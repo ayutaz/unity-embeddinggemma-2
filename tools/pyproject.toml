@@ -1,0 +1,10 @@
+[project]
+name = "embeddinggemma-tools"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "onnx>=1.23.2",
+    "sentence-transformers>=6.1.0",
+    "torch>=2.14.1",
+    "transformers>=5.19.0",
+]

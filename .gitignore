@@ -66,3 +66,8 @@ crashlytics-build.properties
 # OS
 .DS_Store
 Thumbs.db
+
+# Python (tools/ is managed by uv)
+.venv/
+__pycache__/
+*.pyc

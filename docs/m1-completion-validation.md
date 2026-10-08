@@ -2,7 +2,8 @@
 
 更新日: 2026-10-09。対象: Windows Editor / Unity 6000.3.16f1 / Sentis 2.6.1。
 作業ブランチ: `feat/m1-persistence-benchmark`、[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)。
-実測コード: `329da925b01f7c9cb0b4d604055f0b9dc214c5c4`。PR #2 / #3は統合済み、基準mainは `1f0e580`。
+実測コード: `329da925b01f7c9cb0b4d604055f0b9dc214c5c4`。PR #1〜#4は統合済み。
+PR #4は2026-10-09 00:32:44 JSTにSquashマージされ、基準mainは `8146107aa77904050c6235866c0cf79ecc80034c`。
 
 ## 現在の判定
 
@@ -43,7 +44,9 @@ Processのworking set / private bytesはMono APIが0を返し、全サンプル�
 - 同headの [実モデルCI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37799183061) は15件、最小cosine `0.9999997615814209` で合格。
 - 配置元の参照 / tokenizer / `.pt2` と保存後2ファイルのSHA-256、37ファイルのLF正規化ソースhash、固定case ID・順序・各基準・中央値 / p95を再計算して確認。
 - 以前の実モデルAPI照合のC#ソースhashも一致し、query / document / rawと再利用の証拠を継続利用。生成コード・uv.lock・固定入力は元の基準mainから変更なし。
-- 後続文書commitでCIが再起動する場合は [PR #4のChecks](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4/checks) とPR本文に最終headの結果を記録する。文書更新だけでUnity測定を再実行しない。
+- 最終PR head `04a970fb07c3f2f1078c3cfb8487c138e3bc9bfe` の [Python CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37801226518) は4環境各64件、[実モデルCI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37801226486) は15件・最小cosine `0.9999998807907104`で合格。
+- 統合後main `8146107` の [Python CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37801650704) も4環境各64件合格。実モデルworkflowはmain pushでは起動しない。
+- 最終PR headと統合mainのtreeは一致し、実測レポートの37ファイルのLF正規化ソースhashも一致。文書更新で実測commitを書き換えず、Unity測定を再実行しない。
 
 ## TDDと失敗履歴
 
@@ -73,4 +76,4 @@ Processのworking set / private bytesはMono APIが0を返し、全サンプル�
 - Processカウンタが0なら未取得。graphicsCounterAvailable / processCountersAvailableで判定する。
 - Float16は[Sentisの重み量子化](https://docs.unity3d.com/Packages/com.unity.ai.inference@2.6/manual/quantize-a-model.html)であり、すべての演算がfp16になる保証はない。速度やGPUメモリの改善も実測から判断する。
 
-この測定は1台・1セッションのWindows Editor結果。他プラットフォーム・Player・モバイル・UPM公開はM2で検証する。
+この測定は1台・1セッションのWindows Editor結果。他プラットフォーム・Player・モバイル・UPM公開は [M2計画](m2-plan.md)で検証する。

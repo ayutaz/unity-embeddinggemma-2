@@ -1,12 +1,14 @@
 # M1 実モデル検証と C# ランタイム API の詳細計画
 
-更新日: 2026-10-08。実装ブランチ: `feat/m1-sentis-runtime`。
-main `60f906d` と計画更新 PR #2 の `84b9dcd` を基点とした当初の作業計画。PR #2 / #3は後続で統合済み、mainは `1f0e580`。保存・量子化・測定は [完了計画](m1-completion-plan.md) と [検証記録](m1-completion-validation.md) を参照。
-後続の計画更新 `7d1964b` を取り込み済み。mainの最新SHAは変わらず、文書の競合を解消した。C# / Python / 固定参照条件は変更していない。
+実行日: 2026-10-08。履歴の位置づけを2026-10-09に更新。実装ブランチ: `feat/m1-sentis-runtime`。
+以下はmain `60f906d` と計画更新PR #2の `84b9dcd` を基点とした当初の計画と実行記録。
+PR #3はmain `1f0e580`へ統合済み。その後PR #4も統合され、現在はmain `8146107`でM1完了。
+最新の証拠は [M1完了検証](m1-completion-validation.md)、次の残作業は [M2計画](m2-plan.md)を参照。
+当時は後続の計画更新 `7d1964b` を取り込み、C# / Python / 固定参照条件を変えず文書競合を解消した。
 
-## 範囲と完了条件
+## 当時の範囲と完了条件
 
-今回の範囲は [M1 計画](m1-plan.md) の次の作業のうち、参照成果物の配置、実モデルの Sentis 検証・互換性修正、C# ランタイム API まで。
+PR #3の範囲は参照成果物の配置、実モデルのSentis検証・互換性修正、C#ランタイムAPIまでだった。
 `.sentis` 保存・fp16 量子化・性能 / メモリ測定は次の段階で、今回の完了を M1 全体の完了とはしない。
 
 1. 固定 revision `914f7f89142e33e77833254d9c9b90c3cef7303b` の成功 CI 成果物を取得し、source commit / tree、全15ケース、生成条件、ファイル SHA-256 を照合して配置する。
@@ -33,11 +35,12 @@ main `60f906d` と計画更新 PR #2 の `84b9dcd` を基点とした当初の�
 - 同じインスタンスで複数入力を順に処理し、Worker は再利用、入力 Tensor は呼び出し単位で解放。Dispose は二重呼び出し可能で、破棄後の推論を拒否する。
 - backend を暗黙に切り替えない。GPU 非対応・モデル入出力不一致・非有限出力は明示的に失敗させる。
 
-## 現在の証拠と制約
+## PR #3実行時の証拠と制約
 
 今回のA〜Eはローカル検証まで完了。成果物の監査・配置、空文字互換修正後のM1 3件、公開APIの2件が実モデルで合格し、単体契約24件も合格した。
 最小cosineはCPU `0.99999999999923483`、GPUCompute `0.99999999999970735`。各backendで固定15ケース、APIではWorker再利用後の再推論も確認。
-F / Gは実装・文書化済み。head `805d7e7` のCIはPython60件×4環境、実モデル15件が成功。計画取り込み後の最終headのCIとPR状態は [PR #3のChecks](https://github.com/ayutaz/unity-embeddinggemma-2/pull/3/checks) で確認し、PR本文に最終runを記録する。[実行記録](m1-runtime-validation.md)、[API手順](runtime-api.md)、[数値レポート](results/m1-windows-fp32-20261008.json)を参照。
+F / Gも完了しPR #3は統合済み。当時のhead `805d7e7` のCIはPython60件×4環境、実モデル15件が成功。
+統合前の最終headのCIは [PR #3のChecks](https://github.com/ayutaz/unity-embeddinggemma-2/pull/3/checks) とPR本文に記録。[実行記録](m1-runtime-validation.md)、[API手順](runtime-api.md)、[当時の数値レポート](results/m1-windows-fp32-20261008.json)を参照。
 基盤の Python 47件×4環境・実モデル Python 15件から、今回の追加を含むCI結果は分けて記録する。
 artifact は約1.1GBで保持3日。失効時や生成コード等の変更時は CI で再生成する。
 ローカル Editor の未保存 Scene / Prefab を自動保存・破棄しない。モデル・ログ・XML は `artifacts/` / `.uloop/` / `Assets/M1Generated/` に保存し、要約だけ Git に残す。

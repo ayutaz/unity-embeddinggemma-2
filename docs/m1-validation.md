@@ -8,7 +8,7 @@
 基盤統合当時のPython全体は47件（既存33件 + ハーネス14件）で、当時のmain CIでも4環境すべて合格。現在は追加を含め各64件が合格している。
 後半の31件・33件の結果や draft PR の記録は修正過程の履歴として保持する。
 
-### PR #1 統合と最新 main（計画更新時に再確認）
+### PR #1統合時のmain（2026-10-08の履歴）
 
 - [PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1) は `MERGED`。最終 head `673cb9a621ee9182274134821681100d3372b193` を、2026-10-08 18:42:07 JST に Squash マージ。main は `60f906d9b8c91a95593898571963d0b3b385a053`、ローカルも同期済み。main への直接 push は行っていない。
 - [最終 PR Python run 37755304462](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37755304462): Ubuntu / Windows × Python 3.13 / 3.14 の4環境で各47件合格。

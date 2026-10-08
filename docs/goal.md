@@ -4,10 +4,11 @@
 - 更新日: 2026-10-09
 - 背景: [新規性調査](embeddinggemma-2-unity-novelty.md)
 
-リポジトリは public の OSS として開発中。M1 の参照生成 / export・Editor acceptance tests・uloop ハーネスの基盤を
-PR #1 で main（`60f906d`）へ統合済み。main CI は Python 4環境各47件と lint が合格し、最終 PR CI の実モデル15件照合も合格。
-PR #2 / #3はmain `1f0e580`まで統合済み。[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)で保存・Float16重み量子化・両backend精度・性能 / メモリ測定まで実装し、Windows EditorのM1受け入れ条件が合格した。
-次はM2。現状と証拠は [M1計画](m1-plan.md)、[完了検証記録](m1-completion-validation.md)を参照。
+リポジトリはpublicのOSSとして開発中。PR #1〜#4をmain `8146107`へ統合済み。
+保存・Float16重み量子化・両backend精度・性能 / メモリ測定までWindows EditorのM1受け入れ条件が合格した。
+mainのPython CIは4環境各64件、PR #4最終headの実モデルPython照合は15件合格。
+次は [M2計画](m2-plan.md)に沿って開発基盤、UPM化、検索サンプル、他環境検証、配布を進める。
+M1の証拠は [M1計画](m1-plan.md)、[完了検証記録](m1-completion-validation.md)を参照。
 リポジトリの公開と、M2 の UPM パッケージ / サンプルのリリースは別の段階として扱う。
 
 ## ゴール
@@ -18,7 +19,7 @@ PR #2 / #3はmain `1f0e580`まで統合済み。[PR #4](https://github.com/ayuta
 
 1. **Sentis だけで動かす**
    - llama.cpp・ONNX Runtime・LiteRT などのネイティブプラグインを使わない。
-   - 依存するのは Sentis(`com.unity.ai.inference`)と Unity 本体だけにする。
+   - 推論はSentis(`com.unity.ai.inference`)を使う。現行RuntimeはUnity提供のNewtonsoft JSONも使用する。配布時に直接依存を明示する。
 2. **テキスト・画像・音声の 3 つに対応する**
    - テキスト用の本体(270M)、画像エンコーダ(170M)、音声エンコーダ(300M)を Sentis で動かす。
    - 画像 / 音声エンコーダの特徴量は共通のテキスト本体へ渡し、768 次元の埋め込みを得る。モダリティをまたいだ検索(例: テキストで画像を探す)ができる。
@@ -57,7 +58,7 @@ PR #2 / #3はmain `1f0e580`まで統合済み。[PR #4](https://github.com/ayuta
 | # | 内容 | 完了の条件 | 状態 |
 | --- | --- | --- | --- |
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor の CPU / GPUCompute で全 15 ケースの token ID / mask が完全一致、fp32 cosine >= 0.999。`.sentis` 保存・再読み込み、fp16 量子化版 cosine >= 0.99、時間・メモリ測定 | Windows Editor受け入れ検証完了 |
-| M2 | テキスト版の UPM パッケージとサンプルをリリースする | macOS Editor / iOS / Android の精度確認・速度 / メモリ測定、UPM API とサンプル、配布手順を揃える | 未着手 |
+| M2 | テキスト版の UPM パッケージとサンプルをリリースする | macOS Editor / iOS / Android の精度確認・速度 / メモリ測定、UPM API とサンプル、配布手順を揃える | [詳細計画を整理済み](m2-plan.md)、実装未着手 |
 | M3 | 画像用モデルに対応する | GPU 上の画像から埋め込みを作り、テキスト→画像の検索が参照実装と一致する | 未着手 |
 | M4 | 音声用モデルに対応する | GPU 上でメルスペクトログラムを作り、テキスト→音声の検索が参照実装と一致する | 未着手 |
 

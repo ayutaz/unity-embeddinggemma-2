@@ -1,0 +1,101 @@
+# M2 詳細計画と残作業
+
+更新日: 2026-10-09。基準main: `8146107aa77904050c6235866c0cf79ecc80034c`。
+**計画を整理済み、M2の実装は未着手。** PR #1〜#4は統合済みで、Windows EditorのM1は完了した。
+[M1完了検証](m1-completion-validation.md)を既存の基準とし、UPM化、テキスト検索サンプル、他環境検証、配布を進める。
+
+## 現在地
+
+- Unity 6000.3.16f1 / Sentis 2.6.1。`Assets/EmbeddingGemma/Runtime/` に公開APIがある。UPMパッケージはまだない。
+- `TextEmbedder` はquery / document / raw、同期・メインスレッド、batch 1 / length 128 / 768次元、CPU / GPUComputeを扱う。
+- `TextModelFile` はfp32 / Float16重みの保存・再読み込みを実装済み。Windows Editorで両形式・両backend全15件が合格。
+- Runtime asmdefはSentisと `Unity.Newtonsoft.Json` を参照する。現在のlockでNewtonsoftは3.2.2。uloop、URP、2D関連パッケージは検証プロジェクト側の構成であり、配布Runtimeの依存には持ち込まない。
+- Python CIはUbuntu / Windows × Python 3.13 / 3.14の4環境各64件成功。macOS / iOS / AndroidとPlayerでの実モデル実行は未検証。
+- mainは未保護、rulesetsは空。全PRに完了判定を返す必須CIも未整備。クラウドUnityはLinux CPUの任意手動補助検証で未実行、Secrets / Variablesは未登録。
+
+## 作業順序と完了条件
+
+| 順序 | タスク | 完了条件 | 依存 / 状態 |
+| --- | --- | --- | --- |
+| 0 | OSS開発基盤: CIの必須判定とmain保護 | 文書だけのPRも含めCI判定が完了する。失敗・必要jobの未実行を成功扱いにしない。PR経由、必須check、force push / 削除の制限をGitHub側で確認 | 最優先、未着手。checkの安定化を先に行う |
+| 1 | UPM構成へ移行 | package manifest、明示的な依存、Runtime / Tests / Samples / 文書を整理。既存API契約とGUIDを維持し、重複assemblyやUnityEditor参照を持ち込まない | 未着手。新しいプロジェクトへの導入で確認 |
+| 2 | テキスト検索サンプル | 文書を事前埋め込みし、queryとのcosineで順位表示。固定入力のPython参照順位と一致。モデル未準備・不正入力・実行失敗を表示し、終了時にリソース解放 | 1に依存、未着手 |
+| 3 | モデル準備・配布手順 | CIで固定revisionから生成、hash監査、取得・配置・読み込み・更新の手順を整備。新規checkoutとサンプル導入で再現 | 1 / 2と並行可能、未着手 |
+| 4 | 環境・runner・実機の確保 | macOS Editor、iOS / Androidのtoolchain・実機・GPU API・ライセンス・署名条件を確認し、実行できる組み合わせを記録 | 早期に調査。必要環境は未確認 |
+| 5 | 各環境の実モデル検証と測定 | 下の環境表を埋め、精度・実行backend・ロード / 初回 / 定常時間・メモリを記録。移行後Windowsの回帰も確認 | 1〜4に依存、未着手 |
+| 6 | リリース準備と配布 | clean projectから版固定で導入、サンプル起動、手順・ライセンス・CHANGELOGを確認。必要環境の合格後にリリース用PRと配布を行う | 1〜5に依存、未着手 |
+
+0と4の準備を早期に進め、実装は1 → 2 / 3 → 5 → 6の順に小さいPRへ分割する。
+この文書更新ではworkflow・GitHub保護設定・Runtimeを変更しない。mergeは依頼があるまで行わない。
+
+## UPM構成案
+
+以下は採用候補であり、まだ存在するパッケージではない。名前・初回バージョンは最初の実装PRで確定する。
+[Unity公式のパッケージ構成](https://docs.unity3d.com/6000.3/Documentation/Manual/cus-layout.html)に沿って整理する。
+
+```text
+Packages/com.ayutaz.embeddinggemma/
+  package.json
+  Runtime/
+  Tests/Editor/
+  Samples~/TextSearch/
+  Documentation~/
+  README.md
+  CHANGELOG.md
+  LICENSE.md
+```
+
+- Runtimeの `.meta` / GUIDとassembly名を維持して移動し、元のAssets側に同じ実装を残さない。
+- package manifestではSentis 2.6.1と直接使用するNewtonsoftの依存を明示する。新規プロジェクトで依存解決を検証し、現行lockの偶然の解決に頼らない。
+- モデル不要の契約テストをパッケージ側へ整理。既存の `Assets/M1Generated/` や `artifacts/` を使う実モデルfixture・計測runnerは、検証プロジェクト側に残すかパスを注入できる形に分離する。
+- 消費側は[Git URLのsubfolder / revision指定](https://docs.unity3d.com/6000.3/Documentation/Manual/upm-git.html)でcommitを固定して検証し、リリース時にtag指定の手順を用意する。未作成のtagは導入済みとして案内しない。
+- まずUnity 6000.3.16f1を検証対象とする。下位のUnity / Sentisへの対応は別検証なしに宣言しない。
+
+## サンプルとAPIの確認
+
+サンプルは日本語 / 英語の小さい固定文書群を用意し、`EmbedDocument` で埋め込み、`EmbedQuery` の結果との全件比較で順位を表示する。
+固定queryと期待順位はモデルrevision・prompt・tokenizer・精度条件を揃えたPython参照からCIで生成する。
+同点時の順序を固定し、fp32 / Float16重みそれぞれで参照順位と照合する。任意の利用者入力に対する検索品質を固定テストの成功から保証しない。
+
+順位計算、不正入力、Dispose、未準備モデルの処理は先に失敗テストを確認して実装する。
+サンプルはモデルを自動取得せず、利用者が準備したモデルとtokenizerを指定する。毎回の検索で保存・量子化しない。
+UI操作で文書準備 → query入力 → 結果表示 → 終了まで確認し、スクリーンショットと小さい結果要約を残す。
+非同期化・可変長・batch拡張は現行APIの必須条件ではなく、必要性と別の契約を定めてから扱う。
+
+## 環境別の受け入れ
+
+| 環境 | 現状 | M2で必要な確認 |
+| --- | --- | --- |
+| Windows Editor | M1の実モデルCPU / GPUCompute合格 | UPM移行後の導入・API・保存とサンプルの回帰 |
+| macOS Editor | 未実行 | 使用機種 / OS / GPU APIを記録し、実モデルCPU / GPUComputeの精度と測定 |
+| iOS Player | 未実行、toolchain / 実機未確認 | IL2CPP・stripping・モデル配置を含むbuild、実機CPU / GPUCompute実行、精度と測定 |
+| Android Player | 未実行、toolchain / 実機未確認 | ABI / graphics API・モデル配置を含むbuild、実機CPU / GPUCompute実行、精度と測定 |
+| Linux CPUクラウド | 任意手動workflowのみ、未実行 | Secrets準備後に補助検証。他の必須環境やGPUの合格と区別 |
+| Web / WebGPU | 任意、未着手 | 必須環境の後に対応可能性を調査 |
+
+精度はM1と同じ15件のtoken ID / mask完全一致、有限・768次元・単位長を維持する。
+fp32はPython参照cosine >= 0.999、Float16重みは >= 0.99。GPUのskipやCPUへの切り替えでGPU合格にしない。
+対象端末で未対応・OOM・build失敗となった場合は、実行条件と失敗を残して対策を検討し、対象環境を黙って完了扱いにしない。
+
+PlayerではEditorのimport処理と分け、事前変換済み `.sentis` とtokenizerを配置して起動時に読み込む。
+読み取り専用の配置先と書き込み可能な保存先を分け、`File.Replace` を含む保存APIの対応を各対象環境で確認する。
+ロード・初回・warmup後の推論を分けて測る。メモリは測定API・取得可否・観測範囲を記録し、Editor全体の値からモバイルの必要量を推定しない。
+Float16重みは保存サイズ削減済みだが、M1では速度改善は確認されていない。端末の採用形式は実測から判断する。
+
+## CIと証拠
+
+- Python・参照生成・変換・パッケージ静的検証・可能なUnity build / testsはActionsを優先する。Python変更はtools/とuvでTDD。
+- 必須CIは全PRで完了する入口を用意し、変更範囲に応じたjob結果を集約する。対象外と必要jobの失敗 / cancelを区別する。
+- クラウドUnity実行にはライセンス設定が必要。GPUやモバイル実機のrunnerがあるとは仮定せず、可能なCIと必要最小限のローカル / 実機実行を分ける。
+- Secretsを使う実行と外部forkのコードを分離する。未実行のクラウドUnityを成功として記録しない。
+- run URL、PR head、実際のcheckout SHA、固定モデルrevision、artifact hash、実行環境、backend、数値、失敗・skipを保存する。
+- モデル・大きいログはGit管理外、LFSは使わない。artifact失効時はCI再生成し、小さい数値要約と再現手順をGitに残す。
+
+既存のworkflow構成と制約は [CI手順](ci.md)、ローカルの必要時操作は [uloopハーネス](automation.md)。
+
+## M2の後
+
+M3で画像エンコーダとGPU上の画像前処理、共通テキスト本体への特徴量入力、テキスト→画像の固定参照順位照合を実装する。
+M4で音声エンコーダとGPU上のメルスペクトログラム前処理、共通空間への入力、テキスト→音声の固定参照順位照合を実装する。
+どちらも実装未着手。演算子互換性・中間テンソル・メモリ・CPU readbackの有無を調査してから詳細計画を作る。
+全体の完了条件は [ゴール](goal.md)を維持する。

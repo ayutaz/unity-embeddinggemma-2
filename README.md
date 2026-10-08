@@ -2,11 +2,10 @@
 
 Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.unity.ai.inference@2.6/manual/index.html) だけを使って、Google の [EmbeddingGemma 2](https://huggingface.co/google/embeddinggemma-2) を動かすプロジェクトです。テキスト・画像・音声を、同じ 768 次元の空間の埋め込みに変換できるようにします。
 
-> **状態: M1 実装中**
-> 2026-10-08: 参照生成・Core ATen export・uloop ハーネスを [PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1) で main（`60f906d`）に統合しました。
-> 統合後の main CI ではPython 4環境の各47テストとworkflow lintが成功。最終PR CIでは実モデルの保存済み `.pt2` の全15ケース照合も成功しました。
-> ローカル Unity 6000.3.16f1 に Unity CLI Loop を導入し、依存解決・テストのコンパイルに成功しました。自動検証ハーネスを追加しています。
-> 未マージの [PR #3](https://github.com/ayutaz/unity-embeddinggemma-2/pull/3) では実モデルの配置と空文字互換修正後、Windowsのtokenizer・fp32 CPU / GPUCompute・C# APIが全15ケース合格しました。mainへの統合、`.sentis`保存・fp16量子化・時間 / メモリ測定が残ります。
+> **状態: Windows EditorのM1受け入れ検証完了**
+> 2026-10-09: 基盤・推論APIはPR #1〜#3で統合済み。[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)で`.sentis`保存・再読み込み、Float16重み量子化、性能・メモリ測定まで実装・検証しました。
+> tokenizerの全15件一致、fp32 / Float16重みのCPU / GPUCompute各15件、公開C# API、C#単体契約30件が合格。Python CIは4環境各64件が合格しました。
+> GPU定常推論の中央値はfp32 50.26ms、Float16重み58.20ms。保存サイズは約1.096GBから0.554GBへ減りました。測定条件と限界は [検証記録](docs/m1-completion-validation.md) を参照してください。
 > クラウドUnity CIはSecretsが必要なLinux CPUの手動補助検証です（未実行）。
 > リポジトリは public ですが、UPM パッケージのリリースはまだ行っていません。
 
@@ -22,7 +21,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 
 | # | 内容 | 状態 |
 | --- | --- | --- |
-| M1 | テキスト用モデルを Sentis で動かす | PR #3でfp32・API合格、未統合。保存・量子化・測定が残る |
+| M1 | テキスト用モデルを Sentis で動かす | Windows Editor受け入れ検証完了（保存・量子化・測定を含む） |
 | M2 | テキスト版の UPM パッケージとサンプルをリリースする | 未着手 |
 | M3 | 画像用モデルに対応する | 未着手 |
 | M4 | 音声用モデルに対応する | 未着手 |
@@ -82,7 +81,7 @@ uv run --locked python -m embeddinggemma_tools prepare --output ../artifacts/m1
 この Python 側の一致と、Sentis 側の M1 合格は別々に検証します。
 
 基盤の [PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1) はマージ済みです。
-次は PR #2 / #3の最新CI・依存関係を確認し、`.sentis`保存・再読み込み → fp16量子化 → 時間・メモリ測定を進めます。詳細な開始条件と合格基準は [M1計画](docs/m1-plan.md) を参照してください。
+M1の実装・検証は揃いました。次はM2のUPMパッケージ化、テキスト検索サンプル、macOS / iOS / Android検証へ進みます。詳細は [M1計画と完了条件](docs/m1-plan.md) を参照してください。
 PR #3で追加した [C# API手順](docs/runtime-api.md)、[実モデル実行記録](docs/m1-runtime-validation.md)、[詳細作業計画](docs/m1-runtime-plan.md) も参照してください。
 互換性修正と C# API を TDD で進め、その後 `.sentis` 保存・fp16 量子化・時間 / メモリ測定を行います。
 新しい実装も作業ブランチ / PR を使い、マージは依頼があるまで行いません。

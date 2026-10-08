@@ -1,6 +1,6 @@
 # Unity のローカル自動操作
 
-更新日: 2026-10-08
+更新日: 2026-10-09
 
 Unity 6000.3.16f1 をローカルで起動し、Unity CLI Loop を介してコンパイル・EditMode テスト・ログ取得を行う。
 Python のモデル取得・変換は GitHub Actions に残す。ローカルで認証済みの Editor を使うため、GitHub Secrets は不要。
@@ -48,6 +48,8 @@ uv run --locked python -m embeddinggemma_tools.unity --suite compile --launch
 uv run --locked python -m embeddinggemma_tools.unity --suite m1
 # C# API 経由の実モデル15ケース×CPU/GPUComputeを検証
 uv run --locked python -m embeddinggemma_tools.unity --suite runtime
+# 保存・量子化・両backend実モデル照合と測定（NUnit / CLIとも20分上限）
+uv run --locked python -m embeddinggemma_tools.unity --suite completion --timeout 1200
 ```
 
 `--launch` を指定したときだけ起動コマンドを送る。起動済み Editor への通常の検証では省略し、毎回ウィンドウを前面へ移動しない。
@@ -75,6 +77,11 @@ runtime scope は両backendの2件すべて合格を必要とし、`runtime_refe
 runtime の合格だけで `m1_reference_passed` は true にしない。
 未実行・不明なJSON・タイムアウトも成功にしない。開始時に以前の成功レポートを上書きする。
 `m1_reference_passed=true` はこの3テストの合格を表す。`.sentis` 保存・量子化・性能測定を含むM1全体の完了ではない。
+`completion`は `M1CompletionTests` の1件でfp32 / Float16重みの保存・再読み込み、CPU / GPUCompute各15ケース、warmup・45サンプル測定を検証する。
+1件passed / failed=skipped=inconclusive=0の時だけ `m1_completion_passed=true`。
+数値・段階別メモリは `artifacts/m1-completion/results.json`、モデルも同じGit管理外ディレクトリに保存する。
+以前のresults.jsonのsuccessは実行開始時に無効化する。結果ファイルだけでなくNUnit / ハーネスの成否も確認する。
+M1全体の完了監査は [検証記録](m1-completion-validation.md) に従い、ソースSHA・固定参照・実行結果・CIを照合する。
 
 ## M1 参照成果物の配置
 

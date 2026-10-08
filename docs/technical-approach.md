@@ -1,12 +1,12 @@
 # 技術調査: Sentis で EmbeddingGemma 2 を動かす方法
 
 - 調査日: 2026-10-07
-- 実装・計画の更新日: 2026-10-08
+- 実装・計画の更新日: 2026-10-09
 - 関連: [ゴール](goal.md) / [新規性調査](embeddinggemma-2-unity-novelty.md)
 
 > text-only 参照生成・Core ATen export・uloop ハーネスの基盤は PR #1 で main `60f906d` に統合済み。main CI では Python 4環境各47件が合格。
 > 実モデルのPython参照生成 / 保存済みexportの全15ケース照合は最終 PR CI で成功（run `37755304407`、最小cosine 0.9999998808）。
-> PR #3（未マージ）でSentis import・tokenizer全15件・fp32 CPU / GPUCompute・C# APIの数値照合が合格。`.sentis` 保存・量子化・測定は未検証。
+> PR #3は統合済み。PR #4で`.sentis`保存・再読み込み、Float16重み量子化、CPU / GPUCompute精度と測定まで合格した。[M1完了検証](m1-completion-validation.md)を参照。
 > 詳細計画は [M1 計画](m1-plan.md)、実行済みの証拠は [検証記録](m1-validation.md)を参照。
 
 ## 要約
@@ -15,7 +15,7 @@
 - EmbeddingGemma 2 は「画像・音声のエンコーダの出力を、共通のテキスト本体の入力列に差し込む」構造。Sentis 側は **テキスト本体 + 画像 / 音声エンコーダ + 差し込み処理** として設計する。M1 はテキスト経路のみ。
 - モデルの持ち込みは、**PyTorch(`.pt2`)の直接読み込みを第一候補**、**標準の演算子だけで書き出した ONNX を予備**とする。LiteRT 版は Sentis が int4 に対応していないため使えない。
 - 前処理(画像のパッチ分割、音声のメルスペクトログラム)と差し込み処理は、Sentis の Functional API で GPU 上のグラフとして作る。
-- 最大のリスクはメモリ。Sentis の量子化は MatMul などの重みにしか効かず、約 134M パラメータある埋め込み表が fp32 のまま残る可能性がある。
+- メモリはM2の実機でも検証する。現行SentisのFloat16重み量子化で保存サイズは約49.45%減ったが、Editorの段階別メモリをモデル専有量や他端末の必要量とは解釈しない。
 
 ## 1. 採用する Sentis の仕様
 

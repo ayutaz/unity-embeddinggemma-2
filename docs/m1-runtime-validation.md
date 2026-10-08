@@ -1,6 +1,7 @@
 # 実モデル検証・ランタイム API の実行記録
 
 日付: 2026-10-08。ブランチ: `feat/m1-sentis-runtime`。詳細は [計画](m1-runtime-plan.md)。
+この文書は配置・fp32・API実装時点の記録。PR #3は後続でmain `1f0e580`へ統合済み。保存・量子化・測定の現状は [M1完了検証](m1-completion-validation.md) を参照。
 
 ## 現在の結果
 

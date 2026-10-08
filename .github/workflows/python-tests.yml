@@ -1,0 +1,50 @@
+name: Python tests
+
+on:
+  push:
+    paths: ['tools/**', '.github/workflows/python-tests.yml']
+  pull_request:
+    paths: ['tools/**', '.github/workflows/python-tests.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: python-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.13', '3.14']
+    defaults:
+      run:
+        working-directory: tools
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: ${{ matrix.python }}
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - name: Offline unit tests
+        run: uv run --locked pytest -q --junitxml=../artifacts/python-tests.xml
+        env:
+          HF_HUB_OFFLINE: '1'
+          TRANSFORMERS_OFFLINE: '1'
+          OMP_NUM_THREADS: '2'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: python-${{ matrix.os }}-${{ matrix.python }}
+          path: artifacts/python-tests.xml
+          retention-days: 7

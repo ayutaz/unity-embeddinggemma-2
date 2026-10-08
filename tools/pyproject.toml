@@ -3,8 +3,19 @@ name = "embeddinggemma-tools"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
+    "huggingface-hub>=1.33.0",
+    "numpy>=2.5.3",
     "onnx>=1.23.2",
     "sentence-transformers>=6.1.0",
     "torch>=2.14.1",
     "transformers>=5.19.0",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

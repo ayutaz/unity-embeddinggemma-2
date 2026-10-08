@@ -1,30 +1,38 @@
 # 技術調査: Sentis で EmbeddingGemma 2 を動かす方法
 
 - 調査日: 2026-10-07
+- 実装・計画の更新日: 2026-10-08
 - 関連: [ゴール](goal.md) / [新規性調査](embeddinggemma-2-unity-novelty.md)
+
+> Python の text-only 参照生成と Core ATen export は実装済みで、小さいモデルのオフラインテスト 33 件が合格。
+> 実モデルのPython参照生成 / 保存済みexportの全15ケース照合はCIで成功（修正後runの最小cosine 0.9999997616）。
+> Sentis import / tokenizer / CPU / GPUCompute、`.sentis` 保存・量子化は未検証。
+> 詳細計画は [M1 計画](m1-plan.md)、実行済みの証拠は [検証記録](m1-validation.md)を参照。
 
 ## 要約
 
-- Sentis の最新版は **2.6.1**(2026-04-02 公開、パッケージ名 `com.unity.ai.inference`)。このプロジェクトの Unity 6000.3 で使える。
-- EmbeddingGemma 2 は「画像・音声のエンコーダの出力を、テキスト用モデルの入力列に差し込む」構造になっている。そのため Sentis 側は **3 つのエンコーダ + 差し込み処理** として組む。
+- 採用する Sentis は **2.6.1**(2026-04-02 公開、パッケージ名 `com.unity.ai.inference`)。指定 Unity 6000.3.16f1 での依存解決・テストのコンパイルは成功。実モデル推論は未検証。
+- EmbeddingGemma 2 は「画像・音声のエンコーダの出力を、共通のテキスト本体の入力列に差し込む」構造。Sentis 側は **テキスト本体 + 画像 / 音声エンコーダ + 差し込み処理** として設計する。M1 はテキスト経路のみ。
 - モデルの持ち込みは、**PyTorch(`.pt2`)の直接読み込みを第一候補**、**標準の演算子だけで書き出した ONNX を予備**とする。LiteRT 版は Sentis が int4 に対応していないため使えない。
 - 前処理(画像のパッチ分割、音声のメルスペクトログラム)と差し込み処理は、Sentis の Functional API で GPU 上のグラフとして作る。
 - 最大のリスクはメモリ。Sentis の量子化は MatMul などの重みにしか効かず、約 134M パラメータある埋め込み表が fp32 のまま残る可能性がある。
 
-## 1. Sentis の最新版
+## 1. 採用する Sentis の仕様
 
 ### バージョン
 
 | バージョン | 公開日 | 主な変更 |
 | --- | --- | --- |
-| **2.6.1** | 2026-04-02 | ドキュメントの修正(最新) |
-| 2.6.0 | 2026-03-30 | ONNX opset 25 に対応。RMSNorm・Swish の Functional メソッド。PyTorch 読み込みで Buffer に対応。トークナイザの切り詰め機能 |
-| 2.5.0 | 2026-01-29 | **PyTorch(`.pt2`)の直接読み込み**。**Hugging Face の `tokenizer.json` の読み込み** |
-| 2.4.0 | 2025-10-30 | 名前を Inference Engine から Sentis に戻す。**トークナイザ API**。**LiteRT の読み込み**。**STFT などの音声向け演算子** |
+| **2.6.1** | 2026-04-02 | ドキュメントの修正。本プロジェクトの採用版 |
+| 2.6.0 | 2026-03-20 | ONNX opset 25 に対応。RMSNorm・Swish の Functional メソッド。PyTorch 読み込みで Buffer に対応。トークナイザの切り詰め機能 |
+| 2.5.0 | 2026-01-23 | **PyTorch(`.pt2`)の直接読み込み**。Hugging Face 用 tokenizer parser の機能追加 |
+| 2.4.0 | 2025-10-22 | 名前を Inference Engine から Sentis に戻す。**トークナイザ API**。**LiteRT の読み込み**。**STFT などの音声向け演算子** |
+
+公開日は [公式 CHANGELOG](https://docs.unity3d.com/Packages/com.unity.ai.inference@2.6/changelog/CHANGELOG.html) で再確認した。
 
 - 動作条件は Unity 6000.0 以降。依存パッケージは Burst・Collections・App UI・Newtonsoft Json・Image Conversion。
 - 名前空間は `Unity.InferenceEngine` のまま(表示名だけが Sentis に戻った)。
-- このプロジェクトの `Packages/manifest.json` には、まだ Sentis が入っていない。
+- `Packages/manifest.json` に Sentis 2.6.1 を追加済み。`Packages/packages-lock.json` は Editor での依存解決後に更新・確認する（現時点では Sentis 未記録）。
 
 ### 読み込める形式
 
@@ -62,8 +70,8 @@
 
 ### Web(WebGPU)について
 
-- Unity の WebGPU 対応は、6000.3(このプロジェクト)では試験的な扱い。6.6(2026-09)で正式対応になった。
-- Sentis の GPUCompute が WebGPU で動くかは、まだ確かめていない。Web 対応は「できれば」の扱いのままとする。
+- このプロジェクトの Unity 6000.3.16f1 / Sentis 2.6.1 で WebGPU を使う実動作は未検証。
+- 他の Unity バージョンの対応状況を根拠に、今回の組み合わせで動くと判断しない。Web 対応は「できれば」の扱いのままとする。
 
 ## 2. EmbeddingGemma 2 の構造
 
@@ -71,14 +79,15 @@
 
 ```
 テキスト ─ トークナイザ ─ input_ids ─┐
-                                    ├─ 埋め込み表を引く ─ 差し込み ─ テキスト用の本体(24層)─ 平均プーリング ─ 正規化 ─ 768次元
+                                    ├─ 埋め込み表を引く ─ 差し込み ─ テキスト本体(24層、内部512→768 projection)─ 平均プーリング ─ 正規化 ─ 768次元
 画像 ─ パッチ分割 ─ 画像エンコーダ ───┤        (<|image|> などの位置を特徴量で置き換える)
 音声 ─ メルスペクトログラム ─ 音声エンコーダ ─┘
 ```
 
 - 画像と音声は **別々のベクトルにはならない**。エンコーダが出す 512 次元の「ソフトトークン」を、テキスト中の `<|image|>` や `<|audio|>` の位置に差し込み、テキスト用の本体に通す。
 - テキストと画像を混ぜた入力(例: 「防水シューズ <|image|>」)も、1 つのベクトルになる。
-- sentence-transformers の構成は「本体 → 平均プーリング(プロンプト部分も含める)→ 正規化」の 3 段。初代にあった Dense 層はない。
+- sentence-transformers の構成は「本体 → 平均プーリング(プロンプト部分も含める)→ 正規化」の 3 段。独立した Dense モジュールはないが、テキスト本体内部の `embedding_projection`（512→768）は保持する。
+- `sliding_window=512` は双方向局所注意の片側の半径（左右を合わせて約1024）。固定長 128 の M1 実モデル検証だけでは窓境界をまたぐ長さの実モデル互換性は証明できない。小さいモデルの単体テストでは半径 2 / 長さ 6 で局所・全体注意を照合する。
 
 ### 各部品
 
@@ -101,13 +110,28 @@
 
 | 方法 | 手順 | 長所 | 短所 | 評価 |
 | --- | --- | --- | --- | --- |
-| **A. PyTorch の直接読み込み** | transformers で読み込む → 書き出し用ラッパーで入出力を整える → `torch.export` → Core ATen に分解 → `.pt2` | 入出力の形と差し込み処理を Python で自由に決められる。注意や RoPE は自動で分解される | 機能が新しい(2.5〜)。動作確認された PyTorch は 2.9.1 で、最新の 2.14 との相性は未確認 | **第一候補** |
+| **A. PyTorch の直接読み込み** | transformers で読み込む → 書き出し用ラッパーで入出力を整える → `torch.export` → Core ATen に分解 → `.pt2` | 入出力の形と差し込み処理を Python で自由に決められる。注意や RoPE は自動で分解される | 採用した torch 2.14.1 の export と Sentis importer の組み合わせは未検証 | **第一候補** |
 | **B. ONNX の書き出し直し** | A と同じラッパー → `torch.onnx.export` で独自演算子なしに書き出す | 読み込み機能が成熟している。モデルの中身を Netron などで確認しやすい | opset 23 以降で Attention や RotaryEmbedding にまとめられないよう注意が必要 | **予備** |
 | C. 公開済み ONNX の手直し | onnx-community 版の独自演算子を、標準の演算子の組み合わせに置き換える | 差し込み処理を含む入出力の設計をそのまま使える | グラフの手術が壊れやすい。q4 / q8 版は使えない | 参考にとどめる |
 | D. LiteRT の読み込み | 公式の LiteRT 版を読み込む | 小さい(165MB) | int4・StableHLO に非対応 | **不可** |
 | E. Functional API で全部作る | safetensors の重みを読み、C# でモデルを組み立てる | 完全に制御できる | 作業量が大きい | 最後の手段。前処理と後処理には使う |
 
-方法 A・B で共通のラッパーを Python 側に作り、出力形式を切り替えられるようにしておく。
+方法 A の Python ラッパーと `.pt2` export は実装済み。方法 B の ONNX export は未実装で、
+実モデルの Sentis import の失敗を確認してから、同じ重み・入出力を使って追加する。
+
+### 現在の Python 実装
+
+| ファイル（`tools/embeddinggemma_tools/`） | 実装した処理 | 確認できた範囲 |
+| --- | --- | --- |
+| `model.py` | 公式 text config を使い、safetensors の `language_model.` 配下だけを strict load。fp32 / eager / eval | 小さい公式モデルの重み抽出 / 欠落検出と、CIでの実モデルtext-only load |
+| `text.py` / `reference.py` | query / document / raw、公式 sentence-transformers pooling / L2 正規化、JSON 参照生成 | 小さいモデルと実モデル15ケースの参照生成 |
+| `export.py` | 固定長注意 mask、Core ATen 分解、int32 scalar 制限、metadata-only assertion 除去、`.pt2` 保存 | 実モデルの保存・再読み込み照合成功。Sentis import は未実行 |
+| `prepare.py` / `__main__.py` | pinned snapshot 取得、参照 / tokenizer / export、再読み込み全件照合、SHA-256、CLI | 小さいsnapshotのTDDと、CI実モデル15ケースの照合成功。run / artifact digestは検証記録を参照 |
+
+M1 の既定は batch 1 / length 128 / fp32 / 768 次元。生成物は `reference.json`、
+`tokenizer.json`、`model.pt2`、`export-validation.json`。Python の照合閾値は 0.999999、
+Sentis の fp32 は 0.999、量子化版は 0.99 と分けて扱う。
+CLI では入力長を変更できるが、既定以外の長さの実モデル・Sentis 互換性は未検証。
 
 ## 4. Unity 側の設計(案)
 
@@ -149,10 +173,12 @@
 
 ## 6. 進め方(M1: テキスト用モデルを動かすまで)
 
+以下は段階の要約。進捗・依存条件・具体的な再開順序は [M1 詳細計画](m1-plan.md)を基準とする。
+
 | # | 作業 | 完了の条件 |
 | --- | --- | --- |
-| 1 | 環境の準備: Sentis 2.6.1 を追加する。Python 環境は `tools/` の uv プロジェクトを使う(準備済み) | Unity と Python の両方で、モデルを読み込めるようになっている |
-| 2 | 参照データの作成: sentence-transformers でテキストの埋め込みを作り、途中の値と一緒に保存する | テキストの参照データが揃っている |
+| 1 | 環境の準備: Sentis 2.6.1 の manifest 指定と Python uv 環境は準備済み。CI で Unity の依存解決を行う | Unity と Python の両方で、モデルを読み込めるようになっている |
+| 2 | 参照データの作成: 実装済み CLI を CI で実モデルに実行し、入力・ID・mask・最終埋め込みを保存する | 固定 15 ケースの参照データが揃っている |
 | 3 | トークナイザの検証: Sentis の `HuggingFaceParser` で `tokenizer.json` を読み、トークン ID を比べる | 日本語・英語・記号・絵文字を含むテストで、トークン ID が完全一致する |
 | 4 | テキスト用モデルの書き出し: ラッパーを作り、`.pt2` で書き出して Sentis に読み込む(だめなら ONNX) | Sentis で読み込めて、CPU と GPU の両方で動く |
 | 5 | 一致の確認: 参照データと比べる | コサイン類似度 0.999 以上 |
@@ -171,7 +197,7 @@ Python は uv で管理する。`tools/` が uv のプロジェクトで、依�
 
 - 依存の追加は `uv add <パッケージ>` で行う。`pip install` や、`pyproject.toml` の手書きはしない。
 - スクリプトは `uv run python <スクリプト>` で実行する(`tools/` で実行する)。
-- 別の環境で揃えるときは `uv sync` を使う。
+- 別の環境で lockfile と揃えるときは `uv sync --locked`、検証には `uv run --locked` を使う。
 
 | 項目 | 内容 |
 | --- | --- |
@@ -183,7 +209,7 @@ Python は uv で管理する。`tools/` が uv のプロジェクトで、依�
 
 - Sentis の PyTorch 読み込みが、torch 2.14 で書き出した EmbeddingGemma 2 を読めるか
 - Sentis のトークナイザが、Gemma の `tokenizer.json` を正しく扱えるか
-- テキスト用の本体の中で、埋め込み表がどう使われているか(画像・音声のトークン位置の扱いや、層ごとの入力の作り方)。transformers のモデル実装で確かめる
+- text-only 経路はPythonの小さいモデル / 実モデルで照合済みだが、実モデルの Sentis 互換性と、画像 / 音声特徴量の差し込み・GPU 上の受け渡しは未検証
 - 埋め込み表が、量子化のあとも fp32 のまま残るか
 - 画像の色空間とリサイズによる差が、どの程度出るか
 - Sentis の GPUCompute が WebGPU で動くか
@@ -205,4 +231,3 @@ Python は uv で管理する。`tools/` が uv のプロジェクトで、依�
 - [google/embeddinggemma-2](https://huggingface.co/google/embeddinggemma-2)(`config.json`、`processor_config.json`、`config_sentence_transformers.json`、`modules.json`、`tokenizer.json`)
 - [onnx-community/embeddinggemma-2-ONNX](https://huggingface.co/onnx-community/embeddinggemma-2-ONNX)(グラフの入出力と演算子を集計)
 - [litert-community/embeddinggemma-2-text-270m-litert-lm](https://huggingface.co/litert-community/embeddinggemma-2-text-270m-litert-lm)
-- [Unity 6.6 での WebGPU の正式対応(cinevva)](https://app.cinevva.com/news/2026-09-01-unity-6-6-webgpu-production)

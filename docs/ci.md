@@ -6,30 +6,32 @@
 依存解決・コンパイルは成功し、M1 Editor テスト3件は参照データ未配置で失敗した。
 Python / モデル変換は引き続き Actions を利用する。[ローカル自動操作](automation.md)を参照。
 
-現在の Unity workflow はクラウドでの検証準備が未完了。
-使用する Action の固定 SHA は `v4.4.0`、CLI は `v0.1.72` に対応するが、
+Unity workflow は任意の **Linux CPU 手動検証** に変更した。PRでは起動しない。
+使用する Action の固定 SHA は `v4.4.0`、CLI は `v0.1.72` に対応する。
 Action が呼ぶ `game-ci test --docker` のコンテナ経路は Linux のみ対応する。
-`windows-latest` との現構成は、Secrets の追加だけでは動作しない。
-Windows のホスト Editor を使う経路への修正・実測を別途行う。
+以前の `windows-latest` + CPU/GPUCompute matrix は削除した。
+Windows CPU/GPUCompute の M1 合格はローカルハーネスで検証する。Linux CPUの合格では代替しない。
+手動クラウド workflow の Editor 実行は未検証で、引き続きライセンスSecretsが必要。
 [GameCI の対応条件](https://game.ci/docs/cli/build/#classic-docker-test-flow)を参照。
 
 ## 現在の CI 状態
 
 4 workflow は作業ツリーに追加済みで、actionlint 1.7.12 による静的検査は合格。
 `feat/m1-text-tdd` の初回実装コミット `4fec060` を push し、[draft PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)を提出済み。
-4 workflow のPR runを起動済み。初回実モデルの参照生成 / export照合は成功。
-workflow lint の ShellCheck SC2129 は修正後CIで合格。UnityはSecrets不足でpreflight失敗。
-初回pushと修正後PRのPython matrixは4環境で各33件合格。実モデル再runも成功（最小cosine 0.9999997616）。詳細なrun履歴は検証記録を参照。
+`40dedae` のPR CIではPython matrixの4環境で各47件合格、実モデルの15件照合とworkflow lintも成功。
+以前の自動Unity workflowはSecrets不足でpreflight失敗し、Editorは開始していなかった。
+以後のPRではPython / 実モデル参照 / workflow lintを自動実行し、Windows Unity検証はローカルで行う。
+このPRは参照生成と自動検証の基盤を統合するもので、M1完了・UPMリリースを示さない。
 既存の Dependency Graph 2 件の成功を、今回の Python / モデル / Unity CI の成功と混同しない。
 
 | workflow | 起動条件 | 実行内容 | 現在の状態 |
 | --- | --- | --- | --- |
-| `workflow-lint.yml` | `.github/**` の push / PR、手動 | actionlint / ShellCheck | 修正後CI成功（run `37733804135`） |
-| `python-tests.yml` | `tools/**` または自身の変更を含む push / PR、手動 | Ubuntu / Windows × Python 3.13 / 3.14 の uv / pytest | 初回push / 修正後PRで4環境各33件成功（PR run `37733804075`） |
-| `model-reference.yml` | `tools/**` または自身の変更を含む PR、手動、reusable call | 固定 revision の実モデル取得、参照生成、`.pt2` export / 再読み込み照合 | 初回 / summary修正後とも実モデル成功（再run `37733804078`） |
-| `unity-validation.yml` | テスト・Packages・tools・関連 workflow の変更を含む同一 repo の PR、手動 | ライセンス preflight → 同一 revision のモデル生成 → Windows CPU / GPUCompute | Secrets不足でpreflight失敗（run `37733804252`）。model / unity jobsはskip、合格ではない |
+| `workflow-lint.yml` | `.github/**` の push / PR、手動 | actionlint / ShellCheck | `40dedae` のCI成功（run `37749553502`） |
+| `python-tests.yml` | `tools/**` または自身の変更を含む push / PR、手動 | Ubuntu / Windows × Python 3.13 / 3.14 の uv / pytest | `40dedae` の4環境各47件成功（PR run `37749553497`） |
+| `model-reference.yml` | `tools/**` または自身の変更を含む PR、手動、reusable call | 固定 revision の実モデル取得、参照生成、`.pt2` export / 再読み込み照合 | `40dedae` の実モデル成功（run `37749553607`） |
+| `unity-validation.yml` | 信頼できるrefからの手動実行のみ | ライセンス preflight → 同一 revision のモデル生成 → Linux CPU | 構成変更後は未実行。Windows / GPU / M1合格の証拠にはしない |
 
-手動実行の設定が存在することは実行実績ではない。初回は PR イベントでの実行を確認する。
+手動実行の設定が存在することは実行実績ではない。旧自動Unity workflowの失敗も履歴として保持する。
 最新の外部状態と実行済みテストの証拠は [検証記録](m1-validation.md)を参照。
 
 ### 検証したソース SHA の扱い
@@ -86,7 +88,7 @@ fp32 `.pt2` を作成する。保存済み export を再読み込みし、全ケ
 
 モデルのファイル自体は Git 管理しない。参照生成失敗時は job を失敗させ、部分成果物があれば調査用に保存する。
 この参照生成 workflow では PR の変更コードを実行しても Secrets を利用しない。
-Unity workflow は後述の同一 repository の PR に限定してライセンス Secrets を使う。
+Unity workflow は後述の信頼できるrefからの手動実行に限ってライセンス Secrets を使う。
 
 `prepare()` は開始時に前回の `export-validation.json` を削除し、今回の全ケース照合が
 完了した場合だけ新しいレポートを保存する。失敗 job の部分成果物はデバッグ用。
@@ -94,10 +96,10 @@ Unity workflow は後述の同一 repository の PR に限定してライセン�
 
 ## Unity CI の準備条件
 
-`.github/workflows/unity-validation.yml` は同一リポジトリの PR と信頼できる作業ブランチからの手動実行を対象にする。
-ライセンスの存在を最初に検証し、同じソース revision の参照生成 workflow を呼び、Windows runner で CPU / GPUCompute を別 job として検証する。
+`.github/workflows/unity-validation.yml` は信頼できるrefからの手動実行のみを対象にする。
+ライセンスの存在を最初に検証し、同じソース revision の参照生成 workflow を呼び、Linux runner で `M1CPU` カテゴリだけを実行する。
 Unity の acceptance tests はローカル Editor でコンパイル成功。実行すると参照データ未配置で3件失敗した。
-GameCI と Windows runner の組み合わせを含め、Editor job は未実行。初回runのpreflight以降の結果から互換性を確認する。
+クラウドの Linux Editor job は未実行。初回の手動runでimport / tokenizer / CPUの結果を確認する。
 GitHub Actions 上の Unity にはライセンス設定が必要。2026-10-08 の再確認でもリポジトリの Secrets / Variables は未登録。
 [GameCI の公式手順](https://game.ci/docs/github/test-runner/)に従い、Personal は
 `UNITY_LICENSE` / `UNITY_EMAIL` / `UNITY_PASSWORD`、Pro は `UNITY_SERIAL` / `UNITY_EMAIL` /
@@ -114,12 +116,12 @@ GPU 機能がない runner のテストを skip しても M1 の GPU 合格に�
 1. 実行ポリシーの問題を解消し、作業ブランチへ変更を commit / push して draft PR を作成する。main へ直接 push しない。
 2. workflow lint と Python matrix を確認する。同じ PR に push と PR 起動の両方が出る場合も、PR の head SHA と実際の checkout / `GITHUB_SHA` を区別して記録する。
 3. Secrets を使わない実モデル参照生成を確認する。全 15 ケースで Python eager 対保存済み export の cosine >= 0.999999、出力 / tokenizer の digest と metadata を保存する。
-4. GitHub の Repository Secrets に Unity ライセンス設定を用意する。欠落していれば Unity preflight は失敗し、モデル生成と Editor job は開始しない。Python 単体 / standalone model workflow は独立して進められる。
-5. Editor の依存解決、コンパイル、tokenizer、CPU 推論、GPUCompute 推論を切り分けて確認する。C# ランタイム API、保存、量子化、測定は今後の TDD 作業。
-6. 生成された `Packages/packages-lock.json` を既存 lockfile と比較し、必要な変更を作業ブランチへ反映する。現時点の lockfile には Sentis が含まれていない。
+4. ローカルの認証済み Unity 6000.3.16f1 で依存解決・コンパイルを確認する（完了）。クラウド補助検証を使う場合だけ Repository Secrets を準備し、手動実行する。
+5. CI成果物を配置し、ローカルハーネスからtokenizer、CPU推論、GPUCompute推論を切り分けて確認する。C# ランタイム API、保存、量子化、測定は今後の TDD 作業。
+6. Editor生成の `Packages/packages-lock.json` はSentis / Unity CLI Loopを含め反映済み。今後の依存変更も同様に確認する。
 7. CI run URL、ソース SHA、実行環境、結果の要約を docs に記録する。モデル artifact は 3 日、pytest / Unity artifact は 7 日で失効するため、再生成手順も保持する。
 
-fork PR の Unity job は起動条件で除外する。この場合の skip は検証完了ではない。
+fork PRからはUnity workflowを起動しない。手動クラウド検証の未実行も、M1の成功には数えない。
 新しい `.cs` のコンパイル成功と tokenizer / import の成功も、768 次元出力の数値一致とは別に確認する。
 
 ## ローカルで必要になった場合のコマンド

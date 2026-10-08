@@ -4,9 +4,9 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 
 > **状態: M1 実装中**
 > 2026-10-08: Python の参照生成・Core ATen export・CLI を実装し、小さいモデルのオフラインテスト 33 件が合格しました。
-> [draft PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)のCIで、Python 4環境の各33テストと、実モデルの保存済み `.pt2` の全15ケース照合が成功しました（修正後runの最小cosine 0.9999997616）。
+> [PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)の `40dedae` のCIで、ハーネスを含むPython 4環境の各47テストと、実モデルの保存済み `.pt2` の全15ケース照合が成功しました。
 > ローカル Unity 6000.3.16f1 に Unity CLI Loop を導入し、依存解決・テストのコンパイルに成功しました。自動検証ハーネスを追加しています。
-> M1 の Editor テスト3件は参照データ未配置で失敗。Sentis CPU / GPUCompute の数値一致は未検証です。Unity CIはライセンスSecrets不足でEditor起動前に停止しています。
+> M1 の Editor テスト3件は参照データ未配置で失敗。Sentis CPU / GPUCompute の数値一致は未検証です。WindowsのM1検証はローカルで継続し、クラウドUnity CIはSecretsが必要なLinux CPUの手動補助検証に限定しています（未実行）。
 > リポジトリは public ですが、UPM パッケージのリリースはまだ行っていません。
 
 ## ゴール

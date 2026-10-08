@@ -1,22 +1,23 @@
-name: Unity M1 validation
+name: Unity CPU validation (manual)
 
 on:
   workflow_dispatch:
-  pull_request:
-    paths: ['Assets/Tests/**', 'Packages/**', 'tools/**', '.github/workflows/unity-validation.yml', '.github/workflows/model-reference.yml']
+
+# Windows M1 CPU/GPUCompute acceptance runs through the local uloop harness.
+# GameCI v4.4's Docker test path supports Linux; this optional job is Linux CPU only.
+# A successful run here does not establish Windows/GPU compatibility or M1 completion.
 
 permissions:
   contents: read
   actions: read
 
 concurrency:
-  group: unity-m1-${{ github.ref }}
+  group: unity-cpu-manual-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   license:
-    # Never execute fork code with the repository's Unity account credentials.
-    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    # Dispatch only on trusted refs: this workflow uses Unity account credentials.
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -36,12 +37,8 @@ jobs:
     uses: ./.github/workflows/model-reference.yml
   unity:
     needs: model
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 90
-    strategy:
-      fail-fast: false
-      matrix:
-        backend: [CPU, GPUCompute]
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
@@ -49,11 +46,10 @@ jobs:
           name: ${{ needs.model.outputs.artifact-name }}
           path: artifacts/m1
       - name: Stage the exported model for Sentis import
-        shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force Assets/M1Generated | Out-Null
-          Copy-Item -LiteralPath artifacts/m1/model.pt2 -Destination Assets/M1Generated/model.pt2
-      - uses: game-ci/unity-test-runner@32e57712352b500e17974b245a6dce9e11a73213 # v4
+          mkdir -p Assets/M1Generated
+          cp artifacts/m1/model.pt2 Assets/M1Generated/model.pt2
+      - uses: game-ci/unity-test-runner@32e57712352b500e17974b245a6dce9e11a73213 # v4.4.0
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
@@ -64,15 +60,15 @@ jobs:
           unityVersion: 6000.3.16f1
           cliVersion: v0.1.72
           testMode: editmode
-          customParameters: -testCategory M1${{ matrix.backend }}
+          customParameters: -testCategory M1CPU
           coverageEnabled: false
-          artifactsPath: artifacts/unity-${{ matrix.backend }}
+          artifactsPath: artifacts/unity-linux-CPU
           githubToken: ''
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
-          name: unity-m1-${{ matrix.backend }}-${{ github.sha }}
+          name: unity-linux-CPU-${{ github.sha }}
           path: |
-            artifacts/unity-${{ matrix.backend }}/
+            artifacts/unity-linux-CPU/
             Packages/packages-lock.json
           retention-days: 7

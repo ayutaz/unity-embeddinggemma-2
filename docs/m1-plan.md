@@ -20,11 +20,11 @@ M1 は Windows Editor での検証を対象とする。macOS / iOS / Android、�
 
 | 対象 | 確認できた状態 | 残っていること |
 | --- | --- | --- |
-| Python | 修正後PR CIの4環境で各33件合格。実モデル 15 ケースの eager / 保存済みexport 照合が CI 成功、最小cosine 0.9999997616 | Sentisとの照合 |
+| Python | `40dedae` のPR CIの4環境でハーネスを含む各47件合格。実モデル15ケースの eager / 保存済みexport 照合も成功 | Sentisとの照合 |
 | Unity | 6000.3.16f1 / Sentis 2.6.1 / Unity CLI Loop 3.14.0 の依存解決とコンパイルが成功。packages-lock 更新済み | CI 成果物をローカルへ配置し、参照との一致を検証 |
 | 推論・保存 | 小さいモデルと実モデルで保存済み `.pt2` を再読み込みして照合成功 | 実モデルの Sentis import、CPU / GPUCompute、C# ランタイム API、`.sentis`、量子化、測定 |
 | GitHub | public。[draft PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)を提出し、4 workflow の初回PR runを起動済み | runの結果確認と失敗の切り分け。Unity Secrets / Variables は未登録 |
-| 開発環境 | `feat/m1-text-tdd` で開発。uloop の起動・コンパイル・テスト・ログ保存ハーネスを構築。main への commit / push / merge は未実施 | ローカル実測と記録。クラウドの Unity CI は別途構成修正が必要 |
+| 開発環境 | `feat/m1-text-tdd` で開発。uloop の起動・コンパイル・テスト・ログ保存ハーネスを構築。main への直接 commit / push は未実施 | ローカルで実モデルを配置して実測・記録。クラウド補助検証は手動Linux CPUに限定 |
 
 GitHub の既存 Dependency Graph 2 件の成功と、新規runの起動は、M1 の CI 合格ではない。
 GitHub 側の main ブランチ保護と repository rulesets は未設定。
@@ -94,7 +94,7 @@ export と最終埋め込みがずれた場合は、同一 ID / mask を渡し�
 
 ユーザー指定により Unity のローカル自動操作を採用する。実モデルの変換は CI、
 成果物の取得・Sentis検証は既存のローカル Editor で行う。[ハーネスの手順](automation.md)を参照。
-クラウド Unity CI は Secrets と Windows 実行構成の修正が別途必要で、現在のローカル検証を止める条件にはしない。
+クラウド Unity CI は Secrets が必要な Linux CPU の手動補助検証に限定した。未実行であり、Windows / GPUの証拠にはしない。
 main 保護のサーバー設定も未完了事項として追跡し、必須 CI の check 名が確定した段階で設定する。
 PR の merge、UPM リリース、モデルの再配布はこの計画の実行に含めない。
 

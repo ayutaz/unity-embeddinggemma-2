@@ -7,6 +7,16 @@
 **M1 は未完了。ローカル Unity 6000.3.16f1 の起動・依存解決・コンパイルが成功。M1 の Editor テスト3件は参照未配置で失敗し、GPUの数値一致は未検証。**
 この文書の後半にある 31 件の結果は修正過程の履歴。ハーネス追加前の Python 全体は33件で、ハーネス専用14件は別途検証した。
 
+### マージ前監査（`40dedae`）
+
+- PR head: `40dedae0ac870ff153edda71bf139a828879194c`。競合なし、未解決のレビュー指摘なし。
+- [Python PR run 37749553497](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37749553497): Ubuntu / Windows × Python 3.13 / 3.14 の4環境で各47件合格。13.00s / 13.98s / 19.11s / 23.33s（順に Ubuntu 3.13 / Ubuntu 3.14 / Windows 3.13 / Windows 3.14）。
+- [実モデル run 37749553607](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37749553607): 全15件合格、最小cosine `0.9999998807907104`。これはPython eagerと保存済みexportの比較であり、Sentisの合格ではない。
+- [workflow lint run 37749553502](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37749553502): actionlint / ShellCheck合格。
+- [旧Unity CI run 37749553956](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37749553956): Secrets不足でpreflight失敗し、モデル / Editor jobsはskip。この失敗履歴を成功へ読み替えない。
+- マージ前に、未対応のWindows Docker test matrixを削除し、Unity workflowをLinux CPUの任意手動検証へ変更。Editor実行は未検証。Windows CPU/GPUComputeはローカルハーネスで継続する。
+- 基盤PRの統合とM1完了を区別する。M1 Editorテストの参照未配置による3件失敗は未解消で、実モデルのSentis import・数値照合、保存・量子化・測定が残る。
+
 ### ローカル自動操作ハーネス（2026-10-08 17:17 JST）
 
 - ユーザー指定で Unity を 6000.3.16f1 (`a56f230f6470`) に変更。インストール済みの同版で Editor の起動を確認。

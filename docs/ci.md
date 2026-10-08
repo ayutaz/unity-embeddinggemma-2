@@ -16,19 +16,18 @@ Windows CPU/GPUCompute の M1 合格はローカルハーネスで検証する�
 
 ## 現在の CI 状態
 
-4 workflow は作業ツリーに追加済みで、actionlint 1.7.12 による静的検査は合格。
-`feat/m1-text-tdd` の初回実装コミット `4fec060` を push し、[draft PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)を提出済み。
-`40dedae` のPR CIではPython matrixの4環境で各47件合格、実モデルの15件照合とworkflow lintも成功。
+4 workflow は [PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1) で main `60f906d` に統合済み。
+統合後の main CI で Python matrix の4環境各47件と workflow lint が成功。
+最終 PR head `673cb9a` では実モデルの15件照合と全自動チェックが成功した。
 以前の自動Unity workflowはSecrets不足でpreflight失敗し、Editorは開始していなかった。
-以後のPRではPython / 実モデル参照 / workflow lintを自動実行し、Windows Unity検証はローカルで行う。
-このPRは参照生成と自動検証の基盤を統合するもので、M1完了・UPMリリースを示さない。
-既存の Dependency Graph 2 件の成功を、今回の Python / モデル / Unity CI の成功と混同しない。
+以後も関連パスを変更する PR では Python / 実モデル参照 / workflow lint を自動実行し、Windows Unity 検証はローカルで行う。
+基盤の統合は M1 完了・UPM リリースを示さない。Dependency Graph の成功も推論の検証には数えない。
 
 | workflow | 起動条件 | 実行内容 | 現在の状態 |
 | --- | --- | --- | --- |
-| `workflow-lint.yml` | `.github/**` の push / PR、手動 | actionlint / ShellCheck | `40dedae` のCI成功（run `37749553502`） |
-| `python-tests.yml` | `tools/**` または自身の変更を含む push / PR、手動 | Ubuntu / Windows × Python 3.13 / 3.14 の uv / pytest | `40dedae` の4環境各47件成功（PR run `37749553497`） |
-| `model-reference.yml` | `tools/**` または自身の変更を含む PR、手動、reusable call | 固定 revision の実モデル取得、参照生成、`.pt2` export / 再読み込み照合 | `40dedae` の実モデル成功（run `37749553607`） |
+| `workflow-lint.yml` | `.github/**` の push / PR、手動 | actionlint / ShellCheck | main `60f906d` 成功（run `37758476440`）、最終 PR も成功 |
+| `python-tests.yml` | `tools/**` または自身の変更を含む push / PR、手動 | Ubuntu / Windows × Python 3.13 / 3.14 の uv / pytest | main `60f906d` の4環境各47件成功（run `37758476415`） |
+| `model-reference.yml` | `tools/**` または自身の変更を含む PR、手動、reusable call | 固定 revision の実モデル取得、参照生成、`.pt2` export / 再読み込み照合 | 最終 PR head `673cb9a` 成功（run `37755304407`）。main push では起動しない |
 | `unity-validation.yml` | 信頼できるrefからの手動実行のみ | ライセンス preflight → 同一 revision のモデル生成 → Linux CPU | 構成変更後は未実行。Windows / GPU / M1合格の証拠にはしない |
 
 手動実行の設定が存在することは実行実績ではない。旧自動Unity workflowの失敗も履歴として保持する。
@@ -45,7 +44,8 @@ PR 番号・head SHA・実際に検証した merge SHA・run URL を合わせて
 push 起動の結果を PR 起動の結果と比較するときも、この違いを確認する。
 
 PRのpaths filterは、直前の追加commitだけでなくPRのthree-dot diff全体で判定する。
-このPRにはtools / workflowの変更があるため、文書のみの追加commitでもPR CIが再起動し得る。
+PR #1 のように tools / workflow の変更がある PR では、文書のみの追加commitでもPR CIが再起動し得る。
+最新 main から作成した文書のみの PR は、現在の paths filter では上記3つの自動 workflow の対象外。
 pushのpaths判定とは分けて扱う。[GitHub公式の差分仕様](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#git-diff-comparisons)を参照。
 検証記録は成功したrunと対象SHAのスナップショットとして残し、後続runの状態はActions画面で確認する。
 
@@ -56,10 +56,11 @@ PR の CI 結果を確認する。GitHub API では main の branch protection �
 repository rulesets が空であり、サーバー側で直接 push を防ぐ設定は未完了。
 この方針は `AGENTS.md` にも記録している。必須 CI の check 名を確認した後、PR 必須・必須 check・
 force push / branch 削除の禁止などを GitHub 側に設定する作業を残す。
+paths filter 付きの check を全 PR で必須にする場合は、文書のみの PR でも判定が完了する起動条件を先に整える。
 自動 merge / release / 公開はこの CI に含めない。
 
-現在の作業ブランチは `feat/m1-text-tdd`。承認モード変更後、実際のブランチ作成に成功し、
-以前の実行ポリシーによる制約は解消した。main への直接 commit / push は行っていない。
+PR #1 の基盤ブランチ `feat/m1-text-tdd` は統合済み。以後は最新 main を基点に作業ブランチを作成する。
+merge は依頼があるまで行わない。今回の計画更新も文書専用ブランチと PR で進める。
 
 ## Python tests
 
@@ -111,15 +112,15 @@ GPU 機能がない runner のテストを skip しても M1 の GPU 合格に�
 現在の acceptance test は compute 非対応を明示的な失敗にし、graphics device / API / OS / Editor / backend をログへ記録する。
 実行可能な GPU runner、または必要最小限のローカル GPU 実行を用意して実測する。
 
-## 初回 CI の確認順序
+## 次の実装と CI の確認順序
 
-1. 実行ポリシーの問題を解消し、作業ブランチへ変更を commit / push して draft PR を作成する。main へ直接 push しない。
-2. workflow lint と Python matrix を確認する。同じ PR に push と PR 起動の両方が出る場合も、PR の head SHA と実際の checkout / `GITHUB_SHA` を区別して記録する。
-3. Secrets を使わない実モデル参照生成を確認する。全 15 ケースで Python eager 対保存済み export の cosine >= 0.999999、出力 / tokenizer の digest と metadata を保存する。
-4. ローカルの認証済み Unity 6000.3.16f1 で依存解決・コンパイルを確認する（完了）。クラウド補助検証を使う場合だけ Repository Secrets を準備し、手動実行する。
-5. CI成果物を配置し、ローカルハーネスからtokenizer、CPU推論、GPUCompute推論を切り分けて確認する。C# ランタイム API、保存、量子化、測定は今後の TDD 作業。
-6. Editor生成の `Packages/packages-lock.json` はSentis / Unity CLI Loopを含め反映済み。今後の依存変更も同様に確認する。
-7. CI run URL、ソース SHA、実行環境、結果の要約を docs に記録する。モデル artifact は 3 日、pytest / Unity artifact は 7 日で失効するため、再生成手順も保持する。
+1. 最新 main に同期して新しい作業ブランチを作成する。基盤の Python / lint は合格済みで、次は参照成果物の配置から進める。
+2. 成功 run `37755304407` の artifact を取得し、全15件の結果・固定 model revision・source SHA / tree・ファイル digest を監査する。期限と取得候補は [計画](m1-plan.md) を参照。失効、モデル生成コード・依存・入力条件の変更時は最新 main でモデル workflow を手動再実行する。
+3. ローカル Unity 6000.3.16f1 に配置して tokenizer / import / CPU / GPUCompute の結果を切り分ける。GitHub Secrets は不要。失敗を再現してから互換性修正を TDD で実装する。
+4. Python や export を変更した場合は、PR の関連 workflow で単体テストと実モデル照合を再確認する。新しい成果物の source SHA を記録し、同じモデルを Editor へ再配置する。C# 変更はローカル compile / M1 ハーネスで確認する。
+5. C# ランタイム API、保存、量子化、測定を [M1 計画](m1-plan.md) の合格条件に従って進める。Editor 生成の packages-lock は更新時に確認する。クラウド Linux CPU 検証を使う場合だけ Secrets を準備する。
+6. CI run URL、PR head と実際の checkout SHA、環境、結果を docs に記録する。モデル artifact は3日、pytest / Unity artifact は7日で失効するため、要約と再生成手順を残す。
+7. PR の差分・CI・未解決指摘を確認し、merge は依頼があるまで行わない。文書のみの PR で workflow が起動しない場合は、未実行と記録して過去の成功を今回の実行として数えない。
 
 fork PRからはUnity workflowを起動しない。手動クラウド検証の未実行も、M1の成功には数えない。
 新しい `.cs` のコンパイル成功と tokenizer / import の成功も、768 次元出力の数値一致とは別に確認する。

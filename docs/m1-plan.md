@@ -2,6 +2,8 @@
 
 更新日: 2026-10-08
 
+計画の基準: [PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1) 統合後の `main`、`60f906d9b8c91a95593898571963d0b3b385a053`。
+
 ## 目的と完了条件
 
 EmbeddingGemma 2 のテキスト入力を Unity Editor の Sentis で実行する。
@@ -16,17 +18,17 @@ M1 は Windows Editor での検証を対象とする。macOS / iOS / Android、�
 
 ## 現在地（2026-10-08 確認）
 
-**M1 は未完了。実モデルのPython参照生成・保存済みexportの全15ケース照合とCI lintが合格。ローカル Unity 6000.3.16f1 / Sentis 2.6.1 の依存解決・コンパイルが成功。Editor の M1 テスト3件は参照データ未配置で失敗。**
+**M1 は未完了。参照生成・export・uloop ハーネスの基盤は PR #1 で main に統合済み。main の Python 4環境各47件と workflow lint は合格。実モデルの Python 15ケース照合も統合前の最終 PR CI で合格した。ローカル Editor の依存解決・コンパイルは成功したが、M1 テスト3件は参照未配置で失敗しており、Sentis 数値照合は未実行。**
 
 | 対象 | 確認できた状態 | 残っていること |
 | --- | --- | --- |
-| Python | `40dedae` のPR CIの4環境でハーネスを含む各47件合格。実モデル15ケースの eager / 保存済みexport 照合も成功 | Sentisとの照合 |
+| Python | `60f906d` の main CI 4環境で各47件合格。最終 PR head `673cb9a` の実モデル15ケースも合格、最小 cosine `0.9999998807907104` | Sentisとの照合 |
 | Unity | 6000.3.16f1 / Sentis 2.6.1 / Unity CLI Loop 3.14.0 の依存解決とコンパイルが成功。packages-lock 更新済み | CI 成果物をローカルへ配置し、参照との一致を検証 |
 | 推論・保存 | 小さいモデルと実モデルで保存済み `.pt2` を再読み込みして照合成功 | 実モデルの Sentis import、CPU / GPUCompute、C# ランタイム API、`.sentis`、量子化、測定 |
-| GitHub | public。[draft PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)を提出し、4 workflow の初回PR runを起動済み | runの結果確認と失敗の切り分け。Unity Secrets / Variables は未登録 |
-| 開発環境 | `feat/m1-text-tdd` で開発。uloop の起動・コンパイル・テスト・ログ保存ハーネスを構築。main への直接 commit / push は未実施 | ローカルで実モデルを配置して実測・記録。クラウド補助検証は手動Linux CPUに限定 |
+| GitHub | public。PR #1 は 2026-10-08 18:42 JST に Squash マージ済み。main CI 成功 | main の保護設定。Unity Secrets / Variables は未登録で、任意のクラウド検証は未実行 |
+| 開発環境 | Unity 6000.3.16f1 / Sentis 2.6.1 / uloop のハーネスを統合済み。最新 main への同期を確認 | 次の実装ごとに作業ブランチ・PRを作成。実モデルのローカル検証を継続 |
 
-GitHub の既存 Dependency Graph 2 件の成功と、新規runの起動は、M1 の CI 合格ではない。
+main の Python / lint 成功は、Sentis や M1 全体の合格を意味しない。
 GitHub 側の main ブランチ保護と repository rulesets は未設定。
 現在の直接 push 禁止は開発規則であり、サーバーで強制できている状態ではない。
 実行ログと確認方法は [検証記録](m1-validation.md)、workflow の準備条件は [CI 手順](ci.md) を参照。
@@ -47,12 +49,12 @@ GitHub 側の main ブランチ保護と repository rulesets は未設定。
 
 | 段階 | 現在の状態 | 次の実施内容と成果物 | 合格条件 / 次の判断 |
 | --- | --- | --- | --- |
-| P0 環境 | ローカルで指定 Editor / Sentis / uloop を解決し、コンパイル合格 | CI 参照成果物を配置し、ハーネスから再検証 | Unity 6000.3.16f1 と Sentis 2.6.1 でテストをコンパイルできる（確認済み） |
-| P1 参照仕様 | 固定入力と Python テスト実装済み | 実モデルの tokenizer で 15 ケースの ID / mask と実際の切り詰めを確認 | 特殊トークン、padding、truncation、プロンプト、出力構造が記録される |
-| P2 参照生成 | 初回とCI修正後の実モデルCLIが成功し、参照・tokenizer・export artifactを生成 | Unity側で同じrevisionの参照を利用 | 全 15 ケースで有限な正規化済み 768 次元出力。revision / source SHA / 条件を記録 |
+| P0 環境 | ローカルで指定 Editor / Sentis / uloop を解決し、コンパイル合格。main 統合済み | 依存変更時にコンパイルを再確認 | Unity 6000.3.16f1 と Sentis 2.6.1 でテストをコンパイルできる（確認済み） |
+| P1 参照仕様 | 固定15入力、Python テスト、実モデルの ID / mask / 埋め込み生成済み | 取得した参照で特殊トークン・padding・長文の切り詰め条件を監査 | 入出力条件を確認し、Sentis に同じ条件を渡す |
+| P2 参照生成 | 最終 PR run `37755304407` 成功、参照・tokenizer・export artifact を生成 | 成果物を取得し、revision・source tree・ファイル SHA-256 を確認して配置 | 成功 run の全15件・生成条件・ファイル整合性を確認。失効時は main で CI 再生成 |
 | P3 tokenizer | Editor acceptance test のコンパイル成功。参照未配置で red | Sentis tokenizer と Python を照合し、失敗した処理だけ TDD で修正 | 全 15 ケースの ID / mask が完全一致 |
 | P4 export | 実モデルのPython eager / 保存済み `.pt2` が全15件合格。Sentis importは未実行 | Unity import。`.pt2` が非互換なら ONNX | Python eager 対保存済み export の全件 cosine >= 0.999999、Sentis import 成功 |
-| P5 inference | Editor acceptance test のコンパイル成功。CPU / GPUCompute とも参照未配置で red | ローカルで実モデルを配置して数値照合し、C# ランタイム API を TDD で実装 | 両 backend の全 15 ケースで cosine >= 0.999、有限・768 次元・単位長 |
+| P5 inference | Editor acceptance test のコンパイル成功。CPU / GPUCompute とも参照未配置で red | ローカル Windows で数値照合し、C# ランタイム API を TDD で実装。API 経由でも全ケース照合 | 両 backend の全 15 ケースで cosine >= 0.999、有限・768 次元・単位長 |
 | P6 保存・測定 | 未着手 | `.sentis` 保存・再読み込み、fp16 量子化、精度・時間・メモリ測定を TDD で実装 | fp32 保存前後一致、量子化版の全件 cosine >= 0.99。条件と測定値を記録 |
 
 P2 / P4 の Python 処理は同じ `prepare` コマンドで行う。P3 と P4 の Unity import の
@@ -85,18 +87,29 @@ export と最終埋め込みがずれた場合は、同一 ID / mask を渡し�
 
 | 順序 | 作業 | 開始条件 | 完了を示す証拠 |
 | --- | --- | --- | --- |
-| 1（済） | `feat/m1-text-tdd` を作成し、変更を commit / push、draft PR 提出 | 承認モード変更後、ブランチ作成成功 | [PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)、初回実装コミット `4fec060`。モデルや artifacts は commit していない |
-| 2（Python側済） | `3df9ebe` のPR CIでPython matrix・workflow lint・実モデル参照生成が成功 | [CI検証記録](m1-validation.md)のrunが存在する | 4 環境で各33件、actionlint / ShellCheck、15 件の export照合成功 / artifact digestを確認済み。Sentis合格は別途必要 |
-| 3（コンパイル済） | ローカル Unity ハーネスで実モデルを検証 | step 2 の CI 成果物を取得・配置 | Editor ログ、依存解決後の packages-lock、NUnit XML。参照未配置の red は確認済み |
-| 4 | importer / tokenizer / C# API を TDD で修正 | step 3 の再現可能な失敗 | P3〜P5 の全件合格。ONNX に変更する場合は同じ入力・重みで照合し、ステージングとテストも更新 |
-| 5 | GPUCompute の実行環境を確定 | GPU job の graphics / compute ログ | CPU 代替や skip でない GPUCompute の全件合格。hosted runner が非対応なら実行可能な GPU runner を用意 |
-| 6 | 保存・量子化・測定と M1 完了監査 | P5 合格 | P6 のテスト、保存前後と量子化版の全ケース結果、メモリ・時間・測定環境 |
+| 0（済） | 基盤 PR #1 を統合し、最新 main に同期 | 最終 PR CI 成功とユーザーのマージ指示 | main `60f906d`、統合後も Python 4環境各47件・lint 成功。証拠は [検証記録](m1-validation.md) |
+| 1（次） | CI 参照成果物を取得・監査・配置 | 成功 run と未失効 artifact。実装する場合は main から新規ブランチ | `reference.json` / `tokenizer.json` / `model.pt2` の SHA-256、モデル revision、15件、source tree を確認。`artifacts/m1/` と `Assets/M1Generated/` に配置 |
+| 2 | 既存ハーネスで実モデルの失敗を特定 | step 1 完了、認証済みローカル Editor | tokenizer / import / CPU / GPUCompute の結果・ログ・NUnit XML。参照未配置の失敗から進んだことを確認 |
+| 3 | tokenizer / importer の非互換を TDD で修正 | step 2 で再現した失敗 | P3 / P4 合格。`.pt2` が非互換なら同じ重み・入力で ONNX export を CI 実行し、Python 照合・ステージング・Editor テストを更新 |
+| 4 | CPU / GPUCompute 照合と C# ランタイム API | tokenizer / import 合格。ローカル GPU の compute 対応を実行時に確認 | P5 全15件合格、API 経由の照合、backend・graphics API のログ。CPU 代替・skip は GPU 合格にしない |
+| 5 | `.sentis` 保存・再読み込み、fp16 量子化 | fp32 の両 backend と API が合格 | 保存前後の一致、量子化版の全15件 cosine >= 0.99。保存・量子化の失敗と未実行を分ける |
+| 6 | 時間・メモリ測定、M1 完了監査 | step 5 完了 | import / 初回 / 定常推論、保存サイズ・メモリ、測定条件と全証拠。完了後に M2 の詳細計画へ進む |
+
+step 1 の取得候補は run `37755304407` の
+`m1-reference-b3b0d76e1d3b6f4e44af1e9ba810d5b3cb6b051d`（約1.1 GB）。
+2026-10-08 の確認時点で未失効、期限は **2026-10-11 18:37:45 JST**。
+PR head `673cb9a`、参照生成の merge checkout `b3b0d76`、統合済み main `60f906d` は
+commit SHA が異なるが Git tree は一致することを確認した。取得後は JSON の `metadata.source_commit` も照合する。
+この計画更新ではモデルを取得していない。失効、モデル生成コード・依存・入力条件の変更時は最新 main の
+`model-reference.yml` を手動実行し、成功した新しい run / source SHA を記録する。
 
 ユーザー指定により Unity のローカル自動操作を採用する。実モデルの変換は CI、
 成果物の取得・Sentis検証は既存のローカル Editor で行う。[ハーネスの手順](automation.md)を参照。
 クラウド Unity CI は Secrets が必要な Linux CPU の手動補助検証に限定した。未実行であり、Windows / GPUの証拠にはしない。
-main 保護のサーバー設定も未完了事項として追跡し、必須 CI の check 名が確定した段階で設定する。
-PR の merge、UPM リリース、モデルの再配布はこの計画の実行に含めない。
+main 保護のサーバー設定も未完了事項として追跡する。自動チェックには paths filter があるため、
+全 PR に要求する check と起動条件を揃え、文書のみの PR が未起動 check 待ちにならない構成を検討してから設定する。
+各実装は TDD とブランチ・PR運用を継続し、merge はその都度依頼があるまで行わない。
+UPM リリースとモデルの再配布は M1 完了後の別作業とする。
 
 ## M1 完了時に残す証拠
 

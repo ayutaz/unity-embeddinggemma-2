@@ -5,9 +5,23 @@
 ## 最新の確認結果
 
 **M1 は未完了。ローカル Unity 6000.3.16f1 の起動・依存解決・コンパイルが成功。M1 の Editor テスト3件は参照未配置で失敗し、GPUの数値一致は未検証。**
-この文書の後半にある 31 件の結果は修正過程の履歴。ハーネス追加前の Python 全体は33件で、ハーネス専用14件は別途検証した。
+現在の Python 全体は47件（既存33件 + ハーネス14件）で、統合後の main CI でも4環境すべて合格。
+後半の31件・33件の結果や draft PR の記録は修正過程の履歴として保持する。
 
-### マージ前監査（`40dedae`）
+### PR #1 統合と最新 main（計画更新時に再確認）
+
+- [PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1) は `MERGED`。最終 head `673cb9a621ee9182274134821681100d3372b193` を、2026-10-08 18:42:07 JST に Squash マージ。main は `60f906d9b8c91a95593898571963d0b3b385a053`、ローカルも同期済み。main への直接 push は行っていない。
+- [最終 PR Python run 37755304462](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37755304462): Ubuntu / Windows × Python 3.13 / 3.14 の4環境で各47件合格。
+- [main Python run 37758476415](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37758476415): 同じ4環境で各47件合格。Ubuntu 3.13: 15.55s、Ubuntu 3.14: 15.76s、Windows 3.13: 22.70s、Windows 3.14: 23.48s。ログで件数を再確認。
+- workflow lint は [最終 PR run 37755304445](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37755304445)、[同 head の push run 37755298800](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37755298800)、[main run 37758476440](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37758476440) が成功。
+- [最終 PR 実モデル run 37755304407](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37755304407): Python eager 対保存済み export の全15件合格、最小 cosine `0.9999998807907104`。main push ではこの workflow は起動しないため、main 上で実モデルを再実行した結果ではない。
+- 参照生成の merge checkout `b3b0d76e1d3b6f4e44af1e9ba810d5b3cb6b051d`、最終 PR head、main の Git tree はすべて `9efb773f81f305c6438eabad0455078ab822116b`。commit SHA が異なることとソース内容の一致を分けて確認した。
+- 上記 run の artifact は `m1-reference-b3b0d76e1d3b6f4e44af1e9ba810d5b3cb6b051d`、ID `11540478716`、`1125922585` bytes。API の zip digest は `sha256:49e29bddb29ddb829d393c6a1058f0667e4bb9ed48dab92560d037e51f7a0172`。2026-10-08 の確認時点で未失効、期限は `2026-10-11T09:37:45Z`（18:37:45 JST）。zip 全体の digest であり、`model.pt2` 単体の値ではない。
+- 計画更新時点でも参照・モデルはローカル未配置。大きい artifact はダウンロードしていない。取得後のファイル SHA-256 / JSON metadata 照合と Sentis import・数値実行は次の作業。
+- main protection API は HTTP 404 `Branch not protected`、rulesets は空配列。Repository Secrets / Variables は登録なし。これは再確認時点の状態であり、ローカル Unity 検証に Secrets は不要。
+- Linux CPU の手動 Unity workflow は未実行。ローカル Editor の最新実行結果は下記のコンパイル合格・M1 3件失敗のまま。今回の文書更新では Editor / Python のテストをローカルで再実行していない。
+
+### マージ前の中間監査（`40dedae`、履歴）
 
 - PR head: `40dedae0ac870ff153edda71bf139a828879194c`。競合なし、未解決のレビュー指摘なし。
 - [Python PR run 37749553497](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37749553497): Ubuntu / Windows × Python 3.13 / 3.14 の4環境で各47件合格。13.00s / 13.98s / 19.11s / 23.33s（順に Ubuntu 3.13 / Ubuntu 3.14 / Windows 3.13 / Windows 3.14）。
@@ -41,7 +55,7 @@
 `artifacts/` は Git 管理対象外。上記 XML はローカルの検証証拠であり、他の checkout には含まれない。
 リモートCIのrun URLと成果物は下記に記録する。ローカルXMLをリモートCIの証拠として流用しない。
 
-### GitHub と作業ツリー（文書更新時に再確認）
+### 初回 PR 提出時の GitHub と作業ツリー（履歴）
 
 - repository: `ayutaz/unity-embeddinggemma-2`、public、default branch は main。
 - `git status --short --branch` / `git branch --list`: 承認モード変更後に `feat/m1-text-tdd` を作成。main への commit / push は未実施。
@@ -52,7 +66,7 @@
 - main protection API: `Branch not protected` (HTTP 404)。repository rulesets API: 空配列。GitHub 側の直接 push 防止は未設定。
 - 以前のブランチ作成は `approval required by policy, but AskForApproval is set to Never` で拒否された。ユーザーが権限モードを変更した後、`git switch -c feat/m1-text-tdd` が成功し、制約の解消を確認した。
 
-これは 2026-10-08 のスナップショット。再開時にはブランチ・PR・run・Secrets 名・protection を再確認する。
+これは初回 PR 提出時のスナップショットで、統合後の状態は冒頭を参照。再開時にはブランチ・PR・run・Secrets 名・protection を再確認する。
 
 ### 初回 PR CI の run 記録
 
@@ -107,7 +121,7 @@ merge checkout SHAは `ad60ba066d9cbe1c1e5e123d03bcc82d7840ac4f`、artifact ID `
 14:48 JSTにAPIで未失効を確認。モデルartifactはGitに含めず、ローカルにも取得していない。
 
 以前のPR matrix / Unity runは新しいpushによりcancelledになったため、合格数に含めない。
-Unity Secretsを設定後、同じソースrevisionの参照生成とEditor検証を再実行する。
+当時は Unity Secrets 設定後のクラウド再実行を予定していた。現在は成功した CI 参照成果物を取得し、ローカル Windows Editor で検証する。Linux CPU のクラウド再実行は任意。
 この表は検証対象コミットの記録。後続の文書commitでPR CIが再起動した場合、そのrunの成功を先取りしない。
 
 ## 実行済み: 小さいモデルによる Python TDD
@@ -150,11 +164,11 @@ uv run --locked pytest -q --junitxml=../artifacts/python-tests.xml
 ## 未検証・結果待ち
 
 - Unity 6000.3.16f1 のローカル起動・依存解決・packages-lock 更新は完了。実モデルの配置と数値照合が残る。
-- Unity acceptance tests のコンパイルと red / green。
+- Unity acceptance tests はコンパイル済み、参照未配置の red を確認済み。実データによる照合と green は未確認。
 - 実モデルの CPU / GPUCompute 推論と、全 15 ケースの cosine >= 0.999。
 - `.sentis` 保存、量子化、精度・メモリ・時間の測定。
 
-M1 は未完了。最新の 33 件の Python 単体テスト合格でも、実モデル・Sentis・GPU の一致を代替しない。
+M1 は未完了。47件の Python 単体テストと Python 実モデル export の合格でも、Sentis・GPU の一致を代替しない。
 
 ## 続行時の export 互換性修正（履歴）
 

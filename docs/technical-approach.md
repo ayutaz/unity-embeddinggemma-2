@@ -4,8 +4,8 @@
 - 実装・計画の更新日: 2026-10-08
 - 関連: [ゴール](goal.md) / [新規性調査](embeddinggemma-2-unity-novelty.md)
 
-> Python の text-only 参照生成と Core ATen export は実装済みで、小さいモデルのオフラインテスト 33 件が合格。
-> 実モデルのPython参照生成 / 保存済みexportの全15ケース照合はCIで成功（修正後runの最小cosine 0.9999997616）。
+> text-only 参照生成・Core ATen export・uloop ハーネスの基盤は PR #1 で main `60f906d` に統合済み。main CI では Python 4環境各47件が合格。
+> 実モデルのPython参照生成 / 保存済みexportの全15ケース照合は最終 PR CI で成功（run `37755304407`、最小cosine 0.9999998808）。
 > Sentis import / tokenizer / CPU / GPUCompute、`.sentis` 保存・量子化は未検証。
 > 詳細計画は [M1 計画](m1-plan.md)、実行済みの証拠は [検証記録](m1-validation.md)を参照。
 

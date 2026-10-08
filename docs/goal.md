@@ -4,8 +4,10 @@
 - 更新日: 2026-10-08
 - 背景: [新規性調査](embeddinggemma-2-unity-novelty.md)
 
-リポジトリは public の OSS として開発中。現在は M1 の Python 実装・オフライン検証と実モデルの参照生成 / export のCI照合まで進み、
-実モデルの Sentis 検証は未実行。[M1 詳細計画](m1-plan.md)と[検証記録](m1-validation.md)を進捗の基準とする。
+リポジトリは public の OSS として開発中。M1 の参照生成 / export・Editor acceptance tests・uloop ハーネスの基盤を
+PR #1 で main（`60f906d`）へ統合済み。main CI は Python 4環境各47件と lint が合格し、最終 PR CI の実モデル15件照合も合格。
+ローカル Editor のコンパイルは成功したが、M1 テスト3件は参照未配置で失敗しており、実モデルの Sentis 数値検証は未実行。
+次は CI 成果物の配置と Windows CPU / GPUCompute の照合を進める。[M1 詳細計画](m1-plan.md)と[検証記録](m1-validation.md)を進捗の基準とする。
 リポジトリの公開と、M2 の UPM パッケージ / サンプルのリリースは別の段階として扱う。
 
 ## ゴール

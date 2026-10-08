@@ -6,12 +6,12 @@
 
 > text-only 参照生成・Core ATen export・uloop ハーネスの基盤は PR #1 で main `60f906d` に統合済み。main CI では Python 4環境各47件が合格。
 > 実モデルのPython参照生成 / 保存済みexportの全15ケース照合は最終 PR CI で成功（run `37755304407`、最小cosine 0.9999998808）。
-> Sentis import / tokenizer / CPU / GPUCompute、`.sentis` 保存・量子化は未検証。
+> PR #3（未マージ）でSentis import・tokenizer全15件・fp32 CPU / GPUCompute・C# APIの数値照合が合格。`.sentis` 保存・量子化・測定は未検証。
 > 詳細計画は [M1 計画](m1-plan.md)、実行済みの証拠は [検証記録](m1-validation.md)を参照。
 
 ## 要約
 
-- 採用する Sentis は **2.6.1**(2026-04-02 公開、パッケージ名 `com.unity.ai.inference`)。指定 Unity 6000.3.16f1 での依存解決・テストのコンパイルは成功。実モデル推論は未検証。
+- 採用する Sentis は **2.6.1**(2026-04-02 公開、パッケージ名 `com.unity.ai.inference`)。指定 Unity 6000.3.16f1 の Windows Editorで実モデルfp32 CPU / GPUComputeを全15件検証済み。
 - EmbeddingGemma 2 は「画像・音声のエンコーダの出力を、共通のテキスト本体の入力列に差し込む」構造。Sentis 側は **テキスト本体 + 画像 / 音声エンコーダ + 差し込み処理** として設計する。M1 はテキスト経路のみ。
 - モデルの持ち込みは、**PyTorch(`.pt2`)の直接読み込みを第一候補**、**標準の演算子だけで書き出した ONNX を予備**とする。LiteRT 版は Sentis が int4 に対応していないため使えない。
 - 前処理(画像のパッチ分割、音声のメルスペクトログラム)と差し込み処理は、Sentis の Functional API で GPU 上のグラフとして作る。
@@ -125,7 +125,7 @@
 | --- | --- | --- |
 | `model.py` | 公式 text config を使い、safetensors の `language_model.` 配下だけを strict load。fp32 / eager / eval | 小さい公式モデルの重み抽出 / 欠落検出と、CIでの実モデルtext-only load |
 | `text.py` / `reference.py` | query / document / raw、公式 sentence-transformers pooling / L2 正規化、JSON 参照生成 | 小さいモデルと実モデル15ケースの参照生成 |
-| `export.py` | 固定長注意 mask、Core ATen 分解、int32 scalar 制限、metadata-only assertion 除去、`.pt2` 保存 | 実モデルの保存・再読み込み照合成功。Sentis import は未実行 |
+| `export.py` | 固定長注意 mask、Core ATen 分解、int32 scalar 制限、metadata-only assertion 除去、`.pt2` 保存 | 実モデルのPython再読み込みとWindows Sentis import / fp32 CPU / GPUCompute照合が成功 |
 | `prepare.py` / `__main__.py` | pinned snapshot 取得、参照 / tokenizer / export、再読み込み全件照合、SHA-256、CLI | 小さいsnapshotのTDDと、CI実モデル15ケースの照合成功。run / artifact digestは検証記録を参照 |
 
 M1 の既定は batch 1 / length 128 / fp32 / 768 次元。生成物は `reference.json`、
@@ -207,9 +207,9 @@ Python は uv で管理する。`tools/` が uv のプロジェクトで、依�
 
 ## 未確認の事項(実際に試して確かめる)
 
-- Sentis の PyTorch 読み込みが、torch 2.14 で書き出した EmbeddingGemma 2 を読めるか
-- Sentis のトークナイザが、Gemma の `tokenizer.json` を正しく扱えるか
-- text-only 経路はPythonの小さいモデル / 実モデルで照合済みだが、実モデルの Sentis 互換性と、画像 / 音声特徴量の差し込み・GPU 上の受け渡しは未検証
+- 固定fp32 `.pt2` のSentis importは成功。量子化・保存・他プラットフォームの互換性は未検証
+- Sentis 2.6.1のtokenizerは空文字を拒否したため、同じ特殊トークン / paddingを適用する `TextTokenizer` を追加。固定15件のID / mask完全一致を確認。他の入力条件への拡張時は再検証する
+- text-only の実モデルSentis経路はWindows CPU / GPUComputeで照合済み。画像 / 音声特徴量の差し込み・GPU上の受け渡しは未検証
 - 埋め込み表が、量子化のあとも fp32 のまま残るか
 - 画像の色空間とリサイズによる差が、どの程度出るか
 - Sentis の GPUCompute が WebGPU で動くか

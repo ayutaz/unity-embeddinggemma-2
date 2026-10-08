@@ -83,6 +83,7 @@ uv run --locked python -m embeddinggemma_tools prepare --output ../artifacts/m1
 
 基盤の [PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1) はマージ済みです。
 次は PR #2 / #3の最新CI・依存関係を確認し、`.sentis`保存・再読み込み → fp16量子化 → 時間・メモリ測定を進めます。詳細な開始条件と合格基準は [M1計画](docs/m1-plan.md) を参照してください。
+PR #3で追加した [C# API手順](docs/runtime-api.md)、[実モデル実行記録](docs/m1-runtime-validation.md)、[詳細作業計画](docs/m1-runtime-plan.md) も参照してください。
 互換性修正と C# API を TDD で進め、その後 `.sentis` 保存・fp16 量子化・時間 / メモリ測定を行います。
 新しい実装も作業ブランチ / PR を使い、マージは依頼があるまで行いません。
 詳細な順序は [計画](docs/m1-plan.md)、CI の確認記録は [検証記録](docs/m1-validation.md)を参照してください。

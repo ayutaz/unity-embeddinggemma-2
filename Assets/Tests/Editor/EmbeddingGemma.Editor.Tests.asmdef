@@ -1,6 +1,6 @@
 {
     "name": "EmbeddingGemma.Editor.Tests",
-    "references": ["Unity.InferenceEngine", "Unity.InferenceEngine.Tokenization"],
+    "references": ["EmbeddingGemma.Runtime", "Unity.InferenceEngine", "Unity.InferenceEngine.Tokenization"],
     "includePlatforms": ["Editor"],
     "optionalUnityReferences": ["TestAssemblies"],
     "autoReferenced": false

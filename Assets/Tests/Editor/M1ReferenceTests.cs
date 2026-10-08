@@ -3,13 +3,12 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using Unity.InferenceEngine;
-using Unity.InferenceEngine.Tokenization.Parsers.HuggingFace;
 using UnityEditor;
 using UnityEngine;
 
 namespace EmbeddingGemma.Tests
 {
-    // Acceptance tests written before the Unity runtime API. Not yet executed in an Editor.
+    // Acceptance tests against the independent pinned Python reference.
     public sealed class M1ReferenceTests
     {
         [Serializable]
@@ -59,7 +58,7 @@ namespace EmbeddingGemma.Tests
         public void TokenizerMatchesEveryReferenceCase()
         {
             var reference = ReadReference();
-            var tokenizer = HuggingFaceParser.GetDefault().Parse(
+            var tokenizer = new TextTokenizer(
                 File.ReadAllText(Path.Combine(ArtifactDirectory, "tokenizer.json")));
             foreach (var item in reference.cases)
             {
@@ -86,7 +85,7 @@ namespace EmbeddingGemma.Tests
             var model = ModelLoader.Load(asset);
             using var worker = new Worker(model, backend);
             Assert.That(worker.backendType, Is.EqualTo(backend));
-            var tokenizer = HuggingFaceParser.GetDefault().Parse(
+            var tokenizer = new TextTokenizer(
                 File.ReadAllText(Path.Combine(ArtifactDirectory, "tokenizer.json")));
             var minimum = 1.0;
             foreach (var item in reference.cases)

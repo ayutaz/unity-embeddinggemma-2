@@ -1,9 +1,10 @@
 # 実モデル検証・ランタイム API の実行記録
 
 日付: 2026-10-08。ブランチ: `feat/m1-sentis-runtime`。詳細は [計画](m1-runtime-plan.md)。
-この文書は配置・fp32・API実装時点の記録。PR #3は後続でmain `1f0e580`へ統合済み。保存・量子化・測定の現状は [M1完了検証](m1-completion-validation.md) を参照。
+この文書は配置・fp32・API実装時点の履歴。PR #3はmain `1f0e580`へ、その後PR #4はmain `8146107`へ統合済み。
+以下の「残作業」「未完了」はPR #3実行当時を指す。現在のM1は保存・量子化・測定まで完了。[M1完了検証](m1-completion-validation.md)と [M2計画](m2-plan.md)を参照。
 
-## 現在の結果
+## PR #3実行時の結果
 
 **依頼範囲のローカル検証は合格。成果物を配置し、tokenizer ID / mask 全15件、実モデル fp32 CPU / GPUCompute 全15件ずつ、公開 C# API 経由の全15件ずつと再推論が合格。C# 単体契約24件も合格。M1全体は保存・量子化・測定が残る。**
 
@@ -50,10 +51,10 @@ Sentis出力は全件 `[1,768]`、有限、L2 normが1±0.001。GPUはRTX 4070 T
 `TextTokenizer` は非空入力を元のSentis pipelineに渡し、空入力は同じpost processor / truncation / padding設定を使うtoken-free pipelineで処理する。
 固定モデルのnormalizerは空文字を空のままにするReplace設定。特殊トークンIDのハードコード、参照の変更、空文字ケースの除外、package cacheの修正は行っていない。
 
-## 残っている確認と次段階
+## 当時残っていた確認と次段階
 
 - head `805d7e7` の [Python PR run 37769319201](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37769319201) は4環境各60件、[実モデル run 37769319055](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37769319055) は15件・最小cosine `0.9999998807907104` で成功。以前のcode commit `6da634a` のPR runは後続commitでcancelledとなったため、成功に含めない（push runは成功）。
 - 計画PR #2の `7d1964b` を取り込み、文書競合を解消。実測したC#内容、Pythonのコード・lock・固定条件には変更なし。取り込み後の最終結果は [PR #3 のChecks](https://github.com/ayutaz/unity-embeddinggemma-2/pull/3/checks) とPR本文で対象headに対応するrunを確認する。
 - 保存・再読み込み、fp16量子化、時間 / メモリ測定は今回の範囲外の次段階。
 
-今回の範囲が合格しても、`.sentis` 保存・量子化・測定を終えるまで M1 全体は未完了。
+PR #3時点では`.sentis`保存・量子化・測定が残り、M1全体は未完了だった。これらは後続PR #4で完了した。

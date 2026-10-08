@@ -1,7 +1,8 @@
 # テキスト推論 API
 
-推論APIは [PR #3](https://github.com/ayutaz/unity-embeddinggemma-2/pull/3) でmain `1f0e580`へ統合済み。
-**Windows Editor の実モデル CPU / GPUCompute 全15ケースと再推論、単体契約24件が合格**。[実行記録](m1-runtime-validation.md) を参照。
+推論APIは [PR #3](https://github.com/ayutaz/unity-embeddinggemma-2/pull/3)、保存APIは [PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)で統合済み。現在の基準mainは `8146107`。
+**Windows Editorの実モデルCPU / GPUCompute全15ケースと再推論、保存・量子化を含むM1受け入れ検証が合格**。
+API導入当時は単体契約24件、現在は保存・測定契約を含む30件が合格。[M1完了検証](m1-completion-validation.md)を参照。
 
 `EmbeddingGemma.Runtime` は UnityEditor を参照しない assembly。
 Unity 6000.3.16f1 / Sentis 2.6.1 の、batch 1 / length 128 / fp32 / 768次元の export を対象とする。
@@ -43,7 +44,7 @@ CPU / GPUCompute を明示する。GPU 非対応をCPUに切り替えない。
 
 ## 保存・再読み込み
 
-[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)に実装。契約5件と実モデルのfp32 / Float16重み・両backend全15件が合格。[検証記録](m1-completion-validation.md)を参照。
+[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)でmainへ統合済み。契約5件と実モデルのfp32 / Float16重み・両backend全15件が合格。[検証記録](m1-completion-validation.md)を参照。
 
 ```csharp
 TextModelFile.Save(model, "artifacts/m1-completion/fp32.sentis");
@@ -54,4 +55,4 @@ using var restoredEmbedder = new TextEmbedder(restored, tokenizerJson, BackendTy
 
 `.sentis`拡張子を要求し、親ディレクトリを作成。一時ファイルを保存・ロード確認後、既存先を置換する。失敗時は一時ファイルを削除する。
 fp16保存はディスク経由でモデルをコピーしてから重み量子化し、入力Modelを変更しない。書き出しは大きいメモリとI/Oを必要とするため、毎推論時に行わない。
-macOS / iOS / Android、UPMリリースはM2の対象。
+macOS / iOS / Android、UPMリリースは [M2計画](m2-plan.md)の対象。

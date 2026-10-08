@@ -51,7 +51,8 @@ Sentis出力は全件 `[1,768]`、有限、L2 normが1±0.001。GPUはRTX 4070 T
 
 ## 残っている確認と次段階
 
-- この文書の更新時点で、code commit `6da634a` の [Python PR run 37768677221](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37768677221) / [push run 37768671926](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37768671926) / [実モデル run 37768677239](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37768677239) は待機中。成功は先取りしない。後続文書commitでもPR全体のpaths filterにより再起動するため、最終結果は [PR #3 のChecks](https://github.com/ayutaz/unity-embeddinggemma-2/pull/3/checks) で対象headと合わせて確認する。
+- head `805d7e7` の [Python PR run 37769319201](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37769319201) は4環境各60件、[実モデル run 37769319055](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37769319055) は15件・最小cosine `0.9999998807907104` で成功。以前のcode commit `6da634a` のPR runは後続commitでcancelledとなったため、成功に含めない（push runは成功）。
+- 計画PR #2の `7d1964b` を取り込み、文書競合を解消。実測したC#内容、Pythonのコード・lock・固定条件には変更なし。取り込み後の最終結果は [PR #3 のChecks](https://github.com/ayutaz/unity-embeddinggemma-2/pull/3/checks) とPR本文で対象headに対応するrunを確認する。
 - 保存・再読み込み、fp16量子化、時間 / メモリ測定は今回の範囲外の次段階。
 
 今回の範囲が合格しても、`.sentis` 保存・量子化・測定を終えるまで M1 全体は未完了。

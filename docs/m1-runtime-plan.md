@@ -2,6 +2,7 @@
 
 更新日: 2026-10-08。実装ブランチ: `feat/m1-sentis-runtime`。
 main `60f906d` と計画更新 PR #2 の `84b9dcd` を基点とする。PR #2 は未マージのため、実装 PR は同ブランチを base とする。
+後続の計画更新 `7d1964b` を取り込み済み。mainの最新SHAは変わらず、文書の競合を解消した。C# / Python / 固定参照条件は変更していない。
 
 ## 範囲と完了条件
 
@@ -36,7 +37,7 @@ main `60f906d` と計画更新 PR #2 の `84b9dcd` を基点とする。PR #2 �
 
 今回のA〜Eはローカル検証まで完了。成果物の監査・配置、空文字互換修正後のM1 3件、公開APIの2件が実モデルで合格し、単体契約24件も合格した。
 最小cosineはCPU `0.99999999999923483`、GPUCompute `0.99999999999970735`。各backendで固定15ケース、APIではWorker再利用後の再推論も確認。
-F / Gの最新CI確認・文書化・PR受け渡しを進める。[実行記録](m1-runtime-validation.md)、[API手順](runtime-api.md)、[数値レポート](results/m1-windows-fp32-20261008.json)を参照。
+F / Gは実装・文書化済み。head `805d7e7` のCIはPython60件×4環境、実モデル15件が成功。計画取り込み後の最終headのCIとPR状態は [PR #3のChecks](https://github.com/ayutaz/unity-embeddinggemma-2/pull/3/checks) で確認し、PR本文に最終runを記録する。[実行記録](m1-runtime-validation.md)、[API手順](runtime-api.md)、[数値レポート](results/m1-windows-fp32-20261008.json)を参照。
 基盤の Python 47件×4環境・実モデル Python 15件から、今回の追加を含むCI結果は分けて記録する。
 artifact は約1.1GBで保持3日。失効時や生成コード等の変更時は CI で再生成する。
 ローカル Editor の未保存 Scene / Prefab を自動保存・破棄しない。モデル・ログ・XML は `artifacts/` / `.uloop/` / `Assets/M1Generated/` に保存し、要約だけ Git に残す。

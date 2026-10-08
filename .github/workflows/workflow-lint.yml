@@ -1,10 +1,7 @@
 name: Workflow lint
 
 on:
-  push:
-    paths: ['.github/**']
-  pull_request:
-    paths: ['.github/**']
+  workflow_call:
   workflow_dispatch:
 
 permissions:

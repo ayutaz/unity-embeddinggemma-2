@@ -6,15 +6,17 @@
 
 4 workflow は作業ツリーに追加済みで、actionlint 1.7.12 による静的検査は合格。
 `feat/m1-text-tdd` の初回実装コミット `4fec060` を push し、[draft PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)を提出済み。
-4 workflow の初回PR runを起動済み。実モデルの参照生成は開始し、workflow lint はCIのShellCheck SC2129で失敗したため修正・再検証する。詳細なrun履歴は検証記録を参照。
+4 workflow のPR runを起動済み。初回実モデルの参照生成 / export照合は成功。
+workflow lint の ShellCheck SC2129 は修正後CIで合格。UnityはSecrets不足でpreflight失敗。
+初回pushと修正後PRのPython matrixは4環境で各33件合格。実モデル再runも成功（最小cosine 0.9999997616）。詳細なrun履歴は検証記録を参照。
 既存の Dependency Graph 2 件の成功を、今回の Python / モデル / Unity CI の成功と混同しない。
 
 | workflow | 起動条件 | 実行内容 | 現在の状態 |
 | --- | --- | --- | --- |
-| `workflow-lint.yml` | `.github/**` の push / PR、手動 | actionlint / ShellCheck | ローカルactionlint合格、初回CIはSC2129で失敗。summary出力の修正後に再検証 |
-| `python-tests.yml` | `tools/**` または自身の変更を含む push / PR、手動 | Ubuntu / Windows × Python 3.13 / 3.14 の uv / pytest | ローカル Windows 3.14 の 33 件合格、初回PR matrix待機中 |
-| `model-reference.yml` | `tools/**` または自身の変更を含む PR、手動、reusable call | 固定 revision の実モデル取得、参照生成、`.pt2` export / 再読み込み照合 | 初回PR runで生成開始済み、結果確認中 |
-| `unity-validation.yml` | テスト・Packages・tools・関連 workflow の変更を含む同一 repo の PR、手動 | ライセンス preflight → 同一 revision のモデル生成 → Windows CPU / GPUCompute | Secrets 0、初回PR preflight待機中 |
+| `workflow-lint.yml` | `.github/**` の push / PR、手動 | actionlint / ShellCheck | 修正後CI成功（run `37733804135`） |
+| `python-tests.yml` | `tools/**` または自身の変更を含む push / PR、手動 | Ubuntu / Windows × Python 3.13 / 3.14 の uv / pytest | 初回push / 修正後PRで4環境各33件成功（PR run `37733804075`） |
+| `model-reference.yml` | `tools/**` または自身の変更を含む PR、手動、reusable call | 固定 revision の実モデル取得、参照生成、`.pt2` export / 再読み込み照合 | 初回 / summary修正後とも実モデル成功（再run `37733804078`） |
+| `unity-validation.yml` | テスト・Packages・tools・関連 workflow の変更を含む同一 repo の PR、手動 | ライセンス preflight → 同一 revision のモデル生成 → Windows CPU / GPUCompute | Secrets不足でpreflight失敗（run `37733804252`）。model / unity jobsはskip、合格ではない |
 
 手動実行の設定が存在することは実行実績ではない。初回は PR イベントでの実行を確認する。
 最新の外部状態と実行済みテストの証拠は [検証記録](m1-validation.md)を参照。
@@ -28,6 +30,11 @@ PR の作業ブランチの最新 commit（`github.event.pull_request.head.sha`�
 `prepare` が出力する `metadata.source_commit` と artifact 名には `GITHUB_SHA` が入る。
 PR 番号・head SHA・実際に検証した merge SHA・run URL を合わせて記録し、参照生成と Unity のソースが一致することを確認する。
 push 起動の結果を PR 起動の結果と比較するときも、この違いを確認する。
+
+PRのpaths filterは、直前の追加commitだけでなくPRのthree-dot diff全体で判定する。
+このPRにはtools / workflowの変更があるため、文書のみの追加commitでもPR CIが再起動し得る。
+pushのpaths判定とは分けて扱う。[GitHub公式の差分仕様](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#git-diff-comparisons)を参照。
+検証記録は成功したrunと対象SHAのスナップショットとして残し、後続runの状態はActions画面で確認する。
 
 ## ブランチと PR
 
@@ -44,7 +51,7 @@ force push / branch 削除の禁止などを GitHub 側に設定する作業を�
 ## Python tests
 
 `.github/workflows/workflow-lint.yml` で actionlint 1.7.12 による workflow の静的検査も実行する。
-ローカルでは全 workflow の actionlint 合格を確認済み。GitHub Actions 上では初回runの結果待ち。
+ローカルでは全 workflow の actionlint 合格を確認済み。GitHub Actions 上のactionlint / ShellCheckも修正後runで合格。
 
 `.github/workflows/python-tests.yml` は関連ファイルの push / PR と手動実行を対象にする。
 Ubuntu / Windows と Python 3.13 / 3.14 の組み合わせで `uv sync --locked` とオフライン pytest を実行する。

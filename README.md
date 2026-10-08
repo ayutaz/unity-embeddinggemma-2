@@ -4,7 +4,8 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 
 > **状態: M1 実装中**
 > 2026-10-08: Python の参照生成・Core ATen export・CLI を実装し、小さいモデルのオフラインテスト 33 件が合格しました。
-> [draft PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)で CI を起動し、結果を確認中です。実モデルの結果と Sentis CPU / GPUCompute の一致は未検証です。
+> [draft PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)のCIで、Python 4環境の各33テストと、実モデルの保存済み `.pt2` の全15ケース照合が成功しました（修正後runの最小cosine 0.9999997616）。
+> Sentis CPU / GPUCompute は未検証です。Unity CIはライセンスSecrets不足でEditor起動前に停止しています。
 > リポジトリは public ですが、UPM パッケージのリリースはまだ行っていません。
 
 ## ゴール
@@ -83,7 +84,7 @@ CI の確認記録は [検証記録](docs/m1-validation.md)を参照してくだ
 
 ## モデルファイルについて
 
-モデルファイル(`.safetensors`、`.pt2`、`.onnx`、`.sentis` など)はリポジトリにコミットしません。Git LFS も使いません。`tools/` の CLI が Hugging Face の固定 revision から取得して変換します。実モデルでの実行確認はこれからです。
+モデルファイル(`.safetensors`、`.pt2`、`.onnx`、`.sentis` など)はリポジトリにコミットしません。Git LFS も使いません。`tools/` の CLI が Hugging Face の固定 revision から取得して変換します。実モデルのPython export照合はCIで成功し、Sentisでの実行確認はこれからです。
 
 ## ドキュメント
 

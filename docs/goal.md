@@ -4,7 +4,7 @@
 - 更新日: 2026-10-08
 - 背景: [新規性調査](embeddinggemma-2-unity-novelty.md)
 
-リポジトリは public の OSS として開発中。現在は M1 の Python 実装とオフライン検証まで進み、
+リポジトリは public の OSS として開発中。現在は M1 の Python 実装・オフライン検証と実モデルの参照生成 / export のCI照合まで進み、
 実モデルの Sentis 検証は未実行。[M1 詳細計画](m1-plan.md)と[検証記録](m1-validation.md)を進捗の基準とする。
 リポジトリの公開と、M2 の UPM パッケージ / サンプルのリリースは別の段階として扱う。
 

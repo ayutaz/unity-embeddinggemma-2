@@ -4,19 +4,19 @@
 
 ## 最新の確認結果
 
-**M1 は未完了。PR #1 を提出し CI を起動済み。実モデル・Unity・GPU の検証結果はまだない。**
+**M1 は未完了。`3df9ebe` のPR CIでPython 4環境各33件と実モデルの全15ケース照合が成功。UnityはライセンスSecrets不足でpreflight失敗し、Editor / GPUは未検証。**
 この文書の後半にある 31 件の結果は修正過程の履歴で、最新の結果は 33 件。
 
 | 項目 | 証拠 | 判定 / 限界 |
 | --- | --- | --- |
 | Python 単体テスト | `artifacts/python-tests.xml`: tests=33、failures=0、errors=0、skipped=0。2026-10-08 14:18 JST の実行。CLI 表示 14.59s、XML time 14.572s | 小さいモデル、Windows / Python 3.14 のオフライン実行のみ合格 |
 | 実装との対応 | XML の生成時刻は `prepare.py` / `test_prepare.py` の最終変更より後。export、loader、参照、CLI、失敗時レポートの testcase を含む | 今回の文書更新ではテストを再実行していない |
-| workflow | 4 YAML のローカルactionlint 1.7.12 合格、初回PR runの起動を確認 | CIのShellCheck SC2129で初回lint失敗。summary出力を修正して再検証 |
+| workflow | 4 YAML のローカルactionlint 1.7.12 合格、修正後CI `37733804135` 成功 | 初回ShellCheck SC2129は修正済み。lint合格はSentis合格ではない |
 | Unity 依存 | ProjectVersion は 6000.3.19f1、manifest は Sentis 2.6.1。packages-lock に Sentis の項目なし | Editor の依存解決・コンパイルは未検証 |
-| 実モデル設定 | 固定 revision の config を再取得し hidden_size=512、embedding_dim=768、24 層、語彙 262144、sliding_window=512 を確認 | 重み取得・実モデル推論の成功を意味しない |
+| 実モデル設定 | 固定 revision の config は hidden_size=512、embedding_dim=768、24 層、語彙 262144、sliding_window=512 | 実モデルのtext-only load / Python参照生成 / export照合は下記CIで成功。Sentis互換性は未検証 |
 
 `artifacts/` は Git 管理対象外。上記 XML はローカルの検証証拠であり、他の checkout には含まれない。
-リモート CI 開始後は、run URL とそこで生成された XML / レポートに証拠を追加する。
+リモートCIのrun URLと成果物は下記に記録する。ローカルXMLをリモートCIの証拠として流用しない。
 
 ### GitHub と作業ツリー（文書更新時に再確認）
 
@@ -35,7 +35,8 @@
 
 初回実装コミット `4fec060` を対象に起動。2026-10-08 の起動直後の確認では全PR runが `queued`。
 待機中は成功・失敗を判定しない。pushイベントの Python tests / Workflow lint も別runとして起動している。
-実装コミット以降の文書のみの更新は、現在のpaths filterではこれらのCIを新たに起動しない。
+PRのpaths filterはthree-dot diff全体を見るため、文書のみの追加commitでもPR CIが再起動し得る。
+以下はrunごとの履歴であり、後続runの成功を含めて主張しない。
 
 | workflow | run | 起動直後の状態 |
 | --- | --- | --- |
@@ -57,6 +58,34 @@
 
 同時点で Model reference run `37733486276` は `uv sync --locked` が成功し、実モデル生成stepが `in_progress`。
 生成stepの開始だけでは全15ケースの照合成功を示さない。
+
+### 確認できたCI結果（2026-10-08）
+
+| 検証 | 対象のhead SHA / run | 実行結果 |
+| --- | --- | --- |
+| Python matrix（push） | `4fec060` / [37733471063](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37733471063) | success。Windows 3.13: 33 passed / 21.91s、Windows 3.14: 33 passed / 14.57s、Ubuntu 3.13: 33 passed / 14.96s、Ubuntu 3.14: 33 passed / 15.66s。ログで各件数を確認 |
+| 実モデル参照 / export（PR） | `4fec060` / [37733486276](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37733486276) | success。15ケース、最小cosine `0.9999998807907104`。実モデルのeager対保存済み`.pt2`照合。Sentisの結果ではない |
+| lint修正後（PR） | `3df9ebe` / [37733804135](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37733804135) | success。CIのactionlint / ShellCheckでSC2129解消を確認 |
+| Unityライセンス（PR） | `3df9ebe` / [37733804252](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37733804252) | failure。Secrets不足でlicense jobがexit 1。model / unity jobsはskipped。Editor / GPUは未実行 |
+| Python matrix修正後（PR） | `3df9ebe` / [37733804075](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37733804075) | success。Windows 3.13: 33 passed / 23.12s、Windows 3.14: 33 passed / 24.26s、Ubuntu 3.13: 33 passed / 15.43s、Ubuntu 3.14: 33 passed / 16.90s。各件数はrunログで確認 |
+| 実モデル再run（PR） | `3df9ebe` / [37733804078](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37733804078) | success。15ケース、最小cosine `0.9999997615814209`。閾値 0.999999 以上を維持 |
+
+初回実モデルartifactは `m1-reference-3472830afe4e7a7c6ce2840022cbc8435abee1f2`。
+このsuffixはPRのmerge checkout SHAで、head SHA `4fec060`と異なる。
+artifact ID `11530499604`、サイズ `1125922580` bytes、zipのSHA-256は
+`95b34d2f2ad4d850946a283aec1d419a66e6dc78069a16edd444081b334ee0f6`。
+ログとAPIで確認し、大きいモデルartifactはローカルへ取得していない。
+このdigestはアップロードされたzip全体の値であり、`model.pt2`単体のdigestとは区別する。
+
+実モデル再runのartifactは `m1-reference-ad60ba066d9cbe1c1e5e123d03bcc82d7840ac4f`。
+merge checkout SHAは `ad60ba066d9cbe1c1e5e123d03bcc82d7840ac4f`、artifact ID `11530858602`、
+サイズ `1125922493` bytes、zipのSHA-256は
+`bf26dccb19b85194db29f943b3c66080b7f6703e43d2b27443b0bffaa7a62213`。
+14:48 JSTにAPIで未失効を確認。モデルartifactはGitに含めず、ローカルにも取得していない。
+
+以前のPR matrix / Unity runは新しいpushによりcancelledになったため、合格数に含めない。
+Unity Secretsを設定後、同じソースrevisionの参照生成とEditor検証を再実行する。
+この表は検証対象コミットの記録。後続の文書commitでPR CIが再起動した場合、そのrunの成功を先取りしない。
 
 ## 実行済み: 小さいモデルによる Python TDD
 
@@ -97,7 +126,6 @@ uv run --locked pytest -q --junitxml=../artifacts/python-tests.xml
 
 ## 未検証・結果待ち
 
-- GitHub Actions の Python matrix と実モデルの参照生成・export（初回PR runは起動済み、結果待ち）。
 - Unity 6000.3.19f1 の起動と Sentis の依存解決。packages-lock は Editor 生成待ち。
 - Unity acceptance tests のコンパイルと red / green。
 - 実モデルの CPU / GPUCompute 推論と、全 15 ケースの cosine >= 0.999。

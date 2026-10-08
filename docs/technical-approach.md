@@ -5,7 +5,8 @@
 - 関連: [ゴール](goal.md) / [新規性調査](embeddinggemma-2-unity-novelty.md)
 
 > Python の text-only 参照生成と Core ATen export は実装済みで、小さいモデルのオフラインテスト 33 件が合格。
-> 実モデルの export、Sentis import / tokenizer / CPU / GPUCompute、保存・量子化は未検証。
+> 実モデルのPython参照生成 / 保存済みexportの全15ケース照合はCIで成功（修正後runの最小cosine 0.9999997616）。
+> Sentis import / tokenizer / CPU / GPUCompute、`.sentis` 保存・量子化は未検証。
 > 詳細計画は [M1 計画](m1-plan.md)、実行済みの証拠は [検証記録](m1-validation.md)を参照。
 
 ## 要約
@@ -122,10 +123,10 @@
 
 | ファイル（`tools/embeddinggemma_tools/`） | 実装した処理 | 確認できた範囲 |
 | --- | --- | --- |
-| `model.py` | 公式 text config を使い、safetensors の `language_model.` 配下だけを strict load。fp32 / eager / eval | 小さい公式モデルの重み抽出、projection 保持、欠落時の失敗 |
-| `text.py` / `reference.py` | query / document / raw、公式 sentence-transformers pooling / L2 正規化、JSON 参照生成 | 小さいモデルと固定入力定義。実モデルの 15 件は未実行 |
-| `export.py` | 固定長注意 mask、Core ATen 分解、int32 scalar 制限、metadata-only assertion 除去、`.pt2` 保存 | 保存後の別 ID / mask の結果一致、shape guard。Sentis import は未実行 |
-| `prepare.py` / `__main__.py` | pinned snapshot 取得、参照 / tokenizer / export、再読み込み全件照合、SHA-256、CLI | 小さい snapshot の一連の処理と失敗時レポート。実モデル取得・export は未実行 |
+| `model.py` | 公式 text config を使い、safetensors の `language_model.` 配下だけを strict load。fp32 / eager / eval | 小さい公式モデルの重み抽出 / 欠落検出と、CIでの実モデルtext-only load |
+| `text.py` / `reference.py` | query / document / raw、公式 sentence-transformers pooling / L2 正規化、JSON 参照生成 | 小さいモデルと実モデル15ケースの参照生成 |
+| `export.py` | 固定長注意 mask、Core ATen 分解、int32 scalar 制限、metadata-only assertion 除去、`.pt2` 保存 | 実モデルの保存・再読み込み照合成功。Sentis import は未実行 |
+| `prepare.py` / `__main__.py` | pinned snapshot 取得、参照 / tokenizer / export、再読み込み全件照合、SHA-256、CLI | 小さいsnapshotのTDDと、CI実モデル15ケースの照合成功。run / artifact digestは検証記録を参照 |
 
 M1 の既定は batch 1 / length 128 / fp32 / 768 次元。生成物は `reference.json`、
 `tokenizer.json`、`model.pt2`、`export-validation.json`。Python の照合閾値は 0.999999、
@@ -208,7 +209,7 @@ Python は uv で管理する。`tools/` が uv のプロジェクトで、依�
 
 - Sentis の PyTorch 読み込みが、torch 2.14 で書き出した EmbeddingGemma 2 を読めるか
 - Sentis のトークナイザが、Gemma の `tokenizer.json` を正しく扱えるか
-- text-only 経路の小さいモデルでの照合は済んだが、実モデルの Sentis 互換性と、画像 / 音声特徴量の差し込み・GPU 上の受け渡しは未検証
+- text-only 経路はPythonの小さいモデル / 実モデルで照合済みだが、実モデルの Sentis 互換性と、画像 / 音声特徴量の差し込み・GPU 上の受け渡しは未検証
 - 埋め込み表が、量子化のあとも fp32 のまま残るか
 - 画像の色空間とリサイズによる差が、どの程度出るか
 - Sentis の GPUCompute が WebGPU で動くか

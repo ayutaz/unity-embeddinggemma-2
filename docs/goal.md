@@ -1,13 +1,13 @@
 # プロジェクトのゴール
 
 - 設定日: 2026-10-07
-- 更新日: 2026-10-08
+- 更新日: 2026-10-09
 - 背景: [新規性調査](embeddinggemma-2-unity-novelty.md)
 
 リポジトリは public の OSS として開発中。M1 の参照生成 / export・Editor acceptance tests・uloop ハーネスの基盤を
 PR #1 で main（`60f906d`）へ統合済み。main CI は Python 4環境各47件と lint が合格し、最終 PR CI の実モデル15件照合も合格。
-未マージの [PR #3](https://github.com/ayutaz/unity-embeddinggemma-2/pull/3) で成果物配置・空文字互換修正後のWindows fp32 CPU / GPUCompute・公開C# APIが全15ケース合格。
-次はPRの統合準備、`.sentis`保存・再読み込み、fp16量子化、時間・メモリ測定。[M1 詳細計画](m1-plan.md)を進捗の基準とし、mainと未マージブランチの成果を区別する。
+PR #2 / #3はmain `1f0e580`まで統合済み。[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)で保存・Float16重み量子化・両backend精度・性能 / メモリ測定まで実装し、Windows EditorのM1受け入れ条件が合格した。
+次はM2。現状と証拠は [M1計画](m1-plan.md)、[完了検証記録](m1-completion-validation.md)を参照。
 リポジトリの公開と、M2 の UPM パッケージ / サンプルのリリースは別の段階として扱う。
 
 ## ゴール
@@ -56,7 +56,7 @@ PR #1 で main（`60f906d`）へ統合済み。main CI は Python 4環境各47�
 
 | # | 内容 | 完了の条件 | 状態 |
 | --- | --- | --- | --- |
-| M1 | テキスト用モデルを Sentis で動かす | Windows Editor の CPU / GPUCompute で全 15 ケースの token ID / mask が完全一致、fp32 cosine >= 0.999。`.sentis` 保存・再読み込み、fp16 量子化版 cosine >= 0.99、時間・メモリ測定 | PR #3でfp32・API合格、未統合。保存・量子化・測定が残る |
+| M1 | テキスト用モデルを Sentis で動かす | Windows Editor の CPU / GPUCompute で全 15 ケースの token ID / mask が完全一致、fp32 cosine >= 0.999。`.sentis` 保存・再読み込み、fp16 量子化版 cosine >= 0.99、時間・メモリ測定 | Windows Editor受け入れ検証完了 |
 | M2 | テキスト版の UPM パッケージとサンプルをリリースする | macOS Editor / iOS / Android の精度確認・速度 / メモリ測定、UPM API とサンプル、配布手順を揃える | 未着手 |
 | M3 | 画像用モデルに対応する | GPU 上の画像から埋め込みを作り、テキスト→画像の検索が参照実装と一致する | 未着手 |
 | M4 | 音声用モデルに対応する | GPU 上でメルスペクトログラムを作り、テキスト→音声の検索が参照実装と一致する | 未着手 |
@@ -80,7 +80,6 @@ M1 の検証後は M2 を優先し、M3・M4 はその後に進める。全体�
 
 ## 確認が必要なこと
 
-- Sentis のトークナイザが Gemma の `tokenizer.json`(BPE、`byte_fallback`)を正しく扱えるか
-- Core ATen `.pt2`（第一候補）の実モデル import が成立するか。失敗時は標準 ONNX に切り替える。公式 LiteRT int4 版は今回の経路に含めない
+- tokenizerとCore ATen `.pt2` importはWindows M1の固定15件で合格。モデル・条件・プラットフォームを変える際は再照合する
 - モバイルで動かせるメモリ量に収まるか。重みの概算だけで判断せず、埋め込み表、実行時テンソル、backend を含めて測る
 - 話し言葉の音声が、テキストと同じ意味の空間に入るか

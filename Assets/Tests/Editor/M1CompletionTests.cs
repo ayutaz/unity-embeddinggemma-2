@@ -5,7 +5,7 @@ namespace EmbeddingGemma.Tests
 {
     public sealed class M1CompletionTests
     {
-        [Test]
+        [Test, Timeout(1200000)]
         public void SavedFp32AndFloat16PassBothBackendsAndRecordMeasurements()
         {
             var report = M1CompletionRunner.Run();

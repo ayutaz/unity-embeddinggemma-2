@@ -22,7 +22,8 @@ namespace EmbeddingGemma.Tests
         {
             public string stage;
             public long unityAllocatedBytes, unityReservedBytes, graphicsDriverBytes, processWorkingSetBytes, processPrivateBytes;
-            public bool graphicsCounterAvailable;
+            public long managedHeapBytes;
+            public bool graphicsCounterAvailable, processCountersAvailable;
         }
         [Serializable] public sealed class BackendResult
         {
@@ -47,7 +48,7 @@ namespace EmbeddingGemma.Tests
             public int processorCount, systemMemoryMB, gpuCapacityMB, sequenceLength = 128, batchSize = 1, embeddingDimension = 768;
             public int warmupRounds = 2, measurementRounds = 3;
             public string timingScope = "Synchronous public API, including prompting, tokenization, scheduling and final vector readback. Samples follow reference case order in each round.";
-            public string memoryScope = "Stage samples of the whole Unity Editor/process, not model-exclusive VRAM or a continuously observed peak. graphicsDriverBytes=0 means unavailable.";
+            public string memoryScope = "Stage samples of the whole Unity Editor/process, not model-exclusive VRAM or a continuously observed peak. Zero graphics or process counters mean unavailable; availability flags are explicit. Managed heap is measured separately and must not be summed with overlapping native/process counters.";
             public double forcedAssetImportMs;
             public List<FormatResult> formats = new();
             public List<Memory> memory = new();
@@ -56,13 +57,15 @@ namespace EmbeddingGemma.Tests
         [Serializable] sealed class Metadata { public string model_revision, source_commit; public int sequence_length, embedding_dimension; }
         [Serializable] sealed class Item { public string id, formatted_text; public int[] input_ids, attention_mask; public float[] embedding; }
 
-        static Memory Sample(string stage)
+        public static Memory CaptureMemory(string stage)
         {
             using var process = Process.GetCurrentProcess();
             var graphics = Profiler.GetAllocatedMemoryForGraphicsDriver();
             return new Memory { stage = stage, unityAllocatedBytes = Profiler.GetTotalAllocatedMemoryLong(),
                 unityReservedBytes = Profiler.GetTotalReservedMemoryLong(), graphicsDriverBytes = graphics,
-                graphicsCounterAvailable = graphics > 0, processWorkingSetBytes = process.WorkingSet64, processPrivateBytes = process.PrivateMemorySize64 };
+                graphicsCounterAvailable = graphics > 0, managedHeapBytes = GC.GetTotalMemory(false),
+                processCountersAvailable = process.WorkingSet64 > 0 && process.PrivateMemorySize64 > 0,
+                processWorkingSetBytes = process.WorkingSet64, processPrivateBytes = process.PrivateMemorySize64 };
         }
         static double Time(Action action) { var watch = Stopwatch.StartNew(); action(); return watch.Elapsed.TotalMilliseconds; }
         static string Hash(string path)
@@ -104,12 +107,12 @@ namespace EmbeddingGemma.Tests
                     Assert.That(tokens.GetIds(), Is.EqualTo(item.input_ids), item.id);
                     Assert.That(tokens.GetAttentionMask(), Is.EqualTo(item.attention_mask), item.id);
                 }
-                report.memory.Add(Sample("before forced synchronous .pt2 import"));
+                report.memory.Add(CaptureMemory("before forced synchronous .pt2 import"));
                 const string assetPath = "Assets/M1Generated/model.pt2";
                 report.forcedAssetImportMs = Time(() => AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate | ImportAssetOptions.ForceSynchronousImport));
                 var asset = AssetDatabase.LoadAssetAtPath<ModelAsset>(assetPath);
                 Assert.That(asset, Is.Not.Null);
-                report.memory.Add(Sample("after import; Editor caches included"));
+                report.memory.Add(CaptureMemory("after import; Editor caches included"));
                 // Independent before-save outputs, retained as small vectors only.
                 var baseline = new Dictionary<BackendType, float[][]>();
                 foreach (var backend in new[] { BackendType.CPU, BackendType.GPUCompute })
@@ -130,10 +133,10 @@ namespace EmbeddingGemma.Tests
                     foreach (var backend in new[] { BackendType.CPU, BackendType.GPUCompute })
                     {
                         var result = new BackendResult { backend = backend.ToString() }; format.backends.Add(result);
-                        result.memory.Add(Sample("before model load"));
+                        result.memory.Add(CaptureMemory("before model load"));
                         Model loaded = null;
                         result.modelLoadMs = Time(() => loaded = TextModelFile.Load(format.path));
-                        result.memory.Add(Sample("after saved model load"));
+                        result.memory.Add(CaptureMemory("after saved model load"));
                         result.tokenizerPreparationMs = Time(() => { var independent = new TextTokenizer(tokenizerJson); independent.Encode(reference.cases[0].formatted_text); });
                         TextEmbedder embedder = null;
                         result.workerAndTokenizerMs = Time(() => embedder = new TextEmbedder(loaded, tokenizerJson, backend));
@@ -141,7 +144,7 @@ namespace EmbeddingGemma.Tests
                         {
                             Assert.That(embedder.Backend, Is.EqualTo(backend));
                             result.firstInferenceMs = Time(() => embedder.EmbedRaw(reference.cases[0].formatted_text));
-                            result.memory.Add(Sample("after first inference and readback"));
+                            result.memory.Add(CaptureMemory("after first inference and readback"));
                             for (var i = 0; i < reference.cases.Length; i++)
                             {
                                 var item = reference.cases[i]; var actual = embedder.EmbedRaw(item.formatted_text);
@@ -158,15 +161,15 @@ namespace EmbeddingGemma.Tests
                             }
                             for (var round = 0; round < report.warmupRounds; round++)
                                 foreach (var item in reference.cases) embedder.EmbedRaw(item.formatted_text);
-                            result.memory.Add(Sample("after warmup"));
+                            result.memory.Add(CaptureMemory("after warmup"));
                             for (var round = 0; round < report.measurementRounds; round++)
                                 foreach (var item in reference.cases) result.samplesMs.Add(Time(() => embedder.EmbedRaw(item.formatted_text)));
                             var sorted = result.samplesMs.OrderBy(v => v).ToArray();
                             result.medianMs = sorted[sorted.Length / 2]; result.p95Ms = sorted[(int)Math.Ceiling(sorted.Length * 0.95) - 1];
-                            result.memory.Add(Sample("after measurement"));
+                            result.memory.Add(CaptureMemory("after measurement"));
                         }
                         loaded = null; embedder = null; GC.Collect(); GC.WaitForPendingFinalizers();
-                        result.memory.Add(Sample("after Worker Dispose and managed GC; Editor caches retained"));
+                        result.memory.Add(CaptureMemory("after Worker Dispose and managed GC; Editor caches retained"));
                         Debug.Log($"M1 completion {precision} / {backend}: cases=15, min_cosine={result.minimumCosine.ToString("R", CultureInfo.InvariantCulture)}, median_ms={result.medianMs:F3}");
                         Save();
                     }

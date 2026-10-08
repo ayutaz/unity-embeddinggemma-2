@@ -1,24 +1,25 @@
 # M2 詳細計画と残作業
 
 更新日: 2026-10-09。基準main: `8146107aa77904050c6235866c0cf79ecc80034c`。
-**計画を整理済み、M2の実装は未着手。** PR #1〜#4は統合済みで、Windows EditorのM1は完了した。
+**PR #6でCI整備・UPM化を実装中。** PR #1〜#4は統合済みで、Windows EditorのM1は完了した。
+GitHub側のmain保護は設定済み。PR #6のmain統合、検索サンプル・他環境・リリースは未完了。[パッケージ検証](m2-package-validation.md)を参照。
 [M1完了検証](m1-completion-validation.md)を既存の基準とし、UPM化、テキスト検索サンプル、他環境検証、配布を進める。
 
 ## 現在地
 
-- Unity 6000.3.16f1 / Sentis 2.6.1。`Assets/EmbeddingGemma/Runtime/` に公開APIがある。UPMパッケージはまだない。
+- Unity 6000.3.16f1 / Sentis 2.6.1。PR #6で公開APIを `Packages/com.ayutaz.embeddinggemma/Runtime/` へ移行。開発版 `0.1.0-pre.1`、未リリース。
 - `TextEmbedder` はquery / document / raw、同期・メインスレッド、batch 1 / length 128 / 768次元、CPU / GPUComputeを扱う。
 - `TextModelFile` はfp32 / Float16重みの保存・再読み込みを実装済み。Windows Editorで両形式・両backend全15件が合格。
 - Runtime asmdefはSentisと `Unity.Newtonsoft.Json` を参照する。現在のlockでNewtonsoftは3.2.2。uloop、URP、2D関連パッケージは検証プロジェクト側の構成であり、配布Runtimeの依存には持ち込まない。
 - Python CIはUbuntu / Windows × Python 3.13 / 3.14の4環境各64件成功。macOS / iOS / AndroidとPlayerでの実モデル実行は未検証。
-- mainは未保護、rulesetsは空。全PRに完了判定を返す必須CIも未整備。クラウドUnityはLinux CPUの任意手動補助検証で未実行、Secrets / Variablesは未登録。
+- mainはbranch protection設定済み。PRとRequired CIを管理者にも要求し、force push / 削除を禁止。全PRのCI入口とパッケージ監査はPR #6に実装、mainへの反映待ち。クラウドUnityはLinux CPUの任意手動補助検証で未実行、Secrets / Variablesは未登録。
 
 ## 作業順序と完了条件
 
 | 順序 | タスク | 完了条件 | 依存 / 状態 |
 | --- | --- | --- | --- |
-| 0 | OSS開発基盤: CIの必須判定とmain保護 | 文書だけのPRも含めCI判定が完了する。失敗・必要jobの未実行を成功扱いにしない。PR経由、必須check、force push / 削除の制限をGitHub側で確認 | 最優先、未着手。checkの安定化を先に行う |
-| 1 | UPM構成へ移行 | package manifest、明示的な依存、Runtime / Tests / Samples / 文書を整理。既存API契約とGUIDを維持し、重複assemblyやUnityEditor参照を持ち込まない | 未着手。新しいプロジェクトへの導入で確認 |
+| 0 | OSS開発基盤: CIの必須判定とmain保護 | 文書だけのPRも含めCI判定が完了する。失敗・必要jobの未実行を成功扱いにしない。PR経由、必須check、force push / 削除の制限をGitHub側で確認 | サーバー保護を設定・読み戻し済み。CI実装はPR #6、main反映待ち |
+| 1 | UPM構成へ移行 | package manifest、明示的な依存、Runtime / Tests / Samples / 文書を整理。既存API契約とGUIDを維持し、重複assemblyやUnityEditor参照を持ち込まない | PR #6に実装。新規consumerで検証、main統合待ち |
 | 2 | テキスト検索サンプル | 文書を事前埋め込みし、queryとのcosineで順位表示。固定入力のPython参照順位と一致。モデル未準備・不正入力・実行失敗を表示し、終了時にリソース解放 | 1に依存、未着手 |
 | 3 | モデル準備・配布手順 | CIで固定revisionから生成、hash監査、取得・配置・読み込み・更新の手順を整備。新規checkoutとサンプル導入で再現 | 1 / 2と並行可能、未着手 |
 | 4 | 環境・runner・実機の確保 | macOS Editor、iOS / Androidのtoolchain・実機・GPU API・ライセンス・署名条件を確認し、実行できる組み合わせを記録 | 早期に調査。必要環境は未確認 |
@@ -26,11 +27,11 @@
 | 6 | リリース準備と配布 | clean projectから版固定で導入、サンプル起動、手順・ライセンス・CHANGELOGを確認。必要環境の合格後にリリース用PRと配布を行う | 1〜5に依存、未着手 |
 
 0と4の準備を早期に進め、実装は1 → 2 / 3 → 5 → 6の順に小さいPRへ分割する。
-この文書更新ではworkflow・GitHub保護設定・Runtimeを変更しない。mergeは依頼があるまで行わない。
+今回の依頼範囲は上表0 / 1（利用者向け一覧の1 / 2）。検索サンプル以降は後続作業。mergeは依頼があるまで行わない。
 
-## UPM構成案
+## UPM構成
 
-以下は採用候補であり、まだ存在するパッケージではない。名前・初回バージョンは最初の実装PRで確定する。
+PR #6で `com.ayutaz.embeddinggemma`、開発版 `0.1.0-pre.1`として実装。公開tagはまだない。
 [Unity公式のパッケージ構成](https://docs.unity3d.com/6000.3/Documentation/Manual/cus-layout.html)に沿って整理する。
 
 ```text

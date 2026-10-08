@@ -3,10 +3,11 @@
 Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.unity.ai.inference@2.6/manual/index.html) だけを使って、Google の [EmbeddingGemma 2](https://huggingface.co/google/embeddinggemma-2) を動かすプロジェクトです。テキスト・画像・音声を、同じ 768 次元の空間の埋め込みに変換できるようにします。
 
 > **状態: M1 実装中**
-> 2026-10-08: Python の参照生成・Core ATen export・CLI を実装し、小さいモデルのオフラインテスト 33 件が合格しました。
-> [PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)の `40dedae` のCIで、ハーネスを含むPython 4環境の各47テストと、実モデルの保存済み `.pt2` の全15ケース照合が成功しました。
+> 2026-10-08: 参照生成・Core ATen export・uloop ハーネスを [PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1) で main（`60f906d`）に統合しました。
+> 統合後の main CI ではPython 4環境の各47テストとworkflow lintが成功。最終PR CIでは実モデルの保存済み `.pt2` の全15ケース照合も成功しました。
 > ローカル Unity 6000.3.16f1 に Unity CLI Loop を導入し、依存解決・テストのコンパイルに成功しました。自動検証ハーネスを追加しています。
-> M1 の Editor テスト3件は参照データ未配置で失敗。Sentis CPU / GPUCompute の数値一致は未検証です。WindowsのM1検証はローカルで継続し、クラウドUnity CIはSecretsが必要なLinux CPUの手動補助検証に限定しています（未実行）。
+> 未マージの [PR #3](https://github.com/ayutaz/unity-embeddinggemma-2/pull/3) では実モデルの配置と空文字互換修正後、Windowsのtokenizer・fp32 CPU / GPUCompute・C# APIが全15ケース合格しました。mainへの統合、`.sentis`保存・fp16量子化・時間 / メモリ測定が残ります。
+> クラウドUnity CIはSecretsが必要なLinux CPUの手動補助検証です（未実行）。
 > リポジトリは public ですが、UPM パッケージのリリースはまだ行っていません。
 
 ## ゴール
@@ -21,7 +22,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 
 | # | 内容 | 状態 |
 | --- | --- | --- |
-| M1 | テキスト用モデルを Sentis で動かす | 実装中（Sentis での一致は未検証） |
+| M1 | テキスト用モデルを Sentis で動かす | PR #3でfp32・API合格、未統合。保存・量子化・測定が残る |
 | M2 | テキスト版の UPM パッケージとサンプルをリリースする | 未着手 |
 | M3 | 画像用モデルに対応する | 未着手 |
 | M4 | 音声用モデルに対応する | 未着手 |
@@ -80,11 +81,12 @@ uv run --locked python -m embeddinggemma_tools prepare --output ../artifacts/m1
 モデルの revision を固定して参照データ・設定済み tokenizer・`.pt2` を生成し、保存後のモデルを参照実装と比較します。
 この Python 側の一致と、Sentis 側の M1 合格は別々に検証します。
 
-承認モードの変更後、作業ブランチ `feat/m1-text-tdd` を作成できました。
-[draft PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)を提出済みです。
-CI の確認記録は [検証記録](docs/m1-validation.md)を参照してください。
-次はブランチ / PR → Python matrix・実モデル export → Unity tokenizer・CPU / GPUCompute →
-`.sentis` 保存・fp16 量子化・測定の順に進めます。Unity CI には Repository Secrets の準備が必要です。
+基盤の [PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1) はマージ済みです。
+次は PR #2 / #3の最新CI・依存関係を確認し、`.sentis`保存・再読み込み → fp16量子化 → 時間・メモリ測定を進めます。詳細な開始条件と合格基準は [M1計画](docs/m1-plan.md) を参照してください。
+互換性修正と C# API を TDD で進め、その後 `.sentis` 保存・fp16 量子化・時間 / メモリ測定を行います。
+新しい実装も作業ブランチ / PR を使い、マージは依頼があるまで行いません。
+詳細な順序は [計画](docs/m1-plan.md)、CI の確認記録は [検証記録](docs/m1-validation.md)を参照してください。
+ローカル検証に GitHub Secrets は不要です。任意の Linux CPU 手動 CI を使う場合だけ準備します。
 
 ## モデルファイルについて
 

@@ -1,0 +1,18 @@
+{
+  "name": "com.ayutaz.embeddinggemma",
+  "version": "0.1.0-pre.1",
+  "displayName": "EmbeddingGemma Text",
+  "description": "Text embeddings with Unity Sentis. Model weights are obtained separately; Windows Editor validation is recorded in the repository.",
+  "unity": "6000.3",
+  "unityRelease": "16f1",
+  "dependencies": {
+    "com.unity.ai.inference": "2.6.1",
+    "com.unity.nuget.newtonsoft-json": "3.2.2"
+  },
+  "keywords": ["embedding", "text", "sentis"],
+  "author": {
+    "name": "ayutaz",
+    "url": "https://github.com/ayutaz"
+  },
+  "license": "Apache-2.0"
+}

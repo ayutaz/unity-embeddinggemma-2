@@ -20,10 +20,12 @@ jobs:
     uses: ./.github/workflows/workflow-lint.yml
   model-reference:
     uses: ./.github/workflows/model-reference.yml
+  package:
+    uses: ./.github/workflows/package-validation.yml
   required:
     name: Required CI
     if: ${{ always() }}
-    needs: [python, workflow-lint, model-reference]
+    needs: [python, workflow-lint, model-reference, package]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

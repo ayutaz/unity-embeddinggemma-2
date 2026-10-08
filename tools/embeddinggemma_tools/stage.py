@@ -38,6 +38,9 @@ def stage_reference(source: Path, project: Path, source_commit: str) -> dict:
             raise ValueError("All 15 reference and export cases are required")
         if len({case["id"] for case in cases}) != 15 or [row["id"] for row in rows] != [case["id"] for case in cases]:
             raise ValueError("Reference and export case IDs must match")
+        fixed_cases = json.loads((Path(__file__).resolve().parents[1] / "cases/text.json").read_text(encoding="utf-8"))
+        if [case["id"] for case in cases] != [case["id"] for case in fixed_cases]:
+            raise ValueError("Artifact must use the fixed input suite in the same order")
         cosines = [row["cosine"] for row in rows]
         if not all(math.isfinite(value) and value >= 0.999999 for value in cosines):
             raise ValueError("Python export validation must pass every case")

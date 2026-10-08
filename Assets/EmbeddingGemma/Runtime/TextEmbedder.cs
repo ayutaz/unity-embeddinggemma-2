@@ -1,8 +1,6 @@
 using System;
 using System.Linq;
 using Unity.InferenceEngine;
-using Unity.InferenceEngine.Tokenization;
-using Unity.InferenceEngine.Tokenization.Parsers.HuggingFace;
 using UnityEngine;
 
 namespace EmbeddingGemma
@@ -16,7 +14,7 @@ namespace EmbeddingGemma
     {
         public const int SequenceLength = 128;
         public const int EmbeddingDimension = 768;
-        readonly ITokenizer tokenizer;
+        readonly TextTokenizer tokenizer;
         Worker worker;
         public BackendType Backend { get; }
 
@@ -33,7 +31,7 @@ namespace EmbeddingGemma
                 names.Any(name => !model.inputs.Any(input => input.name == name && input.dataType == DataType.Int &&
                     input.shape.IsStatic() && input.shape.ToTensorShape() == new TensorShape(1, SequenceLength))))
                 throw new ArgumentException("Expected two int32 [1,128] inputs and one embedding output.", nameof(model));
-            tokenizer = HuggingFaceParser.GetDefault().Parse(tokenizerJson);
+            tokenizer = new TextTokenizer(tokenizerJson);
             worker = new Worker(model, backend);
             Backend = backend;
             if (worker.backendType != backend)

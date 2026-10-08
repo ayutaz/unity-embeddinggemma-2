@@ -1,5 +1,6 @@
 import hashlib
 import json
+from pathlib import Path
 
 import pytest
 
@@ -17,13 +18,14 @@ def artifact(tmp_path):
     metadata = dict(model_id="google/embeddinggemma-2", model_revision=REVISION,
                     source_commit=SOURCE, sequence_length=128, batch_size=1,
                     dtype="float32", embedding_dimension=768)
-    cases = [dict(id=str(i), input_ids=[1] * 128, attention_mask=[1] * 128,
-                  embedding=[1.0] + [0.0] * 767) for i in range(15)]
+    ids = [case["id"] for case in json.loads((Path(__file__).parents[1] / "cases/text.json").read_text(encoding="utf-8"))]
+    cases = [dict(id=case_id, input_ids=[1] * 128, attention_mask=[1] * 128,
+                  embedding=[1.0] + [0.0] * 767) for case_id in ids]
     (root / "reference.json").write_text(json.dumps(dict(schema_version=1, metadata=metadata, cases=cases)))
     (root / "tokenizer.json").write_text('{"model": {"type": "BPE"}}')
     (root / "model.pt2").write_bytes(b"model bytes")
     report = dict(metadata=metadata, case_count=15, minimum_cosine=1.0,
-                  cases=[dict(id=str(i), cosine=1.0) for i in range(15)],
+                  cases=[dict(id=case_id, cosine=1.0) for case_id in ids],
                   sha256={name: hashlib.sha256((root / name).read_bytes()).hexdigest()
                           for name in ("model.pt2", "reference.json", "tokenizer.json")})
     (root / "export-validation.json").write_text(json.dumps(report))
@@ -41,7 +43,7 @@ def test_verified_artifact_is_staged_with_small_audit_report(artifact, tmp_path)
     assert json.loads((project / "artifacts/m1-stage.json").read_text())["success"] is True
 
 
-@pytest.mark.parametrize("fault", ["hash", "revision", "source", "cases", "cosine", "missing", "nan"])
+@pytest.mark.parametrize("fault", ["hash", "revision", "source", "cases", "cosine", "missing", "nan", "wrong_suite"])
 def test_invalid_artifact_never_replaces_staged_model(artifact, tmp_path, fault):
     report_path = artifact / "export-validation.json"
     report = json.loads(report_path.read_text())
@@ -59,6 +61,13 @@ def test_invalid_artifact_never_replaces_staged_model(artifact, tmp_path, fault)
         (artifact / "tokenizer.json").unlink()
     elif fault == "nan":
         report["minimum_cosine"] = float("nan")
+    elif fault == "wrong_suite":
+        reference_path = artifact / "reference.json"
+        reference = json.loads(reference_path.read_text())
+        reference["cases"][0]["id"] = "different-input-suite"
+        report["cases"][0]["id"] = "different-input-suite"
+        reference_path.write_text(json.dumps(reference))
+        report["sha256"]["reference.json"] = hashlib.sha256(reference_path.read_bytes()).hexdigest()
     report_path.write_text(json.dumps(report))
     project = tmp_path / "project"
     target = project / "Assets/M1Generated/model.pt2"

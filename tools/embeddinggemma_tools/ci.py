@@ -3,7 +3,7 @@
 import json
 import os
 
-REQUIRED_JOBS = ("python", "workflow-lint", "model-reference")
+REQUIRED_JOBS = ("python", "workflow-lint", "model-reference", "package")
 
 
 def validate_results(jobs):

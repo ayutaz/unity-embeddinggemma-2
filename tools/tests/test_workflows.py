@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 
 import yaml
 
@@ -45,3 +46,32 @@ def test_cloud_unity_remains_manual_and_does_not_receive_fork_secrets():
     workflow = load("unity-validation.yml")
     assert set(workflow["on"]) == {"workflow_dispatch"}
     assert "secrets" not in load("ci.yml")["jobs"]["model-reference"]
+
+
+def test_package_audit_is_required_and_creates_an_isolated_consumer():
+    assert "package" in REQUIRED_JOBS
+    workflow = load("package-validation.yml")
+    commands = "\n".join(step.get("run", "") for step in workflow["jobs"]["package"]["steps"])
+    assert "embeddinggemma_tools.package" in commands
+    assert "--consumer" in commands
+    assert "--git-revision" in commands
+
+
+def test_package_audit_failure_cannot_be_hidden_by_tee():
+    workflow = load("package-validation.yml")
+    audit = next(step for step in workflow["jobs"]["package"]["steps"]
+                 if "embeddinggemma_tools.package" in step.get("run", ""))
+    assert audit["shell"] == "bash"  # GitHub explicitly enables -eo pipefail.
+
+
+def test_main_protection_requires_pr_and_actions_check_for_admins_too():
+    policy = json.loads((ROOT / ".github/main-protection.json").read_text())
+    assert policy["enforce_admins"] is True
+    assert policy["required_status_checks"] == {
+        "strict": True, "checks": [{"context": "Required CI", "app_id": 15368}]}
+    assert policy["required_pull_request_reviews"] is not None
+    assert policy["required_pull_request_reviews"]["required_approving_review_count"] == 0
+    assert policy["required_conversation_resolution"] is True
+    assert policy["required_linear_history"] is True
+    assert policy["allow_force_pushes"] is False
+    assert policy["allow_deletions"] is False

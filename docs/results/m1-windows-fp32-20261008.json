@@ -1,0 +1,327 @@
+{
+  "schema_version": 1,
+  "scope": "Windows Editor fp32 text reference and runtime API",
+  "m1_complete": false,
+  "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+  "reference_source_commit": "b3b0d76e1d3b6f4e44af1e9ba810d5b3cb6b051d",
+  "code_commit": "6da634a2c745cb1bfb226c1712666139e1366442",
+  "source_note": "Tested C# working tree content was committed as code_commit; no C# changes afterward.",
+  "source_sha256_lf": {
+    "Assets/EmbeddingGemma/Runtime/TextEmbedder.cs": "7c1ae887d66cb3b29fe3467d21e046e334f0dc4eb39df8c0e9f5fa39f302513b",
+    "Assets/EmbeddingGemma/Runtime/TextPrompts.cs": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5",
+    "Assets/EmbeddingGemma/Runtime/TextTokenizer.cs": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763",
+    "Assets/Tests/Editor/M1ReferenceTests.cs": "13613831849805ceb1bc0dcb95418c7d82d227b121e539dd0fc35320f914232a",
+    "Assets/Tests/Editor/TextEmbedderReferenceTests.cs": "c51d79b6a0a3e3b882b5ba419712646b8621f96c834bbe00e8c29be0d56e0c7f"
+  },
+  "environment": {
+    "unity": "6000.3.16f1",
+    "sentis": "2.6.1",
+    "os": "Windows 11 (10.0.22631)",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12"
+  },
+  "artifact_sha256": {
+    "reference.json": "637c45b2fa3be84d16b47a3456000e5ab27d1e50e37424288bf42b318d799cb8",
+    "tokenizer.json": "25975a936201b81402a3b867d5c462cf10808bb96759f97fe9aefecbb11c49df",
+    "model.pt2": "18018897e12a72af996253ffd4c8bb28aa8825e614f2813e298815851188d25f"
+  },
+  "results": {
+    "reference": {
+      "started_at": "2026-10-08T11:11:15.115628+00:00",
+      "completed_at": "2026-10-08T11:12:38.158057+00:00",
+      "tests": {
+        "TestCount": 3,
+        "PassedCount": 3,
+        "FailedCount": 0,
+        "SkippedCount": 0,
+        "InconclusiveCount": 0
+      },
+      "backends": {
+        "CPU": {
+          "case_count": 15,
+          "minimum_cosine": 0.9999999999992348,
+          "cases": [
+            {
+              "id": "ja-query",
+              "cosine": 0.9999999999996612
+            },
+            {
+              "id": "ja-document",
+              "cosine": 0.9999999999995968
+            },
+            {
+              "id": "en-query",
+              "cosine": 0.9999999999996152
+            },
+            {
+              "id": "en-document",
+              "cosine": 0.9999999999996384
+            },
+            {
+              "id": "titled-document",
+              "cosine": 0.999999999999319
+            },
+            {
+              "id": "empty",
+              "cosine": 0.9999999999999376
+            },
+            {
+              "id": "empty-query",
+              "cosine": 0.9999999999994076
+            },
+            {
+              "id": "whitespace",
+              "cosine": 0.9999999999992348
+            },
+            {
+              "id": "newlines",
+              "cosine": 0.9999999999993595
+            },
+            {
+              "id": "mixed",
+              "cosine": 0.9999999999995326
+            },
+            {
+              "id": "emoji",
+              "cosine": 0.999999999999782
+            },
+            {
+              "id": "punctuation",
+              "cosine": 0.999999999999368
+            },
+            {
+              "id": "unicode",
+              "cosine": 0.9999999999997005
+            },
+            {
+              "id": "long-truncated",
+              "cosine": 0.9999999999994637
+            },
+            {
+              "id": "unrelated-document",
+              "cosine": 0.9999999999994764
+            }
+          ]
+        },
+        "GPUCompute": {
+          "case_count": 15,
+          "minimum_cosine": 0.9999999999997073,
+          "cases": [
+            {
+              "id": "ja-query",
+              "cosine": 0.9999999999998892
+            },
+            {
+              "id": "ja-document",
+              "cosine": 0.9999999999997997
+            },
+            {
+              "id": "en-query",
+              "cosine": 0.9999999999998606
+            },
+            {
+              "id": "en-document",
+              "cosine": 0.9999999999998574
+            },
+            {
+              "id": "titled-document",
+              "cosine": 0.9999999999997479
+            },
+            {
+              "id": "empty",
+              "cosine": 0.9999999999999786
+            },
+            {
+              "id": "empty-query",
+              "cosine": 0.9999999999997229
+            },
+            {
+              "id": "whitespace",
+              "cosine": 0.9999999999997453
+            },
+            {
+              "id": "newlines",
+              "cosine": 0.9999999999998156
+            },
+            {
+              "id": "mixed",
+              "cosine": 0.9999999999997862
+            },
+            {
+              "id": "emoji",
+              "cosine": 0.9999999999999017
+            },
+            {
+              "id": "punctuation",
+              "cosine": 0.9999999999998015
+            },
+            {
+              "id": "unicode",
+              "cosine": 0.9999999999997993
+            },
+            {
+              "id": "long-truncated",
+              "cosine": 0.9999999999997073
+            },
+            {
+              "id": "unrelated-document",
+              "cosine": 0.9999999999997731
+            }
+          ]
+        }
+      },
+      "local_evidence": "artifacts/unity-harness/real-model-empty-fix"
+    },
+    "runtime_api": {
+      "started_at": "2026-10-08T11:12:51.401060+00:00",
+      "completed_at": "2026-10-08T11:14:01.362716+00:00",
+      "tests": {
+        "TestCount": 2,
+        "PassedCount": 2,
+        "FailedCount": 0,
+        "SkippedCount": 0,
+        "InconclusiveCount": 0
+      },
+      "backends": {
+        "CPU": {
+          "case_count": 15,
+          "minimum_cosine": 0.9999999999992348,
+          "cases": [
+            {
+              "id": "ja-query",
+              "cosine": 0.9999999999996612
+            },
+            {
+              "id": "ja-document",
+              "cosine": 0.9999999999995968
+            },
+            {
+              "id": "en-query",
+              "cosine": 0.9999999999996152
+            },
+            {
+              "id": "en-document",
+              "cosine": 0.9999999999996384
+            },
+            {
+              "id": "titled-document",
+              "cosine": 0.999999999999319
+            },
+            {
+              "id": "empty",
+              "cosine": 0.9999999999999376
+            },
+            {
+              "id": "empty-query",
+              "cosine": 0.9999999999994076
+            },
+            {
+              "id": "whitespace",
+              "cosine": 0.9999999999992348
+            },
+            {
+              "id": "newlines",
+              "cosine": 0.9999999999993595
+            },
+            {
+              "id": "mixed",
+              "cosine": 0.9999999999995326
+            },
+            {
+              "id": "emoji",
+              "cosine": 0.999999999999782
+            },
+            {
+              "id": "punctuation",
+              "cosine": 0.999999999999368
+            },
+            {
+              "id": "unicode",
+              "cosine": 0.9999999999997005
+            },
+            {
+              "id": "long-truncated",
+              "cosine": 0.9999999999994637
+            },
+            {
+              "id": "unrelated-document",
+              "cosine": 0.9999999999994764
+            }
+          ]
+        },
+        "GPUCompute": {
+          "case_count": 15,
+          "minimum_cosine": 0.9999999999997073,
+          "cases": [
+            {
+              "id": "ja-query",
+              "cosine": 0.9999999999998892
+            },
+            {
+              "id": "ja-document",
+              "cosine": 0.9999999999997997
+            },
+            {
+              "id": "en-query",
+              "cosine": 0.9999999999998606
+            },
+            {
+              "id": "en-document",
+              "cosine": 0.9999999999998574
+            },
+            {
+              "id": "titled-document",
+              "cosine": 0.9999999999997479
+            },
+            {
+              "id": "empty",
+              "cosine": 0.9999999999999786
+            },
+            {
+              "id": "empty-query",
+              "cosine": 0.9999999999997229
+            },
+            {
+              "id": "whitespace",
+              "cosine": 0.9999999999997453
+            },
+            {
+              "id": "newlines",
+              "cosine": 0.9999999999998156
+            },
+            {
+              "id": "mixed",
+              "cosine": 0.9999999999997862
+            },
+            {
+              "id": "emoji",
+              "cosine": 0.9999999999999017
+            },
+            {
+              "id": "punctuation",
+              "cosine": 0.9999999999998015
+            },
+            {
+              "id": "unicode",
+              "cosine": 0.9999999999997993
+            },
+            {
+              "id": "long-truncated",
+              "cosine": 0.9999999999997073
+            },
+            {
+              "id": "unrelated-document",
+              "cosine": 0.9999999999997731
+            }
+          ]
+        }
+      },
+      "local_evidence": "artifacts/unity-harness/real-runtime-first"
+    }
+  },
+  "remaining_m1": [
+    "sentis persistence/reload",
+    "fp16 quantization validation",
+    "time and memory measurements"
+  ]
+}

@@ -42,8 +42,8 @@ def test_complete_editor_loop_records_evidence_and_verifies_all_m1_tests(project
     assert [call[0][3] for call in editor.calls] == ["launch", "compile", "run-tests", "get-logs"]
     test_args, options = editor.calls[2]
     assert test_args[1:3] == ["--project-path", str(project)]
-    assert test_args[4:] == ["--test-mode", "EditMode", "--filter-type", "assembly",
-                             "--filter-value", "EmbeddingGemma.Editor.Tests",
+    assert test_args[4:] == ["--test-mode", "EditMode", "--filter-type", "class",
+                             "--filter-value", "EmbeddingGemma.Tests.M1ReferenceTests",
                              "--unsaved-changes", "fail", "--timeout-seconds", "900"]
     assert options["cwd"] == project
     assert options["shell"] is False
@@ -165,3 +165,24 @@ def test_cli_main_returns_nonzero_when_verification_fails(project, tmp_path, mon
     monkeypatch.setattr(unity, "run_harness", lambda *args, **kwargs:
                         {"success": False, "m1_reference_passed": False, "error": "failed"})
     assert unity.main(["--project", str(project), "--output", str(tmp_path / "evidence")]) == 1
+
+
+def test_runtime_scope_requires_both_real_model_backends_without_claiming_m1(project, tmp_path):
+    editor = EditorCLI(tests={"Success": True, "TestCount": 2, "PassedCount": 2,
+                              "FailedCount": 0, "SkippedCount": 0})
+    report = run_harness(project, tmp_path / "evidence", "uloop.exe", "runtime", runner=editor)
+    assert report["success"] is True
+    assert report["runtime_reference_passed"] is True
+    assert report["m1_reference_passed"] is False
+    assert "EmbeddingGemma.Tests.TextEmbedderReferenceTests" in editor.calls[1][0]
+
+
+@pytest.mark.parametrize("result", [
+    {"Success": True, "TestCount": 1, "PassedCount": 1, "FailedCount": 0, "SkippedCount": 0},
+    {"Success": True, "TestCount": 2, "PassedCount": 1, "FailedCount": 0, "SkippedCount": 1},
+    {"Success": False, "TestCount": 2, "PassedCount": 1, "FailedCount": 1, "SkippedCount": 0},
+])
+def test_runtime_scope_rejects_missing_failed_or_skipped_backend(project, tmp_path, result):
+    report = run_harness(project, tmp_path / "evidence", "uloop.exe", "runtime", runner=EditorCLI(tests=result))
+    assert report["success"] is False
+    assert report["runtime_reference_passed"] is False

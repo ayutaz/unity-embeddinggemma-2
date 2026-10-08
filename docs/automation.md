@@ -46,6 +46,8 @@ uv sync --locked
 uv run --locked python -m embeddinggemma_tools.unity --suite compile --launch
 # 起動済み Editor で M1 の3テスト → ログ・失敗時XML保存
 uv run --locked python -m embeddinggemma_tools.unity --suite m1
+# C# API 経由の実モデル15ケース×CPU/GPUComputeを検証
+uv run --locked python -m embeddinggemma_tools.unity --suite runtime
 ```
 
 `--launch` を指定したときだけ起動コマンドを送る。起動済み Editor への通常の検証では省略し、毎回ウィンドウを前面へ移動しない。
@@ -54,7 +56,9 @@ uv run --locked python -m embeddinggemma_tools.unity --suite m1
 ハーネスはWindowsで欠落する `ALLUSERSPROFILE` を子プロセスにのみ補い、UPMの起動エラーを防ぐ。
 ユーザーやシステムの環境変数は変更しない。
 
-テスト対象は `EmbeddingGemma.Editor.Tests` assembly。既存の tokenizer・CPU・GPUCompute の計3件を実行する。
+テスト対象は `EmbeddingGemma.Editor.Tests` assembly 内のclassを明示する。
+`m1` は `M1ReferenceTests` の tokenizer・CPU・GPUCompute 計3件、`runtime` は
+`TextEmbedderReferenceTests` のAPI経由CPU / GPUCompute 計2件（各15ケース）。単体契約テストはこの件数に混ぜない。
 Scene / Prefab の未保存変更があれば `--unsaved-changes fail` で停止する。コンパイルにも外部Scene変更の停止オプションを指定する。
 検証のために未保存編集を自動保存・破棄しない。
 
@@ -67,6 +71,8 @@ Scene / Prefab の未保存変更があれば `--unsaved-changes fail` で停止
 
 exit code 0 は指定した scope の成功、1 は失敗。`--suite compile` は必ず `m1_reference_passed=false`。
 M1 scope は `Success=true` だけでは合格にせず、3件すべて合格・失敗0・skip0・inconclusive0を必要とする。
+runtime scope は両backendの2件すべて合格を必要とし、`runtime_reference_passed` に記録する。
+runtime の合格だけで `m1_reference_passed` は true にしない。
 未実行・不明なJSON・タイムアウトも成功にしない。開始時に以前の成功レポートを上書きする。
 `m1_reference_passed=true` はこの3テストの合格を表す。`.sentis` 保存・量子化・性能測定を含むM1全体の完了ではない。
 
@@ -80,12 +86,15 @@ run と artifact の対応、モデルrevision、`export-validation.json` のSHA
 
 ```powershell
 gh run download <successful-run-id> --name <m1-reference-artifact-name> --dir artifacts/m1
-New-Item -ItemType Directory -Force Assets/M1Generated | Out-Null
-Copy-Item -LiteralPath artifacts/m1/model.pt2 -Destination Assets/M1Generated/model.pt2
+cd tools
+uv run --locked python -m embeddinggemma_tools.stage --source-commit <CI-checkout-SHA>
 ```
 
+配置処理は固定 revision・生成元・全15件のPython結果・参照ベクトルの条件と3ファイルのSHA-256を監査し、
+合格時だけ `Assets/M1Generated/model.pt2` を置換する。`artifacts/m1-stage.json` に小さいレポートを保存する。
+監査失敗時には以前の成功レポートを無効化する。監査の成功はSentis合格ではない。
 `reference.json` / `tokenizer.json` は `artifacts/m1/`、モデルは `Assets/M1Generated/model.pt2` をテストが参照する。
-その後 `--suite m1` を実行し、Sentis import・tokenizer・CPU・GPUCompute の失敗を切り分ける。
+その後 `--suite m1` と `--suite runtime` を実行し、Sentis import・tokenizer・CPU・GPUCompute とAPIを確認する。
 artifact の保持期間は3日。失効した場合は CI で再生成する。生成モデルをcommitしない。
 
 ## 確認済みの範囲

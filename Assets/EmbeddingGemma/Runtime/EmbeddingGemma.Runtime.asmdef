@@ -1,0 +1,5 @@
+{
+    "name": "EmbeddingGemma.Runtime",
+    "references": ["Unity.InferenceEngine", "Unity.InferenceEngine.Tokenization"],
+    "autoReferenced": true
+}

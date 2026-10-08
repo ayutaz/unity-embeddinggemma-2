@@ -71,3 +71,16 @@ Thumbs.db
 .venv/
 __pycache__/
 *.pyc
+
+# Downloaded models and reproducible validation artifacts
+/artifacts/
+*.safetensors
+*.pt2
+*.onnx
+*.onnx_data
+*.sentis
+*.tflite
+.pytest_cache/
+/.uloop/
+/Assets/M1Generated/
+/Assets/M1Generated.meta

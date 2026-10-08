@@ -1,0 +1,17 @@
+[
+  {"id": "ja-query", "role": "query", "text": "猫はどこで眠っていますか？"},
+  {"id": "ja-document", "role": "document", "text": "猫が窓辺で眠っています。"},
+  {"id": "en-query", "role": "query", "text": "Where is the cat sleeping?"},
+  {"id": "en-document", "role": "document", "text": "The cat is sleeping by the window."},
+  {"id": "titled-document", "role": "document", "title": "天気", "text": "明日は晴れの予報です。"},
+  {"id": "empty", "role": "raw", "text": ""},
+  {"id": "empty-query", "role": "query", "text": ""},
+  {"id": "whitespace", "role": "raw", "text": "  \t\n  "},
+  {"id": "newlines", "role": "document", "text": "最初の行\n次の行\r\n最後の行"},
+  {"id": "mixed", "role": "query", "text": "Unityで日本語とEnglishを検索する"},
+  {"id": "emoji", "role": "raw", "text": "猫🐈と犬🐕 😀 👨‍👩‍👧‍👦"},
+  {"id": "punctuation", "role": "raw", "text": "記号: !?！？ []{} <> /\\ | ~ ` @#$%^&*()"},
+  {"id": "unicode", "role": "raw", "text": "é é ＡＢＣ abc ひらがな カタカナ 漢字"},
+  {"id": "long-truncated", "role": "document", "text": "長い文章を切り詰めて正しく処理します。", "repeat": 100},
+  {"id": "unrelated-document", "role": "document", "text": "A computer compiles source code into a program."}
+]

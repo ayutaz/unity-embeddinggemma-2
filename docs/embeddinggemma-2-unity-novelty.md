@@ -1,15 +1,21 @@
 # EmbeddingGemma 2 の Unity 対応に関する新規性調査
 
 - 調査日: 2026-10-07
+- 文書の更新日: 2026-10-08（実装状況への参照を追加。先行事例の網羅検索は再実施していない）
 - 対象: [google/embeddinggemma-2](https://huggingface.co/google/embeddinggemma-2)
+
+> 本文の先行事例・新規性の評価は 2026-10-07 の調査範囲に限る。現在の先行実装の不存在を保証するものではない。
+> 現在は Sentis 2.6.1 を採用し、Python の参照生成・export と小さいモデルのテストを実装済み。
+> 実モデルの Unity 推論は未検証。[M1 詳細計画](m1-plan.md) / [検証記録](m1-validation.md)を参照。
 
 ## 結論
 
-現時点(2026-10-07)では新規性がある。ただし、テキストの埋め込みだけを Unity で動かす部分は、近いうちに既存のライブラリで実現される可能性が高い。
+2026-10-07 の調査では、Sentis を使う直接の先行実装は見つからず、新規性がある可能性がある。
+ただし、テキストの埋め込みだけを Unity で動かす部分は、既存のライブラリで実現される可能性がある。
 
 新規性を主張しやすいのは次の 2 点。
 
-1. Unity 純正の Inference Engine(旧 Sentis)だけで動かすこと
+1. Unity 純正の Sentis（名前空間は `Unity.InferenceEngine`）だけで動かすこと
 2. 画像・音声を含むマルチモーダルの埋め込みを Unity で扱うこと
 
 ## モデルの概要
@@ -39,7 +45,7 @@ Google の発表では、Unity・C#・.NET への言及はない。
 | 事例 | 内容 | 本件との関係 |
 | --- | --- | --- |
 | [unity/inference-engine-minilm-v6](https://huggingface.co/unity/inference-engine-minilm-v6) | Unity 公式。Inference Engine でテキストの埋め込み(MiniLM v6)を動かすサンプル | 「Unity で埋め込みを動かすこと」自体は新しくない |
-| [LLMUnity](https://github.com/undreamai/LLMUnity) | llama.cpp のラッパー。GGUF の埋め込みモデルで RAG ができる | `ggml-org/embeddinggemma-2-GGUF` がすでにあるため、llama.cpp が新しいモデル構造に対応すれば、テキストだけの対応はほぼそのまま動く可能性が高い。最新リリースは v3.0.3(2026年3月)。対応済みかどうかは未確認 |
+| [LLMUnity](https://github.com/undreamai/LLMUnity) | llama.cpp のラッパー。GGUF の埋め込みモデルで RAG ができる | 調査時点で `ggml-org/embeddinggemma-2-GGUF` があり、llama.cpp が新しいモデル構造に対応すればテキスト経路を利用できる可能性がある。EmbeddingGemma 2 への対応状況と現在のリリースは未確認 |
 | EmbeddingGemma.NET | 初代 EmbeddingGemma を ONNX Runtime 経由で C# から使う実装 | ONNX Runtime の Unity 用プラグインと組み合わせれば、Unity でも動く見込み |
 
 ## Inference Engine での対応状況
@@ -67,7 +73,7 @@ Google の発表では、Unity・C#・.NET への言及はない。
 | --- | --- | --- |
 | テキストだけを llama.cpp(LLMUnity など)で動かす | 低い | 既存ライブラリの更新で実現しそう |
 | ONNX Runtime の Unity プラグインで動かす | 低〜中 | 公開済みの ONNX がそのまま使える。.NET での先行例もある |
-| Inference Engine だけでテキストを動かす(iOS / Android、GPU) | 中〜高 | 演算子の置き換えが必要で、先行例がない |
+| Sentis だけでテキストを動かす(iOS / Android、GPU) | 中〜高 | 演算子の互換性対応が必要で、調査範囲では先行例が見つからなかった |
 | 画像・音声も Unity で扱う(例: スクリーンショットや声でゲーム内を検索) | 高い | Unity でのマルチモーダル埋め込みの先行例が見つからない |
 
 ## 注意点
@@ -78,7 +84,9 @@ Google の発表では、Unity・C#・.NET への言及はない。
 
 ## 次のステップ
 
-テキスト用モデルを標準の演算子だけで書き出し直し、Inference Engine で読み込めるかを試す。これが一番手早く検証できる。
+Core ATen `.pt2` の text-only export 実装を CI で実モデルに適用し、Sentis での tokenizer / import /
+CPU / GPUCompute を検証する。非互換が確認された場合に標準 ONNX の経路を追加する。
+公開時の新規性の主張は、その時点の先行事例調査と実際の検証結果に基づいて更新する。
 
 ## 参考資料
 

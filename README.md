@@ -2,8 +2,10 @@
 
 Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.unity.ai.inference@2.6/manual/index.html) だけを使って、Google の [EmbeddingGemma 2](https://huggingface.co/google/embeddinggemma-2) を動かすプロジェクトです。テキスト・画像・音声を、同じ 768 次元の空間の埋め込みに変換できるようにします。
 
-> **状態: 計画段階**
-> 調査と方針の決定まで終わっています。実装はこれからです。
+> **状態: M1 実装中**
+> 2026-10-08: Python の参照生成・Core ATen export・CLI を実装し、小さいモデルのオフラインテスト 33 件が合格しました。
+> 実モデルと Unity の CI は未実行で、Sentis CPU / GPUCompute の一致は未検証です。
+> リポジトリは public ですが、UPM パッケージのリリースはまだ行っていません。
 
 ## ゴール
 
@@ -17,8 +19,8 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 
 | # | 内容 | 状態 |
 | --- | --- | --- |
-| M1 | テキスト用モデルを Sentis で動かす | 未着手 |
-| M2 | テキスト版を公開する | 未着手 |
+| M1 | テキスト用モデルを Sentis で動かす | 実装中（Sentis での一致は未検証） |
+| M2 | テキスト版の UPM パッケージとサンプルをリリースする | 未着手 |
 | M3 | 画像用モデルに対応する | 未着手 |
 | M4 | 音声用モデルに対応する | 未着手 |
 
@@ -27,7 +29,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 | 項目 | バージョン |
 | --- | --- |
 | Unity | 6000.3.19f1(URP 2D テンプレート) |
-| Sentis(`com.unity.ai.inference`) | 2.6.1 を使う予定(まだプロジェクトに入っていない) |
+| Sentis(`com.unity.ai.inference`) | 2.6.1（manifest に指定。Editor での依存解決は未実行） |
 | Python(モデルの変換用) | 3.13 以上、[uv](https://docs.astral.sh/uv/) で管理 |
 
 ## フォルダ構成
@@ -47,22 +49,49 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 
 ```sh
 cd tools
-uv sync                      # 依存をインストールする
-uv run python <スクリプト>   # スクリプトを実行する
+uv sync --locked             # lockfile と同じ依存をインストールする
+uv run --locked python <スクリプト> # スクリプトを実行する
 uv add <パッケージ>          # 依存を追加する(pip install は使わない)
 ```
 
 主な依存は torch・transformers・sentence-transformers・onnx です。
 
+開発は TDD で行い、重い実行は GitHub Actions を利用します。`main` へ直接 push せず、作業ブランチから PR を作成します。
+CI の構成と Unity ライセンスの準備は [docs/ci.md](docs/ci.md)、M1 の詳細手順と進捗は [docs/m1-plan.md](docs/m1-plan.md) を参照してください。
+
+小さいモデルを使うオフライン単体テスト:
+
+```sh
+cd tools
+uv run --locked pytest -q
+```
+
+GitHub Actions が実行する参照生成・変換コマンド:
+
+```sh
+uv run --locked python -m embeddinggemma_tools prepare --output ../artifacts/m1
+```
+
+モデルの revision を固定して参照データ・設定済み tokenizer・`.pt2` を生成し、保存後のモデルを参照実装と比較します。
+この Python 側の一致と、Sentis 側の M1 合格は別々に検証します。
+
+承認モードの変更後、作業ブランチ `feat/m1-text-tdd` を作成できました。
+PR と CI の最新状態は [検証記録](docs/m1-validation.md)を参照してください。
+次はブランチ / PR → Python matrix・実モデル export → Unity tokenizer・CPU / GPUCompute →
+`.sentis` 保存・fp16 量子化・測定の順に進めます。Unity CI には Repository Secrets の準備が必要です。
+
 ## モデルファイルについて
 
-モデルファイル(`.safetensors`、`.pt2`、`.onnx`、`.sentis` など)はリポジトリにコミットしません。Git LFS も使いません。モデルは Hugging Face から取得し、`tools/` のスクリプトで変換する予定です。
+モデルファイル(`.safetensors`、`.pt2`、`.onnx`、`.sentis` など)はリポジトリにコミットしません。Git LFS も使いません。`tools/` の CLI が Hugging Face の固定 revision から取得して変換します。実モデルでの実行確認はこれからです。
 
 ## ドキュメント
 
 | ドキュメント | 内容 |
 | --- | --- |
 | [docs/goal.md](docs/goal.md) | ゴール、達成の基準、マイルストーン、対象外のこと |
+| [docs/m1-plan.md](docs/m1-plan.md) | M1 の詳細計画、TDD の進め方、検証状況 |
+| [docs/m1-validation.md](docs/m1-validation.md) | TDD の red / green、最新テスト結果、未検証項目、外部状態の確認記録 |
+| [docs/ci.md](docs/ci.md) | GitHub Actions、PR 運用、Unity CI の準備 |
 | [docs/technical-approach.md](docs/technical-approach.md) | Sentis 2.6 の調査、EmbeddingGemma 2 の構造、モデルを持ち込む方法の比較、設計案、検証方法 |
 | [docs/embeddinggemma-2-unity-novelty.md](docs/embeddinggemma-2-unity-novelty.md) | Unity 対応の新規性の調査(2026-10-07 時点) |
 

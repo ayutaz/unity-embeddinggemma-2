@@ -56,11 +56,11 @@ Float16は保存する重みの精度であり、全演算のfp16化・速度改
 
 ## 次の作業
 
-1. 全PRで完了する必須CIの判定を整え、main保護を設定する。
-2. [M2詳細計画](m2-plan.md)に沿ってUPM構成、テキスト検索サンプル、配布手順、macOS Editor / iOS / Androidの精度・速度・メモリ検証を進める。計画整理済み、実装未着手。
+1. PR #6に実装した全PRの必須CIとUPM移行をmainへ統合する。GitHub側のmain保護は設定済み。[パッケージ検証](m2-package-validation.md)を参照。
+2. [M2詳細計画](m2-plan.md)に沿ってテキスト検索サンプル、配布手順、macOS Editor / iOS / Androidの精度・速度・メモリ検証を進める。
 3. M2の後にM3で画像モデルとGPU前処理、M4で音声モデルとGPU前処理・モダリティ横断検索。
 
-main保護のサーバー設定と、全PRで起動する必須CIの整合は開発基盤の別作業として残る。
+main保護のサーバー設定は完了。全PRで起動する必須CIはPR #6のmain統合待ち。
 クラウドUnity workflowはLinux CPUの任意手動補助検証で未実行。Secrets未登録はローカルM1の妨げではなく、Linuxや他環境を合格扱いにしない。
 
 ## 開発・再実行規則

@@ -9,6 +9,10 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 > クラウドUnity CIはSecretsが必要なLinux CPUの手動補助検証です（未実行）。
 > リポジトリは public ですが、UPM パッケージのリリースはまだ行っていません。
 
+> **M2着手中（PR #6）**: テキストRuntimeを `com.ayutaz.embeddinggemma` の開発版UPMへ移行しました。
+> 全PRで実行するCIとパッケージ監査を追加し、GitHub側ではmainのPR必須・Required CI必須・force push / 削除禁止を設定済みです。
+> PRのmain統合、検索サンプル、他環境の実機検証、リリースは未完了。[パッケージ導入・検証](docs/m2-package-validation.md)を参照してください。
+
 ## ゴール
 
 次の 3 つをすべて満たすことを目指します。詳しくは [docs/goal.md](docs/goal.md) を参照してください。
@@ -22,7 +26,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 | # | 内容 | 状態 |
 | --- | --- | --- |
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor受け入れ検証完了（保存・量子化・測定を含む） |
-| M2 | テキスト版の UPM パッケージとサンプルをリリースする | [詳細計画を整理済み](docs/m2-plan.md)、実装未着手 |
+| M2 | テキスト版の UPM パッケージとサンプルをリリースする | UPM化をPR #6で実装。検索サンプル・他環境検証・リリースは未着手 |
 | M3 | 画像用モデルに対応する | 未着手 |
 | M4 | 音声用モデルに対応する | 未着手 |
 
@@ -40,7 +44,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 ```
 .
 ├── Assets/          Unity のアセット
-├── Packages/        Unity のパッケージ設定
+├── Packages/        Unity のパッケージ設定・EmbeddingGemma UPM
 ├── ProjectSettings/ Unity のプロジェクト設定
 ├── docs/            調査結果と設計のドキュメント
 └── tools/           モデルを変換する Python プロジェクト(uv)
@@ -80,11 +84,19 @@ uv run --locked python -m embeddinggemma_tools prepare --output ../artifacts/m1
 モデルの revision を固定して参照データ・設定済み tokenizer・`.pt2` を生成し、保存後のモデルを参照実装と比較します。
 この Python 側の一致と、Sentis 側の M1 合格は別々に検証します。
 
-M1はWindows Editorで完了し、PR #1〜#4を統合済みです。次は全PRの必須CIとmain保護を整え、M2のUPMパッケージ化、テキスト検索サンプル、macOS / iOS / Android検証、配布へ進みます。
+M1はWindows Editorで完了し、PR #1〜#4を統合済みです。PR #6で全PRの必須CIとUPM化を実装し、main保護はGitHub側に設定済みです。次はテキスト検索サンプル、macOS / iOS / Android検証、配布へ進みます。
 残作業の順序・依存・完了条件は [M2計画](docs/m2-plan.md)、実装済みAPIは [C# API手順](docs/runtime-api.md) を参照してください。
 新しい実装も作業ブランチ / PR を使い、マージは依頼があるまで行いません。
 M1の完了条件は [M1計画](docs/m1-plan.md)、最新の数値とCIの確認記録は [完了検証記録](docs/m1-completion-validation.md)を参照してください。
 ローカル検証に GitHub Secrets は不要です。任意の Linux CPU 手動 CI を使う場合だけ準備します。
+
+## UPM開発版の導入
+
+Unity 6000.3.16f1の別プロジェクトで、Package Managerから
+[package.json](Packages/com.ayutaz.embeddinggemma/package.json)を「Add package from disk」で指定します。
+Sentis 2.6.1とNewtonsoft JSON 3.2.2はパッケージの依存から解決します。
+Git URLのcommit固定による導入とAPI使用例は [パッケージ文書](Packages/com.ayutaz.embeddinggemma/Documentation~/index.md)を参照してください。
+モデルは含まれておらず、検索サンプルと公開tagはまだありません。
 
 ## モデルファイルについて
 
@@ -101,6 +113,7 @@ M1の完了条件は [M1計画](docs/m1-plan.md)、最新の数値とCIの確認
 | [docs/runtime-api.md](docs/runtime-api.md) | 実装済みのテキスト推論・保存API |
 | [docs/automation.md](docs/automation.md) | uloopの導入、検証ハーネス、モデル成果物の監査・配置 |
 | [docs/m2-plan.md](docs/m2-plan.md) | 残作業の順序、UPM・検索サンプル・他環境・配布の完了条件 |
+| [docs/m2-package-validation.md](docs/m2-package-validation.md) | CI・main保護・UPM移行、新規Unityプロジェクトへの導入結果 |
 | [docs/ci.md](docs/ci.md) | GitHub Actions、PR 運用、Unity CI の準備 |
 | [docs/technical-approach.md](docs/technical-approach.md) | Sentis 2.6 の調査、EmbeddingGemma 2 の構造、モデルを持ち込む方法の比較、設計案、検証方法 |
 | [docs/embeddinggemma-2-unity-novelty.md](docs/embeddinggemma-2-unity-novelty.md) | Unity 対応の新規性の調査(2026-10-07 時点) |

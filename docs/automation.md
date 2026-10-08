@@ -115,3 +115,16 @@ PR #1〜#4はmain `8146107`へ統合済み。統合後のmain CI（run `37801650
 保存・量子化・測定とソース対応は [M1完了検証](m1-completion-validation.md)、次のUPM移行・サンプル・他環境検証は [M2計画](m2-plan.md)を参照。
 クラウドUnity workflowはSecretsが必要なLinux CPUの手動補助検証のみ。M1のWindows CPU/GPUCompute合格はこのローカルハーネスで確認する。
 詳細な履歴は [検証記録](m1-validation.md)を参照。
+
+## UPM移行後の契約テスト
+
+PR #6でRuntimeとモデル不要の契約29件を `Packages/com.ayutaz.embeddinggemma/` へ移行した。
+実モデルfixtureと測定契約1件は検証プロジェクトの `Assets/Tests/Editor/` に残す。上記m1 / runtime / completionスコープは変わらない。
+パッケージ側の契約は次のassemblyを明示して実行する。
+
+```powershell
+& artifacts/uloop/bin/uloop.exe --project-path . run-tests --filter-type assembly --filter-value EmbeddingGemma.Package.Editor.Tests --test-mode EditMode --unsaved-changes fail
+```
+
+新規consumerの作成と同じassemblyの検証は [UPM検証](m2-package-validation.md)を参照。
+起動時もPythonハーネスを使うと、子プロセスへの `ALLUSERSPROFILE` 補完が適用される。

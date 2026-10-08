@@ -6,7 +6,9 @@ API導入当時は単体契約24件、現在は保存・測定契約を含む30�
 
 `EmbeddingGemma.Runtime` は UnityEditor を参照しない assembly。
 Unity 6000.3.16f1 / Sentis 2.6.1 の、batch 1 / length 128 / fp32 / 768次元の export を対象とする。
-モデル・tokenizer は [CI成果物を検証して配置](automation.md) する。配布用 UPM 整理は M2 で行う。
+モデル・tokenizerは [CI成果物を検証して配置](automation.md)する。
+PR #6でRuntimeを `Packages/com.ayutaz.embeddinggemma/Runtime/` へ移行し、元のソース・assembly名・GUIDを維持した。
+別プロジェクトへの導入は [パッケージ文書](../Packages/com.ayutaz.embeddinggemma/Documentation~/index.md)、結果は [UPM検証](m2-package-validation.md)を参照。
 
 ```csharp
 using EmbeddingGemma;

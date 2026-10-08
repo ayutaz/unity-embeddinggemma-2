@@ -1,0 +1,218 @@
+{
+  "schema_version": 1,
+  "scope": "Windows Editor UPM migration and PR infrastructure; no release or mobile acceptance",
+  "tested_code_commit": "b74180ec8dcdce99faf88dc129a58904c50a7946",
+  "baseline_commit": "8146107aa77904050c6235866c0cf79ecc80034c",
+  "package": "com.ayutaz.embeddinggemma",
+  "version": "0.1.0-pre.1",
+  "unity": "6000.3.16f1",
+  "sentis": "2.6.1",
+  "newtonsoft": "3.2.2",
+  "consumer": {
+    "source": "local folder UPM dependency, separate empty project",
+    "runtime_files_in_assets": false,
+    "urp_dependency": false,
+    "automation_package": "io.github.hatayama.uloopmcp 3.14.0 (test tooling only)",
+    "tests": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-08T16:53:20.7032258Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 29,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 29,
+      "XmlPath": null
+    }
+  },
+  "root_project": {
+    "package_contracts": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-08T16:43:11.8254799Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 29,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 29,
+      "XmlPath": null
+    },
+    "measurement_contract": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-08T16:45:43.7439235Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 1,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 1,
+      "XmlPath": null
+    },
+    "m1_reference": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-08T16:48:00.3424186Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 3,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 3,
+      "XmlPath": null
+    },
+    "runtime_reference": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-08T16:49:22.2858974Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 2,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 2,
+      "XmlPath": null
+    }
+  },
+  "source_preservation": [
+    {
+      "git_blob": "5668116ce349e2099e8b1296b6408285501131fb",
+      "from": "Assets/EmbeddingGemma/Runtime.meta",
+      "to": "Packages/com.ayutaz.embeddinggemma/Runtime.meta"
+    },
+    {
+      "git_blob": "1ba4921375bd3b9c8473460b7dd9544f4dfb8e5d",
+      "from": "Assets/EmbeddingGemma/Runtime/EmbeddingGemma.Runtime.asmdef",
+      "to": "Packages/com.ayutaz.embeddinggemma/Runtime/EmbeddingGemma.Runtime.asmdef"
+    },
+    {
+      "git_blob": "fcb0f687136e1105c1b2d908d02193208d1b5b62",
+      "from": "Assets/EmbeddingGemma/Runtime/EmbeddingGemma.Runtime.asmdef.meta",
+      "to": "Packages/com.ayutaz.embeddinggemma/Runtime/EmbeddingGemma.Runtime.asmdef.meta"
+    },
+    {
+      "git_blob": "b1b1536ef8642e1fce9f51c6c4355dfe786320de",
+      "from": "Assets/EmbeddingGemma/Runtime/TextEmbedder.cs",
+      "to": "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs"
+    },
+    {
+      "git_blob": "e2e608c488a332c4a194cce490283b108a0aed26",
+      "from": "Assets/EmbeddingGemma/Runtime/TextEmbedder.cs.meta",
+      "to": "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs.meta"
+    },
+    {
+      "git_blob": "7ac222f03da2408e058a17b3ea8fd7729a4420d3",
+      "from": "Assets/EmbeddingGemma/Runtime/TextModelFile.cs",
+      "to": "Packages/com.ayutaz.embeddinggemma/Runtime/TextModelFile.cs"
+    },
+    {
+      "git_blob": "45d3889f6dfc1ed3b1e2e785b6cdfc095cabe693",
+      "from": "Assets/EmbeddingGemma/Runtime/TextModelFile.cs.meta",
+      "to": "Packages/com.ayutaz.embeddinggemma/Runtime/TextModelFile.cs.meta"
+    },
+    {
+      "git_blob": "ccd53e0ce9e3e8e0bf08596a73bbe93083f0defc",
+      "from": "Assets/EmbeddingGemma/Runtime/TextPrompts.cs",
+      "to": "Packages/com.ayutaz.embeddinggemma/Runtime/TextPrompts.cs"
+    },
+    {
+      "git_blob": "81f3521aaa5b459d839a2a8828fe0a912da7e858",
+      "from": "Assets/EmbeddingGemma/Runtime/TextPrompts.cs.meta",
+      "to": "Packages/com.ayutaz.embeddinggemma/Runtime/TextPrompts.cs.meta"
+    },
+    {
+      "git_blob": "0f919d9f5d41f8eda9e6088eea62cffe4c8d53a6",
+      "from": "Assets/EmbeddingGemma/Runtime/TextTokenizer.cs",
+      "to": "Packages/com.ayutaz.embeddinggemma/Runtime/TextTokenizer.cs"
+    },
+    {
+      "git_blob": "233981ee5518f08cf77410ba0352dae8dacb18c0",
+      "from": "Assets/EmbeddingGemma/Runtime/TextTokenizer.cs.meta",
+      "to": "Packages/com.ayutaz.embeddinggemma/Runtime/TextTokenizer.cs.meta"
+    },
+    {
+      "git_blob": "ec94e017ef9625ecc4e4fd24828efa1b6a87d0bf",
+      "from": "Assets/Tests/Editor/TextPromptsTests.cs",
+      "to": "Packages/com.ayutaz.embeddinggemma/Tests/Editor/TextPromptsTests.cs"
+    },
+    {
+      "git_blob": "15cbf9fc0f8e07954da9ab46ebe1477857cc2f95",
+      "from": "Assets/Tests/Editor/TextPromptsTests.cs.meta",
+      "to": "Packages/com.ayutaz.embeddinggemma/Tests/Editor/TextPromptsTests.cs.meta"
+    },
+    {
+      "git_blob": "0d69c0c6395600bc6b6d6404b32626bef1460308",
+      "from": "Assets/Tests/Editor/TextTokenizerTests.cs",
+      "to": "Packages/com.ayutaz.embeddinggemma/Tests/Editor/TextTokenizerTests.cs"
+    },
+    {
+      "git_blob": "53f1a249877c40cbbb618c776806bc9346ba430d",
+      "from": "Assets/Tests/Editor/TextTokenizerTests.cs.meta",
+      "to": "Packages/com.ayutaz.embeddinggemma/Tests/Editor/TextTokenizerTests.cs.meta"
+    },
+    {
+      "git_blob": "b4c2e806c9e1cadf0344a92fa4442686d1effebb",
+      "from": "Assets/Tests/Editor/TextEmbedderTests.cs",
+      "to": "Packages/com.ayutaz.embeddinggemma/Tests/Editor/TextEmbedderTests.cs"
+    },
+    {
+      "git_blob": "590e7ed41f8bffb52d93efaa5b0e65ab47ef5351",
+      "from": "Assets/Tests/Editor/TextEmbedderTests.cs.meta",
+      "to": "Packages/com.ayutaz.embeddinggemma/Tests/Editor/TextEmbedderTests.cs.meta"
+    },
+    {
+      "git_blob": "ca81c9d797a8633da65d5547290b3977f56051fa",
+      "from": "Assets/Tests/Editor/TextModelFileTests.cs",
+      "to": "Packages/com.ayutaz.embeddinggemma/Tests/Editor/TextModelFileTests.cs"
+    },
+    {
+      "git_blob": "d1f251f207f02acf1409c94f8a5483092689e720",
+      "from": "Assets/Tests/Editor/TextModelFileTests.cs.meta",
+      "to": "Packages/com.ayutaz.embeddinggemma/Tests/Editor/TextModelFileTests.cs.meta"
+    }
+  ],
+  "main_protection": {
+    "pr_required": true,
+    "approval_count": 0,
+    "required_check": "Required CI",
+    "actions_app_id": 15368,
+    "strict": true,
+    "enforce_admins": true,
+    "allow_force_pushes": false,
+    "allow_deletions": false,
+    "required_linear_history": true,
+    "required_conversation_resolution": true
+  },
+  "limitations": [
+    "PR #6 not merged at recording time; universal CI workflow integration pending merge.",
+    "No published release or searchable sample.",
+    "No macOS, Player, iOS or Android acceptance.",
+    "No new full save/quantization benchmark; Runtime source and metadata unchanged.",
+    "Consumer uses model-free contracts; real-model CPU/GPU evidence is the separate root project regression.",
+    "Initial root compile failed before Package Manager resolve; fixed and subsequent compile/tests passed.",
+    "Initial direct consumer launch failed UPM path resolution with missing ALLUSERSPROFILE; harness environment repair resolved packages.",
+    "uloop launch readiness timed out; consumer run-tests reported compilation and 29 passed, zero skips; CLI post-compile warmup warning is distinct from NUnit test results."
+  ]
+}

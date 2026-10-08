@@ -186,3 +186,25 @@ def test_runtime_scope_rejects_missing_failed_or_skipped_backend(project, tmp_pa
     report = run_harness(project, tmp_path / "evidence", "uloop.exe", "runtime", runner=EditorCLI(tests=result))
     assert report["success"] is False
     assert report["runtime_reference_passed"] is False
+
+
+def test_completion_scope_runs_saved_models_quantization_and_measurement_fixture(project, tmp_path):
+    editor = EditorCLI(tests={"Success": True, "TestCount": 1, "PassedCount": 1,
+                              "FailedCount": 0, "SkippedCount": 0})
+    report = run_harness(project, tmp_path / "evidence", "uloop.exe", "completion", runner=editor)
+    assert report["success"] is True
+    assert report["m1_completion_passed"] is True
+    assert report["m1_reference_passed"] is False
+    assert report["runtime_reference_passed"] is False
+    assert "EmbeddingGemma.Tests.M1CompletionTests" in editor.calls[1][0]
+
+
+@pytest.mark.parametrize("result", [
+    {"Success": True, "TestCount": 0, "PassedCount": 0, "FailedCount": 0, "SkippedCount": 0},
+    {"Success": True, "TestCount": 1, "PassedCount": 0, "FailedCount": 0, "SkippedCount": 1},
+    {"Success": True, "TestCount": 1, "PassedCount": 1, "FailedCount": 0, "SkippedCount": 0, "InconclusiveCount": 1},
+])
+def test_completion_scope_rejects_absent_skipped_or_inconclusive_results(project, tmp_path, result):
+    report = run_harness(project, tmp_path / "evidence", "uloop.exe", "completion", runner=EditorCLI(tests=result))
+    assert report["success"] is False
+    assert report["m1_completion_passed"] is False

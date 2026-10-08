@@ -5,7 +5,8 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 > **状態: M1 実装中**
 > 2026-10-08: Python の参照生成・Core ATen export・CLI を実装し、小さいモデルのオフラインテスト 33 件が合格しました。
 > [draft PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)のCIで、Python 4環境の各33テストと、実モデルの保存済み `.pt2` の全15ケース照合が成功しました（修正後runの最小cosine 0.9999997616）。
-> Sentis CPU / GPUCompute は未検証です。Unity CIはライセンスSecrets不足でEditor起動前に停止しています。
+> ローカル Unity 6000.3.16f1 に Unity CLI Loop を導入し、依存解決・テストのコンパイルに成功しました。自動検証ハーネスを追加しています。
+> M1 の Editor テスト3件は参照データ未配置で失敗。Sentis CPU / GPUCompute の数値一致は未検証です。Unity CIはライセンスSecrets不足でEditor起動前に停止しています。
 > リポジトリは public ですが、UPM パッケージのリリースはまだ行っていません。
 
 ## ゴール
@@ -29,8 +30,9 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 
 | 項目 | バージョン |
 | --- | --- |
-| Unity | 6000.3.19f1(URP 2D テンプレート) |
-| Sentis(`com.unity.ai.inference`) | 2.6.1（manifest に指定。Editor での依存解決は未実行） |
+| Unity | 6000.3.16f1(URP 2D テンプレート) |
+| Sentis(`com.unity.ai.inference`) | 2.6.1（ローカル Editor で依存解決・コンパイル済み） |
+| Unity CLI Loop | パッケージ 3.14.0 / dispatcher 3.8.1 / project runner 3.8.0 |
 | Python(モデルの変換用) | 3.13 以上、[uv](https://docs.astral.sh/uv/) で管理 |
 
 ## フォルダ構成
@@ -59,6 +61,8 @@ uv add <パッケージ>          # 依存を追加する(pip install は使わ�
 
 開発は TDD で行い、重い実行は GitHub Actions を利用します。`main` へ直接 push せず、作業ブランチから PR を作成します。
 CI の構成と Unity ライセンスの準備は [docs/ci.md](docs/ci.md)、M1 の詳細手順と進捗は [docs/m1-plan.md](docs/m1-plan.md) を参照してください。
+
+Unity のローカル自動操作とハーネスの導入・実行方法は [docs/automation.md](docs/automation.md) を参照してください。
 
 小さいモデルを使うオフライン単体テスト:
 

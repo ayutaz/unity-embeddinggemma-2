@@ -16,15 +16,15 @@ M1 は Windows Editor での検証を対象とする。macOS / iOS / Android、�
 
 ## 現在地（2026-10-08 確認）
 
-**M1 は未完了。実モデルのPython参照生成・保存済みexportの全15ケース照合とCI lintが合格。UnityはライセンスSecrets不足でEditor起動前に停止。**
+**M1 は未完了。実モデルのPython参照生成・保存済みexportの全15ケース照合とCI lintが合格。ローカル Unity 6000.3.16f1 / Sentis 2.6.1 の依存解決・コンパイルが成功。Editor の M1 テスト3件は参照データ未配置で失敗。**
 
 | 対象 | 確認できた状態 | 残っていること |
 | --- | --- | --- |
 | Python | 修正後PR CIの4環境で各33件合格。実モデル 15 ケースの eager / 保存済みexport 照合が CI 成功、最小cosine 0.9999997616 | Sentisとの照合 |
-| Unity | 6000.3.19f1 を指定。Sentis 2.6.1 を manifest に追加。Editor acceptance tests を作成 | Editor での依存解決、packages-lock 更新、テストのコンパイルと red / green |
+| Unity | 6000.3.16f1 / Sentis 2.6.1 / Unity CLI Loop 3.14.0 の依存解決とコンパイルが成功。packages-lock 更新済み | CI 成果物をローカルへ配置し、参照との一致を検証 |
 | 推論・保存 | 小さいモデルと実モデルで保存済み `.pt2` を再読み込みして照合成功 | 実モデルの Sentis import、CPU / GPUCompute、C# ランタイム API、`.sentis`、量子化、測定 |
 | GitHub | public。[draft PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)を提出し、4 workflow の初回PR runを起動済み | runの結果確認と失敗の切り分け。Unity Secrets / Variables は未登録 |
-| 開発環境 | `feat/m1-text-tdd` の初回実装 `4fec060` とCI修正 `3df9ebe` を push 済み。main への commit / push / merge は未実施 | Unity Secrets準備後の実測と記録 |
+| 開発環境 | `feat/m1-text-tdd` で開発。uloop の起動・コンパイル・テスト・ログ保存ハーネスを構築。main への commit / push / merge は未実施 | ローカル実測と記録。クラウドの Unity CI は別途構成修正が必要 |
 
 GitHub の既存 Dependency Graph 2 件の成功と、新規runの起動は、M1 の CI 合格ではない。
 GitHub 側の main ブランチ保護と repository rulesets は未設定。
@@ -34,7 +34,7 @@ GitHub 側の main ブランチ保護と repository rulesets は未設定。
 ## 開発規則
 
 - リポジトリは public の OSS。ユーザー指定により CI/CD を最大限利用する。モデル取得・参照生成・export・Unity テスト・性能測定は原則 GitHub Actions で行う。
-- ローカルは編集、静的確認、必要最小限の軽い red / green 確認に限る。ローカルへの Unity インストールや実モデルの重い実行は進めない。
+- Python のモデル取得・変換は引き続き CI を使う。ユーザー指定により、インストール済み Unity 6000.3.16f1 でのローカル起動・検証を進める。
 - 全実装を TDD で進める。仕様を検証するテストを書く → 意図した理由の失敗を実行で確認する → 最小実装 → 合格 → 必要な整理。
 - Python は `tools/` の uv 環境に統一する。`uv sync` / `uv add` / `uv run` を使用する。
 - Python 単体テストは小さいランダム初期化モデルなどでオフライン実行できるようにする。
@@ -47,12 +47,12 @@ GitHub 側の main ブランチ保護と repository rulesets は未設定。
 
 | 段階 | 現在の状態 | 次の実施内容と成果物 | 合格条件 / 次の判断 |
 | --- | --- | --- | --- |
-| P0 環境 | Python 準備済み、Unity 未検証 | CI で指定 Editor / Sentis を起動し、依存解決ログと生成された packages-lock を確認 | Unity 6000.3.19f1 と Sentis 2.6.1 でテストをコンパイルできる |
+| P0 環境 | ローカルで指定 Editor / Sentis / uloop を解決し、コンパイル合格 | CI 参照成果物を配置し、ハーネスから再検証 | Unity 6000.3.16f1 と Sentis 2.6.1 でテストをコンパイルできる（確認済み） |
 | P1 参照仕様 | 固定入力と Python テスト実装済み | 実モデルの tokenizer で 15 ケースの ID / mask と実際の切り詰めを確認 | 特殊トークン、padding、truncation、プロンプト、出力構造が記録される |
 | P2 参照生成 | 初回とCI修正後の実モデルCLIが成功し、参照・tokenizer・export artifactを生成 | Unity側で同じrevisionの参照を利用 | 全 15 ケースで有限な正規化済み 768 次元出力。revision / source SHA / 条件を記録 |
-| P3 tokenizer | Editor acceptance test 作成済み、未コンパイル | Sentis tokenizer と Python を照合し、失敗した処理だけ TDD で修正 | 全 15 ケースの ID / mask が完全一致 |
+| P3 tokenizer | Editor acceptance test のコンパイル成功。参照未配置で red | Sentis tokenizer と Python を照合し、失敗した処理だけ TDD で修正 | 全 15 ケースの ID / mask が完全一致 |
 | P4 export | 実モデルのPython eager / 保存済み `.pt2` が全15件合格。Sentis importは未実行 | Unity import。`.pt2` が非互換なら ONNX | Python eager 対保存済み export の全件 cosine >= 0.999999、Sentis import 成功 |
-| P5 inference | Editor acceptance test 作成済み、推論 API 未実装 | CPU / GPUCompute の CI で red を確認し、C# ランタイム API を TDD で実装 | 両 backend の全 15 ケースで cosine >= 0.999、有限・768 次元・単位長 |
+| P5 inference | Editor acceptance test のコンパイル成功。CPU / GPUCompute とも参照未配置で red | ローカルで実モデルを配置して数値照合し、C# ランタイム API を TDD で実装 | 両 backend の全 15 ケースで cosine >= 0.999、有限・768 次元・単位長 |
 | P6 保存・測定 | 未着手 | `.sentis` 保存・再読み込み、fp16 量子化、精度・時間・メモリ測定を TDD で実装 | fp32 保存前後一致、量子化版の全件 cosine >= 0.99。条件と測定値を記録 |
 
 P2 / P4 の Python 処理は同じ `prepare` コマンドで行う。P3 と P4 の Unity import の
@@ -87,13 +87,14 @@ export と最終埋め込みがずれた場合は、同一 ID / mask を渡し�
 | --- | --- | --- | --- |
 | 1（済） | `feat/m1-text-tdd` を作成し、変更を commit / push、draft PR 提出 | 承認モード変更後、ブランチ作成成功 | [PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)、初回実装コミット `4fec060`。モデルや artifacts は commit していない |
 | 2（Python側済） | `3df9ebe` のPR CIでPython matrix・workflow lint・実モデル参照生成が成功 | [CI検証記録](m1-validation.md)のrunが存在する | 4 環境で各33件、actionlint / ShellCheck、15 件の export照合成功 / artifact digestを確認済み。Sentis合格は別途必要 |
-| 3 | Unity CI を開始 | Unity Secrets 登録。step 2 の実モデル export 成功 | Editor ログ、依存解決後の packages-lock、NUnit XML。失敗は red の理由を記録 |
+| 3（コンパイル済） | ローカル Unity ハーネスで実モデルを検証 | step 2 の CI 成果物を取得・配置 | Editor ログ、依存解決後の packages-lock、NUnit XML。参照未配置の red は確認済み |
 | 4 | importer / tokenizer / C# API を TDD で修正 | step 3 の再現可能な失敗 | P3〜P5 の全件合格。ONNX に変更する場合は同じ入力・重みで照合し、ステージングとテストも更新 |
 | 5 | GPUCompute の実行環境を確定 | GPU job の graphics / compute ログ | CPU 代替や skip でない GPUCompute の全件合格。hosted runner が非対応なら実行可能な GPU runner を用意 |
 | 6 | 保存・量子化・測定と M1 完了監査 | P5 合格 | P6 のテスト、保存前後と量子化版の全ケース結果、メモリ・時間・測定環境 |
 
-Unity Secrets の準備は step 2 と並行できる。GPU runner の利用に追加の費用・設定が必要なら
-具体的な選択肢を確認する。ローカルに実モデルや Unity を導入して進める前提にはしない。
+ユーザー指定により Unity のローカル自動操作を採用する。実モデルの変換は CI、
+成果物の取得・Sentis検証は既存のローカル Editor で行う。[ハーネスの手順](automation.md)を参照。
+クラウド Unity CI は Secrets と Windows 実行構成の修正が別途必要で、現在のローカル検証を止める条件にはしない。
 main 保護のサーバー設定も未完了事項として追跡し、必須 CI の check 名が確定した段階で設定する。
 PR の merge、UPM リリース、モデルの再配布はこの計画の実行に含めない。
 

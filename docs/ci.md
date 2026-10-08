@@ -2,6 +2,17 @@
 
 更新日: 2026-10-08
 
+ユーザー指定により、Unity の検証はローカル 6000.3.16f1 + Unity CLI Loop のハーネスでも実行する。
+依存解決・コンパイルは成功し、M1 Editor テスト3件は参照データ未配置で失敗した。
+Python / モデル変換は引き続き Actions を利用する。[ローカル自動操作](automation.md)を参照。
+
+現在の Unity workflow はクラウドでの検証準備が未完了。
+使用する Action の固定 SHA は `v4.4.0`、CLI は `v0.1.72` に対応するが、
+Action が呼ぶ `game-ci test --docker` のコンテナ経路は Linux のみ対応する。
+`windows-latest` との現構成は、Secrets の追加だけでは動作しない。
+Windows のホスト Editor を使う経路への修正・実測を別途行う。
+[GameCI の対応条件](https://game.ci/docs/cli/build/#classic-docker-test-flow)を参照。
+
 ## 現在の CI 状態
 
 4 workflow は作業ツリーに追加済みで、actionlint 1.7.12 による静的検査は合格。
@@ -85,7 +96,7 @@ Unity workflow は後述の同一 repository の PR に限定してライセン�
 
 `.github/workflows/unity-validation.yml` は同一リポジトリの PR と信頼できる作業ブランチからの手動実行を対象にする。
 ライセンスの存在を最初に検証し、同じソース revision の参照生成 workflow を呼び、Windows runner で CPU / GPUCompute を別 job として検証する。
-Unity の acceptance tests は先に作成済みだが、Editor でのコンパイル・red / green はまだ実行していない。
+Unity の acceptance tests はローカル Editor でコンパイル成功。実行すると参照データ未配置で3件失敗した。
 GameCI と Windows runner の組み合わせを含め、Editor job は未実行。初回runのpreflight以降の結果から互換性を確認する。
 GitHub Actions 上の Unity にはライセンス設定が必要。2026-10-08 の再確認でもリポジトリの Secrets / Variables は未登録。
 [GameCI の公式手順](https://game.ci/docs/github/test-runner/)に従い、Personal は

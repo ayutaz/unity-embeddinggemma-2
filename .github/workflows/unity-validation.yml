@@ -61,7 +61,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           projectPath: .
-          unityVersion: 6000.3.19f1
+          unityVersion: 6000.3.16f1
           cliVersion: v0.1.72
           testMode: editmode
           customParameters: -testCategory M1${{ matrix.backend }}

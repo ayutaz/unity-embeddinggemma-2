@@ -4,15 +4,28 @@
 
 ## 最新の確認結果
 
-**M1 は未完了。`3df9ebe` のPR CIでPython 4環境各33件と実モデルの全15ケース照合が成功。UnityはライセンスSecrets不足でpreflight失敗し、Editor / GPUは未検証。**
-この文書の後半にある 31 件の結果は修正過程の履歴で、最新の結果は 33 件。
+**M1 は未完了。ローカル Unity 6000.3.16f1 の起動・依存解決・コンパイルが成功。M1 の Editor テスト3件は参照未配置で失敗し、GPUの数値一致は未検証。**
+この文書の後半にある 31 件の結果は修正過程の履歴。ハーネス追加前の Python 全体は33件で、ハーネス専用14件は別途検証した。
+
+### ローカル自動操作ハーネス（2026-10-08 17:17 JST）
+
+- ユーザー指定で Unity を 6000.3.16f1 (`a56f230f6470`) に変更。インストール済みの同版で Editor の起動を確認。
+- Unity Personal ライセンスをローカルで認識。GitHub Secrets を使用していない。
+- 初回起動は `ALLUSERSPROFILE` 欠落により UPM が `The "path" argument must be of type string. Received undefined` で停止。Unity 子プロセスだけに標準の CommonApplicationData を補うと解決し、依存取得・インポートが完了。システム設定は変更していない。
+- Unity CLI Loop パッケージ 3.14.0、プロジェクト内 dispatcher 3.8.1 / project runner 3.8.0 を導入。旧グローバル npm CLI 2.1.9 は変更していない。
+- `uloop compile` は `Success=true, ErrorCount=0, WarningCount=0`。Sentis / tokenizer API を使用する既存テストもコンパイルできた。Editor が生成した packages-lock に Sentis / uloop と依存が追加された。
+- `uv run --locked python -m embeddinggemma_tools.unity --suite compile --launch` は成功。証拠: `artifacts/unity-harness/compile/`。
+- 同ハーネスの `--suite m1` は `TestCount=3, PassedCount=0, FailedCount=3, SkippedCount=0`。3件とも `reference.json` 未配置のアサーションで失敗。tokenizer / CPU / GPUCompute の数値照合まで進んでいない。証拠: `artifacts/unity-harness/m1-missing-reference/` と `.uloop/outputs/TestResults/` の NUnit XML。
+- ハーネスはTDDで実装。未実装モジュールによる red と、失敗時の結果・XML未回収による red を確認後に修正し、専用 Python 単体テスト14件がローカルで合格。これを実モデル推論の成功とは数えない。
+- NVIDIA GeForce RTX 4070 Ti SUPER / Direct3D 12 を Editor ログで認識。GPUの認識はSentisの動作確認ではない。
+- 実行方法と再導入手順: [自動操作](automation.md)。以下のCI表はハーネス追加前の実行履歴。
 
 | 項目 | 証拠 | 判定 / 限界 |
 | --- | --- | --- |
 | Python 単体テスト | `artifacts/python-tests.xml`: tests=33、failures=0、errors=0、skipped=0。2026-10-08 14:18 JST の実行。CLI 表示 14.59s、XML time 14.572s | 小さいモデル、Windows / Python 3.14 のオフライン実行のみ合格 |
 | 実装との対応 | XML の生成時刻は `prepare.py` / `test_prepare.py` の最終変更より後。export、loader、参照、CLI、失敗時レポートの testcase を含む | 今回の文書更新ではテストを再実行していない |
 | workflow | 4 YAML のローカルactionlint 1.7.12 合格、修正後CI `37733804135` 成功 | 初回ShellCheck SC2129は修正済み。lint合格はSentis合格ではない |
-| Unity 依存 | ProjectVersion は 6000.3.19f1、manifest は Sentis 2.6.1。packages-lock に Sentis の項目なし | Editor の依存解決・コンパイルは未検証 |
+| Unity 依存（CI導入時） | 変更前の CI は 6000.3.19f1 指定でSecrets preflight失敗 | その時点では Editor は未実行。後続のローカル結果は上記を参照 |
 | 実モデル設定 | 固定 revision の config は hidden_size=512、embedding_dim=768、24 層、語彙 262144、sliding_window=512 | 実モデルのtext-only load / Python参照生成 / export照合は下記CIで成功。Sentis互換性は未検証 |
 
 `artifacts/` は Git 管理対象外。上記 XML はローカルの検証証拠であり、他の checkout には含まれない。
@@ -126,7 +139,7 @@ uv run --locked pytest -q --junitxml=../artifacts/python-tests.xml
 
 ## 未検証・結果待ち
 
-- Unity 6000.3.19f1 の起動と Sentis の依存解決。packages-lock は Editor 生成待ち。
+- Unity 6000.3.16f1 のローカル起動・依存解決・packages-lock 更新は完了。実モデルの配置と数値照合が残る。
 - Unity acceptance tests のコンパイルと red / green。
 - 実モデルの CPU / GPUCompute 推論と、全 15 ケースの cosine >= 0.999。
 - `.sentis` 保存、量子化、精度・メモリ・時間の測定。

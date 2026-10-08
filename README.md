@@ -6,7 +6,8 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 > 2026-10-08: 参照生成・Core ATen export・uloop ハーネスを [PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1) で main（`60f906d`）に統合しました。
 > 統合後の main CI ではPython 4環境の各47テストとworkflow lintが成功。最終PR CIでは実モデルの保存済み `.pt2` の全15ケース照合も成功しました。
 > ローカル Unity 6000.3.16f1 に Unity CLI Loop を導入し、依存解決・テストのコンパイルに成功しました。自動検証ハーネスを追加しています。
-> M1 の Editor テスト3件は参照データ未配置で失敗。Sentis CPU / GPUCompute の数値一致は未検証です。WindowsのM1検証はローカルで継続し、クラウドUnity CIはSecretsが必要なLinux CPUの手動補助検証に限定しています（未実行）。
+> [PR #3](https://github.com/ayutaz/unity-embeddinggemma-2/pull/3) の実装ブランチで実モデルを配置し、空文字のtokenizer互換処理を修正。Windows Editorの全15ケースでID / mask一致、Sentis CPU / GPUComputeと公開C# APIの数値照合が成功しました。単体契約24件も合格。PRは未マージです。
+> `.sentis`保存・fp16量子化・時間 / メモリ測定は残作業。クラウドUnity CIはSecretsが必要なLinux CPUの手動補助検証です（未実行）。
 > リポジトリは public ですが、UPM パッケージのリリースはまだ行っていません。
 
 ## ゴール
@@ -21,7 +22,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 
 | # | 内容 | 状態 |
 | --- | --- | --- |
-| M1 | テキスト用モデルを Sentis で動かす | 実装中（Sentis での一致は未検証） |
+| M1 | テキスト用モデルを Sentis で動かす | fp32 CPU / GPU・C# API照合済み、保存・量子化・測定が残る |
 | M2 | テキスト版の UPM パッケージとサンプルをリリースする | 未着手 |
 | M3 | 画像用モデルに対応する | 未着手 |
 | M4 | 音声用モデルに対応する | 未着手 |
@@ -81,15 +82,16 @@ uv run --locked python -m embeddinggemma_tools prepare --output ../artifacts/m1
 この Python 側の一致と、Sentis 側の M1 合格は別々に検証します。
 
 基盤の [PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1) はマージ済みです。
-次は CI の参照成果物を取得・照合・配置し、ローカル Unity で tokenizer・実モデル import・CPU / GPUCompute を検証します。
-互換性修正と C# API を TDD で進め、その後 `.sentis` 保存・fp16 量子化・時間 / メモリ測定を行います。
+CI成果物の取得・監査・配置、ローカルUnityでの全15ケース照合とC# APIは PR #3 で実装・検証済みです。
+使用方法は [テキスト推論API](docs/runtime-api.md)、実行結果は [検証記録](docs/m1-runtime-validation.md)を参照してください。
+次は `.sentis` 保存・fp16 量子化・時間 / メモリ測定を進めます。
 新しい実装も作業ブランチ / PR を使い、マージは依頼があるまで行いません。
 詳細な順序は [計画](docs/m1-plan.md)、CI の確認記録は [検証記録](docs/m1-validation.md)を参照してください。
 ローカル検証に GitHub Secrets は不要です。任意の Linux CPU 手動 CI を使う場合だけ準備します。
 
 ## モデルファイルについて
 
-モデルファイル(`.safetensors`、`.pt2`、`.onnx`、`.sentis` など)はリポジトリにコミットしません。Git LFS も使いません。`tools/` の CLI が Hugging Face の固定 revision から取得して変換します。実モデルのPython export照合はCIで成功し、Sentisでの実行確認はこれからです。
+モデルファイル(`.safetensors`、`.pt2`、`.onnx`、`.sentis` など)はリポジトリにコミットしません。Git LFS も使いません。`tools/` の CLI が Hugging Face の固定 revision から取得して変換します。Python exportはCI、Sentis fp32はローカルWindows Editorで照合済みです。
 
 ## ドキュメント
 
@@ -98,6 +100,9 @@ uv run --locked python -m embeddinggemma_tools prepare --output ../artifacts/m1
 | [docs/goal.md](docs/goal.md) | ゴール、達成の基準、マイルストーン、対象外のこと |
 | [docs/m1-plan.md](docs/m1-plan.md) | M1 の詳細計画、TDD の進め方、検証状況 |
 | [docs/m1-validation.md](docs/m1-validation.md) | TDD の red / green、最新テスト結果、未検証項目、外部状態の確認記録 |
+| [docs/m1-runtime-plan.md](docs/m1-runtime-plan.md) | 実モデル配置・互換性修正・C# APIまでの詳細計画 |
+| [docs/m1-runtime-validation.md](docs/m1-runtime-validation.md) | Windows fp32 CPU / GPU・APIの実測と修正の証拠 |
+| [docs/runtime-api.md](docs/runtime-api.md) | C# APIの使用方法と対象範囲 |
 | [docs/ci.md](docs/ci.md) | GitHub Actions、PR 運用、Unity CI の準備 |
 | [docs/technical-approach.md](docs/technical-approach.md) | Sentis 2.6 の調査、EmbeddingGemma 2 の構造、モデルを持ち込む方法の比較、設計案、検証方法 |
 | [docs/embeddinggemma-2-unity-novelty.md](docs/embeddinggemma-2-unity-novelty.md) | Unity 対応の新規性の調査(2026-10-07 時点) |

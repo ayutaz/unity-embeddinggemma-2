@@ -3,7 +3,8 @@
 更新日: 2026-10-08
 
 ユーザー指定により、Unity の検証はローカル 6000.3.16f1 + Unity CLI Loop のハーネスでも実行する。
-依存解決・コンパイルは成功し、M1 Editor テスト3件は参照データ未配置で失敗した。
+基盤導入時はM1 Editorテスト3件が参照未配置で失敗したが、後続 PR #3（未マージ）のブランチで
+実モデルの配置と空文字互換修正を行い、tokenizer / fp32 CPU / GPUCompute全15件とC# API経由の照合が合格した。
 Python / モデル変換は引き続き Actions を利用する。[ローカル自動操作](automation.md)を参照。
 
 Unity workflow は任意の **Linux CPU 手動検証** に変更した。PRでは起動しない。
@@ -22,6 +23,7 @@ Windows CPU/GPUCompute の M1 合格はローカルハーネスで検証する�
 以前の自動Unity workflowはSecrets不足でpreflight失敗し、Editorは開始していなかった。
 以後も関連パスを変更する PR では Python / 実モデル参照 / workflow lint を自動実行し、Windows Unity 検証はローカルで行う。
 基盤の統合は M1 完了・UPM リリースを示さない。Dependency Graph の成功も推論の検証には数えない。
+PR #3のローカル実モデル合格と、同PRの最新CI結果は別々に確認する。[実行記録](m1-runtime-validation.md)を参照。
 
 | workflow | 起動条件 | 実行内容 | 現在の状態 |
 | --- | --- | --- | --- |
@@ -99,7 +101,7 @@ Unity workflow は後述の信頼できるrefからの手動実行に限って�
 
 `.github/workflows/unity-validation.yml` は信頼できるrefからの手動実行のみを対象にする。
 ライセンスの存在を最初に検証し、同じソース revision の参照生成 workflow を呼び、Linux runner で `M1CPU` カテゴリだけを実行する。
-Unity の acceptance tests はローカル Editor でコンパイル成功。実行すると参照データ未配置で3件失敗した。
+Unity の acceptance tests はローカル Editorで実モデルtokenizer / CPU / GPUComputeの3件合格。
 クラウドの Linux Editor job は未実行。初回の手動runでimport / tokenizer / CPUの結果を確認する。
 GitHub Actions 上の Unity にはライセンス設定が必要。2026-10-08 の再確認でもリポジトリの Secrets / Variables は未登録。
 [GameCI の公式手順](https://game.ci/docs/github/test-runner/)に従い、Personal は
@@ -114,11 +116,11 @@ GPU 機能がない runner のテストを skip しても M1 の GPU 合格に�
 
 ## 次の実装と CI の確認順序
 
-1. 最新 main に同期して新しい作業ブランチを作成する。基盤の Python / lint は合格済みで、次は参照成果物の配置から進める。
+1. 最新 main に同期して新しい作業ブランチを作成する。PR #3で参照配置・Sentis fp32・APIまでローカル合格済み。次の保存・量子化・測定もTDDで進める。
 2. 成功 run `37755304407` の artifact を取得し、全15件の結果・固定 model revision・source SHA / tree・ファイル digest を監査する。期限と取得候補は [計画](m1-plan.md) を参照。失効、モデル生成コード・依存・入力条件の変更時は最新 main でモデル workflow を手動再実行する。
 3. ローカル Unity 6000.3.16f1 に配置して tokenizer / import / CPU / GPUCompute の結果を切り分ける。GitHub Secrets は不要。失敗を再現してから互換性修正を TDD で実装する。
 4. Python や export を変更した場合は、PR の関連 workflow で単体テストと実モデル照合を再確認する。新しい成果物の source SHA を記録し、同じモデルを Editor へ再配置する。C# 変更はローカル compile / M1 ハーネスで確認する。
-5. C# ランタイム API、保存、量子化、測定を [M1 計画](m1-plan.md) の合格条件に従って進める。Editor 生成の packages-lock は更新時に確認する。クラウド Linux CPU 検証を使う場合だけ Secrets を準備する。
+5. C# API経由の照合も通した上で、保存・量子化・測定を [M1 計画](m1-plan.md) の合格条件に従って進める。Editor 生成の packages-lock は更新時に確認する。クラウド Linux CPU 検証を使う場合だけ Secrets を準備する。
 6. CI run URL、PR head と実際の checkout SHA、環境、結果を docs に記録する。モデル artifact は3日、pytest / Unity artifact は7日で失効するため、要約と再生成手順を残す。
 7. PR の差分・CI・未解決指摘を確認し、merge は依頼があるまで行わない。文書のみの PR で workflow が起動しない場合は、未実行と記録して過去の成功を今回の実行として数えない。
 

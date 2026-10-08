@@ -4,7 +4,9 @@
 
 ## 最新の確認結果
 
-**M1 は未完了。ローカル Unity 6000.3.16f1 の起動・依存解決・コンパイルが成功。M1 の Editor テスト3件は参照未配置で失敗し、GPUの数値一致は未検証。**
+**M1 は未完了。後続 PR #3（未マージ）の実装ブランチで参照を配置し、Sentis importと空文字互換修正後のtokenizer / fp32 CPU / GPUComputeが全15件合格。C# API経由の照合と再推論も合格。保存・量子化・測定が残る。**
+最新の実モデルの結果、失敗からの修正、数値と実行証拠は [ランタイム検証記録](m1-runtime-validation.md) を参照。
+以下は主に基盤 PR #1 統合時までの履歴。
 現在の Python 全体は47件（既存33件 + ハーネス14件）で、統合後の main CI でも4環境すべて合格。
 後半の31件・33件の結果や draft PR の記録は修正過程の履歴として保持する。
 
@@ -161,14 +163,14 @@ uv run --locked pytest -q --junitxml=../artifacts/python-tests.xml
 - 作業ブランチ作成は実行環境の自動承認レビューに拒否された。ユーザーがブランチ / PR 運用を明示した後も拒否。
 - commit / push / PR 作成 / Actions 起動は未実施。`main` への push は行っていない。
 
-## 未検証・結果待ち
+## PR #1 統合時点の未検証項目（履歴）
 
 - Unity 6000.3.16f1 のローカル起動・依存解決・packages-lock 更新は完了。実モデルの配置と数値照合が残る。
 - Unity acceptance tests はコンパイル済み、参照未配置の red を確認済み。実データによる照合と green は未確認。
 - 実モデルの CPU / GPUCompute 推論と、全 15 ケースの cosine >= 0.999。
 - `.sentis` 保存、量子化、精度・メモリ・時間の測定。
 
-M1 は未完了。47件の Python 単体テストと Python 実モデル export の合格でも、Sentis・GPU の一致を代替しない。
+PR #1 統合時点では Sentis / GPU 未検証だった。後続の実モデル合格を Python 単体テストから推定せず、上記の別実行で確認した。M1 全体は未完了。
 
 ## 続行時の export 互換性修正（履歴）
 

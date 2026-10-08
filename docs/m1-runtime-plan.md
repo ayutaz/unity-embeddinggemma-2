@@ -34,6 +34,9 @@ main `60f906d` と計画更新 PR #2 の `84b9dcd` を基点とする。PR #2 �
 
 ## 現在の証拠と制約
 
-基盤の Python 47件×4環境・実モデル Python 15件は合格。Editor のコンパイルは合格だが、既存3件は参照未配置で失敗した状態から開始する。
+今回のA〜Eはローカル検証まで完了。成果物の監査・配置、空文字互換修正後のM1 3件、公開APIの2件が実モデルで合格し、単体契約24件も合格した。
+最小cosineはCPU `0.99999999999923483`、GPUCompute `0.99999999999970735`。各backendで固定15ケース、APIではWorker再利用後の再推論も確認。
+F / Gの最新CI確認・文書化・PR受け渡しを進める。[実行記録](m1-runtime-validation.md)、[API手順](runtime-api.md)、[数値レポート](results/m1-windows-fp32-20261008.json)を参照。
+基盤の Python 47件×4環境・実モデル Python 15件から、今回の追加を含むCI結果は分けて記録する。
 artifact は約1.1GBで保持3日。失効時や生成コード等の変更時は CI で再生成する。
 ローカル Editor の未保存 Scene / Prefab を自動保存・破棄しない。モデル・ログ・XML は `artifacts/` / `.uloop/` / `Assets/M1Generated/` に保存し、要約だけ Git に残す。

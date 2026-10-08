@@ -1,11 +1,12 @@
 # CI と開発手順
 
-更新日: 2026-10-08
+更新日: 2026-10-09
 
 ユーザー指定により、Unity の検証はローカル 6000.3.16f1 + Unity CLI Loop のハーネスでも実行する。
-基盤導入時はM1 Editorテスト3件が参照未配置で失敗したが、後続 PR #3（未マージ）のブランチで
+基盤導入時はM1 Editorテスト3件が参照未配置で失敗したが、後続 PR #3（統合済み）で
 実モデルの配置と空文字互換修正を行い、tokenizer / fp32 CPU / GPUCompute全15件とC# API経由の照合が合格した。
 Python / モデル変換は引き続き Actions を利用する。[ローカル自動操作](automation.md)を参照。
+PR #4で保存・量子化・両backend測定まで合格した。Pythonは4環境各64件、実モデルCIは15件合格。最新headのCIはPR本文 / Checks、Windowsの実測は [M1完了検証](m1-completion-validation.md) を参照。
 
 Unity workflow は任意の **Linux CPU 手動検証** に変更した。PRでは起動しない。
 使用する Action の固定 SHA は `v4.4.0`、CLI は `v0.1.72` に対応する。

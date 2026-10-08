@@ -1,0 +1,1036 @@
+{
+  "schema_version": 1,
+  "m1_complete": true,
+  "scope": "Windows Editor text M1 only",
+  "tested_code_commit": "329da925b01f7c9cb0b4d604055f0b9dc214c5c4",
+  "source_sha256_lf": {
+    "Assets/EmbeddingGemma/Runtime.meta": "0a1f6fc5c15de44fe9154ef44989a15d8960727683a07f6242efab54bc10f51c",
+    "Assets/EmbeddingGemma/Runtime/EmbeddingGemma.Runtime.asmdef": "c3544989a5a45ee123c42bd2a9dd967d1812b93fad620587e04ad73ad1f22512",
+    "Assets/EmbeddingGemma/Runtime/EmbeddingGemma.Runtime.asmdef.meta": "6d846944ad51d3b13db5e1bcc70a207368b1276e422cd0edcecba6f1713e69e6",
+    "Assets/EmbeddingGemma/Runtime/TextEmbedder.cs": "7c1ae887d66cb3b29fe3467d21e046e334f0dc4eb39df8c0e9f5fa39f302513b",
+    "Assets/EmbeddingGemma/Runtime/TextEmbedder.cs.meta": "4a60fbde736497f9796ddc1956417525f05a21a83e03461e76c0c977d7e0167f",
+    "Assets/EmbeddingGemma/Runtime/TextModelFile.cs": "c4fb628f5ea5e4daacac88f9d4f09266f44e3133a0baf2236438c611917ede28",
+    "Assets/EmbeddingGemma/Runtime/TextModelFile.cs.meta": "6782b388e82763e6f044d92ace988eda3a1c537debdd69dd9fb01e16a835405a",
+    "Assets/EmbeddingGemma/Runtime/TextPrompts.cs": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5",
+    "Assets/EmbeddingGemma/Runtime/TextPrompts.cs.meta": "b224a3e9a7b4a0b99cb02fc43c4135abf66faec20545aef014fb269d3319f1e7",
+    "Assets/EmbeddingGemma/Runtime/TextTokenizer.cs": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763",
+    "Assets/EmbeddingGemma/Runtime/TextTokenizer.cs.meta": "8d1afc2fb8c6eb2c3109f17308efec227bc70ab7f0103787af1450fd18ec199d",
+    "Assets/Tests/Editor/EmbeddingGemma.Editor.Tests.asmdef": "0eeeb1ade4913c037c2de9440f3d705b3924fd8cacd0bff4c358b1b1539a9d4f",
+    "Assets/Tests/Editor/EmbeddingGemma.Editor.Tests.asmdef.meta": "a19a853844bdf407162efc93baa1492a3a5ed06da352a28d3d74ef578b188d43",
+    "Assets/Tests/Editor/M1CompletionRunner.cs": "ed399c96ecbd3d1d6327b13892a189daf5635a09febefc3fec2e71368ff7894d",
+    "Assets/Tests/Editor/M1CompletionRunner.cs.meta": "cc6ef4ca5dae00cc45012260908f045c65f7c5b014a60810c265df3c3bfab818",
+    "Assets/Tests/Editor/M1CompletionTests.cs": "ce91b1815ef64a9b8d409f395e53ae54ddb57f016f509aa007285f3f08bad904",
+    "Assets/Tests/Editor/M1CompletionTests.cs.meta": "db8be18b5941d4b9c86efe34ee05c288e9b405f465735668111b849a992ae656",
+    "Assets/Tests/Editor/M1MeasurementContractTests.cs": "f8200bc6dcebdff852612023dd684f7167037e28d3627268f713f5d64914f22b",
+    "Assets/Tests/Editor/M1MeasurementContractTests.cs.meta": "e75074b426ac5bd03a3a4db02d8e452020db08ce2fa8a936e9ef6d365daa8172",
+    "Assets/Tests/Editor/M1ReferenceTests.cs": "13613831849805ceb1bc0dcb95418c7d82d227b121e539dd0fc35320f914232a",
+    "Assets/Tests/Editor/M1ReferenceTests.cs.meta": "2dfbb6470fdad1fc87a6a55cd4dd7d3306cfa52b6e5efa8eb2381e0eb54a0153",
+    "Assets/Tests/Editor/TextEmbedderReferenceTests.cs": "c51d79b6a0a3e3b882b5ba419712646b8621f96c834bbe00e8c29be0d56e0c7f",
+    "Assets/Tests/Editor/TextEmbedderReferenceTests.cs.meta": "85fcc267e62561dfdbc361f488cbf464f4f2cbd5e6c83a7c2b08d50045e98a70",
+    "Assets/Tests/Editor/TextEmbedderTests.cs": "c349ec6dc7ae9976132f7086518bb2ef631cd61358751795dbc0b97444d37865",
+    "Assets/Tests/Editor/TextEmbedderTests.cs.meta": "225d6c805c8ca7631e3025cc2eb43bc13c8003a7344e17ffa969e163b50fdccb",
+    "Assets/Tests/Editor/TextModelFileTests.cs": "5625adac98d6446f37f9195f1224598d7bf6c983096423b9228afeb52baa6024",
+    "Assets/Tests/Editor/TextModelFileTests.cs.meta": "dbdea16f0ecf8619320ecd5864f37a9c255010cf0e04c55f9ee514e5fbaf034c",
+    "Assets/Tests/Editor/TextPromptsTests.cs": "8cc3e136e42cd7d726e65249ae59a2cc485e0410999a08b3b208d298ff490301",
+    "Assets/Tests/Editor/TextPromptsTests.cs.meta": "ae9a62d281c8d584c973e8428256c903749f62dfb796ca46831f7e9e76adc8cb",
+    "Assets/Tests/Editor/TextTokenizerTests.cs": "65a16bd2f191aac9ad1724252ceacd35dc453a570effc668fd631b98cb0f2aef",
+    "Assets/Tests/Editor/TextTokenizerTests.cs.meta": "a37a98a6452b09298315df91dae23240976ae331a7edf3f097b538c01685c52f",
+    "Packages/manifest.json": "f18e810cb8ffde5c7192c9c3d86f06791346035394b13ba0ce019d94762f9985",
+    "Packages/packages-lock.json": "d3821e81ff13d179020173a147e1ba2cba59aa6277845b5d9355ea8a2a8031c5",
+    "ProjectSettings/ProjectVersion.txt": "52c7d54d92d2f5b2c1212e3afaf3854c3c8b993f875eed0b7f99df56e27b4940",
+    "tools/cases/text.json": "cfd85f225562726ea280c561ff9c8b98278e3a74bf8ca88235b6fd4a1fd99d76",
+    "tools/embeddinggemma_tools/unity.py": "4e267eaa864b3129d18773a2a1c4fd8b1354ea1920901d3f37c450f0959b3426",
+    "tools/uv.lock": "5ff931024057f5131c32ff67474927d782564187246fe8fba7fb79e2b7450ed9"
+  },
+  "reference_artifact_sha256": {
+    "reference.json": "637c45b2fa3be84d16b47a3456000e5ab27d1e50e37424288bf42b318d799cb8",
+    "tokenizer.json": "25975a936201b81402a3b867d5c462cf10808bb96759f97fe9aefecbb11c49df",
+    "model.pt2": "18018897e12a72af996253ffd4c8bb28aa8825e614f2813e298815851188d25f"
+  },
+  "tests": {
+    "completion": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-08T15:24:34.6753049Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 1,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 1,
+      "XmlPath": null
+    },
+    "csharp_contracts": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-08T15:14:45.1777Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 30,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 30,
+      "XmlPath": null
+    }
+  },
+  "verified_comparisons": 60,
+  "model_and_measurements": {
+    "success": true,
+    "error": "",
+    "startedUtc": "2026-10-08T15:15:52.7665211Z",
+    "completedUtc": "2026-10-08T15:24:34.3781667Z",
+    "unity": "6000.3.16f1",
+    "sentis": "2.6.1",
+    "os": "Windows 11  (10.0.22631)",
+    "cpu": "AMD Ryzen 9 5900X 12-Core Processor ",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphicsApi": "Direct3D12",
+    "modelRevision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "sourceCommit": "b3b0d76e1d3b6f4e44af1e9ba810d5b3cb6b051d",
+    "processorCount": 24,
+    "systemMemoryMB": 65448,
+    "gpuCapacityMB": 16063,
+    "sequenceLength": 128,
+    "batchSize": 1,
+    "embeddingDimension": 768,
+    "warmupRounds": 2,
+    "measurementRounds": 3,
+    "timingScope": "Synchronous public API, including prompting, tokenization, scheduling and final vector readback. Samples follow reference case order in each round.",
+    "memoryScope": "Stage samples of the whole Unity Editor/process, not model-exclusive VRAM or a continuously observed peak. Zero graphics or process counters mean unavailable; availability flags are explicit. Managed heap is measured separately and must not be summed with overlapping native/process counters.",
+    "forcedAssetImportMs": 128723.09120000001,
+    "formats": [
+      {
+        "precision": "fp32",
+        "path": "artifacts/m1-completion/fp32.sentis",
+        "sha256": "8488d70f2d636a34bfe2a64c1d7b9d3eb3fce70c4fb9e27d32b698090c8fb373",
+        "bytes": 1095598044,
+        "sourceLoadMs": 579.267,
+        "quantizeMs": 0.0,
+        "saveMs": 6276.9771,
+        "backends": [
+          {
+            "backend": "CPU",
+            "modelLoadMs": 798.4605,
+            "tokenizerPreparationMs": 10629.6085,
+            "workerAndTokenizerMs": 9264.9274,
+            "firstInferenceMs": 466.29380000000003,
+            "medianMs": 481.4305,
+            "p95Ms": 577.8572,
+            "minimumCosine": 0.9999999999992348,
+            "maximumRoundTripError": 0.0,
+            "cases": [
+              {
+                "id": "ja-query",
+                "cosine": 0.9999999999996612,
+                "roundTripError": 0.0,
+                "norm": 0.9999999849147526
+              },
+              {
+                "id": "ja-document",
+                "cosine": 0.9999999999995968,
+                "roundTripError": 0.0,
+                "norm": 1.0000000078195284
+              },
+              {
+                "id": "en-query",
+                "cosine": 0.9999999999996152,
+                "roundTripError": 0.0,
+                "norm": 1.0000000590230649
+              },
+              {
+                "id": "en-document",
+                "cosine": 0.9999999999996384,
+                "roundTripError": 0.0,
+                "norm": 0.9999999555713781
+              },
+              {
+                "id": "titled-document",
+                "cosine": 0.999999999999319,
+                "roundTripError": 0.0,
+                "norm": 1.0000000329674514
+              },
+              {
+                "id": "empty",
+                "cosine": 0.9999999999999376,
+                "roundTripError": 0.0,
+                "norm": 0.999999992765447
+              },
+              {
+                "id": "empty-query",
+                "cosine": 0.9999999999994076,
+                "roundTripError": 0.0,
+                "norm": 1.0000001073030886
+              },
+              {
+                "id": "whitespace",
+                "cosine": 0.9999999999992348,
+                "roundTripError": 0.0,
+                "norm": 1.0000000037763646
+              },
+              {
+                "id": "newlines",
+                "cosine": 0.9999999999993595,
+                "roundTripError": 0.0,
+                "norm": 0.999999965023196
+              },
+              {
+                "id": "mixed",
+                "cosine": 0.9999999999995326,
+                "roundTripError": 0.0,
+                "norm": 1.000000030793409
+              },
+              {
+                "id": "emoji",
+                "cosine": 0.999999999999782,
+                "roundTripError": 0.0,
+                "norm": 0.9999999654923422
+              },
+              {
+                "id": "punctuation",
+                "cosine": 0.999999999999368,
+                "roundTripError": 0.0,
+                "norm": 1.0000000083099094
+              },
+              {
+                "id": "unicode",
+                "cosine": 0.9999999999997005,
+                "roundTripError": 0.0,
+                "norm": 0.9999999959190536
+              },
+              {
+                "id": "long-truncated",
+                "cosine": 0.9999999999994637,
+                "roundTripError": 0.0,
+                "norm": 0.9999999793830251
+              },
+              {
+                "id": "unrelated-document",
+                "cosine": 0.9999999999994764,
+                "roundTripError": 0.0,
+                "norm": 1.0000000158679834
+              }
+            ],
+            "samplesMs": [
+              485.399,
+              484.5008,
+              502.16720000000004,
+              616.5768,
+              577.8572,
+              502.4338,
+              478.5842,
+              473.8047,
+              468.7452,
+              472.6234,
+              481.4305,
+              462.44910000000004,
+              477.6449,
+              517.9926,
+              472.7769,
+              498.932,
+              477.1143,
+              455.64390000000003,
+              466.04580000000004,
+              473.89050000000003,
+              456.1043,
+              507.8023,
+              475.2696,
+              522.9535000000001,
+              540.6442000000001,
+              540.7193,
+              548.0418000000001,
+              507.9895,
+              479.8127,
+              462.1642,
+              454.7792,
+              464.0174,
+              481.58860000000004,
+              454.90090000000004,
+              459.0958,
+              457.18350000000004,
+              494.49460000000005,
+              480.7244,
+              479.9991,
+              485.0002,
+              523.0625,
+              543.8174,
+              513.4772,
+              531.1311000000001,
+              602.2371
+            ],
+            "memory": [
+              {
+                "stage": "before model load",
+                "unityAllocatedBytes": 2375317311,
+                "unityReservedBytes": 3375144960,
+                "graphicsDriverBytes": 2419342232,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 4286951424,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after saved model load",
+                "unityAllocatedBytes": 2375317311,
+                "unityReservedBytes": 3375144960,
+                "graphicsDriverBytes": 2419342232,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 6480162816,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after first inference and readback",
+                "unityAllocatedBytes": 2393754695,
+                "unityReservedBytes": 3375144960,
+                "graphicsDriverBytes": 2419342232,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 6963138560,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after warmup",
+                "unityAllocatedBytes": 2399283831,
+                "unityReservedBytes": 3375144960,
+                "graphicsDriverBytes": 2419342232,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 6967304192,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after measurement",
+                "unityAllocatedBytes": 2404812935,
+                "unityReservedBytes": 3375144960,
+                "graphicsDriverBytes": 2419342232,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 6970859520,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after Worker Dispose and managed GC; Editor caches retained",
+                "unityAllocatedBytes": 2385342647,
+                "unityReservedBytes": 3375144960,
+                "graphicsDriverBytes": 2419342232,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 5583990784,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              }
+            ]
+          },
+          {
+            "backend": "GPUCompute",
+            "modelLoadMs": 1003.5353,
+            "tokenizerPreparationMs": 11482.602700000001,
+            "workerAndTokenizerMs": 10014.495,
+            "firstInferenceMs": 1298.4442000000001,
+            "medianMs": 50.2554,
+            "p95Ms": 68.8827,
+            "minimumCosine": 0.9999999999997073,
+            "maximumRoundTripError": 0.0,
+            "cases": [
+              {
+                "id": "ja-query",
+                "cosine": 0.9999999999998892,
+                "roundTripError": 0.0,
+                "norm": 1.0000000532604059
+              },
+              {
+                "id": "ja-document",
+                "cosine": 0.9999999999997997,
+                "roundTripError": 0.0,
+                "norm": 1.000000047011874
+              },
+              {
+                "id": "en-query",
+                "cosine": 0.9999999999998606,
+                "roundTripError": 0.0,
+                "norm": 1.000000047339584
+              },
+              {
+                "id": "en-document",
+                "cosine": 0.9999999999998574,
+                "roundTripError": 0.0,
+                "norm": 1.0000001062678474
+              },
+              {
+                "id": "titled-document",
+                "cosine": 0.9999999999997479,
+                "roundTripError": 0.0,
+                "norm": 0.9999999733498929
+              },
+              {
+                "id": "empty",
+                "cosine": 0.9999999999999786,
+                "roundTripError": 0.0,
+                "norm": 1.0000000384070111
+              },
+              {
+                "id": "empty-query",
+                "cosine": 0.9999999999997229,
+                "roundTripError": 0.0,
+                "norm": 1.0000000939588713
+              },
+              {
+                "id": "whitespace",
+                "cosine": 0.9999999999997453,
+                "roundTripError": 0.0,
+                "norm": 1.0000000404319747
+              },
+              {
+                "id": "newlines",
+                "cosine": 0.9999999999998156,
+                "roundTripError": 0.0,
+                "norm": 0.9999999581267707
+              },
+              {
+                "id": "mixed",
+                "cosine": 0.9999999999997862,
+                "roundTripError": 0.0,
+                "norm": 1.00000004044992
+              },
+              {
+                "id": "emoji",
+                "cosine": 0.9999999999999017,
+                "roundTripError": 0.0,
+                "norm": 1.0000000420303254
+              },
+              {
+                "id": "punctuation",
+                "cosine": 0.9999999999998015,
+                "roundTripError": 0.0,
+                "norm": 0.9999999915684402
+              },
+              {
+                "id": "unicode",
+                "cosine": 0.9999999999997993,
+                "roundTripError": 0.0,
+                "norm": 1.0000001159910736
+              },
+              {
+                "id": "long-truncated",
+                "cosine": 0.9999999999997073,
+                "roundTripError": 0.0,
+                "norm": 0.9999999391794222
+              },
+              {
+                "id": "unrelated-document",
+                "cosine": 0.9999999999997731,
+                "roundTripError": 0.0,
+                "norm": 0.9999999906515612
+              }
+            ],
+            "samplesMs": [
+              49.2173,
+              49.034400000000005,
+              50.2233,
+              50.138000000000005,
+              50.2554,
+              48.347,
+              49.6051,
+              47.7792,
+              48.595,
+              48.3192,
+              48.2605,
+              53.3051,
+              50.2061,
+              54.0597,
+              51.4934,
+              50.367900000000006,
+              50.3472,
+              50.8239,
+              49.371300000000005,
+              49.5963,
+              51.258100000000006,
+              51.775800000000004,
+              49.855900000000005,
+              52.5394,
+              50.894000000000005,
+              51.7164,
+              49.433,
+              48.6811,
+              55.8305,
+              51.0394,
+              50.2569,
+              49.438300000000005,
+              51.592000000000006,
+              49.6466,
+              48.2963,
+              49.9104,
+              63.617200000000004,
+              69.83550000000001,
+              71.6859,
+              68.8827,
+              65.4234,
+              67.7711,
+              49.4035,
+              58.213800000000006,
+              45.958600000000004
+            ],
+            "memory": [
+              {
+                "stage": "before model load",
+                "unityAllocatedBytes": 2385344750,
+                "unityReservedBytes": 3375144960,
+                "graphicsDriverBytes": 2419342232,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 5584048128,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after saved model load",
+                "unityAllocatedBytes": 2385344750,
+                "unityReservedBytes": 3375144960,
+                "graphicsDriverBytes": 2419342232,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 7775956992,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after first inference and readback",
+                "unityAllocatedBytes": 2386772945,
+                "unityReservedBytes": 3375144960,
+                "graphicsDriverBytes": 5232506312,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 8106348544,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after warmup",
+                "unityAllocatedBytes": 2392583288,
+                "unityReservedBytes": 3375144960,
+                "graphicsDriverBytes": 4137466288,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 8110489600,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after measurement",
+                "unityAllocatedBytes": 2398665051,
+                "unityReservedBytes": 3375144960,
+                "graphicsDriverBytes": 4137512368,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 8114016256,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after Worker Dispose and managed GC; Editor caches retained",
+                "unityAllocatedBytes": 2398590787,
+                "unityReservedBytes": 3375144960,
+                "graphicsDriverBytes": 4137512368,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 5733769216,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "precision": "float16-weights",
+        "path": "artifacts/m1-completion/float16-weights.sentis",
+        "sha256": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819",
+        "bytes": 553775500,
+        "sourceLoadMs": 1172.2305000000001,
+        "quantizeMs": 1828.7334,
+        "saveMs": 2694.9886,
+        "backends": [
+          {
+            "backend": "CPU",
+            "modelLoadMs": 446.14390000000003,
+            "tokenizerPreparationMs": 10529.465400000001,
+            "workerAndTokenizerMs": 9268.114300000001,
+            "firstInferenceMs": 820.7311000000001,
+            "medianMs": 865.1154,
+            "p95Ms": 942.7874,
+            "minimumCosine": 0.9999999999991496,
+            "maximumRoundTripError": 2.3469328880310059E-07,
+            "cases": [
+              {
+                "id": "ja-query",
+                "cosine": 0.999999999999674,
+                "roundTripError": 7.078051567077637E-08,
+                "norm": 0.9999999874940347
+              },
+              {
+                "id": "ja-document",
+                "cosine": 0.9999999999995601,
+                "roundTripError": 1.1734664440155029E-07,
+                "norm": 0.9999999911590749
+              },
+              {
+                "id": "en-query",
+                "cosine": 0.9999999999996876,
+                "roundTripError": 1.0337680578231812E-07,
+                "norm": 1.0000000125775863
+              },
+              {
+                "id": "en-document",
+                "cosine": 0.9999999999995655,
+                "roundTripError": 1.7881393432617188E-07,
+                "norm": 0.9999999981014552
+              },
+              {
+                "id": "titled-document",
+                "cosine": 0.9999999999993467,
+                "roundTripError": 1.2665987014770508E-07,
+                "norm": 1.0000000201404928
+              },
+              {
+                "id": "empty",
+                "cosine": 0.9999999999999406,
+                "roundTripError": 5.960464477539063E-08,
+                "norm": 0.9999999373066958
+              },
+              {
+                "id": "empty-query",
+                "cosine": 0.9999999999993778,
+                "roundTripError": 2.086162567138672E-07,
+                "norm": 1.0000000563527083
+              },
+              {
+                "id": "whitespace",
+                "cosine": 0.9999999999991496,
+                "roundTripError": 1.4062970876693726E-07,
+                "norm": 0.9999999825554107
+              },
+              {
+                "id": "newlines",
+                "cosine": 0.9999999999993798,
+                "roundTripError": 1.2665987014770508E-07,
+                "norm": 0.9999999721203242
+              },
+              {
+                "id": "mixed",
+                "cosine": 0.9999999999995481,
+                "roundTripError": 8.195638656616211E-08,
+                "norm": 0.9999999809567055
+              },
+              {
+                "id": "emoji",
+                "cosine": 0.9999999999998064,
+                "roundTripError": 8.940696716308594E-08,
+                "norm": 1.0000000076955713
+              },
+              {
+                "id": "punctuation",
+                "cosine": 0.9999999999993952,
+                "roundTripError": 2.3469328880310059E-07,
+                "norm": 0.9999999915752683
+              },
+              {
+                "id": "unicode",
+                "cosine": 0.999999999999684,
+                "roundTripError": 9.313225746154785E-08,
+                "norm": 1.000000008384307
+              },
+              {
+                "id": "long-truncated",
+                "cosine": 0.9999999999994728,
+                "roundTripError": 1.0617077350616455E-07,
+                "norm": 0.9999999927356817
+              },
+              {
+                "id": "unrelated-document",
+                "cosine": 0.9999999999995097,
+                "roundTripError": 1.471489667892456E-07,
+                "norm": 1.000000007559771
+              }
+            ],
+            "samplesMs": [
+              829.1625,
+              844.1949000000001,
+              866.1179000000001,
+              833.296,
+              842.2443000000001,
+              839.5438,
+              837.1289,
+              828.5981,
+              919.7872000000001,
+              1004.1757,
+              956.6224000000001,
+              869.5478,
+              817.0917000000001,
+              824.2605000000001,
+              862.1143000000001,
+              875.2805000000001,
+              909.3011,
+              913.8447,
+              895.1453,
+              880.1115000000001,
+              857.1838,
+              879.9853,
+              902.1971000000001,
+              865.8014000000001,
+              824.5708000000001,
+              837.9077000000001,
+              815.6374000000001,
+              842.2004000000001,
+              877.6214,
+              881.3605,
+              881.1626,
+              815.6596000000001,
+              835.9818,
+              851.8106,
+              824.5041,
+              855.1952,
+              865.1154,
+              835.2279000000001,
+              888.5046000000001,
+              899.5274000000001,
+              885.2426,
+              939.1791000000001,
+              942.7874,
+              890.8677,
+              857.0788
+            ],
+            "memory": [
+              {
+                "stage": "before model load",
+                "unityAllocatedBytes": 2397560232,
+                "unityReservedBytes": 3375144960,
+                "graphicsDriverBytes": 4137512368,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 3310452736,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after saved model load",
+                "unityAllocatedBytes": 2397560232,
+                "unityReservedBytes": 3375144960,
+                "graphicsDriverBytes": 4137512368,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 4419989504,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after first inference and readback",
+                "unityAllocatedBytes": 3505187520,
+                "unityReservedBytes": 4004298752,
+                "graphicsDriverBytes": 4137512368,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 5461676032,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after warmup",
+                "unityAllocatedBytes": 3510750552,
+                "unityReservedBytes": 4004298752,
+                "graphicsDriverBytes": 4137512368,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 5465878528,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after measurement",
+                "unityAllocatedBytes": 3515911000,
+                "unityReservedBytes": 4004298752,
+                "graphicsDriverBytes": 4137512368,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 5469466624,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after Worker Dispose and managed GC; Editor caches retained",
+                "unityAllocatedBytes": 2408283424,
+                "unityReservedBytes": 3425476608,
+                "graphicsDriverBytes": 4137512368,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 4067033088,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              }
+            ]
+          },
+          {
+            "backend": "GPUCompute",
+            "modelLoadMs": 495.57800000000003,
+            "tokenizerPreparationMs": 10901.9015,
+            "workerAndTokenizerMs": 9586.859,
+            "firstInferenceMs": 762.0674,
+            "medianMs": 58.197300000000006,
+            "p95Ms": 61.7102,
+            "minimumCosine": 0.9999999999997065,
+            "maximumRoundTripError": 9.685754776000977E-08,
+            "cases": [
+              {
+                "id": "ja-query",
+                "cosine": 0.9999999999998972,
+                "roundTripError": 5.960464477539063E-08,
+                "norm": 0.9999999812669045
+              },
+              {
+                "id": "ja-document",
+                "cosine": 0.9999999999998281,
+                "roundTripError": 5.587935447692871E-08,
+                "norm": 1.0000000462964382
+              },
+              {
+                "id": "en-query",
+                "cosine": 0.9999999999998705,
+                "roundTripError": 4.842877388000488E-08,
+                "norm": 1.00000007274031
+              },
+              {
+                "id": "en-document",
+                "cosine": 0.9999999999998711,
+                "roundTripError": 5.960464477539063E-08,
+                "norm": 0.9999999502231972
+              },
+              {
+                "id": "titled-document",
+                "cosine": 0.9999999999997449,
+                "roundTripError": 6.332993507385254E-08,
+                "norm": 0.9999999859607515
+              },
+              {
+                "id": "empty",
+                "cosine": 0.9999999999999739,
+                "roundTripError": 4.470348358154297E-08,
+                "norm": 0.9999999834563037
+              },
+              {
+                "id": "empty-query",
+                "cosine": 0.9999999999997065,
+                "roundTripError": 6.705522537231445E-08,
+                "norm": 1.0000000988440239
+              },
+              {
+                "id": "whitespace",
+                "cosine": 0.9999999999997324,
+                "roundTripError": 9.685754776000977E-08,
+                "norm": 0.9999999693412066
+              },
+              {
+                "id": "newlines",
+                "cosine": 0.9999999999998004,
+                "roundTripError": 8.940696716308594E-08,
+                "norm": 1.0000000403032445
+              },
+              {
+                "id": "mixed",
+                "cosine": 0.9999999999998548,
+                "roundTripError": 8.940696716308594E-08,
+                "norm": 0.9999999525874583
+              },
+              {
+                "id": "emoji",
+                "cosine": 0.9999999999998886,
+                "roundTripError": 4.470348358154297E-08,
+                "norm": 1.0000000452701265
+              },
+              {
+                "id": "punctuation",
+                "cosine": 0.9999999999998058,
+                "roundTripError": 5.587935447692871E-08,
+                "norm": 0.999999969805952
+              },
+              {
+                "id": "unicode",
+                "cosine": 0.9999999999997922,
+                "roundTripError": 6.332993507385254E-08,
+                "norm": 0.9999999513984169
+              },
+              {
+                "id": "long-truncated",
+                "cosine": 0.9999999999997085,
+                "roundTripError": 5.960464477539063E-08,
+                "norm": 0.999999980601073
+              },
+              {
+                "id": "unrelated-document",
+                "cosine": 0.9999999999998037,
+                "roundTripError": 6.51925802230835E-08,
+                "norm": 0.9999999407139402
+              }
+            ],
+            "samplesMs": [
+              58.603100000000005,
+              58.5795,
+              57.4743,
+              57.5377,
+              57.7716,
+              58.197300000000006,
+              58.624900000000004,
+              57.894800000000004,
+              57.4671,
+              58.9206,
+              57.8817,
+              59.3626,
+              56.672200000000004,
+              64.5579,
+              57.0968,
+              58.4592,
+              61.225100000000005,
+              59.623400000000004,
+              58.5598,
+              58.956900000000005,
+              56.901500000000006,
+              61.7102,
+              58.797700000000006,
+              59.4333,
+              58.4557,
+              57.310900000000004,
+              57.7466,
+              58.9033,
+              69.08800000000001,
+              60.3112,
+              57.7359,
+              57.6984,
+              60.5598,
+              59.241800000000005,
+              59.1623,
+              56.2288,
+              58.048100000000005,
+              55.9988,
+              57.7107,
+              56.856,
+              56.868,
+              53.9399,
+              55.0865,
+              59.5854,
+              54.850100000000005
+            ],
+            "memory": [
+              {
+                "stage": "before model load",
+                "unityAllocatedBytes": 2408285594,
+                "unityReservedBytes": 3425476608,
+                "graphicsDriverBytes": 4137512368,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 4067131392,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after saved model load",
+                "unityAllocatedBytes": 2408285594,
+                "unityReservedBytes": 3425476608,
+                "graphicsDriverBytes": 4137512368,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 5176668160,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after first inference and readback",
+                "unityAllocatedBytes": 2411119827,
+                "unityReservedBytes": 3425476608,
+                "graphicsDriverBytes": 6939142112,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 5429899264,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after warmup",
+                "unityAllocatedBytes": 2416582754,
+                "unityReservedBytes": 3425476608,
+                "graphicsDriverBytes": 6385953736,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 5434028032,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after measurement",
+                "unityAllocatedBytes": 2422430205,
+                "unityReservedBytes": 3459031040,
+                "graphicsDriverBytes": 6385999816,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 5437554688,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              },
+              {
+                "stage": "after Worker Dispose and managed GC; Editor caches retained",
+                "unityAllocatedBytes": 2422333213,
+                "unityReservedBytes": 3459031040,
+                "graphicsDriverBytes": 6385999816,
+                "processWorkingSetBytes": 0,
+                "processPrivateBytes": 0,
+                "managedHeapBytes": 4075880448,
+                "graphicsCounterAvailable": true,
+                "processCountersAvailable": false
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "memory": [
+      {
+        "stage": "before forced synchronous .pt2 import",
+        "unityAllocatedBytes": 535538828,
+        "unityReservedBytes": 1529573376,
+        "graphicsDriverBytes": 298595648,
+        "processWorkingSetBytes": 0,
+        "processPrivateBytes": 0,
+        "managedHeapBytes": 2759364608,
+        "graphicsCounterAvailable": true,
+        "processCountersAvailable": false
+      },
+      {
+        "stage": "after import; Editor caches included",
+        "unityAllocatedBytes": 2348385186,
+        "unityReservedBytes": 3375144960,
+        "graphicsDriverBytes": 298595648,
+        "processWorkingSetBytes": 0,
+        "processPrivateBytes": 0,
+        "managedHeapBytes": 8011309056,
+        "graphicsCounterAvailable": true,
+        "processCountersAvailable": false
+      }
+    ]
+  },
+  "limitations": [
+    "Stage-sampled whole-Editor memory, not exclusive model VRAM or continuous peak.",
+    "Mono Process counters unavailable when flag is false.",
+    "Single Windows Editor session; no Player, macOS, iOS or Android validation.",
+    "Initial numerical run completed but NUnit timed out; only completion-final is accepted."
+  ]
+}

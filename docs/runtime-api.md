@@ -1,6 +1,6 @@
 # テキスト推論 API
 
-実装ブランチ: `feat/m1-sentis-runtime`、[PR #3](https://github.com/ayutaz/unity-embeddinggemma-2/pull/3) は未マージ。
+推論APIは [PR #3](https://github.com/ayutaz/unity-embeddinggemma-2/pull/3) でmain `1f0e580`へ統合済み。
 **Windows Editor の実モデル CPU / GPUCompute 全15ケースと再推論、単体契約24件が合格**。[実行記録](m1-runtime-validation.md) を参照。
 
 `EmbeddingGemma.Runtime` は UnityEditor を参照しない assembly。
@@ -41,4 +41,17 @@ CPU / GPUCompute を明示する。GPU 非対応をCPUに切り替えない。
 出力が float `[1,768]` でない、非有限値を含む、単位長でない場合は `InvalidOperationException`。
 不適合出力をAPIで補正して合格扱いにはしない。モデルとtokenizerのrevision / hash監査は配置時に行う。
 
-`.sentis` 保存・量子化・性能測定、macOS / iOS / Android、UPM リリースは未検証で次段階。
+## 保存・再読み込み
+
+[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)に実装。契約5件と実モデルのfp32 / Float16重み・両backend全15件が合格。[検証記録](m1-completion-validation.md)を参照。
+
+```csharp
+TextModelFile.Save(model, "artifacts/m1-completion/fp32.sentis");
+TextModelFile.Save(model, "artifacts/m1-completion/fp16.sentis", float16: true);
+var restored = TextModelFile.Load("artifacts/m1-completion/fp16.sentis");
+using var restoredEmbedder = new TextEmbedder(restored, tokenizerJson, BackendType.GPUCompute);
+```
+
+`.sentis`拡張子を要求し、親ディレクトリを作成。一時ファイルを保存・ロード確認後、既存先を置換する。失敗時は一時ファイルを削除する。
+fp16保存はディスク経由でモデルをコピーしてから重み量子化し、入力Modelを変更しない。書き出しは大きいメモリとI/Oを必要とするため、毎推論時に行わない。
+macOS / iOS / Android、UPMリリースはM2の対象。

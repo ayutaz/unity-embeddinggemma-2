@@ -16,17 +16,17 @@ M1 は Windows Editor での検証を対象とする。macOS / iOS / Android、�
 
 ## 現在地（2026-10-08 確認）
 
-**M1 は未完了。Python の実装と小さいモデルの検証が済み、実モデルと Unity の CI 実行待ち。**
+**M1 は未完了。Python の実装と小さいモデルの検証が済み、draft PR #1 の CI の結果を確認中。実モデルの参照生成を開始済み。**
 
 | 対象 | 確認できた状態 | 残っていること |
 | --- | --- | --- |
 | Python | uv 管理の参照生成・text-only loader・Core ATen export・CLI を実装。オフライン 33 件合格 | Ubuntu / Windows × Python 3.13 / 3.14 の CI、実モデル 15 ケースの照合 |
 | Unity | 6000.3.19f1 を指定。Sentis 2.6.1 を manifest に追加。Editor acceptance tests を作成 | Editor での依存解決、packages-lock 更新、テストのコンパイルと red / green |
 | 推論・保存 | Python の小さいモデルで保存済み `.pt2` を再読み込みして別入力を検証 | 実モデルの Sentis import、CPU / GPUCompute、C# ランタイム API、`.sentis`、量子化、測定 |
-| GitHub | public。open PR 0。今回追加した 4 workflow はローカル静的検査のみ合格 | ブランチ・PR 作成と CI 実行。Unity Secrets / Variables は未登録 |
-| 開発環境 | 承認モードの変更後に `feat/m1-text-tdd` を作成済み。main への commit / push は未実施 | 作業ブランチからの commit / push、draft PR 提出 |
+| GitHub | public。[draft PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)を提出し、4 workflow の初回PR runを起動済み | runの結果確認と失敗の切り分け。Unity Secrets / Variables は未登録 |
+| 開発環境 | `feat/m1-text-tdd` の実装コミット `4fec060` を push 済み。main への commit / push / merge は未実施 | PR の CI 結果に基づく検証と記録 |
 
-GitHub の既存 Dependency Graph 2 件の成功は M1 の CI 成功ではない。
+GitHub の既存 Dependency Graph 2 件の成功と、新規runの起動は、M1 の CI 合格ではない。
 GitHub 側の main ブランチ保護と repository rulesets は未設定。
 現在の直接 push 禁止は開発規則であり、サーバーで強制できている状態ではない。
 実行ログと確認方法は [検証記録](m1-validation.md)、workflow の準備条件は [CI 手順](ci.md) を参照。
@@ -85,7 +85,7 @@ export と最終埋め込みがずれた場合は、同一 ID / mask を渡し�
 
 | 順序 | 作業 | 開始条件 | 完了を示す証拠 |
 | --- | --- | --- | --- |
-| 1 | `feat/m1-text-tdd` を作成し、変更を commit / push、draft PR 提出 | セッションの実行ポリシーがブランチ作成を許可する | main と異なる head branch、PR URL / head SHA。モデルや artifacts を commit しない |
+| 1（済） | `feat/m1-text-tdd` を作成し、変更を commit / push、draft PR 提出 | 承認モード変更後、ブランチ作成成功 | [PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)、初回実装コミット `4fec060`。モデルや artifacts は commit していない |
 | 2 | Python matrix・workflow lint・実モデル参照生成を PR で実行 | PR と対象 workflow がリモートに存在する | 4 環境の pytest XML、actionlint、15 件の export report / digest。いずれも同じソース revision |
 | 3 | Unity CI を開始 | Unity Secrets 登録。step 2 の実モデル export 成功 | Editor ログ、依存解決後の packages-lock、NUnit XML。失敗は red の理由を記録 |
 | 4 | importer / tokenizer / C# API を TDD で修正 | step 3 の再現可能な失敗 | P3〜P5 の全件合格。ONNX に変更する場合は同じ入力・重みで照合し、ステージングとテストも更新 |

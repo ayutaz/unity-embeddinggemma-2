@@ -45,14 +45,16 @@ jobs:
         shell: bash
         working-directory: .
         run: |
-          if [ -f artifacts/m1/export-validation.json ]; then
-            echo '### Python reference versus saved export' >> "$GITHUB_STEP_SUMMARY"
-            echo '```json' >> "$GITHUB_STEP_SUMMARY"
-            cat artifacts/m1/export-validation.json >> "$GITHUB_STEP_SUMMARY"
-            echo '```' >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo 'Reference/export did not complete. This is not an M1 pass.' >> "$GITHUB_STEP_SUMMARY"
-          fi
+          {
+            if [ -f artifacts/m1/export-validation.json ]; then
+              echo '### Python reference versus saved export'
+              echo '```json'
+              cat artifacts/m1/export-validation.json
+              echo '```'
+            else
+              echo 'Reference/export did not complete. This is not an M1 pass.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

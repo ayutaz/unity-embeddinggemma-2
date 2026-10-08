@@ -4,14 +4,14 @@
 
 ## 最新の確認結果
 
-**M1 は未完了。実モデルの参照生成・Unity・GPU 検証は未実行。**
+**M1 は未完了。PR #1 を提出し CI を起動済み。実モデル・Unity・GPU の検証結果はまだない。**
 この文書の後半にある 31 件の結果は修正過程の履歴で、最新の結果は 33 件。
 
 | 項目 | 証拠 | 判定 / 限界 |
 | --- | --- | --- |
 | Python 単体テスト | `artifacts/python-tests.xml`: tests=33、failures=0、errors=0、skipped=0。2026-10-08 14:18 JST の実行。CLI 表示 14.59s、XML time 14.572s | 小さいモデル、Windows / Python 3.14 のオフライン実行のみ合格 |
 | 実装との対応 | XML の生成時刻は `prepare.py` / `test_prepare.py` の最終変更より後。export、loader、参照、CLI、失敗時レポートの testcase を含む | 今回の文書更新ではテストを再実行していない |
-| workflow | 4 YAML の actionlint 1.7.12 合格 | 構文・静的検査。GitHub 上での実行成功ではない |
+| workflow | 4 YAML のローカルactionlint 1.7.12 合格、初回PR runの起動を確認 | CIのShellCheck SC2129で初回lint失敗。summary出力を修正して再検証 |
 | Unity 依存 | ProjectVersion は 6000.3.19f1、manifest は Sentis 2.6.1。packages-lock に Sentis の項目なし | Editor の依存解決・コンパイルは未検証 |
 | 実モデル設定 | 固定 revision の config を再取得し hidden_size=512、embedding_dim=768、24 層、語彙 262144、sliding_window=512 を確認 | 重み取得・実モデル推論の成功を意味しない |
 
@@ -22,13 +22,41 @@
 
 - repository: `ayutaz/unity-embeddinggemma-2`、public、default branch は main。
 - `git status --short --branch` / `git branch --list`: 承認モード変更後に `feat/m1-text-tdd` を作成。main への commit / push は未実施。
-- `gh pr list --state open`: open PR は 0。
-- `gh run list`: Dependency Graph の既存 2 件のみ成功。run ID は `37728681777` / `37585043501`、head SHA はともに `e19e116428bbf488dc6466f658156e3d7f6d87e8`。M1 の実行ではない。
+- `gh pr view 1`: [draft PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)、base=`main`、head=`feat/m1-text-tdd`、初回実装 head SHA=`4fec06088b5a535430995936cd1d2e5284a8f559`。
+- main のリモート SHA は `e19e116428bbf488dc6466f658156e3d7f6d87e8` のまま。mainへのpush / mergeは行っていない。
+- 既存 Dependency Graph 2 件の成功（run ID `37728681777` / `37585043501`）は M1 の実行ではない。以下に新規runを分けて記録する。
 - `gh secret list` / `gh variable list`: ともに登録なし。値の取得・ログ出力はしていない。
 - main protection API: `Branch not protected` (HTTP 404)。repository rulesets API: 空配列。GitHub 側の直接 push 防止は未設定。
 - 以前のブランチ作成は `approval required by policy, but AskForApproval is set to Never` で拒否された。ユーザーが権限モードを変更した後、`git switch -c feat/m1-text-tdd` が成功し、制約の解消を確認した。
 
 これは 2026-10-08 のスナップショット。再開時にはブランチ・PR・run・Secrets 名・protection を再確認する。
+
+### 初回 PR CI の run 記録
+
+初回実装コミット `4fec060` を対象に起動。2026-10-08 の起動直後の確認では全PR runが `queued`。
+待機中は成功・失敗を判定しない。pushイベントの Python tests / Workflow lint も別runとして起動している。
+実装コミット以降の文書のみの更新は、現在のpaths filterではこれらのCIを新たに起動しない。
+
+| workflow | run | 起動直後の状態 |
+| --- | --- | --- |
+| Workflow lint | [37733486201](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37733486201) | queued |
+| Python tests | [37733486327](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37733486327) | 4環境 queued |
+| Model reference and export | [37733486276](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37733486276) | queued |
+| Unity M1 validation | [37733486514](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37733486514) | license job queued。Secrets未登録のためpreflight未成立 |
+
+再開時は上記run IDを `gh run view <id> --json status,conclusion,jobs,url` で確認する。
+`metadata.source_commit` の実際のcheckout SHAは参照生成結果から照合し、PR head SHAと同一と仮定しない。
+
+### 初回CIの失敗と修正
+
+14:42 JST の再確認で Workflow lint run `37733486201`（PR）/ `37733471105`（push）が失敗。
+`model-reference.yml` の summary 出力に ShellCheck `SC2129`（同じファイルへの連続追記をまとめる）を検出した。
+これはCIで失敗を実行確認してから修正したもの。echo / cat の各行でのリダイレクトを
+グループ全体の一回のリダイレクトにまとめ、成功 / 失敗のsummary本文は維持する。
+修正後のCI合格は別runで確認する。Windowsでのローカルactionlint合格は、CIのShellCheck合格を含まない。
+
+同時点で Model reference run `37733486276` は `uv sync --locked` が成功し、実モデル生成stepが `in_progress`。
+生成stepの開始だけでは全15ケースの照合成功を示さない。
 
 ## 実行済み: 小さいモデルによる Python TDD
 
@@ -54,7 +82,9 @@ uv run --locked pytest -q --junitxml=../artifacts/python-tests.xml
 モデル本体を stub にした export テストではない。異なるトークン / mask を保存後の `.pt2` に入力して検証する。
 参照生成の pooling / normalization は sentence-transformers の公式モジュールを使い、export 側の自作後処理と独立に比較する。
 
-## 実行済み: 静的確認と外部状態
+## 実装初期の静的確認と外部状態（履歴）
+
+以下は権限モード変更・PR提出前の記録。現在の状態は冒頭の確認結果を参照。
 
 - リポジトリは PUBLIC。
 - GitHub の Repository Secrets / Variables は開始時点で未登録。
@@ -65,9 +95,9 @@ uv run --locked pytest -q --junitxml=../artifacts/python-tests.xml
 - 作業ブランチ作成は実行環境の自動承認レビューに拒否された。ユーザーがブランチ / PR 運用を明示した後も拒否。
 - commit / push / PR 作成 / Actions 起動は未実施。`main` への push は行っていない。
 
-## 未実行
+## 未検証・結果待ち
 
-- GitHub Actions の Python matrix と実モデルの参照生成・export。
+- GitHub Actions の Python matrix と実モデルの参照生成・export（初回PR runは起動済み、結果待ち）。
 - Unity 6000.3.19f1 の起動と Sentis の依存解決。packages-lock は Editor 生成待ち。
 - Unity acceptance tests のコンパイルと red / green。
 - 実モデルの CPU / GPUCompute 推論と、全 15 ケースの cosine >= 0.999。
@@ -75,7 +105,7 @@ uv run --locked pytest -q --junitxml=../artifacts/python-tests.xml
 
 M1 は未完了。最新の 33 件の Python 単体テスト合格でも、実モデル・Sentis・GPU の一致を代替しない。
 
-## 続行時の export 互換性修正
+## 続行時の export 互換性修正（履歴）
 
 保存済みの小さいモデルの `.pt2` を静的に確認し、次の二点を検出した。
 
@@ -104,7 +134,7 @@ actionlint 1.7.12 による全 workflow の静的検査も合格。`workflow-lin
 再確認時点でもブランチは main のまま、open PR は 0、登録済み Unity Secrets は 0。
 リモート CI の実行に必要な条件はまだ変化していない。
 
-## 再開時の確認と成功レポートの更新
+## 権限モード変更前の再開確認と成功レポートの更新（履歴）
 
 再開時にも `git switch -c feat/m1-text-tdd` が
 `approval required by policy, but AskForApproval is set to Never` で拒否された。

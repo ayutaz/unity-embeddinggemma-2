@@ -4,7 +4,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 
 > **状態: M1 実装中**
 > 2026-10-08: Python の参照生成・Core ATen export・CLI を実装し、小さいモデルのオフラインテスト 33 件が合格しました。
-> 実モデルと Unity の CI は未実行で、Sentis CPU / GPUCompute の一致は未検証です。
+> [draft PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)で CI を起動し、結果を確認中です。実モデルの結果と Sentis CPU / GPUCompute の一致は未検証です。
 > リポジトリは public ですが、UPM パッケージのリリースはまだ行っていません。
 
 ## ゴール
@@ -76,7 +76,8 @@ uv run --locked python -m embeddinggemma_tools prepare --output ../artifacts/m1
 この Python 側の一致と、Sentis 側の M1 合格は別々に検証します。
 
 承認モードの変更後、作業ブランチ `feat/m1-text-tdd` を作成できました。
-PR と CI の最新状態は [検証記録](docs/m1-validation.md)を参照してください。
+[draft PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)を提出済みです。
+CI の確認記録は [検証記録](docs/m1-validation.md)を参照してください。
 次はブランチ / PR → Python matrix・実モデル export → Unity tokenizer・CPU / GPUCompute →
 `.sentis` 保存・fp16 量子化・測定の順に進めます。Unity CI には Repository Secrets の準備が必要です。
 

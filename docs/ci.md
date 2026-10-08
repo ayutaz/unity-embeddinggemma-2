@@ -5,15 +5,16 @@
 ## 現在の CI 状態
 
 4 workflow は作業ツリーに追加済みで、actionlint 1.7.12 による静的検査は合格。
-まだ commit / push / PR 提出は行っておらず、これらの workflow は GitHub 上で未実行。
+`feat/m1-text-tdd` の初回実装コミット `4fec060` を push し、[draft PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1)を提出済み。
+4 workflow の初回PR runを起動済み。実モデルの参照生成は開始し、workflow lint はCIのShellCheck SC2129で失敗したため修正・再検証する。詳細なrun履歴は検証記録を参照。
 既存の Dependency Graph 2 件の成功を、今回の Python / モデル / Unity CI の成功と混同しない。
 
 | workflow | 起動条件 | 実行内容 | 現在の状態 |
 | --- | --- | --- | --- |
-| `workflow-lint.yml` | `.github/**` の push / PR、手動 | actionlint | ローカル合格、リモート未実行 |
-| `python-tests.yml` | `tools/**` または自身の変更を含む push / PR、手動 | Ubuntu / Windows × Python 3.13 / 3.14 の uv / pytest | ローカル Windows 3.14 の 33 件のみ合格、matrix 未実行 |
-| `model-reference.yml` | `tools/**` または自身の変更を含む PR、手動、reusable call | 固定 revision の実モデル取得、参照生成、`.pt2` export / 再読み込み照合 | 実モデル未実行 |
-| `unity-validation.yml` | テスト・Packages・tools・関連 workflow の変更を含む同一 repo の PR、手動 | ライセンス preflight → 同一 revision のモデル生成 → Windows CPU / GPUCompute | Secrets 0、未実行 |
+| `workflow-lint.yml` | `.github/**` の push / PR、手動 | actionlint / ShellCheck | ローカルactionlint合格、初回CIはSC2129で失敗。summary出力の修正後に再検証 |
+| `python-tests.yml` | `tools/**` または自身の変更を含む push / PR、手動 | Ubuntu / Windows × Python 3.13 / 3.14 の uv / pytest | ローカル Windows 3.14 の 33 件合格、初回PR matrix待機中 |
+| `model-reference.yml` | `tools/**` または自身の変更を含む PR、手動、reusable call | 固定 revision の実モデル取得、参照生成、`.pt2` export / 再読み込み照合 | 初回PR runで生成開始済み、結果確認中 |
+| `unity-validation.yml` | テスト・Packages・tools・関連 workflow の変更を含む同一 repo の PR、手動 | ライセンス preflight → 同一 revision のモデル生成 → Windows CPU / GPUCompute | Secrets 0、初回PR preflight待機中 |
 
 手動実行の設定が存在することは実行実績ではない。初回は PR イベントでの実行を確認する。
 最新の外部状態と実行済みテストの証拠は [検証記録](m1-validation.md)を参照。
@@ -43,7 +44,7 @@ force push / branch 削除の禁止などを GitHub 側に設定する作業を�
 ## Python tests
 
 `.github/workflows/workflow-lint.yml` で actionlint 1.7.12 による workflow の静的検査も実行する。
-ローカルでは全 workflow の actionlint 合格を確認済み。GitHub Actions 上の実行はまだ行っていない。
+ローカルでは全 workflow の actionlint 合格を確認済み。GitHub Actions 上では初回runの結果待ち。
 
 `.github/workflows/python-tests.yml` は関連ファイルの push / PR と手動実行を対象にする。
 Ubuntu / Windows と Python 3.13 / 3.14 の組み合わせで `uv sync --locked` とオフライン pytest を実行する。
@@ -78,7 +79,7 @@ Unity workflow は後述の同一 repository の PR に限定してライセン�
 `.github/workflows/unity-validation.yml` は同一リポジトリの PR と信頼できる作業ブランチからの手動実行を対象にする。
 ライセンスの存在を最初に検証し、同じソース revision の参照生成 workflow を呼び、Windows runner で CPU / GPUCompute を別 job として検証する。
 Unity の acceptance tests は先に作成済みだが、Editor でのコンパイル・red / green はまだ実行していない。
-GameCI と Windows runner の組み合わせを含め、この workflow 自体も未実行。CI の結果から互換性を確認する。
+GameCI と Windows runner の組み合わせを含め、Editor job は未実行。初回runのpreflight以降の結果から互換性を確認する。
 GitHub Actions 上の Unity にはライセンス設定が必要。2026-10-08 の再確認でもリポジトリの Secrets / Variables は未登録。
 [GameCI の公式手順](https://game.ci/docs/github/test-runner/)に従い、Personal は
 `UNITY_LICENSE` / `UNITY_EMAIL` / `UNITY_PASSWORD`、Pro は `UNITY_SERIAL` / `UNITY_EMAIL` /

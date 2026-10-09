@@ -44,7 +44,7 @@ uv run --locked python -m embeddinggemma_tools.package --consumer ../artifacts/c
 uv run --locked python -m embeddinggemma_tools.stage --source "../artifacts/download/$runId" --project ../artifacts/c --source-commit $checkoutSha --search
 ```
 
-consumerをUnity 6000.3.16f1で開き、依存解決・compileの完了を確認する。上の`--automation`は検証用uloopだけを加える。
+consumerをUnity 6000.3.16f1で開き、依存解決・compileの完了を確認する。上の`--automation`は検証用uloopと、外部Acceleratorを無効にするプロジェクト設定を加える。
 起動方法と失敗ログの扱いは [自動操作手順](automation.md)。起動待ちが失敗しても、後続の成功と混ぜない。
 
 Windowsではconsumerの絶対パスを短くする。今回の長いconsumerパスでは、267文字のuloopテンプレートをPowerShellは認識したがUnity側で`DirectoryNotFoundException`となり、起動接続待ちもタイムアウトした。短い`artifacts/c`で同じ新規導入を行うと起動・compile・自動操作が成功した。既存プロジェクトの移動やLibraryのコピーで回避せず、空の短いパスへ導入し直して検証する。
@@ -93,7 +93,9 @@ artifact保持は3日。失効した場合は`CI`を対象ブランチで再実�
 
 既存consumerではProject Settings > EditorのCache ServerをDisabledにしてから、必要なら再起動する。[UnityのCacheServerMode](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/CacheServerMode.html)でDisabledはプロジェクトの外部キャッシュを無効にする設定。
 
-重いモデル準備と実モデル照合はまとめて実行し、ドキュメントだけの編集で繰り返さない。domain reload遅延の原因は未確定。準備済みモデルのhash照合による再利用と、不要なimport / Refresh削減は検証中で、時間短縮の実測値はまだない。
+重いモデル準備と実モデル照合はまとめて実行し、ドキュメントだけの編集で繰り返さない。準備メニューは入力モデルSHA-256、生成元commit、Unity版、tokenizer、出力3ファイルのサイズとSHA-256が一致した場合だけ再利用する。旧receiptや破損・欠落・不一致は再変換し、失敗時に過去のsuccessを残さない。再利用ではModelAsset読み込み・変換・書き込みを省き、全体Refreshも実行しない。
+
+Windows consumerの単回測定は初回202.76秒、再利用174.52秒（約13.9%短縮）。出力hash・receipt・全ファイル更新時刻は不変だった。hash監査の負荷は残り、domain reload遅延の原因や改善率を断定する測定ではない。[検証記録](m2-search-validation.md)にTDD・CLI完了応答・画面操作と未解決ログを分けて保存した。
 
 テストが数値を保存していても、CLIの完了応答を取得できなければハーネス合格にはしない。接続切断時の`SafeToRetry: false`を無視して同じ重い操作を自動再実行しない。
 

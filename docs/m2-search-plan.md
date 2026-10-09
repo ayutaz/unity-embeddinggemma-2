@@ -4,17 +4,17 @@
 
 ## 2026-10-10の現在地
 
-mainは`be791e00a1b344c5453f70037d7116184169c17f`。PR #9（計画）と#10（検索基盤）は統合済みで、統合後CIも成功。PR #11（サンプル・モデル準備）はmainをbaseとする未統合PR。
+検証基準mainは`be791e00a1b344c5453f70037d7116184169c17f`。PR #9（計画）と#10（検索基盤）は統合済みで、統合後CIも成功。PR #11（サンプル・モデル準備）はmainをbaseとするPR。最新の統合状況はGitHubを参照。
 
 | 段階 | 現在の状態 | 残る受け入れ確認 |
 | --- | --- | --- |
 | A | mainへ統合済み。固定6文書 / 4queryの参照生成・全順位・同点ID順・hash監査を実装 | 完了。統合後CI run 37964228515成功 |
 | B | PR #11で実装。Windows実モデル4条件は4 passed / failed 0 / skip 0、全順位一致。実際のGame View入力イベントで準備・日本語 / 英語検索・空入力・解放・モデル欠落を確認し画像を保存 | PR #11の残変更に対するCIと統合後CI |
-| C | 新規checkoutから短いパスの空consumerを作成し、依存解決・契約38件・サンプル5件・モデル変換が成功。実モデル4条件の数値と全順位を保存 | テスト後のdomain reload中に停止されたためCLI完了応答は未取得。consumer画面操作・高速化の確認・手順確定が残る |
+| C | 別checkoutから短いパスの空consumerへ導入。依存解決・契約38件・sample 18件・モデル変換とhash監査、改善後の実モデル4 passed / skip 0・全順位一致・CLI完了応答、CPUの日英検索・空入力・解放を確認 | 従来の中断履歴と未解決ログを維持。PR / 統合後CIはGitHub参照 |
 
 実モデルの数値は[検証記録](m2-search-validation.md)と[Windows結果](results/m2-search-root-windows-20261010.json)を参照。fp32 / Float16重みの両方をCPU / GPUComputeで保存済みモデルから読み、各条件で6文書 + 4queryをPython参照へ照合した。
 
-次は不要なモデル再import・再変換・全体Refreshを減らす改善をTDDで検証する。検証用consumerでは、到達できない外部Acceleratorの待機を避けるためプロジェクト単位でキャッシュを無効にする。domain reloadの原因は断定していない。停止前の数値結果とCLIの未完了を別記し、改善後のconsumer画面操作・実行完了を確認する。証拠・文書を整合させ、PR #11と統合後CIを確認するまで一覧1 / 2は進行中。
+一覧1 / 2の実装・consumer再現・手順を確認済み。検証済みモデルの再利用をTDDで追加し、再import・再変換・全体Refreshと外部Accelerator待機を削減した。準備203秒 → 175秒は単回観測で、domain reloadの原因は未確定。以前の中断履歴を保持し、改善後の成功を別記した。次はmacOS / iOS / Androidの環境確保と実測、Git URL導入、リリース。hash確認の負荷と未解決allocation / fontログも追跡する。
 
 その後、macOS / iOS / Androidの環境確保と実モデル検証、commit / tag固定のGit URL導入、リリースへ進む。
 

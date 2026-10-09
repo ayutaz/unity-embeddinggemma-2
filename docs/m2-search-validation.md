@@ -1,6 +1,6 @@
 # 検索サンプル実装の検証記録
 
-開始日 / 更新日: 2026-10-10。実装計画は [検索サンプルとモデル準備](m2-search-plan.md)。Windowsの実モデル4条件と元プロジェクトの画面操作を確認した。新規consumerでは数値を保存したがCLIの完了応答は未取得。高速化の確認とconsumer画面操作が残り、一覧1 / 2全体はまだ完了していない。
+開始日 / 更新日: 2026-10-10。実装計画は [検索サンプルとモデル準備](m2-search-plan.md)。Windowsの元プロジェクトと新規consumerで実モデル4条件を照合し、CLI完了応答・日英検索・空入力・解放の画面操作を確認した。一覧1 / 2の実装・再現・手順を確認済み。M2全体の他環境検証とリリースは残る。
 
 ## TDDの証拠
 
@@ -76,12 +76,20 @@ Pythonのローカル確認は追加範囲だけuvで実行。全環境のテス
 
 uloopがstderrへ返した接続切断理由を失わないよう、ハーネスを修正した。先に`UNITY_DISCONNECTED_AFTER_ACCEPT`を記録できず1 failed、修正後はharness範囲25 passed。受理済みテストを自動再実行せず、失敗・数値報告・CLI完了応答を別々に扱う。
 
-SHA-256で入力と準備済み出力を確認し、再変換・ModelAsset読み込み・不要な全体Refreshを省く経路はTDDの検証中。改善後の実測時間はまだない。
+準備キャッシュのテストを先に実行し、「キャッシュhitでもモデルを読む」で1 failed、再構築のloader失敗で旧successが残る1 failedを確認。入力モデルhash・生成元2件・Unity版・tokenizer・出力3ファイルのサイズとSHA-256を検証してから再利用し、loader前に旧successを無効化する実装へ変更した。sample EditModeの18 passed / failed 0 / skipped 0 / inconclusive 0。破損・欠落・旧形式・生成元差異では再構築する。
+
+入力ModelAssetを必要時だけimport / loadし、ModelLoader.Load後にUnloadAssetで解放する。全体AssetDatabase.Refreshを省いた。consumerで旧receiptからの初回準備202.7615秒、再利用174.5159秒。再利用ではreceiptと全出力の更新時刻が不変。単回観測の約13.9%短縮で、domain reload単体の改善率や統計的なベンチマークではない。hash監査にはまだ時間がかかる。[準備・TDD・時間の記録](results/m2-search-optimization-windows-20261010.json)。
+
+承認されたSafe Modeから復旧し、通常モードでconsumerの実モデル検索ハーネスを再実行した。2026-10-09T18:27:22.5620769ZにCLIの4 passed / failed 0 / skipped 0 / inconclusive 0を取得。compile errors / warnings 0、ハーネス全体success、全ベクトルと全順位一致、合計86.1642秒。[改善後consumer記録](results/m2-search-consumer-completed-windows-20261010.json)。以前の接続切断結果は履歴として維持する。
+
+consumerのGame View入力イベントでCPU準備、日本語 / 英語検索、空入力（結果0件・入力エラー）、解放（ready false・結果0件）を確認し、Play停止と最大化解除まで実施した。[日本語画面](screenshots/m2-search-consumer-japanese.png) / [英語画面](screenshots/m2-search-consumer-english.png)。元プロジェクトのGPU画面操作と合わせて両backendを確認した。
+
+最初のPlay停止後にPersistent allocation 1件のLeak Detectedログが出た。スタック付き検出を有効にしてCPU準備・解放・停止を再実行したところ同ログは再現せず、Deleting invalid font reference警告1件が残った。発生元は特定できていない。検索の数値・NUnit成功とは別の未解決観測として記録し、次のリソース測定で追跡する。
 
 ## 未完了の確認
 
-- モデル準備のキャッシュ再利用・import / Refresh削減の検証と実測。
-- 新規consumer内でのCLI完了応答・画面操作。数値・変換の既存結果を維持して再確認する。
-- [利用者向け手順](model-preparation.md)の確定、PR #11と統合後CI。PR #9 / #10は統合済み。
+- PR #11と統合後CIの結果はGitHubのPR / Actionsを参照。実装head `c6ab65e`のCI run 37973032211は全8 job成功。文書・証跡の最終commitは別途CIで確認する。
+- hash確認の高速化、再現しなかったallocationログとfont警告の切り分け。
+- macOS / iOS / Android・Git URL導入・公開リリースは後続で未検証。
 
 M1の過去実測・UPM移行の過去回帰は [現在の状態](status.md)の証拠を維持する。この検索サンプルの実モデル合格の代わりには数えない。

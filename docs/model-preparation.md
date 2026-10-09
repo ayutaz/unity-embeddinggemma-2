@@ -83,9 +83,39 @@ Float16重みを試す場合は`model-float16.sentis`を指定する。GPU非対
 artifact保持は3日。失効した場合は`CI`を対象ブランチで再実行し、新しい成功runとcheckout SHAで取得・監査・準備する。
 再準備の前にサンプルでリソースを解放する。途中の準備失敗や以前の結果を新しい成功として扱わず、`preparation.json`・Console・監査結果を確認する。
 
-実モデルのWindows回帰には`uv run --locked python -m embeddinggemma_tools.unity --suite search --timeout 1200`を使う。
+実モデルのWindows回帰には、`tools/`から`uv run --locked python -m embeddinggemma_tools.unity --suite search --timeout 1200`を使う。`--project`の既定はこのリポジトリの検証projectで、consumerを自動選択しない。
 4件（fp32 / Float16重み × CPU / GPUCompute）がすべてpassed、failed / skipped / inconclusive = 0の時だけ検索参照合格。
 結果は`artifacts/m2-search/results.json`とハーネス出力に分けて保存する。[検証記録](m2-search-validation.md)に実行済みの範囲を記載する。
+
+### 別consumerで実モデル回帰を行う
+
+`package --sample`で入るsampleテストは小さいモデルの契約であり、実モデル参照fixtureは配布UPMに含まない。consumerの4条件を検証するには、検証リポジトリのfixtureを明示的に配置する。今回のconsumerで実行したfixtureは元の `TextSearchReferenceTests.cs` とSHA-256一致を確認した。
+
+consumerのEditorを停止し、リポジトリルートから次を実行する。`artifacts/c`は作成済みの短いconsumer。既存の検証フォルダがある場合は上書きせず、内容を照合してそのfixtureを使用する。
+
+```powershell
+$validationPath = 'artifacts/c/Assets/SearchValidation'
+if (Test-Path -LiteralPath $validationPath) { throw 'Validation directory already exists; compare the existing fixture first.' }
+New-Item -ItemType Directory -Path $validationPath | Out-Null
+Copy-Item -LiteralPath Assets/Tests/Editor/TextSearchReferenceTests.cs -Destination $validationPath
+Copy-Item -LiteralPath Assets/Tests/Editor/TextSearchReferenceTests.cs.meta -Destination $validationPath
+$validationAssembly = @{
+  name = 'EmbeddingGemma.Search.Consumer.Validation'
+  references = @('EmbeddingGemma.Runtime', 'Unity.InferenceEngine')
+  includePlatforms = @('Editor')
+  optionalUnityReferences = @('TestAssemblies')
+  autoReferenced = $false
+}
+$validationAssembly | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath "$validationPath/EmbeddingGemma.Search.Consumer.Validation.asmdef" -Encoding utf8
+```
+
+consumerを同じUnity版で開き、依存解決・compileと上記の`stage --search` / 準備メニュー完了を確認した後、`tools/`から実行する。
+
+```powershell
+uv run --locked python -m embeddinggemma_tools.unity --project ../artifacts/c --suite search --timeout 1200
+```
+
+consumerの数値結果は `artifacts/c/artifacts/m2-search/results.json`。ハーネスの保存先は既定では検証リポジトリの `artifacts/unity-harness/` で、`--output`でも明示できる。fixture欠落によるNoTestsFound、GPU skip、接続切断を4条件合格にしない。
 
 ## ローカル検証の待機を減らす
 

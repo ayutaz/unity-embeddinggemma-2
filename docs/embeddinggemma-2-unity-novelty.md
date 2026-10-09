@@ -6,7 +6,7 @@
 
 > 本文の方式比較は2026-10-07の調査を基礎とし、下に2026-10-09の限定検索を追記した。現在の先行実装の不存在を保証しない。
 > Sentis 2.6.1 / Unity 6000.3.16f1のWindows Editorで、実モデルのtokenizer・CPU / GPUCompute・保存 / Float16重み・性能 / メモリ測定までM1完了。
-> PR #6のCI整備・UPM化はmain統合済み、PR #8統合後のmain CIも成功。画像・音声は未着手。[現在の状態](status.md) / [M1完了検証](m1-completion-validation.md) / [UPM検証](m2-package-validation.md)を参照。
+> CI・UPM・検索サンプル・モデル準備はmain統合済み。PR #12統合後main `4ee0cbb`のCI全8 job成功と、Windows consumerの実モデル検索4条件・画面操作を確認。画像・音声は未着手。[現在の状態](status.md) / [M1完了検証](m1-completion-validation.md) / [検索検証](m2-search-validation.md)を参照。先行事例調査の日付は変更しない。
 
 ## 結論
 
@@ -98,7 +98,7 @@ Float16重み保存はWindowsで検証済みだが、int4 / int8・モバイルG
 ## 次のステップ
 
 Core ATen `.pt2` のtext-only exportとWindows Sentisのtokenizer / import / CPU / GPUCompute照合は完了した。
-次はM2の検索サンプル・モデル準備手順・他環境・配布。画像 / 音声はM3 / M4で実モデル検証を進める。
+検索サンプルとモデル準備手順はWindows consumer再現を含め完了・統合済み。次はM2の他環境・Git URL導入・配布。画像 / 音声はM3 / M4で実モデル検証を進める。
 ONNX経路は条件変更で非互換が確認された場合の予備とする。
 公開時の新規性の主張は、その時点の先行事例調査と実際の検証結果に基づいて更新する。
 

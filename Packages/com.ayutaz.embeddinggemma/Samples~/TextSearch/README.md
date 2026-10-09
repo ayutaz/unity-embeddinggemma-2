@@ -16,5 +16,5 @@
 既定の配置先は`Assets/StreamingAssets/EmbeddingGemmaTextSearch/`です。モデル・tokenizerと生成結果をGitへコミットしないでください。
 
 取得・監査・新規consumer・更新・artifact失効時の手順は
-[リポジトリのモデル準備手順](https://github.com/ayutaz/unity-embeddinggemma-2/blob/feat/m2-text-search-sample/docs/model-preparation.md)を参照してください。
+[リポジトリのモデル準備手順](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/model-preparation.md)を参照してください。
 現在の同期ファイル読み込みを、未検証のPlayer配置や端末で動作確認済みとは扱いません。

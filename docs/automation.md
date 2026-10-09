@@ -51,6 +51,8 @@ uv run --locked python -m embeddinggemma_tools.unity --suite m1
 uv run --locked python -m embeddinggemma_tools.unity --suite runtime
 # 保存・量子化・両backend実モデル照合と測定（NUnit / CLIとも20分上限）
 uv run --locked python -m embeddinggemma_tools.unity --suite completion --timeout 1200
+# 検索4条件: fp32 / Float16重み × CPU / GPUCompute
+uv run --locked python -m embeddinggemma_tools.unity --suite search --timeout 1200
 ```
 
 `--launch` を指定したときだけ起動コマンドを送る。起動済み Editor への通常の検証では省略し、毎回ウィンドウを前面へ移動しない。
@@ -80,6 +82,7 @@ runtime の合格だけで `m1_reference_passed` は true にしない。
 `m1_reference_passed=true` はこの3テストの合格を表す。`.sentis` 保存・量子化・性能測定を含むM1全体の完了ではない。
 `completion`は `M1CompletionTests` の1件でfp32 / Float16重みの保存・再読み込み、CPU / GPUCompute各15ケース、warmup・45サンプル測定を検証する。
 1件passed / failed=skipped=inconclusive=0の時だけ `m1_completion_passed=true`。
+`search`は `TextSearchReferenceTests` の4件すべてpassed、failed / skipped / inconclusive=0の場合だけ `search_reference_passed=true`。M1の各passedフラグは変更しない。保存済み2形式 × 2backendで6文書 / 4queryのベクトル・全順位を監査し、数値は対象project内の `artifacts/m2-search/results.json` に保存する。
 数値・段階別メモリは `artifacts/m1-completion/results.json`、モデルも同じGit管理外ディレクトリに保存する。
 以前のresults.jsonのsuccessは実行開始時に無効化する。結果ファイルだけでなくNUnit / ハーネスの成否も確認する。
 M1全体の完了監査は [検証記録](m1-completion-validation.md) に従い、ソースSHA・固定参照・実行結果・CIを照合する。
@@ -113,16 +116,17 @@ artifact の保持期間は3日。失効した場合は CI で再生成する。
 `--suite m1` は3件すべて、`--suite runtime` は両backendの2件すべて合格した。skip / failed / inconclusiveは0。
 各backendの全15ケースでfp32一致を確認し、C#単体契約24件も合格。詳細は [ランタイム検証記録](m1-runtime-validation.md)。
 続くPR #4では `--suite completion` の1件でfp32 / Float16重み・CPU / GPUCompute全60比較と180定常測定値が合格し、C#単体契約は30件合格した。
-M1完了時はPR #1〜#4をmain `8146107`へ統合し、当時のmain CI（run `37801650704`）は4環境各64件合格。現在はPR #6 / #8も統合済みで、main `c7d1189` の [run 37949804912](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37949804912)は全8 job成功、Python4環境各102件・実モデルPython15件合格。
+M1完了時はPR #1〜#4をmain `8146107`へ統合し、当時のmain CI（run `37801650704`）は4環境各64件合格。確認基準main `4ee0cbb`はPR #12まで統合済みで、[run 37975720534](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975720534)の全8 job成功。CIのPython照合とローカルSentis実測は区別する。
 保存・量子化・測定とソース対応は [M1完了検証](m1-completion-validation.md)を参照。
 PR #6でUPM移行の導入・compile・契約29件と元プロジェクトの実モデルM1 3件 / API 2件が合格した。全保存・量子化・測定を移行後に再実行した結果ではない。
-main統合、サンプル・他環境検証・配布の残作業は [M2計画](m2-plan.md)を参照。
+PR #11の検索サンプルは元プロジェクトと新規consumerで4条件・CLI完了応答・画面操作を確認済み。[検索検証記録](m2-search-validation.md)を参照。他環境・Git URL導入・配布の残作業は [M2計画](m2-plan.md)へ記載する。
 クラウドUnity workflowはSecretsが必要なLinux CPUの手動補助検証のみ。M1のWindows CPU/GPUCompute合格はこのローカルハーネスで確認する。
 詳細な履歴は [検証記録](m1-validation.md)を参照。
 
 ## UPM移行後の契約テスト
 
 PR #6でRuntimeとモデル不要の契約29件を `Packages/com.ayutaz.embeddinggemma/` へ移行した。
+後続の検索・入力契約を加えたパッケージassemblyは38件をconsumerで確認済み。29件は移行時点の履歴で、現在の全契約件数ではない。サンプルEditor契約18件と実モデル検索4件は別assembly / fixtureとして記録する。
 実モデルfixtureと測定契約1件は検証プロジェクトの `Assets/Tests/Editor/` に残す。上記m1 / runtime / completionスコープは変わらない。
 パッケージ側の契約は次のassemblyを明示して実行する。
 
@@ -134,3 +138,13 @@ PR #6でRuntimeとモデル不要の契約29件を `Packages/com.ayutaz.embeddin
 起動時もPythonハーネスを使うと、子プロセスへの `ALLUSERSPROFILE` 補完が適用される。
 新規consumerではパッケージ解決後もuloop launch readinessがタイムアウトした。後続のrun-testsでcompileと29 passed / skip 0を確認したが、launchの失敗を成功へ読み替えない。
 初回起動の失敗・stderr・summaryを保持し、同じEditorが起動済みか確認してから `--launch` なしの検証を行う。
+
+## 検索consumerと重い待機の扱い
+
+検索サンプルの取得・監査・Sentis変換、consumerへ実モデルfixtureを配置する方法は [モデル準備手順](model-preparation.md)を使う。`--project`を省略するとハーネスはこのリポジトリの検証projectを対象にする。別consumerでは明示する。
+
+`--automation`で生成するconsumerは外部Acceleratorをプロジェクト単位で無効化する。短いWindowsパスを使い、既存の未保存編集を上書きしない。モデル準備はhash / metadataが一致する場合だけ再利用し、不要なModelAsset読み込み・再変換・全体Refreshを避ける。文書編集だけで重いテストを再実行しない。
+
+stderrの構造化エラーも保存する。`UNITY_DISCONNECTED_AFTER_ACCEPT`や`SafeToRetry: false`の受理済み操作を自動再実行しない。数値ファイルがsuccessでも、NUnit件数とCLI完了応答がない場合はハーネス合格にしない。起動待ちの失敗と後続テストの成功も別々に記録する。
+
+改善後consumerは4 passed / skip 0、ハーネスsuccessを確認済み。以前の中断履歴と停止時のallocation / fontログは[改善後consumer記録](results/m2-search-consumer-completed-windows-20261010.json)へ分けて保存した。根本原因を断定せず、次の測定で追跡する。

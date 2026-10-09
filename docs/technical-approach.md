@@ -7,8 +7,8 @@
 > M1完了時はPR #1〜#4をmain `8146107`へ統合し、当時のPython CIは4環境各64件合格。
 > 最終PR #4のPython参照生成 / 保存済みexport全15件照合も成功（run `37801226486`、最小cosine 0.9999998808）。
 > Windows Editorで`.sentis`保存・再読み込み、Float16重み量子化、CPU / GPUCompute精度と測定までM1完了。[M1完了検証](m1-completion-validation.md)を参照。
-> PR #6のCI整備・UPM化はmain統合済み。PR #8統合後main `c7d1189` のPython CIは4環境各102件・全8 job成功。[現在の状態](status.md) / [UPM検証](m2-package-validation.md)を参照。
-> 次は [M2計画](m2-plan.md)。外部仕様は2026-10-07の調査を基礎とし、2026-10-09に採用版の公式export / 量子化 / UPM手順とインストール済み2.6.1の実装を再確認した。画像・音声の設計案は未実装。
+> CI・UPM・検索基盤とサンプル / モデル準備をPR #6・#10・#11で統合済み。PR #12統合後の確認基準main `4ee0cbb`はCI全8 job成功。元プロジェクトと新規consumerでWindows Sentisの検索4条件・画面操作を確認。[現在の状態](status.md) / [検索検証](m2-search-validation.md)を参照。
+> 次は [M2計画](m2-plan.md)の他環境・Git URL導入・リリース。外部仕様は2026-10-07の調査を基礎とし、2026-10-09に採用版の公式export / 量子化 / UPM手順とインストール済み2.6.1の実装を再確認した。今回の更新は実装状態の反映で、外部仕様の再調査ではない。画像・音声の設計案は未実装。
 
 ## 要約
 

@@ -1,9 +1,9 @@
 # M2 詳細計画と残作業
 
-更新日: 2026-10-10。検証基準main: `758cb04f407724a62326256f51792fb66f82c72d`（PR #11統合後）。
+更新日: 2026-10-10。確認基準main: `4ee0cbbde07fc99ca87d33ed52a44e6100ca0b0c`（PR #12統合後）。Unity実測は各検証記録の実行SHAを維持する。
 **CI整備・UPM化はPR #6でmainへ統合済み。統合後のmain CIも全8 job成功。** PR #1〜#4のWindows EditorのM1は完了した。
 GitHub側のmain保護も設定・再確認済み。検索基盤はPR #10でmainへ統合済み。PR #11の検索サンプルとモデル手順は、Windowsの元プロジェクト・新規consumerで実モデル4条件と画面操作、CLI完了応答を確認した。M2全体の他環境・Git URL導入・リリースは残る。[検証記録](m2-search-validation.md)を参照。
-[現在の状態](status.md)でPRと証拠の対応を確認し、[M1完了検証](m1-completion-validation.md)を既存の基準としてテキスト検索サンプル、モデル準備手順、他環境検証、配布を進める。
+[現在の状態](status.md)でPRと証拠の対応を確認し、[M1完了検証](m1-completion-validation.md)と検索consumer再現を既存の基準として他環境検証、Git URL導入、配布を進める。
 
 利用者向け一覧の1（検索サンプル）と2（モデル準備手順）の実装・再現を確認済み。[実装計画](m2-search-plan.md) / [検証記録](m2-search-validation.md) / [モデル準備手順](model-preparation.md)を参照。
 Sentis実モデル4条件は両Windowsプロジェクトで合格。consumerのCLIは4 passed / skip 0、sample EditModeは改善後18 passed。モデル再利用の単回測定203秒 → 175秒。以前の中断記録と未解決allocation / fontログを別記する。PR #11の統合状況・最新CIはGitHubを参照。
@@ -26,7 +26,7 @@ Sentis実モデル4条件は両Windowsプロジェクトで合格。consumerのC
 | 2 | テキスト検索サンプル | 文書事前埋め込み・cosine順位・同点ID順・エラー表示・リソース解放 | 実装・Windows実モデル4条件・元プロジェクトGPU / consumer CPUの画面操作確認済み。PR #11 |
 | 3 | モデル準備・配布手順 | CI固定revision生成、hash監査、取得・配置・更新、新規checkout / 空consumerで再現 | 実装・導入・監査・変換・CLI4 passed・画面操作確認済み。キャッシュTDD18 passed、手順確定。PR #11 |
 | 4 | 環境・runner・実機の確保 | macOS Editor、iOS / Androidのtoolchain・実機・GPU API・ライセンス・署名条件を確認し、実行できる組み合わせを記録 | 早期に調査。必要環境は未確認 |
-| 5 | 各環境の実モデル検証と測定 | 下の環境表を埋め、精度・実行backend・ロード / 初回 / 定常時間・メモリを記録。移行後Windowsの回帰も確認 | 移行後Windowsの導入・契約・M1 / API回帰済み。保存・量子化・全ベンチ再測定、サンプル、他環境は残る。1〜4に依存 |
+| 5 | 各環境の実モデル検証と測定 | 下の環境表を埋め、精度・実行backend・ロード / 初回 / 定常時間・メモリを記録。移行後Windowsの回帰も確認 | Windowsの導入・契約・M1 / API回帰と検索4条件・consumer UI確認済み。移行後の保存・量子化・全ベンチ再測定と他環境は残る。1〜4に依存 |
 | 6 | リリース準備と配布 | clean projectから版固定で導入、サンプル起動、手順・ライセンス・CHANGELOGを確認。必要環境の合格後にリリース用PRと配布を行う | 1〜5に依存、未着手 |
 
 0〜3の実装・Windows consumer再現・手順確認を終え、PR #11の統合と統合後CI全8 job成功を確認した。続いて4の環境確保 → 5の実測 → 6のリリースへ進む。hash確認の負荷と未解決allocation / fontログも次の測定で追跡する。
@@ -41,7 +41,7 @@ Sentis実モデル4条件は両Windowsプロジェクトで合格。consumerのC
 | C | 利用者向けモデル準備と再現手順 | 既存prepare / stage CLIとActionsを使用。revision・source SHA・hash、取得・変換・配置・更新、artifact失効時の再生成を文書化。新規checkoutからBのサンプルを起動して再現。重みはGitへ含めない |
 | D | 他環境の実行と配布準備 | 下表のtoolchain / runner / 実機を確保し、実モデルの精度・backend・速度・メモリを記録。Git URLのcommit固定導入を実Editorで確認し、必要環境の合格後にtag固定導入とリリースPRへ進む |
 
-A → Bの順に進め、Cの手順整理とDの環境調査は早期に進められる。Cのサンプル再現はBに依存する。
+AはPR #10、B / CはPR #11で完了・統合済み。次の実装PRはDの環境確保と実測、Git URL導入、リリース準備に分ける。Dは既存の固定参照・サンプル・監査手順を引き継ぐ。
 実装ではテストを追加 → 意図した失敗を実行確認 → 最小実装 → greenを記録する。Pythonはtools/とuv、重い参照生成・変換・全テストはActionsへ寄せる。
 Unityや実機が利用できない環境は未実行として残し、サンプルや公開の完了条件を満たしたことにはしない。
 

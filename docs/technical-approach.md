@@ -1,13 +1,13 @@
 # 技術調査: Sentis で EmbeddingGemma 2 を動かす方法
 
 - 調査日: 2026-10-07
-- 実装・計画の更新日: 2026-10-09
+- 実装・計画の更新日: 2026-10-10
 - 関連: [ゴール](goal.md) / [新規性調査](embeddinggemma-2-unity-novelty.md)
 
-> PR #1〜#4はmain `8146107`へ統合済み。mainのPython CIは4環境各64件合格。
+> M1完了時はPR #1〜#4をmain `8146107`へ統合し、当時のPython CIは4環境各64件合格。
 > 最終PR #4のPython参照生成 / 保存済みexport全15件照合も成功（run `37801226486`、最小cosine 0.9999998808）。
 > Windows Editorで`.sentis`保存・再読み込み、Float16重み量子化、CPU / GPUCompute精度と測定までM1完了。[M1完了検証](m1-completion-validation.md)を参照。
-> PR #6でCI整備・UPM化も実装・検証済み。確認したhead `8a585bc` のPython CIは4環境各102件・全8チェック成功、main統合待ち。[現在の状態](status.md) / [UPM検証](m2-package-validation.md)を参照。
+> PR #6のCI整備・UPM化はmain統合済み。PR #8統合後main `c7d1189` のPython CIは4環境各102件・全8 job成功。[現在の状態](status.md) / [UPM検証](m2-package-validation.md)を参照。
 > 次は [M2計画](m2-plan.md)。外部仕様は2026-10-07の調査を基礎とし、2026-10-09に採用版の公式export / 量子化 / UPM手順とインストール済み2.6.1の実装を再確認した。画像・音声の設計案は未実装。
 
 ## 要約

@@ -1,11 +1,11 @@
 # M1 詳細計画と完了監査
 
-更新日: 2026-10-09。対象はWindows Editor / Unity 6000.3.16f1 / Sentis 2.6.1。
+更新日: 2026-10-10（現在地・次の作業を更新）。実測対象はWindows Editor / Unity 6000.3.16f1 / Sentis 2.6.1。
 
 **M1のWindows Editor受け入れ条件はすべて合格した。** PR #1〜#3で基盤・参照配置・推論APIを統合し、[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)で保存・Float16重み量子化・性能とメモリ測定を追加した。
-実測コードは `329da925b01f7c9cb0b4d604055f0b9dc214c5c4`。PR #4は2026-10-09 00:32:44 JSTに統合済みで、現在の基準mainは `8146107aa77904050c6235866c0cf79ecc80034c`。
-mainの37ファイルのソースhashは実測レポートと一致する。最終PRとmainのCIは [完了検証記録](m1-completion-validation.md)を参照。
-PR #6では19ファイルをソース・metaのGit blob一致でUPMへ移行し、契約29件・実モデルM1 / API回帰を検証済み。main統合待ちであり、元M1の保存・量子化・測定の数値は変更しない。[現在の状態](status.md) / [パッケージ検証](m2-package-validation.md)を参照。
+実測コードは `329da925b01f7c9cb0b4d604055f0b9dc214c5c4`。PR #4は2026-10-09 00:32:44 JSTに統合済みで、M1完了時の基準mainは `8146107aa77904050c6235866c0cf79ecc80034c`。
+M1完了時のmainの37ファイルのソースhashは実測レポートと一致する。当時の最終PRとmainのCIは [完了検証記録](m1-completion-validation.md)を参照。
+PR #6では19ファイルをソース・metaのGit blob一致でUPMへ移行し、契約29件・実モデルM1 / API回帰を検証済み。PR #6 / #8はmain `c7d1189`へ統合済みで、統合後CIも全8 job成功。元M1の保存・量子化・測定の数値は変更しない。[現在の状態](status.md) / [パッケージ検証](m2-package-validation.md)を参照。
 
 ## 受け入れ条件と証拠
 
@@ -57,11 +57,11 @@ Float16は保存する重みの精度であり、全演算のfp16化・速度改
 
 ## 次の作業
 
-1. PR #6のCI・UPM化は実装・検証済みで全8チェック成功。マージ依頼後にmainへ統合し、統合CIを確認する。GitHub側のmain保護は設定済み。[パッケージ検証](m2-package-validation.md)を参照。
-2. [M2詳細計画](m2-plan.md)に沿ってテキスト検索サンプル、配布手順、macOS Editor / iOS / Androidの精度・速度・メモリ検証を進める。
+1. [M2詳細計画](m2-plan.md)に沿ってテキスト検索サンプルを進める。固定ケース・順位計算と参照生成、UI操作・エラー表示・Disposeを小さいPRへ分割し、TDDで実装する。
+2. 配布手順、新規checkoutの再現、macOS Editor / iOS / Androidの精度・速度・メモリ検証とGit URL導入を確認し、テキスト版リリースへ進む。
 3. M2の後にM3で画像モデルとGPU前処理、M4で音声モデルとGPU前処理・モダリティ横断検索。
 
-main保護のサーバー設定は完了。全PRで起動する必須CIはPR #6のmain統合待ち。
+main保護のサーバー設定と、全PRで起動する必須CIのmain統合は完了。
 クラウドUnity workflowはLinux CPUの任意手動補助検証で未実行。Secrets未登録はローカルM1の妨げではなく、Linuxや他環境を合格扱いにしない。
 
 ## 開発・再実行規則

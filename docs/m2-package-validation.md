@@ -1,10 +1,10 @@
 # CI・main保護・UPM移行の検証
 
-更新日: 2026-10-09。PR #6、ブランチ `feat/ci-upm-package`。
+更新日: 2026-10-10。Windows実測は2026-10-09のPR #6、ブランチ `feat/ci-upm-package` の記録を維持。
 実測したコード: `b74180ec8dcdce99faf88dc129a58904c50a7946`。基準main: `8146107`。
 確認済みPR head: `8a585bc634a210e5ffd9ceaa5d67b85f1c9316a3`。文書更新の新しいCIとこの過去実測を区別する。[現在の状態](status.md)を参照。
 対象は利用者向け残タスク一覧の1（CI / main保護）と2（UPM化）。
-**実装とWindows Editorの導入検証は完了。mainのworkflow / packageへの反映はPR merge待ち。**
+**実装とWindows Editorの導入検証は完了。PR #6はmainへ統合済み。** PR #8統合後のmain `c7d1189` の [CI run 37949804912](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37949804912)も全8 job成功。Unityの実測JSONは当時の記録で、統合後に再測定した結果ではない。
 検索サンプル、他環境、公開リリースは今回の範囲に含めない。
 
 ## 実装と結果
@@ -86,7 +86,7 @@ CLI起動待ちの問題は検証用ツールの制約として残し、パッ�
 
 ## 残作業
 
-PR #6は確認したheadでCI成功・競合なし。merge依頼後にmainへ統合し、統合後のCIとpackage反映を確認する。
+PR #6は2026-10-10に依頼に基づきmainへ統合済み。PR #8も統合し、mainのCI成功とpackage反映を確認した。
 PR #5の文書変更もPR #6に含まれ、#5は未マージで閉じた。文書のみの検証用PR #7もクローズ済み。
 その後は [M2計画](m2-plan.md)のテキスト検索サンプル、モデル配布手順、macOS / iOS / Android、リリースへ進む。
 `Samples~`には現状説明だけを置き、未実装の検索シーンをPackage Managerへ登録しない。

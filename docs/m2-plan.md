@@ -1,9 +1,9 @@
 # M2 詳細計画と残作業
 
 更新日: 2026-10-09。基準main: `8146107aa77904050c6235866c0cf79ecc80034c`。
-**PR #6でCI整備・UPM化を実装中。** PR #1〜#4は統合済みで、Windows EditorのM1は完了した。
+**PR #6のCI整備・UPM化は実装・検証済み、main統合待ち。** PR #1〜#4は統合済みで、Windows EditorのM1は完了した。
 GitHub側のmain保護は設定済み。PR #6のmain統合、検索サンプル・他環境・リリースは未完了。[パッケージ検証](m2-package-validation.md)を参照。
-[M1完了検証](m1-completion-validation.md)を既存の基準とし、UPM化、テキスト検索サンプル、他環境検証、配布を進める。
+[現在の状態](status.md)でPRと証拠の対応を確認し、[M1完了検証](m1-completion-validation.md)を既存の基準としてテキスト検索サンプル、モデル準備手順、他環境検証、配布を進める。
 
 ## 現在地
 
@@ -11,23 +11,23 @@ GitHub側のmain保護は設定済み。PR #6のmain統合、検索サンプル�
 - `TextEmbedder` はquery / document / raw、同期・メインスレッド、batch 1 / length 128 / 768次元、CPU / GPUComputeを扱う。
 - `TextModelFile` はfp32 / Float16重みの保存・再読み込みを実装済み。Windows Editorで両形式・両backend全15件が合格。
 - Runtime asmdefはSentisと `Unity.Newtonsoft.Json` を参照する。現在のlockでNewtonsoftは3.2.2。uloop、URP、2D関連パッケージは検証プロジェクト側の構成であり、配布Runtimeの依存には持ち込まない。
-- Python CIはUbuntu / Windows × Python 3.13 / 3.14の4環境各64件成功。macOS / iOS / AndroidとPlayerでの実モデル実行は未検証。
+- M1統合mainのPython CIは4環境各64件、PR #6の確認したhead `8a585bc` はUbuntu / Windows × Python 3.13 / 3.14各102件成功。新規consumerの契約29件と元プロジェクトの実モデルCPU / GPU回帰も成功。macOS / iOS / AndroidとPlayerでの実モデル実行は未検証。
 - mainはbranch protection設定済み。PRとRequired CIを管理者にも要求し、force push / 削除を禁止。全PRのCI入口とパッケージ監査はPR #6に実装、mainへの反映待ち。クラウドUnityはLinux CPUの任意手動補助検証で未実行、Secrets / Variablesは未登録。
 
 ## 作業順序と完了条件
 
 | 順序 | タスク | 完了条件 | 依存 / 状態 |
 | --- | --- | --- | --- |
-| 0 | OSS開発基盤: CIの必須判定とmain保護 | 文書だけのPRも含めCI判定が完了する。失敗・必要jobの未実行を成功扱いにしない。PR経由、必須check、force push / 削除の制限をGitHub側で確認 | サーバー保護を設定・読み戻し済み。CI実装はPR #6、main反映待ち |
+| 0 | OSS開発基盤: CIの必須判定とmain保護 | 文書だけのPRも含めCI判定が完了する。失敗・必要jobの未実行を成功扱いにしない。PR経由、必須check、force push / 削除の制限をGitHub側で確認 | 保護設定・読み戻し、PR #6の全8チェック、文書のみPR #7の全8 jobが成功。main反映待ち |
 | 1 | UPM構成へ移行 | package manifest、明示的な依存、Runtime / Tests / Samples / 文書を整理。既存API契約とGUIDを維持し、重複assemblyやUnityEditor参照を持ち込まない | PR #6に実装。新規consumerで検証、main統合待ち |
 | 2 | テキスト検索サンプル | 文書を事前埋め込みし、queryとのcosineで順位表示。固定入力のPython参照順位と一致。モデル未準備・不正入力・実行失敗を表示し、終了時にリソース解放 | 1に依存、未着手 |
-| 3 | モデル準備・配布手順 | CIで固定revisionから生成、hash監査、取得・配置・読み込み・更新の手順を整備。新規checkoutとサンプル導入で再現 | 1 / 2と並行可能、未着手 |
+| 3 | モデル準備・配布手順 | CIで固定revisionから生成、hash監査、取得・配置・読み込み・更新の手順を整備。新規checkoutとサンプル導入で再現 | 既存のprepare / stage CLIとCI生成手順あり。サンプル向け配布手順・新規checkout再現は残る。1 / 2と並行可能 |
 | 4 | 環境・runner・実機の確保 | macOS Editor、iOS / Androidのtoolchain・実機・GPU API・ライセンス・署名条件を確認し、実行できる組み合わせを記録 | 早期に調査。必要環境は未確認 |
-| 5 | 各環境の実モデル検証と測定 | 下の環境表を埋め、精度・実行backend・ロード / 初回 / 定常時間・メモリを記録。移行後Windowsの回帰も確認 | 1〜4に依存、未着手 |
+| 5 | 各環境の実モデル検証と測定 | 下の環境表を埋め、精度・実行backend・ロード / 初回 / 定常時間・メモリを記録。移行後Windowsの回帰も確認 | 移行後Windowsの導入・契約・M1 / API回帰済み。保存・量子化・全ベンチ再測定、サンプル、他環境は残る。1〜4に依存 |
 | 6 | リリース準備と配布 | clean projectから版固定で導入、サンプル起動、手順・ライセンス・CHANGELOGを確認。必要環境の合格後にリリース用PRと配布を行う | 1〜5に依存、未着手 |
 
 0と4の準備を早期に進め、実装は1 → 2 / 3 → 5 → 6の順に小さいPRへ分割する。
-今回の依頼範囲は上表0 / 1（利用者向け一覧の1 / 2）。検索サンプル以降は後続作業。mergeは依頼があるまで行わない。
+直近の実装依頼範囲は上表0 / 1（利用者向け一覧の1 / 2）で、実装・検証まで完了した。検索サンプル以降は後続作業。mergeは依頼があるまで行わない。
 
 ## UPM構成
 
@@ -39,7 +39,7 @@ Packages/com.ayutaz.embeddinggemma/
   package.json
   Runtime/
   Tests/Editor/
-  Samples~/TextSearch/
+  Samples~/README.md  # 状態説明のみ。TextSearch/は後続実装
   Documentation~/
   README.md
   CHANGELOG.md
@@ -49,7 +49,7 @@ Packages/com.ayutaz.embeddinggemma/
 - Runtimeの `.meta` / GUIDとassembly名を維持して移動し、元のAssets側に同じ実装を残さない。
 - package manifestではSentis 2.6.1と直接使用するNewtonsoftの依存を明示する。新規プロジェクトで依存解決を検証し、現行lockの偶然の解決に頼らない。
 - モデル不要の契約テストをパッケージ側へ整理。既存の `Assets/M1Generated/` や `artifacts/` を使う実モデルfixture・計測runnerは、検証プロジェクト側に残すかパスを注入できる形に分離する。
-- 消費側は[Git URLのsubfolder / revision指定](https://docs.unity3d.com/6000.3/Documentation/Manual/upm-git.html)でcommitを固定して検証し、リリース時にtag指定の手順を用意する。未作成のtagは導入済みとして案内しない。
+- 消費側はローカルフォルダ依存で別Editor導入・29件合格を確認済み。[Git URLのsubfolder / revision指定](https://docs.unity3d.com/6000.3/Documentation/Manual/upm-git.html)はmanifest生成・監査のみで、Editorでの導入は未実行。commit固定で検証し、リリース時にtag指定の手順を用意する。
 - まずUnity 6000.3.16f1を検証対象とする。下位のUnity / Sentisへの対応は別検証なしに宣言しない。
 
 ## サンプルとAPIの確認
@@ -67,7 +67,7 @@ UI操作で文書準備 → query入力 → 結果表示 → 終了まで確認�
 
 | 環境 | 現状 | M2で必要な確認 |
 | --- | --- | --- |
-| Windows Editor | M1の実モデルCPU / GPUCompute合格 | UPM移行後の導入・API・保存とサンプルの回帰 |
+| Windows Editor | M1完了。UPM移行後の別consumer導入・契約29件、元プロジェクトのM1 / API CPU / GPUCompute回帰済み | Git URL導入、保存・量子化・全測定の再確認、サンプルの回帰 |
 | macOS Editor | 未実行 | 使用機種 / OS / GPU APIを記録し、実モデルCPU / GPUComputeの精度と測定 |
 | iOS Player | 未実行、toolchain / 実機未確認 | IL2CPP・stripping・モデル配置を含むbuild、実機CPU / GPUCompute実行、精度と測定 |
 | Android Player | 未実行、toolchain / 実機未確認 | ABI / graphics API・モデル配置を含むbuild、実機CPU / GPUCompute実行、精度と測定 |

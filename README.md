@@ -4,14 +4,16 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 
 > **状態: Windows EditorのM1受け入れ検証完了**
 > 2026-10-09: PR #1〜#4はmain `8146107`へ統合済み。[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)で`.sentis`保存・再読み込み、Float16重み量子化、性能・メモリ測定まで実装・検証しました。
-> tokenizerの全15件一致、fp32 / Float16重みのCPU / GPUCompute各15件、公開C# API、C#単体契約30件が合格。Python CIは4環境各64件が合格しました。
+> tokenizerの全15件一致、fp32 / Float16重みのCPU / GPUCompute各15件、公開C# API、C#単体契約30件が合格。M1統合mainのPython CIは4環境各64件が合格しました。
 > GPU定常推論の中央値はfp32 50.26ms、Float16重み58.20ms。保存サイズは約1.096GBから0.554GBへ減りました。測定条件と限界は [検証記録](docs/m1-completion-validation.md) を参照してください。
 > クラウドUnity CIはSecretsが必要なLinux CPUの手動補助検証です（未実行）。
 > リポジトリは public ですが、UPM パッケージのリリースはまだ行っていません。
 
-> **M2着手中（PR #6）**: テキストRuntimeを `com.ayutaz.embeddinggemma` の開発版UPMへ移行しました。
+> **M2のCI整備・UPM化は実装・検証済み（PR #6、未マージ）**: テキストRuntimeを `com.ayutaz.embeddinggemma` の開発版UPMへ移行しました。
 > 全PRで実行するCIとパッケージ監査を追加し、GitHub側ではmainのPR必須・Required CI必須・force push / 削除禁止を設定済みです。
-> PRのmain統合、検索サンプル、他環境の実機検証、リリースは未完了。[パッケージ導入・検証](docs/m2-package-validation.md)を参照してください。
+> PR #6の確認済みhead `8a585bc` は全8チェック成功、Pythonは4環境各102件。文書のみのPR #7も全8 job成功し、検証後に閉じました。
+> 新規UnityプロジェクトへのUPM導入・契約29件と、元プロジェクトの実モデルCPU / GPU回帰が成功しています。
+> PRのmain統合、検索サンプル、他環境の実機検証、リリースは未完了。[現在の状態と残タスク](docs/status.md) / [パッケージ導入・検証](docs/m2-package-validation.md)を参照してください。
 
 ## ゴール
 
@@ -26,7 +28,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 | # | 内容 | 状態 |
 | --- | --- | --- |
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor受け入れ検証完了（保存・量子化・測定を含む） |
-| M2 | テキスト版の UPM パッケージとサンプルをリリースする | UPM化をPR #6で実装。検索サンプル・他環境検証・リリースは未着手 |
+| M2 | テキスト版の UPM パッケージとサンプルをリリースする | CI整備・UPM化の実装とWindows検証済み、PR #6のmain統合待ち。検索サンプル・他環境・リリースは未完了 |
 | M3 | 画像用モデルに対応する | 未着手 |
 | M4 | 音声用モデルに対応する | 未着手 |
 
@@ -84,10 +86,10 @@ uv run --locked python -m embeddinggemma_tools prepare --output ../artifacts/m1
 モデルの revision を固定して参照データ・設定済み tokenizer・`.pt2` を生成し、保存後のモデルを参照実装と比較します。
 この Python 側の一致と、Sentis 側の M1 合格は別々に検証します。
 
-M1はWindows Editorで完了し、PR #1〜#4を統合済みです。PR #6で全PRの必須CIとUPM化を実装し、main保護はGitHub側に設定済みです。次はテキスト検索サンプル、macOS / iOS / Android検証、配布へ進みます。
+M1はWindows Editorで完了し、PR #1〜#4を統合済みです。PR #6で全PRの必須CIとUPM化を実装・検証し、main保護はGitHub側に設定済みです。まずPR #6のマージ依頼後にmainへ反映・CIを確認し、その後テキスト検索サンプル、モデル準備手順、macOS / iOS / Android検証、配布へ進みます。
 残作業の順序・依存・完了条件は [M2計画](docs/m2-plan.md)、実装済みAPIは [C# API手順](docs/runtime-api.md) を参照してください。
 新しい実装も作業ブランチ / PR を使い、マージは依頼があるまで行いません。
-M1の完了条件は [M1計画](docs/m1-plan.md)、最新の数値とCIの確認記録は [完了検証記録](docs/m1-completion-validation.md)を参照してください。
+M1の完了条件と当時の測定は [M1計画](docs/m1-plan.md) / [完了検証記録](docs/m1-completion-validation.md)、最新のCIとUPM検証は [現在の状態](docs/status.md)を参照してください。
 ローカル検証に GitHub Secrets は不要です。任意の Linux CPU 手動 CI を使う場合だけ準備します。
 
 ## UPM開発版の導入
@@ -95,7 +97,7 @@ M1の完了条件は [M1計画](docs/m1-plan.md)、最新の数値とCIの確認
 Unity 6000.3.16f1の別プロジェクトで、Package Managerから
 [package.json](Packages/com.ayutaz.embeddinggemma/package.json)を「Add package from disk」で指定します。
 Sentis 2.6.1とNewtonsoft JSON 3.2.2はパッケージの依存から解決します。
-Git URLのcommit固定による導入とAPI使用例は [パッケージ文書](Packages/com.ayutaz.embeddinggemma/Documentation~/index.md)を参照してください。
+Git URLのcommit固定による導入指定とAPI使用例は [パッケージ文書](Packages/com.ayutaz.embeddinggemma/Documentation~/index.md)を参照してください。Editorで実行確認した導入経路はローカルフォルダ依存で、Git URL導入は後続検証です。
 モデルは含まれておらず、検索サンプルと公開tagはまだありません。
 
 ## モデルファイルについて
@@ -106,6 +108,7 @@ Git URLのcommit固定による導入とAPI使用例は [パッケージ文書](
 
 | ドキュメント | 内容 |
 | --- | --- |
+| [docs/status.md](docs/status.md) | 最新のmain / PR / CI、検証済みの範囲、残タスク |
 | [docs/goal.md](docs/goal.md) | ゴール、達成の基準、マイルストーン、対象外のこと |
 | [docs/m1-plan.md](docs/m1-plan.md) | M1 の詳細計画、TDD の進め方、検証状況 |
 | [docs/m1-completion-validation.md](docs/m1-completion-validation.md) | M1完了の数値、ソース対応、CI、失敗履歴と測定の限界 |
@@ -116,7 +119,7 @@ Git URLのcommit固定による導入とAPI使用例は [パッケージ文書](
 | [docs/m2-package-validation.md](docs/m2-package-validation.md) | CI・main保護・UPM移行、新規Unityプロジェクトへの導入結果 |
 | [docs/ci.md](docs/ci.md) | GitHub Actions、PR 運用、Unity CI の準備 |
 | [docs/technical-approach.md](docs/technical-approach.md) | Sentis 2.6 の調査、EmbeddingGemma 2 の構造、モデルを持ち込む方法の比較、設計案、検証方法 |
-| [docs/embeddinggemma-2-unity-novelty.md](docs/embeddinggemma-2-unity-novelty.md) | Unity 対応の新規性の調査(2026-10-07 時点) |
+| [docs/embeddinggemma-2-unity-novelty.md](docs/embeddinggemma-2-unity-novelty.md) | 新規性の初回調査と2026-10-09の限定再確認 |
 
 ## ライセンス
 

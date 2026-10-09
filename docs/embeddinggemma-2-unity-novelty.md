@@ -1,13 +1,12 @@
 # EmbeddingGemma 2 の Unity 対応に関する新規性調査
 
 - 調査日: 2026-10-07
-- 文書の更新日: 2026-10-08（実装状況への参照を追加。先行事例の網羅検索は再実施していない）
+- 文書の更新日: 2026-10-09（実装・検証状況と限定検索を更新。先行事例の網羅検索は未実施）
 - 対象: [google/embeddinggemma-2](https://huggingface.co/google/embeddinggemma-2)
 
-> 本文の先行事例・新規性の評価は 2026-10-07 の調査範囲に限る。現在の先行実装の不存在を保証するものではない。
-> 現在は Sentis 2.6.1 を採用し、Python の参照生成・export と小さいモデルのテストを実装済み。
-> 実モデルのPython参照 / 保存済みexportの全15ケース照合もCIで成功した。
-> 実モデルの Unity 推論は未検証。[M1 詳細計画](m1-plan.md) / [検証記録](m1-validation.md)を参照。
+> 本文の方式比較は2026-10-07の調査を基礎とし、下に2026-10-09の限定検索を追記した。現在の先行実装の不存在を保証しない。
+> Sentis 2.6.1 / Unity 6000.3.16f1のWindows Editorで、実モデルのtokenizer・CPU / GPUCompute・保存 / Float16重み・性能 / メモリ測定までM1完了。
+> PR #6のCI整備・UPM化も実装・検証済み、main統合待ち。画像・音声は未着手。[現在の状態](status.md) / [M1完了検証](m1-completion-validation.md) / [UPM検証](m2-package-validation.md)を参照。
 
 ## 結論
 
@@ -36,10 +35,22 @@ Google の発表では、Unity・C#・.NET への言及はない。
 
 ## Unity での既存事例
 
-### 直接の事例
+### 2026-10-07の直接事例調査（履歴）
 
 - GitHub で「embeddinggemma」と「unity」または「sentis」を組み合わせて検索した結果、該当リポジトリは 0 件だった。初代 EmbeddingGemma(300M)も同じだった。
 - Hugging Face の派生モデルには GGUF・MLX・ONNX・LiteRT・CoreML 版があるが、Unity や Sentis 向けの版はない。
+
+### 2026-10-09の限定再確認
+
+GitHub repository searchで `embeddinggemma unity in:name,description,readme` と
+`embeddinggemma sentis in:name,description,readme` を再検索した。前者はtotal_count=33（先頭20件を取得）、
+後者はtotal_count=1で本リポジトリだけが返った。公開した本リポジトリも検索対象になるため、現在の結果を0件とは記載しない。
+検索はrepository metadata / READMEの語句一致であり、全ソース、Asset Store、論文、未公開実装の網羅調査ではない。
+
+Unity側の埋め込み先行例は引き続き存在する。[Unity公式MiniLM](https://huggingface.co/unity/inference-engine-minilm-v6)と
+[LLMUnityの埋め込みAPI](https://github.com/undreamai/LLMUnity/blob/main/Runtime/LLM.cs)は比較対象である。
+LLMUnityのAPIの存在からEmbeddingGemma 2の実モデル対応済みとは判断せず、そのモデル・版・backendでの実行確認を未確認として残す。
+公開時の主張は「Windows Sentisで固定条件のテキスト経路を検証した」までとし、世界初やマルチモーダル対応済みとは主張しない。
 
 ### 近い先行事例
 
@@ -66,7 +77,8 @@ Google の発表では、Unity・C#・.NET への言及はない。
 - 独自演算子をグラフ上で標準の演算子に分解する
 - 足りない演算子を自前で実装する
 
-この作業がそのまま技術的な貢献になり、新規性の中心になる。量子化版(int4 / int8)をモバイルの GPU で動かせれば、さらに価値が上がる。
+これは公開ONNX経路を採る場合の候補。現行テキスト実装はCore ATen `.pt2` 経路を採用し、ONNXの独自演算子を書き換える処理は実装していない。
+Float16重み保存はWindowsで検証済みだが、int4 / int8・モバイルGPUは未検証。新規性の主張に未実装経路を含めない。
 
 ## アプローチ別の新規性
 
@@ -79,14 +91,15 @@ Google の発表では、Unity・C#・.NET への言及はない。
 
 ## 注意点
 
-- 公開から 1 日しか経っていないため、数週間で状況が変わる可能性が高い。早く出すことが新規性を保つ条件になる。
+- 2026-10-07の初回調査はモデル公開直後の結果。先行事例は変化するため、公開リリースや研究発表の時点で再調査する。
 - Unity Asset Store と論文(arXiv など)はまだ調べていない。研究として新規性を主張するなら、ここも確認が必要。
 - LLMUnity が EmbeddingGemma 2 に対応済みかどうかは確かめていない。
 
 ## 次のステップ
 
-Core ATen `.pt2` の text-only export 実装を CI で実モデルに適用し、Sentis での tokenizer / import /
-CPU / GPUCompute を検証する。非互換が確認された場合に標準 ONNX の経路を追加する。
+Core ATen `.pt2` のtext-only exportとWindows Sentisのtokenizer / import / CPU / GPUCompute照合は完了した。
+次はPR #6のmain統合、M2の検索サンプル・他環境・配布。画像 / 音声はM3 / M4で実モデル検証を進める。
+ONNX経路は条件変更で非互換が確認された場合の予備とする。
 公開時の新規性の主張は、その時点の先行事例調査と実際の検証結果に基づいて更新する。
 
 ## 参考資料

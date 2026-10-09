@@ -7,8 +7,10 @@
 リポジトリはpublicのOSSとして開発中。PR #1〜#4をmain `8146107`へ統合済み。
 保存・Float16重み量子化・両backend精度・性能 / メモリ測定までWindows EditorのM1受け入れ条件が合格した。
 mainのPython CIは4環境各64件、PR #4最終headの実モデルPython照合は15件合格。
-次は [M2計画](m2-plan.md)に沿って開発基盤、UPM化、検索サンプル、他環境検証、配布を進める。
-PR #6で全PRのCIとUPM移行を実装中、GitHub側のmain保護は設定済み。現在の検証は [パッケージ検証](m2-package-validation.md)へ記録する。
+PR #6のCI整備・UPM移行は実装・検証済み、GitHub側のmain保護は設定済み。確認したhead `8a585bc` の全8チェックとPython4環境各102件が成功した。
+文書のみのPR #7も全8 jobが成功し、未マージで閉じた。PR #5の文書変更はPR #6へ含め、#5は閉じた。
+まずPR #6のマージ依頼後にmainへ反映し、その後 [M2計画](m2-plan.md)の検索サンプル、モデル準備手順、他環境検証、配布を進める。
+最新のmain / PRの区別は [現在の状態](status.md)、導入と回帰の証拠は [パッケージ検証](m2-package-validation.md)を参照。
 M1の証拠は [M1計画](m1-plan.md)、[完了検証記録](m1-completion-validation.md)を参照。
 リポジトリの公開と、M2 の UPM パッケージ / サンプルのリリースは別の段階として扱う。
 
@@ -59,7 +61,7 @@ M1の証拠は [M1計画](m1-plan.md)、[完了検証記録](m1-completion-valid
 | # | 内容 | 完了の条件 | 状態 |
 | --- | --- | --- | --- |
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor の CPU / GPUCompute で全 15 ケースの token ID / mask が完全一致、fp32 cosine >= 0.999。`.sentis` 保存・再読み込み、fp16 量子化版 cosine >= 0.99、時間・メモリ測定 | Windows Editor受け入れ検証完了 |
-| M2 | テキスト版の UPM パッケージとサンプルをリリースする | macOS Editor / iOS / Android の精度確認・速度 / メモリ測定、UPM API とサンプル、配布手順を揃える | PR #6でCI・UPM化を実装中。サンプル・他環境・配布は未完了 |
+| M2 | テキスト版の UPM パッケージとサンプルをリリースする | macOS Editor / iOS / Android の精度確認・速度 / メモリ測定、UPM API とサンプル、配布手順を揃える | PR #6のCI・UPM化は実装・Windows検証済み、main統合待ち。サンプル・他環境・配布は未完了 |
 | M3 | 画像用モデルに対応する | GPU 上の画像から埋め込みを作り、テキスト→画像の検索が参照実装と一致する | 未着手 |
 | M4 | 音声用モデルに対応する | GPU 上でメルスペクトログラムを作り、テキスト→音声の検索が参照実装と一致する | 未着手 |
 

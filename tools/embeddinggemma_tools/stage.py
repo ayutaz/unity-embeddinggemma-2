@@ -9,9 +9,10 @@ import re
 import shutil
 
 from .prepare import MODEL_ID, MODEL_REVISION
+from .search import SEARCH_CASES, load_search_cases, validate_search_reference
 
 
-def stage_reference(source: Path, project: Path, source_commit: str) -> dict:
+def stage_reference(source: Path, project: Path, source_commit: str, *, search=False) -> dict:
     source, project = source.resolve(), project.resolve()
     audit_path = project / "artifacts/m1-stage.json"
     audit_path.parent.mkdir(parents=True, exist_ok=True)
@@ -52,8 +53,22 @@ def stage_reference(source: Path, project: Path, source_commit: str) -> dict:
                 raise ValueError(f"Invalid reference shape: {case['id']}")
             if not all(math.isfinite(value) for value in vector) or abs(sum(value * value for value in vector) - 1) > 0.002:
                 raise ValueError(f"Reference must be finite and normalized: {case['id']}")
+        names = ["reference.json", "tokenizer.json", "model.pt2"]
+        if search:
+            search_reference = json.loads((source / "search-reference.json").read_text(encoding="utf-8"))
+            validate_search_reference(search_reference, load_search_cases(SEARCH_CASES), report["metadata"])
+            search_rows = search_reference["documents"] + search_reference["queries"]
+            comparisons = report["search_cases"]
+            if (report["search_case_count"] != len(search_rows)
+                    or [row["id"] for row in comparisons] != [row["id"] for row in search_rows]):
+                raise ValueError("Search export cases must match the complete fixed suite")
+            search_cosines = [row["cosine"] for row in comparisons]
+            if (not all(math.isfinite(value) and value >= 0.999999 for value in search_cosines)
+                    or report["search_minimum_cosine"] != min(search_cosines)):
+                raise ValueError("Search export validation must pass every case")
+            names.append("search-reference.json")
         digests = {}
-        for name in ("reference.json", "tokenizer.json", "model.pt2"):
+        for name in names:
             with (source / name).open("rb") as stream:
                 digest = hashlib.file_digest(stream, "sha256").hexdigest()
             if digest != report["sha256"].get(name):
@@ -62,7 +77,10 @@ def stage_reference(source: Path, project: Path, source_commit: str) -> dict:
         destination = project / "artifacts/m1"
         destination.mkdir(parents=True, exist_ok=True)
         if source != destination:
-            for name in ("reference.json", "tokenizer.json", "export-validation.json"):
+            staged_names = ["reference.json", "tokenizer.json", "export-validation.json"]
+            if search:
+                staged_names.append("search-reference.json")
+            for name in staged_names:
                 shutil.copyfile(source / name, destination / name)
         model = project / "Assets/M1Generated/model.pt2"
         model.parent.mkdir(parents=True, exist_ok=True)
@@ -71,6 +89,9 @@ def stage_reference(source: Path, project: Path, source_commit: str) -> dict:
         pending.replace(model)
         audit.update(success=True, case_count=15, minimum_cosine=min(cosines), sha256=digests,
                      model_revision=MODEL_REVISION, staged_model=str(model))
+        if search:
+            audit.update(search_reference_staged=True, search_case_count=len(search_rows),
+                         search_minimum_cosine=min(search_cosines))
     except (OSError, ValueError, KeyError, TypeError) as exc:
         audit["error"] = str(exc)
         save()
@@ -85,8 +106,9 @@ def main(argv=None):
     parser.add_argument("--source", type=Path, default=project / "artifacts/m1")
     parser.add_argument("--project", type=Path, default=project)
     parser.add_argument("--source-commit", required=True)
+    parser.add_argument("--search", action="store_true", help="Require and stage the audited TextSearch reference")
     args = parser.parse_args(argv)
-    result = stage_reference(args.source, args.project, args.source_commit)
+    result = stage_reference(args.source, args.project, args.source_commit, search=args.search)
     print(json.dumps(result, indent=2))
 
 

@@ -79,3 +79,58 @@ def test_invalid_artifact_never_replaces_staged_model(artifact, tmp_path, fault)
         stage_reference(artifact, project, SOURCE)
     assert target.read_bytes() == b"previous model"
     assert json.loads((project / "artifacts/m1-stage.json").read_text())["success"] is False
+
+
+@pytest.fixture
+def search_artifact(artifact):
+    from embeddinggemma_tools.search import SEARCH_CASES, load_search_cases, rank_documents
+    from embeddinggemma_tools.text import format_text
+    report = json.loads((artifact / "export-validation.json").read_text())
+    suite = load_search_cases(SEARCH_CASES)
+    def expand(row, role):
+        return {**row, "role": role, "formatted_text": format_text(row["text"], role, row.get("title")),
+                "input_ids": [1] * 128, "attention_mask": [1] * 128, "embedding": [1.0] + [0.0] * 767}
+    docs = [expand(row, "document") for row in suite["documents"]]
+    queries = [expand(row, "query") for row in suite["queries"]]
+    for query in queries: query["ranking"] = rank_documents(query["embedding"], docs)
+    reference = {"schema_version": 1, "metadata": report["metadata"], "documents": docs, "queries": queries}
+    path = artifact / "search-reference.json"
+    path.write_text(json.dumps(reference), encoding="utf-8")
+    report["sha256"][path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
+    report["search_case_count"] = len(docs) + len(queries)
+    report["search_cases"] = [{"id": row["id"], "cosine": 1.0} for row in docs + queries]
+    report["search_minimum_cosine"] = 1.0
+    (artifact / "export-validation.json").write_text(json.dumps(report))
+    return artifact
+
+
+def test_search_reference_is_audited_and_staged_with_the_model(search_artifact, tmp_path):
+    project = tmp_path / "consumer"
+    report = stage_reference(search_artifact, project, SOURCE, search=True)
+    assert report["search_reference_staged"] is True
+    assert report["search_case_count"] == 10
+    assert (project / "artifacts/m1/search-reference.json").read_bytes() == (search_artifact / "search-reference.json").read_bytes()
+
+
+@pytest.mark.parametrize("fault", ["missing", "hash", "ranking", "export"])
+def test_search_audit_failure_never_replaces_existing_model(search_artifact, tmp_path, fault):
+    path = search_artifact / "search-reference.json"
+    report_path = search_artifact / "export-validation.json"
+    report = json.loads(report_path.read_text())
+    if fault == "missing": path.unlink()
+    elif fault == "hash": path.write_text("corrupt")
+    elif fault == "ranking":
+        data = json.loads(path.read_text())
+        data["queries"][0]["ranking"].reverse()
+        path.write_text(json.dumps(data))
+        report["sha256"][path.name] = hashlib.sha256(path.read_bytes()).hexdigest()
+    elif fault == "export": report["search_cases"][0]["cosine"] = 0.5
+    report_path.write_text(json.dumps(report))
+    project = tmp_path / "consumer"
+    model = project / "Assets/M1Generated/model.pt2"
+    model.parent.mkdir(parents=True)
+    model.write_bytes(b"previous model")
+    with pytest.raises((ValueError, FileNotFoundError)):
+        stage_reference(search_artifact, project, SOURCE, search=True)
+    assert model.read_bytes() == b"previous model"
+    assert json.loads((project / "artifacts/m1-stage.json").read_text())["success"] is False

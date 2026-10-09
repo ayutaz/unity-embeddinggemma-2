@@ -1,8 +1,8 @@
 # M2 詳細計画と残作業
 
-更新日: 2026-10-09。基準main: `8146107aa77904050c6235866c0cf79ecc80034c`。
-**PR #6のCI整備・UPM化は実装・検証済み、main統合待ち。** PR #1〜#4は統合済みで、Windows EditorのM1は完了した。
-GitHub側のmain保護は設定済み。PR #6のmain統合、検索サンプル・他環境・リリースは未完了。[パッケージ検証](m2-package-validation.md)を参照。
+更新日: 2026-10-10。基準main: `c7d11897e43d374fbb87f3761f65fb3faec60c7c`（PR #8統合後）。
+**CI整備・UPM化はPR #6でmainへ統合済み。統合後のmain CIも全8 job成功。** PR #1〜#4のWindows EditorのM1は完了した。
+GitHub側のmain保護も設定・再確認済み。M2全体は進行中で、検索サンプル・他環境・リリースは未完了。[パッケージ検証](m2-package-validation.md)を参照。
 [現在の状態](status.md)でPRと証拠の対応を確認し、[M1完了検証](m1-completion-validation.md)を既存の基準としてテキスト検索サンプル、モデル準備手順、他環境検証、配布を進める。
 
 ## 現在地
@@ -11,23 +11,36 @@ GitHub側のmain保護は設定済み。PR #6のmain統合、検索サンプル�
 - `TextEmbedder` はquery / document / raw、同期・メインスレッド、batch 1 / length 128 / 768次元、CPU / GPUComputeを扱う。
 - `TextModelFile` はfp32 / Float16重みの保存・再読み込みを実装済み。Windows Editorで両形式・両backend全15件が合格。
 - Runtime asmdefはSentisと `Unity.Newtonsoft.Json` を参照する。現在のlockでNewtonsoftは3.2.2。uloop、URP、2D関連パッケージは検証プロジェクト側の構成であり、配布Runtimeの依存には持ち込まない。
-- M1統合mainのPython CIは4環境各64件、PR #6の確認したhead `8a585bc` はUbuntu / Windows × Python 3.13 / 3.14各102件成功。新規consumerの契約29件と元プロジェクトの実モデルCPU / GPU回帰も成功。macOS / iOS / AndroidとPlayerでの実モデル実行は未検証。
-- mainはbranch protection設定済み。PRとRequired CIを管理者にも要求し、force push / 削除を禁止。全PRのCI入口とパッケージ監査はPR #6に実装、mainへの反映待ち。クラウドUnityはLinux CPUの任意手動補助検証で未実行、Secrets / Variablesは未登録。
+- 現在のmain CI [run 37949804912](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37949804912)は全8 job成功。Ubuntu / Windows × Python 3.13 / 3.14各102件、実モデルPython照合15件が合格。UPM移行時には新規consumerの契約29件と元プロジェクトの実モデルCPU / GPU回帰も成功。macOS / iOS / AndroidとPlayerでの実モデル実行は未検証。
+- mainはbranch protection設定済み。PRとRequired CIを管理者にも要求し、force push / 削除を禁止。全PRのCI入口とパッケージ監査はmainへ統合済み。クラウドUnityはLinux CPUの任意手動補助検証で未実行、2026-10-10確認時にSecrets / Variablesは未登録。
 
 ## 作業順序と完了条件
 
 | 順序 | タスク | 完了条件 | 依存 / 状態 |
 | --- | --- | --- | --- |
-| 0 | OSS開発基盤: CIの必須判定とmain保護 | 文書だけのPRも含めCI判定が完了する。失敗・必要jobの未実行を成功扱いにしない。PR経由、必須check、force push / 削除の制限をGitHub側で確認 | 保護設定・読み戻し、PR #6の全8チェック、文書のみPR #7の全8 jobが成功。main反映待ち |
-| 1 | UPM構成へ移行 | package manifest、明示的な依存、Runtime / Tests / Samples / 文書を整理。既存API契約とGUIDを維持し、重複assemblyやUnityEditor参照を持ち込まない | PR #6に実装。新規consumerで検証、main統合待ち |
+| 0 | OSS開発基盤: CIの必須判定とmain保護 | 文書だけのPRも含めCI判定が完了する。失敗・必要jobの未実行を成功扱いにしない。PR経由、必須check、force push / 削除の制限をGitHub側で確認 | 完了。保護を再確認、PR #6 / #8統合済み、統合後mainの全8 job成功 |
+| 1 | UPM構成へ移行 | package manifest、明示的な依存、Runtime / Tests / Samples / 文書を整理。既存API契約とGUIDを維持し、重複assemblyやUnityEditor参照を持ち込まない | 完了。PR #6統合済み、新規consumerのローカルフォルダ導入・契約29件合格。Git URL検証と公開は6で扱う |
 | 2 | テキスト検索サンプル | 文書を事前埋め込みし、queryとのcosineで順位表示。固定入力のPython参照順位と一致。モデル未準備・不正入力・実行失敗を表示し、終了時にリソース解放 | 1に依存、未着手 |
 | 3 | モデル準備・配布手順 | CIで固定revisionから生成、hash監査、取得・配置・読み込み・更新の手順を整備。新規checkoutとサンプル導入で再現 | 既存のprepare / stage CLIとCI生成手順あり。サンプル向け配布手順・新規checkout再現は残る。1 / 2と並行可能 |
 | 4 | 環境・runner・実機の確保 | macOS Editor、iOS / Androidのtoolchain・実機・GPU API・ライセンス・署名条件を確認し、実行できる組み合わせを記録 | 早期に調査。必要環境は未確認 |
 | 5 | 各環境の実モデル検証と測定 | 下の環境表を埋め、精度・実行backend・ロード / 初回 / 定常時間・メモリを記録。移行後Windowsの回帰も確認 | 移行後Windowsの導入・契約・M1 / API回帰済み。保存・量子化・全ベンチ再測定、サンプル、他環境は残る。1〜4に依存 |
 | 6 | リリース準備と配布 | clean projectから版固定で導入、サンプル起動、手順・ライセンス・CHANGELOGを確認。必要環境の合格後にリリース用PRと配布を行う | 1〜5に依存、未着手 |
 
-0と4の準備を早期に進め、実装は1 → 2 / 3 → 5 → 6の順に小さいPRへ分割する。
-直近の実装依頼範囲は上表0 / 1（利用者向け一覧の1 / 2）で、実装・検証まで完了した。検索サンプル以降は後続作業。mergeは依頼があるまで行わない。
+0 / 1は完了した。次は2を中心に3と4の準備を進め、2 / 3 / 4 → 5 → 6の順に小さいPRへ分割する。
+検索サンプル以降は未着手または準備段階。今後も作業ブランチからPRを提出し、mergeは依頼があるまで行わない。
+
+## 直近のPR分割と受け渡し
+
+| 順番 | PRの範囲 | 次の作業へ渡すもの / 合格条件 |
+| --- | --- | --- |
+| A | 検索の固定ケースと順位計算 | 日本語 / 英語の小さい文書群・query・同点順序を定義。Python参照生成とC# cosine / ranking契約をTDDで追加し、Actionsで固定revisionの期待順位を生成。小さいfixtureの合格と実モデル照合を別記 |
+| B | `Samples~/TextSearch/` の操作とモデル読み込み | Aの順位計算と既存TextEmbedderを使用。文書の事前埋め込み、query入力、順位表示、未準備・不正入力・実行失敗、終了時DisposeをTDDで実装。Windows Editorでfp32 / Float16重み、CPU / GPUComputeを参照順位と照合し、UI操作を記録 |
+| C | 利用者向けモデル準備と再現手順 | 既存prepare / stage CLIとActionsを使用。revision・source SHA・hash、取得・変換・配置・更新、artifact失効時の再生成を文書化。新規checkoutからBのサンプルを起動して再現。重みはGitへ含めない |
+| D | 他環境の実行と配布準備 | 下表のtoolchain / runner / 実機を確保し、実モデルの精度・backend・速度・メモリを記録。Git URLのcommit固定導入を実Editorで確認し、必要環境の合格後にtag固定導入とリリースPRへ進む |
+
+A → Bの順に進め、Cの手順整理とDの環境調査は早期に進められる。Cのサンプル再現はBに依存する。
+実装ではテストを追加 → 意図した失敗を実行確認 → 最小実装 → greenを記録する。Pythonはtools/とuv、重い参照生成・変換・全テストはActionsへ寄せる。
+Unityや実機が利用できない環境は未実行として残し、サンプルや公開の完了条件を満たしたことにはしない。
 
 ## UPM構成
 

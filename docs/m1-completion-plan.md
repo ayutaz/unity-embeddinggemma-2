@@ -4,7 +4,7 @@
 Unity 6000.3.16f1 / Sentis 2.6.1、固定モデルrevision・batch 1 / length 128 / 768次元で実行した。
 実測コード `329da92` で全段階の受け入れ条件が合格し、PR #4をmain `8146107`へ統合済み。[検証記録](m1-completion-validation.md)を参照。
 以下は実施した順序と合格条件。次の残作業は [M2計画](m2-plan.md)に整理する。
-PR #6でCI整備・UPM化を実装・検証済み、main統合待ち。[現在の状態](status.md) / [UPM検証](m2-package-validation.md)を参照。以下の実測commit・完了条件は当時のまま維持する。
+2026-10-10の現状: PR #6のCI整備・UPM化はmain統合済み、PR #8統合後のmain CIも成功。[現在の状態](status.md) / [UPM検証](m2-package-validation.md)を参照。以下の実測commit・完了条件は当時のまま維持する。
 
 | 順序 | 実装・実行 | 合格条件と証拠 |
 | --- | --- | --- |

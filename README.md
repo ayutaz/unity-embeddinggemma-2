@@ -9,11 +9,11 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 > クラウドUnity CIはSecretsが必要なLinux CPUの手動補助検証です（未実行）。
 > リポジトリは public ですが、UPM パッケージのリリースはまだ行っていません。
 
-> **M2のCI整備・UPM化は実装・検証済み（PR #6、未マージ）**: テキストRuntimeを `com.ayutaz.embeddinggemma` の開発版UPMへ移行しました。
+> **2026-10-10: M2のCI整備・UPM化をmainへ統合済み（PR #6・#8）**: テキストRuntimeを `com.ayutaz.embeddinggemma` の開発版UPMへ移行しました。
 > 全PRで実行するCIとパッケージ監査を追加し、GitHub側ではmainのPR必須・Required CI必須・force push / 削除禁止を設定済みです。
-> PR #6の確認済みhead `8a585bc` は全8チェック成功、Pythonは4環境各102件。文書のみのPR #7も全8 job成功し、検証後に閉じました。
+> 現在のmain `c7d1189` の [CI run 37949804912](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37949804912) は全8 job成功、Pythonは4環境各102件・実モデルPython照合15件合格です。
 > 新規UnityプロジェクトへのUPM導入・契約29件と、元プロジェクトの実モデルCPU / GPU回帰が成功しています。
-> PRのmain統合、検索サンプル、他環境の実機検証、リリースは未完了。[現在の状態と残タスク](docs/status.md) / [パッケージ導入・検証](docs/m2-package-validation.md)を参照してください。
+> 次はテキスト検索サンプルです。モデル準備手順、他環境の実機検証、リリースも残っています。[現在の状態と残タスク](docs/status.md) / [パッケージ導入・検証](docs/m2-package-validation.md)を参照してください。
 
 ## ゴール
 
@@ -28,7 +28,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 | # | 内容 | 状態 |
 | --- | --- | --- |
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor受け入れ検証完了（保存・量子化・測定を含む） |
-| M2 | テキスト版の UPM パッケージとサンプルをリリースする | CI整備・UPM化の実装とWindows検証済み、PR #6のmain統合待ち。検索サンプル・他環境・リリースは未完了 |
+| M2 | テキスト版の UPM パッケージとサンプルをリリースする | CI整備・UPM化はmain統合済み、Windows検証済み。検索サンプル・他環境・リリースは未完了 |
 | M3 | 画像用モデルに対応する | 未着手 |
 | M4 | 音声用モデルに対応する | 未着手 |
 
@@ -86,7 +86,7 @@ uv run --locked python -m embeddinggemma_tools prepare --output ../artifacts/m1
 モデルの revision を固定して参照データ・設定済み tokenizer・`.pt2` を生成し、保存後のモデルを参照実装と比較します。
 この Python 側の一致と、Sentis 側の M1 合格は別々に検証します。
 
-M1はWindows Editorで完了し、PR #1〜#4を統合済みです。PR #6で全PRの必須CIとUPM化を実装・検証し、main保護はGitHub側に設定済みです。まずPR #6のマージ依頼後にmainへ反映・CIを確認し、その後テキスト検索サンプル、モデル準備手順、macOS / iOS / Android検証、配布へ進みます。
+M1はWindows Editorで完了し、PR #1〜#4・#6・#8を統合済みです。全PRの必須CIとUPM化をmainへ反映し、統合後CIの成功とmain保護を確認しました。次はテキスト検索サンプル、モデル準備手順、macOS / iOS / Android検証、配布へ進みます。
 残作業の順序・依存・完了条件は [M2計画](docs/m2-plan.md)、実装済みAPIは [C# API手順](docs/runtime-api.md) を参照してください。
 新しい実装も作業ブランチ / PR を使い、マージは依頼があるまで行いません。
 M1の完了条件と当時の測定は [M1計画](docs/m1-plan.md) / [完了検証記録](docs/m1-completion-validation.md)、最新のCIとUPM検証は [現在の状態](docs/status.md)を参照してください。

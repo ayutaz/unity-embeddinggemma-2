@@ -1,7 +1,7 @@
 # CI と開発手順
 
-更新日: 2026-10-09。基準main: `8146107`。
-PR #6の全PRのCIとUPM監査は実装・検証済み。確認したhead `8a585bc` の全8チェックが成功し、mainへのworkflow反映はPRのmerge待ち。
+更新日: 2026-10-10。基準main: `c7d1189`。
+PR #6の全PRのCIとUPM監査はmain統合済み。PR #8も統合後、main `c7d1189` の全8 job成功を確認した。
 文書のみのPR #7も全8 job成功後に未マージで閉じた。[現在の状態](status.md)を参照。
 GitHub側のmain保護は設定済み。M1のWindows実測は [完了検証](m1-completion-validation.md)、UPM移行の結果は [パッケージ検証](m2-package-validation.md)を参照。
 
@@ -23,8 +23,7 @@ GitHub側のmain保護は設定済み。M1のWindows実測は [完了検証](m1-
 Secretsは渡さず、`pull_request_target`は使わない。外部forkの実行承認はGitHubの制御に従う。
 
 導入前のpaths filter付きworkflowでは文書のみPRにcheckが発行されなかった。
-PR #6がmainへ統合されるまで、古いmainから作成された文書PRではRequired CIが未発行になる。
-保護を外して通さず、新workflowを含むPRの統合後に対象PRを最新mainへ更新する。
+この導入前の問題はPR #6の統合で解消した。古いmainを基準にした作業ブランチは最新mainへ更新し、対象headのRequired CIを確認する。
 PR #6は文書PR #5の変更も含み、重複する#5は未マージで閉じた。
 PR #7はPR #6のブランチをbaseにした実PRで、Markdown 1ファイル・6行追加だけでもRequired CIを含む全8 jobが実行・成功した。
 検証後に閉じており、mainへ統合したPRではない。
@@ -32,7 +31,7 @@ PR #7はPR #6のブランチをbaseにした実PRで、Markdown 1ファイル・
 ## main保護とPR運用
 
 mainへの直接pushは禁止。作業ブランチからPRを提出し、mergeは依頼があるまで行わない。
-GitHubのbranch protectionを2026-10-09に設定し、APIで次を読み戻して確認した。
+GitHubのbranch protectionを2026-10-09に設定し、2026-10-10にもAPIで次を読み戻して確認した。
 
 - PR必須。単独開発でも運用できるよう人手の必須承認数は0。
 - `Required CI`必須、GitHub Actions提供元に固定、baseに対して最新であることを要求。
@@ -89,6 +88,7 @@ macOS / iOS / Androidのbuild・実機・測定は [M2計画](m2-plan.md)の後�
 | CI入口導入 `8122a13` | [37809737222](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37809737222)、Python・lint・実モデル・Required CI成功。UPM監査の追加前 |
 | UPM実装 `b74180e` | [37811183097](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37811183097)、Python 4環境各102件、lint、実モデル15件、パッケージ監査、Required CIすべて成功 |
 | PR #6確認済みhead `8a585bc` | [37812870591](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37812870591)、全8 job成功、Python 4環境各102件、実モデル15件・最小cosine `0.9999998807907104`。checkout `9ccff937ae9fc675c12aee8e1533d08cc0502e9a` とheadのtree一致 |
+| PR #6 / #8統合後main `c7d1189` | [37949804912](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37949804912)、pushイベントの全8 job成功、Python4環境各102件、実モデル15件・最小cosine `0.9999998807907104`、Required CI成功。Unity実行は含まない |
 | 文書のみPR #7 `9633a1c` | [37813857997](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37813857997)、全8 job成功。Markdown 1ファイル・6行追加、baseは `feat/ci-upm-package`、検証後クローズ |
 
 過去の失敗・cancel・基盤導入の記録は [基盤履歴](m1-validation.md)と [API実装履歴](m1-runtime-validation.md)を保持する。

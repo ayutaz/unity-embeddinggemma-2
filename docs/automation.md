@@ -1,6 +1,6 @@
 # Unity のローカル自動操作
 
-更新日: 2026-10-09
+更新日: 2026-10-10（main統合状況を更新。Unityの実測は以前の記録を維持）
 最新のmain / PR / CIと実行範囲は [現在の状態](status.md)、UPM移行の検証は [パッケージ検証](m2-package-validation.md)を参照。
 
 Unity 6000.3.16f1 をローカルで起動し、Unity CLI Loop を介してコンパイル・EditMode テスト・ログ取得を行う。
@@ -113,7 +113,7 @@ artifact の保持期間は3日。失効した場合は CI で再生成する。
 `--suite m1` は3件すべて、`--suite runtime` は両backendの2件すべて合格した。skip / failed / inconclusiveは0。
 各backendの全15ケースでfp32一致を確認し、C#単体契約24件も合格。詳細は [ランタイム検証記録](m1-runtime-validation.md)。
 続くPR #4では `--suite completion` の1件でfp32 / Float16重み・CPU / GPUCompute全60比較と180定常測定値が合格し、C#単体契約は30件合格した。
-PR #1〜#4はmain `8146107`へ統合済み。統合後のmain CI（run `37801650704`）は4環境各64件合格。
+M1完了時はPR #1〜#4をmain `8146107`へ統合し、当時のmain CI（run `37801650704`）は4環境各64件合格。現在はPR #6 / #8も統合済みで、main `c7d1189` の [run 37949804912](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37949804912)は全8 job成功、Python4環境各102件・実モデルPython15件合格。
 保存・量子化・測定とソース対応は [M1完了検証](m1-completion-validation.md)を参照。
 PR #6でUPM移行の導入・compile・契約29件と元プロジェクトの実モデルM1 3件 / API 2件が合格した。全保存・量子化・測定を移行後に再実行した結果ではない。
 main統合、サンプル・他環境検証・配布の残作業は [M2計画](m2-plan.md)を参照。

@@ -59,5 +59,78 @@ namespace EmbeddingGemma.Samples.Tests
             Assert.That(UnityEngine.JsonUtility.FromJson<TextSearchModelPreparation.Report>(File.ReadAllText(reportPath)).success, Is.False,
                 "A failed preparation must not leave a previous success receipt.");
         }
+
+        [Test]
+        public void VerifiedCacheDoesNotLoadModelOrRewriteFiles()
+        {
+            var tokenizer = Path.Combine(temporary, "input-tokenizer.json"); File.WriteAllText(tokenizer, Tokenizer);
+            var target = Path.Combine(temporary, "output");
+            var first = TextSearchModelPreparation.PrepareCached(Model, tokenizer, target, "model-source", "search-source", "model-sha256");
+            var receipt = File.ReadAllText(Path.Combine(target, "preparation.json"));
+            var before = first.files.Select(file => File.GetLastWriteTimeUtc(Path.Combine(target, file.name))).ToArray();
+            var second = TextSearchModelPreparation.PrepareCached(() => throw new Exception("Cache hit must not load the model."),
+                tokenizer, target, "model-source", "search-source", "model-sha256");
+            Assert.That(second.success, Is.True);
+            Assert.That(File.ReadAllText(Path.Combine(target, "preparation.json")), Is.EqualTo(receipt));
+            Assert.That(second.files.Select(file => File.GetLastWriteTimeUtc(Path.Combine(target, file.name))), Is.EqualTo(before));
+        }
+
+        [TestCase("source")]
+        [TestCase("search")]
+        [TestCase("model-hash")]
+        [TestCase("unity")]
+        [TestCase("legacy")]
+        [TestCase("failed")]
+        [TestCase("duplicate")]
+        [TestCase("missing")]
+        [TestCase("corrupt")]
+        [TestCase("tokenizer")]
+        [TestCase("malformed")]
+        public void ChangedInputsOrInvalidCacheAreRebuilt(string mutation)
+        {
+            var tokenizer = Path.Combine(temporary, "input-tokenizer.json"); File.WriteAllText(tokenizer, Tokenizer);
+            var target = Path.Combine(temporary, "output");
+            var first = TextSearchModelPreparation.PrepareCached(Model, tokenizer, target, "model-source", "search-source", "model-sha256");
+            var path = Path.Combine(target, "preparation.json");
+            var json = UnityEngine.JsonUtility.FromJson<TextSearchModelPreparation.Report>(File.ReadAllText(path));
+            switch (mutation)
+            {
+                case "source": json.sourceCommit = "other"; break;
+                case "search": json.searchSourceCommit = "other"; break;
+                case "model-hash": json.modelSha256 = "other"; break;
+                case "unity": json.unityVersion = "other"; break;
+                case "legacy": json.modelSha256 = null; break;
+                case "failed": json.success = false; break;
+                case "duplicate": json.files[1] = json.files[0]; break;
+                case "missing": File.Delete(Path.Combine(target, "model-float16.sentis")); break;
+                case "corrupt":
+                    var bytes = File.ReadAllBytes(Path.Combine(target, "model-fp32.sentis")); bytes[bytes.Length - 1] ^= 1;
+                    File.WriteAllBytes(Path.Combine(target, "model-fp32.sentis"), bytes); break;
+                case "tokenizer": File.WriteAllText(tokenizer, Tokenizer + " "); break;
+            }
+            File.WriteAllText(path, mutation == "malformed" ? "invalid-json" : UnityEngine.JsonUtility.ToJson(json, true));
+            var loads = 0;
+            var rebuilt = TextSearchModelPreparation.PrepareCached(() => { loads++; return Model(); }, tokenizer,
+                target, "model-source", "search-source", "model-sha256");
+            Assert.That(loads, Is.EqualTo(1), mutation);
+            Assert.That(rebuilt.success, Is.True);
+            Assert.That(File.ReadAllText(Path.Combine(target, "tokenizer.json")), Is.EqualTo(File.ReadAllText(tokenizer)));
+            Assert.That(TextModelFile.Load(Path.Combine(target, "model-fp32.sentis")).inputs, Has.Count.EqualTo(2));
+        }
+
+        [Test]
+        public void RebuildLoadFailureInvalidatesPreviousSuccessAndPreservesModels()
+        {
+            var tokenizer = Path.Combine(temporary, "input-tokenizer.json"); File.WriteAllText(tokenizer, Tokenizer);
+            var target = Path.Combine(temporary, "output");
+            TextSearchModelPreparation.PrepareCached(Model, tokenizer, target, "source", "search", "old-hash");
+            var before = File.ReadAllBytes(Path.Combine(target, "model-fp32.sentis"));
+            Assert.Throws<InvalidOperationException>(() => TextSearchModelPreparation.PrepareCached(
+                () => throw new InvalidOperationException("load failed"), tokenizer, target, "source", "search", "new-hash"));
+            var report = UnityEngine.JsonUtility.FromJson<TextSearchModelPreparation.Report>(File.ReadAllText(Path.Combine(target, "preparation.json")));
+            Assert.That(report.success, Is.False);
+            Assert.That(report.error, Is.EqualTo("load failed"));
+            Assert.That(File.ReadAllBytes(Path.Combine(target, "model-fp32.sentis")), Is.EqualTo(before));
+        }
     }
 }

@@ -2,7 +2,7 @@
 
 更新日: 2026-10-10。[現在の状態](status.md)でmain / PRと検証範囲を確認する。
 
-推論APIは [PR #3](https://github.com/ayutaz/unity-embeddinggemma-2/pull/3)、保存APIは [PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)、検索APIは [PR #10](https://github.com/ayutaz/unity-embeddinggemma-2/pull/10)で統合済み。現在の基準mainは `be791e0`。M1実測の対応は当時のmain `8146107`を維持する。
+推論APIは [PR #3](https://github.com/ayutaz/unity-embeddinggemma-2/pull/3)、保存APIは [PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)、検索APIは [PR #10](https://github.com/ayutaz/unity-embeddinggemma-2/pull/10)、検索サンプルはPR #11で統合済み。検証基準mainは `758cb04`。M1実測の対応は当時のmain `8146107`を維持する。
 **Windows Editorの実モデルCPU / GPUCompute全15ケースと再推論、保存・量子化を含むM1受け入れ検証が合格**。
 API導入当時は単体契約24件、M1完了時は保存・測定を含む30件が合格。PR #6では29件をパッケージへ移し、測定契約1件を元プロジェクトに残して両方の合格を確認した。[M1完了検証](m1-completion-validation.md) / [UPM検証](m2-package-validation.md)を参照。
 

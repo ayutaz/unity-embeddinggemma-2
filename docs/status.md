@@ -1,16 +1,16 @@
 # 現在の状態と残タスク
 
-確認日: 2026-10-10。main基準はPR #10統合後。PR #11の実装・consumer再現・最終証跡を更新した。統合状況と最新CIはGitHubのPR / Actionsを参照。
+確認日: 2026-10-10。PR #11統合後のmainを基準に実装・consumer再現・証跡・CIを照合した。以後の最新CIはGitHubのPR / Actionsを参照。
 検索実装・計画更新の作業ブランチは `feat/m2-text-search-sample`。M1の履歴を維持し、Windows検索実測を別の証拠として追加した。以下のmain SHAとCIは検証時点の基準であり、最新状態はPR / Actionsから確認する。
 
 ## mainと作業ブランチ
 
 | 対象 | 確認した状態 |
 | --- | --- |
-| 検証基準main | `be791e00a1b344c5453f70037d7116184169c17f`。PR #1〜#4・#6・#8〜#10統合済み。Windows EditorのM1、CI・UPM化・検索基盤を反映済み |
+| 検証基準main | `758cb04f407724a62326256f51792fb66f82c72d`。PR #1〜#4・#6・#8〜#11統合済み。M1、CI・UPM、検索サンプル・モデル手順・準備最適化を反映済み |
 | [PR #9](https://github.com/ayutaz/unity-embeddinggemma-2/pull/9) | 計画更新を2026-10-10 02:05:30 JSTにsquash merge。commit `de82a29fc737bca0478c87d06ffcc4d94fb07e64`、統合後CI run 37963795561成功 |
 | [PR #10](https://github.com/ayutaz/unity-embeddinggemma-2/pull/10) | 検索基盤を2026-10-10 02:09:08 JSTにsquash merge。commit `be791e00a1b344c5453f70037d7116184169c17f`、統合後CI run 37964228515成功 |
-| [PR #11](https://github.com/ayutaz/unity-embeddinggemma-2/pull/11) | mainをbaseとするサンプル・モデル手順・準備最適化。実装head `c6ab65e`のCI run 37973032211全8 job成功。Windows consumer再現・UI・TDD完了。最終文書commitと統合後CIはGitHub参照 |
+| [PR #11](https://github.com/ayutaz/unity-embeddinggemma-2/pull/11) | 最終head `8c80526`のCI run 37974713580全8 job成功後、2026-10-10 03:41:24 JSTにsquash merge。commit `758cb04`、統合後CI run 37975026704全8 job成功。Windows consumer再現・UI・TDD完了 |
 | [PR #6](https://github.com/ayutaz/unity-embeddinggemma-2/pull/6) | CI整備・UPM化を2026-10-10 00:07:13 JSTにsquash merge。commit `5ae4e8c29a3a4c8639bd94f7848e3683d063f4d2` |
 | [PR #8](https://github.com/ayutaz/unity-embeddinggemma-2/pull/8) | 文書更新を最新mainへ更新し、全8チェック成功後に2026-10-10 00:11:01 JSTにsquash merge。commit `c7d11897e43d374fbb87f3761f65fb3faec60c7c` |
 | main保護 | サーバー設定済み。PR必須、strict Required CI（GitHub Actions App 15368）、管理者適用、force push / 削除禁止、linear history・会話解決。人手承認数0 |
@@ -24,7 +24,7 @@
 | 対象 | 証拠・結果 | 限界 |
 | --- | --- | --- |
 | M1 | [完了検証](m1-completion-validation.md)。tokenizer全15件一致、fp32 / Float16重みのCPU / GPUCompute各15件、保存・再読み込み・時間 / メモリ測定合格 | Windows Editor 6000.3.16f1 / Sentis 2.6.1、固定モデル・batch 1 / length 128 / 768次元 |
-| 統合後mainのCI | [run 37964228515](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37964228515)。main `be791e0`の全8 job成功、Python4環境各123件、実モデルPython M1 15件 + 検索10件、lint・パッケージ監査・Required CI成功 | Python照合・パッケージ静的監査であり、新たなUnity実行ではない |
+| 統合後mainのCI | [run 37975026704](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975026704)。main `758cb04`の全8 job成功。Python4環境、実モデルPython M1 / 検索照合、lint・パッケージ監査・Required CI成功 | Python照合・パッケージ静的監査であり、新たなUnity実行ではない |
 | PR #6のCI | [run 37812870591](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37812870591)。Ubuntu / Windows × Python 3.13 / 3.14各102件、lint、実モデルPython15件、パッケージ監査、Required CIの全8 job成功 | 実際のcheckoutは `9ccff937ae9fc675c12aee8e1533d08cc0502e9a`。確認したPR headとtree一致。Python照合はSentis実行ではない |
 | 文書のみPR | [run 37813857997](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37813857997)。PR #7はMarkdown 1ファイル・6行追加だけで全8 job成功 | baseは `feat/ci-upm-package`、headは `9633a1ca8d5f3a01eff427599187329c2447b68c`。古いmainへの統合済みという意味ではない |
 | UPM導入 | [パッケージ検証](m2-package-validation.md)。別の空のUnityプロジェクトでローカルフォルダ依存解決・compile・契約29件成功、URP依存なし | 当時はモデル不要の導入検証。後続consumerの実モデルGPU結果は別行。Git URL導入は未実行 |
@@ -40,12 +40,11 @@ Runtimeと契約テストの19ファイルは移行前とGit blob一致、assemb
 
 ## 残タスクの順序
 
-1. 検索サンプル・モデル手順・準備最適化は実装とWindows consumer再現を確認済み。PR #11の統合状況・統合後CIはGitHubを参照する。
-2. hash確認の負荷を改善し、停止時の再現しなかったallocationログとEditor font警告を次のリソース測定で切り分ける。domain reloadの原因は未確定。
-3. macOS Editor・iOS・Androidのrunner / toolchain / 実機を確保し、精度・backend・速度・メモリを実測する。環境の確保は1 / 2と並行して進める。
-4. Git URLのcommit / tag固定導入とサンプル起動、文書・ライセンス・CHANGELOGを確認し、テキスト版をリリースする。ここまででM2完了。
-5. M3で画像エンコーダ・GPU画像前処理・テキスト→画像検索を実装・照合する。
-6. M4で音声エンコーダ・GPUメル前処理・テキスト→音声検索を実装・照合する。
+1. macOS Editor・iOS・Androidのrunner / toolchain / 実機を確保し、精度・backend・速度・メモリを実測する。
+2. 測定と並行してhash確認の負荷を改善し、再現しなかったallocationログとEditor font警告を切り分ける。domain reloadの原因は未確定。
+3. Git URLのcommit / tag固定導入とサンプル起動、文書・ライセンス・CHANGELOGを確認し、テキスト版をリリースする。ここまででM2完了。
+4. M3で画像エンコーダ・GPU画像前処理・テキスト→画像検索を実装・照合する。
+5. M4で音声エンコーダ・GPUメル前処理・テキスト→音声検索を実装・照合する。
 
 詳細な依存・受け入れ条件は [M2計画](m2-plan.md)、全体のゴールは [ゴール](goal.md)。
 

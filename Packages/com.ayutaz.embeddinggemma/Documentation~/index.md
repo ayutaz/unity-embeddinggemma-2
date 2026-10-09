@@ -1,13 +1,13 @@
 # 導入とテキストAPI
 
-更新日: 2026-10-09。開発版 `0.1.0-pre.1` は [PR #6](https://github.com/ayutaz/unity-embeddinggemma-2/pull/6)にあり、未マージ・未リリースです。
+更新日: 2026-10-10。開発版 `0.1.0-pre.1` は [PR #6](https://github.com/ayutaz/unity-embeddinggemma-2/pull/6)でmainへ統合済み、未リリースです。
 ローカルフォルダ依存で別Unityプロジェクトへの導入・compile・契約29件成功を確認しました。Git URLでのEditor導入はまだ実行していません。
 
 ## 導入
 
 Unity 6000.3.16f1で、Package Managerの「Add package from disk」からこのパッケージの `package.json` を指定します。
 Git URLの指定形式は [Unity公式手順](https://docs.unity3d.com/6000.3/Documentation/Manual/upm-git.html)に沿っています。
-`<commit-sha>` はパッケージを含む40桁commitに置き換えます。検証済みソースの例は `8a585bc634a210e5ffd9ceaa5d67b85f1c9316a3` です。
+`<commit-sha>` はパッケージを含む40桁commitに置き換えます。mainへ統合したソースの例は `c7d11897e43d374fbb87f3761f65fb3faec60c7c` です。
 このcommitの指定と、Git URL導入をEditorで実行済みであることは区別します。
 公開tagはまだありません。
 

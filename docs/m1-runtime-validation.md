@@ -3,7 +3,7 @@
 日付: 2026-10-08。ブランチ: `feat/m1-sentis-runtime`。詳細は [計画](m1-runtime-plan.md)。
 この文書は配置・fp32・API実装時点の履歴。PR #3はmain `1f0e580`へ、その後PR #4はmain `8146107`へ統合済み。
 以下の「残作業」「未完了」はPR #3実行当時を指す。現在のM1は保存・量子化・測定まで完了。[M1完了検証](m1-completion-validation.md)と [M2計画](m2-plan.md)を参照。
-現状参照の更新日: 2026-10-09。PR #6ではRuntimeと契約29件をUPMへ移行し、元プロジェクトの実モデル3件 / API 2件の回帰が合格した。mainへの反映は未完了。[現在の状態](status.md) / [パッケージ検証](m2-package-validation.md)を参照。
+現状参照の更新日: 2026-10-10。PR #6ではRuntimeと契約29件をUPMへ移行し、元プロジェクトの実モデル3件 / API 2件の回帰が合格した。mainへの反映は完了し、PR #8統合後のmain CIも成功。[現在の状態](status.md) / [パッケージ検証](m2-package-validation.md)を参照。
 
 ## PR #3実行時の結果
 

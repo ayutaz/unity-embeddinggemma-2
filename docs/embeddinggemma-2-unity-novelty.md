@@ -1,12 +1,12 @@
 # EmbeddingGemma 2 の Unity 対応に関する新規性調査
 
 - 調査日: 2026-10-07
-- 文書の更新日: 2026-10-09（実装・検証状況と限定検索を更新。先行事例の網羅検索は未実施）
+- 文書の更新日: 2026-10-10（main統合状況を更新。限定検索は2026-10-09の記録を維持し、先行事例の網羅検索は未実施）
 - 対象: [google/embeddinggemma-2](https://huggingface.co/google/embeddinggemma-2)
 
 > 本文の方式比較は2026-10-07の調査を基礎とし、下に2026-10-09の限定検索を追記した。現在の先行実装の不存在を保証しない。
 > Sentis 2.6.1 / Unity 6000.3.16f1のWindows Editorで、実モデルのtokenizer・CPU / GPUCompute・保存 / Float16重み・性能 / メモリ測定までM1完了。
-> PR #6のCI整備・UPM化も実装・検証済み、main統合待ち。画像・音声は未着手。[現在の状態](status.md) / [M1完了検証](m1-completion-validation.md) / [UPM検証](m2-package-validation.md)を参照。
+> PR #6のCI整備・UPM化はmain統合済み、PR #8統合後のmain CIも成功。画像・音声は未着手。[現在の状態](status.md) / [M1完了検証](m1-completion-validation.md) / [UPM検証](m2-package-validation.md)を参照。
 
 ## 結論
 
@@ -98,7 +98,7 @@ Float16重み保存はWindowsで検証済みだが、int4 / int8・モバイルG
 ## 次のステップ
 
 Core ATen `.pt2` のtext-only exportとWindows Sentisのtokenizer / import / CPU / GPUCompute照合は完了した。
-次はPR #6のmain統合、M2の検索サンプル・他環境・配布。画像 / 音声はM3 / M4で実モデル検証を進める。
+次はM2の検索サンプル・モデル準備手順・他環境・配布。画像 / 音声はM3 / M4で実モデル検証を進める。
 ONNX経路は条件変更で非互換が確認された場合の予備とする。
 公開時の新規性の主張は、その時点の先行事例調査と実際の検証結果に基づいて更新する。
 

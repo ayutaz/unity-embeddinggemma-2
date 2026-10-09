@@ -1,6 +1,7 @@
 # Unity のローカル自動操作
 
 更新日: 2026-10-09
+最新のmain / PR / CIと実行範囲は [現在の状態](status.md)、UPM移行の検証は [パッケージ検証](m2-package-validation.md)を参照。
 
 Unity 6000.3.16f1 をローカルで起動し、Unity CLI Loop を介してコンパイル・EditMode テスト・ログ取得を行う。
 Python のモデル取得・変換は GitHub Actions に残す。ローカルで認証済みの Editor を使うため、GitHub Secrets は不要。
@@ -85,7 +86,8 @@ M1全体の完了監査は [検証記録](m1-completion-validation.md) に従い
 
 ## M1 参照成果物の配置
 
-コンパイルだけならモデルは不要。M1 数値検証では成功した Model reference and export run の artifact が必要。
+コンパイルだけならモデルは不要。M1数値検証では、成功した `Model reference and export` の参照artifactが必要。
+PR #6の新CIでは `CI` 内の `model-reference / reference` jobが同じ成果物を生成する。旧workflow名だけでrunを選ばない。
 run と artifact の対応、モデルrevision、`export-validation.json` のSHA-256を確認する。
 モデル変換はローカルでやり直さず、CI成果物を約1.1GBダウンロードする。
 
@@ -112,7 +114,9 @@ artifact の保持期間は3日。失効した場合は CI で再生成する。
 各backendの全15ケースでfp32一致を確認し、C#単体契約24件も合格。詳細は [ランタイム検証記録](m1-runtime-validation.md)。
 続くPR #4では `--suite completion` の1件でfp32 / Float16重み・CPU / GPUCompute全60比較と180定常測定値が合格し、C#単体契約は30件合格した。
 PR #1〜#4はmain `8146107`へ統合済み。統合後のmain CI（run `37801650704`）は4環境各64件合格。
-保存・量子化・測定とソース対応は [M1完了検証](m1-completion-validation.md)、次のUPM移行・サンプル・他環境検証は [M2計画](m2-plan.md)を参照。
+保存・量子化・測定とソース対応は [M1完了検証](m1-completion-validation.md)を参照。
+PR #6でUPM移行の導入・compile・契約29件と元プロジェクトの実モデルM1 3件 / API 2件が合格した。全保存・量子化・測定を移行後に再実行した結果ではない。
+main統合、サンプル・他環境検証・配布の残作業は [M2計画](m2-plan.md)を参照。
 クラウドUnity workflowはSecretsが必要なLinux CPUの手動補助検証のみ。M1のWindows CPU/GPUCompute合格はこのローカルハーネスで確認する。
 詳細な履歴は [検証記録](m1-validation.md)を参照。
 
@@ -128,3 +132,5 @@ PR #6でRuntimeとモデル不要の契約29件を `Packages/com.ayutaz.embeddin
 
 新規consumerの作成と同じassemblyの検証は [UPM検証](m2-package-validation.md)を参照。
 起動時もPythonハーネスを使うと、子プロセスへの `ALLUSERSPROFILE` 補完が適用される。
+新規consumerではパッケージ解決後もuloop launch readinessがタイムアウトした。後続のrun-testsでcompileと29 passed / skip 0を確認したが、launchの失敗を成功へ読み替えない。
+初回起動の失敗・stderr・summaryを保持し、同じEditorが起動済みか確認してから `--launch` なしの検証を行う。

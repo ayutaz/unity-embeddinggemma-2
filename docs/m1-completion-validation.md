@@ -4,6 +4,7 @@
 作業ブランチ: `feat/m1-persistence-benchmark`、[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)。
 実測コード: `329da925b01f7c9cb0b4d604055f0b9dc214c5c4`。PR #1〜#4は統合済み。
 PR #4は2026-10-09 00:32:44 JSTにSquashマージされ、基準mainは `8146107aa77904050c6235866c0cf79ecc80034c`。
+この文書と数値JSONはM1実測時の記録。PR #6のUPM移行・契約 / 実モデルAPI回帰と最新CIは [パッケージ検証](m2-package-validation.md) / [現在の状態](status.md)を参照。移行後の全保存・量子化ベンチマークは再実行していない。
 
 ## 現在の判定
 
@@ -45,7 +46,7 @@ Processのworking set / private bytesはMono APIが0を返し、全サンプル�
 - 配置元の参照 / tokenizer / `.pt2` と保存後2ファイルのSHA-256、37ファイルのLF正規化ソースhash、固定case ID・順序・各基準・中央値 / p95を再計算して確認。
 - 以前の実モデルAPI照合のC#ソースhashも一致し、query / document / rawと再利用の証拠を継続利用。生成コード・uv.lock・固定入力は元の基準mainから変更なし。
 - 最終PR head `04a970fb07c3f2f1078c3cfb8487c138e3bc9bfe` の [Python CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37801226518) は4環境各64件、[実モデルCI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37801226486) は15件・最小cosine `0.9999998807907104`で合格。
-- 統合後main `8146107` の [Python CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37801650704) も4環境各64件合格。実モデルworkflowはmain pushでは起動しない。
+- 統合後main `8146107` の [Python CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37801650704) も4環境各64件合格。このmain版では実モデルworkflowをmain pushで起動しなかった。PR #6の新しいCI入口はmain pushでも実行する構成で、未統合。
 - 最終PR headと統合mainのtreeは一致し、実測レポートの37ファイルのLF正規化ソースhashも一致。文書更新で実測commitを書き換えず、Unity測定を再実行しない。
 
 ## TDDと失敗履歴

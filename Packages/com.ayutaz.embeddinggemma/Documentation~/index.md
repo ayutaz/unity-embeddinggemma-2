@@ -1,9 +1,14 @@
 # 導入とテキストAPI
 
+更新日: 2026-10-09。開発版 `0.1.0-pre.1` は [PR #6](https://github.com/ayutaz/unity-embeddinggemma-2/pull/6)にあり、未マージ・未リリースです。
+ローカルフォルダ依存で別Unityプロジェクトへの導入・compile・契約29件成功を確認しました。Git URLでのEditor導入はまだ実行していません。
+
 ## 導入
 
 Unity 6000.3.16f1で、Package Managerの「Add package from disk」からこのパッケージの `package.json` を指定します。
-別のプロジェクトではGit URLでも導入できます。`<commit-sha>` はパッケージを含む検証済みの40桁commitに置き換えてください。
+Git URLの指定形式は [Unity公式手順](https://docs.unity3d.com/6000.3/Documentation/Manual/upm-git.html)に沿っています。
+`<commit-sha>` はパッケージを含む40桁commitに置き換えます。検証済みソースの例は `8a585bc634a210e5ffd9ceaa5d67b85f1c9316a3` です。
+このcommitの指定と、Git URL導入をEditorで実行済みであることは区別します。
 公開tagはまだありません。
 
 ```text
@@ -51,5 +56,6 @@ var restored = TextModelFile.Load(writableFloat16Path);
 ```
 
 Float16重み保存は元のModelを変えません。保存と量子化は大きいメモリ・I/Oを使用するため、毎推論時に呼びません。
-読み取り専用の配置先へ保存しないでください。保存API・Player・macOS / iOS / Androidの互換性は後続検証の対象です。
+Windows Editorではfp32 / Float16重みの保存・ロードと両backend各15件を検証済みです。UPM移行後の全保存・量子化ベンチマークは再実行していません。
+読み取り専用の配置先へ保存しないでください。Player・macOS / iOS / Androidの保存API互換性は後続検証の対象です。
 Float16重みは全演算のfp16化や速度改善を保証しません。

@@ -2,6 +2,9 @@
 
 Unity SentisでEmbeddingGemma 2のテキスト埋め込みを作るUPMパッケージです。
 開発版 `0.1.0-pre.1`。公開リリース・モバイル対応の受け入れはまだ完了していません。
+2026-10-09確認: [PR #6](https://github.com/ayutaz/unity-embeddinggemma-2/pull/6)で実装・検証済み、mainへの反映待ちです。
+別の空のUnityプロジェクトでローカルフォルダ依存の解決・compile・契約29件が成功しました。元の検証プロジェクトでは実モデルCPU / GPUComputeの回帰も成功しています。
+新規consumerでの実モデルGPU、Git URL経由のEditor導入は未検証です。
 
 - 検証対象: Unity 6000.3.16f1、Sentis 2.6.1、Windows Editor CPU / GPUCompute。
 - API: `TextEmbedder`、`TextPrompts`、`TextTokenizer`、`TextModelFile`。

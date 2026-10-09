@@ -7,7 +7,7 @@
 
 Unity 6000.3.16f1で、Package Managerの「Add package from disk」からこのパッケージの `package.json` を指定します。
 Git URLの指定形式は [Unity公式手順](https://docs.unity3d.com/6000.3/Documentation/Manual/upm-git.html)に沿っています。
-`<commit-sha>` はパッケージを含む40桁commitに置き換えます。mainへ統合したソースの例は `c7d11897e43d374fbb87f3761f65fb3faec60c7c` です。
+`<commit-sha>` はパッケージを含む40桁commitに置き換えます。検索APIを含むmainのソース例は `be791e00a1b344c5453f70037d7116184169c17f` です。Text SearchサンプルはPR #11の未統合ソースに含まれます。
 このcommitの指定と、Git URL導入をEditorで実行済みであることは区別します。
 公開tagはまだありません。
 
@@ -66,4 +66,4 @@ Float16重みは全演算のfp16化や速度改善を保証しません。
 
 `TextSearchIndex`は文書を一度だけ埋め込み、検索のたびにqueryを埋め込みます。空のqueryは拒否します。渡した`ITextEmbedder`は呼び出し側が所有します。`TextSearchSession`を使う場合はsessionが推論器を所有し、再準備やDisposeで解放します。
 
-Windowsでは保存済みfp32 / Float16重み × CPU / GPUComputeで固定6文書 / 4queryの全順位が参照と一致しました。画面操作と新規consumer内での実モデル再現は進行中です。任意入力の検索品質や他環境の受け入れは別の検証対象です。
+Windowsでは保存済みfp32 / Float16重み × CPU / GPUComputeで固定6文書 / 4queryの全順位が参照と一致し、元プロジェクトの画面操作も確認しました。新規consumerでは数値を保存したもののCLI完了応答は未取得で、画面操作も残ります。任意入力の検索品質や他環境の受け入れは別の検証対象です。

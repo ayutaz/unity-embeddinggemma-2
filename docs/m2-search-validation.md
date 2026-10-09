@@ -1,6 +1,6 @@
 # 検索サンプル実装の検証記録
 
-開始日 / 更新日: 2026-10-10。実装計画は [検索サンプルとモデル準備](m2-search-plan.md)。Windowsの実モデル4条件は合格した。画面操作と新規consumerの実モデル再現は進行中で、一覧1 / 2全体はまだ完了していない。
+開始日 / 更新日: 2026-10-10。実装計画は [検索サンプルとモデル準備](m2-search-plan.md)。Windowsの実モデル4条件と元プロジェクトの画面操作を確認した。新規consumerでは数値を保存したがCLIの完了応答は未取得。高速化の確認とconsumer画面操作が残り、一覧1 / 2全体はまだ完了していない。
 
 ## TDDの証拠
 
@@ -48,14 +48,40 @@ Pythonのローカル確認は追加範囲だけuvで実行。全環境のテス
 
 新規checkoutはPR #11のheadから作成し、重み・Libraryを含まない空consumerへサンプルを導入した。モデルはPR #10の監査済みartifactを再利用し、検索参照はPR #11の軽量artifactへ更新した。依存バージョン・tokenizer hash・固定revision・shape・正規化が一致することをCLIで確認し、model sourceとsearch sourceを別々に記録した。Pythonのlocked環境・Unityパッケージキャッシュ・取得済みCI artifactを再利用しているため、ネットワークを含む完全な空キャッシュ再取得の検証とはしない。
 
-新規consumerの`uloop launch`はEditorを起動したが、600秒の接続待ちが`UNITY_STARTUP_TIMEOUT`で失敗した。ハーネスの要約はstdoutのJSON解析失敗を記録しており、保存したstderrに上記の具体的な原因がある。同じEditorの`status`はReadyを確認できたため、再起動せず別のcompileで継続確認する。launch成功へ書き換えない。
+長いパスの最初のconsumerでは`uloop launch`が600秒で`UNITY_STARTUP_TIMEOUT`。後続compileは成功したが、既存uloop templateの267文字のパスでDirectoryNotFoundExceptionが発生した。長いパスの問題を疑い、短い `artifacts/c` に別の空consumerを作成した。最初の失敗は成功へ書き換えない。
 
-サンプルsceneをPlayで起動し、日本語の入力欄とボタンが描画されることを画像で確認した。GameViewへの合成MouseDown / MouseUpだけでは準備状態へ遷移した証拠を得られなかったため、ボタン操作成功とは数えない。Playを停止し、GameViewの最大化を解除した。画面操作の受け入れは引き続き未完了。
+短いconsumerではlaunch・compile成功、パッケージ契約38件 / サンプル5件がpassed、skip 0。モデル変換のreceiptと3ファイルのhash・サイズも確認した。モデル変換後のdomain reloadが長時間応答しなかったため、そのEditorを停止して同じconsumerを再起動した。再起動後もcompileと修正済みサンプル5件が合格。
+
+その後、実モデル4条件の全ベクトル・全順位が一致し、2026-10-09T17:20:28.8329486Zに数値報告を保存した。しかしテスト後のcompile / domain reload中にユーザーがUnityを停止し、CLIは`UNITY_DISCONNECTED_AFTER_ACCEPT`、ハーネス全体は失敗。NUnitの完了件数は取得していない。[consumer記録](results/m2-search-consumer-windows-20261010.json)は数値・変換の成功とCLIの未完了を分けて保持する。
+
+## 元プロジェクトの画面操作
+
+最初のGame Viewへの合成イベントでは準備状態への遷移を確認できなかった。この試行はボタン操作成功に数えない。その後、Unityの`EditorGUIUtility.QueueGameViewInputEvent`で実際のGame View入力キューへMouseDown / MouseUp / KeyDown / KeyUpを送り、サンプルの操作メソッドを直接呼ばずに以下を確認した。
+
+- GPUComputeで6文書を準備し、日本語query「猫を健康に育てるには」を検索。全6順位を確認。
+- 入力欄を操作して英語query `How do scientists explore planets?` を入力・検索。全6順位を確認。
+- 空入力では結果が0件になり、入力エラーを表示。
+- 解放で準備状態がfalse、結果0件。モデル欠落では準備エラーを表示。
+- Playを停止し、変更したGame View最大化を戻した。
+
+空入力エラー時に古い「検索結果6件」が残る表示不具合を発見。先にassertionを追加して1 failed / 2 passedを確認し、失敗時のstatusを修正。サンプル5 passed / skip 0、その後の画面でも修正を確認した。修正commitは`fc57171`、mainへのrebase後の等価treeは`bc2721d`。
+
+[操作と画像hashの記録](results/m2-search-ui-windows-20261010.json)、[日本語](screenshots/m2-search-japanese.png)、[英語](screenshots/m2-search-english.png)、[空入力](screenshots/m2-search-blank-query.png)、[モデル欠落](screenshots/m2-search-missing-model.png)を保存した。
+
+## domain reload遅延への対応
+
+停止前のログには、大きいModelAssetの準備、Sentis define変更に伴うcompile、到達できないAccelerator `192.168.11.2:80` のタイムアウトを確認した。遅延の根本原因は未確定であり、deadlockとは断定しない。
+
+自動検証consumerの作成では外部Acceleratorをプロジェクト単位で無効にする。Pythonで先に設定ファイル欠落の1 failedを確認し、実装後にpackage範囲20 passed。通常consumerや利用者のグローバル設定はこのCLI変更の対象外。
+
+uloopがstderrへ返した接続切断理由を失わないよう、ハーネスを修正した。先に`UNITY_DISCONNECTED_AFTER_ACCEPT`を記録できず1 failed、修正後はharness範囲25 passed。受理済みテストを自動再実行せず、失敗・数値報告・CLI完了応答を別々に扱う。
+
+SHA-256で入力と準備済み出力を確認し、再変換・ModelAsset読み込み・不要な全体Refreshを省く経路はTDDの検証中。改善後の実測時間はまだない。
 
 ## 未完了の確認
 
-- サンプルUI・モデル準備と読み込み・エラー表示・終了時解放の操作。
-- 新規checkout / 空のconsumer内での変換・実モデル検索・画面操作による再現。導入とsource SHA / hash監査・配置は成功済み。
-- UI画像と操作記録の保存、[利用者向け手順](model-preparation.md)を再現結果と照合。
+- モデル準備のキャッシュ再利用・import / Refresh削減の検証と実測。
+- 新規consumer内でのCLI完了応答・画面操作。数値・変換の既存結果を維持して再確認する。
+- [利用者向け手順](model-preparation.md)の確定、PR #11と統合後CI。PR #9 / #10は統合済み。
 
 M1の過去実測・UPM移行の過去回帰は [現在の状態](status.md)の証拠を維持する。この検索サンプルの実モデル合格の代わりには数えない。

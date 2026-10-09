@@ -67,7 +67,14 @@ def run_harness(project: Path, output: Path, cli: str, suite: str, *,
         finally:
             (output / f"{command}.json").write_text(json.dumps(evidence, indent=2) + "\n", encoding="utf-8")
             report["steps"].append(command)
-        payload = _payload(result.stdout)
+        try:
+            payload = _payload(result.stdout)
+        except ValueError:
+            if result.returncode == 0:
+                raise
+            # uloop emits structured connection failures on stderr. Preserve the
+            # actual reason; an accepted request must never be retried here.
+            payload = _payload(result.stderr)
         if command == "run-tests":
             report["tests"] = payload
             if payload.get("XmlPath"):
@@ -75,7 +82,9 @@ def run_harness(project: Path, output: Path, cli: str, suite: str, *,
                 if xml.is_relative_to((project / ".uloop/outputs/TestResults").resolve()) and xml.is_file():
                     shutil.copyfile(xml, output / "test-results.xml")
         if result.returncode != 0:
-            raise RuntimeError(f"{command}: exit {result.returncode}; see {command}.json")
+            error = payload.get("Error", {})
+            reason = error.get("ErrorCode", "") if isinstance(error, dict) else ""
+            raise RuntimeError(f"{command}: exit {result.returncode} {reason}; see {command}.json")
         return payload
 
     try:

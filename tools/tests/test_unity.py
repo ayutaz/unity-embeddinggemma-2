@@ -153,6 +153,27 @@ def test_malformed_cli_response_is_a_failure(project, tmp_path):
     assert report["m1_reference_passed"] is False
 
 
+def test_cli_transport_error_on_stderr_preserves_reason_without_repeating_accepted_tests(project, tmp_path):
+    editor = EditorCLI()
+
+    def disconnected(args, **kwargs):
+        result = editor(args, **kwargs)
+        if args[3] == "run-tests":
+            result.returncode = 1
+            result.stdout = ""
+            result.stderr = json.dumps({"Success": False, "Error": {
+                "ErrorCode": "UNITY_DISCONNECTED_AFTER_ACCEPT", "SafeToRetry": False,
+                "Message": "Unity disconnected after accepting the request."}})
+        return result
+
+    report = run_harness(project, tmp_path / "evidence", "uloop.exe", "search", runner=disconnected)
+    assert report["success"] is False
+    assert report["search_reference_passed"] is False
+    assert "UNITY_DISCONNECTED_AFTER_ACCEPT" in report["error"]
+    assert report["tests"]["Error"]["SafeToRetry"] is False
+    assert [args[0][3] for args in editor.calls].count("run-tests") == 1
+
+
 def test_failed_cli_preserves_test_counts_and_xml_in_evidence(project, tmp_path):
     xml = project / ".uloop/outputs/TestResults/failed.xml"
     xml.parent.mkdir(parents=True)

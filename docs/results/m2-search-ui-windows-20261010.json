@@ -1,0 +1,74 @@
+{
+  "success": true,
+  "baselineCodeSource": "669691c17b295ba05632ff70736a550e1142e5fc",
+  "correctedStatusCodeSource": "fc57171c139c015371d06c32937e3898e3129ee7",
+  "rebasedEquivalentSource": "bc2721d36f13a4df50720bf86d37c3b7f839e830",
+  "inputMethod": "UnityEditor.EditorGUIUtility.QueueGameViewInputEvent",
+  "inputKinds": [
+    "MouseDown",
+    "MouseUp",
+    "KeyDown",
+    "KeyUp"
+  ],
+  "directSampleMethodInvocationUsedForUIActions": false,
+  "backend": "GPUCompute",
+  "renderingWidth": 1280,
+  "renderingHeight": 800,
+  "steps": [
+    {
+      "operation": "japanese-observation",
+      "success": true,
+      "observation": "検索結果 6 件 / GPUCompute / 猫を健康に育てるには / doc-cat-en,doc-cat-ja,doc-recipe-a,doc-recipe-b,doc-space-ja,doc-space-en"
+    },
+    {
+      "operation": "english-observation",
+      "success": true,
+      "observation": "検索結果 6 件 / GPUCompute / How do scientists explore planets? / doc-space-en,doc-space-ja,doc-recipe-a,doc-recipe-b,doc-cat-en,doc-cat-ja"
+    },
+    {
+      "operation": "blank-corrected-observation",
+      "success": true,
+      "observation": "検索できませんでした。 / 検索に失敗: Query text is required.\r\nParameter name: query / query length=0 / results=0"
+    },
+    {
+      "operation": "release-observation",
+      "success": true,
+      "observation": "モデルと文書を準備してください。 / ready=False / results=0"
+    },
+    {
+      "operation": "missing-model-observation",
+      "success": true,
+      "observation": "準備に失敗: 準備した.sentisモデルのパスを指定してください。 / ready=False / model=missing-model.sentis"
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "screenshots/m2-search-blank-query.png",
+      "bytes": 102323,
+      "sha256": "3e8586b57ac74690a5c7d36208711a370b1fa49a0f8ec32658fc096561675b4d"
+    },
+    {
+      "file": "screenshots/m2-search-english.png",
+      "bytes": 188848,
+      "sha256": "361a35b08df8f80e943a63af81970666469c2dc6e2fd737e5213f5f85c697056"
+    },
+    {
+      "file": "screenshots/m2-search-japanese.png",
+      "bytes": 188168,
+      "sha256": "25ec4618460366595b619e2af4c26dcd382752c0833f8e20c0ede62acfb520b2"
+    },
+    {
+      "file": "screenshots/m2-search-missing-model.png",
+      "bytes": 96189,
+      "sha256": "a3ee486af6319f7261cf4225099ad5037537ac66111c4cfc4a358b655b193214"
+    }
+  ],
+  "cleanup": "Play stopped; temporary view maximization restored",
+  "statusFixTdd": {
+    "greenPassed": 5,
+    "redPassed": 2,
+    "redFailed": 1,
+    "greenFailed": 0,
+    "greenSkipped": 0
+  }
+}

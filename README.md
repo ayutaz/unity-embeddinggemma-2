@@ -11,10 +11,10 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 
 > **2026-10-10: M2のCI整備・UPM化をmainへ統合済み（PR #6・#8）**: テキストRuntimeを `com.ayutaz.embeddinggemma` の開発版UPMへ移行しました。
 > 全PRで実行するCIとパッケージ監査を追加し、GitHub側ではmainのPR必須・Required CI必須・force push / 削除禁止を設定済みです。
-> 現在のmain `c7d1189` の [CI run 37949804912](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37949804912) は全8 job成功、Pythonは4環境各102件・実モデルPython照合15件合格です。
+> 現在のmain `be791e0` の [CI run 37964228515](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37964228515) は全8 job成功、Pythonは4環境各123件・実モデルPython照合M1 15件 + 検索10件合格です。計画更新PR #9と検索基盤PR #10も統合済みです。
 > 新規UnityプロジェクトへのUPM導入・契約29件と、元プロジェクトの実モデルCPU / GPU回帰が成功しています。
-> **検索サンプルとモデル準備手順はPR #10 / #11で実装済み、mainへ未統合です。** PR #11のCI全8 job成功、Python4環境各132件。Windows Sentisではfp32 / Float16重み × CPU / GPUComputeの4条件が合格し、固定6文書 / 4queryの全順位がPython参照と一致しました。
-> 次は画面操作と新規consumer内の実モデル再現、PR統合後CIです。他環境の実機検証とリリースも残っています。[現在の状態と残タスク](docs/status.md) / [検索の計画](docs/m2-search-plan.md) / [検索検証記録](docs/m2-search-validation.md)を参照してください。
+> **検索サンプルとモデル準備手順はPR #11で実装済み、mainへ未統合です。** Windows Sentisではfp32 / Float16重み × CPU / GPUComputeの4条件が合格し、固定6文書 / 4queryの全順位がPython参照と一致しました。元プロジェクトの日本語 / 英語検索・エラー表示・解放も画面入力で確認しています。
+> 新規consumerでは変換・数値照合を保存済みですが、domain reload中に停止されたためCLIの完了応答は未取得です。次は高速化の検証、consumer画面操作、PR統合後CIです。他環境の実機検証とリリースも残っています。[現在の状態と残タスク](docs/status.md) / [検索の計画](docs/m2-search-plan.md) / [検索検証記録](docs/m2-search-validation.md)を参照してください。
 
 ## ゴール
 
@@ -29,7 +29,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 | # | 内容 | 状態 |
 | --- | --- | --- |
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor受け入れ検証完了（保存・量子化・測定を含む） |
-| M2 | テキスト版の UPM パッケージとサンプルをリリースする | CI・UPM化はmain統合済み。検索はPRで実装・Windows4条件合格。画面操作・consumer再現・他環境・リリースは未完了 |
+| M2 | テキスト版の UPM パッケージとサンプルをリリースする | CI・UPM・検索基盤はmain統合済み。サンプルはPRで実装・Windows4条件と画面操作を確認。consumer再現の完了・他環境・リリースは残る |
 | M3 | 画像用モデルに対応する | 未着手 |
 | M4 | 音声用モデルに対応する | 未着手 |
 

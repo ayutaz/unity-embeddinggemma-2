@@ -4,9 +4,9 @@
 - 更新日: 2026-10-10
 - 背景: [新規性調査](embeddinggemma-2-unity-novelty.md)
 
-リポジトリはpublicのOSSとして開発中。PR #1〜#4・#6・#8をmain `c7d1189`へ統合済み。
+リポジトリはpublicのOSSとして開発中。PR #1〜#4・#6・#8〜#10をmain `be791e0`へ統合済み。
 保存・Float16重み量子化・両backend精度・性能 / メモリ測定までWindows EditorのM1受け入れ条件が合格した。
-統合後mainの [CI run 37949804912](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37949804912)は全8 job成功、Python4環境各102件・実モデルPython照合15件が合格。
+統合後mainの [CI run 37964228515](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37964228515)は全8 job成功、Python4環境各123件・実モデルPython照合M1 15件 + 検索10件が合格。
 PR #6のCI整備・UPM移行はmainへ反映済み、GitHub側のmain保護も設定・再確認済み。
 文書のみのPR #7も全8 jobが成功し、未マージで閉じた。PR #5の文書変更はPR #6へ含め、#5は閉じた。
 次は [M2計画](m2-plan.md)の検索サンプル、モデル準備手順、他環境検証、配布を進める。M2全体の受け入れは未完了。

@@ -4,17 +4,19 @@
 
 ## 2026-10-10の現在地
 
-mainは`c7d11897e43d374fbb87f3761f65fb3faec60c7c`。PR #9 → #10 → #11は依存順の未統合PRであり、以下の検索実装はPR側の成果である。
+mainは`be791e00a1b344c5453f70037d7116184169c17f`。PR #9（計画）と#10（検索基盤）は統合済みで、統合後CIも成功。PR #11（サンプル・モデル準備）はmainをbaseとする未統合PR。
 
 | 段階 | 現在の状態 | 残る受け入れ確認 |
 | --- | --- | --- |
-| A | 実装・CI検証済み。PR #10の全8 job成功、Python4環境各123件。固定6文書 / 4queryの参照生成・全順位・同点ID順・hash監査を実装 | PRの統合と統合後CI |
-| B | PR #11でサンプル・モデル準備・リソース解放を実装。CI全8 job成功、Python4環境各132件。Windowsの実モデル4条件は4 passed / failed 0 / skip 0、全queryの全6順位が一致 | 実際の画面入力・準備・検索・エラー表示・終了の操作記録と画像。API契約の合格だけで画面操作を完了扱いにしない |
-| C | 取得・変換・配置・更新手順と空consumer導入CLIを実装。新規checkoutからのサンプル導入とCI成果物のhash監査・配置まで成功 | 新規consumer内のモデル変換・実モデル検索・画面操作による再現確認 |
+| A | mainへ統合済み。固定6文書 / 4queryの参照生成・全順位・同点ID順・hash監査を実装 | 完了。統合後CI run 37964228515成功 |
+| B | PR #11で実装。Windows実モデル4条件は4 passed / failed 0 / skip 0、全順位一致。実際のGame View入力イベントで準備・日本語 / 英語検索・空入力・解放・モデル欠落を確認し画像を保存 | PR #11の残変更に対するCIと統合後CI |
+| C | 新規checkoutから短いパスの空consumerを作成し、依存解決・契約38件・サンプル5件・モデル変換が成功。実モデル4条件の数値と全順位を保存 | テスト後のdomain reload中に停止されたためCLI完了応答は未取得。consumer画面操作・高速化の確認・手順確定が残る |
 
 実モデルの数値は[検証記録](m2-search-validation.md)と[Windows結果](results/m2-search-root-windows-20261010.json)を参照。fp32 / Float16重みの両方をCPU / GPUComputeで保存済みモデルから読み、各条件で6文書 + 4queryをPython参照へ照合した。
 
-次はBの画面操作、Cの新規consumer再現、証拠・文書の整合確認、PR依存順の統合と統合後CIを進める。その後、macOS / iOS / Androidの環境確保と実モデル検証、commit / tag固定のGit URL導入、リリースへ進む。画面操作・consumer再現が終わるまで一覧1 / 2は進行中とする。
+次は不要なモデル再import・再変換・全体Refreshを減らす改善をTDDで検証する。検証用consumerでは、到達できない外部Acceleratorの待機を避けるためプロジェクト単位でキャッシュを無効にする。domain reloadの原因は断定していない。停止前の数値結果とCLIの未完了を別記し、改善後のconsumer画面操作・実行完了を確認する。証拠・文書を整合させ、PR #11と統合後CIを確認するまで一覧1 / 2は進行中。
+
+その後、macOS / iOS / Androidの環境確保と実モデル検証、commit / tag固定のGit URL導入、リリースへ進む。
 
 | 段階 | 実装 / 成果物 | 合格の証拠 |
 | --- | --- | --- |
@@ -28,4 +30,4 @@ mainは`c7d11897e43d374fbb87f3761f65fb3faec60c7c`。PR #9 → #10 → #11は依�
 
 モデルは自動ダウンロードしない。利用者が明示的に用意した`.sentis`とtokenizerを読み、各検索で再保存・再量子化しない。重み・大きい生成結果はGit / LFSへ含めず、小さい実行要約と再現手順を記録する。
 
-実装ブランチは`feat/m2-text-search`（PR #10）と`feat/m2-text-search-sample`（PR #11）。計画更新PR #9を基礎にする。mainへ直接pushせず、マージは依頼された範囲でCI・差分・競合を確認して行う。未実行・失敗・GPU skipは合格と分け、全段階の証拠が揃うまでこの作業を完了扱いにしない。
+作業ブランチは`feat/m2-text-search-sample`（PR #11）、baseはmain。mainへ直接pushせず、マージは依頼された範囲でCI・差分・競合を確認して行う。未実行・失敗・GPU skipは合格と分け、全段階の証拠が揃うまでこの作業を完了扱いにしない。

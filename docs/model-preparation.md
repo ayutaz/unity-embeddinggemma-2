@@ -40,12 +40,14 @@ uv run --locked python -m embeddinggemma_tools.stage --source "../artifacts/down
 検証用に空のconsumerを作る場合は、リポジトリの`tools/`から次を使う。既存プロジェクトを上書きしない。
 
 ```powershell
-uv run --locked python -m embeddinggemma_tools.package --consumer ../artifacts/m2-consumer --sample --automation
-uv run --locked python -m embeddinggemma_tools.stage --source "../artifacts/download/$runId" --project ../artifacts/m2-consumer --source-commit $checkoutSha --search
+uv run --locked python -m embeddinggemma_tools.package --consumer ../artifacts/c --sample --automation
+uv run --locked python -m embeddinggemma_tools.stage --source "../artifacts/download/$runId" --project ../artifacts/c --source-commit $checkoutSha --search
 ```
 
 consumerをUnity 6000.3.16f1で開き、依存解決・compileの完了を確認する。上の`--automation`は検証用uloopだけを加える。
 起動方法と失敗ログの扱いは [自動操作手順](automation.md)。起動待ちが失敗しても、後続の成功と混ぜない。
+
+Windowsではconsumerの絶対パスを短くする。今回の長いconsumerパスでは、267文字のuloopテンプレートをPowerShellは認識したがUnity側で`DirectoryNotFoundException`となり、起動接続待ちもタイムアウトした。短い`artifacts/c`で同じ新規導入を行うと起動・compile・自動操作が成功した。既存プロジェクトの移動やLibraryのコピーで回避せず、空の短いパスへ導入し直して検証する。
 
 Editorの**Tools → EmbeddingGemma → Prepare Text Search Models**を実行する。
 このメニューは`stage --search`の成功記録と配置済みファイルのhashを読み戻し、`.pt2`をSentisでimportして保存する。モデルをダウンロードしない。
@@ -84,6 +86,16 @@ artifact保持は3日。失効した場合は`CI`を対象ブランチで再実�
 実モデルのWindows回帰には`uv run --locked python -m embeddinggemma_tools.unity --suite search --timeout 1200`を使う。
 4件（fp32 / Float16重み × CPU / GPUCompute）がすべてpassed、failed / skipped / inconclusive = 0の時だけ検索参照合格。
 結果は`artifacts/m2-search/results.json`とハーネス出力に分けて保存する。[検証記録](m2-search-validation.md)に実行済みの範囲を記載する。
+
+## ローカル検証の待機を減らす
+
+自動検証用consumerを`--automation`で新規作成すると、Unity Acceleratorをプロジェクト単位で無効にする。通常consumerやグローバルEditor設定は変更しない。検証で到達できない外部Acceleratorへのタイムアウトが繰り返し観測されたため、継承した接続先による待機を避ける。
+
+既存consumerではProject Settings > EditorのCache ServerをDisabledにしてから、必要なら再起動する。[UnityのCacheServerMode](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/CacheServerMode.html)でDisabledはプロジェクトの外部キャッシュを無効にする設定。
+
+重いモデル準備と実モデル照合はまとめて実行し、ドキュメントだけの編集で繰り返さない。domain reload遅延の原因は未確定。準備済みモデルのhash照合による再利用と、不要なimport / Refresh削減は検証中で、時間短縮の実測値はまだない。
+
+テストが数値を保存していても、CLIの完了応答を取得できなければハーネス合格にはしない。接続切断時の`SafeToRetry: false`を無視して同じ重い操作を自動再実行しない。
 
 ## 検証済みモデルを再利用する場合
 

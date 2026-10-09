@@ -95,6 +95,14 @@ def create_consumer(project, package, *, git_revision=None, automation=False, sa
         (project / directory).mkdir(parents=True, exist_ok=True)
     (project / "Packages/manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
     (project / "ProjectSettings/ProjectVersion.txt").write_text("m_EditorVersion: 6000.3.16f1\n", encoding="utf-8", newline="\n")
+    if automation:
+        # Isolate validation from an ambient Accelerator endpoint in Editor preferences.
+        # Ordinary consumer projects retain Unity's defaults.
+        (project / "ProjectSettings/EditorSettings.asset").write_text(
+            "%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n--- !u!159 &1\n"
+            "EditorSettings:\n  m_ObjectHideFlags: 0\n  serializedVersion: 15\n"
+            "  m_CacheServerMode: 2\n  m_CacheServerEnableDownload: 0\n"
+            "  m_CacheServerEnableUpload: 0\n", encoding="utf-8", newline="\n")
     if sample:
         shutil.copytree(sample_path, project / "Assets/EmbeddingGemmaTextSearch")
     return manifest

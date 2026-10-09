@@ -97,6 +97,19 @@ def test_consumer_can_pin_git_commit_and_add_editor_automation(package, tmp_path
     assert manifest["scopedRegistries"][0]["scopes"] == ["io.github.hatayama.uloopmcp"]
 
 
+def test_automated_consumer_does_not_inherit_unreachable_global_accelerator(package, tmp_path):
+    project = tmp_path / "consumer"
+    create_consumer(project, package, automation=True)
+    settings = (project / "ProjectSettings/EditorSettings.asset").read_text()
+    assert "m_CacheServerMode: 2" in settings  # CacheServerMode.Disabled
+    assert "m_CacheServerEnableDownload: 0" in settings
+    assert "m_CacheServerEnableUpload: 0" in settings
+
+    ordinary = tmp_path / "ordinary"
+    create_consumer(ordinary, package)
+    assert not (ordinary / "ProjectSettings/EditorSettings.asset").exists()
+
+
 def test_existing_project_is_never_overwritten(package, tmp_path):
     project = tmp_path / "consumer"
     project.mkdir()

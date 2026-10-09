@@ -1,0 +1,6 @@
+{
+  "name": "EmbeddingGemma.TextSearch.Sample.Editor",
+  "references": ["EmbeddingGemma.Runtime", "Unity.InferenceEngine", "Unity.Newtonsoft.Json"],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": true
+}

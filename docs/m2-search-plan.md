@@ -2,6 +2,22 @@
 
 開始日: 2026-10-10。対象は利用者向け一覧の1（検索サンプル）と2（モデル取得・変換・配置手順）。[M2計画](m2-plan.md)のA / B / Cを進める。macOS・モバイル・公開リリースは後続であり、この作業でM2全体の完了とはしない。
 
+## 2026-10-10の現在地
+
+検証基準mainは`be791e00a1b344c5453f70037d7116184169c17f`。PR #9（計画）と#10（検索基盤）は統合済みで、統合後CIも成功。PR #11（サンプル・モデル準備）はmainをbaseとするPR。最新の統合状況はGitHubを参照。
+
+| 段階 | 現在の状態 | 残る受け入れ確認 |
+| --- | --- | --- |
+| A | mainへ統合済み。固定6文書 / 4queryの参照生成・全順位・同点ID順・hash監査を実装 | 完了。統合後CI run 37964228515成功 |
+| B | PR #11で実装。Windows実モデル4条件は4 passed / failed 0 / skip 0、全順位一致。実際のGame View入力イベントで準備・日本語 / 英語検索・空入力・解放・モデル欠落を確認し画像を保存 | PR #11の残変更に対するCIと統合後CI |
+| C | 別checkoutから短いパスの空consumerへ導入。依存解決・契約38件・sample 18件・モデル変換とhash監査、改善後の実モデル4 passed / skip 0・全順位一致・CLI完了応答、CPUの日英検索・空入力・解放を確認 | 従来の中断履歴と未解決ログを維持。PR / 統合後CIはGitHub参照 |
+
+実モデルの数値は[検証記録](m2-search-validation.md)と[Windows結果](results/m2-search-root-windows-20261010.json)を参照。fp32 / Float16重みの両方をCPU / GPUComputeで保存済みモデルから読み、各条件で6文書 + 4queryをPython参照へ照合した。
+
+一覧1 / 2の実装・consumer再現・手順を確認済み。検証済みモデルの再利用をTDDで追加し、再import・再変換・全体Refreshと外部Accelerator待機を削減した。準備203秒 → 175秒は単回観測で、domain reloadの原因は未確定。以前の中断履歴を保持し、改善後の成功を別記した。次はmacOS / iOS / Androidの環境確保と実測、Git URL導入、リリース。hash確認の負荷と未解決allocation / fontログも追跡する。
+
+その後、macOS / iOS / Androidの環境確保と実モデル検証、commit / tag固定のGit URL導入、リリースへ進む。
+
 | 段階 | 実装 / 成果物 | 合格の証拠 |
 | --- | --- | --- |
 | A | 固定の日本語 / 英語文書・query、cosine順位計算と同点時ID順、検索のPython参照生成 | Python / C#のTDD red → green。Actionsで固定モデルrevision・prompt・tokenizer・128長の参照ベクトルと全順位を生成。出力のsource SHA・SHA-256を監査 |
@@ -14,4 +30,4 @@
 
 モデルは自動ダウンロードしない。利用者が明示的に用意した`.sentis`とtokenizerを読み、各検索で再保存・再量子化しない。重み・大きい生成結果はGit / LFSへ含めず、小さい実行要約と再現手順を記録する。
 
-実装ブランチは`feat/m2-text-search`。計画更新PR #9を基礎にし、実装はPRへ提出する。mainへ直接pushせず、マージは依頼があるまで行わない。未実行・失敗・GPU skipは合格と分け、全段階の証拠が揃うまでこの作業を完了扱いにしない。
+作業ブランチは`feat/m2-text-search-sample`（PR #11）、baseはmain。mainへ直接pushせず、マージは依頼された範囲でCI・差分・競合を確認して行う。未実行・失敗・GPU skipは合格と分け、全段階の証拠が揃うまでこの作業を完了扱いにしない。

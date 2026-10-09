@@ -1,0 +1,6 @@
+{
+  "name": "EmbeddingGemma.TextSearch.Sample.PlayMode.Tests",
+  "references": ["EmbeddingGemma.Runtime", "EmbeddingGemma.TextSearch.Sample", "Unity.InferenceEngine"],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "autoReferenced": false
+}

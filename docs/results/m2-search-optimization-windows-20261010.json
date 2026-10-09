@@ -1,0 +1,116 @@
+{
+  "codeSource": "c6ab65e30db79f15014cc0e80b269fa6f42e12b6",
+  "cacheHitRed": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-09T18:15:15.9437107Z",
+    "FailedCount": 1,
+    "FailedTests": [
+      {
+        "FullName": "EmbeddingGemma.Samples.Tests.TextSearchModelPreparationTests.VerifiedCacheDoesNotLoadModelOrRewriteFiles",
+        "Message": "System.Exception : Cache hit must not load the model.",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\c\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchModelPreparationTests.cs",
+        "Line": 71
+      }
+    ],
+    "HasFailures": true,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Failed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 0,
+    "SkippedCount": 0,
+    "Status": "Failed",
+    "Success": false,
+    "TestCount": 1,
+    "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\c\\.uloop\\outputs\\TestResults\\20261009_181515_9467346_efc421acbba544aebb2d75b61f3169d2.xml"
+  },
+  "loaderFailureRed": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-09T18:16:29.1957146Z",
+    "FailedCount": 1,
+    "FailedTests": [
+      {
+        "FullName": "EmbeddingGemma.Samples.Tests.TextSearchModelPreparationTests.RebuildLoadFailureInvalidatesPreviousSuccessAndPreservesModels",
+        "Message": "  Expected: False\r\n  But was:  True\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\c\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchModelPreparationTests.cs",
+        "Line": 131
+      }
+    ],
+    "HasFailures": true,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Failed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 0,
+    "SkippedCount": 0,
+    "Status": "Failed",
+    "Success": false,
+    "TestCount": 1,
+    "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\c\\.uloop\\outputs\\TestResults\\20261009_181629_1977144_861664ced6ff412db621f3529b22958b.xml"
+  },
+  "sampleEditModeGreen": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-09T18:17:36.7354367Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 18,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 18,
+    "XmlPath": null
+  },
+  "firstPreparation": {
+    "elapsedSeconds": 202.7615335,
+    "exitCode": 0
+  },
+  "cachedPreparation": {
+    "elapsedSeconds": 174.5159033,
+    "exitCode": 0,
+    "before": {
+      "model-float16.sentis": "2026-10-09T18:20:12.1937476Z",
+      "tokenizer.json": "2026-10-09T18:20:13.3817803Z",
+      "preparation.json": "2026-10-09T18:22:02.0842322Z",
+      "model-fp32.sentis": "2026-10-09T18:20:04.3885566Z"
+    },
+    "after": {
+      "model-float16.sentis": "2026-10-09T18:20:12.1937476Z",
+      "tokenizer.json": "2026-10-09T18:20:13.3817803Z",
+      "preparation.json": "2026-10-09T18:22:02.0842322Z",
+      "model-fp32.sentis": "2026-10-09T18:20:04.3885566Z"
+    },
+    "receiptUnchanged": true
+  },
+  "elapsedReductionPercent": 13.930467832055538,
+  "limitation": "Single initial conversion and subsequent audited reuse observation, not a controlled benchmark or isolated domain-reload measurement. SHA-256 still reads large inputs and outputs. No native acceleration added.",
+  "preparedFiles": {
+    "success": true,
+    "error": "",
+    "sourceCommit": "2edb272f17a38c7af210474345c35f391fd6955c",
+    "searchSourceCommit": "13f194266162d2a728b2b2a0da9e9e58ae314ff6",
+    "unityVersion": "6000.3.16f1",
+    "completedUtc": "2026-10-09T18:22:02.0842322Z",
+    "modelSha256": "92968480724ef7838cbd7d7b7cfd6a8d6d5105bb937f8a9907e965805a7651c8",
+    "files": [
+      {
+        "name": "model-fp32.sentis",
+        "sha256": "8488d70f2d636a34bfe2a64c1d7b9d3eb3fce70c4fb9e27d32b698090c8fb373",
+        "bytes": 1095598044
+      },
+      {
+        "name": "model-float16.sentis",
+        "sha256": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819",
+        "bytes": 553775500
+      },
+      {
+        "name": "tokenizer.json",
+        "sha256": "25975a936201b81402a3b867d5c462cf10808bb96759f97fe9aefecbb11c49df",
+        "bytes": 32170775
+      }
+    ]
+  }
+}

@@ -9,6 +9,7 @@ from pathlib import Path
 from huggingface_hub import snapshot_download
 
 from .prepare import MODEL_ID, MODEL_REVISION, prepare
+from .search import SEARCH_CASES
 
 
 def sequence_length(value):
@@ -33,6 +34,8 @@ def main(argv=None):
     command.add_argument("--cases", type=Path, default=Path(__file__).resolve().parents[1] / "cases" / "text.json")
     command.add_argument("--sequence-length", type=sequence_length, default=128)
     command.add_argument("--revision", type=revision, default=MODEL_REVISION)
+    command.add_argument("--search-cases", type=Path, default=SEARCH_CASES,
+                         help="Fixed document/query suite included in the TextSearch sample")
     args = parser.parse_args(argv)
     snapshot = args.snapshot
     if snapshot is None:
@@ -41,8 +44,9 @@ def main(argv=None):
             "config_sentence_transformers.json", "modules.json", "1_Pooling/config.json",
         ]))
     summary = prepare(snapshot, args.cases, args.output, args.sequence_length, args.revision,
-                      source_commit=os.environ.get("GITHUB_SHA", "local"))
-    print(json.dumps({"case_count": summary["case_count"], "minimum_cosine": summary["minimum_cosine"]}))
+                      source_commit=os.environ.get("GITHUB_SHA", "local"), search_cases_path=args.search_cases)
+    print(json.dumps({name: summary[name] for name in (
+        "case_count", "minimum_cosine", "search_case_count", "search_minimum_cosine")}))
 
 
 if __name__ == "__main__":

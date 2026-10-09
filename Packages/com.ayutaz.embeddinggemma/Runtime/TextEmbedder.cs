@@ -5,12 +5,20 @@ using UnityEngine;
 
 namespace EmbeddingGemma
 {
+    /// <summary>Query/document inference used by the search index and session.</summary>
+    public interface ITextEmbedder : IDisposable
+    {
+        BackendType Backend { get; }
+        float[] EmbedQuery(string text);
+        float[] EmbedDocument(string text, string title = null);
+    }
+
     /// <summary>
     /// Synchronous, main-thread text inference for the pinned batch-1, length-128 fp32 export.
     /// Owns its Worker and per-call input tensors; the caller owns the supplied Model.
     /// The exported graph includes projection, mean pooling and L2 normalization.
     /// </summary>
-    public sealed class TextEmbedder : IDisposable
+    public sealed class TextEmbedder : ITextEmbedder
     {
         public const int SequenceLength = 128;
         public const int EmbeddingDimension = 768;

@@ -11,6 +11,7 @@ from transformers import AutoTokenizer
 from .export import export_pt2
 from .model import load_text_model
 from .reference import build_reference, load_cases, write_reference
+from .search import generate_search_reference
 
 MODEL_ID = "google/embeddinggemma-2"
 MODEL_REVISION = "914f7f89142e33e77833254d9c9b90c3cef7303b"
@@ -18,7 +19,7 @@ MODEL_REVISION = "914f7f89142e33e77833254d9c9b90c3cef7303b"
 
 def prepare(
     snapshot: Path, cases_path: Path, destination: Path,
-    sequence_length: int, revision: str, source_commit: str = "local",
+    sequence_length: int, revision: str, source_commit: str = "local", *, search_cases_path: Path | None = None,
 ) -> dict:
     destination.mkdir(parents=True, exist_ok=True)
     # Only the current completed generation may publish a success report.
@@ -36,6 +37,11 @@ def prepare(
     }
     metadata["versions"]["torch"] = torch.__version__
     write_reference(destination / "reference.json", cases, metadata)
+    search_cases = []
+    if search_cases_path is not None:
+        search = generate_search_reference(model, tokenizer, search_cases_path,
+                                          destination / "search-reference.json", sequence_length, metadata)
+        search_cases = search["documents"] + search["queries"]
     # The last reference call configures fixed-length truncation and padding in the backend.
     tokenizer.backend_tokenizer.save(str(destination / "tokenizer.json"))
     first = cases[0]
@@ -44,7 +50,7 @@ def prepare(
     exported = torch.export.load(destination / "model.pt2").module()
     similarities = []
     with torch.no_grad():
-        for case in cases:
+        for case in cases + search_cases:
             actual = exported(torch.tensor([case["input_ids"]]), torch.tensor([case["attention_mask"]]))[0]
             expected = torch.tensor(case["embedding"])
             if not torch.isfinite(actual).all():
@@ -54,11 +60,19 @@ def prepare(
                 raise ValueError(f"export differs from reference: {case['id']} cosine={similarity}")
             similarities.append({"id": case["id"], "cosine": similarity})
     digests = {}
-    for name in ("model.pt2", "reference.json", "tokenizer.json"):
+    names = ["model.pt2", "reference.json", "tokenizer.json"]
+    if search_cases_path is not None:
+        names.append("search-reference.json")
+    for name in names:
         with (destination / name).open("rb") as stream:
             digests[name] = hashlib.file_digest(stream, "sha256").hexdigest()
-    summary = {"case_count": len(cases), "minimum_cosine": min(row["cosine"] for row in similarities),
-               "cases": similarities, "sha256": digests, "metadata": metadata}
+    base_similarities = similarities[:len(cases)]
+    summary = {"case_count": len(cases), "minimum_cosine": min(row["cosine"] for row in base_similarities),
+               "cases": base_similarities, "sha256": digests, "metadata": metadata}
+    if search_cases_path is not None:
+        search_similarities = similarities[len(cases):]
+        summary.update(search_case_count=len(search_similarities), search_cases=search_similarities,
+                       search_minimum_cosine=min(row["cosine"] for row in search_similarities))
     (destination / "export-validation.json").write_text(
         json.dumps(summary, indent=2, allow_nan=False) + "\n", encoding="utf-8"
     )

@@ -1,0 +1,16 @@
+{
+  "documents": [
+    {"id": "doc-cat-ja", "title": "猫との暮らし", "text": "猫は身近なペットです。食事や運動、健康管理に気を配って一緒に暮らします。"},
+    {"id": "doc-cat-en", "title": "Living with cats", "text": "Cats are popular pets. Good food, exercise and veterinary care help keep a cat healthy."},
+    {"id": "doc-space-ja", "title": "宇宙探査", "text": "宇宙探査機が惑星や月を観測します。ロケットを使って太陽系の成り立ちを調べます。"},
+    {"id": "doc-space-en", "title": "Space exploration", "text": "Spacecraft observe planets and moons. Rockets help scientists explore the solar system."},
+    {"id": "doc-recipe-a", "title": "パンを焼く", "text": "小麦粉、水、酵母を混ぜて生地を発酵させ、オーブンでパンを焼きます。"},
+    {"id": "doc-recipe-b", "title": "パンを焼く", "text": "小麦粉、水、酵母を混ぜて生地を発酵させ、オーブンでパンを焼きます。"}
+  ],
+  "queries": [
+    {"id": "query-cat-ja", "text": "猫を健康に育てるには"},
+    {"id": "query-space-en", "text": "How do scientists explore planets?"},
+    {"id": "query-recipe-ja", "text": "パンの作り方"},
+    {"id": "query-cat-en", "text": "How should I care for a pet cat?"}
+  ]
+}

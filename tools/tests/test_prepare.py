@@ -90,3 +90,24 @@ def test_failed_rerun_invalidates_previous_success_report(tmp_path, monkeypatch,
     with pytest.raises(RuntimeError, match="current generation failed"):
         prepare(snapshot, cases, output, sequence_length=6, revision="0" * 40)
     assert not report.exists(), "A failed generation must not leave a previous success report."
+
+
+def test_prepare_exports_and_hashes_search_reference_against_saved_program(tmp_path):
+    snapshot = tmp_path / "snapshot"
+    snapshot.mkdir()
+    make_snapshot(snapshot)
+    cases = tmp_path / "cases.json"
+    cases.write_text(json.dumps([{"id": "cat", "text": "cat", "role": "raw"}]))
+    search_cases = tmp_path / "search.json"
+    search_cases.write_text(json.dumps({"documents": [{"id": "doc-a", "text": "cat", "title": "cat"},
+                                                      {"id": "doc-b", "text": "cat", "title": "cat"}],
+                                       "queries": [{"id": "query-a", "text": "cat"}]}))
+    output = tmp_path / "output"
+    report = prepare(snapshot, cases, output, 6, "0" * 40, search_cases_path=search_cases)
+    search = json.loads((output / "search-reference.json").read_text())
+    assert report["sha256"]["search-reference.json"] == hashlib.sha256((output / "search-reference.json").read_bytes()).hexdigest()
+    assert report["search_case_count"] == 3
+    assert report["search_minimum_cosine"] >= 0.999999
+    assert len(report["search_cases"]) == 3
+    assert search["metadata"] == report["metadata"]
+    assert [row["document_id"] for row in search["queries"][0]["ranking"]] == ["doc-a", "doc-b"]

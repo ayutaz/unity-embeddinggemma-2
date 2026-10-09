@@ -7,11 +7,11 @@ Unity SentisでEmbeddingGemma 2のテキスト埋め込みを作るUPMパッケ�
 新規consumerでの実モデルGPU、Git URL経由のEditor導入は未検証です。
 
 - 検証対象: Unity 6000.3.16f1、Sentis 2.6.1、Windows Editor CPU / GPUCompute。
-- API: `TextEmbedder`、`TextPrompts`、`TextTokenizer`、`TextModelFile`。
+- API: `TextEmbedder` / `ITextEmbedder`、`TextPrompts`、`TextTokenizer`、`TextModelFile`、`TextSearchIndex`、`TextSearchSession`、`SearchDocument`、`SearchHit`。
 - batch 1 / length 128 / 768次元の固定モデルを使用。推論はメインスレッドの同期処理です。
 - モデル重み・参照artifact・ネイティブプラグインは含みません。モデルのダウンロードも自動実行しません。
 - 実行依存はSentisとUnity提供Newtonsoft JSON。検証用のuloop、URP、Pythonはパッケージの実行依存ではありません。
 
 導入・使用例は [Documentation~/index.md](Documentation~/index.md)、実測・変換・検証手順は
 [リポジトリ](https://github.com/ayutaz/unity-embeddinggemma-2)を参照してください。
-検索サンプル、macOS / iOS / Androidの実モデル検証はM2の後続作業です。
+このブランチではText Searchサンプルとモデル準備メニューを[PR #11](https://github.com/ayutaz/unity-embeddinggemma-2/pull/11)で追加しました。Package Managerからインポートし、[サンプル手順](Samples~/TextSearch/README.md)に沿って明示的にモデルを配置します。Windowsでは保存済みfp32 / Float16重み × CPU / GPUComputeの全4条件で固定queryの全順位が一致しました。mainへの統合、画面操作・新規consumer実モデル再現、macOS / iOS / Androidの受け入れと公開リリースは未完了です。

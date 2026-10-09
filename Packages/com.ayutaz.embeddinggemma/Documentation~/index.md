@@ -59,3 +59,11 @@ Float16重み保存は元のModelを変えません。保存と量子化は大�
 Windows Editorではfp32 / Float16重みの保存・ロードと両backend各15件を検証済みです。UPM移行後の全保存・量子化ベンチマークは再実行していません。
 読み取り専用の配置先へ保存しないでください。Player・macOS / iOS / Androidの保存API互換性は後続検証の対象です。
 Float16重みは全演算のfp16化や速度改善を保証しません。
+
+## テキスト検索サンプル
+
+このブランチには[Text Search](../Samples~/TextSearch/README.md)を含みます（PR #11、mainへ未統合）。Package Managerでインポートし、モデルを明示的に準備してから`TextSearch.unity`を開きます。文書を事前埋め込みし、queryとのcosine順に表示します。同点は文書IDのordinal順です。
+
+`TextSearchIndex`は文書を一度だけ埋め込み、検索のたびにqueryを埋め込みます。空のqueryは拒否します。渡した`ITextEmbedder`は呼び出し側が所有します。`TextSearchSession`を使う場合はsessionが推論器を所有し、再準備やDisposeで解放します。
+
+Windowsでは保存済みfp32 / Float16重み × CPU / GPUComputeで固定6文書 / 4queryの全順位が参照と一致しました。画面操作と新規consumer内での実モデル再現は進行中です。任意入力の検索品質や他環境の受け入れは別の検証対象です。

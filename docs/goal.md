@@ -61,7 +61,7 @@ M1の証拠は [M1計画](m1-plan.md)、[完了検証記録](m1-completion-valid
 | # | 内容 | 完了の条件 | 状態 |
 | --- | --- | --- | --- |
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor の CPU / GPUCompute で全 15 ケースの token ID / mask が完全一致、fp32 cosine >= 0.999。`.sentis` 保存・再読み込み、fp16 量子化版 cosine >= 0.99、時間・メモリ測定 | Windows Editor受け入れ検証完了 |
-| M2 | テキスト版の UPM パッケージとサンプルをリリースする | macOS Editor / iOS / Android の精度確認・速度 / メモリ測定、UPM API とサンプル、配布手順を揃える | CI・UPM化はmain統合済み、Windows検証済み。検索サンプル・他環境・配布は未完了 |
+| M2 | テキスト版の UPM パッケージとサンプルをリリースする | macOS Editor / iOS / Android の精度確認・速度 / メモリ測定、UPM API とサンプル、配布手順を揃える | CI・UPM化はmain統合済み。検索サンプルと手順はPRで実装しWindows実モデル4条件合格。画面操作・新規consumer再現・他環境・配布は未完了 |
 | M3 | 画像用モデルに対応する | GPU 上の画像から埋め込みを作り、テキスト→画像の検索が参照実装と一致する | 未着手 |
 | M4 | 音声用モデルに対応する | GPU 上でメルスペクトログラムを作り、テキスト→音声の検索が参照実装と一致する | 未着手 |
 

@@ -13,7 +13,8 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 > 全PRで実行するCIとパッケージ監査を追加し、GitHub側ではmainのPR必須・Required CI必須・force push / 削除禁止を設定済みです。
 > 現在のmain `c7d1189` の [CI run 37949804912](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37949804912) は全8 job成功、Pythonは4環境各102件・実モデルPython照合15件合格です。
 > 新規UnityプロジェクトへのUPM導入・契約29件と、元プロジェクトの実モデルCPU / GPU回帰が成功しています。
-> 次はテキスト検索サンプルです。モデル準備手順、他環境の実機検証、リリースも残っています。[現在の状態と残タスク](docs/status.md) / [パッケージ導入・検証](docs/m2-package-validation.md)を参照してください。
+> **検索サンプルとモデル準備手順はPR #10 / #11で実装済み、mainへ未統合です。** PR #11のCI全8 job成功、Python4環境各132件。Windows Sentisではfp32 / Float16重み × CPU / GPUComputeの4条件が合格し、固定6文書 / 4queryの全順位がPython参照と一致しました。
+> 次は画面操作と新規consumer内の実モデル再現、PR統合後CIです。他環境の実機検証とリリースも残っています。[現在の状態と残タスク](docs/status.md) / [検索の計画](docs/m2-search-plan.md) / [検索検証記録](docs/m2-search-validation.md)を参照してください。
 
 ## ゴール
 
@@ -28,7 +29,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 | # | 内容 | 状態 |
 | --- | --- | --- |
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor受け入れ検証完了（保存・量子化・測定を含む） |
-| M2 | テキスト版の UPM パッケージとサンプルをリリースする | CI整備・UPM化はmain統合済み、Windows検証済み。検索サンプル・他環境・リリースは未完了 |
+| M2 | テキスト版の UPM パッケージとサンプルをリリースする | CI・UPM化はmain統合済み。検索はPRで実装・Windows4条件合格。画面操作・consumer再現・他環境・リリースは未完了 |
 | M3 | 画像用モデルに対応する | 未着手 |
 | M4 | 音声用モデルに対応する | 未着手 |
 
@@ -86,7 +87,7 @@ uv run --locked python -m embeddinggemma_tools prepare --output ../artifacts/m1
 モデルの revision を固定して参照データ・設定済み tokenizer・`.pt2` を生成し、保存後のモデルを参照実装と比較します。
 この Python 側の一致と、Sentis 側の M1 合格は別々に検証します。
 
-M1はWindows Editorで完了し、PR #1〜#4・#6・#8を統合済みです。全PRの必須CIとUPM化をmainへ反映し、統合後CIの成功とmain保護を確認しました。次はテキスト検索サンプル、モデル準備手順、macOS / iOS / Android検証、配布へ進みます。
+M1はWindows Editorで完了し、PR #1〜#4・#6・#8を統合済みです。検索サンプル・モデル準備手順はPR #10 / #11で実装し、Windowsの実モデル4条件が合格しました。次は画面操作と新規consumer再現、統合後CI、その後macOS / iOS / Android検証と配布へ進みます。
 残作業の順序・依存・完了条件は [M2計画](docs/m2-plan.md)、実装済みAPIは [C# API手順](docs/runtime-api.md) を参照してください。
 新しい実装も作業ブランチ / PR を使い、マージは依頼があるまで行いません。
 M1の完了条件と当時の測定は [M1計画](docs/m1-plan.md) / [完了検証記録](docs/m1-completion-validation.md)、最新のCIとUPM検証は [現在の状態](docs/status.md)を参照してください。
@@ -98,7 +99,7 @@ Unity 6000.3.16f1の別プロジェクトで、Package Managerから
 [package.json](Packages/com.ayutaz.embeddinggemma/package.json)を「Add package from disk」で指定します。
 Sentis 2.6.1とNewtonsoft JSON 3.2.2はパッケージの依存から解決します。
 Git URLのcommit固定による導入指定とAPI使用例は [パッケージ文書](Packages/com.ayutaz.embeddinggemma/Documentation~/index.md)を参照してください。Editorで実行確認した導入経路はローカルフォルダ依存で、Git URL導入は後続検証です。
-モデルは含まれておらず、検索サンプルと公開tagはまだありません。
+モデルは含まれていません。このブランチのText SearchサンプルはPackage Managerからインポートできます。[モデル準備手順](docs/model-preparation.md)に沿って明示的にモデルを配置してください。検索サンプルはPR #11でmainへ未統合、公開tagはまだありません。
 
 ## モデルファイルについて
 
@@ -116,6 +117,9 @@ Git URLのcommit固定による導入指定とAPI使用例は [パッケージ�
 | [docs/runtime-api.md](docs/runtime-api.md) | 実装済みのテキスト推論・保存API |
 | [docs/automation.md](docs/automation.md) | uloopの導入、検証ハーネス、モデル成果物の監査・配置 |
 | [docs/m2-plan.md](docs/m2-plan.md) | 残作業の順序、UPM・検索サンプル・他環境・配布の完了条件 |
+| [docs/m2-search-plan.md](docs/m2-search-plan.md) | 検索サンプルとモデル準備の実装済み範囲・残る受け入れ条件 |
+| [docs/m2-search-validation.md](docs/m2-search-validation.md) | TDD・CI・Windows検索4条件の実測と未完了項目 |
+| [docs/model-preparation.md](docs/model-preparation.md) | 検索モデルの取得・監査・変換・配置・更新と新規consumer導入 |
 | [docs/m2-package-validation.md](docs/m2-package-validation.md) | CI・main保護・UPM移行、新規Unityプロジェクトへの導入結果 |
 | [docs/ci.md](docs/ci.md) | GitHub Actions、PR 運用、Unity CI の準備 |
 | [docs/technical-approach.md](docs/technical-approach.md) | Sentis 2.6 の調査、EmbeddingGemma 2 の構造、モデルを持ち込む方法の比較、設計案、検証方法 |

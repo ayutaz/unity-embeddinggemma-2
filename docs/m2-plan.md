@@ -2,11 +2,11 @@
 
 更新日: 2026-10-10。基準main: `c7d11897e43d374fbb87f3761f65fb3faec60c7c`（PR #8統合後）。
 **CI整備・UPM化はPR #6でmainへ統合済み。統合後のmain CIも全8 job成功。** PR #1〜#4のWindows EditorのM1は完了した。
-GitHub側のmain保護も設定・再確認済み。M2全体は進行中で、検索サンプル・他環境・リリースは未完了。[パッケージ検証](m2-package-validation.md)を参照。
+GitHub側のmain保護も設定・再確認済み。M2全体は進行中。検索サンプルはPR側で実装し、Windows実モデル4条件が合格した。画面操作・新規consumer再現・他環境・リリースは未完了。[パッケージ検証](m2-package-validation.md)を参照。
 [現在の状態](status.md)でPRと証拠の対応を確認し、[M1完了検証](m1-completion-validation.md)を既存の基準としてテキスト検索サンプル、モデル準備手順、他環境検証、配布を進める。
 
 利用者向け一覧の1（検索サンプル）と2（モデル準備手順）を実装中。[個別の実装計画](m2-search-plan.md) / [検証記録](m2-search-validation.md) / [モデル準備手順](model-preparation.md)を参照。
-検索基盤PR #10のCIは成功。サンプルのEditMode / PlayMode契約は合格したが、Sentis実モデル4条件・画面操作・新規checkout再現はまだ完了していない。これらが揃うまで1 / 2の作業完了とはしない。
+検索基盤PR #10とサンプル・手順PR #11のCIは全8 job成功。サンプルのEditMode / PlayMode契約と、Sentis実モデル4条件（fp32 / Float16重み × CPU / GPUCompute、全queryの全順位）が合格した。画面操作・新規consumerの実モデル再現は進行中。これらが揃うまで1 / 2の作業完了とはしない。PR #9 → #10 → #11は未統合で、mainの機能とは区別する。
 
 ## 現在地
 
@@ -23,14 +23,14 @@ GitHub側のmain保護も設定・再確認済み。M2全体は進行中で、�
 | --- | --- | --- | --- |
 | 0 | OSS開発基盤: CIの必須判定とmain保護 | 文書だけのPRも含めCI判定が完了する。失敗・必要jobの未実行を成功扱いにしない。PR経由、必須check、force push / 削除の制限をGitHub側で確認 | 完了。保護を再確認、PR #6 / #8統合済み、統合後mainの全8 job成功 |
 | 1 | UPM構成へ移行 | package manifest、明示的な依存、Runtime / Tests / Samples / 文書を整理。既存API契約とGUIDを維持し、重複assemblyやUnityEditor参照を持ち込まない | 完了。PR #6統合済み、新規consumerのローカルフォルダ導入・契約29件合格。Git URL検証と公開は6で扱う |
-| 2 | テキスト検索サンプル | 文書を事前埋め込みし、queryとのcosineで順位表示。固定入力のPython参照順位と一致。モデル未準備・不正入力・実行失敗を表示し、終了時にリソース解放 | 実装中。順位基盤PR #10・Python実モデル参照のCI成功、UI・準備・解放の契約は合格。Sentis4条件・画面操作が残る |
-| 3 | モデル準備・配布手順 | CIで固定revisionから生成、hash監査、取得・配置・読み込み・更新の手順を整備。新規checkoutとサンプル導入で再現 | サンプル向け取得・監査・Editor変換・配置・更新手順とCLI導入を実装中。新規checkoutの実モデル再現が残る |
+| 2 | テキスト検索サンプル | 文書を事前埋め込みし、queryとのcosineで順位表示。固定入力のPython参照順位と一致。モデル未準備・不正入力・実行失敗を表示し、終了時にリソース解放 | PR #10 / #11で実装・CI成功。UI・準備・解放の契約とWindows Sentis4条件が合格。画面入力・操作記録が残る |
+| 3 | モデル準備・配布手順 | CIで固定revisionから生成、hash監査、取得・配置・読み込み・更新の手順を整備。新規checkoutとサンプル導入で再現 | PR #11で手順・変換メニュー・CLI導入・互換モデルキャッシュ監査を実装。新規checkoutから空consumerへの導入・配置監査済み。consumer内の変換・実モデル検索・操作再現が残る |
 | 4 | 環境・runner・実機の確保 | macOS Editor、iOS / Androidのtoolchain・実機・GPU API・ライセンス・署名条件を確認し、実行できる組み合わせを記録 | 早期に調査。必要環境は未確認 |
 | 5 | 各環境の実モデル検証と測定 | 下の環境表を埋め、精度・実行backend・ロード / 初回 / 定常時間・メモリを記録。移行後Windowsの回帰も確認 | 移行後Windowsの導入・契約・M1 / API回帰済み。保存・量子化・全ベンチ再測定、サンプル、他環境は残る。1〜4に依存 |
 | 6 | リリース準備と配布 | clean projectから版固定で導入、サンプル起動、手順・ライセンス・CHANGELOGを確認。必要環境の合格後にリリース用PRと配布を行う | 1〜5に依存、未着手 |
 
-0 / 1は完了した。次は2を中心に3と4の準備を進め、2 / 3 / 4 → 5 → 6の順に小さいPRへ分割する。
-検索サンプル以降は未着手または準備段階。今後も作業ブランチからPRを提出し、mergeは依頼があるまで行わない。
+0 / 1は完了した。直近は2の画面操作 → 3の新規consumer再現 → 検証記録・手順の確定 → PR依存順の統合・統合後CI。続いて4の環境確保 → 5の実測 → 6のリリースへ進む。
+今後も作業ブランチからPRを提出し、mergeは依頼された範囲でCI・差分・競合を確認して行う。
 
 ## 直近のPR分割と受け渡し
 
@@ -55,7 +55,7 @@ Packages/com.ayutaz.embeddinggemma/
   package.json
   Runtime/
   Tests/Editor/
-  Samples~/README.md  # 状態説明のみ。TextSearch/は後続実装
+  Samples~/TextSearch/  # PR #11で導入可能。モデル重みは別途準備
   Documentation~/
   README.md
   CHANGELOG.md
@@ -83,7 +83,7 @@ UI操作で文書準備 → query入力 → 結果表示 → 終了まで確認�
 
 | 環境 | 現状 | M2で必要な確認 |
 | --- | --- | --- |
-| Windows Editor | M1完了。UPM移行後の別consumer導入・契約29件、元プロジェクトのM1 / API CPU / GPUCompute回帰済み | Git URL導入、保存・量子化・全測定の再確認、サンプルの回帰 |
+| Windows Editor | M1完了。UPM移行後の別consumer導入・契約29件、元プロジェクトのM1 / API回帰済み。検索サンプルはPR側で保存済み2形式 × CPU / GPUComputeの全順位合格 | サンプル画面操作・新規consumer実モデル再現、Git URL導入、全測定の再確認 |
 | macOS Editor | 未実行 | 使用機種 / OS / GPU APIを記録し、実モデルCPU / GPUComputeの精度と測定 |
 | iOS Player | 未実行、toolchain / 実機未確認 | IL2CPP・stripping・モデル配置を含むbuild、実機CPU / GPUCompute実行、精度と測定 |
 | Android Player | 未実行、toolchain / 実機未確認 | ABI / graphics API・モデル配置を含むbuild、実機CPU / GPUCompute実行、精度と測定 |

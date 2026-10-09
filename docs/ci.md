@@ -1,7 +1,8 @@
 # CI と開発手順
 
 更新日: 2026-10-09。基準main: `8146107`。
-PR #6で全PRのCIとUPM監査を実装中。mainへのworkflow反映はPRのmerge待ち。
+PR #6の全PRのCIとUPM監査は実装・検証済み。確認したhead `8a585bc` の全8チェックが成功し、mainへのworkflow反映はPRのmerge待ち。
+文書のみのPR #7も全8 job成功後に未マージで閉じた。[現在の状態](status.md)を参照。
 GitHub側のmain保護は設定済み。M1のWindows実測は [完了検証](m1-completion-validation.md)、UPM移行の結果は [パッケージ検証](m2-package-validation.md)を参照。
 
 ## 全PRの必須CI
@@ -24,7 +25,9 @@ Secretsは渡さず、`pull_request_target`は使わない。外部forkの実行
 導入前のpaths filter付きworkflowでは文書のみPRにcheckが発行されなかった。
 PR #6がmainへ統合されるまで、古いmainから作成された文書PRではRequired CIが未発行になる。
 保護を外して通さず、新workflowを含むPRの統合後に対象PRを最新mainへ更新する。
-PR #6は文書PR #5の変更も含む。
+PR #6は文書PR #5の変更も含み、重複する#5は未マージで閉じた。
+PR #7はPR #6のブランチをbaseにした実PRで、Markdown 1ファイル・6行追加だけでもRequired CIを含む全8 jobが実行・成功した。
+検証後に閉じており、mainへ統合したPRではない。
 
 ## main保護とPR運用
 
@@ -85,9 +88,11 @@ macOS / iOS / Androidのbuild・実機・測定は [M2計画](m2-plan.md)の後�
 | PR #4実モデル | [37801226486](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37801226486)、Python全15件照合 |
 | CI入口導入 `8122a13` | [37809737222](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37809737222)、Python・lint・実モデル・Required CI成功。UPM監査の追加前 |
 | UPM実装 `b74180e` | [37811183097](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37811183097)、Python 4環境各102件、lint、実モデル15件、パッケージ監査、Required CIすべて成功 |
+| PR #6確認済みhead `8a585bc` | [37812870591](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37812870591)、全8 job成功、Python 4環境各102件、実モデル15件・最小cosine `0.9999998807907104`。checkout `9ccff937ae9fc675c12aee8e1533d08cc0502e9a` とheadのtree一致 |
+| 文書のみPR #7 `9633a1c` | [37813857997](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37813857997)、全8 job成功。Markdown 1ファイル・6行追加、baseは `feat/ci-upm-package`、検証後クローズ |
 
 過去の失敗・cancel・基盤導入の記録は [基盤履歴](m1-validation.md)と [API実装履歴](m1-runtime-validation.md)を保持する。
-PR #6の最終headはPRのChecksで確認し、上の過去runを今回の再実行として数えない。
+上の結果は各commitの実行記録。新しい文書PRの結果はそのPRのChecksで確認し、過去runを新しいheadの成功として数えない。
 
 ## ローカルの必要最小限の確認
 

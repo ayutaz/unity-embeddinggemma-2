@@ -2,6 +2,7 @@
 
 更新日: 2026-10-09。PR #6、ブランチ `feat/ci-upm-package`。
 実測したコード: `b74180ec8dcdce99faf88dc129a58904c50a7946`。基準main: `8146107`。
+確認済みPR head: `8a585bc634a210e5ffd9ceaa5d67b85f1c9316a3`。文書更新の新しいCIとこの過去実測を区別する。[現在の状態](status.md)を参照。
 対象は利用者向け残タスク一覧の1（CI / main保護）と2（UPM化）。
 **実装とWindows Editorの導入検証は完了。mainのworkflow / packageへの反映はPR merge待ち。**
 検索サンプル、他環境、公開リリースは今回の範囲に含めない。
@@ -10,7 +11,7 @@
 
 | 対象 | 確認済みの結果 |
 | --- | --- |
-| 全PR CI | paths filterなしの入口からPython・lint・実モデル参照・パッケージ監査を実行。集約Required CIは全4 jobのsuccessを要求 |
+| 全PR CI | paths filterなしの入口からPython・lint・実モデル参照・パッケージ監査を実行。集約Required CIは全4 jobのsuccessを要求。PR #6の全8チェック、文書のみPR #7の全8 job成功 |
 | main保護 | GitHub APIでPR必須、Actions App 15368のRequired CI必須、strict、管理者適用、force push / 削除禁止、会話解決・linear historyを読み戻し |
 | UPM | `com.ayutaz.embeddinggemma` / `0.1.0-pre.1`。Sentis 2.6.1 / Newtonsoft 3.2.2を直接依存として宣言 |
 | 既存ソース | Runtime・契約テストとmetaの19ファイルを元mainのGit blobと比較し一致。元のAssets側Runtimeは削除、assembly名・GUID維持 |
@@ -41,7 +42,13 @@
 CI導入時のrun [37809737222](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37809737222)は成功したが、UPM監査の追加前。
 UPM実装commitのrunは [37811183097](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37811183097)。
 Python 4環境各102件、lint、実モデル15件（最小cosine `0.9999998807907104`）、パッケージ監査、Required CIがすべて成功した。
-最終headとChecksの結果はPR本文に記録し、過去runを最終headの結果と混同しない。
+確認済みhead `8a585bc` の [run 37812870591](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37812870591)も同じ8 jobがすべて成功した。
+実際のcheckout `9ccff937ae9fc675c12aee8e1533d08cc0502e9a` とPR headのtree一致を確認済み。
+
+文書のみPRの実行証拠は [PR #7](https://github.com/ayutaz/unity-embeddinggemma-2/pull/7) / [run 37813857997](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37813857997)。
+baseは `feat/ci-upm-package`、headは `9633a1ca8d5f3a01eff427599187329c2447b68c`。
+差分は `docs/ci-docs-only-probe.md` 1ファイル・6行追加のみ。全8 job成功、Python4環境各102件、実モデル15件・同じ最小cosine、Required CI成功をログで確認した。
+結果をPR #6本文に記録し、検証用PR #7は未マージで閉じた。PR #6の全体diffを文書のみと扱った検証ではない。
 
 ## 別プロジェクトで再現
 
@@ -79,6 +86,7 @@ CLI起動待ちの問題は検証用ツールの制約として残し、パッ�
 
 ## 残作業
 
-PR #6のCIとレビューを確認してmainへ統合する（merge依頼が必要）。PR #5の文書変更もPR #6に含まれる。
+PR #6は確認したheadでCI成功・競合なし。merge依頼後にmainへ統合し、統合後のCIとpackage反映を確認する。
+PR #5の文書変更もPR #6に含まれ、#5は未マージで閉じた。文書のみの検証用PR #7もクローズ済み。
 その後は [M2計画](m2-plan.md)のテキスト検索サンプル、モデル配布手順、macOS / iOS / Android、リリースへ進む。
 `Samples~`には現状説明だけを置き、未実装の検索シーンをPackage Managerへ登録しない。

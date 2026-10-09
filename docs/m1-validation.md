@@ -1,11 +1,12 @@
 # M1 検証記録
 
 日付: 2026-10-08
+現状参照の更新日: 2026-10-09。[現在の状態](status.md)でmain / PR / CIの対応を確認する。
 
 ## 最新の確認結果
 
 **Windows EditorのM1受け入れ検証は完了。** 保存・量子化・測定までの最新結果は [M1完了検証](m1-completion-validation.md)、進捗の基準は [M1計画](m1-plan.md)。以下は基盤実装時点の履歴として残す。
-基盤統合当時のPython全体は47件（既存33件 + ハーネス14件）で、当時のmain CIでも4環境すべて合格。現在は追加を含め各64件が合格している。
+基盤統合当時のPython全体は47件（既存33件 + ハーネス14件）。M1統合main `8146107` は各64件、PR #6の確認済みhead `8a585bc` は各102件が4環境すべて合格している。PR #6は未マージで、main保護はサーバー設定済み。
 後半の31件・33件の結果や draft PR の記録は修正過程の履歴として保持する。
 
 ### PR #1統合時のmain（2026-10-08の履歴）
@@ -161,14 +162,16 @@ uv run --locked pytest -q --junitxml=../artifacts/python-tests.xml
 - 作業ブランチ作成は実行環境の自動承認レビューに拒否された。ユーザーがブランチ / PR 運用を明示した後も拒否。
 - commit / push / PR 作成 / Actions 起動は未実施。`main` への push は行っていない。
 
-## 未検証・結果待ち
+## 基盤実装当時の未検証・結果待ち（履歴）
+
+この節はPR #1の時点を指す。後続PR #3 / #4で配置・実モデル照合・保存・量子化・測定まで完了した。
 
 - Unity 6000.3.16f1 のローカル起動・依存解決・packages-lock 更新は完了。実モデルの配置と数値照合が残る。
 - Unity acceptance tests はコンパイル済み、参照未配置の red を確認済み。実データによる照合と green は未確認。
 - 実モデルの CPU / GPUCompute 推論と、全 15 ケースの cosine >= 0.999。
 - `.sentis` 保存、量子化、精度・メモリ・時間の測定。
 
-M1 は未完了。47件の Python 単体テストと Python 実モデル export の合格でも、Sentis・GPU の一致を代替しない。
+この時点のM1は未完了だった。47件のPython単体テストとPython実モデルexportの合格だけでは、Sentis・GPUの一致を代替しない。
 
 ## 続行時の export 互換性修正（履歴）
 
@@ -219,4 +222,4 @@ uv run --locked pytest -q --junitxml=../artifacts/python-tests.xml
 33 passed in 14.59s
 ```
 
-実モデル / Unity / GPU の検証は引き続き未実行であり、M1 は未完了。
+権限変更前のこの時点では実モデル / Unity / GPUは未実行で、M1は未完了だった。後続の完了結果は冒頭と [M1完了検証](m1-completion-validation.md)を参照。

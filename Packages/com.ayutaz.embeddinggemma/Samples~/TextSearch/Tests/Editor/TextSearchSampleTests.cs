@@ -56,10 +56,12 @@ namespace EmbeddingGemma.Samples.Tests
             Assert.That(sample.Search(" \n "), Is.False);
             Assert.That(sample.Error, Is.Not.Empty);
             Assert.That(sample.Results, Is.Empty);
+            Assert.That(sample.Status, Does.Not.StartWith("検索結果 "), "A failed search must not keep the previous successful result count.");
             Assert.That(provider.Queries, Is.EqualTo(1));
             provider.FailQuery = true;
             Assert.That(sample.Search("cat"), Is.False);
             Assert.That(sample.Error, Does.Contain("query inference failed"));
+            Assert.That(sample.Status, Does.Not.StartWith("検索結果 "));
             sample.ReleaseDocuments();
             Assert.That(sample.IsReady, Is.False);
             Assert.That(provider.Disposals, Is.EqualTo(1));

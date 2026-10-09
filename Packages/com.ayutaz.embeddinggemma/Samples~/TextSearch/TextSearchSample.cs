@@ -90,7 +90,12 @@ namespace EmbeddingGemma.Samples
                 Status = $"検索結果 {results.Length} 件 / {Backend}";
                 return true;
             }
-            catch (Exception exception) { Error = "検索に失敗: " + exception.Message; return false; }
+            catch (Exception exception)
+            {
+                Status = "検索できませんでした。";
+                Error = "検索に失敗: " + exception.Message;
+                return false;
+            }
         }
 
         public void ReleaseDocuments()

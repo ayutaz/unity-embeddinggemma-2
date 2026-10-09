@@ -110,7 +110,21 @@ artifact の保持期間は3日。失効した場合は CI で再生成する。
 後続 PR #3 のブランチで実モデル成果物の監査・配置が完了。空文字例外を修正後、
 `--suite m1` は3件すべて、`--suite runtime` は両backendの2件すべて合格した。skip / failed / inconclusiveは0。
 各backendの全15ケースでfp32一致を確認し、C#単体契約24件も合格。詳細は [ランタイム検証記録](m1-runtime-validation.md)。
-基盤は PR #1 で main `60f906d` に統合済み。統合後の main CI（run `37758476415`）で既存33件とハーネス14件を合わせた47件が4環境で合格。
-参照成果物の取得候補・期限・ソース対応と、次の保存・量子化・測定は [M1 計画](m1-plan.md) を参照。
+続くPR #4では `--suite completion` の1件でfp32 / Float16重み・CPU / GPUCompute全60比較と180定常測定値が合格し、C#単体契約は30件合格した。
+PR #1〜#4はmain `8146107`へ統合済み。統合後のmain CI（run `37801650704`）は4環境各64件合格。
+保存・量子化・測定とソース対応は [M1完了検証](m1-completion-validation.md)、次のUPM移行・サンプル・他環境検証は [M2計画](m2-plan.md)を参照。
 クラウドUnity workflowはSecretsが必要なLinux CPUの手動補助検証のみ。M1のWindows CPU/GPUCompute合格はこのローカルハーネスで確認する。
 詳細な履歴は [検証記録](m1-validation.md)を参照。
+
+## UPM移行後の契約テスト
+
+PR #6でRuntimeとモデル不要の契約29件を `Packages/com.ayutaz.embeddinggemma/` へ移行した。
+実モデルfixtureと測定契約1件は検証プロジェクトの `Assets/Tests/Editor/` に残す。上記m1 / runtime / completionスコープは変わらない。
+パッケージ側の契約は次のassemblyを明示して実行する。
+
+```powershell
+& artifacts/uloop/bin/uloop.exe --project-path . run-tests --filter-type assembly --filter-value EmbeddingGemma.Package.Editor.Tests --test-mode EditMode --unsaved-changes fail
+```
+
+新規consumerの作成と同じassemblyの検証は [UPM検証](m2-package-validation.md)を参照。
+起動時もPythonハーネスを使うと、子プロセスへの `ALLUSERSPROFILE` 補完が適用される。

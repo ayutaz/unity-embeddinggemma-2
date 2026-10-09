@@ -3,8 +3,8 @@
 更新日: 2026-10-09。対象はWindows Editor / Unity 6000.3.16f1 / Sentis 2.6.1。
 
 **M1のWindows Editor受け入れ条件はすべて合格した。** PR #1〜#3で基盤・参照配置・推論APIを統合し、[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)で保存・Float16重み量子化・性能とメモリ測定を追加した。
-実測コードは `329da925b01f7c9cb0b4d604055f0b9dc214c5c4`。実装の基準mainは `1f0e580d276831a6c7dd20bef7ec41fac5dacc72`。
-PR #4の最終head・CI・統合状態はPR本文とChecksを参照する。
+実測コードは `329da925b01f7c9cb0b4d604055f0b9dc214c5c4`。PR #4は2026-10-09 00:32:44 JSTに統合済みで、現在の基準mainは `8146107aa77904050c6235866c0cf79ecc80034c`。
+mainの37ファイルのソースhashは実測レポートと一致する。最終PRとmainのCIは [完了検証記録](m1-completion-validation.md)を参照。
 
 ## 受け入れ条件と証拠
 
@@ -56,18 +56,18 @@ Float16は保存する重みの精度であり、全演算のfp16化・速度改
 
 ## 次の作業
 
-1. PR #4の最終head・CI・差分・実測ソースの対応を監査して統合する。ユーザーの「M1の最後まで」の範囲で実施。
-2. M2の詳細計画: UPM構成、テキスト検索サンプル、配布手順、macOS Editor / iOS / Androidの精度・速度・メモリ検証。
-3. M3で画像モデルとGPU前処理、M4で音声モデルとGPU前処理・モダリティ横断検索。
+1. PR #6に実装した全PRの必須CIとUPM移行をmainへ統合する。GitHub側のmain保護は設定済み。[パッケージ検証](m2-package-validation.md)を参照。
+2. [M2詳細計画](m2-plan.md)に沿ってテキスト検索サンプル、配布手順、macOS Editor / iOS / Androidの精度・速度・メモリ検証を進める。
+3. M2の後にM3で画像モデルとGPU前処理、M4で音声モデルとGPU前処理・モダリティ横断検索。
 
-main保護のサーバー設定と、全PRで起動する必須CIの整合は開発基盤の別作業として残る。
+main保護のサーバー設定は完了。全PRで起動する必須CIはPR #6のmain統合待ち。
 クラウドUnity workflowはLinux CPUの任意手動補助検証で未実行。Secrets未登録はローカルM1の妨げではなく、Linuxや他環境を合格扱いにしない。
 
 ## 開発・再実行規則
 
 - TDD: テスト → 意図した失敗の実行確認 → 最小実装 → green。
 - Pythonはtools/のuvのみ。モデル取得・参照生成・変換・重いPython実行はActionsを優先し、実GPUは既存ローカルEditor / uloopを利用。
-- mainへの直接pushは禁止。作業ブランチ・PRを使い、今回以外のmergeは依頼があるまで行わない。
+- mainへの直接pushは禁止。作業ブランチ・PRを使い、mergeは依頼があるまで行わない。
 - モデル・大きいログはGit管理外。Git LFSを使わない。再生成手順と小さい数値要約を残す。
 - 参照artifactの保持は3日。失効・モデル生成コード・依存・入力条件の変更時はCI再生成し、新しいsource SHA / hashを監査する。
 - 再実行: [uloopハーネス](automation.md)、[保存・推論API](runtime-api.md)、[完了作業計画](m1-completion-plan.md)。

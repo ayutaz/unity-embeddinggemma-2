@@ -4,10 +4,10 @@
 - 実装・計画の更新日: 2026-10-09
 - 関連: [ゴール](goal.md) / [新規性調査](embeddinggemma-2-unity-novelty.md)
 
-> text-only 参照生成・Core ATen export・uloop ハーネスの基盤は PR #1 で main `60f906d` に統合済み。main CI では Python 4環境各47件が合格。
-> 実モデルのPython参照生成 / 保存済みexportの全15ケース照合は最終 PR CI で成功（run `37755304407`、最小cosine 0.9999998808）。
-> PR #3は統合済み。PR #4で`.sentis`保存・再読み込み、Float16重み量子化、CPU / GPUCompute精度と測定まで合格した。[M1完了検証](m1-completion-validation.md)を参照。
-> 詳細計画は [M1 計画](m1-plan.md)、実行済みの証拠は [検証記録](m1-validation.md)を参照。
+> PR #1〜#4はmain `8146107`へ統合済み。mainのPython CIは4環境各64件合格。
+> 最終PR #4のPython参照生成 / 保存済みexport全15件照合も成功（run `37801226486`、最小cosine 0.9999998808）。
+> Windows Editorで`.sentis`保存・再読み込み、Float16重み量子化、CPU / GPUCompute精度と測定までM1完了。[M1完了検証](m1-completion-validation.md)を参照。
+> 次は [M2計画](m2-plan.md)。以下の外部仕様・方式比較は2026-10-07の調査を基礎とし、画像・音声の設計案を実装済みとは扱わない。
 
 ## 要約
 

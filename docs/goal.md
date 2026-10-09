@@ -9,7 +9,7 @@
 統合後mainの [CI run 37964228515](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37964228515)は全8 job成功、Python4環境各123件・実モデルPython照合M1 15件 + 検索10件が合格。
 PR #6のCI整備・UPM移行はmainへ反映済み、GitHub側のmain保護も設定・再確認済み。
 文書のみのPR #7も全8 jobが成功し、未マージで閉じた。PR #5の文書変更はPR #6へ含め、#5は閉じた。
-次は [M2計画](m2-plan.md)の検索サンプル、モデル準備手順、他環境検証、配布を進める。M2全体の受け入れは未完了。
+検索サンプルとモデル準備手順はWindows consumer再現を含め確認し、PR #11で統合済み。次は [M2計画](m2-plan.md)の他環境検証、Git URL導入、配布を進める。M2全体の受け入れは未完了。
 最新のmain / PRの区別は [現在の状態](status.md)、導入と回帰の証拠は [パッケージ検証](m2-package-validation.md)を参照。
 M1の証拠は [M1計画](m1-plan.md)、[完了検証記録](m1-completion-validation.md)を参照。
 リポジトリの公開と、M2 の UPM パッケージ / サンプルのリリースは別の段階として扱う。

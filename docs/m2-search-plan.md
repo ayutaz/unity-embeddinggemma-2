@@ -4,13 +4,13 @@
 
 ## 2026-10-10の現在地
 
-検証基準mainは`be791e00a1b344c5453f70037d7116184169c17f`。PR #9（計画）と#10（検索基盤）は統合済みで、統合後CIも成功。PR #11（サンプル・モデル準備）はmainをbaseとするPR。最新の統合状況はGitHubを参照。
+検証基準mainは`758cb04f407724a62326256f51792fb66f82c72d`。PR #9（計画）・#10（検索基盤）・#11（サンプル・モデル準備）は統合済み。PR #11の最終head CI run 37974713580と統合後main CI run 37975026704はともに全8 job成功。
 
 | 段階 | 現在の状態 | 残る受け入れ確認 |
 | --- | --- | --- |
 | A | mainへ統合済み。固定6文書 / 4queryの参照生成・全順位・同点ID順・hash監査を実装 | 完了。統合後CI run 37964228515成功 |
-| B | PR #11で実装。Windows実モデル4条件は4 passed / failed 0 / skip 0、全順位一致。実際のGame View入力イベントで準備・日本語 / 英語検索・空入力・解放・モデル欠落を確認し画像を保存 | PR #11の残変更に対するCIと統合後CI |
-| C | 別checkoutから短いパスの空consumerへ導入。依存解決・契約38件・sample 18件・モデル変換とhash監査、改善後の実モデル4 passed / skip 0・全順位一致・CLI完了応答、CPUの日英検索・空入力・解放を確認 | 従来の中断履歴と未解決ログを維持。PR / 統合後CIはGitHub参照 |
+| B | PR #11で統合。Windows実モデル4条件は4 passed / failed 0 / skip 0、全順位一致。Game View入力で準備・日英検索・空入力・解放・モデル欠落を確認し画像を保存 | 完了。最終headと統合後CI全8 job成功 |
+| C | 別checkoutから短いパスの空consumerへ導入。依存解決・契約38件・sample 18件・モデル変換とhash監査、改善後の実モデル4 passed / skip 0・全順位一致・CLI完了応答、CPUの日英検索・空入力・解放を確認 | 完了。PR #11統合済み。従来の中断履歴と未解決ログを維持 |
 
 実モデルの数値は[検証記録](m2-search-validation.md)と[Windows結果](results/m2-search-root-windows-20261010.json)を参照。fp32 / Float16重みの両方をCPU / GPUComputeで保存済みモデルから読み、各条件で6文書 + 4queryをPython参照へ照合した。
 

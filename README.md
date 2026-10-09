@@ -11,9 +11,9 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 
 > **2026-10-10: M2のCI整備・UPM化をmainへ統合済み（PR #6・#8）**: テキストRuntimeを `com.ayutaz.embeddinggemma` の開発版UPMへ移行しました。
 > 全PRで実行するCIとパッケージ監査を追加し、GitHub側ではmainのPR必須・Required CI必須・force push / 削除禁止を設定済みです。
-> 検証基準main `be791e0` の [CI run 37964228515](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37964228515) は全8 job成功、Pythonは4環境各123件・実モデルPython照合M1 15件 + 検索10件合格です。計画更新PR #9と検索基盤PR #10も統合済みです。
+> PR #11統合後の検証基準main `758cb04` の [CI run 37975026704](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975026704) は全8 job成功。Python4環境・実モデルPython照合・lint・パッケージ監査を確認しました。
 > 新規UnityプロジェクトへのUPM導入・契約29件と、元プロジェクトの実モデルCPU / GPU回帰が成功しています。
-> **検索サンプルとモデル準備手順をPR #11で追加しました。** Windows Sentisではfp32 / Float16重み × CPU / GPUComputeの4条件が合格し、固定6文書 / 4queryの全順位がPython参照と一致しました。元プロジェクトの日本語 / 英語検索・エラー表示・解放も画面入力で確認しています。
+> **検索サンプルとモデル準備手順はPR #11でmainへ統合済みです。** Windows Sentisではfp32 / Float16重み × CPU / GPUComputeの4条件が合格し、固定6文書 / 4queryの全順位がPython参照と一致しました。元プロジェクトの日本語 / 英語検索・エラー表示・解放も画面入力で確認しています。
 > 新規consumerでも実モデル4 passed / failed 0 / skipped 0 / inconclusive 0とCLI完了応答、日英検索・空入力・解放を確認しました。準備キャッシュの再利用は単回測定203秒 → 175秒。停止時のallocationログとfont警告は別記しています。他環境・Git URL導入・リリースは残っています。[現在の状態](docs/status.md) / [検索の計画](docs/m2-search-plan.md) / [検証記録](docs/m2-search-validation.md)を参照してください。
 
 ## ゴール

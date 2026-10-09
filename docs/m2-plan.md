@@ -1,6 +1,6 @@
 # M2 詳細計画と残作業
 
-更新日: 2026-10-10。基準main: `be791e00a1b344c5453f70037d7116184169c17f`（PR #10統合後）。
+更新日: 2026-10-10。検証基準main: `758cb04f407724a62326256f51792fb66f82c72d`（PR #11統合後）。
 **CI整備・UPM化はPR #6でmainへ統合済み。統合後のmain CIも全8 job成功。** PR #1〜#4のWindows EditorのM1は完了した。
 GitHub側のmain保護も設定・再確認済み。検索基盤はPR #10でmainへ統合済み。PR #11の検索サンプルとモデル手順は、Windowsの元プロジェクト・新規consumerで実モデル4条件と画面操作、CLI完了応答を確認した。M2全体の他環境・Git URL導入・リリースは残る。[検証記録](m2-search-validation.md)を参照。
 [現在の状態](status.md)でPRと証拠の対応を確認し、[M1完了検証](m1-completion-validation.md)を既存の基準としてテキスト検索サンプル、モデル準備手順、他環境検証、配布を進める。
@@ -14,7 +14,7 @@ Sentis実モデル4条件は両Windowsプロジェクトで合格。consumerのC
 - `TextEmbedder` はquery / document / raw、同期・メインスレッド、batch 1 / length 128 / 768次元、CPU / GPUComputeを扱う。
 - `TextModelFile` はfp32 / Float16重みの保存・再読み込みを実装済み。Windows Editorで両形式・両backend全15件が合格。
 - Runtime asmdefはSentisと `Unity.Newtonsoft.Json` を参照する。現在のlockでNewtonsoftは3.2.2。uloop、URP、2D関連パッケージは検証プロジェクト側の構成であり、配布Runtimeの依存には持ち込まない。
-- 現在のmain CI [run 37964228515](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37964228515)は全8 job成功。Ubuntu / Windows × Python 3.13 / 3.14各123件、実モデルPython照合M1 15件 + 検索10件が合格。macOS / iOS / AndroidとPlayerでの実モデル実行は未検証。
+- PR #11統合後mainの[CI run 37975026704](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975026704)は全8 job成功。Ubuntu / Windows × Python 3.13 / 3.14、実モデルPython照合、lint・パッケージ監査が合格。macOS / iOS / AndroidとPlayerでの実モデル実行は未検証。
 - mainはbranch protection設定済み。PRとRequired CIを管理者にも要求し、force push / 削除を禁止。全PRのCI入口とパッケージ監査はmainへ統合済み。クラウドUnityはLinux CPUの任意手動補助検証で未実行、2026-10-10確認時にSecrets / Variablesは未登録。
 
 ## 作業順序と完了条件
@@ -29,7 +29,7 @@ Sentis実モデル4条件は両Windowsプロジェクトで合格。consumerのC
 | 5 | 各環境の実モデル検証と測定 | 下の環境表を埋め、精度・実行backend・ロード / 初回 / 定常時間・メモリを記録。移行後Windowsの回帰も確認 | 移行後Windowsの導入・契約・M1 / API回帰済み。保存・量子化・全ベンチ再測定、サンプル、他環境は残る。1〜4に依存 |
 | 6 | リリース準備と配布 | clean projectから版固定で導入、サンプル起動、手順・ライセンス・CHANGELOGを確認。必要環境の合格後にリリース用PRと配布を行う | 1〜5に依存、未着手 |
 
-0 / 1に加え、2 / 3の実装・Windows consumer再現・手順確認を終えた。PR #11の統合と統合後CIはGitHub参照。続いて4の環境確保 → 5の実測 → 6のリリースへ進む。hash確認の負荷と未解決allocation / fontログも次の測定で追跡する。
+0〜3の実装・Windows consumer再現・手順確認を終え、PR #11の統合と統合後CI全8 job成功を確認した。続いて4の環境確保 → 5の実測 → 6のリリースへ進む。hash確認の負荷と未解決allocation / fontログも次の測定で追跡する。
 今後も作業ブランチからPRを提出し、mergeは依頼された範囲でCI・差分・競合を確認して行う。
 
 ## 直近のPR分割と受け渡し

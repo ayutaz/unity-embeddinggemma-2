@@ -7,7 +7,7 @@
 
 Unity 6000.3.16f1で、Package Managerの「Add package from disk」からこのパッケージの `package.json` を指定します。
 Git URLの指定形式は [Unity公式手順](https://docs.unity3d.com/6000.3/Documentation/Manual/upm-git.html)に沿っています。
-`<commit-sha>` はパッケージを含む40桁commitに置き換えます。検索APIを含むmainのソース例は `be791e00a1b344c5453f70037d7116184169c17f` です。Text SearchサンプルはPR #11のソースに含まれます。
+`<commit-sha>` はパッケージを含む40桁commitに置き換えます。検索APIとText Searchサンプルを含むmainのソース例は `758cb04f407724a62326256f51792fb66f82c72d`（PR #11統合後）です。Git URLのEditor導入は後続検証で、ここは指定形式の例です。
 このcommitの指定と、Git URL導入をEditorで実行済みであることは区別します。
 公開tagはまだありません。
 

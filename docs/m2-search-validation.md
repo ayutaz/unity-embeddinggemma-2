@@ -88,7 +88,7 @@ consumerのGame View入力イベントでCPU準備、日本語 / 英語検索、
 
 ## 未完了の確認
 
-- PR #11と統合後CIの結果はGitHubのPR / Actionsを参照。実装head `c6ab65e`のCI run 37973032211は全8 job成功。文書・証跡の最終commitは別途CIで確認する。
+- PR #11は2026-10-10 03:41:24 JSTにcommit `758cb04`へ統合済み。最終head `8c80526`のCI run 37974713580、統合後main CI run 37975026704は全8 job成功。統合treeは最終headと一致。文書更新にUnityを再実行していない。
 - hash確認の高速化、再現しなかったallocationログとfont警告の切り分け。
 - macOS / iOS / Android・Git URL導入・公開リリースは後続で未検証。
 

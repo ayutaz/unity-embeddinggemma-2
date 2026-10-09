@@ -12,7 +12,7 @@ namespace EmbeddingGemma
         public string Title { get; }
         public SearchDocument(string id, string text, string title = null)
         {
-            if (id == null || !Regex.IsMatch(id, "^[a-z0-9][a-z0-9_-]*$"))
+            if (id == null || !Regex.IsMatch(id, "\\A[a-z0-9][a-z0-9_-]*\\z"))
                 throw new ArgumentException("Use a lowercase ASCII document ID.", nameof(id));
             if (string.IsNullOrWhiteSpace(text)) throw new ArgumentException("Document text is required.", nameof(text));
             Id = id; Text = text; Title = title;

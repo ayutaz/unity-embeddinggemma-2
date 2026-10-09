@@ -10,6 +10,13 @@
     "com.unity.nuget.newtonsoft-json": "3.2.2"
   },
   "keywords": ["embedding", "text", "sentis"],
+  "samples": [
+    {
+      "displayName": "Text Search",
+      "description": "Search a small Japanese/English corpus using a separately prepared Sentis model.",
+      "path": "Samples~/TextSearch"
+    }
+  ],
   "author": {
     "name": "ayutaz",
     "url": "https://github.com/ayutaz"

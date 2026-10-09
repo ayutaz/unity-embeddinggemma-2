@@ -7,4 +7,6 @@
 - Sentis 2.6.1 / Newtonsoft JSON 3.2.2の直接依存を明示。
 - モデル、計測fixture、開発用自動操作ツールは配布対象に含めない。
 - Windows Unity 6000.3.16f1の別consumerでローカルフォルダ依存の解決・compile・契約29件成功。元の検証プロジェクトで実モデルCPU / GPUCompute回帰も成功。
-- 2026-10-10にPR #6をmainへ統合済み。公開tag、検索サンプル、Git URLのEditor導入、macOS / iOS / Androidの受け入れは未完了。
+- 2026-10-10にPR #6をmainへ統合済み。公開tag、Git URLのEditor導入、macOS / iOS / Androidの受け入れは未完了。
+- PR #10で固定文書のcosine検索、同点ID順、所有リソースを解放する検索sessionをmainへ統合。PR #11でText Searchサンプル、明示的なモデル準備・hash監査・配置・更新手順と、検証済みキャッシュの再利用を追加。
+- Windowsの元プロジェクトと新規consumerでfp32 / Float16重み × CPU / GPUComputeの固定全順位・ベクトル一致、CLI 4 passed / skip 0と日英画面操作を確認。

@@ -1,0 +1,737 @@
+{
+  "harnessSuccess": true,
+  "cliTestCountsVerified": true,
+  "codeSource": "c6ab65e30db79f15014cc0e80b269fa6f42e12b6",
+  "origin": "Separate checkout and initially empty short-path consumer. Python, Unity dependency and CI artifact caches reused. Consumer persisted across interruption and optimization; not a second empty-cache install.",
+  "importedSampleVerification": "All imported sample source text matches c6ab65e checkout, after normalizing CRLF/LF. Checkout advanced from original fc57171; runtime source unchanged.",
+  "previousInterruptedAttempt": "m2-search-consumer-windows-20261010.json",
+  "preparation": {
+    "success": true,
+    "error": "",
+    "sourceCommit": "2edb272f17a38c7af210474345c35f391fd6955c",
+    "searchSourceCommit": "13f194266162d2a728b2b2a0da9e9e58ae314ff6",
+    "unityVersion": "6000.3.16f1",
+    "completedUtc": "2026-10-09T18:22:02.0842322Z",
+    "modelSha256": "92968480724ef7838cbd7d7b7cfd6a8d6d5105bb937f8a9907e965805a7651c8",
+    "files": [
+      {
+        "name": "model-fp32.sentis",
+        "sha256": "8488d70f2d636a34bfe2a64c1d7b9d3eb3fce70c4fb9e27d32b698090c8fb373",
+        "bytes": 1095598044
+      },
+      {
+        "name": "model-float16.sentis",
+        "sha256": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819",
+        "bytes": 553775500
+      },
+      {
+        "name": "tokenizer.json",
+        "sha256": "25975a936201b81402a3b867d5c462cf10808bb96759f97fe9aefecbb11c49df",
+        "bytes": 32170775
+      }
+    ]
+  },
+  "tests": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-09T18:27:22.5620769Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 4,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 4,
+    "XmlPath": null
+  },
+  "harnessElapsedSeconds": 86.1642174,
+  "numericReferenceResults": {
+    "success": true,
+    "startedUtc": "2026-10-09T18:26:25.5202007Z",
+    "completedUtc": "2026-10-09T18:27:22.505146Z",
+    "unity": "6000.3.16f1",
+    "os": "Windows 11  (10.0.22631)",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphicsApi": "Direct3D12",
+    "modelRevision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "referenceSource": "13f194266162d2a728b2b2a0da9e9e58ae314ff6",
+    "modelSource": "2edb272f17a38c7af210474345c35f391fd6955c",
+    "conditions": [
+      {
+        "success": true,
+        "precision": "fp32",
+        "backend": "CPU",
+        "error": "",
+        "minimumCosine": 0.9999999999981735,
+        "documentCount": 6,
+        "queryCount": 4,
+        "queries": [
+          {
+            "id": "query-cat-ja",
+            "ranking": [
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.7473304110670193
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.7248598257649412
+              },
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.5659783338053531
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.5659783338053531
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.5122136955441852
+              },
+              {
+                "document_id": "doc-space-en",
+                "score": 0.4919055925521205
+              }
+            ]
+          },
+          {
+            "id": "query-space-en",
+            "ranking": [
+              {
+                "document_id": "doc-space-en",
+                "score": 0.7798648539191194
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.7117977046604552
+              },
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.5516260573160966
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.5516260573160966
+              },
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.5359168734597249
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.5263622875663185
+              }
+            ]
+          },
+          {
+            "id": "query-recipe-ja",
+            "ranking": [
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.8117594303975944
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.8117594303975944
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.5771714890936261
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.5589211719750438
+              },
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.5229029672034823
+              },
+              {
+                "document_id": "doc-space-en",
+                "score": 0.5080021140957824
+              }
+            ]
+          },
+          {
+            "id": "query-cat-en",
+            "ranking": [
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.7958340504855802
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.716784992965655
+              },
+              {
+                "document_id": "doc-space-en",
+                "score": 0.530673954808166
+              },
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.5133201274905753
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.5133201274905753
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.5030712413662828
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "success": true,
+        "precision": "fp32",
+        "backend": "GPUCompute",
+        "error": "",
+        "minimumCosine": 0.999999999999512,
+        "documentCount": 6,
+        "queryCount": 4,
+        "queries": [
+          {
+            "id": "query-cat-ja",
+            "ranking": [
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.7473303426040513
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.7248598136856715
+              },
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.5659783895424063
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.5659783895424063
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.5122136388969601
+              },
+              {
+                "document_id": "doc-space-en",
+                "score": 0.4919057124303446
+              }
+            ]
+          },
+          {
+            "id": "query-space-en",
+            "ranking": [
+              {
+                "document_id": "doc-space-en",
+                "score": 0.7798648642603759
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.7117976097640415
+              },
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.5516260511443223
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.5516260511443223
+              },
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.5359167231874132
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.5263622798476042
+              }
+            ]
+          },
+          {
+            "id": "query-recipe-ja",
+            "ranking": [
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.8117594395513761
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.8117594395513761
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.5771715142352556
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.5589210756342383
+              },
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.5229028996267017
+              },
+              {
+                "document_id": "doc-space-en",
+                "score": 0.5080020903058801
+              }
+            ]
+          },
+          {
+            "id": "query-cat-en",
+            "ranking": [
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.7958339796363999
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.7167849951108329
+              },
+              {
+                "document_id": "doc-space-en",
+                "score": 0.5306740243407113
+              },
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.5133201512608726
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.5133201512608726
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.5030711836112948
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "success": true,
+        "precision": "float16",
+        "backend": "CPU",
+        "error": "",
+        "minimumCosine": 0.9999999999982625,
+        "documentCount": 6,
+        "queryCount": 4,
+        "queries": [
+          {
+            "id": "query-cat-ja",
+            "ranking": [
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.7473302795875995
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.724859700631836
+              },
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.5659783691962434
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.5659783691962434
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.51221360768319
+              },
+              {
+                "document_id": "doc-space-en",
+                "score": 0.4919055607135568
+              }
+            ]
+          },
+          {
+            "id": "query-space-en",
+            "ranking": [
+              {
+                "document_id": "doc-space-en",
+                "score": 0.7798648329763939
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.7117976477931458
+              },
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.5516260641509965
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.5516260641509965
+              },
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.5359166787462596
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.5263623545799622
+              }
+            ]
+          },
+          {
+            "id": "query-recipe-ja",
+            "ranking": [
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.81175945764406
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.81175945764406
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.5771715624538548
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.5589211598843629
+              },
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.522902837334879
+              },
+              {
+                "document_id": "doc-space-en",
+                "score": 0.508002178560356
+              }
+            ]
+          },
+          {
+            "id": "query-cat-en",
+            "ranking": [
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.7958340039005826
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.7167849857428491
+              },
+              {
+                "document_id": "doc-space-en",
+                "score": 0.5306740074114046
+              },
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.5133202779748385
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.5133202779748385
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.5030712796865222
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "success": true,
+        "precision": "float16",
+        "backend": "GPUCompute",
+        "error": "",
+        "minimumCosine": 0.9999999999994984,
+        "documentCount": 6,
+        "queryCount": 4,
+        "queries": [
+          {
+            "id": "query-cat-ja",
+            "ranking": [
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.7473303435039038
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.7248598069272855
+              },
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.5659783804528246
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.5659783804528246
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.512213678390191
+              },
+              {
+                "document_id": "doc-space-en",
+                "score": 0.49190570545080414
+              }
+            ]
+          },
+          {
+            "id": "query-space-en",
+            "ranking": [
+              {
+                "document_id": "doc-space-en",
+                "score": 0.7798648887130949
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.7117976440516569
+              },
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.5516260665635233
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.5516260665635233
+              },
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.5359167338954286
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.5263623564371217
+              }
+            ]
+          },
+          {
+            "id": "query-recipe-ja",
+            "ranking": [
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.8117594480270712
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.8117594480270712
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.5771714946660856
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.5589211127208285
+              },
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.5229029082709717
+              },
+              {
+                "document_id": "doc-space-en",
+                "score": 0.50800213180254
+              }
+            ]
+          },
+          {
+            "id": "query-cat-en",
+            "ranking": [
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.7958339521031985
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.7167849794342989
+              },
+              {
+                "document_id": "doc-space-en",
+                "score": 0.5306739895772238
+              },
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.5133201332652632
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.5133201332652632
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.5030712012218482
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "ui": {
+    "input": "EditorGUIUtility.QueueGameViewInputEvent actual mouse/key events; no direct sample action calls",
+    "backend": "CPU",
+    "observations": {
+      "prepared": {
+        "Result": "文書 6 件を準備済み / CPU / ready=True / backend=CPU / query=猫を健康に育てるには / error=",
+        "Logs": [
+          "Execution completed successfully"
+        ],
+        "CompilationErrors": [],
+        "ErrorMessage": "",
+        "Error": "",
+        "UpdatedCode": null,
+        "DiagnosticsSummary": null,
+        "Diagnostics": [],
+        "EditorPlaying": true,
+        "Success": true
+      },
+      "japanese": {
+        "Result": "検索結果 6 件 / CPU / 猫を健康に育てるには / doc-cat-en,doc-cat-ja,doc-recipe-a,doc-recipe-b,doc-space-ja,doc-space-en / error=",
+        "Logs": [
+          "Execution completed successfully"
+        ],
+        "CompilationErrors": [],
+        "ErrorMessage": "",
+        "Error": "",
+        "UpdatedCode": null,
+        "DiagnosticsSummary": null,
+        "Diagnostics": [],
+        "EditorPlaying": true,
+        "Success": true
+      },
+      "english": {
+        "Result": "検索結果 6 件 / CPU / How do scientists explore planets? / doc-space-en,doc-space-ja,doc-recipe-a,doc-recipe-b,doc-cat-en,doc-cat-ja / error=",
+        "Logs": [
+          "Execution completed successfully"
+        ],
+        "CompilationErrors": [],
+        "ErrorMessage": "",
+        "Error": "",
+        "UpdatedCode": null,
+        "DiagnosticsSummary": null,
+        "Diagnostics": [],
+        "EditorPlaying": true,
+        "Success": true
+      },
+      "blank": {
+        "Result": "検索できませんでした。 / queryLength=0 / ready=True / results=0 / error=検索に失敗: Query text is required.\r\nParameter name: query",
+        "Logs": [
+          "Execution completed successfully"
+        ],
+        "CompilationErrors": [],
+        "ErrorMessage": "",
+        "Error": "",
+        "UpdatedCode": null,
+        "DiagnosticsSummary": null,
+        "Diagnostics": [],
+        "EditorPlaying": true,
+        "Success": true
+      },
+      "release": {
+        "Result": "モデルと文書を準備してください。 / ready=False / results=0 / error=",
+        "Logs": [
+          "Execution completed successfully"
+        ],
+        "CompilationErrors": [],
+        "ErrorMessage": "",
+        "Error": "",
+        "UpdatedCode": null,
+        "DiagnosticsSummary": null,
+        "Diagnostics": [],
+        "EditorPlaying": true,
+        "Success": true
+      }
+    },
+    "screenshots": [
+      {
+        "path": "docs/screenshots/m2-search-consumer-japanese.png",
+        "bytes": 188300,
+        "sha256": "44c9c5fb4062ebe251dbf24826768965474669c26faa324658a637f0d6f1928d"
+      },
+      {
+        "path": "docs/screenshots/m2-search-consumer-english.png",
+        "bytes": 189005,
+        "sha256": "76f2435422d994056409413493297539d5d7645074e72aa0e39cfb70ccb7f81e"
+      }
+    ],
+    "stop": {
+      "IsPlaying": false,
+      "IsPaused": false,
+      "Changed": true,
+      "WasAlreadyStopped": false,
+      "ResumedFromPause": false,
+      "BlockedByCompileErrors": false,
+      "BlockedByUnsavedChanges": false,
+      "CompileErrorCount": 0,
+      "CompileErrors": [],
+      "Message": "Play mode stopped",
+      "Warning": ""
+    },
+    "restore": {
+      "Result": "False",
+      "Logs": [
+        "Execution completed successfully"
+      ],
+      "CompilationErrors": [],
+      "ErrorMessage": "",
+      "Error": "",
+      "UpdatedCode": null,
+      "DiagnosticsSummary": null,
+      "Diagnostics": [],
+      "EditorPlaying": false,
+      "Success": true
+    }
+  },
+  "unresolvedLogs": {
+    "firstStop": {
+      "TotalCount": 1,
+      "DisplayedCount": 1,
+      "LogType": "All",
+      "MaxCount": 100,
+      "SearchText": "",
+      "IncludeStackTrace": false,
+      "Logs": [
+        {
+          "Type": "Log",
+          "Message": "Leak Detected : Persistent allocates 1 individual allocations. To find out more please enable 'Preferences > Jobs > Leak Detection Level > Enabled With Stack Trace' and reproduce the leak again.",
+          "StackTrace": null
+        }
+      ],
+      "Success": true
+    },
+    "reproduction": "CPU prepare, explicit release, Stop with EnabledWithStackTrace; allocation log did not recur; font warning remains; cause undetermined",
+    "repeatedStop": {
+      "TotalCount": 1,
+      "DisplayedCount": 1,
+      "LogType": "All",
+      "MaxCount": 100,
+      "SearchText": "",
+      "IncludeStackTrace": true,
+      "Logs": [
+        {
+          "Type": "Warning",
+          "Message": "Deleting invalid font reference.",
+          "StackTrace": "UnityEditor.ScriptReloadProperties:Load (UnityEditor.ScriptReloadProperties)"
+        }
+      ],
+      "Success": true
+    },
+    "restore": {
+      "Result": "False",
+      "Logs": [
+        "Execution completed successfully"
+      ],
+      "CompilationErrors": [],
+      "ErrorMessage": "",
+      "Error": "",
+      "UpdatedCode": null,
+      "DiagnosticsSummary": null,
+      "Diagnostics": [],
+      "EditorPlaying": false,
+      "Success": true
+    }
+  }
+}

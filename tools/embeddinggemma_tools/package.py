@@ -4,6 +4,7 @@ import argparse
 import json
 from pathlib import Path
 import re
+import shutil
 
 PACKAGE_NAME = "com.ayutaz.embeddinggemma"
 ROOT = Path(__file__).resolve().parents[2]
@@ -71,13 +72,16 @@ def audit_package(package):
     return {"success": not errors, "package": manifest.get("name"), "version": manifest.get("version"), "errors": errors}
 
 
-def create_consumer(project, package, *, git_revision=None, automation=False):
+def create_consumer(project, package, *, git_revision=None, automation=False, sample=False):
     project, package = Path(project), Path(package).resolve()
     report = audit_package(package)
     if not report["success"]:
         raise ValueError("package audit failed: " + "; ".join(report["errors"]))
     if git_revision is not None and not re.fullmatch(r"[0-9a-f]{40}", git_revision):
         raise ValueError("git_revision must be a full lowercase commit SHA")
+    sample_path = package / "Samples~/TextSearch"
+    if sample and not (sample_path / "TextSearch.unity").is_file():
+        raise ValueError("TextSearch sample must be available before creating its consumer")
     if project.exists() and (not project.is_dir() or any(project.iterdir())):
         raise ValueError("consumer project must be empty; existing projects are never overwritten")
     source = (f"https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/{PACKAGE_NAME}#{git_revision}"
@@ -91,6 +95,16 @@ def create_consumer(project, package, *, git_revision=None, automation=False):
         (project / directory).mkdir(parents=True, exist_ok=True)
     (project / "Packages/manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
     (project / "ProjectSettings/ProjectVersion.txt").write_text("m_EditorVersion: 6000.3.16f1\n", encoding="utf-8", newline="\n")
+    if automation:
+        # Isolate validation from an ambient Accelerator endpoint in Editor preferences.
+        # Ordinary consumer projects retain Unity's defaults.
+        (project / "ProjectSettings/EditorSettings.asset").write_text(
+            "%YAML 1.1\n%TAG !u! tag:unity3d.com,2011:\n--- !u!159 &1\n"
+            "EditorSettings:\n  m_ObjectHideFlags: 0\n  serializedVersion: 15\n"
+            "  m_CacheServerMode: 2\n  m_CacheServerEnableDownload: 0\n"
+            "  m_CacheServerEnableUpload: 0\n", encoding="utf-8", newline="\n")
+    if sample:
+        shutil.copytree(sample_path, project / "Assets/EmbeddingGemmaTextSearch")
     return manifest
 
 
@@ -100,11 +114,13 @@ def main(argv=None):
     parser.add_argument("--consumer", type=Path)
     parser.add_argument("--git-revision")
     parser.add_argument("--automation", action="store_true")
+    parser.add_argument("--sample", action="store_true", help="Import TextSearch into a new empty consumer")
     args = parser.parse_args(argv)
     report = audit_package(args.package)
     if report["success"] and args.consumer:
         try:
-            create_consumer(args.consumer, args.package, git_revision=args.git_revision, automation=args.automation)
+            create_consumer(args.consumer, args.package, git_revision=args.git_revision, automation=args.automation,
+                            sample=args.sample)
             report["consumer"] = str(args.consumer.resolve())
         except (OSError, ValueError) as exc:
             report["success"] = False

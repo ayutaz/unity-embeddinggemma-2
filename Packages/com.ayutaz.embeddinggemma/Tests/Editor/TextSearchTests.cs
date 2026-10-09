@@ -73,6 +73,14 @@ namespace EmbeddingGemma.Tests
             Assert.Throws<ArgumentException>(() => TextSearchIndex.Cosine(new[] { 1f }, new[] { 1f, 0f }));
         }
 
+        [TestCase("a\n")]
+        [TestCase("A")]
+        [TestCase("")]
+        public void DocumentIdsMustMatchTheEntireLowercaseAsciiIdentifier(string id)
+        {
+            Assert.Throws<ArgumentException>(() => new SearchDocument(id, "text"));
+        }
+
         [Test]
         public void SessionOwnsProviderAndDisposesOnFailureReplacementAndExit()
         {

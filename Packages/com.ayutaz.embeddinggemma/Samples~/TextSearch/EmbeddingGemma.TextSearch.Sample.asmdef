@@ -1,0 +1,5 @@
+{
+  "name": "EmbeddingGemma.TextSearch.Sample",
+  "references": ["EmbeddingGemma.Runtime", "Unity.InferenceEngine"],
+  "autoReferenced": true
+}

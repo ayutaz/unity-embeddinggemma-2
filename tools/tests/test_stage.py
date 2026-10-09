@@ -1,5 +1,6 @@
 import hashlib
 import json
+import shutil
 from pathlib import Path
 
 import pytest
@@ -134,3 +135,36 @@ def test_search_audit_failure_never_replaces_existing_model(search_artifact, tmp
         stage_reference(search_artifact, project, SOURCE, search=True)
     assert model.read_bytes() == b"previous model"
     assert json.loads((project / "artifacts/m1-stage.json").read_text())["success"] is False
+
+
+@pytest.mark.parametrize("fault", [None, "version", "tokenizer", "source", "rank"])
+def test_cached_model_can_use_separately_audited_compatible_search_reference(search_artifact, tmp_path, fault):
+    overlay = tmp_path / "search-only"
+    overlay.mkdir()
+    for name in ("search-reference.json", "export-validation.json"):
+        shutil.copyfile(search_artifact / name, overlay / name)
+    report_path = overlay / "export-validation.json"
+    reference_path = overlay / "search-reference.json"
+    report = json.loads(report_path.read_text())
+    reference = json.loads(reference_path.read_text())
+    report["metadata"]["source_commit"] = "c" * 40
+    reference["metadata"]["source_commit"] = "c" * 40
+    if fault == "version": report["metadata"]["versions"] = {"torch": "different"}
+    elif fault == "tokenizer": report["sha256"]["tokenizer.json"] = "0" * 64
+    elif fault == "source": reference["metadata"]["source_commit"] = "d" * 40
+    elif fault == "rank": reference["queries"][0]["ranking"].reverse()
+    reference_path.write_text(json.dumps(reference))
+    report["sha256"]["search-reference.json"] = hashlib.sha256(reference_path.read_bytes()).hexdigest()
+    report_path.write_text(json.dumps(report))
+    project = tmp_path / "consumer"
+    if fault:
+        with pytest.raises(ValueError):
+            stage_reference(search_artifact, project, SOURCE, search=True, search_source=overlay, search_source_commit="c" * 40)
+        assert not (project / "Assets/M1Generated/model.pt2").exists()
+    else:
+        result = stage_reference(search_artifact, project, SOURCE, search=True, search_source=overlay, search_source_commit="c" * 40)
+        assert result["source_commit"] == SOURCE
+        assert result["search_source_commit"] == "c" * 40
+        assert (project / "artifacts/m1/search-reference.json").read_bytes() == reference_path.read_bytes()
+        assert (project / "artifacts/m1/search-export-validation.json").read_bytes() == report_path.read_bytes()
+        assert result["sha256"]["model.pt2"] == hashlib.sha256((project / "Assets/M1Generated/model.pt2").read_bytes()).hexdigest()

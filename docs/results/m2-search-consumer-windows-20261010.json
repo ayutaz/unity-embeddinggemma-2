@@ -1,0 +1,554 @@
+{
+  "harnessSuccess": false,
+  "cliTestCountsVerified": false,
+  "codeSource": "fc57171c139c015371d06c32937e3898e3129ee7",
+  "origin": "empty consumer created from separate checkout; local Python/dependency/artifact caches reused",
+  "numericResultsCompletedUtc": "2026-10-09T17:20:28.8329486Z",
+  "transportFailure": "UNITY_DISCONNECTED_AFTER_ACCEPT after user stopped Unity during post-test domain reload",
+  "preparation": {
+    "success": true,
+    "error": "",
+    "sourceCommit": "2edb272f17a38c7af210474345c35f391fd6955c",
+    "searchSourceCommit": "13f194266162d2a728b2b2a0da9e9e58ae314ff6",
+    "unityVersion": "6000.3.16f1",
+    "completedUtc": "2026-10-09T17:08:37.6895285Z",
+    "files": [
+      {
+        "name": "model-fp32.sentis",
+        "sha256": "8488d70f2d636a34bfe2a64c1d7b9d3eb3fce70c4fb9e27d32b698090c8fb373",
+        "bytes": 1095598044
+      },
+      {
+        "name": "model-float16.sentis",
+        "sha256": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819",
+        "bytes": 553775500
+      },
+      {
+        "name": "tokenizer.json",
+        "sha256": "25975a936201b81402a3b867d5c462cf10808bb96759f97fe9aefecbb11c49df",
+        "bytes": 32170775
+      }
+    ]
+  }
+,"numericReferenceResults":{
+    "success": true,
+    "startedUtc": "2026-10-09T17:18:50.8785636Z",
+    "completedUtc": "2026-10-09T17:20:28.8329486Z",
+    "unity": "6000.3.16f1",
+    "os": "Windows 11  (10.0.22631)",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphicsApi": "Direct3D12",
+    "modelRevision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "referenceSource": "13f194266162d2a728b2b2a0da9e9e58ae314ff6",
+    "modelSource": "2edb272f17a38c7af210474345c35f391fd6955c",
+    "conditions": [
+        {
+            "success": true,
+            "precision": "fp32",
+            "backend": "CPU",
+            "error": "",
+            "minimumCosine": 0.9999999999981735,
+            "documentCount": 6,
+            "queryCount": 4,
+            "queries": [
+                {
+                    "id": "query-cat-ja",
+                    "ranking": [
+                        {
+                            "document_id": "doc-cat-en",
+                            "score": 0.7473304110670193
+                        },
+                        {
+                            "document_id": "doc-cat-ja",
+                            "score": 0.7248598257649412
+                        },
+                        {
+                            "document_id": "doc-recipe-a",
+                            "score": 0.5659783338053531
+                        },
+                        {
+                            "document_id": "doc-recipe-b",
+                            "score": 0.5659783338053531
+                        },
+                        {
+                            "document_id": "doc-space-ja",
+                            "score": 0.5122136955441852
+                        },
+                        {
+                            "document_id": "doc-space-en",
+                            "score": 0.4919055925521205
+                        }
+                    ]
+                },
+                {
+                    "id": "query-space-en",
+                    "ranking": [
+                        {
+                            "document_id": "doc-space-en",
+                            "score": 0.7798648539191194
+                        },
+                        {
+                            "document_id": "doc-space-ja",
+                            "score": 0.7117977046604552
+                        },
+                        {
+                            "document_id": "doc-recipe-a",
+                            "score": 0.5516260573160966
+                        },
+                        {
+                            "document_id": "doc-recipe-b",
+                            "score": 0.5516260573160966
+                        },
+                        {
+                            "document_id": "doc-cat-en",
+                            "score": 0.5359168734597249
+                        },
+                        {
+                            "document_id": "doc-cat-ja",
+                            "score": 0.5263622875663185
+                        }
+                    ]
+                },
+                {
+                    "id": "query-recipe-ja",
+                    "ranking": [
+                        {
+                            "document_id": "doc-recipe-a",
+                            "score": 0.8117594303975944
+                        },
+                        {
+                            "document_id": "doc-recipe-b",
+                            "score": 0.8117594303975944
+                        },
+                        {
+                            "document_id": "doc-cat-ja",
+                            "score": 0.5771714890936261
+                        },
+                        {
+                            "document_id": "doc-space-ja",
+                            "score": 0.5589211719750438
+                        },
+                        {
+                            "document_id": "doc-cat-en",
+                            "score": 0.5229029672034823
+                        },
+                        {
+                            "document_id": "doc-space-en",
+                            "score": 0.5080021140957824
+                        }
+                    ]
+                },
+                {
+                    "id": "query-cat-en",
+                    "ranking": [
+                        {
+                            "document_id": "doc-cat-en",
+                            "score": 0.7958340504855802
+                        },
+                        {
+                            "document_id": "doc-cat-ja",
+                            "score": 0.716784992965655
+                        },
+                        {
+                            "document_id": "doc-space-en",
+                            "score": 0.530673954808166
+                        },
+                        {
+                            "document_id": "doc-recipe-a",
+                            "score": 0.5133201274905753
+                        },
+                        {
+                            "document_id": "doc-recipe-b",
+                            "score": 0.5133201274905753
+                        },
+                        {
+                            "document_id": "doc-space-ja",
+                            "score": 0.5030712413662828
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "success": true,
+            "precision": "fp32",
+            "backend": "GPUCompute",
+            "error": "",
+            "minimumCosine": 0.999999999999512,
+            "documentCount": 6,
+            "queryCount": 4,
+            "queries": [
+                {
+                    "id": "query-cat-ja",
+                    "ranking": [
+                        {
+                            "document_id": "doc-cat-en",
+                            "score": 0.7473303426040513
+                        },
+                        {
+                            "document_id": "doc-cat-ja",
+                            "score": 0.7248598136856715
+                        },
+                        {
+                            "document_id": "doc-recipe-a",
+                            "score": 0.5659783895424063
+                        },
+                        {
+                            "document_id": "doc-recipe-b",
+                            "score": 0.5659783895424063
+                        },
+                        {
+                            "document_id": "doc-space-ja",
+                            "score": 0.5122136388969601
+                        },
+                        {
+                            "document_id": "doc-space-en",
+                            "score": 0.4919057124303446
+                        }
+                    ]
+                },
+                {
+                    "id": "query-space-en",
+                    "ranking": [
+                        {
+                            "document_id": "doc-space-en",
+                            "score": 0.7798648642603759
+                        },
+                        {
+                            "document_id": "doc-space-ja",
+                            "score": 0.7117976097640415
+                        },
+                        {
+                            "document_id": "doc-recipe-a",
+                            "score": 0.5516260511443223
+                        },
+                        {
+                            "document_id": "doc-recipe-b",
+                            "score": 0.5516260511443223
+                        },
+                        {
+                            "document_id": "doc-cat-en",
+                            "score": 0.5359167231874132
+                        },
+                        {
+                            "document_id": "doc-cat-ja",
+                            "score": 0.5263622798476042
+                        }
+                    ]
+                },
+                {
+                    "id": "query-recipe-ja",
+                    "ranking": [
+                        {
+                            "document_id": "doc-recipe-a",
+                            "score": 0.8117594395513761
+                        },
+                        {
+                            "document_id": "doc-recipe-b",
+                            "score": 0.8117594395513761
+                        },
+                        {
+                            "document_id": "doc-cat-ja",
+                            "score": 0.5771715142352556
+                        },
+                        {
+                            "document_id": "doc-space-ja",
+                            "score": 0.5589210756342383
+                        },
+                        {
+                            "document_id": "doc-cat-en",
+                            "score": 0.5229028996267017
+                        },
+                        {
+                            "document_id": "doc-space-en",
+                            "score": 0.5080020903058801
+                        }
+                    ]
+                },
+                {
+                    "id": "query-cat-en",
+                    "ranking": [
+                        {
+                            "document_id": "doc-cat-en",
+                            "score": 0.7958339796363999
+                        },
+                        {
+                            "document_id": "doc-cat-ja",
+                            "score": 0.7167849951108329
+                        },
+                        {
+                            "document_id": "doc-space-en",
+                            "score": 0.5306740243407113
+                        },
+                        {
+                            "document_id": "doc-recipe-a",
+                            "score": 0.5133201512608726
+                        },
+                        {
+                            "document_id": "doc-recipe-b",
+                            "score": 0.5133201512608726
+                        },
+                        {
+                            "document_id": "doc-space-ja",
+                            "score": 0.5030711836112948
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "success": true,
+            "precision": "float16",
+            "backend": "CPU",
+            "error": "",
+            "minimumCosine": 0.9999999999982625,
+            "documentCount": 6,
+            "queryCount": 4,
+            "queries": [
+                {
+                    "id": "query-cat-ja",
+                    "ranking": [
+                        {
+                            "document_id": "doc-cat-en",
+                            "score": 0.7473302795875995
+                        },
+                        {
+                            "document_id": "doc-cat-ja",
+                            "score": 0.724859700631836
+                        },
+                        {
+                            "document_id": "doc-recipe-a",
+                            "score": 0.5659783691962435
+                        },
+                        {
+                            "document_id": "doc-recipe-b",
+                            "score": 0.5659783691962435
+                        },
+                        {
+                            "document_id": "doc-space-ja",
+                            "score": 0.51221360768319
+                        },
+                        {
+                            "document_id": "doc-space-en",
+                            "score": 0.4919055607135568
+                        }
+                    ]
+                },
+                {
+                    "id": "query-space-en",
+                    "ranking": [
+                        {
+                            "document_id": "doc-space-en",
+                            "score": 0.7798648329763939
+                        },
+                        {
+                            "document_id": "doc-space-ja",
+                            "score": 0.7117976477931458
+                        },
+                        {
+                            "document_id": "doc-recipe-a",
+                            "score": 0.5516260641509965
+                        },
+                        {
+                            "document_id": "doc-recipe-b",
+                            "score": 0.5516260641509965
+                        },
+                        {
+                            "document_id": "doc-cat-en",
+                            "score": 0.5359166787462596
+                        },
+                        {
+                            "document_id": "doc-cat-ja",
+                            "score": 0.5263623545799622
+                        }
+                    ]
+                },
+                {
+                    "id": "query-recipe-ja",
+                    "ranking": [
+                        {
+                            "document_id": "doc-recipe-a",
+                            "score": 0.81175945764406
+                        },
+                        {
+                            "document_id": "doc-recipe-b",
+                            "score": 0.81175945764406
+                        },
+                        {
+                            "document_id": "doc-cat-ja",
+                            "score": 0.5771715624538548
+                        },
+                        {
+                            "document_id": "doc-space-ja",
+                            "score": 0.5589211598843629
+                        },
+                        {
+                            "document_id": "doc-cat-en",
+                            "score": 0.522902837334879
+                        },
+                        {
+                            "document_id": "doc-space-en",
+                            "score": 0.508002178560356
+                        }
+                    ]
+                },
+                {
+                    "id": "query-cat-en",
+                    "ranking": [
+                        {
+                            "document_id": "doc-cat-en",
+                            "score": 0.7958340039005826
+                        },
+                        {
+                            "document_id": "doc-cat-ja",
+                            "score": 0.7167849857428491
+                        },
+                        {
+                            "document_id": "doc-space-en",
+                            "score": 0.5306740074114046
+                        },
+                        {
+                            "document_id": "doc-recipe-a",
+                            "score": 0.5133202779748385
+                        },
+                        {
+                            "document_id": "doc-recipe-b",
+                            "score": 0.5133202779748385
+                        },
+                        {
+                            "document_id": "doc-space-ja",
+                            "score": 0.5030712796865222
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "success": true,
+            "precision": "float16",
+            "backend": "GPUCompute",
+            "error": "",
+            "minimumCosine": 0.9999999999994984,
+            "documentCount": 6,
+            "queryCount": 4,
+            "queries": [
+                {
+                    "id": "query-cat-ja",
+                    "ranking": [
+                        {
+                            "document_id": "doc-cat-en",
+                            "score": 0.7473303435039038
+                        },
+                        {
+                            "document_id": "doc-cat-ja",
+                            "score": 0.7248598069272855
+                        },
+                        {
+                            "document_id": "doc-recipe-a",
+                            "score": 0.5659783804528246
+                        },
+                        {
+                            "document_id": "doc-recipe-b",
+                            "score": 0.5659783804528246
+                        },
+                        {
+                            "document_id": "doc-space-ja",
+                            "score": 0.512213678390191
+                        },
+                        {
+                            "document_id": "doc-space-en",
+                            "score": 0.49190570545080417
+                        }
+                    ]
+                },
+                {
+                    "id": "query-space-en",
+                    "ranking": [
+                        {
+                            "document_id": "doc-space-en",
+                            "score": 0.7798648887130949
+                        },
+                        {
+                            "document_id": "doc-space-ja",
+                            "score": 0.7117976440516569
+                        },
+                        {
+                            "document_id": "doc-recipe-a",
+                            "score": 0.5516260665635233
+                        },
+                        {
+                            "document_id": "doc-recipe-b",
+                            "score": 0.5516260665635233
+                        },
+                        {
+                            "document_id": "doc-cat-en",
+                            "score": 0.5359167338954286
+                        },
+                        {
+                            "document_id": "doc-cat-ja",
+                            "score": 0.5263623564371217
+                        }
+                    ]
+                },
+                {
+                    "id": "query-recipe-ja",
+                    "ranking": [
+                        {
+                            "document_id": "doc-recipe-a",
+                            "score": 0.8117594480270712
+                        },
+                        {
+                            "document_id": "doc-recipe-b",
+                            "score": 0.8117594480270712
+                        },
+                        {
+                            "document_id": "doc-cat-ja",
+                            "score": 0.5771714946660856
+                        },
+                        {
+                            "document_id": "doc-space-ja",
+                            "score": 0.5589211127208285
+                        },
+                        {
+                            "document_id": "doc-cat-en",
+                            "score": 0.5229029082709718
+                        },
+                        {
+                            "document_id": "doc-space-en",
+                            "score": 0.50800213180254
+                        }
+                    ]
+                },
+                {
+                    "id": "query-cat-en",
+                    "ranking": [
+                        {
+                            "document_id": "doc-cat-en",
+                            "score": 0.7958339521031985
+                        },
+                        {
+                            "document_id": "doc-cat-ja",
+                            "score": 0.7167849794342989
+                        },
+                        {
+                            "document_id": "doc-space-en",
+                            "score": 0.5306739895772238
+                        },
+                        {
+                            "document_id": "doc-recipe-a",
+                            "score": 0.5133201332652632
+                        },
+                        {
+                            "document_id": "doc-recipe-b",
+                            "score": 0.5133201332652632
+                        },
+                        {
+                            "document_id": "doc-space-ja",
+                            "score": 0.5030712012218482
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}}

@@ -7,7 +7,7 @@
 
 Unity 6000.3.16f1で、Package Managerの「Add package from disk」からこのパッケージの `package.json` を指定します。
 Git URLの指定形式は [Unity公式手順](https://docs.unity3d.com/6000.3/Documentation/Manual/upm-git.html)に沿っています。
-`<commit-sha>` はパッケージを含む40桁commitに置き換えます。mainへ統合したソースの例は `c7d11897e43d374fbb87f3761f65fb3faec60c7c` です。
+`<commit-sha>` はパッケージを含む40桁commitに置き換えます。検索APIを含むmainのソース例は `be791e00a1b344c5453f70037d7116184169c17f` です。Text SearchサンプルはPR #11のソースに含まれます。
 このcommitの指定と、Git URL導入をEditorで実行済みであることは区別します。
 公開tagはまだありません。
 
@@ -59,3 +59,11 @@ Float16重み保存は元のModelを変えません。保存と量子化は大�
 Windows Editorではfp32 / Float16重みの保存・ロードと両backend各15件を検証済みです。UPM移行後の全保存・量子化ベンチマークは再実行していません。
 読み取り専用の配置先へ保存しないでください。Player・macOS / iOS / Androidの保存API互換性は後続検証の対象です。
 Float16重みは全演算のfp16化や速度改善を保証しません。
+
+## テキスト検索サンプル
+
+このブランチには[Text Search](../Samples~/TextSearch/README.md)を含みます（PR #11で追加）。Package Managerでインポートし、モデルを明示的に準備してから`TextSearch.unity`を開きます。文書を事前埋め込みし、queryとのcosine順に表示します。同点は文書IDのordinal順です。
+
+`TextSearchIndex`は文書を一度だけ埋め込み、検索のたびにqueryを埋め込みます。空のqueryは拒否します。渡した`ITextEmbedder`は呼び出し側が所有します。`TextSearchSession`を使う場合はsessionが推論器を所有し、再準備やDisposeで解放します。
+
+Windowsの元プロジェクトと新規consumerでfp32 / Float16重み × CPU / GPUComputeの固定6文書 / 4queryの全順位が参照と一致し、CLI完了応答・日英検索・空入力・解放も確認しました。任意入力の品質や他環境の受け入れは別の検証対象です。

@@ -62,7 +62,7 @@ Float16重みは全演算のfp16化や速度改善を保証しません。
 
 ## テキスト検索サンプル
 
-このブランチには[Text Search](../Samples~/TextSearch/README.md)を含みます（PR #11で追加）。Package Managerでインポートし、モデルを明示的に準備してから`TextSearch.unity`を開きます。文書を事前埋め込みし、queryとのcosine順に表示します。同点は文書IDのordinal順です。
+パッケージには[Text Search](../Samples~/TextSearch/README.md)を含みます（PR #11でmainへ統合済み）。Package Managerでインポートし、モデルを明示的に準備してから`TextSearch.unity`を開きます。文書を事前埋め込みし、queryとのcosine順に表示します。同点は文書IDのordinal順です。
 
 `TextSearchIndex`は文書を一度だけ埋め込み、検索のたびにqueryを埋め込みます。空のqueryは拒否します。渡した`ITextEmbedder`は呼び出し側が所有します。`TextSearchSession`を使う場合はsessionが推論器を所有し、再準備やDisposeで解放します。
 

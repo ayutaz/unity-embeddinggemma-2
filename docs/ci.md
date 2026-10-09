@@ -1,7 +1,7 @@
 # CI と開発手順
 
-更新日: 2026-10-10。基準main: `c7d1189`。
-PR #6の全PRのCIとUPM監査はmain統合済み。PR #8も統合後、main `c7d1189` の全8 job成功を確認した。
+更新日: 2026-10-10。確認基準main: `4ee0cbb`（PR #12統合後）。
+CI・UPM監査・検索基盤・サンプル・準備最適化はmain統合済み。[CI run 37975720534](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975720534)の全8 job成功を確認した。
 文書のみのPR #7も全8 job成功後に未マージで閉じた。[現在の状態](status.md)を参照。
 GitHub側のmain保護は設定済み。M1のWindows実測は [完了検証](m1-completion-validation.md)、UPM移行の結果は [パッケージ検証](m2-package-validation.md)を参照。
 
@@ -14,7 +14,7 @@ GitHub側のmain保護は設定済み。M1のWindows実測は [完了検証](m1-
 | --- | --- | --- |
 | `python-tests.yml` / `python` | Ubuntu / Windows × Python 3.13 / 3.14、uvによるオフラインpytest | matrix全環境の成功が必要 |
 | `workflow-lint.yml` / `workflow-lint` | actionlint 1.7.12 / ShellCheck | 成功が必要 |
-| `model-reference.yml` / `model-reference` | 固定revisionの実モデル取得、Python参照生成、保存済み`.pt2`の全15件照合 | 成功が必要。Sentis実行の代わりにはしない |
+| `model-reference.yml` / `model-reference` | 固定revisionの実モデル取得、M1の15入力と検索6文書 / 4queryのPython参照生成・保存済み`.pt2`照合・検索順位確認 | 成功が必要。Sentis実行の代わりにはしない |
 | `package-validation.yml` / `package` | manifest・直接依存・Runtime参照・GUID・配布禁止ファイルの監査、別consumerのmanifest生成 | 成功が必要。Unityを実行した結果ではない |
 | `ci.yml` / `Required CI` | 上記4 jobの結果を `always()` で集約 | success以外、欠落、skipped、cancelled、不明値は失敗 |
 
@@ -54,7 +54,7 @@ CIの成功は自動merge・自動releaseを意味しない。モデル・大き
 batch 1 / length 128 / fp32の`.pt2`を生成し、保存済みexportをPython eagerと全15件比較する。閾値は0.999999。
 生成はtools/のuvで行い、失敗時の部分成果物を成功扱いにしない。開始時に以前の成功レポートを無効化する。
 
-3日保持のモデルartifactは `reference.json`、`tokenizer.json`、`model.pt2`、`export-validation.json`を含む。
+3日保持の `m1-reference-<checkout-SHA>` は `reference.json`、`search-reference.json`、`tokenizer.json`、`model.pt2`、`export-validation.json`を含む。軽量な `search-reference-<checkout-SHA>` は検索参照とexport報告のみを含む。互換モデルの再利用は[モデル準備手順](model-preparation.md)で生成元とhashを別々に監査する。
 pytestとパッケージ監査artifactは7日保持。失効時はActionsで再生成し、小さい数値要約と再現手順をGitへ残す。
 
 PRでは既定のmerge refをcheckoutする。`github.sha` / metadataのsource commitと、PR head SHAは区別する。
@@ -68,7 +68,7 @@ run URL、PR head、実際のcheckout SHA、model revision、ファイルhashを
 GameCI Actionの固定SHAはv4.4.0、CLIはv0.1.72に対応する。Docker経路はLinux対象。
 Windows / GPUの合格には数えず、設定の存在を実行実績として扱わない。
 
-2026-10-09時点でRepository Secrets / Variablesは未登録、クラウドEditor jobは未実行。
+2026-10-10確認時点でRepository Secrets / Variablesは未登録、クラウドEditor jobは未実行。
 旧自動workflowはSecrets不足でpreflight失敗し、Editorを開始していない。
 クラウド実行を利用する場合は [GameCI公式手順](https://game.ci/docs/github/test-runner/)に沿ってUnityライセンスを準備する。
 Secret値はソース・チャット・ログへ書かない。
@@ -90,6 +90,8 @@ macOS / iOS / Androidのbuild・実機・測定は [M2計画](m2-plan.md)の後�
 | PR #6確認済みhead `8a585bc` | [37812870591](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37812870591)、全8 job成功、Python 4環境各102件、実モデル15件・最小cosine `0.9999998807907104`。checkout `9ccff937ae9fc675c12aee8e1533d08cc0502e9a` とheadのtree一致 |
 | PR #6 / #8統合後main `c7d1189` | [37949804912](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37949804912)、pushイベントの全8 job成功、Python4環境各102件、実モデル15件・最小cosine `0.9999998807907104`、Required CI成功。Unity実行は含まない |
 | 文書のみPR #7 `9633a1c` | [37813857997](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37813857997)、全8 job成功。Markdown 1ファイル・6行追加、baseは `feat/ci-upm-package`、検証後クローズ |
+| PR #11統合後main `758cb04` | [37975026704](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975026704)、全8 job成功。検索サンプル・モデル準備・最適化を統合 |
+| PR #12統合後main `4ee0cbb` | [37975720534](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975720534)、全8 job成功。統合記録の文書更新。Unityの再実行ではない |
 
 過去の失敗・cancel・基盤導入の記録は [基盤履歴](m1-validation.md)と [API実装履歴](m1-runtime-validation.md)を保持する。
 上の結果は各commitの実行記録。新しい文書PRの結果はそのPRのChecksで確認し、過去runを新しいheadの成功として数えない。
@@ -104,4 +106,4 @@ uv run --locked python -m embeddinggemma_tools.package
 ```
 
 全Pythonテスト、モデル取得・変換は原則Actionsを使う。変更に必要な小さいred / greenだけローカルで確認する。
-新規consumerの作成・Unityでの導入検証は [パッケージ検証](m2-package-validation.md)を参照。
+新規consumerの初期UPM導入記録は [パッケージ検証](m2-package-validation.md)、現在の検索サンプル導入・再現は [モデル準備手順](model-preparation.md)を参照。

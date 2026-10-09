@@ -125,3 +125,17 @@ def test_repository_package_can_be_consumed_without_asset_runtime():
     assert PACKAGE_NAME in manifest["testables"]
     package = json.loads((ROOT / "Packages" / PACKAGE_NAME / "package.json").read_text())
     assert manifest["dependencies"][PACKAGE_NAME] == package["version"]
+
+
+def test_repository_sample_is_registered_and_can_be_imported_into_empty_consumer(tmp_path):
+    package = ROOT / "Packages" / PACKAGE_NAME
+    manifest = json.loads((package / "package.json").read_text())
+    assert manifest["samples"] == [{"displayName": "Text Search", "description": "Search a small Japanese/English corpus using a separately prepared Sentis model.", "path": "Samples~/TextSearch"}]
+    project = tmp_path / "consumer"
+    create_consumer(project, package, sample=True)
+    imported = project / "Assets/EmbeddingGemmaTextSearch"
+    assert (imported / "TextSearch.unity").is_file()
+    assert (imported / "TextSearchSample.cs").is_file()
+    assert (imported / "Resources/EmbeddingGemmaTextSearch/corpus.json").is_file()
+    assert (imported / "TextSearchSample.cs.meta").read_bytes() == (package / "Samples~/TextSearch/TextSearchSample.cs.meta").read_bytes()
+    assert not list(project.rglob("*.sentis"))

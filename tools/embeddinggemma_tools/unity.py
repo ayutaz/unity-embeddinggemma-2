@@ -28,15 +28,16 @@ def run_harness(project: Path, output: Path, cli: str, suite: str, *,
                 runner=subprocess.run, launch=False, timeout=900) -> dict:
     scopes = {"m1": ("M1ReferenceTests", 3, "m1_reference_passed"),
               "runtime": ("TextEmbedderReferenceTests", 2, "runtime_reference_passed"),
-              "completion": ("M1CompletionTests", 1, "m1_completion_passed")}
+              "completion": ("M1CompletionTests", 1, "m1_completion_passed"),
+              "search": ("TextSearchReferenceTests", 4, "search_reference_passed")}
     if suite not in ("compile", *scopes) or not 1 <= timeout <= 1200:
-        raise ValueError("suite must be compile/m1/runtime/completion and timeout between 1 and 1200 seconds")
+        raise ValueError("suite must be compile/m1/runtime/completion/search and timeout between 1 and 1200 seconds")
     project = project.resolve()
     version_file = project / "ProjectSettings/ProjectVersion.txt"
     version = next(line.split(":", 1)[1].strip() for line in version_file.read_text().splitlines()
                    if line.startswith("m_EditorVersion:"))
     output.mkdir(parents=True, exist_ok=True)
-    report = {"success": False, "m1_reference_passed": False, "runtime_reference_passed": False, "m1_completion_passed": False, "suite": suite,
+    report = {"success": False, "m1_reference_passed": False, "runtime_reference_passed": False, "m1_completion_passed": False, "search_reference_passed": False, "suite": suite,
               "project": str(project), "unity_version": version, "cli": cli,
               "started_at": datetime.now(timezone.utc).isoformat(), "steps": []}
     summary = output / "summary.json"
@@ -116,7 +117,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--project", type=Path, default=project)
     parser.add_argument("--uloop", default=str(project / "artifacts/uloop/bin/uloop.exe"))
-    parser.add_argument("--suite", choices=["compile", "m1", "runtime", "completion"], default="m1")
+    parser.add_argument("--suite", choices=["compile", "m1", "runtime", "completion", "search"], default="m1")
     parser.add_argument("--launch", action="store_true", help="Open the Editor and wait for readiness first")
     parser.add_argument("--timeout", type=int, default=900)
     parser.add_argument("--output", type=Path, default=project / "artifacts/unity-harness" /
@@ -127,6 +128,7 @@ def main(argv=None):
     print(json.dumps({"success": report["success"], "m1_reference_passed": report["m1_reference_passed"],
                       "runtime_reference_passed": report.get("runtime_reference_passed", False),
                       "m1_completion_passed": report.get("m1_completion_passed", False),
+                      "search_reference_passed": report.get("search_reference_passed", False),
                       "evidence": str(args.output.resolve()), "error": report.get("error")}, ensure_ascii=False))
     return 0 if report["success"] else 1
 

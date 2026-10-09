@@ -5,6 +5,9 @@
 GitHub側のmain保護も設定・再確認済み。M2全体は進行中で、検索サンプル・他環境・リリースは未完了。[パッケージ検証](m2-package-validation.md)を参照。
 [現在の状態](status.md)でPRと証拠の対応を確認し、[M1完了検証](m1-completion-validation.md)を既存の基準としてテキスト検索サンプル、モデル準備手順、他環境検証、配布を進める。
 
+利用者向け一覧の1（検索サンプル）と2（モデル準備手順）を実装中。[個別の実装計画](m2-search-plan.md) / [検証記録](m2-search-validation.md) / [モデル準備手順](model-preparation.md)を参照。
+検索基盤PR #10のCIは成功。サンプルのEditMode / PlayMode契約は合格したが、Sentis実モデル4条件・画面操作・新規checkout再現はまだ完了していない。これらが揃うまで1 / 2の作業完了とはしない。
+
 ## 現在地
 
 - Unity 6000.3.16f1 / Sentis 2.6.1。PR #6で公開APIを `Packages/com.ayutaz.embeddinggemma/Runtime/` へ移行。開発版 `0.1.0-pre.1`、未リリース。
@@ -20,8 +23,8 @@ GitHub側のmain保護も設定・再確認済み。M2全体は進行中で、�
 | --- | --- | --- | --- |
 | 0 | OSS開発基盤: CIの必須判定とmain保護 | 文書だけのPRも含めCI判定が完了する。失敗・必要jobの未実行を成功扱いにしない。PR経由、必須check、force push / 削除の制限をGitHub側で確認 | 完了。保護を再確認、PR #6 / #8統合済み、統合後mainの全8 job成功 |
 | 1 | UPM構成へ移行 | package manifest、明示的な依存、Runtime / Tests / Samples / 文書を整理。既存API契約とGUIDを維持し、重複assemblyやUnityEditor参照を持ち込まない | 完了。PR #6統合済み、新規consumerのローカルフォルダ導入・契約29件合格。Git URL検証と公開は6で扱う |
-| 2 | テキスト検索サンプル | 文書を事前埋め込みし、queryとのcosineで順位表示。固定入力のPython参照順位と一致。モデル未準備・不正入力・実行失敗を表示し、終了時にリソース解放 | 1に依存、未着手 |
-| 3 | モデル準備・配布手順 | CIで固定revisionから生成、hash監査、取得・配置・読み込み・更新の手順を整備。新規checkoutとサンプル導入で再現 | 既存のprepare / stage CLIとCI生成手順あり。サンプル向け配布手順・新規checkout再現は残る。1 / 2と並行可能 |
+| 2 | テキスト検索サンプル | 文書を事前埋め込みし、queryとのcosineで順位表示。固定入力のPython参照順位と一致。モデル未準備・不正入力・実行失敗を表示し、終了時にリソース解放 | 実装中。順位基盤PR #10・Python実モデル参照のCI成功、UI・準備・解放の契約は合格。Sentis4条件・画面操作が残る |
+| 3 | モデル準備・配布手順 | CIで固定revisionから生成、hash監査、取得・配置・読み込み・更新の手順を整備。新規checkoutとサンプル導入で再現 | サンプル向け取得・監査・Editor変換・配置・更新手順とCLI導入を実装中。新規checkoutの実モデル再現が残る |
 | 4 | 環境・runner・実機の確保 | macOS Editor、iOS / Androidのtoolchain・実機・GPU API・ライセンス・署名条件を確認し、実行できる組み合わせを記録 | 早期に調査。必要環境は未確認 |
 | 5 | 各環境の実モデル検証と測定 | 下の環境表を埋め、精度・実行backend・ロード / 初回 / 定常時間・メモリを記録。移行後Windowsの回帰も確認 | 移行後Windowsの導入・契約・M1 / API回帰済み。保存・量子化・全ベンチ再測定、サンプル、他環境は残る。1〜4に依存 |
 | 6 | リリース準備と配布 | clean projectから版固定で導入、サンプル起動、手順・ライセンス・CHANGELOGを確認。必要環境の合格後にリリース用PRと配布を行う | 1〜5に依存、未着手 |

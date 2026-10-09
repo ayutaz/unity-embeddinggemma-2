@@ -75,3 +75,12 @@ def test_main_protection_requires_pr_and_actions_check_for_admins_too():
     assert policy["required_linear_history"] is True
     assert policy["allow_force_pushes"] is False
     assert policy["allow_deletions"] is False
+
+
+def test_search_reference_can_be_downloaded_without_the_large_model():
+    workflow = load("model-reference.yml")
+    steps = workflow["jobs"]["reference"]["steps"]
+    artifact = next(step for step in steps if step.get("with", {}).get("name", "").startswith("search-reference-"))
+    assert artifact["with"]["path"].splitlines() == ["artifacts/m1/search-reference.json", "artifacts/m1/export-validation.json"]
+    assert artifact["with"]["retention-days"] == "3"
+    assert artifact["with"]["if-no-files-found"] == "error"

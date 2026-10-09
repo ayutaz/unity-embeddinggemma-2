@@ -1,0 +1,7 @@
+{
+  "name": "EmbeddingGemma.TextSearch.Sample.Editor.Tests",
+  "references": ["EmbeddingGemma.Runtime", "EmbeddingGemma.TextSearch.Sample", "EmbeddingGemma.TextSearch.Sample.Editor", "Unity.InferenceEngine"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "autoReferenced": false
+}

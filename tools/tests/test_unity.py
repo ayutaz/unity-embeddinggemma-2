@@ -79,6 +79,19 @@ def test_compile_only_is_explicitly_not_m1_verification(project, tmp_path):
     assert [call[0][3] for call in editor.calls] == ["compile", "get-logs"]
 
 
+@pytest.mark.parametrize("passed", [True, False])
+def test_search_scope_requires_all_four_precision_backend_conditions_without_skips(project, tmp_path, passed):
+    tests = {"Success": True, "TestCount": 4, "PassedCount": 4 if passed else 3,
+             "FailedCount": 0, "SkippedCount": 0 if passed else 1}
+    editor = EditorCLI(tests=tests)
+    report = run_harness(project, tmp_path / "evidence", "uloop.exe", "search", runner=editor)
+    assert report["success"] is passed
+    assert report["search_reference_passed"] is passed
+    assert report["m1_reference_passed"] is False
+    args = editor.calls[1][0]
+    assert args[args.index("--filter-value") + 1] == "EmbeddingGemma.Tests.TextSearchReferenceTests"
+
+
 def test_launch_progress_and_json_are_supported(project, tmp_path):
     editor = EditorCLI()
 

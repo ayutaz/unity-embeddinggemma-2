@@ -1,0 +1,102 @@
+# 検索サンプル用モデルの取得・変換・配置・更新
+
+対象: Unity 6000.3.16f1 / Sentis 2.6.1、固定`google/embeddinggemma-2` revision `914f7f89142e33e77833254d9c9b90c3cef7303b`。TextSearchの6文書 / 4queryとM1の15入力を使う。モデルをGit / LFSへコミットしない。
+
+モデル参照と`.pt2`の生成はActions、Sentisの`.sentis`変換と実GPU検証は認証済みEditorで行う。ローカル操作にGitHubのUnity Secretsは不要。Linux CPUの任意手動Unity workflowは別経路で、未実行を合格にしない。
+
+## 1. 成功したCI成果物を取得する
+
+新規checkoutでも最初に`tools/`で`uv sync --locked`を実行する。Pythonはuvだけを使う。
+最新の実装ブランチまたは統合後mainの`CI`で、Python・lint・model-reference・package・Required CIが成功したrunを選ぶ。PRのhead SHAと実際のcheckout SHAは異なる場合がある。
+
+リポジトリルートからPowerShellで実行する。`$runId`を選んだ成功runの番号に置き換える。
+
+```powershell
+$runId = <successful-run-id>
+gh run view $runId --repo ayutaz/unity-embeddinggemma-2
+$referenceName = gh api "repos/ayutaz/unity-embeddinggemma-2/actions/runs/$runId/artifacts" --jq '.artifacts[] | select(.name | startswith("m1-reference-")) | .name'
+$checkoutSha = $referenceName -replace '^m1-reference-', ''
+gh run view $runId --repo ayutaz/unity-embeddinggemma-2 --log | Select-String -SimpleMatch $checkoutSha
+gh run download $runId --repo ayutaz/unity-embeddinggemma-2 --name $referenceName --dir "artifacts/download/$runId"
+```
+
+checkoutログの40桁SHA、artifact名末尾のSHA、`export-validation.json`の`metadata.source_commit`が一致することを確認する。runが失敗・cancel・未完了、artifactがexpired、SHAが不一致なら使用しない。
+約1.1GBのモデルと約32MBのtokenizerを含む。`reference.json`、`search-reference.json`、`tokenizer.json`、`model.pt2`、`export-validation.json`が必要。
+
+## 2. 監査して配置する
+
+```powershell
+cd tools
+uv run --locked python -m embeddinggemma_tools.stage --source "../artifacts/download/$runId" --project .. --source-commit $checkoutSha --search
+```
+
+`stage --search`は固定revision・実際の生成SHA・入力条件・M1の15件・検索10件のexport cosine >= 0.999999・全順位・SHA-256を監査する。
+合格時に`Assets/M1Generated/model.pt2`と`artifacts/m1/`の参照・tokenizerを配置し、`artifacts/m1-stage.json`を保存する。不正な成果物では既存モデルを置き換えず、監査の成功を無効にする。
+配置成功はSentis推論の合格ではない。
+
+## 3. サンプルを導入し、Sentis形式へ変換する
+
+別のUnityプロジェクトでパッケージを導入し、Package Managerのサンプル一覧から**Text Search**をImportする。
+検証用に空のconsumerを作る場合は、リポジトリの`tools/`から次を使う。既存プロジェクトを上書きしない。
+
+```powershell
+uv run --locked python -m embeddinggemma_tools.package --consumer ../artifacts/m2-consumer --sample --automation
+uv run --locked python -m embeddinggemma_tools.stage --source "../artifacts/download/$runId" --project ../artifacts/m2-consumer --source-commit $checkoutSha --search
+```
+
+consumerをUnity 6000.3.16f1で開き、依存解決・compileの完了を確認する。上の`--automation`は検証用uloopだけを加える。
+起動方法と失敗ログの扱いは [自動操作手順](automation.md)。起動待ちが失敗しても、後続の成功と混ぜない。
+
+Editorの**Tools → EmbeddingGemma → Prepare Text Search Models**を実行する。
+このメニューは`stage --search`の成功記録と配置済みファイルのhashを読み戻し、`.pt2`をSentisでimportして保存する。モデルをダウンロードしない。
+
+```text
+Assets/StreamingAssets/EmbeddingGemmaTextSearch/
+  model-fp32.sentis
+  model-float16.sentis
+  tokenizer.json
+  preparation.json
+```
+
+`preparation.json`には成功 / 失敗、生成元SHA、Unity版、各ファイルのサイズとSHA-256を記録する。Float16は保存重みの形式であり、全演算fp16化や速度改善を意味しない。
+ルート検証プロジェクトではこの生成先をGit管理外にしている。別プロジェクトでもモデル・tokenizerをコミットしない設定を用意する。
+
+## 4. 検索を操作する
+
+インポートした`TextSearch.unity`を開き、Playする。検証用consumerでは`Assets/EmbeddingGemmaTextSearch/TextSearch.unity`。
+
+1. `.sentis`と`tokenizer.json`のパスを指定し、CPUまたはGPUComputeを選択する。
+2. **モデルと文書を準備**で6文書を一度だけ埋め込む。
+3. 検索文を入力し、**検索**で全6件の順位とcosineを表示する。
+4. **解放 / モデルを変更**で推論器を解放し、形式・backendを変更して再準備できる。
+5. Play停止・GameObject無効化時にも推論器を解放する。
+
+Float16重みを試す場合は`model-float16.sentis`を指定する。GPU非対応・モデル未準備・不正な入力・推論失敗は画面に表示し、CPUへ自動切り替えしない。
+同点は文書IDのordinal順。固定例の成功から任意の検索文の品質を保証しない。
+現在のサンプルは通常のファイルパスを同期読み込みする。Androidのjar内StreamingAssetsなどを含むPlayer配置は後続の端末検証で対応を確認する。
+
+## 5. 更新とartifact失効
+
+モデルrevision・生成コード・依存・入力条件を変更したらActionsで参照を再生成する。現在のstageは上記の固定revisionだけを受け入れ、勝手に別モデルへ更新しない。
+artifact保持は3日。失効した場合は`CI`を対象ブランチで再実行し、新しい成功runとcheckout SHAで取得・監査・準備する。
+再準備の前にサンプルでリソースを解放する。途中の準備失敗や以前の結果を新しい成功として扱わず、`preparation.json`・Console・監査結果を確認する。
+
+実モデルのWindows回帰には`uv run --locked python -m embeddinggemma_tools.unity --suite search --timeout 1200`を使う。
+4件（fp32 / Float16重み × CPU / GPUCompute）がすべてpassed、failed / skipped / inconclusive = 0の時だけ検索参照合格。
+結果は`artifacts/m2-search/results.json`とハーネス出力に分けて保存する。[検証記録](m2-search-validation.md)に実行済みの範囲を記載する。
+
+## 検証済みモデルを再利用する場合
+
+すでに成功runから取得した完全なモデル成果物がある場合は、新しい検索参照だけを`search-reference-<checkout-SHA>` artifactで取得できる。
+この小さいartifactは`search-reference.json`と`export-validation.json`を含み、重みとtokenizerを含まない。
+
+```powershell
+gh run download <successful-search-run-id> --repo ayutaz/unity-embeddinggemma-2 --name search-reference-<search-checkout-SHA> --dir artifacts/download/search-reference
+cd tools
+uv run --locked python -m embeddinggemma_tools.stage --source <cached-complete-artifact-directory> --source-commit <model-checkout-SHA> --search --search-source ../artifacts/download/search-reference --search-source-commit <search-checkout-SHA>
+```
+
+双方のSHAはそれぞれ成功runの実際のcheckoutログで確認する。モデル側は元の15件とファイルhashを再監査し、検索側は全10件・順位・hashを別に監査する。
+固定モデル・revision・export条件・依存の全metadata（生成SHAを除く）とtokenizerのSHA-256が一致する場合だけ組み合わせる。異なるモデルや依存を互換と仮定せず、不一致は失敗にする。
+`m1-stage.json`の`source_commit`はモデル生成元、`search_source_commit`は検索参照生成元。別の検索export報告は`artifacts/m1/search-export-validation.json`へ保存する。
+Sentis準備報告も`sourceCommit`と`searchSourceCommit`を別に記録し、実モデル検索の新しい結果で4条件を照合する。キャッシュ監査だけでは検索合格にしない。

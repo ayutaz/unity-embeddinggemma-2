@@ -1,7 +1,9 @@
 # M1 保存・量子化・測定と完了監査
 
-作業ブランチ: `feat/m1-persistence-benchmark`。Unity 6000.3.16f1 / Sentis 2.6.1、固定モデルrevision・batch 1 / length 128 / 768次元を維持する。
-PR #2 / #3は統合済み。実測コード `329da92` で全段階の受け入れ条件が合格した。[検証記録](m1-completion-validation.md)を参照。PR #4の最新CI・レビュー・統合を最後に確認する。
+実行完了した計画の履歴（2026-10-09更新）。作業ブランチは `feat/m1-persistence-benchmark`。
+Unity 6000.3.16f1 / Sentis 2.6.1、固定モデルrevision・batch 1 / length 128 / 768次元で実行した。
+実測コード `329da92` で全段階の受け入れ条件が合格し、PR #4をmain `8146107`へ統合済み。[検証記録](m1-completion-validation.md)を参照。
+以下は実施した順序と合格条件。次の残作業は [M2計画](m2-plan.md)に整理する。
 
 | 順序 | 実装・実行 | 合格条件と証拠 |
 | --- | --- | --- |

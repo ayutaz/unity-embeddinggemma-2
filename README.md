@@ -3,11 +3,15 @@
 Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.unity.ai.inference@2.6/manual/index.html) だけを使って、Google の [EmbeddingGemma 2](https://huggingface.co/google/embeddinggemma-2) を動かすプロジェクトです。テキスト・画像・音声を、同じ 768 次元の空間の埋め込みに変換できるようにします。
 
 > **状態: Windows EditorのM1受け入れ検証完了**
-> 2026-10-09: 基盤・推論APIはPR #1〜#3で統合済み。[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)で`.sentis`保存・再読み込み、Float16重み量子化、性能・メモリ測定まで実装・検証しました。
+> 2026-10-09: PR #1〜#4はmain `8146107`へ統合済み。[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)で`.sentis`保存・再読み込み、Float16重み量子化、性能・メモリ測定まで実装・検証しました。
 > tokenizerの全15件一致、fp32 / Float16重みのCPU / GPUCompute各15件、公開C# API、C#単体契約30件が合格。Python CIは4環境各64件が合格しました。
 > GPU定常推論の中央値はfp32 50.26ms、Float16重み58.20ms。保存サイズは約1.096GBから0.554GBへ減りました。測定条件と限界は [検証記録](docs/m1-completion-validation.md) を参照してください。
 > クラウドUnity CIはSecretsが必要なLinux CPUの手動補助検証です（未実行）。
 > リポジトリは public ですが、UPM パッケージのリリースはまだ行っていません。
+
+> **M2着手中（PR #6）**: テキストRuntimeを `com.ayutaz.embeddinggemma` の開発版UPMへ移行しました。
+> 全PRで実行するCIとパッケージ監査を追加し、GitHub側ではmainのPR必須・Required CI必須・force push / 削除禁止を設定済みです。
+> PRのmain統合、検索サンプル、他環境の実機検証、リリースは未完了。[パッケージ導入・検証](docs/m2-package-validation.md)を参照してください。
 
 ## ゴール
 
@@ -22,7 +26,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 | # | 内容 | 状態 |
 | --- | --- | --- |
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor受け入れ検証完了（保存・量子化・測定を含む） |
-| M2 | テキスト版の UPM パッケージとサンプルをリリースする | 未着手 |
+| M2 | テキスト版の UPM パッケージとサンプルをリリースする | UPM化をPR #6で実装。検索サンプル・他環境検証・リリースは未着手 |
 | M3 | 画像用モデルに対応する | 未着手 |
 | M4 | 音声用モデルに対応する | 未着手 |
 
@@ -40,7 +44,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 ```
 .
 ├── Assets/          Unity のアセット
-├── Packages/        Unity のパッケージ設定
+├── Packages/        Unity のパッケージ設定・EmbeddingGemma UPM
 ├── ProjectSettings/ Unity のプロジェクト設定
 ├── docs/            調査結果と設計のドキュメント
 └── tools/           モデルを変換する Python プロジェクト(uv)
@@ -80,17 +84,23 @@ uv run --locked python -m embeddinggemma_tools prepare --output ../artifacts/m1
 モデルの revision を固定して参照データ・設定済み tokenizer・`.pt2` を生成し、保存後のモデルを参照実装と比較します。
 この Python 側の一致と、Sentis 側の M1 合格は別々に検証します。
 
-基盤の [PR #1](https://github.com/ayutaz/unity-embeddinggemma-2/pull/1) はマージ済みです。
-M1の実装・検証は揃いました。次はM2のUPMパッケージ化、テキスト検索サンプル、macOS / iOS / Android検証へ進みます。詳細は [M1計画と完了条件](docs/m1-plan.md) を参照してください。
-PR #3で追加した [C# API手順](docs/runtime-api.md)、[実モデル実行記録](docs/m1-runtime-validation.md)、[詳細作業計画](docs/m1-runtime-plan.md) も参照してください。
-互換性修正と C# API を TDD で進め、その後 `.sentis` 保存・fp16 量子化・時間 / メモリ測定を行います。
+M1はWindows Editorで完了し、PR #1〜#4を統合済みです。PR #6で全PRの必須CIとUPM化を実装し、main保護はGitHub側に設定済みです。次はテキスト検索サンプル、macOS / iOS / Android検証、配布へ進みます。
+残作業の順序・依存・完了条件は [M2計画](docs/m2-plan.md)、実装済みAPIは [C# API手順](docs/runtime-api.md) を参照してください。
 新しい実装も作業ブランチ / PR を使い、マージは依頼があるまで行いません。
-詳細な順序は [計画](docs/m1-plan.md)、CI の確認記録は [検証記録](docs/m1-validation.md)を参照してください。
+M1の完了条件は [M1計画](docs/m1-plan.md)、最新の数値とCIの確認記録は [完了検証記録](docs/m1-completion-validation.md)を参照してください。
 ローカル検証に GitHub Secrets は不要です。任意の Linux CPU 手動 CI を使う場合だけ準備します。
+
+## UPM開発版の導入
+
+Unity 6000.3.16f1の別プロジェクトで、Package Managerから
+[package.json](Packages/com.ayutaz.embeddinggemma/package.json)を「Add package from disk」で指定します。
+Sentis 2.6.1とNewtonsoft JSON 3.2.2はパッケージの依存から解決します。
+Git URLのcommit固定による導入とAPI使用例は [パッケージ文書](Packages/com.ayutaz.embeddinggemma/Documentation~/index.md)を参照してください。
+モデルは含まれておらず、検索サンプルと公開tagはまだありません。
 
 ## モデルファイルについて
 
-モデルファイル(`.safetensors`、`.pt2`、`.onnx`、`.sentis` など)はリポジトリにコミットしません。Git LFS も使いません。`tools/` の CLI が Hugging Face の固定 revision から取得して変換します。実モデルのPython export照合はCIで成功し、Sentisでの実行確認はこれからです。
+モデルファイル(`.safetensors`、`.pt2`、`.onnx`、`.sentis` など)はリポジトリにコミットしません。Git LFS も使いません。`tools/` の CLI が Hugging Face の固定 revision から取得して変換します。Python export照合はCIで成功し、SentisのWindows Editor CPU / GPUComputeでも固定15件の精度を検証済みです。他環境とUPM配布はM2で確認します。
 
 ## ドキュメント
 
@@ -98,7 +108,12 @@ PR #3で追加した [C# API手順](docs/runtime-api.md)、[実モデル実行�
 | --- | --- |
 | [docs/goal.md](docs/goal.md) | ゴール、達成の基準、マイルストーン、対象外のこと |
 | [docs/m1-plan.md](docs/m1-plan.md) | M1 の詳細計画、TDD の進め方、検証状況 |
-| [docs/m1-validation.md](docs/m1-validation.md) | TDD の red / green、最新テスト結果、未検証項目、外部状態の確認記録 |
+| [docs/m1-completion-validation.md](docs/m1-completion-validation.md) | M1完了の数値、ソース対応、CI、失敗履歴と測定の限界 |
+| [docs/m1-validation.md](docs/m1-validation.md) | 基盤導入当時のTDD・CI・失敗履歴 |
+| [docs/runtime-api.md](docs/runtime-api.md) | 実装済みのテキスト推論・保存API |
+| [docs/automation.md](docs/automation.md) | uloopの導入、検証ハーネス、モデル成果物の監査・配置 |
+| [docs/m2-plan.md](docs/m2-plan.md) | 残作業の順序、UPM・検索サンプル・他環境・配布の完了条件 |
+| [docs/m2-package-validation.md](docs/m2-package-validation.md) | CI・main保護・UPM移行、新規Unityプロジェクトへの導入結果 |
 | [docs/ci.md](docs/ci.md) | GitHub Actions、PR 運用、Unity CI の準備 |
 | [docs/technical-approach.md](docs/technical-approach.md) | Sentis 2.6 の調査、EmbeddingGemma 2 の構造、モデルを持ち込む方法の比較、設計案、検証方法 |
 | [docs/embeddinggemma-2-unity-novelty.md](docs/embeddinggemma-2-unity-novelty.md) | Unity 対応の新規性の調査(2026-10-07 時点) |

@@ -1,10 +1,7 @@
 name: Python tests
 
 on:
-  push:
-    paths: ['tools/**', '.github/workflows/python-tests.yml']
-  pull_request:
-    paths: ['tools/**', '.github/workflows/python-tests.yml']
+  workflow_call:
   workflow_dispatch:
 
 permissions:

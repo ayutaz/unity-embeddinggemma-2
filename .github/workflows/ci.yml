@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    uses: ./.github/workflows/python-tests.yml
+  workflow-lint:
+    uses: ./.github/workflows/workflow-lint.yml
+  model-reference:
+    uses: ./.github/workflows/model-reference.yml
+  package:
+    uses: ./.github/workflows/package-validation.yml
+  required:
+    name: Required CI
+    if: ${{ always() }}
+    needs: [python, workflow-lint, model-reference, package]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+      - name: Require every dependency to succeed
+        working-directory: tools
+        run: uv run --no-project --python 3.13 python -m embeddinggemma_tools.ci
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}

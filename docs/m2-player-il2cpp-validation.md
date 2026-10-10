@@ -25,7 +25,7 @@ Unity 6000.3.16f1 / Sentis 2.6.1 / Visual Studio 2026のWindows toolchainを使�
 
 consumerは当初固定Git SHA `e7b3a54`を解決した`artifacts/h`で、Core Runtimeは検証sourceとの一致を確認した。import済みvalidationを記録したsourceへ置き換えた条件であり、`c742fb9`の新規Git導入成功とは扱わない。以前のprepared weightsとimport / shader / filesystem cacheを再利用し、モデルの再download・変換はしていない。
 
-Windows 11 / RTX 4070 Ti SUPER / Direct3D12で同じbinaryを2回、異なるrun ID・結果先で起動した。前のprocess終了後だけ次を開始した。固定bundleを`file://`で渡し、初回の6ファイル展開と、2回目のmanifestのみ転送・全5ファイル完全hash・cache再利用を確認した。実際のCPU / GPUCompute × FP32 / Float16重み、25入力token ID / mask一致、M1 15ケース、検索6文書 / 4queryの全順位・score・解放を機械監査した。
+Windows 11 / RTX 4070 Ti SUPER / Direct3D12で同じbinaryを2回、異なるrun ID・結果先で起動した。保存済みprocess argumentsを後続調査で読み戻し、両起動とも `-batchmode -force-d3d12` を指定した条件と確認した。前のprocess終了後だけ次を開始した。固定bundleを`file://`で渡し、初回の6ファイル展開と、2回目のmanifestのみ転送・全5ファイル完全hash・cache再利用を確認した。実際のCPU / GPUCompute × FP32 / Float16重み、25入力token ID / mask一致、M1 15ケース、検索6文書 / 4queryの全順位・score・解放を機械監査した。
 
 ## 実Playerの結果
 
@@ -51,5 +51,7 @@ Windows 11 / RTX 4070 Ti SUPER / Direct3D12で同じbinaryを2回、異なるrun
 各平均は同じqueryの3回。FP16は重みprecisionで、すべての演算がFloat16という主張ではない。モデルdeserialize、worker / tokenizer準備、初回推論、warmup後の3回、解放とapplication全体のメモリstage sampleは結果JSONに保持した。Release Player logに以前のDevelopment Playerの`MemoryLeaks`行はなく、結果の診断値はnullとした。診断行がないことをnative leak解消の証拠にしない。完了後は検証Playerなし、Editor本体1つを確認した。
 
 ## 残るgate
+
+このbatch mode合格はsample GUIや通常表示の正常shutdownを証明しない。後続の[通常表示sample検証](m2-player-sample-validation.md)では日英GUI / GPU検索が成功した後にengine shutdownでアクセス違反を観測した。元の2起動合格を維持し、異なる実行条件の失敗を別に記録する。
 
 Windowsのfile URLはAndroid APK内のjar読み込みの証拠ではない。macOS Editor / iOS / Androidの実機CPU / GPU、sampleのdevice読み込み、allocation / domain reloadの追跡、正式リリースgateは引き続き未達。時間は既存cacheを利用した反復実行で、cold-machineの比較や統計的benchmarkではない。メモリはapplication全体のstage sampleで、peak・モデル専用・GPU使用量の証拠ではない。

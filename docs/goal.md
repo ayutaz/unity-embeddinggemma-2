@@ -4,13 +4,13 @@
 - 更新日: 2026-10-10
 - 背景: [新規性調査](embeddinggemma-2-unity-novelty.md)
 
-リポジトリはpublicのOSSとして開発中。現在のWindows Git導入・検索とPlayer実測は[現在の状態](status.md)と[4段階の実行計画](m2-release-plan.md)を参照する。固定Git導入は確認済みで、必須他環境・残る安定性・候補 / tag導入・正式Releaseは未完了。
+リポジトリはpublicのOSSとして開発中。mainはPR #30後の `6f55a85`。Windows固定Git導入・実モデル4条件 / UIと精度検証Playerのbatch modeは確認済み。通常表示sample PlayerはGUI / GPU検索成功後にshutdown失敗し、PR #31はdraft。Androidは実APK監査までで実機未実行。必須他環境・残る安定性・候補 / tag導入・正式Releaseは未完了。[現在の状態](status.md)と[4段階の実行計画](m2-release-plan.md)を参照する。
 以下の導入時の基準はPR #12時点の履歴として保持する。確認基準main `4ee0cbb`にはPR #1〜#4・#6・#8〜#12を統合済み。
 保存・Float16重み量子化・両backend精度・性能 / メモリ測定までWindows EditorのM1受け入れ条件が合格した。
 確認基準mainの [CI run 37975720534](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975720534)は全8 job成功。Python4環境・実モデルPython照合・lint・パッケージ監査を確認。Sentisの実測はWindowsの検証記録を参照する。
 PR #6のCI整備・UPM移行はmainへ反映済み、GitHub側のmain保護も設定・再確認済み。
 文書のみのPR #7も全8 jobが成功し、未マージで閉じた。PR #5の文書変更はPR #6へ含め、#5は閉じた。
-検索サンプルとモデル準備手順はWindows consumer再現を含め確認し、PR #11で統合済み。次は [M2計画](m2-plan.md)の他環境検証、Git URL導入、配布を進める。M2全体の受け入れは未完了。
+検索サンプルとモデル準備手順はWindows consumer再現を含め確認し、PR #11で統合済み。当時の後続課題だった固定commitのGit導入は現在確認済みで、正常sample終了・他環境 / 実機・正式candidate / tag導入・配布へ進める。M2全体の受け入れは未完了。
 最新のmain / PRの区別は [現在の状態](status.md)、導入と回帰の証拠は [パッケージ検証](m2-package-validation.md)を参照。
 M1の証拠は [M1計画](m1-plan.md)、[完了検証記録](m1-completion-validation.md)を参照。
 リポジトリの公開と、M2 の UPM パッケージ / サンプルのリリースは別の段階として扱う。

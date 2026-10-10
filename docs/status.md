@@ -1,9 +1,39 @@
 # 現在の状態と残タスク
 
-確認日: 2026-10-10。確認基準mainはPR #29後の `fc66af7`。統合後main [CI run 38029860876](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38029860876)は全8 job成功。sample font寿命修正のsource `f7ffbfd`、新固定Git consumer `fc66af7`、Editor測定fixture修正 `bc3ac49`の実測を分けて記録した。実Unity検証のSHAは各記録を維持する。下の表はPR #12時点の基準・履歴として保持し、後続実測を本文に追記する。以降のmain / PR / CIはGitHubを参照。
-検索実装は `feat/m2-text-search-sample` / PR #11で統合済み。M1の履歴を維持し、Windows検索実測を別の証拠として追加した。以下のmain SHAとCIは確認時点の基準であり、後続の文書PRでも確認済みの実測SHAを変更しない。
+確認日: 2026-10-10。GitHub APIでmain・open PR・CI・保護・Secrets / runner・tag / Releaseを再確認した。M2全体は未完了。実測のsource SHAと導入SHAを区別し、後続の文書更新で過去の実行条件を変更しない。
 
 ## mainと作業ブランチ
+
+| 対象 | 現在確認した状態 |
+| --- | --- |
+| main | `6f55a8574df1bc75d51fb5992fd70dc7d0512fb9`、PR #30まで統合済み。[統合後CI 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)の全8 job成功 |
+| [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31) | 唯一のopen PR、draft / 未統合。ブランチ `feat/m2-player-sample-validation`。実装checkpoint `cd6b8bf4ee6a616f6d8bff08084207e7f4edd4a5`の[CI 38040187805](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38040187805)は全8 job成功。最新文書headのcheckはPRで確認する |
+| main保護 | PR必須、strict Required CI / App 15368、管理者適用、人手承認数0、会話解決・linear history必須、force push / 削除禁止を読み戻し確認 |
+| Unity / Sentis | 固定版6000.3.16f1 / 2.6.1。6000.3.21f1の終了クラッシュ修正候補との比較は版変更の回答待ち、更新・修正確認は未実施 |
+| 実行環境 | Repository Secrets 0 / self-hosted runner 0。macOS / iOS実行環境とAndroid接続端末の実測結果は未取得 |
+| 配布 | 開発版 `0.1.0-pre.1`。公開tag 0 / GitHub Release 0、正式リリース未実施 |
+
+## 最新の検証範囲
+
+| 対象 | 確認済み | 未達・限界 |
+| --- | --- | --- |
+| 固定Git Windows Editor | `fc66af7`の空consumer導入、compile、UPM 38 / sample EditMode 66 / PlayMode 2 / token15 / 実モデル4条件とUI・cache。Editor fixture 2ファイルの`bc3ac49`配置後はsample EditMode 67件合格。[詳細](m2-font-git-consumer-validation.md) | fixture修正のGit導入全体を再実行した結果ではない。Runtime / sample本体は同一。Editor検索DB・allocation・domain reloadは未解決 |
+| Windows精度検証Player | `c742fb9`、IL2CPP / Release / High stripping、batchmode / Direct3D12でCPU / GPUCompute × FP32 / Float16・独立2起動・終了code 0。[詳細](m2-player-il2cpp-validation.md) | 検証assemblyのpreserve-all条件。通常表示のsampleや任意consumer / 他OSへ一般化しない |
+| Windows sample Player | `41dc0be`の実build、37 source hash一致。通常表示で日英GUI・Float16 / GPUCompute・全4 query / 各6順位・score・空入力 / 欠落拒否・解放。runtime成功後にprocess異常終了。[詳細](m2-player-sample-validation.md) | shutdown access violation、独立2起動は未達。native keyboard / mouseは未検証。PR #31 draft |
+| 終了監査 | 23 red → 23 green、実結果を`process_gate_passed=false` / CLI exit 1と判定。runtime成功とprocess失敗を両方保持 | 完了receiptの整合性監査。数値参照やPNGを再検証せず、実行・M2全体の証明ではない |
+| Android | `751c30a`の実ARM64 / IL2CPP / High stripping APK build、署名・全payload完全hash監査。[詳細](m2-android-validation.md) | 実機・jar runtime・CPU / GPU・sample UIは未実行 |
+| CI | main / PR実装checkpointの全8 job成功 | Python / 参照 / lint / package / 集約で、実Unity・GPU・モバイルの成功ではない。Unity手動Linux CPU補助検証は未実行 |
+
+## 次の作業と依存
+
+1. Windows sampleの終了クラッシュを修正確認する。対応PDBでPlatformAccessibilityManager破棄処理に停止箇所を限定した。公式UUM-146676を含む6000.3.21f1への変更が決まれば、モデル不要shutdown比較 → 同じ固定参照で日英GUI / 全query / 解放 → 独立2起動のexit 0 / cacheを確認する。公式修正との関連は未確定で、版変更の回答前に更新しない。
+2. Editor検索DB / allocation / domain reloadを限定条件で調べる。検証済みfont寿命修正と測定fixture修正を維持し、実測なしの高速化率を宣言しない。
+3. Android端末とMac / iOS環境を確保し、既存APK・固定参照を使う実CPU / GPU・配置 / cache・停止と再起動を測定する。Secretsだけで実機環境が揃ったとは扱わない。
+4. 全gate合格後、candidate / version / CHANGELOG / license → tag固定consumer導入 → 正式Release。M3・M4はその後。
+
+詳細な成果物と合格条件は[4段階の実行計画](m2-release-plan.md)に定義する。正常終了が未達のPR #31をCI成功だけでmergeしない。
+
+## 履歴: PR #12時点のmainとブランチ
 
 | 対象 | 確認した状態 |
 | --- | --- |
@@ -20,7 +50,7 @@
 
 全PRを対象とするCI入口、UPMコードと検索APIはmainへ統合済み。サンプルとモデル準備手順はPR #11で追加。mainへの直接pushや保護の迂回は行っていない。[開発規則](../AGENTS.md)に従い、マージは依頼された範囲でCI・差分・競合を確認して行う。
 
-## 検証済みの範囲
+## 履歴: 導入・検索基盤の検証
 
 | 対象 | 証拠・結果 | 限界 |
 | --- | --- | --- |
@@ -39,7 +69,7 @@
 PR #6のUPM移行時にはRuntimeと契約テストの19ファイルが移行前とGit blob一致し、assembly名・GUIDを維持した。後続の検索API・契約追加は別のTDDと検証記録で扱う。
 直接依存はSentis 2.6.1 / Newtonsoft JSON 3.2.2。モデル・ネイティブプラグイン・URP・uloop・Pythonを配布Runtimeへ含めない。
 
-## 残タスクの順序
+## 履歴: 実装と検証の進展
 
 PR #29統合SHA `fc66af7`を新しい空のGit consumerへ導入し、requested / resolved SHA、配布92 / sample 52ファイル、compile、UPM 38 / sample EditMode 66 / PlayMode 2、token15、実モデル4条件・全順位 / score、日英UI / 空入力 / 欠落モデル / 解放 / file URL初回・warm cacheを確認した。[結果と制約](m2-font-git-consumer-validation.md)。最初のUIでfont Warning 1 / Editor検索DB Error 1を保持した。測定fixtureが破棄済みfontをcacheへ残す経路を実証し、Editor test 2ファイルだけの修正 `bc3ac49`で1 failed → 1 passed、全67 passed、invalid font参照0、未準備UI 3回の停止前後Console 0を確認した。検索DB原因・native allocation・Player sample画面 / 他OS実機・候補 / tag / 正式Releaseは未完了。
 
@@ -65,12 +95,12 @@ Windows Playerの変更はPR #18の全8 CI成功後にmain `f44976b` へ統合�
 
 ## 未実行と失敗の扱い
 
-- macOS / iOS / Android / WebGPUは未検証。Windows PlayerはMono Developmentと後続IL2CPP / Release / High stripping条件で合格した。ただし検証assemblyのpreserve-all条件で、任意consumerのstrippingを証明しない。Editorや小さいモデルの合格で実機結果を置き換えない。
+- macOS / iOS / Android実機 / WebGPUは未検証。Android build・payload監査は成功したが実機成功ではない。Windows精度検証PlayerのIL2CPP合格はbatch mode条件で、通常表示sampleのshutdownは失敗。検証assemblyのpreserve-allや小さい契約モデルを任意consumer / 実機の成功へ一般化しない。
 - クラウドUnityは任意手動Linux CPU検証。Secrets / Variablesは未登録、Editor job未実行。必要なのはこのクラウド経路の利用時で、検索サンプルなどの開発を止める条件ではない。
 - PR #6当時のconsumerのuloop launch readinessはタイムアウト。後続run-testsのcompile・29 passedとは分けて履歴を保持する。検索導入では長いパスの失敗後、別の短いconsumerの起動・compile・テストが成功した。
 - GPU skipやCPU代替をGPU成功として扱わない。モデルと大きいartifactはGit管理外、LFSを使わずActionsで再生成する。
 
-## 最近の更新
+## 履歴: 各checkpointの結果
 
 PR #26をhead `d888e66`の全8 CI成功後にsquash mergeし、main `d6c8442`の[CI run 38027319740](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38027319740)も全8 job成功。元checkoutのUnity設定変更を保持した。モデルなし空sceneでPackage Manager Errorを観測し、回復時の直接uloop起動ではALLUSERSPROFILEが欠けていたことを確認した。旧PID終了・Editor本体0確認後、既存uvハーネスで環境補完して1回起動し、compile Error / Warning 0。以降の空scene 3回はConsole 0件、未準備sample UI 3回は0 / Warning 1 / Warning 1で、font警告をモデル推論なしに再現した。元scene / leak設定は復元済み。6回の比較ではallocation診断は出なかったが、次のPlay開始直後にFound leak診断15件を観測した。責任箇所は未確定。font原因・解消とdomain reload単体の高速化は未確認。[条件・結果・次の切り分け](m2-stability-environment-validation.md)。
 

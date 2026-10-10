@@ -2,15 +2,11 @@
 
 2026-10-10からの安定化・Git URL導入・他環境実測・正式リリースは、[M2リリースまでの詳細実行計画](m2-release-plan.md)で作業・依存・成果物・合格条件・PR分割を定義する。以下の実測履歴は当時のSHAを維持する。
 
-最新のWindows固定Git導入・実モデル4条件・sample UIと、検証専用Windows IL2CPP Playerは確認済み。[Git consumer結果](m2-latest-git-consumer-validation.md) / [Player結果](m2-player-il2cpp-validation.md)を参照。以下の基準・状態表はPR #12時点の履歴であり、現在の未達項目は他環境、残る安定性、正式候補 / tag導入、正式Releaseである。配布README / CHANGELOGもこの区別へ更新し、未検証の環境を対応済みにしない。
+更新日: 2026-10-10。確認基準mainはPR #30後の `6f55a85`。[main CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)は全8 job成功。PR #31はdraft / 未統合で、実装checkpoint `cd6b8bf`の[CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38040187805)も全8 job成功。実Unity実行のsourceは各検証記録を維持する。
 
-更新日: 2026-10-10。確認基準main: `4ee0cbbde07fc99ca87d33ed52a44e6100ca0b0c`（PR #12統合後）。Unity実測は各検証記録の実行SHAを維持する。
-**CI整備・UPM化はPR #6でmainへ統合済み。統合後のmain CIも全8 job成功。** PR #1〜#4のWindows EditorのM1は完了した。
-GitHub側のmain保護も設定・再確認済み。検索基盤はPR #10でmainへ統合済み。PR #11の検索サンプルとモデル手順は、Windowsの元プロジェクト・新規consumerで実モデル4条件と画面操作、CLI完了応答を確認した。M2全体の他環境・Git URL導入・リリースは残る。[検証記録](m2-search-validation.md)を参照。
-[現在の状態](status.md)でPRと証拠の対応を確認し、[M1完了検証](m1-completion-validation.md)と検索consumer再現を既存の基準として他環境検証、Git URL導入、配布を進める。
+Windowsの固定Git consumer `fc66af7`で実モデル4条件・sample UI / cacheを確認し、測定fixture `bc3ac49`の2ファイル配置後の67契約合格をPR #30へ反映済み。[Git consumer結果](m2-font-git-consumer-validation.md)。検証専用IL2CPP Playerの独立2起動はbatch mode条件で合格した。[Player結果](m2-player-il2cpp-validation.md)。通常表示sample Playerは日英GUI / GPU検索成功後にshutdownで失敗し、独立2起動は未達。[sample結果](m2-player-sample-validation.md)。Androidは実APK・署名 / payload監査まで成功、実機は未実行。
 
-利用者向け一覧の1（検索サンプル）と2（モデル準備手順）の実装・再現を確認済み。[実装計画](m2-search-plan.md) / [検証記録](m2-search-validation.md) / [モデル準備手順](model-preparation.md)を参照。
-Sentis実モデル4条件は両Windowsプロジェクトで合格。consumerのCLIは4 passed / skip 0、sample EditModeは改善後18 passed。モデル再利用の単回測定203秒 → 175秒。以前の中断記録と未解決allocation / fontログを別記する。PR #11の統合状況・最新CIはGitHubを参照。
+次はsample正常終了・独立2起動、Editor検索DB / allocation / domain reload、macOS Editor / iOS / Android実機、正式候補 / tag導入・Release。Unity 6000.3.21f1の公式終了修正候補との比較は固定版変更の回答待ちで、現行6000.3.16f1を維持する。[現在の状態](status.md)と4段階計画を現在の作業順序の基準にする。M1・検索初期実装・単回測定の履歴は各[検証記録](m2-search-validation.md)に保持する。
 
 ## 現在地
 
@@ -18,7 +14,7 @@ Sentis実モデル4条件は両Windowsプロジェクトで合格。consumerのC
 - `TextEmbedder` はquery / document / raw、同期・メインスレッド、batch 1 / length 128 / 768次元、CPU / GPUComputeを扱う。
 - `TextModelFile` はfp32 / Float16重みの保存・再読み込みを実装済み。Windows Editorで両形式・両backend全15件が合格。
 - Runtime asmdefはSentisと `Unity.Newtonsoft.Json` を参照する。現在のlockでNewtonsoftは3.2.2。uloop、URP、2D関連パッケージは検証プロジェクト側の構成であり、配布Runtimeの依存には持ち込まない。
-- PR #11統合後mainの[CI run 37975026704](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975026704)は全8 job成功。Ubuntu / Windows × Python 3.13 / 3.14、実モデルPython照合、lint・パッケージ監査が合格。macOS / iOS / AndroidとPlayerでの実モデル実行は未検証。
+- PR #30統合mainとPR #31実装checkpointのCIは全8 job成功。Ubuntu / Windows × Python 3.13 / 3.14、実モデルPython照合、lint・パッケージ監査を含み、Unity / 実機GPUの証明ではない。Windows Playerは上記限定条件で実行済み、必須他環境は未検証。
 - mainはbranch protection設定済み。PRとRequired CIを管理者にも要求し、force push / 削除を禁止。全PRのCI入口とパッケージ監査はmainへ統合済み。クラウドUnityはLinux CPUの任意手動補助検証で未実行、2026-10-10確認時にSecrets / Variablesは未登録。
 
 ## 作業順序と完了条件
@@ -29,14 +25,14 @@ Sentis実モデル4条件は両Windowsプロジェクトで合格。consumerのC
 | 1 | UPM構成へ移行 | package manifest、明示的な依存、Runtime / Tests / Samples / 文書を整理。既存API契約とGUIDを維持し、重複assemblyやUnityEditor参照を持ち込まない | 完了。PR #6統合済み、新規consumerのローカルフォルダ導入・契約29件合格。Git URL検証と公開は6で扱う |
 | 2 | テキスト検索サンプル | 文書事前埋め込み・cosine順位・同点ID順・エラー表示・リソース解放 | 実装・Windows実モデル4条件・元プロジェクトGPU / consumer CPUの画面操作確認済み。PR #11 |
 | 3 | モデル準備・配布手順 | CI固定revision生成、hash監査、取得・配置・更新、新規checkout / 空consumerで再現 | 実装・導入・監査・変換・CLI4 passed・画面操作確認済み。キャッシュTDD18 passed、手順確定。PR #11 |
-| 4 | 環境・runner・実機の確保 | macOS Editor、iOS / Androidのtoolchain・実機・GPU API・ライセンス・署名条件を確認し、実行できる組み合わせを記録 | 早期に調査。必要環境は未確認 |
-| 5 | 各環境の実モデル検証と測定 | 下の環境表を埋め、精度・実行backend・ロード / 初回 / 定常時間・メモリを記録。移行後Windowsの回帰も確認 | Windowsの導入・契約・M1 / API回帰と検索4条件・consumer UI確認済み。移行後の保存・量子化・全ベンチ再測定と他環境は残る。1〜4に依存 |
-| 6 | リリース準備と配布 | clean projectから版固定で導入、サンプル起動、手順・ライセンス・CHANGELOGを確認。必要環境の合格後にリリース用PRと配布を行う | 1〜5に依存、未着手 |
+| 4 | 環境・runner・実機の確保 | macOS Editor、iOS / Androidのtoolchain・実機・GPU API・ライセンス・署名条件を確認し、実行できる組み合わせを記録 | Windows / Android build環境は確認済み、Android実機とMac / iOS環境は未確保。Secrets / self-hosted runner各0 |
+| 5 | 各環境の実モデル検証と測定 | 下の環境表を埋め、精度・実行backend・ロード / 初回 / 定常時間・メモリを記録。移行後Windowsの回帰も確認 | Windows固定Git Editor・精度検証Player batch modeは合格。通常表示sampleはshutdown未達、Androidは実APKまで。他OS / 実機と残る安定性は未完了。1〜4に依存 |
+| 6 | リリース準備と配布 | clean projectから版固定で導入、サンプル起動、手順・ライセンス・CHANGELOGを確認。必要環境の合格後にリリース用PRと配布を行う | commit固定Git導入は確認済み。正式candidate / tag固定導入 / Releaseは未実施、1〜5に依存 |
 
-0〜3の実装・Windows consumer再現・手順確認を終え、PR #11の統合と統合後CI全8 job成功を確認した。続いて4の環境確保 → 5の実測 → 6のリリースへ進む。hash確認の負荷と未解決allocation / fontログも次の測定で追跡する。
+0〜3の実装と後続の固定Git / cache / font寿命改善は統合済み。4の環境確保と並行し、5ではWindows sample shutdownの修正比較を先に進める。正常終了と残る実機 / 安定性gateを満たしてから6へ進む。完全hash監査を維持し、モデル再downloadや不要なbuildを避ける。
 今後も作業ブランチからPRを提出し、mergeは依頼された範囲でCI・差分・競合を確認して行う。
 
-## 直近のPR分割と受け渡し
+## 履歴: 検索実装のPR分割と受け渡し
 
 | 順番 | PRの範囲 | 次の作業へ渡すもの / 合格条件 |
 | --- | --- | --- |
@@ -69,7 +65,7 @@ Packages/com.ayutaz.embeddinggemma/
 - Runtimeの `.meta` / GUIDとassembly名を維持して移動し、元のAssets側に同じ実装を残さない。
 - package manifestではSentis 2.6.1と直接使用するNewtonsoftの依存を明示する。新規プロジェクトで依存解決を検証し、現行lockの偶然の解決に頼らない。
 - モデル不要の契約テストをパッケージ側へ整理。既存の `Assets/M1Generated/` や `artifacts/` を使う実モデルfixture・計測runnerは、検証プロジェクト側に残すかパスを注入できる形に分離する。
-- 消費側はローカルフォルダ依存で別Editor導入・29件合格を確認済み。[Git URLのsubfolder / revision指定](https://docs.unity3d.com/6000.3/Documentation/Manual/upm-git.html)はmanifest生成・監査のみで、Editorでの導入は未実行。commit固定で検証し、リリース時にtag指定の手順を用意する。
+- 消費側はローカルフォルダ依存と固定commitのGit URLを別Editorで実行確認済み。[最新の固定Git consumer](m2-font-git-consumer-validation.md)で導入SHA・配布source・実モデル・UIを監査した。正式candidate / tag導入をリリース時に別途検証する。
 - まずUnity 6000.3.16f1を検証対象とする。下位のUnity / Sentisへの対応は別検証なしに宣言しない。
 
 ## サンプルとAPIの確認
@@ -87,10 +83,11 @@ UI操作で文書準備 → query入力 → 結果表示 → 終了まで確認�
 
 | 環境 | 現状 | M2で必要な確認 |
 | --- | --- | --- |
-| Windows Editor | M1完了、UPM移行後の契約 / 回帰、元プロジェクトと新規consumerの検索4条件・CLI・画面操作確認済み | Git URL導入、全測定の再確認、未解決allocation / fontログの切り分け |
+| Windows Editor | M1完了、UPM移行・固定Git consumerの検索4条件・画面 / cache、font寿命と測定fixtureの修正確認済み | Editor検索DB / allocation / domain reload、正式candidate導入の回帰 |
+| Windows Player | 精度検証IL2CPPのbatch mode全4条件・独立2起動合格。sampleの通常表示は日英GUI / GPU全query・解放成功後にshutdown失敗 | 公式修正版との比較、独立2起動のexit 0 / cache。任意consumerのstrippingを別途確認 |
 | macOS Editor | 未実行 | 使用機種 / OS / GPU APIを記録し、実モデルCPU / GPUComputeの精度と測定 |
 | iOS Player | 未実行、toolchain / 実機未確認 | IL2CPP・stripping・モデル配置を含むbuild、実機CPU / GPUCompute実行、精度と測定 |
-| Android Player | 未実行、toolchain / 実機未確認 | ABI / graphics API・モデル配置を含むbuild、実機CPU / GPUCompute実行、精度と測定 |
+| Android Player | ARM64 / IL2CPP / High stripping実APK・署名・全payload監査成功。実機未実行 | 同じAPKで実jar配置・CPU / GPUCompute・精度 / 測定 / cache / 再起動・sample UI |
 | Linux CPUクラウド | 任意手動workflowのみ、未実行 | Secrets準備後に補助検証。他の必須環境やGPUの合格と区別 |
 | Web / WebGPU | 任意、未着手 | 必須環境の後に対応可能性を調査 |
 

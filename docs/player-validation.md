@@ -3,6 +3,8 @@
 2026-10-10。M2のmacOS Editor / iOS / Android実測とWindows Player回帰の準備を進める。
 受け入れ条件とリリースの依存は [詳細実行計画](m2-release-plan.md) に従う。
 
+現在は精度検証専用Windows PlayerのDevelopment / MonoとIL2CPP / Release / High strippingを実行済み。後者はbatch mode / Direct3D12の全4条件・独立2起動・exit 0が合格した。[IL2CPP結果](m2-player-il2cpp-validation.md)。別の[配布sample Player](m2-player-sample-validation.md)は通常表示の日英GUI / Float16 GPU検索・解放が成功したがshutdown失敗。Androidは[実APK・署名 / payload監査](m2-android-validation.md)まで成功、実機 / macOS / iOSは未実行。以下の準備記録や単体契約を不足gateの代替にしない。
+
 ## 実装済み: hashを照合したモデルと固定参照のbundle
 
 `tools/embeddinggemma_tools/player.py` はEditorで準備したFP32 / Float16の `.sentis` とtokenizer、監査済みM1 / 検索参照を、空の出力先へまとめる。

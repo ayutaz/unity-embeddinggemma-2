@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using Newtonsoft.Json.Linq;
 using Unity.InferenceEngine;
 using UnityEditor;
@@ -56,12 +55,7 @@ namespace EmbeddingGemma.Samples
             }
         }
 
-        static string Digest(string path)
-        {
-            using var stream = File.OpenRead(path);
-            using var hash = SHA256.Create();
-            return BitConverter.ToString(hash.ComputeHash(stream)).Replace("-", "").ToLowerInvariant();
-        }
+        static string Digest(string path) => TextSearchFileHash.Compute(path);
 
         public static Report PrepareCached(Func<Model> loadModel, string tokenizerPath, string destination,
             string sourceCommit, string searchSourceCommit, string modelSha256)

@@ -10,6 +10,7 @@ marker がない通常の Player と、Editor の Play では自動実行しな�
 - 実行と失敗時解放、結果保存、linker、scene / corpus の provenance: 新規12 failed → 全24 passed（上の12件を含む）。
 - Player 起動条件とモデル欠落: 5件中2 failed → 新規全29 passed。failed / skipped / inconclusive は0。
 - GUI の遅延準備: 新規1 failed → 全31 passed。GUI preflight: 新規1 failed → 全32 passed。モデルを準備する前に最大120 render frame待ち、GUI 不成立ならモデル監査・準備を行わない。
+- batch mode の早期終了: 新規1 failed → 全33 passed。view / モデル / screenshot / render-frame wait の前に対象外の条件を失敗報告へ保存する。[TDD 記録](results/m2-player-sample-batch-preflight-windows-20261010.json)。注入した runtime 条件も `injected_contract` とし、GPU 合格とは扱わない。
 - Player validation assembly のまとめ実行は139 passed / 2 failed / skip 0。失敗した2件は Android target が必要な build integration 契約で、この Editor は StandaloneWindows64。対象違いの失敗を残し、Android 成功とは数えない。
 
 初期 source は `239992584b93142d7563be0156e95f7e1ffe962b`、描画待ち・診断は `904879d9cfa304d8fcc4210d45f52c45083facbc`、モデル前 preflight は `747f986c159d6ba78490c2b207e98c1ceb86af02`。
@@ -36,7 +37,7 @@ Float16 重み / actual GPUCompute Worker / 固定6文書 / 4 query の全順位
 
 ## 実行状況
 
-[source・TDD・build・失敗実行の証拠](results/m2-player-sample-windows-20261010.json)を保存した。最新ビルドの37ファイルの正規化済み source hash が固定作業ブランチと一致した。
+[source・TDD・build・失敗実行の証拠](results/m2-player-sample-windows-20261010.json)を保存した。当時の `747f986` ビルドの37ファイルの正規化済み source hash が固定作業ソースと一致した。後続の batch preflight は別の変更で、この旧 binary の実行結果を新 source の成功とは扱わない。
 consumer は Git SHA `fc66af7` を解決した既存の `artifacts/j` を利用し、sample の測定 fixture 2ファイルと validation source を作業ソースで配置した条件。新しいハーネス SHA の空 Git 導入成功とは扱わない。
 
 | source | 実 build 秒 | errors / warnings | Player 観察 |
@@ -83,6 +84,8 @@ binary の Resources には sample 用 marker を確認し、既存の全条件�
 sample font / scene / 新ハーネスと、モデルの準備は、旧 Player のこの再現には必要でない。batch mode で graphics device が有効でも終了できたため、graphics device 初期化だけを原因と断定しない。batch mode は window と実行条件も変えるため、単独要因の同定には通常モードの可視表示との比較が残る。以前の実モデル合格は当時の実行条件の証拠として維持し、この新しい欠落条件へ一般化しない。
 
 `-nographics` の意味は [Unity 6.3 公式 Player command-line reference](https://docs.unity3d.com/6000.3/Documentation/Manual/PlayerCommandLineArguments.html) に従う。batch mode の想定どおりの失敗終了は GUI / GPU 推論の合格ではなく、全3報告の `success=false` / `gpuVerified=false` を維持する。非表示起動を GUI 検証の推奨条件とは扱わず、ユーザーの表示希望を確認してから同一 sample binary の通常表示を比較する。
+
+サンプル GUI ハーネスでは batch mode を runtime preflight で拒否し、`NotSupportedException` を失敗報告へ保存する。既存の精度検証専用ハーネスは GUI を必須条件にしていない。Unity 6.3 の [WaitForEndOfFrame API](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/WaitForEndOfFrame.html) は Editor の batch mode でこの待機が実行されないことを説明している。これを全 Player の hang 再現証拠へ一般化せず、画面を必要とするハーネスで対象外の実行条件を先に検出する。
 
 ## 再現
 

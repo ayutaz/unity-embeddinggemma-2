@@ -10,7 +10,7 @@ marker がない通常の Player と、Editor の Play では自動実行しな�
 - 実行と失敗時解放、結果保存、linker、scene / corpus の provenance: 新規12 failed → 全24 passed（上の12件を含む）。
 - Player 起動条件とモデル欠落: 5件中2 failed → 新規全29 passed。failed / skipped / inconclusive は0。
 - GUI の遅延準備: 新規1 failed → 全31 passed。GUI preflight: 新規1 failed → 全32 passed。モデルを準備する前に最大120 render frame待ち、GUI 不成立ならモデル監査・準備を行わない。
-- batch mode の早期終了: 新規1 failed → 全33 passed。view / モデル / screenshot / render-frame wait の前に対象外の条件を失敗報告へ保存する。[TDD 記録](results/m2-player-sample-batch-preflight-windows-20261010.json)。注入した runtime 条件も `injected_contract` とし、GPU 合格とは扱わない。
+- batch mode の早期終了: 新規1 failed → 全33 passed。sample proxy の取得 / モデル / screenshot / render-frame wait の前に対象外の条件を失敗報告へ保存する。[TDD と実 Player 記録](results/m2-player-sample-batch-preflight-windows-20261010.json)。注入した runtime 条件も `injected_contract` とし、GPU 合格とは扱わない。
 - Player validation assembly のまとめ実行は139 passed / 2 failed / skip 0。失敗した2件は Android target が必要な build integration 契約で、この Editor は StandaloneWindows64。対象違いの失敗を残し、Android 成功とは数えない。
 
 初期 source は `239992584b93142d7563be0156e95f7e1ffe962b`、描画待ち・診断は `904879d9cfa304d8fcc4210d45f52c45083facbc`、モデル前 preflight は `747f986c159d6ba78490c2b207e98c1ceb86af02`。
@@ -86,6 +86,10 @@ sample font / scene / 新ハーネスと、モデルの準備は、旧 Player �
 `-nographics` の意味は [Unity 6.3 公式 Player command-line reference](https://docs.unity3d.com/6000.3/Documentation/Manual/PlayerCommandLineArguments.html) に従う。batch mode の想定どおりの失敗終了は GUI / GPU 推論の合格ではなく、全3報告の `success=false` / `gpuVerified=false` を維持する。非表示起動を GUI 検証の推奨条件とは扱わず、ユーザーの表示希望を確認してから同一 sample binary の通常表示を比較する。
 
 サンプル GUI ハーネスでは batch mode を runtime preflight で拒否し、`NotSupportedException` を失敗報告へ保存する。既存の精度検証専用ハーネスは GUI を必須条件にしていない。Unity 6.3 の [WaitForEndOfFrame API](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/WaitForEndOfFrame.html) は Editor の batch mode でこの待機が実行されないことを説明している。これを全 Player の hang 再現証拠へ一般化せず、画面を必要とするハーネスで対象外の実行条件を先に検出する。
+
+source `41dc0bef68b1e1cd899033bfd02333eba49f00eb` の差分 IL2CPP / Release / High stripping build は40.455秒、errors 0 / warnings 485で成功し、37 source hash が作業ソースと一致した。同じ新 binary を `-batchmode -force-d3d12` / Hidden で1回実行し、実際の batch=true / is_editor=false / Direct3D12、`NotSupportedException` の保存、process 終了 code 1を確認した。queries 0、bundle / sample observation なし、success / gpu_verified は false。この対象外条件の正常な拒否であり、通常表示の黒画面・アクセス違反の修正や sample 検索の合格ではない。GUI 比較は新 binary で行う。
+
+ビルド中の StreamingAssets payload と meta は owned consumer 内へ退避し、終了後に全ファイルの名前・サイズと元配置の復元を確認した。scene clean / Play・Test Runner停止、Mono2x / Disabled / Release設定も元の状態と一致した。モデルの download / 変換・追加 Editor 起動はしていない。
 
 ## 再現
 

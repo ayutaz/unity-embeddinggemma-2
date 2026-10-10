@@ -1,6 +1,6 @@
 # 現在の状態と残タスク
 
-確認日: 2026-10-10。最新の確認済み統合mainはPR #24後の `01f3d86`。PR #24は現在headの全8 CI成功後に統合し、統合後main [CI run 38022144437](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38022144437)も全8 job成功。PR #23統合後CI run 38019722018も成功。下の表はPR #12時点の基準・履歴として保持し、後続実測を本文に追記する。最新CIはGitHubのPR / Actionsを参照。
+確認日: 2026-10-10。確認基準mainはPR #27後の `c3281cd`。統合後main [CI run 38025309104](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38025309104)は全8 job成功。PR #27は配布README / CHANGELOG等のMarkdown 6ファイルだけを更新し、Runtime / sample / GUID / manifestは変更していない。実Unity検証のSHAは各記録を維持する。下の表はPR #12時点の基準・履歴として保持し、後続実測を本文に追記する。以降のmain / PR / CIはGitHubを参照。
 検索実装は `feat/m2-text-search-sample` / PR #11で統合済み。M1の履歴を維持し、Windows検索実測を別の証拠として追加した。以下のmain SHAとCIは確認時点の基準であり、後続の文書PRでも確認済みの実測SHAを変更しない。
 
 ## mainと作業ブランチ
@@ -67,6 +67,12 @@ Windows Playerの変更はPR #18の全8 CI成功後にmain `f44976b` へ統合�
 - GPU skipやCPU代替をGPU成功として扱わない。モデルと大きいartifactはGit管理外、LFSを使わずActionsで再生成する。
 
 ## 最近の更新
+
+Androidの現在のC#はcompileと12契約が合格した。約37分の継続したMainThreadBlockedを確認した後、旧Editor PID 110956の終了・本体0確認を経て1回だけ回復起動し、新PID 127008で実APKをbuildした。source `751c30a`、ARM64 / IL2CPP / compiler Release / High stripping、504.158秒 / errors 0 / warnings 970。SDK v2 debug署名検証と、実APK 1,720,031,692 bytesの全payload完全hash・ARM64監査が成功した。scene / settingsとsample payload / metaは復元済み。実receiptの固定BuildOptions対応は1 redからAPK19 green。[結果と限界](m2-android-validation.md)、[機械可読結果](results/m2-android-apk-build-20261010.json)を参照。実機・jar runtime・Android CPU / GPU・sample Player画面は未実行。停止原因・警告解消・他OS・安定性・tag / Releaseは未完了。PR #27はhead `6ab5278`の全8 CI成功後にmain `c3281cd`へ統合済み。PR #26もその文書更新を取り込んだ。当時の観測timeoutはEditor操作の終了証拠にはせず、その後の回復と区別する。元checkoutのUnity設定変更は保持した。
+
+Android Player報告の監査CLIを追加した。固定APK provenance / 同梱参照hash、全4条件のactual backend / 15ケース / 全順位・score / 解放、初回jar展開とwarm cache、3回warm timingと14段階memory、異なる非重複runを照合する。39 redと追加5 redから関連73 passed。小さいfixtureによる整合性監査で、ADB実行・端末identity・process終了は別の実測証拠を要求する。[回収手順と範囲](m2-android-validation.md#実機結果の回収と報告監査)。実APKは上記で確認済みだが、実機 / 他OSと正式Release gateは残る。
+
+Android用build helperとAPK payload監査の準備時点では、Windows targetでhelperの9 red、graphics保存リスト復元の2 redから既存を含む110 passed。小さいAPK fixtureは16 redから関連29 passedだった。その後のAPI変更を含むC#は当時再検証待ちでdraftにした。現在は上記のAndroid12契約と実APKの成功を追加したが、以前の110件の合格範囲は拡大しない。[準備履歴と現在の結果](m2-android-validation.md)。
 
 PR #24統合main `01f3d86`を新しい空のGit consumerへ固定導入し、requested / resolved SHA・88ファイル・import済みsampleを照合した。compile、UPM 38 / sample EditMode 64、token15入力、実モデル検索FP32 / Float16 × CPU / GPUの4条件と全順位・scoreが合格。sample PlayMode 2件は受理後のCLI接続失敗を保持し、同じ実行のUnity保存XMLから2 passedを回収した。Game Viewの日英入力・準備・検索・空入力・解放・warm完全hash・Play停止も確認した。[新規Git導入の結果](m2-latest-git-consumer-validation.md)。旧Editorの終了を確認してから新Editor1つを起動し、再起動なし。停止時Persistent allocation Log 1件の原因、実APK / 他OS / 実機 / tag導入と正式Release gateは残る。
 

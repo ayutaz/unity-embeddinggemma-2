@@ -28,9 +28,9 @@ namespace EmbeddingGemma.Validation
     {
         public static IEnumerator Run(PlayerRunConfiguration config, PlayerBuildInfo build, Action<JObject> save,
             Action<JObject> completed, Func<IPlayerSampleView> create = null, Func<string, PlayerBundle> load = null,
-            Func<string, JObject> capture = null)
+            Func<string, JObject> capture = null, Func<bool> isBatchMode = null)
         {
-            var injected = create != null || load != null || capture != null;
+            var injected = create != null || load != null || capture != null || isBatchMode != null;
             var report = new JObject {
                 ["schema_version"] = 1, ["success"] = false, ["gpu_verified"] = false,
                 ["validation_mode"] = injected ? "injected_contract" : "real_model",
@@ -59,6 +59,10 @@ namespace EmbeddingGemma.Validation
             {
                 build.Validate();
                 if (build.unityVersion != Application.unityVersion) throw new ArgumentException("Running Editor version differs from build provenance.");
+                report["phase"] = "runtime_preflight";
+                report["batch_mode"] = (isBatchMode ?? (() => Application.isBatchMode))();
+                if ((bool)report["batch_mode"])
+                    throw new NotSupportedException("Sample GUI validation requires interactive rendering; batch mode is not supported.");
                 view = (create ?? (() => PlayerSampleView.FromScene()))();
                 report["phase"] = "gui_preflight"; save(report);
                 var clock = Stopwatch.StartNew();

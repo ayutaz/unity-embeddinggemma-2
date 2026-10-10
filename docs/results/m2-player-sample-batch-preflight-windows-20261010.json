@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "scope": "Injected sample execution contracts in the existing Unity Editor; not native Player, GUI or GPU acceptance.",
+  "test_filter": "EmbeddingGemma.Validation.Tests.PlayerSample.*",
+  "red": {
+    "passed": 0,
+    "failed": 1,
+    "completed_utc": "2026-10-10T07:57:13.4591136Z",
+    "total": 1,
+    "failure": "  Batch mode must finish without yielding a render-frame wait.\r\n  Expected: False\r\n  But was:  True\r\n"
+  },
+  "green": {
+    "passed": 33,
+    "skipped": 0,
+    "failed": 0,
+    "total": 33,
+    "completed_utc": "2026-10-10T07:58:02.8241144Z",
+    "inconclusive": 0
+  },
+  "batch_rejected_before": [
+    "view creation",
+    "model load",
+    "screenshot capture",
+    "render-frame wait"
+  ],
+  "gpu_verified": false,
+  "native_execution_verified": false
+}

@@ -54,7 +54,7 @@ namespace EmbeddingGemma.Validation.Tests
             JObject result = null;
             Drain(PlayerSampleExecution.Run(config, PlayerRunProtocolTests.Build(), _ => { }, report => result = report,
                 () => view, _ => failLoad ? throw new IOException("injected audit failure") : new PlayerBundle { Reference = Reference(), Receipt = new JObject { ["success"] = true } },
-                name => failCapture ? throw new IOException("injected capture failure") : new JObject { ["name"] = name, ["width"] = 1280, ["height"] = 800 }));
+                name => failCapture ? throw new IOException("injected capture failure") : new JObject { ["name"] = name, ["width"] = 1280, ["height"] = 800 }, isBatchMode: () => false));
             return result;
         }
         [Test] public void ContractRunChecksAllQueriesAndReleasesTheViewWithoutClaimingRealGpu()
@@ -86,6 +86,25 @@ namespace EmbeddingGemma.Validation.Tests
             var view = new View { Fault = "font_missing" }; var report = Run(view);
             Assert.That((bool)report["success"], Is.False); Assert.That(view.Preparations, Is.EqualTo(0));
             Assert.That(view.Released, Is.True); Assert.That(view.Destroyed, Is.True);
+        }
+        [Test] public void BatchModeFailsBeforeCreatingAViewLoadingModelsOrWaitingForRendering()
+        {
+            var config = new PlayerRunConfiguration { Bundle = directory, Output = Path.Combine(directory, "batch.json"), RunId = new string('b', 32) };
+            var views = 0; var loads = 0; var captures = 0; JObject result = null; JObject saved = null;
+            var operation = PlayerSampleExecution.Run(config, PlayerRunProtocolTests.Build(), report => saved = (JObject)report.DeepClone(), report => result = report,
+                () => { views++; return new View(); }, _ => { loads++; return new PlayerBundle { Reference = Reference() }; },
+                _ => { captures++; return new JObject(); }, isBatchMode: () => true);
+            try
+            {
+                Assert.That(operation.MoveNext(), Is.False, "Batch mode must finish without yielding a render-frame wait.");
+                Assert.That(views, Is.Zero); Assert.That(loads, Is.Zero); Assert.That(captures, Is.Zero);
+                Assert.That((bool)result["success"], Is.False); Assert.That((bool)result["gpu_verified"], Is.False);
+                Assert.That((bool)result["batch_mode"], Is.True);
+                Assert.That((string)result["error"], Does.Contain("NotSupportedException").And.Contain("batch mode"));
+                Assert.That((string)saved["phase"], Is.EqualTo("failed"));
+                Assert.That((string)saved["completed_utc"], Is.Not.Null.And.Not.Empty);
+            }
+            finally { (operation as IDisposable)?.Dispose(); }
         }
         [Test] public void ScreenshotFailureIsRecordedAndReleasesTheWorker()
         {

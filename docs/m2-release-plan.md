@@ -106,3 +106,4 @@ PRのmergeはユーザーの既存依頼の範囲で、差分・競合・現在h
 - Package Managerの `packages-lock.json` は `source: git` と同じ40桁hashを記録した。Sentis 2.6.1 / Newtonsoft JSON 3.2.2も解決した。[部分成功と起動失敗の記録](results/m2-git-consumer-windows-20261010.json)を参照。Git解決の監査CLIをTDDで追加し、既存packageテストを含む38件が合格した。
 - 初回launchのCLI readinessは330秒でtimeout。後続get-logsは `UNITY_EDITOR_UNRESPONSIVE`、IPC heartbeatは生存しEditor main threadのtickが停止していると報告した。compile / 契約 / 実モデル / UIは未実行であり、Git URLでの全動作確認は未完了。
 - 旧consumer `artifacts/c` はPlay停止・scene cleanを確認して閉じた。終了指示だけでは旧Editorが残ったため、次回からprocess終了を確認してから次を起動する。新Editorをtimeoutだけを理由に再起動しない。
+- PR #14は現在headの全8 CI成功後に統合した。次は [Player向け準備](player-validation.md) のモデル・参照bundleを整備した。fixtureのred → green、関連70テスト合格、既存実モデル約1.68GBのcopy前後完全hash一致を確認した。Player build / 実行の合格とは別の結果として扱う。

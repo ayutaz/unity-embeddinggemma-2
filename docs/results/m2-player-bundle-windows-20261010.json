@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-10T00:16:13.1649868Z",
+  "tool_source_sha256_lf": "a05b18d35fc37215ef6c577ef6a38a3ce0849a6b5e440d6a5a8bf7f58a4196d3",
+  "bundle": {
+    "success": true,
+    "unity_executed": false,
+    "gpu_verified": false,
+    "files": [
+      {
+        "name": "model-fp32.sentis",
+        "bytes": 1095598044,
+        "sha256": "8488d70f2d636a34bfe2a64c1d7b9d3eb3fce70c4fb9e27d32b698090c8fb373"
+      },
+      {
+        "name": "model-float16.sentis",
+        "bytes": 553775500,
+        "sha256": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819"
+      },
+      {
+        "name": "tokenizer.json",
+        "bytes": 32170775,
+        "sha256": "25975a936201b81402a3b867d5c462cf10808bb96759f97fe9aefecbb11c49df"
+      },
+      {
+        "name": "reference.json",
+        "bytes": 408173,
+        "sha256": "deb9b3ed00e49c29b18c1a747307a318900d5e993fb3d9208f4d37e8a73cf2f6"
+      },
+      {
+        "name": "search-reference.json",
+        "bytes": 268000,
+        "sha256": "3530756b36316a812ac853f0722bed5479e92e6bb02ca6aa41c06660d32a71ec"
+      }
+    ],
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "model_source": "2edb272f17a38c7af210474345c35f391fd6955c",
+    "search_source": "13f194266162d2a728b2b2a0da9e9e58ae314ff6",
+    "model_origin_sha256": "92968480724ef7838cbd7d7b7cfd6a8d6d5105bb937f8a9907e965805a7651c8",
+    "unity_preparation_version": "6000.3.16f1"
+  },
+  "timing": {
+    "success": true,
+    "elapsed_seconds": 3.5741238,
+    "includes": "uv startup, validation hashes, copies, post-copy hashes",
+    "player_executed": false
+  },
+  "source_cache": "Previously prepared and audited consumer models, source 2edb272 and search reference 13f1942; filesystem caches reused",
+  "models_regenerated": false,
+  "total_bundle_file_bytes": 1682220492.0,
+  "related_tests": {
+    "failed": 0,
+    "passed": 70,
+    "command": "uv run --locked --no-sync pytest -q tests/test_player_bundle.py tests/test_stage.py tests/test_consumer_resolution.py tests/test_package.py"
+  },
+  "tdd_red": "ModuleNotFoundError: embeddinggemma_tools.player",
+  "player_build": "not_run",
+  "player_execution": "not_run",
+  "macos_ios_android": "not_run",
+  "performance_scope": "One run: uv startup, full hashes, copies and post-copy hashes. Not an Editor domain reload or model preparation speedup measurement."
+}

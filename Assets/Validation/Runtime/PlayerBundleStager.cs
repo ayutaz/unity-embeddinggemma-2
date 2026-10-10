@@ -9,10 +9,10 @@ namespace EmbeddingGemma.Validation
 {
     [Serializable] public sealed class PlayerBundleStage
     {
-        public string source, directory, error, transport;
-        public bool transferCompleted;
+        public string source, directory, error, transport, cacheRejectedError;
+        public bool transferCompleted, cacheReused, auditPassed;
         public int transferredFiles;
-        public double milliseconds;
+        public double milliseconds, auditMilliseconds;
     }
     public static class PlayerBundleStager
     {
@@ -23,6 +23,7 @@ namespace EmbeddingGemma.Validation
             if (result == null) throw new ArgumentNullException(nameof(result));
             var timer = Stopwatch.StartNew();
             result.source = source; result.error = null; result.transferCompleted = false; result.transferredFiles = 0;
+            result.cacheReused = false; result.auditPassed = false; result.cacheRejectedError = null; result.auditMilliseconds = 0;
             result.transport = transfer == null ? "UnityWebRequest.DownloadHandlerFile" : "injected_transport";
             try
             {
@@ -36,9 +37,7 @@ namespace EmbeddingGemma.Validation
                     else
                     {
                         // This harness extracts local StreamingAssets; it does not download models from the Internet.
-                        if (!(source.StartsWith("file://", StringComparison.Ordinal) ||
-                            source.StartsWith("jar:file://", StringComparison.Ordinal) && source.Contains("!/")))
-                            throw new NotSupportedException("Unsupported StreamingAssets source: " + source);
+                        RequireLocalSource(source);
                         result.directory = Path.GetFullPath(destination);
                         if (Directory.Exists(result.directory) && Directory.EnumerateFileSystemEntries(result.directory).Any())
                             throw new IOException("Staging directory must be empty; previous runs are never overwritten.");
@@ -49,40 +48,50 @@ namespace EmbeddingGemma.Validation
                 if (result.error != null || result.transferCompleted) yield break;
                 foreach (var name in Names)
                 {
-                    var final = Path.Combine(result.directory, name); var partial = final + ".part";
-                    IEnumerator routine = null;
-                    try
-                    {
-                        try { routine = (transfer ?? Download)(source.TrimEnd('/') + "/" + name, partial); }
-                        catch (Exception exception) { result.error = exception.GetType().Name + ": " + name + ": " + exception.Message; }
-                        if (result.error != null) yield break;
-                        while (true)
-                        {
-                            var moved = false; object current = null;
-                            try { moved = routine.MoveNext(); if (moved) current = routine.Current; }
-                            catch (Exception exception) { result.error = exception.GetType().Name + ": " + name + ": " + exception.Message; }
-                            if (result.error != null) yield break;
-                            if (!moved) break;
-                            yield return current;
-                        }
-                        // A transfer must complete before publishing the file under its fixed name.
-                        try { File.Move(partial, final); result.transferredFiles++; }
-                        catch (Exception exception) { result.error = exception.GetType().Name + ": " + name + ": " + exception.Message; }
-                        if (result.error != null) yield break;
-                    }
-                    finally
-                    {
-                        try { (routine as IDisposable)?.Dispose(); }
-                        catch (Exception exception) { result.error ??= "Transfer disposal: " + exception.Message; }
-                        try { if (File.Exists(partial)) File.Delete(partial); }
-                        catch (Exception exception) { result.error ??= "Partial-file cleanup: " + exception.Message; }
-                    }
+                    yield return TransferFile(source.TrimEnd('/') + "/" + name, Path.Combine(result.directory, name), result, transfer);
                     if (result.error != null) yield break;
                 }
                 // The caller must still perform the pinned receipt and full SHA-256 audit.
                 result.transferCompleted = true;
             }
             finally { timer.Stop(); result.milliseconds = timer.Elapsed.TotalMilliseconds; }
+        }
+        internal static void RequireLocalSource(string source)
+        {
+            if (source == null || !(source.StartsWith("file://", StringComparison.Ordinal) ||
+                source.StartsWith("jar:file://", StringComparison.Ordinal) && source.Contains("!/")))
+                throw new NotSupportedException("Unsupported StreamingAssets source: " + source);
+        }
+        internal static IEnumerator TransferFile(string source, string final, PlayerBundleStage result, Func<string, string, IEnumerator> transfer)
+        {
+            var name = Path.GetFileName(final); var partial = final + ".part";
+            IEnumerator routine = null;
+            try
+            {
+                try { routine = (transfer ?? Download)(source, partial); }
+                catch (Exception exception) { result.error = exception.GetType().Name + ": " + name + ": " + exception.Message; }
+                if (result.error != null) yield break;
+                while (true)
+                {
+                    var moved = false; object current = null;
+                    try { moved = routine.MoveNext(); if (moved) current = routine.Current; }
+                    catch (Exception exception) { result.error = exception.GetType().Name + ": " + name + ": " + exception.Message; }
+                    if (result.error != null) yield break;
+                    if (!moved) break;
+                    yield return current;
+                }
+                // A transfer must complete before publishing the file under its fixed name.
+                try { File.Move(partial, final); result.transferredFiles++; }
+                catch (Exception exception) { result.error = exception.GetType().Name + ": " + name + ": " + exception.Message; }
+                if (result.error != null) yield break;
+            }
+            finally
+            {
+                try { (routine as IDisposable)?.Dispose(); }
+                catch (Exception exception) { result.error ??= "Transfer disposal: " + exception.Message; }
+                try { if (File.Exists(partial)) File.Delete(partial); }
+                catch (Exception exception) { result.error ??= "Partial-file cleanup: " + exception.Message; }
+                    }
         }
         static IEnumerator Download(string source, string output)
         {

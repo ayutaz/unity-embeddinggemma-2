@@ -17,6 +17,8 @@ Unityの[IMGUITextHandle](https://raw.githubusercontent.com/Unity-Technologies/U
 Player側はviewごとに生成し、元と同じくview破棄時に解放する条件分岐を維持した。
 本番処理はUnityのprivate cacheへ変更を加えず、警告を無効化しない。private fieldを読む処理は固定Editorに対する検証テストだけに置いた。Core Runtimeの差分は0。
 
+保存済みscene / Play停止 / TestRunner非稼働を確認した後、同じEditor PID `139424` を正常終了した。終了callbackの後に観測用callbackで `original_id=-4736 destroyed=True remaining_owned_id=0` を記録し、所有fontのnative破棄とSessionState消去を確認した。Editor.logの `Shut down.` とEditor本体0件も確認した。強制終了による結果ではない。
+
 ## TDDと回帰
 
 | 実行 | 結果 | 証拠と意味 |
@@ -55,8 +57,9 @@ Game Viewの実mouse / keyboard入力で日本語・英語queryを検索し、�
 ## 未検証と残る問題
 
 - `Font.GetCharacterInfo` の旧glyph probeは日本語でfalseだった。これをglyph検証合格に数えず、実TextCore画面の観察と分けて記録した。
-- Editor終了callbackは実装したが、この時点では実際のEditor終了によるcleanupは未実行。Player側の新helperもbuild / 実行は未確認。
+- Editor終了時の所有font破棄は確認済み。Player側の新helperはbuild / 実行未確認。
 - 以前のFound native allocation診断の責任箇所は未確定。この条件でConsole 0件でも、native leak全体の解消やdomain reloadの高速化は証明しない。
+- 正常終了のnative `MemoryLeaks` 診断はallocatedMemory=17,476,385 bytesを報告した。fontの破棄とは別の観測値で、責任箇所や有害なリークの量を確定しない。
 - 成功した準備中にEditor.logへD3D12 upload buffer size診断が出た。原因解消や性能改善は主張しない。
 - 日英2queryのFloat16 GPU操作は、既存のFP32 / Float16 × CPU / GPU全4条件の精度結果を置き換えない。
 - 新固定Git consumer、macOS / iOS / Android実機、候補 / tag導入と正式Releaseは後続gate。`0.1.0-pre.1` は未リリース。

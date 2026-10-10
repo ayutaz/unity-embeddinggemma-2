@@ -42,7 +42,7 @@
     "sentis": "2.6.1",
     "uloop_cli": "3.8.1",
     "editor_pid": 139424,
-    "editor_created": "2026-10-10T14:24:55.8807910+09:00",
+    "editor_created": "2026-10-10T14:24:55.880791+09:00",
     "project": "artifacts/i",
     "editor_count": 1,
     "active_build_target": "Android",
@@ -823,11 +823,282 @@
   "limitations": [
     "Two UI queries on Float16 GPU do not replace the previous full four-condition M1/search suite.",
     "Legacy Font.GetCharacterInfo for Japanese returned false; actual TextCore Game View Japanese rendering was inspected separately.",
-    "Final helper has an Editor.quitting cleanup callback; actual Editor shutdown cleanup has not yet been executed.",
     "New helper Player conditional path has not yet been built/run.",
     "Generic Found native allocation diagnostics observed before this fix remain unattributed; this result does not prove leak freedom.",
     "An Editor.log D3D12 upload-buffer-size diagnostic occurred during successful model preparation; no performance fix is claimed.",
     "macOS, iOS and Android physical CPU/GPU execution and candidate/tag consumers remain unverified.",
     "Package 0.1.0-pre.1 remains unreleased."
-  ]
+  ],
+  "editor_shutdown": {
+    "observed_utc": "2026-10-10T06:04:58.2113044Z",
+    "editor_pid": 139424,
+    "editor_process_exited": true,
+    "remaining_editor_count": 0,
+    "shutdown_request": {
+      "Result": "{ exit_scheduled = True, scene = Assets/EmbeddingGemmaTextSearch/TextSearch.unity, dirty = False, playing = False, runner_active = False, owned_font_id = -4736 }",
+      "Logs": [
+        "Execution completed successfully"
+      ],
+      "CompilationErrors": [],
+      "ErrorMessage": "",
+      "Error": "",
+      "UpdatedCode": null,
+      "DiagnosticsSummary": null,
+      "Diagnostics": [],
+      "EditorPlaying": false,
+      "Success": true
+    },
+    "font_cleanup_marker": "FONT_QUIT_PROBE_20261010 original_id=-4736 destroyed=True remaining_owned_id=0",
+    "owned_font_destroyed": true,
+    "owned_session_id_erased": true,
+    "editor_log_shut_down": true,
+    "native_memory_shutdown_diagnostic": {
+      "type": "MemoryLeaks",
+      "version": 2,
+      "phase": "Immediate",
+      "time": 1791612254896,
+      "processId": 139424,
+      "allocatedMemory": 17476385,
+      "memoryLabels": [
+        {
+          "Default": 29313
+        },
+        {
+          "Permanent": 15236
+        },
+        {
+          "NewDelete": 71541
+        },
+        {
+          "Thread": 4237960
+        },
+        {
+          "Manager": 826304
+        },
+        {
+          "VertexData": 8
+        },
+        {
+          "Geometry": 816
+        },
+        {
+          "Texture": 296
+        },
+        {
+          "Shader": 81205
+        },
+        {
+          "Material": 24
+        },
+        {
+          "GfxDevice": 176640
+        },
+        {
+          "Animation": 392
+        },
+        {
+          "Audio": 3040
+        },
+        {
+          "FreeType": 8
+        },
+        {
+          "FontEngine": 736
+        },
+        {
+          "Physics": 2090
+        },
+        {
+          "Physics2D": 16
+        },
+        {
+          "Serialization": 1361472
+        },
+        {
+          "Input": 14984
+        },
+        {
+          "JobScheduler": 33024
+        },
+        {
+          "TextLib": 38488
+        },
+        {
+          "Mono": 32
+        },
+        {
+          "ScriptingNativeRuntime": 155060
+        },
+        {
+          "BaseObject": 1620336
+        },
+        {
+          "Resource": 1336
+        },
+        {
+          "Renderer": 3000
+        },
+        {
+          "Transform": 4685
+        },
+        {
+          "File": 18618
+        },
+        {
+          "WebCam": 616
+        },
+        {
+          "Culling": 32
+        },
+        {
+          "Terrain": 11394
+        },
+        {
+          "Wind": 24
+        },
+        {
+          "STL": 40
+        },
+        {
+          "String": 13807
+        },
+        {
+          "DynamicArray": 92473
+        },
+        {
+          "HashMap": 164445
+        },
+        {
+          "Utility": 2662098
+        },
+        {
+          "Curl": 48
+        },
+        {
+          "PoolAlloc": 2728
+        },
+        {
+          "AI": 80
+        },
+        {
+          "TypeTree": 354245
+        },
+        {
+          "ScriptManager": 512
+        },
+        {
+          "RuntimeInitializeOnLoadManager": 64
+        },
+        {
+          "SpriteAtlas": 112
+        },
+        {
+          "GI": 7792
+        },
+        {
+          "Director": 8240
+        },
+        {
+          "CloudService": 10944
+        },
+        {
+          "WebRequest": 7029
+        },
+        {
+          "VR": 47994
+        },
+        {
+          "SceneManager": 504
+        },
+        {
+          "Video": 208
+        },
+        {
+          "LazyScriptCache": 32
+        },
+        {
+          "Camera": 177
+        },
+        {
+          "Secure": 2377
+        },
+        {
+          "SerializationCache": 1576
+        },
+        {
+          "APIUpdating": 10320
+        },
+        {
+          "Subsystems": 336
+        },
+        {
+          "VirtualTexturing": 57888
+        },
+        {
+          "StaticSafetyDebugInfo": 278528
+        },
+        {
+          "Analytics": 384
+        },
+        {
+          "Hierarchy": 608
+        },
+        {
+          "CoreStats": 13032
+        },
+        {
+          "Identifiers": 12960
+        },
+        {
+          "Gui": 267557
+        },
+        {
+          "EditorUtility": 189100
+        },
+        {
+          "VersionControl": 4
+        },
+        {
+          "Undo": 947
+        },
+        {
+          "AssetDatabase": 4513110
+        },
+        {
+          "EditorGi": 328
+        },
+        {
+          "UnityConnect": 29557
+        },
+        {
+          "Upm": 1896
+        },
+        {
+          "AssetCompliance": 64
+        },
+        {
+          "DrivenProperties": 72
+        },
+        {
+          "LocalIPC": 210
+        },
+        {
+          "ProfilerEditor": 9746
+        },
+        {
+          "CoreBusinessMetrics": 2863
+        },
+        {
+          "Licensing": 664
+        },
+        {
+          "AssetReference": 32
+        },
+        {
+          "IPCStream": 32
+        }
+      ]
+    },
+    "native_memory_diagnostic_attribution": "Unknown; not a font leak-free claim"
+  }
 }

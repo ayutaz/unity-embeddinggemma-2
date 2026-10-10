@@ -41,7 +41,7 @@ PR #6のUPM移行時にはRuntimeと契約テストの19ファイルが移行前
 
 ## 残タスクの順序
 
-Windows Editorのsample fontが停止で破棄されてもIMGUI cacheに参照が残る経路を再現し、Editor内で1つのnative fontを共有する修正をTDDで確認した。red 2 failed → green 2 passed、sample EditMode 66 / PlayMode 2、未準備UI 3回の停止前後Console 0、実Float16 GPU日英検索の全6順位・score照合、空入力・解放・停止が合格。[実測と未検証](m2-editor-font-lifetime-validation.md)を参照。修正source `f7ffbfd`は既存Git consumerへの作業ソース配置で、新固定Git導入は未実行。次は実Editor終了cleanupと新Git導入・Player条件を確認し、以前のnative allocation診断と他OS / 実機・正式Release gateを進める。
+Windows Editorのsample fontが停止で破棄されてもIMGUI cacheに参照が残る経路を再現し、Editor内で1つのnative fontを共有する修正をTDDで確認した。red 2 failed → green 2 passed、sample EditMode 66 / PlayMode 2、未準備UI 3回の停止前後Console 0、実Float16 GPU日英検索の全6順位・score照合、空入力・解放・停止が合格。[実測と未検証](m2-editor-font-lifetime-validation.md)を参照。修正source `f7ffbfd`は既存Git consumerへの作業ソース配置で、新固定Git導入は未実行。正常Editor終了時の所有font破棄も確認済み。次は新Git導入・Player条件を確認し、以前のnative allocation診断と他OS / 実機・正式Release gateを進める。
 
 ユーザーが安定化から正式リリースまでの実行を依頼した。[詳細実行計画](m2-release-plan.md)に4段階の受け渡しと完了条件を記載した。新しい実測はその実行SHA・環境で記録し、以下の既存履歴を書き換えない。
 

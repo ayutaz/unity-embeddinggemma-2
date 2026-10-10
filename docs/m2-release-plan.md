@@ -8,7 +8,7 @@ M1の履歴と既存のM2受け入れ条件は維持する。Windowsだけの成
 
 ## 次に進める順序
 
-PR #26 / #28は統合済み。起動環境補完後の[モデルなし比較](m2-stability-environment-validation.md)に続き、[font寿命](m2-editor-font-lifetime-validation.md)を実IMGUIで切り分けた。sample fontがPlay停止で破棄されてもEditor cacheへ参照が残ることを再現し、Editor内で1つのfontを再利用する修正をTDDで確認した。sample EditMode 66 / PlayMode 2、未準備UI 3回、実Float16 GPU日英検索・空入力・解放・停止が合格。修正SHAの新Git導入と実Editor終了cleanup、Player font経路を次に確認する。以前のFound leak診断15件の責任箇所は未確定で、解消とは扱わない。実機gateは端末待ちで、不要なAPK再buildを避ける。
+PR #26 / #28は統合済み。起動環境補完後の[モデルなし比較](m2-stability-environment-validation.md)に続き、[font寿命](m2-editor-font-lifetime-validation.md)を実IMGUIで切り分けた。sample fontがPlay停止で破棄されてもEditor cacheへ参照が残ることを再現し、Editor内で1つのfontを再利用する修正をTDDで確認した。sample EditMode 66 / PlayMode 2、未準備UI 3回、実Float16 GPU日英検索・空入力・解放・停止が合格。正常Editor終了による所有font破棄も確認した。修正SHAの新Git導入とPlayer font経路を次に確認する。以前のFound leak診断15件の責任箇所は未確定で、解消とは扱わない。実機gateは端末待ちで、不要なAPK再buildを避ける。
 
 1. 安定性を限定条件で調べる。新Git consumerの停止時にPersistent allocation Logが1件出たため、NativeLeakDetectionのstack設定を保存・復元し、空scene / UIのみ / CPU / GPUの条件と終了時点を比較する。既存sample cacheの実装と新固定mainのGit導入・実モデル4条件・画面は確認済み。正式候補・tagの導入は後段で別途確認する。
 2. Android buildのscene / 配置 / receipt / ABI / graphics APIはTDDで接続済み。source `751c30a`の実APK build・署名・全payload監査が成功した。接続端末を確保したら同じAPKで実jar展開・CPU / GPU精度・cache再利用・停止と再起動を実測する。端末なしのbuildを実機合格とは数えない。

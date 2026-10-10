@@ -50,7 +50,7 @@ M1の履歴と既存のM2受け入れ条件は維持する。Windowsだけの成
 
 | 対象 | 必要な環境 | 現状 / 次の作業 |
 | --- | --- | --- |
-| Windows Player | Windows build module、実GPU、固定モデル配置 | moduleあり。Editor成功と別にbuild / Player起動を検証する |
+| Windows Player | Windows build module、実GPU、固定モデル配置 | Development / MonoとIL2CPP / Release / High strippingの両方で実モデル4条件・独立2起動が合格。releaseでfile URL初回展開とcache再利用・完全CNG hashも確認。任意consumerのstrippingや他OSへ一般化しない |
 | macOS Editor | Mac、Unity 6000.3.16f1、Metal対応GPU、適切なUnityライセンス | 実行可能なMacを確認する。hosted CPU buildだけでMetal GPU成功としない |
 | iOS Player | Mac、Xcode / iOS module、署名可能な実機、Metal | 端末・署名・接続を確認する。Apple資格情報はチャットやソースへ記録しない |
 | Android Player | Android module / SDK / NDK / JDK、実機、対応graphics API | Windows moduleあり、接続端末なし。ABI / API / メモリ条件を確認する |
@@ -124,3 +124,5 @@ PRのmergeはユーザーの既存依頼の範囲で、差分・競合・現在h
 - Player起動前のStreamingAssets展開adapterをTDDで追加した。新規12 redから既存65件を含む77 greenへ移行。実UnityWebRequestで小さい日本語・空白を含むfile URLの転送と欠落ファイル失敗を確認し、jar URLの固定6ファイル・interruption・旧出力保持・完全hashによる推論前の拒否は合成契約で確認した。[記録](results/m2-streaming-bundle-windows-20261010.json)にmodule不足のcompile失敗と非同期完了待ちの2失敗も残す。実APK / Android端末 / 実モデル転送 / 新しいPlayer binaryは未実行。次は監査済みcache再利用と容量管理、APK / Android起動・sample配置、Windows IL2CPP、利用可能な他OS / 実機環境を進める。
 - PR #21を現在headの全8 CI成功後に統合し、mainを `9b5203c` へfast-forwardした。統合後CI run 38016987520は記録時点で7 job成功 / Required CI待機中。Editorは1つ、元のUnity設定変更を保持した。
 - 所有marker付きの監査済みcacheを追加し、cache再利用でも完全hashを維持、旧activeを保持して更新、成功後1 / 更新中最大2 bundleに制限した。cache新規10 red + 統合 / manifest破損2 red、完全hash7 redを観測し、全96 greenを確認した。[実測と失敗履歴](m2-bundle-cache-validation.md)。実bundleの監査約108秒によるNUnit timeoutを保持し、Windows CNGで同じwarm監査を約1.5〜1.8秒へ短縮、3回すべて全ファイル照合・モデル再転送0だった。実推論・GPU・Player・他OSの新しい合格とは扱わない。次はWindows IL2CPP / release strippingと新bootstrapの実Player回帰、APK / Android sample配置、他OS / 実機環境と安定性の未解決条件を進める。
+- PR #22を現在headの全8 CI成功後に統合し、mainを `f41c7d7` へfast-forwardした。統合後mainのCI run 38019106372も全8 job成功。既存のUnity設定変更を保持し、Editor本体1つを確認した。
+- Windows IL2CPP / compiler Release / High strippingをTDDで追加し、3 redから99 greenへ移行した。source `c742fb9` の実buildが257.1秒 / errors 0 / warnings 485で成功し、同じbinaryの独立2起動とも終了code 0、実モデル4条件・25 token入力・M1と検索全順位・score・解放が合格した。file URL初回展開とwarm cache再利用、全5ファイルの実CNG監査1.47秒 / 1.55秒、モデル再転送0、保持1 bundleを確認した。[条件と結果](m2-player-il2cpp-validation.md)。Windowsの検証専用assemblyをpreserve-allした条件であり、任意consumerや他OSの成功には数えない。次は配布sampleのAndroid配置・実APK / macOS / iOS / Androidの実機・安定性追跡とリリースgateを進める。

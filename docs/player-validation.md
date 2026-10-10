@@ -77,6 +77,8 @@ Unity 6000.3.16f1 / Sentis 2.6.1のプロジェクトでWindows 64-bitを選択�
 
 Editorから `EmbeddingGemma.Validation.Editor.ValidationPlayerBuild.BuildWindows("<新しい空directory>/Validation.exe", "<ソースの40桁commit>")` を呼ぶ。既存出力を上書きせず、生成した検証sceneだけをbuildし、元のsceneを復元して一時markerを削除する。`build.json` はbuild結果、時間、errors / warnings、Mono / IL2CPP、stripping、RuntimeソースのLF正規化SHA-256を記録する。buildを呼ぶ前にconsumerのソースと指定commitが一致することを確認する。
 
+`releaseIl2Cpp: true`を渡すと、非Developmentの`BuildOptions.None`、IL2CPP / compiler Release / managed stripping Highでbuildする。元のbackend / stripping / compiler設定を成功・失敗どちらでも復元する。optionsとcompilerもreceiptへ記録する。[Windows release検証](m2-player-il2cpp-validation.md)にTDDと実行条件を記録する。既定の呼び方はDevelopment / 現在のEditor設定を維持する。
+
 検証PlayerにはResourcesのprovenance markerを含める。markerがない通常PlayerやEditorでは自動実行しない。監査済みbundleを通常filesystemに配置して、毎回新しいresult path / run IDを指定する。
 
 ```powershell

@@ -68,7 +68,7 @@ binary の Resources には sample 用 marker を確認し、既存の全条件�
 
 ## モデル不要の終了処理の比較
 
-以前の精度検証で合格した `c742fb940b78393573b19e42352fe7b70256e74d` の IL2CPP / Release / High stripping binary を再利用した。sample scene と新しい sample ハーネスを含まない既存 Player に、存在しない bundle directory を指定した。全条件で `DirectoryNotFoundException` を結果に保存し、model / tokenizer / Worker / query は実行していない。
+以前の精度検証で合格した `c742fb940b78393573b19e42352fe7b70256e74d` の IL2CPP / Release / High stripping binary を再利用した。元の実モデル2起動も保存済み arguments の `-batchmode -force-d3d12` を確認した。sample scene と新しい sample ハーネスを含まない既存 Player に、存在しない bundle directory を指定した。全条件で `DirectoryNotFoundException` を結果に保存し、model / tokenizer / Worker / query は実行していない。
 
 [3起動の比較条件・終了結果・元 report / log の hash](results/m2-player-shutdown-comparison-windows-20261010.json)を保持した。公開用の要約にはユーザー名・絶対パス・PID・機種情報・生の crash record を含めず、完全な原本は Git 管理外の local artifacts に維持した。前の process の終了を確認してから次を起動し、全て `Start-Process -WindowStyle Hidden`。新規 build・モデルの download / copy・Editor の追加起動はしていない。
 

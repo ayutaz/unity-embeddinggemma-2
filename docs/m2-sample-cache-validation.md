@@ -68,7 +68,7 @@ uloopのdynamic codeから`EditorGUIUtility.QueueGameViewInputEvent`でIMGUIのm
 
 ## 次のgate
 
-1. 統合したsampleを含む固定Git SHAから、空consumerへ新規導入し、module・compile・sample・画面と実モデルを確認する。
+1. 統合main `01f3d86`の[新しい空Git consumer](m2-latest-git-consumer-validation.md)でmodule・compile・sample・画面・実モデル4条件を確認した。正式候補 / tag固定導入は後段で確認する。
 2. Android APK build / 配置 / 実jar読み込み・実機CPU / GPUを確認する。今回のfile URLと合成jar契約を代用にしない。
 3. macOS Editor / iOS / Androidの実測、任意consumerのstripping、frame latency、安定性の未解決項目を確認する。
 4. [4段階の詳細計画](m2-release-plan.md)の全gateを満たす候補でtag固定導入と正式Releaseを行う。

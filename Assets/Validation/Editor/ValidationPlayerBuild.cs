@@ -37,11 +37,11 @@ namespace EmbeddingGemma.Validation.Editor
             if (EditorApplication.isPlaying || EditorUserBuildSettings.activeBuildTarget != target)
                 throw new InvalidOperationException("Stop Play Mode and select " + target + " before building.");
             for (var i = 0; i < SceneManager.sceneCount; i++) if (SceneManager.GetSceneAt(i).isDirty) throw new InvalidOperationException("Save scene edits before building.");
-            if (File.Exists(ScenePath) || File.Exists(MarkerPath)) throw new IOException("Temporary validation assets already exist; inspect them before building.");
+            if (File.Exists(ScenePath) || File.Exists(MarkerPath) || File.Exists(SampleMarkerPath)) throw new IOException("Temporary validation assets already exist; inspect them before building.");
         }
 
         static PlayerBuildInfo BuildTargetPlayer(BuildPlayerOptions options, string codeCommit, NamedBuildTarget target,
-            Action<BuildPlayerOptions> execute, bool releaseIl2Cpp = false, Action configure = null, Action restore = null, Func<JObject> details = null)
+            Action<BuildPlayerOptions> execute, bool releaseIl2Cpp = false, Action configure = null, Action restore = null, Func<JObject> details = null, bool sampleScene = false)
         {
             EnsureBuildState(options.target);
             var previous = EditorSceneManager.GetSceneManagerSetup();
@@ -49,6 +49,7 @@ namespace EmbeddingGemma.Validation.Editor
             var previousStripping = PlayerSettings.GetManagedStrippingLevel(target);
             var previousCompiler = PlayerSettings.GetIl2CppCompilerConfiguration(target);
             var directory = Path.GetDirectoryName(options.locationPathName);
+            var markerPath = sampleScene ? SampleMarkerPath : MarkerPath;
             Directory.CreateDirectory(directory);
             var receipt = new JObject { ["success"] = false, ["injected_build"] = execute != null, ["source_commit"] = codeCommit, ["started_utc"] = DateTime.UtcNow.ToString("O") };
             var receiptPath = Path.Combine(directory, "build.json");
@@ -68,13 +69,16 @@ namespace EmbeddingGemma.Validation.Editor
                 if (details != null) receipt["target_settings"] = details();
                 var info = new PlayerBuildInfo { codeCommit = codeCommit, unityVersion = Application.unityVersion, sentisVersion = "2.6.1", target = options.target.ToString(),
                     scriptingBackend = PlayerSettings.GetScriptingBackend(target).ToString(),
-                    stripping = PlayerSettings.GetManagedStrippingLevel(target).ToString(), sourceSha256 = SourceHashes() };
+                    stripping = PlayerSettings.GetManagedStrippingLevel(target).ToString(), sourceSha256 = SourceHashes(sampleScene) };
                 info.Validate(); receipt["build_info"] = JObject.FromObject(info); Save();
-                Directory.CreateDirectory(Path.GetDirectoryName(MarkerPath));
-                File.WriteAllText(MarkerPath, JsonConvert.SerializeObject(info, Formatting.Indented), new UTF8Encoding(false));
-                AssetDatabase.ImportAsset(MarkerPath, ImportAssetOptions.ForceSynchronousImport);
-                var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-                if (!EditorSceneManager.SaveScene(scene, ScenePath)) throw new IOException("Could not save validation scene.");
+                Directory.CreateDirectory(Path.GetDirectoryName(markerPath));
+                File.WriteAllText(markerPath, JsonConvert.SerializeObject(info, Formatting.Indented), new UTF8Encoding(false));
+                AssetDatabase.ImportAsset(markerPath, ImportAssetOptions.ForceSynchronousImport);
+                if (!sampleScene)
+                {
+                    var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+                    if (!EditorSceneManager.SaveScene(scene, ScenePath)) throw new IOException("Could not save validation scene.");
+                }
                 if (execute != null) execute(options);
                 else
                 {
@@ -98,7 +102,7 @@ namespace EmbeddingGemma.Validation.Editor
                 catch (Exception exception) { receipt["success"] = false; receipt["restore_error"] = exception.Message; throw; }
                 finally
                 {
-                    try { AssetDatabase.DeleteAsset(ScenePath); AssetDatabase.DeleteAsset(MarkerPath); }
+                    try { if (!sampleScene) AssetDatabase.DeleteAsset(ScenePath); AssetDatabase.DeleteAsset(markerPath); }
                     finally
                     {
                         try
@@ -118,22 +122,35 @@ namespace EmbeddingGemma.Validation.Editor
             }
         }
 
-        static JObject SourceHashes()
+        static JObject SourceHashes(bool includeSample = false)
         {
             var hashes = new JObject();
+            void AddFile(string file, string key)
+            {
+                var text = File.ReadAllText(file).Replace("\r\n", "\n"); using var hash = SHA256.Create();
+                hashes[key] = BitConverter.ToString(hash.ComputeHash(Encoding.UTF8.GetBytes(text))).Replace("-", "").ToLowerInvariant();
+            }
             void Add(string root, string prefix)
             {
                 foreach (var file in Directory.GetFiles(root, "*.cs", SearchOption.AllDirectories).OrderBy(path => path, StringComparer.Ordinal))
                 {
-                    var text = File.ReadAllText(file).Replace("\r\n", "\n"); using var hash = SHA256.Create();
-                    var digest = BitConverter.ToString(hash.ComputeHash(Encoding.UTF8.GetBytes(text))).Replace("-", "").ToLowerInvariant();
-                    hashes[prefix + Path.GetRelativePath(root, file).Replace('\\', '/')] = digest;
+                    AddFile(file, prefix + Path.GetRelativePath(root, file).Replace('\\', '/'));
                 }
             }
             Add(Path.GetFullPath("Assets/Validation/Runtime"), "Assets/Validation/Runtime/");
+            AddFile("Assets/Validation/Runtime/link.xml", "Assets/Validation/Runtime/link.xml");
             var package = UnityEditor.PackageManager.PackageInfo.FindForAssetPath("Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs");
             if (package == null) throw new InvalidOperationException("The Runtime package is unresolved.");
             Add(Path.Combine(package.resolvedPath, "Runtime"), "Packages/com.ayutaz.embeddinggemma/Runtime/");
+            if (includeSample)
+            {
+                Add(Path.GetFullPath("Assets/EmbeddingGemmaTextSearch"), "Assets/EmbeddingGemmaTextSearch/");
+                AddFile(SampleScenePath, SampleScenePath);
+                const string corpus = "Assets/EmbeddingGemmaTextSearch/Resources/EmbeddingGemmaTextSearch/corpus.json";
+                AddFile(corpus, corpus);
+                const string assembly = "Assets/EmbeddingGemmaTextSearch/EmbeddingGemma.TextSearch.Sample.asmdef";
+                AddFile(assembly, assembly);
+            }
             return hashes;
         }
     }

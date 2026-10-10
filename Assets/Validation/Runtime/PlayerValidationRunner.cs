@@ -23,18 +23,21 @@ namespace EmbeddingGemma.Validation
         IEnumerator Start()
         {
             yield return null;
-            var exitCode = 1;
+            PlayerRunConfiguration config = null;
+            PlayerReportFile writer = null;
             try
             {
                 var defaultOutput = Path.Combine(Application.persistentDataPath, "EmbeddingGemmaValidation", Guid.NewGuid().ToString("N"), "results.json");
-                var config = PlayerRunConfiguration.Parse(Environment.GetCommandLineArgs(), Application.streamingAssetsPath + "/EmbeddingGemmaValidation", defaultOutput);
-                var writer = new PlayerReportFile(config.Output);
-                var result = PlayerRunProtocol.Run(config, build, writer.Save);
-                Debug.Log("EmbeddingGemma validation " + result.phase + ": " + config.Output);
-                exitCode = result.success ? 0 : 1;
+                config = PlayerRunConfiguration.Parse(Environment.GetCommandLineArgs(), Application.streamingAssetsPath + "/EmbeddingGemmaValidation", defaultOutput);
+                writer = new PlayerReportFile(config.Output);
             }
             catch (Exception exception) { Debug.LogException(exception); }
-            Application.Quit(exitCode);
+            if (writer == null) { Application.Quit(1); yield break; }
+            PlayerRunReport result = null;
+            var staging = Path.Combine(Application.persistentDataPath, "EmbeddingGemmaValidation", "StagedBundle-" + config.RunId);
+            yield return PlayerValidationExecution.Run(config, build, staging, writer.Save, report => result = report);
+            if (result != null) Debug.Log("EmbeddingGemma validation " + result.phase + ": " + config.Output);
+            Application.Quit(result != null && result.success ? 0 : 1);
         }
     }
 }

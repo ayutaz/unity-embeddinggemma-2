@@ -51,7 +51,23 @@ run-001/
 uloop-cliで実装前のredを20件、9件、追加11件と段階的に観測し、最終的にUnity Editorで40 passed / failed・skipped・inconclusive 0を確認した。[TDDの記録](results/m2-player-contracts-windows-20261010.json)にsource hashと実行条件を記載する。
 テストは小さい合成参照 / providerを使用しており、実モデル推論、実際のGPU、Player build / 起動の証拠ではない。既存のSentis実モデル結果と分けて扱う。
 
-現時点のloaderは通常のfilesystem専用。Androidのjar内StreamingAssetsやURLは明示的に拒否する。[Unity公式のStreamingAssets仕様](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Application-streamingAssetsPath.html)に沿った展開adapterと実機確認は次の作業に残す。
+loader自体は通常のfilesystem専用で、URLを直接渡すと拒否する。起動経路に以下の展開adapterを追加した。Androidの実APK / 実機確認は未実行で、展開の契約合格とは分ける。
+
+## StreamingAssetsからの展開adapter
+
+[Unity公式のStreamingAssets仕様](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Application-streamingAssetsPath.html)では、AndroidのStreamingAssetsはAPK内のURLになり、通常のfilesystem APIでアクセスできない。検証Playerの`PlayerBundleStager`は、ローカル`jar:file://...!/assets/...`と`file://`の6ファイルをUnityWebRequestで新しい空directoryへ展開する。`bundle.json`と既存の固定5ファイルだけを対象とし、manifestから転送先の名前を選ばせない。
+
+[DownloadHandlerFile](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Networking.DownloadHandlerFile.html)で直接`.part`ファイルへ書き、全モデルをbyte配列へ載せない。requestの完了を待ち、成功後だけ固定のファイル名へ移す。request timeoutは各300秒。失敗時はpartialを除去し、後続転送・監査・推論へ進めない。既存の非空directoryを上書きしない。通常のfilesystem bundleはその場所で監査し、余分にcopyしない。
+
+`PlayerValidationExecution.Run`はbuild provenanceと結果保存を確認し、展開完了後に既存の`PlayerBundleLoader`と`PlayerRunProtocol`を呼ぶ。転送完了はhash・参照・推論の合格を意味しない。全ファイルの完全SHA-256、token照合、実backend4条件の合格条件を維持する。結果JSONの`staging`に元source、展開directory、transport、転送件数、展開時間と失敗を記録する。展開中・失敗はsuccess=false / gpuVerified=falseであり、元のsourceをconfigの書き換えで失わない。
+
+新規12件で意図したredを観測し、既存65件を含む77 passed / failed・skipped・inconclusive 0をWindows Editorで確認した。[ソース・失敗履歴・結果](results/m2-streaming-bundle-windows-20261010.json)を参照。実UnityWebRequestの2件は、日本語・空白を含む小さい`file://` bundleの完全転送と、欠落ファイルの失敗 / partial除去を検証した。jar URLの転送先・全固定名、interruption、既存出力の保持、展開後の同じ長さの内容変更によるhash拒否、build / 結果保存の失敗による推論禁止も確認した。合成providerのGPU条件は実GPU合格として扱わない。
+
+最小consumerへ`Assets/Validation/`を配置する場合は、`Packages/manifest.json`のdependenciesで組込みmodule `"com.unity.modules.unitywebrequest": "1.0.0"` を有効にする。元プロジェクトでは既に有効。consumerではmodule不足のcompile失敗を記録し、追加・Package Manager Resolve後の解決とcompile / 契約成功を確認した。Resolve受理後のassembly reloadでCLI応答が切れたが、同じEditorのlock / module状態と最終結果を確認し、再起動やResolveの重複実行はしなかった。
+
+opt-in bootstrapはこの経路へ接続し、URLの展開先を`persistentDataPath/EmbeddingGemmaValidation/StagedBundle-<run ID>`とする。filesystem sourceならこの展開先は作らない。今回の検証は小さい合成bundleに限定し、変更後のPlayer binary、実モデルの転送、実APKのjar読み込み、Android端末は未実行。HTTPS等のリモート取得とWebGLは本adapterの対象外。
+
+URL展開は新しい空directoryを必要とする。監査済みcacheの再利用、中断からの再開、複数run後にモデルが無制限に残らない保持運用は、反復mobile検証前の残タスク。現在のソースをAndroid実機対応完了とは扱わず、APK packaging・bootstrap・CPU / GPUと容量・時間を実機で確認する。配布UPMのサンプルへAndroidの配置経路を渡す作業も残る。
 
 ## Windows検証Playerのbuildと起動
 
@@ -71,7 +87,7 @@ Editorから `EmbeddingGemma.Validation.Editor.ValidationPlayerBuild.BuildWindow
 
 ## 残る実機確認
 
-1. Androidのjar内StreamingAssetsは事前配置 / persistentDataPathへの展開adapterとして別にTDDと実機確認を行う。現在の起動経路は通常filesystem用で、Android対応の成功には数えない。
+1. Androidの展開adapterは上記の契約・Windows file URL転送まで確認した。APK packaging / jar読み込み / 実機bootstrap、監査済みcacheと容量管理、配布サンプルへの配置経路を検証する。現在の契約合格をAndroid実機の成功には数えない。
 2. macOS Editor / iOS / Androidで実際のtokenizer / Sentis providerを実行する。15ケースのtoken ID / mask完全一致、4条件の埋め込み、6文書 / 4queryの全順位を実環境で確認し、Windowsの結果を他環境の成功にしない。
 3. requested / actual backendを記録し、GPU非対応やOOMを失敗にする。GPUをCPUへ黙って切り替えない。
 4. load、tokenizer準備、初回推論、warmup後の反復推論、解放を測る。OS、端末、Unity、GPU / graphics API、build backend、stripping、メモリcounterの取得可否と観測範囲を記録する。

@@ -1,0 +1,576 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-10T02:50:47.9029388Z",
+  "source_commit": "b885b27cb9225291c9f46f9be2bdafc634cac8d9",
+  "source_sha256_lf": {
+    "Assets/Validation/Runtime/PlayerBundleCache.cs": "8e17ce94c049d97d700363cd1446f8348aeaf2f2e0dbcc34c2c84fc349960fc9",
+    "Assets/Validation/Runtime/PlayerBundleLoader.cs": "61f27369c26d75b50e27136b8464cd4a5ea472773dd045b82694fa77aca44921",
+    "Assets/Validation/Runtime/PlayerBundleStager.cs": "b2041d88674d20ae62e272bbaffbee0e24e3d66c8d9e1ad9e110680e590f2940",
+    "Assets/Validation/Runtime/PlayerFileHash.cs": "ecf0d009a00fad2c2234f9bbe7e292ac27e05c279fe96978aae9c748af75cd91",
+    "Assets/Validation/Runtime/PlayerRunProtocol.cs": "28678308558ca6f05ef44aa9988f5012f06a794c05faacd00896035494c025e2",
+    "Assets/Validation/Runtime/PlayerValidation.cs": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+    "Assets/Validation/Runtime/PlayerValidationExecution.cs": "f219eca5073a12241d90c736d6d1339875792323585a369efade8956830fb7a1",
+    "Assets/Validation/Runtime/PlayerValidationRunner.cs": "8b9e4ee9e1407569f24dae5be70eddf6410a97371af1bc27ab7b1085047a1a4b",
+    "Assets/Validation/Tests/Editor/PlayerBundleCacheTests.cs": "3659fc8f87e0160860a51fe62df9fd4d47823ea794274e607b18f75f33613363",
+    "Assets/Validation/Tests/Editor/PlayerBundleStagerTests.cs": "27ab9fce0d1d34b6a13cd702af916d78b2ec19e8b30de6ba022c3d0bfe28f0b6",
+    "Assets/Validation/Tests/Editor/PlayerFileHashTests.cs": "43eb68a311c204f8a19723c3655af9eea41e58fbdba38a6d22d8402686586be0"
+  },
+  "consumer": {
+    "requested_git_revision": "e7b3a54ec279f0c78be43a58548ec6695c4ba4ec",
+    "validation_assets_overlaid_from_work_branch": true,
+    "core_runtime_unchanged": true,
+    "editor_count": 1,
+    "editor_pid": 174716
+  },
+  "environment": {
+    "unity": "6000.3.16f1",
+    "sentis": "2.6.1",
+    "os": "Windows 11",
+    "test_mode": "EditMode",
+    "unitywebrequest_module": "1.0.0"
+  },
+  "tdd": {
+    "cache_red": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T02:26:43.9889497Z",
+      "FailedCount": 10,
+      "FailedTests": [
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleCacheTests.AConcurrentCacheOwnerPreventsTransferAndReplacement",
+          "Message": "System.NotImplementedException : Audited bounded bundle cache is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerBundleCache.cs",
+          "Line": 10
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleCacheTests.ActualFileUrlWarmCacheReturnsOneManifestTransfer",
+          "Message": "System.NotImplementedException : Audited bounded bundle cache is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerBundleCache.cs",
+          "Line": 10
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleCacheTests.ChangedManifestPublishesOnlyAfterCandidateAuditAndBoundsStorage",
+          "Message": "System.NotImplementedException : Audited bounded bundle cache is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerBundleCache.cs",
+          "Line": 10
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleCacheTests.EqualLengthAndMtimeCorruptionIsRepairedBeforeReuse",
+          "Message": "System.NotImplementedException : Audited bounded bundle cache is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerBundleCache.cs",
+          "Line": 10
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleCacheTests.FailedUpdatePreservesOldActiveAndNextAttemptDoesNotAccumulateVersions",
+          "Message": "System.NotImplementedException : Audited bounded bundle cache is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerBundleCache.cs",
+          "Line": 10
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleCacheTests.InterruptedPromotionRestoresPreviousActiveBeforeRetry",
+          "Message": "System.NotImplementedException : Audited bounded bundle cache is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerBundleCache.cs",
+          "Line": 10
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleCacheTests.InvalidManifestStopsBeforeWeightsAndKeepsOldCache",
+          "Message": "System.NotImplementedException : Audited bounded bundle cache is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerBundleCache.cs",
+          "Line": 10
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleCacheTests.UnexpectedFilesPreventCleanupInsteadOfBeingDeleted",
+          "Message": "System.NotImplementedException : Audited bounded bundle cache is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerBundleCache.cs",
+          "Line": 10
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleCacheTests.UnknownNonemptyDirectoryIsNeverAdoptedOrDeleted",
+          "Message": "System.NotImplementedException : Audited bounded bundle cache is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerBundleCache.cs",
+          "Line": 10
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleCacheTests.WarmCacheFetchesOnlyManifestAndStillAuditsEveryFile",
+          "Message": "System.NotImplementedException : Audited bounded bundle cache is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerBundleCache.cs",
+          "Line": 10
+        }
+      ],
+      "HasFailures": true,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Failed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 0,
+      "SkippedCount": 0,
+      "Status": "Failed",
+      "Success": false,
+      "TestCount": 10,
+      "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\.uloop\\outputs\\TestResults\\20261010_022643_9929728_6b95a09b1cb74c38b4b3901dfe7234b1.xml"
+    },
+    "integration_and_corrupt_manifest_red": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T02:30:46.4241045Z",
+      "FailedCount": 2,
+      "FailedTests": [
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleCacheTests.ExecutionReusesAuditedCacheAndHoldsItsLeaseThroughoutInference",
+          "Message": "  One or more required conditions failed; see condition errors.\r\n  Expected: True\r\n  But was:  False\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Tests\\Editor\\PlayerBundleCacheTests.cs",
+          "Line": 167
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleCacheTests.MalformedCachedManifestIsRepairedWithoutClaimingReuse",
+          "Message": "  JsonReaderException: Unexpected character encountered while parsing value: b. Path '', line 0, position 0.\r\n  Expected: True\r\n  But was:  False\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Tests\\Editor\\PlayerBundleCacheTests.cs",
+          "Line": 142
+        }
+      ],
+      "HasFailures": true,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Failed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 10,
+      "SkippedCount": 0,
+      "Status": "Failed",
+      "Success": false,
+      "TestCount": 12,
+      "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\.uloop\\outputs\\TestResults\\20261010_023046_4271094_31282c70f47d46129fd7008554d4b718.xml"
+    },
+    "legacy_destination_expectation_failure": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T02:32:01.3440035Z",
+      "FailedCount": 1,
+      "FailedTests": [
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.ExecutionAuditsTheExtractedDirectoryBeforeAllConditions",
+          "Message": "  One or more required conditions failed; see condition errors.\r\n  Expected: True\r\n  But was:  False\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Tests\\Editor\\PlayerBundleStagerTests.cs",
+          "Line": 127
+        }
+      ],
+      "HasFailures": true,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Failed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 88,
+      "SkippedCount": 0,
+      "Status": "Failed",
+      "Success": false,
+      "TestCount": 89,
+      "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\.uloop\\outputs\\TestResults\\20261010_023201_3470234_8589bdd93bf84ea6ba5ffecb7185e621.xml"
+    },
+    "accidental_import_compile_failure": {
+      "ErrorCount": 1,
+      "WarningCount": 0,
+      "Errors": [
+        {
+          "Message": "Assets\\Validation\\Runtime\\PlayerBundleStager.cs(41,122): error CS1061: 'IEnumerable<string>' does not contain a definition for 'Any' and no accessible extension method 'Any' accepting a first argument of type 'IEnumerable<string>' could be found (are you missing a using directive or an assembly reference?)",
+          "File": "Assets\\Validation\\Runtime\\PlayerBundleStager.cs",
+          "Line": 41
+        }
+      ],
+      "Warnings": [],
+      "Message": null,
+      "ErrorCode": null,
+      "NextActions": null,
+      "ProjectRoot": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h",
+      "Warning": null,
+      "Success": false
+    },
+    "cache_green": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T02:34:09.3263286Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 89,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 89,
+      "XmlPath": null
+    },
+    "hash_red": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T02:44:22.4599626Z",
+      "FailedCount": 7,
+      "FailedTests": [
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerFileHashTests.InvalidNativeOutputCannotReplaceACompleteDigest",
+          "Message": "System.NotImplementedException : Same-handle full SHA-256 acceleration is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerFileHash.cs",
+          "Line": 11
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerFileHashTests.IoFailureCannotBeReportedAsAValidHash",
+          "Message": "  Expected: <System.IO.IOException>\r\n  But was:  <System.NotImplementedException: Same-handle full SHA-256 acceleration is not implemented.\r\n  at EmbeddingGemma.Validation.PlayerFileHash.Compute (System.IO.Stream stream, System.String& backend, System.Func`2[T,TResult] accelerated) [0x00004] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerFileHash.cs:11 \r\n  at EmbeddingGemma.Validation.Tests.PlayerFileHashTests+<>c__DisplayClass4_0.<IoFailureCannotBeReportedAsAValidHash>b__0 () [0x00000] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Tests\\Editor\\PlayerFileHashTests.cs:51 \r\n  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x0002f] in <f577cd9686154d6ab10efd7e65e64366>:0 >\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Tests\\Editor\\PlayerFileHashTests.cs",
+          "Line": 51
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerFileHashTests.KnownVectorsUseTheActualPlatformImplementation(\"\",\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\")",
+          "Message": "System.NotImplementedException : Same-handle full SHA-256 acceleration is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerFileHash.cs",
+          "Line": 11
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerFileHashTests.KnownVectorsUseTheActualPlatformImplementation(\"abc\",\"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad\")",
+          "Message": "System.NotImplementedException : Same-handle full SHA-256 acceleration is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerFileHash.cs",
+          "Line": 11
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerFileHashTests.MultiChunkInputMatchesIndependentManagedSha256",
+          "Message": "System.NotImplementedException : Same-handle full SHA-256 acceleration is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerFileHash.cs",
+          "Line": 11
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerFileHashTests.UnavailableNativeAfterConsumptionFallsBackToAllBytesOnTheSameHandle",
+          "Message": "System.NotImplementedException : Same-handle full SHA-256 acceleration is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerFileHash.cs",
+          "Line": 11
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerFileHashTests.UnreadableInputIsRejected",
+          "Message": "  Expected: <System.ArgumentException>\r\n  But was:  <System.NotImplementedException: Same-handle full SHA-256 acceleration is not implemented.\r\n  at EmbeddingGemma.Validation.PlayerFileHash.Compute (System.IO.Stream stream, System.String& backend, System.Func`2[T,TResult] accelerated) [0x00004] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerFileHash.cs:11 \r\n  at EmbeddingGemma.Validation.Tests.PlayerFileHashTests+<>c__DisplayClass5_0.<UnreadableInputIsRejected>b__0 () [0x00000] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Tests\\Editor\\PlayerFileHashTests.cs:56 \r\n  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x0002f] in <f577cd9686154d6ab10efd7e65e64366>:0 >\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Tests\\Editor\\PlayerFileHashTests.cs",
+          "Line": 56
+        }
+      ],
+      "HasFailures": true,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Failed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 0,
+      "SkippedCount": 0,
+      "Status": "Failed",
+      "Success": false,
+      "TestCount": 7,
+      "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\.uloop\\outputs\\TestResults\\20261010_024422_4629861_2a913442683f4012983dd4968be060b4.xml"
+    },
+    "final_green": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T02:46:18.0145253Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 96,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 96,
+      "XmlPath": null
+    }
+  },
+  "measurement": {
+    "baseline_source_commit": "235e67b76286869de02f81cebe629b40ce2f6594",
+    "baseline_nunit": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T02:40:05.5349206Z",
+      "FailedCount": 1,
+      "FailedTests": [
+        {
+          "FullName": "LocalPlayerBundleCacheMeasurementTests.MeasuresCacheCreationAndWarmAuditWithPinnedRealBundle",
+          "Message": "Timeout value of 180000 ms was exceeded. If this is intended, increase the timeout value using a TimeoutAttribute."
+        }
+      ],
+      "HasFailures": true,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Failed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 0,
+      "SkippedCount": 0,
+      "Status": "Failed",
+      "Success": false,
+      "TestCount": 1,
+      "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\.uloop\\outputs\\TestResults\\20261010_024005_5389793_fce779f2ee2e4bc79e4c34b39bf5d00f.xml"
+    },
+    "baseline_data": {
+      "recorded_at_utc": "2026-10-10T02:40:05.4648314Z",
+      "unity": "6000.3.16f1",
+      "os": "Windows 11  (10.0.22631)",
+      "is_editor": true,
+      "source_uri": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/player-bundle/windows-20261010-run1",
+      "cache_root": "C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/unity-harness/cache-20261010/real-cache",
+      "bundle": {
+        "success": true,
+        "unity_executed": false,
+        "gpu_verified": false,
+        "files": [
+          {
+            "name": "model-fp32.sentis",
+            "bytes": 1095598044,
+            "sha256": "8488d70f2d636a34bfe2a64c1d7b9d3eb3fce70c4fb9e27d32b698090c8fb373"
+          },
+          {
+            "name": "model-float16.sentis",
+            "bytes": 553775500,
+            "sha256": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819"
+          },
+          {
+            "name": "tokenizer.json",
+            "bytes": 32170775,
+            "sha256": "25975a936201b81402a3b867d5c462cf10808bb96759f97fe9aefecbb11c49df"
+          },
+          {
+            "name": "reference.json",
+            "bytes": 408173,
+            "sha256": "deb9b3ed00e49c29b18c1a747307a318900d5e993fb3d9208f4d37e8a73cf2f6"
+          },
+          {
+            "name": "search-reference.json",
+            "bytes": 268000,
+            "sha256": "3530756b36316a812ac853f0722bed5479e92e6bb02ca6aa41c06660d32a71ec"
+          }
+        ],
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "model_source": "2edb272f17a38c7af210474345c35f391fd6955c",
+        "search_source": "13f194266162d2a728b2b2a0da9e9e58ae314ff6",
+        "model_origin_sha256": "92968480724ef7838cbd7d7b7cfd6a8d6d5105bb937f8a9907e965805a7651c8",
+        "unity_preparation_version": "6000.3.16f1"
+      },
+      "cache_creation": {
+        "source": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/player-bundle/windows-20261010-run1",
+        "directory": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\unity-harness\\cache-20261010\\real-cache\\active",
+        "error": null,
+        "transport": "UnityWebRequest.DownloadHandlerFile",
+        "cacheRejectedError": null,
+        "transferCompleted": true,
+        "cacheReused": false,
+        "auditPassed": true,
+        "transferredFiles": 6,
+        "milliseconds": 109111.24410000001,
+        "auditMilliseconds": 107461.99740000001
+      },
+      "cache_reuse": {
+        "source": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/player-bundle/windows-20261010-run1",
+        "directory": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\unity-harness\\cache-20261010\\real-cache\\active",
+        "error": null,
+        "transport": "UnityWebRequest.DownloadHandlerFile",
+        "cacheRejectedError": null,
+        "transferCompleted": true,
+        "cacheReused": true,
+        "auditPassed": true,
+        "transferredFiles": 1,
+        "milliseconds": 108773.50330000001,
+        "auditMilliseconds": 108761.4292
+      },
+      "retained_bundle_directories": 1,
+      "retained_bundle_bytes": 1682221728,
+      "model_bytes_retransferred_on_warm_run": 0,
+      "model_inference_executed": false,
+      "gpu_verified": false,
+      "scope": "One cache creation followed by one warm cache audit using prepared real weights and shared filesystem/OS caches. Not a cold-machine benchmark. Total includes file transfer, full SHA-256, pinned reference parsing and directory operations."
+    },
+    "baseline_overall_test_passed": false,
+    "baseline_scope": "Both audits completed and produced JSON, but the compound NUnit test failed its 180000 ms timeout. Its timings are observations, not a baseline test pass.",
+    "native_nunit": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T02:47:48.7542583Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 1,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 1,
+      "XmlPath": null
+    },
+    "native_data": {
+      "recorded_at_utc": "2026-10-10T02:47:48.6086011Z",
+      "unity": "6000.3.16f1",
+      "os": "Windows 11  (10.0.22631)",
+      "is_editor": true,
+      "source_uri": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/player-bundle/windows-20261010-run1",
+      "cache_root": "C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/unity-harness/cache-20261010/real-cache",
+      "runs": [
+        {
+          "source": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/player-bundle/windows-20261010-run1",
+          "directory": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\unity-harness\\cache-20261010\\real-cache\\active",
+          "error": null,
+          "transport": "UnityWebRequest.DownloadHandlerFile",
+          "cacheRejectedError": null,
+          "transferCompleted": true,
+          "cacheReused": true,
+          "auditPassed": true,
+          "transferredFiles": 1,
+          "milliseconds": 1524.4841000000001,
+          "auditMilliseconds": 1502.7138,
+          "hashBackends": {
+            "model-fp32.sentis": "windows_cng",
+            "model-float16.sentis": "windows_cng",
+            "tokenizer.json": "windows_cng",
+            "reference.json": "windows_cng",
+            "search-reference.json": "windows_cng"
+          }
+        },
+        {
+          "source": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/player-bundle/windows-20261010-run1",
+          "directory": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\unity-harness\\cache-20261010\\real-cache\\active",
+          "error": null,
+          "transport": "UnityWebRequest.DownloadHandlerFile",
+          "cacheRejectedError": null,
+          "transferCompleted": true,
+          "cacheReused": true,
+          "auditPassed": true,
+          "transferredFiles": 1,
+          "milliseconds": 1471.1906000000001,
+          "auditMilliseconds": 1464.895,
+          "hashBackends": {
+            "model-fp32.sentis": "windows_cng",
+            "model-float16.sentis": "windows_cng",
+            "tokenizer.json": "windows_cng",
+            "reference.json": "windows_cng",
+            "search-reference.json": "windows_cng"
+          }
+        },
+        {
+          "source": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/player-bundle/windows-20261010-run1",
+          "directory": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\unity-harness\\cache-20261010\\real-cache\\active",
+          "error": null,
+          "transport": "UnityWebRequest.DownloadHandlerFile",
+          "cacheRejectedError": null,
+          "transferCompleted": true,
+          "cacheReused": true,
+          "auditPassed": true,
+          "transferredFiles": 1,
+          "milliseconds": 1759.0996,
+          "auditMilliseconds": 1752.4228,
+          "hashBackends": {
+            "model-fp32.sentis": "windows_cng",
+            "model-float16.sentis": "windows_cng",
+            "tokenizer.json": "windows_cng",
+            "reference.json": "windows_cng",
+            "search-reference.json": "windows_cng"
+          }
+        }
+      ],
+      "bundle": {
+        "success": true,
+        "unity_executed": false,
+        "gpu_verified": false,
+        "files": [
+          {
+            "name": "model-fp32.sentis",
+            "bytes": 1095598044,
+            "sha256": "8488d70f2d636a34bfe2a64c1d7b9d3eb3fce70c4fb9e27d32b698090c8fb373"
+          },
+          {
+            "name": "model-float16.sentis",
+            "bytes": 553775500,
+            "sha256": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819"
+          },
+          {
+            "name": "tokenizer.json",
+            "bytes": 32170775,
+            "sha256": "25975a936201b81402a3b867d5c462cf10808bb96759f97fe9aefecbb11c49df"
+          },
+          {
+            "name": "reference.json",
+            "bytes": 408173,
+            "sha256": "deb9b3ed00e49c29b18c1a747307a318900d5e993fb3d9208f4d37e8a73cf2f6"
+          },
+          {
+            "name": "search-reference.json",
+            "bytes": 268000,
+            "sha256": "3530756b36316a812ac853f0722bed5479e92e6bb02ca6aa41c06660d32a71ec"
+          }
+        ],
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "model_source": "2edb272f17a38c7af210474345c35f391fd6955c",
+        "search_source": "13f194266162d2a728b2b2a0da9e9e58ae314ff6",
+        "model_origin_sha256": "92968480724ef7838cbd7d7b7cfd6a8d6d5105bb937f8a9907e965805a7651c8",
+        "unity_preparation_version": "6000.3.16f1"
+      },
+      "retained_bundle_directories": 1,
+      "retained_bundle_bytes": 1682221728,
+      "model_bytes_retransferred": 0,
+      "model_inference_executed": false,
+      "gpu_verified": false,
+      "scope": "Three consecutive warm audits of the same prepared bundle/cache with actual Windows CNG on all five files. Full SHA-256 and pinned reference parsing remain required. Not a cold-machine or statistical benchmark."
+    },
+    "native_probe_sha256": {
+      "Local.BundleCache.Measurement.Tests.asmdef": "ce0506bebb8e41d576a84e3fbee98347485b085d77df9636eb005df2ff2cce55",
+      "LocalPlayerBundleCacheMeasurementTests.cs": "b599ec115c2339b18e62fe992e7f6edf13276048e5e218506b7c852f43c31844"
+    },
+    "native_total_mean_ms": 1584.924766666667,
+    "native_audit_mean_ms": 1573.3438666666668,
+    "warm_total_ratio_single_baseline_to_three_run_mean": 68.63007354523641,
+    "comparison_scope": "Same Windows Editor, prepared weights and cache. One baseline warm observation and three consecutive native warm observations; shared OS/file caches, no cold-machine or statistical claim."
+  },
+  "verified": {
+    "cache_reuse_requires_full_five_file_sha256": true,
+    "cache_corruption_equal_length_mtime_repaired": true,
+    "malformed_cached_manifest_repaired": true,
+    "invalid_incoming_manifest_stops_before_weights": true,
+    "old_active_preserved_during_failed_update": true,
+    "owned_storage_after_success_one_bundle": true,
+    "owned_storage_during_update_at_most_two_bundles": true,
+    "unknown_files_and_links_refused_in_source": true,
+    "unknown_file_retention_tested": true,
+    "link_behavior_on_actual_platforms_unexecuted": true,
+    "lease_held_through_synthetic_inference": true,
+    "certificate_avoids_duplicate_production_hash_audit": true,
+    "native_real_five_file_hash_backend": "windows_cng",
+    "model_bytes_retransferred_on_native_runs": 0
+  },
+  "final_editor_state": {
+    "playing": false,
+    "dirty": false,
+    "scene": "Assets/EmbeddingGemmaTextSearch/TextSearch.unity"
+  },
+  "final_logs": {
+    "TotalCount": 3,
+    "DisplayedCount": 3,
+    "LogType": "All",
+    "MaxCount": 50,
+    "SearchText": "",
+    "IncludeStackTrace": true,
+    "Logs": [
+      {
+        "Type": "Log",
+        "Message": "Executing IPostBuildCleanup for: Unity.PerformanceTesting.Editor.TestRunBuilder.",
+        "StackTrace": "UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()"
+      },
+      {
+        "Type": "Log",
+        "Message": "Saving results to: C:/Users/yuta/AppData/LocalLow/DefaultCompany/h\\TestResults.xml",
+        "StackTrace": ""
+      },
+      {
+        "Type": "Log",
+        "Message": "Executing IPrebuildSetup for: Unity.PerformanceTesting.Editor.TestRunBuilder.",
+        "StackTrace": "UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()"
+      }
+    ],
+    "Success": true
+  },
+  "gpu_verified_in_this_run": false,
+  "sentis_inference_executed_in_this_run": false,
+  "limitations": [
+    "Windows Editor only. CNG executes on Windows compile targets; unavailable native support and other platforms use full .NET SHA-256 fallback. Actual Windows Player/IL2CPP and other OS execution remain unverified.",
+    "The real prepared bundle was transferred/audited, but no Sentis inference or GPU precision test ran in this turn. Synthetic provider success remains injected_contract and gpuVerified=false.",
+    "The baseline compound NUnit test timed out after the completed audits. Its failure is retained separately from the passing optimized measurement.",
+    "The measurement fixture is local and path-specific; its SHA-256 is recorded. Model files and large generated cache are outside Git.",
+    "Publication/recovery was checked with filesystem failure/crash-state simulations. Android APK jar IO, file-lock/rename behavior and device storage limits need actual device validation.",
+    "Incomplete candidate data is discarded under the owned cache lock on retry; byte-range transfer resume is not implemented. Unknown pre-existing directories are preserved.",
+    "Model cache retention is bounded; small per-run reports remain separately retained. Older StagedBundle paths from the previous bootstrap are not automatically adopted or deleted.",
+    "No peak memory, native leak-free, domain-reload cause or end-to-end Player speed claim. Allocation diagnostics, Windows IL2CPP/release stripping, macOS/iOS/Android, sample device loading and release gates remain open."
+  ]
+}

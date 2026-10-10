@@ -65,9 +65,11 @@ loader自体は通常のfilesystem専用で、URLを直接渡すと拒否する�
 
 最小consumerへ`Assets/Validation/`を配置する場合は、`Packages/manifest.json`のdependenciesで組込みmodule `"com.unity.modules.unitywebrequest": "1.0.0"` を有効にする。元プロジェクトでは既に有効。consumerではmodule不足のcompile失敗を記録し、追加・Package Manager Resolve後の解決とcompile / 契約成功を確認した。Resolve受理後のassembly reloadでCLI応答が切れたが、同じEditorのlock / module状態と最終結果を確認し、再起動やResolveの重複実行はしなかった。
 
-opt-in bootstrapはこの経路へ接続し、URLの展開先を`persistentDataPath/EmbeddingGemmaValidation/StagedBundle-<run ID>`とする。filesystem sourceならこの展開先は作らない。今回の検証は小さい合成bundleに限定し、変更後のPlayer binary、実モデルの転送、実APKのjar読み込み、Android端末は未実行。HTTPS等のリモート取得とWebGLは本adapterの対象外。
+opt-in bootstrapはこの経路へ接続した。後続のcache改善で、URLの展開先を`persistentDataPath/EmbeddingGemmaValidation/BundleCache/active`へ変更した。filesystem sourceならcacheは作らない。上記の初期adapter検証は小さい合成bundleに限定し、実model転送・監査の後続測定は以下に分けて記録する。変更後のPlayer binary、実APKのjar読み込み、Android端末は未実行。HTTPS等のリモート取得とWebGLは本adapterの対象外。
 
-URL展開は新しい空directoryを必要とする。監査済みcacheの再利用、中断からの再開、複数run後にモデルが無制限に残らない保持運用は、反復mobile検証前の残タスク。現在のソースをAndroid実機対応完了とは扱わず、APK packaging・bootstrap・CPU / GPUと容量・時間を実機で確認する。配布UPMのサンプルへAndroidの配置経路を渡す作業も残る。
+単独`PlayerBundleStager.Stage`は新しい空directoryを必要とする。起動時のURL経路は`PlayerBundleCache`で、manifest取得と全5ファイルの完全SHA-256を毎回行い、監査済みのactiveを再利用する。cache更新・破損修復は旧activeを保持してcandidateを監査し、成功後1 bundle / 更新中最大2 bundleに制限する。所有外のdirectory・未知のファイルを削除しない。[cacheとhash高速化の実測](m2-bundle-cache-validation.md)では96契約、約1.68GBの実bundleのwarm完全監査3回が合格し、各モデル再転送0、Windows Editorの監査約1.5〜1.8秒を確認した。baselineの約108秒とNUnit timeout失敗も保存した。
+
+現在のソースをAndroid実機対応完了とは扱わず、APK packaging・bootstrap・CPU / GPUとlock / rename / 容量・時間を実機で確認する。配布UPM sampleのAndroid配置、中断転送のbyte-range resume、Windows IL2CPPと他OSも残る。
 
 ## Windows検証Playerのbuildと起動
 
@@ -87,7 +89,7 @@ Editorから `EmbeddingGemma.Validation.Editor.ValidationPlayerBuild.BuildWindow
 
 ## 残る実機確認
 
-1. Androidの展開adapterは上記の契約・Windows file URL転送まで確認した。APK packaging / jar読み込み / 実機bootstrap、監査済みcacheと容量管理、配布サンプルへの配置経路を検証する。現在の契約合格をAndroid実機の成功には数えない。
+1. Android向けの展開adapterとcacheは上記の契約・Windows file URL / 実bundle監査まで確認した。APK packaging / jar読み込み / 実機bootstrap、deviceのlock / rename / 容量管理、配布sample配置を検証する。現在のWindows合格をAndroid実機の成功には数えない。
 2. macOS Editor / iOS / Androidで実際のtokenizer / Sentis providerを実行する。15ケースのtoken ID / mask完全一致、4条件の埋め込み、6文書 / 4queryの全順位を実環境で確認し、Windowsの結果を他環境の成功にしない。
 3. requested / actual backendを記録し、GPU非対応やOOMを失敗にする。GPUをCPUへ黙って切り替えない。
 4. load、tokenizer準備、初回推論、warmup後の反復推論、解放を測る。OS、端末、Unity、GPU / graphics API、build backend、stripping、メモリcounterの取得可否と観測範囲を記録する。

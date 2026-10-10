@@ -1,6 +1,6 @@
 # 現在の状態と残タスク
 
-確認日: 2026-10-10。最新の確認済み統合mainはPR #25後の `b1a8c67`。統合後main [CI run 38023036522](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38023036522)は全8 job成功。PR #24統合後CI run 38022144437も全8 job成功。下の表はPR #12時点の基準・履歴として保持し、後続実測を本文に追記する。最新CIはGitHubのPR / Actionsを参照。
+確認日: 2026-10-10。確認基準mainはPR #27後の `c3281cd`。統合後main [CI run 38025309104](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38025309104)は全8 job成功。PR #27は配布README / CHANGELOG等のMarkdown 6ファイルだけを更新し、Runtime / sample / GUID / manifestは変更していない。実Unity検証のSHAは各記録を維持する。下の表はPR #12時点の基準・履歴として保持し、後続実測を本文に追記する。以降のmain / PR / CIはGitHubを参照。
 検索実装は `feat/m2-text-search-sample` / PR #11で統合済み。M1の履歴を維持し、Windows検索実測を別の証拠として追加した。以下のmain SHAとCIは確認時点の基準であり、後続の文書PRでも確認済みの実測SHAを変更しない。
 
 ## mainと作業ブランチ
@@ -67,6 +67,8 @@ Windows Playerの変更はPR #18の全8 CI成功後にmain `f44976b` へ統合�
 - GPU skipやCPU代替をGPU成功として扱わない。モデルと大きいartifactはGit管理外、LFSを使わずActionsで再生成する。
 
 ## 最近の更新
+
+PR #27をhead `6ab5278`の全8 CI成功後にsquash mergeし、mainを`c3281cd`へfast-forwardした。元checkoutのUnity設定変更は保持した。draft PR #26もこのmainを取り込んだが、実装コードは不変。target切り替え後の観測CLIは`UNITY_RESPONSE_TIMEOUT_AFTER_ACCEPT`で終了し、`SafeToRetry=false`を返した。Editor PID 110956は生存し、uloopは`MainThreadBlocked` / compilingを報告した。Editor終了・target切り替え完了の証拠ではないため再要求・再起動せず、画面状態の確認を待つ。
 
 Android Player報告の監査CLIを追加した。固定APK provenance / 同梱参照hash、全4条件のactual backend / 15ケース / 全順位・score / 解放、初回jar展開とwarm cache、3回warm timingと14段階memory、異なる非重複runを照合する。39 redと追加5 redから関連73 passed。これは小さいfixtureによる整合性監査で、ADB実行・端末identity・process終了は別の実測証拠を要求する。[回収手順と範囲](m2-android-validation.md#実機結果の回収と報告監査)。同じEditorの応答待ち、実APK / 実機 / 他OSと正式Release gateは残る。
 

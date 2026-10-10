@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-10-10T04:38:20.3955309Z",
+  "checked_at_utc": "2026-10-10T04:50:38.9334506Z",
   "scope": "Preparation contracts and tiny APK fixtures only. Current C# differs from the last Unity green run and awaits revalidation.",
   "base_main": "b1a8c67c62066bfa5e1830a947563ace3dff9fa5",
   "current_source_sha256_lf": {
@@ -17,54 +17,64 @@
   "unity_runtime_executed_on_android": false,
   "gpu_verified_on_android": false,
   "android_helper_red": {
-    "passed": 0,
-    "failed": 9,
+    "completed_at": "2026-10-10T04:12:53.4316389Z",
     "reason": "NotImplemented stubs",
-    "completed_at": "2026-10-10T04:12:53.4316389Z"
+    "passed": 0,
+    "failed": 9
   },
   "initial_green_attempt": {
     "scope": "Not green; graphics restoration test refined afterward",
-    "passed": 106,
     "failed": 2,
+    "passed": 106,
     "total": 108
   },
   "explicit_graphics_restoration_red": {
-    "passed": 9,
+    "completed_at": "2026-10-10T04:15:21.3597057Z",
     "failed": 2,
-    "total": 11,
-    "completed_at": "2026-10-10T04:15:21.3597057Z"
+    "passed": 9,
+    "total": 11
   },
   "prior_windows_target_green": {
-    "passed": 110,
-    "inconclusive": 0,
-    "total": 110,
-    "completed_at": "2026-10-10T04:16:10.7717793Z",
     "failed": 0,
     "skipped": 0,
-    "scope": "99 existing + 11 Android contracts; before splitApplicationBinary replacement and two Android integration cases"
+    "scope": "99 existing + 11 Android contracts; before splitApplicationBinary replacement and two Android integration cases",
+    "completed_at": "2026-10-10T04:16:10.7717793Z",
+    "passed": 110,
+    "inconclusive": 0,
+    "total": 110
   },
   "current_python_apk_contracts": {
-    "new_apk_cases": 16,
     "scope": "Tiny ZIP fixtures, no Unity or device execution",
     "existing_bundle_cases": 13,
+    "new_apk_cases": 16,
     "red_failed": 16,
     "green_passed": 29
   },
   "current_python_report_contracts": {
-    "additional_red_failed": 5,
-    "scope": "Synthetic Player reports only. ADB/device identity/process exit and real Android execution are not proven.",
-    "initial_red_failed": 39,
+    "final_related_green_passed": 73,
     "new_report_cases": 44,
-    "final_related_green_passed": 73
+    "initial_red_failed": 39,
+    "additional_red_failed": 5,
+    "scope": "Synthetic Player reports only. ADB/device identity/process exit and real Android execution are not proven."
+  },
+  "synchronized_main": "c3281cd641922387b2b6718fe520c02a2b8d2d6c",
+  "synchronized_main_ci": {
+    "successful_jobs": 8,
+    "run_id": 38025309104,
+    "conclusion": "success"
   },
   "target_switch": {
-    "state": "Same accepted CLI observation is live but has not returned; API Updater log tail is not a confirmed cause",
+    "observer_terminal": true,
+    "accepted": true,
     "attempts": 1,
-    "observation_session": 1711,
-    "completion_verified": false,
     "title_target": "Android",
     "editor_pid": 110956,
-    "accepted": true
+    "observation_session": 1711,
+    "error_code": "UNITY_RESPONSE_TIMEOUT_AFTER_ACCEPT",
+    "completion_verified": false,
+    "safe_to_retry": false,
+    "state": "MainThreadBlocked / compiling. CLI timeout is not evidence that the accepted Editor operation is terminal. API Updater log tail is not a confirmed cause; waiting for visible dialog information.",
+    "editor_process_alive": true
   },
   "remaining_gates": [
     "Current C# compile and Android integration contracts",

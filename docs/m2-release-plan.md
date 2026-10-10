@@ -4,7 +4,7 @@
 ユーザーの「4まで詳細の計画を立てて進めてください」に対応し、安定性・高速化、Git URL導入、他環境の実測、リリースの4段階を扱う。
 M1の履歴と既存のM2受け入れ条件は維持する。Windowsだけの成功でM2全体を完了としない。
 
-現在の確認済みmainはPR #25後の `b1a8c67`。統合後[CI run 38023036522](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38023036522)の全8 job成功を確認した。配布sampleの選択モデルcacheをsource `2e463a8`で実装・Windows実GPU確認し、PR #24統合mainを[新しい空Git consumer](m2-latest-git-consumer-validation.md)で導入・compile・契約・実モデル4条件・UIまで確認した。PR #25はその結果の文書更新で、UPM配布treeは同一。下の開始時点と実行履歴は当時の証拠を維持する。
+確認基準mainはPR #27後の `c3281cd`。統合後[CI run 38025309104](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38025309104)の全8 job成功を確認した。配布sampleの選択モデルcacheをsource `2e463a8`で実装・Windows実GPU確認し、PR #24統合mainを[新しい空Git consumer](m2-latest-git-consumer-validation.md)で導入・compile・契約・実モデル4条件・UIまで確認した。PR #25はその結果の文書更新で当時のUPM配布treeは同一。PR #27で配布文書の未検証表示を実測へ合わせたが、Runtime / sample / GUID / manifestは不変。下の開始時点と実行履歴は当時の証拠を維持する。
 
 ## 次に進める順序
 
@@ -112,6 +112,8 @@ Pythonは `tools/` とuvに統一する。実装はred → greenを確認し、�
 PRのmergeはユーザーの既存依頼の範囲で、差分・競合・現在headのCIを確認して行う。リリースまでを依頼された本作業の範囲で進め、未達gateを迂回しない。
 
 ## 実行中の記録
+
+- PR #27はhead `6ab5278`の全8 CI成功後に統合し、main `c3281cd`のCI run 38025309104も全8 job成功。文書変更だけをdraft PR #26へ取り込んだ。Unity観測CLIの`UNITY_RESPONSE_TIMEOUT_AFTER_ACCEPT` / `SafeToRetry=false`と、Editor生存 / `MainThreadBlocked`を分けて記録した。target再要求・再起動はせず画面状態を確認する。実APK / 必須他環境 / 安定性とrelease gateは開いたまま。
 
 - Android実機結果の回収手順と報告監査を追加した。39 redと追加5 redを観測し、関連73 passed。APK auditと同じbuild / source hash / 同梱参照、全4条件と固定順位 / score、jar cold展開からwarmへの移行、timing / memory / 解放を照合する。報告監査ではADB実行や独立process終了を成功とせず、実機証拠の取得を後段に残す。[手順と範囲](m2-android-validation.md#実機結果の回収と報告監査)。
 

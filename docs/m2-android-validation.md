@@ -1,6 +1,6 @@
 # Android検証の準備と未実行gate
 
-確認日: 2026-10-10。基準mainはPR #25後の `b1a8c67c62066bfa5e1830a947563ace3dff9fa5`。
+確認日: 2026-10-10。実装開始の基準mainはPR #25後の `b1a8c67c62066bfa5e1830a947563ace3dff9fa5`。その後PR #27の文書更新main `c3281cd`を取り込んだ。Runtime / sample / GUID / manifestは不変で、統合後CI run 38025309104は全8 job成功。
 これはAndroid向け検証ハーネスの準備記録であり、APK build / インストール / 実機CPU・GPUの合格記録ではない。
 [機械可読結果](results/m2-android-preparation-20261010.json)と[4段階の計画](m2-release-plan.md)を参照。
 
@@ -40,6 +40,8 @@ ZIPの重複entry、余分なモデル、他ABI、injectしたbuild receipt、so
 その変更を含む現在のC#は再compile / 再テスト待ちである。110 passedを現在のC#全体の合格証拠にしない。
 target切り替えを1回だけ受理した後、同じEditor PID 110956のCLI観測が応答待ちになっている。
 ウィンドウタイトルはAndroidになったが、`Editor.log`はAPI Updaterの出力で止まっており、原因は未確定。
+同じ観測CLIは約30分後に`UNITY_RESPONSE_TIMEOUT_AFTER_ACCEPT`で終了し、`SafeToRetry=false`を返した。
+Editor本体は生存し、uloop statusは`MainThreadBlocked` / compilingと報告した。CLIの終了はEditorや受理された操作の終了証拠ではない。
 確認ダイアログの有無を確認中で、観測timeoutを理由に再起動・target再要求はしていない。
 Editor本体1つと、その子AssetImportWorker 2つを確認した。追加のEditor本体は起動していない。
 

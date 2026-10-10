@@ -60,6 +60,32 @@ namespace EmbeddingGemma.Validation.Tests
             const string old = "{\"success\":true,\"runId\":\"previous\"}"; File.WriteAllText(Config().Output, old);
             Assert.Throws<IOException>(() => new PlayerReportFile(Config().Output)); Assert.That(File.ReadAllText(Config().Output), Is.EqualTo(old));
         }
+        [Test] public void RepeatedReportsKeepOnlyTheLatestSnapshot()
+        {
+            var file = new PlayerReportFile(Config().Output);
+            foreach (var phase in new[] { "starting", "bundle_audit", "token_audit", "completed" })
+                file.Save(new PlayerRunReport { phase = phase, success = phase == "completed" });
+            var latest = JObject.Parse(File.ReadAllText(Config().Output));
+            Assert.That((string)latest["phase"], Is.EqualTo("completed")); Assert.That((bool)latest["success"], Is.True);
+            Assert.That(File.Exists(Config().Output + ".pending"), Is.False);
+        }
+        [Test, Platform("Win")] public void BriefReaderLockDoesNotAbortReportProgress()
+        {
+            var file = new PlayerReportFile(Config().Output);
+            var reader = new FileStream(Config().Output, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var release = System.Threading.Tasks.Task.Run(() => { System.Threading.Thread.Sleep(150); reader.Dispose(); });
+            try { file.Save(new PlayerRunReport { phase = "bundle_audit" }); }
+            finally { release.GetAwaiter().GetResult(); }
+            Assert.That((string)JObject.Parse(File.ReadAllText(Config().Output))["phase"], Is.EqualTo("bundle_audit"));
+        }
+        [Test, Platform("Win")] public void PersistentReaderLockFailsWithoutReplacingThePreviousSnapshot()
+        {
+            var file = new PlayerReportFile(Config().Output); var previous = File.ReadAllText(Config().Output);
+            using (var reader = new FileStream(Config().Output, FileMode.Open, FileAccess.Read, FileShare.Read))
+                Assert.Throws<IOException>(() => file.Save(new PlayerRunReport { success = true, phase = "completed" }));
+            Assert.That(File.ReadAllText(Config().Output), Is.EqualTo(previous));
+            Assert.That(File.Exists(Config().Output + ".pending"), Is.False);
+        }
         [Test] public void ReportsProgressAsIncompleteUntilAllFourConditionsFinish()
         {
             var snapshots = new List<PlayerRunReport>();

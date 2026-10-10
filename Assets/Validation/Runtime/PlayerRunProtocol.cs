@@ -84,8 +84,23 @@ namespace EmbeddingGemma.Validation
         public void Save(PlayerRunReport report)
         {
             var pending = path + ".pending";
-            File.WriteAllText(pending, JsonConvert.SerializeObject(report, Formatting.Indented) + "\n", new UTF8Encoding(false));
-            File.Replace(pending, path, null);
+            try
+            {
+                File.WriteAllText(pending, JsonConvert.SerializeObject(report, Formatting.Indented) + "\n", new UTF8Encoding(false));
+                // Windows readers/virus scanners can briefly deny delete sharing. Keep the
+                // previous complete JSON until replacement succeeds; never truncate it.
+                for (var attempt = 0; ; attempt++)
+                {
+                    try { File.Replace(pending, path, null); break; }
+                    catch (IOException) when (attempt < 20) { System.Threading.Thread.Sleep(50); }
+                }
+            }
+            finally
+            {
+                try { if (File.Exists(pending)) File.Delete(pending); }
+                catch (IOException) { /* Do not mask the original replacement failure. */ }
+                catch (UnauthorizedAccessException) { /* Retain the original error. */ }
+            }
         }
     }
     public static class PlayerRunProtocol

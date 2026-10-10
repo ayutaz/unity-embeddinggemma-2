@@ -13,20 +13,28 @@ namespace EmbeddingGemma.Samples.Tests
         int originalSkinSize;
         [SetUp] public void Setup()
         {
-            font = Font.CreateDynamicFontFromOSFont(new[] { "Yu Gothic UI", "Noto Sans CJK JP", "Hiragino Sans", "Arial" }, 16);
+            font = TextSearchGuiFont.Acquire();
             skin = ScriptableObject.CreateInstance<GUISkin>();
             originalSkinFont = skin.label.font; originalSkinSize = skin.label.fontSize;
             styles = new TextSearchGuiStyles(skin, font);
         }
-        [TearDown] public void Cleanup() { styles.Dispose(); UnityEngine.Object.DestroyImmediate(skin); UnityEngine.Object.DestroyImmediate(font); }
+        [TearDown] public void Cleanup() { styles.Dispose(); UnityEngine.Object.DestroyImmediate(skin); TextSearchGuiFont.Release(font); }
         float GlyphSpan(string text, int size)
         {
-            font.RequestCharactersInTexture(text, size);
-            var low = int.MaxValue; var high = int.MinValue;
-            foreach (var c in text)
-                if (font.GetCharacterInfo(c, out var info, size)) { low = Math.Min(low, info.minY); high = Math.Max(high, info.maxY); }
-            Assert.That(high, Is.GreaterThan(low), "The actual OS font must provide test glyphs.");
-            return high - low;
+            // The legacy glyph API needs a fresh font after a domain reload.
+            // Measure the same OS family without passing this temporary probe
+            // to GUIStyle, which would register it in the persistent cache.
+            var probe = Font.CreateDynamicFontFromOSFont(font.name, size);
+            try
+            {
+                probe.RequestCharactersInTexture(text, size);
+                var low = int.MaxValue; var high = int.MinValue;
+                foreach (var c in text)
+                    if (probe.GetCharacterInfo(c, out var info, size)) { low = Math.Min(low, info.minY); high = Math.Max(high, info.maxY); }
+                Assert.That(high, Is.GreaterThan(low), "The actual OS font must provide test glyphs.");
+                return high - low;
+            }
+            finally { UnityEngine.Object.DestroyImmediate(probe); }
         }
         [TestCase("label")] [TestCase("field")] [TestCase("button")] [TestCase("heading")]
         public void LayoutFitsTheActualFontGlyphBounds(string name)
@@ -51,7 +59,7 @@ namespace EmbeddingGemma.Samples.Tests
             styles.Dispose();
             foreach (var style in new[] { styles.Label, styles.Heading, styles.Error, styles.TextField, styles.Button })
                 Assert.That(style.font, Is.Null, "Cached GUIStyles must release native font references.");
-            Assert.That(font != null, Is.True, "The sample owns font destruction; disposing styles must not destroy it.");
+            Assert.That(font != null, Is.True, "Disposing styles must not destroy the owner-managed font.");
         }
     }
 }

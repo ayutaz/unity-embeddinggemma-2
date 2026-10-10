@@ -1,6 +1,6 @@
 # 現在の状態と残タスク
 
-確認日: 2026-10-10。確認基準mainはPR #28後の `0abb299`。統合後main [CI run 38027941069](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38027941069)は全8 job成功。PR #27 / #28は文書のみでRuntime / sample / GUID / manifestは変更していない。今回のsample font寿命修正はsource `f7ffbfd`の別結果として記録した。実Unity検証のSHAは各記録を維持する。下の表はPR #12時点の基準・履歴として保持し、後続実測を本文に追記する。以降のmain / PR / CIはGitHubを参照。
+確認日: 2026-10-10。確認基準mainはPR #29後の `fc66af7`。統合後main [CI run 38029860876](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38029860876)は全8 job成功。sample font寿命修正のsource `f7ffbfd`、新固定Git consumer `fc66af7`、Editor測定fixture修正 `bc3ac49`の実測を分けて記録した。実Unity検証のSHAは各記録を維持する。下の表はPR #12時点の基準・履歴として保持し、後続実測を本文に追記する。以降のmain / PR / CIはGitHubを参照。
 検索実装は `feat/m2-text-search-sample` / PR #11で統合済み。M1の履歴を維持し、Windows検索実測を別の証拠として追加した。以下のmain SHAとCIは確認時点の基準であり、後続の文書PRでも確認済みの実測SHAを変更しない。
 
 ## mainと作業ブランチ
@@ -41,7 +41,9 @@ PR #6のUPM移行時にはRuntimeと契約テストの19ファイルが移行前
 
 ## 残タスクの順序
 
-Windows Editorのsample fontが停止で破棄されてもIMGUI cacheに参照が残る経路を再現し、Editor内で1つのnative fontを共有する修正をTDDで確認した。red 2 failed → green 2 passed、sample EditMode 66 / PlayMode 2、未準備UI 3回の停止前後Console 0、実Float16 GPU日英検索の全6順位・score照合、空入力・解放・停止が合格。[実測と未検証](m2-editor-font-lifetime-validation.md)を参照。修正source `f7ffbfd`は既存Git consumerへの作業ソース配置で、新固定Git導入は未実行。正常Editor終了時の所有font破棄も確認済み。次は新Git導入・Player条件を確認し、以前のnative allocation診断と他OS / 実機・正式Release gateを進める。
+PR #29統合SHA `fc66af7`を新しい空のGit consumerへ導入し、requested / resolved SHA、配布92 / sample 52ファイル、compile、UPM 38 / sample EditMode 66 / PlayMode 2、token15、実モデル4条件・全順位 / score、日英UI / 空入力 / 欠落モデル / 解放 / file URL初回・warm cacheを確認した。[結果と制約](m2-font-git-consumer-validation.md)。最初のUIでfont Warning 1 / Editor検索DB Error 1を保持した。測定fixtureが破棄済みfontをcacheへ残す経路を実証し、Editor test 2ファイルだけの修正 `bc3ac49`で1 failed → 1 passed、全67 passed、invalid font参照0、未準備UI 3回の停止前後Console 0を確認した。検索DB原因・native allocation・Player sample画面 / 他OS実機・候補 / tag / 正式Releaseは未完了。
+
+Windows Editorのsample fontが停止で破棄されてもIMGUI cacheに参照が残る経路を再現し、Editor内で1つのnative fontを共有する修正をTDDで確認した。red 2 failed → green 2 passed、sample EditMode 66 / PlayMode 2、未準備UI 3回の停止前後Console 0、実Float16 GPU日英検索の全6順位・score照合、空入力・解放・停止が合格。[当初の実測と制約](m2-editor-font-lifetime-validation.md)を参照。修正source `f7ffbfd`の当初検証は作業ソース配置で、後続 `fc66af7`の新Git導入は上記で別に確認した。正常Editor終了時の所有font破棄も確認済み。次は残るEditor検索DB / native allocation診断、Player sample画面、他OS / 実機・正式Release gateを進める。
 
 ユーザーが安定化から正式リリースまでの実行を依頼した。[詳細実行計画](m2-release-plan.md)に4段階の受け渡しと完了条件を記載した。新しい実測はその実行SHA・環境で記録し、以下の既存履歴を書き換えない。
 

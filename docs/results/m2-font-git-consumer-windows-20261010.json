@@ -1,0 +1,1998 @@
+{
+  "schema_version": 1,
+  "observed_date": "2026-10-10",
+  "scope": "Pinned Git consumer main fc66af7 plus separate Editor-test fixture overlay",
+  "contracts_and_real_inference_passed": true,
+  "all_m2_gates_complete": false,
+  "source": {
+    "git_consumer_revision": "fc66af7bc9150ddcf759917a5e9c92b2c5afa991",
+    "fixture_fix_source": "bc3ac490da7738db8ac9bdff872836fac0684834",
+    "fixture_overlay_files": [
+      "Packages/com.ayutaz.embeddinggemma/Samples~/TextSearch/Tests/Editor/TextSearchEditorFontLifetimeTests.cs",
+      "Packages/com.ayutaz.embeddinggemma/Samples~/TextSearch/Tests/Editor/TextSearchGuiStylesTests.cs"
+    ],
+    "fixture_overlay_hashes": [
+      {
+        "path": "Packages/com.ayutaz.embeddinggemma/Samples~/TextSearch/Tests/Editor/TextSearchEditorFontLifetimeTests.cs",
+        "source_file_sha256": "aaaa11b1b0f2d822ddc8dfa8bdaf8a1584847b1e3d592cb44fd312f04860c342",
+        "imported_file_matches": true
+      },
+      {
+        "path": "Packages/com.ayutaz.embeddinggemma/Samples~/TextSearch/Tests/Editor/TextSearchGuiStylesTests.cs",
+        "source_file_sha256": "e1398f53ed93ce30c1321b28d2e13b17b96b3d89ef704bf6468020716d87dafd",
+        "imported_file_matches": true
+      }
+    ],
+    "fixture_changes_production_code": false,
+    "fresh_git_resolution_of_fixture_fix": false,
+    "git_resolution": {
+      "success": true,
+      "project": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j",
+      "requested_revision": "fc66af7bc9150ddcf759917a5e9c92b2c5afa991",
+      "resolved_revision": "fc66af7bc9150ddcf759917a5e9c92b2c5afa991",
+      "unity_executed": false,
+      "errors": []
+    },
+    "source_audit_before_fixture_overlay": {
+      "success": true,
+      "git_revision": "fc66af7bc9150ddcf759917a5e9c92b2c5afa991",
+      "package_path": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Library\\PackageCache\\com.ayutaz.embeddinggemma@836a44df646f",
+      "file_count": 92,
+      "files": [
+        {
+          "path": "CHANGELOG.md",
+          "source_sha256_utf8_lf": "c7a5cc1fc3aac2dfd8bf9ecc9763e500f5be44d302888a3c7c8425cf6be6ab2e",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "CHANGELOG.md.meta",
+          "source_sha256_utf8_lf": "221f72be3505fbd09573072c668625c999cc9dc799a715445f0471b931a0c9f7",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Documentation~/index.md",
+          "source_sha256_utf8_lf": "4c32e3e4f98cc0f4455da8e1e304968b5b24b653b77324feab7abe58b7866953",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "LICENSE.md",
+          "source_sha256_utf8_lf": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "LICENSE.md.meta",
+          "source_sha256_utf8_lf": "2722eb66e3b54b0f546f2750c64be9b2427346f9f70c6f31bced9c57295db7bf",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "README.md",
+          "source_sha256_utf8_lf": "da837dbc52956a39c5fa98efc8a1d4d16bf6440a9c31c079b258c2540f07d630",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "README.md.meta",
+          "source_sha256_utf8_lf": "32de4d504821b6bdaeb95658cb7bd66b64f42f0297290911c0eb70b2d2e8a70f",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Runtime.meta",
+          "source_sha256_utf8_lf": "0a1f6fc5c15de44fe9154ef44989a15d8960727683a07f6242efab54bc10f51c",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Runtime/EmbeddingGemma.Runtime.asmdef",
+          "source_sha256_utf8_lf": "c3544989a5a45ee123c42bd2a9dd967d1812b93fad620587e04ad73ad1f22512",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Runtime/EmbeddingGemma.Runtime.asmdef.meta",
+          "source_sha256_utf8_lf": "6d846944ad51d3b13db5e1bcc70a207368b1276e422cd0edcecba6f1713e69e6",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Runtime/TextEmbedder.cs",
+          "source_sha256_utf8_lf": "85cb087541827169efe40ddec5074f6cc8b6a1dd995531a250ce5c4bbc66ec1e",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Runtime/TextEmbedder.cs.meta",
+          "source_sha256_utf8_lf": "4a60fbde736497f9796ddc1956417525f05a21a83e03461e76c0c977d7e0167f",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Runtime/TextModelFile.cs",
+          "source_sha256_utf8_lf": "c4fb628f5ea5e4daacac88f9d4f09266f44e3133a0baf2236438c611917ede28",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Runtime/TextModelFile.cs.meta",
+          "source_sha256_utf8_lf": "6782b388e82763e6f044d92ace988eda3a1c537debdd69dd9fb01e16a835405a",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Runtime/TextPrompts.cs",
+          "source_sha256_utf8_lf": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Runtime/TextPrompts.cs.meta",
+          "source_sha256_utf8_lf": "b224a3e9a7b4a0b99cb02fc43c4135abf66faec20545aef014fb269d3319f1e7",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Runtime/TextSearchIndex.cs",
+          "source_sha256_utf8_lf": "8a17c7ac6e995e6ceb36d9cead732f3ace63f418ab6e860e7f71fdd7a9ea43d0",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Runtime/TextSearchIndex.cs.meta",
+          "source_sha256_utf8_lf": "110c8410183b888d0bf2ae3ca8aef4f83faaf64ce44ec5dbfccce907929c08c6",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Runtime/TextSearchSession.cs",
+          "source_sha256_utf8_lf": "e4a85fd2378a18b48dd022f82a6fdb4eb73ef9dd980f539c75e2ef5768f1f9f7",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Runtime/TextSearchSession.cs.meta",
+          "source_sha256_utf8_lf": "735a435e0a836c8adf5f445924520715dd9a92c666a9ff179d641eefc31fa73e",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Runtime/TextTokenizer.cs",
+          "source_sha256_utf8_lf": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Runtime/TextTokenizer.cs.meta",
+          "source_sha256_utf8_lf": "8d1afc2fb8c6eb2c3109f17308efec227bc70ab7f0103787af1450fd18ec199d",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Samples~/README.md",
+          "source_sha256_utf8_lf": "772b5f643da8b0ee1f7c54f450fbe94ca2f4d26b51e9ef2867e503824e246fa4",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Samples~/TextSearch.meta",
+          "source_sha256_utf8_lf": "1a8f5f374e6845d550d783cabd0b71eeeaf78cdd2e41d3cfd6459aee9bf950ec",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Samples~/TextSearch/AssemblyInfo.cs",
+          "source_sha256_utf8_lf": "ec0d59ffd41af917084a28ce8734622beb475c42e5853af979a848edc0d32afa",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/AssemblyInfo.cs.meta",
+          "source_sha256_utf8_lf": "c9b353d07b8d16427f4d78b872b3e6714993c7c466d71518c82b892f2636d965",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Editor.meta",
+          "source_sha256_utf8_lf": "7603fbf9cab60c97e59dcc49efb192d0846079c753fb56b40c9b09524f71dba9",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Editor/EmbeddingGemma.TextSearch.Sample.Editor.asmdef",
+          "source_sha256_utf8_lf": "dc491d7e01e9a4edc5e790223bffa6f8a0055cddccdf6fff71c2a60ab98a977a",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Editor/EmbeddingGemma.TextSearch.Sample.Editor.asmdef.meta",
+          "source_sha256_utf8_lf": "9c0109dc479abe67f210edc7d78a57c9856a8d8d419ef047b3f1d1171dcb5e06",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Editor/TextSearchFileHash.cs",
+          "source_sha256_utf8_lf": "a45422ba0538553ef844cd5cfd943727b0b3f1512affcd6014b51b6eb93208aa",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Editor/TextSearchFileHash.cs.meta",
+          "source_sha256_utf8_lf": "414ac2a440caa0308e3b512d4ed43ccdcb5be210aeea63ea8c0033cebf699a1b",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Editor/TextSearchModelPreparation.cs",
+          "source_sha256_utf8_lf": "b06fefa3a797f9f964c2457b2cc556f9d07d5afeaa29233b355f4f72f0b5b152",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Editor/TextSearchModelPreparation.cs.meta",
+          "source_sha256_utf8_lf": "c4533262d6066c7e269c6beee87ba5e9dd198fc22fcb89780df409e3404ce8b6",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/EmbeddingGemma.TextSearch.Sample.asmdef",
+          "source_sha256_utf8_lf": "f5c349313be84166147c076da36c041ad61388c7f33e16e39f3c1cb8fd1aedb8",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/EmbeddingGemma.TextSearch.Sample.asmdef.meta",
+          "source_sha256_utf8_lf": "ef50946ae5d746b53be791fd33ffeeee1ead47c70db51e3671d1a984179c664a",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/README.md",
+          "source_sha256_utf8_lf": "b860b5c5b8a89a5a9a00d9b31dbf30911913ff3d8ab3019727d6b5294466ee21",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/README.md.meta",
+          "source_sha256_utf8_lf": "fb3e282d23c60e7f150c3bc782f8609671c7f07be5b1a3682c003bc8af56eda4",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Resources.meta",
+          "source_sha256_utf8_lf": "b4168fe8f7c7cb277c0b82cf71bc5ef0edf9efb002468495a23c74054085c7c2",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Resources/EmbeddingGemmaTextSearch.meta",
+          "source_sha256_utf8_lf": "16522a0662c39fe45f73d3d605ed39c0aa00cf79b5f95d4413a4c13190f40997",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Resources/EmbeddingGemmaTextSearch/corpus.json",
+          "source_sha256_utf8_lf": "10bca454ed0893a67d0af903d88da6a884bb5506920846a483a812f48cedd926",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Resources/EmbeddingGemmaTextSearch/corpus.json.meta",
+          "source_sha256_utf8_lf": "d25733e06239ae493622df6ac30e27d0d212f035e9577caa4e64413550e63033",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests.meta",
+          "source_sha256_utf8_lf": "6fe344edc0e87239789ad9e95d730bb5236721230ca36bcf10ad32fec03f16e1",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/Editor.meta",
+          "source_sha256_utf8_lf": "f17819902740143572700d32df94e6eeb0bc940cf6e1a17a6516b3502e7d3e10",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/Editor/EmbeddingGemma.TextSearch.Sample.Editor.Tests.asmdef",
+          "source_sha256_utf8_lf": "e2007c10796846ce32ce1cced409bd432268b67ed9b2a9f12a19aa926cd8d899",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/Editor/EmbeddingGemma.TextSearch.Sample.Editor.Tests.asmdef.meta",
+          "source_sha256_utf8_lf": "fafb12ffa1c34ed53134b7386dc7fa9e77e4bc5d7c43b1a0bc74caeda4be0408",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/Editor/TextSearchEditorFontLifetimeTests.cs",
+          "source_sha256_utf8_lf": "a5603d2f6fe28d75c307c335b1361dc56d8d9ef5054d723cde209b1cad5a47a0",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/Editor/TextSearchEditorFontLifetimeTests.cs.meta",
+          "source_sha256_utf8_lf": "58a4da4231f334ed8f8f9a98240591ac65b7ebc09a7eabce04d989804b6f0fe6",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/Editor/TextSearchFileHashTests.cs",
+          "source_sha256_utf8_lf": "dc71a8475146d152c8003199ef7fe18850dfc940d5ddf68c88b5b23f70dfda1d",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/Editor/TextSearchFileHashTests.cs.meta",
+          "source_sha256_utf8_lf": "281f8448db81af65d4db160bfb9eca0f9940fcf188267d196ef4e39ee821cf9e",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/Editor/TextSearchGuiStylesTests.cs",
+          "source_sha256_utf8_lf": "d53be2729e3ae279c0ab0e652b3ae7017e09bcfce97569b20e01dfdd69742c5b",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/Editor/TextSearchGuiStylesTests.cs.meta",
+          "source_sha256_utf8_lf": "64652f404148aba8beed15be387954defa925dcfa1eb25981840bdc88288381e",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/Editor/TextSearchModelCacheTests.cs",
+          "source_sha256_utf8_lf": "ac239d80db0f4aac2fa1e1929c9042b8002c1ecb59cced2d09417506ba0655c3",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/Editor/TextSearchModelCacheTests.cs.meta",
+          "source_sha256_utf8_lf": "d4f992f51c3856dd85e34c3635770b37284af35dd612fe3f8193d7dfa6336d3d",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/Editor/TextSearchModelPreparationTests.cs",
+          "source_sha256_utf8_lf": "f13b612e1fd9d751b9bddcfe1a7b15131e023aac064954bf89aaf35636091f22",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/Editor/TextSearchModelPreparationTests.cs.meta",
+          "source_sha256_utf8_lf": "2997ef6460beab5fa013f905604f89b5e6d996ef8ba3fcb1afab28418f8e93b8",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/Editor/TextSearchSampleTests.cs",
+          "source_sha256_utf8_lf": "737a4c9ae8e2dae83c3e18f1ba80006cbcb16e31a410bf4195a028091a3d3ef2",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/Editor/TextSearchSampleTests.cs.meta",
+          "source_sha256_utf8_lf": "90e5a9e3f7e6b6f34ac8c277be14cd68a298e42758e47b51076eefe985112a1f",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/Editor/TextSearchStreamHashTests.cs",
+          "source_sha256_utf8_lf": "694071d34b1b7d335706a348bc18c242f570163bf6c8263d093a5837b2655a56",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/Editor/TextSearchStreamHashTests.cs.meta",
+          "source_sha256_utf8_lf": "661eb960d12f3de523f7a52d3bee8b07286bbbcdc554cd66e6c5602e9eebde8d",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/PlayMode.meta",
+          "source_sha256_utf8_lf": "5917927caa2429d344a6af6a6a58e47ab4a95ae9b79d89f474ec9f9674c9f1bc",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/PlayMode/EmbeddingGemma.TextSearch.Sample.PlayMode.Tests.asmdef",
+          "source_sha256_utf8_lf": "7cc5397b2210e3fb947e9172036027387b203510ce5cbdc832de71122d86785b",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/PlayMode/EmbeddingGemma.TextSearch.Sample.PlayMode.Tests.asmdef.meta",
+          "source_sha256_utf8_lf": "53050f55ee49ee0ea54107f8795b9cc4d21a356de661793016c1124e06ab59d8",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/PlayMode/TextSearchLifecycleTests.cs",
+          "source_sha256_utf8_lf": "258eb784fbcf627116119eb628cf1b4f8a2a75213f64bcfe4d21674cebe6fa21",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/Tests/PlayMode/TextSearchLifecycleTests.cs.meta",
+          "source_sha256_utf8_lf": "04256499a6e351a4b4dfb53a5aa71eb5afad47cd6e0fd80ba0724b87c34ebceb",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/TextSearch.unity",
+          "source_sha256_utf8_lf": "04c3e5d8bba0199accc793637576429e0002c66786d7ce909a34abaac104cd74",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/TextSearch.unity.meta",
+          "source_sha256_utf8_lf": "ecbcbbec0d44a15572fe8fa21fa9468c1022af5a614450eabb48e2bb98828038",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/TextSearchGuiFont.cs",
+          "source_sha256_utf8_lf": "355373a0db2dc75066f758c08f1507042107cb9ed8dc81463f8b5a8cff0135a5",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/TextSearchGuiFont.cs.meta",
+          "source_sha256_utf8_lf": "6aa0d786dc4fd6af4d11ae3be8c3470a166c24357dc004c364a33adf76bc1cde",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/TextSearchGuiStyles.cs",
+          "source_sha256_utf8_lf": "586356b3c0760a158355e17e7a6d159dfbbb0e69abb0d3cda911d63046a82c53",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/TextSearchGuiStyles.cs.meta",
+          "source_sha256_utf8_lf": "225f428cdfc14fd0426f1d88f01b12cb8e751759132ee953cca7e9bc7ed08b35",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/TextSearchModelCache.cs",
+          "source_sha256_utf8_lf": "0c0b2d86cb0470a6e8a1b60cc4354520addc31953765ba3fe12cf46867b974a6",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/TextSearchModelCache.cs.meta",
+          "source_sha256_utf8_lf": "a59d513b331c9eac6c58b10f29c12f9038eb46f3708d2aa014f349a5ec45d5e3",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/TextSearchSample.cs",
+          "source_sha256_utf8_lf": "ebdb65c3468b1b8e7d3fce54fa4b602c3ce549d8f2a9c4fa59be6031f1133683",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/TextSearchSample.cs.meta",
+          "source_sha256_utf8_lf": "a35765aa5e0f5b047f38a5033451040e74cef4dba1db6e721dc97765f1a36b96",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/TextSearchStreamHash.cs",
+          "source_sha256_utf8_lf": "dcf552f22fbd449938f98fe564128ba270875791532374b44611a686120ea279",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Samples~/TextSearch/TextSearchStreamHash.cs.meta",
+          "source_sha256_utf8_lf": "704cdbc0af8f7643b383eee1d02b9233374cb6296376ff3fa47e397558ada75d",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": true
+        },
+        {
+          "path": "Tests.meta",
+          "source_sha256_utf8_lf": "b5293d9741b0c5943d52b64d5dd749ad011a72e42e8b5a07768a8ec6e18801ac",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Tests/Editor.meta",
+          "source_sha256_utf8_lf": "9625d352fa84464ae5cd8205535e00c22cc4cdc59c93b0a5191afa0e49f7d21b",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Tests/Editor/EmbeddingGemma.Package.Editor.Tests.asmdef",
+          "source_sha256_utf8_lf": "bbea9db024fe61ffd454434de4efe196e9b0f57f0e17591e1442218f8f37b959",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Tests/Editor/EmbeddingGemma.Package.Editor.Tests.asmdef.meta",
+          "source_sha256_utf8_lf": "1a38b497a3611b8947ca9ebcb951713b37ad96c33379cc941a5f0bdf2ce00f7c",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Tests/Editor/TextEmbedderTests.cs",
+          "source_sha256_utf8_lf": "c349ec6dc7ae9976132f7086518bb2ef631cd61358751795dbc0b97444d37865",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Tests/Editor/TextEmbedderTests.cs.meta",
+          "source_sha256_utf8_lf": "225d6c805c8ca7631e3025cc2eb43bc13c8003a7344e17ffa969e163b50fdccb",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Tests/Editor/TextModelFileTests.cs",
+          "source_sha256_utf8_lf": "5625adac98d6446f37f9195f1224598d7bf6c983096423b9228afeb52baa6024",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Tests/Editor/TextModelFileTests.cs.meta",
+          "source_sha256_utf8_lf": "dbdea16f0ecf8619320ecd5864f37a9c255010cf0e04c55f9ee514e5fbaf034c",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Tests/Editor/TextPromptsTests.cs",
+          "source_sha256_utf8_lf": "8cc3e136e42cd7d726e65249ae59a2cc485e0410999a08b3b208d298ff490301",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Tests/Editor/TextPromptsTests.cs.meta",
+          "source_sha256_utf8_lf": "ae9a62d281c8d584c973e8428256c903749f62dfb796ca46831f7e9e76adc8cb",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Tests/Editor/TextSearchTests.cs",
+          "source_sha256_utf8_lf": "8a629f02b2cd60a2f55c72a0f8123ca7376328028f17e9bd92713f55ee026f13",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Tests/Editor/TextSearchTests.cs.meta",
+          "source_sha256_utf8_lf": "5eba17b05df76232a720d237a19986e1bc7f66fb1ccb3d7ab94c426ed9e26be6",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Tests/Editor/TextTokenizerTests.cs",
+          "source_sha256_utf8_lf": "65a16bd2f191aac9ad1724252ceacd35dc453a570effc668fd631b98cb0f2aef",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "Tests/Editor/TextTokenizerTests.cs.meta",
+          "source_sha256_utf8_lf": "a37a98a6452b09298315df91dae23240976ae331a7edf3f097b538c01685c52f",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "package.json",
+          "source_sha256_utf8_lf": "eefc177b92cc8f13f3e908eda0c3f7ca4df73ffd26899bd7f981290d21dbe83d",
+          "resolved_matches": true,
+          "comparison": "Full parsed manifest comparison, ignoring only UPM _fingerprint",
+          "imported_sample_matches": null
+        },
+        {
+          "path": "package.json.meta",
+          "source_sha256_utf8_lf": "8064e6c620884b2aebc35c5517016434c324a07e042dc0665c974c884dad881d",
+          "resolved_matches": true,
+          "comparison": "SHA256 UTF8 LF",
+          "imported_sample_matches": null
+        }
+      ],
+      "models": [
+        {
+          "name": "model-fp32.sentis",
+          "bytes": 1095598044,
+          "sha256": "8488d70f2d636a34bfe2a64c1d7b9d3eb3fce70c4fb9e27d32b698090c8fb373",
+          "fully_audited": true
+        },
+        {
+          "name": "model-float16.sentis",
+          "bytes": 553775500,
+          "sha256": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819",
+          "fully_audited": true
+        },
+        {
+          "name": "tokenizer.json",
+          "bytes": 32170775,
+          "sha256": "25975a936201b81402a3b867d5c462cf10808bb96759f97fe9aefecbb11c49df",
+          "fully_audited": true
+        }
+      ],
+      "sample_source": "Pinned main copied by create_consumer --sample and matched against independently Git-resolved package",
+      "model_reuse": "Previously prepared hardlinks, no download/conversion",
+      "generated_pt2_imported": false
+    },
+    "staging": {
+      "git_revision": "fc66af7bc9150ddcf759917a5e9c92b2c5afa991",
+      "library_exists": false,
+      "model_reuse": "Hardlinks to previously audited models/reference; no downloads or conversion",
+      "sample_source": "Pinned main worktree",
+      "layout": "Unity bundled Default.wlt"
+    }
+  },
+  "editor": {
+    "initial_state": "{ unity = 6000.3.16f1, scene = Assets/EmbeddingGemmaTextSearch/TextSearch.unity, dirty = False, build_target = StandaloneWindows64, gpu = NVIDIA GeForce RTX 4070 Ti SUPER, graphics_api = Direct3D12, all_users_profile = C:\\ProgramData, native_leak_mode = Enabled }",
+    "pid": 105536,
+    "created": "2026-10-10T15:08:41.5685970+09:00",
+    "gui_editor_count": 1,
+    "asset_import_workers": [
+      {
+        "pid": 33892,
+        "parent_pid": 105536
+      },
+      {
+        "pid": 50824,
+        "parent_pid": 105536
+      }
+    ],
+    "launch_and_compile": {
+      "success": true,
+      "m1_reference_passed": false,
+      "runtime_reference_passed": false,
+      "m1_completion_passed": false,
+      "search_reference_passed": false,
+      "suite": "compile",
+      "project": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j",
+      "unity_version": "6000.3.16f1",
+      "cli": "C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/uloop/bin/uloop.exe",
+      "started_at": "2026-10-10T15:08:40.258331+09:00",
+      "steps": [
+        "launch",
+        "compile",
+        "get-logs"
+      ],
+      "completed_at": "2026-10-10T15:10:15.830221+09:00"
+    },
+    "compile": {
+      "ErrorCount": 0,
+      "WarningCount": 0,
+      "Errors": [],
+      "Warnings": [],
+      "Message": null,
+      "ErrorCode": null,
+      "NextActions": null,
+      "ProjectRoot": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j",
+      "Warning": null,
+      "Success": true
+    },
+    "final_state": "{ playing = False, compiling = False, scene = Assets/EmbeddingGemmaTextSearch/TextSearch.unity, dirty = False, maximized = False, leak_mode = Enabled, font_id = -43108 }",
+    "after_fixture_regression": "{ running = False, playing = False, invalid_font_references = 0, shared_font = -43108, shared_font_and_asset_valid = True }"
+  },
+  "pinned_git_tests": {
+    "upm": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T06:11:01.0814155Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 38,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 38,
+      "XmlPath": null
+    },
+    "sample_editmode": {
+      "artifact": "sample-editmode-results.xml",
+      "sha256": "8a47a8aeb7421c26f35ed340cbb069edb3244030c4b0e87168c7dbf6865c8631",
+      "total": 66,
+      "passed": 66,
+      "failed": 0,
+      "skipped": 0,
+      "inconclusive": 0,
+      "start": "2026-10-10 06:11:59Z",
+      "end": "2026-10-10 06:12:05Z",
+      "font_lifetime_cases": [
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchEditorFontLifetimeTests.EditorFontCacheStaysValidAcrossTwoPlaySessions",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchEditorFontLifetimeTests.TwoSampleViewsShareOneEditorFont",
+          "result": "Passed",
+          "failure": null
+        }
+      ]
+    },
+    "sample_playmode": {
+      "Status": "Passed",
+      "HasFailures": false,
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "Message": "Test execution completed with status: Passed",
+      "CompletedAt": "2026-10-10T06:12:40.2037011Z",
+      "TestCount": 2,
+      "PassedCount": 2,
+      "FailedCount": 0,
+      "SkippedCount": 0,
+      "InconclusiveCount": 0,
+      "XmlPath": null,
+      "Success": true
+    },
+    "tokenizer_15_inputs": {
+      "Status": "Passed",
+      "HasFailures": false,
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "Message": "Test execution completed with status: Passed",
+      "CompletedAt": "2026-10-10T06:13:17.3124227Z",
+      "TestCount": 1,
+      "PassedCount": 1,
+      "FailedCount": 0,
+      "SkippedCount": 0,
+      "InconclusiveCount": 0,
+      "XmlPath": null,
+      "Success": true
+    },
+    "search_four_conditions": {
+      "Status": "Passed",
+      "HasFailures": false,
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "Message": "Test execution completed with status: Passed",
+      "CompletedAt": "2026-10-10T06:14:43.9968778Z",
+      "TestCount": 4,
+      "PassedCount": 4,
+      "FailedCount": 0,
+      "SkippedCount": 0,
+      "InconclusiveCount": 0,
+      "XmlPath": null,
+      "Success": true
+    },
+    "sample_editmode_cli": {
+      "Success": false,
+      "Error": {
+        "ErrorCode": "UNITY_DISCONNECTED_AFTER_ACCEPT",
+        "Phase": "response_waiting",
+        "Message": "Unity disconnected after accepting the request.",
+        "Retryable": true,
+        "SafeToRetry": false,
+        "ProjectRoot": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j",
+        "Command": "run-tests",
+        "NextActions": [
+          "Check Unity Console logs because Unity had already accepted the request.",
+          "Retry after Unity finishes compiling, reloading scripts, or restarting the bridge.",
+          "If scripts were edited since the last compile, Unity imported them when the test run released its assembly lock and the domain reload discarded every active hot-reload patch; re-run 'uloop hot-reload' after the reload, or run 'uloop compile' first (--skip-compile only skips the CLI-side compile)."
+        ],
+        "Details": {
+          "Cause": "EOF"
+        }
+      }
+    },
+    "sample_terminal_observer_disconnect": {
+      "success": false,
+      "error_code": "UNITY_DISCONNECTED_AFTER_ACCEPT",
+      "raw_artifact_saved": false,
+      "note": "Read-only observer lost its response during domain reload; tool output reported EOF, and no observer result was obtained."
+    },
+    "sample_completed_observer": {
+      "Result": "{ running = False, playing = False, compiling = False, scene = Assets/EmbeddingGemmaTextSearch/TextSearch.unity, owned_font = -43108 }",
+      "Logs": [
+        "Execution completed successfully"
+      ],
+      "CompilationErrors": [],
+      "ErrorMessage": "",
+      "Error": "",
+      "UpdatedCode": null,
+      "DiagnosticsSummary": null,
+      "Diagnostics": [],
+      "EditorPlaying": false,
+      "Success": true
+    },
+    "transport_interpretation": "Do not retry accepted requests. Same-run saved NUnit XML plus inactive TestRunner proved completion."
+  },
+  "real_search": {
+    "reference_sha256": "3530756b36316a812ac853f0722bed5479e92e6bb02ca6aa41c06660d32a71ec",
+    "report_sha256": "61262e8f7f840b4a36fbfde01a4b114a399e1e2c071f073905c1eaac3b0e9b64",
+    "report": {
+      "success": true,
+      "startedUtc": "2026-10-10T06:13:20.8072992Z",
+      "completedUtc": "2026-10-10T06:14:43.9722418Z",
+      "unity": "6000.3.16f1",
+      "os": "Windows 11  (10.0.22631)",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphicsApi": "Direct3D12",
+      "modelRevision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+      "referenceSource": "13f194266162d2a728b2b2a0da9e9e58ae314ff6",
+      "modelSource": "2edb272f17a38c7af210474345c35f391fd6955c",
+      "conditions": [
+        {
+          "success": true,
+          "precision": "fp32",
+          "backend": "CPU",
+          "error": "",
+          "minimumCosine": 0.9999999999981735,
+          "documentCount": 6,
+          "queryCount": 4,
+          "queries": [
+            {
+              "id": "query-cat-ja",
+              "ranking": [
+                {
+                  "document_id": "doc-cat-en",
+                  "score": 0.7473304110670193
+                },
+                {
+                  "document_id": "doc-cat-ja",
+                  "score": 0.7248598257649412
+                },
+                {
+                  "document_id": "doc-recipe-a",
+                  "score": 0.5659783338053531
+                },
+                {
+                  "document_id": "doc-recipe-b",
+                  "score": 0.5659783338053531
+                },
+                {
+                  "document_id": "doc-space-ja",
+                  "score": 0.5122136955441852
+                },
+                {
+                  "document_id": "doc-space-en",
+                  "score": 0.4919055925521205
+                }
+              ]
+            },
+            {
+              "id": "query-space-en",
+              "ranking": [
+                {
+                  "document_id": "doc-space-en",
+                  "score": 0.7798648539191194
+                },
+                {
+                  "document_id": "doc-space-ja",
+                  "score": 0.7117977046604552
+                },
+                {
+                  "document_id": "doc-recipe-a",
+                  "score": 0.5516260573160966
+                },
+                {
+                  "document_id": "doc-recipe-b",
+                  "score": 0.5516260573160966
+                },
+                {
+                  "document_id": "doc-cat-en",
+                  "score": 0.5359168734597249
+                },
+                {
+                  "document_id": "doc-cat-ja",
+                  "score": 0.5263622875663185
+                }
+              ]
+            },
+            {
+              "id": "query-recipe-ja",
+              "ranking": [
+                {
+                  "document_id": "doc-recipe-a",
+                  "score": 0.8117594303975944
+                },
+                {
+                  "document_id": "doc-recipe-b",
+                  "score": 0.8117594303975944
+                },
+                {
+                  "document_id": "doc-cat-ja",
+                  "score": 0.5771714890936261
+                },
+                {
+                  "document_id": "doc-space-ja",
+                  "score": 0.5589211719750438
+                },
+                {
+                  "document_id": "doc-cat-en",
+                  "score": 0.5229029672034823
+                },
+                {
+                  "document_id": "doc-space-en",
+                  "score": 0.5080021140957824
+                }
+              ]
+            },
+            {
+              "id": "query-cat-en",
+              "ranking": [
+                {
+                  "document_id": "doc-cat-en",
+                  "score": 0.7958340504855802
+                },
+                {
+                  "document_id": "doc-cat-ja",
+                  "score": 0.716784992965655
+                },
+                {
+                  "document_id": "doc-space-en",
+                  "score": 0.530673954808166
+                },
+                {
+                  "document_id": "doc-recipe-a",
+                  "score": 0.5133201274905753
+                },
+                {
+                  "document_id": "doc-recipe-b",
+                  "score": 0.5133201274905753
+                },
+                {
+                  "document_id": "doc-space-ja",
+                  "score": 0.5030712413662828
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "success": true,
+          "precision": "fp32",
+          "backend": "GPUCompute",
+          "error": "",
+          "minimumCosine": 0.999999999999512,
+          "documentCount": 6,
+          "queryCount": 4,
+          "queries": [
+            {
+              "id": "query-cat-ja",
+              "ranking": [
+                {
+                  "document_id": "doc-cat-en",
+                  "score": 0.7473303426040513
+                },
+                {
+                  "document_id": "doc-cat-ja",
+                  "score": 0.7248598136856715
+                },
+                {
+                  "document_id": "doc-recipe-a",
+                  "score": 0.5659783895424063
+                },
+                {
+                  "document_id": "doc-recipe-b",
+                  "score": 0.5659783895424063
+                },
+                {
+                  "document_id": "doc-space-ja",
+                  "score": 0.5122136388969601
+                },
+                {
+                  "document_id": "doc-space-en",
+                  "score": 0.4919057124303446
+                }
+              ]
+            },
+            {
+              "id": "query-space-en",
+              "ranking": [
+                {
+                  "document_id": "doc-space-en",
+                  "score": 0.7798648642603759
+                },
+                {
+                  "document_id": "doc-space-ja",
+                  "score": 0.7117976097640415
+                },
+                {
+                  "document_id": "doc-recipe-a",
+                  "score": 0.5516260511443223
+                },
+                {
+                  "document_id": "doc-recipe-b",
+                  "score": 0.5516260511443223
+                },
+                {
+                  "document_id": "doc-cat-en",
+                  "score": 0.5359167231874132
+                },
+                {
+                  "document_id": "doc-cat-ja",
+                  "score": 0.5263622798476042
+                }
+              ]
+            },
+            {
+              "id": "query-recipe-ja",
+              "ranking": [
+                {
+                  "document_id": "doc-recipe-a",
+                  "score": 0.8117594395513761
+                },
+                {
+                  "document_id": "doc-recipe-b",
+                  "score": 0.8117594395513761
+                },
+                {
+                  "document_id": "doc-cat-ja",
+                  "score": 0.5771715142352556
+                },
+                {
+                  "document_id": "doc-space-ja",
+                  "score": 0.5589210756342383
+                },
+                {
+                  "document_id": "doc-cat-en",
+                  "score": 0.5229028996267017
+                },
+                {
+                  "document_id": "doc-space-en",
+                  "score": 0.5080020903058801
+                }
+              ]
+            },
+            {
+              "id": "query-cat-en",
+              "ranking": [
+                {
+                  "document_id": "doc-cat-en",
+                  "score": 0.7958339796363999
+                },
+                {
+                  "document_id": "doc-cat-ja",
+                  "score": 0.7167849951108329
+                },
+                {
+                  "document_id": "doc-space-en",
+                  "score": 0.5306740243407113
+                },
+                {
+                  "document_id": "doc-recipe-a",
+                  "score": 0.5133201512608726
+                },
+                {
+                  "document_id": "doc-recipe-b",
+                  "score": 0.5133201512608726
+                },
+                {
+                  "document_id": "doc-space-ja",
+                  "score": 0.5030711836112948
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "success": true,
+          "precision": "float16",
+          "backend": "CPU",
+          "error": "",
+          "minimumCosine": 0.9999999999982625,
+          "documentCount": 6,
+          "queryCount": 4,
+          "queries": [
+            {
+              "id": "query-cat-ja",
+              "ranking": [
+                {
+                  "document_id": "doc-cat-en",
+                  "score": 0.7473302795875995
+                },
+                {
+                  "document_id": "doc-cat-ja",
+                  "score": 0.724859700631836
+                },
+                {
+                  "document_id": "doc-recipe-a",
+                  "score": 0.5659783691962434
+                },
+                {
+                  "document_id": "doc-recipe-b",
+                  "score": 0.5659783691962434
+                },
+                {
+                  "document_id": "doc-space-ja",
+                  "score": 0.51221360768319
+                },
+                {
+                  "document_id": "doc-space-en",
+                  "score": 0.4919055607135568
+                }
+              ]
+            },
+            {
+              "id": "query-space-en",
+              "ranking": [
+                {
+                  "document_id": "doc-space-en",
+                  "score": 0.7798648329763939
+                },
+                {
+                  "document_id": "doc-space-ja",
+                  "score": 0.7117976477931458
+                },
+                {
+                  "document_id": "doc-recipe-a",
+                  "score": 0.5516260641509965
+                },
+                {
+                  "document_id": "doc-recipe-b",
+                  "score": 0.5516260641509965
+                },
+                {
+                  "document_id": "doc-cat-en",
+                  "score": 0.5359166787462596
+                },
+                {
+                  "document_id": "doc-cat-ja",
+                  "score": 0.5263623545799622
+                }
+              ]
+            },
+            {
+              "id": "query-recipe-ja",
+              "ranking": [
+                {
+                  "document_id": "doc-recipe-a",
+                  "score": 0.81175945764406
+                },
+                {
+                  "document_id": "doc-recipe-b",
+                  "score": 0.81175945764406
+                },
+                {
+                  "document_id": "doc-cat-ja",
+                  "score": 0.5771715624538548
+                },
+                {
+                  "document_id": "doc-space-ja",
+                  "score": 0.5589211598843629
+                },
+                {
+                  "document_id": "doc-cat-en",
+                  "score": 0.522902837334879
+                },
+                {
+                  "document_id": "doc-space-en",
+                  "score": 0.508002178560356
+                }
+              ]
+            },
+            {
+              "id": "query-cat-en",
+              "ranking": [
+                {
+                  "document_id": "doc-cat-en",
+                  "score": 0.7958340039005826
+                },
+                {
+                  "document_id": "doc-cat-ja",
+                  "score": 0.7167849857428491
+                },
+                {
+                  "document_id": "doc-space-en",
+                  "score": 0.5306740074114046
+                },
+                {
+                  "document_id": "doc-recipe-a",
+                  "score": 0.5133202779748385
+                },
+                {
+                  "document_id": "doc-recipe-b",
+                  "score": 0.5133202779748385
+                },
+                {
+                  "document_id": "doc-space-ja",
+                  "score": 0.5030712796865222
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "success": true,
+          "precision": "float16",
+          "backend": "GPUCompute",
+          "error": "",
+          "minimumCosine": 0.9999999999994984,
+          "documentCount": 6,
+          "queryCount": 4,
+          "queries": [
+            {
+              "id": "query-cat-ja",
+              "ranking": [
+                {
+                  "document_id": "doc-cat-en",
+                  "score": 0.7473303435039038
+                },
+                {
+                  "document_id": "doc-cat-ja",
+                  "score": 0.7248598069272855
+                },
+                {
+                  "document_id": "doc-recipe-a",
+                  "score": 0.5659783804528246
+                },
+                {
+                  "document_id": "doc-recipe-b",
+                  "score": 0.5659783804528246
+                },
+                {
+                  "document_id": "doc-space-ja",
+                  "score": 0.512213678390191
+                },
+                {
+                  "document_id": "doc-space-en",
+                  "score": 0.49190570545080414
+                }
+              ]
+            },
+            {
+              "id": "query-space-en",
+              "ranking": [
+                {
+                  "document_id": "doc-space-en",
+                  "score": 0.7798648887130949
+                },
+                {
+                  "document_id": "doc-space-ja",
+                  "score": 0.7117976440516569
+                },
+                {
+                  "document_id": "doc-recipe-a",
+                  "score": 0.5516260665635233
+                },
+                {
+                  "document_id": "doc-recipe-b",
+                  "score": 0.5516260665635233
+                },
+                {
+                  "document_id": "doc-cat-en",
+                  "score": 0.5359167338954286
+                },
+                {
+                  "document_id": "doc-cat-ja",
+                  "score": 0.5263623564371217
+                }
+              ]
+            },
+            {
+              "id": "query-recipe-ja",
+              "ranking": [
+                {
+                  "document_id": "doc-recipe-a",
+                  "score": 0.8117594480270712
+                },
+                {
+                  "document_id": "doc-recipe-b",
+                  "score": 0.8117594480270712
+                },
+                {
+                  "document_id": "doc-cat-ja",
+                  "score": 0.5771714946660856
+                },
+                {
+                  "document_id": "doc-space-ja",
+                  "score": 0.5589211127208285
+                },
+                {
+                  "document_id": "doc-cat-en",
+                  "score": 0.5229029082709717
+                },
+                {
+                  "document_id": "doc-space-en",
+                  "score": 0.50800213180254
+                }
+              ]
+            },
+            {
+              "id": "query-cat-en",
+              "ranking": [
+                {
+                  "document_id": "doc-cat-en",
+                  "score": 0.7958339521031985
+                },
+                {
+                  "document_id": "doc-cat-ja",
+                  "score": 0.7167849794342989
+                },
+                {
+                  "document_id": "doc-space-en",
+                  "score": 0.5306739895772238
+                },
+                {
+                  "document_id": "doc-recipe-a",
+                  "score": 0.5133201332652632
+                },
+                {
+                  "document_id": "doc-recipe-b",
+                  "score": 0.5133201332652632
+                },
+                {
+                  "document_id": "doc-space-ja",
+                  "score": 0.5030712012218482
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "mechanical_full_ranking_and_score_comparison": [
+      {
+        "precision": "fp32",
+        "backend": "CPU",
+        "minimum_cosine": 0.9999999999981735,
+        "score_tolerance": 0.002,
+        "queries": [
+          {
+            "query_id": "query-cat-ja",
+            "all_six_ranks_match": true,
+            "maximum_score_error": 1.8180180150206837E-07
+          },
+          {
+            "query_id": "query-space-en",
+            "all_six_ranks_match": true,
+            "maximum_score_error": 2.421338294311681E-07
+          },
+          {
+            "query_id": "query-recipe-ja",
+            "all_six_ranks_match": true,
+            "maximum_score_error": 1.4767791511882677E-07
+          },
+          {
+            "query_id": "query-cat-en",
+            "all_six_ranks_match": true,
+            "maximum_score_error": 8.199930390251353E-08
+          }
+        ]
+      },
+      {
+        "precision": "fp32",
+        "backend": "GPUCompute",
+        "minimum_cosine": 0.999999999999512,
+        "score_tolerance": 0.002,
+        "queries": [
+          {
+            "query_id": "query-cat-ja",
+            "all_six_ranks_match": true,
+            "maximum_score_error": 8.637552584289665E-08
+          },
+          {
+            "query_id": "query-space-en",
+            "all_six_ranks_match": true,
+            "maximum_score_error": 9.186151772588858E-08
+          },
+          {
+            "query_id": "query-recipe-ja",
+            "all_six_ranks_match": true,
+            "maximum_score_error": 8.582897670361689E-08
+          },
+          {
+            "query_id": "query-cat-en",
+            "all_six_ranks_match": true,
+            "maximum_score_error": 3.1781969833666324E-08
+          }
+        ]
+      },
+      {
+        "precision": "float16",
+        "backend": "CPU",
+        "minimum_cosine": 0.9999999999982625,
+        "score_tolerance": 0.02,
+        "queries": [
+          {
+            "query_id": "query-cat-ja",
+            "all_six_ranks_match": true,
+            "maximum_score_error": 2.1364036523197072E-07
+          },
+          {
+            "query_id": "query-space-en",
+            "all_six_ranks_match": true,
+            "maximum_score_error": 6.161721810560294E-08
+          },
+          {
+            "query_id": "query-recipe-ja",
+            "all_six_ranks_match": true,
+            "maximum_score_error": 1.3404757592816452E-07
+          },
+          {
+            "query_id": "query-cat-en",
+            "all_six_ranks_match": true,
+            "maximum_score_error": 1.5058644597942816E-07
+          }
+        ]
+      },
+      {
+        "precision": "float16",
+        "backend": "GPUCompute",
+        "minimum_cosine": 0.9999999999994984,
+        "score_tolerance": 0.02,
+        "queries": [
+          {
+            "query_id": "query-cat-ja",
+            "all_six_ranks_match": true,
+            "maximum_score_error": 6.890311787799419E-08
+          },
+          {
+            "query_id": "query-space-en",
+            "all_six_ranks_match": true,
+            "maximum_score_error": 1.0256953308918071E-07
+          },
+          {
+            "query_id": "query-recipe-ja",
+            "all_six_ranks_match": true,
+            "maximum_score_error": 8.874540458059244E-08
+          },
+          {
+            "query_id": "query-cat-en",
+            "all_six_ranks_match": true,
+            "maximum_score_error": 2.1853737930399575E-08
+          }
+        ]
+      }
+    ]
+  },
+  "actual_ui": {
+    "queries": [
+      {
+        "query_id": "query-cat-ja",
+        "state": {
+          "query": "猫を健康に育てるには",
+          "ready": true,
+          "preparing": false,
+          "error": "",
+          "status": "検索結果 6 件 / GPUCompute",
+          "requested_backend": "GPUCompute",
+          "actual_backend": "GPUCompute",
+          "provider": "EmbeddingGemma.TextEmbedder",
+          "font_id": -43108,
+          "owned_font_id": -43108,
+          "model_path": "C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/j/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-float16.sentis",
+          "cache": null,
+          "editor_allocated_memory_bytes": 367027196,
+          "gpu_memory_bytes": null,
+          "ranking": [
+            {
+              "id": "doc-cat-en",
+              "score": 0.7473303435039038
+            },
+            {
+              "id": "doc-cat-ja",
+              "score": 0.7248598069272855
+            },
+            {
+              "id": "doc-recipe-a",
+              "score": 0.5659783804528246
+            },
+            {
+              "id": "doc-recipe-b",
+              "score": 0.5659783804528246
+            },
+            {
+              "id": "doc-space-ja",
+              "score": 0.512213678390191
+            },
+            {
+              "id": "doc-space-en",
+              "score": 0.49190570545080414
+            }
+          ]
+        },
+        "all_six_ranks_match": true,
+        "maximum_score_error": 6.890311787799419E-08
+      },
+      {
+        "query_id": "query-space-en",
+        "state": {
+          "query": "How do scientists explore planets?",
+          "ready": true,
+          "preparing": false,
+          "error": "",
+          "status": "検索結果 6 件 / GPUCompute",
+          "requested_backend": "GPUCompute",
+          "actual_backend": "GPUCompute",
+          "provider": "EmbeddingGemma.TextEmbedder",
+          "font_id": -43108,
+          "owned_font_id": -43108,
+          "model_path": "C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/j/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-float16.sentis",
+          "cache": null,
+          "editor_allocated_memory_bytes": 367500456,
+          "gpu_memory_bytes": null,
+          "ranking": [
+            {
+              "id": "doc-space-en",
+              "score": 0.7798648887130949
+            },
+            {
+              "id": "doc-space-ja",
+              "score": 0.7117976440516569
+            },
+            {
+              "id": "doc-recipe-a",
+              "score": 0.5516260665635233
+            },
+            {
+              "id": "doc-recipe-b",
+              "score": 0.5516260665635233
+            },
+            {
+              "id": "doc-cat-en",
+              "score": 0.5359167338954286
+            },
+            {
+              "id": "doc-cat-ja",
+              "score": 0.5263623564371217
+            }
+          ]
+        },
+        "all_six_ranks_match": true,
+        "maximum_score_error": 1.0256953308918071E-07
+      }
+    ],
+    "blank": {
+      "query": "",
+      "ready": true,
+      "preparing": false,
+      "error": "検索に失敗: Query text is required.\r\nParameter name: query",
+      "status": "検索できませんでした。",
+      "requested_backend": "GPUCompute",
+      "actual_backend": "GPUCompute",
+      "provider": "EmbeddingGemma.TextEmbedder",
+      "font_id": -43108,
+      "owned_font_id": -43108,
+      "model_path": "C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/j/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-float16.sentis",
+      "cache": null,
+      "editor_allocated_memory_bytes": 367484639,
+      "gpu_memory_bytes": null,
+      "ranking": []
+    },
+    "released": {
+      "query": "",
+      "ready": false,
+      "preparing": false,
+      "error": "",
+      "status": "モデルと文書を準備してください。",
+      "requested_backend": "GPUCompute",
+      "actual_backend": null,
+      "provider": null,
+      "font_id": -43108,
+      "owned_font_id": -43108,
+      "model_path": "C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/j/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-float16.sentis",
+      "cache": null,
+      "editor_allocated_memory_bytes": 366970210,
+      "gpu_memory_bytes": null,
+      "ranking": []
+    },
+    "direct_path_reload": {
+      "query": "",
+      "ready": true,
+      "preparing": false,
+      "error": "",
+      "status": "文書 6 件を準備済み / GPUCompute",
+      "requested_backend": "GPUCompute",
+      "actual_backend": "GPUCompute",
+      "provider": "EmbeddingGemma.TextEmbedder",
+      "font_id": -43108,
+      "owned_font_id": -43108,
+      "model_path": "C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/j/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-float16.sentis",
+      "cache": null,
+      "editor_allocated_memory_bytes": 368595038,
+      "gpu_memory_bytes": null,
+      "ranking": []
+    },
+    "direct_reload_proves_cache_reuse": false,
+    "first_url_observation": {
+      "query": "",
+      "ready": false,
+      "preparing": true,
+      "error": "",
+      "status": "モデルを展開・確認しています。",
+      "requested_backend": "GPUCompute",
+      "actual_backend": null,
+      "provider": null,
+      "font_id": -43108,
+      "owned_font_id": -43108,
+      "model_path": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/j/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-float16.sentis",
+      "cache": {
+        "Success": false,
+        "CacheReused": false,
+        "TransferredFiles": 1,
+        "Milliseconds": 0.0,
+        "AuditMilliseconds": 0.0,
+        "HashBackends": null,
+        "CacheRejectedError": null
+      },
+      "editor_allocated_memory_bytes": 367483774,
+      "gpu_memory_bytes": null,
+      "ranking": []
+    },
+    "first_url_observation_is_terminal": false,
+    "file_url_cold": {
+      "query": "",
+      "ready": true,
+      "preparing": false,
+      "error": "",
+      "status": "文書 6 件を準備済み / GPUCompute",
+      "requested_backend": "GPUCompute",
+      "actual_backend": "GPUCompute",
+      "provider": "EmbeddingGemma.TextEmbedder",
+      "font_id": -43108,
+      "owned_font_id": -43108,
+      "model_path": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/j/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-float16.sentis",
+      "cache": {
+        "Success": true,
+        "CacheReused": false,
+        "TransferredFiles": 3,
+        "Milliseconds": 904.9000000000001,
+        "AuditMilliseconds": 413.0494,
+        "HashBackends": {
+          "model-float16.sentis": "windows_cng",
+          "tokenizer.json": "windows_cng"
+        },
+        "CacheRejectedError": null
+      },
+      "editor_allocated_memory_bytes": 369274818,
+      "gpu_memory_bytes": null,
+      "ranking": []
+    },
+    "file_url_warm": {
+      "query": "",
+      "ready": true,
+      "preparing": false,
+      "error": "",
+      "status": "文書 6 件を準備済み / GPUCompute",
+      "requested_backend": "GPUCompute",
+      "actual_backend": "GPUCompute",
+      "provider": "EmbeddingGemma.TextEmbedder",
+      "font_id": -43108,
+      "owned_font_id": -43108,
+      "model_path": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/j/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-float16.sentis",
+      "cache": {
+        "Success": true,
+        "CacheReused": true,
+        "TransferredFiles": 1,
+        "Milliseconds": 441.2914,
+        "AuditMilliseconds": 426.9409,
+        "HashBackends": {
+          "model-float16.sentis": "windows_cng",
+          "tokenizer.json": "windows_cng"
+        },
+        "CacheRejectedError": null
+      },
+      "editor_allocated_memory_bytes": 370035926,
+      "gpu_memory_bytes": null,
+      "ranking": []
+    },
+    "missing_model": {
+      "query": "",
+      "ready": false,
+      "preparing": false,
+      "error": "準備に失敗: 準備した.sentisモデルのパスを指定してください。",
+      "status": "モデルと文書を準備してください。",
+      "requested_backend": "GPUCompute",
+      "actual_backend": null,
+      "provider": null,
+      "font_id": -43108,
+      "owned_font_id": -43108,
+      "model_path": "C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/j/Assets/StreamingAssets/MissingModel/model-float16.sentis",
+      "cache": null,
+      "editor_allocated_memory_bytes": 369156239,
+      "gpu_memory_bytes": null,
+      "ranking": []
+    },
+    "before_fixture_fix_console": {
+      "TotalCount": 2,
+      "DisplayedCount": 2,
+      "LogType": "All",
+      "MaxCount": 100,
+      "SearchText": "",
+      "IncludeStackTrace": true,
+      "Logs": [
+        {
+          "Type": "Error",
+          "Message": "ArgumentOutOfRangeException: Index was out of range. Must be non-negative and less than the size of the collection.\r\nParameter name: index",
+          "StackTrace": "System.Collections.Generic.List`1[T].get_Item (System.Int32 index) (at <41d29b352f6a475ab1bf7c6628b82790>:0)\nUnityEditor.Search.SearchDatabase+<EnumerateAll>d__80.MoveNext () (at <607ea4376af1479fb319058a46eb4955>:0)\nSystem.Linq.Enumerable.TryGetFirst[TSource] (System.Collections.Generic.IEnumerable`1[T] source, System.Boolean& found) (at <80564d689e48448fa2a7101993ee7201>:0)\nSystem.Linq.Enumerable.First[TSource] (System.Collections.Generic.IEnumerable`1[T] source) (at <80564d689e48448fa2a7101993ee7201>:0)\nUnityEditor.Search.SearchDatabase.GetDefaultSearchDatabase () (at <607ea4376af1479fb319058a46eb4955>:0)\nUnityEditor.Search.SearchInit.IndexationOnStartup () (at <607ea4376af1479fb319058a46eb4955>:0)\nUnityEditor.EditorApplication.Internal_CallDelayFunctions () (at <61339efb240547e991d3aef546e3afd3>:0)"
+        },
+        {
+          "Type": "Warning",
+          "Message": "Deleting invalid font reference.",
+          "StackTrace": "UnityEditor.ScriptReloadProperties:Load (UnityEditor.ScriptReloadProperties)"
+        }
+      ],
+      "Success": true
+    },
+    "cache_active_files": [
+      {
+        "name": "model-float16.sentis",
+        "bytes": 553775500
+      },
+      {
+        "name": "preparation.json",
+        "bytes": 918
+      },
+      {
+        "name": "tokenizer.json",
+        "bytes": 32170775
+      }
+    ],
+    "cache_active_bytes": 585947193.0,
+    "exclusive_read_lease_open_after_release": true,
+    "cache_staging_directories_present": [],
+    "screenshot": "images/m2-font-git-consumer-english-windows.png"
+  },
+  "fixture_fix": {
+    "baseline_native_cache_probe": "{ fixture_font_id = -44496, registered_in_editor_cache = True, destroyed_after_fixture_cleanup = True, shared_sample_font_id = -43108 }",
+    "red": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T06:22:14.6980303Z",
+      "FailedCount": 1,
+      "FailedTests": [
+        {
+          "FullName": "EmbeddingGemma.Samples.Tests.TextSearchEditorFontLifetimeTests.StyleMeasurementFixtureDoesNotLeaveDestroyedEditorFont",
+          "Message": "  A measurement fixture must not leave a destroyed font in the persistent Editor cache.\r\n  Expected: True\r\n  But was:  False\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchEditorFontLifetimeTests.cs",
+          "Line": 52
+        }
+      ],
+      "HasFailures": true,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Failed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 0,
+      "SkippedCount": 0,
+      "Status": "Failed",
+      "Success": false,
+      "TestCount": 1,
+      "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\.uloop\\outputs\\TestResults\\20261010_062214_7012884_afac135657cb409eadf1b302fea9deb0.xml"
+    },
+    "red_xml": {
+      "artifact": "style-fixture-red-results.xml",
+      "sha256": "165b0e1d4a1f4a3eebc6ef10694377e60c2bd2078930ff3d07acc32602fc5f19",
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0,
+      "inconclusive": 0,
+      "start": "2026-10-10 06:22:14",
+      "end": "2026-10-10 06:22:14",
+      "font_lifetime_cases": [
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchEditorFontLifetimeTests.StyleMeasurementFixtureDoesNotLeaveDestroyedEditorFont",
+          "result": "Failed",
+          "failure": null
+        }
+      ]
+    },
+    "first_implementation": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T06:22:50.1272785Z",
+      "FailedCount": 1,
+      "FailedTests": [
+        {
+          "FullName": "EmbeddingGemma.Samples.Tests.TextSearchEditorFontLifetimeTests.StyleMeasurementFixtureDoesNotLeaveDestroyedEditorFont",
+          "Message": "  The actual OS font must provide test glyphs.\r\n  Expected: greater than 2147483647\r\n  But was:  -2147483648\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchGuiStylesTests.cs",
+          "Line": 28
+        }
+      ],
+      "HasFailures": true,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Failed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 0,
+      "SkippedCount": 0,
+      "Status": "Failed",
+      "Success": false,
+      "TestCount": 1,
+      "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\.uloop\\outputs\\TestResults\\20261010_062250_1298711_a64279aa0a8f47b5afe73e6d8263d66b.xml"
+    },
+    "first_implementation_failure": "Retained shared font did not return legacy GetCharacterInfo glyphs; assertions were kept and a fresh same-family glyph probe was isolated from GUIStyle registration.",
+    "green": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T06:24:03.4942718Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 1,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 1,
+      "XmlPath": null
+    },
+    "regression": {
+      "artifact": "style-fixture-regression-results.xml",
+      "sha256": "34d95c780030feba6b377720b8641c9af81e76292c3efa65f0dcb03422747de9",
+      "total": 67,
+      "passed": 67,
+      "failed": 0,
+      "skipped": 0,
+      "inconclusive": 0,
+      "start": "2026-10-10 06:25:03Z",
+      "end": "2026-10-10 06:25:07Z",
+      "font_lifetime_cases": [
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchEditorFontLifetimeTests.EditorFontCacheStaysValidAcrossTwoPlaySessions",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchEditorFontLifetimeTests.StyleMeasurementFixtureDoesNotLeaveDestroyedEditorFont",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchEditorFontLifetimeTests.TwoSampleViewsShareOneEditorFont",
+          "result": "Passed",
+          "failure": null
+        }
+      ]
+    },
+    "regression_cli": {
+      "Success": false,
+      "Error": {
+        "ErrorCode": "UNITY_DISCONNECTED_AFTER_ACCEPT",
+        "Phase": "response_waiting",
+        "Message": "Unity disconnected after accepting the request.",
+        "Retryable": true,
+        "SafeToRetry": false,
+        "ProjectRoot": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j",
+        "Command": "run-tests",
+        "NextActions": [
+          "Check Unity Console logs because Unity had already accepted the request.",
+          "Retry after Unity finishes compiling, reloading scripts, or restarting the bridge.",
+          "If scripts were edited since the last compile, Unity imported them when the test run released its assembly lock and the domain reload discarded every active hot-reload patch; re-run 'uloop hot-reload' after the reload, or run 'uloop compile' first (--skip-compile only skips the CLI-side compile)."
+        ],
+        "Details": {
+          "Cause": "EOF"
+        }
+      }
+    },
+    "unprepared_ui_cycles": [
+      {
+        "iteration": 1,
+        "font_id": -43108,
+        "ready": false,
+        "before_console": 0,
+        "after_console": 0
+      },
+      {
+        "iteration": 2,
+        "font_id": -43108,
+        "ready": false,
+        "before_console": 0,
+        "after_console": 0
+      },
+      {
+        "iteration": 3,
+        "font_id": -43108,
+        "ready": false,
+        "before_console": 0,
+        "after_console": 0
+      }
+    ]
+  },
+  "ci": {
+    "pr29_head": "996827be4a1d00429e3d37cb869c63e211efa3bc",
+    "pr29_run": 38029721944,
+    "pr29_jobs_success": 8,
+    "merged_main": "fc66af7bc9150ddcf759917a5e9c92b2c5afa991",
+    "main_run": 38029860876,
+    "main_jobs_success": 8,
+    "repository_secret_count": 0,
+    "self_hosted_runner_count": 0
+  },
+  "limitations": [
+    "Initial UI had an Editor SearchDatabase.IndexationOnStartup ArgumentOutOfRangeException and an invalid font warning. Keep their original stack traces; three post-fixture-fix UI cycles were clean but do not prove the SearchDatabase cause or resolution.",
+    "Fixture fix was an overlay of two Editor test files on the fc66af7 Git consumer. No production Runtime/sample code changed.",
+    "Existing native allocation diagnostics, cold-machine performance, new-helper Player UI, macOS/iOS/Android CPU/GPU, release candidate/tag consumers and formal Release remain incomplete.",
+    "Cache stage timings are single measurements and exclude model deserialization, Worker setup and embedding inference.",
+    "Total allocated memory readings are Editor-wide; GPU memory is unknown.",
+    "New consumer did not reimport the original pt2 or repeat M1 embedding all 15 cases; it used token15 and the real search full four-condition suite.",
+    "Package 0.1.0-pre.1 is unreleased."
+  ]
+}

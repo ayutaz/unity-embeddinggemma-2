@@ -4,7 +4,7 @@
 ユーザーの「4まで詳細の計画を立てて進めてください」に対応し、安定性・高速化、Git URL導入、他環境の実測、リリースの4段階を扱う。
 M1の履歴と既存のM2受け入れ条件は維持する。Windowsだけの成功でM2全体を完了としない。
 
-現在の確認済みmainはPR #24後の `01f3d86`。統合後[CI run 38022144437](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38022144437)の全8 job成功を確認した。配布sampleの選択モデルcacheをsource `2e463a8`で実装・Windows実GPU確認し、統合mainを[新しい空Git consumer](m2-latest-git-consumer-validation.md)で導入・compile・契約・実モデル4条件・UIまで確認した。下の開始時点と実行履歴は当時の証拠を維持する。
+現在の確認済みmainはPR #25後の `b1a8c67`。統合後[CI run 38023036522](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38023036522)の全8 job成功を確認した。配布sampleの選択モデルcacheをsource `2e463a8`で実装・Windows実GPU確認し、PR #24統合mainを[新しい空Git consumer](m2-latest-git-consumer-validation.md)で導入・compile・契約・実モデル4条件・UIまで確認した。PR #25はその結果の文書更新で、UPM配布treeは同一。下の開始時点と実行履歴は当時の証拠を維持する。
 
 ## 次に進める順序
 
@@ -112,6 +112,8 @@ Pythonは `tools/` とuvに統一する。実装はred → greenを確認し、�
 PRのmergeはユーザーの既存依頼の範囲で、差分・競合・現在headのCIを確認して行う。リリースまでを依頼された本作業の範囲で進め、未達gateを迂回しない。
 
 ## 実行中の記録
+
+- Android helperをTDDで準備し、Windows targetで9 red、graphics保存リストの2 redから既存を含む110 passedを確認した。APK監査は小さいZIP fixtureの16 redから関連29 passed。その後のUnity 6.3 API変更とAndroid targetの2契約は未検証。target切り替え1回受理後、同じEditorの観測が応答待ちで、再要求・再起動は行っていない。現在のC#再検証をmerge gateにしたdraft PRを作り、実APK / 実機 / macOS / iOSと正式Releaseは引き続き未完了。[準備と次の実行手順](m2-android-validation.md)。
 
 - PR #24を現在headの全8 CI成功後に統合し、mainを `01f3d86`へfast-forwardした。統合後CI run 38022144437も全8 job成功。新しい空のGit consumer `artifacts/i`を作成し、旧PIDの終了・Editor 0件を確認してから1つだけ起動した。約101.5秒でuloop Ready、固定SHA解決・source88ファイル・UPM38 / sample64 / token15入力 / 実モデル4条件・UIが合格した。PlayMode CLI接続失敗は同じ実行の保存XMLから2 passedを回収し、再実行・再起動しなかった。[詳細](m2-latest-git-consumer-validation.md)。Play停止のallocation Log 1件と他環境 / releaseのgateは残る。
 

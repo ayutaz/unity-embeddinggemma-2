@@ -1,6 +1,6 @@
 # 現在の状態と残タスク
 
-確認日: 2026-10-10。最新の確認済み統合mainはPR #24後の `01f3d86`。PR #24は現在headの全8 CI成功後に統合し、統合後main [CI run 38022144437](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38022144437)も全8 job成功。PR #23統合後CI run 38019722018も成功。下の表はPR #12時点の基準・履歴として保持し、後続実測を本文に追記する。最新CIはGitHubのPR / Actionsを参照。
+確認日: 2026-10-10。最新の確認済み統合mainはPR #25後の `b1a8c67`。統合後main [CI run 38023036522](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38023036522)は全8 job成功。PR #24統合後CI run 38022144437も全8 job成功。下の表はPR #12時点の基準・履歴として保持し、後続実測を本文に追記する。最新CIはGitHubのPR / Actionsを参照。
 検索実装は `feat/m2-text-search-sample` / PR #11で統合済み。M1の履歴を維持し、Windows検索実測を別の証拠として追加した。以下のmain SHAとCIは確認時点の基準であり、後続の文書PRでも確認済みの実測SHAを変更しない。
 
 ## mainと作業ブランチ
@@ -67,6 +67,8 @@ Windows Playerの変更はPR #18の全8 CI成功後にmain `f44976b` へ統合�
 - GPU skipやCPU代替をGPU成功として扱わない。モデルと大きいartifactはGit管理外、LFSを使わずActionsで再生成する。
 
 ## 最近の更新
+
+Android用build helperとAPK payload監査を準備した。Windows targetでhelperの9 red、graphics保存リスト復元の2 redを観測し、修正後は既存を含む110 passed。小さいAPK fixtureは16 redから、既存bundleを含む29 passed。その後のUnity 6.3 APIへの置き換えとAndroid target用2契約は再検証待ちで、110件の合格を現在のC#全体へ一般化しない。1回受理されたtarget切り替え後、同じEditor PIDのCLI観測が応答待ちになっている。追加起動・再起動はしていない。実APK build / 実機は未実行で、draft PRとして通常CIと分けて追跡する。[準備状況と再開手順](m2-android-validation.md)。
 
 PR #24統合main `01f3d86`を新しい空のGit consumerへ固定導入し、requested / resolved SHA・88ファイル・import済みsampleを照合した。compile、UPM 38 / sample EditMode 64、token15入力、実モデル検索FP32 / Float16 × CPU / GPUの4条件と全順位・scoreが合格。sample PlayMode 2件は受理後のCLI接続失敗を保持し、同じ実行のUnity保存XMLから2 passedを回収した。Game Viewの日英入力・準備・検索・空入力・解放・warm完全hash・Play停止も確認した。[新規Git導入の結果](m2-latest-git-consumer-validation.md)。旧Editorの終了を確認してから新Editor1つを起動し、再起動なし。停止時Persistent allocation Log 1件の原因、実APK / 他OS / 実機 / tag導入と正式Release gateは残る。
 

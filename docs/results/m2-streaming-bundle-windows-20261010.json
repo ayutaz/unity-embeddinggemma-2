@@ -1,0 +1,320 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-10T02:18:07.9767330Z",
+  "source_commit": "ac54cee24fb6fa8fc71936e69c182315e47e6322",
+  "source_sha256_lf": {
+    "Assets/Validation/Runtime/PlayerBundleLoader.cs": "4dad8ee6870789ef6d64a45c54eb5813d6a5c302807600dd7d96f3565fe0ab0d",
+    "Assets/Validation/Runtime/PlayerBundleStager.cs": "b12fb8ce2d42f1770344b2a937acd09d5db2d306f2cdbe2c1b1385cb873dbeb2",
+    "Assets/Validation/Runtime/PlayerRunProtocol.cs": "b1ef7ca422df8f3d2889465d84d4c9df48c9d7786488435d2f9fba2828fee042",
+    "Assets/Validation/Runtime/PlayerValidation.cs": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+    "Assets/Validation/Runtime/PlayerValidationExecution.cs": "fa55014e293a4cc9c90a96477528e8f474e869b332ad9d13b125de3ab2b7cc7c",
+    "Assets/Validation/Runtime/PlayerValidationRunner.cs": "83e9e784ed077cca49662eeb8c0e157eee30fa2b8cb0209401b261ae3f35d1f9",
+    "Assets/Validation/Tests/Editor/PlayerBundleStagerTests.cs": "b2a379f21473f599525b68f2d60bc2fb5a2d978c8b6c5993309cdef51857e23b"
+  },
+  "consumer": {
+    "requested_git_revision": "e7b3a54ec279f0c78be43a58548ec6695c4ba4ec",
+    "validation_assets_copied_from_work_branch": true,
+    "sample_assets_from_ui_fix": true,
+    "core_runtime_unchanged": true,
+    "editor_count": 1,
+    "editor_pid": 174716
+  },
+  "environment": {
+    "unity": "6000.3.16f1",
+    "sentis": "2.6.1",
+    "os": "Windows 11",
+    "test_mode": "EditMode",
+    "unitywebrequest_module": "1.0.0",
+    "module_source": "builtin"
+  },
+  "tdd": {
+    "red": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T02:10:26.4738597Z",
+      "FailedCount": 12,
+      "FailedTests": [
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.ActualMissingFileFailsAndLeavesNoPartialFile",
+          "Message": "System.NotImplementedException : StreamingAssets file staging is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerBundleStager.cs",
+          "Line": 18
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.ActualUnityWebRequestStreamsUnicodeFileUrlsToDisk",
+          "Message": "System.NotImplementedException : StreamingAssets file staging is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerBundleStager.cs",
+          "Line": 18
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.ExecutionAuditsTheExtractedDirectoryBeforeAllConditions",
+          "Message": "System.NotImplementedException : Staging must be connected to the validation protocol.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerValidationExecution.cs",
+          "Line": 15
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.ExistingDestinationIsNeverOverwritten",
+          "Message": "System.NotImplementedException : StreamingAssets file staging is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerBundleStager.cs",
+          "Line": 18
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.FailedStagingSavesFailureAndNeverStartsAuditOrInference",
+          "Message": "System.NotImplementedException : Staging must be connected to the validation protocol.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerValidationExecution.cs",
+          "Line": 15
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.FilesystemBundlesAreAuditedInPlaceWithoutCopying",
+          "Message": "System.NotImplementedException : StreamingAssets file staging is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerBundleStager.cs",
+          "Line": 18
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.InterruptedTransferCannotPromotePartialBytesOrContinue",
+          "Message": "System.NotImplementedException : StreamingAssets file staging is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerBundleStager.cs",
+          "Line": 18
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.InvalidBuildAndReportWriteFailureCannotStartTransfers",
+          "Message": "System.NotImplementedException : Staging must be connected to the validation protocol.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerValidationExecution.cs",
+          "Line": 15
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.JarTransportCopiesOnlyFixedBundleFilesBeforeFilesystemAudit",
+          "Message": "System.NotImplementedException : StreamingAssets file staging is not implemented.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerBundleStager.cs",
+          "Line": 18
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.TransferredBytesStillRequireFullHashAuditBeforeInference",
+          "Message": "System.NotImplementedException : Staging must be connected to the validation protocol.",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Runtime\\PlayerValidationExecution.cs",
+          "Line": 15
+        }
+      ],
+      "HasFailures": true,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Failed first 10 of 12 failures listed; see XmlPath for full results.",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 0,
+      "SkippedCount": 0,
+      "Status": "Failed",
+      "Success": false,
+      "TestCount": 12,
+      "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\.uloop\\outputs\\TestResults\\20261010_021026_4778905_6a27865ba4404fdc872e473257fd4404.xml"
+    },
+    "red_cases": [
+      {
+        "name": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.ActualMissingFileFailsAndLeavesNoPartialFile",
+        "result": "Failed",
+        "message": "System.NotImplementedException : StreamingAssets file staging is not implemented."
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.ActualUnityWebRequestStreamsUnicodeFileUrlsToDisk",
+        "result": "Failed",
+        "message": "System.NotImplementedException : StreamingAssets file staging is not implemented."
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.ExecutionAuditsTheExtractedDirectoryBeforeAllConditions",
+        "result": "Failed",
+        "message": "System.NotImplementedException : Staging must be connected to the validation protocol."
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.ExistingDestinationIsNeverOverwritten",
+        "result": "Failed",
+        "message": "System.NotImplementedException : StreamingAssets file staging is not implemented."
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.FailedStagingSavesFailureAndNeverStartsAuditOrInference",
+        "result": "Failed",
+        "message": "System.NotImplementedException : Staging must be connected to the validation protocol."
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.FilesystemBundlesAreAuditedInPlaceWithoutCopying",
+        "result": "Failed",
+        "message": "System.NotImplementedException : StreamingAssets file staging is not implemented."
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.InterruptedTransferCannotPromotePartialBytesOrContinue",
+        "result": "Failed",
+        "message": "System.NotImplementedException : StreamingAssets file staging is not implemented."
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.InvalidBuildAndReportWriteFailureCannotStartTransfers",
+        "result": "Failed",
+        "message": "System.NotImplementedException : Staging must be connected to the validation protocol."
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.JarTransportCopiesOnlyFixedBundleFilesBeforeFilesystemAudit",
+        "result": "Failed",
+        "message": "System.NotImplementedException : StreamingAssets file staging is not implemented."
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.TransferredBytesStillRequireFullHashAuditBeforeInference",
+        "result": "Failed",
+        "message": "System.NotImplementedException : Staging must be connected to the validation protocol."
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.UnsupportedSourcesDoNotCreateAStagingDirectory(\"https://example.invalid/bundle\")",
+        "result": "Failed",
+        "message": "System.NotImplementedException : StreamingAssets file staging is not implemented."
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.UnsupportedSourcesDoNotCreateAStagingDirectory(\"jar:https://example.invalid/app.apk!/assets\")",
+        "result": "Failed",
+        "message": "System.NotImplementedException : StreamingAssets file staging is not implemented."
+      }
+    ],
+    "intermediate_compile_failure": {
+      "ErrorCount": 4,
+      "WarningCount": 0,
+      "Errors": [
+        {
+          "Message": "Assets\\Validation\\Runtime\\PlayerBundleStager.cs(86,37): error CS1069: The type name 'UnityWebRequest' could not be found in the namespace 'UnityEngine.Networking'. This type has been forwarded to assembly 'UnityEngine.UnityWebRequestModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null' Enable the built in package 'Unity Web Request' in the Package Manager window to fix this error.",
+          "File": "Assets\\Validation\\Runtime\\PlayerBundleStager.cs",
+          "Line": 86
+        },
+        {
+          "Message": "Assets\\Validation\\Runtime\\PlayerBundleStager.cs(86,61): error CS0103: The name 'UnityWebRequest' does not exist in the current context",
+          "File": "Assets\\Validation\\Runtime\\PlayerBundleStager.cs",
+          "Line": 86
+        },
+        {
+          "Message": "Assets\\Validation\\Runtime\\PlayerBundleStager.cs(87,43): error CS1069: The type name 'DownloadHandlerFile' could not be found in the namespace 'UnityEngine.Networking'. This type has been forwarded to assembly 'UnityEngine.UnityWebRequestModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null' Enable the built in package 'Unity Web Request' in the Package Manager window to fix this error.",
+          "File": "Assets\\Validation\\Runtime\\PlayerBundleStager.cs",
+          "Line": 87
+        },
+        {
+          "Message": "Assets\\Validation\\Runtime\\PlayerBundleStager.cs(90,35): error CS0103: The name 'UnityWebRequest' does not exist in the current context",
+          "File": "Assets\\Validation\\Runtime\\PlayerBundleStager.cs",
+          "Line": 90
+        }
+      ],
+      "Warnings": [],
+      "Message": null,
+      "ErrorCode": null,
+      "NextActions": null,
+      "ProjectRoot": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h",
+      "Warning": null,
+      "Success": false
+    },
+    "module_resolve_observation": {
+      "source": "CLI tool output, chunk a93efe; error was not captured by the stdout Tee-Object",
+      "error_code": "UNITY_DISCONNECTED_AFTER_ACCEPT",
+      "phase": "response_waiting",
+      "safe_to_retry": false,
+      "cause": "EOF",
+      "resolve_not_reissued": true,
+      "resolution_verified_by_package_lock_and_final_editor_state": true
+    },
+    "intermediate_request_wait_failure": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T02:14:08.8117609Z",
+      "FailedCount": 2,
+      "FailedTests": [
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.ActualMissingFileFailsAndLeavesNoPartialFile",
+          "Message": "  Expected: String containing \"model-float16.sentis\"\r\n  But was:  \"IOException: model-fp32.sentis: StreamingAssets transfer failed.\"\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Tests\\Editor\\PlayerBundleStagerTests.cs",
+          "Line": 83
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerBundleStagerTests.ActualUnityWebRequestStreamsUnicodeFileUrlsToDisk",
+          "Message": "  IOException: bundle.json: StreamingAssets transfer failed.\r\n  Expected: True\r\n  But was:  False\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Tests\\Editor\\PlayerBundleStagerTests.cs",
+          "Line": 74
+        }
+      ],
+      "HasFailures": true,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Failed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 75,
+      "SkippedCount": 0,
+      "Status": "Failed",
+      "Success": false,
+      "TestCount": 77,
+      "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\.uloop\\outputs\\TestResults\\20261010_021408_8147662_12e56bcad3d34551b1c617a7b7a11d2d.xml"
+    },
+    "green": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T02:15:08.3350042Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 77,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 77,
+      "XmlPath": null
+    }
+  },
+  "verified": {
+    "new_contract_tests": 12,
+    "prior_contract_tests": 65,
+    "actual_unitywebrequest_file_url_tests": 2,
+    "unicode_and_spaces_file_url_transfer": true,
+    "missing_file_no_partial_publication": true,
+    "jar_url_mapping_using_injected_transport": true,
+    "fixed_six_file_names": true,
+    "existing_destination_preserved": true,
+    "interrupted_transfer_blocks_audit": true,
+    "changed_same_length_bytes_block_inference": true,
+    "build_or_report_failure_blocks_transfer": true,
+    "synthetic_all_conditions_gpu_verified": false
+  },
+  "final_editor_state": {
+    "playing": false,
+    "dirty": false,
+    "scene": "Assets/EmbeddingGemmaTextSearch/TextSearch.unity",
+    "module": "1.0.0"
+  },
+  "final_logs": {
+    "TotalCount": 3,
+    "DisplayedCount": 3,
+    "LogType": "All",
+    "MaxCount": 50,
+    "SearchText": "",
+    "IncludeStackTrace": true,
+    "Logs": [
+      {
+        "Type": "Log",
+        "Message": "Executing IPostBuildCleanup for: Unity.PerformanceTesting.Editor.TestRunBuilder.",
+        "StackTrace": "UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()"
+      },
+      {
+        "Type": "Log",
+        "Message": "Saving results to: C:/Users/yuta/AppData/LocalLow/DefaultCompany/h\\TestResults.xml",
+        "StackTrace": ""
+      },
+      {
+        "Type": "Log",
+        "Message": "Executing IPrebuildSetup for: Unity.PerformanceTesting.Editor.TestRunBuilder.",
+        "StackTrace": "UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()"
+      }
+    ],
+    "Success": true
+  },
+  "android_apk_executed": false,
+  "android_device_executed": false,
+  "real_model_executed_in_this_run": false,
+  "gpu_verified_in_this_run": false,
+  "player_build_or_bootstrap_executed_in_this_run": false,
+  "limitations": [
+    "Tiny synthetic bundle/provider tests only. Actual UnityWebRequest file:// transfers were exercised on Windows Editor; jar URL transport was injected, not read from a real APK.",
+    "The opt-in Player bootstrap is connected to the staging protocol in source; no new Player binary was built or executed in this run.",
+    "A minimal consumer needed the builtin Unity Web Request module enabled. Compile failed before package resolution; an accepted Resolve disconnected during assembly reload, then module lock/resolution and strict green were verified without restarting Editor.",
+    "Initial real transfer tests exposed incomplete waiting in EditMode. Explicit isDone polling fixed the two failures; failures are retained.",
+    "Filesystem sources run in place; URL extraction requires a fresh empty destination. Cache reuse, interruption resume and bounded retained model storage remain work before repeated mobile runs.",
+    "No model files were downloaded, converted or staged in these tests. No memory peak/throughput benchmark was performed.",
+    "APK packaging, Android build/device CPU/GPU, Windows IL2CPP/release stripping, macOS/iOS, allocation/domain reload and release gates remain open."
+  ]
+}

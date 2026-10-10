@@ -1,6 +1,6 @@
 # 現在の状態と残タスク
 
-確認日: 2026-10-10。最新の統合mainはPR #19後の `e958d39`。PR #19は現在headの全8 CI成功後に統合し、PR #18後のmain CI run 38013974138も成功を確認した。下の表はPR #12時点の基準・履歴として保持し、後続実測を本文に追記する。最新CIはGitHubのPR / Actionsを参照。
+確認日: 2026-10-10。最新の統合mainはPR #20後の `561069a`。PR #20は現在headの全8 CI成功後に統合し、統合後main CI run 38016073243も成功を確認した。下の表はPR #12時点の基準・履歴として保持し、後続実測を本文に追記する。最新CIはGitHubのPR / Actionsを参照。
 検索実装は `feat/m2-text-search-sample` / PR #11で統合済み。M1の履歴を維持し、Windows検索実測を別の証拠として追加した。以下のmain SHAとCIは確認時点の基準であり、後続の文書PRでも確認済みの実測SHAを変更しない。
 
 ## mainと作業ブランチ
@@ -66,9 +66,13 @@ Windows Playerの変更はPR #18の全8 CI成功後にmain `f44976b` へ統合�
 - PR #6当時のconsumerのuloop launch readinessはタイムアウト。後続run-testsのcompile・29 passedとは分けて履歴を保持する。検索導入では長いパスの失敗後、別の短いconsumerの起動・compile・テストが成功した。
 - GPU skipやCPU代替をGPU成功として扱わない。モデルと大きいartifactはGit管理外、LFSを使わずActionsで再生成する。
 
-## 文書の読み方
+## 最近の更新
+
+Player用のStreamingAssets展開adapterは新規12件のredから、既存を含む77件のgreenへ移行した。Windows Editorの実UnityWebRequestによる小さいfile URL転送と欠落処理を確認し、jar transportは注入して検証した。[配置経路と残る条件](player-validation.md#streamingassetsからの展開adapter)を参照。展開後も完全SHA-256・token・全backend条件を要求する。実APK / Android端末 / 新しいPlayer起動・監査済みcache再利用・容量管理・配布sample配置は未実行。現在のGitHub Secretとrunnerは0、ADB接続端末も0を確認し、他OS / 実機の合格や正式releaseを完了とはしない。
 
 検索UIの文字欠けは、実OS fontのglyph境界を使うTDDで再現し、font・sizeを明示したcached styleへ修正した。EditMode 34件とPlayMode 1件が合格し、Windows Game Viewの日英GPU検索の全順位・scoreが修正前と完全一致、空入力・解放・モデル欠落表示・Play停止も確認した。[表示修正の実測](m2-ui-font-validation.md)を参照。修正したsampleはGit consumerへ作業ソースとして配置したもので、修正SHAの新規Git導入成功とは扱わない。allocationとdomain reloadの原因、Windows IL2CPP / release stripping、他OS / 実機と正式リリースの条件は未達のまま残す。
+
+## 文書の読み方
 
 README、ゴール、M2計画、CI、API、automationは現在の利用・作業手順。
 M1の各plan / validationは実行した段階の履歴で、当時のcommit・数値・失敗を維持する。

@@ -4,16 +4,16 @@
 ユーザーの「4まで詳細の計画を立てて進めてください」に対応し、安定性・高速化、Git URL導入、他環境の実測、リリースの4段階を扱う。
 M1の履歴と既存のM2受け入れ条件は維持する。Windowsだけの成功でM2全体を完了としない。
 
-現在の確認済みmainはPR #23後の `197fae9`。統合後[CI run 38019722018](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38019722018)成功を確認した。配布sampleの選択モデルcacheをsource `2e463a8`で実装・Windows実GPU確認し、[新しい検証記録](m2-sample-cache-validation.md)へ追加した。下の開始時点と実行履歴は当時の証拠を維持する。
+現在の確認済みmainはPR #24後の `01f3d86`。統合後[CI run 38022144437](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38022144437)の全8 job成功を確認した。配布sampleの選択モデルcacheをsource `2e463a8`で実装・Windows実GPU確認し、統合mainを[新しい空Git consumer](m2-latest-git-consumer-validation.md)で導入・compile・契約・実モデル4条件・UIまで確認した。下の開始時点と実行履歴は当時の証拠を維持する。
 
 ## 次に進める順序
 
-1. sample cacheをPRで統合し、固定した新しいGit SHAから空consumerへ導入する。現在の実測は既存consumerへのsample配置であり、新SHAのGit導入結果ではない。builtin UnityWebRequest、compile、sample契約、実モデル4条件と画面を確認する。
+1. 安定性を限定条件で調べる。新Git consumerの停止時にPersistent allocation Logが1件出たため、NativeLeakDetectionのstack設定を保存・復元し、空scene / UIのみ / CPU / GPUの条件と終了時点を比較する。既存sample cacheの実装と新固定mainのGit導入・実モデル4条件・画面は確認済み。正式候補・tagの導入は後段で別途確認する。
 2. Android buildのscene / 配置 / receipt / ABI / graphics APIをTDDで接続し、APK packagingを確認する。接続端末を確保したら実jar展開・CPU / GPU精度・cache再利用・停止と再起動を実測する。端末なしのbuildを実機合格とは数えない。
 3. macOS / iOS実行環境とActionsライセンス・runnerを確保し、同じ固定参照の全条件を実測する。安定性はfont警告、allocation、domain reloadを限定条件で切り分ける。sampleのhash / deserialize同期時間と他OS性能も測定する。
 4. 上記と既存の全gateを満たす候補にversion / CHANGELOG / licenseを対応付け、tag固定consumer導入を確認して正式Releaseする。必須実機結果を省略しない。
 
-Windows PlayerのIL2CPP / Release / High stripping結果は確認済み。新sampleのAndroid URL経路は実装済みだが、実APK / 実機とPlayer sample画面は未実行。font Warningは残る。これらを開いたgateとして扱い、M2全体は未完了のまま進める。
+Windows PlayerのIL2CPP / Release / High stripping結果と、最新sampleを含む新規固定Git consumerは確認済み。新sampleのAndroid URL経路は実装済みだが、実APK / 実機とPlayer sample画面は未実行。font Warningの原因とallocationログは未解決。これらを開いたgateとして扱い、M2全体は未完了のまま進める。
 
 ## 開始時点の証拠
 
@@ -112,6 +112,8 @@ Pythonは `tools/` とuvに統一する。実装はred → greenを確認し、�
 PRのmergeはユーザーの既存依頼の範囲で、差分・競合・現在headのCIを確認して行う。リリースまでを依頼された本作業の範囲で進め、未達gateを迂回しない。
 
 ## 実行中の記録
+
+- PR #24を現在headの全8 CI成功後に統合し、mainを `01f3d86`へfast-forwardした。統合後CI run 38022144437も全8 job成功。新しい空のGit consumer `artifacts/i`を作成し、旧PIDの終了・Editor 0件を確認してから1つだけ起動した。約101.5秒でuloop Ready、固定SHA解決・source88ファイル・UPM38 / sample64 / token15入力 / 実モデル4条件・UIが合格した。PlayMode CLI接続失敗は同じ実行の保存XMLから2 passedを回収し、再実行・再起動しなかった。[詳細](m2-latest-git-consumer-validation.md)。Play停止のallocation Log 1件と他環境 / releaseのgateは残る。
 
 - 配布sampleの選択モデルcacheをTDDで追加した。cache 14 red、hash 7 red、非同期sample 3 red、Play中断1 red、provider失敗Status 2 redを観測し、最終EditMode 64 / PlayMode 2 green。Pythonは必要builtin module欠落の2 redから22 green。Windows Editorのactual GPUでFP32日本語とFloat16固定英語の全順位・scoreがPython参照と一致し、file URL初回3件 / warm 1件、完全hash、lease、欠落と空入力を確認した。[結果](m2-sample-cache-validation.md)。過去の英語UI文は固定参照と違ったため別結果に残し、固定文を追加実行した。font Warning 1件、実APK / 他OS / 新SHA Git導入 / sample Playerは未達。
 - PR #23を現在headの全8 CI成功後に統合し、mainを `197fae9`へfast-forwardした。統合後CI run 38019722018も成功。元checkoutのUnity設定変更を保持し、検証Editor本体は1つで継続している。

@@ -66,6 +66,24 @@ binary の Resources には sample 用 marker を確認し、既存の全条件�
 表示条件の比較はユーザーの希望確認待ち。今後はモデルなしの描画 / shutdown を先に切り分け、同じ binary の表示条件で比較する。
 原因・修正確認が済むまで [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31) は draft とし、CI 成功を実Player成功の代用にしない。
 
+## モデル不要の終了処理の比較
+
+以前の精度検証で合格した `c742fb940b78393573b19e42352fe7b70256e74d` の IL2CPP / Release / High stripping binary を再利用した。sample scene と新しい sample ハーネスを含まない既存 Player に、存在しない bundle directory を指定した。全条件で `DirectoryNotFoundException` を結果に保存し、model / tokenizer / Worker / query は実行していない。
+
+[3起動の比較条件・終了結果・元 report / log の hash](results/m2-player-shutdown-comparison-windows-20261010.json)を保持した。公開用の要約にはユーザー名・絶対パス・PID・機種情報・生の crash record を含めず、完全な原本は Git 管理外の local artifacts に維持した。前の process の終了を確認してから次を起動し、全て `Start-Process -WindowStyle Hidden`。新規 build・モデルの download / copy・Editor の追加起動はしていない。
+
+| 条件 | 実際の graphics API | process 終了 code | 観察 |
+| --- | --- | ---: | --- |
+| 通常モード、非表示、1280×800 windowed | Direct3D12 | -1073741819 (`0xc0000005`) | 失敗報告保存後にアクセス違反 |
+| `-batchmode -nographics` | Null | 1 | 想定した欠落エラーの終了 code で停止 |
+| `-batchmode -force-d3d12` | Direct3D12 | 1 | 想定した欠落エラーの終了 code で停止 |
+
+通常モードの旧 Player dump も sample Player と同じ native 例外位置だった。旧 Player と sample Player の `UnityPlayer.dll` は全ファイル SHA-256 `bef601ad70832ed45da76262346d90bd8136d97f2d338db743f02d9b2f314712` が一致した。これは共通の例外位置を示すが、symbol 解決 / stack unwind を行っておらず、原因特定ではない。生の例外情報は公開要約に含めない。
+
+sample font / scene / 新ハーネスと、モデルの準備は、旧 Player のこの再現には必要でない。batch mode で graphics device が有効でも終了できたため、graphics device 初期化だけを原因と断定しない。batch mode は window と実行条件も変えるため、単独要因の同定には通常モードの可視表示との比較が残る。以前の実モデル合格は当時の実行条件の証拠として維持し、この新しい欠落条件へ一般化しない。
+
+`-nographics` の意味は [Unity 6.3 公式 Player command-line reference](https://docs.unity3d.com/6000.3/Documentation/Manual/PlayerCommandLineArguments.html) に従う。batch mode の想定どおりの失敗終了は GUI / GPU 推論の合格ではなく、全3報告の `success=false` / `gpuVerified=false` を維持する。非表示起動を GUI 検証の推奨条件とは扱わず、ユーザーの表示希望を確認してから同一 sample binary の通常表示を比較する。
+
 ## 再現
 
 Unity 6000.3.16f1 / Sentis 2.6.1 の固定 Git consumer に TextSearch sample を import し、validation 用 `Assets/Validation` を固定 source から配置する。
@@ -74,6 +92,8 @@ scene を保存し、Play と Test Runner を停止する。モデルを Player 
 ```csharp
 ValidationPlayerBuild.BuildWindowsSample("<new empty build directory>/Sample.exe", "<fixed 40-character source commit>");
 ```
+
+次は今回失敗した非表示条件の再現であり、GUI の受け入れ確認に推奨する起動条件ではない。通常表示の比較結果は未取得。
 
 ```powershell
 $arguments = @('-screen-width','1280','-screen-height','800','-screen-fullscreen','0','-force-d3d12',

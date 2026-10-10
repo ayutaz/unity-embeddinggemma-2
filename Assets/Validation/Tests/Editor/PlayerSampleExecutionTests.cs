@@ -19,10 +19,11 @@ namespace EmbeddingGemma.Validation.Tests
             public string Fault;
             public bool Released, Destroyed;
             public int Queries;
+            int fontReads;
             public bool Ready => Fault != "preparation";
             public string Error => "injected preparation failure";
             public string ActualBackend => Fault == "backend" ? "CPU" : "GPUCompute";
-            public bool FontAlive => !Destroyed || Fault == "font";
+            public bool FontAlive => Fault == "late_font" && fontReads++ < 3 ? false : !Destroyed || Fault == "font";
             public int FontInstanceId => 42;
             public JObject CacheSnapshot => new JObject { ["Success"] = true, ["CacheReused"] = false, ["TransferredFiles"] = 3 };
             public IEnumerator Prepare(string bundle, string cacheRoot) { yield break; }
@@ -35,7 +36,7 @@ namespace EmbeddingGemma.Validation.Tests
             }
             public bool RejectBlank() => Fault != "blank";
             public bool RejectMissingModel() => Fault != "missing";
-            public bool ReleaseAndCheckNativeOwner() { Released = true; return Fault != "release"; }
+            public bool ReleaseAndCheckNativeOwner() { Released = true; if (Fault == "release_throw") throw new IOException("injected release exception"); return Fault != "release"; }
             public void DestroyView() => Destroyed = true;
         }
         static PlayerReferenceSet Reference() => new PlayerReferenceSet { Queries = Enumerable.Range(0, 4).Select(q => new PlayerRow {
@@ -66,13 +67,18 @@ namespace EmbeddingGemma.Validation.Tests
             Assert.That(view.Released, Is.True); Assert.That(view.Destroyed, Is.True);
             Assert.That((bool)result["font_destroyed"], Is.True);
         }
-        [TestCase("preparation")] [TestCase("backend")] [TestCase("ranking")] [TestCase("blank")] [TestCase("release")] [TestCase("font")] [TestCase("missing")]
+        [TestCase("preparation")] [TestCase("backend")] [TestCase("ranking")] [TestCase("blank")] [TestCase("release")] [TestCase("font")] [TestCase("missing")] [TestCase("release_throw")]
         public void RequiredChecksCannotBeOmittedAndFailureStillReleasesOwners(string fault)
         {
             var view = new View { Fault = fault }; var result = Run(view);
             Assert.That((bool)result["success"], Is.False); Assert.That((bool)result["gpu_verified"], Is.False);
             Assert.That((string)result["error"], Is.Not.Null.And.Not.Empty);
             Assert.That(view.Released, Is.True); Assert.That(view.Destroyed, Is.True);
+        }
+        [Test] public void GuiMayBecomeReadyOnALaterFrameWithoutRepeatingPreparation()
+        {
+            var view = new View { Fault = "late_font" }; var report = Run(view);
+            Assert.That((bool)report["success"], Is.True); Assert.That(view.Queries, Is.EqualTo(4));
         }
         [Test] public void ScreenshotFailureIsRecordedAndReleasesTheWorker()
         {

@@ -73,7 +73,19 @@ namespace EmbeddingGemma.Validation
                 if (view.ActualBackend != "GPUCompute") throw new InvalidOperationException("An actual GPUCompute Worker is required.");
                 report["cache"] = view.CacheSnapshot;
                 yield return new WaitForEndOfFrame();
-                if (!view.FontAlive || view.FontInstanceId == 0) throw new InvalidOperationException("The sample GUI native font is missing.");
+                var guiFrames = 0;
+                while (!view.FontAlive && guiFrames < 120) { guiFrames++; yield return new WaitForEndOfFrame(); }
+                report["gui_wait_frames"] = guiFrames;
+                report["render_observation"] = new JObject { ["width"] = Screen.width, ["height"] = Screen.height,
+                    ["focused"] = Application.isFocused, ["batch_mode"] = Application.isBatchMode,
+                    ["splash_finished"] = UnityEngine.Rendering.SplashScreen.isFinished };
+                if (view is PlayerSampleView realView) report["sample_observation"] = realView.Describe();
+                if (!view.FontAlive || view.FontInstanceId == 0)
+                {
+                    var path = Path.Combine(Path.GetDirectoryName(config.Output), config.RunId + "-gui-not-ready.png");
+                    report["diagnostic_screenshot"] = (capture ?? Capture)(path);
+                    throw new InvalidOperationException("The sample GUI native font is missing after waiting 120 render frames.");
+                }
                 report["font_instance_id"] = view.FontInstanceId;
                 for (var i = 0; i < bundle.Reference.Queries.Length; i++)
                 {

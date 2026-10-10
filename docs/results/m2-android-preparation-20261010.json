@@ -1,6 +1,6 @@
 {
   "checked_at_utc": "2026-10-10T04:50:38.9334506Z",
-  "scope": "Preparation contracts and tiny APK fixtures only. Current C# differs from the last Unity green run and awaits revalidation.",
+  "scope": "Historical preparation snapshot at checked_at_utc; C# then awaited revalidation. Later actual C# and APK evidence is in m2-android-apk-build-20261010.json.",
   "base_main": "b1a8c67c62066bfa5e1830a947563ace3dff9fa5",
   "current_source_sha256_lf": {
     "Assets/Validation/Editor/ValidationPlayerBuild.cs": "6007e8e0493713372f8e261d020aaf347e589e5f51c788dd774c6da9ef31f2d5",

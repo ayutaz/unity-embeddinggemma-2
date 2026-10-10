@@ -1,0 +1,275 @@
+{
+  "checked_at_utc": "2026-10-10T05:18:37.7998618Z",
+  "scope": "Actual Android Development APK packaging and SDK signature verification. No installation, device inference, or Android GPU execution.",
+  "previous_preparation_snapshot": "m2-android-preparation-20261010.json",
+  "build_source_commit": "751c30a0b7216b4fe090e989118e570e06b10775",
+  "current_source_sha256_lf": {
+    "Assets/Validation/Editor/ValidationPlayerBuild.cs": "6007e8e0493713372f8e261d020aaf347e589e5f51c788dd774c6da9ef31f2d5",
+    "Assets/Validation/Editor/ValidationPlayerBuild.Android.cs": "98ec13ecd20248e18a5e22f3ffe2a1db811f9aa8c7b4945e67773f756e229c3d",
+    "Assets/Validation/Tests/Editor/ValidationAndroidBuildTests.cs": "d354cfe55617fa0f9fcc01144a698f38be134cf16c302d513a4781a7745c677a",
+    "tools/embeddinggemma_tools/android.py": "ff8d2c11ebec0b160c493bd21df0d5495e4a3572f03fc28a07fdc9cd9e6be27e",
+    "tools/tests/test_android_apk.py": "467f4bc5cab9b40262ba164e3d3e8fda4dd9e8a402bfb1566011a4a2bdfc6036"
+  },
+  "current_android_csharp_contracts": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-10T04:58:54.3436574Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 12,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 12,
+    "XmlPath": null
+  },
+  "android_scene_and_settings_integration": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-10T04:57:45.0629847Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 2,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 2,
+    "XmlPath": null
+  },
+  "python_real_build_options_tdd": {
+    "other_passed": 2,
+    "scope": "Tiny fixtures; exact observed pinned options allowed, arbitrary extra build tasks rejected",
+    "intended_red_failed": 1,
+    "final_apk_contracts_passed": 19
+  },
+  "recovery": {
+    "old_editor_pid": 110956,
+    "old_editor_exited": true,
+    "editor_count_before_launch": 0,
+    "saved_scene_snapshot": "before-switch-state.json",
+    "recovery_reason": "Persistent MainThreadBlocked after Android target compilation, unchanged useful log tail and negligible CPU progress; current modern source already committed and copied",
+    "log_preserved": "C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/unity-harness/android-20261010/editor-mainthread-blocked-before-recovery.log",
+    "checked_at_utc": "2026-10-10T04:55:50.8884469Z"
+  },
+  "recovered_editor_pid": 127008,
+  "recovery_cause_confirmed": false,
+  "apk_payload_audit": {
+    "success": true,
+    "apk_payload_verified": true,
+    "unity_runtime_executed": false,
+    "gpu_verified": false,
+    "source_commit": "751c30a0b7216b4fe090e989118e570e06b10775",
+    "apk_bytes": 1720031692,
+    "apk_sha256": "efcde071bc540ac093482ea7ce340eb6904d2d6e9ab012c5174d3210edba1ca1",
+    "abis": [
+      "arm64-v8a"
+    ],
+    "files": [
+      {
+        "name": "model-fp32.sentis",
+        "bytes": 1095598044,
+        "compressed_bytes": 1095598044,
+        "compression": 0,
+        "sha256": "8488d70f2d636a34bfe2a64c1d7b9d3eb3fce70c4fb9e27d32b698090c8fb373"
+      },
+      {
+        "name": "model-float16.sentis",
+        "bytes": 553775500,
+        "compressed_bytes": 553775500,
+        "compression": 0,
+        "sha256": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819"
+      },
+      {
+        "name": "tokenizer.json",
+        "bytes": 32170775,
+        "compressed_bytes": 32170775,
+        "compression": 0,
+        "sha256": "25975a936201b81402a3b867d5c462cf10808bb96759f97fe9aefecbb11c49df"
+      },
+      {
+        "name": "reference.json",
+        "bytes": 408173,
+        "compressed_bytes": 408173,
+        "compression": 0,
+        "sha256": "deb9b3ed00e49c29b18c1a747307a318900d5e993fb3d9208f4d37e8a73cf2f6"
+      },
+      {
+        "name": "search-reference.json",
+        "bytes": 268000,
+        "compressed_bytes": 268000,
+        "compression": 0,
+        "sha256": "3530756b36316a812ac853f0722bed5479e92e6bb02ca6aa41c06660d32a71ec"
+      }
+    ],
+    "build": {
+      "success": true,
+      "injected_build": false,
+      "source_commit": "751c30a0b7216b4fe090e989118e570e06b10775",
+      "started_utc": "2026-10-10T05:00:37.7850968Z",
+      "build_options": "ForceOptimizeScriptCompilation, Il2CPP, CompressTextures, StripDebugSymbols, ShaderLivelinkSupport, Development",
+      "il2cpp_compiler": "Release",
+      "target_settings": {
+        "architectures": "ARM64",
+        "application_identifier": "com.ayutaz.embeddinggemma.validation",
+        "min_sdk": 26,
+        "target_sdk": "AndroidApiLevelAuto",
+        "custom_keystore": false,
+        "apk_expansion": false,
+        "apk_per_cpu": false,
+        "app_bundle": false,
+        "export_project": false,
+        "automatic_graphics_api": false,
+        "graphics_apis": [
+          "Vulkan",
+          "OpenGLES3"
+        ]
+      },
+      "build_info": {
+        "codeCommit": "751c30a0b7216b4fe090e989118e570e06b10775",
+        "unityVersion": "6000.3.16f1",
+        "sentisVersion": "2.6.1",
+        "target": "Android",
+        "scriptingBackend": "IL2CPP",
+        "stripping": "High",
+        "sourceSha256": {
+          "Assets/Validation/Runtime/PlayerBundleCache.cs": "8e17ce94c049d97d700363cd1446f8348aeaf2f2e0dbcc34c2c84fc349960fc9",
+          "Assets/Validation/Runtime/PlayerBundleLoader.cs": "61f27369c26d75b50e27136b8464cd4a5ea472773dd045b82694fa77aca44921",
+          "Assets/Validation/Runtime/PlayerBundleStager.cs": "b2041d88674d20ae62e272bbaffbee0e24e3d66c8d9e1ad9e110680e590f2940",
+          "Assets/Validation/Runtime/PlayerFileHash.cs": "ecf0d009a00fad2c2234f9bbe7e292ac27e05c279fe96978aae9c748af75cd91",
+          "Assets/Validation/Runtime/PlayerRunProtocol.cs": "28678308558ca6f05ef44aa9988f5012f06a794c05faacd00896035494c025e2",
+          "Assets/Validation/Runtime/PlayerValidation.cs": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+          "Assets/Validation/Runtime/PlayerValidationExecution.cs": "f219eca5073a12241d90c736d6d1339875792323585a369efade8956830fb7a1",
+          "Assets/Validation/Runtime/PlayerValidationRunner.cs": "8b9e4ee9e1407569f24dae5be70eddf6410a97371af1bc27ab7b1085047a1a4b",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs": "85cb087541827169efe40ddec5074f6cc8b6a1dd995531a250ce5c4bbc66ec1e",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextModelFile.cs": "c4fb628f5ea5e4daacac88f9d4f09266f44e3133a0baf2236438c611917ede28",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextPrompts.cs": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchIndex.cs": "8a17c7ac6e995e6ceb36d9cead732f3ace63f418ab6e860e7f71fdd7a9ea43d0",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchSession.cs": "e4a85fd2378a18b48dd022f82a6fdb4eb73ef9dd980f539c75e2ef5768f1f9f7",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextTokenizer.cs": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763"
+        }
+      },
+      "build_result": "Succeeded",
+      "build_seconds": 504.1580638,
+      "build_bytes": 3773032313,
+      "errors": 0,
+      "warnings": 970,
+      "completed_utc": "2026-10-10T05:09:02.9880202Z"
+    },
+    "bundle": {
+      "success": true,
+      "unity_executed": false,
+      "gpu_verified": false,
+      "files": [
+        {
+          "name": "model-fp32.sentis",
+          "bytes": 1095598044,
+          "sha256": "8488d70f2d636a34bfe2a64c1d7b9d3eb3fce70c4fb9e27d32b698090c8fb373"
+        },
+        {
+          "name": "model-float16.sentis",
+          "bytes": 553775500,
+          "sha256": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819"
+        },
+        {
+          "name": "tokenizer.json",
+          "bytes": 32170775,
+          "sha256": "25975a936201b81402a3b867d5c462cf10808bb96759f97fe9aefecbb11c49df"
+        },
+        {
+          "name": "reference.json",
+          "bytes": 408173,
+          "sha256": "deb9b3ed00e49c29b18c1a747307a318900d5e993fb3d9208f4d37e8a73cf2f6"
+        },
+        {
+          "name": "search-reference.json",
+          "bytes": 268000,
+          "sha256": "3530756b36316a812ac853f0722bed5479e92e6bb02ca6aa41c06660d32a71ec"
+        }
+      ],
+      "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+      "model_source": "2edb272f17a38c7af210474345c35f391fd6955c",
+      "search_source": "13f194266162d2a728b2b2a0da9e9e58ae314ff6",
+      "model_origin_sha256": "92968480724ef7838cbd7d7b7cfd6a8d6d5105bb937f8a9907e965805a7651c8",
+      "unity_preparation_version": "6000.3.16f1"
+    },
+    "scope": "APK payload hashes and build receipt only; signature, installation, jar runtime, device precision and performance are not verified."
+  },
+  "sdk_signature": {
+    "apksigner_exit_code": 0,
+    "signer_count": 1,
+    "product_release_signature": false,
+    "signature_scheme_v4": false,
+    "signature_scheme_v2": true,
+    "signature_scheme_v3": false,
+    "signer_dn": "C=US, O=Android, CN=Android Debug",
+    "sdk_build_tools": "36.0.0",
+    "source_stamp": false,
+    "success": true,
+    "certificate_sha256": "a6b3bd268e5918f39c766f4217d09f155ead9adbfeb30fe2b467cc77c34f8a49",
+    "signature_scheme_v1": false
+  },
+  "actual_apk_metadata": {
+    "compile_sdk": 36,
+    "launcher": "com.unity3d.player.UnityPlayerGameActivity",
+    "target_sdk": 36,
+    "debuggable": true,
+    "aapt2_exit_code": 0,
+    "version_code": 1,
+    "version_name": "1.0",
+    "min_sdk": 26,
+    "abi": "arm64-v8a",
+    "package": "com.ayutaz.embeddinggemma.validation"
+  },
+  "build_warnings": {
+    "representative": "Hidden/Sentis/Pad and Hidden/Sentis/ConvTranspose: integer modulus may be much slower, try using uints if possible (gles3 and vulkan)",
+    "count": 970,
+    "all_warning_causes_classified": false,
+    "resolved": false
+  },
+  "staging_restoration": {
+    "checked_at_utc": "2026-10-10T05:17:27.5520793Z",
+    "sample_payload_restored": true,
+    "sample_metadata_restored": true,
+    "validation_payload_preserved_outside_assets": true,
+    "validation_payload_removed_from_assets": true,
+    "generated_scene_removed": true,
+    "generated_marker_removed": true,
+    "files_deleted": 0
+  },
+  "restored_editor_state": {
+    "Result": "{ target = Android, compiling = False, playing = False, dirty = False, scene = Assets/EmbeddingGemmaTextSearch/TextSearch.unity }",
+    "Logs": [
+      "Execution completed successfully"
+    ],
+    "CompilationErrors": [],
+    "ErrorMessage": "",
+    "Error": "",
+    "UpdatedCode": null,
+    "DiagnosticsSummary": null,
+    "Diagnostics": [],
+    "EditorPlaying": false,
+    "Success": true
+  },
+  "original_stripping_restored": "Minimal",
+  "android_installation_executed": false,
+  "unity_runtime_executed_on_android": false,
+  "gpu_verified_on_android": false,
+  "independent_android_process_restarts_verified": false,
+  "remaining_gates": [
+    "Connected ARM64 device",
+    "APK jar staging and warm cache",
+    "Android CPU/GPU precision and performance and independent restarts",
+    "Android sample Player UI",
+    "macOS Editor CPU/GPU",
+    "iOS Player CPU/GPU",
+    "Allocation/font/domain-reload stability",
+    "Candidate and fixed tag consumer",
+    "Formal release"
+  ]
+}

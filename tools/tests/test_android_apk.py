@@ -133,3 +133,21 @@ def test_cli_preserves_an_existing_result(tmp_path):
     with pytest.raises(ValueError, match="existing"):
         main(["--apk", str(apk), "--bundle", str(bundle), "--build", str(build), "--commit", COMMIT, "--output", str(output)])
     assert output.read_text() == "keep"
+
+
+def test_accepts_pinned_unity_android_development_options_reported_by_real_build(tmp_path):
+    apk, bundle, build, entries, data = inputs(tmp_path)
+    data['build_options'] = 'ForceOptimizeScriptCompilation, Il2CPP, CompressTextures, StripDebugSymbols, ShaderLivelinkSupport, Development'
+    build.write_text(json.dumps(data), encoding='utf-8')
+    write_apk(apk, entries)
+    assert audit_apk(apk, bundle, build, COMMIT)['apk_payload_verified'] is True
+
+
+@pytest.mark.parametrize('extra', ['AutoRunPlayer', 'IncludeTestAssemblies'])
+def test_does_not_allow_unrequested_build_tasks_or_test_assemblies(tmp_path, extra):
+    apk, bundle, build, entries, data = inputs(tmp_path)
+    data['build_options'] = extra + ', Development'
+    build.write_text(json.dumps(data), encoding='utf-8')
+    write_apk(apk, entries)
+    with pytest.raises(ValueError):
+        audit_apk(apk, bundle, build, COMMIT)

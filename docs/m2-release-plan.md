@@ -9,11 +9,11 @@ M1の履歴と既存のM2受け入れ条件は維持する。Windowsだけの成
 ## 次に進める順序
 
 1. 安定性を限定条件で調べる。新Git consumerの停止時にPersistent allocation Logが1件出たため、NativeLeakDetectionのstack設定を保存・復元し、空scene / UIのみ / CPU / GPUの条件と終了時点を比較する。既存sample cacheの実装と新固定mainのGit導入・実モデル4条件・画面は確認済み。正式候補・tagの導入は後段で別途確認する。
-2. Android buildのscene / 配置 / receipt / ABI / graphics APIをTDDで接続し、APK packagingを確認する。接続端末を確保したら実jar展開・CPU / GPU精度・cache再利用・停止と再起動を実測する。端末なしのbuildを実機合格とは数えない。
+2. Android buildのscene / 配置 / receipt / ABI / graphics APIはTDDで接続済み。source `751c30a`の実APK build・署名・全payload監査が成功した。接続端末を確保したら同じAPKで実jar展開・CPU / GPU精度・cache再利用・停止と再起動を実測する。端末なしのbuildを実機合格とは数えない。
 3. macOS / iOS実行環境とActionsライセンス・runnerを確保し、同じ固定参照の全条件を実測する。安定性はfont警告、allocation、domain reloadを限定条件で切り分ける。sampleのhash / deserialize同期時間と他OS性能も測定する。
 4. 上記と既存の全gateを満たす候補にversion / CHANGELOG / licenseを対応付け、tag固定consumer導入を確認して正式Releaseする。必須実機結果を省略しない。
 
-Windows PlayerのIL2CPP / Release / High stripping結果と、最新sampleを含む新規固定Git consumerは確認済み。新sampleのAndroid URL経路は実装済みだが、実APK / 実機とPlayer sample画面は未実行。font Warningの原因とallocationログは未解決。これらを開いたgateとして扱い、M2全体は未完了のまま進める。
+Windows PlayerのIL2CPP / Release / High stripping結果と、最新sampleを含む新規固定Git consumerは確認済み。[Android実APK](m2-android-validation.md)は504.158秒 / errors 0 / warnings 970でbuild成功し、SDK v2 debug署名と全5ファイルの完全hash / ARM64を確認した。実機とPlayer sample画面は未実行。font Warning、allocation、domain reloadとbuild警告の原因は未解決。これらを開いたgateとして扱い、M2全体は未完了のまま進める。
 
 ## 開始時点の証拠
 
@@ -64,7 +64,7 @@ Windows PlayerのIL2CPP / Release / High stripping結果と、最新sampleを含
 | Windows Player | Windows build module、実GPU、固定モデル配置 | Development / MonoとIL2CPP / Release / High strippingの両方で実モデル4条件・独立2起動が合格。releaseでfile URL初回展開とcache再利用・完全CNG hashも確認。任意consumerのstrippingや他OSへ一般化しない |
 | macOS Editor | Mac、Unity 6000.3.16f1、Metal対応GPU、適切なUnityライセンス | 実行可能なMacを確認する。hosted CPU buildだけでMetal GPU成功としない |
 | iOS Player | Mac、Xcode / iOS module、署名可能な実機、Metal | 端末・署名・接続を確認する。Apple資格情報はチャットやソースへ記録しない |
-| Android Player | Android module / SDK / NDK / JDK、実機、対応graphics API | Windows moduleあり、接続端末なし。ABI / API / メモリ条件を確認する |
+| Android Player | Android module / SDK / NDK / JDK、実機、対応graphics API | 実ARM64 / IL2CPP / High stripping APK、署名・payload監査済み。接続端末なし。次は同じAPKの実jar / 全CPU・GPU条件 / 2起動 / sample画面 |
 | Actions Unity | 適切なライセンス、対象OS / GPU / 接続端末を持つrunner | Secrets / self-hosted runnerなし。利用可能な構成を先に確定する |
 
 ### 実装・実行
@@ -113,11 +113,11 @@ PRのmergeはユーザーの既存依頼の範囲で、差分・競合・現在h
 
 ## 実行中の記録
 
-- PR #27はhead `6ab5278`の全8 CI成功後に統合し、main `c3281cd`のCI run 38025309104も全8 job成功。文書変更だけをdraft PR #26へ取り込んだ。Unity観測CLIの`UNITY_RESPONSE_TIMEOUT_AFTER_ACCEPT` / `SafeToRetry=false`と、Editor生存 / `MainThreadBlocked`を分けて記録した。target再要求・再起動はせず画面状態を確認する。実APK / 必須他環境 / 安定性とrelease gateは開いたまま。
+- PR #27はhead `6ab5278`の全8 CI成功後に統合し、main `c3281cd`のCI run 38025309104も全8 job成功。文書変更だけを当時draftのPR #26へ取り込んだ。観測CLIの`UNITY_RESPONSE_TIMEOUT_AFTER_ACCEPT` / `SafeToRetry=false`と、Editor生存 / MainThreadBlockedを分けて記録した。継続した停止状態と保存済みsourceを確認した後、旧PID終了・Editor本体0確認を経て1回だけ回復起動した。原因は未確定。現在のAndroid compile / 12契約、source `751c30a`の実APK build・SDK v2 debug署名・全payload監査が成功し、scene / settings / sampleデータを復元した。実receiptのBuildOptions対応は1 redからAPK19 green。[結果と限界](m2-android-validation.md)。実機 / 必須他環境 / 安定性とrelease gateは開いたまま。
 
 - Android実機結果の回収手順と報告監査を追加した。39 redと追加5 redを観測し、関連73 passed。APK auditと同じbuild / source hash / 同梱参照、全4条件と固定順位 / score、jar cold展開からwarmへの移行、timing / memory / 解放を照合する。報告監査ではADB実行や独立process終了を成功とせず、実機証拠の取得を後段に残す。[手順と範囲](m2-android-validation.md#実機結果の回収と報告監査)。
 
-- Android helperをTDDで準備し、Windows targetで9 red、graphics保存リストの2 redから既存を含む110 passedを確認した。APK監査は小さいZIP fixtureの16 redから関連29 passed。その後のUnity 6.3 API変更とAndroid targetの2契約は未検証。target切り替え1回受理後、同じEditorの観測が応答待ちで、再要求・再起動は行っていない。現在のC#再検証をmerge gateにしたdraft PRを作り、実APK / 実機 / macOS / iOSと正式Releaseは引き続き未完了。[準備と次の実行手順](m2-android-validation.md)。
+- Android helperをTDDで準備し、Windows targetで9 red、graphics保存リストの2 redから既存を含む110 passedを確認した。APK監査は小さいZIP fixtureの16 redから関連29 passed。当時のUnity 6.3 API変更とAndroid targetの2契約は未検証だったためdraft PRを作った。後続のAndroid12契約と実APK成功は上記に追記し、以前の110件の合格範囲を拡大しない。[準備履歴と実APK結果](m2-android-validation.md)。
 
 - PR #24を現在headの全8 CI成功後に統合し、mainを `01f3d86`へfast-forwardした。統合後CI run 38022144437も全8 job成功。新しい空のGit consumer `artifacts/i`を作成し、旧PIDの終了・Editor 0件を確認してから1つだけ起動した。約101.5秒でuloop Ready、固定SHA解決・source88ファイル・UPM38 / sample64 / token15入力 / 実モデル4条件・UIが合格した。PlayMode CLI接続失敗は同じ実行の保存XMLから2 passedを回収し、再実行・再起動しなかった。[詳細](m2-latest-git-consumer-validation.md)。Play停止のallocation Log 1件と他環境 / releaseのgateは残る。
 

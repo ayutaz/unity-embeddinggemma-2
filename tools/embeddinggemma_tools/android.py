@@ -11,6 +11,9 @@ from .player import MODEL_FILES, MODEL_REVISION, _object
 
 PREFIX = "assets/EmbeddingGemmaValidation/"
 FILES = MODEL_FILES + ("reference.json", "search-reference.json")
+# Observed from the pinned 6000.3.16f1 Android BuildPlayerOptions receipt.
+# Keep the complete representation; do not admit arbitrary extra build tasks.
+ANDROID_DEVELOPMENT_OPTIONS = "ForceOptimizeScriptCompilation, Il2CPP, CompressTextures, StripDebugSymbols, ShaderLivelinkSupport, Development"
 
 
 def _require(condition, message):
@@ -30,7 +33,7 @@ def audit_apk(apk, bundle, build, expected_commit):
     _require(receipt.get("success") is True and receipt.get("injected_build") is False
              and receipt.get("source_commit") == expected_commit and receipt.get("build_result") == "Succeeded"
              and type(receipt.get("errors")) is int and receipt["errors"] == 0
-             and receipt.get("build_options") in {"Development", "None"}
+             and receipt.get("build_options") in {"Development", "None", ANDROID_DEVELOPMENT_OPTIONS}
              and receipt.get("il2cpp_compiler") == "Release", "Successful real APK build receipt is required")
     _require(isinstance(provenance, dict) and provenance.get("codeCommit") == expected_commit
              and provenance.get("target") == "Android" and provenance.get("unityVersion") == "6000.3.16f1"

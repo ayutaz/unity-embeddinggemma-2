@@ -1,8 +1,8 @@
-# Android検証の準備と未実行gate
+# Android検証APKのbuild・監査と実機gate
 
 確認日: 2026-10-10。実装開始の基準mainはPR #25後の `b1a8c67c62066bfa5e1830a947563ace3dff9fa5`。その後PR #27の文書更新main `c3281cd`を取り込んだ。Runtime / sample / GUID / manifestは不変で、統合後CI run 38025309104は全8 job成功。
-これはAndroid向け検証ハーネスの準備記録であり、APK build / インストール / 実機CPU・GPUの合格記録ではない。
-[機械可読結果](results/m2-android-preparation-20261010.json)と[4段階の計画](m2-release-plan.md)を参照。
+source `751c30a0b7216b4fe090e989118e570e06b10775`の実APK build・SDK署名検証・完全payload監査は成功した。インストール・実機CPU / GPUは未実行。
+[実APK結果](results/m2-android-apk-build-20261010.json)、[準備時点の履歴](results/m2-android-preparation-20261010.json)、[4段階の計画](m2-release-plan.md)を参照。
 
 ## 実装
 
@@ -37,15 +37,30 @@ ZIPの重複entry、余分なモデル、他ABI、injectしたbuild receipt、so
 | APK監査green | 新規16件と既存bundle13件、29 passed。実APKを使った結果ではない |
 
 **110件の合格後**に旧`useAPKExpansionFiles`をUnity 6.3の`splitApplicationBinary`へ置き換え、Android targetでreceiptとscene/settings復元を検証する2ケースを追加した。
-その変更を含む現在のC#は再compile / 再テスト待ちである。110 passedを現在のC#全体の合格証拠にしない。
-target切り替えを1回だけ受理した後、同じEditor PID 110956のCLI観測が応答待ちになっている。
+その変更を含む現在のC#はAndroid targetでcompile成功、契約12 passed / failed・skipped・inconclusive 0を確認した。scene / settings復元の2ケースも別に2 passedを確認し、12件に含まれるため合計14件とは数えない。Windows用target拒否ケースは今回の対象外。110 passedは変更前の履歴として維持する。
+target切り替えを1回だけ受理した後、同じEditor PID 110956のCLI観測は応答待ちとなった。
 ウィンドウタイトルはAndroidになったが、`Editor.log`はAPI Updaterの出力で止まっており、原因は未確定。
 同じ観測CLIは約30分後に`UNITY_RESPONSE_TIMEOUT_AFTER_ACCEPT`で終了し、`SafeToRetry=false`を返した。
 Editor本体は生存し、uloop statusは`MainThreadBlocked` / compilingと報告した。CLIの終了はEditorや受理された操作の終了証拠ではない。
-確認ダイアログの有無を確認中で、観測timeoutを理由に再起動・target再要求はしていない。
-Editor本体1つと、その子AssetImportWorker 2つを確認した。追加のEditor本体は起動していない。
+約37分の継続したMainThreadBlocked、実質的に進まないログとCPU、保存済みsceneとcommit済みsourceを確認した後、旧Editorとその子workerを終了した。旧PID終了・Editor本体0を確認してから、Android targetのEditorを1回起動した。新PIDは127008。起動・compile・12契約・実buildが成功した。観測timeoutだけを終了証拠にして再起動したものではなく、停止原因が解決・特定できたとも扱わない。
+後のプロセス確認でも画面を持つEditor本体は1つ。AssetImportWorker 2つは同じ本体が起動した補助プロセスだった。
 
-## 再開手順
+## 実APKの確認結果
+
+- Unity 6000.3.16f1 / Sentis 2.6.1、ARM64 / IL2CPP / compiler Release / High strippingのDevelopment APK。実buildは504.158秒、errors 0 / warnings 970。build開始05:00:37 UTC、完了05:09:02 UTC。
+- APKは1,720,031,692 bytes、SHA-256 `efcde071bc540ac093482ea7ce340eb6904d2d6e9ab012c5174d3210edba1ca1`。BuildReportのサイズ3,773,032,313 bytesとは別の実APK長を記録する。
+- SDK build-tools 36.0.0のapksigner検証exit 0、v2署名成功。Android Debug signerの検証であり、製品Release署名ではない。v1 / v3 / v4 / SourceStampを成功とは扱わない。
+- aapt2 exit 0。min SDK 26 / target・compile SDK 36、`arm64-v8a`のみ、launcherは`com.unity3d.player.UnityPlayerGameActivity`。アプリversionName 1.0は検証アプリの設定で、UPM versionとは別。
+- bundle.jsonと全5 payloadの長さ・完全SHA-256が固定bundleと一致し、libunity / libil2cpp、余分なモデルや他ABIがないことを確認した。Runtime 14ファイルのLF正規化hashをbuild sourceと照合した。consumerのCoreはGit `01f3d86`由来で、今回のsourceと一致する。
+- sampleモデルは所有project内のAssets外へ退避し、既存bundleの6ファイルをhardlinkして二重packagingと再download / conversionを避けた。build後はsampleとmetaを復元し、検証payloadをAssets外に保持した。生成scene / markerは除去済み。元sceneは保存済み・Play停止・compile停止、strippingは元のMinimalに戻った。
+- 警告の例はSentis Pad / ConvTranspose shaderの整数剰余演算の遅さ（gles3 / vulkan）。全970件の原因分類・解消や端末性能の改善は未確認。
+
+実receiptのBuildOptionsは`ForceOptimizeScriptCompilation, Il2CPP, CompressTextures, StripDebugSymbols, ShaderLivelinkSupport, Development`だった。APK監査はこの固定Unityの完全な文字列表現だけを追加許可した。1件の意図したredと2件の拒否成功を観測して修正し、APK契約19 passedを確認した。任意の追加flag、AutoRunPlayer、IncludeTestAssembliesを許可する変更ではない。
+APK監査結果のruntime / GPUフラグはfalseのままである。
+
+## build再現と残る実機手順
+
+下記1〜6は今回確認済み。現在は7の接続実機待ちで、不要なtarget切り替えやAPK再buildはしない。
 
 1. 既存Editorの応答を確認する。先に受理された観測を追跡し、同じtarget切り替えを二重発行しない。
 2. 現在のC#をcompileする。`ValidationAndroidBuildTests.BuildRecordsAndroidProvenanceAndRestoresTheSceneAndSettings`の2ケースを明示的に実行する。
@@ -70,12 +85,12 @@ uv run --locked python -m embeddinggemma_tools.android `
 8. 配布sampleのAndroid Player画面も別に操作確認する。validation用APKの成功でsample UI成功を代用しない。
 
 Android module / SDK / NDK / JDKは利用可能だが、確認時ADB接続端末は0件。
-APK build自体はまだ要求しておらず、実APK、実機、macOS / iOS、未解決のallocation / font、tag導入、正式Releaseはすべて開いたgateとして維持する。
-現在のPRはC#再検証待ちのdraftとし、通常のActions CI成功だけでmergeしない。
+実APK・署名 / payload監査は確認済み。実機、macOS / iOS、未解決のallocation / font / domain reload、tag導入、正式Releaseは開いたgateとして維持する。
+PRのC#再検証待ちは解消した。最新headの通常CIと差分を確認してハーネス変更を統合し、実機合格とM2完了は引き続き別に判断する。
 
 ## 実機結果の回収と報告監査
 
-実APK / 接続端末を確保した後に使う手順で、以下はまだ実機で実行していない。
+監査済み実APKは確保したが、以下はまだ接続実機で実行していない。
 [Android公式ADB手順](https://developer.android.com/tools/adb)に従い、serialを明示して対象を固定する。
 APK内のlauncher componentを確認してから起動し、Windows用のcommand line引数や固定のActivity名を流用しない。
 bootstrapは新しいGUIDのdirectoryへresults.jsonを保存し、別の32桁run IDも生成する。
@@ -85,7 +100,7 @@ Androidの保存先は通常`/storage/emulated/<userid>/Android/data/<packagenam
 ```powershell
 adb devices -l
 adb -s <serial> install <Validation.apk>
-adb -s <serial> shell am start -W -n <確認したpackage/launcher-component>
+adb -s <serial> shell am start -W -n com.ayutaz.embeddinggemma.validation/com.unity3d.player.UnityPlayerGameActivity
 adb -s <serial> shell pidof com.ayutaz.embeddinggemma.validation
 adb -s <serial> pull <実際のGUID-directory/results.json> <新しいrun1.json>
 ```

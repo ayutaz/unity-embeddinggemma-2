@@ -1,7 +1,9 @@
 # CI と開発手順
 
-更新日: 2026-10-10。確認基準main: `4ee0cbb`（PR #12統合後）。
-CI・UPM監査・検索基盤・サンプル・準備最適化はmain統合済み。[CI run 37975720534](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975720534)の全8 job成功を確認した。
+更新日: 2026-10-10。確認基準main: `6f55a85`（PR #30統合後）。
+CI・UPM監査・検索基盤・サンプル・準備 / cache・Editor font寿命修正はmain統合済み。[main CI run 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)の全8 job成功。draft PR #31の実装checkpoint `cd6b8bf`も[CI run 38040187805](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38040187805)全8 job成功。通常表示sample Playerの終了クラッシュは未解決で、CI成功だけでmergeやM2完了としない。
+
+このPR runの実checkoutはmerge ref `3a8f52e`（head `cd6b8bf` + base `6f55a85`）。ログでPython4環境各253 passedを確認した。実Unity・GPU・モバイル実機を実行した8 jobではない。追加の文書headは同じ必須CIをPRで確認する。
 文書のみのPR #7も全8 job成功後に未マージで閉じた。[現在の状態](status.md)を参照。
 GitHub側のmain保護は設定済み。M1のWindows実測は [完了検証](m1-completion-validation.md)、UPM移行の結果は [パッケージ検証](m2-package-validation.md)を参照。
 

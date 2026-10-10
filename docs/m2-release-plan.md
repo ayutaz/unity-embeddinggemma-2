@@ -6,6 +6,15 @@ M1の履歴と既存のM2受け入れ条件は維持する。Windowsだけの成
 
 確認基準mainはPR #30後の `6f55a85`。統合後[CI run 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)の全8 job成功を確認した。font寿命修正を含む `fc66af7` を[新しい空Git consumer](m2-font-git-consumer-validation.md)で導入し、compile・契約・実モデル4条件・UI・file URL cacheまで確認した。測定fixture修正 `bc3ac49`はEditor test 2ファイルだけの配置で検証後にPR #30へ統合し、配布Runtime / sample本体は同一。下の開始時点と実行履歴は当時の証拠を維持する。
 
+PR #31の実装checkpoint `cd6b8bf`の[CI run 38040187805](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38040187805)は全8 job成功。PRはdraft / 未統合で、通常表示sampleのprocess終了は未達。2026-10-10の再確認でRepository Secrets / self-hosted runner / 公開tag / GitHub Releaseは各0。ドキュメント更新のための追加Unity起動・モデル取得・buildは行わない。
+
+| 段階 | 現在の到達点 | 次の成果物 / 依存 |
+| --- | --- | --- |
+| 1. 安定性・高速化 | 完全hashのCNG・cache再利用、Editor font寿命修正を実測確認。sample終了クラッシュとEditor検索DB / allocation / domain reloadは残る | 固定版変更の回答後に公式修正版とのshutdown比較。原因・修正の同条件証拠、正常終了2起動 |
+| 2. 固定Git導入 | `fc66af7`の空consumerで解決 / source / 実モデル4条件 / UI / cache合格。後続fixture配置を分けて記録 | 最終candidateの固定Git回帰。候補sourceが変われば必要な範囲だけ再検証 |
+| 3. 他環境・Player実測 | Windows精度検証Player batch modeは合格。sample通常表示はGUI / GPU成功後に異常終了。Androidは実APK監査まで | 正常sample process、Android実機、Mac / iOS環境と各CPU / GPU・配置 / cache・測定結果 |
+| 4. 正式配布 | 開発版0.1.0-pre.1のみ。candidate / tag / Release未実施 | 1〜3の全gate合格 → candidate / version / license / CHANGELOG → tag固定consumer → 正式Release |
+
 ## 次に進める順序
 
 PR #30まで統合済み。[font寿命](m2-editor-font-lifetime-validation.md)はTDDと実UI・正常Editor終了で修正確認し、統合SHAの新Git導入も合格した。測定fixture自身の破棄済みfont参照は1 failed → 1 passed、全67 passed、invalid font参照0、未準備UI 3回の停止前後Console 0を確認した。[Windows sample Player](m2-player-sample-validation.md)はbatch preflightを含む全33契約と実buildが成功。非表示起動の黒画面に対し、許可後の通常表示では日英GUI・Float16 / GPUComputeの全4query・各6順位 / score・解放が成功したが、engine shutdownでアクセス違反が残る。[PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)はdraft。対応PDBからPlatformAccessibilityManagerの破棄処理に停止箇所を絞り、公式修正UUM-146676を含む6000.3.21f1への変更を確認待ち。独立2起動の合格・初回Editor検索DB Error・以前のFound leak診断は未解決。実機gateは端末待ちで、不要なAPK再buildを避ける。

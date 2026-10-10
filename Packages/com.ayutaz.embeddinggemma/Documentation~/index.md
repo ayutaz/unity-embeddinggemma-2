@@ -1,17 +1,17 @@
 # 導入とテキストAPI
 
 更新日: 2026-10-10。開発版 `0.1.0-pre.1` は [PR #6](https://github.com/ayutaz/unity-embeddinggemma-2/pull/6)でmainへ統合済み、未リリースです。
-Windowsの新しい空のUnityプロジェクトで固定commitのGit URL導入・compile・UPM 38 / sample EditMode 64 / PlayMode 2件、実モデル4条件・全順位 / scoreと日英画面操作を確認しました。[実測条件と結果](https://github.com/ayutaz/unity-embeddinggemma-2/blob/b1a8c67c62066bfa5e1830a947563ace3dff9fa5/docs/m2-latest-git-consumer-validation.md)を参照してください。macOS / iOS / Android、正式候補と公開tagは未検証です。
+Windowsの新しい空のUnityプロジェクトで固定commit `fc66af7`のGit URL導入・compile・UPM 38 / sample EditMode 66 / PlayMode 2件、実モデル4条件・全順位 / scoreと日英画面 / cacheを確認しました。後続のEditor測定fixture 2ファイル修正ではsample EditMode 67件が合格し、PR #30で統合済み。[実測条件と結果](https://github.com/ayutaz/unity-embeddinggemma-2/blob/6f55a8574df1bc75d51fb5992fd70dc7d0512fb9/docs/m2-font-git-consumer-validation.md)。Androidは実APK build・payload監査まで、macOS / iOS / Android実機、正式候補と公開tagは未検証です。通常表示sample PlayerはGUI / GPU検索成功後に終了クラッシュが残り、[PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)はdraftです。
 
 ## 導入
 
 Unity 6000.3.16f1で、Package Managerの「Add package from disk」からこのパッケージの `package.json` を指定します。
 Git URLの指定形式は [Unity公式手順](https://docs.unity3d.com/6000.3/Documentation/Manual/upm-git.html)に沿っています。
-`<commit-sha>` はパッケージを含む40桁commitに置き換えます。WindowsでGit解決と実動作を確認したcommitは `01f3d8682a97053bf4583e14fd8fbed14e2c8cae`（PR #24統合後）です。下のURLはその実測SHAへ固定しています。以降の文書変更、正式候補やtagの実測を代用する結果ではありません。
+`<commit-sha>` はパッケージを含む40桁commitに置き換えます。WindowsでGit解決と実動作を確認したcommitは `fc66af7bc9150ddcf759917a5e9c92b2c5afa991`（PR #29統合後）です。下のURLはその実測SHAへ固定しています。このSHAには後続のEditor測定fixture修正2ファイルを含みません。以降の文書変更、正式候補やtagの実測を代用する結果ではありません。
 公開tagはまだありません。
 
 ```text
-https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/com.ayutaz.embeddinggemma#01f3d8682a97053bf4583e14fd8fbed14e2c8cae
+https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/com.ayutaz.embeddinggemma#fc66af7bc9150ddcf759917a5e9c92b2c5afa991
 ```
 
 SentisとNewtonsoft JSONはpackage manifestから解決します。URP・uloopは利用側に不要です。

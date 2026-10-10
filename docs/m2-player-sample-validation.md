@@ -4,6 +4,8 @@
 既存の M1 全条件 Player とは別の起動 marker `EmbeddingGemmaSampleValidationBuild` を使う。
 marker がない通常の Player と、Editor の Play では自動実行しない。
 
+PR #31はdraft / 未統合。実装checkpoint `cd6b8bf`の[CI run 38040187805](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38040187805)は全8 job成功。通常表示では実GUI / GPU検索 / 解放が成功したがprocess shutdownが失敗し、独立2起動の全体受け入れは未達。詳細は[通常表示での検証](#通常表示での検証)を参照する。Unity固定版は6000.3.16f1のまま。
+
 ## 実装と TDD
 
 - 新規の sample proxy / 全6件 ranking / build 設定契約: 12件中11 failed → 全12 passed。

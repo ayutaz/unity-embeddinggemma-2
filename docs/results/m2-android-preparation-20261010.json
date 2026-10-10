@@ -1,0 +1,92 @@
+{
+  "checked_at_utc": "2026-10-10T04:50:38.9334506Z",
+  "scope": "Historical preparation snapshot at checked_at_utc; C# then awaited revalidation. Later actual C# and APK evidence is in m2-android-apk-build-20261010.json.",
+  "base_main": "b1a8c67c62066bfa5e1830a947563ace3dff9fa5",
+  "current_source_sha256_lf": {
+    "Assets/Validation/Editor/ValidationPlayerBuild.cs": "6007e8e0493713372f8e261d020aaf347e589e5f51c788dd774c6da9ef31f2d5",
+    "Assets/Validation/Editor/ValidationPlayerBuild.Android.cs": "98ec13ecd20248e18a5e22f3ffe2a1db811f9aa8c7b4945e67773f756e229c3d",
+    "Assets/Validation/Tests/Editor/ValidationAndroidBuildTests.cs": "d354cfe55617fa0f9fcc01144a698f38be134cf16c302d513a4781a7745c677a",
+    "tools/embeddinggemma_tools/android.py": "2539cac62bb82ba23763b267a5242ccbd4b4dbb6728e21aa161415181c440096",
+    "tools/tests/test_android_apk.py": "1669268f0b1e15a7a5e5cb3661cb992ae09f0bc599a76eb0388aebadbb3dc16d",
+    "tools/embeddinggemma_tools/android_runs.py": "33f27466397a6b0794dedbc41b8b23e09b810b8f2d512976c66d04be440f640a",
+    "tools/tests/test_android_runs.py": "49760f9584051c08b4deb8f30e9b051849911708c07978214e92d73db3c899a8"
+  },
+  "current_csharp_verified": false,
+  "apk_build_executed": false,
+  "apk_payload_verified": false,
+  "unity_runtime_executed_on_android": false,
+  "gpu_verified_on_android": false,
+  "android_helper_red": {
+    "completed_at": "2026-10-10T04:12:53.4316389Z",
+    "reason": "NotImplemented stubs",
+    "passed": 0,
+    "failed": 9
+  },
+  "initial_green_attempt": {
+    "scope": "Not green; graphics restoration test refined afterward",
+    "failed": 2,
+    "passed": 106,
+    "total": 108
+  },
+  "explicit_graphics_restoration_red": {
+    "completed_at": "2026-10-10T04:15:21.3597057Z",
+    "failed": 2,
+    "passed": 9,
+    "total": 11
+  },
+  "prior_windows_target_green": {
+    "failed": 0,
+    "skipped": 0,
+    "scope": "99 existing + 11 Android contracts; before splitApplicationBinary replacement and two Android integration cases",
+    "completed_at": "2026-10-10T04:16:10.7717793Z",
+    "passed": 110,
+    "inconclusive": 0,
+    "total": 110
+  },
+  "current_python_apk_contracts": {
+    "scope": "Tiny ZIP fixtures, no Unity or device execution",
+    "existing_bundle_cases": 13,
+    "new_apk_cases": 16,
+    "red_failed": 16,
+    "green_passed": 29
+  },
+  "current_python_report_contracts": {
+    "final_related_green_passed": 73,
+    "new_report_cases": 44,
+    "initial_red_failed": 39,
+    "additional_red_failed": 5,
+    "scope": "Synthetic Player reports only. ADB/device identity/process exit and real Android execution are not proven."
+  },
+  "synchronized_main": "c3281cd641922387b2b6718fe520c02a2b8d2d6c",
+  "synchronized_main_ci": {
+    "successful_jobs": 8,
+    "run_id": 38025309104,
+    "conclusion": "success"
+  },
+  "target_switch": {
+    "observer_terminal": true,
+    "accepted": true,
+    "attempts": 1,
+    "title_target": "Android",
+    "editor_pid": 110956,
+    "observation_session": 1711,
+    "error_code": "UNITY_RESPONSE_TIMEOUT_AFTER_ACCEPT",
+    "completion_verified": false,
+    "safe_to_retry": false,
+    "state": "MainThreadBlocked / compiling. CLI timeout is not evidence that the accepted Editor operation is terminal. API Updater log tail is not a confirmed cause; waiting for visible dialog information.",
+    "editor_process_alive": true
+  },
+  "remaining_gates": [
+    "Current C# compile and Android integration contracts",
+    "Real APK build and signature/payload audit",
+    "Connected ARM64 device",
+    "APK jar staging and warm cache",
+    "Android CPU/GPU precision and performance and independent restarts",
+    "Android sample Player UI",
+    "macOS Editor CPU/GPU",
+    "iOS Player CPU/GPU",
+    "Allocation/font stability",
+    "Candidate and fixed tag consumer",
+    "Formal release"
+  ]
+}

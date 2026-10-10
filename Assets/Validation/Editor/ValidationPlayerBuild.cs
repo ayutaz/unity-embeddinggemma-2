@@ -15,7 +15,7 @@ using UnityEngine.SceneManagement;
 
 namespace EmbeddingGemma.Validation.Editor
 {
-    public static class ValidationPlayerBuild
+    public static partial class ValidationPlayerBuild
     {
         public const string ScenePath = "Assets/Validation/Generated/Validation.unity";
         public const string MarkerPath = "Assets/Validation/Generated/Resources/EmbeddingGemmaValidationBuild.json";
@@ -30,14 +30,21 @@ namespace EmbeddingGemma.Validation.Editor
                 target = BuildTarget.StandaloneWindows64, options = development ? BuildOptions.Development : BuildOptions.None };
         }
         public static PlayerBuildInfo BuildWindows(string output, string codeCommit, Action<BuildPlayerOptions> execute = null, bool releaseIl2Cpp = false)
+            => BuildTargetPlayer(WindowsOptions(output, codeCommit, development: !releaseIl2Cpp), codeCommit, NamedBuildTarget.Standalone, execute, releaseIl2Cpp);
+
+        static void EnsureBuildState(BuildTarget target)
         {
-            var options = WindowsOptions(output, codeCommit, development: !releaseIl2Cpp);
-            if (EditorApplication.isPlaying || EditorUserBuildSettings.activeBuildTarget != BuildTarget.StandaloneWindows64)
-                throw new InvalidOperationException("Stop Play Mode and select Windows 64-bit before building.");
+            if (EditorApplication.isPlaying || EditorUserBuildSettings.activeBuildTarget != target)
+                throw new InvalidOperationException("Stop Play Mode and select " + target + " before building.");
             for (var i = 0; i < SceneManager.sceneCount; i++) if (SceneManager.GetSceneAt(i).isDirty) throw new InvalidOperationException("Save scene edits before building.");
             if (File.Exists(ScenePath) || File.Exists(MarkerPath)) throw new IOException("Temporary validation assets already exist; inspect them before building.");
+        }
+
+        static PlayerBuildInfo BuildTargetPlayer(BuildPlayerOptions options, string codeCommit, NamedBuildTarget target,
+            Action<BuildPlayerOptions> execute, bool releaseIl2Cpp = false, Action configure = null, Action restore = null, Func<JObject> details = null)
+        {
+            EnsureBuildState(options.target);
             var previous = EditorSceneManager.GetSceneManagerSetup();
-            var target = NamedBuildTarget.Standalone;
             var previousBackend = PlayerSettings.GetScriptingBackend(target);
             var previousStripping = PlayerSettings.GetManagedStrippingLevel(target);
             var previousCompiler = PlayerSettings.GetIl2CppCompilerConfiguration(target);
@@ -49,6 +56,7 @@ namespace EmbeddingGemma.Validation.Editor
             Save();
             try
             {
+                configure?.Invoke();
                 if (releaseIl2Cpp)
                 {
                     PlayerSettings.SetScriptingBackend(target, ScriptingImplementation.IL2CPP);
@@ -57,9 +65,10 @@ namespace EmbeddingGemma.Validation.Editor
                 }
                 receipt["build_options"] = options.options.ToString();
                 receipt["il2cpp_compiler"] = PlayerSettings.GetIl2CppCompilerConfiguration(target).ToString();
+                if (details != null) receipt["target_settings"] = details();
                 var info = new PlayerBuildInfo { codeCommit = codeCommit, unityVersion = Application.unityVersion, sentisVersion = "2.6.1", target = options.target.ToString(),
-                    scriptingBackend = PlayerSettings.GetScriptingBackend(NamedBuildTarget.Standalone).ToString(),
-                    stripping = PlayerSettings.GetManagedStrippingLevel(NamedBuildTarget.Standalone).ToString(), sourceSha256 = SourceHashes() };
+                    scriptingBackend = PlayerSettings.GetScriptingBackend(target).ToString(),
+                    stripping = PlayerSettings.GetManagedStrippingLevel(target).ToString(), sourceSha256 = SourceHashes() };
                 info.Validate(); receipt["build_info"] = JObject.FromObject(info); Save();
                 Directory.CreateDirectory(Path.GetDirectoryName(MarkerPath));
                 File.WriteAllText(MarkerPath, JsonConvert.SerializeObject(info, Formatting.Indented), new UTF8Encoding(false));
@@ -94,6 +103,7 @@ namespace EmbeddingGemma.Validation.Editor
                     {
                         try
                         {
+                            restore?.Invoke();
                             if (releaseIl2Cpp)
                             {
                                 PlayerSettings.SetScriptingBackend(target, previousBackend);

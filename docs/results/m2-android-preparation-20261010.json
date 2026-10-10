@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-10-10T04:27:06.8280537Z",
+  "checked_at_utc": "2026-10-10T04:38:20.3955309Z",
   "scope": "Preparation contracts and tiny APK fixtures only. Current C# differs from the last Unity green run and awaits revalidation.",
   "base_main": "b1a8c67c62066bfa5e1830a947563ace3dff9fa5",
   "current_source_sha256_lf": {
@@ -7,7 +7,9 @@
     "Assets/Validation/Editor/ValidationPlayerBuild.Android.cs": "98ec13ecd20248e18a5e22f3ffe2a1db811f9aa8c7b4945e67773f756e229c3d",
     "Assets/Validation/Tests/Editor/ValidationAndroidBuildTests.cs": "d354cfe55617fa0f9fcc01144a698f38be134cf16c302d513a4781a7745c677a",
     "tools/embeddinggemma_tools/android.py": "2539cac62bb82ba23763b267a5242ccbd4b4dbb6728e21aa161415181c440096",
-    "tools/tests/test_android_apk.py": "1669268f0b1e15a7a5e5cb3661cb992ae09f0bc599a76eb0388aebadbb3dc16d"
+    "tools/tests/test_android_apk.py": "1669268f0b1e15a7a5e5cb3661cb992ae09f0bc599a76eb0388aebadbb3dc16d",
+    "tools/embeddinggemma_tools/android_runs.py": "33f27466397a6b0794dedbc41b8b23e09b810b8f2d512976c66d04be440f640a",
+    "tools/tests/test_android_runs.py": "49760f9584051c08b4deb8f30e9b051849911708c07978214e92d73db3c899a8"
   },
   "current_csharp_verified": false,
   "apk_build_executed": false,
@@ -16,46 +18,53 @@
   "gpu_verified_on_android": false,
   "android_helper_red": {
     "passed": 0,
-    "completed_at": "2026-10-10T04:12:53.4316389Z",
     "failed": 9,
-    "reason": "NotImplemented stubs"
+    "reason": "NotImplemented stubs",
+    "completed_at": "2026-10-10T04:12:53.4316389Z"
   },
   "initial_green_attempt": {
-    "failed": 2,
-    "passed": 106,
     "scope": "Not green; graphics restoration test refined afterward",
+    "passed": 106,
+    "failed": 2,
     "total": 108
   },
   "explicit_graphics_restoration_red": {
-    "failed": 2,
-    "completed_at": "2026-10-10T04:15:21.3597057Z",
     "passed": 9,
-    "total": 11
+    "failed": 2,
+    "total": 11,
+    "completed_at": "2026-10-10T04:15:21.3597057Z"
   },
   "prior_windows_target_green": {
-    "total": 110,
-    "scope": "99 existing + 11 Android contracts; before splitApplicationBinary replacement and two Android integration cases",
     "passed": 110,
-    "skipped": 0,
+    "inconclusive": 0,
+    "total": 110,
     "completed_at": "2026-10-10T04:16:10.7717793Z",
     "failed": 0,
-    "inconclusive": 0
+    "skipped": 0,
+    "scope": "99 existing + 11 Android contracts; before splitApplicationBinary replacement and two Android integration cases"
   },
   "current_python_apk_contracts": {
-    "green_passed": 29,
+    "new_apk_cases": 16,
     "scope": "Tiny ZIP fixtures, no Unity or device execution",
     "existing_bundle_cases": 13,
-    "new_apk_cases": 16,
-    "red_failed": 16
+    "red_failed": 16,
+    "green_passed": 29
+  },
+  "current_python_report_contracts": {
+    "additional_red_failed": 5,
+    "scope": "Synthetic Player reports only. ADB/device identity/process exit and real Android execution are not proven.",
+    "initial_red_failed": 39,
+    "new_report_cases": 44,
+    "final_related_green_passed": 73
   },
   "target_switch": {
-    "completion_verified": false,
-    "observation_session": 1711,
-    "editor_pid": 110956,
-    "title_target": "Android",
-    "accepted": true,
     "state": "Same accepted CLI observation is live but has not returned; API Updater log tail is not a confirmed cause",
-    "attempts": 1
+    "attempts": 1,
+    "observation_session": 1711,
+    "completion_verified": false,
+    "title_target": "Android",
+    "editor_pid": 110956,
+    "accepted": true
   },
   "remaining_gates": [
     "Current C# compile and Android integration contracts",

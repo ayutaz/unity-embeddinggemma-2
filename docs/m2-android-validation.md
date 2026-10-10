@@ -70,3 +70,50 @@ uv run --locked python -m embeddinggemma_tools.android `
 Android module / SDK / NDK / JDKは利用可能だが、確認時ADB接続端末は0件。
 APK build自体はまだ要求しておらず、実APK、実機、macOS / iOS、未解決のallocation / font、tag導入、正式Releaseはすべて開いたgateとして維持する。
 現在のPRはC#再検証待ちのdraftとし、通常のActions CI成功だけでmergeしない。
+
+## 実機結果の回収と報告監査
+
+実APK / 接続端末を確保した後に使う手順で、以下はまだ実機で実行していない。
+[Android公式ADB手順](https://developer.android.com/tools/adb)に従い、serialを明示して対象を固定する。
+APK内のlauncher componentを確認してから起動し、Windows用のcommand line引数や固定のActivity名を流用しない。
+bootstrapは新しいGUIDのdirectoryへresults.jsonを保存し、別の32桁run IDも生成する。
+Androidの保存先は通常`/storage/emulated/<userid>/Android/data/<packagename>/files`だが、
+[Unity 6.3のpersistentDataPath仕様](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Application-persistentDataPath.html)と実際のPlayer出力を照合し、useridや保存先を仮定しない。
+
+```powershell
+adb devices -l
+adb -s <serial> install <Validation.apk>
+adb -s <serial> shell am start -W -n <確認したpackage/launcher-component>
+adb -s <serial> shell pidof com.ayutaz.embeddinggemma.validation
+adb -s <serial> pull <実際のGUID-directory/results.json> <新しいrun1.json>
+```
+
+初回のPID生存、結果completed、PID消失をそれぞれ時刻付きで保存する。
+結果completedだけで終了済みとは扱わず、同じ実行を追跡する。停止・失敗の結果も上書きしない。
+1回目の終了確認後、同じAPKで2回目を起動して新しいPID / run ID / results.jsonを回収する。
+キャッシュを保ってwarmを測る。モデルを含むBundleCache directory全体をpullせず、各results.jsonと必要な検証ログだけを回収する。
+端末serialとOS / GPU / API / ABIの対応、2つの起動と終了の観測は別のADB証拠へ保存する。
+
+`android_runs`は回収された2つの報告の整合性を監査するCLIで、ADBを実行しない。
+固定APK auditと同一build source hashes / bundle、同梱参照の完全hash、tokenRows 25、
+FP32 / Float16 × CPU / GPUComputeの全4条件、actual backend、M1全15ケースのcosine、
+検索全4queryの全6順位・score、worker解放、3回warm timing、14段階のメモリ観測、
+初回jar全6件展開から2回目manifest 1件のwarm cache移行を要求する。
+cosine・scoreは既存のPlayer条件と同じ閾値を使う。
+同じrun ID、期間重複、途中報告、injected結果・hash backend、CPU fallbackやWindows / Editor結果は拒否する。
+
+```powershell
+uv run --locked python -m embeddinggemma_tools.android_runs `
+  --runs <run1.json> <run2.json> --apk-audit <apk-audit.json> `
+  --reference <reference.json> --search-reference <search-reference.json> `
+  --output <新しいplayer-report-audit.json>
+```
+
+監査成功の`reported_gpu_pass`はPlayerが報告した結果の整合性を表す。
+このCLIはembedding / tokenを再計算せず、端末identityや独立process終了も証明しない。
+`android_execution_performed_by_auditor` / `independent_process_exits_verified`はfalseを維持する。
+実機合格には上記の実APK・署名 / payload・起動 / 終了・端末情報の証拠と実際のPlayer結果を組み合わせる。
+
+報告監査は39件の意図したredと、追加5件のredを観測して実装した。
+追加のredはinjected hash、欠けたmemory stage、重複JSON field、NaNと数値overflowの拒否を確認した。
+新規44件と既存APK / bundle 29件の計73 passedを確認した。小さいfixtureのみで、実Android結果はまだない。

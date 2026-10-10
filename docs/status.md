@@ -68,6 +68,8 @@ Windows Playerの変更はPR #18の全8 CI成功後にmain `f44976b` へ統合�
 
 ## 最近の更新
 
+Android Player報告の監査CLIを追加した。固定APK provenance / 同梱参照hash、全4条件のactual backend / 15ケース / 全順位・score / 解放、初回jar展開とwarm cache、3回warm timingと14段階memory、異なる非重複runを照合する。39 redと追加5 redから関連73 passed。これは小さいfixtureによる整合性監査で、ADB実行・端末identity・process終了は別の実測証拠を要求する。[回収手順と範囲](m2-android-validation.md#実機結果の回収と報告監査)。同じEditorの応答待ち、実APK / 実機 / 他OSと正式Release gateは残る。
+
 Android用build helperとAPK payload監査を準備した。Windows targetでhelperの9 red、graphics保存リスト復元の2 redを観測し、修正後は既存を含む110 passed。小さいAPK fixtureは16 redから、既存bundleを含む29 passed。その後のUnity 6.3 APIへの置き換えとAndroid target用2契約は再検証待ちで、110件の合格を現在のC#全体へ一般化しない。1回受理されたtarget切り替え後、同じEditor PIDのCLI観測が応答待ちになっている。追加起動・再起動はしていない。実APK build / 実機は未実行で、draft PRとして通常CIと分けて追跡する。[準備状況と再開手順](m2-android-validation.md)。
 
 PR #24統合main `01f3d86`を新しい空のGit consumerへ固定導入し、requested / resolved SHA・88ファイル・import済みsampleを照合した。compile、UPM 38 / sample EditMode 64、token15入力、実モデル検索FP32 / Float16 × CPU / GPUの4条件と全順位・scoreが合格。sample PlayMode 2件は受理後のCLI接続失敗を保持し、同じ実行のUnity保存XMLから2 passedを回収した。Game Viewの日英入力・準備・検索・空入力・解放・warm完全hash・Play停止も確認した。[新規Git導入の結果](m2-latest-git-consumer-validation.md)。旧Editorの終了を確認してから新Editor1つを起動し、再起動なし。停止時Persistent allocation Log 1件の原因、実APK / 他OS / 実機 / tag導入と正式Release gateは残る。

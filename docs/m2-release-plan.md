@@ -113,6 +113,8 @@ PRのmergeはユーザーの既存依頼の範囲で、差分・競合・現在h
 
 ## 実行中の記録
 
+- Android実機結果の回収手順と報告監査を追加した。39 redと追加5 redを観測し、関連73 passed。APK auditと同じbuild / source hash / 同梱参照、全4条件と固定順位 / score、jar cold展開からwarmへの移行、timing / memory / 解放を照合する。報告監査ではADB実行や独立process終了を成功とせず、実機証拠の取得を後段に残す。[手順と範囲](m2-android-validation.md#実機結果の回収と報告監査)。
+
 - Android helperをTDDで準備し、Windows targetで9 red、graphics保存リストの2 redから既存を含む110 passedを確認した。APK監査は小さいZIP fixtureの16 redから関連29 passed。その後のUnity 6.3 API変更とAndroid targetの2契約は未検証。target切り替え1回受理後、同じEditorの観測が応答待ちで、再要求・再起動は行っていない。現在のC#再検証をmerge gateにしたdraft PRを作り、実APK / 実機 / macOS / iOSと正式Releaseは引き続き未完了。[準備と次の実行手順](m2-android-validation.md)。
 
 - PR #24を現在headの全8 CI成功後に統合し、mainを `01f3d86`へfast-forwardした。統合後CI run 38022144437も全8 job成功。新しい空のGit consumer `artifacts/i`を作成し、旧PIDの終了・Editor 0件を確認してから1つだけ起動した。約101.5秒でuloop Ready、固定SHA解決・source88ファイル・UPM38 / sample64 / token15入力 / 実モデル4条件・UIが合格した。PlayMode CLI接続失敗は同じ実行の保存XMLから2 passedを回収し、再実行・再起動しなかった。[詳細](m2-latest-git-consumer-validation.md)。Play停止のallocation Log 1件と他環境 / releaseのgateは残る。

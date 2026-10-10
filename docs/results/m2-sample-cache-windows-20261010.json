@@ -1,0 +1,1021 @@
+{
+  "prepared_model_provenance": {
+    "success": true,
+    "error": "",
+    "sourceCommit": "2edb272f17a38c7af210474345c35f391fd6955c",
+    "searchSourceCommit": "13f194266162d2a728b2b2a0da9e9e58ae314ff6",
+    "unityVersion": "6000.3.16f1",
+    "completedUtc": "2026-10-09T18:22:02.0842322Z",
+    "modelSha256": "92968480724ef7838cbd7d7b7cfd6a8d6d5105bb937f8a9907e965805a7651c8",
+    "files": [
+      {
+        "name": "model-fp32.sentis",
+        "sha256": "8488d70f2d636a34bfe2a64c1d7b9d3eb3fce70c4fb9e27d32b698090c8fb373",
+        "bytes": 1095598044
+      },
+      {
+        "name": "model-float16.sentis",
+        "sha256": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819",
+        "bytes": 553775500
+      },
+      {
+        "name": "tokenizer.json",
+        "sha256": "25975a936201b81402a3b867d5c462cf10808bb96759f97fe9aefecbb11c49df",
+        "bytes": 32170775
+      }
+    ]
+  },
+  "schema_version": 1,
+  "final_logs": {
+    "TotalCount": 1,
+    "DisplayedCount": 1,
+    "LogType": "All",
+    "MaxCount": 30,
+    "SearchText": "",
+    "IncludeStackTrace": true,
+    "Logs": [
+      {
+        "Type": "Warning",
+        "Message": "Deleting invalid font reference.",
+        "StackTrace": "UnityEditor.ScriptReloadProperties:Load (UnityEditor.ScriptReloadProperties)"
+      }
+    ],
+    "Success": true
+  },
+  "limitations": [
+    "Actual Windows Editor file URL transfer, FP32/Float16 GPU sample searches and warm reuse only. New sample CPU, standalone Player, Android APK jar/device, macOS and iOS were not executed.",
+    "Jar URLs, cancellation, corruption, recovery and bounded retention also have tiny synthetic transport/provider contracts. Those results do not establish real GPU or device compatibility.",
+    "The consumer originally resolved Git SHA e7b3a54; sample source was overlaid with recorded commit 2e463a8. This does not prove fresh Git import of the changed package sample.",
+    "Prepared weights, the same Editor, filesystem/shader/import caches were reused. Each real stage measurement is one observation. No cold-machine, statistical, peak-memory or end-to-end preparation speed claim.",
+    "Reported stage duration covers transfer, full selected-file hashes and cache operations. Model deserialize, worker setup and document embeddings occur afterward and are excluded from this stage clock.",
+    "Transfers are coroutines, but full hash and actual Sentis preparation execute synchronously. Other OS full .NET hash and real device frame latency remain unmeasured. Byte-range transfer resume is not implemented.",
+    "Console retains one Deleting invalid font reference Warning from UnityEditor.ScriptReloadProperties.Load. Its origin is unresolved; no warning-free or native-leak-free claim.",
+    "Required cross-platform, stability and formal release gates remain open. Models, binary builds and the generated model cache are outside Git."
+  ],
+  "searches": [
+    {
+      "maximum_score_delta": 8.637552584289665E-08,
+      "file": "ui-japanese-results.json",
+      "result": {
+        "ready": true,
+        "preparing": false,
+        "Error": "",
+        "Status": "検索結果 6 件 / GPUCompute",
+        "Query": "猫を健康に育てるには",
+        "ModelPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-fp32.sentis",
+        "TokenizerPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/tokenizer.json",
+        "requestedBackend": "GPUCompute",
+        "actualBackend": "GPUCompute",
+        "providerType": "EmbeddingGemma.TextEmbedder",
+        "stage": {
+          "ModelPath": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaTextSearch\\ModelCache\\active\\model-fp32.sentis",
+          "TokenizerPath": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaTextSearch\\ModelCache\\active\\tokenizer.json",
+          "Error": null,
+          "CacheRejectedError": null,
+          "Success": true,
+          "CacheReused": false,
+          "TransferredFiles": 3,
+          "Milliseconds": 2449.2318,
+          "AuditMilliseconds": 729.6897,
+          "HashBackends": {
+            "model-fp32.sentis": "windows_cng",
+            "tokenizer.json": "windows_cng"
+          }
+        },
+        "results": [
+          {
+            "id": "doc-cat-en",
+            "score": 0.7473303426040513
+          },
+          {
+            "id": "doc-cat-ja",
+            "score": 0.7248598136856715
+          },
+          {
+            "id": "doc-recipe-a",
+            "score": 0.5659783895424063
+          },
+          {
+            "id": "doc-recipe-b",
+            "score": 0.5659783895424063
+          },
+          {
+            "id": "doc-space-ja",
+            "score": 0.5122136388969601
+          },
+          {
+            "id": "doc-space-en",
+            "score": 0.4919057124303446
+          }
+        ],
+        "unity": "6000.3.16f1",
+        "os": "Windows 11  (10.0.22631)",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphicsApi": "Direct3D12"
+      },
+      "query_id": "query-cat-ja",
+      "full_ranking_matches": true
+    },
+    {
+      "maximum_score_delta": 2.1853737930399575E-08,
+      "file": "ui-reference-english-results.json",
+      "result": {
+        "ready": true,
+        "preparing": false,
+        "Error": "",
+        "Status": "検索結果 6 件 / GPUCompute",
+        "Query": "How should I care for a pet cat?",
+        "ModelPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-float16.sentis",
+        "TokenizerPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/tokenizer.json",
+        "requestedBackend": "GPUCompute",
+        "actualBackend": "GPUCompute",
+        "providerType": "EmbeddingGemma.TextEmbedder",
+        "stage": {
+          "ModelPath": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaTextSearch\\ModelCache\\active\\model-float16.sentis",
+          "TokenizerPath": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaTextSearch\\ModelCache\\active\\tokenizer.json",
+          "Error": null,
+          "CacheRejectedError": null,
+          "Success": true,
+          "CacheReused": true,
+          "TransferredFiles": 1,
+          "Milliseconds": 458.84360000000004,
+          "AuditMilliseconds": 417.97990000000004,
+          "HashBackends": {
+            "model-float16.sentis": "windows_cng",
+            "tokenizer.json": "windows_cng"
+          }
+        },
+        "results": [
+          {
+            "id": "doc-cat-en",
+            "score": 0.7958339521031985
+          },
+          {
+            "id": "doc-cat-ja",
+            "score": 0.7167849794342989
+          },
+          {
+            "id": "doc-space-en",
+            "score": 0.5306739895772238
+          },
+          {
+            "id": "doc-recipe-a",
+            "score": 0.5133201332652632
+          },
+          {
+            "id": "doc-recipe-b",
+            "score": 0.5133201332652632
+          },
+          {
+            "id": "doc-space-ja",
+            "score": 0.5030712012218482
+          }
+        ],
+        "unity": "6000.3.16f1",
+        "os": "Windows 11  (10.0.22631)",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphicsApi": "Direct3D12"
+      },
+      "query_id": "query-cat-en",
+      "full_ranking_matches": true
+    }
+  ],
+  "tdd_red": [
+    {
+      "file": "cache-red-tests.json",
+      "result": {
+        "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+        "CompletedAt": "2026-10-10T03:18:41.2836011Z",
+        "FailedCount": 14,
+        "FailedTests": [
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.AFailedUpdateKeepsTheLastVerifiedActiveAndRetryIsBounded",
+            "Message": "  Not implemented\r\n  Expected: True\r\n  But was:  False\r\n",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchModelCacheTests.cs",
+            "Line": 101
+          },
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.ALeasePreventsAnotherResolutionUntilTheCallerReleasesIt",
+            "Message": "  Not implemented\r\n  Expected: True\r\n  But was:  False\r\n",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchModelCacheTests.cs",
+            "Line": 117
+          },
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.CancellationDisposesTheTransferAndReleasesTheLock",
+            "Message": "  Expected: True\r\n  But was:  False\r\n",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchModelCacheTests.cs",
+            "Line": 126
+          },
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.ChangedPrecisionReplacesTheOwnedCacheAndDoesNotKeepBothWeights",
+            "Message": "  Not implemented\r\n  Expected: True\r\n  But was:  False\r\n",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchModelCacheTests.cs",
+            "Line": 73
+          },
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.CopiesOnlySelectedPrecisionAndWarmRunTransfersOnlyManifest",
+            "Message": "  Not implemented\r\n  Expected: True\r\n  But was:  False\r\n",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchModelCacheTests.cs",
+            "Line": 62
+          },
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.InvalidManifestIsRejectedBeforeAnyWeightTransfer(\"names\")",
+            "Message": "  Expected: String containing \"Invalid preparation\"\r\n  But was:  \"Not implemented\"\r\n",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchModelCacheTests.cs",
+            "Line": 97
+          },
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.InvalidManifestIsRejectedBeforeAnyWeightTransfer(\"hash\")",
+            "Message": "  Expected: String containing \"Invalid preparation\"\r\n  But was:  \"Not implemented\"\r\n",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchModelCacheTests.cs",
+            "Line": 97
+          },
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.InvalidManifestIsRejectedBeforeAnyWeightTransfer(\"success\")",
+            "Message": "  Expected: String containing \"Invalid preparation\"\r\n  But was:  \"Not implemented\"\r\n",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchModelCacheTests.cs",
+            "Line": 97
+          },
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.InvalidManifestIsRejectedBeforeAnyWeightTransfer(\"source\")",
+            "Message": "  Expected: String containing \"Invalid preparation\"\r\n  But was:  \"Not implemented\"\r\n",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchModelCacheTests.cs",
+            "Line": 97
+          },
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.NetworkUrlsAndDifferentTokenizerSourcesAreRejectedBeforeTransfer",
+            "Message": "  Expected: String containing \"Unsupported model source\"\r\n  But was:  \"Not implemented\"\r\n",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchModelCacheTests.cs",
+            "Line": 135
+          }
+        ],
+        "HasFailures": true,
+        "InconclusiveCount": 0,
+        "Message": "Test execution completed with status: Failed first 10 of 14 failures listed; see XmlPath for full results.",
+        "NoTestsFound": false,
+        "NoTestsFoundExplanation": "",
+        "PassedCount": 0,
+        "SkippedCount": 0,
+        "Status": "Failed",
+        "Success": false,
+        "TestCount": 14,
+        "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\.uloop\\outputs\\TestResults\\20261010_031841_2871153_b1097005df124c25a1e7aa14c4208f4f.xml"
+      }
+    },
+    {
+      "file": "hash-red-tests.json",
+      "result": {
+        "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+        "CompletedAt": "2026-10-10T03:21:10.6880565Z",
+        "FailedCount": 7,
+        "FailedTests": [
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchStreamHashTests.InvalidNativeOutputCannotReplaceACompleteDigest",
+            "Message": "System.NotImplementedException : The method or operation is not implemented.",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\TextSearchStreamHash.cs",
+            "Line": 8
+          },
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchStreamHashTests.IoFailureCannotBeReportedAsAValidHash",
+            "Message": "  Expected: <System.IO.IOException>\r\n  But was:  <System.NotImplementedException: The method or operation is not implemented.\r\n  at EmbeddingGemma.Samples.TextSearchStreamHash.Compute (System.IO.Stream stream, System.String& backend, System.Func`2[T,TResult] accelerated) [0x00004] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\TextSearchStreamHash.cs:8 \r\n  at EmbeddingGemma.Samples.Tests.TextSearchStreamHashTests+<>c__DisplayClass4_0.<IoFailureCannotBeReportedAsAValidHash>b__0 () [0x00000] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchStreamHashTests.cs:51 \r\n  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x0002f] in <f577cd9686154d6ab10efd7e65e64366>:0 >\r\n",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchStreamHashTests.cs",
+            "Line": 51
+          },
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchStreamHashTests.KnownVectorsUseTheActualPlatformImplementation(\"\",\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\")",
+            "Message": "System.NotImplementedException : The method or operation is not implemented.",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\TextSearchStreamHash.cs",
+            "Line": 8
+          },
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchStreamHashTests.KnownVectorsUseTheActualPlatformImplementation(\"abc\",\"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad\")",
+            "Message": "System.NotImplementedException : The method or operation is not implemented.",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\TextSearchStreamHash.cs",
+            "Line": 8
+          },
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchStreamHashTests.MultiChunkInputMatchesIndependentManagedSha256",
+            "Message": "System.NotImplementedException : The method or operation is not implemented.",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\TextSearchStreamHash.cs",
+            "Line": 8
+          },
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchStreamHashTests.UnavailableNativeAfterConsumptionFallsBackToAllBytesOnTheSameHandle",
+            "Message": "System.NotImplementedException : The method or operation is not implemented.",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\TextSearchStreamHash.cs",
+            "Line": 8
+          },
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchStreamHashTests.UnreadableInputIsRejected",
+            "Message": "  Expected: <System.ArgumentException>\r\n  But was:  <System.NotImplementedException: The method or operation is not implemented.\r\n  at EmbeddingGemma.Samples.TextSearchStreamHash.Compute (System.IO.Stream stream, System.String& backend, System.Func`2[T,TResult] accelerated) [0x00004] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\TextSearchStreamHash.cs:8 \r\n  at EmbeddingGemma.Samples.Tests.TextSearchStreamHashTests+<>c__DisplayClass5_0.<UnreadableInputIsRejected>b__0 () [0x00000] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchStreamHashTests.cs:56 \r\n  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x0002f] in <f577cd9686154d6ab10efd7e65e64366>:0 >\r\n",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchStreamHashTests.cs",
+            "Line": 56
+          }
+        ],
+        "HasFailures": true,
+        "InconclusiveCount": 0,
+        "Message": "Test execution completed with status: Failed",
+        "NoTestsFound": false,
+        "NoTestsFoundExplanation": "",
+        "PassedCount": 0,
+        "SkippedCount": 0,
+        "Status": "Failed",
+        "Success": false,
+        "TestCount": 7,
+        "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\.uloop\\outputs\\TestResults\\20261010_032110_6920773_605a2e504a4645029536e69025ab5920.xml"
+      }
+    },
+    {
+      "file": "sample-red-tests.json",
+      "result": {
+        "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+        "CompletedAt": "2026-10-10T03:23:05.1851079Z",
+        "FailedCount": 3,
+        "FailedTests": [
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.SampleCancellationPreventsLateProviderCreationAndDisposesTransport",
+            "Message": "  Expected: True\r\n  But was:  False\r\n",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchModelCacheTests.cs",
+            "Line": 185
+          },
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.SampleLoadsOnlyResolvedPathsAndHoldsLeaseUntilWorkerRelease",
+            "Message": "  Expected: True\r\n  But was:  False\r\n",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchModelCacheTests.cs",
+            "Line": 169
+          },
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.SampleTransferFailureIsVisibleAndNeverCreatesTheWorker",
+            "Message": "  Expected: String containing \"interrupted model transfer\"\r\n  But was:  <string.Empty>\r\n",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchModelCacheTests.cs",
+            "Line": 200
+          }
+        ],
+        "HasFailures": true,
+        "InconclusiveCount": 0,
+        "Message": "Test execution completed with status: Failed",
+        "NoTestsFound": false,
+        "NoTestsFoundExplanation": "",
+        "PassedCount": 14,
+        "SkippedCount": 0,
+        "Status": "Failed",
+        "Success": false,
+        "TestCount": 17,
+        "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\.uloop\\outputs\\TestResults\\20261010_032305_1881388_ef7434692f3847c6a0dabe892d4fa6e4.xml"
+      }
+    },
+    {
+      "file": "play-red-tests.json",
+      "result": {
+        "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+        "CompletedAt": "2026-10-10T03:23:27.3561348Z",
+        "FailedCount": 1,
+        "FailedTests": [
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchLifecycleTests.DisablingDuringTransferDisposesItAndPreventsLatePreparation",
+            "Message": "  Expected: True\r\n  But was:  False\r\n",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\PlayMode\\TextSearchLifecycleTests.cs",
+            "Line": 53
+          }
+        ],
+        "HasFailures": true,
+        "InconclusiveCount": 0,
+        "Message": "Test execution completed with status: Failed",
+        "NoTestsFound": false,
+        "NoTestsFoundExplanation": "",
+        "PassedCount": 1,
+        "SkippedCount": 0,
+        "Status": "Failed",
+        "Success": false,
+        "TestCount": 2,
+        "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\.uloop\\outputs\\TestResults\\20261010_032327_3591589_64ef7c261ea74f1e81c0c02149629aaf.xml"
+      }
+    },
+    {
+      "file": "provider-status-red-tests.json",
+      "result": {
+        "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+        "CompletedAt": "2026-10-10T03:27:51.1427401Z",
+        "FailedCount": 2,
+        "FailedTests": [
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.SampleProviderFailureEndsProgressAndReleasesTheCache(False)",
+            "Message": "  String lengths are both 15. Strings differ at index 4.\r\n  Expected: \"モデルを準備できませんでした。\"\r\n  But was:  \"モデルを展開・確認しています。\"\r\n  ---------------^\r\n",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchModelCacheTests.cs",
+            "Line": 214
+          },
+          {
+            "FullName": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.SampleProviderFailureEndsProgressAndReleasesTheCache(True)",
+            "Message": "  String lengths are both 15. Strings differ at index 4.\r\n  Expected: \"モデルを準備できませんでした。\"\r\n  But was:  \"モデルを展開・確認しています。\"\r\n  ---------------^\r\n",
+            "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchModelCacheTests.cs",
+            "Line": 214
+          }
+        ],
+        "HasFailures": true,
+        "InconclusiveCount": 0,
+        "Message": "Test execution completed with status: Failed",
+        "NoTestsFound": false,
+        "NoTestsFoundExplanation": "",
+        "PassedCount": 21,
+        "SkippedCount": 0,
+        "Status": "Failed",
+        "Success": false,
+        "TestCount": 23,
+        "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\.uloop\\outputs\\TestResults\\20261010_032751_1462541_d18dd932a052423d88a2921e01a772fc.xml"
+      }
+    }
+  ],
+  "logs_before_stop": {
+    "TotalCount": 1,
+    "DisplayedCount": 1,
+    "LogType": "All",
+    "MaxCount": 30,
+    "SearchText": "",
+    "IncludeStackTrace": true,
+    "Logs": [
+      {
+        "Type": "Warning",
+        "Message": "Deleting invalid font reference.",
+        "StackTrace": "UnityEditor.ScriptReloadProperties:Load (UnityEditor.ScriptReloadProperties)"
+      }
+    ],
+    "Success": true
+  },
+  "python_tdd": {
+    "runner": "uv run --locked --no-sync pytest tests/test_package.py",
+    "green": "......................                                                   [100%]\r\n22 passed in 1.39s\r\n",
+    "red": "FF                                                                       [100%]\r\n================================== FAILURES ===================================\r\n__ test_sample_consumer_enables_local_streamingassets_transfer_module[None] ___\r\n\r\ntmp_path = WindowsPath('C:/Users/yuta/AppData/Local/Temp/pytest-of-yuta/pytest-9201/test_sample_consumer_enables_l0')\r\nrevision = None\r\n\r\n    @pytest.mark.parametrize(\"revision\", [None, \"a\" * 40])\r\n    def test_sample_consumer_enables_local_streamingassets_transfer_module(tmp_path, revision):\r\n        package = ROOT / \"Packages\" / PACKAGE_NAME\r\n        project = tmp_path / \"consumer\"\r\n        create_consumer(project, package, sample=True, git_revision=revision)\r\n        manifest = json.loads((project / \"Packages/manifest.json\").read_text())\r\n>       assert manifest[\"dependencies\"][\"com.unity.modules.unitywebrequest\"] == \"1.0.0\"\r\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nE       KeyError: 'com.unity.modules.unitywebrequest'\r\n\r\ntests\\test_package.py:163: KeyError\r\n_ test_sample_consumer_enables_local_streamingassets_transfer_module[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa] _\r\n\r\ntmp_path = WindowsPath('C:/Users/yuta/AppData/Local/Temp/pytest-of-yuta/pytest-9201/test_sample_consumer_enables_l1')\r\nrevision = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'\r\n\r\n    @pytest.mark.parametrize(\"revision\", [None, \"a\" * 40])\r\n    def test_sample_consumer_enables_local_streamingassets_transfer_module(tmp_path, revision):\r\n        package = ROOT / \"Packages\" / PACKAGE_NAME\r\n        project = tmp_path / \"consumer\"\r\n        create_consumer(project, package, sample=True, git_revision=revision)\r\n        manifest = json.loads((project / \"Packages/manifest.json\").read_text())\r\n>       assert manifest[\"dependencies\"][\"com.unity.modules.unitywebrequest\"] == \"1.0.0\"\r\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nE       KeyError: 'com.unity.modules.unitywebrequest'\r\n\r\ntests\\test_package.py:163: KeyError\r\n=========================== short test summary info ===========================\r\nFAILED tests/test_package.py::test_sample_consumer_enables_local_streamingassets_transfer_module[None]\r\nFAILED tests/test_package.py::test_sample_consumer_enables_local_streamingassets_transfer_module[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa]\r\n2 failed, 20 deselected in 0.23s\r\n"
+  },
+  "first_fp32": {
+    "ready": true,
+    "preparing": false,
+    "Error": "",
+    "Status": "文書 6 件を準備済み / GPUCompute",
+    "Query": "猫を健康に育てるには",
+    "ModelPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-fp32.sentis",
+    "TokenizerPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/tokenizer.json",
+    "requestedBackend": "GPUCompute",
+    "actualBackend": "GPUCompute",
+    "providerType": "EmbeddingGemma.TextEmbedder",
+    "stage": {
+      "ModelPath": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaTextSearch\\ModelCache\\active\\model-fp32.sentis",
+      "TokenizerPath": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaTextSearch\\ModelCache\\active\\tokenizer.json",
+      "Error": null,
+      "CacheRejectedError": null,
+      "Success": true,
+      "CacheReused": false,
+      "TransferredFiles": 3,
+      "Milliseconds": 2449.2318,
+      "AuditMilliseconds": 729.6897,
+      "HashBackends": {
+        "model-fp32.sentis": "windows_cng",
+        "tokenizer.json": "windows_cng"
+      }
+    },
+    "results": [],
+    "unity": "6000.3.16f1",
+    "os": "Windows 11  (10.0.22631)",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphicsApi": "Direct3D12"
+  },
+  "editmode_green": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-10T03:28:50.8538411Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 64,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 64,
+    "XmlPath": null
+  },
+  "input_path": "UnityEditor.EditorGUIUtility.QueueGameViewInputEvent via uloop execute-dynamic-code; IMGUI mouse and keyboard events",
+  "recorded_at_utc": "2026-10-10T03:48:39.7632138Z",
+  "path_api_compile_failure": {
+    "ErrorCount": 1,
+    "WarningCount": 0,
+    "Errors": [
+      {
+        "Message": "Assets\\EmbeddingGemmaTextSearch\\TextSearchModelCache.cs(77,25): error CS0117: 'Path' does not contain a definition for 'TrimEndingDirectorySeparator'",
+        "File": "Assets\\EmbeddingGemmaTextSearch\\TextSearchModelCache.cs",
+        "Line": 77
+      }
+    ],
+    "Warnings": [],
+    "Message": null,
+    "ErrorCode": null,
+    "NextActions": null,
+    "ProjectRoot": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h",
+    "Warning": null,
+    "Success": false
+  },
+  "source_hashes": [
+    {
+      "sha256": "ec0d59ffd41af917084a28ce8734622beb475c42e5853af979a848edc0d32afa",
+      "path": "AssemblyInfo.cs"
+    },
+    {
+      "sha256": "f5c349313be84166147c076da36c041ad61388c7f33e16e39f3c1cb8fd1aedb8",
+      "path": "EmbeddingGemma.TextSearch.Sample.asmdef"
+    },
+    {
+      "sha256": "586356b3c0760a158355e17e7a6d159dfbbb0e69abb0d3cda911d63046a82c53",
+      "path": "TextSearchGuiStyles.cs"
+    },
+    {
+      "sha256": "0c0b2d86cb0470a6e8a1b60cc4354520addc31953765ba3fe12cf46867b974a6",
+      "path": "TextSearchModelCache.cs"
+    },
+    {
+      "sha256": "58802cfd50a4b2bde5ec193d7ffc5a20066a265195ba18fe9904f4ae6fb702c6",
+      "path": "TextSearchSample.cs"
+    },
+    {
+      "sha256": "dcf552f22fbd449938f98fe564128ba270875791532374b44611a686120ea279",
+      "path": "TextSearchStreamHash.cs"
+    },
+    {
+      "sha256": "dc491d7e01e9a4edc5e790223bffa6f8a0055cddccdf6fff71c2a60ab98a977a",
+      "path": "Editor/EmbeddingGemma.TextSearch.Sample.Editor.asmdef"
+    },
+    {
+      "sha256": "a45422ba0538553ef844cd5cfd943727b0b3f1512affcd6014b51b6eb93208aa",
+      "path": "Editor/TextSearchFileHash.cs"
+    },
+    {
+      "sha256": "b06fefa3a797f9f964c2457b2cc556f9d07d5afeaa29233b355f4f72f0b5b152",
+      "path": "Editor/TextSearchModelPreparation.cs"
+    },
+    {
+      "sha256": "e2007c10796846ce32ce1cced409bd432268b67ed9b2a9f12a19aa926cd8d899",
+      "path": "Tests/Editor/EmbeddingGemma.TextSearch.Sample.Editor.Tests.asmdef"
+    },
+    {
+      "sha256": "dc71a8475146d152c8003199ef7fe18850dfc940d5ddf68c88b5b23f70dfda1d",
+      "path": "Tests/Editor/TextSearchFileHashTests.cs"
+    },
+    {
+      "sha256": "d53be2729e3ae279c0ab0e652b3ae7017e09bcfce97569b20e01dfdd69742c5b",
+      "path": "Tests/Editor/TextSearchGuiStylesTests.cs"
+    },
+    {
+      "sha256": "ac239d80db0f4aac2fa1e1929c9042b8002c1ecb59cced2d09417506ba0655c3",
+      "path": "Tests/Editor/TextSearchModelCacheTests.cs"
+    },
+    {
+      "sha256": "f13b612e1fd9d751b9bddcfe1a7b15131e023aac064954bf89aaf35636091f22",
+      "path": "Tests/Editor/TextSearchModelPreparationTests.cs"
+    },
+    {
+      "sha256": "737a4c9ae8e2dae83c3e18f1ba80006cbcb16e31a410bf4195a028091a3d3ef2",
+      "path": "Tests/Editor/TextSearchSampleTests.cs"
+    },
+    {
+      "sha256": "694071d34b1b7d335706a348bc18c242f570163bf6c8263d093a5837b2655a56",
+      "path": "Tests/Editor/TextSearchStreamHashTests.cs"
+    },
+    {
+      "sha256": "7cc5397b2210e3fb947e9172036027387b203510ce5cbdc832de71122d86785b",
+      "path": "Tests/PlayMode/EmbeddingGemma.TextSearch.Sample.PlayMode.Tests.asmdef"
+    },
+    {
+      "sha256": "258eb784fbcf627116119eb628cf1b4f8a2a75213f64bcfe4d21674cebe6fa21",
+      "path": "Tests/PlayMode/TextSearchLifecycleTests.cs"
+    }
+  ],
+  "final_editor_state": {
+    "Result": "{ playing = False, dirty = False, scene = Assets/EmbeddingGemmaTextSearch/TextSearch.unity }",
+    "Logs": [
+      "Execution completed successfully"
+    ],
+    "CompilationErrors": [],
+    "ErrorMessage": "",
+    "Error": "",
+    "UpdatedCode": null,
+    "DiagnosticsSummary": null,
+    "Diagnostics": [],
+    "EditorPlaying": false,
+    "Success": true
+  },
+  "playmode_green": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-10T03:30:10.1262605Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 2,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 2,
+    "XmlPath": null
+  },
+  "missing_source": {
+    "ready": false,
+    "preparing": false,
+    "Error": "準備に失敗: IOException: HTTP/1.1 404 Not Found",
+    "Status": "モデルを準備できませんでした。",
+    "Query": "How can I keep my cat healthy?",
+    "ModelPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/missing-sample-model/model-fp32.sentis",
+    "TokenizerPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/missing-sample-model/tokenizer.json",
+    "requestedBackend": "GPUCompute",
+    "actualBackend": null,
+    "providerType": null,
+    "stage": null,
+    "results": [],
+    "unity": "6000.3.16f1",
+    "os": "Windows 11  (10.0.22631)",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphicsApi": "Direct3D12"
+  },
+  "corpus_sha256": "19cdda018b3a2c9a91cda35df7084ed0abf88e104ddd27255578e4a2e03a5b00",
+  "blank_input": {
+    "ready": true,
+    "preparing": false,
+    "Error": "検索に失敗: Query text is required.\r\nParameter name: query",
+    "Status": "検索できませんでした。",
+    "Query": "",
+    "ModelPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-fp32.sentis",
+    "TokenizerPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/tokenizer.json",
+    "requestedBackend": "GPUCompute",
+    "actualBackend": "GPUCompute",
+    "providerType": "EmbeddingGemma.TextEmbedder",
+    "stage": {
+      "ModelPath": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaTextSearch\\ModelCache\\active\\model-fp32.sentis",
+      "TokenizerPath": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaTextSearch\\ModelCache\\active\\tokenizer.json",
+      "Error": null,
+      "CacheRejectedError": null,
+      "Success": true,
+      "CacheReused": false,
+      "TransferredFiles": 3,
+      "Milliseconds": 2449.2318,
+      "AuditMilliseconds": 729.6897,
+      "HashBackends": {
+        "model-fp32.sentis": "windows_cng",
+        "tokenizer.json": "windows_cng"
+      }
+    },
+    "results": [],
+    "unity": "6000.3.16f1",
+    "os": "Windows 11  (10.0.22631)",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphicsApi": "Direct3D12"
+  },
+  "cache": {
+    "retained_bytes": 585947193.0,
+    "warm_model_bytes_retransferred": 0,
+    "retained_files": [
+      "model-float16.sentis",
+      "preparation.json",
+      "tokenizer.json"
+    ],
+    "retained_bundle_directories": 1
+  },
+  "before_editor_state": {
+    "Result": "{ playing = False, dirty = False, scene = Assets/EmbeddingGemmaTextSearch/TextSearch.unity, samples = 1 }",
+    "Logs": [
+      "Execution completed successfully"
+    ],
+    "CompilationErrors": [],
+    "ErrorMessage": "",
+    "Error": "",
+    "UpdatedCode": null,
+    "DiagnosticsSummary": null,
+    "Diagnostics": [],
+    "EditorPlaying": false,
+    "Success": true
+  },
+  "source_commit": "2e463a844f10ce84548c7d7f9339ae2c2aa6e068",
+  "pointer_tool_failures": [
+    {
+      "Message": "No EventSystem found in the scene. Ensure an EventSystem GameObject exists.",
+      "Action": "Click",
+      "HitGameObjectName": null,
+      "PositionX": 0.0,
+      "PositionY": 0.0,
+      "EndPositionX": null,
+      "EndPositionY": null,
+      "InterruptedByPausePoint": false,
+      "RejectedByActivePausePointId": null,
+      "RejectedBeforeExecution": false,
+      "PausePointId": null,
+      "PausePointHitCount": null,
+      "PausePointHits": null,
+      "Success": false
+    },
+    {
+      "Message": "simulate-mouse-input requires the Input System package (com.unity.inputsystem). Install it via Package Manager and set Active Input Handling to 'Input System Package (New)' or 'Both' in Player Settings.",
+      "Action": "Click",
+      "Button": null,
+      "PositionX": null,
+      "PositionY": null,
+      "CameraName": null,
+      "CameraPath": null,
+      "Hit": null,
+      "HitGameObjectName": null,
+      "HitGameObjectPath": null,
+      "HitLayer": null,
+      "HitLayerName": null,
+      "Distance": null,
+      "HitPointX": null,
+      "HitPointY": null,
+      "HitPointZ": null,
+      "HitNormalX": null,
+      "HitNormalY": null,
+      "HitNormalZ": null,
+      "InputCoordinateSystem": "",
+      "UnityCoordinateSystem": "",
+      "GameViewWidth": null,
+      "GameViewHeight": null,
+      "InputPositionX": null,
+      "InputPositionY": null,
+      "InjectedUnityPositionX": null,
+      "InjectedUnityPositionY": null,
+      "CoordinateConversionFormula": "",
+      "InterruptedByPausePoint": false,
+      "PressDeliveredToGame": null,
+      "RejectedByActivePausePointId": null,
+      "RejectedBeforeExecution": false,
+      "PausePointId": null,
+      "PausePointHitCount": null,
+      "PausePointHits": null,
+      "Success": false
+    }
+  ],
+  "warm_fp32": {
+    "ready": true,
+    "preparing": false,
+    "Error": "",
+    "Status": "文書 6 件を準備済み / GPUCompute",
+    "Query": "",
+    "ModelPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-fp32.sentis",
+    "TokenizerPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/tokenizer.json",
+    "requestedBackend": "GPUCompute",
+    "actualBackend": "GPUCompute",
+    "providerType": "EmbeddingGemma.TextEmbedder",
+    "stage": {
+      "ModelPath": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaTextSearch\\ModelCache\\active\\model-fp32.sentis",
+      "TokenizerPath": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaTextSearch\\ModelCache\\active\\tokenizer.json",
+      "Error": null,
+      "CacheRejectedError": null,
+      "Success": true,
+      "CacheReused": true,
+      "TransferredFiles": 1,
+      "Milliseconds": 817.8029,
+      "AuditMilliseconds": 803.0711,
+      "HashBackends": {
+        "model-fp32.sentis": "windows_cng",
+        "tokenizer.json": "windows_cng"
+      }
+    },
+    "results": [],
+    "unity": "6000.3.16f1",
+    "os": "Windows 11  (10.0.22631)",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphicsApi": "Direct3D12"
+  },
+  "menu_command_observation": {
+    "tool_chunk": "a68e21",
+    "scope": "Installed CLI has no execute-menu-item command; no model operation was accepted.",
+    "error_code": "UNKNOWN_COMMAND"
+  },
+  "initial_compile_failure": {
+    "ErrorCount": 1,
+    "WarningCount": 0,
+    "Errors": [
+      {
+        "Message": "Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchModelCacheTests.cs(7,7): error CS0246: The type or namespace name 'Newtonsoft' could not be found (are you missing a using directive or an assembly reference?)",
+        "File": "Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchModelCacheTests.cs",
+        "Line": 7
+      }
+    ],
+    "Warnings": [],
+    "Message": null,
+    "ErrorCode": null,
+    "NextActions": [
+      "error CS0246: 'Newtonsoft' could not be found from a script under 'Assets/EmbeddingGemmaTextSearch/Tests/Editor/EmbeddingGemma.TextSearch.Sample.Editor.Tests.asmdef'. If that type lives in another assembly (for example the script was recently moved under a new asmdef), add the declaring assembly to that asmdef's references and run 'uloop compile' again; if the name is a typo, fix the name instead."
+    ],
+    "ProjectRoot": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h",
+    "Warning": null,
+    "Success": false
+  },
+  "warm_float16": {
+    "ready": true,
+    "preparing": false,
+    "Error": "",
+    "Status": "文書 6 件を準備済み / GPUCompute",
+    "Query": "猫を健康に育てるには",
+    "ModelPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-float16.sentis",
+    "TokenizerPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/tokenizer.json",
+    "requestedBackend": "GPUCompute",
+    "actualBackend": "GPUCompute",
+    "providerType": "EmbeddingGemma.TextEmbedder",
+    "stage": {
+      "ModelPath": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaTextSearch\\ModelCache\\active\\model-float16.sentis",
+      "TokenizerPath": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaTextSearch\\ModelCache\\active\\tokenizer.json",
+      "Error": null,
+      "CacheRejectedError": null,
+      "Success": true,
+      "CacheReused": true,
+      "TransferredFiles": 1,
+      "Milliseconds": 458.84360000000004,
+      "AuditMilliseconds": 417.97990000000004,
+      "HashBackends": {
+        "model-float16.sentis": "windows_cng",
+        "tokenizer.json": "windows_cng"
+      }
+    },
+    "results": [],
+    "unity": "6000.3.16f1",
+    "os": "Windows 11  (10.0.22631)",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphicsApi": "Direct3D12"
+  },
+  "explicit_release": {
+    "ready": false,
+    "preparing": false,
+    "Error": "",
+    "Status": "モデルと文書を準備してください。",
+    "Query": "",
+    "ModelPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-fp32.sentis",
+    "TokenizerPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/tokenizer.json",
+    "requestedBackend": "GPUCompute",
+    "actualBackend": null,
+    "providerType": null,
+    "stage": null,
+    "results": [],
+    "unity": "6000.3.16f1",
+    "os": "Windows 11  (10.0.22631)",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphicsApi": "Direct3D12"
+  },
+  "base_main": "197fae9f063300f669a99f83f9779be89f07e3ab",
+  "additional_nonreference_english": {
+    "maximum_cross_precision_score_delta": 4.220931815179796E-08,
+    "scope": "Same UI-only query in both precisions. Not a pinned Python query; preserved separately.",
+    "fp32": {
+      "ready": true,
+      "preparing": false,
+      "Error": "",
+      "Status": "検索結果 6 件 / GPUCompute",
+      "Query": "How can I keep my cat healthy?",
+      "ModelPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-fp32.sentis",
+      "TokenizerPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/tokenizer.json",
+      "requestedBackend": "GPUCompute",
+      "actualBackend": "GPUCompute",
+      "providerType": "EmbeddingGemma.TextEmbedder",
+      "stage": {
+        "ModelPath": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaTextSearch\\ModelCache\\active\\model-fp32.sentis",
+        "TokenizerPath": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaTextSearch\\ModelCache\\active\\tokenizer.json",
+        "Error": null,
+        "CacheRejectedError": null,
+        "Success": true,
+        "CacheReused": false,
+        "TransferredFiles": 3,
+        "Milliseconds": 2449.2318,
+        "AuditMilliseconds": 729.6897,
+        "HashBackends": {
+          "model-fp32.sentis": "windows_cng",
+          "tokenizer.json": "windows_cng"
+        }
+      },
+      "results": [
+        {
+          "id": "doc-cat-en",
+          "score": 0.7960972780118484
+        },
+        {
+          "id": "doc-cat-ja",
+          "score": 0.7123549652944065
+        },
+        {
+          "id": "doc-space-en",
+          "score": 0.5459699540864157
+        },
+        {
+          "id": "doc-recipe-a",
+          "score": 0.5244940375392793
+        },
+        {
+          "id": "doc-recipe-b",
+          "score": 0.5244940375392793
+        },
+        {
+          "id": "doc-space-ja",
+          "score": 0.5080113423188284
+        }
+      ],
+      "unity": "6000.3.16f1",
+      "os": "Windows 11  (10.0.22631)",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphicsApi": "Direct3D12"
+    },
+    "query": "How can I keep my cat healthy?",
+    "float16": {
+      "ready": true,
+      "preparing": false,
+      "Error": "",
+      "Status": "検索結果 6 件 / GPUCompute",
+      "Query": "How can I keep my cat healthy?",
+      "ModelPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-float16.sentis",
+      "TokenizerPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/tokenizer.json",
+      "requestedBackend": "GPUCompute",
+      "actualBackend": "GPUCompute",
+      "providerType": "EmbeddingGemma.TextEmbedder",
+      "stage": {
+        "ModelPath": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaTextSearch\\ModelCache\\active\\model-float16.sentis",
+        "TokenizerPath": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaTextSearch\\ModelCache\\active\\tokenizer.json",
+        "Error": null,
+        "CacheRejectedError": null,
+        "Success": true,
+        "CacheReused": false,
+        "TransferredFiles": 3,
+        "Milliseconds": 1549.7348000000002,
+        "AuditMilliseconds": 406.0362,
+        "HashBackends": {
+          "model-float16.sentis": "windows_cng",
+          "tokenizer.json": "windows_cng"
+        }
+      },
+      "results": [
+        {
+          "id": "doc-cat-en",
+          "score": 0.7960972703095927
+        },
+        {
+          "id": "doc-cat-ja",
+          "score": 0.7123549745262255
+        },
+        {
+          "id": "doc-space-en",
+          "score": 0.5459699390712421
+        },
+        {
+          "id": "doc-recipe-a",
+          "score": 0.5244940168437426
+        },
+        {
+          "id": "doc-recipe-b",
+          "score": 0.5244940168437426
+        },
+        {
+          "id": "doc-space-ja",
+          "score": 0.5080113845281465
+        }
+      ],
+      "unity": "6000.3.16f1",
+      "os": "Windows 11  (10.0.22631)",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphicsApi": "Direct3D12"
+    }
+  },
+  "lease_blocked": {
+    "blocked_by_live_worker": true,
+    "observed_at_utc": "2026-10-10T03:36:27.2976887Z"
+  },
+  "validation_mode": "Windows Editor real GPU sample flow plus synthetic cache/provider contracts",
+  "lease_released": {
+    "observed_at_utc": "2026-10-10T03:40:07.1905496Z",
+    "released_after_play_stop": true
+  },
+  "selected_float16": {
+    "ready": true,
+    "preparing": false,
+    "Error": "",
+    "Status": "文書 6 件を準備済み / GPUCompute",
+    "Query": "How can I keep my cat healthy?",
+    "ModelPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-float16.sentis",
+    "TokenizerPath": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/h/Assets/StreamingAssets/EmbeddingGemmaTextSearch/tokenizer.json",
+    "requestedBackend": "GPUCompute",
+    "actualBackend": "GPUCompute",
+    "providerType": "EmbeddingGemma.TextEmbedder",
+    "stage": {
+      "ModelPath": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaTextSearch\\ModelCache\\active\\model-float16.sentis",
+      "TokenizerPath": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaTextSearch\\ModelCache\\active\\tokenizer.json",
+      "Error": null,
+      "CacheRejectedError": null,
+      "Success": true,
+      "CacheReused": false,
+      "TransferredFiles": 3,
+      "Milliseconds": 1549.7348000000002,
+      "AuditMilliseconds": 406.0362,
+      "HashBackends": {
+        "model-float16.sentis": "windows_cng",
+        "tokenizer.json": "windows_cng"
+      }
+    },
+    "results": [],
+    "unity": "6000.3.16f1",
+    "os": "Windows 11  (10.0.22631)",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphicsApi": "Direct3D12"
+  }
+}

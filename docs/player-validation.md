@@ -69,7 +69,7 @@ opt-in bootstrapはこの経路へ接続した。後続のcache改善で、URL�
 
 単独`PlayerBundleStager.Stage`は新しい空directoryを必要とする。起動時のURL経路は`PlayerBundleCache`で、manifest取得と全5ファイルの完全SHA-256を毎回行い、監査済みのactiveを再利用する。cache更新・破損修復は旧activeを保持してcandidateを監査し、成功後1 bundle / 更新中最大2 bundleに制限する。所有外のdirectory・未知のファイルを削除しない。[cacheとhash高速化の実測](m2-bundle-cache-validation.md)では96契約、約1.68GBの実bundleのwarm完全監査3回が合格し、各モデル再転送0、Windows Editorの監査約1.5〜1.8秒を確認した。baselineの約108秒とNUnit timeout失敗も保存した。
 
-現在のソースをAndroid実機対応完了とは扱わず、APK packaging・bootstrap・CPU / GPUとlock / rename / 容量・時間を実機で確認する。配布UPM sampleのAndroid配置、中断転送のbyte-range resume、Windows IL2CPPと他OSも残る。
+現在のソースをAndroid実機対応完了とは扱わず、APK packaging・bootstrap・CPU / GPUとlock / rename / 容量・時間を実機で確認する。後続の[Windows IL2CPP実測](m2-player-il2cpp-validation.md)は合格した。配布UPM sampleにも[選択重みだけのcache配置](m2-sample-cache-validation.md)を追加したが、実APK / sample Player画面 / 他OSは未実行。検証bootstrapは参照を含む固定6ファイル、配布sampleはreceiptと選択重み・tokenizerの3ファイルで、別のcacheを使用する。byte-range resumeは実装しない。
 
 ## Windows検証Playerのbuildと起動
 

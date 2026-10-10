@@ -2,6 +2,7 @@
 
 ## 0.1.0-pre.1 — Unreleased
 
+- 2026-10-10の検証状況を更新。PR #30まで統合済み、固定Git consumer `fc66af7`の実モデル4条件・UI / cacheを確認。Androidは実APK・署名 / payload監査までで実機は未実行。draft PR #31では通常表示sampleのGUI / Float16 GPU全query・解放が成功した後に終了クラッシュを観測し、全体受け入れは未達。以下の各変更時点の未実行記録は当時の履歴として保持する。
 - GUI style測定テストもEditor所有fontを共有し、fixtureのCleanupでIMGUI cacheへ破棄済みfontを残さないように修正。元のglyph境界assertionを維持し、1 failed → 1 passed、sample全67 passed、未準備UI 3回の停止前後Console 0を確認。PR #29統合SHAの新規Git導入・実モデル4条件・UI / file URL cacheは別に合格。最初のEditor検索DBエラーの原因は未確定。
 - TextSearch sampleのEditor fontをEditor内で1つだけ所有し、Play / domain reload後も同じnative fontを再利用。修正前2件の失敗と修正後2件・sample EditMode 66件 / PlayMode 2件、Windows実Float16 GPU日英検索・空入力・解放、正常Editor終了時の所有font破棄を確認。新helperのPlayer実行・他OSとnative allocation診断の原因は未検証。
 - 検証済みテキストRuntimeをUPMへ移行。公開API・Runtime assembly名・既存ソースとGUIDを維持。
@@ -15,5 +16,5 @@
 - PR #20で日英表示に必要なfont生成・レイアウトと操作確認を追加。font警告とallocation Logの由来は追跡中。
 - PR #24で選択した重みとtokenizerだけを保持する所有cache、ローカルfile / jar URL配置、完全hash、worker使用中lease、キャンセル時の転送解放を追加。成功後1組 / 更新中最大2組のcacheを保持。実Windows file URL / GPU / warm cacheを確認した。実APK / 実機とsample Player画面は未検証。
 - PR #25の記録では、PR #24統合SHA `01f3d8682a97053bf4583e14fd8fbed14e2c8cae`を新しい空のWindows Git consumerで導入。UPM 38 / sample EditMode 64 / PlayMode 2、実モデル4条件・全順位 / score、日英入力 / 空入力 / 解放 / warm cache / Play停止を確認。PlayMode CLI接続失敗は同じ実行のXMLで2 passedを回収した。
-- Windows検証専用PlayerはPR #23でIL2CPP / compiler Release / High strippingの実buildと実モデル4条件・独立2起動を確認。検証assemblyのpreserve-all条件であり、任意consumerのstripping成功や配布sample Player画面の成功へ一般化しない。
+- Windows検証専用PlayerはPR #23でIL2CPP / compiler Release / High stripping、batch mode / Direct3D12の実buildと実モデル4条件・独立2起動を確認。検証assemblyのpreserve-all条件であり、任意consumerのstripping成功や配布sampleの通常表示 / shutdownへ一般化しない。
 - versionは `0.1.0-pre.1`のまま。macOS Editor / iOS / Androidの必須実測、残る安定性、候補 / tag固定導入、正式Releaseは未完了。

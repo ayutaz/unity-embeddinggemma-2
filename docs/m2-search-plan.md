@@ -2,7 +2,11 @@
 
 開始日 / 完了確認日: 2026-10-10。対象は利用者向け一覧の1（検索サンプル）と2（モデル取得・変換・配置手順）。[M2計画](m2-plan.md)のA / B / Cは実装・検証・統合済み。macOS・モバイル・公開リリースは後続であり、M2全体の完了とはしない。
 
-## 2026-10-10の現在地
+## 現在の受け渡し
+
+mainはPR #30後の `6f55a85`。検索・cache・Editor font寿命修正は統合済み、`fc66af7`の固定Git consumerで実モデル4条件 / UIを確認した。Androidは実APK監査まで。PR #31の通常表示sampleはGUI / GPU検索成功後にshutdown失敗でdraftを維持する。次は正常終了・実機 / 他OS・candidate / tag導入とRelease。[現在の状態](status.md) / [4段階の計画](m2-release-plan.md)を参照する。
+
+## 履歴: 検索初期実装の受け入れ
 
 確認基準mainは`4ee0cbbde07fc99ca87d33ed52a44e6100ca0b0c`。PR #9（計画）・#10（検索基盤）・#11（サンプル・モデル準備）・#12（統合記録）は統合済み。PR #11の最終head CI run 37974713580、統合後main CI run 37975026704、PR #12統合後CI run 37975720534はすべて全8 job成功。実測のsource SHAは結果JSONを維持する。
 

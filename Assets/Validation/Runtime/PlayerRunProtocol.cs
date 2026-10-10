@@ -84,7 +84,10 @@ namespace EmbeddingGemma.Validation
             var initial = Encoding.UTF8.GetBytes("{\"success\":false,\"phase\":\"not_started\"}\n"); stream.Write(initial, 0, initial.Length);
         }
         public void Save(PlayerRunReport report)
+            => Save(JObject.FromObject(report));
+        public void Save(JObject report)
         {
+            if (report == null) throw new ArgumentNullException(nameof(report));
             var pending = path + ".pending";
             try
             {

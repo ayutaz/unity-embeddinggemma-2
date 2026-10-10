@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "scope": "Native interactive sample API and own Player screenshots; runtime checks passed but process shutdown crashed. This is not full sample or M2 release acceptance.",
+  "process_gate": {
+    "schema_version": 1,
+    "run_id": "2e3446430f754cfc9c4af624c175ab9c",
+    "source_commit": "41dc0bef68b1e1cd899033bfd02333eba49f00eb",
+    "runtime_report_success": true,
+    "runtime_gpu_verified": true,
+    "runtime_completion_checks_passed": true,
+    "process_exit_code": -1073741819,
+    "process_exit_zero": false,
+    "process_seconds": 25.4044,
+    "process_gate_passed": false,
+    "reason": "nonzero_process_exit",
+    "report_sha256": "e4e4d09f00e33592d4b374f1ccbccdc9f1c43d390bf90b5a0933583ec6232780",
+    "process_receipt_sha256": "57e9904254f84e270d4f64bfeb95afde06c3a92871bc5929098bcdf5fdb06adc",
+    "execution_performed_by_auditor": false,
+    "reference_reaudited": false,
+    "m2_release_verified": false,
+    "scope": "Completed receipt consistency and runtime completion flags only. Numeric reference, screenshots, model provenance and two independent launches require separate evidence. Saved exit codes are external launcher observations, not operating-system execution performed by this auditor."
+  },
+  "source_commit": "41dc0bef68b1e1cd899033bfd02333eba49f00eb",
+  "unity": "6000.3.16f1",
+  "sentis": "2.6.1",
+  "target": "StandaloneWindows64",
+  "scripting_backend": "IL2CPP",
+  "stripping": "High",
+  "graphics_api": "Direct3D12",
+  "actual_backend": "GPUCompute",
+  "window_style": "Normal",
+  "batch_mode": false,
+  "gui_wait_frames": 0,
+  "query_count": 4,
+  "queries": [
+    {
+      "id": "query-cat-ja",
+      "maximum_score_error": 6.890311787799419E-08,
+      "ranking_count": 6
+    },
+    {
+      "id": "query-space-en",
+      "maximum_score_error": 1.0256953308918071E-07,
+      "ranking_count": 6
+    },
+    {
+      "id": "query-recipe-ja",
+      "maximum_score_error": 8.874540458059244E-08,
+      "ranking_count": 6
+    },
+    {
+      "id": "query-cat-en",
+      "maximum_score_error": 2.1853737930399575E-08,
+      "ranking_count": 6
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "2e3446430f754cfc9c4af624c175ab9c-query-cat-ja.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 174885,
+      "sha256": "6e1d4871d01f636bdce0d5ad35b9221f3a1b757cf4667ea73bebf834375361f9"
+    },
+    {
+      "name": "2e3446430f754cfc9c4af624c175ab9c-query-space-en.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 176633,
+      "sha256": "e24e7271b88ff323844866c775423e0d747ca2f5d09b98d345112ea1a43a5208"
+    }
+  ],
+  "screenshots_visually_reviewed": true,
+  "screenshots_published": false,
+  "screenshots_kept_local_reason": "Model path fields contain local absolute paths.",
+  "worker_released": true,
+  "font_destroyed": true,
+  "blank_rejected": true,
+  "missing_model_rejected": true,
+  "console_count": 0,
+  "shutdown_diagnosis": {
+    "exception": "access_violation",
+    "matching_pe_pdb_guid_and_age": true,
+    "public_symbol": "RuntimeStatic<PlatformAccessibilityManager>::StaticDestroy",
+    "symbol_offset": "0x51",
+    "verified_stack_unwind": false,
+    "related_official_issue": "UUM-146676",
+    "official_fix_version": "6000.3.21f1",
+    "official_release_notes": "https://unity.com/releases/editor/whats-new/6000.3.21f1",
+    "relationship": "Consistent native subsystem and exit behavior; not verified by version comparison.",
+    "original_dump_published": false
+  },
+  "tdd": {
+    "red_failed": 23,
+    "green_passed": 23
+  },
+  "independent_two_processes_accepted": false,
+  "m2_release_verified": false
+}

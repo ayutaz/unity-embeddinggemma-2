@@ -4,18 +4,27 @@
 ユーザーの「4まで詳細の計画を立てて進めてください」に対応し、安定性・高速化、Git URL導入、他環境の実測、リリースの4段階を扱う。
 M1の履歴と既存のM2受け入れ条件は維持する。Windowsだけの成功でM2全体を完了としない。
 
-確認基準mainはPR #29後の `fc66af7`。統合後[CI run 38029860876](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38029860876)の全8 job成功を確認した。font寿命修正を含むmainを[新しい空Git consumer](m2-font-git-consumer-validation.md)で導入し、compile・契約・実モデル4条件・UI・file URL cacheまで確認した。測定fixture修正 `bc3ac49`はEditor test 2ファイルだけの作業ソース配置で、配布Runtime / sample本体は同一。下の開始時点と実行履歴は当時の証拠を維持する。
+確認基準mainはPR #30後の `6f55a85`。統合後[CI run 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)の全8 job成功を確認した。font寿命修正を含む `fc66af7` を[新しい空Git consumer](m2-font-git-consumer-validation.md)で導入し、compile・契約・実モデル4条件・UI・file URL cacheまで確認した。測定fixture修正 `bc3ac49`はEditor test 2ファイルだけの配置で検証後にPR #30へ統合し、配布Runtime / sample本体は同一。下の開始時点と実行履歴は当時の証拠を維持する。
+
+PR #31の実装checkpoint `cd6b8bf`の[CI run 38040187805](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38040187805)は全8 job成功。PRはdraft / 未統合で、通常表示sampleのprocess終了は未達。2026-10-10の再確認でRepository Secrets / self-hosted runner / 公開tag / GitHub Releaseは各0。ドキュメント更新のための追加Unity起動・モデル取得・buildは行わない。
+
+| 段階 | 現在の到達点 | 次の成果物 / 依存 |
+| --- | --- | --- |
+| 1. 安定性・高速化 | 完全hashのCNG・cache再利用、Editor font寿命修正を実測確認。sample終了クラッシュとEditor検索DB / allocation / domain reloadは残る | 固定版変更の回答後に公式修正版とのshutdown比較。原因・修正の同条件証拠、正常終了2起動 |
+| 2. 固定Git導入 | `fc66af7`の空consumerで解決 / source / 実モデル4条件 / UI / cache合格。後続fixture配置を分けて記録 | 最終candidateの固定Git回帰。候補sourceが変われば必要な範囲だけ再検証 |
+| 3. 他環境・Player実測 | Windows精度検証Player batch modeは合格。sample通常表示はGUI / GPU成功後に異常終了。Androidは実APK監査まで | 正常sample process、Android実機、Mac / iOS環境と各CPU / GPU・配置 / cache・測定結果 |
+| 4. 正式配布 | 開発版0.1.0-pre.1のみ。candidate / tag / Release未実施 | 1〜3の全gate合格 → candidate / version / license / CHANGELOG → tag固定consumer → 正式Release |
 
 ## 次に進める順序
 
-PR #29まで統合済み。[font寿命](m2-editor-font-lifetime-validation.md)はTDDと実UI・正常Editor終了で修正確認し、統合SHAの新Git導入も合格した。後続では測定fixture自身が破棄済みfontをcacheへ残すことを実証し、1 failed → 1 passed、全67 passed、invalid font参照0、未準備UI 3回の停止前後Console 0を確認した。初回UIのEditor検索DB Errorは原因未確定。次は残る検索DB / native allocation診断とPlayer sample画面を進める。以前のFound leak診断15件を解消とは扱わない。実機gateは端末待ちで、不要なAPK再buildを避ける。
+PR #30まで統合済み。[font寿命](m2-editor-font-lifetime-validation.md)はTDDと実UI・正常Editor終了で修正確認し、統合SHAの新Git導入も合格した。測定fixture自身の破棄済みfont参照は1 failed → 1 passed、全67 passed、invalid font参照0、未準備UI 3回の停止前後Console 0を確認した。[Windows sample Player](m2-player-sample-validation.md)はbatch preflightを含む全33契約と実buildが成功。非表示起動の黒画面に対し、許可後の通常表示では日英GUI・Float16 / GPUComputeの全4query・各6順位 / score・解放が成功したが、engine shutdownでアクセス違反が残る。[PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)はdraft。対応PDBからPlatformAccessibilityManagerの破棄処理に停止箇所を絞り、公式修正UUM-146676を含む6000.3.21f1への変更を確認待ち。独立2起動の合格・初回Editor検索DB Error・以前のFound leak診断は未解決。実機gateは端末待ちで、不要なAPK再buildを避ける。
 
-1. 安定性を限定条件で調べる。新Git consumerの停止時にPersistent allocation Logが1件出たため、NativeLeakDetectionのstack設定を保存・復元し、空scene / UIのみ / CPU / GPUの条件と終了時点を比較する。既存sample cacheの実装と新固定mainのGit導入・実モデル4条件・画面は確認済み。正式候補・tagの導入は後段で別途確認する。
+1. Windows sample Playerの終了クラッシュを解消する。旧精度検証Playerのモデル不要比較では、通常モード非表示起動で同じ例外位置、batch modeはgraphics有無とも想定code 1で終了した。[比較結果](m2-player-sample-validation.md#モデル不要の終了処理の比較)を維持する。新 `41dc0be` の通常表示で実検索・画面・解放は通ったがprocess終了は失敗。対応するPE/PDB GUID / ageとpublic symbolを確認し、UnityのPlatformAccessibilityManager破棄処理と公式UUM-146676を次の比較対象にした。固定版変更の回答後、同じbundle / sample / Python参照を使って修正版のモデル不要shutdownを先に比較し、続けて日英画面・全query・独立2起動のexit 0 / cacheを確認する。外部終了監査は23 red → 23 greenで追加し、runtime successだけで異常終了を合格にしない。続けてEditor検索DB / allocation / domain reloadを調べる。正式候補・tagの導入は後段で別途確認する。
 2. Android buildのscene / 配置 / receipt / ABI / graphics APIはTDDで接続済み。source `751c30a`の実APK build・署名・全payload監査が成功した。接続端末を確保したら同じAPKで実jar展開・CPU / GPU精度・cache再利用・停止と再起動を実測する。端末なしのbuildを実機合格とは数えない。
 3. macOS / iOS実行環境とActionsライセンス・runnerを確保し、同じ固定参照の全条件を実測する。安定性はfont警告、allocation、domain reloadを限定条件で切り分ける。sampleのhash / deserialize同期時間と他OS性能も測定する。
 4. 上記と既存の全gateを満たす候補にversion / CHANGELOG / licenseを対応付け、tag固定consumer導入を確認して正式Releaseする。必須実機結果を省略しない。
 
-Windows PlayerのIL2CPP / Release / High stripping結果と、font寿命修正までの新規固定Git consumerは確認済み。[Android実APK](m2-android-validation.md)は504.158秒 / errors 0 / warnings 970でbuild成功し、SDK v2 debug署名と全5ファイルの完全hash / ARM64を確認した。実機とPlayer sample画面は未実行。Windows Editorのsample font・測定fixture寿命は限定条件で修正確認済みだが、Editor検索DB、native allocation、domain reloadとbuild警告の原因は未解決。これらを開いたgateとして扱い、M2全体は未完了のまま進める。
+Windowsの精度検証専用PlayerのIL2CPP / Release / High stripping結果は当時のbatchmode / Direct3D12条件で合格し、font寿命修正までの新規固定Git consumerも確認済み。[Android実APK](m2-android-validation.md)は504.158秒 / errors 0 / warnings 970でbuild成功し、SDK v2 debug署名と全5ファイルの完全hash / ARM64を確認した。Android実機は未実行。Windows sampleの通常表示 / GPU検索は部分成功、process終了と独立2起動は未達。33契約やnative buildの成功で不足gateを埋めない。Repository Secrets / self-hosted runnerは2026-10-10の記録時点で各0件。Editor検索DB、native allocation、domain reloadとbuild警告の原因は未解決。全4段階のgateを維持し、M2全体は未完了のまま進める。
 
 ## 開始時点の証拠
 
@@ -63,7 +72,7 @@ Windows PlayerのIL2CPP / Release / High stripping結果と、font寿命修正�
 
 | 対象 | 必要な環境 | 現状 / 次の作業 |
 | --- | --- | --- |
-| Windows Player | Windows build module、実GPU、固定モデル配置 | Development / MonoとIL2CPP / Release / High strippingの両方で実モデル4条件・独立2起動が合格。releaseでfile URL初回展開とcache再利用・完全CNG hashも確認。任意consumerのstrippingや他OSへ一般化しない |
+| Windows Player | Windows build module、実GPU、固定モデル配置 | 精度検証専用PlayerはDevelopment / MonoとIL2CPP / Release / High strippingのbatchmode条件で実モデル4条件・独立2起動が合格。sample Playerは33契約・実build・通常表示の日英GUI / GPU全query / 解放が成功、shutdownが失敗。公式修正版とのモデル不要比較後、独立2起動を完了する。固定版変更は回答待ち。任意consumerのstrippingや他OSへ一般化しない |
 | macOS Editor | Mac、Unity 6000.3.16f1、Metal対応GPU、適切なUnityライセンス | 実行可能なMacを確認する。hosted CPU buildだけでMetal GPU成功としない |
 | iOS Player | Mac、Xcode / iOS module、署名可能な実機、Metal | 端末・署名・接続を確認する。Apple資格情報はチャットやソースへ記録しない |
 | Android Player | Android module / SDK / NDK / JDK、実機、対応graphics API | 実ARM64 / IL2CPP / High stripping APK、署名・payload監査済み。接続端末なし。次は同じAPKの実jar / 全CPU・GPU条件 / 2起動 / sample画面 |

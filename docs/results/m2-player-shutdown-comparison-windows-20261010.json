@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "validation_scope": "Model-free missing-bundle shutdown comparison of the existing Windows full-validation Player; not GUI or inference acceptance.",
+  "source_commit": "c742fb940b78393573b19e42352fe7b70256e74d",
+  "unity_version": "6000.3.16f1",
+  "scripting_backend": "IL2CPP",
+  "stripping": "High",
+  "il2cpp_compiler": "Release",
+  "unity_player_hashes_match": true,
+  "unity_player_sha256": "bef601ad70832ed45da76262346d90bd8136d97f2d338db743f02d9b2f314712",
+  "runs": [
+    {
+      "mode": "windowed",
+      "window_style": "Hidden",
+      "flags": [
+        "-screen-width",
+        "1280",
+        "-screen-height",
+        "800",
+        "-screen-fullscreen",
+        "0",
+        "-force-d3d12"
+      ],
+      "source_commit": "c742fb940b78393573b19e42352fe7b70256e74d",
+      "bundle_exists": false,
+      "model_loaded": false,
+      "queries_executed": 0,
+      "graphics_api": "Direct3D12",
+      "report_success": false,
+      "report_gpu_verified": false,
+      "report_phase": "failed",
+      "report_error_type": "DirectoryNotFoundException",
+      "exit_code": -1073741819,
+      "expected_missing_bundle_exit": false,
+      "report_sha256": "74fdc01ae7578eb65ccd3ddb7ab55e4168429f93bf55905d1dff2f59df1b68ac",
+      "log_sha256": "be6d4eeb4e8aaab6acc981c1b3565c856bdcdd68d1bbbff94a3d50ad0d59cfcf",
+      "elapsed_seconds": 40.9323501
+    },
+    {
+      "mode": "batch",
+      "window_style": "Hidden",
+      "flags": [
+        "-batchmode",
+        "-nographics"
+      ],
+      "source_commit": "c742fb940b78393573b19e42352fe7b70256e74d",
+      "bundle_exists": false,
+      "model_loaded": false,
+      "queries_executed": 0,
+      "graphics_api": "Null",
+      "report_success": false,
+      "report_gpu_verified": false,
+      "report_phase": "failed",
+      "report_error_type": "DirectoryNotFoundException",
+      "exit_code": 1,
+      "expected_missing_bundle_exit": true,
+      "report_sha256": "9cf32ad41a43fbd4b4b0ef83ab79f566e470426e478a92f49b76047e20e33665",
+      "log_sha256": "8b5e3aff914a75c258d693bb58875b4ce858e72bb1d40d2250bae666120e441d",
+      "elapsed_seconds": 10.2658815
+    },
+    {
+      "mode": "batch",
+      "window_style": "Hidden",
+      "flags": [
+        "-batchmode",
+        "-force-d3d12"
+      ],
+      "source_commit": "c742fb940b78393573b19e42352fe7b70256e74d",
+      "bundle_exists": false,
+      "model_loaded": false,
+      "queries_executed": 0,
+      "graphics_api": "Direct3D12",
+      "report_success": false,
+      "report_gpu_verified": false,
+      "report_phase": "failed",
+      "report_error_type": "DirectoryNotFoundException",
+      "exit_code": 1,
+      "expected_missing_bundle_exit": true,
+      "report_sha256": "d19c17886c6740ddbaf12bb2da256a8dcced09d67f8e200a666b5841a43857b7",
+      "log_sha256": "6f09ff405ebff9c6cc6c3a95c3e7dc8ca3952207989e58fd168d5a7d6ccaa314",
+      "elapsed_seconds": 10.2306036
+    }
+  ],
+  "gui_verified": false,
+  "gpu_verified": false,
+  "model_verified": false,
+  "cause_identified": false,
+  "limitations": [
+    "Three separate completed processes, launched sequentially; no source edits or new builds.",
+    "No visible-window comparison performed.",
+    "Batch mode changes window and execution conditions; Direct3D12 initialization does not prove GUI rendering or GPU inference.",
+    "Raw reports, logs and dump details are retained only in ignored local artifacts. Public report/log hashes correspond to those original records.",
+    "These are new missing-bundle failure conditions, separate from earlier successful real-model runs.",
+    "No user name, absolute path, process ID, machine/GPU model, driver version or raw crash records are included in this public summary."
+  ]
+}

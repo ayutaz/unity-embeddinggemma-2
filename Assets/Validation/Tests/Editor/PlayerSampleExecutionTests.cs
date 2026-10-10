@@ -19,14 +19,15 @@ namespace EmbeddingGemma.Validation.Tests
             public string Fault;
             public bool Released, Destroyed;
             public int Queries;
+            public int Preparations;
             int fontReads;
             public bool Ready => Fault != "preparation";
             public string Error => "injected preparation failure";
             public string ActualBackend => Fault == "backend" ? "CPU" : "GPUCompute";
-            public bool FontAlive => Fault == "late_font" && fontReads++ < 3 ? false : !Destroyed || Fault == "font";
+            public bool FontAlive => Fault == "font_missing" || Fault == "late_font" && fontReads++ < 3 ? false : !Destroyed || Fault == "font";
             public int FontInstanceId => 42;
             public JObject CacheSnapshot => new JObject { ["Success"] = true, ["CacheReused"] = false, ["TransferredFiles"] = 3 };
-            public IEnumerator Prepare(string bundle, string cacheRoot) { yield break; }
+            public IEnumerator Prepare(string bundle, string cacheRoot) { Preparations++; yield break; }
             public PlayerRanking[] SearchRanking(string query)
             {
                 Queries++;
@@ -79,6 +80,12 @@ namespace EmbeddingGemma.Validation.Tests
         {
             var view = new View { Fault = "late_font" }; var report = Run(view);
             Assert.That((bool)report["success"], Is.True); Assert.That(view.Queries, Is.EqualTo(4));
+        }
+        [Test] public void MissingGuiFailsBeforeAnyModelPreparation()
+        {
+            var view = new View { Fault = "font_missing" }; var report = Run(view);
+            Assert.That((bool)report["success"], Is.False); Assert.That(view.Preparations, Is.EqualTo(0));
+            Assert.That(view.Released, Is.True); Assert.That(view.Destroyed, Is.True);
         }
         [Test] public void ScreenshotFailureIsRecordedAndReleasesTheWorker()
         {

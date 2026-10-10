@@ -36,6 +36,23 @@ namespace EmbeddingGemma.Samples.Tests
 
         static void ShowGameView() => EditorWindow.GetWindow(Type.GetType("UnityEditor.GameView,UnityEditor")).Focus();
 
+        [Test]
+        public void StyleMeasurementFixtureDoesNotLeaveDestroyedEditorFont()
+        {
+            var fixture = new TextSearchGuiStylesTests();
+            fixture.Setup();
+            var font = (Font)typeof(TextSearchGuiStylesTests).GetField("font", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(fixture);
+            var id = font.GetInstanceID();
+            try
+            {
+                fixture.WrappedDocumentRowsFitBothLinesOfTheActualFont();
+                Assert.That(CachedFont(id), Is.SameAs(font), "Actual GUIStyle measurement must register the fixture font.");
+            }
+            finally { fixture.Cleanup(); }
+            Assert.That(CachedFont(id) != null, Is.True,
+                "A measurement fixture must not leave a destroyed font in the persistent Editor cache.");
+        }
+
         [UnityTest]
         public IEnumerator TwoSampleViewsShareOneEditorFont()
         {

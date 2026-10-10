@@ -4,9 +4,11 @@
 ユーザーの「4まで詳細の計画を立てて進めてください」に対応し、安定性・高速化、Git URL導入、他環境の実測、リリースの4段階を扱う。
 M1の履歴と既存のM2受け入れ条件は維持する。Windowsだけの成功でM2全体を完了としない。
 
-確認基準mainはPR #27後の `c3281cd`。統合後[CI run 38025309104](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38025309104)の全8 job成功を確認した。配布sampleの選択モデルcacheをsource `2e463a8`で実装・Windows実GPU確認し、PR #24統合mainを[新しい空Git consumer](m2-latest-git-consumer-validation.md)で導入・compile・契約・実モデル4条件・UIまで確認した。PR #25はその結果の文書更新で当時のUPM配布treeは同一。PR #27で配布文書の未検証表示を実測へ合わせたが、Runtime / sample / GUID / manifestは不変。下の開始時点と実行履歴は当時の証拠を維持する。
+確認基準mainはPR #26後の `d6c8442`。統合後[CI run 38027319740](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38027319740)の全8 job成功を確認した。配布sampleの選択モデルcacheをsource `2e463a8`で実装・Windows実GPU確認し、PR #24統合mainを[新しい空Git consumer](m2-latest-git-consumer-validation.md)で導入・compile・契約・実モデル4条件・UIまで確認した。PR #25はその結果の文書更新で当時のUPM配布treeは同一。PR #27で配布文書の未検証表示を実測へ合わせたが、Runtime / sample / GUID / manifestは不変。下の開始時点と実行履歴は当時の証拠を維持する。
 
 ## 次に進める順序
+
+PR #26は統合済み。起動環境を既存uvハーネスで補完した後、空scene 3回のConsoleは0件、モデル未準備sample UIは2・3回目にfont Warningを再現した。[モデルなし比較](m2-stability-environment-validation.md)から、次はPlay開始のreload前後とfont生成・解放を分離する。6回の比較ではallocation診断なしだったが、次のPlayでFound leak診断15件を観測した。責任箇所は未確定で、解消とは扱わない。実機gateは端末待ちで、不要なAPK再buildを避ける。
 
 1. 安定性を限定条件で調べる。新Git consumerの停止時にPersistent allocation Logが1件出たため、NativeLeakDetectionのstack設定を保存・復元し、空scene / UIのみ / CPU / GPUの条件と終了時点を比較する。既存sample cacheの実装と新固定mainのGit導入・実モデル4条件・画面は確認済み。正式候補・tagの導入は後段で別途確認する。
 2. Android buildのscene / 配置 / receipt / ABI / graphics APIはTDDで接続済み。source `751c30a`の実APK build・署名・全payload監査が成功した。接続端末を確保したら同じAPKで実jar展開・CPU / GPU精度・cache再利用・停止と再起動を実測する。端末なしのbuildを実機合格とは数えない。

@@ -25,23 +25,34 @@ namespace EmbeddingGemma.Validation
                 save(result);
             }
             catch (Exception exception) { result.error = exception.GetType().Name + ": " + exception.Message; }
-            if (result.error == null)
+            PlayerBundleAudit audit = null;
+            try
             {
-                yield return PlayerBundleStager.Stage(config.Bundle, destination, stage, transfer);
-                if (!stage.transferCompleted) result.error = stage.error ?? "Bundle staging did not complete.";
+                if (result.error == null)
+                {
+                    if (config.Bundle.Contains("://"))
+                        yield return PlayerBundleCache.ResolveAudited(config.Bundle, destination, stage, value => audit = value, transfer);
+                    else yield return PlayerBundleStager.Stage(config.Bundle, destination, stage, transfer);
+                    if (stage.error != null || !stage.transferCompleted) result.error = stage.error ?? "Bundle staging did not complete.";
+                }
+                if (result.error != null)
+                {
+                    result.phase = "failed"; result.completedUtc = DateTime.UtcNow.ToString("O");
+                    try { save(result); }
+                    catch (Exception exception) { result.error += " Result write: " + exception.Message; }
+                }
+                else
+                {
+                    var resolved = new PlayerRunConfiguration { Bundle = stage.directory, Output = config.Output, RunId = config.RunId };
+                    var started = result.startedUtc;
+                    void Save(PlayerRunReport report) { report.startedUtc = started; report.staging = stage; save(report); }
+                    // Production cache certificates avoid repeating the full audit. Explicitly
+                    // injected loaders retain the injected-contract classification.
+                    result = audit != null && load == null ? PlayerRunProtocol.RunAudited(resolved, build, Save, audit, encode, create)
+                        : PlayerRunProtocol.Run(resolved, build, Save, load, encode, create);
+                }
             }
-            if (result.error != null)
-            {
-                result.phase = "failed"; result.completedUtc = DateTime.UtcNow.ToString("O");
-                try { save(result); }
-                catch (Exception exception) { result.error += " Result write: " + exception.Message; }
-            }
-            else
-            {
-                var resolved = new PlayerRunConfiguration { Bundle = stage.directory, Output = config.Output, RunId = config.RunId };
-                var started = result.startedUtc;
-                result = PlayerRunProtocol.Run(resolved, build, report => { report.startedUtc = started; report.staging = stage; save(report); }, load, encode, create);
-            }
+            finally { audit?.Dispose(); }
             complete(result);
         }
     }

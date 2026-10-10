@@ -34,7 +34,7 @@ namespace EmbeddingGemma.Validation
             catch (Exception exception) { Debug.LogException(exception); }
             if (writer == null) { Application.Quit(1); yield break; }
             PlayerRunReport result = null;
-            var staging = Path.Combine(Application.persistentDataPath, "EmbeddingGemmaValidation", "StagedBundle-" + config.RunId);
+            var staging = Path.Combine(Application.persistentDataPath, "EmbeddingGemmaValidation", "BundleCache");
             yield return PlayerValidationExecution.Run(config, build, staging, writer.Save, report => result = report);
             if (result != null) Debug.Log("EmbeddingGemma validation " + result.phase + ": " + config.Output);
             Application.Quit(result != null && result.success ? 0 : 1);

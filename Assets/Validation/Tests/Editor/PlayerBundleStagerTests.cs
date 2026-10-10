@@ -123,11 +123,12 @@ namespace EmbeddingGemma.Validation.Tests
             Drain(PlayerValidationExecution.Run(config, PlayerRunProtocolTests.Build(), destination,
                 report => snapshots.Add(Newtonsoft.Json.JsonConvert.DeserializeObject<PlayerRunReport>(Newtonsoft.Json.JsonConvert.SerializeObject(report))),
                 report => result = report, CopyFixture, PlayerBundleLoader.Load, _ => (new int[128], new int[128]),
-                (bundle, _, backend) => { Assert.That(bundle.Directory, Is.EqualTo(destination)); calls++; return new Provider { Backend = backend }; }));
+                (bundle, _, backend) => { Assert.That(bundle.Directory, Is.EqualTo(Path.Combine(destination, "active"))); calls++; return new Provider { Backend = backend }; }));
             Assert.That(result.success, Is.True, result.error); Assert.That(result.gpuVerified, Is.False); Assert.That(calls, Is.EqualTo(4));
             Assert.That(config.Bundle, Is.EqualTo(JarUrl), "The requested source must not be lost through mutation.");
             Assert.That(snapshots.First().phase, Is.EqualTo("bundle_staging")); Assert.That(snapshots.Take(snapshots.Count - 1).All(report => !report.success), Is.True);
             Assert.That(result.staging.source, Is.EqualTo(JarUrl)); Assert.That(result.staging.transferredFiles, Is.EqualTo(6));
+            Assert.That(result.staging.auditPassed, Is.True);
         }
         [Test] public void FailedStagingSavesFailureAndNeverStartsAuditOrInference()
         {

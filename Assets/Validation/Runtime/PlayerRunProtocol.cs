@@ -67,6 +67,7 @@ namespace EmbeddingGemma.Validation
         public PlayerBuildInfo build;
         public PlayerBundleStage staging;
         public JObject bundle;
+        public JObject hashBackends;
         public double auditMilliseconds, tokenizerMilliseconds;
         public List<PlayerCondition> conditions = new();
         public List<PlayerMemory> memory = new();
@@ -109,6 +110,16 @@ namespace EmbeddingGemma.Validation
         public static PlayerRunReport Run(PlayerRunConfiguration config, PlayerBuildInfo build, Action<PlayerRunReport> save,
             Func<string, PlayerBundle> load = null, Func<string, (int[] ids, int[] mask)> encode = null,
             Func<PlayerBundle, string, BackendType, IPlayerEmbedder> create = null)
+            => RunCore(config, build, save, load, encode, create, null);
+
+        internal static PlayerRunReport RunAudited(PlayerRunConfiguration config, PlayerBuildInfo build, Action<PlayerRunReport> save,
+            PlayerBundleAudit audit, Func<string, (int[] ids, int[] mask)> encode,
+            Func<PlayerBundle, string, BackendType, IPlayerEmbedder> create)
+            => RunCore(config, build, save, null, encode, create, audit ?? throw new ArgumentNullException(nameof(audit)));
+
+        static PlayerRunReport RunCore(PlayerRunConfiguration config, PlayerBuildInfo build, Action<PlayerRunReport> save,
+            Func<string, PlayerBundle> load, Func<string, (int[] ids, int[] mask)> encode,
+            Func<PlayerBundle, string, BackendType, IPlayerEmbedder> create, PlayerBundleAudit audit)
         {
             var report = new PlayerRunReport { runId = config.RunId, startedUtc = DateTime.UtcNow.ToString("O"), phase = "starting", build = build,
                 isEditor = Application.isEditor, unity = Application.unityVersion, os = SystemInfo.operatingSystem,
@@ -117,9 +128,11 @@ namespace EmbeddingGemma.Validation
             try
             {
                 build.Validate(); if (build.unityVersion != Application.unityVersion) throw new ArgumentException("Running Unity version differs from build provenance.");
-                save(report); report.memory.Add(CaptureMemory("before_audit")); report.phase = "bundle_audit"; save(report);
-                var timer = Stopwatch.StartNew(); var bundle = (load ?? PlayerBundleLoader.Load)(config.Bundle); timer.Stop();
-                report.auditMilliseconds = timer.Elapsed.TotalMilliseconds; report.bundle = bundle.Receipt;
+                save(report); report.memory.Add(CaptureMemory(audit == null ? "before_audit" : "after_cache_audit")); report.phase = "bundle_audit"; save(report);
+                if (audit != null && audit.Bundle.Directory != config.Bundle) throw new ArgumentException("Audited cache directory differs from the run configuration.");
+                var timer = Stopwatch.StartNew(); var bundle = audit?.Bundle ?? (load ?? PlayerBundleLoader.Load)(config.Bundle); timer.Stop();
+                report.auditMilliseconds = audit?.Milliseconds ?? timer.Elapsed.TotalMilliseconds; report.bundle = bundle.Receipt;
+                report.hashBackends = bundle.HashBackends;
                 report.phase = "token_audit"; save(report); timer.Restart();
                 if (encode == null)
                 {

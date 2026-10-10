@@ -1,6 +1,6 @@
 # 現在の状態と残タスク
 
-確認日: 2026-10-10。PR #12統合後のmainを基準に実装・consumer再現・証跡・CIを照合した。以後の最新CIはGitHubのPR / Actionsを参照。
+確認日: 2026-10-10。最新の統合mainはPR #19後の `e958d39`。PR #19は現在headの全8 CI成功後に統合し、PR #18後のmain CI run 38013974138も成功を確認した。下の表はPR #12時点の基準・履歴として保持し、後続実測を本文に追記する。最新CIはGitHubのPR / Actionsを参照。
 検索実装は `feat/m2-text-search-sample` / PR #11で統合済み。M1の履歴を維持し、Windows検索実測を別の証拠として追加した。以下のmain SHAとCIは確認時点の基準であり、後続の文書PRでも確認済みの実測SHAを変更しない。
 
 ## mainと作業ブランチ
@@ -67,6 +67,8 @@ Windows Playerの変更はPR #18の全8 CI成功後にmain `f44976b` へ統合�
 - GPU skipやCPU代替をGPU成功として扱わない。モデルと大きいartifactはGit管理外、LFSを使わずActionsで再生成する。
 
 ## 文書の読み方
+
+検索UIの文字欠けは、実OS fontのglyph境界を使うTDDで再現し、font・sizeを明示したcached styleへ修正した。EditMode 34件とPlayMode 1件が合格し、Windows Game Viewの日英GPU検索の全順位・scoreが修正前と完全一致、空入力・解放・モデル欠落表示・Play停止も確認した。[表示修正の実測](m2-ui-font-validation.md)を参照。修正したsampleはGit consumerへ作業ソースとして配置したもので、修正SHAの新規Git導入成功とは扱わない。allocationとdomain reloadの原因、Windows IL2CPP / release stripping、他OS / 実機と正式リリースの条件は未達のまま残す。
 
 README、ゴール、M2計画、CI、API、automationは現在の利用・作業手順。
 M1の各plan / validationは実行した段階の履歴で、当時のcommit・数値・失敗を維持する。

@@ -27,6 +27,7 @@ namespace EmbeddingGemma.Samples
         SearchHit[] results = Array.Empty<SearchHit>();
         Vector2 scroll;
         Font font;
+        TextSearchGuiStyles styles;
 
         void OnEnable()
         {
@@ -110,45 +111,45 @@ namespace EmbeddingGemma.Samples
         void OnDestroy()
         {
             ReleaseDocuments();
+            styles?.Dispose(); styles = null;
             if (font != null) Destroy(font);
         }
 
         void OnGUI()
         {
             if (font == null) font = Font.CreateDynamicFontFromOSFont(new[] { "Yu Gothic UI", "Noto Sans CJK JP", "Hiragino Sans", "Arial" }, 16);
-            var oldFont = GUI.skin.font;
-            GUI.skin.font = font;
+            styles ??= new TextSearchGuiStyles(GUI.skin, font);
             try
             {
                 GUILayout.BeginArea(new Rect(16, 16, Math.Max(320, Screen.width - 32), Math.Max(240, Screen.height - 32)), GUI.skin.box);
                 scroll = GUILayout.BeginScrollView(scroll);
-                GUILayout.Label("EmbeddingGemma 2 — テキスト検索", new GUIStyle(GUI.skin.label) { fontSize = 22 });
-                GUILayout.Label("日本語 / 英語の固定6文書をcosineで比較します。同点は文書ID順です。");
-                GUILayout.Label("モデルは別途準備してください。自動ダウンロードは行いません。");
+                GUILayout.Label("EmbeddingGemma 2 — テキスト検索", styles.Heading);
+                GUILayout.Label("日本語 / 英語の固定6文書をcosineで比較します。同点は文書ID順です。", styles.Label);
+                GUILayout.Label("モデルは別途準備してください。自動ダウンロードは行いません。", styles.Label);
                 GUI.enabled = !IsReady;
-                GUILayout.Label(".sentisモデル"); ModelPath = GUILayout.TextField(ModelPath ?? "");
-                GUILayout.Label("tokenizer.json"); TokenizerPath = GUILayout.TextField(TokenizerPath ?? "");
-                Backend = GUILayout.Toolbar(Backend == BackendType.CPU ? 0 : 1, new[] { "CPU", "GPUCompute" }) == 0 ? BackendType.CPU : BackendType.GPUCompute;
+                GUILayout.Label(".sentisモデル", styles.Label); ModelPath = GUILayout.TextField(ModelPath ?? "", styles.TextField);
+                GUILayout.Label("tokenizer.json", styles.Label); TokenizerPath = GUILayout.TextField(TokenizerPath ?? "", styles.TextField);
+                Backend = GUILayout.Toolbar(Backend == BackendType.CPU ? 0 : 1, new[] { "CPU", "GPUCompute" }, styles.Button) == 0 ? BackendType.CPU : BackendType.GPUCompute;
                 GUI.enabled = true;
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button("モデルと文書を準備")) PrepareDocuments();
-                if (GUILayout.Button("解放 / モデルを変更")) ReleaseDocuments();
+                if (GUILayout.Button("モデルと文書を準備", styles.Button)) PrepareDocuments();
+                if (GUILayout.Button("解放 / モデルを変更", styles.Button)) ReleaseDocuments();
                 GUILayout.EndHorizontal();
                 GUILayout.Space(12);
-                GUILayout.Label("検索文"); Query = GUILayout.TextField(Query ?? "");
-                if (GUILayout.Button("検索")) Search(Query);
-                GUILayout.Label(Status);
-                if (!string.IsNullOrEmpty(Error)) GUILayout.Label(Error, new GUIStyle(GUI.skin.label) { normal = { textColor = Color.red }, wordWrap = true });
+                GUILayout.Label("検索文", styles.Label); Query = GUILayout.TextField(Query ?? "", styles.TextField);
+                if (GUILayout.Button("検索", styles.Button)) Search(Query);
+                GUILayout.Label(Status, styles.Label);
+                if (!string.IsNullOrEmpty(Error)) GUILayout.Label(Error, styles.Error);
                 for (var i = 0; i < results.Length; i++)
                 {
                     var hit = results[i];
                     GUILayout.Space(8);
-                    GUILayout.Label($"{i + 1}. {hit.Document.Title ?? hit.Document.Id}   cosine {hit.Score:F4}   [{hit.Document.Id}]");
-                    GUILayout.Label(hit.Document.Text, new GUIStyle(GUI.skin.label) { wordWrap = true });
+                    GUILayout.Label($"{i + 1}. {hit.Document.Title ?? hit.Document.Id}   cosine {hit.Score:F4}   [{hit.Document.Id}]", styles.Label);
+                    GUILayout.Label(hit.Document.Text, styles.Label);
                 }
                 GUILayout.EndScrollView(); GUILayout.EndArea();
             }
-            finally { GUI.enabled = true; GUI.skin.font = oldFont; }
+            finally { GUI.enabled = true; }
         }
     }
 }

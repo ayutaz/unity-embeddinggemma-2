@@ -1,0 +1,349 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-10T02:05:05.9943789Z",
+  "sample_source_commit": "1c264badc383d83421d4021de484126d31b240ea",
+  "sample_source_sha256_lf": {
+    "TextSearchSample.cs": "4e3a0cc69092bfac016938dc587a0a57e36438de1f65dc441968a8845efe8102",
+    "TextSearchGuiStyles.cs": "586356b3c0760a158355e17e7a6d159dfbbb0e69abb0d3cda911d63046a82c53",
+    "AssemblyInfo.cs": "ec0d59ffd41af917084a28ce8734622beb475c42e5853af979a848edc0d32afa",
+    "Tests/Editor/TextSearchGuiStylesTests.cs": "d53be2729e3ae279c0ab0e652b3ae7017e09bcfce97569b20e01dfdd69742c5b"
+  },
+  "consumer": {
+    "requested_git_revision": "e7b3a54ec279f0c78be43a58548ec6695c4ba4ec",
+    "resolved_git_revision": "e7b3a54ec279f0c78be43a58548ec6695c4ba4ec",
+    "sample_overlaid_from_work_branch": true,
+    "unchanged_git_import_validated": false,
+    "editor_count": 1,
+    "editor_pid": 174716
+  },
+  "environment": {
+    "unity": "6000.3.16f1",
+    "sentis": "2.6.1",
+    "os": "Windows 11",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "game_view_width": 1280,
+    "game_view_height": 800
+  },
+  "tdd": {
+    "red": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T01:53:35.0635296Z",
+      "FailedCount": 5,
+      "FailedTests": [
+        {
+          "FullName": "EmbeddingGemma.Samples.Tests.TextSearchGuiStylesTests.LayoutFitsTheActualFontGlyphBounds(\"label\")",
+          "Message": "  label row must fit ascenders and descenders of the rendered font.\r\n  Expected: greater than or equal to 20.0f\r\n  But was:  14.5299997f\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchGuiStylesTests.cs",
+          "Line": 36
+        },
+        {
+          "FullName": "EmbeddingGemma.Samples.Tests.TextSearchGuiStylesTests.LayoutFitsTheActualFontGlyphBounds(\"field\")",
+          "Message": "  field row must fit ascenders and descenders of the rendered font.\r\n  Expected: greater than or equal to 20.0f\r\n  But was:  14.5299997f\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchGuiStylesTests.cs",
+          "Line": 36
+        },
+        {
+          "FullName": "EmbeddingGemma.Samples.Tests.TextSearchGuiStylesTests.LayoutFitsTheActualFontGlyphBounds(\"button\")",
+          "Message": "  button row must fit ascenders and descenders of the rendered font.\r\n  Expected: greater than or equal to 20.0f\r\n  But was:  14.5299997f\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchGuiStylesTests.cs",
+          "Line": 36
+        },
+        {
+          "FullName": "EmbeddingGemma.Samples.Tests.TextSearchGuiStylesTests.LayoutFitsTheActualFontGlyphBounds(\"heading\")",
+          "Message": "  heading row must fit ascenders and descenders of the rendered font.\r\n  Expected: greater than or equal to 27.0f\r\n  But was:  26.6299992f\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchGuiStylesTests.cs",
+          "Line": 36
+        },
+        {
+          "FullName": "EmbeddingGemma.Samples.Tests.TextSearchGuiStylesTests.WrappedDocumentRowsFitBothLinesOfTheActualFont",
+          "Message": "  Expected: greater than or equal to 40.0f\r\n  But was:  30.4899998f\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\EmbeddingGemmaTextSearch\\Tests\\Editor\\TextSearchGuiStylesTests.cs",
+          "Line": 42
+        }
+      ],
+      "HasFailures": true,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Failed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 1,
+      "SkippedCount": 0,
+      "Status": "Failed",
+      "Success": false,
+      "TestCount": 6,
+      "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\.uloop\\outputs\\TestResults\\20261010_015335_0672437_1a7ea12ffb2942968ce47b40c6e6e583.xml"
+    },
+    "green": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T01:55:03.4135266Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 34,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 34,
+      "XmlPath": null
+    },
+    "playmode": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T02:03:33.5582022Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 1,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 1,
+      "XmlPath": null
+    },
+    "font_metrics": {
+      "Result": "{\"fontSize\":16,\"lineHeight\":21,\"fontNames\":[\"Yu Gothic UI\",\"Noto Sans CJK JP\",\"Hiragino Sans\",\"Arial\"],\"rows\":[{\"character\":\"A\",\"ok\":true,\"minY\":-1,\"maxY\":13,\"glyphHeight\":14},{\"character\":\"g\",\"ok\":true,\"minY\":-5,\"maxY\":10,\"glyphHeight\":15},{\"character\":\"j\",\"ok\":true,\"minY\":-5,\"maxY\":13,\"glyphHeight\":18},{\"character\":\"p\",\"ok\":true,\"minY\":-5,\"maxY\":10,\"glyphHeight\":15},{\"character\":\"猫\",\"ok\":true,\"minY\":-3,\"maxY\":15,\"glyphHeight\":18},{\"character\":\"健\",\"ok\":true,\"minY\":-3,\"maxY\":15,\"glyphHeight\":18},{\"character\":\"康\",\"ok\":true,\"minY\":-3,\"maxY\":15,\"glyphHeight\":18}]}",
+      "Logs": [
+        "Execution completed successfully"
+      ],
+      "CompilationErrors": [],
+      "ErrorMessage": "",
+      "Error": "",
+      "UpdatedCode": null,
+      "DiagnosticsSummary": null,
+      "Diagnostics": [],
+      "EditorPlaying": true,
+      "Success": true
+    }
+  },
+  "model_bundle": {
+    "success": true,
+    "unity_executed": false,
+    "gpu_verified": false,
+    "files": [
+      {
+        "name": "model-fp32.sentis",
+        "bytes": 1095598044,
+        "sha256": "8488d70f2d636a34bfe2a64c1d7b9d3eb3fce70c4fb9e27d32b698090c8fb373"
+      },
+      {
+        "name": "model-float16.sentis",
+        "bytes": 553775500,
+        "sha256": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819"
+      },
+      {
+        "name": "tokenizer.json",
+        "bytes": 32170775,
+        "sha256": "25975a936201b81402a3b867d5c462cf10808bb96759f97fe9aefecbb11c49df"
+      },
+      {
+        "name": "reference.json",
+        "bytes": 408173,
+        "sha256": "deb9b3ed00e49c29b18c1a747307a318900d5e993fb3d9208f4d37e8a73cf2f6"
+      },
+      {
+        "name": "search-reference.json",
+        "bytes": 268000,
+        "sha256": "3530756b36316a812ac853f0722bed5479e92e6bb02ca6aa41c06660d32a71ec"
+      }
+    ],
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "model_source": "2edb272f17a38c7af210474345c35f391fd6955c",
+    "search_source": "13f194266162d2a728b2b2a0da9e9e58ae314ff6",
+    "model_origin_sha256": "92968480724ef7838cbd7d7b7cfd6a8d6d5105bb937f8a9907e965805a7651c8",
+    "unity_preparation_version": "6000.3.16f1"
+  },
+  "ui": {
+    "input_path": "Game View mouse/keyboard/scroll events; no direct field assignment or method substitution",
+    "states": {
+      "prepared": {
+        "playing": true,
+        "backend": "GPUCompute",
+        "ready": true,
+        "status": "文書 6 件を準備済み / GPUCompute",
+        "query": "猫を健康に育てるには",
+        "error": "",
+        "ranking": []
+      },
+      "japanese": {
+        "playing": true,
+        "backend": "GPUCompute",
+        "ready": true,
+        "status": "検索結果 6 件 / GPUCompute",
+        "query": "猫を健康に育てるには",
+        "error": "",
+        "ranking": [
+          {
+            "id": "doc-cat-en",
+            "score": 0.7473303426040513
+          },
+          {
+            "id": "doc-cat-ja",
+            "score": 0.7248598136856715
+          },
+          {
+            "id": "doc-recipe-a",
+            "score": 0.5659783895424063
+          },
+          {
+            "id": "doc-recipe-b",
+            "score": 0.5659783895424063
+          },
+          {
+            "id": "doc-space-ja",
+            "score": 0.5122136388969601
+          },
+          {
+            "id": "doc-space-en",
+            "score": 0.4919057124303446
+          }
+        ]
+      },
+      "english": {
+        "playing": true,
+        "backend": "GPUCompute",
+        "ready": true,
+        "status": "検索結果 6 件 / GPUCompute",
+        "query": "How can I keep my cat healthy?",
+        "error": "",
+        "ranking": [
+          {
+            "id": "doc-cat-en",
+            "score": 0.7960972780118484
+          },
+          {
+            "id": "doc-cat-ja",
+            "score": 0.7123549652944065
+          },
+          {
+            "id": "doc-space-en",
+            "score": 0.5459699540864157
+          },
+          {
+            "id": "doc-recipe-a",
+            "score": 0.5244940375392793
+          },
+          {
+            "id": "doc-recipe-b",
+            "score": 0.5244940375392793
+          },
+          {
+            "id": "doc-space-ja",
+            "score": 0.5080113423188284
+          }
+        ]
+      },
+      "blank": {
+        "playing": true,
+        "backend": "GPUCompute",
+        "ready": true,
+        "status": "検索できませんでした。",
+        "query": "",
+        "error": "検索に失敗: Query text is required.\r\nParameter name: query",
+        "ranking": []
+      },
+      "released": {
+        "playing": true,
+        "backend": "GPUCompute",
+        "ready": false,
+        "status": "モデルと文書を準備してください。",
+        "query": "",
+        "error": "",
+        "ranking": []
+      },
+      "missing-model": {
+        "playing": true,
+        "backend": "GPUCompute",
+        "ready": false,
+        "status": "モデルと文書を準備してください。",
+        "query": "",
+        "error": "準備に失敗: 準備した.sentisモデルのパスを指定してください。",
+        "ranking": []
+      }
+    },
+    "scores_and_full_rankings_exactly_equal_before_fix": true,
+    "before_result": "docs/results/m2-git-consumer-runtime-windows-20261010.json",
+    "missing_model_path": "missing-ui-model.sentis",
+    "missing_model_path_observed_in_screenshot": true,
+    "glyphs_visually_reviewed": true,
+    "all_six_results_visible_after_scroll": true,
+    "final_editor_state": {
+      "playing": false,
+      "dirty": false,
+      "scene": "Assets/EmbeddingGemmaTextSearch/TextSearch.unity"
+    },
+    "screenshots": {
+      "scrolled": {
+        "path": "docs/screenshots/m2-ui-font-scrolled.png",
+        "width": 1280,
+        "height": 800,
+        "sha256": "34826b6b258ec148b57a670f5d2adc545499d052a83eb2d8a34f55f06ee00a2e"
+      },
+      "missing-model": {
+        "path": "docs/screenshots/m2-ui-font-missing-model.png",
+        "width": 1280,
+        "height": 800,
+        "sha256": "4da86a1888691b3a990efa13b11c937a275f256384ca0a6dd26945c4b1b4cb72"
+      }
+    }
+  },
+  "logs": {
+    "pre_ui_console_clear": {
+      "ClearedLogCount": 1,
+      "ClearedCounts": {
+        "ErrorCount": 0,
+        "WarningCount": 1,
+        "LogCount": 0
+      },
+      "Message": "Successfully cleared 1 console logs (Errors: 0, Warnings: 1, Logs: 0)",
+      "ErrorMessage": "",
+      "Success": true
+    },
+    "pre_ui_warning_details": "One prior Warning was cleared without fetching its message; origin unknown.",
+    "after_ui_stop": {
+      "TotalCount": 0,
+      "DisplayedCount": 0,
+      "LogType": "All",
+      "MaxCount": 50,
+      "SearchText": "",
+      "IncludeStackTrace": true,
+      "Logs": [],
+      "Success": true
+    },
+    "after_playmode_test": {
+      "TotalCount": 2,
+      "DisplayedCount": 2,
+      "LogType": "All",
+      "MaxCount": 50,
+      "SearchText": "",
+      "IncludeStackTrace": true,
+      "Logs": [
+        {
+          "Type": "Log",
+          "Message": "Executing IPostBuildCleanup for: Unity.PerformanceTesting.Editor.TestRunBuilder.",
+          "StackTrace": "UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()"
+        },
+        {
+          "Type": "Log",
+          "Message": "Saving results to: C:/Users/yuta/AppData/LocalLow/DefaultCompany/h\\TestResults.xml",
+          "StackTrace": ""
+        }
+      ],
+      "Success": true
+    },
+    "leak_free_verified": false
+  },
+  "limitations": [
+    "Windows Editor font/layout only. Other OS fonts, DPI scales and Player UI are not validated by this run.",
+    "The consumer core package remains pinned to the earlier Git commit; its imported sample was overlaid with the candidate source. This is not a fresh Git import of the UI fix.",
+    "GUIStyle instances are cached; no GC allocation or frame-time measurement was performed.",
+    "No new full four-condition real-model regression: inference core is unchanged; actual GPU FP32 Japanese/English UI rankings and scores match the pre-fix run exactly.",
+    "Zero logs after this UI run does not prove the earlier Persistent allocation or font warnings are fixed; one pre-run Warning was cleared without attribution.",
+    "Domain reload cause, Windows IL2CPP/release stripping, macOS/iOS/Android execution and release gates remain open."
+  ]
+}

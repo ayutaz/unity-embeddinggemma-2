@@ -73,6 +73,21 @@ Windows / GPUの合格には数えず、設定の存在を実行実績として�
 クラウド実行を利用する場合は [GameCI公式手順](https://game.ci/docs/github/test-runner/)に沿ってUnityライセンスを準備する。
 Secret値はソース・チャット・ログへ書かない。
 
+### Unity Secretsを準備する
+
+本リポジトリの [Actions Secrets設定](https://github.com/ayutaz/unity-embeddinggemma-2/settings/secrets/actions) で、現在の手動workflowに必要な値を登録する。
+[GameCI公式のactivation手順](https://game.ci/docs/github/activation/)ではPersonalはHubで有効化した `.ulf` の内容とアカウント情報、Pro等はserialとアカウント情報を使用する。自分のライセンス種別に対応する手順を選ぶ。
+
+| Secret | 値 |
+| --- | --- |
+| `UNITY_EMAIL` | CIで使うUnityアカウントのメールアドレス |
+| `UNITY_PASSWORD` | 同じアカウントのパスワード |
+| `UNITY_LICENSE` | Personal経路の `.ulf` ファイル全文。Windowsの公式掲載先は `C:\ProgramData\Unity\Unity_lic.ulf` |
+| `UNITY_SERIAL` | Professional経路のserial。現在のpreflightではLICENSEかSERIALのどちらかが必要 |
+
+登録後は値ではなくSecret名だけを `gh secret list` で確認し、手動 `Unity CPU validation (manual)` を検証対象refで実行する。license preflight成功、Editor開始、NUnit実行・必要件数の合格、artifact回収を順に確認する。Secretが存在するだけではUnity実行成功ではない。
+このworkflowはLinux CPU補助検証であり、macOS MetalやiOS / Android実機のGPU合格には数えない。実機runner・端末・署名条件は [詳細実行計画](m2-release-plan.md) で別途確保する。
+
 必要なWindows GPUと新規プロジェクトへのUPM導入は、ローカル6000.3.16f1とuloopで検証する。
 [自動操作とハーネス](automation.md)を使い、未保存Scene / Prefabは自動保存・破棄しない。
 CPU / GPUCompute、実モデル / 小さい契約モデル、compile / 数値一致を別々に記録する。skipをGPU合格にしない。

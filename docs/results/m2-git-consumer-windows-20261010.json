@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-10T00:04:58.6623742Z",
+  "requested_package_commit": "2329507eb763202a297c1b15f385a83512eb6e1f",
+  "auditor_code_commit": "dcb2e9d",
+  "project": "artifacts/g",
+  "new_project": true,
+  "library_cache_at_creation": false,
+  "shared_upm_download_cache": true,
+  "local_file_dependency": false,
+  "unity_version": "6000.3.16f1",
+  "uloop_cli_version": "3.8.1",
+  "resolved_git_audit": {
+    "success": true,
+    "project": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\g",
+    "requested_revision": "2329507eb763202a297c1b15f385a83512eb6e1f",
+    "resolved_revision": "2329507eb763202a297c1b15f385a83512eb6e1f",
+    "unity_executed": false,
+    "errors": []
+  },
+  "editor_harness": {
+    "success": false,
+    "m1_reference_passed": false,
+    "runtime_reference_passed": false,
+    "m1_completion_passed": false,
+    "search_reference_passed": false,
+    "suite": "compile",
+    "project": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\g",
+    "unity_version": "6000.3.16f1",
+    "cli": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\uloop\\bin\\uloop.exe",
+    "started_at": "2026-10-10T08:55:24.391172+09:00",
+    "steps": [
+      "launch",
+      "get-logs"
+    ],
+    "error": "launch: timeout after 330s",
+    "logs_error": "get-logs: exit 1 UNITY_EDITOR_UNRESPONSIVE; see get-logs.json",
+    "completed_at": "2026-10-10T09:01:33.538402+09:00"
+  },
+  "compile_status": "not_run",
+  "contracts_status": "not_run",
+  "real_model_status": "not_run",
+  "ui_status": "not_run",
+  "git_consumer_acceptance_complete": false,
+  "failure": "IPC heartbeat remained alive while Editor main-thread ticks stopped; possible modal or initialisation problem, cause unconfirmed",
+  "focus_result": "No main window handle for process 145608",
+  "retry": "No restart or duplicate accepted test request",
+  "tdd": {
+    "cli_green": "38 passed: resolution and package tests",
+    "cli_red": "1 failed: unrecognized --verify-git-consumer",
+    "resolution_green": "36 passed: resolution and existing package tests",
+    "resolution_red": "ImportError: audit_git_consumer did not exist"
+  },
+  "models_downloaded_or_converted": false,
+  "notes": [
+    "Package Manager resolved the exact Git SHA and pinned direct dependencies. This does not establish Unity compilation or GPU compatibility.",
+    "The existing consumer latest-main real-model 4 passes are separate from this new Git consumer.",
+    "Old consumer PID 83780 was stopped after confirming Play stopped and scene clean; its process exit was then verified."
+  ]
+}

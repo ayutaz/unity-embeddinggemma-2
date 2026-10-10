@@ -38,10 +38,25 @@ run-001/
 `bundle.json` のsuccessは配置・hash監査が完了した意味であり、モデルのPlayer / GPU実行やM2合格を意味しない。
 出力に部分ファイルが残ってもreceiptがfalseなら使用しない。失敗原因を確認し、新しい空出力先で必要な処理を行う。
 
+## 実装済み: Playerから利用する検証ロジック
+
+`Assets/Validation/Runtime/` に検証専用assemblyを置いた。配布UPMのRuntimeとは別で、NUnit / UnityEditorへの参照を持たない。現在は呼び出し用APIであり、Player起動componentやbuild helperはまだ接続していない。
+
+- `PlayerBundleLoader.Load(directory)` はreceiptの固定revision・生成commit・Unity準備version・固定5ファイルを確認し、毎回全ファイルの完全SHA-256を計算する。同じサイズ・mtimeでも内容が違えば失敗する。hashを確認した同じfile handleでtokenizerと参照を読む。
+- `PlayerValidation.ParseReferences` はM1 15ケース、検索6文書 / 4queryのshape・有限単位vector・prompt・全順位・依存metadataを確認する。model / search生成commitはbundleに照合する。
+- `CheckAllTokens` はM1と検索を合わせた全25入力で、固定参照とtoken ID / maskの全128要素を完全一致で確認する。実行側は実際の`TextTokenizer.Encode`を渡す。
+- `RunCondition` は明示したprecision / backendを実行し、15ケース・検索の全順位とscore・追加warmup後3回の推論・解放を記録する。FP32 cosine >= 0.999、Float16重み >= 0.99、有限768次元・単位長を要求する。requested / actual backendが違えば失敗する。
+- `AllConditionsPassed` はCPU / GPUCompute × FP32 / Float16の4条件が重複なく揃い、必要件数・精度・解放が合格した場合だけtrueを返す。欠落・重複・CPU代替・エラーを成功にしない。
+
+uloop-cliで実装前のredを20件、9件、追加11件と段階的に観測し、最終的にUnity Editorで40 passed / failed・skipped・inconclusive 0を確認した。[TDDの記録](results/m2-player-contracts-windows-20261010.json)にsource hashと実行条件を記載する。
+テストは小さい合成参照 / providerを使用しており、実モデル推論、実際のGPU、Player build / 起動の証拠ではない。既存のSentis実モデル結果と分けて扱う。
+
+現時点のloaderは通常のfilesystem専用。Androidのjar内StreamingAssetsやURLは明示的に拒否する。[Unity公式のStreamingAssets仕様](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Application-streamingAssetsPath.html)に沿った展開adapterと実機確認は次の作業に残す。
+
 ## 次の実装と実機確認
 
-1. Player側でbundleを読み、起動時に実際のファイルhashとcode commitを記録する。Androidのjar内StreamingAssetsは通常のFile読み込みと分け、事前配置 / persistentDataPathへの展開をTDDで実装・実機確認する。
-2. NUnit / UnityEditorに依存しない実行componentを用意し、15ケースのtoken ID / mask完全一致、4条件の埋め込み、6文書 / 4queryの全順位を検証する。Editorで使った古い結果をPlayer成功にしない。
+1. 起動config・code commitのprovenance・失敗時のreport書き込みをTDDで接続する。通常filesystemのhash監査APIを使い、Androidのjar内StreamingAssetsは事前配置 / persistentDataPathへの展開adapterとして別にTDDと実機確認を行う。
+2. 実行componentとbuild helperを用意し、検証APIへ実際のtokenizer / Sentis providerを渡す。15ケースのtoken ID / mask完全一致、4条件の埋め込み、6文書 / 4queryの全順位をPlayerで実行する。Editorで使った古い結果や今回の合成テストをPlayer成功にしない。
 3. requested / actual backendを記録し、GPU非対応やOOMを失敗にする。GPUをCPUへ黙って切り替えない。
 4. load、tokenizer準備、初回推論、warmup後の反復推論、解放を測る。OS、端末、Unity、GPU / graphics API、build backend、stripping、メモリcounterの取得可否と観測範囲を記録する。
 5. Windows Playerからbuild / 起動 / 数値 / 終了 / 再起動を確認し、macOS Editor / iOS / Androidへ同じ参照・測定を渡す。buildだけでは実機GPU成功ではない。

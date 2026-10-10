@@ -59,19 +59,9 @@ namespace EmbeddingGemma.Validation
             {
                 build.Validate();
                 if (build.unityVersion != Application.unityVersion) throw new ArgumentException("Running Editor version differs from build provenance.");
-                report["phase"] = "bundle_audit"; save(report);
-                var clock = Stopwatch.StartNew(); var bundle = (load ?? PlayerBundleLoader.Load)(config.Bundle); clock.Stop();
-                report["bundle"] = bundle.Receipt; report["hash_backends"] = bundle.HashBackends; report["audit_milliseconds"] = clock.Elapsed.TotalMilliseconds;
-                if (bundle.Reference?.Queries?.Length != 4) throw new ArgumentException("Four pinned sample queries are required.");
                 view = (create ?? (() => PlayerSampleView.FromScene()))();
-                report["phase"] = "preparation"; save(report); clock.Restart();
-                yield return view.Prepare(config.Bundle, Path.Combine(Path.GetDirectoryName(config.Output), "sample-model-cache"));
-                clock.Stop(); report["preparation_milliseconds"] = clock.Elapsed.TotalMilliseconds;
-                report["preparation_timing_scope"] = "File URL staging and full cache audit, model deserialization, Worker creation and six document embeddings together; one measurement.";
-                if (!view.Ready) throw new InvalidOperationException("Sample is not ready: " + view.Error);
-                report["actual_backend"] = view.ActualBackend;
-                if (view.ActualBackend != "GPUCompute") throw new InvalidOperationException("An actual GPUCompute Worker is required.");
-                report["cache"] = view.CacheSnapshot;
+                report["phase"] = "gui_preflight"; save(report);
+                var clock = Stopwatch.StartNew();
                 yield return new WaitForEndOfFrame();
                 var guiFrames = 0;
                 while (!view.FontAlive && guiFrames < 120) { guiFrames++; yield return new WaitForEndOfFrame(); }
@@ -87,6 +77,20 @@ namespace EmbeddingGemma.Validation
                     throw new InvalidOperationException("The sample GUI native font is missing after waiting 120 render frames.");
                 }
                 report["font_instance_id"] = view.FontInstanceId;
+                clock.Stop(); report["gui_preflight_milliseconds"] = clock.Elapsed.TotalMilliseconds;
+                report["phase"] = "bundle_audit"; save(report); clock.Restart();
+                var bundle = (load ?? PlayerBundleLoader.Load)(config.Bundle); clock.Stop();
+                report["bundle"] = bundle.Receipt; report["hash_backends"] = bundle.HashBackends; report["audit_milliseconds"] = clock.Elapsed.TotalMilliseconds;
+                if (bundle.Reference?.Queries?.Length != 4) throw new ArgumentException("Four pinned sample queries are required.");
+                report["phase"] = "preparation"; save(report); clock.Restart();
+                yield return view.Prepare(config.Bundle, Path.Combine(Path.GetDirectoryName(config.Output), "sample-model-cache"));
+                clock.Stop(); report["preparation_milliseconds"] = clock.Elapsed.TotalMilliseconds;
+                report["preparation_timing_scope"] = "File URL staging and full cache audit, model deserialization, Worker creation and six document embeddings together; one measurement.";
+                if (!view.Ready) throw new InvalidOperationException("Sample is not ready: " + view.Error);
+                report["actual_backend"] = view.ActualBackend;
+                if (view.ActualBackend != "GPUCompute") throw new InvalidOperationException("An actual GPUCompute Worker is required.");
+                report["cache"] = view.CacheSnapshot;
+                if (!view.FontAlive) throw new InvalidOperationException("The sample lost its GUI font during model preparation.");
                 for (var i = 0; i < bundle.Reference.Queries.Length; i++)
                 {
                     var query = bundle.Reference.Queries[i]; report["phase"] = "query:" + query.id; save(report);

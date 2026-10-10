@@ -41,9 +41,20 @@ namespace EmbeddingGemma.Validation
         public string Error => (string)Property("Error");
         public bool FontAlive => destroyRequested ? ownedFont != null : (Font)Field("font") != null;
         public int FontInstanceId => FontAlive ? ((Font)Field("font")).GetInstanceID() : 0;
-        public JObject Describe() => new JObject { ["active"] = sample.gameObject.activeInHierarchy,
-            ["enabled"] = ((MonoBehaviour)sample).enabled, ["use_guilayout"] = ((MonoBehaviour)sample).useGUILayout,
-            ["ready"] = Ready, ["font_alive"] = FontAlive, ["model_path"] = (string)type.GetField("ModelPath").GetValue(sample) };
+        public JObject Describe()
+        {
+            var cameras = new JArray();
+            foreach (var camera in UnityEngine.Object.FindObjectsByType<Camera>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                cameras.Add(new JObject { ["name"] = camera.name, ["enabled"] = camera.enabled, ["active"] = camera.gameObject.activeInHierarchy,
+                    ["target_display"] = camera.targetDisplay, ["pixel_width"] = camera.pixelWidth, ["pixel_height"] = camera.pixelHeight,
+                    ["rendering_path"] = camera.renderingPath.ToString(), ["actual_rendering_path"] = camera.actualRenderingPath.ToString(),
+                    ["rect"] = camera.rect.ToString(), ["background"] = camera.backgroundColor.ToString(), ["target_texture"] = camera.targetTexture != null });
+            return new JObject { ["active"] = sample.gameObject.activeInHierarchy,
+                ["enabled"] = ((MonoBehaviour)sample).enabled, ["use_guilayout"] = ((MonoBehaviour)sample).useGUILayout,
+                ["ready"] = Ready, ["font_alive"] = FontAlive, ["model_path"] = (string)type.GetField("ModelPath").GetValue(sample),
+                ["frame"] = Time.frameCount, ["scene"] = sample.gameObject.scene.path, ["cameras"] = cameras,
+                ["active_camera_count"] = Camera.allCamerasCount };
+        }
         public IReadOnlyList<SearchHit> Results => (IReadOnlyList<SearchHit>)Property("Results");
         public string ActualBackend
         {

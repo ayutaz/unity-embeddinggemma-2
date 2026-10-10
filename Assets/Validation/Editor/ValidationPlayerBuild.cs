@@ -19,7 +19,7 @@ namespace EmbeddingGemma.Validation.Editor
     {
         public const string ScenePath = "Assets/Validation/Generated/Validation.unity";
         public const string MarkerPath = "Assets/Validation/Generated/Resources/EmbeddingGemmaValidationBuild.json";
-        public static BuildPlayerOptions WindowsOptions(string output, string codeCommit)
+        public static BuildPlayerOptions WindowsOptions(string output, string codeCommit, bool development = true)
         {
             if (codeCommit == null || !Regex.IsMatch(codeCommit, "\\A[a-f0-9]{40}\\z") || string.IsNullOrWhiteSpace(output) ||
                 !output.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)) throw new ArgumentException("A fixed source commit and .exe output are required.");
@@ -27,16 +27,20 @@ namespace EmbeddingGemma.Validation.Editor
             var directory = Path.GetDirectoryName(output);
             if (Directory.Exists(directory) && Directory.EnumerateFileSystemEntries(directory).Any()) throw new IOException("Build output directory must be empty.");
             return new BuildPlayerOptions { scenes = new[] { ScenePath }, locationPathName = output,
-                target = BuildTarget.StandaloneWindows64, options = BuildOptions.Development };
+                target = BuildTarget.StandaloneWindows64, options = development ? BuildOptions.Development : BuildOptions.None };
         }
-        public static PlayerBuildInfo BuildWindows(string output, string codeCommit, Action<BuildPlayerOptions> execute = null)
+        public static PlayerBuildInfo BuildWindows(string output, string codeCommit, Action<BuildPlayerOptions> execute = null, bool releaseIl2Cpp = false)
         {
-            var options = WindowsOptions(output, codeCommit);
+            var options = WindowsOptions(output, codeCommit, development: !releaseIl2Cpp);
             if (EditorApplication.isPlaying || EditorUserBuildSettings.activeBuildTarget != BuildTarget.StandaloneWindows64)
                 throw new InvalidOperationException("Stop Play Mode and select Windows 64-bit before building.");
             for (var i = 0; i < SceneManager.sceneCount; i++) if (SceneManager.GetSceneAt(i).isDirty) throw new InvalidOperationException("Save scene edits before building.");
             if (File.Exists(ScenePath) || File.Exists(MarkerPath)) throw new IOException("Temporary validation assets already exist; inspect them before building.");
             var previous = EditorSceneManager.GetSceneManagerSetup();
+            var target = NamedBuildTarget.Standalone;
+            var previousBackend = PlayerSettings.GetScriptingBackend(target);
+            var previousStripping = PlayerSettings.GetManagedStrippingLevel(target);
+            var previousCompiler = PlayerSettings.GetIl2CppCompilerConfiguration(target);
             var directory = Path.GetDirectoryName(options.locationPathName);
             Directory.CreateDirectory(directory);
             var receipt = new JObject { ["success"] = false, ["injected_build"] = execute != null, ["source_commit"] = codeCommit, ["started_utc"] = DateTime.UtcNow.ToString("O") };
@@ -45,6 +49,14 @@ namespace EmbeddingGemma.Validation.Editor
             Save();
             try
             {
+                if (releaseIl2Cpp)
+                {
+                    PlayerSettings.SetScriptingBackend(target, ScriptingImplementation.IL2CPP);
+                    PlayerSettings.SetManagedStrippingLevel(target, ManagedStrippingLevel.High);
+                    PlayerSettings.SetIl2CppCompilerConfiguration(target, Il2CppCompilerConfiguration.Release);
+                }
+                receipt["build_options"] = options.options.ToString();
+                receipt["il2cpp_compiler"] = PlayerSettings.GetIl2CppCompilerConfiguration(target).ToString();
                 var info = new PlayerBuildInfo { codeCommit = codeCommit, unityVersion = Application.unityVersion, sentisVersion = "2.6.1", target = options.target.ToString(),
                     scriptingBackend = PlayerSettings.GetScriptingBackend(NamedBuildTarget.Standalone).ToString(),
                     stripping = PlayerSettings.GetManagedStrippingLevel(NamedBuildTarget.Standalone).ToString(), sourceSha256 = SourceHashes() };
@@ -77,8 +89,21 @@ namespace EmbeddingGemma.Validation.Editor
                 catch (Exception exception) { receipt["success"] = false; receipt["restore_error"] = exception.Message; throw; }
                 finally
                 {
-                    AssetDatabase.DeleteAsset(ScenePath); AssetDatabase.DeleteAsset(MarkerPath);
-                    receipt["completed_utc"] = DateTime.UtcNow.ToString("O"); Save();
+                    try { AssetDatabase.DeleteAsset(ScenePath); AssetDatabase.DeleteAsset(MarkerPath); }
+                    finally
+                    {
+                        try
+                        {
+                            if (releaseIl2Cpp)
+                            {
+                                PlayerSettings.SetScriptingBackend(target, previousBackend);
+                                PlayerSettings.SetManagedStrippingLevel(target, previousStripping);
+                                PlayerSettings.SetIl2CppCompilerConfiguration(target, previousCompiler);
+                            }
+                        }
+                        catch (Exception exception) { receipt["success"] = false; receipt["settings_restore_error"] = exception.Message; throw; }
+                        finally { receipt["completed_utc"] = DateTime.UtcNow.ToString("O"); Save(); }
+                    }
                 }
             }
         }

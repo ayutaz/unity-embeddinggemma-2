@@ -41,6 +41,9 @@ namespace EmbeddingGemma.Validation
         public string Error => (string)Property("Error");
         public bool FontAlive => destroyRequested ? ownedFont != null : (Font)Field("font") != null;
         public int FontInstanceId => FontAlive ? ((Font)Field("font")).GetInstanceID() : 0;
+        public JObject Describe() => new JObject { ["active"] = sample.gameObject.activeInHierarchy,
+            ["enabled"] = ((MonoBehaviour)sample).enabled, ["use_guilayout"] = ((MonoBehaviour)sample).useGUILayout,
+            ["ready"] = Ready, ["font_alive"] = FontAlive, ["model_path"] = (string)type.GetField("ModelPath").GetValue(sample) };
         public IReadOnlyList<SearchHit> Results => (IReadOnlyList<SearchHit>)Property("Results");
         public string ActualBackend
         {

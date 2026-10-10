@@ -34,6 +34,8 @@ namespace EmbeddingGemma.Validation
             if (writer == null) { Application.Quit(1); yield break; }
             JObject result = null;
             yield return PlayerSampleExecution.Run(config, build, writer.Save, report => result = report);
+            // Let deferred view/font destruction complete before requesting engine shutdown.
+            yield return null;
             Debug.Log("EmbeddingGemma sample validation: " + config.Output);
             Application.Quit(result != null && (bool)result["success"] ? 0 : 1);
         }

@@ -1,0 +1,1595 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-10-10T07:34:04.1407790Z",
+  "success": false,
+  "gpu_verified": false,
+  "scope": "Windows sample Player harness implementation and retained native GUI/shutdown failures. This is not a passing sample Player result.",
+  "main_at_start": "6f55a8574df1bc75d51fb5992fd70dc7d0512fb9",
+  "consumer_git_revision": "fc66af7bc9150ddcf759917a5e9c92b2c5afa991",
+  "source_checks": [
+    {
+      "name": "Assets/Validation/Runtime/PlayerBundleCache.cs",
+      "matched": true,
+      "sha256": "8e17ce94c049d97d700363cd1446f8348aeaf2f2e0dbcc34c2c84fc349960fc9"
+    },
+    {
+      "name": "Assets/Validation/Runtime/PlayerBundleLoader.cs",
+      "matched": true,
+      "sha256": "61f27369c26d75b50e27136b8464cd4a5ea472773dd045b82694fa77aca44921"
+    },
+    {
+      "name": "Assets/Validation/Runtime/PlayerBundleStager.cs",
+      "matched": true,
+      "sha256": "b2041d88674d20ae62e272bbaffbee0e24e3d66c8d9e1ad9e110680e590f2940"
+    },
+    {
+      "name": "Assets/Validation/Runtime/PlayerFileHash.cs",
+      "matched": true,
+      "sha256": "ecf0d009a00fad2c2234f9bbe7e292ac27e05c279fe96978aae9c748af75cd91"
+    },
+    {
+      "name": "Assets/Validation/Runtime/PlayerRunProtocol.cs",
+      "matched": true,
+      "sha256": "99f474b98eaf7053d47b6ec42402779ebd54115ecfa718c8ef227ed66fbc864b"
+    },
+    {
+      "name": "Assets/Validation/Runtime/PlayerSampleExecution.cs",
+      "matched": true,
+      "sha256": "8fa69eeb24918b4b3f5113159c84b5fdf2061a4c8021091c8b9ec5bab494b0cd"
+    },
+    {
+      "name": "Assets/Validation/Runtime/PlayerSampleRunner.cs",
+      "matched": true,
+      "sha256": "ce4d97887e13ab4a613ee501d72eef56652b0959b589ee0829e753e8d37f741e"
+    },
+    {
+      "name": "Assets/Validation/Runtime/PlayerSampleView.cs",
+      "matched": true,
+      "sha256": "46c0492fe6ebd2fd0764050cb21a4d4343c5d20ead47f6c2dec09831b7ea25da"
+    },
+    {
+      "name": "Assets/Validation/Runtime/PlayerValidation.cs",
+      "matched": true,
+      "sha256": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09"
+    },
+    {
+      "name": "Assets/Validation/Runtime/PlayerValidationExecution.cs",
+      "matched": true,
+      "sha256": "f219eca5073a12241d90c736d6d1339875792323585a369efade8956830fb7a1"
+    },
+    {
+      "name": "Assets/Validation/Runtime/PlayerValidationRunner.cs",
+      "matched": true,
+      "sha256": "8b9e4ee9e1407569f24dae5be70eddf6410a97371af1bc27ab7b1085047a1a4b"
+    },
+    {
+      "name": "Assets/Validation/Runtime/link.xml",
+      "matched": true,
+      "sha256": "8d1d42432c97f128d4c87978f3c7b1a4b2a4de47097ea15c3d89edff75023dcd"
+    },
+    {
+      "name": "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs",
+      "matched": true,
+      "sha256": "85cb087541827169efe40ddec5074f6cc8b6a1dd995531a250ce5c4bbc66ec1e"
+    },
+    {
+      "name": "Packages/com.ayutaz.embeddinggemma/Runtime/TextModelFile.cs",
+      "matched": true,
+      "sha256": "c4fb628f5ea5e4daacac88f9d4f09266f44e3133a0baf2236438c611917ede28"
+    },
+    {
+      "name": "Packages/com.ayutaz.embeddinggemma/Runtime/TextPrompts.cs",
+      "matched": true,
+      "sha256": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5"
+    },
+    {
+      "name": "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchIndex.cs",
+      "matched": true,
+      "sha256": "8a17c7ac6e995e6ceb36d9cead732f3ace63f418ab6e860e7f71fdd7a9ea43d0"
+    },
+    {
+      "name": "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchSession.cs",
+      "matched": true,
+      "sha256": "e4a85fd2378a18b48dd022f82a6fdb4eb73ef9dd980f539c75e2ef5768f1f9f7"
+    },
+    {
+      "name": "Packages/com.ayutaz.embeddinggemma/Runtime/TextTokenizer.cs",
+      "matched": true,
+      "sha256": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763"
+    },
+    {
+      "name": "Assets/EmbeddingGemmaTextSearch/AssemblyInfo.cs",
+      "matched": true,
+      "sha256": "ec0d59ffd41af917084a28ce8734622beb475c42e5853af979a848edc0d32afa"
+    },
+    {
+      "name": "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchFileHash.cs",
+      "matched": true,
+      "sha256": "a45422ba0538553ef844cd5cfd943727b0b3f1512affcd6014b51b6eb93208aa"
+    },
+    {
+      "name": "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchModelPreparation.cs",
+      "matched": true,
+      "sha256": "b06fefa3a797f9f964c2457b2cc556f9d07d5afeaa29233b355f4f72f0b5b152"
+    },
+    {
+      "name": "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchEditorFontLifetimeTests.cs",
+      "matched": true,
+      "sha256": "57d3f74ae505abd31e82aab059abf062a24b02ec80bc74eee553524b16c08acc"
+    },
+    {
+      "name": "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchFileHashTests.cs",
+      "matched": true,
+      "sha256": "dc71a8475146d152c8003199ef7fe18850dfc940d5ddf68c88b5b23f70dfda1d"
+    },
+    {
+      "name": "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchGuiStylesTests.cs",
+      "matched": true,
+      "sha256": "2883b875453830eb35ead546e7f86cf86bc02299e59d7c9b6efc2518fd12a85e"
+    },
+    {
+      "name": "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelCacheTests.cs",
+      "matched": true,
+      "sha256": "ac239d80db0f4aac2fa1e1929c9042b8002c1ecb59cced2d09417506ba0655c3"
+    },
+    {
+      "name": "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelPreparationTests.cs",
+      "matched": true,
+      "sha256": "f13b612e1fd9d751b9bddcfe1a7b15131e023aac064954bf89aaf35636091f22"
+    },
+    {
+      "name": "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchSampleTests.cs",
+      "matched": true,
+      "sha256": "737a4c9ae8e2dae83c3e18f1ba80006cbcb16e31a410bf4195a028091a3d3ef2"
+    },
+    {
+      "name": "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchStreamHashTests.cs",
+      "matched": true,
+      "sha256": "694071d34b1b7d335706a348bc18c242f570163bf6c8263d093a5837b2655a56"
+    },
+    {
+      "name": "Assets/EmbeddingGemmaTextSearch/Tests/PlayMode/TextSearchLifecycleTests.cs",
+      "matched": true,
+      "sha256": "258eb784fbcf627116119eb628cf1b4f8a2a75213f64bcfe4d21674cebe6fa21"
+    },
+    {
+      "name": "Assets/EmbeddingGemmaTextSearch/TextSearchGuiFont.cs",
+      "matched": true,
+      "sha256": "355373a0db2dc75066f758c08f1507042107cb9ed8dc81463f8b5a8cff0135a5"
+    },
+    {
+      "name": "Assets/EmbeddingGemmaTextSearch/TextSearchGuiStyles.cs",
+      "matched": true,
+      "sha256": "586356b3c0760a158355e17e7a6d159dfbbb0e69abb0d3cda911d63046a82c53"
+    },
+    {
+      "name": "Assets/EmbeddingGemmaTextSearch/TextSearchModelCache.cs",
+      "matched": true,
+      "sha256": "0c0b2d86cb0470a6e8a1b60cc4354520addc31953765ba3fe12cf46867b974a6"
+    },
+    {
+      "name": "Assets/EmbeddingGemmaTextSearch/TextSearchSample.cs",
+      "matched": true,
+      "sha256": "ebdb65c3468b1b8e7d3fce54fa4b602c3ce549d8f2a9c4fa59be6031f1133683"
+    },
+    {
+      "name": "Assets/EmbeddingGemmaTextSearch/TextSearchStreamHash.cs",
+      "matched": true,
+      "sha256": "dcf552f22fbd449938f98fe564128ba270875791532374b44611a686120ea279"
+    },
+    {
+      "name": "Assets/EmbeddingGemmaTextSearch/TextSearch.unity",
+      "matched": true,
+      "sha256": "04c3e5d8bba0199accc793637576429e0002c66786d7ce909a34abaac104cd74"
+    },
+    {
+      "name": "Assets/EmbeddingGemmaTextSearch/Resources/EmbeddingGemmaTextSearch/corpus.json",
+      "matched": true,
+      "sha256": "10bca454ed0893a67d0af903d88da6a884bb5506920846a483a812f48cedd926"
+    },
+    {
+      "name": "Assets/EmbeddingGemmaTextSearch/EmbeddingGemma.TextSearch.Sample.asmdef",
+      "matched": true,
+      "sha256": "f5c349313be84166147c076da36c041ad61388c7f33e16e39f3c1cb8fd1aedb8"
+    }
+  ],
+  "source_files_matched": 37,
+  "contracts": {
+    "execution_red": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T06:57:12.1890306Z",
+      "FailedCount": 12,
+      "FailedTests": [
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleExecutionTests.AuditFailureDoesNotBecomeAPassingSampleRun",
+          "Message": "System.ArgumentException : The actual value must be an IEnumerable\r\nParameter name: actual",
+          "File": "<f577cd9686154d6ab10efd7e65e64366>",
+          "Line": 0
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleExecutionTests.ContractRunChecksAllQueriesAndReleasesTheViewWithoutClaimingRealGpu",
+          "Message": "  Expected: True\r\n  But was:  False\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\PlayerSampleExecutionTests.cs",
+          "Line": 60
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleExecutionTests.LinkerPreservesOptionalSampleAndThePrivateWorkerOwnerFields",
+          "Message": "  Expected: not null\r\n  But was:  null\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\PlayerSampleExecutionTests.cs",
+          "Line": 99
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleExecutionTests.RequiredChecksCannotBeOmittedAndFailureStillReleasesOwners(\"preparation\")",
+          "Message": "System.ArgumentNullException : Value cannot be null.\r\nParameter name: value",
+          "File": "<761cf2a144514d2291a678c334d49e9b>",
+          "Line": 0
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleExecutionTests.RequiredChecksCannotBeOmittedAndFailureStillReleasesOwners(\"backend\")",
+          "Message": "System.ArgumentNullException : Value cannot be null.\r\nParameter name: value",
+          "File": "<761cf2a144514d2291a678c334d49e9b>",
+          "Line": 0
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleExecutionTests.RequiredChecksCannotBeOmittedAndFailureStillReleasesOwners(\"ranking\")",
+          "Message": "System.ArgumentNullException : Value cannot be null.\r\nParameter name: value",
+          "File": "<761cf2a144514d2291a678c334d49e9b>",
+          "Line": 0
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleExecutionTests.RequiredChecksCannotBeOmittedAndFailureStillReleasesOwners(\"blank\")",
+          "Message": "System.ArgumentNullException : Value cannot be null.\r\nParameter name: value",
+          "File": "<761cf2a144514d2291a678c334d49e9b>",
+          "Line": 0
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleExecutionTests.RequiredChecksCannotBeOmittedAndFailureStillReleasesOwners(\"release\")",
+          "Message": "System.ArgumentNullException : Value cannot be null.\r\nParameter name: value",
+          "File": "<761cf2a144514d2291a678c334d49e9b>",
+          "Line": 0
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleExecutionTests.RequiredChecksCannotBeOmittedAndFailureStillReleasesOwners(\"font\")",
+          "Message": "System.ArgumentNullException : Value cannot be null.\r\nParameter name: value",
+          "File": "<761cf2a144514d2291a678c334d49e9b>",
+          "Line": 0
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleExecutionTests.SampleReceiptIncludesTheActualSceneCorpusAndLinkerHashes",
+          "Message": "  Assets/EmbeddingGemmaTextSearch/TextSearch.unity\r\n  Expected: String\r\n  But was:  null\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\PlayerSampleExecutionTests.cs",
+          "Line": 110
+        }
+      ],
+      "HasFailures": true,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Failed first 10 of 12 failures listed; see XmlPath for full results.",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 0,
+      "SkippedCount": 0,
+      "Status": "Failed",
+      "Success": false,
+      "TestCount": 12,
+      "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\.uloop\\outputs\\TestResults\\20261010_065712_1915479_fb9fedd1f98947fdacc5e19348b94c50.xml"
+    },
+    "first_green": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T06:54:11.7117492Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 12,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 12,
+      "XmlPath": null
+    },
+    "gui_readiness_red": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T07:11:00.7160526Z",
+      "FailedCount": 1,
+      "FailedTests": [
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleExecutionTests.GuiMayBecomeReadyOnALaterFrameWithoutRepeatingPreparation",
+          "Message": "  Expected: True\r\n  But was:  False\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\PlayerSampleExecutionTests.cs",
+          "Line": 81
+        }
+      ],
+      "HasFailures": true,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Failed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 1,
+      "SkippedCount": 0,
+      "Status": "Failed",
+      "Success": false,
+      "TestCount": 2,
+      "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\.uloop\\outputs\\TestResults\\20261010_071100_7190600_09c9544f75f84bbf9df4e884c3b675b9.xml"
+    },
+    "preflight_red": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T07:19:56.6799256Z",
+      "FailedCount": 1,
+      "FailedTests": [
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleExecutionTests.MissingGuiFailsBeforeAnyModelPreparation",
+          "Message": "  Expected: 0\r\n  But was:  1\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\PlayerSampleExecutionTests.cs",
+          "Line": 87
+        }
+      ],
+      "HasFailures": true,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Failed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 0,
+      "SkippedCount": 0,
+      "Status": "Failed",
+      "Success": false,
+      "TestCount": 1,
+      "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\.uloop\\outputs\\TestResults\\20261010_071956_6824370_c5359c5f0b854b8691de74ae1ab84378.xml"
+    },
+    "bootstrap_red": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T07:00:25.5466785Z",
+      "FailedCount": 2,
+      "FailedTests": [
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleExecutionTests.OnlyTheOptInPlayerMarkerStartsTheRunner(False,True,True)",
+          "Message": "  Expected: True\r\n  But was:  False\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\PlayerSampleExecutionTests.cs",
+          "Line": 109
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleExecutionTests.RequiredChecksCannotBeOmittedAndFailureStillReleasesOwners(\"missing\")",
+          "Message": "  Expected: False\r\n  But was:  True\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\PlayerSampleExecutionTests.cs",
+          "Line": 73
+        }
+      ],
+      "HasFailures": true,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Failed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 3,
+      "SkippedCount": 0,
+      "Status": "Failed",
+      "Success": false,
+      "TestCount": 5,
+      "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\.uloop\\outputs\\TestResults\\20261010_070025_5507176_cbb44e65f19e4b089b80bad09a4c5d64.xml"
+    },
+    "first_red": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T06:48:01.8631333Z",
+      "FailedCount": 11,
+      "FailedTests": [
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleValidationTests.IncorrectOrNonfiniteRankingCannotPass(\"count\")",
+          "Message": "  Expected: <System.ArgumentException>\r\n  But was:  null\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\PlayerSampleValidationTests.cs",
+          "Line": 34
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleValidationTests.IncorrectOrNonfiniteRankingCannotPass(\"order\")",
+          "Message": "  Expected: <System.ArgumentException>\r\n  But was:  null\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\PlayerSampleValidationTests.cs",
+          "Line": 34
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleValidationTests.IncorrectOrNonfiniteRankingCannotPass(\"score\")",
+          "Message": "  Expected: <System.ArgumentException>\r\n  But was:  null\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\PlayerSampleValidationTests.cs",
+          "Line": 34
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleValidationTests.IncorrectOrNonfiniteRankingCannotPass(\"nan\")",
+          "Message": "  Expected: <System.ArgumentException>\r\n  But was:  null\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\PlayerSampleValidationTests.cs",
+          "Line": 34
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleValidationTests.IncorrectOrNonfiniteRankingCannotPass(\"infinity\")",
+          "Message": "  Expected: <System.ArgumentException>\r\n  But was:  null\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\PlayerSampleValidationTests.cs",
+          "Line": 34
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleValidationTests.IncorrectOrNonfiniteRankingCannotPass(\"duplicate\")",
+          "Message": "  Expected: <System.ArgumentException>\r\n  But was:  null\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\PlayerSampleValidationTests.cs",
+          "Line": 34
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleValidationTests.InvalidReferenceCannotAuthorizeAResult",
+          "Message": "  Expected: <System.ArgumentException>\r\n  But was:  null\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\PlayerSampleValidationTests.cs",
+          "Line": 36
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleValidationTests.ProxyDrivesRealSampleSearchGuardAndReleaseWithoutCallingFakeGpuReal",
+          "Message": "  Expected: True\r\n  But was:  False\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\PlayerSampleValidationTests.cs",
+          "Line": 83
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleValidationTests.SampleBuildMarkerIsIsolatedAndSettingsAreRestored(False)",
+          "Message": "  Expected and actual are both <System.String[1]>\r\n  Values differ at index [0]\r\n  Expected string length 48 but was 44. Strings differ at index 7.\r\n  Expected: \"Assets/EmbeddingGemmaTextSearch/TextSearch.unity\"\r\n  But was:  \"Assets/Validation/Generated/Validation.unity\"\r\n  ------------------^\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\PlayerSampleValidationTests.cs",
+          "Line": 52
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.PlayerSampleValidationTests.SampleBuildMarkerIsIsolatedAndSettingsAreRestored(True)",
+          "Message": "  Expected: <System.InvalidOperationException>\r\n  But was:  <NUnit.Framework.AssertionException:   Expected and actual are both <System.String[1]>\r\n  Values differ at index [0]\r\n  Expected string length 48 but was 44. Strings differ at index 7.\r\n  Expected: \"Assets/EmbeddingGemmaTextSearch/TextSearch.unity\"\r\n  But was:  \"Assets/Validation/Generated/Validation.unity\"\r\n  ------------------^\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression) [0x00000] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.PlayerSampleValidationTests+<>c__DisplayClass10_0.<SampleBuildMarkerIsIsolatedAndSettingsAreRestored>b__1 (UnityEditor.BuildPlayerOptions options) [0x00001] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\PlayerSampleValidationTests.cs:52 \r\n  at EmbeddingGemma.Validation.Editor.ValidationPlayerBuild.BuildTargetPlayer (UnityEditor.BuildPlayerOptions options, System.String codeCommit, UnityEditor.Build.NamedBuildTarget target, System.Action`1[T] execute, System.Boolean releaseIl2Cpp, System.Action configure, System.Action restore, System.Func`1[TResult] details) [0x003fc] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Editor\\ValidationPlayerBuild.cs:89 \r\n  at EmbeddingGemma.Validation.Editor.ValidationPlayerBuild.BuildWindows (System.String output, System.String codeCommit, System.Action`1[T] execute, System.Boolean releaseIl2Cpp) [0x00000] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Editor\\ValidationPlayerBuild.cs:33 \r\n  at EmbeddingGemma.Validation.Editor.ValidationPlayerBuild.BuildWindowsSample (System.String output, System.String codeCommit, System.Action`1[T] execute) [0x00000] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Editor\\ValidationPlayerBuild.Sample.cs:13 \r\n  at EmbeddingGemma.Validation.Tests.PlayerSampleValidationTests+<>c__DisplayClass10_0.<SampleBuildMarkerIsIsolatedAndSettingsAreRestored>b__2 () [0x00000] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\PlayerSampleValidationTests.cs:59 \r\n  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x0002f] in <f577cd9686154d6ab10efd7e65e64366>:0 >\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\PlayerSampleValidationTests.cs",
+          "Line": 59
+        }
+      ],
+      "HasFailures": true,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Failed first 10 of 11 failures listed; see XmlPath for full results.",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 1,
+      "SkippedCount": 0,
+      "Status": "Failed",
+      "Success": false,
+      "TestCount": 12,
+      "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\.uloop\\outputs\\TestResults\\20261010_064801_8661493_9dfb5e187bdb43cc8c3f614710e56727.xml"
+    },
+    "final": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T07:21:27.0340003Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 32,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 32,
+      "XmlPath": null
+    },
+    "initial_all": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T07:01:40.8076221Z",
+      "FailedCount": 2,
+      "FailedTests": [
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.ValidationAndroidBuildTests.BuildRecordsAndroidProvenanceAndRestoresTheSceneAndSettings(False)",
+          "Message": "  Run these integration contracts after the explicit Android target switch.\r\n  Expected: Android\r\n  But was:  StandaloneWindows64\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\ValidationAndroidBuildTests.cs",
+          "Line": 116
+        },
+        {
+          "FullName": "EmbeddingGemma.Validation.Tests.ValidationAndroidBuildTests.BuildRecordsAndroidProvenanceAndRestoresTheSceneAndSettings(True)",
+          "Message": "  Run these integration contracts after the explicit Android target switch.\r\n  Expected: Android\r\n  But was:  StandaloneWindows64\r\n",
+          "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\Validation\\Tests\\Editor\\ValidationAndroidBuildTests.cs",
+          "Line": 116
+        }
+      ],
+      "HasFailures": true,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Failed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 139,
+      "SkippedCount": 0,
+      "Status": "Failed",
+      "Success": false,
+      "TestCount": 141,
+      "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\.uloop\\outputs\\TestResults\\20261010_070140_8101379_c60eaabeaf7d42eb9cccb2fb8b8d00ea.xml"
+    }
+  },
+  "builds": [
+    {
+      "success": true,
+      "injected_build": false,
+      "source_commit": "239992584b93142d7563be0156e95f7e1ffe962b",
+      "started_utc": "2026-10-10T07:03:13.04519Z",
+      "build_options": "None",
+      "il2cpp_compiler": "Release",
+      "target_settings": {
+        "validation_kind": "sample",
+        "sample_scene": "Assets/EmbeddingGemmaTextSearch/TextSearch.unity"
+      },
+      "build_info": {
+        "codeCommit": "239992584b93142d7563be0156e95f7e1ffe962b",
+        "unityVersion": "6000.3.16f1",
+        "sentisVersion": "2.6.1",
+        "target": "StandaloneWindows64",
+        "scriptingBackend": "IL2CPP",
+        "stripping": "High",
+        "sourceSha256": {
+          "Assets/Validation/Runtime/PlayerBundleCache.cs": "8e17ce94c049d97d700363cd1446f8348aeaf2f2e0dbcc34c2c84fc349960fc9",
+          "Assets/Validation/Runtime/PlayerBundleLoader.cs": "61f27369c26d75b50e27136b8464cd4a5ea472773dd045b82694fa77aca44921",
+          "Assets/Validation/Runtime/PlayerBundleStager.cs": "b2041d88674d20ae62e272bbaffbee0e24e3d66c8d9e1ad9e110680e590f2940",
+          "Assets/Validation/Runtime/PlayerFileHash.cs": "ecf0d009a00fad2c2234f9bbe7e292ac27e05c279fe96978aae9c748af75cd91",
+          "Assets/Validation/Runtime/PlayerRunProtocol.cs": "99f474b98eaf7053d47b6ec42402779ebd54115ecfa718c8ef227ed66fbc864b",
+          "Assets/Validation/Runtime/PlayerSampleExecution.cs": "9441c909cf18c5dd94939a873bf92e2918a16f15a393b63009ee165095caef9d",
+          "Assets/Validation/Runtime/PlayerSampleRunner.cs": "5179deba360e9cb59af0c9a91fd2c3b8d1dfeef2ed3715b5358e80086a301446",
+          "Assets/Validation/Runtime/PlayerSampleView.cs": "9b93bb8aa89cf527a8b095859e8df9bc94e9c6f79f012899c5397374250214ca",
+          "Assets/Validation/Runtime/PlayerValidation.cs": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+          "Assets/Validation/Runtime/PlayerValidationExecution.cs": "f219eca5073a12241d90c736d6d1339875792323585a369efade8956830fb7a1",
+          "Assets/Validation/Runtime/PlayerValidationRunner.cs": "8b9e4ee9e1407569f24dae5be70eddf6410a97371af1bc27ab7b1085047a1a4b",
+          "Assets/Validation/Runtime/link.xml": "8d1d42432c97f128d4c87978f3c7b1a4b2a4de47097ea15c3d89edff75023dcd",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs": "85cb087541827169efe40ddec5074f6cc8b6a1dd995531a250ce5c4bbc66ec1e",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextModelFile.cs": "c4fb628f5ea5e4daacac88f9d4f09266f44e3133a0baf2236438c611917ede28",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextPrompts.cs": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchIndex.cs": "8a17c7ac6e995e6ceb36d9cead732f3ace63f418ab6e860e7f71fdd7a9ea43d0",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchSession.cs": "e4a85fd2378a18b48dd022f82a6fdb4eb73ef9dd980f539c75e2ef5768f1f9f7",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextTokenizer.cs": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763",
+          "Assets/EmbeddingGemmaTextSearch/AssemblyInfo.cs": "ec0d59ffd41af917084a28ce8734622beb475c42e5853af979a848edc0d32afa",
+          "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchFileHash.cs": "a45422ba0538553ef844cd5cfd943727b0b3f1512affcd6014b51b6eb93208aa",
+          "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchModelPreparation.cs": "b06fefa3a797f9f964c2457b2cc556f9d07d5afeaa29233b355f4f72f0b5b152",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchEditorFontLifetimeTests.cs": "57d3f74ae505abd31e82aab059abf062a24b02ec80bc74eee553524b16c08acc",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchFileHashTests.cs": "dc71a8475146d152c8003199ef7fe18850dfc940d5ddf68c88b5b23f70dfda1d",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchGuiStylesTests.cs": "2883b875453830eb35ead546e7f86cf86bc02299e59d7c9b6efc2518fd12a85e",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelCacheTests.cs": "ac239d80db0f4aac2fa1e1929c9042b8002c1ecb59cced2d09417506ba0655c3",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelPreparationTests.cs": "f13b612e1fd9d751b9bddcfe1a7b15131e023aac064954bf89aaf35636091f22",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchSampleTests.cs": "737a4c9ae8e2dae83c3e18f1ba80006cbcb16e31a410bf4195a028091a3d3ef2",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchStreamHashTests.cs": "694071d34b1b7d335706a348bc18c242f570163bf6c8263d093a5837b2655a56",
+          "Assets/EmbeddingGemmaTextSearch/Tests/PlayMode/TextSearchLifecycleTests.cs": "258eb784fbcf627116119eb628cf1b4f8a2a75213f64bcfe4d21674cebe6fa21",
+          "Assets/EmbeddingGemmaTextSearch/TextSearchGuiFont.cs": "355373a0db2dc75066f758c08f1507042107cb9ed8dc81463f8b5a8cff0135a5",
+          "Assets/EmbeddingGemmaTextSearch/TextSearchGuiStyles.cs": "586356b3c0760a158355e17e7a6d159dfbbb0e69abb0d3cda911d63046a82c53",
+          "Assets/EmbeddingGemmaTextSearch/TextSearchModelCache.cs": "0c0b2d86cb0470a6e8a1b60cc4354520addc31953765ba3fe12cf46867b974a6",
+          "Assets/EmbeddingGemmaTextSearch/TextSearchSample.cs": "ebdb65c3468b1b8e7d3fce54fa4b602c3ce549d8f2a9c4fa59be6031f1133683",
+          "Assets/EmbeddingGemmaTextSearch/TextSearchStreamHash.cs": "dcf552f22fbd449938f98fe564128ba270875791532374b44611a686120ea279",
+          "Assets/EmbeddingGemmaTextSearch/TextSearch.unity": "04c3e5d8bba0199accc793637576429e0002c66786d7ce909a34abaac104cd74",
+          "Assets/EmbeddingGemmaTextSearch/Resources/EmbeddingGemmaTextSearch/corpus.json": "10bca454ed0893a67d0af903d88da6a884bb5506920846a483a812f48cedd926",
+          "Assets/EmbeddingGemmaTextSearch/EmbeddingGemma.TextSearch.Sample.asmdef": "f5c349313be84166147c076da36c041ad61388c7f33e16e39f3c1cb8fd1aedb8"
+        }
+      },
+      "build_result": "Succeeded",
+      "build_seconds": 231.82966829999998,
+      "build_bytes": 604349729,
+      "errors": 0,
+      "warnings": 485,
+      "completed_utc": "2026-10-10T07:07:05.4633423Z"
+    },
+    {
+      "success": true,
+      "injected_build": false,
+      "source_commit": "904879d9cfa304d8fcc4210d45f52c45083facbc",
+      "started_utc": "2026-10-10T07:13:22.6529705Z",
+      "build_options": "None",
+      "il2cpp_compiler": "Release",
+      "target_settings": {
+        "validation_kind": "sample",
+        "sample_scene": "Assets/EmbeddingGemmaTextSearch/TextSearch.unity"
+      },
+      "build_info": {
+        "codeCommit": "904879d9cfa304d8fcc4210d45f52c45083facbc",
+        "unityVersion": "6000.3.16f1",
+        "sentisVersion": "2.6.1",
+        "target": "StandaloneWindows64",
+        "scriptingBackend": "IL2CPP",
+        "stripping": "High",
+        "sourceSha256": {
+          "Assets/Validation/Runtime/PlayerBundleCache.cs": "8e17ce94c049d97d700363cd1446f8348aeaf2f2e0dbcc34c2c84fc349960fc9",
+          "Assets/Validation/Runtime/PlayerBundleLoader.cs": "61f27369c26d75b50e27136b8464cd4a5ea472773dd045b82694fa77aca44921",
+          "Assets/Validation/Runtime/PlayerBundleStager.cs": "b2041d88674d20ae62e272bbaffbee0e24e3d66c8d9e1ad9e110680e590f2940",
+          "Assets/Validation/Runtime/PlayerFileHash.cs": "ecf0d009a00fad2c2234f9bbe7e292ac27e05c279fe96978aae9c748af75cd91",
+          "Assets/Validation/Runtime/PlayerRunProtocol.cs": "99f474b98eaf7053d47b6ec42402779ebd54115ecfa718c8ef227ed66fbc864b",
+          "Assets/Validation/Runtime/PlayerSampleExecution.cs": "8b6d4d7afc17789a4c181d540f704993637dcd1cb2b62d18e90765f67c2f8258",
+          "Assets/Validation/Runtime/PlayerSampleRunner.cs": "ce4d97887e13ab4a613ee501d72eef56652b0959b589ee0829e753e8d37f741e",
+          "Assets/Validation/Runtime/PlayerSampleView.cs": "cfde6c9625dde7fb514ae2e2dce80d9f7b427214dd11c8c6fdc830cec4fd1ddc",
+          "Assets/Validation/Runtime/PlayerValidation.cs": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+          "Assets/Validation/Runtime/PlayerValidationExecution.cs": "f219eca5073a12241d90c736d6d1339875792323585a369efade8956830fb7a1",
+          "Assets/Validation/Runtime/PlayerValidationRunner.cs": "8b9e4ee9e1407569f24dae5be70eddf6410a97371af1bc27ab7b1085047a1a4b",
+          "Assets/Validation/Runtime/link.xml": "8d1d42432c97f128d4c87978f3c7b1a4b2a4de47097ea15c3d89edff75023dcd",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs": "85cb087541827169efe40ddec5074f6cc8b6a1dd995531a250ce5c4bbc66ec1e",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextModelFile.cs": "c4fb628f5ea5e4daacac88f9d4f09266f44e3133a0baf2236438c611917ede28",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextPrompts.cs": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchIndex.cs": "8a17c7ac6e995e6ceb36d9cead732f3ace63f418ab6e860e7f71fdd7a9ea43d0",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchSession.cs": "e4a85fd2378a18b48dd022f82a6fdb4eb73ef9dd980f539c75e2ef5768f1f9f7",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextTokenizer.cs": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763",
+          "Assets/EmbeddingGemmaTextSearch/AssemblyInfo.cs": "ec0d59ffd41af917084a28ce8734622beb475c42e5853af979a848edc0d32afa",
+          "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchFileHash.cs": "a45422ba0538553ef844cd5cfd943727b0b3f1512affcd6014b51b6eb93208aa",
+          "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchModelPreparation.cs": "b06fefa3a797f9f964c2457b2cc556f9d07d5afeaa29233b355f4f72f0b5b152",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchEditorFontLifetimeTests.cs": "57d3f74ae505abd31e82aab059abf062a24b02ec80bc74eee553524b16c08acc",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchFileHashTests.cs": "dc71a8475146d152c8003199ef7fe18850dfc940d5ddf68c88b5b23f70dfda1d",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchGuiStylesTests.cs": "2883b875453830eb35ead546e7f86cf86bc02299e59d7c9b6efc2518fd12a85e",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelCacheTests.cs": "ac239d80db0f4aac2fa1e1929c9042b8002c1ecb59cced2d09417506ba0655c3",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelPreparationTests.cs": "f13b612e1fd9d751b9bddcfe1a7b15131e023aac064954bf89aaf35636091f22",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchSampleTests.cs": "737a4c9ae8e2dae83c3e18f1ba80006cbcb16e31a410bf4195a028091a3d3ef2",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchStreamHashTests.cs": "694071d34b1b7d335706a348bc18c242f570163bf6c8263d093a5837b2655a56",
+          "Assets/EmbeddingGemmaTextSearch/Tests/PlayMode/TextSearchLifecycleTests.cs": "258eb784fbcf627116119eb628cf1b4f8a2a75213f64bcfe4d21674cebe6fa21",
+          "Assets/EmbeddingGemmaTextSearch/TextSearchGuiFont.cs": "355373a0db2dc75066f758c08f1507042107cb9ed8dc81463f8b5a8cff0135a5",
+          "Assets/EmbeddingGemmaTextSearch/TextSearchGuiStyles.cs": "586356b3c0760a158355e17e7a6d159dfbbb0e69abb0d3cda911d63046a82c53",
+          "Assets/EmbeddingGemmaTextSearch/TextSearchModelCache.cs": "0c0b2d86cb0470a6e8a1b60cc4354520addc31953765ba3fe12cf46867b974a6",
+          "Assets/EmbeddingGemmaTextSearch/TextSearchSample.cs": "ebdb65c3468b1b8e7d3fce54fa4b602c3ce549d8f2a9c4fa59be6031f1133683",
+          "Assets/EmbeddingGemmaTextSearch/TextSearchStreamHash.cs": "dcf552f22fbd449938f98fe564128ba270875791532374b44611a686120ea279",
+          "Assets/EmbeddingGemmaTextSearch/TextSearch.unity": "04c3e5d8bba0199accc793637576429e0002c66786d7ce909a34abaac104cd74",
+          "Assets/EmbeddingGemmaTextSearch/Resources/EmbeddingGemmaTextSearch/corpus.json": "10bca454ed0893a67d0af903d88da6a884bb5506920846a483a812f48cedd926",
+          "Assets/EmbeddingGemmaTextSearch/EmbeddingGemma.TextSearch.Sample.asmdef": "f5c349313be84166147c076da36c041ad61388c7f33e16e39f3c1cb8fd1aedb8"
+        }
+      },
+      "build_result": "Succeeded",
+      "build_seconds": 41.7631033,
+      "build_bytes": 606437629,
+      "errors": 0,
+      "warnings": 485,
+      "completed_utc": "2026-10-10T07:14:05.0004646Z"
+    },
+    {
+      "success": true,
+      "injected_build": false,
+      "source_commit": "747f986c159d6ba78490c2b207e98c1ceb86af02",
+      "started_utc": "2026-10-10T07:22:38.1275042Z",
+      "build_options": "None",
+      "il2cpp_compiler": "Release",
+      "target_settings": {
+        "validation_kind": "sample",
+        "sample_scene": "Assets/EmbeddingGemmaTextSearch/TextSearch.unity"
+      },
+      "build_info": {
+        "codeCommit": "747f986c159d6ba78490c2b207e98c1ceb86af02",
+        "unityVersion": "6000.3.16f1",
+        "sentisVersion": "2.6.1",
+        "target": "StandaloneWindows64",
+        "scriptingBackend": "IL2CPP",
+        "stripping": "High",
+        "sourceSha256": {
+          "Assets/Validation/Runtime/PlayerBundleCache.cs": "8e17ce94c049d97d700363cd1446f8348aeaf2f2e0dbcc34c2c84fc349960fc9",
+          "Assets/Validation/Runtime/PlayerBundleLoader.cs": "61f27369c26d75b50e27136b8464cd4a5ea472773dd045b82694fa77aca44921",
+          "Assets/Validation/Runtime/PlayerBundleStager.cs": "b2041d88674d20ae62e272bbaffbee0e24e3d66c8d9e1ad9e110680e590f2940",
+          "Assets/Validation/Runtime/PlayerFileHash.cs": "ecf0d009a00fad2c2234f9bbe7e292ac27e05c279fe96978aae9c748af75cd91",
+          "Assets/Validation/Runtime/PlayerRunProtocol.cs": "99f474b98eaf7053d47b6ec42402779ebd54115ecfa718c8ef227ed66fbc864b",
+          "Assets/Validation/Runtime/PlayerSampleExecution.cs": "8fa69eeb24918b4b3f5113159c84b5fdf2061a4c8021091c8b9ec5bab494b0cd",
+          "Assets/Validation/Runtime/PlayerSampleRunner.cs": "ce4d97887e13ab4a613ee501d72eef56652b0959b589ee0829e753e8d37f741e",
+          "Assets/Validation/Runtime/PlayerSampleView.cs": "46c0492fe6ebd2fd0764050cb21a4d4343c5d20ead47f6c2dec09831b7ea25da",
+          "Assets/Validation/Runtime/PlayerValidation.cs": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+          "Assets/Validation/Runtime/PlayerValidationExecution.cs": "f219eca5073a12241d90c736d6d1339875792323585a369efade8956830fb7a1",
+          "Assets/Validation/Runtime/PlayerValidationRunner.cs": "8b9e4ee9e1407569f24dae5be70eddf6410a97371af1bc27ab7b1085047a1a4b",
+          "Assets/Validation/Runtime/link.xml": "8d1d42432c97f128d4c87978f3c7b1a4b2a4de47097ea15c3d89edff75023dcd",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs": "85cb087541827169efe40ddec5074f6cc8b6a1dd995531a250ce5c4bbc66ec1e",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextModelFile.cs": "c4fb628f5ea5e4daacac88f9d4f09266f44e3133a0baf2236438c611917ede28",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextPrompts.cs": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchIndex.cs": "8a17c7ac6e995e6ceb36d9cead732f3ace63f418ab6e860e7f71fdd7a9ea43d0",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchSession.cs": "e4a85fd2378a18b48dd022f82a6fdb4eb73ef9dd980f539c75e2ef5768f1f9f7",
+          "Packages/com.ayutaz.embeddinggemma/Runtime/TextTokenizer.cs": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763",
+          "Assets/EmbeddingGemmaTextSearch/AssemblyInfo.cs": "ec0d59ffd41af917084a28ce8734622beb475c42e5853af979a848edc0d32afa",
+          "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchFileHash.cs": "a45422ba0538553ef844cd5cfd943727b0b3f1512affcd6014b51b6eb93208aa",
+          "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchModelPreparation.cs": "b06fefa3a797f9f964c2457b2cc556f9d07d5afeaa29233b355f4f72f0b5b152",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchEditorFontLifetimeTests.cs": "57d3f74ae505abd31e82aab059abf062a24b02ec80bc74eee553524b16c08acc",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchFileHashTests.cs": "dc71a8475146d152c8003199ef7fe18850dfc940d5ddf68c88b5b23f70dfda1d",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchGuiStylesTests.cs": "2883b875453830eb35ead546e7f86cf86bc02299e59d7c9b6efc2518fd12a85e",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelCacheTests.cs": "ac239d80db0f4aac2fa1e1929c9042b8002c1ecb59cced2d09417506ba0655c3",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelPreparationTests.cs": "f13b612e1fd9d751b9bddcfe1a7b15131e023aac064954bf89aaf35636091f22",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchSampleTests.cs": "737a4c9ae8e2dae83c3e18f1ba80006cbcb16e31a410bf4195a028091a3d3ef2",
+          "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchStreamHashTests.cs": "694071d34b1b7d335706a348bc18c242f570163bf6c8263d093a5837b2655a56",
+          "Assets/EmbeddingGemmaTextSearch/Tests/PlayMode/TextSearchLifecycleTests.cs": "258eb784fbcf627116119eb628cf1b4f8a2a75213f64bcfe4d21674cebe6fa21",
+          "Assets/EmbeddingGemmaTextSearch/TextSearchGuiFont.cs": "355373a0db2dc75066f758c08f1507042107cb9ed8dc81463f8b5a8cff0135a5",
+          "Assets/EmbeddingGemmaTextSearch/TextSearchGuiStyles.cs": "586356b3c0760a158355e17e7a6d159dfbbb0e69abb0d3cda911d63046a82c53",
+          "Assets/EmbeddingGemmaTextSearch/TextSearchModelCache.cs": "0c0b2d86cb0470a6e8a1b60cc4354520addc31953765ba3fe12cf46867b974a6",
+          "Assets/EmbeddingGemmaTextSearch/TextSearchSample.cs": "ebdb65c3468b1b8e7d3fce54fa4b602c3ce549d8f2a9c4fa59be6031f1133683",
+          "Assets/EmbeddingGemmaTextSearch/TextSearchStreamHash.cs": "dcf552f22fbd449938f98fe564128ba270875791532374b44611a686120ea279",
+          "Assets/EmbeddingGemmaTextSearch/TextSearch.unity": "04c3e5d8bba0199accc793637576429e0002c66786d7ce909a34abaac104cd74",
+          "Assets/EmbeddingGemmaTextSearch/Resources/EmbeddingGemmaTextSearch/corpus.json": "10bca454ed0893a67d0af903d88da6a884bb5506920846a483a812f48cedd926",
+          "Assets/EmbeddingGemmaTextSearch/EmbeddingGemma.TextSearch.Sample.asmdef": "f5c349313be84166147c076da36c041ad61388c7f33e16e39f3c1cb8fd1aedb8"
+        }
+      },
+      "build_result": "Succeeded",
+      "build_seconds": 52.456658,
+      "build_bytes": 606722261,
+      "errors": 0,
+      "warnings": 485,
+      "completed_utc": "2026-10-10T07:23:31.1863176Z"
+    }
+  ],
+  "runs": [
+    {
+      "process": {
+        "pid": 68628,
+        "runId": "56d365e6c7e04d05b56e6781a0ce5fd4",
+        "startedUtc": "2026-10-10T07:07:29.3278206Z",
+        "output": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\player-results\\sample-2399925-20261010\\cold.json",
+        "exitCode": -1073741819,
+        "completedUtc": "2026-10-10T07:08:12.129815Z",
+        "seconds": 42.7991685
+      },
+      "source": "239992584b93142d7563be0156e95f7e1ffe962b",
+      "report": {
+        "schema_version": 1,
+        "success": false,
+        "gpu_verified": false,
+        "validation_mode": "real_model",
+        "scope": "Imported TextSearch sample, Float16 weights, GPUCompute, fixed six documents and four queries. Programmatic sample API; no native keyboard or mouse validation.",
+        "run_id": "56d365e6c7e04d05b56e6781a0ce5fd4",
+        "started_utc": "2026-10-10T07:07:40.3696621Z",
+        "phase": "failed",
+        "is_editor": false,
+        "unity": "6000.3.16f1",
+        "os": "Windows 11  (10.0.22631)",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphics_api": "Direct3D12",
+        "build": {
+          "codeCommit": "239992584b93142d7563be0156e95f7e1ffe962b",
+          "unityVersion": "6000.3.16f1",
+          "sentisVersion": "2.6.1",
+          "target": "StandaloneWindows64",
+          "scriptingBackend": "IL2CPP",
+          "stripping": "High",
+          "sourceSha256": {
+            "Assets/Validation/Runtime/PlayerBundleCache.cs": "8e17ce94c049d97d700363cd1446f8348aeaf2f2e0dbcc34c2c84fc349960fc9",
+            "Assets/Validation/Runtime/PlayerBundleLoader.cs": "61f27369c26d75b50e27136b8464cd4a5ea472773dd045b82694fa77aca44921",
+            "Assets/Validation/Runtime/PlayerBundleStager.cs": "b2041d88674d20ae62e272bbaffbee0e24e3d66c8d9e1ad9e110680e590f2940",
+            "Assets/Validation/Runtime/PlayerFileHash.cs": "ecf0d009a00fad2c2234f9bbe7e292ac27e05c279fe96978aae9c748af75cd91",
+            "Assets/Validation/Runtime/PlayerRunProtocol.cs": "99f474b98eaf7053d47b6ec42402779ebd54115ecfa718c8ef227ed66fbc864b",
+            "Assets/Validation/Runtime/PlayerSampleExecution.cs": "9441c909cf18c5dd94939a873bf92e2918a16f15a393b63009ee165095caef9d",
+            "Assets/Validation/Runtime/PlayerSampleRunner.cs": "5179deba360e9cb59af0c9a91fd2c3b8d1dfeef2ed3715b5358e80086a301446",
+            "Assets/Validation/Runtime/PlayerSampleView.cs": "9b93bb8aa89cf527a8b095859e8df9bc94e9c6f79f012899c5397374250214ca",
+            "Assets/Validation/Runtime/PlayerValidation.cs": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+            "Assets/Validation/Runtime/PlayerValidationExecution.cs": "f219eca5073a12241d90c736d6d1339875792323585a369efade8956830fb7a1",
+            "Assets/Validation/Runtime/PlayerValidationRunner.cs": "8b9e4ee9e1407569f24dae5be70eddf6410a97371af1bc27ab7b1085047a1a4b",
+            "Assets/Validation/Runtime/link.xml": "8d1d42432c97f128d4c87978f3c7b1a4b2a4de47097ea15c3d89edff75023dcd",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs": "85cb087541827169efe40ddec5074f6cc8b6a1dd995531a250ce5c4bbc66ec1e",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextModelFile.cs": "c4fb628f5ea5e4daacac88f9d4f09266f44e3133a0baf2236438c611917ede28",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextPrompts.cs": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchIndex.cs": "8a17c7ac6e995e6ceb36d9cead732f3ace63f418ab6e860e7f71fdd7a9ea43d0",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchSession.cs": "e4a85fd2378a18b48dd022f82a6fdb4eb73ef9dd980f539c75e2ef5768f1f9f7",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextTokenizer.cs": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763",
+            "Assets/EmbeddingGemmaTextSearch/AssemblyInfo.cs": "ec0d59ffd41af917084a28ce8734622beb475c42e5853af979a848edc0d32afa",
+            "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchFileHash.cs": "a45422ba0538553ef844cd5cfd943727b0b3f1512affcd6014b51b6eb93208aa",
+            "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchModelPreparation.cs": "b06fefa3a797f9f964c2457b2cc556f9d07d5afeaa29233b355f4f72f0b5b152",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchEditorFontLifetimeTests.cs": "57d3f74ae505abd31e82aab059abf062a24b02ec80bc74eee553524b16c08acc",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchFileHashTests.cs": "dc71a8475146d152c8003199ef7fe18850dfc940d5ddf68c88b5b23f70dfda1d",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchGuiStylesTests.cs": "2883b875453830eb35ead546e7f86cf86bc02299e59d7c9b6efc2518fd12a85e",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelCacheTests.cs": "ac239d80db0f4aac2fa1e1929c9042b8002c1ecb59cced2d09417506ba0655c3",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelPreparationTests.cs": "f13b612e1fd9d751b9bddcfe1a7b15131e023aac064954bf89aaf35636091f22",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchSampleTests.cs": "737a4c9ae8e2dae83c3e18f1ba80006cbcb16e31a410bf4195a028091a3d3ef2",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchStreamHashTests.cs": "694071d34b1b7d335706a348bc18c242f570163bf6c8263d093a5837b2655a56",
+            "Assets/EmbeddingGemmaTextSearch/Tests/PlayMode/TextSearchLifecycleTests.cs": "258eb784fbcf627116119eb628cf1b4f8a2a75213f64bcfe4d21674cebe6fa21",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchGuiFont.cs": "355373a0db2dc75066f758c08f1507042107cb9ed8dc81463f8b5a8cff0135a5",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchGuiStyles.cs": "586356b3c0760a158355e17e7a6d159dfbbb0e69abb0d3cda911d63046a82c53",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchModelCache.cs": "0c0b2d86cb0470a6e8a1b60cc4354520addc31953765ba3fe12cf46867b974a6",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchSample.cs": "ebdb65c3468b1b8e7d3fce54fa4b602c3ce549d8f2a9c4fa59be6031f1133683",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchStreamHash.cs": "dcf552f22fbd449938f98fe564128ba270875791532374b44611a686120ea279",
+            "Assets/EmbeddingGemmaTextSearch/TextSearch.unity": "04c3e5d8bba0199accc793637576429e0002c66786d7ce909a34abaac104cd74",
+            "Assets/EmbeddingGemmaTextSearch/Resources/EmbeddingGemmaTextSearch/corpus.json": "10bca454ed0893a67d0af903d88da6a884bb5506920846a483a812f48cedd926",
+            "Assets/EmbeddingGemmaTextSearch/EmbeddingGemma.TextSearch.Sample.asmdef": "f5c349313be84166147c076da36c041ad61388c7f33e16e39f3c1cb8fd1aedb8"
+          }
+        },
+        "queries": [],
+        "screenshots": [],
+        "console": [],
+        "worker_released": true,
+        "font_destroyed": false,
+        "bundle": {
+          "success": true,
+          "unity_executed": false,
+          "gpu_verified": false,
+          "files": [
+            {
+              "name": "model-fp32.sentis",
+              "bytes": 1095598044,
+              "sha256": "8488d70f2d636a34bfe2a64c1d7b9d3eb3fce70c4fb9e27d32b698090c8fb373"
+            },
+            {
+              "name": "model-float16.sentis",
+              "bytes": 553775500,
+              "sha256": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819"
+            },
+            {
+              "name": "tokenizer.json",
+              "bytes": 32170775,
+              "sha256": "25975a936201b81402a3b867d5c462cf10808bb96759f97fe9aefecbb11c49df"
+            },
+            {
+              "name": "reference.json",
+              "bytes": 408173,
+              "sha256": "deb9b3ed00e49c29b18c1a747307a318900d5e993fb3d9208f4d37e8a73cf2f6"
+            },
+            {
+              "name": "search-reference.json",
+              "bytes": 268000,
+              "sha256": "3530756b36316a812ac853f0722bed5479e92e6bb02ca6aa41c06660d32a71ec"
+            }
+          ],
+          "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+          "model_source": "2edb272f17a38c7af210474345c35f391fd6955c",
+          "search_source": "13f194266162d2a728b2b2a0da9e9e58ae314ff6",
+          "model_origin_sha256": "92968480724ef7838cbd7d7b7cfd6a8d6d5105bb937f8a9907e965805a7651c8",
+          "unity_preparation_version": "6000.3.16f1"
+        },
+        "hash_backends": {
+          "model-fp32.sentis": "windows_cng",
+          "model-float16.sentis": "windows_cng",
+          "tokenizer.json": "windows_cng",
+          "reference.json": "windows_cng",
+          "search-reference.json": "windows_cng"
+        },
+        "audit_milliseconds": 1384.5799000000002,
+        "preparation_milliseconds": 6439.9732,
+        "preparation_timing_scope": "File URL staging and full cache audit, model deserialization, Worker creation and six document embeddings together; one measurement.",
+        "actual_backend": "GPUCompute",
+        "cache": {
+          "Success": true,
+          "CacheReused": false,
+          "TransferredFiles": 3,
+          "Milliseconds": 945.2471,
+          "AuditMilliseconds": 449.87190000000004,
+          "HashBackends": {
+            "model-float16.sentis": "windows_cng",
+            "tokenizer.json": "windows_cng"
+          },
+          "CacheRejectedError": null
+        },
+        "error": "InvalidOperationException: The sample GUI native font is missing.\n",
+        "completed_utc": "2026-10-10T07:07:48.2050801Z"
+      },
+      "label": "cold",
+      "log_tail": [
+        "",
+        "UnloadTime: 0.635400 ms",
+        "EmbeddingGemma sample validation: C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\player-results\\sample-2399925-20261010\\cold.json",
+        "UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)",
+        "UnityEngine.Logger:Log(LogType, Object)",
+        "UnityEngine.Debug:Log(Object)",
+        "EmbeddingGemma.Validation.<Start>d__3:MoveNext()",
+        "UnityEngine.SetupCoroutine:InvokeMoveNext(IEnumerator, IntPtr)",
+        "",
+        "[Physics::Module] Cleanup current backend.",
+        "[Physics::Module] Id: 0xf2b8ea05",
+        "Input System module state changed to: ShutdownInProgress.",
+        "Input System polling thread exited.",
+        "Input System module state changed to: Shutdown."
+      ]
+    },
+    {
+      "process": {
+        "pid": 120308,
+        "runId": "8d54860d94ab418694903093bf1c96d3",
+        "startedUtc": "2026-10-10T07:14:25.021848Z",
+        "output": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\player-results\\sample-904879d-20261010\\cold.json",
+        "exitCode": -1073741819,
+        "windowStyle": "Hidden",
+        "completedUtc": "2026-10-10T07:14:48.9630113Z",
+        "seconds": 23.9384423
+      },
+      "source": "904879d9cfa304d8fcc4210d45f52c45083facbc",
+      "report": {
+        "schema_version": 1,
+        "success": false,
+        "gpu_verified": false,
+        "validation_mode": "real_model",
+        "scope": "Imported TextSearch sample, Float16 weights, GPUCompute, fixed six documents and four queries. Programmatic sample API; no native keyboard or mouse validation.",
+        "run_id": "8d54860d94ab418694903093bf1c96d3",
+        "started_utc": "2026-10-10T07:14:36.1435693Z",
+        "phase": "failed",
+        "is_editor": false,
+        "unity": "6000.3.16f1",
+        "os": "Windows 11  (10.0.22631)",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphics_api": "Direct3D12",
+        "build": {
+          "codeCommit": "904879d9cfa304d8fcc4210d45f52c45083facbc",
+          "unityVersion": "6000.3.16f1",
+          "sentisVersion": "2.6.1",
+          "target": "StandaloneWindows64",
+          "scriptingBackend": "IL2CPP",
+          "stripping": "High",
+          "sourceSha256": {
+            "Assets/Validation/Runtime/PlayerBundleCache.cs": "8e17ce94c049d97d700363cd1446f8348aeaf2f2e0dbcc34c2c84fc349960fc9",
+            "Assets/Validation/Runtime/PlayerBundleLoader.cs": "61f27369c26d75b50e27136b8464cd4a5ea472773dd045b82694fa77aca44921",
+            "Assets/Validation/Runtime/PlayerBundleStager.cs": "b2041d88674d20ae62e272bbaffbee0e24e3d66c8d9e1ad9e110680e590f2940",
+            "Assets/Validation/Runtime/PlayerFileHash.cs": "ecf0d009a00fad2c2234f9bbe7e292ac27e05c279fe96978aae9c748af75cd91",
+            "Assets/Validation/Runtime/PlayerRunProtocol.cs": "99f474b98eaf7053d47b6ec42402779ebd54115ecfa718c8ef227ed66fbc864b",
+            "Assets/Validation/Runtime/PlayerSampleExecution.cs": "8b6d4d7afc17789a4c181d540f704993637dcd1cb2b62d18e90765f67c2f8258",
+            "Assets/Validation/Runtime/PlayerSampleRunner.cs": "ce4d97887e13ab4a613ee501d72eef56652b0959b589ee0829e753e8d37f741e",
+            "Assets/Validation/Runtime/PlayerSampleView.cs": "cfde6c9625dde7fb514ae2e2dce80d9f7b427214dd11c8c6fdc830cec4fd1ddc",
+            "Assets/Validation/Runtime/PlayerValidation.cs": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+            "Assets/Validation/Runtime/PlayerValidationExecution.cs": "f219eca5073a12241d90c736d6d1339875792323585a369efade8956830fb7a1",
+            "Assets/Validation/Runtime/PlayerValidationRunner.cs": "8b9e4ee9e1407569f24dae5be70eddf6410a97371af1bc27ab7b1085047a1a4b",
+            "Assets/Validation/Runtime/link.xml": "8d1d42432c97f128d4c87978f3c7b1a4b2a4de47097ea15c3d89edff75023dcd",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs": "85cb087541827169efe40ddec5074f6cc8b6a1dd995531a250ce5c4bbc66ec1e",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextModelFile.cs": "c4fb628f5ea5e4daacac88f9d4f09266f44e3133a0baf2236438c611917ede28",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextPrompts.cs": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchIndex.cs": "8a17c7ac6e995e6ceb36d9cead732f3ace63f418ab6e860e7f71fdd7a9ea43d0",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchSession.cs": "e4a85fd2378a18b48dd022f82a6fdb4eb73ef9dd980f539c75e2ef5768f1f9f7",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextTokenizer.cs": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763",
+            "Assets/EmbeddingGemmaTextSearch/AssemblyInfo.cs": "ec0d59ffd41af917084a28ce8734622beb475c42e5853af979a848edc0d32afa",
+            "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchFileHash.cs": "a45422ba0538553ef844cd5cfd943727b0b3f1512affcd6014b51b6eb93208aa",
+            "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchModelPreparation.cs": "b06fefa3a797f9f964c2457b2cc556f9d07d5afeaa29233b355f4f72f0b5b152",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchEditorFontLifetimeTests.cs": "57d3f74ae505abd31e82aab059abf062a24b02ec80bc74eee553524b16c08acc",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchFileHashTests.cs": "dc71a8475146d152c8003199ef7fe18850dfc940d5ddf68c88b5b23f70dfda1d",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchGuiStylesTests.cs": "2883b875453830eb35ead546e7f86cf86bc02299e59d7c9b6efc2518fd12a85e",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelCacheTests.cs": "ac239d80db0f4aac2fa1e1929c9042b8002c1ecb59cced2d09417506ba0655c3",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelPreparationTests.cs": "f13b612e1fd9d751b9bddcfe1a7b15131e023aac064954bf89aaf35636091f22",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchSampleTests.cs": "737a4c9ae8e2dae83c3e18f1ba80006cbcb16e31a410bf4195a028091a3d3ef2",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchStreamHashTests.cs": "694071d34b1b7d335706a348bc18c242f570163bf6c8263d093a5837b2655a56",
+            "Assets/EmbeddingGemmaTextSearch/Tests/PlayMode/TextSearchLifecycleTests.cs": "258eb784fbcf627116119eb628cf1b4f8a2a75213f64bcfe4d21674cebe6fa21",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchGuiFont.cs": "355373a0db2dc75066f758c08f1507042107cb9ed8dc81463f8b5a8cff0135a5",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchGuiStyles.cs": "586356b3c0760a158355e17e7a6d159dfbbb0e69abb0d3cda911d63046a82c53",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchModelCache.cs": "0c0b2d86cb0470a6e8a1b60cc4354520addc31953765ba3fe12cf46867b974a6",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchSample.cs": "ebdb65c3468b1b8e7d3fce54fa4b602c3ce549d8f2a9c4fa59be6031f1133683",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchStreamHash.cs": "dcf552f22fbd449938f98fe564128ba270875791532374b44611a686120ea279",
+            "Assets/EmbeddingGemmaTextSearch/TextSearch.unity": "04c3e5d8bba0199accc793637576429e0002c66786d7ce909a34abaac104cd74",
+            "Assets/EmbeddingGemmaTextSearch/Resources/EmbeddingGemmaTextSearch/corpus.json": "10bca454ed0893a67d0af903d88da6a884bb5506920846a483a812f48cedd926",
+            "Assets/EmbeddingGemmaTextSearch/EmbeddingGemma.TextSearch.Sample.asmdef": "f5c349313be84166147c076da36c041ad61388c7f33e16e39f3c1cb8fd1aedb8"
+          }
+        },
+        "queries": [],
+        "screenshots": [],
+        "console": [],
+        "worker_released": true,
+        "font_destroyed": false,
+        "bundle": {
+          "success": true,
+          "unity_executed": false,
+          "gpu_verified": false,
+          "files": [
+            {
+              "name": "model-fp32.sentis",
+              "bytes": 1095598044,
+              "sha256": "8488d70f2d636a34bfe2a64c1d7b9d3eb3fce70c4fb9e27d32b698090c8fb373"
+            },
+            {
+              "name": "model-float16.sentis",
+              "bytes": 553775500,
+              "sha256": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819"
+            },
+            {
+              "name": "tokenizer.json",
+              "bytes": 32170775,
+              "sha256": "25975a936201b81402a3b867d5c462cf10808bb96759f97fe9aefecbb11c49df"
+            },
+            {
+              "name": "reference.json",
+              "bytes": 408173,
+              "sha256": "deb9b3ed00e49c29b18c1a747307a318900d5e993fb3d9208f4d37e8a73cf2f6"
+            },
+            {
+              "name": "search-reference.json",
+              "bytes": 268000,
+              "sha256": "3530756b36316a812ac853f0722bed5479e92e6bb02ca6aa41c06660d32a71ec"
+            }
+          ],
+          "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+          "model_source": "2edb272f17a38c7af210474345c35f391fd6955c",
+          "search_source": "13f194266162d2a728b2b2a0da9e9e58ae314ff6",
+          "model_origin_sha256": "92968480724ef7838cbd7d7b7cfd6a8d6d5105bb937f8a9907e965805a7651c8",
+          "unity_preparation_version": "6000.3.16f1"
+        },
+        "hash_backends": {
+          "model-fp32.sentis": "windows_cng",
+          "model-float16.sentis": "windows_cng",
+          "tokenizer.json": "windows_cng",
+          "reference.json": "windows_cng",
+          "search-reference.json": "windows_cng"
+        },
+        "audit_milliseconds": 1369.8462,
+        "preparation_milliseconds": 5983.878900000001,
+        "preparation_timing_scope": "File URL staging and full cache audit, model deserialization, Worker creation and six document embeddings together; one measurement.",
+        "actual_backend": "GPUCompute",
+        "cache": {
+          "Success": true,
+          "CacheReused": false,
+          "TransferredFiles": 3,
+          "Milliseconds": 882.4379,
+          "AuditMilliseconds": 429.0113,
+          "HashBackends": {
+            "model-float16.sentis": "windows_cng",
+            "tokenizer.json": "windows_cng"
+          },
+          "CacheRejectedError": null
+        },
+        "gui_wait_frames": 120,
+        "render_observation": {
+          "width": 1280,
+          "height": 800,
+          "focused": true,
+          "batch_mode": false,
+          "splash_finished": true
+        },
+        "sample_observation": {
+          "active": true,
+          "enabled": true,
+          "use_guilayout": true,
+          "ready": true,
+          "font_alive": false,
+          "model_path": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/player-bundle/windows-20261010-run1/model-float16.sentis"
+        },
+        "diagnostic_screenshot": {
+          "name": "8d54860d94ab418694903093bf1c96d3-gui-not-ready.png",
+          "width": 1280,
+          "height": 800,
+          "bytes": 17969,
+          "sha256": "bbdccdfa0f0eb1f22460f9faa6cd64dec41db193a88d8de9453e469e62e8fb6e",
+          "hash_backend": "windows_cng"
+        },
+        "error": "InvalidOperationException: The sample GUI native font is missing after waiting 120 render frames.\n",
+        "completed_utc": "2026-10-10T07:14:43.5766281Z"
+      },
+      "label": "cold",
+      "log_tail": [
+        "",
+        "UnloadTime: 1.277100 ms",
+        "EmbeddingGemma sample validation: C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\player-results\\sample-904879d-20261010\\cold.json",
+        "UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)",
+        "UnityEngine.Logger:Log(LogType, Object)",
+        "UnityEngine.Debug:Log(Object)",
+        "EmbeddingGemma.Validation.<Start>d__3:MoveNext()",
+        "UnityEngine.SetupCoroutine:InvokeMoveNext(IEnumerator, IntPtr)",
+        "",
+        "[Physics::Module] Cleanup current backend.",
+        "[Physics::Module] Id: 0xf2b8ea05",
+        "Input System module state changed to: ShutdownInProgress.",
+        "Input System polling thread exited.",
+        "Input System module state changed to: Shutdown."
+      ]
+    },
+    {
+      "process": {
+        "pid": 32120,
+        "runId": "d63b9435060a489d8644d90f026360e2",
+        "startedUtc": "2026-10-10T07:17:46.5053505Z",
+        "graphicsRequest": "Direct3D11",
+        "windowStyle": "Hidden",
+        "exitCode": -1073741819,
+        "seconds": 23.3922849,
+        "completedUtc": "2026-10-10T07:18:09.9014294Z"
+      },
+      "source": "904879d9cfa304d8fcc4210d45f52c45083facbc",
+      "report": {
+        "schema_version": 1,
+        "success": false,
+        "gpu_verified": false,
+        "validation_mode": "real_model",
+        "scope": "Imported TextSearch sample, Float16 weights, GPUCompute, fixed six documents and four queries. Programmatic sample API; no native keyboard or mouse validation.",
+        "run_id": "d63b9435060a489d8644d90f026360e2",
+        "started_utc": "2026-10-10T07:17:57.2153895Z",
+        "phase": "failed",
+        "is_editor": false,
+        "unity": "6000.3.16f1",
+        "os": "Windows 11  (10.0.22631)",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphics_api": "Direct3D11",
+        "build": {
+          "codeCommit": "904879d9cfa304d8fcc4210d45f52c45083facbc",
+          "unityVersion": "6000.3.16f1",
+          "sentisVersion": "2.6.1",
+          "target": "StandaloneWindows64",
+          "scriptingBackend": "IL2CPP",
+          "stripping": "High",
+          "sourceSha256": {
+            "Assets/Validation/Runtime/PlayerBundleCache.cs": "8e17ce94c049d97d700363cd1446f8348aeaf2f2e0dbcc34c2c84fc349960fc9",
+            "Assets/Validation/Runtime/PlayerBundleLoader.cs": "61f27369c26d75b50e27136b8464cd4a5ea472773dd045b82694fa77aca44921",
+            "Assets/Validation/Runtime/PlayerBundleStager.cs": "b2041d88674d20ae62e272bbaffbee0e24e3d66c8d9e1ad9e110680e590f2940",
+            "Assets/Validation/Runtime/PlayerFileHash.cs": "ecf0d009a00fad2c2234f9bbe7e292ac27e05c279fe96978aae9c748af75cd91",
+            "Assets/Validation/Runtime/PlayerRunProtocol.cs": "99f474b98eaf7053d47b6ec42402779ebd54115ecfa718c8ef227ed66fbc864b",
+            "Assets/Validation/Runtime/PlayerSampleExecution.cs": "8b6d4d7afc17789a4c181d540f704993637dcd1cb2b62d18e90765f67c2f8258",
+            "Assets/Validation/Runtime/PlayerSampleRunner.cs": "ce4d97887e13ab4a613ee501d72eef56652b0959b589ee0829e753e8d37f741e",
+            "Assets/Validation/Runtime/PlayerSampleView.cs": "cfde6c9625dde7fb514ae2e2dce80d9f7b427214dd11c8c6fdc830cec4fd1ddc",
+            "Assets/Validation/Runtime/PlayerValidation.cs": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+            "Assets/Validation/Runtime/PlayerValidationExecution.cs": "f219eca5073a12241d90c736d6d1339875792323585a369efade8956830fb7a1",
+            "Assets/Validation/Runtime/PlayerValidationRunner.cs": "8b9e4ee9e1407569f24dae5be70eddf6410a97371af1bc27ab7b1085047a1a4b",
+            "Assets/Validation/Runtime/link.xml": "8d1d42432c97f128d4c87978f3c7b1a4b2a4de47097ea15c3d89edff75023dcd",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs": "85cb087541827169efe40ddec5074f6cc8b6a1dd995531a250ce5c4bbc66ec1e",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextModelFile.cs": "c4fb628f5ea5e4daacac88f9d4f09266f44e3133a0baf2236438c611917ede28",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextPrompts.cs": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchIndex.cs": "8a17c7ac6e995e6ceb36d9cead732f3ace63f418ab6e860e7f71fdd7a9ea43d0",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchSession.cs": "e4a85fd2378a18b48dd022f82a6fdb4eb73ef9dd980f539c75e2ef5768f1f9f7",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextTokenizer.cs": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763",
+            "Assets/EmbeddingGemmaTextSearch/AssemblyInfo.cs": "ec0d59ffd41af917084a28ce8734622beb475c42e5853af979a848edc0d32afa",
+            "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchFileHash.cs": "a45422ba0538553ef844cd5cfd943727b0b3f1512affcd6014b51b6eb93208aa",
+            "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchModelPreparation.cs": "b06fefa3a797f9f964c2457b2cc556f9d07d5afeaa29233b355f4f72f0b5b152",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchEditorFontLifetimeTests.cs": "57d3f74ae505abd31e82aab059abf062a24b02ec80bc74eee553524b16c08acc",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchFileHashTests.cs": "dc71a8475146d152c8003199ef7fe18850dfc940d5ddf68c88b5b23f70dfda1d",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchGuiStylesTests.cs": "2883b875453830eb35ead546e7f86cf86bc02299e59d7c9b6efc2518fd12a85e",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelCacheTests.cs": "ac239d80db0f4aac2fa1e1929c9042b8002c1ecb59cced2d09417506ba0655c3",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelPreparationTests.cs": "f13b612e1fd9d751b9bddcfe1a7b15131e023aac064954bf89aaf35636091f22",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchSampleTests.cs": "737a4c9ae8e2dae83c3e18f1ba80006cbcb16e31a410bf4195a028091a3d3ef2",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchStreamHashTests.cs": "694071d34b1b7d335706a348bc18c242f570163bf6c8263d093a5837b2655a56",
+            "Assets/EmbeddingGemmaTextSearch/Tests/PlayMode/TextSearchLifecycleTests.cs": "258eb784fbcf627116119eb628cf1b4f8a2a75213f64bcfe4d21674cebe6fa21",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchGuiFont.cs": "355373a0db2dc75066f758c08f1507042107cb9ed8dc81463f8b5a8cff0135a5",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchGuiStyles.cs": "586356b3c0760a158355e17e7a6d159dfbbb0e69abb0d3cda911d63046a82c53",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchModelCache.cs": "0c0b2d86cb0470a6e8a1b60cc4354520addc31953765ba3fe12cf46867b974a6",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchSample.cs": "ebdb65c3468b1b8e7d3fce54fa4b602c3ce549d8f2a9c4fa59be6031f1133683",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchStreamHash.cs": "dcf552f22fbd449938f98fe564128ba270875791532374b44611a686120ea279",
+            "Assets/EmbeddingGemmaTextSearch/TextSearch.unity": "04c3e5d8bba0199accc793637576429e0002c66786d7ce909a34abaac104cd74",
+            "Assets/EmbeddingGemmaTextSearch/Resources/EmbeddingGemmaTextSearch/corpus.json": "10bca454ed0893a67d0af903d88da6a884bb5506920846a483a812f48cedd926",
+            "Assets/EmbeddingGemmaTextSearch/EmbeddingGemma.TextSearch.Sample.asmdef": "f5c349313be84166147c076da36c041ad61388c7f33e16e39f3c1cb8fd1aedb8"
+          }
+        },
+        "queries": [],
+        "screenshots": [],
+        "console": [],
+        "worker_released": true,
+        "font_destroyed": false,
+        "bundle": {
+          "success": true,
+          "unity_executed": false,
+          "gpu_verified": false,
+          "files": [
+            {
+              "name": "model-fp32.sentis",
+              "bytes": 1095598044,
+              "sha256": "8488d70f2d636a34bfe2a64c1d7b9d3eb3fce70c4fb9e27d32b698090c8fb373"
+            },
+            {
+              "name": "model-float16.sentis",
+              "bytes": 553775500,
+              "sha256": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819"
+            },
+            {
+              "name": "tokenizer.json",
+              "bytes": 32170775,
+              "sha256": "25975a936201b81402a3b867d5c462cf10808bb96759f97fe9aefecbb11c49df"
+            },
+            {
+              "name": "reference.json",
+              "bytes": 408173,
+              "sha256": "deb9b3ed00e49c29b18c1a747307a318900d5e993fb3d9208f4d37e8a73cf2f6"
+            },
+            {
+              "name": "search-reference.json",
+              "bytes": 268000,
+              "sha256": "3530756b36316a812ac853f0722bed5479e92e6bb02ca6aa41c06660d32a71ec"
+            }
+          ],
+          "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+          "model_source": "2edb272f17a38c7af210474345c35f391fd6955c",
+          "search_source": "13f194266162d2a728b2b2a0da9e9e58ae314ff6",
+          "model_origin_sha256": "92968480724ef7838cbd7d7b7cfd6a8d6d5105bb937f8a9907e965805a7651c8",
+          "unity_preparation_version": "6000.3.16f1"
+        },
+        "hash_backends": {
+          "model-fp32.sentis": "windows_cng",
+          "model-float16.sentis": "windows_cng",
+          "tokenizer.json": "windows_cng",
+          "reference.json": "windows_cng",
+          "search-reference.json": "windows_cng"
+        },
+        "audit_milliseconds": 1357.4765,
+        "preparation_milliseconds": 6184.2806,
+        "preparation_timing_scope": "File URL staging and full cache audit, model deserialization, Worker creation and six document embeddings together; one measurement.",
+        "actual_backend": "GPUCompute",
+        "cache": {
+          "Success": true,
+          "CacheReused": true,
+          "TransferredFiles": 1,
+          "Milliseconds": 424.5011,
+          "AuditMilliseconds": 418.52320000000003,
+          "HashBackends": {
+            "model-float16.sentis": "windows_cng",
+            "tokenizer.json": "windows_cng"
+          },
+          "CacheRejectedError": null
+        },
+        "gui_wait_frames": 120,
+        "render_observation": {
+          "width": 1280,
+          "height": 800,
+          "focused": true,
+          "batch_mode": false,
+          "splash_finished": true
+        },
+        "sample_observation": {
+          "active": true,
+          "enabled": true,
+          "use_guilayout": true,
+          "ready": true,
+          "font_alive": false,
+          "model_path": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/player-bundle/windows-20261010-run1/model-float16.sentis"
+        },
+        "diagnostic_screenshot": {
+          "name": "d63b9435060a489d8644d90f026360e2-gui-not-ready.png",
+          "width": 1280,
+          "height": 800,
+          "bytes": 17969,
+          "sha256": "bbdccdfa0f0eb1f22460f9faa6cd64dec41db193a88d8de9453e469e62e8fb6e",
+          "hash_backend": "windows_cng"
+        },
+        "error": "InvalidOperationException: The sample GUI native font is missing after waiting 120 render frames.\n",
+        "completed_utc": "2026-10-10T07:18:04.8253262Z"
+      },
+      "label": "d3d11",
+      "log_tail": [
+        "",
+        "UnloadTime: 0.417000 ms",
+        "EmbeddingGemma sample validation: C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\player-results\\sample-904879d-20261010\\d3d11.json",
+        "UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)",
+        "UnityEngine.Logger:Log(LogType, Object)",
+        "UnityEngine.Debug:Log(Object)",
+        "EmbeddingGemma.Validation.<Start>d__3:MoveNext()",
+        "UnityEngine.SetupCoroutine:InvokeMoveNext(IEnumerator, IntPtr)",
+        "",
+        "[Physics::Module] Cleanup current backend.",
+        "[Physics::Module] Id: 0xf2b8ea05",
+        "Input System module state changed to: ShutdownInProgress.",
+        "Input System polling thread exited.",
+        "Input System module state changed to: Shutdown."
+      ]
+    },
+    {
+      "process": {
+        "pid": 65720,
+        "runId": "924506ecf52a4988a348041bf2f84dd2",
+        "startedUtc": "2026-10-10T07:23:47.3071804Z",
+        "output": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\player-results\\sample-747f986-20261010\\cold.json",
+        "exitCode": -1073741819,
+        "windowStyle": "Hidden",
+        "completedUtc": "2026-10-10T07:24:04.4568069Z",
+        "seconds": 17.146261
+      },
+      "source": "747f986c159d6ba78490c2b207e98c1ceb86af02",
+      "report": {
+        "schema_version": 1,
+        "success": false,
+        "gpu_verified": false,
+        "validation_mode": "real_model",
+        "scope": "Imported TextSearch sample, Float16 weights, GPUCompute, fixed six documents and four queries. Programmatic sample API; no native keyboard or mouse validation.",
+        "run_id": "924506ecf52a4988a348041bf2f84dd2",
+        "started_utc": "2026-10-10T07:23:58.4521093Z",
+        "phase": "failed",
+        "is_editor": false,
+        "unity": "6000.3.16f1",
+        "os": "Windows 11  (10.0.22631)",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphics_api": "Direct3D12",
+        "build": {
+          "codeCommit": "747f986c159d6ba78490c2b207e98c1ceb86af02",
+          "unityVersion": "6000.3.16f1",
+          "sentisVersion": "2.6.1",
+          "target": "StandaloneWindows64",
+          "scriptingBackend": "IL2CPP",
+          "stripping": "High",
+          "sourceSha256": {
+            "Assets/Validation/Runtime/PlayerBundleCache.cs": "8e17ce94c049d97d700363cd1446f8348aeaf2f2e0dbcc34c2c84fc349960fc9",
+            "Assets/Validation/Runtime/PlayerBundleLoader.cs": "61f27369c26d75b50e27136b8464cd4a5ea472773dd045b82694fa77aca44921",
+            "Assets/Validation/Runtime/PlayerBundleStager.cs": "b2041d88674d20ae62e272bbaffbee0e24e3d66c8d9e1ad9e110680e590f2940",
+            "Assets/Validation/Runtime/PlayerFileHash.cs": "ecf0d009a00fad2c2234f9bbe7e292ac27e05c279fe96978aae9c748af75cd91",
+            "Assets/Validation/Runtime/PlayerRunProtocol.cs": "99f474b98eaf7053d47b6ec42402779ebd54115ecfa718c8ef227ed66fbc864b",
+            "Assets/Validation/Runtime/PlayerSampleExecution.cs": "8fa69eeb24918b4b3f5113159c84b5fdf2061a4c8021091c8b9ec5bab494b0cd",
+            "Assets/Validation/Runtime/PlayerSampleRunner.cs": "ce4d97887e13ab4a613ee501d72eef56652b0959b589ee0829e753e8d37f741e",
+            "Assets/Validation/Runtime/PlayerSampleView.cs": "46c0492fe6ebd2fd0764050cb21a4d4343c5d20ead47f6c2dec09831b7ea25da",
+            "Assets/Validation/Runtime/PlayerValidation.cs": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+            "Assets/Validation/Runtime/PlayerValidationExecution.cs": "f219eca5073a12241d90c736d6d1339875792323585a369efade8956830fb7a1",
+            "Assets/Validation/Runtime/PlayerValidationRunner.cs": "8b9e4ee9e1407569f24dae5be70eddf6410a97371af1bc27ab7b1085047a1a4b",
+            "Assets/Validation/Runtime/link.xml": "8d1d42432c97f128d4c87978f3c7b1a4b2a4de47097ea15c3d89edff75023dcd",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs": "85cb087541827169efe40ddec5074f6cc8b6a1dd995531a250ce5c4bbc66ec1e",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextModelFile.cs": "c4fb628f5ea5e4daacac88f9d4f09266f44e3133a0baf2236438c611917ede28",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextPrompts.cs": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchIndex.cs": "8a17c7ac6e995e6ceb36d9cead732f3ace63f418ab6e860e7f71fdd7a9ea43d0",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchSession.cs": "e4a85fd2378a18b48dd022f82a6fdb4eb73ef9dd980f539c75e2ef5768f1f9f7",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextTokenizer.cs": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763",
+            "Assets/EmbeddingGemmaTextSearch/AssemblyInfo.cs": "ec0d59ffd41af917084a28ce8734622beb475c42e5853af979a848edc0d32afa",
+            "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchFileHash.cs": "a45422ba0538553ef844cd5cfd943727b0b3f1512affcd6014b51b6eb93208aa",
+            "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchModelPreparation.cs": "b06fefa3a797f9f964c2457b2cc556f9d07d5afeaa29233b355f4f72f0b5b152",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchEditorFontLifetimeTests.cs": "57d3f74ae505abd31e82aab059abf062a24b02ec80bc74eee553524b16c08acc",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchFileHashTests.cs": "dc71a8475146d152c8003199ef7fe18850dfc940d5ddf68c88b5b23f70dfda1d",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchGuiStylesTests.cs": "2883b875453830eb35ead546e7f86cf86bc02299e59d7c9b6efc2518fd12a85e",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelCacheTests.cs": "ac239d80db0f4aac2fa1e1929c9042b8002c1ecb59cced2d09417506ba0655c3",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelPreparationTests.cs": "f13b612e1fd9d751b9bddcfe1a7b15131e023aac064954bf89aaf35636091f22",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchSampleTests.cs": "737a4c9ae8e2dae83c3e18f1ba80006cbcb16e31a410bf4195a028091a3d3ef2",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchStreamHashTests.cs": "694071d34b1b7d335706a348bc18c242f570163bf6c8263d093a5837b2655a56",
+            "Assets/EmbeddingGemmaTextSearch/Tests/PlayMode/TextSearchLifecycleTests.cs": "258eb784fbcf627116119eb628cf1b4f8a2a75213f64bcfe4d21674cebe6fa21",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchGuiFont.cs": "355373a0db2dc75066f758c08f1507042107cb9ed8dc81463f8b5a8cff0135a5",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchGuiStyles.cs": "586356b3c0760a158355e17e7a6d159dfbbb0e69abb0d3cda911d63046a82c53",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchModelCache.cs": "0c0b2d86cb0470a6e8a1b60cc4354520addc31953765ba3fe12cf46867b974a6",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchSample.cs": "ebdb65c3468b1b8e7d3fce54fa4b602c3ce549d8f2a9c4fa59be6031f1133683",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchStreamHash.cs": "dcf552f22fbd449938f98fe564128ba270875791532374b44611a686120ea279",
+            "Assets/EmbeddingGemmaTextSearch/TextSearch.unity": "04c3e5d8bba0199accc793637576429e0002c66786d7ce909a34abaac104cd74",
+            "Assets/EmbeddingGemmaTextSearch/Resources/EmbeddingGemmaTextSearch/corpus.json": "10bca454ed0893a67d0af903d88da6a884bb5506920846a483a812f48cedd926",
+            "Assets/EmbeddingGemmaTextSearch/EmbeddingGemma.TextSearch.Sample.asmdef": "f5c349313be84166147c076da36c041ad61388c7f33e16e39f3c1cb8fd1aedb8"
+          }
+        },
+        "queries": [],
+        "screenshots": [],
+        "console": [],
+        "worker_released": true,
+        "font_destroyed": false,
+        "gui_wait_frames": 120,
+        "render_observation": {
+          "width": 1280,
+          "height": 800,
+          "focused": true,
+          "batch_mode": false,
+          "splash_finished": true
+        },
+        "sample_observation": {
+          "active": true,
+          "enabled": true,
+          "use_guilayout": true,
+          "ready": false,
+          "font_alive": false,
+          "model_path": "C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/player-build/sample-747f986/Sample_Data/StreamingAssets\\EmbeddingGemmaTextSearch\\model-fp32.sentis",
+          "frame": 122,
+          "scene": "Assets/EmbeddingGemmaTextSearch/TextSearch.unity",
+          "cameras": [
+            {
+              "name": "Main Camera",
+              "enabled": true,
+              "active": true,
+              "target_display": 0,
+              "pixel_width": 1280,
+              "pixel_height": 800,
+              "rendering_path": "UsePlayerSettings",
+              "actual_rendering_path": "Forward",
+              "rect": "(x:0.00, y:0.00, width:1.00, height:1.00)",
+              "background": "RGBA(0.060, 0.080, 0.120, 1.000)",
+              "target_texture": false
+            }
+          ],
+          "active_camera_count": 1
+        },
+        "diagnostic_screenshot": {
+          "name": "924506ecf52a4988a348041bf2f84dd2-gui-not-ready.png",
+          "width": 1280,
+          "height": 800,
+          "bytes": 17969,
+          "sha256": "bbdccdfa0f0eb1f22460f9faa6cd64dec41db193a88d8de9453e469e62e8fb6e",
+          "hash_backend": "windows_cng"
+        },
+        "error": "InvalidOperationException: The sample GUI native font is missing after waiting 120 render frames.\n",
+        "completed_utc": "2026-10-10T07:23:58.5147745Z"
+      },
+      "label": "cold",
+      "log_tail": [
+        "",
+        "UnloadTime: 1.149800 ms",
+        "EmbeddingGemma sample validation: C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\player-results\\sample-747f986-20261010\\cold.json",
+        "UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)",
+        "UnityEngine.Logger:Log(LogType, Object)",
+        "UnityEngine.Debug:Log(Object)",
+        "EmbeddingGemma.Validation.<Start>d__3:MoveNext()",
+        "UnityEngine.SetupCoroutine:InvokeMoveNext(IEnumerator, IntPtr)",
+        "",
+        "[Physics::Module] Cleanup current backend.",
+        "[Physics::Module] Id: 0xf2b8ea05",
+        "Input System module state changed to: ShutdownInProgress.",
+        "Input System polling thread exited.",
+        "Input System module state changed to: Shutdown."
+      ]
+    },
+    {
+      "process": {
+        "pid": 75932,
+        "runId": "ca2af015619f4359b66f5aafef6651dd",
+        "startedUtc": "2026-10-10T07:31:16.2879274Z",
+        "graphicsRequest": "Direct3D12",
+        "threadingRequest": "force-gfx-direct",
+        "windowStyle": "Hidden",
+        "exitCode": -1073741819,
+        "seconds": 16.3530993,
+        "completedUtc": "2026-10-10T07:31:32.6446456Z"
+      },
+      "source": "747f986c159d6ba78490c2b207e98c1ceb86af02",
+      "report": {
+        "schema_version": 1,
+        "success": false,
+        "gpu_verified": false,
+        "validation_mode": "real_model",
+        "scope": "Imported TextSearch sample, Float16 weights, GPUCompute, fixed six documents and four queries. Programmatic sample API; no native keyboard or mouse validation.",
+        "run_id": "ca2af015619f4359b66f5aafef6651dd",
+        "started_utc": "2026-10-10T07:31:26.943411Z",
+        "phase": "failed",
+        "is_editor": false,
+        "unity": "6000.3.16f1",
+        "os": "Windows 11  (10.0.22631)",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphics_api": "Direct3D12",
+        "build": {
+          "codeCommit": "747f986c159d6ba78490c2b207e98c1ceb86af02",
+          "unityVersion": "6000.3.16f1",
+          "sentisVersion": "2.6.1",
+          "target": "StandaloneWindows64",
+          "scriptingBackend": "IL2CPP",
+          "stripping": "High",
+          "sourceSha256": {
+            "Assets/Validation/Runtime/PlayerBundleCache.cs": "8e17ce94c049d97d700363cd1446f8348aeaf2f2e0dbcc34c2c84fc349960fc9",
+            "Assets/Validation/Runtime/PlayerBundleLoader.cs": "61f27369c26d75b50e27136b8464cd4a5ea472773dd045b82694fa77aca44921",
+            "Assets/Validation/Runtime/PlayerBundleStager.cs": "b2041d88674d20ae62e272bbaffbee0e24e3d66c8d9e1ad9e110680e590f2940",
+            "Assets/Validation/Runtime/PlayerFileHash.cs": "ecf0d009a00fad2c2234f9bbe7e292ac27e05c279fe96978aae9c748af75cd91",
+            "Assets/Validation/Runtime/PlayerRunProtocol.cs": "99f474b98eaf7053d47b6ec42402779ebd54115ecfa718c8ef227ed66fbc864b",
+            "Assets/Validation/Runtime/PlayerSampleExecution.cs": "8fa69eeb24918b4b3f5113159c84b5fdf2061a4c8021091c8b9ec5bab494b0cd",
+            "Assets/Validation/Runtime/PlayerSampleRunner.cs": "ce4d97887e13ab4a613ee501d72eef56652b0959b589ee0829e753e8d37f741e",
+            "Assets/Validation/Runtime/PlayerSampleView.cs": "46c0492fe6ebd2fd0764050cb21a4d4343c5d20ead47f6c2dec09831b7ea25da",
+            "Assets/Validation/Runtime/PlayerValidation.cs": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+            "Assets/Validation/Runtime/PlayerValidationExecution.cs": "f219eca5073a12241d90c736d6d1339875792323585a369efade8956830fb7a1",
+            "Assets/Validation/Runtime/PlayerValidationRunner.cs": "8b9e4ee9e1407569f24dae5be70eddf6410a97371af1bc27ab7b1085047a1a4b",
+            "Assets/Validation/Runtime/link.xml": "8d1d42432c97f128d4c87978f3c7b1a4b2a4de47097ea15c3d89edff75023dcd",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs": "85cb087541827169efe40ddec5074f6cc8b6a1dd995531a250ce5c4bbc66ec1e",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextModelFile.cs": "c4fb628f5ea5e4daacac88f9d4f09266f44e3133a0baf2236438c611917ede28",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextPrompts.cs": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchIndex.cs": "8a17c7ac6e995e6ceb36d9cead732f3ace63f418ab6e860e7f71fdd7a9ea43d0",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchSession.cs": "e4a85fd2378a18b48dd022f82a6fdb4eb73ef9dd980f539c75e2ef5768f1f9f7",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextTokenizer.cs": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763",
+            "Assets/EmbeddingGemmaTextSearch/AssemblyInfo.cs": "ec0d59ffd41af917084a28ce8734622beb475c42e5853af979a848edc0d32afa",
+            "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchFileHash.cs": "a45422ba0538553ef844cd5cfd943727b0b3f1512affcd6014b51b6eb93208aa",
+            "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchModelPreparation.cs": "b06fefa3a797f9f964c2457b2cc556f9d07d5afeaa29233b355f4f72f0b5b152",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchEditorFontLifetimeTests.cs": "57d3f74ae505abd31e82aab059abf062a24b02ec80bc74eee553524b16c08acc",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchFileHashTests.cs": "dc71a8475146d152c8003199ef7fe18850dfc940d5ddf68c88b5b23f70dfda1d",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchGuiStylesTests.cs": "2883b875453830eb35ead546e7f86cf86bc02299e59d7c9b6efc2518fd12a85e",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelCacheTests.cs": "ac239d80db0f4aac2fa1e1929c9042b8002c1ecb59cced2d09417506ba0655c3",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelPreparationTests.cs": "f13b612e1fd9d751b9bddcfe1a7b15131e023aac064954bf89aaf35636091f22",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchSampleTests.cs": "737a4c9ae8e2dae83c3e18f1ba80006cbcb16e31a410bf4195a028091a3d3ef2",
+            "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchStreamHashTests.cs": "694071d34b1b7d335706a348bc18c242f570163bf6c8263d093a5837b2655a56",
+            "Assets/EmbeddingGemmaTextSearch/Tests/PlayMode/TextSearchLifecycleTests.cs": "258eb784fbcf627116119eb628cf1b4f8a2a75213f64bcfe4d21674cebe6fa21",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchGuiFont.cs": "355373a0db2dc75066f758c08f1507042107cb9ed8dc81463f8b5a8cff0135a5",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchGuiStyles.cs": "586356b3c0760a158355e17e7a6d159dfbbb0e69abb0d3cda911d63046a82c53",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchModelCache.cs": "0c0b2d86cb0470a6e8a1b60cc4354520addc31953765ba3fe12cf46867b974a6",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchSample.cs": "ebdb65c3468b1b8e7d3fce54fa4b602c3ce549d8f2a9c4fa59be6031f1133683",
+            "Assets/EmbeddingGemmaTextSearch/TextSearchStreamHash.cs": "dcf552f22fbd449938f98fe564128ba270875791532374b44611a686120ea279",
+            "Assets/EmbeddingGemmaTextSearch/TextSearch.unity": "04c3e5d8bba0199accc793637576429e0002c66786d7ce909a34abaac104cd74",
+            "Assets/EmbeddingGemmaTextSearch/Resources/EmbeddingGemmaTextSearch/corpus.json": "10bca454ed0893a67d0af903d88da6a884bb5506920846a483a812f48cedd926",
+            "Assets/EmbeddingGemmaTextSearch/EmbeddingGemma.TextSearch.Sample.asmdef": "f5c349313be84166147c076da36c041ad61388c7f33e16e39f3c1cb8fd1aedb8"
+          }
+        },
+        "queries": [],
+        "screenshots": [],
+        "console": [
+          {
+            "type": "Error",
+            "message": "CaptureScreenshotAsTexture() failed to generate texture! Was method called before the 'end of frame' state was reached?",
+            "stack": "UnityEngine.ScreenCapture:CaptureScreenshotAsTexture()\nEmbeddingGemma.Validation.PlayerSampleExecution:Capture(String)\nEmbeddingGemma.Validation.<<Run>g__Core|2>d:MoveNext()\nEmbeddingGemma.Validation.<Run>d__0:MoveNext()\nUnityEngine.SetupCoroutine:InvokeMoveNext(IEnumerator, IntPtr)\n"
+          }
+        ],
+        "worker_released": true,
+        "font_destroyed": false,
+        "gui_wait_frames": 120,
+        "render_observation": {
+          "width": 1280,
+          "height": 800,
+          "focused": true,
+          "batch_mode": false,
+          "splash_finished": true
+        },
+        "sample_observation": {
+          "active": true,
+          "enabled": true,
+          "use_guilayout": true,
+          "ready": false,
+          "font_alive": false,
+          "model_path": "C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/player-build/sample-747f986/Sample_Data/StreamingAssets\\EmbeddingGemmaTextSearch\\model-fp32.sentis",
+          "frame": 122,
+          "scene": "Assets/EmbeddingGemmaTextSearch/TextSearch.unity",
+          "cameras": [
+            {
+              "name": "Main Camera",
+              "enabled": true,
+              "active": true,
+              "target_display": 0,
+              "pixel_width": 1280,
+              "pixel_height": 800,
+              "rendering_path": "UsePlayerSettings",
+              "actual_rendering_path": "Forward",
+              "rect": "(x:0.00, y:0.00, width:1.00, height:1.00)",
+              "background": "RGBA(0.060, 0.080, 0.120, 1.000)",
+              "target_texture": false
+            }
+          ],
+          "active_camera_count": 1
+        },
+        "error": "InvalidOperationException: Player screenshot texture is unavailable.\n",
+        "completed_utc": "2026-10-10T07:31:26.9520904Z"
+      },
+      "label": "single-thread",
+      "log_tail": [
+        "[ line -325196232]",
+        "",
+        "EmbeddingGemma sample validation: C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\player-results\\sample-747f986-20261010\\single-thread.json",
+        "UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)",
+        "UnityEngine.Logger:Log(LogType, Object)",
+        "UnityEngine.Debug:Log(Object)",
+        "EmbeddingGemma.Validation.<Start>d__3:MoveNext()",
+        "UnityEngine.SetupCoroutine:InvokeMoveNext(IEnumerator, IntPtr)",
+        "",
+        "[Physics::Module] Cleanup current backend.",
+        "[Physics::Module] Id: 0xf2b8ea05",
+        "Input System module state changed to: ShutdownInProgress.",
+        "Input System polling thread exited.",
+        "Input System module state changed to: Shutdown."
+      ]
+    }
+  ],
+  "crash": {
+    "dump_name": "Sample.exe.68628.dmp",
+    "bytes": 55476715,
+    "thread_id": 144792,
+    "exception_code": "0xc0000005",
+    "exception_address": "UnityPlayer.dll+0xb12f91",
+    "instruction_pointer": "UnityPlayer.dll+0xb12f91",
+    "exception_parameters": [
+      "0x0",
+      "0xe0"
+    ],
+    "stack_candidates": [
+      "UnityPlayer.dll+0xb3408e",
+      "UnityPlayer.dll+0x5c7786",
+      "UnityPlayer.dll+0x6f79e9",
+      "UnityPlayer.dll+0x7fa33d",
+      "UnityPlayer.dll+0x7ff4a5",
+      "UnityPlayer.dll+0x1de17a0",
+      "Sample.exe+0x17d0"
+    ],
+    "scope": "Raw exception/module records and possible return addresses; no symbol resolution or verified stack unwinding. This does not identify the cause."
+  },
+  "editor_camera": {
+    "Result": "{ active = True, enabled = True, path = UsePlayerSettings, actualPath = Forward, rect = (x:0.00, y:0.00, width:1.00, height:1.00), background = RGBA(0.060, 0.080, 0.120, 1.000), width = 1280, height = 800 }",
+    "Logs": [
+      "Execution completed successfully"
+    ],
+    "CompilationErrors": [],
+    "ErrorMessage": "",
+    "Error": "",
+    "UpdatedCode": null,
+    "DiagnosticsSummary": null,
+    "Diagnostics": [],
+    "EditorPlaying": false,
+    "Success": true
+  },
+  "final_editor": {
+    "Result": "{ playing = False, target = StandaloneWindows64, scene = Assets/EmbeddingGemmaTextSearch/TextSearch.unity, dirty = False, backend = Mono2x, stripping = Disabled, compiler = Release }",
+    "Logs": [
+      "Execution completed successfully"
+    ],
+    "CompilationErrors": [],
+    "ErrorMessage": "",
+    "Error": "",
+    "UpdatedCode": null,
+    "DiagnosticsSummary": null,
+    "Diagnostics": [],
+    "EditorPlaying": false,
+    "Success": true
+  },
+  "staging_restored": {
+    "restored": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\j\\Assets\\StreamingAssets\\EmbeddingGemmaTextSearch",
+    "files": [
+      {
+        "Name": "model-float16.sentis",
+        "Length": 553775500
+      },
+      {
+        "Name": "model-float16.sentis.meta",
+        "Length": 155
+      },
+      {
+        "Name": "model-fp32.sentis",
+        "Length": 1095598044
+      },
+      {
+        "Name": "model-fp32.sentis.meta",
+        "Length": 155
+      },
+      {
+        "Name": "preparation.json",
+        "Length": 918
+      },
+      {
+        "Name": "preparation.json.meta",
+        "Length": 155
+      },
+      {
+        "Name": "tokenizer.json",
+        "Length": 32170775
+      },
+      {
+        "Name": "tokenizer.json.meta",
+        "Length": 155
+      }
+    ],
+    "players": []
+  },
+  "unavailable": [
+    "Passing Player GUI/search/font lifetime result",
+    "Passing two-process sample acceptance",
+    "Native shutdown cause",
+    "Native Player keyboard/mouse input",
+    "macOS/iOS/Android device execution",
+    "Release candidate/tag consumer and formal release"
+  ]
+}

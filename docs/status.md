@@ -1,6 +1,6 @@
 # 現在の状態と残タスク
 
-確認日: 2026-10-10。最新の統合mainはPR #22後の `f41c7d7`。PR #22は現在headの全8 CI成功後に統合し、統合後main CI run 38019106372も全8 job成功。PR #21統合後CI run 38016987520も成功を確認した。下の表はPR #12時点の基準・履歴として保持し、後続実測を本文に追記する。最新CIはGitHubのPR / Actionsを参照。
+確認日: 2026-10-10。最新の確認済み統合mainはPR #23後の `197fae9`。PR #23は現在headの全8 CI成功後に統合し、統合後main [CI run 38019722018](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38019722018)も成功。PR #22統合後CI run 38019106372も全8 job成功。下の表はPR #12時点の基準・履歴として保持し、後続実測を本文に追記する。最新CIはGitHubのPR / Actionsを参照。
 検索実装は `feat/m2-text-search-sample` / PR #11で統合済み。M1の履歴を維持し、Windows検索実測を別の証拠として追加した。以下のmain SHAとCIは確認時点の基準であり、後続の文書PRでも確認済みの実測SHAを変更しない。
 
 ## mainと作業ブランチ
@@ -61,12 +61,14 @@ Windows Playerの変更はPR #18の全8 CI成功後にmain `f44976b` へ統合�
 
 ## 未実行と失敗の扱い
 
-- macOS / iOS / Android / WebGPUは未検証。Windows Playerは上記のMono Development条件だけが合格し、IL2CPP / release strippingは未検証。Editorや小さいモデルの合格で置き換えない。
+- macOS / iOS / Android / WebGPUは未検証。Windows PlayerはMono Developmentと後続IL2CPP / Release / High stripping条件で合格した。ただし検証assemblyのpreserve-all条件で、任意consumerのstrippingを証明しない。Editorや小さいモデルの合格で実機結果を置き換えない。
 - クラウドUnityは任意手動Linux CPU検証。Secrets / Variablesは未登録、Editor job未実行。必要なのはこのクラウド経路の利用時で、検索サンプルなどの開発を止める条件ではない。
 - PR #6当時のconsumerのuloop launch readinessはタイムアウト。後続run-testsのcompile・29 passedとは分けて履歴を保持する。検索導入では長いパスの失敗後、別の短いconsumerの起動・compile・テストが成功した。
 - GPU skipやCPU代替をGPU成功として扱わない。モデルと大きいartifactはGit管理外、LFSを使わずActionsで再生成する。
 
 ## 最近の更新
+
+配布TextSearch sampleの選択モデル配置と所有cacheを実装し、実行source `2e463a8`でEditMode 64 / PlayMode 2 / uv Python 22件が合格した。Windows Editorの実file URL転送・FP32 / Float16のactual GPU準備・固定日英2queryの全順位とscore・空入力・解放・欠落モデル拒否・実worker使用中のleaseを確認した。warmではmanifestだけを転送しモデル再転送0、完全CNG監査約803ms / 418ms、成功後は選択Float16 1組の約586MBだけを保持した。[実測と制約](m2-sample-cache-validation.md)。stage時間はmodel deserialize / 文書推論を含まない。変更sample SHAの新規Git導入、実APK / 実機と新sample Player画面は未実行、font Warning 1件の由来も未確定。次は新規固定Git導入と実APK / 他環境のgateを進める。
 
 Windows IL2CPP / compiler Release / managed stripping Highのbuildと実モデル2起動を確認した。release build helperの3 red → 99 green、build 257.1秒 / errors 0 / warnings 485、両Player終了code 0。4条件のactual CPU / GPU、25入力token一致、M1・検索全順位・score・解放が合格。file URLの初回6件展開から2回目manifest 1件だけのcache再利用へ移行し、実CNGの完全hash監査1.47秒 / 1.55秒、モデル再転送0、保持1 bundleを確認した。[結果と範囲](m2-player-il2cpp-validation.md)。検証assemblyにpreserve-allを指定した条件で、任意consumerのstripping・他OS・native leak解消を証明した結果ではない。次は配布sampleのAndroid配置、実APK / 他OS / 実機、残る安定性とrelease gateを進める。
 

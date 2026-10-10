@@ -1,7 +1,9 @@
 {
   "name": "EmbeddingGemma.TextSearch.Sample.Editor.Tests",
-  "references": ["EmbeddingGemma.Runtime", "EmbeddingGemma.TextSearch.Sample", "EmbeddingGemma.TextSearch.Sample.Editor", "Unity.InferenceEngine"],
+  "references": ["EmbeddingGemma.Runtime", "EmbeddingGemma.TextSearch.Sample", "EmbeddingGemma.TextSearch.Sample.Editor", "Unity.InferenceEngine", "Unity.Newtonsoft.Json"],
   "includePlatforms": ["Editor"],
+  "overrideReferences": true,
+  "precompiledReferences": ["nunit.framework.dll", "Newtonsoft.Json.dll"],
   "optionalUnityReferences": ["TestAssemblies"],
   "autoReferenced": false
 }

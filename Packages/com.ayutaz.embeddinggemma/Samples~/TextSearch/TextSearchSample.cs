@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace EmbeddingGemma.Samples
         public BackendType Backend = BackendType.GPUCompute;
         public string Query = "猫を健康に育てるには";
         public bool IsReady => session?.IsReady == true;
+        public bool IsPreparing { get; private set; }
         public string Status { get; private set; } = "モデルと文書を準備してください。";
         public string Error { get; private set; } = "";
         public IReadOnlyList<SearchHit> Results => results;
@@ -28,17 +30,66 @@ namespace EmbeddingGemma.Samples
         Vector2 scroll;
         Font font;
         TextSearchGuiStyles styles;
+        IEnumerator preparationOperation;
+        Coroutine preparationCoroutine;
+        TextSearchModelStage modelStage;
+        int preparationVersion;
 
         void OnEnable()
         {
-            var directory = Path.Combine(Application.streamingAssetsPath, "EmbeddingGemmaTextSearch");
-            if (string.IsNullOrWhiteSpace(ModelPath)) ModelPath = Path.Combine(directory, "model-fp32.sentis");
-            if (string.IsNullOrWhiteSpace(TokenizerPath)) TokenizerPath = Path.Combine(directory, "tokenizer.json");
+            var directory = TextSearchModelCache.Combine(Application.streamingAssetsPath, "EmbeddingGemmaTextSearch");
+            if (string.IsNullOrWhiteSpace(ModelPath)) ModelPath = TextSearchModelCache.Combine(directory, "model-fp32.sentis");
+            if (string.IsNullOrWhiteSpace(TokenizerPath)) TokenizerPath = TextSearchModelCache.Combine(directory, "tokenizer.json");
+        }
+
+        public IEnumerator PrepareDocumentsFromStreamingAssets(string cacheRoot = null, Func<string, string, IEnumerator> transfer = null,
+            Func<string, string, ITextEmbedder> providerFactory = null)
+        {
+            ReleaseDocuments();
+            var version = ++preparationVersion;
+            var stage = new TextSearchModelStage(); modelStage = stage;
+            var operation = TextSearchModelCache.Resolve(ModelPath, TokenizerPath,
+                cacheRoot ?? Path.Combine(Application.persistentDataPath, "EmbeddingGemmaTextSearch", "ModelCache"), stage, transfer);
+            preparationOperation = operation; IsPreparing = true; Status = "モデルを展開・確認しています。";
+            try
+            {
+                while (version == preparationVersion && operation.MoveNext()) yield return operation.Current;
+                if (version != preparationVersion) yield break;
+                if (!stage.Success)
+                {
+                    Error = "準備に失敗: " + stage.Error; Status = "モデルを準備できませんでした。";
+                    stage.Dispose(); modelStage = null; yield break;
+                }
+                if (!PrepareCore(() => providerFactory != null ? providerFactory(stage.ModelPath, stage.TokenizerPath)
+                    : LoadProvider(stage.ModelPath, stage.TokenizerPath))) Status = "モデルを準備できませんでした。";
+            }
+            finally
+            {
+                (operation as IDisposable)?.Dispose();
+                if (version == preparationVersion) { preparationOperation = null; preparationCoroutine = null; IsPreparing = false; }
+            }
+        }
+        public void BeginPreparation()
+        {
+            if (IsPreparing) return;
+            if (ModelPath?.Contains("://") == true || TokenizerPath?.Contains("://") == true)
+                preparationCoroutine = StartCoroutine(PrepareDocumentsFromStreamingAssets());
+            else PrepareDocuments();
         }
 
         public bool PrepareDocuments(Func<ITextEmbedder> providerFactory = null)
         {
             ReleaseDocuments();
+            return PrepareCore(providerFactory ?? (() => LoadProvider(ModelPath, TokenizerPath)));
+        }
+        ITextEmbedder LoadProvider(string model, string tokenizer)
+        {
+            if (!File.Exists(model)) throw new FileNotFoundException("準備した.sentisモデルのパスを指定してください。", model);
+            if (!File.Exists(tokenizer)) throw new FileNotFoundException("tokenizer.jsonのパスを指定してください。", tokenizer);
+            return new TextEmbedder(TextModelFile.Load(model), File.ReadAllText(tokenizer), Backend);
+        }
+        bool PrepareCore(Func<ITextEmbedder> providerFactory)
+        {
             try
             {
                 if (Backend != BackendType.CPU && Backend != BackendType.GPUCompute)
@@ -52,14 +103,7 @@ namespace EmbeddingGemma.Samples
                 session = new TextSearchSession();
                 session.Prepare(documents, () =>
                 {
-                    ITextEmbedder provider;
-                    if (providerFactory != null) provider = providerFactory();
-                    else
-                    {
-                        if (!File.Exists(ModelPath)) throw new FileNotFoundException("準備した.sentisモデルのパスを指定してください。", ModelPath);
-                        if (!File.Exists(TokenizerPath)) throw new FileNotFoundException("tokenizer.jsonのパスを指定してください。", TokenizerPath);
-                        provider = new TextEmbedder(TextModelFile.Load(ModelPath), File.ReadAllText(TokenizerPath), Backend);
-                    }
+                    var provider = providerFactory();
                     if (provider == null) throw new InvalidOperationException("推論器を作成できませんでした。");
                     if (provider.Backend != Backend)
                     {
@@ -73,7 +117,7 @@ namespace EmbeddingGemma.Samples
             }
             catch (Exception exception)
             {
-                ReleaseDocuments();
+                DisposeWorkerAndCache();
                 Error = "準備に失敗: " + exception.Message;
                 return false;
             }
@@ -101,10 +145,18 @@ namespace EmbeddingGemma.Samples
 
         public void ReleaseDocuments()
         {
-            session?.Dispose(); session = null;
+            preparationVersion++;
+            if (preparationCoroutine != null) { StopCoroutine(preparationCoroutine); preparationCoroutine = null; }
+            (preparationOperation as IDisposable)?.Dispose(); preparationOperation = null; IsPreparing = false;
+            DisposeWorkerAndCache();
             results = Array.Empty<SearchHit>();
             Error = "";
             Status = "モデルと文書を準備してください。";
+        }
+        void DisposeWorkerAndCache()
+        {
+            try { session?.Dispose(); }
+            finally { session = null; modelStage?.Dispose(); modelStage = null; }
         }
 
         void OnDisable() => ReleaseDocuments();
@@ -126,18 +178,22 @@ namespace EmbeddingGemma.Samples
                 GUILayout.Label("EmbeddingGemma 2 — テキスト検索", styles.Heading);
                 GUILayout.Label("日本語 / 英語の固定6文書をcosineで比較します。同点は文書ID順です。", styles.Label);
                 GUILayout.Label("モデルは別途準備してください。自動ダウンロードは行いません。", styles.Label);
-                GUI.enabled = !IsReady;
+                GUI.enabled = !IsReady && !IsPreparing;
                 GUILayout.Label(".sentisモデル", styles.Label); ModelPath = GUILayout.TextField(ModelPath ?? "", styles.TextField);
                 GUILayout.Label("tokenizer.json", styles.Label); TokenizerPath = GUILayout.TextField(TokenizerPath ?? "", styles.TextField);
                 Backend = GUILayout.Toolbar(Backend == BackendType.CPU ? 0 : 1, new[] { "CPU", "GPUCompute" }, styles.Button) == 0 ? BackendType.CPU : BackendType.GPUCompute;
                 GUI.enabled = true;
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button("モデルと文書を準備", styles.Button)) PrepareDocuments();
+                GUI.enabled = !IsPreparing;
+                if (GUILayout.Button("モデルと文書を準備", styles.Button)) BeginPreparation();
+                GUI.enabled = true;
                 if (GUILayout.Button("解放 / モデルを変更", styles.Button)) ReleaseDocuments();
                 GUILayout.EndHorizontal();
                 GUILayout.Space(12);
                 GUILayout.Label("検索文", styles.Label); Query = GUILayout.TextField(Query ?? "", styles.TextField);
+                GUI.enabled = IsReady;
                 if (GUILayout.Button("検索", styles.Button)) Search(Query);
+                GUI.enabled = true;
                 GUILayout.Label(Status, styles.Label);
                 if (!string.IsNullOrEmpty(Error)) GUILayout.Label(Error, styles.Error);
                 for (var i = 0; i < results.Length; i++)

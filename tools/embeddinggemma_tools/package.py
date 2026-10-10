@@ -129,6 +129,8 @@ def create_consumer(project, package, *, git_revision=None, automation=False, sa
     source = (f"https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/{PACKAGE_NAME}#{git_revision}"
               if git_revision else "file:" + package.as_posix())
     manifest = {"dependencies": {PACKAGE_NAME: source, "com.unity.test-framework": "1.6.0"}, "testables": [PACKAGE_NAME]}
+    if sample:
+        manifest["dependencies"]["com.unity.modules.unitywebrequest"] = "1.0.0"
     if automation:
         manifest["dependencies"]["io.github.hatayama.uloopmcp"] = "3.14.0"
         manifest["scopedRegistries"] = [{"name": "package.openupm.com", "url": "https://package.openupm.com",

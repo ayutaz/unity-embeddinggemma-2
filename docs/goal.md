@@ -4,7 +4,8 @@
 - 更新日: 2026-10-10
 - 背景: [新規性調査](embeddinggemma-2-unity-novelty.md)
 
-リポジトリはpublicのOSSとして開発中。確認基準main `4ee0cbb`にはPR #1〜#4・#6・#8〜#12を統合済み。
+リポジトリはpublicのOSSとして開発中。現在のWindows Git導入・検索とPlayer実測は[現在の状態](status.md)と[4段階の実行計画](m2-release-plan.md)を参照する。固定Git導入は確認済みで、必須他環境・残る安定性・候補 / tag導入・正式Releaseは未完了。
+以下の導入時の基準はPR #12時点の履歴として保持する。確認基準main `4ee0cbb`にはPR #1〜#4・#6・#8〜#12を統合済み。
 保存・Float16重み量子化・両backend精度・性能 / メモリ測定までWindows EditorのM1受け入れ条件が合格した。
 確認基準mainの [CI run 37975720534](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975720534)は全8 job成功。Python4環境・実モデルPython照合・lint・パッケージ監査を確認。Sentisの実測はWindowsの検証記録を参照する。
 PR #6のCI整備・UPM移行はmainへ反映済み、GitHub側のmain保護も設定・再確認済み。
@@ -61,7 +62,7 @@ M1の証拠は [M1計画](m1-plan.md)、[完了検証記録](m1-completion-valid
 | # | 内容 | 完了の条件 | 状態 |
 | --- | --- | --- | --- |
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor の CPU / GPUCompute で全 15 ケースの token ID / mask が完全一致、fp32 cosine >= 0.999。`.sentis` 保存・再読み込み、fp16 量子化版 cosine >= 0.99、時間・メモリ測定 | Windows Editor受け入れ検証完了 |
-| M2 | テキスト版の UPM パッケージとサンプルをリリースする | macOS Editor / iOS / Android の精度・速度 / メモリ、UPM API・サンプル・配布手順 | CI・UPM化はmain統合済み。検索サンプル・モデル手順はWindows4条件、画面操作、consumer CLI再現確認済み。他環境・Git URL導入・配布は未完了 |
+| M2 | テキスト版の UPM パッケージとサンプルをリリースする | macOS Editor / iOS / Android の精度・速度 / メモリ、UPM API・サンプル・配布手順 | Windows固定Git導入・検索4条件とUI、検証専用IL2CPP Playerを確認。他環境、残る安定性、候補 / tag導入、正式Releaseは未完了 |
 | M3 | 画像用モデルに対応する | GPU 上の画像から埋め込みを作り、テキスト→画像の検索が参照実装と一致する | 未着手 |
 | M4 | 音声用モデルに対応する | GPU 上でメルスペクトログラムを作り、テキスト→音声の検索が参照実装と一致する | 未着手 |
 

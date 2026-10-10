@@ -2,6 +2,8 @@
 
 2026-10-10からの安定化・Git URL導入・他環境実測・正式リリースは、[M2リリースまでの詳細実行計画](m2-release-plan.md)で作業・依存・成果物・合格条件・PR分割を定義する。以下の実測履歴は当時のSHAを維持する。
 
+最新のWindows固定Git導入・実モデル4条件・sample UIと、検証専用Windows IL2CPP Playerは確認済み。[Git consumer結果](m2-latest-git-consumer-validation.md) / [Player結果](m2-player-il2cpp-validation.md)を参照。以下の基準・状態表はPR #12時点の履歴であり、現在の未達項目は他環境、残る安定性、正式候補 / tag導入、正式Releaseである。配布README / CHANGELOGもこの区別へ更新し、未検証の環境を対応済みにしない。
+
 更新日: 2026-10-10。確認基準main: `4ee0cbbde07fc99ca87d33ed52a44e6100ca0b0c`（PR #12統合後）。Unity実測は各検証記録の実行SHAを維持する。
 **CI整備・UPM化はPR #6でmainへ統合済み。統合後のmain CIも全8 job成功。** PR #1〜#4のWindows EditorのM1は完了した。
 GitHub側のmain保護も設定・再確認済み。検索基盤はPR #10でmainへ統合済み。PR #11の検索サンプルとモデル手順は、Windowsの元プロジェクト・新規consumerで実モデル4条件と画面操作、CLI完了応答を確認した。M2全体の他環境・Git URL導入・リリースは残る。[検証記録](m2-search-validation.md)を参照。

@@ -110,3 +110,6 @@ PRのmergeはユーザーの既存依頼の範囲で、差分・競合・現在h
 - PR #15も全8 CI成功後に統合し、main `f564987` の [CI run 38008701772](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38008701772) が成功した。
 - Git consumer `artifacts/g` の起動失敗を記録して終了し、processの終了を確認してから既存consumer `artifacts/c` を1つだけ起動した。別の安定性・hash改善の検証に利用しており、Git URLでの実行成功には数えない。
 - Windows Editorの完全SHA-256を高速化した。新規10テストの意図したred → green、既存18件を含む28 passedを確認。実モデルのキャッシュ再利用はEditor内7.38秒の単回測定、receiptとモデルの更新時刻は不変だった。[測定条件・回帰・限界](results/m2-editor-sha256-windows-20261010.json)を参照。domain reloadとallocation / font警告の原因は未確定のまま扱う。
+- PR #16を全8 CI成功後に統合し、main `0a6e299` の [CI run 38009534632](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38009534632) 全8 job成功を確認した。
+- 同じEditorでモデルを含まない空sceneと、モデルを準備しないsample UIを比較した。空sceneのPlay終了でPersistent allocation Logが1件、sample UIではfont生成を確認しLog / Warning / Errorは0件だった。先行する実モデル実行と全Editor依存が同じprocessにあるため、由来を確定した結果ではない。元scene・Play停止・NativeLeakDetection設定を復元した。[切り分け記録](results/m2-stability-baseline-windows-20261010.json)を参照。
+- Player専用assemblyに参照・token・vector・全順位・backend・解放・完了の検証APIと完全hash loaderを追加した。意図したredを段階的に観測し、合成参照を使う契約40件が合格した。[準備状況](player-validation.md)に次の起動component / build helper / Windows Player実行とAndroid展開を記載する。実モデル / GPU / Playerの新規成功には数えない。

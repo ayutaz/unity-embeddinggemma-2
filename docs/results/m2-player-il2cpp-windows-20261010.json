@@ -1,0 +1,2404 @@
+{
+  "runs": [
+    {
+      "process": {
+        "arguments": [
+          "-batchmode",
+          "-force-d3d12",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\player-runs\\windows-il2cpp-c742fb9-run1\\player.log",
+          "--embeddinggemma-bundle",
+          "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/player-bundle/windows-20261010-run1",
+          "--embeddinggemma-output",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\player-runs\\windows-il2cpp-c742fb9-run1\\results.json",
+          "--embeddinggemma-run-id",
+          "6985b10753e245668ed6f76eec25c9a7"
+        ],
+        "bundle_source": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/player-bundle/windows-20261010-run1",
+        "run_id": "6985b10753e245668ed6f76eec25c9a7",
+        "result": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\player-runs\\windows-il2cpp-c742fb9-run1\\results.json",
+        "started_utc": "2026-10-10T03:04:11.0073177Z",
+        "code_commit": "c742fb940b78393573b19e42352fe7b70256e74d",
+        "pid": 177260,
+        "executable": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\player-build\\windows-il2cpp-c742fb9\\Validation.exe"
+      },
+      "exit": {
+        "completed_utc": "2026-10-10T03:05:34.5612564Z",
+        "run_id": "6985b10753e245668ed6f76eec25c9a7",
+        "pid": 177260,
+        "elapsed_seconds": 83.552954,
+        "exit_code": 0
+      },
+      "result": {
+        "schema_version": 1,
+        "tokenRows": 25,
+        "success": true,
+        "isEditor": false,
+        "gpuVerified": true,
+        "runId": "6985b10753e245668ed6f76eec25c9a7",
+        "startedUtc": "2026-10-10T03:04:19.0914564Z",
+        "completedUtc": "2026-10-10T03:05:31.5509245Z",
+        "phase": "completed",
+        "error": null,
+        "validationMode": "real_model",
+        "unity": "6000.3.16f1",
+        "os": "Windows 11  (10.0.22631)",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphicsApi": "Direct3D12",
+        "timingScope": "Synchronous main-thread API including prompts, tokenization, schedule and final vector readback. One untimed query warmup then three timed query inferences.",
+        "memoryScope": "Whole application stage samples, not a continuously observed peak or model-exclusive memory. GPU memory usage is unknown; null counters mean unavailable.",
+        "build": {
+          "codeCommit": "c742fb940b78393573b19e42352fe7b70256e74d",
+          "unityVersion": "6000.3.16f1",
+          "sentisVersion": "2.6.1",
+          "target": "StandaloneWindows64",
+          "scriptingBackend": "IL2CPP",
+          "stripping": "High",
+          "sourceSha256": {
+            "Assets/Validation/Runtime/PlayerBundleCache.cs": "8e17ce94c049d97d700363cd1446f8348aeaf2f2e0dbcc34c2c84fc349960fc9",
+            "Assets/Validation/Runtime/PlayerBundleLoader.cs": "61f27369c26d75b50e27136b8464cd4a5ea472773dd045b82694fa77aca44921",
+            "Assets/Validation/Runtime/PlayerBundleStager.cs": "b2041d88674d20ae62e272bbaffbee0e24e3d66c8d9e1ad9e110680e590f2940",
+            "Assets/Validation/Runtime/PlayerFileHash.cs": "ecf0d009a00fad2c2234f9bbe7e292ac27e05c279fe96978aae9c748af75cd91",
+            "Assets/Validation/Runtime/PlayerRunProtocol.cs": "28678308558ca6f05ef44aa9988f5012f06a794c05faacd00896035494c025e2",
+            "Assets/Validation/Runtime/PlayerValidation.cs": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+            "Assets/Validation/Runtime/PlayerValidationExecution.cs": "f219eca5073a12241d90c736d6d1339875792323585a369efade8956830fb7a1",
+            "Assets/Validation/Runtime/PlayerValidationRunner.cs": "8b9e4ee9e1407569f24dae5be70eddf6410a97371af1bc27ab7b1085047a1a4b",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs": "85cb087541827169efe40ddec5074f6cc8b6a1dd995531a250ce5c4bbc66ec1e",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextModelFile.cs": "c4fb628f5ea5e4daacac88f9d4f09266f44e3133a0baf2236438c611917ede28",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextPrompts.cs": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchIndex.cs": "8a17c7ac6e995e6ceb36d9cead732f3ace63f418ab6e860e7f71fdd7a9ea43d0",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchSession.cs": "e4a85fd2378a18b48dd022f82a6fdb4eb73ef9dd980f539c75e2ef5768f1f9f7",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextTokenizer.cs": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763"
+          }
+        },
+        "staging": {
+          "source": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/player-bundle/windows-20261010-run1",
+          "directory": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaValidation\\BundleCache\\active",
+          "error": null,
+          "transport": "UnityWebRequest.DownloadHandlerFile",
+          "cacheRejectedError": null,
+          "transferCompleted": true,
+          "cacheReused": false,
+          "auditPassed": true,
+          "transferredFiles": 6,
+          "milliseconds": 3338.1476000000002,
+          "auditMilliseconds": 1474.547,
+          "hashBackends": {
+            "model-fp32.sentis": "windows_cng",
+            "model-float16.sentis": "windows_cng",
+            "tokenizer.json": "windows_cng",
+            "reference.json": "windows_cng",
+            "search-reference.json": "windows_cng"
+          }
+        },
+        "bundle": {
+          "success": true,
+          "unity_executed": false,
+          "gpu_verified": false,
+          "files": [
+            {
+              "name": "model-fp32.sentis",
+              "bytes": 1095598044,
+              "sha256": "8488d70f2d636a34bfe2a64c1d7b9d3eb3fce70c4fb9e27d32b698090c8fb373"
+            },
+            {
+              "name": "model-float16.sentis",
+              "bytes": 553775500,
+              "sha256": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819"
+            },
+            {
+              "name": "tokenizer.json",
+              "bytes": 32170775,
+              "sha256": "25975a936201b81402a3b867d5c462cf10808bb96759f97fe9aefecbb11c49df"
+            },
+            {
+              "name": "reference.json",
+              "bytes": 408173,
+              "sha256": "deb9b3ed00e49c29b18c1a747307a318900d5e993fb3d9208f4d37e8a73cf2f6"
+            },
+            {
+              "name": "search-reference.json",
+              "bytes": 268000,
+              "sha256": "3530756b36316a812ac853f0722bed5479e92e6bb02ca6aa41c06660d32a71ec"
+            }
+          ],
+          "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+          "model_source": "2edb272f17a38c7af210474345c35f391fd6955c",
+          "search_source": "13f194266162d2a728b2b2a0da9e9e58ae314ff6",
+          "model_origin_sha256": "92968480724ef7838cbd7d7b7cfd6a8d6d5105bb937f8a9907e965805a7651c8",
+          "unity_preparation_version": "6000.3.16f1"
+        },
+        "hashBackends": {
+          "model-fp32.sentis": "windows_cng",
+          "model-float16.sentis": "windows_cng",
+          "tokenizer.json": "windows_cng",
+          "reference.json": "windows_cng",
+          "search-reference.json": "windows_cng"
+        },
+        "auditMilliseconds": 1474.518,
+        "tokenizerMilliseconds": 3359.3702000000003,
+        "conditions": [
+          {
+            "success": true,
+            "workerReleased": true,
+            "precision": "fp32",
+            "requestedBackend": "CPU",
+            "actualBackend": "CPU",
+            "error": null,
+            "minimumCosine": 0.9999999999981735,
+            "firstInferenceMilliseconds": 546.7196,
+            "releaseMilliseconds": 1.0392000000000001,
+            "modelLoadMilliseconds": 915.4502,
+            "workerCreationMilliseconds": 3088.5937000000004,
+            "caseCount": 15,
+            "documentCount": 6,
+            "queryCount": 4,
+            "warmInferenceMilliseconds": [
+              518.2607,
+              507.47560000000004,
+              516.5439
+            ],
+            "cases": [
+              {
+                "id": "ja-query",
+                "cosine": 0.9999999999996712
+              },
+              {
+                "id": "ja-document",
+                "cosine": 0.9999999999995968
+              },
+              {
+                "id": "en-query",
+                "cosine": 0.9999999999996152
+              },
+              {
+                "id": "en-document",
+                "cosine": 0.9999999999996384
+              },
+              {
+                "id": "titled-document",
+                "cosine": 0.9999999999993079
+              },
+              {
+                "id": "empty",
+                "cosine": 0.9999999999999376
+              },
+              {
+                "id": "empty-query",
+                "cosine": 0.9999999999994076
+              },
+              {
+                "id": "whitespace",
+                "cosine": 0.9999999999992348
+              },
+              {
+                "id": "newlines",
+                "cosine": 0.9999999999993905
+              },
+              {
+                "id": "mixed",
+                "cosine": 0.9999999999995766
+              },
+              {
+                "id": "emoji",
+                "cosine": 0.999999999999782
+              },
+              {
+                "id": "punctuation",
+                "cosine": 0.9999999999994217
+              },
+              {
+                "id": "unicode",
+                "cosine": 0.9999999999996954
+              },
+              {
+                "id": "long-truncated",
+                "cosine": 0.9999999999995774
+              },
+              {
+                "id": "unrelated-document",
+                "cosine": 0.9999999999995713
+              }
+            ],
+            "queries": [
+              {
+                "id": "query-cat-ja",
+                "cosine": 0.999999999999689,
+                "ranking": [
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.7473304110670193
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.7248598257649412
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5659783338053531
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5659783338053531
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5122136955441852
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.4919055925521205
+                  }
+                ]
+              },
+              {
+                "id": "query-space-en",
+                "cosine": 0.9999999999996023,
+                "ranking": [
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.7798648539191194
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.7117977046604552
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5516260573160966
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5516260573160966
+                  },
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.5359168734597249
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.5263622875663185
+                  }
+                ]
+              },
+              {
+                "id": "query-recipe-ja",
+                "cosine": 0.9999999999996876,
+                "ranking": [
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.8117594303975944
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.8117594303975944
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.5771714890936261
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5589211719750438
+                  },
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.5229029672034823
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.5080021140957824
+                  }
+                ]
+              },
+              {
+                "id": "query-cat-en",
+                "cosine": 0.9999999999996464,
+                "ranking": [
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.7958340504855802
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.716784992965655
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.530673954808166
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5133201274905753
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5133201274905753
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5030712413662828
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "success": true,
+            "workerReleased": true,
+            "precision": "fp32",
+            "requestedBackend": "GPUCompute",
+            "actualBackend": "GPUCompute",
+            "error": null,
+            "minimumCosine": 0.999999999999512,
+            "firstInferenceMilliseconds": 4706.0936,
+            "releaseMilliseconds": 0.7386,
+            "modelLoadMilliseconds": 1206.8555000000001,
+            "workerCreationMilliseconds": 2946.7758000000003,
+            "caseCount": 15,
+            "documentCount": 6,
+            "queryCount": 4,
+            "warmInferenceMilliseconds": [
+              48.175000000000004,
+              40.5882,
+              43.134
+            ],
+            "cases": [
+              {
+                "id": "ja-query",
+                "cosine": 0.9999999999998821
+              },
+              {
+                "id": "ja-document",
+                "cosine": 0.9999999999997997
+              },
+              {
+                "id": "en-query",
+                "cosine": 0.9999999999998606
+              },
+              {
+                "id": "en-document",
+                "cosine": 0.9999999999998574
+              },
+              {
+                "id": "titled-document",
+                "cosine": 0.9999999999998237
+              },
+              {
+                "id": "empty",
+                "cosine": 0.9999999999999786
+              },
+              {
+                "id": "empty-query",
+                "cosine": 0.9999999999997229
+              },
+              {
+                "id": "whitespace",
+                "cosine": 0.9999999999997453
+              },
+              {
+                "id": "newlines",
+                "cosine": 0.9999999999997935
+              },
+              {
+                "id": "mixed",
+                "cosine": 0.9999999999997835
+              },
+              {
+                "id": "emoji",
+                "cosine": 0.9999999999999017
+              },
+              {
+                "id": "punctuation",
+                "cosine": 0.9999999999997553
+              },
+              {
+                "id": "unicode",
+                "cosine": 0.9999999999998133
+              },
+              {
+                "id": "long-truncated",
+                "cosine": 0.9999999999996677
+              },
+              {
+                "id": "unrelated-document",
+                "cosine": 0.9999999999998337
+              }
+            ],
+            "queries": [
+              {
+                "id": "query-cat-ja",
+                "cosine": 0.9999999999998801,
+                "ranking": [
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.7473303426040513
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.7248598136856715
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5659783895424063
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5659783895424063
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5122136388969601
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.4919057124303446
+                  }
+                ]
+              },
+              {
+                "id": "query-space-en",
+                "cosine": 0.9999999999998976,
+                "ranking": [
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.7798648642603759
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.7117976097640415
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5516260511443223
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5516260511443223
+                  },
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.5359167231874132
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.5263622798476042
+                  }
+                ]
+              },
+              {
+                "id": "query-recipe-ja",
+                "cosine": 0.9999999999998792,
+                "ranking": [
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.8117594395513761
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.8117594395513761
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.5771715142352556
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5589210756342383
+                  },
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.5229028996267017
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.5080020903058801
+                  }
+                ]
+              },
+              {
+                "id": "query-cat-en",
+                "cosine": 0.9999999999998933,
+                "ranking": [
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.7958339796363999
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.7167849951108329
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.5306740243407113
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5133201512608726
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5133201512608726
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5030711836112948
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "success": true,
+            "workerReleased": true,
+            "precision": "float16",
+            "requestedBackend": "CPU",
+            "actualBackend": "CPU",
+            "error": null,
+            "minimumCosine": 0.9999999999982625,
+            "firstInferenceMilliseconds": 1052.6729,
+            "releaseMilliseconds": 65.50410000000001,
+            "modelLoadMilliseconds": 1527.7571,
+            "workerCreationMilliseconds": 4492.2983,
+            "caseCount": 15,
+            "documentCount": 6,
+            "queryCount": 4,
+            "warmInferenceMilliseconds": [
+              830.0114000000001,
+              838.0068,
+              830.7875
+            ],
+            "cases": [
+              {
+                "id": "ja-query",
+                "cosine": 0.9999999999996516
+              },
+              {
+                "id": "ja-document",
+                "cosine": 0.9999999999995601
+              },
+              {
+                "id": "en-query",
+                "cosine": 0.9999999999996876
+              },
+              {
+                "id": "en-document",
+                "cosine": 0.9999999999995655
+              },
+              {
+                "id": "titled-document",
+                "cosine": 0.9999999999994379
+              },
+              {
+                "id": "empty",
+                "cosine": 0.9999999999999406
+              },
+              {
+                "id": "empty-query",
+                "cosine": 0.9999999999993778
+              },
+              {
+                "id": "whitespace",
+                "cosine": 0.9999999999991496
+              },
+              {
+                "id": "newlines",
+                "cosine": 0.9999999999993504
+              },
+              {
+                "id": "mixed",
+                "cosine": 0.9999999999995822
+              },
+              {
+                "id": "emoji",
+                "cosine": 0.9999999999998064
+              },
+              {
+                "id": "punctuation",
+                "cosine": 0.9999999999994466
+              },
+              {
+                "id": "unicode",
+                "cosine": 0.9999999999996736
+              },
+              {
+                "id": "long-truncated",
+                "cosine": 0.9999999999995712
+              },
+              {
+                "id": "unrelated-document",
+                "cosine": 0.9999999999995325
+              }
+            ],
+            "queries": [
+              {
+                "id": "query-cat-ja",
+                "cosine": 0.9999999999996811,
+                "ranking": [
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.7473302795875995
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.724859700631836
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5659783691962434
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5659783691962434
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.51221360768319
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.4919055607135568
+                  }
+                ]
+              },
+              {
+                "id": "query-space-en",
+                "cosine": 0.9999999999996598,
+                "ranking": [
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.7798648329763939
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.7117976477931458
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5516260641509965
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5516260641509965
+                  },
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.5359166787462596
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.5263623545799622
+                  }
+                ]
+              },
+              {
+                "id": "query-recipe-ja",
+                "cosine": 0.9999999999996932,
+                "ranking": [
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.81175945764406
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.81175945764406
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.5771715624538548
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5589211598843629
+                  },
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.522902837334879
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.508002178560356
+                  }
+                ]
+              },
+              {
+                "id": "query-cat-en",
+                "cosine": 0.9999999999996199,
+                "ranking": [
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.7958340039005826
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.7167849857428491
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.5306740074114046
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5133202779748385
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5133202779748385
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5030712796865222
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "success": true,
+            "workerReleased": true,
+            "precision": "float16",
+            "requestedBackend": "GPUCompute",
+            "actualBackend": "GPUCompute",
+            "error": null,
+            "minimumCosine": 0.9999999999994984,
+            "firstInferenceMilliseconds": 712.7934,
+            "releaseMilliseconds": 0.6297,
+            "modelLoadMilliseconds": 657.9761000000001,
+            "workerCreationMilliseconds": 3610.7218000000003,
+            "caseCount": 15,
+            "documentCount": 6,
+            "queryCount": 4,
+            "warmInferenceMilliseconds": [
+              33.6714,
+              34.607600000000005,
+              35.1712
+            ],
+            "cases": [
+              {
+                "id": "ja-query",
+                "cosine": 0.9999999999998848
+              },
+              {
+                "id": "ja-document",
+                "cosine": 0.9999999999998281
+              },
+              {
+                "id": "en-query",
+                "cosine": 0.9999999999998705
+              },
+              {
+                "id": "en-document",
+                "cosine": 0.9999999999998711
+              },
+              {
+                "id": "titled-document",
+                "cosine": 0.9999999999998113
+              },
+              {
+                "id": "empty",
+                "cosine": 0.9999999999999739
+              },
+              {
+                "id": "empty-query",
+                "cosine": 0.9999999999997065
+              },
+              {
+                "id": "whitespace",
+                "cosine": 0.9999999999997324
+              },
+              {
+                "id": "newlines",
+                "cosine": 0.9999999999997708
+              },
+              {
+                "id": "mixed",
+                "cosine": 0.9999999999998518
+              },
+              {
+                "id": "emoji",
+                "cosine": 0.9999999999998886
+              },
+              {
+                "id": "punctuation",
+                "cosine": 0.9999999999997792
+              },
+              {
+                "id": "unicode",
+                "cosine": 0.9999999999997984
+              },
+              {
+                "id": "long-truncated",
+                "cosine": 0.9999999999996894
+              },
+              {
+                "id": "unrelated-document",
+                "cosine": 0.999999999999845
+              }
+            ],
+            "queries": [
+              {
+                "id": "query-cat-ja",
+                "cosine": 0.999999999999897,
+                "ranking": [
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.7473303435039038
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.7248598069272855
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5659783804528246
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5659783804528246
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.512213678390191
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.49190570545080414
+                  }
+                ]
+              },
+              {
+                "id": "query-space-en",
+                "cosine": 0.9999999999998783,
+                "ranking": [
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.7798648887130949
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.7117976440516569
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5516260665635233
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5516260665635233
+                  },
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.5359167338954286
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.5263623564371217
+                  }
+                ]
+              },
+              {
+                "id": "query-recipe-ja",
+                "cosine": 0.999999999999893,
+                "ranking": [
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.8117594480270712
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.8117594480270712
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.5771714946660856
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5589211127208285
+                  },
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.5229029082709717
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.50800213180254
+                  }
+                ]
+              },
+              {
+                "id": "query-cat-en",
+                "cosine": 0.9999999999998695,
+                "ranking": [
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.7958339521031985
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.7167849794342989
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.5306739895772238
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5133201332652632
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5133201332652632
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5030712012218482
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "memory": [
+          {
+            "stage": "after_cache_audit",
+            "managedHeapBytes": 68538368,
+            "unityAllocatedBytes": 53170079,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "after_token_audit",
+            "managedHeapBytes": 580177920,
+            "unityAllocatedBytes": 62166431,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "before_fp32:CPU",
+            "managedHeapBytes": 580247552,
+            "unityAllocatedBytes": 62166431,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "worker_created_fp32:CPU",
+            "managedHeapBytes": 3683618816,
+            "unityAllocatedBytes": 62625567,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "released_fp32:CPU",
+            "managedHeapBytes": 3686457344,
+            "unityAllocatedBytes": 68756255,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "before_fp32:GPUCompute",
+            "managedHeapBytes": 3686809600,
+            "unityAllocatedBytes": 68756255,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "worker_created_fp32:GPUCompute",
+            "managedHeapBytes": 4781383680,
+            "unityAllocatedBytes": 68757495,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "released_fp32:GPUCompute",
+            "managedHeapBytes": 4784435200,
+            "unityAllocatedBytes": 94879202,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "before_float16:CPU",
+            "managedHeapBytes": 4784762880,
+            "unityAllocatedBytes": 94879202,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "worker_created_float16:CPU",
+            "managedHeapBytes": 5349277696,
+            "unityAllocatedBytes": 93928618,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "released_float16:CPU",
+            "managedHeapBytes": 5352194048,
+            "unityAllocatedBytes": 93928330,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "before_float16:GPUCompute",
+            "managedHeapBytes": 5352583168,
+            "unityAllocatedBytes": 93928330,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "worker_created_float16:GPUCompute",
+            "managedHeapBytes": 4261908480,
+            "unityAllocatedBytes": 93929554,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "released_float16:GPUCompute",
+            "managedHeapBytes": 4265058304,
+            "unityAllocatedBytes": 95683765,
+            "processWorkingSetBytes": null
+          }
+        ]
+      },
+      "shutdown_memory_diagnostic": null,
+      "raw_directory": "artifacts/player-runs/windows-il2cpp-c742fb9-run1"
+    },
+    {
+      "process": {
+        "run_id": "7c1d01e21ea4436ba7afbbf6c796e6e8",
+        "started_utc": "2026-10-10T03:05:44.1693021Z",
+        "pid": 188500,
+        "bundle_source": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/player-bundle/windows-20261010-run1",
+        "arguments": [
+          "-batchmode",
+          "-force-d3d12",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\player-runs\\windows-il2cpp-c742fb9-run2\\player.log",
+          "--embeddinggemma-bundle",
+          "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/player-bundle/windows-20261010-run1",
+          "--embeddinggemma-output",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\player-runs\\windows-il2cpp-c742fb9-run2\\results.json",
+          "--embeddinggemma-run-id",
+          "7c1d01e21ea4436ba7afbbf6c796e6e8"
+        ],
+        "result": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\player-runs\\windows-il2cpp-c742fb9-run2\\results.json",
+        "code_commit": "c742fb940b78393573b19e42352fe7b70256e74d",
+        "executable": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\player-build\\windows-il2cpp-c742fb9\\Validation.exe"
+      },
+      "exit": {
+        "elapsed_seconds": 78.5791366,
+        "run_id": "7c1d01e21ea4436ba7afbbf6c796e6e8",
+        "exit_code": 0,
+        "pid": 188500,
+        "completed_utc": "2026-10-10T03:07:02.7498163Z"
+      },
+      "result": {
+        "schema_version": 1,
+        "tokenRows": 25,
+        "success": true,
+        "isEditor": false,
+        "gpuVerified": true,
+        "runId": "7c1d01e21ea4436ba7afbbf6c796e6e8",
+        "startedUtc": "2026-10-10T03:05:51.9336912Z",
+        "completedUtc": "2026-10-10T03:07:00.0639334Z",
+        "phase": "completed",
+        "error": null,
+        "validationMode": "real_model",
+        "unity": "6000.3.16f1",
+        "os": "Windows 11  (10.0.22631)",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphicsApi": "Direct3D12",
+        "timingScope": "Synchronous main-thread API including prompts, tokenization, schedule and final vector readback. One untimed query warmup then three timed query inferences.",
+        "memoryScope": "Whole application stage samples, not a continuously observed peak or model-exclusive memory. GPU memory usage is unknown; null counters mean unavailable.",
+        "build": {
+          "codeCommit": "c742fb940b78393573b19e42352fe7b70256e74d",
+          "unityVersion": "6000.3.16f1",
+          "sentisVersion": "2.6.1",
+          "target": "StandaloneWindows64",
+          "scriptingBackend": "IL2CPP",
+          "stripping": "High",
+          "sourceSha256": {
+            "Assets/Validation/Runtime/PlayerBundleCache.cs": "8e17ce94c049d97d700363cd1446f8348aeaf2f2e0dbcc34c2c84fc349960fc9",
+            "Assets/Validation/Runtime/PlayerBundleLoader.cs": "61f27369c26d75b50e27136b8464cd4a5ea472773dd045b82694fa77aca44921",
+            "Assets/Validation/Runtime/PlayerBundleStager.cs": "b2041d88674d20ae62e272bbaffbee0e24e3d66c8d9e1ad9e110680e590f2940",
+            "Assets/Validation/Runtime/PlayerFileHash.cs": "ecf0d009a00fad2c2234f9bbe7e292ac27e05c279fe96978aae9c748af75cd91",
+            "Assets/Validation/Runtime/PlayerRunProtocol.cs": "28678308558ca6f05ef44aa9988f5012f06a794c05faacd00896035494c025e2",
+            "Assets/Validation/Runtime/PlayerValidation.cs": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+            "Assets/Validation/Runtime/PlayerValidationExecution.cs": "f219eca5073a12241d90c736d6d1339875792323585a369efade8956830fb7a1",
+            "Assets/Validation/Runtime/PlayerValidationRunner.cs": "8b9e4ee9e1407569f24dae5be70eddf6410a97371af1bc27ab7b1085047a1a4b",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs": "85cb087541827169efe40ddec5074f6cc8b6a1dd995531a250ce5c4bbc66ec1e",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextModelFile.cs": "c4fb628f5ea5e4daacac88f9d4f09266f44e3133a0baf2236438c611917ede28",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextPrompts.cs": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchIndex.cs": "8a17c7ac6e995e6ceb36d9cead732f3ace63f418ab6e860e7f71fdd7a9ea43d0",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchSession.cs": "e4a85fd2378a18b48dd022f82a6fdb4eb73ef9dd980f539c75e2ef5768f1f9f7",
+            "Packages/com.ayutaz.embeddinggemma/Runtime/TextTokenizer.cs": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763"
+          }
+        },
+        "staging": {
+          "source": "file:///C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/player-bundle/windows-20261010-run1",
+          "directory": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaValidation\\BundleCache\\active",
+          "error": null,
+          "transport": "UnityWebRequest.DownloadHandlerFile",
+          "cacheRejectedError": null,
+          "transferCompleted": true,
+          "cacheReused": true,
+          "auditPassed": true,
+          "transferredFiles": 1,
+          "milliseconds": 1573.3008,
+          "auditMilliseconds": 1555.2562,
+          "hashBackends": {
+            "model-fp32.sentis": "windows_cng",
+            "model-float16.sentis": "windows_cng",
+            "tokenizer.json": "windows_cng",
+            "reference.json": "windows_cng",
+            "search-reference.json": "windows_cng"
+          }
+        },
+        "bundle": {
+          "success": true,
+          "unity_executed": false,
+          "gpu_verified": false,
+          "files": [
+            {
+              "name": "model-fp32.sentis",
+              "bytes": 1095598044,
+              "sha256": "8488d70f2d636a34bfe2a64c1d7b9d3eb3fce70c4fb9e27d32b698090c8fb373"
+            },
+            {
+              "name": "model-float16.sentis",
+              "bytes": 553775500,
+              "sha256": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819"
+            },
+            {
+              "name": "tokenizer.json",
+              "bytes": 32170775,
+              "sha256": "25975a936201b81402a3b867d5c462cf10808bb96759f97fe9aefecbb11c49df"
+            },
+            {
+              "name": "reference.json",
+              "bytes": 408173,
+              "sha256": "deb9b3ed00e49c29b18c1a747307a318900d5e993fb3d9208f4d37e8a73cf2f6"
+            },
+            {
+              "name": "search-reference.json",
+              "bytes": 268000,
+              "sha256": "3530756b36316a812ac853f0722bed5479e92e6bb02ca6aa41c06660d32a71ec"
+            }
+          ],
+          "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+          "model_source": "2edb272f17a38c7af210474345c35f391fd6955c",
+          "search_source": "13f194266162d2a728b2b2a0da9e9e58ae314ff6",
+          "model_origin_sha256": "92968480724ef7838cbd7d7b7cfd6a8d6d5105bb937f8a9907e965805a7651c8",
+          "unity_preparation_version": "6000.3.16f1"
+        },
+        "hashBackends": {
+          "model-fp32.sentis": "windows_cng",
+          "model-float16.sentis": "windows_cng",
+          "tokenizer.json": "windows_cng",
+          "reference.json": "windows_cng",
+          "search-reference.json": "windows_cng"
+        },
+        "auditMilliseconds": 1554.3132,
+        "tokenizerMilliseconds": 3298.0205,
+        "conditions": [
+          {
+            "success": true,
+            "workerReleased": true,
+            "precision": "fp32",
+            "requestedBackend": "CPU",
+            "actualBackend": "CPU",
+            "error": null,
+            "minimumCosine": 0.9999999999981735,
+            "firstInferenceMilliseconds": 600.0805,
+            "releaseMilliseconds": 0.539,
+            "modelLoadMilliseconds": 960.7633000000001,
+            "workerCreationMilliseconds": 3646.2437,
+            "caseCount": 15,
+            "documentCount": 6,
+            "queryCount": 4,
+            "warmInferenceMilliseconds": [
+              517.8432,
+              517.6978,
+              521.7137
+            ],
+            "cases": [
+              {
+                "id": "ja-query",
+                "cosine": 0.9999999999996712
+              },
+              {
+                "id": "ja-document",
+                "cosine": 0.9999999999995968
+              },
+              {
+                "id": "en-query",
+                "cosine": 0.9999999999996152
+              },
+              {
+                "id": "en-document",
+                "cosine": 0.9999999999996384
+              },
+              {
+                "id": "titled-document",
+                "cosine": 0.9999999999993079
+              },
+              {
+                "id": "empty",
+                "cosine": 0.9999999999999376
+              },
+              {
+                "id": "empty-query",
+                "cosine": 0.9999999999994076
+              },
+              {
+                "id": "whitespace",
+                "cosine": 0.9999999999992348
+              },
+              {
+                "id": "newlines",
+                "cosine": 0.9999999999993905
+              },
+              {
+                "id": "mixed",
+                "cosine": 0.9999999999995766
+              },
+              {
+                "id": "emoji",
+                "cosine": 0.999999999999782
+              },
+              {
+                "id": "punctuation",
+                "cosine": 0.9999999999994217
+              },
+              {
+                "id": "unicode",
+                "cosine": 0.9999999999996954
+              },
+              {
+                "id": "long-truncated",
+                "cosine": 0.9999999999995774
+              },
+              {
+                "id": "unrelated-document",
+                "cosine": 0.9999999999995713
+              }
+            ],
+            "queries": [
+              {
+                "id": "query-cat-ja",
+                "cosine": 0.999999999999689,
+                "ranking": [
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.7473304110670193
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.7248598257649412
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5659783338053531
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5659783338053531
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5122136955441852
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.4919055925521205
+                  }
+                ]
+              },
+              {
+                "id": "query-space-en",
+                "cosine": 0.9999999999996023,
+                "ranking": [
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.7798648539191194
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.7117977046604552
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5516260573160966
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5516260573160966
+                  },
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.5359168734597249
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.5263622875663185
+                  }
+                ]
+              },
+              {
+                "id": "query-recipe-ja",
+                "cosine": 0.9999999999996876,
+                "ranking": [
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.8117594303975944
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.8117594303975944
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.5771714890936261
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5589211719750438
+                  },
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.5229029672034823
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.5080021140957824
+                  }
+                ]
+              },
+              {
+                "id": "query-cat-en",
+                "cosine": 0.9999999999996464,
+                "ranking": [
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.7958340504855802
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.716784992965655
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.530673954808166
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5133201274905753
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5133201274905753
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5030712413662828
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "success": true,
+            "workerReleased": true,
+            "precision": "fp32",
+            "requestedBackend": "GPUCompute",
+            "actualBackend": "GPUCompute",
+            "error": null,
+            "minimumCosine": 0.999999999999512,
+            "firstInferenceMilliseconds": 1846.3598000000002,
+            "releaseMilliseconds": 0.4823,
+            "modelLoadMilliseconds": 1160.1211,
+            "workerCreationMilliseconds": 3179.2415,
+            "caseCount": 15,
+            "documentCount": 6,
+            "queryCount": 4,
+            "warmInferenceMilliseconds": [
+              32.0861,
+              36.3921,
+              33.0668
+            ],
+            "cases": [
+              {
+                "id": "ja-query",
+                "cosine": 0.9999999999998821
+              },
+              {
+                "id": "ja-document",
+                "cosine": 0.9999999999997997
+              },
+              {
+                "id": "en-query",
+                "cosine": 0.9999999999998606
+              },
+              {
+                "id": "en-document",
+                "cosine": 0.9999999999998574
+              },
+              {
+                "id": "titled-document",
+                "cosine": 0.9999999999998237
+              },
+              {
+                "id": "empty",
+                "cosine": 0.9999999999999786
+              },
+              {
+                "id": "empty-query",
+                "cosine": 0.9999999999997229
+              },
+              {
+                "id": "whitespace",
+                "cosine": 0.9999999999997453
+              },
+              {
+                "id": "newlines",
+                "cosine": 0.9999999999997935
+              },
+              {
+                "id": "mixed",
+                "cosine": 0.9999999999997835
+              },
+              {
+                "id": "emoji",
+                "cosine": 0.9999999999999017
+              },
+              {
+                "id": "punctuation",
+                "cosine": 0.9999999999997553
+              },
+              {
+                "id": "unicode",
+                "cosine": 0.9999999999998133
+              },
+              {
+                "id": "long-truncated",
+                "cosine": 0.9999999999996677
+              },
+              {
+                "id": "unrelated-document",
+                "cosine": 0.9999999999998337
+              }
+            ],
+            "queries": [
+              {
+                "id": "query-cat-ja",
+                "cosine": 0.9999999999998801,
+                "ranking": [
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.7473303426040513
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.7248598136856715
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5659783895424063
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5659783895424063
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5122136388969601
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.4919057124303446
+                  }
+                ]
+              },
+              {
+                "id": "query-space-en",
+                "cosine": 0.9999999999998976,
+                "ranking": [
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.7798648642603759
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.7117976097640415
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5516260511443223
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5516260511443223
+                  },
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.5359167231874132
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.5263622798476042
+                  }
+                ]
+              },
+              {
+                "id": "query-recipe-ja",
+                "cosine": 0.9999999999998792,
+                "ranking": [
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.8117594395513761
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.8117594395513761
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.5771715142352556
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5589210756342383
+                  },
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.5229028996267017
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.5080020903058801
+                  }
+                ]
+              },
+              {
+                "id": "query-cat-en",
+                "cosine": 0.9999999999998933,
+                "ranking": [
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.7958339796363999
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.7167849951108329
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.5306740243407113
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5133201512608726
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5133201512608726
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5030711836112948
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "success": true,
+            "workerReleased": true,
+            "precision": "float16",
+            "requestedBackend": "CPU",
+            "actualBackend": "CPU",
+            "error": null,
+            "minimumCosine": 0.9999999999982625,
+            "firstInferenceMilliseconds": 1325.8254000000002,
+            "releaseMilliseconds": 107.7403,
+            "modelLoadMilliseconds": 660.9788,
+            "workerCreationMilliseconds": 3410.0185,
+            "caseCount": 15,
+            "documentCount": 6,
+            "queryCount": 4,
+            "warmInferenceMilliseconds": [
+              851.6757,
+              868.1829,
+              940.3759
+            ],
+            "cases": [
+              {
+                "id": "ja-query",
+                "cosine": 0.9999999999996516
+              },
+              {
+                "id": "ja-document",
+                "cosine": 0.9999999999995601
+              },
+              {
+                "id": "en-query",
+                "cosine": 0.9999999999996876
+              },
+              {
+                "id": "en-document",
+                "cosine": 0.9999999999995655
+              },
+              {
+                "id": "titled-document",
+                "cosine": 0.9999999999994379
+              },
+              {
+                "id": "empty",
+                "cosine": 0.9999999999999406
+              },
+              {
+                "id": "empty-query",
+                "cosine": 0.9999999999993778
+              },
+              {
+                "id": "whitespace",
+                "cosine": 0.9999999999991496
+              },
+              {
+                "id": "newlines",
+                "cosine": 0.9999999999993504
+              },
+              {
+                "id": "mixed",
+                "cosine": 0.9999999999995822
+              },
+              {
+                "id": "emoji",
+                "cosine": 0.9999999999998064
+              },
+              {
+                "id": "punctuation",
+                "cosine": 0.9999999999994466
+              },
+              {
+                "id": "unicode",
+                "cosine": 0.9999999999996736
+              },
+              {
+                "id": "long-truncated",
+                "cosine": 0.9999999999995712
+              },
+              {
+                "id": "unrelated-document",
+                "cosine": 0.9999999999995325
+              }
+            ],
+            "queries": [
+              {
+                "id": "query-cat-ja",
+                "cosine": 0.9999999999996811,
+                "ranking": [
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.7473302795875995
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.724859700631836
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5659783691962434
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5659783691962434
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.51221360768319
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.4919055607135568
+                  }
+                ]
+              },
+              {
+                "id": "query-space-en",
+                "cosine": 0.9999999999996598,
+                "ranking": [
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.7798648329763939
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.7117976477931458
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5516260641509965
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5516260641509965
+                  },
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.5359166787462596
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.5263623545799622
+                  }
+                ]
+              },
+              {
+                "id": "query-recipe-ja",
+                "cosine": 0.9999999999996932,
+                "ranking": [
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.81175945764406
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.81175945764406
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.5771715624538548
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5589211598843629
+                  },
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.522902837334879
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.508002178560356
+                  }
+                ]
+              },
+              {
+                "id": "query-cat-en",
+                "cosine": 0.9999999999996199,
+                "ranking": [
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.7958340039005826
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.7167849857428491
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.5306740074114046
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5133202779748385
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5133202779748385
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5030712796865222
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "success": true,
+            "workerReleased": true,
+            "precision": "float16",
+            "requestedBackend": "GPUCompute",
+            "actualBackend": "GPUCompute",
+            "error": null,
+            "minimumCosine": 0.9999999999994984,
+            "firstInferenceMilliseconds": 564.8022,
+            "releaseMilliseconds": 0.5929,
+            "modelLoadMilliseconds": 584.1799,
+            "workerCreationMilliseconds": 2958.9631,
+            "caseCount": 15,
+            "documentCount": 6,
+            "queryCount": 4,
+            "warmInferenceMilliseconds": [
+              35.4137,
+              34.3224,
+              36.670300000000005
+            ],
+            "cases": [
+              {
+                "id": "ja-query",
+                "cosine": 0.9999999999998848
+              },
+              {
+                "id": "ja-document",
+                "cosine": 0.9999999999998281
+              },
+              {
+                "id": "en-query",
+                "cosine": 0.9999999999998705
+              },
+              {
+                "id": "en-document",
+                "cosine": 0.9999999999998711
+              },
+              {
+                "id": "titled-document",
+                "cosine": 0.9999999999998113
+              },
+              {
+                "id": "empty",
+                "cosine": 0.9999999999999739
+              },
+              {
+                "id": "empty-query",
+                "cosine": 0.9999999999997065
+              },
+              {
+                "id": "whitespace",
+                "cosine": 0.9999999999997324
+              },
+              {
+                "id": "newlines",
+                "cosine": 0.9999999999997708
+              },
+              {
+                "id": "mixed",
+                "cosine": 0.9999999999998518
+              },
+              {
+                "id": "emoji",
+                "cosine": 0.9999999999998886
+              },
+              {
+                "id": "punctuation",
+                "cosine": 0.9999999999997792
+              },
+              {
+                "id": "unicode",
+                "cosine": 0.9999999999997984
+              },
+              {
+                "id": "long-truncated",
+                "cosine": 0.9999999999996894
+              },
+              {
+                "id": "unrelated-document",
+                "cosine": 0.999999999999845
+              }
+            ],
+            "queries": [
+              {
+                "id": "query-cat-ja",
+                "cosine": 0.999999999999897,
+                "ranking": [
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.7473303435039038
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.7248598069272855
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5659783804528246
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5659783804528246
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.512213678390191
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.49190570545080414
+                  }
+                ]
+              },
+              {
+                "id": "query-space-en",
+                "cosine": 0.9999999999998783,
+                "ranking": [
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.7798648887130949
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.7117976440516569
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5516260665635233
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5516260665635233
+                  },
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.5359167338954286
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.5263623564371217
+                  }
+                ]
+              },
+              {
+                "id": "query-recipe-ja",
+                "cosine": 0.999999999999893,
+                "ranking": [
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.8117594480270712
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.8117594480270712
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.5771714946660856
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5589211127208285
+                  },
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.5229029082709717
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.50800213180254
+                  }
+                ]
+              },
+              {
+                "id": "query-cat-en",
+                "cosine": 0.9999999999998695,
+                "ranking": [
+                  {
+                    "document_id": "doc-cat-en",
+                    "score": 0.7958339521031985
+                  },
+                  {
+                    "document_id": "doc-cat-ja",
+                    "score": 0.7167849794342989
+                  },
+                  {
+                    "document_id": "doc-space-en",
+                    "score": 0.5306739895772238
+                  },
+                  {
+                    "document_id": "doc-recipe-a",
+                    "score": 0.5133201332652632
+                  },
+                  {
+                    "document_id": "doc-recipe-b",
+                    "score": 0.5133201332652632
+                  },
+                  {
+                    "document_id": "doc-space-ja",
+                    "score": 0.5030712012218482
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "memory": [
+          {
+            "stage": "after_cache_audit",
+            "managedHeapBytes": 67563520,
+            "unityAllocatedBytes": 55139711,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "after_token_audit",
+            "managedHeapBytes": 1020960768,
+            "unityAllocatedBytes": 64136063,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "before_fp32:CPU",
+            "managedHeapBytes": 1021034496,
+            "unityAllocatedBytes": 64136063,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "worker_created_fp32:CPU",
+            "managedHeapBytes": 2585309184,
+            "unityAllocatedBytes": 64595199,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "released_fp32:CPU",
+            "managedHeapBytes": 2588241920,
+            "unityAllocatedBytes": 68878943,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "before_fp32:GPUCompute",
+            "managedHeapBytes": 2588725248,
+            "unityAllocatedBytes": 68878943,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "worker_created_fp32:GPUCompute",
+            "managedHeapBytes": 3047505920,
+            "unityAllocatedBytes": 68880159,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "released_fp32:GPUCompute",
+            "managedHeapBytes": 3050586112,
+            "unityAllocatedBytes": 95001866,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "before_float16:CPU",
+            "managedHeapBytes": 3050909696,
+            "unityAllocatedBytes": 95001866,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "worker_created_float16:CPU",
+            "managedHeapBytes": 3155189760,
+            "unityAllocatedBytes": 94051306,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "released_float16:CPU",
+            "managedHeapBytes": 3158237184,
+            "unityAllocatedBytes": 94051034,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "before_float16:GPUCompute",
+            "managedHeapBytes": 3158630400,
+            "unityAllocatedBytes": 94051034,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "worker_created_float16:GPUCompute",
+            "managedHeapBytes": 3049586688,
+            "unityAllocatedBytes": 94052258,
+            "processWorkingSetBytes": null
+          },
+          {
+            "stage": "released_float16:GPUCompute",
+            "managedHeapBytes": 3052601344,
+            "unityAllocatedBytes": 95806445,
+            "processWorkingSetBytes": null
+          }
+        ]
+      },
+      "shutdown_memory_diagnostic": null,
+      "raw_directory": "artifacts/player-runs/windows-il2cpp-c742fb9-run2"
+    }
+  ],
+  "limitations": [
+    "Windows 11 / RTX 4070 Ti SUPER / Direct3D12 only. macOS Editor, iOS and Android actual device execution remain missing; this is not an APK jar-read test.",
+    "The consumer originally resolved Git SHA e7b3a54; its unchanged Core Runtime was verified against build source. Imported validation code was overlaid with the recorded source, so this is not fresh Git import of c742fb9.",
+    "Prepared weights, filesystem/shader/import caches and the same Editor were reused. Two real Player runs are restart/cache correctness checks, not cold-machine or statistical performance evidence.",
+    "Release BuildOptions.None / IL2CPP compiler Release / managed stripping High are evidenced by the real build receipt; the validation-only assembly has preserve-all link.xml. This does not prove arbitrary consumer stripping configurations.",
+    "Memory is whole-application stage samples, not peak or model-exclusive memory. GPU memory is unknown. Worker disposal does not establish zero native allocations or fix previous shutdown diagnostics.",
+    "Model cache has one active bundle after both runs. Per-run report files remain separate. Incomplete transfer byte-range resume is not implemented.",
+    "Formal release still requires the remaining cross-platform, sample loading and stability gates. No downloaded weights or binary artifacts are committed."
+  ],
+  "schema_version": 1,
+  "summaries": [
+    {
+      "number": 1,
+      "transferred_files": 6,
+      "conditions": [
+        {
+          "backend": "CPU",
+          "maximum_ranking_score_delta": 2.421338294311681E-07,
+          "warm_mean_ms": 514.0934000000001,
+          "precision": "fp32",
+          "minimum_cosine": 0.9999999999981735
+        },
+        {
+          "backend": "GPUCompute",
+          "maximum_ranking_score_delta": 9.186151772588858E-08,
+          "warm_mean_ms": 43.96573333333333,
+          "precision": "fp32",
+          "minimum_cosine": 0.999999999999512
+        },
+        {
+          "backend": "CPU",
+          "maximum_ranking_score_delta": 2.1364036523197072E-07,
+          "warm_mean_ms": 832.9352333333333,
+          "precision": "float16",
+          "minimum_cosine": 0.9999999999982625
+        },
+        {
+          "backend": "GPUCompute",
+          "maximum_ranking_score_delta": 1.0256953308918071E-07,
+          "warm_mean_ms": 34.483399999999996,
+          "precision": "float16",
+          "minimum_cosine": 0.9999999999994984
+        }
+      ],
+      "staging_ms": 3338.1476000000002,
+      "audit_ms": 1474.518,
+      "cache_reused": false,
+      "elapsed_seconds": 83.552954
+    },
+    {
+      "number": 2,
+      "transferred_files": 1,
+      "conditions": [
+        {
+          "backend": "CPU",
+          "maximum_ranking_score_delta": 2.421338294311681E-07,
+          "warm_mean_ms": 519.0849000000001,
+          "precision": "fp32",
+          "minimum_cosine": 0.9999999999981735
+        },
+        {
+          "backend": "GPUCompute",
+          "maximum_ranking_score_delta": 9.186151772588858E-08,
+          "warm_mean_ms": 33.848333333333336,
+          "precision": "fp32",
+          "minimum_cosine": 0.999999999999512
+        },
+        {
+          "backend": "CPU",
+          "maximum_ranking_score_delta": 2.1364036523197072E-07,
+          "warm_mean_ms": 886.7448333333333,
+          "precision": "float16",
+          "minimum_cosine": 0.9999999999982625
+        },
+        {
+          "backend": "GPUCompute",
+          "maximum_ranking_score_delta": 1.0256953308918071E-07,
+          "warm_mean_ms": 35.468799999999995,
+          "precision": "float16",
+          "minimum_cosine": 0.9999999999994984
+        }
+      ],
+      "staging_ms": 1573.3008,
+      "audit_ms": 1554.3132,
+      "cache_reused": true,
+      "elapsed_seconds": 78.5791366
+    }
+  ],
+  "after_editor_state": {
+    "Result": "{ playing = False, dirty = False, scene = Assets/EmbeddingGemmaTextSearch/TextSearch.unity, backend = Mono2x, stripping = Disabled, compiler = Release, persistentPath = C:/Users/yuta/AppData/LocalLow/DefaultCompany/h }",
+    "Logs": [
+      "Execution completed successfully"
+    ],
+    "CompilationErrors": [],
+    "ErrorMessage": "",
+    "Error": "",
+    "UpdatedCode": null,
+    "DiagnosticsSummary": null,
+    "Diagnostics": [],
+    "EditorPlaying": false,
+    "Success": true
+  },
+  "source_commit": "c742fb940b78393573b19e42352fe7b70256e74d",
+  "recorded_at_utc": "2026-10-10T03:07:33.6710226Z",
+  "build_request": {
+    "Result": "{ scheduled = True, source = c742fb940b78393573b19e42352fe7b70256e74d, output = C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/player-build/windows-il2cpp-c742fb9/Validation.exe }",
+    "Logs": [
+      "Execution completed successfully"
+    ],
+    "CompilationErrors": [],
+    "ErrorMessage": "",
+    "Error": "",
+    "UpdatedCode": null,
+    "DiagnosticsSummary": null,
+    "Diagnostics": [],
+    "EditorPlaying": false,
+    "Success": true
+  },
+  "main_after_pr22": "f41c7d75a9975926e4273b8948fd339fcf281c37",
+  "cache": {
+    "retained_bundle_directories": 1,
+    "second_run_model_bytes_retransferred": 0,
+    "directory": "C:\\Users\\yuta\\AppData\\LocalLow\\DefaultCompany\\h\\EmbeddingGemmaValidation\\BundleCache\\active",
+    "retained_bytes": 1682221728
+  },
+  "contracts_green": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-10T02:58:24.6012146Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 99,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 99,
+    "XmlPath": null
+  },
+  "build": {
+    "success": true,
+    "injected_build": false,
+    "source_commit": "c742fb940b78393573b19e42352fe7b70256e74d",
+    "started_utc": "2026-10-10T02:59:38.885425Z",
+    "build_options": "None",
+    "il2cpp_compiler": "Release",
+    "build_info": {
+      "codeCommit": "c742fb940b78393573b19e42352fe7b70256e74d",
+      "unityVersion": "6000.3.16f1",
+      "sentisVersion": "2.6.1",
+      "target": "StandaloneWindows64",
+      "scriptingBackend": "IL2CPP",
+      "stripping": "High",
+      "sourceSha256": {
+        "Assets/Validation/Runtime/PlayerBundleCache.cs": "8e17ce94c049d97d700363cd1446f8348aeaf2f2e0dbcc34c2c84fc349960fc9",
+        "Assets/Validation/Runtime/PlayerBundleLoader.cs": "61f27369c26d75b50e27136b8464cd4a5ea472773dd045b82694fa77aca44921",
+        "Assets/Validation/Runtime/PlayerBundleStager.cs": "b2041d88674d20ae62e272bbaffbee0e24e3d66c8d9e1ad9e110680e590f2940",
+        "Assets/Validation/Runtime/PlayerFileHash.cs": "ecf0d009a00fad2c2234f9bbe7e292ac27e05c279fe96978aae9c748af75cd91",
+        "Assets/Validation/Runtime/PlayerRunProtocol.cs": "28678308558ca6f05ef44aa9988f5012f06a794c05faacd00896035494c025e2",
+        "Assets/Validation/Runtime/PlayerValidation.cs": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+        "Assets/Validation/Runtime/PlayerValidationExecution.cs": "f219eca5073a12241d90c736d6d1339875792323585a369efade8956830fb7a1",
+        "Assets/Validation/Runtime/PlayerValidationRunner.cs": "8b9e4ee9e1407569f24dae5be70eddf6410a97371af1bc27ab7b1085047a1a4b",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs": "85cb087541827169efe40ddec5074f6cc8b6a1dd995531a250ce5c4bbc66ec1e",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/TextModelFile.cs": "c4fb628f5ea5e4daacac88f9d4f09266f44e3133a0baf2236438c611917ede28",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/TextPrompts.cs": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchIndex.cs": "8a17c7ac6e995e6ceb36d9cead732f3ace63f418ab6e860e7f71fdd7a9ea43d0",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchSession.cs": "e4a85fd2378a18b48dd022f82a6fdb4eb73ef9dd980f539c75e2ef5768f1f9f7",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/TextTokenizer.cs": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763"
+      }
+    },
+    "build_result": "Succeeded",
+    "build_seconds": 257.13276709999997,
+    "build_bytes": 2284601420,
+    "errors": 0,
+    "warnings": 485,
+    "completed_utc": "2026-10-10T03:03:56.8142519Z"
+  },
+  "tdd_red": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-10T02:57:35.598115Z",
+    "FailedCount": 3,
+    "FailedTests": [
+      {
+        "FullName": "EmbeddingGemma.Validation.Tests.ValidationPlayerBuildTests.PlansAReleaseBuildWithoutDevelopmentOptions",
+        "Message": "  Expected: None\r\n  But was:  ForceOptimizeScriptCompilation, Il2CPP, CompressTextures, StripDebugSymbols, ShaderLivelinkSupport, Development\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Tests\\Editor\\ValidationPlayerBuildTests.cs",
+        "Line": 26
+      },
+      {
+        "FullName": "EmbeddingGemma.Validation.Tests.ValidationPlayerBuildTests.ReleaseBuildSelectsIl2CppHighAndRestoresAllSettings(False)",
+        "Message": "  Expected: None\r\n  But was:  ForceOptimizeScriptCompilation, Il2CPP, CompressTextures, StripDebugSymbols, ShaderLivelinkSupport, Development\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Tests\\Editor\\ValidationPlayerBuildTests.cs",
+        "Line": 46
+      },
+      {
+        "FullName": "EmbeddingGemma.Validation.Tests.ValidationPlayerBuildTests.ReleaseBuildSelectsIl2CppHighAndRestoresAllSettings(True)",
+        "Message": "  Expected: <System.InvalidOperationException>\r\n  But was:  <NUnit.Framework.AssertionException:   Expected: None\r\n  But was:  ForceOptimizeScriptCompilation, Il2CPP, CompressTextures, StripDebugSymbols, ShaderLivelinkSupport, Development\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression) [0x00000] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.ValidationPlayerBuildTests+<>c__DisplayClass5_0.<ReleaseBuildSelectsIl2CppHighAndRestoresAllSettings>b__0 (UnityEditor.BuildPlayerOptions options) [0x00011] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Tests\\Editor\\ValidationPlayerBuildTests.cs:46 \r\n  at EmbeddingGemma.Validation.Editor.ValidationPlayerBuild.BuildWindows (System.String output, System.String codeCommit, System.Action`1[T] execute, System.Boolean releaseIl2Cpp) [0x003c9] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Editor\\ValidationPlayerBuild.cs:68 \r\n  at EmbeddingGemma.Validation.Tests.ValidationPlayerBuildTests+<>c__DisplayClass5_1.<ReleaseBuildSelectsIl2CppHighAndRestoresAllSettings>b__1 () [0x00000] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Tests\\Editor\\ValidationPlayerBuildTests.cs:53 \r\n  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x0002f] in <f577cd9686154d6ab10efd7e65e64366>:0 >\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\Assets\\Validation\\Tests\\Editor\\ValidationPlayerBuildTests.cs",
+        "Line": 53
+      }
+    ],
+    "HasFailures": true,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Failed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 5,
+    "SkippedCount": 0,
+    "Status": "Failed",
+    "Success": false,
+    "TestCount": 8,
+    "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\h\\.uloop\\outputs\\TestResults\\20261010_025735_6018717_18f1ba8d7a8b4c1eb211dc4e2592f766.xml"
+  },
+  "focus_observation": {
+    "tool_chunk": "b15d40",
+    "message": "Failed to focus Unity window: focusing the Unity window timed out after 10s; the Unity Editor may be busy (for example during a domain reload), retry once it is responsive: context deadline exceeded",
+    "exit_code": 1,
+    "success": false,
+    "scope": "CLI stderr observation, not a saved receipt file. The same Editor and accepted build were retained and the terminal build receipt proves success."
+  },
+  "validation_source_hashes": [
+    {
+      "path": "Editor/ValidationPlayerBuild.cs",
+      "sha256": "c957b504c22506b58c639e04161d357a3165720be51b3405bde7108bd74879c3"
+    },
+    {
+      "path": "Runtime/PlayerBundleCache.cs",
+      "sha256": "8e17ce94c049d97d700363cd1446f8348aeaf2f2e0dbcc34c2c84fc349960fc9"
+    },
+    {
+      "path": "Runtime/PlayerBundleLoader.cs",
+      "sha256": "61f27369c26d75b50e27136b8464cd4a5ea472773dd045b82694fa77aca44921"
+    },
+    {
+      "path": "Runtime/PlayerBundleStager.cs",
+      "sha256": "b2041d88674d20ae62e272bbaffbee0e24e3d66c8d9e1ad9e110680e590f2940"
+    },
+    {
+      "path": "Runtime/PlayerFileHash.cs",
+      "sha256": "ecf0d009a00fad2c2234f9bbe7e292ac27e05c279fe96978aae9c748af75cd91"
+    },
+    {
+      "path": "Runtime/PlayerRunProtocol.cs",
+      "sha256": "28678308558ca6f05ef44aa9988f5012f06a794c05faacd00896035494c025e2"
+    },
+    {
+      "path": "Runtime/PlayerValidation.cs",
+      "sha256": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09"
+    },
+    {
+      "path": "Runtime/PlayerValidationExecution.cs",
+      "sha256": "f219eca5073a12241d90c736d6d1339875792323585a369efade8956830fb7a1"
+    },
+    {
+      "path": "Runtime/PlayerValidationRunner.cs",
+      "sha256": "8b9e4ee9e1407569f24dae5be70eddf6410a97371af1bc27ab7b1085047a1a4b"
+    },
+    {
+      "path": "Tests/Editor/PlayerBundleCacheTests.cs",
+      "sha256": "3659fc8f87e0160860a51fe62df9fd4d47823ea794274e607b18f75f33613363"
+    },
+    {
+      "path": "Tests/Editor/PlayerBundleLoaderTests.cs",
+      "sha256": "09073552053a65a4372e4c953a7979fea5c2326a20cf8d9af14f19d333ed49c4"
+    },
+    {
+      "path": "Tests/Editor/PlayerBundleStagerTests.cs",
+      "sha256": "27ab9fce0d1d34b6a13cd702af916d78b2ec19e8b30de6ba022c3d0bfe28f0b6"
+    },
+    {
+      "path": "Tests/Editor/PlayerFileHashTests.cs",
+      "sha256": "43eb68a311c204f8a19723c3655af9eea41e58fbdba38a6d22d8402686586be0"
+    },
+    {
+      "path": "Tests/Editor/PlayerRunProtocolTests.cs",
+      "sha256": "91d10b06ce0fe5198db8d72ef661c1121ab83f8780c1f3a00386c53c60bca8c6"
+    },
+    {
+      "path": "Tests/Editor/PlayerValidationTests.cs",
+      "sha256": "b510492e8313df7a1414f5bc4e5c4e161063e83542185130ad02a0a8e5848cb8"
+    },
+    {
+      "path": "Tests/Editor/ValidationPlayerBuildTests.cs",
+      "sha256": "4a95093c2367284c486a945e45b142a8fa061bfda17bd08752ef80be93d4e1ed"
+    }
+  ],
+  "before_editor_state": {
+    "Result": "{ playing = False, dirty = False, scene = Assets/EmbeddingGemmaTextSearch/TextSearch.unity, target = StandaloneWindows64, backend = Mono2x, stripping = Disabled, compiler = Release }",
+    "Logs": [
+      "Execution completed successfully"
+    ],
+    "CompilationErrors": [],
+    "ErrorMessage": "",
+    "Error": "",
+    "UpdatedCode": null,
+    "DiagnosticsSummary": null,
+    "Diagnostics": [],
+    "EditorPlaying": false,
+    "Success": true
+  }
+}

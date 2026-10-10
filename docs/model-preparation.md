@@ -79,6 +79,12 @@ Float16重みを試す場合は`model-float16.sentis`を指定する。GPU非対
 
 ## 5. 更新とartifact失効
 
+Git URL consumerの依存解決は、Unityが作成したlockとmanifestを次のコマンドで照合できる。`<consumer-path>` と `<40-digit-commit>` は実際のprojectと導入対象commitへ置き換える。これはGit解決の監査であり、compile・実モデル・GPU実行の証拠ではない。
+
+```powershell
+uv run --locked python -m embeddinggemma_tools.package --verify-git-consumer <consumer-path> --git-revision <40-digit-commit>
+```
+
 モデルrevision・生成コード・依存・入力条件を変更したらActionsで参照を再生成する。現在のstageは上記の固定revisionだけを受け入れ、勝手に別モデルへ更新しない。
 artifact保持は3日。失効した場合は`CI`を対象ブランチで再実行し、新しい成功runとcheckout SHAで取得・監査・準備する。
 再準備の前にサンプルでリソースを解放する。途中の準備失敗や以前の結果を新しい成功として扱わず、`preparation.json`・Console・監査結果を確認する。

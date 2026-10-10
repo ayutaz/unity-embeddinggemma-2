@@ -4,18 +4,18 @@
 ユーザーの「4まで詳細の計画を立てて進めてください」に対応し、安定性・高速化、Git URL導入、他環境の実測、リリースの4段階を扱う。
 M1の履歴と既存のM2受け入れ条件は維持する。Windowsだけの成功でM2全体を完了としない。
 
-確認基準mainはPR #26後の `d6c8442`。統合後[CI run 38027319740](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38027319740)の全8 job成功を確認した。配布sampleの選択モデルcacheをsource `2e463a8`で実装・Windows実GPU確認し、PR #24統合mainを[新しい空Git consumer](m2-latest-git-consumer-validation.md)で導入・compile・契約・実モデル4条件・UIまで確認した。PR #25はその結果の文書更新で当時のUPM配布treeは同一。PR #27で配布文書の未検証表示を実測へ合わせたが、Runtime / sample / GUID / manifestは不変。下の開始時点と実行履歴は当時の証拠を維持する。
+確認基準mainはPR #28後の `0abb299`。統合後[CI run 38027941069](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38027941069)の全8 job成功を確認した。配布sampleの選択モデルcacheをsource `2e463a8`で実装・Windows実GPU確認し、PR #24統合mainを[新しい空Git consumer](m2-latest-git-consumer-validation.md)で導入・compile・契約・実モデル4条件・UIまで確認した。PR #25はその結果の文書更新で当時のUPM配布treeは同一。PR #27 / #28は文書更新でRuntime / sample / GUID / manifestは不変。今回のfont修正はsource `f7ffbfd`で別途実行した。下の開始時点と実行履歴は当時の証拠を維持する。
 
 ## 次に進める順序
 
-PR #26は統合済み。起動環境を既存uvハーネスで補完した後、空scene 3回のConsoleは0件、モデル未準備sample UIは2・3回目にfont Warningを再現した。[モデルなし比較](m2-stability-environment-validation.md)から、次はPlay開始のreload前後とfont生成・解放を分離する。6回の比較ではallocation診断なしだったが、次のPlayでFound leak診断15件を観測した。責任箇所は未確定で、解消とは扱わない。実機gateは端末待ちで、不要なAPK再buildを避ける。
+PR #26 / #28は統合済み。起動環境補完後の[モデルなし比較](m2-stability-environment-validation.md)に続き、[font寿命](m2-editor-font-lifetime-validation.md)を実IMGUIで切り分けた。sample fontがPlay停止で破棄されてもEditor cacheへ参照が残ることを再現し、Editor内で1つのfontを再利用する修正をTDDで確認した。sample EditMode 66 / PlayMode 2、未準備UI 3回、実Float16 GPU日英検索・空入力・解放・停止が合格。修正SHAの新Git導入と実Editor終了cleanup、Player font経路を次に確認する。以前のFound leak診断15件の責任箇所は未確定で、解消とは扱わない。実機gateは端末待ちで、不要なAPK再buildを避ける。
 
 1. 安定性を限定条件で調べる。新Git consumerの停止時にPersistent allocation Logが1件出たため、NativeLeakDetectionのstack設定を保存・復元し、空scene / UIのみ / CPU / GPUの条件と終了時点を比較する。既存sample cacheの実装と新固定mainのGit導入・実モデル4条件・画面は確認済み。正式候補・tagの導入は後段で別途確認する。
 2. Android buildのscene / 配置 / receipt / ABI / graphics APIはTDDで接続済み。source `751c30a`の実APK build・署名・全payload監査が成功した。接続端末を確保したら同じAPKで実jar展開・CPU / GPU精度・cache再利用・停止と再起動を実測する。端末なしのbuildを実機合格とは数えない。
 3. macOS / iOS実行環境とActionsライセンス・runnerを確保し、同じ固定参照の全条件を実測する。安定性はfont警告、allocation、domain reloadを限定条件で切り分ける。sampleのhash / deserialize同期時間と他OS性能も測定する。
 4. 上記と既存の全gateを満たす候補にversion / CHANGELOG / licenseを対応付け、tag固定consumer導入を確認して正式Releaseする。必須実機結果を省略しない。
 
-Windows PlayerのIL2CPP / Release / High stripping結果と、最新sampleを含む新規固定Git consumerは確認済み。[Android実APK](m2-android-validation.md)は504.158秒 / errors 0 / warnings 970でbuild成功し、SDK v2 debug署名と全5ファイルの完全hash / ARM64を確認した。実機とPlayer sample画面は未実行。font Warning、allocation、domain reloadとbuild警告の原因は未解決。これらを開いたgateとして扱い、M2全体は未完了のまま進める。
+Windows PlayerのIL2CPP / Release / High stripping結果と、cache追加までの新規固定Git consumerは確認済み。今回のfont修正SHAの新Git導入は未実行。[Android実APK](m2-android-validation.md)は504.158秒 / errors 0 / warnings 970でbuild成功し、SDK v2 debug署名と全5ファイルの完全hash / ARM64を確認した。実機とPlayer sample画面は未実行。Windows Editorのsample font寿命は限定条件で修正確認済みだが、native allocation、domain reloadとbuild警告の原因は未解決。これらを開いたgateとして扱い、M2全体は未完了のまま進める。
 
 ## 開始時点の証拠
 

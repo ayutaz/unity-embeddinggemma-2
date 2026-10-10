@@ -65,6 +65,7 @@ namespace EmbeddingGemma.Validation
         public string timingScope = "Synchronous main-thread API including prompts, tokenization, schedule and final vector readback. One untimed query warmup then three timed query inferences.";
         public string memoryScope = "Whole application stage samples, not a continuously observed peak or model-exclusive memory. GPU memory usage is unknown; null counters mean unavailable.";
         public PlayerBuildInfo build;
+        public PlayerBundleStage staging;
         public JObject bundle;
         public double auditMilliseconds, tokenizerMilliseconds;
         public List<PlayerCondition> conditions = new();

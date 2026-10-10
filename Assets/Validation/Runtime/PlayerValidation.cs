@@ -23,7 +23,7 @@ namespace EmbeddingGemma.Validation
     {
         public bool success, workerReleased;
         public string precision, requestedBackend, actualBackend, error;
-        public double minimumCosine = 1, firstInferenceMilliseconds, releaseMilliseconds;
+        public double minimumCosine = 1, firstInferenceMilliseconds, releaseMilliseconds, modelLoadMilliseconds, workerCreationMilliseconds;
         public int caseCount, documentCount, queryCount;
         public double[] warmInferenceMilliseconds;
         public PlayerCaseResult[] cases;

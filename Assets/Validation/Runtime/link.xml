@@ -1,0 +1,3 @@
+<linker>
+  <assembly fullname="EmbeddingGemma.Player.Validation" preserve="all" />
+</linker>

@@ -1,0 +1,6 @@
+{
+  "name": "EmbeddingGemma.Player.Validation.Editor",
+  "references": ["EmbeddingGemma.Player.Validation", "Unity.Newtonsoft.Json"],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": true
+}

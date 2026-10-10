@@ -8,14 +8,14 @@ M1の履歴と既存のM2受け入れ条件は維持する。Windowsだけの成
 
 ## 次に進める順序
 
-PR #30まで統合済み。[font寿命](m2-editor-font-lifetime-validation.md)はTDDと実UI・正常Editor終了で修正確認し、統合SHAの新Git導入も合格した。測定fixture自身の破棄済みfont参照は1 failed → 1 passed、全67 passed、invalid font参照0、未準備UI 3回の停止前後Console 0を確認した。後続の [Windows sample Player](m2-player-sample-validation.md) はハーネスは後続の batch preflight を含む全33契約が成功し実buildも成功したが、native GUI が黒画面・font不在となり、shutdown のアクセス違反が再現した。[PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31) は draft。モデル不要 preflight でも再現するため、次は描画・表示条件・shutdownをモデルなしで切り分け、修正後に日本語 / 英語画面と全4query・独立2起動の実合格を確認する。初回UIのEditor検索DB Errorと以前のFound leak診断は未解決。実機gateは端末待ちで、不要なAPK再buildを避ける。
+PR #30まで統合済み。[font寿命](m2-editor-font-lifetime-validation.md)はTDDと実UI・正常Editor終了で修正確認し、統合SHAの新Git導入も合格した。測定fixture自身の破棄済みfont参照は1 failed → 1 passed、全67 passed、invalid font参照0、未準備UI 3回の停止前後Console 0を確認した。[Windows sample Player](m2-player-sample-validation.md)はbatch preflightを含む全33契約と実buildが成功。非表示起動の黒画面に対し、許可後の通常表示では日英GUI・Float16 / GPUComputeの全4query・各6順位 / score・解放が成功したが、engine shutdownでアクセス違反が残る。[PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)はdraft。対応PDBからPlatformAccessibilityManagerの破棄処理に停止箇所を絞り、公式修正UUM-146676を含む6000.3.21f1への変更を確認待ち。独立2起動の合格・初回Editor検索DB Error・以前のFound leak診断は未解決。実機gateは端末待ちで、不要なAPK再buildを避ける。
 
-1. Windows sample Player の黒画面・終了時アクセス違反を先に切り分ける。モデル不要の preflight と旧精度検証 Player の欠落 bundle 比較を実行済み。旧 binary の通常モード非表示起動でも同じ native 例外位置、batch mode は graphics device 有無の両方で想定どおり code 1 で終了した。[比較結果](m2-player-sample-validation.md#モデル不要の終了処理の比較)を保持した。サンプル GUI ハーネスも batch mode を描画待ち前に拒否する変更をTDDで検証し、全33契約 / 新実build / native の拒否・code 1終了を確認済み。通常表示の修正確認には数えず、次はユーザーの表示希望に従って新 `41dc0be` sample binary の通常表示を比較する。GUI 不成立のままモデル準備を繰り返さない。修正後は同じ固定 Python 参照で全4query / 全6順位とscore、空入力・欠落・Worker / lease / native font寿命を検証し、独立2起動の画面・cacheを確認する。続けて既存のEditor検索DB / allocation / domain reloadを調べる。正式候補・tagの導入は後段で別途確認する。
+1. Windows sample Playerの終了クラッシュを解消する。旧精度検証Playerのモデル不要比較では、通常モード非表示起動で同じ例外位置、batch modeはgraphics有無とも想定code 1で終了した。[比較結果](m2-player-sample-validation.md#モデル不要の終了処理の比較)を維持する。新 `41dc0be` の通常表示で実検索・画面・解放は通ったがprocess終了は失敗。対応するPE/PDB GUID / ageとpublic symbolを確認し、UnityのPlatformAccessibilityManager破棄処理と公式UUM-146676を次の比較対象にした。固定版変更の回答後、同じbundle / sample / Python参照を使って修正版のモデル不要shutdownを先に比較し、続けて日英画面・全query・独立2起動のexit 0 / cacheを確認する。外部終了監査は23 red → 23 greenで追加し、runtime successだけで異常終了を合格にしない。続けてEditor検索DB / allocation / domain reloadを調べる。正式候補・tagの導入は後段で別途確認する。
 2. Android buildのscene / 配置 / receipt / ABI / graphics APIはTDDで接続済み。source `751c30a`の実APK build・署名・全payload監査が成功した。接続端末を確保したら同じAPKで実jar展開・CPU / GPU精度・cache再利用・停止と再起動を実測する。端末なしのbuildを実機合格とは数えない。
 3. macOS / iOS実行環境とActionsライセンス・runnerを確保し、同じ固定参照の全条件を実測する。安定性はfont警告、allocation、domain reloadを限定条件で切り分ける。sampleのhash / deserialize同期時間と他OS性能も測定する。
 4. 上記と既存の全gateを満たす候補にversion / CHANGELOG / licenseを対応付け、tag固定consumer導入を確認して正式Releaseする。必須実機結果を省略しない。
 
-Windows の精度検証専用 Player のIL2CPP / Release / High stripping結果と、font寿命修正までの新規固定Git consumerは確認済み。[Android実APK](m2-android-validation.md)は504.158秒 / errors 0 / warnings 970でbuild成功し、SDK v2 debug署名と全5ファイルの完全hash / ARM64を確認した。実機は未実行、Windows Player sample 画面は実行したが失敗。32契約の成功とnative build成功をGUI / GPU実合格に置き換えない。Repository Secrets / self-hosted runner は2026-10-10再確認でも各0件。Windows Editorのsample font・測定fixture寿命は限定条件で修正確認済みだが、Editor検索DB、native allocation、domain reloadとbuild警告の原因は未解決。全4段階のgateを維持し、M2全体は未完了のまま進める。
+Windowsの精度検証専用PlayerのIL2CPP / Release / High stripping結果は当時のbatchmode / Direct3D12条件で合格し、font寿命修正までの新規固定Git consumerも確認済み。[Android実APK](m2-android-validation.md)は504.158秒 / errors 0 / warnings 970でbuild成功し、SDK v2 debug署名と全5ファイルの完全hash / ARM64を確認した。Android実機は未実行。Windows sampleの通常表示 / GPU検索は部分成功、process終了と独立2起動は未達。33契約やnative buildの成功で不足gateを埋めない。Repository Secrets / self-hosted runnerは2026-10-10の記録時点で各0件。Editor検索DB、native allocation、domain reloadとbuild警告の原因は未解決。全4段階のgateを維持し、M2全体は未完了のまま進める。
 
 ## 開始時点の証拠
 
@@ -63,7 +63,7 @@ Windows の精度検証専用 Player のIL2CPP / Release / High stripping結果�
 
 | 対象 | 必要な環境 | 現状 / 次の作業 |
 | --- | --- | --- |
-| Windows Player | Windows build module、実GPU、固定モデル配置 | 精度検証専用PlayerはDevelopment / MonoとIL2CPP / Release / High strippingの両方で実モデル4条件・独立2起動が合格。別のsample Playerは実buildと32契約が成功したがGUI / shutdownが失敗。モデル不要描画を先に切り分け、sample画面・全query・独立2起動を完了する。任意consumerのstrippingや他OSへ一般化しない |
+| Windows Player | Windows build module、実GPU、固定モデル配置 | 精度検証専用PlayerはDevelopment / MonoとIL2CPP / Release / High strippingのbatchmode条件で実モデル4条件・独立2起動が合格。sample Playerは33契約・実build・通常表示の日英GUI / GPU全query / 解放が成功、shutdownが失敗。公式修正版とのモデル不要比較後、独立2起動を完了する。固定版変更は回答待ち。任意consumerのstrippingや他OSへ一般化しない |
 | macOS Editor | Mac、Unity 6000.3.16f1、Metal対応GPU、適切なUnityライセンス | 実行可能なMacを確認する。hosted CPU buildだけでMetal GPU成功としない |
 | iOS Player | Mac、Xcode / iOS module、署名可能な実機、Metal | 端末・署名・接続を確認する。Apple資格情報はチャットやソースへ記録しない |
 | Android Player | Android module / SDK / NDK / JDK、実機、対応graphics API | 実ARM64 / IL2CPP / High stripping APK、署名・payload監査済み。接続端末なし。次は同じAPKの実jar / 全CPU・GPU条件 / 2起動 / sample画面 |

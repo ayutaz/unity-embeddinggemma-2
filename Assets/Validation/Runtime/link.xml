@@ -1,3 +1,8 @@
 <linker>
   <assembly fullname="EmbeddingGemma.Player.Validation" preserve="all" />
+  <assembly fullname="EmbeddingGemma.TextSearch.Sample" preserve="all" ignoreIfMissing="1" />
+  <assembly fullname="EmbeddingGemma.Runtime">
+    <type fullname="EmbeddingGemma.TextEmbedder" preserve="fields" />
+    <type fullname="EmbeddingGemma.TextSearchSession" preserve="fields" />
+  </assembly>
 </linker>

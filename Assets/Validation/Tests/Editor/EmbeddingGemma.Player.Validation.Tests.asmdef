@@ -1,0 +1,9 @@
+{
+  "name": "EmbeddingGemma.Player.Validation.Tests",
+  "references": ["EmbeddingGemma.Player.Validation", "EmbeddingGemma.Runtime", "Unity.InferenceEngine", "Unity.Newtonsoft.Json"],
+  "includePlatforms": ["Editor"],
+  "overrideReferences": true,
+  "precompiledReferences": ["nunit.framework.dll", "Newtonsoft.Json.dll"],
+  "optionalUnityReferences": ["TestAssemblies"],
+  "autoReferenced": false
+}

@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "base_commit": "0a6e2999b09570bc362e8bece1ca427befe4bcfd",
+  "recorded_at_utc": "2026-10-10T00:47:38.5841930Z",
+  "source_sha256_lf": {
+    "Runtime/EmbeddingGemma.Player.Validation.asmdef": "b4f635650b6083e595d276038d5a34cb4cea2c054aa0efd3e3a2f84d1714b177",
+    "Runtime/PlayerBundleLoader.cs": "4dad8ee6870789ef6d64a45c54eb5813d6a5c302807600dd7d96f3565fe0ab0d",
+    "Runtime/PlayerValidation.cs": "4aead21ae1debda13a5702844b339897c658022ce3d9c81af588cf8c266fb6f0",
+    "Tests/Editor/EmbeddingGemma.Player.Validation.Tests.asmdef": "fbd4738ee1bf5691865207609758169113052b40c2aa44a1f8137f57032130a7",
+    "Tests/Editor/PlayerBundleLoaderTests.cs": "09073552053a65a4372e4c953a7979fea5c2326a20cf8d9af14f19d333ed49c4",
+    "Tests/Editor/PlayerValidationTests.cs": "b510492e8313df7a1414f5bc4e5c4e161063e83542185130ad02a0a8e5848cb8"
+  },
+  "unity_version": "6000.3.16f1",
+  "consumer": "Existing artifacts/c file dependency consumer, validation sources copied with identical LF-normalized text",
+  "scope": "NUnit EditMode contracts with small synthetic references and providers; no real weights or actual GPU inference",
+  "red_phases": [
+    {
+      "result_file": "red-tests.json",
+      "failed": 20,
+      "passed": 0,
+      "completed_at": "2026-10-10T00:38:24.7042549Z",
+      "xml": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\c\\.uloop\\outputs\\TestResults\\20261010_003824_7077706_3b93d108fe424251821c9c0c19a90ec2.xml"
+    },
+    {
+      "result_file": "bundle-red-tests.json",
+      "failed": 9,
+      "passed": 0,
+      "completed_at": "2026-10-10T00:41:21.7175813Z",
+      "xml": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\c\\.uloop\\outputs\\TestResults\\20261010_004121_7214169_711f9a621575486c886161a8c13502be.xml"
+    },
+    {
+      "result_file": "completion-red-tests.json",
+      "failed": 11,
+      "passed": 29,
+      "completed_at": "2026-10-10T00:44:13.4061596Z",
+      "xml": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\c\\.uloop\\outputs\\TestResults\\20261010_004413_4091701_cda5c8f6df734806854a1128cd7467df.xml"
+    }
+  ],
+  "green": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-10T00:45:15.8087982Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 40,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 40,
+    "XmlPath": null
+  },
+  "setup_failure": "Initial test assembly omitted an explicit Newtonsoft.Json.dll reference; two compile errors corrected before the intended red tests. Preserved in setup-compile-failure.json.",
+  "player_build": "not_run",
+  "player_execution": "not_run",
+  "real_model_inference": "not_run",
+  "gpu_verified": false,
+  "android_jar_extraction": "not_implemented",
+  "macos_ios_android": "not_run"
+}

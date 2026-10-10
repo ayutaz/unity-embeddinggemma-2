@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "unity_version": "6000.3.16f1",
+  "source_base": "0a6e2999b09570bc362e8bece1ca427befe4bcfd",
+  "consumer": "artifacts/c",
+  "detection_during_probe": "EnabledWithStackTrace",
+  "empty_scene_state": {
+    "Result": "{ playing = True, samples = 0, leakDetection = EnabledWithStackTrace }",
+    "Logs": [
+      "Execution completed successfully"
+    ],
+    "CompilationErrors": [],
+    "ErrorMessage": "",
+    "Warning": "The Unity Editor is unfocused while Play Mode is running, so Play Mode progress may be throttled. Run `uloop focus-window`, or use the `pause-point --await`/`--trigger` flow instead of polling for progress.",
+    "Error": "",
+    "UpdatedCode": null,
+    "DiagnosticsSummary": null,
+    "Diagnostics": [],
+    "EditorPlaying": true,
+    "Success": true
+  },
+  "empty_scene_logs": {
+    "TotalCount": 1,
+    "DisplayedCount": 1,
+    "LogType": "All",
+    "MaxCount": 100,
+    "SearchText": "",
+    "IncludeStackTrace": true,
+    "Logs": [
+      {
+        "Type": "Log",
+        "Message": "Leak Detected : Persistent allocates 1 individual allocations.",
+        "StackTrace": ""
+      }
+    ],
+    "Success": true
+  },
+  "sample_ui_state": {
+    "Result": "{ playing = True, ready = False, fontCreated = True, leakDetection = EnabledWithStackTrace }",
+    "Logs": [
+      "Execution completed successfully"
+    ],
+    "CompilationErrors": [],
+    "ErrorMessage": "",
+    "Warning": "The Unity Editor is unfocused while Play Mode is running, so Play Mode progress may be throttled. Run `uloop focus-window`, or use the `pause-point --await`/`--trigger` flow instead of polling for progress.",
+    "Error": "",
+    "UpdatedCode": null,
+    "DiagnosticsSummary": null,
+    "Diagnostics": [],
+    "EditorPlaying": true,
+    "Success": true
+  },
+  "sample_ui_logs": {
+    "TotalCount": 0,
+    "DisplayedCount": 0,
+    "LogType": "All",
+    "MaxCount": 100,
+    "SearchText": "",
+    "IncludeStackTrace": true,
+    "Logs": [],
+    "Success": true
+  },
+  "restored_state": {
+    "Result": "{ scene = Assets/EmbeddingGemmaTextSearch/TextSearch.unity, dirty = False, playing = False, leakDetection = Enabled, enterPlayOptionsEnabled = False, enterPlayOptions = None }",
+    "Logs": [
+      "Execution completed successfully"
+    ],
+    "CompilationErrors": [],
+    "ErrorMessage": "",
+    "Error": "",
+    "UpdatedCode": null,
+    "DiagnosticsSummary": null,
+    "Diagnostics": [],
+    "EditorPlaying": false,
+    "Success": true
+  },
+  "models_prepared_during_probe": false,
+  "limitation": "Same Editor process previously executed real model tests and retains all Editor/package dependencies. Empty scene reproduction does not identify attribution or rule out prior allocations. One probe per condition. Font warning did not recur. No fixes claimed.",
+  "persistent_allocation": "unresolved",
+  "invalid_font_reference": "not_reproduced_unresolved"
+}

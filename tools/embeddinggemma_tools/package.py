@@ -11,6 +11,48 @@ ROOT = Path(__file__).resolve().parents[2]
 DEPENDENCIES = {"com.unity.ai.inference": "2.6.1", "com.unity.nuget.newtonsoft-json": "3.2.2"}
 
 
+def audit_git_consumer(project, revision):
+    """Audit the requested URL and UPM lock; this is not Editor execution evidence."""
+    project = Path(project)
+    report = {"success": False, "project": str(project.resolve()), "requested_revision": revision,
+              "resolved_revision": None, "unity_executed": False, "errors": []}
+    errors = report["errors"]
+    if not isinstance(revision, str) or not re.fullmatch(r"[0-9a-f]{40}", revision):
+        errors.append("revision must be a full lowercase commit SHA")
+        return report
+    url = f"https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/{PACKAGE_NAME}#{revision}"
+
+    def dependencies(name):
+        try:
+            data = json.loads((project / "Packages" / name).read_text(encoding="utf-8-sig"))
+            if not isinstance(data, dict) or not isinstance(data.get("dependencies"), dict):
+                raise ValueError("expected an object with dependencies")
+            return data["dependencies"]
+        except (OSError, ValueError) as exc:
+            errors.append(f"{name}: {exc}")
+            return {}
+
+    requested = dependencies("manifest.json")
+    locked = dependencies("packages-lock.json")
+    if requested.get(PACKAGE_NAME) != url:
+        errors.append("manifest.json: package must request the exact repository, subfolder and commit")
+    entry = locked.get(PACKAGE_NAME)
+    if not isinstance(entry, dict):
+        errors.append("packages-lock.json: missing resolved package")
+    else:
+        report["resolved_revision"] = entry.get("hash")
+        if entry.get("source") != "git" or entry.get("version") != url or entry.get("hash") != revision:
+            errors.append("packages-lock.json: Git source, requested URL or resolved commit mismatch")
+        if entry.get("dependencies") != DEPENDENCIES:
+            errors.append("packages-lock.json: package direct dependencies changed")
+    for name, version in DEPENDENCIES.items():
+        dependency = locked.get(name)
+        if not isinstance(dependency, dict) or dependency.get("version") != version or dependency.get("source") != "registry":
+            errors.append(f"packages-lock.json: expected registry dependency {name}@{version}")
+    report["success"] = not errors
+    return report
+
+
 def audit_package(package):
     package = Path(package)
     errors = []
@@ -111,11 +153,17 @@ def create_consumer(project, package, *, git_revision=None, automation=False, sa
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--package", type=Path, default=ROOT / "Packages" / PACKAGE_NAME)
-    parser.add_argument("--consumer", type=Path)
+    action = parser.add_mutually_exclusive_group()
+    action.add_argument("--consumer", type=Path)
+    action.add_argument("--verify-git-consumer", type=Path, help="Audit requested and resolved Git commit; does not run Unity")
     parser.add_argument("--git-revision")
     parser.add_argument("--automation", action="store_true")
     parser.add_argument("--sample", action="store_true", help="Import TextSearch into a new empty consumer")
     args = parser.parse_args(argv)
+    if args.verify_git_consumer:
+        report = audit_git_consumer(args.verify_git_consumer, args.git_revision)
+        print(json.dumps(report, ensure_ascii=False))
+        return 0 if report["success"] else 1
     report = audit_package(args.package)
     if report["success"] and args.consumer:
         try:

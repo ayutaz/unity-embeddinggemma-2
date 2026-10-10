@@ -1,0 +1,1104 @@
+{
+  "schema_version": 1,
+  "observed_date": "2026-10-10",
+  "scope": "Windows Editor sample font lifetime; actual Float16 GPU UI",
+  "success": true,
+  "source": {
+    "base_main": "0abb299b32f65083c533818da340e99f80b81cee",
+    "implementation_commit": "f7ffbfd4478efb33da546f742ec59ba06e3e1d61",
+    "consumer_git_revision": "01f3d8682a97053bf4583e14fd8fbed14e2c8cae",
+    "sample_import": "working source overlay, not fresh Git resolution of implementation",
+    "core_runtime_unchanged": true,
+    "matching_imported_files": [
+      {
+        "path": "TextSearchSample.cs",
+        "sha256_utf8_lf": "ebdb65c3468b1b8e7d3fce54fa4b602c3ce549d8f2a9c4fa59be6031f1133683",
+        "imported_matches": true
+      },
+      {
+        "path": "TextSearchGuiFont.cs",
+        "sha256_utf8_lf": "355373a0db2dc75066f758c08f1507042107cb9ed8dc81463f8b5a8cff0135a5",
+        "imported_matches": true
+      },
+      {
+        "path": "TextSearchGuiFont.cs.meta",
+        "sha256_utf8_lf": "6aa0d786dc4fd6af4d11ae3be8c3470a166c24357dc004c364a33adf76bc1cde",
+        "imported_matches": true
+      },
+      {
+        "path": "Tests/Editor/TextSearchEditorFontLifetimeTests.cs",
+        "sha256_utf8_lf": "a5603d2f6fe28d75c307c335b1361dc56d8d9ef5054d723cde209b1cad5a47a0",
+        "imported_matches": true
+      },
+      {
+        "path": "Tests/Editor/TextSearchEditorFontLifetimeTests.cs.meta",
+        "sha256_utf8_lf": "58a4da4231f334ed8f8f9a98240591ac65b7ebc09a7eabce04d989804b6f0fe6",
+        "imported_matches": true
+      }
+    ]
+  },
+  "environment": {
+    "unity": "6000.3.16f1",
+    "sentis": "2.6.1",
+    "uloop_cli": "3.8.1",
+    "editor_pid": 139424,
+    "editor_created": "2026-10-10T14:24:55.880791+09:00",
+    "project": "artifacts/i",
+    "editor_count": 1,
+    "active_build_target": "Android",
+    "execution_os": "Windows",
+    "graphics_api": "Direct3D12",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "physical_android_execution": false
+  },
+  "baseline": {
+    "registered_font": "UnityEditor.EditorTextSettings:fontId=-3220",
+    "after_stop": "UnityEditor.EditorTextSettings:fontId=-3220:destroyed=True",
+    "interpretation": "Actual IMGUI registered the sample font; the cache still referenced its destroyed native object after Stop."
+  },
+  "tests": {
+    "red": {
+      "artifact": "lifetime-red-results.xml",
+      "sha256": "675ad91254208494eade616cc29311d732e9b02b4116c1df811c882100926b51",
+      "result": "Failed(Child)",
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "skipped": 0,
+      "inconclusive": 0,
+      "start_utc": "2026-10-10 05:40:23Z",
+      "end_utc": "2026-10-10 05:40:24Z",
+      "cases": [
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchEditorFontLifetimeTests.EditorFontCacheStaysValidAcrossTwoPlaySessions",
+          "result": "Failed",
+          "failure": "  Stop must not leave a destroyed font in the persistent Editor cache.\n  Expected: True\n  But was:  False\n"
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchEditorFontLifetimeTests.TwoSampleViewsShareOneEditorFont",
+          "result": "Failed",
+          "failure": "  Editor cache ownership must be bounded to one shared font.\n  Expected: same as <Yu Gothic UI (UnityEngine.Font)>\n  But was:  <Yu Gothic UI (UnityEngine.Font)>\n"
+        }
+      ]
+    },
+    "first_implementation": {
+      "artifact": "lifetime-green-results.xml",
+      "sha256": "b5cc701b4a7e57e8f060c1a5dcfa763347e383acbab15886ea71a82fea2fb4f5",
+      "result": "Failed(Child)",
+      "total": 2,
+      "passed": 1,
+      "failed": 1,
+      "skipped": 0,
+      "inconclusive": 0,
+      "start_utc": "2026-10-10 05:42:11Z",
+      "end_utc": "2026-10-10 05:42:12Z",
+      "cases": [
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchEditorFontLifetimeTests.EditorFontCacheStaysValidAcrossTwoPlaySessions",
+          "result": "Failed",
+          "failure": "The sample font must have been registered by actual IMGUI rendering."
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchEditorFontLifetimeTests.TwoSampleViewsShareOneEditorFont",
+          "result": "Passed",
+          "failure": null
+        }
+      ]
+    },
+    "first_implementation_failure": "Renaming the Font changed its OS family lookup, so actual IMGUI did not register it. Experimental font was removed; final implementation preserves its family name.",
+    "green": {
+      "artifact": "lifetime-green-revised-results.xml",
+      "sha256": "5134615468faab2942fd9de349f055bb4985b2de8cc26887ee0bbc9ec9702693",
+      "result": "Passed",
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "inconclusive": 0,
+      "start_utc": "2026-10-10 05:44:10Z",
+      "end_utc": "2026-10-10 05:44:11Z",
+      "cases": [
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchEditorFontLifetimeTests.EditorFontCacheStaysValidAcrossTwoPlaySessions",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchEditorFontLifetimeTests.TwoSampleViewsShareOneEditorFont",
+          "result": "Passed",
+          "failure": null
+        }
+      ]
+    },
+    "sample_editmode": {
+      "artifact": "sample-editmode-regression-results.xml",
+      "sha256": "82bd2c30eb00f25a4e9b294f2e9fc5b23b875da48dcecc94c6107c6934b64d2c",
+      "result": "Passed",
+      "total": 66,
+      "passed": 66,
+      "failed": 0,
+      "skipped": 0,
+      "inconclusive": 0,
+      "start_utc": "2026-10-10 05:45:27Z",
+      "end_utc": "2026-10-10 05:45:32Z",
+      "cases": [
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchEditorFontLifetimeTests.EditorFontCacheStaysValidAcrossTwoPlaySessions",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchEditorFontLifetimeTests.TwoSampleViewsShareOneEditorFont",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchFileHashTests.AcceleratedLargeFileMatchesManagedSha256WithUnicodeAndShellCharacters",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchFileHashTests.AmbiguousNativeOutputMustBeRejectedAndRehashed",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchFileHashTests.HashesTheWholeFileAndReturnsCanonicalSha256",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchFileHashTests.LocalizedHeaderAndUppercaseDigestAreAcceptedWithoutUsingTheHeader",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchFileHashTests.MissingFileCannotBeAcceptedByAnAccelerator",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchFileHashTests.NativeProcessFailureFallsBackToFullHash",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchFileHashTests.UnavailableOrMalformedNativeOutputFallsBackToFullHash(null)",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchFileHashTests.UnavailableOrMalformedNativeOutputFallsBackToFullHash(\"\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchFileHashTests.UnavailableOrMalformedNativeOutputFallsBackToFullHash(\"partial hash or error\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchFileHashTests.UnavailableOrMalformedNativeOutputFallsBackToFullHash(\"d41d8cd98f00b204e9800998ecf8427e\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchGuiStylesTests.DoesNotChangeSharedSkinAndClearsFontReferencesBeforeDestroy",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchGuiStylesTests.LayoutFitsTheActualFontGlyphBounds(\"label\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchGuiStylesTests.LayoutFitsTheActualFontGlyphBounds(\"field\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchGuiStylesTests.LayoutFitsTheActualFontGlyphBounds(\"button\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchGuiStylesTests.LayoutFitsTheActualFontGlyphBounds(\"heading\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchGuiStylesTests.WrappedDocumentRowsFitBothLinesOfTheActualFont",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.AFailedUpdateKeepsTheLastVerifiedActiveAndRetryIsBounded",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.ALeasePreventsAnotherResolutionUntilTheCallerReleasesIt",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.CancellationDisposesTheTransferAndReleasesTheLock",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.ChangedPrecisionReplacesTheOwnedCacheAndDoesNotKeepBothWeights",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.CopiesOnlySelectedPrecisionAndWarmRunTransfersOnlyManifest",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.InterruptedPublicationRecoversTheLastValidBundle(False)",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.InterruptedPublicationRecoversTheLastValidBundle(True)",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.InvalidManifestIsRejectedBeforeAnyWeightTransfer(\"names\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.InvalidManifestIsRejectedBeforeAnyWeightTransfer(\"hash\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.InvalidManifestIsRejectedBeforeAnyWeightTransfer(\"success\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.InvalidManifestIsRejectedBeforeAnyWeightTransfer(\"source\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.NetworkUrlsAndDifferentTokenizerSourcesAreRejectedBeforeTransfer",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.RealMissingFileUrlFailsWithoutPublishedCacheOrPartialFile",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.RealUnicodeFileUrlTransfersSelectedFilesAndReusesCache",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.SameLengthAndMtimeCorruptionIsRepairedBeforeReturningPaths",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.SampleCancellationPreventsLateProviderCreationAndDisposesTransport",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.SampleLoadsOnlyResolvedPathsAndHoldsLeaseUntilWorkerRelease",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.SampleProviderFailureEndsProgressAndReleasesTheCache(False)",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.SampleProviderFailureEndsProgressAndReleasesTheCache(True)",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.SampleTransferFailureIsVisibleAndNeverCreatesTheWorker",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.UnknownFilesInOwnedStorageAreNotDeleted",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.UnownedDataIsPreservedWithoutTransfer",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelCacheTests.UrlDefaultPathsKeepForwardSlashes",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelPreparationTests.ChangedInputsOrInvalidCacheAreRebuilt(\"source\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelPreparationTests.ChangedInputsOrInvalidCacheAreRebuilt(\"search\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelPreparationTests.ChangedInputsOrInvalidCacheAreRebuilt(\"model-hash\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelPreparationTests.ChangedInputsOrInvalidCacheAreRebuilt(\"unity\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelPreparationTests.ChangedInputsOrInvalidCacheAreRebuilt(\"legacy\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelPreparationTests.ChangedInputsOrInvalidCacheAreRebuilt(\"failed\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelPreparationTests.ChangedInputsOrInvalidCacheAreRebuilt(\"duplicate\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelPreparationTests.ChangedInputsOrInvalidCacheAreRebuilt(\"missing\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelPreparationTests.ChangedInputsOrInvalidCacheAreRebuilt(\"corrupt\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelPreparationTests.ChangedInputsOrInvalidCacheAreRebuilt(\"tokenizer\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelPreparationTests.ChangedInputsOrInvalidCacheAreRebuilt(\"malformed\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelPreparationTests.InvalidTokenizerFailsBeforeOverwritingExistingModels",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelPreparationTests.ProducesReloadableFormatsTokenizerAndVerifiedFileManifest",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelPreparationTests.RebuildLoadFailureInvalidatesPreviousSuccessAndPreservesModels",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchModelPreparationTests.VerifiedCacheDoesNotLoadModelOrRewriteFiles",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchSampleTests.BackendMismatchIsAnErrorAndRepreparationReleasesPreviousWorker",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchSampleTests.DisplaysPreparationSearchAndErrorsAndReleasesExplicitly",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchSampleTests.MissingFilesAndInvalidCorpusAreVisibleAndNeverReady",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchStreamHashTests.InvalidNativeOutputCannotReplaceACompleteDigest",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchStreamHashTests.IoFailureCannotBeReportedAsAValidHash",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchStreamHashTests.KnownVectorsUseTheActualPlatformImplementation(\"\",\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchStreamHashTests.KnownVectorsUseTheActualPlatformImplementation(\"abc\",\"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad\")",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchStreamHashTests.MultiChunkInputMatchesIndependentManagedSha256",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchStreamHashTests.UnavailableNativeAfterConsumptionFallsBackToAllBytesOnTheSameHandle",
+          "result": "Passed",
+          "failure": null
+        },
+        {
+          "name": "EmbeddingGemma.Samples.Tests.TextSearchStreamHashTests.UnreadableInputIsRejected",
+          "result": "Passed",
+          "failure": null
+        }
+      ]
+    },
+    "sample_playmode": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-10T05:46:22.1877905Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 2,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 2,
+      "XmlPath": null
+    },
+    "package_audit": {
+      "success": true,
+      "package": "com.ayutaz.embeddinggemma",
+      "version": "0.1.0-pre.1",
+      "errors": []
+    },
+    "terminal_before_playmode": "{ running = False, playing = False, compiling = False }",
+    "transport": [
+      {
+        "artifact": "lifetime-red.json",
+        "cli_success": false,
+        "error_code": "UNITY_DISCONNECTED_AFTER_ACCEPT",
+        "safe_to_retry": false,
+        "test_terminal_evidence": "Unity saved NUnit XML from same accepted request, not CLI completion or an automatic retry"
+      },
+      {
+        "artifact": "lifetime-green.json",
+        "cli_success": false,
+        "error_code": "UNITY_DISCONNECTED_AFTER_ACCEPT",
+        "safe_to_retry": false,
+        "test_terminal_evidence": "Unity saved NUnit XML from same accepted request, not CLI completion or an automatic retry"
+      },
+      {
+        "artifact": "lifetime-green-revised.json",
+        "cli_success": false,
+        "error_code": "UNITY_DISCONNECTED_AFTER_ACCEPT",
+        "safe_to_retry": false,
+        "test_terminal_evidence": "Unity saved NUnit XML from same accepted request, not CLI completion or an automatic retry"
+      },
+      {
+        "artifact": "sample-editmode-regression.json",
+        "cli_success": false,
+        "error_code": "UNITY_DISCONNECTED_AFTER_ACCEPT",
+        "safe_to_retry": false,
+        "test_terminal_evidence": "Unity saved NUnit XML from same accepted request, not CLI completion or an automatic retry"
+      }
+    ]
+  },
+  "model_unprepared_ui_cycles": [
+    {
+      "iteration": 1,
+      "state": "{ playing = True, ready = False, preparing = False, fontId = -4736, ownedId = -4736, fontName = Yu Gothic UI, fontFlags = HideAndDontSave, japaneseGlyph = False, glyphHeight = 0 }",
+      "before_stop_console_count": 0,
+      "after_stop_console_count": 0,
+      "legacy_japanese_glyph_probe_passed": false
+    },
+    {
+      "iteration": 2,
+      "state": "{ playing = True, ready = False, preparing = False, fontId = -4736, ownedId = -4736, fontName = Yu Gothic UI, fontFlags = HideAndDontSave, japaneseGlyph = False, glyphHeight = 0 }",
+      "before_stop_console_count": 0,
+      "after_stop_console_count": 0,
+      "legacy_japanese_glyph_probe_passed": false
+    },
+    {
+      "iteration": 3,
+      "state": "{ playing = True, ready = False, preparing = False, fontId = -4736, ownedId = -4736, fontName = Yu Gothic UI, fontFlags = HideAndDontSave, japaneseGlyph = False, glyphHeight = 0 }",
+      "before_stop_console_count": 0,
+      "after_stop_console_count": 0,
+      "legacy_japanese_glyph_probe_passed": false
+    }
+  ],
+  "actual_model_ui": {
+    "model": "model-float16.sentis",
+    "model_sha256": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819",
+    "reference_sha256": "3530756b36316a812ac853f0722bed5479e92e6bb02ca6aa41c06660d32a71ec",
+    "queries": [
+      {
+        "query_id": "query-cat-ja",
+        "state": {
+          "query": "猫を健康に育てるには",
+          "ready": true,
+          "preparing": false,
+          "error": "",
+          "status": "検索結果 6 件 / GPUCompute",
+          "requested_backend": "GPUCompute",
+          "actual_backend": "GPUCompute",
+          "provider": "EmbeddingGemma.TextEmbedder",
+          "font_id": -4736,
+          "model_path": "C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/i/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-float16.sentis",
+          "ranking": [
+            {
+              "id": "doc-cat-en",
+              "score": 0.7473303435039038
+            },
+            {
+              "id": "doc-cat-ja",
+              "score": 0.7248598069272855
+            },
+            {
+              "id": "doc-recipe-a",
+              "score": 0.5659783804528246
+            },
+            {
+              "id": "doc-recipe-b",
+              "score": 0.5659783804528246
+            },
+            {
+              "id": "doc-space-ja",
+              "score": 0.512213678390191
+            },
+            {
+              "id": "doc-space-en",
+              "score": 0.49190570545080414
+            }
+          ]
+        },
+        "all_six_ranks_match": true,
+        "score_tolerance": 0.02,
+        "maximum_score_error": 6.890311787799419E-08,
+        "comparison": [
+          {
+            "rank": 1,
+            "document_id": "doc-cat-en",
+            "score": 0.7473303435039038,
+            "reference_score": 0.7473303402707073,
+            "absolute_error": 3.2331964883169917E-09
+          },
+          {
+            "rank": 2,
+            "document_id": "doc-cat-ja",
+            "score": 0.7248598069272855,
+            "reference_score": 0.7248598337928018,
+            "absolute_error": 2.686551636710277E-08
+          },
+          {
+            "rank": 3,
+            "document_id": "doc-recipe-a",
+            "score": 0.5659783804528246,
+            "reference_score": 0.5659784279552794,
+            "absolute_error": 4.7502454858516785E-08
+          },
+          {
+            "rank": 4,
+            "document_id": "doc-recipe-b",
+            "score": 0.5659783804528246,
+            "reference_score": 0.5659784279552794,
+            "absolute_error": 4.7502454858516785E-08
+          },
+          {
+            "rank": 5,
+            "document_id": "doc-space-ja",
+            "score": 0.512213678390191,
+            "reference_score": 0.512213725272486,
+            "absolute_error": 4.688229493510221E-08
+          },
+          {
+            "rank": 6,
+            "document_id": "doc-space-en",
+            "score": 0.49190570545080414,
+            "reference_score": 0.491905774353922,
+            "absolute_error": 6.890311787799419E-08
+          }
+        ]
+      },
+      {
+        "query_id": "query-space-en",
+        "state": {
+          "query": "How do scientists explore planets?",
+          "ready": true,
+          "preparing": false,
+          "error": "",
+          "status": "検索結果 6 件 / GPUCompute",
+          "requested_backend": "GPUCompute",
+          "actual_backend": "GPUCompute",
+          "provider": "EmbeddingGemma.TextEmbedder",
+          "font_id": -4736,
+          "model_path": "C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/i/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-float16.sentis",
+          "ranking": [
+            {
+              "id": "doc-space-en",
+              "score": 0.7798648887130949
+            },
+            {
+              "id": "doc-space-ja",
+              "score": 0.7117976440516569
+            },
+            {
+              "id": "doc-recipe-a",
+              "score": 0.5516260665635233
+            },
+            {
+              "id": "doc-recipe-b",
+              "score": 0.5516260665635233
+            },
+            {
+              "id": "doc-cat-en",
+              "score": 0.5359167338954286
+            },
+            {
+              "id": "doc-cat-ja",
+              "score": 0.5263623564371217
+            }
+          ]
+        },
+        "all_six_ranks_match": true,
+        "score_tolerance": 0.02,
+        "maximum_score_error": 1.0256953308918071E-07,
+        "comparison": [
+          {
+            "rank": 1,
+            "document_id": "doc-space-en",
+            "score": 0.7798648887130949,
+            "reference_score": 0.7798648789552759,
+            "absolute_error": 9.757818997258028E-09
+          },
+          {
+            "rank": 2,
+            "document_id": "doc-space-ja",
+            "score": 0.7117976440516569,
+            "reference_score": 0.7117976353254178,
+            "absolute_error": 8.726239064671404E-09
+          },
+          {
+            "rank": 3,
+            "document_id": "doc-recipe-a",
+            "score": 0.5516260665635233,
+            "reference_score": 0.5516260272358227,
+            "absolute_error": 3.932770065162572E-08
+          },
+          {
+            "rank": 4,
+            "document_id": "doc-recipe-b",
+            "score": 0.5516260665635233,
+            "reference_score": 0.5516260272358227,
+            "absolute_error": 3.932770065162572E-08
+          },
+          {
+            "rank": 5,
+            "document_id": "doc-cat-en",
+            "score": 0.5359167338954286,
+            "reference_score": 0.5359166313258955,
+            "absolute_error": 1.0256953308918071E-07
+          },
+          {
+            "rank": 6,
+            "document_id": "doc-cat-ja",
+            "score": 0.5263623564371217,
+            "reference_score": 0.5263622929627441,
+            "absolute_error": 6.347437764286923E-08
+          }
+        ]
+      }
+    ],
+    "first_blank_input_attempt": {
+      "query": "How do scientists explore planets?",
+      "ready": true,
+      "preparing": false,
+      "error": "",
+      "status": "検索結果 6 件 / GPUCompute",
+      "requested_backend": "GPUCompute",
+      "actual_backend": "GPUCompute",
+      "provider": "EmbeddingGemma.TextEmbedder",
+      "font_id": -4736,
+      "model_path": "C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/i/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-float16.sentis",
+      "ranking": [
+        {
+          "id": "doc-space-en",
+          "score": 0.7798648887130949
+        },
+        {
+          "id": "doc-space-ja",
+          "score": 0.7117976440516569
+        },
+        {
+          "id": "doc-recipe-a",
+          "score": 0.5516260665635233
+        },
+        {
+          "id": "doc-recipe-b",
+          "score": 0.5516260665635233
+        },
+        {
+          "id": "doc-cat-en",
+          "score": 0.5359167338954286
+        },
+        {
+          "id": "doc-cat-ja",
+          "score": 0.5263623564371217
+        }
+      ]
+    },
+    "first_blank_input_attempt_passed": false,
+    "blank_input_method": "Mouse focus, Event.KeyboardEvent(^a), Event.KeyboardEvent(backspace), then actual Search button",
+    "blank_guard": {
+      "query": "",
+      "ready": true,
+      "preparing": false,
+      "error": "検索に失敗: Query text is required.\r\nParameter name: query",
+      "status": "検索できませんでした。",
+      "requested_backend": "GPUCompute",
+      "actual_backend": "GPUCompute",
+      "provider": "EmbeddingGemma.TextEmbedder",
+      "font_id": -4736,
+      "model_path": "C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/i/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-float16.sentis",
+      "ranking": []
+    },
+    "release": {
+      "query": "",
+      "ready": false,
+      "preparing": false,
+      "error": "",
+      "status": "モデルと文書を準備してください。",
+      "requested_backend": "GPUCompute",
+      "actual_backend": null,
+      "provider": null,
+      "font_id": -4736,
+      "model_path": "C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/i/Assets/StreamingAssets/EmbeddingGemmaTextSearch/model-float16.sentis",
+      "ranking": []
+    },
+    "before_stop_console_count": 0,
+    "after_stop_console_count": 0,
+    "stop": {
+      "IsPlaying": false,
+      "IsPaused": false,
+      "Changed": true,
+      "WasAlreadyStopped": false,
+      "ResumedFromPause": false,
+      "BlockedByCompileErrors": false,
+      "BlockedByUnsavedChanges": false,
+      "CompileErrorCount": 0,
+      "CompileErrors": [],
+      "Message": "Play mode stopped",
+      "Warning": ""
+    },
+    "final_editor_state": "{ playing = False, compiling = False, scene = Assets/EmbeddingGemmaTextSearch/TextSearch.unity, dirty = False, maximized = False }",
+    "screenshots": [
+      "images/m2-editor-font-gpu-japanese-windows.png",
+      "images/m2-editor-font-gpu-english-windows.png"
+    ]
+  },
+  "limitations": [
+    "Two UI queries on Float16 GPU do not replace the previous full four-condition M1/search suite.",
+    "Legacy Font.GetCharacterInfo for Japanese returned false; actual TextCore Game View Japanese rendering was inspected separately.",
+    "New helper Player conditional path has not yet been built/run.",
+    "Generic Found native allocation diagnostics observed before this fix remain unattributed; this result does not prove leak freedom.",
+    "An Editor.log D3D12 upload-buffer-size diagnostic occurred during successful model preparation; no performance fix is claimed.",
+    "macOS, iOS and Android physical CPU/GPU execution and candidate/tag consumers remain unverified.",
+    "Package 0.1.0-pre.1 remains unreleased."
+  ],
+  "editor_shutdown": {
+    "observed_utc": "2026-10-10T06:04:58.2113044Z",
+    "editor_pid": 139424,
+    "editor_process_exited": true,
+    "remaining_editor_count": 0,
+    "shutdown_request": {
+      "Result": "{ exit_scheduled = True, scene = Assets/EmbeddingGemmaTextSearch/TextSearch.unity, dirty = False, playing = False, runner_active = False, owned_font_id = -4736 }",
+      "Logs": [
+        "Execution completed successfully"
+      ],
+      "CompilationErrors": [],
+      "ErrorMessage": "",
+      "Error": "",
+      "UpdatedCode": null,
+      "DiagnosticsSummary": null,
+      "Diagnostics": [],
+      "EditorPlaying": false,
+      "Success": true
+    },
+    "font_cleanup_marker": "FONT_QUIT_PROBE_20261010 original_id=-4736 destroyed=True remaining_owned_id=0",
+    "owned_font_destroyed": true,
+    "owned_session_id_erased": true,
+    "editor_log_shut_down": true,
+    "native_memory_shutdown_diagnostic": {
+      "type": "MemoryLeaks",
+      "version": 2,
+      "phase": "Immediate",
+      "time": 1791612254896,
+      "processId": 139424,
+      "allocatedMemory": 17476385,
+      "memoryLabels": [
+        {
+          "Default": 29313
+        },
+        {
+          "Permanent": 15236
+        },
+        {
+          "NewDelete": 71541
+        },
+        {
+          "Thread": 4237960
+        },
+        {
+          "Manager": 826304
+        },
+        {
+          "VertexData": 8
+        },
+        {
+          "Geometry": 816
+        },
+        {
+          "Texture": 296
+        },
+        {
+          "Shader": 81205
+        },
+        {
+          "Material": 24
+        },
+        {
+          "GfxDevice": 176640
+        },
+        {
+          "Animation": 392
+        },
+        {
+          "Audio": 3040
+        },
+        {
+          "FreeType": 8
+        },
+        {
+          "FontEngine": 736
+        },
+        {
+          "Physics": 2090
+        },
+        {
+          "Physics2D": 16
+        },
+        {
+          "Serialization": 1361472
+        },
+        {
+          "Input": 14984
+        },
+        {
+          "JobScheduler": 33024
+        },
+        {
+          "TextLib": 38488
+        },
+        {
+          "Mono": 32
+        },
+        {
+          "ScriptingNativeRuntime": 155060
+        },
+        {
+          "BaseObject": 1620336
+        },
+        {
+          "Resource": 1336
+        },
+        {
+          "Renderer": 3000
+        },
+        {
+          "Transform": 4685
+        },
+        {
+          "File": 18618
+        },
+        {
+          "WebCam": 616
+        },
+        {
+          "Culling": 32
+        },
+        {
+          "Terrain": 11394
+        },
+        {
+          "Wind": 24
+        },
+        {
+          "STL": 40
+        },
+        {
+          "String": 13807
+        },
+        {
+          "DynamicArray": 92473
+        },
+        {
+          "HashMap": 164445
+        },
+        {
+          "Utility": 2662098
+        },
+        {
+          "Curl": 48
+        },
+        {
+          "PoolAlloc": 2728
+        },
+        {
+          "AI": 80
+        },
+        {
+          "TypeTree": 354245
+        },
+        {
+          "ScriptManager": 512
+        },
+        {
+          "RuntimeInitializeOnLoadManager": 64
+        },
+        {
+          "SpriteAtlas": 112
+        },
+        {
+          "GI": 7792
+        },
+        {
+          "Director": 8240
+        },
+        {
+          "CloudService": 10944
+        },
+        {
+          "WebRequest": 7029
+        },
+        {
+          "VR": 47994
+        },
+        {
+          "SceneManager": 504
+        },
+        {
+          "Video": 208
+        },
+        {
+          "LazyScriptCache": 32
+        },
+        {
+          "Camera": 177
+        },
+        {
+          "Secure": 2377
+        },
+        {
+          "SerializationCache": 1576
+        },
+        {
+          "APIUpdating": 10320
+        },
+        {
+          "Subsystems": 336
+        },
+        {
+          "VirtualTexturing": 57888
+        },
+        {
+          "StaticSafetyDebugInfo": 278528
+        },
+        {
+          "Analytics": 384
+        },
+        {
+          "Hierarchy": 608
+        },
+        {
+          "CoreStats": 13032
+        },
+        {
+          "Identifiers": 12960
+        },
+        {
+          "Gui": 267557
+        },
+        {
+          "EditorUtility": 189100
+        },
+        {
+          "VersionControl": 4
+        },
+        {
+          "Undo": 947
+        },
+        {
+          "AssetDatabase": 4513110
+        },
+        {
+          "EditorGi": 328
+        },
+        {
+          "UnityConnect": 29557
+        },
+        {
+          "Upm": 1896
+        },
+        {
+          "AssetCompliance": 64
+        },
+        {
+          "DrivenProperties": 72
+        },
+        {
+          "LocalIPC": 210
+        },
+        {
+          "ProfilerEditor": 9746
+        },
+        {
+          "CoreBusinessMetrics": 2863
+        },
+        {
+          "Licensing": 664
+        },
+        {
+          "AssetReference": 32
+        },
+        {
+          "IPCStream": 32
+        }
+      ]
+    },
+    "native_memory_diagnostic_attribution": "Unknown; not a font leak-free claim"
+  }
+}

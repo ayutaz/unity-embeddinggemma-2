@@ -9,12 +9,11 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 > クラウドUnity CIはSecretsが必要なLinux CPUの手動補助検証です（未実行）。
 > リポジトリは public ですが、UPM パッケージのリリースはまだ行っていません。
 
-> **2026-10-10: M2のCI整備・UPM化をmainへ統合済み（PR #6・#8）**: テキストRuntimeを `com.ayutaz.embeddinggemma` の開発版UPMへ移行しました。
-> 全PRで実行するCIとパッケージ監査を追加し、GitHub側ではmainのPR必須・Required CI必須・force push / 削除禁止を設定済みです。
-> PR #12統合後の確認基準main `4ee0cbb` の [CI run 37975720534](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975720534) は全8 job成功。Python4環境・実モデルPython照合・lint・パッケージ監査を確認しました。Unity実測のsource SHAは検証記録を維持しています。
-> 新規UnityプロジェクトへのUPM導入・契約29件と、元プロジェクトの実モデルCPU / GPU回帰が成功しています。
-> **検索サンプルとモデル準備手順はPR #11でmainへ統合済みです。** Windows Sentisではfp32 / Float16重み × CPU / GPUComputeの4条件が合格し、固定6文書 / 4queryの全順位がPython参照と一致しました。元プロジェクトの日本語 / 英語検索・エラー表示・解放も画面入力で確認しています。
-> 新規consumerでも実モデル4 passed / failed 0 / skipped 0 / inconclusive 0とCLI完了応答、日英検索・空入力・解放を確認しました。準備キャッシュの再利用は単回測定203秒 → 175秒。停止時のallocationログとfont警告は別記しています。他環境・Git URL導入・リリースは残っています。[現在の状態](docs/status.md) / [検索の計画](docs/m2-search-plan.md) / [検証記録](docs/m2-search-validation.md)を参照してください。
+> **2026-10-10: M2はWindowsの固定Git導入と実モデル検索を確認済み、正式リリースは未完了です。** テキストRuntimeは `com.ayutaz.embeddinggemma` の開発版 `0.1.0-pre.1`としてmainへ統合済みです。
+> 全PRでCIとパッケージ監査を実行し、mainへの変更はPRとRequired CIを必須にしています。確認基準main `b1a8c67`（PR #25後）の[CI run 38023036522](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38023036522)は全8 job成功です。
+> 新しい空のWindows consumerへPR #24統合SHA `01f3d8682a97053bf4583e14fd8fbed14e2c8cae`をGit URLで導入し、SHA解決・source照合・compile、UPM 38 / sample EditMode 64 / PlayMode 2、実モデルFP32 / Float16 × CPU / GPUComputeの4条件と全順位・score、日英画面入力・空入力・解放を確認しました。[導入と実測](docs/m2-latest-git-consumer-validation.md)を参照してください。
+> 選択モデルだけを保持するsample cacheはfile URL初回展開・warm完全hash・実GPU検索を確認済みです。Windows検証専用PlayerもIL2CPP / Release / High strippingのbuildと実モデル4条件・独立2起動を確認しました。[sample cache](docs/m2-sample-cache-validation.md) / [Playerの条件と結果](docs/m2-player-il2cpp-validation.md)。
+> macOS Editor / iOS / Android実機、sample Player画面、allocation / fontの安定性、正式候補とtag固定導入、正式Releaseは残っています。[現在の状態](docs/status.md) / [4段階の実行計画](docs/m2-release-plan.md)を参照してください。M3・M4はこの作業の後に進めます。
 
 ## ゴール
 
@@ -29,7 +28,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 | # | 内容 | 状態 |
 | --- | --- | --- |
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor受け入れ検証完了（保存・量子化・測定を含む） |
-| M2 | テキスト版の UPM パッケージとサンプルをリリースする | CI・UPM・検索基盤はmain統合済み。検索サンプルとモデル手順はWindows実モデル4条件・画面操作・consumer再現を確認。他環境・Git URL導入・リリースは残る |
+| M2 | テキスト版の UPM パッケージとサンプルをリリースする | Windows固定Git導入・実モデル4条件・UIと検証専用IL2CPP Playerを確認。他環境の実測、残る安定性、候補 / tag導入・正式Releaseは未完了 |
 | M3 | 画像用モデルに対応する | 未着手 |
 | M4 | 音声用モデルに対応する | 未着手 |
 

@@ -1,6 +1,6 @@
 # 現在の状態と残タスク
 
-確認日: 2026-10-10。確認基準mainはPR #27後の `c3281cd`。統合後main [CI run 38025309104](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38025309104)は全8 job成功。PR #27は配布README / CHANGELOG等のMarkdown 6ファイルだけを更新し、Runtime / sample / GUID / manifestは変更していない。実Unity検証のSHAは各記録を維持する。下の表はPR #12時点の基準・履歴として保持し、後続実測を本文に追記する。以降のmain / PR / CIはGitHubを参照。
+確認日: 2026-10-10。確認基準mainはPR #26後の `d6c8442`。統合後main [CI run 38027319740](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38027319740)は全8 job成功。PR #27は配布README / CHANGELOG等のMarkdown 6ファイルだけを更新し、Runtime / sample / GUID / manifestは変更していない。実Unity検証のSHAは各記録を維持する。下の表はPR #12時点の基準・履歴として保持し、後続実測を本文に追記する。以降のmain / PR / CIはGitHubを参照。
 検索実装は `feat/m2-text-search-sample` / PR #11で統合済み。M1の履歴を維持し、Windows検索実測を別の証拠として追加した。以下のmain SHAとCIは確認時点の基準であり、後続の文書PRでも確認済みの実測SHAを変更しない。
 
 ## mainと作業ブランチ
@@ -67,6 +67,8 @@ Windows Playerの変更はPR #18の全8 CI成功後にmain `f44976b` へ統合�
 - GPU skipやCPU代替をGPU成功として扱わない。モデルと大きいartifactはGit管理外、LFSを使わずActionsで再生成する。
 
 ## 最近の更新
+
+PR #26をhead `d888e66`の全8 CI成功後にsquash mergeし、main `d6c8442`の[CI run 38027319740](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38027319740)も全8 job成功。元checkoutのUnity設定変更を保持した。モデルなし空sceneでPackage Manager Errorを観測し、回復時の直接uloop起動ではALLUSERSPROFILEが欠けていたことを確認した。旧PID終了・Editor本体0確認後、既存uvハーネスで環境補完して1回起動し、compile Error / Warning 0。以降の空scene 3回はConsole 0件、未準備sample UI 3回は0 / Warning 1 / Warning 1で、font警告をモデル推論なしに再現した。元scene / leak設定は復元済み。6回の比較ではallocation診断は出なかったが、次のPlay開始直後にFound leak診断15件を観測した。責任箇所は未確定。font原因・解消とdomain reload単体の高速化は未確認。[条件・結果・次の切り分け](m2-stability-environment-validation.md)。
 
 Androidの現在のC#はcompileと12契約が合格した。約37分の継続したMainThreadBlockedを確認した後、旧Editor PID 110956の終了・本体0確認を経て1回だけ回復起動し、新PID 127008で実APKをbuildした。source `751c30a`、ARM64 / IL2CPP / compiler Release / High stripping、504.158秒 / errors 0 / warnings 970。SDK v2 debug署名検証と、実APK 1,720,031,692 bytesの全payload完全hash・ARM64監査が成功した。scene / settingsとsample payload / metaは復元済み。実receiptの固定BuildOptions対応は1 redからAPK19 green。[結果と限界](m2-android-validation.md)、[機械可読結果](results/m2-android-apk-build-20261010.json)を参照。実機・jar runtime・Android CPU / GPU・sample Player画面は未実行。停止原因・警告解消・他OS・安定性・tag / Releaseは未完了。PR #27はhead `6ab5278`の全8 CI成功後にmain `c3281cd`へ統合済み。PR #26もその文書更新を取り込んだ。当時の観測timeoutはEditor操作の終了証拠にはせず、その後の回復と区別する。元checkoutのUnity設定変更は保持した。
 

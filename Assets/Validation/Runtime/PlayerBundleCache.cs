@@ -26,6 +26,7 @@ namespace EmbeddingGemma.Validation
             var timer = Stopwatch.StartNew();
             result.source = source; result.directory = null; result.error = null; result.cacheRejectedError = null;
             result.transferCompleted = false; result.cacheReused = false; result.auditPassed = false; result.transferredFiles = 0; result.auditMilliseconds = 0;
+            result.hashBackends = null;
             result.transport = transfer == null ? "UnityWebRequest.DownloadHandlerFile" : "injected_transport";
             var stack = new Stack<IEnumerator>(); stack.Push(Core(source, root, result, complete, transfer));
             try
@@ -97,6 +98,7 @@ namespace EmbeddingGemma.Validation
                 }
                 DeleteOwnedDirectory(root, "incoming");
                 result.directory = active; result.transferCompleted = true; result.auditPassed = true;
+                result.hashBackends = audit.Bundle.HashBackends;
                 audit.Lease = lease; lease = null;
                 try { complete(audit); }
                 catch { audit.Dispose(); throw; }

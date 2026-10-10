@@ -67,6 +67,7 @@ namespace EmbeddingGemma.Validation
         public PlayerBuildInfo build;
         public PlayerBundleStage staging;
         public JObject bundle;
+        public JObject hashBackends;
         public double auditMilliseconds, tokenizerMilliseconds;
         public List<PlayerCondition> conditions = new();
         public List<PlayerMemory> memory = new();
@@ -131,6 +132,7 @@ namespace EmbeddingGemma.Validation
                 if (audit != null && audit.Bundle.Directory != config.Bundle) throw new ArgumentException("Audited cache directory differs from the run configuration.");
                 var timer = Stopwatch.StartNew(); var bundle = audit?.Bundle ?? (load ?? PlayerBundleLoader.Load)(config.Bundle); timer.Stop();
                 report.auditMilliseconds = audit?.Milliseconds ?? timer.Elapsed.TotalMilliseconds; report.bundle = bundle.Receipt;
+                report.hashBackends = bundle.HashBackends;
                 report.phase = "token_audit"; save(report); timer.Restart();
                 if (encode == null)
                 {

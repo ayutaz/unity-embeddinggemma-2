@@ -14,6 +14,7 @@ namespace EmbeddingGemma.Validation
     {
         public string Directory, TokenizerJson;
         public JObject Receipt;
+        public JObject HashBackends;
         public PlayerReferenceSet Reference;
     }
     // Only this validation assembly can obtain a certificate from the full loader audit.
@@ -40,14 +41,13 @@ namespace EmbeddingGemma.Validation
             directory = Path.GetFullPath(directory);
             var receipt = JObject.Parse(File.ReadAllText(Path.Combine(directory, "bundle.json")));
             var files = ValidateReceipt(receipt);
-            var text = new Dictionary<string, string>();
+            var text = new Dictionary<string, string>(); var backends = new JObject();
             foreach (var entry in files)
             {
                 var name = (string)entry["name"];
                 using var stream = File.OpenRead(Path.Combine(directory, name));
                 if (stream.Length != (long)entry["bytes"]) throw new InvalidDataException("Bundle file length differs: " + name);
-                using var hash = SHA256.Create();
-                var digest = BitConverter.ToString(hash.ComputeHash(stream)).Replace("-", "").ToLowerInvariant();
+                var digest = PlayerFileHash.Compute(stream, out var backend); backends[name] = backend;
                 if (digest != (string)entry["sha256"]) throw new InvalidDataException("Bundle file SHA-256 differs: " + name);
                 if (name.EndsWith(".json", StringComparison.Ordinal))
                 {
@@ -57,7 +57,7 @@ namespace EmbeddingGemma.Validation
                     text[name] = reader.ReadToEnd();
                 }
             }
-            return new PlayerBundle { Directory = directory, TokenizerJson = text["tokenizer.json"], Receipt = receipt,
+            return new PlayerBundle { Directory = directory, TokenizerJson = text["tokenizer.json"], Receipt = receipt, HashBackends = backends,
                 Reference = PlayerValidation.ParseReferences(JObject.Parse(text["reference.json"]), JObject.Parse(text["search-reference.json"]),
                     (string)receipt["model_source"], (string)receipt["search_source"]) };
         }

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using UnityEngine.Networking;
+using Newtonsoft.Json.Linq;
 
 namespace EmbeddingGemma.Validation
 {
@@ -13,6 +14,7 @@ namespace EmbeddingGemma.Validation
         public bool transferCompleted, cacheReused, auditPassed;
         public int transferredFiles;
         public double milliseconds, auditMilliseconds;
+        public JObject hashBackends;
     }
     public static class PlayerBundleStager
     {
@@ -24,6 +26,7 @@ namespace EmbeddingGemma.Validation
             var timer = Stopwatch.StartNew();
             result.source = source; result.error = null; result.transferCompleted = false; result.transferredFiles = 0;
             result.cacheReused = false; result.auditPassed = false; result.cacheRejectedError = null; result.auditMilliseconds = 0;
+            result.hashBackends = null;
             result.transport = transfer == null ? "UnityWebRequest.DownloadHandlerFile" : "injected_transport";
             try
             {

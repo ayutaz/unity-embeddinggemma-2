@@ -1,0 +1,683 @@
+{
+  "limitations": [
+    "Windows Development Player Mono2x, stripping Disabled only; IL2CPP/release stripping not executed.",
+    "Existing file dependency consumer and model/import/shader/filesystem caches reused; not a fresh Git consumer install.",
+    "First build had 485 warnings, including Sentis ConvGeneric shader variants; cached build retains 485 warnings. Not warning-free.",
+    "Two runs with three timed query samples per condition; not cold-cache or a statistically controlled performance comparison.",
+    "Whole application memory samples, not peak/model-exclusive memory; GPU memory unknown.",
+    "macOS Editor/iOS/Android not executed; Android URI extraction pending.",
+    "Allocation/font warning origin, Git consumer startup and all M2 release gates remain open."
+  ],
+  "base_commit": "e7b3a54ec279f0c78be43a58548ec6695c4ba4ec",
+  "prior_player_failure": {
+    "success": false,
+    "run_id": "c682b53844e84a7b9fcc9d7c3a7aabe4",
+    "interpretation": "Failed before bundle audit. A brief reader lock was reproduced in a regression test; the original locking process was not identified.",
+    "exit_code": 1,
+    "token_rows": 0,
+    "code_commit": "84f74260709f269550db30bae08963516329d962",
+    "error": "IOException: 置換されるファイルを削除できません。",
+    "phase": "failed",
+    "elapsed_seconds": 8.4263949
+  },
+  "recorded_at_utc": "2026-10-10T01:20:55.3946035Z",
+  "schema_version": 1,
+  "build": {
+    "success": true,
+    "injected_build": false,
+    "source_commit": "dfdcc9cb440cceca0380022a528a54f27e709cfe",
+    "started_utc": "2026-10-10T01:15:38.4849632Z",
+    "build_info": {
+      "codeCommit": "dfdcc9cb440cceca0380022a528a54f27e709cfe",
+      "unityVersion": "6000.3.16f1",
+      "sentisVersion": "2.6.1",
+      "target": "StandaloneWindows64",
+      "scriptingBackend": "Mono2x",
+      "stripping": "Disabled",
+      "sourceSha256": {
+        "Assets/Validation/Runtime/PlayerBundleLoader.cs": "4dad8ee6870789ef6d64a45c54eb5813d6a5c302807600dd7d96f3565fe0ab0d",
+        "Assets/Validation/Runtime/PlayerRunProtocol.cs": "8234160c187253926b2faf18edce450c5df04cf44aeedcbeffe8761a64dd602c",
+        "Assets/Validation/Runtime/PlayerValidation.cs": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+        "Assets/Validation/Runtime/PlayerValidationRunner.cs": "6a90868b56c8f2cca28c313b8cbac160b602126c8ef647751d27de7079c81427",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs": "85cb087541827169efe40ddec5074f6cc8b6a1dd995531a250ce5c4bbc66ec1e",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/TextModelFile.cs": "c4fb628f5ea5e4daacac88f9d4f09266f44e3133a0baf2236438c611917ede28",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/TextPrompts.cs": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchIndex.cs": "8a17c7ac6e995e6ceb36d9cead732f3ace63f418ab6e860e7f71fdd7a9ea43d0",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchSession.cs": "e4a85fd2378a18b48dd022f82a6fdb4eb73ef9dd980f539c75e2ef5768f1f9f7",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/TextTokenizer.cs": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763"
+      }
+    },
+    "build_result": "Succeeded",
+    "build_seconds": 11.2325635,
+    "build_bytes": 1867199516,
+    "errors": 0,
+    "warnings": 485,
+    "completed_utc": "2026-10-10T01:15:50.4266684Z"
+  },
+  "bundle": {
+    "success": true,
+    "unity_executed": false,
+    "gpu_verified": false,
+    "files": [
+      {
+        "name": "model-fp32.sentis",
+        "bytes": 1095598044,
+        "sha256": "8488d70f2d636a34bfe2a64c1d7b9d3eb3fce70c4fb9e27d32b698090c8fb373"
+      },
+      {
+        "name": "model-float16.sentis",
+        "bytes": 553775500,
+        "sha256": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819"
+      },
+      {
+        "name": "tokenizer.json",
+        "bytes": 32170775,
+        "sha256": "25975a936201b81402a3b867d5c462cf10808bb96759f97fe9aefecbb11c49df"
+      },
+      {
+        "name": "reference.json",
+        "bytes": 408173,
+        "sha256": "deb9b3ed00e49c29b18c1a747307a318900d5e993fb3d9208f4d37e8a73cf2f6"
+      },
+      {
+        "name": "search-reference.json",
+        "bytes": 268000,
+        "sha256": "3530756b36316a812ac853f0722bed5479e92e6bb02ca6aa41c06660d32a71ec"
+      }
+    ],
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "model_source": "2edb272f17a38c7af210474345c35f391fd6955c",
+    "search_source": "13f194266162d2a728b2b2a0da9e9e58ae314ff6",
+    "model_origin_sha256": "92968480724ef7838cbd7d7b7cfd6a8d6d5105bb937f8a9907e965805a7651c8",
+    "unity_preparation_version": "6000.3.16f1"
+  },
+  "runs": [
+    {
+      "conditions": [
+        {
+          "full_rankings_match": true,
+          "success": true,
+          "document_count": 6,
+          "query_count": 4,
+          "first_inference_ms": 577.1783,
+          "model_load_ms": 1406.6977000000002,
+          "worker_creation_ms": 3964.1458000000002,
+          "minimum_cosine": 0.9999999999981735,
+          "release_ms": 4.3002,
+          "case_count": 15,
+          "maximum_ranking_score_delta": 2.421338294311681E-07,
+          "actual_backend": "CPU",
+          "warm_inference_ms": [
+            494.39570000000003,
+            491.3475,
+            543.9692
+          ],
+          "requested_backend": "CPU",
+          "worker_released": true,
+          "precision": "fp32"
+        },
+        {
+          "full_rankings_match": true,
+          "success": true,
+          "document_count": 6,
+          "query_count": 4,
+          "first_inference_ms": 4631.5807,
+          "model_load_ms": 1113.5117,
+          "worker_creation_ms": 4030.3731000000002,
+          "minimum_cosine": 0.999999999999512,
+          "release_ms": 2.8459000000000003,
+          "case_count": 15,
+          "maximum_ranking_score_delta": 9.186151772588858E-08,
+          "actual_backend": "GPUCompute",
+          "warm_inference_ms": [
+            52.2612,
+            55.853,
+            56.74
+          ],
+          "requested_backend": "GPUCompute",
+          "worker_released": true,
+          "precision": "fp32"
+        },
+        {
+          "full_rankings_match": true,
+          "success": true,
+          "document_count": 6,
+          "query_count": 4,
+          "first_inference_ms": 1081.9642000000001,
+          "model_load_ms": 804.8317000000001,
+          "worker_creation_ms": 4895.8211,
+          "minimum_cosine": 0.9999999999982625,
+          "release_ms": 92.4349,
+          "case_count": 15,
+          "maximum_ranking_score_delta": 2.1364036523197072E-07,
+          "actual_backend": "CPU",
+          "warm_inference_ms": [
+            773.2547000000001,
+            798.7069,
+            811.8528
+          ],
+          "requested_backend": "CPU",
+          "worker_released": true,
+          "precision": "float16"
+        },
+        {
+          "full_rankings_match": true,
+          "success": true,
+          "document_count": 6,
+          "query_count": 4,
+          "first_inference_ms": 667.0858000000001,
+          "model_load_ms": 510.43480000000005,
+          "worker_creation_ms": 4840.9809000000005,
+          "minimum_cosine": 0.9999999999994984,
+          "release_ms": 1.1383,
+          "case_count": 15,
+          "maximum_ranking_score_delta": 1.0256953308918071E-07,
+          "actual_backend": "GPUCompute",
+          "warm_inference_ms": [
+            41.121,
+            40.5627,
+            39.896100000000004
+          ],
+          "requested_backend": "GPUCompute",
+          "worker_released": true,
+          "precision": "float16"
+        }
+      ],
+      "started_utc": "2026-10-10T01:16:31.2491305Z",
+      "elapsed_seconds": 105.6520248,
+      "validation_mode": "real_model",
+      "timing_scope": "Synchronous main-thread API including prompts, tokenization, schedule and final vector readback. One untimed query warmup then three timed query inferences.",
+      "completed_utc": "2026-10-10T01:18:07.2958953Z",
+      "exit_code": 0,
+      "memory": [
+        {
+          "stage": "before_audit",
+          "managedHeapBytes": 1138688,
+          "unityAllocatedBytes": 42252979,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "after_token_audit",
+          "managedHeapBytes": 919199744,
+          "unityAllocatedBytes": 42252979,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "before_fp32:CPU",
+          "managedHeapBytes": 919285760,
+          "unityAllocatedBytes": 42252979,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "worker_created_fp32:CPU",
+          "managedHeapBytes": 2069147648,
+          "unityAllocatedBytes": 42388683,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "released_fp32:CPU",
+          "managedHeapBytes": 2072039424,
+          "unityAllocatedBytes": 49176923,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "before_fp32:GPUCompute",
+          "managedHeapBytes": 2072383488,
+          "unityAllocatedBytes": 49176923,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "worker_created_fp32:GPUCompute",
+          "managedHeapBytes": 4399837184,
+          "unityAllocatedBytes": 49178347,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "released_fp32:GPUCompute",
+          "managedHeapBytes": 4403073024,
+          "unityAllocatedBytes": 75444172,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "before_float16:CPU",
+          "managedHeapBytes": 4403384320,
+          "unityAllocatedBytes": 75444172,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "worker_created_float16:CPU",
+          "managedHeapBytes": 4591562752,
+          "unityAllocatedBytes": 74411620,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "released_float16:CPU",
+          "managedHeapBytes": 4594507776,
+          "unityAllocatedBytes": 74411660,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "before_float16:GPUCompute",
+          "managedHeapBytes": 4594872320,
+          "unityAllocatedBytes": 74411660,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "worker_created_float16:GPUCompute",
+          "managedHeapBytes": 6036983808,
+          "unityAllocatedBytes": 74412972,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "released_float16:GPUCompute",
+          "managedHeapBytes": 6040018944,
+          "unityAllocatedBytes": 76415003,
+          "processWorkingSetBytes": null
+        }
+      ],
+      "token_rows": 25,
+      "memory_scope": "Whole application stage samples, not a continuously observed peak or model-exclusive memory. GPU memory usage is unknown; null counters mean unavailable.",
+      "unity": "6000.3.16f1",
+      "audit_ms": 22492.9453,
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "run_id": "1ce1fd2437664c3488d691021634d0cc",
+      "tokenizer_ms": 4268.1709,
+      "graphics_api": "Direct3D12",
+      "os": "Windows 11  (10.0.22631)",
+      "is_editor": false,
+      "raw_directory": "artifacts/player-runs/windows-dfdcc9c-run1",
+      "gpu_verified": true,
+      "shutdown_memory_diagnostic": {
+        "type": "MemoryLeaks",
+        "version": 2,
+        "phase": "Immediate",
+        "time": 1791595087951,
+        "processId": 128684,
+        "allocatedMemory": 1104702,
+        "memoryLabels": [
+          {
+            "Default": 136
+          },
+          {
+            "NewDelete": 728
+          },
+          {
+            "Thread": 7616
+          },
+          {
+            "Manager": 542515
+          },
+          {
+            "GfxDevice": 463120
+          },
+          {
+            "GfxThread": 312
+          },
+          {
+            "Audio": 752
+          },
+          {
+            "Serialization": 520
+          },
+          {
+            "JobScheduler": 32768
+          },
+          {
+            "String": 507
+          },
+          {
+            "HashMap": 52736
+          },
+          {
+            "PoolAlloc": 720
+          },
+          {
+            "CloudService": 144
+          },
+          {
+            "VR": 1872
+          },
+          {
+            "Video": 144
+          },
+          {
+            "Subsystems": 96
+          },
+          {
+            "CoreBusinessMetrics": 120
+          }
+        ]
+      },
+      "success": true
+    },
+    {
+      "conditions": [
+        {
+          "full_rankings_match": true,
+          "success": true,
+          "document_count": 6,
+          "query_count": 4,
+          "first_inference_ms": 574.3285000000001,
+          "model_load_ms": 1254.8452,
+          "worker_creation_ms": 4255.077,
+          "minimum_cosine": 0.9999999999981735,
+          "release_ms": 4.2083,
+          "case_count": 15,
+          "maximum_ranking_score_delta": 2.421338294311681E-07,
+          "actual_backend": "CPU",
+          "warm_inference_ms": [
+            487.75230000000005,
+            488.9506,
+            481.8014
+          ],
+          "requested_backend": "CPU",
+          "worker_released": true,
+          "precision": "fp32"
+        },
+        {
+          "full_rankings_match": true,
+          "success": true,
+          "document_count": 6,
+          "query_count": 4,
+          "first_inference_ms": 1661.5720000000001,
+          "model_load_ms": 1046.1969000000001,
+          "worker_creation_ms": 4041.53,
+          "minimum_cosine": 0.999999999999512,
+          "release_ms": 1.3417000000000001,
+          "case_count": 15,
+          "maximum_ranking_score_delta": 9.186151772588858E-08,
+          "actual_backend": "GPUCompute",
+          "warm_inference_ms": [
+            38.365,
+            36.9351,
+            34.699600000000004
+          ],
+          "requested_backend": "GPUCompute",
+          "worker_released": true,
+          "precision": "fp32"
+        },
+        {
+          "full_rankings_match": true,
+          "success": true,
+          "document_count": 6,
+          "query_count": 4,
+          "first_inference_ms": 861.0156000000001,
+          "model_load_ms": 490.7554,
+          "worker_creation_ms": 3743.8167000000003,
+          "minimum_cosine": 0.9999999999982625,
+          "release_ms": 79.8987,
+          "case_count": 15,
+          "maximum_ranking_score_delta": 2.1364036523197072E-07,
+          "actual_backend": "CPU",
+          "warm_inference_ms": [
+            794.5669,
+            790.2405,
+            823.3901000000001
+          ],
+          "requested_backend": "CPU",
+          "worker_released": true,
+          "precision": "float16"
+        },
+        {
+          "full_rankings_match": true,
+          "success": true,
+          "document_count": 6,
+          "query_count": 4,
+          "first_inference_ms": 562.8691,
+          "model_load_ms": 707.423,
+          "worker_creation_ms": 3738.5744,
+          "minimum_cosine": 0.9999999999994984,
+          "release_ms": 1.2925,
+          "case_count": 15,
+          "maximum_ranking_score_delta": 1.0256953308918071E-07,
+          "actual_backend": "GPUCompute",
+          "warm_inference_ms": [
+            42.4688,
+            42.1421,
+            46.1683
+          ],
+          "requested_backend": "GPUCompute",
+          "worker_released": true,
+          "precision": "float16"
+        }
+      ],
+      "started_utc": "2026-10-10T01:19:05.3724007Z",
+      "elapsed_seconds": 97.3877111,
+      "validation_mode": "real_model",
+      "timing_scope": "Synchronous main-thread API including prompts, tokenization, schedule and final vector readback. One untimed query warmup then three timed query inferences.",
+      "completed_utc": "2026-10-10T01:20:33.432042Z",
+      "exit_code": 0,
+      "memory": [
+        {
+          "stage": "before_audit",
+          "managedHeapBytes": 1122304,
+          "unityAllocatedBytes": 42252899,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "after_token_audit",
+          "managedHeapBytes": 875671552,
+          "unityAllocatedBytes": 42252899,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "before_fp32:CPU",
+          "managedHeapBytes": 875737088,
+          "unityAllocatedBytes": 42252899,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "worker_created_fp32:CPU",
+          "managedHeapBytes": 2114232320,
+          "unityAllocatedBytes": 42388603,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "released_fp32:CPU",
+          "managedHeapBytes": 2117234688,
+          "unityAllocatedBytes": 49213859,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "before_fp32:GPUCompute",
+          "managedHeapBytes": 2117648384,
+          "unityAllocatedBytes": 49213859,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "worker_created_fp32:GPUCompute",
+          "managedHeapBytes": 3657355264,
+          "unityAllocatedBytes": 49215283,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "released_fp32:GPUCompute",
+          "managedHeapBytes": 3660447744,
+          "unityAllocatedBytes": 75481108,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "before_float16:CPU",
+          "managedHeapBytes": 3660750848,
+          "unityAllocatedBytes": 75481108,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "worker_created_float16:CPU",
+          "managedHeapBytes": 4410470400,
+          "unityAllocatedBytes": 74448556,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "released_float16:CPU",
+          "managedHeapBytes": 4413562880,
+          "unityAllocatedBytes": 74448676,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "before_float16:GPUCompute",
+          "managedHeapBytes": 4413935616,
+          "unityAllocatedBytes": 74448676,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "worker_created_float16:GPUCompute",
+          "managedHeapBytes": 3679477760,
+          "unityAllocatedBytes": 74449988,
+          "processWorkingSetBytes": null
+        },
+        {
+          "stage": "released_float16:GPUCompute",
+          "managedHeapBytes": 3682496512,
+          "unityAllocatedBytes": 76442107,
+          "processWorkingSetBytes": null
+        }
+      ],
+      "token_rows": 25,
+      "memory_scope": "Whole application stage samples, not a continuously observed peak or model-exclusive memory. GPU memory usage is unknown; null counters mean unavailable.",
+      "unity": "6000.3.16f1",
+      "audit_ms": 22056.564000000002,
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "run_id": "6b11bc5957ec4f65be39a53838f35ce4",
+      "tokenizer_ms": 4142.71,
+      "graphics_api": "Direct3D12",
+      "os": "Windows 11  (10.0.22631)",
+      "is_editor": false,
+      "raw_directory": "artifacts/player-runs/windows-dfdcc9c-run2",
+      "gpu_verified": true,
+      "shutdown_memory_diagnostic": {
+        "type": "MemoryLeaks",
+        "version": 2,
+        "phase": "Immediate",
+        "time": 1791595233940,
+        "processId": 117504,
+        "allocatedMemory": 1104694,
+        "memoryLabels": [
+          {
+            "Default": 136
+          },
+          {
+            "NewDelete": 728
+          },
+          {
+            "Thread": 7616
+          },
+          {
+            "Manager": 542515
+          },
+          {
+            "GfxDevice": 463120
+          },
+          {
+            "GfxThread": 304
+          },
+          {
+            "Audio": 752
+          },
+          {
+            "Serialization": 520
+          },
+          {
+            "JobScheduler": 32768
+          },
+          {
+            "String": 507
+          },
+          {
+            "HashMap": 52736
+          },
+          {
+            "PoolAlloc": 720
+          },
+          {
+            "CloudService": 144
+          },
+          {
+            "VR": 1872
+          },
+          {
+            "Video": 144
+          },
+          {
+            "Subsystems": 96
+          },
+          {
+            "CoreBusinessMetrics": 120
+          }
+        ]
+      },
+      "success": true
+    }
+  ],
+  "contracts_green": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-10T01:15:11.0814684Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 65,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 65,
+    "XmlPath": null
+  },
+  "red_phases": [
+    {
+      "completed_utc": "2026-10-10T00:55:54.1495632Z",
+      "passed": 0,
+      "file": "protocol-red-tests.json",
+      "skipped": 0,
+      "failed": 17
+    },
+    {
+      "completed_utc": "2026-10-10T00:57:27.8054478Z",
+      "passed": 0,
+      "file": "build-red-tests.json",
+      "skipped": 0,
+      "failed": 5
+    },
+    {
+      "completed_utc": "2026-10-10T01:00:38.6091182Z",
+      "passed": 61,
+      "file": "scene-restore-red-tests.json",
+      "skipped": 0,
+      "failed": 1
+    },
+    {
+      "completed_utc": "2026-10-10T01:14:32.476667Z",
+      "passed": 1,
+      "file": "report-retry-red-tests.json",
+      "skipped": 0,
+      "failed": 2
+    }
+  ],
+  "validation_source_sha256_lf": {
+    "Assets/Validation/Editor/EmbeddingGemma.Player.Validation.Editor.asmdef": "d6b0ea4bb039766f2f483984bca41801d9f8ee2de1123f77f9e492b0332b5bfd",
+    "Assets/Validation/Editor/ValidationPlayerBuild.cs": "fd2972cc2709d4ec3498171fd46e7616d1ff024c5b9cdcb12c510aeda7c76a08",
+    "Assets/Validation/Runtime/EmbeddingGemma.Player.Validation.asmdef": "7e8e81ade67492d475bf26436f1696a1f5e32081ec80954bffaf205da7facfb3",
+    "Assets/Validation/Runtime/link.xml": "7794a56cd4b187d0d819feb6b61c0bd8aaa552e50a325319ba5902859569bf20",
+    "Assets/Validation/Runtime/PlayerBundleLoader.cs": "4dad8ee6870789ef6d64a45c54eb5813d6a5c302807600dd7d96f3565fe0ab0d",
+    "Assets/Validation/Runtime/PlayerRunProtocol.cs": "8234160c187253926b2faf18edce450c5df04cf44aeedcbeffe8761a64dd602c",
+    "Assets/Validation/Runtime/PlayerValidation.cs": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+    "Assets/Validation/Runtime/PlayerValidationRunner.cs": "6a90868b56c8f2cca28c313b8cbac160b602126c8ef647751d27de7079c81427",
+    "Assets/Validation/Tests/Editor/EmbeddingGemma.Player.Validation.Tests.asmdef": "d2de7d8be2b9351885f9079372bfb37b5b26398ddcef7221f79c82a5c9548b6a",
+    "Assets/Validation/Tests/Editor/PlayerBundleLoaderTests.cs": "09073552053a65a4372e4c953a7979fea5c2326a20cf8d9af14f19d333ed49c4",
+    "Assets/Validation/Tests/Editor/PlayerRunProtocolTests.cs": "91d10b06ce0fe5198db8d72ef661c1121ab83f8780c1f3a00386c53c60bca8c6",
+    "Assets/Validation/Tests/Editor/PlayerValidationTests.cs": "b510492e8313df7a1414f5bc4e5c4e161063e83542185130ad02a0a8e5848cb8",
+    "Assets/Validation/Tests/Editor/ValidationPlayerBuildTests.cs": "597f14eb1144085ae032e95a61e05e50bae10d7d3422edd0b24192e328cedeab"
+  },
+  "setup_failures": [
+    {
+      "file": "compile-name-collision.json",
+      "issue": "PackageInfo ambiguous namespace; fixed by explicit UnityEditor.PackageManager.PackageInfo before green tests.",
+      "errors": 1
+    },
+    {
+      "issue": "After the successful first build, a diagnostic probe dereferenced a null EditorApplication.delayCall. This probe error is not a build failure."
+    }
+  ]
+}

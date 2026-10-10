@@ -18,4 +18,16 @@ Windows Editorでは1MiB以上のファイルをWindows標準の`certutil.exe`�
 
 取得・監査・新規consumer・更新・artifact失効時の手順は
 [リポジトリのモデル準備手順](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/model-preparation.md)を参照してください。
-現在の同期ファイル読み込みを、未検証のPlayer配置や端末で動作確認済みとは扱いません。
+## Playerのローカルモデル配置
+
+通常のfilesystemパスは従来の同期読み込みを使います。AndroidのStreamingAssets等の`jar:file://...!/assets/...`と`file://`は、**モデルと文書を準備**からcoroutineで所有cacheへ展開します。インターネット上のURLや、モデルと異なるdirectoryのtokenizerは受け付けません。
+
+準備済みの`preparation.json`、選択した`model-fp32.sentis`または`model-float16.sentis`、`tokenizer.json`が必要です。receiptは成功、Unity version、固定形式の生成元commit / 元モデルSHA-256、固定3ファイルの長さとhashを要求します。選択した重みとtokenizerだけをコピーし、完全SHA-256を照合してからロードします。再準備でも毎回完全hashを確認し、同じreceiptと選択ならmanifestだけを転送します。
+
+cacheは`Application.persistentDataPath/EmbeddingGemmaTextSearch/ModelCache`に置きます。成功後は選択した重み1つを含む`active`だけ、更新中は旧`active`と候補を保持します。失敗時は旧cacheを残し、中断した候補は次の試行で破棄します。未知のファイル・directoryは自動削除しません。worker使用中はlockを保持し、**解放 / モデルを変更**・無効化・Play停止でworkerとlockを解放します。展開中の解放は通信を中断し、後からworkerを作りません。
+
+sampleを最小consumerへ導入する場合は、manifestのdependenciesに`"com.unity.modules.unitywebrequest": "1.0.0"`を有効にしてください。リポジトリのconsumer作成CLIの`--sample`はこれを追加します。配布Core Runtimeの直接依存は変更していません。
+
+WindowsのRuntime hashはOSのCNGを使い、利用できない場合・他OSは完全.NET SHA-256へ戻ります。追加のネイティブDLLを配布しません。通信はcoroutineですが、hash・モデルdeserialize・文書埋め込みは同期処理です。全準備をフレーム予算内で処理する実装やbyte-range転送再開の保証ではありません。
+
+Windows Editorのfile URL転送・実モデルGPU準備・検索・cache再利用を確認しました。Android APK / 実機、macOS / iOS、Playerのsample画面は未検証であり、この実装を全端末対応済みとは扱いません。[実測と範囲](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/m2-sample-cache-validation.md)を参照してください。

@@ -152,3 +152,12 @@ def test_repository_sample_is_registered_and_can_be_imported_into_empty_consumer
     assert (imported / "Resources/EmbeddingGemmaTextSearch/corpus.json").is_file()
     assert (imported / "TextSearchSample.cs.meta").read_bytes() == (package / "Samples~/TextSearch/TextSearchSample.cs.meta").read_bytes()
     assert not list(project.rglob("*.sentis"))
+
+
+@pytest.mark.parametrize("revision", [None, "a" * 40])
+def test_sample_consumer_enables_local_streamingassets_transfer_module(tmp_path, revision):
+    package = ROOT / "Packages" / PACKAGE_NAME
+    project = tmp_path / "consumer"
+    create_consumer(project, package, sample=True, git_revision=revision)
+    manifest = json.loads((project / "Packages/manifest.json").read_text())
+    assert manifest["dependencies"]["com.unity.modules.unitywebrequest"] == "1.0.0"

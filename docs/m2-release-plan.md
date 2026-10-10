@@ -4,6 +4,17 @@
 ユーザーの「4まで詳細の計画を立てて進めてください」に対応し、安定性・高速化、Git URL導入、他環境の実測、リリースの4段階を扱う。
 M1の履歴と既存のM2受け入れ条件は維持する。Windowsだけの成功でM2全体を完了としない。
 
+現在の確認済みmainはPR #23後の `197fae9`。統合後[CI run 38019722018](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38019722018)成功を確認した。配布sampleの選択モデルcacheをsource `2e463a8`で実装・Windows実GPU確認し、[新しい検証記録](m2-sample-cache-validation.md)へ追加した。下の開始時点と実行履歴は当時の証拠を維持する。
+
+## 次に進める順序
+
+1. sample cacheをPRで統合し、固定した新しいGit SHAから空consumerへ導入する。現在の実測は既存consumerへのsample配置であり、新SHAのGit導入結果ではない。builtin UnityWebRequest、compile、sample契約、実モデル4条件と画面を確認する。
+2. Android buildのscene / 配置 / receipt / ABI / graphics APIをTDDで接続し、APK packagingを確認する。接続端末を確保したら実jar展開・CPU / GPU精度・cache再利用・停止と再起動を実測する。端末なしのbuildを実機合格とは数えない。
+3. macOS / iOS実行環境とActionsライセンス・runnerを確保し、同じ固定参照の全条件を実測する。安定性はfont警告、allocation、domain reloadを限定条件で切り分ける。sampleのhash / deserialize同期時間と他OS性能も測定する。
+4. 上記と既存の全gateを満たす候補にversion / CHANGELOG / licenseを対応付け、tag固定consumer導入を確認して正式Releaseする。必須実機結果を省略しない。
+
+Windows PlayerのIL2CPP / Release / High stripping結果は確認済み。新sampleのAndroid URL経路は実装済みだが、実APK / 実機とPlayer sample画面は未実行。font Warningは残る。これらを開いたgateとして扱い、M2全体は未完了のまま進める。
+
 ## 開始時点の証拠
 
 - 最新mainのWindows consumerでUnity 6000.3.16f1 / Sentis 2.6.1 / uloop-cli 3.8.1を実行した。実モデルFP32 / Float16重み × CPU / GPUComputeは4 passed、failed / skipped / inconclusive = 0。固定6文書 / 4queryの全順位がPython参照と一致した。
@@ -101,6 +112,9 @@ Pythonは `tools/` とuvに統一する。実装はred → greenを確認し、�
 PRのmergeはユーザーの既存依頼の範囲で、差分・競合・現在headのCIを確認して行う。リリースまでを依頼された本作業の範囲で進め、未達gateを迂回しない。
 
 ## 実行中の記録
+
+- 配布sampleの選択モデルcacheをTDDで追加した。cache 14 red、hash 7 red、非同期sample 3 red、Play中断1 red、provider失敗Status 2 redを観測し、最終EditMode 64 / PlayMode 2 green。Pythonは必要builtin module欠落の2 redから22 green。Windows Editorのactual GPUでFP32日本語とFloat16固定英語の全順位・scoreがPython参照と一致し、file URL初回3件 / warm 1件、完全hash、lease、欠落と空入力を確認した。[結果](m2-sample-cache-validation.md)。過去の英語UI文は固定参照と違ったため別結果に残し、固定文を追加実行した。font Warning 1件、実APK / 他OS / 新SHA Git導入 / sample Playerは未達。
+- PR #23を現在headの全8 CI成功後に統合し、mainを `197fae9`へfast-forwardした。統合後CI run 38019722018も成功。元checkoutのUnity設定変更を保持し、検証Editor本体は1つで継続している。
 
 - PR #14で本計画とGit導入監査を進めている。新しい `artifacts/g` はローカルfile依存を使わず、commit `2329507eb763202a297c1b15f385a83512eb6e1f` を指定した。
 - Package Managerの `packages-lock.json` は `source: git` と同じ40桁hashを記録した。Sentis 2.6.1 / Newtonsoft JSON 3.2.2も解決した。[部分成功と起動失敗の記録](results/m2-git-consumer-windows-20261010.json)を参照。Git解決の監査CLIをTDDで追加し、既存packageテストを含む38件が合格した。

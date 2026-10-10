@@ -131,7 +131,11 @@ consumerの数値結果は `artifacts/c/artifacts/m2-search/results.json`。ハ�
 
 重いモデル準備と実モデル照合はまとめて実行し、ドキュメントだけの編集で繰り返さない。準備メニューは入力モデルSHA-256、生成元commit、Unity版、tokenizer、出力3ファイルのサイズとSHA-256が一致した場合だけ再利用する。旧receiptや破損・欠落・不一致は再変換し、失敗時に過去のsuccessを残さない。再利用ではModelAsset読み込み・変換・書き込みを省き、全体Refreshも実行しない。
 
-Windows consumerの単回測定は初回202.76秒、再利用174.52秒（約13.9%短縮）。出力hash・receipt・全ファイル更新時刻は不変だった。hash監査の負荷は残り、domain reload遅延の原因や改善率を断定する測定ではない。[検証記録](m2-search-validation.md)にTDD・CLI完了応答・画面操作と未解決ログを分けて保存した。
+従来実装のWindows consumerの単回測定は初回202.76秒、再利用174.52秒。出力hash・receipt・全ファイル更新時刻は不変だった。[検証記録](m2-search-validation.md)に当時のTDD・CLI完了応答・画面操作と未解決ログを保存している。
+
+その後、Windows Editorの1MiB以上の完全なSHA-256照合をWindows標準の`certutil.exe`へ委譲した。絶対パスでsystem utilityを起動し、shellを使わずウィンドウも表示しない。終了codeが0で、64桁hexのhash行が1つだけある場合に採用する。起動失敗・timeout・不正出力では従来の完全なSHA-256へ戻る。他のOSと小さいファイルは従来の処理を維持する。照合をサイズ・mtimeだけに置き換えない。
+
+同じWindows consumer / 実モデルのキャッシュ再利用は変更後の単回測定でEditor内7.38秒だった。モデルとreceiptのサイズ・更新時刻は不変、入力と出力の完全hashも一致した。過去174.52秒はCLIを含む別時点の測定であり、正確な改善率やcold-cacheの速度を示さない。初回変換・domain reload・他OSの高速化は未測定。[高速化の実測記録](results/m2-editor-sha256-windows-20261010.json)に条件と失敗・未実行を記載する。
 
 テストが数値を保存していても、CLIの完了応答を取得できなければハーネス合格にはしない。接続切断時の`SafeToRetry: false`を無視して同じ重い操作を自動再実行しない。
 

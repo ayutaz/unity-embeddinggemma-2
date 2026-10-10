@@ -99,3 +99,10 @@ M1の履歴と既存のM2受け入れ条件は維持する。Windowsだけの成
 AとBは環境調査と並行して進める。Cは実機の有無に依存せず必要な準備を進める。Dの実測は実行環境に依存する。Eの正式リリースは必要環境の合格に依存する。
 Pythonは `tools/` とuvに統一する。実装はred → greenを確認し、小さい必要チェック以外はActionsを優先する。モデル・大きいartifactはGitに含めない。
 PRのmergeはユーザーの既存依頼の範囲で、差分・競合・現在headのCIを確認して行う。リリースまでを依頼された本作業の範囲で進め、未達gateを迂回しない。
+
+## 実行中の記録
+
+- PR #14で本計画とGit導入監査を進めている。新しい `artifacts/g` はローカルfile依存を使わず、commit `2329507eb763202a297c1b15f385a83512eb6e1f` を指定した。
+- Package Managerの `packages-lock.json` は `source: git` と同じ40桁hashを記録した。Sentis 2.6.1 / Newtonsoft JSON 3.2.2も解決した。[部分成功と起動失敗の記録](results/m2-git-consumer-windows-20261010.json)を参照。Git解決の監査CLIをTDDで追加し、既存packageテストを含む38件が合格した。
+- 初回launchのCLI readinessは330秒でtimeout。後続get-logsは `UNITY_EDITOR_UNRESPONSIVE`、IPC heartbeatは生存しEditor main threadのtickが停止していると報告した。compile / 契約 / 実モデル / UIは未実行であり、Git URLでの全動作確認は未完了。
+- 旧consumer `artifacts/c` はPlay停止・scene cleanを確認して閉じた。終了指示だけでは旧Editorが残ったため、次回からprocess終了を確認してから次を起動する。新Editorをtimeoutだけを理由に再起動しない。

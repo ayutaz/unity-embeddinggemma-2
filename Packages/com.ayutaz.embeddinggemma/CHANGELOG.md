@@ -2,6 +2,7 @@
 
 ## 0.1.0-pre.1 — Unreleased
 
+- TextSearch sampleのEditor fontをEditor内で1つだけ所有し、Play / domain reload後も同じnative fontを再利用。修正前2件の失敗と修正後2件・sample EditMode 66件 / PlayMode 2件、Windows実Float16 GPU日英検索・空入力・解放、正常Editor終了時の所有font破棄を確認。新helperのPlayer実行・他OSとnative allocation診断の原因は未検証。
 - 検証済みテキストRuntimeをUPMへ移行。公開API・Runtime assembly名・既存ソースとGUIDを維持。
 - モデル不要の29件のEditor契約テストを配布パッケージへ移行。
 - Sentis 2.6.1 / Newtonsoft JSON 3.2.2の直接依存を明示。

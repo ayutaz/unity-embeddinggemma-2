@@ -164,12 +164,12 @@ namespace EmbeddingGemma.Samples
         {
             ReleaseDocuments();
             styles?.Dispose(); styles = null;
-            if (font != null) Destroy(font);
+            TextSearchGuiFont.Release(font); font = null;
         }
 
         void OnGUI()
         {
-            if (font == null) font = Font.CreateDynamicFontFromOSFont(new[] { "Yu Gothic UI", "Noto Sans CJK JP", "Hiragino Sans", "Arial" }, 16);
+            if (font == null) font = TextSearchGuiFont.Acquire();
             styles ??= new TextSearchGuiStyles(GUI.skin, font);
             try
             {

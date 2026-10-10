@@ -1,6 +1,6 @@
 # 現在の状態と残タスク
 
-確認日: 2026-10-10。確認基準mainはPR #26後の `d6c8442`。統合後main [CI run 38027319740](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38027319740)は全8 job成功。PR #27は配布README / CHANGELOG等のMarkdown 6ファイルだけを更新し、Runtime / sample / GUID / manifestは変更していない。実Unity検証のSHAは各記録を維持する。下の表はPR #12時点の基準・履歴として保持し、後続実測を本文に追記する。以降のmain / PR / CIはGitHubを参照。
+確認日: 2026-10-10。確認基準mainはPR #28後の `0abb299`。統合後main [CI run 38027941069](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38027941069)は全8 job成功。PR #27 / #28は文書のみでRuntime / sample / GUID / manifestは変更していない。今回のsample font寿命修正はsource `f7ffbfd`の別結果として記録した。実Unity検証のSHAは各記録を維持する。下の表はPR #12時点の基準・履歴として保持し、後続実測を本文に追記する。以降のmain / PR / CIはGitHubを参照。
 検索実装は `feat/m2-text-search-sample` / PR #11で統合済み。M1の履歴を維持し、Windows検索実測を別の証拠として追加した。以下のmain SHAとCIは確認時点の基準であり、後続の文書PRでも確認済みの実測SHAを変更しない。
 
 ## mainと作業ブランチ
@@ -40,6 +40,8 @@ PR #6のUPM移行時にはRuntimeと契約テストの19ファイルが移行前
 直接依存はSentis 2.6.1 / Newtonsoft JSON 3.2.2。モデル・ネイティブプラグイン・URP・uloop・Pythonを配布Runtimeへ含めない。
 
 ## 残タスクの順序
+
+Windows Editorのsample fontが停止で破棄されてもIMGUI cacheに参照が残る経路を再現し、Editor内で1つのnative fontを共有する修正をTDDで確認した。red 2 failed → green 2 passed、sample EditMode 66 / PlayMode 2、未準備UI 3回の停止前後Console 0、実Float16 GPU日英検索の全6順位・score照合、空入力・解放・停止が合格。[実測と未検証](m2-editor-font-lifetime-validation.md)を参照。修正source `f7ffbfd`は既存Git consumerへの作業ソース配置で、新固定Git導入は未実行。正常Editor終了時の所有font破棄も確認済み。次は新Git導入・Player条件を確認し、以前のnative allocation診断と他OS / 実機・正式Release gateを進める。
 
 ユーザーが安定化から正式リリースまでの実行を依頼した。[詳細実行計画](m2-release-plan.md)に4段階の受け渡しと完了条件を記載した。新しい実測はその実行SHA・環境で記録し、以下の既存履歴を書き換えない。
 

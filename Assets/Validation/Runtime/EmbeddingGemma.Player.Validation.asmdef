@@ -1,5 +1,5 @@
 {
   "name": "EmbeddingGemma.Player.Validation",
-  "references": ["EmbeddingGemma.Runtime", "Unity.InferenceEngine", "Unity.Newtonsoft.Json"],
+  "references": ["EmbeddingGemma.Runtime", "Unity.InferenceEngine", "Unity.InferenceEngine.Tokenization", "Unity.Newtonsoft.Json"],
   "autoReferenced": true
 }

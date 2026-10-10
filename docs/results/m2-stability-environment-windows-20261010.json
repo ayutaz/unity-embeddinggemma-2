@@ -1,0 +1,402 @@
+{
+  "checked_at_utc": "2026-10-10T05:30:57.3617466Z",
+  "checked_main": "d6c84424498e5bfb67c0adf3b1292a66e97c3a7c",
+  "merged_pr": 26,
+  "pr_head": "d888e66e4f5b567841185841d9593c7beb269033",
+  "pr_ci": {
+    "run_id": 38027163949,
+    "successful_jobs": 8,
+    "conclusion": "success"
+  },
+  "main_ci": {
+    "run_id": 38027319740,
+    "successful_jobs": 8,
+    "conclusion": "success"
+  },
+  "unity_version": "6000.3.16f1",
+  "sentis_version": "2.6.1",
+  "active_build_target": "Android",
+  "actual_editor_graphics_api": "Direct3D12",
+  "sample_source_git": "01f3d8682a97053bf4583e14fd8fbed14e2c8cae",
+  "actual_android_execution": false,
+  "model_preparation_or_inference_during_probe": false,
+  "before_environment_correction": {
+    "editor_pid": 127008,
+    "environment": {
+      "Result": "{ allUsersProfile = , programData = C:\\ProgramData, commonApplicationData = C:\\ProgramData, playing = False, compiling = False }",
+      "Logs": [
+        "Execution completed successfully"
+      ],
+      "CompilationErrors": [],
+      "ErrorMessage": "",
+      "Error": "",
+      "UpdatedCode": null,
+      "DiagnosticsSummary": null,
+      "Diagnostics": [],
+      "EditorPlaying": false,
+      "Success": true
+    },
+    "logs_after_stop": {
+      "TotalCount": 1,
+      "DisplayedCount": 1,
+      "LogType": "All",
+      "MaxCount": 30,
+      "SearchText": "",
+      "IncludeStackTrace": true,
+      "Logs": [
+        {
+          "Type": "Error",
+          "Message": "[Package Manager Window] The \"path\" argument must be of type string. Received undefined",
+          "StackTrace": "UnityEditor.EditorApplication:Internal_CallUpdateFunctions ()"
+        }
+      ],
+      "Success": true
+    },
+    "empty_scene_state": {
+      "Result": "{ playing = True, scene = , roots = 0, samples = 0, leakMode = EnabledWithStackTrace }",
+      "Logs": [
+        "Execution completed successfully"
+      ],
+      "CompilationErrors": [],
+      "ErrorMessage": "",
+      "Warning": "The Unity Editor is unfocused while Play Mode is running, so Play Mode progress may be throttled. Run `uloop focus-window`, or use the `pause-point --await`/`--trigger` flow instead of polling for progress.",
+      "Error": "",
+      "UpdatedCode": null,
+      "DiagnosticsSummary": null,
+      "Diagnostics": [],
+      "EditorPlaying": true,
+      "Success": true
+    }
+  },
+  "controlled_restart": {
+    "checked_at_utc": "2026-10-10T05:24:53.9941856Z",
+    "old_pid": 127008,
+    "old_editor_exited": true,
+    "editor_count_before_launch": 0,
+    "graceful_request_did_not_exit": true,
+    "termination_reason": "Apply verified missing ALLUSERSPROFILE through the existing launch harness; saved clean scene and idle Editor confirmed"
+  },
+  "existing_harness": "tools/embeddinggemma_tools/unity.py: run_harness Windows ALLUSERSPROFILE supplementation",
+  "existing_harness_modified": false,
+  "compile_scope_summary": {
+    "success": true,
+    "m1_reference_passed": false,
+    "runtime_reference_passed": false,
+    "m1_completion_passed": false,
+    "search_reference_passed": false,
+    "suite": "compile",
+    "project": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\i",
+    "unity_version": "6000.3.16f1",
+    "cli": "C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/uloop/bin/uloop.exe",
+    "started_at": "2026-10-10T14:24:54.175501+09:00",
+    "steps": [
+      "launch",
+      "compile",
+      "get-logs"
+    ],
+    "completed_at": "2026-10-10T14:25:51.794149+09:00"
+  },
+  "fixed_editor_pid": 139424,
+  "fixed_editor_environment": {
+    "Result": "{ allUsersProfile = C:\\ProgramData, programData = C:\\ProgramData, scene = Assets/EmbeddingGemmaTextSearch/TextSearch.unity, dirty = False, playing = False, compiling = False, target = Android }",
+    "Logs": [
+      "Execution completed successfully"
+    ],
+    "CompilationErrors": [],
+    "ErrorMessage": "",
+    "Error": "",
+    "UpdatedCode": null,
+    "DiagnosticsSummary": null,
+    "Diagnostics": [],
+    "EditorPlaying": false,
+    "Success": true
+  },
+  "cycles": [
+    {
+      "condition": "empty",
+      "iteration": 1,
+      "started_utc": "2026-10-10T05:26:40.4312625Z",
+      "completed_utc": "2026-10-10T05:26:48.5536248Z",
+      "play_cli_observation_seconds": 4.977729,
+      "stop_cli_observation_seconds": 0.5884104,
+      "runtime_state": "{ playing = True, roots = 0, samples = 0, ready = False, preparing = False, fontCreated = False, mode = EnabledWithStackTrace, graphicsApi = Direct3D12 }",
+      "logs": {
+        "TotalCount": 0,
+        "DisplayedCount": 0,
+        "LogType": "All",
+        "MaxCount": 30,
+        "SearchText": "",
+        "IncludeStackTrace": true,
+        "Logs": [],
+        "Success": true
+      }
+    },
+    {
+      "condition": "empty",
+      "iteration": 2,
+      "started_utc": "2026-10-10T05:26:48.6512562Z",
+      "completed_utc": "2026-10-10T05:26:56.3967018Z",
+      "play_cli_observation_seconds": 4.7166443,
+      "stop_cli_observation_seconds": 0.5651618,
+      "runtime_state": "{ playing = True, roots = 0, samples = 0, ready = False, preparing = False, fontCreated = False, mode = EnabledWithStackTrace, graphicsApi = Direct3D12 }",
+      "logs": {
+        "TotalCount": 0,
+        "DisplayedCount": 0,
+        "LogType": "All",
+        "MaxCount": 30,
+        "SearchText": "",
+        "IncludeStackTrace": true,
+        "Logs": [],
+        "Success": true
+      }
+    },
+    {
+      "condition": "empty",
+      "iteration": 3,
+      "started_utc": "2026-10-10T05:26:56.4887354Z",
+      "completed_utc": "2026-10-10T05:27:04.3513439Z",
+      "play_cli_observation_seconds": 4.7071618,
+      "stop_cli_observation_seconds": 0.5792021,
+      "runtime_state": "{ playing = True, roots = 0, samples = 0, ready = False, preparing = False, fontCreated = False, mode = EnabledWithStackTrace, graphicsApi = Direct3D12 }",
+      "logs": {
+        "TotalCount": 0,
+        "DisplayedCount": 0,
+        "LogType": "All",
+        "MaxCount": 30,
+        "SearchText": "",
+        "IncludeStackTrace": true,
+        "Logs": [],
+        "Success": true
+      }
+    },
+    {
+      "condition": "ui",
+      "iteration": 1,
+      "started_utc": "2026-10-10T05:27:05.0703872Z",
+      "completed_utc": "2026-10-10T05:27:13.2990012Z",
+      "play_cli_observation_seconds": 5.1181231,
+      "stop_cli_observation_seconds": 0.5760014,
+      "runtime_state": "{ playing = True, roots = 2, samples = 1, ready = False, preparing = False, fontCreated = True, mode = EnabledWithStackTrace, graphicsApi = Direct3D12 }",
+      "logs": {
+        "TotalCount": 0,
+        "DisplayedCount": 0,
+        "LogType": "All",
+        "MaxCount": 30,
+        "SearchText": "",
+        "IncludeStackTrace": true,
+        "Logs": [],
+        "Success": true
+      }
+    },
+    {
+      "condition": "ui",
+      "iteration": 2,
+      "started_utc": "2026-10-10T05:27:13.4023785Z",
+      "completed_utc": "2026-10-10T05:27:21.4478456Z",
+      "play_cli_observation_seconds": 4.7364642,
+      "stop_cli_observation_seconds": 0.6782717,
+      "runtime_state": "{ playing = True, roots = 2, samples = 1, ready = False, preparing = False, fontCreated = True, mode = EnabledWithStackTrace, graphicsApi = Direct3D12 }",
+      "logs": {
+        "TotalCount": 1,
+        "DisplayedCount": 1,
+        "LogType": "All",
+        "MaxCount": 30,
+        "SearchText": "",
+        "IncludeStackTrace": true,
+        "Logs": [
+          {
+            "Type": "Warning",
+            "Message": "Deleting invalid font reference.",
+            "StackTrace": "UnityEditor.ScriptReloadProperties:Load (UnityEditor.ScriptReloadProperties)"
+          }
+        ],
+        "Success": true
+      }
+    },
+    {
+      "condition": "ui",
+      "iteration": 3,
+      "started_utc": "2026-10-10T05:27:21.5556511Z",
+      "completed_utc": "2026-10-10T05:27:29.4243357Z",
+      "play_cli_observation_seconds": 4.8108338,
+      "stop_cli_observation_seconds": 0.5798406,
+      "runtime_state": "{ playing = True, roots = 2, samples = 1, ready = False, preparing = False, fontCreated = True, mode = EnabledWithStackTrace, graphicsApi = Direct3D12 }",
+      "logs": {
+        "TotalCount": 1,
+        "DisplayedCount": 1,
+        "LogType": "All",
+        "MaxCount": 30,
+        "SearchText": "",
+        "IncludeStackTrace": true,
+        "Logs": [
+          {
+            "Type": "Warning",
+            "Message": "Deleting invalid font reference.",
+            "StackTrace": "UnityEditor.ScriptReloadProperties:Load (UnityEditor.ScriptReloadProperties)"
+          }
+        ],
+        "Success": true
+      }
+    }
+  ],
+  "restored_state": {
+    "Result": "{ scene = Assets/EmbeddingGemmaTextSearch/TextSearch.unity, dirty = False, mode = Enabled, playing = False, compiling = False }",
+    "Logs": [
+      "Execution completed successfully"
+    ],
+    "CompilationErrors": [],
+    "ErrorMessage": "",
+    "Error": "",
+    "UpdatedCode": null,
+    "DiagnosticsSummary": null,
+    "Diagnostics": [],
+    "EditorPlaying": false,
+    "Success": true
+  },
+  "persistent_allocation_reproduced_in_these_six_cycles": false,
+  "font_warning_reproduced_ui_iterations": [
+    2,
+    3
+  ],
+  "font_warning_model_inference_required": false,
+  "font_warning_root_cause_confirmed": false,
+  "native_leak_free_proven": false,
+  "font_warning_fixed": false,
+  "additional_phase_probe": {
+    "final_state": {
+      "Result": "{ scene = Assets/EmbeddingGemmaTextSearch/TextSearch.unity, dirty = False, playing = False, compiling = False, leakMode = Enabled }",
+      "Logs": [
+        "Execution completed successfully"
+      ],
+      "CompilationErrors": [],
+      "ErrorMessage": "",
+      "Error": "",
+      "UpdatedCode": null,
+      "DiagnosticsSummary": null,
+      "Diagnostics": [],
+      "EditorPlaying": false,
+      "Success": true
+    },
+    "observed_font_warning_before_stop": true,
+    "after_font_total": 16,
+    "after_font_state": {
+      "Result": "{ playing = True, ready = False, preparing = False, fontCreated = True }",
+      "Logs": [
+        "Execution completed successfully"
+      ],
+      "CompilationErrors": [],
+      "ErrorMessage": "",
+      "Error": "",
+      "UpdatedCode": null,
+      "DiagnosticsSummary": null,
+      "Diagnostics": [],
+      "EditorPlaying": true,
+      "Success": true
+    },
+    "note": "Font warning and Found N leak(s) diagnostics were already present immediately after Play. Counts remained 16 through font state and Stop. These are log entries, not unique allocations, and mostly contain unknown native/JIT addresses.",
+    "after_play": {
+      "TotalCount": 16,
+      "DisplayedCount": 16,
+      "LogType": "All",
+      "MaxCount": 30,
+      "SearchText": "",
+      "IncludeStackTrace": true,
+      "Logs": [
+        {
+          "Type": "Warning",
+          "Message": "Deleting invalid font reference.",
+          "StackTrace": "UnityEditor.ScriptReloadProperties:Load (UnityEditor.ScriptReloadProperties)"
+        },
+        {
+          "Type": "Log",
+          "Message": "Found 6 leak(s) from callstack:\n0x000001f6400b179b ((<unknown>)) \n0x000001f6400b13d3 ((<unknown>)) \n0x000001f6400b0e93 ((<unknown>)) \n0x000001f6400b02c3 ((<unknown>)) \n0x000001f6400a6e93 ((<unknown>)) \n0x000001f6400a4853 ((<unknown>)) \n0x000001f6400a466a ((<unknown>)) \n0x000001f6400a4163 ((<unknown>)) \n0x000001f63dad2c9a ((<unknown>)) \n0x000001f64004a993 ((<unknown>)) \n0x000001f640041143 ((<unknown>)) \n0x000001f640037e8b ((<unknown>)) \n0x000001f63dad04ac ((<unknown>)) \n0x000001f63da7f71b ((<unknown>)) \n0x000001f63da7ee54 ((<unknown>)) \n0x000001f63da7eb6b ((<unknown>)) \n0x000001f63da7c44c ((<unknown>)) \n0x000001f63da7c786 ((<unknown>)) \n0x00007ffca7d06c0e (mono-2.0-bdwgc) mono_jit_runtime_invoke (at C:/build/output/Unity-Technologies/mono/mono/mini/mini-runtime.c:3445)",
+          "StackTrace": ""
+        },
+        {
+          "Type": "Log",
+          "Message": "Found 6 leak(s) from callstack:\n0x000001f6400a991b ((<unknown>)) \n0x000001f6400a9553 ((<unknown>)) \n0x000001f6400a930b ((<unknown>)) \n0x000001f6400a8a9b ((<unknown>)) \n0x000001f6400a645b ((<unknown>)) \n0x000001f6400a4853 ((<unknown>)) \n0x000001f6400a466a ((<unknown>)) \n0x000001f6400a4163 ((<unknown>)) \n0x000001f63dad2c9a ((<unknown>)) \n0x000001f64004a993 ((<unknown>)) \n0x000001f640041143 ((<unknown>)) \n0x000001f640037e8b ((<unknown>)) \n0x000001f63dad04ac ((<unknown>)) \n0x000001f63da7f71b ((<unknown>)) \n0x000001f63da7ee54 ((<unknown>)) \n0x000001f63da7eb6b ((<unknown>)) \n0x000001f63da7c44c ((<unknown>)) \n0x000001f63da7c786 ((<unknown>)) \n0x00007ffca7d06c0e (mono-2.0-bdwgc) mono_jit_runtime_invoke (at C:/build/output/Unity-Technologies/mono/mono/mini/mini-runtime.c:3445)",
+          "StackTrace": ""
+        },
+        {
+          "Type": "Log",
+          "Message": "Found 1 leak(s) from callstack:\n0x000001f645d62b8b ((<unknown>)) \n0x000001f645d627d3 ((<unknown>)) \n0x000001f645d62313 ((<unknown>)) \n0x000001f645d61c93 ((<unknown>)) \n0x000001f645d61673 ((<unknown>)) \n0x000001f645d61003 ((<unknown>)) \n0x000001f6410e2dbb ((<unknown>)) \n0x000001f6410e6033 ((<unknown>)) \n0x000001f6410df19b ((<unknown>)) \n0x000001f6400ed86b ((<unknown>)) \n0x000001f6400eb033 ((<unknown>)) \n0x000001f6400d6a33 ((<unknown>)) \n0x000001f6400a42a3 ((<unknown>)) \n0x000001f63dad2c9a ((<unknown>)) \n0x000001f64004a993 ((<unknown>)) \n0x000001f640041143 ((<unknown>)) \n0x000001f640037e8b ((<unknown>)) \n0x000001f63dad04ac ((<unknown>)) \n0x000001f63da7f71b ((<unknown>))",
+          "StackTrace": ""
+        },
+        {
+          "Type": "Log",
+          "Message": "Found 1 leak(s) from callstack:\n0x000001f645d52d6b ((<unknown>)) \n0x000001f645d529b3 ((<unknown>)) \n0x000001f645d524f3 ((<unknown>)) \n0x000001f645d51d8b ((<unknown>)) \n0x000001f645d51683 ((<unknown>)) \n0x000001f644d0e113 ((<unknown>)) \n0x000001f6410e1603 ((<unknown>)) \n0x000001f6410e0a5b ((<unknown>)) \n0x000001f6410df01b ((<unknown>)) \n0x000001f6400ed86b ((<unknown>)) \n0x000001f6400eb033 ((<unknown>)) \n0x000001f6400d6a33 ((<unknown>)) \n0x000001f6400a42a3 ((<unknown>)) \n0x000001f63dad2c9a ((<unknown>)) \n0x000001f64004a993 ((<unknown>)) \n0x000001f640041143 ((<unknown>)) \n0x000001f640037e8b ((<unknown>)) \n0x000001f63dad04ac ((<unknown>)) \n0x000001f63da7f71b ((<unknown>))",
+          "StackTrace": ""
+        },
+        {
+          "Type": "Log",
+          "Message": "Found 6 leak(s) from callstack:\n0x000001f6400cb23b ((<unknown>)) \n0x000001f6400cae73 ((<unknown>)) \n0x000001f6400cac1b ((<unknown>)) \n0x000001f6400ca6e3 ((<unknown>)) \n0x000001f6400c9ea3 ((<unknown>)) \n0x000001f6400c4ac3 ((<unknown>)) \n0x000001f6400a7763 ((<unknown>)) \n0x000001f6400a4853 ((<unknown>)) \n0x000001f6400a466a ((<unknown>)) \n0x000001f6400a4163 ((<unknown>)) \n0x000001f63dad2c9a ((<unknown>)) \n0x000001f64004a993 ((<unknown>)) \n0x000001f640041143 ((<unknown>)) \n0x000001f640037e8b ((<unknown>)) \n0x000001f63dad04ac ((<unknown>)) \n0x000001f63da7f71b ((<unknown>)) \n0x000001f63da7ee54 ((<unknown>)) \n0x000001f63da7eb6b ((<unknown>)) \n0x000001f63da7c44c ((<unknown>))",
+          "StackTrace": ""
+        },
+        {
+          "Type": "Log",
+          "Message": "Found 0 leak(s) from callstack:\n0x000001f63ffd2e43 ((<unknown>)) \n0x000001f63ffd2863 ((<unknown>)) \n0x000001f61c448a45 ((<unknown>)) \n0x00007ffca7d06c0e (mono-2.0-bdwgc) mono_jit_runtime_invoke (at C:/build/output/Unity-Technologies/mono/mono/mini/mini-runtime.c:3445)\n0x00007ffca7c48984 (mono-2.0-bdwgc) do_runtime_invoke (at C:/build/output/Unity-Technologies/mono/mono/metadata/object.c:3068)\n0x00007ffca7c43965 (mono-2.0-bdwgc) mono_runtime_class_init_full (at C:/build/output/Unity-Technologies/mono/mono/metadata/object.c:563)\n0x00007ffca7cfdbd5 (mono-2.0-bdwgc) mono_jit_compile_method_inner (at C:/build/output/Unity-Technologies/mono/mono/mini/mini.c:4228)\n0x00007ffca7d044be (mono-2.0-bdwgc) mono_jit_compile_method_with_opt (at C:/build/output/Unity-Technologies/mono/mono/mini/mini-runtime.c:2700)\n0x00007ffca7d064af (mono-2.0-bdwgc) mono_jit_runtime_invoke (at C:/build/output/Unity-Technologies/mono/mono/mini/mini-runtime.c:3309)\n0x00007ffca7c48984 (mono-2.0-bdwgc) do_runtime_invoke (at C:/build/output/Unity-Technologies/mono/mono/metadata/object.c:3068)\n0x00007ffca7c48a70 (mono-2.0-bdwgc) mono_runtime_invoke (at C:/build/output/Unity-Technologies/mono/mono/metadata/object.c:3115)\n0x00007ffcab4def54 (Unity) scripting_method_invoke\n0x00007ffcab4e5e13 (Unity) ScriptingInvocation::Invoke\n0x00007ffcab39f0e6 (Unity) RuntimeInitializeOnLoadManager::ExecuteInitializeOnLoad\n0x00007ffcab3a3b04 (Unity) RuntimeInitializeOnSceneLoadedBeforeAwake\n0x00007ffcab4823cf (Unity) CallbackArray4<UnitySceneHandle const ,AwakeFromLoadQueue & __ptr64,enum SceneLoadingMode,bool>::Invoke\n0x00007ffcab4807f0 (Unity) LoadSceneOperation::CompleteAwakeSequence\n0x00007ffcab48136d (Unity) LoadSceneOperation::CompletePreloadManagerLoadSceneEditor\n0x00007ffcab4820d1 (Unity) LoadSceneOperation::IntegrateMainThread",
+          "StackTrace": ""
+        },
+        {
+          "Type": "Log",
+          "Message": "Found 1 leak(s) from callstack:\n0x000001f6400b179b ((<unknown>)) \n0x000001f6400b13d3 ((<unknown>)) \n0x000001f644d04c33 ((<unknown>)) \n0x000001f644d0463b ((<unknown>)) \n0x000001f644d02cbb ((<unknown>)) \n0x000001f644d02113 ((<unknown>)) \n0x000001f644d01e33 ((<unknown>)) \n0x000001f6410e0e6b ((<unknown>)) \n0x000001f6410e098b ((<unknown>)) \n0x000001f6410df01b ((<unknown>)) \n0x000001f6400ed86b ((<unknown>)) \n0x000001f6400eb033 ((<unknown>)) \n0x000001f6400d6a33 ((<unknown>)) \n0x000001f6400a42a3 ((<unknown>)) \n0x000001f63dad2c9a ((<unknown>)) \n0x000001f64004a993 ((<unknown>)) \n0x000001f640041143 ((<unknown>)) \n0x000001f640037e8b ((<unknown>)) \n0x000001f63dad04ac ((<unknown>))",
+          "StackTrace": ""
+        },
+        {
+          "Type": "Log",
+          "Message": "Found 1 leak(s) from callstack:\n0x000001f644d05c9b ((<unknown>)) \n0x000001f644d058d3 ((<unknown>)) \n0x000001f644d04eeb ((<unknown>)) \n0x000001f644d0463b ((<unknown>)) \n0x000001f644d02cbb ((<unknown>)) \n0x000001f644d02113 ((<unknown>)) \n0x000001f644d01e33 ((<unknown>)) \n0x000001f6410e0e6b ((<unknown>)) \n0x000001f6410e098b ((<unknown>)) \n0x000001f6410df01b ((<unknown>)) \n0x000001f6400ed86b ((<unknown>)) \n0x000001f6400eb033 ((<unknown>)) \n0x000001f6400d6a33 ((<unknown>)) \n0x000001f6400a42a3 ((<unknown>)) \n0x000001f63dad2c9a ((<unknown>)) \n0x000001f64004a993 ((<unknown>)) \n0x000001f640041143 ((<unknown>)) \n0x000001f640037e8b ((<unknown>)) \n0x000001f63dad04ac ((<unknown>))",
+          "StackTrace": ""
+        },
+        {
+          "Type": "Log",
+          "Message": "Found 6 leak(s) from callstack:\n0x000001f6400a991b ((<unknown>)) \n0x000001f6400a9553 ((<unknown>)) \n0x000001f6400b926b ((<unknown>)) \n0x000001f6400a6fe3 ((<unknown>)) \n0x000001f6400a4853 ((<unknown>)) \n0x000001f6400a466a ((<unknown>)) \n0x000001f6400a4163 ((<unknown>)) \n0x000001f63dad2c9a ((<unknown>)) \n0x000001f64004a993 ((<unknown>)) \n0x000001f640041143 ((<unknown>)) \n0x000001f640037e8b ((<unknown>)) \n0x000001f63dad04ac ((<unknown>)) \n0x000001f63da7f71b ((<unknown>)) \n0x000001f63da7ee54 ((<unknown>)) \n0x000001f63da7eb6b ((<unknown>)) \n0x000001f63da7c44c ((<unknown>)) \n0x000001f63da7c786 ((<unknown>)) \n0x00007ffca7d06c0e (mono-2.0-bdwgc) mono_jit_runtime_invoke (at C:/build/output/Unity-Technologies/mono/mono/mini/mini-runtime.c:3445)\n0x00007ffca7c48984 (mono-2.0-bdwgc) do_runtime_invoke (at C:/build/output/Unity-Technologies/mono/mono/metadata/object.c:3068)",
+          "StackTrace": ""
+        },
+        {
+          "Type": "Log",
+          "Message": "Found 1 leak(s) from callstack:\n0x000001f6400b40bb ((<unknown>)) \n0x000001f6400b3cf3 ((<unknown>)) \n0x000001f644d076f3 ((<unknown>)) \n0x000001f644d046fb ((<unknown>)) \n0x000001f644d02cbb ((<unknown>)) \n0x000001f644d02113 ((<unknown>)) \n0x000001f644d01e33 ((<unknown>)) \n0x000001f6410e0e6b ((<unknown>)) \n0x000001f6410e098b ((<unknown>)) \n0x000001f6410df01b ((<unknown>)) \n0x000001f6400ed86b ((<unknown>)) \n0x000001f6400eb033 ((<unknown>)) \n0x000001f6400d6a33 ((<unknown>)) \n0x000001f6400a42a3 ((<unknown>)) \n0x000001f63dad2c9a ((<unknown>)) \n0x000001f64004a993 ((<unknown>)) \n0x000001f640041143 ((<unknown>)) \n0x000001f640037e8b ((<unknown>)) \n0x000001f63dad04ac ((<unknown>))",
+          "StackTrace": ""
+        },
+        {
+          "Type": "Log",
+          "Message": "Found 1 leak(s) from callstack:\n0x000001f644d05c9b ((<unknown>)) \n0x000001f644d058d3 ((<unknown>)) \n0x000001f644d079ab ((<unknown>)) \n0x000001f644d046fb ((<unknown>)) \n0x000001f644d02cbb ((<unknown>)) \n0x000001f644d02113 ((<unknown>)) \n0x000001f644d01e33 ((<unknown>)) \n0x000001f6410e0e6b ((<unknown>)) \n0x000001f6410e098b ((<unknown>)) \n0x000001f6410df01b ((<unknown>)) \n0x000001f6400ed86b ((<unknown>)) \n0x000001f6400eb033 ((<unknown>)) \n0x000001f6400d6a33 ((<unknown>)) \n0x000001f6400a42a3 ((<unknown>)) \n0x000001f63dad2c9a ((<unknown>)) \n0x000001f64004a993 ((<unknown>)) \n0x000001f640041143 ((<unknown>)) \n0x000001f640037e8b ((<unknown>)) \n0x000001f63dad04ac ((<unknown>))",
+          "StackTrace": ""
+        },
+        {
+          "Type": "Log",
+          "Message": "Found 1 leak(s) from callstack:\n0x000001f643cb2f2b ((<unknown>)) \n0x000001f643cb2b73 ((<unknown>)) \n0x000001f6410ddb3b ((<unknown>)) \n0x000001f6410dd584 ((<unknown>)) \n0x000001f6410dd45a ((<unknown>)) \n0x000001f6400ed6cb ((<unknown>)) \n0x000001f6400eb033 ((<unknown>)) \n0x000001f6400d6a33 ((<unknown>)) \n0x000001f6400a42a3 ((<unknown>)) \n0x000001f63dad2c9a ((<unknown>)) \n0x000001f64004a993 ((<unknown>)) \n0x000001f640041143 ((<unknown>)) \n0x000001f640037e8b ((<unknown>)) \n0x000001f63dad04ac ((<unknown>)) \n0x000001f63da7f71b ((<unknown>)) \n0x000001f63da7ee54 ((<unknown>)) \n0x000001f63da7eb6b ((<unknown>)) \n0x000001f63da7c44c ((<unknown>)) \n0x000001f63da7c786 ((<unknown>))",
+          "StackTrace": ""
+        },
+        {
+          "Type": "Log",
+          "Message": "Found 6 leak(s) from callstack:\n0x000001f6400b40bb ((<unknown>)) \n0x000001f6400b3cf3 ((<unknown>)) \n0x000001f6400b39d3 ((<unknown>)) \n0x000001f6400b036b ((<unknown>)) \n0x000001f6400a6e93 ((<unknown>)) \n0x000001f6400a4853 ((<unknown>)) \n0x000001f6400a466a ((<unknown>)) \n0x000001f6400a4163 ((<unknown>)) \n0x000001f63dad2c9a ((<unknown>)) \n0x000001f64004a993 ((<unknown>)) \n0x000001f640041143 ((<unknown>)) \n0x000001f640037e8b ((<unknown>)) \n0x000001f63dad04ac ((<unknown>)) \n0x000001f63da7f71b ((<unknown>)) \n0x000001f63da7ee54 ((<unknown>)) \n0x000001f63da7eb6b ((<unknown>)) \n0x000001f63da7c44c ((<unknown>)) \n0x000001f63da7c786 ((<unknown>)) \n0x00007ffca7d06c0e (mono-2.0-bdwgc) mono_jit_runtime_invoke (at C:/build/output/Unity-Technologies/mono/mono/mini/mini-runtime.c:3445)",
+          "StackTrace": ""
+        },
+        {
+          "Type": "Log",
+          "Message": "Found 6 leak(s) from callstack:\n0x000001f6400a991b ((<unknown>)) \n0x000001f6400a9553 ((<unknown>)) \n0x000001f6400a930b ((<unknown>)) \n0x000001f6400b6473 ((<unknown>)) \n0x000001f6400a6f3b ((<unknown>)) \n0x000001f6400a4853 ((<unknown>)) \n0x000001f6400a466a ((<unknown>)) \n0x000001f6400a4163 ((<unknown>)) \n0x000001f63dad2c9a ((<unknown>)) \n0x000001f64004a993 ((<unknown>)) \n0x000001f640041143 ((<unknown>)) \n0x000001f640037e8b ((<unknown>)) \n0x000001f63dad04ac ((<unknown>)) \n0x000001f63da7f71b ((<unknown>)) \n0x000001f63da7ee54 ((<unknown>)) \n0x000001f63da7eb6b ((<unknown>)) \n0x000001f63da7c44c ((<unknown>)) \n0x000001f63da7c786 ((<unknown>)) \n0x00007ffca7d06c0e (mono-2.0-bdwgc) mono_jit_runtime_invoke (at C:/build/output/Unity-Technologies/mono/mono/mini/mini-runtime.c:3445)",
+          "StackTrace": ""
+        },
+        {
+          "Type": "Log",
+          "Message": "Found 0 leak(s) from callstack:\n0x000001f63ffd2e43 ((<unknown>)) \n0x000001f63ffd407b ((<unknown>)) \n0x000001f63ffd2563 ((<unknown>)) \n0x000001f61c448a45 ((<unknown>)) \n0x00007ffca7d06c0e (mono-2.0-bdwgc) mono_jit_runtime_invoke (at C:/build/output/Unity-Technologies/mono/mono/mini/mini-runtime.c:3445)\n0x00007ffca7c48984 (mono-2.0-bdwgc) do_runtime_invoke (at C:/build/output/Unity-Technologies/mono/mono/metadata/object.c:3068)\n0x00007ffca7c48a70 (mono-2.0-bdwgc) mono_runtime_invoke (at C:/build/output/Unity-Technologies/mono/mono/metadata/object.c:3115)\n0x00007ffcab4def54 (Unity) scripting_method_invoke\n0x00007ffcab4e5e13 (Unity) ScriptingInvocation::Invoke\n0x00007ffcab39f0e6 (Unity) RuntimeInitializeOnLoadManager::ExecuteInitializeOnLoad\n0x00007ffcab3a3b04 (Unity) RuntimeInitializeOnSceneLoadedBeforeAwake\n0x00007ffcab4823cf (Unity) CallbackArray4<UnitySceneHandle const ,AwakeFromLoadQueue & __ptr64,enum SceneLoadingMode,bool>::Invoke\n0x00007ffcab4807f0 (Unity) LoadSceneOperation::CompleteAwakeSequence\n0x00007ffcab48136d (Unity) LoadSceneOperation::CompletePreloadManagerLoadSceneEditor\n0x00007ffcab4820d1 (Unity) LoadSceneOperation::IntegrateMainThread\n0x00007ffcab48500f (Unity) PreloadManager::UpdatePreloadingSingleStep\n0x00007ffcab4857f8 (Unity) PreloadManager::WaitForAllAsyncOperationsToComplete\n0x00007ffcac0f4d41 (Unity) EditorSceneManager::RestoreSceneBackups\n0x00007ffcabd1a234 (Unity) PlayerLoopController::EnterPlayMode",
+          "StackTrace": ""
+        }
+      ],
+      "Success": true
+    },
+    "after_stop_total": 16,
+    "allocation_diagnostic_log_entries": 15,
+    "leak_mode": "Enabled after restoring original setting; differs from six-cycle stack-enabled comparison",
+    "nonzero_found_leak_message_entries": 13,
+    "allocation_root_cause_confirmed": false
+  },
+  "limitations": [
+    "Single Windows Editor process with installed package/uloop/Android build dependencies; not a pristine project or Android Player.",
+    "Six-cycle comparison collected logs after Stop; one additional phase probe observed warning before Stop, but exact reload hook still needs separation.",
+    "No font destruction or style implementation changed; model inference not executed.",
+    "CLI elapsed times include dispatcher and domain reload observation, not isolated domain-reload or performance benchmarks.",
+    "ALLUSERSPROFILE was missing before correction and Package Manager error did not recur after correction; this does not prove other reload/allocation causes fixed.",
+    "Previous real-model allocation logs remain unresolved; six cycles had no diagnostic, but next phase probe emitted Found leak diagnostics. No native leak-free claim or source attribution."
+  ]
+}

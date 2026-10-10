@@ -56,6 +56,8 @@ uv run --locked python -m embeddinggemma_tools.unity --suite search --timeout 12
 ```
 
 `--launch` を指定したときだけ起動コマンドを送る。起動済み Editor への通常の検証では省略し、毎回ウィンドウを前面へ移動しない。
+
+WindowsではこのPythonハーネスが未定義の`ALLUSERSPROFILE`を`ProgramData`で補完する。直接uloopで起動したconsumerでは同変数が欠け、Package Managerの`path ... undefined` Errorを観測した。[実Editorの切り分け](m2-stability-environment-validation.md)を参照。補完済み環境で起動するには旧Editorの保存済み状態・PID終了・本体0を確認する。起動済みprocessへ`--launch`を送っても、そのprocessの環境は遡って変わらない。
 `--project` / `--uloop` / `--output` で対象プロジェクト・CLI・証拠の保存先を明示できる。
 `--timeout` は各コンパイル・テストの待ち時間で、既定900秒、範囲1～1200秒。
 ハーネスはWindowsで欠落する `ALLUSERSPROFILE` を子プロセスにのみ補い、UPMの起動エラーを防ぐ。

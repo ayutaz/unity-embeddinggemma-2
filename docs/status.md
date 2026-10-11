@@ -26,6 +26,8 @@
 
 ## 次の作業と依存
 
+2026-10-12の[ログ計測](m2-editor-profile-validation.md)で、完了reloadと初回asset import / compile・通信停止を分ける手段を追加した。TDD 16 failed → 16 passed、保存ログ2件へ適用済み。性能改善・クラッシュ修正・実機合格は追加していない。
+
 1. Windows sampleの終了クラッシュを修正確認する。対応PDBでPlatformAccessibilityManager破棄処理に停止箇所を限定した。公式UUM-146676を含む6000.3.21f1への変更が決まれば、モデル不要shutdown比較 → 同じ固定参照で日英GUI / 全query / 解放 → 独立2起動のexit 0 / cacheを確認する。公式修正との関連は未確定で、版変更の回答前に更新しない。
 2. Editor検索DB / allocation / domain reloadを限定条件で調べる。検証済みfont寿命修正と測定fixture修正を維持し、実測なしの高速化率を宣言しない。
 3. Android端末とMac / iOS環境を確保し、既存APK・固定参照を使う実CPU / GPU・配置 / cache・停止と再起動を測定する。Secretsだけで実機環境が揃ったとは扱わない。

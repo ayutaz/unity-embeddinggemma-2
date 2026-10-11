@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "observed_on": "2026-10-12",
+  "unity_version": "6000.3.16f1",
+  "operation": "Read saved logs and current Console; no Editor launch, compile, Play, model download or build",
+  "tdd": {"red_failed": 16, "green_passed": 16},
+  "snapshots": [
+    {
+      "name": "j-session",
+      "log_sha256": "e2cc76988d6886a41ac5496ea458341c67996059d4c10ca4a3e06b04619cb645",
+      "completed_reload_count": 30,
+      "incomplete_reload_count": 0,
+      "unpaired_profile_count": 0,
+      "completed_reload_ms": {"min": 913, "median": 3866, "max": 7939},
+      "asset_refresh_seconds": {"count": 226, "min": 0.006, "median": 0.041, "max": 65.071},
+      "search_database_enumeration_exception_count": 4,
+      "persistent_allocation_diagnostic_count": 1,
+      "last_reload_ms": 3865,
+      "last_reload_stages_ms": {
+        "BeginReloadAssembly": 1044,
+        "FinalizeReload": 2559,
+        "SetupLoadedEditorAssemblies": 1252,
+        "ProcessInitializeOnLoadMethodAttributes": 672,
+        "AwakeInstancesAfterBackupRestoration": 667
+      },
+      "longest_refresh": {
+        "total_seconds": 65.071,
+        "initiator": "InitialRefreshV2",
+        "imports_total": 3015,
+        "imports_actual": 3015,
+        "imports_local_cache": 0,
+        "asset_db_process_native_ms": 27908,
+        "asset_db_callback_native_ms": 17241,
+        "scripting_domain_reloads": 2,
+        "scripting_domain_reload_ms": 2300,
+        "scripting_compile_ms": 16427
+      },
+      "scope": "Mixed historical startup, script changes, Play/test and build operations in one session with reused caches and source overlays. Not a clean baseline or a new candidate regression run."
+    },
+    {
+      "name": "i-before-recovery",
+      "log_sha256": "e9d91e7b85e39039a40dd8b6e2b16614dbc5c83213da16fab536325874bf2eb9",
+      "completed_reload_count": 16,
+      "incomplete_reload_count": 0,
+      "unpaired_profile_count": 0,
+      "completed_reload_ms": {"min": 979, "median": 3828, "max": 7984},
+      "asset_refresh_seconds": {"count": 193, "min": 0.004, "median": 0.035, "max": 80.624},
+      "search_database_enumeration_exception_count": 1,
+      "persistent_allocation_diagnostic_count": 2,
+      "scope": "A previously saved log before recovery after target-switch communication stopped. Complete reload markers do not prove the Editor was responsive or identify the reason for recovery."
+    }
+  ],
+  "current_observations": {
+    "editor_main_process_count": 1,
+    "asset_import_worker_count": 2,
+    "uloop_console_error_count": 0,
+    "adb_connected_device_count": 0,
+    "repository_secret_count": 0,
+    "self_hosted_runner_count": 0
+  },
+  "next_action": "Separate startup asset import/compile cost, completed reload overhead and communication/target-switch stalls. Preserve caches and the same live process; compare controlled conditions before claiming an optimization.",
+  "performance_improvement_verified": false,
+  "shutdown_crash_fixed": false,
+  "m2_release_verified": false,
+  "limitations": [
+    "Statistics cover completed profiler markers only and provide no duration estimate for a hang.",
+    "Nested stage timings overlap; asset-pipeline and domain-profiler timings have different boundaries and must not be added or treated as equivalent.",
+    "Historical diagnostics remain even when the current Console is empty.",
+    "The two different sessions are not a before/after performance comparison.",
+    "No absolute user paths, licensing text or raw logs are included in this public summary."
+  ]
+}

@@ -1,12 +1,14 @@
 # Unity のローカル自動操作
 
-更新日: 2026-10-10（main統合状況を更新。Unityの実測は以前の記録を維持）
+更新日: 2026-10-12（保存ログのreload計測を追加。Unityの実モデル実測は以前の記録を維持）
 最新のmain / PR / CIと実行範囲は [現在の状態](status.md)、UPM移行の検証は [パッケージ検証](m2-package-validation.md)を参照。
 
 Unity 6000.3.16f1 をローカルで起動し、Unity CLI Loop を介してコンパイル・EditMode テスト・ログ取得を行う。
 Python のモデル取得・変換は GitHub Actions に残す。ローカルで認証済みの Editor を使うため、GitHub Secrets は不要。
 
 ## 導入済みの構成
+
+追加Editor起動なしで待ち時間を調べる場合は、[保存ログの計測手順と限界](m2-editor-profile-validation.md)を使う。`tools/`で`uv run --locked python -m embeddinggemma_tools.editor_profile --log <saved-Editor.log>`を実行すると、完了reloadの時間・内訳、未完了のmarker、asset refreshを分けて出力する。完了したログの監査であり、Unityの実行・精度・高速化の合格判定には使わない。
 
 | 対象 | 固定バージョン |
 | --- | --- |

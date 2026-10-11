@@ -17,6 +17,8 @@ PR #31の実装checkpoint `cd6b8bf`の[CI run 38040187805](https://github.com/ay
 
 ## 次に進める順序
 
+2026-10-12に[Editor待ち時間の切り分け](m2-editor-profile-validation.md)を追加した。新しいログ計測CLIは16 red → 16 green。既存j sessionの完了reload 30件はmedian 3.866秒 / max 7.939秒で、初回refresh 65.071秒には3015件のimportとcompileが含まれる。過去の数分間停止や通信停止とは別の証拠であり、高速化完了とは扱わない。追加Unity実行なしで測定対象を限定した。Editor本体1件、Console Error 0件、ADB端末・Secrets・self-hosted runner各0件を再確認した。
+
 PR #30まで統合済み。[font寿命](m2-editor-font-lifetime-validation.md)はTDDと実UI・正常Editor終了で修正確認し、統合SHAの新Git導入も合格した。測定fixture自身の破棄済みfont参照は1 failed → 1 passed、全67 passed、invalid font参照0、未準備UI 3回の停止前後Console 0を確認した。[Windows sample Player](m2-player-sample-validation.md)はbatch preflightを含む全33契約と実buildが成功。非表示起動の黒画面に対し、許可後の通常表示では日英GUI・Float16 / GPUComputeの全4query・各6順位 / score・解放が成功したが、engine shutdownでアクセス違反が残る。[PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)はdraft。対応PDBからPlatformAccessibilityManagerの破棄処理に停止箇所を絞り、公式修正UUM-146676を含む6000.3.21f1への変更を確認待ち。独立2起動の合格・初回Editor検索DB Error・以前のFound leak診断は未解決。実機gateは端末待ちで、不要なAPK再buildを避ける。
 
 1. Windows sample Playerの終了クラッシュを解消する。旧精度検証Playerのモデル不要比較では、通常モード非表示起動で同じ例外位置、batch modeはgraphics有無とも想定code 1で終了した。[比較結果](m2-player-sample-validation.md#モデル不要の終了処理の比較)を維持する。新 `41dc0be` の通常表示で実検索・画面・解放は通ったがprocess終了は失敗。対応するPE/PDB GUID / ageとpublic symbolを確認し、UnityのPlatformAccessibilityManager破棄処理と公式UUM-146676を次の比較対象にした。固定版変更の回答後、同じbundle / sample / Python参照を使って修正版のモデル不要shutdownを先に比較し、続けて日英画面・全query・独立2起動のexit 0 / cacheを確認する。外部終了監査は23 red → 23 greenで追加し、runtime successだけで異常終了を合格にしない。続けてEditor検索DB / allocation / domain reloadを調べる。正式候補・tagの導入は後段で別途確認する。

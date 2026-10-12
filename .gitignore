@@ -86,6 +86,8 @@ __pycache__/
 /.uloop/
 /Assets/M1Generated/
 /Assets/M1Generated.meta
+/Assets/M3Generated/
+/Assets/M3Generated.meta
 /Assets/StreamingAssets/EmbeddingGemmaTextSearch/
 /Assets/StreamingAssets/EmbeddingGemmaTextSearch.meta
 /Assets/Validation/Generated/

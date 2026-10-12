@@ -1,5 +1,6 @@
 """Generate pinned reference data and validate the saved export before Unity import."""
 
+import gc
 import hashlib
 import importlib.metadata
 import json
@@ -11,7 +12,7 @@ import torch
 import numpy as np
 from transformers import AutoTokenizer
 
-from .export import (AudioEncoderExport, MultimodalEmbeddingExport, VisionEncoderExport,
+from .export import (AudioEncoderExport, AudioEncoderStagesExport, MultimodalEmbeddingExport, VisionEncoderExport,
                      export_audio_pt2, export_multimodal_pt2, export_pt2, export_vision_pt2)
 from .model import load_audio_models, load_text_model, load_vision_models
 from .reference import build_reference, load_cases, write_reference
@@ -19,6 +20,66 @@ from .search import generate_search_reference
 
 MODEL_ID = "google/embeddinggemma-2"
 MODEL_REVISION = "914f7f89142e33e77833254d9c9b90c3cef7303b"
+
+
+def capture_official_audio_stages(audio, projection, features, frame_mask):
+    """Capture native forward outputs, removing only this call's temporary hooks."""
+    values, handles = [], []
+    modules = [audio.subsample_conv_projection, *audio.layers[:audio.config.num_hidden_layers], audio.output_proj]
+    try:
+        for index, module in enumerate(modules):
+            def capture(module, args, output, index=index):
+                values.append((output[0] if index == 0 else output).detach().clone())
+            handles.append(module.register_forward_hook(capture))
+        with torch.no_grad():
+            result = audio(input_features=features, attention_mask=frame_mask.bool())
+            values.append(projection(result.last_hidden_state)[result.attention_mask].detach().clone())
+    finally:
+        for handle in handles:
+            handle.remove()
+    return tuple(values)
+
+
+def compare_audio_stage_outputs(names, expected, actual):
+    """Report each native-vs-saved stage under the unchanged encoder tolerance."""
+    if not names or len(set(names)) != len(names) or len(names) != len(expected) or len(names) != len(actual):
+        raise ValueError("audio stage names/count mismatch")
+    rows, first = [], None
+    for name, native, saved in zip(names, expected, actual, strict=True):
+        if (native.dtype != torch.float32 or saved.dtype != torch.float32 or native.shape != saved.shape
+                or native.numel() == 0 or not torch.isfinite(native).all() or not torch.isfinite(saved).all()):
+            raise ValueError(f"audio stage shape/dtype/nonfinite mismatch: {name}")
+        difference = (saved - native).abs()
+        allowed = 1e-5 + 1e-4 * native.abs()
+        mismatches = int((difference > allowed).sum())
+        if mismatches and first is None:
+            first = name
+        rows.append(dict(name=name, shape=list(native.shape), success=mismatches == 0,
+                         maximum_absolute_error=difference.max().item(),
+                         maximum_tolerance_ratio=(difference / allowed).max().item(),
+                         mismatched_elements=mismatches))
+    return dict(first_divergent_stage=first, stages=rows)
+
+
+def diagnose_audio_stages(audio, projection, features, frame_mask, destination, failed_saved):
+    """Export a stage trace only after a numeric failure; never return encoder success."""
+    destination = Path(destination)
+    wrapper = AudioEncoderStagesExport(audio, projection, frame_mask)
+    path = destination / "audio-stages.pt2"
+    expected = capture_official_audio_stages(audio, projection, features, frame_mask)
+    export_audio_pt2(wrapper, features, path)
+    with torch.no_grad():
+        actual = torch.export.load(path).module()(features)
+    result = compare_audio_stage_outputs(wrapper.stage_names, expected, actual)
+    if failed_saved.shape != actual[-1].shape or not torch.isfinite(failed_saved).all():
+        raise ValueError("audio stage trace cannot be compared to the failed graph")
+    result.update(stage="audio_encoder_stage_diagnostics_only", feature_rtol=1e-4, feature_atol=1e-5,
+                  trace_matches_failed_graph=torch.equal(actual[-1], failed_saved),
+                  trace_vs_failed_graph_maximum_absolute_error=(actual[-1] - failed_saved).abs().max().item())
+    with path.open("rb") as stream:
+        result["graph_sha256"] = hashlib.file_digest(stream, "sha256").hexdigest()
+    result["graph_bytes"] = path.stat().st_size
+    return result
 
 
 def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODEL_REVISION, source_commit="local"):
@@ -120,10 +181,21 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
                                    mismatched_elements=int((difference > allowed).sum()),
                                    graph_sha256=digest(graph), unity_validated=False, end_to_end_validated=False,
                                    operators=sorted({str(node.target) for node in exported.graph.nodes if node.op == "call_function"}))
-                    (destination / "audio-encoder-failure.json").write_text(json.dumps(failure, indent=2, allow_nan=False) + "\n",
-                                                                           encoding="utf-8")
+                    failure_path = destination / "audio-encoder-failure.json"
+                    failure_path.write_text(json.dumps(failure, indent=2, allow_nan=False) + "\n", encoding="utf-8")
                     expected.numpy().astype("<f4").tofile(destination / "failed-official-features-fp32.bin")
                     actual.numpy().astype("<f4").tofile(destination / "failed-saved-features-fp32.bin")
+                    # Release the saved module's duplicate weights before exporting
+                    # another real graph. A trace changes the output contract, so
+                    # record whether its final value still matches this failed graph.
+                    del exported
+                    gc.collect()
+                    try:
+                        failure["stage_diagnostics"] = diagnose_audio_stages(
+                            audio, projection, features, inputs[0][2], directory, actual)
+                    except Exception as diagnostic_error:
+                        failure["stage_diagnostics_error"] = f"{type(diagnostic_error).__name__}: {diagnostic_error}"
+                    failure_path.write_text(json.dumps(failure, indent=2, allow_nan=False) + "\n", encoding="utf-8")
                     print(json.dumps(failure, allow_nan=False))
                     raise ValueError(f"audio encoder export mismatch: {case_id} cosine={cosine}")
                 similarities.append(cosine)

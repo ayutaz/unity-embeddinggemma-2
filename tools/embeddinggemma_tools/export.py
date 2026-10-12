@@ -264,9 +264,13 @@ class AudioEncoderExport(nn.Module):
             raise ValueError("audio features require the same device and zero right padding")
 
     def forward(self, features):
+        return self._forward(features, collect_stages=False)
+
+    def _forward(self, features, *, collect_stages):
         if not torch.compiler.is_compiling():
             self.validate_inputs(features)
         hidden, _ = self.audio.subsample_conv_projection(features, self.frame_mask.bool())
+        stages = [hidden] if collect_stages else []
         positions = self.audio.rel_pos_enc(hidden)
         for layer, attention in zip(self.audio.layers[:self.audio.config.num_hidden_layers], self.attentions):
             cap = min(layer.gradient_clipping, torch.finfo(layer.norm_pre_attn.weight.dtype).max)
@@ -276,8 +280,25 @@ class AudioEncoderExport(nn.Module):
             hidden = layer.norm_post_attn(hidden.clamp(-cap, cap)) + residual
             hidden = layer.feed_forward2(layer.lconv1d(hidden))
             hidden = layer.norm_out(hidden.clamp(-cap, cap))
-        projected = self.projection(self.audio.output_proj(hidden))
-        return projected[0, :self.feature_count]
+            if collect_stages:
+                stages.append(hidden)
+        hidden = self.audio.output_proj(hidden)
+        projected = self.projection(hidden)[0, :self.feature_count]
+        if collect_stages:
+            return tuple([*stages, hidden, projected])
+        return projected
+
+
+class AudioEncoderStagesExport(AudioEncoderExport):
+    """Failure-only trace using the same numerical path as the normal export."""
+
+    @property
+    def stage_names(self):
+        return ("subsample", *(f"layer_{index}" for index in range(self.audio.config.num_hidden_layers)),
+                "output_projection", "projected_features")
+
+    def forward(self, features):
+        return self._forward(features, collect_stages=True)
 
 
 def export_audio_pt2(wrapper, features, destination):

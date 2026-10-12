@@ -51,9 +51,22 @@ uv run --locked python -m embeddinggemma_tools prepare-audio-encoder --preproces
 
 固定反例 `8.01` / `5.0`とsigned値で、保存audio graphのnative演算完全一致テストを追加し、2 / 7要素が異なる意図したredを確認した。音声exportだけにnative division順序のSiLU分解を適用し、その他のCore ATen分解は維持する。保存graphにnative SiLU / Sigmoidが残らずExp / Divを使うこと、他exportの既定分解を変更しないことを含め、encoder / 準備監査の関連32 passed / skip 0（35.78秒）。小さい検証時はOMP / MKL各4 threadとした。elementwise `rtol=1e-4` / `atol=1e-5`と独立した公式encoderの期待値は維持し、実モデルActions再照合を別に行う。
 
+[SiLU修正後CI 38321025453](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38321025453)（PR head `2fb5c83504f46680fd5be40265715ea5eb992eac`、実行merge ref `5b2f387519de6d2029f52d72525fadbe84152c2a`）も不合格。eager対公式差0、保存対eager最大差 `0.00021576881408691406`、許容差比 `9.733773231506348`、不一致368要素。cosine `0.9999997615814209`は合格だが、要素単位の条件は不合格。Softplus / SiLUの小さいgreenを実encoderの合格とはしない。
+
+### 段階別診断のTDD
+
+残る差を推測で修正せず、公式subsample、各encoder層、output projection、最終project済みfeatureを独立したforward hookで取得し、同じ数値経路を使う保存stage graphへ照合する。正常exportは従来どおり単一Tensorを返し、追加graphは数値不合格のときだけ作成する。
+
+- stage export未実装、入力変更後の保存照合、公式hookの例外時解放、不完全 / 非finite trace拒否、最初の差の検出、診断失敗時の元の数値失敗保持について、12件の意図したassertion redを確認。関連44 passed / skip 0（66.43秒）。
+- 診断開始前に元の失敗receipt / binaryが存在しない追加1 redを確認。先に元の失敗を保存してから重い診断へ進む最小修正を行った。
+- traceの最終値が元の失敗graphと完全一致するかを記録し、一致しない場合も明示する受け入れを追加。診断が実行経路を変えた可能性を隠さず、原因判断の制約として扱う。
+- 最終はstage診断14件と既存encoder / 準備32件の計46 passed / skip 0（103.46秒）。`tools/`のuv、OMP / MKL各4 thread、小さいモデルだけで検証。[段階別記録](results/m4-audio-stage-tdd-20261013.json)。
+
+診断では元の `rtol=1e-4` / `atol=1e-5`を維持し、各stageのshape、最大絶対誤差、許容差比、不一致数、最初の不合格stage、診断graphのhashを記録する。公式hookはこの呼び出しが追加したものだけをfinallyで除去する。保存moduleの重複重みを解放してからstage exportを行い、診断例外は別欄へ保持する。元の失敗は引き続きCIを失敗させ、診断成功をencoder / Sentis / 最終768次元の合格にしない。大きいgraphはActions artifactだけに保存する。
+
 ## 次の受け入れ
 
-1. Actionsの固定実重みによるencoder / projector照合。実profileとtoken数・graph hashを取得する。
+1. Actionsの固定実重みで段階別診断を実行し、最初に差が出るstageを特定する。原因を分離した小さいredから修正し、元のencoder / projector全ケースを再照合する。現時点で実モデル数値不合格は未解消。
 2. 音声前処理・encoderのSentis import / 保存・再読込、実CPU / GPUと採用Float16重みの数値照合。非互換・OOM・fallbackは失敗として記録する。
 3. A2のPCM入力契約とA3のGPU前処理を接続し、中間CPU readbackなしを確認する。
 4. A5のGPU soft token → 共通本体 → 有限768次元・単位長、FP32 cosine >= 0.999 / Float16 >= 0.99、text / image回帰。

@@ -71,7 +71,7 @@ namespace EmbeddingGemma.Validation
         public IEnumerator Prepare(string bundle, string cacheRoot)
         {
             var source = new Uri(Path.GetFullPath(bundle) + Path.DirectorySeparatorChar).AbsoluteUri;
-            type.GetField("ModelPath").SetValue(sample, source + "model-float16.sentis");
+            type.GetField("ModelPath").SetValue(sample, source + "model-fp32.sentis");
             type.GetField("TokenizerPath").SetValue(sample, source + "tokenizer.json");
             type.GetField("Backend").SetValue(sample, BackendType.GPUCompute);
             return (IEnumerator)Call("PrepareDocumentsFromStreamingAssets", cacheRoot, null, null);

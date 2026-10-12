@@ -6,6 +6,15 @@ A1 / A3の固定profile音声前処理exportと参照・必須Actions gateをTDD
 
 A1 / A4の音声encoder / projector固定profile exportと独立PCM参照・必須Actions gateをTDDで実装した。[実装と参照設定・検証範囲](m4-audio-encoder-validation.md)。encoder20 red、SDPA契約2 red、参照 / CLI8 red、workflow1 redを観測し、最終の関連小さい回帰145 passed / skip 0。実重みActionsとSentis・A5以降は別gateとして残す。
 
+### 直近のTDD順序
+
+1. A4の保存graph数値差を解消する。[PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40)は実装済み・未統合で、固定attention係数修正後の[実モデルCI 38319899052](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38319899052)も失敗。eager wrapperは公式参照と最大差0だが、保存graphで最大差 `0.00015294551849365234`、許容差比 `6.410955429077148`。SiLU丸めの追加1 red → 音声 / 監査関連32 passedを確認したため、固定実重み・6信号・mask profileで再照合する。許容差を緩めない。
+2. A2のPCM入力契約とA3の前処理graphをSentisへ接続する。境界長・mask・無音・channel / sample rateのredから実装し、各段の実CPU / GPU結果を確認する。
+3. A4のencoderをSentisで保存 / 再読込し、CPU / 実GPUとFloat16を照合する。A5で実音声featureをGPUのまま共通本体へ渡し、最終768次元を固定参照と照合する。
+4. A6 / A7の検索・再生・明示収録・停止 / 解放をTDDで実装し、固定PCMの精度とマイク入力動作を別に受け入れる。テキスト・画像回帰と必須実機へ渡す。
+
+音声前処理exportの合格を音声encoderの合格に含めない。PR #40の小さい契約greenと実モデル不合格も別に保持する。
+
 ## 範囲と参照固定
 
 A1 / A3のPython前処理exportは[PR #38](https://github.com/ayutaz/unity-embeddinggemma-2/pull/38)でTDD実装し、mainへ統合済み。head `0424734291dc4cb7606b8bae53086f4911252e94`の[CI 38313045325](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38313045325)全8 job成功、公式前処理対保存graphの6ケースで最大絶対誤差 `0.0038890838623046875`。`audio_preprocessing_only` / `unity_validated=false` / `encoders_validated=false`であり、A3のSentis GPU合格ではない。次は入力契約、前処理graphのSentis実測、A4の音声encoder exportと独立参照照合を進め、A5〜A7へ接続する。

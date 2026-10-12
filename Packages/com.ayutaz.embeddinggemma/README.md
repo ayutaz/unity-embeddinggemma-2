@@ -14,4 +14,4 @@ Unity SentisでEmbeddingGemma 2のテキスト埋め込みを作るUPMパッケ�
 
 導入・使用例は [Documentation~/index.md](Documentation~/index.md)、実測・変換・検証手順は
 [リポジトリ](https://github.com/ayutaz/unity-embeddinggemma-2)を参照してください。
-Package ManagerからText Searchサンプルをインポートし、[サンプル手順](Samples~/TextSearch/README.md)に沿ってモデルを配置します。Windowsではfile URLの初回展開・warm完全hashと実GPU検索を確認済み。Androidのjar経路は実装済みで実APK build・監査も成功しましたが、実機は未実行です。通常表示sample Playerは日英GUI / Float16 GPU検索・解放が成功した後に終了クラッシュが残り、[PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)はdraft / 未統合です。model deserializeと推論はメインスレッドの同期処理です。
+Package ManagerからText Searchサンプルをインポートし、[サンプル手順](Samples~/TextSearch/README.md)に沿ってモデルを配置します。Windowsではfile URLの初回展開・warm完全hashと実GPU検索を確認済み。Androidのjar経路は実装済みで実APK build・監査も成功しましたが、実機は未実行です。21f1の通常表示sample Playerでは日英GUI / GPU検索・解放・独立2起動の正常終了を確認しました。検証consumerの環境補修と新candidate導入・Float16/GPU性能・他OS実機のgateが残り、[PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)はdraft / 未統合です。model deserializeと推論はメインスレッドの同期処理です。

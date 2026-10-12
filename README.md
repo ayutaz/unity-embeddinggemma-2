@@ -13,7 +13,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 > 全PRでCIとパッケージ監査を実行し、mainへの変更はPRとRequired CIを必須にしています。確認基準main `6f55a85`（PR #30後）の[CI run 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)は全8 job成功です。
 > 新しい空のWindows consumerへfont寿命修正を含む固定SHA `fc66af7`をGit URLで導入し、SHA・source照合、compile、UPM 38 / sample EditMode 66 / PlayMode 2、実モデルFP32 / Float16 × CPU / GPUComputeの4条件、全順位・score、日英UI・空入力・欠落モデル・解放・file URL cacheを確認しました。後続のEditor測定fixture 2ファイルの修正ではsample EditMode 67件が合格し、PR #30で統合しました。[導入と検証範囲](docs/m2-font-git-consumer-validation.md)。
 > Windows精度検証専用PlayerはIL2CPP / Release / High stripping、batch mode / Direct3D12で実モデル4条件・独立2起動・終了code 0を確認しました。[Playerの条件と結果](docs/m2-player-il2cpp-validation.md)。Androidは実APK build・署名・payload監査まで成功、実機は未実行です。[Android検証](docs/m2-android-validation.md)。
-> [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)はdraft・未統合。通常表示のsample Playerで日英GUI・Float16 / GPUComputeの固定4 query・全順位 / score・解放は成功しましたが、終了時にクラッシュし、全体の受け入れは未達です。実装checkpoint `cd6b8bf`の[CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38040187805)は全8 job成功。[実測・失敗と修正候補](docs/m2-player-sample-validation.md)を参照してください。
+> [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)はdraft・未統合。承認されたUnity 6000.3.21f1で通常Windows Playerの実モデル4条件とsample日英GUI・固定4 query・全順位 / score・解放・独立2起動の正常終了を確認しました。検証consumerの環境補修、新Git candidate導入、Float16/GPU性能と他OS実機のgateは残っています。[新版の実測と制約](docs/m2-unity-21-upgrade-validation.md)を参照してください。
 > sample Playerの正常終了・独立2起動、macOS Editor / iOS / Android実機、Editor検索DB / allocation / domain reload、正式候補・tag導入・正式Releaseが残っています。[現在の状態](docs/status.md) / [4段階の実行計画](docs/m2-release-plan.md)。M3・M4はM2の後に進めます。
 
 ## ゴール

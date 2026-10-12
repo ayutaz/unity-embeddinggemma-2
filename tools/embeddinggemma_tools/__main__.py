@@ -8,7 +8,7 @@ from pathlib import Path
 
 from huggingface_hub import snapshot_download
 
-from .prepare import MODEL_ID, MODEL_REVISION, prepare
+from .prepare import MODEL_ID, MODEL_REVISION, prepare, prepare_multimodal_backbone
 from .search import SEARCH_CASES
 
 
@@ -36,13 +36,30 @@ def main(argv=None):
     command.add_argument("--revision", type=revision, default=MODEL_REVISION)
     command.add_argument("--search-cases", type=Path, default=SEARCH_CASES,
                          help="Fixed document/query suite included in the TextSearch sample")
+    backbone = commands.add_parser("prepare-backbone", help="Validate projected-feature backbone; not encoder or Unity proof")
+    backbone.add_argument("--output", type=Path, required=True)
+    backbone.add_argument("--snapshot", type=Path)
+    backbone.add_argument("--sequence-length", type=sequence_length, default=1024)
+    backbone.add_argument("--revision", type=revision, default=MODEL_REVISION)
+    backbone.add_argument("--image-feature-count", type=int, default=280)
+    backbone.add_argument("--audio-feature-count", type=int, default=280)
     args = parser.parse_args(argv)
     snapshot = args.snapshot
     if snapshot is None:
-        snapshot = Path(snapshot_download(MODEL_ID, revision=args.revision, allow_patterns=[
+        patterns = [
             "config.json", "model.safetensors", "tokenizer.json", "tokenizer_config.json",
             "config_sentence_transformers.json", "modules.json", "1_Pooling/config.json",
-        ]))
+        ]
+        if args.command == "prepare-backbone":
+            patterns.append("processor_config.json")
+        snapshot = Path(snapshot_download(MODEL_ID, revision=args.revision, allow_patterns=patterns))
+    if args.command == "prepare-backbone":
+        summary = prepare_multimodal_backbone(snapshot, args.output, args.sequence_length,
+                    image_feature_count=args.image_feature_count, audio_feature_count=args.audio_feature_count,
+                    revision=args.revision, source_commit=os.environ.get("GITHUB_SHA", "local"))
+        print(json.dumps({name: summary[name] for name in (
+            "success", "stage", "case_count", "minimum_cosine", "unity_validated", "encoders_validated")}))
+        return
     summary = prepare(snapshot, args.cases, args.output, args.sequence_length, args.revision,
                       source_commit=os.environ.get("GITHUB_SHA", "local"), search_cases_path=args.search_cases)
     print(json.dumps({name: summary[name] for name in (

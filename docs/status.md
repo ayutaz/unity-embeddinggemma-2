@@ -4,6 +4,8 @@
 
 **計画変更: 正式リリースはM3画像・M4音声と全必須検証の完了後。** [全体TDD計画](multimodal-tdd-plan.md) / [画像](m3-plan.md) / [音声](m4-plan.md)を追加した。M3・M4の実装とred / green、Unity実測は未着手。以下の履歴にあるtext-only先行リリースの順序は当時の計画として保持する。
 
+**今回の実行範囲: 工程6の配布準備まで、正式リリースは行わない。** 共通backboneの特徴量入力・長さprofile・参照 / export照合・Actions接続をTDDで開始した。14件、追加8件、CLI / workflow 2件のredを観測し、最終の関連小さい契約43 passed / skip 0。[共通backboneの実装・証拠・未完了](multimodal-backbone-validation.md)。実encoder / 新profileのSentis / 全必須実機の合格はまだなく、M3 / M4完了とはしない。
+
 ## mainと作業ブランチ
 
 | 対象 | 現在確認した状態 |

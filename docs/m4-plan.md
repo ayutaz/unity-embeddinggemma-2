@@ -6,6 +6,8 @@ A1 / A3の固定profile音声前処理exportと参照・必須Actions gateをTDD
 
 ## 範囲と参照固定
 
+A1 / A3のPython前処理exportは[PR #38](https://github.com/ayutaz/unity-embeddinggemma-2/pull/38)でTDD実装し、mainへ統合済み。head `0424734291dc4cb7606b8bae53086f4911252e94`の[CI 38313045325](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38313045325)全8 job成功、公式前処理対保存graphの6ケースで最大絶対誤差 `0.0038890838623046875`。`audio_preprocessing_only` / `unity_validated=false` / `encoders_validated=false`であり、A3のSentis GPU合格ではない。次は入力契約、前処理graphのSentis実測、A4の音声encoder exportと独立参照照合を進め、A5〜A7へ接続する。
+
 PCM波形 → GPU上のSTFT / mel / log等の公式前処理 → 音声encoderのsoft token → 共通本体 → 768次元を実装する。最初はbatch 1と固定長profileを扱い、音声の最小 / 最大長、padding / mask、長さ超過時の扱いを契約にする。長音声のchunk化は参照のtoken配置・集約を確認してから追加し、独自のchunk平均を参照互換としない。
 
 固定revisionの公式processor・実装からsample rate、channel処理 / resample、window係数とperiodicity、center / pad、frame数、FFT、amplitudeかpowerか、mel scale / normalization / 範囲、floor / log / affine処理、paddingとencoder出力長、prompt / audio特殊tokenを確認する。既存調査の16kHz / window320 / hop160 / FFT512 / mel128 / floor0.001だけでは参照一致を保証しない。公式参照確認後に全係数・許容差・profileをfixtureへ固定する。

@@ -86,5 +86,25 @@ namespace EmbeddingGemma.Validation.Tests
             Assert.That(proxy.Search(""),Is.False);Assert.That(proxy.Results,Is.Empty);
             proxy.Release();Assert.That(proxy.Ready,Is.False);Assert.That(fake.Disposed,Is.True);
         }
+        [Test] public void ProxyStagesTheDefaultFp32ModelForGpuValidationWithoutStartingInference()
+        {
+            var type = Type.GetType(PlayerSampleView.SampleTypeName);
+            Assert.That(type, Is.Not.Null, "Import the pinned sample before this contract test.");
+            owner = new GameObject("Sample default precision contract");
+            var sample = (Component)owner.AddComponent(type);
+            var proxy = new PlayerSampleView(sample);
+            var operation = proxy.Prepare(directory, Path.Combine(directory, "cache"));
+            try
+            {
+                var source = new Uri(Path.GetFullPath(directory) + Path.DirectorySeparatorChar).AbsoluteUri;
+                Assert.That((string)type.GetField("ModelPath").GetValue(sample), Is.EqualTo(source + "model-fp32.sentis"));
+                Assert.That((string)type.GetField("TokenizerPath").GetValue(sample), Is.EqualTo(source + "tokenizer.json"));
+                Assert.That((BackendType)type.GetField("Backend").GetValue(sample), Is.EqualTo(BackendType.GPUCompute));
+                Assert.That(proxy.Ready, Is.False);
+                Assert.That(proxy.ActualBackend, Is.Null, "Source configuration does not prove an actual GPU Worker.");
+                Assert.That(Directory.Exists(Path.Combine(directory, "cache")), Is.False, "The returned coroutine has not started.");
+            }
+            finally { (operation as IDisposable)?.Dispose(); }
+        }
     }
 }

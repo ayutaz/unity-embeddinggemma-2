@@ -10,13 +10,123 @@ from pathlib import Path
 import torch
 from transformers import AutoTokenizer
 
-from .export import MultimodalEmbeddingExport, export_multimodal_pt2, export_pt2
-from .model import load_text_model
+from .export import MultimodalEmbeddingExport, VisionEncoderExport, export_multimodal_pt2, export_pt2, export_vision_pt2
+from .model import load_text_model, load_vision_models
 from .reference import build_reference, load_cases, write_reference
 from .search import generate_search_reference
 
 MODEL_ID = "google/embeddinggemma-2"
 MODEL_REVISION = "914f7f89142e33e77833254d9c9b90c3cef7303b"
+
+
+def load_image_processor(snapshot):
+    from transformers import Gemma4ImageProcessor
+    configuration = json.loads((Path(snapshot) / "processor_config.json").read_text(encoding="utf-8"))
+    settings = configuration["image_processor"]
+    if settings.get("image_processor_type") != "Gemma4ImageProcessor":
+        raise ValueError("fixed Gemma4 image processor is required")
+    return Gemma4ImageProcessor(**{key: value for key, value in settings.items()
+                                 if key not in ("image_processor_type", "image_seq_length")})
+
+
+def prepare_vision(snapshot, destination, *, revision=MODEL_REVISION, source_commit="local", profiles=None):
+    """Official processor and real tower/projector vs saved fixed-profile export.
+
+    Fixtures are generated RGB images with known provenance. This stage does not
+    prove Sentis compatibility, final embeddings or semantic retrieval quality.
+    """
+    from PIL import Image
+    snapshot, destination = Path(snapshot), Path(destination)
+    destination.mkdir(parents=True, exist_ok=True)
+    (destination / "vision-validation.json").unlink(missing_ok=True)
+    if re.fullmatch(r"[0-9a-f]{40}", revision) is None:
+        raise ValueError("model revision must be an immutable lowercase commit SHA")
+    profiles = {"square": (96, 96), "landscape": (96, 160), "portrait": (160, 96)} if profiles is None else profiles
+    if (not isinstance(profiles, dict) or not profiles or any(
+            not isinstance(name, str) or re.fullmatch(r"[a-z][a-z0-9_-]*", name) is None
+            or not isinstance(size, (tuple, list)) or len(size) != 2
+            or any(type(dimension) is not int or dimension <= 0 for dimension in size)
+            for name, size in profiles.items())):
+        raise ValueError("vision profiles require safe names and positive integer image dimensions")
+    vision, projection = load_vision_models(snapshot)
+    processor = load_image_processor(snapshot)
+    rows, profile_metadata, similarities, produced = [], {}, [], []
+    for profile, (height, width) in profiles.items():
+        directory = destination / profile
+        directory.mkdir(parents=True, exist_ok=True)
+        y, x = torch.meshgrid(torch.arange(height), torch.arange(width), indexing="ij")
+        images = [torch.stack((x * 7 % 256, y * 11 % 256, (x + y) * 5 % 256)).to(torch.uint8),
+                  torch.stack(((x // 3 + y // 5) % 2 * 255, (x * 3 + y * 2) % 256,
+                               (x * 13 - y * 7) % 256)).to(torch.uint8)]
+        prepared = [processor(images=image, return_tensors="pt") for image in images]
+        coords = prepared[0]["image_position_ids"]
+        wrapper = VisionEncoderExport(vision, projection, coords)
+        expected_rows = []
+        for index, (image, inputs) in enumerate(zip(images, prepared, strict=True)):
+            pixels = inputs["pixel_values"].float()
+            wrapper.validate_inputs(pixels)
+            if (not torch.equal(inputs["image_position_ids"], coords)
+                    or torch.as_tensor(inputs["num_soft_tokens_per_image"]).tolist() != [wrapper.feature_count]):
+                raise ValueError("image processor output does not match the fixed vision profile")
+            with torch.no_grad():
+                expected = projection(vision(pixel_values=pixels, pixel_position_ids=coords).last_hidden_state)
+            if not torch.isfinite(expected).all():
+                raise ValueError("official vision reference is not finite")
+            case_id = f"{profile}-{index}"
+            image_path = directory / f"{index}.png"
+            Image.fromarray(image.permute(1, 2, 0).numpy()).save(image_path)
+            pixel_path = directory / f"{index}-pixels-fp32.bin"
+            pixels.numpy().astype("<f4").tofile(pixel_path)
+            produced.extend((image_path, pixel_path))
+            expected_rows.append((pixels, expected, case_id))
+            rows.append(dict(id=case_id, profile=profile, image=image_path.relative_to(destination).as_posix(),
+                             pixels=pixel_path.relative_to(destination).as_posix(), features=expected.tolist()))
+        graph = directory / "vision.pt2"
+        export_vision_pt2(wrapper, expected_rows[0][0], graph)
+        exported = torch.export.load(graph).module()
+        with torch.no_grad():
+            for pixels, expected, case_id in expected_rows:
+                actual = exported(pixels)
+                if actual.shape != expected.shape or not torch.isfinite(actual).all():
+                    raise ValueError(f"vision export mismatch: {case_id} shape or nonfinite output")
+                cosine = torch.nn.functional.cosine_similarity(actual, expected, dim=-1).min().item()
+                if cosine < 0.999999 or not torch.allclose(actual, expected, rtol=1e-4, atol=1e-5):
+                    raise ValueError(f"vision export mismatch: {case_id} cosine={cosine}")
+                similarities.append(cosine)
+        positions_path = directory / "positions-int32.bin"
+        coords.numpy().astype("<i4").tofile(positions_path)
+        produced.extend((graph, positions_path))
+        profile_metadata[profile] = dict(pixel_shape=list(expected_rows[0][0].shape), feature_count=wrapper.feature_count,
+                                         feature_width=projection.text_hidden_size, positions_shape=list(coords.shape),
+                                         positions=positions_path.relative_to(destination).as_posix(),
+                                         graph=graph.relative_to(destination).as_posix(), input_image_shape=[3, height, width])
+        del exported, wrapper
+    if not rows:
+        raise ValueError("vision profiles must contain at least one input")
+    def digest(path):
+        with path.open("rb") as stream:
+            return hashlib.file_digest(stream, "sha256").hexdigest()
+    metadata = dict(model_id=MODEL_ID, model_revision=revision, source_commit=source_commit,
+                    stage="vision_encoder_projector_only", dtype="float32", batch_size=1,
+                    input_sha256={name: digest(snapshot / name)
+                                  for name in ("config.json", "processor_config.json", "model.safetensors")},
+                    fixture_provenance="procedurally_generated_rgb_patterns_no_user_data",
+                    pixel_encoding="little_endian_float32_rgb_patches", position_encoding="little_endian_int32_xy",
+                    minimum_cosine=0.999999, feature_rtol=1e-4, feature_atol=1e-5,
+                    versions={name: importlib.metadata.version(name) for name in ("torch", "transformers", "torchvision")})
+    reference_path = destination / "vision-reference.json"
+    reference_path.write_text(json.dumps(dict(metadata=metadata, profiles=profile_metadata, cases=rows),
+                                         indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    processor_path = destination / "processor_config.json"
+    shutil.copyfile(snapshot / "processor_config.json", processor_path)
+    produced.extend((reference_path, processor_path))
+    summary = dict(success=True, stage=metadata["stage"], unity_validated=False, end_to_end_validated=False,
+                   profile_count=len(profile_metadata), case_count=len(rows), minimum_cosine=min(similarities),
+                   metadata=metadata, files={path.relative_to(destination).as_posix():
+                       dict(bytes=path.stat().st_size, sha256=digest(path)) for path in produced})
+    (destination / "vision-validation.json").write_text(json.dumps(summary, indent=2, allow_nan=False) + "\n",
+                                                       encoding="utf-8")
+    return summary
 
 
 def prepare_multimodal_backbone(snapshot, destination, sequence_length=1024, *, image_feature_count=280,

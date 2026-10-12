@@ -2,6 +2,8 @@
 
 更新日: 2026-10-13。**画像end-to-end API / sampleはmainに未実装、実画像encoder / Unityの合格証拠は未取得**。共通backboneの一部はPR #34で実装済みだが、合成特徴量によるPython照合は画像encoderの受け入れを満たさない。依存・実行場所・公開条件は[全体計画](multimodal-tdd-plan.md)、既存仕様調査は[技術調査](technical-approach.md)。M3完了時には正式リリースせず、M4と全必須環境の検証へ進む。
 
+I1 / I2の固定profile encoder / projector exportと公式processor参照・必須Actions gateをTDDで開始した。[実装と検証範囲](m3-vision-export-validation.md)。小さい回帰66 passed / skip 0。実モデル / Sentis結果は別に取得し、M3全体は未完了とする。
+
 ## 範囲と参照固定
 
 `Texture` / `RenderTexture` → GPU前処理 → 画像encoderのsoft token → 共通本体 → 768次元を実装する。encoder出力を直接L2正規化して最終embeddingとする実装は採用しない。入力は最初に単一画像 / batch 1と参照で確定した解像度profileを扱い、縦横比・許容寸法・上限・複数画像の対応範囲をAPIで明示する。

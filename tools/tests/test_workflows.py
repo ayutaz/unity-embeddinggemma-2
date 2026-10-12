@@ -48,6 +48,15 @@ def test_cloud_unity_remains_manual_and_does_not_receive_fork_secrets():
     assert "secrets" not in load("ci.yml")["jobs"]["model-reference"]
 
 
+def test_manual_unity_and_project_use_the_approved_shutdown_fix_version():
+    version = '6000.3.21f1'
+    project_version = (ROOT / 'ProjectSettings/ProjectVersion.txt').read_text()
+    assert f'm_EditorVersion: {version}\n' in project_version
+    steps = load('unity-validation.yml')['jobs']['unity']['steps']
+    game_ci = next(step for step in steps if step.get('uses', '').startswith('game-ci/unity-test-runner@'))
+    assert game_ci['with']['unityVersion'] == version
+
+
 def test_package_audit_is_required_and_creates_an_isolated_consumer():
     assert "package" in REQUIRED_JOBS
     workflow = load("package-validation.yml")

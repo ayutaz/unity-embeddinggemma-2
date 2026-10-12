@@ -15,7 +15,7 @@ namespace EmbeddingGemma.Validation.Tests
         [SetUp] public void Setup() { directory = Path.Combine(Path.GetTempPath(), "embeddinggemma-run-" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(directory); }
         [TearDown] public void Cleanup() { Directory.Delete(directory, true); }
         PlayerRunConfiguration Config() => new PlayerRunConfiguration { Bundle = directory, Output = Path.Combine(directory, "results.json"), RunId = new string('a', 32) };
-        public static PlayerBuildInfo Build() => new PlayerBuildInfo { codeCommit = new string('a', 40), unityVersion = "6000.3.16f1", sentisVersion = "2.6.1",
+        public static PlayerBuildInfo Build() => new PlayerBuildInfo { codeCommit = new string('a', 40), unityVersion = "6000.3.21f1", sentisVersion = "2.6.1",
             target = "StandaloneWindows64", scriptingBackend = "Mono2x", stripping = "Disabled", sourceSha256 = new JObject { ["Assets/Validation/Runtime/example.cs"] = new string('b', 64) } };
         static PlayerBundle Bundle() => new PlayerBundle { Reference = PlayerValidationTests.Reference(), Receipt = new JObject { ["success"] = true } };
         sealed class Provider : IPlayerEmbedder
@@ -27,6 +27,16 @@ namespace EmbeddingGemma.Validation.Tests
             public void Dispose() { }
         }
         [Test] public void AcceptsPinnedBuildProvenance() { Build().Validate(); }
+        [Test] public void AcceptsApprovedShutdownFixVersion()
+        {
+            var info = Build(); info.unityVersion = "6000.3.21f1";
+            Assert.DoesNotThrow(() => info.Validate());
+        }
+        [Test] public void RejectsPreviousBuildVersionForNewRuns()
+        {
+            var info = Build(); info.unityVersion = "6000.3.16f1";
+            Assert.Throws<ArgumentException>(() => info.Validate());
+        }
         [TestCase("commit")] [TestCase("hash")] [TestCase("unity")] [TestCase("backend")]
         public void InvalidBuildProvenanceIsRejected(string failure)
         {

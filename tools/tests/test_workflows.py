@@ -26,6 +26,18 @@ def test_required_reference_job_validates_long_multimodal_backbone_and_retains_s
     assert artifact[0]["with"]["retention-days"] == "3"
 
 
+def test_required_reference_job_validates_real_vision_and_preserves_partial_failure_evidence():
+    steps = load("model-reference.yml")["jobs"]["reference"]["steps"]
+    run = [step for step in steps if "prepare-vision" in step.get("run", "")]
+    assert len(run) == 1, "required real-weight vision export gate is missing"
+    assert "uv run --locked python -m embeddinggemma_tools prepare-vision" in run[0]["run"]
+    artifact = [step for step in steps if step.get("with", {}).get("name", "").startswith("vision-encoder-")]
+    assert len(artifact) == 1
+    assert artifact[0]["if"] == "always()"
+    assert artifact[0]["with"]["path"] == "artifacts/vision-encoder/"
+    assert artifact[0]["with"]["retention-days"] == "3"
+
+
 def test_required_ci_runs_on_every_pr_including_documentation():
     workflow = load("ci.yml")
     assert "pull_request" in workflow["on"]

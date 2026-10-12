@@ -108,6 +108,76 @@ class MultimodalEmbeddingExport(TextEmbeddingExport):
         return pool_and_normalize(output.last_hidden_state, attention_mask)
 
 
+class VisionEncoderExport(nn.Module):
+    """Official vision tower + projector, with a fixed rectangular patch profile.
+
+    Static pooling and padding selection avoid dynamic boolean indexing. Pixels
+    are RGB patches in processor order, float32 in [0, 1]. This produces features
+    for the shared backbone, not final sentence embeddings. Unity must enforce
+    the same input contract outside the exported numerical graph.
+    """
+
+    def __init__(self, vision, projection, pixel_position_ids):
+        super().__init__()
+        kernel = vision.config.pooling_kernel_size
+        coords = pixel_position_ids
+        if (coords.dtype != torch.int64 or coords.ndim != 3 or coords.shape[0] != 1
+                or coords.shape[2] != 2 or coords.shape[1] == 0 or coords.shape[1] % (kernel * kernel)):
+            raise ValueError("vision profile requires batch-one int64 positions and whole pooling cells")
+        pairs = coords[0].tolist()
+        valid = [pair for pair in pairs if pair != [-1, -1]]
+        if not valid or any(min(pair) < 0 or max(pair) >= vision.config.position_embedding_size for pair in valid):
+            raise ValueError("vision profile positions must be nonempty and inside the position table")
+        width, height = max(pair[0] for pair in valid) + 1, max(pair[1] for pair in valid) + 1
+        expected = [[x, y] for y in range(height) for x in range(width)]
+        if (width % kernel or height % kernel or valid != expected
+                or pairs != expected + [[-1, -1]] * (len(pairs) - len(expected))):
+            raise ValueError("vision profile must be a complete row-major rectangle with trailing padding")
+        self.vision = vision
+        self.projection = projection
+        self.pixel_shape = (1, len(pairs), 3 * vision.config.patch_size**2)
+        self.feature_count = width * height // (kernel * kernel)
+        self.register_buffer("positions", coords.clone())
+        padding = (coords == -1).all(dim=-1)
+        self.register_buffer("padding", padding)
+        self.register_buffer("attention", torch.where(
+            (~padding)[:, None, None, :], 0.0, torch.finfo(torch.float32).min))
+        weights = torch.zeros(1, self.feature_count, len(pairs), dtype=torch.float32, device=coords.device)
+        for index, (x, y) in enumerate(valid):
+            weights[0, (x // kernel) + (width // kernel) * (y // kernel), index] = 1 / (kernel * kernel)
+        self.register_buffer("pooling_weights", weights)
+        self.eval()
+
+    def validate_inputs(self, pixels):
+        if pixels.dtype != torch.float32 or pixels.shape != self.pixel_shape:
+            raise ValueError("pixel shape and dtype must match the fixed RGB float32 profile")
+        if not torch.isfinite(pixels).all() or torch.any(pixels < 0) or torch.any(pixels > 1):
+            raise ValueError("pixels must be finite and in [0, 1]")
+        if pixels.device != self.positions.device:
+            raise ValueError("pixels and profile must be on the same device")
+
+    def forward(self, pixels):
+        if not torch.compiler.is_compiling():
+            self.validate_inputs(pixels)
+        hidden = self.vision.patch_embedder(pixels, self.positions, self.padding)
+        position_embeddings = self.vision.encoder.rotary_emb(hidden, self.positions)
+        for layer in self.vision.encoder.layers[:self.vision.config.num_hidden_layers]:
+            hidden = layer(hidden, attention_mask=self.attention, position_embeddings=position_embeddings,
+                           position_ids=self.positions)
+        # The official pooler zeroes padding, averages each spatial cell, then
+        # scales in fp32. The fixed weights select only valid output cells.
+        hidden = hidden.masked_fill(self.padding.unsqueeze(-1), 0.0)
+        hidden = (self.pooling_weights @ hidden.float())[0] * self.vision.config.hidden_size**0.5
+        if self.vision.config.standardize:
+            hidden = (hidden - self.vision.std_bias.float()) * self.vision.std_scale.float()
+        return self.projection(hidden)
+
+
+def export_vision_pt2(wrapper, pixels, destination):
+    wrapper.validate_inputs(pixels)
+    _save_program(wrapper.eval(), (pixels,), destination)
+
+
 def export_pt2(
     model: nn.Module, input_ids: torch.Tensor, attention_mask: torch.Tensor, destination: Path
 ) -> None:

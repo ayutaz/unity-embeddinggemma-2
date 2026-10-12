@@ -10,11 +10,12 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 > リポジトリは public ですが、UPM パッケージのリリースはまだ行っていません。
 
 > **2026-10-10: M2はWindowsの固定Git導入と実モデル検索を確認済み、正式リリースは未完了です。** テキストRuntimeは `com.ayutaz.embeddinggemma` の開発版 `0.1.0-pre.1`としてmainへ統合済みです。
-> 全PRでCIとパッケージ監査を実行し、mainへの変更はPRとRequired CIを必須にしています。確認基準main `6f55a85`（PR #30後）の[CI run 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)は全8 job成功です。
-> 新しい空のWindows consumerへfont寿命修正を含む固定SHA `fc66af7`をGit URLで導入し、SHA・source照合、compile、UPM 38 / sample EditMode 66 / PlayMode 2、実モデルFP32 / Float16 × CPU / GPUComputeの4条件、全順位・score、日英UI・空入力・欠落モデル・解放・file URL cacheを確認しました。後続のEditor測定fixture 2ファイルの修正ではsample EditMode 67件が合格し、PR #30で統合しました。[導入と検証範囲](docs/m2-font-git-consumer-validation.md)。
-> Windows精度検証専用PlayerはIL2CPP / Release / High stripping、batch mode / Direct3D12で実モデル4条件・独立2起動・終了code 0を確認しました。[Playerの条件と結果](docs/m2-player-il2cpp-validation.md)。Androidは実APK build・署名・payload監査まで成功、実機は未実行です。[Android検証](docs/m2-android-validation.md)。
-> [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)はdraft・未統合。承認されたUnity 6000.3.21f1で通常Windows Playerの実モデル4条件とsample日英GUI・固定4 query・全順位 / score・解放・独立2起動の正常終了を確認しました。検証consumerの環境補修、新Git candidate導入、Float16/GPU性能と他OS実機のgateは残っています。[新版の実測と制約](docs/m2-unity-21-upgrade-validation.md)を参照してください。
-> sample Playerの正常終了・独立2起動、macOS Editor / iOS / Android実機、Editor検索DB / allocation / domain reload、正式候補・tag導入・正式Releaseが残っています。[現在の状態](docs/status.md) / [4段階の実行計画](docs/m2-release-plan.md)。M3・M4はM2の後に進めます。
+> 全PRでCIとパッケージ監査を実行し、mainへの変更はPRとRequired CIを必須にしています。確認基準main `b1a8c67`（PR #25後）の[CI run 38023036522](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38023036522)は全8 job成功です。
+> 新しい空のWindows consumerへPR #24統合SHA `01f3d8682a97053bf4583e14fd8fbed14e2c8cae`をGit URLで導入し、SHA解決・source照合・compile、UPM 38 / sample EditMode 64 / PlayMode 2、実モデルFP32 / Float16 × CPU / GPUComputeの4条件と全順位・score、日英画面入力・空入力・解放を確認しました。[導入と実測](docs/m2-latest-git-consumer-validation.md)を参照してください。
+> 選択モデルだけを保持するsample cacheはfile URL初回展開・warm完全hash・実GPU検索を確認済みです。Windows検証専用PlayerもIL2CPP / Release / High strippingのbuildと実モデル4条件・独立2起動を確認しました。[sample cache](docs/m2-sample-cache-validation.md) / [Playerの条件と結果](docs/m2-player-il2cpp-validation.md)。
+> この段落は2026-10-10の到達点です。後続のWindows Player実測・環境補修条件・残タスクは[現在の状態](docs/status.md)を参照してください。
+
+> **2026-10-13: 正式リリースは画像・音声を含む全対応と必須検証の完了後に行います。** M2の基盤安定化 → 共通マルチモーダル基盤 → M3画像 → M4音声 → 全対象環境の検証 → 正式公開の順です。全実装をTDDで進めます。[全体計画](docs/multimodal-tdd-plan.md) / [M3のRed・Greenと実モデル条件](docs/m3-plan.md) / [M4のRed・Greenと実モデル条件](docs/m4-plan.md)。M3・M4の実装・検証は未着手です。
 
 ## ゴール
 
@@ -29,9 +30,10 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 | # | 内容 | 状態 |
 | --- | --- | --- |
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor受け入れ検証完了（保存・量子化・測定を含む） |
-| M2 | テキスト版の UPM パッケージとサンプルをリリースする | Windows固定Git導入・実モデル4条件・UIと検証専用IL2CPP Playerを確認。他環境の実測、残る安定性、候補 / tag導入・正式Releaseは未完了 |
-| M3 | 画像用モデルに対応する | 未着手 |
-| M4 | 音声用モデルに対応する | 未着手 |
+| M2 | テキストUPM・サンプル・検証基盤を安定化する | Windows実測あり。標準環境再現・新candidate・性能・他環境は未完了 |
+| M3 | GPU画像前処理・encoder・共通本体・画像検索 | TDD計画作成済み、実装・検証未着手 |
+| M4 | GPU音声前処理・encoder・共通本体・音声検索 | TDD計画作成済み、実装・検証未着手 |
+| 最終公開 | 全対応と必須環境の検証後に正式リリース | 未着手 |
 
 ## 動作環境
 
@@ -87,7 +89,7 @@ uv run --locked python -m embeddinggemma_tools prepare --output ../artifacts/m1
 モデルの revision を固定して参照データ・設定済み tokenizer・`.pt2` を生成し、保存後のモデルを参照実装と比較します。
 この Python 側の一致と、Sentis 側の M1 合格は別々に検証します。
 
-M1はWindows Editorで完了。検索サンプル・モデル準備手順と固定commitのGit導入はWindowsで確認済みです。次はsample Player終了クラッシュの修正確認、macOS / iOS / Android実機、候補・tag導入と配布へ進みます。Unityは6000.3.16f1のままで、終了クラッシュの公式修正候補を含む6000.3.21f1への更新は未決定です。
+M1はWindows Editorで完了。検索サンプル・モデル準備手順もWindows実モデル4条件と新規consumerのCLI完了・画面操作を確認しました。PR #11の統合状況と最新CIはGitHubを参照してください。次はmacOS / iOS / Android検証、Git URL導入と配布へ進みます。
 残作業の順序・依存・完了条件は [M2計画](docs/m2-plan.md)、実装済みAPIは [C# API手順](docs/runtime-api.md) を参照してください。
 新しい実装も作業ブランチ / PR を使い、マージは依頼があるまで行いません。
 M1の完了条件と当時の測定は [M1計画](docs/m1-plan.md) / [完了検証記録](docs/m1-completion-validation.md)、最新のCIとUPM検証は [現在の状態](docs/status.md)を参照してください。
@@ -98,7 +100,7 @@ M1の完了条件と当時の測定は [M1計画](docs/m1-plan.md) / [完了検�
 Unity 6000.3.16f1の別プロジェクトで、Package Managerから
 [package.json](Packages/com.ayutaz.embeddinggemma/package.json)を「Add package from disk」で指定します。
 Sentis 2.6.1とNewtonsoft JSON 3.2.2はパッケージの依存から解決します。
-Git URLのcommit固定による導入指定とAPI使用例は [パッケージ文書](Packages/com.ayutaz.embeddinggemma/Documentation~/index.md)を参照してください。Windowsではローカルフォルダ依存と固定commitのGit導入を実Editorで確認済みです。正式候補・公開tag固定での導入は未実行です。[最新の固定Git検証](docs/m2-font-git-consumer-validation.md)。
+Git URLのcommit固定による導入指定とAPI使用例は [パッケージ文書](Packages/com.ayutaz.embeddinggemma/Documentation~/index.md)を参照してください。Editorで実行確認した導入経路はローカルフォルダ依存で、Git URL導入は後続検証です。
 モデルは含まれていません。Text SearchサンプルはPackage Managerからインポートできます。[モデル準備手順](docs/model-preparation.md)に沿って明示的にモデルを配置してください。公開tagはまだありません。
 
 ## モデルファイルについて
@@ -111,15 +113,15 @@ Git URLのcommit固定による導入指定とAPI使用例は [パッケージ�
 | --- | --- |
 | [docs/status.md](docs/status.md) | 最新のmain / PR / CI、検証済みの範囲、残タスク |
 | [docs/goal.md](docs/goal.md) | ゴール、達成の基準、マイルストーン、対象外のこと |
+| [docs/multimodal-tdd-plan.md](docs/multimodal-tdd-plan.md) | M2〜M4と全必須検証から正式公開までのTDD・依存・PR分割 |
+| [docs/m3-plan.md](docs/m3-plan.md) | 画像の参照固定、GPU前処理・encoder・検索のRed / Greenと実測条件 |
+| [docs/m4-plan.md](docs/m4-plan.md) | 音声の参照固定、GPU前処理・encoder・検索 / 収録のRed / Greenと実測条件 |
 | [docs/m1-plan.md](docs/m1-plan.md) | M1 の詳細計画、TDD の進め方、検証状況 |
 | [docs/m1-completion-validation.md](docs/m1-completion-validation.md) | M1完了の数値、ソース対応、CI、失敗履歴と測定の限界 |
 | [docs/m1-validation.md](docs/m1-validation.md) | 基盤導入当時のTDD・CI・失敗履歴 |
 | [docs/runtime-api.md](docs/runtime-api.md) | 実装済みのテキスト推論・保存API |
 | [docs/automation.md](docs/automation.md) | uloopの導入、検証ハーネス、モデル成果物の監査・配置 |
 | [docs/m2-plan.md](docs/m2-plan.md) | 残作業の順序、UPM・検索サンプル・他環境・配布の完了条件 |
-| [docs/m2-release-plan.md](docs/m2-release-plan.md) | 安定化・Git導入・他環境実測・正式リリースの4段階と現在の依存 |
-| [docs/m2-player-sample-validation.md](docs/m2-player-sample-validation.md) | sample Playerの実GUI・GPU検索、終了クラッシュ、外部終了監査 |
-| [docs/m2-android-validation.md](docs/m2-android-validation.md) | 実APK build・署名・payload監査と残る実機検証 |
 | [docs/m2-search-plan.md](docs/m2-search-plan.md) | 検索サンプルとモデル準備の実装済み範囲・残る受け入れ条件 |
 | [docs/m2-search-validation.md](docs/m2-search-validation.md) | TDD・CI・Windows検索4条件の実測と未完了項目 |
 | [docs/model-preparation.md](docs/model-preparation.md) | 検索モデルの取得・監査・変換・配置・更新と新規consumer導入 |

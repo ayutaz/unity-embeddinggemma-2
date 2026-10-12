@@ -68,6 +68,14 @@ namespace EmbeddingGemma.Validation.Tests
             Assert.That(view.Released, Is.True); Assert.That(view.Destroyed, Is.True);
             Assert.That((bool)result["font_destroyed"], Is.True);
         }
+        [Test] public void ReportScopeIdentifiesTheDefaultFp32ValidationAndInputLimit()
+        {
+            var report = Run(new View());
+            Assert.That((string)report["scope"], Does.Contain("FP32 weights").And.Contain("GPUCompute"));
+            Assert.That((string)report["scope"], Does.Not.Contain("Float16 weights"));
+            Assert.That((string)report["scope"], Does.Contain("no native keyboard or mouse validation"));
+            Assert.That((bool)report["gpu_verified"], Is.False, "An injected contract cannot prove real FP32 GPU execution.");
+        }
         [TestCase("preparation")] [TestCase("backend")] [TestCase("ranking")] [TestCase("blank")] [TestCase("release")] [TestCase("font")] [TestCase("missing")] [TestCase("release_throw")]
         public void RequiredChecksCannotBeOmittedAndFailureStillReleasesOwners(string fault)
         {

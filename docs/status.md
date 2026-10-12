@@ -4,17 +4,18 @@
 
 **計画変更: 正式リリースはM3画像・M4音声と全必須検証の完了後。** [全体TDD計画](multimodal-tdd-plan.md) / [画像](m3-plan.md) / [音声](m4-plan.md)に、各タスクのred / 最小実装 / green・実モデル受け入れを定義した。共通backboneの一部と画像encoder exportは実装済み。画像encoderのPython照合は合格、SentisではFloat16全6条件が合格・FP32全6条件が要素単位の許容差超過で不合格。画像・音声end-to-end API / sampleはmainに未実装、GPU前処理と共通本体のUnity新profileは未検証。以下の履歴にあるtext-only先行リリースの順序は当時の計画として保持する。
 
-**今回の実行範囲: 工程6の配布準備まで、正式リリースは行わない。** 共通backboneの特徴量入力・長さprofile・参照 / export照合・Actions接続をTDDで開始した。14件、追加8件、CLI / workflow 2件のredを観測し、最終の関連小さい契約43 passed / skip 0。[共通backboneの実装・証拠・未完了](multimodal-backbone-validation.md)。実encoder / 新profileのSentis / 全必須実機の合格はまだなく、M3 / M4完了とはしない。
+**計画の範囲: 工程6の配布準備まで、正式リリースは全対応後の別工程。** 共通backboneの特徴量入力・長さprofile・参照 / export照合・Actions接続をTDDで開始した。14件、追加8件、CLI / workflow 2件のredを観測し、関連小さい契約43 passed / skip 0。[共通backboneの実装・証拠・未完了](multimodal-backbone-validation.md)。後続のPR #43で共通Runtime APIをTDD実装し、新規24件・既存38件の計62 passed / skip 0を確認した。小さい実GPUの成功と、実backbone / encoder・固定Git Runtime導入の未検証を分ける。この計画更新ではUnity再実行、実装変更、公開tag / Release作成は行わない。
 
 ## mainと作業ブランチ
 
 | 対象 | 現在確認した状態 |
 | --- | --- |
-| main | `c5402fdc3b6776903a49d2843404c4aacb7bd2f4`、PR #39まで統合済み。[main CI 38316541487](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38316541487)成功 |
+| main | `e35470212f616b020c0b150a4c515a007f0b937f`、PR #42まで統合済み。[main CI 38320110239](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38320110239)成功 |
 | [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31) | draft / 未統合。ブランチ `feat/m2-player-sample-validation`、今回確認したhead `a34bf9057694e141e939ac41bea3e2b713b0a15b`。実測sourceは下表のSHAを維持。過去の補修条件付き実測を新candidate全体の合格にしない |
 | [PR #38](https://github.com/ayutaz/unity-embeddinggemma-2/pull/38) | 音声前処理export、統合済み。head `0424734291dc4cb7606b8bae53086f4911252e94`の[CI 38313045325](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38313045325)全8 job成功。公式前処理対export 6ケース成功、音声encoder / Unityは未検証 |
-| [PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40) | 音声encoder export、未統合。head `bb752c2e4d04cc1fdd65f65241bd46dd108a9f26`の[CI 38318322669](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38318322669)は実モデル数値不合格。eager対公式差0、保存graph対eager最大差0.00020956993103027344。保存 / 分解の原因別TDD修正が必要 |
-| [PR #41](https://github.com/ayutaz/unity-embeddinggemma-2/pull/41) | 画像Sentis fixture、draft / 未統合。確認head `66a05063bf011867e36461c4d423212150a7af6e`。Float16 CPU / 実GPU全6条件合格、FP32全6条件は要素単位許容差不合格。[実行範囲](results/m3-vision-windows-plan-snapshot-20261013.json)。CI成功とは別判定 |
+| [PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40) | 音声encoder export、未統合。head `2fb5c83504f46680fd5be40265715ea5eb992eac`の[CI 38321025453](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38321025453)は実モデル数値不合格。eager対公式差0、保存graph対eager最大差0.00021576881408691406、許容差比9.733773231506348。段階別診断と原因別TDD修正が必要 |
+| [PR #41](https://github.com/ayutaz/unity-embeddinggemma-2/pull/41) | 画像Sentis fixture、draft / 未統合。確認head `b5766154a209622849e9d71d11955b9bd7e0a65c`の[CI 38320212347](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38320212347)成功。Float16 CPU / 実GPU全6条件合格、FP32全6条件は要素単位許容差不合格。[実行範囲](results/m3-vision-windows-plan-snapshot-20261013.json)。CI成功とは別判定 |
+| [PR #43](https://github.com/ayutaz/unity-embeddinggemma-2/pull/43) | 共通本体Runtime API、draft / 未統合。head `2e89a61925ff18868fb1e7351ad4b962856b5133`の[CI 38322389996](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38322389996)成功。TDDと小さい実GPUを含む62件green。consumerのEditor test assemblyへ開発sourceを配置した検証で、実backbone / encoder・新Runtime assemblyの固定Git導入は未検証。[検証記録](https://github.com/ayutaz/unity-embeddinggemma-2/blob/2e89a61925ff18868fb1e7351ad4b962856b5133/docs/multimodal-runtime-validation.md) |
 | main保護 | PR必須、strict Required CI / App 15368、管理者適用、人手承認数0、会話解決・linear history必須、force push / 削除禁止を読み戻し確認 |
 | Unity / Sentis | 作業ブランチの固定版6000.3.21f1 / 2.6.1。mainのEditor固定はPR #31未統合のため16f1。通常Windows精度Playerとsampleの実終了0を確認。[更新・実測と制約](m2-unity-21-upgrade-validation.md)。既存16f1実測は履歴として維持 |
 | 実行環境 | Repository Secrets 0 / self-hosted runner 0。macOS / iOS実行環境とAndroid接続端末の実測結果は未取得 |
@@ -29,7 +30,7 @@
 | Windows sample Player | 21f1の最終source `28529f2`、全37 source hash一致。通常日英GUI・FP32 / GPUCompute・全4 query / 各6順位・score・空入力 / 欠落拒否・解放とcold / warm両方の実終了code 0。31.571 / 29.187秒、warmモデル再転送0。[詳細](m2-unity-21-upgrade-validation.md) / [数値](results/m2-unity21-windows-20261012.json) | native keyboard / mouseは未検証。新Git candidate / 未補修21f1 compile / 他OSは未達。Float16性能改善の証明ではない。PR #31 draft |
 | 終了監査 | 23 red → 23 green、実結果を`process_gate_passed=false` / CLI exit 1と判定。runtime成功とprocess失敗を両方保持 | 完了receiptの整合性監査。数値参照やPNGを再検証せず、実行・M2全体の証明ではない |
 | Android | `751c30a`の実ARM64 / IL2CPP / High stripping APK build、署名・全payload完全hash監査。[詳細](m2-android-validation.md) | 実機・jar runtime・CPU / GPU・sample UIは未実行 |
-| CI | main / PR実装checkpointの全8 job成功 | Python / 参照 / lint / package / 集約で、実Unity・GPU・モバイルの成功ではない。Unity手動Linux CPU補助検証は未実行 |
+| CI | mainとPR #41 / #43の上記runが成功 | PR #40の実encoder gateは失敗。CI成功は実Unity・GPU・モバイルの成功ではない。Unity手動Linux CPU補助検証は未実行 |
 
 ## 次の作業と依存
 
@@ -38,8 +39,8 @@
 1. 標準21f1環境を再現し、Test Frameworkの不足.metaとconsumer構成を分けて調べる。手補修のcacheに依存しないcompile / テスト導入手順を確定する。
 2. Float16/GPU単独起動と4条件連続実行、frame待ち / 資源解放を比較する。Editor検索DB / allocation / import / domain reloadを別に測り、仮説を実測済みの高速化と扱わない。
 3. 修正が落ち着いた固定Git candidateを新しい空consumerで監査し、compile・token・実モデル4条件・日英UI・cacheを確認する。既存native成功はsource overlay条件の証拠として維持する。
-4. 共通feature入力・長さprofile・参照 / artifact監査をTDDで拡張し、M3のGPU画像前処理・encoder・共通本体・検索sampleを実装 / 実モデル照合する。
-5. M4のGPU音声前処理・encoder・共通本体・検索 / 再生 / 明示収録をTDDで実装 / 実モデル照合する。テキスト・画像回帰を維持する。
+4. PR #43の共通Runtime契約greenを起点に、実backboneの保存 / 再読込・CPU / GPU・FP32 / Float16と固定Git Runtime導入を確認する。画像FP32差は小さい原因別redから修正し、M3のGPU画像前処理・実feature接続・768次元・検索sampleをTDDで実装 / 実モデル照合する。
+5. 音声encoderの段階別診断をTDDで追加してPR #40の数値差を特定し、原因別red → 修正 → 元の実モデルgateのgreenを得る。その後M4のGPU音声前処理・共通本体・検索 / 再生 / 明示収録をTDDで実装 / 実モデル照合する。診断の準備は4と独立して進められ、テキスト・画像回帰を維持する。
 6. Android target / 21f1 toolchain、Android実機・Mac / iOSを含む全必須環境で3モダリティのCPU / GPU・配置 / cache・sample・測定 / 終了を検証する。環境確保とActionsライセンス設定は1から並行し、Secretsだけで実機GPUが揃ったと扱わない。
 7. M2〜M4と全必須条件の合格後、candidate / version / CHANGELOG / licenseと固定SHAの空consumer導入を確認して配布準備を完了する。公開tag / 正式Releaseは全対応後の別工程。text-only先行公開は行わない。`.pt2` → `.sentis`を継続し、標準ONNX再exportは非互換または実測の利点がある場合の候補とする。
 

@@ -62,7 +62,7 @@ LLMUnityのAPIの存在からEmbeddingGemma 2の実モデル対応済みとは�
 
 ## Inference Engine での対応状況
 
-[onnx-community/embeddinggemma-2-ONNX](https://huggingface.co/onnx-community/embeddinggemma-2-ONNX) のグラフを取得して演算子を集計し、[Inference Engine の対応演算子一覧](https://docs.unity3d.com/Packages/com.unity.ai.inference@2.6/manual/supported-operators.html) と照らし合わせた。ONNX 版はテキスト・画像・音声のモデルに分かれている。
+2026-10-07の初回調査では[onnx-community/embeddinggemma-2-ONNX](https://huggingface.co/onnx-community/embeddinggemma-2-ONNX) のグラフを取得して演算子を集計し、[Inference Engine の対応演算子一覧](https://docs.unity3d.com/Packages/com.unity.ai.inference@2.6/manual/supported-operators.html) と照らし合わせた。以下の表は初回調査の記録である。
 
 | ファイル | Inference Engine で動かない演算子 |
 | --- | --- |
@@ -71,7 +71,9 @@ LLMUnityのAPIの存在からEmbeddingGemma 2の実モデル対応済みとは�
 | 画像用 `vision_encoder.onnx` | `MultiHeadAttention`。また `NonZero` は CPU でしか動かない |
 | 音声用 `audio_encoder.onnx` | `SimplifiedLayerNormalization` |
 
-公開されている ONNX は、ONNX Runtime の独自演算子(`com.microsoft` ドメイン)を前提にしている。Inference Engine で動かすには、少なくとも次のどれかが必要になる。
+2026-10-13には固定revision `daa72c51243991dfcaf9f9137d2c573d8f7790c0`のFP32 `model.onnx`（421,421 bytes）だけを再取得した。標準opset 21 / `com.microsoft` 1、独自演算子は`RotaryEmbedding`と`SkipSimplifiedLayerNormalization`各48 node。入力は`input_ids` / `attention_mask` / `image_features` / `video_features` / `audio_features`、出力は`last_hidden_state` / `sentence_embedding`だった。旧表の3演算子を最新グラフの実測へ読み替えない。重み取得、量子化版 / 画像 / 音声グラフの再調査、Unity import / 推論は行っていない。
+
+このONNX経路の課題はParameter数の不一致ではなく、ONNX Runtimeの独自演算子(`com.microsoft` ドメイン)とSentisの演算子対応、および入出力契約である。Inference Engineで動かすには、少なくとも次のどれかが必要になる。
 
 - 独自演算子を使わず、標準の演算子だけで ONNX を書き出し直す
 - 独自演算子をグラフ上で標準の演算子に分解する

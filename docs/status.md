@@ -1,13 +1,13 @@
 # 現在の状態と残タスク
 
-確認日: 2026-10-12。GitHub APIでmain・PR #31・CI・Secrets / runner・tag / Releaseを再確認した。保護設定は2026-10-10の読み戻し記録。M2全体は未完了。実測のsource SHAと導入SHAを区別し、後続の文書更新で過去の実行条件を変更しない。
+確認日: 2026-10-13。GitHub APIでmain・全open PR・CI・Secrets / runner・tag / Releaseを再確認した。保護設定は2026-10-10の読み戻し記録。M2全体は未完了。実測のsource SHAと導入SHAを区別し、後続の文書更新で過去の実行条件を変更しない。
 
 ## mainと作業ブランチ
 
 | 対象 | 現在確認した状態 |
 | --- | --- |
 | main | `6f55a8574df1bc75d51fb5992fd70dc7d0512fb9`、PR #30まで統合済み。[統合後CI 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)の全8 job成功 |
-| [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31) | draft / 未統合。ブランチ `feat/m2-player-sample-validation`。21f1 origin対応checkpoint `725200a`の[CI 38188653627](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38188653627)は全8 job成功。最新headのcheckはPRで確認する |
+| [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31) | draft / 未統合。ブランチ `feat/m2-player-sample-validation`、実測文書checkpoint `193e31f`の[CI 38192458296](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38192458296)は全8 job成功。競合なしでも、未補修21f1 compile・新Git candidateのgateは未達。文書だけの統合をコードの統合と扱わない |
 | main保護 | PR必須、strict Required CI / App 15368、管理者適用、人手承認数0、会話解決・linear history必須、force push / 削除禁止を読み戻し確認 |
 | Unity / Sentis | 作業ブランチの固定版6000.3.21f1 / 2.6.1。通常Windows精度Playerとsampleの実終了0を確認。[更新・実測と制約](m2-unity-21-upgrade-validation.md)。既存16f1実測は履歴として維持 |
 | 実行環境 | Repository Secrets 0 / self-hosted runner 0。macOS / iOS実行環境とAndroid接続端末の実測結果は未取得 |
@@ -26,12 +26,13 @@
 
 ## 次の作業と依存
 
-2026-10-12の[ログ計測](m2-editor-profile-validation.md)で、完了reloadと初回asset import / compile・通信停止を分ける手段を追加した。TDD 16 failed → 16 passed、保存ログ2件へ適用済み。性能改善・クラッシュ修正・実機合格は追加していない。
+2026-10-12の[ログ計測](https://github.com/ayutaz/unity-embeddinggemma-2/blob/193e31fd65e82c5185f79df2fb4edf2758b046b7/docs/m2-editor-profile-validation.md)で、完了reloadと初回asset import / compile・通信停止を分ける手段を追加した。TDD 16 failed → 16 passed、保存ログ2件へ適用済み。性能改善・クラッシュ修正・実機合格は追加していない。
 
-1. 21f1の通常Playerはモデル欠落経路で想定exit 1、実モデル精度4条件と最終FP32 sampleの独立2起動でexit 0を確認した。cold / warm・全query・画面・解放・終了を記録済み。旧アクセス違反は履歴保持、公式修正の内部原因は断定しない。
-2. 最終candidateの固定Git導入と未補修21f1 compileを確認する。現在のTest Framework補修条件を隠さず、Editor検索DB / allocation / domain reloadとFloat16/GPU遅延を限定条件で調べる。検証済みfont寿命修正とfixture修正を維持する。
-3. Android端末とMac / iOS環境を確保し、既存APK・固定参照を使う実CPU / GPU・配置 / cache・停止と再起動を測定する。Secretsだけで実機環境が揃ったとは扱わない。
-4. 全gate合格後、candidate / version / CHANGELOG / license → tag固定consumer導入 → 正式Release。M3・M4はその後。
+1. 標準21f1環境を再現し、Test Frameworkの不足.metaとconsumer構成を分けて調べる。手補修のcacheに依存しないcompile / テスト導入手順を確定する。
+2. Float16/GPU単独起動と4条件連続実行、frame待ち / 資源解放を比較する。Editor検索DB / allocation / import / domain reloadを別に測り、仮説を実測済みの高速化と扱わない。
+3. 修正が落ち着いた固定Git candidateを新しい空consumerで監査し、compile・token・実モデル4条件・日英UI・cacheを確認する。既存native成功はsource overlay条件の証拠として維持する。
+4. Android target / 21f1 toolchain、Android実機とMac / iOSのCPU / GPU・配置 / cache・終了を測定する。Actionsのライセンス設定は並行して進め、Secretsだけで実機環境が揃ったとは扱わない。
+5. 必須gate合格後、PR統合、candidate / version / CHANGELOG / license → tag固定consumer導入 → 正式Release。M3・M4はその後。モデル形式は検証済み`.pt2` → `.sentis`を継続し、標準ONNXへの再exportは互換性問題または実測上の利点が出た場合の候補とする。
 
 詳細な成果物と合格条件は[4段階の実行計画](m2-release-plan.md)に定義する。PR #31はdraftを維持し、残るgateをCI成功だけで埋めない。
 

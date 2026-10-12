@@ -178,6 +178,107 @@ def export_vision_pt2(wrapper, pixels, destination):
     _save_program(wrapper.eval(), (pixels,), destination)
 
 
+class _AudioAttentionExport(nn.Module):
+    """Official relative chunk attention with static Gather replacing Unfold."""
+
+    def __init__(self, attention, sequence_length):
+        super().__init__()
+        self.attention = attention
+        blocks = (sequence_length + attention.chunk_size - 1) // attention.chunk_size
+        self.register_buffer("context_indices", torch.arange(blocks)[:, None] * attention.chunk_size
+                             + torch.arange(attention.context_size)[None, :])
+
+    def context(self, hidden):
+        attention = self.attention
+        padded = torch.nn.functional.pad(hidden, (0, 0, 0, 0, attention.max_past_horizon,
+                                                   attention.max_future_horizon + attention.chunk_size - 1))
+        return padded[:, self.context_indices].contiguous()
+
+    def forward(self, hidden, positions, mask):
+        attention = self.attention
+        batch, length, _ = hidden.shape
+        shape = (batch, length, attention.num_heads, attention.head_dim)
+        query = attention.q_proj(hidden).float().view(shape)
+        query = query * attention.q_scale * torch.nn.functional.softplus(attention.per_dim_scale)
+        query = attention._convert_to_block(query)
+        key = self.context(attention.k_proj(hidden).float().view(shape) * attention.k_scale)
+        value = self.context(attention.v_proj(hidden).float().view(shape))
+        relative = attention.relative_k_proj(positions).view(-1, attention.num_heads, attention.head_dim)
+        queries = query.permute(0, 3, 1, 2, 4)
+        content = queries @ key.permute(0, 3, 1, 4, 2)
+        bias = queries.reshape(batch, attention.num_heads, -1, attention.head_dim) @ relative.permute(1, 2, 0)
+        bias = attention._rel_shift(bias.reshape(batch, attention.num_heads, query.shape[1], attention.chunk_size, -1))
+        logits = torch.tanh((content + bias) / attention.softcap) * attention.softcap
+        logits = logits.masked_fill(~mask, attention.config.attention_invalid_logits_value)
+        probabilities = torch.nn.functional.softmax(logits, dim=-1, dtype=torch.float32).to(value.dtype)
+        output = (probabilities @ value.permute(0, 3, 1, 2, 4)).permute(0, 2, 3, 1, 4)
+        output = output.reshape(batch, query.shape[1] * attention.chunk_size, -1)[:, :length].contiguous()
+        return attention.post(output.to(hidden.dtype))
+
+
+class AudioEncoderExport(nn.Module):
+    """Fixed prefix-mask audio encoder + projector, not final embeddings.
+
+    Host validation is outside the saved graph. Unity must enforce the same
+    finite FP32 features / zero right-padding and fixed frame-mask profile.
+    """
+
+    def __init__(self, audio, projection, frame_mask):
+        super().__init__()
+        if audio.config._attn_implementation != "sdpa":
+            raise ValueError("audio export reference requires the official sdpa boolean-mask semantics")
+        if (frame_mask.dtype != torch.int64 or frame_mask.ndim != 2 or frame_mask.shape[0] != 1
+                or frame_mask.shape[1] == 0 or not torch.all((frame_mask == 0) | (frame_mask == 1))
+                or not frame_mask.any() or torch.any(frame_mask[:, 1:] > frame_mask[:, :-1])):
+            raise ValueError("audio profile requires a nonempty batch-one int64 binary prefix mask")
+        self.audio = audio
+        self.projection = projection
+        self.feature_shape = (1, frame_mask.shape[1], audio.config.subsampling_conv_channels[0])
+        self.register_buffer("frame_mask", frame_mask.clone())
+        output_mask = frame_mask[:, ::4].bool()
+        length = output_mask.shape[1]
+        self.feature_count = int(output_mask.sum())
+        chunk = audio.config.attention_chunk_size
+        past = audio.config.attention_context_left - 1
+        future = audio.config.attention_context_right
+        blocks = (length + chunk - 1) // chunk
+        queries = torch.arange(blocks)[:, None, None] * chunk + torch.arange(chunk)[None, :, None]
+        keys = torch.arange(blocks)[:, None, None] * chunk + torch.arange(chunk + past + future)[None, None, :] - past
+        distance = queries - keys
+        valid_keys = (keys >= 0) & (keys < length) & output_mask[0, keys.clamp(0, length - 1)]
+        allowed = ((distance >= 0) & (distance < past)) | ((distance < 0) & (-distance < future))
+        self.register_buffer("blocked_mask", (valid_keys & (queries < length) & allowed)[None, None])
+        self.attentions = nn.ModuleList(_AudioAttentionExport(layer.self_attn, length) for layer in audio.layers)
+        self.eval()
+
+    def validate_inputs(self, features):
+        if features.dtype != torch.float32 or features.shape != self.feature_shape or not torch.isfinite(features).all():
+            raise ValueError("audio features must match the finite float32 profile")
+        if features.device != self.frame_mask.device or torch.any(features[self.frame_mask == 0] != 0):
+            raise ValueError("audio features require the same device and zero right padding")
+
+    def forward(self, features):
+        if not torch.compiler.is_compiling():
+            self.validate_inputs(features)
+        hidden, _ = self.audio.subsample_conv_projection(features, self.frame_mask.bool())
+        positions = self.audio.rel_pos_enc(hidden)
+        for layer, attention in zip(self.audio.layers[:self.audio.config.num_hidden_layers], self.attentions):
+            cap = min(layer.gradient_clipping, torch.finfo(layer.norm_pre_attn.weight.dtype).max)
+            hidden = layer.feed_forward1(hidden)
+            residual = hidden
+            hidden = attention(layer.norm_pre_attn(hidden.clamp(-cap, cap)), positions, self.blocked_mask)
+            hidden = layer.norm_post_attn(hidden.clamp(-cap, cap)) + residual
+            hidden = layer.feed_forward2(layer.lconv1d(hidden))
+            hidden = layer.norm_out(hidden.clamp(-cap, cap))
+        projected = self.projection(self.audio.output_proj(hidden))
+        return projected[0, :self.feature_count]
+
+
+def export_audio_pt2(wrapper, features, destination):
+    wrapper.validate_inputs(features)
+    _save_program(wrapper.eval(), (features,), destination)
+
+
 def export_pt2(
     model: nn.Module, input_ids: torch.Tensor, attention_mask: torch.Tensor, destination: Path
 ) -> None:

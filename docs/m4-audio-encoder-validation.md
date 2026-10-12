@@ -35,6 +35,14 @@ uv run --locked python -m embeddinggemma_tools prepare-audio-encoder --preproces
 
 この失敗を小さいテストで追跡できるよう、失敗時の独立したeager / 保存graph / 公式出力の最大差・許容差比・不一致要素数・graph hash / 演算子・source / caseを記録する診断と、stale失敗receipt除去を追加した。2件の意図したred → 関連9 passed / skip 0。元の数値許容差は維持し、再実行で原因を分離する。診断binaryはActions artifactだけに保存する。Python export成功をSentis / GPU / 最終vectorの成功には数えない。
 
+### 保存グラフの固定attention係数
+
+[診断CI 38318322669](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38318322669)では、無音のeager wrapper対公式出力の最大差は0、保存graph対eagerの最大差は `0.00020956993103027344`、固定許容差比は `8.21683406829834`、不一致209要素だった。保存graphの演算分解に起因する差として調査を進める。
+
+小さいFP32演算診断で、native `Softplus`とCore ATenの `log1p(exp(x))`に最大差 `9.5367431640625e-7`を確認した（入力範囲 -10〜10 の10001点）。音声attentionの学習済みper-dimension query係数は入力に依存しないため、公式native Softplusで一度計算してbufferとして保存する。`query * q_scale * coefficient`の乗算順序は維持する。これは学習更新を扱わない固定重みの推論exportである。
+
+保存attentionにSoftplus分解が残り、native係数を保持できないことを1件の意図したassertion redで確認した。修正後は保存係数の完全一致、演算子監査、変更したhidden入力に対する独立公式attention照合を含め、encoder / 参照監査の関連31 passed / skip 0（44.88秒）。native SiLUにも小さい分解差を観測しており、この係数修正だけで実encoderの不合格が解消したとはまだ判断しない。元の実モデル許容差を維持したActions再照合が必要。
+
 ## 次の受け入れ
 
 1. Actionsの固定実重みによるencoder / projector照合。実profileとtoken数・graph hashを取得する。

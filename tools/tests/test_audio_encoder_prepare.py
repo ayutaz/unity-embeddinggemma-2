@@ -34,6 +34,8 @@ def test_prepares_independent_official_audio_features_and_two_saved_profiles(tmp
     function = factory()
     snapshot, inputs = fixture(tmp_path, monkeypatch)
     output = tmp_path / "encoder"
+    output.mkdir()
+    (output / "audio-encoder-failure.json").write_text('{"success":false,"source_commit":"old"}')
     report = function(snapshot, inputs, output, source_commit="b" * 40)
     assert report["success"] is True
     assert report["stage"] == "audio_encoder_projector_only"
@@ -51,6 +53,7 @@ def test_prepares_independent_official_audio_features_and_two_saved_profiles(tmp
         assert (output / name).stat().st_size == item["bytes"]
         assert hashlib.sha256((output / name).read_bytes()).hexdigest() == item["sha256"]
     assert json.loads((output / "audio-encoder-validation.json").read_text()) == report
+    assert not (output / "audio-encoder-failure.json").exists()
 
 
 def test_encoder_failure_clears_stale_success(tmp_path):
@@ -95,6 +98,14 @@ def test_wrong_saved_encoder_features_are_rejected(tmp_path, monkeypatch):
     with pytest.raises(ValueError, match="audio encoder export mismatch"):
         function(snapshot, inputs, tmp_path / "out", source_commit="b" * 40)
     assert not (tmp_path / "out/audio-encoder-validation.json").exists()
+    failure_path = tmp_path / "out/audio-encoder-failure.json"
+    assert failure_path.exists(), "numeric failure must preserve independent eager/saved diagnostics"
+    failure = json.loads(failure_path.read_text(encoding="utf-8"))
+    assert failure["success"] is False and failure["stage"] == "audio_encoder_projector_only"
+    assert failure["source_commit"] == "b" * 40 and failure["case_id"] == "silence"
+    assert failure["saved_vs_official_maximum_absolute_error"] > 0
+    assert failure["eager_vs_official_maximum_absolute_error"] <= 1e-5
+    assert failure["saved_vs_eager_maximum_absolute_error"] > 0
 
 
 def test_cli_connects_pinned_snapshot_preprocessing_and_ci_source(tmp_path, monkeypatch, capsys):

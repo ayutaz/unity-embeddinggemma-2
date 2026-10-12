@@ -31,7 +31,9 @@ uv run --locked python -m embeddinggemma_tools prepare-audio-encoder --preproces
 - 元モデル / processor / 前処理参照 / graph / binary / 出力参照のhash、lockしたlibrary版、profile・source SHAを記録する。成功は全ケース照合後にのみ保存し、途中失敗時はstale成功を除去する。
 - 別artifactを3日保持し、重み・graph・大きいtensorをGit / LFSへ含めない。`stage=audio_encoder_projector_only`、`unity_validated=false`、`end_to_end_validated=false`を維持する。
 
-この文書追加時点では、小さいfixtureの合格のみ取得済み。実encoderのActions結果は実行後に追記し、Python export成功をSentis / GPU / 最終vectorの成功には数えない。
+最初の実encoder [CI run 38317139304](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38317139304)（head `d4f7b2668d3108349edca12ed8a55b7d07d4028e`）は、無音の保存graph対公式encoder照合で失敗した。minimum cosine `0.9999998211860657`はcosine条件を満たすが、elementwise条件を超えた。成功receiptは生成していない。Python4環境・lint・packageは成功したが、実encoder gateとRequired CIは失敗である。
+
+この失敗を小さいテストで追跡できるよう、失敗時の独立したeager / 保存graph / 公式出力の最大差・許容差比・不一致要素数・graph hash / 演算子・source / caseを記録する診断と、stale失敗receipt除去を追加した。2件の意図したred → 関連9 passed / skip 0。元の数値許容差は維持し、再実行で原因を分離する。診断binaryはActions artifactだけに保存する。Python export成功をSentis / GPU / 最終vectorの成功には数えない。
 
 ## 次の受け入れ
 

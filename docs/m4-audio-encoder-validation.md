@@ -43,6 +43,14 @@ uv run --locked python -m embeddinggemma_tools prepare-audio-encoder --preproces
 
 保存attentionにSoftplus分解が残り、native係数を保持できないことを1件の意図したassertion redで確認した。修正後は保存係数の完全一致、演算子監査、変更したhidden入力に対する独立公式attention照合を含め、encoder / 参照監査の関連31 passed / skip 0（44.88秒）。native SiLUにも小さい分解差を観測しており、この係数修正だけで実encoderの不合格が解消したとはまだ判断しない。元の実モデル許容差を維持したActions再照合が必要。
 
+[係数修正後CI 38319899052](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38319899052)（head `1eabc0f0d0d2c2b2bd936b820fc9c2baf3a27fd9`）も無音の要素単位条件で不合格。eager対公式差0、保存対eager最大差 `0.00015294551849365234`、許容差比 `6.410955429077148`、不一致430要素。最大差は減ったが合格ではなく、不一致数も増えている。Python4環境・lint・packageは合格、実encoder / Required CIは失敗。
+
+### 音声SiLUの丸め順序
+
+固定[PyTorch 2.14.1のnative CPU SiLU](https://github.com/pytorch/pytorch/blob/v2.14.1/aten/src/ATen/native/cpu/Activation.cpp#L1098-L1128)は `x / (1 + exp(-x))`で計算する。Core ATen既定の `x * sigmoid(x)`は、同じ数学的関数でも逆数を丸めてから乗算するためFP32値が異なる。10001点の小さい診断で、既定分解は最大差 `9.5367431640625e-7` / 不一致2204点、divisionの順序では最大差 `4.76837158203125e-7` / 不一致426点だった。これらは小さい演算結果であり、実encoderの受け入れではない。
+
+固定反例 `8.01` / `5.0`とsigned値で、保存audio graphのnative演算完全一致テストを追加し、2 / 7要素が異なる意図したredを確認した。音声exportだけにnative division順序のSiLU分解を適用し、その他のCore ATen分解は維持する。保存graphにnative SiLU / Sigmoidが残らずExp / Divを使うこと、他exportの既定分解を変更しないことを含め、encoder / 準備監査の関連32 passed / skip 0（35.78秒）。小さい検証時はOMP / MKL各4 threadとした。elementwise `rtol=1e-4` / `atol=1e-5`と独立した公式encoderの期待値は維持し、実モデルActions再照合を別に行う。
+
 ## 次の受け入れ
 
 1. Actionsの固定実重みによるencoder / projector照合。実profileとtoken数・graph hashを取得する。

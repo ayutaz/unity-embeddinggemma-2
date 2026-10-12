@@ -90,6 +90,33 @@ def test_saved_attention_preserves_native_learned_query_scale_without_softplus_d
     torch.testing.assert_close(saved.module()(changed, positions, blocked), expected, rtol=1e-5, atol=1e-6)
 
 
+def test_saved_audio_silu_preserves_native_division_rounding_at_counterexamples(tmp_path):
+    class ActivationProbe(torch.nn.Module):
+        def validate_inputs(self, features):
+            assert features.dtype == torch.float32 and torch.isfinite(features).all()
+
+        def forward(self, features):
+            return torch.nn.functional.silu(features)
+
+    # Fixed counterexamples to Core ATen's x * sigmoid(x), plus signed values.
+    # Native CPU SiLU computes x / (1 + exp(-x)); do not add a rounded reciprocal
+    # multiplication. These are FP32 arithmetic tests, not real encoder proof.
+    inputs = torch.tensor([8.01, 5.0, 1.0, 0.1, -0.3, -2.0, -8.0])
+    expected = torch.nn.functional.silu(inputs)
+    path = tmp_path / "audio-silu.pt2"
+    export.export_audio_pt2(ActivationProbe(), inputs, path)
+    saved = torch.export.load(path)
+    actual = saved.module()(inputs)
+    torch.testing.assert_close(actual, expected, rtol=0, atol=0)
+    targets = {str(node.target) for node in saved.graph.nodes if node.op == "call_function"}
+    assert "aten.silu.default" not in targets and "aten.sigmoid.default" not in targets
+    assert "aten.exp.default" in targets and "aten.div.Tensor" in targets
+    default_path = tmp_path / "default-silu.pt2"
+    export._save_program(ActivationProbe(), (inputs,), default_path)
+    default = torch.export.load(default_path)
+    assert "aten.sigmoid.default" in {str(node.target) for node in default.graph.nodes if node.op == "call_function"}
+
+
 def test_loads_only_audio_and_projector_as_float32(tmp_path):
     audio, projection = audio_models()
     (tmp_path / "config.json").write_text(json.dumps({"audio_config": audio.config.to_dict(),

@@ -282,7 +282,13 @@ class AudioEncoderExport(nn.Module):
 
 def export_audio_pt2(wrapper, features, destination):
     wrapper.validate_inputs(features)
-    _save_program(wrapper.eval(), (features,), destination)
+    # Match the pinned official CPU SiLU kernel's division order. Core ATen's
+    # default x * sigmoid(x) introduces an extra rounded reciprocal multiply.
+    # Other exporters retain their existing default decomposition table.
+    from torch._decomp import core_aten_decompositions
+    decompositions = core_aten_decompositions()
+    decompositions[torch.ops.aten.silu.default] = lambda value: value / (1 + torch.exp(-value))
+    _save_program(wrapper.eval(), (features,), destination, decompositions=decompositions)
 
 
 def export_pt2(
@@ -297,10 +303,10 @@ def export_multimodal_pt2(wrapper, input_ids, attention_mask, image_features, au
     _save_program(wrapper.eval(), (input_ids, attention_mask, image_features, audio_features), destination)
 
 
-def _save_program(wrapper, inputs, destination):
+def _save_program(wrapper, inputs, destination, *, decompositions=None):
     with torch.no_grad():
         program = torch.export.export(wrapper, inputs)
-        program = program.run_decompositions()
+        program = program.run_decompositions(decompositions)
     # Sentis' Torch JSON reader stores graph scalar integers as System.Int32.
     # Core ATen uses INT64_MAX for open-ended slices, even on fixed-size inputs.
     def clamp_scalar(value):

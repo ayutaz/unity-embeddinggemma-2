@@ -30,6 +30,7 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
     snapshot, preprocessing, destination = Path(snapshot), Path(preprocessing).resolve(), Path(destination)
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "audio-encoder-validation.json").unlink(missing_ok=True)
+    (destination / "audio-encoder-failure.json").unlink(missing_ok=True)
     if re.fullmatch(r"[0-9a-f]{40}", revision) is None:
         raise ValueError("model revision must be an immutable lowercase commit SHA")
 
@@ -107,6 +108,23 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
                     raise ValueError(f"audio encoder export mismatch: {case_id} shape/dtype/nonfinite")
                 cosine = torch.nn.functional.cosine_similarity(actual, expected, dim=-1).min().item()
                 if cosine < 0.999999 or not torch.allclose(actual, expected, rtol=1e-4, atol=1e-5):
+                    eager = wrapper(features)
+                    difference = (actual - expected).abs()
+                    allowed = 1e-5 + 1e-4 * expected.abs()
+                    failure = dict(success=False, stage="audio_encoder_projector_only", source_commit=source_commit,
+                                   profile=profile, case_id=case_id, minimum_cosine=cosine,
+                                   saved_vs_official_maximum_absolute_error=difference.max().item(),
+                                   eager_vs_official_maximum_absolute_error=(eager - expected).abs().max().item(),
+                                   saved_vs_eager_maximum_absolute_error=(actual - eager).abs().max().item(),
+                                   maximum_tolerance_ratio=(difference / allowed).max().item(),
+                                   mismatched_elements=int((difference > allowed).sum()),
+                                   graph_sha256=digest(graph), unity_validated=False, end_to_end_validated=False,
+                                   operators=sorted({str(node.target) for node in exported.graph.nodes if node.op == "call_function"}))
+                    (destination / "audio-encoder-failure.json").write_text(json.dumps(failure, indent=2, allow_nan=False) + "\n",
+                                                                           encoding="utf-8")
+                    expected.numpy().astype("<f4").tofile(destination / "failed-official-features-fp32.bin")
+                    actual.numpy().astype("<f4").tofile(destination / "failed-saved-features-fp32.bin")
+                    print(json.dumps(failure, allow_nan=False))
                     raise ValueError(f"audio encoder export mismatch: {case_id} cosine={cosine}")
                 similarities.append(cosine)
                 input_path = directory / f"{case_id}-features-fp32.bin"

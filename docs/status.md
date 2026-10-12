@@ -2,14 +2,18 @@
 
 確認日: 2026-10-13。GitHub APIでmain・全open PR・CI・Secrets / runner・tag / Releaseを再確認した。保護設定は2026-10-10の読み戻し記録。M2全体は未完了。実測のsource SHAと導入SHAを区別し、後続の文書更新で過去の実行条件を変更しない。
 
+**計画変更: 正式リリースはM3画像・M4音声と全必須検証の完了後。** [全体TDD計画](multimodal-tdd-plan.md) / [画像](m3-plan.md) / [音声](m4-plan.md)を追加した。M3・M4の実装とred / green、Unity実測は未着手。以下の履歴にあるtext-only先行リリースの順序は当時の計画として保持する。
+
+**今回の実行範囲: 工程6の配布準備まで、正式リリースは行わない。** 共通backboneの特徴量入力・長さprofile・参照 / export照合・Actions接続をTDDで開始した。14件、追加8件、CLI / workflow 2件のredを観測し、最終の関連小さい契約43 passed / skip 0。[共通backboneの実装・証拠・未完了](multimodal-backbone-validation.md)。実encoder / 新profileのSentis / 全必須実機の合格はまだなく、M3 / M4完了とはしない。
+
 ## mainと作業ブランチ
 
 | 対象 | 現在確認した状態 |
 | --- | --- |
-| main | `6f55a8574df1bc75d51fb5992fd70dc7d0512fb9`、PR #30まで統合済み。[統合後CI 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)の全8 job成功 |
-| [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31) | draft / 未統合。ブランチ `feat/m2-player-sample-validation`、実測文書checkpoint `193e31f`の[CI 38192458296](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38192458296)は全8 job成功。競合なしでも、未補修21f1 compile・新Git candidateのgateは未達。文書だけの統合をコードの統合と扱わない |
+| main | 計画開始時 `08c13671acd82dc2324b818eefe8e9aff3a5a54f`、PR #32まで統合済み。[統合後CI 38292044001](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38292044001)成功 |
+| [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31) | draft / 未統合。ブランチ `feat/m2-player-sample-validation`、head `fde79e2ab11210e711db14acb6ccc8c758a09229`の[CI 38292153925](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38292153925)全8 job成功。実測sourceは下表のSHAを維持。競合なしでも未補修21f1 compile・新Git candidateは未達 |
 | main保護 | PR必須、strict Required CI / App 15368、管理者適用、人手承認数0、会話解決・linear history必須、force push / 削除禁止を読み戻し確認 |
-| Unity / Sentis | 作業ブランチの固定版6000.3.21f1 / 2.6.1。通常Windows精度Playerとsampleの実終了0を確認。[更新・実測と制約](m2-unity-21-upgrade-validation.md)。既存16f1実測は履歴として維持 |
+| Unity / Sentis | 作業ブランチの固定版6000.3.21f1 / 2.6.1。mainのEditor固定はPR #31未統合のため16f1。通常Windows精度Playerとsampleの実終了0を確認。[更新・実測と制約](m2-unity-21-upgrade-validation.md)。既存16f1実測は履歴として維持 |
 | 実行環境 | Repository Secrets 0 / self-hosted runner 0。macOS / iOS実行環境とAndroid接続端末の実測結果は未取得 |
 | 配布 | 開発版 `0.1.0-pre.1`。公開tag 0 / GitHub Release 0、正式リリース未実施 |
 
@@ -31,10 +35,12 @@
 1. 標準21f1環境を再現し、Test Frameworkの不足.metaとconsumer構成を分けて調べる。手補修のcacheに依存しないcompile / テスト導入手順を確定する。
 2. Float16/GPU単独起動と4条件連続実行、frame待ち / 資源解放を比較する。Editor検索DB / allocation / import / domain reloadを別に測り、仮説を実測済みの高速化と扱わない。
 3. 修正が落ち着いた固定Git candidateを新しい空consumerで監査し、compile・token・実モデル4条件・日英UI・cacheを確認する。既存native成功はsource overlay条件の証拠として維持する。
-4. Android target / 21f1 toolchain、Android実機とMac / iOSのCPU / GPU・配置 / cache・終了を測定する。Actionsのライセンス設定は並行して進め、Secretsだけで実機環境が揃ったとは扱わない。
-5. 必須gate合格後、PR統合、candidate / version / CHANGELOG / license → tag固定consumer導入 → 正式Release。M3・M4はその後。モデル形式は検証済み`.pt2` → `.sentis`を継続し、標準ONNXへの再exportは互換性問題または実測上の利点が出た場合の候補とする。
+4. 共通feature入力・長さprofile・参照 / artifact監査をTDDで拡張し、M3のGPU画像前処理・encoder・共通本体・検索sampleを実装 / 実モデル照合する。
+5. M4のGPU音声前処理・encoder・共通本体・検索 / 再生 / 明示収録をTDDで実装 / 実モデル照合する。テキスト・画像回帰を維持する。
+6. Android target / 21f1 toolchain、Android実機・Mac / iOSを含む全必須環境で3モダリティのCPU / GPU・配置 / cache・sample・測定 / 終了を検証する。環境確保とActionsライセンス設定は1から並行し、Secretsだけで実機GPUが揃ったと扱わない。
+7. M2〜M4と全必須条件の合格後、candidate / version / CHANGELOG / license → tag固定consumer導入 → 正式Release。text-only先行公開は行わない。`.pt2` → `.sentis`を継続し、標準ONNX再exportは非互換または実測の利点がある場合の候補とする。
 
-詳細な成果物と合格条件は[4段階の実行計画](m2-release-plan.md)に定義する。PR #31はdraftを維持し、残るgateをCI成功だけで埋めない。
+詳細な成果物と合格条件は[全体TDD計画](multimodal-tdd-plan.md)と[M2基盤計画](m2-release-plan.md)に定義する。PR #31はdraftを維持し、残るgateをCI成功だけで埋めない。
 
 ## 履歴: PR #12時点のmainとブランチ
 

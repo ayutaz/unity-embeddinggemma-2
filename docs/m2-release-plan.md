@@ -1,9 +1,9 @@
-# M2: 安定化からテキスト版リリースまでの実行計画
+# M2: 基盤安定化と全対応後の正式リリースへの受け渡し
 
 作成日: 2026-10-10。開始時点のmainは `2329507eb763202a297c1b15f385a83512eb6e1f`。
 最終更新: 2026-10-13。main / PR / CI / Secrets / runner / tag / ReleaseをGitHub APIで再確認した。今回の更新は文書のみで、Unity起動・build・実機測定は追加していない。
-ユーザーの「4まで詳細の計画を立てて進めてください」に対応し、安定性・高速化、Git URL導入、他環境の実測、リリースの4段階を扱う。
-M1の履歴と既存のM2受け入れ条件は維持する。Windowsだけの成功でM2全体を完了としない。
+当初は安定性・高速化、Git URL導入、他環境の実測、text-onlyリリースの4段階を扱った。2026-10-13のユーザー指定により、**正式リリースはM3画像・M4音声を含む全対応と必須検証の完了後へ移す**。[全体TDD計画](multimodal-tdd-plan.md) / [M3](m3-plan.md) / [M4](m4-plan.md)を全体の順序とする。
+M1の証拠と既存M2の技術的受け入れ条件は維持する。M2はテキストUPM・sample・検証基盤の安定化として扱い、公開をM3・M4着手の前提にしない。Windowsだけの成功でM2全体を完了としない。
 
 確認基準mainはPR #30後の `6f55a85`。統合後[CI run 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)の全8 job成功を確認した。font寿命修正を含む `fc66af7` を[新しい空Git consumer](m2-font-git-consumer-validation.md)で導入し、compile・契約・実モデル4条件・UI・file URL cacheまで確認した。測定fixture修正 `bc3ac49`はEditor test 2ファイルだけの配置で検証後にPR #30へ統合し、配布Runtime / sample本体は同一。下の開始時点と実行履歴は当時の証拠を維持する。
 
@@ -14,7 +14,7 @@ PR #31はdraft / 未統合。2026-10-12に承認された6000.3.21f1で、通常
 | 1. 安定性・高速化 | 完全hashのCNG・cache、font寿命修正を実測確認。21f1最終FP32 sampleのcold / warmは31.571 / 29.187秒・実終了0。Float16/GPUの遅延とEditor診断は残る | Float16/GPU条件間の資源解放調査、未補修21f1 compileの確認 |
 | 2. 固定Git導入 | `fc66af7`の空consumerで解決 / source / 実モデル4条件 / UI / cache合格。後続fixture配置を分けて記録 | 最終candidateの固定Git回帰。候補sourceが変われば必要な範囲だけ再検証 |
 | 3. 他環境・Player実測 | 21f1 Windows精度Player通常モード4条件とsample通常GUI / GPU、独立2起動の終了を確認。Androidは16f1の実APK監査まで | Android実機、Mac / iOS環境と各CPU / GPU・配置 / cache・測定結果。21f1移行後のAndroid toolchainも確認 |
-| 4. 正式配布 | 開発版0.1.0-pre.1のみ。candidate / tag / Release未実施 | 1〜3の全gate合格 → candidate / version / license / CHANGELOG → tag固定consumer → 正式Release |
+| 4. 全対応後の正式配布 | 開発版0.1.0-pre.1のみ。candidate / tag / Release未実施 | M2基盤 → M3画像 → M4音声 → 全必須環境の統合検証 → version / license / CHANGELOG → tag固定consumer → 正式Release |
 
 ## 次に進める順序
 
@@ -26,9 +26,9 @@ PR #31はdraft / 未統合。2026-10-12に承認された6000.3.21f1で、通常
 | 2. 性能・安定性 | Float16/GPU単独起動と4条件連続実行を比較し、条件間のframe待ち / 資源解放を切り分ける。Editor検索DB / allocation / import / domain reloadも別々に測る | 同じhash / Unity / backend / 入力でload・初回・warm反復・解放 / メモリを記録。改善案はTDD後に実測し、全精度・順位・終了を再確認。FP32変更をFloat16高速化と扱わない |
 | 3. 固定Git candidate | 上記の変更が落ち着いた固定40桁SHAを空consumerへ導入する。source overlayを使わずrequested / resolved SHA、配布source、compile・契約・token・実モデル・日英UI / cacheを監査する | 今回の`fc66af7` + overlay結果と別の再現記録。モデルcache再利用範囲を明記し、変更が必要ならcandidateを更新して影響範囲だけ再検証 |
 | 4. 他環境とCI | Android targetの契約 / 21f1 toolchainを確認し、実機でjar展開・CPU / GPU・sample / cache・2起動を測る。Mac / iOSの実行環境と適切なライセンスも確保する。利用可能なUnity CIを設定する | Android / Mac / iOSの実backendと固定参照照合、速度・メモリ・終了記録。Secretsだけで実機GPU環境が揃ったとは扱わない |
-| 5. 統合と正式配布 | 必要な修正と導入の証拠をPRでレビュー・統合し、1〜4と既存の必須gateを満たすcandidateを凍結する。version / CHANGELOG / license、tag固定導入、Releaseを順に確認する | main直push禁止。PR #31は現状draftを維持。CIだけでmerge / release gateを埋めず、公開tagとReleaseまで確認してM2完了とする |
+| 5. M3・M4への受け渡し | 必要な基盤修正と導入の証拠をPRでレビュー・統合し、共通feature入力と長さprofileをTDDで拡張してM3 / M4へ進む。4の環境確保・可能な実測は並行 | main直push禁止。PR #31は未補修compile / 新candidateのgateが残るためdraft維持。M3 / M4後に全必須環境を検証し、正式配布は最後 |
 
-1〜3は現環境で着手可能。4の実機測定には端末 / Mac / iOS環境が必要で、環境調査とCI設定は並行して進める。5の正式公開は必須他環境の合格後とする。文書更新だけで重いUnity / モデル実行を繰り返さない。ローカル実検証が必要な場合はuloop、Editor本体1つ、既存の監査済みモデル / Library / build cacheを基本にする。観測timeoutだけで再起動せず、同じoperation / PID / 保存結果を追跡する。
+1〜3は現環境で着手可能。4の実機測定には端末 / Mac / iOS環境が必要で、環境調査とCI設定は並行する。M3・M4の開発は必須他環境の確保待ちで止めず、最終公開は全モダリティ・全必須環境の合格後とする。文書更新だけで重いUnity / モデル実行を繰り返さない。ローカル実検証が必要な場合はuloop、Editor本体1つ、既存の監査済みモデル / Library / build cacheを基本にする。観測timeoutだけで再起動せず、同じoperation / PID / 保存結果を追跡する。
 
 ### モデル形式とONNXの位置付け
 
@@ -38,7 +38,7 @@ PR #31はdraft / 未統合。2026-10-12に承認された6000.3.21f1で、通常
 
 標準演算へ分解したONNXの再exportは、`.pt2`の非互換が実際に出た場合、または比較測定で導入価値を示せる場合に検討する。その場合も同じ元重み・prompt / tokenizer / pooling / 正規化でPython参照とUnity CPU / GPUを照合する。公開ONNXへの切り替えをM2の追加必須gateにはしない。ONNX Runtimeプラグインを配布Runtimeへ入れる方針変更は行わない。
 
-M2完了後はM3で画像エンコーダ・GPU前処理・テキスト→画像検索、M4で音声エンコーダ・GPUメル前処理・テキスト→音声検索を同じ精度検証方式で進める。
+M2の再現可能な基盤からM3画像、M4音声へ進める。各実装のred / greenと実モデルCPU / GPU参照照合を別記し、正式公開は両者と全必須環境の統合検証後に行う。
 
 ### 履歴: 版更新前の順序と診断
 
@@ -122,11 +122,13 @@ Windowsの精度検証専用PlayerのIL2CPP / Release / High stripping結果は�
 - macOS Editor / iOS / Androidの実モデルCPU / GPUを実行して必要な条件を満たす。GPU skip / CPU fallbackをGPU passにしない。
 - 環境が確保できない場合は未実行のまま残す。この条件が残った状態でM2全体を完了・リリース済みとしない。
 
-## 4. テキスト版のリリース
+## 4. 全モダリティ対応後の正式リリース
+
+この段階はM2直後には実行しない。M3・M4と全必須環境の合格を[全体TDD計画](multimodal-tdd-plan.md)で揃えてから実行する。配布監査等に挙動を追加する場合もred → 最小実装 → green、公開操作自体は実測後の監査として記録する。
 
 ### 作業
 
-1. 1〜3の結果を候補commitへ対応付ける。対象環境の未実行、必要な失敗、サンプルの未解決問題を点検し、変更を凍結した候補で監査する。
+1. 1〜3とM3 / M4の全モダリティ・全必須環境の結果を候補commitへ対応付ける。未実行、必要な失敗、全sampleの未解決問題を点検し、変更を凍結した候補で監査する。
 2. README、UPM文書、CHANGELOG、Apache-2.0のコードライセンスとモデルの取得・利用条件を確認する。コードのライセンスをモデルへ自動適用しない。モデルを配布artifactやGitへ混入させない。
 3. リリース版versionとcandidateをPRで更新し、Required CIと必要なUnity回帰を確認する。mainへ直接pushしない。
 4. tagとGitHub Releaseは検証済みcommitに対応させる。tag固定Git URLで空consumerへ導入し、compile・サンプル・実モデルを確認する。検証前に正式公開済みと表現しない。
@@ -134,8 +136,8 @@ Windowsの精度検証専用PlayerのIL2CPP / Release / High stripping結果は�
 
 ### 合格条件
 
-- 固定tagから再現できるUPMパッケージとサンプルがあり、必須環境の実測結果・文書・CHANGELOG・ライセンスが揃っている。
-- すべてのgateを監査し、未実行を成功に数えず、GitHub Releaseとtagの実在を確認してM2完了とする。
+- 固定tagから再現できる3モダリティのUPMパッケージと全sampleがあり、全必須環境の実測結果・文書・CHANGELOG・ライセンスが揃っている。
+- M2〜M4と全必須gateを監査し、未実行を成功に数えず、GitHub Releaseとtagの実在を確認して全体の正式公開完了とする。text-onlyの先行Releaseは作らない。
 
 ## PR分割と依存
 
@@ -145,9 +147,9 @@ Windowsの精度検証専用PlayerのIL2CPP / Release / High stripping結果は�
 | B | 安定性・hash処理の測定 / 改善 | red / green、同条件性能比較、Unity精度・UI回帰 |
 | C | Playerの配置・実行・測定ハーネス | 小さい契約テスト、build / 実行結果schema、Windows Player検証 |
 | D | macOS / iOS / Androidの実測と必要な移植修正 | 各環境の厳密な結果、build・端末・backend条件 |
-| E | リリース版・文書・tag導入・配布 | 1〜3の合格を揃えたcandidate、tag導入結果、Release |
+| E | M3・M4後のリリース版・文書・tag導入・配布 | 1〜3と全モダリティ・全必須環境の合格を揃えたcandidate、tag導入結果、Release |
 
-AとBは環境調査と並行して進める。Cは実機の有無に依存せず必要な準備を進める。Dの実測は実行環境に依存する。Eの正式リリースは必要環境の合格に依存する。
+AとBは環境調査と並行して進める。Cは実機の有無に依存せず必要な準備を進める。Dの実測は実行環境に依存する。共通基盤とM3 / M4のPR分割は[全体TDD計画](multimodal-tdd-plan.md)を参照。Eの正式公開はM3 / M4と全必要環境の合格に依存する。
 Pythonは `tools/` とuvに統一する。実装はred → greenを確認し、小さい必要チェック以外はActionsを優先する。モデル・大きいartifactはGitに含めない。
 PRのmergeはユーザーの既存依頼の範囲で、差分・競合・現在headのCIを確認して行う。リリースまでを依頼された本作業の範囲で進め、未達gateを迂回しない。
 

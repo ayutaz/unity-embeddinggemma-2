@@ -1,6 +1,7 @@
 """Audit the text UPM distribution and prepare an isolated Unity consumer project."""
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -114,7 +115,7 @@ def audit_package(package):
     return {"success": not errors, "package": manifest.get("name"), "version": manifest.get("version"), "errors": errors}
 
 
-def create_consumer(project, package, *, git_revision=None, automation=False, sample=False):
+def create_consumer(project, package, *, git_revision=None, automation=False, sample=False, test_framework_source=None):
     project, package = Path(project), Path(package).resolve()
     report = audit_package(package)
     if not report["success"]:
@@ -126,6 +127,28 @@ def create_consumer(project, package, *, git_revision=None, automation=False, sa
         raise ValueError("TextSearch sample must be available before creating its consumer")
     if project.exists() and (not project.is_dir() or any(project.iterdir())):
         raise ValueError("consumer project must be empty; existing projects are never overwritten")
+    framework_receipt = None
+    if test_framework_source is not None:
+        test_framework_source = Path(test_framework_source).resolve()
+        configuration = json.loads((test_framework_source / "package.json").read_text(encoding="utf-8"))
+        if configuration.get("name") != "com.unity.test-framework" or configuration.get("version") != "1.6.0":
+            raise ValueError("embedded source must be the fixed com.unity.test-framework 1.6.0 package")
+        if not (test_framework_source / "LICENSE.md").is_file():
+            raise ValueError("embedded framework must retain its license")
+        if project.resolve().is_relative_to(test_framework_source) or test_framework_source.is_relative_to(project.resolve()):
+            raise ValueError("framework source and destination must not contain each other")
+        entries = {}
+        for path in sorted(test_framework_source.rglob("*")):
+            if path.is_symlink():
+                raise ValueError("embedded source must not contain symbolic links")
+            if path.is_file():
+                with path.open("rb") as stream:
+                    checksum = hashlib.file_digest(stream, "sha256").hexdigest()
+                entries[path.relative_to(test_framework_source).as_posix()] = dict(bytes=path.stat().st_size, sha256=checksum)
+        framework_receipt = dict(schema_version=1, source_package=configuration["name"], source_version=configuration["version"],
+                                 source_files=entries, unity_compiled=False,
+                                 missing_script_metadata=[name + ".meta" for name in entries
+                                                          if name.endswith(".cs") and name + ".meta" not in entries])
     source = (f"https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/{PACKAGE_NAME}#{git_revision}"
               if git_revision else "file:" + package.as_posix())
     manifest = {"dependencies": {PACKAGE_NAME: source, "com.unity.test-framework": "1.6.0"}, "testables": [PACKAGE_NAME]}
@@ -137,6 +160,12 @@ def create_consumer(project, package, *, git_revision=None, automation=False, sa
                                          "scopes": ["io.github.hatayama.uloopmcp"]}]
     for directory in ("Assets", "Packages", "ProjectSettings"):
         (project / directory).mkdir(parents=True, exist_ok=True)
+    if framework_receipt is not None:
+        # Embedded packages are mutable. Unity's importer generates missing
+        # metadata on first import; neither the Editor nor PackageCache is edited.
+        shutil.copytree(test_framework_source, project / "Packages/com.unity.test-framework")
+        (project / "ProjectSettings/EmbeddingGemmaTestFramework.json").write_text(
+            json.dumps(framework_receipt, indent=2) + "\n", encoding="utf-8", newline="\n")
     (project / "Packages/manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
     (project / "ProjectSettings/ProjectVersion.txt").write_text("m_EditorVersion: 6000.3.21f1\n", encoding="utf-8", newline="\n")
     if automation:
@@ -161,7 +190,11 @@ def main(argv=None):
     parser.add_argument("--git-revision")
     parser.add_argument("--automation", action="store_true")
     parser.add_argument("--sample", action="store_true", help="Import TextSearch into a new empty consumer")
+    parser.add_argument("--test-framework-source", type=Path,
+                        help="Embed a local official Test Framework 1.6.0 source in a new consumer; does not patch cache")
     args = parser.parse_args(argv)
+    if args.test_framework_source is not None and args.consumer is None:
+        parser.error("--test-framework-source requires --consumer")
     if args.verify_git_consumer:
         report = audit_git_consumer(args.verify_git_consumer, args.git_revision)
         print(json.dumps(report, ensure_ascii=False))
@@ -170,7 +203,7 @@ def main(argv=None):
     if report["success"] and args.consumer:
         try:
             create_consumer(args.consumer, args.package, git_revision=args.git_revision, automation=args.automation,
-                            sample=args.sample)
+                            sample=args.sample, test_framework_source=args.test_framework_source)
             report["consumer"] = str(args.consumer.resolve())
         except (OSError, ValueError) as exc:
             report["success"] = False

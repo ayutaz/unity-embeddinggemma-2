@@ -1,0 +1,335 @@
+{
+  "schema_version": 1,
+  "recorded_utc": "2026-10-12T01:33:20.6373853Z",
+  "scope": "Windows Unity21 native precision and imported sample execution in a metadata-repaired validation consumer.",
+  "m2_complete": false,
+  "release_verified": false,
+  "unity": "6000.3.21f1",
+  "sentis": "2.6.1",
+  "graphics_api": "Direct3D12",
+  "gpu_execution_skipped": false,
+  "consumer_git_revision": "fc66af7bc9150ddcf759917a5e9c92b2c5afa991",
+  "fresh_final_candidate_git_install_verified": false,
+  "environment_repairs": [
+    "Per-process ALLUSERSPROFILE from ProgramData",
+    "Two missing Test Framework C# metadata files in ignored consumer PackageCache; no vendor C# changes"
+  ],
+  "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+  "sample_preparation_origin": "6000.3.21f1",
+  "precision_preparation_origin": "6000.3.16f1",
+  "sample_build": {
+    "source": "28529f2e20a57dc865ef7268a92b0526c9a87c3e",
+    "success": true,
+    "injected_build": false,
+    "seconds": 76.3194379,
+    "errors": 0,
+    "warnings": 485,
+    "source_hashes_matched": 37
+  },
+  "sample_runs": [
+    {
+      "run": "cold",
+      "source": "28529f2e20a57dc865ef7268a92b0526c9a87c3e",
+      "success": true,
+      "gpu_verified": true,
+      "actual_backend": "GPUCompute",
+      "is_editor": false,
+      "batch_mode": false,
+      "exit_code": 0,
+      "process_seconds": 31.5713197,
+      "preparation_milliseconds": 11557.171100000001,
+      "cache_reused": false,
+      "transferred_files": 3,
+      "model_file": "model-fp32.sentis",
+      "cache_audit_milliseconds": 866.946,
+      "queries": [
+        {
+          "id": "query-cat-ja",
+          "milliseconds": 207.10080000000002,
+          "rank_count": 6,
+          "full_ranking_matches": true,
+          "maximum_score_error": 8.637552584289665E-08
+        },
+        {
+          "id": "query-space-en",
+          "milliseconds": 188.1773,
+          "rank_count": 6,
+          "full_ranking_matches": true,
+          "maximum_score_error": 9.186151772588858E-08
+        },
+        {
+          "id": "query-recipe-ja",
+          "milliseconds": 149.9322,
+          "rank_count": 6,
+          "full_ranking_matches": true,
+          "maximum_score_error": 8.582897670361689E-08
+        },
+        {
+          "id": "query-cat-en",
+          "milliseconds": 151.5362,
+          "rank_count": 6,
+          "full_ranking_matches": true,
+          "maximum_score_error": 3.1781969833666324E-08
+        }
+      ],
+      "blank_rejected": true,
+      "missing_model_rejected": true,
+      "worker_released": true,
+      "font_destroyed": true,
+      "console_count": 0,
+      "screenshot_count": 2,
+      "screenshot_dimensions": [
+        1280,
+        800
+      ],
+      "report_sha256": "9e9430da12009b812910fd79b055ca77c0aadaee663a1203dc2702e1e51c6cd2",
+      "process_receipt_sha256": "298d416e18608d0dc55836852a0113beada6e1ac76973b1fee277175aa4bb823"
+    },
+    {
+      "run": "warm",
+      "source": "28529f2e20a57dc865ef7268a92b0526c9a87c3e",
+      "success": true,
+      "gpu_verified": true,
+      "actual_backend": "GPUCompute",
+      "is_editor": false,
+      "batch_mode": false,
+      "exit_code": 0,
+      "process_seconds": 29.1866322,
+      "preparation_milliseconds": 8237.479500000001,
+      "cache_reused": true,
+      "transferred_files": 1,
+      "model_file": "model-fp32.sentis",
+      "cache_audit_milliseconds": 1030.1629,
+      "queries": [
+        {
+          "id": "query-cat-ja",
+          "milliseconds": 267.0735,
+          "rank_count": 6,
+          "full_ranking_matches": true,
+          "maximum_score_error": 8.637552584289665E-08
+        },
+        {
+          "id": "query-space-en",
+          "milliseconds": 313.28200000000004,
+          "rank_count": 6,
+          "full_ranking_matches": true,
+          "maximum_score_error": 9.186151772588858E-08
+        },
+        {
+          "id": "query-recipe-ja",
+          "milliseconds": 329.93280000000004,
+          "rank_count": 6,
+          "full_ranking_matches": true,
+          "maximum_score_error": 8.582897670361689E-08
+        },
+        {
+          "id": "query-cat-en",
+          "milliseconds": 263.91200000000003,
+          "rank_count": 6,
+          "full_ranking_matches": true,
+          "maximum_score_error": 3.1781969833666324E-08
+        }
+      ],
+      "blank_rejected": true,
+      "missing_model_rejected": true,
+      "worker_released": true,
+      "font_destroyed": true,
+      "console_count": 0,
+      "screenshot_count": 2,
+      "screenshot_dimensions": [
+        1280,
+        800
+      ],
+      "report_sha256": "14d4f4fd0b1ca3137d379e89a4b774a67aa97f4c1da97e624aef239f11d67cea",
+      "process_receipt_sha256": "1fa5bd84c02b7053743b6dbd2bfc6f24b37015615cb4d45fb7200333ec7484b7"
+    }
+  ],
+  "precision_runs": [
+    {
+      "run": "1",
+      "source": "725200ad03036f8ac9ab31f31007987c1f66bb06",
+      "success": true,
+      "gpu_verified": true,
+      "token_rows": 25,
+      "exit_code": 0,
+      "process_seconds": 563.8427804,
+      "editor_import_active_at_launch": true,
+      "performance_comparison_valid": false,
+      "conditions": [
+        {
+          "precision": "fp32",
+          "requested_backend": "CPU",
+          "actual_backend": "CPU",
+          "success": true,
+          "worker_released": true,
+          "minimum_cosine": 0.9999999999981735,
+          "case_count": 15,
+          "document_count": 6,
+          "query_count": 4,
+          "warm_inference_milliseconds": [
+            887.134,
+            776.7591,
+            649.851
+          ]
+        },
+        {
+          "precision": "fp32",
+          "requested_backend": "GPUCompute",
+          "actual_backend": "GPUCompute",
+          "success": true,
+          "worker_released": true,
+          "minimum_cosine": 0.999999999999512,
+          "case_count": 15,
+          "document_count": 6,
+          "query_count": 4,
+          "warm_inference_milliseconds": [
+            150.0892,
+            157.4957,
+            156.65890000000002
+          ]
+        },
+        {
+          "precision": "float16",
+          "requested_backend": "CPU",
+          "actual_backend": "CPU",
+          "success": true,
+          "worker_released": true,
+          "minimum_cosine": 0.9999999999982625,
+          "case_count": 15,
+          "document_count": 6,
+          "query_count": 4,
+          "warm_inference_milliseconds": [
+            899.5200000000001,
+            883.2822,
+            873.7700000000001
+          ]
+        },
+        {
+          "precision": "float16",
+          "requested_backend": "GPUCompute",
+          "actual_backend": "GPUCompute",
+          "success": true,
+          "worker_released": true,
+          "minimum_cosine": 0.9999999999994984,
+          "case_count": 15,
+          "document_count": 6,
+          "query_count": 4,
+          "warm_inference_milliseconds": [
+            17197.6606,
+            10306.769900000001,
+            7887.530500000001
+          ]
+        }
+      ]
+    },
+    {
+      "run": "2",
+      "source": "725200ad03036f8ac9ab31f31007987c1f66bb06",
+      "success": true,
+      "gpu_verified": true,
+      "token_rows": 25,
+      "exit_code": 0,
+      "process_seconds": 363.1585942,
+      "editor_import_active_at_launch": false,
+      "performance_comparison_valid": false,
+      "conditions": [
+        {
+          "precision": "fp32",
+          "requested_backend": "CPU",
+          "actual_backend": "CPU",
+          "success": true,
+          "worker_released": true,
+          "minimum_cosine": 0.9999999999981735,
+          "case_count": 15,
+          "document_count": 6,
+          "query_count": 4,
+          "warm_inference_milliseconds": [
+            846.3276000000001,
+            819.6370000000001,
+            841.9506
+          ]
+        },
+        {
+          "precision": "fp32",
+          "requested_backend": "GPUCompute",
+          "actual_backend": "GPUCompute",
+          "success": true,
+          "worker_released": true,
+          "minimum_cosine": 0.999999999999512,
+          "case_count": 15,
+          "document_count": 6,
+          "query_count": 4,
+          "warm_inference_milliseconds": [
+            107.47980000000001,
+            120.76280000000001,
+            100.7553
+          ]
+        },
+        {
+          "precision": "float16",
+          "requested_backend": "CPU",
+          "actual_backend": "CPU",
+          "success": true,
+          "worker_released": true,
+          "minimum_cosine": 0.9999999999982625,
+          "case_count": 15,
+          "document_count": 6,
+          "query_count": 4,
+          "warm_inference_milliseconds": [
+            1368.6425000000002,
+            1479.8982,
+            1635.5175000000002
+          ]
+        },
+        {
+          "precision": "float16",
+          "requested_backend": "GPUCompute",
+          "actual_backend": "GPUCompute",
+          "success": true,
+          "worker_released": true,
+          "minimum_cosine": 0.9999999999994984,
+          "case_count": 15,
+          "document_count": 6,
+          "query_count": 4,
+          "warm_inference_milliseconds": [
+            7353.8981,
+            8414.4348,
+            7388.9348
+          ]
+        }
+      ]
+    }
+  ],
+  "sample_numeric_reference_rechecked": true,
+  "sample_screenshot_hashes_rechecked": true,
+  "japanese_and_english_cold_screenshots_visually_checked": true,
+  "native_keyboard_mouse_verified": false,
+  "csharp_tests": {
+    "validation_assembly": {
+      "total": 151,
+      "passed": 149,
+      "failed": 2,
+      "skipped": 0,
+      "failure_scope": "Android build target prerequisites on Windows target"
+    },
+    "fp32_proxy": {
+      "intended_red": 1,
+      "green": 13,
+      "skipped": 0
+    },
+    "fp32_report_scope": {
+      "intended_red": 1,
+      "green": 22,
+      "skipped": 0
+    }
+  },
+  "unresolved": [
+    "Unmodified fresh Unity21 Test Framework compile",
+    "Fresh final candidate Git consumer",
+    "Float16/GPU warm inference 7-8 seconds in sequential precision harness",
+    "Editor SearchDatabase/allocation/domain reload investigation",
+    "Android physical runtime",
+    "macOS and iOS runtime",
+    "Final candidate/tag/release gates"
+  ]
+}

@@ -26,9 +26,13 @@ uv run --locked python -m embeddinggemma_tools prepare-vision --output ../artifa
 
 成功報告の`stage=vision_encoder_projector_only`、`unity_validated=false`、`end_to_end_validated=false`を保持する。失敗時は前回の成功receiptを除去し、生成済み部分artifactと失敗logを残す。実Actions結果は取得後に追記する。
 
+## 実重みActionsの結果
+
+[PR #37 CI 38310718250](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38310718250)は全8 job成功。実visionの3 profile / 6ケース、minimum cosine `0.9999997615814209`、elementwise条件・有限値 / shapeが合格した。参照 / artifact sourceは`e2a6dc01fbca8c9be1f3bbe875325ad338de0ca0`（PR head `b4222c564de415cbf09a39864a832ef8bd839d9b`のmerge ref）。統合後main `08f3dfc406738943a54e773d401dc502557f6f04`の[CI 38311759146](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38311759146)も成功。Python参照の成功であり、Sentis・GPU前処理・最終embedding・M3全体の合格ではない。
+
 ## 次の検証
 
-1. Actionsの実vision export照合。非対応演算・shape・memory不足は失敗として保存する。
+1. 上記の合格artifactを監査・再利用し、非対応演算・shape・memory不足は失敗として保存する。
 2. Sentis import / 保存・再読込、実CPU / GPUのfeature照合とFloat16重み検証。
 3. I3のGPU resize / RGB patch化。公式前処理の中間tensorを参照に使い、向き・色空間・alpha・奇数寸法・縦横比をTDDで確認する。
 4. imageの実feature数に一致するbackbone profile、入力 / GPU資源契約、最終768次元・テキスト回帰、検索sample / Player。

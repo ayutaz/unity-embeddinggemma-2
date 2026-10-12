@@ -2,6 +2,8 @@
 
 更新日: 2026-10-13。**音声end-to-end API / sampleはmainに未実装、実音声encoder / Unityの合格証拠は未取得**。共通backboneの一部はPR #34で実装済みだが、合成特徴量によるPython照合は音声encoderの受け入れを満たさない。依存・実行場所・公開条件は[全体計画](multimodal-tdd-plan.md)、既存仕様調査は[技術調査](technical-approach.md)。M4の実装完了だけで公開せず、3モダリティと全必須環境の検証を揃える。
 
+A1 / A3の固定profile音声前処理exportと参照・必須Actions gateをTDDで開始した。[係数・許容差の根拠と検証範囲](m4-audio-preprocessing-validation.md)。35 redから前処理契約が合格し、監査 / 回帰を含め110 passed / skip 0。Unity実GPUとaudio encoder以降は未検証。
+
 ## 範囲と参照固定
 
 PCM波形 → GPU上のSTFT / mel / log等の公式前処理 → 音声encoderのsoft token → 共通本体 → 768次元を実装する。最初はbatch 1と固定長profileを扱い、音声の最小 / 最大長、padding / mask、長さ超過時の扱いを契約にする。長音声のchunk化は参照のtoken配置・集約を確認してから追加し、独自のchunk平均を参照互換としない。

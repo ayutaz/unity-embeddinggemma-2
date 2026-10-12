@@ -125,3 +125,31 @@ jobs:
           compression-level: 0
           retention-days: 3
           if-no-files-found: warn
+      - name: Validate fixed audio preprocessing against official PCM references
+        run: uv run --locked python -m embeddinggemma_tools.audio --output ../artifacts/audio-preprocessing
+        env:
+          OMP_NUM_THREADS: '4'
+          MKL_NUM_THREADS: '4'
+      - name: Record audio preprocessing-only validation scope
+        if: always()
+        shell: bash
+        working-directory: .
+        run: |
+          {
+            echo '### PCM → log-magnitude mel (not encoder or Unity validation)'
+            if [ -f artifacts/audio-preprocessing/audio-validation.json ]; then
+              echo '```json'
+              cat artifacts/audio-preprocessing/audio-validation.json
+              echo '```'
+            else
+              echo 'Audio preprocessing validation did not complete. Audio encoder and Sentis remain unverified.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: audio-preprocessing-${{ github.sha }}
+          path: artifacts/audio-preprocessing/
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: warn

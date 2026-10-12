@@ -2,7 +2,7 @@
 
 確認日: 2026-10-13。GitHub APIでmain・全open PR・CI・Secrets / runner・tag / Releaseを再確認した。保護設定は2026-10-10の読み戻し記録。M2全体は未完了。実測のsource SHAと導入SHAを区別し、後続の文書更新で過去の実行条件を変更しない。
 
-**計画変更: 正式リリースはM3画像・M4音声と全必須検証の完了後。** [全体TDD計画](multimodal-tdd-plan.md) / [画像](m3-plan.md) / [音声](m4-plan.md)を追加した。M3・M4の実装とred / green、Unity実測は未着手。以下の履歴にあるtext-only先行リリースの順序は当時の計画として保持する。
+**計画変更: 正式リリースはM3画像・M4音声と全必須検証の完了後。** [全体TDD計画](multimodal-tdd-plan.md) / [画像](m3-plan.md) / [音声](m4-plan.md)に、各タスクのred / 最小実装 / green・実モデル受け入れを定義した。共通backboneの一部は実装済み。画像・音声end-to-end API / sampleはmainに未実装、実encoderとUnity新profileは未検証。以下の履歴にあるtext-only先行リリースの順序は当時の計画として保持する。
 
 **今回の実行範囲: 工程6の配布準備まで、正式リリースは行わない。** 共通backboneの特徴量入力・長さprofile・参照 / export照合・Actions接続をTDDで開始した。14件、追加8件、CLI / workflow 2件のredを観測し、最終の関連小さい契約43 passed / skip 0。[共通backboneの実装・証拠・未完了](multimodal-backbone-validation.md)。実encoder / 新profileのSentis / 全必須実機の合格はまだなく、M3 / M4完了とはしない。
 
@@ -10,7 +10,7 @@
 
 | 対象 | 現在確認した状態 |
 | --- | --- |
-| main | 計画開始時 `08c13671acd82dc2324b818eefe8e9aff3a5a54f`、PR #32まで統合済み。[統合後CI 38292044001](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38292044001)成功 |
+| main | `0ea29ac5dee26f201dd1d2ba30e78221acdbe6d3`、PR #34まで統合済み。[統合後CI 38306673212](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38306673212)成功 |
 | [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31) | draft / 未統合。ブランチ `feat/m2-player-sample-validation`、head `fde79e2ab11210e711db14acb6ccc8c758a09229`の[CI 38292153925](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38292153925)全8 job成功。実測sourceは下表のSHAを維持。競合なしでも未補修21f1 compile・新Git candidateは未達 |
 | main保護 | PR必須、strict Required CI / App 15368、管理者適用、人手承認数0、会話解決・linear history必須、force push / 削除禁止を読み戻し確認 |
 | Unity / Sentis | 作業ブランチの固定版6000.3.21f1 / 2.6.1。mainのEditor固定はPR #31未統合のため16f1。通常Windows精度Playerとsampleの実終了0を確認。[更新・実測と制約](m2-unity-21-upgrade-validation.md)。既存16f1実測は履歴として維持 |

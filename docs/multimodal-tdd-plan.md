@@ -4,10 +4,12 @@
 
 ## 現在の基準と作業順
 
-- 今回確認したmain: `0ea29ac5dee26f201dd1d2ba30e78221acdbe6d3`（PR #34統合）。[main CI 38306673212](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38306673212)成功。テキストUPM / 検索サンプルとWindows M1の証拠は維持する。
-- C2 / C3の一部として、project済み特徴量入力・1024長backboneのexport / 参照 / Actions接続は実装済み。[PR #34 CI 38306145598](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38306145598)で実text重みと合成特徴量の2ケース、minimum cosine 1.0を確認した。実画像 / 音声encoderとUnity新profileは未検証。[証拠と範囲](multimodal-backbone-validation.md)。
+- 今回確認したmain: `08f3dfc406738943a54e773d401dc502557f6f04`（PR #37まで統合）。[main CI 38311759146](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38311759146)成功。テキストUPM / 検索サンプルとWindows M1の証拠は維持する。
+- C2 / C3の一部として、project済み特徴量入力・1024長backboneのexport / 参照 / Actions接続は実装済み。[PR #34 CI 38306145598](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38306145598)で実text重みと合成特徴量の2ケース、minimum cosine 1.0を確認した。実encoder featureを使う共通本体とUnity新profileは未検証。[証拠と範囲](multimodal-backbone-validation.md)。
 - PR #31はdraft。6000.3.21f1でのWindows実測成功は検証consumerの補修条件付きであり、未補修compile、新candidateの空Git consumer導入、Float16/GPU性能の確認が残る。詳細は[M2基盤計画](m2-release-plan.md)と[実測記録](m2-unity-21-upgrade-validation.md)。
 - 開発対象は承認済みUnity 6000.3.21f1 / Sentis 2.6.1。mainのUnity版変更はPR #31未統合のため未反映。版を黙って変更しない。
+- M3の画像encoder / projector exportはPR #37でmainへ統合済み。[実モデルPython CI 38310718250](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38310718250)の3 profile / 6ケースでminimum cosine `0.9999997615814209`。`vision_encoder_projector_only`であり、Unity・GPU前処理・最終768次元の合格ではない。
+- M4の音声前処理exportは[PR #38](https://github.com/ayutaz/unity-embeddinggemma-2/pull/38)のhead `0424734291dc4cb7606b8bae53086f4911252e94`に実装済み・未統合。[CI 38313045325](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38313045325)全8 job成功、公式前処理対exportの6ケースで最大絶対誤差 `0.0038890838623046875`。`audio_preprocessing_only`であり、音声encoder / Unityは未検証。
 - M3画像 / M4音声のend-to-end API / sampleはmainに未実装。macOS / iOS / Android実機の合格証拠は未取得。Unity CI用Secrets / 専用runnerと端末の確保を並行して進め、CI成功と実機GPU成功を分ける。
 
 | 順序 | 範囲 | 次へ渡す条件 |
@@ -17,9 +19,22 @@
 | 3 | [M3画像対応](m3-plan.md) | GPU前処理 → 画像encoder → 共通本体 → 768次元。実モデル精度、テキスト→画像順位、sample操作・解放 |
 | 4 | [M4音声対応](m4-plan.md) | GPU音声前処理 → 音声encoder → 共通本体 → 768次元。実モデル精度、テキスト→音声順位、sample操作・解放 |
 | 5 | 全モダリティの統合・必須環境 | Windows / macOS Editor、iOS / Android PlayerでCPU / 実GPU、配布candidate・UI・時間・メモリ・正常終了 |
-| 6 | 最終配布準備 → 正式リリース | 1〜5の全合格後にversion / 文書 / license / candidate固定consumerを確認。公開段階で固定tag consumer再現、GitHub Releaseと公開内容を読み戻す |
+| 6 | 最終配布準備 | 1〜5の全合格後にversion / 文書 / license / candidate固定consumerを確認。正式リリースは全対応後の別工程 |
 
 端末・Mac・署名・CIライセンスの確保は1から並行する。M2の全OS検証や正式公開をM3・M4の着手条件にしない。共通基盤に必要な再現性を確保できたらM3へ進み、他OSの不足は最終公開の必須条件として残す。M4のprocessor調査・小さい参照fixture準備もM3中に進められる。日程は実測・環境確保後に見積もり、現時点で完了日を約束しない。
+
+### 次に着手する単位
+
+| 順序 | タスクと依存 | 最初に固定するテスト | 次へ渡す証拠 |
+| --- | --- | --- | --- |
+| 1 | C1 / C7: M2の残る導入・安定性 | 原因別の導入契約、解放 / 待機漏れ、誤集計を拒否するテスト | 未補修と補修条件を分けた固定Git consumer結果、Float16/GPU同条件比較。単なるtimeoutを再起動の条件にしない |
+| 2 | C3 / I2: 共通本体と画像exportのSentis受け入れ | 独立Pythonのshape・全feature・数値、実backendとfallbackの検査 | 固定artifact / hashでCPU・GPUCompute × FP32・Float16。既にPythonで合格したexportへ架空のredは付けず、非互換があれば原因の小さい再現テストから修正 |
+| 3 | I3 → I4 → I5 / I6: 画像のGPU前処理・API・sample / Player | resize / patch順 / 色空間の不一致、placeholder / mask不整合、検索順位 / 寿命の不正 | Texture / RenderTextureから最終768次元までの実GPU、text→image全順位、UI・解放・独立終了 |
+| 4 | A1〜A4 → A5 → A6 / A7: 音声の残るencoder・GPU前処理・API・sample / Player | PR #38の固定前処理を起点に、入力境界・encoder mask / token数・最終vector・検索 / 収録状態の不正 | 音声encoderの独立Python照合後、Sentis実CPU / GPU、text→audio全順位、再生 / 明示収録 / 停止。固定PCMとマイクを別判定 |
+| 5 | C4〜C6: 全モダリティ・全必須環境 | 混在次元 / 順位、cache破損、GPU fallback、途中結果 / 非zero終了の誤判定 | Windows / macOS Editor、iOS / Android実機の3モダリティ精度、UI、時間 / メモリ・解放・終了 |
+| 6 | 最終配布準備 | 配布監査の版不整合・モデル混入・native依存・不足結果の見逃し | 固定candidateの空consumer再現、API文書・全sample・CHANGELOG・license・結果一覧。公開tag / GitHub Releaseはこの工程では作らない |
+
+未実装の振る舞いは下記C / I / A表のredから開始する。実測で初めて見つかった不具合は、原因を分離した失敗テストを追加してから修正する。各工程は実装済み / 小さいテスト合格 / 実モデルPython合格 / Unity・実GPU合格 / 実機合格を別に更新する。
 
 ## 全作業に共通するTDD手順
 

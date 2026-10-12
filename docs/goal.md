@@ -63,8 +63,8 @@ M1の証拠は [M1計画](m1-plan.md)、[完了検証記録](m1-completion-valid
 | --- | --- | --- | --- |
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor の CPU / GPUCompute で全 15 ケースの token ID / mask が完全一致、fp32 cosine >= 0.999。`.sentis` 保存・再読み込み、fp16 量子化版 cosine >= 0.99、時間・メモリ測定 | Windows Editor受け入れ検証完了 |
 | M2 | テキストUPM・サンプル・検証基盤を安定化する | 標準consumer / 固定Git導入、API・検索・Player・解放、macOS / Windows / iOS / Androidの精度・速度 / メモリ。正式公開は最終段階へ移す | Windows実測あり。標準21f1再現・新candidate・性能・他環境は未完了 |
-| M3 | 画像用モデルに対応する | [画像TDD計画](m3-plan.md)。GPU前処理 / encoder / 共通本体、実モデル精度、テキスト→画像順位、sample・Player | 共通backbone一部実装済み。画像API / sample未実装、実encoder / Unity未検証 |
-| M4 | 音声用モデルに対応する | [音声TDD計画](m4-plan.md)。GPU前処理 / encoder / 共通本体、実モデル精度、テキスト→音声順位、sample・収録 / 再生・Player | 共通backbone一部実装済み。音声API / sample未実装、実encoder / Unity未検証 |
+| M3 | 画像用モデルに対応する | [画像TDD計画](m3-plan.md)。GPU前処理 / encoder / 共通本体、実モデル精度、テキスト→画像順位、sample・Player | 画像encoder / projector exportのPython実モデル照合は合格。画像API / sample未実装、Sentis / GPU前処理は未検証 |
+| M4 | 音声用モデルに対応する | [音声TDD計画](m4-plan.md)。GPU前処理 / encoder / 共通本体、実モデル精度、テキスト→音声順位、sample・収録 / 再生・Player | 音声前処理exportのPython照合はPR #38で合格・未統合。音声encoder / API / sample未実装、Unity未検証 |
 | 最終公開 | 全対応後の正式リリース | M2〜M4と全必須環境、混在検索、最終candidate / tag固定導入、文書・ライセンス・GitHub Release | 未着手 |
 
 M2の再現可能な開発基盤 → 共通特徴量 / 長さ拡張 → M3 → M4 → 全必須環境の統合検証 → 正式公開の順とする。環境確保と実行可能な他OS検証は並行し、M2の全OS完了やtext-only ReleaseをM3・M4の着手条件にしない。必須macOS / Windows / iOS / Androidは維持し、Windows M1合格で他環境を成功扱いにしない。

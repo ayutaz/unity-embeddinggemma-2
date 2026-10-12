@@ -38,6 +38,18 @@ def test_required_reference_job_validates_real_vision_and_preserves_partial_fail
     assert artifact[0]["with"]["retention-days"] == "3"
 
 
+def test_required_reference_job_validates_fixed_audio_preprocessing_and_retains_scoped_artifact():
+    steps = load("model-reference.yml")["jobs"]["reference"]["steps"]
+    run = [step for step in steps if "embeddinggemma_tools.audio" in step.get("run", "")]
+    assert len(run) == 1, "required audio preprocessing export gate is missing"
+    assert "uv run --locked python -m embeddinggemma_tools.audio" in run[0]["run"]
+    artifact = [step for step in steps if step.get("with", {}).get("name", "").startswith("audio-preprocessing-")]
+    assert len(artifact) == 1
+    assert artifact[0]["if"] == "always()"
+    assert artifact[0]["with"]["path"] == "artifacts/audio-preprocessing/"
+    assert artifact[0]["with"]["retention-days"] == "3"
+
+
 def test_required_ci_runs_on_every_pr_including_documentation():
     workflow = load("ci.yml")
     assert "pull_request" in workflow["on"]

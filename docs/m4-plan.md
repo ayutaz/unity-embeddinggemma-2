@@ -2,6 +2,8 @@
 
 更新日: 2026-10-13。**音声end-to-end API / sampleはmainに未実装、実音声encoder / Unityの合格証拠は未取得**。共通backboneの一部はPR #34で実装済みだが、合成特徴量によるPython照合は音声encoderの受け入れを満たさない。依存・実行場所・公開条件は[全体計画](multimodal-tdd-plan.md)、既存仕様調査は[技術調査](technical-approach.md)。M4の実装完了だけで公開せず、3モダリティと全必須環境の検証を揃える。
 
+A1 / A3の固定profile音声前処理exportと参照・必須Actions gateをTDDで開始した。[係数・許容差の根拠と検証範囲](m4-audio-preprocessing-validation.md)。35 redから前処理契約が合格し、監査 / 回帰を含め110 passed / skip 0。Unity実GPUとaudio encoder以降は未検証。
+
 ## 範囲と参照固定
 
 A1 / A3のPython前処理exportは[PR #38](https://github.com/ayutaz/unity-embeddinggemma-2/pull/38)でTDD実装済み・未統合。head `0424734291dc4cb7606b8bae53086f4911252e94`の[CI 38313045325](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38313045325)全8 job成功、公式前処理対保存graphの6ケースで最大絶対誤差 `0.0038890838623046875`。`audio_preprocessing_only` / `unity_validated=false` / `encoders_validated=false`であり、A3のSentis GPU合格ではない。次は入力契約、前処理graphのSentis実測、A4の音声encoder exportと独立参照照合を進め、A5〜A7へ接続する。

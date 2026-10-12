@@ -5,7 +5,7 @@
   "real_model_validated": false,
   "unity_validated": false,
   "end_to_end_validated": false,
-  "python": "3.13",
+  "python": "3.14",
   "omp_threads": 4,
   "mkl_threads": 4,
   "final_new_tests": 14,

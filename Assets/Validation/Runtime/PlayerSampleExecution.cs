@@ -34,7 +34,7 @@ namespace EmbeddingGemma.Validation
             var report = new JObject {
                 ["schema_version"] = 1, ["success"] = false, ["gpu_verified"] = false,
                 ["validation_mode"] = injected ? "injected_contract" : "real_model",
-                ["scope"] = "Imported TextSearch sample, Float16 weights, GPUCompute, fixed six documents and four queries. Programmatic sample API; no native keyboard or mouse validation.",
+                ["scope"] = "Imported TextSearch sample, FP32 weights, GPUCompute, fixed six documents and four queries. Programmatic sample API; no native keyboard or mouse validation.",
                 ["run_id"] = config.RunId, ["started_utc"] = DateTime.UtcNow.ToString("O"), ["phase"] = "starting",
                 ["is_editor"] = Application.isEditor, ["unity"] = Application.unityVersion,
                 ["os"] = SystemInfo.operatingSystem, ["gpu"] = SystemInfo.graphicsDeviceName,

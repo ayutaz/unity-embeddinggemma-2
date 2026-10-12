@@ -1,22 +1,23 @@
 # M2・M3・M4から正式リリースまでのTDD計画
 
-更新日: 2026-10-13。ユーザー指定により、**テキストだけの先行リリースは行わず、画像・音声対応と全必須検証を終えてから正式リリースする**。従来文書の「M2リリース後にM3・M4」はこの順序へ変更する。これは計画の更新であり、M3・M4の実装・red / green・実モデル検証はまだ実行していない。
+更新日: 2026-10-13。ユーザー指定により、**正式リリースはM2〜M4の全対応と全必須検証の完了後**とする。開発中のPR統合と正式リリースを分け、今回の計画更新では公開操作を行わない。すべての振る舞いの実装・修正・自動化を、以下のred → green → refactorで進める。
 
 ## 現在の基準と作業順
 
-- 計画開始時main: `08c13671acd82dc2324b818eefe8e9aff3a5a54f`（PR #32統合）。テキストUPM / 検索サンプルは実装済み、Windows M1の証拠は維持する。
+- 今回確認したmain: `0ea29ac5dee26f201dd1d2ba30e78221acdbe6d3`（PR #34統合）。[main CI 38306673212](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38306673212)成功。テキストUPM / 検索サンプルとWindows M1の証拠は維持する。
+- C2 / C3の一部として、project済み特徴量入力・1024長backboneのexport / 参照 / Actions接続は実装済み。[PR #34 CI 38306145598](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38306145598)で実text重みと合成特徴量の2ケース、minimum cosine 1.0を確認した。実画像 / 音声encoderとUnity新profileは未検証。[証拠と範囲](multimodal-backbone-validation.md)。
 - PR #31はdraft。6000.3.21f1でのWindows実測成功は検証consumerの補修条件付きであり、未補修compile、新candidateの空Git consumer導入、Float16/GPU性能の確認が残る。詳細は[M2基盤計画](m2-release-plan.md)と[実測記録](m2-unity-21-upgrade-validation.md)。
 - 開発対象は承認済みUnity 6000.3.21f1 / Sentis 2.6.1。mainのUnity版変更はPR #31未統合のため未反映。版を黙って変更しない。
-- M3画像 / M4音声は未実装。macOS / iOS / Android実機の合格証拠、Unity CI用Secrets / 専用runner、公開tag / Releaseも未取得。CI成功と実機GPU成功は分ける。
+- M3画像 / M4音声のend-to-end API / sampleはmainに未実装。macOS / iOS / Android実機の合格証拠は未取得。Unity CI用Secrets / 専用runnerと端末の確保を並行して進め、CI成功と実機GPU成功を分ける。
 
 | 順序 | 範囲 | 次へ渡す条件 |
 | --- | --- | --- |
 | 1 | M2基盤の再現・安定化 | 標準consumerのcompile、固定Git導入、テキスト回帰・終了・resource管理。既知の性能問題の原因と採用条件を記録 |
-| 2 | 共通マルチモーダル基盤 | 固定processor契約、特徴量差し込み、長さ別export、参照生成・artifact監査。テキスト128長の既存APIを回帰確認 |
+| 2 | 共通マルチモーダル基盤の残り | 実装済みbackboneをSentis import / CPU / GPUへ接続。固定processor契約、Unity入力profile監査、GPU特徴量受け渡し、artifact監査。テキスト128長の既存APIを回帰確認 |
 | 3 | [M3画像対応](m3-plan.md) | GPU前処理 → 画像encoder → 共通本体 → 768次元。実モデル精度、テキスト→画像順位、sample操作・解放 |
 | 4 | [M4音声対応](m4-plan.md) | GPU音声前処理 → 音声encoder → 共通本体 → 768次元。実モデル精度、テキスト→音声順位、sample操作・解放 |
 | 5 | 全モダリティの統合・必須環境 | Windows / macOS Editor、iOS / Android PlayerでCPU / 実GPU、配布candidate・UI・時間・メモリ・正常終了 |
-| 6 | 正式リリース | 1〜5の合格、version / 文書 / license、固定tag consumer再現、GitHub Releaseと公開内容の読み戻し |
+| 6 | 最終配布準備 → 正式リリース | 1〜5の全合格後にversion / 文書 / license / candidate固定consumerを確認。公開段階で固定tag consumer再現、GitHub Releaseと公開内容を読み戻す |
 
 端末・Mac・署名・CIライセンスの確保は1から並行する。M2の全OS検証や正式公開をM3・M4の着手条件にしない。共通基盤に必要な再現性を確保できたらM3へ進み、他OSの不足は最終公開の必須条件として残す。M4のprocessor調査・小さい参照fixture準備もM3中に進められる。日程は実測・環境確保後に見積もり、現時点で完了日を約束しない。
 
@@ -29,6 +30,15 @@
 5. 小さい契約テスト、実モデルPython、Unity実モデルCPU / GPU、Player / 実機を別段階で判定する。小さいモデルやmockのgreenで実モデル互換性を完了にしない。
 
 調査・仕様固定は期待値を決める前段、実測は実装の受け入れである。文書変更に架空のred / greenは付けない。実行可能な再現がないタスクは「未実行」とし、公開条件から除外しない。
+
+### 各PRで残す記録
+
+- 対象のC / I / AタスクID、入力契約、独立した参照fixtureとhash、先に固定した数値許容差。
+- red時のsource SHA・test名・意図した失敗理由・run URLまたは保存結果。既存コードの改修では、改修前に追加テストが失敗することを確認する。
+- green時のsource SHA、対象テスト・影響範囲の回帰件数、failed / skipped / 未実行、実モデルと実backendの結果。
+- refactor / 最適化後の回帰結果、必要な同条件の性能比較、残る依存。実装結果から期待値を上書きしない。
+
+環境設定・手動操作・文書作成には架空の単体テストを付けず、実際の読み戻しや受け入れ証拠を記録する。設定を生成・検査するプログラムを追加する場合は、その振る舞いもTDD対象とする。
 
 ## 共通基盤のTDD分割
 
@@ -74,15 +84,15 @@ GPUでは画像 / 音声前処理とencoderから共通本体までの中間CPU 
 
 版更新、配布manifest、CHANGELOG、ライセンス監査に自動化を追加する場合も、不一致 / 重み混入 / native依存 / 不正版を拒否するredから実装する。コードApache-2.0とモデル / fixtureの利用条件を分ける。モデルをGit / LFS / UPM / Releaseへ混入させない。
 
-すべての必須結果を最終candidateのsource / model hashへ対応付けてから、version更新PR → 全回帰 → 同commitのtag固定空consumer再現 → 正式GitHub Release → tag / version / Releaseの読み戻しへ進む。途中の開発PR統合は可能だが、M2のtext-only Releaseを先に作らない。手動公開はTDDのテスト結果ではなく、監査済み成果物の公開操作として記録する。
+すべての必須結果を最終candidateのsource / model hashへ対応付けてから、version更新PR → 全回帰 → 固定candidateの空consumer再現・配布監査までを準備する。正式公開はその後の段階とし、同commitのtag固定空consumer再現 → 正式GitHub Release → tag / version / Releaseの読み戻しを行う。準備中は公開tag / Releaseを作らない。途中の開発PR統合は可能だが、M2のtext-only Releaseを先に作らない。手動公開はTDDのテスト結果ではなく、監査済み成果物の公開操作として記録する。
 
 ## PRの分割
 
 1. M2の標準環境再現と必要な安定性修正（原因別、PR #31の未達条件を解消してから統合）。
-2. C2の参照 / artifact監査と、C3の共通本体 / profile拡張。大きければ別PR。
+2. PR #34のC2 / C3を起点に、Sentis新profile・Unity入力監査・GPU特徴量受け渡しと参照 / artifact監査の残り。大きければ別PR。
 3. M3の参照・encoder export → GPU前処理 → end-to-end API / sample。
 4. M4の参照・encoder export → GPU音声前処理 → end-to-end API / sample。
 5. C4〜C6の残りと全モダリティ・各OSの修正 / 検証。変更ごとに必要な回帰を実行。
-6. 全必須条件合格後の最終配布PRと正式公開。
+6. 全必須条件合格後の最終配布PR。正式公開は準備完了後の別段階。
 
 各実装PRへ対象契約、red / green証拠、実モデルの合格 / 失敗 / 未実行、run URL、残る依存を記載する。main直pushは禁止。モデル形式は検証済み`.pt2` → `.sentis`を起点とし、標準ONNX再exportは非互換または実測の利点がある場合だけ同じTDD・数値検証で追加する。

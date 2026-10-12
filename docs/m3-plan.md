@@ -1,6 +1,6 @@
 # M3: 画像対応のTDD計画
 
-更新日: 2026-10-13。**実装・検証は未着手**。依存・実行場所・公開条件は[全体計画](multimodal-tdd-plan.md)、既存仕様調査は[技術調査](technical-approach.md)。M3完了時には正式リリースせず、M4と全必須環境の検証へ進む。
+更新日: 2026-10-13。**画像end-to-end API / sampleはmainに未実装、実画像encoder / Unityの合格証拠は未取得**。共通backboneの一部はPR #34で実装済みだが、合成特徴量によるPython照合は画像encoderの受け入れを満たさない。依存・実行場所・公開条件は[全体計画](multimodal-tdd-plan.md)、既存仕様調査は[技術調査](technical-approach.md)。M3完了時には正式リリースせず、M4と全必須環境の検証へ進む。
 
 ## 範囲と参照固定
 

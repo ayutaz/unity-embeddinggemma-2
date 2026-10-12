@@ -9,7 +9,7 @@
 | main | `6f55a8574df1bc75d51fb5992fd70dc7d0512fb9`、PR #30まで統合済み。[統合後CI 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)の全8 job成功 |
 | [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31) | 唯一のopen PR、draft / 未統合。ブランチ `feat/m2-player-sample-validation`。実装checkpoint `cd6b8bf4ee6a616f6d8bff08084207e7f4edd4a5`の[CI 38040187805](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38040187805)は全8 job成功。最新文書headのcheckはPRで確認する |
 | main保護 | PR必須、strict Required CI / App 15368、管理者適用、人手承認数0、会話解決・linear history必須、force push / 削除禁止を読み戻し確認 |
-| Unity / Sentis | 固定版6000.3.16f1 / 2.6.1。6000.3.21f1の終了クラッシュ修正候補との比較は版変更の回答待ち、更新・修正確認は未実施 |
+| Unity / Sentis | 2026-10-12に21f1への更新を承認。作業ブランチの固定版は6000.3.21f1 / 2.6.1、native回帰は進行中。[更新とgate](m2-unity-21-upgrade-validation.md)。既存16f1実測は履歴として維持 |
 | 実行環境 | Repository Secrets 0 / self-hosted runner 0。macOS / iOS実行環境とAndroid接続端末の実測結果は未取得 |
 | 配布 | 開発版 `0.1.0-pre.1`。公開tag 0 / GitHub Release 0、正式リリース未実施 |
 
@@ -28,7 +28,7 @@
 
 2026-10-12の[ログ計測](m2-editor-profile-validation.md)で、完了reloadと初回asset import / compile・通信停止を分ける手段を追加した。TDD 16 failed → 16 passed、保存ログ2件へ適用済み。性能改善・クラッシュ修正・実機合格は追加していない。
 
-1. Windows sampleの終了クラッシュを修正確認する。対応PDBでPlatformAccessibilityManager破棄処理に停止箇所を限定した。公式UUM-146676を含む6000.3.21f1への変更が決まれば、モデル不要shutdown比較 → 同じ固定参照で日英GUI / 全query / 解放 → 独立2起動のexit 0 / cacheを確認する。公式修正との関連は未確定で、版変更の回答前に更新しない。
+1. Windows sampleの終了クラッシュを修正確認する。対応PDBでPlatformAccessibilityManager破棄処理に停止箇所を限定した。6000.3.21f1への更新が承認されたため、モデル不要shutdown比較 → 同じ固定参照で日英GUI / 全query / 解放 → 独立2起動のexit 0 / cacheを確認する。公式修正との関連は比較後に判断する。
 2. Editor検索DB / allocation / domain reloadを限定条件で調べる。検証済みfont寿命修正と測定fixture修正を維持し、実測なしの高速化率を宣言しない。
 3. Android端末とMac / iOS環境を確保し、既存APK・固定参照を使う実CPU / GPU・配置 / cache・停止と再起動を測定する。Secretsだけで実機環境が揃ったとは扱わない。
 4. 全gate合格後、candidate / version / CHANGELOG / license → tag固定consumer導入 → 正式Release。M3・M4はその後。

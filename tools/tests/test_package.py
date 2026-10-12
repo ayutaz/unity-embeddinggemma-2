@@ -83,7 +83,7 @@ def test_new_consumer_declares_only_package_and_test_dependencies(package, tmp_p
     assert manifest["dependencies"] == {
         PACKAGE_NAME: "file:" + package.resolve().as_posix(), "com.unity.test-framework": "1.6.0"}
     assert manifest["testables"] == [PACKAGE_NAME]
-    assert (project / "ProjectSettings/ProjectVersion.txt").read_text() == "m_EditorVersion: 6000.3.16f1\n"
+    assert (project / "ProjectSettings/ProjectVersion.txt").read_text() == "m_EditorVersion: 6000.3.21f1\n"
     assert (project / "Assets").is_dir()
     assert not (project / "Assets/EmbeddingGemma").exists()
 

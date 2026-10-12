@@ -19,7 +19,7 @@ namespace EmbeddingGemma.Validation
         public JObject sourceSha256;
         public void Validate()
         {
-            if (codeCommit == null || !Regex.IsMatch(codeCommit, "\\A[a-f0-9]{40}\\z") || unityVersion != "6000.3.16f1" || sentisVersion != "2.6.1" ||
+            if (codeCommit == null || !Regex.IsMatch(codeCommit, "\\A[a-f0-9]{40}\\z") || unityVersion != "6000.3.21f1" || sentisVersion != "2.6.1" ||
                 !new[] { "StandaloneWindows64", "StandaloneOSX", "Android", "iOS" }.Contains(target) ||
                 !new[] { "Mono2x", "IL2CPP" }.Contains(scriptingBackend) ||
                 !new[] { "Disabled", "Minimal", "Low", "Medium", "High" }.Contains(stripping) || sourceSha256 == null || !sourceSha256.HasValues ||

@@ -138,7 +138,7 @@ def create_consumer(project, package, *, git_revision=None, automation=False, sa
     for directory in ("Assets", "Packages", "ProjectSettings"):
         (project / directory).mkdir(parents=True, exist_ok=True)
     (project / "Packages/manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8", newline="\n")
-    (project / "ProjectSettings/ProjectVersion.txt").write_text("m_EditorVersion: 6000.3.16f1\n", encoding="utf-8", newline="\n")
+    (project / "ProjectSettings/ProjectVersion.txt").write_text("m_EditorVersion: 6000.3.21f1\n", encoding="utf-8", newline="\n")
     if automation:
         # Isolate validation from an ambient Accelerator endpoint in Editor preferences.
         # Ordinary consumer projects retain Unity's defaults.

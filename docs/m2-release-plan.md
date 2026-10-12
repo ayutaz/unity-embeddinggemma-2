@@ -17,6 +17,8 @@ PR #31の実装checkpoint `cd6b8bf`の[CI run 38040187805](https://github.com/ay
 
 ## 次に進める順序
 
+2026-10-12に6000.3.21f1への更新が承認され、[版指定のTDD・導入とnative gate](m2-unity-21-upgrade-validation.md)を開始した。以下の版変更回答待ちは2026-10-10時点の診断記録で、現在は実行比較へ進む。固定参照・旧16f1結果・他OS / 実機・正式Releaseのgateは維持する。
+
 2026-10-12に[Editor待ち時間の切り分け](m2-editor-profile-validation.md)を追加した。新しいログ計測CLIは16 red → 16 green。既存j sessionの完了reload 30件はmedian 3.866秒 / max 7.939秒で、初回refresh 65.071秒には3015件のimportとcompileが含まれる。過去の数分間停止や通信停止とは別の証拠であり、高速化完了とは扱わない。追加Unity実行なしで測定対象を限定した。Editor本体1件、Console Error 0件、ADB端末・Secrets・self-hosted runner各0件を再確認した。
 
 PR #30まで統合済み。[font寿命](m2-editor-font-lifetime-validation.md)はTDDと実UI・正常Editor終了で修正確認し、統合SHAの新Git導入も合格した。測定fixture自身の破棄済みfont参照は1 failed → 1 passed、全67 passed、invalid font参照0、未準備UI 3回の停止前後Console 0を確認した。[Windows sample Player](m2-player-sample-validation.md)はbatch preflightを含む全33契約と実buildが成功。非表示起動の黒画面に対し、許可後の通常表示では日英GUI・Float16 / GPUComputeの全4query・各6順位 / score・解放が成功したが、engine shutdownでアクセス違反が残る。[PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)はdraft。対応PDBからPlatformAccessibilityManagerの破棄処理に停止箇所を絞り、公式修正UUM-146676を含む6000.3.21f1への変更を確認待ち。独立2起動の合格・初回Editor検索DB Error・以前のFound leak診断は未解決。実機gateは端末待ちで、不要なAPK再buildを避ける。

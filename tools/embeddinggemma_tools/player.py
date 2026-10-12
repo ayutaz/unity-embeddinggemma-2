@@ -42,7 +42,7 @@ def stage_player_bundle(prepared, reference, audit_path, output):
         preparation = _object(prepared / "preparation.json")
         if (audit.get("success") is not True or audit.get("search_reference_staged") is not True
                 or audit.get("model_revision") != MODEL_REVISION or preparation.get("success") is not True
-                or preparation.get("unityVersion") != "6000.3.16f1"):
+                or preparation.get("unityVersion") not in ("6000.3.16f1", "6000.3.21f1")):
             raise ValueError("Successful pinned stage and Unity preparation receipts are required")
         for stage_name, prepared_name in (("source_commit", "sourceCommit"), ("search_source_commit", "searchSourceCommit")):
             commit = audit.get(stage_name)

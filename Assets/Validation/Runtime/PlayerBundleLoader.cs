@@ -65,7 +65,8 @@ namespace EmbeddingGemma.Validation
         {
             Require(receipt["success"]?.Type == JTokenType.Boolean && (bool)receipt["success"] &&
                 (string)receipt["model_revision"] == PlayerValidation.ModelRevision &&
-                (string)receipt["unity_preparation_version"] == "6000.3.16f1", "Successful pinned Unity bundle receipt is required.");
+                ((string)receipt["unity_preparation_version"] == "6000.3.16f1" ||
+                 (string)receipt["unity_preparation_version"] == "6000.3.21f1"), "Successful pinned Unity bundle receipt is required.");
             foreach (var name in new[] { "model_source", "search_source" })
                 Require(receipt[name]?.Type == JTokenType.String && Regex.IsMatch((string)receipt[name], "\\A[a-f0-9]{40}\\z"), "Invalid source commit: " + name);
             Require(receipt["model_origin_sha256"]?.Type == JTokenType.String && Regex.IsMatch((string)receipt["model_origin_sha256"], "\\A[a-f0-9]{64}\\z"), "Original model SHA-256 is missing.");

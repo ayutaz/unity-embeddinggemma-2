@@ -48,6 +48,19 @@ namespace EmbeddingGemma.Validation.Tests
             if (violation == "unity") receipt["unity_preparation_version"] = "6000.3.15f1";
             Save(); Assert.Throws<ArgumentException>(() => PlayerBundleLoader.Load(directory));
         }
+        [TestCase("6000.3.16f1")] [TestCase("6000.3.21f1")]
+        public void SupportedPreparationVersionKeepsItsOrigin(string version)
+        {
+            receipt["unity_preparation_version"] = version;
+            Save();
+            Assert.That((string)PlayerBundleLoader.Load(directory).Receipt["unity_preparation_version"], Is.EqualTo(version));
+        }
+        [TestCase("6000.3.22f1")] [TestCase(null)]
+        public void OtherPreparationVersionsAreRejected(string version)
+        {
+            receipt["unity_preparation_version"] = version;
+            Save(); Assert.Throws<ArgumentException>(() => PlayerBundleLoader.Load(directory));
+        }
         [TestCase("path")] [TestCase("duplicate")]
         public void ManifestCannotChooseFilesOutsideTheFixedBundle(string violation)
         {

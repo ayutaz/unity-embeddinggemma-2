@@ -22,11 +22,13 @@ uv run --locked python -m embeddinggemma_tools prepare-backbone --output ../arti
 - modalityの順序とfeature値を変更した2ケースを、独立Python参照と保存済みCore ATen programへ渡す。cosine >= 0.999999と有限値を要求し、失敗時は成功報告を保存しない。
 - `backbone-reference.json`に入力 / feature / vector、source SHA、model revision、config / processor / weights hash、library版を保存する。`backbone-validation.json`と各成果物hashを監査証拠にする。
 - `stage=projected_features_backbone_only`、`encoders_validated=false`、`unity_validated=false`を必ず記録する。CIの成功をM3 / M4やSentis GPU成功へ読み替えない。
-- 生成graph・重み・大きい参照はGit / LFSへ入れず、3日保持のActions artifactへ置く。実runの合格 / 失敗とURLは結果取得後に追記する。
+- 生成graph・重み・大きい参照はGit / LFSへ入れず、3日保持のActions artifactへ置く。
+
+[PR #34 CI 38306145598](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38306145598)のログで、`success=true`、2ケース、minimum cosine 1.0、`stage=projected_features_backbone_only`、`unity_validated=false`、`encoders_validated=false`を確認した。統合後main `0ea29ac5dee26f201dd1d2ba30e78221acdbe6d3`の[CI 38306673212](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38306673212)も成功。実text重みのPython export合格であり、Sentisや実encoderの合格ではない。
 
 ## 未完了
 
-1. 実重みの新1024長exportのActions結果、Sentis import / 実CPU / GPU数値照合。
+1. 新1024長exportのSentis import / 実CPU / GPU数値照合。実text重みのActions export照合は上記で合格。
 2. 公式processorの画像 / 音声前処理とtoken数契約の固定、encoderとprojectorの個別export / 実モデル照合。
 3. Unity側のGPU tensor受け渡しと入力profile監査、画像 / 音声API・sample・Player・全必須環境。
 4. 標準21f1 compile・新固定Git candidate導入、Float16/GPU性能・資源解放のM2残作業。

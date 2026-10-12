@@ -187,6 +187,12 @@ class _AudioAttentionExport(nn.Module):
         blocks = (sequence_length + attention.chunk_size - 1) // attention.chunk_size
         self.register_buffer("context_indices", torch.arange(blocks)[:, None] * attention.chunk_size
                              + torch.arange(attention.context_size)[None, :])
+        # This learned coefficient is constant for an inference export. Native
+        # Softplus and its Core ATen log1p(exp(x)) decomposition differ in FP32
+        # rounding; preserve the official value before graph decomposition.
+        # Keep the two query multiplications in their original order.
+        self.register_buffer("per_dimension_query_scale",
+                             torch.nn.functional.softplus(attention.per_dim_scale.detach()).clone())
 
     def context(self, hidden):
         attention = self.attention
@@ -199,7 +205,7 @@ class _AudioAttentionExport(nn.Module):
         batch, length, _ = hidden.shape
         shape = (batch, length, attention.num_heads, attention.head_dim)
         query = attention.q_proj(hidden).float().view(shape)
-        query = query * attention.q_scale * torch.nn.functional.softplus(attention.per_dim_scale)
+        query = query * attention.q_scale * self.per_dimension_query_scale
         query = attention._convert_to_block(query)
         key = self.context(attention.k_proj(hidden).float().view(shape) * attention.k_scale)
         value = self.context(attention.v_proj(hidden).float().view(shape))

@@ -60,6 +60,36 @@ def test_saved_audio_export_matches_changed_features_without_unfold_or_nonzero(t
     assert not any(term in target for term in ("unfold", "nonzero", "masked_scatter", "_assert_tensor_metadata") for target in targets)
 
 
+def test_saved_attention_preserves_native_learned_query_scale_without_softplus_decomposition(tmp_path):
+    audio, projection = audio_models()
+    attention = audio.layers[0].self_attn
+    with torch.no_grad():
+        attention.per_dim_scale.copy_(torch.tensor([-8, -2, -0.3, 0, 0.1, 1, 5, 8.49]))
+    native_scale = torch.nn.functional.softplus(attention.per_dim_scale).detach().clone()
+    wrapper = export._AudioAttentionExport(attention, 7).eval()
+    hidden = torch.randn(1, 7, audio.config.hidden_size)
+    positions = audio.rel_pos_enc(hidden)
+    blocked = factory()(audio, projection, mask()).blocked_mask
+    destination = tmp_path / "attention.pt2"
+    export._save_program(wrapper, (hidden, positions, blocked), destination)
+    saved = torch.export.load(destination)
+    # Per-dimension scale is a fixed learned inference coefficient. Replacing
+    # native Softplus with log1p(exp(x)) changes its FP32 rounding; compute it
+    # once with the official operation and retain that tensor in the graph.
+    targets = {str(node.target) for node in saved.graph.nodes if node.op == "call_function"}
+    assert "aten.exp.default" not in targets and "aten.log1p.default" not in targets, (
+        "Fixed learned query scale must not be recomputed with decomposed Softplus"
+    )
+    coefficients = [*saved.state_dict.values(), *saved.constants.values()]
+    assert any(value.shape == native_scale.shape and torch.equal(value, native_scale)
+               for value in coefficients if isinstance(value, torch.Tensor)), (
+        "Saved attention must retain the exact native learned scale"
+    )
+    changed = hidden * 0.6
+    expected = attention(changed, positions, blocked)[0]
+    torch.testing.assert_close(saved.module()(changed, positions, blocked), expected, rtol=1e-5, atol=1e-6)
+
+
 def test_loads_only_audio_and_projector_as_float32(tmp_path):
     audio, projection = audio_models()
     (tmp_path / "config.json").write_text(json.dumps({"audio_config": audio.config.to_dict(),

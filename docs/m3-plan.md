@@ -1,8 +1,17 @@
 # M3: 画像対応のTDD計画
 
-更新日: 2026-10-13。**画像end-to-end API / sampleはmainに未実装、Sentis実画像encoder / GPU前処理の合格証拠は未取得**。画像encoder / projectorのPython実モデル照合はPR #37で合格した。共通backboneの一部はPR #34で実装済みだが、合成特徴量によるPython照合は画像end-to-endの受け入れを満たさない。依存・実行場所・公開条件は[全体計画](multimodal-tdd-plan.md)、既存仕様調査は[技術調査](technical-approach.md)。M3完了時には正式リリースせず、M4と全必須環境の検証へ進む。
+更新日: 2026-10-13。**画像end-to-end API / sampleはmainに未実装、GPU前処理・最終768次元は未検証**。画像encoder / projectorのPython実モデル照合はPR #37で合格した。Sentis encoderはPR #41のWindows実測でFloat16のCPU / GPU全6条件が合格、FP32全6条件は要素単位の許容差超過で不合格。共通backboneの一部はPR #34で実装済みだが、合成特徴量によるPython照合は画像end-to-endの受け入れを満たさない。依存・実行場所・公開条件は[全体計画](multimodal-tdd-plan.md)、既存仕様調査は[技術調査](technical-approach.md)。M3完了時には正式リリースせず、M4と全必須環境の検証へ進む。
 
-I1 / I2の固定profile encoder / projector exportと公式processor参照・必須Actions gateをTDDで実装した。[実装と検証範囲](m3-vision-export-validation.md)。小さい回帰66 passed / skip 0。[PR #37 CI 38310718250](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38310718250)の3 profile / 6ケースでminimum cosine `0.9999997615814209`、elementwise rtol `1e-4` / atol `1e-5`を満たした。出力は512次元soft tokenで、`unity_validated=false` / `end_to_end_validated=false`。次はSentis import・保存 / 再読込・CPU / GPU・Float16、続いてI3のGPU前処理とI4〜I6へ進む。
+I1 / I2の固定profile encoder / projector exportと公式processor参照・必須Actions gateをTDDで実装した。[実装と検証範囲](m3-vision-export-validation.md)。小さい回帰66 passed / skip 0。[PR #37 CI 38310718250](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38310718250)の3 profile / 6ケースでminimum cosine `0.9999997615814209`、elementwise rtol `1e-4` / atol `1e-5`を満たした。出力は512次元soft tokenで、このPython報告の `unity_validated=false` / `end_to_end_validated=false`は維持する。後続のSentis実測は以下に分け、残るFP32照合、I3のGPU前処理とI4〜I6へ進む。
+
+### 直近のTDD順序
+
+1. I2のFP32差を演算・段階別に特定し、独立参照との不一致を小さいテストでredにしてから修正する。現在の `rtol=1e-4` / `atol=1e-5`を緩めない。3 profile / 全12条件の実モデル再照合と保存 / 再読込を確認する。
+2. C3の実画像feature入力・長さprofileをSentis CPU / GPUへ接続し、placeholder / mask / token数の不一致をred → greenにする。
+3. I3のGPU前処理を向き・色空間・補間・patch順の固定fixtureからTDDで実装し、Texture / RenderTextureの両方を実GPUで照合する。
+4. I4〜I6のAPI → 横断検索sample → Playerを表の契約順でTDD実装する。最終768次元と全順位が合格するまでM3は未完了とする。
+
+[最新の12条件](results/m3-vision-windows-plan-snapshot-20261013.json)はencoderのみの実測。全GPU条件で実出力backendはGPUCompute、CPU計算 / 入力要求・readback flushの監査は0件だが、前処理と共通本体のGPU受け渡しは別に検証する。CLIの観測timeoutと保存報告の完了を区別する。
 
 ## 範囲と参照固定
 

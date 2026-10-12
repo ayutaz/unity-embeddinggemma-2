@@ -2,7 +2,7 @@
 
 確認日: 2026-10-13。今回GitHub APIでmain・全open PR・CIを再確認した。Secrets / runner・tag / Releaseは同日の先行確認、保護設定は2026-10-10の読み戻し記録。M2全体は未完了。実測のsource SHAと導入SHAを区別し、後続の文書更新で過去の実行条件を変更しない。
 
-**計画変更: 正式リリースはM3画像・M4音声と全必須検証の完了後。** [全体TDD計画](multimodal-tdd-plan.md) / [画像](m3-plan.md) / [音声](m4-plan.md)に、各タスクのred / 最小実装 / green・実モデル受け入れを定義した。共通backboneの一部と画像encoder exportは実装済み。画像encoderのPython実モデル照合は合格したが、画像・音声end-to-end API / sampleはmainに未実装、Sentis実encoderとUnity新profileは未検証。以下の履歴にあるtext-only先行リリースの順序は当時の計画として保持する。
+**計画変更: 正式リリースはM3画像・M4音声と全必須検証の完了後。** [全体TDD計画](multimodal-tdd-plan.md) / [画像](m3-plan.md) / [音声](m4-plan.md)に、各タスクのred / 最小実装 / green・実モデル受け入れを定義した。共通backboneの一部と画像encoder exportは実装済み。画像encoderのPython照合は合格、SentisではFloat16全6条件が合格・FP32全6条件が要素単位の許容差超過で不合格。画像・音声end-to-end API / sampleはmainに未実装、GPU前処理と共通本体のUnity新profileは未検証。以下の履歴にあるtext-only先行リリースの順序は当時の計画として保持する。
 
 **今回の実行範囲: 工程6の配布準備まで、正式リリースは行わない。** 共通backboneの特徴量入力・長さprofile・参照 / export照合・Actions接続をTDDで開始した。14件、追加8件、CLI / workflow 2件のredを観測し、最終の関連小さい契約43 passed / skip 0。[共通backboneの実装・証拠・未完了](multimodal-backbone-validation.md)。実encoder / 新profileのSentis / 全必須実機の合格はまだなく、M3 / M4完了とはしない。
 
@@ -10,9 +10,11 @@
 
 | 対象 | 現在確認した状態 |
 | --- | --- |
-| main | `b0871ab778a1a1301c3deb04917ebdf4785e9dbe`、PR #38まで統合済み。統合後main CIは実行中 |
+| main | `c5402fdc3b6776903a49d2843404c4aacb7bd2f4`、PR #39まで統合済み。[main CI 38316541487](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38316541487)成功 |
 | [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31) | draft / 未統合。ブランチ `feat/m2-player-sample-validation`、今回確認したhead `a34bf9057694e141e939ac41bea3e2b713b0a15b`。実測sourceは下表のSHAを維持。過去の補修条件付き実測を新candidate全体の合格にしない |
 | [PR #38](https://github.com/ayutaz/unity-embeddinggemma-2/pull/38) | 音声前処理export、統合済み。head `0424734291dc4cb7606b8bae53086f4911252e94`の[CI 38313045325](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38313045325)全8 job成功。公式前処理対export 6ケース成功、音声encoder / Unityは未検証 |
+| [PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40) | 音声encoder export、未統合。head `bb752c2e4d04cc1fdd65f65241bd46dd108a9f26`の[CI 38318322669](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38318322669)は実モデル数値不合格。eager対公式差0、保存graph対eager最大差0.00020956993103027344。保存 / 分解の原因別TDD修正が必要 |
+| [PR #41](https://github.com/ayutaz/unity-embeddinggemma-2/pull/41) | 画像Sentis fixture、draft / 未統合。確認head `66a05063bf011867e36461c4d423212150a7af6e`。Float16 CPU / 実GPU全6条件合格、FP32全6条件は要素単位許容差不合格。[実行範囲](results/m3-vision-windows-plan-snapshot-20261013.json)。CI成功とは別判定 |
 | main保護 | PR必須、strict Required CI / App 15368、管理者適用、人手承認数0、会話解決・linear history必須、force push / 削除禁止を読み戻し確認 |
 | Unity / Sentis | 作業ブランチの固定版6000.3.21f1 / 2.6.1。mainのEditor固定はPR #31未統合のため16f1。通常Windows精度Playerとsampleの実終了0を確認。[更新・実測と制約](m2-unity-21-upgrade-validation.md)。既存16f1実測は履歴として維持 |
 | 実行環境 | Repository Secrets 0 / self-hosted runner 0。macOS / iOS実行環境とAndroid接続端末の実測結果は未取得 |
@@ -39,7 +41,7 @@
 4. 共通feature入力・長さprofile・参照 / artifact監査をTDDで拡張し、M3のGPU画像前処理・encoder・共通本体・検索sampleを実装 / 実モデル照合する。
 5. M4のGPU音声前処理・encoder・共通本体・検索 / 再生 / 明示収録をTDDで実装 / 実モデル照合する。テキスト・画像回帰を維持する。
 6. Android target / 21f1 toolchain、Android実機・Mac / iOSを含む全必須環境で3モダリティのCPU / GPU・配置 / cache・sample・測定 / 終了を検証する。環境確保とActionsライセンス設定は1から並行し、Secretsだけで実機GPUが揃ったと扱わない。
-7. M2〜M4と全必須条件の合格後、candidate / version / CHANGELOG / license → tag固定consumer導入 → 正式Release。text-only先行公開は行わない。`.pt2` → `.sentis`を継続し、標準ONNX再exportは非互換または実測の利点がある場合の候補とする。
+7. M2〜M4と全必須条件の合格後、candidate / version / CHANGELOG / licenseと固定SHAの空consumer導入を確認して配布準備を完了する。公開tag / 正式Releaseは全対応後の別工程。text-only先行公開は行わない。`.pt2` → `.sentis`を継続し、標準ONNX再exportは非互換または実測の利点がある場合の候補とする。
 
 詳細な成果物と合格条件は[全体TDD計画](multimodal-tdd-plan.md)と[M2基盤計画](m2-release-plan.md)に定義する。PR #31はdraftを維持し、残るgateをCI成功だけで埋めない。
 

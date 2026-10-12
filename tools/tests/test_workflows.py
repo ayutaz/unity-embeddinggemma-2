@@ -14,6 +14,18 @@ def load(name):
                      Loader=yaml.BaseLoader)
 
 
+def test_required_reference_job_validates_long_multimodal_backbone_and_retains_separate_evidence():
+    steps = load("model-reference.yml")["jobs"]["reference"]["steps"]
+    run = [step for step in steps if "prepare-backbone" in step.get("run", "")]
+    assert len(run) == 1, "required real-weight backbone validation is missing"
+    assert "uv run --locked python -m embeddinggemma_tools prepare-backbone" in run[0]["run"]
+    artifact = [step for step in steps if step.get("with", {}).get("name", "").startswith("multimodal-backbone-")]
+    assert len(artifact) == 1
+    assert artifact[0]["if"] == "always()"
+    assert artifact[0]["with"]["path"] == "artifacts/multimodal-backbone/"
+    assert artifact[0]["with"]["retention-days"] == "3"
+
+
 def test_required_ci_runs_on_every_pr_including_documentation():
     workflow = load("ci.yml")
     assert "pull_request" in workflow["on"]

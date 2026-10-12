@@ -30,4 +30,15 @@ Sentis 2.6.1の`m_LayerCPUFallback`は、CPUに置く定数のtensor indexも含
 
 同じgraphのimport / 保存をCPU / GPU条件ごとに繰り返さず、profileごとにimportを1回、profile / precisionごとに保存を1回とし、各backendは同じ保存済みモデルを独立にreloadする。fixture開始時にcacheを消去し、前回runの準備結果を再利用しない。準備重複の1 red、別precision / profileとfixture resetを含め、監査・cache全6 passed / skip 0。これらのfakeは監査と準備回数の契約のみで、GPU性能や実モデル成功の代用にしない。
 
-修正後の同じ12条件を実行中。初回失敗を上書きせず、修正後の実backendと数値・時間を別結果として回収する。FP32 elementwise失敗の原因調査、GPU前処理と共通本体への接続は引き続き必要である。
+## 修正後の完了結果
+
+[修正後の12条件・実backend・保存model hash](results/m3-vision-windows-revised-20261013.json)。同じEditorで2026-10-12 22:38:12〜22:50:18 UTCに全12条件が完了した。fixture SHA-256は `b50531a1844b238cb7ff3a95fd3099f6f2ff1e83a7b845c192927639cc6d1389`。CLI観測の`UNITY_EDITOR_UNRESPONSIVE` / `SafeToRetry=false`は保持し、再実行せず同一operationの保存報告から完了を確認した。
+
+| 条件 | 結果と限界 |
+| --- | --- |
+| Float16 / CPU・GPU × 3 profile | 6条件合格。cosine最小 `0.9999999990336575`。GPUのactual worker / outputはGPUCompute、CPU計算 / 入力要求・中間readback flushは全GPU条件で0件。重み保存形式の精度であり、GPU前処理・最終embedding・他環境の成功ではない |
+| FP32 / CPU・GPU × 3 profile | 6条件不合格。cosine最小 `0.9999999989783473`は条件を満たすが、要素単位許容差比は4.18〜8.99で超過。許容差を緩めず、段階・演算別の小さい再現redから原因を調査する |
+
+今回の全体 `success=false`は維持する。初回のGPU6条件は数値推論前の監査失敗、修正後は実GPU数値を取得した結果であり、両者を区別する。初回約22分45秒と今回約12分5秒は、GPU数値推論の有無が異なるため同じ仕事量の高速化比較には使わない。import / 保存を各profile / precisionで再利用する契約は6件の小さいテストで別に確認している。
+
+実行中にはEditor working set約27.6GBを観測したが、測定instrumentによる正確なpeak・解放後の収支は未取得。モデル・asset・worker・tensorの所有権と反復切替 / 解放をC4 / C7で検証する。FP32差、GPU前処理、共通本体への接続は引き続き必要で、PRをdraftのまま保持する。

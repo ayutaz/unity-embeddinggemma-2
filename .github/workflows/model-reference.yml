@@ -69,6 +69,34 @@ jobs:
           compression-level: 0
           retention-days: 3
           if-no-files-found: warn
+      - name: Validate official image processor and real vision encoder / projector exports
+        run: uv run --locked python -m embeddinggemma_tools prepare-vision --output ../artifacts/vision-encoder
+        env:
+          OMP_NUM_THREADS: '4'
+          MKL_NUM_THREADS: '4'
+      - name: Record vision-only validation scope
+        if: always()
+        shell: bash
+        working-directory: .
+        run: |
+          {
+            echo '### Official image processor → vision / projector (not Unity or final embedding validation)'
+            if [ -f artifacts/vision-encoder/vision-validation.json ]; then
+              echo '```json'
+              cat artifacts/vision-encoder/vision-validation.json
+              echo '```'
+            else
+              echo 'Vision export validation did not complete. Sentis and end-to-end image embeddings remain unverified.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: vision-encoder-${{ github.sha }}
+          path: artifacts/vision-encoder/
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: warn
       - name: Validate real-weight multimodal backbone with long projected-feature inputs
         run: uv run --locked python -m embeddinggemma_tools prepare-backbone --output ../artifacts/multimodal-backbone
         env:

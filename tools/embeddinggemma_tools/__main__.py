@@ -8,7 +8,7 @@ from pathlib import Path
 
 from huggingface_hub import snapshot_download
 
-from .prepare import MODEL_ID, MODEL_REVISION, prepare, prepare_multimodal_backbone
+from .prepare import MODEL_ID, MODEL_REVISION, prepare, prepare_multimodal_backbone, prepare_vision
 from .search import SEARCH_CASES
 
 
@@ -43,6 +43,10 @@ def main(argv=None):
     backbone.add_argument("--revision", type=revision, default=MODEL_REVISION)
     backbone.add_argument("--image-feature-count", type=int, default=280)
     backbone.add_argument("--audio-feature-count", type=int, default=280)
+    vision = commands.add_parser("prepare-vision", help="Official image processor / vision export gate; not Unity proof")
+    vision.add_argument("--output", type=Path, required=True)
+    vision.add_argument("--snapshot", type=Path)
+    vision.add_argument("--revision", type=revision, default=MODEL_REVISION)
     args = parser.parse_args(argv)
     snapshot = args.snapshot
     if snapshot is None:
@@ -50,9 +54,15 @@ def main(argv=None):
             "config.json", "model.safetensors", "tokenizer.json", "tokenizer_config.json",
             "config_sentence_transformers.json", "modules.json", "1_Pooling/config.json",
         ]
-        if args.command == "prepare-backbone":
+        if args.command in ("prepare-backbone", "prepare-vision"):
             patterns.append("processor_config.json")
         snapshot = Path(snapshot_download(MODEL_ID, revision=args.revision, allow_patterns=patterns))
+    if args.command == "prepare-vision":
+        summary = prepare_vision(snapshot, args.output, revision=args.revision,
+                                 source_commit=os.environ.get("GITHUB_SHA", "local"))
+        print(json.dumps({name: summary[name] for name in (
+            "success", "stage", "profile_count", "case_count", "minimum_cosine", "unity_validated", "end_to_end_validated")}))
+        return
     if args.command == "prepare-backbone":
         summary = prepare_multimodal_backbone(snapshot, args.output, args.sequence_length,
                     image_feature_count=args.image_feature_count, audio_feature_count=args.audio_feature_count,

@@ -10,9 +10,9 @@
 
 | 対象 | 現在確認した状態 |
 | --- | --- |
-| main | `08f3dfc406738943a54e773d401dc502557f6f04`、PR #37まで統合済み。[統合後CI 38311759146](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38311759146)成功 |
+| main | `b0871ab778a1a1301c3deb04917ebdf4785e9dbe`、PR #38まで統合済み。統合後main CIは実行中 |
 | [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31) | draft / 未統合。ブランチ `feat/m2-player-sample-validation`、今回確認したhead `a34bf9057694e141e939ac41bea3e2b713b0a15b`。実測sourceは下表のSHAを維持。過去の補修条件付き実測を新candidate全体の合格にしない |
-| [PR #38](https://github.com/ayutaz/unity-embeddinggemma-2/pull/38) | 音声前処理export、未統合。head `0424734291dc4cb7606b8bae53086f4911252e94`の[CI 38313045325](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38313045325)全8 job成功。公式前処理対export 6ケース成功、音声encoder / Unityは未検証 |
+| [PR #38](https://github.com/ayutaz/unity-embeddinggemma-2/pull/38) | 音声前処理export、統合済み。head `0424734291dc4cb7606b8bae53086f4911252e94`の[CI 38313045325](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38313045325)全8 job成功。公式前処理対export 6ケース成功、音声encoder / Unityは未検証 |
 | main保護 | PR必須、strict Required CI / App 15368、管理者適用、人手承認数0、会話解決・linear history必須、force push / 削除禁止を読み戻し確認 |
 | Unity / Sentis | 作業ブランチの固定版6000.3.21f1 / 2.6.1。mainのEditor固定はPR #31未統合のため16f1。通常Windows精度Playerとsampleの実終了0を確認。[更新・実測と制約](m2-unity-21-upgrade-validation.md)。既存16f1実測は履歴として維持 |
 | 実行環境 | Repository Secrets 0 / self-hosted runner 0。macOS / iOS実行環境とAndroid接続端末の実測結果は未取得 |

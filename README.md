@@ -13,7 +13,9 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 > 全PRでCIとパッケージ監査を実行し、mainへの変更はPRとRequired CIを必須にしています。確認基準main `b1a8c67`（PR #25後）の[CI run 38023036522](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38023036522)は全8 job成功です。
 > 新しい空のWindows consumerへPR #24統合SHA `01f3d8682a97053bf4583e14fd8fbed14e2c8cae`をGit URLで導入し、SHA解決・source照合・compile、UPM 38 / sample EditMode 64 / PlayMode 2、実モデルFP32 / Float16 × CPU / GPUComputeの4条件と全順位・score、日英画面入力・空入力・解放を確認しました。[導入と実測](docs/m2-latest-git-consumer-validation.md)を参照してください。
 > 選択モデルだけを保持するsample cacheはfile URL初回展開・warm完全hash・実GPU検索を確認済みです。Windows検証専用PlayerもIL2CPP / Release / High strippingのbuildと実モデル4条件・独立2起動を確認しました。[sample cache](docs/m2-sample-cache-validation.md) / [Playerの条件と結果](docs/m2-player-il2cpp-validation.md)。
-> macOS Editor / iOS / Android実機、sample Player画面、allocation / fontの安定性、正式候補とtag固定導入、正式Releaseは残っています。[現在の状態](docs/status.md) / [4段階の実行計画](docs/m2-release-plan.md)を参照してください。M3・M4はこの作業の後に進めます。
+> この段落は2026-10-10の到達点です。後続のWindows Player実測・環境補修条件・残タスクは[現在の状態](docs/status.md)を参照してください。
+
+> **2026-10-13: 正式リリースは画像・音声を含む全対応と必須検証の完了後に行います。** M2の基盤安定化 → 共通マルチモーダル基盤 → M3画像 → M4音声 → 全対象環境の検証 → 正式公開の順です。全実装をTDDで進めます。[全体計画](docs/multimodal-tdd-plan.md) / [M3のRed・Greenと実モデル条件](docs/m3-plan.md) / [M4のRed・Greenと実モデル条件](docs/m4-plan.md)。M3・M4の実装・検証は未着手です。
 
 ## ゴール
 
@@ -28,9 +30,10 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 | # | 内容 | 状態 |
 | --- | --- | --- |
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor受け入れ検証完了（保存・量子化・測定を含む） |
-| M2 | テキスト版の UPM パッケージとサンプルをリリースする | Windows固定Git導入・実モデル4条件・UIと検証専用IL2CPP Playerを確認。他環境の実測、残る安定性、候補 / tag導入・正式Releaseは未完了 |
-| M3 | 画像用モデルに対応する | 未着手 |
-| M4 | 音声用モデルに対応する | 未着手 |
+| M2 | テキストUPM・サンプル・検証基盤を安定化する | Windows実測あり。標準環境再現・新candidate・性能・他環境は未完了 |
+| M3 | GPU画像前処理・encoder・共通本体・画像検索 | TDD計画作成済み、実装・検証未着手 |
+| M4 | GPU音声前処理・encoder・共通本体・音声検索 | TDD計画作成済み、実装・検証未着手 |
+| 最終公開 | 全対応と必須環境の検証後に正式リリース | 未着手 |
 
 ## 動作環境
 
@@ -110,6 +113,9 @@ Git URLのcommit固定による導入指定とAPI使用例は [パッケージ�
 | --- | --- |
 | [docs/status.md](docs/status.md) | 最新のmain / PR / CI、検証済みの範囲、残タスク |
 | [docs/goal.md](docs/goal.md) | ゴール、達成の基準、マイルストーン、対象外のこと |
+| [docs/multimodal-tdd-plan.md](docs/multimodal-tdd-plan.md) | M2〜M4と全必須検証から正式公開までのTDD・依存・PR分割 |
+| [docs/m3-plan.md](docs/m3-plan.md) | 画像の参照固定、GPU前処理・encoder・検索のRed / Greenと実測条件 |
+| [docs/m4-plan.md](docs/m4-plan.md) | 音声の参照固定、GPU前処理・encoder・検索 / 収録のRed / Greenと実測条件 |
 | [docs/m1-plan.md](docs/m1-plan.md) | M1 の詳細計画、TDD の進め方、検証状況 |
 | [docs/m1-completion-validation.md](docs/m1-completion-validation.md) | M1完了の数値、ソース対応、CI、失敗履歴と測定の限界 |
 | [docs/m1-validation.md](docs/m1-validation.md) | 基盤導入当時のTDD・CI・失敗履歴 |

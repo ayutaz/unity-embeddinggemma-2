@@ -1,8 +1,8 @@
 # M2 詳細計画と残作業
 
-2026-10-10からの安定化・Git URL導入・他環境実測・正式リリースは、[M2リリースまでの詳細実行計画](m2-release-plan.md)で作業・依存・成果物・合格条件・PR分割を定義する。以下の実測履歴は当時のSHAを維持する。
+2026-10-13の計画変更: **正式リリースはM3画像・M4音声と全必須検証の完了後**。[全体TDD計画](multimodal-tdd-plan.md) / [M3](m3-plan.md) / [M4](m4-plan.md)を現在の順序とする。M2の安定化・Git URL導入・他環境実測は[M2基盤詳細計画](m2-release-plan.md)で扱う。以下の順序・実測はPR #12時点の履歴で、当時のSHAを維持する。text-only公開をM3 / M4の着手条件にしない。
 
-最新のWindows固定Git導入・実モデル4条件・sample UIと、検証専用Windows IL2CPP Playerは確認済み。[Git consumer結果](m2-latest-git-consumer-validation.md) / [Player結果](m2-player-il2cpp-validation.md)を参照。以下の基準・状態表はPR #12時点の履歴であり、現在の未達項目は他環境、残る安定性、正式候補 / tag導入、正式Releaseである。配布README / CHANGELOGもこの区別へ更新し、未検証の環境を対応済みにしない。
+Windowsの既存固定Git導入・実モデル4条件・sample UIと、検証専用Windows IL2CPP Playerは確認済み。[Git consumer結果](m2-latest-git-consumer-validation.md) / [Player結果](m2-player-il2cpp-validation.md)を参照。現在の未達項目は標準21f1 / 新candidate再現、残る性能・安定性、他環境、M3 / M4、最終候補 / tag導入と正式Release。[最新状態](status.md)で補修 / overlay条件と実測SHAを確認し、未検証の環境を対応済みにしない。
 
 更新日: 2026-10-10。確認基準main: `4ee0cbbde07fc99ca87d33ed52a44e6100ca0b0c`（PR #12統合後）。Unity実測は各検証記録の実行SHAを維持する。
 **CI整備・UPM化はPR #6でmainへ統合済み。統合後のmain CIも全8 job成功。** PR #1〜#4のWindows EditorのM1は完了した。
@@ -12,7 +12,7 @@ GitHub側のmain保護も設定・再確認済み。検索基盤はPR #10でmain
 利用者向け一覧の1（検索サンプル）と2（モデル準備手順）の実装・再現を確認済み。[実装計画](m2-search-plan.md) / [検証記録](m2-search-validation.md) / [モデル準備手順](model-preparation.md)を参照。
 Sentis実モデル4条件は両Windowsプロジェクトで合格。consumerのCLIは4 passed / skip 0、sample EditModeは改善後18 passed。モデル再利用の単回測定203秒 → 175秒。以前の中断記録と未解決allocation / fontログを別記する。PR #11の統合状況・最新CIはGitHubを参照。
 
-## 現在地
+## 履歴: PR #12時点の現在地
 
 - Unity 6000.3.16f1 / Sentis 2.6.1。PR #6で公開APIを `Packages/com.ayutaz.embeddinggemma/Runtime/` へ移行。開発版 `0.1.0-pre.1`、未リリース。
 - `TextEmbedder` はquery / document / raw、同期・メインスレッド、batch 1 / length 128 / 768次元、CPU / GPUComputeを扱う。
@@ -21,7 +21,7 @@ Sentis実モデル4条件は両Windowsプロジェクトで合格。consumerのC
 - PR #11統合後mainの[CI run 37975026704](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975026704)は全8 job成功。Ubuntu / Windows × Python 3.13 / 3.14、実モデルPython照合、lint・パッケージ監査が合格。macOS / iOS / AndroidとPlayerでの実モデル実行は未検証。
 - mainはbranch protection設定済み。PRとRequired CIを管理者にも要求し、force push / 削除を禁止。全PRのCI入口とパッケージ監査はmainへ統合済み。クラウドUnityはLinux CPUの任意手動補助検証で未実行、2026-10-10確認時にSecrets / Variablesは未登録。
 
-## 作業順序と完了条件
+## 履歴: PR #12時点の作業順序と完了条件
 
 | 順序 | タスク | 完了条件 | 依存 / 状態 |
 | --- | --- | --- | --- |
@@ -36,7 +36,7 @@ Sentis実モデル4条件は両Windowsプロジェクトで合格。consumerのC
 0〜3の実装・Windows consumer再現・手順確認を終え、PR #11の統合と統合後CI全8 job成功を確認した。続いて4の環境確保 → 5の実測 → 6のリリースへ進む。hash確認の負荷と未解決allocation / fontログも次の測定で追跡する。
 今後も作業ブランチからPRを提出し、mergeは依頼された範囲でCI・差分・競合を確認して行う。
 
-## 直近のPR分割と受け渡し
+## 履歴: PR #12時点のPR分割と受け渡し
 
 | 順番 | PRの範囲 | 次の作業へ渡すもの / 合格条件 |
 | --- | --- | --- |
@@ -118,5 +118,5 @@ Float16重みは保存サイズ削減済みだが、M1では速度改善は確�
 
 M3で画像エンコーダとGPU上の画像前処理、共通テキスト本体への特徴量入力、テキスト→画像の固定参照順位照合を実装する。
 M4で音声エンコーダとGPU上のメルスペクトログラム前処理、共通空間への入力、テキスト→音声の固定参照順位照合を実装する。
-どちらも実装未着手。演算子互換性・中間テンソル・メモリ・CPU readbackの有無を調査してから詳細計画を作る。
+どちらも実装未着手。[M3詳細TDD計画](m3-plan.md) / [M4詳細TDD計画](m4-plan.md)を作成済み。固定参照の前処理契約を確認し、red / greenと実モデル照合を各段階で実行する。正式公開は両者と全必須環境の検証後へ移した。
 全体の完了条件は [ゴール](goal.md)を維持する。

@@ -8,7 +8,7 @@ from pathlib import Path
 
 from huggingface_hub import snapshot_download
 
-from .prepare import MODEL_ID, MODEL_REVISION, prepare, prepare_multimodal_backbone, prepare_vision
+from .prepare import MODEL_ID, MODEL_REVISION, prepare, prepare_audio_encoder, prepare_multimodal_backbone, prepare_vision
 from .search import SEARCH_CASES
 
 
@@ -47,6 +47,11 @@ def main(argv=None):
     vision.add_argument("--output", type=Path, required=True)
     vision.add_argument("--snapshot", type=Path)
     vision.add_argument("--revision", type=revision, default=MODEL_REVISION)
+    audio = commands.add_parser("prepare-audio-encoder", help="Official audio encoder export gate; not Unity or final embedding proof")
+    audio.add_argument("--output", type=Path, required=True)
+    audio.add_argument("--preprocessing", type=Path, required=True)
+    audio.add_argument("--snapshot", type=Path)
+    audio.add_argument("--revision", type=revision, default=MODEL_REVISION)
     args = parser.parse_args(argv)
     snapshot = args.snapshot
     if snapshot is None:
@@ -54,9 +59,15 @@ def main(argv=None):
             "config.json", "model.safetensors", "tokenizer.json", "tokenizer_config.json",
             "config_sentence_transformers.json", "modules.json", "1_Pooling/config.json",
         ]
-        if args.command in ("prepare-backbone", "prepare-vision"):
+        if args.command in ("prepare-backbone", "prepare-vision", "prepare-audio-encoder"):
             patterns.append("processor_config.json")
         snapshot = Path(snapshot_download(MODEL_ID, revision=args.revision, allow_patterns=patterns))
+    if args.command == "prepare-audio-encoder":
+        summary = prepare_audio_encoder(snapshot, args.preprocessing, args.output, revision=args.revision,
+                                         source_commit=os.environ.get("GITHUB_SHA", "local"))
+        print(json.dumps({name: summary[name] for name in (
+            "success", "stage", "profile_count", "case_count", "minimum_cosine", "unity_validated", "end_to_end_validated")}))
+        return
     if args.command == "prepare-vision":
         summary = prepare_vision(snapshot, args.output, revision=args.revision,
                                  source_commit=os.environ.get("GITHUB_SHA", "local"))

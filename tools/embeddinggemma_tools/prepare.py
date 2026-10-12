@@ -8,15 +8,140 @@ import shutil
 from pathlib import Path
 
 import torch
+import numpy as np
 from transformers import AutoTokenizer
 
-from .export import MultimodalEmbeddingExport, VisionEncoderExport, export_multimodal_pt2, export_pt2, export_vision_pt2
-from .model import load_text_model, load_vision_models
+from .export import (AudioEncoderExport, MultimodalEmbeddingExport, VisionEncoderExport,
+                     export_audio_pt2, export_multimodal_pt2, export_pt2, export_vision_pt2)
+from .model import load_audio_models, load_text_model, load_vision_models
 from .reference import build_reference, load_cases, write_reference
 from .search import generate_search_reference
 
 MODEL_ID = "google/embeddinggemma-2"
 MODEL_REVISION = "914f7f89142e33e77833254d9c9b90c3cef7303b"
+
+
+def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODEL_REVISION, source_commit="local"):
+    """Official audio tower/projector vs saved graph on audited PCM-derived features.
+
+    Independent inputs are the official NumPy preprocessing references, not the
+    output of our preprocessing graph. This is not final embeddings or Unity proof.
+    """
+    snapshot, preprocessing, destination = Path(snapshot), Path(preprocessing).resolve(), Path(destination)
+    destination.mkdir(parents=True, exist_ok=True)
+    (destination / "audio-encoder-validation.json").unlink(missing_ok=True)
+    if re.fullmatch(r"[0-9a-f]{40}", revision) is None:
+        raise ValueError("model revision must be an immutable lowercase commit SHA")
+
+    def digest(path):
+        with path.open("rb") as stream:
+            return hashlib.file_digest(stream, "sha256").hexdigest()
+
+    audit = json.loads((preprocessing / "audio-validation.json").read_text(encoding="utf-8"))
+    if (audit.get("success") is not True or audit.get("stage") != "audio_preprocessing_only"
+            or audit["metadata"].get("source_commit") != source_commit
+            or audit["metadata"].get("model_revision") != revision):
+        raise ValueError("preprocessing completion, stage, revision or source mismatch")
+    audited = {}
+    for name, item in audit["files"].items():
+        path = (preprocessing / name).resolve()
+        if (not path.is_relative_to(preprocessing) or not path.is_file()
+                or path.stat().st_size != item["bytes"] or digest(path) != item["sha256"]):
+            raise ValueError(f"preprocessing artifact hash/path mismatch: {name}")
+        audited[name] = path
+    required = {"audio-reference.json", "processor_config.json"}
+    if not required.issubset(audited):
+        raise ValueError("preprocessing manifest omits reference/config")
+    reference = json.loads(audited["audio-reference.json"].read_text(encoding="utf-8"))
+    metadata = reference["metadata"]
+    if (metadata.get("source_commit") != source_commit or metadata.get("model_revision") != revision
+            or metadata.get("stage") != "audio_preprocessing_only"
+            or metadata.get("processor_sha256") != digest(snapshot / "processor_config.json")
+            or digest(audited["processor_config.json"]) != metadata["processor_sha256"]):
+        raise ValueError("preprocessing reference/config/source mismatch")
+    shape = metadata["feature_shape"]
+    if (not isinstance(shape, list) or len(shape) != 3 or shape[0] != 1 or shape[2] != 128
+            or type(shape[1]) is not int or shape[1] <= 0 or metadata["frame_mask_shape"] != shape[:2]
+            or not reference["cases"] or len(reference["cases"]) != audit["case_count"]):
+        raise ValueError("preprocessing frame/feature/case profile mismatch")
+    groups = {}
+    for row in reference["cases"]:
+        if re.fullmatch(r"[a-z][a-z0-9_-]*", row["id"]) is None:
+            raise ValueError("preprocessing case ID must be safe")
+        if not {row["features"], row["frame_mask"]}.issubset(audited):
+            raise ValueError("preprocessing manifest omits feature/mask input")
+        feature_array = np.fromfile(audited[row["features"]], dtype="<f4")
+        mask_array = np.fromfile(audited[row["frame_mask"]], dtype="<i4")
+        if feature_array.size != shape[1] * 128 or mask_array.size != shape[1]:
+            raise ValueError("preprocessing binary input size mismatch")
+        features = torch.from_numpy(feature_array.reshape(shape))
+        frame_mask = torch.from_numpy(mask_array.reshape(1, shape[1])).to(torch.int64)
+        # Validate before loading weights and before grouping by prefix length.
+        if (not torch.isfinite(features).all() or not torch.all((frame_mask == 0) | (frame_mask == 1))
+                or not frame_mask.any() or torch.any(frame_mask[:, 1:] > frame_mask[:, :-1])
+                or torch.any(features[frame_mask == 0] != 0)):
+            raise ValueError("preprocessing requires finite features and a nonempty zero-padded prefix mask")
+        profile = f"frames-{shape[1]}-valid-{int(frame_mask.sum())}"
+        groups.setdefault(profile, []).append((row, features, frame_mask))
+    audio, projection = load_audio_models(snapshot)
+    rows, profiles, produced, similarities = [], {}, [], []
+    for profile, inputs in groups.items():
+        directory = destination / profile
+        directory.mkdir(parents=True, exist_ok=True)
+        wrapper = AudioEncoderExport(audio, projection, inputs[0][2])
+        graph = directory / "audio.pt2"
+        expected_rows = []
+        with torch.no_grad():
+            for row, features, frame_mask in inputs:
+                output = audio(input_features=features, attention_mask=frame_mask.bool())
+                expected = projection(output.last_hidden_state)[output.attention_mask]
+                if not torch.isfinite(expected).all():
+                    raise ValueError("official audio encoder reference must be finite")
+                expected_rows.append((features, expected, row["id"]))
+        export_audio_pt2(wrapper, inputs[0][1], graph)
+        exported = torch.export.load(graph).module()
+        with torch.no_grad():
+            for features, expected, case_id in expected_rows:
+                actual = exported(features)
+                if actual.dtype != torch.float32 or actual.shape != expected.shape or not torch.isfinite(actual).all():
+                    raise ValueError(f"audio encoder export mismatch: {case_id} shape/dtype/nonfinite")
+                cosine = torch.nn.functional.cosine_similarity(actual, expected, dim=-1).min().item()
+                if cosine < 0.999999 or not torch.allclose(actual, expected, rtol=1e-4, atol=1e-5):
+                    raise ValueError(f"audio encoder export mismatch: {case_id} cosine={cosine}")
+                similarities.append(cosine)
+                input_path = directory / f"{case_id}-features-fp32.bin"
+                features.numpy().astype("<f4").tofile(input_path)
+                produced.append(input_path)
+                rows.append(dict(id=case_id, profile=profile, input_features=input_path.relative_to(destination).as_posix(),
+                                 features=expected.tolist()))
+        mask_path = directory / "frame-mask-int32.bin"
+        inputs[0][2].numpy().astype("<i4").tofile(mask_path)
+        produced.extend((graph, mask_path))
+        profiles[profile] = dict(feature_shape=shape, feature_count=wrapper.feature_count,
+                                 feature_width=projection.text_hidden_size, frame_mask_shape=shape[:2],
+                                 frame_mask=mask_path.relative_to(destination).as_posix(),
+                                 graph=graph.relative_to(destination).as_posix())
+        del exported, wrapper
+    encoder_metadata = dict(model_id=MODEL_ID, model_revision=revision, source_commit=source_commit,
+                            stage="audio_encoder_projector_only", dtype="float32", batch_size=1,
+                            attention_implementation="sdpa", minimum_cosine=0.999999,
+                            feature_rtol=1e-4, feature_atol=1e-5,
+                            preprocessing_reference_sha256=digest(audited["audio-reference.json"]),
+                            fixture_provenance=metadata["fixture_provenance"],
+                            input_sha256={name: digest(snapshot / name) for name in
+                                          ("config.json", "processor_config.json", "model.safetensors")},
+                            versions={name: importlib.metadata.version(name) for name in ("torch", "transformers")})
+    reference_path = destination / "audio-encoder-reference.json"
+    reference_path.write_text(json.dumps(dict(metadata=encoder_metadata, profiles=profiles, cases=rows),
+                                         indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    produced.append(reference_path)
+    summary = dict(success=True, stage=encoder_metadata["stage"], profile_count=len(profiles), case_count=len(rows),
+                   minimum_cosine=min(similarities), unity_validated=False, end_to_end_validated=False,
+                   metadata=encoder_metadata, files={path.relative_to(destination).as_posix():
+                       dict(bytes=path.stat().st_size, sha256=digest(path)) for path in produced})
+    (destination / "audio-encoder-validation.json").write_text(json.dumps(summary, indent=2, allow_nan=False) + "\n",
+                                                              encoding="utf-8")
+    return summary
 
 
 def load_image_processor(snapshot):

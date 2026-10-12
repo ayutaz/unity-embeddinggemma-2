@@ -2,6 +2,7 @@
 
 ## 0.1.0-pre.1 — Unreleased
 
+- 固定profileのproject済み画像 / 音声featureを扱うMultimodalBackboneを追加。token / mask / feature数・Model入出力を監査し、caller所有Tensorを借用して最終768次元だけをコピー。21 redから契約22 green、小さい実GPUを含め23 green、破棄featureの追加1 redから最終24件＋既存38件の62 green。実encoder・最終実モデル・GPU前処理・prompt / sample・新Git consumer / Playerは別の未完了gate。
 - GUI style測定テストもEditor所有fontを共有し、fixtureのCleanupでIMGUI cacheへ破棄済みfontを残さないように修正。元のglyph境界assertionを維持し、1 failed → 1 passed、sample全67 passed、未準備UI 3回の停止前後Console 0を確認。PR #29統合SHAの新規Git導入・実モデル4条件・UI / file URL cacheは別に合格。最初のEditor検索DBエラーの原因は未確定。
 - TextSearch sampleのEditor fontをEditor内で1つだけ所有し、Play / domain reload後も同じnative fontを再利用。修正前2件の失敗と修正後2件・sample EditMode 66件 / PlayMode 2件、Windows実Float16 GPU日英検索・空入力・解放、正常Editor終了時の所有font破棄を確認。新helperのPlayer実行・他OSとnative allocation診断の原因は未検証。
 - 検証済みテキストRuntimeをUPMへ移行。公開API・Runtime assembly名・既存ソースとGUIDを維持。

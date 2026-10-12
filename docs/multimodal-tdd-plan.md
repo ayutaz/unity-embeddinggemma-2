@@ -4,13 +4,21 @@
 
 ## 現在の基準と作業順
 
-- 今回確認したmain: `b0871ab778a1a1301c3deb04917ebdf4785e9dbe`（PR #38まで統合）。統合後main CIは実行中。テキストUPM / 検索サンプルとWindows M1の証拠は維持する。
+- 今回確認したmain: `c5402fdc3b6776903a49d2843404c4aacb7bd2f4`（PR #39まで統合）。[main CI 38316541487](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38316541487)は成功。テキストUPM / 検索サンプルとWindows M1の証拠は維持する。
 - C2 / C3の一部として、project済み特徴量入力・1024長backboneのexport / 参照 / Actions接続は実装済み。[PR #34 CI 38306145598](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38306145598)で実text重みと合成特徴量の2ケース、minimum cosine 1.0を確認した。実encoder featureを使う共通本体とUnity新profileは未検証。[証拠と範囲](multimodal-backbone-validation.md)。
 - PR #31はdraft。6000.3.21f1でのWindows実測成功は検証consumerの補修条件付きであり、未補修compile、新candidateの空Git consumer導入、Float16/GPU性能の確認が残る。詳細は[M2基盤計画](m2-release-plan.md)と[実測記録](m2-unity-21-upgrade-validation.md)。
 - 開発対象は承認済みUnity 6000.3.21f1 / Sentis 2.6.1。mainのUnity版変更はPR #31未統合のため未反映。版を黙って変更しない。
 - M3の画像encoder / projector exportはPR #37でmainへ統合済み。[実モデルPython CI 38310718250](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38310718250)の3 profile / 6ケースでminimum cosine `0.9999997615814209`。`vision_encoder_projector_only`であり、Unity・GPU前処理・最終768次元の合格ではない。
 - M4の音声前処理exportは[PR #38](https://github.com/ayutaz/unity-embeddinggemma-2/pull/38)のhead `0424734291dc4cb7606b8bae53086f4911252e94`に実装し、mainへ統合済み。[CI 38313045325](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38313045325)全8 job成功、公式前処理対exportの6ケースで最大絶対誤差 `0.0038890838623046875`。`audio_preprocessing_only`であり、音声encoder / Unityは未検証。
 - M3画像 / M4音声のend-to-end API / sampleはmainに未実装。macOS / iOS / Android実機の合格証拠は未取得。Unity CI用Secrets / 専用runnerと端末の確保を並行して進め、CI成功と実機GPU成功を分ける。
+
+### 今回の検証を反映した優先課題
+
+- I2: [PR #41](https://github.com/ayutaz/unity-embeddinggemma-2/pull/41)の画像Sentis fixtureをWindowsで実行した。3 profile × CPU / GPUCompute × FP32 / Float16の12条件は保存報告まで完了し、Float16の6条件は合格。FP32の6条件はcosine条件を満たすが、先に固定した要素単位の許容差を超えて不合格。原因を分離した小さいredから修正する。[全条件と実行範囲](results/m3-vision-windows-plan-snapshot-20261013.json)。GPU encoderの成功をGPU画像前処理・共通本体・最終768次元の成功へ流用しない。
+- A4: [PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40)に音声encoder exportと参照監査を実装したが、[CI 38318322669](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38318322669)は失敗。silenceでeager wrapper対公式参照の最大差は0、保存graph対eagerは `0.00020956993103027344`、許容差比 `8.21683406829834`。保存 / 演算分解で差が発生する箇所を特定してredを作り、許容差を変更せず修正・実重み再照合する。小さい契約greenを実モデルgreenとして扱わない。
+- C4 / C7: 重いUnity測定は同一operationの完了報告を追跡し、CLI観測timeoutを再実行の理由にしない。import / 保存の再利用、worker / tensor / modelの所有権と解放を先に検証し、改善は同じ仕事量で測る。異なる条件数のrun時間だけで高速化を宣言しない。
+
+この2件の数値不合格解消とM2基盤の残る再現性確認を最初のPR単位にし、共通本体・I3以降・A2 / A3以降へ渡す。以下の6工程とC / I / Aの完了条件は維持する。正式Releaseと公開tagは全対応後の別工程とする。
 
 | 順序 | 範囲 | 次へ渡す条件 |
 | --- | --- | --- |

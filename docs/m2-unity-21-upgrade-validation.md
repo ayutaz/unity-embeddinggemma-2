@@ -7,7 +7,7 @@
 - 作業ブランチのProjectVersion、空consumer生成、手動Unity CPU CIの実行版を21f1にした。
 - 新しいPlayer build provenanceは21f1を必須にする。過去16f1の保存結果は書き換えない。
 - Sentisは2.6.1のまま。既存の監査済みモデル、Python参照、Library / build cacheを再利用する。
-- 配布packageのminimum 16f1は以前のEditor検証に対応した値で、21f1のnative検証が済んだ段階で配布条件を見直す。現在の21f1指定を実モデル検証済みとは扱わない。
+- 配布packageのminimum 16f1は以前のEditor検証に対応した値。21f1のnative検証は下記の補修済みconsumer条件で確認した。標準の新規導入と配布条件は別gateで確認する。
 - Androidの過去APK / bundle監査は16f1 provenanceのまま保持する。21f1のAndroid実機合格へ読み替えない。
 
 ## TDDと導入
@@ -50,6 +50,27 @@ Float16/GPUの長時間化は未解決。1回目のwarm 3回は8〜17秒、FP32/
 
 sampleのFloat16指定baselineはcold / warmとも実モデルGPU・4query / 各6順位・score・空入力拒否・モデル欠落拒否・Worker / font解放に合格し、実終了code 0だった。各110.615 / 108.706秒。cacheはcoldが3ファイル転送、warmが1ファイル（descriptorのみ）転送、モデル再転送なし。日英の1280×800画像を確認し、batchmodeではない通常GUIで文字と結果が描画された。これはGUI APIを通るハーネスの結果であり、native keyboard / mouse入力の人手操作を確認した結果ではない。
 
-製品sampleの既定ModelPathはFP32だったが、`PlayerSampleView.Prepare`が検証時にFloat16へ変更していた。proxyの準備入力をFP32 / GPUComputeへ揃える契約は1 failedを確認後に実装し、batchmode / nographicsのsample契約13件がpassed / skip 0になった。画面Editorの再起動はengine初期化前で待機し、テスト未実行だったため、GUI不要の契約はbatch Test Runnerへ切り分けた。原因は未確定で、domain reloadの合格やGPU合格に読み替えない。新FP32指定のnative再測定は次の結果として分けて記録する。
+製品sampleの既定ModelPathはFP32だったが、`PlayerSampleView.Prepare`が検証時にFloat16へ変更していた。proxyの準備入力をFP32 / GPUComputeへ揃える契約は1 failedを確認後に実装し、batchmode / nographicsのsample契約13件がpassed / skip 0になった。画面Editorの再起動はengine初期化前で待機し、テスト未実行だったため、GUI不要の契約はbatch Test Runnerへ切り分けた。原因は未確定で、domain reloadの合格やGPU合格に読み替えない。
+
+checkpoint `cdd7c30`の初回FP32 Playerは全query・解放・終了code 0、31.112秒。保存scopeに旧Float16表記が残っていたため、この結果を最終受け入れの2起動には使わず保持した。表記の契約は1 failed → 実行契約全22 passed / skip 0で修正した。`cdd7c30`の[CI 38191479251](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38191479251)は全8 job成功。
+
+## FP32既定sampleの最終native結果
+
+固定source `28529f2e20a57dc865ef7268a92b0526c9a87c3e`でsampleを実buildし、全37 source hash一致、Succeeded / 76.319秒 / errors 0 / warnings 485を確認した。GUI不要のbuildはbatchmode / nographicsで実行し、以下のPlayerはbatchmodeなしの通常表示 / Direct3D12で実行した。Editorの実終了後にPlayerを直列で起動し、既存Library / build cacheと監査済み21f1 bundleを再利用した。モデル再downloadは行っていない。
+
+| 測定 | cold | warm |
+| --- | --- | --- |
+| 実process終了code | 0 | 0 |
+| process全体 | 31.571秒 | 29.187秒 |
+| 準備（stage / audit / load / Worker / 6文書埋め込みの合算） | 11.557秒 | 8.237秒 |
+| 全4queryの検索時間 | 149.932〜207.101ms | 263.912〜329.933ms |
+| cache再利用 / 転送数 | false / 3 | true / 1（descriptorのみ） |
+| 固定6順位・score / 最大score差 | 全一致 / 9.187e-8 | 全一致 / 9.187e-8 |
+
+両方でFP32 / actual GPUCompute・空入力拒否・モデル欠落拒否・Workerとfont解放、Console 0を確認した。既存uv監査CLIも両process gateを合格と判定した。保存した全順位とscoreを固定参照へ別途再照合し、画像のbytes / hashも照合した。coldの日英1280×800画像を目視確認し、文字と結果、FP32 path表示を確認した。native keyboard / mouseの人手操作結果ではない。
+
+Float16指定baselineの110.615 / 108.706秒からFP32指定では31.571 / 29.187秒になった。これは既定モデルに合わせた検証条件の変更であり、Float16の同条件高速化やdomain reload高速化の証明ではない。warm検索がcoldより遅い観測も保存し、反復benchmarkの中央値や保証値にはしない。
+
+公開用の小さい[数値・source・条件別要約](results/m2-unity21-windows-20261012.json)を保存した。生ログ、ローカルpath入りPNG、モデル・binary・dumpはignored artifactsに残しGitへ含めない。
 
 新規candidate導入、未補修21f1環境のcompile、Float16/GPU性能調査、他環境は未完了。PR #31をdraftのまま進める。

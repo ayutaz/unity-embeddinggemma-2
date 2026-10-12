@@ -6,16 +6,25 @@ M1の履歴と既存のM2受け入れ条件は維持する。Windowsだけの成
 
 確認基準mainはPR #30後の `6f55a85`。統合後[CI run 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)の全8 job成功を確認した。font寿命修正を含む `fc66af7` を[新しい空Git consumer](m2-font-git-consumer-validation.md)で導入し、compile・契約・実モデル4条件・UI・file URL cacheまで確認した。測定fixture修正 `bc3ac49`はEditor test 2ファイルだけの配置で検証後にPR #30へ統合し、配布Runtime / sample本体は同一。下の開始時点と実行履歴は当時の証拠を維持する。
 
-PR #31の実装checkpoint `cd6b8bf`の[CI run 38040187805](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38040187805)は全8 job成功。PRはdraft / 未統合で、通常表示sampleのprocess終了は未達。2026-10-10の再確認でRepository Secrets / self-hosted runner / 公開tag / GitHub Releaseは各0。ドキュメント更新のための追加Unity起動・モデル取得・buildは行わない。
+PR #31はdraft / 未統合。2026-10-12に承認された6000.3.21f1で、通常モードの精度PlayerとFloat16指定sampleはそれぞれ独立2起動の実終了code 0を確認した。実モデル・固定Python参照・GUI・cacheの詳細と環境補修条件は[新版の検証記録](m2-unity-21-upgrade-validation.md)へ分けた。2026-10-12のGitHub再確認でもRepository Secrets / self-hosted runner / 公開tag / GitHub Releaseは各0。新しい最終candidateのGit導入、Float16/GPU性能、必須他環境と正式Releaseは未完了。
 
 | 段階 | 現在の到達点 | 次の成果物 / 依存 |
 | --- | --- | --- |
-| 1. 安定性・高速化 | 完全hashのCNG・cache再利用、Editor font寿命修正を実測確認。sample終了クラッシュとEditor検索DB / allocation / domain reloadは残る | 固定版変更の回答後に公式修正版とのshutdown比較。原因・修正の同条件証拠、正常終了2起動 |
+| 1. 安定性・高速化 | 完全hashのCNG・cache、font寿命修正を実測確認。21f1最終FP32 sampleのcold / warmは31.571 / 29.187秒・実終了0。Float16/GPUの遅延とEditor診断は残る | Float16/GPU条件間の資源解放調査、未補修21f1 compileの確認 |
 | 2. 固定Git導入 | `fc66af7`の空consumerで解決 / source / 実モデル4条件 / UI / cache合格。後続fixture配置を分けて記録 | 最終candidateの固定Git回帰。候補sourceが変われば必要な範囲だけ再検証 |
-| 3. 他環境・Player実測 | Windows精度検証Player batch modeは合格。sample通常表示はGUI / GPU成功後に異常終了。Androidは実APK監査まで | 正常sample process、Android実機、Mac / iOS環境と各CPU / GPU・配置 / cache・測定結果 |
+| 3. 他環境・Player実測 | 21f1 Windows精度Player通常モード4条件とsample通常GUI / GPU、独立2起動の終了を確認。Androidは16f1の実APK監査まで | Android実機、Mac / iOS環境と各CPU / GPU・配置 / cache・測定結果。21f1移行後のAndroid toolchainも確認 |
 | 4. 正式配布 | 開発版0.1.0-pre.1のみ。candidate / tag / Release未実施 | 1〜3の全gate合格 → candidate / version / license / CHANGELOG → tag固定consumer → 正式Release |
 
 ## 次に進める順序
+
+21f1の終了比較を通過し、検証ハーネスを製品sampleの既定FP32へ揃えるTDDと実測を完了した。最終source `28529f2`の同じbinaryはcold / warmとも実終了0、全query / 日英GUI / 解放に合格。[sourceと数値](results/m2-unity21-windows-20261012.json)。旧sample Playerのshutdown失敗は履歴として残す。以後は次の順序とする。
+
+1. 最終FP32 sampleの証拠と最新headのCIを対応付ける。文書だけの更新で重いUnity / モデル実行を繰り返さず、実行sourceを保持する。
+2. 新candidateを空のGit consumerで確認する。21f1同梱Test Frameworkの2つの不足.metaは現在の検証consumerだけで補修したため、配布の標準環境でcompileできるかを独立に確認する。Editor検索DB / allocation / domain reload、Float16/GPUの遅延は未確定として追跡し、条件を限定したTDDと実測で扱う。
+3. Android端末とMac / iOS環境で実行する。既存APK監査を実機合格へ読み替えず、各実backend・固定参照・配置・cache・終了 / 再起動を取得する。GitHub Secretsだけでは実機GPU環境は揃わない。
+4. 必須gateを満たすcandidateにversion / CHANGELOG / licenseを対応付け、tag固定consumerの導入確認後に正式Releaseする。M2全体は未完了。
+
+### 履歴: 版更新前の順序と診断
 
 2026-10-12に6000.3.21f1への更新が承認され、[版指定のTDD・導入とnative gate](m2-unity-21-upgrade-validation.md)を開始した。以下の版変更回答待ちは2026-10-10時点の診断記録で、現在は実行比較へ進む。固定参照・旧16f1結果・他OS / 実機・正式Releaseのgateは維持する。
 

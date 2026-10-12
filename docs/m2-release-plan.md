@@ -1,21 +1,59 @@
 # M2: 安定化からテキスト版リリースまでの実行計画
 
 作成日: 2026-10-10。開始時点のmainは `2329507eb763202a297c1b15f385a83512eb6e1f`。
+最終更新: 2026-10-13。main / PR / CI / Secrets / runner / tag / ReleaseをGitHub APIで再確認した。今回の更新は文書のみで、Unity起動・build・実機測定は追加していない。
 ユーザーの「4まで詳細の計画を立てて進めてください」に対応し、安定性・高速化、Git URL導入、他環境の実測、リリースの4段階を扱う。
 M1の履歴と既存のM2受け入れ条件は維持する。Windowsだけの成功でM2全体を完了としない。
 
-確認基準mainはPR #29後の `fc66af7`。統合後[CI run 38029860876](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38029860876)の全8 job成功を確認した。font寿命修正を含むmainを[新しい空Git consumer](m2-font-git-consumer-validation.md)で導入し、compile・契約・実モデル4条件・UI・file URL cacheまで確認した。測定fixture修正 `bc3ac49`はEditor test 2ファイルだけの作業ソース配置で、配布Runtime / sample本体は同一。下の開始時点と実行履歴は当時の証拠を維持する。
+確認基準mainはPR #30後の `6f55a85`。統合後[CI run 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)の全8 job成功を確認した。font寿命修正を含む `fc66af7` を[新しい空Git consumer](m2-font-git-consumer-validation.md)で導入し、compile・契約・実モデル4条件・UI・file URL cacheまで確認した。測定fixture修正 `bc3ac49`はEditor test 2ファイルだけの配置で検証後にPR #30へ統合し、配布Runtime / sample本体は同一。下の開始時点と実行履歴は当時の証拠を維持する。
+
+PR #31はdraft / 未統合。2026-10-12に承認された6000.3.21f1で、通常モードの精度Player4条件と最終FP32 sampleはそれぞれ独立2起動の実終了code 0を確認した。実行sourceは精度`725200a` / sample`28529f2`。実測文書checkpoint `193e31f`の[CI 38192458296](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38192458296)は全8 job成功。実モデル・固定Python参照・GUI・cacheの詳細と環境補修条件は[新版の検証記録](m2-unity-21-upgrade-validation.md)へ分けた。2026-10-13のGitHub再確認でもRepository Secrets / self-hosted runner / 公開tag / GitHub Releaseは各0。新しい最終candidateのGit導入、Float16/GPU性能、必須他環境と正式Releaseは未完了。
+
+| 段階 | 現在の到達点 | 次の成果物 / 依存 |
+| --- | --- | --- |
+| 1. 安定性・高速化 | 完全hashのCNG・cache、font寿命修正を実測確認。21f1最終FP32 sampleのcold / warmは31.571 / 29.187秒・実終了0。Float16/GPUの遅延とEditor診断は残る | Float16/GPU条件間の資源解放調査、未補修21f1 compileの確認 |
+| 2. 固定Git導入 | `fc66af7`の空consumerで解決 / source / 実モデル4条件 / UI / cache合格。後続fixture配置を分けて記録 | 最終candidateの固定Git回帰。候補sourceが変われば必要な範囲だけ再検証 |
+| 3. 他環境・Player実測 | 21f1 Windows精度Player通常モード4条件とsample通常GUI / GPU、独立2起動の終了を確認。Androidは16f1の実APK監査まで | Android実機、Mac / iOS環境と各CPU / GPU・配置 / cache・測定結果。21f1移行後のAndroid toolchainも確認 |
+| 4. 正式配布 | 開発版0.1.0-pre.1のみ。candidate / tag / Release未実施 | 1〜3の全gate合格 → candidate / version / license / CHANGELOG → tag固定consumer → 正式Release |
 
 ## 次に進める順序
 
-PR #29まで統合済み。[font寿命](m2-editor-font-lifetime-validation.md)はTDDと実UI・正常Editor終了で修正確認し、統合SHAの新Git導入も合格した。後続では測定fixture自身が破棄済みfontをcacheへ残すことを実証し、1 failed → 1 passed、全67 passed、invalid font参照0、未準備UI 3回の停止前後Console 0を確認した。初回UIのEditor検索DB Errorは原因未確定。次は残る検索DB / native allocation診断とPlayer sample画面を進める。以前のFound leak診断15件を解消とは扱わない。実機gateは端末待ちで、不要なAPK再buildを避ける。
+21f1の終了比較を通過し、検証ハーネスを製品sampleの既定FP32へ揃えるTDDと実測を完了した。最終source `28529f2`の同じbinaryはcold / warmとも実終了0、全query / 日英GUI / 解放に合格。[sourceと数値](results/m2-unity21-windows-20261012.json)。旧sample Playerのshutdown失敗は履歴として残す。以後は次の順序とする。
 
-1. 安定性を限定条件で調べる。新Git consumerの停止時にPersistent allocation Logが1件出たため、NativeLeakDetectionのstack設定を保存・復元し、空scene / UIのみ / CPU / GPUの条件と終了時点を比較する。既存sample cacheの実装と新固定mainのGit導入・実モデル4条件・画面は確認済み。正式候補・tagの導入は後段で別途確認する。
+| 順序 | 次の作業 | 合格条件 / 受け渡し |
+| --- | --- | --- |
+| 1. 標準環境の再現 | 21f1の通常consumerとテスト用consumerを分け、同梱Test Frameworkの2つの不足.metaが各構成へ与える影響を確認する。検証cacheだけの手補修に依存しない導入手順を確定する | 固定版・依存・補修有無・compile結果を記録。自動対応を追加する場合はTDD。未補修環境の失敗を既存native合格で隠さない |
+| 2. 性能・安定性 | Float16/GPU単独起動と4条件連続実行を比較し、条件間のframe待ち / 資源解放を切り分ける。Editor検索DB / allocation / import / domain reloadも別々に測る | 同じhash / Unity / backend / 入力でload・初回・warm反復・解放 / メモリを記録。改善案はTDD後に実測し、全精度・順位・終了を再確認。FP32変更をFloat16高速化と扱わない |
+| 3. 固定Git candidate | 上記の変更が落ち着いた固定40桁SHAを空consumerへ導入する。source overlayを使わずrequested / resolved SHA、配布source、compile・契約・token・実モデル・日英UI / cacheを監査する | 今回の`fc66af7` + overlay結果と別の再現記録。モデルcache再利用範囲を明記し、変更が必要ならcandidateを更新して影響範囲だけ再検証 |
+| 4. 他環境とCI | Android targetの契約 / 21f1 toolchainを確認し、実機でjar展開・CPU / GPU・sample / cache・2起動を測る。Mac / iOSの実行環境と適切なライセンスも確保する。利用可能なUnity CIを設定する | Android / Mac / iOSの実backendと固定参照照合、速度・メモリ・終了記録。Secretsだけで実機GPU環境が揃ったとは扱わない |
+| 5. 統合と正式配布 | 必要な修正と導入の証拠をPRでレビュー・統合し、1〜4と既存の必須gateを満たすcandidateを凍結する。version / CHANGELOG / license、tag固定導入、Releaseを順に確認する | main直push禁止。PR #31は現状draftを維持。CIだけでmerge / release gateを埋めず、公開tagとReleaseまで確認してM2完了とする |
+
+1〜3は現環境で着手可能。4の実機測定には端末 / Mac / iOS環境が必要で、環境調査とCI設定は並行して進める。5の正式公開は必須他環境の合格後とする。文書更新だけで重いUnity / モデル実行を繰り返さない。ローカル実検証が必要な場合はuloop、Editor本体1つ、既存の監査済みモデル / Library / build cacheを基本にする。観測timeoutだけで再起動せず、同じoperation / PID / 保存結果を追跡する。
+
+### モデル形式とONNXの位置付け
+
+現行の`.pt2` → `.sentis`をテキスト版の主経路として維持する。公開ONNXは「Parameter数が合わない」ことではなく、Sentisの演算子対応と入出力契約が課題になる。
+
+2026-10-13に[公開ONNX](https://huggingface.co/onnx-community/embeddinggemma-2-ONNX/tree/daa72c51243991dfcaf9f9137d2c573d8f7790c0)の固定revision `daa72c51243991dfcaf9f9137d2c573d8f7790c0`からFP32 `model.onnx`グラフだけを取得した。opsetは標準21 / `com.microsoft` 1、独自演算子は`RotaryEmbedding` / `SkipSimplifiedLayerNormalization`各48 node。入力はtoken ID / maskに加えimage / video / audio featuresで、現行text-only APIとは異なる。重みは取得せず、ONNXのUnity import / 推論は実行していない。[既存の技術調査](embeddinggemma-2-unity-novelty.md#inference-engine-での対応状況)と区別する。
+
+標準演算へ分解したONNXの再exportは、`.pt2`の非互換が実際に出た場合、または比較測定で導入価値を示せる場合に検討する。その場合も同じ元重み・prompt / tokenizer / pooling / 正規化でPython参照とUnity CPU / GPUを照合する。公開ONNXへの切り替えをM2の追加必須gateにはしない。ONNX Runtimeプラグインを配布Runtimeへ入れる方針変更は行わない。
+
+M2完了後はM3で画像エンコーダ・GPU前処理・テキスト→画像検索、M4で音声エンコーダ・GPUメル前処理・テキスト→音声検索を同じ精度検証方式で進める。
+
+### 履歴: 版更新前の順序と診断
+
+2026-10-12に6000.3.21f1への更新が承認され、[版指定のTDD・導入とnative gate](m2-unity-21-upgrade-validation.md)を開始した。以下の版変更回答待ちは2026-10-10時点の診断記録で、現在は実行比較へ進む。固定参照・旧16f1結果・他OS / 実機・正式Releaseのgateは維持する。
+
+2026-10-12に[Editor待ち時間の切り分け](https://github.com/ayutaz/unity-embeddinggemma-2/blob/193e31fd65e82c5185f79df2fb4edf2758b046b7/docs/m2-editor-profile-validation.md)を追加した。新しいログ計測CLIは16 red → 16 green。既存j sessionの完了reload 30件はmedian 3.866秒 / max 7.939秒で、初回refresh 65.071秒には3015件のimportとcompileが含まれる。過去の数分間停止や通信停止とは別の証拠であり、高速化完了とは扱わない。追加Unity実行なしで測定対象を限定した。Editor本体1件、Console Error 0件、ADB端末・Secrets・self-hosted runner各0件を再確認した。
+
+PR #30まで統合済み。[font寿命](m2-editor-font-lifetime-validation.md)はTDDと実UI・正常Editor終了で修正確認し、統合SHAの新Git導入も合格した。測定fixture自身の破棄済みfont参照は1 failed → 1 passed、全67 passed、invalid font参照0、未準備UI 3回の停止前後Console 0を確認した。[Windows sample Player](https://github.com/ayutaz/unity-embeddinggemma-2/blob/193e31fd65e82c5185f79df2fb4edf2758b046b7/docs/m2-player-sample-validation.md)はbatch preflightを含む全33契約と実buildが成功。非表示起動の黒画面に対し、許可後の通常表示では日英GUI・Float16 / GPUComputeの全4query・各6順位 / score・解放が成功したが、engine shutdownでアクセス違反が残る。[PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)はdraft。対応PDBからPlatformAccessibilityManagerの破棄処理に停止箇所を絞り、公式修正UUM-146676を含む6000.3.21f1への変更を確認待ち。独立2起動の合格・初回Editor検索DB Error・以前のFound leak診断は未解決。実機gateは端末待ちで、不要なAPK再buildを避ける。
+
+1. Windows sample Playerの終了クラッシュを解消する。旧精度検証Playerのモデル不要比較では、通常モード非表示起動で同じ例外位置、batch modeはgraphics有無とも想定code 1で終了した。[比較結果](https://github.com/ayutaz/unity-embeddinggemma-2/blob/193e31fd65e82c5185f79df2fb4edf2758b046b7/docs/m2-player-sample-validation.md#モデル不要の終了処理の比較)を維持する。新 `41dc0be` の通常表示で実検索・画面・解放は通ったがprocess終了は失敗。対応するPE/PDB GUID / ageとpublic symbolを確認し、UnityのPlatformAccessibilityManager破棄処理と公式UUM-146676を次の比較対象にした。固定版変更の回答後、同じbundle / sample / Python参照を使って修正版のモデル不要shutdownを先に比較し、続けて日英画面・全query・独立2起動のexit 0 / cacheを確認する。外部終了監査は23 red → 23 greenで追加し、runtime successだけで異常終了を合格にしない。続けてEditor検索DB / allocation / domain reloadを調べる。正式候補・tagの導入は後段で別途確認する。
 2. Android buildのscene / 配置 / receipt / ABI / graphics APIはTDDで接続済み。source `751c30a`の実APK build・署名・全payload監査が成功した。接続端末を確保したら同じAPKで実jar展開・CPU / GPU精度・cache再利用・停止と再起動を実測する。端末なしのbuildを実機合格とは数えない。
 3. macOS / iOS実行環境とActionsライセンス・runnerを確保し、同じ固定参照の全条件を実測する。安定性はfont警告、allocation、domain reloadを限定条件で切り分ける。sampleのhash / deserialize同期時間と他OS性能も測定する。
 4. 上記と既存の全gateを満たす候補にversion / CHANGELOG / licenseを対応付け、tag固定consumer導入を確認して正式Releaseする。必須実機結果を省略しない。
 
-Windows PlayerのIL2CPP / Release / High stripping結果と、font寿命修正までの新規固定Git consumerは確認済み。[Android実APK](m2-android-validation.md)は504.158秒 / errors 0 / warnings 970でbuild成功し、SDK v2 debug署名と全5ファイルの完全hash / ARM64を確認した。実機とPlayer sample画面は未実行。Windows Editorのsample font・測定fixture寿命は限定条件で修正確認済みだが、Editor検索DB、native allocation、domain reloadとbuild警告の原因は未解決。これらを開いたgateとして扱い、M2全体は未完了のまま進める。
+Windowsの精度検証専用PlayerのIL2CPP / Release / High stripping結果は当時のbatchmode / Direct3D12条件で合格し、font寿命修正までの新規固定Git consumerも確認済み。[Android実APK](m2-android-validation.md)は504.158秒 / errors 0 / warnings 970でbuild成功し、SDK v2 debug署名と全5ファイルの完全hash / ARM64を確認した。Android実機は未実行。Windows sampleの通常表示 / GPU検索は部分成功、process終了と独立2起動は未達。33契約やnative buildの成功で不足gateを埋めない。Repository Secrets / self-hosted runnerは2026-10-10の記録時点で各0件。Editor検索DB、native allocation、domain reloadとbuild警告の原因は未解決。全4段階のgateを維持し、M2全体は未完了のまま進める。
 
 ## 開始時点の証拠
 
@@ -63,11 +101,11 @@ Windows PlayerのIL2CPP / Release / High stripping結果と、font寿命修正�
 
 | 対象 | 必要な環境 | 現状 / 次の作業 |
 | --- | --- | --- |
-| Windows Player | Windows build module、実GPU、固定モデル配置 | Development / MonoとIL2CPP / Release / High strippingの両方で実モデル4条件・独立2起動が合格。releaseでfile URL初回展開とcache再利用・完全CNG hashも確認。任意consumerのstrippingや他OSへ一般化しない |
-| macOS Editor | Mac、Unity 6000.3.16f1、Metal対応GPU、適切なUnityライセンス | 実行可能なMacを確認する。hosted CPU buildだけでMetal GPU成功としない |
+| Windows Player | Windows build module、実GPU、固定モデル配置 | 21f1 / IL2CPP / Release / High strippingの通常モードで実モデル4条件と最終FP32 sampleの独立2起動・実終了0を確認。検証consumerの補修条件、新Git candidateとFloat16/GPU性能は別gate。任意consumerのstrippingや他OSへ一般化しない |
+| macOS Editor | Mac、Unity 6000.3.21f1、Metal対応GPU、適切なUnityライセンス | 実行可能なMacを確認する。hosted CPU buildだけでMetal GPU成功としない |
 | iOS Player | Mac、Xcode / iOS module、署名可能な実機、Metal | 端末・署名・接続を確認する。Apple資格情報はチャットやソースへ記録しない |
-| Android Player | Android module / SDK / NDK / JDK、実機、対応graphics API | 実ARM64 / IL2CPP / High stripping APK、署名・payload監査済み。接続端末なし。次は同じAPKの実jar / 全CPU・GPU条件 / 2起動 / sample画面 |
-| Actions Unity | 適切なライセンス、対象OS / GPU / 接続端末を持つrunner | Secrets / self-hosted runnerなし。利用可能な構成を先に確定する |
+| Android Player | Android module / SDK / NDK / JDK、実機、対応graphics API | 16f1の実ARM64 / IL2CPP / High stripping APK、署名・payload監査済み。実機結果なし。旧APKの証拠を維持し、21f1 toolchain / target契約の確認後に必要なbuildだけ更新して実jar / CPU・GPU / 2起動 / sampleを測る |
+| Actions Unity | 適切なライセンス、対象OS / GPU / 接続端末を持つrunner | 2026-10-13時点でSecrets / self-hosted runnerなし。PR #31の手動Linux CPU workflowは6000.3.21f1固定（mainの実行版移行は同PR統合後）、`UNITY_EMAIL` / `UNITY_PASSWORD`と`UNITY_LICENSE`または`UNITY_SERIAL`を要求する。適切なライセンス構成を確定して設定・実行する。Linux CPU成功をWindows / Metal / モバイルGPUの証拠にしない |
 
 ### 実装・実行
 

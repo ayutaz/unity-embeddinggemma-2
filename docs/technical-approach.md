@@ -1,14 +1,14 @@
 # 技術調査: Sentis で EmbeddingGemma 2 を動かす方法
 
 - 調査日: 2026-10-07
-- 実装・計画の更新日: 2026-10-10
+- 実装・計画の更新日: 2026-10-13
 - 関連: [ゴール](goal.md) / [新規性調査](embeddinggemma-2-unity-novelty.md)
 
 > M1完了時はPR #1〜#4をmain `8146107`へ統合し、当時のPython CIは4環境各64件合格。
 > 最終PR #4のPython参照生成 / 保存済みexport全15件照合も成功（run `37801226486`、最小cosine 0.9999998808）。
 > Windows Editorで`.sentis`保存・再読み込み、Float16重み量子化、CPU / GPUCompute精度と測定までM1完了。[M1完了検証](m1-completion-validation.md)を参照。
 > CI・UPM・検索基盤とサンプル / モデル準備をPR #6・#10・#11で統合済み。PR #12統合後の確認基準main `4ee0cbb`はCI全8 job成功。元プロジェクトと新規consumerでWindows Sentisの検索4条件・画面操作を確認。[現在の状態](status.md) / [検索検証](m2-search-validation.md)を参照。
-> 次は [M2計画](m2-plan.md)の他環境・Git URL導入・リリース。外部仕様は2026-10-07の調査を基礎とし、2026-10-09に採用版の公式export / 量子化 / UPM手順とインストール済み2.6.1の実装を再確認した。今回の更新は実装状態の反映で、外部仕様の再調査ではない。画像・音声の設計案は未実装。
+> 現在は[M2基盤安定化](m2-release-plan.md) → 共通特徴量 / 長さ拡張 → [M3画像](m3-plan.md) → [M4音声](m4-plan.md) → 全必須環境の検証 → 正式公開。[全体TDD計画](multimodal-tdd-plan.md)を参照。外部仕様は2026-10-07の調査を基礎とし、2026-10-09に採用版の公式export / 量子化 / UPM手順とインストール済み2.6.1の実装を再確認した。今回の更新は計画の反映で、画像・音声の外部仕様再調査 / 実装 / 実測ではない。以下の前処理定数はM3 / M4の固定processor確認で再検証してから採用する。
 
 ## 要約
 

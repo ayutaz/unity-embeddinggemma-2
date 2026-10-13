@@ -1,0 +1,62 @@
+{
+  "scope": "saved_backbone_cpu_metadata_inspection_only",
+  "precision": "fp32",
+  "gpu_execution": false,
+  "d3d12_failure_resolved": false,
+  "saved_sha256": "484b88de0c8d77b9f36ceab79b2ffd5772444d97a3b2f4571380f159d7c389fa",
+  "unity": "6000.3.21f1",
+  "sentis": "2.6.1",
+  "completed_utc": "2026-10-13T16:55:33.4688054Z",
+  "largest_constants": [
+    {
+      "index": 13,
+      "bytes": 536870912,
+      "shape": "(262144, 512)",
+      "data_type": "Float"
+    },
+    {
+      "index": 79,
+      "bytes": 25165824,
+      "shape": "(512, 12288)",
+      "data_type": "Float"
+    },
+    {
+      "index": 71,
+      "bytes": 4194304,
+      "shape": "(1024, 1024)",
+      "data_type": "Int"
+    },
+    {
+      "index": 335,
+      "bytes": 4194304,
+      "shape": "(512, 2048)",
+      "data_type": "Float"
+    },
+    {
+      "index": 341,
+      "bytes": 4194304,
+      "shape": "(512, 2048)",
+      "data_type": "Float"
+    },
+    {
+      "index": 350,
+      "bytes": 4194304,
+      "shape": "(2048, 512)",
+      "data_type": "Float"
+    },
+    {
+      "index": 632,
+      "bytes": 4194304,
+      "shape": "(512, 2048)",
+      "data_type": "Float"
+    },
+    {
+      "index": 638,
+      "bytes": 4194304,
+      "shape": "(512, 2048)",
+      "data_type": "Float"
+    }
+  ],
+  "recorded_d3d12_upload_buffer_bytes": 16777216,
+  "recorded_d3d12_requested_bytes": 536870912
+}

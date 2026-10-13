@@ -1,0 +1,62 @@
+{
+  "scope": "saved_backbone_cpu_metadata_inspection_only",
+  "precision": "float16",
+  "gpu_execution": false,
+  "d3d12_failure_resolved": false,
+  "saved_sha256": "8c6039445c66191b6cc5987b9df40517316d5cda9aa2eda0f3edc738b42c1de3",
+  "unity": "6000.3.21f1",
+  "sentis": "2.6.1",
+  "completed_utc": "2026-10-13T16:55:36.4775049Z",
+  "largest_constants": [
+    {
+      "index": 4,
+      "bytes": 268435456,
+      "shape": "(262144, 512)",
+      "data_type": "Short"
+    },
+    {
+      "index": 7,
+      "bytes": 12582912,
+      "shape": "(512, 12288)",
+      "data_type": "Short"
+    },
+    {
+      "index": 727,
+      "bytes": 4194304,
+      "shape": "(1024, 1024)",
+      "data_type": "Int"
+    },
+    {
+      "index": 22,
+      "bytes": 2097152,
+      "shape": "(512, 2048)",
+      "data_type": "Short"
+    },
+    {
+      "index": 25,
+      "bytes": 2097152,
+      "shape": "(512, 2048)",
+      "data_type": "Short"
+    },
+    {
+      "index": 28,
+      "bytes": 2097152,
+      "shape": "(2048, 512)",
+      "data_type": "Short"
+    },
+    {
+      "index": 49,
+      "bytes": 2097152,
+      "shape": "(512, 2048)",
+      "data_type": "Short"
+    },
+    {
+      "index": 52,
+      "bytes": 2097152,
+      "shape": "(512, 2048)",
+      "data_type": "Short"
+    }
+  ],
+  "recorded_d3d12_upload_buffer_bytes": 16777216,
+  "recorded_d3d12_requested_bytes": 536870912
+}

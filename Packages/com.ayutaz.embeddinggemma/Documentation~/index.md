@@ -79,3 +79,15 @@ float[] embedding = backbone.Embed(inputIds, attentionMask, imageFeatures, audio
 ```
 
 `model`・feature Tensorは呼び出し側が所有します。GPUComputeでは非空featureを既にGPUへ置いてください。backboneはfeatureをCPUへdownload・Disposeせず、最終768次元だけを独立したCPU配列へコピーします。featureの全値に対するCPU検査は行わないため、入力側でもfinite条件を保証してください。長さ / mask / slot数・feature shape・dataの生存・backendの不一致は拒否します。backboneをDisposeした後も、借用Tensorの解放は呼び出し側が行います。
+
+## PCM入力境界（開発中）
+
+`AudioPcmInput`は固定16kHz mono PCMの入力準備です。対応長は161〜179200 samples、振幅はfiniteな[-1,1]。対応外入力はArgumentException（nullはArgumentNullException）で拒否します。
+
+```csharp
+var input = new AudioPcmInput(pcm, samplingRate: 16000, channels: 1);
+// Waveform / SampleMask: owned dataを参照するReadOnlySpan、各179200要素。
+// SourceSampleCount / ValidFrameCount: 実入力長と公式semicausal maskの有効frame数。
+```
+
+callerのPCM配列から独立したsnapshotを作り、右側zero paddingとprefix maskを保持します。caller配列や公開コピーを変更しても準備済み入力は変わりません。これはCPU入力境界のAPIであり、前処理Worker・音声encoder・最終embedding推論は後続の実装です。

@@ -12,7 +12,7 @@ import torch
 import numpy as np
 from transformers import AutoTokenizer
 
-from .export import (AudioEncoderExport, AudioEncoderStagesExport, AudioFeedForwardStagesExport, MultimodalEmbeddingExport, VisionEncoderExport,
+from .export import (AudioEncoderExport, AudioEncoderStagesExport, AudioFeedForwardStagesExport, AudioSubsampleStagesExport, MultimodalEmbeddingExport, VisionEncoderExport,
                      export_audio_pt2, export_audio_native_onnx, export_multimodal_pt2, export_pt2, export_vision_pt2)
 from .model import load_audio_models, load_text_model, load_vision_models
 from .reference import build_reference, load_cases, write_reference
@@ -207,6 +207,75 @@ def diagnose_audio_layer_stages(audio, projection, features, frame_mask, destina
     return result
 
 
+def capture_official_audio_subsample_stages(audio, features, frame_mask):
+    """Observe the native subsample module without replacing its forward path."""
+    values, handles = {}, []
+    module = audio.subsample_conv_projection
+    def before(name):
+        def capture(child, args):
+            values[name] = args[0].detach().clone()
+        return capture
+    def after(name):
+        def capture(child, args, output):
+            values[name] = output.detach().clone()
+        return capture
+    try:
+        for index, layer in enumerate((module.layer0, module.layer1)):
+            prefix = f"layer{index}."
+            handles.append(layer.conv.register_forward_pre_hook(before(prefix + "masked_input")))
+            for name, child in (("conv", layer.conv), ("norm", layer.norm), ("relu", layer.act)):
+                handles.append(child.register_forward_hook(after(prefix + name)))
+        handles.append(module.input_proj_linear.register_forward_pre_hook(before("projection_input")))
+        handles.append(module.input_proj_linear.register_forward_hook(after("projection")))
+        with torch.no_grad():
+            module(features, frame_mask.bool())
+    finally:
+        for handle in handles:
+            handle.remove()
+    return tuple(values[name] for name in AudioSubsampleStagesExport.stage_names)
+
+
+def diagnose_audio_onnx_subsample(audio, features, frame_mask, destination, failed_subsample, official_subsample):
+    """Inspect subsample operators only against the completed coarse trace."""
+    from onnx.reference import ReferenceEvaluator
+
+    destination = Path(destination)
+    path = destination / "audio-onnx-subsample-stages.onnx"
+    wrapper = AudioSubsampleStagesExport(audio.subsample_conv_projection, features.shape, frame_mask)
+    expected = capture_official_audio_subsample_stages(audio, features, frame_mask)
+    export_audio_native_onnx(wrapper, features, path)
+    evaluator = ReferenceEvaluator(str(path))
+    actual = tuple(torch.from_numpy(value) for value in evaluator.run(None, {"input": features.numpy()}))
+    result = compare_audio_stage_outputs(wrapper.stage_names, expected, actual)
+    for value in (failed_subsample, official_subsample):
+        if (value.dtype != torch.float32 or value.shape != actual[-1].shape or not torch.isfinite(value).all()):
+            raise ValueError("subsample diagnostic context has invalid shape/dtype/nonfinite data")
+    trace_matches = torch.equal(actual[-1], failed_subsample)
+    native_matches = torch.equal(expected[-1], official_subsample)
+    result.update(stage="audio_onnx_subsample_diagnostics_only", trace_matches_full_subsample=trace_matches,
+                  native_reference_matches_full_subsample=native_matches,
+                  trace_vs_full_subsample_maximum_absolute_error=(actual[-1] - failed_subsample).abs().max().item(),
+                  native_vs_full_subsample_maximum_absolute_error=(expected[-1] - official_subsample).abs().max().item(),
+                  localization_validated=trace_matches and native_matches,
+                  encoders_validated=False, end_to_end_validated=False, feature_rtol=1e-4, feature_atol=1e-5,
+                  first_nonzero_stage=next((row["name"] for row in result["stages"]
+                                            if row["maximum_absolute_error"] > 0), None))
+    artifacts = [("graph", path)]
+    for name, value, dtype in (("native_input", features, "<f4"), ("frame_mask", frame_mask, "<i4"),
+                               ("native_subsample", official_subsample, "<f4")):
+        binary = destination / f"audio-subsample-{name}.bin"
+        value.numpy().astype(dtype).tofile(binary)
+        artifacts.append((name, binary))
+    result["files"] = {}
+    for name, artifact in artifacts:
+        with artifact.open("rb") as stream:
+            digest = hashlib.file_digest(stream, "sha256").hexdigest()
+        result["files"][name] = dict(path=artifact.name, bytes=artifact.stat().st_size, sha256=digest)
+    (destination / "audio-onnx-subsample-diagnostics.json").write_text(
+        json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    return result
+
+
 def diagnose_audio_onnx_stages(audio, projection, features, frame_mask, destination, failed_onnx, *, detail_layer=None,
                               official_reference=None):
     """Trace standard ONNX only in the context of the original failed final path."""
@@ -247,7 +316,17 @@ def diagnose_audio_onnx_stages(audio, projection, features, frame_mask, destinat
     receipt = path.with_name(path.stem + "-diagnostics.json")
     receipt.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     selected = re.fullmatch(r"layer_(\d+)", result["first_nonzero_stage"] or "")
-    if detail_layer is None and matches and native_matches and result["first_divergent_stage"] is not None and selected:
+    if (detail_layer is None and matches and native_matches and result["first_divergent_stage"] is not None
+            and result["first_nonzero_stage"] == "subsample"):
+        failed_subsample, official_subsample = actual[0], expected[0]
+        del evaluator, actual, expected, wrapper
+        gc.collect()
+        try:
+            result["subsample_diagnostics"] = diagnose_audio_onnx_subsample(
+                audio, features, frame_mask, destination, failed_subsample, official_subsample)
+        except Exception as diagnostic_error:
+            result["subsample_diagnostics_error"] = f"{type(diagnostic_error).__name__}: {diagnostic_error}"
+    elif detail_layer is None and matches and native_matches and result["first_divergent_stage"] is not None and selected:
         # Release coarse ONNX weights before the selected-layer export.
         del evaluator, actual, expected, wrapper
         gc.collect()

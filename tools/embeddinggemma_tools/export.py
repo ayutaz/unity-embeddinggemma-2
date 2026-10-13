@@ -308,6 +308,44 @@ class AudioEncoderExport(nn.Module):
         return projected
 
 
+class AudioSubsampleStagesExport(nn.Module):
+    """Failure-only fixed-profile trace of the official subsample module."""
+
+    stage_names = tuple(f"layer{index}.{part}" for index in (0, 1)
+                        for part in ("masked_input", "conv", "norm", "relu")) + ("projection_input", "projection")
+
+    def __init__(self, module, input_shape, frame_mask):
+        super().__init__()
+        self.module = module
+        self.feature_shape = tuple(input_shape)
+        self.register_buffer("frame_mask", frame_mask.clone())
+        self.eval()
+
+    def validate_inputs(self, features):
+        if (features.dtype != torch.float32 or tuple(features.shape) != self.feature_shape
+                or not torch.isfinite(features).all() or features.device != self.frame_mask.device
+                or torch.any(features[self.frame_mask == 0] != 0)):
+            raise ValueError("subsample features require the fixed finite float32 profile and zero padding")
+
+    def forward(self, features):
+        if not torch.compiler.is_compiling():
+            self.validate_inputs(features)
+        hidden, frame_mask, stages = features.unsqueeze(1), self.frame_mask.bool(), []
+        for layer in (self.module.layer0, self.module.layer1):
+            hidden = hidden * frame_mask[:, None, :, None]
+            stages.append(hidden)
+            hidden = layer.conv(hidden.to(layer.conv.weight.dtype))
+            stages.append(hidden)
+            normalized = layer.norm(hidden.permute(0, 2, 3, 1))
+            stages.append(normalized)
+            hidden = layer.act(normalized.permute(0, 3, 1, 2).contiguous())
+            stages.append(hidden)
+            frame_mask = frame_mask[:, ::2]
+        batch, _, length, _ = hidden.shape
+        hidden = hidden.permute(0, 2, 3, 1).contiguous().reshape(batch, length, -1)
+        return (*stages, hidden, self.module.input_proj_linear(hidden))
+
+
 class AudioEncoderStagesExport(AudioEncoderExport):
     """Failure-only trace using the same numerical path as the normal export."""
 

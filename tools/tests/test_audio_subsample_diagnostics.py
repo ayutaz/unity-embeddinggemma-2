@@ -111,3 +111,35 @@ def test_subsample_trace_refuses_invalid_fixed_profile_features(problem):
     else: features[0, -1, 0] = 1
     with pytest.raises(ValueError, match="subsample"):
         wrapper(features)
+
+
+@pytest.mark.parametrize("secondary_fails", [False, True])
+def test_coarse_failure_routes_original_subsample_values_to_secondary_diagnostic(tmp_path, monkeypatch, secondary_fails):
+    import onnx.reference
+    audio, projection = audio_models()
+    features, frame_mask = torch.zeros(1, 25, 8), mask(25, 17)
+    native = prepare.capture_official_audio_stages(audio, projection, features, frame_mask)
+    actual = tuple(value.clone() for value in native)
+    actual[0].add_(0.01)
+    actual[-1].add_(0.03)
+    class Evaluator:
+        def __init__(self, path): pass
+        def run(self, *args): return [value.numpy() for value in actual]
+    def save(wrapper, features, path): path.write_bytes(b"coarse-diagnostic-test-only")
+    calls = []
+    def probe(*args):
+        calls.append(args)
+        if secondary_fails: raise RuntimeError("secondary subsample failed")
+        return dict(localization_validated=False, encoders_validated=False)
+    monkeypatch.setattr(onnx.reference, "ReferenceEvaluator", Evaluator)
+    monkeypatch.setattr(prepare, "export_audio_native_onnx", save)
+    monkeypatch.setattr(prepare, "diagnose_audio_onnx_subsample", probe)
+    report = prepare.diagnose_audio_onnx_stages(
+        audio, projection, features, frame_mask, tmp_path, actual[-1], official_reference=native[-1])
+    assert len(calls) == 1, "The first coarse subsample failure must trigger the selected operator trace"
+    assert torch.equal(calls[0][-2], actual[0]) and torch.equal(calls[0][-1], native[0])
+    assert report["encoders_validated"] is False and report["end_to_end_validated"] is False
+    if secondary_fails:
+        assert "secondary subsample failed" in report["subsample_diagnostics_error"]
+    else:
+        assert report["subsample_diagnostics"]["localization_validated"] is False

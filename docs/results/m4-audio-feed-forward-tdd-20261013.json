@@ -1,0 +1,48 @@
+{
+  "scope": "audio_feed_forward_diagnostic_tdd_only",
+  "real_model_validated": false,
+  "unity_validated": false,
+  "encoders_validated": false,
+  "end_to_end_validated": false,
+  "base_source": "4ae52890da50ffc570cba4902d96e95b182cc9c6",
+  "python": "3.14",
+  "omp_threads": 4,
+  "mkl_threads": 4,
+  "feature_rtol": 0.0001,
+  "feature_atol": 1E-05,
+  "initial_red": {
+    "failed": 16,
+    "reason": "Missing standalone feed-forward export, native input/stage capture and failure-only diagnostic contracts",
+    "duration_seconds": 27.77
+  },
+  "first_green": {
+    "passed": 16,
+    "failed": 0,
+    "skipped": 0,
+    "duration_seconds": 94.16
+  },
+  "failure_gate_red": {
+    "failed": 1,
+    "passed": 3,
+    "deselected": 13,
+    "reason": "Numeric-success trace incorrectly triggered another export",
+    "duration_seconds": 83.92
+  },
+  "final_green": {
+    "passed": 76,
+    "failed": 0,
+    "skipped": 0,
+    "duration_seconds": 297.37
+  },
+  "source_sha256": {
+    "tools/embeddinggemma_tools/export.py": "4f5418c140e488e8db81058fda65a28e23335d7f6687ffb670c80b018ea4e2b6",
+    "tools/embeddinggemma_tools/prepare.py": "3f4e202d85c9b47ed7f95016163f2d69384a7abd4a87a6773eb5c71c95d3d9c2",
+    "tools/tests/test_audio_feed_forward_diagnostics.py": "9383928dc7d639254392f52532ba48f11bd745bd6553fecca678573be831a04b"
+  },
+  "logs": {
+    "audio-feed-forward-red.log": "2265f8bf2b76937e4dd9783af154817f534ba105983e5f5b6503eb97a82fa424",
+    "audio-feed-forward-first-green.log": "b34c55f184b5d690a9cb42638ddf3b092e81db0d09b1c36c92001f6195013fd1",
+    "audio-feed-forward-gate-red.log": "d287d3b9b57eb922a9b9ce0086b94f63928cd70159a43e68817b862f73b24d97",
+    "audio-feed-forward-regression-green.log": "a6efa78de10c317b79af8b3c903349119231d34dba3800f97b28610be30e72d0"
+  }
+}

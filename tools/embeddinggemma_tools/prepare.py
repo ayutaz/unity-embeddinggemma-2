@@ -12,7 +12,7 @@ import torch
 import numpy as np
 from transformers import AutoTokenizer
 
-from .export import (AudioEncoderExport, AudioEncoderStagesExport, MultimodalEmbeddingExport, VisionEncoderExport,
+from .export import (AudioEncoderExport, AudioEncoderStagesExport, AudioFeedForwardStagesExport, MultimodalEmbeddingExport, VisionEncoderExport,
                      export_audio_pt2, export_multimodal_pt2, export_pt2, export_vision_pt2)
 from .model import load_audio_models, load_text_model, load_vision_models
 from .reference import build_reference, load_cases, write_reference
@@ -66,6 +66,72 @@ def compare_audio_stage_outputs(names, expected, actual):
                          maximum_tolerance_ratio=(difference / allowed).max().item(),
                          mismatched_elements=mismatches))
     return dict(first_divergent_stage=first, stages=rows)
+
+
+def capture_official_audio_feed_forward(audio, features, frame_mask, *, detail_layer, part):
+    """Use the native tower's actual selected input, not a synthetic replacement."""
+    if (type(detail_layer) is not int or not 0 <= detail_layer < audio.config.num_hidden_layers
+            or part not in ("feed_forward1", "feed_forward2")):
+        raise ValueError("audio feed-forward selector must name an existing layer and feed-forward part")
+    module = getattr(audio.layers[detail_layer], part)
+    values, inputs, handles = {}, [], []
+    def capture_input(mod, args):
+        inputs.append(args[0].detach().clone())
+    def observe(name):
+        def capture(mod, args, output):
+            values[name] = output.detach().clone()
+            if name == "pre_layer_norm":
+                values["clamp_input"] = args[0].detach().clone()
+            elif name == "post_layer_norm":
+                values["clamp_output"] = args[0].detach().clone()
+        return capture
+    try:
+        handles.append(module.register_forward_pre_hook(capture_input))
+        for name, child in [("pre_layer_norm", module.pre_layer_norm), ("ffw_layer_1", module.ffw_layer_1),
+                            ("activation", module.act_fn), ("ffw_layer_2", module.ffw_layer_2),
+                            ("post_layer_norm", module.post_layer_norm), ("residual_output", module)]:
+            handles.append(child.register_forward_hook(observe(name)))
+        with torch.no_grad():
+            audio(input_features=features, attention_mask=frame_mask.bool())
+            values["post_layer_scale"] = values["post_layer_norm"] * module.post_layer_scale
+    finally:
+        for handle in handles:
+            handle.remove()
+    return inputs[0], tuple(values[name] for name in AudioFeedForwardStagesExport.stage_names)
+
+
+def diagnose_audio_feed_forward_stages(audio, features, frame_mask, destination, failed_stage, *, detail_layer, part):
+    """Localize an operation only when this standalone final equals the full trace."""
+    hidden, expected = capture_official_audio_feed_forward(audio, features, frame_mask,
+                                                         detail_layer=detail_layer, part=part)
+    wrapper = AudioFeedForwardStagesExport(getattr(audio.layers[detail_layer], part), hidden.shape)
+    destination = Path(destination)
+    path = destination / f"audio-layer-{detail_layer}-{part}-stages.pt2"
+    export_audio_pt2(wrapper, hidden, path)
+    with torch.no_grad():
+        program = torch.export.load(path)
+        actual = program.module()(hidden)
+    result = compare_audio_stage_outputs(wrapper.stage_names, expected, actual)
+    if (failed_stage.dtype != torch.float32 or failed_stage.shape != actual[-1].shape
+            or not torch.isfinite(failed_stage).all()):
+        raise ValueError("audio feed-forward trace cannot be compared to the full stage")
+    matches = torch.equal(actual[-1], failed_stage)
+    first_nonzero = next((row["name"] for row in result["stages"] if row["maximum_absolute_error"] > 0), None)
+    input_path = path.with_suffix(".native-input-fp32.bin")
+    hidden.numpy().astype("<f4").tofile(input_path)
+    result.update(stage="audio_feed_forward_diagnostics_only", detail_layer=detail_layer, part=part,
+                  feature_rtol=1e-4, feature_atol=1e-5, first_nonzero_stage=first_nonzero,
+                  standalone_matches_full_stage=matches, localization_validated=matches,
+                  standalone_vs_full_stage_maximum_absolute_error=(actual[-1] - failed_stage).abs().max().item(),
+                  encoders_validated=False, end_to_end_validated=False, native_input_shape=list(hidden.shape),
+                  operators=sorted({str(node.target) for node in program.graph.nodes if node.op == "call_function"}))
+    for name, artifact in [("graph", path), ("native_input", input_path)]:
+        with artifact.open("rb") as stream:
+            result[f"{name}_sha256"] = hashlib.file_digest(stream, "sha256").hexdigest()
+        result[f"{name}_bytes"] = artifact.stat().st_size
+    (destination / f"audio-layer-{detail_layer}-{part}-diagnostics.json").write_text(
+        json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    return result
 
 
 def diagnose_audio_stages(audio, projection, features, frame_mask, destination, failed_saved):
@@ -124,6 +190,20 @@ def diagnose_audio_layer_stages(audio, projection, features, frame_mask, destina
     with path.open("rb") as stream:
         result["graph_sha256"] = hashlib.file_digest(stream, "sha256").hexdigest()
     result["graph_bytes"] = path.stat().st_size
+    receipt = path.with_name(f"audio-layer-{detail_layer}-diagnostics.json")
+    receipt.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    first_difference = next((row for row in result["stages"] if row["maximum_absolute_error"] > 0), None)
+    selected = re.fullmatch(rf"layer_{detail_layer}\.(feed_forward[12])", first_difference["name"]) if first_difference else None
+    if result["trace_matches_failed_graph"] and result["first_divergent_stage"] is not None and selected:
+        failed_stage = actual[wrapper.stage_names.index(first_difference["name"])].detach().clone()
+        del actual, expected, wrapper
+        gc.collect()
+        try:
+            result["feed_forward_diagnostics"] = diagnose_audio_feed_forward_stages(
+                audio, features, frame_mask, destination, failed_stage, detail_layer=detail_layer, part=selected.group(1))
+        except Exception as diagnostic_error:
+            result["feed_forward_diagnostics_error"] = f"{type(diagnostic_error).__name__}: {diagnostic_error}"
+    receipt.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     return result
 
 

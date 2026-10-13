@@ -94,3 +94,11 @@ subsampleは一致し、最初の非zero差は`layer_0.feed_forward1`（最大�
 3. A2のPCM入力契約とA3のGPU前処理を接続し、中間CPU readbackなしを確認する。
 4. A5のGPU soft token → 共通本体 → 有限768次元・単位長、FP32 cosine >= 0.999 / Float16 >= 0.99、text / image回帰。
 5. A6 / A7の全検索順位、再生・明示収録 / 停止・解放、Playerと必須実機を別に検証する。
+
+## Feed-forward単独の演算診断をTDD追加
+
+layer 0.feed_forward1の実入力を公式audio towerのpre-hookから取得し、clamp → pre RMSNorm → linear 1 → activation → linear 2 → clamp → post RMSNorm → scale → residualを比較する小さい診断graphを追加した。独立native hookの出力はin-place更新前にcloneし、失敗時も自分のhookだけを解放する。単独graphのfinalが元のfull traceの同stageと完全一致した場合だけlocalizationを有効とし、一致しなければcontextの違いを残す。
+
+未実装による16 assertion red → 最小実装16 green。数値不合格のないtraceでも余分なexportを始める追加1 redを確認し、実際の数値不合格とfull final一致がある場合だけ子診断を起動するよう修正した。関連encoder / prepare / 段階・層内診断を含め76 passed / fail 0 / skip 0（297.37秒）。[TDD・source / log hash](results/m4-audio-feed-forward-tdd-20261013.json)。
+
+全体graphをさらにもう1つ生成する代わりに、選んだfeed-forwardの重みと公式入力だけでexportする。graph / native inputのsize・hash、各stageの差・固定許容差、standalone対full stage一致をreceiptへ残す。親の不合格報告を子export前に保存し、子diagnosticの例外でも元の数値不合格を保持する。これは診断追加であり、実重みの原因演算・encoder数値合格は未確認。次のActions実行で確認し、既存の不一致328要素と残り5信号未実行を消さない。Unity / end-to-endの受け入れも未完了。

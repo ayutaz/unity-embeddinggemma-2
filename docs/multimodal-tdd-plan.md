@@ -4,12 +4,23 @@
 
 ## 現在の基準
 
-今回確認したmainは `2d4f7be7487faef02ca2ee60ca168274b3d0671d`（共通Runtime PR #43、PCM境界PR #48、音声前処理Runtime PR #50、全体TDD計画PR #51、画像GPU前処理PR #52まで統合）。統合後の[main CI 38341355564](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38341355564)は成功。M1のWindows受け入れを維持し、画像 / 音声のend-to-end API / sampleは未実装。残作業は検証だけではない。[直前の計画snapshot](results/tdd-plan-checkpoint-20261013.json)、[音声前処理Runtime受け入れ](results/m4-audio-preprocessing-runtime-windows-20261013.json)、[今回確認した診断未達](results/tdd-acceptance-plan-checkpoint-20261013.json)を別checkpointとして保持する。今回の計画更新では新たなUnity実行・モデル生成は行わず、既存の完了報告を読み取った。
+今回確認したmainは `c809ee74fef8805485fc6757b5eb5d4ebed32bec`。PR #52までの基盤に加え、全体計画PR #54、公式prompt契約PR #55、native SiLU / 標準ONNX Swish単独probe PR #57が統合済み。画像 / 音声のend-to-end API / sampleは未実装で、残作業は検証だけではない。以下の最新checkpointと、各行の過去の固定sourceの実測を区別する。[以前の計画snapshot](results/tdd-plan-checkpoint-20261013.json)、[音声前処理Runtime受け入れ](results/m4-audio-preprocessing-runtime-windows-20261013.json)、[診断未達](results/tdd-acceptance-plan-checkpoint-20261013.json)は保持する。今回の文書更新では新たなUnity実行・モデル生成は行わない。
+
+### 最新checkpointと直近の受け渡し
+
+| 対象 | 現在の証拠 | 次のTDDと受け入れ |
+| --- | --- | --- |
+| C3 公式prompt | PR #55はmainへ統合済み。prompt / placeholder / maskの契約実装を保持 | 実encoderのfeature数・順序・所有権・途中失敗を新しいredから接続し、実画像 / 音声の最終vectorとtext回帰を確認 |
+| I1 / I4 最終画像参照 | PR #56の実モデルPythonは3 profile / 6画像で768次元と保存encoder → 保存backboneを照合済み。producer `35d357263ae29de4db1ad93d1cac3616ea1e61b4`、[CI 38356261690](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38356261690)。現head `70fe7dec4f53846006e84917a6e48d6c0cf54d1e`の全8チェック成功だがmainと競合 | PR #56は競合解消後のheadでCIを確認して統合。zero-audio profileのSentis import・CPU / 実GPUの全chain照合、I2の元FP32条件、API / sampleは別gate |
+| A4 標準Swish単独 | PR #57は統合済み。[小さいWindows probe](results/m4-native-silu-swish-probe-windows-20261013.json)はCPU / GPUの全4条件合格。GPUは固定許容差内であり、完全一致ではない | 単独operatorの合格を全encoderへ流用しない。全encoder ONNX、保存 / 再読込と元6信号を確認 |
+| A4 native音声ONNX候補 | 未コミットの `feat/audio-native-silu-onnx` は追加4 + 2 + 1 redから関連58 green。以前のnative vector比較2 redも同候補では解消。独立ONNX評価の全encoder照合は小さいモデルのみ | 候補を別PRへ固定。Actionsで元の実重み6信号を照合し、標準ONNXの構造・数値、Sentis CPU / 実GPUを別判定。現在の実モデル不合格を成功に書き換えない |
+
+このcheckpointのPR / branch状態は2026-10-13の確認時点。各後続PRでsource SHA・入力 / model hash・red / green・未実行を更新する。工程1〜6の範囲と各C / I / A契約は下記のまま維持し、正式公開は全完了後に別途扱う。
 
 | 範囲 | 確認済み | 次に満たす条件 |
 | --- | --- | --- |
 | M2 / C1・C7 | Windows Editor / Playerのテキスト実測あり。導入helperのPR #36はPR #31の作業ブランチへ統合済み | mainへの導入手順反映、安定性・性能の原因別修正、最終candidateの空Git consumer、native入力・他OS。既存consumerの更新を新規導入と数えない |
-| C3 共通backbone | [PR #43](https://github.com/ayutaz/unity-embeddinggemma-2/pull/43)はmainへ統合済み。最終head `4feac7551bd99f2571a667f237ace85ba2d7093f`、[CI 38331086059](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331086059)成功。配置・cacheの小さい68件greenに加え、実1024長graphのCPU / GPUCompute × FP32 / Float16全4条件合格 | 実測sourceは固定Git `21e598c5b53d5ad73557ee6d606b12770254d73b`。統合headへ実測を付け替えない。実encoder feature、公式prompt構築、GPU前処理との接続と最終空consumerは別gate |
+| C3 共通backbone | [PR #43](https://github.com/ayutaz/unity-embeddinggemma-2/pull/43)はmainへ統合済み。最終head `4feac7551bd99f2571a667f237ace85ba2d7093f`、[CI 38331086059](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331086059)成功。配置・cacheの小さい68件greenに加え、実1024長graphのCPU / GPUCompute × FP32 / Float16全4条件合格 | 実測sourceは固定Git `21e598c5b53d5ad73557ee6d606b12770254d73b`。統合headへ実測を付け替えない。公式promptはPR #55で統合済み。実encoder feature・GPU前処理との接続と最終空consumerは別gate |
 | M3 / I1・I2 | Python画像encoder / projectorは3 profileで合格。Windows Sentis Float16 CPU / 実GPUの6条件合格 | FP32の6条件はcosine合格でも固定elementwise許容差を超過。不一致演算を小さいredにし、全12条件を満たす。I3の実装 / Windows検証は次行。実encoder接続・最終768次元API / sampleは未完成 |
 | M3 / I3 | PR #52でGPU画像前処理を実装。Python14 red → 14 green、Unity13 red → green、最大寸法dispatchの1 redを修正。固定Git `71284e3`でpackage118 green、公式24ケースのpixel / position一致・次段GPU受け渡し。[receipt](results/m3-image-preprocessing-final-git-windows-20261013.json) | 実encoder接続・最終API / sampleは未完了。GPU profiler、長い反復 / memory、Player・他OS・最終空consumerは別gate |
 | M4 / A1〜A3 | 前処理単独PR #38 / #46、PCM入力PR #48、前処理Runtime PR #50はmainへ統合。21 red → 21 green、固定Git package全108 green、CPU / 実GPU各6信号の全feature・mask合格、次段検証graphへのGPU Tensor受け渡しを確認。[実測と失敗履歴](m4-audio-preprocessing-runtime-validation.md) | 実音声encoder・backboneへの連結、最終768次元API / sample・最終空consumerは別gate。初回の測定用ReduceMean不一致を成功で消さない |
@@ -37,11 +48,11 @@ Mac・端末・署名・Unity CIライセンス / runnerの確保は工程1か�
 
 ### 直近の実行順と依存
 
-I3の画像GPU前処理RuntimeはPR #52でmainへ統合し、Windows固定Git受け入れまで進んだ。次はI2の画像FP32差・A4の音声encoder差とC3の公式prompt / maskをTDDで解消する。I3のGPU profiler / memory / 他環境は別gateとして保持する。工程番号は受け渡しの順序であり、M2の他OS検証完了まで独立したM3 / M4の開発を待たせない。
+I3の画像GPU前処理RuntimeはPR #52でmainへ統合し、Windows固定Git受け入れまで進んだ。C3の公式prompt / mask契約もPR #55で統合済み。次はI2の画像FP32差とA4の音声encoder差をTDDで解消し、実encoder・公式prompt・共通本体を連結する。I3のGPU profiler / memory / 他環境は別gateとして保持する。工程番号は受け渡しの順序であり、M2の他OS検証完了まで独立したM3 / M4の開発を待たせない。
 
 画像診断PR #53はhead `d51262632b0d0369fe62719dff743e6ecd990a46`の[CI 38346643250](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38346643250)が全8チェック成功だが、実Sentis診断は別判定。初回はBurstのimport失敗で推論未実行。回復後の2026-10-13 04:56 UTCの報告はcompile成功・CPU / GPUComputeの2テスト不合格・skip 0で、`New native final must fit the original pinned reference`に失敗した。case_0のtrace最終値は元の保存Sentis最終値と一致したが、独立参照の文脈確認が未達で、case_1へ到達していない。途中の`localization_validated=true`を全体成功や原因確定へ使わない。まず元 / 新参照の入力・生成環境・最終値を照合し、報告監査がこの途中成功を拒否するredを追加する。その後、文脈が揃ったstage / 演算のredから最小修正へ進み、元の全12条件を再照合する。
 
-音声PR #40の実モデルgateはsilence不合格のまま。作業ブランチの重みを使わない調査では、native SiLUのvector / scalarと保存graphのexp経路に丸め差があり、vector比較の2テストはred。数学関数の経路差を確認した段階で、full encoderの原因修正は未証明。小さい独立参照red → 最小修正 → 関連green → 元6信号の実モデルPython → Sentis CPU / 実GPUの順とする。残り5信号の未実行を合格にしない。
+音声PR #40の実モデルgateはsilence不合格のまま。以前のvector比較2 redはnative演算保持の候補でgreenになり、標準Swish単独もPR #57で受け入れ済みだが、full encoderの実重み修正は未証明。小さいモデルの関連58 greenの候補を固定PRへ渡し、元6信号の実モデルPython → 全encoder標準ONNX → Sentis CPU / 実GPUの順とする。残り5信号の未実行を合格にしない。
 
 | 順序 | PRの対象 | 先に観測する失敗と、次へ進む条件 |
 | --- | --- | --- |
@@ -66,8 +77,8 @@ M2の標準導入・安定性修正と、Mac / iOS / Androidの環境確保は�
 
 ### 次のPR単位の詳細
 
-1. **公式promptと実encoder接続**: PCM入力境界PR #48、共通Runtime PR #43、前処理Runtime PR #50は統合済み。次に公式prompt / mask構築と実encoderの所有権・受け渡しを、不正入力 / profile / 二重Dispose / 途中失敗のredから実装する。実encoder接続の合格判定はI2 / A4の数値gate合格後、工程6の空consumerは別gate。
-2. **音声activation差の修正**: 診断76件を維持し、単独診断とfull traceの完全一致を前提に、native SiLUと保存graphの丸め差を小さい独立参照の再現redへ落とす。最小修正 → 対象 / 関連回帰green → 元の実重み6信号green → Sentis CPU / 実GPU受け入れの順で進む。診断追加だけではA4を合格にしない。
+1. **公式promptと実encoder接続**: PCM入力境界PR #48、共通Runtime PR #43、前処理Runtime PR #50、公式prompt / mask契約PR #55は統合済み。次に実encoderの所有権・受け渡しを、不正入力 / profile / 二重Dispose / 途中失敗のredから実装する。実encoder接続の合格判定はI2 / A4の数値gate合格後、工程6の空consumerは別gate。
+2. **音声activation差の修正**: 診断と元の実モデル不合格を保持し、native SiLU保持・標準ONNX Swishへの候補を小さいred / greenから別PRへ渡す。小さい関連58 green → 元の実重み6信号green → 全encoder ONNX数値照合 → Sentis CPU / 実GPU受け入れの順で進む。単独probe・構造checker・診断追加だけではA4を合格にしない。
 3. **画像FP32差の分離**: 独立参照と最初に差が出るstage / 演算の小さいredから修正し、3 profile × CPU / GPU × FP32 / Float16の12条件を確認する。cosine合格だけでelementwise不合格を上書きしない。
 4. **GPU前処理から実encoderへの接続**: I3の境界・所有権の実装とWindows単独受け入れは完了。次は実encoderへの受け渡し・途中失敗・中間readback禁止の契約をredから確認する。A3の前処理Runtime単独も受け入れ済みだが、A4合格後の実encoder・共通本体への連結は別契約。I4 / A5の最終768次元とI5 / A6の全順位・sampleへ進む。
 

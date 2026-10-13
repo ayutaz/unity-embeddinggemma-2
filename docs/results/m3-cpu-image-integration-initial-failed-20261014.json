@@ -1,0 +1,36 @@
+{
+  "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+  "CompletedAt": "2026-10-13T16:12:39.6467145Z",
+  "FailedCount": 3,
+  "FailedTests": [
+    {
+      "FullName": "EmbeddingGemma.Tests.CpuImagePreprocessorIntegrationTests.OtherAcceptedByteFormatsKeepStoredRgb(RGB24,False)",
+      "Message": "System.NotSupportedException : CPU preprocessing of GPU-only inputs requires supported texture readback.",
+      "File": ".\\Library\\PackageCache\\com.ayutaz.embeddinggemma@08b69075045b\\Runtime\\ImagePreprocessor.cs",
+      "Line": 136
+    },
+    {
+      "FullName": "EmbeddingGemma.Tests.CpuImagePreprocessorIntegrationTests.OtherAcceptedByteFormatsKeepStoredRgb(BGRA32,False)",
+      "Message": "System.NotSupportedException : CPU preprocessing of GPU-only inputs requires supported texture readback.",
+      "File": ".\\Library\\PackageCache\\com.ayutaz.embeddinggemma@08b69075045b\\Runtime\\ImagePreprocessor.cs",
+      "Line": 136
+    },
+    {
+      "FullName": "EmbeddingGemma.Tests.CpuImagePreprocessorIntegrationTests.RealTextureCpuPreprocessingConnectsToSyntheticFinalApi",
+      "Message": "  Expected: 0.45733540469874051d +/- 9.9999999999999995E-07d\r\n  But was:  0.457341015f\r\n",
+      "File": ".\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CpuImagePreprocessorIntegrationTests.cs",
+      "Line": 62
+    }
+  ],
+  "HasFailures": true,
+  "InconclusiveCount": 0,
+  "Message": "Test execution completed with status: Failed",
+  "NoTestsFound": false,
+  "NoTestsFoundExplanation": "",
+  "PassedCount": 2,
+  "SkippedCount": 0,
+  "Status": "Failed",
+  "Success": false,
+  "TestCount": 5,
+  "XmlPath": ".\\artifacts\\k\\.uloop\\outputs\\TestResults\\20261013_161239_6502268_da2b03e8eb9545d7b0171445ab720082.xml"
+}

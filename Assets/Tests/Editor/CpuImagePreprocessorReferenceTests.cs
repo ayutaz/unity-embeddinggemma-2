@@ -12,9 +12,9 @@ namespace EmbeddingGemma.Tests
 {
     public sealed class CpuImagePreprocessorReferenceTests
     {
-        const string RuntimeSource="b5dba83cb9d5c3f73ff1fd6abfa4ebe26e11405f";
+        const string RuntimeSource="1193e9ae50f7997b9436d3b6f3c887446337cbeb";
         static string DirectoryPath => Path.Combine(Application.dataPath,"../artifacts/image-preprocessing");
-        static string OutputPath => Path.Combine(DirectoryPath,"cpu-unity-results.json");
+        static string OutputPath => Path.Combine(DirectoryPath,"cpu-unity-results-1193e9a.json");
 
         [TestCase("readable_linear")] [TestCase("readable_srgb")]
         [TestCase("texture_linear")] [TestCase("texture_srgb")]

@@ -27,3 +27,5 @@ hookは自身が登録したものだけをfinallyで削除し、外部hookと�
 fully valid silence入力`[1,280,1024]`から再現したnative layer 0 finalは、保存済みfinalの全要素とbit単位で一致した。7つの内部値を各1,146,880 bytesで取得し、ダウンロード後も全7ファイルのsize / SHAを再照合した。norm_outのSHAは元finalの`3cc35396…`と一致。Runtimeの修正、元goldenの置き換え、許容差の緩和はない。以前の全audio export用workflowは条件によりskipで、不要なfull exportを実行していない。ここでのskipは数値合格には含めない。
 
 これは公式native内部参照の再現成功であり、Sentisの内部値との照合はまだ未実行。encoder数値gateの不合格は保持する。source一致と正常完了が確認できても、元6信号・CPU / 実GPUの修正合格、画像数値差、各role・境界・sample・Player / 必須実機・最終配布準備は未完了。
+
+同じheadの[通常CI 38459687450](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38459687450)はPython4環境 / package / actionlintが合格した一方、model-referenceは`audio ONNX export mismatch: silence`で失敗し、Required CIも不合格。native内部参照producerの成功で、元ONNXの失敗を置き換えない。診断完了後は専用labelを外し、文書更新で同じ参照取得を重複実行しない。後続headのCIとこの固定sourceの実測は別に追跡する。

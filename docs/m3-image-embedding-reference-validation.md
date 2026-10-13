@@ -22,4 +22,8 @@
 
 Actionsの既存vision生成後に実行し、固定revisionの重みを同じrunner cacheから利用する。最終参照JSON、profile graph、native feature binary、全hashをartifactへ保存し、モデルをGitへ含めない。`python_saved_chain_validated`、`unity_validated`、`gpu_chain_validated`を分けて記録する。全graphを1度に保持せず、現在のprofileを処理して解放する。
 
-実モデルPython結果は未実行。次はActionsの結果とsourceを確認し、実CPU / GPUの対応profileとencoderから最終768次元までをSentisで照合する。zero-audio inputのimport / Runtime受け入れ、画像FP32の元gate、GPU前処理の中間readback禁止と資源・性能を別々に確認する。失敗や未実行を成功にしない。
+実モデルPythonは[CI 38356261690](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38356261690)で成功し、head `3ef114a2a7880c15340e1218613a6369641a89e5`の全8チェックも成功。producerはmerge ref `35d357263ae29de4db1ad93d1cac3616ea1e61b4`で、PR headとは別。全3 profile / 6画像でnative feature → 保存backboneと保存encoder → 保存backboneの固定elementwise条件とcosine条件が合格した。最終幅768、minimum cosineはFloat32計算値1.0（全値一致の主張ではない）。squareは256 / 0、landscape / portraitは252 / 0のfeature数を持ち、後者は同じgraphを共有する。
+
+2つのbackbone graphは1095293656 / 1095285464 bytes、合計2190579120 bytes。これは保存量の実測で、速度 / peak memory改善のbenchmarkではない。全archive 2193997298 bytesをローカルへ再取得せず、結果JSONだけ2473458 bytesの範囲取得で確認した。固定source、reference JSONのmanifest hashを照合。[実モデルreceipt](results/m3-image-embedding-reference-real-20261013.json)。ローカルで実重みを実行していない。過去のTDD receiptの未実行flagは当時のcheckpointとして保持する。
+
+次は実CPU / GPUの対応profileとencoderから最終768次元までをSentisで照合する。zero-audio inputのimport / Runtime受け入れ、画像FP32の元gate、GPU前処理の中間readback禁止と資源・性能を別々に確認する。今回のPython合格でそれらを解決済みにせず、失敗や未実行を成功にしない。

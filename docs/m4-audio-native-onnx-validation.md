@@ -61,6 +61,10 @@ Runtime requested / resolved SHAは `8a7d2f0dea30be95a3158830fb0d9c9de895efc4`�
 
 次は実Sentisの段階別出力を元の不合格最終値と対応付け、最初の不一致を小さいredへ分離する。NumPy評価と実Sentis全encoderの両方が未達である。subsample単独の合格を流用せず、元6信号・Float16・前処理 / backbone連結・最終API / sample / Player / 必須実機のgateを維持する。
 
+段階別のnative参照producerを6 assertion red → 6 green、CLI / workflowの未接続を2 red → 2 greenで追加した。不合格の元ONNX報告を保持する分岐も1件green。[TDD receipt](results/m4-audio-runtime-stage-reference-tdd-20261013.json)。source / revision / snapshot / 選択artifact hash、6 ID / 2 profile、finite入力とprefix maskを重み読み込み前に監査する。native各段階の最終値は元encoder参照へ完全一致し、traceのNumPy最終値も元ONNXの最終値へ完全一致しなければ完了報告を作らない。段階別native tensorはhash付きbinaryへ保存し、original ONNX数値判定を変更せず`audio_runtime_stage_context_only`として扱う。
+
+opt-in workflowはnative収集が数値不合格でも、完了manifestがある場合だけalways条件でstage参照生成へ進む。収集stepの非zero終了は維持し、continue-on-errorを使わない。必須model-reference workflowは変更していない。次の実重み実行でこの文脈を確認する。新しいproducerのnative最終値を以前の固定参照と照合し、実Sentis trace最終値も元の実Sentis不合格へ対応付けてから局所診断へ進む。小さいcontext greenを実encoder数値合格へ流用しない。
+
 Actionsで元の実重み6信号を実行し、native保存参照と全encoder標準ONNXの数値結果を分けて判定する。PR #40の過去のsilence不合格・残り5信号未実行はそのsourceの記録として保持する。候補が失敗した場合も固定許容差を緩めず、最初の演算差を小さいredへ落とす。
 
 Python全gate合格後も、Sentis import / 保存 / 再読込、全6信号のCPU / 実GPUと採用Float16形式、GPU前処理 → 実encoder → 共通本体の連結、最終API / 検索・再生・明示収録 / Player / 必須実機は別gate。小さいONNX greenや構造checkerを実モデル・GPU成功へ流用しない。

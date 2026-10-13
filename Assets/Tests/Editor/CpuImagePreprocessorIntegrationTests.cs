@@ -1,6 +1,8 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Unity.InferenceEngine;
 using UnityEngine;
@@ -58,6 +60,28 @@ namespace EmbeddingGemma.Tests
                     var actual=api.Embed(texture);
                     var expectedSeed=(2588+260)/10000.0+64/255.0*2304/2520;
                     var norm=Math.Sqrt(expectedSeed*expectedSeed+1);
+                    using(var diagnostic=preprocessor.Process(texture))
+                    {
+                        var patchValues=diagnostic.Pixels.DownloadToArray();
+                        var expectedMean=(double)(64*(1f/255f))*2304/2520;
+                        var mean=patchValues.Sum(value=>(double)value)/patchValues.Length;
+                        var encWorker=(Worker)typeof(ImageFeatureEncoder).GetField("worker",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(encoder);
+                        var projected=((Tensor<float>)encWorker.PeekOutput()).DownloadToArray();
+                        var observedProjectedMean=projected.Sum(value=>(double)value)/projected.Length;
+                        var inferredFinalSeed=actual[0]/(double)actual[1];
+                        var destination=Path.Combine(Application.dataPath,"../artifacts/cpu-image-small-chain-diagnostic"); Directory.CreateDirectory(destination);
+                        File.WriteAllText(Path.Combine(destination,"results.json"),new JObject {
+                            ["scope"]="synthetic_cpu_graph_reduction_diagnostic_not_real_model",
+                            ["runtime_source"]="10fa49cd4a7db231cb3e27434dfabaf47b54fb1f",
+                            ["fixed_final_atol"]=1e-6,["fixed_final_passed"]=Math.Abs(actual[0]-expectedSeed/norm)<=1e-6,
+                            ["pixel_mean_expected_from_float32_storage"]=expectedMean,["pixel_mean_actual_double_accumulation"]=mean,
+                            ["projected_mean_actual"]=observedProjectedMean,["projected_mean_error_vs_pixel_mean"]=observedProjectedMean-mean,
+                            ["final_seed_expected_high_precision"]=expectedSeed,["final_seed_inferred_from_output"]=inferredFinalSeed,
+                            ["backbone_seed_error_vs_observed_projected_mean"]=inferredFinalSeed-((2588+260)/10000.0+observedProjectedMean),
+                            ["final_first_expected"]=expectedSeed/norm,["final_first_actual"]=actual[0],
+                            ["real_model_validated"]=false
+                        }.ToString());
+                    }
                     Assert.That(actual.Length,Is.EqualTo(768));
                     Assert.That(actual[0],Is.EqualTo(expectedSeed/norm).Within(1e-6));
                     Assert.That(actual[1],Is.EqualTo(1/norm).Within(1e-6)); Assert.That(actual.Skip(2),Is.All.EqualTo(0));

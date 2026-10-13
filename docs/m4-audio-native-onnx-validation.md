@@ -45,6 +45,12 @@ coarseの失敗を保持してsubsample単独ONNXを保存し、単独最終値�
 
 NumPy評価の不合格と、実Sentis subsampleのCPU / GPU合格を分ける。数式をNumPyの結果だけへ合わせて変更せず、次は元6信号の完全なnative参照を保持して全encoderの実Sentisを診断する。現在のRequired数値gateを通過したとは扱わず、未実行・失敗を隠さない。全encoder / 最終768次元 / API / sample / Player / 必須実機は引き続き未受け入れ。
 
+### 全encoder診断へ渡すnative参照収集
+
+`--native-silu --collect-onnx-failures`を明示した診断経路だけは、NumPy不合格を記録して元6信号のnative参照・各profileのONNXを最後まで保存する。native保存参照の不一致は即時拒否する。NumPyに不合格があれば最終`success=false` / `onnx_numerically_validated=false`、全caseの失敗ledger、非zero終了を維持する。`native_reference_complete=true`とUnity / encoder受け入れは別。Required model-referenceにはこのflagを付けず、既存の厳格なgateを変更しない。
+
+別の`Audio native reference for runtime diagnostics` workflowはmanual、または同repoのPRへ`audio-runtime-diagnostics` labelを付けた場合だけ実行する。contents readのみ、Secretsなし、pull_request_targetなし。NumPy不合格のstepへcontinue-on-errorを付けずworkflowも失敗のままにするが、always uploadで診断artifactを保持する。小さいTDDはAPI / CLIの4 red、workflow欠落の1 assertion red → 最終関連18 passed。UTF-8 workflowを既定cp932で読む初回testの1失敗は修正し、数値のredに合算しない。[収集TDD receipt](results/m4-audio-native-runtime-reference-tdd-20261013.json)。実重みの全6参照はこの時点では未実行。
+
 Actionsで元の実重み6信号を実行し、native保存参照と全encoder標準ONNXの数値結果を分けて判定する。PR #40の過去のsilence不合格・残り5信号未実行はそのsourceの記録として保持する。候補が失敗した場合も固定許容差を緩めず、最初の演算差を小さいredへ落とす。
 
 Python全gate合格後も、Sentis import / 保存 / 再読込、全6信号のCPU / 実GPUと採用Float16形式、GPU前処理 → 実encoder → 共通本体の連結、最終API / 検索・再生・明示収録 / Player / 必須実機は別gate。小さいONNX greenや構造checkerを実モデル・GPU成功へ流用しない。

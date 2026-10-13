@@ -6,6 +6,8 @@
 
 ## TDDと実測
 
+PR #58の[CI 38361093854](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38361093854)ではUbuntu / Python 3.14の17要素fixtureでnative対div-expのexact mismatchが0だった。以前のテストの「必ず差が出る」というassertionが失敗したが、保存native対公式nativeの完全一致は合格。診断件数は各環境の入力から独立に再計算した件数・最大絶対誤差へ照合し、0も有効な実測として扱う。Windows実測の1 / 381件は当時の環境の記録として保持し、精度許容差は変更しない。
+
 probe生成・native op保持・変更入力・immutable source拒否・モデルを取得しないCLIは5 assertion red → 関連9 passed。shape 17と[1,2,4096]、seed 412 / scale 2を使う。raw `aten.silu`を保存し、再読込と変更入力が公式SiLUに全値一致することを確認した。ONNXは標準domainのSwish 1 node / opset 24 / IR 10でcheckerが成功した。
 
 固定source `ef7a45e237ced12c7b7b0466e23bb7e653bb8a58`で小さいfixtureをローカル生成した。モデル重み・tokenizer取得はない。同じUnity 6000.3.21f1 Editorを再利用し、各ONNXを1回import・保存し、同じ保存modelをCPU / GPUComputeで再読込した。import後の専用Swish layer 1個を確認した。vendor cacheの変更・native plugin追加はない。

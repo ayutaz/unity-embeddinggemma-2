@@ -127,6 +127,37 @@ def scan(stream, *, small_tensor_bytes=4096, metadata_field_bytes=1 << 20):
     return result
 
 
+def _norm_anchor(node, weights, stage):
+    if node["op_type"] != "Mul" or len(node["outputs"]) != 1:
+        raise ValueError("invalid audio norm operator")
+    candidates = [weights[name] for name in node["inputs"] if name in weights]
+    if len(candidates) != 1:
+        raise ValueError("audio norm scale initializer is missing or ambiguous")
+    weight = candidates[0]
+    dims = weight.get("dims", [])
+    if (weight.get("data_type") != 1 or not dims or any(type(value) is not int or value < 1 for value in dims)
+            or weight.get("raw_bytes") != math.prod(dims) * 4
+            or re.fullmatch(r"[0-9a-f]{64}", weight.get("sha256", "")) is None):
+        raise ValueError("audio norm scale must have audited small FP32 bytes")
+    return dict(stage=stage, node_name=node["name"], original_output=node["outputs"][0],
+                coefficient_name=weight["name"], coefficient_sha256=weight["sha256"],
+                coefficient_bytes=weight["raw_bytes"], coefficient_dims=dims)
+
+
+def audio_layer_zero_norm_anchors(metadata):
+    """Map the three layer-zero norm outputs to their unique scale bytes."""
+    weights = {value["name"]: value for value in metadata["initializers"]}
+    if len(weights) != len(metadata["initializers"]):
+        raise ValueError("duplicate initializer name")
+    result = []
+    for stage in ("norm_pre_attn", "norm_post_attn", "norm_out"):
+        nodes = [node for node in metadata["nodes"] if node["name"] == f"/{stage}/Mul_1"]
+        if len(nodes) != 1:
+            raise ValueError("internal audio norm stage is missing or ambiguous")
+        result.append(_norm_anchor(nodes[0], weights, stage))
+    return result
+
+
 def audio_norm_anchors(metadata, *, layer_count=12):
     """Bind each exported audio norm_out scale to its exact small FP32 payload."""
     if type(layer_count) is not int or not 1 <= layer_count <= 100:
@@ -144,18 +175,7 @@ def audio_norm_anchors(metadata, *, layer_count=12):
         index = int(match.group(1) or "0")
         if index >= layer_count or index in result or node["op_type"] != "Mul" or len(node["outputs"]) != 1:
             raise ValueError("duplicate or invalid audio norm stage")
-        candidates = [weights[name] for name in node["inputs"] if name in weights]
-        if len(candidates) != 1:
-            raise ValueError("audio norm scale initializer is missing or ambiguous")
-        weight = candidates[0]
-        dims = weight.get("dims", [])
-        if (weight.get("data_type") != 1 or not dims or any(type(value) is not int or value < 1 for value in dims)
-                or weight.get("raw_bytes") != math.prod(dims) * 4
-                or re.fullmatch(r"[0-9a-f]{64}", weight.get("sha256", "")) is None):
-            raise ValueError("audio norm scale must have audited small FP32 bytes")
-        result[index] = dict(stage=f"layer_{index}", node_name=node["name"], original_output=node["outputs"][0],
-                             coefficient_name=weight["name"], coefficient_sha256=weight["sha256"],
-                             coefficient_bytes=weight["raw_bytes"], coefficient_dims=dims)
+        result[index] = _norm_anchor(node, weights, f"layer_{index}")
     if set(result) != set(range(layer_count)):
         raise ValueError("audio norm stage is missing")
     return [result[index] for index in range(layer_count)]

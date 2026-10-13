@@ -1,0 +1,35 @@
+{
+  "date_jst": "2026-10-14",
+  "scope": "fixed_image_encoder_api_synthetic_graph_tdd",
+  "real_model_validated": false,
+  "image_end_to_end_validated": false,
+  "known_vision_fp32_failure_resolved": false,
+  "red": {
+    "test_source": "833e7e0",
+    "runtime_source": "9c6f7943ca6319849dd3db54611acc477e7d0981",
+    "test_only_consumer_copy": true,
+    "completed_utc": "2026-10-13T15:31:05.0388093Z",
+    "passed": 0, "failed": 16, "skipped": 0,
+    "failure": "Missing ImageEncoderProfile API assertion after successful compile",
+    "sha256": "62f46af15a5ba7846ae2b3623e32f6c2ac19f5b436eed37db3a6e4f46b64acec"
+  },
+  "green": {
+    "requested_source": "3c9bf7d616e0fccb4ec808280e1a59185da8e2b9",
+    "resolved_source": "3c9bf7d616e0fccb4ec808280e1a59185da8e2b9",
+    "runtime_overlay": false,
+    "test_only_copy_removed": true,
+    "completed_utc": "2026-10-13T15:35:10.0633628Z",
+    "passed": 16, "failed": 0, "skipped": 0, "cli_exit_code": 0,
+    "sha256": "18e46b686552ce64efcabf50cba7590496148829ad4e1e9d27cd63015260ce4b"
+  },
+  "package_regression": {
+    "assembly": "EmbeddingGemma.Package.Editor.Tests",
+    "completed_utc": "2026-10-13T15:36:56.1306565Z",
+    "passed": 158, "failed": 0, "skipped": 0, "cli_exit_code": 0,
+    "sha256": "8a339f164e25a11df9e7e62c73c9ce9951f0b5c7386930372918b309fe12103c",
+    "earlier_wrong_assembly_run": {"test_count": 0, "status": "NoTestsFound", "cli_exit_code": 1, "counted_as_pass": false}
+  },
+  "compile": {"errors": 0, "warnings": 0, "cli_exit_code": 0},
+  "environment": {"unity": "6000.3.21f1", "sentis": "2.6.1", "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER", "graphics_api": "Direct3D12", "editor_pid": 149180, "project": "artifacts/k", "fresh_consumer": false, "embedded_test_framework": "1.6.0"},
+  "release_created": false
+}

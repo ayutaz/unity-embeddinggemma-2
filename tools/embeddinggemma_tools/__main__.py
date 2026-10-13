@@ -12,6 +12,7 @@ from .prepare import MODEL_ID, MODEL_REVISION, prepare, prepare_audio_encoder, p
 from .search import SEARCH_CASES
 from .prompt_reference import prepare_prompt_reference
 from .image_embeddings import prepare_image_embeddings
+from .audio_embeddings import prepare_audio_embeddings
 from .native_silu_probe import prepare_silu_probe
 
 
@@ -73,6 +74,12 @@ def main(argv=None):
     images.add_argument("--vision-source", type=Path, required=True)
     images.add_argument("--sequence-length", type=sequence_length, default=1024)
     images.add_argument("--revision", type=revision, default=MODEL_REVISION)
+    final_audio = commands.add_parser("prepare-audio-embeddings", help="Official audio final vectors and native-only saved-chain gate")
+    final_audio.add_argument("--output", type=Path, required=True)
+    final_audio.add_argument("--snapshot", type=Path)
+    final_audio.add_argument("--encoder-source", type=Path, required=True)
+    final_audio.add_argument("--sequence-length", type=sequence_length, default=1024)
+    final_audio.add_argument("--revision", type=revision, default=MODEL_REVISION)
     silu=commands.add_parser("prepare-silu-probe",help="Weights-free native SiLU and ONNX Swish probe")
     silu.add_argument("--output",type=Path,required=True)
     args = parser.parse_args(argv)
@@ -86,11 +93,17 @@ def main(argv=None):
             "config.json", "model.safetensors", "tokenizer.json", "tokenizer_config.json",
             "config_sentence_transformers.json", "modules.json", "1_Pooling/config.json",
         ]
-        if args.command in ("prepare-backbone", "prepare-vision", "prepare-audio-encoder", "prepare-image-embeddings", "prepare-audio-runtime-stages"):
+        if args.command in ("prepare-backbone", "prepare-vision", "prepare-audio-encoder", "prepare-image-embeddings", "prepare-audio-runtime-stages", "prepare-audio-embeddings"):
             patterns.append("processor_config.json")
         if args.command == "prepare-prompts":
             patterns = ["config.json", "tokenizer.json", "tokenizer_config.json", "config_sentence_transformers.json"]
         snapshot = Path(snapshot_download(MODEL_ID, revision=args.revision, allow_patterns=patterns))
+    if args.command == "prepare-audio-embeddings":
+        summary = prepare_audio_embeddings(snapshot, args.encoder_source, args.output, sequence_length=args.sequence_length,
+                                           revision=args.revision, source_commit=os.environ.get("GITHUB_SHA", "local"))
+        print(json.dumps({name: summary[name] for name in (
+            "success", "stage", "case_count", "profile_count", "unity_validated", "gpu_chain_validated", "onnx_encoder_numerically_validated")}))
+        return
     if args.command == "prepare-audio-runtime-stages":
         summary = prepare_audio_runtime_stages(snapshot, args.encoder_source, args.output, revision=args.revision,
                                                source_commit=os.environ.get("GITHUB_SHA", "local"))

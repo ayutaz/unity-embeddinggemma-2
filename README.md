@@ -15,7 +15,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 > 選択モデルだけを保持するsample cacheはfile URL初回展開・warm完全hash・実GPU検索を確認済みです。Windows検証専用PlayerもIL2CPP / Release / High strippingのbuildと実モデル4条件・独立2起動を確認しました。[sample cache](docs/m2-sample-cache-validation.md) / [Playerの条件と結果](docs/m2-player-il2cpp-validation.md)。
 > この段落は2026-10-10の到達点です。後続のWindows Player実測・環境補修条件・残タスクは[現在の状態](docs/status.md)を参照してください。
 
-> **2026-10-13: 正式リリースは画像・音声を含む全対応と必須検証の完了後に行います。** M2の基盤安定化 → 共通マルチモーダル基盤 → M3画像 → M4音声 → 全対象環境の検証 → 正式公開の順です。全実装をTDDで進めます。[全体計画](docs/multimodal-tdd-plan.md) / [M3のRed・Greenと実モデル条件](docs/m3-plan.md) / [M4のRed・Greenと実モデル条件](docs/m4-plan.md)。M3・M4の実装・検証は未着手です。
+> **2026-10-13: 正式リリースは画像・音声を含む全対応と必須検証の完了後に行います。** M2の基盤安定化 → 共通マルチモーダル基盤 → M3画像 → M4音声 → 全対象環境の検証 → 配布準備の順です。全実装をTDDで進めます。[全体計画](docs/multimodal-tdd-plan.md) / [M3のRed・Greenと実モデル条件](docs/m3-plan.md) / [M4のRed・Greenと実モデル条件](docs/m4-plan.md)。画像encoder・音声前処理のPython照合は合格しています。画像Sentis FP32、音声encoderの保存graphには数値不合格が残り、GPU前処理から最終768次元までのAPI・検索sampleは未完成です。正式公開は配布準備後の別工程です。
 
 ## ゴール
 
@@ -31,8 +31,8 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 | --- | --- | --- |
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor受け入れ検証完了（保存・量子化・測定を含む） |
 | M2 | テキストUPM・サンプル・検証基盤を安定化する | Windows実測あり。標準環境再現・新candidate・性能・他環境は未完了 |
-| M3 | GPU画像前処理・encoder・共通本体・画像検索 | TDD計画作成済み、実装・検証未着手 |
-| M4 | GPU音声前処理・encoder・共通本体・音声検索 | TDD計画作成済み、実装・検証未着手 |
+| M3 | GPU画像前処理・encoder・共通本体・画像検索 | Python encoder合格、Sentis Float16 6条件合格 / FP32 6条件不合格。前処理・最終API・sampleは未完成 |
+| M4 | GPU音声前処理・encoder・共通本体・音声検索 | Python前処理6ケース合格。音声encoder数値不合格、Unity・最終API・sampleは未完了 |
 | 最終公開 | 全対応と必須環境の検証後に正式リリース | 未着手 |
 
 ## 動作環境

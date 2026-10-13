@@ -6,9 +6,9 @@ A1 / A3の固定profile音声前処理exportと参照・必須Actions gateをTDD
 
 ### 直近のTDD順序
 
-1. A4の保存graph数値差を解消する。[PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40)のhead `2fb5c83504f46680fd5be40265715ea5eb992eac`は実装済み・未統合で、[最新実モデルCI 38321025453](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38321025453)は失敗。Softplus係数固定とSiLU演算順序の修正後も、eager wrapper対公式参照は最大差0、保存graph対eagerは最大差 `0.00021576881408691406`、許容差比 `9.733773231506348`、不一致368要素。次は段階別診断の欠落 / 誤順序 / 元の失敗消失を拒否するテストのred → 診断実装のgreen → 最初の差の特定と進める。その原因の小さい再現red → 最小修正 → 固定実重み・6信号・mask profileの照合greenを得る。診断の成功はencoderの成功ではなく、許容差を緩めない。
+1. A4の保存graph数値差を解消する。[PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40)の確認head `c4676f7b38f01ce98a9dedca87fb450febea20b9`は未統合。段階別診断をTDDで追加して関連46件greenとなったが、[実モデル診断 CI 38324421389](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38324421389)は不合格。silenceの公式対eager差0、保存graph対eager最大差 `0.00021576881408691406`、許容差比 `9.733773231506348`、不一致368要素。subsampleは一致し、layer 0から微差、layer 10で初めて許容差超過となった。[固定headの診断結果](https://github.com/ayutaz/unity-embeddinggemma-2/blob/c4676f7b38f01ce98a9dedca87fb450febea20b9/docs/results/m4-audio-stages-real-failed-20261013.json)。次は層内のstage欠落 / 誤順序 / hook解放漏れ / 元の失敗消失を拒否するred → 層内診断green → 原因演算の小さい再現red → 最小修正 → 固定実重み・6信号・mask profileのgreenを得る。残り5信号は未実行。最新headのCI 38325813586は今回確認時点で実行中。診断の成功はencoderの成功ではなく、許容差を緩めない。
 2. A3の前処理graph単独はWindows Sentis CPU / 実GPUで受け入れ済み。次はA2のPCM入力契約と製品Runtime接続を、境界長・mask・無音・channel / sample rateのredから実装する。本番のGPU tensor受け渡しと各入力経路を検証し、診断fixtureのgreenだけでAPI完了にしない。
-3. A4のencoderをSentisで保存 / 再読込し、CPU / 実GPUとFloat16を照合する。A5で実音声featureをGPUのまま共通本体へ渡し、最終768次元を固定参照と照合する。共通本体APIのPR #43には小さい実GPUを含む62件のgreenがあるが、実backbone・実音声featureの照合と新Runtime assemblyの固定Git導入は別の未完了条件として確認する。
+3. A4のencoderをSentisで保存 / 再読込し、CPU / 実GPUとFloat16を照合する。A5で実音声featureをGPUのまま共通本体へ渡し、最終768次元を固定参照と照合する。共通本体APIのPR #43には小さい実GPUと配置演算 / cache修正を含む68件のgreenがあるが、修正後の実1024長graph・実音声featureの照合と新Runtime assemblyの固定Git導入は別の未完了条件として確認する。
 4. A6 / A7の検索・再生・明示収録・停止 / 解放をTDDで実装し、固定PCMの精度とマイク入力動作を別に受け入れる。テキスト・画像回帰と必須実機へ渡す。
 
 音声前処理exportの合格を音声encoderの合格に含めない。PR #40の小さい契約greenと実モデル不合格も別に保持する。

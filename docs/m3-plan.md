@@ -6,7 +6,7 @@ I1 / I2の固定profile encoder / projector exportと公式processor参照・Act
 
 ### 最新checkpoint
 
-公式prompt / mask契約はPR #55でmainへ統合済み。最終画像参照のPR #56は実モデルPythonで3 profile / 6画像の768次元、native feature → 保存backbone、保存encoder → 保存backboneを固定許容差で照合した。producer `35d357263ae29de4db1ad93d1cac3616ea1e61b4`、[CI 38356261690](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38356261690)。2026-10-13確認時のhead `70fe7dec4f53846006e84917a6e48d6c0cf54d1e`は全8チェック成功・main競合あり。競合解消後のheadでCIを確認する。Python参照の合格と、画像Runtime・Sentis全chainの未実行は別に記録する。
+公式prompt / mask契約はPR #55でmainへ統合済み。最終画像参照のPR #56は実モデルPythonで3 profile / 6画像の768次元、native feature → 保存backbone、保存encoder → 保存backboneを固定許容差で照合した。producer `35d357263ae29de4db1ad93d1cac3616ea1e61b4`、[CI 38356261690](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38356261690)。競合解消head `2c6892993b2a198eea671857fd6814efd58af09b`は全8チェック成功。最新base要件へhead `9814ce9d8bd70fa07cbd191867d93d7f4dd461f5`を更新し[CI 38364660005](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38364660005)を再検証中。Python参照の合格と、画像Runtime・Sentis全chainの未実行は別に記録する。
 
 次はzero-audio profileのimport、入力 / feature順・mask / 所有権・途中失敗のred → greenからGPU前処理・実encoder・共通本体を接続する。元のFP32全6条件の不合格を解消し、最終768次元・全順位・画像検索sample・Playerへ進む。下記の過去の実測sourceは維持し、C3の公式prompt構築の未完了記述はこの最新checkpointで更新する。
 

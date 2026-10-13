@@ -15,7 +15,7 @@ PCM境界PR #48と前処理Runtime PR #50はmainへ統合済み。A2 / A3の固�
 
 過去の328要素不一致を含む実測も保持する。新runの368要素への変化は原因解消を意味しない。前処理の合格、入力境界25件green、診断76件green、実encoder不合格を個別に記録する。PR #43はmainへ統合済みだが、下記の固定Git実測sourceは統合headへ置き換えない。
 
-追加の重みを使わない調査の作業ブランチ `9f51b198e1a8e982b89328401827a394635dac48`ではvector比較2件がredだった。現在の未コミット候補 `feat/audio-native-silu-onnx` はnative SiLU保持・標準ONNX Swish変換を追加4 + 2 + 1 redから実装し、以前の2件を含む関連58 passed。ONNX独立評価の全encoder照合は小さいモデルのみ。候補を別PRへ固定し、Actionsで元の実重み6信号を照合する。保存graph全体の実重み修正やSentis encoderの合格はまだ証明していない。
+追加の重みを使わない調査の作業ブランチ `9f51b198e1a8e982b89328401827a394635dac48`ではvector比較2件がredだった。Draft PR #60のnative SiLU保持・標準ONNX Swish変換は追加4 + 2 + 1 redから実装し、以前の2件を含む関連58 passed。ONNX数値gateの2 redから関連43 / feed-forward17 green。[実モデルCI 38362823692](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38362823692)はONNX silence不合格で、最大差0.00013065338134765625 / 許容差比3.971386671066284 / 292要素不一致。producer `cb7f2b00e8135d016c55ef8e00adfe9faafa387b`とhead `05b48e6a2aa363d229f7eb18c163f9d5c19c94b4`を区別する。次は不合格を保持するONNX stage診断をTDD追加し、元graph / 参照と一致した文脈で原因修正へ進む。元6信号全体・Sentis encoderの合格はまだ証明していない。
 
 PR #57の[重みなしnative SiLU / 標準Swish probe](results/m4-native-silu-swish-probe-windows-20261013.json)はmainへ統合済みで、CPU / 実GPU × 2 shape全4条件が固定許容差内。GPUの全値完全一致は要求・主張していない。この単独probeをfull encoderの成功へ流用しない。公式prompt / mask契約もPR #55で統合済み。次はnative保存参照と標準ONNXの構造・数値照合、Sentis保存 / 再読込・元6信号、GPU前処理 → 実encoder → 共通本体の連結、AudioEmbedder相当API、検索 / 再生 / 明示収録、Playerの順に各契約をTDDで受け入れる。
 

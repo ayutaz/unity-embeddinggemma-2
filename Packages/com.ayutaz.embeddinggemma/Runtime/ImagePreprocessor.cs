@@ -131,15 +131,18 @@ namespace EmbeddingGemma
         static Color32[] CpuColors(Texture input)
         {
             if (input is Texture2D readable && readable.isReadable) return readable.GetPixels32(0);
+            var format = input.graphicsFormat;
+            if (!SystemInfo.IsFormatSupported(format, GraphicsFormatUsage.ReadPixels))
+                format = format == GraphicsFormat.R8G8B8_SRGB || format == GraphicsFormat.B8G8R8A8_SRGB
+                    ? GraphicsFormat.R8G8B8A8_SRGB : GraphicsFormat.R8G8B8A8_UNorm;
             if (!SystemInfo.supportsAsyncGPUReadback ||
-                !SystemInfo.IsFormatSupported(input.graphicsFormat, GraphicsFormatUsage.ReadPixels))
+                !SystemInfo.IsFormatSupported(format, GraphicsFormatUsage.ReadPixels))
                 throw new NotSupportedException("CPU preprocessing of GPU-only inputs requires supported texture readback.");
-            // Preserve the exact stored format: converting sRGB to UNorm could change the RGB bytes.
-            var request = AsyncGPUReadback.Request(input, 0, input.graphicsFormat);
+            // Preserve transfer encoding. Some RGB/BGRA formats require conversion to readable RGBA storage.
+            var request = AsyncGPUReadback.Request(input, 0, format);
             request.WaitForCompletion();
             if (request.hasError) throw new InvalidOperationException("Input texture readback failed.");
             var bytes = request.GetData<byte>();
-            var format = input.graphicsFormat;
             var channels = format == GraphicsFormat.R8G8B8_UNorm || format == GraphicsFormat.R8G8B8_SRGB ? 3 : 4;
             var bgra = format == GraphicsFormat.B8G8R8A8_UNorm || format == GraphicsFormat.B8G8R8A8_SRGB;
             var count = input.width * input.height;

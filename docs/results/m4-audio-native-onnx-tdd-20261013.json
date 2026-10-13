@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-13",
+  "scope": "small_native_audio_and_standard_onnx_candidate_only",
+  "red_checkpoint_commit": "46d7e3a1048df3c269a8e82ef8899bfa3ccbd45b",
+  "green_implementation_commit": "ab8e00367f4e95ac815a5ab0ee5c2d2328c5d851",
+  "initial_api_assertion_red": 4,
+  "candidate_prepare_and_cli_red": 2,
+  "default_export_red": 1,
+  "initial_related_green": 58,
+  "onnx_numerical_gate_assertion_red": 2,
+  "numerical_related_green": 43,
+  "feed_forward_related_green": 17,
+  "cli_after_main_merge_green": 3,
+  "initial_bad_regression_test_path": "unexecuted_not_assertion_red",
+  "small_onnx_all_six_cases_validated": true,
+  "original_six_real_weight_signals_validated": false,
+  "full_real_weight_onnx_validated": false,
+  "unity_encoder_validated": false,
+  "end_to_end_validated": false,
+  "tolerances_changed": false,
+  "model_assets_downloaded_locally": false,
+  "formal_release_created": false,
+  "evidence_sha256": {
+    "native-audio-onnx-red.log": "699ddbc96dfe3496f7ccdf51ec2b64b8b858c3eb0e929f8241efde0bbf7dff3b",
+    "native-audio-onnx-first-green.log": "5c29841bb81301284ee5cdf028d34c6820baec1896ca10f2b91eb4ef191b80a5",
+    "native-audio-prepare-red.log": "ea45d7de5ec9027876e28ceaf096a87cade6b7de51bb7e5b07953644bf78bcdd",
+    "native-audio-default-red.log": "7c69ad1bbf8443ec0d4f5305a7d564b873f74177a3f543b508632891c1f6d6d9",
+    "native-audio-related-first-green.log": "7e5e3e9018a0afa99e212641a7be0a7a92199c947c8b3cfdde2c8962a7e0c755",
+    "native-audio-onnx-numerical-red.log": "adcaf8a1060a5755b0ac3a7d8f0a5776a88e6ad715a636d51c1b84d3cee575e2",
+    "native-audio-onnx-numerical-related-green.log": "ad0cfa9b1a7615af86078243df43c74142a57cedc1251a1938cf73cba1781aac",
+    "native-audio-feedforward-related-green.log": "a244b8dc2a31da80f25f8ca218f47b3f780741ec52750dc324315661c0d7b4e8"
+  }
+}

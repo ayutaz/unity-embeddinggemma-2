@@ -144,18 +144,29 @@ def _norm_anchor(node, weights, stage):
                 coefficient_bytes=weight["raw_bytes"], coefficient_dims=dims)
 
 
-def audio_layer_zero_norm_anchors(metadata):
-    """Map the three layer-zero norm outputs to their unique scale bytes."""
+def _named_norm_anchors(metadata, paths):
     weights = {value["name"]: value for value in metadata["initializers"]}
     if len(weights) != len(metadata["initializers"]):
         raise ValueError("duplicate initializer name")
     result = []
-    for stage in ("norm_pre_attn", "norm_post_attn", "norm_out"):
-        nodes = [node for node in metadata["nodes"] if node["name"] == f"/{stage}/Mul_1"]
+    for stage, path in paths:
+        nodes = [node for node in metadata["nodes"] if node["name"] == path]
         if len(nodes) != 1:
             raise ValueError("internal audio norm stage is missing or ambiguous")
         result.append(_norm_anchor(nodes[0], weights, stage))
     return result
+
+
+def audio_layer_zero_norm_anchors(metadata):
+    """Map the three layer-zero norm outputs to their unique scale bytes."""
+    return _named_norm_anchors(metadata, [(stage, f"/{stage}/Mul_1")
+        for stage in ("norm_pre_attn", "norm_post_attn", "norm_out")])
+
+
+def audio_feed_forward_norm_anchors(metadata):
+    """Bind layer-zero feed-forward pre/post norms without reading large weights."""
+    return _named_norm_anchors(metadata, [(stage, f"/feed_forward1/{stage}/Mul_1")
+        for stage in ("pre_layer_norm", "post_layer_norm")])
 
 
 def audio_norm_anchors(metadata, *, layer_count=12):

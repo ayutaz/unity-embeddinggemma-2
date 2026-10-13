@@ -1,4 +1,5 @@
 import json
+import hashlib
 
 import pytest
 import torch
@@ -78,3 +79,106 @@ def test_loader_allocates_only_selected_layer_and_loads_exact_pinned_weights(tmp
     assert layer.training is False
     assert all(torch.equal(value, audio.layers[0].state_dict()[key]) for key, value in layer.state_dict().items())
     assert len(layer.state_dict()) == len(audio.layers[0].state_dict())
+
+
+def bundle(tmp_path):
+    audio, _ = audio_models()
+    layer, hidden, blocked, positions, expected = fixture()
+    snapshot = tmp_path / "snapshot"
+    snapshot.mkdir()
+    (snapshot / "config.json").write_text(json.dumps(dict(audio_config=audio.config.to_dict())))
+    save_file({"audio_tower.layers.0." + key: value.contiguous() for key, value in layer.state_dict().items()}, snapshot / "model.safetensors")
+    context = tmp_path / "context"
+    context.mkdir()
+    hidden.numpy().astype("<f4").tofile(context / "input.bin")
+    expected.numpy().astype("<f4").tofile(context / "final.bin")
+    def identity(path):
+        data = path.read_bytes()
+        return dict(bytes=len(data), sha256=hashlib.sha256(data).hexdigest())
+    metadata = dict(source_commit="a" * 40, model_revision="b" * 40,
+                    input_sha256={name: identity(snapshot / name)["sha256"] for name in ("config.json", "model.safetensors")},
+                    feature_rtol=1e-4, feature_atol=1e-5)
+    reference = dict(metadata=metadata, profiles={"frames-25-valid-25": dict(feature_shape=[1, 25, 8])},
+                     cases=[dict(id="silence", profile="frames-25-valid-25", stages=[
+                         dict(name="subsample", shape=list(hidden.shape), expected="input.bin"),
+                         dict(name="layer_0", shape=list(expected.shape), expected="final.bin")])])
+    audit = dict(success=True, stage="audio_runtime_stage_context_only", context_validated=True, metadata=metadata,
+                 files={name: identity(context / name) for name in ("input.bin", "final.bin")})
+    for name, value in (("audio-stage-reference.json", reference), ("audio-stage-validation.json", audit)):
+        (context / name).write_text(json.dumps(value))
+    return snapshot, context
+
+
+def preparer():
+    value = getattr(audio_layer_replay, "prepare", None)
+    assert callable(value), "Pinned layer replay producer is missing"
+    return value
+
+
+def test_producer_writes_parts_only_after_fixed_context_matches(tmp_path):
+    run = preparer()
+    snapshot, context = bundle(tmp_path)
+    report = run(snapshot, context, tmp_path / "out", reference_source="a" * 40, diagnostic_source="c" * 40)
+    assert report["context_validated"] is True
+    assert report["native_final_exact_match"] is True
+    assert report["reference_source"] == "a" * 40 and report["diagnostic_source"] == "c" * 40
+    assert len(report["parts"]) == 7
+    assert report["full_encoder_validated"] is False and report["unity_validated"] is False
+
+
+@pytest.mark.parametrize("target", ["input.bin", "final.bin"])
+def test_context_binary_corruption_is_rejected_before_loading_weights(tmp_path, monkeypatch, target):
+    run = preparer()
+    snapshot, context = bundle(tmp_path)
+    (context / target).write_bytes(b"corrupted")
+    monkeypatch.setattr(audio_layer_replay, "load_layer", lambda *args, **kwargs: pytest.fail("Audit must precede weights"))
+    with pytest.raises(ValueError, match="hash|size"):
+        run(snapshot, context, tmp_path / "out", reference_source="a" * 40, diagnostic_source="c" * 40)
+
+
+@pytest.mark.parametrize("mutation", ["source", "tolerance", "weights", "final"])
+def test_invalid_context_never_produces_internal_reference(tmp_path, mutation):
+    snapshot, context = bundle(tmp_path)
+    if mutation == "weights":
+        (snapshot / "model.safetensors").write_bytes(b"changed")
+    elif mutation == "final":
+        path = context / "final.bin"
+        import numpy as np
+        values = np.fromfile(path, dtype="<f4") + 0.1
+        values.tofile(path)
+        audit_path = context / "audio-stage-validation.json"
+        audit = json.loads(audit_path.read_text())
+        audit["files"]["final.bin"]["sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+        audit_path.write_text(json.dumps(audit))
+    else:
+        for name in ("audio-stage-reference.json", "audio-stage-validation.json"):
+            path = context / name
+            value = json.loads(path.read_text())
+            value["metadata"]["source_commit" if mutation == "source" else "feature_atol"] = (
+                "d" * 40 if mutation == "source" else 0.1)
+            path.write_text(json.dumps(value))
+    with pytest.raises(ValueError):
+        preparer()(snapshot, context, tmp_path / "out", reference_source="a" * 40, diagnostic_source="c" * 40)
+    assert not (tmp_path / "out").exists()
+
+
+@pytest.mark.parametrize("fail", [False, True])
+def test_cli_records_replay_failure_separately_from_encoder_acceptance(tmp_path, monkeypatch, fail):
+    main = getattr(audio_layer_replay, "main", None)
+    assert callable(main), "Replay CLI and failure ledger are missing"
+    def run(*args, **kwargs):
+        if fail:
+            raise ValueError("native replay does not match pinned layer final")
+        return dict(context_validated=True, native_final_exact_match=True,
+                    full_encoder_validated=False, unity_validated=False)
+    monkeypatch.setattr(audio_layer_replay, "prepare", run)
+    report_path = tmp_path / "report.json"
+    code = main(["--snapshot", str(tmp_path), "--context", str(tmp_path), "--output", str(tmp_path / "out"),
+                 "--reference-source", "a" * 40, "--diagnostic-source", "c" * 40,
+                 "--report", str(report_path)])
+    report = json.loads(report_path.read_text())
+    assert code == (1 if fail else 0)
+    assert report["success"] is (not fail)
+    assert report["full_encoder_validated"] is False and report["unity_validated"] is False
+    if fail:
+        assert "pinned layer final" in report["error"]

@@ -48,6 +48,8 @@ def test_preparation_exports_official_vision_features_and_records_stage_hashes(t
     reference = json.loads((tmp_path / "out/vision-reference.json").read_text())
     assert reference["metadata"]["model_revision"] == "a" * 40
     assert reference["metadata"]["source_commit"] == "b" * 40
+    assert "cpu_math_environment" in reference["metadata"], "Cross-run native references require math environment provenance."
+    assert reference["metadata"]["cpu_math_environment"]["intraop_threads"] > 0
     assert reference["profiles"]["square"]["feature_count"] == 1
     assert reference["profiles"]["square"]["pixel_shape"] == [1, 18, 12]
     assert len(reference["cases"]) == 2
@@ -56,6 +58,25 @@ def test_preparation_exports_official_vision_features_and_records_stage_hashes(t
         assert (tmp_path / "out" / name).is_file()
         assert len(result["files"][name]["sha256"]) == 64
     assert json.loads((tmp_path / "out/vision-validation.json").read_text()) == result
+
+
+def test_math_provenance_records_actual_settings_without_changing_them(monkeypatch):
+    module = preparation_module()
+    capture = getattr(module, "cpu_math_environment", None)
+    assert callable(capture), "CPU math provenance capture is missing."
+    monkeypatch.setattr(torch.backends.cpu, "get_cpu_capability", lambda: "test-avx2")
+    monkeypatch.setattr(torch, "get_num_threads", lambda: 7)
+    monkeypatch.setattr(torch, "get_num_interop_threads", lambda: 3)
+    monkeypatch.setattr(torch, "get_float32_matmul_precision", lambda: "highest")
+    monkeypatch.setattr(torch.__config__, "show", lambda: "test-build-configuration")
+    monkeypatch.setattr(torch, "set_num_threads", lambda *_: pytest.fail("Provenance must not alter math settings."))
+    result = capture()
+    assert result["cpu_capability"] == "test-avx2"
+    assert result["intraop_threads"] == 7 and result["interop_threads"] == 3
+    assert result["float32_matmul_precision"] == "highest"
+    assert result["torch_build_configuration"] == "test-build-configuration"
+    assert isinstance(result["mkl_available"], bool)
+    assert isinstance(result["mkldnn_enabled"], bool)
 
 
 def test_failure_removes_stale_vision_success(tmp_path, monkeypatch):

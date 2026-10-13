@@ -125,13 +125,18 @@ namespace EmbeddingGemma.Tests
                     Assert.That(final.backendType, Is.EqualTo(backend));
                     var finalValues = final.DownloadToArray(); // All inference finishes before diagnostic reads.
                     var golden = oldCases[caseIndex]["features"].ToObject<float[][]>().SelectMany(value => value).ToArray();
-                    var context = VisionDiagnosticAnalysis.Analyze(golden, oldValues, finalValues,
+                    var specs = (JArray)spec["stages"];
+                    var nativeFinal = Read(StagePath(specs.Last().Value<string>("reference_file")));
+                    var context = VisionDiagnosticAnalysis.AnalyzePinnedReference(golden, oldValues, finalValues, nativeFinal,
                         spec.Value<bool>("trace_matches_original_saved"));
                     item["original_mismatched_elements"] = context.Original.Mismatches;
                     item["original_maximum_tolerance_ratio"] = context.Original.MaximumToleranceRatio;
                     item["trace_matches_original_saved"] = context.TraceMatchesOriginal;
-                    item["localization_validated"] = context.CanLocalize;
-                    var specs = (JArray)spec["stages"];
+                    item["native_reference_matches_pinned"] = context.NativeReference.Passed;
+                    item["native_reference_mismatched_elements"] = context.NativeReference.Mismatches;
+                    item["native_reference_maximum_tolerance_ratio"] = context.NativeReference.MaximumToleranceRatio;
+                    Save();
+                    Assert.That(context.NativeReference.Passed, Is.True, "New native final must fit the original pinned reference.");
                     string firstNonzero = null, firstFailure = null;
                     for (var stageIndex = 0; stageIndex < specs.Count; stageIndex++)
                     {
@@ -141,8 +146,6 @@ namespace EmbeddingGemma.Tests
                         var constant = traceModel.constants.Any(value => value.index == output.index);
                         if (!constant) Assert.That(tensor.backendType, Is.EqualTo(backend));
                         var native = Read(StagePath(stage.Value<string>("reference_file")));
-                        if (stageIndex == specs.Count - 1)
-                            Assert.That(VisionDiagnosticAnalysis.Compare(golden, native).Passed, Is.True, "New native final must fit the original pinned reference.");
                         var metrics = VisionDiagnosticAnalysis.Compare(native, tensor.DownloadToArray());
                         var name = stage.Value<string>("name");
                         if (firstNonzero == null && metrics.MaximumAbsoluteError > 0) firstNonzero = name;
@@ -154,7 +157,8 @@ namespace EmbeddingGemma.Tests
                         Save();
                     }
                     item["first_nonzero_stage"] = firstNonzero;
-                    item["first_divergent_stage"] = firstFailure; Save();
+                    item["first_divergent_stage"] = firstFailure;
+                    item["localization_validated"] = context.CanLocalize; Save();
                 }
                 Assert.That(rows.All(value => value.Value<bool>("trace_matches_original_saved")), Is.True, "Diagnostic graph changed the original Sentis path.");
                 Assert.That(rows.Any(value => value.Value<bool>("localization_validated")), Is.True, "Original failed FP32 output was not reproduced.");

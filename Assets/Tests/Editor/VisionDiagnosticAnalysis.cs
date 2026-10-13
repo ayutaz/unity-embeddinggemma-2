@@ -13,12 +13,22 @@ namespace EmbeddingGemma.Tests
     internal struct VisionDiagnosticContext
     {
         internal VisionDiagnosticMetrics Original;
+        internal VisionDiagnosticMetrics NativeReference;
         internal bool TraceMatchesOriginal;
         internal bool CanLocalize;
     }
 
     internal static class VisionDiagnosticAnalysis
     {
+        internal static VisionDiagnosticContext AnalyzePinnedReference(float[] expected, float[] original,
+            float[] traced, float[] native, bool pythonContextMatches)
+        {
+            var nativeReference = Compare(expected, native);
+            var context = Analyze(expected, original, traced, pythonContextMatches && nativeReference.Passed);
+            context.NativeReference = nativeReference;
+            return context;
+        }
+
         internal static VisionDiagnosticMetrics Compare(float[] expected, float[] actual)
         {
             if (expected == null || actual == null) throw new ArgumentNullException();

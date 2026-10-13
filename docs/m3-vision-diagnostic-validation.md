@@ -24,6 +24,22 @@ artifact全体には不要な3 profileの再取得も含まれるため、HTTP R
 
 実CPU / GPUの層診断は参照取得後に実行する。初回import / 保存を1回にし、同じ保存modelを各backendで再読込する。診断出力のreadbackは実行完了後の測定境界であり、製品GPU前処理からencoder / backboneへの連結を証明するものではない。
 
-初回の選択取得は、native参照の取得後、graphの369098752 bytesまで進んだ時点で期限付きURLのHTTP 403により終了した。部分graphは退避して保全し、取得済み参照をZIPのsize / CRCで再利用する追加1 assertion red → 5 greenを確認した。最終信頼判定はCRCだけではなく、固定source / revisionとproducer manifestの全SHA-256照合で行う。URLは403時に更新し、GitHub認証情報・署名URLを結果へ保存しない。取得の再開は明確なterminal failure後に行い、観測timeoutやUnity再起動とは分ける。実Sentis層診断の結果はまだない。
+初回の選択取得は、native参照の取得後、graphの369098752 bytesまで進んだ時点で期限付きURLのHTTP 403により終了した。部分graphは退避して保全し、取得済み参照をZIPのsize / CRCで再利用する追加1 assertion red → 5 greenを確認した。最終信頼判定はCRCだけではなく、固定source / revisionとproducer manifestの全SHA-256照合で行う。URLは403時に更新し、GitHub認証情報・署名URLを結果へ保存しない。取得の再開は明確なterminal failure後に行い、観測timeoutやUnity再起動とは分ける。再取得は完了し、49選択fileを全hash照合してUnityへ渡した。再取得分696421292 bytesは失敗した初回分を含む総転送量ではない。
+
+### 実Sentisの失敗と参照文脈
+
+固定harness head `d51262632b0d0369fe62719dff743e6ecd990a46`のsourceを検証用consumerのEditor assemblyへ配置した条件で測定した。product Runtimeのoverlayはない。初回はBurstのxxHash3 function pointerのcompile失敗でTorch importが終了し、CPU / GPU数値推論は未実行。未保存scene 0を確認し、旧Editor終了後に6000.3.21f1を1つだけ起動した。回復後は同じgraphのimport / 保存が成功した。これは性能改善や数値修正ではない。
+
+2026-10-13 04:56:26 UTCの実CPU / GPUCompute診断はcompile成功、0 passed / 2 failed / 0 skipped。両backendのcase_0でtrace最終値は元保存Sentisと完全一致したが、`New native final must fit the original pinned reference`に失敗した。21 stageを読み出した途中結果があり、case_1は未実行。途中の`localization_validated=true`はこの後段gateの前に設定されていたため、診断受け入れ・原因確定には使用しない。元のFP32不合格は維持する。
+
+同じproducerの親`vision-reference.json`だけを追加で範囲取得し、親manifestのSHA-256と固定sourceを照合した。両画像とも、親の公式最終値と診断hookの最終値は完全一致した。一方、元の固定参照との不一致は画像0で598要素 / 最大許容差比5.768531797804444、画像1で51要素 / 比2.58704231960917。入力pixel hash、model / config / processor hash、ライブラリ版は一致した。新旧producerのvision forward・loader・uv lockには変更がなく、hook追加がこの差を作った証拠はない。CPU演算環境等の原因は未確定。
+
+### 参照判定修正のTDD
+
+不一致native参照でも、2つのSentis最終値が一致するだけで診断成功を出す問題を追加1 assertion redで再現した（既存・対照14 passed）。固定許容差でnative参照も照合する最小修正後、15 passed / failed 0 / skipped 0。harnessは参照の誤差を保存し、native gateと全stageの完了前にはlocalization成功を設定しない。小さい判定契約のgreenで実Sentis診断を合格へ変更しない。修正後の実モデルharnessは未実行。
+
+新しい参照にはCPU capability、intra / inter-op threads、Float32 matmul precision、MKL / MKLDNN・deterministic設定、Torch build情報を記録する。参照・診断metadataの欠落と設定変更を3 assertion redで確認し、最小実装後に関連27 passed。数学設定・許容差・元参照は変更しない。[失敗・比較・TDD receipt](results/m3-vision-reference-context-windows-20261013.json)。
+
+次はActions生成の演算環境を確認し、固定参照との再現条件を小さい比較で切り分ける。参照文脈が揃ってからstage / 演算のredへ進み、元の3 profile / 全12条件に戻す。過去の失敗や未実行を上書きしない。
 
 数値不合格の原因修正、元の全12条件、実画像の最終768次元API / sample、GPU profiler・資源 / 性能、Player / 必須他OS、最終空consumerは未完了。追加診断だけでこれらを合格にしない。

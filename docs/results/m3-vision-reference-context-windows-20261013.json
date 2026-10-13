@@ -1,0 +1,57 @@
+{
+  "scope": "vision_diagnostic_reference_failure_and_guard_tdd",
+  "date": "2026-10-13",
+  "historical_harness_head": "d51262632b0d0369fe62719dff743e6ecd990a46",
+  "historical_harness_editor_source_overlay": true,
+  "product_runtime_source_overlay": false,
+  "diagnostic_producer": "736a4684be754563bbb953a67c2023d688c4a312",
+  "original_reference_producer": "e2a6dc01fbca8c9be1f3bbe875325ad338de0ca0",
+  "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+  "unity": "6000.3.21f1",
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "initial_import_failure": {"cause": "Burst xxHash3 function pointer compile failure", "numerical_inference_executed": false},
+  "controlled_recovery": {"unsaved_scenes": 0, "old_editor_exited_before_new_launch": true, "saved_trace_import_succeeded": true},
+  "historical_sentis_diagnostic": {
+    "completed_utc": "2026-10-13T04:56:26.2954692Z",
+    "compile_passed": true, "passed": 0, "failed": 2, "skipped": 0,
+    "failure": "New native final must fit the original pinned reference",
+    "case_0_trace_matches_original_saved_both_backends": true,
+    "case_1_executed": false, "localization_accepted": false,
+    "results_sha256": "eaea0a53873a95d6f693ab4412573b7c33ac7f818b91869d3f55fab6721de47b"
+  },
+  "saved_reference_comparison": {
+    "weights_loaded": false, "inference_executed": false,
+    "parent_manifest_hash_verified": true,
+    "parent_reference_sha256": "05bdfb1ec5c0f5aaa2ce5f8be1083ca279837f49686ab501d3451c3434e9f09e",
+    "parent_vs_diagnostic_exact_both_cases": true,
+    "old_vs_new_input_pixel_hashes_match": true,
+    "model_config_processor_hashes_match": true,
+    "package_versions_match": true,
+    "cases": [
+      {"case": 0, "maximum_absolute_error": 0.00015985965728759766, "maximum_tolerance_ratio": 5.768531797804444, "mismatched_elements": 598},
+      {"case": 1, "maximum_absolute_error": 0.00005447864532470703, "maximum_tolerance_ratio": 2.58704231960917, "mismatched_elements": 51}
+    ],
+    "exact_cross_run_difference_cause_proven": false
+  },
+  "native_context_guard_tdd": {
+    "red": {"failed": 1, "passed": 14, "compile_passed": true, "completed_utc": "2026-10-13T05:07:02.3244454Z"},
+    "green": {"failed": 0, "passed": 15, "skipped": 0, "compile_passed": true, "completed_utc": "2026-10-13T05:08:23.8549530Z"}
+  },
+  "math_provenance_tdd": {"assertion_red": 3, "related_green": 27, "weights_loaded": false, "math_settings_changed": false},
+  "evidence_sha256": {
+    "vision-native-context-red.log": "5ef601d3a3e6d30d6e3f855e91bf6f31ab291e8805b09e0223ee84e7e3d80509",
+    "vision-native-context-green.log": "2211065dc7a38be8623acc8b1f8e1ee699b3f6a94def63dd8d898ad18a57f99d",
+    "vision-reference-context-comparison.json": "758ad9c49118dd7ba8d7314a673a21a601cc75eafaee6a9856f360bd7d5f2d04",
+    "vision-parent-reference-download.log": "74887cf012791e55cd8063b72130386c3cc855ec56e7cd35500cff1d51b35690",
+    "vision-math-provenance-red.log": "1015e59169cf49e95582319d520503330efbded382d9ecd6e6d8b8cf6225b1b7",
+    "vision-math-provenance-green.log": "3ad66b9483b3028a8f5497649bd39fb269fe96b281eb4968011642c2b3bcfcc5",
+    "vision-real-diagnostic-first-run.log": "8582ecebf1494ea918f72a79475a707ec949559ec2f5885ee58fa4ed0aa1c50a",
+    "vision-real-diagnostic-after-burst-recovery.log": "cc890a73611975d17deb6b47630a308757527aac05244ffef6de318118622132"
+  },
+  "updated_real_sentis_harness_executed": false,
+  "known_fp32_failure_resolved": false,
+  "end_to_end_validated": false,
+  "tolerances_changed": false,
+  "formal_release_created": false
+}

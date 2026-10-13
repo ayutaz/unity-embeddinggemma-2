@@ -115,6 +115,8 @@ def test_reference_manifest_has_native_binaries_hashes_and_original_context(tmp_
     assert result["unity_validated"] is False and result["end_to_end_validated"] is False
     assert result["trace_matches_original_saved"] is True
     assert result["localization_validated"] is False  # Requires Sentis trace vs original as well.
+    assert "cpu_math_environment" in result["metadata"], "Diagnostic native math provenance cannot be omitted."
+    assert result["metadata"]["cpu_math_environment"]["intraop_threads"] > 0
     assert len(result["stages"]) == 7
     for stage in result["stages"]:
         assert (tmp_path / "out" / stage["reference_file"]).stat().st_size == 4 * torch.tensor(stage["shape"]).prod()

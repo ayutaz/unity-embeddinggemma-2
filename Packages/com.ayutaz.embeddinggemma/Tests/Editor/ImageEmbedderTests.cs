@@ -142,6 +142,14 @@ namespace EmbeddingGemma.Tests
             public void Dispose() {Enc.Inner.Dispose(); Back.Inner.Dispose(); UnityEngine.Object.DestroyImmediate(Texture);}
         }
 
+        [Test] public void GpuTexturePreprocessorCanBeBorrowedAsAStage()
+        {
+            using var preprocessor=new ImagePreprocessor();
+            Assert.That(preprocessor, Is.InstanceOf<IImagePreprocessor>());
+            Assert.That(((IImagePreprocessor)(object)preprocessor).Backend, Is.EqualTo(BackendType.GPUCompute));
+        }
+        [Test] public void ImageEncoderCanBeBorrowedAsAStage()
+        {using var parts=new Parts(); Assert.That(parts.Enc.Inner, Is.InstanceOf<IImageFeatureEncoder>());}
         [TestCase(256)] [TestCase(252)]
         public void ImagePromptUsesConfiguredMarkersAndExactFeatureCount(int count)
         {

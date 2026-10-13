@@ -39,6 +39,12 @@ subsample内部のmasked input → conv → channel-last LayerNorm → channel-f
 
 coarseの失敗を保持してsubsample単独ONNXを保存し、単独最終値とfull coarseのsubsample値、hook参照とfull native値の完全一致を確認する。重複coarse weightsを解放してから小さいsubsample graphをexportし、次の比較に必要なinput / mask / native subsampleのみをbinaryで残す。単独diagnosticの成功・失敗を全encoder成功へ流用しない。実重みのsubsample演算別結果は次のActionsで確認する。
 
+後続の[演算別CI 38370900217](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38370900217)は元のsilence不合格を保持。producer `714ee37935b357b8f6f0d1e9c5da9e564482ebc8`。単独traceとcoarseのsubsample最終値、native hookとcoarse native値は両方全値一致した。最初の微差はlayer0.norm（最大4.76837158203125e-06）、最初の許容差超過はprojection（562要素 / 比2.0606276988983154）。projection入力にも前段の差があるため、projection演算だけの原因とは確定しない。
+
+同じ保存subsample ONNX（4,357,846 bytes）とinput / mask / native出力だけを合計6,084,157 bytesの範囲取得で既存Editorへ配置した。uloopでcompile成功、2 NUnit passed / failed 0 / skip 0 / CLI exit 0。Sentis FP32のCPU / 実GPUの両条件は元の固定許容差内。CPU最大差5.53131103515625e-05 / 比0.57182560736176347、GPU最大差4.291534423828125e-05 / 比0.64762583899927439、不一致とも0。GPU計算 / 入力fallback・readback flushは0。[実Sentis receipt](results/m4-audio-subsample-real-sentis-windows-20261013.json)。requested / resolved Runtimeは固定Git `8a7d2f0dea30be95a3158830fb0d9c9de895efc4`、Runtime overlayなし。受け入れharnessだけをconsumerのEditor assemblyへ配置した。前処理からの本番連結の成功とは数えない。
+
+NumPy評価の不合格と、実Sentis subsampleのCPU / GPU合格を分ける。数式をNumPyの結果だけへ合わせて変更せず、次は元6信号の完全なnative参照を保持して全encoderの実Sentisを診断する。現在のRequired数値gateを通過したとは扱わず、未実行・失敗を隠さない。全encoder / 最終768次元 / API / sample / Player / 必須実機は引き続き未受け入れ。
+
 Actionsで元の実重み6信号を実行し、native保存参照と全encoder標準ONNXの数値結果を分けて判定する。PR #40の過去のsilence不合格・残り5信号未実行はそのsourceの記録として保持する。候補が失敗した場合も固定許容差を緩めず、最初の演算差を小さいredへ落とす。
 
 Python全gate合格後も、Sentis import / 保存 / 再読込、全6信号のCPU / 実GPUと採用Float16形式、GPU前処理 → 実encoder → 共通本体の連結、最終API / 検索・再生・明示収録 / Player / 必須実機は別gate。小さいONNX greenや構造checkerを実モデル・GPU成功へ流用しない。

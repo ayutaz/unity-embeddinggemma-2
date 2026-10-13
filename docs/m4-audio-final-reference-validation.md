@@ -36,3 +36,18 @@ uv run --locked python -m embeddinggemma_tools prepare-audio-embeddings --encode
 HTTP 403で終了した取得の後、新しい署名URLで残りの取得が成功した。9 memberすべてがZIP CRC・manifestのsize / SHAに一致し、1つ目の約1.1GB backbone・5 feature・reference JSONを再利用した。新規rangeは1,095,630,657 bytes / 139 request、359.6秒。[取得receipt](results/m4-audio-final-backbone-artifact-staging-20261013.json)。同じUnity Editorの実backbone試験を開始したが、この取得checkpointは数値検証の完了結果ではない。
 
 新しい最終参照producer `4edbe17…`のencoder参照も、7.49GBのartifactからJSON4つだけを25,211,080 bytes / 19 requestで取得した。既存CLIで元producer `271f5a…`へ照合すると全6信号が固定elementwise不合格となり、CLI exit 1。manifestに記録したモデル入力hashとlibrary versionsは一致、frame mask hashは両profileで一致、encoder入力は5信号で一致・sineで不一致。graphのmanifest hashは両profileで異なる。CPU math環境の比較は未取得であり、hardwareや演算を原因と確定しない。[全6信号の固定結果](results/m4-audio-final-producer-pinned-context-failed-20261013.json)。参照JSONのhashは監査済みだが、この比較の新encoder / stage binaryは取得・監査していない。新しい最終参照の合格を旧encoder gateの解消へ流用しない。
+
+### 実音声特徴量 → 最終backboneのWindows受け入れ
+
+2026-10-13 13:37:10 UTC、同じEditor・固定Git Runtime `9c6f794…`・harness `eeec732`で実backbone試験が完了した。CPU / GPUCompute × FP32 / Float16重みの全4条件、各6信号の計24 vectorが既存cosine条件に合格。診断用の固定elementwise比較も全24件で不一致0。GPUの計算 / 非empty feature入力fallbackとreadback flushは0。[全caseの実測](results/m4-audio-final-backbone-sentis-windows-20261013.json)、[実行条件と観測エラー](results/m4-audio-final-backbone-execution-receipt-20261013.json)。
+
+| 条件 | minimum cosine | maximum absolute error | maximum tolerance ratio |
+| --- | --- | --- | --- |
+| FP32 CPU | 0.9999999999855401 | 7.171183824539185e-7 | 0.06616953785056714 |
+| FP32 GPUCompute | 0.9999999999940836 | 3.995373845100403e-7 | 0.03686588537388741 |
+| Float16重み CPU | 0.9999999999908372 | 6.156042218208313e-7 | 0.056802681193798554 |
+| Float16重み GPUCompute | 0.9999999999887754 | 6.509944796562195e-7 | 0.06006819085395641 |
+
+CLIは主スレッドのtick停止300秒を検出してexit 1 / `SafeToRetry=false`を返したが、同じoperationの結果はその後も更新され、全4条件のcompletedとOneTimeTearDownのsuccess=trueを保存した。完了後のuloop statusはReady / Play停止だった。再試験・再起動はしていない。CLIの完成したNUnit集計は回収できておらず、CLI exit 0やNUnit 4 passedとして記録しない。
+
+ここで渡したものは監査済みのPython native audio featuresであり、PCM前処理・Sentis音声encoder・AudioEmbedderの実全chainは未検証。元ONNX / encoder elementwise不合格、参照drift、Raw / Query role、sample / Player / 必須実機・最終空consumerは引き続き残る。保存Float16は重み形式で、全演算をFloat16で実行したという主張ではない。

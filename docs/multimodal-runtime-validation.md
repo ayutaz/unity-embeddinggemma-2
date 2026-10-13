@@ -44,3 +44,12 @@ Unityでは旧graphの小さいimport 2条件と、同じimport失敗を4回繰�
 2. flat Gather修正後の実backbone exportをActionsで生成・照合し、1024長・実encoder feature数profileをSentisでimport / 保存・再読込する。このAPIで独立Pythonの最終768次元へ照合し、CPU / GPUCompute × FP32 / Float16を別判定する。
 3. 公式processorのprompt / 特殊token・maskを生成するAPI、ImageEmbedder / AudioEmbedderとGPU前処理をTDDで接続する。text128長の既存APIは維持する。
 4. 固定candidateの空Git consumerへRuntime assemblyを導入し、sample・Player・全必須実機へ進む。正式Release / tagは作成しない。
+# 実1024長backboneのSentis受け入れ追記
+
+2026-10-13に[CI 38325796546](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38325796546)の修正後graphを監査し、Unity 6000.3.21f1 / Sentis 2.6.1 / Windows / RTX 4070 Ti SUPER / Direct3D12でCPU / GPUCompute × FP32 / Float16の全4条件を実行した。compile成功、4 passed / failed 0 / skipped 0 / inconclusive 0。[固定sourceと全条件](results/multimodal-backbone-sentis-windows-20261013.json)。
+
+実行sourceはproducerのPR merge ref `e521e39af8962bbe9b9a9821e5608e6ade351639`、固定model revisionは`914f7f89142e33e77833254d9c9b90c3cef7303b`。元の実1024長graphのimport失敗を修正後の合格で消さず、[小さい配置TDDと初回失敗](results/multimodal-placement-windows-20261013.json)に保持する。旧stageを別directoryへ移してから新しいhardlinkを配置し、旧sourceの内容を上書きしていない。
+
+保存 / 再読込後、各条件で順序の異なる2入力を参照照合し、有限768次元・単位長を確認した。minimum cosineはFP32 CPU `0.9999999998910367` / GPU `0.9999999999368913`、Float16 CPU `0.9999999998834702` / GPU `0.9999999999423765`。GPU条件の実worker / 出力 / image・audio入力backendはGPUCompute、CPU計算 / feature入力fallbackとGPU readback flushは0件。CPU tokenize / token入力と最終vector取得は境界として扱う。
+
+この4条件は実text重みと合成project済みimage / audio featureのbackbone単独の受け入れ。Runtime sourceをconsumer Editor test assemblyへ配置した結果であり、新Runtime assemblyの固定Git導入・実encoder接続・GPU前処理・最終sample / Player / 他OSの合格ではない。次は開発source配置を外し、固定Git commitのRuntime assemblyを検証する。正式Release / 公開tagは作成しない。

@@ -1,0 +1,31 @@
+{
+  "scope": "python_real_image_final_reference_and_saved_chain_only",
+  "date": "2026-10-13",
+  "ci_run": 38356261690,
+  "pr_head": "3ef114a2a7880c15340e1218613a6369641a89e5",
+  "actual_producer": "35d357263ae29de4db1ad93d1cac3616ea1e61b4",
+  "ci_all_eight_checks_passed": true,
+  "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+  "profile_count": 3,
+  "case_count": 6,
+  "embedding_dimension": 768,
+  "minimum_cosine_float32": 1.0,
+  "native_feature_backbone_fixed_elementwise_passed": true,
+  "saved_encoder_backbone_fixed_elementwise_passed": true,
+  "python_saved_chain_validated": true,
+  "unique_backbone_graphs": 2,
+  "backbone_graphs": [
+    {"file":"square/backbone.pt2","bytes":1095293656,"sha256":"b7654e1d0b670d1d76767f89b8241eb74b0d2ad0f685fc7dd2259f58849bba96","image_features":256,"audio_features":0},
+    {"file":"landscape/backbone.pt2","bytes":1095285464,"sha256":"b5edf4e842deec996ffb24b78a447611155efa21bd49b8819a90e6aa9beec5dc","image_features":252,"audio_features":0,"shared_by_portrait":true}
+  ],
+  "artifact": {"id":11792864757,"archive_bytes":2193997298,"json_only_range_download_bytes":2473458,"reference_manifest_hash_verified":true},
+  "validation_json_sha256": "daaba8d1b11394d342dd0c4e8834691031c50eb601af533db07df01b26cec796",
+  "reference_json_sha256": "1bf06566d6291503c2b485dabbcfa1ca01e5ce03bf79b4fe84050e6475b88e2c",
+  "real_model_executed_locally": false,
+  "sentis_zero_audio_profile_validated": false,
+  "sentis_full_image_chain_validated": false,
+  "gpu_preprocessing_chain_validated": false,
+  "known_vision_fp32_failure_resolved": false,
+  "audio_encoder_failure_resolved": false,
+  "formal_release_created": false
+}

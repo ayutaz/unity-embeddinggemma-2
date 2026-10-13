@@ -22,6 +22,7 @@ def test_native_replay_job_pins_old_context_and_never_claims_full_encoder_pass()
     assert "--reference-source 4edbe17a8105233c5aaa1514faa2862b08a4f7e0" in commands
     assert "embeddinggemma_tools.audio_layer_replay" in commands
     assert "--detail-feed-forward" in commands
+    assert "--projection-oracle" in commands
     assert "--report ../artifacts/audio-layer-replay-report.json" in commands
     assert not any(step.get("continue-on-error") for step in job["steps"])
     uploads = [step for step in job["steps"] if step.get("uses", "").startswith("actions/upload-artifact@")]

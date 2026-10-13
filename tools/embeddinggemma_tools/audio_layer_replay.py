@@ -24,6 +24,59 @@ FEED_FORWARD_PARTS = ("pre_layer_norm", "ffw_layer_1", "act_fn", "ffw_layer_2", 
 FEED_FORWARD_PATHS = tuple("feed_forward1." + name for name in FEED_FORWARD_PARTS)
 
 
+def linear_fp64(module, hidden):
+    """Isolated CPU oracle: exact FP32 inputs/weights, FP64 accumulation, FP32 output."""
+    weight = module.linear.weight
+    if (hidden.dtype != torch.float32 or weight.dtype != torch.float32
+            or hidden.device.type != "cpu" or weight.device.type != "cpu"
+            or module.linear.bias is not None or hidden.ndim < 2
+            or hidden.shape[-1] != weight.shape[1]
+            or not torch.isfinite(hidden).all() or not torch.isfinite(weight).all()):
+        raise ValueError("projection oracle requires finite unbiased CPU FP32 context")
+    with torch.no_grad():
+        working = hidden.to(torch.float64)
+        if module.use_clipped_linears:
+            working = working.clamp(module.input_min, module.input_max)
+        result = torch.nn.functional.linear(working, weight.to(torch.float64)).to(torch.float32)
+        if module.use_clipped_linears:
+            result = result.clamp(module.output_min, module.output_max)
+    if not torch.isfinite(result).all():
+        raise ValueError("projection oracle produced nonfinite values")
+    return result
+
+
+def _fixed_metrics(actual, expected):
+    if actual.shape != expected.shape or not torch.isfinite(actual).all() or not torch.isfinite(expected).all():
+        raise ValueError("projection comparison shape or finite-value mismatch")
+    error = (actual.double() - expected.double()).abs()
+    allowed = 1e-5 + 1e-4 * expected.double().abs()
+    mismatches = int((error > allowed).sum())
+    return dict(elementwise_passed=mismatches == 0, mismatches=mismatches,
+                maximum_absolute_error=float(error.max()), maximum_tolerance_ratio=float((error / allowed).max()))
+
+
+def projection_oracle(layer, parts):
+    """Compare independent exact-input projections; never replace frozen FP32 outputs."""
+    ff = layer.feed_forward1
+    targets = {"linear1": parts["feed_forward1.ffw_layer_1"],
+               "linear2": parts["feed_forward1.ffw_layer_2"],
+               "linear2_post_norm": parts["feed_forward1.post_layer_norm"]}
+    with torch.no_grad():
+        first = parts["feed_forward1.pre_layer_norm"]
+        activation = parts["feed_forward1.act_fn"]
+        baseline1, baseline2 = ff.ffw_layer_1(first), ff.ffw_layer_2(activation)
+        baseline_post = ff.post_layer_norm(baseline2.clamp(-ff.gradient_clipping, ff.gradient_clipping))
+        if any(not torch.equal(value, targets[name]) for name, value in
+               (("linear1", baseline1), ("linear2", baseline2), ("linear2_post_norm", baseline_post))):
+            raise ValueError("pinned FP32 projection baseline mismatch")
+        outputs = dict(linear1=linear_fp64(ff.ffw_layer_1, first), linear2=linear_fp64(ff.ffw_layer_2, activation))
+        outputs["linear2_post_norm"] = ff.post_layer_norm(outputs["linear2"].clamp(-ff.gradient_clipping, ff.gradient_clipping))
+    metrics = {name: _fixed_metrics(value, targets[name]) for name, value in outputs.items()}
+    return dict(scope="exact_native_inputs_fp64_linears_only_then_fp32_post_norm",
+                fp32_baselines_exact_match=True, metrics=metrics,
+                fp64_projection_gate_passed=all(value["elementwise_passed"] for value in metrics.values())), outputs
+
+
 def load_layer(snapshot, *, index=0):
     snapshot = Path(snapshot)
     configuration = json.loads((snapshot / "config.json").read_text(encoding="utf-8"))
@@ -82,7 +135,7 @@ def _identity(path):
     return {"bytes": path.stat().st_size, "sha256": digest}
 
 
-def prepare(snapshot, context, output, *, reference_source, diagnostic_source, detail_feed_forward=False):
+def prepare(snapshot, context, output, *, reference_source, diagnostic_source, detail_feed_forward=False, with_projection_oracle=False):
     """Produce internal references for the frozen, fully valid silence layer 0."""
     snapshot, context, output = map(Path, (snapshot, context, output))
     if any(re.fullmatch(r"[0-9a-f]{40}", value) is None
@@ -136,8 +189,10 @@ def prepare(snapshot, context, output, *, reference_source, diagnostic_source, d
     blocked = Gemma4AudioModel._convert_4d_mask_to_blocked_5d(
         SimpleNamespace(config=config), attention_mask)
     positions = Gemma4AudioRelPositionalEncoding(config)(hidden)
+    detail_feed_forward = detail_feed_forward or with_projection_oracle
     parts = _capture_named(layer, hidden, blocked, positions, pinned_final,
                            (*PARTS, *FEED_FORWARD_PATHS) if detail_feed_forward else PARTS)
+    oracle_report, oracle_values = projection_oracle(layer, parts) if with_projection_oracle else (None, {})
     output.mkdir(parents=True, exist_ok=False)
     files = {}
     for name, tensor in parts.items():
@@ -150,6 +205,13 @@ def prepare(snapshot, context, output, *, reference_source, diagnostic_source, d
                   case=case["id"], input_files=input_files, parts=files,
                   detail_feed_forward=detail_feed_forward,
                   full_encoder_validated=False, unity_validated=False)
+    if oracle_report is not None:
+        oracle_report["files"] = {}
+        for name, tensor in oracle_values.items():
+            path = output / f"candidate-{name}-fp32.bin"
+            tensor.numpy().astype("<f4").tofile(path)
+            oracle_report["files"][name] = dict(file=path.name, shape=list(tensor.shape), **_identity(path))
+        report.update(fp64_projection_oracle=oracle_report, fp64_projection_gate_passed=oracle_report["fp64_projection_gate_passed"])
     (output / "layer-replay.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     return report
 
@@ -163,6 +225,7 @@ def main(argv=None):
     parser.add_argument("--diagnostic-source", required=True)
     parser.add_argument("--report", required=True, type=Path)
     parser.add_argument("--detail-feed-forward", action="store_true")
+    parser.add_argument("--projection-oracle", action="store_true")
     args = parser.parse_args(argv)
     if args.report.exists():
         raise ValueError("refusing to overwrite replay report")
@@ -182,8 +245,8 @@ def main(argv=None):
                                              allow_patterns=["config.json", "model.safetensors"]))
         report.update(prepare(snapshot, args.context, args.output,
                               reference_source=args.reference_source, diagnostic_source=args.diagnostic_source,
-                              detail_feed_forward=args.detail_feed_forward))
-        report["success"] = True
+                              detail_feed_forward=args.detail_feed_forward, with_projection_oracle=args.projection_oracle))
+        report["success"] = report.get("fp64_projection_gate_passed", True)
     except Exception as error:
         report.update(error_type=type(error).__name__, error=str(error))
     args.report.parent.mkdir(parents=True, exist_ok=True)

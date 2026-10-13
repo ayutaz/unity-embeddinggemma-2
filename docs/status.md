@@ -1,5 +1,25 @@
 # 現在の状態と残タスク
 
+## 最新checkpoint: 全音声encoder検証後
+
+2026-10-13確認。mainは `a88ed9cffd942999bb271e597c86563298425f2c`。全体TDD計画PR #58まで統合済み。今回の更新は文書のみで、モデル生成・Unity実行は追加しない。
+
+**M2〜M4は未完了。正式リリースは全実装・全必須検証・配布準備の完了後。** [全体TDD計画](multimodal-tdd-plan.md)、[M3](m3-plan.md)、[M4](m4-plan.md)のRed → 最小実装 → Green → 実モデル受け入れで進める。工程6まで公開tag / GitHub Releaseを作らない。
+
+| 対象 | 確認済み / 不合格 | 次のTDDと完了条件 |
+| --- | --- | --- |
+| M2 | WindowsテキストEditor / Playerの条件付き実測。PR #31はdraft | 導入・寿命・cache・性能の原因別red → 修正 → 最終candidateの空Git consumerと正常終了。Unity版更新・他OSも残る |
+| 共通 | PR #43 backbone、#55公式prompt / maskは統合済み。合成featureのCPU / GPU × 2精度は合格 | 実encoderの数・順序・mask・所有権・中間readbackのred → GPU連結 → 最終768次元 / text回帰 |
+| M3 | #52 GPU前処理と#56最終Python参照は統合済み。#41はFloat16全6条件合格、FP32全6条件不合格。#53診断は参照文脈未達 | 文脈不一致を拒否するred → 原因別修正 → 元12条件。Image API・画像検索sample・Playerは未完成 |
+| M4 | #48 PCM入力 / #50 GPU前処理は統合済み。draft #60のnative保存参照は全6信号合格。NumPy ONNX全6信号とSentis FP32全12条件は不合格 | 元の失敗を再現しないtrace / 参照を拒否するred → 演算差修正 → 全条件再照合。最終音声参照・Audio API・検索 / 再生 / 明示収録・Playerは未完成 |
+| 全統合 / 配布 | Windows以外の必須実機受け入れは不足 | 各OSで3モダリティ・実CPU / GPU・UI・反復資源 / 性能・終了。全合格後、空Git consumer・version / 文書 / license・配布監査 |
+
+音声の根拠はPR #60の確認head `70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1`に固定する。[native / NumPyの全6信号](https://github.com/ayutaz/unity-embeddinggemma-2/blob/70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1/docs/results/m4-audio-all-six-native-reference-real-20261013.json)、[Sentis CPU / 実GPUの全12条件](https://github.com/ayutaz/unity-embeddinggemma-2/blob/70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1/docs/results/m4-audio-full-encoder-fp32-sentis-windows-failed-20261013.json)。cosineだけの合格やsubsample単独の合格をencoder全体の成功にしない。旧PR #40の残り5信号未実行は当時のsourceの記録で、#60の最新範囲とは別。
+
+重い検証はActionsを優先し、Pythonはtools/ + uv。ローカルは小さいTDDと必要な実GPU / UI / 端末検証、Unity Editorは1つとする。すべて作業ブランチ / PR経由、必要checkと対象の受け入れを揃えてから統合する。以下は過去checkpointで、現在の作業順は上記と全体計画を使う。
+
+## 過去checkpoint: PR #50時点
+
 確認日: 2026-10-13。main / PR / CIをGitHub APIで再確認し、PR #50統合後の全体TDD計画を更新した。今回の計画更新ではUnity実行・モデル取得 / 再export・buildを追加していない。前処理RuntimeのTDD、固定Git package回帰、公式CPU / 実GPU信号照合は[既存の実測](results/m4-audio-preprocessing-runtime-windows-20261013.json)を参照する。Secrets / runner・tag / Release・main保護の件数と[直前の計画snapshot](results/tdd-plan-checkpoint-20261013.json)は過去の記録として保持する。
 
 **M2〜M4は未完了。未実装のAPI・前処理・sampleと数値不合格の修正が残る。正式リリースは全対応・全必須検証が終わった後。** [全体TDD計画](multimodal-tdd-plan.md)を6工程で更新し、[M3画像](m3-plan.md) / [M4音声](m4-plan.md)の各タスクに先に確認するRed、最小実装、Green・実モデル受け入れを定義した。配布準備では公開tag / GitHub Releaseを作成しない。

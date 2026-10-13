@@ -12,13 +12,15 @@ namespace EmbeddingGemma.Tests
 {
     public sealed class CpuImagePreprocessorReferenceTests
     {
-        const string RuntimeSource="1193e9ae50f7997b9436d3b6f3c887446337cbeb";
+        const string RuntimeSource="10fa49cd4a7db231cb3e27434dfabaf47b54fb1f";
         static string DirectoryPath => Path.Combine(Application.dataPath,"../artifacts/image-preprocessing");
-        static string OutputPath => Path.Combine(DirectoryPath,"cpu-unity-results-1193e9a.json");
+        static string OutputPath => Path.Combine(DirectoryPath,"cpu-unity-results-10fa49c.json");
 
         [TestCase("readable_linear")] [TestCase("readable_srgb")]
         [TestCase("texture_linear")] [TestCase("texture_srgb")]
         [TestCase("render_linear")] [TestCase("render_srgb")]
+        [TestCase("rgb_linear")] [TestCase("rgb_srgb")]
+        [TestCase("bgra_linear")] [TestCase("bgra_srgb")]
         public void OfficialPixelsPositionsAndCpuConsumerAgree(string path)
         {
             var referencePath=Path.Combine(DirectoryPath,"image-preprocessing-reference.json");
@@ -52,7 +54,9 @@ namespace EmbeddingGemma.Tests
                 var width=row.Value<int>("width"); var height=row.Value<int>("height");
                 var raw=File.ReadAllBytes(Path.Combine(DirectoryPath,row.Value<string>("rgb_file")));
                 var linear=path.EndsWith("linear",StringComparison.Ordinal); var readable=path.StartsWith("readable",StringComparison.Ordinal);
-                var texture=new Texture2D(width,height,TextureFormat.RGBA32,false,linear); RenderTexture rendered=null;
+                var format=path.StartsWith("rgb_",StringComparison.Ordinal)?TextureFormat.RGB24:
+                    path.StartsWith("bgra_",StringComparison.Ordinal)?TextureFormat.BGRA32:TextureFormat.RGBA32;
+                var texture=new Texture2D(width,height,format,false,linear); RenderTexture rendered=null;
                 try
                 {
                     var colors=new Color32[width*height];

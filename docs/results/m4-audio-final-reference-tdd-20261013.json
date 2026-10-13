@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-13",
+  "scope": "tiny_official_audio_final_vectors_and_native_saved_chain_only",
+  "implementation_commit": "7c489a7b502120da37d1e1cdfe836f265a6170a7",
+  "reference_and_loader_tdd": {
+    "assertion_red": 7,
+    "initial_green_passed": 7,
+    "red_log_sha256": "91e3fc4b5eee2fb7efdfe5ad5e4ce1204438595a0d02727f3c198ed96fe059aa",
+    "green_log_sha256": "beaea1f3e99e89cf4c2dd242a95da3cfcc21e3700a670d851cfdbff5f4db46bd"
+  },
+  "cli_workflow_tdd": {
+    "assertion_red": 2,
+    "related_green_passed": 4,
+    "red_log_sha256": "d79fe3c2faa06bf954323ddddaace728721d23fc323d4298df50f6b58211ca60",
+    "green_log_sha256": "933cba093bc0f664cfaef87e9531daeee333d9a7f3a0701ef3b29934d26985e8"
+  },
+  "upstream_failed_status_tdd": {
+    "red": 1,
+    "failure": "KeyError: source_encoder_validation_success",
+    "red_log_sha256": "a3eeb33aa8f83343bdefae27e0979b8798d533a71ac8e4888d38cd7d29dcd4b4"
+  },
+  "final_related_green": {
+    "passed": 11,
+    "failed": 0,
+    "log_sha256": "83a644576266db426be007deb27884c277b47ff6992f0667b2c5680b0ecaf688"
+  },
+  "reference_roles": ["document"],
+  "real_final_audio_reference_executed": false,
+  "unity_final_audio_chain_validated": false,
+  "tolerances_changed": false,
+  "formal_release_created": false
+}

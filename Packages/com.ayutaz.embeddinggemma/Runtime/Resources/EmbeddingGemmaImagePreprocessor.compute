@@ -1,0 +1,50 @@
+#pragma kernel Horizontal
+#pragma kernel VerticalPatches
+
+StructuredBuffer<float> Source;
+StructuredBuffer<int> XRanges;
+StructuredBuffer<int> XWeights;
+StructuredBuffer<int> YRanges;
+StructuredBuffer<int> YWeights;
+RWStructuredBuffer<int> Intermediate;
+RWStructuredBuffer<float> Pixels;
+int SourceWidth, SourceHeight, TargetWidth, TargetHeight;
+int XStride, YStride, XPrecision, YPrecision;
+
+[numthreads(256, 1, 1)]
+void Horizontal(uint3 thread : SV_DispatchThreadID)
+{
+    uint index = thread.x;
+    if (index >= (uint)(SourceHeight * TargetWidth * 3)) return;
+    int channel = index % 3;
+    int x = (index / 3) % TargetWidth;
+    int y = index / (3 * TargetWidth);
+    int minimum = XRanges[2 * x];
+    int count = XRanges[2 * x + 1];
+    int sum = 1 << (XPrecision - 1);
+    for (int k = 0; k < count; k++)
+    {
+        int value = clamp((int)floor(Source[(y * SourceWidth + minimum + k) * 3 + channel] * 255.0 + 0.5), 0, 255);
+        sum += value * XWeights[x * XStride + k];
+    }
+    Intermediate[index] = clamp(sum >> XPrecision, 0, 255);
+}
+
+[numthreads(256, 1, 1)]
+void VerticalPatches(uint3 thread : SV_DispatchThreadID)
+{
+    uint index = thread.x;
+    if (index >= 2520 * 768) return;
+    int patch = index / 768;
+    if (patch >= (TargetWidth / 16) * (TargetHeight / 16)) { Pixels[index] = 0; return; }
+    int local = index % 768;
+    int channel = local % 3;
+    int x = (patch % (TargetWidth / 16)) * 16 + (local / 3) % 16;
+    int y = (patch / (TargetWidth / 16)) * 16 + local / 48;
+    int minimum = YRanges[2 * y];
+    int count = YRanges[2 * y + 1];
+    int sum = 1 << (YPrecision - 1);
+    for (int k = 0; k < count; k++)
+        sum += Intermediate[((minimum + k) * TargetWidth + x) * 3 + channel] * YWeights[y * YStride + k];
+    Pixels[index] = clamp(sum >> YPrecision, 0, 255) * (1.0 / 255.0);
+}

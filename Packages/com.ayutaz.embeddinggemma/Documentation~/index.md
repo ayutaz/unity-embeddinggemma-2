@@ -69,6 +69,8 @@ Windowsの元プロジェクトと新規consumerでfp32 / Float16重み × CPU /
 
 ## 共通本体API（開発中）
 
+画像・音声の最終APIは開発中です。各前処理の出力はencoder入力で、最終768次元embeddingとは異なります。
+
 `MultimodalBackboneProfile`と`MultimodalBackbone`は、encoder / projectorが生成した512幅のsoft-token Tensorを共通本体へ渡すAPIです。画像Texture・音声PCMからの前処理やprompt生成を含みません。実モデルの最終embedding、zero-feature profile、Player / 他OSは検証中です。
 
 profileの長さ・placeholder ID・feature数・vocabulary / pad IDは、監査済みモデルと公式processorの参照から設定します。対応する保存graphは4入力の名前・型・static shapeが一致する必要があります。
@@ -79,6 +81,20 @@ float[] embedding = backbone.Embed(inputIds, attentionMask, imageFeatures, audio
 ```
 
 `model`・feature Tensorは呼び出し側が所有します。GPUComputeでは非空featureを既にGPUへ置いてください。backboneはfeatureをCPUへdownload・Disposeせず、最終768次元だけを独立したCPU配列へコピーします。featureの全値に対するCPU検査は行わないため、入力側でもfinite条件を保証してください。長さ / mask / slot数・feature shape・dataの生存・backendの不一致は拒否します。backboneをDisposeした後も、借用Tensorの解放は呼び出し側が行います。
+
+## 画像前処理Runtime（開発中）
+
+```csharp
+using var preprocessor = new ImagePreprocessor();
+using var prepared = preprocessor.Process(texture);
+// prepared.Pixels: GPUCompute float [1,2520,768]、画像encoderへの借用入力。
+// prepared.Positions: row-majorの(x,y)、末尾[-1,-1]のreadonly metadata。
+// prepared.ResizedWidth / ResizedHeight / SoftTokenCount: 公式profileの形状。
+```
+
+batch 1、8bit RGB / RGBAのTexture2D・作成済みsingle-sample 2D RenderTextureに対応します。各辺1〜8192px、sRGB / linearの保存値をRGB入力として扱い、alphaを無視します。浮動小数・HDR・圧縮formatは明示拒否します。公式bicubic antialiasのresize・丸め、16px patch・最大2520 patchesへのzero paddingをGPUで実行し、中間pixelをCPUへdownloadしません。
+
+入力Textureはcallerが所有します。結果は出力・作業Tensor / 補間bufferを所有し、processorの再利用・Dispose後も独立して生存します。次段GPU処理が完了するまで結果を保持し、その後Disposeしてください。Unity main threadのみ。画像encoder / 最終embedding API、Playerと全必須環境の受け入れは開発中です。
 
 ## PCM入力境界（開発中）
 

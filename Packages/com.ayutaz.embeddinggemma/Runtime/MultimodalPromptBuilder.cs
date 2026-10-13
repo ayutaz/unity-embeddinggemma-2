@@ -93,6 +93,13 @@ namespace EmbeddingGemma
         }
 
         /// <summary>Audio-only prompt from trusted PCM prefix metadata, without GPU mask readback.</summary>
+        public MultimodalPrompt BuildImage(int imageFeatureCount, TextRole role = TextRole.Raw, string title = null)
+        {
+            if (imageFeatureCount <= 0)
+                throw new ArgumentException("Image-only prompts require nonempty projected features.", nameof(imageFeatureCount));
+            return Build(imageToken, imageFeatureCount: imageFeatureCount, role: role, title: title);
+        }
+
         public MultimodalPrompt BuildAudio(int validFrameCount, TextRole role = TextRole.Raw, string title = null)
         {
             var profile = new AudioEncoderProfile(validFrameCount);

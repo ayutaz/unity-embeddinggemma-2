@@ -21,6 +21,8 @@ namespace EmbeddingGemma.Tests
         JArray conditions;Type encoderType,profileType,embedderType;
         readonly Dictionary<string,Lazy<string[]>> saved=new Dictionary<string,Lazy<string[]>>();
         readonly Dictionary<string,MultimodalPromptBuilder> prompts=new Dictionary<string,MultimodalPromptBuilder>();
+        readonly HashSet<string> preprocessingChecked=new HashSet<string>();
+        readonly JArray preprocessingCases=new JArray();
         [OneTimeSetUp]
         public void AuditImmutableChainBundle()
         {
@@ -31,12 +33,12 @@ namespace EmbeddingGemma.Tests
                 ["end_to_end_validated"]=false,["encoder_sentis_gate_status"]="not_executed_for_current_producer",
                 ["encoder_sentis_gate_passed"]=false,["reference_source"]=Producer,["conditions"]=conditions,
                 ["unity"]=Application.unityVersion,["gpu"]=SystemInfo.graphicsDeviceName,["graphics_api"]=SystemInfo.graphicsDeviceType.ToString(),
-                ["preprocessing_precision"]="fp32",["started_utc"]=DateTime.UtcNow.ToString("O"),["hash_backends"]=new JObject(),
+                ["preprocessing_precision"]="fp32",["preprocessing_stage_cases"]=preprocessingCases,["started_utc"]=DateTime.UtcNow.ToString("O"),["hash_backends"]=new JObject(),
                 ["gpu_transfer_evidence"]="Fixed Runtime device contracts, original stage output backends and Worker CPU fallback/flush sets; GPU profiler capture is a separate gate."};Save();
             Assert.That(File.ReadAllText(Resolve(root,"expected-source.txt")).Trim(),Is.EqualTo(Producer));
             Assert.That(Read(root,"staging-receipt.json").Value<bool>("success"),Is.True,"Complete audited staging first.");
             AuditHash(Resolve(root,"audio-runtime-reference/audio-encoder-validation.json"),"68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1");
-            AuditHash(Resolve(root,"audio-runtime-preprocessing/audio-validation.json"),"39b4b4e4929f148ca36020c0f8af89ab1e31e93295ae8e81099ab0ca1c633f3d");
+            AuditHash(Resolve(root,"audio-runtime-preprocessing/audio-validation.json"),"4e325f708e8d103a9de358a411380ddbb51cfe953984e9dcb73e291d919630fa");
             AuditHash(Resolve(backboneRoot,"audio-embedding-validation.json"),"9173afd593113769ed9fb9518c6092ac532d0cb055fc8f97eea2de811248e413");
             AuditHash(Resolve(backboneRoot,"saved-models-receipt.json"),"f79df6aa24fed7f154598a8035bd6cb104dd9d6168db74901be636beb9b9a047");
             encoderAudit=Read(root,"audio-runtime-reference/audio-encoder-validation.json");preprocessingAudit=Read(root,"audio-runtime-preprocessing/audio-validation.json");
@@ -105,6 +107,7 @@ namespace EmbeddingGemma.Tests
                             var id=row.Value<string>("id");condition["phase"]="evaluate_"+id;Save();
                             var input=AudioChainReferenceGuard.FromPaddedPcm(Floats(Resolve(root,"audio-runtime-preprocessing/"+id+"-pcm-fp32.bin")),
                                 Ints(Resolve(root,"audio-runtime-preprocessing/"+id+"-samples-int32.bin")),validFrames);
+                            VerifyPreprocessing(preprocessing,input,id,backend);
                             var prompt=(MultimodalPrompt)Invoke(typeof(MultimodalPromptBuilder).GetMethod("BuildAudio"),builder,new object[]{validFrames,TextRole.Document,null});
                             Assert.That(prompt.InputIds,Is.EqualTo(row["input_ids"].ToObject<int[]>()),"Official full Document prompt IDs.");
                             Assert.That(prompt.AttentionMask,Is.EqualTo(row["attention_mask"].ToObject<int[]>()));
@@ -136,7 +139,31 @@ namespace EmbeddingGemma.Tests
         [OneTimeTearDown]public void Complete()
         {
             if(report==null)return;var summary=AudioChainReferenceGuard.Summarize(conditions,encoderAudit?.Value<bool>("success")==true,false);
+            report["preprocessing_stage_validated"]=preprocessingCases.Count==12 && preprocessingCases.All(row=>row.Value<bool>("success"));
             foreach(var property in summary)report[property.Key]=property.Value;report["completed_utc"]=DateTime.UtcNow.ToString("O");Save();prompts.Clear();
+        }
+        void VerifyPreprocessing(AudioPreprocessor preprocessor,AudioPcmInput input,string id,BackendType backend)
+        {
+            var key=backend+"/"+id;if(preprocessingChecked.Contains(key))return;
+            // Explicit standalone stage diagnostic. It ends before the public API's
+            // GPU chain; no diagnostic readback is performed inside AudioEmbedder.
+            using var diagnostic=preprocessor.Process(input);
+            Assert.That(diagnostic.Features.backendType,Is.EqualTo(backend));Assert.That(diagnostic.FrameMask.backendType,Is.EqualTo(backend));
+            var actual=diagnostic.Features.DownloadToArray();var mask=diagnostic.FrameMask.DownloadToArray();
+            var expected=Floats(Resolve(root,"audio-runtime-preprocessing/"+id+"-features-fp32.bin"));
+            var expectedMask=Ints(Resolve(root,"audio-runtime-preprocessing/"+id+"-frames-int32.bin"));
+            Assert.That(actual.Length,Is.EqualTo(expected.Length));int mismatches=0;double maximum=0,ratio=0;
+            for(var index=0;index<actual.Length;index++)
+            {
+                var difference=Math.Abs((double)actual[index]-expected[index]);var bound=0.004+0.0001*Math.Abs((double)expected[index]);
+                if(float.IsNaN(actual[index])||float.IsInfinity(actual[index])||difference>bound)mismatches++;
+                maximum=Math.Max(maximum,difference);ratio=Math.Max(ratio,difference/bound);
+            }
+            var result=new JObject{["id"]=id,["actual_backend"]=backend.ToString(),["elementwise_mismatches"]=mismatches,
+                ["mask_exact"]=mask.SequenceEqual(expectedMask),["maximum_absolute_error"]=maximum,["maximum_tolerance_ratio"]=ratio,
+                ["diagnostic_readback_count"]=backend==BackendType.GPUCompute?2:0,["success"]=mismatches==0&&mask.SequenceEqual(expectedMask)};
+            preprocessingCases.Add(result);Save();Assert.That(result.Value<bool>("success"),Is.True,"Separate official PCM preprocessing stage criterion.");
+            preprocessingChecked.Add(key);
         }
         static Worker WorkerOf(object value)=>(Worker)value.GetType().GetField("worker",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(value);
         static int CpuFallback(Worker worker,Model model,bool backbone)

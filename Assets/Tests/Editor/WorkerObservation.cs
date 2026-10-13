@@ -24,6 +24,15 @@ namespace EmbeddingGemma.Tests
         }
 
         public static Result Observe(Model model, BackendType backend, Tensor<float> input, TensorShape captureShape, int limit)
+            => ObserveCore(model, backend, input, captureShape, limit, null);
+
+        public static Result ObserveIndexes(Model model, BackendType backend, Tensor<float> input, HashSet<int> indexes)
+        {
+            if (indexes == null || indexes.Count == 0) throw new ArgumentException("Request at least one tensor index.", nameof(indexes));
+            return ObserveCore(model, backend, input, default, indexes.Count, indexes);
+        }
+
+        static Result ObserveCore(Model model, BackendType backend, Tensor<float> input, TensorShape captureShape, int limit, HashSet<int> indexes)
         {
             if (model == null || input == null) throw new ArgumentNullException();
             if (limit < 1) throw new ArgumentOutOfRangeException(nameof(limit));
@@ -58,7 +67,7 @@ namespace EmbeddingGemma.Tests
                             try { tensor = getTensor.Invoke(storage, new object[] { index }) as Tensor; }
                             catch (TargetInvocationException error) when (error.InnerException is KeyNotFoundException)
                             { result.UnavailableTensorIndexes.Add(index); continue; }
-                            if (tensor is Tensor<float> value && value.shape == captureShape && result.Snapshots.Count < limit)
+                            if (tensor is Tensor<float> value && (indexes != null ? indexes.Contains(index) : value.shape == captureShape) && result.Snapshots.Count < limit)
                                 result.Snapshots.Add(new Snapshot { LayerIndex = layerIndex, TensorIndex = index,
                                     LayerType = layer.GetType().Name, Backend = value.backendType, Values = value.DownloadToArray() });
                         }

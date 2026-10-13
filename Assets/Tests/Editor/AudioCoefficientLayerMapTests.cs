@@ -54,5 +54,33 @@ namespace EmbeddingGemma.Tests
             var anchors = Anchors(); anchors.Add(anchors[0].DeepClone());
             Assert.Throws<InvalidOperationException>(() => Resolve(Fixture(false), anchors));
         }
+        static Dictionary<string, int> NormInputs(Model model)
+        {
+            var type = AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetType("EmbeddingGemma.Tests.AudioCoefficientLayerMap")).FirstOrDefault(value => value != null);
+            var method = type?.GetMethod("ResolveNormInputs");
+            Assert.That(method, Is.Not.Null, "Coefficient-bound norm input mapping is missing.");
+            try { return (Dictionary<string, int>)method.Invoke(null, new object[] { model, Anchors() }); }
+            catch (TargetInvocationException error) { ExceptionDispatchInfo.Capture(error.InnerException).Throw(); throw; }
+        }
+        [Test] public void NormInputIdentityFollowsSquaredReductionWithoutChangingModel()
+        {
+            var graph = new FunctionalGraph(); var x = graph.AddInput<float>(new TensorShape(1, 2), "input");
+            var scale = Functional.Constant(new TensorShape(2), new[] { 1.5f, 2.25f });
+            var inverse = Functional.Pow(Functional.ReduceMean(Functional.Pow(x, 2f), -1, true) + 1e-5f, -0.5f);
+            var model = graph.Compile(x * inverse * scale);
+            using var before = new MemoryStream(); ModelWriter.Save(before, model);
+            Assert.That(NormInputs(model)["layer_0"], Is.EqualTo(model.inputs[0].index));
+            using var after = new MemoryStream(); ModelWriter.Save(after, model);
+            Assert.That(after.ToArray(), Is.EqualTo(before.ToArray()));
+        }
+        [Test] public void NormInputMappingRejectsPlainCoefficientMultiplication()
+        { Assert.Throws<InvalidOperationException>(() => NormInputs(Fixture(false))); }
+        [Test] public void NormInputMappingRejectsInverseWithoutSquaredReduction()
+        {
+            var graph = new FunctionalGraph(); var x = graph.AddInput<float>(new TensorShape(1, 2), "input");
+            var scale = Functional.Constant(new TensorShape(2), new[] { 1.5f, 2.25f });
+            var model = graph.Compile(x * Functional.Pow(x + 1e-5f, -0.5f) * scale);
+            Assert.Throws<InvalidOperationException>(() => NormInputs(model));
+        }
     }
 }

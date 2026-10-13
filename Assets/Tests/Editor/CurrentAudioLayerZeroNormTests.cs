@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Unity.InferenceEngine;
@@ -17,11 +18,11 @@ namespace EmbeddingGemma.Tests
         {
             var root = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/audio-real-chain"));
             var nativeRoot = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/audio-native-layer-replay"));
-            var output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/audio-layer-zero-norm-results"));
+            var output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/audio-layer-zero-input-results"));
             Directory.CreateDirectory(output);
             var stages = new JArray();
             var report = new JObject { ["success"] = false, ["observation_completed"] = false,
-                ["scope"] = "silence_layer_zero_three_internal_norms",
+                ["scope"] = "silence_layer_zero_norm_input_and_three_outputs",
                 ["runtime_source"] = "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
                 ["reference_source"] = "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
                 ["native_replay_source"] = "9800c52957478fafa1377e2caa215f9f2e1477b0",
@@ -55,8 +56,10 @@ namespace EmbeddingGemma.Tests
                 HashCheck(modelPath, "3214cc2b179a3abf3f968816c58b83b8ee762661bfab7b58c6f142d48ed3ed3e");
                 var model = TextModelFile.Load(modelPath);
                 var map = AudioCoefficientLayerMap.Resolve(model, (JArray)anchors["anchors"]);
+                var normInputs = AudioCoefficientLayerMap.ResolveNormInputs(model, (JArray)anchors["anchors"]);
                 Assert.That(map.Keys, Is.EquivalentTo(new[] { "norm_pre_attn", "norm_post_attn", "norm_out" }));
                 report["coefficient_bound_outputs"] = JObject.FromObject(map); Save();
+                report["structurally_bound_norm_inputs"] = JObject.FromObject(normInputs);
                 var native = new Dictionary<string, float[]>();
                 foreach (var name in map.Keys)
                 {
@@ -66,14 +69,31 @@ namespace EmbeddingGemma.Tests
                     Assert.That(new FileInfo(path).Length, Is.EqualTo(part.Value<long>("bytes")));
                     HashCheck(path, part.Value<string>("sha256")); native[name] = Floats(path);
                 }
+                var feedForwardPart = replay["parts"]["feed_forward1"];
+                var feedForwardPath = Path.Combine(nativeRoot, "audio-layer-replay", feedForwardPart.Value<string>("file"));
+                HashCheck(feedForwardPath, feedForwardPart.Value<string>("sha256"));
+                var expectedNormInput = Floats(feedForwardPath);
+                var clip = model.layers.Single(layer => layer.outputs.Contains(normInputs["norm_pre_attn"]));
+                Assert.That(clip.GetType().Name, Is.EqualTo("Clip"));
+                var minimum = Scalar(model, clip.inputs[1]); var maximum = Scalar(model, clip.inputs[2]);
+                Assert.That(expectedNormInput.All(value => value >= minimum && value <= maximum), Is.True,
+                    "Native feed_forward1 must be unchanged by the pinned norm input clamp.");
+                report["norm_pre_attn_input_clip_min"] = minimum; report["norm_pre_attn_input_clip_max"] = maximum;
                 var inputPath = Path.Combine(root, "audio-runtime-reference/frames-1119-valid-1119/silence-features-fp32.bin");
                 HashCheck(inputPath, "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24");
                 using var input = new Tensor<float>(new TensorShape(1, 1119, 128), Floats(inputPath));
                 if (backend == BackendType.GPUCompute) { Assert.That(SystemInfo.supportsComputeShaders, Is.True); ComputeTensorData.Pin(input); }
-                var observed = WorkerObservation.ObserveIndexes(model, backend, input, new HashSet<int>(map.Values));
-                Assert.That(observed.Snapshots.Count, Is.EqualTo(3));
+                var indexes = new HashSet<int>(map.Values) { normInputs["norm_pre_attn"] };
+                var observed = WorkerObservation.ObserveIndexes(model, backend, input, indexes);
+                Assert.That(observed.Snapshots.Count, Is.EqualTo(4));
                 Assert.That(observed.FinalMatchesBaselineBits, Is.True, "Observation changed original final bits.");
                 report["normal_final_matches_observed_bits"] = observed.FinalMatchesBaselineBits;
+                var normInput = observed.Snapshots.Single(value => value.TensorIndex == normInputs["norm_pre_attn"]);
+                Assert.That(normInput.Backend, Is.EqualTo(backend));
+                var inputMetrics = Compare(normInput.Values, expectedNormInput);
+                inputMetrics["stage"] = "norm_pre_attn_input"; inputMetrics["layer_index"] = normInput.LayerIndex;
+                inputMetrics["tensor_index"] = normInput.TensorIndex; inputMetrics["actual_backend"] = normInput.Backend.ToString();
+                stages.Add(inputMetrics); Save();
                 foreach (var anchor in (JArray)anchors["anchors"])
                 {
                     var name = anchor.Value<string>("stage");
@@ -108,6 +128,14 @@ namespace EmbeddingGemma.Tests
                 ["maximum_absolute_error"] = maximum, ["maximum_tolerance_ratio"] = ratio };
         }
         static float[] Floats(string path) { var bytes = File.ReadAllBytes(path); var values = new float[bytes.Length / 4]; Buffer.BlockCopy(bytes, 0, values, 0, bytes.Length); return values; }
+        static float Scalar(Model model, int index)
+        {
+            var constant = model.constants.Single(value => value.index == index);
+            Assert.That(constant.dataType, Is.EqualTo(DataType.Float)); Assert.That(constant.lengthBytes, Is.EqualTo(4));
+            var field = typeof(Constant).GetField("array", BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.That(field, Is.Not.Null); var bytes = (ArraySegment<byte>)field.GetValue(constant);
+            return BitConverter.ToSingle(bytes.Array, bytes.Offset);
+        }
         static string Hash(string path)
         {
             var type = AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetType("EmbeddingGemma.Validation.PlayerFileHash")).FirstOrDefault(value => value != null);

@@ -10,6 +10,21 @@ namespace EmbeddingGemma.Tests
 {
     public static class AudioCoefficientLayerMap
     {
+        public static float[] RestoreHalfScale(float[] values)
+        {
+            if (values == null) throw new ArgumentNullException(nameof(values));
+            var restored = new float[values.Length];
+            for (var index = 0; index < values.Length; index++)
+            {
+                var value = values[index];
+                if (float.IsNaN(value) || float.IsInfinity(value) || (value != 0f && Math.Abs(value) < 1.17549435e-38f))
+                    throw new ArgumentException("Half-scale restoration requires finite normal values or zero.", nameof(values));
+                restored[index] = value * 2f;
+                if (float.IsInfinity(restored[index])) throw new ArgumentException("Half-scale restoration overflows.", nameof(values));
+            }
+            return restored;
+        }
+
         public static Dictionary<string, int> ResolveFeedForward(Model model, JArray anchors)
         {
             var norms = Resolve(model, anchors);

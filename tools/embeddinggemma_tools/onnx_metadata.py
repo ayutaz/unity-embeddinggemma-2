@@ -4,6 +4,8 @@ import hashlib
 import io
 import argparse
 import json
+import math
+import re
 from pathlib import Path
 
 import onnx
@@ -123,6 +125,40 @@ def scan(stream, *, small_tensor_bytes=4096, metadata_field_bytes=1 << 20):
         raise ValueError("model graph is missing")
     result.update(model_bytes=size, read_bytes=read_bytes)
     return result
+
+
+def audio_norm_anchors(metadata, *, layer_count=12):
+    """Bind each exported audio norm_out scale to its exact small FP32 payload."""
+    if type(layer_count) is not int or not 1 <= layer_count <= 100:
+        raise ValueError("audio norm layer count is invalid")
+    weights = {}
+    for value in metadata["initializers"]:
+        if value["name"] in weights:
+            raise ValueError("duplicate initializer name")
+        weights[value["name"]] = value
+    result = {}
+    for node in metadata["nodes"]:
+        match = re.fullmatch(r"/norm_out(?:_(\d+))?/Mul_1", node["name"])
+        if match is None:
+            continue
+        index = int(match.group(1) or "0")
+        if index >= layer_count or index in result or node["op_type"] != "Mul" or len(node["outputs"]) != 1:
+            raise ValueError("duplicate or invalid audio norm stage")
+        candidates = [weights[name] for name in node["inputs"] if name in weights]
+        if len(candidates) != 1:
+            raise ValueError("audio norm scale initializer is missing or ambiguous")
+        weight = candidates[0]
+        dims = weight.get("dims", [])
+        if (weight.get("data_type") != 1 or not dims or any(type(value) is not int or value < 1 for value in dims)
+                or weight.get("raw_bytes") != math.prod(dims) * 4
+                or re.fullmatch(r"[0-9a-f]{64}", weight.get("sha256", "")) is None):
+            raise ValueError("audio norm scale must have audited small FP32 bytes")
+        result[index] = dict(stage=f"layer_{index}", node_name=node["name"], original_output=node["outputs"][0],
+                             coefficient_name=weight["name"], coefficient_sha256=weight["sha256"],
+                             coefficient_bytes=weight["raw_bytes"], coefficient_dims=dims)
+    if set(result) != set(range(layer_count)):
+        raise ValueError("audio norm stage is missing")
+    return [result[index] for index in range(layer_count)]
 
 
 def main(argv=None):

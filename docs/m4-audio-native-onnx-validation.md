@@ -69,4 +69,21 @@ opt-in workflowはnative収集が数値不合格でも、完了manifestがある
 
 Actionsで元の実重み6信号を実行し、native保存参照と全encoder標準ONNXの数値結果を分けて判定する。PR #40の過去のsilence不合格・残り5信号未実行はそのsourceの記録として保持する。候補が失敗した場合も固定許容差を緩めず、最初の演算差を小さいredへ落とす。
 
+### 以前の固定参照への文脈監査
+
+stage生成runの7.49GB archiveから、4つの参照JSONだけを25,287,892 bytes / 22 requestで範囲取得した。ZIP64 / CRC、206 Content-Rangeと応答長、memberのパス / サイズを監査するtools/のCLIを6 + 5 assertion redから追加した。取得した新旧encoder参照とstage参照のSHAをmanifestへ照合した後、固定参照監査を4 + 2 red、欠落した値同士を一致とする経路の2 redから追加し、最終関連19 passed。[TDD receipt](results/m4-audio-artifact-and-context-tdd-20261013.json)。最初のimport collection errorはassertion redへ数えない。
+
+実監査の非zero gateはCLI exit 1 / context_validated=false。新producer `bd9cd68…`のnative最終値は以前の`271f5a1…`へ全6信号で固定許容差を超過した。model revision・設定 / 重みhash・Torch / Transformers版・2 profileのmask hashは一致した。入力featureは5信号でhashが一致し、sineのみ異なる。元ONNXのhashも2 profileとも異なるが、protobufのhashだけで演算・重みの差の原因を確定しない。数学環境の比較は記録不足で未確認。[実文脈不合格](results/m4-audio-pinned-context-failed-20261013.json)。同run内のstage context成功を以前の固定参照への一致へ流用せず、trace graph / stage binaryの取得と実Sentis段階診断へ進めていない。元のFP32不合格は保持し、許容差や参照を都合よく置き換えない。
+
+参照・計算環境の再現性は次の切り分け対象で、原因は未確定。これと独立したRuntime API・所有権 / profile・最終API / sampleのTDD実装は進められるが、実モデルの合格判定には数値gateと全chainの実測を別途必要とする。Required CIの[run 38385087239](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38385087239)、head `c7697f4…`もaudio ONNX silence不一致でfailure。小さい監査テストを理由にPRをmergeしない。
+
+取得と固定参照gateはtools/からuvで実行する。モデル全体は以下のmetadata取得へ含めない。
+
+```powershell
+uv run --locked python -m embeddinggemma_tools.artifact_zip --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11804593748 --output ../artifacts/runtime-stage-selected --member audio-runtime-stages/audio-stage-validation.json --member audio-runtime-stages/audio-stage-reference.json --member audio-runtime-reference/audio-encoder-validation.json --member audio-runtime-reference/audio-encoder-reference.json
+uv run --locked python -m embeddinggemma_tools.audio_pinned_context --current ../artifacts/runtime-stage-selected/audio-runtime-reference --pinned ../../k/artifacts/audio-encoder-runtime --output ../artifacts/runtime-stage-selected/pinned-context-cli-failed.json
+```
+
+後者の例のpinned pathは、既存consumerを保持したこのworktreeの相対配置であり、新規環境では監査済みの旧固定参照の配置先へ合わせる。metadata gateの成功もgraph / stage binaryのローカル監査とUnity数値合格を意味しない。
+
 Python全gate合格後も、Sentis import / 保存 / 再読込、全6信号のCPU / 実GPUと採用Float16形式、GPU前処理 → 実encoder → 共通本体の連結、最終API / 検索・再生・明示収録 / Player / 必須実機は別gate。小さいONNX greenや構造checkerを実モデル・GPU成功へ流用しない。

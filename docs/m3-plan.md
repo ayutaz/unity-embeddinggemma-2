@@ -1,6 +1,6 @@
 # M3: 画像対応のTDD計画
 
-更新日: 2026-10-13。**画像end-to-end API / sampleはmainに未実装、GPU画像前処理と実画像から最終768次元の受け入れは未完了**。画像encoder / projectorのPython実モデル照合はPR #37で合格した。Sentis encoderはPR #41のWindows実測でFloat16のCPU / GPU全6条件が合格、FP32全6条件は固定elementwise許容差超過で不合格。共通RuntimeのPR #43はmainへ統合済み。下記の実測sourceは過去の固定headとして維持し、統合headへ付け替えない。[全体計画](multimodal-tdd-plan.md)の工程3として進め、M3完了時には正式リリースせずM4と全必須環境の検証へ渡す。
+更新日: 2026-10-13。**GPU画像前処理はPR #52でmainへ統合・Windows単独受け入れ済み。画像end-to-end API / sampleと実画像から最終768次元の受け入れは未完了**。画像encoder / projectorのPython実モデル照合はPR #37で合格した。Sentis encoderはPR #41のWindows実測でFloat16のCPU / GPU全6条件が合格、FP32全6条件は固定elementwise許容差超過で不合格。共通RuntimeのPR #43はmainへ統合済み。下記の実測sourceは過去の固定headとして維持し、統合headへ付け替えない。[全体計画](multimodal-tdd-plan.md)の工程3として進め、M3完了時には正式リリースせずM4と全必須環境の検証へ渡す。
 
 I1 / I2の固定profile encoder / projector exportと公式processor参照・Actions gateをTDDで実装した。[実装と検証範囲](m3-vision-export-validation.md)。小さい回帰66 passed / skip 0。[実モデルPython CI 38310718250](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38310718250)の3 profile / 6ケースでminimum cosine `0.9999997615814209`。出力は512次元soft tokenであり、画像の最終embeddingではない。
 
@@ -8,10 +8,12 @@ I1 / I2の固定profile encoder / projector exportと公式processor参照・Act
 
 I3の画像GPU前処理は[PR #52](https://github.com/ayutaz/unity-embeddinggemma-2/pull/52)で実装。固定Git Runtime `71284e302d5e3e643e4ed98272c5774640582c1e`で全package 118 green、Texture / RenderTexture × linear / sRGBの公式24ケースは最大pixel差0。8192pxのdispatch不具合も1 redから修正し、最大入力・paddingを確認した。[実測と未達](m3-image-preprocessing-validation.md)。次はI2の数値差修正とC3公式prompt / mask。I4の実モデル連結の合格判定はI2 / I3 / C3が揃ってから行う。GPU profiler、長い反復 / memory、Playerと他OSは別gate。最終API・sample・PlayerもTDDで実装し、encoder単独の合格でM3を完了にしない。
 
-1. I3のGPU前処理を向き・色空間・resize / patch順の固定fixtureからTDDで実装し、Texture / RenderTextureの両方を実GPUで照合する。I2数値差の診断中でも独立した前処理契約は準備できる。
+1. I3のGPU前処理実装と単独Windows照合は完了。次の実encoder接続では、Tensor寿命・途中失敗・中間readbackを新しい契約のredから確認し、GPU profiler / 長い反復memoryの証拠を追加する。
 2. I2のFP32差をstage / 演算別に特定し、独立参照との不一致を小さいテストでredにしてから修正する。現在の `rtol=1e-4` / `atol=1e-5`は緩めず、3 profile / 全12条件の実モデル再照合と保存 / 再読込を確認する。
 3. C3の[PR #43](https://github.com/ayutaz/unity-embeddinggemma-2/pull/43)、確認head `21e598c5b53d5ad73557ee6d606b12770254d73b`では配置・cache修正の68件greenに加え、実1024長backboneのCPU / GPUCompute × FP32 / Float16全4条件が合格した。[固定headの結果](https://github.com/ayutaz/unity-embeddinggemma-2/blob/21e598c5b53d5ad73557ee6d606b12770254d73b/docs/results/multimodal-backbone-sentis-windows-20261013.json)。最初の4条件はconsumer Editor assembly内source、後続の固定Git Runtime更新consumerも4条件合格した。[Git更新のreceipt](results/multimodal-git-runtime-upgrade-windows-20261013.json)。いずれも合成project済みfeatureの受け入れであり、実画像feature接続・公式prompt / mask構築・最終candidateの空consumerは別gateとする。placeholder / feature数・順序の不一致をred → greenにし、実画像の最終vectorを照合する。
 4. I4〜I6のAPI → 横断検索sample → Playerを下表の契約順でTDD実装する。最終768次元と全順位、実操作・解放・正常終了の必要条件を満たすまでM3は未完了とする。
+
+PR #53の実Sentis診断は2026-10-13 04:56 UTCにCPU / GPUの2テストが独立参照の文脈確認で不合格。case_0のtrace最終値は元保存Sentisと一致したが、新native参照と元の固定参照の一致gateが未達で、case_1は未実行。原因を確定したとは扱わない。元 / 新参照の入力・環境を照合し、途中の成功flagを拒否する報告監査のredを追加する。診断文脈の合格後に演算別red → 最小修正 → 全12条件へ進む。[今回のcheckpoint](results/tdd-acceptance-plan-checkpoint-20261013.json)。
 
 [12条件の実測](results/m3-vision-windows-plan-snapshot-20261013.json)はencoderのみ。全GPU条件で実出力はGPUCompute、CPU計算 / 入力要求・readback flushは0件だが、GPU画像前処理と共通本体へのfeature受け渡しは別に検証する。CLI観測timeoutと実operationの保存報告を区別し、未変更の重い検証を再起動しない。
 

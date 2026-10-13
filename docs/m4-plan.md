@@ -15,6 +15,8 @@ PCM境界PR #48と前処理Runtime PR #50はmainへ統合済み。A2 / A3の固�
 
 過去の328要素不一致を含む実測も保持する。新runの368要素への変化は原因解消を意味しない。前処理の合格、入力境界25件green、診断76件green、実encoder不合格を個別に記録する。PR #43はmainへ統合済みだが、下記の固定Git実測sourceは統合headへ置き換えない。
 
+追加の重みを使わない調査は作業ブランチ `9f51b198e1a8e982b89328401827a394635dac48`の記録で、PRのremote headとは別。native SiLU vector / scalarとexp分解で丸め差を確認し、vector比較の2テストはredのまま。scalar例だけのgreenをvector互換性へ流用しない。次はこの小さいredを満たす実装候補を検証し、関連green後にActionsで元の6信号を照合する。保存graph全体の原因修正やSentis encoderの合格はまだ証明していない。
+
 ## 範囲と参照固定
 
 A1 / A3のPython前処理exportは[PR #38](https://github.com/ayutaz/unity-embeddinggemma-2/pull/38)でTDD実装し、mainへ統合済み。head `0424734291dc4cb7606b8bae53086f4911252e94`の[CI 38313045325](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38313045325)全8 job成功、公式前処理対保存graphの6ケースで最大絶対誤差 `0.0038890838623046875`。このproducer報告の`audio_preprocessing_only` / `unity_validated=false` / `encoders_validated=false`は当時の実行範囲として保持する。後続のSentis前処理受け入れは上記の別receiptへ記録する。次は入力契約・Runtime接続、A4の音声encoder exportと独立参照照合を進め、A5〜A7へ接続する。

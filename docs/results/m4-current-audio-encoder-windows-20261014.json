@@ -1,0 +1,214 @@
+{
+  "success": false,
+  "scope": "current_native_features_to_saved_fp32_encoder_public_api_only",
+  "runtime_source": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+  "runtime_overlay": false,
+  "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "unity": "6000.3.21f1",
+  "sentis": "2.6.1",
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "conditions": [
+    {
+      "requested_backend": "CPU",
+      "success": false,
+      "cases": [
+        {
+          "success": false,
+          "mismatched_elements": 728,
+          "maximum_absolute_error": 0.00015592575073242188,
+          "maximum_tolerance_ratio": 6.783585702505517,
+          "minimum_cosine": 0.9999999994325527,
+          "id": "silence",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 1228,
+          "maximum_absolute_error": 0.00023937225341796875,
+          "maximum_tolerance_ratio": 22.360234893414262,
+          "minimum_cosine": 0.9999999984488349,
+          "id": "impulse",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 1162,
+          "maximum_absolute_error": 0.00032782554626464844,
+          "maximum_tolerance_ratio": 18.12694310285467,
+          "minimum_cosine": 0.9999999979656359,
+          "id": "sine",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 2279,
+          "maximum_absolute_error": 0.0002601146697998047,
+          "maximum_tolerance_ratio": 19.87927439444196,
+          "minimum_cosine": 0.9999999987773889,
+          "id": "nyquist",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 843,
+          "maximum_absolute_error": 0.0002927631139755249,
+          "maximum_tolerance_ratio": 12.41474742330012,
+          "minimum_cosine": 0.9999999977042262,
+          "id": "noise",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 743,
+          "maximum_absolute_error": 0.0002927631139755249,
+          "maximum_tolerance_ratio": 12.41474742330012,
+          "minimum_cosine": 0.9999999977042262,
+          "id": "padded_noise",
+          "profile": "frames-1119-valid-839",
+          "actual_backend": "CPU"
+        }
+      ],
+      "cpu_fallback_count": 0,
+      "readback_flush_count": 0,
+      "phase": "completed",
+      "error": "NUnit.Framework.AssertionException:   Every current native feature must satisfy the unchanged encoder gate.\r\n  Expected: True\r\n  But was:  False\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Tests.CurrentAudioEncoderReferenceTests.SavedFp32EncoderApiMatchesCurrentSixNativeSignals (Unity.InferenceEngine.BackendType backend) [0x005df] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CpuImagePreprocessorIntegrationTests.cs:241 "
+    },
+    {
+      "requested_backend": "GPUCompute",
+      "success": false,
+      "cases": [
+        {
+          "success": false,
+          "mismatched_elements": 665,
+          "maximum_absolute_error": 0.00021314620971679688,
+          "maximum_tolerance_ratio": 8.383664435745006,
+          "minimum_cosine": 0.9999999991421854,
+          "id": "silence",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 945,
+          "maximum_absolute_error": 0.000370025634765625,
+          "maximum_tolerance_ratio": 13.7754018061148,
+          "minimum_cosine": 0.9999999973226326,
+          "id": "impulse",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 764,
+          "maximum_absolute_error": 0.00020706653594970703,
+          "maximum_tolerance_ratio": 11.365575408033148,
+          "minimum_cosine": 0.9999999992444074,
+          "id": "sine",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 881,
+          "maximum_absolute_error": 0.0001239776611328125,
+          "maximum_tolerance_ratio": 5.767508189438819,
+          "minimum_cosine": 0.9999999996075448,
+          "id": "nyquist",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 94,
+          "maximum_absolute_error": 8.869171142578125E-05,
+          "maximum_tolerance_ratio": 3.338910038371225,
+          "minimum_cosine": 0.9999999998264154,
+          "id": "noise",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 84,
+          "maximum_absolute_error": 8.869171142578125E-05,
+          "maximum_tolerance_ratio": 3.338910038371225,
+          "minimum_cosine": 0.9999999998264154,
+          "id": "padded_noise",
+          "profile": "frames-1119-valid-839",
+          "actual_backend": "GPUCompute"
+        }
+      ],
+      "cpu_fallback_count": 0,
+      "readback_flush_count": 0,
+      "phase": "completed",
+      "error": "NUnit.Framework.AssertionException:   Every current native feature must satisfy the unchanged encoder gate.\r\n  Expected: True\r\n  But was:  False\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Tests.CurrentAudioEncoderReferenceTests.SavedFp32EncoderApiMatchesCurrentSixNativeSignals (Unity.InferenceEngine.BackendType backend) [0x005df] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CpuImagePreprocessorIntegrationTests.cs:241 "
+    }
+  ],
+  "hash_backends": {
+    "audio-runtime-reference\\audio-encoder-validation.json": "windows_cng",
+    "audio-runtime-reference\\audio-encoder-reference.json": "windows_cng",
+    "audio-runtime-reference\\frames-1119-valid-1119\\audio.onnx": "windows_cng",
+    "audio-runtime-reference\\frames-1119-valid-1119\\frame-mask-int32.bin": "windows_cng",
+    "frames-1119-valid-1119-416c3e32172844ceb7d6498c84d100d3-fp32.sentis": "windows_cng",
+    "audio-runtime-reference\\frames-1119-valid-839\\audio.onnx": "windows_cng",
+    "audio-runtime-reference\\frames-1119-valid-839\\frame-mask-int32.bin": "windows_cng",
+    "frames-1119-valid-839-e83605202a8046639cd83ed7c34c0b59-fp32.sentis": "windows_cng",
+    "audio-runtime-reference\\frames-1119-valid-1119\\silence-features-fp32.bin": "windows_cng",
+    "audio-runtime-reference\\frames-1119-valid-1119\\impulse-features-fp32.bin": "windows_cng",
+    "audio-runtime-reference\\frames-1119-valid-1119\\sine-features-fp32.bin": "windows_cng",
+    "audio-runtime-reference\\frames-1119-valid-1119\\nyquist-features-fp32.bin": "windows_cng",
+    "audio-runtime-reference\\frames-1119-valid-1119\\noise-features-fp32.bin": "windows_cng",
+    "audio-runtime-reference\\frames-1119-valid-839\\padded_noise-features-fp32.bin": "windows_cng"
+  },
+  "feature_rtol": 0.0001,
+  "feature_atol": 1E-05,
+  "minimum_cosine": 0.999999,
+  "end_to_end_validated": false,
+  "float16_validated": false,
+  "pcm_preprocessing_validated": false,
+  "started_utc": "2026-10-13T18:30:12.7340395Z",
+  "metadata_and_files_audited": true,
+  "encoder_python_gate_passed": false,
+  "saved_models_reused": true,
+  "sentis_encoder_numeric_validated": false,
+  "completed_utc": "2026-10-13T18:30:39.7725299Z",
+  "harness_source": "2b8870e",
+  "cli_sha256": "407a239f183524bea8b31bdb068ed6fd103df41703bfa116a91ec8be6aa9cf85",
+  "nunit": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T18:30:39.8435897Z",
+    "FailedCount": 2,
+    "FailedTests": [
+      {
+        "FullName": "EmbeddingGemma.Tests.CurrentAudioEncoderReferenceTests.SavedFp32EncoderApiMatchesCurrentSixNativeSignals(CPU)",
+        "Message": "  Every current native feature must satisfy the unchanged encoder gate.\r\n  Expected: True\r\n  But was:  False\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CpuImagePreprocessorIntegrationTests.cs",
+        "Line": 245
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.CurrentAudioEncoderReferenceTests.SavedFp32EncoderApiMatchesCurrentSixNativeSignals(GPUCompute)",
+        "Message": "  Every current native feature must satisfy the unchanged encoder gate.\r\n  Expected: True\r\n  But was:  False\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CpuImagePreprocessorIntegrationTests.cs",
+        "Line": 245
+      }
+    ],
+    "HasFailures": true,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Failed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 0,
+    "SkippedCount": 0,
+    "Status": "Failed",
+    "Success": false,
+    "TestCount": 2,
+    "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\.uloop\\outputs\\TestResults\\20261013_183039_8468781_9009ea4818664a56800233623b01464d.xml"
+  },
+  "tolerances_changed": false
+}

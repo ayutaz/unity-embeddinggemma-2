@@ -1,6 +1,6 @@
 # 共通マルチモーダル本体のRuntime契約
 
-更新日: 2026-10-13。[全体TDD計画](multimodal-tdd-plan.md)のC3 / C4を進める。`MultimodalBackboneProfile`と`MultimodalBackbone`をUPM Runtimeへ追加し、合成project済み特徴量を使う実text重み・1024長backboneのSentis受け入れを確認した。**画像 / 音声encoder、公式prompt構築、GPU前処理から最終768次元までのend-to-end照合は未完了。** 新Runtime assemblyの固定Git導入も後段で確認する。以下の初回TDD / import失敗の履歴と、末尾の修正後実モデル4条件の合格を分けて記録する。
+更新日: 2026-10-13。[全体TDD計画](multimodal-tdd-plan.md)のC3 / C4を進める。`MultimodalBackboneProfile`と`MultimodalBackbone`をUPM Runtimeへ追加し、合成project済み特徴量を使う実text重み・1024長backboneのSentis受け入れを確認した。**画像 / 音声encoder、公式prompt構築、GPU前処理から最終768次元までのend-to-end照合は未完了。** 既存consumerを固定Git Runtimeへ更新した4条件も合格した。最終candidateの空consumerと実encoderのend-to-endは別の残作業とする。以下の初回TDD / import失敗の履歴と、末尾の修正後実モデル4条件の合格を分けて記録する。
 
 ## APIと所有権
 
@@ -53,3 +53,13 @@ Unityでは旧graphの小さいimport 2条件と、同じimport失敗を4回繰�
 保存 / 再読込後、各条件で順序の異なる2入力を参照照合し、有限768次元・単位長を確認した。minimum cosineはFP32 CPU `0.9999999998910367` / GPU `0.9999999999368913`、Float16 CPU `0.9999999998834702` / GPU `0.9999999999423765`。GPU条件の実worker / 出力 / image・audio入力backendはGPUCompute、CPU計算 / feature入力fallbackとGPU readback flushは0件。CPU tokenize / token入力と最終vector取得は境界として扱う。
 
 この4条件は実text重みと合成project済みimage / audio featureのbackbone単独の受け入れ。Runtime sourceをconsumer Editor test assemblyへ配置した結果であり、新Runtime assemblyの固定Git導入・実encoder接続・GPU前処理・最終sample / Player / 他OSの合格ではない。次は開発source配置を外し、固定Git commitのRuntime assemblyを検証する。正式Release / 公開tagは作成しない。
+
+## 固定Git Runtime assemblyの更新consumer受け入れ
+
+固定Git commit `21e598c5b53d5ad73557ee6d606b12770254d73b`を既存consumerへ導入し、Runtime / Profile / 単体テストの開発source overlayをAssetsから退避した。Package Managerのrequested / resolved SHAとGit source、Sentis 2.6.1 / Newtonsoft 3.2.2を読み戻した。型のassembly名は両方とも `EmbeddingGemma.Runtime`。package source監査は98 tracked filesで、改行を正規化したGit blob97件一致と、UPM生成 `_fingerprint`だけを除いたpackage.jsonのsemantic一致。raw bytes全件一致という監査ではない。
+
+更新直後は旧packageが残っており、compileで新型を見つけられずCS0246となった。Package ManagerのResolveを1回だけ要求した後、uloopは受理後のEOF / `UNITY_DISCONNECTED_AFTER_ACCEPT`を返した。`SafeToRetry=false`を守り再要求せず、同じoperationのlock / cache更新とEditor Readyを確認した。これらは導入遷移の失敗・観測切断であり、アルゴリズムのTDD redには数えない。
+
+解決後のcompileとpackage assembly契約は62 passed / fail 0 / skip 0 / inconclusive 0（2026-10-13 00:52:41 UTC）。続いてcompileを省略して実1024長4条件を実行し、同じoperationの報告を追跡した。2026-10-13 01:02:13 UTCに4 passed / fail 0 / skip 0 / inconclusive 0、CLI exit 0を確認。[固定Git更新のreceipt](results/multimodal-git-runtime-upgrade-windows-20261013.json)。CPU / 実GPU × FP32 / Float16で保存 / 再読込、並びの異なる2入力、有限768次元・単位長を照合し、全GPU条件のCPU計算 / feature入力fallback・readback flushは0件。
+
+実text重みと合成project済み特徴量のbackbone受け入れは、開発source内だけでなく配布Runtime assemblyでも合格した。公式Test Framework 1.6.0をembeddedにした既存consumerの更新条件を保持し、最終空consumerの合格とはしない。実画像・実音声encoder、公式prompt / mask構築、GPU前処理、最終API / sample・Player / 他OSは引き続き全体計画の必須gate。共通backbone Runtimeという本PRの範囲と、その後のend-to-end実装を分け、正式Release / 公開tagは作成しない。

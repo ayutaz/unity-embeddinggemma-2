@@ -1,6 +1,7 @@
 """Bounded HTTP range reads for selectively extracting large validation artifacts."""
 
 from collections import OrderedDict
+import binascii
 import io
 from pathlib import Path, PurePosixPath
 import shutil
@@ -61,6 +62,14 @@ def extract_subset(reader, destination, prefix):
             if relative.is_absolute() or ".." in relative.parts or not target.is_relative_to(destination):
                 raise ValueError("artifact path escaped destination")
             target.parent.mkdir(parents=True, exist_ok=True)
+            if target.is_file() and target.stat().st_size == item.file_size:
+                checksum = 0
+                with target.open("rb") as existing:
+                    while block := existing.read(1024 * 1024):
+                        checksum = binascii.crc32(block, checksum)
+                if checksum == item.CRC:
+                    extracted.append(relative.as_posix())
+                    continue
             partial = target.with_name(target.name + ".part")
             with archive.open(item) as source, partial.open("wb") as output:
                 shutil.copyfileobj(source, output, 1024 * 1024)

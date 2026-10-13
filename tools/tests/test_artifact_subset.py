@@ -62,3 +62,18 @@ def test_archive_path_escape_is_rejected(tmp_path):
     with pytest.raises(ValueError, match="path"):
         extract(stream, tmp_path / "out", "diagnostics/")
     assert not (tmp_path / "escape.bin").exists()
+
+
+def test_completed_entry_is_reused_only_when_size_and_crc_match(tmp_path):
+    reader_type, extract = required("RangeReader"), required("extract_subset")
+    value = b"native reference" * 100000
+    stream = io.BytesIO()
+    with zipfile.ZipFile(stream, "w", compression=zipfile.ZIP_STORED) as archive:
+        archive.writestr("diagnostics/native.bin", value)
+    destination = tmp_path / "out"; destination.mkdir()
+    (destination / "native.bin").write_bytes(value)
+    data, requested = stream.getvalue(), []
+    def fetch(start, stop):
+        requested.append((start, stop)); return data[start:stop]
+    extract(reader_type(fetch, len(data), block_size=512), destination, "diagnostics/")
+    assert sum(stop - start for start, stop in requested) < len(data) / 10, "Completed native reference was downloaded again."

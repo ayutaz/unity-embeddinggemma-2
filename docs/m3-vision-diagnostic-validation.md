@@ -24,4 +24,6 @@ artifact全体には不要な3 profileの再取得も含まれるため、HTTP R
 
 実CPU / GPUの層診断は参照取得後に実行する。初回import / 保存を1回にし、同じ保存modelを各backendで再読込する。診断出力のreadbackは実行完了後の測定境界であり、製品GPU前処理からencoder / backboneへの連結を証明するものではない。
 
+初回の選択取得は、native参照の取得後、graphの369098752 bytesまで進んだ時点で期限付きURLのHTTP 403により終了した。部分graphは退避して保全し、取得済み参照をZIPのsize / CRCで再利用する追加1 assertion red → 5 greenを確認した。最終信頼判定はCRCだけではなく、固定source / revisionとproducer manifestの全SHA-256照合で行う。URLは403時に更新し、GitHub認証情報・署名URLを結果へ保存しない。取得の再開は明確なterminal failure後に行い、観測timeoutやUnity再起動とは分ける。実Sentis層診断の結果はまだない。
+
 数値不合格の原因修正、元の全12条件、実画像の最終768次元API / sample、GPU profiler・資源 / 性能、Player / 必須他OS、最終空consumerは未完了。追加診断だけでこれらを合格にしない。

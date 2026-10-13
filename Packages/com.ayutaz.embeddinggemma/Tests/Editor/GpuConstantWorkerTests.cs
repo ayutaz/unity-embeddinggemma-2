@@ -96,5 +96,34 @@ namespace EmbeddingGemma.Tests
             var model=FloatModel();var input=model.inputs[0];input.index=17;model.inputs[0]=input;
             Assert.Throws<ArgumentException>(()=>{using var holder=Create(model);});
         }
+        [TestCase(BackendType.CPU)] [TestCase(BackendType.GPUCompute)]
+        public void BackboneOwnsBoundedUploaderAndRetainsItsOriginalFeatureContract(BackendType backend)
+        {
+            var graph=new FunctionalGraph();var ids=graph.AddInput<int>(new TensorShape(1,8),"input_ids");
+            var mask=graph.AddInput<int>(new TensorShape(1,8),"attention_mask");
+            var image=graph.AddInput<float>(new TensorShape(1,512),"image_features");
+            var audio=graph.AddInput<float>(new TensorShape(0,512),"audio_features");
+            var source=Functional.ReduceSum((ids+mask).Float(),new[] {0,1},true)+
+                Functional.ReduceSum(image,new[] {0,1},true)/512f+Functional.ReduceSum(audio,new[] {0,1},true);
+            const int count=2097153;
+            var weights=Enumerable.Range(0,count).Select(index=>0.25f+((uint)index*1664525u+1013904223u)%65536/65536f).ToArray();
+            var seed=Functional.ReduceSum(source*Functional.Constant(new TensorShape(1,count),weights),1,true)/count;
+            var first=new float[768];first[0]=1;var second=new float[768];second[1]=1;
+            var vector=seed*Functional.Constant(new TensorShape(1,768),first)+Functional.Constant(new TensorShape(1,768),second);
+            var model=graph.Compile(vector/Functional.Sqrt(Functional.ReduceSumSquare(vector,1,true)));
+            Assert.That(model.constants.Any(value=>value.lengthBytes>8*1024*1024),Is.True,"A real default-budget crossing is required.");
+            var profile=new MultimodalBackboneProfile(8,10,11,1,0,32,0);
+            using var backbone=new MultimodalBackbone(model,profile,backend);
+            var owner=typeof(MultimodalBackbone).GetField("workerOwner",BindingFlags.NonPublic|BindingFlags.Instance);
+            Assert.That(owner,Is.Not.Null,"Production backbone must use bounded uploads.");
+            var holder=(IDisposable)owner.GetValue(backbone);
+            Assert.That(Value(holder,"UploadedConstantCount"),Is.EqualTo(backend==BackendType.CPU?0:1));
+            Assert.That(Value(holder,"MaximumUploadBytes"),Is.LessThanOrEqualTo(8*1024*1024));
+            using var features=new Tensor<float>(new TensorShape(1,512),Enumerable.Repeat(0.5f,512).ToArray());
+            if(backend==BackendType.GPUCompute)ComputeTensorData.Pin(features);
+            using var empty=new Tensor<float>(new TensorShape(0,512));
+            var result=backbone.Embed(new[] {10,0,0,0,0,0,0,0},new[] {1,0,0,0,0,0,0,0},features,empty);
+            Assert.That(result.Length,Is.EqualTo(768));Assert.That(result.Sum(value=>(double)value*value),Is.EqualTo(1).Within(1e-6));
+        }
     }
 }

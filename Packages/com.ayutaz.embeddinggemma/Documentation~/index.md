@@ -1,4 +1,4 @@
-# 導入とテキストAPI
+# 導入とRuntime API
 
 更新日: 2026-10-10。開発版 `0.1.0-pre.1` は [PR #6](https://github.com/ayutaz/unity-embeddinggemma-2/pull/6)でmainへ統合済み、未リリースです。
 Windowsの新しい空のUnityプロジェクトで固定commitのGit URL導入・compile・UPM 38 / sample EditMode 64 / PlayMode 2件、実モデル4条件・全順位 / scoreと日英画面操作を確認しました。[実測条件と結果](https://github.com/ayutaz/unity-embeddinggemma-2/blob/b1a8c67c62066bfa5e1830a947563ace3dff9fa5/docs/m2-latest-git-consumer-validation.md)を参照してください。macOS / iOS / Android、正式候補と公開tagは未検証です。
@@ -66,3 +66,16 @@ Float16重みは全演算のfp16化や速度改善を保証しません。
 `TextSearchIndex`は文書を一度だけ埋め込み、検索のたびにqueryを埋め込みます。空のqueryは拒否します。渡した`ITextEmbedder`は呼び出し側が所有します。`TextSearchSession`を使う場合はsessionが推論器を所有し、再準備やDisposeで解放します。
 
 Windowsの元プロジェクトと新規consumerでfp32 / Float16重み × CPU / GPUComputeの固定6文書 / 4queryの全順位が参照と一致し、CLI完了応答・日英検索・空入力・解放も確認しました。任意入力の品質や他環境の受け入れは別の検証対象です。
+
+## 共通本体API（開発中）
+
+`MultimodalBackboneProfile`と`MultimodalBackbone`は、encoder / projectorが生成した512幅のsoft-token Tensorを共通本体へ渡すAPIです。画像Texture・音声PCMからの前処理やprompt生成を含みません。実モデルの最終embedding、zero-feature profile、Player / 他OSは検証中です。
+
+profileの長さ・placeholder ID・feature数・vocabulary / pad IDは、監査済みモデルと公式processorの参照から設定します。対応する保存graphは4入力の名前・型・static shapeが一致する必要があります。
+
+```csharp
+using var backbone = new MultimodalBackbone(model, profile, BackendType.GPUCompute);
+float[] embedding = backbone.Embed(inputIds, attentionMask, imageFeatures, audioFeatures);
+```
+
+`model`・feature Tensorは呼び出し側が所有します。GPUComputeでは非空featureを既にGPUへ置いてください。backboneはfeatureをCPUへdownload・Disposeせず、最終768次元だけを独立したCPU配列へコピーします。featureの全値に対するCPU検査は行わないため、入力側でもfinite条件を保証してください。長さ / mask / slot数・feature shape・dataの生存・backendの不一致は拒否します。backboneをDisposeした後も、借用Tensorの解放は呼び出し側が行います。

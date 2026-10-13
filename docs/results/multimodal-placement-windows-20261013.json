@@ -1,0 +1,96 @@
+{
+  "scope": "real_backbone_import_failed_and_small_placement_tdd",
+  "real_model_validated": false,
+  "git_consumer_validated": false,
+  "encoders_validated": false,
+  "gpu_preprocessing_validated": false,
+  "unity": "6000.3.21f1",
+  "sentis": "2.6.1",
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "python": "3.14",
+  "source_note": "Uncommitted development tests staged in the existing consumer Editor test assembly. Final source hashes describe green only; the initial real fixture predated the failure-cache change.",
+  "real_initial": {
+    "artifact_source": "e35470212f616b020c0b150a4c515a007f0b937f",
+    "ci_run": "38320110239",
+    "graph_sha256": "a24bc32bc757197d973f418f95dc1f6af194b7274f9d124eca2955c45f3b2150",
+    "reference_sha256": "e690d34c810b37e9c388acbdd6d5b8afa64cea66d64c26a537154da6391eccd6",
+    "config_sha256": "b8f1e9931b57fbc054acdb445c41765d55b0074c58d145fa82839941ad1b5bb3",
+    "sequence_length": 1024,
+    "image_feature_count": 280,
+    "audio_feature_count": 280,
+    "success": false,
+    "started_utc": "2026-10-12T23:49:34.1837537Z",
+    "completed_utc": "2026-10-13T00:01:56.9876197Z",
+    "import_failure": "Where.InferPartial: ValueError: broadcast dims must be equal or 1",
+    "numerical_cases_executed": 0,
+    "conditions": [
+      {
+        "phase": "prepare_saved_model",
+        "success": false,
+        "requested_backend": "CPU",
+        "precision": "fp32"
+      },
+      {
+        "phase": "prepare_saved_model",
+        "success": false,
+        "requested_backend": "GPUCompute",
+        "precision": "fp32"
+      },
+      {
+        "phase": "prepare_saved_model",
+        "success": false,
+        "requested_backend": "CPU",
+        "precision": "float16"
+      },
+      {
+        "phase": "prepare_saved_model",
+        "success": false,
+        "requested_backend": "GPUCompute",
+        "precision": "float16"
+      }
+    ],
+    "report_sha256": "913e3c61b5736f765029e33166d1da8e7c3c7533055958f3a7ea8632a7319e96",
+    "observer_error": {
+      "safe_to_retry": false,
+      "stall_seconds": 305.5773585,
+      "code": "UNITY_EDITOR_UNRESPONSIVE",
+      "stopped_operation": false,
+      "source": "observed CLI stderr from session 76329",
+      "phase": "response_waiting"
+    }
+  },
+  "small_tdd": {
+    "python_red": 1,
+    "python_green": 25,
+    "python_red_log_sha256": "03818c5f8b7f8e6795a9b6cce0f91443f64b6b9090ac4edb2958964924f75e09",
+    "python_green_log_sha256": "06f21f263f52eef2b2db9b5fd3eb14bc5c9a83147dea4d97e20292c0745fcd19",
+    "unity_red": {
+      "skipped": 0,
+      "failed": 3,
+      "passed": 3,
+      "total": 6,
+      "result_sha256": "660fee0198069d57e14a3e29ac9da8f2bbe449f773dc78a9edf73f2d2742c8b7",
+      "xml_sha256": "95250cd10b17d2db17b377641f021f36ca9e376d9bff790a2cdc0549a42d0261",
+      "completed_utc": "2026-10-13T00:03:38.9467678Z"
+    },
+    "unity_green": {
+      "skipped": 0,
+      "failed": 0,
+      "passed": 68,
+      "total": 68,
+      "result_sha256": "eb2e4daff7bf162506a35a46aa7cb404fc516db95d5129900b4820413a8131c4",
+      "completed_utc": "2026-10-13T00:04:50.4232552Z"
+    },
+    "unchanged_independent_reference_sha256": "88c904a93f70eb00732b478788c4000de838b9ae0fc7c024a6400ef28333d636",
+    "old_graph_sha256": "b978ef25017bd4302421fa097dc8350e8be82ea5f4bf8845d4bcd91c3ebd25ba",
+    "new_graph_sha256": "414767c39cc4bc9532de5cb58aaa7273773d2c08a138f06aaeb782fcdca89a17"
+  },
+  "final_source_sha256": {
+    "tools/embeddinggemma_tools/export.py": "f8a89aa273b909f87e4dc532d65fca19185feee99284a3b967afddd1bc13d812",
+    "tools/tests/test_multimodal.py": "e11faf2b9c55535d80e2887b3172d3a5247246b713dcf3ebf243a449d5e44c94",
+    "Assets/Tests/Editor/MultimodalBackboneReferenceTests.cs": "e56ebb3cb33da123406880a8d427839afb2b6f3c95355f91fda9d91c8d79ea86",
+    "Assets/Tests/Editor/MultimodalPlacementReferenceTests.cs": "a8ea49b4d73e57c5fcf555db51d32d9a84cc39102a8ef6e1582edabaf5671266",
+    "Assets/Tests/Editor/BackboneImportCacheTests.cs": "41fb39f68dba9f3a400279b78d40f6bd834460ea0080248b167f871d1fc50dab"
+  }
+}

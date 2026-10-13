@@ -1,25 +1,27 @@
 # M4: 音声対応のTDD計画
 
-更新日: 2026-10-13。**音声end-to-end API / sampleはmainに未実装、実音声encoder / Unityの合格証拠は未取得**。共通backboneの一部はPR #34で実装済みだが、合成特徴量によるPython照合は音声encoderの受け入れを満たさない。依存・実行場所・公開条件は[全体計画](multimodal-tdd-plan.md)、既存仕様調査は[技術調査](technical-approach.md)。M4の実装完了だけで公開せず、3モダリティと全必須環境の検証を揃える。
+更新日: 2026-10-13。**音声end-to-end API / sampleはmainに未実装、実音声encoderのPython数値gateは不合格、Sentis encoder受け入れは未完了**。音声前処理単独はPythonとWindows Sentis CPU / 実GPUで合格済み。[全体計画](multimodal-tdd-plan.md)の工程4として進める。M4実装だけでは公開せず、3モダリティと全必須環境の受け入れを揃える。
 
-A1 / A3の固定profile音声前処理exportと参照・必須Actions gateをTDDで開始した。[係数・許容差の根拠と検証範囲](m4-audio-preprocessing-validation.md)。35 redから前処理契約が合格し、監査 / 回帰を含め110 passed / skip 0。Unity実GPUとaudio encoder以降は未検証。
+A1 / A3の前処理exportと参照・必須Actions gateはTDD実装し、PR #38 / #46をmainへ統合した。[係数・許容差の根拠](m4-audio-preprocessing-validation.md)。35 redから前処理契約を満たし、監査 / 回帰を含め110 passed / skip 0。Windows UnityはCPU / 実GPU各6信号、保存 / 再読込、mask完全一致が合格。最大絶対誤差は両backendとも `0.0038890838623046875`、GPU計算 / 入力fallbackとreadback flushは0件。[実行条件・診断readback・未達範囲](m4-audio-preprocessing-sentis-validation.md)。製品PCM Runtime APIと本番GPU連結、音声encoder以降、他OSの成功とは分ける。
 
 A1 / A4の音声encoder / projector固定profile exportと独立PCM参照・必須Actions gateをTDDで実装した。[実装と参照設定・検証範囲](m4-audio-encoder-validation.md)。encoder20 red、SDPA契約2 red、参照 / CLI8 red、workflow1 redを観測し、最終の関連小さい回帰145 passed / skip 0。実重みActionsとSentis・A5以降は別gateとして残す。
 
 ### 直近のTDD順序
 
-1. A4の保存graph数値差を解消する。[PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40)の確認head `c4676f7b38f01ce98a9dedca87fb450febea20b9`は未統合。段階別診断をTDDで追加して関連46件greenとなったが、[実モデル診断 CI 38324421389](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38324421389)は不合格。silenceの公式対eager差0、保存graph対eager最大差 `0.00021576881408691406`、許容差比 `9.733773231506348`、不一致368要素。subsampleは一致し、layer 0から微差、layer 10で初めて許容差超過となった。[固定headの診断結果](https://github.com/ayutaz/unity-embeddinggemma-2/blob/c4676f7b38f01ce98a9dedca87fb450febea20b9/docs/results/m4-audio-stages-real-failed-20261013.json)。層内のstage欠落 / 誤順序 / hook解放漏れ / 元の失敗消失を拒否する10 redと、自動選択 / 先行保存の追加3 redから診断を実装し、関連59件greenを確認した。次はActionsで層内診断を実行し、原因演算の小さい再現red → 最小修正 → 固定実重み・6信号・mask profileのgreenを得る。残り5信号は未実行。同headのCI 38325813586も失敗で終了した。診断の成功はencoderの成功ではなく、許容差を緩めない。
-2. A2のPCM入力契約とA3の前処理graphをSentisへ接続する。境界長・mask・無音・channel / sample rateのredから実装し、各段の実CPU / GPU結果を確認する。
-3. A4のencoderをSentisで保存 / 再読込し、CPU / 実GPUとFloat16を照合する。A5で実音声featureをGPUのまま共通本体へ渡し、最終768次元を固定参照と照合する。共通本体APIのPR #43には小さい実GPUと配置演算 / cache修正を含む68件のgreenがあるが、修正後の実1024長graph・実音声featureの照合と新Runtime assemblyの固定Git導入は別の未完了条件として確認する。
-4. A6 / A7の検索・再生・明示収録・停止 / 解放をTDDで実装し、固定PCMの精度とマイク入力動作を別に受け入れる。テキスト・画像回帰と必須実機へ渡す。
+1. **A4の原因演算を分離して修正する。** [PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40)、確認head `4ae52890da50ffc570cba4902d96e95b182cc9c6`は未統合。層内stage欠落 / 誤順序 / hook解放・失敗報告保持を検証する10 red、追加自動定位3 redを経て関連59件green。[実モデルCI 38327706633](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38327706633)は不合格。silenceの公式対eager差0、保存対eager最大差 `0.00013375282287597656`、許容差比 `5.294248580932617`、不一致328要素。[固定headの実測](https://github.com/ayutaz/unity-embeddinggemma-2/blob/4ae52890da50ffc570cba4902d96e95b182cc9c6/docs/results/m4-audio-layer-real-failed-20261013.json)。subsampleは一致、最初の非zero差はlayer 0.feed_forward1、最初の許容差超過はlayer 10。層内traceのfinalは元の失敗graphと一致しており、診断が別経路へ逸れていない。次は公式入力を使うfeed-forward単独のRMSNorm / linear / activation / norm・scale / residualを比較する診断をTDD追加する。stage・入力・hookとstandalone対full trace整合のred → 診断green → 原因演算の再現red → 最小修正 → 元の実重み6信号green。残り5信号は未実行、診断成功をencoder成功と数えず、許容差は緩めない。
+2. **A2 / A3の製品Runtime接続。** 前処理graph単独の合格を起点に、PCM境界長・channel / sample rate・NaN / Infinity・空入力・maskのredから入力APIを実装する。GPU tensor受け渡しと各入力経路を確認し、診断fixtureのgreenだけでAPI完了にしない。この契約はencoder修正と独立して準備できる。
+3. **A4 → A5の実モデル連結。** encoder数値gateの合格後、Sentis保存 / 再読込・CPU / 実GPU・Float16を照合し、featureをGPUのまま共通本体へ渡して最終768次元を照合する。共通backboneのPR #43は配置・cacheの68件greenと実1024長4条件が合格済みだが、合成featureによるbackbone単独の結果。後続の固定Git Runtime更新consumerでも4条件合格したが、公式prompt構築・実音声feature接続と最終candidateの空consumerは別gateとして扱う。[Git更新のreceipt](results/multimodal-git-runtime-upgrade-windows-20261013.json)。[固定headのbackbone結果](https://github.com/ayutaz/unity-embeddinggemma-2/blob/21e598c5b53d5ad73557ee6d606b12770254d73b/docs/results/multimodal-backbone-sentis-windows-20261013.json)。
+4. **A6 / A7のsampleとPlayer。** 検索・再生・明示収録・停止 / 解放を下表のredから実装し、固定PCMの精度とマイク入力動作を別に受け入れる。テキスト・画像回帰と必須実機へ渡す。
 
-音声前処理exportの合格を音声encoderの合格に含めない。PR #40の小さい契約greenと実モデル不合格も別に保持する。
+過去の368要素不一致の実測も保持する。新runの328要素への変化は原因解消を意味しない。音声前処理の合格、層内診断59件green、実encoder不合格を個別に記録する。
 
 [段階別実モデルCI 38324421389](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38324421389)は不合格で完了。subsampleは完全一致、`layer_0`から小さい差があり、許容差を最初に超えるのは`layer_10`。診断graphと元の不合格graphの最終値は完全一致した。層内診断は小さいTDDで追加済み。次は実重みActionsで原因演算を特定し、元の固定数値条件へ戻す。[全stageと未検証ケース](m4-audio-encoder-validation.md)。
 
+Feed-forward診断は追加16 red → 16 green、余分なexportを防ぐ追加1 red → 関連76 greenまで実装した。[TDDの証拠](results/m4-audio-feed-forward-tdd-20261013.json)。公式入力・各演算の値と単独対full stage一致を比較する。実重みでの原因演算と元の6信号合格は未確認であり、次のActionsで判定する。PR #43は全8 CI成功後にmainへ統合済み。合成featureのbackbone単独と、実音声encoder連結の未完了を分ける。
+
 ## 範囲と参照固定
 
-A1 / A3のPython前処理exportは[PR #38](https://github.com/ayutaz/unity-embeddinggemma-2/pull/38)でTDD実装し、mainへ統合済み。head `0424734291dc4cb7606b8bae53086f4911252e94`の[CI 38313045325](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38313045325)全8 job成功、公式前処理対保存graphの6ケースで最大絶対誤差 `0.0038890838623046875`。`audio_preprocessing_only` / `unity_validated=false` / `encoders_validated=false`であり、A3のSentis GPU合格ではない。次は入力契約、前処理graphのSentis実測、A4の音声encoder exportと独立参照照合を進め、A5〜A7へ接続する。
+A1 / A3のPython前処理exportは[PR #38](https://github.com/ayutaz/unity-embeddinggemma-2/pull/38)でTDD実装し、mainへ統合済み。head `0424734291dc4cb7606b8bae53086f4911252e94`の[CI 38313045325](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38313045325)全8 job成功、公式前処理対保存graphの6ケースで最大絶対誤差 `0.0038890838623046875`。このproducer報告の`audio_preprocessing_only` / `unity_validated=false` / `encoders_validated=false`は当時の実行範囲として保持する。後続のSentis前処理受け入れは上記の別receiptへ記録する。次は入力契約・Runtime接続、A4の音声encoder exportと独立参照照合を進め、A5〜A7へ接続する。
 
 PCM波形 → GPU上のSTFT / mel / log等の公式前処理 → 音声encoderのsoft token → 共通本体 → 768次元を実装する。最初はbatch 1と固定長profileを扱い、音声の最小 / 最大長、padding / mask、長さ超過時の扱いを契約にする。長音声のchunk化は参照のtoken配置・集約を確認してから追加し、独自のchunk平均を参照互換としない。
 

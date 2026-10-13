@@ -340,7 +340,8 @@ def diagnose_audio_onnx_stages(audio, projection, features, frame_mask, destinat
     return result
 
 
-def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODEL_REVISION, source_commit="local", native_silu=False):
+def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODEL_REVISION, source_commit="local", native_silu=False,
+                          collect_onnx_failures=False):
     """Official audio tower/projector vs saved graph on audited PCM-derived features.
 
     Independent inputs are the official NumPy preprocessing references, not the
@@ -350,6 +351,11 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "audio-encoder-validation.json").unlink(missing_ok=True)
     (destination / "audio-encoder-failure.json").unlink(missing_ok=True)
+    if collect_onnx_failures:
+        (destination / "audio-encoder-reference.json").unlink(missing_ok=True)
+        (destination / "audio-onnx-diagnostic-failures.json").unlink(missing_ok=True)
+        if not native_silu:
+            raise ValueError("collect ONNX failures requires --native-silu")
     if re.fullmatch(r"[0-9a-f]{40}", revision) is None:
         raise ValueError("model revision must be an immutable lowercase commit SHA")
 
@@ -406,6 +412,7 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
     audio, projection = load_audio_models(snapshot)
     rows, profiles, produced, similarities = [], {}, [], []
     onnx_similarities = []
+    onnx_failures, onnx_attempted = [], 0
     for profile, inputs in groups.items():
         directory = destination / profile
         directory.mkdir(parents=True, exist_ok=True)
@@ -481,6 +488,7 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
             evaluator = ReferenceEvaluator(str(imported_graph))
             for features, expected, case_id in expected_rows:
                 actual_array = evaluator.run(None, {"input": features.numpy()})[0]
+                onnx_attempted += 1
                 if (actual_array.dtype != np.float32 or actual_array.shape != tuple(expected.shape)
                         or not np.isfinite(actual_array).all()):
                     failure = dict(success=False, stage="audio_encoder_onnx", source_commit=source_commit,
@@ -497,6 +505,7 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
                         onnx_similarities.append(cosine)
                         row = next(item for item in rows if item["id"] == case_id)
                         row.update(onnx_minimum_cosine=cosine,
+                                   onnx_success=True,
                                    onnx_maximum_absolute_error=difference.max().item(),
                                    onnx_maximum_tolerance_ratio=(difference / allowed).max().item())
                         continue
@@ -506,8 +515,16 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
                                    maximum_tolerance_ratio=(difference / allowed).max().item(),
                                    mismatched_elements=mismatched, graph_sha256=digest(imported_graph),
                                    unity_validated=False, end_to_end_validated=False)
-                    expected.numpy().astype("<f4").tofile(destination / "failed-official-features-fp32.bin")
-                    actual_array.astype("<f4").tofile(destination / "failed-onnx-features-fp32.bin")
+                    if not collect_onnx_failures:
+                        expected.numpy().astype("<f4").tofile(destination / "failed-official-features-fp32.bin")
+                        actual_array.astype("<f4").tofile(destination / "failed-onnx-features-fp32.bin")
+                if collect_onnx_failures:
+                    onnx_failures.append(failure)
+                    next(item for item in rows if item["id"] == case_id)["onnx_success"] = False
+                    if len(onnx_failures) == 1:
+                        (destination / "audio-encoder-failure.json").write_text(
+                            json.dumps(failure, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+                    continue
                 (destination / "audio-encoder-failure.json").write_text(
                     json.dumps(failure, indent=2, allow_nan=False) + "\n", encoding="utf-8")
                 if failure.get("reason") is None:
@@ -542,17 +559,27 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
     reference_path.write_text(json.dumps(dict(metadata=encoder_metadata, profiles=profiles, cases=rows),
                                          indent=2, allow_nan=False) + "\n", encoding="utf-8")
     produced.append(reference_path)
-    summary = dict(success=True, stage=encoder_metadata["stage"], profile_count=len(profiles), case_count=len(rows),
+    if onnx_failures:
+        failure_path = destination / "audio-onnx-diagnostic-failures.json"
+        failure_path.write_text(json.dumps(dict(success=False, source_commit=source_commit,
+                                               stage="onnx_diagnostic_collection", cases=onnx_failures),
+                                           indent=2, allow_nan=False) + "\n", encoding="utf-8")
+        produced.append(failure_path)
+    summary = dict(success=not onnx_failures, stage=encoder_metadata["stage"], profile_count=len(profiles), case_count=len(rows),
                    minimum_cosine=min(similarities), unity_validated=False, end_to_end_validated=False,
                    metadata=encoder_metadata, files={path.relative_to(destination).as_posix():
                        dict(bytes=path.stat().st_size, sha256=digest(path)) for path in produced})
     summary["native_silu_preserved"]=True
     summary["onnx_structurally_validated"]=native_silu
-    summary["onnx_numerically_validated"]=native_silu
-    summary["onnx_case_count"] = len(onnx_similarities)
+    summary["native_reference_complete"] = True
+    summary["onnx_numerically_validated"]=native_silu and not onnx_failures
+    summary["onnx_case_count"] = onnx_attempted
+    summary["onnx_failed_case_count"] = len(onnx_failures)
     summary["onnx_minimum_cosine"] = min(onnx_similarities) if onnx_similarities else None
     (destination / "audio-encoder-validation.json").write_text(json.dumps(summary, indent=2, allow_nan=False) + "\n",
                                                               encoding="utf-8")
+    if onnx_failures:
+        raise ValueError("ONNX diagnostic collection contains mismatches; native reference complete")
     return summary
 
 

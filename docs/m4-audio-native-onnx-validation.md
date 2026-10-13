@@ -31,6 +31,14 @@ ONNX stage診断は5 assertion redから実装し、hash helperのNameErrorに�
 
 診断は不合格時だけ実行し、coarse graphの重複weightsを解放してから必要なlayer graphをexportする。traceが元の不合格graphと一致し、hook参照の最終値が元の公式referenceと一致する場合だけ`localization_validated`を有効にする。診断で`encoders_validated` / `end_to_end_validated`を成功にしない。実重みのstage診断結果は次のActionsで確認し、現在は未実行。
 
+後続の[実stage CI 38365896076](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38365896076)はsilence不合格を保持したまま、coarse trace最終値が元の失敗ONNXと全値一致し、hook最終値も元の公式referenceと全値一致した。producer `6f1e14447d7ee2abb175d157de9b7567e6c3fc96` / head `75af5e1cba6506033a3348c136b2bbbc088b930b`。最初の非zero差・固定許容差超過はともにsubsample。shape [1,280,1024]、最大差8.96453857421875e-05 / 許容差比2.1150693893432617 / 562要素不一致。subsample内部の演算原因はまだ未確定で、conv / LayerNorm / ReLU / projectionの順に独立参照から分ける。
+
+同runの最終featureは847要素不一致、最大差0.0002942085266113281 / 許容差比14.494515419006348。元のONNX graph hashは初回と同じでも、292要素の以前の結果と数値が異なる。差の変化を修正・性能改善・回帰原因の確定と扱わず、入力 / 参照 / 数学環境の差は未確認として保持する。3.68GB archiveから11,501 bytesだけを範囲取得し、CRC・producerとJSON hashを確認した。[実stage不合格receipt](results/m4-audio-onnx-stages-real-failed-20261013.json)。当時の診断TDD receiptの実重み未実行flagは過去のcheckpointとして残す。
+
+subsample内部のmasked input → conv → channel-last LayerNorm → channel-first ReLUを2層、projection入力 / 出力へ分ける小さいtraceを追加した。公式moduleのhook参照、full / padded maskと変更入力、参照 / traceずれ、既存hook保持と例外時解除の6 assertion red、shape / dtype / 非有限値 / paddingの4 red → 関連16 green。coarseの元subsample値を次段へ渡さない2 assertion redから接続し、最終関連22 passed / failed 0。[subsample TDD receipt](results/m4-audio-subsample-diagnostic-tdd-20261013.json)。各checkpointの件数を一度の実行として合算しない。
+
+coarseの失敗を保持してsubsample単独ONNXを保存し、単独最終値とfull coarseのsubsample値、hook参照とfull native値の完全一致を確認する。重複coarse weightsを解放してから小さいsubsample graphをexportし、次の比較に必要なinput / mask / native subsampleのみをbinaryで残す。単独diagnosticの成功・失敗を全encoder成功へ流用しない。実重みのsubsample演算別結果は次のActionsで確認する。
+
 Actionsで元の実重み6信号を実行し、native保存参照と全encoder標準ONNXの数値結果を分けて判定する。PR #40の過去のsilence不合格・残り5信号未実行はそのsourceの記録として保持する。候補が失敗した場合も固定許容差を緩めず、最初の演算差を小さいredへ落とす。
 
 Python全gate合格後も、Sentis import / 保存 / 再読込、全6信号のCPU / 実GPUと採用Float16形式、GPU前処理 → 実encoder → 共通本体の連結、最終API / 検索・再生・明示収録 / Player / 必須実機は別gate。小さいONNX greenや構造checkerを実モデル・GPU成功へ流用しない。

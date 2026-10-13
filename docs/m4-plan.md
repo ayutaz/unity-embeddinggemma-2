@@ -8,14 +8,14 @@ A1 / A4の音声encoder / projector固定profile exportと独立PCM参照・必�
 
 ### 直近のTDD順序
 
-1. A4の保存graph数値差を解消する。[PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40)は実装済み・未統合で、head `2fb5c83504f46680fd5be40265715ea5eb992eac`の[実モデルCI 38321025453](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38321025453)は失敗。Softplus係数固定とSiLU演算順序の修正後も、eager wrapper対公式参照は最大差0、保存graph対eagerは最大差 `0.00021576881408691406`、許容差比 `9.733773231506348`、不一致368要素。段階別診断の12 redと元の失敗保存の追加1 redから最小実装を行い、関連46件のgreenを確認した。次はActionsで最初に差が出るstageを特定し、その原因の小さい再現red → 最小修正 → 固定実重み・6信号・mask profileの照合greenを得る。診断の成功はencoderの成功ではなく、許容差を緩めない。
+1. A4の保存graph数値差を解消する。[PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40)の確認head `c4676f7b38f01ce98a9dedca87fb450febea20b9`は未統合。段階別診断をTDDで追加して関連46件greenとなったが、[実モデル診断 CI 38324421389](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38324421389)は不合格。silenceの公式対eager差0、保存graph対eager最大差 `0.00021576881408691406`、許容差比 `9.733773231506348`、不一致368要素。subsampleは一致し、layer 0から微差、layer 10で初めて許容差超過となった。[固定headの診断結果](https://github.com/ayutaz/unity-embeddinggemma-2/blob/c4676f7b38f01ce98a9dedca87fb450febea20b9/docs/results/m4-audio-stages-real-failed-20261013.json)。層内のstage欠落 / 誤順序 / hook解放漏れ / 元の失敗消失を拒否する10 redと、自動選択 / 先行保存の追加3 redから診断を実装し、関連59件greenを確認した。次はActionsで層内診断を実行し、原因演算の小さい再現red → 最小修正 → 固定実重み・6信号・mask profileのgreenを得る。残り5信号は未実行。同headのCI 38325813586も失敗で終了した。診断の成功はencoderの成功ではなく、許容差を緩めない。
 2. A2のPCM入力契約とA3の前処理graphをSentisへ接続する。境界長・mask・無音・channel / sample rateのredから実装し、各段の実CPU / GPU結果を確認する。
-3. A4のencoderをSentisで保存 / 再読込し、CPU / 実GPUとFloat16を照合する。A5で実音声featureをGPUのまま共通本体へ渡し、最終768次元を固定参照と照合する。共通本体APIのPR #43には小さい実GPUを含む62件のgreenがあるが、実backbone・実音声featureの照合と新Runtime assemblyの固定Git導入は別の未完了条件として確認する。
+3. A4のencoderをSentisで保存 / 再読込し、CPU / 実GPUとFloat16を照合する。A5で実音声featureをGPUのまま共通本体へ渡し、最終768次元を固定参照と照合する。共通本体APIのPR #43には小さい実GPUと配置演算 / cache修正を含む68件のgreenがあるが、修正後の実1024長graph・実音声featureの照合と新Runtime assemblyの固定Git導入は別の未完了条件として確認する。
 4. A6 / A7の検索・再生・明示収録・停止 / 解放をTDDで実装し、固定PCMの精度とマイク入力動作を別に受け入れる。テキスト・画像回帰と必須実機へ渡す。
 
 音声前処理exportの合格を音声encoderの合格に含めない。PR #40の小さい契約greenと実モデル不合格も別に保持する。
 
-[段階別実モデルCI 38324421389](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38324421389)は不合格で完了。subsampleは完全一致、`layer_0`から小さい差があり、許容差を最初に超えるのは`layer_10`。診断graphと元の不合格graphの最終値は完全一致した。次は層内診断をTDDで追加して原因演算を特定し、元の固定数値条件へ戻す。[全stageと未検証ケース](m4-audio-encoder-validation.md)。
+[段階別実モデルCI 38324421389](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38324421389)は不合格で完了。subsampleは完全一致、`layer_0`から小さい差があり、許容差を最初に超えるのは`layer_10`。診断graphと元の不合格graphの最終値は完全一致した。層内診断は小さいTDDで追加済み。次は実重みActionsで原因演算を特定し、元の固定数値条件へ戻す。[全stageと未検証ケース](m4-audio-encoder-validation.md)。
 
 ## 範囲と参照固定
 

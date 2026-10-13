@@ -15,3 +15,15 @@ Pythonの公式fixture生成・固定source監査・重みを取得しないCLI�
 Actionsの`prepare-prompts`はmodel weightsを取得しない。固定revisionの4設定fileのhash、source / library版と、公式processorのimage / audio置換・HF tokenizerのIDs / maskを15ケースに保存する。画像256 / 252、音声の1 / 4 / 5 / 8 / 9 / 17 / 2999 frame境界と穴のあるmask、両モダリティの順序、query / document・日本語title、空rawを含む。大きいtokenizerはartifactに保存しGitへ含めない。
 
 実tokenizerの受け入れは`MultimodalPromptReferenceTests`で固定source・全file hash・15ケースの文字列 / IDs / maskを照合する。型のassemblyは`EmbeddingGemma.Runtime`を要求し、prototypeを配布結果としない。次にprototypeを退避し、固定Git packageへ更新してpackage契約・この公式参照を実行する。これらは実encoder・最終embedding・GPU連結・sample / Player・他OSの成功とは別に判定する。正式Release / tagは作成しない。
+
+## 固定Git導入と環境回復
+
+Runtime / 単体テストのprototypeをAssetsから退避し、固定Git `8a7d2f0dea30be95a3158830fb0d9c9de895efc4`へ更新した。初回のCLIは未対応`--timeout-seconds`を引数解析で拒否し、Editorへ要求されていない。対応オプションでの最初のUPM要求は受理されたが、serverはHTTP 500を返した。Editor内の`ALLUSERSPROFILE`が欠け、`ProgramData`等は設定済みだった。Editorのプロセス内で`ALLUSERSPROFILE`を補い、親PIDと実行fileを照合した該当UPM serverだけを停止した。Editor PID 16260は保持し、次のUPM server PID 173168でrequested / resolved SHAが一致した。観測timeoutだけを理由とする再起動・再要求ではない。次回のEditor起動前にはPowerShellで`$env:ALLUSERSPROFILE=$env:ProgramData`を指定する。
+
+2026-10-13 05:38:24 UTCに配布packageの全142 passed / failed 0 / skipped 0 / compile成功を確認。既存consumerを更新した条件であり、空consumerの最終candidate再現ではない。公式Test Framework 1.6.0のembedded条件を維持する。source監査は119 Git fileのうち118件がcanonical改行で一致し、package.jsonはUPMの`_fingerprint`だけを除いてsemantic一致。最初の監査コマンドはtools cwdでtreeが空だったため、0件をsource証拠として受け入れず、Git root指定と非空guardで修正した。raw bytes全件一致とは表現しない。
+
+[PR #55のCI 38351727099](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38351727099)はhead `8a7d2f0`の全8チェック成功。公式prompt artifactのproducerはmerge ref `dc185218d6b682f53b191e21600255be19c380e7`であり、PR headとは別。15ケースを取得し、固定source / revisionと全file hashを照合した。実tokenizerのRuntime照合は、この取得済みartifactと固定Gitを使う同じEditorで実行する。
+
+2026-10-13 05:43:27 UTCに実tokenizer照合が1 test passed / failed 0 / skipped 0 / CLI exit 0で完了し、内部の全15ケースが文字列・token ID・attention maskの完全一致を満たした。型のassemblyは`EmbeddingGemma.Runtime`、Runtime source overlayなし。[固定GitとTDDのreceipt](results/multimodal-prompt-windows-20261013.json)。full tokenizerの反復初期化とfile監査を含むharnessの所要時間であり、warm prompt構築・モデル推論のbenchmarkとはしない。これ以降の文書commitへ実測sourceを付け替えない。
+
+次はこのpromptを使い、実encoderの受け入れ済みfeatureを対応するstatic backbone profileへ渡す。現在の合成本体検証の280 / 280 feature profileを256 / 252画像や可変音声maskへ流用せず、profile別exportと最終768次元の独立参照をTDDで準備する。画像FP32 / 音声encoderの不合格と全体計画の残るgateは保持する。

@@ -47,6 +47,7 @@ def main(argv=None):
     vision.add_argument("--output", type=Path, required=True)
     vision.add_argument("--snapshot", type=Path)
     vision.add_argument("--revision", type=revision, default=MODEL_REVISION)
+    vision.add_argument("--diagnostics", action="store_true", help="Native stage references for both inputs of the first profile")
     args = parser.parse_args(argv)
     snapshot = args.snapshot
     if snapshot is None:
@@ -59,7 +60,7 @@ def main(argv=None):
         snapshot = Path(snapshot_download(MODEL_ID, revision=args.revision, allow_patterns=patterns))
     if args.command == "prepare-vision":
         summary = prepare_vision(snapshot, args.output, revision=args.revision,
-                                 source_commit=os.environ.get("GITHUB_SHA", "local"))
+                                 source_commit=os.environ.get("GITHUB_SHA", "local"), diagnostics=args.diagnostics)
         print(json.dumps({name: summary[name] for name in (
             "success", "stage", "profile_count", "case_count", "minimum_cosine", "unity_validated", "end_to_end_validated")}))
         return

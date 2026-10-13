@@ -70,7 +70,7 @@ jobs:
           retention-days: 3
           if-no-files-found: warn
       - name: Validate official image processor and real vision encoder / projector exports
-        run: uv run --locked python -m embeddinggemma_tools prepare-vision --output ../artifacts/vision-encoder
+        run: uv run --locked python -m embeddinggemma_tools prepare-vision --output ../artifacts/vision-encoder --diagnostics
         env:
           OMP_NUM_THREADS: '4'
           MKL_NUM_THREADS: '4'

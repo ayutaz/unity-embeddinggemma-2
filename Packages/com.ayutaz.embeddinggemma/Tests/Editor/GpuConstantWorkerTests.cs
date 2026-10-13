@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
@@ -74,6 +75,8 @@ namespace EmbeddingGemma.Tests
             var values=Enumerable.Range(1,15).Select(value=>value*0.25f).ToArray();
             var model=graph.Compile(Functional.MatMul(input,Functional.Constant(new TensorShape(3,5),values)));
             ModelQuantizer.QuantizeWeights(QuantizationType.Float16,ref model);
+            // Production consumes saved models; serialization normalizes quantizer input indexes.
+            using(var serialized=new MemoryStream()) {ModelWriter.Save(serialized,model);serialized.Position=0;model=ModelLoader.Load(serialized);}
             Assert.That(model.constants.Any(value=>value.dataType==DataType.Short&&value.shape.length==15),Is.True,"Real packed half constant required.");
             using var holder=Create(model);using var tensor=new Tensor<float>(new TensorShape(1,3),new[] {1f,2f,3f});
             Worker(holder).Schedule(tensor);
@@ -87,6 +90,11 @@ namespace EmbeddingGemma.Tests
             Assert.Throws<TargetInvocationException>(()=>Worker(holder));
             using var baseline=new Worker(model,BackendType.CPU);using var input=new Tensor<float>(new TensorShape(1,7),new float[7]);
             baseline.Schedule(input);Assert.That(((Tensor<float>)baseline.PeekOutput()).DownloadToArray()[6],Is.EqualTo(6));
+        }
+        [Test] public void NoncontiguousInputIndexesAreRejectedBeforeWorkerCreation()
+        {
+            var model=FloatModel();var input=model.inputs[0];input.index=17;model.inputs[0]=input;
+            Assert.Throws<ArgumentException>(()=>Create(model));
         }
     }
 }

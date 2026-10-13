@@ -68,9 +68,20 @@ uv run --locked python -m embeddinggemma_tools prepare-audio-encoder --preproces
 
 これで差の蓄積区間は絞れたが、原因演算は未特定である。次は層内のfeed-forward / attention / convolution / normalizationの独立診断をTDDで追加し、最初に差を生む演算を特定する。silenceでgateが停止したため残る5ケースは未検証。Python4環境・lint・packageは合格し、実encoder / Required CIは失敗した。これらの判定を維持して進める。
 
+### 層内診断のTDD
+
+2026-10-13に選択層のfeed_forward1 / norm_pre_attn / self_attn / norm_post_attn / lconv1d / feed_forward2を追加出力する診断を実装した。公式moduleのforward hookから独立に参照を取得し、native側の後続in-place演算前にcloneする。正常exportの出力契約・演算・許容差は維持する。
+
+- 初回の欠落keyword / methodのAPI probeは9件失敗。意図したassertion失敗として確認し直した契約redは10件。最小実装後、保存した変更入力、最終値の元graphとの完全一致、例外時のnested hook解放、不正層selectorを含む関連56件がgreenとなった。
+- 最初に許容差超過する層ではなく、最初に非zero差が出た層を選ぶ追加の3 redを確認した。coarse traceが元の失敗graphの最終値と一致するときだけ自動で層内診断する。一致しないときは実行せず、最終経路が変わった制約を保持する。
+- coarse診断のJSONを層内export開始前に保存し、追加診断の失敗は別欄へ保持する。元のencoder不合格と粗い診断を消さない。
+- 最終は新規13件と既存46件の計59 passed / failed 0 / skipped 0、177.64秒。tools/uv、Python 3.14、OMP / MKL各4 thread、小さいモデルのTDD。[結果とsource hash](results/m4-audio-layer-tdd-20261013.json)。実モデルの原因修正や合格はまだ得ていない。
+
+前回の実重みではsubsampleが完全一致、最初の非zero差はlayer 0なので、次のActionsはlayer 0の層内traceを生成する。数値不合格が残る場合は同じCIを失敗させ、大きいgraphはartifactだけに保存する。診断traceが元のgraphの経路を変えていないことと、どの演算で差が始まるかを先に確認してから、原因の小さい再現テストと修正へ進む。
+
 ## 次の受け入れ
 
-1. 層内診断をTDDで追加し、Actionsの固定実重みで最初の原因演算を特定する。原因を分離した小さいredから修正し、元のencoder / projector全ケースを再照合する。現時点で実モデル数値不合格は未解消。
+1. 実装した層内診断をActionsの固定実重みで実行し、最初の原因演算を特定する。原因を分離した小さいredから修正し、元のencoder / projector全ケースを再照合する。現時点で実モデル数値不合格は未解消。
 2. 音声前処理・encoderのSentis import / 保存・再読込、実CPU / GPUと採用Float16重みの数値照合。非互換・OOM・fallbackは失敗として記録する。
 3. A2のPCM入力契約とA3のGPU前処理を接続し、中間CPU readbackなしを確認する。
 4. A5のGPU soft token → 共通本体 → 有限768次元・単位長、FP32 cosine >= 0.999 / Float16 >= 0.99、text / image回帰。

@@ -22,14 +22,21 @@ MODEL_ID = "google/embeddinggemma-2"
 MODEL_REVISION = "914f7f89142e33e77833254d9c9b90c3cef7303b"
 
 
-def capture_official_audio_stages(audio, projection, features, frame_mask):
+def capture_official_audio_stages(audio, projection, features, frame_mask, *, detail_layer=None):
     """Capture native forward outputs, removing only this call's temporary hooks."""
+    if detail_layer is not None and (type(detail_layer) is not int or not 0 <= detail_layer < audio.config.num_hidden_layers):
+        raise ValueError("audio detail layer must be an existing integer layer index")
     values, handles = [], []
-    modules = [audio.subsample_conv_projection, *audio.layers[:audio.config.num_hidden_layers], audio.output_proj]
+    modules = [(audio.subsample_conv_projection, True)]
+    for index, layer in enumerate(audio.layers[:audio.config.num_hidden_layers]):
+        if index == detail_layer:
+            modules.extend((getattr(layer, part), part == "self_attn") for part in AudioEncoderStagesExport.detail_parts)
+        modules.append((layer, False))
+    modules.append((audio.output_proj, False))
     try:
-        for index, module in enumerate(modules):
-            def capture(module, args, output, index=index):
-                values.append((output[0] if index == 0 else output).detach().clone())
+        for module, tuple_output in modules:
+            def capture(module, args, output, tuple_output=tuple_output):
+                values.append((output[0] if tuple_output else output).detach().clone())
             handles.append(module.register_forward_hook(capture))
         with torch.no_grad():
             result = audio(input_features=features, attention_mask=frame_mask.bool())
@@ -74,6 +81,44 @@ def diagnose_audio_stages(audio, projection, features, frame_mask, destination, 
     if failed_saved.shape != actual[-1].shape or not torch.isfinite(failed_saved).all():
         raise ValueError("audio stage trace cannot be compared to the failed graph")
     result.update(stage="audio_encoder_stage_diagnostics_only", feature_rtol=1e-4, feature_atol=1e-5,
+                  trace_matches_failed_graph=torch.equal(actual[-1], failed_saved),
+                  trace_vs_failed_graph_maximum_absolute_error=(actual[-1] - failed_saved).abs().max().item())
+    with path.open("rb") as stream:
+        result["graph_sha256"] = hashlib.file_digest(stream, "sha256").hexdigest()
+    result["graph_bytes"] = path.stat().st_size
+    receipt = destination / "audio-stage-diagnostics.json"
+    receipt.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    if result["trace_matches_failed_graph"] and result["first_divergent_stage"] is not None:
+        first_difference = next((row for row in result["stages"] if row["maximum_absolute_error"] > 0), None)
+        selected = re.fullmatch(r"layer_(\d+)", first_difference["name"]) if first_difference else None
+        if selected:
+            # Retain the completed coarse trace before another expensive export.
+            # A final-path mismatch makes localization of the failed graph unsafe.
+            del actual, expected, wrapper
+            gc.collect()
+            try:
+                result["layer_diagnostics"] = diagnose_audio_layer_stages(
+                    audio, projection, features, frame_mask, destination, failed_saved,
+                    detail_layer=int(selected.group(1)))
+            except Exception as diagnostic_error:
+                result["layer_diagnostics_error"] = f"{type(diagnostic_error).__name__}: {diagnostic_error}"
+    receipt.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    return result
+
+
+def diagnose_audio_layer_stages(audio, projection, features, frame_mask, destination, failed_saved, *, detail_layer):
+    """Inspect one native layer without changing the saved final numerical path."""
+    wrapper = AudioEncoderStagesExport(audio, projection, frame_mask, detail_layer=detail_layer)
+    path = Path(destination) / f"audio-layer-{detail_layer}-stages.pt2"
+    expected = capture_official_audio_stages(audio, projection, features, frame_mask, detail_layer=detail_layer)
+    export_audio_pt2(wrapper, features, path)
+    with torch.no_grad():
+        actual = torch.export.load(path).module()(features)
+    result = compare_audio_stage_outputs(wrapper.stage_names, expected, actual)
+    if failed_saved.shape != actual[-1].shape or not torch.isfinite(failed_saved).all():
+        raise ValueError("audio detail stage trace cannot be compared to the failed graph")
+    result.update(stage="audio_encoder_layer_diagnostics_only", detail_layer=detail_layer,
+                  feature_rtol=1e-4, feature_atol=1e-5,
                   trace_matches_failed_graph=torch.equal(actual[-1], failed_saved),
                   trace_vs_failed_graph_maximum_absolute_error=(actual[-1] - failed_saved).abs().max().item())
     with path.open("rb") as stream:

@@ -10,6 +10,54 @@ namespace EmbeddingGemma.Tests
 {
     public static class AudioCoefficientLayerMap
     {
+        public static Dictionary<string, int> ResolveFeedForward(Model model, JArray anchors)
+        {
+            var norms = Resolve(model, anchors);
+            var inputs = ResolveNormInputs(model, anchors);
+            if (!norms.Keys.OrderBy(value => value).SequenceEqual(new[] { "post_layer_norm", "pre_layer_norm" }))
+                throw new InvalidOperationException("Expected feed-forward pre/post norm identities.");
+            var constants = new HashSet<int>(model.constants.Select(value => value.index));
+            int Producer(int index)
+            {
+                var matches = model.layers.Select((layer, number) => new { layer, number }).Where(value => value.layer.outputs.Contains(index)).ToArray();
+                if (matches.Length != 1) throw new InvalidOperationException("Feed-forward producer is missing or ambiguous.");
+                return matches[0].number;
+            }
+            int Unclip(int index)
+            {
+                for (var count = 0; count < 5; count++)
+                {
+                    var layer = model.layers[Producer(index)];
+                    if (layer.GetType().Name != "Clip") return index;
+                    if (layer.inputs.Length != 3 || !constants.Contains(layer.inputs[1]) || !constants.Contains(layer.inputs[2]))
+                        throw new InvalidOperationException("Feed-forward clamp bounds must be constants.");
+                    index = layer.inputs[0];
+                }
+                throw new InvalidOperationException("Feed-forward clamp chain exceeded the bound.");
+            }
+            int MatrixInput(int index)
+            {
+                var layer = model.layers[Producer(Unclip(index))];
+                if (layer.GetType().Name != "MatMul" && layer.GetType().Name != "MatMul2D")
+                    throw new InvalidOperationException("Expected a feed-forward projection.");
+                var data = layer.inputs.Where(value => !constants.Contains(value)).ToArray();
+                if (layer.inputs.Length != 2 || data.Length != 1)
+                    throw new InvalidOperationException("Feed-forward projection requires one constant weight.");
+                return data[0];
+            }
+            var second = inputs["post_layer_norm"];
+            var activationIndex = Unclip(MatrixInput(second));
+            var activation = model.layers[Producer(activationIndex)];
+            if (activation.GetType().Name != "Swish" || activation.inputs.Length != 1)
+                throw new InvalidOperationException("Expected the native SiLU/Swish path.");
+            var first = activation.inputs[0];
+            if (Unclip(MatrixInput(first)) != norms["pre_layer_norm"])
+                throw new InvalidOperationException("Feed-forward projection is not bound to the pre norm.");
+            return new Dictionary<string, int> { ["pre_layer_norm"] = norms["pre_layer_norm"],
+                ["ffw_layer_1"] = first, ["act_fn"] = activationIndex,
+                ["ffw_layer_2"] = second, ["post_layer_norm"] = norms["post_layer_norm"] };
+        }
+
         public static Dictionary<string, int> ResolveNormInputs(Model model, JArray anchors)
         {
             var outputs = Resolve(model, anchors);

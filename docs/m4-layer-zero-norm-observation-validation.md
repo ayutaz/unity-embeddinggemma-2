@@ -27,3 +27,17 @@ CPU / GPUとも3段階の観測は完了し、通常Scheduleと観測実行の�
 NUnit0 passed / 2 failed / skip0 / CLI exit1、2026-10-13 20:13:25 UTCに完了。各reportは`observation_completed=true` / `success=false`を保持する。現在の数値条件に実際に失敗する受け入れテストで、診断完了を数値passに置き換えない。初回のuloop権限不足は実テスト未実行であり、上記のassertion失敗と別に扱う。
 
 次はnorm_pre_attn入力と独立した正規化処理の比較、feed_forward1内の差の分解から最小修正へ進む。元6信号・CPU / 実GPUのencoder gate、画像FP32差、全chain / 各role・入力境界、画像 / 音声sample、反復 / memory・実モデルPlayer / 必須実機、最終空consumerと配布準備は未完了。
+
+## 追加: 正規化入力の照合
+
+`ResolveNormInputs`は係数で確定した最終Mulから、normalized Mul → Rsqrt → epsilon加算 → ReduceMean → Squareをたどる。Squareの入力とnormalized Mulの入力が同じindexでなければ拒否する。missing APIの3 assertion redを確認し、最初の実装では合成fixtureがScalarMadへ統合されるため6 green / 1 fail。multiplier1 / 有限正epsilonのScalarMadを認識して7 green / skip0 / CLI exit0となった。単なる係数Multiplyや平方平均のないinverseをRMSNorm入力と誤認しない。元Modelの保存byte列不変を確認した。
+
+追加harness source `8003bf54a92ae13e9701314d454da8cd0a785dc0`で、別の出力先へCPU / 実GPUの各4点を観測した。norm入力indexは107 / 244 / 392。norm_pre_attn入力のindex107はlayer38のClip出力であり、min / maxは±1e10。固定native feed_forward1出力は全要素がその範囲内なので、nativeのclampで値が変化しないことを確認して比較した。[追加receipt](results/m4-layer-zero-norm-input-windows-20261014.json)。
+
+| 追加観測 | CPU 不一致数 / 最大許容差比 | GPU 不一致数 / 最大許容差比 |
+| --- | --- | --- |
+| norm_pre_attn_input（clamp後のfeed_forward1出力） | 281 / 2.05972 | 280 / 1.60989 |
+
+両backendで正規化入力時点から固定数値条件を超えている。正規化だけが原因とは扱わず、次はfeed_forward1内部のpre norm / linear / activation / post normと、前段subsampleの差の影響を切り分ける。既存3出力の不一致数・最大比は前回と同じ。通常最終featureと観測最終featureのbit一致も両方維持した。
+
+追加runはNUnit0 pass / 2 fail / skip0 / CLI exit1、2026-10-13 20:21:43 UTCに完了。元の3点run、mapperの中間失敗、追加4点runを別々に保持する。数値許容差、元参照、Runtime、モデルは変更していない。

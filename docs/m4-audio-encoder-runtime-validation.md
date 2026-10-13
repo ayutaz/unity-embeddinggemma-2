@@ -10,4 +10,6 @@
 
 既存Editor PID 16260を再利用し、強制再compile・追加Editor・モデル取得 / 変換は行っていない。開発検証はUnity 6000.3.21f1 / Sentis 2.6.1 / RTX 4070 Ti SUPER / D3D12。公式Test Framework 1.6.0 embeddedの既存補修条件を維持する。今回は既存consumerのGit更新で、最終candidateの空consumer導入ではない。
 
+固定Git cacheのRuntimeファイルとtypedテストもソースへ照合した。最初のバイトhash比較はWindows checkoutのCRLF差で不一致となったが、CRLF → LFだけを正規化した後は両ファイルとも完全一致。Assets内に新Runtime型の定義はなく、package Runtimeの上書きは行っていない。canonical hashをreceiptへ記録する。
+
 実音声encoderの元6信号の数値不合格と新旧参照の不一致はPR #60へ保持している。このAPIの小さいgreenで実モデル・最終音声embedding・sample / Player・必須実機を合格にしない。次は共通backbone / 公式promptとの連結と最終APIのTDD、独立した最終音声参照、実モデル数値gateと全chainの受け入れが必要。

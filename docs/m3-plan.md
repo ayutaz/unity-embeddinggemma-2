@@ -7,7 +7,7 @@ I1 / I2の固定profile encoder / projector exportと公式processor参照・必
 ### 直近のTDD順序
 
 1. I2のFP32差を演算・段階別に特定し、独立参照との不一致を小さいテストでredにしてから修正する。現在の `rtol=1e-4` / `atol=1e-5`を緩めない。3 profile / 全12条件の実モデル再照合と保存 / 再読込を確認する。
-2. C3の実画像feature入力・長さprofileをSentis CPU / GPUへ接続し、placeholder / mask / token数の不一致をred → greenにする。[PR #43](https://github.com/ayutaz/unity-embeddinggemma-2/pull/43)の共通本体APIは小さい実GPUを含む新規24件・既存38件のgreenを確認済みだがdraft / 未統合。まず監査済み1024長の実backboneを保存 / 再読込して最終768次元へ照合し、その後に実画像featureを接続する。合成特徴量と実encoder特徴量、新Runtime assemblyの固定Git導入を別に判定する。
+2. C3の実画像feature入力・長さprofileをSentis CPU / GPUへ接続し、placeholder / mask / token数の不一致をred → greenにする。[PR #43](https://github.com/ayutaz/unity-embeddinggemma-2/pull/43)はhead `41d2da3bb8228ff6cf74a016888841bcac2a4f28`で小さい実GPUと配置演算 / 失敗cacheを含む68件green、CI全8 job成功。ただし初回1024長graphはSentis import失敗・数値照合0件。まず修正後の実graphを監査して保存 / 再読込・最終768次元を照合し、その後に実画像featureを接続する。合成特徴量と実encoder特徴量、新Runtime assemblyの固定Git導入を別に判定する。実モデルgateを満たすまでdraft / 未統合を維持する。
 3. I3のGPU前処理を向き・色空間・補間・patch順の固定fixtureからTDDで実装し、Texture / RenderTextureの両方を実GPUで照合する。
 4. I4〜I6のAPI → 横断検索sample → Playerを表の契約順でTDD実装する。最終768次元と全順位が合格するまでM3は未完了とする。
 

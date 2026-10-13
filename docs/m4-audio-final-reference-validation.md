@@ -24,3 +24,9 @@ uv run --locked python -m embeddinggemma_tools prepare-audio-embeddings --encode
 最終artifactは2,194,146,655 bytes。306,255 bytes / 9 requestでJSON2つだけを範囲取得し、CRC・reference SHAとmanifest、metadata一致を監査した。backbone binariesは取得・Unity importしていない。元encoderのsuccess=false / ONNX全6件不合格を保持し、workflow全体はfailure。Required CI run 38398824940もmodel-reference / Required CIがfailureで、Python全4環境・workflow lint・packageは成功した。native最終参照の合格をONNX / Sentis / 旧固定参照の問題解消へ流用しない。生成labelは解除済み。
 
 次はこの新しい最終参照sourceを明示した音声専用backboneのSentis単独受け入れと、Runtime APIを使った全chain照合。同時に元FP32 encoderと固定参照driftの原因修正を追う。全chainが合格しても、未達のencoder条件を消さず、M3 / M4・各role / sample・必須環境・配布準備まで元のscopeを維持する。
+
+### 実backbone受け入れハーネスのTDD
+
+`eeec732`で、大きいartifactのbounded streaming / 最大4並列range / CRC検証済みcache再利用と、実音声専用backboneの受け入れハーネスを追加した。取得処理は意図した3 red / 既存1 passから関連15 green。Unity guardはsource・全6信号・profile・非finite出力・既存FP32 / Float16最終cosine条件の9 assertion redから9 green、compile error / warning 0。固定Git Runtime `9c6f794…`のconsumerで、受け入れtestのみを配置しRuntime overlayはない。[TDD receipt](results/m4-audio-final-backbone-harness-tdd-20261013.json)。
+
+実backbone試験は新参照producer `4edbe17…`のnative features → image count=0 / audio count=280または210のbackboneを全6信号 × CPU / GPU × FP32 / Float16で照合する。profileごとのimport / 保存は1回にし、各model / workerを解放して次へ進む。全caseの数値結果・actual backend・fallback / flushを保存する。最終vectorの既存cosine条件と診断用elementwise値を分け、encoderの固定elementwise gateは変更しない。このTDD checkpointでは実モデル試験は未実行。取得のHTTP 403はインフラ失敗として別記し、取得済みmemberを検証・再利用して続行する。

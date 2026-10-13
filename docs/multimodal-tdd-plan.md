@@ -4,7 +4,7 @@
 
 ## 現在の基準
 
-今回確認したmainは `625ed8cf6f6dc3e14a762a860608505975a299a5`。PR #52までの基盤に加え、全体計画PR #54、公式prompt契約PR #55、最終画像Python参照PR #56、native SiLU / 標準ONNX Swish単独probe PR #57、環境ごとの診断値照合PR #59が統合済み。画像 / 音声のend-to-end API / sampleは未実装で、残作業は検証だけではない。以下の最新checkpointと、各行の過去の固定sourceの実測を区別する。[以前の計画snapshot](results/tdd-plan-checkpoint-20261013.json)、[音声前処理Runtime受け入れ](results/m4-audio-preprocessing-runtime-windows-20261013.json)、[診断未達](results/tdd-acceptance-plan-checkpoint-20261013.json)は保持する。今回の文書更新では新たなUnity実行・モデル生成は行わない。
+今回確認したmainは `a88ed9cffd942999bb271e597c86563298425f2c`。PR #52までの基盤に加え、全体計画PR #54 / #58、公式prompt契約PR #55、最終画像Python参照PR #56、native SiLU / 標準ONNX Swish単独probe PR #57、環境ごとの診断値照合PR #59が統合済み。画像 / 音声のend-to-end API / sampleは未実装で、残作業は検証だけではない。以下の最新checkpointと、各行の過去の固定sourceの実測を区別する。[以前の計画snapshot](results/tdd-plan-checkpoint-20261013.json)、[音声前処理Runtime受け入れ](results/m4-audio-preprocessing-runtime-windows-20261013.json)、[診断未達](results/tdd-acceptance-plan-checkpoint-20261013.json)は保持する。今回の文書更新では新たなUnity実行・モデル生成は行わない。
 
 ### 最新checkpointと直近の受け渡し
 
@@ -13,7 +13,7 @@
 | C3 公式prompt | PR #55はmainへ統合済み。prompt / placeholder / maskの契約実装を保持 | 実encoderのfeature数・順序・所有権・途中失敗を新しいredから接続し、実画像 / 音声の最終vectorとtext回帰を確認 |
 | I1 / I4 最終画像参照 | PR #56はmainへ統合済み。実モデルPythonは3 profile / 6画像で768次元と保存encoder → 保存backboneを照合。producer `35d357263ae29de4db1ad93d1cac3616ea1e61b4`、[CI 38356261690](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38356261690)。最新baseのhead `9814ce9d8bd70fa07cbd191867d93d7f4dd461f5`の[CI 38364660005](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38364660005)全8成功を確認して統合 | zero-audio profileのSentis import・CPU / 実GPUの全chain照合、I2の元FP32条件、API / sampleは別gate |
 | A4 標準Swish単独 | PR #57は統合済み。[小さいWindows probe](results/m4-native-silu-swish-probe-windows-20261013.json)はCPU / GPUの全4条件合格。GPUは固定許容差内であり、完全一致ではない | 単独operatorの合格を全encoderへ流用しない。全encoder ONNX、保存 / 再読込と元6信号を確認 |
-| A4 native音声ONNX候補 | Draft PR #60へ固定。4 + 2 + 1 red → 関連58 green、ONNX数値gateの2 red → 関連43 / feed-forward17 green。[実モデルCI 38362823692](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38362823692)はONNX silence不合格。cosine合格でも許容差比3.971386671066284 / 292要素不一致。producer `cb7f2b00e8135d016c55ef8e00adfe9faafa387b`、head `05b48e6a2aa363d229f7eb18c163f9d5c19c94b4`は別 | 元の不合格を保持してONNX stage診断をTDD追加し、trace最終値と元graphの一致を確認して原因修正へ。元6信号とSentis CPU / 実GPUを別判定。小さいgreen・cosineだけで実モデル成功にしない |
+| A4 native音声ONNX候補 | Draft PR #60、確認head `70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1`。native保存参照は元6信号 / 2 profileで固定許容差合格、NumPy ONNXは全6信号不合格。[producer 271f…の記録](https://github.com/ayutaz/unity-embeddinggemma-2/blob/70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1/docs/results/m4-audio-all-six-native-reference-real-20261013.json)。Sentis FP32も全6信号 × CPU / GPUの12条件でelementwise不合格、cosineのみ全条件合格。[実測](https://github.com/ayutaz/unity-embeddinggemma-2/blob/70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1/docs/results/m4-audio-full-encoder-fp32-sentis-windows-failed-20261013.json) | 元の不合格を再現するstage参照をTDD追加。native最終値と元参照、trace最終値と元graphの一致を先に確認して原因修正へ。元6信号のNumPy / Sentis CPU / 実GPUを再照合し、採用Float16も別gate。小さいgreen・cosineだけで実モデル成功にしない |
 
 このcheckpointのPR / branch状態は2026-10-13の確認時点。各後続PRでsource SHA・入力 / model hash・red / green・未実行を更新する。工程1〜6の範囲と各C / I / A契約は下記のまま維持し、正式公開は全完了後に別途扱う。
 
@@ -52,7 +52,7 @@ I3の画像GPU前処理RuntimeはPR #52でmainへ統合し、Windows固定Git受
 
 画像診断PR #53はhead `d51262632b0d0369fe62719dff743e6ecd990a46`の[CI 38346643250](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38346643250)が全8チェック成功だが、実Sentis診断は別判定。初回はBurstのimport失敗で推論未実行。回復後の2026-10-13 04:56 UTCの報告はcompile成功・CPU / GPUComputeの2テスト不合格・skip 0で、`New native final must fit the original pinned reference`に失敗した。case_0のtrace最終値は元の保存Sentis最終値と一致したが、独立参照の文脈確認が未達で、case_1へ到達していない。途中の`localization_validated=true`を全体成功や原因確定へ使わない。まず元 / 新参照の入力・生成環境・最終値を照合し、報告監査がこの途中成功を拒否するredを追加する。その後、文脈が揃ったstage / 演算のredから最小修正へ進み、元の全12条件を再照合する。
 
-音声PR #40の実モデルgateはsilence不合格のまま。以前のvector比較2 redはnative演算保持の候補でgreenになり、標準Swish単独もPR #57で受け入れ済みだが、full encoderの実重み修正は未証明。小さいモデルの関連58 greenの候補を固定PRへ渡し、元6信号の実モデルPython → 全encoder標準ONNX → Sentis CPU / 実GPUの順とする。残り5信号の未実行を合格にしない。
+音声PR #40のsilence不合格は過去の固定sourceの記録として保持する。後継候補PR #60では元6信号のnative保存参照を受け入れたが、NumPy ONNX全6信号とSentis FP32のCPU / GPU全12条件は不合格。subsample単独のSentis CPU / GPU合格はfull encoderへ流用しない。次は元の不合格出力に一致するstage診断の文脈をTDDで保証し、差が出る演算の小さいred → 最小修正 → 関連green → 元6信号の全encoder再照合へ進む。
 
 | 順序 | PRの対象 | 先に観測する失敗と、次へ進む条件 |
 | --- | --- | --- |
@@ -78,11 +78,11 @@ M2の標準導入・安定性修正と、Mac / iOS / Androidの環境確保は�
 ### 次のPR単位の詳細
 
 1. **公式promptと実encoder接続**: PCM入力境界PR #48、共通Runtime PR #43、前処理Runtime PR #50、公式prompt / mask契約PR #55は統合済み。次に実encoderの所有権・受け渡しを、不正入力 / profile / 二重Dispose / 途中失敗のredから実装する。実encoder接続の合格判定はI2 / A4の数値gate合格後、工程6の空consumerは別gate。
-2. **音声activation差の修正**: 診断と元の実モデル不合格を保持し、native SiLU保持・標準ONNX Swishへの候補を小さいred / greenから別PRへ渡す。小さい関連58 green → 元の実重み6信号green → 全encoder ONNX数値照合 → Sentis CPU / 実GPU受け入れの順で進む。単独probe・構造checker・診断追加だけではA4を合格にしない。
+2. **音声encoder差の修正**: PR #60の全6信号 / 12条件不合格を保持する。参照source / hash違い、native最終値の不一致、traceが元の失敗を再現しないケースを先にredへ落とす。診断の文脈確認がgreenになってから段階別に差を分離し、演算の独立参照red → 最小修正 → 関連green → 元6信号のONNX / Sentis CPU / GPU再照合へ進む。原因をactivationへ限定せず、単独probe・構造checker・診断追加だけではA4を合格にしない。
 3. **画像FP32差の分離**: 独立参照と最初に差が出るstage / 演算の小さいredから修正し、3 profile × CPU / GPU × FP32 / Float16の12条件を確認する。cosine合格だけでelementwise不合格を上書きしない。
 4. **GPU前処理から実encoderへの接続**: I3の境界・所有権の実装とWindows単独受け入れは完了。次は実encoderへの受け渡し・途中失敗・中間readback禁止の契約をredから確認する。A3の前処理Runtime単独も受け入れ済みだが、A4合格後の実encoder・共通本体への連結は別契約。I4 / A5の最終768次元とI5 / A6の全順位・sampleへ進む。
 
-最新の音声実測はsilenceのみで、公式対eager差0、保存対eager最大差 `0.00021576881408691406`、許容差比 `9.733773231506348`、不一致368要素。producer sourceはPR headとは異なる `e81255dcbdf9844752bfef0fa789b54635388a47`。単独feed-forwardではclamp / RMSNorm / 最初のlinearが完全一致し、activationに最大差 `5.960464477539063e-8`が初めて出るが、全9 stageは個別許容差内。残り5信号は未実行。過去の328要素不一致も保持し、数値の変化を解決や高速化と扱わない。固定した `rtol=1e-4` / `atol=1e-5`は緩めない。
+最新の音声Sentis実測は元6信号すべてを実行済み。CPUの最大許容差比は15.800193893998493、GPUは13.610273396664804で、全12条件が不合格。NUnitは2 failed / skip 0 / CLI exit 1、compile error / warning 0、GPU fallback / readback flush 0。参照producer `271f5a12ca2aab081eb330f45cf593d404330374`、harness commit `98f33c67d6fcd9181bb2baa52c4908340cbbe90e`を区別する。過去のsilenceだけの失敗を上書きせず、数値の変化を解決や高速化と扱わない。固定した `rtol=1e-4` / `atol=1e-5`は緩めない。
 
 ### 性能とローカル負荷
 

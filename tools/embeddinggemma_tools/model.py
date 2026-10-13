@@ -7,6 +7,22 @@ import torch
 from safetensors import safe_open
 from transformers import EmbeddingGemma2TextConfig, EmbeddingGemma2TextModel, Gemma4VisionConfig, Gemma4VisionModel
 from transformers.models.embedding_gemma2.modeling_embedding_gemma2 import EmbeddingGemma2MultimodalEmbedder
+from transformers import EmbeddingGemma2Config, EmbeddingGemma2Model
+
+
+def load_image_embedding_model(snapshot: Path):
+    """Official multimodal forward with real active towers, no unused audio allocation."""
+    configuration = json.loads((snapshot / "config.json").read_text(encoding="utf-8"))
+    configuration["audio_config"] = None
+    config = EmbeddingGemma2Config.from_dict(configuration)
+    config.text_config._attn_implementation = "eager"
+    config.vision_config._attn_implementation = "eager"
+    # Construct structure without allocating a second copy of the active weights.
+    with torch.device("meta"):
+        core = EmbeddingGemma2Model(config)
+    core.language_model = load_text_model(snapshot)
+    core.vision_tower, core.embed_vision = load_vision_models(snapshot)
+    return core.eval()
 
 
 def load_text_model(snapshot: Path) -> EmbeddingGemma2TextModel:

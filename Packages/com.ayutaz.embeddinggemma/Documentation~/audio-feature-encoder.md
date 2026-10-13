@@ -24,3 +24,5 @@ Tensor<float> borrowedSoftTokens = encoded.SoftTokens;
 Modelは借用、Workerはencoderが所有します。前処理結果は呼び出し側が所有し、encoderは破棄しません。`AudioEncodingResult`は出力のdevice copyを所有するため、worker再利用・解放後も保持できます。結果のDispose後は`SoftTokens`を使用できません。中間Tensorは最終処理が終わってから解放してください。
 
 今回の小さいCPU / 実GPUテストはprofile、入力拒否、所有権、GPU受け渡しの確認です。実音声encoderの固定数値条件、最終埋め込み・検索sample・Player・他OSの受け入れは未完了です。
+
+前処理・encoder・共通backboneを合成する開発中のAPIは[AudioEmbedder](audio-embedder.md)を参照してください。最終768次元APIの小さい合成検証と、実モデル数値の受け入れを区別します。

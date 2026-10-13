@@ -10,7 +10,7 @@ namespace EmbeddingGemma
     /// Owns a Sentis Worker; borrows its Model without changing layers, inputs or weights.
     /// On GPUCompute, uploads large GPU-used constants in bounded 32-bit-word copies before
     /// scheduling. CPU-needed shape constants remain on CPU. Call on the main thread.
-    /// Storage inspection is pinned to Sentis 2.6.1 and preserved by the package link.xml.
+    /// Storage inspection is pinned to Sentis 2.6.1. The Editor linker callback registers the package link.xml.
     /// </summary>
     public sealed class GpuConstantWorker : IDisposable
     {

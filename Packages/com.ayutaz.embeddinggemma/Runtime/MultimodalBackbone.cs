@@ -11,7 +11,7 @@ namespace EmbeddingGemma
     /// feature tensor values are never downloaded. Only the final vector is copied to CPU.
     /// Processor prompt construction and encoder execution are separate contracts.
     /// </summary>
-    public sealed class MultimodalBackbone : IDisposable
+    public sealed class MultimodalBackbone : IDisposable, IMultimodalBackbone
     {
         public const int EmbeddingDimension = 768;
         public BackendType Backend { get; }

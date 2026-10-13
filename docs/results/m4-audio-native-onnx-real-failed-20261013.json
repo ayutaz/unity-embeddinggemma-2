@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-13",
+  "workflow_run": 38362823692,
+  "pr": 60,
+  "head_commit": "05b48e6a2aa363d229f7eb18c163f9d5c19c94b4",
+  "producer_commit": "cb7f2b00e8135d016c55ef8e00adfe9faafa387b",
+  "artifact_id": 11795658076,
+  "archive_bytes": 2457302434,
+  "archive_downloaded_locally": false,
+  "selective_range_bytes": 1551,
+  "selective_range_requests": 6,
+  "failure_json_sha256": "fd7fb3fd9f20426c40bd63d5e061ed4ae14f5fa6a0fe2f9743e19ae96fa9f366",
+  "failure": {
+    "success": false,
+    "stage": "audio_encoder_onnx",
+    "source_commit": "cb7f2b00e8135d016c55ef8e00adfe9faafa387b",
+    "profile": "frames-1119-valid-1119",
+    "case_id": "silence",
+    "minimum_cosine": 0.9999998211860657,
+    "onnx_vs_official_maximum_absolute_error": 0.00013065338134765625,
+    "maximum_tolerance_ratio": 3.971386671066284,
+    "mismatched_elements": 292,
+    "graph_sha256": "7770a8af258f2de32c5587497b820596ea4e1ed7ec5382c3ee90eada2bec7e4a",
+    "unity_validated": false,
+    "end_to_end_validated": false
+  },
+  "remaining_onnx_signals": "unexecuted_after_first_failure",
+  "all_six_native_signals_validated": false,
+  "all_six_onnx_signals_validated": false,
+  "tolerances_changed": false,
+  "formal_release_created": false
+}

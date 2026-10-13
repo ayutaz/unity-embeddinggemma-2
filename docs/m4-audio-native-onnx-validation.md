@@ -23,6 +23,10 @@ native graphとONNX graphをprofileで区別し、全caseのONNX cosine / 最大
 
 ## 次の受け入れ
 
+初回の[実モデルCI 38362823692](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38362823692)はONNXのsilenceで不合格。head `05b48e6a2aa363d229f7eb18c163f9d5c19c94b4`とは別のproducer merge ref `cb7f2b00e8135d016c55ef8e00adfe9faafa387b`を保持する。cosine `0.9999998211860657`は合格でも、最大絶対差 `0.00013065338134765625`、許容差比 `3.971386671066284`、不一致292要素で固定elementwise条件は不合格。後続のONNX信号・全6信号のnative完了・Unityは未受け入れ。nativeの最初のprofileを通過してONNX照合へ進んだことは、保存JSONとproducerの処理順から分かる範囲に限る。
+
+2,457,302,434 bytesのartifactを再取得せず、6回 / 1,551 bytesのHTTP rangeで失敗JSONだけを取得した。ZIPのCRC、producer、失敗status、JSON hashを確認。[実不合格receipt](results/m4-audio-native-onnx-real-failed-20261013.json)。次は同じONNX経路のstage traceを公式hook参照へ比較し、trace最終値が元の不合格graphと完全一致する場合だけ局所化を有効にする。trace追加や二次診断の成功で元の不合格を上書きしない。
+
 Actionsで元の実重み6信号を実行し、native保存参照と全encoder標準ONNXの数値結果を分けて判定する。PR #40の過去のsilence不合格・残り5信号未実行はそのsourceの記録として保持する。候補が失敗した場合も固定許容差を緩めず、最初の演算差を小さいredへ落とす。
 
 Python全gate合格後も、Sentis import / 保存 / 再読込、全6信号のCPU / 実GPUと採用Float16形式、GPU前処理 → 実encoder → 共通本体の連結、最終API / 検索・再生・明示収録 / Player / 必須実機は別gate。小さいONNX greenや構造checkerを実モデル・GPU成功へ流用しない。

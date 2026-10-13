@@ -4,19 +4,19 @@
 
 ## 現在の基準と作業順
 
-- 今回確認したmain: `e35470212f616b020c0b150a4c515a007f0b937f`（PR #42まで統合）。[main CI 38320110239](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38320110239)は成功。テキストUPM / 検索サンプルとWindows M1の証拠は維持する。
+- 今回確認したmain: `bb12017c0045840a8a04b8afebeaf263fe5f5287`（PR #44まで統合）。[main CI 38324316213](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38324316213)は成功。テキストUPM / 検索サンプルとWindows M1の証拠は維持する。
 - C2 / C3の一部として、project済み特徴量入力・1024長backboneのexport / 参照 / Actions接続は実装済み。[PR #34 CI 38306145598](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38306145598)で実text重みと合成特徴量の2ケース、minimum cosine 1.0を確認した。実encoder featureを使う共通本体とUnity新profileは未検証。[証拠と範囲](multimodal-backbone-validation.md)。
-- [PR #43](https://github.com/ayutaz/unity-embeddinggemma-2/pull/43)のhead `2e89a61925ff18868fb1e7351ad4b962856b5133`に共通本体Runtime APIを追加した。初回21件と破棄featureの追加1件の意図したredを確認し、最終は新規24件と既存38件の計62 passed / skip 0。小さい実GPUでfeature backend維持・所有権・CPU計算fallbackなしを確認し、[CI 38322389996](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38322389996)も成功。draft / 未統合であり、開発sourceをconsumerのEditor test assemblyへ配置した結果。実backboneのSentis照合、新Runtime assemblyの固定Git導入、実encoder接続の合格ではない。[記録](https://github.com/ayutaz/unity-embeddinggemma-2/blob/2e89a61925ff18868fb1e7351ad4b962856b5133/docs/multimodal-runtime-validation.md)。
+- [PR #43](https://github.com/ayutaz/unity-embeddinggemma-2/pull/43)の確認headは `41d2da3bb8228ff6cf74a016888841bcac2a4f28`。共通Runtime APIの62件greenに続き、1024長の実graphはSentis importでbroadcast不整合となり、数値照合は0件だった。特徴量の配置を小さいgraphで再現し、Python 1 red → 25 green、Unity 3 failed / 3 passed → 既存を含む68 passed / skip 0へ修正した。失敗importを再利用するcacheも検証済み。[CI 38325796546](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38325796546)全8 job成功。ただし小さい実GPUとconsumer Editor test assemblyへのsource配置の結果であり、修正後の実1024長graphのSentis照合・新Runtime assemblyの固定Git導入・実encoder接続は未完了。[固定headの記録](https://github.com/ayutaz/unity-embeddinggemma-2/blob/41d2da3bb8228ff6cf74a016888841bcac2a4f28/docs/results/multimodal-placement-windows-20261013.json)。draftは維持する。
 - PR #31はdraft。6000.3.21f1でのWindows実測成功は検証consumerの補修条件付きであり、未補修compile、新candidateの空Git consumer導入、Float16/GPU性能の確認が残る。詳細は[M2基盤計画](m2-release-plan.md)と[実測記録](m2-unity-21-upgrade-validation.md)。
 - 開発対象は承認済みUnity 6000.3.21f1 / Sentis 2.6.1。mainのUnity版変更はPR #31未統合のため未反映。版を黙って変更しない。
 - M3の画像encoder / projector exportはPR #37でmainへ統合済み。[実モデルPython CI 38310718250](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38310718250)の3 profile / 6ケースでminimum cosine `0.9999997615814209`。`vision_encoder_projector_only`であり、Unity・GPU前処理・最終768次元の合格ではない。
-- M4の音声前処理exportは[PR #38](https://github.com/ayutaz/unity-embeddinggemma-2/pull/38)のhead `0424734291dc4cb7606b8bae53086f4911252e94`に実装し、mainへ統合済み。[CI 38313045325](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38313045325)全8 job成功、公式前処理対exportの6ケースで最大絶対誤差 `0.0038890838623046875`。`audio_preprocessing_only`であり、音声encoder / Unityは未検証。
+- M4の音声前処理exportは[PR #38](https://github.com/ayutaz/unity-embeddinggemma-2/pull/38)のhead `0424734291dc4cb7606b8bae53086f4911252e94`に実装し、mainへ統合済み。[CI 38313045325](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38313045325)全8 job成功、公式前処理対exportの6ケースで最大絶対誤差 `0.0038890838623046875`。後続の[PR #46](https://github.com/ayutaz/unity-embeddinggemma-2/pull/46)でWindows Sentis CPU / 実GPU各6ケースの前処理・保存 / 再読込・mask完全一致を確認した。[結果と範囲](m4-audio-preprocessing-sentis-validation.md)。これは前処理単独の受け入れであり、製品PCM API・音声encoder・最終768次元 / sampleの合格ではない。
 - M3画像 / M4音声のend-to-end API / sampleはmainに未実装。macOS / iOS / Android実機の合格証拠は未取得。Unity CI用Secrets / 専用runnerと端末の確保を並行して進め、CI成功と実機GPU成功を分ける。
 
 ### 今回の検証を反映した優先課題
 
 - I2: [PR #41](https://github.com/ayutaz/unity-embeddinggemma-2/pull/41)の画像Sentis fixtureをWindowsで実行した。3 profile × CPU / GPUCompute × FP32 / Float16の12条件は保存報告まで完了し、Float16の6条件は合格。FP32の6条件はcosine条件を満たすが、先に固定した要素単位の許容差を超えて不合格。原因を分離した小さいredから修正する。[全条件と実行範囲](results/m3-vision-windows-plan-snapshot-20261013.json)。GPU encoderの成功をGPU画像前処理・共通本体・最終768次元の成功へ流用しない。
-- A4: [PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40)の最新head `2fb5c83504f46680fd5be40265715ea5eb992eac`は未統合。[CI 38321025453](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38321025453)はSoftplus係数固定・SiLU演算順序のTDD修正後も失敗。silenceでeager wrapper対公式参照の最大差は0、保存graph対eagerは `0.00021576881408691406`、許容差比 `9.733773231506348`、不一致368要素。CIの実行sourceはPR merge ref `5b2f387519de6d2029f52d72525fadbe84152c2a`。次は段階別診断自体をTDDで追加し、最初に差が発生するstageを特定して原因別の小さいredを作る。許容差を変更せず修正・実重み再照合する。小さい契約greenやcosine合格を全条件のgreenとして扱わない。
+- A4: [PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40)の確認head `c4676f7b38f01ce98a9dedca87fb450febea20b9`は未統合。段階別診断はTDDで追加し、関連46件green。[実モデル診断 CI 38324421389](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38324421389)は失敗、実行sourceはPR merge ref `dc2156c954e66aba418f31f1ce88ca7da089b355`。silenceでは公式対eager差0、保存graph対eager最大差 `0.00021576881408691406`、許容差比 `9.733773231506348`、不一致368要素。subsampleは一致、layer 0から微差、layer 10で初めて許容差を超過した。次は層内の演算を独立参照と比較する診断をTDDで追加し、原因演算の小さい再現red → 修正 → 元の実重み6ケースgreenへ進む。原因演算は未特定、残り5ケースは未実行、許容差は変更しない。[固定headの段階別証拠](https://github.com/ayutaz/unity-embeddinggemma-2/blob/c4676f7b38f01ce98a9dedca87fb450febea20b9/docs/results/m4-audio-stages-real-failed-20261013.json)。同headのCI 38325813586は今回確認時点で実行中であり、合格とは数えない。
 - C4 / C7: 重いUnity測定は同一operationの完了報告を追跡し、CLI観測timeoutを再実行の理由にしない。import / 保存の再利用、worker / tensor / modelの所有権と解放を先に検証し、改善は同じ仕事量で測る。異なる条件数のrun時間だけで高速化を宣言しない。
 
 この2件の数値不合格解消とM2基盤の残る再現性確認を最初のPR単位にし、共通本体・I3以降・A2 / A3以降へ渡す。以下の6工程とC / I / Aの完了条件は維持する。正式Releaseと公開tagは全対応後の別工程とする。
@@ -25,8 +25,8 @@
 
 | 単位 | 先に確認する失敗 | 合格してから渡すもの |
 | --- | --- | --- |
-| 音声保存graphの段階別診断 | stage欠落・順序違い・診断失敗による元の数値失敗の消失を拒否する小さいテスト | 公式のsubsample / 各encoder層 / projectorと保存graphを比較し、最初の差を特定。原因の再現red → 最小修正 → 元の実モデル6ケースのgreen。診断追加だけではA4合格にしない |
-| 共通本体Runtimeの実モデル受け入れ | 新しい契約変更は不正profile / 入力 / 所有権のredから始める。既存APIの受け入れは固定参照との比較で行い、架空のredを作らない | PR #43の62件を維持し、監査済み1024長artifactを保存 / 再読込、CPU / GPUCompute × FP32 / Float16で最終768次元を照合。合成project済みfeatureと実encoder featureの結果を分け、最後にRuntime assemblyの固定Git導入も確認 |
+| 音声保存graphの層内診断 | 既存の段階診断46件を維持し、層内stage欠落・誤順序・hook解放漏れ・元の失敗消失を拒否する小さいテスト | layer 0 / 10内の公式演算と保存graphを比較し、原因を特定。原因の再現red → 最小修正 → 元の実モデル6ケースのgreen。診断追加だけではA4合格にしない |
+| 共通本体Runtimeの実モデル受け入れ | 配置演算と失敗cacheのred → greenは確認済み。新しい契約変更は不正profile / 入力 / 所有権のredから始める | PR #43の68件を維持し、修正後の監査済み1024長artifactを保存 / 再読込、CPU / GPUCompute × FP32 / Float16で最終768次元を照合。合成project済みfeatureと実encoder featureの結果を分け、最後にRuntime assemblyの固定Git導入も確認 |
 | 画像FP32数値差 | 独立参照に対し最初に差が出る演算 / stageを小さい入力でredにする | 修正対象を絞って再照合し、3 profile × CPU / GPU × FP32 / Float16の12条件を満たす。未変更の重い処理は再生成せず、修正の影響範囲に必要な実測だけを行う |
 
 M2の再現性確認を継続しながら、互いに依存しない参照診断・画像前処理の契約・音声入力境界のテストは準備できる。実encoderの不合格を最終API / sampleの完了で埋め合わせない。OOM、演算非互換、未取得の実機は失敗 / 未実行として残し、その条件に依存しないタスクを進める。

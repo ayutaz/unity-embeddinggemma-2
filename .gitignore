@@ -88,6 +88,8 @@ __pycache__/
 /.uloop/
 /Assets/M1Generated/
 /Assets/M1Generated.meta
+/Assets/AudioPreprocessingGenerated/
+/Assets/AudioPreprocessingGenerated.meta
 /Assets/StreamingAssets/EmbeddingGemmaTextSearch/
 /Assets/StreamingAssets/EmbeddingGemmaTextSearch.meta
 /Assets/Validation/Generated/

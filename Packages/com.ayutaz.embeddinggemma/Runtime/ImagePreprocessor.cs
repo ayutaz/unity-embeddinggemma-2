@@ -131,14 +131,31 @@ namespace EmbeddingGemma
         static Color32[] CpuColors(Texture input)
         {
             if (input is Texture2D readable && readable.isReadable) return readable.GetPixels32(0);
+            if (!SystemInfo.supportsAsyncGPUReadback)
+                throw new NotSupportedException("CPU preprocessing of GPU-only inputs requires texture readback.");
             var format = input.graphicsFormat;
             if (!SystemInfo.IsFormatSupported(format, GraphicsFormatUsage.ReadPixels))
-                format = format == GraphicsFormat.R8G8B8_SRGB || format == GraphicsFormat.B8G8R8A8_SRGB
-                    ? GraphicsFormat.R8G8B8A8_SRGB : GraphicsFormat.R8G8B8A8_UNorm;
-            if (!SystemInfo.supportsAsyncGPUReadback ||
-                !SystemInfo.IsFormatSupported(format, GraphicsFormatUsage.ReadPixels))
-                throw new NotSupportedException("CPU preprocessing of GPU-only inputs requires supported texture readback.");
-            // Preserve transfer encoding. Some RGB/BGRA formats require conversion to readable RGBA storage.
+            {
+                // The source format itself must support readback; requesting another destination format is insufficient.
+                var srgb = format == GraphicsFormat.R8G8B8_SRGB || format == GraphicsFormat.R8G8B8A8_SRGB || format == GraphicsFormat.B8G8R8A8_SRGB;
+                var converted = new Texture2D(input.width, input.height, TextureFormat.RGBA32, false, !srgb);
+                try
+                {
+                    if (!SystemInfo.IsFormatSupported(converted.graphicsFormat, GraphicsFormatUsage.ReadPixels))
+                        throw new NotSupportedException("This GPU has no readable RGBA format for the input encoding.");
+                    // ConvertTexture writes GPU storage; never return the destination's unmodified CPU copy.
+                    converted.Apply(false, true);
+                    if (!Graphics.ConvertTexture(input, converted))
+                        throw new NotSupportedException("This GPU cannot convert the input storage to readable RGBA.");
+                    return CpuColors(converted);
+                }
+                finally
+                {
+                    if (Application.isPlaying) UnityEngine.Object.Destroy(converted);
+                    else UnityEngine.Object.DestroyImmediate(converted);
+                }
+            }
+            // Preserve the source transfer encoding during the input readback.
             var request = AsyncGPUReadback.Request(input, 0, format);
             request.WaitForCompletion();
             if (request.hasError) throw new InvalidOperationException("Input texture readback failed.");

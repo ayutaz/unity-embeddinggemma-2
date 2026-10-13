@@ -74,6 +74,16 @@ jobs:
         env:
           OMP_NUM_THREADS: '4'
           MKL_NUM_THREADS: '4'
+      - name: Generate weights-free official image preprocessing fixtures
+        run: |
+          uv run --locked python -c 'import os; from embeddinggemma_tools.image_preprocessing import prepare_reference; prepare_reference("../artifacts/vision-encoder/processor_config.json", "../artifacts/image-preprocessing", revision="914f7f89142e33e77833254d9c9b90c3cef7303b", source_commit=os.environ["GITHUB_SHA"])'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: image-preprocessing-${{ github.sha }}
+          path: artifacts/image-preprocessing/
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: error
       - name: Record vision-only validation scope
         if: always()
         shell: bash

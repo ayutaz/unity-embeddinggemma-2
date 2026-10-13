@@ -24,6 +24,12 @@
 
 ## 次の受け入れと未達
 
-固定Git Runtimeへ更新し、source overlayを外して実assembly / 配布source / shaderを監査し、package回帰と同24ケースを確認する。その後にI2の画像FP32不合格を解消し、実encoderへのGPU接続、公式prompt、最終API / sample、Playerと必須他OSへ進める。
+固定Git `c21f1f8709b196c55c2b707a389dccc37437b21f`へ既存consumerを更新し、source / shader overlayを退避した。両公開型はEmbeddingGemma.Runtime、112 canonical Git blobs + package.json semantic一致、113ファイル不一致0。package 117 passed / skip 0、公式4 test / 全24ケースpassed、最大pixel差0。更新要求は受理後EOF / SafeToRetry=falseで切断したが、再要求・Editor再起動を行わず同PIDのReady、requested / resolved SHA一致を確認した。[固定Git受け入れreceipt](results/m3-image-preprocessing-git-windows-20261013.json)。最終candidateの新規空consumerや画像encoder接続とは分ける。
 
-今回の結果は上記6入力寸法・Windows backendのみ。全寸法のメモリ上限・極端な縦横比・最大寸法dispatch、長い反復での資源 / 性能、Player strippingと他OSは未検証。直接のGPU profiler captureも未取得で、転送の判断はsource経路、GPU Tensorと次段Workerのfallback / flush監査の範囲。これらを成功へ読み替えない。
+この後、同固定Git Runtimeへ8192×8192のGPU生成単色RenderTextureを渡す追加テストが「pixel 0: expected 0.2, got 0」で失敗した。Editor logは「maximum thread group count 65535」の超過を記録。横passは73728 groupsを要求していた。dispatchを2次元へ分割し、shaderのlinear indexもrow offsetを含む形へ修正した。係数・補間・数値許容差は変更していない。
+
+最初の修正後は全pixel比較に到達したが、red観測用ignore設定が生成したLogにNoUnexpectedReceivedが失敗。ignore設定を除去すると既存のshader signed integer division Warningが検出された。非負の座標 / strideをuintにし、係数とsumはsignedのまま保持した。最終5 passed / fail 0 / skip 0 / CLI exit 0、最大寸法の全patch / paddingと通常の公式24ケースが合格した。これは修正source / shaderのoverlay実測で、上記c21のGit結果へ付け替えない。[境界修正TDD](results/m3-image-preprocessing-max-input-tdd-20261013.json)。警告の解消だけで速度改善とは判定しない。
+
+次に修正後の固定Git Runtimeで配布source / shader監査、全package・公式fixture・最大入力を確認する。その後にI2の画像FP32不合格を解消し、実encoderへのGPU接続、公式prompt、最終API / sample、Playerと必須他OSへ進める。公式画像前処理fixtureの生成・artifact保存は既存Actionsへ接続した。CIの成功はUnity実GPU・実encoder成功と分ける。
+
+今回の結果は上記6入力寸法と最大寸法の単色画像、Windows backendのみ。全寸法のメモリ上限・極端な縦横比、長い反復での資源 / 性能、Player strippingと他OSは未検証。直接のGPU profiler captureも未取得で、転送の判断はsource経路、GPU Tensorと次段Workerのfallback / flush監査の範囲。これらを成功へ読み替えない。

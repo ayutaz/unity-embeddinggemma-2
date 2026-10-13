@@ -87,7 +87,12 @@ namespace EmbeddingGemma
                 commands.SetComputeBufferParam(shader, horizontalKernel, "Intermediate", intermediateData.buffer);
                 commands.SetComputeBufferParam(shader, horizontalKernel, "XRanges", xr);
                 commands.SetComputeBufferParam(shader, horizontalKernel, "XWeights", xw);
-                commands.DispatchCompute(shader, horizontalKernel, (input.height * width * 3 + 255) / 256, 1, 1);
+                // D3D / Vulkan dispatch dimensions are limited to 65535 groups.
+                // Tile the flattened horizontal pass into rows without changing pixels.
+                var groups = (input.height * width * 3 + 255) / 256;
+                var groupsX = Math.Min(groups, 65535);
+                commands.SetComputeIntParam(shader, "HorizontalDispatchWidth", groupsX * 256);
+                commands.DispatchCompute(shader, horizontalKernel, groupsX, (groups + groupsX - 1) / groupsX, 1);
                 commands.SetComputeBufferParam(shader, patchKernel, "Intermediate", intermediateData.buffer);
                 commands.SetComputeBufferParam(shader, patchKernel, "Pixels", ComputeTensorData.Pin(output).buffer);
                 commands.SetComputeBufferParam(shader, patchKernel, "YRanges", yr);

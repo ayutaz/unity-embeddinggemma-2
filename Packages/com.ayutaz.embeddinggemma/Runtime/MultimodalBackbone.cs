@@ -17,6 +17,7 @@ namespace EmbeddingGemma
         public BackendType Backend { get; }
         public MultimodalBackboneProfile Profile { get; }
         Worker worker;
+        GpuConstantWorker workerOwner;
 
         public MultimodalBackbone(Model model, MultimodalBackboneProfile profile, BackendType backend)
         {
@@ -34,7 +35,8 @@ namespace EmbeddingGemma
                 throw new ArgumentException("Expected four named static inputs matching the fixed multimodal profile.", nameof(model));
             Profile = profile;
             Backend = backend;
-            worker = new Worker(model, backend);
+            workerOwner = new GpuConstantWorker(model, backend);
+            worker = workerOwner.Worker;
             if (worker.backendType != backend)
             {
                 Dispose();
@@ -83,7 +85,8 @@ namespace EmbeddingGemma
 
         public void Dispose()
         {
-            worker?.Dispose();
+            workerOwner?.Dispose();
+            workerOwner = null;
             worker = null;
         }
     }

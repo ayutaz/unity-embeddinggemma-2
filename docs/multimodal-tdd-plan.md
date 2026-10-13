@@ -10,7 +10,8 @@
 | --- | --- | --- |
 | M2 / C1・C7 | Windows Editor / Playerのテキスト実測あり。導入helperのPR #36はPR #31の作業ブランチへ統合済み | mainへの導入手順反映、安定性・性能の原因別修正、最終candidateの空Git consumer、native入力・他OS。既存consumerの更新を新規導入と数えない |
 | C3 共通backbone | [PR #43](https://github.com/ayutaz/unity-embeddinggemma-2/pull/43)はmainへ統合済み。最終head `4feac7551bd99f2571a667f237ace85ba2d7093f`、[CI 38331086059](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331086059)成功。配置・cacheの小さい68件greenに加え、実1024長graphのCPU / GPUCompute × FP32 / Float16全4条件合格 | 実測sourceは固定Git `21e598c5b53d5ad73557ee6d606b12770254d73b`。統合headへ実測を付け替えない。実encoder feature、公式prompt構築、GPU前処理との接続と最終空consumerは別gate |
-| M3 / I1・I2 | Python画像encoder / projectorは3 profileで合格。Windows Sentis Float16 CPU / 実GPUの6条件合格 | FP32の6条件はcosine合格でも固定elementwise許容差を超過。不一致演算を小さいredにし、全12条件を満たす。GPU画像前処理・最終768次元API / sampleは未完成 |
+| M3 / I1・I2 | Python画像encoder / projectorは3 profileで合格。Windows Sentis Float16 CPU / 実GPUの6条件合格 | FP32の6条件はcosine合格でも固定elementwise許容差を超過。不一致演算を小さいredにし、全12条件を満たす。I3の実装 / Windows検証は次行。実encoder接続・最終768次元API / sampleは未完成 |
+| M3 / I3 | PR #52でGPU画像前処理を実装。Python14 red → 14 green、Unity13 red → green、最大寸法dispatchの1 redを修正。固定Git `71284e3`でpackage118 green、公式24ケースのpixel / position一致・次段GPU受け渡し。[receipt](results/m3-image-preprocessing-final-git-windows-20261013.json) | 実encoder接続・最終API / sampleは未完了。GPU profiler、長い反復 / memory、Player・他OS・最終空consumerは別gate |
 | M4 / A1〜A3 | 前処理単独PR #38 / #46、PCM入力PR #48、前処理Runtime PR #50はmainへ統合。21 red → 21 green、固定Git package全108 green、CPU / 実GPU各6信号の全feature・mask合格、次段検証graphへのGPU Tensor受け渡しを確認。[実測と失敗履歴](m4-audio-preprocessing-runtime-validation.md) | 実音声encoder・backboneへの連結、最終768次元API / sample・最終空consumerは別gate。初回の測定用ReduceMean不一致を成功で消さない |
 | M4 / A4 | [PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40)、確認head `e13adcd96ed3e10802131dfc94c48d9533f37ee2`。feed-forward単独診断をTDD追加し関連76件green | [実モデルCI 38331914586](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331914586)はsilence不合格。layer 0.feed_forward1の最初の微差はactivation、最初の許容差超過はlayer 10。単独診断とfull traceは完全一致。差の発生箇所が分かった段階であり、原因修正と元の6信号の合格は未完了 |
 | 必須環境 | Windowsの条件付き証拠とAndroid APK buildあり | macOS / iOS / Android実機の3モダリティCPU / 実GPU、sample、時間 / memory・終了の合格証拠が必要 |
@@ -36,7 +37,7 @@ Mac・端末・署名・Unity CIライセンス / runnerの確保は工程1か�
 
 ### 直近の実行順と依存
 
-次の着手はI3の画像GPU前処理とする。独立した入力契約をTDDで実装し、その間もI2の画像FP32差・A4の音声encoder差を未解決として保持する。工程番号は受け渡しの順序であり、M2の他OS検証完了まで独立したM3 / M4の開発を待たせない。
+I3の画像GPU前処理RuntimeはPR #52で実装・Windows固定Git受け入れまで進んだ。次はI2の画像FP32差・A4の音声encoder差とC3の公式prompt / maskをTDDで解消する。I3のGPU profiler / memory / 他環境は別gateとして保持する。工程番号は受け渡しの順序であり、M2の他OS検証完了まで独立したM3 / M4の開発を待たせない。
 
 | 順序 | PRの対象 | 先に観測する失敗と、次へ進む条件 |
 | --- | --- | --- |

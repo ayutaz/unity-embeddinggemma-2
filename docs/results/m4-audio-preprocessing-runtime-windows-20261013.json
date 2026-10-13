@@ -1,0 +1,275 @@
+{
+  "scope": "pinned_git_audio_preprocessing_runtime_and_official_signals",
+  "runtime_source": "9f99414bfa36c03431d12a23198c378a7235a6fe",
+  "unity": "6000.3.21f1",
+  "sentis": "2.6.1",
+  "consumer": "existing_k_git_upgrade",
+  "fresh_consumer_validated": false,
+  "runtime_source_overlay_present": false,
+  "official_test_framework_condition": "Official Test Framework 1.6.0 embedded in existing consumer",
+  "source_audit": {
+    "git_revision": "9f99414bfa36c03431d12a23198c378a7235a6fe",
+    "requested_revision": "9f99414bfa36c03431d12a23198c378a7235a6fe",
+    "resolved_revision": "9f99414bfa36c03431d12a23198c378a7235a6fe",
+    "comparison": "Canonical Git blobs with text normalization; package.json semantic comparison removing only UPM-generated _fingerprint",
+    "package_cache": "com.ayutaz.embeddinggemma@0151a7d17c3a",
+    "audited_source_files": 106,
+    "canonical_blob_matches": 105,
+    "manifest_semantics_match": true,
+    "fingerprint": "0151a7d17c3a4439e0caab3d85200c0753012652",
+    "source_mismatches": 0,
+    "source_overlay_present": false
+  },
+  "runtime_type": "{ PreprocessorAssembly = EmbeddingGemma.Runtime, ResultAssembly = EmbeddingGemma.Runtime }",
+  "package_regression": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T02:10:43.4556214Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 108,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 108,
+    "XmlPath": null
+  },
+  "cli_exit_code": 0,
+  "acceptance_tests": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T02:15:00.7315813Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 2,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 2,
+    "XmlPath": null
+  },
+  "actual_report": {
+    "success": true,
+    "stage": "audio_preprocessing_runtime_only",
+    "real_preprocessing_validated": true,
+    "encoders_validated": false,
+    "end_to_end_validated": false,
+    "fresh_consumer_validated": false,
+    "runtime_type_assembly": "EmbeddingGemma.Runtime",
+    "unity": "6000.3.21f1",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "started_utc": "2026-10-13T02:14:45.9873463Z",
+    "conditions": [
+      {
+        "requested_backend": "CPU",
+        "success": true,
+        "cases": [
+          {
+            "id": "silence",
+            "success": true,
+            "downstream_maximum_absolute_error": 0.0,
+            "downstream_mismatched_elements": 0,
+            "feature_download_before_chaining": false,
+            "mask_download_before_chaining": false,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "mismatched_elements": 0
+          },
+          {
+            "id": "impulse",
+            "success": true,
+            "downstream_maximum_absolute_error": 4.76837158203125E-07,
+            "downstream_mismatched_elements": 0,
+            "feature_download_before_chaining": false,
+            "mask_download_before_chaining": false,
+            "maximum_absolute_error": 4.76837158203125E-07,
+            "maximum_tolerance_ratio": 0.0001072118828333223,
+            "mismatched_elements": 0
+          },
+          {
+            "id": "sine",
+            "success": true,
+            "downstream_maximum_absolute_error": 0.0038890838623046875,
+            "downstream_mismatched_elements": 0,
+            "feature_download_before_chaining": false,
+            "mask_download_before_chaining": false,
+            "maximum_absolute_error": 0.0038890838623046875,
+            "maximum_tolerance_ratio": 0.8301271504209226,
+            "mismatched_elements": 0
+          },
+          {
+            "id": "nyquist",
+            "success": true,
+            "downstream_maximum_absolute_error": 0.0014133453369140625,
+            "downstream_mismatched_elements": 0,
+            "feature_download_before_chaining": false,
+            "mask_download_before_chaining": false,
+            "maximum_absolute_error": 0.0014133453369140625,
+            "maximum_tolerance_ratio": 0.3013034270367677,
+            "mismatched_elements": 0
+          },
+          {
+            "id": "noise",
+            "success": true,
+            "downstream_maximum_absolute_error": 7.867813110351562E-06,
+            "downstream_mismatched_elements": 0,
+            "feature_download_before_chaining": false,
+            "mask_download_before_chaining": false,
+            "maximum_absolute_error": 7.867813110351562E-06,
+            "maximum_tolerance_ratio": 0.0017907848911956272,
+            "mismatched_elements": 0
+          },
+          {
+            "id": "padded_noise",
+            "success": true,
+            "downstream_maximum_absolute_error": 6.4373016357421875E-06,
+            "downstream_mismatched_elements": 0,
+            "feature_download_before_chaining": false,
+            "mask_download_before_chaining": false,
+            "maximum_absolute_error": 6.4373016357421875E-06,
+            "maximum_tolerance_ratio": 0.0014985765188156271,
+            "mismatched_elements": 0
+          }
+        ],
+        "actual_backend": "CPU",
+        "cpu_computation_or_input_indices": [],
+        "cpu_readback_flush_indices": [],
+        "downstream_audit": {
+          "cpu_computation_or_input_indices": [],
+          "cpu_readback_flush_indices": []
+        }
+      },
+      {
+        "requested_backend": "GPUCompute",
+        "success": true,
+        "cases": [
+          {
+            "id": "silence",
+            "success": true,
+            "downstream_maximum_absolute_error": 0.0,
+            "downstream_mismatched_elements": 0,
+            "feature_download_before_chaining": false,
+            "mask_download_before_chaining": false,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "mismatched_elements": 0
+          },
+          {
+            "id": "impulse",
+            "success": true,
+            "downstream_maximum_absolute_error": 4.76837158203125E-07,
+            "downstream_mismatched_elements": 0,
+            "feature_download_before_chaining": false,
+            "mask_download_before_chaining": false,
+            "maximum_absolute_error": 4.76837158203125E-07,
+            "maximum_tolerance_ratio": 0.00010957452982569119,
+            "mismatched_elements": 0
+          },
+          {
+            "id": "sine",
+            "success": true,
+            "downstream_maximum_absolute_error": 0.0038890838623046875,
+            "downstream_mismatched_elements": 0,
+            "feature_download_before_chaining": false,
+            "mask_download_before_chaining": false,
+            "maximum_absolute_error": 0.0038890838623046875,
+            "maximum_tolerance_ratio": 0.8301271504209226,
+            "mismatched_elements": 0
+          },
+          {
+            "id": "nyquist",
+            "success": true,
+            "downstream_maximum_absolute_error": 0.0014138221740722656,
+            "downstream_mismatched_elements": 0,
+            "feature_download_before_chaining": false,
+            "mask_download_before_chaining": false,
+            "maximum_absolute_error": 0.0014138221740722656,
+            "maximum_tolerance_ratio": 0.30140508136437794,
+            "mismatched_elements": 0
+          },
+          {
+            "id": "noise",
+            "success": true,
+            "downstream_maximum_absolute_error": 7.867813110351562E-06,
+            "downstream_mismatched_elements": 0,
+            "feature_download_before_chaining": false,
+            "mask_download_before_chaining": false,
+            "maximum_absolute_error": 7.867813110351562E-06,
+            "maximum_tolerance_ratio": 0.0017907848911956272,
+            "mismatched_elements": 0
+          },
+          {
+            "id": "padded_noise",
+            "success": true,
+            "downstream_maximum_absolute_error": 6.67572021484375E-06,
+            "downstream_mismatched_elements": 0,
+            "feature_download_before_chaining": false,
+            "mask_download_before_chaining": false,
+            "maximum_absolute_error": 6.67572021484375E-06,
+            "maximum_tolerance_ratio": 0.0015540793528458355,
+            "mismatched_elements": 0
+          }
+        ],
+        "actual_backend": "GPUCompute",
+        "cpu_computation_or_input_indices": [],
+        "cpu_readback_flush_indices": [],
+        "downstream_audit": {
+          "cpu_computation_or_input_indices": [],
+          "cpu_readback_flush_indices": []
+        }
+      }
+    ],
+    "reference_source": "e35470212f616b020c0b150a4c515a007f0b937f",
+    "reference_sha256": "4da5aeaf282598c32ffdd920701cd836622880fb4f611d19e5ba470831f2768a",
+    "saved_graph_sha256": "da7dd8f65ebb2789360235d657646f47e315f062fc8ccc3b10e3285ecaf6ed8d",
+    "saved_graph_bytes": 6207316,
+    "completed_utc": "2026-10-13T02:15:00.6506677Z"
+  },
+  "initial_failure": {
+    "observed": -5.92099857,
+    "passed_conditions": 1,
+    "full_feature_tolerance_unchanged": true,
+    "original_feature_comparison_reached_on_cpu": false,
+    "failed_backend": "CPU",
+    "failed_conditions": 1,
+    "scope": "downstream_diagnostic_large_mean_probe",
+    "expected": -5.907755374908447,
+    "correction": "Replace unrelated large scalar mean with an elementwise downstream graph consuming every feature and mask element. Keep the original full features / exact mask comparisons after chaining.",
+    "underlying_reduction_cause_confirmed": false,
+    "production_runtime_modified_to_address_probe": false
+  },
+  "environment_events": [
+    "Short SHA was accidentally written first and auto-resolve rejected it. Corrected to full 40-character SHA.",
+    "Burst Package Has Been Removed modal dismissed with Later; no Editor restart.",
+    "Full-SHA Resolve accepted then EOF with SafeToRetry=false; not repeated; Ready and resolved hash verified."
+  ],
+  "observation_errors": [
+    "Initial source audit counter collided with PowerShell Matches automatic variable. Only the corrected complete audit is accepted."
+  ],
+  "hashes": {
+    "artifacts/audio-preprocessor-git-official-signals.log": "75176cec3ee4f376b62d9eeb23c1c4542b44ef5743f4cb01270e58a9cac98033",
+    "artifacts/audio-preprocessor-downstream-reduction-failed.json": "031e54ef3af74fb6207b0d05ec553730c759a921383aa11d8bf0562e2bf4d062",
+    "artifacts/audio-preprocessor-git-regression.log": "5d2d4016a476b2ff96c0ab5a583bd9a8bf0580a349503ddbe8fa3b841c66c7fa",
+    "artifacts/audio-preprocessor-downstream-reduction-failed.log": "bd76e8f7329629387cbd9fad889c1847518f6d4c876fba2d3c8e1df8468ce91c",
+    "artifacts/audio-preprocessor-runtime-type.log": "d5d9e6f17d9ac921a0ac379f2d02616954ae6cb48ecc9a8bebbb33cc39c34e3c",
+    "artifacts/audio-preprocessor-git-source-audit.json": "8dbfdc26e85cfd5429850687d1080476e0d4f21fa37c9fb46e0438cb4f84f91d",
+    "Assets/Tests/Editor/AudioPreprocessorRuntimeReferenceTests.cs": "59ef7eeb4338804909be377f5565e0a29385b5cbe66a92ad6516eb8eccfe3ac4"
+  },
+  "resolve_observation": {
+    "error_code": "UNITY_DISCONNECTED_AFTER_ACCEPT",
+    "source": "Terminal tool result for exec session 67456; response was not captured by Tee file",
+    "phase": "response_waiting",
+    "cause": "EOF",
+    "cli_exit_code": 1,
+    "repeated": false,
+    "missing_log_file_recorded": true,
+    "safe_to_retry": false
+  }
+}

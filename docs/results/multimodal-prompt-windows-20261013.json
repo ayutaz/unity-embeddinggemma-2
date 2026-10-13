@@ -1,0 +1,38 @@
+{
+  "scope": "multimodal_prompt_tokens_runtime_only",
+  "date": "2026-10-13",
+  "runtime_source": "8a7d2f0dea30be95a3158830fb0d9c9de895efc4",
+  "reference_producer": "dc185218d6b682f53b191e21600255be19c380e7",
+  "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+  "ci": {"run_id": 38351727099, "head": "8a7d2f0dea30be95a3158830fb0d9c9de895efc4", "all_eight_checks_passed": true},
+  "reference_artifact": {"id": 11791077843, "archive_bytes": 32587643, "cases": 15, "all_file_hashes_matched": true, "model_weights_downloaded_by_prompt_command": false},
+  "runtime_tdd": {"assertion_red": 24, "prototype_green": 24, "prototype_compile_failure_preserved": true, "stdout_red_capture_failed": true, "same_operation_red_xml_recovered": true},
+  "reference_tdd": {"assertion_red": 4, "related_green": 21, "windows_test_utf8_read_failure_preserved": true},
+  "consumer": {
+    "unity": "6000.3.21f1", "kind": "existing_git_consumer_upgrade",
+    "test_framework": "official_1.6.0_embedded",
+    "requested_sha": "8a7d2f0dea30be95a3158830fb0d9c9de895efc4",
+    "resolved_sha": "8a7d2f0dea30be95a3158830fb0d9c9de895efc4",
+    "runtime_assembly": "EmbeddingGemma.Runtime", "runtime_source_overlay": false,
+    "git_files": 119, "canonical_source_files_matched": 118, "package_manifest_semantic_match": true,
+    "empty_tree_initial_audit_rejected": true,
+    "package_contracts": {"passed": 142, "failed": 0, "skipped": 0, "compile_passed": true, "completed_utc": "2026-10-13T05:38:24.5047590Z"},
+    "official_prompt_reference": {"tests_passed": 1, "cases_passed": 15, "failed": 0, "skipped": 0, "cli_exit_code": 0, "completed_utc": "2026-10-13T05:43:27.5084272Z", "formatted_text_exact": true, "token_ids_exact": true, "attention_masks_exact": true},
+    "initial_upm_failure": {"http_status": 500, "allusersprofile_missing_in_editor": true},
+    "upm_recovery": {"process_environment_repaired": true, "old_server_pid": 62580, "new_server_pid": 173168, "editor_pid_retained": 16260, "editor_restarted": false}
+  },
+  "evidence_sha256": {
+    "prompt-runtime-red.xml": "76e52ebace33020762a47db26bcc496a57411224be7dcb660e2e322bfb768aed",
+    "prompt-runtime-green.log": "56cb7ebd723270a32815eb57c7d9f0e862e05720aad0da7b511820ea29d13029",
+    "prompt-reference-red.log": "a6e2bca8a3f26da7a80f70ea6b3da196c23710c55fd3f7493f15afb52a799ac1",
+    "prompt-reference-final-green.log": "ebdcc4dee3076f1b256ecc8dd318ae3c00c02cef45d19b86005d86fd042efacb",
+    "prompt-fixed-git-package-tests.log": "22a67cbcbb6c9bb17413472b224ba218b8b4555d01f8f4b267111fd16781fbb2",
+    "prompt-canonical-source-audit.json": "ed4f7894ce6e10113fa3b2529fa1cb63a8139ab11d4abf6bdcbd3cc8ad93fb26",
+    "prompt-fixed-git-resolution-audit.log": "1f29b71e6d7b0049afa1428a5eb2e32bb208efeb5ed6cd9eba274b984c10d653",
+    "prompt-official-reference-first-run.log": "b27eb7513d82de1a857d2bda74bde87b858af64b02ac6dee80cb2f9b5c60a7a0",
+    "official_prompt_results_json": "b9d634a604685f438f5cc1267a51867c97c22062a2734f2c6796c395d0515c70"
+  },
+  "encoders_validated": false, "backbone_end_to_end_validated": false,
+  "gpu_chain_validated": false, "final_embedding_validated": false,
+  "final_empty_consumer_validated": false, "formal_release_created": false
+}

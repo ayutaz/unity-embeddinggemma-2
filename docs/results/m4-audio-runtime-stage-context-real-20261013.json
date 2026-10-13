@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-13",
+  "scope": "real_audio_runtime_stage_context_only",
+  "workflow_run": 38384143753,
+  "workflow_conclusion": "failure",
+  "head_commit": "ab3c0034766970f60ebcb4cfc59e3a7f0f8d91d0",
+  "producer_commit": "bd9cd68e978b05270bc4bd4b0c564a695a94f127",
+  "artifact_id": 11804593748,
+  "archive_bytes": 7486832617,
+  "collection_step_conclusion": "failure",
+  "collection_error": "ONNX diagnostic collection contains mismatches; native reference complete",
+  "stage_export_step_conclusion": "success",
+  "stage_export_completed_utc": "2026-10-13T10:37:17.7033780Z",
+  "upload_step_conclusion": "success",
+  "cli_result": {
+    "success": true,
+    "stage": "audio_runtime_stage_context_only",
+    "profile_count": 2,
+    "case_count": 6,
+    "context_validated": true,
+    "full_encoder_validated": false,
+    "unity_validated": false,
+    "end_to_end_validated": false
+  },
+  "context_original_reference_scope": "same_workflow_encoder_reference",
+  "previous_frozen_reference_producer": "271f5a12ca2aab081eb330f45cf593d404330374",
+  "previous_frozen_reference_comparison_executed": false,
+  "stage_binaries_downloaded_and_audited_locally": false,
+  "unity_stage_diagnostics_executed": false,
+  "full_encoder_validated": false,
+  "tolerances_changed": false,
+  "formal_release_created": false
+}

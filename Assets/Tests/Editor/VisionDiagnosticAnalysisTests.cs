@@ -6,6 +6,30 @@ namespace EmbeddingGemma.Tests
     public sealed class VisionDiagnosticAnalysisTests
     {
         [Test]
+        public void DifferentNativeReferenceCannotClaimLocalizationEvenWhenSentisFinalsAgree()
+        {
+            var result = VisionDiagnosticAnalysis.AnalyzePinnedReference(new[] { 1f }, new[] { 1.02f }, new[] { 1.02f }, new[] { 1.01f }, true);
+            Assert.That(result.TraceMatchesOriginal, Is.True);
+            Assert.That(result.NativeReference.Mismatches, Is.EqualTo(1));
+            Assert.That(result.CanLocalize, Is.False, "The native reference gate must be checked before publishing localization.");
+        }
+
+        [Test]
+        public void MatchingNativeReferenceAllowsLocalizationAtTheFixedTolerance()
+        {
+            var result = VisionDiagnosticAnalysis.AnalyzePinnedReference(new[] { 1f }, new[] { 1.02f }, new[] { 1.02f }, new[] { 1.000001f }, true);
+            Assert.That(result.NativeReference.Passed, Is.True);
+            Assert.That(result.CanLocalize, Is.True);
+        }
+
+        [Test]
+        public void MatchingNativeReferenceDoesNotOverrideFailedPythonContext()
+        {
+            var result = VisionDiagnosticAnalysis.AnalyzePinnedReference(new[] { 1f }, new[] { 1.02f }, new[] { 1.02f }, new[] { 1f }, false);
+            Assert.That(result.CanLocalize, Is.False);
+        }
+
+        [Test]
         public void SameFailedFinalCanBeLocalizedOnlyWithPinnedPythonContext()
         {
             var result = VisionDiagnosticAnalysis.Analyze(new[] { 1f }, new[] { 1.01f }, new[] { 1.01f }, true);

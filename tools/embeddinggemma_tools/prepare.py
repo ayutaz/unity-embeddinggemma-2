@@ -13,6 +13,7 @@ from transformers import AutoTokenizer
 from .export import MultimodalEmbeddingExport, VisionEncoderExport, export_multimodal_pt2, export_pt2, export_vision_pt2
 from .model import load_text_model, load_vision_models
 from .reference import build_reference, load_cases, write_reference
+from .reference_environment import cpu_math_environment
 from .search import generate_search_reference
 
 MODEL_ID = "google/embeddinggemma-2"
@@ -122,6 +123,7 @@ def prepare_vision(snapshot, destination, *, revision=MODEL_REVISION, source_com
                     fixture_provenance="procedurally_generated_rgb_patterns_no_user_data",
                     pixel_encoding="little_endian_float32_rgb_patches", position_encoding="little_endian_int32_xy",
                     minimum_cosine=0.999999, feature_rtol=1e-4, feature_atol=1e-5,
+                    cpu_math_environment=cpu_math_environment(),
                     versions={name: importlib.metadata.version(name) for name in ("torch", "transformers", "torchvision")})
     reference_path = destination / "vision-reference.json"
     reference_path.write_text(json.dumps(dict(metadata=metadata, profiles=profile_metadata, cases=rows),

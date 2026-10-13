@@ -9,6 +9,7 @@ import re
 import torch
 
 from .export import VisionEncoderExport, export_vision_pt2
+from .reference_environment import cpu_math_environment
 
 
 class VisionEncoderStagesExport(VisionEncoderExport):
@@ -137,6 +138,7 @@ def prepare_vision_diagnostics(vision, projection, pixels, coords, destination, 
                   unity_validated=False, end_to_end_validated=False, localization_validated=False,
                   trace_matches_original_saved=all(case["trace_matches_original_saved"] for case in cases),
                   metadata=dict(source_commit=source_commit, model_revision=revision,
+                      cpu_math_environment=cpu_math_environment(),
                       versions={name: importlib.metadata.version(name) for name in ("torch", "transformers", "torchvision")},
                       pixel_shape=list(pixels.shape), position_shape=list(coords.shape), case_count=len(cases),
                       feature_count=wrapper.feature_count), cases=cases, files=files)

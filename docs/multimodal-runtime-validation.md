@@ -28,7 +28,19 @@ GPU featureの全値をhost検査するためのreadbackは行わない。呼び
 
 ## 次の受け入れ
 
+### 実backboneのimport不合格と小さい再現
+
+main `e35470212f616b020c0b150a4c515a007f0b937f`の[Actions 38320110239](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38320110239)から、実text重み・1024長・画像280 / 音声280のbackbone artifactを取得した。全ファイルのsize / SHA-256、固定revision、別取得したconfigの元hash一致を監査した。入力特徴量は合成値であり、実encoder出力ではない。
+
+WindowsのCPU / GPUCompute × FP32 / Float16の4条件は**Sentis importで不合格**。`Where.InferPartial`で `ValueError: broadcast dims must be equal or 1`が発生し、ModelAssetが生成されなかった。保存 / 再読込・CPU / GPU数値照合は未実行。CLIの観測は305秒で終了したが、同じEditor / operationの保存報告は最後まで追跡し、2026-10-13 00:01:56 UTCに4条件の不合格完了を確認した。観測timeoutによる重複起動・再試行はしていない。
+
+このimportの問題を小さい固定graphで再現した。Pythonの保存graph監査で1件のredを確認し、特徴量の多次元advanced indexをflat `index_select`と明示的な `[1, length, width]`へのreshapeに置き換えた。非連続 / 並び変更placeholder、feature値変更、padding、ゼロfeatureを含む既存数値契約とtext export / model回帰は25 passed / skip 0。固定shapeのbatch 1という元の対応範囲を維持し、独立masked-scatter参照は変更していない。
+
+Unityでは旧graphの小さいimport 2条件と、同じimport失敗を4回繰り返してしまうcache契約1件の計3 red（他3件green）を確認した。旧 / 新graphの独立Python参照JSONはhash完全一致。flat Gatherへの修正後、小さい保存 / 再読込graphのCPU / 実GPUで2ケースの全24要素が許容差内、GPUのCPU計算fallback / readback flushなし。失敗も保持するLazy cacheの最小修正後は、同じ監査済みsourceを一度だけprepareし、新しいauditではretryできる。最終は追加6件と既存62件の**68 passed / skip 0**、compileも成功した。[入力・source hash・失敗とgreenの範囲](results/multimodal-placement-windows-20261013.json)。
+
+最初の実graphは失敗する同一importを4条件で繰り返した。cache修正はprepare回数を4→1にする契約の証拠であり、実モデルの速度改善を測定した結果ではない。初回不合格の生成assetはartifactへ退避し、元の監査済みgraphと報告を保持した。新しい実backboneの生成 / 独立Python照合はActionsで行い、そのartifactで実Sentisを再受け入れする。小さいgraphのgreenは実1024長graph、新Runtime assemblyのGit導入、実encoder接続のgreenではない。
+
 1. 上記62件の契約greenを起点に、small graph / 実GPU / 実modelの結果を引き続き分離して保存する。
-2. 監査済み実backbone exportの1024長・実encoder feature数profileをimport / 保存・再読込し、このAPIで独立Pythonの最終768次元へ照合する。CPU / GPUCompute × FP32 / Float16を別判定する。
+2. flat Gather修正後の実backbone exportをActionsで生成・照合し、1024長・実encoder feature数profileをSentisでimport / 保存・再読込する。このAPIで独立Pythonの最終768次元へ照合し、CPU / GPUCompute × FP32 / Float16を別判定する。
 3. 公式processorのprompt / 特殊token・maskを生成するAPI、ImageEmbedder / AudioEmbedderとGPU前処理をTDDで接続する。text128長の既存APIは維持する。
 4. 固定candidateの空Git consumerへRuntime assemblyを導入し、sample・Player・全必須実機へ進む。正式Release / tagは作成しない。

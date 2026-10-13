@@ -101,6 +101,25 @@ def test_saved_export_accepts_changed_positions_features_and_padding_without_mas
     assert not any("masked_scatter" in target or "_assert_tensor_metadata" in target for target in targets)
 
 
+def test_feature_placement_uses_explicit_flat_gather_shape_for_sentis_import(tmp_path):
+    model = tiny_model()
+    path = tmp_path / "placement.pt2"
+    export.export_multimodal_pt2(wrapper(model), *inputs(), path)
+    program = torch.export.load(path)
+    targets = {str(node.target) for node in program.graph.nodes if node.op == "call_function"}
+    # Real 1024-profile import reached a Where broadcast failure. Use a flat
+    # Gather + explicit fixed shape for feature placement instead of importing
+    # the multidimensional advanced-index path as GatherND/Transpose.
+    assert "aten.index.Tensor" not in targets, "Feature placement must avoid the multidimensional advanced-index importer"
+    assert "aten.index_select.default" in targets
+    ids = torch.tensor([[IMAGE, 5, IMAGE, AUDIO, 0, 0]])
+    frame_mask = torch.tensor([[1, 1, 1, 1, 0, 0]])
+    image, audio = inputs()[2:]
+    actual = program.module()(ids, frame_mask, image.flip(0), audio * 0.6)
+    torch.testing.assert_close(actual, independent(model, ids, frame_mask, image.flip(0), audio * 0.6),
+                               rtol=1e-5, atol=1e-6)
+
+
 def test_longer_profile_crosses_local_attention_window_with_both_modalities():
     model = tiny_model()
     factory = getattr(export, "MultimodalEmbeddingExport", None)

@@ -18,4 +18,12 @@ hookは自身が登録したものだけをfinallyで削除し、外部hookと�
 
 固定artifact `11814567883` / producer `4edbe17a8105233c5aaa1514faa2862b08a4f7e0`のreference / validation JSONとnative stage 00 / 01だけをrange取得する。JSONの既知SHAを確認してから、同revisionのconfig / modelだけをActionsで取得する。新しいproducer sourceと元参照sourceを分ける。失敗時もreport / range receiptをuploadし、failureをcontinue-on-errorで成功にしない。weightsはuploadしない。
 
-実モデルのActions結果はまだ未取得。内部参照の採用には固定finalの完全一致が必要で、未実行を成功にしない。参照取得後もSentis内部値との対応・原因演算修正、元6信号のCPU / 実GPU、画像数値差、各role・境界・sample・Player / 必須実機・最終配布準備が残る。
+## 実モデルActions結果
+
+[Draft PR #75](https://github.com/ayutaz/unity-embeddinggemma-2/pull/75)、head `0908bc04b623d0facbc724c90c9861f178c59274`の[run 38459688048](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38459688048)は成功し、2026-10-13 20:04:16 UTCに完了。実行sourceはGitHubのmerge commit `9800c52957478fafa1377e2caa215f9f2e1477b0`で、元producer `4edbe17…`と区別する。[小さいreceipt](results/m4-native-layer-replay-actions-20261014.json)へ各source・各内部値のhashを固定した。
+
+7,486,823,730 bytesの元archiveから4ファイルだけを2,383,011 bytes / 16 range requestsで取得。既知JSON SHAと各binaryを監査した。実モデルのconfig / safetensorsはActionsで取得して固定SHAを照合し、公式layer 0だけを構築した。実際のTorchは2.14.1+cu130 / threads2であり、envの4を実thread数として記録しない。
+
+fully valid silence入力`[1,280,1024]`から再現したnative layer 0 finalは、保存済みfinalの全要素とbit単位で一致した。7つの内部値を各1,146,880 bytesで取得し、ダウンロード後も全7ファイルのsize / SHAを再照合した。norm_outのSHAは元finalの`3cc35396…`と一致。Runtimeの修正、元goldenの置き換え、許容差の緩和はない。以前の全audio export用workflowは条件によりskipで、不要なfull exportを実行していない。ここでのskipは数値合格には含めない。
+
+これは公式native内部参照の再現成功であり、Sentisの内部値との照合はまだ未実行。encoder数値gateの不合格は保持する。source一致と正常完了が確認できても、元6信号・CPU / 実GPUの修正合格、画像数値差、各role・境界・sample・Player / 必須実機・最終配布準備は未完了。

@@ -34,3 +34,7 @@ PCM前処理は別の段階診断としてCPU / 実GPU各6件が固定 `rtol=1e-
 回復後の実行は2026-10-13 15:08:42 UTCに開始したが、CLIが`UNITY_DISCONNECTED_AFTER_ACCEPT` / `Cause: EOF` / exit 1を返した。`uloop status`の`NotRunning`とUnity本体process 0を確認したため、単なる観測timeoutとは区別する。保存された[途中結果](results/m4-audio-real-chain-recovered-incomplete-20261014.json)には`completed_utc`がなく、FP32 CPUの6件は完了・合格、FP32 GPUは5件を保存して`evaluate_padded_noise`で途切れている。Float16 CPU / GPUはこの実行では未実行。NUnit完了集計はなく、GPU条件や全4条件を合格に数えない。
 
 途中結果のSHA-256は`3629757438fdc97c413a7f902848f11843fc00e34ac5e9db2c124797f8abd939`、ignored CLI receipt `artifacts/audio-real-chain-unity/run-tests-recovered.json`は`d6af11528a86762818d1bc7d69ddadd591a34d31e13a7e236152b3a0f894454a`。Editor logには`d3d12: upload buffer was too small for the requested resource! Size: 16777216. Requested: 536870912.`がある。16 MiBのbufferに対して512 MiBを要求した証拠であり、数値不一致や終了の根本原因を確定したものではない。手動終了の有無も未確認。元の失敗を保持し、ComputeBufferへの転送と大きいconstantの扱いを調べてから重い再実行を判断する。texture / mesh向けのasync upload設定をこの転送の修正として扱わない。
+
+### 最新Required CIでもencoder数値gateは未達
+
+head `d1c0d8c`の[CI 38422572898](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38422572898)は`Validate real audio encoder and projector against official PCM-derived features`で`ValueError: audio ONNX export mismatch: silence`、exit 1となり、Required CIも不合格。Python全4環境、package、actionlintは合格した。元の数値gateの再現であり、network / runnerの一時障害として再実行しない。native-reference jobのskipを実モデル合格に数えない。このPRはDraftで保持する。

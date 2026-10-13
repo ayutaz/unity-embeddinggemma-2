@@ -11,6 +11,7 @@ from huggingface_hub import snapshot_download
 from .prepare import MODEL_ID, MODEL_REVISION, prepare, prepare_multimodal_backbone, prepare_vision
 from .search import SEARCH_CASES
 from .prompt_reference import prepare_prompt_reference
+from .native_silu_probe import prepare_silu_probe
 
 
 def sequence_length(value):
@@ -52,7 +53,13 @@ def main(argv=None):
     prompts.add_argument("--output", type=Path, required=True)
     prompts.add_argument("--snapshot", type=Path)
     prompts.add_argument("--revision", type=revision, default=MODEL_REVISION)
+    silu=commands.add_parser("prepare-silu-probe",help="Weights-free native SiLU and ONNX Swish probe")
+    silu.add_argument("--output",type=Path,required=True)
     args = parser.parse_args(argv)
+    if args.command == "prepare-silu-probe":
+        summary=prepare_silu_probe(args.output,source_commit=os.environ.get("GITHUB_SHA","local"))
+        print(json.dumps({name:summary[name] for name in ("success","stage","case_count","unity_validated")}))
+        return
     snapshot = args.snapshot
     if snapshot is None:
         patterns = [

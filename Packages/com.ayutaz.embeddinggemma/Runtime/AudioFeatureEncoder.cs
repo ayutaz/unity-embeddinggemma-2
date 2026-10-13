@@ -23,7 +23,7 @@ namespace EmbeddingGemma
     }
 
     /// <summary>
-    /// Borrows a model exported and audited for exactly Profile.ValidFrameCount.
+    /// Synchronous main-thread execution. Borrows a model exported and audited for exactly Profile.ValidFrameCount.
     /// Owns its Worker, borrows preprocessing tensors, and returns independently owned
     /// projected soft tokens on the requested device. This is not a final embedding.
     /// </summary>

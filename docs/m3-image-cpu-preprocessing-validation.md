@@ -29,3 +29,7 @@ harness `2018623841a7b061fa205c3101299304d02d855e`による[段階診断](result
 実画像encoderのFP32不合格、実model全chainの最終768次元照合、role / sample / 必須環境は残る。CPU前処理60条件の合格だけでM3や工程6の完了にはしない。
 
 入力読み取りの仕様はUnityの[GetPixels32](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Texture2D.GetPixels32.html)、[AsyncGPUReadback.Request](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Rendering.AsyncGPUReadback.Request.html)、[WaitForCompletion](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Rendering.AsyncGPUReadbackRequest.WaitForCompletion.html)、[ConvertTexture](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Graphics.ConvertTexture.html)を確認した。同期readbackはstallを伴うため、GPU-only入力での時間 / memory測定とsample操作の受け入れを残す。
+
+## 最新Required CIのPython vision不合格
+
+head `da1e68d`の[CI 38431029093](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38431029093)はPythonの`Validate official image processor and real vision encoder / projector exports`で`ValueError: vision export mismatch: square-0 cosine=0.9999997615814209`、exit 1となり、Required CIも不合格。Python4環境 / package / actionlintは成功した。このPRの差分にはPython / workflow変更はなく、CPU前処理のC#試験とは別の未達として保持する。cosineの表示値だけでelementwiseを合格にしない。原因は未確定であり、許容差を変更せず、失敗runを一時障害として再実行して消すことはしない。

@@ -30,6 +30,9 @@ namespace EmbeddingGemma
                 throw new ArgumentOutOfRangeException(nameof(backend), "Use CPU or GPUCompute explicitly.");
             if (chunkBytes < 4 || chunkBytes > MaximumChunkBytes || chunkBytes % 4 != 0)
                 throw new ArgumentOutOfRangeException(nameof(chunkBytes), "Use a word-aligned budget from 4 bytes to 16 MiB.");
+            for (var index = 0; index < model.inputs.Count; index++)
+                if (model.inputs[index].index != index)
+                    throw new ArgumentException("Sentis requires contiguous input indexes. Save and reload the model after quantization.", nameof(model));
             if (backend == BackendType.GPUCompute && !SystemInfo.supportsComputeShaders)
                 throw new NotSupportedException("This device cannot run GPUCompute.");
             try

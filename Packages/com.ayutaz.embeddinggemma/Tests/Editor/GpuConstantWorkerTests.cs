@@ -94,7 +94,7 @@ namespace EmbeddingGemma.Tests
         [Test] public void NoncontiguousInputIndexesAreRejectedBeforeWorkerCreation()
         {
             var model=FloatModel();var input=model.inputs[0];input.index=17;model.inputs[0]=input;
-            Assert.Throws<ArgumentException>(()=>Create(model));
+            Assert.Throws<ArgumentException>(()=>{using var holder=Create(model);});
         }
     }
 }

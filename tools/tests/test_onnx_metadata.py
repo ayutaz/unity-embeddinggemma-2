@@ -87,3 +87,27 @@ def test_cli_cannot_overwrite_its_model_input(tmp_path):
     with pytest.raises(ValueError, match="overwrite"):
         main(["--model", str(source), "--output", str(source)])
     assert source.read_bytes() == original
+
+
+def test_audio_norm_anchors_bind_operator_to_small_constant_identity():
+    function = getattr(onnx_metadata, "audio_norm_anchors", None)
+    assert callable(function), "Audio norm anchors are missing"
+    metadata = dict(nodes=[dict(name="/norm_out/Mul_1", op_type="Mul", inputs=["h", "w"], outputs=["out"])],
+                    initializers=[dict(name="w", data_type=1, dims=[2], raw_bytes=8, sha256="a" * 64)])
+    assert function(metadata, layer_count=1) == [dict(stage="layer_0", node_name="/norm_out/Mul_1",
+        original_output="out", coefficient_name="w", coefficient_sha256="a" * 64, coefficient_bytes=8, coefficient_dims=[2])]
+
+
+@pytest.mark.parametrize("problem", ["missing_weight", "duplicate_stage", "missing_stage"])
+def test_ambiguous_or_unhashed_audio_norm_anchor_is_rejected(problem):
+    function = getattr(onnx_metadata, "audio_norm_anchors", None)
+    assert callable(function), "Audio norm anchors are missing"
+    node = dict(name="/norm_out/Mul_1", op_type="Mul", inputs=["h", "w"], outputs=["out"])
+    weight = dict(name="w", data_type=1, dims=[2], raw_bytes=8, sha256="a" * 64)
+    metadata = dict(nodes=[node], initializers=[weight])
+    if problem == "missing_weight":
+        weight.pop("sha256")
+    elif problem == "duplicate_stage":
+        metadata["nodes"].append(dict(node))
+    with pytest.raises(ValueError):
+        function(metadata, layer_count=2 if problem == "missing_stage" else 1)

@@ -2,6 +2,9 @@
 
 import hashlib
 import io
+import argparse
+import json
+from pathlib import Path
 
 import onnx
 
@@ -120,3 +123,23 @@ def scan(stream, *, small_tensor_bytes=4096, metadata_field_bytes=1 << 20):
         raise ValueError("model graph is missing")
     result.update(model_bytes=size, read_bytes=read_bytes)
     return result
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--model", required=True, type=Path)
+    parser.add_argument("--output", required=True, type=Path)
+    args = parser.parse_args(argv)
+    if args.model.resolve() == args.output.resolve():
+        raise ValueError("metadata output must not overwrite the input model")
+    with args.model.open("rb") as stream:
+        report = scan(stream)
+    report.update(binary_sha256_audited=False, source_model=args.model.name)
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(report, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    print(json.dumps(dict(node_count=len(report["nodes"]), initializer_count=len(report["initializers"]),
+                          model_bytes=report["model_bytes"], read_bytes=report["read_bytes"], model_executed=False)))
+
+
+if __name__ == "__main__":
+    main()

@@ -102,3 +102,11 @@ layer 0.feed_forward1の実入力を公式audio towerのpre-hookから取得し�
 未実装による16 assertion red → 最小実装16 green。数値不合格のないtraceでも余分なexportを始める追加1 redを確認し、実際の数値不合格とfull final一致がある場合だけ子診断を起動するよう修正した。関連encoder / prepare / 段階・層内診断を含め76 passed / fail 0 / skip 0（297.37秒）。[TDD・source / log hash](results/m4-audio-feed-forward-tdd-20261013.json)。
 
 全体graphをさらにもう1つ生成する代わりに、選んだfeed-forwardの重みと公式入力だけでexportする。graph / native inputのsize・hash、各stageの差・固定許容差、standalone対full stage一致をreceiptへ残す。親の不合格報告を子export前に保存し、子diagnosticの例外でも元の数値不合格を保持する。これは診断追加であり、実重みの原因演算・encoder数値合格は未確認。次のActions実行で確認し、既存の不一致328要素と残り5信号未実行を消さない。Unity / end-to-endの受け入れも未完了。
+
+## 実feed-forwardの最初の微差と小さいvector Red
+
+後続CI 38331914586は不合格、producer source `e81255dcbdf9844752bfef0fa789b54635388a47`。silenceの公式対eager差0、保存対eager最大差 `0.00021576881408691406`、許容差比 `9.733773231506348`、368要素不一致。単独feed-forwardはfull traceと完全一致し、clamp・最初のRMSNorm・linearは差0、最初の微差はactivation（最大 `5.960464477539063e-8`）。9 stageは個別許容差内であり、encoder全体の不合格を解消した証拠ではない。
+
+seed 412・float32入力のnative SiLUと保存graphを照合する17要素 / [1,2,4096]の追加2テストは意図したassertion red。不一致は1 / 381要素。実重みを使わない7つの式（exp / expm1 / exp2、sigmoid、float64経由等）を比較したが、どれもnativeとのbitwise一致を満たさなかった。これは原因修正やgreenではなく、採用できない候補を切り分けた小さい調査結果。float64経由の修正や許容差変更は採用していない。[実診断・red・比較とhash](results/m4-audio-activation-vector-red-20261013.json)。
+
+このcheckpointは局所のredを保持するローカルcommitで、未解決のままmainへ統合しない。次はnative vector演算とexport可能な演算の違いを調べ、最小修正後にこのredと既存回帰、元の実重み6信号・Sentis CPU / 実GPUへ進む。診断のbitwise検査と元の固定 `rtol=1e-4` / `atol=1e-5`のencoder受け入れを区別する。

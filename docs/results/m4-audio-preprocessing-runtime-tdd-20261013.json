@@ -1,0 +1,118 @@
+{
+  "scope": "audio_preprocessing_runtime_small_graph_tdd",
+  "base_source": "aad9d48f70e1394d030bbe18191d1e2a519d1c7c",
+  "unity": "6000.3.21f1",
+  "stub_sha256": "8ed7d2c1fa5bfc7ed6b397b4ef5e2ad416c73745a8f29b2972eea67a90d7e950",
+  "fixture_error_recorded_separately": "Initial GatherElements rank mismatch prevented intended assertions. Corrected fixture to IndexSelect; production stub unchanged. Not counted as TDD red.",
+  "red": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T01:57:12.5268795Z",
+    "FailedCount": 21,
+    "FailedTests": [
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioPreprocessorTests.DisposedRuntimeRejectsBothValidAndNullCalls",
+        "Message": "  Expected: <System.ObjectDisposedException>\r\n  But was:  null\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioPreprocessorTests.cs",
+        "Line": 136
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioPreprocessorTests.GpuFeaturesAndIntegerMaskChainWithoutIntermediateCpuReadback",
+        "Message": "  Expected: not null\r\n  But was:  null\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioPreprocessorTests.cs",
+        "Line": 148
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioPreprocessorTests.InvalidScheduledOutputsAreRejectedRepeatedly(\"feature_shape\")",
+        "Message": "  Expected: <System.InvalidOperationException>\r\n  But was:  null\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioPreprocessorTests.cs",
+        "Line": 91
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioPreprocessorTests.InvalidScheduledOutputsAreRejectedRepeatedly(\"mask_shape\")",
+        "Message": "  Expected: <System.InvalidOperationException>\r\n  But was:  null\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioPreprocessorTests.cs",
+        "Line": 91
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioPreprocessorTests.InvalidScheduledOutputsAreRejectedRepeatedly(\"feature_type\")",
+        "Message": "  Expected: <System.InvalidOperationException>\r\n  But was:  null\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioPreprocessorTests.cs",
+        "Line": 91
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioPreprocessorTests.InvalidScheduledOutputsAreRejectedRepeatedly(\"mask_type\")",
+        "Message": "  Expected: <System.InvalidOperationException>\r\n  But was:  null\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioPreprocessorTests.cs",
+        "Line": 91
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioPreprocessorTests.MismatchedFixedGraphContractIsRejected(\"input_name\")",
+        "Message": "  Expected: <System.ArgumentException>\r\n  But was:  null\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioPreprocessorTests.cs",
+        "Line": 71
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioPreprocessorTests.MismatchedFixedGraphContractIsRejected(\"mask_name\")",
+        "Message": "  Expected: <System.ArgumentException>\r\n  But was:  null\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioPreprocessorTests.cs",
+        "Line": 71
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioPreprocessorTests.MismatchedFixedGraphContractIsRejected(\"input_type\")",
+        "Message": "  Expected: <System.ArgumentException>\r\n  But was:  null\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioPreprocessorTests.cs",
+        "Line": 71
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioPreprocessorTests.MismatchedFixedGraphContractIsRejected(\"mask_type\")",
+        "Message": "  Expected: <System.ArgumentException>\r\n  But was:  null\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioPreprocessorTests.cs",
+        "Line": 71
+      }
+    ],
+    "HasFailures": true,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Failed first 10 of 21 failures listed; see XmlPath for full results.",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 0,
+    "SkippedCount": 0,
+    "Status": "Failed",
+    "Success": false,
+    "TestCount": 21,
+    "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\.uloop\\outputs\\TestResults\\20261013_015712_5319646_953608087931489bb1a276c0eaebfc07.xml"
+  },
+  "green": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T01:58:42.0235372Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 21,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 21,
+    "XmlPath": null
+  },
+  "small_graph_gpu_validated": true,
+  "real_preprocessing_validated": false,
+  "git_runtime_validated": false,
+  "encoders_validated": false,
+  "end_to_end_validated": false,
+  "fresh_consumer_validated": false,
+  "source_scope": "New Runtime and tests staged in existing consumer Editor test assembly; AudioPcmInput borrowed from pinned Git Runtime 5c8f991.",
+  "source_hashes": {
+    "Packages/com.ayutaz.embeddinggemma/Tests/Editor/AudioPreprocessorTests.cs": "4d2ec526a600485e441c0234b237ec71fdc59305be601564ccf574f2273ad74a",
+    "Packages/com.ayutaz.embeddinggemma/Runtime/AudioPreprocessor.cs": "a80b5f062e78203861fa3ba1e19cdd0d27c9b5f0fd23fad516fc36c4e575ed85"
+  },
+  "log_hashes": {
+    "audio-preprocessor-fixture-error.log": "2ee55d71e9178fc839be0cad9d5cf2fadf078f9685107d94b6e1bdc27ec9462c",
+    "audio-preprocessor-first-green.log": "569bc8bd3d99f1a4066fb3c08f9c08bf6bf5034f82133db985a1bb5b430d8b5f",
+    "audio-preprocessor-red.xml": "4353208b531f0d6ccda38b65f3947da8ddc37580f2991360d7e04479fd7a3dfc",
+    "audio-preprocessor-red.log": "f851968ccb58f45386876699e524cd22abbe2fd2019c145857187e185a3bddb8"
+  }
+}

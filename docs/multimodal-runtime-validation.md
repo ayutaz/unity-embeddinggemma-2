@@ -1,6 +1,6 @@
 # 共通マルチモーダル本体のRuntime契約
 
-更新日: 2026-10-13。[全体TDD計画](multimodal-tdd-plan.md)のC3 / C4を進める。`MultimodalBackboneProfile`と`MultimodalBackbone`をUPM Runtimeへ追加する。**画像 / 音声encoder、公式prompt構築、GPU前処理、実モデルの最終768次元照合はこの変更の完了範囲に含めない。**
+更新日: 2026-10-13。[全体TDD計画](multimodal-tdd-plan.md)のC3 / C4を進める。`MultimodalBackboneProfile`と`MultimodalBackbone`をUPM Runtimeへ追加し、合成project済み特徴量を使う実text重み・1024長backboneのSentis受け入れを確認した。**画像 / 音声encoder、公式prompt構築、GPU前処理から最終768次元までのend-to-end照合は未完了。** 新Runtime assemblyの固定Git導入も後段で確認する。以下の初回TDD / import失敗の履歴と、末尾の修正後実モデル4条件の合格を分けて記録する。
 
 ## APIと所有権
 
@@ -44,7 +44,7 @@ Unityでは旧graphの小さいimport 2条件と、同じimport失敗を4回繰�
 2. flat Gather修正後の実backbone exportをActionsで生成・照合し、1024長・実encoder feature数profileをSentisでimport / 保存・再読込する。このAPIで独立Pythonの最終768次元へ照合し、CPU / GPUCompute × FP32 / Float16を別判定する。
 3. 公式processorのprompt / 特殊token・maskを生成するAPI、ImageEmbedder / AudioEmbedderとGPU前処理をTDDで接続する。text128長の既存APIは維持する。
 4. 固定candidateの空Git consumerへRuntime assemblyを導入し、sample・Player・全必須実機へ進む。正式Release / tagは作成しない。
-# 実1024長backboneのSentis受け入れ追記
+## 実1024長backboneのSentis受け入れ追記
 
 2026-10-13に[CI 38325796546](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38325796546)の修正後graphを監査し、Unity 6000.3.21f1 / Sentis 2.6.1 / Windows / RTX 4070 Ti SUPER / Direct3D12でCPU / GPUCompute × FP32 / Float16の全4条件を実行した。compile成功、4 passed / failed 0 / skipped 0 / inconclusive 0。[固定sourceと全条件](results/multimodal-backbone-sentis-windows-20261013.json)。
 

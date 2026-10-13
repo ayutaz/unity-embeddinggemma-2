@@ -101,7 +101,11 @@ class MultimodalEmbeddingExport(TextEmbeddingExport):
         for slots, features in ((image_slots, image_features), (audio_slots, audio_features)):
             padded = torch.cat((torch.zeros_like(embeddings[0, :1]), features), dim=0)
             indices = slots.to(torch.int64).cumsum(dim=1)
-            gathered = padded[indices]
+            # Sentis imports multidimensional advanced indexing through
+            # GatherND / Transpose. Keep the feature placement's rank explicit
+            # with a flat Gather followed by the fixed batch-one shape.
+            gathered = torch.index_select(padded, 0, indices.reshape(-1)).reshape(
+                1, self.sequence_length, self.model.config.hidden_size)
             embeddings = torch.where(slots.unsqueeze(-1), gathered, embeddings)
         output = self.model(inputs_embeds=embeddings, attention_mask=self.attention_masks(input_ids, attention_mask),
                             position_ids=self.positions, return_dict=True)

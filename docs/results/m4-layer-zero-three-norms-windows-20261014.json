@@ -1,0 +1,164 @@
+{
+  "scope": "layer_zero_three_internal_norm_observations",
+  "harness_source": "1f1414c7f4810fed440eb1b9a8aa0bad40f2a207",
+  "harness_file_sha256": "f304caf7f9b1ff548f4d82434f91802703a396a4b07d188641512233865c6bd5",
+  "runtime_source": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+  "native_reference_action_run": 38459688048,
+  "native_replay_report_sha256": "39d563e2c8f186f397240b225b5fbb42ea8d7b6321d178bd7120135c2b039150",
+  "compile_errors": 0,
+  "compile_warnings": 0,
+  "python_anchor_red": 4,
+  "related_python_green": 15,
+  "cli": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T20:13:25.1338354Z",
+    "FailedCount": 2,
+    "FailedTests": [
+      {
+        "FullName": "EmbeddingGemma.Tests.CurrentAudioLayerZeroNormTests.CompareNativeInternalNormsOnUnchangedSavedEncoder(CPU)",
+        "Message": "  Fixed native layer-zero numeric gate failed; see saved stages.\r\n  Expected: True\r\n  But was:  False\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CurrentAudioLayerZeroNormTests.cs",
+        "Line": 93
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.CurrentAudioLayerZeroNormTests.CompareNativeInternalNormsOnUnchangedSavedEncoder(GPUCompute)",
+        "Message": "  Fixed native layer-zero numeric gate failed; see saved stages.\r\n  Expected: True\r\n  But was:  False\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CurrentAudioLayerZeroNormTests.cs",
+        "Line": 93
+      }
+    ],
+    "HasFailures": true,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Failed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 0,
+    "SkippedCount": 0,
+    "Status": "Failed",
+    "Success": false,
+    "TestCount": 2,
+    "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\.uloop\\outputs\\TestResults\\20261013_201325_1388741_5dfc3acd38c347108df0b7f38b5c1757.xml"
+  },
+  "cpu": {
+    "success": false,
+    "observation_completed": true,
+    "scope": "silence_layer_zero_three_internal_norms",
+    "runtime_source": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "native_replay_source": "9800c52957478fafa1377e2caa215f9f2e1477b0",
+    "requested_backend": "CPU",
+    "runtime_overlay": false,
+    "unity_version": "6000.3.21f1",
+    "graphics_device": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "stages": [
+      {
+        "elementwise_passed": false,
+        "mismatches": 2,
+        "maximum_absolute_error": 0.00013136863708496094,
+        "maximum_tolerance_ratio": 2.1204016560003884,
+        "stage": "norm_pre_attn",
+        "layer_index": 44,
+        "tensor_index": 122,
+        "actual_backend": "CPU",
+        "coefficient_sha256": "c22ca47d6f70b7da106ca99050f334f11937ab4f95d14ff7093b28f0144de607"
+      },
+      {
+        "elementwise_passed": false,
+        "mismatches": 1,
+        "maximum_absolute_error": 7.62939453125E-05,
+        "maximum_tolerance_ratio": 1.0575427286748973,
+        "stage": "norm_post_attn",
+        "layer_index": 93,
+        "tensor_index": 259,
+        "actual_backend": "CPU",
+        "coefficient_sha256": "04ca760fb1df7ade391ed9e8ae11171aa89d91b616fcec04f9684cbf166577c1"
+      },
+      {
+        "elementwise_passed": false,
+        "mismatches": 9,
+        "maximum_absolute_error": 0.0001373291015625,
+        "maximum_tolerance_ratio": 1.3983720504092492,
+        "stage": "norm_out",
+        "layer_index": 151,
+        "tensor_index": 407,
+        "actual_backend": "CPU",
+        "coefficient_sha256": "1523738acdf79e3b34e42c2dc4c7145dd1b9c0db1dd3f77120d7ca37b7c186e9"
+      }
+    ],
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "started_utc": "2026-10-13T20:13:10.8787409Z",
+    "coefficient_bound_outputs": {
+      "norm_pre_attn": 122,
+      "norm_post_attn": 259,
+      "norm_out": 407
+    },
+    "normal_final_matches_observed_bits": true,
+    "first_failed_observed_stage": "norm_pre_attn",
+    "error": "NUnit.Framework.AssertionException:   Fixed native layer-zero numeric gate failed; see saved stages.\r\n  Expected: True\r\n  But was:  False\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Tests.CurrentAudioLayerZeroNormTests.CompareNativeInternalNormsOnUnchangedSavedEncoder (Unity.InferenceEngine.BackendType backend) [0x007fb] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CurrentAudioLayerZeroNormTests.cs:89 ",
+    "completed_utc": "2026-10-13T20:13:19.5167086Z"
+  },
+  "gpu": {
+    "success": false,
+    "observation_completed": true,
+    "scope": "silence_layer_zero_three_internal_norms",
+    "runtime_source": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "native_replay_source": "9800c52957478fafa1377e2caa215f9f2e1477b0",
+    "requested_backend": "GPUCompute",
+    "runtime_overlay": false,
+    "unity_version": "6000.3.21f1",
+    "graphics_device": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "stages": [
+      {
+        "elementwise_passed": false,
+        "mismatches": 280,
+        "maximum_absolute_error": 0.00013071298599243164,
+        "maximum_tolerance_ratio": 1.6591489397483195,
+        "stage": "norm_pre_attn",
+        "layer_index": 44,
+        "tensor_index": 122,
+        "actual_backend": "GPUCompute",
+        "coefficient_sha256": "c22ca47d6f70b7da106ca99050f334f11937ab4f95d14ff7093b28f0144de607"
+      },
+      {
+        "elementwise_passed": true,
+        "mismatches": 0,
+        "maximum_absolute_error": 3.814697265625E-05,
+        "maximum_tolerance_ratio": 0.6759525141920583,
+        "stage": "norm_post_attn",
+        "layer_index": 93,
+        "tensor_index": 259,
+        "actual_backend": "GPUCompute",
+        "coefficient_sha256": "04ca760fb1df7ade391ed9e8ae11171aa89d91b616fcec04f9684cbf166577c1"
+      },
+      {
+        "elementwise_passed": false,
+        "mismatches": 8,
+        "maximum_absolute_error": 9.1552734375E-05,
+        "maximum_tolerance_ratio": 2.149710387100482,
+        "stage": "norm_out",
+        "layer_index": 151,
+        "tensor_index": 407,
+        "actual_backend": "GPUCompute",
+        "coefficient_sha256": "1523738acdf79e3b34e42c2dc4c7145dd1b9c0db1dd3f77120d7ca37b7c186e9"
+      }
+    ],
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "started_utc": "2026-10-13T20:13:19.533804Z",
+    "coefficient_bound_outputs": {
+      "norm_pre_attn": 122,
+      "norm_post_attn": 259,
+      "norm_out": 407
+    },
+    "normal_final_matches_observed_bits": true,
+    "first_failed_observed_stage": "norm_pre_attn",
+    "error": "NUnit.Framework.AssertionException:   Fixed native layer-zero numeric gate failed; see saved stages.\r\n  Expected: True\r\n  But was:  False\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Tests.CurrentAudioLayerZeroNormTests.CompareNativeInternalNormsOnUnchangedSavedEncoder (Unity.InferenceEngine.BackendType backend) [0x007fb] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CurrentAudioLayerZeroNormTests.cs:89 ",
+    "completed_utc": "2026-10-13T20:13:24.9955817Z"
+  },
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

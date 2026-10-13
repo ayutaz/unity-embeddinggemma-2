@@ -154,7 +154,7 @@ jobs:
           retention-days: 3
           if-no-files-found: warn
       - name: Validate real audio encoder and projector against official PCM-derived features
-        run: uv run --locked python -m embeddinggemma_tools prepare-audio-encoder --preprocessing ../artifacts/audio-preprocessing --output ../artifacts/audio-encoder
+        run: uv run --locked python -m embeddinggemma_tools prepare-audio-encoder --preprocessing ../artifacts/audio-preprocessing --output ../artifacts/audio-encoder --native-silu
         env:
           OMP_NUM_THREADS: '4'
           MKL_NUM_THREADS: '4'

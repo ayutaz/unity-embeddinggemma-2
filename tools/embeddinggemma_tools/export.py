@@ -375,14 +375,52 @@ class AudioFeedForwardStagesExport(nn.Module):
 
 
 def export_audio_pt2(wrapper, features, destination):
+    # Keep the native kernel for Python accuracy. Sentis imports the standard
+    # Swish ONNX companion, not this native-reference Torch program.
+    export_audio_native_pt2(wrapper,features,destination)
+
+
+def export_audio_native_pt2(wrapper, features, destination):
+    """Retain the actual CPU SiLU operation for the independent Python gate."""
     wrapper.validate_inputs(features)
-    # Match the pinned official CPU SiLU kernel's division order. Core ATen's
-    # default x * sigmoid(x) introduces an extra rounded reciprocal multiply.
-    # Other exporters retain their existing default decomposition table.
     from torch._decomp import core_aten_decompositions
-    decompositions = core_aten_decompositions()
-    decompositions[torch.ops.aten.silu.default] = lambda value: value / (1 + torch.exp(-value))
-    _save_program(wrapper.eval(), (features,), destination, decompositions=decompositions)
+    decompositions=core_aten_decompositions()
+    decompositions.pop(torch.ops.aten.silu.default,None)
+    _save_program(wrapper.eval(),(features,),destination,decompositions=decompositions)
+
+
+def export_audio_native_onnx(wrapper, features, destination):
+    """Bridge the legacy export limit to standard Swish without runtime plugins."""
+    import tempfile
+    import onnx
+    destination=Path(destination)
+    destination.parent.mkdir(parents=True,exist_ok=True)
+    domain="com.ayutaz.export"
+    def silu_symbolic(graph, value):
+        return graph.op(domain+"::NativeSiLU",value).setType(value.type())
+    torch.onnx.register_custom_op_symbolic("aten::silu",silu_symbolic,20)
+    try:
+        with tempfile.TemporaryDirectory(prefix="audio-onnx-",dir=destination.parent) as directory:
+            if not Path(directory).resolve().is_relative_to(destination.parent.resolve()):
+                raise ValueError("ONNX temporary path escaped the output directory")
+            intermediate=Path(directory)/"intermediate.onnx"
+            with torch.no_grad():
+                torch.onnx.export(wrapper.eval(),(features,),intermediate,dynamo=False,opset_version=20,
+                    input_names=["input"],output_names=["output"],custom_opsets={domain:1})
+            model=onnx.load(intermediate)
+            model=onnx.version_converter.convert_version(model,24)
+            for node in model.graph.node:
+                if node.domain==domain and node.op_type=="NativeSiLU":
+                    node.domain="";node.op_type="Swish"
+                elif node.domain not in ("","ai.onnx"):
+                    raise ValueError("Audio ONNX export retained a nonstandard runtime domain")
+            imports=[item for item in model.opset_import if item.domain!=domain]
+            del model.opset_import[:]
+            model.opset_import.extend(imports)
+            onnx.checker.check_model(model)
+            onnx.save_model(model,destination)
+    finally:
+        torch.onnx.unregister_custom_op_symbolic("aten::silu",20)
 
 
 def export_pt2(

@@ -13,7 +13,7 @@ import numpy as np
 from transformers import AutoTokenizer
 
 from .export import (AudioEncoderExport, AudioEncoderStagesExport, AudioFeedForwardStagesExport, MultimodalEmbeddingExport, VisionEncoderExport,
-                     export_audio_pt2, export_multimodal_pt2, export_pt2, export_vision_pt2)
+                     export_audio_pt2, export_audio_native_onnx, export_multimodal_pt2, export_pt2, export_vision_pt2)
 from .model import load_audio_models, load_text_model, load_vision_models
 from .reference import build_reference, load_cases, write_reference
 from .search import generate_search_reference
@@ -207,7 +207,7 @@ def diagnose_audio_layer_stages(audio, projection, features, frame_mask, destina
     return result
 
 
-def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODEL_REVISION, source_commit="local"):
+def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODEL_REVISION, source_commit="local", native_silu=False):
     """Official audio tower/projector vs saved graph on audited PCM-derived features.
 
     Independent inputs are the official NumPy preprocessing references, not the
@@ -336,6 +336,14 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
                                  feature_width=projection.text_hidden_size, frame_mask_shape=shape[:2],
                                  frame_mask=mask_path.relative_to(destination).as_posix(),
                                  graph=graph.relative_to(destination).as_posix())
+        if native_silu:
+            imported_graph=directory/"audio.onnx"
+            export_audio_native_onnx(wrapper,inputs[0][1],imported_graph)
+            produced.append(imported_graph)
+            profiles[profile].update(native_graph=graph.relative_to(destination).as_posix(),
+                                     graph=imported_graph.relative_to(destination).as_posix(),import_format="onnx")
+        else:
+            profiles[profile]["import_format"]="native_torch_reference_only"
         del exported, wrapper
     encoder_metadata = dict(model_id=MODEL_ID, model_revision=revision, source_commit=source_commit,
                             stage="audio_encoder_projector_only", dtype="float32", batch_size=1,
@@ -354,6 +362,9 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
                    minimum_cosine=min(similarities), unity_validated=False, end_to_end_validated=False,
                    metadata=encoder_metadata, files={path.relative_to(destination).as_posix():
                        dict(bytes=path.stat().st_size, sha256=digest(path)) for path in produced})
+    summary["native_silu_preserved"]=True
+    summary["onnx_structurally_validated"]=native_silu
+    summary["onnx_numerically_validated"]=False
     (destination / "audio-encoder-validation.json").write_text(json.dumps(summary, indent=2, allow_nan=False) + "\n",
                                                               encoding="utf-8")
     return summary

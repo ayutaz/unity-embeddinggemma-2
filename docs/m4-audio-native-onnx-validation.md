@@ -51,6 +51,10 @@ NumPy評価の不合格と、実Sentis subsampleのCPU / GPU合格を分ける�
 
 別の`Audio native reference for runtime diagnostics` workflowはmanual、または同repoのPRへ`audio-runtime-diagnostics` labelを付けた場合だけ実行する。contents readのみ、Secretsなし、pull_request_targetなし。NumPy不合格のstepへcontinue-on-errorを付けずworkflowも失敗のままにするが、always uploadで診断artifactを保持する。小さいTDDはAPI / CLIの4 red、workflow欠落の1 assertion red → 最終関連18 passed。UTF-8 workflowを既定cp932で読む初回testの1失敗は修正し、数値のredに合算しない。[収集TDD receipt](results/m4-audio-native-runtime-reference-tdd-20261013.json)。実重みの全6参照はこの時点では未実行。
 
+その後の[全参照収集run 38375956180](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38375956180)で、silence / impulse / sine / nyquist / noise / padded_noiseの全6信号、2 profile（280 / 210 soft token）のnative保存経路が固定elementwise条件とcosine条件に合格した。minimum cosineは0.9999997615814209。producer `271f5a12ca2aab081eb330f45cf593d404330374`とhead `b3961877234dc6e47d7ffd47093f2efa03468c72`を区別する。NumPyは全6信号で不合格のまま、validation success=false / workflow failure / 非zero終了を維持した。[全native参照receipt](results/m4-audio-all-six-native-reference-real-20261013.json)。これは全encoderのPython native参照完了であり、ONNX / Sentis / 最終embeddingの完了ではない。
+
+実FP32 Sentisの全6信号をCPU / GPUで照合する`AudioEncoderReferenceTests`を準備した。選択したONNX・入力 / mask・referenceのhash、元の6 ID、native完了sourceを監査し、profileごとにimport / 保存 / 解放する。通常の数値不一致は各caseへ残して他の信号も評価し、全6信号の合格が揃うまでconditionを成功にしない。Float16とGPU前処理 / backbone連結は別gate。現在はcompile成功のみで、実モデルの転送完了後に実行する。
+
 Actionsで元の実重み6信号を実行し、native保存参照と全encoder標準ONNXの数値結果を分けて判定する。PR #40の過去のsilence不合格・残り5信号未実行はそのsourceの記録として保持する。候補が失敗した場合も固定許容差を緩めず、最初の演算差を小さいredへ落とす。
 
 Python全gate合格後も、Sentis import / 保存 / 再読込、全6信号のCPU / 実GPUと採用Float16形式、GPU前処理 → 実encoder → 共通本体の連結、最終API / 検索・再生・明示収録 / Player / 必須実機は別gate。小さいONNX greenや構造checkerを実モデル・GPU成功へ流用しない。

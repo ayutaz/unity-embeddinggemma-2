@@ -49,6 +49,12 @@ jobs:
           uv run --locked python -m embeddinggemma_tools prepare-audio-runtime-stages
           --encoder-source ../artifacts/audio-runtime-reference
           --output ../artifacts/audio-runtime-stages
+      - name: Generate official final audio vectors and native saved chain
+        if: ${{ always() && hashFiles('artifacts/audio-runtime-reference/audio-encoder-validation.json') != '' }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools prepare-audio-embeddings
+          --encoder-source ../artifacts/audio-runtime-reference
+          --output ../artifacts/audio-final-reference
       - name: Record diagnostic scope without claiming numeric success
         if: always()
         shell: bash
@@ -74,6 +80,14 @@ jobs:
             artifacts/audio-runtime-reference/
             artifacts/audio-runtime-stages/
             artifacts/audio-runtime-preprocessing/audio-validation.json
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: warn
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: audio-final-reference-${{ github.sha }}
+          path: artifacts/audio-final-reference/
           compression-level: 0
           retention-days: 3
           if-no-files-found: warn

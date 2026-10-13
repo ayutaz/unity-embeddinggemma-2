@@ -26,6 +26,20 @@ def load_image_embedding_model(snapshot: Path):
     return core.eval()
 
 
+def load_audio_embedding_model(snapshot: Path):
+    """Official audio-only forward, allocating only strict active text/audio weights."""
+    configuration = json.loads((snapshot / "config.json").read_text(encoding="utf-8"))
+    configuration["vision_config"] = None
+    config = EmbeddingGemma2Config.from_dict(configuration)
+    config.text_config._attn_implementation = "eager"
+    config.audio_config._attn_implementation = "sdpa"
+    with torch.device("meta"):
+        core = EmbeddingGemma2Model(config)
+    core.language_model = load_text_model(snapshot)
+    core.audio_tower, core.embed_audio = load_audio_models(snapshot)
+    return core.eval()
+
+
 def load_text_model(snapshot: Path) -> EmbeddingGemma2TextModel:
     configuration = json.loads((snapshot / "config.json").read_text(encoding="utf-8"))
     config = EmbeddingGemma2TextConfig.from_dict(configuration["text_config"])

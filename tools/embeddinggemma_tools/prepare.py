@@ -583,6 +583,164 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
     return summary
 
 
+def prepare_audio_runtime_stages(snapshot, encoder, destination, *, revision=MODEL_REVISION, source_commit="local"):
+    """Persist native stages only when both final paths reproduce the audited source.
+
+    Context validation is independent of encoder numerical acceptance. An ONNX
+    collection with failures can supply native references, never an encoder pass.
+    """
+    from onnx.reference import ReferenceEvaluator
+
+    snapshot, encoder, destination = Path(snapshot), Path(encoder).resolve(), Path(destination).resolve()
+    if destination == encoder or destination.is_relative_to(encoder):
+        raise ValueError("stage reference destination must be separate from the encoder source")
+    destination.mkdir(parents=True, exist_ok=True)
+    for name in ("audio-stage-validation.json", "audio-stage-reference.json"):
+        (destination / name).unlink(missing_ok=True)
+
+    def digest(path):
+        with path.open("rb") as stream:
+            return hashlib.file_digest(stream, "sha256").hexdigest()
+
+    audit = json.loads((encoder / "audio-encoder-validation.json").read_text(encoding="utf-8"))
+    metadata = audit.get("metadata", {})
+    if (re.fullmatch(r"[0-9a-f]{40}", revision) is None
+            or audit.get("stage") != "audio_encoder_projector_only"
+            or audit.get("native_reference_complete") is not True
+            or audit.get("native_silu_preserved") is not True
+            or audit.get("onnx_structurally_validated") is not True
+            or metadata.get("source_commit") != source_commit
+            or metadata.get("model_revision") != revision
+            or metadata.get("dtype") != "float32"
+            or metadata.get("feature_rtol") != 1e-4 or metadata.get("feature_atol") != 1e-5):
+        raise ValueError("stage reference requires pinned complete native and standard ONNX sources")
+
+    audited = {}
+    def artifact(name):
+        if name in audited:
+            return audited[name]
+        if not isinstance(name, str):
+            raise ValueError("stage reference artifact path must be a string")
+        path = (encoder / name).resolve()
+        item = audit.get("files", {}).get(name, {})
+        if (not path.is_relative_to(encoder) or not path.is_file()
+                or path.stat().st_size != item.get("bytes") or digest(path) != item.get("sha256")):
+            raise ValueError(f"stage reference artifact hash/path mismatch: {name}")
+        audited[name] = path
+        return path
+
+    original_path = artifact("audio-encoder-reference.json")
+    reference = json.loads(original_path.read_text(encoding="utf-8"))
+    required_signals = {"silence", "impulse", "sine", "nyquist", "noise", "padded_noise"}
+    cases, profiles = reference.get("cases", []), reference.get("profiles", {})
+    if (reference.get("metadata") != metadata or len(cases) != 6
+            or {row.get("id") for row in cases} != required_signals or audit.get("case_count") != 6
+            or len(profiles) != 2 or audit.get("profile_count") != 2
+            or {row.get("profile") for row in cases} != set(profiles)):
+        raise ValueError("stage reference case/profile/metadata mismatch")
+    for name in ("config.json", "processor_config.json", "model.safetensors"):
+        if digest(snapshot / name) != metadata.get("input_sha256", {}).get(name):
+            raise ValueError(f"stage reference snapshot hash mismatch: {name}")
+
+    groups = {}
+    for profile, spec in profiles.items():
+        shape = spec.get("feature_shape")
+        if (not isinstance(shape, list) or len(shape) != 3 or shape[0] != 1 or shape[2] != 128
+                or type(shape[1]) is not int or shape[1] <= 0
+                or spec.get("frame_mask_shape") != shape[:2] or spec.get("import_format") != "onnx"
+                or re.fullmatch(r"frames-\d+-valid-\d+", profile) is None):
+            raise ValueError("stage reference feature profile mismatch")
+        graph = artifact(spec["graph"])
+        raw_mask = np.fromfile(artifact(spec["frame_mask"]), dtype="<i4")
+        if raw_mask.size != shape[1]:
+            raise ValueError("stage reference mask size mismatch")
+        frame_mask = torch.from_numpy(raw_mask.reshape(shape[:2])).to(torch.int64)
+        if (not torch.all((frame_mask == 0) | (frame_mask == 1)) or not frame_mask.any()
+                or torch.any(frame_mask[:, 1:] > frame_mask[:, :-1])
+                or profile != f"frames-{shape[1]}-valid-{int(frame_mask.sum())}"):
+            raise ValueError("stage reference requires a finite nonempty prefix mask")
+        inputs = []
+        for row in cases:
+            if row["profile"] != profile:
+                continue
+            raw = np.fromfile(artifact(row["input_features"]), dtype="<f4")
+            if raw.size != int(np.prod(shape)):
+                raise ValueError("stage reference feature size mismatch")
+            features = torch.from_numpy(raw.reshape(shape))
+            expected = torch.tensor(row["features"], dtype=torch.float32)
+            if (not torch.isfinite(features).all() or torch.any(features[frame_mask == 0] != 0)
+                    or expected.shape != (spec["feature_count"], spec["feature_width"])
+                    or not torch.isfinite(expected).all()):
+                raise ValueError("stage reference requires finite, zero-padded inputs and original outputs")
+            inputs.append((row, features, expected))
+        groups[profile] = (spec, graph, frame_mask, inputs)
+
+    # Every source/input is checked before loading weights or generating graphs.
+    audio, projection = load_audio_models(snapshot)
+    produced, stage_profiles, stage_rows = [], {}, []
+    for profile, (spec, graph, frame_mask, inputs) in groups.items():
+        directory = destination / profile
+        directory.mkdir(parents=True, exist_ok=True)
+        wrapper = AudioEncoderStagesExport(audio, projection, frame_mask)
+        names = wrapper.stage_names
+        native = []
+        for row, features, expected in inputs:
+            stages = capture_official_audio_stages(audio, projection, features, frame_mask)
+            compare_audio_stage_outputs(names, stages, stages)  # validate shape/dtype/finite for every stage
+            if not torch.equal(stages[-1], expected):
+                raise ValueError(f"native stage final does not match original reference: {row['id']}")
+            native.append(stages)
+        original_evaluator = ReferenceEvaluator(str(graph))
+        originals = [original_evaluator.run(None, {"input": features.numpy()})[0]
+                     for _, features, _ in inputs]
+        del original_evaluator
+        gc.collect()
+        trace = directory / "audio-stages.onnx"
+        export_audio_native_onnx(wrapper, inputs[0][1], trace)
+        produced.append(trace)
+        evaluator = ReferenceEvaluator(str(trace))
+        if len(evaluator.output_names) != len(names):
+            raise ValueError("stage reference trace output count mismatch")
+        stage_profiles[profile] = dict(feature_shape=spec["feature_shape"], graph=trace.relative_to(destination).as_posix(),
+                                       original_graph_sha256=digest(graph), stage_names=list(names),
+                                       output_names=list(evaluator.output_names))
+        for (row, features, _), stages, original in zip(inputs, native, originals, strict=True):
+            actual = tuple(torch.from_numpy(value) for value in evaluator.run(None, {"input": features.numpy()}))
+            comparison = compare_audio_stage_outputs(names, stages, actual)
+            if (original.dtype != np.float32 or original.shape != tuple(actual[-1].shape)
+                    or not np.isfinite(original).all() or not np.array_equal(actual[-1].numpy(), original)):
+                raise ValueError(f"trace stage final does not match original ONNX output: {row['id']}")
+            entries = []
+            for index, (name, value) in enumerate(zip(names, stages, strict=True)):
+                path = directory / f"{row['id']}-stage-{index:02d}-fp32.bin"
+                value.numpy().astype("<f4").tofile(path)
+                produced.append(path)
+                entries.append(dict(name=name, output_index=index, shape=list(value.shape),
+                                    expected=path.relative_to(destination).as_posix()))
+            stage_rows.append(dict(id=row["id"], profile=profile, input_features=row["input_features"], stages=entries,
+                                   native_final_matches_original=True, trace_numpy_matches_original=True,
+                                   numpy_stage_comparison=comparison))
+        del evaluator, wrapper, native, originals
+        gc.collect()
+    stage_metadata = dict(stage="audio_runtime_stage_context_only", source_commit=source_commit, model_revision=revision,
+                          encoder_reference_sha256=digest(original_path), input_sha256=metadata["input_sha256"],
+                          feature_rtol=1e-4, feature_atol=1e-5,
+                          versions={name: importlib.metadata.version(name) for name in ("torch", "transformers", "onnx")})
+    reference_path = destination / "audio-stage-reference.json"
+    reference_path.write_text(json.dumps(dict(metadata=stage_metadata, profiles=stage_profiles, cases=stage_rows),
+                                         indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    produced.append(reference_path)
+    summary = dict(success=True, stage=stage_metadata["stage"], context_validated=True,
+                   case_count=len(stage_rows), profile_count=len(stage_profiles), metadata=stage_metadata,
+                   original_onnx_numerically_validated=audit["onnx_numerically_validated"],
+                   full_encoder_validated=False, unity_validated=False, end_to_end_validated=False,
+                   files={path.relative_to(destination).as_posix():
+                          dict(bytes=path.stat().st_size, sha256=digest(path)) for path in produced})
+    (destination / "audio-stage-validation.json").write_text(json.dumps(summary, indent=2, allow_nan=False) + "\n",
+                                                            encoding="utf-8")
+    return summary
+
+
 def load_image_processor(snapshot):
     from transformers import Gemma4ImageProcessor
     configuration = json.loads((Path(snapshot) / "processor_config.json").read_text(encoding="utf-8"))

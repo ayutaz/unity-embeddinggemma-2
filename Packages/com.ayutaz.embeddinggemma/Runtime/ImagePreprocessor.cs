@@ -7,14 +7,24 @@ using UnityEngine.Rendering;
 
 namespace EmbeddingGemma
 {
-    /// <summary>Official 8-bit RGB image preprocessing on GPUCompute, batch one.</summary>
+    /// <summary>Official 8-bit RGB image preprocessing on CPU or GPUCompute, batch one.</summary>
     /// <remarks>Main thread only. Input textures are borrowed. Keep each owned result alive
-    /// until its downstream GPU work completes. No intermediate pixel readback is performed.</remarks>
+    /// until its downstream work completes. GPUCompute performs no intermediate pixel readback.
+    /// CPU reads readable Texture2D storage directly; GPU-only inputs require one synchronous input readback.</remarks>
     public sealed class ImagePreprocessor : IDisposable, IImagePreprocessor
     {
-        public BackendType Backend => BackendType.GPUCompute;
+        public BackendType Backend { get; }
         bool disposed;
         ComputeShader shader;
+
+        public ImagePreprocessor() : this(BackendType.GPUCompute) { }
+
+        public ImagePreprocessor(BackendType backend)
+        {
+            if (backend != BackendType.CPU && backend != BackendType.GPUCompute)
+                throw new ArgumentOutOfRangeException(nameof(backend), "Use CPU or GPUCompute explicitly.");
+            Backend = backend;
+        }
 
         public ImagePreprocessingResult Process(Texture input)
         {
@@ -33,7 +43,7 @@ namespace EmbeddingGemma
                 throw new ArgumentException("RenderTexture must already exist and be single-sample 2D.", nameof(input));
             if (input.width < 1 || input.height < 1 || input.width > 8192 || input.height > 8192)
                 throw new ArgumentException("Expected image dimensions in [1,8192]. Input is never cropped.", nameof(input));
-            if (!SystemInfo.supportsComputeShaders)
+            if (Backend == BackendType.GPUCompute && !SystemInfo.supportsComputeShaders)
                 throw new NotSupportedException("Image preprocessing requires an actual compute GPU.");
 
             var factor = Math.Sqrt(645120.0 / ((double)input.width * input.height));
@@ -42,6 +52,8 @@ namespace EmbeddingGemma
             if (height == 0) { height = 48; width = Math.Min((int)Math.Floor((double)input.width / input.height) * 48, 13440); }
             else if (width == 0) { width = 48; height = Math.Min((int)Math.Floor((double)input.height / input.width) * 48, 13440); }
             if (width * height > 645120) throw new ArgumentException("Image exceeds the official patch budget.", nameof(input));
+
+            if (Backend == BackendType.CPU) return ProcessCpu(input, width, height);
 
             if (shader == null)
             {
@@ -65,10 +77,8 @@ namespace EmbeddingGemma
                 }
                 var xr = Buffer(horizontal.Ranges); var xw = Buffer(horizontal.Weights);
                 var yr = Buffer(vertical.Ranges); var yw = Buffer(vertical.Weights);
-                var positions = new int[5040]; Array.Fill(positions, -1);
+                var positions = Positions(width, height);
                 var patchCount = width / 16 * (height / 16);
-                for (var patch = 0; patch < patchCount; patch++)
-                { positions[2 * patch] = patch % (width / 16); positions[2 * patch + 1] = patch / (width / 16); }
 
                 using var commands = new CommandBuffer { name = "EmbeddingGemma image preprocessing" };
                 commands.ToTensor(input, source, new TextureTransform().SetTensorLayout(TensorLayout.NHWC)
@@ -110,7 +120,86 @@ namespace EmbeddingGemma
             }
         }
 
-        // Geometry-only CPU metadata; image pixels remain on the GPU. Matches PyTorch
+        static int[] Positions(int width, int height)
+        {
+            var positions = new int[5040]; Array.Fill(positions, -1);
+            for (var patch = 0; patch < width / 16 * (height / 16); patch++)
+            { positions[2 * patch] = patch % (width / 16); positions[2 * patch + 1] = patch / (width / 16); }
+            return positions;
+        }
+
+        static Color32[] CpuColors(Texture input)
+        {
+            if (input is Texture2D readable && readable.isReadable) return readable.GetPixels32(0);
+            if (!SystemInfo.supportsAsyncGPUReadback ||
+                !SystemInfo.IsFormatSupported(input.graphicsFormat, GraphicsFormatUsage.ReadPixels))
+                throw new NotSupportedException("CPU preprocessing of GPU-only inputs requires supported texture readback.");
+            // Preserve the exact stored format: converting sRGB to UNorm could change the RGB bytes.
+            var request = AsyncGPUReadback.Request(input, 0, input.graphicsFormat);
+            request.WaitForCompletion();
+            if (request.hasError) throw new InvalidOperationException("Input texture readback failed.");
+            var bytes = request.GetData<byte>();
+            var format = input.graphicsFormat;
+            var channels = format == GraphicsFormat.R8G8B8_UNorm || format == GraphicsFormat.R8G8B8_SRGB ? 3 : 4;
+            var bgra = format == GraphicsFormat.B8G8R8A8_UNorm || format == GraphicsFormat.B8G8R8A8_SRGB;
+            var count = input.width * input.height;
+            if (bytes.Length != count * channels) throw new InvalidOperationException("Input readback has an unexpected storage size.");
+            var colors = new Color32[count];
+            for (var pixel = 0; pixel < count; pixel++)
+            {
+                var offset = pixel * channels;
+                colors[pixel] = new Color32(bytes[offset + (bgra ? 2 : 0)], bytes[offset + 1],
+                    bytes[offset + (bgra ? 0 : 2)], channels == 4 ? bytes[offset + 3] : (byte)255);
+            }
+            return colors;
+        }
+
+        static ImagePreprocessingResult ProcessCpu(Texture input, int width, int height)
+        {
+            var colors = CpuColors(input);
+            var horizontal = Axis(input.width, width);
+            var vertical = Axis(input.height, height);
+            // The horizontal pass is clamped to uint8 before the vertical pass, as in torchvision.
+            var intermediate = new byte[input.height * width * 3];
+            for (var y = 0; y < input.height; y++)
+                for (var x = 0; x < width; x++)
+                {
+                    var minimum = horizontal.Ranges[2 * x]; var count = horizontal.Ranges[2 * x + 1];
+                    int red = 1 << (horizontal.Precision - 1), green = red, blue = red;
+                    for (var k = 0; k < count; k++)
+                    {
+                        // Unity's CPU texture rows start at the bottom; official RGB rows start at the top.
+                        var color = colors[(input.height - y - 1) * input.width + minimum + k];
+                        var weight = horizontal.Weights[x * horizontal.Stride + k];
+                        red += color.r * weight; green += color.g * weight; blue += color.b * weight;
+                    }
+                    var offset = (y * width + x) * 3;
+                    intermediate[offset] = (byte)Math.Clamp(red >> horizontal.Precision, 0, 255);
+                    intermediate[offset + 1] = (byte)Math.Clamp(green >> horizontal.Precision, 0, 255);
+                    intermediate[offset + 2] = (byte)Math.Clamp(blue >> horizontal.Precision, 0, 255);
+                }
+            var values = new float[2520 * 768];
+            var columns = width / 16;
+            for (var y = 0; y < height; y++)
+                for (var x = 0; x < width; x++)
+                {
+                    var minimum = vertical.Ranges[2 * y]; var count = vertical.Ranges[2 * y + 1];
+                    var patch = y / 16 * columns + x / 16;
+                    var output = patch * 768 + (y % 16 * 16 + x % 16) * 3;
+                    for (var channel = 0; channel < 3; channel++)
+                    {
+                        var sum = 1 << (vertical.Precision - 1);
+                        for (var k = 0; k < count; k++)
+                            sum += intermediate[((minimum + k) * width + x) * 3 + channel] * vertical.Weights[y * vertical.Stride + k];
+                        values[output + channel] = Math.Clamp(sum >> vertical.Precision, 0, 255) * (1f / 255f);
+                    }
+                }
+            var pixels = new Tensor<float>(new TensorShape(1, 2520, 768), values);
+            return new ImagePreprocessingResult(pixels, width, height, width / 48 * (height / 48),
+                Positions(width, height), new List<Tensor> {pixels}, new List<ComputeBuffer>());
+        }
+
+        // Geometry-only coefficients shared by CPU and GPU. Matches PyTorch
         // v2.14.1 uint8 bicubic antialias coefficient normalization and signed rounding.
         static (int[] Ranges, int[] Weights, int Stride, int Precision) Axis(int source, int target)
         {

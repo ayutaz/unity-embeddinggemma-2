@@ -65,6 +65,8 @@ Runtime requested / resolved SHAは `8a7d2f0dea30be95a3158830fb0d9c9de895efc4`�
 
 opt-in workflowはnative収集が数値不合格でも、完了manifestがある場合だけalways条件でstage参照生成へ進む。収集stepの非zero終了は維持し、continue-on-errorを使わない。必須model-reference workflowは変更していない。次の実重み実行でこの文脈を確認する。新しいproducerのnative最終値を以前の固定参照と照合し、実Sentis trace最終値も元の実Sentis不合格へ対応付けてから局所診断へ進む。小さいcontext greenを実encoder数値合格へ流用しない。
 
+後続の[実重みrun 38384143753](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38384143753)は元6信号 / 2 profileのstage生成stepとartifact uploadが成功した。CLIは`audio_runtime_stage_context_only` / `context_validated=true`、full encoder / Unity / end-to-endはfalse。producer `bd9cd68e978b05270bc4bd4b0c564a695a94f127`、head `ab3c0034766970f60ebcb4cfc59e3a7f0f8d91d0`を区別する。native収集stepはONNX不一致の非zero終了を維持し、workflow全体はfailure。[CLIとstepの実記録](results/m4-audio-runtime-stage-context-real-20261013.json)。この文脈保証は同runの元encoder参照 / ONNXとの一致であり、以前のproducer `271f…`の固定参照への照合、stage binaryのローカルhash監査、実Sentis段階診断は未実行。全7.49GB archiveを取得せず、次は必要なmetadata / binary / traceだけを選択取得して元の実Sentis不合格へ対応付ける。再生成labelは解除し、後続文書更新で重み生成を繰り返さない。
+
 Actionsで元の実重み6信号を実行し、native保存参照と全encoder標準ONNXの数値結果を分けて判定する。PR #40の過去のsilence不合格・残り5信号未実行はそのsourceの記録として保持する。候補が失敗した場合も固定許容差を緩めず、最初の演算差を小さいredへ落とす。
 
 Python全gate合格後も、Sentis import / 保存 / 再読込、全6信号のCPU / 実GPUと採用Float16形式、GPU前処理 → 実encoder → 共通本体の連結、最終API / 検索・再生・明示収録 / Player / 必須実機は別gate。小さいONNX greenや構造checkerを実モデル・GPU成功へ流用しない。

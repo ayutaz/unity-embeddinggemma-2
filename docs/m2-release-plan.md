@@ -18,7 +18,7 @@ PR #31はdraft / 未統合。2026-10-12に承認された6000.3.21f1で、通常
 
 ## 2026-10-13の計画更新
 
-現在のmainは `73b82bb`（PR #47 / #43まで統合）、[main CI 38331670827](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331670827)成功。共通Runtimeは統合済みで、実画像 / 実音声接続と最終空consumerの受け入れが残る。上のSHA / 測定値は過去の条件として維持する。固定Git導入helperは[PR #36](https://github.com/ayutaz/unity-embeddinggemma-2/pull/36)でPR #31の作業ブランチへ統合済みであり、未着手ではない。mainへの反映と最終candidateの新規導入が残る。今回確認した範囲はmain / open PR / 該当CIと保存された実行証拠であり、上記Secrets / runner / tag / Releaseの件数は過去の読み戻し記録とする。
+現在のmainは `f41546d`（PR #50まで統合）、[main CI 38336919527](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38336919527)成功。共通Runtime・PCM入力・音声前処理Runtimeは統合済みで、実画像 / 実音声encoder接続と最終API / sample、最終空consumerの受け入れが残る。上のSHA / 測定値は過去の条件として維持する。固定Git導入helperは[PR #36](https://github.com/ayutaz/unity-embeddinggemma-2/pull/36)でPR #31の作業ブランチへ統合済みであり、未着手ではない。mainへの反映と最終candidateの新規導入が残る。今回確認した範囲はmain / open PR / 該当CIと保存された実行証拠であり、上記Secrets / runner / tag / Releaseの件数は過去の読み戻し記録とする。
 
 共通Runtimeの固定Git版 `21e598c`を既存consumerへ更新し、source overlayなしで実1024長backbone4条件が合格した。[receipt](results/multimodal-git-runtime-upgrade-windows-20261013.json)。embedded公式Test Frameworkの条件、合成featureの範囲を記録し、M2の最終空consumer・sample / Player・全環境の合格には数えない。
 

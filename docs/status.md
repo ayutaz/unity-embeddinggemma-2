@@ -1,6 +1,6 @@
 # 現在の状態と残タスク
 
-確認日: 2026-10-13。main / PR / CIをGitHub APIで確認し、同じEditorで前処理RuntimeのTDD、固定Git package回帰、公式CPU / 実GPU信号照合を追加実行した。Editorの新規起動・モデル再取得 / 再export・buildは行っていない。Secrets / runner・tag / Release・main保護の件数は下の過去記録と分ける。[最新Runtimeの実測](results/m4-audio-preprocessing-runtime-windows-20261013.json)、[直前の計画snapshot](results/tdd-plan-checkpoint-20261013.json)。
+確認日: 2026-10-13。main / PR / CIをGitHub APIで再確認し、PR #50統合後の全体TDD計画を更新した。今回の計画更新ではUnity実行・モデル取得 / 再export・buildを追加していない。前処理RuntimeのTDD、固定Git package回帰、公式CPU / 実GPU信号照合は[既存の実測](results/m4-audio-preprocessing-runtime-windows-20261013.json)を参照する。Secrets / runner・tag / Release・main保護の件数と[直前の計画snapshot](results/tdd-plan-checkpoint-20261013.json)は過去の記録として保持する。
 
 **M2〜M4は未完了。未実装のAPI・前処理・sampleと数値不合格の修正が残る。正式リリースは全対応・全必須検証が終わった後。** [全体TDD計画](multimodal-tdd-plan.md)を6工程で更新し、[M3画像](m3-plan.md) / [M4音声](m4-plan.md)の各タスクに先に確認するRed、最小実装、Green・実モデル受け入れを定義した。配布準備では公開tag / GitHub Releaseを作成しない。
 
@@ -8,12 +8,13 @@
 
 | 対象 | 今回確認した状態 |
 | --- | --- |
-| main | `506b5672c68e22ac8f66076d4462e6ea143f9501`、PR #49 / #48まで統合。[CI 38335082007](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38335082007)成功 |
+| main | `f41546dfd48ab77347d27772612b2ea43c992b70`、PR #50まで統合。[CI 38336919527](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38336919527)成功 |
 | [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31) | draft / 未統合。head `a34bf9057694e141e939ac41bea3e2b713b0a15b`。Windows Player終了・sampleの条件付き実測あり。導入helperのPR #36はこのブランチへ統合済みで、mainには未反映。最終空consumer・性能・native入力・他環境が残る |
 | [PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40) | 未統合。head `e13adcd96ed3e10802131dfc94c48d9533f37ee2`。feed-forward診断をTDD追加して関連76件green。[実モデルCI 38331914586](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331914586)とRequired CIは不合格。最初の微差はlayer 0.feed_forward1のactivation、許容差超過はlayer 10。残り5信号未実行、修正未完了 |
 | [PR #41](https://github.com/ayutaz/unity-embeddinggemma-2/pull/41) | draft / 未統合。head `b5766154a209622849e9d71d11955b9bd7e0a65c`。[CI 38320212347](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38320212347)成功。画像Sentis Float16全6条件合格 / FP32全6条件elementwise不合格を維持 |
 | [PR #43](https://github.com/ayutaz/unity-embeddinggemma-2/pull/43) | mainへ統合済み。最終head `4feac7551bd99f2571a667f237ace85ba2d7093f`。[CI 38331086059](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331086059)全8 job成功。小さい配置 / cache契約68件と実1024長backbone4条件は別runで合格。固定Git `21e598c`のRuntime更新consumerも4条件合格。実測sourceを統合headへ付け替えず、実encoder接続・公式prompt / 前処理 / sampleと最終空consumerを別gateとする |
 | [PR #48](https://github.com/ayutaz/unity-embeddinggemma-2/pull/48) | mainへ統合済み。最終head `55221e5c53763ef0de9f00fa6459861dce3756d7`、全8 CI成功。PCM入力25 red → 25 green、固定Git Runtimeの型 / 全102ファイル監査とpackage assembly 87 green。[受け入れ範囲](m4-pcm-input-validation.md) |
+| [PR #50](https://github.com/ayutaz/unity-embeddinggemma-2/pull/50) | mainへ統合済み。最終head `6dc6651dacce126ad88c37eb89f01c4fda6d5049`、[全8 CI成功](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38336350087)。前処理Runtime 21 red → 21 green、固定Git package 108 green、公式CPU / 実GPU各6信号と次段検証graphへのTensor受け渡し合格。実encoder / 最終APIは別gate |
 | [PR #46](https://github.com/ayutaz/unity-embeddinggemma-2/pull/46) | mainへ統合済み。音声前処理のWindows Sentis CPU / 実GPU受け入れを追加。製品PCM入力API・encoder・end-to-endの成功ではない |
 | Unity / Sentis | 開発検証6000.3.21f1 / 2.6.1。mainのEditor固定はPR #31未統合のため6000.3.16f1。実測のsource / package / model hashを混同しない |
 
@@ -31,6 +32,8 @@
 | Android / macOS / iOS | Androidは既存実APK buildとpayload監査まで。[Android記録](m2-android-validation.md) | Android実機とMac / iOSの3モダリティ・CPU / 実GPU・sample・終了は未実行 |
 
 ## 次の作業と依存
+
+次の実装PRはI3画像GPU前処理。全体の着手順と各PRのred / green・完了条件は[全体計画](multimodal-tdd-plan.md#直近の実行順と依存)を参照する。M2〜M4、必須環境、配布準備の全完了後に正式リリースを扱う。
 
 1. M2の導入helper / 21f1更新をmainへ渡す条件を整理し、残る性能・安定性を原因別red → 最小修正 → 同条件比較で進める。
 2. PCM境界PR #48と共通Runtime PR #43は統合済み。前処理Runtime PR #50はTDD21 green、固定Git package108 green、公式CPU / 実GPU各6信号・mask・次段Tensor受け渡しが合格。[条件と失敗履歴](m4-audio-preprocessing-runtime-validation.md)。実encoder / backbone接続、最終空consumerは別gate。

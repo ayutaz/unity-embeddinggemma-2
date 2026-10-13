@@ -8,16 +8,22 @@ import argparse
 import json
 import re
 import subprocess
+import zlib
+import uuid
+from concurrent.futures import ThreadPoolExecutor
 from urllib.error import HTTPError
 from urllib.request import HTTPRedirectHandler, Request, build_opener, urlopen
 
 
 class RangeReader(io.RawIOBase):
-    def __init__(self, size, fetch, *, chunk_bytes=4 * 1024 * 1024):
+    def __init__(self, size, fetch, *, chunk_bytes=8 * 1024 * 1024, max_parallel=4):
         if type(size) is not int or size <= 0 or type(chunk_bytes) is not int or chunk_bytes <= 0:
             raise ValueError("range size/chunk must be positive integers")
+        if type(max_parallel) is not int or not 1 <= max_parallel <= 4:
+            raise ValueError("range parallelism must be between one and four")
         self.size, self.fetch, self.chunk_bytes, self.position = size, fetch, chunk_bytes, 0
         self.range_bytes, self.range_requests = 0, 0
+        self.pool = ThreadPoolExecutor(max_workers=max_parallel)
 
     def seekable(self):
         return True
@@ -39,17 +45,19 @@ class RangeReader(io.RawIOBase):
         if count < -1:
             raise ValueError("range read size is invalid")
         end = self.size if count == -1 else min(self.size, self.position + count)
-        chunks = []
-        while self.position < end:
-            stop = min(end, self.position + self.chunk_bytes)
-            raw = self.fetch(self.position, stop)
-            if len(raw) != stop - self.position:
+        ranges = [(start, min(end, start+self.chunk_bytes)) for start in range(self.position, end, self.chunk_bytes)]
+        chunks = list(self.pool.map(lambda bounds: self.fetch(*bounds), ranges))
+        for (start, stop), raw in zip(ranges, chunks, strict=True):
+            if len(raw) != stop - start:
                 raise ValueError("range length mismatch")
             self.range_bytes += len(raw)
             self.range_requests += 1
-            self.position = stop
-            chunks.append(raw)
+        self.position = end
         return b"".join(chunks)
+
+    def close(self):
+        self.pool.shutdown(wait=True)
+        super().close()
 
 
 def extract_members(reader, destination, names, *, max_entry_bytes=64 * 1024 * 1024):
@@ -76,11 +84,31 @@ def extract_members(reader, destination, names, *, max_entry_bytes=64 * 1024 * 1
                 raise ValueError(f"ZIP member size exceeds selection limit: {name}")
             infos.append(info)
         for info in infos:
-            raw = archive.read(info)  # zipfile checks the complete member CRC.
             path = paths[info.filename]
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_bytes(raw)
-            files[info.filename] = dict(bytes=len(raw), crc32=info.CRC, sha256=hashlib.sha256(raw).hexdigest())
+            def existing():
+                if not path.is_file() or path.stat().st_size != info.file_size: return None
+                crc, digest = 0, hashlib.sha256()
+                with path.open("rb") as stream:
+                    for block in iter(lambda: stream.read(32*1024*1024), b""):
+                        crc = zlib.crc32(block, crc); digest.update(block)
+                return digest.hexdigest() if crc == info.CRC else None
+            cached = existing()
+            if cached is not None:
+                files[info.filename] = dict(bytes=info.file_size, crc32=info.CRC, sha256=cached, cache_reused=True)
+                continue
+            partial = path.with_name(path.name + "." + uuid.uuid4().hex + ".partial")
+            digest, count = hashlib.sha256(), 0
+            try:
+                with archive.open(info) as stream, partial.open("wb") as target:
+                    for block in iter(lambda: stream.read(32*1024*1024), b""):
+                        count += len(block); digest.update(block); target.write(block)
+                if count != info.file_size:
+                    raise ValueError("ZIP streamed member size mismatch")
+                partial.replace(path)  # CRC completed before replacing an existing target.
+            finally:
+                partial.unlink(missing_ok=True)
+            files[info.filename] = dict(bytes=count, crc32=info.CRC, sha256=digest.hexdigest(), cache_reused=False)
     return dict(selected_count=len(files), range_bytes=reader.range_bytes,
                 range_requests=reader.range_requests, archive_bytes=reader.size, files=files)
 

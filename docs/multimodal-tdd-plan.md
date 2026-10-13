@@ -1,12 +1,27 @@
 # M2・M3・M4から正式リリースまでのTDD計画
 
-更新日: 2026-10-13。**正式リリースはM2〜M4の全対応と全必須検証の完了後**とする。工程6までは開発・検証・配布準備であり、公開tag / GitHub Releaseを作成しない。振る舞いを追加・変更するすべての実装と自動化を、独立した期待値によるred → green → refactorで進める。
+更新日: 2026-10-14。**正式リリースはM2〜M4の全対応と全必須検証の完了後**とする。工程6までは開発・検証・配布準備であり、公開tag / GitHub Releaseを作成しない。振る舞いを追加・変更するすべての実装と自動化を、独立した期待値によるred → green → refactorで進める。
 
 ## 現在の基準
 
-今回確認したmainは `5e9311ab86362118398e5c004964b7004961838a`（計画更新PR #61）。PR #52までの基盤に加え、全体計画PR #54 / #58、公式prompt契約PR #55、最終画像Python参照PR #56、native SiLU / 標準ONNX Swish単独probe PR #57、環境ごとの診断値照合PR #59が統合済み。画像の最終APIと画像 / 音声sampleは未実装。音声の最終APIはDraft PR #62で実装・合成受け入れ済みだがmain未統合で、実モデル全chainは未完了。残作業は検証だけではない。以下の最新checkpointと、各行の過去の固定sourceの実測を区別する。[以前の計画snapshot](results/tdd-plan-checkpoint-20261013.json)、[音声前処理Runtime受け入れ](results/m4-audio-preprocessing-runtime-windows-20261013.json)、[診断未達](results/tdd-acceptance-plan-checkpoint-20261013.json)は保持する。今回の文書更新では新たなUnity実行・モデル生成は行わない。
+今回確認したmainは `92eda69bebe87bcd1d965f6ce2d12d435d43bb13`（計画更新PR #63）。PR #52までの基盤に加え、全体計画PR #54 / #58 / #61 / #63、公式prompt契約PR #55、最終画像Python参照PR #56、native SiLU / 標準ONNX Swish単独probe PR #57、環境ごとの診断値照合PR #59が統合済み。画像encoder APIはDraft PR #64、最終画像APIはDraft PR #65で実装・合成受け入れ済みだがmain未統合。画像 / 音声sampleは未実装。音声の最終APIはDraft PR #62で実装・合成受け入れ済みだがmain未統合で、実モデル全chainは失敗・未完了。残作業は検証だけではない。以下の最新checkpointと、各行の過去の固定sourceの実測を区別する。[以前の計画snapshot](results/tdd-plan-checkpoint-20261013.json)、[音声前処理Runtime受け入れ](results/m4-audio-preprocessing-runtime-windows-20261013.json)、[診断未達](results/tdd-acceptance-plan-checkpoint-20261013.json)は保持する。今回の文書更新では新たなUnity実行・モデル生成は行わない。
 
-### 最新checkpointと直近の受け渡し
+### 2026-10-14: 画像APIと音声実chainのcheckpoint
+
+| 対象 | 固定sourceの証拠 | 残るgate / 次のTDD |
+| --- | --- | --- |
+| I4 画像encoder API | [Draft PR #64](https://github.com/ayutaz/unity-embeddinggemma-2/pull/64)、head `46cea116f505e6836f9222e53a14ac536c6b176b`。16 assertion red → Git `3c9bf7d616e0fccb4ec808280e1a59185da8e2b9`でCPU / 実GPUの16 green、package158 green / skip 0。headの[CI 38423962516](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38423962516)全8成功。寸法・位置・feature数・backendと結果所有権の合成検証 | 監査済み実vision modelでのAPI受け入れ、元FP32数値gate。constructorでgraph内部の焼き込み位置を証明したことにしない |
+| I4 最終画像API | [Draft PR #65](https://github.com/ayutaz/unity-embeddinggemma-2/pull/65)、head `f6794ef4fa8cd85a0e69dcc7d144978d0ab46b59`。24 assertion red → Git `c2c5516e83339450bf7ff4c65432ef9ddae06861`でCPU / 実GPUの24 green、共通package225 green / skip 0。Runtime overlayなし。音声PR #62の共通stage契約をbaseにし、PR #64の画像encoderを含む | CPU Texture前処理は未実装（CPU試験は独立fixture）。実Texture → encoder → 画像専用backboneの全chain、全profile / role・sample / Player / 実機・最終空consumer。依存PR統合後にmain基準へ整理 |
+| A5 音声backbone単独 | producer `4edbe17…`、Runtime `9c6f794…`、harness `eeec732…`。native特徴量 → 実backboneのCPU / GPU × FP32 / Float16重みは全24 caseでcosineと診断elementwise合格 | encoder・PCM前処理・最終APIを通した全chainとは別gate。CLI観測はunresponsiveでexit 1、同operationの保存結果は完了・合格。NUnit完了集計を回収したとはしない |
+| A5 音声実chain | 同producer / Runtime、harness `da5e8f0…`。実PCMからAPIまでFP32 CPU / GPU、Float16 CPUは各6信号の最終cosine合格。Float16 GPUは2件返却後sineの正規化で失敗、後続3件未実行。NUnit3 pass / 1 fail / skip 0 / CLI exit 1 | 元encoderのelementwise不合格を保持。current producerのSentis encoder単独gate、Raw / Query・長さ境界・sample・必須環境は未達 / 未実行 |
+| C7 GPU終了・cache | tiny GPU probeはclean restart後CPU / GPU合格。その後の実chainはFP32 CPU6件完了、GPUは5件保存してEditor終了・EOF、Float16未実行。D3D12 logは16 MiB bufferに512 MiB要求を記録。cacheのsource / graph / 版 / quantization / file size / SHA監査は5 red → 関連24 green | 原因未確定。小さいGPU回復を全chain修正にしない。saved model再利用の重い実測・性能倍率は未測定。転送・資源寿命を原因別のredへ落とし、元条件を再照合 |
+| A4 Required CI | Draft PR #60のhead `d1c0d8c`の[CI 38422572898](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38422572898)は`audio ONNX export mismatch: silence`で失敗。Python4環境 / package / actionlintは合格 | 同じ数値gateの再現。network障害として再実行しない。native-referenceのskipはpassに数えず、許容差を維持して修正する |
+
+受け渡しは[画像encoder receipt](https://github.com/ayutaz/unity-embeddinggemma-2/blob/46cea116f505e6836f9222e53a14ac536c6b176b/docs/results/m3-image-feature-encoder-tdd-windows-20261014.json)、[最終画像API receipt](https://github.com/ayutaz/unity-embeddinggemma-2/blob/f6794ef4fa8cd85a0e69dcc7d144978d0ab46b59/docs/results/m3-image-embedder-composition-windows-20261014.json)、[音声の失敗・未完了記録](https://github.com/ayutaz/unity-embeddinggemma-2/blob/a9cef60/docs/m4-audio-real-chain-validation.md)で固定する。実測sourceを最新headの再実行に付け替えない。
+
+次は(1)GPU終了とencoder数値差の原因別再現・修正、(2)実画像 / 音声chainの固定参照照合とCPU画像前処理、(3)画像検索 / 音声再生・明示収録sample、(4)安定性・Player / 必須実機、(5)配布準備へ進む。実モデルgateが未達の間も独立したsample・CPU画像前処理のTDDは進められる。以下の工程1〜6・全必須環境は維持し、公開tag / GitHub Releaseは作成しない。
+
+### 2026-10-13のcheckpoint（過去sourceを保持）
 
 | 対象 | 現在の証拠 | 次のTDDと受け入れ |
 | --- | --- | --- |

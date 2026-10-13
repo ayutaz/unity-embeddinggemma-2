@@ -36,12 +36,19 @@ namespace EmbeddingGemma.Tests
             var storage = field.GetValue(worker);
             var getTensor = storage.GetType().GetMethod("GetTensor", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(int) }, null);
             if (getTensor == null) throw new NotSupportedException("Pinned Sentis tensor lookup is unavailable.");
+            var fallbackField = typeof(Worker).GetField("m_LayerCPUFallback", BindingFlags.Instance | BindingFlags.NonPublic);
+            var cpuLayers = fallbackField?.GetValue(worker) as HashSet<int>;
+            if (cpuLayers == null) throw new NotSupportedException("Pinned Sentis iterator fallback classification is unavailable.");
+            var yieldedLayers = new List<int>();
+            for (var index = 0; index < model.layers.Count; index++)
+                if (!cpuLayers.Contains(model.layers[index].outputs[0])) yieldedLayers.Add(index);
             var iterator = worker.ScheduleIterable(input);
-            var layerIndex = 0;
+            var yieldedIndex = 0;
             try
             {
                 while (iterator.MoveNext())
                 {
+                    var layerIndex = yieldedLayers[yieldedIndex];
                     var layer = model.layers[layerIndex];
                     if (result.Snapshots.Count < limit)
                     {
@@ -56,7 +63,7 @@ namespace EmbeddingGemma.Tests
                                     LayerType = layer.GetType().Name, Backend = value.backendType, Values = value.DownloadToArray() });
                         }
                     }
-                    layerIndex++;
+                    yieldedIndex++;
                 }
             }
             finally { (iterator as IDisposable)?.Dispose(); }

@@ -328,6 +328,48 @@ class AudioEncoderStagesExport(AudioEncoderExport):
         return self._forward(features, collect_stages=True, detail_layer=self.detail_layer)
 
 
+class AudioFeedForwardStagesExport(nn.Module):
+    """Small failure-only trace; preserve values before native in-place updates."""
+
+    stage_names = ("clamp_input", "pre_layer_norm", "ffw_layer_1", "activation", "ffw_layer_2",
+                   "clamp_output", "post_layer_norm", "post_layer_scale", "residual_output")
+
+    def __init__(self, module, input_shape):
+        super().__init__()
+        self.module = module
+        self.input_shape = tuple(input_shape)
+        self.eval()
+
+    def validate_inputs(self, hidden):
+        if (hidden.dtype != torch.float32 or tuple(hidden.shape) != self.input_shape
+                or hidden.device != self.module.pre_layer_norm.weight.device or not torch.isfinite(hidden).all()):
+            raise ValueError("audio feed-forward input must match the finite float32 native profile")
+
+    def forward(self, hidden):
+        if not torch.compiler.is_compiling():
+            self.validate_inputs(hidden)
+        residual = hidden
+        cap = min(self.module.gradient_clipping, torch.finfo(hidden.dtype).max)
+        hidden = hidden.clamp(-cap, cap)
+        values = [hidden.clone()]
+        hidden = self.module.pre_layer_norm(hidden)
+        values.append(hidden.clone())
+        hidden = self.module.ffw_layer_1(hidden)
+        values.append(hidden.clone())
+        hidden = self.module.act_fn(hidden)
+        values.append(hidden.clone())
+        hidden = self.module.ffw_layer_2(hidden)
+        values.append(hidden.clone())
+        hidden = hidden.clamp(-cap, cap)
+        values.append(hidden.clone())
+        hidden = self.module.post_layer_norm(hidden)
+        values.append(hidden.clone())
+        hidden *= self.module.post_layer_scale
+        values.append(hidden.clone())
+        hidden += residual
+        return tuple([*values, hidden])
+
+
 def export_audio_pt2(wrapper, features, destination):
     wrapper.validate_inputs(features)
     # Match the pinned official CPU SiLU kernel's division order. Core ATen's

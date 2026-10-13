@@ -30,3 +30,9 @@ uv run --locked python -m embeddinggemma_tools prepare-audio-embeddings --encode
 `eeec732`で、大きいartifactのbounded streaming / 最大4並列range / CRC検証済みcache再利用と、実音声専用backboneの受け入れハーネスを追加した。取得処理は意図した3 red / 既存1 passから関連15 green。Unity guardはsource・全6信号・profile・非finite出力・既存FP32 / Float16最終cosine条件の9 assertion redから9 green、compile error / warning 0。固定Git Runtime `9c6f794…`のconsumerで、受け入れtestのみを配置しRuntime overlayはない。[TDD receipt](results/m4-audio-final-backbone-harness-tdd-20261013.json)。
 
 実backbone試験は新参照producer `4edbe17…`のnative features → image count=0 / audio count=280または210のbackboneを全6信号 × CPU / GPU × FP32 / Float16で照合する。profileごとのimport / 保存は1回にし、各model / workerを解放して次へ進む。全caseの数値結果・actual backend・fallback / flushを保存する。最終vectorの既存cosine条件と診断用elementwise値を分け、encoderの固定elementwise gateは変更しない。このTDD checkpointでは実モデル試験は未実行。取得のHTTP 403はインフラ失敗として別記し、取得済みmemberを検証・再利用して続行する。
+
+### 取得完了と新旧参照の追加照合
+
+HTTP 403で終了した取得の後、新しい署名URLで残りの取得が成功した。9 memberすべてがZIP CRC・manifestのsize / SHAに一致し、1つ目の約1.1GB backbone・5 feature・reference JSONを再利用した。新規rangeは1,095,630,657 bytes / 139 request、359.6秒。[取得receipt](results/m4-audio-final-backbone-artifact-staging-20261013.json)。同じUnity Editorの実backbone試験を開始したが、この取得checkpointは数値検証の完了結果ではない。
+
+新しい最終参照producer `4edbe17…`のencoder参照も、7.49GBのartifactからJSON4つだけを25,211,080 bytes / 19 requestで取得した。既存CLIで元producer `271f5a…`へ照合すると全6信号が固定elementwise不合格となり、CLI exit 1。manifestに記録したモデル入力hashとlibrary versionsは一致、frame mask hashは両profileで一致、encoder入力は5信号で一致・sineで不一致。graphのmanifest hashは両profileで異なる。CPU math環境の比較は未取得であり、hardwareや演算を原因と確定しない。[全6信号の固定結果](results/m4-audio-final-producer-pinned-context-failed-20261013.json)。参照JSONのhashは監査済みだが、この比較の新encoder / stage binaryは取得・監査していない。新しい最終参照の合格を旧encoder gateの解消へ流用しない。

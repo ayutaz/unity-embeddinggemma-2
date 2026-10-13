@@ -79,9 +79,17 @@ uv run --locked python -m embeddinggemma_tools prepare-audio-encoder --preproces
 
 前回の実重みではsubsampleが完全一致、最初の非zero差はlayer 0なので、次のActionsはlayer 0の層内traceを生成する。数値不合格が残る場合は同じCIを失敗させ、大きいgraphはartifactだけに保存する。診断traceが元のgraphの経路を変えていないことと、どの演算で差が始まるかを先に確認してから、原因の小さい再現テストと修正へ進む。
 
+### 実重みの層内診断
+
+[CI 38327706633](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38327706633)はPR head `0d4b53d8b77bd2213fb3af9683265ac47c727f43` / 実行merge ref `adede1c25500bc05542c4c65f90530eec7a606ee`で数値不合格となった。coarse / 層内traceの最終値はともに元の保存graphと完全一致し、追加診断例外はなかった。[全結果](results/m4-audio-layer-real-failed-20261013.json)。
+
+silenceの公式対eager差は0、保存graph対eager最大差 `0.00013375282287597656`、許容差比 `5.294248580932617`、不一致328要素。前回の368要素とは異なる実run結果として保持し、不合格解消や高速化とはしない。残る5信号は引き続き未実行。
+
+subsampleは一致し、最初の非zero差は`layer_0.feed_forward1`（最大差 `3.814697265625e-6`、許容差比 `0.02367383986711502`）。その後のnorm_pre_attn / self_attn / norm_post_attn / lconv1d / feed_forward2にも差があり、layer 0内では許容差以内だがlayer 10で初めて超過する。feed-forward内のどの演算が最初に差を生むかは未特定。次は公式の入力を固定した小さいfeed-forward単独診断をTDDで作り、RMS norm / linear / activation / residualを個別に照合する。単独traceと全体traceの同じstageの一致を確認してから原因の修正へ進む。
+
 ## 次の受け入れ
 
-1. 実装した層内診断をActionsの固定実重みで実行し、最初の原因演算を特定する。原因を分離した小さいredから修正し、元のencoder / projector全ケースを再照合する。現時点で実モデル数値不合格は未解消。
+1. feed_forward1単独診断をTDDで追加し、公式の入力を固定して最初の原因演算を特定する。原因を分離した小さいredから修正し、元のencoder / projector全ケースを再照合する。現時点で実モデル数値不合格は未解消。
 2. 音声前処理・encoderのSentis import / 保存・再読込、実CPU / GPUと採用Float16重みの数値照合。非互換・OOM・fallbackは失敗として記録する。
 3. A2のPCM入力契約とA3のGPU前処理を接続し、中間CPU readbackなしを確認する。
 4. A5のGPU soft token → 共通本体 → 有限768次元・単位長、FP32 cosine >= 0.999 / Float16 >= 0.99、text / image回帰。

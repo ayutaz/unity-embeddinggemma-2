@@ -111,7 +111,9 @@ namespace EmbeddingGemma.Tests
                             var prompt=(MultimodalPrompt)Invoke(typeof(MultimodalPromptBuilder).GetMethod("BuildAudio"),builder,new object[]{validFrames,TextRole.Document,null});
                             Assert.That(prompt.InputIds,Is.EqualTo(row["input_ids"].ToObject<int[]>()),"Official full Document prompt IDs.");
                             Assert.That(prompt.AttentionMask,Is.EqualTo(row["attention_mask"].ToObject<int[]>()));
-                            var actual=(float[])Invoke(embedderType.GetMethod("Embed"),api,new object[]{input,TextRole.Document,null});
+                            float[] actual;
+                            try{actual=(float[])Invoke(embedderType.GetMethod("Embed"),api,new object[]{input,TextRole.Document,null});}
+                            catch(Exception error){condition["failed_case_id"]=id;condition["original_api_error"]=error.ToString();Save();CaptureFailedStages(condition,workers,id,precision,backend);throw;}
                             var devices=workers.All(worker=>worker.PeekOutput().backendType==backend) && workers[0].PeekOutput(ppModel.outputs[1].name).backendType==backend;
                             var result=AudioBackboneReferenceGuard.CompareVectors(actual,row["embedding"].ToObject<float[]>(),precision=="float16");
                             result["id"]=id;result["profile"]=entry.Key;result["actual_backend"]=workers[2].PeekOutput().backendType.ToString();
@@ -166,6 +168,28 @@ namespace EmbeddingGemma.Tests
             preprocessingChecked.Add(key);
         }
         static Worker WorkerOf(object value)=>(Worker)value.GetType().GetField("worker",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(value);
+        void CaptureFailedStages(JObject condition,Worker[] workers,string id,string precision,BackendType backend)
+        {
+            var diagnostics=new JObject();condition["failure_stage_diagnostics"]=diagnostics;
+            var names=new[]{"preprocessing_features","encoder_features","final_embedding"};
+            for(var index=0;index<workers.Length;index++)
+            {
+                condition["phase"]="diagnose_"+id+"_"+names[index];Save();
+                try
+                {
+                    var tensor=workers[index].PeekOutput() as Tensor<float>;Assert.That(tensor,Is.Not.Null);
+                    var values=tensor.DownloadToArray();var stats=AudioChainReferenceGuard.DescribeValues(values);
+                    stats["actual_backend"]=tensor.backendType.ToString();stats["readback_scope"]="failure_diagnostic_after_api_exception";
+                    var filename="failure-"+precision+"-"+backend+"-"+id+"-"+names[index]+".bin";
+                    var bytes=new byte[values.Length*4];Buffer.BlockCopy(values,0,bytes,0,bytes.Length);
+                    File.WriteAllBytes(Path.Combine(Path.GetDirectoryName(resultPath),filename),bytes);
+                    stats["local_binary"]=filename;diagnostics[names[index]]=stats;
+                }
+                catch(Exception error){diagnostics[names[index]]=new JObject{["diagnostic_error"]=error.ToString()};}
+                Save();
+            }
+            condition["phase"]="failed_"+id;Save();
+        }
         static int CpuFallback(Worker worker,Model model,bool backbone)
         {
             var fallback=(HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallback",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(worker);

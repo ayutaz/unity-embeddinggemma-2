@@ -8,6 +8,15 @@ namespace EmbeddingGemma.Tests
     public static class AudioChainReferenceGuard
     {
         static readonly string[] Signals={"silence","impulse","sine","nyquist","noise","padded_noise"};
+        public static JObject DescribeValues(float[] values)
+        {
+            if(values==null)throw new ArgumentNullException(nameof(values));
+            var finite=values.Where(value=>!float.IsNaN(value)&&!float.IsInfinity(value)).ToArray();
+            return new JObject{["length"]=values.Length,["finite_count"]=finite.Length,
+                ["nan_count"]=values.Count(float.IsNaN),["infinity_count"]=values.Count(float.IsInfinity),
+                ["finite_sum_squares"]=finite.Sum(value=>(double)value*value),
+                ["maximum_absolute_finite_value"]=finite.Length==0?0:finite.Max(value=>Math.Abs((double)value))};
+        }
         public static void ValidateProducers(JObject final,JObject encoder,JObject preprocessing,string source)
         {
             const string revision="914f7f89142e33e77833254d9c9b90c3cef7303b";

@@ -1,8 +1,14 @@
 # M4: 音声対応のTDD計画
 
-更新日: 2026-10-13。**音声end-to-end API / sampleはmainに未実装。PR #60のnative保存参照は元6信号 / 2 profileで合格したが、NumPy ONNX全6信号とSentis FP32のCPU / GPU全12条件は固定elementwise許容差で不合格**。音声前処理単独はPythonとWindows Sentis CPU / 実GPUで合格済み。[全体計画](multimodal-tdd-plan.md)の工程4として進める。M4実装だけでは公開せず、3モダリティと全必須環境の受け入れを揃える。
+更新日: 2026-10-13。**音声APIはDraft PR #62でTDD実装・合成受け入れ済みだがmain未統合。実モデルend-to-end検証と検索 / 再生 / 明示収録sampleは未完了。PR #60のnative保存参照は元6信号 / 2 profileで合格したが、NumPy ONNX全6信号とSentis FP32のCPU / GPU全12条件は固定elementwise許容差で不合格**。音声前処理単独はPythonとWindows Sentis CPU / 実GPUで合格済み。[全体計画](multimodal-tdd-plan.md)の工程4として進める。M4実装だけでは公開せず、3モダリティと全必須環境の受け入れを揃える。
 
 ### 最新checkpointと次のRed
+
+今回のopen PR確認では、PR #60のheadは `85b84a012f00a0a9d5239af56ab4a71572ec8f86`、PR #62は `280250e4ebba9d1006a74c377d39181fcbd93a55`で、いずれもDraft。PR #60にはDocument-roleの独立した最終Python参照が追加され、producer `4edbe17a8105233c5aaa1514faa2862b08a4f7e0`の元6信号 / 2 profile / 768次元と保存native encoder → 保存backboneが合格した。[固定receipt](https://github.com/ayutaz/unity-embeddinggemma-2/blob/85b84a012f00a0a9d5239af56ab4a71572ec8f86/docs/results/m4-audio-final-reference-real-20261013.json)。元ONNX不合格は維持され、workflow全体もfailure。新参照を旧参照producerの数値差診断へ無条件に流用しない。
+
+PR #62ではAudioFeatureEncoder / AudioEmbedderと公式prompt構築をTDDで実装した。最終APIの20 assertion red → 20 green、固定Git `9c6f7943ca6319849dd3db54611acc477e7d0981`のpackage 185 green / skip 0は合成graphの契約受け入れ。[固定receipt](https://github.com/ayutaz/unity-embeddinggemma-2/blob/280250e4ebba9d1006a74c377d39181fcbd93a55/docs/results/m4-audio-embedder-composition-windows-20261013.json)。次は参照source / hash・全caseと数値不一致の拒否テスト、zero-image backboneの実CPU / GPU × FP32 / Float16、実前処理 → encoder → backbone → 最終APIの元6信号照合。Raw / Query roleの参照・長さ境界・text / image回帰を独立したredから追加する。全chainの合格でも元のencoder gateは省略せず、検索・再生・明示収録・Playerへ渡す。
+
+以下の `70cb9ee…` は過去のencoder不合格を記録した固定headであり、現在headとは区別する。
 
 Draft [PR #60](https://github.com/ayutaz/unity-embeddinggemma-2/pull/60)の確認headは `70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1`。参照producerは `271f5a12ca2aab081eb330f45cf593d404330374`であり、PR headへ付け替えない。[全6信号のnative / NumPy結果](https://github.com/ayutaz/unity-embeddinggemma-2/blob/70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1/docs/results/m4-audio-all-six-native-reference-real-20261013.json)、[全encoderのSentis不合格](https://github.com/ayutaz/unity-embeddinggemma-2/blob/70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1/docs/results/m4-audio-full-encoder-fp32-sentis-windows-failed-20261013.json)を固定する。Sentisはcosine全条件合格でもelementwise全条件不合格。skip 0 / CLI exit 1であり、GPU fallback / readback flushは0。subsample単独のCPU / GPU合格を全encoderの成功と数えない。
 

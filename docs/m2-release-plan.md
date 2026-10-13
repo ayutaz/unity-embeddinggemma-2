@@ -16,6 +16,14 @@ PR #31はdraft / 未統合。2026-10-12に承認された6000.3.21f1で、通常
 | 3. 他環境・Player実測 | 21f1 Windows精度Player通常モード4条件とsample通常GUI / GPU、独立2起動の終了を確認。Androidは16f1の実APK監査まで | Android実機、Mac / iOS環境と各CPU / GPU・配置 / cache・測定結果。21f1移行後のAndroid toolchainも確認 |
 | 4. 全対応後の正式配布 | 開発版0.1.0-pre.1のみ。candidate / tag / Release未実施 | M2基盤 → M3画像 → M4音声 → 全必須環境の統合検証 → version / license / CHANGELOG → tag固定consumer → 正式Release |
 
+## 2026-10-13の計画更新
+
+現在のmainは `bf9cc19`（PR #46まで統合）、[main CI 38328373164](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38328373164)成功。上のSHA / 測定値は過去の条件として維持する。固定Git導入helperは[PR #36](https://github.com/ayutaz/unity-embeddinggemma-2/pull/36)でPR #31の作業ブランチへ統合済みであり、未着手ではない。mainへの反映と最終candidateの新規導入が残る。
+
+共通Runtimeの固定Git版 `21e598c`を既存consumerへ更新し、source overlayなしで実1024長backbone4条件が合格した。[receipt](results/multimodal-git-runtime-upgrade-windows-20261013.json)。embedded公式Test Frameworkの条件、合成featureの範囲を記録し、M2の最終空consumer・sample / Player・全環境の合格には数えない。
+
+以後は[全体TDD計画](multimodal-tdd-plan.md)の6工程を優先する。M2の残る振る舞いの変更は原因別red → green → refactor、最適化は同一入力・hash・backendの比較を要求する。正式公開はM3 / M4・全必須環境の完了後。工程6では配布準備だけを行い、公開tag / Releaseを作成しない。
+
 ## 次に進める順序
 
 21f1の終了比較を通過し、検証ハーネスを製品sampleの既定FP32へ揃えるTDDと実測を完了した。最終source `28529f2`の同じbinaryはcold / warmとも実終了0、全query / 日英GUI / 解放に合格。[sourceと数値](results/m2-unity21-windows-20261012.json)。旧sample Playerのshutdown失敗は履歴として残す。以後は次の順序とする。

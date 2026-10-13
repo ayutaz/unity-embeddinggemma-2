@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.ExceptionServices;
 using NUnit.Framework;
 using Unity.InferenceEngine;
 using UnityEngine;
@@ -12,29 +11,11 @@ namespace EmbeddingGemma.Tests
     // Independent small graphs prove composition, cleanup and the real GPU handoff only.
     public sealed class AudioEmbedderTests
     {
-        static Type Api()
-        {
-            var type = typeof(AudioPcmInput).Assembly.GetType("EmbeddingGemma.AudioEmbedder");
-            Assert.That(type, Is.Not.Null, "Final audio composition API is missing");
-            return type;
-        }
-        [SetUp] public void RequireCompositionApi() => Api();
-        static object Call(Func<object> action)
-        {
-            try { return action(); }
-            catch (TargetInvocationException error) { ExceptionDispatchInfo.Capture(error.InnerException).Throw(); throw; }
-        }
-        static object Create(Parts parts, string omit = null) => Call(() => Activator.CreateInstance(Api(), new object[] {
+        static AudioEmbedder Create(Parts parts, string omit = null) => new AudioEmbedder(
             omit == "preprocessor" ? null : parts.Pre, omit == "encoder" ? null : parts.Enc,
-            omit == "backbone" ? null : parts.Back, omit == "prompts" ? null : parts.Prompts }));
-        static float[] Embed(object api, AudioPcmInput input) => (float[])Call(() => api.GetType().GetMethod("Embed").Invoke(api,
-            new object[] {input, TextRole.Raw, null}));
-        static MultimodalPrompt Prompt(MultimodalPromptBuilder builder, int frames)
-        {
-            var method = builder.GetType().GetMethod("BuildAudio");
-            Assert.That(method, Is.Not.Null, "Metadata-only audio prompt construction is missing");
-            return (MultimodalPrompt)Call(() => method.Invoke(builder, new object[] {frames, TextRole.Raw, null}));
-        }
+            omit == "backbone" ? null : parts.Back, omit == "prompts" ? null : parts.Prompts);
+        static float[] Embed(AudioEmbedder api, AudioPcmInput input) => api.Embed(input);
+        static MultimodalPrompt Prompt(MultimodalPromptBuilder builder, int frames) => builder.BuildAudio(frames);
         static MultimodalPromptBuilder Builder(MultimodalBackboneProfile profile)
         {
             var fixture = typeof(AudioEmbedderTests).Assembly.GetType("EmbeddingGemma.Tests.MultimodalPromptBuilderTests");
@@ -129,7 +110,7 @@ namespace EmbeddingGemma.Tests
         public void PipelineReturnsOwnedNormalized768VectorAndReleasesIntermediateCopies(BackendType backend)
         {
             if(backend==BackendType.GPUCompute) Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
-            using var parts=new Parts(backend); using var api=(IDisposable)Create(parts);
+            using var parts=new Parts(backend); using var api=Create(parts);
             var result=Embed(api,Pcm()); Assert.That(result.Length,Is.EqualTo(768));
             var seed=48+321*0.25/179200; var norm=Math.Sqrt(seed*seed+1);
             Assert.That(result[0],Is.EqualTo(seed/norm).Within(1e-6)); Assert.That(result[1],Is.EqualTo(1/norm).Within(1e-6));
@@ -149,7 +130,7 @@ namespace EmbeddingGemma.Tests
         [TestCase("encoder")] [TestCase("backbone")]
         public void StageFailureReleasesOwnedResultsAndAllowsRecovery(string stage)
         {
-            using var parts=new Parts(); using var api=(IDisposable)Create(parts);
+            using var parts=new Parts(); using var api=Create(parts);
             parts.Enc.Fail=stage=="encoder"; parts.Back.Fail=stage=="backbone";
             Assert.Throws<InvalidOperationException>(()=>Embed(api,Pcm()));
             Assert.Throws<ObjectDisposedException>(()=>{var ignored=parts.Pre.Last.Features;});
@@ -159,14 +140,14 @@ namespace EmbeddingGemma.Tests
         [Test]
         public void InvalidInputIsRejectedBeforePreprocessing()
         {
-            using var parts=new Parts(); using var api=(IDisposable)Create(parts);
+            using var parts=new Parts(); using var api=Create(parts);
             Assert.Throws<ArgumentNullException>(()=>Embed(api,null)); Assert.Throws<ArgumentException>(()=>Embed(api,Pcm(samples:481)));
             Assert.That(parts.Pre.Calls,Is.Zero);
         }
         [Test]
         public void FacadeDisposalDoesNotDisposeBorrowedWorkers()
         {
-            using var parts=new Parts(); var api=(IDisposable)Create(parts); api.Dispose(); api.Dispose();
+            using var parts=new Parts(); var api=Create(parts); api.Dispose(); api.Dispose();
             Assert.Throws<ObjectDisposedException>(()=>Embed(api,Pcm()));
             using var processed=parts.Pre.Inner.Process(Pcm()); using var encoded=parts.Enc.Inner.Encode(processed);
             Assert.That(encoded.SoftTokens.shape,Is.EqualTo(new TensorShape(1,512)));

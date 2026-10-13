@@ -207,6 +207,60 @@ def diagnose_audio_layer_stages(audio, projection, features, frame_mask, destina
     return result
 
 
+def diagnose_audio_onnx_stages(audio, projection, features, frame_mask, destination, failed_onnx, *, detail_layer=None,
+                              official_reference=None):
+    """Trace standard ONNX only in the context of the original failed final path."""
+    from onnx.reference import ReferenceEvaluator
+
+    destination = Path(destination)
+    wrapper = AudioEncoderStagesExport(audio, projection, frame_mask, detail_layer=detail_layer)
+    suffix = "stages" if detail_layer is None else f"layer-{detail_layer}-stages"
+    path = destination / f"audio-onnx-{suffix}.onnx"
+    expected = capture_official_audio_stages(audio, projection, features, frame_mask, detail_layer=detail_layer)
+    if official_reference is None:
+        with torch.no_grad():
+            native = audio(input_features=features, attention_mask=frame_mask.bool())
+            official_reference = projection(native.last_hidden_state)[native.attention_mask]
+    if (official_reference.dtype != torch.float32 or official_reference.shape != expected[-1].shape
+            or not torch.isfinite(official_reference).all()):
+        raise ValueError("audio ONNX diagnostic original reference is invalid")
+    native_matches = torch.equal(expected[-1], official_reference)
+    export_audio_native_onnx(wrapper, features, path)
+    evaluator = ReferenceEvaluator(str(path))
+    actual = tuple(torch.from_numpy(value) for value in evaluator.run(None, {"input": features.numpy()}))
+    result = compare_audio_stage_outputs(wrapper.stage_names, expected, actual)
+    if (failed_onnx.dtype != torch.float32 or failed_onnx.shape != actual[-1].shape
+            or not torch.isfinite(failed_onnx).all()):
+        raise ValueError("audio ONNX trace cannot be compared to the failed graph")
+    matches = torch.equal(actual[-1], failed_onnx)
+    with path.open("rb") as stream:
+        graph_hash = hashlib.file_digest(stream, "sha256").hexdigest()
+    result.update(stage="audio_encoder_onnx_stage_diagnostics_only", detail_layer=detail_layer,
+                  feature_rtol=1e-4, feature_atol=1e-5, trace_matches_failed_graph=matches,
+                  native_reference_matches_original=native_matches,
+                  native_reference_vs_original_maximum_absolute_error=(expected[-1] - official_reference).abs().max().item(),
+                  localization_validated=matches and native_matches, encoders_validated=False, end_to_end_validated=False,
+                  first_nonzero_stage=next((row["name"] for row in result["stages"]
+                                            if row["maximum_absolute_error"] > 0), None),
+                  trace_vs_failed_graph_maximum_absolute_error=(actual[-1] - failed_onnx).abs().max().item(),
+                  graph_sha256=graph_hash, graph_bytes=path.stat().st_size)
+    receipt = path.with_name(path.stem + "-diagnostics.json")
+    receipt.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    selected = re.fullmatch(r"layer_(\d+)", result["first_nonzero_stage"] or "")
+    if detail_layer is None and matches and native_matches and result["first_divergent_stage"] is not None and selected:
+        # Release coarse ONNX weights before the selected-layer export.
+        del evaluator, actual, expected, wrapper
+        gc.collect()
+        try:
+            result["layer_diagnostics"] = diagnose_audio_onnx_stages(
+                audio, projection, features, frame_mask, destination, failed_onnx,
+                detail_layer=int(selected.group(1)), official_reference=official_reference)
+        except Exception as diagnostic_error:
+            result["layer_diagnostics_error"] = f"{type(diagnostic_error).__name__}: {diagnostic_error}"
+    receipt.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    return result
+
+
 def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODEL_REVISION, source_commit="local", native_silu=False):
     """Official audio tower/projector vs saved graph on audited PCM-derived features.
 
@@ -377,6 +431,16 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
                     actual_array.astype("<f4").tofile(destination / "failed-onnx-features-fp32.bin")
                 (destination / "audio-encoder-failure.json").write_text(
                     json.dumps(failure, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+                if failure.get("reason") is None:
+                    del evaluator
+                    gc.collect()
+                    try:
+                        failure["onnx_stage_diagnostics"] = diagnose_audio_onnx_stages(
+                            audio, projection, features, inputs[0][2], directory, actual, official_reference=expected)
+                    except Exception as diagnostic_error:
+                        failure["onnx_stage_diagnostics_error"] = f"{type(diagnostic_error).__name__}: {diagnostic_error}"
+                    (destination / "audio-encoder-failure.json").write_text(
+                        json.dumps(failure, indent=2, allow_nan=False) + "\n", encoding="utf-8")
                 raise ValueError(f"audio ONNX export mismatch: {case_id}")
             del evaluator
             produced.append(imported_graph)

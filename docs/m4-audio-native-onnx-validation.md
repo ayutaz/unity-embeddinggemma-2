@@ -27,6 +27,10 @@ native graphとONNX graphをprofileで区別し、全caseのONNX cosine / 最大
 
 2,457,302,434 bytesのartifactを再取得せず、6回 / 1,551 bytesのHTTP rangeで失敗JSONだけを取得した。ZIPのCRC、producer、失敗status、JSON hashを確認。[実不合格receipt](results/m4-audio-native-onnx-real-failed-20261013.json)。次は同じONNX経路のstage traceを公式hook参照へ比較し、trace最終値が元の不合格graphと完全一致する場合だけ局所化を有効にする。trace追加や二次診断の成功で元の不合格を上書きしない。
 
+ONNX stage診断は5 assertion redから実装し、hash helperのNameErrorによる初回3 failed / 6 passedを修正後に9 passed。さらに元graphとtrace最終値が一致してもnative参照がずれた文脈を許可する穴を1 assertion redで確認し、元の公式referenceへの完全一致guardを追加した。最終関連10 passed / failed 0。first stage・選択layer・全stage比較、元の失敗graph一致、native参照一致、二次診断成功 / 失敗時の元不合格保持を確認した。[診断TDD receipt](results/m4-audio-onnx-diagnostic-tdd-20261013.json)。NameErrorは実装中の失敗であり、意図したassertion red件数へ合算しない。
+
+診断は不合格時だけ実行し、coarse graphの重複weightsを解放してから必要なlayer graphをexportする。traceが元の不合格graphと一致し、hook参照の最終値が元の公式referenceと一致する場合だけ`localization_validated`を有効にする。診断で`encoders_validated` / `end_to_end_validated`を成功にしない。実重みのstage診断結果は次のActionsで確認し、現在は未実行。
+
 Actionsで元の実重み6信号を実行し、native保存参照と全encoder標準ONNXの数値結果を分けて判定する。PR #40の過去のsilence不合格・残り5信号未実行はそのsourceの記録として保持する。候補が失敗した場合も固定許容差を緩めず、最初の演算差を小さいredへ落とす。
 
 Python全gate合格後も、Sentis import / 保存 / 再読込、全6信号のCPU / 実GPUと採用Float16形式、GPU前処理 → 実encoder → 共通本体の連結、最終API / 検索・再生・明示収録 / Player / 必須実機は別gate。小さいONNX greenや構造checkerを実モデル・GPU成功へ流用しない。

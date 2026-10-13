@@ -272,6 +272,7 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
         groups.setdefault(profile, []).append((row, features, frame_mask))
     audio, projection = load_audio_models(snapshot)
     rows, profiles, produced, similarities = [], {}, [], []
+    onnx_similarities = []
     for profile, inputs in groups.items():
         directory = destination / profile
         directory.mkdir(parents=True, exist_ok=True)
@@ -337,14 +338,54 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
                                  frame_mask=mask_path.relative_to(destination).as_posix(),
                                  graph=graph.relative_to(destination).as_posix())
         if native_silu:
+            from onnx.reference import ReferenceEvaluator
+
+            # Release the duplicate native graph weights before loading ONNX.
+            del exported
+            gc.collect()
             imported_graph=directory/"audio.onnx"
             export_audio_native_onnx(wrapper,inputs[0][1],imported_graph)
+            evaluator = ReferenceEvaluator(str(imported_graph))
+            for features, expected, case_id in expected_rows:
+                actual_array = evaluator.run(None, {"input": features.numpy()})[0]
+                if (actual_array.dtype != np.float32 or actual_array.shape != tuple(expected.shape)
+                        or not np.isfinite(actual_array).all()):
+                    failure = dict(success=False, stage="audio_encoder_onnx", source_commit=source_commit,
+                                   profile=profile, case_id=case_id, reason="shape/dtype/nonfinite",
+                                   graph_sha256=digest(imported_graph), unity_validated=False,
+                                   end_to_end_validated=False)
+                else:
+                    actual = torch.from_numpy(actual_array)
+                    cosine = torch.nn.functional.cosine_similarity(actual, expected, dim=-1).min().item()
+                    difference = (actual - expected).abs()
+                    allowed = 1e-5 + 1e-4 * expected.abs()
+                    mismatched = int((difference > allowed).sum())
+                    if cosine >= 0.999999 and mismatched == 0:
+                        onnx_similarities.append(cosine)
+                        row = next(item for item in rows if item["id"] == case_id)
+                        row.update(onnx_minimum_cosine=cosine,
+                                   onnx_maximum_absolute_error=difference.max().item(),
+                                   onnx_maximum_tolerance_ratio=(difference / allowed).max().item())
+                        continue
+                    failure = dict(success=False, stage="audio_encoder_onnx", source_commit=source_commit,
+                                   profile=profile, case_id=case_id, minimum_cosine=cosine,
+                                   onnx_vs_official_maximum_absolute_error=difference.max().item(),
+                                   maximum_tolerance_ratio=(difference / allowed).max().item(),
+                                   mismatched_elements=mismatched, graph_sha256=digest(imported_graph),
+                                   unity_validated=False, end_to_end_validated=False)
+                    expected.numpy().astype("<f4").tofile(destination / "failed-official-features-fp32.bin")
+                    actual_array.astype("<f4").tofile(destination / "failed-onnx-features-fp32.bin")
+                (destination / "audio-encoder-failure.json").write_text(
+                    json.dumps(failure, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+                raise ValueError(f"audio ONNX export mismatch: {case_id}")
+            del evaluator
             produced.append(imported_graph)
             profiles[profile].update(native_graph=graph.relative_to(destination).as_posix(),
                                      graph=imported_graph.relative_to(destination).as_posix(),import_format="onnx")
         else:
             profiles[profile]["import_format"]="native_torch_reference_only"
-        del exported, wrapper
+            del exported
+        del wrapper
     encoder_metadata = dict(model_id=MODEL_ID, model_revision=revision, source_commit=source_commit,
                             stage="audio_encoder_projector_only", dtype="float32", batch_size=1,
                             attention_implementation="sdpa", minimum_cosine=0.999999,
@@ -364,7 +405,9 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
                        dict(bytes=path.stat().st_size, sha256=digest(path)) for path in produced})
     summary["native_silu_preserved"]=True
     summary["onnx_structurally_validated"]=native_silu
-    summary["onnx_numerically_validated"]=False
+    summary["onnx_numerically_validated"]=native_silu
+    summary["onnx_case_count"] = len(onnx_similarities)
+    summary["onnx_minimum_cosine"] = min(onnx_similarities) if onnx_similarities else None
     (destination / "audio-encoder-validation.json").write_text(json.dumps(summary, indent=2, allow_nan=False) + "\n",
                                                               encoding="utf-8")
     return summary

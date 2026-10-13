@@ -1,0 +1,11 @@
+<linker>
+  <assembly fullname="Unity.InferenceEngine">
+    <type fullname="Unity.InferenceEngine.Worker">
+      <field name="m_Storage" />
+      <field name="m_LayerCPUFallback" />
+    </type>
+    <type fullname="Unity.InferenceEngine.ModelStorage">
+      <method name="GetTensor" />
+    </type>
+  </assembly>
+</linker>

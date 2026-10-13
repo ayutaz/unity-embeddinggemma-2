@@ -1,6 +1,19 @@
 # M4: 音声対応のTDD計画
 
-更新日: 2026-10-13。**音声end-to-end API / sampleはmainに未実装、実音声encoderのPython数値gateは不合格、Sentis encoder受け入れは未完了**。音声前処理単独はPythonとWindows Sentis CPU / 実GPUで合格済み。[全体計画](multimodal-tdd-plan.md)の工程4として進める。M4実装だけでは公開せず、3モダリティと全必須環境の受け入れを揃える。
+更新日: 2026-10-13。**音声end-to-end API / sampleはmainに未実装。PR #60のnative保存参照は元6信号 / 2 profileで合格したが、NumPy ONNX全6信号とSentis FP32のCPU / GPU全12条件は固定elementwise許容差で不合格**。音声前処理単独はPythonとWindows Sentis CPU / 実GPUで合格済み。[全体計画](multimodal-tdd-plan.md)の工程4として進める。M4実装だけでは公開せず、3モダリティと全必須環境の受け入れを揃える。
+
+### 最新checkpointと次のRed
+
+Draft [PR #60](https://github.com/ayutaz/unity-embeddinggemma-2/pull/60)の確認headは `70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1`。参照producerは `271f5a12ca2aab081eb330f45cf593d404330374`であり、PR headへ付け替えない。[全6信号のnative / NumPy結果](https://github.com/ayutaz/unity-embeddinggemma-2/blob/70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1/docs/results/m4-audio-all-six-native-reference-real-20261013.json)、[全encoderのSentis不合格](https://github.com/ayutaz/unity-embeddinggemma-2/blob/70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1/docs/results/m4-audio-full-encoder-fp32-sentis-windows-failed-20261013.json)を固定する。Sentisはcosine全条件合格でもelementwise全条件不合格。skip 0 / CLI exit 1であり、GPU fallback / readback flushは0。subsample単独のCPU / GPU合格を全encoderの成功と数えない。
+
+| 順序 | 先に観測するRed | 最小実装 / Green | 実モデルの完了条件 |
+| --- | --- | --- | --- |
+| A4-1 診断の文脈 | source / revision / hash違い、不完全な6信号参照、native最終値が元参照と違う、trace最終値が元の失敗graphと違うのに診断を受け入れる | 重み読み込み前の監査と段階別参照生成。意図した失敗を観測してから実装し、関連回帰をgreenへ | 固定入力・参照と元の不合格出力の対応を確認。文脈が不一致なら原因特定に使わない |
+| A4-2 数値差の修正 | 文脈確認後、最初の差 / 許容差超過を独立した小さい演算テストで再現 | 証拠のある演算だけ最小修正。元の失敗テストと関連回帰をgreenへ | 元6信号 / 2 profileのONNX、Sentis CPU / 実GPU、保存 / 再読込。採用Float16は別検証。固定許容差を緩めない |
+| A5 連結 / 最終API | feature順 / mask / profile違い、借用Tensorの破棄、途中失敗の残留、中間CPU readback、最終vector不一致 | GPU前処理 → 実encoder → 共通本体とAudioEmbedder相当API | 独立した最終768次元参照・正規化、text / image回帰。最終音声参照CLIも期待値・監査のredから実装 |
+| A6 / A7 sample / Player | 全順位 / score、停止 / 再操作、権限拒否 / deviceなし、異常終了の誤受け入れ | 検索・再生・明示収録 / 停止と解放 | 固定PCM精度とマイク動作を別判定。実UI・Player・必須実機と正常終了 |
+
+以下のPR #40 / 初期PR #60のsilenceだけの失敗は、そのsourceでの履歴として保持する。「残り5信号未実行」は当時の範囲であり、現在のPR #60は全6信号実行済み。次の作業は上表の診断文脈保証から進め、原因をactivationへ限定しない。
 
 A1 / A3の前処理exportと参照・必須Actions gateはTDD実装し、PR #38 / #46をmainへ統合した。[係数・許容差の根拠](m4-audio-preprocessing-validation.md)。35 redから前処理契約を満たし、監査 / 回帰を含め110 passed / skip 0。Windows UnityはCPU / 実GPU各6信号、保存 / 再読込、mask完全一致が合格。最大絶対誤差は両backendとも `0.0038890838623046875`、GPU計算 / 入力fallbackとreadback flushは0件。[実行条件・診断readback・未達範囲](m4-audio-preprocessing-sentis-validation.md)。製品PCM Runtime APIと本番GPU連結、音声encoder以降、他OSの成功とは分ける。
 

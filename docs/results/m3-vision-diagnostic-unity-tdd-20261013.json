@@ -1,0 +1,37 @@
+{
+  "scope": "vision_diagnostic_unity_analysis_and_selective_artifact_tdd_only",
+  "unity_analysis_assertion_red": 12,
+  "unity_analysis_green": 12,
+  "compile_errors": 0,
+  "compile_warnings": 0,
+  "artifact_subset_assertion_red": 4,
+  "artifact_subset_green": 4,
+  "real_reference_run": 38344076080,
+  "actual_reference_source": "736a4684be754563bbb953a67c2023d688c4a312",
+  "reference_ci_conclusion": "success",
+  "evidence_files": {
+    "vision-diagnostic-analysis-red.log": {
+      "bytes": 4595,
+      "sha256": "01b1188d4f3b1b7042323041b78e5345390179eb6afc73d2e31a83dacd405808"
+    },
+    "vision-diagnostic-analysis-green.log": {
+      "bytes": 508,
+      "sha256": "10a81fb5bb2b451f85ad30c2d5362c15d58e5c8b710968b88fb564f4420689a6"
+    },
+    "vision-diagnostic-harness-compile.log": {
+      "bytes": 282,
+      "sha256": "b20aaa9e6a36d5a0933e32aeb8916f99af80e130ef6468b3572c50240086ce5e"
+    },
+    "artifact-subset-red.log": {
+      "bytes": 2683,
+      "sha256": "a97c2e4b1a82549b7fbb7e83ebf3a3f203e7479aa1311cb898c34eb5c2d18a2b"
+    },
+    "artifact-subset-green.log": {
+      "bytes": 100,
+      "sha256": "9923ba1ded2c101ef3c5f20bc813bde917b4e08fcd48a9a57cf24a115f262c92"
+    }
+  },
+  "real_sentis_diagnostics_executed": false,
+  "known_fp32_failure_resolved": false,
+  "formal_release_created": false
+}

@@ -117,6 +117,28 @@ def test_saved_audio_silu_preserves_native_division_rounding_at_counterexamples(
     assert "aten.sigmoid.default" in {str(node.target) for node in default.graph.nodes if node.op == "call_function"}
 
 
+@pytest.mark.parametrize("shape", [(17,), (1, 2, 4096)])
+def test_saved_audio_silu_preserves_native_vectorized_rounding(tmp_path, shape):
+    class ActivationProbe(torch.nn.Module):
+        def validate_inputs(self, features):
+            assert features.dtype == torch.float32 and torch.isfinite(features).all()
+
+        def forward(self, features):
+            return torch.nn.functional.silu(features)
+
+    torch.manual_seed(412)
+    inputs = torch.randn(shape) * 2
+    expected = torch.nn.functional.silu(inputs)
+    path = tmp_path / "vector-silu.pt2"
+    export.export_audio_pt2(ActivationProbe(), inputs, path)
+    with torch.no_grad():
+        actual = torch.export.load(path).module()(inputs)
+    indices = torch.nonzero(actual.flatten() != expected.flatten()).flatten()
+    examples = [(inputs.flatten()[i].item(), expected.flatten()[i].item(), actual.flatten()[i].item())
+                for i in indices[:4]]
+    assert indices.numel() == 0, f"Native vectorized SiLU mismatch: {indices.numel()} elements; {examples}"
+
+
 def test_loads_only_audio_and_projector_as_float32(tmp_path):
     audio, projection = audio_models()
     (tmp_path / "config.json").write_text(json.dumps({"audio_config": audio.config.to_dict(),

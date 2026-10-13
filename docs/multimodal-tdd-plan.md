@@ -10,7 +10,7 @@
 - PR #31はdraft。6000.3.21f1でのWindows実測成功は検証consumerの補修条件付きであり、未補修compile、新candidateの空Git consumer導入、Float16/GPU性能の確認が残る。詳細は[M2基盤計画](m2-release-plan.md)と[実測記録](m2-unity-21-upgrade-validation.md)。
 - 開発対象は承認済みUnity 6000.3.21f1 / Sentis 2.6.1。mainのUnity版変更はPR #31未統合のため未反映。版を黙って変更しない。
 - M3の画像encoder / projector exportはPR #37でmainへ統合済み。[実モデルPython CI 38310718250](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38310718250)の3 profile / 6ケースでminimum cosine `0.9999997615814209`。`vision_encoder_projector_only`であり、Unity・GPU前処理・最終768次元の合格ではない。
-- M4の音声前処理exportは[PR #38](https://github.com/ayutaz/unity-embeddinggemma-2/pull/38)のhead `0424734291dc4cb7606b8bae53086f4911252e94`に実装し、mainへ統合済み。[CI 38313045325](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38313045325)全8 job成功、公式前処理対exportの6ケースで最大絶対誤差 `0.0038890838623046875`。`audio_preprocessing_only`であり、音声encoder / Unityは未検証。
+- M4の音声前処理exportは[PR #38](https://github.com/ayutaz/unity-embeddinggemma-2/pull/38)のhead `0424734291dc4cb7606b8bae53086f4911252e94`に実装し、mainへ統合済み。[CI 38313045325](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38313045325)全8 job成功、公式前処理対exportの6ケースで最大絶対誤差 `0.0038890838623046875`。後続の[PR #46](https://github.com/ayutaz/unity-embeddinggemma-2/pull/46)でWindows Sentis CPU / 実GPU各6ケースの前処理・保存 / 再読込・mask完全一致を確認した。[結果と範囲](m4-audio-preprocessing-sentis-validation.md)。これは前処理単独の受け入れであり、製品PCM API・音声encoder・最終768次元 / sampleの合格ではない。
 - M3画像 / M4音声のend-to-end API / sampleはmainに未実装。macOS / iOS / Android実機の合格証拠は未取得。Unity CI用Secrets / 専用runnerと端末の確保を並行して進め、CI成功と実機GPU成功を分ける。
 
 ### 今回の検証を反映した優先課題

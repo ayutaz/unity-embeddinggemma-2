@@ -43,6 +43,12 @@ jobs:
           --preprocessing ../artifacts/audio-runtime-preprocessing
           --output ../artifacts/audio-runtime-reference
           --native-silu --collect-onnx-failures
+      - name: Export stages only after native reference completion
+        if: ${{ always() && hashFiles('artifacts/audio-runtime-reference/audio-encoder-validation.json') != '' }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools prepare-audio-runtime-stages
+          --encoder-source ../artifacts/audio-runtime-reference
+          --output ../artifacts/audio-runtime-stages
       - name: Record diagnostic scope without claiming numeric success
         if: always()
         shell: bash
@@ -66,6 +72,7 @@ jobs:
           name: audio-runtime-native-${{ github.sha }}
           path: |
             artifacts/audio-runtime-reference/
+            artifacts/audio-runtime-stages/
             artifacts/audio-runtime-preprocessing/audio-validation.json
           compression-level: 0
           retention-days: 3

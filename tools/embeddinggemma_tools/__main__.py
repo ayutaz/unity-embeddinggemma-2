@@ -8,7 +8,7 @@ from pathlib import Path
 
 from huggingface_hub import snapshot_download
 
-from .prepare import MODEL_ID, MODEL_REVISION, prepare, prepare_audio_encoder, prepare_multimodal_backbone, prepare_vision
+from .prepare import MODEL_ID, MODEL_REVISION, prepare, prepare_audio_encoder, prepare_audio_runtime_stages, prepare_multimodal_backbone, prepare_vision
 from .search import SEARCH_CASES
 from .prompt_reference import prepare_prompt_reference
 from .image_embeddings import prepare_image_embeddings
@@ -58,6 +58,11 @@ def main(argv=None):
     audio.add_argument("--native-silu",action="store_true",help="Keep native SiLU math and create standard Swish ONNX companions")
     audio.add_argument("--collect-onnx-failures", action="store_true",
                        help="Finish native references while recording ONNX failures; still exits with failure")
+    stages = commands.add_parser("prepare-audio-runtime-stages", help="Pinned native stages; context only, not encoder acceptance")
+    stages.add_argument("--output", type=Path, required=True)
+    stages.add_argument("--encoder-source", type=Path, required=True)
+    stages.add_argument("--snapshot", type=Path)
+    stages.add_argument("--revision", type=revision, default=MODEL_REVISION)
     prompts = commands.add_parser("prepare-prompts", help="Weights-free official multimodal prompt/token references")
     prompts.add_argument("--output", type=Path, required=True)
     prompts.add_argument("--snapshot", type=Path)
@@ -81,11 +86,18 @@ def main(argv=None):
             "config.json", "model.safetensors", "tokenizer.json", "tokenizer_config.json",
             "config_sentence_transformers.json", "modules.json", "1_Pooling/config.json",
         ]
-        if args.command in ("prepare-backbone", "prepare-vision", "prepare-audio-encoder", "prepare-image-embeddings"):
+        if args.command in ("prepare-backbone", "prepare-vision", "prepare-audio-encoder", "prepare-image-embeddings", "prepare-audio-runtime-stages"):
             patterns.append("processor_config.json")
         if args.command == "prepare-prompts":
             patterns = ["config.json", "tokenizer.json", "tokenizer_config.json", "config_sentence_transformers.json"]
         snapshot = Path(snapshot_download(MODEL_ID, revision=args.revision, allow_patterns=patterns))
+    if args.command == "prepare-audio-runtime-stages":
+        summary = prepare_audio_runtime_stages(snapshot, args.encoder_source, args.output, revision=args.revision,
+                                               source_commit=os.environ.get("GITHUB_SHA", "local"))
+        print(json.dumps({name: summary[name] for name in (
+            "success", "stage", "profile_count", "case_count", "context_validated", "full_encoder_validated",
+            "unity_validated", "end_to_end_validated")}))
+        return
     if args.command == "prepare-audio-encoder":
         summary = prepare_audio_encoder(snapshot, args.preprocessing, args.output, revision=args.revision,
                                          source_commit=os.environ.get("GITHUB_SHA", "local"),native_silu=args.native_silu,

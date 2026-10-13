@@ -98,5 +98,18 @@ namespace EmbeddingGemma.Tests
             Assert.That(result.Value<int>("length"),Is.EqualTo(768));Assert.That(result.Value<int>("finite_count"),Is.EqualTo(768));
             Assert.That(result.Value<double>("finite_sum_squares"),Is.Zero);
         }
+        [TestCase("valid",true)] [TestCase("producer",false)] [TestCase("graph",false)] [TestCase("file",false)] [TestCase("missing",false)]
+        public void SavedModelReuseRequiresBoundContextAndVerifiedFiles(string problem,bool expected)
+        {
+            var context=new JObject{["producer"]=Source,["graph_sha256"]=new string('a',64),["unity"]="6000.3.21f1",["sentis"]="2.6.1",["quantized"]=true};
+            var files=new JObject{["fp32"]=new JObject{["name"]="unique-fp32.sentis",["bytes"]=100,["sha256"]=new string('c',64)},
+                ["float16"]=new JObject{["name"]="unique-float16.sentis",["bytes"]=50,["sha256"]=new string('d',64)}};
+            var cache=new JObject{["context"]=context.DeepClone(),["files"]=files.DeepClone()};
+            if(problem=="producer")cache["context"]["producer"]=new string('e',40);
+            if(problem=="graph")cache["context"]["graph_sha256"]=new string('e',64);
+            if(problem=="file")files["float16"]["sha256"]=new string('e',64);
+            if(problem=="missing")((JObject)files).Remove("float16");
+            Assert.That((bool)Invoke("CacheMatches",cache,context,files),Is.EqualTo(expected));
+        }
     }
 }

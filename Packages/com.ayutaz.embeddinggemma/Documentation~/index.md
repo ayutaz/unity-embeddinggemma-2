@@ -82,6 +82,21 @@ float[] embedding = backbone.Embed(inputIds, attentionMask, imageFeatures, audio
 
 `model`・feature Tensorは呼び出し側が所有します。GPUComputeでは非空featureを既にGPUへ置いてください。backboneはfeatureをCPUへdownload・Disposeせず、最終768次元だけを独立したCPU配列へコピーします。featureの全値に対するCPU検査は行わないため、入力側でもfinite条件を保証してください。長さ / mask / slot数・feature shape・dataの生存・backendの不一致は拒否します。backboneをDisposeした後も、借用Tensorの解放は呼び出し側が行います。
 
+### 公式promptの構築
+
+`MultimodalPromptBuilder`は固定revisionのtokenizer JSON・tokenizer設定とbackbone profileを使い、単一画像 / 単一音声または両方のpromptを作ります。画像feature数は実encoder profileの値（square 256、landscape / portrait 252等）を渡します。音声は前処理のbinary feature maskを2段stride-2で縮約し、有効なsoft token数を求めます。開始 / 終了marker、token ID、feature数は設定・profileに一致する必要があります。
+
+```csharp
+var prompts = new MultimodalPromptBuilder(tokenizerJson, tokenizerConfigurationJson, profile);
+var prompt = prompts.Build("<|image|>", imageFeatureCount: 256, role: TextRole.Document);
+// 対応するencoder / backbone graphとGPU Tensorを準備してから渡します。
+float[] embedding = backbone.Embed(prompt.InputIds, prompt.AttentionMask, imageFeatures, audioFeatures);
+```
+
+これはAPIの接続例です。実encoderから最終embeddingまでの受け入れは開発中です。音声なら`Build("<|audio|>", audioFeatureMask: mask)`、両方ならtemplate内に各placeholderを1つずつ置きます。query / document prefixとtitleは`TextPrompts`の契約を維持します。入力templateに開始 / 終了markerを事前展開しないでください。結果のIDs / maskは独立した配列copyです。
+
+text用tokenizerの既存truncation / paddingを解除し、完全なtoken化の後にprofile長へ右paddingします。上限超過は例外となり、切り捨てません。固定profileごとにbuilderを作って再利用してください。promptはCPU側の入力境界で、GPU featureの読み出しやencoder実行は行いません。zero-featureのbackbone graphや全end-to-endの検証は別です。
+
 ## 画像前処理Runtime（開発中）
 
 ```csharp

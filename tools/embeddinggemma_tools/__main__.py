@@ -10,6 +10,7 @@ from huggingface_hub import snapshot_download
 
 from .prepare import MODEL_ID, MODEL_REVISION, prepare, prepare_multimodal_backbone, prepare_vision
 from .search import SEARCH_CASES
+from .prompt_reference import prepare_prompt_reference
 
 
 def sequence_length(value):
@@ -47,6 +48,10 @@ def main(argv=None):
     vision.add_argument("--output", type=Path, required=True)
     vision.add_argument("--snapshot", type=Path)
     vision.add_argument("--revision", type=revision, default=MODEL_REVISION)
+    prompts = commands.add_parser("prepare-prompts", help="Weights-free official multimodal prompt/token references")
+    prompts.add_argument("--output", type=Path, required=True)
+    prompts.add_argument("--snapshot", type=Path)
+    prompts.add_argument("--revision", type=revision, default=MODEL_REVISION)
     args = parser.parse_args(argv)
     snapshot = args.snapshot
     if snapshot is None:
@@ -56,7 +61,14 @@ def main(argv=None):
         ]
         if args.command in ("prepare-backbone", "prepare-vision"):
             patterns.append("processor_config.json")
+        if args.command == "prepare-prompts":
+            patterns = ["config.json", "tokenizer.json", "tokenizer_config.json", "config_sentence_transformers.json"]
         snapshot = Path(snapshot_download(MODEL_ID, revision=args.revision, allow_patterns=patterns))
+    if args.command == "prepare-prompts":
+        summary = prepare_prompt_reference(snapshot, args.output, revision=args.revision,
+                                           source_commit=os.environ.get("GITHUB_SHA", "local"))
+        print(json.dumps({name: summary[name] for name in ("success", "stage", "case_count", "unity_validated", "end_to_end_validated")}))
+        return
     if args.command == "prepare-vision":
         summary = prepare_vision(snapshot, args.output, revision=args.revision,
                                  source_commit=os.environ.get("GITHUB_SHA", "local"))

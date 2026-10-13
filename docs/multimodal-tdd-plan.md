@@ -4,14 +4,14 @@
 
 ## 現在の基準
 
-今回確認したmainは `5139412ae77f99d7becf2e8dd49aa6bb8b035ab3`。PR #52までの基盤に加え、全体計画PR #54、公式prompt契約PR #55、native SiLU / 標準ONNX Swish単独probe PR #57、環境ごとの診断値照合PR #59が統合済み。画像 / 音声のend-to-end API / sampleは未実装で、残作業は検証だけではない。以下の最新checkpointと、各行の過去の固定sourceの実測を区別する。[以前の計画snapshot](results/tdd-plan-checkpoint-20261013.json)、[音声前処理Runtime受け入れ](results/m4-audio-preprocessing-runtime-windows-20261013.json)、[診断未達](results/tdd-acceptance-plan-checkpoint-20261013.json)は保持する。今回の文書更新では新たなUnity実行・モデル生成は行わない。
+今回確認したmainは `625ed8cf6f6dc3e14a762a860608505975a299a5`。PR #52までの基盤に加え、全体計画PR #54、公式prompt契約PR #55、最終画像Python参照PR #56、native SiLU / 標準ONNX Swish単独probe PR #57、環境ごとの診断値照合PR #59が統合済み。画像 / 音声のend-to-end API / sampleは未実装で、残作業は検証だけではない。以下の最新checkpointと、各行の過去の固定sourceの実測を区別する。[以前の計画snapshot](results/tdd-plan-checkpoint-20261013.json)、[音声前処理Runtime受け入れ](results/m4-audio-preprocessing-runtime-windows-20261013.json)、[診断未達](results/tdd-acceptance-plan-checkpoint-20261013.json)は保持する。今回の文書更新では新たなUnity実行・モデル生成は行わない。
 
 ### 最新checkpointと直近の受け渡し
 
 | 対象 | 現在の証拠 | 次のTDDと受け入れ |
 | --- | --- | --- |
 | C3 公式prompt | PR #55はmainへ統合済み。prompt / placeholder / maskの契約実装を保持 | 実encoderのfeature数・順序・所有権・途中失敗を新しいredから接続し、実画像 / 音声の最終vectorとtext回帰を確認 |
-| I1 / I4 最終画像参照 | PR #56の実モデルPythonは3 profile / 6画像で768次元と保存encoder → 保存backboneを照合済み。producer `35d357263ae29de4db1ad93d1cac3616ea1e61b4`、[CI 38356261690](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38356261690)。競合解消head `2c6892993b2a198eea671857fd6814efd58af09b`も全8チェック成功。main保護の最新base要件でhead `9814ce9d8bd70fa07cbd191867d93d7f4dd461f5`へ更新し[CI 38364660005](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38364660005)を再検証中 | 現headのCI成功と最新baseを確認して統合。zero-audio profileのSentis import・CPU / 実GPUの全chain照合、I2の元FP32条件、API / sampleは別gate |
+| I1 / I4 最終画像参照 | PR #56はmainへ統合済み。実モデルPythonは3 profile / 6画像で768次元と保存encoder → 保存backboneを照合。producer `35d357263ae29de4db1ad93d1cac3616ea1e61b4`、[CI 38356261690](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38356261690)。最新baseのhead `9814ce9d8bd70fa07cbd191867d93d7f4dd461f5`の[CI 38364660005](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38364660005)全8成功を確認して統合 | zero-audio profileのSentis import・CPU / 実GPUの全chain照合、I2の元FP32条件、API / sampleは別gate |
 | A4 標準Swish単独 | PR #57は統合済み。[小さいWindows probe](results/m4-native-silu-swish-probe-windows-20261013.json)はCPU / GPUの全4条件合格。GPUは固定許容差内であり、完全一致ではない | 単独operatorの合格を全encoderへ流用しない。全encoder ONNX、保存 / 再読込と元6信号を確認 |
 | A4 native音声ONNX候補 | Draft PR #60へ固定。4 + 2 + 1 red → 関連58 green、ONNX数値gateの2 red → 関連43 / feed-forward17 green。[実モデルCI 38362823692](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38362823692)はONNX silence不合格。cosine合格でも許容差比3.971386671066284 / 292要素不一致。producer `cb7f2b00e8135d016c55ef8e00adfe9faafa387b`、head `05b48e6a2aa363d229f7eb18c163f9d5c19c94b4`は別 | 元の不合格を保持してONNX stage診断をTDD追加し、trace最終値と元graphの一致を確認して原因修正へ。元6信号とSentis CPU / 実GPUを別判定。小さいgreen・cosineだけで実モデル成功にしない |
 

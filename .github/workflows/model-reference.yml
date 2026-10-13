@@ -33,6 +33,15 @@ jobs:
           enable-cache: true
           cache-dependency-glob: tools/uv.lock
       - run: uv sync --locked
+      - name: Generate weights-free official multimodal prompt references
+        run: uv run --locked python -m embeddinggemma_tools prepare-prompts --output ../artifacts/multimodal-prompts
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: multimodal-prompts-${{ github.sha }}
+          path: artifacts/multimodal-prompts/
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: error
       - name: Generate real-model references and validate exported program
         run: uv run --locked python -m embeddinggemma_tools prepare --output ../artifacts/m1
         env:

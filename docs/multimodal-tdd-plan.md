@@ -1,59 +1,53 @@
 # M2・M3・M4から正式リリースまでのTDD計画
 
-更新日: 2026-10-13。ユーザー指定により、**正式リリースはM2〜M4の全対応と全必須検証の完了後**とする。開発中のPR統合と正式リリースを分け、今回の計画更新では公開操作を行わない。すべての振る舞いの実装・修正・自動化を、以下のred → green → refactorで進める。
+更新日: 2026-10-13。**正式リリースはM2〜M4の全対応と全必須検証の完了後**とする。工程6までは開発・検証・配布準備であり、公開tag / GitHub Releaseを作成しない。振る舞いを追加・変更するすべての実装と自動化を、独立した期待値によるred → green → refactorで進める。
 
-## 現在の基準と作業順
+## 現在の基準
 
-- 今回確認したmain: `bb12017c0045840a8a04b8afebeaf263fe5f5287`（PR #44まで統合）。[main CI 38324316213](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38324316213)は成功。テキストUPM / 検索サンプルとWindows M1の証拠は維持する。
-- C2 / C3の一部として、project済み特徴量入力・1024長backboneのexport / 参照 / Actions接続は実装済み。[PR #34 CI 38306145598](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38306145598)で実text重みと合成特徴量の2ケース、minimum cosine 1.0を確認した。実encoder featureを使う共通本体とUnity新profileは未検証。[証拠と範囲](multimodal-backbone-validation.md)。
-- [PR #43](https://github.com/ayutaz/unity-embeddinggemma-2/pull/43)の確認headは `41d2da3bb8228ff6cf74a016888841bcac2a4f28`。共通Runtime APIの62件greenに続き、1024長の実graphはSentis importでbroadcast不整合となり、数値照合は0件だった。特徴量の配置を小さいgraphで再現し、Python 1 red → 25 green、Unity 3 failed / 3 passed → 既存を含む68 passed / skip 0へ修正した。失敗importを再利用するcacheも検証済み。[CI 38325796546](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38325796546)全8 job成功。ただし小さい実GPUとconsumer Editor test assemblyへのsource配置の結果であり、修正後の実1024長graphのSentis照合・新Runtime assemblyの固定Git導入・実encoder接続は未完了。[固定headの記録](https://github.com/ayutaz/unity-embeddinggemma-2/blob/41d2da3bb8228ff6cf74a016888841bcac2a4f28/docs/results/multimodal-placement-windows-20261013.json)。draftは維持する。
-- PR #31はdraft。6000.3.21f1でのWindows実測成功は検証consumerの補修条件付きであり、未補修compile、新candidateの空Git consumer導入、Float16/GPU性能の確認が残る。詳細は[M2基盤計画](m2-release-plan.md)と[実測記録](m2-unity-21-upgrade-validation.md)。
-- 開発対象は承認済みUnity 6000.3.21f1 / Sentis 2.6.1。mainのUnity版変更はPR #31未統合のため未反映。版を黙って変更しない。
-- M3の画像encoder / projector exportはPR #37でmainへ統合済み。[実モデルPython CI 38310718250](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38310718250)の3 profile / 6ケースでminimum cosine `0.9999997615814209`。`vision_encoder_projector_only`であり、Unity・GPU前処理・最終768次元の合格ではない。
-- M4の音声前処理exportは[PR #38](https://github.com/ayutaz/unity-embeddinggemma-2/pull/38)のhead `0424734291dc4cb7606b8bae53086f4911252e94`に実装し、mainへ統合済み。[CI 38313045325](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38313045325)全8 job成功、公式前処理対exportの6ケースで最大絶対誤差 `0.0038890838623046875`。後続の[PR #46](https://github.com/ayutaz/unity-embeddinggemma-2/pull/46)でWindows Sentis CPU / 実GPU各6ケースの前処理・保存 / 再読込・mask完全一致を確認した。[結果と範囲](m4-audio-preprocessing-sentis-validation.md)。これは前処理単独の受け入れであり、製品PCM API・音声encoder・最終768次元 / sampleの合格ではない。
-- M3画像 / M4音声のend-to-end API / sampleはmainに未実装。macOS / iOS / Android実機の合格証拠は未取得。Unity CI用Secrets / 専用runnerと端末の確保を並行して進め、CI成功と実機GPU成功を分ける。
+今回確認したmainは `bf9cc19af7b53834faaafb3a119e955cf27ad423`（PR #46まで統合）。[main CI 38328373164](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38328373164)は成功。M1のWindowsテキスト受け入れは維持するが、画像・音声のend-to-end API / sampleは未実装であり、残作業は検証だけではない。
 
-### 今回の検証を反映した優先課題
-
-- I2: [PR #41](https://github.com/ayutaz/unity-embeddinggemma-2/pull/41)の画像Sentis fixtureをWindowsで実行した。3 profile × CPU / GPUCompute × FP32 / Float16の12条件は保存報告まで完了し、Float16の6条件は合格。FP32の6条件はcosine条件を満たすが、先に固定した要素単位の許容差を超えて不合格。原因を分離した小さいredから修正する。[全条件と実行範囲](results/m3-vision-windows-plan-snapshot-20261013.json)。GPU encoderの成功をGPU画像前処理・共通本体・最終768次元の成功へ流用しない。
-- A4: [PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40)の確認head `c4676f7b38f01ce98a9dedca87fb450febea20b9`は未統合。段階別診断はTDDで追加し、関連46件green。[実モデル診断 CI 38324421389](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38324421389)は失敗、実行sourceはPR merge ref `dc2156c954e66aba418f31f1ce88ca7da089b355`。silenceでは公式対eager差0、保存graph対eager最大差 `0.00021576881408691406`、許容差比 `9.733773231506348`、不一致368要素。subsampleは一致、layer 0から微差、layer 10で初めて許容差を超過した。次は層内の演算を独立参照と比較する診断をTDDで追加し、原因演算の小さい再現red → 修正 → 元の実重み6ケースgreenへ進む。原因演算は未特定、残り5ケースは未実行、許容差は変更しない。[固定headの段階別証拠](https://github.com/ayutaz/unity-embeddinggemma-2/blob/c4676f7b38f01ce98a9dedca87fb450febea20b9/docs/results/m4-audio-stages-real-failed-20261013.json)。同headのCI 38325813586は今回確認時点で実行中であり、合格とは数えない。
-- C4 / C7: 重いUnity測定は同一operationの完了報告を追跡し、CLI観測timeoutを再実行の理由にしない。import / 保存の再利用、worker / tensor / modelの所有権と解放を先に検証し、改善は同じ仕事量で測る。異なる条件数のrun時間だけで高速化を宣言しない。
-
-この2件の数値不合格解消とM2基盤の残る再現性確認を最初のPR単位にし、共通本体・I3以降・A2 / A3以降へ渡す。以下の6工程とC / I / Aの完了条件は維持する。正式Releaseと公開tagは全対応後の別工程とする。
-
-### 最初の実装単位と停止条件
-
-| 単位 | 先に確認する失敗 | 合格してから渡すもの |
+| 範囲 | 確認済み | 次に満たす条件 |
 | --- | --- | --- |
-| 音声保存graphの層内診断 | 既存の段階診断46件を維持し、層内stage欠落・誤順序・hook解放漏れ・元の失敗消失を拒否する小さいテスト | layer 0 / 10内の公式演算と保存graphを比較し、原因を特定。原因の再現red → 最小修正 → 元の実モデル6ケースのgreen。診断追加だけではA4合格にしない |
-| 共通本体Runtimeの実モデル受け入れ | 配置演算と失敗cacheのred → greenは確認済み。新しい契約変更は不正profile / 入力 / 所有権のredから始める | PR #43の68件を維持し、修正後の監査済み1024長artifactを保存 / 再読込、CPU / GPUCompute × FP32 / Float16で最終768次元を照合。合成project済みfeatureと実encoder featureの結果を分け、最後にRuntime assemblyの固定Git導入も確認 |
-| 画像FP32数値差 | 独立参照に対し最初に差が出る演算 / stageを小さい入力でredにする | 修正対象を絞って再照合し、3 profile × CPU / GPU × FP32 / Float16の12条件を満たす。未変更の重い処理は再生成せず、修正の影響範囲に必要な実測だけを行う |
+| M2 / C1・C7 | Windows Editor / Playerのテキスト実測あり。導入helperのPR #36はPR #31の作業ブランチへ統合済み | mainへの導入手順反映、安定性・性能の原因別修正、最終candidateの空Git consumer、native入力・他OS。既存consumerの更新を新規導入と数えない |
+| C3 共通backbone | [PR #43](https://github.com/ayutaz/unity-embeddinggemma-2/pull/43)、確認head `21e598c5b53d5ad73557ee6d606b12770254d73b`。[CI 38328907748](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38328907748)全8 job成功。配置・cacheの小さい68件greenに加え、実1024長graphのCPU / GPUCompute × FP32 / Float16全4条件合格 | 最初の4条件はEditor assembly内source。後続の固定Git Runtime更新でも4条件合格（下記receipt）。実encoder feature、公式prompt構築、GPU前処理との接続と最終空consumerは別gate |
+| M3 / I1・I2 | Python画像encoder / projectorは3 profileで合格。Windows Sentis Float16 CPU / 実GPUの6条件合格 | FP32の6条件はcosine合格でも固定elementwise許容差を超過。不一致演算を小さいredにし、全12条件を満たす。GPU画像前処理・最終768次元API / sampleは未完成 |
+| M4 / A1・A3 | PR #38 / #46をmainへ統合。音声前処理は公式PythonとWindows Sentis CPU / 実GPU各6信号、保存 / 再読込、mask完全一致が合格 | 製品PCM入力契約とRuntime接続、実音声encoder、最終768次元API / sampleは未完了。診断用出力取得を本番GPU連結の証明にしない |
+| M4 / A4 | [PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40)、確認head `4ae52890da50ffc570cba4902d96e95b182cc9c6`。層内診断をTDDで追加し関連59件green | [実モデルCI 38327706633](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38327706633)はsilenceで不合格。最初の非zero差はlayer 0のfeed_forward1、最初の許容差超過はlayer 10。原因演算をさらに分離し、元の6信号を合格させる |
+| 必須環境 | Windowsの条件付き証拠とAndroid APK buildあり | macOS / iOS / Android実機の3モダリティCPU / 実GPU、sample、時間 / memory・終了の合格証拠が必要 |
 
-M2の再現性確認を継続しながら、互いに依存しない参照診断・画像前処理の契約・音声入力境界のテストは準備できる。実encoderの不合格を最終API / sampleの完了で埋め合わせない。OOM、演算非互換、未取得の実機は失敗 / 未実行として残し、その条件に依存しないタスクを進める。
+共通backboneの[固定headの実測](https://github.com/ayutaz/unity-embeddinggemma-2/blob/21e598c5b53d5ad73557ee6d606b12770254d73b/docs/results/multimodal-backbone-sentis-windows-20261013.json)と音声診断の[固定headの不合格](https://github.com/ayutaz/unity-embeddinggemma-2/blob/4ae52890da50ffc570cba4902d96e95b182cc9c6/docs/results/m4-audio-layer-real-failed-20261013.json)を参照する。初回backbone import失敗も保持する。PRのCI成功とUnity・実機の受け入れを分け、後続headで過去の実行sourceを置き換えない。
 
-| 順序 | 範囲 | 次へ渡す条件 |
+開発検証は承認済みUnity 6000.3.21f1 / Sentis 2.6.1。mainのEditor固定はPR #31未統合のため6000.3.16f1であり、版更新はPRで反映する。固定Git Runtime更新後の実backbone受け入れは同じoperationの完了報告を追跡し、2026-10-13 01:02:13 UTCに4 passed / failed 0 / skip 0 / CLI exit 0を確認した。[更新consumerのreceipt](results/multimodal-git-runtime-upgrade-windows-20261013.json)。Runtime source overlayなし、requested / resolved SHA一致。これは既存consumerの更新で、最終candidateの空consumer再現ではない。公式Test Framework 1.6.0のembedded条件も保持する。この計画更新では新しいUnity起動や再実行を行わない。
+
+## 着手順と依存
+
+| 工程 | 対象と先に作る失敗テスト | 最小実装と完了条件 |
 | --- | --- | --- |
-| 1 | M2基盤の再現・安定化 | 標準consumerのcompile、固定Git導入、テキスト回帰・終了・resource管理。既知の性能問題の原因と採用条件を記録 |
-| 2 | 共通マルチモーダル基盤の残り | 実装済みbackboneをSentis import / CPU / GPUへ接続。固定processor契約、Unity入力profile監査、GPU特徴量受け渡し、artifact監査。テキスト128長の既存APIを回帰確認 |
-| 3 | [M3画像対応](m3-plan.md) | GPU前処理 → 画像encoder → 共通本体 → 768次元。実モデル精度、テキスト→画像順位、sample操作・解放 |
-| 4 | [M4音声対応](m4-plan.md) | GPU音声前処理 → 音声encoder → 共通本体 → 768次元。実モデル精度、テキスト→音声順位、sample操作・解放 |
-| 5 | 全モダリティの統合・必須環境 | Windows / macOS Editor、iOS / Android PlayerでCPU / 実GPU、配布candidate・UI・時間・メモリ・正常終了 |
-| 6 | 最終配布準備 | 1〜5の全合格後にversion / 文書 / license / candidate固定consumerを確認。正式リリースは全対応後の別工程 |
+| 1 M2基盤 | C1 / C7。不足依存・導入SHA不一致、resource解放漏れ・待機漏れ、cache破損の誤受け入れを原因別にredへ | 再現可能な導入と安定性修正。固定Gitでcompile・テキスト回帰・検索・正常終了。import / reload / 推論を別測定し、同条件で性能比較 |
+| 2 共通基盤 | C2〜C4。revision / hash / profile違い、placeholder数・feature順 / mask違い、借用Tensor破棄・中間CPU readbackをredへ | 固定profile / 公式prompt・特徴量配置、GPU tensorの所有権と受け渡し、Runtime assemblyの実モデル受け入れ。実encoder接続時にも最終768次元を独立参照へ照合。既存text128長回帰 |
+| 3 M3画像 | I1〜I6。FP32差の小さい再現、向き・色空間・resize / patch順、画像入力境界、最終vector・全順位・sample状態の不一致をredへ | GPU画像前処理 → encoder → 共通本体 → ImageEmbedder相当API → 画像検索sample → Player。Texture / RenderTexture、実CPU / GPU、有限768次元・単位長、全順位・表示・解放・終了 |
+| 4 M4音声 | A1〜A7。encoder差の小さい再現、PCM長 / channel / sample rate・NaN、frame / mask、最終vector・検索・収録状態の不一致をredへ | PCM入力 → GPU前処理 → encoder → 共通本体 → AudioEmbedder相当API → 検索 / 再生sample → 明示収録 / Player。固定PCM精度とマイク入力動作を別判定、停止 / 権限失敗・解放・終了 |
+| 5 全統合・必須環境 | C4〜C6。混在索引の次元 / 順位、切替の解放漏れ、actual CPU・skip・途中結果・非zero終了をpassとする監査をredへ | Windows Editor / Player、macOS Editor、iOS / Android実機で3モダリティの実CPU / GPU、sample実操作、cache・切替、時間 / memory・正常終了。未実行・OOMを合格にしない |
+| 6 最終配布準備 | 版 / manifest不整合、重み混入、native依存、結果欠落を見逃す配布監査をredへ | 1〜5の全合格後、version / CHANGELOG / API文書・全sample / licenseを整理。固定candidateの空Git consumer再現と配布監査。公開tag / 正式Releaseは後の別工程 |
 
-端末・Mac・署名・CIライセンスの確保は1から並行する。M2の全OS検証や正式公開をM3・M4の着手条件にしない。共通基盤に必要な再現性を確保できたらM3へ進み、他OSの不足は最終公開の必須条件として残す。M4のprocessor調査・小さい参照fixture準備もM3中に進められる。日程は実測・環境確保後に見積もり、現時点で完了日を約束しない。
+詳細なRed / 最小実装 / Greenは下記C表と[M3画像計画](m3-plan.md)のI表、[M4音声計画](m4-plan.md)のA表を用いる。機能完了は小さい単体テストだけでは判定せず、実モデル・実backend・sample / Playerの必要な受け入れまで追う。
 
-### 次に着手する単位
+Mac・端末・署名・Unity CIライセンス / runnerの確保は工程1から並行する。M2の全OS検証完了をM3の着手条件にしない。画像前処理とPCM入力境界の独立した契約は、encoder数値差の解消を待たず準備できる。最終公開に必要な条件は省略しない。日程はモデル数値差と実機確保の見通しを得てから見積もる。
 
-| 順序 | タスクと依存 | 最初に固定するテスト | 次へ渡す証拠 |
-| --- | --- | --- | --- |
-| 1 | C1 / C7: M2の残る導入・安定性 | 原因別の導入契約、解放 / 待機漏れ、誤集計を拒否するテスト | 未補修と補修条件を分けた固定Git consumer結果、Float16/GPU同条件比較。単なるtimeoutを再起動の条件にしない |
-| 2 | C3 / I2: 共通本体と画像exportのSentis受け入れ | 独立Pythonのshape・全feature・数値、実backendとfallbackの検査 | 固定artifact / hashでCPU・GPUCompute × FP32・Float16。既にPythonで合格したexportへ架空のredは付けず、非互換があれば原因の小さい再現テストから修正 |
-| 3 | I3 → I4 → I5 / I6: 画像のGPU前処理・API・sample / Player | resize / patch順 / 色空間の不一致、placeholder / mask不整合、検索順位 / 寿命の不正 | Texture / RenderTextureから最終768次元までの実GPU、text→image全順位、UI・解放・独立終了 |
-| 4 | A1〜A4 → A5 → A6 / A7: 音声の残るencoder・GPU前処理・API・sample / Player | PR #38の固定前処理を起点に、入力境界・encoder mask / token数・最終vector・検索 / 収録状態の不正 | 音声encoderの独立Python照合後、Sentis実CPU / GPU、text→audio全順位、再生 / 明示収録 / 停止。固定PCMとマイクを別判定 |
-| 5 | C4〜C6: 全モダリティ・全必須環境 | 混在次元 / 順位、cache破損、GPU fallback、途中結果 / 非zero終了の誤判定 | Windows / macOS Editor、iOS / Android実機の3モダリティ精度、UI、時間 / メモリ・解放・終了 |
-| 6 | 最終配布準備 | 配布監査の版不整合・モデル混入・native依存・不足結果の見逃し | 固定candidateの空consumer再現、API文書・全sample・CHANGELOG・license・結果一覧。公開tag / GitHub Releaseはこの工程では作らない |
+### 次のPR単位
 
-未実装の振る舞いは下記C / I / A表のredから開始する。実測で初めて見つかった不具合は、原因を分離した失敗テストを追加してから修正する。各工程は実装済み / 小さいテスト合格 / 実モデルPython合格 / Unity・実GPU合格 / 実機合格を別に更新する。
+1. **共通Runtimeの受け入れ整理と残る接続**: 固定Git更新consumerの4条件合格をPR #43へ反映し、実encoder feature・公式prompt / mask構築の契約へ進む。既存consumerの更新と工程6の空consumerは分ける。新契約変更が必要なら不正入力 / profile / 所有権のredから修正する。
+2. **音声feed_forward1の演算診断**: 層内診断59件を維持し、stage欠落 / 誤順序、公式入力の取り違え、hook解放漏れ、standalone出力とfull traceの不一致を拒否するテストから始める。公式実入力を使ってRMSNorm → linear → activation → linear → norm / scale / residualの差を比較する。原因を特定後、その演算の再現red → 最小修正 → 元の実重み6信号greenへ進む。診断追加だけではA4を合格にしない。
+3. **画像FP32差の分離**: 独立参照と最初に差が出るstage / 演算の小さいredから修正し、3 profile × CPU / GPU × FP32 / Float16の12条件を確認する。cosine合格だけでelementwise不合格を上書きしない。
+4. **画像GPU前処理・PCM Runtime契約**: I3とA2 / A3の境界テストから最小実装。合格後に各encoder・共通本体へ接続し、I4 / A5の最終768次元とI5 / A6の全順位・sampleへ進む。
+
+音声保存graphの現時点の実測はsilenceのみで、公式対eager差0、保存対eager最大差 `0.00013375282287597656`、許容差比 `5.294248580932617`、不一致328要素。残り5信号は未実行。layer 0の各内部stageは許容差内でも差が蓄積する。前回の不合格記録も残し、数値の変化を解決や高速化と扱わない。原因演算は未特定、固定した `rtol=1e-4` / `atol=1e-5`は緩めない。
+
+### 性能とローカル負荷
+
+Pythonはtools/とuv、重み取得・変換・参照生成・広い回帰・buildはGitHub Actionsを優先する。ローカルは小さいred / greenと、代替できない実GPU・UI・端末検証に限定する。監査済みartifact / 保存model / Libraryを再利用し、同じ大きい未変更graphを再生成しない。
+
+Unity Editorは1つを再利用する。CLI timeout / 接続切断だけを再起動の理由にせず、同operationの完了報告・PID・保存結果を追う。最適化はgreen後に同じsource / model hash・仕事量・backendで比較し、import時間、初回 / warm推論、前処理 / encoder / backbone、memory・解放を別に記録する。
 
 ## 全作業に共通するTDD手順
 

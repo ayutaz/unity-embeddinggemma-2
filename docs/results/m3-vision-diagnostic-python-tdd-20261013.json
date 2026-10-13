@@ -1,0 +1,52 @@
+{
+  "scope": "vision_python_diagnostic_tdd_only",
+  "initial_assertion_red": 12,
+  "first_green": 12,
+  "routing_api_red": 3,
+  "routing_control_pass": 1,
+  "routing_and_existing_prepare_green": 13,
+  "both_profile_inputs_assertion_red": 3,
+  "all_related_green_before_rotary": 26,
+  "rotary_assertion_red": 2,
+  "rotary_and_diagnostic_green": 13,
+  "source_model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+  "evidence_files": {
+    "vision-diagnostics-red.log": {
+      "bytes": 8264,
+      "sha256": "07deb477c9e52cb6d2aebf33984133d07fb9e881233a9878b475fbae769c9d76"
+    },
+    "vision-diagnostics-first-green.log": {
+      "bytes": 102,
+      "sha256": "3424d2247d0f77dff5ba2b36347b83bf49790ce51d663f0d30b580108459fab8"
+    },
+    "vision-diagnostic-routing-red.log": {
+      "bytes": 2792,
+      "sha256": "86338976e7e8a11a64874935b9709650e81b99ad139b564b4cc74c0d3ab89858"
+    },
+    "vision-diagnostic-routing-green.log": {
+      "bytes": 102,
+      "sha256": "b76a401fb086bdcbe88352215145d0a954786248d2040e895ab6960f5b5cfb63"
+    },
+    "vision-diagnostic-both-cases-red.log": {
+      "bytes": 6286,
+      "sha256": "2d0f18c88c01a97cef9c5adc883a17df9bb82c0e6403b959d5b00168ed27ddaf"
+    },
+    "vision-diagnostic-both-cases-green.log": {
+      "bytes": 112,
+      "sha256": "7f0cf6b804113a60976b207de04d6911f5935b736e0d4f91f57088d5122a255a"
+    },
+    "vision-rotary-diagnostic-red.log": {
+      "bytes": 2673,
+      "sha256": "8de911462f694e5f717f6a33039b918263b1ec96867749dc7a2c94a11d797c46"
+    },
+    "vision-rotary-diagnostic-green.log": {
+      "bytes": 112,
+      "sha256": "48638818be5017b56b83b764180929925f5d71a62475d35a0c8821b6fc319d86"
+    }
+  },
+  "real_weights_executed": false,
+  "unity_real_diagnostics_executed": false,
+  "known_fp32_failure_resolved": false,
+  "tolerance_changed": false,
+  "formal_release_created": false
+}

@@ -29,7 +29,7 @@ def load_image_processor(snapshot):
                                  if key not in ("image_processor_type", "image_seq_length")})
 
 
-def prepare_vision(snapshot, destination, *, revision=MODEL_REVISION, source_commit="local", profiles=None):
+def prepare_vision(snapshot, destination, *, revision=MODEL_REVISION, source_commit="local", profiles=None, diagnostics=False):
     """Official processor and real tower/projector vs saved fixed-profile export.
 
     Fixtures are generated RGB images with known provenance. This stage does not
@@ -101,6 +101,15 @@ def prepare_vision(snapshot, destination, *, revision=MODEL_REVISION, source_com
                                          positions=positions_path.relative_to(destination).as_posix(),
                                          graph=graph.relative_to(destination).as_posix(), input_image_shape=[3, height, width])
         del exported, wrapper
+        if diagnostics and profile == next(iter(profiles)):
+            from .vision_diagnostics import prepare_vision_diagnostics
+            diagnostic_directory = destination / "diagnostics"
+            diagnostic = prepare_vision_diagnostics(vision, projection, expected_rows[0][0], coords,
+                diagnostic_directory, graph, source_commit=source_commit, revision=revision,
+                additional_pixels=tuple(item[0] for item in expected_rows[1:]))
+            if not diagnostic["success"]:
+                raise ValueError("vision diagnostic numerical mismatch or original context mismatch")
+            produced.extend(path for path in diagnostic_directory.rglob("*") if path.is_file())
     if not rows:
         raise ValueError("vision profiles must contain at least one input")
     def digest(path):

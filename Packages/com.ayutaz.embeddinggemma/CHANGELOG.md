@@ -2,6 +2,8 @@
 
 ## 0.1.0-pre.1 — Unreleased
 
+- Add owned CPU / GPU PCM preprocessing outputs and Worker reuse / disposal contracts; audio encoder and final embedding integration remain in development.
+
 - 固定16kHz mono PCM入力のAudioPcmInputを追加。161〜179200 samplesと振幅[-1,1]を監査し、owned snapshot・右zero padding / prefix mask・公式frame境界を準備。25 red → 25 green。GPU前処理・encoder・最終音声embeddingは別の未完了gate。
 
 - 固定profileのproject済み画像 / 音声featureを扱うMultimodalBackboneを追加。token / mask / feature数・Model入出力を監査し、caller所有Tensorを借用して最終768次元だけをコピー。21 redから契約22 green、小さい実GPUを含め23 green、破棄featureの追加1 redから最終24件＋既存38件の62 green。実encoder・最終実モデル・GPU前処理・prompt / sample・新Git consumer / Playerは別の未完了gate。

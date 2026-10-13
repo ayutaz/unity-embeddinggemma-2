@@ -90,4 +90,17 @@ var input = new AudioPcmInput(pcm, samplingRate: 16000, channels: 1);
 // SourceSampleCount / ValidFrameCount: 実入力長と公式semicausal maskの有効frame数。
 ```
 
-callerのPCM配列から独立したsnapshotを作り、右側zero paddingとprefix maskを保持します。caller配列や公開コピーを変更しても準備済み入力は変わりません。これはCPU入力境界のAPIであり、前処理Worker・音声encoder・最終embedding推論は後続の実装です。
+callerのPCM配列から独立したsnapshotを作り、右側zero paddingとprefix maskを保持します。caller配列や公開コピーを変更しても準備済み入力は変わりません。これはCPU入力境界のAPIであり、前処理Workerは次のAPIへ渡します。音声encoder・最終embedding推論は開発中です。
+
+## PCM前処理Runtime（開発中）
+
+`AudioPreprocessor`は監査済みの固定前処理Modelを借用し、Workerと入力upload Tensorを所有します。対応graphはfloat `waveform` / int `sample_mask`の[1,179200]入力と、順序付き2出力（float特徴量[1,1119,128]、int frame mask[1,1119]）です。backendはCPUまたはGPUComputeを明示し、対応外backendや固定shape / type不一致は拒否します。
+
+```csharp
+using var preprocessor = new AudioPreprocessor(preprocessingModel, BackendType.GPUCompute);
+using var prepared = preprocessor.Process(new AudioPcmInput(pcm));
+// prepared.Features / prepared.FrameMaskを後続Workerへ直接渡します。
+// prepared.ValidFrameCountは入力prefixから決めた有効frame数です。
+```
+
+`AudioPreprocessingResult`は両出力Tensorを所有します。GPUではdevice copyで保持し、中間downloadを行いません。Workerの再実行 / Dispose後も結果は独立して生存し、結果をDisposeすると両Tensorを解放します。後続推論への貸し出しが終わるまで結果を保持してください。同期APIはUnity main threadで呼びます。最終音声embedding APIとは別で、音声encoderと共通本体への接続は開発中です。

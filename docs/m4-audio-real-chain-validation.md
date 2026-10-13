@@ -20,3 +20,11 @@ PCM前処理は別の段階診断としてCPU / 実GPU各6件が固定 `rtol=1e-
 最終vectorの成功は既存cosine条件に基づく。診断elementwiseにはFP32 CPUで439、FP32 GPUで441、Float16 CPUで506、途中のFloat16 GPUで28不一致があり、backbone単独24件のelementwise不一致0と区別する。元ONNX encoderの全6不合格、新旧参照drift、現在producerのSentis encoder単独feature gate、Raw / Query role、sample / Player / 必須実機 / 最終空consumerは未達・未実行のまま。M4完了・正式Releaseとはしない。
 
 次は許容差を変えず、同じ4条件でGPU失敗時の前処理・encoder・最終Tensorの有限性と大きさを捕捉する。単独backboneの合格だけで連続chainの失敗を解消済みとせず、再現・原因修正・元6信号の再照合へ進む。
+
+## 2026-10-14 JST: 再実行の失敗とGPU環境回復
+
+診断付きの同じ4条件は、既存`.sentis`の置換をWindowsが拒否した2件と、GPU前処理の不合格2件で0 passed / 4 failed / skip 0 / CLI exit 1となった。[保存した再実行結果](results/m4-audio-real-chain-diagnostic-rerun-failed-20261013.json)。元のFloat16 GPU sineを局所化した結果ではなく、最初の失敗記録は保持する。
+
+4要素だけの独立probeではCPUの`log(0.001)`は正しく、GPUは全ゼロを返した。全試験がterminal・Play停止・scene cleanを確認し、PID 16260を正常終了してEditor本体0を確認後、同じ6000.3.21f1 / `artifacts/k`を1つだけ起動した。portable Editorはuloopの既定探索外にあり、実際の確認済みexeを起動した。新PID 193788でReadyとなり、同じ小さいprobeはCPU / GPUとも合格。これは環境の回復であり、GPU異常の根本原因やFloat16 chainの修正とは扱わない。[回復とcache TDDのreceipt](results/m4-audio-gpu-health-recovery-and-cache-20261014.json)。
+
+再実行時に同じ重いmodelを再import / 保存する経路を改善した。source / graph / Unity / Sentis / quantizationと保存fileのsize / SHAを束縛したcache監査を5 assertion red / 既存19 passから関連24 greenへ進めた。完全一致したfileだけを再利用し、新規生成は一意の別名へ保存して以前のfileを保持する。暗号学的監査は省略しない。性能改善の倍率や重いimport再利用の実測はまだない。回復後の同じ4条件は進行中で、数値許容差・M4全体の完了条件は変更していない。

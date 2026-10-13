@@ -1,0 +1,51 @@
+{
+  "date_jst": "2026-10-14",
+  "scope": "terminal_gpu_health_failure_recovery_and_verified_model_cache",
+  "original_chain_failure_preserved": "m4-audio-real-chain-windows-failed-20261013.json",
+  "diagnostic_rerun": {
+    "result_file": "m4-audio-real-chain-diagnostic-rerun-failed-20261013.json",
+    "result_sha256": "d4aa9fc54472f89116e64ce309974301a606134a95c0f4af94efb9f4ae14be8b",
+    "completed_utc": "2026-10-13T14:48:37.7586874Z",
+    "passed": 0,
+    "failed": 4,
+    "skipped": 0,
+    "cli_exit_code": 1,
+    "cli_result_sha256": "21d161e2f68b04ff3942dbf96bdc461b9e137cfbd106def0749c2a02b413e3fa",
+    "failure_categories": ["existing_model_file_replace_denied", "GPU_preprocessing_float_output_zero"],
+    "original_float16_sine_failure_localized": false
+  },
+  "small_gpu_health_probe": {
+    "before": {"passed": 1, "failed": 1, "skipped": 0, "cli_exit_code": 1, "sha256": "0f734214f165d4921bca15c5e441407310ce4d313b8792aaaff995518ddb8463", "evidence": "CPU log(0.001) matched; GPU returned four zeros instead of -6.90775537."},
+    "after": {"passed": 2, "failed": 0, "skipped": 0, "cli_exit_code": 0, "completed_utc": "2026-10-13T15:03:45.6898347Z", "sha256": "31e4abf358392a8d9da14d0a6277ddd21a8051e92dfe9e5fcbe00c7990ae0b8d"}
+  },
+  "recovery": {
+    "reason": "All accepted tests were terminal, and a separate tiny GPU computation failed.",
+    "old_editor_pid": 16260,
+    "clean_scene_and_stopped_play_checked": true,
+    "graceful_editor_exit": true,
+    "old_editor_process_count_zero_before_launch": true,
+    "new_editor_pid": 193788,
+    "new_editor_process_count": 1,
+    "unity": "6000.3.21f1",
+    "project": "artifacts/k",
+    "uloop_launch_failure": "Portable Editor was outside the default lookup paths; no Editor was spawned by that failed command.",
+    "resolved_editor": "artifacts/unity-editor/6000.3.21f1/Editor/Unity.exe",
+    "child_allusersprofile_completed": true,
+    "ready_observed": true,
+    "root_cause_fixed": false
+  },
+  "cache_tdd": {
+    "red_commit": "4691521",
+    "red": {"passed": 19, "failed": 5, "skipped": 0, "cli_exit_code": 1, "sha256": "df2e2288484a1fbad53b3539f847768a809551ca494ca0650ed9d1b64d01883e"},
+    "green_commit": "528f44e44bc1e8fb682e3d132f72b059c746b698",
+    "green": {"passed": 24, "failed": 0, "skipped": 0, "cli_exit_code": 0, "sha256": "a021ee191546f05e5ea36c6767dd11ea8b98b426e96ef38ef040305d6a008e7f"},
+    "binding": ["producer", "graph_sha256", "unity", "sentis", "quantization", "saved_file_name_size_sha256"],
+    "existing_destinations_preserved": true,
+    "fresh_unique_generation_paths": true,
+    "heavy_import_reuse_measured": false
+  },
+  "recovered_real_chain_execution": "in_progress_at_this_checkpoint",
+  "encoder_numerical_gate_relaxed": false,
+  "end_to_end_validated": false,
+  "release_created": false
+}

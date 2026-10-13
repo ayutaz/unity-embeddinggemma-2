@@ -4,14 +4,14 @@
 
 ## 現在の基準
 
-今回確認したmainは `506b5672c68e22ac8f66076d4462e6ea143f9501`（共通Runtime PR #43、計画PR #49、PCM境界PR #48まで統合）。[main CI 38335082007](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38335082007)成功。M1のWindows受け入れを維持し、画像 / 音声のend-to-end API / sampleは未実装。残作業は検証だけではない。[直前の計画snapshot](results/tdd-plan-checkpoint-20261013.json)と[最新の前処理Runtime受け入れ](results/m4-audio-preprocessing-runtime-windows-20261013.json)を別checkpointとして保持する。
+今回確認したmainは `f41546dfd48ab77347d27772612b2ea43c992b70`（共通Runtime PR #43、計画PR #49、PCM境界PR #48、前処理Runtime PR #50まで統合）。PR #50の[CI 38336350087](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38336350087)は全8チェック成功。統合後の[main CI 38336919527](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38336919527)は成功。M1のWindows受け入れを維持し、画像 / 音声のend-to-end API / sampleは未実装。残作業は検証だけではない。[直前の計画snapshot](results/tdd-plan-checkpoint-20261013.json)と[最新の前処理Runtime受け入れ](results/m4-audio-preprocessing-runtime-windows-20261013.json)を別checkpointとして保持する。今回の計画更新では新たなUnity実行・モデル生成は行わない。
 
 | 範囲 | 確認済み | 次に満たす条件 |
 | --- | --- | --- |
 | M2 / C1・C7 | Windows Editor / Playerのテキスト実測あり。導入helperのPR #36はPR #31の作業ブランチへ統合済み | mainへの導入手順反映、安定性・性能の原因別修正、最終candidateの空Git consumer、native入力・他OS。既存consumerの更新を新規導入と数えない |
 | C3 共通backbone | [PR #43](https://github.com/ayutaz/unity-embeddinggemma-2/pull/43)はmainへ統合済み。最終head `4feac7551bd99f2571a667f237ace85ba2d7093f`、[CI 38331086059](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331086059)成功。配置・cacheの小さい68件greenに加え、実1024長graphのCPU / GPUCompute × FP32 / Float16全4条件合格 | 実測sourceは固定Git `21e598c5b53d5ad73557ee6d606b12770254d73b`。統合headへ実測を付け替えない。実encoder feature、公式prompt構築、GPU前処理との接続と最終空consumerは別gate |
 | M3 / I1・I2 | Python画像encoder / projectorは3 profileで合格。Windows Sentis Float16 CPU / 実GPUの6条件合格 | FP32の6条件はcosine合格でも固定elementwise許容差を超過。不一致演算を小さいredにし、全12条件を満たす。GPU画像前処理・最終768次元API / sampleは未完成 |
-| M4 / A1〜A3 | 前処理単独PR #38 / #46、PCM入力PR #48はmainへ統合。前処理Runtime PR #50は21 red → 21 green、固定Git package全108 green、CPU / 実GPU各6信号の全feature・mask合格。[実測と失敗履歴](m4-audio-preprocessing-runtime-validation.md) | GPU特徴量 / 整数maskを次段graphへ直接渡す受け入れ。実音声encoder・backboneへの連結、最終768次元API / sample・最終空consumerは別gate。初回の測定用ReduceMean不一致を成功で消さない |
+| M4 / A1〜A3 | 前処理単独PR #38 / #46、PCM入力PR #48、前処理Runtime PR #50はmainへ統合。21 red → 21 green、固定Git package全108 green、CPU / 実GPU各6信号の全feature・mask合格、次段検証graphへのGPU Tensor受け渡しを確認。[実測と失敗履歴](m4-audio-preprocessing-runtime-validation.md) | 実音声encoder・backboneへの連結、最終768次元API / sample・最終空consumerは別gate。初回の測定用ReduceMean不一致を成功で消さない |
 | M4 / A4 | [PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40)、確認head `e13adcd96ed3e10802131dfc94c48d9533f37ee2`。feed-forward単独診断をTDD追加し関連76件green | [実モデルCI 38331914586](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331914586)はsilence不合格。layer 0.feed_forward1の最初の微差はactivation、最初の許容差超過はlayer 10。単独診断とfull traceは完全一致。差の発生箇所が分かった段階であり、原因修正と元の6信号の合格は未完了 |
 | 必須環境 | Windowsの条件付き証拠とAndroid APK buildあり | macOS / iOS / Android実機の3モダリティCPU / 実GPU、sample、時間 / memory・終了の合格証拠が必要 |
 
@@ -34,9 +34,34 @@
 
 Mac・端末・署名・Unity CIライセンス / runnerの確保は工程1から並行する。M2の全OS検証完了をM3の着手条件にしない。画像前処理とPCM入力境界の独立した契約は、encoder数値差の解消を待たず準備できる。最終公開に必要な条件は省略しない。日程はモデル数値差と実機確保の見通しを得てから見積もる。
 
-### 次のPR単位
+### 直近の実行順と依存
 
-1. **公式promptと実encoder接続**: PCM入力境界PR #48と共通Runtime PR #43は統合済み。前処理Runtime PR #50は固定Git / 公式信号の受け入れを記録。次に公式prompt / mask構築と実encoderの所有権・受け渡しを、不正入力 / profile / 二重Dispose / 途中失敗のredから実装する。工程6の空consumerは別gate。
+次の着手はI3の画像GPU前処理とする。独立した入力契約をTDDで実装し、その間もI2の画像FP32差・A4の音声encoder差を未解決として保持する。工程番号は受け渡しの順序であり、M2の他OS検証完了まで独立したM3 / M4の開発を待たせない。
+
+| 順序 | PRの対象 | 先に観測する失敗と、次へ進む条件 |
+| --- | --- | --- |
+| 1 | I3 画像GPU前処理 | 独立した公式processor fixtureでresize寸法 / 丸め・補間・色・向き・patch / padding・所有権のred。最小実装後、Texture / RenderTextureの実GPU比較、次段へ渡すTensorの寿命、中間readbackなしを確認 |
+| 2 | I2 / A4 数値差の修正、C3 公式prompt / mask契約 | 差の出る演算を小さい独立参照でredへ分離。最小修正・関連回帰後、画像12条件と音声の元6信号を照合。prompt / placeholder数・順序・mask違いは別のredから実装 |
+| 3 | I4 / A5 実encoderから最終API | 各encoderが受け入れ済みとなってから実モデル連結を合格判定。入力拒否・途中失敗・再利用・二重Disposeのred → green、最終768次元 / 正規化 / 固定参照一致、既存text回帰 |
+| 4 | I5 / A6 / A7 検索・表示・再生・明示収録 | 全順位 / score・未準備・エラー後復帰・停止・権限拒否のred → green。実UI操作と固定PCMの精度を個別に確認し、Playerへ渡す |
+| 5 | C1 / C4〜C7 全統合・各必須環境 | 導入・切替・cache・報告監査・正常終了の不正経路をred → green。各OSの実backend、sample、時間 / memoryを最終candidateで照合 |
+| 6 | 配布準備 | version / manifest / license・モデル混入 / native依存・証拠欠落を見逃す監査のred → green。全必須結果と固定candidateの空Git consumerを対応付け、公開操作へ渡せる状態にする |
+
+M2の標準導入・安定性修正と、Mac / iOS / Androidの環境確保は上記と並行する。工程6の開始条件は工程1〜5の全必須結果が揃うこと。実行環境が未確保ならその行は未実行として残し、配布準備や正式公開の完了条件を下げない。正式公開は全対応後の別工程とし、今回の開発・検証・準備では公開tag / GitHub Releaseを作成しない。
+
+### 機能単位の受け入れチェックリスト
+
+- [ ] M2: 標準導入手順がmainへ反映され、最終candidateのテキスト導入・sample・安定性 / 性能・正常終了が合格。
+- [ ] M3: I1〜I6。画像FP32の既知不合格を解消し、GPU前処理、実画像の最終768次元API、検索sample、Playerを受け入れ。
+- [ ] M4: A1〜A7。音声encoderの既知不合格を解消し、前処理から実encoder / 共通本体のGPU連結、最終768次元API、検索 / 再生 / 明示収録、Playerを受け入れ。
+- [ ] 全統合: Windows Editor / Player、macOS Editor、iOS / Android実機で3モダリティCPU / 実GPU・sample・切替 / cache・時間 / memory・正常終了の証拠が揃う。
+- [ ] 配布準備: 全必須結果を固定candidateへ対応付け、空Git consumer、API文書 / sample、version / CHANGELOG / license、配布監査が合格。
+
+チェックは予定ではなく受け入れ証拠が揃ってから付ける。正式Releaseはこの一覧の全完了後に扱う。
+
+### 次のPR単位の詳細
+
+1. **公式promptと実encoder接続**: PCM入力境界PR #48、共通Runtime PR #43、前処理Runtime PR #50は統合済み。次に公式prompt / mask構築と実encoderの所有権・受け渡しを、不正入力 / profile / 二重Dispose / 途中失敗のredから実装する。実encoder接続の合格判定はI2 / A4の数値gate合格後、工程6の空consumerは別gate。
 2. **音声activation差の修正**: 診断76件を維持し、単独診断とfull traceの完全一致を前提に、native SiLUと保存graphの丸め差を小さい独立参照の再現redへ落とす。最小修正 → 対象 / 関連回帰green → 元の実重み6信号green → Sentis CPU / 実GPU受け入れの順で進む。診断追加だけではA4を合格にしない。
 3. **画像FP32差の分離**: 独立参照と最初に差が出るstage / 演算の小さいredから修正し、3 profile × CPU / GPU × FP32 / Float16の12条件を確認する。cosine合格だけでelementwise不合格を上書きしない。
 4. **画像GPU前処理・実encoder接続**: I3の境界・所有権・中間readback禁止をredから実装する。A3の前処理Runtime単独は受け入れ済みだが、A4合格後の実encoder・共通本体への連結は別契約。I4 / A5の最終768次元とI5 / A6の全順位・sampleへ進む。

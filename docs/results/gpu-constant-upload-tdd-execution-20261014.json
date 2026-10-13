@@ -1,0 +1,17 @@
+{
+  "date_jst": "2026-10-14",
+  "runtime_source": "66c72fb5277dc5c3b2897cf71da583413411bc77",
+  "runtime_overlay": false,
+  "red": {"test_source": "6c681bba517ab681dde1393bd5fd499bf222fd7c", "passed": 0, "failed": 13, "skipped": 0, "cli_exit_code": 1, "sha256": "29f441d0246551b4221824b50b74a64a7ec4a6959b50f00733b16a3b9204ee8f"},
+  "input_index_red": {"source": "16a8c251bbfece6f203e669165b6dda5eafb5c03", "passed": 13, "failed": 1, "skipped": 0, "cli_exit_code": 1, "sha256": "9b69c1f3640c12ee8f6d51127a0532a58e14609c8a296ff4ab31eaf752f5d4c9"},
+  "helper_green": {"source": "494e58f3cee3b213d14b7c628e12bb4e12217a3a", "passed": 14, "failed": 0, "skipped": 0, "cli_exit_code": 0, "sha256": "bf896a33a86b5b39190bed6aef6d9d88a86ccf951b56b2dd73360ed50bfcf400"},
+  "backbone_red": {"source": "f98e89ae1a1126fa09c9a735070aa0b21e629a64", "passed": 0, "failed": 2, "skipped": 0, "cli_exit_code": 1, "sha256": "3db49257bd89f08b65c564f901ff001ecb7873e4969d5a3ba0695cccd98c07d4"},
+  "backbone_green": {"passed": 16, "failed": 0, "skipped": 0, "cli_exit_code": 0, "sha256": "f28a023411d6965002f9665c02b0682eb5393cea2dca187fec41213e74220147"},
+  "package_regression": {"passed": 253, "failed": 0, "skipped": 0, "cli_exit_code": 0, "sha256": "39453bbfc385284e9adc1d5010aac988a18007c7a7351935899f1275a31c7cdb"},
+  "real_backbone": {"harness_source": "e3cc8401417e9654f4947afdbb7d54eae3460a50", "producer": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0", "cases": 24, "passed_cases": 24, "nunit_passed": 4, "nunit_failed": 0, "skipped": 0, "cli_exit_code": 0, "sha256": "bf066e4138e2cc7bf2ebe0189ea17bee346ac2d79330c6e995b5de2a86e5d20d", "cli_sha256": "fec0021c1f9d5f58a7705adae921e6b688c1314b0a9ddc0144e3b95a0d29a072", "maximum_upload_bytes": 8388608},
+  "compile": {"errors": 0, "warnings": 0},
+  "real_pcm_chain_validated": false,
+  "il2cpp_stripping_validated": false,
+  "d3d12_original_exit_root_cause_proven": false,
+  "release_created": false
+}

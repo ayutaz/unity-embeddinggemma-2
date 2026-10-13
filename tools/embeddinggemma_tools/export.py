@@ -266,19 +266,34 @@ class AudioEncoderExport(nn.Module):
     def forward(self, features):
         return self._forward(features, collect_stages=False)
 
-    def _forward(self, features, *, collect_stages):
+    def _forward(self, features, *, collect_stages, detail_layer=None):
         if not torch.compiler.is_compiling():
             self.validate_inputs(features)
         hidden, _ = self.audio.subsample_conv_projection(features, self.frame_mask.bool())
         stages = [hidden] if collect_stages else []
         positions = self.audio.rel_pos_enc(hidden)
-        for layer, attention in zip(self.audio.layers[:self.audio.config.num_hidden_layers], self.attentions):
+        for index, (layer, attention) in enumerate(zip(self.audio.layers[:self.audio.config.num_hidden_layers], self.attentions)):
+            detailed = collect_stages and index == detail_layer
             cap = min(layer.gradient_clipping, torch.finfo(layer.norm_pre_attn.weight.dtype).max)
             hidden = layer.feed_forward1(hidden)
+            if detailed:
+                stages.append(hidden)
             residual = hidden
-            hidden = attention(layer.norm_pre_attn(hidden.clamp(-cap, cap)), positions, self.blocked_mask)
-            hidden = layer.norm_post_attn(hidden.clamp(-cap, cap)) + residual
-            hidden = layer.feed_forward2(layer.lconv1d(hidden))
+            hidden = layer.norm_pre_attn(hidden.clamp(-cap, cap))
+            if detailed:
+                stages.append(hidden)
+            hidden = attention(hidden, positions, self.blocked_mask)
+            if detailed:
+                stages.append(hidden)
+            hidden = layer.norm_post_attn(hidden.clamp(-cap, cap))
+            if detailed:
+                stages.append(hidden)
+            hidden = layer.lconv1d(hidden + residual)
+            if detailed:
+                stages.append(hidden)
+            hidden = layer.feed_forward2(hidden)
+            if detailed:
+                stages.append(hidden)
             hidden = layer.norm_out(hidden.clamp(-cap, cap))
             if collect_stages:
                 stages.append(hidden)
@@ -292,13 +307,25 @@ class AudioEncoderExport(nn.Module):
 class AudioEncoderStagesExport(AudioEncoderExport):
     """Failure-only trace using the same numerical path as the normal export."""
 
+    detail_parts = ("feed_forward1", "norm_pre_attn", "self_attn", "norm_post_attn", "lconv1d", "feed_forward2")
+
+    def __init__(self, audio, projection, frame_mask, *, detail_layer=None):
+        if detail_layer is not None and (type(detail_layer) is not int or not 0 <= detail_layer < audio.config.num_hidden_layers):
+            raise ValueError("audio detail layer must be an existing integer layer index")
+        super().__init__(audio, projection, frame_mask)
+        self.detail_layer = detail_layer
+
     @property
     def stage_names(self):
-        return ("subsample", *(f"layer_{index}" for index in range(self.audio.config.num_hidden_layers)),
-                "output_projection", "projected_features")
+        names = ["subsample"]
+        for index in range(self.audio.config.num_hidden_layers):
+            if index == self.detail_layer:
+                names.extend(f"layer_{index}.{part}" for part in self.detail_parts)
+            names.append(f"layer_{index}")
+        return (*names, "output_projection", "projected_features")
 
     def forward(self, features):
-        return self._forward(features, collect_stages=True)
+        return self._forward(features, collect_stages=True, detail_layer=self.detail_layer)
 
 
 def export_audio_pt2(wrapper, features, destination):

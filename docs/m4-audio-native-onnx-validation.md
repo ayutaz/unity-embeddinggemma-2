@@ -55,6 +55,12 @@ NumPy評価の不合格と、実Sentis subsampleのCPU / GPU合格を分ける�
 
 実FP32 Sentisの全6信号をCPU / GPUで照合する`AudioEncoderReferenceTests`を準備した。選択したONNX・入力 / mask・referenceのhash、元の6 ID、native完了sourceを監査し、profileごとにimport / 保存 / 解放する。通常の数値不一致は各caseへ残して他の信号も評価し、全6信号の合格が揃うまでconditionを成功にしない。Float16とGPU前処理 / backbone連結は別gate。現在はcompile成功のみで、実モデルの転送完了後に実行する。
 
+2026-10-13 10:00 UTCに実FP32 SentisのCPU / GPU × 元6信号の全12条件を実行した。compile errors / warnings 0、NUnit 0 passed / 2 failed / skip 0 / CLI exit 1。全12条件でcosine >= 0.999999は合格したが、固定`rtol=1e-4` / `atol=1e-5`のelementwise条件は全て不合格。[全encoderの実不合格receipt](results/m4-audio-full-encoder-fp32-sentis-windows-failed-20261013.json)。CPU最大許容差比15.800193893998493（sine）、GPU最大比13.610273396664804（impulse）。GPU全信号の実出力はGPUCompute、CPU計算 / 入力fallback・readback flush 0。backend実行と数値受け入れを区別し、cosineだけで全encoder成功にしない。
+
+Runtime requested / resolved SHAは `8a7d2f0dea30be95a3158830fb0d9c9de895efc4`、Runtime overlayなし、Unity 6000.3.21f1 / Sentis 2.6.1 / RTX 4070 Ti SUPER / D3D12。最初のモデル転送は大きいrangeで進行後にURL期限切れ403となった。SHA / CRC検証済みの最初のONNXを保持し、残りは8 MiB × 最大4並列のbounded rangeへ切り替えて384.3秒で完了した。全archive・native `.pt2`は再取得せず、選択したONNXと入力 / mask / JSONだけを配置した。転送の観測停滞だけでprocessを再起動せず、進捗guardで停止を撤回し、実403終了後にURLを更新した。
+
+次は実Sentisの段階別出力を元の不合格最終値と対応付け、最初の不一致を小さいredへ分離する。NumPy評価と実Sentis全encoderの両方が未達である。subsample単独の合格を流用せず、元6信号・Float16・前処理 / backbone連結・最終API / sample / Player / 必須実機のgateを維持する。
+
 Actionsで元の実重み6信号を実行し、native保存参照と全encoder標準ONNXの数値結果を分けて判定する。PR #40の過去のsilence不合格・残り5信号未実行はそのsourceの記録として保持する。候補が失敗した場合も固定許容差を緩めず、最初の演算差を小さいredへ落とす。
 
 Python全gate合格後も、Sentis import / 保存 / 再読込、全6信号のCPU / 実GPUと採用Float16形式、GPU前処理 → 実encoder → 共通本体の連結、最終API / 検索・再生・明示収録 / Player / 必須実機は別gate。小さいONNX greenや構造checkerを実モデル・GPU成功へ流用しない。

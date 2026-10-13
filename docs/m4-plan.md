@@ -15,6 +15,8 @@ A1 / A4の音声encoder / projector固定profile exportと独立PCM参照・必�
 
 音声前処理exportの合格を音声encoderの合格に含めない。PR #40の小さい契約greenと実モデル不合格も別に保持する。
 
+[段階別実モデルCI 38324421389](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38324421389)は不合格で完了。subsampleは完全一致、`layer_0`から小さい差があり、許容差を最初に超えるのは`layer_10`。診断graphと元の不合格graphの最終値は完全一致した。次は層内診断をTDDで追加して原因演算を特定し、元の固定数値条件へ戻す。[全stageと未検証ケース](m4-audio-encoder-validation.md)。
+
 ## 範囲と参照固定
 
 A1 / A3のPython前処理exportは[PR #38](https://github.com/ayutaz/unity-embeddinggemma-2/pull/38)でTDD実装し、mainへ統合済み。head `0424734291dc4cb7606b8bae53086f4911252e94`の[CI 38313045325](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38313045325)全8 job成功、公式前処理対保存graphの6ケースで最大絶対誤差 `0.0038890838623046875`。`audio_preprocessing_only` / `unity_validated=false` / `encoders_validated=false`であり、A3のSentis GPU合格ではない。次は入力契約、前処理graphのSentis実測、A4の音声encoder exportと独立参照照合を進め、A5〜A7へ接続する。

@@ -64,9 +64,13 @@ uv run --locked python -m embeddinggemma_tools prepare-audio-encoder --preproces
 
 診断では元の `rtol=1e-4` / `atol=1e-5`を維持し、各stageのshape、最大絶対誤差、許容差比、不一致数、最初の不合格stage、診断graphのhashを記録する。公式hookはこの呼び出しが追加したものだけをfinallyで除去する。保存moduleの重複重みを解放してからstage exportを行い、診断例外は別欄へ保持する。元の失敗は引き続きCIを失敗させ、診断成功をencoder / Sentis / 最終768次元の合格にしない。大きいgraphはActions artifactだけに保存する。
 
+[段階別診断CI 38324421389](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38324421389)（PR head `f77139fb5cb7c87ef6cda905fb158e3debd72a0e`、実行merge ref `dc2156c954e66aba418f31f1ce88ca7da089b355`）は数値不合格で完了した。診断自体は実行成功、元の保存graphと診断graphの最終featureは完全一致（最大差0）。subsampleは公式と完全一致し、`layer_0`から小さい差が発生しているが、要素単位許容差を最初に超えるのは`layer_10`（最大差 `0.000148773193359375`、許容差比 `3.572887659072876`、不一致14要素）。`layer_11`は最大差 `0.001194000244140625` / 不一致1146要素、最終projectorでは従来どおり最大差 `0.00021576881408691406` / 不一致368要素だった。[全stageの数値とgraph hash](results/m4-audio-stages-real-failed-20261013.json)。
+
+これで差の蓄積区間は絞れたが、原因演算は未特定である。次は層内のfeed-forward / attention / convolution / normalizationの独立診断をTDDで追加し、最初に差を生む演算を特定する。silenceでgateが停止したため残る5ケースは未検証。Python4環境・lint・packageは合格し、実encoder / Required CIは失敗した。これらの判定を維持して進める。
+
 ## 次の受け入れ
 
-1. Actionsの固定実重みで段階別診断を実行し、最初に差が出るstageを特定する。原因を分離した小さいredから修正し、元のencoder / projector全ケースを再照合する。現時点で実モデル数値不合格は未解消。
+1. 層内診断をTDDで追加し、Actionsの固定実重みで最初の原因演算を特定する。原因を分離した小さいredから修正し、元のencoder / projector全ケースを再照合する。現時点で実モデル数値不合格は未解消。
 2. 音声前処理・encoderのSentis import / 保存・再読込、実CPU / GPUと採用Float16重みの数値照合。非互換・OOM・fallbackは失敗として記録する。
 3. A2のPCM入力契約とA3のGPU前処理を接続し、中間CPU readbackなしを確認する。
 4. A5のGPU soft token → 共通本体 → 有限768次元・単位長、FP32 cosine >= 0.999 / Float16 >= 0.99、text / image回帰。

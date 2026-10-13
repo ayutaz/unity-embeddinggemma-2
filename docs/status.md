@@ -33,7 +33,7 @@
 
 ## 次の作業と依存
 
-次の実装PRはI3画像GPU前処理。全体の着手順と各PRのred / green・完了条件は[全体計画](multimodal-tdd-plan.md#直近の実行順と依存)を参照する。M2〜M4、必須環境、配布準備の全完了後に正式リリースを扱う。
+I3画像GPU前処理はPR #52で実装・Windows固定Git受け入れまで進んだ。固定source `71284e3`でpackage118 green、公式24ケースのpixel / position一致、最大8192px入力のdispatch修正も合格。[receipt](results/m3-image-preprocessing-final-git-windows-20261013.json)。次は画像FP32 / 音声encoderの数値差と公式prompt / mask。GPU profiler・反復資源 / 性能、実encoder・最終API / sample、他環境と最終空consumerは別gate。全体のred / green・完了条件は[全体計画](multimodal-tdd-plan.md#直近の実行順と依存)を参照する。M2〜M4、必須環境、配布準備の全完了後に正式リリースを扱う。
 
 1. M2の導入helper / 21f1更新をmainへ渡す条件を整理し、残る性能・安定性を原因別red → 最小修正 → 同条件比較で進める。
 2. PCM境界PR #48と共通Runtime PR #43は統合済み。前処理Runtime PR #50はTDD21 green、固定Git package108 green、公式CPU / 実GPU各6信号・mask・次段Tensor受け渡しが合格。[条件と失敗履歴](m4-audio-preprocessing-runtime-validation.md)。実encoder / backbone接続、最終空consumerは別gate。

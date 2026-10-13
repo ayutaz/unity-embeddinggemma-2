@@ -30,6 +30,8 @@
 
 最初の修正後は全pixel比較に到達したが、red観測用ignore設定が生成したLogにNoUnexpectedReceivedが失敗。ignore設定を除去すると既存のshader signed integer division Warningが検出された。非負の座標 / strideをuintにし、係数とsumはsignedのまま保持した。最終5 passed / fail 0 / skip 0 / CLI exit 0、最大寸法の全patch / paddingと通常の公式24ケースが合格した。これは修正source / shaderのoverlay実測で、上記c21のGit結果へ付け替えない。[境界修正TDD](results/m3-image-preprocessing-max-input-tdd-20261013.json)。警告の解消だけで速度改善とは判定しない。
 
-次に修正後の固定Git Runtimeで配布source / shader監査、全package・公式fixture・最大入力を確認する。その後にI2の画像FP32不合格を解消し、実encoderへのGPU接続、公式prompt、最終API / sample、Playerと必須他OSへ進める。公式画像前処理fixtureの生成・artifact保存は既存Actionsへ接続した。CIの成功はUnity実GPU・実encoder成功と分ける。
+修正後の固定Git `71284e302d5e3e643e4ed98272c5774640582c1e`でsource / shader overlayを退避し、requested / resolved SHA一致、114 canonical blobs + package.json semantic一致の115ファイル不一致0を確認。公開型はRuntime assembly、shaderもpackage内assetへ解決した。最大入力を含むpackage 118 passed / fail 0 / skip 0 / CLI exit 0。公式4 test / 24ケースは全passed、最大pixel差0、position一致、次段GPU Workerの計算 / 入力fallback・readback flush 0。Resolveは受理後EOFで再要求せず、同EditorのReadyを追跡。readonly型probeの引用符誤りによるCS0103は補助検証の失敗として保存し、訂正後の成功と分ける。[修正後Git receipt](results/m3-image-preprocessing-final-git-windows-20261013.json)。
+
+次にI2の画像FP32不合格を解消し、実encoderへのGPU接続、公式prompt、最終API / sample、Playerと必須他OSへ進める。公式画像前処理fixtureの生成・artifact保存は既存Actionsへ接続した。CIの成功はUnity実GPU・実encoder成功と分ける。
 
 今回の結果は上記6入力寸法と最大寸法の単色画像、Windows backendのみ。全寸法のメモリ上限・極端な縦横比、長い反復での資源 / 性能、Player strippingと他OSは未検証。直接のGPU profiler captureも未取得で、転送の判断はsource経路、GPU Tensorと次段Workerのfallback / flush監査の範囲。これらを成功へ読み替えない。

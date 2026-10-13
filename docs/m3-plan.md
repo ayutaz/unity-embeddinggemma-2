@@ -6,7 +6,7 @@ I1 / I2の固定profile encoder / projector exportと公式processor参照・Act
 
 ### 直近のTDD順序
 
-次の実装PRはI3の画像GPU前処理。下記I2の数値差修正と独立して契約を進め、I4の実モデル連結の合格判定はI2 / I3 / C3が揃ってから行う。最終API・sample・PlayerもTDDで実装し、encoder単独の合格でM3を完了にしない。
+I3の画像GPU前処理は[PR #52](https://github.com/ayutaz/unity-embeddinggemma-2/pull/52)で実装。固定Git Runtime `71284e302d5e3e643e4ed98272c5774640582c1e`で全package 118 green、Texture / RenderTexture × linear / sRGBの公式24ケースは最大pixel差0。8192pxのdispatch不具合も1 redから修正し、最大入力・paddingを確認した。[実測と未達](m3-image-preprocessing-validation.md)。次はI2の数値差修正とC3公式prompt / mask。I4の実モデル連結の合格判定はI2 / I3 / C3が揃ってから行う。GPU profiler、長い反復 / memory、Playerと他OSは別gate。最終API・sample・PlayerもTDDで実装し、encoder単独の合格でM3を完了にしない。
 
 1. I3のGPU前処理を向き・色空間・resize / patch順の固定fixtureからTDDで実装し、Texture / RenderTextureの両方を実GPUで照合する。I2数値差の診断中でも独立した前処理契約は準備できる。
 2. I2のFP32差をstage / 演算別に特定し、独立参照との不一致を小さいテストでredにしてから修正する。現在の `rtol=1e-4` / `atol=1e-5`は緩めず、3 profile / 全12条件の実モデル再照合と保存 / 再読込を確認する。

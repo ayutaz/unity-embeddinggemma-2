@@ -27,4 +27,10 @@ PCM前処理は別の段階診断としてCPU / 実GPU各6件が固定 `rtol=1e-
 
 4要素だけの独立probeではCPUの`log(0.001)`は正しく、GPUは全ゼロを返した。全試験がterminal・Play停止・scene cleanを確認し、PID 16260を正常終了してEditor本体0を確認後、同じ6000.3.21f1 / `artifacts/k`を1つだけ起動した。portable Editorはuloopの既定探索外にあり、実際の確認済みexeを起動した。新PID 193788でReadyとなり、同じ小さいprobeはCPU / GPUとも合格。これは環境の回復であり、GPU異常の根本原因やFloat16 chainの修正とは扱わない。[回復とcache TDDのreceipt](results/m4-audio-gpu-health-recovery-and-cache-20261014.json)。
 
-再実行時に同じ重いmodelを再import / 保存する経路を改善した。source / graph / Unity / Sentis / quantizationと保存fileのsize / SHAを束縛したcache監査を5 assertion red / 既存19 passから関連24 greenへ進めた。完全一致したfileだけを再利用し、新規生成は一意の別名へ保存して以前のfileを保持する。暗号学的監査は省略しない。性能改善の倍率や重いimport再利用の実測はまだない。回復後の同じ4条件は進行中で、数値許容差・M4全体の完了条件は変更していない。
+再実行時に同じ重いmodelを再import / 保存する経路を改善した。source / graph / Unity / Sentis / quantizationと保存fileのsize / SHAを束縛したcache監査を5 assertion red / 既存19 passから関連24 greenへ進めた。完全一致したfileだけを再利用し、新規生成は一意の別名へ保存して以前のfileを保持する。暗号学的監査は省略しない。性能改善の倍率や重いimport再利用の実測はまだない。数値許容差・M4全体の完了条件は変更していない。
+
+### 回復後の実chainはEditor終了で未完了
+
+回復後の実行は2026-10-13 15:08:42 UTCに開始したが、CLIが`UNITY_DISCONNECTED_AFTER_ACCEPT` / `Cause: EOF` / exit 1を返した。`uloop status`の`NotRunning`とUnity本体process 0を確認したため、単なる観測timeoutとは区別する。保存された[途中結果](results/m4-audio-real-chain-recovered-incomplete-20261014.json)には`completed_utc`がなく、FP32 CPUの6件は完了・合格、FP32 GPUは5件を保存して`evaluate_padded_noise`で途切れている。Float16 CPU / GPUはこの実行では未実行。NUnit完了集計はなく、GPU条件や全4条件を合格に数えない。
+
+途中結果のSHA-256は`3629757438fdc97c413a7f902848f11843fc00e34ac5e9db2c124797f8abd939`、ignored CLI receipt `artifacts/audio-real-chain-unity/run-tests-recovered.json`は`d6af11528a86762818d1bc7d69ddadd591a34d31e13a7e236152b3a0f894454a`。Editor logには`d3d12: upload buffer was too small for the requested resource! Size: 16777216. Requested: 536870912.`がある。16 MiBのbufferに対して512 MiBを要求した証拠であり、数値不一致や終了の根本原因を確定したものではない。手動終了の有無も未確認。元の失敗を保持し、ComputeBufferへの転送と大きいconstantの扱いを調べてから重い再実行を判断する。texture / mesh向けのasync upload設定をこの転送の修正として扱わない。

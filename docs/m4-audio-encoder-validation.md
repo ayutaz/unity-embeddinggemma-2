@@ -110,3 +110,11 @@ layer 0.feed_forward1の実入力を公式audio towerのpre-hookから取得し�
 seed 412・float32入力のnative SiLUと保存graphを照合する17要素 / [1,2,4096]の追加2テストは意図したassertion red。不一致は1 / 381要素。実重みを使わない7つの式（exp / expm1 / exp2、sigmoid、float64経由等）を比較したが、どれもnativeとのbitwise一致を満たさなかった。これは原因修正やgreenではなく、採用できない候補を切り分けた小さい調査結果。float64経由の修正や許容差変更は採用していない。[実診断・red・比較とhash](results/m4-audio-activation-vector-red-20261013.json)。
 
 このcheckpointは局所のredを保持するローカルcommitで、未解決のままmainへ統合しない。次はnative vector演算とexport可能な演算の違いを調べ、最小修正後にこのredと既存回帰、元の実重み6信号・Sentis CPU / 実GPUへ進む。診断のbitwise検査と元の固定 `rtol=1e-4` / `atol=1e-5`のencoder受け入れを区別する。
+
+## 固定CPUの数学経路と同一値のvector / scalar差
+
+重み不要の追跡で、実環境はtorch 2.14.1+cpu、AVX2、MKL available、installed AT_MKL_ENABLED=1と確認した。[固定native SiLU](https://github.com/pytorch/pytorch/blob/v2.14.1/aten/src/ATen/native/cpu/Activation.cpp)はvectorでVectorized.exp、scalarでstd::expを使う。installed vec256_float.hのfloat expはSleef_expf8_u10。[固定Tensor.exp](https://github.com/pytorch/pytorch/blob/v2.14.1/aten/src/ATen/native/cpu/UnaryOpsKernel.cpp)はVML経路、installed vml.hのfloat specializationはMKL Expとなっている。式が同じでも、実行する数学経路は同一ではない。
+
+seed 412の17要素では、index 2 / input -1.0837361812591553についてnative vector=-0.2739681303501129、native scalar=-0.2739681005477905、div_exp=-0.2739681005477905。vector対scalar、vector対div_expは各1要素不一致。同じ入力値でもnativeのarray / scalar条件で丸めが変わることを確認した。[source / probe hashと範囲](results/m4-audio-native-math-research-20261013.json)。
+
+これは保存式とnativeの経路差を絞った研究結果。全体encoder不合格の厳密な因果、export可能な修正式、Sentis encoderの成功は未証明。referenceの数学backendを変更して合格にせず、許容差・本番実装は変更していない。局所redを保持し、次の候補はscalar式の一致だけで選ばずvector条件と元の実重み6信号へ照合する。

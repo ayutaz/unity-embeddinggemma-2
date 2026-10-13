@@ -52,6 +52,7 @@ def main(argv=None):
     audio.add_argument("--preprocessing", type=Path, required=True)
     audio.add_argument("--snapshot", type=Path)
     audio.add_argument("--revision", type=revision, default=MODEL_REVISION)
+    audio.add_argument("--native-silu",action="store_true",help="Keep native SiLU math and create standard Swish ONNX companions")
     args = parser.parse_args(argv)
     snapshot = args.snapshot
     if snapshot is None:
@@ -64,7 +65,7 @@ def main(argv=None):
         snapshot = Path(snapshot_download(MODEL_ID, revision=args.revision, allow_patterns=patterns))
     if args.command == "prepare-audio-encoder":
         summary = prepare_audio_encoder(snapshot, args.preprocessing, args.output, revision=args.revision,
-                                         source_commit=os.environ.get("GITHUB_SHA", "local"))
+                                         source_commit=os.environ.get("GITHUB_SHA", "local"),native_silu=args.native_silu)
         print(json.dumps({name: summary[name] for name in (
             "success", "stage", "profile_count", "case_count", "minimum_cosine", "unity_validated", "end_to_end_validated")}))
         return

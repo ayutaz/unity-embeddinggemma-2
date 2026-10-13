@@ -61,6 +61,7 @@ jobs:
           --reference-source 4edbe17a8105233c5aaa1514faa2862b08a4f7e0
           --diagnostic-source "$GITHUB_SHA"
           --report ../artifacts/audio-layer-replay-report.json
+          --detail-feed-forward
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

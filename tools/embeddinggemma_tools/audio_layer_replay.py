@@ -20,6 +20,8 @@ from transformers.masking_utils import create_bidirectional_mask
 from huggingface_hub import snapshot_download
 
 PARTS = ("feed_forward1", "norm_pre_attn", "self_attn", "norm_post_attn", "lconv1d", "feed_forward2", "norm_out")
+FEED_FORWARD_PARTS = ("pre_layer_norm", "ffw_layer_1", "act_fn", "ffw_layer_2", "post_layer_norm")
+FEED_FORWARD_PATHS = tuple("feed_forward1." + name for name in FEED_FORWARD_PARTS)
 
 
 def load_layer(snapshot, *, index=0):
@@ -38,7 +40,7 @@ def load_layer(snapshot, *, index=0):
     return layer.eval(), config
 
 
-def capture_parts(layer, hidden, blocked_mask, positions, pinned_final):
+def _capture_named(layer, hidden, blocked_mask, positions, pinned_final, names):
     for value in (hidden, pinned_final, positions):
         if value.dtype != torch.float32 or not torch.isfinite(value).all():
             raise ValueError("native replay requires finite FP32 context")
@@ -51,8 +53,8 @@ def capture_parts(layer, hidden, blocked_mask, positions, pinned_final):
             values[name] = tensor.detach().clone()
         return callback
     try:
-        for name in PARTS:
-            handles.append(getattr(layer, name).register_forward_hook(observe(name)))
+        for name in names:
+            handles.append(layer.get_submodule(name).register_forward_hook(observe(name)))
         with torch.no_grad():
             actual = layer(hidden.clone(), attention_mask=blocked_mask, position_embeddings=positions)
     finally:
@@ -60,9 +62,18 @@ def capture_parts(layer, hidden, blocked_mask, positions, pinned_final):
             handle.remove()
     if not torch.equal(actual, pinned_final):
         raise ValueError("native replay does not match pinned layer final")
-    if tuple(values) != PARTS or any(not torch.isfinite(value).all() for value in values.values()):
+    if set(values) != set(names) or any(not torch.isfinite(value).all() for value in values.values()):
         raise ValueError("native replay parts are incomplete or nonfinite")
-    return values
+    return {name: values[name] for name in names}
+
+
+def capture_parts(layer, hidden, blocked_mask, positions, pinned_final):
+    return _capture_named(layer, hidden, blocked_mask, positions, pinned_final, PARTS)
+
+
+def capture_feed_forward_parts(layer, hidden, blocked_mask, positions, pinned_final):
+    values = _capture_named(layer, hidden, blocked_mask, positions, pinned_final, FEED_FORWARD_PATHS)
+    return {name: values["feed_forward1." + name] for name in FEED_FORWARD_PARTS}
 
 
 def _identity(path):
@@ -71,7 +82,7 @@ def _identity(path):
     return {"bytes": path.stat().st_size, "sha256": digest}
 
 
-def prepare(snapshot, context, output, *, reference_source, diagnostic_source):
+def prepare(snapshot, context, output, *, reference_source, diagnostic_source, detail_feed_forward=False):
     """Produce internal references for the frozen, fully valid silence layer 0."""
     snapshot, context, output = map(Path, (snapshot, context, output))
     if any(re.fullmatch(r"[0-9a-f]{40}", value) is None
@@ -125,7 +136,8 @@ def prepare(snapshot, context, output, *, reference_source, diagnostic_source):
     blocked = Gemma4AudioModel._convert_4d_mask_to_blocked_5d(
         SimpleNamespace(config=config), attention_mask)
     positions = Gemma4AudioRelPositionalEncoding(config)(hidden)
-    parts = capture_parts(layer, hidden, blocked, positions, pinned_final)
+    parts = _capture_named(layer, hidden, blocked, positions, pinned_final,
+                           (*PARTS, *FEED_FORWARD_PATHS) if detail_feed_forward else PARTS)
     output.mkdir(parents=True, exist_ok=False)
     files = {}
     for name, tensor in parts.items():
@@ -136,6 +148,7 @@ def prepare(snapshot, context, output, *, reference_source, diagnostic_source):
                   reference_source=reference_source, diagnostic_source=diagnostic_source,
                   model_revision=metadata["model_revision"], profile=case["profile"],
                   case=case["id"], input_files=input_files, parts=files,
+                  detail_feed_forward=detail_feed_forward,
                   full_encoder_validated=False, unity_validated=False)
     (output / "layer-replay.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     return report
@@ -149,6 +162,7 @@ def main(argv=None):
     parser.add_argument("--reference-source", required=True)
     parser.add_argument("--diagnostic-source", required=True)
     parser.add_argument("--report", required=True, type=Path)
+    parser.add_argument("--detail-feed-forward", action="store_true")
     args = parser.parse_args(argv)
     if args.report.exists():
         raise ValueError("refusing to overwrite replay report")
@@ -167,7 +181,8 @@ def main(argv=None):
             snapshot = Path(snapshot_download(MODEL_ID, revision=revision,
                                              allow_patterns=["config.json", "model.safetensors"]))
         report.update(prepare(snapshot, args.context, args.output,
-                              reference_source=args.reference_source, diagnostic_source=args.diagnostic_source))
+                              reference_source=args.reference_source, diagnostic_source=args.diagnostic_source,
+                              detail_feed_forward=args.detail_feed_forward))
         report["success"] = True
     except Exception as error:
         report.update(error_type=type(error).__name__, error=str(error))

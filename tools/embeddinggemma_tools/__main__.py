@@ -56,6 +56,8 @@ def main(argv=None):
     audio.add_argument("--snapshot", type=Path)
     audio.add_argument("--revision", type=revision, default=MODEL_REVISION)
     audio.add_argument("--native-silu",action="store_true",help="Keep native SiLU math and create standard Swish ONNX companions")
+    audio.add_argument("--collect-onnx-failures", action="store_true",
+                       help="Finish native references while recording ONNX failures; still exits with failure")
     prompts = commands.add_parser("prepare-prompts", help="Weights-free official multimodal prompt/token references")
     prompts.add_argument("--output", type=Path, required=True)
     prompts.add_argument("--snapshot", type=Path)
@@ -86,7 +88,8 @@ def main(argv=None):
         snapshot = Path(snapshot_download(MODEL_ID, revision=args.revision, allow_patterns=patterns))
     if args.command == "prepare-audio-encoder":
         summary = prepare_audio_encoder(snapshot, args.preprocessing, args.output, revision=args.revision,
-                                         source_commit=os.environ.get("GITHUB_SHA", "local"),native_silu=args.native_silu)
+                                         source_commit=os.environ.get("GITHUB_SHA", "local"),native_silu=args.native_silu,
+                                         collect_onnx_failures=args.collect_onnx_failures)
         print(json.dumps({name: summary[name] for name in (
             "success", "stage", "profile_count", "case_count", "minimum_cosine", "unity_validated", "end_to_end_validated")}))
         return

@@ -1,0 +1,333 @@
+{
+  "scope": "image_preprocessing_fixed_git_runtime_only",
+  "source_sha": "c21f1f8709b196c55c2b707a389dccc37437b21f",
+  "requested_resolved_sha_match": true,
+  "source_overlay": false,
+  "package_regression_passed": 117,
+  "reference_tests_passed": 4,
+  "official_case_count": 24,
+  "failed": 0,
+  "skipped": 0,
+  "inconclusive": 0,
+  "cli_exit": 0,
+  "completed_at": "2026-10-13T02:54:04.6739924Z",
+  "source_audit": {
+    "source_sha": "c21f1f8709b196c55c2b707a389dccc37437b21f",
+    "source_overlay": false,
+    "canonical_git_blobs": 112,
+    "package_json_semantic_matches": 1,
+    "errors": [],
+    "cache": ".\\artifacts\\k\\Library\\PackageCache\\com.ayutaz.embeddinggemma@5a050383c20c"
+  },
+  "actual_results": {
+    "stage": "image_preprocessing_only",
+    "encoder_validated": false,
+    "end_to_end_validated": false,
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "runtime_assembly": "EmbeddingGemma.Runtime",
+    "reference_source": "1fd94e28045c9bb4752bf92439f02912d57dd1f2",
+    "texture_linear": [
+      {
+        "id": "square",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "landscape",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "portrait",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "odd",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "downsample",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "identity",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      }
+    ],
+    "texture_srgb": [
+      {
+        "id": "square",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "landscape",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "portrait",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "odd",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "downsample",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "identity",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      }
+    ],
+    "render_linear": [
+      {
+        "id": "square",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "landscape",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "portrait",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "odd",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "downsample",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "identity",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      }
+    ],
+    "render_srgb": [
+      {
+        "id": "square",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "landscape",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "portrait",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "odd",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "downsample",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      },
+      {
+        "id": "identity",
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "downstream_maximum_absolute_error": 5.960464477539063E-08,
+        "mismatched_elements": 0,
+        "actual_backend": "GPUCompute",
+        "download_before_chaining": false,
+        "consumer_cpu_fallback": 0,
+        "consumer_readback_flush": 0
+      }
+    ]
+  },
+  "update_error": "UNITY_DISCONNECTED_AFTER_ACCEPT / EOF / SafeToRetry=false; no retry and no Editor restart; same PID returned Ready",
+  "evidence_files": {
+    "image-gpu-git-resolve.log": {
+      "bytes": 638,
+      "sha256": "317677857c3730d4dbf3658f5f5d6435fba641058f94f2647733df39c05ffaaa"
+    },
+    "image-gpu-git-source-audit.json": {
+      "bytes": 330,
+      "sha256": "a58b48d9cd00124550dcb2f597046d6d014f1ae1dc0b9e69b55d052f764cc6de"
+    },
+    "image-gpu-git-runtime-type.log": {
+      "bytes": 346,
+      "sha256": "8b26286458ec04144186d46c03b68886080e46598ae4881afd282b339e77b2b9"
+    },
+    "image-gpu-git-package-regression.log": {
+      "bytes": 510,
+      "sha256": "f2da43682ddd1bf05cf762ec336904dde622d5496a869d45857fcb4d17ac5dbe"
+    },
+    "image-gpu-git-official-reference.log": {
+      "bytes": 506,
+      "sha256": "f292483bcb3204be2f26f353c9587eafef8728cf44f6a40e5e3991879ee36ebf"
+    }
+  },
+  "maximum_dimensions_validated": false,
+  "profiler_capture_obtained": false,
+  "encoder_validated": false,
+  "end_to_end_validated": false,
+  "fresh_consumer_validated": false,
+  "player_validated": false,
+  "other_platforms_validated": false
+}

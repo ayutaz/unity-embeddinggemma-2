@@ -1,0 +1,42 @@
+{
+  "scope": "weights_free_native_silu_and_standard_swish_probe_only",
+  "date": "2026-10-13",
+  "measured_source": "ef7a45e237ced12c7b7b0466e23bb7e653bb8a58",
+  "python_assertion_red": 5,
+  "python_related_green": 9,
+  "model_assets_downloaded": false,
+  "native_torch_saved_exact": true,
+  "onnx_standard_op": "Swish",
+  "onnx_opset": 24,
+  "onnx_ir_version": 10,
+  "sentis_version": "2.6.1",
+  "unity": "6000.3.21f1",
+  "completed_utc": "2026-10-13T06:36:43.7088718Z",
+  "tests_passed": 2,
+  "conditions_passed": 4,
+  "failed": 0,
+  "skipped": 0,
+  "compile_passed": true,
+  "conditions": [
+    {"backend":"CPU","shape":[17],"maximum_absolute_error":0.0,"exact_value_mismatches":0,"fixed_tolerance_mismatches":0},
+    {"backend":"CPU","shape":[1,2,4096],"maximum_absolute_error":0.0,"exact_value_mismatches":0,"fixed_tolerance_mismatches":0},
+    {"backend":"GPUCompute","shape":[17],"maximum_absolute_error":0.0000002384185791015625,"maximum_tolerance_ratio":0.0009737505670149552,"exact_value_mismatches":11,"fixed_tolerance_mismatches":0},
+    {"backend":"GPUCompute","shape":[1,2,4096],"maximum_absolute_error":0.0000007152557373046875,"maximum_tolerance_ratio":0.002203734991435294,"exact_value_mismatches":3263,"fixed_tolerance_mismatches":0}
+  ],
+  "gpu_cpu_computation_or_input_fallback": 0,
+  "gpu_intermediate_readback_flush": 0,
+  "baseline_div_exp_exact_mismatches": [1,381],
+  "installed_torch_onnx_max_opset": 23,
+  "installed_torchscript_onnx_max_opset": 20,
+  "evidence_sha256": {
+    "native-silu-probe-red.log":"90b7f4d3b24d5c64ab3a10f0ad9e872f9989db7f9bc8df481ee1071b41830b0f",
+    "native-silu-probe-first-green.log":"ea563212eba2931a098fd094361e49289cc7d6c06bba73638406e41967ba6b55",
+    "native-silu-local-generation.log":"17f4d41df769a8521525be7143c7eebc59a0f46cc4e27abeb9dfa1a2524f28a0",
+    "native-silu-swish-first-run.log":"065a06fa46786d03b99d9d4ae6807fabe1062e5b08f4271b652f76ccf3cc74f7",
+    "unity_results_json":"d53c2b972d40c694f9314cd7f039c7ea9713f4a7137689c25879c43fd3a27c02"
+  },
+  "full_audio_encoder_validated": false,
+  "original_six_real_signals_validated": false,
+  "tolerances_changed": false,
+  "formal_release_created": false
+}

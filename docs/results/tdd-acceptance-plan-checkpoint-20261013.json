@@ -1,0 +1,42 @@
+{
+  "scope": "planning_checkpoint_from_existing_results_only",
+  "date": "2026-10-13",
+  "main_sha": "2d4f7be7487faef02ca2ee60ca168274b3d0671d",
+  "main_ci": {"run_id": 38341355564, "conclusion": "success"},
+  "vision_diagnostic": {
+    "pr": 53,
+    "harness_head": "d51262632b0d0369fe62719dff743e6ecd990a46",
+    "harness_source_overlay_in_validation_consumer": true,
+    "harness_file_sha256": "7eee2a1e5bbf61401e6c729143038e603c6acc954e9c13cec5dff27dafa0100d",
+    "producer_sha": "736a4684be754563bbb953a67c2023d688c4a312",
+    "original_reference_sha": "e2a6dc01fbca8c9be1f3bbe875325ad338de0ca0",
+    "completed_utc": "2026-10-13T04:56:26.2954692Z",
+    "compile_passed": true,
+    "passed": 0,
+    "failed": 2,
+    "skipped": 0,
+    "failed_backends": ["CPU", "GPUCompute"],
+    "failure": "New native final must fit the original pinned reference",
+    "trace_matches_original_saved_case_0": true,
+    "case_1_executed": false,
+    "localization_accepted": false,
+    "premature_case_localization_flag": true,
+    "fixed_fp32_failure_resolved": false,
+    "results_sha256": "eaea0a53873a95d6f693ab4412573b7c33ac7f818b91869d3f55fab6721de47b",
+    "cli_log_sha256": "cc890a73611975d17deb6b47630a308757527aac05244ffef6de318118622132",
+    "xml_basename": "20261013_045626_5595401_34f09f64b79e4306b432d62e48b4be5a.xml"
+  },
+  "audio_encoder": {
+    "pr": 40,
+    "remote_head": "e13adcd96ed3e10802131dfc94c48d9533f37ee2",
+    "real_reference_ci_run": 38331914586,
+    "real_reference_gate": "failed",
+    "weights_free_research_local_head": "9f51b198e1a8e982b89328401827a394635dac48",
+    "vector_counterexample_tests_red": 2,
+    "full_encoder_fix_proven": false,
+    "remaining_real_signals_unexecuted": 5
+  },
+  "new_unity_execution_in_this_planning_change": false,
+  "new_model_generation_in_this_planning_change": false,
+  "formal_release_authorized_by_this_plan": false
+}

@@ -1,10 +1,10 @@
 {
-  "scope": "audio_pcm_input_contract_tdd_only",
+  "scope": "audio_pcm_input_contract_tdd_and_git_runtime_upgrade",
   "base_source": "73b82bbd633f8fe64be8551bff00dd7b032b7f40",
   "unity": "6000.3.21f1",
   "real_model_validated": false,
   "gpu_validated": false,
-  "git_consumer_validated": false,
+  "git_consumer_validated": true,
   "encoders_validated": false,
   "end_to_end_validated": false,
   "initial_red": {
@@ -37,5 +37,52 @@
   },
   "source_scope": "New Runtime and test sources staged in existing consumer Editor test assembly for TDD; pinned Git Runtime assembly acceptance remains separate.",
   "final_source_sha256": "dd09d4297aba5032ae0d7131c6d19e07733c5ac6dd79488f784e5531020a5661",
-  "green_log_sha256": "2c2d91e86d1963901a4723e0af3bf519a9c73e73a1cbbeacaa76ebe0b1816752"
+  "green_log_sha256": "2c2d91e86d1963901a4723e0af3bf519a9c73e73a1cbbeacaa76ebe0b1816752",
+  "fresh_consumer_validated": false,
+  "git_runtime_upgrade": {
+    "tested_source": "5c8f9918dedcdc351eca6486e5927fd99ad447da",
+    "consumer": "existing_k_consumer",
+    "requested_revision": "5c8f9918dedcdc351eca6486e5927fd99ad447da",
+    "resolved_revision": "5c8f9918dedcdc351eca6486e5927fd99ad447da",
+    "dependency_source": "git",
+    "source_overlay_present": false,
+    "test_framework_condition": "Official Test Framework 1.6.0 embedded in consumer; existing Library reused",
+    "accepted_resolve_disconnect": "UNITY_DISCONNECTED_AFTER_ACCEPT; EOF; SafeToRetry=false; operation not repeated",
+    "actual_runtime_type": "{ InputAssembly = EmbeddingGemma.Runtime, BackboneAssembly = EmbeddingGemma.Runtime }",
+    "runtime_type_log_sha256": "7da200dfc9512108a169f115468b7f700750980dbaea59f21643bbc5e5efa139",
+    "source_audit": {
+      "comparison": "Canonical Git blobs with Windows text normalization; package.json semantic equality after removing only UPM-generated _fingerprint",
+      "git_revision": "5c8f9918dedcdc351eca6486e5927fd99ad447da",
+      "package_cache": "com.ayutaz.embeddinggemma@99ee23e226a7",
+      "audited_source_files": 102,
+      "actual_source_files": 102,
+      "canonical_blob_matches": 101,
+      "manifest_semantics_match": true,
+      "generated_manifest_metadata": {
+        "_fingerprint": "99ee23e226a7cdb93c473d7d11690e64b9fe04f0"
+      },
+      "source_mismatches": 0,
+      "mismatches": []
+    },
+    "tests": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-13T01:39:38.6546925Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 87,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 87,
+      "XmlPath": null
+    },
+    "cli_exit_code": 0,
+    "completed_test_log_sha256": "b3726aea36fceb79dda514f07e8716b7555a067c1ff17b470de3699efd079f7c",
+    "resolve_log_sha256": "317677857c3730d4dbf3658f5f5d6435fba641058f94f2647733df39c05ffaaa",
+    "evidence_scope": "87 package assembly tests include 25 PCM boundary and 62 existing contracts. Does not prove GPU preprocessing Worker, real audio encoder, final audio embedding or fresh consumer."
+  }
 }

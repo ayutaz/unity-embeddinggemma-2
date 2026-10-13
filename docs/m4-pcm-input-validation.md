@@ -14,4 +14,12 @@
 
 最小実装後はcompile成功、25 passed / fail 0 / skip 0 / inconclusive 0、2026-10-13 01:31:20 UTCに完了。入力長・sample / frame境界、padding / mask、null・rate / channel・NaN / Infinity・範囲外振幅、copy ownershipを検証。[source / XML・結果hashとscope](results/m4-pcm-input-windows-20261013.json)。
 
-この段階はmanaged入力準備のTDDであり、GPU実行・配布Runtime assembly・音声encoder合格ではない。次は固定Git Runtimeへの導入を確認し、A3の前処理Worker・GPU tensor / maskの所有権と受け渡しを実装する。downmix / resampleを追加する場合も別の独立参照とredから始める。正式Release / 公開tagは作成しない。
+上の25件はEditor assemblyへ配置したsourceでのTDD記録。後続の配布Runtime受け入れとは分ける。
+
+## 固定Git Runtime更新の受け入れ
+
+同じconsumerから4つのPCM source / test overlayを監査後に退避し、Git依存を `5c8f9918dedcdc351eca6486e5927fd99ad447da`へ更新した。Resolveは一度だけ要求し、受理後EOF（`UNITY_DISCONNECTED_AFTER_ACCEPT` / `SafeToRetry=false`）を記録した。再要求せず、Editor Ready / idleとrequested / resolved SHA一致を読み戻した。
+
+package assemblyはcompile成功、87 passed / fail 0 / skip 0 / inconclusive 0、CLI exit 0、2026-10-13 01:39:38 UTC完了。新PCM境界25件と既存62件を含む別runであり、先の25件と合算しない。後続の型照会で `AudioPcmInput`と`MultimodalBackbone`はともに実際の `EmbeddingGemma.Runtime`所属を確認した。cacheの配布source全102ファイルについて101 canonical Git blob一致、package.jsonはUPM生成`_fingerprint`だけを除いたsemantic一致、余剰ファイル・不一致0。Windows text normalizationを適用した比較であり、全102ファイルのraw-byte一致とは記載しない。Git consumer監査CLIもrequested / resolved一致・errorsなしで合格した。
+
+これは既存consumerの更新、公式Test Framework 1.6.0をembeddedにした条件で、最終空consumerの合格ではない。詳細なsource・log hashは同じ[receipt](results/m4-pcm-input-windows-20261013.json)に追記した。GPU前処理Worker・音声encoder・最終768次元は未実装または未受け入れ。次はA3のGPU tensor / maskの所有権と受け渡しをTDD実装する。downmix / resampleを追加する場合も別の独立参照とredから始める。正式Release / 公開tagは作成しない。

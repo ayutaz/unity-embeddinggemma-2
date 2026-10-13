@@ -10,8 +10,9 @@ namespace EmbeddingGemma
     /// <summary>Official 8-bit RGB image preprocessing on GPUCompute, batch one.</summary>
     /// <remarks>Main thread only. Input textures are borrowed. Keep each owned result alive
     /// until its downstream GPU work completes. No intermediate pixel readback is performed.</remarks>
-    public sealed class ImagePreprocessor : IDisposable
+    public sealed class ImagePreprocessor : IDisposable, IImagePreprocessor
     {
+        public BackendType Backend => BackendType.GPUCompute;
         bool disposed;
         ComputeShader shader;
 

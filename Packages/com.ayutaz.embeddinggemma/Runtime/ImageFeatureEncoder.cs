@@ -45,7 +45,7 @@ namespace EmbeddingGemma
     /// Owns its Worker, borrows preprocessing tensors, and returns independently owned
     /// projected soft tokens on the requested device. This is not a final embedding.
     /// </summary>
-    public sealed class ImageFeatureEncoder : IDisposable
+    public sealed class ImageFeatureEncoder : IDisposable, IImageFeatureEncoder
     {
         public BackendType Backend { get; }
         public ImageEncoderProfile Profile { get; }

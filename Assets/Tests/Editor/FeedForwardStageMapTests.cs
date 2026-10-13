@@ -53,5 +53,22 @@ namespace EmbeddingGemma.Tests
         [TestCase("relu")] [TestCase("bypass")] [TestCase("plain_pre")]
         public void WrongActivationOrNormalizationCannotBeMappedAsOfficialFeedForward(string problem)
         { Assert.Throws<InvalidOperationException>(() => Resolve(Fixture(problem))); }
+        static float[] Restore(float[] values)
+        {
+            var type = AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetType("EmbeddingGemma.Tests.AudioCoefficientLayerMap")).FirstOrDefault(value => value != null);
+            var method = type?.GetMethod("RestoreHalfScale");
+            Assert.That(method, Is.Not.Null, "Audited half-scale restoration is missing.");
+            try { return (float[])method.Invoke(null, new object[] { values }); }
+            catch (TargetInvocationException error) { ExceptionDispatchInfo.Capture(error.InnerException).Throw(); throw; }
+        }
+        [Test] public void HalfScaleRestoreReturnsExactIndependentValuesAndKeepsBorrowedInput()
+        {
+            var original = new[] { 1.5f, -2.25f, 0f, 1e-5f }; var scaled = original.Select(value => value * 0.5f).ToArray();
+            var before = scaled.ToArray(); var restored = Restore(scaled);
+            Assert.That(restored, Is.EqualTo(original)); Assert.That(restored, Is.Not.SameAs(scaled)); Assert.That(scaled, Is.EqualTo(before));
+        }
+        [TestCase(float.NaN)] [TestCase(float.PositiveInfinity)] [TestCase(float.Epsilon)] [TestCase(float.MaxValue)]
+        public void HalfScaleRestoreRejectsNonfiniteSubnormalOrOverflowValues(float value)
+        { Assert.Throws<ArgumentException>(() => Restore(new[] { value })); }
     }
 }

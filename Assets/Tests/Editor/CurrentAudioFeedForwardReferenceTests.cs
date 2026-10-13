@@ -44,7 +44,9 @@ namespace EmbeddingGemma.Tests
                 Assert.That(replay.Value<string>("diagnostic_source"), Is.EqualTo(report.Value<string>("native_replay_source")));
                 Assert.That(replay.Value<string>("profile"), Is.EqualTo("frames-1119-valid-1119"));
                 Assert.That(replay.Value<string>("case"), Is.EqualTo("silence"));
-                var anchors = JObject.Parse(File.ReadAllText(Path.Combine(nativeRoot, "feed-forward-norm-anchors.json")));
+                var anchorsPath = Path.Combine(nativeRoot, "feed-forward-norm-anchors.json");
+                HashCheck(anchorsPath, "95f3e32536dce9b3b3820050dac4bc837c0f460c75e4e56735381bf924007c33");
+                var anchors = JObject.Parse(File.ReadAllText(anchorsPath));
                 Assert.That(anchors.Value<string>("native_replay_report_sha256"), Is.EqualTo(Hash(replayPath)));
                 HashCheck(Path.Combine(root, "audio-runtime-reference/frames-1119-valid-1119/audio.onnx"),
                     "7770a8af258f2de32c5587497b820596ea4e1ed7ec5382c3ee90eada2bec7e4a");
@@ -54,6 +56,7 @@ namespace EmbeddingGemma.Tests
                 Assert.That(modelPath.StartsWith(root + Path.DirectorySeparatorChar, StringComparison.Ordinal), Is.True);
                 HashCheck(modelPath, "3214cc2b179a3abf3f968816c58b83b8ee762661bfab7b58c6f142d48ed3ed3e");
                 var model = TextModelFile.Load(modelPath);
+                report["folded_scale_audit"] = anchors["folded_scale_audit"];
                 var map = AudioCoefficientLayerMap.ResolveFeedForward(model, (JArray)anchors["anchors"]);
                 var names = new[] { "pre_layer_norm", "ffw_layer_1", "act_fn", "ffw_layer_2", "post_layer_norm" };
                 Assert.That(map.Keys, Is.EquivalentTo(names));
@@ -85,7 +88,9 @@ namespace EmbeddingGemma.Tests
                 {
                     var snapshot = observed.Snapshots.Single(value => value.TensorIndex == map[name]);
                     Assert.That(snapshot.Backend, Is.EqualTo(backend));
-                    var metrics = Compare(snapshot.Values, native[name]);
+                    var actual = name == "post_layer_norm" ? AudioCoefficientLayerMap.RestoreHalfScale(snapshot.Values) : snapshot.Values;
+                    var metrics = Compare(actual, native[name]);
+                    metrics["diagnostic_restore_multiplier"] = name == "post_layer_norm" ? 2 : 1;
                     metrics["stage"] = name; metrics["layer_index"] = snapshot.LayerIndex; metrics["tensor_index"] = snapshot.TensorIndex;
                     metrics["actual_backend"] = snapshot.Backend.ToString(); metrics["linear2_outer_clamp_alias"] = name == "ffw_layer_2";
                     stages.Add(metrics); Save();

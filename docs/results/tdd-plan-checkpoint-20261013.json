@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "scope": "planning_snapshot_only",
+  "date": "2026-10-13",
+  "main_source": "73b82bbd633f8fe64be8551bff00dd7b032b7f40",
+  "main_ci": {
+    "conclusion": "success",
+    "run_id": 38331670827
+  },
+  "formal_release_created_by_this_update": false,
+  "new_unity_execution": false,
+  "common_runtime": {
+    "actual_git_test_source": "21e598c5b53d5ad73557ee6d606b12770254d73b",
+    "encoder_features": "synthetic_projected_features",
+    "state": "merged",
+    "pr": 43,
+    "fresh_final_consumer_validated": false,
+    "actual_encoder_connection_validated": false,
+    "final_pr_head": "4feac7551bd99f2571a667f237ace85ba2d7093f",
+    "actual_backbone_passed": 4
+  },
+  "audio_encoder": {
+    "pr": 40,
+    "pr_head": "e13adcd96ed3e10802131dfc94c48d9533f37ee2",
+    "ci_run_id": 38331914586,
+    "conclusion": "failure",
+    "evidence_sha256": "a9e02cf6fda0d333afccd6597d6056869f3961dfbdc78f0e93aac57c0e3529d3",
+    "producer_source": "e81255dcbdf9844752bfef0fa789b54635388a47",
+    "case_id": "silence",
+    "maximum_absolute_error": 0.00021576881408691406,
+    "maximum_tolerance_ratio": 9.733773231506348,
+    "mismatched_elements": 368,
+    "feature_rtol": 0.0001,
+    "feature_atol": 1E-05,
+    "first_nonzero_stage": "activation",
+    "first_tolerance_failure": "layer_10",
+    "localization_validated": true,
+    "standalone_matches_full_stage": true,
+    "diagnostic_stages": [
+      {
+        "name": "clamp_input",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "pre_layer_norm",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "ffw_layer_1",
+        "shape": [
+          1,
+          280,
+          4096
+        ],
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "activation",
+        "shape": [
+          1,
+          280,
+          4096
+        ],
+        "success": true,
+        "maximum_absolute_error": 5.960464477539063E-08,
+        "maximum_tolerance_ratio": 0.0011215595295652747,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "ffw_layer_2",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 9.5367431640625E-07,
+        "maximum_tolerance_ratio": 0.00967935100197792,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "clamp_output",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 9.5367431640625E-07,
+        "maximum_tolerance_ratio": 0.00967935100197792,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "post_layer_norm",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 7.62939453125E-06,
+        "maximum_tolerance_ratio": 0.0810510665178299,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "post_layer_scale",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 3.814697265625E-06,
+        "maximum_tolerance_ratio": 0.04196758195757866,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "residual_output",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 7.62939453125E-06,
+        "maximum_tolerance_ratio": 0.04501582682132721,
+        "mismatched_elements": 0
+      }
+    ],
+    "diagnostic_tdd_passed": 76,
+    "remaining_signals_executed": false,
+    "unity_encoder_validated": false,
+    "end_to_end_validated": false
+  },
+  "pcm_input": {
+    "pr": 48,
+    "pr_head": "5c8f9918dedcdc351eca6486e5927fd99ad447da",
+    "state": "draft_unmerged",
+    "ci_run_id": 38332893619,
+    "ci_conclusion": "success",
+    "staged_input_tdd_red": 25,
+    "staged_input_tdd_green": 25,
+    "separate_package_assembly_run": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-13T01:39:38.6546925Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 87,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 87,
+      "XmlPath": null
+    },
+    "completed_log_sha256": "b3726aea36fceb79dda514f07e8716b7555a067c1ff17b470de3699efd079f7c",
+    "runtime_type_and_source_binding_audit_completed": false,
+    "gpu_worker_connection_validated": false,
+    "real_encoder_validated": false,
+    "fresh_consumer_validated": false
+  },
+  "remaining_implementation": [
+    "official_multimodal_prompt_and_mask",
+    "image_gpu_preprocessing",
+    "audio_gpu_runtime_worker_connection",
+    "image_and_audio_final_768d_api",
+    "search_playback_recording_samples",
+    "player_and_platform_integration"
+  ],
+  "evidence_note": "Hashes identify existing local captured evidence. This compact planning snapshot does not replace full execution receipts or claim missing assembly/source binding, actual encoders, GPU chaining or fresh candidate acceptance."
+}

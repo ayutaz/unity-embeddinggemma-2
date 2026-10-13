@@ -1,17 +1,17 @@
 # M3: 画像対応のTDD計画
 
-更新日: 2026-10-13。**画像end-to-end API / sampleはmainに未実装、GPU前処理・最終768次元は未検証**。画像encoder / projectorのPython実モデル照合はPR #37で合格した。Sentis encoderはPR #41のWindows実測でFloat16のCPU / GPU全6条件が合格、FP32全6条件は要素単位の許容差超過で不合格。共通backboneの一部はPR #34で実装済みだが、合成特徴量によるPython照合は画像end-to-endの受け入れを満たさない。依存・実行場所・公開条件は[全体計画](multimodal-tdd-plan.md)、既存仕様調査は[技術調査](technical-approach.md)。M3完了時には正式リリースせず、M4と全必須環境の検証へ進む。
+更新日: 2026-10-13。**画像end-to-end API / sampleはmainに未実装、GPU画像前処理と実画像から最終768次元の受け入れは未完了**。画像encoder / projectorのPython実モデル照合はPR #37で合格した。Sentis encoderはPR #41のWindows実測でFloat16のCPU / GPU全6条件が合格、FP32全6条件は固定elementwise許容差超過で不合格。[全体計画](multimodal-tdd-plan.md)の工程3として進め、M3完了時には正式リリースせずM4と全必須環境の検証へ渡す。
 
-I1 / I2の固定profile encoder / projector exportと公式processor参照・必須Actions gateをTDDで実装した。[実装と検証範囲](m3-vision-export-validation.md)。小さい回帰66 passed / skip 0。[PR #37 CI 38310718250](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38310718250)の3 profile / 6ケースでminimum cosine `0.9999997615814209`、elementwise rtol `1e-4` / atol `1e-5`を満たした。出力は512次元soft tokenで、このPython報告の `unity_validated=false` / `end_to_end_validated=false`は維持する。後続のSentis実測は以下に分け、残るFP32照合、I3のGPU前処理とI4〜I6へ進む。
+I1 / I2の固定profile encoder / projector exportと公式processor参照・Actions gateをTDDで実装した。[実装と検証範囲](m3-vision-export-validation.md)。小さい回帰66 passed / skip 0。[実モデルPython CI 38310718250](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38310718250)の3 profile / 6ケースでminimum cosine `0.9999997615814209`。出力は512次元soft tokenであり、画像の最終embeddingではない。
 
 ### 直近のTDD順序
 
-1. I2のFP32差を演算・段階別に特定し、独立参照との不一致を小さいテストでredにしてから修正する。現在の `rtol=1e-4` / `atol=1e-5`を緩めない。3 profile / 全12条件の実モデル再照合と保存 / 再読込を確認する。
-2. C3の実画像feature入力・長さprofileをSentis CPU / GPUへ接続し、placeholder / mask / token数の不一致をred → greenにする。[PR #43](https://github.com/ayutaz/unity-embeddinggemma-2/pull/43)はhead `41d2da3bb8228ff6cf74a016888841bcac2a4f28`で小さい実GPUと配置演算 / 失敗cacheを含む68件green、CI全8 job成功。ただし初回1024長graphはSentis import失敗・数値照合0件。まず修正後の実graphを監査して保存 / 再読込・最終768次元を照合し、その後に実画像featureを接続する。合成特徴量と実encoder特徴量、新Runtime assemblyの固定Git導入を別に判定する。実モデルgateを満たすまでdraft / 未統合を維持する。
-3. I3のGPU前処理を向き・色空間・補間・patch順の固定fixtureからTDDで実装し、Texture / RenderTextureの両方を実GPUで照合する。
-4. I4〜I6のAPI → 横断検索sample → Playerを表の契約順でTDD実装する。最終768次元と全順位が合格するまでM3は未完了とする。
+1. I2のFP32差をstage / 演算別に特定し、独立参照との不一致を小さいテストでredにしてから修正する。現在の `rtol=1e-4` / `atol=1e-5`は緩めず、3 profile / 全12条件の実モデル再照合と保存 / 再読込を確認する。
+2. C3の[PR #43](https://github.com/ayutaz/unity-embeddinggemma-2/pull/43)、確認head `21e598c5b53d5ad73557ee6d606b12770254d73b`では配置・cache修正の68件greenに加え、実1024長backboneのCPU / GPUCompute × FP32 / Float16全4条件が合格した。[固定headの結果](https://github.com/ayutaz/unity-embeddinggemma-2/blob/21e598c5b53d5ad73557ee6d606b12770254d73b/docs/results/multimodal-backbone-sentis-windows-20261013.json)。最初の4条件はconsumer Editor assembly内source、後続の固定Git Runtime更新consumerも4条件合格した。[Git更新のreceipt](results/multimodal-git-runtime-upgrade-windows-20261013.json)。いずれも合成project済みfeatureの受け入れであり、実画像feature接続・公式prompt / mask構築・最終candidateの空consumerは別gateとする。placeholder / feature数・順序の不一致をred → greenにし、実画像の最終vectorを照合する。
+3. I3のGPU前処理を向き・色空間・resize / patch順の固定fixtureからTDDで実装し、Texture / RenderTextureの両方を実GPUで照合する。I2数値差の診断中でも独立した前処理契約は準備できる。
+4. I4〜I6のAPI → 横断検索sample → Playerを下表の契約順でTDD実装する。最終768次元と全順位、実操作・解放・正常終了の必要条件を満たすまでM3は未完了とする。
 
-[最新の12条件](results/m3-vision-windows-plan-snapshot-20261013.json)はencoderのみの実測。全GPU条件で実出力backendはGPUCompute、CPU計算 / 入力要求・readback flushの監査は0件だが、前処理と共通本体のGPU受け渡しは別に検証する。CLIの観測timeoutと保存報告の完了を区別する。
+[12条件の実測](results/m3-vision-windows-plan-snapshot-20261013.json)はencoderのみ。全GPU条件で実出力はGPUCompute、CPU計算 / 入力要求・readback flushは0件だが、GPU画像前処理と共通本体へのfeature受け渡しは別に検証する。CLI観測timeoutと実operationの保存報告を区別し、未変更の重い検証を再起動しない。
 
 ## 範囲と参照固定
 

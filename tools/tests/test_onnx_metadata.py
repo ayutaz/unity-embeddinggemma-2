@@ -1,5 +1,6 @@
 import hashlib
 import io
+import json
 
 import onnx
 import pytest
@@ -62,3 +63,27 @@ def test_metadata_field_budget_is_enforced():
     data = helper.make_model(graph).SerializeToString()
     with pytest.raises(ValueError, match="budget"):
         run(LimitedReader(data), metadata_field_bytes=128)
+
+
+def test_cli_emits_metadata_without_claiming_binary_hash_audit(tmp_path, capsys):
+    main = getattr(onnx_metadata, "main", None)
+    assert callable(main), "ONNX metadata CLI is missing"
+    source = tmp_path / "model.onnx"
+    source.write_bytes(model_bytes())
+    output = tmp_path / "metadata.json"
+    main(["--model", str(source), "--output", str(output)])
+    report = json.loads(output.read_text())
+    assert report["binary_sha256_audited"] is False
+    assert report["model_executed"] is False and report["read_bytes"] < 20000
+    assert json.loads(capsys.readouterr().out)["node_count"] == 2
+
+
+def test_cli_cannot_overwrite_its_model_input(tmp_path):
+    main = getattr(onnx_metadata, "main", None)
+    assert callable(main), "ONNX metadata CLI is missing"
+    source = tmp_path / "model.onnx"
+    original = model_bytes()
+    source.write_bytes(original)
+    with pytest.raises(ValueError, match="overwrite"):
+        main(["--model", str(source), "--output", str(source)])
+    assert source.read_bytes() == original

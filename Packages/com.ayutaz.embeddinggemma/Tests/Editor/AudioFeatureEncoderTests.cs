@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.ExceptionServices;
 using NUnit.Framework;
 using Unity.InferenceEngine;
 using UnityEngine;
@@ -12,24 +11,11 @@ namespace EmbeddingGemma.Tests
     // Synthetic graphs test Runtime contracts and device ownership, not real audio accuracy.
     public sealed class AudioFeatureEncoderTests
     {
-        static Type Api(string name)
-        {
-            var type = typeof(AudioPcmInput).Assembly.GetType("EmbeddingGemma." + name);
-            Assert.That(type, Is.Not.Null, "Audio encoder Runtime API is missing: " + name);
-            return type;
-        }
-        static object Unwrap(Func<object> action)
-        {
-            try { return action(); }
-            catch (TargetInvocationException error) { ExceptionDispatchInfo.Capture(error.InnerException).Throw(); throw; }
-        }
-        static object Profile(int frames) => Unwrap(() => Activator.CreateInstance(Api("AudioEncoderProfile"), frames));
-        static object Encoder(Model model, BackendType backend, object profile) =>
-            Unwrap(() => Activator.CreateInstance(Api("AudioFeatureEncoder"), model, backend, profile));
-        static object Encode(object encoder, AudioPreprocessingResult input) =>
-            Unwrap(() => encoder.GetType().GetMethod("Encode").Invoke(encoder, new object[] { input }));
-        static Tensor<float> Tokens(object result) =>
-            (Tensor<float>)Unwrap(() => result.GetType().GetProperty("SoftTokens").GetValue(result));
+        static AudioEncoderProfile Profile(int frames) => new AudioEncoderProfile(frames);
+        static AudioFeatureEncoder Encoder(Model model, BackendType backend, AudioEncoderProfile profile) =>
+            new AudioFeatureEncoder(model, backend, profile);
+        static AudioEncodingResult Encode(AudioFeatureEncoder encoder, AudioPreprocessingResult input) => encoder.Encode(input);
+        static Tensor<float> Tokens(AudioEncodingResult result) => result.SoftTokens;
 
         static Model EncoderGraph(int count = 1, string problem = null)
         {
@@ -56,8 +42,8 @@ namespace EmbeddingGemma.Tests
         public void ProfileMatchesTwoStrideTwoSubsamplingStages(int frames, int count)
         {
             var profile = Profile(frames);
-            Assert.That(profile.GetType().GetProperty("ValidFrameCount").GetValue(profile), Is.EqualTo(frames));
-            Assert.That(profile.GetType().GetProperty("FeatureCount").GetValue(profile), Is.EqualTo(count));
+            Assert.That(profile.ValidFrameCount, Is.EqualTo(frames));
+            Assert.That(profile.FeatureCount, Is.EqualTo(count));
         }
         [TestCase(-1)] [TestCase(0)] [TestCase(1120)]
         public void UnsupportedPrefixIsRejected(int frames) => Assert.Throws<ArgumentOutOfRangeException>(() => Profile(frames));
@@ -92,19 +78,19 @@ namespace EmbeddingGemma.Tests
         [Test]
         public void PrefixMismatchWithTheSameSoftTokenCountIsRejectedAndWorkerRemainsUsable()
         {
-            using var encoder = (IDisposable)Encoder(EncoderGraph(), BackendType.CPU, Profile(2));
+            using var encoder = Encoder(EncoderGraph(), BackendType.CPU, Profile(2));
             using var preprocessor = new AudioPreprocessor(PreprocessorGraph(), BackendType.CPU);
             using var wrong = preprocessor.Process(Pcm(count: 481)); // 3 frames still produce one soft token.
             Assert.Throws<ArgumentException>(() => Encode(encoder, wrong));
             Assert.Throws<ArgumentNullException>(() => Encode(encoder, null));
             using var valid = preprocessor.Process(Pcm());
-            using var result = (IDisposable)Encode(encoder, valid);
+            using var result = Encode(encoder, valid);
             Assert.That(Tokens(result).shape, Is.EqualTo(new TensorShape(1, 512)));
         }
         [TestCase("shape")] [TestCase("type")]
         public void InvalidScheduledOutputIsRejectedRepeatedly(string problem)
         {
-            using var encoder = (IDisposable)Encoder(EncoderGraph(problem: problem), BackendType.CPU, Profile(2));
+            using var encoder = Encoder(EncoderGraph(problem: problem), BackendType.CPU, Profile(2));
             using var preprocessor = new AudioPreprocessor(PreprocessorGraph(), BackendType.CPU);
             using var input = preprocessor.Process(Pcm());
             Assert.Throws<InvalidOperationException>(() => Encode(encoder, input));
@@ -116,14 +102,15 @@ namespace EmbeddingGemma.Tests
             if (backend == BackendType.GPUCompute) Assert.That(SystemInfo.supportsComputeShaders, Is.True, "Actual GPU required; never skip.");
             using var preprocessor = new AudioPreprocessor(PreprocessorGraph(), backend);
             using var input = preprocessor.Process(Pcm()); using var changed = preprocessor.Process(Pcm(0.5f));
-            using var encoder = (IDisposable)Encoder(EncoderGraph(), backend, Profile(2));
-            using var first = (IDisposable)Encode(encoder, input); using var second = (IDisposable)Encode(encoder, changed);
+            var encoderModel = EncoderGraph();
+            using var encoder = Encoder(encoderModel, backend, Profile(2));
+            using var first = Encode(encoder, input); using var second = Encode(encoder, changed);
             Assert.That(Tokens(first), Is.Not.SameAs(Tokens(second)));
             Assert.That(Tokens(first).backendType, Is.EqualTo(backend));
             if (backend == BackendType.GPUCompute)
             {
                 var worker = (Worker)encoder.GetType().GetField("worker", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(encoder);
-                var model = EncoderGraph();
+                var model = encoderModel;
                 const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
                 var cpu = (HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallback", flags).GetValue(worker);
                 var flush = (HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallbackShouldFlushGPU", flags).GetValue(worker);
@@ -142,7 +129,7 @@ namespace EmbeddingGemma.Tests
         [Test]
         public void DisposedPreprocessingResultIsRejected()
         {
-            using var encoder = (IDisposable)Encoder(EncoderGraph(), BackendType.CPU, Profile(2));
+            using var encoder = Encoder(EncoderGraph(), BackendType.CPU, Profile(2));
             using var preprocessor = new AudioPreprocessor(PreprocessorGraph(), BackendType.CPU);
             var input = preprocessor.Process(Pcm()); input.Dispose();
             Assert.Throws<ObjectDisposedException>(() => Encode(encoder, input));
@@ -151,7 +138,7 @@ namespace EmbeddingGemma.Tests
         public void CpuInputsAreRejectedByGpuEncoderWithoutImplicitUpload()
         {
             Assert.That(SystemInfo.supportsComputeShaders, Is.True, "Actual GPU required; never skip.");
-            using var encoder = (IDisposable)Encoder(EncoderGraph(), BackendType.GPUCompute, Profile(2));
+            using var encoder = Encoder(EncoderGraph(), BackendType.GPUCompute, Profile(2));
             using var preprocessor = new AudioPreprocessor(PreprocessorGraph(), BackendType.CPU);
             using var input = preprocessor.Process(Pcm());
             Assert.Throws<ArgumentException>(() => Encode(encoder, input));

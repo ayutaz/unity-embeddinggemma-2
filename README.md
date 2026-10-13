@@ -32,7 +32,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor受け入れ検証完了（保存・量子化・測定を含む） |
 | M2 | テキストUPM・サンプル・検証基盤を安定化する | Windows実測あり。標準環境再現・新candidate・性能・他環境は未完了 |
 | M3 | GPU画像前処理・encoder・共通本体・画像検索 | Python encoder合格、Sentis Float16 6条件合格 / FP32 6条件不合格。前処理・最終API・sampleは未完成 |
-| M4 | GPU音声前処理・encoder・共通本体・音声検索 | Python前処理6ケース合格。音声encoder数値不合格、Unity・最終API・sampleは未完了 |
+| M4 | GPU音声前処理・encoder・共通本体・音声検索 | PythonとWindows Sentis CPU / 実GPUの前処理6ケース合格。音声encoder数値不合格、最終API・sampleは未完了 |
 | 最終公開 | 全対応と必須環境の検証後に正式リリース | 未着手 |
 
 ## 動作環境

@@ -13,7 +13,8 @@ namespace EmbeddingGemma.Tests
         {
             var type=typeof(AudioChainReferenceGuardTests).Assembly.GetType("EmbeddingGemma.Tests.AudioChainReferenceGuard");
             Assert.That(type,Is.Not.Null,"Real audio chain acceptance guard is missing");
-            try{return type.GetMethod(method).Invoke(null,args);}
+            var member=type.GetMethod(method);Assert.That(member,Is.Not.Null,"Real audio chain diagnostic method is missing: "+method);
+            try{return member.Invoke(null,args);}
             catch(TargetInvocationException error){ExceptionDispatchInfo.Capture(error.InnerException).Throw();throw;}
         }
         static readonly string Source=new string('b',40);
@@ -83,6 +84,19 @@ namespace EmbeddingGemma.Tests
             var result=(JObject)Invoke("Summarize",conditions,true,true);
             Assert.That(result.Value<bool>("final_vectors_validated"),Is.False);
             Assert.That(result.Value<bool>("end_to_end_validated"),Is.False);
+        }
+        [Test] public void FailureDiagnosticCountsNonfiniteValuesWithoutHidingFiniteMagnitude()
+        {
+            var result=(JObject)Invoke("DescribeValues",new float[]{0,2,float.NaN,float.PositiveInfinity});
+            Assert.That(result.Value<int>("length"),Is.EqualTo(4));Assert.That(result.Value<int>("finite_count"),Is.EqualTo(2));
+            Assert.That(result.Value<int>("nan_count"),Is.EqualTo(1));Assert.That(result.Value<int>("infinity_count"),Is.EqualTo(1));
+            Assert.That(result.Value<double>("finite_sum_squares"),Is.EqualTo(4));Assert.That(result.Value<double>("maximum_absolute_finite_value"),Is.EqualTo(2));
+        }
+        [Test] public void ZeroVectorFailureDiagnosticExposesZeroNorm()
+        {
+            var result=(JObject)Invoke("DescribeValues",new float[768]);
+            Assert.That(result.Value<int>("length"),Is.EqualTo(768));Assert.That(result.Value<int>("finite_count"),Is.EqualTo(768));
+            Assert.That(result.Value<double>("finite_sum_squares"),Is.Zero);
         }
     }
 }

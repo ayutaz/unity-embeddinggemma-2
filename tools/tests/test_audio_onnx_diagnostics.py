@@ -50,6 +50,25 @@ def test_trace_with_a_different_final_path_cannot_claim_localization(tmp_path):
     assert report["encoders_validated"] is False
 
 
+def test_changed_native_reference_cannot_validate_localization(tmp_path, monkeypatch):
+    run = diagnostic()
+    audio, projection = audio_models()
+    frame_mask = mask(25, 17)
+    features = torch.zeros(1, 25, 8)
+    original = tmp_path / "original.onnx"
+    export.export_audio_native_onnx(export.AudioEncoderExport(audio, projection, frame_mask), features, original)
+    failed = torch.from_numpy(ReferenceEvaluator(str(original)).run(None, {"input": features.numpy()})[0])
+    capture = prepare.capture_official_audio_stages
+    def changed(*args, **kwargs):
+        stages = capture(*args, **kwargs)
+        return (*stages[:-1], stages[-1] + 0.1)
+    monkeypatch.setattr(prepare, "capture_official_audio_stages", changed)
+    report = run(audio, projection, features, frame_mask, tmp_path, failed)
+    assert report["trace_matches_failed_graph"] is True
+    assert report["localization_validated"] is False, "A different native reference must invalidate the diagnostic context"
+    assert report["native_reference_matches_original"] is False
+
+
 @pytest.mark.parametrize("diagnostic_fails", [False, True])
 def test_original_onnx_failure_survives_stage_diagnostic_success_or_failure(tmp_path, monkeypatch, diagnostic_fails):
     snapshot, inputs = fixture(tmp_path, monkeypatch)

@@ -16,8 +16,14 @@
 
 これは新Runtime / test sourceを既存consumerのEditor test assemblyへ配置したTDDであり、配布Runtimeや実FFT / mel精度の成功へ流用しない。[source・fixtureエラー・red / green結果hash](results/m4-audio-preprocessing-runtime-tdd-20261013.json)。
 
-## 次の受け入れ
+## 固定Git Runtimeと公式6信号の受け入れ
 
-固定Git版のRuntime導入、source / 型assembly監査、package assembly回帰を確認する。その後、既存の監査済み `.sentis`と公式6信号を使い、CPU / 実GPU各6件の全feature許容差とmask完全一致、GPUの次段Workerへの受け渡しを検証する。期待値はRuntime出力から作らず、既存の固定Python参照を再利用する。モデル再取得・再exportは不要。
+固定Git `9f99414bfa36c03431d12a23198c378a7235a6fe`を既存consumerへ更新し、Runtime / unit source overlayを退避した。requested / resolved SHA一致、106配布ファイルの105 canonical Git blob一致 + package.jsonのUPM生成`_fingerprint`だけを除いたsemantic一致、不一致0を確認した。両公開型は実際の `EmbeddingGemma.Runtime`所属。compile成功、package assembly全108 passed / fail 0 / skip 0 / CLI exit 0。
 
-実受け入れharnessは `AudioPreprocessorRuntimeReferenceTests`。固定source / model revision・processor hash・参照と保存graphを監査し、最終scalar取得後にのみ診断用feature / mask readbackを行う。合格時も音声encoder・共通本体・最終vector、最終空consumer・Player / 他OSの成功とは記載しない。現時点ではこれらの追加受け入れは未実行。
+実受け入れharnessは `AudioPreprocessorRuntimeReferenceTests`。固定source / model revision・processor hash・参照と既存の保存graphを監査した。CPU / 実GPU各6信号の全featureは元の固定 `atol=0.004` / `rtol=1e-4`内、mask完全一致、有効frame数一致。両backendの最大差 `0.0038890838623046875`、最大許容差比 `0.830127150420923`。次段Workerが全特徴量とmaskを要素ごとに加算した後、独立した参照と全要素照合する。中間downloadなし、実GPUの両WorkerでCPU計算 / 入力fallback・readback flushは0。次段の出力取得後にのみ、元の特徴量 / maskを診断readbackする。最終2条件ともpassed / fail 0 / skip 0 / CLI exit 0、2026-10-13 02:15:00 UTC完了。[source・実測と失敗履歴](results/m4-audio-preprocessing-runtime-windows-20261013.json)。
+
+初回の実受け入れでは測定用の大きいReduceMeanのCPU scalarが `-5.92099857`、独立平均は `-5.9077553749084473`で不一致（CPU failed、GPU 6信号passed）。CPU側の元feature全要素比較へ到達しなかったため、前処理結果の不合格原因とは確定しない。Runtimeを変更せず、測定を全要素の次段加算・元featureの全要素照合へ変更した。元の前処理許容差は維持する。大きいReduceMeanの根本原因は未確定で、最終合格によってこの失敗を消さない。
+
+Git更新時に一度短いSHAを指定して自動解決が失敗したため、完全な40桁SHAへ修正した。Burst削除警告はLaterで閉じ、Editor再起動なし。完全SHAへのResolveは受理後EOF / SafeToRetry=falseを記録して再要求せず、同processのReadyと解決hashを確認した。失敗応答はterminal toolで確認したがTee fileには保存されず、その欠落もreceiptに記載する。初回source監査scriptのcounter衝突も合格に数えず、修正後の完全監査だけを採用した。
+
+既存consumer・embedded公式Test Framework 1.6.0・監査済みmodel / Library再利用の条件。harnessはconsumer Editor test assemblyに配置、製品Runtimeは固定Git packageから実行した。モデル再取得・再exportは行っていない。音声encoder・共通本体・最終vector、最終空consumer・Player / 他OSの成功には数えない。次はencoder数値差の修正と実encoderへのGPU接続を進める。

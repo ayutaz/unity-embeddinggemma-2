@@ -99,9 +99,9 @@ namespace EmbeddingGemma.Tests
                 var graph = new FunctionalGraph();
                 var features = graph.AddInput<float>(new TensorShape(1, 1119, 128), "features");
                 var mask = graph.AddInput<int>(new TensorShape(1, 1119), "frame_mask");
-                var scalar = Functional.ReduceMean(features, new[] { 0, 1, 2 }, true)
-                    + Functional.ReduceMean(mask.Float(), new[] { 0, 1 }, true);
-                var consumer = graph.Compile(scalar);
+                // Consume every feature and mask element without an unrelated large FP32 reduction.
+                var joined = features + Functional.Unsqueeze(mask.Float(), 2);
+                var consumer = graph.Compile(joined);
                 using var next = new Worker(consumer, backend);
                 var consumerAudit = new JObject(); AuditFallback(next, consumer, backend, consumerAudit);
                 condition["downstream_audit"] = consumerAudit;
@@ -119,15 +119,23 @@ namespace EmbeddingGemma.Tests
                     Assert.That(final.backendType, Is.EqualTo(backend));
                     var expected = Read<float>(row.Value<string>("features"), 1119 * 128);
                     var expectedMask = Read<int>(row.Value<string>("frame_mask"), 1119);
-                    var chained = final.DownloadToArray()[0];
-                    var expectedScalar = expected.Average(value => (double)value) + expectedMask.Average();
-                    // The interval follows the fixed per-element bound through a mean,
-                    // with a fixed 0.0002 allowance for scalar reduction rounding.
-                    var scalarBound = 0.004 + 1e-4 * expected.Average(value => Math.Abs((double)value)) + 0.0002;
-                    Assert.That(float.IsNaN(chained) || float.IsInfinity(chained), Is.False);
-                    Assert.That(chained, Is.EqualTo(expectedScalar).Within(scalarBound));
-                    item["downstream_scalar_absolute_error"] = Math.Abs(chained - expectedScalar);
-                    item["downstream_scalar_error_bound"] = scalarBound;
+                    Assert.That(final.shape, Is.EqualTo(new TensorShape(1, 1119, 128)));
+                    var chained = final.DownloadToArray();
+                    double chainMaximum = 0; var chainMismatches = 0;
+                    for (var index = 0; index < chained.Length; index++)
+                    {
+                        var expectedValue = expected[index] + expectedMask[index / 128];
+                        Assert.That(float.IsNaN(chained[index]) || float.IsInfinity(chained[index]), Is.False);
+                        var difference = Math.Abs((double)chained[index] - expectedValue);
+                        // Same original preprocessing bound, plus a fixed 2e-6 allowance
+                        // for the single FP32 addition. Original features are checked below unchanged.
+                        var tolerance = 0.004 + 1e-4 * Math.Abs(expected[index]) + 2e-6;
+                        chainMaximum = Math.Max(chainMaximum, difference);
+                        if (difference > tolerance) chainMismatches++;
+                    }
+                    item["downstream_maximum_absolute_error"] = chainMaximum;
+                    item["downstream_mismatched_elements"] = chainMismatches;
+                    Assert.That(chainMismatches, Is.EqualTo(0));
                     item["feature_download_before_chaining"] = false;
                     item["mask_download_before_chaining"] = false;
                     // These diagnostic reads occur only after the downstream Worker has consumed both tensors.

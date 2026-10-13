@@ -2,6 +2,8 @@
 
 ## 0.1.0-pre.1 — Unreleased
 
+- Add GPU-only 8-bit Texture / RenderTexture preprocessing with official bicubic antialias rounding, RGB patch order, position metadata and owned output tensors. Image encoder integration and final embedding API remain in development.
+
 - Add owned CPU / GPU PCM preprocessing outputs and Worker reuse / disposal contracts; audio encoder and final embedding integration remain in development.
 
 - 固定16kHz mono PCM入力のAudioPcmInputを追加。161〜179200 samplesと振幅[-1,1]を監査し、owned snapshot・右zero padding / prefix mask・公式frame境界を準備。25 red → 25 green。GPU前処理・encoder・最終音声embeddingは別の未完了gate。

@@ -1,0 +1,47 @@
+{
+  "scope": "image_maximum_input_dispatch_fix_source_overlay_tdd",
+  "red_runtime_source": "c21f1f8709b196c55c2b707a389dccc37437b21f",
+  "red_assertion": "Largest-input pixel 0: expected 0.2, got 0.",
+  "dispatch_groups_requested": 73728,
+  "dispatch_dimension_limit": 65535,
+  "red_count": 1,
+  "initial_fix_failed": "NoUnexpectedReceived rejected test-only IgnoreFailingMessages:true Log after pixel assertions passed",
+  "next_failed": "NoUnexpectedReceived rejected shader signed integer division Warning",
+  "implementation": "2D horizontal dispatch / row offset; unsigned nonnegative coordinates; signed coefficients and sums retained",
+  "final_test_count": 5,
+  "passed": 5,
+  "failed": 0,
+  "skipped": 0,
+  "cli_exit": 0,
+  "completed_at": "2026-10-13T03:01:52.8097280Z",
+  "maximum_input": {
+    "width": 8192,
+    "fixture": "GPU-generated constant RenderTexture",
+    "height": 8192,
+    "resized_width": 768,
+    "resized_height": 768,
+    "all_pixels_and_padding_checked": true
+  },
+  "ordinary_official_cases": 24,
+  "evidence_files": {
+    "image-gpu-max-input-red.log": {
+      "bytes": 1077,
+      "sha256": "862ea1a50a715bc521e5a29f6fc877edbf05a60889ee9cbc7df211bfe0b4a2af"
+    },
+    "image-gpu-max-input-first-green.log": {
+      "bytes": 959,
+      "sha256": "ee3d6c53cc9e79aba4a2782be369ea5c308edfe4871d1140b1bc4337293b64ba"
+    },
+    "image-gpu-max-input-assertion-green.log": {
+      "bytes": 1143,
+      "sha256": "053a924f3a6c10ec39857ddd7dd5ea12acb15c2b8f6bd38103e7c6345bca31b9"
+    },
+    "image-gpu-max-input-final-green.log": {
+      "bytes": 506,
+      "sha256": "eb1e539f2cacb9f21c1624c7e87f3943a0b9ebee557e5b0975fd1201cbf415b7"
+    }
+  },
+  "fixed_git_fix_validated": false,
+  "performance_speedup_measured": false,
+  "end_to_end_validated": false
+}

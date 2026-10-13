@@ -8,6 +8,21 @@ namespace EmbeddingGemma.Tests
     public static class AudioChainReferenceGuard
     {
         static readonly string[] Signals={"silence","impulse","sine","nyquist","noise","padded_noise"};
+        public static bool CacheMatches(JObject cache,JObject context,JObject actualFiles)
+        {
+            if(cache==null || context==null || actualFiles==null || !JToken.DeepEquals(cache["context"],context) ||
+                !JToken.DeepEquals(cache["files"],actualFiles) ||
+                !Regex.IsMatch(context.Value<string>("producer")??"","^[0-9a-f]{40}$") ||
+                !Regex.IsMatch(context.Value<string>("graph_sha256")??"","^[0-9a-f]{64}$") ||
+                string.IsNullOrEmpty(context.Value<string>("unity")) || string.IsNullOrEmpty(context.Value<string>("sentis")) || context.Value<bool?>("quantized")==null)
+                return false;
+            var formats=context.Value<bool>("quantized")?new[]{"fp32","float16"}:new[]{"fp32"};
+            if(!actualFiles.Properties().Select(row=>row.Name).OrderBy(x=>x).SequenceEqual(formats.OrderBy(x=>x)))return false;
+            foreach(var file in actualFiles)
+                if(!Regex.IsMatch(file.Value.Value<string>("name")??"","^[A-Za-z0-9_.-]+[.]sentis$") ||
+                    !Regex.IsMatch(file.Value.Value<string>("sha256")??"","^[0-9a-f]{64}$") || file.Value.Value<long?>("bytes")<=0 || file.Value["bytes"]==null)return false;
+            return true;
+        }
         public static JObject DescribeValues(float[] values)
         {
             if(values==null)throw new ArgumentNullException(nameof(values));

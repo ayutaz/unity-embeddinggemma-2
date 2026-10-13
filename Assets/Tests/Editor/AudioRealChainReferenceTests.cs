@@ -130,12 +130,38 @@ namespace EmbeddingGemma.Tests
         }
         string[] ImportAndSave(string id,string graph,bool quantize)
         {
+            var spec=graph.StartsWith("audio-runtime-reference/",StringComparison.Ordinal)?encoderAudit["files"][graph.Substring("audio-runtime-reference/".Length)]:
+                preprocessingAudit["files"][graph.Substring("audio-runtime-preprocessing/".Length)];
+            var context=new JObject{["producer"]=Producer,["graph_sha256"]=spec.Value<string>("sha256"),["unity"]=Application.unityVersion,["sentis"]="2.6.1",["quantized"]=quantize};
+            var cachePath=Resolve(root,id+"-model-cache.json");
+            if(File.Exists(cachePath))
+            {
+                JObject cache=null;try{cache=JObject.Parse(File.ReadAllText(cachePath));}catch(Newtonsoft.Json.JsonException){}
+                if(cache!=null && AudioChainReferenceGuard.CacheMatches(cache,context,cache["files"] as JObject))
+                {
+                    var identities=new JObject();
+                    foreach(var file in (JObject)cache["files"])
+                    {
+                        var name=file.Value.Value<string>("name");var path=Resolve(root,name);
+                        if(File.Exists(path))identities[file.Key]=new JObject{["name"]=name,["bytes"]=new FileInfo(path).Length,["sha256"]=Hash(path)};
+                    }
+                    if(AudioChainReferenceGuard.CacheMatches(cache,context,identities))
+                    {report["cache_reused_"+id]=true;Save();return new[]{Resolve(root,identities["fp32"].Value<string>("name")),Resolve(root,identities[quantize?"float16":"fp32"].Value<string>("name"))};}
+                }
+            }
             report["import_phase"]=id;Save();var assetPath="Assets/AudioRealChainGenerated/"+id+Path.GetExtension(graph);
             Directory.CreateDirectory(Path.GetDirectoryName(assetPath));File.Copy(Resolve(root,graph),assetPath,true);AssetDatabase.ImportAsset(assetPath,ImportAssetOptions.ForceSynchronousImport);
             var asset=AssetDatabase.LoadAssetAtPath<ModelAsset>(assetPath);Assert.That(asset,Is.Not.Null);var model=ModelLoader.Load(asset);
-            var fp32=Resolve(root,id+"-fp32.sentis");var half=Resolve(root,id+"-float16.sentis");
+            // Unique destinations keep existing audited files intact when Windows
+            // temporarily denies replacing an existing model file.
+            var generation=id+"-"+Guid.NewGuid().ToString("N");
+            var fp32=Resolve(root,generation+"-fp32.sentis");var half=Resolve(root,generation+"-float16.sentis");
             try{TextModelFile.Save(model,fp32);if(quantize){ModelQuantizer.QuantizeWeights(QuantizationType.Float16,ref model);TextModelFile.Save(model,half);}}
             finally{model=null;Resources.UnloadAsset(asset);GC.Collect();GC.WaitForPendingFinalizers();}
+            var files=new JObject{["fp32"]=new JObject{["name"]=Path.GetFileName(fp32),["bytes"]=new FileInfo(fp32).Length,["sha256"]=Hash(fp32)}};
+            if(quantize)files["float16"]=new JObject{["name"]=Path.GetFileName(half),["bytes"]=new FileInfo(half).Length,["sha256"]=Hash(half)};
+            var record=new JObject{["context"]=context,["files"]=files};Assert.That(AudioChainReferenceGuard.CacheMatches(record,context,files),Is.True);
+            File.WriteAllText(cachePath,record.ToString());
             return new[]{fp32,quantize?half:fp32};
         }
         [OneTimeTearDown]public void Complete()
@@ -201,11 +227,13 @@ namespace EmbeddingGemma.Tests
         void AuditFile(string directory,string name,JToken spec)
         {Assert.That(spec,Is.Not.Null);var path=Resolve(directory,name);Assert.That(new FileInfo(path).Length,Is.EqualTo(spec.Value<long>("bytes")));AuditHash(path,spec.Value<string>("sha256"));}
         void AuditHash(string path,string expected)
+        {Assert.That(Hash(path),Is.EqualTo(expected));}
+        string Hash(string path)
         {
             var type=AppDomain.CurrentDomain.GetAssemblies().Select(assembly=>assembly.GetType("EmbeddingGemma.Validation.PlayerFileHash")).FirstOrDefault(value=>value!=null);
             Assert.That(type,Is.Not.Null,"Use the unchanged validated platform SHA-256 helper.");using var stream=File.OpenRead(path);var args=new object[]{stream,null,null};
-            var digest=(string)Invoke(type.GetMethod("Compute"),null,args);Assert.That(digest,Is.EqualTo(expected));
-            ((JObject)report["hash_backends"])[Path.GetFileName(path)]=(string)args[1];
+            var digest=(string)Invoke(type.GetMethod("Compute"),null,args);
+            ((JObject)report["hash_backends"])[Path.GetRelativePath(Path.GetDirectoryName(root),path)]=(string)args[1];return digest;
         }
         static string Resolve(string directory,string name)
         {var path=Path.GetFullPath(Path.Combine(directory,name));Assert.That(path.StartsWith(directory+Path.DirectorySeparatorChar,StringComparison.Ordinal),Is.True);return path;}

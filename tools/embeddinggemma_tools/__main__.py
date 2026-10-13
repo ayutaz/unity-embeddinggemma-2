@@ -11,6 +11,7 @@ from huggingface_hub import snapshot_download
 from .prepare import MODEL_ID, MODEL_REVISION, prepare, prepare_multimodal_backbone, prepare_vision
 from .search import SEARCH_CASES
 from .prompt_reference import prepare_prompt_reference
+from .image_embeddings import prepare_image_embeddings
 
 
 def sequence_length(value):
@@ -52,6 +53,12 @@ def main(argv=None):
     prompts.add_argument("--output", type=Path, required=True)
     prompts.add_argument("--snapshot", type=Path)
     prompts.add_argument("--revision", type=revision, default=MODEL_REVISION)
+    images = commands.add_parser("prepare-image-embeddings", help="Official image final vectors and fixed backbone profiles")
+    images.add_argument("--output", type=Path, required=True)
+    images.add_argument("--snapshot", type=Path)
+    images.add_argument("--vision-source", type=Path, required=True)
+    images.add_argument("--sequence-length", type=sequence_length, default=1024)
+    images.add_argument("--revision", type=revision, default=MODEL_REVISION)
     args = parser.parse_args(argv)
     snapshot = args.snapshot
     if snapshot is None:
@@ -59,11 +66,16 @@ def main(argv=None):
             "config.json", "model.safetensors", "tokenizer.json", "tokenizer_config.json",
             "config_sentence_transformers.json", "modules.json", "1_Pooling/config.json",
         ]
-        if args.command in ("prepare-backbone", "prepare-vision"):
+        if args.command in ("prepare-backbone", "prepare-vision", "prepare-image-embeddings"):
             patterns.append("processor_config.json")
         if args.command == "prepare-prompts":
             patterns = ["config.json", "tokenizer.json", "tokenizer_config.json", "config_sentence_transformers.json"]
         snapshot = Path(snapshot_download(MODEL_ID, revision=args.revision, allow_patterns=patterns))
+    if args.command == "prepare-image-embeddings":
+        summary = prepare_image_embeddings(snapshot,args.vision_source,args.output,sequence_length=args.sequence_length,
+                                           revision=args.revision,source_commit=os.environ.get("GITHUB_SHA","local"))
+        print(json.dumps({name:summary[name] for name in ("success","stage","case_count","profile_count","unity_validated","gpu_chain_validated")}))
+        return
     if args.command == "prepare-prompts":
         summary = prepare_prompt_reference(snapshot, args.output, revision=args.revision,
                                            source_commit=os.environ.get("GITHUB_SHA", "local"))

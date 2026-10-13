@@ -1,17 +1,17 @@
 # M4: 音声対応のTDD計画
 
-更新日: 2026-10-13。**音声end-to-end API / sampleはmainに未実装、実音声encoder / Unityの合格証拠は未取得**。共通backboneの一部はPR #34で実装済みだが、合成特徴量によるPython照合は音声encoderの受け入れを満たさない。依存・実行場所・公開条件は[全体計画](multimodal-tdd-plan.md)、既存仕様調査は[技術調査](technical-approach.md)。M4の実装完了だけで公開せず、3モダリティと全必須環境の検証を揃える。
+更新日: 2026-10-13。**音声end-to-end API / sampleはmainに未実装、実音声encoderのPython数値gateは不合格、Sentis encoder受け入れは未完了**。音声前処理単独はPythonとWindows Sentis CPU / 実GPUで合格済み。[全体計画](multimodal-tdd-plan.md)の工程4として進める。M4実装だけでは公開せず、3モダリティと全必須環境の受け入れを揃える。
 
-A1 / A3の固定profile音声前処理exportと参照・必須Actions gateをTDDで開始した。[係数・許容差の根拠と検証範囲](m4-audio-preprocessing-validation.md)。35 redから前処理契約が合格し、監査 / 回帰を含め110 passed / skip 0。後続のWindows Unity受け入れではCPU / 実GPU各6信号、保存 / 再読込、全mask一致が合格した。最大絶対誤差は両backendとも `0.0038890838623046875`、GPU計算 / 入力fallbackとreadback flushは0件。[実行条件・診断readback・未達の範囲](m4-audio-preprocessing-sentis-validation.md)。音声encoder以降、製品PCM Runtime APIと他OSは未検証。
+A1 / A3の前処理exportと参照・必須Actions gateはTDD実装し、PR #38 / #46をmainへ統合した。[係数・許容差の根拠](m4-audio-preprocessing-validation.md)。35 redから前処理契約を満たし、監査 / 回帰を含め110 passed / skip 0。Windows UnityはCPU / 実GPU各6信号、保存 / 再読込、mask完全一致が合格。最大絶対誤差は両backendとも `0.0038890838623046875`、GPU計算 / 入力fallbackとreadback flushは0件。[実行条件・診断readback・未達範囲](m4-audio-preprocessing-sentis-validation.md)。製品PCM Runtime APIと本番GPU連結、音声encoder以降、他OSの成功とは分ける。
 
 ### 直近のTDD順序
 
-1. A4の保存graph数値差を解消する。[PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40)の確認head `c4676f7b38f01ce98a9dedca87fb450febea20b9`は未統合。段階別診断をTDDで追加して関連46件greenとなったが、[実モデル診断 CI 38324421389](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38324421389)は不合格。silenceの公式対eager差0、保存graph対eager最大差 `0.00021576881408691406`、許容差比 `9.733773231506348`、不一致368要素。subsampleは一致し、layer 0から微差、layer 10で初めて許容差超過となった。[固定headの診断結果](https://github.com/ayutaz/unity-embeddinggemma-2/blob/c4676f7b38f01ce98a9dedca87fb450febea20b9/docs/results/m4-audio-stages-real-failed-20261013.json)。次は層内のstage欠落 / 誤順序 / hook解放漏れ / 元の失敗消失を拒否するred → 層内診断green → 原因演算の小さい再現red → 最小修正 → 固定実重み・6信号・mask profileのgreenを得る。残り5信号は未実行。最新headのCI 38325813586は今回確認時点で実行中。診断の成功はencoderの成功ではなく、許容差を緩めない。
-2. A3の前処理graph単独はWindows Sentis CPU / 実GPUで受け入れ済み。次はA2のPCM入力契約と製品Runtime接続を、境界長・mask・無音・channel / sample rateのredから実装する。本番のGPU tensor受け渡しと各入力経路を検証し、診断fixtureのgreenだけでAPI完了にしない。
-3. A4のencoderをSentisで保存 / 再読込し、CPU / 実GPUとFloat16を照合する。A5で実音声featureをGPUのまま共通本体へ渡し、最終768次元を固定参照と照合する。共通本体APIのPR #43には小さい実GPUと配置演算 / cache修正を含む68件のgreenがあるが、修正後の実1024長graph・実音声featureの照合と新Runtime assemblyの固定Git導入は別の未完了条件として確認する。
-4. A6 / A7の検索・再生・明示収録・停止 / 解放をTDDで実装し、固定PCMの精度とマイク入力動作を別に受け入れる。テキスト・画像回帰と必須実機へ渡す。
+1. **A4の原因演算を分離して修正する。** [PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40)、確認head `4ae52890da50ffc570cba4902d96e95b182cc9c6`は未統合。層内stage欠落 / 誤順序 / hook解放・失敗報告保持を検証する10 red、追加自動定位3 redを経て関連59件green。[実モデルCI 38327706633](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38327706633)は不合格。silenceの公式対eager差0、保存対eager最大差 `0.00013375282287597656`、許容差比 `5.294248580932617`、不一致328要素。[固定headの実測](https://github.com/ayutaz/unity-embeddinggemma-2/blob/4ae52890da50ffc570cba4902d96e95b182cc9c6/docs/results/m4-audio-layer-real-failed-20261013.json)。subsampleは一致、最初の非zero差はlayer 0.feed_forward1、最初の許容差超過はlayer 10。層内traceのfinalは元の失敗graphと一致しており、診断が別経路へ逸れていない。次は公式入力を使うfeed-forward単独のRMSNorm / linear / activation / norm・scale / residualを比較する診断をTDD追加する。stage・入力・hookとstandalone対full trace整合のred → 診断green → 原因演算の再現red → 最小修正 → 元の実重み6信号green。残り5信号は未実行、診断成功をencoder成功と数えず、許容差は緩めない。
+2. **A2 / A3の製品Runtime接続。** 前処理graph単独の合格を起点に、PCM境界長・channel / sample rate・NaN / Infinity・空入力・maskのredから入力APIを実装する。GPU tensor受け渡しと各入力経路を確認し、診断fixtureのgreenだけでAPI完了にしない。この契約はencoder修正と独立して準備できる。
+3. **A4 → A5の実モデル連結。** encoder数値gateの合格後、Sentis保存 / 再読込・CPU / 実GPU・Float16を照合し、featureをGPUのまま共通本体へ渡して最終768次元を照合する。共通backboneのPR #43は配置・cacheの68件greenと実1024長4条件が合格済みだが、合成featureによるbackbone単独の結果。後続の固定Git Runtime更新consumerでも4条件合格したが、公式prompt構築・実音声feature接続と最終candidateの空consumerは別gateとして扱う。[Git更新のreceipt](results/multimodal-git-runtime-upgrade-windows-20261013.json)。[固定headのbackbone結果](https://github.com/ayutaz/unity-embeddinggemma-2/blob/21e598c5b53d5ad73557ee6d606b12770254d73b/docs/results/multimodal-backbone-sentis-windows-20261013.json)。
+4. **A6 / A7のsampleとPlayer。** 検索・再生・明示収録・停止 / 解放を下表のredから実装し、固定PCMの精度とマイク入力動作を別に受け入れる。テキスト・画像回帰と必須実機へ渡す。
 
-音声前処理exportの合格を音声encoderの合格に含めない。PR #40の小さい契約greenと実モデル不合格も別に保持する。
+過去の368要素不一致の実測も保持する。新runの328要素への変化は原因解消を意味しない。音声前処理の合格、層内診断59件green、実encoder不合格を個別に記録する。
 
 ## 範囲と参照固定
 

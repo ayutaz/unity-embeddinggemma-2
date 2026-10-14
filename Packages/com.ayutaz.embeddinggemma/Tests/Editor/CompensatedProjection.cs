@@ -35,8 +35,8 @@ namespace EmbeddingGemma.Tests
             var outputShape = (int[])shape.Clone(); outputShape[outputShape.Length - 1] = columns;
             var outputCount = outputShape.Aggregate(1L, (count, size) => count * size);
             if (outputCount > int.MaxValue) throw new ArgumentOutOfRangeException(nameof(shape), "Output size exceeds the tensor budget.");
-            var total = Functional.Constant(new TensorShape(outputShape), new float[(int)outputCount]);
-            var correction = Functional.Constant(new TensorShape(outputShape), new float[(int)outputCount]);
+            var total = Functional.Constant(0f);
+            var correction = Functional.Constant(0f);
             for (var start = 0; start < width;)
             {
                 var count = Math.Min(chunk, width - start);

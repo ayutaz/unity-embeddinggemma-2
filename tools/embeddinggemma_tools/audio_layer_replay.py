@@ -30,14 +30,18 @@ SUBSAMPLE_PARTS = ("layer0.conv", "layer0.norm", "layer0.act", "layer1.conv",
 class CompensatedClippedLinear(torch.nn.Module):
     """Exportable FP32 candidate, borrowing weights and preserving official clips."""
 
-    def __init__(self, source, *, chunk_size=64):
+    def __init__(self, source, *, chunk_size=64, include_bias=False):
         super().__init__()
         if type(chunk_size) is not int or chunk_size <= 0:
             raise ValueError("chunk size must be a positive integer")
-        if (source.linear.weight.dtype != torch.float32 or source.linear.bias is not None
+        if (source.linear.weight.dtype != torch.float32 or (source.linear.bias is not None and not include_bias)
                 or not torch.isfinite(source.linear.weight).all()):
             raise ValueError("candidate requires finite unbiased FP32 weights")
+        if source.linear.bias is not None and (source.linear.bias.dtype != torch.float32
+                or not torch.isfinite(source.linear.bias).all()):
+            raise ValueError("candidate requires finite FP32 bias")
         self.linear = source.linear
+        self.output_bias = source.linear.bias if include_bias else None
         self.chunk_size = chunk_size
         self.use_clipped_linears = source.use_clipped_linears
         if self.use_clipped_linears:
@@ -61,6 +65,8 @@ class CompensatedClippedLinear(torch.nn.Module):
                 (total - updated) + part, (part - updated) + total)
             total = updated
         output = total + correction
+        if self.output_bias is not None:
+            output = output + self.output_bias
         return output.clamp(self.output_min, self.output_max) if self.use_clipped_linears else output
 
 

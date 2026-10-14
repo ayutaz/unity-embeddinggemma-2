@@ -2,6 +2,8 @@
 
 Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.unity.ai.inference@2.6/manual/index.html) だけを使って、Google の [EmbeddingGemma 2](https://huggingface.co/google/embeddinggemma-2) を動かすプロジェクトです。テキスト・画像・音声を、同じ 768 次元の空間の埋め込みに変換できるようにします。
 
+> **2026-10-15: 数値修正と最終API受け入れを進行中、未完了です。** 小さいGPU演算probeは4件合格。実Welford8音声ONNX候補は元6信号・2 profileの全6件で固定goldenの数値判定に不合格。参照環境の差と候補の差を分け、元期待値・許容差を維持しています。[現在の状態](docs/status.md) / [計画](docs/multimodal-tdd-plan.md)。
+
 > **2026-10-14: 計画の1・2まで検証しました。** main `c868df5` にGPU画像前処理・PCM / GPU音声前処理・公式prompt・共通backboneがあります。PR #81のGPU専用変更を含むcompileと、tiny / 実画像1件のGPU段階計測は2 pass・skip0・exit0、fallback / flush0。音声SiLU修正後の実ONNXは元6信号・2 profileを全件照合し、全6件不合格でした。最終画像 / 音声APIはDraft実装で、元encoder数値gateとUnity実入力→768次元は未達です。[今回の結果](docs/gpu-execution-and-silu-validation.md) / [最新状態](docs/status.md) / [次の計画](docs/multimodal-tdd-plan.md)。以下の旧日付の実測は履歴です。
 
 > **状態: Windows EditorのM1受け入れ検証完了**

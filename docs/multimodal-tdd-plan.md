@@ -4,6 +4,8 @@
 
 ## 2026-10-14の実行方針と再開順
 
+2026-10-15: 実行計画の3（数値修正）・4（最終API）までが新しく許可された。R2の音声数値差を進行中で、R2 / R3の完了は未証明。小さいGPU演算probeの4 passを全encoderへ流用しない。実Welford8 ONNXは旧golden全6件で不合格。最新native参照の再計算にも環境差があるため、新しいnative値を期待値に採用せず、保存した実ONNX出力を旧goldenへ直接比較する。[現在の判定](status.md)が以下の前回checkpointより優先する。画像FP32全profileと実APIの全role・境界・資源寿命・例外後再利用・text回帰の範囲は維持する。
+
 ユーザー指定の実行計画1・2までを実施した。最新Unity実測は `b796e504367fb9165a4992ff036a205fb2e7d429`、mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。Draft PR #81のGPU専用変更を含むcompile、tiny / 実square 1件のGPU計測は合格。SiLU修正後のActions実ONNXは元6信号・2 profile全件実行、全6件不合格。[今回の結果](gpu-execution-and-silu-validation.md) / [最新状態](status.md)。R2の数値修正以降は未着手。
 
 | 順序 | 着手条件と作業 | 渡す証拠 / 完了条件 |

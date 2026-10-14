@@ -76,6 +76,18 @@ def test_cli_forwards_explicit_onnx_layernorm_candidate(tmp_path,monkeypatch,cap
     assert calls[0]['onnx_layernorm']=='torch_welford8' and calls[0]['native_silu']
 
 
+def test_cli_forwards_explicit_compensated_projection_candidate(tmp_path,monkeypatch):
+    calls=[]
+    def run(*args,**kwargs):
+        calls.append(kwargs)
+        return dict(success=True,stage="audio_encoder_projector_only",profile_count=2,case_count=6,
+                    minimum_cosine=1.0,unity_validated=False,end_to_end_validated=False)
+    monkeypatch.setattr(cli,"prepare_audio_encoder",run)
+    cli.main(["prepare-audio-encoder","--snapshot",str(tmp_path/"snapshot"),"--preprocessing",str(tmp_path/"pre"),
+              "--output",str(tmp_path/"out"),"--native-silu","--onnx-linear","compensated64"])
+    assert calls[0]['onnx_linear']=='compensated64'
+
+
 def test_structurally_valid_but_wrong_onnx_cannot_produce_success(tmp_path, monkeypatch):
     snapshot, inputs = fixture(tmp_path, monkeypatch)
     original = prepare.export_audio_native_onnx

@@ -1,0 +1,123 @@
+{
+  "scope": "step3_weights_free_gpu_precision_components_only",
+  "source": "6542bc644b348c71b072b7b82db6e9b39722eb24",
+  "success": true,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "probe": {
+    "success": true,
+    "scope": "weights_free_gpu_fma_and_welford_components_only",
+    "source": "6542bc644b348c71b072b7b82db6e9b39722eb24",
+    "unity": "6000.3.16f1",
+    "sentis": "2.6.1",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "cases": [
+      {
+        "case": "baseline-fma",
+        "success": true,
+        "requested_backend": "GPUCompute",
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "actual_backend": "GPUCompute",
+        "exact_differences": 3,
+        "mismatched_elements": 2,
+        "maximum_absolute_error": 1.0
+      },
+      {
+        "case": "fma",
+        "success": true,
+        "requested_backend": "GPUCompute",
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "actual_backend": "GPUCompute",
+        "exact_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0
+      },
+      {
+        "case": "welford32",
+        "success": true,
+        "requested_backend": "GPUCompute",
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "actual_backend": "GPUCompute",
+        "exact_differences": 27,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 2.384185791015625e-07
+      },
+      {
+        "case": "welford128",
+        "success": true,
+        "requested_backend": "GPUCompute",
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "actual_backend": "GPUCompute",
+        "exact_differences": 218,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 2.384185791015625e-07
+      }
+    ]
+  },
+  "process": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      ".\\artifacts\\acceptance-consumer",
+      "-logFile",
+      ".\\artifacts\\numerical-acceptance-state\\gpu-precision-probe-auditfix-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.GpuPrecisionProbeTests",
+      "-testResults",
+      ".\\artifacts\\numerical-acceptance-state\\gpu-precision-probe-auditfix-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-14T15:54:16.976146+00:00",
+    "pid": 68132,
+    "exit_code": 0,
+    "elapsed_seconds": 36.7753348000042,
+    "completed_utc": "2026-10-14T15:54:53.751479+00:00"
+  },
+  "nunit": {
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0
+  },
+  "earlier_harness_failure": {
+    "source": "896e1fdf2d38eb41d5bec3478054eb1891dcb535",
+    "passed": 0,
+    "failed": 4,
+    "reason": "hash helper out argument is backend string, not byte count; setup failed before inference"
+  },
+  "python_tdd": {
+    "arithmetic_missing_red": 6,
+    "initial_component_green": 6,
+    "component_export_and_generation_green": 10,
+    "temporary_module_restore_red": 2,
+    "related_export_green": 18
+  },
+  "cuda_or_native_extension_required": false,
+  "onnx_float64_used": false,
+  "checkpoint_limits": [
+    "Windows RTX4070 Ti SUPER/D3D12 only",
+    "not a real encoder or full API acceptance",
+    "termination Persistent allocation warning retained"
+  ],
+  "raw_sha256": {
+    "gpu-precision-probe-first-20261015.xml": "ee6907c85f63ac057d87e1b1b7abf8afe3eb643ddb1ee9e6d6797ec2faa720c8",
+    "gpu-precision-probe-auditfix-20261015.xml": "739788b070185252dce0d4efda1021d5b74a7b7c520f06bc6676219fe2aba083",
+    "gpu-precision-probe-auditfix-20261015.log": "91e75bd984dc7122a04c76e585f83a53860d3157cb0912059a135c55ac767174",
+    "gpu-precision-probe-auditfix-20261015-process.json": "f17d1c911d4e2bd4cece5c5601c632576a9b2de5a6276b38f2dedd52bc933b53"
+  }
+}

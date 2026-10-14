@@ -19,9 +19,12 @@ def _validate_template(template):
         raise ValueError('RMS templates require standard FP32 input/output and arithmetic')
 
 
-def refine_rms_means(model, mean_templates, inverse_template, *, expected_count):
+def refine_rms_means(model, mean_templates, inverse_template, *, expected_count, excluded_names=()):
     """Audit squared last-axis RMS paths, then inline explicit FP32 templates."""
     for template in [*mean_templates.values(),inverse_template]:_validate_template(template)
+    mean_names={n.name for n in model.graph.node if n.op_type=='ReduceMean'}
+    if len(set(excluded_names))!=len(excluded_names) or not set(excluded_names).issubset(mean_names):
+        raise ValueError('Explicit RMS layout exclusion is missing or duplicated')
     weights={w.name:w for w in model.graph.initializer}
     producers={output:n for n in model.graph.node for output in n.output}
     infos={v.name:v for v in (*model.graph.input,*model.graph.output,*model.graph.value_info)}
@@ -37,6 +40,7 @@ def refine_rms_means(model, mean_templates, inverse_template, *, expected_count)
         return actual.size==1 and np.isfinite(actual).all() and float(actual.item())==float(np.float32(value))
     targets=[]
     for mean in [n for n in model.graph.node if n.op_type=='ReduceMean']:
+        if mean.name in excluded_names:continue
         info=infos.get(mean.input[0]);shape=info.type.tensor_type.shape.dim if info is not None else []
         width=shape[-1].dim_value if shape else 0
         axes=constant(mean.input[1]).reshape(-1).tolist() if len(mean.input)==2 else next((list(a.ints) for a in mean.attribute if a.name=='axes'),[])
@@ -80,4 +84,5 @@ def refine_rms_means(model, mean_templates, inverse_template, *, expected_count)
     del model.graph.node[:];model.graph.node.extend(rewritten);model.graph.initializer.extend(extra)
     if _initializer_digest(model.graph.initializer[:count])!=before:raise RuntimeError('Existing RMS coefficient bytes changed')
     return dict(replaced_rms_count=expected_count,existing_initializer_bytes_preserved=True,
+                excluded_mean_names=list(excluded_names),
                 existing_initializer_sha256=before,node_count=len(model.graph.node),full_encoder_validated=False)

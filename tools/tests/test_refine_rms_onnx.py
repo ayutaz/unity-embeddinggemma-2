@@ -63,3 +63,18 @@ def test_bad_rms_context_is_rejected_before_mutation(tmp_path,problem):
     before=source.SerializeToString()
     with pytest.raises(ValueError):run(source,{1024:mean},inverse,expected_count=count)
     assert source.SerializeToString()==before
+
+
+def test_explicit_layout_exclusion_preserves_unproven_mean_node(tmp_path):
+    run=required();source=model();mean,inverse=templates(tmp_path)
+    excluded=helper.make_node('ReduceMean',['input','axis'],['unproven'],keepdims=1,name='conv_norm/ReduceMean')
+    before=excluded.SerializeToString();source.graph.node.append(excluded)
+    report=run(source,{1024:mean},inverse,expected_count=1,excluded_names=('conv_norm/ReduceMean',))
+    assert next(n for n in source.graph.node if n.name=='conv_norm/ReduceMean').SerializeToString()==before
+    assert report['excluded_mean_names']==['conv_norm/ReduceMean']
+
+
+def test_missing_exclusion_cannot_hide_a_context_error(tmp_path):
+    run=required();source=model();mean,inverse=templates(tmp_path);before=source.SerializeToString()
+    with pytest.raises(ValueError):run(source,{1024:mean},inverse,expected_count=1,excluded_names=('missing',))
+    assert source.SerializeToString()==before

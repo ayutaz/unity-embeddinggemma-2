@@ -14,6 +14,56 @@ namespace EmbeddingGemma.Validation.Tests
 {
     public sealed class PartitionedAudioGpuReferenceTests
     {
+        static Type RequiredSilu()
+        {
+            var type=typeof(GpuBlockedMatmul).Assembly.GetType("EmbeddingGemma.GpuSilu");
+            Assert.That(type,Is.Not.Null,"Native-rounding GPU SiLU is missing.");return type;
+        }
+        [Test]
+        public void GpuSiluOwnsOutputsRejectsCpuAndPreservesBorrowedInputAfterDispose()
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
+            var type=RequiredSilu();var operation=(IDisposable)Activator.CreateInstance(type);var execute=type.GetMethod("Execute");
+            using var cpu=new Tensor<float>(new TensorShape(1,2),new[]{0f,0f});
+            var error=Assert.Throws<TargetInvocationException>(()=>execute.Invoke(operation,new object[]{cpu}));Assert.That(error.InnerException,Is.InstanceOf<ArgumentException>());
+            using var input=new Tensor<float>(new TensorShape(1,2),new[]{BitConverter.Int32BitsToSingle(unchecked((int)0x80000000)),0f});ComputeTensorData.Pin(input);
+            using var output=(Tensor<float>)execute.Invoke(operation,new object[]{input});
+            using var other=(Tensor<float>)execute.Invoke(operation,new object[]{input});operation.Dispose();operation.Dispose();
+            Assert.That(output.backendType,Is.EqualTo(BackendType.GPUCompute));Assert.That(output.shape,Is.EqualTo(input.shape));
+            Assert.That(output.DownloadToArray().Select(BitConverter.SingleToInt32Bits),Is.EqualTo(input.DownloadToArray().Select(BitConverter.SingleToInt32Bits)));
+            Assert.That(other.DownloadToArray().Select(BitConverter.SingleToInt32Bits),Is.EqualTo(input.DownloadToArray().Select(BitConverter.SingleToInt32Bits)));
+        }
+        [Test]
+        public void FrozenFirstActivationGpuMustMatchOriginalNativeBits()
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
+            var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/frozen-first-silu-gpu-"+source+".json"));Assert.That(File.Exists(output),Is.False);
+            var report=new JObject{["success"]=false,["scope"]="one_frozen_original_silu_gpu_bit_gate",["runtime_source"]=source,["full_encoder_validated"]=false,["end_to_end_validated"]=false};
+            void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
+            void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
+            Save();
+            try
+            {
+                var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-native-feed-forward-replay"));
+                var path=Path.Combine(root,"audio-layer-replay-report.json");Check(path,"99529dc0fa6c74825b23fca653d82091797ff1e5267d26c5cdae723fcf86f501");
+                var replay=JObject.Parse(File.ReadAllText(path));Assert.That(replay.Value<bool>("native_final_exact_match"),Is.True);
+                var x=replay["parts"]["feed_forward1.ffw_layer_1"];var y=replay["parts"]["feed_forward1.act_fn"];
+                var inputPath=Path.Combine(root,"audio-layer-replay",x.Value<string>("file"));var expectedPath=Path.Combine(root,"audio-layer-replay",y.Value<string>("file"));
+                Check(inputPath,x.Value<string>("sha256"));Check(expectedPath,y.Value<string>("sha256"));
+                var type=RequiredSilu();using var operation=(IDisposable)Activator.CreateInstance(type);
+                using var input=new Tensor<float>(new TensorShape(1,280,4096),Floats(inputPath));ComputeTensorData.Pin(input);
+                using var result=(Tensor<float>)type.GetMethod("Execute").Invoke(operation,new object[]{input});Assert.That(result.backendType,Is.EqualTo(BackendType.GPUCompute));
+                var actual=result.DownloadToArray();var expected=Floats(expectedPath);Assert.That(actual.Length,Is.EqualTo(expected.Length));int bits=0;
+                for(var index=0;index<actual.Length;index++)if(BitConverter.SingleToInt32Bits(actual[index])!=BitConverter.SingleToInt32Bits(expected[index]))bits++;
+                report["actual_backend"]=result.backendType.ToString();report["count"]=actual.Length;report["bit_differences"]=bits;
+                var bytes=new byte[actual.Length*4];Buffer.BlockCopy(actual,0,bytes,0,bytes.Length);File.WriteAllBytes(Path.ChangeExtension(output,"bin"),bytes);
+                Save();Assert.That(bits,Is.Zero,"Preserve original native SiLU rounding.");report["success"]=true;
+            }
+            catch(Exception error){report["error"]=error.ToString();throw;}
+            finally {Save();}
+        }
+
         [Test]
         public void SmallBoundaryObservationPreservesFinalBitsAndBorrowedGpuResources()
         {

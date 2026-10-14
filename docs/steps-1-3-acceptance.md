@@ -2,6 +2,8 @@
 
 > 文書整合確認: 2026-10-15。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。ユーザー指定の実行計画3・4は継続中、未完了。直近の所有Unity processは終了済み。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
 
+2026-10-15最新追加: 最初のnormのinverse補正は固定6行の実GPU2 Red→2 Green・全bit一致。[局所結果](results/m4-frozen-first-norm-refined-gpu-20261015.json)。既存initializer byteを保つinverse-only rewriteは小さい6 Red→関連12 Green。ただし元silence全encoderはinverseのみ472要素、static64組合せ287要素不合格。[inverseのみ](results/m4-inverse-only-real-gpu-failed-20261015.json) / [static64組合せ](results/m4-refined-static64-real-gpu-failed-20261015.json)。元nativeの全12層観測は通常最終値とbit一致、0〜8層は許容差内、9層1・10層39・11層1,218要素不合格。初回はflat cacheの参照path誤りで比較未実行、修正後NUnit1 passは観測完了の意味に限定する。[固定全層観測](results/m4-refined-static64-full-layer-observation-20261015.json)。次は元layer_8入力でlayer_9を単独GPU照合する。工程3・4の全範囲と元許容差を維持する。
+
 2026-10-15追加: 保存Welford8のsilence GPUComputeは元参照と355要素不合格、計算fallback / flush0。[固定失敗receipt](results/m4-saved-welford8-gpu-failed-20261015.json)。通常最終値を変えない7段階観測では、最初の畳み込みがbit一致し、最初の微差はlayer0.norm。[観測と経路TDD](results/m4-saved-subsample-gpu-first-difference-20261015.json)。最初の後段normの1要素超過は、実activationのFP64投影でも残るため入力側へ戻す。[独立oracle診断](results/m4-first-feed-forward-gpu-propagation-20261015.json)。全encoder補償のActionsはrunner通信断で数値結果未取得、成果物0件。[別分類の失敗](results/m4-compensated-encoder-runner-lost-20261015.json)。画像FP32全profile、音声全信号、実入力から最終APIの全role・境界・寿命・例外後再利用・text回帰は未達。以降の停止記述は当時の履歴。
 
 2026-10-14。ユーザー指定の範囲は、(1)基準・PR依存整理、(2)画像・音声encoder数値不一致修正、(3)実入力→最終768次元APIの受け入れ。sample・正式Releaseは今回の完了条件へ置き換えない。

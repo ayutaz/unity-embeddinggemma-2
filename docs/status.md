@@ -1,10 +1,16 @@
 # 現在の状態と残タスク
 
-更新日: 2026-10-15。最新の実GPU観測sourceは `a685db3c7f5c34cdf51b13156d4bfb5c8dc24043`、小さい経路テストのGreenは `c16a66151c3b7943b6d402d688717ffa539903e9`、確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
+更新日: 2026-10-15。最新の実GPU層観測sourceは `dd8cfd4fd8656df9b7b3b6c5505b01bb952f336f`、最初の正規化GPU局所Greenは `ac60979fc9b601edaf87cee6c5ddd24468c350ea`、確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
 
 ## 現在の判定
 
-**2026-10-15最新checkpoint: 実行計画3・4は継続中、未完了。ローカルUnityの全所有processは終了済み。** 保存済みWelford8の実音声モデルをGPUComputeで元silenceへ照合し、計算fallback / flush0、355要素不合格。入力側7段階の観測は通常最終出力とbit一致し、最初の畳み込みは元native値とbit一致、最初の微差はlayer0.norm。7段階は各々の許容差内だが、最初のfeed-forward post normでは1要素が超過する。元係数・config・graph epsilonを監査した独立診断では、実activationにFP64投影を適用してもその1要素は残り、前段入力の差が支配的。FP64はoffline oracleのみ。8 lane候補と現在CPUの最初のLayerNormは元の全6種類の入力行にbit一致し、16 laneへの変更は改善根拠がない。[実GPUの不合格](results/m4-saved-welford8-gpu-failed-20261015.json) / [後段への誤差伝播](results/m4-first-feed-forward-gpu-propagation-20261015.json) / [入力側の最初の差](results/m4-saved-subsample-gpu-first-difference-20261015.json)。
+**2026-10-15最新checkpoint: 実行計画3・4は継続中、未完了。直近の所有Unity processは終了済み。** 元の全35,840行を保つ6種類の固定入力で、最初のLayerNormのGPU平均値はbit一致、逆標準偏差の2値は不一致だった。平方根と逆数の収縮を避け、FP32 residualで2段階の丸めを補正するopt-inを追加。GPU局所2 Red→2 Green、全normal / mean / inverseが元nativeとbit一致、計算fallback / flush0。[固定局所結果](results/m4-frozen-first-norm-refined-gpu-20261015.json)。FP64は独立scalar oracleのテストだけで、runtime / ONNXに含めない。候補の証明済み統計域は1e-6〜1e6。既定export / 元goldenは変更しない。
+
+元重みを再exportせず、保存ONNXの2つのinverseだけへ補正templateを挿入する小さいrewriteを6 Red→関連12 Greenで追加。既存initializer全byteの集約hashを前後で照合し、変換17.57秒で監査済み別graphを生成した。ただし元silenceのGPU encoder gateはinverseだけで472要素不合格、元Welford8の355より悪化。[実モデルの失敗](results/m4-inverse-only-real-gpu-failed-20261015.json)。既存static64投影補償との組合せは287要素不合格、最大許容差比9.27709、40,633層。数は減ったが最大誤差が増えているので全体改善・受け入れとは扱わない。[組合せの失敗](results/m4-refined-static64-real-gpu-failed-20261015.json)。両試行はGPUCompute・計算fallback / flush0、skip0。
+
+static64候補の12層を元producer `4edbe17` の固定native中間値へ照合し、通常最終値を変えないことを確認。layer_0〜8の9層は各固定許容差内、最初の超過はlayer_9の1要素、layer_10は39・layer_11は1,218要素。NUnit1 passは観測完了であり、12数値条件の全合格ではない。[全層の観測](results/m4-refined-static64-full-layer-observation-20261015.json)。次はlayer_9を元layer_8の入力でGPU単独照合し、前段差の伝播と直接のbackend差を分離する。画像FP32全profile・音声元全6信号・padded候補、実Texture / PCM→最終APIの全role・境界・寿命・例外後再利用・text回帰は未達のまま。以下は前回checkpointの履歴。
+
+**2026-10-15前回checkpoint:** 保存済みWelford8の実音声モデルをGPUComputeで元silenceへ照合し、計算fallback / flush0、355要素不合格。入力側7段階の観測は通常最終出力とbit一致し、最初の畳み込みは元native値とbit一致、最初の微差はlayer0.norm。7段階は各々の許容差内だが、最初のfeed-forward post normでは1要素が超過する。元係数・config・graph epsilonを監査した独立診断では、実activationにFP64投影を適用してもその1要素は残り、前段入力の差が支配的。FP64はoffline oracleのみ。8 lane候補と現在CPUの最初のLayerNormは元の全6種類の入力行にbit一致し、16 laneへの変更は改善根拠がない。[実GPUの不合格](results/m4-saved-welford8-gpu-failed-20261015.json) / [後段への誤差伝播](results/m4-first-feed-forward-gpu-propagation-20261015.json) / [入力側の最初の差](results/m4-saved-subsample-gpu-first-difference-20261015.json)。
 
 全encoderのWelford8 + compensated64 Actions `38600337962` / source `1f52193` はterminal failure。runner通信断のannotationがあり、成果物0件・数値結果なし。OOMは未証明であり、数値不合格や成功とは判定しない。同じ重い処理をそのまま再試行しない。[実行未達の記録](results/m4-compensated-encoder-runner-lost-20261015.json)。次は最初のGPU Welford128を、元の全入力行を保つ6種類の固定行へ切り出し、統計・平方根 / 逆数の微差を分離して小さいRedから修正する。画像FP32全profile・音声全6信号のGPU gateと、実Texture / PCMから最終APIの全role・境界・所有権・例外後再利用・text回帰は引き続き未達。小さい経路bindingは3 Red→実装後のMoveDim不足1 fail→関連6 Greenであり、全encoder合格ではない。以下の「実行中」は前回checkpointの履歴。
 

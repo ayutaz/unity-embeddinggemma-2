@@ -4,6 +4,12 @@
 
 ## 現在の判定
 
+**2026-10-15最新の切り分け:** compact候補の12層観測 `5a8799e` は通常最終値をbit再現し、元最終gateの201要素不合格も再現。layer_0〜8は許容差内、layer_9は1・layer_10は42・layer_11は1,119要素超過。約101.22 MBのlayer_9抽出 `f24a539` は観測入力で観測出力を全bit再現し、元layer_8入力では元layer_9との超過0、最大許容差比0.26133。入力側7段階の観測 `dbd836b` ではlayer0.conv / norm / actが全bit一致し、最初の差はlayer1.convの224,650値（元許容差超過0）。いずれもGPUCompute・計算fallback / flush0・NUnit1 pass / skip0 / exit0は切り分けの完了であり、全encoder合格ではない。[固定切り分けreceipt](results/m4-compact-gpu-drift-localization-20261015.json)。
+
+同じ元conv2入力・係数で現在CPUを再計算すると元参照と268,142値のbit差があり、元許容差内でも参照文脈のbit再現は未達。現CPU値を新goldenに採用しない。次は保存conv2値に対して、固定CPU畳み込みの集計順 / 文脈と一般的なGPU FP32補償候補を切り分ける。FP64は独立offline oracleのみ。Unity終了時のPersistent allocation 1件の警告を保存しており、発生元・所有権 / Disposeの受け入れは未達。
+
+Python全体回帰 `38625994348` / `139283e` はWindows / Ubuntu・Python3.13 / 3.14の各744件で742 pass / 2 fail / skip0。失敗はimmutable artifact取得の`actions: read`と、複数upload中のnative artifactを旧前提で選ぶ契約テスト2件。読み取り専用権限とfailure後のnative stage保持を維持して判定対象を修正し、関連52 Green。[旧全体回帰と局所修正](results/python-full-regression-contract-failed-20261015.json)。修正後の全体回帰はまだ未検証。画像FP32全3 profile・音声元全6信号 / 両profileと実入力→最終APIの全条件は未達のまま。以下は直前の数値修正checkpoint。
+
 **2026-10-15最新checkpoint: 実行計画3・4は継続中、未完了。直近の所有Unity processは終了済み。** 最新候補 `d8714aa` の無音encoderはGPUCompute・計算fallback / flush0で201要素不合格、最大許容差比3.73996。以前のlayout候補の213要素・6.90199から改善したが、元gateは不合格。Sentis層数78,457→60,546、実行111.94→91.71秒は各1回の比較で、benchmarkではない。[最新全encoder不合格](results/m4-compact-outer-rms-full-gpu-failed-20261015.json)。元golden、入力・mask・係数byte、`atol=1e-5` / `rtol=1e-4`は変更しない。
 
 dynamic16 attention + static64は248要素不合格。投影chunk32は364、chunk16は229で、最大誤差とgraph増大も残るため採用しない。[attention / 投影の失敗](results/m4-refined-attention-projection-gpu-failed-20261015.json)。最初のfeed-forward RMSはGPU局所2 Red→2 Green、全bit一致。[局所RMS](results/m4-frozen-rms-cascade-gpu-20261015.json)。これを109箇所へ一律に適用した全encoderは327要素不合格。畳み込み後の12 normが非連続layoutであると確認し、除外した97箇所版も213要素不合格だった。[両候補の失敗](results/m4-full-rms-candidates-gpu-failed-20261015.json)。

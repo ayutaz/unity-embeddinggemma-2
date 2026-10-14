@@ -44,5 +44,10 @@ def test_opt_in_workflow_produces_stages_after_failed_native_collection_without_
     assert not steps[collection].get("continue-on-error", False)
     assert not step.get("continue-on-error", False)
     assert "--encoder-source ../artifacts/audio-runtime-reference" in step["run"]
-    upload = next(row for row in steps if "actions/upload-artifact" in row.get("uses", ""))
+    uploads = [row for row in steps if "actions/upload-artifact" in row.get("uses", "")
+               and row.get("with", {}).get("name", "").startswith("audio-runtime-native-")]
+    assert len(uploads) == 1, "Native stage evidence needs one dedicated artifact"
+    upload = uploads[0]
+    assert upload["if"] == "always()", "Retain native stage evidence after numeric failure"
+    assert "artifacts/audio-runtime-reference/" in upload["with"]["path"]
     assert "artifacts/audio-runtime-stages/" in upload["with"]["path"]

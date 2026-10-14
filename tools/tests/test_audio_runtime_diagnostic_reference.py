@@ -91,7 +91,8 @@ def test_runtime_diagnostic_workflow_is_opt_in_read_only_and_retains_failure():
     workflow = yaml.load(path.read_text(encoding="utf-8"), Loader=yaml.BaseLoader)
     assert "workflow_dispatch" in workflow["on"] and "pull_request" in workflow["on"]
     assert "pull_request_target" not in workflow["on"]
-    assert workflow["permissions"] == {"contents": "read"}
+    # Fetching the immutable original artifact needs actions:read, never write.
+    assert workflow["permissions"] == {"contents": "read", "actions": "read"}
     job = workflow["jobs"]["native-reference"]
     assert "audio-runtime-diagnostics" in job["if"]
     assert "head.repo.full_name == github.repository" in job["if"]

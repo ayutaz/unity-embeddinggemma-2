@@ -54,14 +54,16 @@ def test_only_selected_inverses_change_and_all_existing_coefficients_stay_identi
         np.testing.assert_array_equal(actual,expected)
 
 
-@pytest.mark.parametrize('problem',['missing','shared_root','duplicate','bad_template'])
+@pytest.mark.parametrize('problem',['missing','shared_root','duplicate','bad_template','double_input','double_cast'])
 def test_invalid_context_is_rejected_before_any_model_mutation(tmp_path,problem):
     run = required()
     original, replacement = model(), template(tmp_path)
     if problem=='missing':original.graph.node[4].name='not-a-target'
     elif problem=='shared_root':original.graph.node.append(helper.make_node('Identity',['norm0-root'],['extra']))
     elif problem=='duplicate':original.graph.node[4].name='norm0/Reciprocal'
-    else:replacement.graph.node[0].domain='untrusted.custom'
+    elif problem=='bad_template':replacement.graph.node[0].domain='untrusted.custom'
+    elif problem=='double_input':replacement.graph.input[0].type.tensor_type.elem_type=TensorProto.DOUBLE
+    else:replacement.graph.node.append(helper.make_node('Cast',[replacement.graph.input[0].name],['unexpected-double'],to=TensorProto.DOUBLE))
     before = original.SerializeToString()
     with pytest.raises(ValueError):run(original,replacement,prefixes=('norm0','norm1'))
     assert original.SerializeToString()==before

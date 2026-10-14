@@ -50,16 +50,20 @@ namespace EmbeddingGemma.Validation.Tests
         public void AllStaticPartitionsGpuMatchesOriginalGolden(string signal)
             =>Execute(signal,true);
 
-        void Execute(string signal,bool allStatic)
+        [Test]
+        public void ObserveAllStaticLayersAgainstOriginalNativeWithoutChangingFinalBits()
+            =>Execute("silence",true,true);
+
+        void Execute(string signal,bool allStatic,bool observe=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var folder=allStatic?"GpuAudioPartitionedAllStatic":"GpuAudioPartitionedFirstFf";
             var root=Path.Combine(Application.dataPath,folder);
             var originalRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-real-chain/audio-runtime-reference"));
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+(allStatic?"partitioned-all-static-gpu-":"partitioned-first-ff-gpu-")+source+"-"+signal+".json"));
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+(observe?"partitioned-all-static-layer-observation-":allStatic?"partitioned-all-static-gpu-":"partitioned-first-ff-gpu-")+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
-            var report=new JObject { ["success"]=false,["scope"]="one_partitioned_original_audio_encoder_gpu_numeric_gate",
+            var report=new JObject { ["success"]=false,["scope"]=observe?"original_audio_layer_observation_only":"one_partitioned_original_audio_encoder_gpu_numeric_gate",
                 ["runtime_source"]=source,["signal"]=signal,["requested_backend"]="GPUCompute",
                 ["gpu"]=SystemInfo.graphicsDeviceName,["phase"]="audit",["end_to_end_validated"]=false,["all_original_signals_validated"]=false };
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
@@ -128,10 +132,83 @@ namespace EmbeddingGemma.Validation.Tests
                 }
                 report["actual_backend"]=encoded.backendType.ToString();report["mismatched_elements"]=mismatch;
                 report["maximum_absolute_error"]=maximum;report["maximum_tolerance_ratio"]=ratio;report["phase"]="completed";Save();
+                if(observe)
+                {
+                    var contextRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-current-stage-context"));
+                    var layerReferencePath=Path.Combine(contextRoot,"audio-stage-reference.json");var layerAuditPath=Path.Combine(contextRoot,"audio-stage-validation.json");
+                    Check(layerReferencePath,"6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a");
+                    Check(layerAuditPath,"3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b");
+                    var layerReference=JObject.Parse(File.ReadAllText(layerReferencePath));var layerAudit=JObject.Parse(File.ReadAllText(layerAuditPath));
+                    Assert.That(layerAudit.Value<bool>("success")&&layerAudit.Value<bool>("context_validated"),Is.True);
+                    Assert.That(layerReference["metadata"].Value<string>("source_commit"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));
+                    var layerCase=((JArray)layerReference["cases"]).Single(c=>c.Value<string>("id")==signal);
+                    var anchorPath=Path.Combine(Application.dataPath,"GpuAudioRefinedCandidate/full-layer-anchors.json");
+                    Check(anchorPath,"34e8d2c011b0fb8f083f1a8c850dfc25193fd526696e186a833740d7980c4092");
+                    var anchors=(JArray)JObject.Parse(File.ReadAllText(anchorPath))["anchors"];
+                    var wanted=anchors.Select(a=>a.Value<string>("onnx_node")+"_output_0").ToHashSet();
+                    report["phase"]="observe";Save();
+                    var snapshots=ObserveBoundaries(models.ToArray(),inputs.ToArray(),outputs.ToArray(),kernels.ToArray(),input,wanted);
+                    Assert.That(snapshots["__final"].Select(BitConverter.SingleToInt32Bits),Is.EqualTo(actual.Select(BitConverter.SingleToInt32Bits)));
+                    report["normal_final_matches_observed_bits"]=true;var stages=new JArray();report["stages"]=stages;
+                    foreach(var anchor in anchors)
+                    {
+                        var name=anchor.Value<string>("stage");var boundary=anchor.Value<string>("onnx_node")+"_output_0";
+                        var part=((JArray)layerCase["stages"]).Single(p=>p.Value<string>("name")==name);
+                        var file=part.Value<string>("expected");var path=Path.Combine(contextRoot,file);
+                        if(!File.Exists(path))path=Path.Combine(contextRoot,Path.GetFileName(file));
+                        Check(path,layerAudit["files"][file].Value<string>("sha256"));
+                        var values=snapshots[boundary];var native=Floats(path);Assert.That(values.Length,Is.EqualTo(native.Length));
+                        int bits=0,bad=0;double maxRatio=0;
+                        for(var i=0;i<values.Length;i++)
+                        {
+                            Assert.That(float.IsNaN(values[i])||float.IsInfinity(values[i]),Is.False);
+                            if(BitConverter.SingleToInt32Bits(values[i])!=BitConverter.SingleToInt32Bits(native[i]))bits++;
+                            var difference=Math.Abs((double)values[i]-native[i]);var allowed=1e-5+1e-4*Math.Abs((double)native[i]);
+                            if(difference>allowed)bad++;maxRatio=Math.Max(maxRatio,difference/allowed);
+                        }
+                        stages.Add(new JObject{["stage"]=name,["boundary"]=boundary,["bit_differences"]=bits,["mismatched_elements"]=bad,["maximum_tolerance_ratio"]=maxRatio});Save();
+                    }
+                    Assert.That(stages.Count,Is.EqualTo(12));report["observation_completed"]=true;
+                    report["full_encoder_validated"]=false;report["success"]=true;report["phase"]="completed_observation";return;
+                }
                 Assert.That(mismatch,Is.Zero,"Keep the original full FP32 audio encoder gate.");report["success"]=true;
             }
             catch(Exception error){report["error"]=error.ToString();throw;}
             finally { foreach(var kernel in kernels)kernel.Dispose();Save(); }
+        }
+        // Diagnostic-only downloads; the product GPU pipeline is unchanged.
+        static Dictionary<string,float[]> ObserveBoundaries(Model[] models,string[] inputs,string[] outputs,GpuBlockedMatmul[] kernels,Tensor<float> input,HashSet<string> wanted)
+        {
+            if(!wanted.IsSubsetOf(models.SelectMany(m=>m.outputs.Select(o=>o.name))))throw new ArgumentException("Observed boundary is missing.");
+            float[] baseline;
+            using(var normal=new GpuProjectionPipeline(models,inputs,outputs,kernels))
+            using(var final=normal.Execute(input))baseline=final.DownloadToArray();
+            var values=new Dictionary<string,Tensor<float>>{{models[0].inputs[0].name,input}};
+            var owned=new HashSet<Tensor<float>>();var workers=new List<Worker>();var snapshots=new Dictionary<string,float[]>();
+            try
+            {
+                for(var stage=0;stage<models.Length;stage++)
+                {
+                    var model=models[stage];var worker=new Worker(model,BackendType.GPUCompute);workers.Add(worker);
+                    var cpu=(HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallback",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(worker);
+                    var flush=(HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallbackShouldFlushGPU",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(worker);
+                    Assert.That(cpu.Intersect(model.layers.SelectMany(l=>l.outputs).Concat(model.inputs.Select(i=>i.index))).Count(),Is.Zero);Assert.That(flush.Count,Is.Zero);
+                    foreach(var boundary in model.inputs)worker.SetInput(boundary.name,values[boundary.name]);
+                    worker.Schedule();
+                    foreach(var boundary in model.outputs)
+                    {
+                        Tensor copy=null;worker.CopyOutput(boundary.name,ref copy);var value=copy as Tensor<float>;
+                        if(value==null){copy?.Dispose();throw new InvalidOperationException("Expected a float GPU boundary.");}
+                        owned.Add(value);Assert.That(value.backendType,Is.EqualTo(BackendType.GPUCompute));values[boundary.name]=value;
+                        if(wanted.Contains(boundary.name))snapshots[boundary.name]=value.DownloadToArray();
+                    }
+                    if(stage<kernels.Length){var value=kernels[stage].Execute(values[inputs[stage]]);owned.Add(value);values[outputs[stage]]=value;}
+                }
+                snapshots["__final"]=values[models.Last().outputs.Single().name].DownloadToArray();
+                Assert.That(snapshots["__final"].Select(BitConverter.SingleToInt32Bits),Is.EqualTo(baseline.Select(BitConverter.SingleToInt32Bits)),"Diagnostic downloads changed normal final bits.");
+                Assert.That(snapshots.Keys.Where(k=>k!="__final"),Is.EquivalentTo(wanted));return snapshots;
+            }
+            finally {foreach(var value in owned)value.Dispose();foreach(var worker in workers)worker.Dispose();}
         }
         static float[] Floats(string path){var bytes=File.ReadAllBytes(path);var values=new float[bytes.Length/4];Buffer.BlockCopy(bytes,0,values,0,bytes.Length);return values;}
     }

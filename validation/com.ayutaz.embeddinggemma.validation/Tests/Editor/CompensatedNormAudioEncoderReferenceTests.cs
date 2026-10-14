@@ -30,11 +30,11 @@ namespace EmbeddingGemma.Validation.Tests
             var requested = JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath, "../Packages/manifest.json")));
             Assert.That(requested["dependencies"].Value<string>("com.ayutaz.embeddinggemma").EndsWith("#" + RuntimeSource), Is.True);
             root = Path.GetFullPath(Path.Combine(Application.dataPath, "../../k/artifacts/audio-real-chain"));
-            resultPath = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/compensated-norm-full-encoder/results.json"));
+            resultPath = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/norm4-reciprocal-full-encoder/results.json"));
             conditions = new JArray();
             report = new JObject
             {
-                ["success"] = false, ["scope"] = "current_native_features_to_compensated_norm4_fp32_encoder_public_api_only",
+                ["success"] = false, ["scope"] = "current_native_features_to_compensated_norm4_reciprocal_fp32_encoder_public_api_only",
                 ["runtime_source"] = RuntimeSource, ["runtime_overlay"] = false, ["reference_source"] = Producer,
                 ["unity"] = Application.unityVersion, ["sentis"] = "2.6.1", ["gpu"] = SystemInfo.graphicsDeviceName,
                 ["graphics_api"] = SystemInfo.graphicsDeviceType.ToString(), ["conditions"] = conditions,
@@ -201,4 +201,3 @@ namespace EmbeddingGemma.Validation.Tests
         void Save() { Directory.CreateDirectory(Path.GetDirectoryName(resultPath)); File.WriteAllText(resultPath, report.ToString()); }
     }
 }
-

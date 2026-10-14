@@ -101,7 +101,7 @@ Sentis 2.6.1のCPU GlobalAverageVariancePoolはFP32の逐次和から `E[x²] - 
 
 Git `4492052…`のprojection chunk64 / norm chunk4を元6信号・2 profileへ実行した。CPU/GPU全12 encoder条件は引き続き不合格。最大許容差比はCPU11.85614177 / GPU13.28313560。silenceの最初のfeed-forward post normはCPU284→1要素、GPU5→3要素となったが、合格ではない。subsample観測2 pass、feed-forward2 fail、encoder2 fail、計NUnit2 pass / 4 fail / skip0 / exit2。[全encoder失敗](results/m4-compensated-norm4-real-audio-failed-20261014.json) / [component結果](results/m4-compensated-norm4-component-results-20261014.json)。
 
-Git `c96b534…`のnorm chunk1ではsilenceのpost normがCPU/GPUとも1要素不一致。最大許容差比1.94292705 / 2.22255104、最終bitsは保持、NUnit0 pass / 2 fail / skip0 / exit2。全encoderのnorm1受け入れは未実行。[norm1の失敗](results/m4-compensated-norm1-feed-forward-failed-20261014.json)。次の候補 `8ef7e84…` はinverse standard deviationを一度計算して乗算するFP32式を試し、25件の小さい回帰が合格。実feed-forwardの結果は別gateとして収集中。
+Git `c96b534…`のnorm chunk1ではsilenceのpost normがCPU/GPUとも1要素不一致。最大許容差比1.94292705 / 2.22255104、最終bitsは保持、NUnit0 pass / 2 fail / skip0 / exit2。全encoderのnorm1受け入れは未実行。[norm1の失敗](results/m4-compensated-norm1-feed-forward-failed-20261014.json)。候補 `8ef7e84…` はinverse standard deviationを一度計算して乗算するFP32式を試し、25件の小さい回帰が合格。実silence feed-forwardもCPU/GPU各1要素不合格、最大許容差比2.09704983 / 1.32994859、最終bits保持、NUnit0 pass / 2 fail / skip0 / exit2。[reciprocal候補の失敗](results/m4-compensated-norm1-reciprocal-feed-forward-failed-20261014.json)。CPU/GPUで改善の方向が異なり、候補の単独合格を全encoderの合格へ置き換えない。後続の実行結果は別directoryへ保存し、旧norm4の全encoder失敗reportを上書きしない。
 
 固定native内部参照は再利用し、producerが変わっていないC#候補更新で重い参照生成を繰り返さないため、PRの任意 `audio-layer-replay-diagnostics` labelを外した。Required CIと実モデル数値gateは維持し、任意workflowのskipをpassに数えない。
 

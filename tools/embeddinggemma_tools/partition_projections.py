@@ -7,6 +7,31 @@ from onnx.utils import Extractor
 from .refine_layernorm_onnx import _initializer_digest
 
 
+def apply_boundary_shape_audit(model,audit,*,expected_graph_sha256):
+    """Apply fixed, named Sentis metadata without changing any operation."""
+    if (audit.get('success') is not True or audit.get('scope')!='fixed_boundary_metadata_only_no_inference'
+            or audit.get('source_graph_sha256')!=expected_graph_sha256
+            or hashlib.sha256(model.SerializeToString()).hexdigest()!=expected_graph_sha256):
+        raise ValueError('Fixed boundary audit source or completion differs')
+    infos={v.name:v for v in (*model.graph.input,*model.graph.output,*model.graph.value_info)}
+    assignments=[]
+    for name,dimensions in audit.get('boundaries',{}).items():
+        info=infos.get(name)
+        if (info is None or info.type.tensor_type.elem_type!=onnx.TensorProto.FLOAT
+                or not isinstance(dimensions,list) or not dimensions
+                or any(type(d) is not int or d<=0 for d in dimensions)
+                or len(info.type.tensor_type.shape.dim)!=len(dimensions)):
+            raise ValueError('Boundary metadata type, rank, or shape differs')
+        if any(d.dim_value>0 and d.dim_value!=actual for d,actual in zip(info.type.tensor_type.shape.dim,dimensions)):
+            raise ValueError('Known boundary dimension conflicts with audit')
+        assignments.append((info,dimensions))
+    if not assignments:raise ValueError('No audited boundaries found')
+    for info,dimensions in assignments:
+        for dimension,actual in zip(info.type.tensor_type.shape.dim,dimensions):dimension.dim_value=actual
+    return dict(boundary_count=len(assignments),source_graph_sha256=expected_graph_sha256,
+                coefficient_bytes_preserved=True,non_metadata_operations_preserved=True,full_encoder_validated=False)
+
+
 def complete_projection_shape_audit(model,audit,*,expected_graph_sha256):
     """Account for runtime matrices and original constant-input matrices.
 

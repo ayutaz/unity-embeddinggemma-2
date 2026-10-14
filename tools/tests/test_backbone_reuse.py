@@ -17,7 +17,7 @@ def fixture(tmp_path, modality="audio"):
     path = tmp_path / (modality + "-embedding-reference.json")
     path.write_text(json.dumps(reference))
     receipt = dict(success=True, stage="python_" + modality + "_embeddings_only", metadata=reference["metadata"],
-                   files={str(p.relative_to(tmp_path)): dict(bytes=p.stat().st_size, sha256=hashlib.sha256(p.read_bytes()).hexdigest())
+                   files={p.relative_to(tmp_path).as_posix(): dict(bytes=p.stat().st_size, sha256=hashlib.sha256(p.read_bytes()).hexdigest())
                           for p in (path, graph)})
     (tmp_path / (modality + "-embedding-validation.json")).write_text(json.dumps(receipt))
     expected = {"small": {k: v for k, v in profile.items() if k != "graph"}}

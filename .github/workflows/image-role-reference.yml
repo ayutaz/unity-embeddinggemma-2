@@ -1,0 +1,100 @@
+name: Frozen image role reference
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, labeled]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: image-role-reference-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  reference:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       contains(github.event.pull_request.labels.*.name, 'image-role-reference'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - name: Fetch fixed native vision files
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.artifact_zip
+          --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11830312950
+          --output ../artifacts/fixed-image-native --max-entry-bytes 2147483648
+          --member vision-reference.json --member vision-validation.json
+          --member square/vision.pt2 --member square/positions-int32.bin
+          --member square/0-pixels-fp32.bin --member square/1-pixels-fp32.bin
+          --member landscape/vision.pt2 --member landscape/positions-int32.bin
+          --member landscape/0-pixels-fp32.bin --member landscape/1-pixels-fp32.bin
+          --member portrait/vision.pt2 --member portrait/positions-int32.bin
+          --member portrait/0-pixels-fp32.bin --member portrait/1-pixels-fp32.bin
+      - name: Fetch fixed document backbones
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.artifact_zip
+          --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11830367896
+          --output ../artifacts/fixed-image-document-backbone --max-entry-bytes 2147483648
+          --member image-embedding-reference.json --member image-embedding-validation.json
+          --member square/backbone.pt2 --member landscape/backbone.pt2
+      - name: Audit pinned manifests before model download
+        run: |
+          sha256sum --check <<'EOF'
+          7c183c5217e13c28205c2a804c04ff93c68642b40a948f1cfb3c55d7f3852a98  ../artifacts/fixed-image-native/vision-reference.json
+          3f48634edaa191fa15a8c7d5eb6ebdc8a452709f45ef6fab22e6ead45bdc0aa4  ../artifacts/fixed-image-native/vision-validation.json
+          f5c2dbb079f6f19cfd4f16f14666c368cf3755ae9bee331b7b98ea91cb1d38e0  ../artifacts/fixed-image-document-backbone/image-embedding-reference.json
+          2506af777e47cb11408455f2b1dc40f1432c49a9a0e06d10189f6ea8c0d9fe9a  ../artifacts/fixed-image-document-backbone/image-embedding-validation.json
+          EOF
+      - name: Compare every role against official real-model forward
+        run: |
+          for role in document query raw; do
+            uv run --locked python -m embeddinggemma_tools prepare-image-embeddings \
+              --vision-source ../artifacts/fixed-image-native \
+              --vision-source-commit c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1 \
+              --backbone-source ../artifacts/fixed-image-document-backbone \
+              --revision 914f7f89142e33e77833254d9c9b90c3cef7303b \
+              --role "$role" --output "../artifacts/image-role-reference/$role"
+          done
+      - name: Record reference-only scope
+        if: always()
+        run: |
+          {
+            echo '### Fixed encoder/backbone → role-specific official Python vectors'
+            echo 'The original vision FP32 failures and Unity full-chain acceptance remain separate.'
+            echo 'Only completed validation JSON establishes a role reference result.'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: image-role-reference-${{ github.sha }}
+          path: |
+            artifacts/image-role-reference/**/*.json
+            artifacts/image-role-reference/**/*-features-fp32.bin
+            artifacts/image-role-reference/**/*-actual-fp32.bin
+            artifacts/fixed-image-native/range-receipt.json
+            artifacts/fixed-image-document-backbone/range-receipt.json
+          compression-level: 0
+          retention-days: 7
+          if-no-files-found: warn

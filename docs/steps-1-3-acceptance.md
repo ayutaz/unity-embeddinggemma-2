@@ -2,6 +2,16 @@
 
 2026-10-14。ユーザー指定の範囲は、(1)基準・PR依存整理、(2)画像・音声encoder数値不一致修正、(3)実入力→最終768次元APIの受け入れ。sample・正式Releaseは今回の完了条件へ置き換えない。
 
+## 停止時の状況とGPU実行への変更
+
+2026-10-14、ユーザーの停止指示後、Unityの負荷調査とGPU実行への変更を追加で依頼された。実行中だった画像診断のbatchmode Unity（PID 64068）は停止した。参照元 `5c697a6472e0203d9f24c77da7a466f83735ce84` の部分結果は未完了として保存し、未実行条件を合格にも数値不合格にも数えない。
+
+この診断はCPUとGPUの実モデル推論を交互に実行していた。完了済みsquare GPUの2画像は `actual_backend=GPUCompute`、RTX 4070 Ti SUPER / Direct3D12、計算fallback・readback flushとも0だった。一方、squareとlandscapeのCPU条件も実際に実行されていた。数値補償の診断候補は元1823層から25265層へ展開され、GPU推論前にもCPU側のモデル変換・読み込みが発生する。各段階の時間を計測していないため、負荷全体の割合は未確定。ログにはUnity Acceleratorの接続timeoutもあるが、推論の遅延原因とは確定しない。
+
+今回の対象である `CompensatedVisionReferenceTests` と `CompensatedNormAudioEncoderReferenceTests` はGPUCompute専用へ変更する。GPU未対応・CPU backend指定を拒否し、出力backend一致と計算fallback・flush 0の既存assertionを維持する。集計は画像3 profile / 音声1 backendへ変更し、`cpu_validated=false` を記録する。旧CPU/GPU全条件の完了記録として扱わない。小さい合成契約テストのCPU条件と過去の診断fixtureは履歴・回帰用途で残すが、ローカルの実モデル検証に含めない。
+
+工程1の基準整理は済んでいる。工程2の画像FP32・音声encoder数値gateは未達、工程3のUnity実入力から最終768次元APIも未達。画像のPython Query/Document/Raw参照は18件合格したがUnity全chainの合格ではない。ONNX SiLUの演算順序修正は小さい関連37件と準備回帰4件を確認したが、修正後の実モデルは未検証。今回のGPU専用変更は構成回帰テストで確認し、長時間の実モデル再実行は行わない。
+
 ## 基準とPR依存
 
 確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。CI run 38428339728は8 job成功。mainの既存ローカル変更は維持する。作業branchは `feat/multimodal-numerical-acceptance`。統合はこの作業branch内で行い、mainへmergeしない。

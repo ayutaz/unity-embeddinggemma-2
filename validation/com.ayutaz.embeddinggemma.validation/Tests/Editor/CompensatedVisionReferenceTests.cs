@@ -31,7 +31,8 @@ namespace EmbeddingGemma.Validation.Tests
                 ["reference_source"] = "e2a6dc01fbca8c9be1f3bbe875325ad338de0ca0", ["runtime_overlay"] = false,
                 ["unity"] = Application.unityVersion, ["sentis"] = "2.6.1", ["gpu"] = SystemInfo.graphicsDeviceName,
                 ["graphics_api"] = SystemInfo.graphicsDeviceType.ToString(), ["conditions"] = conditions,
-                ["expected_conditions"] = 6, ["float16_validated"] = false, ["preprocessing_validated"] = false,
+                ["execution_backend"] = "GPUCompute", ["cpu_validated"] = false,
+                ["expected_conditions"] = 3, ["float16_validated"] = false, ["preprocessing_validated"] = false,
                 ["end_to_end_validated"] = false, ["started_utc"] = DateTime.UtcNow.ToString("O") }; Save();
             var locked = JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath, "../Packages/packages-lock.json")));
             Assert.That(locked["dependencies"]["com.ayutaz.embeddinggemma"].Value<string>("hash"), Is.EqualTo(report.Value<string>("runtime_source")));
@@ -54,12 +55,14 @@ namespace EmbeddingGemma.Validation.Tests
             foreach (var pair in ModelHashes) HashCheck(Path.Combine(root, pair.Key + "-fp32.sentis"), pair.Value);
             report["reference_audited"] = true; Save();
         }
-        [TestCase("square", BackendType.CPU)] [TestCase("square", BackendType.GPUCompute)]
-        [TestCase("landscape", BackendType.CPU)] [TestCase("landscape", BackendType.GPUCompute)]
-        [TestCase("portrait", BackendType.CPU)] [TestCase("portrait", BackendType.GPUCompute)]
+        [TestCase("square", BackendType.GPUCompute)]
+        [TestCase("landscape", BackendType.GPUCompute)]
+        [TestCase("portrait", BackendType.GPUCompute)]
         [Timeout(1200000)]
         public void CompensatedSavedModelMatchesBothFixedImages(string name, BackendType backend)
         {
+            Assert.That(backend, Is.EqualTo(BackendType.GPUCompute), "Real-model inference requires GPUCompute.");
+            Assert.That(SystemInfo.supportsComputeShaders, Is.True, "Actual GPU required; never skip or fall back.");
             var cases = new JArray();
             var condition = new JObject { ["profile"] = name, ["requested_backend"] = backend.ToString(),
                 ["success"] = false, ["phase"] = "load", ["cases"] = cases, ["saved_sha256"] = ModelHashes[name] };
@@ -118,7 +121,7 @@ namespace EmbeddingGemma.Validation.Tests
         [OneTimeTearDown] public void CompleteReport()
         {
             if (report == null) return;
-            report["success"] = conditions.Count == 6 && conditions.All(value => value.Value<bool>("success"));
+            report["success"] = conditions.Count == 3 && conditions.All(value => value.Value<bool>("success"));
             report["completed_utc"] = DateTime.UtcNow.ToString("O"); Save();
         }
         static float[] Floats(string path) { var bytes = File.ReadAllBytes(path); var result = new float[bytes.Length / 4]; Buffer.BlockCopy(bytes, 0, result, 0, bytes.Length); return result; }

@@ -20,7 +20,8 @@ namespace EmbeddingGemma.Tests
             var mean = Sum(input, width, chunk) / width;
             var centered = input - mean;
             var variance = Sum(centered * centered, width, chunk) / width;
-            var normalized = centered / Functional.Sqrt(variance + epsilon);
+            var inverseStandardDeviation = 1f / Functional.Sqrt(variance + epsilon);
+            var normalized = centered * inverseStandardDeviation;
             return graph.Compile(normalized * Functional.Constant((float[])scale.Clone()) + Functional.Constant((float[])bias.Clone()));
         }
         static FunctionalTensor Sum(FunctionalTensor input, int width, int chunk)

@@ -10,7 +10,7 @@ namespace EmbeddingGemma
     /// tensor of the same shape. The source-derived exp rounding is qualified
     /// against bounded fixed inputs on each GPU; it is not a portable bit guarantee.
     /// </summary>
-    public sealed class GpuSilu : IDisposable
+    public sealed class GpuSilu : IGpuTensorOperation
     {
         ComputeShader shader;
         readonly int kernel;

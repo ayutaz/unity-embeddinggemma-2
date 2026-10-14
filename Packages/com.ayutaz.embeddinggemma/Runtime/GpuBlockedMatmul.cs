@@ -10,7 +10,7 @@ namespace EmbeddingGemma
     /// Copies coefficients at construction, borrows GPU inputs, returns owned GPU outputs.
     /// Native MAD rounding must be qualified on each supported GPU; no CPU fallback.
     /// </summary>
-    public sealed class GpuBlockedMatmul : IDisposable
+    public sealed class GpuBlockedMatmul : IGpuTensorOperation
     {
         readonly int width, columns;
         ComputeBuffer weights;

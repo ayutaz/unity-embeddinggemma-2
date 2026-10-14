@@ -1,0 +1,10 @@
+{
+  "scope": "sentis_dynamic_batched_compensated_matmul_tdd_red",
+  "source": "7e8d94c",
+  "passed": 0,
+  "failed": 6,
+  "skipped": 0,
+  "exit_code": 2,
+  "reason": "Dynamic batched FP32 compensated matmul API missing",
+  "full_encoder_validated": false
+}

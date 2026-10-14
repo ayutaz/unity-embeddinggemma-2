@@ -1,8 +1,12 @@
 # 現在の状態と残タスク
 
-更新日: 2026-10-14。最新のUnity実測コード基準は `b796e504367fb9165a4992ff036a205fb2e7d429`、確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
+更新日: 2026-10-15。最新の実GPU観測sourceは `a685db3c7f5c34cdf51b13156d4bfb5c8dc24043`、小さい経路テストのGreenは `c16a66151c3b7943b6d402d688717ffa539903e9`、確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
 
 ## 現在の判定
+
+**2026-10-15最新checkpoint: 実行計画3・4は継続中、未完了。ローカルUnityの全所有processは終了済み。** 保存済みWelford8の実音声モデルをGPUComputeで元silenceへ照合し、計算fallback / flush0、355要素不合格。入力側7段階の観測は通常最終出力とbit一致し、最初の畳み込みは元native値とbit一致、最初の微差はlayer0.norm。7段階は各々の許容差内だが、最初のfeed-forward post normでは1要素が超過する。元係数・config・graph epsilonを監査した独立診断では、実activationにFP64投影を適用してもその1要素は残り、前段入力の差が支配的。FP64はoffline oracleのみ。8 lane候補と現在CPUの最初のLayerNormは元の全6種類の入力行にbit一致し、16 laneへの変更は改善根拠がない。[実GPUの不合格](results/m4-saved-welford8-gpu-failed-20261015.json) / [後段への誤差伝播](results/m4-first-feed-forward-gpu-propagation-20261015.json) / [入力側の最初の差](results/m4-saved-subsample-gpu-first-difference-20261015.json)。
+
+全encoderのWelford8 + compensated64 Actions `38600337962` / source `1f52193` はterminal failure。runner通信断のannotationがあり、成果物0件・数値結果なし。OOMは未証明であり、数値不合格や成功とは判定しない。同じ重い処理をそのまま再試行しない。[実行未達の記録](results/m4-compensated-encoder-runner-lost-20261015.json)。次は最初のGPU Welford128を、元の全入力行を保つ6種類の固定行へ切り出し、統計・平方根 / 逆数の微差を分離して小さいRedから修正する。画像FP32全profile・音声全6信号のGPU gateと、実Texture / PCMから最終APIの全role・境界・所有権・例外後再利用・text回帰は引き続き未達。小さい経路bindingは3 Red→実装後のMoveDim不足1 fail→関連6 Greenであり、全encoder合格ではない。以下の「実行中」は前回checkpointの履歴。
 
 **2026-10-15追記: ユーザー指定の実行計画3・4を進行中。いずれも未完了。** GPUの小さいFMA / Welford正規化probeは固定Git `6542bc6`、4 pass / fail0 / skip0 / exit0、全件GPUCompute・計算fallback / flush0。実音声ONNX Welford8候補はActions `38595761111` / source `6bceed7` で元6信号・2 profileを固定済み旧goldenへ直接照合し、全6件不合格。最新runnerの公式native値にも旧goldenとの差があるため、同run内のtrace一致を元の原因特定とは扱わない。[GPU局所結果](results/m4-welford-gpu-probes-windows-20261015.json) / [参照文脈の未達](results/m4-first-onnx-failure-and-original-context-20261015.json) / [元6信号の候補不合格](results/m4-welford8-pinned-onnx-failed-20261015.json)。次は補償付き静的投影の候補を同じ元6信号へ照合する。画像FP32全profile、Sentis音声全信号、実入力→最終APIの全role・境界・所有権・例外後再利用・text回帰は未達のまま。以下の「1・2まで」は前回終了時の履歴。
 

@@ -1,0 +1,203 @@
+{
+  "scope": "first_feed_forward_frozen_gpu_projection_and_norm_decomposition",
+  "success": false,
+  "source": "4bc3dd4b8cb7e633d93cb6c199da5e6455d09ed3",
+  "report": {
+    "scope": "first_feed_forward_frozen_gpu_projection_and_norm_decomposition",
+    "runtime_source": "4bc3dd4b8cb7e633d93cb6c199da5e6455d09ed3",
+    "candidate_source": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+    "graph_sha256": "f43f3275c1ba48837b626fc09c738a8204dabd25e2ff3c74d7e75abcb3591899",
+    "config_sha256": "b8f1e9931b57fbc054acdb445c41765d55b0074c58d145fa82839941ad1b5bb3",
+    "fp64_diagnostic_only": true,
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "projections": {
+      "ffw_layer_1": {
+        "input_vs_native": {
+          "mismatches": 0,
+          "maximum_absolute_error": 4.0531158447265625e-06,
+          "maximum_tolerance_ratio": 0.12308760449600334
+        },
+        "output_vs_native": {
+          "mismatches": 0,
+          "maximum_absolute_error": 5.7220458984375e-06,
+          "maximum_tolerance_ratio": 0.18437457394419265
+        },
+        "propagated_input_vs_native_oracle": {
+          "mismatches": 0,
+          "maximum_absolute_error": 5.117813573818353e-06,
+          "maximum_tolerance_ratio": 0.17735662331095667
+        },
+        "gpu_projection_vs_propagated_oracle": {
+          "mismatches": 0,
+          "maximum_absolute_error": 3.3559390431037173e-06,
+          "maximum_tolerance_ratio": 0.05818497059506343
+        },
+        "native_projection_vs_native_oracle": {
+          "mismatches": 0,
+          "maximum_absolute_error": 2.7052991526943515e-06,
+          "maximum_tolerance_ratio": 0.07906566465681923
+        }
+      },
+      "ffw_layer_2": {
+        "input_vs_native": {
+          "mismatches": 0,
+          "maximum_absolute_error": 5.7220458984375e-06,
+          "maximum_tolerance_ratio": 0.11340765438158788
+        },
+        "output_vs_native": {
+          "mismatches": 0,
+          "maximum_absolute_error": 3.814697265625e-06,
+          "maximum_tolerance_ratio": 0.10653858499265133
+        },
+        "propagated_input_vs_native_oracle": {
+          "mismatches": 0,
+          "maximum_absolute_error": 2.8322205198882955e-06,
+          "maximum_tolerance_ratio": 0.08162257808794819
+        },
+        "gpu_projection_vs_propagated_oracle": {
+          "mismatches": 0,
+          "maximum_absolute_error": 2.965180507352727e-06,
+          "maximum_tolerance_ratio": 0.08210130079255945
+        },
+        "native_projection_vs_native_oracle": {
+          "mismatches": 0,
+          "maximum_absolute_error": 1.832704496607107e-06,
+          "maximum_tolerance_ratio": 0.02822756375647922
+        },
+        "norm_error_budget": {
+          "input_vs_native": {
+            "mismatches": 0,
+            "maximum_absolute_error": 3.814697265625e-06,
+            "maximum_tolerance_ratio": 0.10653858499265133
+          },
+          "output_vs_native": {
+            "mismatches": 1,
+            "maximum_absolute_error": 5.340576171875e-05,
+            "maximum_tolerance_ratio": 1.746695888252553
+          },
+          "propagation_vs_native_oracle": {
+            "mismatches": 1,
+            "maximum_absolute_error": 5.595135503710935e-05,
+            "maximum_tolerance_ratio": 1.7466678008356378
+          },
+          "backend_vs_propagated_oracle": {
+            "mismatches": 0,
+            "maximum_absolute_error": 6.7687587801401605e-06,
+            "maximum_tolerance_ratio": 0.0014906621525534413
+          },
+          "native_vs_native_oracle": {
+            "mismatches": 0,
+            "maximum_absolute_error": 7.108475358563737e-06,
+            "maximum_tolerance_ratio": 0.0017050202298354777
+          },
+          "components_peak_absolute": {
+            "propagated_input": 5.595135503710935e-05,
+            "backend": 6.7687587801401605e-06,
+            "native_reference": 7.108475358563737e-06
+          },
+          "decomposition_maximum_remainder": 0.0,
+          "decomposition_verified": true,
+          "numeric_gate_passed": false,
+          "full_encoder_validated": false
+        },
+        "norm_of_fp64_projection_on_actual_input_vs_native": {
+          "mismatches": 1,
+          "maximum_absolute_error": 4.420196248133834e-05,
+          "maximum_tolerance_ratio": 2.0063168328464833
+        },
+        "norm_of_fp64_projection_on_native_input_vs_native": {
+          "mismatches": 0,
+          "maximum_absolute_error": 2.7285504216933987e-05,
+          "maximum_tolerance_ratio": 0.22489293478235994
+        },
+        "failed_norm_elements": [
+          {
+            "index": [
+              0,
+              0,
+              298
+            ],
+            "gpu": -0.007360585033893585,
+            "native": -0.007379340939223766,
+            "projection_backend_component": -2.788434022036289e-06,
+            "input_propagation_component": 1.9128812410750852e-05,
+            "native_projection_rounding_component": 2.4148855118817647e-06
+          }
+        ]
+      }
+    }
+  },
+  "coefficient_context": {
+    "scope": "read_only_first_feed_forward_coefficients",
+    "graph_sha256": "f43f3275c1ba48837b626fc09c738a8204dabd25e2ff3c74d7e75abcb3591899",
+    "config_sha256": "b8f1e9931b57fbc054acdb445c41765d55b0074c58d145fa82839941ad1b5bb3",
+    "epsilon": 1e-06,
+    "gradient_clipping": 10000000000.0,
+    "projections": {
+      "ffw_layer_1": {
+        "node_name": "/feed_forward1/ffw_layer_1/linear/MatMul",
+        "shape": [
+          1024,
+          4096
+        ],
+        "file": "ffw_layer_1-weight.bin",
+        "sha256": "d598344ee23d0545a76fa6d95173fbc886e8f2dd46d5907e6bd50b6cfa4891df",
+        "input_clips": [
+          [
+            -12.875,
+            12.8125
+          ]
+        ],
+        "output_clip": [
+          -40.0,
+          39.75
+        ],
+        "input_producer": "/feed_forward1/pre_layer_norm/Mul_1"
+      },
+      "ffw_layer_2": {
+        "node_name": "/feed_forward1/ffw_layer_2/linear/MatMul",
+        "shape": [
+          4096,
+          1024
+        ],
+        "file": "ffw_layer_2-weight.bin",
+        "sha256": "50ff67bc3a9a8704f925183042667884c6a2114de99565c2fa93f79570bd77b6",
+        "input_clips": [
+          [
+            -11.1875,
+            11.0625
+          ]
+        ],
+        "output_clip": [
+          -34.25,
+          34.0
+        ],
+        "input_producer": "/feed_forward1/act_fn/NativeSiLU"
+      }
+    },
+    "full_encoder_validated": false,
+    "graph_epsilon_fp32": 9.999999974752427e-07
+  },
+  "graph_epsilon_verified": true,
+  "original_config_hash_verified": true,
+  "folded_coefficient_hash_verified": true,
+  "outer_gradient_clip_proven_alias_for_captured_values": true,
+  "diagnosis": "one first post-norm failed element remains after diagnostic FP64 linear2 on actual activation; upstream input drift dominates this element",
+  "fp64_diagnostic_only": true,
+  "original_golden_changed": false,
+  "original_tolerance_changed": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "limits": [
+    "silence and first feed-forward only",
+    "not a correction or full encoder cause proof",
+    "FP64 is an independent offline oracle, never a GPU runtime candidate"
+  ],
+  "raw_sha256": {
+    "first-projection-decomposition-verified-20261015.json": "a685aabb94a032317e42df6542acaadd8d66f69e9bb4cefa10d33bebed3b8b8b",
+    "first-projection-context-verified/context.json": "d99264ded52187f54dc6b6358e6b87431ac8b93abc138052b3e4dac336c33e2f",
+    "extract-first-projection-verified-20261015-process.json": "e8f22e1f5d0b2cd884d116f3b47ce2c46c1270d4d9c712baba34eb9b56798e07",
+    "analyze-first-projection-20261015-process.json": "01243f944db0b6b9980045174a5448281be0c0f4eceb958dcc5eb081870d38fc"
+  }
+}

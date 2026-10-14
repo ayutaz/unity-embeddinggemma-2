@@ -33,7 +33,9 @@ namespace EmbeddingGemma.Validation.Tests
                 var locked=JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath,"../Packages/packages-lock.json")));
                 foreach(var p in new[]{"com.ayutaz.embeddinggemma","com.ayutaz.embeddinggemma.validation"})Assert.That(locked["dependencies"][p].Value<string>("hash"),Is.EqualTo(source));
                 Assert.That(specification.Value<string>("original_reference_source"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));
-                Check(Path.Combine(root,"layer9.onnx"),"574942834f4416b257855342a1fe87ef0e1616bb8a1d8952ed41f212f5f689d4");
+                Assert.That(specification.Value<bool>("batch_bound_to_immutable_original_profile"),Is.True);
+                Assert.That(specification["shape"].ToObject<int[]>(),Is.EqualTo(new[]{1,280,1024}));
+                Check(Path.Combine(root,"layer9.onnx"),"9336aba57dfe522be860d4778ed2ebc07aac549f4726d9554f8a95c98d76639d");
                 foreach(var f in (JObject)specification["files"])Check(f.Value.Value<string>("path"),f.Value.Value<string>("sha256"));
                 var model=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/Layer9Isolation/layer9.onnx"));
                 model=CompensatedModel.Create(model,64);report["layer_count"]=model.layers.Count;

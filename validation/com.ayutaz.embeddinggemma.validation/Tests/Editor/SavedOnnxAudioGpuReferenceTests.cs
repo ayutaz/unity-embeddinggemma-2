@@ -1,0 +1,119 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using EmbeddingGemma.Tests;
+using Newtonsoft.Json.Linq;
+using NUnit.Framework;
+using UnityEditor;
+using Unity.InferenceEngine;
+using UnityEngine;
+
+namespace EmbeddingGemma.Validation.Tests
+{
+    public sealed class SavedOnnxAudioGpuReferenceTests
+    {
+        [TestCase("silence")]
+        [TestCase("impulse")]
+        [TestCase("sine")]
+        [TestCase("nyquist")]
+        [TestCase("noise")]
+        [TestCase("padded_noise")]
+        public void SavedCandidateGpuMatchesOriginalGolden(string signal)
+        {
+            Assert.That(SystemInfo.supportsComputeShaders, Is.True, "Actual GPU required; no CPU substitute or skip.");
+            var root = Path.GetFullPath(Path.Combine(Application.dataPath, "../../k/artifacts/audio-real-chain/audio-runtime-reference"));
+            var candidateRoot = Path.Combine(Application.dataPath, "GpuAudioCandidate");
+            var source = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
+            var output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/saved-onnx-audio-gpu-" + source + "-" + signal + ".json"));
+            Assert.That(File.Exists(output), Is.False, "Preserve each invocation's evidence.");
+            var report = new JObject { ["success"] = false, ["scope"] = "one_saved_onnx_audio_encoder_gpu_vs_immutable_original",
+                ["signal"] = signal, ["runtime_source"] = source, ["requested_backend"] = "GPUCompute",
+                ["unity"] = Application.unityVersion, ["sentis"] = "2.6.1", ["gpu"] = SystemInfo.graphicsDeviceName,
+                ["graphics_api"] = SystemInfo.graphicsDeviceType.ToString(), ["end_to_end_validated"] = false,
+                ["all_original_signals_validated"] = false, ["phase"] = "audit" };
+            void Save() { Directory.CreateDirectory(Path.GetDirectoryName(output)); File.WriteAllText(output, report.ToString()); }
+            void Audit(string path, JToken spec)
+            {
+                Assert.That(new FileInfo(path).Length, Is.EqualTo(spec.Value<long>("bytes")));
+                using var stream = File.OpenRead(path);
+                Assert.That(PlayerFileHash.Compute(stream, out _), Is.EqualTo(spec.Value<string>("sha256")));
+            }
+            Save();
+            try
+            {
+                var locked = JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath, "../Packages/packages-lock.json")));
+                foreach (var package in new[] { "com.ayutaz.embeddinggemma", "com.ayutaz.embeddinggemma.validation" })
+                    Assert.That(locked["dependencies"][package].Value<string>("hash"), Is.EqualTo(source));
+                var originalPath = Path.Combine(root, "audio-encoder-reference.json");
+                using (var stream = File.OpenRead(originalPath))
+                    Assert.That(PlayerFileHash.Compute(stream, out _), Is.EqualTo("ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9"));
+                var original = JObject.Parse(File.ReadAllText(originalPath));
+                var originalAudit = JObject.Parse(File.ReadAllText(Path.Combine(root, "audio-encoder-validation.json")));
+                var candidate = JObject.Parse(File.ReadAllText(Path.Combine(candidateRoot, "audio-encoder-reference.json")));
+                var candidateAudit = JObject.Parse(File.ReadAllText(Path.Combine(candidateRoot, "audio-encoder-validation.json")));
+                Audit(Path.Combine(candidateRoot, "audio-encoder-reference.json"), candidateAudit["files"]["audio-encoder-reference.json"]);
+                foreach (var field in new[] { "model_revision", "input_sha256", "versions" })
+                    Assert.That(JToken.DeepEquals(candidate["metadata"][field], original["metadata"][field]), Is.True);
+                report["candidate_source"] = candidate["metadata"]["source_commit"];
+                report["reference_source"] = original["metadata"]["source_commit"];
+                report["candidate_python_gate_passed"] = candidateAudit.Value<bool>("success");
+                var row = ((JArray)original["cases"]).Single(r => r.Value<string>("id") == signal);
+                var candidateRow = ((JArray)candidate["cases"]).Single(r => r.Value<string>("id") == signal);
+                var profileName = row.Value<string>("profile");
+                Assert.That(candidateRow.Value<string>("profile"), Is.EqualTo(profileName));
+                var profile = original["profiles"][profileName]; var candidateProfile = candidate["profiles"][profileName];
+                var graphName = candidateProfile.Value<string>("graph");
+                var assetPath = "Assets/GpuAudioCandidate/" + profileName + ".onnx";
+                Audit(Path.Combine(Application.dataPath, "GpuAudioCandidate", profileName + ".onnx"), candidateAudit["files"][graphName]);
+                var inputName = row.Value<string>("input_features"); var maskName = profile.Value<string>("frame_mask");
+                Audit(Path.Combine(root, inputName), originalAudit["files"][inputName]);
+                Audit(Path.Combine(root, maskName), originalAudit["files"][maskName]);
+                Assert.That(candidateAudit["files"][candidateRow.Value<string>("input_features")].Value<string>("sha256"),
+                    Is.EqualTo(originalAudit["files"][inputName].Value<string>("sha256")));
+                Assert.That(candidateAudit["files"][candidateProfile.Value<string>("frame_mask")].Value<string>("sha256"),
+                    Is.EqualTo(originalAudit["files"][maskName].Value<string>("sha256")));
+                report["graph_sha256"] = candidateAudit["files"][graphName]["sha256"]; report["phase"] = "load"; Save();
+                var asset = AssetDatabase.LoadAssetAtPath<ModelAsset>(assetPath);
+                Assert.That(asset, Is.Not.Null, "The audited ONNX must import before execution.");
+                var model = ModelLoader.Load(asset);
+                var maskValues = Ints(Path.Combine(root, maskName)); var validFrames = maskValues.Sum();
+                report["layer_count"] = model.layers.Count; report["phase"] = "worker"; Save();
+                using var api = new AudioFeatureEncoder(model, BackendType.GPUCompute, new AudioEncoderProfile(validFrames));
+                var worker = (Worker)typeof(AudioFeatureEncoder).GetField("worker", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(api);
+                var cpu = (HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallback", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(worker);
+                var count = cpu.Intersect(model.layers.SelectMany(l => l.outputs).Concat(model.inputs.Select(i => i.index))).Count();
+                var flush = (HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallbackShouldFlushGPU", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(worker);
+                report["cpu_computation_or_input_count"] = count; report["readback_flush_count"] = flush.Count;
+                Assert.That(count, Is.Zero); Assert.That(flush.Count, Is.Zero); Save();
+                var features = new Tensor<float>(new TensorShape(1,1119,128), Floats(Path.Combine(root,inputName)));
+                var mask = new Tensor<int>(new TensorShape(1,1119), maskValues);
+                ComputeTensorData.Pin(features); ComputeTensorData.Pin(mask);
+                using var input = (AudioPreprocessingResult)Activator.CreateInstance(typeof(AudioPreprocessingResult),
+                    BindingFlags.Instance | BindingFlags.NonPublic, null, new object[] { features,mask,validFrames },null);
+                report["phase"] = "inference"; Save();
+                using var encoded = api.Encode(input);
+                report["actual_backend"] = encoded.SoftTokens.backendType.ToString();
+                Assert.That(encoded.SoftTokens.backendType, Is.EqualTo(BackendType.GPUCompute));
+                var actual = encoded.SoftTokens.DownloadToArray();
+                var expected = row["features"].ToObject<float[][]>().SelectMany(v => v).ToArray();
+                Assert.That(actual.Length, Is.EqualTo(expected.Length));
+                var mismatch = 0; double maximum=0, ratio=0;
+                for (var i=0;i<actual.Length;i++)
+                {
+                    Assert.That(float.IsNaN(actual[i]) || float.IsInfinity(actual[i]), Is.False);
+                    var difference=Math.Abs((double)actual[i]-expected[i]); var allowed=1e-5+1e-4*Math.Abs((double)expected[i]);
+                    maximum=Math.Max(maximum,difference); ratio=Math.Max(ratio,difference/allowed); if(difference>allowed)mismatch++;
+                }
+                report["mismatched_elements"]=mismatch; report["maximum_absolute_error"]=maximum;
+                report["maximum_tolerance_ratio"]=ratio; report["phase"]="completed"; Save();
+                Assert.That(mismatch,Is.Zero,"Preserve the original FP32 encoder numeric gate."); report["success"]=true;
+            }
+            catch(Exception error) { report["error"]=error.ToString(); throw; }
+            finally { Save(); }
+        }
+        static float[] Floats(string path) { var bytes=File.ReadAllBytes(path); var values=new float[bytes.Length/4]; Buffer.BlockCopy(bytes,0,values,0,bytes.Length); return values; }
+        static int[] Ints(string path) { var bytes=File.ReadAllBytes(path); var values=new int[bytes.Length/4]; Buffer.BlockCopy(bytes,0,values,0,bytes.Length); return values; }
+    }
+}

@@ -71,4 +71,10 @@ Python exportable layerは5 red→既存oracleを含む34 green。保存Torch pr
 
 定数のbroadcast積を保持する1 assertion red / 既存3 pass→修正。Git `a084197…`でモデル変換4件と変更せず再利用したSHA helper7件の計11 green / skip0。元profile・6信号の重い受け入れは同Gitで進行中。Windows CNG hash helperを再利用して同じSHA監査を行い、モデル再生成をしない。結果が揃うまで元encoder gateと工程2を合格にしない。
 
+### 全encoderの完了結果（不合格）
+
+Git `a084197eafa029fbb696cd12dd12b28337274477`の元6信号・2 profileをCPU/実GPUの全12条件で実行完了。すべてcosine>=0.999999だが、固定elementwise条件は全件不合格。最大許容差比はCPU13.67548863 / GPU13.08589078。元1657層に対し候補39317層。GPU計算fallback / readback flush0、NUnit0 pass / 2 fail / skip0 / process exit2。[全条件receipt](results/m4-compensated-full-encoder-all-six-failed-20261014.json)。原raw reportは上書き前に別名へ保持した。
+
+補償積和だけで元encoder gateは解消していない。候補を製品Runtimeへ採用せず、次はTDD済みWorkerObservationで同じ候補の元最終出力を保持し、最初に固定許容差を超える層・前段入力差を局所化する。画像FP32・native文脈の未達も保持し、工程3の全chain・role/境界・text回帰を完了にしない。
+
 工程1は本snapshotと依存表で整理済み。工程2・3は未完了。各候補の実測をこのledgerへ追記し、失敗や未実行を残す。

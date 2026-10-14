@@ -18,11 +18,11 @@ namespace EmbeddingGemma.Validation.Tests
         {
             var root = Path.GetFullPath(Path.Combine(Application.dataPath, "../../k/artifacts/audio-real-chain"));
             var nativeRoot = Path.GetFullPath(Path.Combine(Application.dataPath, "../../k/artifacts/audio-native-feed-forward-replay"));
-            var output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/compensated-norm-feed-forward-results"));
+            var output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/compensated-norm1-feed-forward-results"));
             Directory.CreateDirectory(output);
             var stages = new JArray();
             var report = new JObject { ["success"] = false, ["observation_completed"] = false,
-                ["scope"] = "silence_compensated_norm4_layer_zero_feed_forward1_and_subsample",
+                ["scope"] = "silence_compensated_norm1_layer_zero_feed_forward1_and_subsample",
                 ["runtime_source"] = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE"),
                 ["reference_source"] = "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
                 ["native_replay_source"] = "6ac2c92191a62ada4830adeee5235fb3c4b90f15",
@@ -61,7 +61,7 @@ namespace EmbeddingGemma.Validation.Tests
                 var map = AudioCoefficientLayerMap.ResolveFeedForward(model, (JArray)anchors["anchors"]);
                 var names = new[] { "pre_layer_norm", "ffw_layer_1", "act_fn", "ffw_layer_2", "post_layer_norm" };
                 Assert.That(map.Keys, Is.EquivalentTo(names));
-                map["subsample"] = 49; model = CompensatedModel.CreateWithCompensatedNorms(model, 64, 4);
+                map["subsample"] = 49; model = CompensatedModel.CreateWithCompensatedNorms(model, 64, 1);
                 report["coefficient_and_path_bound_outputs"] = JObject.FromObject(map); Save();
                 var native = new Dictionary<string, float[]>();
                 foreach (var name in names)
@@ -161,4 +161,5 @@ namespace EmbeddingGemma.Validation.Tests
         static void HashCheck(string path, string expected) => Assert.That(Hash(path), Is.EqualTo(expected));
     }
 }
+
 

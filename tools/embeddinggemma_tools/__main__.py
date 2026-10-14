@@ -74,12 +74,16 @@ def main(argv=None):
     images.add_argument("--vision-source", type=Path, required=True)
     images.add_argument("--sequence-length", type=sequence_length, default=1024)
     images.add_argument("--revision", type=revision, default=MODEL_REVISION)
+    images.add_argument("--role", choices=("query", "document", "raw"), default="document")
+    images.add_argument("--vision-source-commit", type=revision)
     final_audio = commands.add_parser("prepare-audio-embeddings", help="Official audio final vectors and native-only saved-chain gate")
     final_audio.add_argument("--output", type=Path, required=True)
     final_audio.add_argument("--snapshot", type=Path)
     final_audio.add_argument("--encoder-source", type=Path, required=True)
     final_audio.add_argument("--sequence-length", type=sequence_length, default=1024)
     final_audio.add_argument("--revision", type=revision, default=MODEL_REVISION)
+    final_audio.add_argument("--role", choices=("query", "document", "raw"), default="document")
+    final_audio.add_argument("--encoder-source-commit", type=revision)
     silu=commands.add_parser("prepare-silu-probe",help="Weights-free native SiLU and ONNX Swish probe")
     silu.add_argument("--output",type=Path,required=True)
     args = parser.parse_args(argv)
@@ -100,7 +104,8 @@ def main(argv=None):
         snapshot = Path(snapshot_download(MODEL_ID, revision=args.revision, allow_patterns=patterns))
     if args.command == "prepare-audio-embeddings":
         summary = prepare_audio_embeddings(snapshot, args.encoder_source, args.output, sequence_length=args.sequence_length,
-                                           revision=args.revision, source_commit=os.environ.get("GITHUB_SHA", "local"))
+                                           revision=args.revision, source_commit=os.environ.get("GITHUB_SHA", "local"),
+                                           role=args.role, encoder_source_commit=args.encoder_source_commit)
         print(json.dumps({name: summary[name] for name in (
             "success", "stage", "case_count", "profile_count", "unity_validated", "gpu_chain_validated", "onnx_encoder_numerically_validated")}))
         return
@@ -120,7 +125,8 @@ def main(argv=None):
         return
     if args.command == "prepare-image-embeddings":
         summary = prepare_image_embeddings(snapshot,args.vision_source,args.output,sequence_length=args.sequence_length,
-                                           revision=args.revision,source_commit=os.environ.get("GITHUB_SHA","local"))
+                                           revision=args.revision,source_commit=os.environ.get("GITHUB_SHA","local"),
+                                           role=args.role,vision_source_commit=args.vision_source_commit)
         print(json.dumps({name:summary[name] for name in ("success","stage","case_count","profile_count","unity_validated","gpu_chain_validated")}))
         return
     if args.command == "prepare-prompts":

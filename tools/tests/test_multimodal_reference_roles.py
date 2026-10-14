@@ -6,6 +6,7 @@ import torch
 from transformers import AutoTokenizer
 
 from embeddinggemma_tools import __main__ as cli, audio_embeddings, image_embeddings, model, prepare
+from embeddinggemma_tools import export
 from test_audio_embeddings import source as audio_source
 from test_image_embeddings import prepare_source as image_source
 from test_vision import positions
@@ -117,3 +118,35 @@ def test_image_reference_producer_and_reused_vision_producer_are_separate(tmp_pa
         revision="a" * 40, source_commit="c" * 40, vision_source_commit="b" * 40, role="raw")
     assert report["metadata"]["source_commit"] == "c" * 40
     assert report["metadata"]["vision_source_commit"] == "b" * 40
+
+
+def test_audio_raw_role_reuses_audited_document_backbones_without_export(tmp_path, audio_fixture, monkeypatch):
+    snapshot, encoder = audio_fixture
+    source = tmp_path / "document"
+    original = audio_embeddings.prepare_audio_embeddings(snapshot, encoder, source, sequence_length=32,
+        revision=prepare.MODEL_REVISION, source_commit="b" * 40)
+    monkeypatch.setattr(export, "export_multimodal_pt2", lambda *_: pytest.fail("Unchanged backbone was exported again"))
+    report = audio_embeddings.prepare_audio_embeddings(snapshot, encoder, tmp_path / "raw", sequence_length=32,
+        revision=prepare.MODEL_REVISION, source_commit="c" * 40, encoder_source_commit="b" * 40,
+        role="raw", backbone_source=source)
+    assert report["metadata"]["backbone_source_commit"] == "b" * 40
+    assert report["python_native_saved_chain_validated"]
+    for name, value in original["files"].items():
+        if name.endswith("backbone.pt2"):
+            assert report["files"][name] == value
+
+
+def test_image_query_role_reuses_audited_document_backbone_without_export(tmp_path, image_fixture, monkeypatch):
+    snapshot, vision = image_fixture
+    source = tmp_path / "document"
+    original = image_embeddings.prepare_image_embeddings(snapshot, vision, source, sequence_length=32,
+        revision="a" * 40, source_commit="b" * 40)
+    monkeypatch.setattr(export, "export_multimodal_pt2", lambda *_: pytest.fail("Unchanged backbone was exported again"))
+    report = image_embeddings.prepare_image_embeddings(snapshot, vision, tmp_path / "query", sequence_length=32,
+        revision="a" * 40, source_commit="c" * 40, vision_source_commit="b" * 40,
+        role="query", backbone_source=source)
+    assert report["metadata"]["backbone_source_commit"] == "b" * 40
+    assert report["success"]
+    for name, value in original["files"].items():
+        if name.endswith("backbone.pt2"):
+            assert report["files"][name] == value

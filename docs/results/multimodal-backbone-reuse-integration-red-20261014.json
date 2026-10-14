@@ -1,0 +1,9 @@
+{
+  "failed": 2,
+  "scope": "backbone_reuse_producer_integration_red",
+  "passed": 10,
+  "command": "uv run pytest tests/test_backbone_reuse.py tests/test_multimodal_reference_roles.py -k reuse -q --tb=short",
+  "reason": "Missing backbone_source API parameter",
+  "deselected": 10,
+  "source": "04dfbdcd28ab8b69fc448bde70ed21fa022913e4"
+}

@@ -40,7 +40,7 @@ def refine_static_matmul(model,template,*,node_name,expected_weight_sha256):
     names={template.graph.input[0].name:target.input[0],template.graph.input[1].name:target.input[1],template.graph.output[0].name:target.output[0]}
     def fresh(value):
         while value in reserved:
-            value+='_' 
+            value = f'{value}_'
         reserved.add(value);return value
     def rename(value):
         if not value:return value

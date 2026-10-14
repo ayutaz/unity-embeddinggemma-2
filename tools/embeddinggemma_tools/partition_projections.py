@@ -17,8 +17,8 @@ def apply_boundary_shape_audit(model,audit,*,expected_graph_sha256):
     assignments=[]
     for name,dimensions in audit.get('boundaries',{}).items():
         info=infos.get(name)
-        if (info is None or info.type.tensor_type.elem_type!=onnx.TensorProto.FLOAT
-                or not isinstance(dimensions,list) or not dimensions
+        if (info is None or info.type.tensor_type.elem_type not in (onnx.TensorProto.FLOAT,onnx.TensorProto.INT64)
+                or not isinstance(dimensions,list)
                 or any(type(d) is not int or d<=0 for d in dimensions)
                 or len(info.type.tensor_type.shape.dim)!=len(dimensions)):
             raise ValueError('Boundary metadata type, rank, or shape differs')

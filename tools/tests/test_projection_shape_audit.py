@@ -121,3 +121,13 @@ def test_boundary_overlay_rejects_bad_audit_without_partial_mutation(problem):
     assert callable(function),'GPU boundary shape overlay is missing'
     with pytest.raises(ValueError):function(source,audit,expected_graph_sha256=sha)
     assert source.SerializeToString()==before
+
+
+def test_boundary_shape_audit_accepts_original_integer_shape_metadata_and_scalar_rank():
+    source,audit,_=boundary_context()
+    source.graph.value_info.append(helper.make_tensor_value_info('axis',TensorProto.INT64,[]))
+    sha=hashlib.sha256(source.SerializeToString()).hexdigest()
+    audit['source_graph_sha256']=sha;audit['boundaries']['axis']=[]
+    result=partition_projections.apply_boundary_shape_audit(source,audit,expected_graph_sha256=sha)
+    assert result['boundary_count']==6
+    assert source.graph.value_info[-1].type.tensor_type.elem_type==TensorProto.INT64

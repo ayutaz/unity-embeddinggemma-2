@@ -86,3 +86,38 @@ def test_completion_rejects_unproven_runtime_or_constant_shapes(problem):
     assert callable(function),'Constant-folded projection shape coverage is missing'
     with pytest.raises(ValueError):function(source,audit,expected_graph_sha256=sha)
     assert source.SerializeToString()==before
+
+
+def boundary_context():
+    source,_,sha=context()
+    audit=dict(success=True,scope='fixed_boundary_metadata_only_no_inference',source_graph_sha256=sha,
+               boundaries={v.name:[1,4] for v in (*source.graph.input,*source.graph.output,*source.graph.value_info)})
+    return source,audit,sha
+
+
+def test_boundary_audit_fills_fixed_shapes_without_changing_operations_or_coefficients():
+    source,audit,sha=boundary_context()
+    function=getattr(partition_projections,'apply_boundary_shape_audit',None)
+    assert callable(function),'GPU boundary shape overlay is missing'
+    nodes=[n.SerializeToString() for n in source.graph.node];weights=[w.SerializeToString() for w in source.graph.initializer]
+    result=function(source,audit,expected_graph_sha256=sha)
+    assert result['boundary_count']==5 and result['full_encoder_validated'] is False
+    assert source.graph.value_info[1].type.tensor_type.shape.dim[1].dim_value==4
+    assert nodes==[n.SerializeToString() for n in source.graph.node]
+    assert weights==[w.SerializeToString() for w in source.graph.initializer]
+
+
+@pytest.mark.parametrize('problem',['source','failed','zero','missing_name','known_conflict','rank'])
+def test_boundary_overlay_rejects_bad_audit_without_partial_mutation(problem):
+    source,audit,sha=boundary_context()
+    if problem=='source':audit['source_graph_sha256']='0'*64
+    elif problem=='failed':audit['success']=False
+    elif problem=='zero':audit['boundaries']['b']=[1,0]
+    elif problem=='missing_name':audit['boundaries']['missing']=[1,4]
+    elif problem=='known_conflict':audit['boundaries']['c']=[2,4]
+    elif problem=='rank':audit['boundaries']['c']=[1,1,4]
+    before=source.SerializeToString()
+    function=getattr(partition_projections,'apply_boundary_shape_audit',None)
+    assert callable(function),'GPU boundary shape overlay is missing'
+    with pytest.raises(ValueError):function(source,audit,expected_graph_sha256=sha)
+    assert source.SerializeToString()==before

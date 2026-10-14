@@ -98,13 +98,22 @@ namespace EmbeddingGemma.Validation.Tests
         [TestCase("padded_noise")]
         public void ScalarMeanCandidateGpuMatchesOriginalGolden(string signal) => Execute(signal,"GpuAudioScalarMeanCandidate",true,16);
 
+        [TestCase("silence")]
+        [TestCase("impulse")]
+        [TestCase("sine")]
+        [TestCase("nyquist")]
+        [TestCase("noise")]
+        [TestCase("padded_noise")]
+        public void Block192ProjectionCandidateGpuMatchesOriginalGolden(string signal) => Execute(signal,"GpuAudioBlock192ProjectionCandidate",true,16);
+
         void Execute(string signal,string candidateFolder,bool compensateStatic=false,int attentionChunk=0,int projectionChunk=64)
         {
             Assert.That(SystemInfo.supportsComputeShaders, Is.True, "Actual GPU required; no CPU substitute or skip.");
             var root = Path.GetFullPath(Path.Combine(Application.dataPath, "../../k/artifacts/audio-real-chain/audio-runtime-reference"));
             var candidateRoot = Path.Combine(Application.dataPath, candidateFolder);
             var source = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var scalarMean=candidateFolder=="GpuAudioScalarMeanCandidate";
+            var block192=candidateFolder=="GpuAudioBlock192ProjectionCandidate";
+            var scalarMean=candidateFolder=="GpuAudioScalarMeanCandidate" || block192;
             var blockConv=candidateFolder=="GpuAudioBlock16ConvCandidate" || scalarMean;
             var variant=candidateFolder=="GpuAudioCandidate"?"":attentionChunk>0?"-refined-attention16-static"+projectionChunk:compensateStatic?"-refined-static64":"-refined-inverse";
             if(candidateFolder=="GpuAudioCascadeCandidate")variant="-cascade-attention16-static64";
@@ -113,6 +122,7 @@ namespace EmbeddingGemma.Validation.Tests
             if(candidateFolder=="GpuAudioCompensatedConvCandidate")variant="-conv64-attention16-static64";
             if(candidateFolder=="GpuAudioBlock16ConvCandidate")variant="-block16-conv-attention16-static64";
             if(scalarMean)variant="-scalar-mean-block16-attention16-static64";
+            if(block192)variant="-block192-projection-attention16-static64";
             var output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/saved-onnx-audio-gpu-" + source + variant + "-" + signal + ".json"));
             Assert.That(File.Exists(output), Is.False, "Preserve each invocation's evidence.");
             var report = new JObject { ["success"] = false, ["scope"] = "one_saved_onnx_audio_encoder_gpu_vs_immutable_original",
@@ -185,6 +195,15 @@ namespace EmbeddingGemma.Validation.Tests
                         Assert.That(transform.Value<string>("source_graph_sha256"),Is.EqualTo("8a376cc5bc258e13fbdc2212bb6d352eafdd2b618d553113b7cf9f0aa8192fb0"));
                         Assert.That(transform.Value<bool>("existing_initializer_bytes_preserved"),Is.True);
                         report["scalar_mean_graph_transform"]=transform.DeepClone();
+                    }
+                    if(block192)
+                    {
+                        var transform=candidateAudit["input_projection_graph_transform"];
+                        Assert.That(transform.Value<int>("replaced_matmul_count"),Is.EqualTo(1));
+                        Assert.That(transform.Value<string>("source_graph_sha256"),Is.EqualTo("c050c2efa87d83aea45587b25f7b8d1d24dc471f33cc732dcf17d89588c70c13"));
+                        Assert.That(transform.Value<string>("weight_sha256"),Is.EqualTo("a59650e614c2746ee18bbb23c475f65677beeb9ffe49350854af2aad873052a1"));
+                        Assert.That(transform.Value<bool>("existing_initializer_bytes_preserved"),Is.True);
+                        report["input_projection_graph_transform"]=transform.DeepClone();
                     }
                 }
                 var row = ((JArray)original["cases"]).Single(r => r.Value<string>("id") == signal);

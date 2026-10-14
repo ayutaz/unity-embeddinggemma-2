@@ -1,9 +1,97 @@
 """Partition fixed ONNX projections while retaining every live residual edge."""
 import hashlib
+import copy
 import onnx
 from onnx import numpy_helper,helper
 from onnx.utils import Extractor
 from .refine_layernorm_onnx import _initializer_digest
+
+
+def complete_projection_shape_audit(model,audit,*,expected_graph_sha256):
+    """Account for runtime matrices and original constant-input matrices.
+
+    Importers fold constant-input projections, so their absence from a runtime
+    layer list is expected. Only tensor dimensions are read here: no matrix
+    multiplication or numerical acceptance is performed.
+    """
+    if (audit.get('scope')!='fixed_model_metadata_only_no_inference'
+            or audit.get('source_graph_sha256')!=expected_graph_sha256
+            or hashlib.sha256(model.SerializeToString()).hexdigest()!=expected_graph_sha256):
+        raise ValueError('Fixed projection audit source differs')
+    runtime={}
+    for row in audit.get('projections',[]):
+        sha=row.get('weight_sha256')
+        if sha in runtime and runtime[sha]!=row:raise ValueError('Projection shape hash is ambiguous')
+        runtime[sha]=row
+    constants={n.output[0]:next((a.t for a in n.attribute if a.name=='value'),None)
+               for n in model.graph.node if n.op_type=='Constant' and len(n.output)==1}
+    weights={w.name:w for w in model.graph.initializer}
+    constants.update(weights)
+    completed=[];runtime_count=0;constant_count=0;used=set()
+    for node in model.graph.node:
+        if node.op_type!='MatMul' or node.input[1] not in weights or len(weights[node.input[1]].dims)!=2:continue
+        weight=weights[node.input[1]]
+        if weight.data_type!=onnx.TensorProto.FLOAT:raise ValueError('Projection coefficient is not FP32')
+        sha=hashlib.sha256(numpy_helper.to_array(weight).astype('<f4').tobytes()).hexdigest()
+        value=constants.get(node.input[0])
+        if value is not None:
+            if value.data_type!=onnx.TensorProto.FLOAT:raise ValueError('Projection constant input is not FP32')
+            x=list(value.dims)
+            row=dict(kind='OriginalConstantInput',weight_sha256=sha,weight_shape=list(weight.dims),
+                     input_shape=x,output_shape=[*x[:-1],weight.dims[1]])
+            constant_count+=1
+        else:
+            if sha not in runtime:raise ValueError('Runtime projection shape is missing')
+            row=copy.deepcopy(runtime[sha]);used.add(sha);runtime_count+=1
+        completed.append(row)
+    if used!=set(runtime):raise ValueError('Runtime audit contains an unaccounted coefficient')
+    result=dict(success=True,scope='fixed_model_metadata_only_no_inference',source_graph_sha256=expected_graph_sha256,
+                projections=completed,projection_count=len(completed),runtime_projection_count=runtime_count,
+                constant_projection_count=constant_count,original_runtime_audit_success=audit.get('success'),
+                original_runtime_audit_error=audit.get('error'),runtime_source=audit.get('runtime_source'),
+                gpu_validated=False,full_encoder_validated=False,end_to_end_validated=False)
+    # Reuse the complete shape/type/conflict checks on a copy before returning.
+    apply_projection_shape_audit(copy.deepcopy(model),result,expected_graph_sha256=expected_graph_sha256)
+    return result
+
+
+def apply_projection_shape_audit(model,audit,*,expected_graph_sha256):
+    """Fill unknown metadata from a successful hash-bound fixed Sentis audit."""
+    if (audit.get('success') is not True or audit.get('scope')!='fixed_model_metadata_only_no_inference'
+            or audit.get('source_graph_sha256')!=expected_graph_sha256
+            or hashlib.sha256(model.SerializeToString()).hexdigest()!=expected_graph_sha256):
+        raise ValueError('Fixed projection audit source or completion differs')
+    rows={}
+    for row in audit.get('projections',[]):
+        sha=row.get('weight_sha256')
+        if sha in rows and row!=rows[sha]:raise ValueError('Projection shape hash is ambiguous')
+        rows[sha]=row
+    weights={w.name:w for w in model.graph.initializer}
+    infos={v.name:v for v in (*model.graph.input,*model.graph.output,*model.graph.value_info)}
+    assignments=[];count=0
+    for node in model.graph.node:
+        if node.op_type!='MatMul' or node.input[1] not in weights or len(weights[node.input[1]].dims)!=2:continue
+        weight=weights[node.input[1]]
+        sha=hashlib.sha256(numpy_helper.to_array(weight).astype('<f4').tobytes()).hexdigest();row=rows.get(sha)
+        if row is None or row.get('weight_shape')!=list(weight.dims):raise ValueError('Projection audit coefficient is missing or differs')
+        x,y=row.get('input_shape'),row.get('output_shape')
+        if (not isinstance(x,list) or not isinstance(y,list) or len(x) not in (2,3)
+                or any(type(d) is not int or d<=0 for d in (*x,*y))
+                or x[-1]!=weight.dims[0] or y!=[*x[:-1],weight.dims[1]]):
+            raise ValueError('Projection audit shape differs')
+        for name,dimensions in [(node.input[0],x),(node.output[0],y)]:
+            info=infos.get(name)
+            if info is None or info.type.tensor_type.elem_type!=onnx.TensorProto.FLOAT or len(info.type.tensor_type.shape.dim)!=len(dimensions):
+                raise ValueError('Projection metadata type or rank differs')
+            for existing,actual in zip(info.type.tensor_type.shape.dim,dimensions):
+                if existing.dim_value>0 and existing.dim_value!=actual:raise ValueError('Known projection dimension conflicts with audit')
+            assignments.append((info,dimensions))
+        count+=1
+    if not count:raise ValueError('No audited static projections found')
+    for info,dimensions in assignments:
+        for dimension,actual in zip(info.type.tensor_type.shape.dim,dimensions):dimension.dim_value=actual
+    return dict(projection_count=count,source_graph_sha256=expected_graph_sha256,
+                coefficient_bytes_preserved=True,non_metadata_operations_preserved=True,full_encoder_validated=False)
 
 
 def partition_static_projections(model,*,node_names,expected_weight_sha256):
@@ -46,6 +134,7 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256):
     # than forcing shape/axis constants through intermediate tensor inputs.
     constants=set(weights)
     for node in nodes:
+        if node.name in node_names:continue
         known_shape=(node.op_type=='Shape' and node.input and node.input[0] in infos
                      and all(d.dim_value>0 for d in infos[node.input[0]].type.tensor_type.shape.dim))
         if node.op_type=='Constant' or known_shape or (node.input and all(v in constants for v in node.input)):
@@ -72,6 +161,7 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256):
         future={v for node in nodes[index:] for v in node.input}
         future.update(v.name for v in model.graph.output)
         live=[v for v in seen if v in future and v not in constants]
+        if target.input[0] in constants:live.append(target.input[0])
         if target.input[0] not in live:raise ValueError('Projection input is not live at its boundary')
         part=extractor.extract_model(frontier,live)
         if any(n.name in node_names for n in part.graph.node):raise ValueError('A selected projection escaped its cut')

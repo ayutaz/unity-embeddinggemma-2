@@ -25,6 +25,51 @@ def model():
     return helper.make_model(graph,opset_imports=[helper.make_opsetid('',24)],ir_version=9),weight
 
 
+def silu_model():
+    source,w=model();nodes=list(source.graph.node)
+    nodes[1:2]=[helper.make_node('Neg',['a'],['neg'],name='silu_neg'),
+                helper.make_node('Exp',['neg'],['exp'],name='silu_exp'),
+                helper.make_node('Add',['exp','one'],['den'],name='silu_add'),
+                helper.make_node('Div',['a','den'],['b'],name='silu')]
+    del source.graph.node[:];source.graph.node.extend(nodes)
+    source.graph.initializer.append(numpy_helper.from_array(np.array(1,dtype=np.float32),name='one'))
+    source.graph.value_info.extend([helper.make_tensor_value_info(n,TensorProto.FLOAT,[1,4]) for n in ['neg','exp','den']])
+    return source,w
+
+
+def test_silu_and_matrix_boundaries_reconnect_without_retaining_silu_internal_nodes():
+    source,w=silu_model();before=source.SerializeToString();sha=hashlib.sha256(w.tobytes()).hexdigest()
+    parts,plan=required()(source,node_names=['first','second'],expected_weight_sha256=[sha,sha],silu_node_names=['silu'])
+    assert source.SerializeToString()==before and len(parts)==4
+    assert [op['kind'] for op in plan['operations']]==['matmul','silu','matmul']
+    assert len(plan['projections'])==2
+    values={'input':np.array([[1,-2,3,-4]],dtype=np.float32)}
+    for index,part in enumerate(parts):
+        onnx.checker.check_model(part)
+        assert not any(n.name.startswith('silu') for n in part.graph.node)
+        result=ReferenceEvaluator(part).run(None,{v.name:values[v.name] for v in part.graph.input})
+        aliases=plan['segments'][index]['output_aliases']
+        values.update(dict(zip([aliases.get(v.name,v.name) for v in part.graph.output],result)))
+        if index<len(plan['operations']):
+            op=plan['operations'][index];x=values[op['input']]
+            values[op['output']]=x@w if op['kind']=='matmul' else x/(np.float32(1)+np.exp(-x))
+    np.testing.assert_array_equal(values['out'],ReferenceEvaluator(source).run(None,{'input':values['input']})[0])
+
+
+@pytest.mark.parametrize('problem',['missing','duplicate','constant','operator','shared','shape'])
+def test_silu_partition_refuses_unverified_chain_without_mutating_original(problem):
+    source,w=silu_model();names=['silu'];sha=hashlib.sha256(w.tobytes()).hexdigest()
+    if problem=='missing':names=['missing']
+    elif problem=='duplicate':names=['silu','silu']
+    elif problem=='constant':source.graph.initializer[-1].CopyFrom(numpy_helper.from_array(np.array(2,dtype=np.float32),name='one'))
+    elif problem=='operator':source.graph.node[2].op_type='Relu'
+    elif problem=='shared':source.graph.node[-1].input[1]='exp'
+    elif problem=='shape':source.graph.value_info[1].type.tensor_type.shape.dim[1].ClearField('dim_value')
+    before=source.SerializeToString()
+    with pytest.raises(ValueError):required()(source,node_names=['first','second'],expected_weight_sha256=[sha,sha],silu_node_names=names)
+    assert source.SerializeToString()==before
+
+
 def test_partition_reconnects_exact_residual_and_preserves_source_bytes():
     source,w=model();before=source.SerializeToString();sha=hashlib.sha256(w.tobytes()).hexdigest()
     parts,plan=required()(source,node_names=['first','second'],expected_weight_sha256=[sha,sha])

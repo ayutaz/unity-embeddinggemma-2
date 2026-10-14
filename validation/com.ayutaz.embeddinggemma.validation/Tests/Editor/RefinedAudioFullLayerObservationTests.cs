@@ -39,6 +39,19 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.That(audit.Value<bool>("success")&&audit.Value<bool>("context_validated"),Is.True);
                 Assert.That(JToken.DeepEquals(reference["metadata"],audit["metadata"]),Is.True);
                 Assert.That(reference["metadata"].Value<string>("source_commit"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));
+                var originalCase=((JArray)reference["cases"]).Single(c=>c.Value<string>("id")=="silence");
+                string ResolveExpected(string file)
+                {
+                    Assert.That(file.StartsWith("frames-1119-valid-1119/",StringComparison.Ordinal),Is.True);
+                    var nested=Path.Combine(root,file);
+                    // This immutable local cache retained the native binaries flat.
+                    return File.Exists(nested)?nested:Path.Combine(root,Path.GetFileName(file));
+                }
+                // Refuse missing/corrupt references before model load or GPU work.
+                foreach(var part in ((JArray)originalCase["stages"]).Where(s=>s.Value<string>("name").StartsWith("layer_",StringComparison.Ordinal)))
+                {
+                    var file=part.Value<string>("expected");Check(ResolveExpected(file),audit["files"][file].Value<string>("sha256"));
+                }
                 var anchors=JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath,"GpuAudioRefinedCandidate/full-layer-anchors.json")));
                 Assert.That(anchors.Value<string>("native_reference_sha256"),Is.EqualTo("6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a"));
                 var modelPath=Path.Combine(Application.dataPath,"GpuAudioRefinedCandidate/frames-1119-valid-1119.onnx");
@@ -60,11 +73,10 @@ namespace EmbeddingGemma.Validation.Tests
                 report["phase"]="observe";Save();var observed=WorkerObservation.ObserveIndexes(model,BackendType.GPUCompute,input,new HashSet<int>(map.Values));
                 Assert.That(observed.FinalMatchesBaselineBits,Is.True);Assert.That(observed.Snapshots.Count,Is.EqualTo(12));report["normal_final_matches_observed_bits"]=true;
                 var captureRoot=Path.ChangeExtension(output,null)+"-captures";Directory.CreateDirectory(captureRoot);report["capture_directory"]=captureRoot;
-                var originalCase=((JArray)reference["cases"]).Single(c=>c.Value<string>("id")=="silence");
                 for(var index=0;index<12;index++)
                 {
                     var name="layer_"+index;var expectedPart=((JArray)originalCase["stages"]).Single(s=>s.Value<string>("name")==name);
-                    var file=expectedPart.Value<string>("expected");var expectedPath=Path.Combine(root,file);Check(expectedPath,audit["files"][file].Value<string>("sha256"));
+                    var file=expectedPart.Value<string>("expected");var expectedPath=ResolveExpected(file);Check(expectedPath,audit["files"][file].Value<string>("sha256"));
                     var expected=Floats(expectedPath);var snapshot=observed.Snapshots.Single(s=>s.TensorIndex==map[name]);Assert.That(snapshot.Backend,Is.EqualTo(BackendType.GPUCompute));
                     var actual=snapshot.Values;Assert.That(actual.Length,Is.EqualTo(expected.Length));Assert.That(actual.All(v=>!float.IsNaN(v)&&!float.IsInfinity(v)),Is.True);
                     var bytes=new byte[actual.Length*4];Buffer.BlockCopy(actual,0,bytes,0,bytes.Length);File.WriteAllBytes(Path.Combine(captureRoot,name+"-actual.bin"),bytes);

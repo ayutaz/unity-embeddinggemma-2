@@ -70,6 +70,24 @@ namespace EmbeddingGemma.Tests
                 ["ffw_layer_2"] = second, ["post_layer_norm"] = norms["post_layer_norm"] };
         }
 
+        public static int ResolveReluOutput(Model model, int normOutput)
+        {
+            if (model == null) throw new ArgumentNullException(nameof(model));
+            var index = normOutput;
+            for (var count = 0; count < 4; count++)
+            {
+                var matches = model.layers.Where(layer => layer.inputs.Length > 0 && layer.inputs[0] == index).ToArray();
+                if (matches.Length != 1 || matches[0].outputs.Length != 1)
+                    throw new InvalidOperationException("Subsample norm-to-activation edge is missing or ambiguous.");
+                var next = matches[0];
+                if (next.GetType().Name == "Relu") return next.outputs[0];
+                if (next.GetType().Name != "Transpose" && next.GetType().Name != "Identity")
+                    throw new InvalidOperationException("Expected only layout changes before subsample ReLU.");
+                index = next.outputs[0];
+            }
+            throw new InvalidOperationException("Subsample activation path exceeded the bound.");
+        }
+
         public static int ResolveSiluInput(Model model, int outputIndex)
         {
             if (model == null) throw new ArgumentNullException(nameof(model));

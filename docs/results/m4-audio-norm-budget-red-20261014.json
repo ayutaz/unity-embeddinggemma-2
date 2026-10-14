@@ -1,0 +1,9 @@
+{
+  "scope": "independent_audio_norm_error_budget_tdd_red",
+  "source": "1477d88e99c98f1bf8937355437f238599c9951e",
+  "full_encoder_validated": false,
+  "passed": 0,
+  "reason": "NotImplementedError from the independent RMSNorm oracle and error budget stubs",
+  "test": "uv run pytest tests/test_audio_norm_propagation.py -q",
+  "failed": 12
+}

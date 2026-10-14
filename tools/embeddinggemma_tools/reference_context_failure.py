@@ -29,6 +29,7 @@ def record_feature_drift(destination, modality, actual, expected, *, role, profi
     if saved_encoder is not None:
         try:
             report["saved_encoder_vs_expected"] = feature_error_metrics(saved_encoder(), expected)
+            report["saved_encoder_thread_contexts"] = probe_cpu_threads(saved_encoder, (), expected)
         except Exception as error:
             # Keep the original official mismatch even if saved replay cannot run.
             report["saved_encoder_vs_expected"] = dict(error=f"{type(error).__name__}: {error}", validated=False)
@@ -49,3 +50,28 @@ def feature_error_metrics(actual, expected):
                       maximum_absolute_error=float(difference.max()), maximum_tolerance_ratio=float((difference / allowed).max()),
                       worst_index=index, worst_actual=float(actual.flatten()[index]), worst_expected=float(expected.flatten()[index]))
     return report
+
+
+def probe_cpu_threads(program, inputs, expected, *, thread_counts=(1, 2, 4)):
+    """Failure-only controlled replay; restore the caller's intraop setting."""
+    if (not thread_counts or len(set(thread_counts)) != len(thread_counts)
+            or any(type(value) is not int or value <= 0 for value in thread_counts)):
+        raise ValueError("thread counts must be unique positive integers")
+    initial = torch.get_num_threads()
+    conditions = []
+    try:
+        for requested in thread_counts:
+            row = dict(requested_threads=requested, executed=False)
+            conditions.append(row)
+            try:
+                torch.set_num_threads(requested)
+                row["actual_threads"] = torch.get_num_threads()
+                with torch.no_grad():
+                    row.update(feature_error_metrics(program(*inputs), expected))
+                row["executed"] = True
+            except Exception as error:
+                row["error"] = f"{type(error).__name__}: {error}"
+    finally:
+        torch.set_num_threads(initial)
+    return dict(scope="controlled_cpu_thread_replay_only", original_threads=initial, conditions=conditions,
+                full_encoder_validated=False, end_to_end_validated=False)

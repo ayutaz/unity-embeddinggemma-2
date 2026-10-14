@@ -1,0 +1,19 @@
+{
+  "scope": "small_sentis_frozen_shape_projection_tdd_green",
+  "source": "753e8b2d04705e00c6cbd1b2e809630cb4d14aee",
+  "red_source": "3c666d2065fbcd1a9576731d3930c28a1091c925",
+  "red_passed": 5,
+  "red_failed": 3,
+  "green_passed": 8,
+  "green_failed": 0,
+  "green_skipped": 0,
+  "exit_code": 0,
+  "unity": "6000.3.16f1",
+  "sentis": "2.6.1",
+  "gpu": "RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "xml_sha256": "bc3729f052992f60819851c59c0bab82deebb0a7ba7780184525f2b7eb6347fc",
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "shutdown_allocation_warning": true
+}

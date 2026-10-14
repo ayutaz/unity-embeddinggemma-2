@@ -1,0 +1,28 @@
+{
+  "scope": "saved_weight_candidate_without_official_input_clip_failed",
+  "source": "336493cb7393f95ffab88e0a7e94b3dca331570c",
+  "passed": 0,
+  "failed": 2,
+  "skipped": 0,
+  "exit_code": 2,
+  "original_raw_cpu_gpu_reports_preserved": false,
+  "metrics_provenance": "tool_readback_before_reports_were_replaced_by_next_run",
+  "cpu": {
+    "linear1_mismatches": 0,
+    "linear1_maximum_tolerance_ratio": 0.06828807889458331,
+    "linear2_mismatches": 197848,
+    "linear2_maximum_tolerance_ratio": 39132.34469704287,
+    "post_norm_mismatches": 285418,
+    "post_norm_maximum_tolerance_ratio": 49631.083969194704
+  },
+  "gpu": {
+    "linear1_mismatches": 0,
+    "linear1_maximum_tolerance_ratio": 0.06762058303790332,
+    "linear2_mismatches": 197848,
+    "linear2_maximum_tolerance_ratio": 39132.352180204914,
+    "post_norm_mismatches": 285418,
+    "post_norm_maximum_tolerance_ratio": 49631.09316433763
+  },
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

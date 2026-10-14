@@ -1,0 +1,16 @@
+{
+  "scope": "small_sentis_compensated_projection_tdd_green",
+  "source": "31abf50915bee41961e6019a2da1eaa5fb951494",
+  "unity": "6000.3.16f1",
+  "sentis": "2.6.1",
+  "passed": 5,
+  "failed": 0,
+  "skipped": 0,
+  "exit_code": 0,
+  "xml_sha256": "9d116559c2ebb491d976e09efcf4572a85a63b48f6996149887af783e4fcb353",
+  "runtime_overlay": false,
+  "full_encoder_validated": false,
+  "actual_frozen_weight_sentis_candidate_executed": false,
+  "end_to_end_validated": false,
+  "shutdown_allocation_warning": true
+}

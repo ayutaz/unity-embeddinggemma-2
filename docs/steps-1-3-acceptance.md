@@ -145,8 +145,10 @@ Git `02413f7…` の音声run `38560553234` と画像run `38560640093` は、PNG
 
 同じ保存graph・入力・旧期待値を1/2/4 intraop threadで比較するfailure-only診断を6 assertion red→6 green、画像/音声の連結2 greenで追加した。各requested/actual threadを記録し、実行失敗は数値不一致と分け、最後にcallerのthread数を復元する。golden・通常参照生成の設定は変更しない。[thread red](results/cpu-reference-context-red-20261014.json) / [green](results/cpu-reference-context-green-20261014.json)。次の実Actionsでthread依存を検証する。工程2・3は未完了。
 
-音声thread診断run `38561998469` はAVX2 runnerで完了した。保存native graphのsilenceは1/2/4 threadすべて288要素不一致、最大許容差比8.71274790。このrunnerの当該fixtureはthread数変更で解消しない。ここで全tensor bit一致や他runner/他信号の同値性は主張しない。元期待値は変更していない。
+音声thread診断run `38561998469` はAVX2 runnerで完了した。保存native graphのsilenceは1/2/4 threadすべて288要素不一致、最大許容差比8.71274790。このrunnerの当該fixtureはthread数変更で解消しない。ここで全tensor bit一致や他runner/他信号の同値性は主張しない。元期待値は変更していない。[実thread診断receipt](results/m4-real-reference-thread-contexts-failed-20261014.json)。
 
 次はnative設定と `ATEN_CPU_CAPABILITY=avx2` / `MKL_CBWR=AVX2` / `DNNL_MAX_CPU_ISA=AVX2` を要求する設定を、別processのActions matrixで比較する。CPU hostもlscpu JSONで記録する。Intelの[条件付き数値再現性](https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-windows/2023-0/get-started-with-conditional-num-reproducibility.html)ではnon-Intel CPU等でAVX2設定がAUTOへ戻り得るため、環境変数だけで演算文脈一致と断定しない。oneDNNのISA制限は[公式service API](https://uxlfoundation.github.io/oneDNN/group_dnnl_api_cpp_service.html)を参照した。
 
 専用workflowは監査済み保存native graphと最初のfixtureだけを部分取得し、backboneやHF snapshotを取得しない。旧参照JSON・manifestの固定SHA、producer/revision、選択graph・入力のpath/サイズ/SHAを検査してからloadし、診断のみのJSONを出す。通常の参照生成の全manifest監査を弱めていない。standalone replay4 assertion red、workflow2 red→画像分岐と関連回帰を含む23 green。[replay red](results/saved-reference-replay-red-20261014.json) / [workflow red](results/reference-context-workflow-red-20261014.json) / [green](results/reference-context-workflow-green-20261014.json)。最初のfixtureの診断であり、全encoder・工程2/3の合格ではない。
+
+専用matrix [38563722587](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38563722587) はhead `d78066b2f5d608ab158773b2a64c1750299f0fc3` で4 jobの実handleを確認した。画像nativeは開始済み、残りはqueue待ち。任意labelは同じrunの確認後に外した。別の画像role/thread run `38562190876`（head `9332de5…`、job `115845754166`）は公式実モデル比較stepでliveを確認し、未完了なので再起動しない。結果が揃うまで工程2/3は未完了のまま維持する。

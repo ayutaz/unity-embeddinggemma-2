@@ -189,9 +189,9 @@ namespace EmbeddingGemma.Validation.Tests
         { Assert.That(spec, Is.Not.Null); var path = Resolve(name); Assert.That(new FileInfo(path).Length, Is.EqualTo(spec.Value<long>("bytes"))); AuditHash(path, spec.Value<string>("sha256")); }
         void AuditHash(string path, string expected)
         {
-            using var stream = File.OpenRead(path); using var hash = SHA256.Create();
-            Assert.That(BitConverter.ToString(hash.ComputeHash(stream)).Replace("-", "").ToLowerInvariant(), Is.EqualTo(expected));
-            ((JObject)report["hash_backends"])[Path.GetRelativePath(root, path)] = "System.Security.Cryptography.SHA256";
+            using var stream = File.OpenRead(path); var digest = PlayerFileHash.Compute(stream, out var backend);
+            Assert.That(digest, Is.EqualTo(expected));
+            ((JObject)report["hash_backends"])[Path.GetRelativePath(root, path)] = backend;
         }
         string Resolve(string name)
         { var path = Path.GetFullPath(Path.Combine(root, name)); Assert.That(path.StartsWith(root + Path.DirectorySeparatorChar, StringComparison.Ordinal), Is.True); return path; }
@@ -201,4 +201,3 @@ namespace EmbeddingGemma.Validation.Tests
         void Save() { Directory.CreateDirectory(Path.GetDirectoryName(resultPath)); File.WriteAllText(resultPath, report.ToString()); }
     }
 }
-

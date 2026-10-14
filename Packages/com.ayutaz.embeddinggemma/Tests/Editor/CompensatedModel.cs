@@ -33,7 +33,8 @@ namespace EmbeddingGemma.Tests
                 if ((kind != "MatMul" && kind != "MatMul2D" && kind != "Dense") || layer.inputs.Length < 2 ||
                     !constants.TryGetValue(layer.inputs[1], out var weight) || constants.ContainsKey(layer.inputs[0]))
                 { result.layers.Add(layer); continue; }
-                if (weight.dataType != DataType.Float || weight.shape.rank != 2 || weight.lengthBytes != weight.shape.length * 4)
+                if (weight.shape.rank != 2) { result.layers.Add(layer); continue; }
+                if (weight.dataType != DataType.Float || weight.lengthBytes != weight.shape.length * 4)
                     throw new NotSupportedException("Candidate requires audited FP32 matrix weights.");
                 var transposeA = layer.GetType().GetField("transposeA");
                 if (transposeA != null && (bool)transposeA.GetValue(layer)) throw new NotSupportedException("Transposed data input needs independent acceptance.");

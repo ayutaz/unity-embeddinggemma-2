@@ -1,0 +1,443 @@
+{
+  "scope": "one_silence_full_encoder_and_subsample_localization_with_cpu_stage_timings",
+  "success": false,
+  "runtime_source": "de3a3b02fc5bd1e1ec0739ffa9b9dfdd446f272a",
+  "graph_producer": "f5ff1262614706946c373ca74db547eb1b881ef2",
+  "original_reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "original_reference_changed": false,
+  "full_encoder": {
+    "report": {
+      "success": false,
+      "scope": "one_saved_onnx_audio_encoder_gpu_vs_immutable_original",
+      "signal": "silence",
+      "runtime_source": "de3a3b02fc5bd1e1ec0739ffa9b9dfdd446f272a",
+      "requested_backend": "GPUCompute",
+      "unity": "6000.3.16f1",
+      "sentis": "2.6.1",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_api": "Direct3D12",
+      "end_to_end_validated": false,
+      "all_original_signals_validated": false,
+      "phase": "completed",
+      "candidate_source": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+      "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+      "candidate_python_gate_passed": false,
+      "candidate_folder": "GpuAudioScalarMeanCandidate",
+      "graph_transform": {
+        "replaced_inverse_count": 2,
+        "prefixes": [
+          "/subsample_conv_projection/layer0/norm",
+          "/subsample_conv_projection/layer1/norm"
+        ],
+        "existing_initializer_bytes_preserved": true,
+        "existing_initializer_sha256": "1bf6702c73c5124fb83b629fadf150e32392d21bc5f024c2a4c88062b336ca6a",
+        "node_count": 7409,
+        "full_encoder_validated": false,
+        "source_commit": "9af88c45edca97e6c3d73b298f6c065b7638b837",
+        "original_graph_sha256": "f43f3275c1ba48837b626fc09c738a8204dabd25e2ff3c74d7e75abcb3591899",
+        "template_sha256": "026e6136b2cb4c940b0d320fe9da4e82529d6e47e1a1fbbdeb8c4209f19d858b",
+        "source_model_producer": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+        "algorithm": "bounded_fp32_sqrt_then_reciprocal_residual_refinement",
+        "original_node_count": 7237,
+        "old_graph_onnx_results_reused": false,
+        "graph_sha256": "8aefc4b83fd0cc709544a0d6337b8c1837d2c864ad1d3c8cbd39fcd568abc222",
+        "profile": "frames-1119-valid-1119"
+      },
+      "rms_graph_transform": {
+        "replaced_rms_count": 109,
+        "existing_initializer_bytes_preserved": true,
+        "excluded_mean_names": [],
+        "explicit_mean_override_names": [
+          "/lconv1d/conv_norm/ReduceMean",
+          "/lconv1d/conv_norm_1/ReduceMean",
+          "/lconv1d/conv_norm_2/ReduceMean",
+          "/lconv1d/conv_norm_3/ReduceMean",
+          "/lconv1d/conv_norm_4/ReduceMean",
+          "/lconv1d/conv_norm_5/ReduceMean",
+          "/lconv1d/conv_norm_6/ReduceMean",
+          "/lconv1d/conv_norm_7/ReduceMean",
+          "/lconv1d/conv_norm_8/ReduceMean",
+          "/lconv1d/conv_norm_9/ReduceMean",
+          "/lconv1d/conv_norm_10/ReduceMean",
+          "/lconv1d/conv_norm_11/ReduceMean"
+        ],
+        "existing_initializer_sha256": "42776517d990ebd9ef43161f7063e8ff0d810d35fd2b20f137dcdc9fa4235b6f",
+        "node_count": 31727,
+        "full_encoder_validated": false,
+        "source_commit": "d8714aa4f2ec1fb92a4578f07e4e46408132dd18",
+        "source_graph_sha256": "8aefc4b83fd0cc709544a0d6337b8c1837d2c864ad1d3c8cbd39fcd568abc222",
+        "original_node_count": 7409,
+        "algorithm": "pinned_compact_inner8_and_explicit_outer280_fp32_mean_and_refined_inverse",
+        "template_widths": [
+          1024,
+          1536
+        ],
+        "mean_template_node_counts": {
+          "1024": 121,
+          "1536": 124
+        },
+        "override_shape_contract": {
+          "input": [
+            1,
+            1119,
+            128
+          ],
+          "conv_norm": [
+            1,
+            280,
+            1024
+          ],
+          "scope": "one fixed full-valid profile; native lconv replay and 12 same-size causal convolutions audited"
+        },
+        "generator_sha256": "0571cf2cd7daa9d4fa2dc6bc86831fc7c39a3d5a8785df66b18c35d2c3c58631",
+        "graph_sha256": "11607255142478773e621f5e9feebf2d3269457feb67d63215cecbc55fc61b67"
+      },
+      "conv_graph_transform": {
+        "replaced_conv_count": 1,
+        "target_node": "/subsample_conv_projection/layer1/conv/Conv",
+        "weight_sha256": "68309f01ea3e738fccb24a0db5db608841a3a8e59b0a4fa5d0fb521ed60bf43c",
+        "existing_initializer_bytes_preserved": true,
+        "existing_initializer_sha256": "1154ac702080fbd58adb2770693221efc81f56750563f8d4310ddb7fcf870bfd",
+        "node_count": 36931,
+        "full_encoder_validated": false,
+        "source_commit": "8df85b3e5488f76f3f24ec8a61a808e4c9d5de8e",
+        "source_graph_sha256": "11607255142478773e621f5e9feebf2d3269457feb67d63215cecbc55fc61b67",
+        "original_node_count": 31727,
+        "algorithm": "pinned_block16_reset_fma_then_fp32_store_add",
+        "template_node_count": 5205,
+        "template_sha256": "eb2c7a93397a60d6a69380d34a84fa65239b5aeebb262c2cfb5d2ec8bc723c62",
+        "fixed_profile": "frames-1119-valid-1119",
+        "input_shape": [
+          1,
+          128,
+          560,
+          64
+        ],
+        "generator_sha256": "324c6ca5297b1041e5e2be9a4f53afa01c3d88c062b229e92847f75fcb670fe6",
+        "graph_sha256": "8a376cc5bc258e13fbdc2212bb6d352eafdd2b618d553113b7cf9f0aa8192fb0"
+      },
+      "scalar_mean_graph_transform": {
+        "replaced_scalar_mean_count": 8,
+        "prefix": "/subsample_conv_projection/layer1/norm/",
+        "existing_initializer_bytes_preserved": true,
+        "existing_initializer_sha256": "1154ac702080fbd58adb2770693221efc81f56750563f8d4310ddb7fcf870bfd",
+        "node_count": 37139,
+        "full_encoder_validated": false,
+        "source_commit": "f5ff1262614706946c373ca74db547eb1b881ef2",
+        "source_graph_sha256": "8a376cc5bc258e13fbdc2212bb6d352eafdd2b618d553113b7cf9f0aa8192fb0",
+        "original_node_count": 36931,
+        "algorithm": "eight_lane_welford_fused_scalar_mean_only",
+        "template_sha256": "c9a6e4f90b1a38d274e2e5ad088a8cbf316b55ed58d5daa143e84de934e644c0",
+        "generator_sha256": "c9b776be5a50fd80a5cff575ebfacf8bdc88615912e69e69c491ac59b82f283e",
+        "fixed_profile": "frames-1119-valid-1119",
+        "graph_sha256": "c050c2efa87d83aea45587b25f7b8d1d24dc471f33cc732dcf17d89588c70c13"
+      },
+      "graph_sha256": "c050c2efa87d83aea45587b25f7b8d1d24dc471f33cc732dcf17d89588c70c13",
+      "stage_timings_ms": {
+        "asset_and_model_load": 2094.183,
+        "runtime_graph_transforms": 19245.1899,
+        "worker_creation": 101.58420000000001,
+        "input_and_audit_preparation": 24.4224,
+        "cpu_schedule": 10430.9102,
+        "gpu_completion_and_output_download": 661.1861
+      },
+      "saved_graph_layer_count": 23618,
+      "attention_compensated_layer_count": 26390,
+      "runtime_graph_transform": "dynamic16_then_static64",
+      "projection_chunk": 64,
+      "layer_count": 64050,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "actual_backend": "GPUCompute",
+      "unity_allocated_bytes_after_inference": 240158194,
+      "editor_peak_working_set_bytes": 0,
+      "mismatched_elements": 417,
+      "maximum_absolute_error": 0.00015664100646972656,
+      "maximum_tolerance_ratio": 6.736437438239218,
+      "error": "NUnit.Framework.AssertionException:   Preserve the original FP32 encoder numeric gate.\r\n  Expected: 0\r\n  But was:  417\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.SavedOnnxAudioGpuReferenceTests.Execute (System.String signal, System.String candidateFolder, System.Boolean compensateStatic, System.Int32 attentionChunk, System.Int32 projectionChunk) [0x011d6] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@5001dfebe371\\Tests\\Editor\\SavedOnnxAudioGpuReferenceTests.cs:264 "
+    },
+    "process": {
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        ".\\artifacts\\acceptance-consumer",
+        "-logFile",
+        ".\\artifacts\\numerical-acceptance-state\\scalar-mean-full-gpu-silence-regex-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "EmbeddingGemma.Validation.Tests.SavedOnnxAudioGpuReferenceTests.ScalarMeanCandidateGpuMatchesOriginalGolden.*silence.*",
+        "-testResults",
+        ".\\artifacts\\numerical-acceptance-state\\scalar-mean-full-gpu-silence-regex-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": false,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-14T21:25:54.650098+00:00",
+      "pid": 59904,
+      "exit_code": 2,
+      "elapsed_seconds": 65.05829450000601,
+      "completed_utc": "2026-10-14T21:26:59.708395+00:00"
+    },
+    "nunit": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "evidence": [
+      {
+        "path": "artifacts\\acceptance-consumer\\artifacts\\saved-onnx-audio-gpu-de3a3b02fc5bd1e1ec0739ffa9b9dfdd446f272a-scalar-mean-block16-attention16-static64-silence.json",
+        "bytes": 7182,
+        "sha256": "9b9082ce31b7afdaf5d6c00846baba729758232a392bf51926308d72721b5066"
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\scalar-mean-full-gpu-silence-regex-20261015-process.json",
+        "bytes": 1094,
+        "sha256": "cbb00d53f682e01f0dd254cd815a2055fe905d992f5473f9eb2bda92d130b1a9"
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\scalar-mean-full-gpu-silence-regex-20261015.xml",
+        "bytes": 6460,
+        "sha256": "e599d9898e5528fe12ae9a1e117f50adceae4b596459439a53e21edd7cab704d"
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\scalar-mean-full-gpu-silence-regex-20261015.log",
+        "bytes": 40068,
+        "sha256": "b8a5da3c304b629240aceeaa549273e2ebe279065d95e64ee5e9e1de0ad7f970"
+      }
+    ]
+  },
+  "observation": {
+    "report": {
+      "success": true,
+      "scope": "one_saved_gpu_subsample_observation_only",
+      "runtime_source": "de3a3b02fc5bd1e1ec0739ffa9b9dfdd446f272a",
+      "candidate_source": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+      "requested_backend": "GPUCompute",
+      "stages": [
+        {
+          "stage": "layer0.conv",
+          "mismatches": 0,
+          "exact_difference_count": 0,
+          "numeric_passed": true,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "stage": "layer0.norm",
+          "mismatches": 0,
+          "exact_difference_count": 0,
+          "numeric_passed": true,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "stage": "layer0.act",
+          "mismatches": 0,
+          "exact_difference_count": 0,
+          "numeric_passed": true,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "stage": "layer1.conv",
+          "mismatches": 0,
+          "exact_difference_count": 0,
+          "numeric_passed": true,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "stage": "layer1.norm",
+          "mismatches": 0,
+          "exact_difference_count": 0,
+          "numeric_passed": true,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "stage": "layer1.act",
+          "mismatches": 0,
+          "exact_difference_count": 0,
+          "numeric_passed": true,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "stage": "input_proj_linear",
+          "mismatches": 0,
+          "exact_difference_count": 249203,
+          "numeric_passed": true,
+          "maximum_absolute_error": 7.62939453125e-06,
+          "maximum_tolerance_ratio": 0.13410795869485548,
+          "actual_backend": "GPUCompute"
+        }
+      ],
+      "phase": "completed",
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "graph_sha256": "c050c2efa87d83aea45587b25f7b8d1d24dc471f33cc732dcf17d89588c70c13",
+      "layer_count": 64050,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "bound_outputs": {
+        "layer0.norm": 1717,
+        "layer1.norm": 7624,
+        "layer0.conv": 13,
+        "layer1.conv": 6570,
+        "layer0.act": 1720,
+        "layer1.act": 7627,
+        "input_proj_linear": 7634
+      },
+      "normal_final_matches_observed_bits": true,
+      "capture_directory": ".\\artifacts\\acceptance-consumer\\artifacts\\scalar-mean-subsample-gpu-de3a3b02fc5bd1e1ec0739ffa9b9dfdd446f272a-captures",
+      "first_nonzero_stage": "input_proj_linear",
+      "first_tolerance_exceeding_stage": null,
+      "observation_completed": true
+    },
+    "process": {
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        ".\\artifacts\\acceptance-consumer",
+        "-logFile",
+        ".\\artifacts\\numerical-acceptance-state\\scalar-mean-subsample-observation-gpu-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "ObserveScalarMeanSubsampleOnGpuWithoutChangingNormalFinalBits",
+        "-testResults",
+        ".\\artifacts\\numerical-acceptance-state\\scalar-mean-subsample-observation-gpu-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": true,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-14T21:27:25.197905+00:00",
+      "pid": 38024,
+      "exit_code": 0,
+      "elapsed_seconds": 71.8945226999931,
+      "completed_utc": "2026-10-14T21:28:37.092433+00:00"
+    },
+    "nunit": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "evidence": [
+      {
+        "path": "artifacts\\acceptance-consumer\\artifacts\\scalar-mean-subsample-gpu-de3a3b02fc5bd1e1ec0739ffa9b9dfdd446f272a.json",
+        "bytes": 2937,
+        "sha256": "e18904f411f9952d6617fd762ae1bf4d6dc69b7f249ad81932590e323f00d076"
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\scalar-mean-subsample-observation-gpu-20261015-process.json",
+        "bytes": 1041,
+        "sha256": "d814c84241e3aee3ea32abf451f952a19582d76a0e25b6cad5a10b5d0e3abd88"
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\scalar-mean-subsample-observation-gpu-20261015.xml",
+        "bytes": 4084,
+        "sha256": "7a3e5b738ad1b9b31ab79f630d13f2ddd533f65e3559685953fbb3f910039eef"
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\scalar-mean-subsample-observation-gpu-20261015.log",
+        "bytes": 39876,
+        "sha256": "230c0a8d04934715c462dfa67b740ff67ca80e266f28ea16a2e11e8de1680954"
+      }
+    ]
+  },
+  "no_execution": {
+    "scope": "invalid_filter_no_tests_executed",
+    "accepted": false,
+    "process": {
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        ".\\artifacts\\acceptance-consumer",
+        "-logFile",
+        ".\\artifacts\\numerical-acceptance-state\\scalar-mean-full-gpu-silence-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "ScalarMeanCandidateGpuMatchesOriginalGolden(\"silence\")",
+        "-testResults",
+        ".\\artifacts\\numerical-acceptance-state\\scalar-mean-full-gpu-silence-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": true,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-14T21:23:45.835339+00:00",
+      "pid": 82956,
+      "exit_code": 0,
+      "elapsed_seconds": 53.80545169999823,
+      "completed_utc": "2026-10-14T21:24:39.640794+00:00"
+    },
+    "nunit_total": 0,
+    "exit_zero_does_not_prove_execution": true,
+    "evidence": [
+      {
+        "path": "artifacts\\numerical-acceptance-state\\scalar-mean-full-gpu-silence-20261015-process.json",
+        "bytes": 1019,
+        "sha256": "b00422b0a8572c01eeee8788a330e848a85012230b22804b8b41311a74224ced"
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\scalar-mean-full-gpu-silence-20261015.xml",
+        "bytes": 742,
+        "sha256": "a684a14895d83984d3887ac3ae277044c48edb1d6458c913e274b01b6947f3ba"
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\scalar-mean-full-gpu-silence-20261015.log",
+        "bytes": 46675,
+        "sha256": "f29b8fb8011575ce13a7ba5bf192b650cfbe0e2bd7fac850e837a70da5c10f0b"
+      }
+    ]
+  },
+  "stage_timings_ms": {
+    "asset_and_model_load": 2094.183,
+    "runtime_graph_transforms": 19245.1899,
+    "worker_creation": 101.58420000000001,
+    "input_and_audit_preparation": 24.4224,
+    "cpu_schedule": 10430.9102,
+    "gpu_completion_and_output_download": 661.1861
+  },
+  "performance_limits": [
+    "diagnostic expanded graph, not production baseline",
+    "CPU schedule may overlap GPU execution; completion/download is not total GPU compute time",
+    "cold import 16.8049945 seconds was from earlier zero-test invocation",
+    "Mono editor_peak_working_set_bytes returned zero and is unavailable, not zero memory usage"
+  ],
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "next_numeric_boundary": "original exact subsample.layer1.act -> input_proj_linear",
+  "ownership_and_leak_acceptance": false,
+  "remaining": [
+    "audio all six signals and both profiles",
+    "image FP32 all three profiles",
+    "real PCM/Texture to normalized768 API all roles/masks/boundaries/dispose/reuse/text",
+    "no product intermediate readback or CPU computation fallback"
+  ]
+}

@@ -99,6 +99,7 @@ jobs:
           path: |
             artifacts/audio-role-reference/**/*.json
             artifacts/audio-role-reference/**/*-features-fp32.bin
+            artifacts/audio-role-reference/**/*-actual-fp32.bin
             artifacts/fixed-audio-native/range-receipt.json
             artifacts/fixed-document-backbone/range-receipt.json
           compression-level: 0

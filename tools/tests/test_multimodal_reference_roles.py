@@ -3,6 +3,7 @@ import json
 import numpy as np
 import pytest
 import torch
+from transformers import AutoTokenizer
 
 from embeddinggemma_tools import __main__ as cli, audio_embeddings, image_embeddings, model, prepare
 from test_audio_embeddings import source as audio_source
@@ -21,8 +22,9 @@ def image_fixture(tmp_path_factory):
         yield image_source(tmp_path_factory.mktemp("image-role-source"), patch)
 
 
-def assert_role(reference, role):
+def assert_role(reference, role, snapshot):
     assert reference["metadata"]["role"] == role
+    tokenizer = AutoTokenizer.from_pretrained(snapshot, local_files_only=True)
     for row in reference["cases"]:
         assert row["role"] == role
         if role == "query":
@@ -31,6 +33,9 @@ def assert_role(reference, role):
             assert row["formatted_text"].startswith("title: none | text: ")
         else:
             assert not row["formatted_text"].startswith(("title: none | text: ", "task: search result | query: "))
+        independent = tokenizer(row["formatted_text"], padding="max_length", max_length=len(row["input_ids"]), truncation=False)
+        assert row["input_ids"] == independent["input_ids"]
+        assert row["attention_mask"] == independent["attention_mask"]
 
 
 @pytest.mark.parametrize("role", ["query", "raw", "document"])
@@ -41,7 +46,7 @@ def test_audio_reference_role_and_final_vectors_match_independent_official_forwa
         revision=prepare.MODEL_REVISION, source_commit="b" * 40, role=role)
     reference = json.loads((output / "audio-embedding-reference.json").read_text())
     source = json.loads((encoder / "audio-encoder-reference.json").read_text())
-    assert_role(reference, role)
+    assert_role(reference, role, snapshot)
     core = model.load_audio_embedding_model(snapshot)
     for row in reference["cases"]:
         spec = source["profiles"][row["profile"]]
@@ -63,7 +68,7 @@ def test_image_reference_role_and_final_vectors_match_independent_official_forwa
     report = image_embeddings.prepare_image_embeddings(snapshot, vision, output, sequence_length=32,
         revision="a" * 40, source_commit="b" * 40, role=role)
     reference = json.loads((output / "image-embedding-reference.json").read_text())
-    assert_role(reference, role)
+    assert_role(reference, role, snapshot)
     core = model.load_image_embedding_model(snapshot)
     for row in reference["cases"]:
         pixels = torch.from_numpy(np.fromfile(vision / row["pixels"], "<f4").copy().reshape(1, 18, 12))

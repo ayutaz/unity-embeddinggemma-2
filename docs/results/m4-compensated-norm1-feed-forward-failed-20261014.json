@@ -1,0 +1,100 @@
+{
+  "end_to_end_validated": false,
+  "passed": 0,
+  "scope": "compensated_centered_norm1_silence_feed_forward_failed",
+  "failed": 2,
+  "exit_code": 2,
+  "skipped": 0,
+  "full_encoder_validated": false,
+  "source": "c96b5349c47ed270c2a761fec5a8e045f4f33c91",
+  "conditions": [
+    {
+      "report_sha256": "fbc92b21bd8890f7e655913afc63c611129c10a81d6bbd56a5e5533b1d5f3d81",
+      "backend": "CPU",
+      "success": false,
+      "final_bits_preserved": true,
+      "stages": [
+        {
+          "stage": "subsample",
+          "mismatches": 0,
+          "maximum_absolute_error": 1.9073486328125E-05,
+          "maximum_tolerance_ratio": 0.3941506298457008
+        },
+        {
+          "stage": "pre_layer_norm",
+          "mismatches": 0,
+          "maximum_absolute_error": 5.424022674560547E-06,
+          "maximum_tolerance_ratio": 0.22515706237234326
+        },
+        {
+          "stage": "ffw_layer_1",
+          "mismatches": 0,
+          "maximum_absolute_error": 8.106231689453125E-06,
+          "maximum_tolerance_ratio": 0.6530708814454231
+        },
+        {
+          "stage": "act_fn",
+          "mismatches": 0,
+          "maximum_absolute_error": 7.62939453125E-06,
+          "maximum_tolerance_ratio": 0.3493665805948189
+        },
+        {
+          "stage": "ffw_layer_2",
+          "mismatches": 0,
+          "maximum_absolute_error": 1.049041748046875E-05,
+          "maximum_tolerance_ratio": 0.3370862771780201
+        },
+        {
+          "stage": "post_layer_norm",
+          "mismatches": 1,
+          "maximum_absolute_error": 7.2479248046875E-05,
+          "maximum_tolerance_ratio": 1.942927054009115
+        }
+      ]
+    },
+    {
+      "report_sha256": "5f84afdb2d49403be350245f3b766dabe0fc7ed34c7923e759056306b290f8c0",
+      "backend": "GPUCompute",
+      "success": false,
+      "final_bits_preserved": true,
+      "stages": [
+        {
+          "stage": "subsample",
+          "mismatches": 0,
+          "maximum_absolute_error": 1.52587890625E-05,
+          "maximum_tolerance_ratio": 0.3522835929894711
+        },
+        {
+          "stage": "pre_layer_norm",
+          "mismatches": 0,
+          "maximum_absolute_error": 3.337860107421875E-06,
+          "maximum_tolerance_ratio": 0.12676820552910922
+        },
+        {
+          "stage": "ffw_layer_1",
+          "mismatches": 0,
+          "maximum_absolute_error": 5.4836273193359375E-06,
+          "maximum_tolerance_ratio": 0.17692509620907376
+        },
+        {
+          "stage": "act_fn",
+          "mismatches": 0,
+          "maximum_absolute_error": 4.5299530029296875E-06,
+          "maximum_tolerance_ratio": 0.09456539023619158
+        },
+        {
+          "stage": "ffw_layer_2",
+          "mismatches": 0,
+          "maximum_absolute_error": 2.86102294921875E-06,
+          "maximum_tolerance_ratio": 0.11231694892445614
+        },
+        {
+          "stage": "post_layer_norm",
+          "mismatches": 1,
+          "maximum_absolute_error": 6.866455078125E-05,
+          "maximum_tolerance_ratio": 2.2225510444617806
+        }
+      ]
+    }
+  ]
+}

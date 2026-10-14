@@ -18,10 +18,10 @@ namespace EmbeddingGemma.Validation.Tests
         {
             var root = Path.GetFullPath(Path.Combine(Application.dataPath, "../../k/artifacts/audio-real-chain"));
             var nativeRoot = Path.GetFullPath(Path.Combine(Application.dataPath, "../../numerical-acceptance-state/subsample-native-replay"));
-            var output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/compensated-norm1-subsample-results"));
+            var output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/norm1-reciprocal-subsample"));
             Directory.CreateDirectory(output);
             var stages = new JArray();
-            var report = new JObject { ["scope"] = "silence_compensated_norm1_subsample_observation_only", ["success"] = false,
+            var report = new JObject { ["scope"] = "silence_compensated_norm1_reciprocal_subsample_observation_only", ["success"] = false,
                 ["observation_completed"] = false, ["runtime_source"] = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE"),
                 ["native_replay_source"] = "e868446e44fb96494605b61b99f86cf3a5f5f973",
                 ["requested_backend"] = backend.ToString(), ["stages"] = stages, ["unity"] = Application.unityVersion,
@@ -131,5 +131,3 @@ namespace EmbeddingGemma.Validation.Tests
         static void HashCheck(string path, string expected) => Assert.That(Hash(path), Is.EqualTo(expected));
     }
 }
-
-

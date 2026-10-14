@@ -1,0 +1,10 @@
+{
+  "deselected": 14,
+  "scope": "role_reference_feature_drift_diagnostics_green",
+  "command": "uv run pytest tests/test_multimodal_reference_roles.py -k feature_drift -q --tb=short",
+  "failed": 0,
+  "real_context_validated": false,
+  "passed": 2,
+  "expected_unchanged": true,
+  "source_base": "aedf4927ccd5f6b76c3461c72f659e241405be99"
+}

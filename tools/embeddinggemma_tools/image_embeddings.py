@@ -16,6 +16,7 @@ from . import export
 from .model import load_image_embedding_model
 from .text import format_text
 from .backbone_reuse import audit_backbone_source, validate_reuse_destination
+from .reference_context_failure import record_feature_drift
 
 
 def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequence_length=1024, revision, source_commit,
@@ -117,6 +118,8 @@ def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequenc
                 expected=torch.nn.functional.normalize(native.last_hidden_state[:,mask[0].bool()].mean(dim=1),dim=-1)
                 golden_features=torch.tensor(original["features"])
                 if features.shape!=golden_features.shape or not torch.allclose(features,golden_features,rtol=1e-4,atol=1e-5):
+                    record_feature_drift(destination, "image", features, golden_features, role=role, profile=profile,
+                                         case=original["id"], source_commit=source_commit, input_source_commit=vision_source_commit)
                     raise ValueError("Official image embedding reference changed the encoder features")
                 audio=torch.empty(0,core.config.text_config.hidden_size)
                 wrapper.validate_inputs(ids,mask,features,audio)

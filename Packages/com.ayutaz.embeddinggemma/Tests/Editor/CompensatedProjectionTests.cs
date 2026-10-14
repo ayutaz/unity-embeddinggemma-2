@@ -46,6 +46,13 @@ namespace EmbeddingGemma.Tests
             Assert.Throws<ArgumentOutOfRangeException>(() => BuildForShape(new[] { 1f }, 1, 1, new[] { 1, 0, 1 }));
         }
 
+        [Test] public void VisionSizedOutputUsesOnlyScalarZerosAndBlockWeights()
+        {
+            var model = BuildForShape(Enumerable.Repeat(1f, 4 * 3072).ToArray(), 3072, 2, new[] { 1, 2520, 4 });
+            Assert.That(model.constants.Max(value => value.lengthBytes), Is.LessThanOrEqualTo(2 * 3072 * 4),
+                "Output-sized zero constants must not enter the GPU upload path.");
+        }
+
         static Model BuildClipped(float[] weights, int columns, int chunk, int[] shape, float[] bounds)
         {
             var method = typeof(CompensatedProjection).GetMethod("BuildClipped");

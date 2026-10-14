@@ -22,6 +22,11 @@ namespace EmbeddingGemma.Validation.Tests
         public void OriginalInputProjectionMustMatchAllSavedNativeBitsOnGpu()
             => Execute("FrozenInputProjectionProbe","projection","frozen-input-projection","one_original_280_row_input_projection_gpu_bits_only");
 
+        [TestCase("ffw_layer_1")]
+        [TestCase("ffw_layer_2")]
+        public void OriginalFirstFeedForwardProjectionMustMatchSavedNativeBitsOnGpu(string part)
+            => Execute("FrozenFirstFeedForward-"+part,"projection","frozen-first-ff-"+part,"one_original_first_feed_forward_projection_gpu_bits_only");
+
         void Execute(string folder,string graph,string reportStem,string scope)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
@@ -51,6 +56,15 @@ namespace EmbeddingGemma.Validation.Tests
                     Assert.That(spec.Value<string>("weight_sha256"),Is.EqualTo("a59650e614c2746ee18bbb23c475f65677beeb9ffe49350854af2aad873052a1"));
                     Assert.That(spec["input_shape"].ToObject<int[]>(),Is.EqualTo(new[]{1,280,1024}));
                 }
+                if(folder.StartsWith("FrozenFirstFeedForward-",StringComparison.Ordinal))
+                {
+                    var first=folder.EndsWith("ffw_layer_1",StringComparison.Ordinal);
+                    Assert.That(spec.Value<bool>("all_original_rows_preserved"),Is.True);
+                    Assert.That(spec.Value<string>("native_report_sha256"),Is.EqualTo("99529dc0fa6c74825b23fca653d82091797ff1e5267d26c5cdae723fcf86f501"));
+                    Assert.That(spec.Value<string>("original_expected_sha256"),Is.EqualTo(first?"e5ac1da2d80e0013714a5be3e3336272bc954176baf71bd932107db62b8318b4":"efafce302f7c558de3f9d62778a6be2d419d841e98a4a797e79ee7222fce1686"));
+                    Assert.That(spec.Value<string>("weight_sha256"),Is.EqualTo(first?"d598344ee23d0545a76fa6d95173fbc886e8f2dd46d5907e6bd50b6cfa4891df":"50ff67bc3a9a8704f925183042667884c6a2114de99565c2fa93f79570bd77b6"));
+                    Assert.That(spec["input_shape"].ToObject<int[]>(),Is.EqualTo(new[]{1,280,first?1024:4096}));
+                }
                 foreach(var file in (JObject)spec["files"])
                 {
                     var path=Path.Combine(root,file.Key);using var stream=File.OpenRead(path);
@@ -58,7 +72,7 @@ namespace EmbeddingGemma.Validation.Tests
                     Assert.That(new FileInfo(path).Length,Is.EqualTo(file.Value.Value<long>("bytes")));
                 }
                 var model=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/"+folder+"/"+graph+".onnx"));
-                if(folder=="FrozenInputProjectionProbe" && variant=="static64")
+                if((folder=="FrozenInputProjectionProbe" || folder.StartsWith("FrozenFirstFeedForward-",StringComparison.Ordinal)) && variant=="static64")
                     model=CompensatedModel.Create(model,64);
                 report["layer_count"]=model.layers.Count;
                 using var worker=new Worker(model,BackendType.GPUCompute);

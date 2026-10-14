@@ -1,0 +1,43 @@
+{
+  "scope": "real_document_pcm_candidate_chain_final_vectors",
+  "consumer_requested_and_resolved_sha": "9c6f7943ca6319849dd3db54611acc477e7d0981",
+  "runtime_source_overlay": false,
+  "reference_producer": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "harness_commit": "da5e8f0c3cd796f675350038aac7621d9e0f3b60",
+  "guard_red_commit": "6d4f3f8586e7f72ec26b5f66326c157d4610599e",
+  "guard_green_commit": "c10a173feb88bed4331c1f4b6f6a87a31b051445",
+  "source_pcm_and_completion_guard": {
+    "red": {"passed": 0, "failed": 17, "skipped": 0, "cli_exit_code": 1, "sha256": "bd02096833d4c845b9c2a44c2a6d7a8cdb051635f3fcb00d617b99a19ac0e027"},
+    "green": {"passed": 17, "failed": 0, "skipped": 0, "cli_exit_code": 0, "sha256": "f2501395b657ad0e14a7e7ff72ef585e66512495b15346e36ac341045e806c4b"}
+  },
+  "failure_diagnostic_guard": {
+    "red_commit": "a3cc4c2daf27ff9df7b160d21b06701e46d2be48",
+    "green_commit": "00c30e7f1d1460ad2f79ee3ddca4f0f2ede59f51",
+    "red": {"passed": 17, "failed": 2, "skipped": 0, "cli_exit_code": 1, "sha256": "28335f8bc8a41f5a0f98495661f7c2bd0ed55700d967fd30ca57a3a136da1bce"},
+    "green": {"passed": 19, "failed": 0, "skipped": 0, "cli_exit_code": 0, "sha256": "5e9ee80f9e82d9e23ce1bfc5a796c53db13c086fa35fa429818a0eda8347139d"}
+  },
+  "unchanged_cng_hash_helper": {"source_main_commit": "92eda69bebe87bcd1d965f6ce2d12d435d43bb13", "passed": 7, "failed": 0, "skipped": 0, "sha256": "0d25882cd56c415619e755b9bc7fbc3429096da1ad516ae1b35623b6df88d243"},
+  "compile": {"errors": 0, "warnings": 0, "sha256": "b20aaa9e6a36d5a0933e32aeb8916f99af80e130ef6468b3572c50240086ce5e"},
+  "actual_chain": {
+    "nunit": {"passed": 3, "failed": 1, "skipped": 0, "cli_exit_code": 1, "completed_utc": "2026-10-13T14:25:33.2465319Z", "sha256": "e88eff6ca46132b382257a21378073c8e04b5f5be27d10844439c8ac19b5e11a"},
+    "result_file": "m4-audio-real-chain-windows-failed-20261013.json",
+    "result_sha256": "97a0b2cf49c9d9dd71015fa562a36fd9e54f3245139e9e655c65f85ef9186c67",
+    "planned_vectors": 24,
+    "accepted_vectors": 20,
+    "failed_before_vector_return": "float16_weights/GPUCompute/sine: Exported embedding is not L2 normalized.",
+    "not_executed_after_failure": ["float16_weights/GPUCompute/nyquist", "float16_weights/GPUCompute/noise", "float16_weights/GPUCompute/padded_noise"],
+    "preprocessing_stage": {"passed": 12, "failed": 0, "mask_exact": true, "maximum_absolute_error": 0.0038890838623046875, "maximum_tolerance_ratio": 0.8301271504209226, "diagnostic_readbacks_separate_from_api_route": true},
+    "encoder_python_gate_passed": false,
+    "encoder_sentis_gate_status": "not_executed_for_current_producer",
+    "end_to_end_validated": false
+  },
+  "unity": "6000.3.21f1",
+  "sentis": "2.6.1",
+  "test_framework": "1.6.0 embedded",
+  "editor_process_count": 1,
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "original_failure_tensor_statistics": "not_recorded; diagnostic capture added after two intended assertion failures",
+  "tolerances_relaxed": false,
+  "release_created": false
+}

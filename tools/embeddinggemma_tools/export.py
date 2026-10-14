@@ -182,6 +182,285 @@ def export_vision_pt2(wrapper, pixels, destination):
     _save_program(wrapper.eval(), (pixels,), destination)
 
 
+class _AudioAttentionExport(nn.Module):
+    """Official relative chunk attention with static Gather replacing Unfold."""
+
+    def __init__(self, attention, sequence_length):
+        super().__init__()
+        self.attention = attention
+        blocks = (sequence_length + attention.chunk_size - 1) // attention.chunk_size
+        self.register_buffer("context_indices", torch.arange(blocks)[:, None] * attention.chunk_size
+                             + torch.arange(attention.context_size)[None, :])
+        # This learned coefficient is constant for an inference export. Native
+        # Softplus and its Core ATen log1p(exp(x)) decomposition differ in FP32
+        # rounding; preserve the official value before graph decomposition.
+        # Keep the two query multiplications in their original order.
+        self.register_buffer("per_dimension_query_scale",
+                             torch.nn.functional.softplus(attention.per_dim_scale.detach()).clone())
+
+    def context(self, hidden):
+        attention = self.attention
+        padded = torch.nn.functional.pad(hidden, (0, 0, 0, 0, attention.max_past_horizon,
+                                                   attention.max_future_horizon + attention.chunk_size - 1))
+        return padded[:, self.context_indices].contiguous()
+
+    def forward(self, hidden, positions, mask):
+        attention = self.attention
+        batch, length, _ = hidden.shape
+        shape = (batch, length, attention.num_heads, attention.head_dim)
+        query = attention.q_proj(hidden).float().view(shape)
+        query = query * attention.q_scale * self.per_dimension_query_scale
+        query = attention._convert_to_block(query)
+        key = self.context(attention.k_proj(hidden).float().view(shape) * attention.k_scale)
+        value = self.context(attention.v_proj(hidden).float().view(shape))
+        relative = attention.relative_k_proj(positions).view(-1, attention.num_heads, attention.head_dim)
+        queries = query.permute(0, 3, 1, 2, 4)
+        content = queries @ key.permute(0, 3, 1, 4, 2)
+        bias = queries.reshape(batch, attention.num_heads, -1, attention.head_dim) @ relative.permute(1, 2, 0)
+        bias = attention._rel_shift(bias.reshape(batch, attention.num_heads, query.shape[1], attention.chunk_size, -1))
+        logits = torch.tanh((content + bias) / attention.softcap) * attention.softcap
+        logits = logits.masked_fill(~mask, attention.config.attention_invalid_logits_value)
+        probabilities = torch.nn.functional.softmax(logits, dim=-1, dtype=torch.float32).to(value.dtype)
+        output = (probabilities @ value.permute(0, 3, 1, 2, 4)).permute(0, 2, 3, 1, 4)
+        output = output.reshape(batch, query.shape[1] * attention.chunk_size, -1)[:, :length].contiguous()
+        return attention.post(output.to(hidden.dtype))
+
+
+class AudioEncoderExport(nn.Module):
+    """Fixed prefix-mask audio encoder + projector, not final embeddings.
+
+    Host validation is outside the saved graph. Unity must enforce the same
+    finite FP32 features / zero right-padding and fixed frame-mask profile.
+    """
+
+    def __init__(self, audio, projection, frame_mask):
+        super().__init__()
+        if audio.config._attn_implementation != "sdpa":
+            raise ValueError("audio export reference requires the official sdpa boolean-mask semantics")
+        if (frame_mask.dtype != torch.int64 or frame_mask.ndim != 2 or frame_mask.shape[0] != 1
+                or frame_mask.shape[1] == 0 or not torch.all((frame_mask == 0) | (frame_mask == 1))
+                or not frame_mask.any() or torch.any(frame_mask[:, 1:] > frame_mask[:, :-1])):
+            raise ValueError("audio profile requires a nonempty batch-one int64 binary prefix mask")
+        self.audio = audio
+        self.projection = projection
+        self.feature_shape = (1, frame_mask.shape[1], audio.config.subsampling_conv_channels[0])
+        self.register_buffer("frame_mask", frame_mask.clone())
+        output_mask = frame_mask[:, ::4].bool()
+        length = output_mask.shape[1]
+        self.feature_count = int(output_mask.sum())
+        chunk = audio.config.attention_chunk_size
+        past = audio.config.attention_context_left - 1
+        future = audio.config.attention_context_right
+        blocks = (length + chunk - 1) // chunk
+        queries = torch.arange(blocks)[:, None, None] * chunk + torch.arange(chunk)[None, :, None]
+        keys = torch.arange(blocks)[:, None, None] * chunk + torch.arange(chunk + past + future)[None, None, :] - past
+        distance = queries - keys
+        valid_keys = (keys >= 0) & (keys < length) & output_mask[0, keys.clamp(0, length - 1)]
+        allowed = ((distance >= 0) & (distance < past)) | ((distance < 0) & (-distance < future))
+        self.register_buffer("blocked_mask", (valid_keys & (queries < length) & allowed)[None, None])
+        self.attentions = nn.ModuleList(_AudioAttentionExport(layer.self_attn, length) for layer in audio.layers)
+        self.eval()
+
+    def validate_inputs(self, features):
+        if features.dtype != torch.float32 or features.shape != self.feature_shape or not torch.isfinite(features).all():
+            raise ValueError("audio features must match the finite float32 profile")
+        if features.device != self.frame_mask.device or torch.any(features[self.frame_mask == 0] != 0):
+            raise ValueError("audio features require the same device and zero right padding")
+
+    def forward(self, features):
+        return self._forward(features, collect_stages=False)
+
+    def _forward(self, features, *, collect_stages, detail_layer=None):
+        if not torch.compiler.is_compiling():
+            self.validate_inputs(features)
+        hidden, _ = self.audio.subsample_conv_projection(features, self.frame_mask.bool())
+        stages = [hidden] if collect_stages else []
+        positions = self.audio.rel_pos_enc(hidden)
+        for index, (layer, attention) in enumerate(zip(self.audio.layers[:self.audio.config.num_hidden_layers], self.attentions)):
+            detailed = collect_stages and index == detail_layer
+            cap = min(layer.gradient_clipping, torch.finfo(layer.norm_pre_attn.weight.dtype).max)
+            hidden = layer.feed_forward1(hidden)
+            if detailed:
+                stages.append(hidden)
+            residual = hidden
+            hidden = layer.norm_pre_attn(hidden.clamp(-cap, cap))
+            if detailed:
+                stages.append(hidden)
+            hidden = attention(hidden, positions, self.blocked_mask)
+            if detailed:
+                stages.append(hidden)
+            hidden = layer.norm_post_attn(hidden.clamp(-cap, cap))
+            if detailed:
+                stages.append(hidden)
+            hidden = layer.lconv1d(hidden + residual)
+            if detailed:
+                stages.append(hidden)
+            hidden = layer.feed_forward2(hidden)
+            if detailed:
+                stages.append(hidden)
+            hidden = layer.norm_out(hidden.clamp(-cap, cap))
+            if collect_stages:
+                stages.append(hidden)
+        hidden = self.audio.output_proj(hidden)
+        projected = self.projection(hidden)[0, :self.feature_count]
+        if collect_stages:
+            return tuple([*stages, hidden, projected])
+        return projected
+
+
+class AudioSubsampleStagesExport(nn.Module):
+    """Failure-only fixed-profile trace of the official subsample module."""
+
+    stage_names = tuple(f"layer{index}.{part}" for index in (0, 1)
+                        for part in ("masked_input", "conv", "norm", "relu")) + ("projection_input", "projection")
+
+    def __init__(self, module, input_shape, frame_mask):
+        super().__init__()
+        self.module = module
+        self.feature_shape = tuple(input_shape)
+        self.register_buffer("frame_mask", frame_mask.clone())
+        self.eval()
+
+    def validate_inputs(self, features):
+        if (features.dtype != torch.float32 or tuple(features.shape) != self.feature_shape
+                or not torch.isfinite(features).all() or features.device != self.frame_mask.device
+                or torch.any(features[self.frame_mask == 0] != 0)):
+            raise ValueError("subsample features require the fixed finite float32 profile and zero padding")
+
+    def forward(self, features):
+        if not torch.compiler.is_compiling():
+            self.validate_inputs(features)
+        hidden, frame_mask, stages = features.unsqueeze(1), self.frame_mask.bool(), []
+        for layer in (self.module.layer0, self.module.layer1):
+            hidden = hidden * frame_mask[:, None, :, None]
+            stages.append(hidden)
+            hidden = layer.conv(hidden.to(layer.conv.weight.dtype))
+            stages.append(hidden)
+            normalized = layer.norm(hidden.permute(0, 2, 3, 1))
+            stages.append(normalized)
+            hidden = layer.act(normalized.permute(0, 3, 1, 2).contiguous())
+            stages.append(hidden)
+            frame_mask = frame_mask[:, ::2]
+        batch, _, length, _ = hidden.shape
+        hidden = hidden.permute(0, 2, 3, 1).contiguous().reshape(batch, length, -1)
+        return (*stages, hidden, self.module.input_proj_linear(hidden))
+
+
+class AudioEncoderStagesExport(AudioEncoderExport):
+    """Failure-only trace using the same numerical path as the normal export."""
+
+    detail_parts = ("feed_forward1", "norm_pre_attn", "self_attn", "norm_post_attn", "lconv1d", "feed_forward2")
+
+    def __init__(self, audio, projection, frame_mask, *, detail_layer=None):
+        if detail_layer is not None and (type(detail_layer) is not int or not 0 <= detail_layer < audio.config.num_hidden_layers):
+            raise ValueError("audio detail layer must be an existing integer layer index")
+        super().__init__(audio, projection, frame_mask)
+        self.detail_layer = detail_layer
+
+    @property
+    def stage_names(self):
+        names = ["subsample"]
+        for index in range(self.audio.config.num_hidden_layers):
+            if index == self.detail_layer:
+                names.extend(f"layer_{index}.{part}" for part in self.detail_parts)
+            names.append(f"layer_{index}")
+        return (*names, "output_projection", "projected_features")
+
+    def forward(self, features):
+        return self._forward(features, collect_stages=True, detail_layer=self.detail_layer)
+
+
+class AudioFeedForwardStagesExport(nn.Module):
+    """Small failure-only trace; preserve values before native in-place updates."""
+
+    stage_names = ("clamp_input", "pre_layer_norm", "ffw_layer_1", "activation", "ffw_layer_2",
+                   "clamp_output", "post_layer_norm", "post_layer_scale", "residual_output")
+
+    def __init__(self, module, input_shape):
+        super().__init__()
+        self.module = module
+        self.input_shape = tuple(input_shape)
+        self.eval()
+
+    def validate_inputs(self, hidden):
+        if (hidden.dtype != torch.float32 or tuple(hidden.shape) != self.input_shape
+                or hidden.device != self.module.pre_layer_norm.weight.device or not torch.isfinite(hidden).all()):
+            raise ValueError("audio feed-forward input must match the finite float32 native profile")
+
+    def forward(self, hidden):
+        if not torch.compiler.is_compiling():
+            self.validate_inputs(hidden)
+        residual = hidden
+        cap = min(self.module.gradient_clipping, torch.finfo(hidden.dtype).max)
+        hidden = hidden.clamp(-cap, cap)
+        values = [hidden.clone()]
+        hidden = self.module.pre_layer_norm(hidden)
+        values.append(hidden.clone())
+        hidden = self.module.ffw_layer_1(hidden)
+        values.append(hidden.clone())
+        hidden = self.module.act_fn(hidden)
+        values.append(hidden.clone())
+        hidden = self.module.ffw_layer_2(hidden)
+        values.append(hidden.clone())
+        hidden = hidden.clamp(-cap, cap)
+        values.append(hidden.clone())
+        hidden = self.module.post_layer_norm(hidden)
+        values.append(hidden.clone())
+        hidden *= self.module.post_layer_scale
+        values.append(hidden.clone())
+        hidden += residual
+        return tuple([*values, hidden])
+
+
+def export_audio_pt2(wrapper, features, destination):
+    # Keep the native kernel for Python accuracy. Sentis imports the standard
+    # Swish ONNX companion, not this native-reference Torch program.
+    export_audio_native_pt2(wrapper,features,destination)
+
+
+def export_audio_native_pt2(wrapper, features, destination):
+    """Retain the actual CPU SiLU operation for the independent Python gate."""
+    wrapper.validate_inputs(features)
+    from torch._decomp import core_aten_decompositions
+    decompositions=core_aten_decompositions()
+    decompositions.pop(torch.ops.aten.silu.default,None)
+    _save_program(wrapper.eval(),(features,),destination,decompositions=decompositions)
+
+
+def export_audio_native_onnx(wrapper, features, destination):
+    """Bridge the legacy export limit to standard Swish without runtime plugins."""
+    import tempfile
+    import onnx
+    destination=Path(destination)
+    destination.parent.mkdir(parents=True,exist_ok=True)
+    domain="com.ayutaz.export"
+    def silu_symbolic(graph, value):
+        return graph.op(domain+"::NativeSiLU",value).setType(value.type())
+    torch.onnx.register_custom_op_symbolic("aten::silu",silu_symbolic,20)
+    try:
+        with tempfile.TemporaryDirectory(prefix="audio-onnx-",dir=destination.parent) as directory:
+            if not Path(directory).resolve().is_relative_to(destination.parent.resolve()):
+                raise ValueError("ONNX temporary path escaped the output directory")
+            intermediate=Path(directory)/"intermediate.onnx"
+            with torch.no_grad():
+                torch.onnx.export(wrapper.eval(),(features,),intermediate,dynamo=False,opset_version=20,
+                    input_names=["input"],output_names=["output"],custom_opsets={domain:1})
+            model=onnx.load(intermediate)
+            model=onnx.version_converter.convert_version(model,24)
+            for node in model.graph.node:
+                if node.domain==domain and node.op_type=="NativeSiLU":
+                    node.domain="";node.op_type="Swish"
+                elif node.domain not in ("","ai.onnx"):
+                    raise ValueError("Audio ONNX export retained a nonstandard runtime domain")
+            imports=[item for item in model.opset_import if item.domain!=domain]
+            del model.opset_import[:]
+            model.opset_import.extend(imports)
+            onnx.checker.check_model(model)
+            onnx.save_model(model,destination)
+    finally:
+        torch.onnx.unregister_custom_op_symbolic("aten::silu",20)
+
+
 def export_pt2(
     model: nn.Module, input_ids: torch.Tensor, attention_mask: torch.Tensor, destination: Path
 ) -> None:
@@ -194,10 +473,10 @@ def export_multimodal_pt2(wrapper, input_ids, attention_mask, image_features, au
     _save_program(wrapper.eval(), (input_ids, attention_mask, image_features, audio_features), destination)
 
 
-def _save_program(wrapper, inputs, destination):
+def _save_program(wrapper, inputs, destination, *, decompositions=None):
     with torch.no_grad():
         program = torch.export.export(wrapper, inputs)
-        program = program.run_decompositions()
+        program = program.run_decompositions(decompositions)
     # Sentis' Torch JSON reader stores graph scalar integers as System.Int32.
     # Core ATen uses INT64_MAX for open-ended slices, even on fixed-size inputs.
     def clamp_scalar(value):

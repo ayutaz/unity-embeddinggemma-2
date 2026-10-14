@@ -17,6 +17,8 @@ Draft [PR #60](https://github.com/ayutaz/unity-embeddinggemma-2/pull/60)の確�
 
 A1 / A3の前処理exportと参照・必須Actions gateはTDD実装し、PR #38 / #46をmainへ統合した。[係数・許容差の根拠](m4-audio-preprocessing-validation.md)。35 redから前処理契約を満たし、監査 / 回帰を含め110 passed / skip 0。Windows UnityはCPU / 実GPU各6信号、保存 / 再読込、mask完全一致が合格。最大絶対誤差は両backendとも `0.0038890838623046875`、GPU計算 / 入力fallbackとreadback flushは0件。[実行条件・診断readback・未達範囲](m4-audio-preprocessing-sentis-validation.md)。製品PCM Runtime APIと本番GPU連結、音声encoder以降、他OSの成功とは分ける。
 
+A1 / A4の音声encoder / projector固定profile exportと独立PCM参照・必須Actions gateをTDDで実装した。[実装と参照設定・検証範囲](m4-audio-encoder-validation.md)。encoder20 red、SDPA契約2 red、参照 / CLI8 red、workflow1 redを観測し、最終の関連小さい回帰145 passed / skip 0。実重みActionsとSentis・A5以降は別gateとして残す。
+
 ### 直近のTDD順序
 
 PCM境界PR #48と前処理Runtime PR #50はmainへ統合済み。A2 / A3の固定入力・前処理単独と次段検証graphへのGPU受け渡しは受け入れ済みで、A4以降は未完了。音声encoderの数値差修正 → 実encoder / 共通本体への接続 → 最終API → 検索 / 再生 / 明示収録sample → Playerを、各契約のred → 最小実装 → greenの順で進める。M3の独立した前処理実装はこの修正待ちで止めない。
@@ -31,6 +33,10 @@ PCM境界PR #48と前処理Runtime PR #50はmainへ統合済み。A2 / A3の固�
 追加の重みを使わない調査の作業ブランチ `9f51b198e1a8e982b89328401827a394635dac48`ではvector比較2件がredだった。Draft PR #60のnative SiLU保持・標準ONNX Swish変換は追加4 + 2 + 1 redから実装し、以前の2件を含む関連58 passed。ONNX数値gateの2 redから関連43 / feed-forward17 green。[実モデルCI 38362823692](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38362823692)はONNX silence不合格で、最大差0.00013065338134765625 / 許容差比3.971386671066284 / 292要素不一致。producer `cb7f2b00e8135d016c55ef8e00adfe9faafa387b`とhead `05b48e6a2aa363d229f7eb18c163f9d5c19c94b4`を区別する。次は不合格を保持するONNX stage診断をTDD追加し、元graph / 参照と一致した文脈で原因修正へ進む。元6信号全体・Sentis encoderの合格はまだ証明していない。
 
 PR #57の[重みなしnative SiLU / 標準Swish probe](results/m4-native-silu-swish-probe-windows-20261013.json)はmainへ統合済みで、CPU / 実GPU × 2 shape全4条件が固定許容差内。GPUの全値完全一致は要求・主張していない。この単独probeをfull encoderの成功へ流用しない。公式prompt / mask契約もPR #55で統合済み。次はnative保存参照と標準ONNXの構造・数値照合、Sentis保存 / 再読込・元6信号、GPU前処理 → 実encoder → 共通本体の連結、AudioEmbedder相当API、検索 / 再生 / 明示収録、Playerの順に各契約をTDDで受け入れる。
+
+[段階別実モデルCI 38324421389](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38324421389)は不合格で完了。subsampleは完全一致、`layer_0`から小さい差があり、許容差を最初に超えるのは`layer_10`。診断graphと元の不合格graphの最終値は完全一致した。層内診断は小さいTDDで追加済み。次は実重みActionsで原因演算を特定し、元の固定数値条件へ戻す。[全stageと未検証ケース](m4-audio-encoder-validation.md)。
+
+Feed-forward診断は追加16 red → 16 green、余分なexportを防ぐ追加1 red → 関連76 greenまで実装した。[TDDの証拠](results/m4-audio-feed-forward-tdd-20261013.json)。公式入力・各演算の値と単独対full stage一致を比較する。実重みでの原因演算と元の6信号合格は未確認であり、次のActionsで判定する。PR #43は全8 CI成功後にmainへ統合済み。合成featureのbackbone単独と、実音声encoder連結の未完了を分ける。
 
 ## 範囲と参照固定
 

@@ -1,8 +1,14 @@
 # 現在の状態と残タスク
 
-更新日: 2026-10-15。最新の完了済み実GPU全encoder候補sourceは `a2fca44551f250a68674e6b235372c043edda6b5`（全135投影候補は数値悪化のため不採用）、前の2投影候補は `e9e5c92a7c97bf4228d13f6e1abc911e4fa12c5f`、直接feed-forward GPU局所Greenは `e9e72e8611ed28be41921dd27f0b9b72b3e6d5c1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
+更新日: 2026-10-15。最新の実GPU全層観測は `b29c5adc8db5ae79dce60445cef04a59230e1e39`、元入力のlayer_10単独は `e25217575b591e37f68e37943d49e47986f19682`。全encoder数値gateの `a2fca44551f250a68674e6b235372c043edda6b5`は539要素不合格で、全135投影候補は不採用。前の2投影候補は `e9e5c92a7c97bf4228d13f6e1abc911e4fa12c5f`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
 
 ## 現在の判定
+
+**2026-10-15最新の誤差伝播診断:** 観測helperは小さいGPU1 Red→1 Greenで、通常と観測の最終bit一致と、借りた入力 / kernelの生存を確認した。`b29c5ad`の135投影候補は通常最終値539要素不合格を再現し、診断readbackを加えても最終値のbitは変わらなかった。元の12層参照との照合ではlayer_0〜9は許容差内（bit差は残る）、最初の超過はlayer_10の42要素・最大許容差比8.265064、layer_11は2,021要素・19.720919。NUnit1 passは観測完了であり、全encoder数値合格ではない。
+
+layer_10を元graphから切り出した11投影 / 12 segment / 2,941 ONNX nodeへ、元native layer_9出力を入力した。`e252175`の単独GPUは許容差超過0・最大許容差比0.243686、GPUCompute・計算fallback / flush0、NUnit1 pass / fail0 / skip0 / exit0。準備1.186秒、実行＋最終診断download0.771秒。全体のlayer_10不合格には前段入力の誤差伝播が関与するが、layer_10の全bit一致や全encoder合格は証明していない。小さい観測と単独層の終了logにはPersistent allocation 1件の警告があり、発生元 / leak freedomは未検証。所有Unityはterminal。[固定観測・TDD・単独GPUと限界](results/m4-all-static-original-layer-propagation-20261015.json)。
+
+次はlayer_10を繰り返すのでなく、元の最初のfeed-forward固定参照を使って、早い投影の入力と出力の最初の微差を調べる。Python全体は独立Actions [38654418805](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38654418805) / 固定source `e25217575b591e37f68e37943d49e47986f19682`を開始し、結果待ち。工程3・4の全条件は未達のまま。以降は前回checkpoint。
 
 **2026-10-15最新の全135投影候補:** runtime shape監査は123個を確認し、135個の期待数に届かず不合格だった。元ONNXと係数hashで照合した結果、残り12個はすべて定数入力のrelative-key投影で、Sentisの定数畳み込み対象と分かった。畳み込みへの変換という仮説は否定した。元定数のshapeだけを読み、実行時123個と合わせた135個のmetadata監査を追加。元graphの演算・係数を保持して分割境界を出力へ公開する別graphで、Sentisの固定shape411個を確認した。NUnit1 pass / fail0 / skip0 / exit0、推論は未実行でGPU数値合格ではない。
 

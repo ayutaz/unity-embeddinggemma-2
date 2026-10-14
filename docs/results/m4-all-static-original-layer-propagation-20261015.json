@@ -1,0 +1,270 @@
+{
+  "success": false,
+  "scope": "original_audio_gpu_error_propagation_diagnosis_only",
+  "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "original_reference_changed": false,
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "observation": {
+    "runtime_source": "b29c5adc8db5ae79dce60445cef04a59230e1e39",
+    "success": true,
+    "normal_final_matches_observed_bits": true,
+    "whole_encoder_mismatched_elements": 539,
+    "whole_encoder_numeric_passed": false,
+    "actual_backend": "GPUCompute",
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "first_tolerance_exceeding_stage": "layer_10",
+    "stages": [
+      {
+        "stage": "layer_0",
+        "boundary": "/norm_out/Mul_1_output_0",
+        "bit_differences": 211335,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.3073016239897436
+      },
+      {
+        "stage": "layer_1",
+        "boundary": "/norm_out_1/Mul_1_output_0",
+        "bit_differences": 247692,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.16412516128613935
+      },
+      {
+        "stage": "layer_2",
+        "boundary": "/norm_out_2/Mul_1_output_0",
+        "bit_differences": 252395,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.19944894394706905
+      },
+      {
+        "stage": "layer_3",
+        "boundary": "/norm_out_3/Mul_1_output_0",
+        "bit_differences": 254166,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.15380509220244024
+      },
+      {
+        "stage": "layer_4",
+        "boundary": "/norm_out_4/Mul_1_output_0",
+        "bit_differences": 254684,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.3172820004247873
+      },
+      {
+        "stage": "layer_5",
+        "boundary": "/norm_out_5/Mul_1_output_0",
+        "bit_differences": 252343,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.5667839384870612
+      },
+      {
+        "stage": "layer_6",
+        "boundary": "/norm_out_6/Mul_1_output_0",
+        "bit_differences": 250173,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.2586047221560495
+      },
+      {
+        "stage": "layer_7",
+        "boundary": "/norm_out_7/Mul_1_output_0",
+        "bit_differences": 257031,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.33499991777766247
+      },
+      {
+        "stage": "layer_8",
+        "boundary": "/norm_out_8/Mul_1_output_0",
+        "bit_differences": 257086,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.3891578131640634
+      },
+      {
+        "stage": "layer_9",
+        "boundary": "/norm_out_9/Mul_1_output_0",
+        "bit_differences": 259278,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.46696058161001225
+      },
+      {
+        "stage": "layer_10",
+        "boundary": "/norm_out_10/Mul_1_output_0",
+        "bit_differences": 273428,
+        "mismatched_elements": 42,
+        "maximum_tolerance_ratio": 8.265064056411378
+      },
+      {
+        "stage": "layer_11",
+        "boundary": "/norm_out_11/Mul_1_output_0",
+        "bit_differences": 279964,
+        "mismatched_elements": 2021,
+        "maximum_tolerance_ratio": 19.72091887192322
+      }
+    ],
+    "execution": {
+      "source_process": 81136,
+      "terminal": true,
+      "exit_code": 0,
+      "elapsed_seconds": 69.4097630000033,
+      "nunit": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "isolation": {
+    "runtime_source": "e25217575b591e37f68e37943d49e47986f19682",
+    "partition_producer": "b29c5adc8db5ae79dce60445cef04a59230e1e39",
+    "input_stage": "layer_9",
+    "output_stage": "layer_10",
+    "success": true,
+    "projection_count": 11,
+    "segment_count": 12,
+    "actual_backend": "GPUCompute",
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 4.57763671875e-05,
+    "maximum_tolerance_ratio": 0.24368642497043944,
+    "prepare_ms": 1185.5786,
+    "execute_and_final_download_ms": 771.2797,
+    "execution": {
+      "source_process": 50056,
+      "terminal": true,
+      "exit_code": 0,
+      "elapsed_seconds": 45.42260589999205,
+      "nunit": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "tdd": {
+    "missing_observation": "1 GPU red",
+    "implemented_observation": "1 GPU green",
+    "red": {
+      "source_process": 80196,
+      "terminal": true,
+      "exit_code": 2,
+      "elapsed_seconds": 37.040590599994175,
+      "nunit": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      }
+    },
+    "green": {
+      "source_process": 78748,
+      "terminal": true,
+      "exit_code": 0,
+      "elapsed_seconds": 35.202985900003114,
+      "nunit": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "inference": "Upstream error propagation contributes: layer 10 exceeds tolerance with the actual layer 9 output, but passes with the original native layer 9 output. This does not prove every operation in layer 10 is bit exact.",
+  "unresolved": [
+    "Whole audio encoder remains 539 mismatches",
+    "Earlier layer outputs have bit differences despite passing their local tolerance",
+    "Persistent allocation warning in the small observation and isolated layer logs; ownership/leak freedom is not proven",
+    "All original audio signals and both profiles",
+    "All FP32 image profiles",
+    "Actual PCM/Texture to normalized 768 API and all roles, boundaries, masks, disposal, reuse, text regression"
+  ],
+  "independent_python_regression": {
+    "run_id": 38654418805,
+    "source": "e25217575b591e37f68e37943d49e47986f19682",
+    "status_at_dispatch": "queued",
+    "verified_pass": false
+  },
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "evidence": [
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-all-static-layer-observation-b29c5adc8db5ae79dce60445cef04a59230e1e39-silence.json",
+      "bytes": 4732,
+      "sha256": "205ee4187156d93dfc65577af717dfa1fb71118bb761fb2f6f9dd914dad7e585"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-layer10-original-input-e25217575b591e37f68e37943d49e47986f19682-silence.json",
+      "bytes": 1009,
+      "sha256": "0b9fdc68c0c9f227a549c74490e217897ff2e07667e98e881b7b64bf6222f152"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\partitioned-layer10-original-input-real\\partition-plan.json",
+      "bytes": 16117,
+      "sha256": "67ef58375b741468304e4ba435760fe8f625f1109e9cfd492f3dd9b30eb6feba"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\small-partition-boundary-observation-red-20261015.xml",
+      "bytes": 5372,
+      "sha256": "41c172ef32cfc569822c30ad3a50e2d91ab59a323f38f834c481fdef9405cfa1"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\small-partition-boundary-observation-red-20261015-process.json",
+      "bytes": 1327,
+      "sha256": "f2c8c915b8c9d3a68dacbe293b454936bd0edebed8bd179dbcddf9da4ea029ef"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\small-partition-boundary-observation-red-20261015.log",
+      "bytes": 45636,
+      "sha256": "0dcb78c596090aea3d74ba7860f506d70e318c321d22f15ec2e5b6b9b5f36619"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\small-partition-boundary-observation-green-20261015.xml",
+      "bytes": 4044,
+      "sha256": "6282ed463232f61daf1853f8ba837a8cc392fd9571200f546ce6afce3e02cd0f"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\small-partition-boundary-observation-green-20261015-process.json",
+      "bytes": 1332,
+      "sha256": "863d107f87ed48c885ee96f2a3b5e3c95a913e6361fa7eb07fa5c42a85f4e40d"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\small-partition-boundary-observation-green-20261015.log",
+      "bytes": 45891,
+      "sha256": "d1d85cab51adebacca58f48e6cb6350d32feaaafe9ef1c1488067033bcdd10e8"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\partitioned-all-static-original-layers-20261015.xml",
+      "bytes": 4058,
+      "sha256": "91941f308ff6d312b2286061f6c78b90ed38e750b6b4e47396bb259808f8b2d9"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\partitioned-all-static-original-layers-20261015-process.json",
+      "bytes": 1320,
+      "sha256": "0d00fe6da7de997efc425505b7958140aab2c1b97c291c16abd80172f5c7c4af"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\partitioned-all-static-original-layers-20261015.log",
+      "bytes": 40200,
+      "sha256": "c6b0a15f8d928831cdc1ec535510551381df49c3c67d765b56383d33ed1941fb"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\partitioned-layer10-original-input-gpu-20261015.xml",
+      "bytes": 4008,
+      "sha256": "6e8141dd0c94500164caa971926913461fa50bdc78fca3ff2bfa6594ba6784e1"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\partitioned-layer10-original-input-gpu-20261015-process.json",
+      "bytes": 1307,
+      "sha256": "fc093562a9f942ed3ee56b71776b21f03faf3b9732b97c39e74d954b122e4f80"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\partitioned-layer10-original-input-gpu-20261015.log",
+      "bytes": 50872,
+      "sha256": "6550fb2485b2311fb15b1cf1d3d04d4a6378effa4175b122be1006d9b24d7646"
+    }
+  ]
+}

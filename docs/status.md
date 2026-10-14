@@ -1,5 +1,56 @@
 # 現在の状態と残タスク
 
+更新日: 2026-10-14。コード基準は `a237dee2874cdb0fbcdf4fe333aebae7193ad390`、確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
+
+## 現在の判定
+
+実装・実モデル検証はユーザー指示で停止中。今回進めるのは文書・計画の整合のみで、Unity起動・モデル生成・数値検証は追加しない。Unity.exeが存在しないことと、CI run `38569646238` / `38571522044` の `completed/cancelled` を再確認した。cancel / skipを合格に数えない。
+
+[Draft PR #81](https://github.com/ayutaz/unity-embeddinggemma-2/pull/81)はOPEN、baseは `test/audio-post-norm-isolation`。GitHubで23件のopen PRを確認し、main未統合のAPI・診断候補とmainの機能を分けた。公開tag / GitHub Releaseは各0件。mainの既存ローカルUnity設定変更は保持している。[文書更新の確認snapshot](results/documentation-checkpoint-20261014.json)。
+
+| 範囲 | 確認済みの到達点 | 未達・未検証 |
+| --- | --- | --- |
+| 工程1 / 基準整理 | PR依存・参照hash・環境・判定条件を整理済み | 採用candidate変更時のsource・実測更新 |
+| M1 / M2 | WindowsテキストのEditorと条件付きPlayer・固定Git導入の過去受け入れあり | 最終candidateの標準空consumer、性能・寿命、macOS / iOS / Android実機 |
+| M3 / 画像 | GPU前処理・prompt・共通backboneはmain。Image APIはDraft実装・合成契約合格。Python Query / Document / Rawは6画像×3 roleの18件合格 | 元FP32 encoder gate、Unity実Texture→768次元の全chain・全role、検索sample・Player |
+| M4 / 音声 | PCM・GPU前処理はmain。Audio APIはDraft実装・合成契約合格。SiLU ONNX演算順序修正は関連37件と準備回帰4件で確認 | 修正後の実ONNX元6信号、Sentis encoder固定数値gate、音声Query / Raw、実全chainの全条件 |
+| GPU専用変更 | 対象2 fixtureからCPU条件を除外しCPU指定を拒否。構成回帰2 red→2 green | 変更後のUnityコンパイル・実モデル再実行。全legacy fixtureがGPU専用になったわけではない |
+| 正式公開 | 開発版 `0.1.0-pre.1`、モデルをGit / LFSへ含めない | M2〜M4・全必須環境・最終配布監査が揃ってから公開工程 |
+
+**工程2の数値修正と工程3の実入力→最終768次元APIは未完了。** Pythonのrole参照、局所TDD、最終cosine、観測テストの合格を、元encoderのelementwise gateやUnity全chain合格へ置き換えない。
+
+## 最後に得られた証拠
+
+- [画像3 roleのPython参照](results/m3-real-image-all-role-reference-20261014.json): Actions `38562190876`、producer `891ce9004deecc262437e56b2fd9a2eaf1054632`。18件合格。元vision FP32 gateの解決とUnity連結はfalse。
+- [音声norm1 / dynamic16候補](results/m4-norm1-dynamic16-full-encoder-failed-20261014.json): source `998fa43d89814a90c9eebb899c71439879b79390`、元6信号×CPU/GPUの12数値条件すべて不合格。最大許容差比CPU12.21667173 / GPU11.47812797、NUnit0 pass / 2 fail / skip0 / exit2。候補45623層。旧norm1候補の結果とは別記録。
+- [SiLU演算順序修正](results/native-silu-division-order-green-20261014.json): 標準ONNX `Neg→Exp→Add→Div` にしてnativeの除算順序を保持。関連37 pass、準備回帰4 pass。実モデルのsilence不合格が解消したとはまだ言えない。
+- [CPU参照文脈matrix](results/native-first-fixture-context-matrix-20261014.json): Actions `38563722587` の4 jobは実行完了。画像nativeは旧期待値と3要素不一致、画像AVX2要求は最初の画像で一致。音声nativeはsilenceで一致、音声AVX2要求はthread別に不一致。異なるhostも含むためISA単独を原因と断定しない。全画像・全信号の成功ではない。
+- [画像norm4の中断記録](results/m3-vision-norm4-user-interrupted-20261014.json): source `5c697a6472e0203d9f24c77da7a466f83735ce84`。square / landscapeのCPU / GPU各条件は完了・不合格、portrait CPUは途中、portrait GPUは未開始。NUnit完了XMLはない。未実行条件を数値失敗にも合格にも数えない。
+
+## GPU実行と負荷について
+
+停止したPID 64068は通常UIではなく、別consumerのbatchmode画像診断だった。CPU/GPUを交互に実行しており、CPUモデル推論も負荷に含まれていた。完了GPU条件ではRTX 4070 Ti SUPER / D3D12、出力GPUCompute、計算fallback / readback flush 0を確認した。
+
+診断候補の層数は1823→25265。モデル変換・shape解析・読み込み・hash監査・GPUへの転送やdispatch準備はCPU側にも仕事がある。GPU使用だけではこの準備負荷は消えない。段階別時間・peak memory・CPU/GPU利用率は未計測で、層数増加を遅延全体の原因として確定しない。Accelerator接続timeoutもログにあるが、推論の遅延との因果は未確認。
+
+`CompensatedVisionReferenceTests` と `CompensatedNormAudioEncoderReferenceTests` はGPUCompute専用へ変更済み。前処理・encoder・backboneを同じGPU backendへ揃え、GPU未対応をCPUで代替しない。Runtime APIのCPU選択肢と小さいCPU契約テストは残るため、他の旧suiteを一括実行するとCPU実モデル検証も含み得る。[自動操作の実行方針](automation.md)を先に確認する。
+
+## 再開時の計画
+
+1. 固定Git consumerのrequested / resolved SHA、Editor・Sentis・GPUを確認し、対象変更のcompileと小さいGPU probeを先に行う。全suiteを起動しない。
+2. 実装済みSiLU修正をActionsで元6信号・2 profileの保存ONNXへ照合する。失敗したら一つの入力・最初の差に絞る。旧golden・hash・`atol=1e-5` / `rtol=1e-4`は維持する。
+3. Unity側は監査済み元モデルの一つのGPU入力から始め、load / transform / Worker準備 / upload / schedule / readback / disposeを別々に計測する。ローカル計画上の上限は1試行5分とし、超過は中断・未完了へ分類する。これは現launcherの実装済みtimeoutではなく、再開時に設定・確認する運用条件。
+4. 一つの失敗経路の最小修正が合格してから、GPUで画像全3 profile・音声元6信号と採用重み形式を照合する。新しい補償候補を全encoderへ展開する前に、層数・準備時間・memoryの増加を評価する。
+5. 工程2のgateが揃った後、実Texture / PCM→前処理→encoder→backbone→768次元APIの全role・profile・mask・長さ境界・所有権・例外後再利用・text回帰を受け入れる。
+6. sample・混在検索・長い反復・Player・必須実機・最終空consumer・配布監査へ渡す。main mergeと正式公開は別の明示指示が必要。
+
+実モデル推論の再開は今回の文書更新には含めない。GPU専用の新しい結果と、従来のCPU/GPU受け入れ履歴は別scopeで管理する。
+
+## 過去のcheckpointと実測履歴
+
+以下の「次の作業」やPR head / CI / 実行中の記述は当時の記録で、上の現在状態と再開計画が優先する。実測source・失敗・未実行は保持する。
+
+
 ## 2026-10-14: 工程1〜3の作業checkpoint（main未統合）
 
 確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。全22件のopen PRのhead・base・CI、API / 前処理 / GPU転送 / 診断の依存を[工程1〜3の受け入れ](steps-1-3-acceptance.md)へ整理した。作業branchは `feat/multimodal-numerical-acceptance`、[Draft PR #81](https://github.com/ayutaz/unity-embeddinggemma-2/pull/81)。mainへのmergeや正式Releaseは行わない。
@@ -14,7 +65,7 @@ LayerNormの中心化分散＋補償和候補は10 red→既存回帰を含む25
 
 画像候補の約31 MBゼロinitializerは1 red→スカラーbroadcast修正→既存26 green。保存実モデルの3 profile×CPU/GPU、各2画像は全12 numeric caseで固定elementwise不合格、GPU fallback/flush0、NUnit0 pass / 6 fail / skip0 / exit2。監査済みbackboneを再exportせずrole別参照へ使うAPI/CLIは関連44 green、source保護・path/CLI監査16 green。工程2・3の未達は維持する。
 
-## 最新checkpoint: 工程1〜3の受け入れ作業
+## 履歴checkpoint: 工程1〜3の受け入れ作業
 
 2026-10-14確認。mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`、[main CI 38428339728](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38428339728)は8 job成功。以下の追加実装・検証は[Draft PR #81](https://github.com/ayutaz/unity-embeddinggemma-2/pull/81)の作業branchであり、mainへの統合・正式リリースは行っていない。Audio/Image APIもDraft PR #62 / #64 / #65の実装で、mainの機能と区別する。
 
@@ -70,7 +121,7 @@ LayerNormの中心化分散＋補償和候補は10 red→既存回帰を含む25
 | [PR #46](https://github.com/ayutaz/unity-embeddinggemma-2/pull/46) | mainへ統合済み。音声前処理のWindows Sentis CPU / 実GPU受け入れを追加。製品PCM入力API・encoder・end-to-endの成功ではない |
 | Unity / Sentis | 開発検証6000.3.21f1 / 2.6.1。mainのEditor固定はPR #31未統合のため6000.3.16f1。実測のsource / package / model hashを混同しない |
 
-## 最新の検証範囲
+## 履歴の検証範囲
 
 | 対象 | 確認済みと証拠 | 未達・限界 |
 | --- | --- | --- |
@@ -192,3 +243,85 @@ M1の各plan / validationは実行した段階の履歴で、当時のcommit・�
 [技術調査](technical-approach.md)は採用済みのテキスト経路と未実装の画像 / 音声設計を区別する。
 [新規性調査](embeddinggemma-2-unity-novelty.md)は2026-10-07の調査に2026-10-09の限定検索を追記したもので、先行実装の不存在を保証しない。
 package内の文書は導入 / API / 未リリースと、mainへ統合したサンプルの使い方を説明する。AGENTS.mdとApacheライセンスは規則・条文を維持する。
+
+## 文書一覧と現在の読み方
+
+2026-10-14に次の全文を読み込み、現行コード・証拠・停止状態との参照関係を確認した。ライセンスと開発規則は変更せず、既存結果JSONも書き換えない。履歴文書の未実行や次の作業は当時のscopeで、上の現在判定が優先する。
+
+| 文書 | 位置づけ |
+| --- | --- |
+| [README.md](../README.md) | 現在の仕様・手順 |
+| [docs/automation.md](automation.md) | 現在の仕様・手順 |
+| [docs/ci.md](ci.md) | 現在の仕様・手順 |
+| [docs/embeddinggemma-2-unity-novelty.md](embeddinggemma-2-unity-novelty.md) | 固定sourceの履歴 |
+| [docs/goal.md](goal.md) | 現在の仕様・手順 |
+| [docs/gpu-constant-il2cpp-validation.md](gpu-constant-il2cpp-validation.md) | 固定sourceの履歴 |
+| [docs/gpu-constant-upload-validation.md](gpu-constant-upload-validation.md) | 固定sourceの履歴 |
+| [docs/m1-completion-plan.md](m1-completion-plan.md) | 固定sourceの履歴 |
+| [docs/m1-completion-validation.md](m1-completion-validation.md) | 固定sourceの履歴 |
+| [docs/m1-plan.md](m1-plan.md) | 固定sourceの履歴 |
+| [docs/m1-runtime-plan.md](m1-runtime-plan.md) | 固定sourceの履歴 |
+| [docs/m1-runtime-validation.md](m1-runtime-validation.md) | 固定sourceの履歴 |
+| [docs/m1-validation.md](m1-validation.md) | 固定sourceの履歴 |
+| [docs/m2-android-validation.md](m2-android-validation.md) | 固定sourceの履歴 |
+| [docs/m2-bundle-cache-validation.md](m2-bundle-cache-validation.md) | 固定sourceの履歴 |
+| [docs/m2-editor-font-lifetime-validation.md](m2-editor-font-lifetime-validation.md) | 固定sourceの履歴 |
+| [docs/m2-font-git-consumer-validation.md](m2-font-git-consumer-validation.md) | 固定sourceの履歴 |
+| [docs/m2-git-consumer-runtime-validation.md](m2-git-consumer-runtime-validation.md) | 固定sourceの履歴 |
+| [docs/m2-latest-git-consumer-validation.md](m2-latest-git-consumer-validation.md) | 固定sourceの履歴 |
+| [docs/m2-package-validation.md](m2-package-validation.md) | 固定sourceの履歴 |
+| [docs/m2-plan.md](m2-plan.md) | 現在の計画と履歴 |
+| [docs/m2-player-il2cpp-validation.md](m2-player-il2cpp-validation.md) | 固定sourceの履歴 |
+| [docs/m2-release-plan.md](m2-release-plan.md) | 現在の計画と履歴 |
+| [docs/m2-sample-cache-validation.md](m2-sample-cache-validation.md) | 固定sourceの履歴 |
+| [docs/m2-search-plan.md](m2-search-plan.md) | 現在の計画と履歴 |
+| [docs/m2-search-validation.md](m2-search-validation.md) | 固定sourceの履歴 |
+| [docs/m2-stability-environment-validation.md](m2-stability-environment-validation.md) | 固定sourceの履歴 |
+| [docs/m2-ui-font-validation.md](m2-ui-font-validation.md) | 固定sourceの履歴 |
+| [docs/m2-unity-21-upgrade-validation.md](m2-unity-21-upgrade-validation.md) | 固定sourceの履歴 |
+| [docs/m3-image-cpu-preprocessing-validation.md](m3-image-cpu-preprocessing-validation.md) | 固定sourceの履歴 |
+| [docs/m3-image-embedder-validation.md](m3-image-embedder-validation.md) | 固定sourceの履歴 |
+| [docs/m3-image-embedding-reference-validation.md](m3-image-embedding-reference-validation.md) | 固定sourceの履歴 |
+| [docs/m3-image-feature-encoder-validation.md](m3-image-feature-encoder-validation.md) | 固定sourceの履歴 |
+| [docs/m3-image-preprocessing-validation.md](m3-image-preprocessing-validation.md) | 固定sourceの履歴 |
+| [docs/m3-plan.md](m3-plan.md) | 現在の計画と履歴 |
+| [docs/m3-vision-export-validation.md](m3-vision-export-validation.md) | 固定sourceの履歴 |
+| [docs/m4-audio-embedder-validation.md](m4-audio-embedder-validation.md) | 固定sourceの履歴 |
+| [docs/m4-audio-encoder-runtime-validation.md](m4-audio-encoder-runtime-validation.md) | 固定sourceの履歴 |
+| [docs/m4-audio-encoder-validation.md](m4-audio-encoder-validation.md) | 固定sourceの履歴 |
+| [docs/m4-audio-final-reference-validation.md](m4-audio-final-reference-validation.md) | 固定sourceの履歴 |
+| [docs/m4-audio-native-onnx-validation.md](m4-audio-native-onnx-validation.md) | 固定sourceの履歴 |
+| [docs/m4-audio-preprocessing-runtime-validation.md](m4-audio-preprocessing-runtime-validation.md) | 固定sourceの履歴 |
+| [docs/m4-audio-preprocessing-sentis-validation.md](m4-audio-preprocessing-sentis-validation.md) | 固定sourceの履歴 |
+| [docs/m4-audio-preprocessing-validation.md](m4-audio-preprocessing-validation.md) | 固定sourceの履歴 |
+| [docs/m4-audio-real-chain-validation.md](m4-audio-real-chain-validation.md) | 固定sourceの履歴 |
+| [docs/m4-current-coefficient-bound-layer-validation.md](m4-current-coefficient-bound-layer-validation.md) | 固定sourceの履歴 |
+| [docs/m4-current-encoder-observation-validation.md](m4-current-encoder-observation-validation.md) | 固定sourceの履歴 |
+| [docs/m4-feed-forward-stage-observation-validation.md](m4-feed-forward-stage-observation-validation.md) | 固定sourceの履歴 |
+| [docs/m4-fp64-projection-oracle-validation.md](m4-fp64-projection-oracle-validation.md) | 固定sourceの履歴 |
+| [docs/m4-layer-zero-norm-observation-validation.md](m4-layer-zero-norm-observation-validation.md) | 固定sourceの履歴 |
+| [docs/m4-native-feed-forward-reference-validation.md](m4-native-feed-forward-reference-validation.md) | 固定sourceの履歴 |
+| [docs/m4-native-layer-replay-validation.md](m4-native-layer-replay-validation.md) | 固定sourceの履歴 |
+| [docs/m4-native-silu-swish-probe-validation.md](m4-native-silu-swish-probe-validation.md) | 固定sourceの履歴 |
+| [docs/m4-pcm-input-validation.md](m4-pcm-input-validation.md) | 固定sourceの履歴 |
+| [docs/m4-plan.md](m4-plan.md) | 現在の計画と履歴 |
+| [docs/m4-post-norm-isolation-validation.md](m4-post-norm-isolation-validation.md) | 固定sourceの履歴 |
+| [docs/model-license.md](model-license.md) | 現在の仕様・手順 |
+| [docs/model-preparation.md](model-preparation.md) | 現在の仕様・手順 |
+| [docs/multimodal-backbone-validation.md](multimodal-backbone-validation.md) | 固定sourceの履歴 |
+| [docs/multimodal-prompt-validation.md](multimodal-prompt-validation.md) | 固定sourceの履歴 |
+| [docs/multimodal-runtime-validation.md](multimodal-runtime-validation.md) | 固定sourceの履歴 |
+| [docs/multimodal-tdd-plan.md](multimodal-tdd-plan.md) | 現在の計画と履歴 |
+| [docs/player-validation.md](player-validation.md) | 固定sourceの履歴 |
+| [docs/runtime-api.md](runtime-api.md) | 現在の仕様・手順 |
+| [docs/status.md](status.md) | 現在の仕様・手順 |
+| [docs/steps-1-3-acceptance.md](steps-1-3-acceptance.md) | 現在の仕様・手順 |
+| [docs/technical-approach.md](technical-approach.md) | 現在の仕様・手順 |
+| [Packages/com.ayutaz.embeddinggemma/CHANGELOG.md](../Packages/com.ayutaz.embeddinggemma/CHANGELOG.md) | 現在の仕様・手順 |
+| [Packages/com.ayutaz.embeddinggemma/Documentation~/audio-embedder.md](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-embedder.md) | 現在の仕様・手順 |
+| [Packages/com.ayutaz.embeddinggemma/Documentation~/audio-feature-encoder.md](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-feature-encoder.md) | 現在の仕様・手順 |
+| [Packages/com.ayutaz.embeddinggemma/Documentation~/index.md](../Packages/com.ayutaz.embeddinggemma/Documentation~/index.md) | 現在の仕様・手順 |
+| [Packages/com.ayutaz.embeddinggemma/README.md](../Packages/com.ayutaz.embeddinggemma/README.md) | 現在の仕様・手順 |
+| [Packages/com.ayutaz.embeddinggemma/Samples~/README.md](../Packages/com.ayutaz.embeddinggemma/Samples~/README.md) | 現在の仕様・手順 |
+| [Packages/com.ayutaz.embeddinggemma/Samples~/TextSearch/README.md](../Packages/com.ayutaz.embeddinggemma/Samples~/TextSearch/README.md) | 現在の仕様・手順 |
+| [validation/com.ayutaz.embeddinggemma.validation/README.md](../validation/com.ayutaz.embeddinggemma.validation/README.md) | 現在の仕様・手順 |

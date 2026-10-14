@@ -1,5 +1,7 @@
 # 現在の保存encoderの層別数値差
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 2026-10-14 JST。Runtime requested / resolved Git `adccab24dbcc3f5dd8c8ac79911a7604a6014021`、固定Python producer `4edbe17a8105233c5aaa1514faa2862b08a4f7e0`。元のFP32全12条件の不合格、以前のproducerの参照drift、Pow候補の不合格は維持する。正式Release / tagは作成しない。
 
 ## 重みを読み込まない演算metadata

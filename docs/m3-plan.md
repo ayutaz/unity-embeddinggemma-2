@@ -1,10 +1,22 @@
 # M3: 画像対応のTDD計画
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。冒頭の現在方針が、下の旧checkpointの着手順より優先する。
+
+## 2026-10-14の画像の現在地
+
+GPU画像前処理はmain、ImageFeatureEncoder / ImageEmbedderはDraft実装・合成契約合格。画像PythonのQuery / Document / Rawは3 profile・6画像×3 roleで18件合格した。[receipt](results/m3-real-image-all-role-reference-20261014.json)。元FP32 encoderの固定gateとUnity実Texture→768次元の全chainは未達。
+
+補償投影候補の元12数値caseは全件不合格。最後のnorm4実行はユーザー中断で、square / landscape CPU / GPUは不合格、portrait CPUは途中、portrait GPUは未開始。[中断receipt](results/m3-vision-norm4-user-interrupted-20261014.json)。小さいGPU契約やPython role参照でこの未達を置き換えない。
+
+再開は[全体計画R0〜R5](multimodal-tdd-plan.md)に従う。対象fixtureのGPU専用変更をcompileし、一つのGPU入力で参照文脈・数値差と準備負荷を確認する。元3 profile、FP32 / 採用Float16、全role・実Texture / RenderTexture・所有権・text回帰・sample・Player / 必須環境を保持する。層数25265への展開を性能合格の候補と扱わない。
+
+## 以前の画像計画・固定sourceの履歴
+
 更新日: 2026-10-13。**GPU画像前処理はPR #52でmainへ統合・Windows単独受け入れ済み。画像end-to-end API / sampleと実画像から最終768次元の受け入れは未完了**。画像encoder / projectorのPython実モデル照合はPR #37で合格した。Sentis encoderはPR #41のWindows実測でFloat16のCPU / GPU全6条件が合格、FP32全6条件は固定elementwise許容差超過で不合格。共通RuntimeのPR #43はmainへ統合済み。下記の実測sourceは過去の固定headとして維持し、統合headへ付け替えない。[全体計画](multimodal-tdd-plan.md)の工程3として進め、M3完了時には正式リリースせずM4と全必須環境の検証へ渡す。
 
 I1 / I2の固定profile encoder / projector exportと公式processor参照・Actions gateをTDDで実装した。[実装と検証範囲](m3-vision-export-validation.md)。小さい回帰66 passed / skip 0。[実モデルPython CI 38310718250](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38310718250)の3 profile / 6ケースでminimum cosine `0.9999997615814209`。出力は512次元soft tokenであり、画像の最終embeddingではない。
 
-### 最新checkpoint
+### 履歴checkpoint
 
 公式prompt / mask契約PR #55と最終画像参照PR #56はmainへ統合済み。実モデルPythonで3 profile / 6画像の768次元、native feature → 保存backbone、保存encoder → 保存backboneを固定許容差で照合した。producer `35d357263ae29de4db1ad93d1cac3616ea1e61b4`、[CI 38356261690](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38356261690)。最新baseのhead `9814ce9d8bd70fa07cbd191867d93d7f4dd461f5`の[CI 38364660005](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38364660005)全8成功を確認して統合。Python参照の合格と、画像Runtime・Sentis全chainの未実行は別に記録する。
 

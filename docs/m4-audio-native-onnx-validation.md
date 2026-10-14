@@ -1,5 +1,13 @@
 # M4: native音声参照と標準ONNX Swish候補
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
+## 2026-10-14の追加状況
+
+現行 `export_audio_native_onnx` はSiLU markerを標準 `Neg→Exp→Add→Div` へ置換する。[小さい修正receipt](results/native-silu-division-order-green-20261014.json)。以下のSwish経路は以前のsourceの記録。修正後の実ONNX全信号は未検証。
+
+## 当時の実測・実装記録
+
 2026-10-13。A4の保存graph数値差に対して、native SiLUを保持するPython参照と標準ONNX SwishのSentis向け候補をTDDで追加した。実重みの元6信号、Sentis全encoderのCPU / 実GPU、最終768次元API / sampleは未受け入れ。正式Release / tagは作成しない。
 
 ## 経路と固定した条件

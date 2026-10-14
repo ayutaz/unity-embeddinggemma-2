@@ -1,8 +1,27 @@
 # M2・M3・M4から正式リリースまでのTDD計画
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。冒頭の現在方針が、下の旧checkpointの着手順より優先する。
+
+## 2026-10-14の実行方針と再開順
+
+実モデルの実装・検証は停止中。コード基準は `a237dee2874cdb0fbcdf4fe333aebae7193ad390`、mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。Draft PR #81の対象画像・音声fixtureはGPUCompute専用だが、変更後のUnity compile / 実モデル検証は未実施。[最新状態](status.md)を現在の判定、以下の既存checkpointを過去の証拠として読む。
+
+| 順序 | 着手条件と作業 | 渡す証拠 / 完了条件 |
+| --- | --- | --- |
+| R0 GPUと負荷 | 固定Git SHA / Unity / Sentisを監査し、compileと小さいGPU probe。CPUへ代替しない | requested / actual backend、実GPU / API、fallback / flush 0。load / transform / Worker / upload / schedule / final readback / disposeの時間とmemory |
+| R1 実装済み修正 | 標準ONNX SiLU除算順序修正をActionsの元6信号・2 profileで照合 | 保存graph hash・独立評価・固定許容差。小さい37+4 passは実モデル成功の代替にしない |
+| R2 数値差 | 一つのGPU入力で参照文脈と最初の差を確認し、独立した小さいredから最小修正 | 元golden・入力 / model hash・`atol=1e-5` / `rtol=1e-4`不変。局所合格後に画像全profile・音声全信号のGPU gate |
+| R3 最終API | R2のencoder gate後、実Texture / PCM→encoder→backbone→768次元 | Query / Document / Raw、全profile・mask・境界、所有権 / Dispose・例外後再利用、GPU中間readbackなし、text回帰 |
+| R4 全体受け入れ | M2〜M4の残りsample・混在検索・反復 / 性能・Player・必須実機 | Windows / macOS / iOS / Androidのsource対応結果、最終candidateの空Git consumer、正常終了 |
+| R5 配布準備 | 全必須gateと依存差分を確認 | version / CHANGELOG / license / 配布監査。公開tag / Releaseは準備後の別工程 |
+
+ローカル実モデルは1試行・1失敗経路に絞り、再開時に5分の外部上限を設定・確認する。上限超過時は同PIDと部分結果を保存して止め、未完了と記録する。現launcherへのtimeout実装済みとは扱わない。重い全条件・モデル取得 / exportはActions優先。GPU runner / ライセンス不在は未実行としCPU結果で補わない。
+
+CPUを含む下記の以前の検証matrixは互換性の履歴・契約として保持する。今後の主実行経路はGPUで、従来のCPU/GPU全条件の完了flagをGPU専用結果へ流用しない。RuntimeのCPU対応を削除したとは主張しない。
+
 更新日: 2026-10-14。**正式リリースはM2〜M4の全対応と全必須検証の完了後**とする。工程6までは開発・検証・配布準備であり、公開tag / GitHub Releaseを作成しない。振る舞いを追加・変更するすべての実装と自動化を、独立した期待値によるred → green → refactorで進める。
 
-## 現在の基準と直近の優先順
+## 以前の基準と当時の優先順
 
 2026-10-14のmainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。追加実装はDraft PR #81の依存branchで、mainと分ける。最新の実測・未達は[status](status.md)、sourceごとの証拠は[工程1〜3のledger](steps-1-3-acceptance.md)を参照する。以下の以前の基準とcheckpointは各sourceの履歴として保持する。
 

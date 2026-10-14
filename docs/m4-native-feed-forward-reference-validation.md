@@ -1,5 +1,7 @@
 # 固定native layer 0のfeed_forward1内部参照
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 2026-10-14 JST。Sentisの固定silence入力ではnorm_pre_attn入力時点で既に数値条件を超えるため、同じnative文脈のfeed_forward1内部5段階を取得する。Runtime・モデル・元参照・許容差を変更せず、正式Release / tagは作成しない。
 
 ## TDD

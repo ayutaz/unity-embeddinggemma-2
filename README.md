@@ -2,7 +2,7 @@
 
 Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.unity.ai.inference@2.6/manual/index.html) だけを使って、Google の [EmbeddingGemma 2](https://huggingface.co/google/embeddinggemma-2) を動かすプロジェクトです。テキスト・画像・音声を、同じ 768 次元の空間の埋め込みに変換できるようにします。
 
-> **2026-10-14: 画像・音声の数値受け入れを継続中です。** main `c868df5` には共通backbone、公式prompt、画像GPU前処理、PCM入力・音声GPU前処理が反映されています。画像・音声の最終APIはDraft PRで実装・合成テスト済みですが、実encoderの固定数値gateと実入力→768次元の全条件は未達です。最新の補償候補も画像・音声の元条件で不合格でした。[現在の状態](docs/status.md) / [工程1〜3の受け入れledger](docs/steps-1-3-acceptance.md)を参照してください。以下の古い日付の実測は各sourceの履歴で、最新候補の合格を意味しません。
+> **2026-10-14: 実装・実モデル検証は停止中、文書・計画を更新しました。** main `c868df5` にGPU画像前処理・PCM / GPU音声前処理・公式prompt・共通backboneがあります。最終画像 / 音声APIはDraft実装・合成契約合格ですが、元encoder数値gateとUnity実入力→768次元は未達です。画像Pythonの3 roleは18件合格。PR #81の対象実モデルfixtureはGPU専用へ変更済みですが、変更後のUnity compile / 実モデルは未検証です。[最新状態](docs/status.md) / [再開計画](docs/multimodal-tdd-plan.md) / [固定source別の証拠](docs/steps-1-3-acceptance.md)。以下の旧日付の実測は履歴です。
 
 > **状態: Windows EditorのM1受け入れ検証完了**
 > 2026-10-09: PR #1〜#4はmain `8146107`へ統合済み。[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)で`.sentis`保存・再読み込み、Float16重み量子化、性能・メモリ測定まで実装・検証しました。
@@ -33,8 +33,8 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 | --- | --- | --- |
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor受け入れ検証完了（保存・量子化・測定を含む） |
 | M2 | テキストUPM・サンプル・検証基盤を安定化する | Windows実測あり。標準環境再現・新candidate・性能・他環境は未完了 |
-| M3 | GPU画像前処理・encoder・共通本体・画像検索 | GPU前処理はmainへ反映、APIはDraft PR。既存Sentis Float16 6条件合格 / FP32不合格。実全chain・sampleは未完了 |
-| M4 | GPU音声前処理・encoder・共通本体・音声検索 | PCM入力・GPU前処理はmainへ反映、APIはDraft PR。音声encoder数値不合格、実全chain・sampleは未完了 |
+| M3 | GPU画像前処理・encoder・共通本体・画像検索 | GPU前処理はmain、APIはDraft。Python3 role / 18件合格、元Sentis FP32と実全chain・sampleは未完了 |
+| M4 | GPU音声前処理・encoder・共通本体・音声検索 | PCM入力・GPU前処理はmain、APIはDraft。SiLU ONNX修正は小さい回帰のみ合格。encoder数値gate・実全chain・sampleは未完了 |
 | 最終公開 | 全対応と必須環境の検証後に正式リリース | 未着手 |
 
 ## 動作環境
@@ -91,7 +91,7 @@ uv run --locked python -m embeddinggemma_tools prepare --output ../artifacts/m1
 モデルの revision を固定して参照データ・設定済み tokenizer・`.pt2` を生成し、保存後のモデルを参照実装と比較します。
 この Python 側の一致と、Sentis 側の M1 合格は別々に検証します。
 
-M1はWindows Editorで完了。検索サンプル・モデル準備手順もWindows実モデル4条件と新規consumerのCLI完了・画面操作を確認しました。PR #11の統合状況と最新CIはGitHubを参照してください。次はmacOS / iOS / Android検証、Git URL導入と配布へ進みます。
+M1はWindows Editorで完了。テキスト検索と固定Git導入の既存Windows実測を維持します。次の順序はGPUと負荷の確認、元encoder数値gate修正、実入力→最終API、sample / 必須環境 / 最終空consumerです。実モデルの再開は今回の文書更新には含めません。
 残作業の順序・依存・完了条件は [M2計画](docs/m2-plan.md)、実装済みAPIは [C# API手順](docs/runtime-api.md) を参照してください。
 新しい実装も作業ブランチ / PR を使い、マージは依頼があるまで行いません。
 M1の完了条件と当時の測定は [M1計画](docs/m1-plan.md) / [完了検証記録](docs/m1-completion-validation.md)、最新のCIとUPM検証は [現在の状態](docs/status.md)を参照してください。
@@ -102,7 +102,7 @@ M1の完了条件と当時の測定は [M1計画](docs/m1-plan.md) / [完了検�
 Unity 6000.3.16f1の別プロジェクトで、Package Managerから
 [package.json](Packages/com.ayutaz.embeddinggemma/package.json)を「Add package from disk」で指定します。
 Sentis 2.6.1とNewtonsoft JSON 3.2.2はパッケージの依存から解決します。
-Git URLのcommit固定による導入指定とAPI使用例は [パッケージ文書](Packages/com.ayutaz.embeddinggemma/Documentation~/index.md)を参照してください。Editorで実行確認した導入経路はローカルフォルダ依存で、Git URL導入は後続検証です。
+Git URLのcommit固定による導入指定とAPI使用例は [パッケージ文書](Packages/com.ayutaz.embeddinggemma/Documentation~/index.md)を参照してください。Windowsの固定Git導入は既存sourceで実測済みです。最新マルチモーダルcandidateの空consumer導入は未検証です。
 モデルは含まれていません。Text SearchサンプルはPackage Managerからインポートできます。[モデル準備手順](docs/model-preparation.md)に沿って明示的にモデルを配置してください。公開tagはまだありません。
 
 ## モデルファイルについて

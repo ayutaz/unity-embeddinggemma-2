@@ -1,5 +1,7 @@
 # M4音声前処理のSentis CPU / GPU受け入れ
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 実行日: 2026-10-13。Unity 6000.3.21f1 / Sentis 2.6.1、Windows、RTX 4070 Ti SUPER / Direct3D12の既存consumerで、`uloop run-tests`によるcompileとEditMode 2件が成功した。failed / skipped / inconclusiveは0。両backendそれぞれ6信号を比較した。[小さい結果記録](results/m4-audio-preprocessing-sentis-windows-20261013.json)。
 
 ## 固定入力と判定

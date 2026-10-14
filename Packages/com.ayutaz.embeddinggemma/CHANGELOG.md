@@ -2,6 +2,11 @@
 
 ## 0.1.0-pre.1 — Unreleased
 
+- 2026-10-14 development snapshot: ImageFeatureEncoder / ImageEmbedder and AudioFeatureEncoder / AudioEmbedder are implemented with synthetic contract evidence on draft branches, not merged into main. Real encoder numeric gates and complete Unity input-to-768 acceptance remain incomplete.
+- Runtime CPU options remain available; the active vision and norm-audio real-model validation fixtures now require GPUCompute. Their post-change Unity compile / model execution is unverified. Compensated graph transforms are Editor/test candidates, not adopted runtime optimizations.
+- Python tooling preserves native SiLU division order with standard ONNX Neg / Exp / Add / Div. Small regressions pass; real-model validation of this fix is pending. Image Python references pass all 18 Query / Document / Raw cases; this does not certify the Unity chain.
+
+
 - Add GPU-only 8-bit Texture / RenderTexture preprocessing with official bicubic antialias rounding, RGB patch order, position metadata and owned output tensors. Image encoder integration and final embedding API remain in development.
 
 - Add owned CPU / GPU PCM preprocessing outputs and Worker reuse / disposal contracts; audio encoder and final embedding integration remain in development.

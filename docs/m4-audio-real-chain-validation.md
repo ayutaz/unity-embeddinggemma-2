@@ -1,5 +1,13 @@
 # 実PCMから最終音声APIへの候補chain検証
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
+## 2026-10-14の追加状況
+
+過去の最終cosine全24条件合格をencoder elementwise合格へ読み替えない。最新encoder候補は元12数値条件すべて不合格、全role / 入力境界 / 所有権・資源の全chain受け入れは未達。
+
+## 当時の実測・実装記録
+
 2026-10-13。固定Git Runtime `9c6f794…`、参照producer `4edbe17…`、harness `da5e8f0…`で、実PCM → AudioPreprocessor → AudioFeatureEncoder → 音声専用backbone → AudioEmbedderを実行した。Document promptの全ID / maskも公式参照へ照合する。**FP32のCPU / GPUとFloat16重みのCPUは各6信号が合格。Float16重みのGPUはsineの最終正規化で失敗し、全体未達**。[全caseと原失敗](results/m4-audio-real-chain-windows-failed-20261013.json)、[TDDと実行receipt](results/m4-audio-real-chain-tdd-and-execution-20261013.json)。
 
 | 条件 | 最終vector | minimum cosine | 状態 |

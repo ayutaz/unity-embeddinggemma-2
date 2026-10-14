@@ -1,5 +1,17 @@
 # Unity のローカル自動操作
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。実モデル実行は停止中。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
+
+## 現在の実モデル実行方針
+
+2026-10-14、実モデル実行は停止中。下のm1 / runtime / completion / searchのコマンドは従来のCPU/GPU履歴suiteを含み、GPU専用の現行入口ではない。今の要件に対して全suiteをローカル起動しない。
+
+GPU専用へ変更した対象は別validation packageの `EmbeddingGemma.Validation.Tests.CompensatedVisionReferenceTests` と `EmbeddingGemma.Validation.Tests.CompensatedNormAudioEncoderReferenceTests`。Runtimeとvalidationを同じ固定Git SHAにし、requested / resolved SHAを確認してからcompileする。コード基準 `a237dee2874cdb0fbcdf4fe333aebae7193ad390` の再compile / 実モデル検証は未実施。
+
+再開時は[全体計画R0〜R5](multimodal-tdd-plan.md)の一つのGPU入力を選び、実GPU / graphics API、actual backend、fallback / flush 0を保存する。GPUモデルでもload / graph変換・shape解析 / Worker準備 / hash / uploadはCPU負荷を伴うため、各段階を計測する。ローカルは外部5分上限を設定・確認し、期限時に対象PIDのidentityを確認して停止、部分結果とexitを別scopeで保存する。既存ignored launcherは長いWaitForExitを使うため、この上限が実装済みとは扱わない。新しいlauncher自動化を追加する場合はTDDでtimeout・子process終了を検証する。
+
+観測timeoutだけで新しいEditorを起動しない。同operation / PIDを追跡し、GPU未対応・未実行・中断・数値不合格を区別する。重い全条件の実行はGPU runner / ライセンスを確保したActionsを優先し、CPU runnerの結果を実GPU合格に数えない。
+
 更新日: 2026-10-10（main統合状況を更新。Unityの実測は以前の記録を維持）
 最新のmain / PR / CIと実行範囲は [現在の状態](status.md)、UPM移行の検証は [パッケージ検証](m2-package-validation.md)を参照。
 

@@ -1,5 +1,7 @@
 # 工程1〜3の作業基準と受け入れ
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。実モデル実行は停止中。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
+
 2026-10-14。ユーザー指定の範囲は、(1)基準・PR依存整理、(2)画像・音声encoder数値不一致修正、(3)実入力→最終768次元APIの受け入れ。sample・正式Releaseは今回の完了条件へ置き換えない。
 
 ## 停止時の状況とGPU実行への変更
@@ -37,7 +39,7 @@ API・前処理・定数転送は開発統合候補。#41 / #53 / #68 / #70 / #7
 
 画像は新旧参照の文脈一致を先に満たし、元の保存graph・入力・重みhashを維持してstage差を局所化する。音声候補の成功だけで画像へ同じ修正を採用しない。
 
-工程2の完了証拠は元画像12条件と、元音声6信号のPython保存export・Sentis CPU/実GPUの固定数値gate。小さいgreen・cosineのみの成功・FP64候補・skipは代替にならない。
+従来の工程2の記録は元画像12条件と元音声6信号×CPU/GPUを含む。ユーザーのGPU実行要件により、再開時の主実行は画像全profile / 音声元6信号のGPU固定数値gateとPython保存exportとする。CPU/GPU全条件の過去の失敗は保持し、GPU専用結果を旧matrix全体の完了へ流用しない。小さいgreen・cosineのみの成功・FP64候補・skipは代替にならない。
 
 ## 実入力から最終API
 
@@ -162,3 +164,18 @@ Git `02413f7…` の音声run `38560553234` と画像run `38560640093` は、PNG
 専用workflowは監査済み保存native graphと最初のfixtureだけを部分取得し、backboneやHF snapshotを取得しない。旧参照JSON・manifestの固定SHA、producer/revision、選択graph・入力のpath/サイズ/SHAを検査してからloadし、診断のみのJSONを出す。通常の参照生成の全manifest監査を弱めていない。standalone replay4 assertion red、workflow2 red→画像分岐と関連回帰を含む23 green。[replay red](results/saved-reference-replay-red-20261014.json) / [workflow red](results/reference-context-workflow-red-20261014.json) / [green](results/reference-context-workflow-green-20261014.json)。最初のfixtureの診断であり、全encoder・工程2/3の合格ではない。
 
 専用matrix [38563722587](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38563722587) はhead `d78066b2f5d608ab158773b2a64c1750299f0fc3` で4 jobの実handleを確認した。画像nativeは開始済み、残りはqueue待ち。任意labelは同じrunの確認後に外した。別の画像role/thread run `38562190876`（head `9332de5…`、job `115845754166`）は公式実モデル比較stepでliveを確認し、未完了なので再起動しない。結果が揃うまで工程2/3は未完了のまま維持する。
+
+
+## 最後の確定結果と再開計画
+
+実装・実モデル検証は停止中。現在のコード基準は `a237dee2874cdb0fbcdf4fe333aebae7193ad390`。画像norm4の中断、GPU専用構成2 red→2 green、対象変更後のUnity未検証は[中断receipt](results/m3-vision-norm4-user-interrupted-20261014.json)と[文書更新snapshot](results/documentation-checkpoint-20261014.json)を参照する。
+
+画像の[Query / Document / Raw実Python参照](results/m3-real-image-all-role-reference-20261014.json)はActions `38562190876`、producer `891ce9004deecc262437e56b2fd9a2eaf1054632`で全18件合格した。上の旧runの「Query/Raw未実行」は当時の履歴。元vision FP32 gate、Unity全chainの未達は維持する。音声Query / Rawは未完了。
+
+[CPU参照文脈matrix](results/native-first-fixture-context-matrix-20261014.json)のActions `38563722587` は4 job実行完了。最初のfixtureのみの検証で、native画像3要素不一致、AVX2要求画像は一致、native音声silenceは一致、AVX2要求音声はthread別に不一致だった。hostと設定の交絡があるためCPU ISA単独を原因確定せず、旧goldenを更新しない。
+
+[dynamic16候補](results/m4-norm1-dynamic16-full-encoder-failed-20261014.json)はsource `998fa43d89814a90c9eebb899c71439879b79390`、norm1 / projection64 / dynamic16、候補45623層。元音声12数値条件は全件不合格、NUnit0 pass / 2 fail / skip0 / exit2、GPU fallback / flush0。GPU最大許容差比11.47812797で、候補採用・全encoder修正とは扱わない。
+
+[標準ONNX SiLU修正](results/native-silu-division-order-green-20261014.json)はmarkerを `Neg→Exp→Add→Div` へ置換し、FP32除算順序の小さい反例を3 red→3 green、関連37 greenへした。準備回帰は旧Swish検査の失敗を標準4演算の検査へ更新し4 green。実モデルは未実行で、元silence不合格の修正完了とは言えない。
+
+再開順は[全体計画R0〜R5](multimodal-tdd-plan.md)。最新compileと小さいGPU確認、既存SiLU修正のActions全信号照合、一つのGPU失敗経路の最小修正、全profile / 全信号、実全chain、sample / 必須環境 / 配布準備の順に進む。段階別負荷と5分の外部上限を再開時に設定・確認し、未変更の全suite反復や新しい大規模補償候補の同時展開を避ける。工程2・3は未完了。

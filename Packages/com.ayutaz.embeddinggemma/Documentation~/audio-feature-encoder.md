@@ -1,5 +1,7 @@
 # 音声encoderへのTensor接続
 
+> 2026-10-14: このencoder APIはDraft実装です。合成契約合格と実encoderの数値合格は別で、最新実候補は不合格。運用経路はGPUComputeを明示し、前処理・backboneとbackendを揃えます。
+
 `AudioFeatureEncoder`は`AudioPreprocessor`の結果を受け取り、投影済みsoft tokenを返す低レベルAPIです。メインスレッドで同期実行します。最終768次元の埋め込みAPIではありません。
 
 CPU / GPUComputeを明示し、前処理とencoderを同じbackendで構成します。GPUではfeature / maskをCPUへダウンロードせず、既存のfeature Tensorをそのままencoderへ渡します。PCMのuploadは前処理の入力境界です。

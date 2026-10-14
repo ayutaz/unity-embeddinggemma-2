@@ -532,7 +532,7 @@ class TorchWelfordLayerNorm(nn.Module):
     https://github.com/pytorch/pytorch/blob/5c4886908584029761b579af026dcfb627c84070/aten/src/ATen/native/cpu/moments_utils.h
     Native source and weights are borrowed; never change the golden reference.
     """
-    def __init__(self, source, *, refine_inverse=False):
+    def __init__(self, source, *, refine_inverse=False, fuse_scalar_mean=False):
         super().__init__()
         if source.normalized_shape not in ((32,), (128,)):
             raise ValueError("candidate supports only width 32 or 128")
@@ -542,6 +542,9 @@ class TorchWelfordLayerNorm(nn.Module):
         self.eps = source.eps
         self.width = source.normalized_shape[0]
         self.refine_inverse = refine_inverse
+        # Linux reference compiler contracts the scalar AddMoments mean update.
+        # Opt in explicitly; existing candidate graphs retain their old order.
+        self.fuse_scalar_mean = fuse_scalar_mean
 
     def forward(self, values):
         if not torch.compiler.is_compiling():
@@ -563,7 +566,8 @@ class TorchWelfordLayerNorm(nn.Module):
             previous = index * count
             delta = mean[..., index:index+1] - total_mean
             coefficient = values.new_tensor(count / (previous + count))
-            total_mean = total_mean + coefficient * delta
+            total_mean = (fp32_fma(coefficient, delta, total_mean) if self.fuse_scalar_mean
+                          else total_mean + coefficient * delta)
             total_moment = total_moment + (moment[..., index:index+1] + delta * delta * coefficient * previous)
         variance = total_moment / self.width + self.eps
         inverse = fp32_refined_rstd(variance) if self.refine_inverse else 1.0 / torch.sqrt(variance)

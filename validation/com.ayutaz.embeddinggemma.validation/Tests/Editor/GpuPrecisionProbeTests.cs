@@ -32,8 +32,8 @@ namespace EmbeddingGemma.Validation.Tests
             foreach (var entry in (JObject)specification["files"])
             {
                 using var stream = File.OpenRead(Path.Combine(root, entry.Key));
-                Assert.That(PlayerFileHash.Compute(stream, out var bytes), Is.EqualTo(entry.Value.Value<string>("sha256")));
-                Assert.That(bytes, Is.EqualTo(entry.Value.Value<long>("bytes")));
+                Assert.That(PlayerFileHash.Compute(stream, out _), Is.EqualTo(entry.Value.Value<string>("sha256")));
+                Assert.That(new FileInfo(Path.Combine(root, entry.Key)).Length, Is.EqualTo(entry.Value.Value<long>("bytes")));
             }
             rows = new JArray();
             report = new JObject { ["success"] = false, ["scope"] = "weights_free_gpu_fma_and_welford_components_only",

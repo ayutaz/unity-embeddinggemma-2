@@ -12,6 +12,8 @@
 
 LayerNormの中心化分散＋補償和候補は10 red→既存回帰を含む25 green。norm chunk4の全encoderは全12条件不合格、norm chunk1のsilence post normもCPU/GPU各1要素不合格。候補はEditor/testのみ。工程3のQuery/Document/Raw参照生成と入力producerの別SHA監査は12 red→関連34 greenだが、実モデルのrole別参照とSentis全chainは未完了。固定許容差・元の失敗・Required CIを維持して進める。
 
+画像候補の約31 MBゼロinitializerは1 red→スカラーbroadcast修正→既存26 green。保存実モデルの3 profile×CPU/GPU、各2画像は全12 numeric caseで固定elementwise不合格、GPU fallback/flush0、NUnit0 pass / 6 fail / skip0 / exit2。監査済みbackboneを再exportせずrole別参照へ使うAPI/CLIは関連44 green、source保護・path/CLI監査16 green。工程2・3の未達は維持する。
+
 ## 最新checkpoint: 全音声encoder検証後
 
 2026-10-13確認。mainは `a88ed9cffd942999bb271e597c86563298425f2c`。全体TDD計画PR #58まで統合済み。今回の更新は文書のみで、モデル生成・Unity実行は追加しない。

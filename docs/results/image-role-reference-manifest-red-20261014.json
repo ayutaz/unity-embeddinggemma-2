@@ -1,0 +1,11 @@
+{
+  "scope": "fixed_image_role_manifest_completeness_red",
+  "source_base": "a20ff165aa7bdc170350b68f20a86aaec660f399",
+  "command": "uv run --locked pytest tests/test_image_role_reference_workflow.py -q --tb=short",
+  "passed": 1,
+  "failed": 1,
+  "real_run": 38558995411,
+  "real_failure": "FileNotFoundError: fixed-image-native/square/0.png",
+  "numeric_cases_executed": 0,
+  "reason": "Image producer audits the complete manifest, including PNGs and processor_config.json"
+}

@@ -1,0 +1,146 @@
+{
+  "scope": "compensated_silence_subsample_observation_only",
+  "native_reference_source": "e868446e44fb96494605b61b99f86cf3a5f5f973",
+  "sentis": "2.6.1",
+  "full_encoder_validated": false,
+  "termination_allocation_warning_retained": true,
+  "failed": 0,
+  "end_to_end_validated": false,
+  "unity": "6000.3.16f1",
+  "exit_code": 0,
+  "passed": 2,
+  "conditions": [
+    {
+      "report_sha256": "b112d54156b6ee1a7b04549d6fb23517e20046881df28032821bbb1a5e72ae24",
+      "backend": "CPU",
+      "first_nonzero_difference": "layer0.norm",
+      "normal_final_matches_observed_bits": true,
+      "success": true,
+      "stages": [
+        {
+          "stage": "layer0.conv",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "capture_sha256": "c36aa611eedea3b78551a16577d17df98dd7d451cc0e1d1e7bc1c5e073173d9c"
+        },
+        {
+          "stage": "layer0.norm",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 6.67572021484375E-06,
+          "maximum_tolerance_ratio": 0.12262070823950967,
+          "capture_sha256": "1c9b870c8a2f4bed5c1ee01ccf59830bf5b859acf150edf7d79b15c045514f92"
+        },
+        {
+          "stage": "layer0.act",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 1.426786184310913E-06,
+          "maximum_tolerance_ratio": 0.11090145010190063,
+          "capture_sha256": "51385c8b722cb7041f9e308ebf57b5edaa0a28b54de7bd92c478ec01afcfdc97"
+        },
+        {
+          "stage": "layer1.conv",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 1.239776611328125E-05,
+          "maximum_tolerance_ratio": 0.049516618767590774,
+          "capture_sha256": "cf5416dffb040ae6841d97587674e6312781bf1302ea5207040146e0cb1981b0"
+        },
+        {
+          "stage": "layer1.norm",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 1.621246337890625E-05,
+          "maximum_tolerance_ratio": 0.26934781602448654,
+          "capture_sha256": "5fe72d6603a684b4c7bf1c7c6d70feb349b378bac34e3c87aca6b8bc49ae1c92"
+        },
+        {
+          "stage": "layer1.act",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 1.621246337890625E-05,
+          "maximum_tolerance_ratio": 0.09214742063946768,
+          "capture_sha256": "85cf6f899dc6519065656eb452c9bb34d219ed3b6c60dd4be35a6108196c09eb"
+        },
+        {
+          "stage": "input_proj_linear",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 5.91278076171875E-05,
+          "maximum_tolerance_ratio": 0.7322561426248949,
+          "capture_sha256": "679ba3decc09ed21d0eb91147db9e8b111cf4cae18a4cb416c0d8e1ceebc8e75"
+        }
+      ]
+    },
+    {
+      "report_sha256": "bc30fe11d5bb2ce68f2b7287d15835ad5d89c0cb95f1ea20d648e7a58f978aa0",
+      "backend": "GPUCompute",
+      "first_nonzero_difference": "layer0.norm",
+      "normal_final_matches_observed_bits": true,
+      "success": true,
+      "stages": [
+        {
+          "stage": "layer0.conv",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "capture_sha256": "c36aa611eedea3b78551a16577d17df98dd7d451cc0e1d1e7bc1c5e073173d9c"
+        },
+        {
+          "stage": "layer0.norm",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 6.67572021484375E-06,
+          "maximum_tolerance_ratio": 0.12266478469825859,
+          "capture_sha256": "b01efb2c8dfbf3f53bea9279dbee054fbf297be512d4d5dcdb86c3c1f4d3e255"
+        },
+        {
+          "stage": "layer0.act",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 1.9073486328125E-06,
+          "maximum_tolerance_ratio": 0.11104623006286916,
+          "capture_sha256": "b22d8d0b4963e3eb608820217d45defc9cd37e055a2c3a9e094783e52398ba20"
+        },
+        {
+          "stage": "layer1.conv",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 5.9604644775390625E-06,
+          "maximum_tolerance_ratio": 0.056346497218292955,
+          "capture_sha256": "7ceafbc8ca78be69f44293d98ec6d20ffb5c460772469a7e5152a4fc6c5f74b2"
+        },
+        {
+          "stage": "layer1.norm",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 1.6689300537109375E-05,
+          "maximum_tolerance_ratio": 0.14871502173997714,
+          "capture_sha256": "46e0a52c0628e026dc1d51cb2ba13d7a80ee13f5324dbc162e1f8ec9a3337474"
+        },
+        {
+          "stage": "layer1.act",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 1.6689300537109375E-05,
+          "maximum_tolerance_ratio": 0.09064580452356472,
+          "capture_sha256": "860a3aa22a9791b5165981883371c762651253d27b001dfc823aee5372bf7818"
+        },
+        {
+          "stage": "input_proj_linear",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 4.00543212890625E-05,
+          "maximum_tolerance_ratio": 0.6638164849742562,
+          "capture_sha256": "31311b3b8ef0713d52a956c9ec98f027af883ecaa557b54530395f0855a02cbb"
+        }
+      ]
+    }
+  ],
+  "skipped": 0,
+  "source": "a89ac05c1e970045420747522512be191ee1a169"
+}

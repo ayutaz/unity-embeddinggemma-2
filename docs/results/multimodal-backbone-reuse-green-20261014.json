@@ -1,0 +1,14 @@
+{
+  "destination_cli_audit_passed": 16,
+  "unity_validated": false,
+  "passed": 44,
+  "real_role_reference_validated": false,
+  "tiny_models_only": true,
+  "command": "uv run pytest tests/test_backbone_reuse.py tests/test_multimodal_reference_roles.py tests/test_audio_embeddings.py tests/test_image_embeddings.py -q --tb=short",
+  "scope": "audited_backbone_reuse_role_generation_regression_green",
+  "source_base": "49609fb8ee9d25bc1cf520ade974ad3690e3d541",
+  "failed": 0,
+  "destination_cli_audit_command": "uv run pytest tests/test_backbone_reuse.py tests/test_backbone_reuse_destination.py tests/test_multimodal_reference_roles.py -k overlap_or_cli_forwards_or_corrupt_or_original_producer",
+  "destination_cli_audit_failed": 0,
+  "destination_cli_audit_deselected": 12
+}

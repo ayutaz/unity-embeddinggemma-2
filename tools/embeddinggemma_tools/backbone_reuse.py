@@ -6,6 +6,14 @@ from pathlib import Path
 import re
 
 
+def validate_reuse_destination(source, destination):
+    if source is None:
+        return
+    source, destination = Path(source).resolve(), Path(destination).resolve()
+    if source.is_relative_to(destination) or destination.is_relative_to(source):
+        raise ValueError("backbone source and output destination must be separate")
+
+
 def audit_backbone_source(directory, modality, *, revision, input_sha256, profiles):
     if modality not in ("audio", "image"):
         raise ValueError("backbone modality is invalid")

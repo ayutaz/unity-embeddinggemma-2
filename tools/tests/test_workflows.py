@@ -14,6 +14,20 @@ def load(name):
                      Loader=yaml.BaseLoader)
 
 
+def test_audio_encoder_only_dispatch_preserves_all_signals_without_extra_chain_exports():
+    workflow = load("audio-runtime-reference.yml")
+    option = workflow["on"]["workflow_dispatch"]["inputs"]["encoder_only"]
+    assert option["type"] == "boolean" and option["default"] == "true"
+    steps = workflow["jobs"]["native-reference"]["steps"]
+    encoder = next(s for s in steps if "prepare-audio-encoder" in s.get("run", ""))
+    assert "--native-silu --collect-onnx-failures" in encoder["run"]
+    assert "if" not in encoder
+    for command in ("prepare-audio-runtime-stages", "prepare-audio-embeddings"):
+        step = next(s for s in steps if command in s.get("run", ""))
+        assert "!inputs.encoder_only" in step["if"]
+        assert "always()" in step["if"]
+
+
 def test_required_reference_job_validates_long_multimodal_backbone_and_retains_separate_evidence():
     steps = load("model-reference.yml")["jobs"]["reference"]["steps"]
     run = [step for step in steps if "prepare-backbone" in step.get("run", "")]

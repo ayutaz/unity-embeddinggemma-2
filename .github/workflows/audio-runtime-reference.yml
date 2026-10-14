@@ -2,6 +2,11 @@ name: Audio native reference for runtime diagnostics
 
 on:
   workflow_dispatch:
+    inputs:
+      encoder_only:
+        description: Validate all six encoder signals and both profiles without exporting unrelated chain stages
+        type: boolean
+        default: true
   pull_request:
     types: [opened, synchronize, labeled]
 
@@ -44,13 +49,13 @@ jobs:
           --output ../artifacts/audio-runtime-reference
           --native-silu --collect-onnx-failures
       - name: Export stages only after native reference completion
-        if: ${{ always() && hashFiles('artifacts/audio-runtime-reference/audio-encoder-validation.json') != '' }}
+        if: ${{ always() && !inputs.encoder_only && hashFiles('artifacts/audio-runtime-reference/audio-encoder-validation.json') != '' }}
         run: >-
           uv run --locked python -m embeddinggemma_tools prepare-audio-runtime-stages
           --encoder-source ../artifacts/audio-runtime-reference
           --output ../artifacts/audio-runtime-stages
       - name: Generate official final audio vectors and native saved chain
-        if: ${{ always() && hashFiles('artifacts/audio-runtime-reference/audio-encoder-validation.json') != '' }}
+        if: ${{ always() && !inputs.encoder_only && hashFiles('artifacts/audio-runtime-reference/audio-encoder-validation.json') != '' }}
         run: >-
           uv run --locked python -m embeddinggemma_tools prepare-audio-embeddings
           --encoder-source ../artifacts/audio-runtime-reference

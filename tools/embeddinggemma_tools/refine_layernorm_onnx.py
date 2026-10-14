@@ -26,7 +26,11 @@ def refine_layernorm_inverses(model, template, *, prefixes=(
             or any(not isinstance(p, str) or not p for p in prefixes)):
         raise ValueError('Select unique explicit inverse prefixes')
     if (len(template.graph.input) != 1 or len(template.graph.output) != 1
+            or any(v.type.tensor_type.elem_type != onnx.TensorProto.FLOAT
+                   for v in (*template.graph.input, *template.graph.output))
             or any(n.domain not in ('', 'ai.onnx') for n in template.graph.node)
+            or any(n.op_type == 'Cast' and a.name == 'to' and a.i == onnx.TensorProto.DOUBLE
+                   for n in template.graph.node for a in n.attribute)
             or any(w.data_type == onnx.TensorProto.DOUBLE for w in template.graph.initializer)
             or any(a.type == onnx.AttributeProto.TENSOR and a.t.data_type == onnx.TensorProto.DOUBLE
                    for n in template.graph.node for a in n.attribute)):

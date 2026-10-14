@@ -1,0 +1,11 @@
+{
+  "xml_sha256": "7251dd2bfa9a09e1f943471707a9fce60596e61ad43cee23d6c566eab8b542cf",
+  "exit_code": 2,
+  "source": "d72c7803b9d3fbedae7dc83096874d5932ea16ea",
+  "reason": "Missing compensated LayerNorm Build and immutable transform APIs",
+  "full_encoder_validated": false,
+  "failed": 10,
+  "passed": 0,
+  "scope": "compensated_layer_norm_tdd_red",
+  "skipped": 0
+}

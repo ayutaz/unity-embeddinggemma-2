@@ -28,6 +28,21 @@ def test_audio_encoder_only_dispatch_preserves_all_signals_without_extra_chain_e
         assert "always()" in step["if"]
 
 
+def test_audio_first_failure_dispatch_runs_existing_context_guarded_localization():
+    workflow = load("audio-runtime-reference.yml")
+    option = workflow["on"]["workflow_dispatch"]["inputs"]["diagnose_first_failure"]
+    assert option["type"] == "boolean" and option["default"] == "false"
+    encoder = next(s for s in workflow["jobs"]["native-reference"]["steps"]
+                   if "prepare-audio-encoder" in s.get("run", ""))
+    assert encoder["env"]["DIAGNOSE_FIRST_FAILURE"] == "${{ inputs.diagnose_first_failure }}"
+    command = encoder["run"]
+    assert 'if [ "$DIAGNOSE_FIRST_FAILURE" = true ]; then' in command
+    diagnostic, collection = command.split("else", 1)
+    assert "--native-silu" in diagnostic and "--collect-onnx-failures" not in diagnostic
+    assert "--native-silu --collect-onnx-failures" in collection
+    assert "continue-on-error" not in encoder and "|| true" not in command
+
+
 def test_required_reference_job_validates_long_multimodal_backbone_and_retains_separate_evidence():
     steps = load("model-reference.yml")["jobs"]["reference"]["steps"]
     run = [step for step in steps if "prepare-backbone" in step.get("run", "")]

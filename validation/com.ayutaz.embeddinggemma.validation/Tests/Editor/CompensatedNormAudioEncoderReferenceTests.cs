@@ -38,6 +38,7 @@ namespace EmbeddingGemma.Validation.Tests
                 ["runtime_source"] = RuntimeSource, ["runtime_overlay"] = false, ["reference_source"] = Producer,
                 ["unity"] = Application.unityVersion, ["sentis"] = "2.6.1", ["gpu"] = SystemInfo.graphicsDeviceName,
                 ["graphics_api"] = SystemInfo.graphicsDeviceType.ToString(), ["conditions"] = conditions,
+                ["execution_backend"] = "GPUCompute", ["cpu_validated"] = false, ["expected_conditions"] = 1,
                 ["hash_backends"] = new JObject(), ["feature_rtol"] = 1e-4, ["feature_atol"] = 1e-5,
                 ["minimum_cosine"] = 0.999999, ["end_to_end_validated"] = false,
                 ["float16_validated"] = false, ["pcm_preprocessing_validated"] = false,
@@ -92,10 +93,12 @@ namespace EmbeddingGemma.Validation.Tests
             Save();
         }
 
-        [TestCase(BackendType.CPU)] [TestCase(BackendType.GPUCompute)]
+        [TestCase(BackendType.GPUCompute)]
         [Timeout(1200000)]
         public void SavedFp32EncoderApiMatchesCurrentSixNativeSignals(BackendType backend)
         {
+            Assert.That(backend, Is.EqualTo(BackendType.GPUCompute), "Real-model inference requires GPUCompute.");
+            Assert.That(SystemInfo.supportsComputeShaders, Is.True, "Actual GPU required; never skip or fall back.");
             var condition = new JObject { ["requested_backend"] = backend.ToString(), ["success"] = false,
                 ["cases"] = new JArray(), ["cpu_fallback_count"] = 0, ["readback_flush_count"] = 0 };
             conditions.Add(condition); Save();
@@ -183,7 +186,7 @@ namespace EmbeddingGemma.Validation.Tests
         [OneTimeTearDown] public void Complete()
         {
             if (report == null) return;
-            report["success"] = conditions.Count == 2 && conditions.All(value => value.Value<bool>("success"));
+            report["success"] = conditions.Count == 1 && conditions.All(value => value.Value<bool>("success"));
             report["sentis_encoder_numeric_validated"] = report["success"];
             report["completed_utc"] = DateTime.UtcNow.ToString("O"); Save();
         }

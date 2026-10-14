@@ -4,6 +4,14 @@
 
 ## 現在の判定
 
+**2026-10-15最新のSiLU修正:** `f774707`の5境界観測は通常最終bitを変えず、input_projectionと最初のpre_layer_norm後の入力を元参照へ全bit一致させた。最初の差はactivation_inputの826,899値（元の局所許容差超過0・最大比0.001836）。最初のFF出力89,170値、norm_pre_attn81,727値へbit差が伝播する。観測値をhash付きのGit対象外binaryへ保存した。元のquantized-linear入力Clipは期待値だけに適用し、参照ファイル / 製品GPU計算は変更しない。
+
+固定PyTorch commit `5c488690…`が参照するSLEEF commit `5a1d179…`のexpf手順を確認した。独立したFP32-FMA丸めoracleは最初のnative SiLU 1,146,880値を全bit再現。FP64はoffline oracleだけ。GPU API / 固定活性化の2 Redを確認後、FP32 range reduction・polynomial・native MAD・除算の残差補正を行うopt-in `GpuSilu`を追加した。BSL-1.0の著作権表記とlicenseを同梱。`e2121e9`の実RTX 4070 Ti SUPER / D3D12は2 pass / fail0 / skip0 / exit0、元SiLU 1,146,880値を全bit一致。CPU入力拒否後の再利用、signed zero、独立GPU出力、op解放後の借用入力 / 出力の生存も確認。[固定観測・源コード・TDD・GPU成功](results/m4-native-silu-frozen-gpu-green-20261015.json)。shaderのbounded range外はGPU数学経路で、bit一致は未検証。他GPU / OSの保証にも流用しない。
+
+**全encoderへのSiLU接続は未完了。** 既存135投影候補は539要素不合格のまま。次はSiLUを投影と同じGPU tensorのstageとして接続し、最初のFFと元全encoderへ戻す。音声元6信号 / 両profile、画像FP32全3 profile、最終768 APIの全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰 / 中間readback・CPU計算fallback禁止は未達。既存Persistent allocation警告の発生元も未検証。所有Unityはterminal。
+
+独立Python全体回帰 [38654418805](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38654418805) / 固定source `e25217575b591e37f68e37943d49e47986f19682`はterminal success、4環境各843 pass / fail0 / skip0。全4 XMLで確認した。以降のPython変更はなく、追加GPU SiLU / 新しいUnity観測 / Required CIの成功には流用しない。[固定回帰](results/python-full-projection-shape-audit-green-20261015.json)。以降は前回checkpoint。
+
 **2026-10-15最新の誤差伝播診断:** 観測helperは小さいGPU1 Red→1 Greenで、通常と観測の最終bit一致と、借りた入力 / kernelの生存を確認した。`b29c5ad`の135投影候補は通常最終値539要素不合格を再現し、診断readbackを加えても最終値のbitは変わらなかった。元の12層参照との照合ではlayer_0〜9は許容差内（bit差は残る）、最初の超過はlayer_10の42要素・最大許容差比8.265064、layer_11は2,021要素・19.720919。NUnit1 passは観測完了であり、全encoder数値合格ではない。
 
 layer_10を元graphから切り出した11投影 / 12 segment / 2,941 ONNX nodeへ、元native layer_9出力を入力した。`e252175`の単独GPUは許容差超過0・最大許容差比0.243686、GPUCompute・計算fallback / flush0、NUnit1 pass / fail0 / skip0 / exit0。準備1.186秒、実行＋最終診断download0.771秒。全体のlayer_10不合格には前段入力の誤差伝播が関与するが、layer_10の全bit一致や全encoder合格は証明していない。小さい観測と単独層の終了logにはPersistent allocation 1件の警告があり、発生元 / leak freedomは未検証。所有Unityはterminal。[固定観測・TDD・単独GPUと限界](results/m4-all-static-original-layer-propagation-20261015.json)。

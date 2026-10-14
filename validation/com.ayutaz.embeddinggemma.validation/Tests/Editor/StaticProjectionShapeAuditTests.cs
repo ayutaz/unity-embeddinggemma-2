@@ -15,10 +15,18 @@ namespace EmbeddingGemma.Validation.Tests
     {
         [Test]
         public void AuditPartitionBoundaryShapesWithoutRunningInference()
+            =>AuditBoundaries(false);
+
+        [Test]
+        public void AuditNativeSiluBoundaryShapesWithoutRunningInference()
+            =>AuditBoundaries(true);
+
+        void AuditBoundaries(bool nativeSilu)
         {
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var root=Path.Combine(Application.dataPath,"GpuAudioBoundaryShapeAudit");
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/partition-boundary-shapes-"+source+".json"));
+            var folder=nativeSilu?"GpuAudioNativeSiluShapeAudit":"GpuAudioBoundaryShapeAudit";
+            var root=Path.Combine(Application.dataPath,folder);
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+(nativeSilu?"native-silu-boundary-shapes-":"partition-boundary-shapes-")+source+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject { ["success"]=false,["scope"]="fixed_boundary_metadata_only_no_inference",
                 ["runtime_source"]=source,["gpu_validated"]=false,["full_encoder_validated"]=false,["end_to_end_validated"]=false };
@@ -34,7 +42,7 @@ namespace EmbeddingGemma.Validation.Tests
                 using(var stream=File.OpenRead(Path.Combine(root,"boundaries.onnx")))
                     Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(manifest.Value<string>("audit_graph_sha256")));
                 report["source_graph_sha256"]=manifest["source_graph_sha256"];report["audit_graph_sha256"]=manifest["audit_graph_sha256"];
-                var model=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/GpuAudioBoundaryShapeAudit/boundaries.onnx"));
+                var model=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/"+folder+"/boundaries.onnx"));
                 var analyser=typeof(Worker).Assembly.GetType("Unity.InferenceEngine.Compiler.Analyser.PartialInferenceAnalysis");
                 Assert.That(analyser,Is.Not.Null);
                 var context=analyser.GetMethod("InferModelPartialTensors").Invoke(null,new object[]{model});
@@ -51,7 +59,7 @@ namespace EmbeddingGemma.Validation.Tests
                 foreach(var boundary in model.outputs)boundaries[boundary.name]=JArray.FromObject(Shape(boundary.index));
                 report["boundaries"]=boundaries;Save();
                 Assert.That(boundaries.Properties().Select(p=>p.Name),Is.EquivalentTo(manifest["boundary_names"].ToObject<string[]>()));
-                Assert.That(boundaries.Count,Is.EqualTo(411));report["success"]=true;
+                Assert.That(boundaries.Count,Is.EqualTo(nativeSilu?483:411));report["success"]=true;
             }
             catch(Exception error){report["error"]=error.ToString();throw;}
             finally { Save(); }

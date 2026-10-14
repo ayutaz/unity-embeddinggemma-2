@@ -152,3 +152,34 @@ def test_image_query_role_reuses_audited_document_backbone_without_export(tmp_pa
     for name, value in original["files"].items():
         if name.endswith("backbone.pt2"):
             assert report["files"][name] == value
+
+
+@pytest.mark.parametrize("modality", ["audio", "image"])
+def test_official_feature_drift_records_failed_context_without_replacing_reference(
+        tmp_path, audio_fixture, image_fixture, monkeypatch, modality):
+    module = audio_embeddings if modality == "audio" else image_embeddings
+    snapshot, encoder = audio_fixture if modality == "audio" else image_fixture
+    load = getattr(module, "load_" + modality + "_embedding_model")
+    core = load(snapshot)
+    forward = core.forward
+    def changed(*args, **kwargs):
+        result = forward(*args, **kwargs)
+        name = modality + "_hidden_states"
+        setattr(result, name, getattr(result, name) + .25)
+        return result
+    monkeypatch.setattr(core, "forward", changed)
+    monkeypatch.setattr(module, "load_" + modality + "_embedding_model", lambda *_: core)
+    output = tmp_path / modality
+    run = getattr(module, "prepare_" + modality + "_embeddings")
+    with pytest.raises(ValueError, match="encoder features"):
+        run(snapshot, encoder, output, sequence_length=32,
+            revision=prepare.MODEL_REVISION if modality == "audio" else "a" * 40,
+            source_commit="b" * 40, role="raw")
+    failure_path = output / (modality + "-role-context-failure.json")
+    assert failure_path.is_file(), "Numeric context failure diagnostics were discarded"
+    failure = json.loads(failure_path.read_text(encoding="utf-8"))
+    assert failure["success"] is False and failure["role"] == "raw"
+    assert failure["mismatched_elements"] > 0
+    assert .24 < failure["maximum_absolute_error"] < .26
+    assert failure["expected_unchanged"] and failure["runtime"]["torch_threads"] > 0
+    assert not (output / (modality + "-embedding-validation.json")).exists()

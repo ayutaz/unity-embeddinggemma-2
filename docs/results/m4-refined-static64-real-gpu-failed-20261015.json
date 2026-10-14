@@ -1,0 +1,105 @@
+{
+  "scope": "one_saved_onnx_audio_encoder_gpu_vs_immutable_original",
+  "success": false,
+  "source": "8c1e095a039e4ad2d71053dd315fba4cd9a10db9",
+  "report": {
+    "success": false,
+    "scope": "one_saved_onnx_audio_encoder_gpu_vs_immutable_original",
+    "signal": "silence",
+    "runtime_source": "8c1e095a039e4ad2d71053dd315fba4cd9a10db9",
+    "requested_backend": "GPUCompute",
+    "unity": "6000.3.16f1",
+    "sentis": "2.6.1",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "end_to_end_validated": false,
+    "all_original_signals_validated": false,
+    "phase": "completed",
+    "candidate_source": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "candidate_python_gate_passed": false,
+    "candidate_folder": "GpuAudioRefinedCandidate",
+    "graph_transform": {
+      "replaced_inverse_count": 2,
+      "prefixes": [
+        "/subsample_conv_projection/layer0/norm",
+        "/subsample_conv_projection/layer1/norm"
+      ],
+      "existing_initializer_bytes_preserved": true,
+      "existing_initializer_sha256": "1bf6702c73c5124fb83b629fadf150e32392d21bc5f024c2a4c88062b336ca6a",
+      "node_count": 7409,
+      "full_encoder_validated": false,
+      "source_commit": "9af88c45edca97e6c3d73b298f6c065b7638b837",
+      "original_graph_sha256": "f43f3275c1ba48837b626fc09c738a8204dabd25e2ff3c74d7e75abcb3591899",
+      "template_sha256": "026e6136b2cb4c940b0d320fe9da4e82529d6e47e1a1fbbdeb8c4209f19d858b",
+      "source_model_producer": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+      "algorithm": "bounded_fp32_sqrt_then_reciprocal_residual_refinement",
+      "original_node_count": 7237,
+      "old_graph_onnx_results_reused": false,
+      "graph_sha256": "8aefc4b83fd0cc709544a0d6337b8c1837d2c864ad1d3c8cbd39fcd568abc222",
+      "profile": "frames-1119-valid-1119"
+    },
+    "graph_sha256": "8aefc4b83fd0cc709544a0d6337b8c1837d2c864ad1d3c8cbd39fcd568abc222",
+    "saved_graph_layer_count": 2973,
+    "runtime_graph_transform": "CompensatedModel.Create/static64",
+    "layer_count": 40633,
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "actual_backend": "GPUCompute",
+    "mismatched_elements": 287,
+    "maximum_absolute_error": 0.00019598007202148438,
+    "maximum_tolerance_ratio": 9.277090026662508,
+    "error": "NUnit.Framework.AssertionException:   Preserve the original FP32 encoder numeric gate.\r\n  Expected: 0\r\n  But was:  287\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.SavedOnnxAudioGpuReferenceTests.Execute (System.String signal, System.String candidateFolder, System.Boolean compensateStatic) [0x00c0b] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@2b919a7f23ec\\Tests\\Editor\\SavedOnnxAudioGpuReferenceTests.cs:146 "
+  },
+  "process": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+      "-logFile",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\refined-static64-real-gpu-silence-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.SavedOnnxAudioGpuReferenceTests.RefinedStaticProjectionCandidateGpuMatchesOriginalGolden.*silence.*",
+      "-testResults",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\refined-static64-real-gpu-silence-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-14T18:14:37.601808+00:00",
+    "pid": 54232,
+    "exit_code": 2,
+    "elapsed_seconds": 80.1428958999968,
+    "completed_utc": "2026-10-14T18:15:57.744725+00:00"
+  },
+  "nunit": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0
+  },
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "all_original_signals_validated": false,
+  "prior_saved_welford8": {
+    "failed_elements": 355,
+    "maximum_tolerance_ratio": 6.290722137274609
+  },
+  "refined_inverse_only": {
+    "failed_elements": 472,
+    "maximum_tolerance_ratio": 7.310759792243903
+  },
+  "interpretation": "mismatch count fell but maximum error rose; numeric gate remains failed and overall improvement is not proven",
+  "raw_sha256": {
+    "saved-onnx-audio-gpu-8c1e095a039e4ad2d71053dd315fba4cd9a10db9-refined-static64-silence.json": "b89952fc2f72e0a03189407b87ebcb2f84beeec3e8a3236e80386567d2b482c7",
+    "refined-static64-real-gpu-silence-20261015.xml": "f63879e164d9128cb9c29a9ca3163855502bb38b63d5d9668c7b994708c636b2",
+    "refined-static64-real-gpu-silence-20261015.log": "1fad1bf487524614a7731ff4512708bfbf17520bae7d26a16434c90ee17f8f58",
+    "refined-static64-real-gpu-silence-20261015-process.json": "c867d11a66f58b392edfaf977eb613aaef781aff5083b6660e7a421d7b66fc8a"
+  }
+}

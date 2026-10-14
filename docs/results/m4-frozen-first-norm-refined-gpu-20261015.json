@@ -1,0 +1,275 @@
+{
+  "scope": "six_exact_unique_native_first_convolution_rows_only",
+  "success": true,
+  "original_row_count": 35840,
+  "unique_row_count": 6,
+  "case_results": [
+    {
+      "variant": "baseline",
+      "source": "7653e5289fc710127ce74ed19affcdf50dc4fcb8",
+      "rows": [
+        {
+          "success": false,
+          "scope": "first_native_conv_unique_rows_gpu_norm_component_only",
+          "source": "7653e5289fc710127ce74ed19affcdf50dc4fcb8",
+          "probe_variant": "baseline",
+          "case": "normal",
+          "requested_backend": "GPUCompute",
+          "full_encoder_validated": false,
+          "end_to_end_validated": false,
+          "phase": "completed",
+          "layer_kinds": {
+            "Slice": 32,
+            "Sub": 297,
+            "ScalarMad": 129,
+            "Add": 248,
+            "Mul": 90,
+            "Rsqrt": 1
+          },
+          "cpu_computation_or_input_count": 0,
+          "readback_flush_count": 0,
+          "exact_differences": 178,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 1.9073486328125e-06,
+          "error": "NUnit.Framework.AssertionException:   Diagnostic stronger local bit target; full encoder original tolerance remains unchanged.\r\n  Expected: 0\r\n  But was:  178\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.FrozenLayerNormGpuTests.FrozenFirstNormRowsMatchIndependentNativeBits (System.String name) [0x006e9] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@ea95cd3ebe98\\Tests\\Editor\\FrozenLayerNormGpuTests.cs:64 "
+        },
+        {
+          "success": false,
+          "scope": "first_native_conv_unique_rows_gpu_norm_component_only",
+          "source": "7653e5289fc710127ce74ed19affcdf50dc4fcb8",
+          "probe_variant": "baseline",
+          "case": "mean_inverse",
+          "requested_backend": "GPUCompute",
+          "full_encoder_validated": false,
+          "end_to_end_validated": false,
+          "phase": "completed",
+          "layer_kinds": {
+            "Slice": 32,
+            "Sub": 296,
+            "ScalarMad": 128,
+            "Add": 248,
+            "Mul": 88,
+            "Rsqrt": 1,
+            "Concat": 1
+          },
+          "cpu_computation_or_input_count": 0,
+          "readback_flush_count": 0,
+          "exact_differences": 2,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 2.9802322387695312e-08,
+          "error": "NUnit.Framework.AssertionException:   Diagnostic stronger local bit target; full encoder original tolerance remains unchanged.\r\n  Expected: 0\r\n  But was:  2\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.FrozenLayerNormGpuTests.FrozenFirstNormRowsMatchIndependentNativeBits (System.String name) [0x006e9] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@ea95cd3ebe98\\Tests\\Editor\\FrozenLayerNormGpuTests.cs:64 "
+        }
+      ],
+      "nunit": {
+        "total": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\frozen-layernorm-baseline-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "EmbeddingGemma.Validation.Tests.FrozenLayerNormGpuTests",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\frozen-layernorm-baseline-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-14T17:56:09.361397+00:00",
+        "pid": 55552,
+        "exit_code": 2,
+        "elapsed_seconds": 40.961653000005754,
+        "completed_utc": "2026-10-14T17:56:50.323045+00:00"
+      },
+      "raw_sha256": {
+        "frozen-layernorm-baseline-20261015.xml": "fa28172e2182f3f3c720bb426a7dd21c71ba937b4aab1da57a73300e5d07591a",
+        "frozen-layernorm-baseline-20261015.log": "e3690bdb5b5328e095f1b0cbb193698d14bce1fa208996c66fb622d0f62796cb",
+        "frozen-layernorm-baseline-20261015-process.json": "04695bcbfb90252fb834b6ffb1e976258647b96e59a43a1189408c712fc30d22"
+      }
+    },
+    {
+      "variant": "refined",
+      "source": "ac60979fc9b601edaf87cee6c5ddd24468c350ea",
+      "rows": [
+        {
+          "success": true,
+          "scope": "first_native_conv_unique_rows_gpu_norm_component_only",
+          "source": "ac60979fc9b601edaf87cee6c5ddd24468c350ea",
+          "probe_variant": "refined",
+          "case": "normal",
+          "requested_backend": "GPUCompute",
+          "full_encoder_validated": false,
+          "end_to_end_validated": false,
+          "phase": "completed",
+          "layer_kinds": {
+            "Slice": 32,
+            "Sub": 327,
+            "ScalarMad": 135,
+            "Add": 270,
+            "Mul": 105,
+            "Sqrt": 1,
+            "Neg": 2,
+            "Div": 1,
+            "Reciprocal": 1
+          },
+          "cpu_computation_or_input_count": 0,
+          "readback_flush_count": 0,
+          "exact_differences": 0,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 0.0
+        },
+        {
+          "success": true,
+          "scope": "first_native_conv_unique_rows_gpu_norm_component_only",
+          "source": "ac60979fc9b601edaf87cee6c5ddd24468c350ea",
+          "probe_variant": "refined",
+          "case": "mean_inverse",
+          "requested_backend": "GPUCompute",
+          "full_encoder_validated": false,
+          "end_to_end_validated": false,
+          "phase": "completed",
+          "layer_kinds": {
+            "Slice": 32,
+            "Sub": 326,
+            "ScalarMad": 135,
+            "Add": 270,
+            "Mul": 103,
+            "Sqrt": 1,
+            "Neg": 2,
+            "Div": 1,
+            "Reciprocal": 1,
+            "Concat": 1
+          },
+          "cpu_computation_or_input_count": 0,
+          "readback_flush_count": 0,
+          "exact_differences": 0,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 0.0
+        }
+      ],
+      "nunit": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\frozen-layernorm-refined-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "EmbeddingGemma.Validation.Tests.FrozenLayerNormGpuTests",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\frozen-layernorm-refined-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": true,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-14T18:01:00.532345+00:00",
+        "pid": 67572,
+        "exit_code": 0,
+        "elapsed_seconds": 45.37212179999915,
+        "completed_utc": "2026-10-14T18:01:45.904472+00:00"
+      },
+      "raw_sha256": {
+        "frozen-layernorm-refined-20261015.xml": "6f17d450aa2fc2d4dc5ba07ef673d9e16513333b62d4c2f076d4d11b554998e7",
+        "frozen-layernorm-refined-20261015.log": "19525965a4112a2b951af3b83b90caa8c651c5af0167b8f56b7e370695e43d0f",
+        "frozen-layernorm-refined-20261015-process.json": "f567f87d114e91659bd3598f237fcea0203304f6fff22b744c80f3fc0dd19bd7"
+      }
+    }
+  ],
+  "probe": {
+    "graph_variant": "refined",
+    "input_shape": [
+      6,
+      128
+    ],
+    "native_normal_matches_original_bits": true,
+    "all_original_rows_preserved": true,
+    "original_row_count": 35840,
+    "unique_row_count": 6,
+    "files": {
+      "input.bin": {
+        "bytes": 3072,
+        "sha256": "8c2b32f13280c6ded24e6513a7da17cdfda1ef64538ac3848fa2f91773ae96bb"
+      },
+      "normal.onnx": {
+        "bytes": 132464,
+        "sha256": "21f6337ebb36bbd2b17cc2632dc8887852ac489dd31745506f26d4f862693c31"
+      },
+      "normal-expected.bin": {
+        "bytes": 3072,
+        "sha256": "43ea292dddfeac704e04e871682652bdf3543abe0215dc25e086125e5646d198"
+      },
+      "mean_inverse.onnx": {
+        "bytes": 131755,
+        "sha256": "117d7f906b4b44ef169f407b0f91323b00de9067bc663af52d670576397d30da"
+      },
+      "mean_inverse-expected.bin": {
+        "bytes": 48,
+        "sha256": "bd1b9732bb4974f6637e55c5c134ed70470e8bd08ad8b1228968f031126ccdaf"
+      }
+    },
+    "native_replay_sha256": "664a8242d079f53bf98d2032f9398de6d2c8d6bcd2312d1baaa35bb498ce5fb8",
+    "torch_version": "2.14.1+cpu",
+    "cpu_capability": "AVX2",
+    "gpu_validated": false,
+    "full_encoder_validated": false
+  },
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "original_golden_changed": false,
+  "original_encoder_tolerance_changed": false,
+  "diagnostic_bit_target_stronger_than_encoder_gate": true,
+  "fp64_runtime_used": false,
+  "bounded_statistic_domain": [
+    1e-06,
+    1000000.0
+  ],
+  "python_tdd": {
+    "missing_refinement_red": 6,
+    "correct_scalar_reference_green": 6,
+    "inverse_rewriter_red": 6,
+    "rewrite_and_refinement_related_green": 12,
+    "initial_related_run": {
+      "passed": 21,
+      "failed": 1,
+      "reason": "elementwise Torch sqrt is an approximate seed; scalar native std::sqrt requires independently rounded reference"
+    },
+    "initial_rewriter_run": {
+      "passed": 11,
+      "failed": 1,
+      "reason": "test matched suffix /Mul on newly added nodes instead of checking original node bytes"
+    }
+  },
+  "scalar_native_source": "https://github.com/pytorch/pytorch/blob/5c4886908584029761b579af026dcfb627c84070/aten/src/ATen/native/cpu/layer_norm_kernel.cpp#L77",
+  "raw_python_sha256": {
+    "refined-rstd-red-20261015.xml": "8e16182029fa29cad43ed06bb39e5745db543b40db9b281c4be0004ba08394a4",
+    "refined-rstd-first-green-20261015.xml": "4444cefc7317b38751814b653e3adcdafc3b4d27b18febf574e90e9a110724f3",
+    "refined-rstd-correct-scalar-green-20261015.xml": "b2b0baac59ec6d5f03f3406188867b4106defe72df90a82f4e4252ac6417248b",
+    "refine-onnx-red-20261015.xml": "ef247cacf562e0aaa7da6925eb17f09ba3813c21ab30d69132b66ef7a02d5a9f",
+    "refine-onnx-green-20261015.xml": "1ed615a5e054561f56f7a5835ce4fe6e9823d61442b9d35a27d8ee9c91faa9dc",
+    "refine-onnx-audit-green-20261015.xml": "67a095f3ca0d4f45a35022af196cf6372239f02e27e4a32db4e6daf08ac7bc8c"
+  }
+}

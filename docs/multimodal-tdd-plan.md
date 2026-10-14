@@ -4,7 +4,7 @@
 
 ## 2026-10-14の実行方針と再開順
 
-2026-10-15最新checkpoint: 全encoder補償候補のActionsはrunner通信断で終了し、数値結果がない。重い同一jobの再試行を避け、保存済み実GPUモデルの入力側7段階を通常最終値を変えずに観測した。最初の畳み込みは元参照とbit一致し、最初の微差はLayerNorm。次は元の全行を保つ6種類の固定入力で最初のWelford128統計・逆数をGPU照合し、最小修正後に元モデルへ戻す。R2の全画像profile / 音声信号とR3の実API全条件を省略しない。[現在の判定](status.md) / [固定診断receipt](results/m4-saved-subsample-gpu-first-difference-20261015.json)。
+2026-10-15最新checkpoint: 最初のGPU正規化の逆標準偏差をFP32だけで補正し、元6種類の入力行でnormal / mean / inverseのbit一致を確認した。元重みの再exportを避ける監査済みinverse-only rewriteも追加。ただし全encoderはinverseのみ472要素、static64組合せ287要素不合格。12層の通常最終値を変えない観測でlayer_0〜8は許容差内、layer_9で1要素超過し後段で増幅する。次は元layer_8入力を使うlayer_9単独GPU照合へ分解する。R2の画像全profile・音声元全信号とR3の実API全role / 境界 / 寿命 / 例外後再利用 / text回帰は維持する。[現在の判定](status.md) / [固定全層観測](results/m4-refined-static64-full-layer-observation-20261015.json)。全encoderActionsのrunner通信断は別の未取得結果として保持し、同一jobをそのまま再試行しない。
 
 2026-10-15: 実行計画の3（数値修正）・4（最終API）までが新しく許可された。R2の音声数値差を進行中で、R2 / R3の完了は未証明。小さいGPU演算probeの4 passを全encoderへ流用しない。実Welford8 ONNXは旧golden全6件で不合格。最新native参照の再計算にも環境差があるため、新しいnative値を期待値に採用せず、保存した実ONNX出力を旧goldenへ直接比較する。[現在の判定](status.md)が以下の前回checkpointより優先する。画像FP32全profileと実APIの全role・境界・資源寿命・例外後再利用・text回帰の範囲は維持する。
 

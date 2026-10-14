@@ -94,3 +94,21 @@ Git `1477d88e99c98f1bf8937355437f238599c9951e` では同じ観測に中間FP32 b
 Actions [38540183522](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38540183522)は成功。PR head `57714c79…`、実producerのmerge SHA `e868446e44fb96494605b61b99f86cf3a5f5f973`を区別する。メル入力572928 byteのSHAを維持し、native subsample最終値は既存参照と完全一致。7箇所のbinaryを部分取得し、サイズ・SHAを監査した。[固定native参照receipt](results/m4-audio-subsample-native-reference-20261014.json)。
 
 Git `a89ac05c1e970045420747522512be191ee1a169`の実Sentis観測もCPU/GPU各7箇所すべて元elementwise許容差内、通常最終bitsは不変。最初のconv出力はnativeと差0で、最初の非零差はlayer0.normの最大6.67572021484375e-6。subsample最終投影の最大許容差比はCPU0.73225614 / GPU0.66381648。NUnit2 pass / 0 fail / skip0 / process exit0。終了時allocation warningは保持し、資源寿命の合格にはしない。[Sentis観測receipt](results/m4-compensated-subsample-observation-20261014.json)。前段7箇所の合格と、後段post normや全encoderの不合格は両立する。次は最初のLayerNormから伝播する差と投影の差を固定入力で切り分け、最小の数値修正をTDDで試す。画像と工程3の未達は維持する。
+
+### 中心化分散と補償和のLayerNorm候補
+
+Sentis 2.6.1のCPU GlobalAverageVariancePoolはFP32の逐次和から `E[x²] - E[x]²` を計算する。Editor候補として、中心化した値の二乗と、平均・分散のNeumaier補償和を使う `CompensatedLayerNorm` を追加した。元のモデル・係数・output IDを保持するtransformも追加し、Git `d72c780…`のAPI不足10 assertion red→Git `bee1e0a…`のCPU/GPUを含む25 green / skip0 / exit0。大きい行数でもinitializerはscale/biasと小さいscalarだけで、元モデルの保存bytesは不変。[red](results/m4-compensated-norm-red-20261014.json) / [green](results/m4-compensated-norm-green-20261014.json)。Runtimeへ採用していない。
+
+Git `4492052…`のprojection chunk64 / norm chunk4を元6信号・2 profileへ実行した。CPU/GPU全12 encoder条件は引き続き不合格。最大許容差比はCPU11.85614177 / GPU13.28313560。silenceの最初のfeed-forward post normはCPU284→1要素、GPU5→3要素となったが、合格ではない。subsample観測2 pass、feed-forward2 fail、encoder2 fail、計NUnit2 pass / 4 fail / skip0 / exit2。[全encoder失敗](results/m4-compensated-norm4-real-audio-failed-20261014.json) / [component結果](results/m4-compensated-norm4-component-results-20261014.json)。
+
+Git `c96b534…`のnorm chunk1ではsilenceのpost normがCPU/GPUとも1要素不一致。最大許容差比1.94292705 / 2.22255104、最終bitsは保持、NUnit0 pass / 2 fail / skip0 / exit2。全encoderのnorm1受け入れは未実行。[norm1の失敗](results/m4-compensated-norm1-feed-forward-failed-20261014.json)。次の候補 `8ef7e84…` はinverse standard deviationを一度計算して乗算するFP32式を試し、25件の小さい回帰が合格。実feed-forwardの結果は別gateとして収集中。
+
+固定native内部参照は再利用し、producerが変わっていないC#候補更新で重い参照生成を繰り返さないため、PRの任意 `audio-layer-replay-diagnostics` labelを外した。Required CIと実モデル数値gateは維持し、任意workflowのskipをpassに数えない。
+
+### 工程3のrole別参照生成
+
+画像・音声の最終Python参照に `role="query" / "document" / "raw"` とCLIの `--role` を追加した。既存callerのdefaultはdocument。採用roleの固定promptを検査し、不正roleはモデルloadより前に拒否する。row/metadataへroleを記録し、3 roleの独立したtokenizer照合・公式forwardと保存chainをtinyモデルで確認した。
+
+新しい参照生成コードの `source_commit` と、再利用するencoder入力の `encoder_source_commit` / `vision_source_commit` を分ける。CLIは `--encoder-source-commit` / `--vision-source-commit` を受け付け、省略時だけ旧callerと同じsourceを要求する。入力producer、モデルrevision、全入力fileのhashを監査する。旧encoderの数値失敗を新しいrole参照の成功へ置き換えない。
+
+12 red→既存producerを含む34 green。独立tokenizerによるID/mask照合を追加後、対象12件もgreen。実モデルのQuery/Raw参照、Sentis全chain、GPU中間readback・所有権・境界・text回帰の受け入れは未完了。[role TDD](results/multimodal-role-reference-red-20261014.json) / [green](results/multimodal-role-reference-green-20261014.json)。新しいroleは別destinationへ生成し、旧固定参照を上書きしない。

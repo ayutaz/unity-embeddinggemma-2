@@ -10,6 +10,8 @@
 
 追加checkpoint: 補償候補の全encoderは元6信号×CPU/GPUの12条件すべてelementwise不合格。silenceの中間値と独立RMSNorm oracleで、post normのCPU284 / GPU5不一致は前段入力の差から再現し、同じ入力に対するSentis norm自体は許容差内と確認した。これはsilence限定の原因切り分けで、修正完了ではない。subsample内部7箇所の固定Python参照producerを7 red→関連56 green、workflowを1 red→1 greenで追加した。詳細と固定sourceは[工程1〜3 ledger](steps-1-3-acceptance.md#補償候補の誤差伝播silence限定)へ保持する。
 
+LayerNormの中心化分散＋補償和候補は10 red→既存回帰を含む25 green。norm chunk4の全encoderは全12条件不合格、norm chunk1のsilence post normもCPU/GPU各1要素不合格。候補はEditor/testのみ。工程3のQuery/Document/Raw参照生成と入力producerの別SHA監査は12 red→関連34 greenだが、実モデルのrole別参照とSentis全chainは未完了。固定許容差・元の失敗・Required CIを維持して進める。
+
 ## 最新checkpoint: 全音声encoder検証後
 
 2026-10-13確認。mainは `a88ed9cffd942999bb271e597c86563298425f2c`。全体TDD計画PR #58まで統合済み。今回の更新は文書のみで、モデル生成・Unity実行は追加しない。

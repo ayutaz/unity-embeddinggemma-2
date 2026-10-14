@@ -4,6 +4,8 @@
 
 ## 2026-10-14の実行方針と再開順
 
+2026-10-15最新checkpoint: 非連続layoutのouter RMSは元native lconvの独立replayを使い、実GPU局所2 Red→2 Green、全bit一致、計算fallback / flush0。compact候補は元silence全encoderで201要素不合格、最大許容差比3.73996、60,546層、約91.71秒。[局所GPU](results/m4-frozen-outer-rms-compact-gpu-20261015.json) / [全encoder不合格](results/m4-compact-outer-rms-full-gpu-failed-20261015.json)。次のR2はcompact候補の元12層観測→最初の超過の局所TDD→音声全6信号 / 両profile・画像FP32全3 profileの受け入れ。R3はその後に実Texture / PCM→GPU前処理→encoder→backbone→正規化768次元、Query / Document / Raw・mask / 境界・所有権 / Dispose・例外後再利用・text回帰・中間readback / CPU計算fallbackなしを検証する。実行計画3・4とも未完了で、範囲や許容差を縮めない。以下は前回checkpoint。
+
 2026-10-15単独層の追加結果: layer_9は全モデルで観測した入力・出力をbit再現し、元layer_8入力を与えると元layer_9との不一致0。最初の層超過について前段入力差の伝播を確認した。[固定GPU単独照合](results/m4-layer9-original-input-gpu-isolation-20261015.json)。次は前段のdynamic attention積和を切り分け、元encoder gateへ戻す。R2 / R3の全条件を維持する。以下の単独層比較前の着手順は前回checkpoint。
 
 2026-10-15最新checkpoint: 最初のGPU正規化の逆標準偏差をFP32だけで補正し、元6種類の入力行でnormal / mean / inverseのbit一致を確認した。元重みの再exportを避ける監査済みinverse-only rewriteも追加。ただし全encoderはinverseのみ472要素、static64組合せ287要素不合格。12層の通常最終値を変えない観測でlayer_0〜8は許容差内、layer_9で1要素超過し後段で増幅する。次は元layer_8入力を使うlayer_9単独GPU照合へ分解する。R2の画像全profile・音声元全信号とR3の実API全role / 境界 / 寿命 / 例外後再利用 / text回帰は維持する。[現在の判定](status.md) / [固定全層観測](results/m4-refined-static64-full-layer-observation-20261015.json)。全encoderActionsのrunner通信断は別の未取得結果として保持し、同一jobをそのまま再試行しない。

@@ -1,0 +1,224 @@
+{
+  "scope": "compact_layout_aware_full_encoder_silence_only",
+  "success": false,
+  "report": {
+    "success": false,
+    "scope": "one_saved_onnx_audio_encoder_gpu_vs_immutable_original",
+    "signal": "silence",
+    "runtime_source": "d8714aa4f2ec1fb92a4578f07e4e46408132dd18",
+    "requested_backend": "GPUCompute",
+    "unity": "6000.3.16f1",
+    "sentis": "2.6.1",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "end_to_end_validated": false,
+    "all_original_signals_validated": false,
+    "phase": "completed",
+    "candidate_source": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "candidate_python_gate_passed": false,
+    "candidate_folder": "GpuAudioCompactOuterCandidate",
+    "graph_transform": {
+      "replaced_inverse_count": 2,
+      "prefixes": [
+        "/subsample_conv_projection/layer0/norm",
+        "/subsample_conv_projection/layer1/norm"
+      ],
+      "existing_initializer_bytes_preserved": true,
+      "existing_initializer_sha256": "1bf6702c73c5124fb83b629fadf150e32392d21bc5f024c2a4c88062b336ca6a",
+      "node_count": 7409,
+      "full_encoder_validated": false,
+      "source_commit": "9af88c45edca97e6c3d73b298f6c065b7638b837",
+      "original_graph_sha256": "f43f3275c1ba48837b626fc09c738a8204dabd25e2ff3c74d7e75abcb3591899",
+      "template_sha256": "026e6136b2cb4c940b0d320fe9da4e82529d6e47e1a1fbbdeb8c4209f19d858b",
+      "source_model_producer": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+      "algorithm": "bounded_fp32_sqrt_then_reciprocal_residual_refinement",
+      "original_node_count": 7237,
+      "old_graph_onnx_results_reused": false,
+      "graph_sha256": "8aefc4b83fd0cc709544a0d6337b8c1837d2c864ad1d3c8cbd39fcd568abc222",
+      "profile": "frames-1119-valid-1119"
+    },
+    "rms_graph_transform": {
+      "replaced_rms_count": 109,
+      "existing_initializer_bytes_preserved": true,
+      "excluded_mean_names": [],
+      "explicit_mean_override_names": [
+        "/lconv1d/conv_norm/ReduceMean",
+        "/lconv1d/conv_norm_1/ReduceMean",
+        "/lconv1d/conv_norm_2/ReduceMean",
+        "/lconv1d/conv_norm_3/ReduceMean",
+        "/lconv1d/conv_norm_4/ReduceMean",
+        "/lconv1d/conv_norm_5/ReduceMean",
+        "/lconv1d/conv_norm_6/ReduceMean",
+        "/lconv1d/conv_norm_7/ReduceMean",
+        "/lconv1d/conv_norm_8/ReduceMean",
+        "/lconv1d/conv_norm_9/ReduceMean",
+        "/lconv1d/conv_norm_10/ReduceMean",
+        "/lconv1d/conv_norm_11/ReduceMean"
+      ],
+      "existing_initializer_sha256": "42776517d990ebd9ef43161f7063e8ff0d810d35fd2b20f137dcdc9fa4235b6f",
+      "node_count": 31727,
+      "full_encoder_validated": false,
+      "source_commit": "d8714aa4f2ec1fb92a4578f07e4e46408132dd18",
+      "source_graph_sha256": "8aefc4b83fd0cc709544a0d6337b8c1837d2c864ad1d3c8cbd39fcd568abc222",
+      "original_node_count": 7409,
+      "algorithm": "pinned_compact_inner8_and_explicit_outer280_fp32_mean_and_refined_inverse",
+      "template_widths": [
+        1024,
+        1536
+      ],
+      "mean_template_node_counts": {
+        "1024": 121,
+        "1536": 124
+      },
+      "override_shape_contract": {
+        "input": [
+          1,
+          1119,
+          128
+        ],
+        "conv_norm": [
+          1,
+          280,
+          1024
+        ],
+        "scope": "one fixed full-valid profile; native lconv replay and 12 same-size causal convolutions audited"
+      },
+      "generator_sha256": "0571cf2cd7daa9d4fa2dc6bc86831fc7c39a3d5a8785df66b18c35d2c3c58631",
+      "graph_sha256": "11607255142478773e621f5e9feebf2d3269457feb67d63215cecbc55fc61b67"
+    },
+    "graph_sha256": "11607255142478773e621f5e9feebf2d3269457feb67d63215cecbc55fc61b67",
+    "saved_graph_layer_count": 20114,
+    "attention_compensated_layer_count": 22886,
+    "runtime_graph_transform": "dynamic16_then_static64",
+    "projection_chunk": 64,
+    "layer_count": 60546,
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "actual_backend": "GPUCompute",
+    "mismatched_elements": 201,
+    "maximum_absolute_error": 8.559226989746094e-05,
+    "maximum_tolerance_ratio": 3.739961971155319
+  },
+  "nunit": {
+    "id": "2",
+    "testcasecount": "1",
+    "result": "Failed(Child)",
+    "total": "1",
+    "passed": "0",
+    "failed": "1",
+    "inconclusive": "0",
+    "skipped": "0",
+    "asserts": "0",
+    "engine-version": "3.5.0.0",
+    "clr-version": "4.0.30319.42000",
+    "start-time": "2026-10-14 19:38:51Z",
+    "end-time": "2026-10-14 19:39:31Z",
+    "duration": "39.4812334"
+  },
+  "process": {
+    "terminal": true,
+    "exit_code": 2,
+    "elapsed_seconds": 91.7144377000077,
+    "timed_out": false,
+    "pid": 83340
+  },
+  "original_tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "raw": [
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\saved-onnx-audio-gpu-d8714aa4f2ec1fb92a4578f07e4e46408132dd18-compact-outer-attention16-static64-silence.json",
+      "bytes": 4729,
+      "sha256": "33b109c11e86a4d277470b5fc313be3fe68e6ea0d64a985efd101693018d34df"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\compact-outer-rms-attention16-static64-gpu-silence-20261015-process.json",
+      "bytes": 1130,
+      "sha256": "34549585dc7e09a22df805ebd689e7542108cbfd22bf66cec6827c1ddf450890"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\compact-outer-rms-attention16-static64-gpu-silence-20261015.xml",
+      "bytes": 6485,
+      "sha256": "caace79bccb6c795fa435f26e88b4b10e51404825ba480c0bd3ce023ee89565b"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\compact-outer-rms-attention16-static64-gpu-silence-20261015.log",
+      "bytes": 47735,
+      "sha256": "4a01061d365b83155222134589f67f93ca955db950b6644accfb72e65549998e"
+    }
+  ],
+  "first_preparation_failure": {
+    "reason": "Legacy Pad intermediates retained symbolic batch/time dimensions; explicit override refused before mutation and GPU execution",
+    "process": {
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "python",
+        "../../numerical-acceptance-state/prepare_cascade_real_model.py",
+        "compact-outer"
+      ],
+      "timeout_seconds": 120.0,
+      "success": false,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-14T19:36:31.960058+00:00",
+      "pid": 48888,
+      "exit_code": 1,
+      "elapsed_seconds": 5.336193399998592,
+      "completed_utc": "2026-10-14T19:36:37.296254+00:00"
+    }
+  },
+  "corrected_fixed_profile_preparation": {
+    "command": [
+      "uv",
+      "run",
+      "--locked",
+      "python",
+      "../../numerical-acceptance-state/prepare_cascade_real_model.py",
+      "compact-outer-bound"
+    ],
+    "timeout_seconds": 120.0,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-14T19:37:34.489139+00:00",
+    "pid": 21796,
+    "exit_code": 0,
+    "elapsed_seconds": 16.637013599989587,
+    "completed_utc": "2026-10-14T19:37:51.126155+00:00"
+  },
+  "compact_templates": {
+    "mean1024_old_nodes": 842,
+    "mean1024_new_nodes": 121,
+    "mean1536_old_nodes": 1234,
+    "mean1536_new_nodes": 124
+  },
+  "comparison_to_previous_layout_candidate": {
+    "previous_source": "a4c38eaf38028324a9db9d17339c032f85d85214",
+    "mismatches": [
+      213,
+      201
+    ],
+    "maximum_tolerance_ratio": [
+      6.901991060153883,
+      3.739961971155319
+    ],
+    "layers": [
+      78457,
+      60546
+    ],
+    "elapsed_seconds": [
+      111.93508180000936,
+      91.7144377000077
+    ],
+    "timing_is_single_run_comparison_not_benchmark": true
+  },
+  "full_encoder_validated": false,
+  "all_original_signals_validated": false,
+  "all_profiles_validated": false,
+  "end_to_end_validated": false,
+  "next_action": "Observe the compact candidate against the immutable 12 native layer references; isolate the first exceeded stage before further full encoder changes; retain image all profiles and final API scope"
+}

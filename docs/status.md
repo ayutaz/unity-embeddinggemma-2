@@ -4,6 +4,14 @@
 
 ## 現在の判定
 
+**2026-10-15最新の参照環境調査:** 元参照run `38398829258` はUbuntu24.04.5 / image20261004.327.1、OMP / MKL各4を確認。ただし元runはCPU ISAを記録していない。既存の保存native再生 `5a2496d` はAMD EPYC9V74・AVX512でthread1 / 2 / 4の最終値が元参照と完全一致し、AVX2制限版は不一致だった。この既存証拠はCPU診断で、GPU全encoder合格ではない。
+
+保存native.pt2から元Conv2係数をhashで抽出する診断を6 Red→6 Green、別workflowを1 Red、失敗reportのruntime / 要求hash保持を1 Red、native ISAをdownload前に確認する不足1 Redから修正し、関連40 Green。Actions `38632854677` はnative / avx2とも実際のruntimeがAVX2、元Conv2と268,142値のbit差（元許容差超過0）でterminal failure。native VMは旧成功時と同じEPYC9V74というmodel名でも、lscpuにAVX512 flagsを公開していなかった。nativeというjob名をISAの証拠にせず、期待値は置き換えない。[固定診断とhardware差](results/m4-saved-conv-cpu-context-unavailable-20261015.json)。新workflowはdefault branchにないため直接dispatchの404後、PR診断labelで起動し、run開始後はlabelを外して後続pushの大きいdownload反復を防いだ。
+
+oneDNN3.12.0 / commit `80afa71049cd69a3df32adcccb623b12cd7baa22` の実際のConv2は `jit:avx2`、src / dst `aBcd8b`、weight `ABcd8b8a` と判明。実装・memory formatは[公式verbose仕様](https://uxlfoundation.github.io/oneDNN/dev_guide_verbose.html)に沿って記録する。次は同commitの[AVX512 kernel生成コード](https://github.com/uxlfoundation/oneDNN/blob/80afa71049cd69a3df32adcccb623b12cd7baa22/src/cpu/x64/jit_avx512_common_conv_kernel.cpp)を調べ、GPUで元参照の演算順を保つ成分へ戻す。今回はGPU試行を新たに起動せず、Unityは停止済み。工程3・4、画像FP32全3 profile、音声元全6信号 / 両profile、実入力→最終APIの全条件は未達。
+
+畳み込みAPIを含む前回source `fcaf611` のPython全体回帰 `38631235343` は4環境それぞれ767 pass / fail0 / skip0でterminal success。[固定Python成功](results/python-full-compensated-conv-green-20261015.json)。今回の新しいCPU診断 / preflightはこのsourceに含まれず、関連40 Greenと区別する。以下は直前checkpoint。
+
 **2026-10-15最新の畳み込み候補:** FP32 unfold + chunk64 Neumaier積和を15 Red→15 Greenで追加し、元Convの4D係数をそのまま使う1箇所rewriteを7 Red→関連67 Greenで追加。FP16 Castを監査が拒否しない不足1 Redを修正して関連68 Green。runtime / ONNXにFP64を入れず、既定のexportと元goldenを維持する。`dbfa061` の実GPU全encoderは無音219要素不合格・最大許容差比6.78027で、以前の201要素・3.73996より悪化したため採用しない。GPUCompute・計算fallback / flush0、61,003層、約96.65秒、NUnit0 pass / 1 fail / skip0 / exit2。[固定失敗とTDD](results/m4-compensated-conv-full-gpu-failed-20261015.json)。直近の所有Unityは終了済み。
 
 現在CPUのgrad / no_grad / inference mode、oneDNN有無、module呼び出しを比較しても元conv2のbit再現は未達。元の8,960入力patchは6種類の固定値へ集約できることを監査し、channel / kernel / block順と2 / 4 / 8 accumulatorの42種類を独立offline FMA oracleで比較したが全bit一致の順序は見つからなかった。これは候補探索の診断で、GPU成功や参照文脈合格ではない。次はimmutable参照のhost / convolution kernel文脈を復元し、小さいGPU演算の忠実性を確認してから全encoderへ戻る。旧golden・許容差を変えず、画像FP32全3 profile、音声元全6信号 / 両profile、実Texture / PCM→最終768次元APIの全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰 / 中間readbackなしを維持する。工程3・4とも未完了。

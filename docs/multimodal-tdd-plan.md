@@ -4,6 +4,8 @@
 
 ## 2026-10-14の実行方針と再開順
 
+2026-10-15最新: 保存nativeの既存AVX512再生は元最終値を完全再現し、AVX2制限は不一致。新しいConv2診断Actionsはnative条件もAVX2 runtime / VM feature maskだったため元bitを再現せず、元期待値を維持。[CPU参照の未達](results/m4-saved-conv-cpu-context-unavailable-20261015.json)。CPU診断 / workflow / 失敗監査 / download前のISA確認は関連40 Green。次のR2はpinned oneDNN3.12のAVX512生成コードと互換kernel証拠を調べ、小さいGPU成分→元encoder全条件へ戻す。前回sourceのPython全体回帰は4環境各767 pass、新しい診断の全体回帰とは区別する。R2 / R3と工程3・4の全範囲は未完了のまま。以下は直前checkpoint。
+
 2026-10-15最新: 2番目のConvだけをunfold + FP32補償積和へ置換した実GPU候補は219要素不合格・最大許容差比6.78027で、201要素版より悪化し不採用。[失敗と局所TDD](results/m4-compensated-conv-full-gpu-failed-20261015.json)。CPU実行mode / oneDNNと42種類のFMA順序でも元conv2のbit再現は未達。R2の次はimmutable参照のhost / convolution kernel文脈を調べ、小さいGPU成分の忠実性→元encoder全条件へ進む。参照値と許容差は変更しない。前回sourceのPython回帰は4環境各744 pass、新しい畳み込み関連は68 Greenで別証拠。R2 / R3全範囲と工程3・4未完了を維持する。以下は直前checkpoint。
 
 2026-10-15最新切り分け: compact候補は元12層の観測でも最初の超過がlayer_9の1要素。layer_9単独は観測値をbit再現し、元layer_8入力なら超過0。入力側ではlayer0.conv / norm / actが元値と全bit一致し、最初の差がlayer1.convへ進んだ。[固定GPU切り分け](results/m4-compact-gpu-drift-localization-20261015.json)。R2の次は保存した元conv2値と入力・係数を維持し、固定CPUの集計順 / 文脈と一般的なGPU FP32補償候補を局所TDDへ分解する。現CPUconv2の再計算は元bitを再現しないため新goldenにしない。全信号 / profileの受け入れとR3全chainの範囲は維持する。Python全体回帰の契約2 failは関連52 Greenへ修正済み、修正後全体回帰は未検証。以下は直前checkpoint。

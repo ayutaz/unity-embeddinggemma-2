@@ -55,6 +55,24 @@ jobs:
         run: |
           mkdir -p ../artifacts/conv-context
           lscpu --json > ../artifacts/conv-context/cpu-host.json
+      - name: Require the native reference ISA before downloading a model
+        if: matrix.context == 'native'
+        run: |
+          uv run --locked python - <<'PY'
+          import json, os
+          from pathlib import Path
+          import torch
+          actual = torch.backends.cpu.get_cpu_capability()
+          available = actual == 'AVX512'
+          report = dict(success=available, scope='native_conv_host_preflight_only',
+              execution_status='ready' if available else 'missing_required_cpu',
+              required_cpu_capability='AVX512', actual_cpu_capability=actual,
+              job_source=os.environ['GITHUB_SHA'], gpu_validated=False,
+              full_encoder_validated=False, end_to_end_validated=False)
+          Path('../artifacts/conv-context/host-preflight.json').write_text(json.dumps(report, indent=2)+'\n')
+          print(json.dumps(report))
+          raise SystemExit(0 if available else 1)
+          PY
       - name: Fetch immutable native graph and the frozen convolution tensors
         env:
           GH_TOKEN: ${{ github.token }}

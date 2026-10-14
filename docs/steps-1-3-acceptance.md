@@ -2,6 +2,8 @@
 
 > 文書整合確認: 2026-10-15。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。ユーザー指定の実行計画3・4は継続中、未完了。直近の所有Unity processは終了済み。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
 
+2026-10-15最新: 元runのOS / image / OMP / MKLを追跡し、既存のAVX512保存native再生の完全一致を確認。新しいConv2 CPU Actionsはnative条件もVMのAVX512 flagsが公開されずruntimeAVX2・268,142値bit差・元許容差超過0で失敗。元goldenを置換せず、ISA不足をdownload前に拒否するpreflightを追加して関連40 Green。[固定CPU診断](results/m4-saved-conv-cpu-context-unavailable-20261015.json)。前回source `fcaf611` のPython全体回帰は4環境各767 pass / skip0。[固定回帰](results/python-full-compensated-conv-green-20261015.json)。今回GPU実行はなく、元encoder / API全範囲と工程3・4未達を維持。次はpinned oneDNN3.12 AVX512生成コードから演算順の証拠を取得する。以下は直前checkpoint。
+
 2026-10-15最新の候補: `dbfa061` のConv64実GPU全encoderは219要素不合格、最大許容差比6.78027、計算fallback / flush0、NUnit0 pass / 1 fail / skip0 / exit2。旧201要素版より悪化しており不採用。元係数byteを保持するrewriteとFP16拒否は関連68 Green。[固定候補失敗](results/m4-compensated-conv-full-gpu-failed-20261015.json)。現在CPUのmode / oneDNNと42種類のFMA順でも元conv2のbit再現は未達。次は参照host / kernel文脈を調べ、小さいGPU成分の忠実性を先に確認する。前回契約修正の全体Pythonは4環境各744 pass / skip0、今回の新APIの全体回帰とは区別。[前回sourceの全体回帰](results/python-full-regression-contract-green-20261015.json)。工程3・4、画像全profile・音声全信号 / 両profile・最終API全条件は未達のまま。以下は直前checkpoint。
 
 2026-10-15最新観測: compactの元12層はlayer_9から超過。layer_9抽出は観測値をbit再現し、元入力なら超過0。入力側7段階は最初のCNN / norm / actが全bit一致、最初の微差は2番目のCNN。[GPU切り分け](results/m4-compact-gpu-drift-localization-20261015.json)。同一入力・係数の現在CPUconv2も元bitを再現しないため、参照文脈未達とし、新goldenへ置き換えない。Persistent allocation警告1件の発生元とDisposeは未検証。全encoder201要素不合格・全信号 / 両profile・画像FP32全3 profile・最終API全条件を維持する。全体Python回帰は4環境各744件中契約2件不合格、関連52件を修正後Greenにしたが全体の再確認は未達。[全体回帰失敗](results/python-full-regression-contract-failed-20261015.json)。以下は直前checkpoint。

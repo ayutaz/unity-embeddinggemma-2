@@ -19,13 +19,14 @@ namespace EmbeddingGemma.Validation.Tests
         {
             var root = Path.GetFullPath(Path.Combine(Application.dataPath, "../../k/artifacts/audio-real-chain"));
             var contextRoot = Path.GetFullPath(Path.Combine(Application.dataPath, "../../k/artifacts/audio-current-stage-context"));
-            var output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/compensated-layer-results"));
+            var output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/norm1-reciprocal-scalar-zero-layer-results"));
             Directory.CreateDirectory(output);
             var path = Path.Combine(output, backend + ".json");
             var stages = new JArray();
-            var report = new JObject { ["success"] = false, ["scope"] = "silence_compensated_fp32_norm_outputs_to_native_layer_references",
+            var report = new JObject { ["success"] = false, ["scope"] = "silence_norm1_reciprocal_scalar_zero_fp32_norm_outputs_to_native_layer_references",
                 ["runtime_source"] = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE"), ["reference_source"] = "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
                 ["requested_backend"] = backend.ToString(), ["runtime_overlay"] = false, ["stages"] = stages,
+                ["projection_chunk"] = 64, ["norm_chunk"] = 1,
                 ["full_encoder_validated"] = false, ["end_to_end_validated"] = false, ["started_utc"] = DateTime.UtcNow.ToString("O") };
             void Save() => File.WriteAllText(path, report.ToString());
             Save();
@@ -50,7 +51,7 @@ namespace EmbeddingGemma.Validation.Tests
                 HashCheck(modelPath, "3214cc2b179a3abf3f968816c58b83b8ee762661bfab7b58c6f142d48ed3ed3e");
                 var model = TextModelFile.Load(modelPath);
                 var map = AudioCoefficientLayerMap.Resolve(model, (JArray)anchors["anchors"]);
-                model = CompensatedModel.Create(model, 64);
+                model = CompensatedModel.CreateWithCompensatedNorms(model, 64, 1);
                 Assert.That(map.Count, Is.EqualTo(12));
                 report["coefficient_bound_outputs"] = JObject.FromObject(map); Save();
                 var row = ((JArray)reference["cases"]).Single(value => value.Value<string>("id") == "silence");

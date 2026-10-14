@@ -193,3 +193,31 @@ jobs:
           compression-level: 0
           retention-days: 3
           if-no-files-found: warn
+      - name: Validate real audio encoder and projector against official PCM-derived features
+        run: uv run --locked python -m embeddinggemma_tools prepare-audio-encoder --preprocessing ../artifacts/audio-preprocessing --output ../artifacts/audio-encoder --native-silu
+        env:
+          OMP_NUM_THREADS: '4'
+          MKL_NUM_THREADS: '4'
+      - name: Record audio encoder-only validation scope
+        if: always()
+        shell: bash
+        working-directory: .
+        run: |
+          {
+            echo '### Official mel references → audio encoder / projector (not Unity or final embeddings)'
+            if [ -f artifacts/audio-encoder/audio-encoder-validation.json ]; then
+              echo '```json'
+              cat artifacts/audio-encoder/audio-encoder-validation.json
+              echo '```'
+            else
+              echo 'Audio encoder validation did not complete. Sentis and final audio embeddings remain unverified.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: audio-encoder-${{ github.sha }}
+          path: artifacts/audio-encoder/
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: warn

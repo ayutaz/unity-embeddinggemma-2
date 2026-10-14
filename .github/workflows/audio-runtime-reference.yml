@@ -1,0 +1,93 @@
+name: Audio native reference for runtime diagnostics
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, labeled]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: audio-runtime-reference-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native-reference:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       contains(github.event.pull_request.labels.*.name, 'audio-runtime-diagnostics'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - name: Pin procedural PCM features against the official processor
+        run: uv run --locked python -m embeddinggemma_tools.audio --output ../artifacts/audio-runtime-preprocessing
+      - name: Collect every native reference and retain ONNX failure status
+        run: >-
+          uv run --locked python -m embeddinggemma_tools prepare-audio-encoder
+          --preprocessing ../artifacts/audio-runtime-preprocessing
+          --output ../artifacts/audio-runtime-reference
+          --native-silu --collect-onnx-failures
+      - name: Export stages only after native reference completion
+        if: ${{ always() && hashFiles('artifacts/audio-runtime-reference/audio-encoder-validation.json') != '' }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools prepare-audio-runtime-stages
+          --encoder-source ../artifacts/audio-runtime-reference
+          --output ../artifacts/audio-runtime-stages
+      - name: Generate official final audio vectors and native saved chain
+        if: ${{ always() && hashFiles('artifacts/audio-runtime-reference/audio-encoder-validation.json') != '' }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools prepare-audio-embeddings
+          --encoder-source ../artifacts/audio-runtime-reference
+          --output ../artifacts/audio-final-reference
+      - name: Record diagnostic scope without claiming numeric success
+        if: always()
+        shell: bash
+        working-directory: .
+        run: |
+          {
+            echo '### Native reference collection for actual Sentis diagnostics'
+            echo 'This job remains failed when NumPy ONNX outputs exceed the fixed tolerance.'
+            echo 'Native reference completion is separate from ONNX / Unity / final-embedding acceptance.'
+            if [ -f artifacts/audio-runtime-reference/audio-encoder-validation.json ]; then
+              echo '```json'
+              cat artifacts/audio-runtime-reference/audio-encoder-validation.json
+              echo '```'
+            else
+              echo 'Native reference collection did not finish.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: audio-runtime-native-${{ github.sha }}
+          path: |
+            artifacts/audio-runtime-reference/
+            artifacts/audio-runtime-stages/
+            artifacts/audio-runtime-preprocessing/audio-validation.json
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: warn
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: audio-final-reference-${{ github.sha }}
+          path: artifacts/audio-final-reference/
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: warn

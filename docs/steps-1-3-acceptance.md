@@ -78,3 +78,15 @@ Git `a084197eafa029fbb696cd12dd12b28337274477`の元6信号・2 profileをCPU/�
 補償積和だけで元encoder gateは解消していない。候補を製品Runtimeへ採用せず、次はTDD済みWorkerObservationで同じ候補の元最終出力を保持し、最初に固定許容差を超える層・前段入力差を局所化する。画像FP32・native文脈の未達も保持し、工程3の全chain・role/境界・text回帰を完了にしない。
 
 工程1は本snapshotと依存表で整理済み。工程2・3は未完了。各候補の実測をこのledgerへ追記し、失敗や未実行を残す。
+
+### 補償候補の誤差伝播（silence限定）
+
+Git `5337431264f0f790deaf40d25a9e5604c402b051` の12 norm出力観測はCPU/GPUとも最終出力bitsを保持した。最初の不合格は両backendのlayer_0で、CPU6要素 / GPU11要素。観測テストの成功は数値gateの成功ではない。[観測receipt](results/m4-compensated-layer-observation-20261014.json)。
+
+Git `f38ea33ee52fc91624244048df10489063a5d46a` のsubsampleからfeed_forward1までの6段階も通常最終出力bitsを保持した。CPUはlinear1で1要素、post normで284要素が不合格。GPUはpost normで5要素が不合格。NUnit0 pass / 2 fail / skip0。[段階別receipt](results/m4-compensated-feed-forward-observation-20261014.json)。
+
+Git `1477d88e99c98f1bf8937355437f238599c9951e` では同じ観測に中間FP32 binary、SHA、importerで0.5統合されたnorm係数とepsilonを追加した。通常最終bitsは不変、CPU/GPU両条件とも元assertionが不合格で終了した。binaryはignored artifactsに保持し、Gitには記録とhashだけを置く。
+
+独立FP64 RMSNorm oracleと誤差分解は12 assertion redから実装し、既存補償投影を含む35 green。保存したlinear2出力を独立oracleへ入れると、CPU284 / GPU5のpost norm不一致を再現した。一方、実Sentis post norm出力対同じ入力のoracleは両backendで不一致0、最大許容差比0.00137561 / 0.00124218。native出力対native入力のoracleも不一致0。分解残差は0。**このsilence候補では、正規化演算そのものより前段から伝播した入力誤差が主要因**と判断する。他の信号・後続layerへの一般化や、subsample内の原因確定はしない。[誤差予算](results/m4-audio-norm-propagation-budget-20261014.json)。
+
+次の原因切り分け用に、subsampleのconv / LayerNorm / activation × 2と最終projectionの7箇所を採取するPython producerを7 red→既存関連を含む56 greenで追加した。固定入力のSHA・サイズと、既存native subsample最終値の完全一致を満たす場合だけ出力する。既存外部hookを保持し、成功・失敗のどちらも自身のhookを除去する。workflowの固定メル入力取得・hash監査は1 red→1 green。実重みActionsの結果は別gateで、tiny-model greenを実参照文脈の合格に数えない。

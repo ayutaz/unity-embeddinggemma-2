@@ -8,6 +8,8 @@
 
 **工程1は整理済み。工程2の元画像 / 音声数値gate、工程3の実入力→最終768次元APIは未完了。** 未統合PR #69の分割GPU転送、#70の音声全chain最終cosine24件合格、#71の重みなしIL2CPP probe、#72のcurrent encoder全12条件不合格を区別する。以下は過去checkpointである。
 
+追加checkpoint: 補償候補の全encoderは元6信号×CPU/GPUの12条件すべてelementwise不合格。silenceの中間値と独立RMSNorm oracleで、post normのCPU284 / GPU5不一致は前段入力の差から再現し、同じ入力に対するSentis norm自体は許容差内と確認した。これはsilence限定の原因切り分けで、修正完了ではない。subsample内部7箇所の固定Python参照producerを7 red→関連56 green、workflowを1 red→1 greenで追加した。詳細と固定sourceは[工程1〜3 ledger](steps-1-3-acceptance.md#補償候補の誤差伝播silence限定)へ保持する。
+
 ## 最新checkpoint: 全音声encoder検証後
 
 2026-10-13確認。mainは `a88ed9cffd942999bb271e597c86563298425f2c`。全体TDD計画PR #58まで統合済み。今回の更新は文書のみで、モデル生成・Unity実行は追加しない。

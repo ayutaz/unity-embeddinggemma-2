@@ -61,6 +61,12 @@ namespace EmbeddingGemma.Validation.Tests
                 {
                     var asset=AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/GpuAudioPartitionedFirstFf/"+segment.Value<string>("file"));
                     Assert.That(asset,Is.Not.Null);var model=ModelLoader.Load(asset);
+                    var aliases=(JObject)segment["output_aliases"];
+                    for(var index=0;index<model.outputs.Count;index++)
+                    {
+                        var boundary=model.outputs[index];
+                        if(aliases?.Property(boundary.name)!=null){boundary.name=aliases.Value<string>(boundary.name);model.outputs[index]=boundary;}
+                    }
                     model=CompensatedModel.CreateWithDynamicMatMuls(model,16);model=CompensatedModel.Create(model,64);
                     models.Add(model);layers.Add(model.layers.Count);
                 }

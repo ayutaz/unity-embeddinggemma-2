@@ -33,7 +33,8 @@ def test_partition_reconnects_exact_residual_and_preserves_source_bytes():
     for index,part in enumerate(parts):
         onnx.checker.check_model(part)
         outputs=ReferenceEvaluator(part).run(None,{v.name:values[v.name] for v in part.graph.input})
-        values.update(dict(zip([v.name for v in part.graph.output],outputs)))
+        aliases=plan['segments'][index]['output_aliases']
+        values.update(dict(zip([aliases.get(v.name,v.name) for v in part.graph.output],outputs)))
         if index<2:
             projection=plan['projections'][index]
             values[projection['output']]=values[projection['input']]@w
@@ -42,6 +43,22 @@ def test_partition_reconnects_exact_residual_and_preserves_source_bytes():
     assert plan['source_initializer_bytes_preserved']
     assert 'input' in plan['segments'][1]['outputs']
     assert [p['weight_sha256'] for p in plan['projections']]==[sha,sha]
+
+
+def test_each_segment_declares_only_used_inputs_including_residual_passthrough():
+    source,w=model();sha=hashlib.sha256(w.tobytes()).hexdigest()
+    parts,_=required()(source,node_names=['first','second'],expected_weight_sha256=[sha,sha])
+    for part in parts:
+        used={v for n in part.graph.node for v in n.input}|{v.name for v in part.graph.output}
+        assert all(v.name in used for v in part.graph.input)
+
+
+def test_passthrough_outputs_have_explicit_identity_for_sentis_import():
+    source,w=model();sha=hashlib.sha256(w.tobytes()).hexdigest()
+    parts,_=required()(source,node_names=['first','second'],expected_weight_sha256=[sha,sha])
+    for part in parts:
+        inputs={v.name for v in part.graph.input}
+        assert not inputs.intersection(v.name for v in part.graph.output)
 
 
 @pytest.mark.parametrize('problem',['missing','duplicate','order','hash','shape'])

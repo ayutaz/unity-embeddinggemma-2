@@ -1,7 +1,7 @@
 """Partition fixed ONNX projections while retaining every live residual edge."""
 import hashlib
 import onnx
-from onnx import numpy_helper
+from onnx import numpy_helper,helper
 from onnx.utils import Extractor
 from .refine_layernorm_onnx import _initializer_digest
 
@@ -52,6 +52,19 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256):
             constants.update(node.output)
     extractor=Extractor(model);frontier=[v.name for v in model.graph.input]
     seen=list(frontier);seen_set=set(seen);cursor=0;segments=[];metadata=[]
+    def prepare(part,logical_outputs,number):
+        used={v for n in part.graph.node for v in n.input}|{v.name for v in part.graph.output}
+        inputs=[v for v in part.graph.input if v.name in used]
+        del part.graph.input[:];part.graph.input.extend(inputs)
+        input_names={v.name for v in inputs};aliases={}
+        reserved={v for n in part.graph.node for v in (*n.input,*n.output)}|input_names
+        for index,output in enumerate(part.graph.output):
+            if output.name in input_names:
+                original=output.name;name=f'__eg_segment_{number}_carry_{index}'
+                while name in reserved:name+='_'
+                reserved.add(name);output.name=name;aliases[name]=original
+                part.graph.node.append(helper.make_node('Identity',[original],[name],name=name+'_identity'))
+        return dict(inputs=[v.name for v in inputs],outputs=logical_outputs,output_aliases=aliases,node_count=len(part.graph.node))
     for index,target,_ in selected:
         for node in nodes[cursor:index]:
             for value in node.output:
@@ -65,12 +78,12 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256):
         for weight in part.graph.initializer:
             if weight.name not in weights or weight.SerializeToString()!=weights[weight.name].SerializeToString():
                 raise ValueError('Extracted coefficient bytes differ')
-        segments.append(part);metadata.append(dict(inputs=list(frontier),outputs=live,node_count=len(part.graph.node)))
+        metadata.append(prepare(part,live,len(segments)));segments.append(part)
         frontier=[*live,target.output[0]];seen.append(target.output[0]);seen_set.add(target.output[0]);cursor=index+1
     outputs=[v.name for v in model.graph.output]
     tail=extractor.extract_model(frontier,outputs)
     if any(n.name in node_names for n in tail.graph.node):raise ValueError('A selected projection escaped the tail cut')
-    segments.append(tail);metadata.append(dict(inputs=frontier,outputs=outputs,node_count=len(tail.graph.node)))
+    metadata.append(prepare(tail,outputs,len(segments)));segments.append(tail)
     return segments,dict(projections=[p for _,_,p in selected],segments=metadata,
         source_initializer_bytes_preserved=True,source_initializer_sha256=_initializer_digest(model.graph.initializer),
         full_encoder_validated=False,end_to_end_validated=False)

@@ -54,16 +54,20 @@ namespace EmbeddingGemma.Validation.Tests
         public void ObserveAllStaticLayersAgainstOriginalNativeWithoutChangingFinalBits()
             =>Execute("silence",true,true);
 
-        void Execute(string signal,bool allStatic,bool observe=false)
+        [Test]
+        public void OriginalLayer10InputGpuMustMatchOriginalLayer10Output()
+            =>Execute("silence",true,false,true);
+
+        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var folder=allStatic?"GpuAudioPartitionedAllStatic":"GpuAudioPartitionedFirstFf";
+            var folder=isolated?"GpuAudioPartitionedLayer10":allStatic?"GpuAudioPartitionedAllStatic":"GpuAudioPartitionedFirstFf";
             var root=Path.Combine(Application.dataPath,folder);
             var originalRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-real-chain/audio-runtime-reference"));
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+(observe?"partitioned-all-static-layer-observation-":allStatic?"partitioned-all-static-gpu-":"partitioned-first-ff-gpu-")+source+"-"+signal+".json"));
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+(isolated?"partitioned-layer10-original-input-":observe?"partitioned-all-static-layer-observation-":allStatic?"partitioned-all-static-gpu-":"partitioned-first-ff-gpu-")+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
-            var report=new JObject { ["success"]=false,["scope"]=observe?"original_audio_layer_observation_only":"one_partitioned_original_audio_encoder_gpu_numeric_gate",
+            var report=new JObject { ["success"]=false,["scope"]=isolated?"one_original_audio_layer_isolation_gpu_numeric_gate":observe?"original_audio_layer_observation_only":"one_partitioned_original_audio_encoder_gpu_numeric_gate",
                 ["runtime_source"]=source,["signal"]=signal,["requested_backend"]="GPUCompute",
                 ["gpu"]=SystemInfo.graphicsDeviceName,["phase"]="audit",["end_to_end_validated"]=false,["all_original_signals_validated"]=false };
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
@@ -91,6 +95,33 @@ namespace EmbeddingGemma.Validation.Tests
                 var row=((JArray)reference["cases"]).Single(c=>c.Value<string>("id")==signal);
                 Assert.That(row.Value<string>("profile"),Is.EqualTo(plan.Value<string>("profile")),"The exact padded profile is required; never substitute full profile.");
                 var inputName=row.Value<string>("input_features");Check(Path.Combine(originalRoot,inputName),audit["files"][inputName].Value<string>("sha256"));
+                float[] inputValues,expected;int[] inputShape;
+                if(isolated)
+                {
+                    Assert.That(plan.Value<int>("layer"),Is.EqualTo(10));Assert.That(((JArray)plan["projections"]).Count,Is.EqualTo(11));
+                    var stageRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-current-stage-context"));
+                    var stageReferencePath=Path.Combine(stageRoot,"audio-stage-reference.json");var stageAuditPath=Path.Combine(stageRoot,"audio-stage-validation.json");
+                    Check(stageReferencePath,"6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a");
+                    Check(stageAuditPath,"3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b");
+                    var stageReference=JObject.Parse(File.ReadAllText(stageReferencePath));var stageAudit=JObject.Parse(File.ReadAllText(stageAuditPath));
+                    Assert.That(stageAudit.Value<bool>("success")&&stageAudit.Value<bool>("context_validated"),Is.True);
+                    Assert.That(stageReference["metadata"].Value<string>("source_commit"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));
+                    var stageCase=((JArray)stageReference["cases"]).Single(c=>c.Value<string>("id")==signal);
+                    float[] Native(string name)
+                    {
+                        var stage=((JArray)stageCase["stages"]).Single(s=>s.Value<string>("name")==name);var file=stage.Value<string>("expected");
+                        var path=Path.Combine(stageRoot,file);if(!File.Exists(path))path=Path.Combine(stageRoot,Path.GetFileName(file));
+                        Check(path,stageAudit["files"][file].Value<string>("sha256"));return Floats(path);
+                    }
+                    inputValues=Native("layer_9");expected=Native("layer_10");inputShape=new[]{1,280,1024};
+                    Assert.That(inputValues.Length,Is.EqualTo(280*1024));Assert.That(expected.Length,Is.EqualTo(280*1024));
+                    report["input_stage"]="layer_9";report["output_stage"]="layer_10";report["full_encoder_validated"]=false;
+                }
+                else
+                {
+                    inputValues=Floats(Path.Combine(originalRoot,inputName));inputShape=new[]{1,1119,128};
+                    expected=row["features"].ToObject<float[][]>().SelectMany(v=>v).ToArray();
+                }
                 report["phase"]="prepare";report["partition_producer"]=plan["producer"];Save();
                 var models=new List<Model>();var layers=new JArray();var timer=System.Diagnostics.Stopwatch.StartNew();
                 foreach(var segment in (JArray)plan["segments"])
@@ -118,11 +149,11 @@ namespace EmbeddingGemma.Validation.Tests
                 report["projection_count"]=kernels.Count;
                 using var pipeline=new GpuProjectionPipeline(models.ToArray(),inputs.ToArray(),outputs.ToArray(),kernels.ToArray());
                 report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
-                using var input=new Tensor<float>(new TensorShape(1,1119,128),Floats(Path.Combine(originalRoot,inputName)));ComputeTensorData.Pin(input);
+                using var input=new Tensor<float>(new TensorShape(inputShape),inputValues);ComputeTensorData.Pin(input);
                 report["phase"]="execute";Save();timer.Restart();
                 using var encoded=pipeline.Execute(input);Assert.That(encoded.backendType,Is.EqualTo(BackendType.GPUCompute));
                 var actual=encoded.DownloadToArray();report["execute_and_final_download_ms"]=timer.Elapsed.TotalMilliseconds;
-                var expected=row["features"].ToObject<float[][]>().SelectMany(v=>v).ToArray();Assert.That(actual.Length,Is.EqualTo(expected.Length));
+                Assert.That(actual.Length,Is.EqualTo(expected.Length));
                 int mismatch=0;double maximum=0,ratio=0;
                 for(var i=0;i<actual.Length;i++)
                 {

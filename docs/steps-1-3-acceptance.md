@@ -124,3 +124,11 @@ Git `8cefbcdae2d2419f950b0d9cc7767090eeafefdc` は旧fixed vision reference / va
 `--backbone-source` で既存のPython最終参照directoryを指定できる。reference/validationの一致、成功scope、producer、model revision、snapshotの全input hash、全profileのsequence length・画像/音声feature数・幅、graphの相対path・サイズ・SHAをモデルload前に検査する。元graphのbyte列を新しいdestinationへコピーし、再exportせずに別roleの公式forwardと保存encoder→backboneの数値を照合する。コピー先graphのSHAは元と一致する。再利用producerとreference JSONのSHAを新metadataへ記録する。
 
 audit8 red、producer連結2 red、CLI2 redから実装し、role・既存producerを含む44 green。source/destinationが同一または相互の配下の場合は旧receiptを変更する前に拒否する6 red→修正、path/CLI/監査の16 green。Windowsのテストmanifestがbackslashを保存していた2 fixture失敗はPOSIX相対pathへ修正し、監査を緩めていない。[reuse red](results/multimodal-backbone-reuse-red-20261014.json) / [連結red](results/multimodal-backbone-reuse-integration-red-20261014.json) / [destination red](results/multimodal-backbone-reuse-destination-red-20261014.json) / [green](results/multimodal-backbone-reuse-green-20261014.json)。tiny-model greenであり、実モデルのQuery/Raw参照やSentisの工程3を完了にしない。
+
+### 実role参照の失敗と再現診断
+
+音声Actions [38555519280](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38555519280) は、固定native・backbone manifestのSHA監査後にDocumentの公式encoder featureが旧固定参照と一致せず失敗した。PR head `678330657ba77bb21f93b0c204d3fa6938642271`、実producer `da22414ba70b6a91869972f435c4276f7f816526`。Query/Rawは未実行。モデルrevision・入力hashの一致だけで演算文脈の一致を証明できない。元goldenを変更せず、数値差と実行環境の記録を先に追加する。[失敗receipt](results/m4-role-reference-real-context-failed-20261014.json)。
+
+画像・音声の文脈不一致時に、失敗JSON・実FP32出力・最大差/許容差比・Torch CPU capabilityとthread数、関連環境変数を記録するTDDは2 assertion red→2 green、role/既存producer回帰も38 green。成功validationは出さず、旧期待値は変更しない。Git `a98a2f805c7c673d08acf9daf9c70fce473f5f4b` の音声診断run `38558654493` は起動時queue待ちで、重複run `38558655724` はcancelした。任意labelを外し、pushごとの同じ重い参照生成を避ける。[diagnostic red](results/role-reference-feature-drift-red-20261014.json) / [green](results/role-reference-feature-drift-green-20261014.json)。
+
+画像にも3 profileの固定native graphと共有backboneを再利用するopt-in workflowを追加した。workflow契約2 red→range extraction/音声workflow回帰を含む10 green。入力はmain `c868df5…` の別role参照生成用artifactであり、工程2の旧vision期待値 `e2a6dc0…` の代替ではない。実モデルrole照合はworkflow greenとは別。[workflow red](results/image-role-reference-workflow-red-20261014.json) / [green](results/image-role-reference-workflow-green-20261014.json)。工程2・3は引き続き未完了。

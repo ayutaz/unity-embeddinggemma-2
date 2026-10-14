@@ -46,6 +46,36 @@ def test_candidate_validates_all_six_onnx_outputs_against_official_features(tmp_
     assert all(row["onnx_minimum_cosine"] >= 0.999999 for row in reference["cases"])
 
 
+def test_every_onnx_output_is_saved_and_audited_for_immutable_pinned_comparison(tmp_path, monkeypatch):
+    import numpy as np
+    import hashlib
+    snapshot, inputs = fixture(tmp_path, monkeypatch)
+    destination = tmp_path / "out"
+    result = prepare.prepare_audio_encoder(snapshot, inputs, destination, source_commit="b"*40, native_silu=True)
+    reference = json.loads((destination/"audio-encoder-reference.json").read_text())
+    assert len(reference['cases']) == 6
+    for row in reference['cases']:
+        path = destination / row['onnx_features']
+        spec = result['files'][row['onnx_features']]
+        raw = path.read_bytes()
+        assert hashlib.sha256(raw).hexdigest() == spec['sha256'] and len(raw) == spec['bytes']
+        actual = np.fromfile(path, dtype='<f4').reshape(np.asarray(row['features']).shape)
+        assert np.isfinite(actual).all()
+        np.testing.assert_allclose(actual, np.asarray(row['features']), rtol=1e-4, atol=1e-5)
+
+
+def test_cli_forwards_explicit_onnx_layernorm_candidate(tmp_path,monkeypatch,capsys):
+    calls=[]
+    def run(*args,**kwargs):
+        calls.append(kwargs)
+        return dict(success=True,stage="audio_encoder_projector_only",profile_count=2,case_count=6,
+                    minimum_cosine=1.0,unity_validated=False,end_to_end_validated=False)
+    monkeypatch.setattr(cli,"prepare_audio_encoder",run)
+    cli.main(["prepare-audio-encoder","--snapshot",str(tmp_path/"snapshot"),"--preprocessing",str(tmp_path/"pre"),
+              "--output",str(tmp_path/"out"),"--native-silu","--onnx-layernorm","torch_welford8"])
+    assert calls[0]['onnx_layernorm']=='torch_welford8' and calls[0]['native_silu']
+
+
 def test_structurally_valid_but_wrong_onnx_cannot_produce_success(tmp_path, monkeypatch):
     snapshot, inputs = fixture(tmp_path, monkeypatch)
     original = prepare.export_audio_native_onnx

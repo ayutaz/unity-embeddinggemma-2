@@ -11,11 +11,17 @@ on:
         description: Stop at the first failed signal and localize only when trace and native final values preserve the original context
         type: boolean
         default: false
+      onnx_layernorm:
+        description: Experimental ONNX LayerNorm arithmetic; original native references remain unchanged
+        type: choice
+        default: native
+        options: [native, torch_welford8]
   pull_request:
     types: [opened, synchronize, labeled]
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: audio-runtime-reference-${{ github.ref }}
@@ -44,22 +50,47 @@ jobs:
           enable-cache: true
           cache-dependency-glob: tools/uv.lock
       - run: uv sync --locked
+      - name: Record the actual host and retain the immutable original reference
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p ../artifacts
+          lscpu --json > ../artifacts/audio-host.json
+          uv run --locked python -m embeddinggemma_tools.artifact_zip \
+            --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11814567883 \
+            --output ../artifacts/pinned-audio \
+            --member audio-runtime-reference/audio-encoder-reference.json \
+            --member audio-runtime-reference/audio-encoder-validation.json
+          sha256sum --check <<'EOF'
+          ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9  ../artifacts/pinned-audio/audio-runtime-reference/audio-encoder-reference.json
+          68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1  ../artifacts/pinned-audio/audio-runtime-reference/audio-encoder-validation.json
+          EOF
       - name: Pin procedural PCM features against the official processor
         run: uv run --locked python -m embeddinggemma_tools.audio --output ../artifacts/audio-runtime-preprocessing
       - name: Collect every native reference and retain ONNX failure status
         env:
           DIAGNOSE_FIRST_FAILURE: ${{ inputs.diagnose_first_failure }}
+          ONNX_LAYERNORM: ${{ inputs.onnx_layernorm || 'native' }}
         run: |
           if [ "$DIAGNOSE_FIRST_FAILURE" = true ]; then
             uv run --locked python -m embeddinggemma_tools prepare-audio-encoder \
               --preprocessing ../artifacts/audio-runtime-preprocessing \
-              --output ../artifacts/audio-runtime-reference --native-silu
+              --output ../artifacts/audio-runtime-reference --native-silu \
+              --onnx-layernorm "$ONNX_LAYERNORM"
           else
             uv run --locked python -m embeddinggemma_tools prepare-audio-encoder \
               --preprocessing ../artifacts/audio-runtime-preprocessing \
               --output ../artifacts/audio-runtime-reference \
-              --native-silu --collect-onnx-failures
+              --native-silu --collect-onnx-failures \
+              --onnx-layernorm "$ONNX_LAYERNORM"
           fi
+      - name: Compare every saved actual ONNX output to the unchanged original golden
+        if: ${{ always() && hashFiles('artifacts/audio-runtime-reference/audio-encoder-reference.json') != '' }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.pinned_audio_onnx
+          --current ../artifacts/audio-runtime-reference
+          --pinned ../artifacts/pinned-audio/audio-runtime-reference
+          --output ../artifacts/audio-pinned-onnx.json
       - name: Export stages only after native reference completion
         if: ${{ always() && !inputs.encoder_only && hashFiles('artifacts/audio-runtime-reference/audio-encoder-validation.json') != '' }}
         run: >-
@@ -92,11 +123,20 @@ jobs:
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
+          name: audio-pinned-onnx-${{ github.sha }}
+          path: artifacts/audio-pinned-onnx.json
+          retention-days: 7
+          if-no-files-found: warn
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
           name: audio-runtime-native-${{ github.sha }}
           path: |
             artifacts/audio-runtime-reference/
             artifacts/audio-runtime-stages/
             artifacts/audio-runtime-preprocessing/audio-validation.json
+            artifacts/audio-host.json
+            artifacts/pinned-audio/range-receipt.json
           compression-level: 0
           retention-days: 3
           if-no-files-found: warn

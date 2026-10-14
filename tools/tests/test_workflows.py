@@ -43,6 +43,23 @@ def test_audio_first_failure_dispatch_runs_existing_context_guarded_localization
     assert "continue-on-error" not in encoder and "|| true" not in command
 
 
+def test_audio_candidate_dispatch_keeps_original_pinned_golden_and_all_six_outputs():
+    workflow=load('audio-runtime-reference.yml')
+    option=workflow['on']['workflow_dispatch']['inputs']['onnx_layernorm']
+    assert option['type']=='choice' and option['default']=='native'
+    assert option['options']==['native','torch_welford8']
+    assert workflow['permissions']['actions']=='read'
+    steps=workflow['jobs']['native-reference']['steps']
+    commands='\n'.join(s.get('run','') for s in steps)
+    assert '11814567883' in commands and 'ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9' in commands
+    validation=next(s for s in steps if 'embeddinggemma_tools.pinned_audio_onnx' in s.get('run',''))
+    assert 'always()' in validation['if']
+    assert '--pinned ../artifacts/pinned-audio/audio-runtime-reference' in validation['run']
+    assert '--output ../artifacts/audio-pinned-onnx.json' in validation['run']
+    assert not validation.get('continue-on-error')
+    assert any(s.get('with',{}).get('path')=='artifacts/audio-pinned-onnx.json' and s.get('if')=='always()' for s in steps)
+
+
 def test_required_reference_job_validates_long_multimodal_backbone_and_retains_separate_evidence():
     steps = load("model-reference.yml")["jobs"]["reference"]["steps"]
     run = [step for step in steps if "prepare-backbone" in step.get("run", "")]

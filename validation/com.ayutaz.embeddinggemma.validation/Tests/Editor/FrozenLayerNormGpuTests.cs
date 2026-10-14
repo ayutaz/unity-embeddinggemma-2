@@ -18,6 +18,9 @@ namespace EmbeddingGemma.Validation.Tests
         [TestCase("mean_inverse")]
         public void FrozenFirstNormRowsMatchIndependentNativeBits(string name) => Execute(name,"FrozenLayerNormProbe");
 
+        [Test]
+        public void FrozenSecondNormRowsMatchOriginalNativeBits() => Execute("normal","FrozenSecondNormProbe");
+
         [TestCase("normal")]
         [TestCase("mean_inverse")]
         public void FrozenRmsRowsMatchIndependentNativeBits(string name) => Execute(name,"FrozenRmsProbe");
@@ -33,7 +36,7 @@ namespace EmbeddingGemma.Validation.Tests
             var root=Path.Combine(Application.dataPath,folder);
             var specification=JObject.Parse(File.ReadAllText(Path.Combine(root,"frozen-probe.json")));
             var probeSha=specification.Value<string>("graph_variant");
-            var stem=folder=="FrozenOuterRmsProbe"?"frozen-outer-rms-gpu-":folder=="FrozenRmsProbe"?"frozen-rms-gpu-":"frozen-layernorm-gpu-";
+            var stem=folder=="FrozenSecondNormProbe"?"frozen-second-norm-gpu-":folder=="FrozenOuterRmsProbe"?"frozen-outer-rms-gpu-":folder=="FrozenRmsProbe"?"frozen-rms-gpu-":"frozen-layernorm-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+"-"+probeSha+"-"+name+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject { ["success"]=false,["scope"]="first_native_conv_unique_rows_gpu_norm_component_only",
@@ -46,7 +49,13 @@ namespace EmbeddingGemma.Validation.Tests
                 var locked=JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath,"../Packages/packages-lock.json")));
                 foreach(var package in new[]{"com.ayutaz.embeddinggemma","com.ayutaz.embeddinggemma.validation"})
                     Assert.That(locked["dependencies"][package].Value<string>("hash"),Is.EqualTo(source));
-                if(folder=="FrozenOuterRmsProbe")
+                if(folder=="FrozenSecondNormProbe")
+                {
+                    Assert.That(specification.Value<string>("reference_source"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));
+                    Assert.That(specification.Value<int>("full_original_row_count"),Is.EqualTo(8960));
+                    report["reference_context"]="original Conv2 and Norm1 bytes, all repeated positions preserved by exact input grouping";
+                }
+                else if(folder=="FrozenOuterRmsProbe")
                 {
                     Assert.That(specification.Value<bool>("original_native_whole_lconv_bits_match"),Is.True);
                     Assert.That(specification["reference_input_strides"].ToObject<int[]>(),Is.EqualTo(new[]{286720,1,280}));
@@ -73,6 +82,7 @@ namespace EmbeddingGemma.Validation.Tests
                 using var input=new Tensor<float>(new TensorShape(specification["input_shape"].ToObject<int[]>()),Floats(Path.Combine(root,"input.bin")));
                 ComputeTensorData.Pin(input);report["phase"]="execute";Save();worker.Schedule(input);
                 var tensor=(Tensor<float>)worker.PeekOutput();Assert.That(tensor.backendType,Is.EqualTo(BackendType.GPUCompute));
+                report["actual_backend"]=tensor.backendType.ToString();report["gpu"]=SystemInfo.graphicsDeviceName;
                 var actual=tensor.DownloadToArray();var expected=Floats(Path.Combine(root,name+"-expected.bin"));Assert.That(actual.Length,Is.EqualTo(expected.Length));
                 Assert.That(actual.All(v=>!float.IsNaN(v)&&!float.IsInfinity(v)),Is.True);
                 var bytes=new byte[actual.Length*4];Buffer.BlockCopy(actual,0,bytes,0,bytes.Length);File.WriteAllBytes(Path.ChangeExtension(output,".bin"),bytes);

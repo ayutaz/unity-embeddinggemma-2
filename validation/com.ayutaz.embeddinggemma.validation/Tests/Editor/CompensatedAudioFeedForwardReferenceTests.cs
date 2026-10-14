@@ -78,6 +78,20 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.That(native["ffw_layer_2"].All(value => value >= minimum && value <= maximum), Is.True,
                     "Native linear2 output must be unchanged by the outer norm-input clamp.");
                 report["linear2_outer_clip_min"] = minimum; report["linear2_outer_clip_max"] = maximum;
+                var norm = AudioNormIsolation.Create(model,
+                    new JArray(anchors["anchors"].Where(value => value.Value<string>("stage") == "post_layer_norm")),
+                    new TensorShape(1, 280, 1024));
+                var normWeight = norm.constants.Single(value => value.index == 102);
+                Assert.That(normWeight.shape, Is.EqualTo(new TensorShape(1024)));
+                var normBytes = (ArraySegment<byte>)typeof(Constant).GetField("array", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(normWeight);
+                var weightValues = new float[1024]; Buffer.BlockCopy(normBytes.Array, normBytes.Offset, weightValues, 0, 4096);
+                var weightCapture = Capture(output, backend + "-post-norm-folded-weight-fp32.bin", weightValues);
+                Assert.That(weightCapture.Value<string>("sha256"), Is.EqualTo(anchors["folded_scale_audit"].Value<string>("folded_coefficient_sha256")));
+                var epsilonLayer = norm.layers.Single(value => value.GetType().Name == "ScalarMad");
+                Assert.That((float)epsilonLayer.GetType().GetField("sFloat").GetValue(epsilonLayer), Is.EqualTo(1f));
+                report["post_norm_context"] = new JObject { ["folded_weight"] = weightCapture,
+                    ["epsilon"] = (float)epsilonLayer.GetType().GetField("bFloat").GetValue(epsilonLayer),
+                    ["restore_multiplier"] = 2, ["width"] = 1024 };
                 var inputPath = Path.Combine(root, "audio-runtime-reference/frames-1119-valid-1119/silence-features-fp32.bin");
                 HashCheck(inputPath, "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24");
                 var subsamplePath = Path.GetFullPath(Path.Combine(Application.dataPath, "../../k/artifacts/audio-current-stage-context/silence-stage-00-fp32.bin"));
@@ -98,6 +112,7 @@ namespace EmbeddingGemma.Validation.Tests
                     metrics["diagnostic_restore_multiplier"] = name == "post_layer_norm" ? 2 : 1;
                     metrics["stage"] = name; metrics["layer_index"] = snapshot.LayerIndex; metrics["tensor_index"] = snapshot.TensorIndex;
                     metrics["actual_backend"] = snapshot.Backend.ToString(); metrics["linear2_outer_clamp_alias"] = name == "ffw_layer_2";
+                    metrics["capture"] = Capture(output, backend + "-" + name + "-fp32.bin", actual);
                     stages.Add(metrics); Save();
                 }
                 report["first_failed_observed_stage"] = stages.FirstOrDefault(value => !value.Value<bool>("elementwise_passed"))?["stage"];
@@ -124,6 +139,13 @@ namespace EmbeddingGemma.Validation.Tests
                 ["worst_index"] = worst, ["worst_actual"] = actual[worst], ["worst_expected"] = expected[worst] };
         }
         static float[] Floats(string path) { var bytes = File.ReadAllBytes(path); var values = new float[bytes.Length / 4]; Buffer.BlockCopy(bytes, 0, values, 0, bytes.Length); return values; }
+        static JObject Capture(string output, string name, float[] values)
+        {
+            var bytes = new byte[checked(values.Length * 4)]; Buffer.BlockCopy(values, 0, bytes, 0, bytes.Length);
+            var path = Path.Combine(output, name); File.WriteAllBytes(path, bytes);
+            Assert.That(Floats(path).Select(BitConverter.SingleToInt32Bits), Is.EqualTo(values.Select(BitConverter.SingleToInt32Bits)));
+            return new JObject { ["file"] = name, ["bytes"] = bytes.Length, ["sha256"] = Hash(path) };
+        }
         static float Scalar(Model model, int index)
         {
             var constant = model.constants.Single(value => value.index == index);

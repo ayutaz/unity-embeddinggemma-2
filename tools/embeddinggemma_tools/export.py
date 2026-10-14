@@ -445,6 +445,38 @@ def fp32_fma(a, b, c):
     return total + (product_error + sum_error)
 
 
+def fp32_block192_matmul(values, weights):
+    """Experimental fixed FP32 static projection with block192 FMA/store order.
+
+    Inferred from a pinned full-280-row SGEMM replay, not a guarantee about all
+    MKL shapes or instruction sets. Borrows the existing KxN coefficient bytes.
+    Product inference stays FP32; the independent test oracle may use FP64.
+    """
+    if not torch.compiler.is_compiling() and not torch.jit.is_tracing():
+        if (values.ndim not in (2, 3) or weights.ndim != 2 or values.shape[-1] != weights.shape[0]
+                or values.shape[-1] < 1 or weights.shape[1] < 1
+                or values.dtype != torch.float32 or weights.dtype != torch.float32
+                or values.device != weights.device or not torch.isfinite(values).all()
+                or not torch.isfinite(weights).all() or torch.any(values.abs() > 1e6)
+                or torch.any(weights.abs() > 100)):
+            raise ValueError('Block192 projection requires bounded finite matching FP32 matrices')
+    width = int(weights.shape[0])
+    blocks = (width + 191) // 192
+    padding = blocks * 192 - width
+    rank = values.ndim
+    chunks = torch.nn.functional.pad(values, (0, padding)).reshape(*values.shape[:-1], blocks, 192)
+    chunks = chunks.permute(rank-1, *range(rank-1), rank)
+    coefficients = torch.nn.functional.pad(weights, (0, 0, 0, padding)).reshape(blocks, 192, weights.shape[1])
+    partial = torch.zeros_like(chunks[..., :1])
+    for index in range(192):
+        right = coefficients[:, index].reshape(blocks, *([1] * (values.ndim-1)), weights.shape[1])
+        partial = fp32_fma(chunks[..., index:index+1], right, partial)
+    total = partial[0]
+    for index in range(1, blocks):
+        total = total + partial[index]
+    return total
+
+
 def fp32_cascade_mean1024(values):
     """Pinned AVX2 eight-lane FP32 sum/divide order for contiguous 1024 rows.
 

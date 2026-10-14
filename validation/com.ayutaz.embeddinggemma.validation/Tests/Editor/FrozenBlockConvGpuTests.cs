@@ -16,16 +16,23 @@ namespace EmbeddingGemma.Validation.Tests
     {
         [Test]
         public void OriginalSecondConvMustMatchAllSavedNativeBitsOnGpu()
+            => Execute("FrozenBlockConvProbe","conv","frozen-block-conv","one_frozen_conv2_original_silence_gpu_bits_only");
+
+        [Test]
+        public void OriginalInputProjectionMustMatchAllSavedNativeBitsOnGpu()
+            => Execute("FrozenInputProjectionProbe","projection","frozen-input-projection","one_original_280_row_input_projection_gpu_bits_only");
+
+        void Execute(string folder,string graph,string reportStem,string scope)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var root=Path.Combine(Application.dataPath,"FrozenBlockConvProbe");
+            var root=Path.Combine(Application.dataPath,folder);
             var spec=JObject.Parse(File.ReadAllText(Path.Combine(root,"frozen-conv.json")));
             var variant=spec.Value<string>("variant");
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/frozen-block-conv-gpu-"+source+"-"+variant+".json"));
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+reportStem+"-gpu-"+source+"-"+variant+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject { ["success"]=false,["source"]=source,["variant"]=variant,
-                ["scope"]="one_frozen_conv2_original_silence_gpu_bits_only",["phase"]="audit",
+                ["scope"]=scope,["phase"]="audit",
                 ["gpu"]=SystemInfo.graphicsDeviceName,["graphics_api"]=SystemInfo.graphicsDeviceType.ToString(),
                 ["full_encoder_validated"]=false,["end_to_end_validated"]=false };
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
@@ -37,13 +44,22 @@ namespace EmbeddingGemma.Validation.Tests
                     Assert.That(locked["dependencies"][p].Value<string>("hash"),Is.EqualTo(source));
                 Assert.That(spec.Value<string>("reference_source"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));
                 Assert.That(spec.Value<bool>("expected_unchanged"),Is.True);
+                if(folder=="FrozenInputProjectionProbe")
+                {
+                    Assert.That(spec.Value<bool>("all_original_rows_preserved"),Is.True);
+                    Assert.That(spec.Value<string>("original_expected_sha256"),Is.EqualTo("dc54774840fed958a310c6092e5c5c3483de74be52df7914d2bd128a99192969"));
+                    Assert.That(spec.Value<string>("weight_sha256"),Is.EqualTo("a59650e614c2746ee18bbb23c475f65677beeb9ffe49350854af2aad873052a1"));
+                    Assert.That(spec["input_shape"].ToObject<int[]>(),Is.EqualTo(new[]{1,280,1024}));
+                }
                 foreach(var file in (JObject)spec["files"])
                 {
                     var path=Path.Combine(root,file.Key);using var stream=File.OpenRead(path);
                     Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(file.Value.Value<string>("sha256")));
                     Assert.That(new FileInfo(path).Length,Is.EqualTo(file.Value.Value<long>("bytes")));
                 }
-                var model=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/FrozenBlockConvProbe/conv.onnx"));
+                var model=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/"+folder+"/"+graph+".onnx"));
+                if(folder=="FrozenInputProjectionProbe" && variant=="static64")
+                    model=CompensatedModel.Create(model,64);
                 report["layer_count"]=model.layers.Count;
                 using var worker=new Worker(model,BackendType.GPUCompute);
                 var cpu=(HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallback",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(worker);

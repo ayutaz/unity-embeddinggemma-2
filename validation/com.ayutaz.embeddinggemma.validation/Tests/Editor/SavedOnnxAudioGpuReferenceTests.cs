@@ -30,13 +30,21 @@ namespace EmbeddingGemma.Validation.Tests
         [TestCase("padded_noise")]
         public void RefinedInverseCandidateGpuMatchesOriginalGolden(string signal) => Execute(signal,"GpuAudioRefinedCandidate");
 
-        void Execute(string signal,string candidateFolder)
+        [TestCase("silence")]
+        [TestCase("impulse")]
+        [TestCase("sine")]
+        [TestCase("nyquist")]
+        [TestCase("noise")]
+        [TestCase("padded_noise")]
+        public void RefinedStaticProjectionCandidateGpuMatchesOriginalGolden(string signal) => Execute(signal,"GpuAudioRefinedCandidate",true);
+
+        void Execute(string signal,string candidateFolder,bool compensateStatic=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders, Is.True, "Actual GPU required; no CPU substitute or skip.");
             var root = Path.GetFullPath(Path.Combine(Application.dataPath, "../../k/artifacts/audio-real-chain/audio-runtime-reference"));
             var candidateRoot = Path.Combine(Application.dataPath, candidateFolder);
             var source = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var variant=candidateFolder=="GpuAudioCandidate"?"":"-refined-inverse";
+            var variant=candidateFolder=="GpuAudioCandidate"?"":compensateStatic?"-refined-static64":"-refined-inverse";
             var output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/saved-onnx-audio-gpu-" + source + variant + "-" + signal + ".json"));
             Assert.That(File.Exists(output), Is.False, "Preserve each invocation's evidence.");
             var report = new JObject { ["success"] = false, ["scope"] = "one_saved_onnx_audio_encoder_gpu_vs_immutable_original",
@@ -98,6 +106,13 @@ namespace EmbeddingGemma.Validation.Tests
                 var asset = AssetDatabase.LoadAssetAtPath<ModelAsset>(assetPath);
                 Assert.That(asset, Is.Not.Null, "The audited ONNX must import before execution.");
                 var model = ModelLoader.Load(asset);
+                report["saved_graph_layer_count"]=model.layers.Count;
+                if(compensateStatic)
+                {
+                    report["phase"]="transform_static_projections";Save();
+                    model=CompensatedModel.Create(model,64);
+                    report["runtime_graph_transform"]="CompensatedModel.Create/static64";
+                }
                 var maskValues = Ints(Path.Combine(root, maskName)); var validFrames = maskValues.Sum();
                 report["layer_count"] = model.layers.Count; report["phase"] = "worker"; Save();
                 using var api = new AudioFeatureEncoder(model, BackendType.GPUCompute, new AudioEncoderProfile(validFrames));

@@ -6,6 +6,7 @@ import importlib.metadata
 import json
 from pathlib import Path
 import re
+import shutil
 from types import SimpleNamespace
 
 import numpy as np
@@ -15,10 +16,11 @@ from transformers import AutoTokenizer, EmbeddingGemma2Processor
 from . import export
 from .model import load_audio_embedding_model
 from .text import format_text
+from .backbone_reuse import audit_backbone_source
 
 
 def prepare_audio_embeddings(snapshot, encoder_directory, destination, *, sequence_length=1024, revision, source_commit,
-                             role="document", encoder_source_commit=None):
+                             role="document", encoder_source_commit=None, backbone_source=None):
     snapshot, encoder_directory, destination = Path(snapshot), Path(encoder_directory).resolve(), Path(destination)
     destination.mkdir(parents=True, exist_ok=True)
     receipt = destination / "audio-embedding-validation.json"
@@ -82,6 +84,13 @@ def prepare_audio_embeddings(snapshot, encoder_directory, destination, *, sequen
         prepared[profile] = (spec, mask, native_graph, inputs)
     if len(prepared) != 2 or sum(len(group[3]) for group in prepared.values()) != 6:
         raise ValueError("Audio reference must cover two profiles and every case")
+    input_hashes = {name: digest(snapshot / name) for name in ("config.json", "processor_config.json", "model.safetensors", "tokenizer.json", "tokenizer_config.json", "config_sentence_transformers.json")}
+    reuse = None
+    if backbone_source is not None:
+        hidden_size = json.loads((snapshot / "config.json").read_text())["text_config"]["hidden_size"]
+        specs = {name: dict(sequence_length=sequence_length, image_feature_count=0, audio_feature_count=value[0]["feature_count"], feature_width=hidden_size)
+                 for name, value in prepared.items()}
+        reuse = audit_backbone_source(backbone_source, "audio", revision=revision, input_sha256=input_hashes, profiles=specs)
     core = load_audio_embedding_model(snapshot)
     tokenizer = AutoTokenizer.from_pretrained(snapshot, local_files_only=True)
     token_configuration = json.loads((snapshot / "tokenizer_config.json").read_text(encoding="utf-8"))
@@ -109,6 +118,9 @@ def prepare_audio_embeddings(snapshot, encoder_directory, destination, *, sequen
         graph = destination / profile / "backbone.pt2"
         graph.parent.mkdir(parents=True, exist_ok=True)
         saved_backbone = None
+        if reuse is not None:
+            shutil.copyfile(reuse["programs"][profile], graph)
+            saved_backbone = torch.export.load(graph).module(); produced.append(graph)
         for original, input_features, golden_features in case_inputs:
             with torch.no_grad():
                 native = core(input_ids=ids, attention_mask=mask, input_features=input_features, input_features_mask=frame_mask.bool())
@@ -148,9 +160,11 @@ def prepare_audio_embeddings(snapshot, encoder_directory, destination, *, sequen
         image_token_id=core.config.image_token_id, audio_token_id=core.config.audio_token_id,
         vocabulary_size=core.config.text_config.vocab_size, pad_token_id=core.config.text_config.pad_token_id,
         encoder_reference_sha256=digest(reference_path), feature_rtol=1e-4, feature_atol=1e-5,
-        input_sha256={name: digest(snapshot/name) for name in ("config.json", "processor_config.json", "model.safetensors", "tokenizer.json", "tokenizer_config.json", "config_sentence_transformers.json")},
+        input_sha256=input_hashes,
         versions={name: importlib.metadata.version(name) for name in ("torch", "transformers")})
     path = destination / "audio-embedding-reference.json"
+    if reuse is not None:
+        final_metadata.update(backbone_source_commit=reuse["source_commit"], backbone_reference_sha256=reuse["reference_sha256"])
     path.write_text(json.dumps(dict(metadata=final_metadata, profiles=profiles, cases=rows), indent=2, allow_nan=False)+"\n", encoding="utf-8")
     produced.append(path)
     report = dict(success=True, stage="python_audio_embeddings_only", metadata=final_metadata, case_count=len(rows), profile_count=len(profiles),

@@ -5,6 +5,7 @@ import importlib.metadata
 import json
 from pathlib import Path
 import re
+import shutil
 from types import SimpleNamespace
 
 import numpy as np
@@ -14,10 +15,11 @@ from transformers import AutoTokenizer, EmbeddingGemma2Processor
 from . import export
 from .model import load_image_embedding_model
 from .text import format_text
+from .backbone_reuse import audit_backbone_source
 
 
 def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequence_length=1024, revision, source_commit,
-                             role="document", vision_source_commit=None):
+                             role="document", vision_source_commit=None, backbone_source=None):
     snapshot, vision_directory, destination = Path(snapshot), Path(vision_directory).resolve(), Path(destination)
     destination.mkdir(parents=True, exist_ok=True)
     receipt = destination/"image-embedding-validation.json"
@@ -64,6 +66,13 @@ def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequenc
             raise ValueError("Image reference case IDs must be unique")
         seen.add(row["id"])
         audited_path(row["pixels"])
+    input_hashes = {name: digest(snapshot / name) for name in ("config.json", "processor_config.json", "model.safetensors", "tokenizer.json", "tokenizer_config.json", "config_sentence_transformers.json")}
+    reuse = None
+    if backbone_source is not None:
+        hidden_size = json.loads((snapshot / "config.json").read_text())["text_config"]["hidden_size"]
+        specs = {name: dict(sequence_length=sequence_length, image_feature_count=value["feature_count"], audio_feature_count=0, feature_width=hidden_size)
+                 for name, value in reference["profiles"].items()}
+        reuse = audit_backbone_source(backbone_source, "image", revision=revision, input_sha256=input_hashes, profiles=specs)
     core = load_image_embedding_model(snapshot)
     tokenizer = AutoTokenizer.from_pretrained(snapshot,local_files_only=True)
     token_configuration=json.loads((snapshot/"tokenizer_config.json").read_text(encoding="utf-8"))
@@ -95,6 +104,10 @@ def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequenc
         key=(sequence_length,count,0)
         graph=graphs.get(key,destination/profile/"backbone.pt2")
         exported=torch.export.load(graph).module() if key in graphs else None
+        if exported is None and reuse is not None:
+            graph.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(reuse["programs"][profile], graph)
+            exported=torch.export.load(graph).module(); produced.append(graph); graphs[key]=graph
         for original in (row for row in reference["cases"] if row["profile"]==profile):
             pixels=torch.from_numpy(np.fromfile(audited_path(original["pixels"]),dtype="<f4").copy()).reshape(spec["pixel_shape"])
             with torch.no_grad():
@@ -141,9 +154,11 @@ def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequenc
                   image_token_id=core.config.image_token_id,audio_token_id=core.config.audio_token_id,
                   vocabulary_size=core.config.text_config.vocab_size,pad_token_id=core.config.text_config.pad_token_id,
                   vision_reference_sha256=digest(vision_directory/"vision-reference.json"),
-                  input_sha256={name:digest(snapshot/name) for name in ("config.json","processor_config.json","model.safetensors","tokenizer.json","tokenizer_config.json","config_sentence_transformers.json")},
+                  input_sha256=input_hashes,
                   versions={name:importlib.metadata.version(name) for name in ("torch","transformers")})
     path=destination/"image-embedding-reference.json"
+    if reuse is not None:
+        metadata.update(backbone_source_commit=reuse["source_commit"], backbone_reference_sha256=reuse["reference_sha256"])
     path.write_text(json.dumps(dict(metadata=metadata,profiles=profiles,cases=rows),indent=2,allow_nan=False)+"\n",encoding="utf-8");produced.append(path)
     report=dict(success=True,stage="python_image_embeddings_only",unity_validated=False,gpu_chain_validated=False,
                 python_saved_chain_validated=True,end_to_end_validated=False,

@@ -16,12 +16,13 @@ from transformers import AutoTokenizer, EmbeddingGemma2Processor
 from . import export
 from .model import load_audio_embedding_model
 from .text import format_text
-from .backbone_reuse import audit_backbone_source
+from .backbone_reuse import audit_backbone_source, validate_reuse_destination
 
 
 def prepare_audio_embeddings(snapshot, encoder_directory, destination, *, sequence_length=1024, revision, source_commit,
                              role="document", encoder_source_commit=None, backbone_source=None):
     snapshot, encoder_directory, destination = Path(snapshot), Path(encoder_directory).resolve(), Path(destination)
+    validate_reuse_destination(backbone_source, destination)
     destination.mkdir(parents=True, exist_ok=True)
     receipt = destination / "audio-embedding-validation.json"
     receipt.unlink(missing_ok=True)

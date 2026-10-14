@@ -15,12 +15,13 @@ from transformers import AutoTokenizer, EmbeddingGemma2Processor
 from . import export
 from .model import load_image_embedding_model
 from .text import format_text
-from .backbone_reuse import audit_backbone_source
+from .backbone_reuse import audit_backbone_source, validate_reuse_destination
 
 
 def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequence_length=1024, revision, source_commit,
                              role="document", vision_source_commit=None, backbone_source=None):
     snapshot, vision_directory, destination = Path(snapshot), Path(vision_directory).resolve(), Path(destination)
+    validate_reuse_destination(backbone_source, destination)
     destination.mkdir(parents=True, exist_ok=True)
     receipt = destination/"image-embedding-validation.json"
     receipt.unlink(missing_ok=True)

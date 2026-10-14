@@ -1,8 +1,14 @@
 # 現在の状態と残タスク
 
-更新日: 2026-10-15。最新の完了済み実GPU全encoder候補sourceは `e9e5c92a7c97bf4228d13f6e1abc911e4fa12c5f`、直接feed-forward GPU局所Greenは `e9e72e8611ed28be41921dd27f0b9b72b3e6d5c1`、確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
+更新日: 2026-10-15。最新の完了済み実GPU全encoder候補sourceは `a2fca44551f250a68674e6b235372c043edda6b5`（全135投影候補は数値悪化のため不採用）、前の2投影候補は `e9e5c92a7c97bf4228d13f6e1abc911e4fa12c5f`、直接feed-forward GPU局所Greenは `e9e72e8611ed28be41921dd27f0b9b72b3e6d5c1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
 
 ## 現在の判定
+
+**2026-10-15最新の全135投影候補:** runtime shape監査は123個を確認し、135個の期待数に届かず不合格だった。元ONNXと係数hashで照合した結果、残り12個はすべて定数入力のrelative-key投影で、Sentisの定数畳み込み対象と分かった。畳み込みへの変換という仮説は否定した。元定数のshapeだけを読み、実行時123個と合わせた135個のmetadata監査を追加。元graphの演算・係数を保持して分割境界を出力へ公開する別graphで、Sentisの固定shape411個を確認した。NUnit1 pass / fail0 / skip0 / exit0、推論は未実行でGPU数値合格ではない。
+
+shape補完5 Red→関連19 Green、定数投影の切り出し1 Red→関連20 Green、境界overlay7 Red→関連27 Green、元integer / scalar metadata保持1 Red→関連28 Green。135投影 / 136 segment / 41,938 ONNX nodeを生成し、すべてのsegment inputの固定FP32 shapeと元initializer digest `1154ac70…`を確認した。`a2fca44`の元silence全encoderはGPUCompute・計算fallback / flush0、NUnit0 pass / 1 fail / skip0 / exit2。**539要素不合格・最大許容差比6.730431**で、前の175要素・4.043479から悪化したためこの候補を採用しない。準備12.463秒、実行＋最終診断download2.499秒は1入力の候補計測であり、最終APIの性能保証ではない。[固定監査・TDD・準備・実GPU不合格](results/m4-all-static-partitioned-gpu-failed-20261015.json)。所有Unityはterminal、終了後のlive queryでUnityなしを確認した。
+
+次は135投影候補と前の2投影候補を元の層別参照へ照合し、最初の誤差増加を起こす投影を特定する。全投影の積和順を同一と推測して採用しない。工程3・4、音声元6信号 / 両profile、画像FP32全3 profile、実PCM / Textureから最終768 APIの全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰 / 中間readbackとCPU計算fallback禁止は引き続き未達。以降は前回checkpoint。
 
 **2026-10-15最新の全encoder接続:** 直接GPUの最初の2投影を、元graphの投影前 / 間 / 後段へGPU tensorのまま接続した。partition plannerは6 Red→6 Green、入力残差のbyte / 係数 / 演算を保持する小さい独立照合を確認。`GpuProjectionPipeline`は2 Red→2 GPU Greenで残差・連続実行・独立出力・Workerの解放 / 借りた投影器の保持を確認。初回の実モデルは中間segmentの入力をそのまま出力するONNXをSentisがbroken linksとして拒否し、推論未実行。未使用input拒否不足1 Redと明示Identity不足1 Redから、未使用inputを除き、値を変えないIdentityとoutput aliasで残差を受け渡すように修正し、関連19 Green。元参照は置き換えない。
 

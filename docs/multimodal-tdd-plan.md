@@ -4,6 +4,8 @@
 
 ## 2026-10-14の実行方針と再開順
 
+2026-10-15現在: 最初のfeed-forwardの標準FMA展開GPUは36.7GBのworking setと出力欠測 / timeoutで失敗し、owned processの終了をlive確認した。直接GPU kernelへ切り替え、API8 Red→8 Greenと、元280行の2投影2 GPU Green / 全bit一致を確認。[資源失敗](results/m4-first-ff-expanded-gpu-resource-failure-20261015.json) / [直接kernel成功](results/m4-direct-gpu-first-ff-projections-green-20261015.json)。R2の次は、元graphの投影前 / 投影間 / 後段をGPU tensorで接続し、元係数・clip・その他演算・入力 / maskを維持して全encoderへ戻す。原則として中間readbackを入れず、重いFMA展開graphの反復を避ける。native MADの丸めは現在GPUだけで実測済み、他GPUは別gate。音声元6信号 / 両profile・画像FP32全3 profileを合格後、R3の最終768 API全条件へ進む。工程3・4は未完了のまま。以下は前回checkpoint。
+
 2026-10-15現在: block192による入力投影のGPU局所全bit一致を確認したが、全encoderは無音295要素・最大許容差比7.637025で不合格。[固定結果](results/m4-block192-input-projection-gpu-and-whole-failed-20261015.json)。次のR2は元clip / 係数 / 期待値を保った最初のfeed-forwardの2投影をGPUへ分離する。両方のoffline候補は元値を全bit再現したが、GPU成功には数えない。局所GPU→元音声全6信号 / 両profile・画像FP32全3 profile→R3最終API全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰の順を維持する。モデル計算はGPU、CPUのgraph変換 / schedule負荷も別に測定し、元許容差を変えず工程3・4の未達を保持する。以下は前回checkpoint。
 
 2026-10-15現在: Conv2のblock16リセット / 保存加算と、Norm1の8-lane scalar平均FMAを元参照の演算順に合わせ、実GPUでsubsampleの最初の6段階を全bit一致させた。全encoderは417要素不合格で未完了。[局所修正](results/m4-source-order-conv-and-scalar-mean-20261015.json) / [全体・負荷](results/m4-scalar-mean-full-gpu-and-load-analysis-20261015.json)。次のR2は元layer1.act・元投影係数の固定入力でinput_proj_linearを独立照合し、差を消す候補だけを元encoderへ戻す。その後、元音声6信号 / 両profile・画像FP32全3 profileを受け入れ、R3の実PCM / Texture→GPU前処理→encoder→backbone→正規化768 APIの全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰へ進む。中間readback / CPU計算fallbackなしと元許容差は維持する。

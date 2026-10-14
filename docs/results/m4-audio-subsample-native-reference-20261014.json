@@ -1,0 +1,91 @@
+{
+  "workflow_conclusion": "success",
+  "workflow_run": 38540183522,
+  "producer_commit": "e868446e44fb96494605b61b99f86cf3a5f5f973",
+  "scope": "frozen_native_subsample_stages_reference_only",
+  "subsample_native_final_exact_match": true,
+  "artifact_id": 11881872190,
+  "full_encoder_validated": false,
+  "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "parts": [
+    {
+      "bytes": 18350080,
+      "shape": [
+        1,
+        128,
+        560,
+        64
+      ],
+      "sha256": "c36aa611eedea3b78551a16577d17df98dd7d451cc0e1d1e7bc1c5e073173d9c",
+      "name": "subsample.layer0.conv"
+    },
+    {
+      "bytes": 18350080,
+      "shape": [
+        1,
+        560,
+        64,
+        128
+      ],
+      "sha256": "c8e5419fb25b2e21336e6446c63ec5bf57f17a9cd755679b340979ae7d145b84",
+      "name": "subsample.layer0.norm"
+    },
+    {
+      "bytes": 18350080,
+      "shape": [
+        1,
+        128,
+        560,
+        64
+      ],
+      "sha256": "1f117877ec3cd7c830a74b22e4f46c97c3caf2ff3f1bda5b641c43385c5d19c4",
+      "name": "subsample.layer0.act"
+    },
+    {
+      "bytes": 1146880,
+      "shape": [
+        1,
+        32,
+        280,
+        32
+      ],
+      "sha256": "b8bceb8d5c1a3e7f204b90155f5fccb8aa5a9885c1ca0357c2ef6920264e0d10",
+      "name": "subsample.layer1.conv"
+    },
+    {
+      "bytes": 1146880,
+      "shape": [
+        1,
+        280,
+        32,
+        32
+      ],
+      "sha256": "b85fa36b25f17bb32eff7321d8d44d07ea895e6600cb030786406c259d6b7b7c",
+      "name": "subsample.layer1.norm"
+    },
+    {
+      "bytes": 1146880,
+      "shape": [
+        1,
+        32,
+        280,
+        32
+      ],
+      "sha256": "139b37b6932ec8ae237925842d10a1f8d3eea7f62bed80ac381c5a2fe2aa10b6",
+      "name": "subsample.layer1.act"
+    },
+    {
+      "bytes": 1146880,
+      "shape": [
+        1,
+        280,
+        1024
+      ],
+      "sha256": "dc54774840fed958a310c6092e5c5c3483de74be52df7914d2bd128a99192969",
+      "name": "subsample.input_proj_linear"
+    }
+  ],
+  "unity_validated": false,
+  "head_commit": "57714c79fb805bcc8fd39e23f89d7de13109c4dc",
+  "reference_json_sha256": "664a8242d079f53bf98d2032f9398de6d2c8d6bcd2312d1baaa35bb498ce5fb8"
+}

@@ -99,9 +99,11 @@ def test_cli_forwards_explicit_role(tmp_path, monkeypatch, modality, source_flag
                     unity_validated=False, gpu_chain_validated=False, onnx_encoder_numerically_validated=False)
     monkeypatch.setattr(cli, "prepare_" + modality + "_embeddings", run)
     cli.main(["prepare-" + modality + "-embeddings", "--snapshot", str(tmp_path), source_flag, str(tmp_path),
-              "--output", str(tmp_path / "out"), "--role", "query", source_flag + "-commit", "b" * 40])
+              "--output", str(tmp_path / "out"), "--role", "query", source_flag + "-commit", "b" * 40,
+              "--backbone-source", str(tmp_path / "backbones")])
     assert seen["role"] == "query"
     assert seen["encoder_source_commit" if modality == "audio" else "vision_source_commit"] == "b" * 40
+    assert seen["backbone_source"] == tmp_path / "backbones"
 
 
 def test_audio_reference_producer_and_reused_encoder_producer_are_separate(tmp_path, audio_fixture):

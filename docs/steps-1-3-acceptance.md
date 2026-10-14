@@ -2,6 +2,8 @@
 
 > 文書整合確認: 2026-10-15。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。ユーザー指定の実行計画3・4は継続中、未完了。直近の所有Unity processは終了済み。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
 
+2026-10-15現在: GPU接続の2 Red→2 Greenとplanner関連19 Greenを確認。初回の中間ONNX import失敗は入力 / 出力aliasを明示Identityで修正し、別試行の`e9e5c92`全encoderは無音175要素・最大許容差比4.043479で不合格。GPUCompute・計算fallback / flush0、NUnit0 pass / 1 fail / skip0、準備23.371秒・実行＋final download10.948秒。[固定接続・失敗・TDD](results/m4-partitioned-first-ff-whole-gpu-failed-20261015.json)。135 static投影への拡張は不明shapeのため準備時に拒否、GPU未実行。工程3・4と全信号 / profile / 最終APIの条件を維持する。以下は前回checkpoint。
+
 2026-10-15現在: 最初のfeed-forwardの展開FMA GPUはworking set36.7GB・出力欠測・timeoutで失敗。直接GPU kernelのAPI8 Red→8 Green、固定Git `e9e72e8`の元280行の2投影2 GPU Green / 全bit一致を確認した。元clipもGPU、計算fallback / flush0、実行＋診断final download212.7533 / 27.6472ms。全encoder / 他GPU / 最終APIの合格には流用しない。[失敗と終了確認](results/m4-first-ff-expanded-gpu-resource-failure-20261015.json) / [固定成功](results/m4-direct-gpu-first-ff-projections-green-20261015.json)。次は元全encoderの投影境界をGPU tensorで接続する。工程3・4・元全信号 / profile・最終APIの全条件は未完了。以下は前回checkpoint。
 
 2026-10-15現在: 元280行のSGEMM文脈とblock192候補が入力投影を全bit再現し、実GPUもstatic64の249,203 bit差→block192の全bit一致を確認した。元golden / coefficient byte / 許容差は維持。全encoder`43c252d`は無音295要素・最大許容差比7.637025で不合格、GPUCompute・計算fallback / flush0、NUnit0 pass / 1 fail / skip0。CPU / offline診断では最初のfeed-forwardの両投影もblock192で全bit一致したが、そのGPUは未実行。[固定結果と限界](results/m4-block192-input-projection-gpu-and-whole-failed-20261015.json)。Python全体はde3a3b0の4環境各793 pass / skip0まで確認。[固定回帰](results/python-full-scalar-mean-rewrite-green-20261015.json)。工程3・4と全信号 / profile / 最終API条件は未完了のまま。以下は前回checkpoint。

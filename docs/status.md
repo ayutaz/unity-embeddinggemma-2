@@ -1,8 +1,14 @@
 # 現在の状態と残タスク
 
-更新日: 2026-10-15。最新の完了済み実GPU全encoder候補sourceは `43c252d3b908ab9fee657ec9e06cb2c1e2843224`、入力投影GPU局所Greenは `16b9e40a656564aae38f6095ac8d9fcf050b5156`、確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
+更新日: 2026-10-15。最新の完了済み実GPU全encoder候補sourceは `e9e5c92a7c97bf4228d13f6e1abc911e4fa12c5f`、直接feed-forward GPU局所Greenは `e9e72e8611ed28be41921dd27f0b9b72b3e6d5c1`、確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
 
 ## 現在の判定
+
+**2026-10-15最新の全encoder接続:** 直接GPUの最初の2投影を、元graphの投影前 / 間 / 後段へGPU tensorのまま接続した。partition plannerは6 Red→6 Green、入力残差のbyte / 係数 / 演算を保持する小さい独立照合を確認。`GpuProjectionPipeline`は2 Red→2 GPU Greenで残差・連続実行・独立出力・Workerの解放 / 借りた投影器の保持を確認。初回の実モデルは中間segmentの入力をそのまま出力するONNXをSentisがbroken linksとして拒否し、推論未実行。未使用input拒否不足1 Redと明示Identity不足1 Redから、未使用inputを除き、値を変えないIdentityとoutput aliasで残差を受け渡すように修正し、関連19 Green。元参照は置き換えない。
+
+`e9e5c92`の実GPU全encoderは無音175要素不合格・最大許容差比4.043479。前候補295要素・7.637025より改善したが、元`atol1e-5 / rtol1e-4`を満たさない。GPUCompute・計算fallback / flush0、NUnit0 pass / 1 fail / skip0 / exit2。3 segmentの実layer数9,120 / 7 / 58,004、準備23.371秒、実行＋最終診断download10.948秒。直接GPUは2投影だけで、他のstatic / dynamic投影は従来候補。所有Unityはterminal、現在停止済み。[分割TDD・import失敗・固定全体結果](results/m4-partitioned-first-ff-whole-gpu-failed-20261015.json)。
+
+残りの固定行列を同じkernelへ切り替える準備では、元graphに135個のstatic MatMulを確認したが、ONNX境界の一部に未確定shapeがあり、plannerが変更前に拒否した。既存value_infoを除いてshape inferenceを再実行しても231境界に不明dimensionが残った。これは準備拒否 / GPU未実行で、数値失敗でもGPU成功でもない。次は元の固定modelをSentisでshape監査し、hashに結び付いた確定値だけで次の分割へ進む。工程3・4、音声元6信号 / 両profile、画像FP32全3 profile、実入力から最終768 API全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰 / 中間readbackとCPU計算fallback禁止は未達のまま。以下は前回checkpoint。
 
 **2026-10-15最新の直接GPU投影:** 最初のfeed-forwardの2投影を元280行で検証した。static64は781,856 / 233,045値のbit差（元許容差超過は両方0）、NUnit2 fail / skip0。標準ONNXへFMAを展開したblock192候補は、最初の投影中にprocess working setが36,685,799,424 bytesへ増え、300秒timeout後のkill待機30秒もtimeoutした。数値出力 / NUnit XMLは未取得で、GPU合格ではない。その後のlive queryでUnity processなしを確認した。最初のCS0136 compile失敗は変数名衝突を修正し、推論未実行として別記録。[資源失敗と終了確認](results/m4-first-ff-expanded-gpu-resource-failure-20261015.json)。この大きい展開graphは再試行しない。
 

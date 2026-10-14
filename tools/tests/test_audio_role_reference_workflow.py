@@ -6,7 +6,7 @@ import yaml
 def workflow():
     path = Path(__file__).resolve().parents[2] / ".github/workflows/audio-role-reference.yml"
     assert path.is_file(), "Fixed audio role reference workflow is missing"
-    return yaml.safe_load(path.read_text())
+    return yaml.safe_load(path.read_text(encoding="utf-8"))
 
 
 def test_role_job_is_opt_in_and_pins_native_and_backbone_artifacts():

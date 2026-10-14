@@ -43,12 +43,15 @@ jobs:
           uv run --locked python -m embeddinggemma_tools.artifact_zip
           --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11830312950
           --output ../artifacts/fixed-image-native --max-entry-bytes 2147483648
-          --member vision-reference.json --member vision-validation.json
+          --member vision-reference.json --member vision-validation.json --member processor_config.json
           --member square/vision.pt2 --member square/positions-int32.bin
+          --member square/0.png --member square/1.png
           --member square/0-pixels-fp32.bin --member square/1-pixels-fp32.bin
           --member landscape/vision.pt2 --member landscape/positions-int32.bin
+          --member landscape/0.png --member landscape/1.png
           --member landscape/0-pixels-fp32.bin --member landscape/1-pixels-fp32.bin
           --member portrait/vision.pt2 --member portrait/positions-int32.bin
+          --member portrait/0.png --member portrait/1.png
           --member portrait/0-pixels-fp32.bin --member portrait/1-pixels-fp32.bin
       - name: Fetch fixed document backbones
         env:

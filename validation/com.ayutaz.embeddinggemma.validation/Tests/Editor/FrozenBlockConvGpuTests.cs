@@ -71,6 +71,13 @@ namespace EmbeddingGemma.Validation.Tests
                     Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(file.Value.Value<string>("sha256")));
                     Assert.That(new FileInfo(path).Length,Is.EqualTo(file.Value.Value<long>("bytes")));
                 }
+                if(variant=="direct_block192")
+                {
+                    Assert.That(folder.StartsWith("FrozenFirstFeedForward-",StringComparison.Ordinal),Is.True);
+                    ExecuteDirect(root,spec,report,Save);
+                    report["success"]=true;
+                    return;
+                }
                 var model=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/"+folder+"/"+graph+".onnx"));
                 if((folder=="FrozenInputProjectionProbe" || folder.StartsWith("FrozenFirstFeedForward-",StringComparison.Ordinal)) && variant=="static64")
                     model=CompensatedModel.Create(model,64);
@@ -95,6 +102,59 @@ namespace EmbeddingGemma.Validation.Tests
             }
             catch(Exception error){report["error"]=error.ToString();throw;}
             finally{Save();}
+        }
+
+        static void ExecuteDirect(string root,JObject spec,JObject report,Action save)
+        {
+            Assert.That(spec["files"]["weight.bin"].Value<string>("sha256"),Is.EqualTo(spec.Value<string>("weight_sha256")));
+            var inputShape=new TensorShape(spec["input_shape"].ToObject<int[]>());
+            var outputShape=new TensorShape(spec["output_shape"].ToObject<int[]>());
+            var inputBounds=(JArray)spec["input_clips"];
+            Assert.That(inputBounds.Count,Is.EqualTo(1));
+            var outputBounds=(JArray)spec["output_clip"];
+            Model Clip(TensorShape shape,float minimum,float maximum)
+            {
+                var graph=new FunctionalGraph();var input=graph.AddInput<float>(shape);
+                return graph.Compile(Functional.Clamp(input,minimum,maximum));
+            }
+            var prefix=Clip(inputShape,inputBounds[0][0].Value<float>(),inputBounds[0][1].Value<float>());
+            var suffix=Clip(outputShape,outputBounds[0].Value<float>(),outputBounds[1].Value<float>());
+            using var before=new Worker(prefix,BackendType.GPUCompute);
+            using var after=new Worker(suffix,BackendType.GPUCompute);
+            var cpuCount=0;var flushCount=0;
+            foreach(var pair in new[]{(before,prefix),(after,suffix)})
+            {
+                var cpu=(HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallback",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(pair.Item1);
+                var flush=(HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallbackShouldFlushGPU",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(pair.Item1);
+                cpuCount+=cpu.Intersect(pair.Item2.layers.SelectMany(l=>l.outputs).Concat(pair.Item2.inputs.Select(i=>i.index))).Count();
+                flushCount+=flush.Count;
+            }
+            Assert.That(cpuCount,Is.Zero);Assert.That(flushCount,Is.Zero);
+            report["cpu_computation_or_input_count"]=cpuCount;report["readback_flush_count"]=flushCount;
+            report["implementation"]="direct GPU block192 with GPU input/output clipping";
+            report["shader_dispatch_count"]=1;report["clip_layer_count"]=prefix.layers.Count+suffix.layers.Count;
+            using var operation=new GpuBlockedMatmul(inputShape[2],outputShape[2],Floats(Path.Combine(root,"weight.bin")));
+            using var inputTensor=new Tensor<float>(inputShape,Floats(Path.Combine(root,"input.bin")));
+            ComputeTensorData.Pin(inputTensor);
+            report["phase"]="execute";save();var timer=System.Diagnostics.Stopwatch.StartNew();
+            before.Schedule(inputTensor);
+            using var projected=operation.Execute((Tensor<float>)before.PeekOutput());
+            after.Schedule(projected);
+            var output=(Tensor<float>)after.PeekOutput();
+            Assert.That(output.backendType,Is.EqualTo(BackendType.GPUCompute));
+            var actual=output.DownloadToArray();report["gpu_execute_and_final_download_ms"]=timer.Elapsed.TotalMilliseconds;
+            var expected=Floats(Path.Combine(root,"expected.bin"));Assert.That(actual.Length,Is.EqualTo(expected.Length));
+            int bits=0,mismatch=0;double maximum=0;
+            for(var i=0;i<actual.Length;i++)
+            {
+                Assert.That(float.IsNaN(actual[i])||float.IsInfinity(actual[i]),Is.False);
+                if(BitConverter.SingleToInt32Bits(actual[i])!=BitConverter.SingleToInt32Bits(expected[i]))bits++;
+                var difference=Math.Abs((double)actual[i]-expected[i]);maximum=Math.Max(maximum,difference);
+                if(difference>1e-5+1e-4*Math.Abs((double)expected[i]))mismatch++;
+            }
+            report["actual_backend"]=output.backendType.ToString();report["exact_differences"]=bits;
+            report["mismatched_elements"]=mismatch;report["maximum_absolute_error"]=maximum;report["phase"]="completed";save();
+            Assert.That(bits,Is.Zero,"Keep the original fixed local GPU bit target.");
         }
         static float[] Floats(string path){var bytes=File.ReadAllBytes(path);var values=new float[bytes.Length/4];Buffer.BlockCopy(bytes,0,values,0,bytes.Length);return values;}
     }

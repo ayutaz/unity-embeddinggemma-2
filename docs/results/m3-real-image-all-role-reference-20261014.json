@@ -1,0 +1,53 @@
+{
+  "scope": "real_image_role_reference_all_three_roles",
+  "workflow_run": 38562190876,
+  "head_commit": "9332de58aeae56aab3e42797936a88c171db617d",
+  "producer_commit": "891ce9004deecc262437e56b2fd9a2eaf1054632",
+  "artifact_id": 11893990321,
+  "success": true,
+  "numeric_image_role_cases": 18,
+  "unity_validated": false,
+  "end_to_end_validated": false,
+  "original_vision_fp32_gate_resolved": false,
+  "roles": [
+    {
+      "backbone_reference_sha256": "f5c2dbb079f6f19cfd4f16f14666c368cf3755ae9bee331b7b98ea91cb1d38e0",
+      "case_count": 6,
+      "minimum_cosine": 1.0,
+      "minimum_saved_chain_cosine": 1.0,
+      "validation_sha256": "868bb17909487f4da7670329978f09d845900c0612bfc1ee917365e9b9d1b516",
+      "profile_count": 3,
+      "vision_source_commit": "c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1",
+      "role": "document",
+      "backbone_source_commit": "c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1",
+      "stage": "python_image_embeddings_only",
+      "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac"
+    },
+    {
+      "backbone_reference_sha256": "f5c2dbb079f6f19cfd4f16f14666c368cf3755ae9bee331b7b98ea91cb1d38e0",
+      "case_count": 6,
+      "minimum_cosine": 0.9999999403953552,
+      "minimum_saved_chain_cosine": 0.9999999403953552,
+      "validation_sha256": "a8a7a6ecf1be530132b6bce508e6b27cdd320eddd23227461ffa306f7b9f1def",
+      "profile_count": 3,
+      "vision_source_commit": "c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1",
+      "role": "query",
+      "backbone_source_commit": "c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1",
+      "stage": "python_image_embeddings_only",
+      "reference_sha256": "dc4ad0a8e43e391a251e7ff3fb4f569b6bddb7442852f8721b1b7657ea91f82d"
+    },
+    {
+      "backbone_reference_sha256": "f5c2dbb079f6f19cfd4f16f14666c368cf3755ae9bee331b7b98ea91cb1d38e0",
+      "case_count": 6,
+      "minimum_cosine": 0.9999998807907104,
+      "minimum_saved_chain_cosine": 0.9999998807907104,
+      "validation_sha256": "e7b49fabf4746f20a140827efd43ab4459d0f78cd9b561b95cf7803243f05ee6",
+      "profile_count": 3,
+      "vision_source_commit": "c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1",
+      "role": "raw",
+      "backbone_source_commit": "c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1",
+      "stage": "python_image_embeddings_only",
+      "reference_sha256": "120faf6aea190466b625f7c606a4c14e38315101a265c7dd457af13694512e9c"
+    }
+  ]
+}

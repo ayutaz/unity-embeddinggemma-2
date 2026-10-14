@@ -119,7 +119,41 @@ def apply_projection_shape_audit(model,audit,*,expected_graph_sha256):
                 coefficient_bytes_preserved=True,non_metadata_operations_preserved=True,full_encoder_validated=False)
 
 
-def partition_static_projections(model,*,node_names,expected_weight_sha256):
+def _mark_silu_boundaries(model,names):
+    if len(set(names))!=len(names):raise ValueError('Select unique SiLU nodes')
+    nodes=list(model.graph.node);by_name={n.name:n for n in nodes};producer={v:n for n in nodes for v in n.output}
+    constants={w.name:w for w in model.graph.initializer}
+    constants.update({n.output[0]:next((a.t for a in n.attribute if a.name=='value'),None) for n in nodes if n.op_type=='Constant'})
+    uses={v:[] for n in nodes for v in n.output}
+    for node in nodes:
+        for value in node.input:
+            if value in uses:uses[value].append(node.name)
+    outputs={v.name for v in model.graph.output};removed=set();markers={}
+    positions={n.name:i for i,n in enumerate(nodes)}
+    for name in names:
+        div=by_name.get(name)
+        if div is None or div.domain or div.op_type!='Div' or len(div.input)!=2 or len(div.output)!=1:raise ValueError('SiLU division differs')
+        add=producer.get(div.input[1])
+        if add is None or add.domain or add.op_type!='Add' or len(add.input)!=2:raise ValueError('SiLU denominator differs')
+        one=[v for v in add.input if constants.get(v) is not None and constants[v].data_type==onnx.TensorProto.FLOAT
+             and numpy_helper.to_array(constants[v]).size==1 and float(numpy_helper.to_array(constants[v]).reshape(-1)[0])==1.0]
+        if len(one)!=1:raise ValueError('SiLU unit constant differs')
+        exp=producer.get(next(v for v in add.input if v!=one[0]))
+        neg=producer.get(exp.input[0]) if exp is not None and len(exp.input)==1 else None
+        if (exp is None or exp.domain or exp.op_type!='Exp' or neg is None or neg.domain or neg.op_type!='Neg'
+                or list(neg.input)!=[div.input[0]]):raise ValueError('SiLU exponential differs')
+        chain=[neg,exp,add,div]
+        if [positions[n.name] for n in chain]!=sorted(positions[n.name] for n in chain):raise ValueError('SiLU chain order differs')
+        for earlier,later in zip(chain,chain[1:]):
+            if len(earlier.output)!=1 or uses[earlier.output[0]]!=[later.name] or earlier.output[0] in outputs:raise ValueError('SiLU internal output is shared')
+        if any(n.name in removed for n in chain):raise ValueError('SiLU boundaries overlap')
+        removed.update(n.name for n in chain);markers[name]=helper.make_node('Identity',[div.input[0]],list(div.output),name=name)
+    result=copy.deepcopy(model);del result.graph.node[:]
+    result.graph.node.extend(markers[n.name] if n.name in markers else n for n in nodes if n.name in markers or n.name not in removed)
+    return result
+
+
+def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_node_names=()):
     """Return unchanged-op segments and audited external projection boundaries.
 
     Coefficients stay in their original bytes. The caller supplies the GPU
@@ -128,6 +162,13 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256):
     if (not node_names or len(set(node_names))!=len(node_names)
             or len(node_names)!=len(expected_weight_sha256)):
         raise ValueError('Select unique ordered projection names and coefficient hashes')
+    if set(node_names).intersection(silu_node_names):raise ValueError('GPU boundaries overlap')
+    wanted_hash=dict(zip(node_names,expected_weight_sha256))
+    original_order=[n.name for n in model.graph.node if n.name in wanted_hash]
+    if original_order!=list(node_names):raise ValueError('Projection order or identity differs')
+    if silu_node_names:
+        model=_mark_silu_boundaries(model,silu_node_names)
+        chosen=set(node_names)|set(silu_node_names);node_names=[n.name for n in model.graph.node if n.name in chosen]
     nodes=list(model.graph.node);weights={w.name:w for w in model.graph.initializer}
     infos={v.name:v for v in (*model.graph.input,*model.graph.output,*model.graph.value_info)}
     def shape(name):
@@ -137,21 +178,26 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256):
             raise ValueError('Projection boundaries require explicit fixed FP32 shapes')
         return dims
     selected=[];previous=-1
-    for name,wanted in zip(node_names,expected_weight_sha256):
+    for name in node_names:
         matches=[(i,n) for i,n in enumerate(nodes) if n.name==name]
         if len(matches)!=1:raise ValueError('Selected projection is missing or ambiguous')
         index,node=matches[0]
+        if name in silu_node_names:
+            data_shape=shape(node.input[0]);output_shape=shape(node.output[0])
+            if len(data_shape) not in (2,3) or data_shape!=output_shape:raise ValueError('SiLU fixed shapes differ')
+            selected.append((index,node,dict(kind='silu',node=name,input=node.input[0],output=node.output[0],input_shape=data_shape,output_shape=output_shape)))
+            previous=index;continue
         if index<=previous or node.op_type!='MatMul' or len(node.input)!=2 or len(node.output)!=1:
             raise ValueError('Projection order or operator differs')
         weight=weights.get(node.input[1])
         if weight is None or weight.data_type!=onnx.TensorProto.FLOAT or len(weight.dims)!=2:
             raise ValueError('Projection requires an existing FP32 matrix coefficient')
         digest=hashlib.sha256(numpy_helper.to_array(weight).astype('<f4').tobytes()).hexdigest()
-        if digest!=wanted:raise ValueError('Projection coefficient bytes differ')
+        if digest!=wanted_hash[name]:raise ValueError('Projection coefficient bytes differ')
         data_shape=shape(node.input[0]);output_shape=shape(node.output[0])
         if len(data_shape) not in (2,3) or data_shape[-1]!=weight.dims[0] or output_shape!=[*data_shape[:-1],weight.dims[1]]:
             raise ValueError('Projection fixed matrix shapes differ')
-        selected.append((index,node,dict(node=name,input=node.input[0],output=node.output[0],
+        selected.append((index,node,dict(kind='matmul',node=name,input=node.input[0],output=node.output[0],
             input_shape=data_shape,output_shape=output_shape,weight=node.input[1],
             weight_shape=list(weight.dims),weight_sha256=digest)))
         previous=index
@@ -199,6 +245,6 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256):
     tail=extractor.extract_model(frontier,outputs)
     if any(n.name in node_names for n in tail.graph.node):raise ValueError('A selected projection escaped the tail cut')
     metadata.append(prepare(tail,outputs,len(segments)));segments.append(tail)
-    return segments,dict(projections=[p for _,_,p in selected],segments=metadata,
+    return segments,dict(projections=[p for _,_,p in selected if p['kind']=='matmul'],operations=[p for _,_,p in selected],segments=metadata,
         source_initializer_bytes_preserved=True,source_initializer_sha256=_initializer_digest(model.graph.initializer),
         full_encoder_validated=False,end_to_end_validated=False)

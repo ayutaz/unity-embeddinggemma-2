@@ -20,12 +20,25 @@ namespace EmbeddingGemma.Validation.Tests
         [TestCase("noise")]
         [TestCase("padded_noise")]
         public void FirstFeedForwardPartitionGpuMatchesOriginalGolden(string signal)
+            =>Execute(signal,false);
+
+        [TestCase("silence")]
+        [TestCase("impulse")]
+        [TestCase("sine")]
+        [TestCase("nyquist")]
+        [TestCase("noise")]
+        [TestCase("padded_noise")]
+        public void AllStaticPartitionsGpuMatchesOriginalGolden(string signal)
+            =>Execute(signal,true);
+
+        void Execute(string signal,bool allStatic)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var root=Path.Combine(Application.dataPath,"GpuAudioPartitionedFirstFf");
+            var folder=allStatic?"GpuAudioPartitionedAllStatic":"GpuAudioPartitionedFirstFf";
+            var root=Path.Combine(Application.dataPath,folder);
             var originalRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-real-chain/audio-runtime-reference"));
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/partitioned-first-ff-gpu-"+source+"-"+signal+".json"));
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+(allStatic?"partitioned-all-static-gpu-":"partitioned-first-ff-gpu-")+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject { ["success"]=false,["scope"]="one_partitioned_original_audio_encoder_gpu_numeric_gate",
                 ["runtime_source"]=source,["signal"]=signal,["requested_backend"]="GPUCompute",
@@ -40,7 +53,7 @@ namespace EmbeddingGemma.Validation.Tests
                 foreach(var package in new[]{"com.ayutaz.embeddinggemma","com.ayutaz.embeddinggemma.validation"})
                     Assert.That(locked["dependencies"][package].Value<string>("hash"),Is.EqualTo(source));
                 var plan=JObject.Parse(File.ReadAllText(Path.Combine(root,"partition-plan.json")));
-                Assert.That(plan.Value<string>("source_graph_sha256"),Is.EqualTo("63f24d4883047ebe1f30572d7d45ad5bead33891bbe79a256f9ee10867a564b2"));
+                Assert.That(plan.Value<string>("source_graph_sha256"),Is.EqualTo(allStatic?"c050c2efa87d83aea45587b25f7b8d1d24dc471f33cc732dcf17d89588c70c13":"63f24d4883047ebe1f30572d7d45ad5bead33891bbe79a256f9ee10867a564b2"));
                 Assert.That(plan.Value<string>("reference_source"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));
                 Assert.That(plan.Value<bool>("source_initializer_bytes_preserved"),Is.True);
                 foreach(var file in (JObject)plan["files"])
@@ -59,7 +72,7 @@ namespace EmbeddingGemma.Validation.Tests
                 var models=new List<Model>();var layers=new JArray();var timer=System.Diagnostics.Stopwatch.StartNew();
                 foreach(var segment in (JArray)plan["segments"])
                 {
-                    var asset=AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/GpuAudioPartitionedFirstFf/"+segment.Value<string>("file"));
+                    var asset=AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/"+folder+"/"+segment.Value<string>("file"));
                     Assert.That(asset,Is.Not.Null);var model=ModelLoader.Load(asset);
                     var aliases=(JObject)segment["output_aliases"];
                     for(var index=0;index<model.outputs.Count;index++)
@@ -79,6 +92,7 @@ namespace EmbeddingGemma.Validation.Tests
                     inputs.Add(projection.Value<string>("input"));outputs.Add(projection.Value<string>("output"));
                 }
                 report["segment_layer_counts"]=layers;report["prepare_ms"]=timer.Elapsed.TotalMilliseconds;
+                report["projection_count"]=kernels.Count;
                 using var pipeline=new GpuProjectionPipeline(models.ToArray(),inputs.ToArray(),outputs.ToArray(),kernels.ToArray());
                 report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
                 using var input=new Tensor<float>(new TensorShape(1,1119,128),Floats(Path.Combine(originalRoot,inputName)));ComputeTensorData.Pin(input);

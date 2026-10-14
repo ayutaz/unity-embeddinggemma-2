@@ -341,7 +341,7 @@ def diagnose_audio_onnx_stages(audio, projection, features, frame_mask, destinat
 
 
 def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODEL_REVISION, source_commit="local", native_silu=False,
-                          collect_onnx_failures=False, onnx_layernorm="native"):
+                          collect_onnx_failures=False, onnx_layernorm="native", onnx_linear="native"):
     """Official audio tower/projector vs saved graph on audited PCM-derived features.
 
     Independent inputs are the official NumPy preprocessing references, not the
@@ -350,6 +350,8 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
     snapshot, preprocessing, destination = Path(snapshot), Path(preprocessing).resolve(), Path(destination)
     if onnx_layernorm not in ("native", "torch_welford8") or (onnx_layernorm != "native" and not native_silu):
         raise ValueError("ONNX LayerNorm candidate requires the native SiLU companion route")
+    if onnx_linear not in ("native", "compensated64") or (onnx_linear != "native" and not native_silu):
+        raise ValueError("ONNX projection candidate requires the native SiLU companion route")
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "audio-encoder-validation.json").unlink(missing_ok=True)
     (destination / "audio-encoder-failure.json").unlink(missing_ok=True)
@@ -486,10 +488,11 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
             del exported
             gc.collect()
             imported_graph=directory/"audio.onnx"
-            if onnx_layernorm == "native":
+            if onnx_layernorm == "native" and onnx_linear == "native":
                 export_audio_native_onnx(wrapper,inputs[0][1],imported_graph)
             else:
-                export_audio_native_onnx(wrapper,inputs[0][1],imported_graph, layernorm_algorithm=onnx_layernorm)
+                export_audio_native_onnx(wrapper,inputs[0][1],imported_graph, layernorm_algorithm=onnx_layernorm,
+                                         linear_algorithm=onnx_linear)
             evaluator = ReferenceEvaluator(str(imported_graph))
             for features, expected, case_id in expected_rows:
                 actual_array = evaluator.run(None, {"input": features.numpy()})[0]
@@ -566,6 +569,8 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
                             versions={name: importlib.metadata.version(name) for name in ("torch", "transformers")})
     if onnx_layernorm != "native":
         encoder_metadata["onnx_layernorm_algorithm"] = onnx_layernorm
+    if onnx_linear != "native":
+        encoder_metadata["onnx_linear_algorithm"] = onnx_linear
     reference_path = destination / "audio-encoder-reference.json"
     reference_path.write_text(json.dumps(dict(metadata=encoder_metadata, profiles=profiles, cases=rows),
                                          indent=2, allow_nan=False) + "\n", encoding="utf-8")

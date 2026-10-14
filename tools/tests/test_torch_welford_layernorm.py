@@ -95,7 +95,8 @@ def test_opt_in_export_replaces_only_onnx_norms_and_restores_native_modules(tmp_
     assert source.norm is norm and torch.equal(source(values), before)
 
 
-def test_complete_tiny_encoder_candidate_keeps_native_path_and_mask_contract(tmp_path):
+@pytest.mark.parametrize('linear_algorithm',['native','compensated64'])
+def test_complete_tiny_encoder_candidate_keeps_native_path_and_mask_contract(tmp_path,linear_algorithm):
     from transformers import Gemma4AudioConfig, Gemma4AudioModel
     from transformers.models.embedding_gemma2.modeling_embedding_gemma2 import EmbeddingGemma2MultimodalEmbedder
     from test_model import tiny_model
@@ -113,10 +114,35 @@ def test_complete_tiny_encoder_candidate_keeps_native_path_and_mask_contract(tmp
         expected=projection(native.last_hidden_state)[native.attention_mask].numpy()
     path=tmp_path/'audio-candidate.onnx'
     wrapper=export.AudioEncoderExport(audio,projection,mask)
-    export.export_audio_native_onnx(wrapper,values,path,layernorm_algorithm='torch_welford8')
+    export.export_audio_native_onnx(wrapper,values,path,layernorm_algorithm='torch_welford8',linear_algorithm=linear_algorithm)
     assert audio.subsample_conv_projection.layer0.norm is norms[0]
     assert audio.subsample_conv_projection.layer1.norm is norms[1]
     graph=onnx.load(path)
     assert not any(n.op_type=='LayerNormalization' for n in graph.graph.node)
     actual=ReferenceEvaluator(graph).run(None,{'input':values.numpy()})[0]
     __import__('numpy').testing.assert_allclose(actual,expected,rtol=1e-4,atol=1e-5)
+
+
+@pytest.mark.parametrize('fail',[False,True])
+def test_compensated_linear_export_borrows_weights_and_restores_original_module(tmp_path,monkeypatch,fail):
+    class Probe(torch.nn.Module):
+        def __init__(self):
+            super().__init__(); self.linear=torch.nn.Linear(192,12,bias=False)
+        def forward(self,values): return self.linear(values)
+    torch.manual_seed(29)
+    source=Probe().eval(); linear=source.linear
+    values=torch.randn(3,192,generator=torch.Generator().manual_seed(14))
+    expected=source(values).detach()
+    if fail:
+        def broken(*args,**kwargs): raise RuntimeError('export failed')
+        monkeypatch.setattr(torch.onnx,'export',broken)
+        with pytest.raises(RuntimeError,match='export failed'):
+            export.export_audio_native_onnx(source,values,tmp_path/'linear.onnx',linear_algorithm='compensated64')
+    else:
+        path=tmp_path/'linear.onnx'
+        export.export_audio_native_onnx(source,values,path,linear_algorithm='compensated64')
+        graph=onnx.load(path)
+        assert sum(n.op_type=='MatMul' for n in graph.graph.node)>=3
+        actual=ReferenceEvaluator(graph).run(None,{'input':values.numpy()})[0]
+        __import__('numpy').testing.assert_allclose(actual,expected.numpy(),rtol=1e-4,atol=1e-5)
+    assert source.linear is linear and torch.equal(source(values),expected)

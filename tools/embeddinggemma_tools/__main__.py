@@ -59,6 +59,8 @@ def main(argv=None):
     audio.add_argument("--native-silu",action="store_true",help="Keep native SiLU math and create standard division-order ONNX companions")
     audio.add_argument("--onnx-layernorm", choices=("native", "torch_welford8"), default="native",
                        help="Explicit bounded FP32 moment-order candidate for the ONNX companion only")
+    audio.add_argument("--onnx-linear", choices=("native", "compensated64"), default="native",
+                       help="Explicit compensated static projection candidate for the ONNX companion only")
     audio.add_argument("--collect-onnx-failures", action="store_true",
                        help="Finish native references while recording ONNX failures; still exits with failure")
     stages = commands.add_parser("prepare-audio-runtime-stages", help="Pinned native stages; context only, not encoder acceptance")
@@ -124,7 +126,8 @@ def main(argv=None):
     if args.command == "prepare-audio-encoder":
         summary = prepare_audio_encoder(snapshot, args.preprocessing, args.output, revision=args.revision,
                                          source_commit=os.environ.get("GITHUB_SHA", "local"),native_silu=args.native_silu,
-                                         collect_onnx_failures=args.collect_onnx_failures, onnx_layernorm=args.onnx_layernorm)
+                                         collect_onnx_failures=args.collect_onnx_failures, onnx_layernorm=args.onnx_layernorm,
+                                         onnx_linear=args.onnx_linear)
         print(json.dumps({name: summary[name] for name in (
             "success", "stage", "profile_count", "case_count", "minimum_cosine", "unity_validated", "end_to_end_validated")}))
         return

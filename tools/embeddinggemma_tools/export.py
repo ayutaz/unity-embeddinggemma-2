@@ -488,7 +488,7 @@ class TorchWelfordLayerNorm(nn.Module):
         return (values - total_mean) * inverse * self.weight
 
 
-def export_audio_native_onnx(wrapper, features, destination, *, layernorm_algorithm="native"):
+def export_audio_native_onnx(wrapper, features, destination, *, layernorm_algorithm="native", linear_algorithm="native"):
     """Bridge native SiLU to standard ops while preserving FP32 division order."""
     import tempfile
     import onnx
@@ -496,6 +496,8 @@ def export_audio_native_onnx(wrapper, features, destination, *, layernorm_algori
     destination.parent.mkdir(parents=True,exist_ok=True)
     if layernorm_algorithm not in ("native", "torch_welford8"):
         raise ValueError("Unknown ONNX LayerNorm algorithm")
+    if linear_algorithm not in ("native", "compensated64"):
+        raise ValueError("Unknown ONNX linear algorithm")
     restored = []
     domain="com.ayutaz.export"
     def silu_symbolic(graph, value):
@@ -511,6 +513,20 @@ def export_audio_native_onnx(wrapper, features, destination, *, layernorm_algori
                         parent.add_module(name, replacement)
             if not restored:
                 raise ValueError("Welford export candidate requires source LayerNorm modules")
+        if linear_algorithm == "compensated64":
+            from types import SimpleNamespace
+            from .audio_layer_replay import CompensatedClippedLinear
+            linear_count = 0
+            for parent in list(wrapper.modules()):
+                for name, child in list(parent.named_children()):
+                    if isinstance(child, nn.Linear):
+                        replacement = CompensatedClippedLinear(SimpleNamespace(linear=child, use_clipped_linears=False),
+                                                               chunk_size=64, include_bias=True)
+                        restored.append((parent, name, child))
+                        parent.add_module(name, replacement)
+                        linear_count += 1
+            if not linear_count:
+                raise ValueError("Linear export candidate requires source Linear modules")
         with tempfile.TemporaryDirectory(prefix="audio-onnx-",dir=destination.parent) as directory:
             if not Path(directory).resolve().is_relative_to(destination.parent.resolve()):
                 raise ValueError("ONNX temporary path escaped the output directory")

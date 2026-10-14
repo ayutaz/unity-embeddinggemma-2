@@ -4,6 +4,8 @@
 
 ## 現在の判定
 
+**2026-10-15追記: ユーザー指定の実行計画3・4を進行中。いずれも未完了。** GPUの小さいFMA / Welford正規化probeは固定Git `6542bc6`、4 pass / fail0 / skip0 / exit0、全件GPUCompute・計算fallback / flush0。実音声ONNX Welford8候補はActions `38595761111` / source `6bceed7` で元6信号・2 profileを固定済み旧goldenへ直接照合し、全6件不合格。最新runnerの公式native値にも旧goldenとの差があるため、同run内のtrace一致を元の原因特定とは扱わない。[GPU局所結果](results/m4-welford-gpu-probes-windows-20261015.json) / [参照文脈の未達](results/m4-first-onnx-failure-and-original-context-20261015.json) / [元6信号の候補不合格](results/m4-welford8-pinned-onnx-failed-20261015.json)。次は補償付き静的投影の候補を同じ元6信号へ照合する。画像FP32全profile、Sentis音声全信号、実入力→最終APIの全role・境界・所有権・例外後再利用・text回帰は未達のまま。以下の「1・2まで」は前回終了時の履歴。
+
 「ここからの計画」の工程1・2までを実行した。工程1のコンパイル・tiny GPU・実画像1件の段階計測は合格。工程2のSiLU修正後の実ONNX照合は元6信号・2 profileを全件実行し、6件とも数値不合格。数値修正の工程3へは着手していない。[今回の結果と負荷分析](gpu-execution-and-silu-validation.md)。計画の実行番号1・2と、以前の「工程1〜3の受け入れ」の番号は別なので、元encoder数値修正と全chain未完了を維持する。
 
 [Draft PR #81](https://github.com/ayutaz/unity-embeddinggemma-2/pull/81)はOPEN、baseは `test/audio-post-norm-isolation`。GitHubで23件のopen PRを確認し、main未統合のAPI・診断候補とmainの機能を分けた。公開tag / GitHub Releaseは各0件。mainの既存ローカルUnity設定変更は保持している。[文書更新の確認snapshot](results/documentation-checkpoint-20261014.json)。

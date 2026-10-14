@@ -60,6 +60,15 @@ def test_audio_candidate_dispatch_keeps_original_pinned_golden_and_all_six_outpu
     assert any(s.get('with',{}).get('path')=='artifacts/audio-pinned-onnx.json' and s.get('if')=='always()' for s in steps)
 
 
+def test_audio_projection_candidate_is_explicit_and_preserves_default_math():
+    workflow=load('audio-runtime-reference.yml')
+    option=workflow['on']['workflow_dispatch']['inputs']['onnx_linear']
+    assert option['type']=='choice' and option['default']=='native'
+    assert option['options']==['native','compensated64']
+    encoder=next(s for s in workflow['jobs']['native-reference']['steps'] if 'prepare-audio-encoder' in s.get('run',''))
+    assert '--onnx-linear "$ONNX_LINEAR"' in encoder['run']
+
+
 def test_required_reference_job_validates_long_multimodal_backbone_and_retains_separate_evidence():
     steps = load("model-reference.yml")["jobs"]["reference"]["steps"]
     run = [step for step in steps if "prepare-backbone" in step.get("run", "")]

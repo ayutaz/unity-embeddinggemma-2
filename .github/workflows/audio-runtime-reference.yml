@@ -16,6 +16,11 @@ on:
         type: choice
         default: native
         options: [native, torch_welford8]
+      onnx_linear:
+        description: Experimental compensated static projections; original native references remain unchanged
+        type: choice
+        default: native
+        options: [native, compensated64]
   pull_request:
     types: [opened, synchronize, labeled]
 
@@ -71,18 +76,19 @@ jobs:
         env:
           DIAGNOSE_FIRST_FAILURE: ${{ inputs.diagnose_first_failure }}
           ONNX_LAYERNORM: ${{ inputs.onnx_layernorm || 'native' }}
+          ONNX_LINEAR: ${{ inputs.onnx_linear || 'native' }}
         run: |
           if [ "$DIAGNOSE_FIRST_FAILURE" = true ]; then
             uv run --locked python -m embeddinggemma_tools prepare-audio-encoder \
               --preprocessing ../artifacts/audio-runtime-preprocessing \
               --output ../artifacts/audio-runtime-reference --native-silu \
-              --onnx-layernorm "$ONNX_LAYERNORM"
+              --onnx-layernorm "$ONNX_LAYERNORM" --onnx-linear "$ONNX_LINEAR"
           else
             uv run --locked python -m embeddinggemma_tools prepare-audio-encoder \
               --preprocessing ../artifacts/audio-runtime-preprocessing \
               --output ../artifacts/audio-runtime-reference \
               --native-silu --collect-onnx-failures \
-              --onnx-layernorm "$ONNX_LAYERNORM"
+              --onnx-layernorm "$ONNX_LAYERNORM" --onnx-linear "$ONNX_LINEAR"
           fi
       - name: Compare every saved actual ONNX output to the unchanged original golden
         if: ${{ always() && hashFiles('artifacts/audio-runtime-reference/audio-encoder-reference.json') != '' }}

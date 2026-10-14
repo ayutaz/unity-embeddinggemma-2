@@ -143,6 +143,61 @@ namespace EmbeddingGemma.Tests
             return result;
         }
 
+        public static Model CreateWithDynamicMatMuls(Model source, int chunk)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (chunk <= 0) throw new ArgumentOutOfRangeException(nameof(chunk));
+            var inference = typeof(Worker).Assembly.GetType("Unity.InferenceEngine.Compiler.Analyser.PartialInferenceAnalysis");
+            if (inference == null) throw new NotSupportedException("Pinned shape analysis unavailable.");
+            var context = inference.GetMethod("InferModelPartialTensors").Invoke(null, new object[] { source });
+            var getPartial = context.GetType().GetMethod("GetPartialTensor");
+            var constants = source.constants.ToDictionary(value => value.index);
+            var result = new Model { ProducerName = source.ProducerName + "/compensated-dynamic-fp32",
+                inputs = new List<Model.Input>(source.inputs), outputs = new List<Model.Output>(source.outputs),
+                constants = new List<Constant>(source.constants), layers = new List<Layer>() };
+            var next = source.inputs.Select(value => value.index).Concat(source.constants.Select(value => value.index))
+                .Concat(source.layers.SelectMany(value => value.outputs)).DefaultIfEmpty(0).Max() + 1;
+            int[] Shape(int index)
+            {
+                var partial = getPartial.Invoke(context, new object[] { index });
+                var shape = (DynamicTensorShape)partial.GetType().GetProperty("shape").GetValue(partial);
+                if (!shape.IsStatic()) throw new NotSupportedException("Attention candidate requires fixed shapes.");
+                var tensorShape = shape.ToTensorShape();
+                return Enumerable.Range(0, tensorShape.rank).Select(axis => tensorShape[axis]).ToArray();
+            }
+            foreach (var layer in source.layers)
+            {
+                var kind = layer.GetType().Name;
+                // Existing constant matrix projections have their independent transform.
+                if ((kind != "MatMul" && kind != "MatMul2D") || layer.inputs.Length != 2 || layer.outputs.Length != 1 ||
+                    (constants.TryGetValue(layer.inputs[1], out var weight) && weight.shape.rank == 2))
+                { result.layers.Add(layer); continue; }
+                if (new[] { "transposeA", "transposeB" }.Any(name => layer.GetType().GetField(name) is FieldInfo field && (bool)field.GetValue(layer)))
+                { result.layers.Add(layer); continue; }
+                foreach (var input in layer.inputs)
+                    if (constants.TryGetValue(input, out var value) && value.dataType != DataType.Float)
+                        throw new NotSupportedException("Attention constants must be FP32.");
+                var replacement = CompensatedMatMul.Build(Shape(layer.inputs[0]), Shape(layer.inputs[1]), chunk);
+                var map = new Dictionary<int, int> { [replacement.inputs[0].index] = layer.inputs[0],
+                    [replacement.inputs[1].index] = layer.inputs[1], [replacement.outputs[0].index] = layer.outputs[0] };
+                foreach (var value in replacement.constants) if (!map.ContainsKey(value.index)) map[value.index] = next++;
+                foreach (var value in replacement.layers.SelectMany(value => value.outputs)) if (value >= 0 && !map.ContainsKey(value)) map[value] = next++;
+                foreach (var value in replacement.constants)
+                {
+                    var copy = (Constant)MemberCopy.Invoke(value, null); copy.index = map[value.index]; result.constants.Add(copy);
+                }
+                foreach (var value in replacement.layers)
+                {
+                    var copy = (Layer)MemberCopy.Invoke(value, null);
+                    copy.inputs = value.inputs.Select(index => index < 0 ? index : map[index]).ToArray();
+                    copy.outputs = value.outputs.Select(index => index < 0 ? index : map[index]).ToArray(); result.layers.Add(copy);
+                }
+            }
+            var live = new HashSet<int>(result.layers.SelectMany(value => value.inputs).Concat(result.outputs.Select(value => value.index)));
+            result.constants = result.constants.Where(value => live.Contains(value.index)).ToList();
+            return result;
+        }
+
         static Layer NewLayer(string name, int output, params int[] inputs)
         {
             var type = typeof(Worker).Assembly.GetTypes().Single(value => value.Name == name && typeof(Layer).IsAssignableFrom(value));

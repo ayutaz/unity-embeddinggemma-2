@@ -81,7 +81,8 @@ namespace EmbeddingGemma.Tests
                     throw new InvalidOperationException("Subsample norm-to-activation edge is missing or ambiguous.");
                 var next = matches[0];
                 if (next.GetType().Name == "Relu") return next.outputs[0];
-                if (next.GetType().Name != "Transpose" && next.GetType().Name != "Identity")
+                // Functional.Transpose uses MoveDim; ONNX import uses Transpose.
+                if (next.GetType().Name != "Transpose" && next.GetType().Name != "MoveDim" && next.GetType().Name != "Identity")
                     throw new InvalidOperationException("Expected only layout changes before subsample ReLU.");
                 index = next.outputs[0];
             }

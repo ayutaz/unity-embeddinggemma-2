@@ -12,6 +12,51 @@ namespace EmbeddingGemma.Tests
         static readonly MethodInfo MemberCopy = typeof(object).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
         static readonly FieldInfo ConstantBytes = typeof(Constant).GetField("array", BindingFlags.Instance | BindingFlags.NonPublic);
 
+        public static Model CreateWithCompensatedNorms(Model source, int projectionChunk, int normChunk)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (projectionChunk <= 0 || normChunk <= 0) throw new ArgumentOutOfRangeException(nameof(normChunk));
+            var inference = typeof(Worker).Assembly.GetType("Unity.InferenceEngine.Compiler.Analyser.PartialInferenceAnalysis");
+            if (inference == null) throw new NotSupportedException("Pinned Sentis shape analysis is unavailable.");
+            var context = inference.GetMethod("InferModelPartialTensors").Invoke(null, new object[] { source });
+            var getPartial = context.GetType().GetMethod("GetPartialTensor");
+            var constants = source.constants.ToDictionary(value => value.index);
+            var result = new Model { ProducerName = source.ProducerName + "/compensated-centered-norm",
+                inputs = new List<Model.Input>(source.inputs), outputs = new List<Model.Output>(source.outputs),
+                constants = new List<Constant>(source.constants), layers = new List<Layer>() };
+            var next = source.inputs.Select(value => value.index).Concat(source.constants.Select(value => value.index))
+                .Concat(source.layers.SelectMany(value => value.outputs)).DefaultIfEmpty(0).Max() + 1;
+            foreach (var layer in source.layers)
+            {
+                if (layer.GetType().Name != "LayerNormalization") { result.layers.Add(layer); continue; }
+                if (layer.inputs.Length != 3 || layer.outputs.Length != 1
+                    || !constants.TryGetValue(layer.inputs[1], out var scale) || !constants.TryGetValue(layer.inputs[2], out var bias)
+                    || scale.dataType != DataType.Float || bias.dataType != DataType.Float || scale.shape.rank != 1 || bias.shape != scale.shape)
+                    throw new NotSupportedException("Expected audited static FP32 LayerNorm vectors.");
+                var partial = getPartial.Invoke(context, new object[] { layer.inputs[0] });
+                var shape = (DynamicTensorShape)partial.GetType().GetProperty("shape").GetValue(partial);
+                if (!shape.IsStatic()) throw new NotSupportedException("Norm candidate requires a fixed input shape.");
+                var tensorShape = shape.ToTensorShape();
+                var dimensions = Enumerable.Range(0, tensorShape.rank).Select(index => tensorShape[index]).ToArray();
+                var epsilon = (float)layer.GetType().GetField("epsilon").GetValue(layer);
+                var replacement = CompensatedLayerNorm.Build(Floats(scale), Floats(bias), normChunk, dimensions, epsilon);
+                var map = new Dictionary<int, int> { [replacement.inputs[0].index] = layer.inputs[0], [replacement.outputs[0].index] = layer.outputs[0] };
+                foreach (var value in replacement.constants) if (!map.ContainsKey(value.index)) map[value.index] = next++;
+                foreach (var value in replacement.layers.SelectMany(value => value.outputs)) if (value >= 0 && !map.ContainsKey(value)) map[value] = next++;
+                foreach (var value in replacement.constants)
+                {
+                    var copy = (Constant)MemberCopy.Invoke(value, null); copy.index = map[value.index]; result.constants.Add(copy);
+                }
+                foreach (var value in replacement.layers)
+                {
+                    var copy = (Layer)MemberCopy.Invoke(value, null);
+                    copy.inputs = value.inputs.Select(index => index < 0 ? index : map[index]).ToArray();
+                    copy.outputs = value.outputs.Select(index => index < 0 ? index : map[index]).ToArray(); result.layers.Add(copy);
+                }
+            }
+            return Create(result, projectionChunk);
+        }
+
         public static Model Create(Model source, int chunk)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));

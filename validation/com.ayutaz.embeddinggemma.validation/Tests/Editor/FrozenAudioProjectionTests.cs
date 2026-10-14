@@ -60,7 +60,7 @@ namespace EmbeddingGemma.Validation.Tests
                         Assert.That(expected.All(value => value >= minimum && value <= maximum), Is.True);
                         matrixIndex = producer.inputs[0]; producer = source.layers.Single(layer => layer.outputs.Contains(matrixIndex));
                     }
-                    Assert.That(producer.GetType().Name, Is.AnyOf("MatMul", "MatMul2D"));
+                    Assert.That(producer.GetType().Name == "MatMul" || producer.GetType().Name == "MatMul2D", Is.True);
                     foreach (var flag in new[] { "transposeA", "transposeB" })
                     {
                         var field = producer.GetType().GetField(flag); if (field != null) Assert.That((bool)field.GetValue(producer), Is.False);

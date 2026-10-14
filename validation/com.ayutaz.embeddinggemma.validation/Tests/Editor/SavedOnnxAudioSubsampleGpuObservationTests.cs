@@ -26,13 +26,17 @@ namespace EmbeddingGemma.Validation.Tests
         public void ObserveBlock16SubsampleOnGpuWithoutChangingNormalFinalBits()
             => Observe(true,true);
 
-        void Observe(bool compact,bool block16=false)
+        [Test]
+        public void ObserveScalarMeanSubsampleOnGpuWithoutChangingNormalFinalBits()
+            => Observe(true,true,true);
+
+        void Observe(bool compact,bool block16=false,bool scalarMean=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/subsample-native-replay"));
-            var folder=block16?"GpuAudioBlock16ConvCandidate":compact?"GpuAudioCompactOuterCandidate":"GpuAudioCandidate";
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+(block16?"block16-subsample-gpu-":compact?"compact-subsample-gpu-":"saved-onnx-subsample-gpu-")+source+".json"));
+            var folder=scalarMean?"GpuAudioScalarMeanCandidate":block16?"GpuAudioBlock16ConvCandidate":compact?"GpuAudioCompactOuterCandidate":"GpuAudioCandidate";
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+(scalarMean?"scalar-mean-subsample-gpu-":block16?"block16-subsample-gpu-":compact?"compact-subsample-gpu-":"saved-onnx-subsample-gpu-")+source+".json"));
             Assert.That(File.Exists(output),Is.False);
             var rows=new JArray();
             var report=new JObject { ["success"]=false,["scope"]="one_saved_gpu_subsample_observation_only",
@@ -58,7 +62,7 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.That(replay.Value<bool>("success") && replay.Value<bool>("subsample_native_final_exact_match"),Is.True);
                 Assert.That(replay.Value<string>("reference_source"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));
                 var modelPath=Path.Combine(Application.dataPath,folder+"/frames-1119-valid-1119.onnx");
-                var graphSha=block16?"8a376cc5bc258e13fbdc2212bb6d352eafdd2b618d553113b7cf9f0aa8192fb0":compact?"11607255142478773e621f5e9feebf2d3269457feb67d63215cecbc55fc61b67":"f43f3275c1ba48837b626fc09c738a8204dabd25e2ff3c74d7e75abcb3591899";
+                var graphSha=scalarMean?"c050c2efa87d83aea45587b25f7b8d1d24dc471f33cc732dcf17d89588c70c13":block16?"8a376cc5bc258e13fbdc2212bb6d352eafdd2b618d553113b7cf9f0aa8192fb0":compact?"11607255142478773e621f5e9feebf2d3269457feb67d63215cecbc55fc61b67":"f43f3275c1ba48837b626fc09c738a8204dabd25e2ff3c74d7e75abcb3591899";
                 Check(modelPath,graphSha);report["graph_sha256"]=graphSha;
                 var model=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/"+folder+"/frames-1119-valid-1119.onnx"));
                 report["phase"]="bind";Save();

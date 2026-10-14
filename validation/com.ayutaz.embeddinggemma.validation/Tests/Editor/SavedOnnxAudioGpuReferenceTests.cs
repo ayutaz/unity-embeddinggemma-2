@@ -90,18 +90,29 @@ namespace EmbeddingGemma.Validation.Tests
         [TestCase("padded_noise")]
         public void Block16ConvCandidateGpuMatchesOriginalGolden(string signal) => Execute(signal,"GpuAudioBlock16ConvCandidate",true,16);
 
+        [TestCase("silence")]
+        [TestCase("impulse")]
+        [TestCase("sine")]
+        [TestCase("nyquist")]
+        [TestCase("noise")]
+        [TestCase("padded_noise")]
+        public void ScalarMeanCandidateGpuMatchesOriginalGolden(string signal) => Execute(signal,"GpuAudioScalarMeanCandidate",true,16);
+
         void Execute(string signal,string candidateFolder,bool compensateStatic=false,int attentionChunk=0,int projectionChunk=64)
         {
             Assert.That(SystemInfo.supportsComputeShaders, Is.True, "Actual GPU required; no CPU substitute or skip.");
             var root = Path.GetFullPath(Path.Combine(Application.dataPath, "../../k/artifacts/audio-real-chain/audio-runtime-reference"));
             var candidateRoot = Path.Combine(Application.dataPath, candidateFolder);
             var source = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
+            var scalarMean=candidateFolder=="GpuAudioScalarMeanCandidate";
+            var blockConv=candidateFolder=="GpuAudioBlock16ConvCandidate" || scalarMean;
             var variant=candidateFolder=="GpuAudioCandidate"?"":attentionChunk>0?"-refined-attention16-static"+projectionChunk:compensateStatic?"-refined-static64":"-refined-inverse";
             if(candidateFolder=="GpuAudioCascadeCandidate")variant="-cascade-attention16-static64";
             if(candidateFolder=="GpuAudioCascadeLayoutCandidate")variant="-cascade-layout-attention16-static64";
             if(candidateFolder=="GpuAudioCompactOuterCandidate")variant="-compact-outer-attention16-static64";
             if(candidateFolder=="GpuAudioCompensatedConvCandidate")variant="-conv64-attention16-static64";
             if(candidateFolder=="GpuAudioBlock16ConvCandidate")variant="-block16-conv-attention16-static64";
+            if(scalarMean)variant="-scalar-mean-block16-attention16-static64";
             var output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/saved-onnx-audio-gpu-" + source + variant + "-" + signal + ".json"));
             Assert.That(File.Exists(output), Is.False, "Preserve each invocation's evidence.");
             var report = new JObject { ["success"] = false, ["scope"] = "one_saved_onnx_audio_encoder_gpu_vs_immutable_original",
@@ -136,19 +147,19 @@ namespace EmbeddingGemma.Validation.Tests
                 report["reference_source"] = original["metadata"]["source_commit"];
                 report["candidate_python_gate_passed"] = candidateAudit.Value<bool>("success");
                 report["candidate_folder"] = candidateFolder;
-                if(candidateFolder=="GpuAudioRefinedCandidate" || candidateFolder=="GpuAudioCascadeCandidate" || candidateFolder=="GpuAudioCascadeLayoutCandidate" || candidateFolder=="GpuAudioCompactOuterCandidate" || candidateFolder=="GpuAudioCompensatedConvCandidate" || candidateFolder=="GpuAudioBlock16ConvCandidate")
+                if(candidateFolder=="GpuAudioRefinedCandidate" || candidateFolder=="GpuAudioCascadeCandidate" || candidateFolder=="GpuAudioCascadeLayoutCandidate" || candidateFolder=="GpuAudioCompactOuterCandidate" || candidateFolder=="GpuAudioCompensatedConvCandidate" || blockConv)
                 {
                     Assert.That(candidateAudit["graph_transform"],Is.Not.Null,"Transformed graph provenance required.");
                     report["graph_transform"]=candidateAudit["graph_transform"].DeepClone();
                     Assert.That(candidateAudit["graph_transform"].Value<bool>("existing_initializer_bytes_preserved"),Is.True);
                     Assert.That(candidateAudit["graph_transform"].Value<int>("replaced_inverse_count"),Is.EqualTo(2));
                     Assert.That(candidateAudit.Value<bool>("onnx_numeric_validation_performed"),Is.False,"Do not reuse the original graph's ONNX results.");
-                    if(candidateFolder=="GpuAudioCascadeCandidate" || candidateFolder=="GpuAudioCascadeLayoutCandidate" || candidateFolder=="GpuAudioCompactOuterCandidate" || candidateFolder=="GpuAudioCompensatedConvCandidate" || candidateFolder=="GpuAudioBlock16ConvCandidate")
+                    if(candidateFolder=="GpuAudioCascadeCandidate" || candidateFolder=="GpuAudioCascadeLayoutCandidate" || candidateFolder=="GpuAudioCompactOuterCandidate" || candidateFolder=="GpuAudioCompensatedConvCandidate" || blockConv)
                     {
                         var excluded=candidateFolder=="GpuAudioCascadeLayoutCandidate";
                         Assert.That(candidateAudit["rms_graph_transform"].Value<int>("replaced_rms_count"),Is.EqualTo(excluded?97:109));
                         if(excluded)Assert.That(((JArray)candidateAudit["rms_graph_transform"]["excluded_mean_names"]).Count,Is.EqualTo(12));
-                        if(candidateFolder=="GpuAudioCompactOuterCandidate" || candidateFolder=="GpuAudioCompensatedConvCandidate" || candidateFolder=="GpuAudioBlock16ConvCandidate")
+                        if(candidateFolder=="GpuAudioCompactOuterCandidate" || candidateFolder=="GpuAudioCompensatedConvCandidate" || blockConv)
                         {
                             Assert.That(((JArray)candidateAudit["rms_graph_transform"]["explicit_mean_override_names"]).Count,Is.EqualTo(12));
                             Assert.That(((JArray)candidateAudit["rms_graph_transform"]["excluded_mean_names"]).Count,Is.Zero);
@@ -156,7 +167,7 @@ namespace EmbeddingGemma.Validation.Tests
                         Assert.That(candidateAudit["rms_graph_transform"].Value<bool>("existing_initializer_bytes_preserved"),Is.True);
                         report["rms_graph_transform"]=candidateAudit["rms_graph_transform"].DeepClone();
                     }
-                    if(candidateFolder=="GpuAudioCompensatedConvCandidate" || candidateFolder=="GpuAudioBlock16ConvCandidate")
+                    if(candidateFolder=="GpuAudioCompensatedConvCandidate" || blockConv)
                     {
                         var transform=candidateAudit["conv_graph_transform"];
                         Assert.That(transform.Value<int>("replaced_conv_count"),Is.EqualTo(1));
@@ -165,6 +176,15 @@ namespace EmbeddingGemma.Validation.Tests
                         Assert.That(transform.Value<string>("weight_sha256"),Is.EqualTo("68309f01ea3e738fccb24a0db5db608841a3a8e59b0a4fa5d0fb521ed60bf43c"));
                         Assert.That(transform.Value<bool>("existing_initializer_bytes_preserved"),Is.True);
                         report["conv_graph_transform"]=transform.DeepClone();
+                    }
+                    if(scalarMean)
+                    {
+                        var transform=candidateAudit["scalar_mean_graph_transform"];
+                        Assert.That(transform.Value<int>("replaced_scalar_mean_count"),Is.EqualTo(8));
+                        Assert.That(transform.Value<string>("prefix"),Is.EqualTo("/subsample_conv_projection/layer1/norm/"));
+                        Assert.That(transform.Value<string>("source_graph_sha256"),Is.EqualTo("8a376cc5bc258e13fbdc2212bb6d352eafdd2b618d553113b7cf9f0aa8192fb0"));
+                        Assert.That(transform.Value<bool>("existing_initializer_bytes_preserved"),Is.True);
+                        report["scalar_mean_graph_transform"]=transform.DeepClone();
                     }
                 }
                 var row = ((JArray)original["cases"]).Single(r => r.Value<string>("id") == signal);
@@ -183,9 +203,12 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.That(candidateAudit["files"][candidateProfile.Value<string>("frame_mask")].Value<string>("sha256"),
                     Is.EqualTo(originalAudit["files"][maskName].Value<string>("sha256")));
                 report["graph_sha256"] = candidateAudit["files"][graphName]["sha256"]; report["phase"] = "load"; Save();
+                var timings=new JObject();report["stage_timings_ms"]=timings;
+                var timer=System.Diagnostics.Stopwatch.StartNew();
                 var asset = AssetDatabase.LoadAssetAtPath<ModelAsset>(assetPath);
                 Assert.That(asset, Is.Not.Null, "The audited ONNX must import before execution.");
                 var model = ModelLoader.Load(asset);
+                timings["asset_and_model_load"]=timer.Elapsed.TotalMilliseconds;timer.Restart();
                 report["saved_graph_layer_count"]=model.layers.Count;
                 if(attentionChunk>0)
                 {
@@ -200,9 +223,11 @@ namespace EmbeddingGemma.Validation.Tests
                     report["runtime_graph_transform"]=attentionChunk>0?"dynamic16_then_static"+projectionChunk:"CompensatedModel.Create/static64";
                     report["projection_chunk"]=projectionChunk;
                 }
+                timings["runtime_graph_transforms"]=timer.Elapsed.TotalMilliseconds;timer.Restart();
                 var maskValues = Ints(Path.Combine(root, maskName)); var validFrames = maskValues.Sum();
                 report["layer_count"] = model.layers.Count; report["phase"] = "worker"; Save();
                 using var api = new AudioFeatureEncoder(model, BackendType.GPUCompute, new AudioEncoderProfile(validFrames));
+                timings["worker_creation"]=timer.Elapsed.TotalMilliseconds;timer.Restart();
                 var worker = (Worker)typeof(AudioFeatureEncoder).GetField("worker", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(api);
                 var cpu = (HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallback", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(worker);
                 var count = cpu.Intersect(model.layers.SelectMany(l => l.outputs).Concat(model.inputs.Select(i => i.index))).Count();
@@ -215,10 +240,16 @@ namespace EmbeddingGemma.Validation.Tests
                 using var input = (AudioPreprocessingResult)Activator.CreateInstance(typeof(AudioPreprocessingResult),
                     BindingFlags.Instance | BindingFlags.NonPublic, null, new object[] { features,mask,validFrames },null);
                 report["phase"] = "inference"; Save();
+                timings["input_and_audit_preparation"]=timer.Elapsed.TotalMilliseconds;timer.Restart();
                 using var encoded = api.Encode(input);
+                timings["cpu_schedule"]=timer.Elapsed.TotalMilliseconds;timer.Restart();
                 report["actual_backend"] = encoded.SoftTokens.backendType.ToString();
                 Assert.That(encoded.SoftTokens.backendType, Is.EqualTo(BackendType.GPUCompute));
                 var actual = encoded.SoftTokens.DownloadToArray();
+                timings["gpu_completion_and_output_download"]=timer.Elapsed.TotalMilliseconds;
+                report["unity_allocated_bytes_after_inference"]=UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong();
+                using(var process=System.Diagnostics.Process.GetCurrentProcess())
+                    report["editor_peak_working_set_bytes"]=process.PeakWorkingSet64;
                 var expected = row["features"].ToObject<float[][]>().SelectMany(v => v).ToArray();
                 Assert.That(actual.Length, Is.EqualTo(expected.Length));
                 var mismatch = 0; double maximum=0, ratio=0;

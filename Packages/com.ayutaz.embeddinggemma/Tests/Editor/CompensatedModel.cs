@@ -74,14 +74,8 @@ namespace EmbeddingGemma.Tests
                         if (value >= 0 && !map.ContainsKey(value)) map[value] = next++;
                     foreach (var value in replacement.constants)
                     {
-                        var index = map[value.index];
-                        if (value.dataType == DataType.Float) result.constants.Add(new Constant(index, value.shape, Floats(value)));
-                        else if (value.dataType == DataType.Int)
-                        {
-                            var data = (ArraySegment<byte>)ConstantBytes.GetValue(value); var integers = new int[value.lengthBytes / 4];
-                            Buffer.BlockCopy(data.Array, data.Offset, integers, 0, value.lengthBytes); result.constants.Add(new Constant(index, value.shape, integers));
-                        }
-                        else throw new NotSupportedException("Unexpected generated constant type.");
+                        var copy = (Constant)MemberCopy.Invoke(value, null);
+                        copy.index = map[value.index]; result.constants.Add(copy);
                     }
                     foreach (var value in replacement.layers)
                     {

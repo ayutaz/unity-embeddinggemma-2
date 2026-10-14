@@ -1,5 +1,13 @@
 # 現在の状態と残タスク
 
+## 2026-10-14: 工程1〜3の作業checkpoint（main未統合）
+
+確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。全22件のopen PRのhead・base・CI、API / 前処理 / GPU転送 / 診断の依存を[工程1〜3の受け入れ](steps-1-3-acceptance.md)へ整理した。作業branchは `feat/multimodal-numerical-acceptance`、[Draft PR #81](https://github.com/ayutaz/unity-embeddinggemma-2/pull/81)。mainへのmergeや正式Releaseは行わない。
+
+音声FP32の分割積和＋補償和は小さいfixtureのRedから関連50件Green。固定native入力による[専用Actions 38523505660](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38523505660)も3段階・不一致0で合格した。これはPython候補の検証で、Sentis候補や元encoder全条件の修正ではない。追加Sentis fixtureの0件実行、環境compile失敗は受け入れに数えない。
+
+**工程1は整理済み。工程2の元画像 / 音声数値gate、工程3の実入力→最終768次元APIは未完了。** 未統合PR #69の分割GPU転送、#70の音声全chain最終cosine24件合格、#71の重みなしIL2CPP probe、#72のcurrent encoder全12条件不合格を区別する。以下は過去checkpointである。
+
 ## 最新checkpoint: 全音声encoder検証後
 
 2026-10-13確認。mainは `a88ed9cffd942999bb271e597c86563298425f2c`。全体TDD計画PR #58まで統合済み。今回の更新は文書のみで、モデル生成・Unity実行は追加しない。

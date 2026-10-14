@@ -1,0 +1,119 @@
+{
+  "scope": "frozen_native_inputs_real_saved_weight_projection_only",
+  "source": "eee9ea69c8f9006cf861904a5dd88ac02da77af0",
+  "unity": "6000.3.16f1",
+  "sentis": "2.6.1",
+  "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "native_replay_source": "6ac2c92191a62ada4830adeee5235fb3c4b90f15",
+  "saved_model_sha256": "3214cc2b179a3abf3f968816c58b83b8ee762661bfab7b58c6f142d48ed3ed3e",
+  "passed": 2,
+  "failed": 0,
+  "skipped": 0,
+  "exit_code": 0,
+  "reports": [
+    {
+      "backend": "CPU",
+      "report_sha256": "fb5194d456e5fb84825e7e816eb1099a0823e75c4823aecf30e537939c4e97f8",
+      "stages": [
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 2.86102294921875E-06,
+          "maximum_tolerance_ratio": 0.06828807889458331,
+          "stage": "ffw_layer_1",
+          "weight_index": 71,
+          "weight_sha256": "d598344ee23d0545a76fa6d95173fbc886e8f2dd46d5907e6bd50b6cfa4891df",
+          "actual_backend": "CPU",
+          "calculation_fallback_count": 0,
+          "official_clip_bounds": [
+            -12.875,
+            12.8125,
+            -40.0,
+            39.75
+          ],
+          "native_input_clipped_elements": 0
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 1.9073486328125E-06,
+          "maximum_tolerance_ratio": 0.04067426486371985,
+          "stage": "ffw_layer_2",
+          "weight_index": 81,
+          "weight_sha256": "50ff67bc3a9a8704f925183042667884c6a2114de99565c2fa93f79570bd77b6",
+          "actual_backend": "CPU",
+          "calculation_fallback_count": 0,
+          "official_clip_bounds": [
+            -11.1875,
+            11.0625,
+            -34.25,
+            34.0
+          ],
+          "native_input_clipped_elements": 289
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 2.288818359375E-05,
+          "maximum_tolerance_ratio": 0.07749542104029311,
+          "stage": "linear2_post_norm",
+          "actual_backend": "CPU",
+          "calculation_fallback_count": 0
+        }
+      ]
+    },
+    {
+      "backend": "GPUCompute",
+      "report_sha256": "f8cc432931886fe615b3d46ffe67b791883b19de084273bd7bbc973b036f99cc",
+      "stages": [
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 2.86102294921875E-06,
+          "maximum_tolerance_ratio": 0.06762058303790332,
+          "stage": "ffw_layer_1",
+          "weight_index": 71,
+          "weight_sha256": "d598344ee23d0545a76fa6d95173fbc886e8f2dd46d5907e6bd50b6cfa4891df",
+          "actual_backend": "GPUCompute",
+          "calculation_fallback_count": 0,
+          "official_clip_bounds": [
+            -12.875,
+            12.8125,
+            -40.0,
+            39.75
+          ],
+          "native_input_clipped_elements": 0
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 1.9073486328125E-06,
+          "maximum_tolerance_ratio": 0.03730003222625901,
+          "stage": "ffw_layer_2",
+          "weight_index": 81,
+          "weight_sha256": "50ff67bc3a9a8704f925183042667884c6a2114de99565c2fa93f79570bd77b6",
+          "actual_backend": "GPUCompute",
+          "calculation_fallback_count": 0,
+          "official_clip_bounds": [
+            -11.1875,
+            11.0625,
+            -34.25,
+            34.0
+          ],
+          "native_input_clipped_elements": 289
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 1.9073486328125E-05,
+          "maximum_tolerance_ratio": 0.14436542559195464,
+          "stage": "linear2_post_norm",
+          "actual_backend": "GPUCompute",
+          "calculation_fallback_count": 0
+        }
+      ]
+    }
+  ],
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

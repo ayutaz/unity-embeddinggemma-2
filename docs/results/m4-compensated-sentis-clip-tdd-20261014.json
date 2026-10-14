@@ -1,0 +1,14 @@
+{
+  "scope": "small_official_clip_sentis_projection_tdd",
+  "red_source": "ad570a2e2f6172668d9589b6a13bfd589140ded8",
+  "red_failed": 3,
+  "red_passed": 8,
+  "green_source": "02c69dfccf6c7b1f67c92fe9101e0d8d5b829371",
+  "green_passed": 11,
+  "green_failed": 0,
+  "skipped": 0,
+  "exit_code": 0,
+  "xml_sha256": "889254bdd3ddc8848bfcf2113ecbe02027fda111a7a96b4bdbdd1143aaea22ef",
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

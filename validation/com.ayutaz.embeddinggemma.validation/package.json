@@ -1,0 +1,8 @@
+{
+  "name": "com.ayutaz.embeddinggemma.validation",
+  "version": "0.0.1",
+  "displayName": "EmbeddingGemma development validation",
+  "description": "Opt-in real-model development tests. Not part of the distributed runtime package.",
+  "unity": "6000.3",
+  "license": "Apache-2.0"
+}

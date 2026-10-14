@@ -46,6 +46,31 @@ namespace EmbeddingGemma.Tests
             Assert.Throws<ArgumentOutOfRangeException>(() => BuildForShape(new[] { 1f }, 1, 1, new[] { 1, 0, 1 }));
         }
 
+        static Model BuildClipped(float[] weights, int columns, int chunk, int[] shape, float[] bounds)
+        {
+            var method = typeof(CompensatedProjection).GetMethod("BuildClipped");
+            Assert.That(method, Is.Not.Null, "Official input/output clipping is missing from the candidate.");
+            try { return (Model)method.Invoke(null, new object[] { weights, columns, chunk, shape, bounds }); }
+            catch (TargetInvocationException error) { ExceptionDispatchInfo.Capture(error.InnerException).Throw(); throw; }
+        }
+
+        [TestCase(BackendType.CPU)] [TestCase(BackendType.GPUCompute)]
+        public void OfficialInputClipPrecedesProjectionAndOutputClipFollowsCompensation(BackendType backend)
+        {
+            var model = BuildClipped(new[] { 1f, 1f, 1f }, 1, 1, new[] { 1, 3 }, new[] { -2f, 2f, -0.5f, 0.5f });
+            using var input = new Tensor<float>(new TensorShape(1, 3), new[] { 1e8f, 1f, -1e8f });
+            if (backend == BackendType.GPUCompute) { Assert.That(SystemInfo.supportsComputeShaders, Is.True); ComputeTensorData.Pin(input); }
+            using var worker = new Worker(model, backend); worker.Schedule(input);
+            var output = (Tensor<float>)worker.PeekOutput(); Assert.That(output.backendType, Is.EqualTo(backend));
+            Assert.That(output.DownloadToArray(), Is.EqualTo(new[] { 0.5f }));
+        }
+
+        [Test] public void InvalidClipBoundsAreRejected()
+        {
+            Assert.Throws<ArgumentException>(() => BuildClipped(new[] { 1f }, 1, 1, new[] { 1, 1 }, new[] { float.NaN, 1f, -1f, 1f }));
+            Assert.Throws<ArgumentException>(() => BuildClipped(new[] { 1f }, 1, 1, new[] { 1, 1 }, new[] { 2f, -2f, -1f, 1f }));
+        }
+
         [TestCase(BackendType.CPU)] [TestCase(BackendType.GPUCompute)]
         public void CancellationKeepsUnitTermWithoutDoubleOrReadback(BackendType backend)
         {

@@ -46,5 +46,15 @@ namespace EmbeddingGemma.Tests
             var candidate = Create(source);
             Assert.That(candidate.layers, Is.EqualTo(source.layers)); Assert.That(candidate.inputs.Count, Is.EqualTo(2));
         }
+        [Test] public void BroadcastConstantMatmulRetainsItsBatchAndLayerIdentity()
+        {
+            var graph = new FunctionalGraph(); var input = graph.AddInput<float>(new TensorShape(2, 1, 3), "input");
+            var weight = Functional.Constant(new TensorShape(2, 3, 1), new[] { 1f, 2f, 3f, 4f, 5f, 6f });
+            var source = graph.Compile(Functional.MatMul(input, weight));
+            Assert.That(source.constants.Any(value => value.shape.rank == 3), Is.True);
+            var candidate = Create(source);
+            Assert.That(candidate.layers, Is.EqualTo(source.layers));
+            Assert.That(candidate.constants.Select(value => value.shape), Is.EqualTo(source.constants.Select(value => value.shape)));
+        }
     }
 }

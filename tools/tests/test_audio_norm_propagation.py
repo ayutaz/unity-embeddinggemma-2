@@ -33,8 +33,9 @@ def test_budget_separates_propagated_input_native_rounding_and_backend_error():
     propagated_input = native_input.copy()
     propagated_input[0, 0] = 5e-6  # Input within tolerance; normalization amplifies it.
     weight = np.ones(2, np.float32) / 2
-    native_output = rms_norm_oracle(native_input, weight, 1e-6).astype(np.float32)
-    actual = rms_norm_oracle(propagated_input, weight, 1e-6).astype(np.float32)
+    # Closed-form scalar fixtures; expected outputs must not come from the oracle under test.
+    native_output = np.array([[0., .8164966]], np.float32)
+    actual = np.array([[.004082466, .8164898]], np.float32)
     report = norm_error_budget(propagated_input, actual, native_input, native_output, weight, 1e-6)
     assert report["input_vs_native"]["mismatches"] == 0
     assert report["output_vs_native"]["mismatches"] == 1

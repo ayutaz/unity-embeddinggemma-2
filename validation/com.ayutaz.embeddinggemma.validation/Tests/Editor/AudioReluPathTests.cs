@@ -17,7 +17,7 @@ namespace EmbeddingGemma.Validation.Tests
             Assert.That(method,Is.Not.Null,"Strict subsample norm-to-ReLU binding is missing.");
             var graph=new FunctionalGraph();
             var input=graph.AddInput<float>(new TensorShape(1,2),"input");
-            var transposed=Functional.Transpose(input,new[]{1,0});
+            var transposed=Functional.Transpose(input,0,1);
             var output=scenario=="wrong_activation"?Functional.Exp(transposed):Functional.Relu(transposed);
             var model=scenario=="ambiguous"?graph.Compile(output,Functional.Exp(transposed)):graph.Compile(output);
             if(scenario=="valid")

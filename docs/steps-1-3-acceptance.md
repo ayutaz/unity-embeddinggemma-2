@@ -112,3 +112,15 @@ Git `c96b534…`のnorm chunk1ではsilenceのpost normがCPU/GPUとも1要素�
 新しい参照生成コードの `source_commit` と、再利用するencoder入力の `encoder_source_commit` / `vision_source_commit` を分ける。CLIは `--encoder-source-commit` / `--vision-source-commit` を受け付け、省略時だけ旧callerと同じsourceを要求する。入力producer、モデルrevision、全入力fileのhashを監査する。旧encoderの数値失敗を新しいrole参照の成功へ置き換えない。
 
 12 red→既存producerを含む34 green。独立tokenizerによるID/mask照合を追加後、対象12件もgreen。実モデルのQuery/Raw参照、Sentis全chain、GPU中間readback・所有権・境界・text回帰の受け入れは未完了。[role TDD](results/multimodal-role-reference-red-20261014.json) / [green](results/multimodal-role-reference-green-20261014.json)。新しいroleは別destinationへ生成し、旧固定参照を上書きしない。
+
+### 画像候補の大きいinitializerと元profileの受け入れ
+
+補償投影の初期total/correctionは出力shapeと同じゼロ配列だった。実vision相当 `[1,2520,3072]` のinitializer制限テストで、要求24576 byteに対し30965760 byteの1 assertion red / 既存11 passを観測。スカラーの0をbroadcastする最小修正でGit `67ac642…` の既存norm/model回帰を含む26 green / skip0 / exit0。出力tensorそのものの大きさは変えず、不要なゼロinitializerを除去した。[red](results/m3-compensated-scalar-zero-red-20261014.json) / [green](results/m3-compensated-scalar-zero-green-20261014.json)。
+
+Git `8cefbcdae2d2419f950b0d9cc7767090eeafefdc` は旧fixed vision reference / validation JSON・全入力・保存FP32モデルのSHAを監査し、画像encoderの公開APIへ補償投影候補を渡した。Unity 6000.3.16f1 / Sentis2.6.1、3 profile×CPU/GPU、各2画像の計12 numeric caseを完了した。すべて元elementwise許容差で不合格。最大許容差比はCPU4.98814232 / GPU5.18880544。candidate25265層、最大constant7741440 byte、GPU計算fallback / flush0。NUnit0 pass / 6 fail / skip0 / process exit2。[全profileの失敗receipt](results/m3-compensated-vision-all-profiles-failed-20261014.json)。新native参照を期待値へ置き換えていない。旧Unity21の実測と今回のUnity16を同一環境のA/B比較としない。Float16、画像前処理、最終backbone接続はこのrunの対象外。
+
+### role参照用の監査済みbackbone再利用
+
+`--backbone-source` で既存のPython最終参照directoryを指定できる。reference/validationの一致、成功scope、producer、model revision、snapshotの全input hash、全profileのsequence length・画像/音声feature数・幅、graphの相対path・サイズ・SHAをモデルload前に検査する。元graphのbyte列を新しいdestinationへコピーし、再exportせずに別roleの公式forwardと保存encoder→backboneの数値を照合する。コピー先graphのSHAは元と一致する。再利用producerとreference JSONのSHAを新metadataへ記録する。
+
+audit8 red、producer連結2 red、CLI2 redから実装し、role・既存producerを含む44 green。source/destinationが同一または相互の配下の場合は旧receiptを変更する前に拒否する6 red→修正、path/CLI/監査の16 green。Windowsのテストmanifestがbackslashを保存していた2 fixture失敗はPOSIX相対pathへ修正し、監査を緩めていない。[reuse red](results/multimodal-backbone-reuse-red-20261014.json) / [連結red](results/multimodal-backbone-reuse-integration-red-20261014.json) / [destination red](results/multimodal-backbone-reuse-destination-red-20261014.json) / [green](results/multimodal-backbone-reuse-green-20261014.json)。tiny-model greenであり、実モデルのQuery/Raw参照やSentisの工程3を完了にしない。

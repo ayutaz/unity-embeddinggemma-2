@@ -4,7 +4,7 @@
 
 ## 2026-10-14の実行方針と再開順
 
-実モデルの実装・検証は停止中。コード基準は `a237dee2874cdb0fbcdf4fe333aebae7193ad390`、mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。Draft PR #81の対象画像・音声fixtureはGPUCompute専用だが、変更後のUnity compile / 実モデル検証は未実施。[最新状態](status.md)を現在の判定、以下の既存checkpointを過去の証拠として読む。
+ユーザー指定の実行計画1・2までを実施した。最新Unity実測は `b796e504367fb9165a4992ff036a205fb2e7d429`、mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。Draft PR #81のGPU専用変更を含むcompile、tiny / 実square 1件のGPU計測は合格。SiLU修正後のActions実ONNXは元6信号・2 profile全件実行、全6件不合格。[今回の結果](gpu-execution-and-silu-validation.md) / [最新状態](status.md)。R2の数値修正以降は未着手。
 
 | 順序 | 着手条件と作業 | 渡す証拠 / 完了条件 |
 | --- | --- | --- |
@@ -15,7 +15,9 @@
 | R4 全体受け入れ | M2〜M4の残りsample・混在検索・反復 / 性能・Player・必須実機 | Windows / macOS / iOS / Androidのsource対応結果、最終candidateの空Git consumer、正常終了 |
 | R5 配布準備 | 全必須gateと依存差分を確認 | version / CHANGELOG / license / 配布監査。公開tag / Releaseは準備後の別工程 |
 
-ローカル実モデルは1試行・1失敗経路に絞り、再開時に5分の外部上限を設定・確認する。上限超過時は同PIDと部分結果を保存して止め、未完了と記録する。現launcherへのtimeout実装済みとは扱わない。重い全条件・モデル取得 / exportはActions優先。GPU runner / ライセンス不在は未実行としCPU結果で補わない。
+ローカル実モデルは1試行・1失敗経路に絞り、新しいbounded_processで5分の外部上限を適用する。上限超過時は所有processだけを止めてPIDと部分結果を保存し、未完了と記録する。旧ignored launcherへのtimeoutは実装していない。重い全条件・モデル取得 / exportはActions優先。GPU runner / ライセンス不在は未実行としCPU結果で補わない。
+
+今回の計測では新しい `embeddinggemma_tools.bounded_process` の外部300秒上限を実装・使用した。timeoutで所有processだけを停止する3件の小さいテストと、実Unityの正常終了を確認済み。以前のignored launcherの上限は依然未実装。R0はWindows単発測定の範囲で完了、R1は検証実行完了・数値不合格としてR2へ渡す。
 
 CPUを含む下記の以前の検証matrixは互換性の履歴・契約として保持する。今後の主実行経路はGPUで、従来のCPU/GPU全条件の完了flagをGPU専用結果へ流用しない。RuntimeのCPU対応を削除したとは主張しない。
 

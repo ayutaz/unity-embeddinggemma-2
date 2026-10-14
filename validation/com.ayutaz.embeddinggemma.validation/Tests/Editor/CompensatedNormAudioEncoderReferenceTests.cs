@@ -30,17 +30,18 @@ namespace EmbeddingGemma.Validation.Tests
             var requested = JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath, "../Packages/manifest.json")));
             Assert.That(requested["dependencies"].Value<string>("com.ayutaz.embeddinggemma").EndsWith("#" + RuntimeSource), Is.True);
             root = Path.GetFullPath(Path.Combine(Application.dataPath, "../../k/artifacts/audio-real-chain"));
-            resultPath = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/norm4-reciprocal-full-encoder/results.json"));
+            resultPath = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/norm1-reciprocal-scalar-zero-full-encoder/results.json"));
             conditions = new JArray();
             report = new JObject
             {
-                ["success"] = false, ["scope"] = "current_native_features_to_compensated_norm4_reciprocal_fp32_encoder_public_api_only",
+                ["success"] = false, ["scope"] = "current_native_features_to_compensated_norm1_reciprocal_scalar_zero_fp32_encoder_public_api_only",
                 ["runtime_source"] = RuntimeSource, ["runtime_overlay"] = false, ["reference_source"] = Producer,
                 ["unity"] = Application.unityVersion, ["sentis"] = "2.6.1", ["gpu"] = SystemInfo.graphicsDeviceName,
                 ["graphics_api"] = SystemInfo.graphicsDeviceType.ToString(), ["conditions"] = conditions,
                 ["hash_backends"] = new JObject(), ["feature_rtol"] = 1e-4, ["feature_atol"] = 1e-5,
                 ["minimum_cosine"] = 0.999999, ["end_to_end_validated"] = false,
                 ["float16_validated"] = false, ["pcm_preprocessing_validated"] = false,
+                ["projection_chunk"] = 64, ["norm_chunk"] = 1,
                 ["started_utc"] = DateTime.UtcNow.ToString("O")
             };
             Save();
@@ -108,7 +109,7 @@ namespace EmbeddingGemma.Validation.Tests
                     var validFrames = frameMask.Count(value => value == 1);
                     Assert.That(frameMask, Is.EqualTo(Enumerable.Repeat(1, validFrames).Concat(Enumerable.Repeat(0, 1119 - validFrames)).ToArray()));
                     var originalModel = TextModelFile.Load(models[entry.Key]);
-                    var model = CompensatedModel.CreateWithCompensatedNorms(originalModel, 64, 4);
+                    var model = CompensatedModel.CreateWithCompensatedNorms(originalModel, 64, 1);
                     condition["original_layer_count"] = originalModel.layers.Count;
                     condition["candidate_layer_count"] = model.layers.Count;
                     using (var api = new AudioFeatureEncoder(model, backend, new AudioEncoderProfile(validFrames)))

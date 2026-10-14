@@ -45,14 +45,14 @@ namespace EmbeddingGemma.Validation.Tests
                     var tensor=shape.ToTensorShape();return Enumerable.Range(0,tensor.rank).Select(axis=>tensor[axis]).ToArray();
                 }
                 var constants=model.constants.ToDictionary(c=>c.index);var rows=new JArray();
-                foreach(var layer in model.layers.Where(l=>(l.GetType().Name=="MatMul"||l.GetType().Name=="MatMul2D") && l.inputs.Length==2))
+                foreach(var layer in model.layers.Where(l=>l.inputs.Length>=2 && l.outputs.Length==1))
                 {
                     if(!constants.TryGetValue(layer.inputs[1],out var weight)||weight.shape.rank!=2)continue;
                     Assert.That(weight.dataType,Is.EqualTo(DataType.Float));
                     var bytes=(ArraySegment<byte>)typeof(Constant).GetField("array",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(weight);
                     using var stream=new MemoryStream(bytes.Array,bytes.Offset,bytes.Count,false);
                     var sha=PlayerFileHash.Compute(stream,out _);
-                    rows.Add(new JObject { ["weight_sha256"]=sha,["input_shape"]=JArray.FromObject(Shape(layer.inputs[0])),
+                    rows.Add(new JObject { ["kind"]=layer.GetType().Name,["weight_sha256"]=sha,["input_shape"]=JArray.FromObject(Shape(layer.inputs[0])),
                         ["output_shape"]=JArray.FromObject(Shape(layer.outputs.Single())),["weight_shape"]=JArray.FromObject(Shape(layer.inputs[1])) });
                 }
                 report["projections"]=rows;report["projection_count"]=rows.Count;Save();

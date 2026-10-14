@@ -16,13 +16,22 @@ namespace EmbeddingGemma.Validation.Tests
     {
         [Test]
         public void ObserveStatic64LayersAgainstOriginalNativeWithoutChangingFinalBits()
+            => Observe(false);
+
+        [Test]
+        public void ObserveCompactOuterLayersAgainstOriginalNativeWithoutChangingFinalBits()
+            => Observe(true);
+
+        void Observe(bool compact)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-current-stage-context"));
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/refined-static64-full-layers-"+source+".json"));
+            var folder=compact?"GpuAudioCompactOuterCandidate":"GpuAudioRefinedCandidate";
+            var stem=compact?"compact-outer-full-layers-":"refined-static64-full-layers-";
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+".json"));
             Assert.That(File.Exists(output),Is.False);
-            var rows=new JArray();var report=new JObject { ["success"]=false,["scope"]="silence_refined_static64_original_native_full_layer_observation_only",
+            var rows=new JArray();var report=new JObject { ["success"]=false,["scope"]=compact?"silence_compact_outer_original_native_full_layer_observation_only":"silence_refined_static64_original_native_full_layer_observation_only",
                 ["source"]=source,["requested_backend"]="GPUCompute",["stages"]=rows,["phase"]="audit",
                 ["full_encoder_validated"]=false,["end_to_end_validated"]=false };
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
@@ -54,11 +63,20 @@ namespace EmbeddingGemma.Validation.Tests
                 }
                 var anchors=JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath,"GpuAudioRefinedCandidate/full-layer-anchors.json")));
                 Assert.That(anchors.Value<string>("native_reference_sha256"),Is.EqualTo("6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a"));
-                var modelPath=Path.Combine(Application.dataPath,"GpuAudioRefinedCandidate/frames-1119-valid-1119.onnx");
-                Check(modelPath,"8aefc4b83fd0cc709544a0d6337b8c1837d2c864ad1d3c8cbd39fcd568abc222");
-                var model=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/GpuAudioRefinedCandidate/frames-1119-valid-1119.onnx"));
+                var modelPath=Path.Combine(Application.dataPath,folder+"/frames-1119-valid-1119.onnx");
+                var graphSha=compact?"11607255142478773e621f5e9feebf2d3269457feb67d63215cecbc55fc61b67":"8aefc4b83fd0cc709544a0d6337b8c1837d2c864ad1d3c8cbd39fcd568abc222";
+                Check(modelPath,graphSha);report["graph_sha256"]=graphSha;
+                if(compact)
+                {
+                    var candidateAudit=JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath,folder+"/audio-encoder-validation.json")));
+                    Assert.That(candidateAudit["rms_graph_transform"].Value<bool>("existing_initializer_bytes_preserved"),Is.True);
+                    Assert.That(candidateAudit["rms_graph_transform"].Value<string>("source_graph_sha256"),Is.EqualTo(anchors.Value<string>("saved_candidate_graph_sha256")));
+                }
+                var model=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/"+folder+"/frames-1119-valid-1119.onnx"));
                 var map=AudioCoefficientLayerMap.Resolve(model,(JArray)anchors["anchors"]);Assert.That(map.Count,Is.EqualTo(12));
-                report["bound_outputs"]=JObject.FromObject(map);report["phase"]="transform";Save();model=CompensatedModel.Create(model,64);
+                report["bound_outputs"]=JObject.FromObject(map);report["phase"]="transform";Save();
+                if(compact)model=CompensatedModel.CreateWithDynamicMatMuls(model,16);
+                model=CompensatedModel.Create(model,64);
                 report["layer_count"]=model.layers.Count;
                 using(var worker=new Worker(model,BackendType.GPUCompute))
                 {
@@ -72,6 +90,24 @@ namespace EmbeddingGemma.Validation.Tests
                 using var input=new Tensor<float>(new TensorShape(1,1119,128),Floats(inputPath));ComputeTensorData.Pin(input);
                 report["phase"]="observe";Save();var observed=WorkerObservation.ObserveIndexes(model,BackendType.GPUCompute,input,new HashSet<int>(map.Values));
                 Assert.That(observed.FinalMatchesBaselineBits,Is.True);Assert.That(observed.Snapshots.Count,Is.EqualTo(12));report["normal_final_matches_observed_bits"]=true;
+                if(compact)
+                {
+                    var encoderPath=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-real-chain/audio-runtime-reference/audio-encoder-reference.json"));
+                    Check(encoderPath,"ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9");
+                    var encoderReference=JObject.Parse(File.ReadAllText(encoderPath));
+                    var finalExpected=((JArray)encoderReference["cases"]).Single(c=>c.Value<string>("id")=="silence")["features"].ToObject<float[][]>().SelectMany(v=>v).ToArray();
+                    Assert.That(observed.Final.Length,Is.EqualTo(finalExpected.Length));
+                    int mismatch=0;double ratio=0;
+                    for(var i=0;i<finalExpected.Length;i++)
+                    {
+                        Assert.That(float.IsNaN(observed.Final[i])||float.IsInfinity(observed.Final[i]),Is.False);
+                        var d=Math.Abs((double)observed.Final[i]-finalExpected[i]);var allowed=1e-5+1e-4*Math.Abs((double)finalExpected[i]);
+                        if(d>allowed)mismatch++;ratio=Math.Max(ratio,d/allowed);
+                    }
+                    report["final_original_mismatches"]=mismatch;report["final_original_maximum_tolerance_ratio"]=ratio;
+                    // Preserve the known failed gate; success below means observation only.
+                    Assert.That(mismatch,Is.EqualTo(201),"Observation must faithfully replay the latest failed compact candidate.");
+                }
                 var captureRoot=Path.ChangeExtension(output,null)+"-captures";Directory.CreateDirectory(captureRoot);report["capture_directory"]=captureRoot;
                 for(var index=0;index<12;index++)
                 {

@@ -66,6 +66,14 @@ namespace EmbeddingGemma.Validation.Tests
         [TestCase("padded_noise")]
         public void CascadeLayoutRmsCandidateGpuMatchesOriginalGolden(string signal) => Execute(signal,"GpuAudioCascadeLayoutCandidate",true,16);
 
+        [TestCase("silence")]
+        [TestCase("impulse")]
+        [TestCase("sine")]
+        [TestCase("nyquist")]
+        [TestCase("noise")]
+        [TestCase("padded_noise")]
+        public void CompactOuterRmsCandidateGpuMatchesOriginalGolden(string signal) => Execute(signal,"GpuAudioCompactOuterCandidate",true,16);
+
         void Execute(string signal,string candidateFolder,bool compensateStatic=false,int attentionChunk=0,int projectionChunk=64)
         {
             Assert.That(SystemInfo.supportsComputeShaders, Is.True, "Actual GPU required; no CPU substitute or skip.");
@@ -75,6 +83,7 @@ namespace EmbeddingGemma.Validation.Tests
             var variant=candidateFolder=="GpuAudioCandidate"?"":attentionChunk>0?"-refined-attention16-static"+projectionChunk:compensateStatic?"-refined-static64":"-refined-inverse";
             if(candidateFolder=="GpuAudioCascadeCandidate")variant="-cascade-attention16-static64";
             if(candidateFolder=="GpuAudioCascadeLayoutCandidate")variant="-cascade-layout-attention16-static64";
+            if(candidateFolder=="GpuAudioCompactOuterCandidate")variant="-compact-outer-attention16-static64";
             var output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/saved-onnx-audio-gpu-" + source + variant + "-" + signal + ".json"));
             Assert.That(File.Exists(output), Is.False, "Preserve each invocation's evidence.");
             var report = new JObject { ["success"] = false, ["scope"] = "one_saved_onnx_audio_encoder_gpu_vs_immutable_original",
@@ -109,18 +118,23 @@ namespace EmbeddingGemma.Validation.Tests
                 report["reference_source"] = original["metadata"]["source_commit"];
                 report["candidate_python_gate_passed"] = candidateAudit.Value<bool>("success");
                 report["candidate_folder"] = candidateFolder;
-                if(candidateFolder=="GpuAudioRefinedCandidate" || candidateFolder=="GpuAudioCascadeCandidate" || candidateFolder=="GpuAudioCascadeLayoutCandidate")
+                if(candidateFolder=="GpuAudioRefinedCandidate" || candidateFolder=="GpuAudioCascadeCandidate" || candidateFolder=="GpuAudioCascadeLayoutCandidate" || candidateFolder=="GpuAudioCompactOuterCandidate")
                 {
                     Assert.That(candidateAudit["graph_transform"],Is.Not.Null,"Transformed graph provenance required.");
                     report["graph_transform"]=candidateAudit["graph_transform"].DeepClone();
                     Assert.That(candidateAudit["graph_transform"].Value<bool>("existing_initializer_bytes_preserved"),Is.True);
                     Assert.That(candidateAudit["graph_transform"].Value<int>("replaced_inverse_count"),Is.EqualTo(2));
                     Assert.That(candidateAudit.Value<bool>("onnx_numeric_validation_performed"),Is.False,"Do not reuse the original graph's ONNX results.");
-                    if(candidateFolder=="GpuAudioCascadeCandidate" || candidateFolder=="GpuAudioCascadeLayoutCandidate")
+                    if(candidateFolder=="GpuAudioCascadeCandidate" || candidateFolder=="GpuAudioCascadeLayoutCandidate" || candidateFolder=="GpuAudioCompactOuterCandidate")
                     {
                         var excluded=candidateFolder=="GpuAudioCascadeLayoutCandidate";
                         Assert.That(candidateAudit["rms_graph_transform"].Value<int>("replaced_rms_count"),Is.EqualTo(excluded?97:109));
                         if(excluded)Assert.That(((JArray)candidateAudit["rms_graph_transform"]["excluded_mean_names"]).Count,Is.EqualTo(12));
+                        if(candidateFolder=="GpuAudioCompactOuterCandidate")
+                        {
+                            Assert.That(((JArray)candidateAudit["rms_graph_transform"]["explicit_mean_override_names"]).Count,Is.EqualTo(12));
+                            Assert.That(((JArray)candidateAudit["rms_graph_transform"]["excluded_mean_names"]).Count,Is.Zero);
+                        }
                         Assert.That(candidateAudit["rms_graph_transform"].Value<bool>("existing_initializer_bytes_preserved"),Is.True);
                         report["rms_graph_transform"]=candidateAudit["rms_graph_transform"].DeepClone();
                     }

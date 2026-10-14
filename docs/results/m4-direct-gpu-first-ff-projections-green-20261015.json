@@ -1,0 +1,317 @@
+{
+  "success": true,
+  "scope": "direct_gpu_first_feed_forward_two_frozen_projections_only",
+  "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "runtime_source": "e9e72e8611ed28be41921dd27f0b9b72b3e6d5c1",
+  "original_reference_changed": false,
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "api_red": {
+    "process": {
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        ".\\artifacts\\acceptance-consumer",
+        "-logFile",
+        ".\\artifacts\\numerical-acceptance-state\\direct-gpu-block192-contract-red-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "GpuBlockedMatmulTests",
+        "-testResults",
+        ".\\artifacts\\numerical-acceptance-state\\direct-gpu-block192-contract-red-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": false,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-14T22:17:36.446408+00:00",
+      "pid": 60700,
+      "exit_code": 2,
+      "unity_results": ".\\artifacts\\numerical-acceptance-state\\direct-gpu-block192-contract-red-20261015.xml",
+      "unity_counts": {
+        "total": 8,
+        "passed": 0,
+        "failed": 8,
+        "skipped": 0
+      },
+      "elapsed_seconds": 33.97657670000626,
+      "completed_utc": "2026-10-14T22:18:10.422985+00:00"
+    },
+    "nunit": {
+      "total": 8,
+      "passed": 0,
+      "failed": 8,
+      "skipped": 0
+    },
+    "evidence": [
+      {
+        "path": "artifacts\\numerical-acceptance-state\\direct-gpu-block192-contract-red-20261015-process.json",
+        "sha256": "a9355a5fd6ed2c95c10d334f42d4842b45d222f0fabff9b24a28ae8e33c958de",
+        "bytes": 1258
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\direct-gpu-block192-contract-red-20261015.xml",
+        "sha256": "b7a97ae10b05442a4bc858863e6f62cee529a3776783d5bd5262668ffea13081",
+        "bytes": 20423
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\direct-gpu-block192-contract-red-20261015.log",
+        "sha256": "adb4b60efeb827c9f570d2a5d97a295dc0419101e6d3f3e17e399145a860ac6e",
+        "bytes": 45511
+      }
+    ]
+  },
+  "api_green": {
+    "process": {
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        ".\\artifacts\\acceptance-consumer",
+        "-logFile",
+        ".\\artifacts\\numerical-acceptance-state\\direct-gpu-block192-contract-green-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "GpuBlockedMatmulTests",
+        "-testResults",
+        ".\\artifacts\\numerical-acceptance-state\\direct-gpu-block192-contract-green-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": true,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-14T22:21:37.159610+00:00",
+      "pid": 42152,
+      "exit_code": 0,
+      "unity_results": ".\\artifacts\\numerical-acceptance-state\\direct-gpu-block192-contract-green-20261015.xml",
+      "unity_counts": {
+        "total": 8,
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 34.421461000005365,
+      "completed_utc": "2026-10-14T22:22:11.581071+00:00"
+    },
+    "nunit": {
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0
+    },
+    "evidence": [
+      {
+        "path": "artifacts\\numerical-acceptance-state\\direct-gpu-block192-contract-green-20261015-process.json",
+        "sha256": "c3aa62632cd59512565bdefb285f694f9fd212805557dd8a043b402edc57012b",
+        "bytes": 1264
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\direct-gpu-block192-contract-green-20261015.xml",
+        "sha256": "c685bbbc8ff3fa2f7d08edca4b6dfb1a4e3039cb3f77200187745c134ae96dd1",
+        "bytes": 9078
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\direct-gpu-block192-contract-green-20261015.log",
+        "sha256": "a32e278f67b458a7f38d56f9655fb0da301bb79abdf0a3de10fda55faf941bb4",
+        "bytes": 45837
+      }
+    ]
+  },
+  "baseline": {
+    "process": {
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        ".\\artifacts\\acceptance-consumer",
+        "-logFile",
+        ".\\artifacts\\numerical-acceptance-state\\frozen-first-ff-static64-gpu-compilefix-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "OriginalFirstFeedForwardProjectionMustMatchSavedNativeBitsOnGpu",
+        "-testResults",
+        ".\\artifacts\\numerical-acceptance-state\\frozen-first-ff-static64-gpu-compilefix-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": false,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-14T22:00:39.398746+00:00",
+      "pid": 80972,
+      "exit_code": 2,
+      "unity_results": ".\\artifacts\\numerical-acceptance-state\\frozen-first-ff-static64-gpu-compilefix-20261015.xml",
+      "unity_counts": {
+        "total": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0
+      },
+      "elapsed_seconds": 35.048568400001386,
+      "completed_utc": "2026-10-14T22:01:14.447314+00:00"
+    },
+    "nunit": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "skipped": 0
+    },
+    "evidence": [
+      {
+        "path": "artifacts\\numerical-acceptance-state\\frozen-first-ff-static64-gpu-compilefix-20261015-process.json",
+        "sha256": "abef260529fa3632eec7f7bc0136e7bc660b350ad75454265322f5bc1abad54b",
+        "bytes": 1322
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\frozen-first-ff-static64-gpu-compilefix-20261015.xml",
+        "sha256": "41c8c8624b92e98b050da445c7b112030577e00056c10588d41a14d221f366e3",
+        "bytes": 8142
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\frozen-first-ff-static64-gpu-compilefix-20261015.log",
+        "sha256": "b8dd5a5db4d05ac368b8040627938edfc6cc8c03e6a89b984518d2341cf1b691",
+        "bytes": 47916
+      }
+    ]
+  },
+  "real_gpu": {
+    "process": {
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        ".\\artifacts\\acceptance-consumer",
+        "-logFile",
+        ".\\artifacts\\numerical-acceptance-state\\frozen-first-ff-direct-gpu-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "OriginalFirstFeedForwardProjectionMustMatchSavedNativeBitsOnGpu",
+        "-testResults",
+        ".\\artifacts\\numerical-acceptance-state\\frozen-first-ff-direct-gpu-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": true,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-14T22:25:18.202390+00:00",
+      "pid": 50416,
+      "exit_code": 0,
+      "unity_results": ".\\artifacts\\numerical-acceptance-state\\frozen-first-ff-direct-gpu-20261015.xml",
+      "unity_counts": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 37.765129599996726,
+      "completed_utc": "2026-10-14T22:25:55.967521+00:00"
+    },
+    "nunit": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    "evidence": [
+      {
+        "path": "artifacts\\numerical-acceptance-state\\frozen-first-ff-direct-gpu-20261015-process.json",
+        "sha256": "f1f576b27494abad6c4132df7a63b8f8c58e161c58ac21313420c788f5936657",
+        "bytes": 1282
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\frozen-first-ff-direct-gpu-20261015.xml",
+        "sha256": "4843bdb29fa774fd37d8af6265ce89d431fb2bc424934529aa8f56c4eee2bde1",
+        "bytes": 5477
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\frozen-first-ff-direct-gpu-20261015.log",
+        "sha256": "dedc388b792de694a54a0f3f8badba92393d1c1dc81b7748b046a6f6f0849d9c",
+        "bytes": 47116
+      }
+    ]
+  },
+  "records": [
+    {
+      "report": {
+        "success": true,
+        "source": "e9e72e8611ed28be41921dd27f0b9b72b3e6d5c1",
+        "variant": "direct_block192",
+        "scope": "one_original_first_feed_forward_projection_gpu_bits_only",
+        "phase": "completed",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphics_api": "Direct3D12",
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "implementation": "direct GPU block192 with GPU input/output clipping",
+        "shader_dispatch_count": 1,
+        "clip_layer_count": 2,
+        "gpu_execute_and_final_download_ms": 212.75330000000002,
+        "actual_backend": "GPUCompute",
+        "exact_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0
+      },
+      "evidence": {
+        "path": "artifacts\\acceptance-consumer\\artifacts\\frozen-first-ff-ffw_layer_1-gpu-e9e72e8611ed28be41921dd27f0b9b72b3e6d5c1-direct_block192.json",
+        "sha256": "4dec2c6e7bd577dcfff3cd05cc75303e12856464407704dbf533be907e7b9879",
+        "bytes": 746
+      }
+    },
+    {
+      "report": {
+        "success": true,
+        "source": "e9e72e8611ed28be41921dd27f0b9b72b3e6d5c1",
+        "variant": "direct_block192",
+        "scope": "one_original_first_feed_forward_projection_gpu_bits_only",
+        "phase": "completed",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphics_api": "Direct3D12",
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "implementation": "direct GPU block192 with GPU input/output clipping",
+        "shader_dispatch_count": 1,
+        "clip_layer_count": 2,
+        "gpu_execute_and_final_download_ms": 27.6472,
+        "actual_backend": "GPUCompute",
+        "exact_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0
+      },
+      "evidence": {
+        "path": "artifacts\\acceptance-consumer\\artifacts\\frozen-first-ff-ffw_layer_2-gpu-e9e72e8611ed28be41921dd27f0b9b72b3e6d5c1-direct_block192.json",
+        "sha256": "f979fcc8b11b4deaac42597d2731e8af5a2b6fbd9683451be9a26b8e828892bd",
+        "bytes": 735
+      }
+    }
+  ],
+  "native_mad_portability": "HLSL mad may be fused or nonfused; only this actual GPU is qualified",
+  "primary_source": "https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/mad",
+  "performance_scope": "GPU input clip + direct projection + GPU output clip + final diagnostic download; not whole-model latency",
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "next_step": "Partition the original GPU encoder at the two static projections and connect direct GPU outputs without intermediate readback",
+  "remaining": [
+    "audio original six signals and both profiles",
+    "image FP32 all three profiles",
+    "real PCM/Texture through GPU stages to normalized768 API all roles/masks/boundaries",
+    "ownership/dispose/reuse/text regression/no product CPU compute or intermediate readback"
+  ]
+}

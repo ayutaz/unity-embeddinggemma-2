@@ -4,6 +4,12 @@
 
 ## 現在の判定
 
+**2026-10-15最新の直接GPU投影:** 最初のfeed-forwardの2投影を元280行で検証した。static64は781,856 / 233,045値のbit差（元許容差超過は両方0）、NUnit2 fail / skip0。標準ONNXへFMAを展開したblock192候補は、最初の投影中にprocess working setが36,685,799,424 bytesへ増え、300秒timeout後のkill待機30秒もtimeoutした。数値出力 / NUnit XMLは未取得で、GPU合格ではない。その後のlive queryでUnity processなしを確認した。最初のCS0136 compile失敗は変数名衝突を修正し、推論未実行として別記録。[資源失敗と終了確認](results/m4-first-ff-expanded-gpu-resource-failure-20261015.json)。この大きい展開graphは再試行しない。
+
+`GpuBlockedMatmul`を入力GPU tensor・setup時の係数upload・owned GPU outputだけで動く直接compute kernelとして追加した。API3 Red、追加契約を含む8 Red→8 Green。積和の丸め・192項ごとの集計 / tail・CPU入力拒否・係数検証・不正入力後の再利用・独立した出力 / 二重Disposeを実GPUで確認した。`e9e72e8`の実固定投影2件は、元clipもGPUで実行し、1,146,880 / 286,720要素すべてが元native値と全bit一致。GPUCompute・Clip worker計算fallback / flush0、NUnit2 pass / fail0 / skip0。実行＋最終診断downloadは212.7533 / 27.6472msで、モデル全体のlatencyには数えない。[API TDDと固定GPU成功](results/m4-direct-gpu-first-ff-projections-green-20261015.json)。現在Unityは停止済み。
+
+HLSLの[公式mad仕様](https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/mad)は、native命令をfused / nonfusedのどちらにも実装可能としている。この候補の丸めはRTX 4070 Ti SUPER / D3D12の実測で確認したもので、全GPU / OS保証ではない。CPUへの計算fallbackは入れない。次は元encoderを投影境界で分け、GPU tensorのまま直接kernelへ渡して全encoderを再照合する。既存の全encoderは無音295要素不合格のまま、音声元6信号 / 両profile・画像FP32全3 profile・実PCM / Texture→最終768 API全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰は未達。工程3・4の範囲を維持する。以下は前回checkpoint。
+
 **2026-10-15最新の入力投影修正:** 元subsample.layer1.actと投影係数a59650e6…を固定した。現在CPUの3行へ縮めたmatmulは元値と異なったが、元280行のSGEMMはthread1 / 2 / 4、contiguous RHS / linearの全9条件で保存参照を全bit再現した。192項ずつゼロからFMAし、各blockの結果を順にFP32で加える候補でも元280行・286,720値を再現した。これは固定参照から推定した順序で、すべてのMKL shape / ISAに対する保証ではない。API8 Red→関連30 Green、元initializerを保持する1箇所rewrite6 Red→関連22 Green。初回のONNX exportは記号shape推論で巨大allocationを要求し失敗したため、固定Kと正のpermute軸を明示して修正した。失敗と修正後GreenのXMLを別に保持する。
 
 `16b9e40`の実GPU固定投影は、元のstatic64経路で249,203 bit差→block192で全bit一致。元許容差超過は両方0、GPUCompute・計算fallback / flush0、NUnit各1件のRed→Green。元goldenは変更していない。`43c252d` / graph `63f24d48…`の全encoderは無音295要素不合格・最大許容差比7.637025、68,094層、NUnit0 pass / 1 fail / skip0 / exit2。前候補417要素より件数は減ったが最大比は悪化し、旧201要素の候補も含め全encoder未合格。model load2.337秒、CPU変換18.639秒、CPU schedule18.322秒、GPU完了待ち＋最終download0.818秒で、速度の受け入れにも流用しない。[固定投影修正・全体失敗・TDD](results/m4-block192-input-projection-gpu-and-whole-failed-20261015.json)。所有Unityはterminal、現在停止済み。

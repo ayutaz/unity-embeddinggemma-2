@@ -1,0 +1,96 @@
+{
+  "scope": "first_feed_forward_frozen_gpu_projections_and_expanded_graph_resource_failure",
+  "success": false,
+  "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "runtime_source": "b1256b80659ccecc2fc9760914304323146631ac",
+  "graph_producer": "f0e4767eb81ca1a8771cbff2cb50a8ea074e01d3",
+  "original_reference_changed": false,
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "baseline": {
+    "variant": "static64",
+    "execution_status": "completed_numeric_local_bit_failure",
+    "nunit": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "skipped": 0
+    },
+    "process_exit_code": 2,
+    "first_projection": {
+      "bit_differences": 781856,
+      "mismatches": 0
+    },
+    "second_projection": {
+      "bit_differences": 233045,
+      "mismatches": 0
+    },
+    "actual_backend": "GPUCompute",
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "evidence_prefix": "artifacts/numerical-acceptance-state/frozen-first-ff-static64-gpu-compilefix-20261015",
+    "note": "Stronger local bit target failed; original elementwise tolerance was satisfied in both isolated projections."
+  },
+  "initial_compile_failure": {
+    "source": "f0e4767eb81ca1a8771cbff2cb50a8ea074e01d3",
+    "error": "CS0136: local expected shadowed the original output reference variable",
+    "execution_status": "inference_not_executed",
+    "nunit_xml_missing": true,
+    "evidence_prefix": "artifacts/numerical-acceptance-state/frozen-first-ff-static64-gpu-20261015"
+  },
+  "candidate": {
+    "variant": "block192_expanded_standard_fp32_graph",
+    "execution_status": "resource_failure_timeout_no_numeric_output_later_process_missing",
+    "phase_last_observed": "execute_first_projection",
+    "owned_pid": 74764,
+    "last_observed_working_set_bytes": 23034474496,
+    "working_set_snapshot_timestamp": null,
+    "timeout_seconds": 300,
+    "termination_wait_seconds": 30,
+    "observed_errors": [
+      "process wait timeout after 300 seconds",
+      "process wait timeout after kill request after 30 seconds"
+    ],
+    "terminal_verified": false,
+    "gpu_output_obtained": false,
+    "nunit_result_obtained": false,
+    "gpu_validated": false,
+    "evidence_prefix": "artifacts/numerical-acceptance-state/frozen-first-ff-block192-gpu-20261015",
+    "note": "Before-execution fallback/flush audit was zero; that is not proof of a completed GPU result. Local command sessions also stopped responding, so termination must be rechecked before any Unity restart.",
+    "stop_evidence": {
+      "path": "artifacts\\numerical-acceptance-state\\frozen-first-ff-block192-resource-stop-20261015.json",
+      "sha256": "d8b6e3b920b77992f100b242a656155c14abefeef6984f760cfad0b50c8428d7",
+      "bytes": 1034
+    },
+    "stop_snapshot": {
+      "scope": "owned_frozen_first_ff_expanded_graph_resource_failure",
+      "utc": "2026-10-14T22:11:00.4541219Z",
+      "pid": 74764,
+      "working_set_bytes": 36685799424,
+      "command_line": "\"C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe\" -batchmode -projectPath .\\artifacts\\acceptance-consumer -logFile .\\artifacts\\numerical-acceptance-state\\frozen-first-ff-block192-gpu-20261015.log -force-d3d12 -runTests -testPlatform EditMode -testFilter OriginalFirstFeedForwardProjectionMustMatchSavedNativeBitsOnGpu -testResults .\\artifacts\\numerical-acceptance-state\\frozen-first-ff-block192-gpu-20261015.xml",
+      "action": "terminate_exact_owned_process",
+      "reason": "working set above23GB and first fixed projection still awaiting output",
+      "gpu_validated": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false
+    },
+    "termination_confirmed_after_timeout": true,
+    "termination_confirmation": "Later live Win32_Process query returned no Unity processes; original timeout receipt remains terminal=false."
+  },
+  "next_action": "Confirm owned process termination; execute direct GPU block192 kernel tests before implementing and integrating a GPU kernel without expanded FMA intermediates.",
+  "direct_gpu_kernel_tests_authored": true,
+  "direct_gpu_kernel_test_red_observed": true,
+  "direct_gpu_kernel_implemented": true,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "remaining": [
+    "audio original six signals and both profiles",
+    "image FP32 all three profiles",
+    "real PCM/Texture through GPU preprocessing, encoder and backbone to normalized768 API",
+    "all roles/masks/boundaries/ownership/dispose/exception reuse/text regression",
+    "no product intermediate readback or CPU computation fallback"
+  ],
+  "direct_gpu_kernel_gates": "API8 green; both original full frozen FF projections green; see m4-direct-gpu-first-ff-projections-green-20261015.json"
+}

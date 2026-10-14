@@ -104,8 +104,8 @@ jobs:
             --encoder-audit-sha256 68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1 \
             --subsample-reference-sha256 664a8242d079f53bf98d2032f9398de6d2c8d6bcd2312d1baaa35bb498ce5fb8 \
             --weight-sha256 68309f01ea3e738fccb24a0db5db608841a3a8e59b0a4fa5d0fb521ed60bf43c \
-            --output ../artifacts/conv-context/conv-${CONV_PROBE_CONTEXT}.json \
-            2>&1 | tee ../artifacts/conv-context/onednn-${CONV_PROBE_CONTEXT}.log
+            --output "../artifacts/conv-context/conv-${CONV_PROBE_CONTEXT}.json" \
+            2>&1 | tee "../artifacts/conv-context/onednn-${CONV_PROBE_CONTEXT}.log"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

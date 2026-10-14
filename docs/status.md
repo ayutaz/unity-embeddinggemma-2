@@ -4,9 +4,9 @@
 
 ## 現在の判定
 
-**2026-10-15最新checkpoint: 実行計画3・4は継続中、未完了。直近の所有Unity processは終了済み。** 元の全35,840行を保つ6種類の固定入力で、最初のLayerNormのGPU平均値はbit一致、逆標準偏差の2値は不一致だった。平方根と逆数の収縮を避け、FP32 residualで2段階の丸めを補正するopt-inを追加。GPU局所2 Red→2 Green、全normal / mean / inverseが元nativeとbit一致、計算fallback / flush0。[固定局所結果](results/m4-frozen-first-norm-refined-gpu-20261015.json)。FP64は独立scalar oracleのテストだけで、runtime / ONNXに含めない。候補の証明済み統計域は1e-6〜1e6。既定export / 元goldenは変更しない。
+**2026-10-15最新checkpoint: 実行計画3・4は継続中、未完了。直近の所有Unity processは終了済み。** 元の全35,840行を保つ6種類の固定入力で、最初のLayerNormのGPU平均値はbit一致、逆標準偏差の2値は不一致だった。平方根と逆数の収縮を避け、FP32 residualで2段階の丸めを補正するopt-inを追加。GPU局所2 Red→2 Green、全normal / mean / inverseが元nativeとbit一致、計算fallback / flush0。[固定局所結果](results/m4-frozen-first-norm-refined-gpu-20261015.json)。FP64は独立scalar oracleのテストだけで、runtime / ONNXに含めない。候補の対象統計域は1e-6〜1e6で、範囲全体のGPU bit保証ではない。既定export / 元goldenは変更しない。
 
-元重みを再exportせず、保存ONNXの2つのinverseだけへ補正templateを挿入する小さいrewriteを6 Red→関連12 Greenで追加。既存initializer全byteの集約hashを前後で照合し、変換17.57秒で監査済み別graphを生成した。ただし元silenceのGPU encoder gateはinverseだけで472要素不合格、元Welford8の355より悪化。[実モデルの失敗](results/m4-inverse-only-real-gpu-failed-20261015.json)。既存static64投影補償との組合せは287要素不合格、最大許容差比9.27709、40,633層。数は減ったが最大誤差が増えているので全体改善・受け入れとは扱わない。[組合せの失敗](results/m4-refined-static64-real-gpu-failed-20261015.json)。両試行はGPUCompute・計算fallback / flush0、skip0。
+元重みを再exportせず、保存ONNXの2つのinverseだけへ補正templateを挿入する小さいrewriteを6 Red→関連12 Greenで追加。FP64入力 / Castの拒否不足2 Redも修正し、関連14 Green。既存initializer全byteの集約hashを前後で照合し、変換17.57秒で監査済み別graphを生成した。ただし元silenceのGPU encoder gateはinverseだけで472要素不合格、元Welford8の355より悪化。[実モデルの失敗](results/m4-inverse-only-real-gpu-failed-20261015.json)。既存static64投影補償との組合せは287要素不合格、最大許容差比9.27709、40,633層。数は減ったが最大誤差が増えているので全体改善・受け入れとは扱わない。[組合せの失敗](results/m4-refined-static64-real-gpu-failed-20261015.json)。両試行はGPUCompute・計算fallback / flush0、skip0。
 
 static64候補の12層を元producer `4edbe17` の固定native中間値へ照合し、通常最終値を変えないことを確認。layer_0〜8の9層は各固定許容差内、最初の超過はlayer_9の1要素、layer_10は39・layer_11は1,218要素。NUnit1 passは観測完了であり、12数値条件の全合格ではない。[全層の観測](results/m4-refined-static64-full-layer-observation-20261015.json)。次はlayer_9を元layer_8の入力でGPU単独照合し、前段差の伝播と直接のbackend差を分離する。画像FP32全profile・音声元全6信号・padded候補、実Texture / PCM→最終APIの全role・境界・寿命・例外後再利用・text回帰は未達のまま。以下は前回checkpointの履歴。
 

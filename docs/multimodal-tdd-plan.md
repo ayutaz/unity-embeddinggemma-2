@@ -4,6 +4,10 @@
 
 ## 2026-10-14の実行方針と再開順
 
+2026-10-15現在: Conv2のblock16リセット / 保存加算と、Norm1の8-lane scalar平均FMAを元参照の演算順に合わせ、実GPUでsubsampleの最初の6段階を全bit一致させた。全encoderは417要素不合格で未完了。[局所修正](results/m4-source-order-conv-and-scalar-mean-20261015.json) / [全体・負荷](results/m4-scalar-mean-full-gpu-and-load-analysis-20261015.json)。次のR2は元layer1.act・元投影係数の固定入力でinput_proj_linearを独立照合し、差を消す候補だけを元encoderへ戻す。その後、元音声6信号 / 両profile・画像FP32全3 profileを受け入れ、R3の実PCM / Texture→GPU前処理→encoder→backbone→正規化768 APIの全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰へ進む。中間readback / CPU計算fallbackなしと元許容差は維持する。
+
+負荷調査では検証用64,050層graphのCPU変換19.245秒、CPU schedule10.431秒を確認した。次の軽量化は、同じ参照値を保つことを小さいテストで確認しながら、候補graphの変換をActionsで事前生成し、model / Workerを準備時に一度だけ作って再利用する経路を検証する。既存AudioFeatureEncoderはconstructorでWorkerを作っており、毎EmbedでWorker生成する実装にはしない。CPU scheduleとGPU処理は重なるため、完了待ち0.661秒だけを推論性能と報告しない。cold import・拡張graphと通常製品graphの差・継続memory / Disposeは別の測定が必要。Python全体回帰は固定b4b817aで4環境各787 passだが、それ以降のrewrite / XML監査の全体回帰とは区別する。以下は前回checkpoint。
+
 2026-10-15最新: 保存nativeの既存AVX512再生は元最終値を完全再現し、AVX2制限は不一致。新しいConv2診断Actionsはnative条件もAVX2 runtime / VM feature maskだったため元bitを再現せず、元期待値を維持。[CPU参照の未達](results/m4-saved-conv-cpu-context-unavailable-20261015.json)。CPU診断 / workflow / 失敗監査 / download前のISA確認は関連40 Green。次のR2はpinned oneDNN3.12のAVX512生成コードと互換kernel証拠を調べ、小さいGPU成分→元encoder全条件へ戻す。前回sourceのPython全体回帰は4環境各767 pass、新しい診断の全体回帰とは区別する。R2 / R3と工程3・4の全範囲は未完了のまま。以下は直前checkpoint。
 
 2026-10-15最新: 2番目のConvだけをunfold + FP32補償積和へ置換した実GPU候補は219要素不合格・最大許容差比6.78027で、201要素版より悪化し不採用。[失敗と局所TDD](results/m4-compensated-conv-full-gpu-failed-20261015.json)。CPU実行mode / oneDNNと42種類のFMA順序でも元conv2のbit再現は未達。R2の次はimmutable参照のhost / convolution kernel文脈を調べ、小さいGPU成分の忠実性→元encoder全条件へ進む。参照値と許容差は変更しない。前回sourceのPython回帰は4環境各744 pass、新しい畳み込み関連は68 Greenで別証拠。R2 / R3全範囲と工程3・4未完了を維持する。以下は直前checkpoint。

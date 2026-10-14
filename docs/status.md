@@ -1,8 +1,20 @@
 # 現在の状態と残タスク
 
-更新日: 2026-10-15。最新の実GPU全encoder候補sourceは `d8714aa4f2ec1fb92a4578f07e4e46408132dd18`、畳み込み後の正規化GPU局所Greenは `0d7394c2f70fe7bbce99ecf33f87e08b7fd4d80d`、確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
+更新日: 2026-10-15。最新の完了済み実GPU全encoder候補sourceは `de3a3b02fc5bd1e1ec0739ffa9b9dfdd446f272a`、2番目のLayerNorm GPU局所Greenは `b4b817a04e13d35d2dd35ea54412e69f33a2a3d4`、確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
 
 ## 現在の判定
+
+**2026-10-15最新の全体結果と負荷:** `de3a3b0` / graph `c050c2ef…` のGPU全encoderは無音417要素不合格・最大許容差比6.736437438で、元golden / 許容差は変更していない。GPUCompute・計算fallback / flush0、64,050層、NUnit0 pass / 1 fail / skip0 / exit2。同じモデルの7段階観測は通常最終値を変えず、layer0.conv / norm / actとlayer1.conv / norm / actの6段階を元値と全bit一致させた。次の微差はinput_proj_linearの249,203要素、元許容差超過0・最大許容差比0.134108。局所修正の成功と全encoder不合格を別に保持する。[固定全体・観測・負荷receipt](results/m4-scalar-mean-full-gpu-and-load-analysis-20261015.json)。所有Unityは両方terminal、現在停止済み。
+
+今回の検証用拡張graphは、model load約2.094秒、CPU側runtime graph変換19.245秒、worker作成0.102秒、CPU schedule10.431秒、GPU完了待ち＋最終output download0.661秒だった。GPU実行中にもCPUの準備・投入処理は重い。scheduleとGPU処理は重なるため0.661秒を総GPU推論時間と扱わず、通常製品graphの性能保証にも流用しない。先行する0件実行ではcold ONNX import16.805秒も確認。Monoのpeak working setは0で欠測、0 bytesの使用と解釈しない。最初のテストfilter指定は0件 / exit0で未実行として保持し、終了確認後に動作済みregexへ修正した。再発を防ぐXML監査は5 Red＋runner連結3 Red→関連11 Green、終了0でも0件・skip・件数不整合・数値失敗を成功にしない。
+
+`b4b817a`の[Python全体回帰38639201752](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38639201752)は4環境各787 pass / fail0 / skip0でterminal success。[固定receipt](results/python-full-source-order-conv-and-scalar-green-20261015.json)。その後のscalar graph rewrite / 実行XML監査は含まれず、最新sourceの全体回帰は別実行。次は固定済みの元layer1.act入力と元投影係数を使い、input_proj_linearを小さい独立参照へ分離する。工程3・4、音声全6信号 / 両profile、画像FP32全3 profile、実PCM / Textureから最終APIの全受け入れは未達。以下は前回checkpoint。
+
+**2026-10-15最新の元演算順修正:** 固定oneDNNの生成コードに沿ってConv2を16入力channelごとにゼロから積和し、blockを保存するときに前の結果を加える順序へ修正した。連続したFMAの候補探索とは異なる。独立offline oracleで元286,720値を全bit再現し、API7 Red→関連30 Green。`8df85b3`の実GPUは修正前224,650 bit差→修正後全bit一致、元許容差超過はいずれも0、GPUCompute・計算fallback / flush0。`7688991`の全encoderは無音417要素不合格・最大許容差比6.73644であり、旧201要素の候補を上回る数値合格にはなっていない。`b065c1f`の通常最終値を変えない7段階観測では、layer0.conv / norm / actとlayer1.convが元値と全bit一致し、次の微差はlayer1.normの850要素（元許容差超過0）。
+
+元[PyTorch moments_utils.h](https://github.com/pytorch/pytorch/blob/5c4886908584029761b579af026dcfb627c84070/aten/src/ATen/native/cpu/moments_utils.h)のscalar AddMomentsの平均更新に沿い、8-laneの最後の平均集約だけをFP32 FMAにするopt-inを追加した。API4 Red→関連25 Green、監査rewrite5 Redとaxis拒否不足1 Red→関連18 Green。16-lane変更は改善せず不採用。`b4b817a`の固定6種類 / 元8,960行を保持したGPU局所テストは、修正前40 bit差→修正後全bit一致。計算fallback / flush0。[固定証拠](results/m4-source-order-conv-and-scalar-mean-20261015.json)。全encoderへ組み込んだgraph `c050c2ef…` は別の数値gateで判定する。局所一致を工程3・4の完了へ流用しない。
+
+`5e773cc`の[Python全体回帰38635383175](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38635383175)は4環境各776 pass / fail0 / skip0でterminal success。[固定receipt](results/python-full-native-conv-context-green-20261015.json)。その後のblock16とscalar FMA修正は含まれず、最新sourceの全体回帰・モデルRequired CI・実GPU全chainは別判定。画像FP32全3 profile、音声元全6信号 / 両profile、実Texture / PCM→最終768 APIの全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰は未達。以下は前回checkpoint。
 
 **2026-10-15最新の参照環境調査:** 元参照run `38398829258` はUbuntu24.04.5 / image20261004.327.1、OMP / MKL各4を確認。ただし元runはCPU ISAを記録していない。既存の保存native再生 `5a2496d` はAMD EPYC9V74・AVX512でthread1 / 2 / 4の最終値が元参照と完全一致し、AVX2制限版は不一致だった。この既存証拠はCPU診断で、GPU全encoder合格ではない。
 

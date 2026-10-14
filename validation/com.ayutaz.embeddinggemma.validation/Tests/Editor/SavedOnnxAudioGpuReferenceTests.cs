@@ -46,13 +46,17 @@ namespace EmbeddingGemma.Validation.Tests
         [TestCase("padded_noise")]
         public void RefinedAttentionCandidateGpuMatchesOriginalGolden(string signal) => Execute(signal,"GpuAudioRefinedCandidate",true,16);
 
-        void Execute(string signal,string candidateFolder,bool compensateStatic=false,int attentionChunk=0)
+        [TestCase("silence",32)]
+        [TestCase("silence",16)]
+        public void RefinedFineProjectionGpuMatchesOriginalGolden(string signal,int projectionChunk) => Execute(signal,"GpuAudioRefinedCandidate",true,16,projectionChunk);
+
+        void Execute(string signal,string candidateFolder,bool compensateStatic=false,int attentionChunk=0,int projectionChunk=64)
         {
             Assert.That(SystemInfo.supportsComputeShaders, Is.True, "Actual GPU required; no CPU substitute or skip.");
             var root = Path.GetFullPath(Path.Combine(Application.dataPath, "../../k/artifacts/audio-real-chain/audio-runtime-reference"));
             var candidateRoot = Path.Combine(Application.dataPath, candidateFolder);
             var source = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var variant=candidateFolder=="GpuAudioCandidate"?"":attentionChunk>0?"-refined-attention16-static64":compensateStatic?"-refined-static64":"-refined-inverse";
+            var variant=candidateFolder=="GpuAudioCandidate"?"":attentionChunk>0?"-refined-attention16-static"+projectionChunk:compensateStatic?"-refined-static64":"-refined-inverse";
             var output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/saved-onnx-audio-gpu-" + source + variant + "-" + signal + ".json"));
             Assert.That(File.Exists(output), Is.False, "Preserve each invocation's evidence.");
             var report = new JObject { ["success"] = false, ["scope"] = "one_saved_onnx_audio_encoder_gpu_vs_immutable_original",
@@ -124,8 +128,9 @@ namespace EmbeddingGemma.Validation.Tests
                 if(compensateStatic)
                 {
                     report["phase"]="transform_static_projections";Save();
-                    model=CompensatedModel.Create(model,64);
-                    report["runtime_graph_transform"]=attentionChunk>0?"dynamic16_then_static64":"CompensatedModel.Create/static64";
+                    model=CompensatedModel.Create(model,projectionChunk);
+                    report["runtime_graph_transform"]=attentionChunk>0?"dynamic16_then_static"+projectionChunk:"CompensatedModel.Create/static64";
+                    report["projection_chunk"]=projectionChunk;
                 }
                 var maskValues = Ints(Path.Combine(root, maskName)); var validFrames = maskValues.Sum();
                 report["layer_count"] = model.layers.Count; report["phase"] = "worker"; Save();

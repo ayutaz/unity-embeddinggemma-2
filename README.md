@@ -2,6 +2,8 @@
 
 Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.unity.ai.inference@2.6/manual/index.html) だけを使って、Google の [EmbeddingGemma 2](https://huggingface.co/google/embeddinggemma-2) を動かすプロジェクトです。テキスト・画像・音声を、同じ 768 次元の空間の埋め込みに変換できるようにします。
 
+> **2026-10-14: 画像・音声の数値受け入れを継続中です。** main `c868df5` には共通backbone、公式prompt、画像GPU前処理、PCM入力・音声GPU前処理が反映されています。画像・音声の最終APIはDraft PRで実装・合成テスト済みですが、実encoderの固定数値gateと実入力→768次元の全条件は未達です。最新の補償候補も画像・音声の元条件で不合格でした。[現在の状態](docs/status.md) / [工程1〜3の受け入れledger](docs/steps-1-3-acceptance.md)を参照してください。以下の古い日付の実測は各sourceの履歴で、最新候補の合格を意味しません。
+
 > **状態: Windows EditorのM1受け入れ検証完了**
 > 2026-10-09: PR #1〜#4はmain `8146107`へ統合済み。[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)で`.sentis`保存・再読み込み、Float16重み量子化、性能・メモリ測定まで実装・検証しました。
 > tokenizerの全15件一致、fp32 / Float16重みのCPU / GPUCompute各15件、公開C# API、C#単体契約30件が合格。M1統合mainのPython CIは4環境各64件が合格しました。
@@ -31,8 +33,8 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 | --- | --- | --- |
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor受け入れ検証完了（保存・量子化・測定を含む） |
 | M2 | テキストUPM・サンプル・検証基盤を安定化する | Windows実測あり。標準環境再現・新candidate・性能・他環境は未完了 |
-| M3 | GPU画像前処理・encoder・共通本体・画像検索 | Python encoder合格、Sentis Float16 6条件合格 / FP32 6条件不合格。前処理・最終API・sampleは未完成 |
-| M4 | GPU音声前処理・encoder・共通本体・音声検索 | PythonとWindows Sentis CPU / 実GPUの前処理6ケース合格。音声encoder数値不合格、最終API・sampleは未完了 |
+| M3 | GPU画像前処理・encoder・共通本体・画像検索 | GPU前処理はmainへ反映、APIはDraft PR。既存Sentis Float16 6条件合格 / FP32不合格。実全chain・sampleは未完了 |
+| M4 | GPU音声前処理・encoder・共通本体・音声検索 | PCM入力・GPU前処理はmainへ反映、APIはDraft PR。音声encoder数値不合格、実全chain・sampleは未完了 |
 | 最終公開 | 全対応と必須環境の検証後に正式リリース | 未着手 |
 
 ## 動作環境

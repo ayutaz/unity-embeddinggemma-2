@@ -14,7 +14,25 @@ LayerNormの中心化分散＋補償和候補は10 red→既存回帰を含む25
 
 画像候補の約31 MBゼロinitializerは1 red→スカラーbroadcast修正→既存26 green。保存実モデルの3 profile×CPU/GPU、各2画像は全12 numeric caseで固定elementwise不合格、GPU fallback/flush0、NUnit0 pass / 6 fail / skip0 / exit2。監査済みbackboneを再exportせずrole別参照へ使うAPI/CLIは関連44 green、source保護・path/CLI監査16 green。工程2・3の未達は維持する。
 
-## 最新checkpoint: 全音声encoder検証後
+## 最新checkpoint: 工程1〜3の受け入れ作業
+
+2026-10-14確認。mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`、[main CI 38428339728](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38428339728)は8 job成功。以下の追加実装・検証は[Draft PR #81](https://github.com/ayutaz/unity-embeddinggemma-2/pull/81)の作業branchであり、mainへの統合・正式リリースは行っていない。Audio/Image APIもDraft PR #62 / #64 / #65の実装で、mainの機能と区別する。
+
+**工程1は整理済み、工程2（元encoder数値差）・工程3（実入力から最終API）は未完了。** [作業基準・依存・受け入れledger](steps-1-3-acceptance.md)を最新の詳細とし、以下の過去checkpointは各sourceの実測として保持する。
+
+| 対象 | 今回の確定結果 | 次の作業 |
+| --- | --- | --- |
+| M1 / M2 | Windowsテキストの既存受け入れを維持。最終candidate導入・他OSは未完了 | マルチモーダル候補の採用後にtext回帰と固定Git consumerを確認 |
+| 画像FP32 | 補償投影候補の3 profile×CPU/GPU、各2画像の12 numeric caseは全件不合格。GPU fallback/flush0 | 元期待値と許容差を維持し、参照文脈と最初の数値差を局所化 |
+| 音声FP32 | norm chunk1/reciprocal/scalar-zero候補の元6信号×CPU/GPU計12条件は全件不合格。最大許容差比CPU10.75637790 / GPU15.96514096 | 現候補のsilence norm出力はCPU layer_5、GPU layer_6から不合格。後段演算と伝播を切り分ける |
+| 参照再現性 | 同じ固定graph・期待値に対し、実AVX512 runnerで音声saved251要素、画像saved3要素が不一致。原因未確定 | 1/2/4 threadの同graph replayを診断する。旧goldenは変更しない |
+| 最終API / role | role別参照とbackbone再利用のTDDは合格。実Document参照がencoder contextで止まりQuery/Raw未実行 | 実参照の再現性解消後、Texture/PCM→768次元、role/境界/所有権/GPU中間readback禁止/text回帰を受け入れる |
+
+根拠は[画像全profile失敗](results/m3-compensated-vision-all-profiles-failed-20261014.json)、[音声全6信号失敗](results/m4-compensated-norm1-scalar-zero-real-audio-failed-20261014.json)、[silence層観測](results/m4-norm1-scalar-zero-layer-observation-20261014.json)、[実Python文脈診断](results/multimodal-real-saved-context-drift-failed-20261014.json)。観測NUnit2 passは最終bitsを保持した診断の合格で、encoder数値合格ではない。
+
+実SentisはUnity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER / D3D12。旧21f1結果との同環境A/B比較はしない。局所TDD・cosineのみの合格・skipを全encoder/全chainの成功と数えない。重い処理はActions優先、Pythonはtools/uv、main直push・無断merge禁止を維持する。
+
+## 過去checkpoint: 全音声encoder検証後
 
 2026-10-13確認。mainは `a88ed9cffd942999bb271e597c86563298425f2c`。全体TDD計画PR #58まで統合済み。今回の更新は文書のみで、モデル生成・Unity実行は追加しない。
 

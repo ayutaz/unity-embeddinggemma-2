@@ -52,6 +52,37 @@ def test_rms_rewrite_preserves_coefficients_and_matches_native_order(tmp_path):
     np.testing.assert_allclose(actual,expected.numpy(),rtol=1e-4,atol=1e-5)
 
 
+def test_explicit_outer_template_preserves_the_reference_layout(tmp_path):
+    source=model()
+    for info in (*source.graph.input,*source.graph.output,*source.graph.value_info):
+        info.type.tensor_type.shape.dim[1].dim_value=280
+    source.graph.output.append(helper.make_tensor_value_info('mean',TensorProto.FLOAT,[1,280,1]))
+    mean,inverse=templates(tmp_path)
+    class Outer(torch.nn.Module):
+        def forward(self,x):return export.fp32_outer_cascade_mean1024(x)
+    path=tmp_path/'outer.onnx'
+    values=torch.randn(1,1024,280,generator=torch.Generator().manual_seed(74)).transpose(1,2)
+    export.export_audio_native_onnx(Outer(),values.square(),path)
+    outer=onnx.load(path)
+    report=required()(source,{1024:mean},inverse,expected_count=1,
+        mean_overrides={'norm/ReduceMean':outer})
+    onnx.checker.check_model(source)
+    assert report['explicit_mean_override_names']==['norm/ReduceMean']
+    actual=ReferenceEvaluator(source).run(['mean'],{'input':values.numpy()})[0]
+    np.testing.assert_array_equal(actual,values.square().mean(-1,keepdim=True).numpy())
+
+
+@pytest.mark.parametrize('problem',['missing','excluded','shape'])
+def test_explicit_layout_override_is_audited_before_mutation(tmp_path,problem):
+    source=model();mean,inverse=templates(tmp_path)
+    name='missing' if problem=='missing' else 'norm/ReduceMean'
+    if problem=='shape':mean.graph.input[0].type.tensor_type.shape.dim[1].dim_value=280
+    before=source.SerializeToString()
+    with pytest.raises(ValueError):required()(source,{1024:mean},inverse,expected_count=1,
+        mean_overrides={name:mean},excluded_names=[name] if problem=='excluded' else [])
+    assert source.SerializeToString()==before
+
+
 @pytest.mark.parametrize('problem',['width','axis','square','inverse','count','double_template'])
 def test_bad_rms_context_is_rejected_before_mutation(tmp_path,problem):
     run=required();source=model(512 if problem=='width' else 1024);mean,inverse=templates(tmp_path)

@@ -22,6 +22,10 @@ namespace EmbeddingGemma.Validation.Tests
         [TestCase("mean_inverse")]
         public void FrozenRmsRowsMatchIndependentNativeBits(string name) => Execute(name,"FrozenRmsProbe");
 
+        [TestCase("normal")]
+        [TestCase("mean_inverse")]
+        public void FrozenOuterRmsRowsMatchIndependentNativeBits(string name) => Execute(name,"FrozenOuterRmsProbe");
+
         void Execute(string name,string folder)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
@@ -29,7 +33,7 @@ namespace EmbeddingGemma.Validation.Tests
             var root=Path.Combine(Application.dataPath,folder);
             var specification=JObject.Parse(File.ReadAllText(Path.Combine(root,"frozen-probe.json")));
             var probeSha=specification.Value<string>("graph_variant");
-            var stem=folder=="FrozenRmsProbe"?"frozen-rms-gpu-":"frozen-layernorm-gpu-";
+            var stem=folder=="FrozenOuterRmsProbe"?"frozen-outer-rms-gpu-":folder=="FrozenRmsProbe"?"frozen-rms-gpu-":"frozen-layernorm-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+"-"+probeSha+"-"+name+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject { ["success"]=false,["scope"]="first_native_conv_unique_rows_gpu_norm_component_only",
@@ -42,7 +46,13 @@ namespace EmbeddingGemma.Validation.Tests
                 var locked=JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath,"../Packages/packages-lock.json")));
                 foreach(var package in new[]{"com.ayutaz.embeddinggemma","com.ayutaz.embeddinggemma.validation"})
                     Assert.That(locked["dependencies"][package].Value<string>("hash"),Is.EqualTo(source));
-                Assert.That(specification.Value<bool>("native_normal_matches_original_bits"),Is.True);
+                if(folder=="FrozenOuterRmsProbe")
+                {
+                    Assert.That(specification.Value<bool>("original_native_whole_lconv_bits_match"),Is.True);
+                    Assert.That(specification["reference_input_strides"].ToObject<int[]>(),Is.EqualTo(new[]{286720,1,280}));
+                    report["reference_context"]="derived conv_norm input; full native lconv replay matches saved original bits";
+                }
+                else Assert.That(specification.Value<bool>("native_normal_matches_original_bits"),Is.True);
                 Assert.That(specification.Value<bool>("all_original_rows_preserved"),Is.True);
                 foreach(var file in (JObject)specification["files"])
                 {

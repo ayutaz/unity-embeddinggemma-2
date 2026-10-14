@@ -1,10 +1,20 @@
 # 現在の状態と残タスク
 
-更新日: 2026-10-15。最新の実GPU単独層照合sourceは `56a697d9732f0225ef25c1e2a25b4f6d26b44c58`、全層観測は `dd8cfd4fd8656df9b7b3b6c5505b01bb952f336f`、最初の正規化GPU局所Greenは `ac60979fc9b601edaf87cee6c5ddd24468c350ea`、確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
+更新日: 2026-10-15。最新の実GPU全encoder候補sourceは `d8714aa4f2ec1fb92a4578f07e4e46408132dd18`、畳み込み後の正規化GPU局所Greenは `0d7394c2f70fe7bbce99ecf33f87e08b7fd4d80d`、確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
 
 ## 現在の判定
 
-**2026-10-15最新checkpoint: 実行計画3・4は継続中、未完了。直近の所有Unity processは終了済み。** 元の全35,840行を保つ6種類の固定入力で、最初のLayerNormのGPU平均値はbit一致、逆標準偏差の2値は不一致だった。平方根と逆数の収縮を避け、FP32 residualで2段階の丸めを補正するopt-inを追加。GPU局所2 Red→2 Green、全normal / mean / inverseが元nativeとbit一致、計算fallback / flush0。[固定局所結果](results/m4-frozen-first-norm-refined-gpu-20261015.json)。FP64は独立scalar oracleのテストだけで、runtime / ONNXに含めない。候補の対象統計域は1e-6〜1e6で、範囲全体のGPU bit保証ではない。既定export / 元goldenは変更しない。
+**2026-10-15最新checkpoint: 実行計画3・4は継続中、未完了。直近の所有Unity processは終了済み。** 最新候補 `d8714aa` の無音encoderはGPUCompute・計算fallback / flush0で201要素不合格、最大許容差比3.73996。以前のlayout候補の213要素・6.90199から改善したが、元gateは不合格。Sentis層数78,457→60,546、実行111.94→91.71秒は各1回の比較で、benchmarkではない。[最新全encoder不合格](results/m4-compact-outer-rms-full-gpu-failed-20261015.json)。元golden、入力・mask・係数byte、`atol=1e-5` / `rtol=1e-4`は変更しない。
+
+dynamic16 attention + static64は248要素不合格。投影chunk32は364、chunk16は229で、最大誤差とgraph増大も残るため採用しない。[attention / 投影の失敗](results/m4-refined-attention-projection-gpu-failed-20261015.json)。最初のfeed-forward RMSはGPU局所2 Red→2 Green、全bit一致。[局所RMS](results/m4-frozen-rms-cascade-gpu-20261015.json)。これを109箇所へ一律に適用した全encoderは327要素不合格。畳み込み後の12 normが非連続layoutであると確認し、除外した97箇所版も213要素不合格だった。[両候補の失敗](results/m4-full-rms-candidates-gpu-failed-20261015.json)。
+
+畳み込み後のCPU入力はshape `[1,280,1024]` / stride `[286720,1,280]`。固定8-lane CPUのouter reductionは最初の256行と残り24行で集計順が異なる。元のlconv全体を保存nativeとbit一致させた独立replayから、280行のnorm入力・期待値を固定し、GPU局所2 Red→2 Green、normal / mean / inverse全bit一致、計算fallback / flush0を確認した。[outer RMSの局所証拠](results/m4-frozen-outer-rms-compact-gpu-20261015.json)。この2 Redは元許容差より強いbit目標の失敗で、元許容差内の値を全encoder不合格と誤分類しない。
+
+独立したchunk / accumulator / laneをまとめ、依存する加算順を維持して1024 meanのONNX 842→121 node、1536 meanは1,234→124 nodeへ縮小。compact / outer APIは4 Red、prefix shapeの焼き込みによる1回の回帰失敗を修正し、明示layout overrideの4 Redを含む関連45 Green。12箇所のouter meanと97箇所のinner meanを適用したgraphは31,727 node。legacy Padが残すsymbolic中間shapeは最初に拒否され、元入力固定profile・native replay・12個の同じ長さのcausal convを監査して、そのprofileだけ `[1,280,1024]` に明示束縛した。dynamic profileやpadded候補の成功は主張しない。
+
+次はcompact候補を元12層の保存native値へ観測し、最初の許容差超過へ切り分ける。画像FP32全3 profile、音声元全6信号・両profile、実Texture / PCM→GPU前処理→encoder→backbone→正規化768次元APIのQuery / Document / Raw、mask / 境界、所有権 / Dispose、例外後再利用、text回帰、中間readback / CPU計算fallbackなしは未達。通常CIのモデル生成を含むrunはcancelし、Required CIは不合格として記録する。局所合格を全encoder / 全chain合格へ流用しない。以下は前回checkpointの履歴。
+
+**2026-10-15前回checkpoint（inverse修正）:** 元の全35,840行を保つ6種類の固定入力で、最初のLayerNormのGPU平均値はbit一致、逆標準偏差の2値は不一致だった。平方根と逆数の収縮を避け、FP32 residualで2段階の丸めを補正するopt-inを追加。GPU局所2 Red→2 Green、全normal / mean / inverseが元nativeとbit一致、計算fallback / flush0。[固定局所結果](results/m4-frozen-first-norm-refined-gpu-20261015.json)。FP64は独立scalar oracleのテストだけで、runtime / ONNXに含めない。候補の対象統計域は1e-6〜1e6で、範囲全体のGPU bit保証ではない。既定export / 元goldenは変更しない。
 
 元重みを再exportせず、保存ONNXの2つのinverseだけへ補正templateを挿入する小さいrewriteを6 Red→関連12 Greenで追加。FP64入力 / Castの拒否不足2 Redも修正し、関連14 Green。既存initializer全byteの集約hashを前後で照合し、変換17.57秒で監査済み別graphを生成した。ただし元silenceのGPU encoder gateはinverseだけで472要素不合格、元Welford8の355より悪化。[実モデルの失敗](results/m4-inverse-only-real-gpu-failed-20261015.json)。既存static64投影補償との組合せは287要素不合格、最大許容差比9.27709、40,633層。数は減ったが最大誤差が増えているので全体改善・受け入れとは扱わない。[組合せの失敗](results/m4-refined-static64-real-gpu-failed-20261015.json)。両試行はGPUCompute・計算fallback / flush0、skip0。
 

@@ -2,6 +2,8 @@
 
 > 文書整合確認: 2026-10-15。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。ユーザー指定の実行計画3・4は継続中、未完了。直近の所有Unity processは終了済み。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
 
+2026-10-15最新追加: `0d7394c` は元native lconv全体をbit再現した独立replayで、非連続280行のouter RMSをGPU局所2 Red→2 Green、normal / mean / inverse全bit一致、計算fallback / flush0。[局所証拠](results/m4-frozen-outer-rms-compact-gpu-20261015.json)。compact mean / outer mean / 明示layout overrideは関連45 Green。最新全encoder `d8714aa` は201要素・最大許容差比3.73996で不合格、NUnit0 pass / 1 fail / skip0 / exit2、GPUCompute・計算fallback / flush0。[固定全encoder失敗](results/m4-compact-outer-rms-full-gpu-failed-20261015.json)。旧213要素版より数値とgraph負荷は改善したが、元gateを満たさない。次は新候補の元12層観測から最初の超過を切り分ける。画像FP32全3 profile・音声元全6信号 / 両profileと、実入力→最終APIの全条件を維持する。以下は前回checkpoint。
+
 2026-10-15単独層追加: 約100.88 MBのlayer_9は、観測したlayer_8入力の出力をbit再現し、元nativeのlayer_8入力なら元layer_9との不一致0。GPUCompute・計算fallback / flush0、NUnit1 pass / skip0 / exit0。[固定の元入力照合](results/m4-layer9-original-input-gpu-isolation-20261015.json)。初回のbatch未確定による推論前拒否も保持。最初の層超過について前段入力の影響を確認できたが、全encoderや全APIの合格ではない。次はdynamic attention積和を切り分ける。
 
 2026-10-15最新追加: 最初のnormのinverse補正は固定6行の実GPU2 Red→2 Green・全bit一致。[局所結果](results/m4-frozen-first-norm-refined-gpu-20261015.json)。既存initializer byteを保つinverse-only rewriteは小さい6 Red→関連12 Green。ただし元silence全encoderはinverseのみ472要素、static64組合せ287要素不合格。[inverseのみ](results/m4-inverse-only-real-gpu-failed-20261015.json) / [static64組合せ](results/m4-refined-static64-real-gpu-failed-20261015.json)。元nativeの全12層観測は通常最終値とbit一致、0〜8層は許容差内、9層1・10層39・11層1,218要素不合格。初回はflat cacheの参照path誤りで比較未実行、修正後NUnit1 passは観測完了の意味に限定する。[固定全層観測](results/m4-refined-static64-full-layer-observation-20261015.json)。次は元layer_8入力でlayer_9を単独GPU照合する。工程3・4の全範囲と元許容差を維持する。

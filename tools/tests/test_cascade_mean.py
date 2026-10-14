@@ -41,3 +41,13 @@ def test_cascade_export_is_standard_fp32_and_keeps_native_mean(tmp_path):
     assert all(n.domain in ('','ai.onnx') for n in model.graph.node)
     actual=ReferenceEvaluator(model).run(None,{'input':values.numpy()})[0]
     __import__('numpy').testing.assert_array_equal(actual,values.mean(-1,keepdim=True).numpy())
+
+
+@pytest.mark.parametrize('positive',[False,True])
+def test_projection_norm1536_keeps_the_same_independent_native_order(positive):
+    function=getattr(export,'fp32_cascade_mean1536',None)
+    assert callable(function),'1536-wide projection mean is missing'
+    values=torch.randn(2,5,1536,generator=torch.Generator().manual_seed(52))
+    if positive:values=values.square()
+    before=values.clone();actual=function(values)
+    assert torch.equal(actual,values.mean(-1,keepdim=True)) and torch.equal(values,before)

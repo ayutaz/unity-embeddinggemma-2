@@ -453,13 +453,22 @@ def fp32_cascade_mean1024(values):
     four-accumulator, 16-step cascade and final lane order in pinned SumKernel:
     https://github.com/pytorch/pytorch/blob/5c4886908584029761b579af026dcfb627c84070/aten/src/ATen/native/cpu/SumKernel.cpp
     """
+    return _fp32_cascade_mean(values, 1024)
+
+
+def fp32_cascade_mean1536(values):
+    """Same pinned eight-lane order for the audio projection's 1536-wide rows."""
+    return _fp32_cascade_mean(values, 1536)
+
+
+def _fp32_cascade_mean(values, width):
     if not torch.compiler.is_compiling() and not torch.jit.is_tracing():
-        if (values.dtype != torch.float32 or values.ndim < 2 or values.shape[-1] != 1024
+        if (values.dtype != torch.float32 or values.ndim < 2 or values.shape[-1] != width
                 or not values.numel() or not values.is_contiguous() or not torch.isfinite(values).all()):
-            raise ValueError("cascade mean requires finite contiguous FP32 1024-wide rows")
+            raise ValueError("cascade mean requires finite contiguous fixed-width FP32 rows")
     zero = torch.zeros_like(values[..., :8])
     accumulated = [zero, zero, zero, zero]
-    for start in (0, 16):
+    for start in range(0, width // 32, 16):
         partial = [zero, zero, zero, zero]
         for index in range(start, start + 16):
             for lane in range(4):
@@ -472,7 +481,7 @@ def fp32_cascade_mean1024(values):
     total = torch.zeros_like(values[..., :1])
     for lane in range(8):
         total = total + combined[..., lane:lane + 1]
-    return total / 1024
+    return total / width
 
 
 def fp32_refined_rstd(values):

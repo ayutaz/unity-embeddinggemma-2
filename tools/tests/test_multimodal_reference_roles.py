@@ -182,4 +182,7 @@ def test_official_feature_drift_records_failed_context_without_replacing_referen
     assert failure["mismatched_elements"] > 0
     assert .24 < failure["maximum_absolute_error"] < .26
     assert failure["expected_unchanged"] and failure["runtime"]["torch_threads"] > 0
+    saved = failure.get("saved_encoder_vs_expected")
+    assert saved is not None, "Saved encoder context was not compared after official feature drift"
+    assert saved["mismatched_elements"] == 0 and saved["same_shape"] and saved["actual_finite"]
     assert not (output / (modality + "-embedding-validation.json")).exists()

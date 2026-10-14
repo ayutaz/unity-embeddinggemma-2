@@ -54,10 +54,12 @@ namespace EmbeddingGemma.Validation.Tests
                     var expected = ReadPart(context, replay, name, out var targetShape);
                     var matrixIndex = map[name];
                     var producer = source.layers.Single(layer => layer.outputs.Contains(matrixIndex));
+                    var bounds = new[] { float.NegativeInfinity, float.PositiveInfinity, float.NegativeInfinity, float.PositiveInfinity };
                     for (var count = 0; producer.GetType().Name == "Clip" && count < 5; count++)
                     {
                         var minimum = Scalar(source, producer.inputs[1]); var maximum = Scalar(source, producer.inputs[2]);
                         Assert.That(expected.All(value => value >= minimum && value <= maximum), Is.True);
+                        bounds[2] = Math.Max(bounds[2], minimum); bounds[3] = Math.Min(bounds[3], maximum);
                         matrixIndex = producer.inputs[0]; producer = source.layers.Single(layer => layer.outputs.Contains(matrixIndex));
                     }
                     Assert.That(producer.GetType().Name == "MatMul" || producer.GetType().Name == "MatMul2D", Is.True);
@@ -65,9 +67,13 @@ namespace EmbeddingGemma.Validation.Tests
                     {
                         var field = producer.GetType().GetField(flag); if (field != null) Assert.That((bool)field.GetValue(producer), Is.False);
                     }
+                    var edge = source.layers.Single(layer => layer.outputs.Contains(producer.inputs[0]));
+                    Assert.That(edge.GetType().Name, Is.EqualTo("Clip"), "Pinned projection input must preserve the official Clip edge.");
+                    bounds[0] = Scalar(source, edge.inputs[1]); bounds[1] = Scalar(source, edge.inputs[2]);
+                    var clippedInputs = nativeInput.Count(value => value < bounds[0] || value > bounds[1]);
                     var weight = source.constants.Single(value => value.index == producer.inputs[1]);
                     Assert.That(weight.shape, Is.EqualTo(new TensorShape(shape[2], targetShape[2])));
-                    var values = ConstantFloats(weight); var candidate = CompensatedProjection.BuildForShape(values, targetShape[2], 64, shape);
+                    var values = ConstantFloats(weight); var candidate = CompensatedProjection.BuildClipped(values, targetShape[2], 64, shape, bounds);
                     using var input = new Tensor<float>(new TensorShape(shape), nativeInput);
                     if (backend == BackendType.GPUCompute) { Assert.That(SystemInfo.supportsComputeShaders, Is.True); ComputeTensorData.Pin(input); }
                     using var worker = new Worker(candidate, backend); worker.Schedule(input);
@@ -82,12 +88,17 @@ namespace EmbeddingGemma.Validation.Tests
                         var norm = AudioNormIsolation.Create(source, post, new TensorShape(targetShape));
                         using var normWorker = new Worker(norm, backend); normWorker.Schedule(tensor);
                         var normalized = (Tensor<float>)normWorker.PeekOutput(); Assert.That(normalized.backendType, Is.EqualTo(backend));
+                        var normFallback = (HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallback", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(normWorker);
+                        var normFallbackCount = norm.layers.Count(layer => normFallback.Contains(layer.outputs[0]));
+                        if (backend == BackendType.GPUCompute) Assert.That(normFallbackCount, Is.EqualTo(0));
                         normMetrics = Metrics(AudioCoefficientLayerMap.RestoreHalfScale(normalized.DownloadToArray()), ReadPart(context, replay, "post_layer_norm", out _));
                         normMetrics["stage"] = "linear2_post_norm";
+                        normMetrics["actual_backend"] = normalized.backendType.ToString(); normMetrics["calculation_fallback_count"] = normFallbackCount;
                     }
                     var metrics = Metrics(tensor.DownloadToArray(), expected);
                     metrics["stage"] = name; metrics["weight_index"] = weight.index; metrics["weight_sha256"] = ArrayHash(weight);
                     metrics["actual_backend"] = tensor.backendType.ToString(); metrics["calculation_fallback_count"] = fallbackCount;
+                    metrics["official_clip_bounds"] = new JArray(bounds); metrics["native_input_clipped_elements"] = clippedInputs;
                     stages.Add(metrics); if (normMetrics != null) stages.Add(normMetrics); Save();
                 }
                 Assert.That(source.layers.Count, Is.EqualTo(sourceCount));

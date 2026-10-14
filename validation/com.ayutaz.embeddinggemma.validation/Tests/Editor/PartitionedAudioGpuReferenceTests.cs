@@ -58,16 +58,20 @@ namespace EmbeddingGemma.Validation.Tests
         public void OriginalLayer10InputGpuMustMatchOriginalLayer10Output()
             =>Execute("silence",true,false,true);
 
-        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false)
+        [Test]
+        public void ObserveFirstFeedForwardBoundariesWithoutChangingNormalFinalBits()
+            =>Execute("silence",true,false,false,true);
+
+        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var folder=isolated?"GpuAudioPartitionedLayer10":allStatic?"GpuAudioPartitionedAllStatic":"GpuAudioPartitionedFirstFf";
             var root=Path.Combine(Application.dataPath,folder);
             var originalRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-real-chain/audio-runtime-reference"));
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+(isolated?"partitioned-layer10-original-input-":observe?"partitioned-all-static-layer-observation-":allStatic?"partitioned-all-static-gpu-":"partitioned-first-ff-gpu-")+source+"-"+signal+".json"));
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+(early?"partitioned-early-audio-observation-":isolated?"partitioned-layer10-original-input-":observe?"partitioned-all-static-layer-observation-":allStatic?"partitioned-all-static-gpu-":"partitioned-first-ff-gpu-")+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
-            var report=new JObject { ["success"]=false,["scope"]=isolated?"one_original_audio_layer_isolation_gpu_numeric_gate":observe?"original_audio_layer_observation_only":"one_partitioned_original_audio_encoder_gpu_numeric_gate",
+            var report=new JObject { ["success"]=false,["scope"]=early?"original_early_audio_observation_only":isolated?"one_original_audio_layer_isolation_gpu_numeric_gate":observe?"original_audio_layer_observation_only":"one_partitioned_original_audio_encoder_gpu_numeric_gate",
                 ["runtime_source"]=source,["signal"]=signal,["requested_backend"]="GPUCompute",
                 ["gpu"]=SystemInfo.graphicsDeviceName,["phase"]="audit",["end_to_end_validated"]=false,["all_original_signals_validated"]=false };
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
@@ -163,6 +167,60 @@ namespace EmbeddingGemma.Validation.Tests
                 }
                 report["actual_backend"]=encoded.backendType.ToString();report["mismatched_elements"]=mismatch;
                 report["maximum_absolute_error"]=maximum;report["maximum_tolerance_ratio"]=ratio;report["phase"]="completed";Save();
+                if(early)
+                {
+                    var nativeRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-native-feed-forward-replay"));
+                    var replayPath=Path.Combine(nativeRoot,"audio-layer-replay-report.json");
+                    Check(replayPath,"99529dc0fa6c74825b23fca653d82091797ff1e5267d26c5cdae723fcf86f501");
+                    var replay=JObject.Parse(File.ReadAllText(replayPath));
+                    Assert.That(replay.Value<bool>("success")&&replay.Value<bool>("native_final_exact_match"),Is.True);
+                    Assert.That(replay.Value<string>("reference_source"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));
+                    Assert.That(plan["projections"][1].Value<string>("weight_sha256"),Is.EqualTo("d598344ee23d0545a76fa6d95173fbc886e8f2dd46d5907e6bd50b6cfa4891df"));
+                    Assert.That(plan["projections"][2].Value<string>("weight_sha256"),Is.EqualTo("50ff67bc3a9a8704f925183042667884c6a2114de99565c2fa93f79570bd77b6"));
+                    var bindings=new[]{
+                        (name:"input_projection",boundary:"/subsample_conv_projection/input_proj_linear/MatMul_output_0",part:"",minimum:float.NegativeInfinity,maximum:float.PositiveInfinity),
+                        (name:"pre_layer_norm_input",boundary:"/feed_forward1/ffw_layer_1/Clip_output_0",part:"feed_forward1.pre_layer_norm",minimum:-12.875f,maximum:12.8125f),
+                        (name:"activation_input",boundary:"/feed_forward1/ffw_layer_2/Clip_output_0",part:"feed_forward1.act_fn",minimum:-11.1875f,maximum:11.0625f),
+                        (name:"feed_forward1_output",boundary:"/feed_forward1/Add_output_0",part:"feed_forward1",minimum:float.NegativeInfinity,maximum:float.PositiveInfinity),
+                        (name:"norm_pre_attn",boundary:"/norm_pre_attn/Mul_1_output_0",part:"norm_pre_attn",minimum:float.NegativeInfinity,maximum:float.PositiveInfinity)};
+                    report["phase"]="observe_early";Save();
+                    var snapshots=ObserveBoundaries(models.ToArray(),inputs.ToArray(),outputs.ToArray(),kernels.ToArray(),input,bindings.Select(b=>b.boundary).ToHashSet());
+                    Assert.That(snapshots["__final"].Select(BitConverter.SingleToInt32Bits),Is.EqualTo(actual.Select(BitConverter.SingleToInt32Bits)));
+                    report["normal_final_matches_observed_bits"]=true;report["full_encoder_validated"]=false;
+                    var captureRoot=Path.ChangeExtension(output,null)+"-captures";Assert.That(Directory.Exists(captureRoot),Is.False);Directory.CreateDirectory(captureRoot);
+                    report["capture_directory"]=captureRoot;var stages=new JArray();report["stages"]=stages;
+                    foreach(var binding in bindings)
+                    {
+                        string path,expectedSha;
+                        if(binding.part.Length==0)
+                        {
+                            path=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/subsample-native-replay/audio-layer-replay/subsample.input_proj_linear-fp32.bin"));
+                            expectedSha="dc54774840fed958a310c6092e5c5c3483de74be52df7914d2bd128a99192969";
+                        }
+                        else
+                        {
+                            var part=replay["parts"][binding.part];path=Path.Combine(nativeRoot,"audio-layer-replay",part.Value<string>("file"));expectedSha=part.Value<string>("sha256");
+                        }
+                        Check(path,expectedSha);var native=Floats(path);var values=snapshots[binding.boundary];Assert.That(values.Length,Is.EqualTo(native.Length));
+                        Assert.That(values.Any(v=>float.IsNaN(v)||float.IsInfinity(v)),Is.False);
+                        int bits=0,bad=0;double maxRatio=0;
+                        for(var index=0;index<values.Length;index++)
+                        {
+                            // Transform only the immutable expected values to the original
+                            // quantized-linear input Clip boundary. Product computation stays GPU.
+                            var target=Math.Max(binding.minimum,Math.Min(binding.maximum,native[index]));
+                            if(BitConverter.SingleToInt32Bits(values[index])!=BitConverter.SingleToInt32Bits(target))bits++;
+                            var difference=Math.Abs((double)values[index]-target);var allowed=1e-5+1e-4*Math.Abs((double)target);
+                            if(difference>allowed)bad++;maxRatio=Math.Max(maxRatio,difference/allowed);
+                        }
+                        var bytes=new byte[values.Length*4];Buffer.BlockCopy(values,0,bytes,0,bytes.Length);var capture=Path.Combine(captureRoot,binding.name+"-fp32.bin");File.WriteAllBytes(capture,bytes);
+                        using var stream=File.OpenRead(capture);var captureSha=PlayerFileHash.Compute(stream,out _);
+                        stages.Add(new JObject{["stage"]=binding.name,["boundary"]=binding.boundary,["original_native_sha256"]=expectedSha,
+                            ["expected_transform"]=binding.part=="feed_forward1.pre_layer_norm"||binding.part=="feed_forward1.act_fn"?"original_fp32_input_clip":"identity",
+                            ["actual_file"]=capture,["actual_sha256"]=captureSha,["bit_differences"]=bits,["mismatched_elements"]=bad,["maximum_tolerance_ratio"]=maxRatio});Save();
+                    }
+                    Assert.That(stages.Count,Is.EqualTo(5));report["observation_completed"]=true;report["success"]=true;report["phase"]="completed_observation";return;
+                }
                 if(observe)
                 {
                     var contextRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-current-stage-context"));

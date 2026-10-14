@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using EmbeddingGemma.Tests;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -47,6 +48,15 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.That(asset,Is.Not.Null); var model=ModelLoader.Load(asset);
                 report["phase"]="resolve_anchors"; Save();
                 var map=AudioCoefficientLayerMap.ResolveFeedForward(model,(JArray)anchors["anchors"]);
+                var binaryRoot=Path.ChangeExtension(output,null)+"-captures";
+                Directory.CreateDirectory(binaryRoot);
+                var scaleLayer=model.layers.Single(l=>l.outputs.Contains(map["post_layer_norm"]));
+                var scaleId=scaleLayer.inputs.Single(i=>model.constants.Any(c=>c.index==i));
+                var scale=model.constants.Single(c=>c.index==scaleId);
+                Assert.That(scale.dataType,Is.EqualTo(DataType.Float));
+                var scaleBytes=(ArraySegment<byte>)typeof(Constant).GetField("array",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(scale);
+                using(var stream=File.Create(Path.Combine(binaryRoot,"post-norm-folded-weight.bin"))) stream.Write(scaleBytes.Array,scaleBytes.Offset,scaleBytes.Count);
+                report["capture_directory"]=binaryRoot;
                 var inputPath=Path.Combine(root,"frames-1119-valid-1119/silence-features-fp32.bin");
                 Hash(inputPath,"366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24");
                 using var input=new Tensor<float>(new TensorShape(1,1119,128),Floats(inputPath)); ComputeTensorData.Pin(input);
@@ -63,6 +73,8 @@ namespace EmbeddingGemma.Validation.Tests
                     var path=Path.Combine(nativeRoot,"audio-layer-replay",part.Value<string>("file"));
                     Hash(path,part.Value<string>("sha256")); var expected=Floats(path);
                     var actual=name=="post_layer_norm"?AudioCoefficientLayerMap.RestoreHalfScale(snapshot.Values):snapshot.Values;
+                    var actualBytes=new byte[actual.Length*4];Buffer.BlockCopy(actual,0,actualBytes,0,actualBytes.Length);
+                    File.WriteAllBytes(Path.Combine(binaryRoot,name+"-actual.bin"),actualBytes);
                     Assert.That(actual.Length,Is.EqualTo(expected.Length));
                     int mismatches=0; double max=0,ratio=0;
                     for(var i=0;i<actual.Length;i++) { var d=Math.Abs((double)actual[i]-expected[i]);var a=1e-5+1e-4*Math.Abs((double)expected[i]);if(d>a)mismatches++;max=Math.Max(max,d);ratio=Math.Max(ratio,d/a); }

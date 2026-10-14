@@ -18,10 +18,10 @@ namespace EmbeddingGemma.Validation.Tests
         {
             var root = Path.GetFullPath(Path.Combine(Application.dataPath, "../../k/artifacts/audio-real-chain"));
             var nativeRoot = Path.GetFullPath(Path.Combine(Application.dataPath, "../../numerical-acceptance-state/subsample-native-replay"));
-            var output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/compensated-norm-subsample-results"));
+            var output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/compensated-norm1-subsample-results"));
             Directory.CreateDirectory(output);
             var stages = new JArray();
-            var report = new JObject { ["scope"] = "silence_compensated_norm4_subsample_observation_only", ["success"] = false,
+            var report = new JObject { ["scope"] = "silence_compensated_norm1_subsample_observation_only", ["success"] = false,
                 ["observation_completed"] = false, ["runtime_source"] = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE"),
                 ["native_replay_source"] = "e868446e44fb96494605b61b99f86cf3a5f5f973",
                 ["requested_backend"] = backend.ToString(), ["stages"] = stages, ["unity"] = Application.unityVersion,
@@ -83,7 +83,7 @@ namespace EmbeddingGemma.Validation.Tests
                     ["input_proj_linear"] = 49 };
                 map["layer0.act"] = Activation(map["layer0.norm"]); map["layer1.act"] = Activation(map["layer1.norm"]);
                 report["coefficient_bound_outputs"] = JObject.FromObject(map); Save();
-                model = CompensatedModel.CreateWithCompensatedNorms(model, 64, 4);
+                model = CompensatedModel.CreateWithCompensatedNorms(model, 64, 1);
                 var inputPath = Path.Combine(root, "audio-runtime-reference/frames-1119-valid-1119/silence-features-fp32.bin");
                 HashCheck(inputPath, "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24");
                 using var input = new Tensor<float>(new TensorShape(1, 1119, 128), Floats(inputPath));
@@ -131,4 +131,5 @@ namespace EmbeddingGemma.Validation.Tests
         static void HashCheck(string path, string expected) => Assert.That(Hash(path), Is.EqualTo(expected));
     }
 }
+
 

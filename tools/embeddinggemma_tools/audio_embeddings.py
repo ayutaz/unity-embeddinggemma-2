@@ -17,12 +17,15 @@ from .model import load_audio_embedding_model
 from .text import format_text
 
 
-def prepare_audio_embeddings(snapshot, encoder_directory, destination, *, sequence_length=1024, revision, source_commit):
+def prepare_audio_embeddings(snapshot, encoder_directory, destination, *, sequence_length=1024, revision, source_commit,
+                             role="document", encoder_source_commit=None):
     snapshot, encoder_directory, destination = Path(snapshot), Path(encoder_directory).resolve(), Path(destination)
     destination.mkdir(parents=True, exist_ok=True)
     receipt = destination / "audio-embedding-validation.json"
     receipt.unlink(missing_ok=True)
-    if any(not isinstance(value, str) or re.fullmatch(r"[0-9a-f]{40}", value) is None for value in (revision, source_commit)):
+    format_text("", role)
+    encoder_source_commit = source_commit if encoder_source_commit is None else encoder_source_commit
+    if any(not isinstance(value, str) or re.fullmatch(r"[0-9a-f]{40}", value) is None for value in (revision, source_commit, encoder_source_commit)):
         raise ValueError("Audio reference requires immutable provenance")
     def digest(path):
         with path.open("rb") as stream:
@@ -30,7 +33,7 @@ def prepare_audio_embeddings(snapshot, encoder_directory, destination, *, sequen
     manifest = json.loads((encoder_directory / "audio-encoder-validation.json").read_text(encoding="utf-8"))
     metadata = manifest.get("metadata", {})
     if (manifest.get("stage") != "audio_encoder_projector_only" or manifest.get("native_reference_complete") is not True
-            or metadata.get("source_commit") != source_commit or metadata.get("model_revision") != revision):
+            or metadata.get("source_commit") != encoder_source_commit or metadata.get("model_revision") != revision):
         raise ValueError("Audio reference requires complete pinned native encoder provenance")
     def audited_path(name):
         if not isinstance(name, str):
@@ -89,8 +92,8 @@ def prepare_audio_embeddings(snapshot, encoder_directory, destination, *, sequen
     if tokenizer.convert_tokens_to_ids(processor.audio_token) != core.config.audio_token_id:
         raise ValueError("Audio reference token configuration disagrees with model")
     prefixes = json.loads((snapshot / "config_sentence_transformers.json").read_text(encoding="utf-8"))["prompts"]
-    if prefixes["document"] != format_text("", "document"):
-        raise ValueError("Audio reference document prefix differs from the pinned processor")
+    if prefixes.get(role, "") != format_text("", role):
+        raise ValueError(f"Audio reference {role} prefix differs from the pinned processor")
     profiles, rows, produced, similarities = {}, [], [], []
     for profile, (spec, frame_mask, native_graph, case_inputs) in prepared.items():
         wrapper = export.MultimodalEmbeddingExport(core.language_model, sequence_length,
@@ -98,7 +101,7 @@ def prepare_audio_embeddings(snapshot, encoder_directory, destination, *, sequen
             image_feature_count=0, audio_feature_count=spec["feature_count"])
         saved_encoder = torch.export.load(native_graph).module()
         expanded = EmbeddingGemma2Processor.replace_audio_token(processor, {"input_features_mask": frame_mask.bool()}, 0)
-        formatted = format_text(expanded, "document")
+        formatted = format_text(expanded, role)
         encoded = tokenizer(formatted, padding="max_length", max_length=sequence_length, truncation=False, return_tensors="pt")
         ids, mask = encoded["input_ids"], encoded["attention_mask"]
         if ids.shape != (1, sequence_length) or int((ids == core.config.audio_token_id).sum()) != spec["feature_count"]:
@@ -134,13 +137,14 @@ def prepare_audio_embeddings(snapshot, encoder_directory, destination, *, sequen
             features.detach().numpy().astype("<f4").tofile(path); produced.append(path)
             rows.append(dict(id=original["id"], profile=profile, input_features=original["input_features"],
                 features_file=path.relative_to(destination).as_posix(), input_ids=ids[0].tolist(), attention_mask=mask[0].tolist(),
-                formatted_text=formatted, role="document", backbone_cosine=cosine, native_saved_chain_cosine=chain_cosine,
+                formatted_text=formatted, role=role, backbone_cosine=cosine, native_saved_chain_cosine=chain_cosine,
                 embedding=expected[0].tolist()))
         del saved_encoder, saved_backbone, wrapper
         gc.collect()
         profiles[profile] = dict(sequence_length=sequence_length, image_feature_count=0, audio_feature_count=spec["feature_count"],
                                 feature_width=core.config.text_config.hidden_size, graph=graph.relative_to(destination).as_posix())
-    final_metadata = dict(source_commit=source_commit, model_revision=revision, embedding_dimension=core.config.text_config.embedding_dim,
+    final_metadata = dict(source_commit=source_commit, encoder_source_commit=encoder_source_commit, role=role,
+        model_revision=revision, embedding_dimension=core.config.text_config.embedding_dim,
         image_token_id=core.config.image_token_id, audio_token_id=core.config.audio_token_id,
         vocabulary_size=core.config.text_config.vocab_size, pad_token_id=core.config.text_config.pad_token_id,
         encoder_reference_sha256=digest(reference_path), feature_rtol=1e-4, feature_atol=1e-5,

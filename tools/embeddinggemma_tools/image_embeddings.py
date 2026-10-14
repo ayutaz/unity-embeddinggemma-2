@@ -16,12 +16,15 @@ from .model import load_image_embedding_model
 from .text import format_text
 
 
-def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequence_length=1024, revision, source_commit):
+def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequence_length=1024, revision, source_commit,
+                             role="document", vision_source_commit=None):
     snapshot, vision_directory, destination = Path(snapshot), Path(vision_directory).resolve(), Path(destination)
     destination.mkdir(parents=True, exist_ok=True)
     receipt = destination/"image-embedding-validation.json"
     receipt.unlink(missing_ok=True)
-    if any(not isinstance(value,str) or re.fullmatch(r"[0-9a-f]{40}",value) is None for value in (revision,source_commit)):
+    format_text("", role)
+    vision_source_commit = source_commit if vision_source_commit is None else vision_source_commit
+    if any(not isinstance(value,str) or re.fullmatch(r"[0-9a-f]{40}",value) is None for value in (revision,source_commit,vision_source_commit)):
         raise ValueError("Image embedding reference requires immutable provenance")
     def digest(path):
         with path.open("rb") as stream:
@@ -29,7 +32,7 @@ def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequenc
     manifest = json.loads((vision_directory/"vision-validation.json").read_text(encoding="utf-8"))
     reference = json.loads((vision_directory/"vision-reference.json").read_text(encoding="utf-8"))
     for metadata in (manifest["metadata"],reference["metadata"]):
-        if metadata["source_commit"] != source_commit or metadata["model_revision"] != revision:
+        if metadata["source_commit"] != vision_source_commit or metadata["model_revision"] != revision:
             raise ValueError("Image reference provenance mismatch")
         if set(metadata["input_sha256"]) != {"config.json","processor_config.json","model.safetensors"}:
             raise ValueError("Image reference snapshot hash names are invalid")
@@ -71,8 +74,8 @@ def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequenc
     if tokenizer.convert_tokens_to_ids(processor.image_token) != core.config.image_token_id:
         raise ValueError("Image token configuration disagrees with model")
     prefixes=json.loads((snapshot/"config_sentence_transformers.json").read_text(encoding="utf-8"))["prompts"]
-    if prefixes["document"]!=format_text("","document"):
-        raise ValueError("Image document prompt differs from the fixed official prefix")
+    if prefixes.get(role, "")!=format_text("",role):
+        raise ValueError(f"Image {role} prompt differs from the fixed official prefix")
     profiles,rows,produced,similarities,graphs={},[],[],[],{}
     for profile,spec in reference["profiles"].items():
         if re.fullmatch(r"[a-z][a-z0-9_-]*",profile) is None:
@@ -84,7 +87,7 @@ def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequenc
         positions=torch.from_numpy(np.fromfile(audited_path(spec["positions"]),dtype="<i4").copy()).long().reshape(spec["positions_shape"])
         saved_encoder=torch.export.load(audited_path(spec["graph"])).module()
         expanded=EmbeddingGemma2Processor.replace_image_token(processor,{"num_soft_tokens_per_image":[count]},0)
-        formatted=format_text(expanded,"document")
+        formatted=format_text(expanded,role)
         encoded=tokenizer(formatted,padding="max_length",max_length=sequence_length,truncation=False,return_tensors="pt")
         ids,mask=encoded["input_ids"],encoded["attention_mask"]
         if ids.shape!=(1,sequence_length) or int((ids==core.config.image_token_id).sum())!=count:
@@ -124,7 +127,7 @@ def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequenc
             features.detach().numpy().astype("<f4").tofile(feature_file);produced.append(feature_file)
             rows.append(dict(id=original["id"],profile=profile,pixels=original["pixels"],
                 pixels_sha256=digest(audited_path(original["pixels"])),input_ids=ids[0].tolist(),attention_mask=mask[0].tolist(),
-                features_file=feature_file.relative_to(destination).as_posix(),formatted_text=formatted,role="document",
+                features_file=feature_file.relative_to(destination).as_posix(),formatted_text=formatted,role=role,
                 backbone_cosine=cosine,saved_chain_cosine=chain_cosine,
                 embedding=expected[0].tolist()))
             del native,features,actual,encoded_features,chain
@@ -133,7 +136,8 @@ def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequenc
         del exported,wrapper,saved_encoder
     if not rows or len(rows)!=manifest["case_count"]:
         raise ValueError("Image reference must cover every encoder case")
-    metadata=dict(source_commit=source_commit,model_revision=revision,embedding_dimension=core.config.text_config.embedding_dim,
+    metadata=dict(source_commit=source_commit,vision_source_commit=vision_source_commit,role=role,
+                  model_revision=revision,embedding_dimension=core.config.text_config.embedding_dim,
                   image_token_id=core.config.image_token_id,audio_token_id=core.config.audio_token_id,
                   vocabulary_size=core.config.text_config.vocab_size,pad_token_id=core.config.text_config.pad_token_id,
                   vision_reference_sha256=digest(vision_directory/"vision-reference.json"),

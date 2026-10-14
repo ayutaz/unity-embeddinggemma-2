@@ -428,7 +428,7 @@ def export_audio_native_pt2(wrapper, features, destination):
 
 
 def export_audio_native_onnx(wrapper, features, destination):
-    """Bridge the legacy export limit to standard Swish without runtime plugins."""
+    """Bridge native SiLU to standard ops while preserving FP32 division order."""
     import tempfile
     import onnx
     destination=Path(destination)
@@ -447,11 +447,36 @@ def export_audio_native_onnx(wrapper, features, destination):
                     input_names=["input"],output_names=["output"],custom_opsets={domain:1})
             model=onnx.load(intermediate)
             model=onnx.version_converter.convert_version(model,24)
-            for node in model.graph.node:
+            reserved = {name for node in model.graph.node for name in (*node.input, *node.output)}
+            reserved.update(value.name for value in model.graph.initializer)
+            def fresh(base):
+                name = base
+                while name in reserved:
+                    name += "_"
+                reserved.add(name)
+                return name
+            one = fresh("__embeddinggemma_silu_one")
+            model.graph.initializer.append(onnx.helper.make_tensor(one, onnx.TensorProto.FLOAT, [], [1.0]))
+            expanded = []
+            for index, node in enumerate(model.graph.node):
                 if node.domain==domain and node.op_type=="NativeSiLU":
-                    node.domain="";node.op_type="Swish"
+                    if len(node.input) != 1 or len(node.output) != 1:
+                        raise ValueError("Native SiLU requires one FP32 input and output")
+                    negative = fresh(f"__embeddinggemma_silu_{index}_negative")
+                    exponential = fresh(f"__embeddinggemma_silu_{index}_exp")
+                    denominator = fresh(f"__embeddinggemma_silu_{index}_denominator")
+                    # PyTorch CPU SiLU divides x by 1+exp(-x). The ONNX Swish
+                    # evaluator multiplies x by the reciprocal and rounds again.
+                    expanded.extend((onnx.helper.make_node("Neg", [node.input[0]], [negative]),
+                        onnx.helper.make_node("Exp", [negative], [exponential]),
+                        onnx.helper.make_node("Add", [one, exponential], [denominator]),
+                        onnx.helper.make_node("Div", [node.input[0], denominator], list(node.output), name=node.name)))
                 elif node.domain not in ("","ai.onnx"):
                     raise ValueError("Audio ONNX export retained a nonstandard runtime domain")
+                else:
+                    expanded.append(node)
+            del model.graph.node[:]
+            model.graph.node.extend(expanded)
             imports=[item for item in model.opset_import if item.domain!=domain]
             del model.opset_import[:]
             model.opset_import.extend(imports)

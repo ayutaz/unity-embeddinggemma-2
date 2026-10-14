@@ -1,0 +1,12 @@
+{
+  "scope": "immutable_saved_dynamic_matmul_transform_green",
+  "source": "6bc1a61",
+  "passed": 34,
+  "failed": 0,
+  "skipped": 0,
+  "exit_code": 0,
+  "includes_existing_projection_norm_and_saved_model_regression": true,
+  "original_saved_source_bytes_preserved": true,
+  "original_output_identity_preserved": true,
+  "full_encoder_validated": false
+}

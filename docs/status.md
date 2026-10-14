@@ -1,10 +1,10 @@
 # 現在の状態と残タスク
 
-更新日: 2026-10-14。コード基準は `a237dee2874cdb0fbcdf4fe333aebae7193ad390`、確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
+更新日: 2026-10-14。最新のUnity実測コード基準は `b796e504367fb9165a4992ff036a205fb2e7d429`、確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
 
 ## 現在の判定
 
-実装・実モデル検証はユーザー指示で停止中。今回進めるのは文書・計画の整合のみで、Unity起動・モデル生成・数値検証は追加しない。Unity.exeが存在しないことと、CI run `38569646238` / `38571522044` の `completed/cancelled` を再確認した。cancel / skipを合格に数えない。
+「ここからの計画」の工程1・2までを実行した。工程1のコンパイル・tiny GPU・実画像1件の段階計測は合格。工程2のSiLU修正後の実ONNX照合は元6信号・2 profileを全件実行し、6件とも数値不合格。数値修正の工程3へは着手していない。[今回の結果と負荷分析](gpu-execution-and-silu-validation.md)。計画の実行番号1・2と、以前の「工程1〜3の受け入れ」の番号は別なので、元encoder数値修正と全chain未完了を維持する。
 
 [Draft PR #81](https://github.com/ayutaz/unity-embeddinggemma-2/pull/81)はOPEN、baseは `test/audio-post-norm-isolation`。GitHubで23件のopen PRを確認し、main未統合のAPI・診断候補とmainの機能を分けた。公開tag / GitHub Releaseは各0件。mainの既存ローカルUnity設定変更は保持している。[文書更新の確認snapshot](results/documentation-checkpoint-20261014.json)。
 
@@ -13,14 +13,16 @@
 | 工程1 / 基準整理 | PR依存・参照hash・環境・判定条件を整理済み | 採用candidate変更時のsource・実測更新 |
 | M1 / M2 | WindowsテキストのEditorと条件付きPlayer・固定Git導入の過去受け入れあり | 最終candidateの標準空consumer、性能・寿命、macOS / iOS / Android実機 |
 | M3 / 画像 | GPU前処理・prompt・共通backboneはmain。Image APIはDraft実装・合成契約合格。Python Query / Document / Rawは6画像×3 roleの18件合格 | 元FP32 encoder gate、Unity実Texture→768次元の全chain・全role、検索sample・Player |
-| M4 / 音声 | PCM・GPU前処理はmain。Audio APIはDraft実装・合成契約合格。SiLU ONNX演算順序修正は関連37件と準備回帰4件で確認 | 修正後の実ONNX元6信号、Sentis encoder固定数値gate、音声Query / Raw、実全chainの全条件 |
-| GPU専用変更 | 対象2 fixtureからCPU条件を除外しCPU指定を拒否。構成回帰2 red→2 green | 変更後のUnityコンパイル・実モデル再実行。全legacy fixtureがGPU専用になったわけではない |
+| M4 / 音声 | PCM・GPU前処理はmain。Audio APIはDraft実装・合成契約合格。SiLU修正後の実ONNX照合は6信号・2 profile全件実行 | 実ONNX全6件が不合格。Sentis encoder固定数値gate、音声Query / Raw、実全chainの全条件 |
+| GPU専用変更 / 負荷 | 対象2 fixtureのGPU専用変更を含む固定Git consumerがコンパイル成功。tiny / 実square 1件の計測2 pass・skip0・exit0。GPUCompute・fallback / flush0 | 計測は数値合格を主張しない。対象2 fixtureの全profile・全信号は未再実行、全legacy fixtureのGPU専用化ではない |
 | 正式公開 | 開発版 `0.1.0-pre.1`、モデルをGit / LFSへ含めない | M2〜M4・全必須環境・最終配布監査が揃ってから公開工程 |
 
 **工程2の数値修正と工程3の実入力→最終768次元APIは未完了。** Pythonのrole参照、局所TDD、最終cosine、観測テストの合格を、元encoderのelementwise gateやUnity全chain合格へ置き換えない。
 
 ## 最後に得られた証拠
 
+- [GPU段階計測](results/m2-gpu-phase-profile-windows-20261014.json): source `b796e50`、Unity 6000.3.16f1 / Sentis 2.6.1 / RTX 4070 Ti SUPER / D3D12。2 pass、skip0、exit0。実square 1件のload約3.93秒、補償graph変換約13.13秒、schedule約2.07秒、最終readback約1.30秒。プロセスpeak working set約3.94 GiB。数値合格・全chain合格はfalse。
+- [SiLU修正後の実音声ONNX](results/m4-division-silu-real-onnx-failed-20261014.json): Actions `38578451611` / source `a8033bb`。元6信号・2 profileすべて実行、全6件不合格。入力・mask hash、モデル重みとlibrary版は元参照と一致、公式native特徴量も全6件bit一致。旧golden・許容差を変更していない。SiLUの局所修正だけでは全encoderは解決しなかった。
 - [画像3 roleのPython参照](results/m3-real-image-all-role-reference-20261014.json): Actions `38562190876`、producer `891ce9004deecc262437e56b2fd9a2eaf1054632`。18件合格。元vision FP32 gateの解決とUnity連結はfalse。
 - [音声norm1 / dynamic16候補](results/m4-norm1-dynamic16-full-encoder-failed-20261014.json): source `998fa43d89814a90c9eebb899c71439879b79390`、元6信号×CPU/GPUの12数値条件すべて不合格。最大許容差比CPU12.21667173 / GPU11.47812797、NUnit0 pass / 2 fail / skip0 / exit2。候補45623層。旧norm1候補の結果とは別記録。
 - [SiLU演算順序修正](results/native-silu-division-order-green-20261014.json): 標準ONNX `Neg→Exp→Add→Div` にしてnativeの除算順序を保持。関連37 pass、準備回帰4 pass。実モデルのsilence不合格が解消したとはまだ言えない。
@@ -33,18 +35,22 @@
 
 診断候補の層数は1823→25265。モデル変換・shape解析・読み込み・hash監査・GPUへの転送やdispatch準備はCPU側にも仕事がある。GPU使用だけではこの準備負荷は消えない。段階別時間・peak memory・CPU/GPU利用率は未計測で、層数増加を遅延全体の原因として確定しない。Accelerator接続timeoutもログにあるが、推論の遅延との因果は未確認。
 
+上の停止時点の未計測を今回補った。実square 1件ではload + transformが約17.07秒、全7段階約20.53秒の約83%。この2段階のCPU時間は約15.13秒。GPUモデル推論中でも、この候補のCPU準備が大きい。これは単発測定で、旧モデルとの性能比較、全profile、GPU利用率の時系列、Accelerator timeoutの因果は未検証。[段階別の範囲と限界](gpu-execution-and-silu-validation.md)。
+
 `CompensatedVisionReferenceTests` と `CompensatedNormAudioEncoderReferenceTests` はGPUCompute専用へ変更済み。前処理・encoder・backboneを同じGPU backendへ揃え、GPU未対応をCPUで代替しない。Runtime APIのCPU選択肢と小さいCPU契約テストは残るため、他の旧suiteを一括実行するとCPU実モデル検証も含み得る。[自動操作の実行方針](automation.md)を先に確認する。
 
 ## 再開時の計画
 
+以下の1・2（GPU確認とSiLU照合）は今回実行済み。次は一つのGPU失敗入力と最初の数値差を切り分ける作業だが、今回の「2まで」の範囲では開始しない。外部5分上限は `tools/embeddinggemma_tools/bounded_process.py` で実装し、所有processのtimeout停止をTDDで確認した。古いignored `run-native.ps1` の無制限待機は残るので、新しい計測実行には使わない。
+
 1. 固定Git consumerのrequested / resolved SHA、Editor・Sentis・GPUを確認し、対象変更のcompileと小さいGPU probeを先に行う。全suiteを起動しない。
 2. 実装済みSiLU修正をActionsで元6信号・2 profileの保存ONNXへ照合する。失敗したら一つの入力・最初の差に絞る。旧golden・hash・`atol=1e-5` / `rtol=1e-4`は維持する。
-3. Unity側は監査済み元モデルの一つのGPU入力から始め、load / transform / Worker準備 / upload / schedule / readback / disposeを別々に計測する。ローカル計画上の上限は1試行5分とし、超過は中断・未完了へ分類する。これは現launcherの実装済みtimeoutではなく、再開時に設定・確認する運用条件。
+3. Unity側は監査済み元モデルの一つのGPU入力から始め、load / transform / Worker準備 / upload / schedule / readback / disposeを別々に計測する。今回は実square 1件を計測済み。1試行5分の上限は新しいbounded_processで実装・使用し、超過は中断・未完了へ分類する。旧ignored launcherの上限は未実装のまま。
 4. 一つの失敗経路の最小修正が合格してから、GPUで画像全3 profile・音声元6信号と採用重み形式を照合する。新しい補償候補を全encoderへ展開する前に、層数・準備時間・memoryの増加を評価する。
 5. 工程2のgateが揃った後、実Texture / PCM→前処理→encoder→backbone→768次元APIの全role・profile・mask・長さ境界・所有権・例外後再利用・text回帰を受け入れる。
 6. sample・混在検索・長い反復・Player・必須実機・最終空consumer・配布監査へ渡す。main mergeと正式公開は別の明示指示が必要。
 
-実モデル推論の再開は今回の文書更新には含めない。GPU専用の新しい結果と、従来のCPU/GPU受け入れ履歴は別scopeで管理する。
+今回の実行はGPU確認・段階計測とSiLUの実ONNX照合まで。数値修正・全chain・sample以降は実行していない。GPU専用の新しい結果と、従来のCPU/GPU受け入れ履歴は別scopeで管理する。
 
 ## 過去のcheckpointと実測履歴
 

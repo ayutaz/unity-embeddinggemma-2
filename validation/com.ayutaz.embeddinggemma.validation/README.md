@@ -6,13 +6,14 @@ Updated 2026-10-14. This development-only package is separate from the runtime U
 
 | Fixture | Scope | Backend policy |
 | --- | --- | --- |
+| `GpuExecutionProfileTests` | Tiny and one audited real square image; seven workload phases, host memory / CPU time | GPUCompute only; two tests, not numeric encoder acceptance |
 | `FrozenAudioProjectionTests` | Fixed native input / weights; linear1, linear2, post norm only | Historical CPU/GPU component evidence; not full encoder |
 | `CompensatedVisionReferenceTests` | Audited original vision FP32 models, 3 profiles, 2 images each | GPUCompute only; 3 conditions / 6 numeric cases |
 | `CompensatedNormAudioEncoderReferenceTests` | Audited original audio features, 6 signals / 2 profiles, norm1 / projection64 / dynamic16 candidate | GPUCompute only; 1 condition / 6 numeric cases |
 
-The latter two fixtures reject a CPU backend and unavailable compute shaders, verify output GPU residency, and reject CPU computation fallback / readback flush. Reports declare `execution_backend=GPUCompute` and `cpu_validated=false`. Code baseline `a237dee2874cdb0fbcdf4fe333aebae7193ad390` passes two configuration regression tests, but its Unity compilation and real-model execution have not been repeated. Other historical fixtures still contain CPU cases; do not run this entire assembly as a GPU-only workload.
+The compensated fixtures reject a CPU backend and unavailable compute shaders, verify output GPU residency, and reject CPU computation fallback / readback flush. Reports declare `execution_backend=GPUCompute` and `cpu_validated=false`. Their GPU-only changes compiled in fixed consumer `b796e504367fb9165a4992ff036a205fb2e7d429`; the profiling fixture passed both tiny / real image tests with no skips and process exit 0. This does not rerun every compensated numeric condition. Other historical fixtures still contain CPU cases; do not run this entire assembly as a GPU-only workload.
 
-Execution is stopped at the user's request. The last vision norm4 run was interrupted; completed cases failed their unchanged elementwise gate. The previous complete norm1 / dynamic16 audio candidate also failed all 12 CPU/GPU numeric cases. See the repository's [status](../../docs/status.md), [plan](../../docs/multimodal-tdd-plan.md), and [ledger](../../docs/steps-1-3-acceptance.md).
+The user authorized plan steps 1 and 2. GPU phase measurements passed and the subsequent real Python ONNX SiLU validation executed all six original signals across both profiles, with all six failing the unchanged tolerance. No step 3 numerical fix or full-chain acceptance was performed. The historical interrupted vision run and previous 12 failed CPU/GPU audio conditions remain separate evidence. See the [new measurements](../../docs/gpu-execution-and-silu-validation.md), [status](../../docs/status.md), [plan](../../docs/multimodal-tdd-plan.md), and [ledger](../../docs/steps-1-3-acceptance.md).
 
 ## Artifacts and load cost
 

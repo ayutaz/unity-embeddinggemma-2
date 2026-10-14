@@ -1,0 +1,258 @@
+{
+  "scope": "step1_compile_tiny_and_one_real_image_gpu_phase_profile_only",
+  "success": true,
+  "source": "b796e504367fb9165a4992ff036a205fb2e7d429",
+  "main_merged": false,
+  "numeric_encoder_accepted": false,
+  "full_chain_accepted": false,
+  "bounded_runner_tdd": "missing module red -> 3 green; owned process killed on timeout",
+  "unity_tdd": [
+    {
+      "source": "6d9a30f5dfea9e42e8ee1e1a260a8769c46ff796",
+      "passed": 0,
+      "failed": 1,
+      "reason": "profiler missing"
+    },
+    {
+      "source": "e57cd8d4746d36f4b1c1fa3b2cc4ca7fdb54c24e",
+      "passed": 0,
+      "failed": 2,
+      "reason": "Mono process memory counters zero"
+    },
+    {
+      "source": "b796e504367fb9165a4992ff036a205fb2e7d429",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    }
+  ],
+  "process": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      ".\\artifacts\\acceptance-consumer",
+      "-logFile",
+      ".\\artifacts\\numerical-acceptance-state\\gpu-profile-memory-green.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.GpuExecutionProfileTests",
+      "-testResults",
+      ".\\artifacts\\numerical-acceptance-state\\gpu-profile-memory-green.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-14T14:19:20.414792+00:00",
+    "pid": 63544,
+    "exit_code": 0,
+    "elapsed_seconds": 58.44301589999668,
+    "completed_utc": "2026-10-14T14:20:18.857811+00:00"
+  },
+  "requested_resolved_sha_equal": true,
+  "real_input_sha256": "d25852af1b53b8f4ed484b760280b1859b8a3b63e3456f7cbb378f33877761b7",
+  "real_input_bytes": 7741440,
+  "profiles": [
+    {
+      "success": true,
+      "real_model": false,
+      "source": "b796e504367fb9165a4992ff036a205fb2e7d429",
+      "unity": "6000.3.16f1",
+      "sentis": "2.6.1",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_api": "Direct3D12",
+      "requested_backend": "GPUCompute",
+      "numeric_acceptance_claimed": false,
+      "schedule_is_submission_time": true,
+      "final_readback_includes_gpu_wait": true,
+      "phases": [
+        {
+          "name": "load",
+          "completed": true,
+          "wall_seconds": 0.0025101999999999998,
+          "cpu_seconds": 0.0,
+          "working_set_bytes": 4228169728,
+          "peak_working_set_bytes": 4228169728,
+          "unity_allocated_bytes": 223247936
+        },
+        {
+          "name": "transform",
+          "completed": true,
+          "wall_seconds": 0.000717,
+          "cpu_seconds": 0.0,
+          "working_set_bytes": 4228169728,
+          "peak_working_set_bytes": 4228169728,
+          "unity_allocated_bytes": 223247936
+        },
+        {
+          "name": "worker",
+          "completed": true,
+          "wall_seconds": 0.0008056,
+          "cpu_seconds": 0.0,
+          "working_set_bytes": 4228169728,
+          "peak_working_set_bytes": 4228169728,
+          "unity_allocated_bytes": 223249472
+        },
+        {
+          "name": "upload",
+          "completed": true,
+          "wall_seconds": 0.0051833,
+          "cpu_seconds": 0.0,
+          "working_set_bytes": 4229218304,
+          "peak_working_set_bytes": 4229218304,
+          "unity_allocated_bytes": 223251351
+        },
+        {
+          "name": "schedule",
+          "completed": true,
+          "wall_seconds": 0.0009710999999999999,
+          "cpu_seconds": 0.0,
+          "working_set_bytes": 4229218304,
+          "peak_working_set_bytes": 4229218304,
+          "unity_allocated_bytes": 223252189
+        },
+        {
+          "name": "final_readback",
+          "completed": true,
+          "wall_seconds": 0.0881614,
+          "cpu_seconds": 0.0,
+          "working_set_bytes": 4230864896,
+          "peak_working_set_bytes": 4230864896,
+          "unity_allocated_bytes": 222040358
+        },
+        {
+          "name": "dispose",
+          "completed": true,
+          "wall_seconds": 0.0010754,
+          "cpu_seconds": 0.0,
+          "working_set_bytes": 4230864896,
+          "peak_working_set_bytes": 4230864896,
+          "unity_allocated_bytes": 222039302
+        }
+      ],
+      "started_utc": "2026-10-14T14:20:14.8005571Z",
+      "active_phase": "dispose",
+      "original_layer_count": 1,
+      "candidate_layer_count": 1,
+      "transform": "identity_tiny",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "actual_backend": "GPUCompute",
+      "output_elements": 2,
+      "output": [
+        2.0,
+        3.0
+      ],
+      "completed_utc": "2026-10-14T14:20:14.9070604Z"
+    },
+    {
+      "success": true,
+      "real_model": true,
+      "source": "b796e504367fb9165a4992ff036a205fb2e7d429",
+      "unity": "6000.3.16f1",
+      "sentis": "2.6.1",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_api": "Direct3D12",
+      "requested_backend": "GPUCompute",
+      "numeric_acceptance_claimed": false,
+      "schedule_is_submission_time": true,
+      "final_readback_includes_gpu_wait": true,
+      "phases": [
+        {
+          "name": "load",
+          "completed": true,
+          "wall_seconds": 3.934636,
+          "cpu_seconds": 3.515625,
+          "working_set_bytes": 3217911808,
+          "peak_working_set_bytes": 3217911808,
+          "unity_allocated_bytes": 143270185
+        },
+        {
+          "name": "transform",
+          "completed": true,
+          "wall_seconds": 13.1295079,
+          "cpu_seconds": 11.609375,
+          "working_set_bytes": 3285827584,
+          "peak_working_set_bytes": 3291090944,
+          "unity_allocated_bytes": 188392265
+        },
+        {
+          "name": "worker",
+          "completed": true,
+          "wall_seconds": 0.0674581,
+          "cpu_seconds": 0.078125,
+          "working_set_bytes": 3286192128,
+          "peak_working_set_bytes": 3291090944,
+          "unity_allocated_bytes": 188393817
+        },
+        {
+          "name": "upload",
+          "completed": true,
+          "wall_seconds": 0.0083872,
+          "cpu_seconds": 0.0,
+          "working_set_bytes": 3294130176,
+          "peak_working_set_bytes": 3294130176,
+          "unity_allocated_bytes": 188394575
+        },
+        {
+          "name": "schedule",
+          "completed": true,
+          "wall_seconds": 2.0738923,
+          "cpu_seconds": 0.46875,
+          "working_set_bytes": 4222439424,
+          "peak_working_set_bytes": 4222439424,
+          "unity_allocated_bytes": 222945617
+        },
+        {
+          "name": "final_readback",
+          "completed": true,
+          "wall_seconds": 1.3013358,
+          "cpu_seconds": 0.0,
+          "working_set_bytes": 4228018176,
+          "peak_working_set_bytes": 4228018176,
+          "unity_allocated_bytes": 223619000
+        },
+        {
+          "name": "dispose",
+          "completed": true,
+          "wall_seconds": 0.0100088,
+          "cpu_seconds": 0.015625,
+          "working_set_bytes": 4228030464,
+          "peak_working_set_bytes": 4228030464,
+          "unity_allocated_bytes": 223247936
+        }
+      ],
+      "started_utc": "2026-10-14T14:19:54.2314927Z",
+      "active_phase": "dispose",
+      "case_id": "square-0",
+      "model_sha256": "4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7",
+      "original_layer_count": 1823,
+      "candidate_layer_count": 25265,
+      "transform": "compensated_projection64_centered_norm4",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "actual_backend": "GPUCompute",
+      "output_elements": 131072,
+      "completed_utc": "2026-10-14T14:20:14.7879496Z"
+    }
+  ],
+  "phase_memory_scope": "native Windows process working set; sampled at phase ends",
+  "peak_memory_scope": "Windows peak working set for the Editor process; not per-model or GPU VRAM",
+  "elapsed_scope": "single Editor startup including package resolution and script reload; not a benchmark average",
+  "log_warnings": [
+    "Accelerator 192.168.11.2:80 timeout; causal contribution unmeasured",
+    "Persistent allocation/leak warning at shutdown; repeated resource acceptance remains incomplete"
+  ],
+  "evidence_sha256": {
+    "gpu-profile-red.xml": "a4209e33bbc166f3b6681586ecbbb50483202d922b2b774a92b8e65f7720d32e",
+    "gpu-profile-green.xml": "33ca1e376673010752baa85d86f6232f22cb47a70bac5c16fbee58b8bd56a62c",
+    "gpu-profile-memory-green.xml": "fda1cbf65f0d2c6192f5bd975f809ce100f5037844a309a89fe8cb5bc2c73bc1",
+    "gpu-profile-memory-green.log": "fad38cb57e1665a4643282ed743a3990d6c0e558490fc317ffc24f1a147e818d",
+    "gpu-profile-memory-green-process.json": "3496747d3d2c0ed389ce834c60bb82cb9198c2db6ef3cde0e1490df4d32adea4"
+  }
+}

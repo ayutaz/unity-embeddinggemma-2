@@ -2,7 +2,7 @@
 
 Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.unity.ai.inference@2.6/manual/index.html) だけを使って、Google の [EmbeddingGemma 2](https://huggingface.co/google/embeddinggemma-2) を動かすプロジェクトです。テキスト・画像・音声を、同じ 768 次元の空間の埋め込みに変換できるようにします。
 
-> **2026-10-14: 実装・実モデル検証は停止中、文書・計画を更新しました。** main `c868df5` にGPU画像前処理・PCM / GPU音声前処理・公式prompt・共通backboneがあります。最終画像 / 音声APIはDraft実装・合成契約合格ですが、元encoder数値gateとUnity実入力→768次元は未達です。画像Pythonの3 roleは18件合格。PR #81の対象実モデルfixtureはGPU専用へ変更済みですが、変更後のUnity compile / 実モデルは未検証です。[最新状態](docs/status.md) / [再開計画](docs/multimodal-tdd-plan.md) / [固定source別の証拠](docs/steps-1-3-acceptance.md)。以下の旧日付の実測は履歴です。
+> **2026-10-14: 計画の1・2まで検証しました。** main `c868df5` にGPU画像前処理・PCM / GPU音声前処理・公式prompt・共通backboneがあります。PR #81のGPU専用変更を含むcompileと、tiny / 実画像1件のGPU段階計測は2 pass・skip0・exit0、fallback / flush0。音声SiLU修正後の実ONNXは元6信号・2 profileを全件照合し、全6件不合格でした。最終画像 / 音声APIはDraft実装で、元encoder数値gateとUnity実入力→768次元は未達です。[今回の結果](docs/gpu-execution-and-silu-validation.md) / [最新状態](docs/status.md) / [次の計画](docs/multimodal-tdd-plan.md)。以下の旧日付の実測は履歴です。
 
 > **状態: Windows EditorのM1受け入れ検証完了**
 > 2026-10-09: PR #1〜#4はmain `8146107`へ統合済み。[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)で`.sentis`保存・再読み込み、Float16重み量子化、性能・メモリ測定まで実装・検証しました。

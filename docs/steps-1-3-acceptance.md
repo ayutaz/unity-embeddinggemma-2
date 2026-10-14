@@ -6,6 +6,8 @@
 
 ## 停止時の状況とGPU実行への変更
 
+追加実測: ユーザー指定の新しい実行計画1・2を実施した。GPU専用変更を含む `b796e50` がcompile成功、tinyと実square 1件のGPU計測は2 pass / skip0 / exit0。Actions `38578451611` のSiLU修正後実ONNXは元6信号・2 profileすべて照合し全6件不合格。元入力・mask・公式native特徴量は変わっていない。[今回の結果](gpu-execution-and-silu-validation.md)。以下の停止時点の未計測・未compile・未検証は当時の履歴であり、上記の指定範囲を超える元encoder全条件・最終768次元は引き続き未達。
+
 2026-10-14、ユーザーの停止指示後、Unityの負荷調査とGPU実行への変更を追加で依頼された。実行中だった画像診断のbatchmode Unity（PID 64068）は停止した。参照元 `5c697a6472e0203d9f24c77da7a466f83735ce84` の部分結果は未完了として保存し、未実行条件を合格にも数値不合格にも数えない。
 
 この診断はCPUとGPUの実モデル推論を交互に実行していた。完了済みsquare GPUの2画像は `actual_backend=GPUCompute`、RTX 4070 Ti SUPER / Direct3D12、計算fallback・readback flushとも0だった。一方、squareとlandscapeのCPU条件も実際に実行されていた。数値補償の診断候補は元1823層から25265層へ展開され、GPU推論前にもCPU側のモデル変換・読み込みが発生する。各段階の時間を計測していないため、負荷全体の割合は未確定。ログにはUnity Acceleratorの接続timeoutもあるが、推論の遅延原因とは確定しない。

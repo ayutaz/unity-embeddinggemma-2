@@ -185,4 +185,7 @@ def test_official_feature_drift_records_failed_context_without_replacing_referen
     saved = failure.get("saved_encoder_vs_expected")
     assert saved is not None, "Saved encoder context was not compared after official feature drift"
     assert saved["mismatched_elements"] == 0 and saved["same_shape"] and saved["actual_finite"]
+    contexts = failure["saved_encoder_thread_contexts"]
+    assert [row["actual_threads"] for row in contexts["conditions"]] == [1, 2, 4]
+    assert torch.get_num_threads() == contexts["original_threads"]
     assert not (output / (modality + "-embedding-validation.json")).exists()

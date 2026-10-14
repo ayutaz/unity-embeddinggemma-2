@@ -138,3 +138,9 @@ audit8 red、producer連結2 red、CLI2 redから実装し、role・既存produc
 画像run `38558995411` は固定manifest SHAの監査後、producerが全manifestを監査する際に取得対象へ含めていなかった `square/0.png` で失敗した。数値0件。PNG6枚とprocessor_config.jsonを取得対象へ加える1 assertion red / 1 pass→関連10 green。監査処理は緩めず、元数値gateを成功にしていない。[manifest red](results/image-role-reference-manifest-red-20261014.json) / [green](results/image-role-reference-manifest-green-20261014.json)。
 
 Git `a20ff165aa7bdc170350b68f20a86aaec660f399` のnorm chunk1・reciprocal・scalar-zero候補を、元6信号×CPU/GPU全12条件で完了。全件不合格、最大許容差比はCPU10.75637790 / GPU15.96514096。候補42851層、GPU fallback/flush0、NUnit0 pass / 2 fail / skip0 / exit2。旧norm4のraw reportは変更せず、新directoryとarchiveを保持した。[全encoder失敗](results/m4-compensated-norm1-scalar-zero-real-audio-failed-20261014.json)。局所normの改善を全encoderの修正とせず、次は現在の候補の最初の不合格stageを調べる。
+
+Git `465d98373aed61240e5c69892b38c997a0fc2f86` のsilenceに対する12 norm出力観測は、通常の最終bitsを両backendで保持した。最初の不合格norm出力はCPU layer_5（最大許容差比1.02823035）、GPU layer_6（1.02760732）。layer_11ではCPU24.44634017 / GPU23.94601719となる。NUnit2 pass / skip0 / exit0は観測の忠実性だけの合格で、encoder数値合格ではない。[観測receipt](results/m4-norm1-scalar-zero-layer-observation-20261014.json)。
+
+Git `02413f7…` の音声run `38560553234` と画像run `38560640093` は、PNG等の取得不足を解消して実数値へ到達した。両runnerはTorch2.14.1+cu130 / AVX512 / intraop2 / interop2。音声silenceは公式145要素（最大許容差比3.11813114）、保存native graph251要素（8.87123701）で旧期待値と不一致。画像square-0は公式・保存graphとも3要素（1.18285830）で不一致。Query/Rawは未実行。前回音声AVX2 runnerとの違いは観測したが、CPU ISA単独が原因とは証明していない。[実文脈診断](results/multimodal-real-saved-context-drift-failed-20261014.json)。
+
+同じ保存graph・入力・旧期待値を1/2/4 intraop threadで比較するfailure-only診断を6 assertion red→6 green、画像/音声の連結2 greenで追加した。各requested/actual threadを記録し、実行失敗は数値不一致と分け、最後にcallerのthread数を復元する。golden・通常参照生成の設定は変更しない。[thread red](results/cpu-reference-context-red-20261014.json) / [green](results/cpu-reference-context-green-20261014.json)。次の実Actionsでthread依存を検証する。工程2・3は未完了。

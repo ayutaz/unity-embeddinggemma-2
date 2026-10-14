@@ -45,7 +45,7 @@ namespace EmbeddingGemma.Validation.Tests
                     var tensor=shape.ToTensorShape();return Enumerable.Range(0,tensor.rank).Select(axis=>tensor[axis]).ToArray();
                 }
                 var constants=model.constants.ToDictionary(c=>c.index);var rows=new JArray();
-                foreach(var layer in model.layers.Where(l=>l.inputs.Length>=2 && l.outputs.Length==1))
+                foreach(var layer in model.layers.Where(l=>new[]{"MatMul","MatMul2D","Dense","DenseBatched"}.Contains(l.GetType().Name) && l.inputs.Length>=2 && l.outputs.Length==1))
                 {
                     if(!constants.TryGetValue(layer.inputs[1],out var weight)||weight.shape.rank!=2)continue;
                     Assert.That(weight.dataType,Is.EqualTo(DataType.Float));

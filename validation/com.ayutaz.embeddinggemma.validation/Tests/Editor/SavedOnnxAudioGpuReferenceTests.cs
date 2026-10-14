@@ -106,13 +106,22 @@ namespace EmbeddingGemma.Validation.Tests
         [TestCase("padded_noise")]
         public void Block192ProjectionCandidateGpuMatchesOriginalGolden(string signal) => Execute(signal,"GpuAudioBlock192ProjectionCandidate",true,16);
 
+        [TestCase("silence")]
+        [TestCase("impulse")]
+        [TestCase("sine")]
+        [TestCase("nyquist")]
+        [TestCase("noise")]
+        [TestCase("padded_noise")]
+        public void Block192FirstFeedForwardCandidateGpuMatchesOriginalGolden(string signal) => Execute(signal,"GpuAudioBlock192FirstFfCandidate",true,16);
+
         void Execute(string signal,string candidateFolder,bool compensateStatic=false,int attentionChunk=0,int projectionChunk=64)
         {
             Assert.That(SystemInfo.supportsComputeShaders, Is.True, "Actual GPU required; no CPU substitute or skip.");
             var root = Path.GetFullPath(Path.Combine(Application.dataPath, "../../k/artifacts/audio-real-chain/audio-runtime-reference"));
             var candidateRoot = Path.Combine(Application.dataPath, candidateFolder);
             var source = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var block192=candidateFolder=="GpuAudioBlock192ProjectionCandidate";
+            var firstFf=candidateFolder=="GpuAudioBlock192FirstFfCandidate";
+            var block192=candidateFolder=="GpuAudioBlock192ProjectionCandidate" || firstFf;
             var scalarMean=candidateFolder=="GpuAudioScalarMeanCandidate" || block192;
             var blockConv=candidateFolder=="GpuAudioBlock16ConvCandidate" || scalarMean;
             var variant=candidateFolder=="GpuAudioCandidate"?"":attentionChunk>0?"-refined-attention16-static"+projectionChunk:compensateStatic?"-refined-static64":"-refined-inverse";
@@ -123,6 +132,7 @@ namespace EmbeddingGemma.Validation.Tests
             if(candidateFolder=="GpuAudioBlock16ConvCandidate")variant="-block16-conv-attention16-static64";
             if(scalarMean)variant="-scalar-mean-block16-attention16-static64";
             if(block192)variant="-block192-projection-attention16-static64";
+            if(firstFf)variant="-block192-first-ff-attention16-static64";
             var output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/saved-onnx-audio-gpu-" + source + variant + "-" + signal + ".json"));
             Assert.That(File.Exists(output), Is.False, "Preserve each invocation's evidence.");
             var report = new JObject { ["success"] = false, ["scope"] = "one_saved_onnx_audio_encoder_gpu_vs_immutable_original",
@@ -204,6 +214,21 @@ namespace EmbeddingGemma.Validation.Tests
                         Assert.That(transform.Value<string>("weight_sha256"),Is.EqualTo("a59650e614c2746ee18bbb23c475f65677beeb9ffe49350854af2aad873052a1"));
                         Assert.That(transform.Value<bool>("existing_initializer_bytes_preserved"),Is.True);
                         report["input_projection_graph_transform"]=transform.DeepClone();
+                    }
+                    if(firstFf)
+                    {
+                        var transforms=(JArray)candidateAudit["first_feed_forward_graph_transforms"];
+                        Assert.That(transforms.Count,Is.EqualTo(2));
+                        var expected=new[]{"d598344ee23d0545a76fa6d95173fbc886e8f2dd46d5907e6bd50b6cfa4891df","50ff67bc3a9a8704f925183042667884c6a2114de99565c2fa93f79570bd77b6"};
+                        for(var i=0;i<2;i++)
+                        {
+                            Assert.That(transforms[i].Value<int>("replaced_matmul_count"),Is.EqualTo(1));
+                            Assert.That(transforms[i].Value<string>("source_graph_sha256"),Is.EqualTo("63f24d4883047ebe1f30572d7d45ad5bead33891bbe79a256f9ee10867a564b2"));
+                            Assert.That(transforms[i].Value<string>("target_node"),Is.EqualTo("/feed_forward1/ffw_layer_"+(i+1)+"/linear/MatMul"));
+                            Assert.That(transforms[i].Value<string>("weight_sha256"),Is.EqualTo(expected[i]));
+                            Assert.That(transforms[i].Value<bool>("existing_initializer_bytes_preserved"),Is.True);
+                        }
+                        report["first_feed_forward_graph_transforms"]=transforms.DeepClone();
                     }
                 }
                 var row = ((JArray)original["cases"]).Single(r => r.Value<string>("id") == signal);

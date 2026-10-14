@@ -20,6 +20,9 @@ def test_image_role_job_pins_all_native_profiles_and_shared_backbones():
         assert "--member " + name + "/positions-int32.bin" in native
         assert "--member " + name + "/0-pixels-fp32.bin" in native
         assert "--member " + name + "/1-pixels-fp32.bin" in native
+        assert "--member " + name + "/0.png" in native, "Image producer audits the complete input manifest"
+        assert "--member " + name + "/1.png" in native
+    assert "--member processor_config.json" in native
     backbone = next(v["run"] for v in steps if v.get("name") == "Fetch fixed document backbones")
     assert "--artifact-id 11830367896" in backbone
     assert "--member square/backbone.pt2" in backbone and "--member landscape/backbone.pt2" in backbone

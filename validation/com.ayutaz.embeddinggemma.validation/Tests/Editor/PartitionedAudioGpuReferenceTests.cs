@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using EmbeddingGemma.Tests;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -13,6 +14,24 @@ namespace EmbeddingGemma.Validation.Tests
 {
     public sealed class PartitionedAudioGpuReferenceTests
     {
+        [Test]
+        public void SmallBoundaryObservationPreservesFinalBitsAndBorrowedGpuResources()
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
+            var method=typeof(PartitionedAudioGpuReferenceTests).GetMethod("ObserveBoundaries",BindingFlags.Static|BindingFlags.NonPublic);
+            Assert.That(method,Is.Not.Null,"Partition boundary observation is missing.");
+            var a=new FunctionalGraph();var x=a.AddInput<float>(new TensorShape(1,2),"input");var prefix=a.Compile(x);
+            var named=prefix.outputs[0];named.name="input";prefix.outputs[0]=named;
+            var b=new FunctionalGraph();var residual=b.AddInput<float>(new TensorShape(1,2),"input");var projected=b.AddInput<float>(new TensorShape(1,2),"projected");
+            var tail=b.Compile(residual+projected);named=tail.outputs[0];named.name="final";tail.outputs[0]=named;
+            using var kernel=new GpuBlockedMatmul(2,2,new[]{2f,0f,0f,3f});
+            using var input=new Tensor<float>(new TensorShape(1,2),new[]{-3f,4f});ComputeTensorData.Pin(input);
+            var snapshots=(Dictionary<string,float[]>)method.Invoke(null,new object[]{new[]{prefix,tail},new[]{"input"},new[]{"projected"},new[]{kernel},input,new HashSet<string>{"input"}});
+            Assert.That(snapshots["input"],Is.EqualTo(new[]{-3f,4f}));
+            Assert.That(snapshots["__final"],Is.EqualTo(new[]{-9f,16f}));
+            using var reused=kernel.Execute(input);Assert.That(reused.backendType,Is.EqualTo(BackendType.GPUCompute));
+        }
+
         [TestCase("silence")]
         [TestCase("impulse")]
         [TestCase("sine")]

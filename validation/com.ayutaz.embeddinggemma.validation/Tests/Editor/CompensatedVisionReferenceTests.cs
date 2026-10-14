@@ -23,9 +23,10 @@ namespace EmbeddingGemma.Validation.Tests
         [OneTimeSetUp] public void AuditImmutableRealVisionArtifacts()
         {
             root = Path.GetFullPath(Path.Combine(Application.dataPath, "../../k/artifacts/vision-encoder"));
-            output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/compensated-vision-results/results.json"));
+            output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/compensated-vision-norm4-results/results.json"));
             conditions = new JArray();
-            report = new JObject { ["scope"] = "fixed_real_vision_fp32_compensated_projection_encoder_api_only", ["success"] = false,
+            report = new JObject { ["scope"] = "fixed_real_vision_fp32_compensated_projection_centered_norm4_encoder_api_only", ["success"] = false,
+                ["projection_chunk"] = 64, ["norm_chunk"] = 4,
                 ["runtime_source"] = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE"),
                 ["reference_source"] = "e2a6dc01fbca8c9be1f3bbe875325ad338de0ca0", ["runtime_overlay"] = false,
                 ["unity"] = Application.unityVersion, ["sentis"] = "2.6.1", ["gpu"] = SystemInfo.graphicsDeviceName,
@@ -74,7 +75,7 @@ namespace EmbeddingGemma.Validation.Tests
                 var geometry = new ImageEncoderProfile(width, height);
                 Assert.That(geometry.FeatureCount, Is.EqualTo(profile.Value<int>("feature_count")));
                 var original = TextModelFile.Load(Path.Combine(root, name + "-fp32.sentis"));
-                var candidate = CompensatedModel.Create(original, 64);
+                var candidate = CompensatedModel.CreateWithCompensatedNorms(original, 64, 4);
                 condition["original_layer_count"] = original.layers.Count; condition["candidate_layer_count"] = candidate.layers.Count;
                 condition["largest_constant_bytes"] = candidate.constants.Max(value => value.lengthBytes); Save();
                 using var api = new ImageFeatureEncoder(candidate, backend, geometry);

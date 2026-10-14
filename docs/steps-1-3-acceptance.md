@@ -1,6 +1,8 @@
 # 工程1〜3の作業基準と受け入れ
 
-> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。実モデル実行は停止中。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
+> 文書整合確認: 2026-10-15。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。ユーザー指定の実行計画3・4は継続中、未完了。直近の所有Unity processは終了済み。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
+
+2026-10-15追加: 保存Welford8のsilence GPUComputeは元参照と355要素不合格、計算fallback / flush0。[固定失敗receipt](results/m4-saved-welford8-gpu-failed-20261015.json)。通常最終値を変えない7段階観測では、最初の畳み込みがbit一致し、最初の微差はlayer0.norm。[観測と経路TDD](results/m4-saved-subsample-gpu-first-difference-20261015.json)。最初の後段normの1要素超過は、実activationのFP64投影でも残るため入力側へ戻す。[独立oracle診断](results/m4-first-feed-forward-gpu-propagation-20261015.json)。全encoder補償のActionsはrunner通信断で数値結果未取得、成果物0件。[別分類の失敗](results/m4-compensated-encoder-runner-lost-20261015.json)。画像FP32全profile、音声全信号、実入力から最終APIの全role・境界・寿命・例外後再利用・text回帰は未達。以降の停止記述は当時の履歴。
 
 2026-10-14。ユーザー指定の範囲は、(1)基準・PR依存整理、(2)画像・音声encoder数値不一致修正、(3)実入力→最終768次元APIの受け入れ。sample・正式Releaseは今回の完了条件へ置き換えない。
 

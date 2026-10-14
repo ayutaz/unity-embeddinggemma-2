@@ -46,7 +46,7 @@ def test_conv_rewrite_keeps_existing_weight_bytes_and_native_tolerance(tmp_path)
     np.testing.assert_allclose(actual,expected.numpy(),atol=1e-5,rtol=1e-4)
 
 
-@pytest.mark.parametrize('problem',['missing','stride','bias','hash','shape','double'])
+@pytest.mark.parametrize('problem',['missing','stride','bias','hash','shape','double','half_cast'])
 def test_conv_context_is_rejected_before_any_graph_mutation(tmp_path,problem):
     run=required();model,weight=original();compiled=template(tmp_path);name='conv';digest=hashlib.sha256(weight.tobytes()).hexdigest()
     if problem=='missing':name='missing'
@@ -55,6 +55,7 @@ def test_conv_context_is_rejected_before_any_graph_mutation(tmp_path,problem):
     elif problem=='hash':digest='0'*64
     elif problem=='shape':compiled.graph.input[0].type.tensor_type.shape.dim[2].dim_value=9
     elif problem=='double':compiled.graph.input[1].type.tensor_type.elem_type=TensorProto.DOUBLE
+    elif problem=='half_cast':compiled.graph.node.append(helper.make_node('Cast',['values'],['unsupported_half'],to=TensorProto.FLOAT16))
     before=model.SerializeToString()
     with pytest.raises(ValueError):run(model,compiled,node_name=name,expected_weight_sha256=digest)
     assert model.SerializeToString()==before

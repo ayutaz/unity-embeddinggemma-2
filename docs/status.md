@@ -4,6 +4,12 @@
 
 ## 現在の判定
 
+**2026-10-15最新の畳み込み候補:** FP32 unfold + chunk64 Neumaier積和を15 Red→15 Greenで追加し、元Convの4D係数をそのまま使う1箇所rewriteを7 Red→関連67 Greenで追加。FP16 Castを監査が拒否しない不足1 Redを修正して関連68 Green。runtime / ONNXにFP64を入れず、既定のexportと元goldenを維持する。`dbfa061` の実GPU全encoderは無音219要素不合格・最大許容差比6.78027で、以前の201要素・3.73996より悪化したため採用しない。GPUCompute・計算fallback / flush0、61,003層、約96.65秒、NUnit0 pass / 1 fail / skip0 / exit2。[固定失敗とTDD](results/m4-compensated-conv-full-gpu-failed-20261015.json)。直近の所有Unityは終了済み。
+
+現在CPUのgrad / no_grad / inference mode、oneDNN有無、module呼び出しを比較しても元conv2のbit再現は未達。元の8,960入力patchは6種類の固定値へ集約できることを監査し、channel / kernel / block順と2 / 4 / 8 accumulatorの42種類を独立offline FMA oracleで比較したが全bit一致の順序は見つからなかった。これは候補探索の診断で、GPU成功や参照文脈合格ではない。次はimmutable参照のhost / convolution kernel文脈を復元し、小さいGPU演算の忠実性を確認してから全encoderへ戻る。旧golden・許容差を変えず、画像FP32全3 profile、音声元全6信号 / 両profile、実Texture / PCM→最終768次元APIの全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰 / 中間readbackなしを維持する。工程3・4とも未完了。
+
+前回のworkflow契約修正 `2a6d135` のPython全体回帰 `38628144281` は4環境それぞれ744 pass / fail0 / skip0でterminal success。[固定回帰成功](results/python-full-regression-contract-green-20261015.json)。今回追加した畳み込み・rewriteテストはこのsourceに含まれず、関連68 Greenと区別する。最新sourceの全体回帰はまだ未検証。モデル生成を含むRequired CI、元encoder / 全chainの合格へ流用しない。以下は直前の切り分けcheckpoint。
+
 **2026-10-15最新の切り分け:** compact候補の12層観測 `5a8799e` は通常最終値をbit再現し、元最終gateの201要素不合格も再現。layer_0〜8は許容差内、layer_9は1・layer_10は42・layer_11は1,119要素超過。約101.22 MBのlayer_9抽出 `f24a539` は観測入力で観測出力を全bit再現し、元layer_8入力では元layer_9との超過0、最大許容差比0.26133。入力側7段階の観測 `dbd836b` ではlayer0.conv / norm / actが全bit一致し、最初の差はlayer1.convの224,650値（元許容差超過0）。いずれもGPUCompute・計算fallback / flush0・NUnit1 pass / skip0 / exit0は切り分けの完了であり、全encoder合格ではない。[固定切り分けreceipt](results/m4-compact-gpu-drift-localization-20261015.json)。
 
 同じ元conv2入力・係数で現在CPUを再計算すると元参照と268,142値のbit差があり、元許容差内でも参照文脈のbit再現は未達。現CPU値を新goldenに採用しない。次は保存conv2値に対して、固定CPU畳み込みの集計順 / 文脈と一般的なGPU FP32補償候補を切り分ける。FP64は独立offline oracleのみ。Unity終了時のPersistent allocation 1件の警告を保存しており、発生元・所有権 / Disposeの受け入れは未達。

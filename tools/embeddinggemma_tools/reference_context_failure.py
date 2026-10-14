@@ -5,7 +5,9 @@ import json
 import os
 import platform
 from pathlib import Path
+import re
 
+import numpy as np
 import torch
 
 
@@ -75,3 +77,57 @@ def probe_cpu_threads(program, inputs, expected, *, thread_counts=(1, 2, 4)):
         torch.set_num_threads(initial)
     return dict(scope="controlled_cpu_thread_replay_only", original_threads=initial, conditions=conditions,
                 full_encoder_validated=False, end_to_end_validated=False)
+
+
+def replay_saved_reference_context(directory, modality, *, source_commit, revision, case_id):
+    """Audit the saved graph and selected fixture; this is not full acceptance."""
+    if modality not in ("audio", "image") or any(re.fullmatch(r"[0-9a-f]{40}", value) is None for value in (source_commit, revision)):
+        raise ValueError("Replay needs a fixed modality, source and revision")
+    root = Path(directory).resolve()
+    prefix = "audio-encoder" if modality == "audio" else "vision"
+    audit = json.loads((root / (prefix + "-validation.json")).read_text(encoding="utf-8"))
+    if (audit.get("stage") != ("audio_encoder_projector_only" if modality == "audio" else "vision_encoder_projector_only")
+            or not (audit.get("native_reference_complete") if modality == "audio" else audit.get("success"))):
+        raise ValueError("Replay requires a completed native reference")
+    def audited(name):
+        if not isinstance(name, str) or name not in audit["files"]:
+            raise ValueError("Replay file is absent from the audit")
+        path = (root / name).resolve()
+        entry = audit["files"][name]
+        if not path.is_relative_to(root) or not path.is_file() or path.stat().st_size != entry["bytes"]:
+            raise ValueError("Replay file path/size mismatch")
+        with path.open("rb") as stream:
+            digest = hashlib.file_digest(stream, "sha256").hexdigest()
+        if digest != entry["sha256"]:
+            raise ValueError("Replay file hash mismatch")
+        return path
+    reference = json.loads(audited(prefix + "-reference.json").read_text(encoding="utf-8"))
+    metadata = reference["metadata"]
+    if metadata != audit["metadata"] or metadata.get("source_commit") != source_commit or metadata.get("model_revision") != revision:
+        raise ValueError("Replay reference provenance mismatch")
+    matches = [row for row in reference["cases"] if row["id"] == case_id]
+    if len(matches) != 1:
+        raise ValueError("Replay case is missing or ambiguous")
+    row = matches[0]; spec = reference["profiles"][row["profile"]]
+    input_name = row["input_features"] if modality == "audio" else row["pixels"]
+    input_path = audited(input_name)
+    graph_path = audited(spec.get("native_graph", spec.get("graph")))
+    shape = spec["feature_shape"] if modality == "audio" else spec["pixel_shape"]
+    raw = np.fromfile(input_path, dtype="<f4")
+    if not shape or any(type(value) is not int or value <= 0 for value in shape) or raw.size != int(np.prod(shape)) or not np.isfinite(raw).all():
+        raise ValueError("Replay input shape/finite mismatch")
+    values = torch.from_numpy(raw.reshape(shape).copy())
+    expected = torch.tensor(row["features"], dtype=torch.float32)
+    if not expected.numel() or not torch.isfinite(expected).all():
+        raise ValueError("Replay expected features must be finite and nonempty")
+    before_load_threads = torch.get_num_threads()
+    program = torch.export.load(graph_path).module()
+    return dict(scope="audited_saved_reference_context_probe_only", modality=modality, case=case_id,
+                reference_source=source_commit, model_revision=revision, input_sha256=audit["files"][input_name]["sha256"],
+                graph_sha256=audit["files"][graph_path.relative_to(root).as_posix()]["sha256"],
+                threads_before_program_load=before_load_threads, threads_after_program_load=torch.get_num_threads(),
+                runtime=dict(torch_version=torch.__version__, cpu_capability=torch.backends.cpu.get_cpu_capability(),
+                             torch_interop_threads=torch.get_num_interop_threads(),
+                             env={name: os.environ.get(name) for name in ("ATEN_CPU_CAPABILITY", "MKL_CBWR", "DNNL_MAX_CPU_ISA")}),
+                thread_contexts=probe_cpu_threads(program, (values,), expected),
+                model_weights_downloaded=False, expected_unchanged=True, full_encoder_validated=False, end_to_end_validated=False)

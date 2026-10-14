@@ -43,6 +43,26 @@ def test_standalone_replay_uses_fixed_program_input_and_original_expected(saved_
     assert report["model_weights_downloaded"] is False and report["full_encoder_validated"] is False
 
 
+def test_image_replay_audits_the_selected_graph_and_pixels_without_unrelated_pngs(saved_source):
+    original = json.loads((saved_source / "audio-encoder-reference.json").read_text())
+    profile = original["profiles"]["fixed"]
+    profile["pixel_shape"] = profile.pop("feature_shape")
+    profile["graph"] = profile.pop("native_graph")
+    row = original["cases"][0]
+    row["id"] = "square-0"; row["pixels"] = row.pop("input_features")
+    path = saved_source / "vision-reference.json"
+    path.write_text(json.dumps(original), encoding="utf-8")
+    audit = json.loads((saved_source / "audio-encoder-validation.json").read_text())
+    audit.update(stage="vision_encoder_projector_only", success=True)
+    audit["files"][path.name] = dict(bytes=path.stat().st_size, sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+    audit["files"]["unrelated.png"] = dict(bytes=10, sha256="c" * 64)
+    (saved_source / "vision-validation.json").write_text(json.dumps(audit))
+    report = replay(saved_source, "image", source_commit="a" * 40, revision="b" * 40, case_id="square-0")
+    assert report["modality"] == "image" and report["case"] == "square-0"
+    assert all(row["mismatched_elements"] == 0 for row in report["thread_contexts"]["conditions"])
+    assert report["full_encoder_validated"] is False
+
+
 @pytest.mark.parametrize("failure", ["input_hash", "producer", "graph_escape"])
 def test_standalone_replay_rejects_invalid_provenance_before_program_load(saved_source, monkeypatch, failure):
     if failure == "input_hash":

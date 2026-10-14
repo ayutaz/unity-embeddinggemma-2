@@ -1,0 +1,121 @@
+name: Frozen native CPU context diagnostics
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, labeled]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: reference-context-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       contains(github.event.pull_request.labels.*.name, 'reference-context-diagnostics'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        modality: [audio, image]
+        context: [native, avx2]
+    defaults:
+      run:
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+      MODALITY: ${{ matrix.modality }}
+      PROBE_CONTEXT: ${{ matrix.context }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - name: Constrain the common AVX2 context
+        if: matrix.context == 'avx2'
+        run: |
+          {
+            echo 'ATEN_CPU_CAPABILITY=avx2'
+            echo 'MKL_CBWR=AVX2'
+            echo 'DNNL_MAX_CPU_ISA=AVX2'
+          } >> "$GITHUB_ENV"
+      - name: Fetch fixed graph and first fixture
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$MODALITY" = audio ]; then
+            uv run --locked python -m embeddinggemma_tools.artifact_zip \
+              --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11814567883 \
+              --output ../artifacts/context-input --max-entry-bytes 2147483648 \
+              --member audio-runtime-reference/audio-encoder-reference.json \
+              --member audio-runtime-reference/audio-encoder-validation.json \
+              --member audio-runtime-reference/frames-1119-valid-1119/audio.pt2 \
+              --member audio-runtime-reference/frames-1119-valid-1119/silence-features-fp32.bin
+            sha256sum --check <<'EOF'
+          ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9  ../artifacts/context-input/audio-runtime-reference/audio-encoder-reference.json
+          68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1  ../artifacts/context-input/audio-runtime-reference/audio-encoder-validation.json
+          EOF
+          else
+            uv run --locked python -m embeddinggemma_tools.artifact_zip \
+              --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11830312950 \
+              --output ../artifacts/context-input --max-entry-bytes 2147483648 \
+              --member vision-reference.json --member vision-validation.json \
+              --member square/vision.pt2 --member square/0-pixels-fp32.bin
+            sha256sum --check <<'EOF'
+          7c183c5217e13c28205c2a804c04ff93c68642b40a948f1cfb3c55d7f3852a98  ../artifacts/context-input/vision-reference.json
+          3f48634edaa191fa15a8c7d5eb6ebdc8a452709f45ef6fab22e6ead45bdc0aa4  ../artifacts/context-input/vision-validation.json
+          EOF
+          fi
+      - name: Record actual CPU host
+        if: always()
+        run: |
+          mkdir -p ../artifacts/context-results
+          lscpu --json > ../artifacts/context-results/cpu-host.json
+      - name: Replay fixed expected features under controlled threads
+        run: |
+          uv run --locked python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from embeddinggemma_tools.reference_context_failure import replay_saved_reference_context
+          modality = os.environ['MODALITY']
+          root = Path('../artifacts/context-input')
+          producer = 'c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1'
+          case = 'square-0'
+          if modality == 'audio':
+              root /= 'audio-runtime-reference'
+              producer = '4edbe17a8105233c5aaa1514faa2862b08a4f7e0'
+              case = 'silence'
+          report = replay_saved_reference_context(root, modality, source_commit=producer,
+              revision='914f7f89142e33e77833254d9c9b90c3cef7303b', case_id=case)
+          report.update(job_source=os.environ['GITHUB_SHA'], probe_context=os.environ['PROBE_CONTEXT'])
+          output = Path('../artifacts/context-results')
+          output.mkdir(parents=True, exist_ok=True)
+          path = output / f"{modality}-{os.environ['PROBE_CONTEXT']}.json"
+          path.write_text(json.dumps(report, indent=2, allow_nan=False) + '\n', encoding='utf-8')
+          print(json.dumps(report, allow_nan=False))
+          PY
+      - name: Record diagnostic scope
+        if: always()
+        run: |
+          echo 'Saved-graph CPU context diagnostics only; the original encoder and full-chain gates remain separate.' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-context-${{ matrix.modality }}-${{ matrix.context }}-${{ github.sha }}
+          path: |
+            artifacts/context-results/*.json
+            artifacts/context-input/range-receipt.json
+          retention-days: 7
+          if-no-files-found: warn

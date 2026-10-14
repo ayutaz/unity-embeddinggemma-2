@@ -1,0 +1,10 @@
+{
+  "scope": "standalone_native_context_workflow_and_replay_green",
+  "source_base": "a7afd7a",
+  "command": "uv run --locked pytest tests/test_reference_context_workflow.py tests/test_saved_reference_replay.py tests/test_cpu_reference_context.py tests/test_image_role_reference_workflow.py tests/test_audio_role_reference_workflow.py tests/test_artifact_zip.py -q --tb=short",
+  "passed": 23,
+  "failed": 0,
+  "real_context_validated": false,
+  "no_backbone_or_hf_snapshot_download": true,
+  "scope_is_selected_fixture_only": true
+}

@@ -47,11 +47,13 @@ jobs:
           --member audio-runtime-stages/audio-stage-validation.json
           --member audio-runtime-stages/frames-1119-valid-1119/silence-stage-00-fp32.bin
           --member audio-runtime-stages/frames-1119-valid-1119/silence-stage-01-fp32.bin
+          --member audio-runtime-reference/frames-1119-valid-1119/silence-features-fp32.bin
       - name: Verify pinned context manifests before model download
         run: |
           sha256sum --check <<'EOF'
           6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a  ../artifacts/frozen-audio-layer/audio-runtime-stages/audio-stage-reference.json
           3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b  ../artifacts/frozen-audio-layer/audio-runtime-stages/audio-stage-validation.json
+          366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24  ../artifacts/frozen-audio-layer/audio-runtime-reference/frames-1119-valid-1119/silence-features-fp32.bin
           EOF
       - name: Replay official layer 0 against unchanged native final
         run: >-
@@ -64,6 +66,8 @@ jobs:
           --detail-feed-forward
           --projection-oracle
           --compensated-projection
+          --subsample-input ../artifacts/frozen-audio-layer/audio-runtime-reference/frames-1119-valid-1119/silence-features-fp32.bin
+          --subsample-input-sha256 366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

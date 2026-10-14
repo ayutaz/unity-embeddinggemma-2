@@ -7,6 +7,21 @@ namespace EmbeddingGemma.Tests
 {
     public sealed class GpuProjectionPipelineTests
     {
+        [Test]
+        public void MixedGpuStagesPreserveResidualOutputsAndBorrowedSiluAfterDispose()
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
+            var contract=typeof(GpuSilu).Assembly.GetType("EmbeddingGemma.IGpuTensorOperation");
+            Assert.That(contract,Is.Not.Null,"Mixed GPU stage contract is missing.");
+            using var projection=new GpuBlockedMatmul(2,2,new[]{1f,0f,0f,1f});using var silu=new GpuSilu();
+            var operations=Array.CreateInstance(contract,2);operations.SetValue(projection,0);operations.SetValue(silu,1);
+            var pipeline=(IDisposable)Activator.CreateInstance(Required(),Models(),new[]{"input","b"},new[]{"a","c"},operations);
+            using var input=new Tensor<float>(new TensorShape(1,2),new[]{-2f,0f});ComputeTensorData.Pin(input);
+            using var output=Execute(pipeline,input);pipeline.Dispose();
+            Assert.That(output.backendType,Is.EqualTo(BackendType.GPUCompute));Assert.That(output.DownloadToArray(),Is.EqualTo(new[]{-2f,0f}));
+            using var borrowed=silu.Execute(input);Assert.That(borrowed.backendType,Is.EqualTo(BackendType.GPUCompute));
+        }
+
         static Type Required()
         {
             var type=typeof(GpuBlockedMatmul).Assembly.GetType("EmbeddingGemma.GpuProjectionPipeline");

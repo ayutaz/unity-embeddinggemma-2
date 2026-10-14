@@ -119,7 +119,8 @@ def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequenc
                 golden_features=torch.tensor(original["features"])
                 if features.shape!=golden_features.shape or not torch.allclose(features,golden_features,rtol=1e-4,atol=1e-5):
                     record_feature_drift(destination, "image", features, golden_features, role=role, profile=profile,
-                                         case=original["id"], source_commit=source_commit, input_source_commit=vision_source_commit)
+                                         case=original["id"], source_commit=source_commit, input_source_commit=vision_source_commit,
+                                         saved_encoder=lambda: saved_encoder(pixels))
                     raise ValueError("Official image embedding reference changed the encoder features")
                 audio=torch.empty(0,core.config.text_config.hidden_size)
                 wrapper.validate_inputs(ids,mask,features,audio)

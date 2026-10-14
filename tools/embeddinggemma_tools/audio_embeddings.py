@@ -129,7 +129,8 @@ def prepare_audio_embeddings(snapshot, encoder_directory, destination, *, sequen
                 features = native.audio_hidden_states
                 if features.shape != golden_features.shape or not torch.allclose(features, golden_features, rtol=1e-4, atol=1e-5):
                     record_feature_drift(destination, "audio", features, golden_features, role=role, profile=profile,
-                                         case=original["id"], source_commit=source_commit, input_source_commit=encoder_source_commit)
+                                         case=original["id"], source_commit=source_commit, input_source_commit=encoder_source_commit,
+                                         saved_encoder=lambda: saved_encoder(input_features))
                     raise ValueError("Audio reference official encoder features changed")
                 expected = torch.nn.functional.normalize(native.last_hidden_state[:, mask[0].bool()].mean(dim=1), dim=-1)
                 image = torch.empty(0, core.config.text_config.hidden_size)

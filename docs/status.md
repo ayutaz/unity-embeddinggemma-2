@@ -1,8 +1,16 @@
 # 現在の状態と残タスク
 
-更新日: 2026-10-15。最新の完了済み実GPU全encoder候補sourceは `de3a3b02fc5bd1e1ec0739ffa9b9dfdd446f272a`、2番目のLayerNorm GPU局所Greenは `b4b817a04e13d35d2dd35ea54412e69f33a2a3d4`、確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
+更新日: 2026-10-15。最新の完了済み実GPU全encoder候補sourceは `43c252d3b908ab9fee657ec9e06cb2c1e2843224`、入力投影GPU局所Greenは `16b9e40a656564aae38f6095ac8d9fcf050b5156`、確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
 
 ## 現在の判定
+
+**2026-10-15最新の入力投影修正:** 元subsample.layer1.actと投影係数a59650e6…を固定した。現在CPUの3行へ縮めたmatmulは元値と異なったが、元280行のSGEMMはthread1 / 2 / 4、contiguous RHS / linearの全9条件で保存参照を全bit再現した。192項ずつゼロからFMAし、各blockの結果を順にFP32で加える候補でも元280行・286,720値を再現した。これは固定参照から推定した順序で、すべてのMKL shape / ISAに対する保証ではない。API8 Red→関連30 Green、元initializerを保持する1箇所rewrite6 Red→関連22 Green。初回のONNX exportは記号shape推論で巨大allocationを要求し失敗したため、固定Kと正のpermute軸を明示して修正した。失敗と修正後GreenのXMLを別に保持する。
+
+`16b9e40`の実GPU固定投影は、元のstatic64経路で249,203 bit差→block192で全bit一致。元許容差超過は両方0、GPUCompute・計算fallback / flush0、NUnit各1件のRed→Green。元goldenは変更していない。`43c252d` / graph `63f24d48…`の全encoderは無音295要素不合格・最大許容差比7.637025、68,094層、NUnit0 pass / 1 fail / skip0 / exit2。前候補417要素より件数は減ったが最大比は悪化し、旧201要素の候補も含め全encoder未合格。model load2.337秒、CPU変換18.639秒、CPU schedule18.322秒、GPU完了待ち＋最終download0.818秒で、速度の受け入れにも流用しない。[固定投影修正・全体失敗・TDD](results/m4-block192-input-projection-gpu-and-whole-failed-20261015.json)。所有Unityはterminal、現在停止済み。
+
+次の独立offline診断では、最初のfeed-forwardの2つの投影も、元280行CPU SGEMMとblock192候補が保存参照を全bit再現した。入力clip / 出力clipと係数byteを元graphから固定し、FP64は独立FMA丸めoracleだけに使用した。これら2投影の実GPU・全モデル内bit一致は未検証。次は固定GPUでRed→Greenを確認し、元全encoderへ戻る。工程3・4、音声元6信号 / 両profile、画像FP32全3 profile、実入力から最終768 APIの全条件は維持する。
+
+`de3a3b0`の[Python全体回帰38640507832](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38640507832)は4環境各793 pass / fail0 / skip0でterminal success。[固定receipt](results/python-full-scalar-mean-rewrite-green-20261015.json)。後続のXML guard / block192 / matmul rewriteはこのsourceに含まれず、新しいsourceの全体回帰は別判定。CIのconv-reference-context workflowはSC2086の引用不足2件で失敗し、パスの変数展開をquoteした`52b6f3b`の[workflow lint38641650350](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38641650350)でterminal success、既存workflow契約14 passも確認。取消されたCIを成功に数えず、最新Required CIの全job完了は別gate。以下は前回checkpoint。
 
 **2026-10-15最新の全体結果と負荷:** `de3a3b0` / graph `c050c2ef…` のGPU全encoderは無音417要素不合格・最大許容差比6.736437438で、元golden / 許容差は変更していない。GPUCompute・計算fallback / flush0、64,050層、NUnit0 pass / 1 fail / skip0 / exit2。同じモデルの7段階観測は通常最終値を変えず、layer0.conv / norm / actとlayer1.conv / norm / actの6段階を元値と全bit一致させた。次の微差はinput_proj_linearの249,203要素、元許容差超過0・最大許容差比0.134108。局所修正の成功と全encoder不合格を別に保持する。[固定全体・観測・負荷receipt](results/m4-scalar-mean-full-gpu-and-load-analysis-20261015.json)。所有Unityは両方terminal、現在停止済み。
 

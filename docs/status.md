@@ -1,6 +1,6 @@
 # 現在の状態と残タスク
 
-更新日: 2026-10-15。最新の実GPU層観測sourceは `dd8cfd4fd8656df9b7b3b6c5505b01bb952f336f`、最初の正規化GPU局所Greenは `ac60979fc9b601edaf87cee6c5ddd24468c350ea`、確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
+更新日: 2026-10-15。最新の実GPU単独層照合sourceは `56a697d9732f0225ef25c1e2a25b4f6d26b44c58`、全層観測は `dd8cfd4fd8656df9b7b3b6c5505b01bb952f336f`、最初の正規化GPU局所Greenは `ac60979fc9b601edaf87cee6c5ddd24468c350ea`、確認mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
 
 ## 現在の判定
 
@@ -8,7 +8,9 @@
 
 元重みを再exportせず、保存ONNXの2つのinverseだけへ補正templateを挿入する小さいrewriteを6 Red→関連12 Greenで追加。FP64入力 / Castの拒否不足2 Redも修正し、関連14 Green。既存initializer全byteの集約hashを前後で照合し、変換17.57秒で監査済み別graphを生成した。ただし元silenceのGPU encoder gateはinverseだけで472要素不合格、元Welford8の355より悪化。[実モデルの失敗](results/m4-inverse-only-real-gpu-failed-20261015.json)。既存static64投影補償との組合せは287要素不合格、最大許容差比9.27709、40,633層。数は減ったが最大誤差が増えているので全体改善・受け入れとは扱わない。[組合せの失敗](results/m4-refined-static64-real-gpu-failed-20261015.json)。両試行はGPUCompute・計算fallback / flush0、skip0。
 
-static64候補の12層を元producer `4edbe17` の固定native中間値へ照合し、通常最終値を変えないことを確認。layer_0〜8の9層は各固定許容差内、最初の超過はlayer_9の1要素、layer_10は39・layer_11は1,218要素。NUnit1 passは観測完了であり、12数値条件の全合格ではない。[全層の観測](results/m4-refined-static64-full-layer-observation-20261015.json)。次はlayer_9を元layer_8の入力でGPU単独照合し、前段差の伝播と直接のbackend差を分離する。画像FP32全profile・音声元全6信号・padded候補、実Texture / PCM→最終APIの全role・境界・寿命・例外後再利用・text回帰は未達のまま。以下は前回checkpointの履歴。
+static64候補の12層を元producer `4edbe17` の固定native中間値へ照合し、通常最終値を変えないことを確認。layer_0〜8の9層は各固定許容差内、最初の超過はlayer_9の1要素、layer_10は39・layer_11は1,218要素。NUnit1 passは観測完了であり、12数値条件の全合格ではない。[全層の観測](results/m4-refined-static64-full-layer-observation-20261015.json)。
+
+layer_9を約100.88 MBへ抽出して単独GPU照合済み。全モデルで観測したlayer_8入力を使うとlayer_9出力がbit一致し、抽出経路の忠実性を確認。その後、元nativeのlayer_8入力を使うと元layer_9との不一致0、最大許容差比0.25350。NUnit1 pass / skip0 / exit0、計算fallback / flush0。この最初の層超過には前段入力差の伝播が関与すると確認した。[単独層の元入力照合](results/m4-layer9-original-input-gpu-isolation-20261015.json)。初回は未確定batchを残して推論前に拒否され、固定profileのbatch=1へ明示して再実行した。次は前段の誤差を抑えるためdynamic attention積和の補償を切り分け、元encoder gateへ戻す。画像FP32全profile・音声元全6信号・padded候補、実Texture / PCM→最終APIの全role・境界・寿命・例外後再利用・text回帰は未達のまま。以下は前回checkpointの履歴。
 
 **2026-10-15前回checkpoint:** 保存済みWelford8の実音声モデルをGPUComputeで元silenceへ照合し、計算fallback / flush0、355要素不合格。入力側7段階の観測は通常最終出力とbit一致し、最初の畳み込みは元native値とbit一致、最初の微差はlayer0.norm。7段階は各々の許容差内だが、最初のfeed-forward post normでは1要素が超過する。元係数・config・graph epsilonを監査した独立診断では、実activationにFP64投影を適用してもその1要素は残り、前段入力の差が支配的。FP64はoffline oracleのみ。8 lane候補と現在CPUの最初のLayerNormは元の全6種類の入力行にbit一致し、16 laneへの変更は改善根拠がない。[実GPUの不合格](results/m4-saved-welford8-gpu-failed-20261015.json) / [後段への誤差伝播](results/m4-first-feed-forward-gpu-propagation-20261015.json) / [入力側の最初の差](results/m4-saved-subsample-gpu-first-difference-20261015.json)。
 

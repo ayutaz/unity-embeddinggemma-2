@@ -219,13 +219,13 @@ namespace EmbeddingGemma.Validation.Tests
                     {
                         var transforms=(JArray)candidateAudit["first_feed_forward_graph_transforms"];
                         Assert.That(transforms.Count,Is.EqualTo(2));
-                        var expected=new[]{"d598344ee23d0545a76fa6d95173fbc886e8f2dd46d5907e6bd50b6cfa4891df","50ff67bc3a9a8704f925183042667884c6a2114de99565c2fa93f79570bd77b6"};
+                        var expectedWeights=new[]{"d598344ee23d0545a76fa6d95173fbc886e8f2dd46d5907e6bd50b6cfa4891df","50ff67bc3a9a8704f925183042667884c6a2114de99565c2fa93f79570bd77b6"};
                         for(var i=0;i<2;i++)
                         {
                             Assert.That(transforms[i].Value<int>("replaced_matmul_count"),Is.EqualTo(1));
                             Assert.That(transforms[i].Value<string>("source_graph_sha256"),Is.EqualTo("63f24d4883047ebe1f30572d7d45ad5bead33891bbe79a256f9ee10867a564b2"));
                             Assert.That(transforms[i].Value<string>("target_node"),Is.EqualTo("/feed_forward1/ffw_layer_"+(i+1)+"/linear/MatMul"));
-                            Assert.That(transforms[i].Value<string>("weight_sha256"),Is.EqualTo(expected[i]));
+                            Assert.That(transforms[i].Value<string>("weight_sha256"),Is.EqualTo(expectedWeights[i]));
                             Assert.That(transforms[i].Value<bool>("existing_initializer_bytes_preserved"),Is.True);
                         }
                         report["first_feed_forward_graph_transforms"]=transforms.DeepClone();

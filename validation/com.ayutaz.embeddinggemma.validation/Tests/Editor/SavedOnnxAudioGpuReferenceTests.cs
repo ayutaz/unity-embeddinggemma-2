@@ -20,13 +20,24 @@ namespace EmbeddingGemma.Validation.Tests
         [TestCase("nyquist")]
         [TestCase("noise")]
         [TestCase("padded_noise")]
-        public void SavedCandidateGpuMatchesOriginalGolden(string signal)
+        public void SavedCandidateGpuMatchesOriginalGolden(string signal) => Execute(signal,"GpuAudioCandidate");
+
+        [TestCase("silence")]
+        [TestCase("impulse")]
+        [TestCase("sine")]
+        [TestCase("nyquist")]
+        [TestCase("noise")]
+        [TestCase("padded_noise")]
+        public void RefinedInverseCandidateGpuMatchesOriginalGolden(string signal) => Execute(signal,"GpuAudioRefinedCandidate");
+
+        void Execute(string signal,string candidateFolder)
         {
             Assert.That(SystemInfo.supportsComputeShaders, Is.True, "Actual GPU required; no CPU substitute or skip.");
             var root = Path.GetFullPath(Path.Combine(Application.dataPath, "../../k/artifacts/audio-real-chain/audio-runtime-reference"));
-            var candidateRoot = Path.Combine(Application.dataPath, "GpuAudioCandidate");
+            var candidateRoot = Path.Combine(Application.dataPath, candidateFolder);
             var source = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/saved-onnx-audio-gpu-" + source + "-" + signal + ".json"));
+            var variant=candidateFolder=="GpuAudioCandidate"?"":"-refined-inverse";
+            var output = Path.GetFullPath(Path.Combine(Application.dataPath, "../artifacts/saved-onnx-audio-gpu-" + source + variant + "-" + signal + ".json"));
             Assert.That(File.Exists(output), Is.False, "Preserve each invocation's evidence.");
             var report = new JObject { ["success"] = false, ["scope"] = "one_saved_onnx_audio_encoder_gpu_vs_immutable_original",
                 ["signal"] = signal, ["runtime_source"] = source, ["requested_backend"] = "GPUCompute",
@@ -59,14 +70,23 @@ namespace EmbeddingGemma.Validation.Tests
                 report["candidate_source"] = candidate["metadata"]["source_commit"];
                 report["reference_source"] = original["metadata"]["source_commit"];
                 report["candidate_python_gate_passed"] = candidateAudit.Value<bool>("success");
+                report["candidate_folder"] = candidateFolder;
+                if(candidateFolder=="GpuAudioRefinedCandidate")
+                {
+                    Assert.That(candidateAudit["graph_transform"],Is.Not.Null,"Transformed graph provenance required.");
+                    report["graph_transform"]=candidateAudit["graph_transform"].DeepClone();
+                    Assert.That(candidateAudit["graph_transform"].Value<bool>("existing_initializer_bytes_preserved"),Is.True);
+                    Assert.That(candidateAudit["graph_transform"].Value<int>("replaced_inverse_count"),Is.EqualTo(2));
+                    Assert.That(candidateAudit.Value<bool>("onnx_numeric_validation_performed"),Is.False,"Do not reuse the original graph's ONNX results.");
+                }
                 var row = ((JArray)original["cases"]).Single(r => r.Value<string>("id") == signal);
                 var candidateRow = ((JArray)candidate["cases"]).Single(r => r.Value<string>("id") == signal);
                 var profileName = row.Value<string>("profile");
                 Assert.That(candidateRow.Value<string>("profile"), Is.EqualTo(profileName));
                 var profile = original["profiles"][profileName]; var candidateProfile = candidate["profiles"][profileName];
                 var graphName = candidateProfile.Value<string>("graph");
-                var assetPath = "Assets/GpuAudioCandidate/" + profileName + ".onnx";
-                Audit(Path.Combine(Application.dataPath, "GpuAudioCandidate", profileName + ".onnx"), candidateAudit["files"][graphName]);
+                var assetPath = "Assets/"+candidateFolder+"/" + profileName + ".onnx";
+                Audit(Path.Combine(Application.dataPath, candidateFolder, profileName + ".onnx"), candidateAudit["files"][graphName]);
                 var inputName = row.Value<string>("input_features"); var maskName = profile.Value<string>("frame_mask");
                 Audit(Path.Combine(root, inputName), originalAudit["files"][inputName]);
                 Audit(Path.Combine(root, maskName), originalAudit["files"][maskName]);

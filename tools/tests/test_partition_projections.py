@@ -61,6 +61,31 @@ def test_passthrough_outputs_have_explicit_identity_for_sentis_import():
         assert not inputs.intersection(v.name for v in part.graph.output)
 
 
+def test_constant_input_projection_is_cut_and_reconnected_without_cpu_folding():
+    source,w=model();constant=np.ones((1,4),dtype=np.float32)
+    nodes=list(source.graph.node)
+    nodes[1:1]=[helper.make_node('Constant',[],['position'],value=numpy_helper.from_array(constant)),
+                helper.make_node('MatMul',['position','weight'],['relative'],name='position_projection')]
+    nodes[-1].output[0]='sum'
+    nodes.append(helper.make_node('Add',['sum','relative'],['out'],name='with_position'))
+    del source.graph.node[:];source.graph.node.extend(nodes)
+    source.graph.value_info.extend([helper.make_tensor_value_info(n,TensorProto.FLOAT,[1,4]) for n in ['position','relative','sum']])
+    sha=hashlib.sha256(w.tobytes()).hexdigest()
+    parts,plan=required()(source,node_names=['first','position_projection','second'],expected_weight_sha256=[sha]*3)
+    values={'input':np.array([[1,-2,3,-4]],dtype=np.float32)}
+    for index,part in enumerate(parts):
+        onnx.checker.check_model(part)
+        assert not any(n.name in ['first','position_projection','second'] for n in part.graph.node)
+        outputs=ReferenceEvaluator(part).run(None,{v.name:values[v.name] for v in part.graph.input})
+        aliases=plan['segments'][index]['output_aliases']
+        values.update(dict(zip([aliases.get(v.name,v.name) for v in part.graph.output],outputs)))
+        if index<3:
+            projection=plan['projections'][index]
+            values[projection['output']]=values[projection['input']]@w
+    expected=ReferenceEvaluator(source).run(None,{'input':values['input']})[0]
+    np.testing.assert_array_equal(values['out'],expected)
+
+
 @pytest.mark.parametrize('problem',['missing','duplicate','order','hash','shape'])
 def test_partition_refuses_unproven_boundaries_before_mutation(problem):
     source,w=model();sha=hashlib.sha256(w.tobytes()).hexdigest();names=['first','second'];hashes=[sha,sha]

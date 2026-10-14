@@ -488,17 +488,29 @@ class TorchWelfordLayerNorm(nn.Module):
         return (values - total_mean) * inverse * self.weight
 
 
-def export_audio_native_onnx(wrapper, features, destination):
+def export_audio_native_onnx(wrapper, features, destination, *, layernorm_algorithm="native"):
     """Bridge native SiLU to standard ops while preserving FP32 division order."""
     import tempfile
     import onnx
     destination=Path(destination)
     destination.parent.mkdir(parents=True,exist_ok=True)
+    if layernorm_algorithm not in ("native", "torch_welford8"):
+        raise ValueError("Unknown ONNX LayerNorm algorithm")
+    restored = []
     domain="com.ayutaz.export"
     def silu_symbolic(graph, value):
         return graph.op(domain+"::NativeSiLU",value).setType(value.type())
     torch.onnx.register_custom_op_symbolic("aten::silu",silu_symbolic,20)
     try:
+        if layernorm_algorithm == "torch_welford8":
+            for parent in list(wrapper.modules()):
+                for name, child in list(parent.named_children()):
+                    if isinstance(child, nn.LayerNorm):
+                        replacement = TorchWelfordLayerNorm(child)
+                        restored.append((parent, name, child))
+                        parent.add_module(name, replacement)
+            if not restored:
+                raise ValueError("Welford export candidate requires source LayerNorm modules")
         with tempfile.TemporaryDirectory(prefix="audio-onnx-",dir=destination.parent) as directory:
             if not Path(directory).resolve().is_relative_to(destination.parent.resolve()):
                 raise ValueError("ONNX temporary path escaped the output directory")
@@ -544,6 +556,8 @@ def export_audio_native_onnx(wrapper, features, destination):
             onnx.checker.check_model(model)
             onnx.save_model(model,destination)
     finally:
+        for parent, name, child in restored:
+            parent.add_module(name, child)
         torch.onnx.unregister_custom_op_symbolic("aten::silu",20)
 
 

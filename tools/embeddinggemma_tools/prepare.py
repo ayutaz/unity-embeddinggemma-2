@@ -341,13 +341,15 @@ def diagnose_audio_onnx_stages(audio, projection, features, frame_mask, destinat
 
 
 def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODEL_REVISION, source_commit="local", native_silu=False,
-                          collect_onnx_failures=False):
+                          collect_onnx_failures=False, onnx_layernorm="native"):
     """Official audio tower/projector vs saved graph on audited PCM-derived features.
 
     Independent inputs are the official NumPy preprocessing references, not the
     output of our preprocessing graph. This is not final embeddings or Unity proof.
     """
     snapshot, preprocessing, destination = Path(snapshot), Path(preprocessing).resolve(), Path(destination)
+    if onnx_layernorm not in ("native", "torch_welford8") or (onnx_layernorm != "native" and not native_silu):
+        raise ValueError("ONNX LayerNorm candidate requires the native SiLU companion route")
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "audio-encoder-validation.json").unlink(missing_ok=True)
     (destination / "audio-encoder-failure.json").unlink(missing_ok=True)
@@ -484,7 +486,10 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
             del exported
             gc.collect()
             imported_graph=directory/"audio.onnx"
-            export_audio_native_onnx(wrapper,inputs[0][1],imported_graph)
+            if onnx_layernorm == "native":
+                export_audio_native_onnx(wrapper,inputs[0][1],imported_graph)
+            else:
+                export_audio_native_onnx(wrapper,inputs[0][1],imported_graph, layernorm_algorithm=onnx_layernorm)
             evaluator = ReferenceEvaluator(str(imported_graph))
             for features, expected, case_id in expected_rows:
                 actual_array = evaluator.run(None, {"input": features.numpy()})[0]
@@ -496,6 +501,10 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
                                    graph_sha256=digest(imported_graph), unity_validated=False,
                                    end_to_end_validated=False)
                 else:
+                    actual_path = directory / f"{case_id}-onnx-features-fp32.bin"
+                    actual_array.astype("<f4").tofile(actual_path)
+                    produced.append(actual_path)
+                    next(item for item in rows if item["id"] == case_id)["onnx_features"] = actual_path.relative_to(destination).as_posix()
                     actual = torch.from_numpy(actual_array)
                     cosine = torch.nn.functional.cosine_similarity(actual, expected, dim=-1).min().item()
                     difference = (actual - expected).abs()
@@ -555,6 +564,8 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
                             input_sha256={name: digest(snapshot / name) for name in
                                           ("config.json", "processor_config.json", "model.safetensors")},
                             versions={name: importlib.metadata.version(name) for name in ("torch", "transformers")})
+    if onnx_layernorm != "native":
+        encoder_metadata["onnx_layernorm_algorithm"] = onnx_layernorm
     reference_path = destination / "audio-encoder-reference.json"
     reference_path.write_text(json.dumps(dict(metadata=encoder_metadata, profiles=profiles, cases=rows),
                                          indent=2, allow_nan=False) + "\n", encoding="utf-8")

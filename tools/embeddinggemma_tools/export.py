@@ -445,6 +445,36 @@ def fp32_fma(a, b, c):
     return total + (product_error + sum_error)
 
 
+def fp32_cascade_mean1024(values):
+    """Pinned AVX2 eight-lane FP32 sum/divide order for contiguous 1024 rows.
+
+    Experimental standard-op candidate; this is not a general reduction or a
+    guarantee about other CPU instruction sets or tensor layouts. Mirrors the
+    four-accumulator, 16-step cascade and final lane order in pinned SumKernel:
+    https://github.com/pytorch/pytorch/blob/5c4886908584029761b579af026dcfb627c84070/aten/src/ATen/native/cpu/SumKernel.cpp
+    """
+    if not torch.compiler.is_compiling() and not torch.jit.is_tracing():
+        if (values.dtype != torch.float32 or values.ndim < 2 or values.shape[-1] != 1024
+                or not values.numel() or not values.is_contiguous() or not torch.isfinite(values).all()):
+            raise ValueError("cascade mean requires finite contiguous FP32 1024-wide rows")
+    zero = torch.zeros_like(values[..., :8])
+    accumulated = [zero, zero, zero, zero]
+    for start in (0, 16):
+        partial = [zero, zero, zero, zero]
+        for index in range(start, start + 16):
+            for lane in range(4):
+                offset = (index * 4 + lane) * 8
+                partial[lane] = partial[lane] + values[..., offset:offset + 8]
+        accumulated = [accumulated[lane] + partial[lane] for lane in range(4)]
+    combined = accumulated[0]
+    for lane in range(1, 4):
+        combined = combined + accumulated[lane]
+    total = torch.zeros_like(values[..., :1])
+    for lane in range(8):
+        total = total + combined[..., lane:lane + 1]
+    return total / 1024
+
+
 def fp32_refined_rstd(values):
     """Bounded FP32 sqrt then reciprocal, correcting GPU approximation residuals.
 

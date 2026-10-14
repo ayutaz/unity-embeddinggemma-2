@@ -16,14 +16,21 @@ namespace EmbeddingGemma.Validation.Tests
     {
         [TestCase("normal")]
         [TestCase("mean_inverse")]
-        public void FrozenFirstNormRowsMatchIndependentNativeBits(string name)
+        public void FrozenFirstNormRowsMatchIndependentNativeBits(string name) => Execute(name,"FrozenLayerNormProbe");
+
+        [TestCase("normal")]
+        [TestCase("mean_inverse")]
+        public void FrozenRmsRowsMatchIndependentNativeBits(string name) => Execute(name,"FrozenRmsProbe");
+
+        void Execute(string name,string folder)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var root=Path.Combine(Application.dataPath,"FrozenLayerNormProbe");
+            var root=Path.Combine(Application.dataPath,folder);
             var specification=JObject.Parse(File.ReadAllText(Path.Combine(root,"frozen-probe.json")));
             var probeSha=specification.Value<string>("graph_variant");
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/frozen-layernorm-gpu-"+source+"-"+probeSha+"-"+name+".json"));
+            var stem=folder=="FrozenRmsProbe"?"frozen-rms-gpu-":"frozen-layernorm-gpu-";
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+"-"+probeSha+"-"+name+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject { ["success"]=false,["scope"]="first_native_conv_unique_rows_gpu_norm_component_only",
                 ["source"]=source,["probe_variant"]=probeSha,["case"]=name,["requested_backend"]="GPUCompute",
@@ -43,7 +50,8 @@ namespace EmbeddingGemma.Validation.Tests
                     Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(file.Value.Value<string>("sha256")));
                     Assert.That(new FileInfo(path).Length,Is.EqualTo(file.Value.Value<long>("bytes")));
                 }
-                var asset=AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/FrozenLayerNormProbe/"+name+".onnx");Assert.That(asset,Is.Not.Null);
+                report["scope"]=specification.Value<string>("scope")??report.Value<string>("scope");
+                var asset=AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/"+folder+"/"+name+".onnx");Assert.That(asset,Is.Not.Null);
                 var model=ModelLoader.Load(asset);
                 report["layer_kinds"]=JObject.FromObject(model.layers.GroupBy(l=>l.GetType().Name).ToDictionary(g=>g.Key,g=>g.Count()));
                 using var worker=new Worker(model,BackendType.GPUCompute);

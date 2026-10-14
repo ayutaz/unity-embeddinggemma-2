@@ -8,12 +8,13 @@ from .refine_layernorm_onnx import _initializer_digest
 
 def refine_conv2d(model,template,*,node_name,expected_weight_sha256):
     """Inline a two-input template, using the exact existing 4D weight tensor."""
+    unsupported_float={onnx.TensorProto.DOUBLE,onnx.TensorProto.FLOAT16,onnx.TensorProto.BFLOAT16}
     if (len(template.graph.input)!=2 or len(template.graph.output)!=1
             or any(v.type.tensor_type.elem_type!=onnx.TensorProto.FLOAT for v in (*template.graph.input,*template.graph.output))
             or any(n.domain not in ('','ai.onnx') for n in template.graph.node)
-            or any(w.data_type==onnx.TensorProto.DOUBLE for w in template.graph.initializer)
-            or any((n.op_type=='Cast' and a.name=='to' and a.i==onnx.TensorProto.DOUBLE)
-                   or (a.type==onnx.AttributeProto.TENSOR and a.t.data_type==onnx.TensorProto.DOUBLE)
+            or any(w.data_type in unsupported_float for w in template.graph.initializer)
+            or any((n.op_type=='Cast' and a.name=='to' and a.i in unsupported_float)
+                   or (a.type==onnx.AttributeProto.TENSOR and a.t.data_type in unsupported_float)
                    for n in template.graph.node for a in n.attribute)):
         raise ValueError('Convolution template requires two FP32 standard-op inputs and one output')
     matches=[n for n in model.graph.node if n.name==node_name]

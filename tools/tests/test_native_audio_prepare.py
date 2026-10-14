@@ -18,7 +18,8 @@ def test_native_candidate_keeps_all_six_signals_and_standard_import_graphs(tmp_p
         model=onnx.load(tmp_path/"out"/profile["graph"])
         onnx.checker.check_model(model)
         assert all(node.domain in ('','ai.onnx') for node in model.graph.node)
-        assert any(node.op_type=='Swish' for node in model.graph.node)
+        assert not any(node.op_type=='Swish' for node in model.graph.node)
+        assert {'Neg', 'Exp', 'Add', 'Div'} <= {node.op_type for node in model.graph.node}
     assert result["unity_validated"] is False
 
 

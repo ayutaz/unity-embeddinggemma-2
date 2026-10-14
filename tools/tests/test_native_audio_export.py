@@ -16,7 +16,7 @@ def native_export():
 
 def onnx_export():
     value=getattr(export,"export_audio_native_onnx",None)
-    assert callable(value),"Standard Swish audio ONNX export is missing."
+    assert callable(value),"Standard division-order SiLU audio ONNX export is missing."
     return value
 
 
@@ -74,7 +74,7 @@ def test_default_audio_export_keeps_native_silu_for_the_standard_swish_route(tmp
     path=tmp_path/"default.pt2"
     export.export_audio_pt2(Probe(),x,path)
     targets={str(node.target) for node in torch.export.load(path).graph.nodes if node.op=='call_function'}
-    assert 'aten.silu.default' in targets,"Audio math must keep the native kernel; Sentis uses its standard ONNX Swish representation."
+    assert 'aten.silu.default' in targets,"Audio math must keep the native kernel; Sentis uses its standard ONNX companion."
 
 
 def test_onnx_activation_preserves_fp32_division_instead_of_reciprocal_multiplication(tmp_path):

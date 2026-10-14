@@ -7,6 +7,10 @@ on:
         description: Validate all six encoder signals and both profiles without exporting unrelated chain stages
         type: boolean
         default: true
+      diagnose_first_failure:
+        description: Stop at the first failed signal and localize only when trace and native final values preserve the original context
+        type: boolean
+        default: false
   pull_request:
     types: [opened, synchronize, labeled]
 
@@ -43,11 +47,19 @@ jobs:
       - name: Pin procedural PCM features against the official processor
         run: uv run --locked python -m embeddinggemma_tools.audio --output ../artifacts/audio-runtime-preprocessing
       - name: Collect every native reference and retain ONNX failure status
-        run: >-
-          uv run --locked python -m embeddinggemma_tools prepare-audio-encoder
-          --preprocessing ../artifacts/audio-runtime-preprocessing
-          --output ../artifacts/audio-runtime-reference
-          --native-silu --collect-onnx-failures
+        env:
+          DIAGNOSE_FIRST_FAILURE: ${{ inputs.diagnose_first_failure }}
+        run: |
+          if [ "$DIAGNOSE_FIRST_FAILURE" = true ]; then
+            uv run --locked python -m embeddinggemma_tools prepare-audio-encoder \
+              --preprocessing ../artifacts/audio-runtime-preprocessing \
+              --output ../artifacts/audio-runtime-reference --native-silu
+          else
+            uv run --locked python -m embeddinggemma_tools prepare-audio-encoder \
+              --preprocessing ../artifacts/audio-runtime-preprocessing \
+              --output ../artifacts/audio-runtime-reference \
+              --native-silu --collect-onnx-failures
+          fi
       - name: Export stages only after native reference completion
         if: ${{ always() && !inputs.encoder_only && hashFiles('artifacts/audio-runtime-reference/audio-encoder-validation.json') != '' }}
         run: >-

@@ -2,7 +2,18 @@
 
 更新日: 2026-10-14。**正式リリースはM2〜M4の全対応と全必須検証の完了後**とする。工程6までは開発・検証・配布準備であり、公開tag / GitHub Releaseを作成しない。振る舞いを追加・変更するすべての実装と自動化を、独立した期待値によるred → green → refactorで進める。
 
-## 現在の基準
+## 現在の基準と直近の優先順
+
+2026-10-14のmainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。追加実装はDraft PR #81の依存branchで、mainと分ける。最新の実測・未達は[status](status.md)、sourceごとの証拠は[工程1〜3のledger](steps-1-3-acceptance.md)を参照する。以下の以前の基準とcheckpointは各sourceの履歴として保持する。
+
+1. 参照・PR依存・環境・採用候補を固定する。工程1の整理は済んでいるが、新しい候補ごとにsourceと実結果を追記する。
+2. 旧golden・モデル・許容差を維持し、Python参照の演算文脈を再現して画像FP32/音声ONNX・Sentisの元不合格を修正する。現在は保存native graphも旧期待値に一致しないrunnerがあり、thread条件を制御した診断で切り分ける。音声候補のsilence norm出力はCPU layer_5 / GPU layer_6から不合格。小さいgreenを全encoder成功へ置き換えない。
+3. 工程2合格後、実Texture/PCM→前処理→encoder→backbone→最終768次元APIを受け入れる。Query/Document/Raw、全profile・mask・境界・所有権・例外後再利用、GPU中間readback/fallback禁止、text回帰を含む。独立した契約TDDは先に進めてよいが、実全chain合格とは別に記録する。
+4. 画像検索・音声検索/再生/明示収録sample、反復資源・性能、Player・必須実機、最終空Git consumer・配布監査へ渡す。実機・Unity CI環境の確保は並行する。公開tag/Releaseは全必須gate後の別工程。
+
+工程2・3は未完了。以下の工程1〜6、各C/I/A契約と全必須環境の範囲を維持する。
+
+## 以前の基準
 
 今回確認したローカルmainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`（計画更新PR #66）。基盤・公式prompt・最終画像Python参照は統合済み。画像 / 音声API、CPU画像前処理、GPU分割転送は各Draft PRで実装・検証を進めているがmain未統合。画像 / 音声sampleは未実装。実音声chainは最終cosineを全24条件で満たしたが、encoder単独の数値gateは未達でM4全体は未完了。残作業は検証だけではない。以下の最新checkpointと、過去の固定sourceの実測を区別する。[以前の計画snapshot](results/tdd-plan-checkpoint-20261013.json)、[音声前処理Runtime受け入れ](results/m4-audio-preprocessing-runtime-windows-20261013.json)、[診断未達](results/tdd-acceptance-plan-checkpoint-20261013.json)は保持する。
 

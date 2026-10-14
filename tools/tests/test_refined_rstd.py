@@ -12,10 +12,15 @@ def required():
     return function
 
 
-def test_refined_inverse_keeps_native_two_rounding_order_without_fp64():
+def test_refined_inverse_keeps_scalar_two_rounding_order_without_fp64_runtime():
     values = torch.linspace(-12, 12, 2048).exp().float()
     before = values.clone()
-    expected = 1 / torch.sqrt(values)
+    # Native LayerNorm uses scalar std::sqrt, not Torch's vectorized sqrt seed.
+    # The independent double oracle rounds to FP32 after each scalar operation.
+    # This is test-only FP64; exported candidate ops must remain entirely FP32.
+    import numpy as np
+    roots = np.sqrt(values.numpy().astype(np.float64)).astype(np.float32)
+    expected = torch.from_numpy((1 / roots.astype(np.float64)).astype(np.float32))
     actual = required()(values)
     assert actual.dtype == torch.float32 and torch.equal(actual, expected)
     assert torch.equal(values, before)

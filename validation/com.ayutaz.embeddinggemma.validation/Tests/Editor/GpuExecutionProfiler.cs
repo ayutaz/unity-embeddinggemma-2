@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using EmbeddingGemma.Tests;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -14,6 +15,17 @@ namespace EmbeddingGemma.Validation.Tests
 {
     public static class GpuExecutionProfiler
     {
+        [StructLayout(LayoutKind.Sequential)]
+        struct MemoryCounters
+        {
+            public uint size, pageFaults;
+            public UIntPtr peakWorkingSet, workingSet, peakPagedPool, pagedPool,
+                peakNonPagedPool, nonPagedPool, pageFile, peakPageFile;
+        }
+        [DllImport("kernel32.dll")] static extern IntPtr GetCurrentProcess();
+        [DllImport("psapi.dll", SetLastError = true)]
+        static extern bool GetProcessMemoryInfo(IntPtr process, ref MemoryCounters counters, uint size);
+
         public static JObject Run(bool real)
         {
             Assert.That(SystemInfo.supportsComputeShaders, Is.True, "GPU required; no CPU fallback or skip.");
@@ -40,9 +52,20 @@ namespace EmbeddingGemma.Validation.Tests
                 {
                     process.Refresh(); row["wall_seconds"] = watch.Elapsed.TotalSeconds;
                     row["cpu_seconds"] = (process.TotalProcessorTime - cpu).TotalSeconds;
-                    row["working_set_bytes"] = process.WorkingSet64;
-                    row["peak_working_set_bytes"] = process.PeakWorkingSet64;
+                    // Unity Mono returns zero for Process.WorkingSet64 on this host.
+                    // Read Windows' native counters rather than substituting managed heap size.
+                    long workingSet = process.WorkingSet64, peak = process.PeakWorkingSet64;
+                    if (SystemInfo.operatingSystemFamily == OperatingSystemFamily.Windows)
+                    {
+                        var memory = new MemoryCounters { size = (uint)Marshal.SizeOf<MemoryCounters>() };
+                        if (!GetProcessMemoryInfo(GetCurrentProcess(), ref memory, memory.size))
+                            throw new InvalidOperationException("Native memory counters unavailable: " + Marshal.GetLastWin32Error());
+                        workingSet = (long)memory.workingSet.ToUInt64(); peak = (long)memory.peakWorkingSet.ToUInt64();
+                    }
+                    row["working_set_bytes"] = workingSet;
+                    row["peak_working_set_bytes"] = peak;
                     row["unity_allocated_bytes"] = UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong(); Save();
+                    Assert.That(workingSet, Is.GreaterThan(0), "Missing process memory must not pass.");
                 }
             }
             Worker worker = null; Tensor<float> input = null;

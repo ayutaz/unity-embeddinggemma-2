@@ -18,6 +18,34 @@ namespace EmbeddingGemma.Tests
             catch (TargetInvocationException error) { ExceptionDispatchInfo.Capture(error.InnerException).Throw(); throw; }
         }
 
+        static Model BuildForShape(float[] weights, int columns, int chunk, int[] shape)
+        {
+            var type = AppDomain.CurrentDomain.GetAssemblies().Select(assembly => assembly.GetType("EmbeddingGemma.Tests.CompensatedProjection")).FirstOrDefault(value => value != null);
+            var method = type?.GetMethod("BuildForShape");
+            Assert.That(method, Is.Not.Null, "Frozen feature shape projection is missing.");
+            try { return (Model)method.Invoke(null, new object[] { weights, columns, chunk, shape }); }
+            catch (TargetInvocationException error) { ExceptionDispatchInfo.Capture(error.InnerException).Throw(); throw; }
+        }
+
+        [TestCase(BackendType.CPU)] [TestCase(BackendType.GPUCompute)]
+        public void FrozenFeatureBatchRetainsEveryRowAndLastDimension(BackendType backend)
+        {
+            var shape = new[] { 1, 2, 3 }; var before = (int[])shape.Clone();
+            var model = BuildForShape(new[] { 1f, 1f, 1f }, 1, 1, shape);
+            using var input = new Tensor<float>(new TensorShape(shape), new[] { 1e8f, 1f, -1e8f, 1f, 1e8f, -1e8f });
+            if (backend == BackendType.GPUCompute) { Assert.That(SystemInfo.supportsComputeShaders, Is.True); ComputeTensorData.Pin(input); }
+            using var worker = new Worker(model, backend); worker.Schedule(input);
+            var output = (Tensor<float>)worker.PeekOutput();
+            Assert.That(output.backendType, Is.EqualTo(backend)); Assert.That(output.shape, Is.EqualTo(new TensorShape(1, 2, 1)));
+            Assert.That(output.DownloadToArray(), Is.EqualTo(new[] { 1f, 1f }));
+            Assert.That(shape, Is.EqualTo(before));
+        }
+
+        [Test] public void EmptyFrozenFeatureDimensionIsRejected()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => BuildForShape(new[] { 1f }, 1, 1, new[] { 1, 0, 1 }));
+        }
+
         [TestCase(BackendType.CPU)] [TestCase(BackendType.GPUCompute)]
         public void CancellationKeepsUnitTermWithoutDoubleOrReadback(BackendType backend)
         {

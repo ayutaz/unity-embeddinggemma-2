@@ -1,0 +1,40 @@
+// Copyright Naoki Shibata and contributors 2010 - 2024.
+// Exp expression adapted from SLEEF 5a1d179 under Boost Software License 1.0.
+// See ../../SLEEF-LICENSE.txt. Original source: src/libm/sleefsimdsp.c xexpf.
+#pragma kernel NativeSilu
+#pragma use_dxc
+
+StructuredBuffer<float> Input;
+RWStructuredBuffer<float> Output;
+uint Count, DispatchWidth;
+
+[numthreads(64,1,1)]
+void NativeSilu(uint3 thread : SV_DispatchThreadID)
+{
+    uint index=thread.x+thread.y*DispatchWidth;
+    if(index>=Count)return;
+    precise float x=Input[index];
+    if(x==0){Output[index]=x;return;}
+    precise float d=-x;
+    // The native-rounding gate covers bounded normal inputs. Retain the GPU
+    // mathematical route outside this range; that route is not bit-qualified.
+    if(abs(d)>80){Output[index]=x/(1.0f+exp(d));return;}
+    precise float scaled=d*1.4426950408889634073599246810018921374f;
+    int q=(int)round(scaled);
+    precise float s=mad((float)q,-0.693145751953125f,d);
+    s=mad((float)q,-1.428606765330187045e-06f,s);
+    precise float u=0.000198527617612853646278381f;
+    u=mad(u,s,0.00139304355252534151077271f);
+    u=mad(u,s,0.00833336077630519866943359f);
+    u=mad(u,s,0.0416664853692054748535156f);
+    u=mad(u,s,0.166666671633720397949219f);
+    u=mad(u,s,0.5f);
+    precise float square=s*s;
+    u=1.0f+mad(square,u,s);
+    precise float exponential=asfloat(asuint(u)+((uint)q<<23));
+    precise float denominator=1.0f+exponential;
+    precise float quotient=x/denominator;
+    precise float residual=mad(-quotient,denominator,x);
+    precise float inverse=1.0f/denominator;
+    Output[index]=mad(residual,inverse,quotient);
+}

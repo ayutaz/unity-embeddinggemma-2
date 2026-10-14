@@ -62,15 +62,57 @@ namespace EmbeddingGemma.Tests
             }
             var second = inputs["post_layer_norm"];
             var activationIndex = Unclip(MatrixInput(second));
-            var activation = model.layers[Producer(activationIndex)];
-            if (activation.GetType().Name != "Swish" || activation.inputs.Length != 1)
-                throw new InvalidOperationException("Expected the native SiLU/Swish path.");
-            var first = activation.inputs[0];
+            var first = ResolveSiluInput(model, activationIndex);
             if (Unclip(MatrixInput(first)) != norms["pre_layer_norm"])
                 throw new InvalidOperationException("Feed-forward projection is not bound to the pre norm.");
             return new Dictionary<string, int> { ["pre_layer_norm"] = norms["pre_layer_norm"],
                 ["ffw_layer_1"] = first, ["act_fn"] = activationIndex,
                 ["ffw_layer_2"] = second, ["post_layer_norm"] = norms["post_layer_norm"] };
+        }
+
+        public static int ResolveSiluInput(Model model, int outputIndex)
+        {
+            if (model == null) throw new ArgumentNullException(nameof(model));
+            Layer Producer(int index)
+            {
+                var matches = model.layers.Where(layer => layer.outputs.Contains(index)).ToArray();
+                if (matches.Length != 1) throw new InvalidOperationException("SiLU producer is missing or ambiguous.");
+                return matches[0];
+            }
+            bool ScalarMad(Layer layer, float scale, float bias)
+                => layer.GetType().Name == "ScalarMad" && layer.inputs.Length == 1
+                && (DataType)layer.GetType().GetField("dataType").GetValue(layer) == DataType.Float
+                && (float)layer.GetType().GetField("sFloat").GetValue(layer) == scale
+                && (float)layer.GetType().GetField("bFloat").GetValue(layer) == bias;
+            bool IsOne(int index)
+            {
+                var values = model.constants.Where(c => c.index == index && c.dataType == DataType.Float && c.lengthBytes == 4).ToArray();
+                if (values.Length != 1) return false;
+                var bytes = (ArraySegment<byte>)typeof(Constant).GetField("array", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(values[0]);
+                return BitConverter.ToSingle(bytes.Array, bytes.Offset) == 1f;
+            }
+            var activation = Producer(outputIndex);
+            if (activation.GetType().Name == "Swish" && activation.inputs.Length == 1
+                && (float)activation.GetType().GetField("alpha").GetValue(activation) == 1f)
+                return activation.inputs[0];
+            if (activation.GetType().Name != "Div" || activation.inputs.Length != 2)
+                throw new InvalidOperationException("Expected unit-alpha Swish or division-order SiLU.");
+            var input = activation.inputs[0];
+            var denominator = Producer(activation.inputs[1]);
+            int exponentialIndex;
+            if (ScalarMad(denominator, 1f, 1f)) exponentialIndex = denominator.inputs[0];
+            else if (denominator.GetType().Name == "Add" && denominator.inputs.Length == 2
+                     && IsOne(denominator.inputs[0]) != IsOne(denominator.inputs[1]))
+                exponentialIndex = denominator.inputs[IsOne(denominator.inputs[0]) ? 1 : 0];
+            else throw new InvalidOperationException("SiLU denominator must be one plus the exponential.");
+            var exponential = Producer(exponentialIndex);
+            if (exponential.GetType().Name != "Exp" || exponential.inputs.Length != 1)
+                throw new InvalidOperationException("SiLU denominator requires Exp.");
+            var negative = Producer(exponential.inputs[0]);
+            if (!((negative.GetType().Name == "Neg" && negative.inputs.Length == 1) || ScalarMad(negative, -1f, 0f))
+                || negative.inputs[0] != input)
+                throw new InvalidOperationException("SiLU exponential must negate the original numerator.");
+            return input;
         }
 
         public static Dictionary<string, int> ResolveNormInputs(Model model, JArray anchors)

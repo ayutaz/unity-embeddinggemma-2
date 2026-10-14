@@ -2,6 +2,8 @@
 
 > 文書整合確認: 2026-10-15。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。ユーザー指定の実行計画3・4は継続中、未完了。直近の所有Unity processは終了済み。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
 
+2026-10-15最新: 元ONNXのstatic投影135個は実行時123個と定数入力12個に分かれる。元係数hashとSentisの固定境界411個を監査し、shape関連の最終28件を確認した。135投影 / 136 segmentを生成した`a2fca44`の実GPU全encoder無音は539要素・最大許容差比6.730431で不合格。GPUCompute・計算fallback / flush0、NUnit0 pass / 1 fail / skip0 / exit2、準備12.463秒・実行＋final download2.499秒。前の2投影候補175要素から数値が悪化したため採用しない。metadata監査の1 passは推論の成功ではない。[固定監査・TDD・実GPU不合格](results/m4-all-static-partitioned-gpu-failed-20261015.json)。次は最初の誤差増加を起こす投影を元の層別参照で特定する。工程3・4・元全信号 / profile・画像FP32・最終APIの全条件は未達。以下は前回checkpoint。
+
 2026-10-15現在: GPU接続の2 Red→2 Greenとplanner関連19 Greenを確認。初回の中間ONNX import失敗は入力 / 出力aliasを明示Identityで修正し、別試行の`e9e5c92`全encoderは無音175要素・最大許容差比4.043479で不合格。GPUCompute・計算fallback / flush0、NUnit0 pass / 1 fail / skip0、準備23.371秒・実行＋final download10.948秒。[固定接続・失敗・TDD](results/m4-partitioned-first-ff-whole-gpu-failed-20261015.json)。135 static投影への拡張は不明shapeのため準備時に拒否、GPU未実行。工程3・4と全信号 / profile / 最終APIの条件を維持する。以下は前回checkpoint。
 
 2026-10-15現在: 最初のfeed-forwardの展開FMA GPUはworking set36.7GB・出力欠測・timeoutで失敗。直接GPU kernelのAPI8 Red→8 Green、固定Git `e9e72e8`の元280行の2投影2 GPU Green / 全bit一致を確認した。元clipもGPU、計算fallback / flush0、実行＋診断final download212.7533 / 27.6472ms。全encoder / 他GPU / 最終APIの合格には流用しない。[失敗と終了確認](results/m4-first-ff-expanded-gpu-resource-failure-20261015.json) / [固定成功](results/m4-direct-gpu-first-ff-projections-green-20261015.json)。次は元全encoderの投影境界をGPU tensorで接続する。工程3・4・元全信号 / profile・最終APIの全条件は未完了。以下は前回checkpoint。

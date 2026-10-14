@@ -1,0 +1,164 @@
+{
+  "success": false,
+  "scope": "all_135_static_projections_connected_to_original_audio_encoder_gpu_numeric_gate",
+  "runtime_source": "a2fca44551f250a68674e6b235372c043edda6b5",
+  "partition_producer": "a2fca44551f250a68674e6b235372c043edda6b5",
+  "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "source_graph_sha256": "c050c2efa87d83aea45587b25f7b8d1d24dc471f33cc732dcf17d89588c70c13",
+  "source_initializer_sha256": "1154ac702080fbd58adb2770693221efc81f56750563f8d4310ddb7fcf870bfd",
+  "original_reference_changed": false,
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "metadata_audit": {
+    "success": true,
+    "inference_executed": false,
+    "gpu_validated": false,
+    "boundary_count": 411,
+    "runtime_projection_count": 123,
+    "constant_input_projection_count": 12,
+    "note": "The previous 135-count runtime-only audit failed because Sentis folds twelve constant-input relative-key projections. That failed run is retained; the complete metadata audit is separate."
+  },
+  "preparation": {
+    "success": true,
+    "projection_count": 135,
+    "segment_count": 136,
+    "node_count": 41938,
+    "all_segment_inputs_fixed_fp32": true,
+    "source_initializer_bytes_preserved": true
+  },
+  "gpu_result": {
+    "signal": "silence",
+    "actual_backend": "GPUCompute",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "projection_count": 135,
+    "prepare_ms": 12462.750900000001,
+    "execute_and_final_download_ms": 2499.1341,
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "mismatched_elements": 539,
+    "maximum_absolute_error": 0.0001354217529296875,
+    "maximum_tolerance_ratio": 6.730431052922524
+  },
+  "nunit": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0
+  },
+  "process_exit_code": 2,
+  "terminal": true,
+  "previous_first_two_projection_candidate": {
+    "mismatched_elements": 175,
+    "maximum_tolerance_ratio": 4.043478723621082
+  },
+  "accepted_as_replacement": false,
+  "note": "All-static numerical error increased; keep this candidate opt-in. Timings cover one fixed silence input with diagnostic final download, not final API performance.",
+  "tdd": {
+    "shape_completion": "5 red -> related 19 green",
+    "constant_partition": "1 red -> related 20 green",
+    "boundary_overlay": "7 red -> related 27 green",
+    "integer_scalar_metadata": "1 red -> related 28 green"
+  },
+  "outstanding": [
+    "Original six audio signals and both profiles",
+    "All three FP32 image profiles",
+    "Actual PCM/Texture through GPU preprocessing, encoder and backbone to normalized 768 API",
+    "Roles, masks, boundaries, ownership, Dispose, exception reuse, text regression",
+    "No product intermediate readback or CPU computation fallback",
+    "Latest full regression and Required CI"
+  ],
+  "evidence": [
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-all-static-gpu-a2fca44551f250a68674e6b235372c043edda6b5-silence.json",
+      "bytes": 2699,
+      "sha256": "88c645a89fa8adf8f352cf819d70e7382b58cd34d1e0b535446902d7e64a64c2"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partition-boundary-shapes-455ecda01d38e9414481fa1a7c3d9790be79dbb0.json",
+      "bytes": 37136,
+      "sha256": "e3914e7022e5733cf1278649f786b17531657c0a9082c2efa3ca1c68f021a008"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\partitioned-all-static-boundaries-real\\partition-plan.json",
+      "bytes": 183216,
+      "sha256": "75885f4c3514eef008007dadcbc400c2e36aaccee07cef9bc77bc11796a679a6"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\static-projection-complete-shapes-20261015.json",
+      "bytes": 47975,
+      "sha256": "e0d3abe5cdbd91b699c8f185eafcf3fd3201f967254159bb35cf236320a5a2c6"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\partition-boundary-shape-audit-20261015.xml",
+      "bytes": 3992,
+      "sha256": "351b723e471ef572a707f3398a4615d4d6179a58e65d2741f16867575892f879"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\partition-boundary-shape-audit-20261015-process.json",
+      "bytes": 1282,
+      "sha256": "c481c2d71cba82a391efc90355272c1975494555c47e1af63e10069a2c456642"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\partitioned-all-static-full-gpu-silence-20261015.xml",
+      "bytes": 6383,
+      "sha256": "8fb9d1cae24501a4ddb321e449562134f4129bc6ae3a0b4dfe251a964522b197"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\partitioned-all-static-full-gpu-silence-20261015-process.json",
+      "bytes": 1311,
+      "sha256": "25447c87e1923f687c5f5891d467b04ea536c661355fd88a77d590ff37645b8c"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\partitioned-all-static-full-gpu-silence-20261015.log",
+      "bytes": 103403,
+      "sha256": "49f84e4143e36f051f119f61cd418397877524b29052cf3b13811eec16fc6afa"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\prepare-all-static-boundaries-integer-20261015-process.json",
+      "bytes": 437,
+      "sha256": "6524367dd636a12320bc219e98eead2ef84ac44c5ece827635e3718c1766a78f"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\projection-shape-completion-red-20261015.xml",
+      "bytes": 7726,
+      "sha256": "5b98f3e944892c79c4a50ffad22ecba62d8b134745ee3d49a5a6539d9d641ae1"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\projection-shape-completion-green-20261015.xml",
+      "bytes": 3071,
+      "sha256": "0e39df62de9fe9d25c1b610e86fb5415da6aa9a38a78ddeb8eacf3139aedfa6c"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\constant-projection-partition-red-20261015.xml",
+      "bytes": 8594,
+      "sha256": "dabeff1e670feeee56935b15c39162ef9b419326f48a657e4bf344e6576c3832"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\constant-projection-partition-related-green-20261015.xml",
+      "bytes": 3222,
+      "sha256": "26f0cf949cc9c658b0e07b8de93cd24eaba064232e8afeb157c50bdc574d7667"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\boundary-shape-overlay-red-20261015.xml",
+      "bytes": 10730,
+      "sha256": "41dd5d848b24aba927bf8525bf2c0b08b54a69bd7a7d45eb7ffdc1d820614025"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\boundary-shape-overlay-related-green-20261015.xml",
+      "bytes": 4299,
+      "sha256": "87259617421414e498c46b999cdee8e5cbcad31af7ebd90651ec4c30d07acb1c"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\boundary-integer-metadata-red-20261015.xml",
+      "bytes": 5840,
+      "sha256": "64a09b2328af6623413bac0758e25a42b4b2fc6d56063ce4fe8a47b8048a5110"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\boundary-integer-metadata-related-green-20261015.xml",
+      "bytes": 4459,
+      "sha256": "910a3dd0201610c29059b0061f9faa770f71b2c783cff7a27c8b70f69a3d30e3"
+    }
+  ]
+}

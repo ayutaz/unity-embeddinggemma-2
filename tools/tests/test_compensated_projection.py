@@ -113,3 +113,47 @@ def test_producer_preserves_original_parts_and_writes_separate_candidates(tmp_pa
     assert len(candidate["fp32_compensated_projection"]["files"]) == 3
     assert candidate["native_final_exact_match"] is True
     assert candidate["full_encoder_validated"] is False and candidate["unity_validated"] is False
+
+
+def exported_layer(source, chunk_size=1):
+    kind = getattr(audio_layer_replay, "CompensatedClippedLinear", None)
+    assert kind is not None, "Exportable compensated FP32 layer is missing"
+    return kind(source, chunk_size=chunk_size)
+
+
+def test_saved_torch_program_preserves_compensation_and_borrowed_weights(tmp_path):
+    source = module()
+    hidden = torch.tensor([[1e8, 1., -1e8]], dtype=torch.float32)
+    before = source.linear.weight.detach().clone()
+    candidate = exported_layer(source)
+    exported = torch.export.export(candidate, (hidden,))
+    path = tmp_path / "candidate.pt2"
+    torch.export.save(exported, path)
+    loaded = torch.export.load(path).module()
+    assert loaded(hidden).item() == 1.
+    assert torch.equal(source.linear.weight, before)
+
+
+def test_onnx_candidate_uses_standard_fp32_operators_and_fixed_clips(tmp_path):
+    import numpy as np
+    import onnx
+    from onnx.reference import ReferenceEvaluator
+    candidate = exported_layer(module(clipped=True))
+    hidden = torch.tensor([[3., 1., 3.]])
+    path = tmp_path / "candidate.onnx"
+    torch.onnx.export(candidate, (hidden,), path, dynamo=False, opset_version=18, input_names=["input"])
+    model = onnx.load(path)
+    assert all(node.domain == "" for node in model.graph.node)
+    actual = ReferenceEvaluator(model).run(None, {"input": hidden.numpy()})[0]
+    assert actual.dtype == np.float32 and actual.item() == 0.5
+
+
+@pytest.mark.parametrize("problem", ["nonfinite", "dtype", "shape"])
+def test_exportable_layer_rejects_invalid_eager_input(problem):
+    candidate = exported_layer(module())
+    hidden = torch.ones(1, 3)
+    if problem == "nonfinite": hidden[0, 0] = float("nan")
+    elif problem == "dtype": hidden = hidden.double()
+    else: hidden = torch.ones(1, 4)
+    with pytest.raises(ValueError):
+        candidate(hidden)

@@ -24,6 +24,43 @@ FEED_FORWARD_PARTS = ("pre_layer_norm", "ffw_layer_1", "act_fn", "ffw_layer_2", 
 FEED_FORWARD_PATHS = tuple("feed_forward1." + name for name in FEED_FORWARD_PARTS)
 
 
+class CompensatedClippedLinear(torch.nn.Module):
+    """Exportable FP32 candidate, borrowing weights and preserving official clips."""
+
+    def __init__(self, source, *, chunk_size=64):
+        super().__init__()
+        if type(chunk_size) is not int or chunk_size <= 0:
+            raise ValueError("chunk size must be a positive integer")
+        if (source.linear.weight.dtype != torch.float32 or source.linear.bias is not None
+                or not torch.isfinite(source.linear.weight).all()):
+            raise ValueError("candidate requires finite unbiased FP32 weights")
+        self.linear = source.linear
+        self.chunk_size = chunk_size
+        self.use_clipped_linears = source.use_clipped_linears
+        if self.use_clipped_linears:
+            for name in ("input_min", "input_max", "output_min", "output_max"):
+                self.register_buffer(name, getattr(source, name).detach().clone())
+
+    def forward(self, hidden):
+        if not torch.compiler.is_compiling() and not torch.jit.is_tracing():
+            if (hidden.dtype != torch.float32 or hidden.device != self.linear.weight.device
+                    or hidden.ndim < 2 or hidden.shape[-1] != self.linear.in_features
+                    or not torch.isfinite(hidden).all()):
+                raise ValueError("candidate requires finite matching FP32 input")
+        working = hidden.clamp(self.input_min, self.input_max) if self.use_clipped_linears else hidden
+        total = hidden.new_zeros((*hidden.shape[:-1], self.linear.out_features))
+        correction = torch.zeros_like(total)
+        for start in range(0, self.linear.in_features, self.chunk_size):
+            part = torch.nn.functional.linear(working[..., start:start + self.chunk_size],
+                                              self.linear.weight[:, start:start + self.chunk_size])
+            updated = total + part
+            correction = correction + torch.where(total.abs() >= part.abs(),
+                (total - updated) + part, (part - updated) + total)
+            total = updated
+        output = total + correction
+        return output.clamp(self.output_min, self.output_max) if self.use_clipped_linears else output
+
+
 def linear_fp32_compensated(module, hidden, *, chunk_size=64):
     """FP32 block products with Neumaier compensation; preserves official clipping."""
     if type(chunk_size) is not int or chunk_size <= 0:

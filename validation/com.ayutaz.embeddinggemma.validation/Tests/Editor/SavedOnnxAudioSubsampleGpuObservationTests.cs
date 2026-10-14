@@ -16,11 +16,19 @@ namespace EmbeddingGemma.Validation.Tests
     {
         [Test]
         public void ObservePinnedSubsampleOnGpuWithoutChangingNormalFinalBits()
+            => Observe(false);
+
+        [Test]
+        public void ObserveCompactSubsampleOnGpuWithoutChangingNormalFinalBits()
+            => Observe(true);
+
+        void Observe(bool compact)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/subsample-native-replay"));
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/saved-onnx-subsample-gpu-"+source+".json"));
+            var folder=compact?"GpuAudioCompactOuterCandidate":"GpuAudioCandidate";
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+(compact?"compact-subsample-gpu-":"saved-onnx-subsample-gpu-")+source+".json"));
             Assert.That(File.Exists(output),Is.False);
             var rows=new JArray();
             var report=new JObject { ["success"]=false,["scope"]="one_saved_gpu_subsample_observation_only",
@@ -45,9 +53,10 @@ namespace EmbeddingGemma.Validation.Tests
                 var replay=JObject.Parse(File.ReadAllText(replayPath));
                 Assert.That(replay.Value<bool>("success") && replay.Value<bool>("subsample_native_final_exact_match"),Is.True);
                 Assert.That(replay.Value<string>("reference_source"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));
-                var modelPath=Path.Combine(Application.dataPath,"GpuAudioCandidate/frames-1119-valid-1119.onnx");
-                Check(modelPath,"f43f3275c1ba48837b626fc09c738a8204dabd25e2ff3c74d7e75abcb3591899");
-                var model=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/GpuAudioCandidate/frames-1119-valid-1119.onnx"));
+                var modelPath=Path.Combine(Application.dataPath,folder+"/frames-1119-valid-1119.onnx");
+                var graphSha=compact?"11607255142478773e621f5e9feebf2d3269457feb67d63215cecbc55fc61b67":"f43f3275c1ba48837b626fc09c738a8204dabd25e2ff3c74d7e75abcb3591899";
+                Check(modelPath,graphSha);report["graph_sha256"]=graphSha;
+                var model=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/"+folder+"/frames-1119-valid-1119.onnx"));
                 report["phase"]="bind";Save();
                 var constants=model.constants.ToDictionary(c=>c.index);
                 int Weighted(string kind,string sha)
@@ -68,13 +77,28 @@ namespace EmbeddingGemma.Validation.Tests
                 var ffRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-native-feed-forward-replay"));
                 var anchorPath=Path.Combine(ffRoot,"feed-forward-norm-anchors.json");
                 Check(anchorPath,"95f3e32536dce9b3b3820050dac4bc837c0f460c75e4e56735381bf924007c33");
-                var beforeNorm=AudioCoefficientLayerMap.ResolveNormInputs(model,(JArray)JObject.Parse(File.ReadAllText(anchorPath))["anchors"])["pre_layer_norm"];
-                var producer=model.layers.Single(l=>l.outputs.Contains(beforeNorm));
-                if(producer.GetType().Name=="Clip") beforeNorm=producer.inputs[0];
-                producer=model.layers.Single(l=>l.outputs.Contains(beforeNorm));
-                Assert.That(producer.GetType().Name,Is.EqualTo("MatMul"));
-                Assert.That(producer.inputs.Count(constants.ContainsKey),Is.EqualTo(1));
-                map["input_proj_linear"]=beforeNorm;
+                if(compact)map["input_proj_linear"]=Weighted("MatMul","a59650e614c2746ee18bbb23c475f65677beeb9ffe49350854af2aad873052a1");
+                else
+                {
+                    var beforeNorm=AudioCoefficientLayerMap.ResolveNormInputs(model,(JArray)JObject.Parse(File.ReadAllText(anchorPath))["anchors"])["pre_layer_norm"];
+                    var producer=model.layers.Single(l=>l.outputs.Contains(beforeNorm));
+                    if(producer.GetType().Name=="Clip") beforeNorm=producer.inputs[0];
+                    producer=model.layers.Single(l=>l.outputs.Contains(beforeNorm));
+                    Assert.That(producer.GetType().Name,Is.EqualTo("MatMul"));
+                    Assert.That(producer.inputs.Count(constants.ContainsKey),Is.EqualTo(1));
+                    map["input_proj_linear"]=beforeNorm;
+                }
+                if(compact)
+                {
+                    model=CompensatedModel.CreateWithDynamicMatMuls(model,16);
+                    model=CompensatedModel.Create(model,64);report["layer_count"]=model.layers.Count;
+                    using var worker=new Worker(model,BackendType.GPUCompute);
+                    var cpu=(HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallback",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(worker);
+                    var flush=(HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallbackShouldFlushGPU",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(worker);
+                    var count=cpu.Intersect(model.layers.SelectMany(l=>l.outputs).Concat(model.inputs.Select(i=>i.index))).Count();
+                    report["cpu_computation_or_input_count"]=count;report["readback_flush_count"]=flush.Count;
+                    Assert.That(count,Is.Zero);Assert.That(flush.Count,Is.Zero);
+                }
                 report["bound_outputs"]=JObject.FromObject(map);
                 var inputPath=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-real-chain/audio-runtime-reference/frames-1119-valid-1119/silence-features-fp32.bin"));
                 Check(inputPath,"366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24");

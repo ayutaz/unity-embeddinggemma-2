@@ -261,6 +261,15 @@
       "passed": 11,
       "failed": 1,
       "reason": "test matched suffix /Mul on newly added nodes instead of checking original node bytes"
+    },
+    "double_type_and_cast_guard": {
+      "source": "b76777c711af9abb14bc76908706179d1f29542d",
+      "red_failed": 2,
+      "red_other_passed": 6,
+      "related_green_passed": 14,
+      "green_failed": 0,
+      "green_skipped": 0,
+      "scope": "reject FP64 input/cast before any model mutation; not an additional GPU run"
     }
   },
   "scalar_native_source": "https://github.com/pytorch/pytorch/blob/5c4886908584029761b579af026dcfb627c84070/aten/src/ATen/native/cpu/layer_norm_kernel.cpp#L77",
@@ -270,6 +279,8 @@
     "refined-rstd-correct-scalar-green-20261015.xml": "b2b0baac59ec6d5f03f3406188867b4106defe72df90a82f4e4252ac6417248b",
     "refine-onnx-red-20261015.xml": "ef247cacf562e0aaa7da6925eb17f09ba3813c21ab30d69132b66ef7a02d5a9f",
     "refine-onnx-green-20261015.xml": "1ed615a5e054561f56f7a5835ce4fe6e9823d61442b9d35a27d8ee9c91faa9dc",
-    "refine-onnx-audit-green-20261015.xml": "67a095f3ca0d4f45a35022af196cf6372239f02e27e4a32db4e6daf08ac7bc8c"
+    "refine-onnx-audit-green-20261015.xml": "67a095f3ca0d4f45a35022af196cf6372239f02e27e4a32db4e6daf08ac7bc8c",
+    "refine-onnx-double-guard-red-20261015.xml": "e72e95f71dbd3c2fc22a5d8900c0f28714834a026d77d0ac50fe68af5599cb04",
+    "refine-onnx-double-guard-green-20261015.xml": "b9e6357d788a885116a37efd05ad7cb464aa1547ad666c9a2c075d99ed3683cc"
   }
 }

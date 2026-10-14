@@ -60,6 +60,39 @@ namespace EmbeddingGemma.Tests
             Assert.That(error.InnerException,Is.InstanceOf<ArgumentException>());
         }
 
+        [TestCase("shape")]
+        [TestCase("null")]
+        [TestCase("nonfinite")]
+        [TestCase("bound")]
+        public void InvalidCoefficientContractsAreRejectedBeforeAllocation(string problem)
+        {
+            var values=problem=="null"?null:new[]{1f,2f};
+            if(problem=="nonfinite")values[0]=float.NaN;
+            if(problem=="bound")values[0]=101;
+            var error=Assert.Throws<TargetInvocationException>(()=>Create(problem=="shape"?3:2,1,values));
+            Assert.That(error.InnerException,Is.InstanceOf<ArgumentException>());
+        }
+
+        [Test]
+        public void OutputsStayIndependentAfterInvalidInputReuseAndOwnerDispose()
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"An actual GPU is required; never skip.");
+            using var operation=Create(2,1,new[]{1f,2f});
+            using var a=new Tensor<float>(new TensorShape(1,1,2),new[]{3f,4f});
+            using var b=new Tensor<float>(new TensorShape(1,1,2),new[]{7f,13f});
+            using var bad=new Tensor<float>(new TensorShape(1,1,3),new[]{1f,2f,3f});
+            ComputeTensorData.Pin(a);ComputeTensorData.Pin(b);ComputeTensorData.Pin(bad);
+            using var first=Execute(operation,a);
+            var error=Assert.Throws<TargetInvocationException>(()=>Execute(operation,bad));
+            Assert.That(error.InnerException,Is.InstanceOf<ArgumentException>());
+            using var second=Execute(operation,b);
+            operation.Dispose();operation.Dispose();
+            Assert.That(first.DownloadToArray(),Is.EqualTo(new[]{11f}));
+            Assert.That(second.DownloadToArray(),Is.EqualTo(new[]{33f}));
+            var disposed=Assert.Throws<TargetInvocationException>(()=>Execute(operation,a));
+            Assert.That(disposed.InnerException,Is.InstanceOf<ObjectDisposedException>());
+        }
+
         static IDisposable Create(int width,int columns,float[] weights)
             => (IDisposable)Activator.CreateInstance(RequiredType(),width,columns,weights);
         static Tensor<float> Execute(IDisposable operation,Tensor<float> input)

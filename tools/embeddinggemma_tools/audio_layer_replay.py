@@ -15,6 +15,7 @@ from transformers import Gemma4AudioConfig
 from transformers.models.gemma4.modeling_gemma4 import Gemma4AudioLayer
 from transformers.models.gemma4.modeling_gemma4 import (
     Gemma4AudioModel, Gemma4AudioRelPositionalEncoding, sliding_window_mask_function,
+    Gemma4AudioSubSampleConvProjection,
 )
 from transformers.masking_utils import create_bidirectional_mask
 from huggingface_hub import snapshot_download
@@ -22,6 +23,8 @@ from huggingface_hub import snapshot_download
 PARTS = ("feed_forward1", "norm_pre_attn", "self_attn", "norm_post_attn", "lconv1d", "feed_forward2", "norm_out")
 FEED_FORWARD_PARTS = ("pre_layer_norm", "ffw_layer_1", "act_fn", "ffw_layer_2", "post_layer_norm")
 FEED_FORWARD_PATHS = tuple("feed_forward1." + name for name in FEED_FORWARD_PARTS)
+SUBSAMPLE_PARTS = ("layer0.conv", "layer0.norm", "layer0.act", "layer1.conv",
+                   "layer1.norm", "layer1.act", "input_proj_linear")
 
 
 class CompensatedClippedLinear(torch.nn.Module):
@@ -212,6 +215,32 @@ def capture_feed_forward_parts(layer, hidden, blocked_mask, positions, pinned_fi
     return {name: values["feed_forward1." + name] for name in FEED_FORWARD_PARTS}
 
 
+def capture_subsample_parts(module, features, frame_mask, pinned_final):
+    if (features.dtype != torch.float32 or pinned_final.dtype != torch.float32
+            or features.ndim != 3 or pinned_final.ndim != 3
+            or frame_mask.dtype != torch.bool or frame_mask.shape != features.shape[:2]
+            or not torch.isfinite(features).all() or not torch.isfinite(pinned_final).all()):
+        raise ValueError("subsample replay requires finite FP32 input and matching boolean mask")
+    values, handles = {}, []
+    def observe(name):
+        def callback(_module, _args, output):
+            values[name] = output.detach().clone()
+        return callback
+    try:
+        for name in SUBSAMPLE_PARTS:
+            handles.append(module.get_submodule(name).register_forward_hook(observe(name)))
+        with torch.no_grad():
+            actual, _ = module(features.clone(), frame_mask.clone())
+    finally:
+        for handle in handles:
+            handle.remove()
+    if not torch.equal(actual, pinned_final):
+        raise ValueError("native replay does not match pinned subsample final")
+    if set(values) != set(SUBSAMPLE_PARTS) or any(not torch.isfinite(value).all() for value in values.values()):
+        raise ValueError("subsample replay parts are incomplete or nonfinite")
+    return {name: values[name] for name in SUBSAMPLE_PARTS}
+
+
 def _identity(path):
     with path.open("rb") as stream:
         digest = hashlib.file_digest(stream, "sha256").hexdigest()
@@ -219,7 +248,8 @@ def _identity(path):
 
 
 def prepare(snapshot, context, output, *, reference_source, diagnostic_source, detail_feed_forward=False,
-            with_projection_oracle=False, with_compensated_projection=False, chunk_size=64):
+            with_projection_oracle=False, with_compensated_projection=False, chunk_size=64,
+            subsample_input=None, subsample_input_sha256=None):
     """Produce internal references for the frozen, fully valid silence layer 0."""
     snapshot, context, output = map(Path, (snapshot, context, output))
     if any(re.fullmatch(r"[0-9a-f]{40}", value) is None
@@ -260,6 +290,15 @@ def prepare(snapshot, context, output, *, reference_source, diagnostic_source, d
     for name in ("config.json", "model.safetensors"):
         if _identity(snapshot / name)["sha256"] != metadata["input_sha256"][name]:
             raise ValueError("snapshot hash mismatch")
+    features = None
+    if subsample_input is not None:
+        shape = reference["profiles"][case["profile"]]["feature_shape"]
+        if (re.fullmatch(r"[0-9a-f]{64}", subsample_input_sha256 or "") is None
+                or _identity(Path(subsample_input)) != dict(bytes=math.prod(shape) * 4, sha256=subsample_input_sha256)):
+            raise ValueError("pinned subsample input hash or size mismatch")
+        features = torch.from_numpy(np.fromfile(subsample_input, dtype="<f4").reshape(shape))
+    elif subsample_input_sha256 is not None:
+        raise ValueError("subsample input hash requires an explicit input path")
     layer, config = load_layer(snapshot)
     hidden, pinned_final = tensors
     frames = reference["profiles"][case["profile"]]["feature_shape"][1]
@@ -276,6 +315,15 @@ def prepare(snapshot, context, output, *, reference_source, diagnostic_source, d
     detail_feed_forward = detail_feed_forward or with_projection_oracle or with_compensated_projection
     parts = _capture_named(layer, hidden, blocked, positions, pinned_final,
                            (*PARTS, *FEED_FORWARD_PATHS) if detail_feed_forward else PARTS)
+    if features is not None:
+        module = Gemma4AudioSubSampleConvProjection(config).float().eval()
+        prefix = "audio_tower.subsample_conv_projection."
+        with safe_open(snapshot / "model.safetensors", framework="pt", device="cpu") as weights:
+            state = {key.removeprefix(prefix): weights.get_tensor(key).to(torch.float32)
+                     for key in weights.keys() if key.startswith(prefix)}
+        module.load_state_dict(state, strict=True)
+        captured = capture_subsample_parts(module, features, torch.ones(features.shape[:2], dtype=torch.bool), hidden)
+        parts.update({"subsample." + name: tensor for name, tensor in captured.items()})
     oracle_report, oracle_values = projection_oracle(layer, parts) if with_projection_oracle else (None, {})
     compensated_report, compensated_values = (compensated_projection_comparison(layer, parts, chunk_size=chunk_size)
                                                if with_compensated_projection else (None, {}))
@@ -291,6 +339,8 @@ def prepare(snapshot, context, output, *, reference_source, diagnostic_source, d
                   case=case["id"], input_files=input_files, parts=files,
                   detail_feed_forward=detail_feed_forward,
                   full_encoder_validated=False, unity_validated=False)
+    if features is not None:
+        report.update(subsample_native_final_exact_match=True, subsample_input=_identity(Path(subsample_input)))
     if oracle_report is not None:
         oracle_report["files"] = {}
         for name, tensor in oracle_values.items():
@@ -322,6 +372,8 @@ def main(argv=None):
     parser.add_argument("--projection-oracle", action="store_true")
     parser.add_argument("--compensated-projection", action="store_true")
     parser.add_argument("--chunk-size", type=int, default=64)
+    parser.add_argument("--subsample-input", type=Path)
+    parser.add_argument("--subsample-input-sha256")
     args = parser.parse_args(argv)
     if args.report.exists():
         raise ValueError("refusing to overwrite replay report")
@@ -342,7 +394,8 @@ def main(argv=None):
         report.update(prepare(snapshot, args.context, args.output,
                               reference_source=args.reference_source, diagnostic_source=args.diagnostic_source,
                               detail_feed_forward=args.detail_feed_forward, with_projection_oracle=args.projection_oracle,
-                              with_compensated_projection=args.compensated_projection, chunk_size=args.chunk_size))
+                              with_compensated_projection=args.compensated_projection, chunk_size=args.chunk_size,
+                              subsample_input=args.subsample_input, subsample_input_sha256=args.subsample_input_sha256))
         report["success"] = (report.get("fp64_projection_gate_passed", True)
                              and report.get("fp32_compensated_gate_passed", True))
     except Exception as error:

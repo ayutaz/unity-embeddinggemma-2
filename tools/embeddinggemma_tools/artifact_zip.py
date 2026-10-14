@@ -162,9 +162,10 @@ def main(argv=None):
     parser.add_argument("--artifact-id", required=True, type=int)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--member", required=True, action="append")
+    parser.add_argument("--max-entry-bytes", type=int, default=64 * 1024 * 1024)
     args = parser.parse_args(argv)
     reader, metadata = github_artifact_reader(args.repo, args.artifact_id)
-    report = extract_members(reader, args.output, args.member)
+    report = extract_members(reader, args.output, args.member, max_entry_bytes=args.max_entry_bytes)
     report.update(artifact_id=metadata["id"], artifact_name=metadata["name"])
     (args.output / "range-receipt.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(dict(artifact_id=metadata["id"], archive_bytes=reader.size,

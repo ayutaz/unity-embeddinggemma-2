@@ -445,6 +445,25 @@ def fp32_fma(a, b, c):
     return total + (product_error + sum_error)
 
 
+def fp32_refined_rstd(values):
+    """Bounded FP32 sqrt then reciprocal, correcting GPU approximation residuals.
+
+    Keep native's two rounding steps instead of a contracted rsqrt. This is an
+    experimental standard-op candidate for positive statistics in [1e-6, 1e6],
+    not an IEEE implementation for arbitrary FP32 inputs.
+    """
+    if not torch.compiler.is_compiling() and not torch.jit.is_tracing():
+        if (values.dtype != torch.float32 or not values.numel() or not torch.isfinite(values).all()
+                or torch.any(values < 1e-6) or torch.any(values > 1e6)):
+            raise ValueError("refinement requires bounded positive FP32 statistics")
+    root = torch.sqrt(values)
+    residual = fp32_fma(-root, root, values)
+    rounded_root = root + (residual * 0.5) / root
+    inverse = 1.0 / rounded_root
+    reciprocal_residual = fp32_fma(-rounded_root, inverse, torch.ones_like(values))
+    return fp32_fma(inverse, reciprocal_residual, inverse)
+
+
 class TorchWelfordLayerNorm(nn.Module):
     """Editor export candidate for the pinned eight-lane FP32 moment order.
 
@@ -452,7 +471,7 @@ class TorchWelfordLayerNorm(nn.Module):
     https://github.com/pytorch/pytorch/blob/5c4886908584029761b579af026dcfb627c84070/aten/src/ATen/native/cpu/moments_utils.h
     Native source and weights are borrowed; never change the golden reference.
     """
-    def __init__(self, source):
+    def __init__(self, source, *, refine_inverse=False):
         super().__init__()
         if source.normalized_shape not in ((32,), (128,)):
             raise ValueError("candidate supports only width 32 or 128")
@@ -461,6 +480,7 @@ class TorchWelfordLayerNorm(nn.Module):
         self.weight = source.weight
         self.eps = source.eps
         self.width = source.normalized_shape[0]
+        self.refine_inverse = refine_inverse
 
     def forward(self, values):
         if not torch.compiler.is_compiling():
@@ -484,7 +504,8 @@ class TorchWelfordLayerNorm(nn.Module):
             coefficient = values.new_tensor(count / (previous + count))
             total_mean = total_mean + coefficient * delta
             total_moment = total_moment + (moment[..., index:index+1] + delta * delta * coefficient * previous)
-        inverse = 1.0 / torch.sqrt(total_moment / self.width + self.eps)
+        variance = total_moment / self.width + self.eps
+        inverse = fp32_refined_rstd(variance) if self.refine_inverse else 1.0 / torch.sqrt(variance)
         return (values - total_mean) * inverse * self.weight
 
 

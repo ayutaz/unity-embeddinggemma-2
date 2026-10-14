@@ -112,14 +112,29 @@ namespace EmbeddingGemma.Validation.Tests
         public void ObserveFirstFeedForwardBoundariesWithoutChangingNormalFinalBits()
             =>Execute("silence",true,false,false,true);
 
-        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false)
+        [TestCase("silence")]
+        [TestCase("impulse")]
+        [TestCase("sine")]
+        [TestCase("nyquist")]
+        [TestCase("noise")]
+        [TestCase("padded_noise")]
+        public void NativeSiluPartitionsGpuMatchOriginalGolden(string signal)
+            =>Execute(signal,true,false,false,false,true);
+
+        [Test]
+        public void ObserveNativeSiluFirstFeedForwardWithoutChangingNormalFinalBits()
+            =>Execute("silence",true,false,false,true,true);
+
+        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var folder=isolated?"GpuAudioPartitionedLayer10":allStatic?"GpuAudioPartitionedAllStatic":"GpuAudioPartitionedFirstFf";
+            var folder=nativeSilu?"GpuAudioPartitionedNativeSilu":isolated?"GpuAudioPartitionedLayer10":allStatic?"GpuAudioPartitionedAllStatic":"GpuAudioPartitionedFirstFf";
             var root=Path.Combine(Application.dataPath,folder);
             var originalRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-real-chain/audio-runtime-reference"));
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+(early?"partitioned-early-audio-observation-":isolated?"partitioned-layer10-original-input-":observe?"partitioned-all-static-layer-observation-":allStatic?"partitioned-all-static-gpu-":"partitioned-first-ff-gpu-")+source+"-"+signal+".json"));
+            var stem=nativeSilu?(early?"partitioned-native-silu-early-observation-":"partitioned-native-silu-gpu-"):
+                early?"partitioned-early-audio-observation-":isolated?"partitioned-layer10-original-input-":observe?"partitioned-all-static-layer-observation-":allStatic?"partitioned-all-static-gpu-":"partitioned-first-ff-gpu-";
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject { ["success"]=false,["scope"]=early?"original_early_audio_observation_only":isolated?"one_original_audio_layer_isolation_gpu_numeric_gate":observe?"original_audio_layer_observation_only":"one_partitioned_original_audio_encoder_gpu_numeric_gate",
                 ["runtime_source"]=source,["signal"]=signal,["requested_backend"]="GPUCompute",
@@ -127,7 +142,7 @@ namespace EmbeddingGemma.Validation.Tests
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
             Save();
-            var kernels=new List<GpuBlockedMatmul>();
+            var kernels=new List<IGpuTensorOperation>();
             try
             {
                 var locked=JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath,"../Packages/packages-lock.json")));
@@ -192,15 +207,20 @@ namespace EmbeddingGemma.Validation.Tests
                     models.Add(model);layers.Add(model.layers.Count);
                 }
                 var inputs=new List<string>();var outputs=new List<string>();
-                foreach(var projection in (JArray)plan["projections"])
+                var operations=(JArray)plan[nativeSilu?"operations":"projections"];
+                if(nativeSilu){Assert.That(plan.Value<int>("silu_count"),Is.EqualTo(36));Assert.That(operations.Count,Is.EqualTo(171));}
+                foreach(var projection in operations)
                 {
-                    var shape=projection["weight_shape"].ToObject<int[]>();var weightPath=Path.Combine(root,projection.Value<string>("file"));
-                    Check(weightPath,projection.Value<string>("weight_sha256"));
-                    kernels.Add(new GpuBlockedMatmul(shape[0],shape[1],Floats(weightPath)));
+                    if(projection.Value<string>("kind")=="silu")kernels.Add(new GpuSilu());
+                    else
+                    {
+                        var shape=projection["weight_shape"].ToObject<int[]>();var weightPath=Path.Combine(root,projection.Value<string>("file"));
+                        Check(weightPath,projection.Value<string>("weight_sha256"));kernels.Add(new GpuBlockedMatmul(shape[0],shape[1],Floats(weightPath)));
+                    }
                     inputs.Add(projection.Value<string>("input"));outputs.Add(projection.Value<string>("output"));
                 }
                 report["segment_layer_counts"]=layers;report["prepare_ms"]=timer.Elapsed.TotalMilliseconds;
-                report["projection_count"]=kernels.Count;
+                report["projection_count"]=((JArray)plan["projections"]).Count;report["operation_count"]=kernels.Count;report["silu_count"]=nativeSilu?36:0;
                 using var pipeline=new GpuProjectionPipeline(models.ToArray(),inputs.ToArray(),outputs.ToArray(),kernels.ToArray());
                 report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
                 using var input=new Tensor<float>(new TensorShape(inputShape),inputValues);ComputeTensorData.Pin(input);
@@ -316,7 +336,7 @@ namespace EmbeddingGemma.Validation.Tests
             finally { foreach(var kernel in kernels)kernel.Dispose();Save(); }
         }
         // Diagnostic-only downloads; the product GPU pipeline is unchanged.
-        static Dictionary<string,float[]> ObserveBoundaries(Model[] models,string[] inputs,string[] outputs,GpuBlockedMatmul[] kernels,Tensor<float> input,HashSet<string> wanted)
+        static Dictionary<string,float[]> ObserveBoundaries(Model[] models,string[] inputs,string[] outputs,IGpuTensorOperation[] kernels,Tensor<float> input,HashSet<string> wanted)
         {
             if(!wanted.IsSubsetOf(models.SelectMany(m=>m.outputs.Select(o=>o.name))))throw new ArgumentException("Observed boundary is missing.");
             float[] baseline;

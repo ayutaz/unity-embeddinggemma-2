@@ -1,5 +1,7 @@
 # 固定native入力によるFP64 projection比較
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 2026-10-14 JST。保存Sentisのpost norm単独は同じnative入力で固定条件に合格したため、前段の微差と後段での増幅を調べる。固定native pre norm / activation入力と同じFP32重みから、線形積和だけをFP64で計算しFP32へ丸めた候補を比較する。Runtime・モデル・golden・許容差を変更せず、正式Release / tagは作成しない。
 
 ## TDDと比較の範囲

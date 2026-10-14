@@ -1,5 +1,13 @@
 # M4音声encoder / projectorの固定profile export
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
+## 2026-10-14の追加状況
+
+最新のnorm1 / dynamic16候補も元12数値条件すべて不合格。[追加receipt](results/m4-norm1-dynamic16-full-encoder-failed-20261014.json)。標準ONNX SiLU順序修正の実モデルは未検証。
+
+## 当時の実測・実装記録
+
 更新日: 2026-10-13。[M4計画](m4-plan.md)のA1 / A4を進める。**この出力は共通本体へ渡す512次元soft tokenであり、最終768次元embeddingではない**。Sentis実CPU / GPU、共通本体・検索 / 再生 / マイク、各実機は未検証。正式リリースは作らない。
 
 ## 実装とTDD

@@ -1,5 +1,7 @@
 # CPU画像前処理と実測・未達条件
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 2026-10-14 JST。`ImagePreprocessor(BackendType.CPU)`を追加した。既存のparameterless constructorはGPUComputeのまま。CPUでも公式の寸法・bicubic antialias・uint8の横pass後clamp・patch順序・位置情報・zero padding・RGB rescaleを使用する。横passの中間値はbyte配列で保持する。CPU resultは独立したCPU Tensorを所有し、Textureは借用する。
 
 読み取り可能なTexture2Dは`GetPixels32`から取得し、Unityのbottom-up格納を公式top-downへ並べる。GPU-only Texture / RenderTextureは入力を1回読み戻す。読み戻し非対応のRGB24 / BGRA32は、同じtransfer encodingの一時RGBA textureへ`Graphics.ConvertTexture`後に読み戻す。一時Textureは所有して破棄し、借用Textureやactive RenderTextureは変更しない。入力変換・読み戻しにGPUを使う条件と、CPU上のresize / patch化 / 後段Tensorを区別する。GPUCompute経路には途中CPU readbackを加えていない。

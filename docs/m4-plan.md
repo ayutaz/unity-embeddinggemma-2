@@ -1,8 +1,20 @@
 # M4: 音声対応のTDD計画
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。冒頭の現在方針が、下の旧checkpointの着手順より優先する。
+
+## 2026-10-14の音声の現在地
+
+PCM入力とGPU前処理はmain、AudioFeatureEncoder / AudioEmbedderはDraft実装・合成契約合格。最新norm1 / dynamic16補償候補は元6信号×CPU/GPUの12数値条件すべて不合格。[receipt](results/m4-norm1-dynamic16-full-encoder-failed-20261014.json)。GPU fallback / flush 0や最終cosineだけでencoder gateを合格にしない。
+
+SiLUの標準ONNX exportを `Neg→Exp→Add→Div` へ修正し、native除算の順序を保持した。関連37件・準備回帰4件は合格、修正後の実モデルは未検証。音声のQuery / Raw実参照も未完了。画像3 roleの18件成功を音声へ流用しない。
+
+再開は[全体計画R0〜R5](multimodal-tdd-plan.md)に従い、まず既存ONNX修正の元6信号 / 2 profileをActionsで確認する。SentisはGPUの一つの失敗入力へ絞り、局所red→最小修正→全信号へ進む。実PCM→768次元の全role・mask / 長さ境界、GPU中間readback禁止、所有権・例外後再利用、text / image回帰、検索・再生・明示収録sample、必須環境まで範囲を維持する。
+
+## 以前の音声計画・固定sourceの履歴
+
 更新日: 2026-10-13。**音声end-to-end API / sampleはmainに未実装。PR #60のnative保存参照は元6信号 / 2 profileで合格したが、NumPy ONNX全6信号とSentis FP32のCPU / GPU全12条件は固定elementwise許容差で不合格**。音声前処理単独はPythonとWindows Sentis CPU / 実GPUで合格済み。[全体計画](multimodal-tdd-plan.md)の工程4として進める。M4実装だけでは公開せず、3モダリティと全必須環境の受け入れを揃える。
 
-### 最新checkpointと次のRed
+### 履歴checkpointと次のRed
 
 Draft [PR #60](https://github.com/ayutaz/unity-embeddinggemma-2/pull/60)の確認headは `70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1`。参照producerは `271f5a12ca2aab081eb330f45cf593d404330374`であり、PR headへ付け替えない。[全6信号のnative / NumPy結果](https://github.com/ayutaz/unity-embeddinggemma-2/blob/70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1/docs/results/m4-audio-all-six-native-reference-real-20261013.json)、[全encoderのSentis不合格](https://github.com/ayutaz/unity-embeddinggemma-2/blob/70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1/docs/results/m4-audio-full-encoder-fp32-sentis-windows-failed-20261013.json)を固定する。Sentisはcosine全条件合格でもelementwise全条件不合格。skip 0 / CLI exit 1であり、GPU fallback / readback flushは0。subsample単独のCPU / GPU合格を全encoderの成功と数えない。
 

@@ -1,5 +1,15 @@
 # テキスト推論 API
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。実モデル実行は停止中。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
+
+## 現在のAPI範囲とGPU設定
+
+2026-10-14、mainにはテキストAPI、公式prompt・共通backbone、画像GPU前処理、PCM / 音声GPU前処理がある。Draft PR #81の依存branchには `ImageFeatureEncoder` / `ImageEmbedder`、`AudioFeatureEncoder` / `AudioEmbedder`が実装・合成契約検証されている。以下のテキスト手順を、マルチモーダルAPIが未実装という意味に読み替えない。実encoder gate・Unity実入力から最終APIの全条件は未達。
+
+画像は `ImageEmbedder.Embed(Texture, TextRole role = TextRole.Raw, string title = null)`、音声は `AudioEmbedder.Embed(AudioPcmInput, TextRole role = TextRole.Raw, string title = null)`。両APIとも前処理・encoder・backboneとprompt builderを借用し、各呼び出しの中間結果を所有して解放する。返す768次元CPU配列は独立コピーで、APIのDisposeは借用Workerを破棄しない。
+
+利用者向け経路は各stageを `BackendType.GPUCompute` で構築する。同backend / profileを要求し、GPU不在をCPUで代替しない。Runtime APIのCPU選択肢は残るが、対象実モデル検証のGPU専用化は2 fixtureに限定される。構成テスト合格と実モデル受け入れを分ける。[最新状態](status.md) / [音声API](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-embedder.md)。
+
 更新日: 2026-10-10。[現在の状態](status.md)でmain / PRと検証範囲を確認する。
 
 推論APIは [PR #3](https://github.com/ayutaz/unity-embeddinggemma-2/pull/3)、保存APIは [PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)、検索APIは [PR #10](https://github.com/ayutaz/unity-embeddinggemma-2/pull/10)、検索サンプルはPR #11で統合済み。文書の確認基準mainは `4ee0cbb`。M1実測の対応は当時のmain `8146107`を維持する。
@@ -10,7 +20,7 @@ API導入当時は単体契約24件、M1完了時は保存・測定を含む30�
 Unity 6000.3.16f1 / Sentis 2.6.1 の、batch 1 / length 128 / fp32 / 768次元の export を対象とする。
 モデル・tokenizerは [CI成果物を検証して配置](automation.md)する。
 PR #6でRuntimeを `Packages/com.ayutaz.embeddinggemma/Runtime/` へ移行し、元のソース・assembly名・GUIDを維持した。
-このUPM構成はPR #6でmainへ反映済み。実行依存はSentis 2.6.1とNewtonsoft JSON 3.2.2。検索APIはPR #10でmainへ統合し、検索シーンはPR #11で追加している。画像・音声APIは未実装。
+このUPM構成はPR #6でmainへ反映済み。実行依存はSentis 2.6.1とNewtonsoft JSON 3.2.2。検索APIはPR #10でmainへ統合し、検索シーンはPR #11で追加している。main未統合の画像・音声APIは上記の開発範囲を参照。
 別プロジェクトへの導入は [パッケージ文書](../Packages/com.ayutaz.embeddinggemma/Documentation~/index.md)、結果は [UPM検証](m2-package-validation.md)を参照。
 
 ```csharp

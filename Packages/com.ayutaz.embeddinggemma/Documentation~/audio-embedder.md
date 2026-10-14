@@ -1,5 +1,7 @@
 # 音声専用の埋め込みAPI
 
+> 2026-10-14: Draft APIの合成契約は検証済みですが、実音声encoder gate・全role / 境界を含むUnity全chainは未達です。下の使用例は全stageにGPUComputeを指定します。最終768次元CPU配列の取得と中間featureのCPU readbackは区別します。
+
 `AudioEmbedder` / `IAudioEmbedder`は、固定profileのPCM前処理 → 音声encoder / projector → 共通backboneをメインスレッドで同期実行し、独立した768次元のCPU配列を返します。3つの実行stageと公式prompt builderは借用します。stageのModelとWorkerは呼び出し側で管理します。
 
 ```csharp

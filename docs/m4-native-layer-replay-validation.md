@@ -1,5 +1,7 @@
 # 固定入力による音声layer 0内部参照
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 2026-10-14 JST。現在の保存Sentis encoderではsilenceのlayer 0から固定許容差を超えるため、同じPython producerのsubsample出力を入力にして公式layer 0だけを再実行する診断producerを追加した。Runtimeや元参照・許容差は変更しない。正式Release / tagは作成しない。
 
 ## TDDと監査

@@ -1,5 +1,7 @@
 # 最終画像embedding APIの合成受け入れ
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 2026-10-14 JST。`IImagePreprocessor` / `IImageFeatureEncoder`と、画像専用`ImageEmbedder` / `IImageEmbedder`を追加した。音声API PR #62の`IMultimodalBackbone`を共通契約として利用する。画像encoder単独のPR #64を含む後続branchであり、main未統合。正式Releaseは作成しない。
 
 Textureと全stageは借用し、各callの前処理結果・projected soft tokens・empty audio tensorはAPIが解放する。固定profileのimage feature数、audio 0、prompt profile、全stage backendの一致をconstructorで検査する。`BuildImage`はtokenizer設定の画像markerから公式promptを構築し、role / titleの検査をGPU処理より前に行う。encoderとbackboneへGPU Tensorを渡し、最終768次元vectorだけをCPUへ返す。出力の長さ・有限性・L2 normを検査し、返却配列は独立したcopyとする。API破棄は借用stageを破棄しない。

@@ -1,5 +1,13 @@
 # CI と開発手順
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。実モデル実行は停止中。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
+
+## 現在のCIとGPU受け入れの区別
+
+2026-10-14、PR #81のコード基準 `a237dee2874cdb0fbcdf4fe333aebae7193ad390` のCI `38571522044` と前headの `38569646238` は停止指示によりcancelled。最新headのRequired CI合格を主張しない。画像role参照のActions `38562190876` はPython18件合格、CPU文脈matrix `38563722587` は診断実行完了で、Unity / GPU全chainの合格ではない。
+
+通常CIの `model-reference` は実重み生成を含むため、文書だけのpushでも自動開始し得る。実モデル検証停止中は不要な重いrunを識別してcancelし、cancelを成功へ読み替えず記録する。workflowとRequired CI規則は今回変更しない。GPU runner / ライセンスの実行条件を再確認してから[全体計画R0〜R5](multimodal-tdd-plan.md)へ進む。CPU Pythonの参照生成は独立期待値用で、Unityモデル推論をCPUへ切り替える許可ではない。
+
 更新日: 2026-10-10。確認基準main: `4ee0cbb`（PR #12統合後）。
 CI・UPM監査・検索基盤・サンプル・準備最適化はmain統合済み。[CI run 37975720534](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975720534)の全8 job成功を確認した。
 文書のみのPR #7も全8 job成功後に未マージで閉じた。[現在の状態](status.md)を参照。

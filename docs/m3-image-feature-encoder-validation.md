@@ -1,5 +1,7 @@
 # 固定画像profileのencoder Runtime API
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 2026-10-14 JST。`ImageEncoderProfile` / `ImageFeatureEncoder` / `ImageEncodingResult`を追加した。公式exportは位置情報をgraphへ固定し、float `[1,2520,768]`の`pixels`だけを受け取る。APIは前処理の寸法・soft token数・全5040個の座標（padding `[-1,-1]`を含む）・tensor shape / backendを検査し、512次元のprojected soft tokensを返す。768次元の最終embeddingではない。callerは同じ位置情報を焼き込んだ監査済みmodelを供給する必要がある。constructorだけでgraph内部の座標の一致は証明できない。
 
 WorkerはAPI所有、Model / preprocessing resultは借用。`CopyOutput`で独立した結果を作り、Worker破棄後も結果を利用できる。GPU pixel / soft tokenの途中CPU readbackは実装に含めない。現在のTexture前処理はGPU専用であり、このencoderのCPU合格をTextureからのCPU全chain合格にしない。

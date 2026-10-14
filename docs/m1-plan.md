@@ -1,5 +1,7 @@
 # M1 詳細計画と完了監査
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 更新日: 2026-10-10（現在地・次の作業を更新）。実測対象はWindows Editor / Unity 6000.3.16f1 / Sentis 2.6.1。
 
 **M1のWindows Editor受け入れ条件はすべて合格した。** PR #1〜#3で基盤・参照配置・推論APIを統合し、[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)で保存・Float16重み量子化・性能とメモリ測定を追加した。

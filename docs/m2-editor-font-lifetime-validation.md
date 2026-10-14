@@ -1,5 +1,7 @@
 # Windows Editorのsample font寿命の修正
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 確認日: 2026-10-10。実行sourceは `f7ffbfd4478efb33da546f742ec59ba06e3e1d61`。
 Unity 6000.3.16f1 / Sentis 2.6.1 / uloop-cli 3.8.1、Windows / Direct3D12 / RTX 4070 Ti SUPER。
 [結果JSON](results/m2-editor-font-lifetime-windows-20261010.json)に失敗・合格・実際のbackendと固定参照の照合を保存した。

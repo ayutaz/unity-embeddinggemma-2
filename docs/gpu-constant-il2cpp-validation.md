@@ -1,5 +1,7 @@
 # GPU constantのIL2CPP保持・実行検証
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 2026-10-14 JST。[Draft PR #71](https://github.com/ayutaz/unity-embeddinggemma-2/pull/71)。baseはGPU分割転送PR #69。最新の実PlayerはGUID修正済みの固定Git `adccab24dbcc3f5dd8c8ac79911a7604a6014021`を使用する。初回`f246eea58543f806aca1d880c2c37d0eee86fd21`の実行も保持する。[実行receipt](results/gpu-constant-il2cpp-windows-20261014.json)。正式Release / tagは作成しない。
 
 ## パッケージの保持設定

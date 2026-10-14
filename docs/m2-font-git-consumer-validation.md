@@ -1,5 +1,7 @@
 # font修正後の固定Git導入と測定fixtureの寿命
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 2026-10-10。PR #29統合main `fc66af7bc9150ddcf759917a5e9c92b2c5afa991`を新しい空のconsumer `artifacts/j`へ固定Git URLで導入した。
 [結果JSON](results/m2-font-git-consumer-windows-20261010.json)は、最初のGit導入・実モデル結果と、その後のEditorテスト2ファイルだけの修正を分けて記録する。
 PR #29のhead `996827b`の[CI run 38029721944](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38029721944)と、統合mainの[CI run 38029860876](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38029860876)は全8 job成功した。

@@ -1,5 +1,7 @@
 # 公式マルチモーダルpromptのRuntime契約
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 2026-10-13。共通基盤C3のprompt / mask構築をTDDで追加する。`MultimodalPromptBuilder`はtokenizer JSONとtoken設定、固定backbone profileを受け取り、単一画像・単一音声またはその組合せの完全なpromptをtokenizeする。encoderの実行やfeature tensorのreadbackは行わない。
 
 画像placeholderは実feature数256 / 252等に合わせ、公式の開始 / 終了markerで囲む。音声placeholderは公式processorと同じ2段stride-2 mask縮約の有効数から作る。query / document prefixとtitleは既存text契約を維持。元のtext用tokenizerに保存された128長等のtruncation / paddingを解除し、全token化後に固定profileへ右paddingする。上限超過は推論前に拒否し、切捨てはしない。token IDの設定違い、不正mask・欠落 / 重複placeholder・展開済みmarkerを拒否する。結果のIDs / maskは独立したcopyとして取得できる。

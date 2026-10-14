@@ -1,5 +1,7 @@
 # 独立した最終音声Python参照
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 2026-10-13。公式`EmbeddingGemma2Model`のaudio-only forwardから、元6信号 / 2 profileのDocument-role最終vectorを生成するCLIをTDDで追加した。画像towerをmeta構造にも含めず、使用するtext / audio / projectorだけをstrict loadする。係数・mask・encoder feature・保存native encoder→保存backboneと、公式最終vectorを同じ固定許容差へ照合する。画像feature数0、音声280 / 210 soft tokenの実backbone profileはActionsで生成する。
 
 TDDはloader / 最終参照の7 assertion red → 7 green、CLI / workflowの2 red → 既存stageを含む4 green。元ONNX失敗状態が最終報告へ渡らない1 redを修正し、最終関連11 passed / failed 0。[小さいTDD receipt](results/m4-audio-final-reference-tdd-20261013.json)。これは実重み・Unityの成功とは別。

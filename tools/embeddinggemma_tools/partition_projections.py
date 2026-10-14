@@ -125,11 +125,11 @@ def _mark_silu_boundaries(model,names):
     constants={w.name:w for w in model.graph.initializer}
     constants.update({n.output[0]:next((a.t for a in n.attribute if a.name=='value'),None) for n in nodes if n.op_type=='Constant'})
     uses={v:[] for n in nodes for v in n.output}
-    for node in nodes:
+    for index,node in enumerate(nodes):
         for value in node.input:
-            if value in uses:uses[value].append(node.name)
+            if value in uses:uses[value].append(index)
     outputs={v.name for v in model.graph.output};removed=set();markers={}
-    positions={n.name:i for i,n in enumerate(nodes)}
+    positions={id(n):i for i,n in enumerate(nodes)}
     for name in names:
         div=by_name.get(name)
         if div is None or div.domain or div.op_type!='Div' or len(div.input)!=2 or len(div.output)!=1:raise ValueError('SiLU division differs')
@@ -143,13 +143,13 @@ def _mark_silu_boundaries(model,names):
         if (exp is None or exp.domain or exp.op_type!='Exp' or neg is None or neg.domain or neg.op_type!='Neg'
                 or list(neg.input)!=[div.input[0]]):raise ValueError('SiLU exponential differs')
         chain=[neg,exp,add,div]
-        if [positions[n.name] for n in chain]!=sorted(positions[n.name] for n in chain):raise ValueError('SiLU chain order differs')
+        if [positions[id(n)] for n in chain]!=sorted(positions[id(n)] for n in chain):raise ValueError('SiLU chain order differs')
         for earlier,later in zip(chain,chain[1:]):
-            if len(earlier.output)!=1 or uses[earlier.output[0]]!=[later.name] or earlier.output[0] in outputs:raise ValueError('SiLU internal output is shared')
-        if any(n.name in removed for n in chain):raise ValueError('SiLU boundaries overlap')
-        removed.update(n.name for n in chain);markers[name]=helper.make_node('Identity',[div.input[0]],list(div.output),name=name)
+            if len(earlier.output)!=1 or uses[earlier.output[0]]!=[positions[id(later)]] or earlier.output[0] in outputs:raise ValueError('SiLU internal output is shared')
+        if any(positions[id(n)] in removed for n in chain):raise ValueError('SiLU boundaries overlap')
+        removed.update(positions[id(n)] for n in chain);markers[positions[id(div)]]=helper.make_node('Identity',[div.input[0]],list(div.output),name=name)
     result=copy.deepcopy(model);del result.graph.node[:]
-    result.graph.node.extend(markers[n.name] if n.name in markers else n for n in nodes if n.name in markers or n.name not in removed)
+    result.graph.node.extend(markers[index] if index in markers else n for index,n in enumerate(nodes) if index in markers or index not in removed)
     return result
 
 

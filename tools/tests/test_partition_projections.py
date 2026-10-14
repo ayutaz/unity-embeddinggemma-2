@@ -70,6 +70,16 @@ def test_silu_partition_refuses_unverified_chain_without_mutating_original(probl
     assert source.SerializeToString()==before
 
 
+def test_silu_partition_preserves_unrelated_unnamed_onnx_nodes():
+    source,w=silu_model()
+    for node in source.graph.node[1:4]:node.name=''
+    # The exporter does not name internal Neg/Exp/Add nodes.
+    source.graph.node[-1].name=''
+    sha=hashlib.sha256(w.tobytes()).hexdigest()
+    parts,plan=required()(source,node_names=['first','second'],expected_weight_sha256=[sha,sha],silu_node_names=['silu'])
+    assert len(parts)==4 and [n.op_type for n in parts[-1].graph.node]==['Add']
+
+
 def test_partition_reconnects_exact_residual_and_preserves_source_bytes():
     source,w=model();before=source.SerializeToString();sha=hashlib.sha256(w.tobytes()).hexdigest()
     parts,plan=required()(source,node_names=['first','second'],expected_weight_sha256=[sha,sha])

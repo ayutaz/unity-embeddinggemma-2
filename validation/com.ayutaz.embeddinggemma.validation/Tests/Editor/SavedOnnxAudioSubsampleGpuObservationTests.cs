@@ -22,13 +22,17 @@ namespace EmbeddingGemma.Validation.Tests
         public void ObserveCompactSubsampleOnGpuWithoutChangingNormalFinalBits()
             => Observe(true);
 
-        void Observe(bool compact)
+        [Test]
+        public void ObserveBlock16SubsampleOnGpuWithoutChangingNormalFinalBits()
+            => Observe(true,true);
+
+        void Observe(bool compact,bool block16=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/subsample-native-replay"));
-            var folder=compact?"GpuAudioCompactOuterCandidate":"GpuAudioCandidate";
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+(compact?"compact-subsample-gpu-":"saved-onnx-subsample-gpu-")+source+".json"));
+            var folder=block16?"GpuAudioBlock16ConvCandidate":compact?"GpuAudioCompactOuterCandidate":"GpuAudioCandidate";
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+(block16?"block16-subsample-gpu-":compact?"compact-subsample-gpu-":"saved-onnx-subsample-gpu-")+source+".json"));
             Assert.That(File.Exists(output),Is.False);
             var rows=new JArray();
             var report=new JObject { ["success"]=false,["scope"]="one_saved_gpu_subsample_observation_only",
@@ -54,7 +58,7 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.That(replay.Value<bool>("success") && replay.Value<bool>("subsample_native_final_exact_match"),Is.True);
                 Assert.That(replay.Value<string>("reference_source"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));
                 var modelPath=Path.Combine(Application.dataPath,folder+"/frames-1119-valid-1119.onnx");
-                var graphSha=compact?"11607255142478773e621f5e9feebf2d3269457feb67d63215cecbc55fc61b67":"f43f3275c1ba48837b626fc09c738a8204dabd25e2ff3c74d7e75abcb3591899";
+                var graphSha=block16?"8a376cc5bc258e13fbdc2212bb6d352eafdd2b618d553113b7cf9f0aa8192fb0":compact?"11607255142478773e621f5e9feebf2d3269457feb67d63215cecbc55fc61b67":"f43f3275c1ba48837b626fc09c738a8204dabd25e2ff3c74d7e75abcb3591899";
                 Check(modelPath,graphSha);report["graph_sha256"]=graphSha;
                 var model=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/"+folder+"/frames-1119-valid-1119.onnx"));
                 report["phase"]="bind";Save();
@@ -71,7 +75,21 @@ namespace EmbeddingGemma.Validation.Tests
                     new JObject { ["stage"]="layer1.norm",["coefficient_bytes"]=128,["coefficient_sha256"]="7b744a9e296e2331f5553570fdb993412b8f760f1a000179f366554cc84b1434" });
                 var map=AudioCoefficientLayerMap.Resolve(model,normAnchors);
                 map["layer0.conv"]=Weighted("Conv","e4d4ee18dc86a9945d38c159a861784a2c3d9467d6e0be9c48a414e60e2b92fd");
-                map["layer1.conv"]=Weighted("Conv","68309f01ea3e738fccb24a0db5db608841a3a8e59b0a4fa5d0fb521ed60bf43c");
+                if(block16)
+                {
+                    Layer Producer(int index)=>model.layers.Single(l=>l.outputs.Contains(index));
+                    var scale=Producer(map["layer1.norm"]);
+                    var normalized=Producer(scale.inputs.Single(i=>!constants.ContainsKey(i)));
+                    Assert.That(normalized.GetType().Name,Is.EqualTo("Mul"));
+                    var centered=normalized.inputs.Select(Producer).Where(l=>l.GetType().Name=="Sub").ToArray();
+                    Assert.That(centered.Length,Is.EqualTo(1),"Bind the norm's centered input, not the refined inverse.");
+                    var inputIndex=centered[0].inputs[0];var layout=Producer(inputIndex);
+                    for(var hop=0;hop<4 && (layout.GetType().Name=="Reshape"||layout.GetType().Name=="Identity");hop++)
+                    { inputIndex=layout.inputs[0];layout=Producer(inputIndex); }
+                    Assert.That(layout.GetType().Name,Is.EqualTo("Transpose"),"Expected the original NCHW-to-NHWC norm boundary.");
+                    map["layer1.conv"]=layout.inputs[0];
+                }
+                else map["layer1.conv"]=Weighted("Conv","68309f01ea3e738fccb24a0db5db608841a3a8e59b0a4fa5d0fb521ed60bf43c");
                 map["layer0.act"]=AudioCoefficientLayerMap.ResolveReluOutput(model,map["layer0.norm"]);
                 map["layer1.act"]=AudioCoefficientLayerMap.ResolveReluOutput(model,map["layer1.norm"]);
                 var ffRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-native-feed-forward-replay"));

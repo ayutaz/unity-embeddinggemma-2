@@ -24,6 +24,34 @@ FEED_FORWARD_PARTS = ("pre_layer_norm", "ffw_layer_1", "act_fn", "ffw_layer_2", 
 FEED_FORWARD_PATHS = tuple("feed_forward1." + name for name in FEED_FORWARD_PARTS)
 
 
+def linear_fp32_compensated(module, hidden, *, chunk_size=64):
+    """FP32 block products with Neumaier compensation; preserves official clipping."""
+    if type(chunk_size) is not int or chunk_size <= 0:
+        raise ValueError("chunk size must be a positive integer")
+    weight = module.linear.weight
+    if (hidden.dtype != torch.float32 or weight.dtype != torch.float32
+            or hidden.device != weight.device or module.linear.bias is not None
+            or hidden.ndim < 2 or hidden.shape[-1] != weight.shape[1]
+            or not torch.isfinite(hidden).all() or not torch.isfinite(weight).all()):
+        raise ValueError("compensated projection requires finite unbiased FP32 context")
+    with torch.no_grad():
+        working = hidden.clamp(module.input_min, module.input_max) if module.use_clipped_linears else hidden
+        total = torch.zeros((*hidden.shape[:-1], weight.shape[0]), dtype=torch.float32, device=hidden.device)
+        correction = torch.zeros_like(total)
+        for start in range(0, weight.shape[1], chunk_size):
+            part = torch.nn.functional.linear(working[..., start:start + chunk_size], weight[:, start:start + chunk_size])
+            updated = total + part
+            correction = correction + torch.where(total.abs() >= part.abs(),
+                (total - updated) + part, (part - updated) + total)
+            total = updated
+        result = total + correction
+        if module.use_clipped_linears:
+            result = result.clamp(module.output_min, module.output_max)
+    if not torch.isfinite(result).all():
+        raise ValueError("compensated projection produced nonfinite values")
+    return result
+
+
 def linear_fp64(module, hidden):
     """Isolated CPU oracle: exact FP32 inputs/weights, FP64 accumulation, FP32 output."""
     weight = module.linear.weight
@@ -55,8 +83,7 @@ def _fixed_metrics(actual, expected):
                 maximum_absolute_error=float(error.max()), maximum_tolerance_ratio=float((error / allowed).max()))
 
 
-def projection_oracle(layer, parts):
-    """Compare independent exact-input projections; never replace frozen FP32 outputs."""
+def _projection_context(layer, parts):
     ff = layer.feed_forward1
     targets = {"linear1": parts["feed_forward1.ffw_layer_1"],
                "linear2": parts["feed_forward1.ffw_layer_2"],
@@ -69,6 +96,25 @@ def projection_oracle(layer, parts):
         if any(not torch.equal(value, targets[name]) for name, value in
                (("linear1", baseline1), ("linear2", baseline2), ("linear2_post_norm", baseline_post))):
             raise ValueError("pinned FP32 projection baseline mismatch")
+    return ff, first, activation, targets
+
+
+def compensated_projection_comparison(layer, parts, *, chunk_size=64):
+    ff, first, activation, targets = _projection_context(layer, parts)
+    with torch.no_grad():
+        outputs = dict(linear1=linear_fp32_compensated(ff.ffw_layer_1, first, chunk_size=chunk_size),
+                       linear2=linear_fp32_compensated(ff.ffw_layer_2, activation, chunk_size=chunk_size))
+        outputs["linear2_post_norm"] = ff.post_layer_norm(outputs["linear2"].clamp(-ff.gradient_clipping, ff.gradient_clipping))
+    metrics = {name: _fixed_metrics(value, targets[name]) for name, value in outputs.items()}
+    return dict(scope="exact_native_inputs_fp32_chunked_compensated_linears_then_fp32_post_norm",
+                fp32_baselines_exact_match=True, chunk_size=chunk_size, metrics=metrics,
+                fp32_compensated_gate_passed=all(value["elementwise_passed"] for value in metrics.values())), outputs
+
+
+def projection_oracle(layer, parts):
+    """Compare independent exact-input projections; never replace frozen FP32 outputs."""
+    ff, first, activation, targets = _projection_context(layer, parts)
+    with torch.no_grad():
         outputs = dict(linear1=linear_fp64(ff.ffw_layer_1, first), linear2=linear_fp64(ff.ffw_layer_2, activation))
         outputs["linear2_post_norm"] = ff.post_layer_norm(outputs["linear2"].clamp(-ff.gradient_clipping, ff.gradient_clipping))
     metrics = {name: _fixed_metrics(value, targets[name]) for name, value in outputs.items()}
@@ -135,7 +181,8 @@ def _identity(path):
     return {"bytes": path.stat().st_size, "sha256": digest}
 
 
-def prepare(snapshot, context, output, *, reference_source, diagnostic_source, detail_feed_forward=False, with_projection_oracle=False):
+def prepare(snapshot, context, output, *, reference_source, diagnostic_source, detail_feed_forward=False,
+            with_projection_oracle=False, with_compensated_projection=False, chunk_size=64):
     """Produce internal references for the frozen, fully valid silence layer 0."""
     snapshot, context, output = map(Path, (snapshot, context, output))
     if any(re.fullmatch(r"[0-9a-f]{40}", value) is None
@@ -189,10 +236,12 @@ def prepare(snapshot, context, output, *, reference_source, diagnostic_source, d
     blocked = Gemma4AudioModel._convert_4d_mask_to_blocked_5d(
         SimpleNamespace(config=config), attention_mask)
     positions = Gemma4AudioRelPositionalEncoding(config)(hidden)
-    detail_feed_forward = detail_feed_forward or with_projection_oracle
+    detail_feed_forward = detail_feed_forward or with_projection_oracle or with_compensated_projection
     parts = _capture_named(layer, hidden, blocked, positions, pinned_final,
                            (*PARTS, *FEED_FORWARD_PATHS) if detail_feed_forward else PARTS)
     oracle_report, oracle_values = projection_oracle(layer, parts) if with_projection_oracle else (None, {})
+    compensated_report, compensated_values = (compensated_projection_comparison(layer, parts, chunk_size=chunk_size)
+                                               if with_compensated_projection else (None, {}))
     output.mkdir(parents=True, exist_ok=False)
     files = {}
     for name, tensor in parts.items():
@@ -212,6 +261,14 @@ def prepare(snapshot, context, output, *, reference_source, diagnostic_source, d
             tensor.numpy().astype("<f4").tofile(path)
             oracle_report["files"][name] = dict(file=path.name, shape=list(tensor.shape), **_identity(path))
         report.update(fp64_projection_oracle=oracle_report, fp64_projection_gate_passed=oracle_report["fp64_projection_gate_passed"])
+    if compensated_report is not None:
+        compensated_report["files"] = {}
+        for name, tensor in compensated_values.items():
+            path = output / f"candidate-compensated-{name}-fp32.bin"
+            tensor.numpy().astype("<f4").tofile(path)
+            compensated_report["files"][name] = dict(file=path.name, shape=list(tensor.shape), **_identity(path))
+        report.update(fp32_compensated_projection=compensated_report,
+                      fp32_compensated_gate_passed=compensated_report["fp32_compensated_gate_passed"])
     (output / "layer-replay.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     return report
 
@@ -226,6 +283,8 @@ def main(argv=None):
     parser.add_argument("--report", required=True, type=Path)
     parser.add_argument("--detail-feed-forward", action="store_true")
     parser.add_argument("--projection-oracle", action="store_true")
+    parser.add_argument("--compensated-projection", action="store_true")
+    parser.add_argument("--chunk-size", type=int, default=64)
     args = parser.parse_args(argv)
     if args.report.exists():
         raise ValueError("refusing to overwrite replay report")
@@ -245,8 +304,10 @@ def main(argv=None):
                                              allow_patterns=["config.json", "model.safetensors"]))
         report.update(prepare(snapshot, args.context, args.output,
                               reference_source=args.reference_source, diagnostic_source=args.diagnostic_source,
-                              detail_feed_forward=args.detail_feed_forward, with_projection_oracle=args.projection_oracle))
-        report["success"] = report.get("fp64_projection_gate_passed", True)
+                              detail_feed_forward=args.detail_feed_forward, with_projection_oracle=args.projection_oracle,
+                              with_compensated_projection=args.compensated_projection, chunk_size=args.chunk_size))
+        report["success"] = (report.get("fp64_projection_gate_passed", True)
+                             and report.get("fp32_compensated_gate_passed", True))
     except Exception as error:
         report.update(error_type=type(error).__name__, error=str(error))
     args.report.parent.mkdir(parents=True, exist_ok=True)

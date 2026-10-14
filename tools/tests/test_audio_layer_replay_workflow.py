@@ -28,3 +28,12 @@ def test_native_replay_job_pins_old_context_and_never_claims_full_encoder_pass()
     uploads = [step for step in job["steps"] if step.get("uses", "").startswith("actions/upload-artifact@")]
     assert len(uploads) == 1 and uploads[0]["if"] == "always()"
     assert "audio-layer-replay-report.json" in uploads[0]["with"]["path"]
+
+
+def test_replay_compares_compensated_fp32_without_relaxing_failure():
+    path = Path(__file__).resolve().parents[2] / ".github/workflows/audio-layer-replay.yml"
+    workflow = yaml.safe_load(path.read_text(encoding="utf-8"))
+    job = workflow["jobs"]["replay"]
+    commands = "\n".join(step.get("run", "") for step in job["steps"])
+    assert "--compensated-projection" in commands, "Real FP32 candidate is not exercised"
+    assert not any(step.get("continue-on-error") for step in job["steps"])

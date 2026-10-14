@@ -427,6 +427,67 @@ def export_audio_native_pt2(wrapper, features, destination):
     _save_program(wrapper.eval(),(features,),destination,decompositions=decompositions)
 
 
+def fp32_fma(a, b, c):
+    """Single-rounding candidate for bounded normal FP32 inputs, without FP64 ops.
+
+    Dekker product and TwoSum retain the residual before the final rounding.
+    This is a candidate for the bounded LayerNorm statistics, not general IEEE
+    FMA with overflow, underflow, NaN, or infinity handling.
+    """
+    product = a * b
+    a_split, b_split = a * 4097.0, b * 4097.0
+    a_high, b_high = a_split - (a_split - a), b_split - (b_split - b)
+    a_low, b_low = a - a_high, b - b_high
+    product_error = ((a_high * b_high - product) + a_high * b_low + a_low * b_high) + a_low * b_low
+    total = product + c
+    recovered = total - product
+    sum_error = (product - (total - recovered)) + (c - recovered)
+    return total + (product_error + sum_error)
+
+
+class TorchWelfordLayerNorm(nn.Module):
+    """Editor export candidate for the pinned eight-lane FP32 moment order.
+
+    Mirrors the bounded 32/128-wide cases in pinned PyTorch moments_utils.h:
+    https://github.com/pytorch/pytorch/blob/5c4886908584029761b579af026dcfb627c84070/aten/src/ATen/native/cpu/moments_utils.h
+    Native source and weights are borrowed; never change the golden reference.
+    """
+    def __init__(self, source):
+        super().__init__()
+        if source.normalized_shape not in ((32,), (128,)):
+            raise ValueError("candidate supports only width 32 or 128")
+        if source.weight is None or source.weight.dtype != torch.float32 or source.bias is not None:
+            raise ValueError("candidate requires unbiased FP32 LayerNorm scale")
+        self.weight = source.weight
+        self.eps = source.eps
+        self.width = source.normalized_shape[0]
+
+    def forward(self, values):
+        if not torch.compiler.is_compiling():
+            if values.dtype != torch.float32 or values.shape[-1] != self.width:
+                raise ValueError("candidate requires fixed-width FP32 values")
+        mean = torch.zeros_like(values[..., :8])
+        moment = torch.zeros_like(mean)
+        count = self.width // 8
+        for index in range(count):
+            item = values[..., index*8:(index+1)*8]
+            delta = item - mean
+            # Store the reciprocal as FP32, as the pinned vector constants do.
+            coefficient = values.new_tensor(1.0 / (index + 1))
+            mean = fp32_fma(coefficient, delta, mean)
+            moment = fp32_fma(delta, item - mean, moment)
+        total_mean = torch.zeros_like(mean[..., :1])
+        total_moment = torch.zeros_like(total_mean)
+        for index in range(8):
+            previous = index * count
+            delta = mean[..., index:index+1] - total_mean
+            coefficient = values.new_tensor(count / (previous + count))
+            total_mean = total_mean + coefficient * delta
+            total_moment = total_moment + (moment[..., index:index+1] + delta * delta * coefficient * previous)
+        inverse = 1.0 / torch.sqrt(total_moment / self.width + self.eps)
+        return (values - total_mean) * inverse * self.weight
+
+
 def export_audio_native_onnx(wrapper, features, destination):
     """Bridge native SiLU to standard ops while preserving FP32 division order."""
     import tempfile

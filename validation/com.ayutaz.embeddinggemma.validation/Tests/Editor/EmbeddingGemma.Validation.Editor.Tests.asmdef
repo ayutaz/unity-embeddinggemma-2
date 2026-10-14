@@ -3,5 +3,7 @@
   "references": ["EmbeddingGemma.Runtime", "EmbeddingGemma.Package.Editor.Tests", "Unity.InferenceEngine", "Unity.Newtonsoft.Json"],
   "includePlatforms": ["Editor"],
   "optionalUnityReferences": ["TestAssemblies"],
+  "overrideReferences": true,
+  "precompiledReferences": ["Newtonsoft.Json.dll", "nunit.framework.dll"],
   "autoReferenced": false
 }

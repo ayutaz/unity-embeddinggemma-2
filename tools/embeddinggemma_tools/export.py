@@ -466,22 +466,44 @@ def _fp32_cascade_mean(values, width):
         if (values.dtype != torch.float32 or values.ndim < 2 or values.shape[-1] != width
                 or not values.numel() or not values.is_contiguous() or not torch.isfinite(values).all()):
             raise ValueError("cascade mean requires finite contiguous fixed-width FP32 rows")
-    zero = torch.zeros_like(values[..., :8])
-    accumulated = [zero, zero, zero, zero]
-    for start in range(0, width // 32, 16):
-        partial = [zero, zero, zero, zero]
-        for index in range(start, start + 16):
-            for lane in range(4):
-                offset = (index * 4 + lane) * 8
-                partial[lane] = partial[lane] + values[..., offset:offset + 8]
-        accumulated = [accumulated[lane] + partial[lane] for lane in range(4)]
-    combined = accumulated[0]
-    for lane in range(1, 4):
-        combined = combined + accumulated[lane]
-    total = torch.zeros_like(values[..., :1])
-    for lane in range(8):
-        total = total + combined[..., lane:lane + 1]
-    return total / width
+    # Independent chunks / ILP accumulators / SIMD lanes are batched together.
+    # Each dependent addition still occurs in the original order.
+    grouped = values.reshape(-1, width // 512, 16, 4, 8)
+    partial = _fp32_ordered_sum(grouped, -3)
+    accumulated = _fp32_ordered_sum(partial, -4)
+    combined = _fp32_ordered_sum(accumulated, -2)
+    total = _fp32_ordered_sum(combined, -1)
+    return total.reshape_as(values[..., :1]) / width
+
+
+def _fp32_ordered_sum(values, axis):
+    parts = torch.unbind(values, dim=axis)
+    total = torch.zeros_like(parts[0])
+    for part in parts:
+        total = total + part
+    return total.unsqueeze(axis)
+
+
+def fp32_outer_cascade_mean1024(values):
+    """Pinned AVX2 outer reduction for one transposed 280x1024 convolution.
+
+    The first 256 time rows use multi_row_sum (four cascade levels); the last
+    24 use row_sum's four ILP accumulators. The fixed shape and CPU strides are
+    an explicit reference contract, not inferred from an ONNX tensor shape.
+    """
+    if not torch.compiler.is_compiling() and not torch.jit.is_tracing():
+        if (values.dtype != torch.float32 or tuple(values.shape) != (1, 280, 1024)
+                or values.stride() != (286720, 1, 280) or not torch.isfinite(values).all()):
+            raise ValueError("outer cascade requires finite transposed 1x280x1024 FP32 values")
+    head = values[:, :256, :].reshape(1, 256, 4, 16, 16)
+    head = _fp32_ordered_sum(head, -1)
+    head = _fp32_ordered_sum(head, -2)
+    head = _fp32_ordered_sum(head, -3).reshape(1, 256, 1)
+    tail = values[:, 256:, :].reshape(1, 24, 16, 16, 4)
+    tail = _fp32_ordered_sum(tail, -2)
+    tail = _fp32_ordered_sum(tail, -3)
+    tail = _fp32_ordered_sum(tail, -1).reshape(1, 24, 1)
+    return torch.cat((head, tail), dim=1) / 1024
 
 
 def fp32_refined_rstd(values):

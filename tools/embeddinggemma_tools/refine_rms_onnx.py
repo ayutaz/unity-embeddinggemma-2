@@ -19,12 +19,15 @@ def _validate_template(template):
         raise ValueError('RMS templates require standard FP32 input/output and arithmetic')
 
 
-def refine_rms_means(model, mean_templates, inverse_template, *, expected_count, excluded_names=()):
+def refine_rms_means(model, mean_templates, inverse_template, *, expected_count, excluded_names=(), mean_overrides=None):
     """Audit squared last-axis RMS paths, then inline explicit FP32 templates."""
-    for template in [*mean_templates.values(),inverse_template]:_validate_template(template)
+    mean_overrides={} if mean_overrides is None else mean_overrides
+    for template in [*mean_templates.values(),*mean_overrides.values(),inverse_template]:_validate_template(template)
     mean_names={n.name for n in model.graph.node if n.op_type=='ReduceMean'}
     if len(set(excluded_names))!=len(excluded_names) or not set(excluded_names).issubset(mean_names):
         raise ValueError('Explicit RMS layout exclusion is missing or duplicated')
+    if not set(mean_overrides).issubset(mean_names) or set(mean_overrides).intersection(excluded_names):
+        raise ValueError('Explicit RMS layout override is missing or excluded')
     weights={w.name:w for w in model.graph.initializer}
     producers={output:n for n in model.graph.node for output in n.output}
     infos={v.name:v for v in (*model.graph.input,*model.graph.output,*model.graph.value_info)}
@@ -50,6 +53,12 @@ def refine_rms_means(model, mean_templates, inverse_template, *, expected_count,
                  or (square.op_type=='Mul' and len(square.input)==2 and square.input[0]==square.input[1])))
         if (width not in mean_templates or axes not in ([-1],[len(shape)-1]) or keep!=1 or not squared):
             raise ValueError('RMS mean requires a supported squared last-axis fixed width')
+        template=mean_overrides.get(mean.name,mean_templates[width])
+        if mean.name in mean_overrides:
+            template_shape=template.graph.input[0].type.tensor_type.shape.dim
+            if (not shape or any(d.dim_value<=0 for d in (*shape,*template_shape))
+                    or [d.dim_value for d in shape]!=[d.dim_value for d in template_shape]):
+                raise ValueError('Explicit RMS layout override requires the exact fixed input shape')
         users=[n for n in model.graph.node if mean.output[0] in n.input]
         if len(users)!=1 or users[0].op_type!='Add':raise ValueError('RMS epsilon edge is ambiguous')
         addition=users[0];epsilon=[i for i in addition.input if i!=mean.output[0]]
@@ -57,7 +66,7 @@ def refine_rms_means(model, mean_templates, inverse_template, *, expected_count,
         users=[n for n in model.graph.node if addition.output[0] in n.input]
         if len(users)!=1 or users[0].op_type!='Pow' or not scalar(users[0].input[1],-.5):
             raise ValueError('RMS inverse edge differs')
-        targets.extend([(mean,mean_templates[width]),(users[0],inverse_template)])
+        targets.extend([(mean,template),(users[0],inverse_template)])
     if len(targets)!=expected_count*2 or expected_count<=0:raise ValueError('RMS target count differs')
     reserved={v.name for v in (*model.graph.input,*model.graph.output,*model.graph.initializer,*model.graph.value_info)}
     reserved.update(v for n in model.graph.node for v in (*n.input,*n.output))
@@ -85,4 +94,5 @@ def refine_rms_means(model, mean_templates, inverse_template, *, expected_count,
     if _initializer_digest(model.graph.initializer[:count])!=before:raise RuntimeError('Existing RMS coefficient bytes changed')
     return dict(replaced_rms_count=expected_count,existing_initializer_bytes_preserved=True,
                 excluded_mean_names=list(excluded_names),
+                explicit_mean_override_names=list(mean_overrides),
                 existing_initializer_sha256=before,node_count=len(model.graph.node),full_encoder_validated=False)

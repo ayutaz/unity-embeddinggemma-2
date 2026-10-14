@@ -2,6 +2,8 @@
 
 > 文書整合確認: 2026-10-15。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。ユーザー指定の実行計画3・4は継続中、未完了。直近の所有Unity processは終了済み。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
 
+2026-10-15最新の診断: 小さいGPU観測1 Red→1 Green。`b29c5ad`の元12層観測は通常最終bitを変えず、layer_0〜9は許容差内、layer_10が42要素、layer_11が2,021要素不合格。全encoderの539要素不合格は維持する。`e252175`で元layer_9出力を入力したlayer_10単独GPUは許容差超過0、計算fallback / flush0、NUnit1 pass / fail0 / skip0。前段からの誤差伝播が関与すると分かったが、全bit / 全encoder / 最終API合格ではない。Persistent allocation警告の発生元も未検証。[固定観測・単独GPU・限界](results/m4-all-static-original-layer-propagation-20261015.json)。次は最初のfeed-forwardの固定参照から早い入力 / 投影の微差を特定する。以下は前回checkpoint。
+
 2026-10-15最新: 元ONNXのstatic投影135個は実行時123個と定数入力12個に分かれる。元係数hashとSentisの固定境界411個を監査し、shape関連の最終28件を確認した。135投影 / 136 segmentを生成した`a2fca44`の実GPU全encoder無音は539要素・最大許容差比6.730431で不合格。GPUCompute・計算fallback / flush0、NUnit0 pass / 1 fail / skip0 / exit2、準備12.463秒・実行＋final download2.499秒。前の2投影候補175要素から数値が悪化したため採用しない。metadata監査の1 passは推論の成功ではない。[固定監査・TDD・実GPU不合格](results/m4-all-static-partitioned-gpu-failed-20261015.json)。次は最初の誤差増加を起こす投影を元の層別参照で特定する。工程3・4・元全信号 / profile・画像FP32・最終APIの全条件は未達。以下は前回checkpoint。
 
 2026-10-15現在: GPU接続の2 Red→2 Greenとplanner関連19 Greenを確認。初回の中間ONNX import失敗は入力 / 出力aliasを明示Identityで修正し、別試行の`e9e5c92`全encoderは無音175要素・最大許容差比4.043479で不合格。GPUCompute・計算fallback / flush0、NUnit0 pass / 1 fail / skip0、準備23.371秒・実行＋final download10.948秒。[固定接続・失敗・TDD](results/m4-partitioned-first-ff-whole-gpu-failed-20261015.json)。135 static投影への拡張は不明shapeのため準備時に拒否、GPU未実行。工程3・4と全信号 / profile / 最終APIの条件を維持する。以下は前回checkpoint。

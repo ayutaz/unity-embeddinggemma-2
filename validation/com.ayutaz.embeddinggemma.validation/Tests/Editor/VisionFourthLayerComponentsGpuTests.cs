@@ -17,11 +17,17 @@ namespace EmbeddingGemma.Validation.Tests
     {
         [UnityTest]
         public IEnumerator FourthLayerRmsAndGeluMustMatchQualifiedRowBitsOnGpu()
+            =>Run(false);
+        [UnityTest]
+        public IEnumerator MidpointReciprocalFourthLayerRmsAndGeluMustMatchQualifiedRowBitsOnGpu()
+            =>Run(true);
+        static IEnumerator Run(bool midpoint)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/lf38743853944"));
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-fourth-layer-components-gpu-"+source+".json"));
+            var label=midpoint?"vision-fourth-layer-midpoint-components-gpu-":"vision-fourth-layer-components-gpu-";
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+".json"));
             Assert.That(File.Exists(output),Is.False);
             var rows=new JArray();var report=new JObject{["success"]=false,["runtime_source"]=source,
                 ["scope"]="fourth_vision_layer_original_scales_and_qualified_token_row_173_rms_gelu_components_only",
@@ -30,6 +36,7 @@ namespace EmbeddingGemma.Validation.Tests
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             string Hash(string path){using var stream=File.OpenRead(path);return PlayerFileHash.Compute(stream,out _);}
             void Check(string path,string expected)=>Assert.That(Hash(path),Is.EqualTo(expected));
+            report["midpoint_reciprocal_selection"]=midpoint;
             Save();
             try
             {
@@ -60,8 +67,10 @@ namespace EmbeddingGemma.Validation.Tests
                     var asset="GpuVisionHeadRmsCandidates/"+entry["onnx"].Value<string>("file");Check(Path.Combine(Application.dataPath,asset),entry["onnx"].Value<string>("sha256"));
                     return ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/"+asset));
                 }
-                var hidden=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/GpuVisionInlineRmsCandidate/inline-rms.onnx"));
-                var working=QualifiedVisionRmsOperation.InlineLayerRms(original,hidden,Head(1),Head(3),16);
+                var hidden=midpoint?QualifiedVisionMidpointRmsTemplates.Load("hidden").model:ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/GpuVisionInlineRmsCandidate/inline-rms.onnx"));
+                var scaledHead=midpoint?QualifiedVisionMidpointRmsTemplates.Load("head-scaled").model:Head(1);
+                var unscaledHead=midpoint?QualifiedVisionMidpointRmsTemplates.Load("head-unscaled").model:Head(3);
+                var working=QualifiedVisionRmsOperation.InlineLayerRms(original,hidden,scaledHead,unscaledHead,16);
                 var squares=original.layers.Where(layer=>layer.GetType().Name=="Square").Skip(21).Take(7).ToArray();Assert.That(squares.Length,Is.EqualTo(7));
                 Layer Next(Layer value,string kind)=>original.layers.Single(layer=>layer.GetType().Name==kind&&layer.inputs.Contains(value.outputs[0]));
                 var folder=Path.ChangeExtension(output,null)+"-captures";Directory.CreateDirectory(folder);

@@ -204,19 +204,20 @@ namespace EmbeddingGemma.Validation.Tests
         [UnityTest] public IEnumerator IsolatedFifthVisionLayerMustMatchQualifiedContextBitsOnGpu()=>QualifiedLayerCase(5,true);
         [UnityTest] public IEnumerator FourthVisionLayerPrefixMustMatchQualifiedContextBitsOnGpu()=>QualifiedLayerCase(4,false);
         [UnityTest] public IEnumerator IsolatedFourthVisionLayerMustMatchQualifiedContextBitsOnGpu()=>QualifiedLayerCase(4,true);
+        [UnityTest] public IEnumerator MidpointReciprocalFourthLayerPrefixMustMatchQualifiedContextBitsOnGpu()=>QualifiedLayerCase(4,false,true);
         static IEnumerator SecondLayerCase(bool isolated)
             =>QualifiedLayerCase(2,isolated);
-        static IEnumerator QualifiedLayerCase(int count,bool isolated)
+        static IEnumerator QualifiedLayerCase(int count,bool isolated,bool midpoint=false)
         {
             var pending=Run("square-0",inlineAllRms:true,nativeGelu:true,releaseUnusedGpuCache:true,staged:true,
                 releaseGeluCaches:true,editorFramePump:true,nativeOperators:true,nativeStaticBlockSize:192,
                 inlineTailRms:true,softmaxVectorWidth:16,fuseGeluInner:true,sleefGelu:true,nativeRotary:true,
-                encoderPrefixLayers:count,isolatedLayer:isolated);
+                encoderPrefixLayers:count,isolatedLayer:isolated,midpointRms:midpoint);
             while(!pending.IsCompleted){UnityEditor.EditorApplication.QueuePlayerLoopUpdate();yield return null;}
             pending.GetAwaiter().GetResult();
         }
 
-        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false,bool editorFramePump=false,bool nativeOperators=false,int nativeStaticBlockSize=384,bool inlineTailRms=false,int softmaxVectorWidth=8,bool fuseGeluInner=false,bool sleefGelu=false,bool nativeRotary=false,bool firstLayerOnly=false,bool nativePooling=false,bool lastEncoderOnly=false,int encoderPrefixLayers=0,bool isolatedLayer=false)
+        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false,bool editorFramePump=false,bool nativeOperators=false,int nativeStaticBlockSize=384,bool inlineTailRms=false,int softmaxVectorWidth=8,bool fuseGeluInner=false,bool sleefGelu=false,bool nativeRotary=false,bool firstLayerOnly=false,bool nativePooling=false,bool lastEncoderOnly=false,int encoderPrefixLayers=0,bool isolatedLayer=false,bool midpointRms=false)
         {
             Assert.That(encoderPrefixLayers,Is.InRange(0,16));Assert.That(encoderPrefixLayers>0&&(firstLayerOnly||lastEncoderOnly),Is.False);
             var encoderOnly=firstLayerOnly||lastEncoderOnly||encoderPrefixLayers>0;
@@ -240,6 +241,7 @@ namespace EmbeddingGemma.Validation.Tests
             if(nativePooling)label="vision-original-native-pooling-whole-gpu-";
             if(lastEncoderOnly)label="vision-original-native-rotary-last-encoder-gpu-";
             if(encoderPrefixLayers>0)label="vision-original-qualified-"+(isolatedLayer?"isolated-layer":"prefix")+encoderPrefixLayers+"-gpu-";
+            if(midpointRms)label=encoderPrefixLayers>0?"vision-midpoint-rms-qualified-"+(isolatedLayer?"isolated-layer":"prefix")+encoderPrefixLayers+"-gpu-":"vision-original-midpoint-rms-whole-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+"-"+caseId+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["scope"]=releaseUnusedGpuCache?"one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate":nativeGelu?"one_original_vision_encoder_gpu_native_gelu_all_layer_rms_and_patch384_candidate":inlineAllRms?"one_original_vision_encoder_gpu_all_sixteen_layer_rms_and_native_patch384_candidate":"one_original_vision_encoder_gpu_native_patch384_candidate",["runtime_source"]=source,
@@ -256,6 +258,7 @@ namespace EmbeddingGemma.Validation.Tests
             report["native_fixed_left_pooling"]=nativePooling;
             report["last_encoder_only"]=lastEncoderOnly;
             report["encoder_prefix_layers"]=encoderPrefixLayers;report["isolated_layer"]=isolatedLayer;
+            report["midpoint_reciprocal_rms"]=midpointRms;
             if(firstLayerOnly){report["scope"]="original_square_zero_patch_and_first_layer_against_golden_reproducing_native_bits_only";report["full_encoder_validated"]=false;}
             if(lastEncoderOnly){report["scope"]="original_square_zero_all_sixteen_layers_before_padding_pooling_rms_projection_against_golden_reproducing_native_bits_only";report["full_encoder_validated"]=false;}
             if(encoderPrefixLayers>0){report["scope"]=isolatedLayer?"one_original_vision_layer_from_qualified_fixed_hidden_input_only":"original_square_zero_prefix_against_qualified_ordered_context_only";report["full_encoder_validated"]=false;}
@@ -303,8 +306,10 @@ namespace EmbeddingGemma.Validation.Tests
                         var asset="GpuVisionHeadRmsCandidates/"+entry["onnx"].Value<string>("file");Check(Path.Combine(Application.dataPath,asset),entry["onnx"].Value<string>("sha256"));
                         return ModelLoader.Load(UnityEditor.AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/"+asset));
                     }
-                    var template=ModelLoader.Load(UnityEditor.AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/GpuVisionInlineRmsCandidate/inline-rms.onnx"));
-                    working=QualifiedVisionRmsOperation.InlineLayerRms(original,template,Head(1),Head(3),16);
+                    var template=midpointRms?QualifiedVisionMidpointRmsTemplates.Load("hidden").model:ModelLoader.Load(UnityEditor.AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/GpuVisionInlineRmsCandidate/inline-rms.onnx"));
+                    var scaledHead=midpointRms?QualifiedVisionMidpointRmsTemplates.Load("head-scaled").model:Head(1);
+                    var unscaledHead=midpointRms?QualifiedVisionMidpointRmsTemplates.Load("head-unscaled").model:Head(3);
+                    working=QualifiedVisionRmsOperation.InlineLayerRms(original,template,scaledHead,unscaledHead,16);
                     Assert.That(original.constants.All(value=>working.constants.Any(other=>ReferenceEquals(value,other))),Is.True);
                     report["inline_rms_count"]=112;report["layer_count"]=working.layers.Count;
                     report["original_square_count"]=original.layers.Count(layer=>layer.GetType().Name=="Square");
@@ -315,9 +320,11 @@ namespace EmbeddingGemma.Validation.Tests
                         var featureCount=reference["profiles"][profile].Value<int>("feature_count");Assert.That(featureCount==252||featureCount==256,Is.True);
                         var tailFile=featureCount==252?"vision-tail-252-gpu-a4df94698cb1f7c7ea78081830a14111c38c3ce0.sentis":"vision-saved-original-cpu-tail-gpu-c3460fc20d6fc7f8599abcb626d210b0d23aef20-captures/candidate-tail-rms.sentis";
                         var tailSha=featureCount==252?"36b688b118f091490b75af9deab3e2e4873172dbab64e9f021cd99c3c7ba5599":"215fd08ac859acc3501b111104c048fb4450f11092418be4ea45a9fc3d985835";
-                        var tailPath=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+tailFile));Check(tailPath,tailSha);
+                        var tailPath=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+tailFile));Model tailModel;
+                        if(midpointRms){var loaded=QualifiedVisionMidpointRmsTemplates.Load("tail"+featureCount);tailModel=loaded.model;tailSha=loaded.sha;}
+                        else{Check(tailPath,tailSha);tailModel=TextModelFile.Load(tailPath);}
                         report["tail_template_feature_count"]=featureCount;report["tail_template_sha256"]=tailSha;
-                        working=QualifiedVisionRmsOperation.InlineTailRms(working,TextModelFile.Load(tailPath));
+                        working=QualifiedVisionRmsOperation.InlineTailRms(working,tailModel);
                         Assert.That(original.constants.All(value=>working.constants.Any(other=>ReferenceEquals(value,other))),Is.True);
                         Assert.That(working.layers.Count(layer=>layer.GetType().Name=="Square"),Is.Zero);
                         report["inline_rms_count"]=113;report["remaining_original_rms_count"]=0;report["layer_count"]=working.layers.Count;

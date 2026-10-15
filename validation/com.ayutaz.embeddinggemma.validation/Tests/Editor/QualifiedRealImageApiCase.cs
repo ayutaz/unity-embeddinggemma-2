@@ -74,7 +74,9 @@ namespace EmbeddingGemma.Validation.Tests
                 }
                 await Reject(()=>api.EmbedAsync(null),typeof(ArgumentNullException),"null_texture");
                 await Reject(()=>api.EmbedAsync(texture,(TextRole)99),typeof(ArgumentOutOfRangeException),"invalid_role");
-                await Reject(()=>api.EmbedAsync(texture,TextRole.Document,"<image>"),typeof(ArgumentException),"marker_in_title");
+                var imageMarker=JObject.Parse(File.ReadAllText(Path.Combine(tokenizer,"tokenizer_config.json"))).Value<string>("image_token");
+                Assert.That(string.IsNullOrEmpty(imageMarker),Is.False);
+                await Reject(()=>api.EmbedAsync(texture,TextRole.Document,imageMarker),typeof(ArgumentException),"marker_in_title");
                 var destroyed=new Texture2D(2,2);UnityEngine.Object.DestroyImmediate(destroyed);
                 await Reject(()=>api.EmbedAsync(destroyed),typeof(ArgumentException),"destroyed_texture");
                 Assert.That(pre.Calls,Is.Zero);Assert.That(enc.Calls,Is.Zero);
@@ -87,6 +89,15 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.That(pre.Calls,Is.EqualTo(2));Assert.That(enc.Calls,Is.EqualTo(1));
                 Assert.Throws<ObjectDisposedException>(()=>{var ignored=pre.Last.Pixels;});
                 pre.Calls=0;enc.Calls=0;report["real_invalid_input_owned_tensors_disposed"]=true;save();
+                using(var cancellation=new CancellationTokenSource())
+                {
+                    report["phase"]="cancel_after_real_gpu_stage_yield";save();
+                    var pending=api.EmbedAsync(texture,cancellationToken:cancellation.Token);
+                    Assert.That(enc.Calls,Is.EqualTo(1));Assert.That(pending.IsCompleted,Is.False);
+                    cancellation.Cancel();await Reject(()=>pending,typeof(OperationCanceledException),"cancel_after_real_gpu_stage_yield");
+                    Assert.That(pending.IsCanceled,Is.True);Assert.Throws<ObjectDisposedException>(()=>{var ignored=pre.Last.Pixels;});
+                }
+                pre.Calls=0;enc.Calls=0;report["real_gpu_stage_cancellation_validated"]=true;save();
             }
             foreach(var role in roles)
             {

@@ -17,11 +17,14 @@ namespace EmbeddingGemma
         bool disposed;
         public BackendType Backend => BackendType.GPUCompute;
         public GpuTanh()
+            :this(false) { }
+        /// <summary>Explicit paired-exponential SLEEF candidate; the existing table remains the default.</summary>
+        public GpuTanh(bool useSleef)
         {
             if(!SystemInfo.supportsComputeShaders)throw new NotSupportedException("Tanh requires an actual compute GPU.");
             var resource=Resources.Load<ComputeShader>("EmbeddingGemmaNativeTanh");
             if(resource==null)throw new InvalidOperationException("GPU tanh shader is missing.");
-            try{shader=UnityEngine.Object.Instantiate(resource);kernel=shader.FindKernel("NativeTanh");}
+            try{shader=UnityEngine.Object.Instantiate(resource);kernel=shader.FindKernel(useSleef?"SleefTanh":"NativeTanh");}
             catch{Dispose();throw;}
         }
         public Tensor<float> Execute(Tensor<float> input)

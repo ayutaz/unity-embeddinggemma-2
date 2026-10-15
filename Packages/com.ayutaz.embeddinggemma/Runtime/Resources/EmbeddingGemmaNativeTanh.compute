@@ -6,6 +6,7 @@
 // 5a1d179 under BSL-1.0; see ../../SLEEF-LICENSE.txt.
 // All runtime arithmetic and coefficient storage are FP32, including float2 residual pairs.
 #pragma kernel NativeTanh
+#pragma kernel SleefTanh
 #pragma use_dxc
 StructuredBuffer<float> Input;
 RWStructuredBuffer<float> Output;
@@ -75,4 +76,85 @@ void NativeTanh(uint3 thread : SV_DispatchThreadID)
         value=Add2(MultiplyScalar(value,y),Coefficients[offset+power]);
     precise float result=value.x+value.y;
     Output[index]=asfloat(sign|asuint(result));
+}
+
+// Paired-FP32 exp/reciprocal formulation from SLEEF 5a1d179 xtanhf and df.h,
+// BSL-1.0. Keep each non-FMA rounding and explicit fused residual operation.
+float2 AddScalarPair(float x,float2 y)
+{
+    precise float s=x+y.x;
+    precise float low=((x-s)+y.x)+y.y;
+    return float2(s,low);
+}
+float2 AddPair(float2 x,float2 y)
+{
+    precise float s=x.x+y.x;
+    precise float low=(((x.x-s)+y.x)+x.y)+y.y;
+    return float2(s,low);
+}
+float2 MultiplyPair(float2 x,float2 y)
+{
+    precise float s=x.x*y.x;
+    precise float low=mad(x.x,y.y,mad(x.y,y.x,mad(x.x,y.x,-s)));
+    return float2(s,low);
+}
+float2 SquarePair(float2 x)
+{
+    precise float s=x.x*x.x;
+    precise float low=mad(x.x+x.x,x.y,mad(x.x,x.x,-s));
+    return float2(s,low);
+}
+float RoundedInverse(float x)
+{
+    precise float inverse=1.0f/x;
+    precise float residual=mad(-x,inverse,1.0f);
+    return mad(inverse,residual,inverse);
+}
+float2 ReciprocalPair(float2 x)
+{
+    precise float s=RoundedInverse(x.x);
+    precise float low=s*mad(-x.y,s,mad(-x.x,s,1.0f));
+    return float2(s,low);
+}
+float2 DividePair(float2 n,float2 d)
+{
+    precise float t=RoundedInverse(d.x);
+    precise float s=n.x*t;
+    precise float u=mad(t,n.x,-s);
+    precise float v=mad(-d.y,t,mad(-d.x,t,1.0f));
+    precise float low=mad(s,v,mad(n.y,t,u));
+    return float2(s,low);
+}
+float2 ExponentialPair(float2 d)
+{
+    precise float scaled=(d.x+d.y)*1.4426950408889634073599246810018921374f;
+    int q=(int)round(scaled);
+    precise float2 s=Add2(d,float2((float)q*(-0.693145751953125f),0.0f));
+    s=Add2(s,float2((float)q*(-1.428606765330187045e-06f),0.0f));
+    precise float u=0.1980960224e-3f;
+    u=mad(u,s.x,0.1394256484e-2f);
+    u=mad(u,s.x,0.8333456703e-2f);
+    u=mad(u,s.x,0.4166637361e-1f);
+    precise float2 t=Add2(MultiplyScalar(s,u),float2(0.166666659414234244790680580464f,0.0f));
+    t=Add2(MultiplyPair(s,t),float2(0.5f,0.0f));
+    t=Add2(s,MultiplyPair(SquarePair(s),t));
+    t=AddScalarPair(1.0f,t);
+    precise float factor=asfloat((uint)(q+127)<<23);
+    return float2(t.x*factor,t.y*factor);
+}
+[numthreads(64,1,1)]
+void SleefTanh(uint3 thread : SV_DispatchThreadID)
+{
+    uint index=thread.x+thread.y*DispatchWidth;
+    if(index>=Count)return;
+    precise float x=Input[index];
+    if(x==0 || isnan(x)){Output[index]=x;return;}
+    uint sign=asuint(x)&0x80000000u;
+    if(abs(x)>8.664339742f){Output[index]=asfloat(sign|asuint(1.0f));return;}
+    precise float2 d=ExponentialPair(float2(abs(x),0.0f));
+    precise float2 e=ReciprocalPair(d);
+    precise float2 result=DividePair(AddPair(d,-e),AddPair(d,e));
+    precise float y=result.x+result.y;
+    if(isnan(y))y=1.0f;
+    Output[index]=asfloat(sign|asuint(y));
 }

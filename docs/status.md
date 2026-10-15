@@ -1,8 +1,18 @@
 # 現在の状態と残タスク
 
-更新日: 2026-10-15。最新の全encoder数値gateは `b6c96cf1283b857aebafa1587d2dec2866825400`。native除算・tanh・softmaxまで接続した候補は無音125要素不合格、最初のAttention内部13境界は全bit一致。GPUComputeで実行し、計算fallback / flushは0。工程3・4は未完了。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
+更新日: 2026-10-15。最新の全encoder数値gateは `f504f3fd5478ab85cbfc3c9f12e0c228baeadbbb`。native GLUまで接続した候補は無音532要素不合格。最初の層layer_0は最終出力まで全bit一致し、最初の層出力差はlayer_1。GPUComputeで実行し、計算fallback / flushは0。前候補b6c96cfは125要素不合格で、いずれも採用・全体合格ではない。工程3・4は未完了。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
 
 ## 現在の判定
+
+**最新の畳み込み / GLU切り分け:** `1d09c98`の元post投影・Attention残差までは全bit一致し、最初のlconv1d出力に97,175値のbit差（局所許容差超過0）を確認した。元モデルに置換処理を入れない畳み込み参照captureは5 Red→関連26 Green、workflowは1 Red→関連29 Green。Actions [38668286237](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38668286237) / `5d5c5eb`は成功し、固定layer終端へ厳密一致。45 partを取得し、以前の30 partはすべて元hashと一致した。GLU入力 / 出力、depthwise入力 / 重み / 出力、norm / activation / 線形投影の入出力を追加した。
+
+`7eac3ec`の18境界観測は初期conv pre normとlinear_startも全bit一致し、その後のconv_normで88,635値のbit差を記録。小型GPU契約検証を合わせて3 pass / fail0 / skip0。元のSLEEF expと逆数を先に丸めて掛ける手順は、offline oracleでnative GLU286,720値へ全bit一致した。`81893c7`の`GpuGlu`は同じFP32手順をGPU実装し、2 Red→実GPU2 Green、固定286,720値を全bit一致。偶数last axis / CPU入力拒否後の再利用、借用入力、独立出力、符号付きゼロ、Disposeも検証。plannerは9 Red→関連80 Greenで、元Split / Sigmoid / Mul chainの専用利用とshapeを確認する。[固定参照・GLU GPU](results/m4-native-convolution-reference-and-glu-gpu-20261015.json)。
+
+元initializer digestを保持する267 operation / 268 segmentを生成。`f504f3f`の元silence全encoderは**532要素不合格・最大許容差比7.522410**、0 pass / 1 fail / skip0 / exit2。前候補125要素より件数が増えたため採用しない。一方で同sourceの19境界観測は最初のlconv1d全体まで元参照へ全bit一致（線形層は元Clip境界を合わせた比較）。通常最終bitを変えず1 pass / fail0 / skip0、59.968秒で完了。観測成功は全体数値合格ではない。
+
+`3cf6924`の12層観測は通常最終bitを変えず1 pass / fail0 / skip0、69.232秒。**layer_0出力は全bit一致**、layer_1から3,541値のbit差が始まる（局所超過0）。最初の局所許容差超過はlayer_10の26要素、layer_11は1,567要素。次は元layer_1入力・最終値を固定した内部参照を作り、同層の最初の差を調べる。[全体失敗・層出力・畳み込み観測](results/m4-native-glu-whole-and-first-layer-exact-20261015.json)。
+
+独立Python回帰38667280645 / `b6c96cf`は4 XML各894 pass / fail0 / error0 / skip0を確認。[Python固定証拠](results/python-full-native-softmax-planner-green-20261015.json)。畳み込みcapture・GLU planner追加後の38669591942 / `f504f3f`は別runで、未確定の間は成功へ数えない。音声全6信号・2 profile、画像FP32全3 profile、実PCM / Textureから最終768次元GPU APIまでのgateは未達のまま。以下は以前のcheckpoint。
 
 **最新のnative除算・softmax接続:** `GpuScalarDivide`は残差FMA補正を使い、固定native softcap除算55,296値を全bit一致、2 Red→実GPU2 Green。plannerは9 Red→関連65 Green。`GpuSoftmax`は元指数関数と8 laneのFP32加算順を用い、固定native55,296値を全bit一致、2 Red→実GPU2 Green。plannerは6 Red→関連71 Green。ともにGPU入力借用・独立出力・CPU入力拒否後の再利用・Disposeを検証した。[固定GPU成功](results/m4-native-division-and-softmax-frozen-gpu-green-20261015.json)。他GPU・全native入力・全profileのbit一致は未証明。
 

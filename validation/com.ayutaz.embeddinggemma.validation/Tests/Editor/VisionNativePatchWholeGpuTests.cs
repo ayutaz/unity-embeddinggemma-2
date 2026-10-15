@@ -231,8 +231,19 @@ namespace EmbeddingGemma.Validation.Tests
                     var shape=(DynamicTensorShape)partial.GetType().GetProperty("shape").GetValue(partial);Assert.That(shape.IsStatic(),Is.True);outgoing.Add(Describe(output.name,shape.ToTensorShape()));
                 }
                 var bytes=model.constants.Sum(value=>(long)value.lengthBytes);constants+=bytes;layers+=model.layers.Count;
+                var consumed=new HashSet<int>(model.layers.SelectMany(layer=>layer.inputs).Concat(model.outputs.Select(value=>value.index)));
+                var unused=new JArray();
+                foreach(var layer in model.layers)foreach(var index in layer.outputs.Where(index=>index>=0&&!consumed.Contains(index)))
+                {
+                    var partial=context.GetType().GetMethod("GetPartialTensor").Invoke(context,new object[]{index});
+                    var shape=(DynamicTensorShape)partial.GetType().GetProperty("shape").GetValue(partial);
+                    var type=(DataType)partial.GetType().GetProperty("dataType").GetValue(partial);
+                    Assert.That(shape.IsStatic(),Is.True);
+                    unused.Add(new JObject{["index"]=index,["producer"]=layer.GetType().Name,["shape"]=JArray.FromObject(Enumerable.Range(0,shape.rank).Select(i=>shape.ToTensorShape()[i]).ToArray()),
+                        ["bytes"]=shape.ToTensorShape().length*4L,["data_type"]=type.ToString()});
+                }
                 rows.Add(new JObject{["stage"]=stage,["layers"]=model.layers.Count,["shape_layers"]=model.layers.Count(layer=>layer.GetType().Name=="Shape"),
-                    ["coefficient_bytes"]=bytes,["inputs"]=incoming,["outputs"]=outgoing});
+                    ["coefficient_bytes"]=bytes,["inputs"]=incoming,["outputs"]=outgoing,["unconsumed_internal_outputs"]=unused,["unconsumed_internal_output_bytes"]=unused.Sum(value=>value.Value<long>("bytes"))});
             }
             var liveAfter=new HashSet<string>[models.Length];var live=new HashSet<string>{models[models.Length-1].outputs[0].name};
             for(var stage=models.Length-1;stage>=0;stage--)

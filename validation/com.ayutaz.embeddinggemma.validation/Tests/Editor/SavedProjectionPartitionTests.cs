@@ -10,6 +10,24 @@ namespace EmbeddingGemma.Validation.Tests
 {
     public sealed class SavedProjectionPartitionTests
     {
+        [TestCase(3)] [TestCase(4)]
+        public void DynamicBatchedMatmulKeepsBothGpuOperandsAndOriginalResidual(int rank)
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
+            var shape=rank==3?new TensorShape(1,2,2):new TensorShape(1,1,2,2);
+            var graph=new FunctionalGraph();var x=graph.AddInput<float>(shape,"input");
+            var source=graph.Compile(Functional.MatMul(x+1f,x*2f)+x);var before=Bytes(source);
+            var product=source.layers.Single(layer=>layer.GetType().Name=="MatMul");
+            var plan=SavedProjectionPartition.Create(source,product.outputs);
+            Assert.That(plan.Inputs.Single().Length,Is.EqualTo(2),"Both dynamic operands must cross the GPU boundary.");
+            Assert.That(plan.Inputs[0][0],Is.Not.EqualTo(plan.Inputs[0][1]));Assert.That(plan.Weights.Single(),Is.Null);
+            Assert.That(plan.Widths.Single(),Is.EqualTo(2));Assert.That(plan.Columns.Single(),Is.EqualTo(2));Assert.That(plan.Rows.Single(),Is.EqualTo(2));
+            using var operation=new GpuBatchedMatmul();using var input=new Tensor<float>(shape,new[]{1f,2f,3f,4f});ComputeTensorData.Pin(input);
+            using var pipeline=new GpuProjectionPipeline(plan.Models,plan.Inputs,plan.Outputs,new IGpuTensorOperation[]{operation},true);
+            using var output=pipeline.Execute(input);Assert.That(output.shape,Is.EqualTo(shape));Assert.That(output.DownloadToArray(),Is.EqualTo(new[]{23f,34f,41f,60f}));
+            Assert.That(input.DownloadToArray(),Is.EqualTo(new[]{1f,2f,3f,4f}));Assert.That(Bytes(source),Is.EqualTo(before));
+        }
+
         static byte[] Bytes(Model model){using var stream=new MemoryStream();ModelWriter.Save(stream,model);return stream.ToArray();}
         static Model Fixture()
         {

@@ -4,6 +4,8 @@ import gc
 import hashlib
 import importlib.metadata
 import json
+import os
+import platform
 import re
 import shutil
 from pathlib import Path
@@ -355,6 +357,7 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "audio-encoder-validation.json").unlink(missing_ok=True)
     (destination / "audio-encoder-failure.json").unlink(missing_ok=True)
+    (destination / "audio-cpu-context.json").unlink(missing_ok=True)
     if collect_onnx_failures:
         (destination / "audio-encoder-reference.json").unlink(missing_ok=True)
         (destination / "audio-onnx-diagnostic-failures.json").unlink(missing_ok=True)
@@ -413,8 +416,24 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
             raise ValueError("preprocessing requires finite features and a nonempty zero-padded prefix mask")
         profile = f"frames-{shape[1]}-valid-{int(frame_mask.sum())}"
         groups.setdefault(profile, []).append((row, features, frame_mask))
+    # Persist the actual host before loading weights so a failed export also
+    # retains its math context. Record only named numeric-library settings.
+    processor = platform.processor()
+    cpuinfo = Path('/proc/cpuinfo')
+    if platform.system() == 'Linux' and cpuinfo.is_file():
+        processor = next((line.split(':',1)[1].strip() for line in cpuinfo.read_text().splitlines()
+                          if line.startswith('model name') and ':' in line), processor)
+    math_environment = ('MKL_ENABLE_INSTRUCTIONS','MKL_CBWR','ATEN_CPU_CAPABILITY','ONEDNN_MAX_CPU_ISA',
+                        'DNNL_MAX_CPU_ISA','OMP_NUM_THREADS','MKL_NUM_THREADS','OPENBLAS_NUM_THREADS')
+    context_path = destination / 'audio-cpu-context.json'
+    context_path.write_text(json.dumps(dict(source_commit=source_commit,system=platform.system(),
+        machine=platform.machine(),processor=processor,torch_version=str(torch.__version__),
+        cpu_capability=torch.backends.cpu.get_cpu_capability(),torch_threads=torch.get_num_threads(),
+        torch_interop_threads=torch.get_num_interop_threads(),torch_build_configuration=torch.__config__.show(),
+        environment={name:os.environ.get(name) for name in math_environment},
+        encoder_validated=False,gpu_validated=False),indent=2)+'\n',encoding='utf-8')
     audio, projection = load_audio_models(snapshot)
-    rows, profiles, produced, similarities = [], {}, [], []
+    rows, profiles, produced, similarities = [], {}, [context_path], []
     onnx_similarities = []
     onnx_failures, onnx_attempted = [], 0
     for profile, inputs in groups.items():

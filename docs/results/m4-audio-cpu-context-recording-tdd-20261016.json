@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "record_audio_export_cpu_math_context_without_changing_math",
+  "source_base": "f0593c7a8ffe221f11fd7b1b84ae169b31a4d9ff",
+  "red": {
+    "file": "audio-cpu-context-red-20261016.xml",
+    "sha256": "eff658358a56b00fd713ba17bf2182df89555086e770b357bc57cbb00806b824",
+    "tests": "2",
+    "failures": "2",
+    "errors": "0",
+    "skipped": "0",
+    "time": "20.186"
+  },
+  "stale_context_red": {
+    "file": "audio-cpu-context-stale-red-20261016.xml",
+    "sha256": "e6812e6ed744f1a623d9a74991b13dbc5423ca227db60d53dc8a0a9068ba7817",
+    "tests": "1",
+    "failures": "1",
+    "errors": "0",
+    "skipped": "0",
+    "time": "8.157"
+  },
+  "related_green": {
+    "file": "audio-cpu-context-related-green-20261016.xml",
+    "sha256": "d5f98efaf73af41210222476c271b9f431b5b720e654d937308e839bdaadfce9",
+    "tests": "24",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "100.271"
+  },
+  "final_context_green": {
+    "file": "audio-cpu-context-final-green-20261016.xml",
+    "sha256": "322cac16bf854a317bf0c5675c59978aa15a9f8353e8553056ca1fe7505652c9",
+    "tests": "3",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "19.910"
+  },
+  "behavior": [
+    "Record CPU vendor/model where available, Torch build/capability/thread counts and an explicit allowlist of numerical-library variables before real weight loading.",
+    "Both failed and successful export attempts retain context; successful manifests audit its bytes/SHA.",
+    "Remove stale prior context at the start of a new attempt so early preprocessing failure cannot inherit the previous host.",
+    "No arbitrary environment dump, hostname or secrets recorded.",
+    "Original official inference, expected features, coefficients, dtype, tolerances, standard ReferenceEvaluator and export algorithms remain unchanged."
+  ],
+  "real_ci_with_new_context_pending": true,
+  "required_ci_passed": false,
+  "gpu_validated": false
+}

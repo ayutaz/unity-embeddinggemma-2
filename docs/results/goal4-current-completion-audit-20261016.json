@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "date_jst": "2026-10-16",
-  "goal": "4\u307e\u3067\u9032\u3081\u3066\u304f\u3060\u3055\u3044",
+  "goal": "4まで進めてください",
   "status": "active_not_complete",
   "scope_source": "goal4-scope-audit-20261016.json",
-  "candidate_head_at_audit": "db7192005d2236b5213549c82b41b27b6538bac5",
+  "candidate_head_at_audit": "f0593c7a8ffe221f11fd7b1b84ae169b31a4d9ff",
   "requirements": [
     {
       "requirement": "Original learned coefficients, references and encoder tolerances remain unchanged",
@@ -79,11 +79,11 @@
     {
       "requirement": "Required repository checks for the resulting candidate",
       "status": "not_achieved",
-      "last_terminal_ci_run": 38813573269,
-      "last_terminal_ci_head": "db7192005d2236b5213549c82b41b27b6538bac5",
-      "result": "Python four environments, package and workflow lint pass; audio ONNX and Required CI fail.",
-      "candidate_ci_run": 38813573269,
-      "candidate_ci_head": "db7192005d2236b5213549c82b41b27b6538bac5",
+      "last_terminal_ci_run": 38818901317,
+      "last_terminal_ci_head": "f0593c7a8ffe221f11fd7b1b84ae169b31a4d9ff",
+      "result": "Three Python environments, package and workflow lint pass; Linux/Python3.13 Tanh2 tests, audio ONNX and Required CI fail.",
+      "candidate_ci_run": 38818901317,
+      "candidate_ci_head": "f0593c7a8ffe221f11fd7b1b84ae169b31a4d9ff",
       "candidate_ci_last_observation": "completed_failure",
       "candidate_ci_aggregate_conclusion": "failure",
       "evidence": [
@@ -114,9 +114,19 @@
         "m4-original-entire-stem-all286720-actual-onnx-bit-exact-20261016.json",
         "m4-original-tanh-all55296-actual-onnx-bit-exact-20261016.json",
         "m4-connected-original-tanh-and-operator-counts-tdd-20261016.json",
-        "m4-original-all-six-frozen-case-and-profile-selection-tdd-20261016.json"
+        "m4-original-all-six-frozen-case-and-profile-selection-tdd-20261016.json",
+        "m4-original-entire-stem-all-six-1720320-actual-onnx-bit-exact-20261016.json",
+        "m4-connected-original-tanh-all12-143360-bit-exact-20261016.json",
+        "m4-original-raw-input-connected-chain-tdd-20261016.json",
+        "m4-fresh-ci-official-vs-original-silence-drift-20261016.json",
+        "m4-small-native-matrix-windows-host-selection-tdd-20261016.json",
+        "m4-independent-raw-chain-numeric-auditor-tdd-20261016.json",
+        "m4-audio-cpu-context-recording-tdd-20261016.json",
+        "m4-linux-python313-tanh-native-context-failure-20261016.json",
+        "m4-original-raw-all-six-attempt-four-pass-sine-two-fail-padded-timeout-20261016.json",
+        "m4-original-raw-sine-cut-localization-20261016.json"
       ],
-      "next_action": "Evaluate all12layers with actual ONNX carry and independently qualified original operators. Whole original-input/all6signals and Required CI remain mandatory."
+      "next_action": "Localize sine body operator drift on qualified original stage inputs without injecting isolated outputs; investigate native Tanh/MKL CPU contexts with small fixtures. Rejected raw candidate must not be promoted. Padded final and Required CI remain mandatory."
     }
   ],
   "documentation": {
@@ -193,11 +203,43 @@
     "all_bmm_numerical_collection_complete": true,
     "all_bmm_tolerance_failures": 321,
     "all_bmm_maximum_tolerance_ratio": 8.419052768036593,
-    "leaf_softmax_glu_depthwise_exact_values": 628736
+    "leaf_softmax_glu_depthwise_exact_values": 628736,
+    "latest_frozen_stem_all12_tanh": {
+      "run": 38816695739,
+      "source": "bf3b6cf9336ce2ed676683921c187a84b64e1e48",
+      "actual_values": 143360,
+      "tolerance_failures": 0,
+      "bit_differences": 0,
+      "native_context_qualified": true,
+      "all_capture_carry_hashes_verified": true,
+      "raw_feature_input": false,
+      "case_id": "silence",
+      "all_six_cases": false,
+      "gpu_validated": false
+    },
+    "raw_all_six_connected_run": {
+      "run": 38818905732,
+      "source": "f0593c7a8ffe221f11fd7b1b84ae169b31a4d9ff",
+      "last_observation": "terminal_cancelled_padded_20minute_limit",
+      "result_established": true,
+      "candidate_rejected": true,
+      "complete_cases": 5,
+      "passing_cases": 4,
+      "failing_cases": 1,
+      "missing_final_cases": 1,
+      "sine_tolerance_failures": 2,
+      "all_six_passed": false
+    },
+    "fresh_ci_official_silence_vs_pinned_original": {
+      "run": 38816675509,
+      "tolerance_failures": 145,
+      "bit_differences": 138186,
+      "interpretation": "Both comparisons retained; pinned candidate match does not replace fresh-native gate."
+    }
   },
   "pending_candidate_code_sha256": {
-    "frozen_audio_prefix_onnx.py": "8f0d62572b502b3d5eabf0ba6c01b8f6973a79546d537e4c9428b0630bb2b6c0",
-    "frozen_audio_segment_onnx.py": "3786e4e0a037ac94ea50434e1c0ec7a9844a295760e680f0f39e49a252ef2812",
-    "frozen_audio_chained_onnx.py": "d9671467ed2f1d047a3650a79389e0cbf037f028f3b0c255b74ecd467a4f96dd"
+    "frozen_audio_prefix_onnx.py": "c2f0215f43dcdae8fc04006137a1a4719b9567a358bc71dc8c2034597b3f26a6",
+    "frozen_audio_segment_onnx.py": "68f176f0485875d08ca4e28bedb2c8af4e3d6463ac1ef2767bfc6616ce40b79f",
+    "frozen_audio_chained_onnx.py": "099ee2ce03844a930b307d28c1ddeb08302447e93dfafa031f7c8d97c662a4ef"
   }
 }

@@ -5,6 +5,7 @@ import subprocess
 
 import pytest
 import torch
+import yaml
 
 
 def module():
@@ -76,3 +77,29 @@ def test_workflow_adds_only_to_small_opt_in_matrix_job():
     assert 'frozen_matmul_native_context' in matrix
     assert 'frozen_matmul_native_context' not in before
     assert 'timeout-minutes: 10' in matrix
+
+
+def test_small_matrix_host_selection_is_explicit_and_does_not_change_model_jobs():
+    path = Path(__file__).resolve().parents[2] / '.github/workflows/frozen-audio-prefix-onnx.yml'
+    workflow = yaml.safe_load(path.read_text(encoding='utf-8'))
+    inputs = workflow.get('on', workflow.get(True))['workflow_dispatch']['inputs']
+    selection = inputs['matrix_runner']
+    assert selection['default'] == 'ubuntu-latest'
+    assert selection['options'] == ['ubuntu-latest', 'windows-latest']
+    assert workflow['jobs']['probe']['runs-on'] == 'ubuntu-latest'
+    job = workflow['jobs']['matrix_probe']
+    assert job['runs-on'] == "${{ inputs.matrix_runner || 'ubuntu-latest' }}"
+    assert job['defaults']['run']['shell'] == 'bash'
+
+
+def test_matrix_hosts_record_cpu_and_keep_distinct_artifacts_without_downloading_encoder():
+    path = Path(__file__).resolve().parents[2] / '.github/workflows/frozen-audio-prefix-onnx.yml'
+    workflow = yaml.safe_load(path.read_text(encoding='utf-8'))
+    job = workflow['jobs']['matrix_probe']
+    capture = next(s for s in job['steps'] if s.get('name') == 'Record actual CPU host')
+    assert 'RUNNER_OS' in capture['run'] and 'Get-CimInstance Win32_Processor' in capture['run']
+    assert 'lscpu --json' in capture['run']
+    upload = next(s for s in job['steps'] if s.get('uses', '').startswith('actions/upload-artifact'))
+    assert 'runner.os' in upload['with']['name']
+    fetch = next(s for s in job['steps'] if s.get('name', '').startswith('Fetch only audited'))
+    assert '12001831037' in fetch['run'] and '.pt2' not in fetch['run']

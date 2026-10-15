@@ -4,7 +4,7 @@
 
 [現在の状態](status.md)と[手順4の要件別監査](results/goal4-current-completion-audit-20261016.json)を現行の判定とします。元の「4まで」は実Texture / PCM→最終768 APIの全role・固定profile / mask・境界・所有権 / 解放・例外後再利用・text回帰と必須repository checksです。画像18条件・音声18条件、元encoder全画像6件 / 3 profile・音声6信号 / 2 profile、関連189テストのGPU証拠はそろいました。**音声ONNXのRequired CI失敗が残り、手順4全体は未完了です。**
 
-[完了したprefix候補と全音声ONNX失敗の監査](results/m4-complete-prefix-rejected-onnx-and-reproduced-native-20261016.json)では、限定prefixの0超過を、全6信号のONNX不合格と分けて保持しています。AMD EPYC 9V74 / AVX512で元silence保存graphの最終143,360値が全bit再現できたため、次はその固定参照文脈に結び付けて変換の演算差を局所化します。元係数・golden・許容差は維持し、必須CIのgateを緩和しません。
+[元入力から全6ケースの先頭区間](results/m4-original-entire-stem-all-six-1720320-actual-onnx-bit-exact-20261016.json)は全1,720,320値が元参照にbit一致し、[silenceの元stemから全12層](results/m4-connected-original-tanh-all12-143360-bit-exact-20261016.json)も最終143,360値がbit一致しました。source f0593c7の元特徴量→先頭区間→全12層の[raw全6ケース試行](results/m4-original-raw-all-six-attempt-four-pass-sine-two-fail-padded-timeout-20261016.json)は4件合格・sine2要素不合格・padded_noise20分上限で最終未取得でした。候補は採用しません。最新確定CI f0593c7も音声ONNXとLinux/Python3.13のTanh2件が失敗し、fresh officialと元固定参照の差を別に保持しています。部分合格を全encoder・必須CI合格へ読み替えず、元係数・golden・許容差とfresh native比較を維持します。
 
 検索sample、モデル準備再利用、長期memory / 性能、Player、各OS / 実機は元提案の手順5以降、統合・配布は手順6として残します。以下の詳細計画・過去checkpointは当時の状態を含み、実行手順3 / 4とproject milestone M3 / M4全体の範囲を混同しません。
 

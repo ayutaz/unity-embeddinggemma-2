@@ -1,0 +1,1863 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "scope": "editor_rendered_frame_progress_and_fixed_candidate_memory_only",
+  "recorded_at_source": "b887820ff5ecf57d64b8a41887d4e3e2850e3418",
+  "layer_profiles": [
+    {
+      "report": {
+        "file": "vision-layer-buffer-accounting-35553234236999c8f374198c719afb5da1ec8d25-original.json",
+        "sha256": "019cfdc2af846bff4880c89ade1ea525a2faa72f1447533ee80420b3e41c1b66",
+        "result": {
+          "success": true,
+          "runtime_source": "35553234236999c8f374198c719afb5da1ec8d25",
+          "scope": "single_layer_buffer_accounting_diagnostic_only",
+          "inline_rms": false,
+          "full_encoder_validated": false,
+          "end_to_end_validated": false,
+          "intermediate_tensor_readbacks": 0,
+          "timing_and_peak_not_representative_of_normal_schedule": true,
+          "capture_sha256": "bc417e7f0e3486a5ac0025878d58c2c0b612ea5dea99a53e6b8db0e6f93b1513",
+          "source_model_bytes_preserved": true,
+          "normal_schedule_matches_observed_bits": true,
+          "actual_backend": "GPUCompute",
+          "cpu_computation_or_input_count": 0,
+          "readback_flush_count": 0,
+          "layer_count": 113,
+          "maximum_accounted_gpu_capacity_bytes": 740599616,
+          "maximum_graphics_driver_bytes": 963600564,
+          "maximum_host_working_set_bytes": 2224263168,
+          "largest_buffer_steps": [
+            {
+              "backend_type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "accounted_gpu_capacity_bytes": 740599616,
+              "storage_gpu_logical_bytes": 63576416,
+              "accounted_cpu_tensor_capacity_bytes": 428,
+              "categories": {
+                "storage_live": {
+                  "buffers": 25,
+                  "capacity_bytes": 63576416
+                },
+                "storage_free": {
+                  "buffers": 12,
+                  "capacity_bytes": 675571680
+                },
+                "storage_cpu_free": {
+                  "buffers": 0,
+                  "capacity_bytes": 0
+                },
+                "backend_free": {
+                  "buffers": 3,
+                  "capacity_bytes": 1451520
+                }
+              },
+              "graphics_driver_bytes": 963600564,
+              "engine_allocated_bytes": 181231396,
+              "engine_reserved_bytes": 530931712,
+              "managed_gc_bytes": 859922432,
+              "host_working_set_bytes": 2224263168,
+              "host_peak_working_set_bytes": 2224263168,
+              "step": 111,
+              "layer": "Mul",
+              "output_indexes": [
+                283
+              ]
+            },
+            {
+              "backend_type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "accounted_gpu_capacity_bytes": 740599616,
+              "storage_gpu_logical_bytes": 55834976,
+              "accounted_cpu_tensor_capacity_bytes": 428,
+              "categories": {
+                "storage_live": {
+                  "buffers": 24,
+                  "capacity_bytes": 55834976
+                },
+                "storage_free": {
+                  "buffers": 13,
+                  "capacity_bytes": 683313120
+                },
+                "storage_cpu_free": {
+                  "buffers": 0,
+                  "capacity_bytes": 0
+                },
+                "backend_free": {
+                  "buffers": 3,
+                  "capacity_bytes": 1451520
+                }
+              },
+              "graphics_driver_bytes": 963600564,
+              "engine_allocated_bytes": 181231396,
+              "engine_reserved_bytes": 530931712,
+              "managed_gc_bytes": 859930624,
+              "host_working_set_bytes": 2224263168,
+              "host_peak_working_set_bytes": 2224263168,
+              "step": 112,
+              "layer": "Add",
+              "output_indexes": [
+                284
+              ]
+            }
+          ],
+          "initial": {
+            "backend_type": "Unity.InferenceEngine.GfxDeviceBackend",
+            "accounted_gpu_capacity_bytes": 0,
+            "storage_gpu_logical_bytes": 0,
+            "accounted_cpu_tensor_capacity_bytes": 40352524,
+            "categories": {
+              "storage_live": {
+                "buffers": 0,
+                "capacity_bytes": 0
+              },
+              "storage_free": {
+                "buffers": 0,
+                "capacity_bytes": 0
+              },
+              "storage_cpu_free": {
+                "buffers": 0,
+                "capacity_bytes": 0
+              },
+              "backend_free": {
+                "buffers": 0,
+                "capacity_bytes": 0
+              }
+            },
+            "graphics_driver_bytes": 135321908,
+            "engine_allocated_bytes": 159216647,
+            "engine_reserved_bytes": 530931712,
+            "managed_gc_bytes": 859344896,
+            "host_working_set_bytes": 2050879488,
+            "host_peak_working_set_bytes": 2050879488,
+            "step": -1,
+            "layer": "before_schedule"
+          },
+          "last_step": {
+            "backend_type": "Unity.InferenceEngine.GfxDeviceBackend",
+            "accounted_gpu_capacity_bytes": 740599616,
+            "storage_gpu_logical_bytes": 55834976,
+            "accounted_cpu_tensor_capacity_bytes": 428,
+            "categories": {
+              "storage_live": {
+                "buffers": 24,
+                "capacity_bytes": 55834976
+              },
+              "storage_free": {
+                "buffers": 13,
+                "capacity_bytes": 683313120
+              },
+              "storage_cpu_free": {
+                "buffers": 0,
+                "capacity_bytes": 0
+              },
+              "backend_free": {
+                "buffers": 3,
+                "capacity_bytes": 1451520
+              }
+            },
+            "graphics_driver_bytes": 963600564,
+            "engine_allocated_bytes": 181231396,
+            "engine_reserved_bytes": 530931712,
+            "managed_gc_bytes": 859930624,
+            "host_working_set_bytes": 2224263168,
+            "host_peak_working_set_bytes": 2224263168,
+            "step": 112,
+            "layer": "Add",
+            "output_indexes": [
+              284
+            ]
+          }
+        }
+      },
+      "raw_samples": {
+        "file": "vision-layer-buffer-accounting-35553234236999c8f374198c719afb5da1ec8d25-original.jsonl",
+        "sha256": "029edb9a14db0991dbb95c256bc0a5569acefe294501df7351d2e7529e360edb",
+        "bytes": 76320
+      },
+      "original_native_reference_validated": false
+    },
+    {
+      "report": {
+        "file": "vision-layer-buffer-accounting-35553234236999c8f374198c719afb5da1ec8d25-inline-rms.json",
+        "sha256": "36d66ce594f2261e5f70a224445d4fe50c8f70a187395560f464473a81e43a98",
+        "result": {
+          "success": true,
+          "runtime_source": "35553234236999c8f374198c719afb5da1ec8d25",
+          "scope": "single_layer_buffer_accounting_diagnostic_only",
+          "inline_rms": true,
+          "full_encoder_validated": false,
+          "end_to_end_validated": false,
+          "intermediate_tensor_readbacks": 0,
+          "timing_and_peak_not_representative_of_normal_schedule": true,
+          "capture_sha256": "0297b3f63d314de87277fee8c3331a0537f346491e7532c5a7a5920ff5a247e6",
+          "source_model_bytes_preserved": true,
+          "normal_schedule_matches_observed_bits": true,
+          "actual_backend": "GPUCompute",
+          "cpu_computation_or_input_count": 0,
+          "readback_flush_count": 0,
+          "layer_count": 1220,
+          "maximum_accounted_gpu_capacity_bytes": 774982496,
+          "maximum_graphics_driver_bytes": 1939909652,
+          "maximum_host_working_set_bytes": 2434494464,
+          "largest_buffer_steps": [
+            {
+              "backend_type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "accounted_gpu_capacity_bytes": 774982496,
+              "storage_gpu_logical_bytes": 83897696,
+              "accounted_cpu_tensor_capacity_bytes": 2144,
+              "categories": {
+                "storage_live": {
+                  "buffers": 104,
+                  "capacity_bytes": 83897696
+                },
+                "storage_free": {
+                  "buffers": 25,
+                  "capacity_bytes": 689633280
+                },
+                "storage_cpu_free": {
+                  "buffers": 0,
+                  "capacity_bytes": 0
+                },
+                "backend_free": {
+                  "buffers": 3,
+                  "capacity_bytes": 1451520
+                }
+              },
+              "graphics_driver_bytes": 1939909652,
+              "engine_allocated_bytes": 197364084,
+              "engine_reserved_bytes": 542466048,
+              "managed_gc_bytes": 830922752,
+              "host_working_set_bytes": 2434494464,
+              "host_peak_working_set_bytes": 2434494464,
+              "step": 1218,
+              "layer": "Mul",
+              "output_indexes": [
+                283
+              ]
+            },
+            {
+              "backend_type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "accounted_gpu_capacity_bytes": 774982496,
+              "storage_gpu_logical_bytes": 76156256,
+              "accounted_cpu_tensor_capacity_bytes": 2144,
+              "categories": {
+                "storage_live": {
+                  "buffers": 103,
+                  "capacity_bytes": 76156256
+                },
+                "storage_free": {
+                  "buffers": 26,
+                  "capacity_bytes": 697374720
+                },
+                "storage_cpu_free": {
+                  "buffers": 0,
+                  "capacity_bytes": 0
+                },
+                "backend_free": {
+                  "buffers": 3,
+                  "capacity_bytes": 1451520
+                }
+              },
+              "graphics_driver_bytes": 1939909652,
+              "engine_allocated_bytes": 197364084,
+              "engine_reserved_bytes": 542466048,
+              "managed_gc_bytes": 830967808,
+              "host_working_set_bytes": 2434494464,
+              "host_peak_working_set_bytes": 2434494464,
+              "step": 1219,
+              "layer": "Add",
+              "output_indexes": [
+                284
+              ]
+            }
+          ],
+          "initial": {
+            "backend_type": "Unity.InferenceEngine.GfxDeviceBackend",
+            "accounted_gpu_capacity_bytes": 0,
+            "storage_gpu_logical_bytes": 0,
+            "accounted_cpu_tensor_capacity_bytes": 60675520,
+            "categories": {
+              "storage_live": {
+                "buffers": 0,
+                "capacity_bytes": 0
+              },
+              "storage_free": {
+                "buffers": 0,
+                "capacity_bytes": 0
+              },
+              "storage_cpu_free": {
+                "buffers": 0,
+                "capacity_bytes": 0
+              },
+              "backend_free": {
+                "buffers": 0,
+                "capacity_bytes": 0
+              }
+            },
+            "graphics_driver_bytes": 1010139316,
+            "engine_allocated_bytes": 197190595,
+            "engine_reserved_bytes": 542466048,
+            "managed_gc_bytes": 773890048,
+            "host_working_set_bytes": 2412302336,
+            "host_peak_working_set_bytes": 2412302336,
+            "step": -1,
+            "layer": "before_schedule"
+          },
+          "last_step": {
+            "backend_type": "Unity.InferenceEngine.GfxDeviceBackend",
+            "accounted_gpu_capacity_bytes": 774982496,
+            "storage_gpu_logical_bytes": 76156256,
+            "accounted_cpu_tensor_capacity_bytes": 2144,
+            "categories": {
+              "storage_live": {
+                "buffers": 103,
+                "capacity_bytes": 76156256
+              },
+              "storage_free": {
+                "buffers": 26,
+                "capacity_bytes": 697374720
+              },
+              "storage_cpu_free": {
+                "buffers": 0,
+                "capacity_bytes": 0
+              },
+              "backend_free": {
+                "buffers": 3,
+                "capacity_bytes": 1451520
+              }
+            },
+            "graphics_driver_bytes": 1939909652,
+            "engine_allocated_bytes": 197364084,
+            "engine_reserved_bytes": 542466048,
+            "managed_gc_bytes": 830967808,
+            "host_working_set_bytes": 2434494464,
+            "host_peak_working_set_bytes": 2434494464,
+            "step": 1219,
+            "layer": "Add",
+            "output_indexes": [
+              284
+            ]
+          }
+        }
+      },
+      "raw_samples": {
+        "file": "vision-layer-buffer-accounting-35553234236999c8f374198c719afb5da1ec8d25-inline-rms.jsonl",
+        "sha256": "fe87f601f5c459126e8c33ac63cfe65cc88cc8e4ab53da2d5d194b7cb7613f90",
+        "bytes": 822624
+      },
+      "original_native_reference_validated": false
+    }
+  ],
+  "passive_disposal": {
+    "file": "vision-layer-disposal-timing-958851d0eb8e0d0069a04650feb34d8478599332.json",
+    "sha256": "c39e998cd0f573d7944ad6f51f2b8d7a894876a8e2430f7a66e3553c835c4959",
+    "result": {
+      "success": true,
+      "runtime_source": "958851d0eb8e0d0069a04650feb34d8478599332",
+      "scope": "single_layer_disposal_timing_diagnostic_only",
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "forced_gc_and_unload_are_diagnostic_only": true,
+      "snapshots": [
+        {
+          "phase": "before_owned_scope",
+          "frame": 4,
+          "rendered_frame": 4,
+          "is_playing": false,
+          "graphics_driver_bytes": 119839028,
+          "engine_allocated_bytes": 158334502,
+          "managed_gc_bytes": 661721088,
+          "host_working_set_bytes": 1840369664,
+          "host_peak_working_set_bytes": 1840369664
+        },
+        {
+          "phase": "gpu_complete_before_disposal",
+          "frame": 4,
+          "rendered_frame": 4,
+          "is_playing": false,
+          "graphics_driver_bytes": 963600564,
+          "engine_allocated_bytes": 188951554,
+          "managed_gc_bytes": 774696960,
+          "host_working_set_bytes": 2152378368,
+          "host_peak_working_set_bytes": 2152378368
+        },
+        {
+          "phase": "immediately_after_disposal",
+          "frame": 4,
+          "rendered_frame": 4,
+          "is_playing": false,
+          "graphics_driver_bytes": 963600564,
+          "engine_allocated_bytes": 188938866,
+          "managed_gc_bytes": 774717440,
+          "host_working_set_bytes": 2152460288,
+          "host_peak_working_set_bytes": 2152460288
+        },
+        {
+          "phase": "editor_update_0",
+          "frame": 5,
+          "rendered_frame": 5,
+          "is_playing": false,
+          "graphics_driver_bytes": 927547572,
+          "engine_allocated_bytes": 188868390,
+          "managed_gc_bytes": 774754304,
+          "host_working_set_bytes": 2152468480,
+          "host_peak_working_set_bytes": 2152468480
+        },
+        {
+          "phase": "editor_update_1",
+          "frame": 6,
+          "rendered_frame": 6,
+          "is_playing": false,
+          "graphics_driver_bytes": 317909172,
+          "engine_allocated_bytes": 181126767,
+          "managed_gc_bytes": 774782976,
+          "host_working_set_bytes": 2116362240,
+          "host_peak_working_set_bytes": 2152472576
+        },
+        {
+          "phase": "editor_update_2",
+          "frame": 6,
+          "rendered_frame": 6,
+          "is_playing": false,
+          "graphics_driver_bytes": 317909172,
+          "engine_allocated_bytes": 181126767,
+          "managed_gc_bytes": 774815744,
+          "host_working_set_bytes": 2116362240,
+          "host_peak_working_set_bytes": 2152472576
+        },
+        {
+          "phase": "editor_update_3",
+          "frame": 6,
+          "rendered_frame": 6,
+          "is_playing": false,
+          "graphics_driver_bytes": 317909172,
+          "engine_allocated_bytes": 181126767,
+          "managed_gc_bytes": 774844416,
+          "host_working_set_bytes": 2116362240,
+          "host_peak_working_set_bytes": 2152472576
+        },
+        {
+          "phase": "editor_update_4",
+          "frame": 6,
+          "rendered_frame": 6,
+          "is_playing": false,
+          "graphics_driver_bytes": 317909172,
+          "engine_allocated_bytes": 181126767,
+          "managed_gc_bytes": 774877184,
+          "host_working_set_bytes": 2116362240,
+          "host_peak_working_set_bytes": 2152472576
+        },
+        {
+          "phase": "editor_update_5",
+          "frame": 6,
+          "rendered_frame": 6,
+          "is_playing": false,
+          "graphics_driver_bytes": 317909172,
+          "engine_allocated_bytes": 181126767,
+          "managed_gc_bytes": 774909952,
+          "host_working_set_bytes": 2116362240,
+          "host_peak_working_set_bytes": 2152472576
+        },
+        {
+          "phase": "editor_update_6",
+          "frame": 6,
+          "rendered_frame": 6,
+          "is_playing": false,
+          "graphics_driver_bytes": 317909172,
+          "engine_allocated_bytes": 181126767,
+          "managed_gc_bytes": 774963200,
+          "host_working_set_bytes": 2116362240,
+          "host_peak_working_set_bytes": 2152472576
+        },
+        {
+          "phase": "editor_update_7",
+          "frame": 6,
+          "rendered_frame": 6,
+          "is_playing": false,
+          "graphics_driver_bytes": 317909172,
+          "engine_allocated_bytes": 181126767,
+          "managed_gc_bytes": 775012352,
+          "host_working_set_bytes": 2116362240,
+          "host_peak_working_set_bytes": 2152472576
+        },
+        {
+          "phase": "after_diagnostic_gc",
+          "frame": 6,
+          "rendered_frame": 6,
+          "is_playing": false,
+          "graphics_driver_bytes": 317909172,
+          "engine_allocated_bytes": 181126767,
+          "managed_gc_bytes": 629723136,
+          "host_working_set_bytes": 2116370432,
+          "host_peak_working_set_bytes": 2152472576
+        },
+        {
+          "phase": "after_diagnostic_unload_unused_assets",
+          "frame": 6,
+          "rendered_frame": 6,
+          "is_playing": false,
+          "graphics_driver_bytes": 317909172,
+          "engine_allocated_bytes": 181050727,
+          "managed_gc_bytes": 629768192,
+          "host_working_set_bytes": 2116435968,
+          "host_peak_working_set_bytes": 2152472576
+        }
+      ],
+      "before_disposal_account": {
+        "backend_type": "Unity.InferenceEngine.GfxDeviceBackend",
+        "accounted_gpu_capacity_bytes": 740599616,
+        "storage_gpu_logical_bytes": 55834976,
+        "accounted_cpu_tensor_capacity_bytes": 428,
+        "categories": {
+          "storage_live": {
+            "buffers": 24,
+            "capacity_bytes": 55834976
+          },
+          "storage_free": {
+            "buffers": 13,
+            "capacity_bytes": 683313120
+          },
+          "storage_cpu_free": {
+            "buffers": 0,
+            "capacity_bytes": 0
+          },
+          "backend_free": {
+            "buffers": 3,
+            "capacity_bytes": 1451520
+          }
+        },
+        "graphics_driver_bytes": 963600564,
+        "engine_allocated_bytes": 188951554,
+        "engine_reserved_bytes": 542466048,
+        "managed_gc_bytes": 774692864,
+        "host_working_set_bytes": 2152374272,
+        "host_peak_working_set_bytes": 2152374272
+      },
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "original_gpu_reference_hash_preserved": true
+    }
+  },
+  "pumped_disposal": {
+    "file": "vision-layer-disposal-timing-d02174ffbde80c50e01a220ab3636e46832ca507.json",
+    "sha256": "83128ecda77461c51ed0e0dd7245483cbb385e7643c1194fa6d6612ea9eff756",
+    "result": {
+      "success": true,
+      "runtime_source": "d02174ffbde80c50e01a220ab3636e46832ca507",
+      "scope": "single_layer_disposal_timing_diagnostic_only",
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "forced_gc_and_unload_are_diagnostic_only": true,
+      "snapshots": [
+        {
+          "phase": "before_owned_scope",
+          "frame": 4,
+          "rendered_frame": 4,
+          "is_playing": false,
+          "graphics_driver_bytes": 119839028,
+          "engine_allocated_bytes": 158411010,
+          "managed_gc_bytes": 785731584,
+          "host_working_set_bytes": 1886490624,
+          "host_peak_working_set_bytes": 1886490624
+        },
+        {
+          "phase": "gpu_complete_before_disposal",
+          "frame": 4,
+          "rendered_frame": 4,
+          "is_playing": false,
+          "graphics_driver_bytes": 963600564,
+          "engine_allocated_bytes": 189028574,
+          "managed_gc_bytes": 778829824,
+          "host_working_set_bytes": 2168594432,
+          "host_peak_working_set_bytes": 2168594432
+        },
+        {
+          "phase": "immediately_after_disposal",
+          "frame": 4,
+          "rendered_frame": 4,
+          "is_playing": false,
+          "graphics_driver_bytes": 963600564,
+          "engine_allocated_bytes": 189015806,
+          "managed_gc_bytes": 778846208,
+          "host_working_set_bytes": 2168659968,
+          "host_peak_working_set_bytes": 2168659968
+        },
+        {
+          "phase": "editor_update_0",
+          "frame": 5,
+          "rendered_frame": 5,
+          "is_playing": false,
+          "graphics_driver_bytes": 927547572,
+          "engine_allocated_bytes": 188945266,
+          "managed_gc_bytes": 778874880,
+          "host_working_set_bytes": 2168664064,
+          "host_peak_working_set_bytes": 2168664064
+        },
+        {
+          "phase": "editor_update_1",
+          "frame": 6,
+          "rendered_frame": 6,
+          "is_playing": false,
+          "graphics_driver_bytes": 317909172,
+          "engine_allocated_bytes": 181203643,
+          "managed_gc_bytes": 778903552,
+          "host_working_set_bytes": 2132557824,
+          "host_peak_working_set_bytes": 2168668160
+        },
+        {
+          "phase": "editor_update_2",
+          "frame": 6,
+          "rendered_frame": 6,
+          "is_playing": false,
+          "graphics_driver_bytes": 317909172,
+          "engine_allocated_bytes": 181203643,
+          "managed_gc_bytes": 778932224,
+          "host_working_set_bytes": 2132557824,
+          "host_peak_working_set_bytes": 2168668160
+        },
+        {
+          "phase": "editor_update_3",
+          "frame": 6,
+          "rendered_frame": 6,
+          "is_playing": false,
+          "graphics_driver_bytes": 317909172,
+          "engine_allocated_bytes": 181203643,
+          "managed_gc_bytes": 778960896,
+          "host_working_set_bytes": 2132557824,
+          "host_peak_working_set_bytes": 2168668160
+        },
+        {
+          "phase": "editor_update_4",
+          "frame": 6,
+          "rendered_frame": 6,
+          "is_playing": false,
+          "graphics_driver_bytes": 317909172,
+          "engine_allocated_bytes": 181203643,
+          "managed_gc_bytes": 778989568,
+          "host_working_set_bytes": 2132557824,
+          "host_peak_working_set_bytes": 2168668160
+        },
+        {
+          "phase": "editor_update_5",
+          "frame": 6,
+          "rendered_frame": 6,
+          "is_playing": false,
+          "graphics_driver_bytes": 317909172,
+          "engine_allocated_bytes": 181203643,
+          "managed_gc_bytes": 779018240,
+          "host_working_set_bytes": 2132557824,
+          "host_peak_working_set_bytes": 2168668160
+        },
+        {
+          "phase": "editor_update_6",
+          "frame": 6,
+          "rendered_frame": 6,
+          "is_playing": false,
+          "graphics_driver_bytes": 317909172,
+          "engine_allocated_bytes": 181203643,
+          "managed_gc_bytes": 779063296,
+          "host_working_set_bytes": 2132557824,
+          "host_peak_working_set_bytes": 2168668160
+        },
+        {
+          "phase": "editor_update_7",
+          "frame": 6,
+          "rendered_frame": 6,
+          "is_playing": false,
+          "graphics_driver_bytes": 317909172,
+          "engine_allocated_bytes": 181203643,
+          "managed_gc_bytes": 779108352,
+          "host_working_set_bytes": 2132557824,
+          "host_peak_working_set_bytes": 2168668160
+        },
+        {
+          "phase": "queued_player_loop_0",
+          "frame": 7,
+          "rendered_frame": 7,
+          "is_playing": false,
+          "graphics_driver_bytes": 186947956,
+          "engine_allocated_bytes": 181200789,
+          "managed_gc_bytes": 779153408,
+          "host_working_set_bytes": 2132566016,
+          "host_peak_working_set_bytes": 2168668160
+        },
+        {
+          "phase": "queued_player_loop_1",
+          "frame": 8,
+          "rendered_frame": 8,
+          "is_playing": false,
+          "graphics_driver_bytes": 186947956,
+          "engine_allocated_bytes": 181200789,
+          "managed_gc_bytes": 779198464,
+          "host_working_set_bytes": 2132566016,
+          "host_peak_working_set_bytes": 2168668160
+        },
+        {
+          "phase": "queued_player_loop_2",
+          "frame": 9,
+          "rendered_frame": 9,
+          "is_playing": false,
+          "graphics_driver_bytes": 186947956,
+          "engine_allocated_bytes": 181200789,
+          "managed_gc_bytes": 779243520,
+          "host_working_set_bytes": 2132566016,
+          "host_peak_working_set_bytes": 2168668160
+        },
+        {
+          "phase": "queued_player_loop_3",
+          "frame": 10,
+          "rendered_frame": 10,
+          "is_playing": false,
+          "graphics_driver_bytes": 186947956,
+          "engine_allocated_bytes": 181200789,
+          "managed_gc_bytes": 779288576,
+          "host_working_set_bytes": 2132566016,
+          "host_peak_working_set_bytes": 2168668160
+        },
+        {
+          "phase": "queued_player_loop_4",
+          "frame": 11,
+          "rendered_frame": 11,
+          "is_playing": false,
+          "graphics_driver_bytes": 186947956,
+          "engine_allocated_bytes": 181200789,
+          "managed_gc_bytes": 779337728,
+          "host_working_set_bytes": 2132566016,
+          "host_peak_working_set_bytes": 2168668160
+        },
+        {
+          "phase": "queued_player_loop_5",
+          "frame": 12,
+          "rendered_frame": 12,
+          "is_playing": false,
+          "graphics_driver_bytes": 186947956,
+          "engine_allocated_bytes": 181200789,
+          "managed_gc_bytes": 779386880,
+          "host_working_set_bytes": 2132566016,
+          "host_peak_working_set_bytes": 2168668160
+        },
+        {
+          "phase": "queued_player_loop_6",
+          "frame": 13,
+          "rendered_frame": 13,
+          "is_playing": false,
+          "graphics_driver_bytes": 186947956,
+          "engine_allocated_bytes": 181200789,
+          "managed_gc_bytes": 779436032,
+          "host_working_set_bytes": 2132566016,
+          "host_peak_working_set_bytes": 2168668160
+        },
+        {
+          "phase": "queued_player_loop_7",
+          "frame": 14,
+          "rendered_frame": 14,
+          "is_playing": false,
+          "graphics_driver_bytes": 186947956,
+          "engine_allocated_bytes": 181200789,
+          "managed_gc_bytes": 779485184,
+          "host_working_set_bytes": 2132566016,
+          "host_peak_working_set_bytes": 2168668160
+        },
+        {
+          "phase": "after_diagnostic_gc",
+          "frame": 14,
+          "rendered_frame": 14,
+          "is_playing": false,
+          "graphics_driver_bytes": 186947956,
+          "engine_allocated_bytes": 181200789,
+          "managed_gc_bytes": 613244928,
+          "host_working_set_bytes": 2132578304,
+          "host_peak_working_set_bytes": 2168668160
+        },
+        {
+          "phase": "after_diagnostic_unload_unused_assets",
+          "frame": 14,
+          "rendered_frame": 14,
+          "is_playing": false,
+          "graphics_driver_bytes": 186947956,
+          "engine_allocated_bytes": 181124709,
+          "managed_gc_bytes": 613294080,
+          "host_working_set_bytes": 2132639744,
+          "host_peak_working_set_bytes": 2168668160
+        }
+      ],
+      "before_disposal_account": {
+        "backend_type": "Unity.InferenceEngine.GfxDeviceBackend",
+        "accounted_gpu_capacity_bytes": 740599616,
+        "storage_gpu_logical_bytes": 55834976,
+        "accounted_cpu_tensor_capacity_bytes": 428,
+        "categories": {
+          "storage_live": {
+            "buffers": 24,
+            "capacity_bytes": 55834976
+          },
+          "storage_free": {
+            "buffers": 13,
+            "capacity_bytes": 683313120
+          },
+          "storage_cpu_free": {
+            "buffers": 0,
+            "capacity_bytes": 0
+          },
+          "backend_free": {
+            "buffers": 3,
+            "capacity_bytes": 1451520
+          }
+        },
+        "graphics_driver_bytes": 963600564,
+        "engine_allocated_bytes": 189028574,
+        "engine_reserved_bytes": 531980288,
+        "managed_gc_bytes": 778829824,
+        "host_working_set_bytes": 2168590336,
+        "host_peak_working_set_bytes": 2168590336
+      },
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "original_gpu_reference_hash_preserved": true
+    }
+  },
+  "previous_same_candidate_without_frame_pump": {
+    "file": "vision-staged-nested-gelu-cache-release-whole-gpu-99a6565650d242d9c5aaf5ccc346598141cd88c4-square-0.json",
+    "sha256": "0487a8857ad8000fc6b589432e861832ad92e6f75c06f16a82db661f5f99792f",
+    "result": {
+      "success": false,
+      "scope": "one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate",
+      "runtime_source": "99a6565650d242d9c5aaf5ccc346598141cd88c4",
+      "case_id": "square-0",
+      "phase": "completed",
+      "all_profiles_validated": false,
+      "end_to_end_validated": false,
+      "scheduling_mode": "gpu_fence_per_stage",
+      "intermediate_tensor_readback_added": false,
+      "gelu_internal_cache_release": true,
+      "model_file_audit_ms": 475.30080000000004,
+      "profile": "square",
+      "saved_model_sha256": "4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7",
+      "model_load_ms": 651.0418000000001,
+      "coefficient_audit_before_ms": 470.00980000000004,
+      "inline_rms_count": 112,
+      "layer_count": 19535,
+      "original_square_count": 113,
+      "remaining_original_rms_count": 1,
+      "all_original_coefficient_descriptors_retained": true,
+      "graph_rewrite_ms": 1906.479,
+      "native_gelu_count": 16,
+      "release_unused_gpu_cache": true,
+      "pipeline_prepare_ms": 1399.5325,
+      "segment_count": 18,
+      "gpu_operation_count": 17,
+      "prepare_ms": 4431.6013,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "host_working_set_before_execute_bytes": 3358855168,
+      "execute_and_final_download_ms": 9371.0581,
+      "backend_caches": [
+        {
+          "stage": 0,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 1,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 2,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 3,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 4,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 5,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 6,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 7,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 8,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 9,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 10,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 11,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 12,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 13,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 14,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 15,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 16,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 17,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        }
+      ],
+      "gelu_internal_worker_caches": [
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        }
+      ],
+      "capture_sha256": "43fa98f573bd55a0f634075bf17f42fcde2ff9e89894c2d5b1b238c8ab451aab",
+      "cache_only_candidate_bits_preserved": true,
+      "host_working_set_after_download_bytes": 10257428480,
+      "host_peak_working_set_bytes": 10257428480,
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 571,
+      "maximum_absolute_error": 0.00012803077697753906,
+      "maximum_tolerance_ratio": 6.883228917760353,
+      "original_coefficient_bytes_preserved": true,
+      "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+      "coefficient_audit_after_ms": 490.06120000000004,
+      "error_first_line": "NUnit.Framework.AssertionException:   Keep the unchanged original FP32 elementwise gate."
+    }
+  },
+  "mixed_diagnostic_and_frame_pumped_case": {
+    "file": "vision-staged-nested-gelu-cache-release-whole-gpu-d02174ffbde80c50e01a220ab3636e46832ca507-square-0.json",
+    "sha256": "261d0944c22f8280b7f6553b78503e8371af4486c5b6839bfa3c9d010e815b0d",
+    "result": {
+      "success": false,
+      "scope": "one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate",
+      "runtime_source": "d02174ffbde80c50e01a220ab3636e46832ca507",
+      "case_id": "square-0",
+      "phase": "completed",
+      "all_profiles_validated": false,
+      "end_to_end_validated": false,
+      "scheduling_mode": "gpu_fence_per_stage",
+      "intermediate_tensor_readback_added": false,
+      "gelu_internal_cache_release": true,
+      "editor_frame_pump": true,
+      "model_file_audit_ms": 489.29990000000004,
+      "profile": "square",
+      "saved_model_sha256": "4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7",
+      "model_load_ms": 3038.6593000000003,
+      "coefficient_audit_before_ms": 541.8082,
+      "inline_rms_count": 112,
+      "layer_count": 19535,
+      "original_square_count": 113,
+      "remaining_original_rms_count": 1,
+      "all_original_coefficient_descriptors_retained": true,
+      "graph_rewrite_ms": 1670.9476000000002,
+      "native_gelu_count": 16,
+      "release_unused_gpu_cache": true,
+      "pipeline_prepare_ms": 1616.9282,
+      "segment_count": 18,
+      "gpu_operation_count": 17,
+      "prepare_ms": 6872.881200000001,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "host_working_set_before_execute_bytes": 3548028928,
+      "frame_before_execute": 14,
+      "rendered_frame_before_execute": 14,
+      "frame_after_execute": 145,
+      "rendered_frame_after_execute": 145,
+      "execute_and_final_download_ms": 2471.5466,
+      "backend_caches": [
+        {
+          "stage": 0,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 1,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 2,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 3,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 4,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 5,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 6,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 7,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 8,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 9,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 10,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 11,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 12,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 13,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 14,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 15,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 16,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 17,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        }
+      ],
+      "gelu_internal_worker_caches": [
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        }
+      ],
+      "capture_sha256": "43fa98f573bd55a0f634075bf17f42fcde2ff9e89894c2d5b1b238c8ab451aab",
+      "cache_only_candidate_bits_preserved": true,
+      "host_working_set_after_download_bytes": 3583692800,
+      "host_peak_working_set_bytes": 3679625216,
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 571,
+      "maximum_absolute_error": 0.00012803077697753906,
+      "maximum_tolerance_ratio": 6.883228917760353,
+      "original_coefficient_bytes_preserved": true,
+      "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+      "coefficient_audit_after_ms": 463.9918,
+      "error_first_line": "NUnit.Framework.AssertionException:   Keep the unchanged original FP32 elementwise gate."
+    }
+  },
+  "isolated_frame_pumped_case_without_test_forced_gc": {
+    "file": "vision-staged-nested-gelu-cache-release-whole-gpu-b887820ff5ecf57d64b8a41887d4e3e2850e3418-square-0.json",
+    "sha256": "feb7ddbd8cc285835d5c9d838e8443fae160c24b6b843bcfbefb8241459650d5",
+    "result": {
+      "success": false,
+      "scope": "one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate",
+      "runtime_source": "b887820ff5ecf57d64b8a41887d4e3e2850e3418",
+      "case_id": "square-0",
+      "phase": "completed",
+      "all_profiles_validated": false,
+      "end_to_end_validated": false,
+      "scheduling_mode": "gpu_fence_per_stage",
+      "intermediate_tensor_readback_added": false,
+      "gelu_internal_cache_release": true,
+      "editor_frame_pump": true,
+      "test_forced_gc_during_run": false,
+      "model_file_audit_ms": 532.6772,
+      "profile": "square",
+      "saved_model_sha256": "4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7",
+      "model_load_ms": 1281.3997000000002,
+      "coefficient_audit_before_ms": 495.8813,
+      "inline_rms_count": 112,
+      "layer_count": 19535,
+      "original_square_count": 113,
+      "remaining_original_rms_count": 1,
+      "all_original_coefficient_descriptors_retained": true,
+      "graph_rewrite_ms": 1945.9633000000001,
+      "native_gelu_count": 16,
+      "release_unused_gpu_cache": true,
+      "pipeline_prepare_ms": 1611.0677,
+      "segment_count": 18,
+      "gpu_operation_count": 17,
+      "prepare_ms": 5338.3833,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "host_working_set_before_execute_bytes": 3323961344,
+      "frame_before_execute": 4,
+      "rendered_frame_before_execute": 4,
+      "frame_after_execute": 141,
+      "rendered_frame_after_execute": 141,
+      "execute_and_final_download_ms": 2762.1189,
+      "backend_caches": [
+        {
+          "stage": 0,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 1,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 2,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 3,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 4,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 5,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 6,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 7,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 8,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 9,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 10,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 11,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 12,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 13,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 14,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 15,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 16,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 17,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        }
+      ],
+      "gelu_internal_worker_caches": [
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        },
+        {
+          "free_buffer_count": 0,
+          "free_buffer_capacity_bytes": 0
+        }
+      ],
+      "capture_sha256": "43fa98f573bd55a0f634075bf17f42fcde2ff9e89894c2d5b1b238c8ab451aab",
+      "cache_only_candidate_bits_preserved": true,
+      "host_working_set_after_download_bytes": 3504541696,
+      "host_peak_working_set_bytes": 3584634880,
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 571,
+      "maximum_absolute_error": 0.00012803077697753906,
+      "maximum_tolerance_ratio": 6.883228917760353,
+      "original_coefficient_bytes_preserved": true,
+      "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+      "coefficient_audit_after_ms": 472.0478,
+      "error_first_line": "NUnit.Framework.AssertionException:   Keep the unchanged original FP32 elementwise gate."
+    }
+  },
+  "resources": [
+    {
+      "file": "vision-editor-frame-pump-resources-20261015.jsonl",
+      "sha256": "9764321403d6fab2d67baaeadcf1eb4f1c839301112e6486fa198e077a07a6ed",
+      "sample_count": 28,
+      "execution_sample_count": 1,
+      "maximum_observed_host_peak_bytes": 3679625216,
+      "maximum_observed_device_gpu_used_mib": 6161,
+      "maximum_execution_device_gpu_used_mib": 6161,
+      "true_vram_peak_guaranteed": false,
+      "device_includes_background_processes": true
+    },
+    {
+      "file": "vision-editor-frame-pump-isolated-resources-20261015.jsonl",
+      "sha256": "ea43d99cd3cac9c6b6aa8a225f2bc6006d80a27fe81a58d281214ac76260d862",
+      "sample_count": 24,
+      "execution_sample_count": 2,
+      "maximum_observed_host_peak_bytes": 3584634880,
+      "maximum_observed_device_gpu_used_mib": 6246,
+      "maximum_execution_device_gpu_used_mib": 6246,
+      "true_vram_peak_guaranteed": false,
+      "device_includes_background_processes": true
+    }
+  ],
+  "executions": {
+    "layer_profiles": {
+      "file": "vision-original-layer-buffer-accounting-20261015-process.json",
+      "sha256": "d00406d90f5f8b7c5db7650bd55992301593753d150957188f05cd6afcc5c8f5",
+      "xml_sha256": "b9aefb8bb17eb85504be2501a54352e8ed56046ed59f7bca6cc0ade33a472ba8",
+      "counts": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 134.9060790999938,
+      "exit_code": 0
+    },
+    "passive_disposal": {
+      "file": "vision-layer-disposal-editor-updates-20261015-process.json",
+      "sha256": "de89b109c6ef3e661e21bf12d59d28e39a226369625d35a4ce99182e2567f6c9",
+      "xml_sha256": "8bcbe3636713c73e9e3bdb767e6465e862ce24b507e5d098fa6e888a46b08670",
+      "counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 54.66853929999343,
+      "exit_code": 0
+    },
+    "pumped_disposal_plus_full_reference_failure": {
+      "file": "vision-editor-frame-pump-and-disposal-20261015-process.json",
+      "sha256": "c7812b8cc0538652a038850d4565d694e8a48014aed2461dfced6969c6b93aac",
+      "xml_sha256": "89e921c2de905f517705db7d6ef2c4171d77e30532c0a3446e278b915eef7b16",
+      "counts": {
+        "total": 2,
+        "passed": 1,
+        "failed": 1,
+        "skipped": 0
+      },
+      "elapsed_seconds": 70.71984679999878,
+      "exit_code": 2
+    },
+    "isolated_full_reference_failure": {
+      "file": "vision-editor-frame-pump-isolated-no-gc-20261015-process.json",
+      "sha256": "3febfe6f045cfe51e0378015acfd1d5855c04f8fd96277b8bd88ddfbe19e42a8",
+      "xml_sha256": "954d906aaad6916435b4f7073296fff653bc8897237c6e41ce231c30f61f16b4",
+      "counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      },
+      "elapsed_seconds": 60.18310219999694,
+      "exit_code": 2
+    }
+  },
+  "package": {
+    "file": "vision-frame-progress-package-green-20261015.xml",
+    "sha256": "7b14e77fbd0d6f30b53e0682653bd3aa34ee2c0933f313412a37ede453cab6a8",
+    "tests": 22,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "confirmed": "Editor task yields did not guarantee rendered-frame progress. Explicit test-harness QueuePlayerLoopUpdate advances those frames and permits delayed GPU release. The fixed candidate retains identical output and coefficient hashes with substantially lower observed host peak in two processes.",
+  "runtime_arithmetic_changed": false,
+  "intermediate_tensor_readback_added": false,
+  "forced_gc_adopted_as_fix": false,
+  "fixed_candidate_editor_host_peak_reduction_observed": true,
+  "general_memory_acceptance": false,
+  "steady_state_benchmark": false,
+  "full_image_reference_validated": false,
+  "end_to_end_validated": false,
+  "stage3_complete": false,
+  "stage4_complete": false,
+  "limitations": [
+    "Per-layer ScheduleIterable dispatch changes scheduling timing; it is a capacity diagnosis, not normal-schedule performance.",
+    "Original GPU output hash preservation is not original native CPU reference acceptance. The inline-RMS layer compares its own unchanged normal GPU execution.",
+    "Graphics-driver counters are Unity-wide; tracked buffers exclude opaque native/driver allocations and unrelated resources. Device VRAM samples include background processes.",
+    "The first mixed run includes diagnostic GC before full inference. The isolated run filters only the full frame-pumped case and invokes no test-forced GC.",
+    "The late external watcher for the first layer profile found its owned process already exited. No independent device-VRAM sample is claimed for that profile.",
+    "The first profile process spent substantial startup time resolving the pinned packages; NUnit test execution was 7.48 seconds, not the full 134.91-second process time."
+  ],
+  "next": "Use the frame-progressing Editor harness for necessary bounded image checks; return to remaining RMS/scaling and reconnect qualified full-image GPU arithmetic without weakening original references or tolerances.",
+  "remaining": [
+    "Original FP32 image three profiles/six GPU cases; preserve historic CPU failures separately.",
+    "Actual PCM/Texture to GPU preprocessing, encoder, backbone and normalized 768 API across all roles/masks/boundaries/ownership/Dispose/error reuse/text regression.",
+    "Stage 3/4 samples, actual stripped Player and required environments; Required CI, Persistent allocation warning and long-term memory."
+  ]
+}

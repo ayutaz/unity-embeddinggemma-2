@@ -4,6 +4,8 @@
 
 ## 2026-10-15の実行方針と再開順
 
+最新Editor実行checkpoint: [frame進行とbuffer容量監査](results/m3-editor-frame-progress-and-buffer-accounting-20261015.json)。task yieldだけではEditor描画frameが進まずGPU資源の遅延解放が止まる条件を確認し、検証harnessでplayer loopを更新した。同一候補の最終bit / 元係数 / GPU実行を保持し、GC診断を含めない独立runでhost peak約9.55→3.34GiBを観測。全体数値gateは571要素超過のまま。他環境 / 長期memoryの受入や正式benchmarkではない。次はframe進行するharnessで残るRMS / scalingと局所合格済み演算の全profile接続を検証し、元音声6ケース / 2 profile、実PCM / Textureから最終768 API・全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰、工程3・4 sample / Player / Required CIの全範囲を維持する。
+
 最新memory checkpoint: [stage寿命とcache解放・peak未解決](results/m3-gpu-stage-lifetime-and-cache-peak-unresolved-20261015.json)。GPU完了待ち / 内部GELU cache / backend scratch・完了済みML context解放をTDDと固定全体候補で確認したが、571要素超過と高いhost / device peakは未解決。候補の最終bit・元係数・元layer 0 gateを保持。static auditで区間間の保持44.3MiB・未消費内部出力0・分割計算重複なしを確認したが、推論合格やmemory改善ではない。全体cache比較を反復せず、次は1層 / 1区間の実buffer容量とnative / driver allocationを照合する。下記の音声元6ケース / 2 profileの既存GPU合格、画像全FP32条件、実PCM / Textureから最終768 API・全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰、工程3・4 sample / PlayerとRequired CIの範囲を維持する。
 
 最新checkpoint: [元attentionの局所GPU検証とlayer 0再接続](results/m3-attention-softmax-and-matmul-gpu-20261015.json)。先頭16行の捕捉で元最終GPU bit / source bytesを保持し、2つの行列積は独立した現CPU式へ全bit一致。両入力と残差の分割は2 Red→関連24 Green。元layer 0は標準softmax / 候補softmaxの両方で元native許容差超過0となった。ただしsoftmaxだけを追加した途中候補は1要素超過で不合格として保持する。元native内部値の全bit取得や全encoder合格ではない。全体は再実行せず、前候補square-0の571要素超過・高いmemory peakを未解決として保持。次は残るattention/scaling / 元RMSと全体のallocation寿命を確認し、ピーク対策後に全profileへ接続する。下記の元音声6ケース / 2 profile、全実入力の最終768 API・全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰、工程3・4のsample / Playerの範囲を維持する。

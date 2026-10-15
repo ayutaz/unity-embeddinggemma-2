@@ -1,5 +1,15 @@
 # 現在の状態
 
+更新日: 2026-10-15。**Editorの描画frame進行がGPU資源の遅延解放に関係していた。検証harnessでframe更新を明示すると、同じ画像候補の出力bitを保持したまま、独立processのhost peakが約9.55GiB→3.34GiBへ低下した。** [固定receipt](results/m3-editor-frame-progress-and-buffer-accounting-20261015.json)。画像の元FP32 gateは571要素超過のまま、工程3・4は未完了。
+
+元layer 0と7 RMSをinlineした層の2つの容量診断は2 pass / skip0、観測と通常GPU実行の全bit一致・source bytes保持。元層は旧GPU hash `bc417e7f...`を保持したが、元native CPU参照の合格には数えない。追跡可能なGPU buffer容量の最大は約706 / 739MiBで、その大半はstorageのfree pool約644 / 658MiB。per-layer `ScheduleIterable`はタイミングが通常と異なり、graphics-driver counterはEditor全体を含むため、これを通常実行benchmarkへ流用しない。最初のprofile processは134.91秒、NUnit内の実行は7.48秒で、固定package更新等の起動待ちを推論時間へ混ぜない。
+
+元1層のDispose直後はgraphics-driver counterが約919MiBのまま、描画frame 4→6で約303MiBへ低下し、その後の`yield null`ではframeが進まなかった。GC / UnloadUnusedAssetsでは減らない。`EditorApplication.QueuePlayerLoopUpdate`を診断harnessで呼ぶと描画frame 6→14、約178MiBまで低下した。これを受け、全体候補のawait中にもEditor player loopを進めた。mixed診断後の1 runでhost peak3,679,625,216 byte、さらに**GC診断を含めない独立run** `b887820...`で3,584,634,880 byte（約3.34GiB）、GPU実行＋最終取得2.762秒を観測した。描画frameは4→141。実行中device VRAMの観測最大6,246MiBはbackgroundを含む約2秒間隔のsampleで、真のpeakは保証しない。単発観測であり、他環境 / 長期memory受入や定常benchmarkではない。
+
+両全体runは同じ18 segment・元係数digest / 最終hash `43fa98f5...`を保持し、GPUCompute・計算/入力CPU fallback・中間flush0。元参照571要素超過・最大比6.883229で数値gateは各1 fail / skip0のまま。mixed runのdisposal診断1 passを全体数値合格へ置き換えない。今回の変更は診断とEditor検証harnessであり、Runtime算術の変更や強制GCを製品へ追加していない。package22 Green。次はこのframe進行するharnessで必要な検証を行い、残るRMS / scalingと、局所合格した投影・attention等の元全profileへの接続へ戻る。全画像FP32条件、実PCM / Texture→正規化768 APIの全role / mask / 境界 / 所有権 / Dispose / 例外後再利用 / text回帰、工程3・4 sample / Player、Required CI・Persistent allocation警告・長期memoryは未完了。Unity終了済み。
+
+以下は前回checkpoint。
+
 更新日: 2026-10-15。**GPU stage単位の完了待ち、GELU内部cache、backend scratchと完了済みML演算子contextの解放を確認したが、全体の高いmemory peakは解決していない。** [固定receipt](results/m3-gpu-stage-lifetime-and-cache-peak-unresolved-20261015.json)。GPU計算・元係数・固定参照・許容差は維持し、画像全体571要素超過、工程3・4未完了を保持する。
 
 `ExecuteAsync`はUnity main threadで各stageのgraphics fence完了を待ち、途中tensorのCPU取得を追加しない。重複呼び出しを拒否し、cancel / Disposeは投入済みstageのGPU完了後に所有tensorを解放する。4 intended Red→既存26 Green。GELUの内部2 Worker cacheは既存保持1 pass＋新API1 Red→関連32 Green。継承されたprivate fieldのlookupを誤った最初のscratch診断の2前提失敗を別記し、修正後はscratch解放・完了済みcontext解放・linker保持の3 intended Red（既存保持1 pass）→元layer 0のbit保持を含む36 Green。初回GEMM診断は恒等行列の最適化で前提失敗と記録し、非恒等GEMM / async / linkerの6 Greenへ修正。package22 Green。元layer 0は`fe3b9fe2...`全bit保持・元native許容差超過0。既存constructor / cacheの既定動作は維持し、算術kernelは変更していない。Player linker metadataの保持を実Player合格には数えない。

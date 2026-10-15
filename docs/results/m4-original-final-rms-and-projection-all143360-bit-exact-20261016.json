@@ -1,0 +1,31 @@
+{
+  "scope": "literal_original_stage13_through_final_rms_and_projection_only",
+  "input_sha256": "8299ed905cdb45b26b96d6d42cf99a7071f2f9d6cdc87d6e444058da2c65672a",
+  "weight_sha256": "f5d6b3a76b3b186e29dfe6debec4656985fafe89eec26ccab1787d117812267c",
+  "reference_sha256": "e9ac5425c93912ac7e4983ed98e80b4020e1f8f2d81c2950adfd31b1022441ad",
+  "native_exact_difference_count": 0,
+  "portable_normal_exact_difference_count": 0,
+  "actual_onnx_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 0.0,
+    "maximum_tolerance_ratio": 0.0,
+    "worst_index": 0,
+    "worst_actual": -3.593391180038452,
+    "worst_expected": -3.593391180038452,
+    "exact_difference_count": 0
+  },
+  "graph_sha256": "d0010599a64dbb478badc746e92e1d6e83e0b88271eb712c438dc28b5d02eb3b",
+  "capture_sha256": "e9ac5425c93912ac7e4983ed98e80b4020e1f8f2d81c2950adfd31b1022441ad",
+  "elements": 143360,
+  "native_matmul_execution": "original_passthrough_only_not_fixed_order_proof",
+  "whole_encoder_validated": false,
+  "gpu_validated": false,
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "report_sha256": "357f5dc03e14a56fb1629640c55126c98de04905f0dcc0d6268a5c9984d685da",
+  "distinction": "Literal original stage13 only. Actual standard FP32 ONNX output independently bit-exact to original143360values. Does not prove last3layers, connected chain, full raw input, GPU, or required CI.",
+  "original_reference_unchanged": true,
+  "original_weight_unchanged": true
+}

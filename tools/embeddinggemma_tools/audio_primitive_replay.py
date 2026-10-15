@@ -96,7 +96,11 @@ def metrics(actual, expected):
     return result
 
 
-def probe_primitives(program, frozen_input, frozen_output, output, *, from_boundary, to_boundary, provenance=None):
+def probe_primitives(program, frozen_input, frozen_output, output, *, from_boundary, to_boundary, provenance=None,
+                     variant='standard'):
+    from .frozen_audio_segment_onnx import PRECISE
+    if variant not in ('standard', PRECISE):
+        raise ValueError('Unknown isolated primitive variant')
     if not all(isinstance(value, FrozenStageReference) for value in (frozen_input, frozen_output)):
         raise ValueError("Primitive replay requires both audited frozen stage references")
     output = Path(output)
@@ -104,32 +108,39 @@ def probe_primitives(program, frozen_input, frozen_output, output, *, from_bound
     if receipt.exists():
         raise ValueError("Refusing to overwrite primitive replay evidence")
     segment = extract_segment(program, from_boundary, to_boundary)
+    candidate_nodes = {}
+    if variant == PRECISE:
+        from .audio_candidate_primitives import audited_replacements, run_candidate
+        candidate_nodes = audited_replacements(segment)
     before = weight_digests(segment)
     values, expected = tensor(frozen_input.expected), tensor(frozen_output.expected)
     output.mkdir(parents=True, exist_ok=True)
     report = dict(scope="noninjecting_isolated_onnx_operators_on_audited_frozen_input_segment", complete=False,
         provenance=provenance, from_boundary=from_boundary, to_boundary=to_boundary,
         input_provenance=frozen_input.provenance, target_provenance=frozen_output.provenance,
-        cases=[], worst_operator_captures={}, full_encoder_validated=False, gpu_validated=False,
+        cases=[], worst_operator_captures={}, contract_captures={}, variant=variant,
+        candidate_nodes=sorted(node.name for node in candidate_nodes), full_encoder_validated=False, gpu_validated=False,
         end_to_end_validated=False, all_replayed_values_remain_original_native_operations=True)
 
     def save():
         receipt.write_text(json.dumps(report, indent=2, allow_nan=False) + "\n", encoding="utf-8")
 
-    def capture(kind, row, args, native, actual):
-        prior = report["worst_operator_captures"].get(kind)
-        if prior and prior["maximum_tolerance_ratio"] >= row["metrics"]["maximum_tolerance_ratio"]:
+    def capture(kind, row, args, native, actual, *, table='worst_operator_captures', prefix='worst'):
+        prior = report[table].get(kind)
+        if prior and (prior["maximum_tolerance_ratio"], prior['exact_difference_count']) >= (
+                row["metrics"]["maximum_tolerance_ratio"], row['metrics']['exact_difference_count']):
             return
         files = []
         arrays = [(f"input{i}", value) for i, value in enumerate(args) if isinstance(value, torch.Tensor)]
         arrays.extend((("native", native), ("onnx", actual)))
         for name, value in arrays:
-            path = output / f"worst-{kind}-{name}-fp32.bin"
+            path = output / f"{prefix}-{kind}-{name}-fp32.bin"
             value.detach().contiguous().numpy().astype("<f4").tofile(path)
             files.append(dict(file=path.name, shape=list(value.shape), native_strides=list(value.stride()),
                               sha256=file_digest(path)))
-        report["worst_operator_captures"][kind] = dict(node=row["node"], variant=row["variant"],
-            attributes=row["attributes"], maximum_tolerance_ratio=row["metrics"]["maximum_tolerance_ratio"], files=files)
+        report[table][kind] = dict(node=row["node"], variant=row["variant"], operator=row['operator'],
+            attributes=row["attributes"], maximum_tolerance_ratio=row["metrics"]["maximum_tolerance_ratio"],
+            exact_difference_count=row['metrics']['exact_difference_count'], files=files)
 
     save()
     with torch.no_grad():
@@ -140,20 +151,37 @@ def probe_primitives(program, frozen_input, frozen_output, output, *, from_bound
 
         class Replay(torch.fx.Interpreter):
             def run_node(self, node):
-                selected = node.op == "call_function" and node.target in OPERATORS
+                selected = node.op == "call_function" and (node.target in OPERATORS or node in candidate_nodes)
                 if selected:
                     args, kwargs = self.fetch_args_kwargs_from_env(node)
                 result = super().run_node(node)
                 if selected:
                     target = tensor(result)
-                    for variant, actual, attrs in primitive_outputs(node.target, args, kwargs):
-                        row = dict(node=node.name, target=str(node.target), operator=OPERATORS[node.target],
-                            variant=variant, attributes=attrs, metrics=metrics(actual, target),
+                    changed = node in candidate_nodes
+                    if changed:
+                        if kwargs:
+                            raise ValueError('Isolated candidate requires original positional arguments')
+                        actual, attrs = run_candidate(candidate_nodes[node], tuple(x for x in args if isinstance(x, torch.Tensor)), output)
+                        results = [(variant, actual, attrs)]
+                    else:
+                        results = primitive_outputs(node.target, args, kwargs)
+                    for label, actual, attrs in results:
+                        kind = OPERATORS.get(node.target, {torch.ops.aten.addmm.default: 'Gemm',
+                            torch.ops.aten.sigmoid.default: 'Sigmoid'}.get(node.target))
+                        if kind is None:
+                            raise ValueError('Missing audited isolated operator label')
+                        row = dict(node=node.name, target=str(node.target), operator=kind,
+                            variant=label, candidate_replaced=changed, attributes=attrs, metrics=metrics(actual, target),
                             inputs=[dict(shape=list(value.shape), strides=list(value.stride()),
                                 sha256=hashlib.sha256(value.detach().contiguous().numpy().tobytes()).hexdigest())
                                 for value in args if isinstance(value, torch.Tensor)])
                         report["cases"].append(row)
                         capture(row["operator"], row, args, target, actual)
+                        if variant == PRECISE:
+                            contract = dict(target=row['target'], variant=label,
+                                inputs=[dict(shape=spec['shape'], strides=spec['strides']) for spec in row['inputs']])
+                            key = hashlib.sha256(json.dumps(contract, sort_keys=True).encode()).hexdigest()[:20]
+                            capture(key, row, args, target, actual, table='contract_captures', prefix='contract')
                         save()
                 # Isolated ONNX results are never fed into the native replay.
                 return result
@@ -180,6 +208,7 @@ def main(argv=None):
     parser.add_argument("--frozen-stage-source", type=Path, required=True)
     parser.add_argument("--from-stage", choices=tuple(STAGES)[:-1], required=True)
     parser.add_argument("--stage", choices=tuple(STAGES), required=True)
+    parser.add_argument('--variant', choices=('standard', 'ordered_original_primitives'), default='standard')
     args = parser.parse_args(argv)
     source = os.environ.get("GITHUB_SHA", "")
     if re.fullmatch("[0-9a-f]{40}", source) is None:
@@ -192,7 +221,7 @@ def main(argv=None):
     result = probe_primitives(program, load_frozen_stage_reference(args.frozen_stage_source, args.from_stage),
         load_frozen_stage_reference(args.frozen_stage_source, args.stage), args.output,
         from_boundary=boundary_for_stage(program, args.from_stage), to_boundary=boundary_for_stage(program, args.stage),
-        provenance=provenance)
+        provenance=provenance, variant=args.variant)
     print(json.dumps(dict(complete=result["complete"], operator_comparisons=len(result["cases"]),
         local_failure_cases=sum(row["metrics"]["mismatched_elements"] > 0 for row in result["cases"]),
         native_segment_original_metrics=result["native_segment_original_metrics"], full_encoder_validated=False)))

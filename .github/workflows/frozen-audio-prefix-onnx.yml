@@ -12,7 +12,7 @@ on:
         description: Select one candidate for bounded whole-encoder diagnosis, or all for a prefix
         type: choice
         default: all
-        options: [all, native, refined_moment, refined_mean_moment, refined_mean_moment_rms, native_silu, refined_mean_moment_rms_silu, ordered_static_linear, ordered_static_linear_refined, ordered_static_linear_attention, ordered_static_linear_all_bmm, ordered_original_primitives]
+        options: [all, native, refined_moment, refined_mean_moment, refined_mean_moment_rms, native_silu, refined_mean_moment_rms_silu, ordered_static_linear, ordered_static_linear_refined, ordered_static_linear_attention, ordered_static_linear_all_bmm, ordered_original_primitives, ordered_original_stem]
       from_stage:
         description: Optional audited frozen INPUT for isolated segment diagnosis only
         type: choice
@@ -148,11 +148,15 @@ jobs:
             exit
           fi
           if [ "$PRIMITIVE_REPLAY" = true ]; then
+            candidate_args=()
+            if [ "$PROBE_VARIANT" = ordered_original_primitives ]; then
+              candidate_args=(--variant "$PROBE_VARIANT")
+            fi
             uv run --locked python -m embeddinggemma_tools.audio_primitive_replay \
               --input ../artifacts/frozen-prefix-input/audio-runtime-reference \
               --output ../artifacts/frozen-audio-prefix-onnx \
               --frozen-stage-source ../artifacts/frozen-stage-reference/audio-runtime-stages \
-              --from-stage "$PROBE_FROM_STAGE" --stage "$PROBE_STAGE"
+              --from-stage "$PROBE_FROM_STAGE" --stage "$PROBE_STAGE" "${candidate_args[@]}"
             exit
           fi
           if [ "$PROBE_FROM_STAGE" != none ]; then

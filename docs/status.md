@@ -1,5 +1,15 @@
 # 現在の状態
 
+更新日: 2026-10-15。**画像の診断用native参照は、最初に固定した参照と同一ではなかった。追加の全体GPU算術変更より、元の保存済みgraphの再現条件確認を先に行う。** [固定receipt](results/m3-original-reference-context-misalignment-20261015.json)。入力pixelのSHAは一致し、元モデルの全定数content hashは診断モデルにも存在する。一方、診断manifestの`trace_matches_original_saved=true`が比較したgraphは、その診断jobで新たにexportした`508f44c5...`であり、元の固定graph `f9c5175a...`ではない。元固定参照に対して診断native出力自体がsquare-0で598要素、square-1で51要素超過する。過去の「元native layer」等の局所比較は、この診断文脈内の結果として読み、元の固定golden全体への合格へ拡張しない。
+
+GPU候補`32d9471...`は112 RMS / 114 static projection / 32 attention matmul / 16 GELU / 16 softmaxを接続し、元のconstant-left poolingは保持した。178 custom operation / 179 segment、GPUCompute・計算/入力CPU fallback0・中間flush0・元係数保持だが、元固定参照566要素超過で不合格。診断native参照へは6要素超過であり、こちらも合格ではない。画像他5caseは未実行。最初の候補`593be8f...`はpooling分類の前提失敗で数値未実行として分離。末尾projectionのblock384が2ケースで全bit一致した対象も診断nativeのstageであり、元固定参照の証明ではない。保存定数監査は推論なしで1 pass、追加2定数はrotary由来。学習済み係数の相違やCPU ISA等を原因として断定しない。
+
+[Actions 38712084754](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38712084754)は完了し、元artifact `11774238857`のgraph / manifest / pixelのSHA照合を通過後、元square-0参照に全6実行条件で同じ3要素超過・最大比1.182998となった。両runnerはAMD EPYC 7763 / 実AVX2で、native / AVX2指定・thread 1 / 2 / 4の結果は同じ。AVX512は未実行。保存archiveを推論なしで照合すると、元 / 診断graphのmetadata以外の2,321演算と218保存data memberは全て一致し、最終以外の診断出力の追加を確認した。archive SHA差だけを演算・係数差と扱わない。元の生成jobはnative比較成功を記録していたが、今回のhostで再現できていない。次は元保存graphから中間値を直接取得し、診断参照との差の最初の箇所を確定する。
+
+重いCPU再実行はActions側で行い、ローカルUnityは終了済み。既存workflow既定matrixは維持、新しい診断は明示dispatchのみ。workflow 2 Red、実report schemaの3 Red→7 Green、既存CPU context / saved replay11 Green。診断の未実行・待機・失敗は成功へ数えない。元参照・許容差・音声の既存証拠は変更しない。全画像FP32 gate、実PCM / Texture→GPU前処理→encoder→backbone→正規化768 APIの全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰、工程3・4 sample / PlayerとRequired CI・長期memoryは引き続き未完了。
+
+以下は前回checkpoint。
+
 更新日: 2026-10-15。**Editorの描画frame進行がGPU資源の遅延解放に関係していた。検証harnessでframe更新を明示すると、同じ画像候補の出力bitを保持したまま、独立processのhost peakが約9.55GiB→3.34GiBへ低下した。** [固定receipt](results/m3-editor-frame-progress-and-buffer-accounting-20261015.json)。画像の元FP32 gateは571要素超過のまま、工程3・4は未完了。
 
 元layer 0と7 RMSをinlineした層の2つの容量診断は2 pass / skip0、観測と通常GPU実行の全bit一致・source bytes保持。元層は旧GPU hash `bc417e7f...`を保持したが、元native CPU参照の合格には数えない。追跡可能なGPU buffer容量の最大は約706 / 739MiBで、その大半はstorageのfree pool約644 / 658MiB。per-layer `ScheduleIterable`はタイミングが通常と異なり、graphics-driver counterはEditor全体を含むため、これを通常実行benchmarkへ流用しない。最初のprofile processは134.91秒、NUnit内の実行は7.48秒で、固定package更新等の起動待ちを推論時間へ混ぜない。

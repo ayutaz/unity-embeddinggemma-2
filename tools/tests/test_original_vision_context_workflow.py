@@ -48,6 +48,16 @@ def test_original_vision_probe_fetches_exact_old_graph_and_never_changes_golden(
     assert upload['if'] == 'always()' and '.pt2' not in upload['with']['path']
 
 
+def test_original_probe_observes_nodes_on_native_host_and_uploads_only_selected_captures():
+    steps = workflow()['jobs']['original_vision_probe']['steps']
+    execute = next(step['run'] for step in steps
+                   if step.get('name') == 'Replay original saved graph against unchanged golden')
+    assert 'capture_nodes=' in execute and "== 'native'" in execute
+    assert "'add_1', 'cat', 'cat_1', 'add_15', 'mul_372', 'mul_373', 'mm_113'" in execute
+    upload = next(step for step in steps if 'actions/upload-artifact@' in step.get('uses', ''))
+    assert 'artifacts/original-context-results/captures/*.bin' in upload['with']['path']
+
+
 @pytest.mark.parametrize('conditions,reproduced', [
     ([dict(executed=True, mismatched_elements=0)], True),
     ([dict(executed=True, mismatched_elements=1)], False),

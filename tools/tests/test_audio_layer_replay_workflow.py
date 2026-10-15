@@ -53,5 +53,6 @@ def test_attention_reference_scope_keeps_full_subsample_replay_as_separate_defau
     assert "inputs.scope == 'attention'" in attention['if']
     assert '--detail-attention-projections' in attention['run'] and '--subsample-input' not in attention['run']
     assert '--detail-attention-ops' in attention['run']
+    assert '--detail-convolution' in attention['run'],'Native convolution boundaries are missing from the pinned reference job'
     assert '--reference-source 4edbe17a8105233c5aaa1514faa2862b08a4f7e0' in attention['run']
     assert not any(s.get('continue-on-error') for s in steps)

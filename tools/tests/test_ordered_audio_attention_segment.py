@@ -75,3 +75,24 @@ def test_new_attention_candidate_requires_both_audited_families():
             node.args[0].meta = {}
     with pytest.raises(ValueError, match="attention"):
         probe.SegmentExport(segment, VARIANT)
+
+
+def test_all_bmm_candidate_adds_only_a_parameter_backed_fourth_projection():
+    segment, values = fixture()
+    wrapper = probe.SegmentExport(segment, "ordered_static_linear_all_bmm")
+    assert len(wrapper.bmm_nodes) == 4
+    assert len(wrapper.parameter_bmm_nodes) == 1
+    actual, expected = probe.tensor(wrapper(values)), probe.tensor(segment(values))
+    assert torch.equal(actual.view(torch.int32), expected.view(torch.int32))
+
+
+def test_fourth_projection_selector_rejects_dynamic_right_hand_matrix():
+    g = torch.fx.Graph()
+    left, right = g.placeholder('left'), g.placeholder('right')
+    left.meta['val'], right.meta['val'] = torch.zeros(1, 280, 1024), torch.zeros(1, 1024, 1024)
+    output = g.call_function(torch.ops.aten.bmm.default, (left, right))
+    g.output(output)
+    segment = torch.fx.GraphModule(torch.nn.Module(), g)
+    function = getattr(probe, 'audit_parameter_bmm_nodes', None)
+    assert callable(function), 'Parameter-backed fourth BMM audit is missing'
+    assert function(segment) == set()

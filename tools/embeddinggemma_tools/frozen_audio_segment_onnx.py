@@ -18,9 +18,9 @@ from .reference_context_failure import feature_error_metrics
 from .native_silu_onnx import fp32_native_silu
 from .streaming_reference import run_flat_reference
 from .static_block192_onnx import audit_static_linear_nodes, static_block192_export, static_block192_addmm_export
-from .static_block192_onnx import audit_attention_bmm_nodes, static_block192_bmm_export
+from .static_block192_onnx import audit_attention_bmm_nodes, audit_parameter_bmm_nodes, static_block192_bmm_export
 
-VARIANTS = ("native", "refined_mean_moment_rms", "native_silu", "refined_mean_moment_rms_silu", "ordered_static_linear", "ordered_static_linear_attention")
+VARIANTS = ("native", "refined_mean_moment_rms", "native_silu", "refined_mean_moment_rms_silu", "ordered_static_linear", "ordered_static_linear_attention", "ordered_static_linear_all_bmm")
 
 
 def extract_segment(program, from_boundary, to_boundary):
@@ -78,9 +78,14 @@ class SegmentExport(PrefixExport):
             raise ValueError("Ordered static linear candidate requires original280-row parameter projections")
         self.linear_candidate = static_block192_export
         self.biased_linear_candidate = static_block192_addmm_export
-        self.bmm_nodes = audit_attention_bmm_nodes(segment) if variant == "ordered_static_linear_attention" else set()
-        if variant == "ordered_static_linear_attention" and not self.bmm_nodes:
+        batched = variant in ("ordered_static_linear_attention", "ordered_static_linear_all_bmm")
+        self.bmm_nodes = audit_attention_bmm_nodes(segment) if batched else set()
+        if batched and not self.bmm_nodes:
             raise ValueError("Ordered attention candidate requires qualified original attention BMM nodes")
+        self.parameter_bmm_nodes = audit_parameter_bmm_nodes(segment) if variant == "ordered_static_linear_all_bmm" else set()
+        if variant == "ordered_static_linear_all_bmm" and not self.parameter_bmm_nodes:
+            raise ValueError("Ordered full BMM candidate requires original parameter-backed projection")
+        self.bmm_nodes |= self.parameter_bmm_nodes
         self.bmm_candidate = static_block192_bmm_export
 
 
@@ -149,8 +154,10 @@ def probe_segment(program, frozen_input, frozen_output, output, *, from_boundary
                 silu_input_domains=wrapper.silu_observations, linear_replacements=len(wrapper.linear_nodes),
                 ordered_linear_native_execution="original_MatMul_addmm_passthrough_not_fixed_order_execution" if wrapper.linear_nodes else None,
                 ordered_linear_nodes=sorted(node.name for node in wrapper.linear_nodes),
-                attention_bmm_replacements=len(wrapper.bmm_nodes),
-                attention_bmm_nodes=sorted(node.name for node in wrapper.bmm_nodes),
+                attention_bmm_replacements=len(wrapper.bmm_nodes - wrapper.parameter_bmm_nodes),
+                attention_bmm_nodes=sorted(node.name for node in wrapper.bmm_nodes - wrapper.parameter_bmm_nodes),
+                parameter_bmm_replacements=len(wrapper.parameter_bmm_nodes),
+                parameter_bmm_nodes=sorted(node.name for node in wrapper.parameter_bmm_nodes),
                 attention_bmm_native_execution="original_bmm_passthrough_not_fixed_order_execution" if wrapper.bmm_nodes else None))
             save()
     report["complete"] = True
@@ -196,14 +203,18 @@ def main(argv=None):
         if len(audited.linear_nodes) != count:
             raise ValueError("Pinned280-row static linear replacement count differs")
         provenance["ordered_linear_expected_count"] = count
-        if args.variant == "ordered_static_linear_attention":
-            if len(audited.bmm_nodes) != layer_count * 3:
+        if args.variant in ("ordered_static_linear_attention", "ordered_static_linear_all_bmm"):
+            if len(audited.bmm_nodes - audited.parameter_bmm_nodes) != layer_count * 3:
                 raise ValueError("Pinned attention BMM replacement count differs")
             provenance["ordered_attention_bmm_expected_count"] = layer_count * 3
+            if args.variant == "ordered_static_linear_all_bmm":
+                if len(audited.parameter_bmm_nodes) != layer_count:
+                    raise ValueError("Pinned parameter-backed BMM replacement count differs")
+                provenance["ordered_parameter_bmm_expected_count"] = layer_count
     # The joint candidate carries a same-host ONNX baseline; comparisons from
     # earlier jobs alone cannot establish the source of a small drift.
     variants = (("native", "ordered_static_linear", args.variant) if args.variant == "ordered_static_linear_attention" else
-                ("native", args.variant) if args.variant in ("refined_mean_moment_rms_silu", "ordered_static_linear") else (args.variant,))
+                ("native", args.variant) if args.variant in ("refined_mean_moment_rms_silu", "ordered_static_linear", "ordered_static_linear_all_bmm") else (args.variant,))
     report = probe_segment(program, start, end, args.output,
         from_boundary=start_boundary, to_boundary=end_boundary, variants=variants, provenance=provenance)
     print(json.dumps(dict(complete=report["complete"], cases=report["cases"], full_encoder_validated=False)))

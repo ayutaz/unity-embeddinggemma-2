@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "connected_first_layer_silence_fullprofile_only",
+  "source": "7cdad81bc0020be627f40ae3cb1f6c99acf72bf0",
+  "actions_run": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38802387585",
+  "artifact_id": 12004942707,
+  "report_sha256": "e478c121bb836e9df374266daa2c664607e9c67107abae2b05f199b6e5f0eaf9",
+  "original_reference_sha256": "3cc353963c7eafd2a209526c5c19daedd66c9c0da7cdf43dc6a4f4ccee158cf2",
+  "native_original_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 0.0,
+    "maximum_tolerance_ratio": 0.0,
+    "worst_index": 0,
+    "worst_actual": 0.6521252989768982,
+    "worst_expected": 0.6521252989768982,
+    "exact_difference_count": 0
+  },
+  "elements": 286720,
+  "cases": [
+    {
+      "variant": "native",
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 3.0517578125e-05,
+        "maximum_tolerance_ratio": 0.21079575429947162,
+        "worst_index": 1074,
+        "worst_actual": 0.0025315387174487114,
+        "worst_expected": 0.0025337000843137503,
+        "exact_difference_count": 257098
+      },
+      "linear_replacements": 0,
+      "attention_bmm_replacements": 0,
+      "graph_sha256": "1ef779ab34e1e87d12a771b42586bc869bdb4cac32aeefcc02da856900962390",
+      "capture_sha256": "d154f68239ec62359f4e015a59a39d050dbf4ddf7f6c856965c38ab35e13b2ac"
+    },
+    {
+      "variant": "ordered_static_linear",
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 7.62939453125e-05,
+        "maximum_tolerance_ratio": 0.14976236262911558,
+        "worst_index": 24283,
+        "worst_actual": -0.011499066837131977,
+        "worst_expected": -0.011500736698508263,
+        "exact_difference_count": 257557
+      },
+      "linear_replacements": 9,
+      "attention_bmm_replacements": 0,
+      "graph_sha256": "f71d943e382d512ad7169dd6894b2101951463b1d88454b41e2ca730e1c47959",
+      "capture_sha256": "bdc3f0559aa3c56a573f622aeae10c6541569e6d0a287006107bd3c87ce88623"
+    },
+    {
+      "variant": "ordered_static_linear_attention",
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 4.57763671875e-05,
+        "maximum_tolerance_ratio": 0.13518243201813748,
+        "worst_index": 6822,
+        "worst_actual": -0.004579310771077871,
+        "worst_expected": -0.004580724518746138,
+        "exact_difference_count": 255849
+      },
+      "linear_replacements": 9,
+      "attention_bmm_replacements": 3,
+      "graph_sha256": "6a18252ce6842266fa2fc1ed7d3055974fc001e22243f763e511dba31c6837b4",
+      "capture_sha256": "713c4bd4d2937ea15da187f33d3dccf5f1b61cc362fbe90e7075ebefe1c85cdc"
+    }
+  ],
+  "original_weights_unchanged": true,
+  "tolerances_unchanged": true,
+  "numerical_pass": true,
+  "bit_exact": false,
+  "limitation": "All3 candidates already within tolerance on this first layer. Smaller max tolerance ratio alone does not establish a whole-encoder fix. Current native wrapper passthrough excluded as fixed-order proof.",
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "required_ci_passed": false
+}

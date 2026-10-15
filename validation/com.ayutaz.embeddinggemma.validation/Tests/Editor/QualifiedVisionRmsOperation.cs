@@ -15,6 +15,24 @@ namespace EmbeddingGemma.Validation.Tests
         GpuProjectionPipeline pipeline;
         GpuScalarDivide divide;
         public BackendType Backend=>BackendType.GPUCompute;
+        public static Model BorrowScale(Model template,Constant originalScale)
+        {
+            if(template==null||originalScale==null||originalScale.dataType!=DataType.Float||originalScale.shape!=new TensorShape(768)||originalScale.lengthBytes!=768*4)
+                throw new ArgumentException("Expected an original finite width-768 FP32 scale.");
+            var field=typeof(Constant).GetField("array",BindingFlags.Instance|BindingFlags.NonPublic);
+            var bytes=(ArraySegment<byte>)field.GetValue(originalScale);
+            if(bytes.Array==null||bytes.Count!=768*4)throw new ArgumentException("Scale backing bytes differ.");
+            for(var i=0;i<768;i++)
+            {
+                var value=BitConverter.ToSingle(bytes.Array,bytes.Offset+i*4);
+                if(float.IsNaN(value)||float.IsInfinity(value))throw new ArgumentException("Scale must be finite.");
+            }
+            var target=template.constants.Single(value=>value.dataType==DataType.Float&&value.shape==new TensorShape(768));
+            var replacement=(Constant)typeof(object).GetMethod("MemberwiseClone",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(originalScale,null);
+            replacement.index=target.index;
+            return new Model{ProducerName=template.ProducerName+"/borrow-original-scale",inputs=new List<Model.Input>(template.inputs),outputs=new List<Model.Output>(template.outputs),
+                layers=new List<Layer>(template.layers),constants=template.constants.Select(value=>ReferenceEquals(value,target)?replacement:value).ToList()};
+        }
         // Diagnostic graph surgery only: validate the exact six-node original RMS,
         // preserve every descriptor/coefficient, and expose its unchanged tensor ID.
         public static (Model model,int output) MarkFirst(Model source,int projectionOutput)

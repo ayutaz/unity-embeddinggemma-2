@@ -81,7 +81,7 @@ namespace EmbeddingGemma.Validation.Tests
                 if((bool?)layer.GetType().GetField("transposeA")?.GetValue(layer)==true)throw new NotSupportedException("Transposed data requires separate qualification.");
                 var transposed=(bool?)layer.GetType().GetField("transposeB")?.GetValue(layer)??false;
                 var shape=Shape(layer.inputs[0]).ToTensorShape();var width=shape[shape.rank-1];var count=marker?width:weight.shape[transposed?0:1];
-                if((shape.rank!=2&&shape.rank!=3) || shape.length==0 || Type(layer.inputs[0])!=DataType.Float || (!marker&&weight.shape[transposed?1:0]!=width))
+                if((marker?(shape.rank<2||shape.rank>4):(shape.rank!=2&&shape.rank!=3)) || shape.length==0 || Type(layer.inputs[0])!=DataType.Float || (!marker&&weight.shape[transposed?1:0]!=width))
                     throw new NotSupportedException("Fixed GPU matrix shape or type differs.");
                 var outputShape=Shape(layer.outputs[0]).ToTensorShape();
                 if(outputShape.rank!=shape.rank || outputShape.length!=shape.length/width*count || outputShape[outputShape.rank-1]!=count || (marker&&outputShape!=shape))

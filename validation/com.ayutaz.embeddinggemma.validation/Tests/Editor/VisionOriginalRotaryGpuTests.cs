@@ -13,12 +13,12 @@ namespace EmbeddingGemma.Validation.Tests
     {
         [TestCase("cos","cat","8e7ad14c37f14fb5b11e70b08701181c67ad24f4a874385eee5dd63655b39b75")]
         [TestCase("sin","cat_1","1eeda3ae4a8b5bf7f09e29b6d6c763054d9b49ec6de551e09d54a080232a331e")]
-        public void SavedRotaryConstantsMustMatchOriginalNativeHalves(string kind,string node,string expectedSha)
+        public void CorrectedRotaryConstantsMustMatchOriginalNativeHalves(string kind,string node,string expectedSha)
         {
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-original-rotary-constant-audit-"+source+"-"+kind+".json"));
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-corrected-rotary-constant-audit-"+source+"-"+kind+".json"));
             Assert.That(File.Exists(output),Is.False);
-            var report=new JObject{["success"]=false,["runtime_source"]=source,["scope"]="saved_rotary_constants_vs_original_native_halves_without_inference",
+            var report=new JObject{["success"]=false,["runtime_source"]=source,["scope"]="corrected_derived_rotary_constants_vs_original_native_halves_without_inference",
                 ["gpu_validated"]=false,["model_inference_executed"]=false,["full_encoder_validated"]=false,["end_to_end_validated"]=false};
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             string Hash(byte[] bytes){using var stream=new MemoryStream(bytes,false);return PlayerFileHash.Compute(stream,out _);}
@@ -30,14 +30,16 @@ namespace EmbeddingGemma.Validation.Tests
                 foreach(var package in new[]{"com.ayutaz.embeddinggemma","com.ayutaz.embeddinggemma.validation"})Assert.That(locked["dependencies"][package].Value<string>("hash"),Is.EqualTo(source));
                 var path=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-encoder/square-fp32.sentis"));
                 using(var stream=File.OpenRead(path))Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo("4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7"));
-                var original=TextModelFile.Load(path);var array=typeof(Constant).GetField("array",BindingFlags.Instance|BindingFlags.NonPublic);
-                var groups=original.constants.Where(c=>c.dataType==DataType.Float&&c.shape.length==2520*32).Select(c=>
+                var original=QualifiedVisionRotaryTables.RebindOriginalSquareForValidation(TextModelFile.Load(path));
+                var active=new System.Collections.Generic.HashSet<int>(original.layers.SelectMany(l=>l.inputs));
+                var array=typeof(Constant).GetField("array",BindingFlags.Instance|BindingFlags.NonPublic);
+                var groups=original.constants.Where(c=>active.Contains(c.index)&&c.dataType==DataType.Float&&c.shape.length==2520*32).Select(c=>
                 {
                     Assert.That(c.shape,Is.EqualTo(new TensorShape(1,2520,1,32)));
                     var segment=(ArraySegment<byte>)array.GetValue(c);var bytes=new byte[segment.Count];Buffer.BlockCopy(segment.Array,segment.Offset,bytes,0,bytes.Length);
                     return (constant:c,bytes,hash:Hash(bytes));
                 }).GroupBy(value=>value.hash).ToArray();Assert.That(groups.Length,Is.EqualTo(4));
-                foreach(var group in groups)Assert.That(group.Count(),Is.EqualTo(32),"Each position table is reused by Q/K across sixteen layers.");
+                foreach(var group in groups)Assert.That(original.layers.Sum(l=>l.inputs.Count(i=>i==group.First().constant.index)),Is.EqualTo(32),"Each corrected table is shared by Q/K across sixteen layers.");
                 var expectedPath=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/r38716679261/"+node+"-fp32.bin"));Check(expectedPath,expectedSha);
                 var all=Floats(File.ReadAllBytes(expectedPath));Assert.That(all.Length,Is.EqualTo(2520*64));
                 var rows=new JArray();report["comparisons"]=rows;var best=new[]{int.MaxValue,int.MaxValue};

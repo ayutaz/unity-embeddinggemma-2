@@ -57,6 +57,7 @@ namespace EmbeddingGemma.Validation.Tests
             }
             RunOwnedLayer();Sample("immediately_after_disposal");
             for(var i=0;i<8;i++){yield return null;Sample("editor_update_"+i);}
+            for(var i=0;i<8;i++){UnityEditor.EditorApplication.QueuePlayerLoopUpdate();yield return null;Sample("queued_player_loop_"+i);}
             GC.Collect();GC.WaitForPendingFinalizers();yield return null;Sample("after_diagnostic_gc");
             yield return Resources.UnloadUnusedAssets();Sample("after_diagnostic_unload_unused_assets");
             report["actual_backend"]="GPUCompute";report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;

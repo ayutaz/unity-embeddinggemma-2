@@ -64,7 +64,15 @@ namespace EmbeddingGemma.Validation.Tests
             pending.GetAwaiter().GetResult();
         }
 
-        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false)
+        [UnityTest]
+        public IEnumerator StageFencesWithEditorFramePumpPreserveSquareZeroCandidateAndOriginalReferenceGate()
+        {
+            var pending=Run("square-0",true,true,true,true,true,false,true);
+            while(!pending.IsCompleted){UnityEditor.EditorApplication.QueuePlayerLoopUpdate();yield return null;}
+            pending.GetAwaiter().GetResult();
+        }
+
+        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false,bool editorFramePump=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
@@ -75,7 +83,7 @@ namespace EmbeddingGemma.Validation.Tests
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["scope"]=releaseUnusedGpuCache?"one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate":nativeGelu?"one_original_vision_encoder_gpu_native_gelu_all_layer_rms_and_patch384_candidate":inlineAllRms?"one_original_vision_encoder_gpu_all_sixteen_layer_rms_and_native_patch384_candidate":"one_original_vision_encoder_gpu_native_patch384_candidate",["runtime_source"]=source,
                 ["case_id"]=caseId,["phase"]="audit",["all_profiles_validated"]=false,["end_to_end_validated"]=false,
-                ["scheduling_mode"]=staged?"gpu_fence_per_stage":"synchronous_queue",["intermediate_tensor_readback_added"]=false,["gelu_internal_cache_release"]=releaseGeluCaches};
+                ["scheduling_mode"]=staged?"gpu_fence_per_stage":"synchronous_queue",["intermediate_tensor_readback_added"]=false,["gelu_internal_cache_release"]=releaseGeluCaches,["editor_frame_pump"]=editorFramePump};
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
             var operations=new List<IGpuTensorOperation>();Save();
@@ -171,7 +179,9 @@ namespace EmbeddingGemma.Validation.Tests
                 using var input=new Tensor<float>(new TensorShape(1,2520,768),Floats(Path.Combine(root,pixelsName)));ComputeTensorData.Pin(input);
                 using var process=System.Diagnostics.Process.GetCurrentProcess();GpuExecutionProfiler.ReadProcessMemory(process,out var memoryBefore,out _);
                 report["host_working_set_before_execute_bytes"]=memoryBefore;report["phase"]=staged?"execute_async_stage_fences":"execute";Save();timer.Restart();
+                report["frame_before_execute"]=Time.frameCount;report["rendered_frame_before_execute"]=Time.renderedFrameCount;
                 using var encoded=staged?await pipeline.ExecuteAsync(input):pipeline.Execute(input);Assert.That(encoded.backendType,Is.EqualTo(BackendType.GPUCompute));
+                report["frame_after_execute"]=Time.frameCount;report["rendered_frame_after_execute"]=Time.renderedFrameCount;
                 var actual=encoded.DownloadToArray();report["execute_and_final_download_ms"]=timer.Elapsed.TotalMilliseconds;
                 var backendCaches=new JArray();report["backend_caches"]=backendCaches;
                 for(var i=0;i<backends.Length;i++)

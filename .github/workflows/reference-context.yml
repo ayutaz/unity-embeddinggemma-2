@@ -24,6 +24,10 @@ on:
         description: Original vision only; probe static matrix shapes on an AMD host without encoder inference
         type: boolean
         default: false
+      original_softmax16_replay:
+        description: Original vision only; diagnostic CPU lane-order replay guarded by original patch and first-layer bits
+        type: boolean
+        default: false
   pull_request:
     types: [opened, synchronize, labeled]
 
@@ -143,7 +147,7 @@ jobs:
           if-no-files-found: warn
 
   original_vision_probe:
-    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && !inputs.original_rotary_only && !inputs.original_matmul_only
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && !inputs.original_rotary_only && !inputs.original_matmul_only && !inputs.original_softmax16_replay
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -318,7 +322,7 @@ jobs:
           if-no-files-found: warn
 
   original_rotary_probe:
-    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_rotary_only && !inputs.original_matmul_only
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_rotary_only && !inputs.original_matmul_only && !inputs.original_softmax16_replay
     runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:
@@ -400,5 +404,9 @@ jobs:
           if-no-files-found: warn
 
   original_static_matmul_probe:
-    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_matmul_only
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_matmul_only && !inputs.original_softmax16_replay
     uses: ./.github/workflows/vision-matmul-context.yml
+
+  original_ordered_context_probe:
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_softmax16_replay
+    uses: ./.github/workflows/vision-ordered-context.yml

@@ -1,0 +1,109 @@
+name: Original vision ordered CPU diagnostic
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: vision-ordered-context-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - name: Require AMD host before model download
+        run: |
+          uv run --no-project --python 3.13 python - <<'PY'
+          import json,os,subprocess
+          from pathlib import Path
+          host=json.loads(subprocess.check_output(['lscpu','--json'],text=True))
+          rows={row['field'].rstrip(':'):row['data'] for row in host['lscpu']}
+          output=Path('../artifacts/vision-ordered-context');output.mkdir(parents=True,exist_ok=True)
+          satisfied=rows.get('Vendor ID')=='AuthenticAMD'
+          report=dict(source=os.environ['GITHUB_SHA'],host=host,amd_host_satisfied=satisfied,model_executed=False)
+          (output/'host-prerequisite.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
+          if not satisfied:raise SystemExit('AMD host prerequisite unavailable; no model download or execution')
+          PY
+      - run: uv sync --locked
+      - name: Fetch original saved graph and unchanged reference
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          uv run --locked python -m embeddinggemma_tools.artifact_zip \
+            --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11774238857 \
+            --output ../artifacts/vision-ordered-input --max-entry-bytes 2147483648 \
+            --member vision-reference.json --member vision-validation.json \
+            --member square/vision.pt2 --member square/0-pixels-fp32.bin
+          sha256sum --check <<'EOF'
+          3dfccd1a487ce04df3f8d640483ca045f7a7a56231bc1096ad0f845c923a29c6  ../artifacts/vision-ordered-input/vision-reference.json
+          ab1aa775b553f33a5e2892abed2cdcef7768e35fbad6fa5af9ec3286a7ba90ba  ../artifacts/vision-ordered-input/vision-validation.json
+          f9c5175a1d75289ce814a9651f496f9bdae5e873ac66199a5c3d03e0172c16cc  ../artifacts/vision-ordered-input/square/vision.pt2
+          d25852af1b53b8f4ed484b760280b1859b8a3b63e3456f7cbb378f33877761b7  ../artifacts/vision-ordered-input/square/0-pixels-fp32.bin
+          EOF
+      - name: Gate original patch and first layer before ordered full capture
+        run: |
+          uv run --locked python - <<'PY'
+          import hashlib,json,os,time
+          from pathlib import Path
+          import numpy as np
+          import torch
+          from embeddinggemma_tools.reference_context_failure import run_saved_graph_prefix,VisionSoftmax16Diagnostic,capture_saved_program_nodes
+          root=Path('../artifacts/vision-ordered-input');output=Path('../artifacts/vision-ordered-context')
+          program=torch.export.load(root/'square/vision.pt2').module()
+          values=torch.from_numpy(np.fromfile(root/'square/0-pixels-fp32.bin','<f4').reshape(1,2520,768).copy())
+          report=dict(scope='cpu_diagnostic_candidate_not_native_dispatch',source=os.environ['GITHUB_SHA'],
+              original_reference_source='e2a6dc01fbca8c9be1f3bbe875325ad338de0ca0',
+              graph_sha256='f9c5175a1d75289ce814a9651f496f9bdae5e873ac66199a5c3d03e0172c16cc',
+              cpu_capability=torch.backends.cpu.get_cpu_capability(),torch_version=torch.__version__,
+              expected_unchanged=True,original_graph_changed=False,ordered_softmax_diagnostic=True,
+              full_capture_executed=False,gpu_validated=False,full_encoder_validated=False,end_to_end_validated=False)
+          def save():
+              (output/'ordered-context.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
+          patch=run_saved_graph_prefix(program,(values,),'add_1');digest=hashlib.sha256(patch.numpy().tobytes()).hexdigest()
+          report['patch_sha256']=digest;report['patch_matches_original']=digest=='1e99fa140cb0084e624b5019d96ae424192eff77346ef2f7ffea892c1bea0607';save()
+          if not report['patch_matches_original']:raise SystemExit('Original patch differs; no ordered encoder replay')
+          mode=VisionSoftmax16Diagnostic();timer=time.monotonic()
+          with mode:layer=run_saved_graph_prefix(program,(values,),'add_15')
+          digest=hashlib.sha256(layer.numpy().tobytes()).hexdigest()
+          report.update(first_layer_sha256=digest,first_layer_softmax_replacements=mode.replacements,
+              first_layer_elapsed_seconds=time.monotonic()-timer,
+              first_layer_matches_original=digest=='fb33092e54e997da999b87246aefe2089ce2d0f376a89586b8c329db069bb7fa');save()
+          if not report['first_layer_matches_original'] or mode.replacements!=1:
+              raise SystemExit('Ordered diagnostic did not reproduce original first-layer bits; no full replay')
+          reference=json.loads((root/'vision-reference.json').read_text(encoding='utf-8'))
+          case,=(row for row in reference['cases'] if row['id']=='square-0');expected=torch.tensor(case['features'],dtype=torch.float32)
+          nodes=tuple(f'add_{15+14*index}' for index in range(16))+('mul_372','mul_373','mm_113')
+          mode=VisionSoftmax16Diagnostic();timer=time.monotonic()
+          with mode:capture=capture_saved_program_nodes(program,(values,),nodes,output/'captures',expected)
+          report.update(full_capture_executed=True,capture=capture,full_softmax_replacements=mode.replacements,
+              capture_elapsed_seconds=time.monotonic()-timer,
+              original_full_output_bit_exact=capture['original_golden_metrics']['maximum_absolute_error']==0,
+              observed_final_matches_normal_bits=capture['observed_final_matches_normal_bits']);save()
+          if not report['original_full_output_bit_exact'] or not report['observed_final_matches_normal_bits'] or mode.replacements!=32:
+              raise SystemExit('Ordered diagnostic full output does not reproduce original bits; not an accepted original context')
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: original-vision-ordered-${{ github.sha }}
+          path: artifacts/vision-ordered-context/
+          retention-days: 7
+          if-no-files-found: warn

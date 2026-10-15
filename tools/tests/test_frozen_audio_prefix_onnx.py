@@ -206,18 +206,19 @@ def test_cli_explicit_stage_is_forwarded_without_changing_default(tmp_path, monk
     assert calls[0]["frozen_stage"] is None
 
 
-def frozen_fixture(tmp_path, monkeypatch):
+def frozen_fixture(tmp_path, monkeypatch, *, stage="layer_0"):
     directory = tmp_path / "frozen"
     directory.mkdir()
-    binary = directory / "frames-1119-valid-1119/silence-stage-01-fp32.bin"
+    index, shape = (14, [280, 512]) if stage == "projected_features" else (1, [1, 280, 1024])
+    binary = directory / f"frames-1119-valid-1119/silence-stage-{index:02d}-fp32.bin"
     binary.parent.mkdir()
-    binary.write_bytes(bytes(1 * 280 * 1024 * 4))
+    binary.write_bytes(bytes(int(np.prod(shape)) * 4))
     metadata = dict(stage="audio_runtime_stage_context_only", source_commit=probe.PRODUCER,
                     model_revision=probe.REVISION, encoder_reference_sha256=probe.REFERENCE_SHA,
                     feature_atol=1e-5, feature_rtol=1e-4)
     reference = dict(metadata=metadata, cases=[dict(id="silence", profile="frames-1119-valid-1119",
         input_features="frames-1119-valid-1119/silence-features-fp32.bin", native_final_matches_original=True,
-        trace_numpy_matches_original=True, stages=[dict(name="layer_0", shape=[1, 280, 1024], expected=binary.relative_to(directory).as_posix())])])
+        trace_numpy_matches_original=True, stages=[dict(name=stage, shape=shape, expected=binary.relative_to(directory).as_posix())])])
     ref = directory / "audio-stage-reference.json"
     ref.write_text(json.dumps(reference))
     digest = lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
@@ -265,3 +266,35 @@ def test_workflow_frozen_reference_is_explicit_and_keeps_original_artifact_pins(
     assert "--frozen-stage-source" in text
     assert "audio-runtime-stages/audio-stage-reference.json" in text
     assert "audio-runtime-stages/audio-stage-validation.json" in text
+
+
+def test_projected_features_reference_preserves_original_final_shape(tmp_path, monkeypatch):
+    directory, _ = frozen_fixture(tmp_path, monkeypatch, stage="projected_features")
+    frozen = probe.load_frozen_stage_reference(directory, "projected_features")
+    assert frozen.expected.shape == (280, 512)
+    assert frozen.provenance["stage"] == "projected_features"
+
+
+def test_single_candidate_still_checks_native_wrapper_control(tmp_path):
+    source, boundary = program()
+    values = torch.randn(2, 32, generator=torch.Generator().manual_seed(83))
+    report = probe.probe_prefix(source, values, source(values).detach(), tmp_path, boundary=boundary,
+                                variants=("refined_mean_moment",))
+    assert report["complete"] and report["native_wrapper_control_bits_equal"]
+    assert [row["variant"] for row in report["cases"]] == ["refined_mean_moment"]
+    assert not (tmp_path / "native.onnx").exists()
+
+
+@pytest.mark.parametrize("variants", [("unknown",), ("native", "native"), ()])
+def test_rejects_unknown_empty_or_duplicate_variant_sets(tmp_path, variants):
+    source, boundary = program()
+    with pytest.raises(ValueError, match="variant"):
+        probe.probe_prefix(source, torch.zeros(1, 32), torch.zeros(1, 8), tmp_path, boundary=boundary, variants=variants)
+
+
+def test_projected_encoder_workflow_selects_one_explicit_candidate():
+    path = Path(__file__).resolve().parents[2] / ".github/workflows/frozen-audio-prefix-onnx.yml"
+    text = path.read_text()
+    assert "frozen-audio-encoder-fixed-reference" in text
+    assert "projected_features" in text and "stage_index=14" in text
+    assert '--variant "$PROBE_VARIANT"' in text

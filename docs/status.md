@@ -39,6 +39,10 @@ GPU結果はWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER /
 
 次はこの診断結果で最初の差を局所化し、原因を再現する小さいテストから修正し、全6信号と必須CIを再確認します。必須CIが失敗している間、手順4全体は未完了です。
 
+追加の固定参照比較: [最初の投影](results/m4-original-context-subsample-onnx-three-variants-20261016.json)は標準ONNX563要素超過に対し、明示LayerNormの2候補は超過0。[第1層終端](results/m4-fixed-original-layer0-three-onnx-variants-20261016.json)も元286,720値に対して標準284要素超過、2候補とも超過0でした。現在ホストのnative全encoderは元参照と251要素が異なり、その失敗を保持したまま、監査済みの元stage出力を明示的な比較対象としています。これはsilenceの部分区間の結果で、全encoder・全6信号の合格ではありません。
+
+保存グラフのmask型変換とSoftmaxの内部演算名を、同じCPU FP32計算の公開APIで表す診断用bridgeをTDDで追加しました。元グラフ・製品GPU処理は変更していません。次の[最終encoder単一候補の検証](results/m4-saved-final-encoder-single-candidate-tdd-20261016.json)は、元最終143,360値の原本SHAを照合し、native wrapperのbit一致を確認してから実行します。関連40テスト・workflow lintは合格ですが、実モデルの新候補の結果はまだ未取得です。
+
 ## 後続工程
 
 手順5はモデル準備の再利用・配布、検索sample、連続推論のメモリ / 速度、Windows Player、他OS / 実機。手順6は依存PR、導入、ライセンス、配布の整理です。merge・公開は別途明示された範囲で進めます。

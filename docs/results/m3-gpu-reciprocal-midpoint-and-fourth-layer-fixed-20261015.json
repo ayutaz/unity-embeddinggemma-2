@@ -1,0 +1,324 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "scope": "actual_gpu_reciprocal_midpoint_root_cause_and_corrected_fourth_layer_prefix_only",
+  "original_reference_unchanged": true,
+  "original_model_weights_unchanged": true,
+  "tolerances": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "cpu_interval": {
+    "actions_run": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38743853944",
+    "source": "a368b198b519b56b4068ded06da7eb1df2a4a3f4",
+    "report_sha256": "99bb3c88af3f4725ad359fe0d37f561f80a1414107e82e83ad2f2e79c44e4075",
+    "input_node": "add_43",
+    "output_node": "add_57",
+    "qualified_output_bit_exact": true,
+    "selected_token_row": 173,
+    "full_encoder_executed": false
+  },
+  "root_cause": {
+    "operation": "fourth vision layer query RMS, token 173 head 9",
+    "statistic": 3.937986135482788,
+    "statistic_fp32_bits": 1081870327,
+    "root_fp32_bits": 1073611263,
+    "correct_reciprocal_fp32_bits": 1057030401,
+    "old_gpu_seed_and_refined_bits": 1057030400,
+    "cpu_seed_was_correct": true,
+    "old_cpu_seed_selection_did_not_repair_gpu": true,
+    "correction": "Compare compensated FP32 product residuals for a faithful reciprocal seed and its two adjacent representable candidates. Export standard FP32 operations only; preserve the existing graph-size budget.",
+    "scope_limit": "Bounded positive normal statistics; deterministic sample and qualified row gates, not an exhaustive IEEE guarantee."
+  },
+  "previous_components": {
+    "source": "37b33b80eef1556b6a13f7eb350eed04762fd81f",
+    "report": "vision-fourth-layer-midpoint-components-gpu-37b33b80eef1556b6a13f7eb350eed04762fd81f.json",
+    "report_sha256": "557b94fcb0bcf39a0149904a68d89679f775a0d2466fec274631ec729a1ab855",
+    "rms_bit_differences": [
+      0,
+      63,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "gelu_bit_differences": 0,
+    "success": false,
+    "actual_backend": "GPUCompute",
+    "cpu_fallback_count": 0,
+    "intermediate_readback_count": 0,
+    "learned_scales_preserved": true
+  },
+  "corrected_components": {
+    "source": "cd08e0fe23403c08b682f5e4410f0c1c5f72991b",
+    "report": "vision-fourth-layer-midpoint-components-gpu-cd08e0fe23403c08b682f5e4410f0c1c5f72991b.json",
+    "report_sha256": "bcc478ed526b50c8c5b2a00b5f5d31dd0d64066e6853b4dd9d9ae49f75741330",
+    "rms_bit_differences": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "gelu_bit_differences": 0,
+    "success": true,
+    "actual_backend": "GPUCompute",
+    "cpu_fallback_count": 0,
+    "intermediate_readback_count": 0,
+    "learned_scales_preserved": true
+  },
+  "scalar_comparisons": [
+    {
+      "source": "fbc01a948978b7bc377d8eca4efc8a60e08fe3b9",
+      "report": "midpoint-scalar-trace-gpu-fbc01a948978b7bc377d8eca4efc8a60e08fe3b9.json",
+      "report_sha256": "485198a142c9f79ce0e6b3ac8c1083e5cfb58c7d57f082766ee292fa3be6749f",
+      "values": 65,
+      "bit_differences": 2,
+      "actual_backend": "GPUCompute",
+      "cpu_fallback_count": 0,
+      "intermediate_readback_count": 0,
+      "center_traces": [
+        {
+          "name": "selected",
+          "value": 0.5039215,
+          "bits": 1057030400
+        },
+        {
+          "name": "root",
+          "value": 1.98443592,
+          "bits": 1073611263
+        },
+        {
+          "name": "root_residual",
+          "value": 2.30982536e-07,
+          "bits": 880280575
+        },
+        {
+          "name": "rounded_root",
+          "value": 1.98443592,
+          "bits": 1073611263
+        },
+        {
+          "name": "seed",
+          "value": 0.5039215,
+          "bits": 1057030400
+        },
+        {
+          "name": "reciprocal_residual",
+          "value": 5.91408025e-08,
+          "bits": 863896064
+        },
+        {
+          "name": "refined",
+          "value": 0.5039215,
+          "bits": 1057030400
+        },
+        {
+          "name": "seed_high",
+          "value": 5.91408025e-08,
+          "bits": 863896064
+        },
+        {
+          "name": "seed_low",
+          "value": 0.0,
+          "bits": 0
+        },
+        {
+          "name": "refined_high",
+          "value": 5.91408025e-08,
+          "bits": 863896064
+        },
+        {
+          "name": "refined_low",
+          "value": 0.0,
+          "bits": 0
+        },
+        {
+          "name": "seed_closer",
+          "value": 0.0,
+          "bits": 0
+        }
+      ]
+    },
+    {
+      "source": "cd08e0fe23403c08b682f5e4410f0c1c5f72991b",
+      "report": "midpoint-scalar-trace-gpu-cd08e0fe23403c08b682f5e4410f0c1c5f72991b.json",
+      "report_sha256": "60f4f4aa1d6b409b39fe52706dfe8c83f7d804425c4aa376a762fbe73a91f19a",
+      "values": 65601,
+      "bit_differences": 0,
+      "actual_backend": "GPUCompute",
+      "cpu_fallback_count": 0,
+      "intermediate_readback_count": 0,
+      "center_traces": [
+        {
+          "name": "selected",
+          "value": 0.503921568,
+          "bits": 1057030401
+        },
+        {
+          "name": "root",
+          "value": 1.98443592,
+          "bits": 1073611263
+        },
+        {
+          "name": "root_residual",
+          "value": 2.30982536e-07,
+          "bits": 880280575
+        },
+        {
+          "name": "rounded_root",
+          "value": 1.98443592,
+          "bits": 1073611263
+        },
+        {
+          "name": "seed",
+          "value": 0.5039215,
+          "bits": 1057030400
+        },
+        {
+          "name": "reciprocal_residual",
+          "value": 5.91408025e-08,
+          "bits": 863896064
+        },
+        {
+          "name": "refined",
+          "value": 0.5039215,
+          "bits": 1057030400
+        },
+        {
+          "name": "seed_high",
+          "value": 5.91408025e-08,
+          "bits": 863896064
+        },
+        {
+          "name": "seed_low",
+          "value": 0.0,
+          "bits": 0
+        },
+        {
+          "name": "refined_high",
+          "value": 5.91408025e-08,
+          "bits": 863896064
+        },
+        {
+          "name": "refined_low",
+          "value": 0.0,
+          "bits": 0
+        },
+        {
+          "name": "seed_closer",
+          "value": 0.0,
+          "bits": 0
+        }
+      ]
+    }
+  ],
+  "corrected_connected_four_layer_prefix": {
+    "runtime_source": "cd08e0fe23403c08b682f5e4410f0c1c5f72991b",
+    "bit_differences": 0,
+    "mismatched_elements": 0,
+    "actual_backend": "GPUCompute",
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "capture_sha256": "4a0c4defc3aae91517db53ce803c69bede89b0455039396ad7256e4adcd65e71",
+    "host_peak_working_set_bytes": 4228513792,
+    "execute_and_final_download_ms": 5808.9175000000005,
+    "original_coefficient_bytes_preserved": true,
+    "report": "vision-midpoint-rms-qualified-prefix4-gpu-cd08e0fe23403c08b682f5e4410f0c1c5f72991b-square-0.json",
+    "report_sha256": "dc7936015aedd9fd12cf54e5c916e55548a0158e6b5634f795d7b0cd9f871176",
+    "values": 1935360
+  },
+  "tdd": [
+    {
+      "file": "rstd-adjacent-gpu-seed-red-20261015.xml",
+      "sha256": "315e7e601502fcab400e104a23e423d2b32a4246bcc2c0b9ec9e31f8cded9d7d",
+      "tests": 3,
+      "failures": 3,
+      "skipped": 0
+    },
+    {
+      "file": "rstd-adjacent-candidate-related-green-20261015.xml",
+      "sha256": "7e473b949c02fecb06349d69d127784f976612514b173cdd65fe827594a6505f",
+      "tests": 42,
+      "failures": 1,
+      "skipped": 0
+    },
+    {
+      "file": "rstd-adjacent-candidate-related-green-v2-20261015.xml",
+      "sha256": "21fb8546b3555ef11b26fbc17ebd27c3885ec205a937b41b03aeb04633f2821c",
+      "tests": 42,
+      "failures": 0,
+      "skipped": 0
+    }
+  ],
+  "runners": [
+    {
+      "prefix": "gpu-query-midpoint-scalar-trace-20261015",
+      "process_sha256": "df2fc1c92d23efccf61a12e0b991318cd9336e4740d6ffbe731eaafdeca5c773",
+      "xml_sha256": "9a15f45a10bdc2ee71a8494b1f518b7aa30450858884a0258e4eec07cb5bc86f",
+      "counts": {
+        "total": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 45.75699139997596,
+      "terminal": true
+    },
+    {
+      "prefix": "gpu-query-midpoint-scalar-imported-20261015",
+      "process_sha256": "ad68cd9b7185250db35d8eb69e49616131e1af5ec105d4fa0c7d52aa6ab26d23",
+      "xml_sha256": "2b3e71323f2ce43241ad56f630a4babe1b9f641e889e25bb5cb7003329f042dc",
+      "counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      },
+      "exit_code": 2,
+      "elapsed_seconds": 41.47001459999592,
+      "terminal": true
+    },
+    {
+      "prefix": "gpu-query-adjacent-scalar-components-20261015",
+      "process_sha256": "9f49fa522ea3d335608bd06f5f2c45b90c4015cdfbf08fc6ac97475a188a4b2e",
+      "xml_sha256": "b2fca3dc2cef589f74388e2e200d30d7228ac0dcc1ecd25ef60096ae37219258",
+      "counts": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 48.05629839998437,
+      "terminal": true
+    },
+    {
+      "prefix": "gpu-query-adjacent-fourth-prefix-20261015",
+      "process_sha256": "6b5a9d67da66c4a0d5e623b0c7a8ffc95d4193b65fc5a0e3c10b0c46d01ed342",
+      "xml_sha256": "3701163ee3461530bf9d98063e966a9837cbafbd193cbdfb706693158cfc47b0",
+      "counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 46.049314700008836,
+      "terminal": true
+    }
+  ],
+  "production_vision_adopted": false,
+  "full_gpu_encoder_accepted": false,
+  "end_to_end_validated": false,
+  "steps_3_4_complete": false,
+  "pending": [
+    "Corrected full original image cases at unchanged reference/tolerance; do not transfer old candidate passes.",
+    "Production adoption, actual PCM/Texture-to-768 APIs, all roles/masks/boundaries/lifetimes/error reuse/text regression.",
+    "Samples, stripped Player, required environments, final Required CI and long-term memory; persistent allocation warnings remain unresolved."
+  ]
+}

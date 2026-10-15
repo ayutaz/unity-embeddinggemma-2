@@ -4,6 +4,12 @@
 
 ## 2026-10-15の画像の現在地
 
+画像encoder全体は[元FP32全6ケース・3 profileでGPU合格](results/m3-adjacent-reciprocal-all-image-gpu-passed-20261015.json)。固定source `38baf10`で元778,240値全bit一致、6 pass / fail0 / skip0、fallback / 中間readback0。旧候補の未達とは別結果。製品接続adapterは6 Red→関連36 Greenまで実装し、[製品adapterと実Texture](results/m3-production-image-adapter-and-real-texture-gpu-20261015.json)は、元square-1の131,072値がGPU前処理から全bit一致・1 pass / skip0。次は残り実画像ケースとbackbone / 全role最終768 APIへ進む。初回PNGのARGB32形式拒否は2 Red→関連23 Greenで修正し、推論前の失敗履歴も保持する。sample / Player・必須環境・Required CI・長期memoryも残す。Python回帰はsource `cd08e0f`で4環境各1,070 pass / skip0。
+
+最新の優先順: [元CPU参照の再現・第4層への局所化](results/m3-reproduced-cpu-context-and-prefix-localization-20261015.json)と[実GPU逆数丸めの修正](results/m3-gpu-reciprocal-midpoint-and-fourth-layer-fixed-20261015.json)。元参照を再現したCPU診断から、最初の差は第4層token173のQuery RMSと判明。実GPUのseedはCPUと異なり、Newton補正後も正しい逆数より1 ULP下だった。隣接候補を補償FP32残差で比較し、3 Red→関連42 Green、実GPU65,601統計値・7 RMS / GELU・接続4層1,935,360値全bit一致を確認した。次は修正済み元画像全6ケース→製品GPU encoder採用→実Textureから全roleの最終768 API・寿命・例外後再利用・text回帰。元goldenと許容差は維持する。工程3/4全体は未完了。
+
+以下は前回checkpoint。当時実行中だったCPU診断は上記の通り完了している。
+
 最新局所化: [集約前の最終encoder出力](results/m3-last-encoder-boundary-and-ordered-diagnostic-20261015.json)。元square-0の第1層全bit一致に対し、16層後・集約前は1,894,029 bit差 / 13,977要素超過・最大比33.287118の1 fail / skip0。GPUCompute・CPU fallback / 中間flush0・元係数保持。poolingだけでは説明できない。次は明示CPU診断の元patch / 第1層SHA→最終bit一致gateを通った捕捉だけで層を局所化する。CPU softmax単独483,840値bit一致・関連61 Greenは、元encoderの再現やGPU全体合格とは別。Actions 38739806295は実行中。製品GPU経路と元参照・許容差を維持する。
 
 直前checkpoint: [pooling単独の修正と全体未達](results/m3-native-pooling-component-and-whole-failure-20261015.json)。標準Sentisの元constant-left poolingは78,179 bit差・2要素超過、同じ入力と係数のblock192は196,608値全bit一致。固定left演算と分割境界を9 Red→関連23 Greenで追加したが、接続した元square-1は5要素超過・最大比1.409017の1 fail / skip0。batchを停止し、最新pooling候補の他5件は未実行。旧rotary候補の下表4 pass / 2 failと分離する。既存Runtime既定経路を維持し、製品採用・工程3/4の完了とは扱わない。

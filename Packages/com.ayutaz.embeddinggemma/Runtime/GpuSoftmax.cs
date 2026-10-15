@@ -5,7 +5,7 @@ using UnityEngine.Rendering;
 
 namespace EmbeddingGemma
 {
-    /// <summary>Experimental last-axis FP32 softmax with native exponential and eight-lane reduction order. Fixed inputs qualify rounding per GPU.</summary>
+    /// <summary>Experimental last-axis FP32 softmax. Defaults to eight-lane native order; sixteen-lane order is explicit. Fixed inputs qualify rounding per GPU.</summary>
     public sealed class GpuSoftmax : IGpuTensorOperation
     {
         ComputeShader shader;
@@ -13,11 +13,14 @@ namespace EmbeddingGemma
         bool disposed;
         public BackendType Backend => BackendType.GPUCompute;
         public GpuSoftmax()
+            :this(8) { }
+        public GpuSoftmax(int vectorWidth)
         {
+            if(vectorWidth!=8&&vectorWidth!=16)throw new ArgumentOutOfRangeException(nameof(vectorWidth),"Expected eight or sixteen FP32 reduction lanes.");
             if(!SystemInfo.supportsComputeShaders)throw new NotSupportedException("Softmax requires an actual compute GPU.");
             var resource=Resources.Load<ComputeShader>("EmbeddingGemmaNativeSoftmax");
             if(resource==null)throw new InvalidOperationException("GPU softmax shader is missing.");
-            try{shader=UnityEngine.Object.Instantiate(resource);kernel=shader.FindKernel("NativeSoftmax");}
+            try{shader=UnityEngine.Object.Instantiate(resource);kernel=shader.FindKernel(vectorWidth==8?"NativeSoftmax":"NativeSoftmax16");}
             catch{Dispose();throw;}
         }
         public Tensor<float> Execute(Tensor<float> input)

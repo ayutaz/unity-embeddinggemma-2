@@ -9,6 +9,7 @@ import re
 
 import numpy as np
 import torch
+from torch.utils._python_dispatch import TorchDispatchMode
 
 
 def record_feature_drift(destination, modality, actual, expected, *, role, profile, case,
@@ -127,6 +128,74 @@ def run_saved_graph_prefix(program, inputs, node_name):
         if not torch.isfinite(result).all():
             raise ValueError('Prefix observation must be finite')
         return result.detach().clone()
+
+
+def ordered_vision_softmax16(values):
+    """CPU-only diagnostic of the pinned 2520-wide AVX512 lane reduction.
+
+    Does not change native dispatch, a saved graph, or any frozen reference.
+    Same-input native captures qualify the ordering; an encoder replay using
+    this function remains a separate candidate, not a new native golden.
+    """
+    if not isinstance(values, torch.Tensor) or values.dtype != torch.float32 or values.device.type != 'cpu':
+        raise TypeError('Ordered vision softmax requires an FP32 CPU tensor')
+    if values.ndim < 2 or values.ndim > 4 or values.shape[-1] != 2520 or not values.numel() or not values.is_contiguous():
+        raise ValueError('Ordered vision softmax requires a nonempty contiguous 2520-wide rank-2..4 tensor')
+    if not torch.isfinite(values).all():
+        raise ValueError('Ordered vision softmax requires finite logits')
+    flat = values.reshape(-1, 2520)
+    # Windows native exp and Linux SLEEF exp are different numeric contexts.
+    # SLEEF xexpf (5a1d179), copyright Naoki Shibata and contributors,
+    # BSL-1.0; see Packages/com.ayutaz.embeddinggemma/SLEEF-LICENSE.txt.
+    # Reproduce only the pinned non-positive SLEEF xexpf expression here.
+    # FP64 is a CPU diagnostic FMA oracle, never an exported/model/GPU op.
+    difference = (flat - flat.amax(dim=-1, keepdim=True)).detach().numpy()
+    bounded = np.maximum(difference, np.float32(-104))
+    def fma(a, b, c):
+        return (np.asarray(a, dtype='f8') * np.asarray(b, dtype='f8') + np.asarray(c, dtype='f8')).astype('f4')
+    q = np.rint(bounded * np.float32(1.4426950408889634073599246810018921374)).astype('i4')
+    s = fma(q.astype('f4'), np.float32(-0.693145751953125), bounded)
+    s = fma(q.astype('f4'), np.float32(-1.428606765330187045e-6), s)
+    u = np.float32(0.000198527617612853646278381)
+    for coefficient in (0.00139304355252534151077271, 0.00833336077630519866943359,
+                        0.0416664853692054748535156, 0.166666671633720397949219, 0.5):
+        u = fma(u, s, np.float32(coefficient))
+    u = np.float32(1) + fma(s * s, u, s)
+    first = np.trunc(q / 2).astype('i4')
+    result = (u * np.ldexp(np.ones_like(bounded), first)) * np.ldexp(np.ones_like(bounded), q - first)
+    exponentials = torch.from_numpy(np.where(difference < -104, np.float32(0), result))
+    lanes = torch.zeros((flat.shape[0], 16), dtype=torch.float32)
+    for start in range(0, 2512, 16):
+        lanes = lanes + exponentials[:, start:start + 16]
+    lanes[:, :8] = lanes[:, :8] + exponentials[:, 2512:]
+    combined = lanes[:, :8] + lanes[:, 8:]
+    a = combined[:, 0] + combined[:, 4]
+    b = combined[:, 1] + combined[:, 5]
+    c = combined[:, 2] + combined[:, 6]
+    d = combined[:, 3] + combined[:, 7]
+    total = (a + c) + (b + d)
+    inverse = torch.ones_like(total) / total
+    return (exponentials * inverse[:, None]).reshape_as(values)
+
+
+class VisionSoftmax16Diagnostic(TorchDispatchMode):
+    """Opt-in CPU diagnostic; scopes one replacement without editing FX/global state."""
+    def __init__(self):
+        super().__init__()
+        self.replacements = 0
+
+    def __torch_dispatch__(self, func, types, args=(), kwargs=None):
+        kwargs = kwargs or {}
+        if func == torch.ops.aten._softmax.default:
+            values = args[0] if args else kwargs['self']
+            axis = args[1] if len(args) > 1 else kwargs['dim']
+            half_to_float = args[2] if len(args) > 2 else kwargs.get('half_to_float', False)
+            if axis not in (-1, values.ndim - 1) or half_to_float:
+                raise ValueError('Diagnostic softmax only qualifies the original FP32 last-axis path')
+            result = ordered_vision_softmax16(values)
+            self.replacements += 1
+            return result
+        return func(*args, **kwargs)
 
 
 def probe_saved_static_matmuls(program, destination, node_names, *, rows=2520, prefix_rows=16, seed=41015):

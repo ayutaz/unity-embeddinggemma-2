@@ -124,8 +124,19 @@ def test_workflow_chain_mode_keeps_full_scope_and_does_not_fetch_middle_stage_go
     assert '--member "audio-runtime-stages/frames-1119-valid-1119/silence-stage-${stage_index}-fp32.bin"' in text
 
 
-def test_chain_cli_requires_immutable_job_source(tmp_path, monkeypatch):
+@pytest.mark.parametrize('variant', ['native', 'ordered_static_linear_all_bmm', 'ordered_original_primitives'])
+def test_chain_cli_requires_immutable_job_source(tmp_path, monkeypatch, variant):
     monkeypatch.delenv('GITHUB_SHA', raising=False)
     with pytest.raises(ValueError, match='provenance'):
         candidate().main(['--input', str(tmp_path), '--output', str(tmp_path / 'out'),
-                          '--frozen-stage-source', str(tmp_path)])
+                          '--frozen-stage-source', str(tmp_path), '--variant', variant])
+
+
+def test_numeric_capture_upload_precedes_optional_models_and_chain_omits_model_archive():
+    import yaml
+    p = Path(__file__).resolve().parents[2] / '.github/workflows/frozen-audio-prefix-onnx.yml'
+    steps = yaml.safe_load(p.read_text(encoding='utf-8'))['jobs']['probe']['steps']
+    uploads = [s for s in steps if s.get('with', {}).get('name', '').startswith('frozen-audio-prefix-onnx-')]
+    assert '*.onnx' not in uploads[0]['with']['path'], 'Numeric evidence must not wait for the large model archive'
+    assert len(uploads) == 2 and '*.onnx' in uploads[1]['with']['path']
+    assert "env.CHAINED_PROBE != 'true'" in uploads[1]['if']

@@ -12,7 +12,7 @@ on:
         description: Select one candidate for bounded whole-encoder diagnosis, or all for a prefix
         type: choice
         default: all
-        options: [all, native, refined_moment, refined_mean_moment, refined_mean_moment_rms, native_silu, refined_mean_moment_rms_silu, ordered_static_linear, ordered_static_linear_refined, ordered_static_linear_attention, ordered_static_linear_all_bmm]
+        options: [all, native, refined_moment, refined_mean_moment, refined_mean_moment_rms, native_silu, refined_mean_moment_rms_silu, ordered_static_linear, ordered_static_linear_refined, ordered_static_linear_attention, ordered_static_linear_all_bmm, ordered_original_primitives]
       from_stage:
         description: Optional audited frozen INPUT for isolated segment diagnosis only
         type: choice
@@ -90,7 +90,7 @@ jobs:
               exit 1
             fi
             case "$PROBE_VARIANT" in
-              native|ordered_static_linear_all_bmm) ;;
+              native|ordered_static_linear_all_bmm|ordered_original_primitives) ;;
               *) echo 'Chained diagnosis requires an explicit supported candidate.' >&2; exit 1 ;;
             esac
           fi
@@ -178,9 +178,18 @@ jobs:
           path: |
             artifacts/frozen-audio-prefix-onnx/*.json
             artifacts/frozen-audio-prefix-onnx/*.bin
-            artifacts/frozen-audio-prefix-onnx/*.onnx
             artifacts/frozen-prefix-input/range-receipt.json
             artifacts/frozen-stage-reference/range-receipt.json
+          retention-days: 7
+          if-no-files-found: warn
+
+      # Publish small numeric evidence first. Large optional graphs must not
+      # prevent capture recovery when the bounded diagnostic reaches its limit.
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always() && env.CHAINED_PROBE != 'true'
+        with:
+          name: frozen-audio-prefix-onnx-models-${{ github.sha }}
+          path: artifacts/frozen-audio-prefix-onnx/*.onnx
           retention-days: 7
           if-no-files-found: warn
 

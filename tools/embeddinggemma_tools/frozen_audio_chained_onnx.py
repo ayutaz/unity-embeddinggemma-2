@@ -13,7 +13,7 @@ from onnx.reference import ReferenceEvaluator
 
 from .frozen_audio_prefix_onnx import (FrozenStageReference, boundary_for_stage, exact_difference, file_digest,
     load_frozen_input, load_frozen_stage_reference, tensor, weight_digests)
-from .frozen_audio_segment_onnx import VARIANTS, SegmentExport, extract_segment
+from .frozen_audio_segment_onnx import PRECISE, VARIANTS, SegmentExport, extract_segment
 from .export import export_audio_native_onnx
 from .reference_context_failure import feature_error_metrics
 from .streaming_reference import run_flat_reference
@@ -111,7 +111,10 @@ def probe_chained_segments(program, frozen_input, frozen_output, output, *, boun
                         input_sha256=input_sha, output_sha256=capture(f'{variant}-part{index}-output-fp32.bin', values),
                         native_input_strides=list(example.stride()), actual_output_strides=list(values.strides),
                         linear_replacements=len(wrapper.linear_nodes), attention_bmm_replacements=len(wrapper.bmm_nodes-wrapper.parameter_bmm_nodes),
-                        parameter_bmm_replacements=len(wrapper.parameter_bmm_nodes)))
+                        parameter_bmm_replacements=len(wrapper.parameter_bmm_nodes),
+                        rms_mean_replacements=len(wrapper.rms_means), rms_inverse_replacements=len(wrapper.rms_inverses),
+                        silu_replacements=len(wrapper.silu_nodes), softmax_replacements=len(wrapper.softmax_nodes),
+                        sigmoid_replacements=len(wrapper.sigmoid_nodes), depthwise_replacements=len(wrapper.convolution_nodes)))
                     actual = values  # No file reload, native replacement, or frozen intermediate.
                     save()
                     del evaluator, wrapper
@@ -135,7 +138,7 @@ def main(argv=None):
     parser.add_argument('--input', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--frozen-stage-source', type=Path, required=True)
-    parser.add_argument('--variant', choices=('native', 'ordered_static_linear_all_bmm'), default='ordered_static_linear_all_bmm')
+    parser.add_argument('--variant', choices=('native', 'ordered_static_linear_all_bmm', PRECISE), default='ordered_static_linear_all_bmm')
     args = parser.parse_args(argv)
     source = os.environ.get('GITHUB_SHA', '')
     if re.fullmatch('[0-9a-f]{40}', source) is None:
@@ -152,6 +155,12 @@ def main(argv=None):
                     or len(wrapper.bmm_nodes-wrapper.parameter_bmm_nodes) != 9
                     or len(wrapper.parameter_bmm_nodes) != 3):
                 raise ValueError('Pinned chained static-linear/BMM coverage differs')
+            if args.variant == PRECISE:
+                rms = 28 if index == 3 else 27
+                if (len(wrapper.rms_means) != rms or len(wrapper.rms_inverses) != rms
+                        or len(wrapper.silu_nodes) != 9
+                        or any(len(nodes) != 3 for nodes in (wrapper.softmax_nodes, wrapper.sigmoid_nodes, wrapper.convolution_nodes))):
+                    raise ValueError('Pinned chained RMS/SiLU/audio leaf coverage differs')
     report = probe_chained_segments(program,
         load_frozen_stage_reference(args.frozen_stage_source, stages[0]),
         load_frozen_stage_reference(args.frozen_stage_source, stages[-1]), args.output,

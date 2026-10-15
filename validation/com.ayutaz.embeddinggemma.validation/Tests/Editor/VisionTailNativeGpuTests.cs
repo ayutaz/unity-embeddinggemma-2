@@ -6,6 +6,7 @@ using System.Reflection;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Unity.InferenceEngine;
+using UnityEditor;
 using UnityEngine;
 
 namespace EmbeddingGemma.Validation.Tests
@@ -106,6 +107,20 @@ namespace EmbeddingGemma.Validation.Tests
                     var row=new JObject{["case_index"]=caseIndex,["rms"]=Metrics(rmsActual,expectedRms),["projection"]=Metrics(projectionActual,expectedProjection),
                         ["rms_output"]=Write("case-"+caseIndex+"-rms-output",rmsActual,rmsOutput.shape),["projection_output"]=Write("case-"+caseIndex+"-projection-output",projectionActual,projectionOutput.shape)};
                     var candidates=new JArray();row["projection_candidates"]=candidates;cases.Add(row);
+                    if(savedOriginalCpuContext)
+                    {
+                        var asset="Assets/GpuVisionTailRmsCandidate/tail-rms.onnx";
+                        Check(Path.Combine(Application.dataPath,"GpuVisionTailRmsCandidate/tail-rms.onnx"),"af13361f2eee7c768e53ba4bedabead4e21c4092ddbd50a869e6735b1b2d8f5c");
+                        var model=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>(asset));
+                        var candidateBefore=ModelCoefficientHash.Compute(model,out _);
+                        TextModelFile.Save(model,Path.Combine(folder,"candidate-tail-rms.sentis"));
+                        using var candidatePipeline=new GpuProjectionPipeline(new[]{model},Array.Empty<string>(),Array.Empty<string>(),Array.Empty<IGpuTensorOperation>());
+                        using var candidateOutput=candidatePipeline.Execute(features);Assert.That(candidateOutput.backendType,Is.EqualTo(BackendType.GPUCompute));
+                        var candidateValues=candidateOutput.DownloadToArray();var candidateMetrics=Metrics(candidateValues,expectedRms);
+                        candidateMetrics["output"]=Write("case-"+caseIndex+"-candidate-rms-output",candidateValues,candidateOutput.shape);
+                        candidateMetrics["layer_count"]=model.layers.Count;row["candidate_rms"]=candidateMetrics;
+                        Assert.That(ModelCoefficientHash.Compute(model,out _),Is.EqualTo(candidateBefore));
+                    }
                     foreach(var block in new[]{192,384})
                     {
                         using var operation=new GpuBlockedMatmul(768,512,plan.Weights.Single(),block);
@@ -117,7 +132,7 @@ namespace EmbeddingGemma.Validation.Tests
                     passed&=row["rms"].Value<int>("mismatched_elements")==0&&row["projection"].Value<int>("mismatched_elements")==0;
                     passed&=candidates.Any(value=>value.Value<int>("mismatched_elements")==0);Save();
                     if(savedOriginalCpuContext)
-                        passed&=row["rms"].Value<int>("bit_differences")==0&&candidates.Single(value=>value.Value<int>("block")==192).Value<int>("bit_differences")==0;
+                        passed&=row["candidate_rms"].Value<int>("bit_differences")==0&&candidates.Single(value=>value.Value<int>("block")==192).Value<int>("bit_differences")==0;
                 }
                 report["projection_blocks_exact_on_both_cases"]=JArray.FromObject(exactBlocks.OrderBy(value=>value).ToArray());
                 Assert.That(ModelCoefficientHash.Compute(original,out _),Is.EqualTo(before));report["original_coefficients_sha256"]=before;report["original_coefficient_bytes_preserved"]=true;

@@ -603,6 +603,7 @@ namespace EmbeddingGemma.Validation.Tests
                     var anchorPath=Path.Combine(Application.dataPath,"GpuAudioRefinedCandidate/full-layer-anchors.json");
                     Check(anchorPath,"34e8d2c011b0fb8f083f1a8c850dfc25193fd526696e186a833740d7980c4092");
                     var anchors=(JArray)JObject.Parse(File.ReadAllText(anchorPath))["anchors"];
+                    if(signal=="impulse")anchors.Insert(0,new JObject{["stage"]="subsample",["onnx_node"]="/subsample_conv_projection/input_proj_linear/MatMul"});
                     var wanted=anchors.Select(a=>a.Value<string>("onnx_node")+"_output_0").ToHashSet();
                     report["phase"]="observe";Save();
                     encoded.Dispose();pipeline.Dispose();
@@ -627,7 +628,7 @@ namespace EmbeddingGemma.Validation.Tests
                         }
                         stages.Add(new JObject{["stage"]=name,["boundary"]=boundary,["bit_differences"]=bits,["mismatched_elements"]=bad,["maximum_tolerance_ratio"]=maxRatio});Save();
                     }
-                    Assert.That(stages.Count,Is.EqualTo(12));report["observation_completed"]=true;
+                    Assert.That(stages.Count,Is.EqualTo(signal=="impulse"?13:12));report["observation_completed"]=true;
                     report["full_encoder_validated"]=false;report["success"]=true;report["phase"]="completed_observation";return;
                 }
                 Assert.That(mismatch,Is.Zero,"Keep the original full FP32 audio encoder gate.");report["success"]=true;

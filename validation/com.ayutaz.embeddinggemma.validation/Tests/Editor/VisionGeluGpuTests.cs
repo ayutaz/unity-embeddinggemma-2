@@ -47,7 +47,7 @@ namespace EmbeddingGemma.Validation.Tests
                 var values=Floats(Node("view_21"));var expected=Floats(Node("gelu"));var shape=new TensorShape(1,16,3072);
                 using var input=new Tensor<float>(shape,values);ComputeTensorData.Pin(input);
                 using var separate=new GpuGelu(shape,true);using var fused=new GpuGelu(shape,true,true,sleef);
-                if(sleef)
+                if(sleef&&typeof(GpuGelu).GetField("pipeline",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).GetValue(fused)!=null)
                 {
                     // Diagnostic readbacks only: locate the existing failed bit gate without
                     // adding intermediate transfers to the runtime operation.

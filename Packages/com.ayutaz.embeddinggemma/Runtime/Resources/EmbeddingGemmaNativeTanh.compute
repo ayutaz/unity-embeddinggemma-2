@@ -7,10 +7,12 @@
 // All runtime arithmetic and coefficient storage are FP32, including float2 residual pairs.
 #pragma kernel NativeTanh
 #pragma kernel SleefTanh
+#pragma kernel SleefGelu
 #pragma use_dxc
 StructuredBuffer<float> Input;
 RWStructuredBuffer<float> Output;
 uint Count,DispatchWidth;
+uint FuseGeluInner;
 
 // Seven coefficients per interval, ordered by increasing power. The general
 // 27-interval table also covers small inputs and the saturation interval.
@@ -142,19 +144,39 @@ float2 ExponentialPair(float2 d)
     precise float factor=asfloat((uint)(q+127)<<23);
     return float2(t.x*factor,t.y*factor);
 }
-[numthreads(64,1,1)]
-void SleefTanh(uint3 thread : SV_DispatchThreadID)
+float SleefTanhValue(float x)
 {
-    uint index=thread.x+thread.y*DispatchWidth;
-    if(index>=Count)return;
-    precise float x=Input[index];
-    if(x==0 || isnan(x)){Output[index]=x;return;}
+    if(x==0 || isnan(x))return x;
     uint sign=asuint(x)&0x80000000u;
-    if(abs(x)>8.664339742f){Output[index]=asfloat(sign|asuint(1.0f));return;}
+    if(abs(x)>8.664339742f)return asfloat(sign|asuint(1.0f));
     precise float2 d=ExponentialPair(float2(abs(x),0.0f));
     precise float2 e=ReciprocalPair(d);
     precise float2 result=DividePair(AddPair(d,-e),AddPair(d,e));
     precise float y=result.x+result.y;
     if(isnan(y))y=1.0f;
-    Output[index]=asfloat(sign|asuint(y));
+    return asfloat(sign|asuint(y));
+}
+[numthreads(64,1,1)]
+void SleefTanh(uint3 thread : SV_DispatchThreadID)
+{
+    uint index=thread.x+thread.y*DispatchWidth;
+    if(index>=Count)return;
+    Output[index]=SleefTanhValue(Input[index]);
+}
+[numthreads(64,1,1)]
+void SleefGelu(uint3 thread : SV_DispatchThreadID)
+{
+    uint index=thread.x+thread.y*DispatchWidth;
+    if(index>=Count)return;
+    precise float x=Input[index];
+    precise float square=x*x;
+    precise float cube=square*x;
+    precise float product=0.044715f*cube;
+    precise float inner=x+product;
+    if(FuseGeluInner!=0)inner=mad(0.044715f,cube,x);
+    precise float tanhInput=0.7978845608028654f*inner;
+    precise float activation=SleefTanhValue(tanhInput);
+    precise float half=0.5f*x;
+    precise float factor=1.0f+activation;
+    Output[index]=half*factor;
 }

@@ -76,10 +76,10 @@ namespace EmbeddingGemma.Tests
         static readonly float[] Values={-10f,-3f,-1f,-.1f,0f,.1f,1f,3f,10f};
         // Independent torch 2.14.1 FP32 gelu(approximate="tanh") reference.
         static readonly float[] Expected={0f,-.0036374330520629883f,-.15880799293518066f,-.046017248183488846f,0f,.053982753306627274f,.8411920070648193f,2.9963626861572266f,10f};
-        [TestCase(false)] [TestCase(true)]
-        public void GpuGeluPreservesInputAndReturnsOwnedResultsAcrossReuseAndDispose(bool threeDimensions)
+        [TestCase(false,false)] [TestCase(true,false)] [TestCase(false,true)] [TestCase(true,true)]
+        public void GpuGeluPreservesInputAndReturnsOwnedResultsAcrossReuseAndDispose(bool threeDimensions,bool sleef)
         {
-            var shape=threeDimensions?new TensorShape(1,1,9):new TensorShape(1,9);using var operation=Create(shape);
+            var shape=threeDimensions?new TensorShape(1,1,9):new TensorShape(1,9);using var operation=sleef?new GpuGelu(shape,true,true,true):Create(shape);
             using var input=new Tensor<float>(shape,Values);ComputeTensorData.Pin(input);
             using var output=operation.Execute(input);using var repeated=operation.Execute(input);operation.Dispose();operation.Dispose();
             Assert.That(output.backendType,Is.EqualTo(BackendType.GPUCompute));Assert.That(output.shape,Is.EqualTo(shape));
@@ -88,10 +88,10 @@ namespace EmbeddingGemma.Tests
             Assert.That(input.DownloadToArray(),Is.EqualTo(Values));
             Assert.Throws<ObjectDisposedException>(()=>operation.Execute(input));
         }
-        [Test]
-        public void GpuGeluRejectsInvalidInputsAndRemainsReusable()
+        [TestCase(false)] [TestCase(true)]
+        public void GpuGeluRejectsInvalidInputsAndRemainsReusable(bool sleef)
         {
-            using var operation=Create(new TensorShape(1,9));Assert.Throws<ArgumentNullException>(()=>operation.Execute(null));
+            using var operation=sleef?new GpuGelu(new TensorShape(1,9),true,true,true):Create(new TensorShape(1,9));Assert.Throws<ArgumentNullException>(()=>operation.Execute(null));
             using var cpu=new Tensor<float>(new TensorShape(1,9),Values);Assert.Throws<ArgumentException>(()=>operation.Execute(cpu));
             using var wrong=new Tensor<float>(new TensorShape(1,8),new float[8]);ComputeTensorData.Pin(wrong);Assert.Throws<ArgumentException>(()=>operation.Execute(wrong));
             using var dead=new Tensor<float>(new TensorShape(1,9),Values);dead.Dispose();Assert.Throws<ObjectDisposedException>(()=>operation.Execute(dead));

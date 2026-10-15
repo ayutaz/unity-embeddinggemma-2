@@ -239,7 +239,7 @@ def replay_saved_reference_context(directory, modality, *, source_commit, revisi
                 threads_before_program_load=before_load_threads, threads_after_program_load=torch.get_num_threads(),
                 runtime=dict(torch_version=torch.__version__, cpu_capability=torch.backends.cpu.get_cpu_capability(),
                              torch_interop_threads=torch.get_num_interop_threads(),
-                             env={name: os.environ.get(name) for name in ("ATEN_CPU_CAPABILITY", "MKL_CBWR", "DNNL_MAX_CPU_ISA")}),
+                             env={name: os.environ.get(name) for name in ("ATEN_CPU_CAPABILITY", "MKL_CBWR", "MKL_ENABLE_INSTRUCTIONS", "DNNL_MAX_CPU_ISA")}),
                 thread_contexts=probe_cpu_threads(program, (values,), expected),
                 model_weights_downloaded=False, expected_unchanged=True, full_encoder_validated=False, end_to_end_validated=False)
     if capture_nodes is not None:

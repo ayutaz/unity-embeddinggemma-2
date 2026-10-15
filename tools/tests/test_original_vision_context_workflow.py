@@ -79,7 +79,7 @@ def test_original_probe_captures_bounded_native_first_layer_nonlinearity_operand
 def test_blas_context_probe_keeps_aten_native_and_checks_original_patch_before_full_replay():
     value=workflow();trigger=value.get('on',value.get(True));inputs=trigger['workflow_dispatch']['inputs']
     assert 'original_blas_context' in inputs,'Independent original BLAS context input is missing'
-    assert inputs['original_blas_context']['default']=='native' and inputs['original_blas_context']['options']==['native','avx2']
+    assert inputs['original_blas_context']['default']=='native' and inputs['original_blas_context']['options']==['native','avx2','avx2_isa']
     steps=value['jobs']['original_vision_probe']['steps']
     configure=next(s for s in steps if s.get('name')=='Constrain only original native BLAS context')
     assert 'original_blas_context' in configure['if'] and "matrix.context == 'native'" in configure['if']
@@ -90,6 +90,22 @@ def test_blas_context_probe_keeps_aten_native_and_checks_original_patch_before_f
     assert 'run_saved_graph_prefix' in prefix['run'] and "'add_1'" in prefix['run']
     assert '1e99fa140cb0084e624b5019d96ae424192eff77346ef2f7ffea892c1bea0607' in prefix['run']
     assert 'full_encoder_executed=False' in prefix['run'] and 'raise SystemExit' in prefix['run']
+
+
+def test_isa_only_probe_is_distinct_from_cnr_and_requires_original_first_layer_before_replay():
+    value=workflow();trigger=value.get('on',value.get(True));option=trigger['workflow_dispatch']['inputs']['original_blas_context']
+    assert 'avx2_isa' in option['options'],'Independent MKL ISA-only probe is missing'
+    steps=value['jobs']['original_vision_probe']['steps']
+    configure=next(s for s in steps if s.get('name')=='Constrain only original native BLAS instruction set')
+    assert "original_blas_context == 'avx2_isa'" in configure['if'] and "matrix.context == 'native'" in configure['if']
+    assert 'MKL_ENABLE_INSTRUCTIONS=AVX2' in configure['run']
+    assert 'MKL_CBWR=' not in configure['run'] and 'ATEN_CPU_CAPABILITY=' not in configure['run']
+    gate=next(s for s in steps if s.get('name')=='Gate original first layer before ISA-only full replay')
+    assert "original_blas_context == 'avx2_isa'" in gate['if']
+    assert steps.index(gate)<next(i for i,s in enumerate(steps) if s.get('name')=='Replay original saved graph against unchanged golden')
+    assert 'run_saved_graph_prefix' in gate['run'] and "'add_15'" in gate['run']
+    assert 'fb33092e54e997da999b87246aefe2089ce2d0f376a89586b8c329db069bb7fa' in gate['run']
+    assert 'full_encoder_executed=False' in gate['run'] and 'raise SystemExit' in gate['run']
 
 
 def test_rotary_only_dispatch_captures_original_position_constants_for_all_profiles_without_encoder():

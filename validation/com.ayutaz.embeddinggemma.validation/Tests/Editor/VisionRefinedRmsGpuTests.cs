@@ -37,22 +37,10 @@ namespace EmbeddingGemma.Validation.Tests
                 Check(inputPath,"bc4c19c9aaf9688801c99ed073fdde22f0daf6b822dc2c9c4b7a3f7c9aded636");
                 var model=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/GpuVisionFirstRmsCandidate/first-rms.onnx"));report["layer_count"]=model.layers.Count;
                 using var beforeBytes=new MemoryStream();ModelWriter.Save(beforeBytes,model);
-                var scalar=model.layers.Single(layer=>layer.GetType().Name=="ScalarMad"
-                    &&(float)layer.GetType().GetField("sFloat").GetValue(layer)==1f/768f
-                    &&(float)layer.GetType().GetField("bFloat").GetValue(layer)==1e-6f);
-                var before=ModelTensorSlice.Extract(model,scalar.inputs[0],"total");
-                var corrected=(Layer)typeof(object).GetMethod("MemberwiseClone",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(scalar,null);
-                corrected.GetType().GetField("sFloat").SetValue(corrected,1f);
-                var changed=new Model{ProducerName=model.ProducerName+"/explicit-mean-division",inputs=new List<Model.Input>(model.inputs),
-                    outputs=new List<Model.Output>(model.outputs),constants=new List<Constant>(model.constants),
-                    layers=model.layers.Select(layer=>ReferenceEquals(layer,scalar)?corrected:layer).ToList()};
-                var after=ModelTensorSlice.Extract(changed,changed.outputs[0].index,"normalized",new[]{new Model.Input{
-                    name="mean",index=scalar.inputs[0],dataType=DataType.Float,shape=new DynamicTensorShape(1,2520,1)}});
-                using var divide=new GpuScalarDivide(768f);
-                using var pipeline=new GpuProjectionPipeline(new[]{before,after},new[]{"total"},new[]{"mean"},new IGpuTensorOperation[]{divide});
+                using var operation=new QualifiedVisionRmsOperation(model);
                 report["mean_division_gpu_boundary_preserved"]=true;report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
                 using var input=new Tensor<float>(new TensorShape(1,2520,768),Floats(inputPath));ComputeTensorData.Pin(input);report["phase"]="execute";Save();
-                using var tensor=pipeline.Execute(input);Assert.That(tensor.backendType,Is.EqualTo(BackendType.GPUCompute));
+                using var tensor=operation.Execute(input);Assert.That(tensor.backendType,Is.EqualTo(BackendType.GPUCompute));
                 var actual=tensor.DownloadToArray();var expected=Floats(Path.Combine(root,"current-cpu-equation-fp32.bin"));Assert.That(actual.Length,Is.EqualTo(expected.Length));
                 var path=Path.ChangeExtension(output,"bin");var bytes=new byte[actual.Length*4];Buffer.BlockCopy(actual,0,bytes,0,bytes.Length);File.WriteAllBytes(path,bytes);
                 using(var stream=File.OpenRead(path))report["capture_sha256"]=PlayerFileHash.Compute(stream,out _);

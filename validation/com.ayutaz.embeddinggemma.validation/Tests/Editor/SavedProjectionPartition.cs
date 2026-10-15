@@ -72,17 +72,19 @@ namespace EmbeddingGemma.Validation.Tests
             foreach(var row in selected)
             {
                 var layer=row.layer;var kind=layer.GetType().Name;
-                if((kind!="MatMul"&&kind!="MatMul2D") || layer.inputs.Length!=2 || layer.outputs.Length!=1
-                    || constants.ContainsKey(layer.inputs[0]) || !constants.TryGetValue(layer.inputs[1],out var weight)
-                    || weight.shape.rank!=2 || weight.dataType!=DataType.Float || weight.lengthBytes!=weight.shape.length*4)
+                var marker=kind=="Identity";Constant weight=null;
+                if(marker&&(layer.inputs.Length!=1||layer.outputs.Length!=1))throw new ArgumentException("GPU unary marker arity differs.");
+                if(!marker&&((kind!="MatMul"&&kind!="MatMul2D") || layer.inputs.Length!=2 || layer.outputs.Length!=1
+                    || constants.ContainsKey(layer.inputs[0]) || !constants.TryGetValue(layer.inputs[1],out weight)
+                    || weight.shape.rank!=2 || weight.dataType!=DataType.Float || weight.lengthBytes!=weight.shape.length*4))
                     throw new ArgumentException("Selected output is not an audited static FP32 projection.",nameof(selectedOutputs));
                 if((bool?)layer.GetType().GetField("transposeA")?.GetValue(layer)==true)throw new NotSupportedException("Transposed data requires separate qualification.");
                 var transposed=(bool?)layer.GetType().GetField("transposeB")?.GetValue(layer)??false;
-                var shape=Shape(layer.inputs[0]).ToTensorShape();var width=shape[shape.rank-1];var count=weight.shape[transposed?0:1];
-                if((shape.rank!=2&&shape.rank!=3) || shape.length==0 || Type(layer.inputs[0])!=DataType.Float || weight.shape[transposed?1:0]!=width)
+                var shape=Shape(layer.inputs[0]).ToTensorShape();var width=shape[shape.rank-1];var count=marker?width:weight.shape[transposed?0:1];
+                if((shape.rank!=2&&shape.rank!=3) || shape.length==0 || Type(layer.inputs[0])!=DataType.Float || (!marker&&weight.shape[transposed?1:0]!=width))
                     throw new NotSupportedException("Fixed GPU matrix shape or type differs.");
                 var outputShape=Shape(layer.outputs[0]).ToTensorShape();
-                if(outputShape.rank!=shape.rank || outputShape.length!=shape.length/width*count || outputShape[outputShape.rank-1]!=count)
+                if(outputShape.rank!=shape.rank || outputShape.length!=shape.length/width*count || outputShape[outputShape.rank-1]!=count || (marker&&outputShape!=shape))
                     throw new NotSupportedException("Projection output shape differs from its coefficients.");
                 for(var index=cursor;index<row.index;index++)foreach(var value in source.layers[index].outputs)
                     if(value>=0&&seen.Add(value))available.Add(value);
@@ -101,10 +103,14 @@ namespace EmbeddingGemma.Validation.Tests
                 parts.Add(Part(live.Select(index=>new Model.Output{index=index,name=Name(index)}).ToArray()));
                 inputs.Add(new[]{Name(layer.inputs[0])});outputs.Add(Name(layer.outputs[0]));
                 widths.Add(width);columns.Add(count);rows.Add(shape.length/width);
-                var raw=(ArraySegment<byte>)typeof(Constant).GetField("array",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(weight);
-                var values=new float[raw.Count/4];Buffer.BlockCopy(raw.Array,raw.Offset,values,0,raw.Count);
-                if(transposed){var ordered=new float[values.Length];for(var k=0;k<width;k++)for(var n=0;n<count;n++)ordered[k*count+n]=values[n*width+k];values=ordered;}
-                weights.Add(values);
+                if(marker)weights.Add(null);
+                else
+                {
+                    var raw=(ArraySegment<byte>)typeof(Constant).GetField("array",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(weight);
+                    var values=new float[raw.Count/4];Buffer.BlockCopy(raw.Array,raw.Offset,values,0,raw.Count);
+                    if(transposed){var ordered=new float[values.Length];for(var k=0;k<width;k++)for(var n=0;n<count;n++)ordered[k*count+n]=values[n*width+k];values=ordered;}
+                    weights.Add(values);
+                }
                 frontier=live.Concat(layer.outputs).Distinct().ToList();removed.Add(layer.outputs[0]);
                 if(seen.Add(layer.outputs[0]))available.Add(layer.outputs[0]);cursor=row.index+1;
             }

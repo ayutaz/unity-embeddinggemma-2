@@ -248,6 +248,7 @@ namespace EmbeddingGemma.Validation.Tests
                     var replayPath=Path.Combine(nativeRoot,"audio-layer-replay-report.json");
                     Check(replayPath,"99529dc0fa6c74825b23fca653d82091797ff1e5267d26c5cdae723fcf86f501");
                     var replay=JObject.Parse(File.ReadAllText(replayPath));
+                    JObject projectionReplay=null;string projectionRoot=null;
                     Assert.That(replay.Value<bool>("success")&&replay.Value<bool>("native_final_exact_match"),Is.True);
                     Assert.That(replay.Value<string>("reference_source"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));
                     Assert.That(plan["projections"][1].Value<string>("weight_sha256"),Is.EqualTo("d598344ee23d0545a76fa6d95173fbc886e8f2dd46d5907e6bd50b6cfa4891df"));
@@ -262,6 +263,23 @@ namespace EmbeddingGemma.Validation.Tests
                         (name:"self_attn",boundary:"/attentions.0/post/linear/MatMul_output_0",part:"self_attn",minimum:-101.5f,maximum:100.5f),
                         (name:"attention_residual",boundary:"/lconv1d/pre_layer_norm/Cast_output_0",part:"norm_post_attn",minimum:float.NegativeInfinity,maximum:float.PositiveInfinity),
                         (name:"lconv1d",boundary:"/lconv1d/Add_output_0",part:"lconv1d",minimum:float.NegativeInfinity,maximum:float.PositiveInfinity)}).ToArray();
+                    if(attention)
+                    {
+                        var referenceRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/native-attention-reference-c030222-20261015"));
+                        var projectionPath=Path.Combine(referenceRoot,"audio-attention-replay-report.json");
+                        Check(projectionPath,"d7c46da5391561c2879c56bc7d1796b95aba38e7bf61d8875a5c685b4623d5bb");
+                        projectionReplay=JObject.Parse(File.ReadAllText(projectionPath));projectionRoot=Path.Combine(referenceRoot,"audio-attention-replay");
+                        Assert.That(projectionReplay.Value<bool>("success")&&projectionReplay.Value<bool>("native_final_exact_match")&&projectionReplay.Value<bool>("context_validated"),Is.True);
+                        Assert.That(projectionReplay.Value<string>("reference_source"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));
+                        Assert.That(projectionReplay.Value<string>("diagnostic_source"),Is.EqualTo("c03022264c4bab5035f1e87721a6c71fe6a61d01"));
+                        foreach(var original in (JObject)replay["parts"])Assert.That(projectionReplay["parts"][original.Key].Value<string>("sha256"),Is.EqualTo(original.Value.Value<string>("sha256")));
+                        Assert.That(projectionReplay["parts"]["self_attn.post"].Value<string>("sha256"),Is.EqualTo(replay["parts"]["self_attn"].Value<string>("sha256")));
+                        bindings=bindings.Concat(new[]{
+                            (name:"q_proj",boundary:"/attentions.0/q_proj/linear/MatMul_output_0",part:"self_attn.q_proj",minimum:-34.5f,maximum:34.25f),
+                            (name:"k_proj",boundary:"/attentions.0/k_proj/linear/MatMul_output_0",part:"self_attn.k_proj",minimum:-34.5f,maximum:34.25f),
+                            (name:"v_proj",boundary:"/attentions.0/v_proj/linear/MatMul_output_0",part:"self_attn.v_proj",minimum:-34.5f,maximum:34.25f),
+                            (name:"relative_k_proj",boundary:"/attentions.0/relative_k_proj/MatMul_output_0",part:"self_attn.relative_k_proj",minimum:float.NegativeInfinity,maximum:float.PositiveInfinity)}).ToArray();
+                    }
                     report["phase"]="observe_early";Save();
                     var snapshots=ObserveBoundaries(models.ToArray(),inputs.ToArray(),outputs.ToArray(),kernels.ToArray(),input,bindings.Select(b=>b.boundary).ToHashSet());
                     Assert.That(snapshots["__final"].Select(BitConverter.SingleToInt32Bits),Is.EqualTo(actual.Select(BitConverter.SingleToInt32Bits)));
@@ -278,7 +296,9 @@ namespace EmbeddingGemma.Validation.Tests
                         }
                         else
                         {
-                            var part=replay["parts"][binding.part];path=Path.Combine(nativeRoot,"audio-layer-replay",part.Value<string>("file"));expectedSha=part.Value<string>("sha256");
+                            var projectedPart=binding.part.StartsWith("self_attn.",StringComparison.Ordinal);
+                            var part=(projectedPart?projectionReplay:replay)["parts"][binding.part];
+                            path=projectedPart?Path.Combine(projectionRoot,part.Value<string>("file")):Path.Combine(nativeRoot,"audio-layer-replay",part.Value<string>("file"));expectedSha=part.Value<string>("sha256");
                         }
                         Check(path,expectedSha);var native=Floats(path);var values=snapshots[binding.boundary];Assert.That(values.Length,Is.EqualTo(native.Length));
                         if(binding.name=="attention_residual")
@@ -294,7 +314,8 @@ namespace EmbeddingGemma.Validation.Tests
                             // Transform only the immutable expected values to the original
                             // quantized-linear input Clip boundary. Product computation stays GPU.
                             var target=Math.Max(binding.minimum,Math.Min(binding.maximum,native[index]));
-                            var observed=binding.name=="self_attn"?Math.Max(binding.minimum,Math.Min(binding.maximum,values[index])):values[index];
+                            var clipObserved=binding.name=="self_attn"||binding.name=="q_proj"||binding.name=="k_proj"||binding.name=="v_proj";
+                            var observed=clipObserved?Math.Max(binding.minimum,Math.Min(binding.maximum,values[index])):values[index];
                             if(BitConverter.SingleToInt32Bits(observed)!=BitConverter.SingleToInt32Bits(target))bits++;
                             var difference=Math.Abs((double)observed-target);var allowed=1e-5+1e-4*Math.Abs((double)target);
                             if(difference>allowed)bad++;maxRatio=Math.Max(maxRatio,difference/allowed);
@@ -303,10 +324,10 @@ namespace EmbeddingGemma.Validation.Tests
                         using var stream=File.OpenRead(capture);var captureSha=PlayerFileHash.Compute(stream,out _);
                         stages.Add(new JObject{["stage"]=binding.name,["boundary"]=binding.boundary,["original_native_sha256"]=expectedSha,
                             ["expected_transform"]=binding.name=="attention_residual"?"original_fp32_residual_sum":binding.part=="feed_forward1.pre_layer_norm"||binding.part=="feed_forward1.act_fn"?"original_fp32_input_clip":"identity",
-                            ["actual_transform"]=binding.name=="self_attn"?"original_fp32_output_clip_for_diagnostic_comparison_only":"identity",
+                            ["actual_transform"]=binding.name=="self_attn"||binding.name=="q_proj"||binding.name=="k_proj"||binding.name=="v_proj"?"original_fp32_output_clip_for_diagnostic_comparison_only":"identity",
                             ["actual_file"]=capture,["actual_sha256"]=captureSha,["bit_differences"]=bits,["mismatched_elements"]=bad,["maximum_tolerance_ratio"]=maxRatio});Save();
                     }
-                    Assert.That(stages.Count,Is.EqualTo(attention?8:5));report["observation_completed"]=true;report["success"]=true;report["phase"]="completed_observation";return;
+                    Assert.That(stages.Count,Is.EqualTo(attention?12:5));report["observation_completed"]=true;report["success"]=true;report["phase"]="completed_observation";return;
                 }
                 if(observe)
                 {

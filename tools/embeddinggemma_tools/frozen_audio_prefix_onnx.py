@@ -156,9 +156,16 @@ class PrefixExport(torch.nn.Module):
 
     def forward(self, values):
         selected, variant, rms_means, rms_inverses = self.selected, self.variant, self.rms_means, self.rms_inverses
+        silu_nodes = getattr(self, "silu_nodes", set())
+        silu_candidate = getattr(self, "silu_candidate", None)
 
         class Replay(torch.fx.Interpreter):
             def run_node(self, node):
+                if node in silu_nodes:
+                    args, kwargs = self.fetch_args_kwargs_from_env(node)
+                    if len(args) != 1 or kwargs:
+                        raise ValueError("SiLU candidate requires the audited unary operation")
+                    return silu_candidate(args[0])
                 if node in rms_means:
                     args, kwargs = self.fetch_args_kwargs_from_env(node)
                     return ordered_rms_mean(args[0])

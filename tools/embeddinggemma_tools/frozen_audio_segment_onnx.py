@@ -15,8 +15,10 @@ from .frozen_audio_prefix_onnx import (
     load_frozen_stage_reference, tensor, weight_digests,
 )
 from .reference_context_failure import feature_error_metrics
+from .native_silu_onnx import fp32_native_silu
+from .streaming_reference import run_flat_reference
 
-VARIANTS = ("native", "refined_mean_moment_rms")
+VARIANTS = ("native", "refined_mean_moment_rms", "native_silu")
 
 
 def extract_segment(program, from_boundary, to_boundary):
@@ -61,7 +63,12 @@ class SegmentExport(PrefixExport):
         if any(node.target == torch.ops.aten.native_layer_norm.default for node in segment.graph.nodes):
             raise ValueError("Segment must start after both original native normalizations")
         self.prefix, self.variant, self.selected = segment, variant, []
-        self.rms_means, self.rms_inverses = audit_rms_nodes(segment) if variant != "native" else (set(), set())
+        self.rms_means, self.rms_inverses = audit_rms_nodes(segment) if variant == "refined_mean_moment_rms" else (set(), set())
+        self.silu_nodes = {node for node in segment.graph.nodes
+                           if node.op == "call_function" and node.target == torch.ops.aten.silu.default} if variant == "native_silu" else set()
+        if variant == "native_silu" and not self.silu_nodes:
+            raise ValueError("Explicit SiLU candidate requires original SiLU nodes")
+        self.silu_candidate = fp32_native_silu
 
 
 def probe_segment(program, frozen_input, frozen_output, output, *, from_boundary, to_boundary,
@@ -83,7 +90,8 @@ def probe_segment(program, frozen_input, frozen_output, output, *, from_boundary
                   from_boundary=from_boundary, to_boundary=to_boundary, provenance=provenance,
                   input_provenance=frozen_input.provenance, target_provenance=frozen_output.provenance,
                   original_segment_weights=before, cases=[], full_encoder_validated=False,
-                  gpu_validated=False, end_to_end_validated=False)
+                  gpu_validated=False, end_to_end_validated=False,
+                  reference_execution="onnx.reference.ReferenceEvaluator kernels, original node order, release after last explicit consumer")
 
     def save():
         receipt.write_text(json.dumps(report, indent=2, allow_nan=False) + "\n", encoding="utf-8")
@@ -115,7 +123,7 @@ def probe_segment(program, frozen_input, frozen_output, output, *, from_boundary
             wrapped = tensor(wrapper(values))
             graph = output / (variant + ".onnx")
             export_audio_native_onnx(wrapper, values, graph)
-            array = ReferenceEvaluator(str(graph)).run(None, {"input": values.numpy()})[0]
+            array = run_flat_reference(ReferenceEvaluator(str(graph)), {"input": values.numpy()})[0]
             actual = tensor(torch.from_numpy(array))
             if weight_digests(segment) != before:
                 raise ValueError("Original segment coefficient bytes changed")
@@ -124,7 +132,7 @@ def probe_segment(program, frozen_input, frozen_output, output, *, from_boundary
                 capture=name, capture_sha256=capture(name, actual), metrics=metrics(actual),
                 native_wrapper_bits_equal=exact_difference(wrapped, native) == 0,
                 coefficients_unchanged=True, rms_mean_replacements=len(wrapper.rms_means),
-                rms_inverse_replacements=len(wrapper.rms_inverses)))
+                rms_inverse_replacements=len(wrapper.rms_inverses), silu_replacements=len(wrapper.silu_nodes)))
             save()
     report["complete"] = True
     save()
@@ -150,9 +158,15 @@ def main(argv=None):
                       cpu_capability=torch.backends.cpu.get_cpu_capability())
     start = load_frozen_stage_reference(args.frozen_stage_source, args.from_stage)
     end = load_frozen_stage_reference(args.frozen_stage_source, args.stage)
+    start_boundary, end_boundary = (boundary_for_stage(program, stage) for stage in (args.from_stage, args.stage))
+    if args.variant == "native_silu":
+        audited = SegmentExport(extract_segment(program, start_boundary, end_boundary), args.variant)
+        layer_count = min(tuple(STAGES).index(args.stage), 12) - tuple(STAGES).index(args.from_stage)
+        if len(audited.silu_nodes) != layer_count * 3:
+            raise ValueError("Pinned segment SiLU replacement count differs")
+        provenance["silu_expected_count"] = layer_count * 3
     report = probe_segment(program, start, end, args.output,
-        from_boundary=boundary_for_stage(program, args.from_stage),
-        to_boundary=boundary_for_stage(program, args.stage), variants=(args.variant,), provenance=provenance)
+        from_boundary=start_boundary, to_boundary=end_boundary, variants=(args.variant,), provenance=provenance)
     print(json.dumps(dict(complete=report["complete"], cases=report["cases"], full_encoder_validated=False)))
     return 0 if report["complete"] else 1
 

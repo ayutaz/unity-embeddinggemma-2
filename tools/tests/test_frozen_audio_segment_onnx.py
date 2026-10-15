@@ -166,3 +166,29 @@ def test_segment_rms_variant_audits_real_nodes_and_exports_the_original_equation
     probe.export_audio_native_onnx(wrapper, x, path)
     actual = probe.ReferenceEvaluator(str(path)).run(None, {"input": x.numpy()})[0]
     np.testing.assert_allclose(actual, y.detach().numpy(), atol=1e-5, rtol=1e-4)
+
+
+def test_segment_silu_variant_is_explicit_and_tracks_original_silu_nodes(tmp_path):
+    root = torch.nn.Module()
+    graph = torch.fx.Graph()
+    x = graph.placeholder("x")
+    cut = graph.call_function(torch.ops.aten.mul.Tensor, (x, 2.0))
+    activated = graph.call_function(torch.ops.aten.silu.default, (cut,))
+    graph.output(activated)
+    source = torch.fx.GraphModule(root, graph)
+    values = torch.linspace(-10, 10, 128).reshape(2, 64)
+    before = str(source.graph)
+    report = probe.probe_segment(source, frozen(values, "subsample"),
+        frozen(torch.nn.functional.silu(values), "layer_0"), tmp_path,
+        from_boundary=cut.name, to_boundary=activated.name, variants=("native_silu",))
+    assert probe.VARIANTS[0] == "native"
+    assert report["cases"][0]["silu_replacements"] == 1
+    assert report["cases"][0]["metrics"]["exact_difference_count"] == 0
+    assert report["native_wrapper_control_bits_equal"]
+    assert str(source.graph) == before
+
+
+def test_segment_silu_candidate_rejects_a_segment_without_silu():
+    source, cut, end = program()
+    with pytest.raises(ValueError, match="SiLU"):
+        probe.SegmentExport(probe.extract_segment(source, cut, end), "native_silu")

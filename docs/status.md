@@ -1,5 +1,11 @@
 # 現在の状態
 
+更新日: 2026-10-15。**元の固定参照を変更せず、元保存graphのsquare-0全131,072値をAVX512環境で全bit再現した。** [固定receipt](results/m3-original-reference-avx512-reproduced-20261015.json) / [Actions 38716679261](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38716679261)。AMD EPYC 9V45のnative jobは実AVX512でthread 1 / 2 / 4すべて最大絶対誤差0、観測 / 通常の最終bitも一致。同じCPU型番のAVX2指定jobは以前と同じ3要素超過。workflow全体はAVX2側の不合格を保持してfailure、native jobの限定成功を全体CI合格へ置き換えない。他profile / caseのCPU・GPU合格ではない。
+
+元graphのpatch / rotaryは前のAVX2捕捉と全bit一致するが、layer 0からbit差が出る。今回の元golden再現文脈では、公式の転置280行poolingと保存graphの連続256行poolingが、feature・RMS・最終出力の全bitで一致した。保存側controlも全bit一致し、ここではpooling配置仮説は支持されない。次は古い診断native / AVX2一致を合格目標にせず、元goldenを再現した文脈の最初の層のRMS・attentionを比較する。個別のATen / MKL / oneDNN演算を原因と断定した段階ではない。GPUの最新全体結果は5要素超過、他5画像case未実行のまま。元重み・golden・許容差・既存音声証拠と工程3・4の全範囲を維持。Unity終了済み。
+
+以下は前回checkpoint。
+
 最新の末尾検証: [固定CPU末尾入力へのRMS / projection GPU比較](results/m3-original-saved-tail-rms-gpu-20261015.json)。元RMSは89,563 bit差・許容差超過0、block192投影は全bit一致。新しいunscaled RMSは明示FP32 cascade / 商・sqrt・逆数補正を使い、既存の既定1e6上限を保ち、末尾専用に2e6をopt-inとした。6 intended Red→関連38 Green、取得済み196,608値のCPU / 標準FP32 ONNX / 実GPUは全bit一致。GPU局所1 pass / skip0であり、元生成時の中間参照や全encoderの合格ではない。
 
 これを接続した全体`a36625a...`は113 RMSすべて置換・元係数 / GPUCompute・fallback / 中間flush0を保持したが、[元固定goldenへの超過は5要素のまま](results/m3-all-rms-original-gpu-gate-still-five-20261015.json)。5要素の出力bitは前候補と全て同じ。全出力では50,671 bitが変わり、今回CPU出力への超過も3要素のまま。1 fail / skip0、host peak4,655,656,960 byte（約4.34GiB）、実行＋最終取得16.421秒の単発観測。他5画像case未実行。runner / 監視はterminal、Unity終了済み。次は元graphの最後のencoder出力をActionsで直接取得し、公式poolingの転置280行と保存graphの連続256行を比較する。形状・strideが違うことは確認済みだが、残る差の原因とはまだ断定しない。元golden・許容差、工程3・4の全範囲を維持する。

@@ -13,7 +13,7 @@ namespace EmbeddingGemma.Tests
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
             var constructor=Required().GetConstructor(new[]{typeof(Model[]),typeof(string[][]),typeof(string[]),typeof(IGpuTensorOperation[])});
             Assert.That(constructor,Is.Not.Null,"Binary GPU stage binding is missing.");
-            var graph=new FunctionalGraph();var x=graph.AddInput<float>(new TensorShape(2,3),"input");var prefix=Rename(graph.Compile(x,Functional.Transpose(x)),"left","right");
+            var graph=new FunctionalGraph();var x=graph.AddInput<float>(new TensorShape(2,3),"input");var prefix=Rename(graph.Compile(x,Functional.Transpose(x,0,1)),"left","right");
             var finalGraph=new FunctionalGraph();var product=finalGraph.AddInput<float>(new TensorShape(2,2),"product");var tail=Rename(finalGraph.Compile(product),"final");
             using var operation=new GpuBatchedMatmul();var names=new[]{new[]{"left","right"}};
             using var pipeline=(IDisposable)constructor.Invoke(new object[]{new[]{prefix,tail},names,new[]{"product"},new IGpuTensorOperation[]{operation}});

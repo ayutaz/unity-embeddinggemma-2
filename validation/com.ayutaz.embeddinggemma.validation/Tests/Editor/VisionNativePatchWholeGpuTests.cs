@@ -185,8 +185,20 @@ namespace EmbeddingGemma.Validation.Tests
             pending.GetAwaiter().GetResult();
         }
 
-        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false,bool editorFramePump=false,bool nativeOperators=false,int nativeStaticBlockSize=384,bool inlineTailRms=false,int softmaxVectorWidth=8,bool fuseGeluInner=false,bool sleefGelu=false,bool nativeRotary=false,bool firstLayerOnly=false,bool nativePooling=false)
+        [UnityTest]
+        public IEnumerator OriginalNativeRotaryLastEncoderOutputMustMatchGoldenBitsOnGpu()
         {
+            var pending=Run("square-0",inlineAllRms:true,nativeGelu:true,releaseUnusedGpuCache:true,staged:true,
+                releaseGeluCaches:true,editorFramePump:true,nativeOperators:true,nativeStaticBlockSize:192,
+                inlineTailRms:true,softmaxVectorWidth:16,fuseGeluInner:true,sleefGelu:true,nativeRotary:true,lastEncoderOnly:true);
+            while(!pending.IsCompleted){UnityEditor.EditorApplication.QueuePlayerLoopUpdate();yield return null;}
+            pending.GetAwaiter().GetResult();
+        }
+
+        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false,bool editorFramePump=false,bool nativeOperators=false,int nativeStaticBlockSize=384,bool inlineTailRms=false,int softmaxVectorWidth=8,bool fuseGeluInner=false,bool sleefGelu=false,bool nativeRotary=false,bool firstLayerOnly=false,bool nativePooling=false,bool lastEncoderOnly=false)
+        {
+            var encoderOnly=firstLayerOnly||lastEncoderOnly;
+            Assert.That(firstLayerOnly&&lastEncoderOnly,Is.False);
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-encoder"));
@@ -201,6 +213,7 @@ namespace EmbeddingGemma.Validation.Tests
             if(nativeRotary)label="vision-original-native-rotary-whole-gpu-";
             if(firstLayerOnly)label="vision-original-native-rotary-first-layer-gpu-";
             if(nativePooling)label="vision-original-native-pooling-whole-gpu-";
+            if(lastEncoderOnly)label="vision-original-native-rotary-last-encoder-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+"-"+caseId+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["scope"]=releaseUnusedGpuCache?"one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate":nativeGelu?"one_original_vision_encoder_gpu_native_gelu_all_layer_rms_and_patch384_candidate":inlineAllRms?"one_original_vision_encoder_gpu_all_sixteen_layer_rms_and_native_patch384_candidate":"one_original_vision_encoder_gpu_native_patch384_candidate",["runtime_source"]=source,
@@ -215,7 +228,9 @@ namespace EmbeddingGemma.Validation.Tests
             report["native_derived_rotary"]=nativeRotary;
             report["first_layer_only"]=firstLayerOnly;
             report["native_fixed_left_pooling"]=nativePooling;
+            report["last_encoder_only"]=lastEncoderOnly;
             if(firstLayerOnly){report["scope"]="original_square_zero_patch_and_first_layer_against_golden_reproducing_native_bits_only";report["full_encoder_validated"]=false;}
+            if(lastEncoderOnly){report["scope"]="original_square_zero_all_sixteen_layers_before_padding_pooling_rms_projection_against_golden_reproducing_native_bits_only";report["full_encoder_validated"]=false;}
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
             var operations=new List<IGpuTensorOperation>();Save();
@@ -276,12 +291,22 @@ namespace EmbeddingGemma.Validation.Tests
                     report["derived_rotary_rebound_tables"]=4;report["derived_rotary_changed_multiplication_operands"]=changed;
                     report["derived_rotary_scope"]="audited_data_independent_original_"+profile+"_position_tables";
                 }
-                if(firstLayerOnly)
+                if(encoderOnly)
                 {
                     Assert.That(caseId,Is.EqualTo("square-0"));Assert.That(nativeOperators&&nativeRotary&&sleefGelu&&inlineAllRms,Is.True);
-                    var nextLayerRms=original.layers.Where(layer=>layer.GetType().Name=="Square").Skip(7).First();
-                    working=ModelTensorSlice.Extract(working,nextLayerRms.inputs[0],"first_layer");
-                    report["executed_layer_count"]=1;report["executed_rms_count"]=7;
+                    int boundary;
+                    if(firstLayerOnly)boundary=original.layers.Where(layer=>layer.GetType().Name=="Square").Skip(7).First().inputs[0];
+                    else
+                    {
+                        var pool=original.layers.Single(layer=>(layer.GetType().Name=="MatMul"||layer.GetType().Name=="MatMul2D")&&constants.ContainsKey(layer.inputs[0]));
+                        var producers=original.layers.SelectMany(layer=>layer.outputs.Select(index=>(index,layer))).ToDictionary(row=>row.index,row=>row.layer);
+                        var preceding=producers[pool.inputs[1]];
+                        while(new[]{"Reshape","Identity","Unsqueeze","Squeeze"}.Contains(preceding.GetType().Name))preceding=producers[preceding.inputs[0]];
+                        Assert.That(preceding.GetType().Name,Is.EqualTo("Where"));Assert.That(constants.ContainsKey(preceding.inputs[1]),Is.True);
+                        boundary=preceding.inputs[2];
+                    }
+                    working=ModelTensorSlice.Extract(working,boundary,firstLayerOnly?"first_layer":"last_encoder");
+                    report["executed_layer_count"]=firstLayerOnly?1:16;report["executed_rms_count"]=firstLayerOnly?7:112;
                 }
                 report["graph_rewrite_ms"]=phaseTimer.Elapsed.TotalMilliseconds;report["phase"]="prepare_gpu_pipeline";Save();phaseTimer.Restart();
                 var projection=original.layers.First(layer=>layer.GetType().Name=="MatMul"&&constants.TryGetValue(layer.inputs[1],out var w)&&w.shape==new TensorShape(768,768));
@@ -299,13 +324,13 @@ namespace EmbeddingGemma.Validation.Tests
                     var staticProducts=new HashSet<int>(matrices.Where(layer=>workingConstants.ContainsKey(layer.inputs[1])).Select(layer=>layer.outputs[0]));
                     var binaryProducts=new HashSet<int>(matrices.Where(layer=>!workingConstants.ContainsKey(layer.inputs[0])&&!workingConstants.ContainsKey(layer.inputs[1])).Select(layer=>layer.outputs[0]));
                     var leftProducts=new HashSet<int>(matrices.Where(layer=>workingConstants.ContainsKey(layer.inputs[0])&&!workingConstants.ContainsKey(layer.inputs[1])).Select(layer=>layer.outputs[0]));
-                    if(nativePooling){Assert.That(firstLayerOnly,Is.False);Assert.That(leftProducts.Count,Is.EqualTo(1));}
+                    if(nativePooling){Assert.That(encoderOnly,Is.False);Assert.That(leftProducts.Count,Is.EqualTo(1));}
                     var preserved=matrices.Where(layer=>!staticProducts.Contains(layer.outputs[0])&&!binaryProducts.Contains(layer.outputs[0])&&(!nativePooling||!leftProducts.Contains(layer.outputs[0]))).ToArray();
                     report["preserved_original_matrix_operations"]=new JArray(preserved.Select(layer=>new JObject{["output_index"]=layer.outputs[0],
                         ["left_is_constant"]=workingConstants.ContainsKey(layer.inputs[0]),["right_is_constant"]=workingConstants.ContainsKey(layer.inputs[1]),
                         ["left_constant_shape"]=workingConstants.TryGetValue(layer.inputs[0],out var coefficient)?JArray.FromObject(Enumerable.Range(0,coefficient.shape.rank).Select(axis=>coefficient.shape[axis]).ToArray()):null}));Save();
-                    Assert.That(staticProducts.Count,Is.EqualTo(firstLayerOnly?8:114));Assert.That(binaryProducts.Count,Is.EqualTo(firstLayerOnly?2:32));
-                    Assert.That(preserved.Length,Is.EqualTo(firstLayerOnly||nativePooling?0:1));foreach(var matrix in preserved)Assert.That(workingConstants.ContainsKey(matrix.inputs[0]),Is.True);
+                    Assert.That(staticProducts.Count,Is.EqualTo(firstLayerOnly?8:lastEncoderOnly?113:114));Assert.That(binaryProducts.Count,Is.EqualTo(firstLayerOnly?2:32));
+                    Assert.That(preserved.Length,Is.EqualTo(encoderOnly||nativePooling?0:1));foreach(var matrix in preserved)Assert.That(workingConstants.ContainsKey(matrix.inputs[0]),Is.True);
                     var marked=SavedProjectionPartition.MarkGelu(working);working=marked.model;var geluOutputs=new HashSet<int>(marked.outputs);Assert.That(geluOutputs.Count,Is.EqualTo(firstLayerOnly?1:16));
                     var softmaxes=working.layers.Where(layer=>layer.GetType().Name=="Softmax").ToArray();Assert.That(softmaxes.Length,Is.EqualTo(firstLayerOnly?1:16));
                     var identity=typeof(Worker).Assembly.GetTypes().Single(type=>type.Name=="Identity"&&typeof(Layer).IsAssignableFrom(type));
@@ -321,7 +346,7 @@ namespace EmbeddingGemma.Validation.Tests
                         constants=new List<Constant>(working.constants),layers=working.layers.Select(layer=>replacements.TryGetValue(layer,out var marker)?marker:layer).ToList()};
                     var wanted=new HashSet<int>(staticProducts.Concat(binaryProducts).Concat(geluOutputs).Concat(softmaxOutputs));
                     if(nativePooling)wanted.UnionWith(leftProducts);
-                    var selected=working.layers.Where(layer=>wanted.Contains(layer.outputs[0])).Select(layer=>layer.outputs[0]).ToArray();Assert.That(selected.Length,Is.EqualTo(firstLayerOnly?12:nativePooling?179:178));
+                    var selected=working.layers.Where(layer=>wanted.Contains(layer.outputs[0])).Select(layer=>layer.outputs[0]).ToArray();Assert.That(selected.Length,Is.EqualTo(firstLayerOnly?12:lastEncoderOnly?177:nativePooling?179:178));
                     var plan=SavedProjectionPartition.Create(working,selected);Assert.That(plan.Models.Length,Is.EqualTo(selected.Length+1));
                     var operationRows=new JArray();report["qualified_operations"]=operationRows;
                     for(var i=0;i<selected.Length;i++)
@@ -459,14 +484,14 @@ namespace EmbeddingGemma.Validation.Tests
                 }
                 GpuExecutionProfiler.ReadProcessMemory(process,out var memoryAfter,out var peak);report["host_working_set_after_download_bytes"]=memoryAfter;report["host_peak_working_set_bytes"]=peak;
                 var expected=row["features"].ToObject<float[][]>().SelectMany(values=>values).ToArray();
-                if(firstLayerOnly)
+                if(encoderOnly)
                 {
-                    var native=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/gold38716679261/add_15-fp32.bin"));
-                    Check(native,"fb33092e54e997da999b87246aefe2089ce2d0f376a89586b8c329db069bb7fa");expected=Floats(native);
-                    report["reference_sha256"]="fb33092e54e997da999b87246aefe2089ce2d0f376a89586b8c329db069bb7fa";
+                    var hash=firstLayerOnly?"fb33092e54e997da999b87246aefe2089ce2d0f376a89586b8c329db069bb7fa":"1cd9bd4d278a8931ae75f068d4b44c876e8bfa1d56c366d0159db3341b3a4d32";
+                    var native=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/gold38716679261/"+(firstLayerOnly?"add_15":"add_225")+"-fp32.bin"));
+                    Check(native,hash);expected=Floats(native);report["reference_sha256"]=hash;
                 }
                 Assert.That(actual.Length,Is.EqualTo(expected.Length));
-                Assert.That(encoded.shape,Is.EqualTo(firstLayerOnly?new TensorShape(1,2520,768):new TensorShape(reference["profiles"][profile].Value<int>("feature_count"),512)));
+                Assert.That(encoded.shape,Is.EqualTo(encoderOnly?new TensorShape(1,2520,768):new TensorShape(reference["profiles"][profile].Value<int>("feature_count"),512)));
                 int bad=0,bits=0;double maximum=0,ratio=0;
                 for(var i=0;i<actual.Length;i++)
                 {
@@ -478,7 +503,7 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.That(CoefficientsHash(original),Is.EqualTo(originalCoefficients));report["original_coefficient_bytes_preserved"]=true;report["original_coefficients_sha256"]=originalCoefficients;
                 report["coefficient_audit_after_ms"]=phaseTimer.Elapsed.TotalMilliseconds;report["phase"]="completed";Save();
                 Assert.That(bad,Is.Zero,"Keep the unchanged original FP32 elementwise gate.");
-                if(firstLayerOnly)Assert.That(bits,Is.Zero,"Locate remaining native first-layer rounding before another full encoder run.");report["success"]=true;
+                if(encoderOnly)Assert.That(bits,Is.Zero,"Locate remaining native encoder rounding at the exact captured boundary.");report["success"]=true;
             }
             catch(Exception error){report["error"]=error.ToString();throw;}
             finally{foreach(var operation in operations)operation.Dispose();Save();}

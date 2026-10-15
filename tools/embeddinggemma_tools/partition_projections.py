@@ -153,22 +153,26 @@ def _mark_silu_boundaries(model,names):
     return result
 
 
-def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_node_names=()):
+def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_node_names=(),dynamic_node_names=()):
     """Return unchanged-op segments and audited external projection boundaries.
 
     Coefficients stay in their original bytes. The caller supplies the GPU
     projections; this planner never executes or validates a full encoder.
     """
-    if (not node_names or len(set(node_names))!=len(node_names)
+    if ((not node_names and not silu_node_names and not dynamic_node_names) or len(set(node_names))!=len(node_names)
             or len(node_names)!=len(expected_weight_sha256)):
         raise ValueError('Select unique ordered projection names and coefficient hashes')
     if set(node_names).intersection(silu_node_names):raise ValueError('GPU boundaries overlap')
+    if len(set(dynamic_node_names))!=len(dynamic_node_names) or set(dynamic_node_names).intersection((*node_names,*silu_node_names)):
+        raise ValueError('Dynamic GPU boundaries overlap')
     wanted_hash=dict(zip(node_names,expected_weight_sha256))
     original_order=[n.name for n in model.graph.node if n.name in wanted_hash]
     if original_order!=list(node_names):raise ValueError('Projection order or identity differs')
     if silu_node_names:
         model=_mark_silu_boundaries(model,silu_node_names)
-        chosen=set(node_names)|set(silu_node_names);node_names=[n.name for n in model.graph.node if n.name in chosen]
+    if silu_node_names or dynamic_node_names:
+        chosen=set(node_names)|set(silu_node_names)|set(dynamic_node_names);node_names=[n.name for n in model.graph.node if n.name in chosen]
+        if len(node_names)!=len(chosen):raise ValueError('A GPU boundary is missing or ambiguous')
     nodes=list(model.graph.node);weights={w.name:w for w in model.graph.initializer}
     infos={v.name:v for v in (*model.graph.input,*model.graph.output,*model.graph.value_info)}
     def shape(name):
@@ -182,6 +186,16 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_
         matches=[(i,n) for i,n in enumerate(nodes) if n.name==name]
         if len(matches)!=1:raise ValueError('Selected projection is missing or ambiguous')
         index,node=matches[0]
+        if name in dynamic_node_names:
+            if node.op_type!='MatMul' or len(node.input)!=2 or len(node.output)!=1 or node.input[1] in weights:raise ValueError('Dynamic MatMul operands differ')
+            left,right=shape(node.input[0]),shape(node.input[1]);output_shape=shape(node.output[0])
+            if min(len(left),len(right))<2 or max(len(left),len(right))>8 or left[-1]!=right[-2]:raise ValueError('Dynamic matrix dimensions differ')
+            leading=max(len(left),len(right))-2;a=[1]*(leading-len(left)+2)+left[:-2];b=[1]*(leading-len(right)+2)+right[:-2]
+            if any(x!=y and x!=1 and y!=1 for x,y in zip(a,b)) or output_shape!=[*(max(x,y) for x,y in zip(a,b)),left[-2],right[-1]]:
+                raise ValueError('Dynamic matrix batch or output shape differs')
+            selected.append((index,node,dict(kind='batched_matmul',node=name,input=node.input[0],inputs=list(node.input),output=node.output[0],
+                input_shape=left,right_shape=right,output_shape=output_shape)))
+            previous=index;continue
         if name in silu_node_names:
             data_shape=shape(node.input[0]);output_shape=shape(node.output[0])
             if len(data_shape) not in (2,3) or data_shape!=output_shape:raise ValueError('SiLU fixed shapes differ')
@@ -204,6 +218,8 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_
     # Constant subgraphs are recomputed within each extracted segment, rather
     # than forcing shape/axis constants through intermediate tensor inputs.
     constants=set(weights)
+    for _,_,operation in selected:
+        operation.setdefault('inputs',[operation['input']])
     for node in nodes:
         if node.name in node_names:continue
         known_shape=(node.op_type=='Shape' and node.input and node.input[0] in infos
@@ -225,15 +241,16 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_
                 reserved.add(name);output.name=name;aliases[name]=original
                 part.graph.node.append(helper.make_node('Identity',[original],[name],name=name+'_identity'))
         return dict(inputs=[v.name for v in inputs],outputs=logical_outputs,output_aliases=aliases,node_count=len(part.graph.node))
-    for index,target,_ in selected:
+    for index,target,operation in selected:
         for node in nodes[cursor:index]:
             for value in node.output:
                 if value not in constants and value not in seen_set:seen.append(value);seen_set.add(value)
         future={v for node in nodes[index:] for v in node.input}
         future.update(v.name for v in model.graph.output)
         live=[v for v in seen if v in future and v not in constants]
-        if target.input[0] in constants:live.append(target.input[0])
-        if target.input[0] not in live:raise ValueError('Projection input is not live at its boundary')
+        for value in operation['inputs']:
+            if value in constants and value not in live:live.append(value)
+            if value not in live:raise ValueError('GPU operation input is not live at its boundary')
         part=extractor.extract_model(frontier,live)
         if any(n.name in node_names for n in part.graph.node):raise ValueError('A selected projection escaped its cut')
         for weight in part.graph.initializer:

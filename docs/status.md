@@ -1,5 +1,17 @@
 # 現在の状態
 
+更新日: 2026-10-15。**画像attentionの2つの行列積は、元GPU入力の先頭16行に対する独立した現CPU式へ実GPUで全bit一致した。最初の層への再接続も元native参照の許容差超過0。ただし画像全encoderと高いmemory peakは未解決。** [固定receipt](results/m3-attention-softmax-and-matmul-gpu-20261015.json)。工程3・4は未完了のまま。
+
+診断用の行prefix取得は3 intended Red→既存観測を含む10 Green。元の`[1,12,2520,2520]`を全量downloadせず、各headの先頭16行だけを取得した。観測後の元layer 0出力は旧GPU hash `bc417e7f...` と全bit一致し、source model serialized bytesも保持。これは診断readbackであり、製品の中間readbackなしを証明する試験ではない。
+
+softmaxは同じ483,840入力値に対する現CPU式で、標準GPUの419,773 bit差→既存候補157,609 bit差、両者の許容差超過0。候補は全bit一致ではない。softmaxだけを前のRMS / GELU / 投影候補へ追加した `143312e...` の層は1要素超過・最大比1.182683で不合格として保持する。行列積の初回診断はheadをまとめた3次元shapeを4次元と誤認して前提確認で停止し、数値比較未実行として別記録。shape監査修正後は元層の入力3行列を全量、巨大出力とsoftmax入力は先頭16行だけ捕捉し、元最終GPU bit保持を確認した。
+
+`d41c4b3...` の2つのGPU行列積は、捕捉入力に対する独立した現CPU式へそれぞれ483,840値 / 12,288値の全bit一致。元native内部値の取得ではない。両GPU入力と残差の保持は2 intended Red→既存分割 / pipeline / 行prefixを含む24 Green。`eca9428...` の元layer 0は7 RMS / 7投影 / GELU / 2行列積を接続し、標準softmaxで元native gate超過0・最大比0.739177、候補softmaxも接続すると超過0・最大比0.613358。最終hashはそれぞれ`747e55d6...` / `40cf083c...`、全bit一致ではない。2 pass / skip0、GPUCompute・計算/入力CPU fallback・中間flush0、source bytes保持。既存GPU演算カーネルと音声経路は変更していない。package22 Green。
+
+全encoderはこのcheckpointで再実行していない。前候補square-0の571要素超過と高いmemory peakを未解決として保持する。他5画像caseも未実行。次は残るattention/scaling・元RMSと全体のallocation寿命を確認し、ピーク対策後に合格した演算を元全profileへ接続する。実PCM / Texture→GPU前処理→encoder→backbone→正規化768 API、全role / mask / 境界 / 所有権 / Dispose / 例外後再利用 / text回帰、工程3・4のsample / Playerは未完了。Required CI、Persistent allocation警告・長期memoryは別gate。Unity終了済み。
+
+以下は前回checkpoint。
+
 更新日: 2026-10-15。**未使用GPU cache解放とコピー済みWorker出力の退役をopt-inで追加し、元layer 0と全体候補の出力bit保持を確認した。ただし画像全体の571要素超過と高いmemory peakは未解決。** 既存constructorの既定動作は維持。3 intended Red→cache契約3 Green＋linker保持1 Red→関連14 Green、コピー済み出力 / 保持メンバーの2 Red→関連15 Green、package22 Green。[固定receipt](results/m3-gpu-cache-release-and-output-retirement-20261015.json)。
 
 解放はWorkerが所有する未使用poolだけに適用し、全境界のCopyOutput完了後は既にコピー済みのWorker出力を退役する。入力・係数・caller所有の結果・借用operationを保持し、反復・例外後再利用・二重Disposeを確認。最初の層は前候補hash `fe3b9fe2...` と全bit一致し、元native layer gate超過0 / source model bytes保持。Player用link.xmlには実際に参照するprivate field / generic pool constructor・Disposeを明示追加し、広いpreserve指定は使わない。保持metadataの検証であり、Player実行合格ではない。既存GELU / tanh / softmax / batched matmul / 音声算術は不変。

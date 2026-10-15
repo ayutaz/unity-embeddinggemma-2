@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Unity.InferenceEngine;
 
 namespace EmbeddingGemma.Validation.Tests
@@ -32,8 +33,28 @@ namespace EmbeddingGemma.Validation.Tests
             needed.ExceptWith(constants.Select(value=>value.index));needed.ExceptWith(inputs.Select(value=>value.index));
             if(needed.Count!=0)throw new ArgumentException("Requested tensor has an unresolved producer.",nameof(tensorIndex));
             selected.Reverse();
-            return new Model{ProducerName=source.ProducerName+"/diagnostic-tensor-slice",inputs=inputs,
-                constants=constants,layers=selected,outputs=new List<Model.Output>{new Model.Output{name=outputName,index=tensorIndex}}};
+            // Pinned Worker named-input lookup uses input.index as its list
+            // position. Renumber every retained tensor to avoid collisions;
+            // clone descriptors and layers, retaining coefficient backing bytes.
+            var map=new Dictionary<int,int>();
+            foreach(var input in inputs)map.Add(input.index,map.Count);
+            foreach(var constant in constants)map.Add(constant.index,map.Count);
+            foreach(var layer in selected)foreach(var index in layer.outputs)
+                if(index>=0&&!map.ContainsKey(index))map.Add(index,map.Count);
+            var clone=typeof(object).GetMethod("MemberwiseClone",BindingFlags.Instance|BindingFlags.NonPublic);
+            var result=new Model{ProducerName=source.ProducerName+"/diagnostic-tensor-slice"};
+            foreach(var input in inputs)result.inputs.Add(new Model.Input{name=input.name,index=map[input.index],dataType=input.dataType,shape=input.shape});
+            foreach(var constant in constants)
+            {
+                var copy=(Constant)clone.Invoke(constant,null);copy.index=map[constant.index];result.constants.Add(copy);
+            }
+            foreach(var layer in selected)
+            {
+                var copy=(Layer)clone.Invoke(layer,null);
+                copy.inputs=layer.inputs.Select(index=>index<0?index:map[index]).ToArray();
+                copy.outputs=layer.outputs.Select(index=>index<0?index:map[index]).ToArray();result.layers.Add(copy);
+            }
+            result.outputs.Add(new Model.Output{name=outputName,index=map[tensorIndex]});return result;
         }
         public static Model Extract(Model source,int tensorIndex,string outputName)
             =>Extract(source,tensorIndex,outputName,Array.Empty<Model.Input>());

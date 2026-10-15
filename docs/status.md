@@ -55,6 +55,8 @@ source `9741d1e`の[最新確定CI](https://github.com/ayutaz/unity-embeddinggem
 
 範囲外分岐を含む[SiLU区間再検証](results/m4-original-layer8-to-final-native-silu-7-failures-20261016.json)は9か所を置換し、候補のnative計算は元最終出力と全bit一致しました。ONNXは7要素超過で不合格、最大許容差比2.15で、先の標準ONNX1.42より悪化しています。別ホスト間の件数減少だけをSiLUの因果証明や改善とは扱いません。次は固定区間内でRMS28か所とSiLU9か所の順序を同時に表す明示候補を、同じホストの標準ONNXと比較します。元参照・許容差と製品Runtimeは維持します。
 
+[同一ホストの標準ONNXとRMS28＋SiLU9の比較](results/m4-fixed-tail-joint-and-same-host-baseline-failed-20261016.json)も完了し、元参照に対して標準9要素・候補14要素が許容差を超過しました。候補は不採用です。今回のIntel Xeon8573Cではnative区間計算自体にも元参照との10要素超過があり、現在nativeを相手にしたONNX比較にも標準13要素・候補10要素の超過を確認しました。元AMD EPYC9V74ホストと同じONNX SHA・固定入力・元参照でも出力が変わるため、CPU環境差と変換差を分けて保持します。正規化・SiLUだけで解消したとは扱いません。次は候補の組み合わせを増やす前に、同じ入出力・元係数で個別の行列積などを比較します。ローカルUnityは停止状態を維持しています。
+
 ## 後続工程
 
 手順5はモデル準備の再利用・配布、検索sample、連続推論のメモリ / 速度、Windows Player、他OS / 実機。手順6は依存PR、導入、ライセンス、配布の整理です。merge・公開は別途明示された範囲で進めます。

@@ -58,6 +58,15 @@ def test_original_probe_observes_nodes_on_native_host_and_uploads_only_selected_
     assert 'artifacts/original-context-results/captures/*.bin' in upload['with']['path']
 
 
+def test_original_probe_checks_pool_layout_on_captured_last_encoder_output_after_failed_gate():
+    steps=workflow()['jobs']['original_vision_probe']['steps']
+    execute=next(step['run'] for step in steps if step.get('name')=='Replay original saved graph against unchanged golden')
+    assert "'add_225'" in execute, 'Last original encoder output must be observed directly'
+    step=next(step for step in steps if step.get('name')=='Compare original official and saved pooling layouts')
+    assert 'always()' in step['if'] and 'native' in step['if']
+    assert 'embeddinggemma_tools.vision_pooling_context' in step['run']
+
+
 @pytest.mark.parametrize('conditions,reproduced', [
     ([dict(executed=True, mismatched_elements=0)], True),
     ([dict(executed=True, mismatched_elements=1)], False),

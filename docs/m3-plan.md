@@ -4,6 +4,8 @@
 
 ## 2026-10-15の画像の現在地
 
+末尾RMS / block192投影は[今回の固定CPU入力へ実GPU全bit一致](results/m3-original-saved-tail-rms-gpu-20261015.json)。Python6 Red→関連38 Green、GPU局所1 pass / skip0。新しい末尾RMSの統計量上限2e6は明示opt-inで、既存の既定1e6は保つ。全113 RMSへ接続した全体候補は[元固定golden5要素超過のまま](results/m3-all-rms-original-gpu-gate-still-five-20261015.json)、全5要素のbitも前候補と同じ。GPUCompute・fallback / 中間flush0・元係数を保持、1 fail / skip0、他5case未実行。次は取得する元最終encoder入力上で公式poolingの転置280行 / 保存graphの連続256行をActionsで比較する。原因と断定せず元golden・許容差を保つ。Unity終了済み。
+
 最新は[元graphの直接中間観測](results/m3-original-saved-graph-node-context-20261015.json)と[block192全体GPU](results/m3-original-context-block192-gpu-20261015.json)。観測あり / 通常CPU実行の最終全bit一致を確認し、rotaryは旧診断nativeと全bit一致、差はpatchで既に存在すると分かった。今回CPU patchは保存済みGPU block192と全bit一致する。元の全体候補をblock192へ接続した1ケースはGPUCompute・fallback / 中間flush0・元係数保持のまま、元固定golden超過566→5、最大比1.256657へ減少。まだ1 fail / skip0、他5case未実行。今回CPU出力へも3要素超過が残る。host peak約4.37GiB、実行＋最終取得30.050秒、Unity終了済み。次は取得済み末尾入力で残るRMSと最終投影を単独比較する。参照と許容差を変更せず、API全条件 / sample / Player / 必須環境の範囲を維持。以下は前回checkpoint。
 
 元保存graphのActions再実行は完了し、両AMD EPYC 7763 / AVX2 runnerのthread 1 / 2 / 4全条件で元square-0参照3要素超過・最大比1.182998。AVX512は未実行。推論なしのarchive照合ではmetadata以外の2,321演算 / 218保存dataは元と診断で全て一致した。SHA差だけを演算変更とせず、元保存graphから直接中間値を捕捉し、診断参照との最初の相違を確認する。元goldenは保持する。

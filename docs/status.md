@@ -1,5 +1,9 @@
 # 現在の状態
 
+最新の末尾検証: [固定CPU末尾入力へのRMS / projection GPU比較](results/m3-original-saved-tail-rms-gpu-20261015.json)。元RMSは89,563 bit差・許容差超過0、block192投影は全bit一致。新しいunscaled RMSは明示FP32 cascade / 商・sqrt・逆数補正を使い、既存の既定1e6上限を保ち、末尾専用に2e6をopt-inとした。6 intended Red→関連38 Green、取得済み196,608値のCPU / 標準FP32 ONNX / 実GPUは全bit一致。GPU局所1 pass / skip0であり、元生成時の中間参照や全encoderの合格ではない。
+
+これを接続した全体`a36625a...`は113 RMSすべて置換・元係数 / GPUCompute・fallback / 中間flush0を保持したが、[元固定goldenへの超過は5要素のまま](results/m3-all-rms-original-gpu-gate-still-five-20261015.json)。5要素の出力bitは前候補と全て同じ。全出力では50,671 bitが変わり、今回CPU出力への超過も3要素のまま。1 fail / skip0、host peak4,655,656,960 byte（約4.34GiB）、実行＋最終取得16.421秒の単発観測。他5画像case未実行。runner / 監視はterminal、Unity終了済み。次は元graphの最後のencoder出力をActionsで直接取得し、公式poolingの転置280行と保存graphの連続256行を比較する。形状・strideが違うことは確認済みだが、残る差の原因とはまだ断定しない。元golden・許容差、工程3・4の全範囲を維持する。
+
 更新日: 2026-10-15。**元保存graphの直接観測でpatch投影の参照文脈差を特定し、block192で全体GPUの元固定golden超過を566→5要素へ減らした。まだ不合格で、工程3・4は未完了。** [元graphの直接観測](results/m3-original-saved-graph-node-context-20261015.json) / [保存済みGPU block比較](results/m3-original-patch-existing-gpu-blocks-20261015.json) / [全体block192 GPU結果](results/m3-original-context-block192-gpu-20261015.json)。元golden・係数・許容差は維持している。
 
 Actions `38713178242`は元graphから7箇所を直接捕捉し、観測あり / 通常実行の最終全bit一致を確認。rotary cos / sinは以前の診断nativeと全bit一致する一方、patchは1,225,584 bit差・許容差超過0、観測した最初の許容差超過はlayer 0の4要素。最終出力は診断nativeへ553要素超過、元固定goldenへ3要素超過。これは今回のAVX2 CPU実行文脈であり、元生成時の中間goldenではない。以前の6種類のGPU patch出力を推論なしで照合し、今回CPU patchとblock192が全bit一致、block384は旧診断nativeと全bit一致すると確認した。実CPU ISAを単独原因として断定しない。

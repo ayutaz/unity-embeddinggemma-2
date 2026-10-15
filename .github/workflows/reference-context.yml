@@ -186,7 +186,7 @@ jobs:
           report = replay_saved_reference_context(Path('../artifacts/original-context-input'), 'image',
               source_commit='e2a6dc01fbca8c9be1f3bbe875325ad338de0ca0',
               revision='914f7f89142e33e77833254d9c9b90c3cef7303b', case_id='square-0',
-              capture_nodes=('add_1', 'cat', 'cat_1', 'add_15', 'mul_372', 'mul_373', 'mm_113')
+              capture_nodes=('add_1', 'cat', 'cat_1', 'add_15', 'mul_372', 'mul_373', 'mm_113', 'add_225')
                   if os.environ['PROBE_CONTEXT'] == 'native' else None,
               capture_destination=Path('../artifacts/original-context-results/captures'))
           report.update(job_source=os.environ['GITHUB_SHA'], probe_context=os.environ['PROBE_CONTEXT'])
@@ -202,6 +202,13 @@ jobs:
           if not report['reference_reproduced']:
               raise SystemExit('Original saved graph did not reproduce the unchanged fixed reference')
           PY
+      - name: Compare original official and saved pooling layouts
+        if: always() && matrix.context == 'native'
+        run: |
+          uv run --locked python -m embeddinggemma_tools.vision_pooling_context \
+            --input ../artifacts/original-context-input \
+            --captures ../artifacts/original-context-results \
+            --output ../artifacts/original-context-results/pooling-context.json
       - name: Record original replay scope
         if: always()
         run: |

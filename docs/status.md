@@ -1,5 +1,15 @@
 # 現在の状態
 
+更新日: 2026-10-15。**元保存graphの直接観測でpatch投影の参照文脈差を特定し、block192で全体GPUの元固定golden超過を566→5要素へ減らした。まだ不合格で、工程3・4は未完了。** [元graphの直接観測](results/m3-original-saved-graph-node-context-20261015.json) / [保存済みGPU block比較](results/m3-original-patch-existing-gpu-blocks-20261015.json) / [全体block192 GPU結果](results/m3-original-context-block192-gpu-20261015.json)。元golden・係数・許容差は維持している。
+
+Actions `38713178242`は元graphから7箇所を直接捕捉し、観測あり / 通常実行の最終全bit一致を確認。rotary cos / sinは以前の診断nativeと全bit一致する一方、patchは1,225,584 bit差・許容差超過0、観測した最初の許容差超過はlayer 0の4要素。最終出力は診断nativeへ553要素超過、元固定goldenへ3要素超過。これは今回のAVX2 CPU実行文脈であり、元生成時の中間goldenではない。以前の6種類のGPU patch出力を推論なしで照合し、今回CPU patchとblock192が全bit一致、block384は旧診断nativeと全bit一致すると確認した。実CPU ISAを単独原因として断定しない。
+
+この証拠から一度だけ全体block192候補`a9db1db...`を実行。178 custom GPU演算 / 179 segment・残る元RMS1 / 元constant-left poolingを保持し、GPUCompute・計算/入力CPU fallback0・中間flush0・元係数digest保持。元固定golden超過5要素・最大比1.256657、今回CPU出力へは3要素超過・最大比1.095665で未採用。他5画像caseは未実行。1 fail / skip0、process125.479秒 / GPU実行＋最終取得30.050秒、host peak4,694,650,880 byte（約4.37GiB）。新旧候補は演算数が異なるため旧18 segment候補との速度比較にしない。監視とnative runnerはterminal、Unityは終了済み。
+
+元保存graph観測は6 intended Red→workflow1 Red→関連26 Green。これは実モデル数値合格ではない。次は取得済みの末尾入力で、残るRMSと最終投影を小さいGPU比較へ分解し、GPU / 今回CPUの差と今回CPU / 元固定goldenの差を分離する。全体実行の反復やgolden更新は行わない。全画像FP32条件、元音声6ケース / 2 profile、実PCM / Texture→GPU前処理→encoder→backbone→正規化768 APIの全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰、工程3・4 sample / Player、Required CI・必須環境・長期memoryは範囲を維持する。
+
+以下は前回checkpoint。
+
 更新日: 2026-10-15。**画像の診断用native参照は、最初に固定した参照と同一ではなかった。追加の全体GPU算術変更より、元の保存済みgraphの再現条件確認を先に行う。** [固定receipt](results/m3-original-reference-context-misalignment-20261015.json)。入力pixelのSHAは一致し、元モデルの全定数content hashは診断モデルにも存在する。一方、診断manifestの`trace_matches_original_saved=true`が比較したgraphは、その診断jobで新たにexportした`508f44c5...`であり、元の固定graph `f9c5175a...`ではない。元固定参照に対して診断native出力自体がsquare-0で598要素、square-1で51要素超過する。過去の「元native layer」等の局所比較は、この診断文脈内の結果として読み、元の固定golden全体への合格へ拡張しない。
 
 GPU候補`32d9471...`は112 RMS / 114 static projection / 32 attention matmul / 16 GELU / 16 softmaxを接続し、元のconstant-left poolingは保持した。178 custom operation / 179 segment、GPUCompute・計算/入力CPU fallback0・中間flush0・元係数保持だが、元固定参照566要素超過で不合格。診断native参照へは6要素超過であり、こちらも合格ではない。画像他5caseは未実行。最初の候補`593be8f...`はpooling分類の前提失敗で数値未実行として分離。末尾projectionのblock384が2ケースで全bit一致した対象も診断nativeのstageであり、元固定参照の証明ではない。保存定数監査は推論なしで1 pass、追加2定数はrotary由来。学習済み係数の相違やCPU ISA等を原因として断定しない。

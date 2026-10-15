@@ -4,6 +4,8 @@
 
 ## 2026-10-15の実行方針と再開順
 
+最新は[元保存graphの直接観測](results/m3-original-saved-graph-node-context-20261015.json)→[既存GPU patch比較](results/m3-original-patch-existing-gpu-blocks-20261015.json)→[block192全体GPU](results/m3-original-context-block192-gpu-20261015.json)。元graph通常 / 観測の最終全bit一致、rotaryは旧診断nativeと同一、patchは今回CPU値が既存block192と同一であることを確認。全体GPUの元固定golden超過は566→5へ減ったが未合格、今回CPU出力へも3要素超過。GPUCompute・fallback / 中間flush0・元係数とgolden / 許容差は維持。1 fail / skip0、他5画像caseは未実行、Unity終了済み。次は取得済み末尾入力のRMS / 最終投影を個別比較し、今回CPU / 元goldenの差と分離する。以下の全画像FP32・音声6ケース / 2 profile・実入力から最終768 API全条件・工程3・4 sample / Player・Required CI / 必須環境 / 長期memoryの範囲を維持する。
+
 元保存graphの[Actions再実行](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38712084754)は完了。native / AVX2指定の実機はいずれもAMD EPYC 7763 / AVX2で、thread 1 / 2 / 4全条件が同じ3要素超過。AVX512は未実行。静的archive照合では元 / 診断のmetadata以外の2,321演算と218保存dataが全て一致した。以下のSHA差は演算変更の証明ではない。次は元保存graphから直接中間値を取得し、診断参照との最初の相違を絞る。
 
 最新数値checkpoint: [元固定参照と診断参照の不一致](results/m3-original-reference-context-misalignment-20261015.json)。診断native出力自体が元画像固定goldenへ598 / 51要素超過し、診断manifestの一致flagが別jobの再export graphを指すことを確認した。入力pixelは同一、元の全定数content hashは診断側にもある。学習係数変更が原因との証拠はない。全体GPU候補は元固定参照566要素超過・診断native参照6要素超過で不採用。過去の局所native比較は診断文脈内の証拠として保持する。次は元保存graphをActions上のnative / AVX2・thread 1 / 2 / 4で再実行し、元参照の再現条件を確認する。元golden / 許容差を変更せず、重いローカル反復は行わない。下記の全画像FP32、音声6ケース / 2 profile、実入力から最終768 APIの全条件、工程3・4 sample / Player・必須環境・Required CI・長期memoryの範囲を維持する。

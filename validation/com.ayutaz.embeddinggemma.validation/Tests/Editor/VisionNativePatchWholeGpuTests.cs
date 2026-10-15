@@ -145,8 +145,13 @@ namespace EmbeddingGemma.Validation.Tests
                     Assert.That(inlineAllRms&&nativeGelu,Is.True);
                     var matrices=original.layers.Where(layer=>layer.GetType().Name=="MatMul"||layer.GetType().Name=="MatMul2D").ToArray();
                     var staticProducts=new HashSet<int>(matrices.Where(layer=>constants.ContainsKey(layer.inputs[1])).Select(layer=>layer.outputs[0]));
-                    var binaryProducts=new HashSet<int>(matrices.Where(layer=>!constants.ContainsKey(layer.inputs[1])).Select(layer=>layer.outputs[0]));
+                    var binaryProducts=new HashSet<int>(matrices.Where(layer=>!constants.ContainsKey(layer.inputs[0])&&!constants.ContainsKey(layer.inputs[1])).Select(layer=>layer.outputs[0]));
+                    var preserved=matrices.Where(layer=>!staticProducts.Contains(layer.outputs[0])&&!binaryProducts.Contains(layer.outputs[0])).ToArray();
+                    report["preserved_original_matrix_operations"]=new JArray(preserved.Select(layer=>new JObject{["output_index"]=layer.outputs[0],
+                        ["left_is_constant"]=constants.ContainsKey(layer.inputs[0]),["right_is_constant"]=constants.ContainsKey(layer.inputs[1]),
+                        ["left_constant_shape"]=constants.TryGetValue(layer.inputs[0],out var coefficient)?JArray.FromObject(Enumerable.Range(0,coefficient.shape.rank).Select(axis=>coefficient.shape[axis]).ToArray()):null}));Save();
                     Assert.That(staticProducts.Count,Is.EqualTo(114));Assert.That(binaryProducts.Count,Is.EqualTo(32));
+                    Assert.That(preserved.Length,Is.EqualTo(1));Assert.That(constants.ContainsKey(preserved[0].inputs[0]),Is.True);
                     var marked=SavedProjectionPartition.MarkGelu(working);working=marked.model;var geluOutputs=new HashSet<int>(marked.outputs);Assert.That(geluOutputs.Count,Is.EqualTo(16));
                     var softmaxes=working.layers.Where(layer=>layer.GetType().Name=="Softmax").ToArray();Assert.That(softmaxes.Length,Is.EqualTo(16));
                     var identity=typeof(Worker).Assembly.GetTypes().Single(type=>type.Name=="Identity"&&typeof(Layer).IsAssignableFrom(type));

@@ -25,6 +25,7 @@ FEED_FORWARD_PARTS = ("pre_layer_norm", "ffw_layer_1", "act_fn", "ffw_layer_2", 
 FEED_FORWARD_PATHS = tuple("feed_forward1." + name for name in FEED_FORWARD_PARTS)
 ATTENTION_PROJECTION_PARTS = ("q_proj", "k_proj", "v_proj", "relative_k_proj", "post")
 ATTENTION_PROJECTION_PATHS = tuple("self_attn." + name for name in ATTENTION_PROJECTION_PARTS)
+CONVOLUTION_PARTS = ("pre_layer_norm", "linear_start", "depthwise_conv1d", "conv_norm", "act_fn", "linear_end")
 SUBSAMPLE_PARTS = ("layer0.conv", "layer0.norm", "layer0.act", "layer1.conv",
                    "layer1.norm", "layer1.act", "input_proj_linear")
 
@@ -187,7 +188,7 @@ def load_layer(snapshot, *, index=0):
     return layer.eval(), config
 
 
-def _capture_named(layer, hidden, blocked_mask, positions, pinned_final, names):
+def _capture_named(layer, hidden, blocked_mask, positions, pinned_final, names, *, capture_inputs=False):
     for value in (hidden, pinned_final, positions):
         if value.dtype != torch.float32 or not torch.isfinite(value).all():
             raise ValueError("native replay requires finite FP32 context")
@@ -198,6 +199,7 @@ def _capture_named(layer, hidden, blocked_mask, positions, pinned_final, names):
         def callback(module, args, output):
             tensor = output[0] if name == "self_attn" else output
             values[name] = tensor.detach().clone()
+            if capture_inputs:values[name+'.input']=args[0].detach().clone()
         return callback
     try:
         for name in names:
@@ -209,9 +211,10 @@ def _capture_named(layer, hidden, blocked_mask, positions, pinned_final, names):
             handle.remove()
     if not torch.equal(actual, pinned_final):
         raise ValueError("native replay does not match pinned layer final")
-    if set(values) != set(names) or any(not torch.isfinite(value).all() for value in values.values()):
+    expected_names=set(names)|({name+'.input' for name in names} if capture_inputs else set())
+    if set(values) != expected_names or any(not torch.isfinite(value).all() for value in values.values()):
         raise ValueError("native replay parts are incomplete or nonfinite")
-    return {name: values[name] for name in names}
+    return {name: values[name] for name in (*names, *(name+'.input' for name in names))} if capture_inputs else {name: values[name] for name in names}
 
 
 def capture_parts(layer, hidden, blocked_mask, positions, pinned_final):
@@ -260,6 +263,20 @@ def capture_attention_projections(layer, hidden, blocked_mask, positions, pinned
     return {name: values["self_attn." + name] for name in ATTENTION_PROJECTION_PARTS}
 
 
+def capture_convolution_parts(layer, hidden, blocked_mask, positions, pinned_final):
+    """Observe unchanged native convolution modules and their borrowed inputs."""
+    names=tuple('lconv1d.'+name for name in CONVOLUTION_PARTS)
+    captured=_capture_named(layer,hidden,blocked_mask,positions,pinned_final,names,capture_inputs=True)
+    values={name+'.'+kind:captured['lconv1d.'+name+('.input' if kind=='input' else '')]
+            for name in CONVOLUTION_PARTS for kind in ('input','output')}
+    values['depthwise_conv1d.weight']=layer.lconv1d.depthwise_conv1d.weight.detach().clone()
+    values['glu.input']=values['linear_start.output'].clone()
+    values['glu.output']=values['depthwise_conv1d.input'].transpose(1,2).contiguous().clone()
+    if len(values)!=15 or any(v.dtype!=torch.float32 or not torch.isfinite(v).all() for v in values.values()):
+        raise ValueError('Pinned convolution capture is incomplete or not finite FP32')
+    return values
+
+
 def capture_attention_operations(layer, hidden, blocked_mask, positions, pinned_final):
     """Observe native attention dispatch without replacing its operators."""
     from torch.utils._python_dispatch import TorchDispatchMode
@@ -292,7 +309,7 @@ def capture_attention_operations(layer, hidden, blocked_mask, positions, pinned_
     return mode.values
 
 
-def prepare(snapshot, context, output, *, reference_source, diagnostic_source, detail_feed_forward=False, detail_attention_projections=False, detail_attention_ops=False,
+def prepare(snapshot, context, output, *, reference_source, diagnostic_source, detail_feed_forward=False, detail_attention_projections=False, detail_attention_ops=False, detail_convolution=False,
             with_projection_oracle=False, with_compensated_projection=False, chunk_size=64,
             subsample_input=None, subsample_input_sha256=None):
     """Produce internal references for the frozen, fully valid silence layer 0."""
@@ -363,6 +380,8 @@ def prepare(snapshot, context, output, *, reference_source, diagnostic_source, d
     parts = _capture_named(layer, hidden, blocked, positions, pinned_final, names)
     if detail_attention_ops:
         parts.update({'self_attn.'+name:value for name,value in capture_attention_operations(layer,hidden,blocked,positions,pinned_final).items()})
+    if detail_convolution:
+        parts.update({'lconv1d.'+name:value for name,value in capture_convolution_parts(layer,hidden,blocked,positions,pinned_final).items()})
     if features is not None:
         module = Gemma4AudioSubSampleConvProjection(config).float().eval()
         prefix = "audio_tower.subsample_conv_projection."
@@ -388,6 +407,7 @@ def prepare(snapshot, context, output, *, reference_source, diagnostic_source, d
                   detail_feed_forward=detail_feed_forward,
                   detail_attention_projections=detail_attention_projections,
                   detail_attention_ops=detail_attention_ops,
+                  detail_convolution=detail_convolution,
                   full_encoder_validated=False, unity_validated=False)
     if features is not None:
         report.update(subsample_native_final_exact_match=True, subsample_input=_identity(Path(subsample_input)))
@@ -421,6 +441,7 @@ def main(argv=None):
     parser.add_argument("--detail-feed-forward", action="store_true")
     parser.add_argument("--detail-attention-projections", action="store_true")
     parser.add_argument("--detail-attention-ops", action="store_true")
+    parser.add_argument("--detail-convolution", action="store_true")
     parser.add_argument("--projection-oracle", action="store_true")
     parser.add_argument("--compensated-projection", action="store_true")
     parser.add_argument("--chunk-size", type=int, default=64)
@@ -448,6 +469,7 @@ def main(argv=None):
                               detail_feed_forward=args.detail_feed_forward, with_projection_oracle=args.projection_oracle,
                               detail_attention_projections=args.detail_attention_projections,
                               detail_attention_ops=args.detail_attention_ops,
+                              detail_convolution=args.detail_convolution,
                               with_compensated_projection=args.compensated_projection, chunk_size=args.chunk_size,
                               subsample_input=args.subsample_input, subsample_input_sha256=args.subsample_input_sha256))
         report["success"] = (report.get("fp64_projection_gate_passed", True)

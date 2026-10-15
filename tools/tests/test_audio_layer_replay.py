@@ -125,6 +125,55 @@ def test_producer_records_attention_operation_inputs_and_outputs(tmp_path):
     assert not report['full_encoder_validated'] and not report['unity_validated']
 
 
+def test_convolution_capture_preserves_native_parts_and_exposes_glu_and_depthwise_operands():
+    run=getattr(audio_layer_replay,'capture_convolution_parts',None)
+    assert callable(run),'Pinned convolution capture is missing'
+    layer,hidden,blocked,positions,expected=fixture();original=hidden.clone()
+    values=run(layer,hidden,blocked,positions,expected)
+    names=['pre_layer_norm','linear_start','depthwise_conv1d','conv_norm','act_fn','linear_end']
+    assert set(values)=={n+'.'+k for n in names for k in ['input','output']}|{'depthwise_conv1d.weight','glu.input','glu.output'}
+    with torch.no_grad():
+        assert torch.equal(values['glu.output'],torch.nn.functional.glu(values['glu.input'],dim=-1))
+        assert torch.equal(values['depthwise_conv1d.output'],layer.lconv1d.depthwise_conv1d(values['depthwise_conv1d.input']))
+        assert torch.equal(values['act_fn.output'],layer.lconv1d.act_fn(values['act_fn.input']))
+    assert torch.equal(values['depthwise_conv1d.weight'],layer.lconv1d.depthwise_conv1d.weight)
+    assert torch.equal(values['glu.input'],values['linear_start.output'])
+    assert torch.equal(values['glu.output'].transpose(1,2),values['depthwise_conv1d.input'])
+    assert torch.equal(hidden,original)
+    assert all(v.dtype==torch.float32 and torch.isfinite(v).all() for v in values.values())
+
+
+@pytest.mark.parametrize('fail',[False,True])
+def test_convolution_capture_restores_external_hooks_even_when_final_gate_fails(fail):
+    run=getattr(audio_layer_replay,'capture_convolution_parts',None)
+    assert callable(run),'Pinned convolution capture is missing'
+    layer,hidden,blocked,positions,expected=fixture()
+    modules=[layer.get_submodule('lconv1d.'+n) for n in ['pre_layer_norm','linear_start','depthwise_conv1d','conv_norm','act_fn','linear_end']]
+    external=modules[0].register_forward_hook(lambda *args:None);before=[set(m._forward_hooks) for m in modules]
+    try:
+        if fail:
+            with pytest.raises(ValueError,match='pinned.*final'):run(layer,hidden,blocked,positions,expected+.1)
+        else:run(layer,hidden,blocked,positions,expected)
+        assert [set(m._forward_hooks) for m in modules]==before
+    finally:external.remove()
+
+
+def test_producer_records_optional_convolution_inputs_outputs_and_original_weights(tmp_path):
+    snapshot,context=bundle(tmp_path)
+    report=preparer()(snapshot,context,tmp_path/'out',reference_source='a'*40,diagnostic_source='c'*40,detail_convolution=True)
+    assert report['detail_convolution'] and report['native_final_exact_match']
+    assert len(report['parts'])==22 and 'lconv1d.depthwise_conv1d.weight' in report['parts']
+    assert not report['full_encoder_validated'] and not report['unity_validated']
+
+
+def test_cli_passes_convolution_capture_flag_to_audited_producer(tmp_path,monkeypatch):
+    calls=[]
+    monkeypatch.setattr(audio_layer_replay,'prepare',lambda *args,**kwargs:calls.append(kwargs) or {'native_final_exact_match':True})
+    result=audio_layer_replay.main(['--snapshot',str(tmp_path),'--context',str(tmp_path),'--output',str(tmp_path/'out'),
+        '--reference-source','a'*40,'--diagnostic-source','c'*40,'--report',str(tmp_path/'report.json'),'--detail-convolution'])
+    assert result==0 and calls[0]['detail_convolution'] is True
+
+
 def test_loader_allocates_only_selected_layer_and_loads_exact_pinned_weights(tmp_path):
     load = getattr(audio_layer_replay, "load_layer", None)
     assert callable(load), "Selected audio layer loader is missing"

@@ -1,0 +1,70 @@
+name: Original-context audio prefix ONNX diagnosis
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, labeled]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: frozen-audio-prefix-onnx-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       contains(github.event.pull_request.labels.*.name, 'frozen-audio-prefix-onnx'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+      OPENBLAS_NUM_THREADS: '4'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - name: Fetch original saved graph and one fixture without Hugging Face downloads
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.artifact_zip
+          --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11814567883
+          --output ../artifacts/frozen-prefix-input --max-entry-bytes 2147483648
+          --member audio-runtime-reference/audio-encoder-reference.json
+          --member audio-runtime-reference/audio-encoder-validation.json
+          --member audio-runtime-reference/frames-1119-valid-1119/audio.pt2
+          --member audio-runtime-reference/frames-1119-valid-1119/silence-features-fp32.bin
+      - name: Record actual CPU host
+        run: |
+          mkdir -p ../artifacts/frozen-audio-prefix-onnx
+          lscpu --json > ../artifacts/frozen-audio-prefix-onnx/cpu-host.json
+      - name: Require original final bits before diagnosing first projection ONNX
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.frozen_audio_prefix_onnx
+          --input ../artifacts/frozen-prefix-input/audio-runtime-reference
+          --output ../artifacts/frozen-audio-prefix-onnx
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: frozen-audio-prefix-onnx-${{ github.sha }}
+          path: |
+            artifacts/frozen-audio-prefix-onnx/*.json
+            artifacts/frozen-audio-prefix-onnx/*.bin
+            artifacts/frozen-audio-prefix-onnx/*.onnx
+            artifacts/frozen-prefix-input/range-receipt.json
+          retention-days: 7
+          if-no-files-found: warn

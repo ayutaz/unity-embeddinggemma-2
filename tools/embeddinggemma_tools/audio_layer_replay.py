@@ -23,6 +23,8 @@ from huggingface_hub import snapshot_download
 PARTS = ("feed_forward1", "norm_pre_attn", "self_attn", "norm_post_attn", "lconv1d", "feed_forward2", "norm_out")
 FEED_FORWARD_PARTS = ("pre_layer_norm", "ffw_layer_1", "act_fn", "ffw_layer_2", "post_layer_norm")
 FEED_FORWARD_PATHS = tuple("feed_forward1." + name for name in FEED_FORWARD_PARTS)
+ATTENTION_PROJECTION_PARTS = ("q_proj", "k_proj", "v_proj", "relative_k_proj", "post")
+ATTENTION_PROJECTION_PATHS = tuple("self_attn." + name for name in ATTENTION_PROJECTION_PARTS)
 SUBSAMPLE_PARTS = ("layer0.conv", "layer0.norm", "layer0.act", "layer1.conv",
                    "layer1.norm", "layer1.act", "input_proj_linear")
 
@@ -253,7 +255,12 @@ def _identity(path):
     return {"bytes": path.stat().st_size, "sha256": digest}
 
 
-def prepare(snapshot, context, output, *, reference_source, diagnostic_source, detail_feed_forward=False,
+def capture_attention_projections(layer, hidden, blocked_mask, positions, pinned_final):
+    values = _capture_named(layer, hidden, blocked_mask, positions, pinned_final, ATTENTION_PROJECTION_PATHS)
+    return {name: values["self_attn." + name] for name in ATTENTION_PROJECTION_PARTS}
+
+
+def prepare(snapshot, context, output, *, reference_source, diagnostic_source, detail_feed_forward=False, detail_attention_projections=False,
             with_projection_oracle=False, with_compensated_projection=False, chunk_size=64,
             subsample_input=None, subsample_input_sha256=None):
     """Produce internal references for the frozen, fully valid silence layer 0."""
@@ -319,8 +326,9 @@ def prepare(snapshot, context, output, *, reference_source, diagnostic_source, d
         SimpleNamespace(config=config), attention_mask)
     positions = Gemma4AudioRelPositionalEncoding(config)(hidden)
     detail_feed_forward = detail_feed_forward or with_projection_oracle or with_compensated_projection
-    parts = _capture_named(layer, hidden, blocked, positions, pinned_final,
-                           (*PARTS, *FEED_FORWARD_PATHS) if detail_feed_forward else PARTS)
+    names = (*PARTS, *(FEED_FORWARD_PATHS if detail_feed_forward else ()),
+             *(ATTENTION_PROJECTION_PATHS if detail_attention_projections else ()))
+    parts = _capture_named(layer, hidden, blocked, positions, pinned_final, names)
     if features is not None:
         module = Gemma4AudioSubSampleConvProjection(config).float().eval()
         prefix = "audio_tower.subsample_conv_projection."
@@ -344,6 +352,7 @@ def prepare(snapshot, context, output, *, reference_source, diagnostic_source, d
                   model_revision=metadata["model_revision"], profile=case["profile"],
                   case=case["id"], input_files=input_files, parts=files,
                   detail_feed_forward=detail_feed_forward,
+                  detail_attention_projections=detail_attention_projections,
                   full_encoder_validated=False, unity_validated=False)
     if features is not None:
         report.update(subsample_native_final_exact_match=True, subsample_input=_identity(Path(subsample_input)))
@@ -375,6 +384,7 @@ def main(argv=None):
     parser.add_argument("--diagnostic-source", required=True)
     parser.add_argument("--report", required=True, type=Path)
     parser.add_argument("--detail-feed-forward", action="store_true")
+    parser.add_argument("--detail-attention-projections", action="store_true")
     parser.add_argument("--projection-oracle", action="store_true")
     parser.add_argument("--compensated-projection", action="store_true")
     parser.add_argument("--chunk-size", type=int, default=64)
@@ -400,6 +410,7 @@ def main(argv=None):
         report.update(prepare(snapshot, args.context, args.output,
                               reference_source=args.reference_source, diagnostic_source=args.diagnostic_source,
                               detail_feed_forward=args.detail_feed_forward, with_projection_oracle=args.projection_oracle,
+                              detail_attention_projections=args.detail_attention_projections,
                               with_compensated_projection=args.compensated_projection, chunk_size=args.chunk_size,
                               subsample_input=args.subsample_input, subsample_input_sha256=args.subsample_input_sha256))
         report["success"] = (report.get("fp64_projection_gate_passed", True)

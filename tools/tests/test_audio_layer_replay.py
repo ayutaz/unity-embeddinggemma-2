@@ -67,6 +67,31 @@ def test_changed_native_final_is_rejected_before_any_result_is_accepted():
         run(layer, hidden, blocked, positions, expected + 0.1)
 
 
+def test_attention_projection_capture_matches_exact_native_inputs_and_final():
+    run=getattr(audio_layer_replay,'capture_attention_projections',None)
+    assert callable(run),'Pinned attention projection capture is missing'
+    layer,hidden,blocked,positions,expected=fixture()
+    original=hidden.clone();parts=capture()(layer,hidden,blocked,positions,expected)
+    values=run(layer,hidden,blocked,positions,expected)
+    assert list(values)==['q_proj','k_proj','v_proj','relative_k_proj','post']
+    with torch.no_grad():
+        for name in ['q_proj','k_proj','v_proj']:
+            assert torch.equal(values[name],getattr(layer.self_attn,name)(parts['norm_pre_attn']))
+        assert torch.equal(values['relative_k_proj'],layer.self_attn.relative_k_proj(positions))
+    assert torch.equal(values['post'],parts['self_attn'])
+    assert torch.equal(hidden,original)
+
+
+def test_attention_projection_capture_rejects_changed_final_and_removes_hooks():
+    run=getattr(audio_layer_replay,'capture_attention_projections',None)
+    assert callable(run),'Pinned attention projection capture is missing'
+    layer,hidden,blocked,positions,expected=fixture()
+    modules=[layer.get_submodule('self_attn.'+name) for name in ['q_proj','k_proj','v_proj','relative_k_proj','post']]
+    before=[set(module._forward_hooks) for module in modules]
+    with pytest.raises(ValueError,match='pinned.*final'):run(layer,hidden,blocked,positions,expected+0.1)
+    assert [set(module._forward_hooks) for module in modules]==before
+
+
 def test_loader_allocates_only_selected_layer_and_loads_exact_pinned_weights(tmp_path):
     load = getattr(audio_layer_replay, "load_layer", None)
     assert callable(load), "Selected audio layer loader is missing"
@@ -124,6 +149,26 @@ def test_producer_writes_parts_only_after_fixed_context_matches(tmp_path):
     assert report["reference_source"] == "a" * 40 and report["diagnostic_source"] == "c" * 40
     assert len(report["parts"]) == 7
     assert report["full_encoder_validated"] is False and report["unity_validated"] is False
+
+
+def test_producer_records_optional_attention_projections_without_changing_acceptance(tmp_path):
+    snapshot,context=bundle(tmp_path)
+    report=preparer()(snapshot,context,tmp_path/'out',reference_source='a'*40,diagnostic_source='c'*40,detail_attention_projections=True)
+    assert report['detail_attention_projections'] is True
+    assert len(report['parts'])==12
+    assert all('self_attn.'+name in report['parts'] for name in ['q_proj','k_proj','v_proj','relative_k_proj','post'])
+    assert report['native_final_exact_match'] and not report['full_encoder_validated'] and not report['unity_validated']
+
+
+def test_cli_passes_attention_detail_option_to_audited_producer(tmp_path,monkeypatch):
+    calls=[]
+    def prepare(*args,**kwargs):
+        calls.append(kwargs)
+        return dict(context_validated=True,native_final_exact_match=True,full_encoder_validated=False,unity_validated=False)
+    monkeypatch.setattr(audio_layer_replay,'prepare',prepare)
+    result=audio_layer_replay.main(['--snapshot',str(tmp_path),'--context',str(tmp_path),'--output',str(tmp_path/'out'),
+        '--reference-source','a'*40,'--diagnostic-source','c'*40,'--report',str(tmp_path/'report.json'),'--detail-attention-projections'])
+    assert result==0 and calls[0]['detail_attention_projections'] is True
 
 
 @pytest.mark.parametrize("target", ["input.bin", "final.bin"])

@@ -181,9 +181,24 @@ class PrefixExport(torch.nn.Module):
         biased_linear_candidate = getattr(self, "biased_linear_candidate", None)
         bmm_nodes = getattr(self, "bmm_nodes", set())
         bmm_candidate = getattr(self, "bmm_candidate", None)
+        softmax_nodes = getattr(self, 'softmax_nodes', set())
+        sigmoid_nodes = getattr(self, 'sigmoid_nodes', set())
+        convolution_nodes = getattr(self, 'convolution_nodes', set())
+        softmax_candidate = getattr(self, 'softmax_candidate', None)
+        sigmoid_candidate = getattr(self, 'sigmoid_candidate', None)
+        convolution_candidate = getattr(self, 'convolution_candidate', None)
 
         class Replay(torch.fx.Interpreter):
             def run_node(self, node):
+                if node in softmax_nodes or node in sigmoid_nodes or node in convolution_nodes:
+                    args, kwargs = self.fetch_args_kwargs_from_env(node)
+                    if kwargs:
+                        raise ValueError('Only the original audited audio leaf contracts are supported')
+                    if node in softmax_nodes:
+                        return softmax_candidate(args[0])
+                    if node in sigmoid_nodes:
+                        return sigmoid_candidate(args[0])
+                    return convolution_candidate(args[0], args[1])
                 if node in bmm_nodes:
                     args, kwargs = self.fetch_args_kwargs_from_env(node)
                     if len(args) != 2 or kwargs:

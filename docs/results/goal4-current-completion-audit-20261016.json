@@ -4,7 +4,7 @@
   "goal": "4\u307e\u3067\u9032\u3081\u3066\u304f\u3060\u3055\u3044",
   "status": "active_not_complete",
   "scope_source": "goal4-scope-audit-20261016.json",
-  "candidate_head_at_audit": "7cdad81bc0020be627f40ae3cb1f6c99acf72bf0",
+  "candidate_head_at_audit": "18cb03f2aa823eada9de430049b45cb92c458436",
   "requirements": [
     {
       "requirement": "Original learned coefficients, references and encoder tolerances remain unchanged",
@@ -82,8 +82,8 @@
       "last_terminal_ci_run": 38798000979,
       "last_terminal_ci_head": "9d40b11ea8b90d712e4b38e70a3da690acc2c330",
       "result": "Python four environments, package and workflow lint pass; audio ONNX and Required CI fail.",
-      "candidate_ci_run": 38802392979,
-      "candidate_ci_head": "7cdad81bc0020be627f40ae3cb1f6c99acf72bf0",
+      "candidate_ci_run": 38806138349,
+      "candidate_ci_head": "18cb03f2aa823eada9de430049b45cb92c458436",
       "candidate_ci_last_observation": "in_progress_at_recording_not_success",
       "candidate_ci_aggregate_conclusion": "",
       "evidence": [
@@ -99,9 +99,12 @@
         "m4-ordered-original-input-stem-tolerance-passed-20261016.json",
         "m4-six-original-attention-bmm-actual-onnx-bit-exact-20261016.json",
         "m4-first-layer-attention-bmm-connected-tolerance-passed-20261016.json",
-        "m4-original-clipped-pointwise-bmm-all286720-bit-exact-20261016.json"
+        "m4-original-clipped-pointwise-bmm-all286720-bit-exact-20261016.json",
+        "m4-all-bmm-full12-numerical-failure-and-upload-timeout-20261016.json",
+        "m4-original-softmax-glu-depthwise-actual-onnx-bit-exact-20261016.json",
+        "m4-connected-original-operator-candidate-and-upload-tdd-20261016.json"
       ],
-      "next_action": "Compare native ONNX and static-linear/all4audited-BMM candidate through all12layers from original frozen stem. Preserve actual original-input/all6signals/Required CI gates."
+      "next_action": "Evaluate all12layers with actual ONNX carry and independently qualified original operators. Whole original-input/all6signals and Required CI remain mandatory."
     }
   ],
   "documentation": {
@@ -139,12 +142,12 @@
     "first_silu_segment_conclusion": "polynomial input domain rejected before ONNX comparison",
     "explicit_tail_rerun": 38790946377,
     "explicit_tail_rerun_last_observation": "completed_numerical_candidate_failed",
-    "latest_related_local_test_count": 96,
+    "latest_related_local_test_count": 139,
     "latest_related_local_tests_skipped": 0,
     "additional_expanded_silu_onnx_boundary_tests": 9,
     "explicit_tail_rerun_tolerance_failures": 7,
     "explicit_tail_rerun_maximum_tolerance_ratio": 2.1517931271366337,
-    "next_diagnostic": "Whole12layer original frozen-input all4BMM candidate; all original-input cases and Required CI still required.",
+    "next_diagnostic": "Explicit ordered_original_primitives through all12layers in connected3layer partitions; only original frozen endpoints, no intermediate resets.",
     "joint_tail_run": 38791597473,
     "joint_tail_conclusion": "baseline9_and_joint14_tolerance_failures_same_host_both_rejected",
     "joint_current_native_tolerance_failures": 10,
@@ -172,11 +175,17 @@
     "attention_bmm_isolated_actual_onnx_bit_exact_values": 760320,
     "first_layer_attention_run": 38802387585,
     "first_layer_all3_candidate_failures": 0,
-    "clipped_pointwise_original_bit_exact_values": 286720
+    "clipped_pointwise_original_bit_exact_values": 286720,
+    "all_bmm_full12_run": 38803551716,
+    "all_bmm_full12_job_conclusion": "cancelled_20minute_limit_during_upload",
+    "all_bmm_numerical_collection_complete": true,
+    "all_bmm_tolerance_failures": 321,
+    "all_bmm_maximum_tolerance_ratio": 8.419052768036593,
+    "leaf_softmax_glu_depthwise_exact_values": 628736
   },
   "pending_candidate_code_sha256": {
-    "static_block192_onnx.py": "404fe9350b49a809ac0462040ba74526afc7498133af810c8bca2a21bd1e0ded",
-    "frozen_audio_prefix_onnx.py": "71263bb0c0875813990058d5116bec0100b58d6170910a47a7034589ec26b2d8",
-    "frozen_audio_segment_onnx.py": "bdf9a647b5699847c3e4161e0edcb6599efac5f19053f6ec8af7a1f419f29649"
+    "frozen_audio_prefix_onnx.py": "8f0d62572b502b3d5eabf0ba6c01b8f6973a79546d537e4c9428b0630bb2b6c0",
+    "frozen_audio_segment_onnx.py": "3786e4e0a037ac94ea50434e1c0ec7a9844a295760e680f0f39e49a252ef2812",
+    "frozen_audio_chained_onnx.py": "d9671467ed2f1d047a3650a79389e0cbf037f028f3b0c255b74ecd467a4f96dd"
   }
 }

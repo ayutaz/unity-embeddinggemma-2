@@ -16,11 +16,14 @@ from .frozen_audio_prefix_onnx import (
 )
 from .reference_context_failure import feature_error_metrics
 from .native_silu_onnx import fp32_native_silu
+from .native_softmax_onnx import fp32_native_softmax24
+from .native_audio_primitives_onnx import fp32_native_sigmoid, fp32_native_depthwise5
 from .streaming_reference import run_flat_reference
 from .static_block192_onnx import audit_static_linear_nodes, static_block192_export, static_block192_addmm_export
 from .static_block192_onnx import audit_attention_bmm_nodes, audit_parameter_bmm_nodes, static_block192_bmm_export
 
-VARIANTS = ("native", "refined_mean_moment_rms", "native_silu", "refined_mean_moment_rms_silu", "ordered_static_linear", "ordered_static_linear_attention", "ordered_static_linear_all_bmm")
+PRECISE = "ordered_original_primitives"
+VARIANTS = ("native", "refined_mean_moment_rms", "native_silu", "refined_mean_moment_rms_silu", "ordered_static_linear", "ordered_static_linear_attention", "ordered_static_linear_all_bmm", PRECISE)
 
 
 def extract_segment(program, from_boundary, to_boundary):
@@ -56,6 +59,38 @@ def extract_segment(program, from_boundary, to_boundary):
     return torch.fx.GraphModule(program, graph)
 
 
+def audit_audio_leaf_nodes(segment):
+    softmax, sigmoid, convolution = set(), set(), set()
+    def value(node, shape):
+        actual = node.meta.get('val') if isinstance(node, torch.fx.Node) else None
+        return (isinstance(actual, torch.Tensor) and actual.dtype == torch.float32
+                and actual.device.type == 'cpu' and tuple(actual.shape) == shape)
+    for node in segment.graph.nodes:
+        if node.op != 'call_function':
+            continue
+        if node.target == torch.ops.aten._softmax.default:
+            if (len(node.args) != 3 or node.kwargs or node.args[1:] != (-1, False)
+                    or not value(node.args[0], (1, 8, 24, 12, 24))):
+                raise ValueError('Unqualified original audio Softmax contract')
+            softmax.add(node)
+        elif node.target == torch.ops.aten.sigmoid.default:
+            if len(node.args) != 1 or node.kwargs or not value(node.args[0], (1, 280, 1024)):
+                raise ValueError('Unqualified original audio sigmoid contract')
+            sigmoid.add(node)
+        elif node.target == torch.ops.aten.convolution.default:
+            if (len(node.args) != 9 or node.kwargs or node.args[2] is not None
+                    or tuple(node.args[3]) != (1,) or tuple(node.args[4]) != (0,)
+                    or tuple(node.args[5]) != (1,) or node.args[6] is not False
+                    or tuple(node.args[7]) != (0,) or node.args[8] != 1024
+                    or not value(node.args[0], (1, 1024, 284)) or not value(node.args[1], (1024, 1, 5))
+                    or node.args[1].op != 'get_attr'):
+                raise ValueError('Unqualified original Depthwise convolution contract')
+            convolution.add(node)
+    if not all((softmax, sigmoid, convolution)):
+        raise ValueError('Precise candidate requires all original audio leaf families')
+    return softmax, sigmoid, convolution
+
+
 class SegmentExport(PrefixExport):
     def __init__(self, segment, variant):
         # Only post-subsample segments qualify. The original two LayerNorms
@@ -66,27 +101,30 @@ class SegmentExport(PrefixExport):
         if any(node.target == torch.ops.aten.native_layer_norm.default for node in segment.graph.nodes):
             raise ValueError("Segment must start after both original native normalizations")
         self.prefix, self.variant, self.selected = segment, variant, []
-        self.rms_means, self.rms_inverses = audit_rms_nodes(segment) if variant.startswith("refined_mean_moment_rms") else (set(), set())
+        precise = variant == PRECISE
+        self.rms_means, self.rms_inverses = audit_rms_nodes(segment) if variant.startswith("refined_mean_moment_rms") or precise else (set(), set())
         self.silu_nodes = {node for node in segment.graph.nodes
-                           if node.op == "call_function" and node.target == torch.ops.aten.silu.default} if variant.endswith("_silu") else set()
-        if variant.endswith("_silu") and not self.silu_nodes:
+                           if node.op == "call_function" and node.target == torch.ops.aten.silu.default} if variant.endswith("_silu") or precise else set()
+        if (variant.endswith("_silu") or precise) and not self.silu_nodes:
             raise ValueError("Explicit SiLU candidate requires original SiLU nodes")
         self.silu_candidate = fp32_native_silu
         self.silu_observations = []
-        self.linear_nodes = audit_static_linear_nodes(segment) if variant.startswith("ordered_static_linear") else set()
-        if variant.startswith("ordered_static_linear") and not self.linear_nodes:
+        self.linear_nodes = audit_static_linear_nodes(segment) if variant.startswith("ordered_static_linear") or precise else set()
+        if (variant.startswith("ordered_static_linear") or precise) and not self.linear_nodes:
             raise ValueError("Ordered static linear candidate requires original280-row parameter projections")
         self.linear_candidate = static_block192_export
         self.biased_linear_candidate = static_block192_addmm_export
-        batched = variant in ("ordered_static_linear_attention", "ordered_static_linear_all_bmm")
+        batched = variant in ("ordered_static_linear_attention", "ordered_static_linear_all_bmm", PRECISE)
         self.bmm_nodes = audit_attention_bmm_nodes(segment) if batched else set()
         if batched and not self.bmm_nodes:
             raise ValueError("Ordered attention candidate requires qualified original attention BMM nodes")
-        self.parameter_bmm_nodes = audit_parameter_bmm_nodes(segment) if variant == "ordered_static_linear_all_bmm" else set()
-        if variant == "ordered_static_linear_all_bmm" and not self.parameter_bmm_nodes:
+        self.parameter_bmm_nodes = audit_parameter_bmm_nodes(segment) if variant == "ordered_static_linear_all_bmm" or precise else set()
+        if (variant == "ordered_static_linear_all_bmm" or precise) and not self.parameter_bmm_nodes:
             raise ValueError("Ordered full BMM candidate requires original parameter-backed projection")
         self.bmm_nodes |= self.parameter_bmm_nodes
         self.bmm_candidate = static_block192_bmm_export
+        self.softmax_nodes, self.sigmoid_nodes, self.convolution_nodes = audit_audio_leaf_nodes(segment) if precise else (set(), set(), set())
+        self.softmax_candidate, self.sigmoid_candidate, self.convolution_candidate = fp32_native_softmax24, fp32_native_sigmoid, fp32_native_depthwise5
 
 
 def probe_segment(program, frozen_input, frozen_output, output, *, from_boundary, to_boundary,
@@ -158,6 +196,8 @@ def probe_segment(program, frozen_input, frozen_output, output, *, from_boundary
                 attention_bmm_nodes=sorted(node.name for node in wrapper.bmm_nodes - wrapper.parameter_bmm_nodes),
                 parameter_bmm_replacements=len(wrapper.parameter_bmm_nodes),
                 parameter_bmm_nodes=sorted(node.name for node in wrapper.parameter_bmm_nodes),
+                softmax_replacements=len(wrapper.softmax_nodes), sigmoid_replacements=len(wrapper.sigmoid_nodes),
+                depthwise_replacements=len(wrapper.convolution_nodes),
                 attention_bmm_native_execution="original_bmm_passthrough_not_fixed_order_execution" if wrapper.bmm_nodes else None))
             save()
     report["complete"] = True
@@ -187,34 +227,38 @@ def main(argv=None):
     start_boundary, end_boundary = (boundary_for_stage(program, stage) for stage in (args.from_stage, args.stage))
     if args.variant != "native":
         audited = SegmentExport(extract_segment(program, start_boundary, end_boundary), args.variant)
-    if args.variant.endswith("_silu"):
+    if args.variant.endswith("_silu") or args.variant == PRECISE:
         layer_count = min(tuple(STAGES).index(args.stage), 12) - tuple(STAGES).index(args.from_stage)
         if len(audited.silu_nodes) != layer_count * 3:
             raise ValueError("Pinned segment SiLU replacement count differs")
         provenance["silu_expected_count"] = layer_count * 3
-    if args.variant.startswith("refined_mean_moment_rms"):
+    if args.variant.startswith("refined_mean_moment_rms") or args.variant == PRECISE:
         rms_count = expected_rms_count(args.stage) - expected_rms_count(args.from_stage)
         if len(audited.rms_means) != rms_count or len(audited.rms_inverses) != rms_count:
             raise ValueError("Pinned segment RMS replacement count differs")
         provenance["rms_expected_count"] = rms_count
-    if args.variant.startswith("ordered_static_linear"):
+    if args.variant.startswith("ordered_static_linear") or args.variant == PRECISE:
         layer_count = min(tuple(STAGES).index(args.stage), 12) - tuple(STAGES).index(args.from_stage)
         count = layer_count * 9 + (2 if args.stage == "projected_features" else 0)
         if len(audited.linear_nodes) != count:
             raise ValueError("Pinned280-row static linear replacement count differs")
         provenance["ordered_linear_expected_count"] = count
-        if args.variant in ("ordered_static_linear_attention", "ordered_static_linear_all_bmm"):
+        if args.variant in ("ordered_static_linear_attention", "ordered_static_linear_all_bmm", PRECISE):
             if len(audited.bmm_nodes - audited.parameter_bmm_nodes) != layer_count * 3:
                 raise ValueError("Pinned attention BMM replacement count differs")
             provenance["ordered_attention_bmm_expected_count"] = layer_count * 3
-            if args.variant == "ordered_static_linear_all_bmm":
+            if args.variant in ("ordered_static_linear_all_bmm", PRECISE):
                 if len(audited.parameter_bmm_nodes) != layer_count:
                     raise ValueError("Pinned parameter-backed BMM replacement count differs")
                 provenance["ordered_parameter_bmm_expected_count"] = layer_count
+    if args.variant == PRECISE:
+        if any(len(nodes) != layer_count for nodes in (audited.softmax_nodes, audited.sigmoid_nodes, audited.convolution_nodes)):
+            raise ValueError('Pinned original audio leaf replacement count differs')
+        provenance['audio_leaf_expected_count_per_family'] = layer_count
     # The joint candidate carries a same-host ONNX baseline; comparisons from
     # earlier jobs alone cannot establish the source of a small drift.
     variants = (("native", "ordered_static_linear", args.variant) if args.variant == "ordered_static_linear_attention" else
-                ("native", args.variant) if args.variant in ("refined_mean_moment_rms_silu", "ordered_static_linear", "ordered_static_linear_all_bmm") else (args.variant,))
+                ("native", args.variant) if args.variant in ("refined_mean_moment_rms_silu", "ordered_static_linear", "ordered_static_linear_all_bmm", PRECISE) else (args.variant,))
     report = probe_segment(program, start, end, args.output,
         from_boundary=start_boundary, to_boundary=end_boundary, variants=variants, provenance=provenance)
     print(json.dumps(dict(complete=report["complete"], cases=report["cases"], full_encoder_validated=False)))

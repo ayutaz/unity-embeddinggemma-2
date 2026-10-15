@@ -14,9 +14,9 @@ def required():
     return function
 
 
-def graphs(tmp_path):
-    values = torch.randn(2, 32, generator=torch.Generator().manual_seed(120))
-    source = torch.nn.LayerNorm(32, eps=1e-6, bias=False)
+def graphs(tmp_path,*,width=32):
+    values = torch.randn(2, width, generator=torch.Generator().manual_seed(120))
+    source = torch.nn.LayerNorm(width, eps=1e-6, bias=False)
     path = tmp_path/'norm.onnx'
     export.export_audio_native_onnx(export.TorchWelfordLayerNorm(source, refine_inverse=True), values, path)
     model = onnx.load(path)

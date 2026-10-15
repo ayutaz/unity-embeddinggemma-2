@@ -39,7 +39,7 @@ on:
         description: Host for the small matrix-only diagnostic; does not change encoder jobs
         type: choice
         default: ubuntu-latest
-        options: [ubuntu-latest, windows-latest]
+        options: [ubuntu-latest, windows-latest, windows-2022]
       chained_probe:
         description: Full12layers in connected3layer partitions; actual ONNX carry, no frozen resets
         type: boolean

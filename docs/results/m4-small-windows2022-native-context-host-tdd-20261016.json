@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "explicit_additional_small_windows2022_native_context_host_only",
+  "source_base": "e99c44214ab7d7f526b0fede5b561862460f1d66",
+  "red": {
+    "file": "small-windows2022-host-red-20261016.xml",
+    "sha256": "f3f9bafb9ad6f4f2317d152659e0e155618ebae68fba49fc35a0e54c1f14c18f",
+    "tests": "1",
+    "failures": "1",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.132"
+  },
+  "green": {
+    "file": "small-windows2022-host-green-20261016.xml",
+    "sha256": "331f4bde1322f209930c2d02f2722da79cd1c1f8832d1adfee2c20d53cc6ecd5",
+    "tests": "10",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.497"
+  },
+  "image_readme_observed": "https://github.com/actions/runner-images/blob/main/images/windows/Windows2022-Readme.md",
+  "reason": "Previous ubuntu-latest/windows-latest matrix/Tanh diagnostics returned AMD hosts and did not test the Intel/MKL hypothesis. Observe actual hardware on one additional supported image, without assuming its vendor.",
+  "default_runner_changed": false,
+  "model_jobs_changed": false,
+  "small_job_timeout_minutes": 10,
+  "whole_encoder_downloaded": false,
+  "real_host_result_pending": true,
+  "original_model_references_changed": false,
+  "gpu_validated": false
+}

@@ -5,6 +5,7 @@ import torch
 from onnx.reference import ReferenceEvaluator
 
 from embeddinggemma_tools.static_block192_onnx import static_block192_export
+from embeddinggemma_tools import static_block192_onnx as lowering
 from embeddinggemma_tools.export import export_audio_native_onnx
 from embeddinggemma_tools.streaming_reference import run_flat_reference
 
@@ -65,3 +66,29 @@ def test_rejects_unqualified_native_contract(problem):
     if problem == "bound": x[0, 0] = 2e6
     with pytest.raises(ValueError):
         static_block192_export(x, w)
+
+
+def test_biased_lowering_adds_bias_after_first_block_not_after_all_or_inside_fma(tmp_path):
+    function = getattr(lowering, "static_block192_addmm_export", None)
+    assert callable(function), "Biased original first-block store/add lowering is missing"
+    x = torch.randn(3, 400, generator=torch.Generator().manual_seed(291))
+    w = torch.randn(400, 5, generator=torch.Generator().manual_seed(292)) * 0.1
+    bias = torch.randn(5, generator=torch.Generator().manual_seed(293))
+    expected = None
+    for start in range(0, 400, 192):
+        part = torch.zeros(3, 5)
+        for k in range(start, min(start + 192, 400)):
+            part = (x[:, k:k+1].double() * w[k].double() + part.double()).float()
+        expected = part + bias if expected is None else expected + part
+    class Module(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.register_buffer("weight", w)
+            self.register_buffer("bias", bias)
+        def forward(self, x):
+            return function(self.bias, x, self.weight)
+    assert torch.equal(Module()(x).view(torch.int32), torch.addmm(bias, x, w).view(torch.int32))
+    path = tmp_path / "biased.onnx"
+    export_audio_native_onnx(Module(), x, path)
+    actual = run_flat_reference(ReferenceEvaluator(str(path)), {"input": x.numpy()})[0]
+    np.testing.assert_array_equal(actual.view('u4'), expected.numpy().view('u4'))

@@ -17,8 +17,9 @@ from .frozen_audio_prefix_onnx import (
 from .reference_context_failure import feature_error_metrics
 from .native_silu_onnx import fp32_native_silu
 from .streaming_reference import run_flat_reference
+from .static_block192_onnx import static_block192_export, static_block192_addmm_export
 
-VARIANTS = ("native", "refined_mean_moment_rms", "native_silu", "refined_mean_moment_rms_silu")
+VARIANTS = ("native", "refined_mean_moment_rms", "native_silu", "refined_mean_moment_rms_silu", "ordered_static_linear")
 
 
 def extract_segment(program, from_boundary, to_boundary):
@@ -45,12 +46,43 @@ def extract_segment(program, from_boundary, to_boundary):
         raise ValueError("Segment boundary is not an ancestor of the output")
     graph = torch.fx.Graph()
     copied = {cut: graph.placeholder("frozen_stage_input")}
+    copied[cut].meta = dict(cut.meta)
     for node in nodes:
         if node in needed and node is not cut:
             copied[node] = graph.node_copy(node, lambda old: copied[old])
     graph.output(copied[end])
     graph.lint()
     return torch.fx.GraphModule(program, graph)
+
+
+def audit_static_linear_nodes(segment):
+    def parameter_matrix(node):
+        if node.op == "get_attr":
+            return True
+        return (node.op == "call_function" and node.target == torch.ops.aten.permute.default
+                and len(node.args) == 2 and tuple(node.args[1]) == (1, 0)
+                and isinstance(node.args[0], torch.fx.Node) and node.args[0].op == "get_attr")
+    selected = set()
+    for node in segment.graph.nodes:
+        if node.op != "call_function" or node.target not in (torch.ops.aten.mm.default, torch.ops.aten.addmm.default):
+            continue
+        biased = node.target == torch.ops.aten.addmm.default
+        if node.kwargs or len(node.args) != (3 if biased else 2):
+            continue
+        left, right = node.args[-2:]
+        a, b = (value.meta.get("val") for value in (left, right))
+        if (not all(isinstance(value, torch.Tensor) and value.dtype == torch.float32 and value.ndim == 2
+                    for value in (a, b)) or a.shape[0] != 280 or a.shape[1] != b.shape[0]
+                or not parameter_matrix(right)):
+            continue
+        if biased:
+            bias = node.args[0]
+            value = bias.meta.get("val")
+            if (bias.op != "get_attr" or not isinstance(value, torch.Tensor) or value.dtype != torch.float32
+                    or tuple(value.shape) != (b.shape[1],)):
+                continue
+        selected.add(node)
+    return selected
 
 
 class SegmentExport(PrefixExport):
@@ -70,6 +102,11 @@ class SegmentExport(PrefixExport):
             raise ValueError("Explicit SiLU candidate requires original SiLU nodes")
         self.silu_candidate = fp32_native_silu
         self.silu_observations = []
+        self.linear_nodes = audit_static_linear_nodes(segment) if variant == "ordered_static_linear" else set()
+        if variant == "ordered_static_linear" and not self.linear_nodes:
+            raise ValueError("Ordered static linear candidate requires original280-row parameter projections")
+        self.linear_candidate = static_block192_export
+        self.biased_linear_candidate = static_block192_addmm_export
 
 
 def probe_segment(program, frozen_input, frozen_output, output, *, from_boundary, to_boundary,
@@ -134,7 +171,9 @@ def probe_segment(program, frozen_input, frozen_output, output, *, from_boundary
                 native_wrapper_bits_equal=exact_difference(wrapped, native) == 0,
                 coefficients_unchanged=True, rms_mean_replacements=len(wrapper.rms_means),
                 rms_inverse_replacements=len(wrapper.rms_inverses), silu_replacements=len(wrapper.silu_nodes),
-                silu_input_domains=wrapper.silu_observations))
+                silu_input_domains=wrapper.silu_observations, linear_replacements=len(wrapper.linear_nodes),
+                ordered_linear_native_execution="original_MatMul_addmm_passthrough_not_fixed_order_execution" if wrapper.linear_nodes else None,
+                ordered_linear_nodes=sorted(node.name for node in wrapper.linear_nodes)))
             save()
     report["complete"] = True
     save()
@@ -173,9 +212,15 @@ def main(argv=None):
         if len(audited.rms_means) != rms_count or len(audited.rms_inverses) != rms_count:
             raise ValueError("Pinned segment RMS replacement count differs")
         provenance["rms_expected_count"] = rms_count
+    if args.variant == "ordered_static_linear":
+        layer_count = min(tuple(STAGES).index(args.stage), 12) - tuple(STAGES).index(args.from_stage)
+        count = layer_count * 9 + (2 if args.stage == "projected_features" else 0)
+        if len(audited.linear_nodes) != count:
+            raise ValueError("Pinned280-row static linear replacement count differs")
+        provenance["ordered_linear_expected_count"] = count
     # The joint candidate carries a same-host ONNX baseline; comparisons from
     # earlier jobs alone cannot establish the source of a small drift.
-    variants = ("native", args.variant) if args.variant == "refined_mean_moment_rms_silu" else (args.variant,)
+    variants = ("native", args.variant) if args.variant in ("refined_mean_moment_rms_silu", "ordered_static_linear") else (args.variant,)
     report = probe_segment(program, start, end, args.output,
         from_boundary=start_boundary, to_boundary=end_boundary, variants=variants, provenance=provenance)
     print(json.dumps(dict(complete=report["complete"], cases=report["cases"], full_encoder_validated=False)))

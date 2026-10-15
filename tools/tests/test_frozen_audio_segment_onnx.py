@@ -41,6 +41,16 @@ def test_segment_replaces_only_cut_and_borrows_original_weights():
     assert str(source.graph) == before
 
 
+def test_segment_cut_preserves_audited_tensor_metadata_without_aliasing_metadata_dict():
+    source, cut, end = program()
+    original = next(n for n in source.graph.nodes if n.name == cut)
+    original.meta["val"] = torch.zeros(2, 4)
+    segment = probe.extract_segment(source, cut, end)
+    placeholder = next(n for n in segment.graph.nodes if n.op == "placeholder")
+    assert placeholder.meta["val"] is original.meta["val"]
+    assert placeholder.meta is not original.meta
+
+
 @pytest.mark.parametrize("cut,end", [("missing", "mm_default"), ("mul_tensor", "missing"),
                                       ("features", "mm_default"), ("mm_default", "mul_tensor"),
                                       ("mul_tensor", "mul_tensor")])
@@ -212,3 +222,53 @@ def test_joint_candidate_replaces_both_original_rms_and_silu_and_exports(tmp_pat
     actual = probe.run_flat_reference(probe.ReferenceEvaluator(str(path)), {"input": values.numpy()})[0]
     np.testing.assert_allclose(actual, expected.numpy(), atol=1e-5, rtol=1e-4)
     assert str(segment.graph) == before
+
+
+def test_ordered_static_linear_candidate_only_lowers_fixed280_parameter_projections(tmp_path):
+    class Module(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.register_buffer("weight", torch.randn(4, 4, generator=torch.Generator().manual_seed(301)) * 0.1)
+            self.register_buffer("other", torch.randn(4, 3, generator=torch.Generator().manual_seed(302)) * 0.1)
+            self.register_buffer("bias", torch.randn(3, generator=torch.Generator().manual_seed(303)))
+            self.register_buffer("relative", torch.randn(13, 4, generator=torch.Generator().manual_seed(304)))
+        def forward(self, x):
+            cut = x * 1.0
+            relative = torch.mm(self.relative, self.weight)
+            hidden = torch.mm(cut, self.weight) + relative[0]
+            return torch.addmm(self.bias, hidden, self.other)
+    values = torch.randn(280, 4, generator=torch.Generator().manual_seed(305))
+    exported = torch.export.export(Module(), (values,)).run_decompositions({}).module()
+    source = torch.fx.GraphModule(exported, exported.graph)
+    before = str(source.graph)
+    cut = next(n for n in source.graph.nodes if n.target == torch.ops.aten.mul.Tensor)
+    end = next(n for n in source.graph.nodes if n.op == "output").args[0][0]
+    segment = probe.extract_segment(source, cut.name, end.name)
+    wrapper = probe.SegmentExport(segment, "ordered_static_linear")
+    assert len(wrapper.linear_nodes) == 2
+    assert torch.equal(wrapper(values).view(torch.int32), probe.tensor(segment(values)).view(torch.int32))
+    path = tmp_path / "ordered.onnx"
+    probe.export_audio_native_onnx(wrapper, values, path)
+    model = onnx.load(path)
+    relative = next(n for n in segment.graph.nodes if n.target == torch.ops.aten.mm.default
+                    and n.args[0].meta["val"].shape[0] == 13)
+    assert relative not in wrapper.linear_nodes
+    assert all(n.args[-2].meta["val"].shape[0] == 280 for n in wrapper.linear_nodes)
+    # The fully constant13-row projection may be constant-folded by the
+    # unchanged exporter; it is never rewritten by the experimental lowering.
+    assert sum(n.op_type == "MatMul" for n in model.graph.node) <= 1
+    actual = probe.run_flat_reference(probe.ReferenceEvaluator(model), {"input": values.numpy()})[0]
+    np.testing.assert_allclose(actual, probe.tensor(segment(values)).numpy(), atol=1e-5, rtol=1e-4)
+    assert str(source.graph) == before
+
+
+def test_ordered_static_linear_does_not_rewrite_dynamic_weight_matmul():
+    graph = torch.fx.Graph()
+    left, right = graph.placeholder("left"), graph.placeholder("right")
+    left.meta["val"], right.meta["val"] = torch.zeros(280, 4), torch.zeros(4, 3)
+    product = graph.call_function(torch.ops.aten.mm.default, (left, right))
+    graph.output(product)
+    segment = torch.fx.GraphModule(torch.nn.Module(), graph)
+    assert probe.audit_static_linear_nodes(segment) == set()
+    with pytest.raises(ValueError, match="parameter projections"):
+        probe.SegmentExport(segment, "ordered_static_linear")

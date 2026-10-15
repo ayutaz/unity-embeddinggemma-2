@@ -10,6 +10,29 @@ namespace EmbeddingGemma.Validation.Tests
 {
     public sealed class SavedProjectionPartitionTests
     {
+        [TestCase(2)] [TestCase(3)]
+        public void FixedLeftMatrixBoundaryKeepsResidualAndOriginalCoefficients(int rank)
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
+            var leftShape=rank==2?new TensorShape(2,3):new TensorShape(1,2,3);
+            var inputShape=rank==2?new TensorShape(3,2):new TensorShape(1,3,2);
+            var graph=new FunctionalGraph();var x=graph.AddInput<float>(inputShape,"input");
+            var source=graph.Compile(Functional.MatMul(Functional.Constant(leftShape,new[]{1f,0f,2f,-1f,3f,.5f}),x+1f)+Functional.ReduceSum(x,rank-2,true));
+            var before=Bytes(source);var product=source.layers.Single(layer=>layer.GetType().Name=="MatMul");
+            var plan=SavedProjectionPartition.Create(source,product.outputs);
+            var valuesField=plan.GetType().GetField("LeftWeights");var shapeField=plan.GetType().GetField("LeftWeightShapes");
+            Assert.That(valuesField,Is.Not.Null);Assert.That(shapeField,Is.Not.Null);
+            var values=((float[][])valuesField.GetValue(plan)).Single();var shape=((TensorShape[])shapeField.GetValue(plan)).Single();
+            Assert.That(values,Is.EqualTo(new[]{1f,0f,2f,-1f,3f,.5f}));Assert.That(shape,Is.EqualTo(leftShape));
+            Assert.That(plan.Weights.Single(),Is.Null);Assert.That(plan.Inputs.Single().Length,Is.EqualTo(1));
+            var type=typeof(IGpuTensorOperation).Assembly.GetType("EmbeddingGemma.GpuFixedLeftMatmul");Assert.That(type,Is.Not.Null);
+            using var operation=(IGpuTensorOperation)Activator.CreateInstance(type,shape,values);
+            using var pipeline=new GpuProjectionPipeline(plan.Models,plan.Inputs,plan.Outputs,new[]{operation},true);
+            using var input=new Tensor<float>(inputShape,new[]{1f,2f,3f,4f,5f,6f});ComputeTensorData.Pin(input);
+            using var output=pipeline.Execute(input);Assert.That(output.DownloadToArray(),Is.EqualTo(new[]{23f,29f,22f,27.5f}));
+            Assert.That(Bytes(source),Is.EqualTo(before));Assert.That(input.DownloadToArray(),Is.EqualTo(new[]{1f,2f,3f,4f,5f,6f}));
+        }
+
         [TestCase(3)] [TestCase(4)]
         public void DynamicBatchedMatmulKeepsBothGpuOperandsAndOriginalResidual(int rank)
         {

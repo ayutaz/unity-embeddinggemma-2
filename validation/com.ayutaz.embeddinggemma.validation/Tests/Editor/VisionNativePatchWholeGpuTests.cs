@@ -40,6 +40,10 @@ namespace EmbeddingGemma.Validation.Tests
         public void CacheReleasedNativeGeluVisionEncoderMustMatchGoldenOnGpu(string caseId)
             => Run(caseId,true,true,true).GetAwaiter().GetResult();
 
+        [Test]
+        public void CacheReleasedIncludingGeluPreservesSquareZeroCandidateAndOriginalReferenceGate()
+            => Run("square-0",true,true,true,false,true).GetAwaiter().GetResult();
+
         [UnityTest]
         public IEnumerator StageFencesPreserveSquareZeroCandidateAndOriginalReferenceGate()
         {
@@ -48,17 +52,17 @@ namespace EmbeddingGemma.Validation.Tests
             pending.GetAwaiter().GetResult();
         }
 
-        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false)
+        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-encoder"));
-            var label=staged?"vision-staged-cache-release-native-gelu-rms-whole-gpu-":releaseUnusedGpuCache?"vision-cache-release-native-gelu-rms-whole-gpu-":nativeGelu?"vision-native-gelu-inline-rms-whole-gpu-":inlineAllRms?"vision-inline-all-layer-rms-whole-gpu-":"vision-native-patch-whole-gpu-";
+            var label=releaseGeluCaches?"vision-nested-gelu-cache-release-whole-gpu-":staged?"vision-staged-cache-release-native-gelu-rms-whole-gpu-":releaseUnusedGpuCache?"vision-cache-release-native-gelu-rms-whole-gpu-":nativeGelu?"vision-native-gelu-inline-rms-whole-gpu-":inlineAllRms?"vision-inline-all-layer-rms-whole-gpu-":"vision-native-patch-whole-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+"-"+caseId+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["scope"]=releaseUnusedGpuCache?"one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate":nativeGelu?"one_original_vision_encoder_gpu_native_gelu_all_layer_rms_and_patch384_candidate":inlineAllRms?"one_original_vision_encoder_gpu_all_sixteen_layer_rms_and_native_patch384_candidate":"one_original_vision_encoder_gpu_native_patch384_candidate",["runtime_source"]=source,
                 ["case_id"]=caseId,["phase"]="audit",["all_profiles_validated"]=false,["end_to_end_validated"]=false,
-                ["scheduling_mode"]=staged?"gpu_fence_per_stage":"synchronous_queue",["intermediate_tensor_readback_added"]=false};
+                ["scheduling_mode"]=staged?"gpu_fence_per_stage":"synchronous_queue",["intermediate_tensor_readback_added"]=false,["gelu_internal_cache_release"]=releaseGeluCaches};
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
             var operations=new List<IGpuTensorOperation>();Save();
@@ -116,7 +120,7 @@ namespace EmbeddingGemma.Validation.Tests
                         Assert.That(plan.Rows[i],Is.EqualTo(2520));
                         if(plan.Weights[i]==null)
                         {
-                            Assert.That(plan.Widths[i],Is.EqualTo(3072));operations.Add(new GpuGelu(new TensorShape(1,2520,3072)));
+                            Assert.That(plan.Widths[i],Is.EqualTo(3072));operations.Add(new GpuGelu(new TensorShape(1,2520,3072),releaseGeluCaches));
                         }
                         else
                         {
@@ -144,6 +148,24 @@ namespace EmbeddingGemma.Validation.Tests
                 report["host_working_set_before_execute_bytes"]=memoryBefore;report["phase"]=staged?"execute_async_stage_fences":"execute";Save();timer.Restart();
                 using var encoded=staged?await pipeline.ExecuteAsync(input):pipeline.Execute(input);Assert.That(encoded.backendType,Is.EqualTo(BackendType.GPUCompute));
                 var actual=encoded.DownloadToArray();report["execute_and_final_download_ms"]=timer.Elapsed.TotalMilliseconds;
+                var geluCaches=new JArray();report["gelu_internal_worker_caches"]=geluCaches;
+                foreach(var operation in operations.OfType<GpuGelu>())
+                {
+                    const BindingFlags fields=BindingFlags.Instance|BindingFlags.NonPublic;
+                    var nested=(GpuProjectionPipeline)typeof(GpuGelu).GetField("pipeline",fields).GetValue(operation);
+                    var workers=(Worker[])typeof(GpuProjectionPipeline).GetField("workers",fields).GetValue(nested);
+                    foreach(var worker in workers)
+                    {
+                        var storage=typeof(Worker).GetField("m_Storage",fields).GetValue(worker);
+                        var pool=storage.GetType().GetField("m_TensorPool",fields).GetValue(storage);
+                        var cache=pool.GetType().GetField("m_computeMemoryPool",fields).GetValue(pool);
+                        var free=(System.Collections.IDictionary)cache.GetType().GetField("freeBuffers",fields).GetValue(cache);
+                        long bytes=0;foreach(var value in free.Values)bytes+=((ComputeTensorData)value).maxCapacity*4L;
+                        geluCaches.Add(new JObject{["free_buffer_count"]=free.Count,["free_buffer_capacity_bytes"]=bytes});
+                        if(releaseGeluCaches)Assert.That(free.Count,Is.Zero,"Both internal GELU Workers must release their unused caches.");
+                    }
+                }
+                if(nativeGelu)Assert.That(geluCaches.Count,Is.EqualTo(32));
                 var capture=Path.ChangeExtension(output,"bin");Assert.That(File.Exists(capture),Is.False);var capturedBytes=new byte[actual.Length*4];Buffer.BlockCopy(actual,0,capturedBytes,0,capturedBytes.Length);File.WriteAllBytes(capture,capturedBytes);
                 using(var stream=File.OpenRead(capture))report["capture_sha256"]=PlayerFileHash.Compute(stream,out _);
                 if(releaseUnusedGpuCache&&caseId=="square-0")

@@ -3,9 +3,19 @@
     <type fullname="Unity.InferenceEngine.Worker">
       <field name="m_Storage" />
       <field name="m_LayerCPUFallback" />
+      <field name="m_LayerCPUFallbackShouldFlushGPU" />
     </type>
     <type fullname="Unity.InferenceEngine.ModelStorage">
+      <field name="m_TensorPool" />
       <method name="GetTensor" />
+    </type>
+    <type fullname="Unity.InferenceEngine.TensorPool">
+      <field name="m_computeMemoryPool" />
+    </type>
+    <type fullname="Unity.InferenceEngine.TensorDataPool`1">
+      <field name="freeBuffers" />
+      <method name=".ctor" />
+      <method name="Dispose" />
     </type>
   </assembly>
 </linker>

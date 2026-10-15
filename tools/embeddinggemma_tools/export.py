@@ -575,6 +575,40 @@ def fp32_refined_rstd(values):
     return fp32_fma(inverse, reciprocal_residual, inverse)
 
 
+def fp32_cascade_mean64(values):
+    """Opt-in contiguous vision head reduction with two four-vector steps."""
+    if not torch.compiler.is_compiling() and not torch.jit.is_tracing():
+        if (values.dtype != torch.float32 or values.ndim < 2 or values.shape[-1] != 64
+                or not values.numel() or not values.is_contiguous() or not torch.isfinite(values).all()):
+            raise ValueError("vision head cascade requires finite contiguous 64-wide FP32 rows")
+    grouped = values.reshape(-1, 2, 4, 8)
+    partial = _fp32_ordered_sum(grouped, -3)
+    combined = _fp32_ordered_sum(partial, -2)
+    total = _fp32_ordered_sum(combined, -1)
+    return total.reshape_as(values[..., :1]) / 64
+
+
+class VisionHeadRmsExport(nn.Module):
+    """Opt-in scaled/unscaled 64-wide RMS candidate; borrows original scale.
+
+    Local equation parity does not prove original native-context or GPU parity.
+    """
+    def __init__(self, scale, epsilon):
+        super().__init__()
+        if (scale is not None and (not isinstance(scale, torch.Tensor) or scale.dtype != torch.float32
+                or tuple(scale.shape) != (64,) or not scale.is_contiguous() or not torch.isfinite(scale).all())):
+            raise ValueError("vision head RMS requires the original finite FP32 width-64 scale")
+        if float(torch.tensor(epsilon, dtype=torch.float32)) != float(torch.tensor(1e-6, dtype=torch.float32)):
+            raise ValueError("vision head RMS requires epsilon 1e-6")
+        self.register_buffer("scale", scale)
+
+    def forward(self, values):
+        mean = fp32_cascade_mean64(values.square())
+        inverse = fp32_refined_rstd(mean + 1e-6)
+        normalized = values * inverse
+        return normalized if self.scale is None else normalized * self.scale
+
+
 class VisionRmsExport(nn.Module):
     """Opt-in fixed 768-wide FP32 RMS candidate; borrows the original scale.
 

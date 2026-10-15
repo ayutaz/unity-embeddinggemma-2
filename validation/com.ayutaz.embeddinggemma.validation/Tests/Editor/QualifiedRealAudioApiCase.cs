@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Unity.InferenceEngine;
@@ -29,7 +31,7 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.That(Last.FrameMask.backendType,Is.EqualTo(BackendType.GPUCompute));return Last;
             }
         }
-        sealed class ObservedEncoder : IAudioFeatureEncoder
+        sealed class ObservedEncoder : IAsyncAudioFeatureEncoder
         {
             readonly IAudioFeatureEncoder inner;
             public int Calls;
@@ -40,6 +42,12 @@ namespace EmbeddingGemma.Validation.Tests
             public AudioEncodingResult Encode(AudioPreprocessingResult input)
             {
                 Calls++;Last=inner.Encode(input);
+                Assert.That(Last.SoftTokens.backendType,Is.EqualTo(BackendType.GPUCompute));
+                Assert.That(Last.SoftTokens.shape,Is.EqualTo(new TensorShape(Profile.FeatureCount,512)));return Last;
+            }
+            public async Task<AudioEncodingResult> EncodeAsync(AudioPreprocessingResult input,CancellationToken token=default)
+            {
+                Calls++;Last=await ((IAsyncAudioFeatureEncoder)inner).EncodeAsync(input,token);
                 Assert.That(Last.SoftTokens.backendType,Is.EqualTo(BackendType.GPUCompute));
                 Assert.That(Last.SoftTokens.shape,Is.EqualTo(new TensorShape(Profile.FeatureCount,512)));return Last;
             }
@@ -72,7 +80,7 @@ namespace EmbeddingGemma.Validation.Tests
             Assert.That(cpu.Intersect(data),Is.Empty,"No model computation or nonempty feature input may fall back to CPU.");
             Assert.That(flush,Is.Empty);
         }
-        public static void Run(PartitionedAudioFeatureEncoder encoder,string signal,JObject report,string reportPath,Action save,bool allRoles=false)
+        public static async Task Run(PartitionedAudioFeatureEncoder encoder,string signal,JObject report,string reportPath,Action save,bool allRoles=false)
         {
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-real-chain"));
             var ppRoot=Path.Combine(root,"audio-runtime-preprocessing");
@@ -127,7 +135,8 @@ namespace EmbeddingGemma.Validation.Tests
                     Assert.Throws<ArgumentException>(()=>api.Embed(input,TextRole.Document,marker));
                     ((JArray)report["invalid_input_recovery_checks"]).Add("actual_reserved_audio_marker_in_title");
                     back.FailNext=true;
-                    var failed=Assert.Throws<InvalidOperationException>(()=>api.Embed(input));
+                    Exception failed=null;try{await api.EmbedAsync(input);}catch(Exception error){failed=error;}
+                    Assert.That(failed,Is.TypeOf<InvalidOperationException>());
                     Assert.That(failed.Message,Does.StartWith("Expected diagnostic backbone failure"));
                     Assert.Throws<ObjectDisposedException>(()=>{var ignored=pre.Last.Features;});
                     Assert.Throws<ObjectDisposedException>(()=>{var ignored=enc.Last.SoftTokens;});
@@ -145,7 +154,7 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.That(rolePrompt.InputIds,Is.EqualTo(expectedRow["input_ids"].ToObject<int[]>()));Assert.That(rolePrompt.AttentionMask,Is.EqualTo(expectedRow["attention_mask"].ToObject<int[]>()));
                 report["phase"]="execute_pcm_"+roleName+"_api";save();
                 var preCalls=pre.Calls;var encCalls=enc.Calls;
-                var timer=System.Diagnostics.Stopwatch.StartNew();var actual=api.Embed(input,role);
+                var timer=System.Diagnostics.Stopwatch.StartNew();var actual=allRoles?await api.EmbedAsync(input,role):api.Embed(input,role);
                 var duration=timer.Elapsed.TotalMilliseconds;
                 Assert.That(pre.Calls,Is.EqualTo(preCalls+1));Assert.That(enc.Calls,Is.EqualTo(encCalls+1));
                 Assert.Throws<ObjectDisposedException>(()=>{var ignored=pre.Last.Features;});
@@ -177,7 +186,7 @@ namespace EmbeddingGemma.Validation.Tests
             api.Dispose();Assert.Throws<ObjectDisposedException>(()=>api.Embed(input));
             if(allRoles&&signal=="impulse")
             {
-                using var processed=pp.Process(input);using var encoded=encoder.Encode(processed);using var empty=new Tensor<float>(new TensorShape(0,512));
+                using var processed=pp.Process(input);using var encoded=await encoder.EncodeAsync(processed);using var empty=new Tensor<float>(new TensorShape(0,512));
                 var reused=backbone.Embed(prompt.InputIds,prompt.AttentionMask,empty,encoded.SoftTokens);
                 Assert.That(reused,Is.EqualTo(documentVector));report["borrowed_stages_reused_after_api_dispose"]=true;
             }

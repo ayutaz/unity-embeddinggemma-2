@@ -35,6 +35,20 @@ namespace EmbeddingGemma.Tests
         }
 
         [Test]
+        public void SixteenLaneAccumulationKeepsSmallTermsThatEightLaneAccumulatorRoundsAway()
+        {
+            var values=Enumerable.Range(0,2520).Select(index=>index<8?0f:-16.635532f).ToArray();
+            using var input=new Tensor<float>(new TensorShape(1,2520),values);ComputeTensorData.Pin(input);
+            using var eight=Create(8);using var sixteen=Create(16);
+            using var first=eight.Execute(input);using var second=sixteen.Execute(input);
+            var old=first.DownloadToArray();var actual=second.DownloadToArray();
+            Assert.That(old[0],Is.EqualTo(.125f));
+            Assert.That(actual[0],Is.LessThan(old[0]-1e-7f),"The explicit lane count must change the reduction order.");
+            var expected=1f/(8f*(1f+157f/16777216f));
+            Assert.That(Math.Abs((double)actual[0]-expected),Is.LessThanOrEqualTo(1e-8));
+        }
+
+        [Test]
         public void Vector16RejectsInvalidCallsAndRemainsUsableWhileDefaultKeepsVector8Bits()
         {
             foreach(var width in new[]{-1,0,4,32})Assert.Throws<ArgumentOutOfRangeException>(()=>Create(width));

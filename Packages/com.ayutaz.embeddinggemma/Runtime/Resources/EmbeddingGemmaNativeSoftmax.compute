@@ -3,6 +3,7 @@
 // See ../../SLEEF-LICENSE.txt. Reduction ordering follows the pinned native
 // SoftMaxKernel.cpp / ATen cpu vec functional_base.h eight-lane FP32 path.
 #pragma kernel NativeSoftmax
+#pragma kernel NativeSoftmax16
 #pragma use_dxc
 StructuredBuffer<float> Input;
 RWStructuredBuffer<float> Output;
@@ -57,6 +58,49 @@ void NativeSoftmax(uint3 thread : SV_DispatchThreadID)
         precise float b=lanes[1]+lanes[5];
         precise float c=lanes[2]+lanes[6];
         precise float d=lanes[3]+lanes[7];
+        precise float left=a+c;
+        precise float right=b+d;
+        total=left+right;
+    }
+    precise float inverse=1.0f/total;
+    precise float residual=mad(-inverse,total,1.0f);
+    inverse=mad(residual,inverse,inverse);
+    for(uint column=0;column<Width;column++)Output[offset+column]=Output[offset+column]*inverse;
+}
+
+// Pinned AVX512 SoftMaxKernel's sixteen-lane accumulation and the
+// 256/128/64/32-bit shuffle order from VecReduceAllSIMD<float, Op>.
+// Keep the existing eight-lane kernel unchanged for existing callers.
+[numthreads(64,1,1)]
+void NativeSoftmax16(uint3 thread : SV_DispatchThreadID)
+{
+    uint row=thread.x+thread.y*DispatchWidth;
+    if(row>=Rows)return;
+    uint offset=row*Width;
+    precise float maximum=Input[offset];
+    for(uint column=1;column<Width;column++)maximum=max(maximum,Input[offset+column]);
+    precise float lanes[16];
+    [unroll]for(uint lane=0;lane<16;lane++)lanes[lane]=0.0f;
+    for(uint column=0;column<Width;column++)
+    {
+        precise float difference=Input[offset+column]-maximum;
+        precise float exponential=NativeExp(difference);
+        Output[offset+column]=exponential;
+        lanes[column%16]=lanes[column%16]+exponential;
+    }
+    precise float total;
+    if(Width<16)
+    {
+        total=lanes[0];for(uint column=1;column<Width;column++)total=total+lanes[column];
+    }
+    else
+    {
+        precise float combined[8];
+        [unroll]for(uint lane=0;lane<8;lane++)combined[lane]=lanes[lane]+lanes[lane+8];
+        precise float a=combined[0]+combined[4];
+        precise float b=combined[1]+combined[5];
+        precise float c=combined[2]+combined[6];
+        precise float d=combined[3]+combined[7];
         precise float left=a+c;
         precise float right=b+d;
         total=left+right;

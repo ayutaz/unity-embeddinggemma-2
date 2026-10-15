@@ -499,6 +499,10 @@ def fp32_cascade_mean768(values):
     Independent CPU/ONNX checks qualify this arithmetic only; actual GPU and
     original full-image numerical gates remain separate requirements.
     """
+    return _fp32_cascade_sum768(values) / 768
+
+
+def _fp32_cascade_sum768(values):
     if not torch.compiler.is_compiling() and not torch.jit.is_tracing():
         if (values.dtype != torch.float32 or values.ndim < 2 or values.shape[-1] != 768
                 or not values.numel() or not values.is_contiguous() or not torch.isfinite(values).all()):
@@ -508,7 +512,7 @@ def fp32_cascade_mean768(values):
     accumulated = _fp32_ordered_sum(partial, -4)
     combined = _fp32_ordered_sum(accumulated, -2)
     total = _fp32_ordered_sum(combined, -1)
-    return total.reshape_as(values[..., :1]) / 768
+    return total.reshape_as(values[..., :1])
 
 
 def _fp32_cascade_mean(values, width):
@@ -627,6 +631,21 @@ class VisionRmsExport(nn.Module):
 
     def forward(self, values):
         mean = fp32_cascade_mean768(values.square())
+        inverse = fp32_refined_rstd(mean + self.epsilon)
+        return (values * inverse) * self.scale
+
+
+class VisionInlineRmsExport(VisionRmsExport):
+    """Opt-in single-model RMS candidate with FP32 quotient residual correction.
+
+    Keeps importer reciprocal multiplication from determining the mean's last
+    bit. Original-context, GPU and full encoder gates remain independent.
+    """
+    def forward(self, values):
+        total = _fp32_cascade_sum768(values.square())
+        quotient = total / 768
+        residual = fp32_fma(-quotient, torch.full_like(total, 768), total)
+        mean = fp32_fma(residual, torch.full_like(total, 1 / 768), quotient)
         inverse = fp32_refined_rstd(mean + self.epsilon)
         return (values * inverse) * self.scale
 

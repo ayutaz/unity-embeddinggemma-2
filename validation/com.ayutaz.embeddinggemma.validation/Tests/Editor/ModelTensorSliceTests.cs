@@ -11,6 +11,23 @@ namespace EmbeddingGemma.Validation.Tests
     {
         static byte[] Bytes(Model model){using var stream=new MemoryStream();ModelWriter.Save(stream,model);return stream.ToArray();}
         [TestCase(BackendType.CPU)] [TestCase(BackendType.GPUCompute)]
+        public void ExternalBoundaryDoesNotRecomputeTheRemovedProjectionAndRetainsResidualInput(BackendType backend)
+        {
+            if(backend==BackendType.GPUCompute)Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
+            var graph=new FunctionalGraph();var x=graph.AddInput<float>(new TensorShape(1,3),"input");
+            var source=graph.Compile(x*2f+x);var before=Bytes(source);
+            var add=source.layers.Single(layer=>layer.GetType().Name=="Add");var boundaryIndex=add.inputs.Single(i=>i!=source.inputs[0].index);
+            var boundary=new Model.Input{name="external",index=boundaryIndex,dataType=DataType.Float,shape=new DynamicTensorShape(1,3)};
+            var slice=ModelTensorSlice.Extract(source,source.outputs[0].index,"selected",new[]{boundary});
+            Assert.That(slice.layers.Count,Is.EqualTo(1));Assert.That(slice.layers[0].GetType().Name,Is.EqualTo("Add"));
+            using var input=new Tensor<float>(new TensorShape(1,3),new[]{1f,2f,3f});
+            using var external=new Tensor<float>(new TensorShape(1,3),new[]{10f,20f,30f});
+            if(backend==BackendType.GPUCompute){ComputeTensorData.Pin(input);ComputeTensorData.Pin(external);}
+            using var worker=new Worker(slice,backend);worker.SetInput("input",input);worker.SetInput("external",external);worker.Schedule();
+            Assert.That(((Tensor<float>)worker.PeekOutput()).DownloadToArray(),Is.EqualTo(new[]{11f,22f,33f}));
+            Assert.That(Bytes(source),Is.EqualTo(before));
+        }
+        [TestCase(BackendType.CPU)] [TestCase(BackendType.GPUCompute)]
         public void SliceKeepsResidualRoutingAndBorrowedCoefficientsWhilePruningUnrelatedWork(BackendType backend)
         {
             if(backend==BackendType.GPUCompute)Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");

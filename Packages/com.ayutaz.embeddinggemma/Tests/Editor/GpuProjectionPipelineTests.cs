@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Reflection;
 using NUnit.Framework;
 using Unity.InferenceEngine;
 using UnityEngine;
@@ -18,6 +20,48 @@ namespace EmbeddingGemma.Tests
                 BeforeExecute?.Invoke();return LastOutput=identity.Execute(input);
             }
             public void Dispose()=>identity.Dispose();
+        }
+
+        static GpuProjectionPipeline CachePipeline(IGpuTensorOperation operation,bool release)
+        {
+            var constructor=typeof(GpuProjectionPipeline).GetConstructor(new[]{typeof(Model[]),typeof(string[][]),typeof(string[]),typeof(IGpuTensorOperation[]),typeof(bool)});
+            Assert.That(constructor,Is.Not.Null,"Opt-in unused GPU cache release is missing.");
+            var first=new FunctionalGraph();var x=first.AddInput<float>(new TensorShape(1,2),"input");var before=Rename(first.Compile(x,x*x+x),"input","work");
+            var last=new FunctionalGraph();var residual=last.AddInput<float>(new TensorShape(1,2),"input");var projected=last.AddInput<float>(new TensorShape(1,2),"projected");
+            var after=Rename(last.Compile(projected*projected+residual),"final");
+            return (GpuProjectionPipeline)constructor.Invoke(new object[]{new[]{before,after},new[]{new[]{"work"}},new[]{"projected"},new[]{operation},release});
+        }
+        static int CachedGpuBuffers(GpuProjectionPipeline pipeline,int stage)
+        {
+            const BindingFlags fields=BindingFlags.Instance|BindingFlags.NonPublic;
+            var workers=(Worker[])typeof(GpuProjectionPipeline).GetField("workers",fields).GetValue(pipeline);
+            var storage=typeof(Worker).GetField("m_Storage",fields).GetValue(workers[stage]);
+            var tensorPool=storage.GetType().GetField("m_TensorPool",fields).GetValue(storage);
+            var computePool=tensorPool.GetType().GetField("m_computeMemoryPool",fields).GetValue(tensorPool);
+            return ((IDictionary)computePool.GetType().GetField("freeBuffers",fields).GetValue(computePool)).Count;
+        }
+        [TestCase(false)] [TestCase(true)]
+        public void OptInCacheReleaseKeepsLiveResidualOwnedOutputsAndBorrowedOperation(bool release)
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
+            using var operation=new ObservedOperation();using var pipeline=CachePipeline(operation,release);
+            operation.BeforeExecute=()=>{if(release)Assert.That(CachedGpuBuffers(pipeline,0),Is.Zero);else Assert.That(CachedGpuBuffers(pipeline,0),Is.GreaterThan(0));};
+            using var input=new Tensor<float>(new TensorShape(1,2),new[]{-3f,4f});ComputeTensorData.Pin(input);
+            using var output=pipeline.Execute(input);using var repeated=pipeline.Execute(input);
+            if(release)Assert.That(CachedGpuBuffers(pipeline,1),Is.Zero);else Assert.That(CachedGpuBuffers(pipeline,1),Is.GreaterThan(0));
+            pipeline.Dispose();pipeline.Dispose();operation.BeforeExecute=null;
+            Assert.That(output.DownloadToArray(),Is.EqualTo(new[]{33f,404f}));Assert.That(repeated.DownloadToArray(),Is.EqualTo(new[]{33f,404f}));
+            Assert.That(input.DownloadToArray(),Is.EqualTo(new[]{-3f,4f}));using var borrowed=operation.Execute(input);Assert.That(borrowed.DownloadToArray(),Is.EqualTo(new[]{-3f,4f}));
+        }
+        [Test]
+        public void CacheReleaseRemainsReusableAfterBorrowedOperationThrows()
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
+            using var operation=new ObservedOperation();using var pipeline=CachePipeline(operation,true);
+            using var input=new Tensor<float>(new TensorShape(1,2),new[]{-3f,4f});ComputeTensorData.Pin(input);
+            operation.BeforeExecute=()=>throw new InvalidOperationException("Controlled borrowed operation failure.");Assert.Throws<InvalidOperationException>(()=>pipeline.Execute(input));
+            operation.BeforeExecute=null;using var output=pipeline.Execute(input);Assert.That(output.DownloadToArray(),Is.EqualTo(new[]{33f,404f}));
+            Assert.That(CachedGpuBuffers(pipeline,0),Is.Zero);Assert.That(CachedGpuBuffers(pipeline,1),Is.Zero);
         }
 
         [Test]

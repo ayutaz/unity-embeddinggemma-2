@@ -1,0 +1,509 @@
+{
+  "scope": "original_audio_full_profile_five_signals_scalar_moment_fma_gpu",
+  "runtime_source": "a26317fbfbcfbf896dff4a6577124109c6cf977c",
+  "original_references_changed": false,
+  "original_model_initializer_bytes_preserved": true,
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "preparation": {
+    "scope": "two_subsample_norm_scalar_moment_fma_candidate_only",
+    "producer": "66926d5eab8ddd95ea79de3d1ee9c8d9135d9ed3",
+    "source_sha256": "9bc00c121b589af7444e026532b4c01452a21b32b1b2b290e2377b55aa6fe19b",
+    "template_sha256": "c9a6e4f90b1a38d274e2e5ad088a8cbf316b55ed58d5daa143e84de934e644c0",
+    "output_sha256": "650929620cdb4974eec0ee41d1d21c6dfe376c6703cb9cf5091d261171dbd949",
+    "nodes_before": 7306,
+    "nodes_after": 7722,
+    "transforms": [
+      {
+        "replaced_scalar_moment_count": 8,
+        "prefix": "/subsample_conv_projection/layer0/norm/",
+        "width": 128,
+        "existing_initializer_bytes_preserved": true,
+        "existing_initializer_sha256": "3eb6bf434013fb17486f8cdb7d04c36ffc74954fbee8a7c8cf6bd2cd4c88c564",
+        "node_count": 7514,
+        "full_encoder_validated": false
+      },
+      {
+        "replaced_scalar_moment_count": 8,
+        "prefix": "/subsample_conv_projection/layer1/norm/",
+        "width": 32,
+        "existing_initializer_bytes_preserved": true,
+        "existing_initializer_sha256": "3eb6bf434013fb17486f8cdb7d04c36ffc74954fbee8a7c8cf6bd2cd4c88c564",
+        "node_count": 7722,
+        "full_encoder_validated": false
+      }
+    ],
+    "gpu_validated": false,
+    "full_encoder_validated": false,
+    "original_reference_changed": false
+  },
+  "python_tdd": {
+    "export_red": {
+      "file": "scalar-moment-export-red-20261015.xml",
+      "sha256": "9af32ab9cc7f30406829c9fc1b88d93b316033ae3b6522db53ca1f9bf0ff219e",
+      "tests": 2,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0
+    },
+    "export_green": {
+      "file": "scalar-moment-export-green-20261015.xml",
+      "sha256": "713cf392dc87d652f023c21bfa26e53a2c78e21b517bc4195aaecdda3302e201",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "rewrite_red": {
+      "file": "scalar-moment-rewrite-red-20261015.xml",
+      "sha256": "4a3fc25998dcea644f086d153467b0fa066545cc5baed5a19f7c272c15fe6e9c",
+      "tests": 8,
+      "failures": 8,
+      "errors": 0,
+      "skipped": 0
+    },
+    "width32_width128_related_green": {
+      "file": "scalar-moment-width32-width128-green-20261015.xml",
+      "sha256": "8d1428a2a675c7287d6890d4d4bb468076d3ecc0b20016bdfbe07d4c47409263",
+      "tests": 21,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "prefix": {
+    "execution": {
+      "file": "scalar-moment-fma-impulse-prefix-20261015-process.json",
+      "sha256": "84feddd53bf08be3c6e6f0c7720e3754419cb14c5e11e49c26afabe7427eb4fc",
+      "xml_sha256": "272d2b30a9ece1acf0abed7c59558f125054ae7244fe00b4c8cba578af5829a1",
+      "counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 59.01356900000246,
+      "exit_code": 0
+    },
+    "report": {
+      "file": "original-impulse-subsample-prefix-scalar-moment-fma-a26317fbfbcfbf896dff4a6577124109c6cf977c.json",
+      "sha256": "9cc0f27b9c6634707112d925dc787e3ac2c582251c828aab73fffb87cfcebedb",
+      "result": {
+        "success": true,
+        "scope": "one_original_impulse_subsample_gpu_bit_gate_with_diagnostic_captures",
+        "runtime_source": "a26317fbfbcfbf896dff4a6577124109c6cf977c",
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "signal": "impulse",
+        "profile": "frames-1119-valid-1119",
+        "phase": "captured",
+        "intermediate_readbacks_for_diagnostics_only": true,
+        "segment_sha256": "650929620cdb4974eec0ee41d1d21c6dfe376c6703cb9cf5091d261171dbd949",
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "actual_backend": "GPUCompute",
+        "normal_prefix_final_matches_observed_bits": true,
+        "captures": {
+          "layer0.norm": {
+            "file": "layer0.norm-fp32.bin",
+            "sha256": "832727aae0086f02d644c90488e611c533052e403d0b5b60a6aae11b602dd01d",
+            "shape": [
+              1,
+              560,
+              64,
+              128
+            ]
+          },
+          "layer1.norm": {
+            "file": "layer1.norm-fp32.bin",
+            "sha256": "f61d53656cc38e5d632b69540570bea2fa6c655d463b82cff68b906afd4f54a5",
+            "shape": [
+              1,
+              280,
+              32,
+              32
+            ]
+          },
+          "layer0.conv": {
+            "file": "layer0.conv-fp32.bin",
+            "sha256": "f2591d3eeba324a02d2c58372c95c7aef70e7989462af6e7b4b128cbf6bfa73b",
+            "shape": [
+              1,
+              128,
+              560,
+              64
+            ]
+          },
+          "layer1.conv": {
+            "file": "layer1.conv-fp32.bin",
+            "sha256": "0b36aa8d93703743e2177b1761de03fa049abe77c260923a7fc4fa783e89fd55",
+            "shape": [
+              1,
+              32,
+              280,
+              32
+            ]
+          },
+          "layer0.act": {
+            "file": "layer0.act-fp32.bin",
+            "sha256": "8cef76cc1c1c5080efea3a54f583cca64c6ea0df2e20bcde7d9ded5b78f37e26",
+            "shape": [
+              1,
+              128,
+              560,
+              64
+            ]
+          },
+          "layer1.act": {
+            "file": "layer1.act-fp32.bin",
+            "sha256": "c3fbe5ae4705e4541bbdc861273b2d69ec805aa9123ad643d6dd2f799b403939",
+            "shape": [
+              1,
+              32,
+              280,
+              32
+            ]
+          },
+          "projection_input": {
+            "file": "projection_input-fp32.bin",
+            "sha256": "fb4b954270b6416e6af028c9e493ced5dc93081faf3cc6fdbcd31476edb475f8",
+            "shape": [
+              1,
+              280,
+              1024
+            ]
+          },
+          "projection_output": {
+            "file": "projection_output-fp32.bin",
+            "sha256": "fbbc24afa5f1d8dc1bfd45319339e087538ce0b2d8d43239c6ae6db3b41a0176",
+            "shape": [
+              1,
+              280,
+              1024
+            ]
+          },
+          "layer0.conv.weight": {
+            "file": "layer0.conv.weight-fp32.bin",
+            "sha256": "e4d4ee18dc86a9945d38c159a861784a2c3d9467d6e0be9c48a414e60e2b92fd",
+            "shape": [
+              128,
+              1,
+              3,
+              3
+            ]
+          }
+        },
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.0
+      }
+    }
+  },
+  "whole_encoder": [
+    {
+      "signal": "silence",
+      "execution": {
+        "file": "scalar-moment-fma-original-whole-silence-20261015-process.json",
+        "sha256": "61745abaca62a4f2db8c435b104dd9f72f0745468dcb9058739b9f9c1553b39f",
+        "xml_sha256": "e6b09027d41355348375a11176cdca4d4534964bc5d3574f3c04840723eb8c23",
+        "counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "elapsed_seconds": 54.74882219999563,
+        "exit_code": 0
+      },
+      "report": {
+        "file": "partitioned-scalar-moment-fma-gpu-a26317fbfbcfbf896dff4a6577124109c6cf977c-silence.json",
+        "sha256": "4921efe22a014a3b8885caef0abef9f3751c1316c11941f23f8ebc9512f69ac1",
+        "result": {
+          "success": true,
+          "scope": "one_partitioned_original_audio_encoder_gpu_numeric_gate",
+          "runtime_source": "a26317fbfbcfbf896dff4a6577124109c6cf977c",
+          "signal": "silence",
+          "requested_backend": "GPUCompute",
+          "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+          "phase": "completed",
+          "end_to_end_validated": false,
+          "all_original_signals_validated": false,
+          "partition_producer": "4c21ce313fb814a58010cfbe077692090ad5c771",
+          "scalar_moment_fma_segment_sha256": "650929620cdb4974eec0ee41d1d21c6dfe376c6703cb9cf5091d261171dbd949",
+          "model_load_and_transform_ms": 1213.7601,
+          "prepare_ms": 14894.328000000001,
+          "native_operation_prepare_ms": 13680.582300000002,
+          "projection_count": 135,
+          "operation_count": 267,
+          "silu_count": 36,
+          "worker_creation_ms": 149.4579,
+          "dynamic_matmul_count": 36,
+          "query_scale_count": 12,
+          "tanh_count": 12,
+          "scalar_divide_count": 12,
+          "softmax_count": 12,
+          "glu_count": 12,
+          "cpu_computation_or_input_count": 0,
+          "readback_flush_count": 0,
+          "input_tensor_creation_and_pin_ms": 5.198,
+          "host_working_set_before_execute_bytes": 3431796736,
+          "execute_enqueue_ms": 2562.0134000000003,
+          "execute_and_final_download_ms": 3178.2954,
+          "final_download_and_gpu_wait_ms": 616.3152,
+          "host_working_set_after_download_bytes": 4176199680,
+          "host_peak_working_set_bytes": 4176199680,
+          "actual_backend": "GPUCompute",
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 1.430511474609375e-06,
+          "maximum_tolerance_ratio": 0.037593715994207695
+        }
+      }
+    },
+    {
+      "signal": "impulse",
+      "execution": {
+        "file": "scalar-moment-fma-original-whole-impulse-20261015-process.json",
+        "sha256": "808ae4d9adb626eb7b974d3148202251dd3be7a684cd2f13ed9e99a987ea20af",
+        "xml_sha256": "9722f54d368bae9fd1d8316c584bd8112c5f073a89c2546e21452297b11b0550",
+        "counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "elapsed_seconds": 58.760899399989285,
+        "exit_code": 0
+      },
+      "report": {
+        "file": "partitioned-scalar-moment-fma-gpu-a26317fbfbcfbf896dff4a6577124109c6cf977c-impulse.json",
+        "sha256": "7eee940c84adcf85eee72e3eb19ce659f991ec9a48d419d592756264ab969eda",
+        "result": {
+          "success": true,
+          "scope": "one_partitioned_original_audio_encoder_gpu_numeric_gate",
+          "runtime_source": "a26317fbfbcfbf896dff4a6577124109c6cf977c",
+          "signal": "impulse",
+          "requested_backend": "GPUCompute",
+          "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+          "phase": "completed",
+          "end_to_end_validated": false,
+          "all_original_signals_validated": false,
+          "partition_producer": "4c21ce313fb814a58010cfbe077692090ad5c771",
+          "scalar_moment_fma_segment_sha256": "650929620cdb4974eec0ee41d1d21c6dfe376c6703cb9cf5091d261171dbd949",
+          "model_load_and_transform_ms": 1258.8281,
+          "prepare_ms": 15763.556,
+          "native_operation_prepare_ms": 14504.743,
+          "projection_count": 135,
+          "operation_count": 267,
+          "silu_count": 36,
+          "worker_creation_ms": 126.69170000000001,
+          "dynamic_matmul_count": 36,
+          "query_scale_count": 12,
+          "tanh_count": 12,
+          "scalar_divide_count": 12,
+          "softmax_count": 12,
+          "glu_count": 12,
+          "cpu_computation_or_input_count": 0,
+          "readback_flush_count": 0,
+          "input_tensor_creation_and_pin_ms": 5.6526000000000005,
+          "host_working_set_before_execute_bytes": 3373342720,
+          "execute_enqueue_ms": 3032.1569,
+          "execute_and_final_download_ms": 3691.6039,
+          "final_download_and_gpu_wait_ms": 659.4813000000004,
+          "host_working_set_after_download_bytes": 4118675456,
+          "host_peak_working_set_bytes": 4118675456,
+          "actual_backend": "GPUCompute",
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 1.9073486328125e-06,
+          "maximum_tolerance_ratio": 0.04657292832930413
+        }
+      }
+    },
+    {
+      "signal": "sine",
+      "execution": {
+        "file": "scalar-moment-fma-original-whole-sine-20261015-process.json",
+        "sha256": "85b9f90e5ed5fa79c95ee039bfd2ca629b331a1ea26b1a5e2680147835d711d2",
+        "xml_sha256": "0d0ae6f32139688847fcfc49ea7ef86933a75e0269be00fbed23c1f5208cf11f",
+        "counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "elapsed_seconds": 63.89856719999807,
+        "exit_code": 0
+      },
+      "report": {
+        "file": "partitioned-scalar-moment-fma-gpu-a26317fbfbcfbf896dff4a6577124109c6cf977c-sine.json",
+        "sha256": "73654431fde64399a5da5f16faaf42950af2be6d8b481f28a6ff5a4007f3726b",
+        "result": {
+          "success": true,
+          "scope": "one_partitioned_original_audio_encoder_gpu_numeric_gate",
+          "runtime_source": "a26317fbfbcfbf896dff4a6577124109c6cf977c",
+          "signal": "sine",
+          "requested_backend": "GPUCompute",
+          "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+          "phase": "completed",
+          "end_to_end_validated": false,
+          "all_original_signals_validated": false,
+          "partition_producer": "4c21ce313fb814a58010cfbe077692090ad5c771",
+          "scalar_moment_fma_segment_sha256": "650929620cdb4974eec0ee41d1d21c6dfe376c6703cb9cf5091d261171dbd949",
+          "model_load_and_transform_ms": 1622.1499000000001,
+          "prepare_ms": 17055.121300000003,
+          "native_operation_prepare_ms": 15432.988400000002,
+          "projection_count": 135,
+          "operation_count": 267,
+          "silu_count": 36,
+          "worker_creation_ms": 152.19150000000002,
+          "dynamic_matmul_count": 36,
+          "query_scale_count": 12,
+          "tanh_count": 12,
+          "scalar_divide_count": 12,
+          "softmax_count": 12,
+          "glu_count": 12,
+          "cpu_computation_or_input_count": 0,
+          "readback_flush_count": 0,
+          "input_tensor_creation_and_pin_ms": 9.8977,
+          "host_working_set_before_execute_bytes": 3304075264,
+          "execute_enqueue_ms": 4417.2682,
+          "execute_and_final_download_ms": 5202.4444,
+          "final_download_and_gpu_wait_ms": 785.2200999999995,
+          "host_working_set_after_download_bytes": 4049633280,
+          "host_peak_working_set_bytes": 4049633280,
+          "actual_backend": "GPUCompute",
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 1.430511474609375e-06,
+          "maximum_tolerance_ratio": 0.04120452465855162
+        }
+      }
+    },
+    {
+      "signal": "nyquist",
+      "execution": {
+        "file": "scalar-moment-fma-original-whole-nyquist-20261015-process.json",
+        "sha256": "8093b997bbf511442d33bdf2c8369551efaaaf761f876f01e8c4a0d224869bc0",
+        "xml_sha256": "cf841e6b5cfd6566d67cb2c05bb913f1fa88277f94601152eb2012352ae4edf2",
+        "counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "elapsed_seconds": 76.80769760000112,
+        "exit_code": 0
+      },
+      "report": {
+        "file": "partitioned-scalar-moment-fma-gpu-a26317fbfbcfbf896dff4a6577124109c6cf977c-nyquist.json",
+        "sha256": "512c41cbe01382f39c24dfdeebedee0913632eed7becb01210e3f98ea5bb18a5",
+        "result": {
+          "success": true,
+          "scope": "one_partitioned_original_audio_encoder_gpu_numeric_gate",
+          "runtime_source": "a26317fbfbcfbf896dff4a6577124109c6cf977c",
+          "signal": "nyquist",
+          "requested_backend": "GPUCompute",
+          "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+          "phase": "completed",
+          "end_to_end_validated": false,
+          "all_original_signals_validated": false,
+          "partition_producer": "4c21ce313fb814a58010cfbe077692090ad5c771",
+          "scalar_moment_fma_segment_sha256": "650929620cdb4974eec0ee41d1d21c6dfe376c6703cb9cf5091d261171dbd949",
+          "model_load_and_transform_ms": 1576.5831,
+          "prepare_ms": 14855.5193,
+          "native_operation_prepare_ms": 13278.954800000001,
+          "projection_count": 135,
+          "operation_count": 267,
+          "silu_count": 36,
+          "worker_creation_ms": 211.5068,
+          "dynamic_matmul_count": 36,
+          "query_scale_count": 12,
+          "tanh_count": 12,
+          "scalar_divide_count": 12,
+          "softmax_count": 12,
+          "glu_count": 12,
+          "cpu_computation_or_input_count": 0,
+          "readback_flush_count": 0,
+          "input_tensor_creation_and_pin_ms": 7.7786,
+          "host_working_set_before_execute_bytes": 3287711744,
+          "execute_enqueue_ms": 2971.4136000000003,
+          "execute_and_final_download_ms": 3629.8778,
+          "final_download_and_gpu_wait_ms": 658.4980999999998,
+          "host_working_set_after_download_bytes": 4032811008,
+          "host_peak_working_set_bytes": 4032815104,
+          "actual_backend": "GPUCompute",
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 1.430511474609375e-06,
+          "maximum_tolerance_ratio": 0.04383387842410816
+        }
+      }
+    },
+    {
+      "signal": "noise",
+      "execution": {
+        "file": "scalar-moment-fma-original-whole-noise-20261015-process.json",
+        "sha256": "ae577036ff142e70e44b84ec3f85904169b7e11f76b520dd62722a72093e8006",
+        "xml_sha256": "3eaa98208a512635cb74de66288570ee0b98a74244c0396dfb4953a146746f99",
+        "counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "elapsed_seconds": 54.45574150000175,
+        "exit_code": 0
+      },
+      "report": {
+        "file": "partitioned-scalar-moment-fma-gpu-a26317fbfbcfbf896dff4a6577124109c6cf977c-noise.json",
+        "sha256": "84f9138aa17de0dc1aa8ee576817a28f97db16fe5ef18f86c89298e9a7a2bca1",
+        "result": {
+          "success": true,
+          "scope": "one_partitioned_original_audio_encoder_gpu_numeric_gate",
+          "runtime_source": "a26317fbfbcfbf896dff4a6577124109c6cf977c",
+          "signal": "noise",
+          "requested_backend": "GPUCompute",
+          "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+          "phase": "completed",
+          "end_to_end_validated": false,
+          "all_original_signals_validated": false,
+          "partition_producer": "4c21ce313fb814a58010cfbe077692090ad5c771",
+          "scalar_moment_fma_segment_sha256": "650929620cdb4974eec0ee41d1d21c6dfe376c6703cb9cf5091d261171dbd949",
+          "model_load_and_transform_ms": 1132.598,
+          "prepare_ms": 13194.167000000001,
+          "native_operation_prepare_ms": 12061.5854,
+          "projection_count": 135,
+          "operation_count": 267,
+          "silu_count": 36,
+          "worker_creation_ms": 139.6493,
+          "dynamic_matmul_count": 36,
+          "query_scale_count": 12,
+          "tanh_count": 12,
+          "scalar_divide_count": 12,
+          "softmax_count": 12,
+          "glu_count": 12,
+          "cpu_computation_or_input_count": 0,
+          "readback_flush_count": 0,
+          "input_tensor_creation_and_pin_ms": 8.4573,
+          "host_working_set_before_execute_bytes": 3364487168,
+          "execute_enqueue_ms": 2034.2381,
+          "execute_and_final_download_ms": 2723.3757,
+          "final_download_and_gpu_wait_ms": 689.1889000000001,
+          "host_working_set_after_download_bytes": 4110659584,
+          "host_peak_working_set_bytes": 4110659584,
+          "actual_backend": "GPUCompute",
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 1.9073486328125e-06,
+          "maximum_tolerance_ratio": 0.042264721566013186
+        }
+      }
+    }
+  ],
+  "full_profile_five_signals_validated": true,
+  "all_original_signals_and_profiles_validated": false,
+  "end_to_end_validated": false,
+  "remaining": [
+    "padded_noise exact frames-1119-valid-839 profile",
+    "image FP32 three profiles",
+    "actual PCM/Texture to normalized 768 API all required roles masks boundaries ownership Dispose error reuse and text regression"
+  ]
+}

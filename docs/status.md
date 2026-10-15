@@ -1,5 +1,27 @@
 # 現在の状態
 
+更新日: 2026-10-15。**通常音声profileの元5信号が、同一候補の実GPU全encoder gateに合格。工程3・4全体は未完了。** `a26317fbfbcfbf896dff4a6577124109c6cf977c`、RTX 4070 Ti SUPER / Direct3D12 / GPUCompute。元参照・モデル係数・`atol=1e-5` / `rtol=1e-4`は変更していない。Draft PR #81、main未統合。
+
+前段2正規化のscalar moment更新で内側の乗算・加算をFP32 FMAにし、外側のmoment加算順を保持した。8レーンの順番・係数・幅32/128を監査してから適用し、既存initializer bytesを保持する。exportの意図した2 Red→6 Green、ONNX rewriteの8 Red→幅32/128を含む関連21 Green。元impulseの前段出力は1,290 bit差→候補の全bit一致となり、実GPU 1 pass / fail0 / skip0。診断captureのreadbackは製品経路の証拠と分ける。
+
+同じ候補を元全encoderへ接続し、通常profile `frames-1119-valid-1119` の各信号を別Unity processで検証した。全5件が各1 pass / fail0 / skip0 / exit0、計算・入力CPU fallback / 中間flush0。
+
+| 元信号 | 許容差超過数 | 最大絶対誤差 | 最大許容差比 |
+| --- | ---: | ---: | ---: |
+| silence | 0 | 1.4305115e-06 | 0.037593716 |
+| impulse | 0 | 1.9073486e-06 | 0.046572928 |
+| sine | 0 | 1.4305115e-06 | 0.041204525 |
+| nyquist | 0 | 1.4305115e-06 | 0.043833878 |
+| noise | 0 | 1.9073486e-06 | 0.042264722 |
+
+[実行XML・source SHA・前段capture hash・係数保持・Python TDDを結び付けたreceipt](results/m4-scalar-moment-fma-full-profile-gpu-20261015.json)。これは検証候補の音声encoder合格で、公開AudioEmbedder経由の実PCM→768次元・全profile・画像の合格ではない。従来のmean-only候補の521 bit差 / 全encoder360要素不合格は、下の失敗receiptに保持する。
+
+次は `padded_noise` の正確な `frames-1119-valid-839` 用モデルを準備し、元maskと出力210行を保持してGPU検証する。その後、画像FP32全3 profile、実PCM / Texture→GPU前処理→encoder→backbone→正規化768次元APIの全role / mask / 長さ境界 / 所有権 / Dispose / 例外後再利用 / text回帰へ進む。[全体計画](multimodal-tdd-plan.md)の工程3・4の範囲を維持し、sample / Player等の未検証項目も完了へ数えない。
+
+到達不能Acceleratorへの待ちは検証consumerのproject cache無効化で対処済み。root project / global設定は保持した。1 processに実モデル1ケース・300秒上限・owned PIDのmemory監視を続ける。Persistent allocation警告・長期memory安定性、現sourceのRequired CI全合格は別gate。モデル・重み・大きなcaptureはGit/LFSへ入れない。
+
+以下は前回checkpoint。
+
 更新日: 2026-10-15。工程3・4は未完了。元無音の全encoder GPU gateは合格済みだが、元音声全6信号・両profile、画像FP32全3 profile、実PCM / Texture→正規化768次元APIの全条件は未達。元参照・モデル係数・`atol=1e-5` / `rtol=1e-4`を保持する。Draft PR #81、main未統合。
 
 **Unityの待ちへの対処:** 現在の検証consumerがglobal Accelerator設定を継承し、到達できないサーバーへの接続timeoutを繰り返していた。`create_consumer(automation=True)`の既存方針へ戻し、consumer内だけでCacheServerMode.Disabled / download0 / upload0を適用した。所有Unityが停止していることを確認し、設定の変更前backupと前後SHAを保存。root projectのEditorSettingsとglobal preferencesは変更していない。現在のローカルbounded runnerも起動前にこの方針を再適用する。

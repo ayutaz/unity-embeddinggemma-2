@@ -103,6 +103,32 @@ def test_dynamic_matmul_partition_binds_both_live_gpu_operands():
     np.testing.assert_array_equal(values['out'],ReferenceEvaluator(source).run(None,{'input':values['input']})[0])
 
 
+def test_later_shape_dependency_keeps_original_gpu_boundary_live_without_recomputing_it():
+    source=dynamic_model();source.graph.node[-1].CopyFrom(helper.make_node('Identity',['product'],['middle'],name='carry'))
+    source.graph.node.extend([
+        helper.make_node('Shape',['product'],['dimensions'],name='shape'),
+        helper.make_node('MatMul',['middle','middle'],['second_product'],name='second'),
+        helper.make_node('Reshape',['second_product','dimensions'],['out'],name='restore')])
+    source.graph.value_info.extend([
+        helper.make_tensor_value_info('middle',TensorProto.FLOAT,[2,2,2]),
+        helper.make_tensor_value_info('second_product',TensorProto.FLOAT,[2,2,2]),
+        helper.make_tensor_value_info('dimensions',TensorProto.INT64,[3])])
+    before=source.SerializeToString()
+    parts,plan=required()(source,node_names=[],expected_weight_sha256=[],dynamic_node_names=['dynamic','second'])
+    assert source.SerializeToString()==before
+    assert 'product' in plan['segments'][1]['outputs']
+    values={'input':np.arange(12,dtype=np.float32).reshape(2,2,3)}
+    for index,part in enumerate(parts):
+        onnx.checker.check_model(part)
+        assert not any(n.name in ('dynamic','second') for n in part.graph.node)
+        result=ReferenceEvaluator(part).run(None,{v.name:values[v.name] for v in part.graph.input})
+        aliases=plan['segments'][index]['output_aliases']
+        values.update(zip([aliases.get(v.name,v.name) for v in part.graph.output],result))
+        if index<len(plan['operations']):
+            op=plan['operations'][index];values[op['output']]=values[op['inputs'][0]]@values[op['inputs'][1]]
+    np.testing.assert_array_equal(values['out'],ReferenceEvaluator(source).run(None,{'input':values['input']})[0])
+
+
 @pytest.mark.parametrize('problem',['missing','duplicate','shape','inner','batch'])
 def test_dynamic_matmul_boundary_rejects_invalid_metadata_before_mutation(problem):
     source=dynamic_model();names=['dynamic']

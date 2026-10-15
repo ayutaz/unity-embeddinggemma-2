@@ -226,6 +226,7 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_
                      and all(d.dim_value>0 for d in infos[node.input[0]].type.tensor_type.shape.dim))
         if node.op_type=='Constant' or known_shape or (node.input and all(v in constants for v in node.input)):
             constants.update(node.output)
+    producers={v:n for n in nodes for v in n.output}
     extractor=Extractor(model);frontier=[v.name for v in model.graph.input]
     seen=list(frontier);seen_set=set(seen);cursor=0;segments=[];metadata=[]
     def prepare(part,logical_outputs,number):
@@ -247,6 +248,16 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_
                 if value not in constants and value not in seen_set:seen.append(value);seen_set.add(value)
         future={v for node in nodes[index:] for v in node.input}
         future.update(v.name for v in model.graph.output)
+        # Recomputed fixed-shape subgraphs still depend on the GPU tensor
+        # whose dimensions they inspect. Retain that tensor across cuts so
+        # extraction cannot recreate an already externalized projection.
+        pending=list(future);expanded=set()
+        while pending:
+            value=pending.pop()
+            if value in expanded or value not in constants:continue
+            expanded.add(value);producer=producers.get(value)
+            if producer is not None:
+                future.update(producer.input);pending.extend(producer.input)
         live=[v for v in seen if v in future and v not in constants]
         for value in operation['inputs']:
             if value in constants and value not in live:live.append(value)

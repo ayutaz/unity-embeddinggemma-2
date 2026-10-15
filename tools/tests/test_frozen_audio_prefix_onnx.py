@@ -110,6 +110,32 @@ def test_copy_translation_rejects_unqualified_dtype_changes():
         probe.PrefixExport(prefix, "native")(torch.zeros(1, 32))
 
 
+def test_decomposed_two_convolution_prefix_exports_mask_norm_clone_relu_and_projection(tmp_path):
+    class TinySubsample(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.register_buffer("mask", torch.ones(1, 16, dtype=torch.int64))
+            self.register_buffer("first", torch.randn(32, 1, 3, 3, generator=torch.Generator().manual_seed(10)) * 0.1)
+            self.register_buffer("second", torch.randn(32, 32, 3, 3, generator=torch.Generator().manual_seed(11)) * 0.1)
+            self.register_buffer("scale", torch.ones(32))
+            self.register_buffer("matrix", torch.randn(256, 32, generator=torch.Generator().manual_seed(12)) * 0.1)
+        def forward(self, values):
+            mask = torch.ops.aten._to_copy.default(self.mask, dtype=torch.bool)
+            hidden = (values * mask.unsqueeze(-1)).unsqueeze(1)
+            for weight in (self.first, self.second):
+                hidden = torch.ops.aten.convolution.default(hidden, weight, None, [2, 2], [1, 1], [1, 1], False, [0, 0], 1)
+                normalized = torch.ops.aten.native_layer_norm.default(hidden.permute(0, 2, 3, 1), [32], self.scale, None, 1e-6)[0]
+                hidden = torch.ops.aten.clone.default(normalized.permute(0, 3, 1, 2), memory_format=torch.contiguous_format).relu()
+            flattened = hidden.permute(0, 2, 3, 1).contiguous().reshape(4, 256)
+            projected = torch.ops.aten.mm.default(flattened, self.matrix)
+            return projected * 0.5
+    values = torch.randn(1, 16, 32, generator=torch.Generator().manual_seed(13))
+    source = torch.export.export(TinySubsample(), (values,)).run_decompositions({}).module()
+    boundary = next(node.name for node in source.graph.nodes if node.target == torch.ops.aten.mm.default)
+    report = probe.probe_prefix(source, values, source(values).detach(), tmp_path, boundary=boundary)
+    assert report["complete"] and report["cases"][0]["native_wrapper_bits_equal"]
+
+
 def test_refuses_overwriting_prior_evidence(tmp_path):
     path = tmp_path / "frozen-audio-prefix-onnx.json"
     path.write_text("original evidence")
@@ -127,3 +153,32 @@ def test_workflow_is_opt_in_and_downloads_only_frozen_graph_and_one_fixture():
     assert "11814567883" in text and "frozen_audio_prefix_onnx" in text
     assert "HF_TOKEN" not in text and "snapshot_download" not in text
     assert "if: always()" in text
+
+
+def test_fixed_stage_selection_checks_named_operation_and_rejects_other_stages():
+    source, _ = program()
+    tail = next(node for node in source.graph.nodes if node.target == torch.ops.aten.mul.Tensor)
+    tail.name = "mul_27"
+    source.recompile()
+    assert probe.boundary_for_stage(source, "layer_0") == "mul_27"
+    with pytest.raises(ValueError, match="stage"):
+        probe.boundary_for_stage(source, "layer_12")
+    with pytest.raises(ValueError, match="boundary"):
+        probe.boundary_for_stage(source, "subsample")
+
+
+def test_cli_explicit_stage_is_forwarded_without_changing_default(tmp_path, monkeypatch):
+    source, _ = program()
+    tail = next(node for node in source.graph.nodes if node.target == torch.ops.aten.mul.Tensor)
+    tail.name = "mul_27"
+    source.recompile()
+    values = torch.zeros(1, 32)
+    monkeypatch.setenv("GITHUB_SHA", "a" * 40)
+    monkeypatch.setattr(probe, "load_frozen_input", lambda path: (source, values, source(values), {}))
+    calls = []
+    def record(*args, **kwargs):
+        calls.append(kwargs)
+        return dict(complete=True)
+    monkeypatch.setattr(probe, "probe_prefix", record)
+    assert probe.main(["--input", str(tmp_path), "--output", str(tmp_path / "output"), "--stage", "layer_0"]) == 0
+    assert calls[0]["boundary"] == "mul_27"

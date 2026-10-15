@@ -15,6 +15,19 @@ from .export import export_audio_native_onnx
 from .reference_context_failure import feature_error_metrics
 
 VARIANTS = ("native", "refined_moment", "refined_mean_moment")
+# Names verified against b85a2ad... serialized schema in the pinned graph.
+STAGES = {"subsample": ("view_2", torch.ops.aten.view.default),
+          **{f"layer_{index}": (f"mul_{27 + 25 * index}", torch.ops.aten.mul.Tensor) for index in range(12)}}
+
+
+def boundary_for_stage(program, stage):
+    if stage not in STAGES:
+        raise ValueError("Unknown fixed audio stage")
+    name, target = STAGES[stage]
+    matches = [node for node in program.graph.nodes if node.name == name]
+    if len(matches) != 1 or matches[0].op != "call_function" or matches[0].target != target:
+        raise ValueError("Frozen audio stage boundary differs")
+    return name
 
 
 def extract_prefix(program, boundary):
@@ -98,7 +111,7 @@ def probe_prefix(program, values, expected, output, *, boundary, provenance=None
     if receipt.exists() or any((output / (variant + ".onnx")).exists() for variant in VARIANTS):
         raise ValueError("Refusing to overwrite prefix diagnostic evidence")
     output.mkdir(parents=True, exist_ok=True)
-    report = dict(scope="original_context_qualified_audio_subsample_onnx_only", context_qualified=False,
+    report = dict(scope="original_context_qualified_audio_prefix_onnx_only", context_qualified=False,
                   complete=False, cases=[], full_encoder_validated=False, gpu_validated=False,
                   end_to_end_validated=False, boundary=boundary, provenance=provenance)
 
@@ -154,6 +167,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--stage", choices=tuple(STAGES), default="subsample")
     args = parser.parse_args(argv)
     source = os.environ.get("GITHUB_SHA", "")
     if re.fullmatch("[0-9a-f]{40}", source) is None:
@@ -161,11 +175,9 @@ def main(argv=None):
     program, values, expected, provenance = load_frozen_input(args.input)
     provenance.update(job_source=source, torch_version=str(torch.__version__), threads=torch.get_num_threads(),
                       cpu_capability=torch.backends.cpu.get_cpu_capability())
-    # Boundary name and module path are from the pinned original serialized schema.
-    matches = [node for node in program.graph.nodes if node.name == "view_2"]
-    if len(matches) != 1 or matches[0].target != torch.ops.aten.view.default:
-        raise ValueError("Frozen subsample projection boundary differs")
-    report = probe_prefix(program, values, expected, args.output, boundary="view_2", provenance=provenance)
+    boundary = boundary_for_stage(program, args.stage)
+    provenance["stage"] = args.stage
+    report = probe_prefix(program, values, expected, args.output, boundary=boundary, provenance=provenance)
     print(json.dumps(report))
     return 0 if report["complete"] else 1
 

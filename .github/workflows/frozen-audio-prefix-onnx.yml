@@ -2,6 +2,12 @@ name: Original-context audio prefix ONNX diagnosis
 
 on:
   workflow_dispatch:
+    inputs:
+      stage:
+        description: Fixed original boundary; every probe first requires original silence final bits
+        type: choice
+        default: subsample
+        options: [subsample, layer_0, layer_1, layer_2, layer_3, layer_4, layer_5, layer_6, layer_7, layer_8, layer_9, layer_10, layer_11]
   pull_request:
     types: [opened, synchronize, labeled]
 
@@ -18,7 +24,8 @@ jobs:
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (github.event.pull_request.head.repo.full_name == github.repository &&
-       contains(github.event.pull_request.labels.*.name, 'frozen-audio-prefix-onnx'))
+       (contains(github.event.pull_request.labels.*.name, 'frozen-audio-prefix-onnx') ||
+        contains(github.event.pull_request.labels.*.name, 'frozen-audio-layer0-onnx')))
     runs-on: ubuntu-latest
     timeout-minutes: 20
     defaults:
@@ -28,6 +35,7 @@ jobs:
       OMP_NUM_THREADS: '4'
       MKL_NUM_THREADS: '4'
       OPENBLAS_NUM_THREADS: '4'
+      PROBE_STAGE: ${{ inputs.stage || (contains(github.event.pull_request.labels.*.name, 'frozen-audio-layer0-onnx') && 'layer_0') || 'subsample' }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
@@ -57,6 +65,7 @@ jobs:
           uv run --locked python -m embeddinggemma_tools.frozen_audio_prefix_onnx
           --input ../artifacts/frozen-prefix-input/audio-runtime-reference
           --output ../artifacts/frozen-audio-prefix-onnx
+          --stage "$PROBE_STAGE"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

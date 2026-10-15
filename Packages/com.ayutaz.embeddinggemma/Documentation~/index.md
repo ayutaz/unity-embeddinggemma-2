@@ -1,8 +1,8 @@
 # 導入とRuntime API
 
-> 2026-10-14: mainの共通backbone・prompt・GPU画像前処理・PCM / GPU音声前処理に加え、この開発branchはImageFeatureEncoder / ImageEmbedder、AudioFeatureEncoder / AudioEmbedderを含みます。最終APIはDraft実装・合成契約合格で、実モデルの全条件は未達。各stageへGPUComputeを明示し、中間readbackとCPU fallbackを禁止するのが受け入れ要件です。モデル読み込みやgraph準備のCPU負荷は別に計測します。
+> 2026-10-16: Draft PR #81の実GPU検証で、画像・音声の各18条件が実入力から最終768次元まで合格しています。音声は分割encoderと`AudioEmbedder.EmbedAsync`を使用します。必須CIの音声ONNX比較は失敗中で、main未統合・未リリースです。source別証拠と後続工程は[現在の状態](../../../docs/status.md)を参照してください。
 
-更新日: 2026-10-10。開発版 `0.1.0-pre.1` は [PR #6](https://github.com/ayutaz/unity-embeddinggemma-2/pull/6)でmainへ統合済み、未リリースです。
+既存テキスト導入の記録（2026-10-10）: 開発版 `0.1.0-pre.1` は [PR #6](https://github.com/ayutaz/unity-embeddinggemma-2/pull/6)でmainへ統合済み、未リリースです。上のDraftマルチモーダルAPIの統合状態とは区別します。
 Windowsの新しい空のUnityプロジェクトで固定commitのGit URL導入・compile・UPM 38 / sample EditMode 64 / PlayMode 2件、実モデル4条件・全順位 / scoreと日英画面操作を確認しました。[実測条件と結果](https://github.com/ayutaz/unity-embeddinggemma-2/blob/b1a8c67c62066bfa5e1830a947563ace3dff9fa5/docs/m2-latest-git-consumer-validation.md)を参照してください。macOS / iOS / Android、正式候補と公開tagは未検証です。
 
 ## 導入

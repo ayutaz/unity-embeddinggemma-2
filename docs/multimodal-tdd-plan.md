@@ -1,5 +1,15 @@
 # M2・M3・M4から正式リリースまでのTDD計画
 
+## 現在の実行位置（2026-10-16）
+
+[現在の状態](status.md)と[手順4の要件別監査](results/goal4-current-completion-audit-20261016.json)を現行の判定とします。元の「4まで」は実Texture / PCM→最終768 APIの全role・固定profile / mask・境界・所有権 / 解放・例外後再利用・text回帰と必須repository checksです。画像18条件・音声18条件、元encoder全画像6件 / 3 profile・音声6信号 / 2 profile、関連189テストのGPU証拠はそろいました。**音声ONNXのRequired CI失敗が残り、手順4全体は未完了です。**
+
+[完了したprefix候補と全音声ONNX失敗の監査](results/m4-complete-prefix-rejected-onnx-and-reproduced-native-20261016.json)では、限定prefixの0超過を、全6信号のONNX不合格と分けて保持しています。AMD EPYC 9V74 / AVX512で元silence保存graphの最終143,360値が全bit再現できたため、次はその固定参照文脈に結び付けて変換の演算差を局所化します。元係数・golden・許容差は維持し、必須CIのgateを緩和しません。
+
+検索sample、モデル準備再利用、長期memory / 性能、Player、各OS / 実機は元提案の手順5以降、統合・配布は手順6として残します。以下の詳細計画・過去checkpointは当時の状態を含み、実行手順3 / 4とproject milestone M3 / M4全体の範囲を混同しません。
+
+## 過去checkpointと詳細計画
+
 2026-10-16追加確認: [staged音声encoderの元全6信号 / 両profile厳密gateと最新text GPU回帰](results/m4-staged-original-encoder-and-final-text-gpu-regression-20261016.json)が合格。元824,320音声値の許容差超過0、text両precision各10ベクトル / 全4順位、関連189 Green・skip0、終了時の当該Persistent警告0。これで実入力APIの画像18条件・音声18条件と元encoder gate、境界 / 所有権 / 復帰 / text回帰の証拠を保持する。工程4を完了するにはRequired CIのONNX失敗を解消する必要がある。[固定prefixの正規化候補](results/m4-ci-prefix-normalization-and-full-mode-tdd-20261016.json)は限定scopeで0超過だが、probe全体のshape取得失敗は修正前の失敗として保持する。元native参照 / 係数 / default / gateを変えない明示modeで、全ONNX条件をActions上で検証する。
 
 2026-10-16音声API更新: [実PCM全6信号 / 両profile / 全3 roleの最終GPU API](results/m4-real-pcm-all-roles-staged-gpu-20261016.json)は18 pass・skip0。同期試行の12 GiB監視停止は失敗証拠として残し、音声staged encoder / 非同期APIを11 Red→関連39 Greenで追加。最大host peak約7.13 GiBで同APIの全role・実GPU stage後例外からの復帰・借用stageのAPI Dispose後再利用を確認した。元Document全6最終値は先行版と全bit一致。追加要素診断1213超過は最終cosine合格と分ける。次はstaged encoder単体の元厳密全6 gate・最新text回帰・Required CIを確認する。CIの最初の差は、元失敗graph / native入力・出力の約6 MBだけを使う明示opt-in prefix probeで調べ、通常の全ONNX gateは維持する。工程4は未完了。

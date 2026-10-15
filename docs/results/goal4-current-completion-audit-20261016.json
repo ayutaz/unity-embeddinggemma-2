@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "goal": "4\u307e\u3067\u9032\u3081\u3066\u304f\u3060\u3055\u3044",
+  "status": "active_not_complete",
+  "scope_source": "goal4-scope-audit-20261016.json",
+  "candidate_head_at_audit": "b37807099fa7461c0d82b147875bdc5c79f9300c",
+  "requirements": [
+    {
+      "requirement": "Original learned coefficients, references and encoder tolerances remain unchanged",
+      "status": "verified_for_recorded_gpu_sources",
+      "evidence": [
+        "m3-adjacent-reciprocal-all-image-gpu-passed-20261015.json",
+        "m4-staged-original-encoder-and-final-text-gpu-regression-20261016.json",
+        "m4-qualified-frozen-audio-role-reference-20261016.json"
+      ],
+      "limit": "New role reference generation is explicit frozen-boundary reference-only work; it does not execute or qualify the encoder."
+    },
+    {
+      "requirement": "Original image six cases / three profiles on actual GPU",
+      "status": "verified_at_source",
+      "source": "38baf10321226d4af24380adc046679e595ee048",
+      "evidence": "m3-adjacent-reciprocal-all-image-gpu-passed-20261015.json",
+      "values_compared": 778240,
+      "bit_differences": 0,
+      "skipped": 0
+    },
+    {
+      "requirement": "Original audio six signals / both profiles through staged production encoder on actual GPU",
+      "status": "verified_at_source",
+      "source": "0857edc8be1a94d5f46af570058076b5df0eda34",
+      "evidence": "m4-staged-original-encoder-and-final-text-gpu-regression-20261016.json",
+      "values_compared": 824320,
+      "mismatched_elements": 0,
+      "skipped": 0,
+      "limit": "Tolerance success; not bit-exact audio encoder output."
+    },
+    {
+      "requirement": "Actual Texture / RenderTexture to finite normalized768 final API, all roles / profiles, invalid inputs and real GPU cancellation recovery",
+      "status": "verified_at_recorded_sources",
+      "evidence": [
+        "m3-final-image-api-all-cases-all-roles-gpu-20261016.json",
+        "m3-rendertexture-recovery-and-text-gpu-regression-20261016.json"
+      ],
+      "png_role_conditions": 18,
+      "rendertexture_roles": 3,
+      "source_coverage_check": "git diff --name-only caac33200738edb4301c09e5792481d2e9386c91 HEAD -- Packages/com.ayutaz.embeddinggemma/Runtime lists only AudioEmbedder.cs, AudioPipelineContracts.cs and PartitionedAudioFeatureEncoder.cs; shared image math and Resources are unchanged.",
+      "limit": "No claim that all image cases ran at the latest head."
+    },
+    {
+      "requirement": "Actual PCM to finite normalized768 final API, six signals / two profiles / Query Document Raw, masks / boundaries / owned tensors / disposal / error recovery",
+      "status": "verified_at_source",
+      "source": "4b73a02ba652ec0d4fbf9a9ac4475f75046068ae",
+      "evidence": "m4-real-pcm-all-roles-staged-gpu-20261016.json",
+      "role_conditions_passed": 18,
+      "minimum_cosine": 0.9999997097692651,
+      "extra_elementwise_diagnostic_mismatches": 1213,
+      "limit": "Original final cosine gate passes; additional elementwise differences and failed synchronous memory-guard attempt remain recorded."
+    },
+    {
+      "requirement": "Latest text regression and API / boundary / async contracts",
+      "status": "verified_at_source",
+      "source": "0857edc8be1a94d5f46af570058076b5df0eda34",
+      "evidence": "m4-staged-original-encoder-and-final-text-gpu-regression-20261016.json",
+      "related_passes": 189,
+      "skipped": 0,
+      "source_coverage_check": "git diff 0857edc8be1a94d5f46af570058076b5df0eda34 HEAD -- Packages/com.ayutaz.embeddinggemma/Runtime is empty."
+    },
+    {
+      "requirement": "Actual GPUCompute with no computation / nonempty-feature CPU fallback and no intermediate readbacks",
+      "status": "verified_in_recorded_gpu_gates",
+      "evidence": [
+        "m3-final-image-api-all-cases-all-roles-gpu-20261016.json",
+        "m4-real-pcm-all-roles-staged-gpu-20261016.json",
+        "m4-staged-original-encoder-and-final-text-gpu-regression-20261016.json"
+      ],
+      "limit": "Windows Editor RTX4070 Ti SUPER / D3D12 only; final vectors and separate isolated encoder gate outputs are intentionally downloaded."
+    },
+    {
+      "requirement": "Required repository checks for the resulting candidate",
+      "status": "not_achieved",
+      "evidence": "m4-complete-prefix-rejected-onnx-and-reproduced-native-20261016.json",
+      "last_terminal_ci_run": 38771922063,
+      "last_terminal_ci_head": "4cdb2330645fa3705b8d46f18fb64e66897a301f",
+      "result": "Python four environments, package and workflow lint passed; model-reference audio ONNX and Required CI failed.",
+      "candidate_ci_run": 38774804527,
+      "candidate_ci_last_observation": "queued",
+      "full_refined_onnx_candidate_run": 38771944636,
+      "full_refined_onnx_failed_cases": 6,
+      "next_action": "Use a native context that reproduces original saved output to localize the ONNX arithmetic difference; retain all six signal gates and original tolerances.",
+      "candidate_ci_aggregate_conclusion": "",
+      "candidate_model_reference_conclusion": "failure",
+      "candidate_python_environments": 4,
+      "candidate_python_passes_per_environment": 1111
+    }
+  ],
+  "documentation": {
+    "current_status": "../status.md",
+    "current_api_overview": "../runtime-api.md",
+    "audio_api": "../../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-embedder.md",
+    "audio_encoder": "../../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-feature-encoder.md",
+    "history": "https://github.com/ayutaz/unity-embeddinggemma-2/blob/4cdb2330645fa3705b8d46f18fb64e66897a301f/docs/status.md"
+  },
+  "later_scope_preserved": [
+    "Preparation reuse and distribution",
+    "Search / playback / explicit microphone samples",
+    "Long-term memory and performance",
+    "Player / other OS and devices",
+    "Integration / release"
+  ],
+  "completion_claimed": false
+}

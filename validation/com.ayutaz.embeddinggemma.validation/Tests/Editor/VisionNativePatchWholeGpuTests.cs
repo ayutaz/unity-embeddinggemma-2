@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -25,19 +26,25 @@ namespace EmbeddingGemma.Validation.Tests
         public void InlineAllVisionLayerRmsOriginalEncoderMustMatchGoldenOnGpu(string caseId)
             => Run(caseId,true);
 
-        static void Run(string caseId,bool inlineAllRms)
+        [TestCase("square-0")] [TestCase("square-1")]
+        [TestCase("landscape-0")] [TestCase("landscape-1")]
+        [TestCase("portrait-0")] [TestCase("portrait-1")]
+        public void NativeGeluAndInlineVisionRmsEncoderMustMatchGoldenOnGpu(string caseId)
+            => Run(caseId,true,true);
+
+        static void Run(string caseId,bool inlineAllRms,bool nativeGelu=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-encoder"));
-            var label=inlineAllRms?"vision-inline-all-layer-rms-whole-gpu-":"vision-native-patch-whole-gpu-";
+            var label=nativeGelu?"vision-native-gelu-inline-rms-whole-gpu-":inlineAllRms?"vision-inline-all-layer-rms-whole-gpu-":"vision-native-patch-whole-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+"-"+caseId+".json"));
             Assert.That(File.Exists(output),Is.False);
-            var report=new JObject{["success"]=false,["scope"]=inlineAllRms?"one_original_vision_encoder_gpu_all_sixteen_layer_rms_and_native_patch384_candidate":"one_original_vision_encoder_gpu_native_patch384_candidate",["runtime_source"]=source,
+            var report=new JObject{["success"]=false,["scope"]=nativeGelu?"one_original_vision_encoder_gpu_native_gelu_all_layer_rms_and_patch384_candidate":inlineAllRms?"one_original_vision_encoder_gpu_all_sixteen_layer_rms_and_native_patch384_candidate":"one_original_vision_encoder_gpu_native_patch384_candidate",["runtime_source"]=source,
                 ["case_id"]=caseId,["phase"]="audit",["all_profiles_validated"]=false,["end_to_end_validated"]=false};
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
-            Save();
+            var operations=new List<IGpuTensorOperation>();Save();
             try
             {
                 var locked=JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath,"../Packages/packages-lock.json")));
@@ -48,10 +55,13 @@ namespace EmbeddingGemma.Validation.Tests
                 var audit=JObject.Parse(File.ReadAllText(Path.Combine(root,"vision-validation.json")));
                 var row=((JArray)reference["cases"]).Single(value=>value.Value<string>("id")==caseId);var profile=row.Value<string>("profile");
                 var modelSha=profile=="square"?"4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7":profile=="landscape"?"b9bc2336a34167eb0fdfdd99e49c6486d66b20afc23d72da8df1e10da4a1e632":"41c0ade742b09cf291c0b14343b1cf8bffa6f44c9bb2e8d782bc7ba508371e6b";
-                Check(Path.Combine(root,profile+"-fp32.sentis"),modelSha);report["profile"]=profile;report["saved_model_sha256"]=modelSha;
-                report["phase"]="prepare";Save();var timer=System.Diagnostics.Stopwatch.StartNew();
+                report["phase"]="audit_saved_model_file";Save();var phaseTimer=System.Diagnostics.Stopwatch.StartNew();
+                Check(Path.Combine(root,profile+"-fp32.sentis"),modelSha);report["model_file_audit_ms"]=phaseTimer.Elapsed.TotalMilliseconds;report["profile"]=profile;report["saved_model_sha256"]=modelSha;
+                report["phase"]="load_saved_model";Save();var timer=System.Diagnostics.Stopwatch.StartNew();phaseTimer.Restart();
                 var original=TextModelFile.Load(Path.Combine(root,profile+"-fp32.sentis"));var constants=original.constants.ToDictionary(value=>value.index);
-                var working=original;var originalCoefficients=CoefficientsHash(original);
+                report["model_load_ms"]=phaseTimer.Elapsed.TotalMilliseconds;report["phase"]="audit_coefficients_before";Save();phaseTimer.Restart();
+                var working=original;var originalCoefficients=CoefficientsHash(original);report["coefficient_audit_before_ms"]=phaseTimer.Elapsed.TotalMilliseconds;
+                report["phase"]="rewrite_layer_rms";Save();phaseTimer.Restart();
                 if(inlineAllRms)
                 {
                     Check(Path.Combine(Application.dataPath,"GpuVisionInlineRmsCandidate/inline-rms.onnx"),"15c8ec537c8d40386e61b675c05aaaa65b296667c0d38c39dc7d12fe28a25ccb");
@@ -72,16 +82,43 @@ namespace EmbeddingGemma.Validation.Tests
                     report["remaining_original_rms_count"]=original.layers.Count(layer=>layer.GetType().Name=="Square")-112;
                     report["all_original_coefficient_descriptors_retained"]=true;
                 }
+                report["graph_rewrite_ms"]=phaseTimer.Elapsed.TotalMilliseconds;report["phase"]="prepare_gpu_pipeline";Save();phaseTimer.Restart();
                 var projection=original.layers.First(layer=>layer.GetType().Name=="MatMul"&&constants.TryGetValue(layer.inputs[1],out var w)&&w.shape==new TensorShape(768,768));
                 var raw=(ArraySegment<byte>)typeof(Constant).GetField("array",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(constants[projection.inputs[1]]);
                 using(var stream=new MemoryStream(raw.Array,raw.Offset,raw.Count,false))Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo("696c2e091ed4ad117c10faa6bf9707eb808649fb09c84fee457d2327408acc90"));
                 var weights=new float[raw.Count/4];Buffer.BlockCopy(raw.Array,raw.Offset,weights,0,raw.Count);
-                var before=ModelTensorSlice.Extract(working,projection.inputs[0],"projection_input");
-                var after=ModelTensorSlice.Extract(working,working.outputs[0].index,"soft_tokens",new[]{new Model.Input{
-                    name="projection_output",index=projection.outputs[0],dataType=DataType.Float,shape=new DynamicTensorShape(2520,768)}});
-                Assert.That(before.inputs.Count,Is.EqualTo(1));Assert.That(after.inputs.Count,Is.EqualTo(1));
-                using var operation=new GpuBlockedMatmul(768,768,weights,384);
-                using var pipeline=new GpuProjectionPipeline(new[]{before,after},new[]{"projection_input"},new[]{"projection_output"},new[]{operation});
+                Model[] parts;string[][] inputs;string[] outputs;
+                if(nativeGelu)
+                {
+                    var marked=SavedProjectionPartition.MarkGelu(working);working=marked.model;Assert.That(marked.outputs.Length,Is.EqualTo(16));
+                    var wanted=new HashSet<int>(marked.outputs){projection.outputs[0]};
+                    var selected=working.layers.Where(layer=>wanted.Contains(layer.outputs[0])).Select(layer=>layer.outputs[0]).ToArray();
+                    var plan=SavedProjectionPartition.Create(working,selected);Assert.That(plan.Models.Length,Is.EqualTo(18));
+                    for(var i=0;i<selected.Length;i++)
+                    {
+                        Assert.That(plan.Rows[i],Is.EqualTo(2520));
+                        if(plan.Weights[i]==null)
+                        {
+                            Assert.That(plan.Widths[i],Is.EqualTo(3072));operations.Add(new GpuGelu(new TensorShape(1,2520,3072)));
+                        }
+                        else
+                        {
+                            Assert.That(i,Is.Zero);Assert.That(plan.Widths[i],Is.EqualTo(768));Assert.That(plan.Columns[i],Is.EqualTo(768));
+                            Assert.That(plan.Weights[i],Is.EqualTo(weights));operations.Add(new GpuBlockedMatmul(768,768,plan.Weights[i],384));
+                        }
+                    }
+                    parts=plan.Models;inputs=plan.Inputs;outputs=plan.Outputs;report["native_gelu_count"]=16;
+                }
+                else
+                {
+                    var before=ModelTensorSlice.Extract(working,projection.inputs[0],"projection_input");
+                    var after=ModelTensorSlice.Extract(working,working.outputs[0].index,"soft_tokens",new[]{new Model.Input{
+                        name="projection_output",index=projection.outputs[0],dataType=DataType.Float,shape=new DynamicTensorShape(2520,768)}});
+                    Assert.That(before.inputs.Count,Is.EqualTo(1));Assert.That(after.inputs.Count,Is.EqualTo(1));
+                    parts=new[]{before,after};inputs=new[]{new[]{"projection_input"}};outputs=new[]{"projection_output"};operations.Add(new GpuBlockedMatmul(768,768,weights,384));
+                }
+                using var pipeline=new GpuProjectionPipeline(parts,inputs,outputs,operations.ToArray());
+                report["pipeline_prepare_ms"]=phaseTimer.Elapsed.TotalMilliseconds;report["segment_count"]=parts.Length;report["gpu_operation_count"]=operations.Count;
                 report["prepare_ms"]=timer.Elapsed.TotalMilliseconds;report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
                 var pixelsName=row.Value<string>("pixels");Check(Path.Combine(root,pixelsName),audit["files"][pixelsName].Value<string>("sha256"));
                 using var input=new Tensor<float>(new TensorShape(1,2520,768),Floats(Path.Combine(root,pixelsName)));ComputeTensorData.Pin(input);
@@ -98,12 +135,13 @@ namespace EmbeddingGemma.Validation.Tests
                     Assert.That(float.IsNaN(actual[i])||float.IsInfinity(actual[i]),Is.False);
                     var d=Math.Abs((double)actual[i]-expected[i]);var allowed=1e-5+1e-4*Math.Abs((double)expected[i]);if(d>allowed)bad++;maximum=Math.Max(maximum,d);ratio=Math.Max(ratio,d/allowed);
                 }
-                report["actual_backend"]="GPUCompute";report["mismatched_elements"]=bad;report["maximum_absolute_error"]=maximum;report["maximum_tolerance_ratio"]=ratio;report["phase"]="completed";Save();
+                report["actual_backend"]="GPUCompute";report["mismatched_elements"]=bad;report["maximum_absolute_error"]=maximum;report["maximum_tolerance_ratio"]=ratio;report["phase"]="audit_coefficients_after";Save();phaseTimer.Restart();
                 Assert.That(CoefficientsHash(original),Is.EqualTo(originalCoefficients));report["original_coefficient_bytes_preserved"]=true;report["original_coefficients_sha256"]=originalCoefficients;
+                report["coefficient_audit_after_ms"]=phaseTimer.Elapsed.TotalMilliseconds;report["phase"]="completed";Save();
                 Assert.That(bad,Is.Zero,"Keep the unchanged original FP32 elementwise gate.");report["success"]=true;
             }
             catch(Exception error){report["error"]=error.ToString();throw;}
-            finally{Save();}
+            finally{foreach(var operation in operations)operation.Dispose();Save();}
         }
         static string CoefficientsHash(Model model)
         {

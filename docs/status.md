@@ -1,5 +1,13 @@
 # 現在の状態
 
+更新日: 2026-10-15。**元layer 0の全7 RMS＋7投影をGPUで接続し、元の固定layer参照の数値gateに合格した。** `c189347998e2a6950a80f75a9ab1e5f1bf11a8f5`、関連27 pass / fail0 / skip0 / exit0。layer 0の許容差超過0、最大比0.766697、bit差1,518,970。元Model serialized bytes / 6つのscale / 7投影係数・入力・参照・許容差を保持。GPUCompute、計算/入力CPU fallback・中間flush0、15 segment。[固定receipt](results/m3-seven-rms-original-layer0-gpu-20261015.json)。全bit一致や画像全encoder合格には数えない。
+
+4次元unary境界 / 元scale借用は5 intended fail＋旧2次元1 passから関連22 Green。追加fixtureの括弧誤りによるcompile失敗 / XML欠測も別記録し、TDD Redや数値結果へ混ぜない。768幅4か所は元scaleを借用して現CPU式へ実GPU全bit一致、template / coefficient source bytes保持。全7境界 / callable head操作は4 intended failから27 Green。64幅q/k/vもwrapper経由で現CPU式へ全bit一致した。これらは捕捉入力上の局所式の証拠で、元native内部値は未取得。
+
+**画像全体は未合格のまま。** このcheckpointでは全encoderを再実行せず、前source `dd38756...` square-0の566要素超過を保持する。次のGELU切り分けとして、捕捉gate入力の先頭65,536値を現CPUのtanh版GELUへ照合すると、分離演算55 / FMA候補273 / 因数分解5,058 bit差、局所許容差超過は各0だった。候補は採用していない。[固定PyTorch source](https://github.com/pytorch/pytorch/blob/5c4886908584029761b579af026dcfb627c84070/aten/src/ATen/native/cpu/Gelu.h)も確認した。次は活性化とattention積和の局所参照を確認してから全profileへ戻す。実PCM/Texture→GPU前処理→encoder→backbone→正規化768 API、全role / mask / 境界 / 所有権 / Dispose / 例外後再利用 / text回帰、工程3・4のsample / Playerは未完了。既存Runtime package filesは前checkpointから未変更、全Unity process終了済み。Required CI、Persistent allocation警告・長期memoryは別gate。
+
+以下は前回checkpoint。
+
 更新日: 2026-10-15。**64幅のhead RMS 3か所も、捕捉GPU入力と元scaleを使う独立した現CPU式へ実GPUで全bit一致した。** `e07c878249f06dbdd7dab3ce7c600f38e5e69655`、scaled q/k・unscaled vの3 pass / fail0 / skip0 / exit0、GPUCompute・計算/入力CPU fallback・中間flush0。13 Red→CPU/ONNX関連30 Green、音声算術・packageを含む76 Green。[7 RMS観測とhead GPUの固定receipt](results/m3-all-rms-observation-and-head-gpu-20261015.json)。
 
 先に元layer 0の7つのRMS入力 / 出力 / scale / 単体saved modelを捕捉し、通常GPU最終値が旧固定hash `bc417e7f...` と全bit不変であることを確認（1 pass / skip0）。768幅4か所は同じ捕捉入力上で既存exportが現CPU式へ全bit一致したが、実GPU確認は最初の1か所だけ。残る768幅3か所のGPU照合、4次元unary境界と元scale借用のTDD、層への再接続が次の作業。元native内部値は未取得であり、画像全体は下記square-0の566要素超過を未解消のまま保持する。全3 profile・最終API・sample・Player・Required CI・Persistent allocation警告と長期memoryは未完了。ローカルUnityは検証後に終了済み。

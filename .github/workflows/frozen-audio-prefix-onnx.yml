@@ -69,7 +69,9 @@ jobs:
         contains(github.event.pull_request.labels.*.name, 'frozen-audio-layer0-fixed-reference') ||
         contains(github.event.pull_request.labels.*.name, 'frozen-audio-encoder-fixed-reference')))
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Original padded raw carry took~337/355s per3layer part and hit20minutes.
+    # Extend only this measured full12/raw case; its numerical gates are unchanged.
+    timeout-minutes: ${{ inputs.raw_input && inputs.chained_probe && matrix.case_id == 'padded_noise' && 35 || 20 }}
     strategy:
       fail-fast: false
       max-parallel: 6

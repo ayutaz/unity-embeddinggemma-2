@@ -122,7 +122,7 @@ def test_workflow_chain_mode_keeps_full_scope_and_does_not_fetch_middle_stage_go
     text = p.read_text(encoding='utf-8')
     assert 'chained_probe:' in text and 'CHAINED_PROBE' in text
     assert 'embeddinggemma_tools.frozen_audio_chained_onnx' in text
-    assert 'timeout-minutes: 20' in text
+    assert "matrix.case_id == 'padded_noise' && 35 || 20" in text
     assert '--member "audio-runtime-stages/${PROBE_PROFILE}/${PROBE_CASE}-stage-${stage_index}-fp32.bin"' in text
     assert 'silence|impulse|sine|nyquist|noise) profile=frames-1119-valid-1119' in text
 

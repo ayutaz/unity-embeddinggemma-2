@@ -11,6 +11,11 @@ on:
         description: Original vision only; require actual AVX512 before model download and run native context only
         type: boolean
         default: false
+      original_blas_context:
+        description: Original native vision only; optionally constrain MKL while retaining native ATen
+        type: choice
+        default: native
+        options: [native, avx2]
   pull_request:
     types: [opened, synchronize, labeled]
 
@@ -179,6 +184,9 @@ jobs:
           if not satisfied:
               raise SystemExit('Actual AVX512 native context unavailable; no model download or replay was performed')
           PY
+      - name: Constrain only original native BLAS context
+        if: inputs.original_blas_context == 'avx2' && matrix.context == 'native'
+        run: echo 'MKL_CBWR=AVX2' >> "$GITHUB_ENV"
       - name: Fetch original frozen graph and first fixture
         env:
           GH_TOKEN: ${{ github.token }}
@@ -199,6 +207,31 @@ jobs:
         run: |
           mkdir -p ../artifacts/original-context-results
           lscpu --json > ../artifacts/original-context-results/cpu-host.json
+      - name: Gate original patch before constrained BLAS full replay
+        if: inputs.original_blas_context == 'avx2' && matrix.context == 'native'
+        run: |
+          uv run --locked python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          import numpy as np
+          import torch
+          from embeddinggemma_tools.reference_context_failure import run_saved_graph_prefix
+          root = Path('../artifacts/original-context-input')
+          program = torch.export.load(root / 'square/vision.pt2').module()
+          values = torch.from_numpy(np.fromfile(root / 'square/0-pixels-fp32.bin', '<f4').reshape(1,2520,768).copy())
+          patch = run_saved_graph_prefix(program, (values,), 'add_1')
+          digest = hashlib.sha256(patch.numpy().tobytes()).hexdigest()
+          expected = '1e99fa140cb0084e624b5019d96ae424192eff77346ef2f7ffea892c1bea0607'
+          report = dict(scope='original_saved_patch_only_before_blas_context_replay', job_source=os.environ['GITHUB_SHA'],
+              actual_cpu_capability=torch.backends.cpu.get_cpu_capability(), mkl_cbwr=os.environ.get('MKL_CBWR'),
+              patch_shape=list(patch.shape), patch_sha256=digest, original_native_patch_sha256=expected,
+              patch_matches_original_native=digest == expected, full_encoder_executed=False)
+          output = Path('../artifacts/original-context-results/patch-prerequisite.json')
+          output.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+          print(json.dumps(report))
+          if digest != expected:
+              raise SystemExit('Constrained BLAS patch differs from original native; full replay was not executed')
+          PY
       - name: Replay original saved graph against unchanged golden
         run: |
           uv run --locked python - <<'PY'

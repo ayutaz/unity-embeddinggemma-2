@@ -79,6 +79,44 @@ def probe_cpu_threads(program, inputs, expected, *, thread_counts=(1, 2, 4)):
                 full_encoder_validated=False, end_to_end_validated=False)
 
 
+def run_saved_graph_prefix(program, inputs, node_name):
+    """Run through one saved FX node only; do not execute the remaining encoder.
+
+    Returns an independent finite FP32 CPU observation without editing the graph.
+    This diagnostic is not a full-program or original-golden acceptance result.
+    """
+    if not isinstance(program, torch.fx.GraphModule) or not any(node.name == node_name for node in program.graph.nodes):
+        raise ValueError('Prefix node is absent from the saved graph')
+
+    class Complete(Exception):
+        pass
+
+    class Prefix(torch.fx.Interpreter):
+        result = None
+
+        def run_node(self, node):
+            value = super().run_node(node)
+            if node.name == node_name:
+                self.result = value
+                raise Complete()
+            return value
+
+    runner = Prefix(program)
+    with torch.no_grad():
+        try:
+            runner.run(*inputs)
+        except Complete:
+            pass
+        else:
+            raise ValueError('Prefix node was not executed')
+        result = runner.result
+        if not isinstance(result, torch.Tensor) or result.dtype != torch.float32 or result.device.type != 'cpu':
+            raise TypeError('Prefix observation must be an FP32 CPU tensor')
+        if not torch.isfinite(result).all():
+            raise ValueError('Prefix observation must be finite')
+        return result.detach().clone()
+
+
 def capture_saved_program_nodes(program, inputs, node_names, destination, expected, *, row_prefixes=None):
     """Observe the existing saved graph without re-exporting or editing its ops."""
     available = {node.name for node in program.graph.nodes if node.op == 'call_function'}

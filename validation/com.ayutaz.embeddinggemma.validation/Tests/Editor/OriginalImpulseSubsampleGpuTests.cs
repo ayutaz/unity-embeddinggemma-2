@@ -22,12 +22,16 @@ namespace EmbeddingGemma.Validation.Tests
         public void FirstNormFmaImpulseSubsamplePrefixMustMatchAllBitsOnGpu()
             =>Execute(true);
 
-        void Execute(bool firstNormFma)
+        [Test]
+        public void ScalarMomentFmaImpulseSubsamplePrefixMustMatchAllBitsOnGpu()
+            =>Execute(true,true);
+
+        void Execute(bool firstNormFma,bool scalarMomentFma=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.Combine(Application.dataPath,"GpuAudioPartitionedNativeGlu");
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/original-impulse-subsample-prefix-"+(firstNormFma?"first-norm-fma-":"")+source+".json"));
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/original-impulse-subsample-prefix-"+(scalarMomentFma?"scalar-moment-fma-":firstNormFma?"first-norm-fma-":"")+source+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["scope"]="one_original_impulse_subsample_gpu_bit_gate_with_diagnostic_captures",
                 ["runtime_source"]=source,["full_encoder_validated"]=false,["end_to_end_validated"]=false,
@@ -46,8 +50,8 @@ namespace EmbeddingGemma.Validation.Tests
                 var locked=JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath,"../Packages/packages-lock.json")));
                 foreach(var package in new[]{"com.ayutaz.embeddinggemma","com.ayutaz.embeddinggemma.validation"})
                     Assert.That(locked["dependencies"][package].Value<string>("hash"),Is.EqualTo(source));
-                var segmentFile=firstNormFma?"segment-0-first-norm-fma.onnx":"segment-0.onnx";
-                var segmentSha=firstNormFma?"9bc00c121b589af7444e026532b4c01452a21b32b1b2b290e2377b55aa6fe19b":"05f0bb360fd691872ef632c9513c4a07e93cac6a92f30538564867be9b226f51";
+                var segmentFile=scalarMomentFma?"segment-0-scalar-moment-fma.onnx":firstNormFma?"segment-0-first-norm-fma.onnx":"segment-0.onnx";
+                var segmentSha=scalarMomentFma?"650929620cdb4974eec0ee41d1d21c6dfe376c6703cb9cf5091d261171dbd949":firstNormFma?"9bc00c121b589af7444e026532b4c01452a21b32b1b2b290e2377b55aa6fe19b":"05f0bb360fd691872ef632c9513c4a07e93cac6a92f30538564867be9b226f51";
                 Check(Path.Combine(root,segmentFile),segmentSha);report["segment_sha256"]=segmentSha;
                 var model=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/GpuAudioPartitionedNativeGlu/"+segmentFile));
                 model=CompensatedModel.CreateWithDynamicMatMuls(model,16);model=CompensatedModel.Create(model,64);

@@ -11,12 +11,57 @@ using NUnit.Framework;
 using Unity.InferenceEngine;
 using UnityEngine;
 using UnityEngine.Profiling;
+using UnityEngine.TestTools;
 
 namespace EmbeddingGemma.Validation.Tests
 {
     public sealed class VisionLayerBufferAccountingGpuTests
     {
         const BindingFlags Fields=BindingFlags.Instance|BindingFlags.NonPublic;
+        [UnityTest]
+        public IEnumerator AccountSingleLayerDisposalAcrossEditorUpdatesAndDiagnosticGc()
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
+            var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-layer-disposal-timing-"+source+".json"));Assert.That(File.Exists(output),Is.False);
+            var report=new JObject{["success"]=false,["runtime_source"]=source,["scope"]="single_layer_disposal_timing_diagnostic_only",
+                ["full_encoder_validated"]=false,["end_to_end_validated"]=false,["forced_gc_and_unload_are_diagnostic_only"]=true};
+            var snapshots=new JArray();report["snapshots"]=snapshots;
+            void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
+            string Hash(string path){using var stream=File.OpenRead(path);return PlayerFileHash.Compute(stream,out _);}
+            using var process=Process.GetCurrentProcess();
+            void Sample(string phase)
+            {
+                GpuExecutionProfiler.ReadProcessMemory(process,out var host,out var peak);
+                snapshots.Add(new JObject{["phase"]=phase,["frame"]=Time.frameCount,["rendered_frame"]=Time.renderedFrameCount,["is_playing"]=Application.isPlaying,
+                    ["graphics_driver_bytes"]=Profiler.GetAllocatedMemoryForGraphicsDriver(),["engine_allocated_bytes"]=Profiler.GetTotalAllocatedMemoryLong(),
+                    ["managed_gc_bytes"]=GC.GetTotalMemory(false),["host_working_set_bytes"]=host,["host_peak_working_set_bytes"]=peak});Save();
+            }
+            Save();
+            var locked=JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath,"../Packages/packages-lock.json")));
+            foreach(var package in new[]{"com.ayutaz.embeddinggemma","com.ayutaz.embeddinggemma.validation"})Assert.That(locked["dependencies"][package].Value<string>("hash"),Is.EqualTo(source));
+            var path=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-layer0-original-patch-gpu-e39bdf1b5d0faf2ea424023d83076315736c6fde-captures/layer0.sentis"));
+            var inputPath=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-diagnostics/native-stage-0.bin"));
+            Assert.That(Hash(path),Is.EqualTo("d09b8884fae82ecd0245967774a0c8671efe09156c50367c45b9f133fc53983d"));
+            Assert.That(Hash(inputPath),Is.EqualTo("bc4c19c9aaf9688801c99ed073fdde22f0daf6b822dc2c9c4b7a3f7c9aded636"));
+            Sample("before_owned_scope");
+            void RunOwnedLayer()
+            {
+                var model=TextModelFile.Load(path);using var input=new Tensor<float>(new TensorShape(1,2520,768),Floats(inputPath));ComputeTensorData.Pin(input);
+                using var worker=new Worker(model,BackendType.GPUCompute);var cpu=(HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallback",Fields).GetValue(worker);
+                var flush=(HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallbackShouldFlushGPU",Fields).GetValue(worker);
+                Assert.That(cpu.Intersect(model.layers.SelectMany(layer=>layer.outputs).Concat(model.inputs.Select(value=>value.index))).Count(),Is.Zero);Assert.That(flush.Count,Is.Zero);
+                worker.Schedule(input);var actual=((Tensor<float>)worker.PeekOutput()).DownloadToArray();var bytes=new byte[actual.Length*4];Buffer.BlockCopy(actual,0,bytes,0,bytes.Length);
+                using(var stream=new MemoryStream(bytes,false))Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo("bc417e7f0e3486a5ac0025878d58c2c0b612ea5dea99a53e6b8db0e6f93b1513"));
+                report["before_disposal_account"]=Account(worker,process);Sample("gpu_complete_before_disposal");
+            }
+            RunOwnedLayer();Sample("immediately_after_disposal");
+            for(var i=0;i<8;i++){yield return null;Sample("editor_update_"+i);}
+            GC.Collect();GC.WaitForPendingFinalizers();yield return null;Sample("after_diagnostic_gc");
+            yield return Resources.UnloadUnusedAssets();Sample("after_diagnostic_unload_unused_assets");
+            report["actual_backend"]="GPUCompute";report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
+            report["original_gpu_reference_hash_preserved"]=true;report["success"]=true;Save();
+        }
         [TestCase(false)] [TestCase(true)]
         public void AccountOriginalLayerGpuBufferCapacityWithoutIntermediateReadbacks(bool inlineRms)
         {

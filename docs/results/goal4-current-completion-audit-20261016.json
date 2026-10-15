@@ -4,7 +4,7 @@
   "goal": "4\u307e\u3067\u9032\u3081\u3066\u304f\u3060\u3055\u3044",
   "status": "active_not_complete",
   "scope_source": "goal4-scope-audit-20261016.json",
-  "candidate_head_at_audit": "9d40b11ea8b90d712e4b38e70a3da690acc2c330",
+  "candidate_head_at_audit": "ffbfda7d74c0fe242cd5878d6a42f967f155f9af",
   "requirements": [
     {
       "requirement": "Original learned coefficients, references and encoder tolerances remain unchanged",
@@ -79,12 +79,12 @@
     {
       "requirement": "Required repository checks for the resulting candidate",
       "status": "not_achieved",
-      "last_terminal_ci_run": 38793751475,
-      "last_terminal_ci_head": "11db7b17b640ea85ab6b04bef066a737d3e5ee41",
+      "last_terminal_ci_run": 38798000979,
+      "last_terminal_ci_head": "9d40b11ea8b90d712e4b38e70a3da690acc2c330",
       "result": "Python four environments, package and workflow lint pass; audio ONNX and Required CI fail.",
-      "candidate_ci_run": 38798000979,
-      "candidate_ci_head": "9d40b11ea8b90d712e4b38e70a3da690acc2c330",
-      "candidate_ci_last_observation": "pending",
+      "candidate_ci_run": 38801188989,
+      "candidate_ci_head": "ffbfda7d74c0fe242cd5878d6a42f967f155f9af",
+      "candidate_ci_last_observation": "in_progress_at_recording_not_success",
       "candidate_ci_aggregate_conclusion": "",
       "evidence": [
         "m4-saved-full-silence-onnx-candidate-failed-20261016.json",
@@ -94,9 +94,12 @@
         "m4-fixed-tail-joint-and-same-host-baseline-failed-20261016.json",
         "m4-real-matmul192-all1146880-bit-exact-20261016.json",
         "m4-isolated-audio-primitives-all185-within-tolerance-20261016.json",
-        "m4-ordered-static-linear-tail-original-tolerance-passed-20261016.json"
+        "m4-ordered-static-linear-tail-original-tolerance-passed-20261016.json",
+        "m4-ordered-static-linear-all12-original-tolerance-failed-20261016.json",
+        "m4-ordered-original-input-stem-tolerance-passed-20261016.json",
+        "m4-six-original-attention-bmm-actual-onnx-bit-exact-20261016.json"
       ],
-      "next_action": "Extend the original-tolerance-passing ordered static linear tail through all12layers from original frozen subsample input; full original input/all6signals and Required CI remain required."
+      "next_action": "Compare native baseline/static-linear-only/static-linear-and3qualified-attention-BMM shapes on one connected original layer. Full original input/all6signals/Required CI remain mandatory."
     }
   ],
   "documentation": {
@@ -134,12 +137,12 @@
     "first_silu_segment_conclusion": "polynomial input domain rejected before ONNX comparison",
     "explicit_tail_rerun": 38790946377,
     "explicit_tail_rerun_last_observation": "completed_numerical_candidate_failed",
-    "latest_related_local_test_count": 82,
+    "latest_related_local_test_count": 94,
     "latest_related_local_tests_skipped": 0,
     "additional_expanded_silu_onnx_boundary_tests": 9,
     "explicit_tail_rerun_tolerance_failures": 7,
     "explicit_tail_rerun_maximum_tolerance_ratio": 2.1517931271366337,
-    "next_diagnostic": "Extend the original-tolerance-passing ordered static linear tail through all12layers from original frozen subsample input; full original input/all6signals and Required CI remain required.",
+    "next_diagnostic": "Connected first-layer same-host comparison after isolated attention BMM exactness; full12static-linear-only rejected.",
     "joint_tail_run": 38791597473,
     "joint_tail_conclusion": "baseline9_and_joint14_tolerance_failures_same_host_both_rejected",
     "joint_current_native_tolerance_failures": 10,
@@ -156,6 +159,19 @@
     "ordered_tail_bit_differences": 133830,
     "ordered_tail_native_is_passthrough_only": true,
     "all12_from_frozen_subsample_run": 38798918931,
-    "all12_last_observation": "in_progress"
+    "all12_last_observation": "completed_numerical_failure",
+    "all12_standard_failures": 414,
+    "all12_ordered_static_linear_failures": 550,
+    "all12_native_original_bit_differences": 0,
+    "stem_run": 38801198136,
+    "stem_ordered_candidate_failures": 0,
+    "stem_standard_failures": 505,
+    "stem_current_native_whole_failures": 288,
+    "attention_bmm_isolated_actual_onnx_bit_exact_values": 760320
+  },
+  "pending_candidate_code_sha256": {
+    "static_block192_onnx.py": "cc207d942d3e3eaa8c79109c8f58d53e5f19af3d5c09f96b08f59f77e3b53754",
+    "frozen_audio_prefix_onnx.py": "71263bb0c0875813990058d5116bec0100b58d6170910a47a7034589ec26b2d8",
+    "frozen_audio_segment_onnx.py": "c05121783a707aefda6945ddb7297fa8108cbbd8604e8282748368da604c9df7"
   }
 }

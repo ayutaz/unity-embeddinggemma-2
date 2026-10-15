@@ -179,9 +179,16 @@ class PrefixExport(torch.nn.Module):
         linear_nodes = getattr(self, "linear_nodes", set())
         linear_candidate = getattr(self, "linear_candidate", None)
         biased_linear_candidate = getattr(self, "biased_linear_candidate", None)
+        bmm_nodes = getattr(self, "bmm_nodes", set())
+        bmm_candidate = getattr(self, "bmm_candidate", None)
 
         class Replay(torch.fx.Interpreter):
             def run_node(self, node):
+                if node in bmm_nodes:
+                    args, kwargs = self.fetch_args_kwargs_from_env(node)
+                    if len(args) != 2 or kwargs:
+                        raise ValueError("Only original audited attention BMM contracts are supported")
+                    return bmm_candidate(*args)
                 if node in linear_nodes:
                     args, kwargs = self.fetch_args_kwargs_from_env(node)
                     if kwargs:

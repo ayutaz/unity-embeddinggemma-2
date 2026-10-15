@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "six_frozen_original_attention_bmm_captures_actual_onnx_only",
+  "source_base": "ffbfda7d74c0fe242cd5878d6a42f967f155f9af",
+  "implementation_sha256": "cc207d942d3e3eaa8c79109c8f58d53e5f19af3d5c09f96b08f59f77e3b53754",
+  "report_sha256": "cb2d5d6582a63fb4bd0a5b6f0fffabe524e04b79bac44d38346a4247ab3b3caa",
+  "actual_onnx_evaluated": true,
+  "native_forward": "Only torch.bmm passthrough; excluded as fixed-order proof.",
+  "coefficients_unchanged": true,
+  "original_targets_unchanged": true,
+  "scope_limit": "The3 attention shape pairs in layer0/1 only. Does not qualify the fourth BMM projection, all layers, connected outputs or all cases.",
+  "fp64_usage": "Independent unit-test oracle only. All actual exported operators are standard FP32.",
+  "tested_elements": 760320,
+  "bit_differences": 0,
+  "cases": [
+    {
+      "layer": "layer0",
+      "operation": "matrix_ac",
+      "source_report_sha256": "358cf13b790354b83fc59372cf3be304f02c44e78e74a674cb373da77874f068",
+      "source_diagnostic": "5a51cfff0efa955b6862abc481b2230f312b87ac",
+      "input_shapes": [
+        [
+          192,
+          12,
+          128
+        ],
+        [
+          192,
+          128,
+          24
+        ]
+      ],
+      "input_sha256": [
+        "42f5dd2c98dcd71110e0752b4a33d1da134633c2a512554b94d4f7ce323180a4",
+        "f51fb537ae80a52ff62fdaa2ff7ac0cddd77b4ccb104ac8980b53ba361b4e65c"
+      ],
+      "original_target_sha256": "dc2ccd24975382b9f7c5568bd6c472f585ff2c826aa9e82d71e38b7677a19275",
+      "graph_sha256": "dd1910012862287566a4894a5f875df8745612be11881d3a199f71f0d97ca3b7",
+      "elements": 55296,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "elapsed_seconds": 1.6985003000008874
+    },
+    {
+      "layer": "layer0",
+      "operation": "matrix_bd",
+      "source_report_sha256": "358cf13b790354b83fc59372cf3be304f02c44e78e74a674cb373da77874f068",
+      "source_diagnostic": "5a51cfff0efa955b6862abc481b2230f312b87ac",
+      "input_shapes": [
+        [
+          8,
+          288,
+          128
+        ],
+        [
+          8,
+          128,
+          13
+        ]
+      ],
+      "input_sha256": [
+        "42f5dd2c98dcd71110e0752b4a33d1da134633c2a512554b94d4f7ce323180a4",
+        "efaec5a90a68c97767f7646e60a06e47e17acce94fad898febe0a54fd078fc3b"
+      ],
+      "original_target_sha256": "d74554fbcdbe3125f30cf181072ceafd5f0e1369d151b8a7c222b3eb9ad1d4c7",
+      "graph_sha256": "320661aed8965c4608e19d13d93b297fc673301f10330a6840e260bfff08d3df",
+      "elements": 29952,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "elapsed_seconds": 1.1498033999814652
+    },
+    {
+      "layer": "layer0",
+      "operation": "weighted_values",
+      "source_report_sha256": "358cf13b790354b83fc59372cf3be304f02c44e78e74a674cb373da77874f068",
+      "source_diagnostic": "5a51cfff0efa955b6862abc481b2230f312b87ac",
+      "input_shapes": [
+        [
+          192,
+          12,
+          24
+        ],
+        [
+          192,
+          24,
+          128
+        ]
+      ],
+      "input_sha256": [
+        "3d4a0b09a88aaa78ece91b5717b59ac92d93ea3fa7829bf3623c39435ceba7f5",
+        "54bc12c1544a8a69f0e671c1d9394cbea1bfe9aef7de2c59d8de21ade678b8cd"
+      ],
+      "original_target_sha256": "724ad7359d6c1047c7055ff06d604ad42cb53e94b6fee6f97c9524f076d652da",
+      "graph_sha256": "886dc49c8d9ea5999ae52d49a4f207f0b341ec3761c6deb9b09443321a65e81e",
+      "elements": 294912,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "elapsed_seconds": 0.4153453000180889
+    },
+    {
+      "layer": "layer1",
+      "operation": "matrix_ac",
+      "source_report_sha256": "1ff0e32b87977057a457294ae58de1242686fcd67b044e20630a84c69a537fb7",
+      "source_diagnostic": "9d719229e739a788cfc685946033a4414daa0e16",
+      "input_shapes": [
+        [
+          192,
+          12,
+          128
+        ],
+        [
+          192,
+          128,
+          24
+        ]
+      ],
+      "input_sha256": [
+        "2a3ed38fdf94dbc301d6ce3d6497c9f2c94561de8f64f2d310c863d18178e63e",
+        "0ac027428474a18d3f63938444d11d52e7951083e45dade02969ecddd5a8150b"
+      ],
+      "original_target_sha256": "583d2b3e52e7210390f89d393f76818b140326fa0f7225bc8a3de3b0df8bac34",
+      "graph_sha256": "d445dbf59cb5ac78afb8c85d85f8a93404f3901a5e8316e4f5cc970fa524c183",
+      "elements": 55296,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "elapsed_seconds": 1.4964604999986477
+    },
+    {
+      "layer": "layer1",
+      "operation": "matrix_bd",
+      "source_report_sha256": "1ff0e32b87977057a457294ae58de1242686fcd67b044e20630a84c69a537fb7",
+      "source_diagnostic": "9d719229e739a788cfc685946033a4414daa0e16",
+      "input_shapes": [
+        [
+          8,
+          288,
+          128
+        ],
+        [
+          8,
+          128,
+          13
+        ]
+      ],
+      "input_sha256": [
+        "2a3ed38fdf94dbc301d6ce3d6497c9f2c94561de8f64f2d310c863d18178e63e",
+        "24607eaf881ea0a5ce595cb848b7fc9b33997b5074c748b377d15121aac47ab6"
+      ],
+      "original_target_sha256": "e74f12eb5be1483ce821a4c16c2a09ca540a14c5406d3fbb28d7ef95d1df31c3",
+      "graph_sha256": "f6940518f7bcd662700102d87fe52212ce12fb6c1d2ec343bb61a707d8d2f715",
+      "elements": 29952,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "elapsed_seconds": 1.1647803999949247
+    },
+    {
+      "layer": "layer1",
+      "operation": "weighted_values",
+      "source_report_sha256": "1ff0e32b87977057a457294ae58de1242686fcd67b044e20630a84c69a537fb7",
+      "source_diagnostic": "9d719229e739a788cfc685946033a4414daa0e16",
+      "input_shapes": [
+        [
+          192,
+          12,
+          24
+        ],
+        [
+          192,
+          24,
+          128
+        ]
+      ],
+      "input_sha256": [
+        "8133292ce6b3c830db0ad79bafc5242adefe3c1ef6fcda35517eaf1927ae3f03",
+        "06de9568f4623ba1460bf917a6a5d80f592f8749099d5d175a209551932340fa"
+      ],
+      "original_target_sha256": "f3e6632732261ec0cf9e70c3564c3756f04a7ff4ee6fc6a8472b131c490f6734",
+      "graph_sha256": "ffa6e63eaacdd7a8c4bcfdf0aa203e4874334fbd7ded2f5df9878928f90c9566",
+      "elements": 294912,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "elapsed_seconds": 0.4731651999754831
+    }
+  ],
+  "whole_encoder_validated": false,
+  "gpu_validated": false,
+  "required_ci_passed": false
+}

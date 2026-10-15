@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "actual_original_input_through_stem_silence_only",
+  "source": "ffbfda7d74c0fe242cd5878d6a42f967f155f9af",
+  "actions_run": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38801198136",
+  "artifact_id": 12003249391,
+  "cpu_model": "AMD EPYC 7763",
+  "report_sha256": "c67b64df7a7817e49e5f1c16bcdcf47622be23421c32e545f71c87f3c753023c",
+  "independently_verified_elements": 286720,
+  "cases": [
+    {
+      "variant": "native",
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 505,
+        "maximum_absolute_error": 9.822845458984375e-05,
+        "maximum_tolerance_ratio": 2.0606276695431456,
+        "worst_index": 661,
+        "worst_actual": 0.0012183189392089844,
+        "worst_expected": 0.001239180564880371,
+        "exact_difference_count": 285848
+      },
+      "graph_sha256": "d1b7b125b9fd7801e2f6a9a4f99b27e8df695609aac55e4600387116c90db826",
+      "capture_sha256": "1af5d086cf65c4bd1329383a5a75fd59482b6ae341198c289a70527114711c70",
+      "linear_replacements": 0
+    },
+    {
+      "variant": "ordered_static_linear_refined",
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 1.52587890625e-05,
+        "maximum_tolerance_ratio": 0.19566486008139872,
+        "worst_index": 285808,
+        "worst_actual": 0.011186391115188599,
+        "worst_expected": 0.0111885666847229,
+        "exact_difference_count": 279359
+      },
+      "graph_sha256": "34f3356ea8e58dfc1b16c542dd0bb04ebbfb715b6482b0b1519b46970898ca67",
+      "capture_sha256": "7026156c81912b22d2b29b7780c4f704a3d719ce27c23228b02bf6d9f4019950",
+      "linear_replacements": 1
+    }
+  ],
+  "numerical_pass": true,
+  "bit_exact": false,
+  "native_whole_context_qualified": false,
+  "native_whole_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 288,
+    "maximum_absolute_error": 0.0001811981201171875,
+    "maximum_tolerance_ratio": 8.712747897611987,
+    "worst_index": 23176,
+    "worst_actual": 0.007174745202064514,
+    "worst_expected": 0.007268205285072327,
+    "exact_difference_count": 135855
+  },
+  "native_stem_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 3.814697265625e-05,
+    "maximum_tolerance_ratio": 0.27221914003731856,
+    "worst_index": 890,
+    "worst_actual": -0.011671781539916992,
+    "worst_expected": -0.011668741703033447,
+    "exact_difference_count": 270201
+  },
+  "reference_qualification": "Explicit independently audited original frozen stage bytes; native whole drift retained, not relabelled qualified.",
+  "changes": "Only original280-row projection1 and previously qualified refined_mean_moment LayerNorm2; no Conv/RMS/SiLU edits.",
+  "original_weights_unchanged": true,
+  "original_reference_unchanged": true,
+  "tolerances": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "whole_encoder_validated": false,
+  "all_cases_validated": false,
+  "gpu_validated": false,
+  "required_ci_passed": false
+}

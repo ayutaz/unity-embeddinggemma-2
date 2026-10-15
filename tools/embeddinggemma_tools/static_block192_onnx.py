@@ -110,6 +110,59 @@ def static_block192_addmm_export(bias, values, weights):
     return _StaticBlock192Bias.apply(bias, values, weights)
 
 
+class _StaticBlock192Bmm(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx, values, weights):
+        return torch.bmm(values, weights)
+
+    @staticmethod
+    def symbolic(g, values, weights):
+        left, right = (symbolic_helper._get_tensor_sizes(x) for x in (values, weights))
+        if (left is None or right is None or len(left) != 3 or len(right) != 3
+                or any(type(d) is not int or d < 1 for d in (*left, *right))
+                or left[0] != right[0] or left[2] != right[1]):
+            raise ValueError("Static block192 BMM requires fixed positive batched matrix shapes")
+        batch, rows, width, columns = left[0], left[1], left[2], right[2]
+        chunk = min(192, width)
+        blocks = (width + chunk - 1) // chunk
+        padding = blocks * chunk - width
+
+        def ints(value):
+            return g.op("Constant", value_t=torch.tensor(value, dtype=torch.int64))
+
+        zero = g.op("Constant", value_t=torch.tensor(0.0, dtype=torch.float32))
+        if padding:
+            values = g.op("Pad", values, ints([0, 0, 0, 0, 0, padding]), zero, mode_s="constant")
+            weights = g.op("Pad", weights, ints([0, 0, 0, 0, padding, 0]), zero, mode_s="constant")
+        chunks = g.op("Transpose", g.op("Reshape", values, ints([batch, rows, blocks, chunk])), perm_i=[2, 0, 1, 3])
+        coefficients = g.op("Transpose", g.op("Reshape", weights, ints([batch, blocks, chunk, columns])), perm_i=[1, 0, 2, 3])
+        partial = g.op("ConstantOfShape", ints([blocks, batch, rows, 1]), value_t=torch.zeros(1, dtype=torch.float32))
+        splitter = g.op("Constant", value_t=torch.tensor(4097.0, dtype=torch.float32))
+        axis = ints([3])
+        for index in range(chunk):
+            a = g.op("Slice", chunks, ints([index]), ints([index + 1]), axis)
+            b = g.op("Reshape", g.op("Gather", coefficients, ints(index), axis_i=2), ints([blocks, batch, 1, columns]))
+            partial = fma_graph(g, a, b, partial, splitter)
+        total = g.op("Gather", partial, ints(0), axis_i=0)
+        for index in range(1, blocks):
+            total = g.op("Add", total, g.op("Gather", partial, ints(index), axis_i=0))
+        return total.setType(values.type().with_sizes([batch, rows, columns]))
+
+
+def static_block192_bmm_export(values, weights):
+    if (values.dtype != torch.float32 or weights.dtype != torch.float32
+            or values.device.type != "cpu" or weights.device.type != "cpu"
+            or values.ndim != 3 or weights.ndim != 3 or values.shape[0] != weights.shape[0]
+            or values.shape[2] != weights.shape[1]):
+        raise ValueError("Static block192 BMM requires matching CPU FP32 batched matrices")
+    if not torch.jit.is_tracing() and not torch.compiler.is_compiling():
+        if (not values.numel() or not weights.numel() or not torch.isfinite(values).all()
+                or not torch.isfinite(weights).all() or torch.any(values.abs() > 1e6)
+                or torch.any(weights.abs() > 1e6)):
+            raise ValueError("Static block192 BMM requires qualified finite bounded matrices")
+    return _StaticBlock192Bmm.apply(values, weights)
+
+
 def audit_static_linear_nodes(segment):
     def parameter_matrix(node):
         if node.op == "get_attr":
@@ -137,4 +190,22 @@ def audit_static_linear_nodes(segment):
                     or tuple(value.shape) != (b.shape[1],)):
                 continue
         selected.add(node)
+    return selected
+
+
+def audit_attention_bmm_nodes(segment):
+    # These three shape pairs have actual ONNX evidence against the original
+    # qualified layer0/1 captures. The 1x280x1024 projection is not qualified here.
+    qualified = {((192, 12, 128), (192, 128, 24)),
+                 ((8, 288, 128), (8, 128, 13)),
+                 ((192, 12, 24), (192, 24, 128))}
+    selected = set()
+    for node in segment.graph.nodes:
+        if (node.op != "call_function" or node.target != torch.ops.aten.bmm.default
+                or node.kwargs or len(node.args) != 2):
+            continue
+        values = [arg.meta.get("val") for arg in node.args]
+        if (all(isinstance(x, torch.Tensor) and x.dtype == torch.float32 and x.device.type == "cpu" for x in values)
+                and tuple(tuple(x.shape) for x in values) in qualified):
+            selected.add(node)
     return selected

@@ -167,6 +167,19 @@ namespace EmbeddingGemma.Validation.Tests
         public void ObserveNativeQueryScaleConnectedAttentionOperandsWithoutChangingNormalFinalBits()
             =>Execute("silence",true,nativeSilu:true,nativeBmm:true,observeBmm:true,nativeQueryScale:true);
 
+        [TestCase("silence")]
+        [TestCase("impulse")]
+        [TestCase("sine")]
+        [TestCase("nyquist")]
+        [TestCase("noise")]
+        [TestCase("padded_noise")]
+        public void NativeTanhPartitionsGpuMatchOriginalGolden(string signal)
+            =>Execute(signal,true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true);
+
+        [Test]
+        public void ObserveNativeTanhConnectedAttentionOperandsWithoutChangingNormalFinalBits()
+            =>Execute("silence",true,nativeSilu:true,nativeBmm:true,observeBmm:true,nativeQueryScale:true,nativeTanh:true);
+
         [Test]
         public void ObserveNativeSiluFirstFeedForwardWithoutChangingNormalFinalBits()
             =>Execute("silence",true,false,false,true,true);
@@ -175,14 +188,14 @@ namespace EmbeddingGemma.Validation.Tests
         public void ObserveFirstAttentionAndConvolutionWithoutChangingNormalFinalBits()
             =>Execute("silence",true,false,false,true,true,true);
 
-        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false)
+        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var folder=nativeQueryScale?"GpuAudioPartitionedNativeQueryScale":nativeBmm?"GpuAudioPartitionedNativeBmm":nativeSilu?"GpuAudioPartitionedNativeSilu":isolated?"GpuAudioPartitionedLayer10":allStatic?"GpuAudioPartitionedAllStatic":"GpuAudioPartitionedFirstFf";
+            var folder=nativeTanh?"GpuAudioPartitionedNativeTanh":nativeQueryScale?"GpuAudioPartitionedNativeQueryScale":nativeBmm?"GpuAudioPartitionedNativeBmm":nativeSilu?"GpuAudioPartitionedNativeSilu":isolated?"GpuAudioPartitionedLayer10":allStatic?"GpuAudioPartitionedAllStatic":"GpuAudioPartitionedFirstFf";
             var root=Path.Combine(Application.dataPath,folder);
             var originalRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-real-chain/audio-runtime-reference"));
-            var stem=nativeQueryScale?(observeBmm?"partitioned-native-query-scale-operands-observation-":"partitioned-native-query-scale-gpu-"):observeBmm?"partitioned-native-bmm-operands-observation-":nativeBmm?"partitioned-native-bmm-gpu-":attention?"partitioned-native-silu-attention-observation-":nativeSilu?(early?"partitioned-native-silu-early-observation-":"partitioned-native-silu-gpu-"):
+            var stem=nativeTanh?(observeBmm?"partitioned-native-tanh-operands-observation-":"partitioned-native-tanh-gpu-"):nativeQueryScale?(observeBmm?"partitioned-native-query-scale-operands-observation-":"partitioned-native-query-scale-gpu-"):observeBmm?"partitioned-native-bmm-operands-observation-":nativeBmm?"partitioned-native-bmm-gpu-":attention?"partitioned-native-silu-attention-observation-":nativeSilu?(early?"partitioned-native-silu-early-observation-":"partitioned-native-silu-gpu-"):
                 early?"partitioned-early-audio-observation-":isolated?"partitioned-layer10-original-input-":observe?"partitioned-all-static-layer-observation-":allStatic?"partitioned-all-static-gpu-":"partitioned-first-ff-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
@@ -258,12 +271,14 @@ namespace EmbeddingGemma.Validation.Tests
                 }
                 var inputs=new List<string>();var bindingsByOperation=new List<string[]>();var outputs=new List<string>();
                 var operations=(JArray)plan[nativeSilu?"operations":"projections"];
-                if(nativeSilu){Assert.That(plan.Value<int>("silu_count"),Is.EqualTo(36));Assert.That(operations.Count,Is.EqualTo(nativeQueryScale?219:nativeBmm?207:171));}
+                if(nativeSilu){Assert.That(plan.Value<int>("silu_count"),Is.EqualTo(36));Assert.That(operations.Count,Is.EqualTo(nativeTanh?231:nativeQueryScale?219:nativeBmm?207:171));}
                 if(nativeBmm)Assert.That(plan.Value<int>("dynamic_matmul_count"),Is.EqualTo(36));
                 if(nativeQueryScale)Assert.That(plan.Value<int>("query_scale_count"),Is.EqualTo(12));
+                if(nativeTanh)Assert.That(plan.Value<int>("tanh_count"),Is.EqualTo(12));
                 foreach(var projection in operations)
                 {
                     if(projection.Value<string>("kind")=="silu")kernels.Add(new GpuSilu());
+                    else if(projection.Value<string>("kind")=="tanh")kernels.Add(new GpuTanh());
                     else if(projection.Value<string>("kind")=="batched_matmul")kernels.Add(new GpuBatchedMatmul());
                     else if(projection.Value<string>("kind")=="sequential_scale")
                     {
@@ -283,6 +298,7 @@ namespace EmbeddingGemma.Validation.Tests
                 using var pipeline=new GpuProjectionPipeline(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray());
                 report["dynamic_matmul_count"]=nativeBmm?36:0;
                 report["query_scale_count"]=nativeQueryScale?12:0;
+                report["tanh_count"]=nativeTanh?12:0;
                 report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
                 using var input=new Tensor<float>(new TensorShape(inputShape),inputValues);ComputeTensorData.Pin(input);
                 report["phase"]="execute";Save();timer.Restart();
@@ -309,7 +325,20 @@ namespace EmbeddingGemma.Validation.Tests
                     Assert.That(native.Value<string>("reference_source"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));
                     var products=operations.Where(p=>p.Value<string>("kind")=="batched_matmul").Take(3).ToArray();
                     Assert.That(products.Select(p=>p.Value<string>("node")),Is.EqualTo(new[]{"/attentions.0/MatMul","/attentions.0/MatMul_1","/attentions.0/MatMul_2"}));
-                    var wanted=products.SelectMany(p=>p["inputs"].ToObject<string[]>().Append(p.Value<string>("output"))).ToHashSet();
+                    var bindings=new List<(string part,string boundary,JToken shape,bool collapsed)>();var names=new[]{"matrix_ac","matrix_bd","weighted_values"};
+                    for(var product=0;product<3;product++)
+                    {
+                        var operation=products[product];var boundaries=operation["inputs"].ToObject<string[]>().Append(operation.Value<string>("output")).ToArray();
+                        var shapes=new[]{operation["input_shape"],operation["right_shape"],operation["output_shape"]};var kinds=new[]{"left","right","output"};
+                        for(var operand=0;operand<3;operand++)bindings.Add(("self_attn."+names[product]+"."+kinds[operand],boundaries[operand],shapes[operand],true));
+                    }
+                    if(nativeTanh)
+                    {
+                        var operation=operations.First(p=>p.Value<string>("kind")=="tanh");
+                        bindings.Add(("self_attn.tanh.input",operation.Value<string>("input"),operation["input_shape"],false));
+                        bindings.Add(("self_attn.tanh.output",operation.Value<string>("output"),operation["output_shape"],false));
+                    }
+                    var wanted=bindings.Select(b=>b.boundary).ToHashSet();
                     // Reuse the already recorded normal result and release its
                     // workers before creating diagnostic workers.
                     encoded.Dispose();pipeline.Dispose();
@@ -317,21 +346,20 @@ namespace EmbeddingGemma.Validation.Tests
                     Assert.That(snapshots["__final"].Select(BitConverter.SingleToInt32Bits),Is.EqualTo(actual.Select(BitConverter.SingleToInt32Bits)));
                     report["normal_final_matches_observed_bits"]=true;
                     var captureRoot=Path.ChangeExtension(output,null)+"-captures";Assert.That(Directory.Exists(captureRoot),Is.False);Directory.CreateDirectory(captureRoot);
-                    var stages=new JArray();report["stages"]=stages;var names=new[]{"matrix_ac","matrix_bd","weighted_values"};
-                    for(var product=0;product<3;product++)
+                    var stages=new JArray();report["stages"]=stages;
+                    foreach(var binding in bindings)
                     {
-                        var operation=products[product];var boundaries=operation["inputs"].ToObject<string[]>().Append(operation.Value<string>("output")).ToArray();
-                        var shapes=new[]{operation["input_shape"],operation["right_shape"],operation["output_shape"]};
-                        var kinds=new[]{"left","right","output"};
-                        for(var operand=0;operand<3;operand++)
-                        {
-                            var partName="self_attn."+names[product]+"."+kinds[operand];var part=native["parts"][partName];
+                            var partName=binding.part;var part=native["parts"][partName];
                             var expectedPath=Path.Combine(referenceRoot,"audio-attention-replay",part.Value<string>("file"));Check(expectedPath,part.Value<string>("sha256"));
                             // ONNX retains leading batch axes; collapsing them preserves native BMM row order.
-                            var actualShape=shapes[operand].ToObject<int[]>();var nativeShape=part["shape"].ToObject<int[]>();
-                            Assert.That(actualShape.Skip(actualShape.Length-2),Is.EqualTo(nativeShape.Skip(1)));
-                            Assert.That(actualShape.Take(actualShape.Length-2).Aggregate(1,(a,b)=>a*b),Is.EqualTo(nativeShape[0]));
-                            var observed=snapshots[boundaries[operand]];var golden=Floats(expectedPath);Assert.That(observed.Length,Is.EqualTo(golden.Length));
+                            var actualShape=binding.shape.ToObject<int[]>();var nativeShape=part["shape"].ToObject<int[]>();
+                            if(binding.collapsed)
+                            {
+                                Assert.That(actualShape.Skip(actualShape.Length-2),Is.EqualTo(nativeShape.Skip(1)));
+                                Assert.That(actualShape.Take(actualShape.Length-2).Aggregate(1,(a,b)=>a*b),Is.EqualTo(nativeShape[0]));
+                            }
+                            else Assert.That(actualShape,Is.EqualTo(nativeShape));
+                            var observed=snapshots[binding.boundary];var golden=Floats(expectedPath);Assert.That(observed.Length,Is.EqualTo(golden.Length));
                             int bits=0,bad=0;double maxRatio=0;
                             for(var i=0;i<observed.Length;i++)
                             {
@@ -342,10 +370,9 @@ namespace EmbeddingGemma.Validation.Tests
                             }
                             var capture=Path.Combine(captureRoot,partName+"-fp32.bin");var bytes=new byte[observed.Length*4];Buffer.BlockCopy(observed,0,bytes,0,bytes.Length);File.WriteAllBytes(capture,bytes);
                             using var stream=File.OpenRead(capture);var hash=PlayerFileHash.Compute(stream,out _);
-                            stages.Add(new JObject{["part"]=partName,["boundary"]=boundaries[operand],["actual_shape"]=shapes[operand].DeepClone(),["native_shape"]=part["shape"].DeepClone(),["count"]=observed.Length,["bit_differences"]=bits,["mismatched_elements"]=bad,["maximum_tolerance_ratio"]=maxRatio,["capture"]=capture,["sha256"]=hash,["native_sha256"]=part["sha256"]});Save();
-                        }
+                            stages.Add(new JObject{["part"]=partName,["boundary"]=binding.boundary,["actual_shape"]=binding.shape.DeepClone(),["native_shape"]=part["shape"].DeepClone(),["count"]=observed.Length,["bit_differences"]=bits,["mismatched_elements"]=bad,["maximum_tolerance_ratio"]=maxRatio,["capture"]=capture,["sha256"]=hash,["native_sha256"]=part["sha256"]});Save();
                     }
-                    Assert.That(stages.Count,Is.EqualTo(9));report["success"]=true;report["observation_completed"]=true;return;
+                    Assert.That(stages.Count,Is.EqualTo(nativeTanh?11:9));report["success"]=true;report["observation_completed"]=true;return;
                 }
                 if(early)
                 {

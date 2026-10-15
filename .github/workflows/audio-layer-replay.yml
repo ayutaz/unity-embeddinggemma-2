@@ -8,6 +8,11 @@ on:
         type: choice
         options: [full, attention]
         default: full
+      layer_index:
+        description: Original audio layer for attention diagnostics; full always uses layer 0
+        type: choice
+        options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']
+        default: '0'
   pull_request:
     types: [opened, synchronize, labeled]
 
@@ -33,6 +38,7 @@ jobs:
     env:
       OMP_NUM_THREADS: '4'
       MKL_NUM_THREADS: '4'
+      REPLAY_LAYER: ${{ github.event_name == 'workflow_dispatch' && inputs.scope == 'attention' && inputs.layer_index || '0' }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
@@ -45,14 +51,17 @@ jobs:
       - name: Fetch only frozen stage input and output
         env:
           GH_TOKEN: ${{ github.token }}
-        run: >-
-          uv run --locked python -m embeddinggemma_tools.artifact_zip
-          --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11814567883
-          --output ../artifacts/frozen-audio-layer
-          --member audio-runtime-stages/audio-stage-reference.json
-          --member audio-runtime-stages/audio-stage-validation.json
-          --member audio-runtime-stages/frames-1119-valid-1119/silence-stage-00-fp32.bin
-          --member audio-runtime-stages/frames-1119-valid-1119/silence-stage-01-fp32.bin
+        run: |
+          [[ "$REPLAY_LAYER" =~ ^([0-9]|1[01])$ ]] || exit 2
+          printf -v input_stage '%02d' "$REPLAY_LAYER"
+          printf -v output_stage '%02d' "$((REPLAY_LAYER + 1))"
+          uv run --locked python -m embeddinggemma_tools.artifact_zip \
+          --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11814567883 \
+          --output ../artifacts/frozen-audio-layer \
+          --member audio-runtime-stages/audio-stage-reference.json \
+          --member audio-runtime-stages/audio-stage-validation.json \
+          --member "audio-runtime-stages/frames-1119-valid-1119/silence-stage-${input_stage}-fp32.bin" \
+          --member "audio-runtime-stages/frames-1119-valid-1119/silence-stage-${output_stage}-fp32.bin" \
           --member audio-runtime-reference/frames-1119-valid-1119/silence-features-fp32.bin
       - name: Verify pinned context manifests before model download
         run: |
@@ -85,6 +94,7 @@ jobs:
           --reference-source 4edbe17a8105233c5aaa1514faa2862b08a4f7e0
           --diagnostic-source "$GITHUB_SHA"
           --report ../artifacts/audio-attention-replay-report.json
+          --layer-index "$REPLAY_LAYER"
           --detail-feed-forward
           --detail-attention-projections
           --detail-attention-ops

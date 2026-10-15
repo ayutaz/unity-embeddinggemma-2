@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using EmbeddingGemma.Tests;
 using NUnit.Framework;
 using Unity.InferenceEngine;
 using UnityEngine;
@@ -20,6 +21,20 @@ namespace EmbeddingGemma.Validation.Tests
         {
             var method=typeof(QualifiedVisionRmsOperation).GetMethod("BorrowScale");
             Assert.That(method,Is.Not.Null,"Original-scale borrowing is missing.");return method;
+        }
+        [Test]
+        public void AllSevenOriginalRmsMarkersPreserveCoefficientBytesAndDenseGpuInputs()
+        {
+            var method=typeof(QualifiedVisionRmsOperation).GetMethod("MarkAll");Assert.That(method,Is.Not.Null,"All-RMS graph boundaries are missing.");
+            var path=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-layer0-original-patch-gpu-e39bdf1b5d0faf2ea424023d83076315736c6fde-captures/layer0.sentis"));
+            var original=TextModelFile.Load(path);var before=Bytes(original);
+            var result=((Model model,int[] outputs,Constant[] scales))method.Invoke(null,new object[]{original});
+            Assert.That(result.outputs.Length,Is.EqualTo(7));Assert.That(result.scales.Count(value=>value!=null),Is.EqualTo(6));
+            var plan=SavedProjectionPartition.Create(result.model,result.outputs);Assert.That(plan.Models.Length,Is.EqualTo(8));Assert.That(plan.Weights,Is.All.Null);
+            Assert.That(plan.Widths,Is.EqualTo(new[]{768,64,64,64,768,768,768}));
+            Assert.That(plan.Rows,Is.EqualTo(new[]{2520,30240,30240,30240,2520,2520,2520}));
+            foreach(var model in plan.Models)Assert.That(model.inputs.Select(input=>input.index),Is.EqualTo(Enumerable.Range(0,model.inputs.Count)));
+            Assert.That(Bytes(original),Is.EqualTo(before));
         }
         [TestCase(BackendType.CPU)] [TestCase(BackendType.GPUCompute)]
         public void OriginalScaleBindingBorrowsBytesAndPreservesTemplateAndCoefficientSource(BackendType backend)

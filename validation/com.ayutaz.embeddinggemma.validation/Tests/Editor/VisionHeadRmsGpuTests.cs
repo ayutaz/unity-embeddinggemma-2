@@ -30,8 +30,9 @@ namespace EmbeddingGemma.Validation.Tests
             {
                 var locked=JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath,"../Packages/packages-lock.json")));
                 foreach(var package in new[]{"com.ayutaz.embeddinggemma","com.ayutaz.embeddinggemma.validation"})Assert.That(locked["dependencies"][package].Value<string>("hash"),Is.EqualTo(source));
-                var preparation=JObject.Parse(File.ReadAllText(Path.Combine(root,"head-rms-candidates.json")));
-                Assert.That(preparation.Value<string>("producer"),Is.EqualTo(source));
+                var preparationPath=Path.Combine(root,"head-rms-candidates.json");Check(preparationPath,"bb1f2d3df3905551b34723badefd7f1dfdc23da08a9ab4c72545d5d1368ce229");
+                var preparation=JObject.Parse(File.ReadAllText(preparationPath));
+                Assert.That(preparation.Value<string>("producer"),Is.EqualTo("e07c878249f06dbdd7dab3ce7c600f38e5e69655"));
                 var row=((JArray)preparation["rows"]).Single(value=>value.Value<int>("index")==index);
                 Assert.That(row["shape"].ToObject<int[]>(),Is.EqualTo(new[]{1,2520,12,64}));
                 var onnx=Path.Combine(root,row["onnx"].Value<string>("file"));Check(onnx,row["onnx"].Value<string>("sha256"));
@@ -44,7 +45,7 @@ namespace EmbeddingGemma.Validation.Tests
                 var flush=(HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallbackShouldFlushGPU",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(worker);
                 Assert.That(cpu.Intersect(model.layers.SelectMany(layer=>layer.outputs).Concat(model.inputs.Select(value=>value.index))).Count(),Is.Zero);Assert.That(flush.Count,Is.Zero);
                 using var input=new Tensor<float>(new TensorShape(1,2520,12,64),Floats(inputPath));ComputeTensorData.Pin(input);
-                worker.Schedule(input);var tensor=(Tensor<float>)worker.PeekOutput();Assert.That(tensor.backendType,Is.EqualTo(BackendType.GPUCompute));
+                using var operation=new QualifiedVisionRmsOperation(model);using var tensor=operation.Execute(input);Assert.That(tensor.backendType,Is.EqualTo(BackendType.GPUCompute));
                 var actual=tensor.DownloadToArray();var expected=Floats(expectedPath);Assert.That(actual.Length,Is.EqualTo(expected.Length));Assert.That(tensor.shape,Is.EqualTo(input.shape));
                 Assert.That(Array.TrueForAll(actual,value=>!float.IsNaN(value)&&!float.IsInfinity(value)),Is.True);
                 int bits=0,bad=0;double maximum=0,ratio=0;

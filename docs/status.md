@@ -41,7 +41,13 @@ GPU結果はWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER /
 
 追加の固定参照比較: [最初の投影](results/m4-original-context-subsample-onnx-three-variants-20261016.json)は標準ONNX563要素超過に対し、明示LayerNormの2候補は超過0。[第1層終端](results/m4-fixed-original-layer0-three-onnx-variants-20261016.json)も元286,720値に対して標準284要素超過、2候補とも超過0でした。現在ホストのnative全encoderは元参照と251要素が異なり、その失敗を保持したまま、監査済みの元stage出力を明示的な比較対象としています。これはsilenceの部分区間の結果で、全encoder・全6信号の合格ではありません。
 
-保存グラフのmask型変換とSoftmaxの内部演算名を、同じCPU FP32計算の公開APIで表す診断用bridgeをTDDで追加しました。元グラフ・製品GPU処理は変更していません。次の[最終encoder単一候補の検証](results/m4-saved-final-encoder-single-candidate-tdd-20261016.json)は、元最終143,360値の原本SHAを照合し、native wrapperのbit一致を確認してから実行します。関連40テスト・workflow lintは合格ですが、実モデルの新候補の結果はまだ未取得です。
+保存グラフのmask型変換とSoftmaxの内部演算名を、同じCPU FP32計算の公開APIで表す診断用bridgeをTDDで追加しました。元グラフ・製品GPU処理は変更していません。[最終encoder単一候補](results/m4-saved-full-silence-onnx-candidate-failed-20261016.json)は元最終143,360値に対して475要素が許容差を超過して不合格でした。[第6・第9・第12層終端](results/m4-late-stage-localization-and-rms-candidate-tdd-20261016.json)では、前2区間は超過0、最終層終端は1827超過でした。ただし別CPUホスト間の比較なので、最初に差が生じる演算を確定したとは扱いません。
+
+追加した[明示RMS候補](results/m4-saved-full-silence-ordered-rms-onnx-failed-20261016.json)も109か所すべてを置き換えて583要素超過となり、不採用です。元参照・重み・許容差は維持しています。これらのActions成功表示は診断収集の完了であり、数値合格ではありません。
+
+[固定した小区間の比較](results/m4-fixed-rms-and-final-projection-components-20261016.json)では、第1層末尾RMSは8-lane加算・sqrt後の逆数で元286,720値とbit一致、最終投影も元stage13を入力にすると元143,360値とbit一致しました。NumPyで最終投影を計算した場合も許容差超過0です。全体の誤差を切り分けるため、元stageを入力にして後続の保存graphだけを実行する明示的な診断経路を追加しています。この経路は前半を実行しないため、全encoder・GPU・最終APIの合格証拠には数えません。
+
+source `9741d1e`の[最新確定CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38785455573)も、Python4環境・package・workflow lintは成功、model-referenceとRequired CIは失敗です。製品Runtimeは実GPU検証source `0857edc8`から変更されていません。
 
 ## 後続工程
 

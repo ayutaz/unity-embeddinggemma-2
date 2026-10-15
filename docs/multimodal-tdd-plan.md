@@ -4,6 +4,12 @@
 
 ## 2026-10-15の実行方針と再開順
 
+2026-10-16最新: [実PNG全6件・全3 roleの最終768 GPU API](results/m3-final-image-api-all-cases-all-roles-gpu-20261016.json)は18 pass / fail0 / skip0。最小cosine 0.9999999999976248、追加要素診断も超過0、CPU fallback / 中間readback0。[RenderTexture、実不正入力6拒否、実GPU stage後キャンセルと同APIの復帰、text GPU回帰](results/m3-rendertexture-recovery-and-text-gpu-regression-20261016.json)も合格。text128 FP32 / Float16重みの各10ベクトル・全4順位 / scoreを確認し、選択した契約回帰90 Green。非同期画像APIは8 Red→関連38 Green。
+
+[元の実行計画に対する範囲監査](results/goal4-scope-audit-20261016.json)に従い、「4まで」はR2の元encoder GPU gateとR3の最終API検証までを完了させる。元音声6ケース / 2 profileと画像FP32全6件の既存GPU成功を保持する。次は音声の実PCM→採用GPU encoder→backbone→最終768を既存Document原本から受け入れ、Query / Raw、全mask / 境界・所有権 / Dispose・例外後再利用と最終checksをそろえる。旧role生成でのCPU文脈失敗は保持し、新goldenで既知の失敗を消さない。工程4全体は未完了。
+
+検索sample、モデル準備再利用の改善、長期性能 / memory、Player、各OS / deviceは、元の最終提案の工程5以降に含まれる。projectのM3 / M4全体要件として残すが、実行計画3 / 4とM3 / M4の完了条件を混同しない。Persistent allocation警告は未解決。ローカルUnityと今回のowned監視は終了済み。以下は以前のcheckpointと当時の状態。
+
 画像の元FP32 encoderは[新候補の全6ケース・3 profileで実GPU合格](results/m3-adjacent-reciprocal-all-image-gpu-passed-20261015.json)。固定source `38baf10`で全778,240値bit一致・6 pass / skip0、CPU fallback / 中間readback0、元参照 / 係数 / 許容差不変。製品adapterの6 Red→関連36 Greenを経て、[R3の実Texture→GPU前処理→製品adapter](results/m3-production-image-adapter-and-real-texture-gpu-20261015.json)は元square-1の131,072値全bit一致・1 pass / skip0まで確認。初回ARGB32拒否は推論前のsetup失敗として保持し、2 Red→関連23 Greenで修正した。実PCM / Texture→最終768の全role / mask / 境界 / 所有権 / Dispose・例外後再利用・text回帰、sample / Player・必須環境・Required CI・長期memoryまでの元範囲は維持し、工程3/4全体は未完了。修正済みPythonはsource `cd08e0f`の4環境各1,070 pass / skip0。
 
 最新: [参照再現と第4層への局所化](results/m3-reproduced-cpu-context-and-prefix-localization-20261015.json)から[GPUの逆数丸めを修正](results/m3-gpu-reciprocal-midpoint-and-fourth-layer-fixed-20261015.json)。CPUだけで通ったseed保持候補はGPUで63 bit差を保持したため不採用。FP32の隣接候補と補償残差の比較を3 Red→関連42 Greenで実装し、実GPU65,601統計値と第4層成分・接続4層1,935,360値が全bit一致した。元係数・参照・`atol=1e-5, rtol=1e-4`、GPUCompute・CPU fallback / 中間readback0を維持。R2の元画像全6件は新候補で全件合格し、R3は製品encoder採用後の実Texture / PCM→最終768 APIを全role・mask・境界・所有権 / Dispose・例外後再利用・text回帰まで検証する。sample / Player / 必須環境 / Required CI / 長期memoryを含む全範囲を維持し、工程3/4の完了とはしない。

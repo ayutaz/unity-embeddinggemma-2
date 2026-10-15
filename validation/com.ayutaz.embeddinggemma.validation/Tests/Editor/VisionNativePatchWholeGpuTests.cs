@@ -158,6 +158,12 @@ namespace EmbeddingGemma.Validation.Tests
                     report["original_coefficients_sha256"]=originalCoefficients;report["phase"]="audit_complete";report["success"]=true;return;
                 }
                 using var pipeline=new GpuProjectionPipeline(parts,inputs,outputs,operations.ToArray(),releaseUnusedGpuCache);
+                const BindingFlags privateFields=BindingFlags.Instance|BindingFlags.NonPublic;
+                var deviceType=typeof(Worker).Assembly.GetType("Unity.InferenceEngine.GfxDeviceBackend");
+                var backendType=typeof(Worker).Assembly.GetType("Unity.InferenceEngine.GPUComputeBackend");
+                var pipelineWorkers=(Worker[])typeof(GpuProjectionPipeline).GetField("workers",privateFields).GetValue(pipeline);
+                var backends=pipelineWorkers.Select(worker=>typeof(Worker).GetField("m_Backend",privateFields).GetValue(worker)).ToArray();
+                var initialContexts=backends.Select(backend=>deviceType!=null&&deviceType.IsInstanceOfType(backend)?deviceType.GetField("m_GfxContext",privateFields).GetValue(backend):null).ToArray();
                 report["release_unused_gpu_cache"]=releaseUnusedGpuCache;
                 report["pipeline_prepare_ms"]=phaseTimer.Elapsed.TotalMilliseconds;report["segment_count"]=parts.Length;report["gpu_operation_count"]=operations.Count;
                 report["prepare_ms"]=timer.Elapsed.TotalMilliseconds;report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
@@ -167,6 +173,18 @@ namespace EmbeddingGemma.Validation.Tests
                 report["host_working_set_before_execute_bytes"]=memoryBefore;report["phase"]=staged?"execute_async_stage_fences":"execute";Save();timer.Restart();
                 using var encoded=staged?await pipeline.ExecuteAsync(input):pipeline.Execute(input);Assert.That(encoded.backendType,Is.EqualTo(BackendType.GPUCompute));
                 var actual=encoded.DownloadToArray();report["execute_and_final_download_ms"]=timer.Elapsed.TotalMilliseconds;
+                var backendCaches=new JArray();report["backend_caches"]=backendCaches;
+                for(var i=0;i<backends.Length;i++)
+                {
+                    var backend=backends[i];var cache=backendType.GetField("m_MemoryPool",privateFields).GetValue(backend);
+                    var free=(System.Collections.IDictionary)cache.GetType().GetField("freeBuffers",privateFields).GetValue(cache);
+                    long bytes=0;foreach(var value in free.Values)bytes+=((ComputeTensorData)value).maxCapacity*4L;
+                    var context=initialContexts[i]==null?null:deviceType.GetField("m_GfxContext",privateFields).GetValue(backend);
+                    var changed=initialContexts[i]!=null&&!ReferenceEquals(initialContexts[i],context);
+                    backendCaches.Add(new JObject{["stage"]=i,["type"]=backend.GetType().FullName,["scratch_free_count"]=free.Count,["scratch_free_bytes"]=bytes,["compiled_context_recreated"]=changed});
+                    if(releaseUnusedGpuCache)Assert.That(free.Count,Is.Zero);
+                    if(staged&&releaseUnusedGpuCache&&initialContexts[i]!=null)Assert.That(changed,Is.True);
+                }
                 var geluCaches=new JArray();report["gelu_internal_worker_caches"]=geluCaches;
                 foreach(var operation in operations.OfType<GpuGelu>())
                 {

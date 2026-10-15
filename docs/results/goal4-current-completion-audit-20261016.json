@@ -4,7 +4,7 @@
   "goal": "4\u307e\u3067\u9032\u3081\u3066\u304f\u3060\u3055\u3044",
   "status": "active_not_complete",
   "scope_source": "goal4-scope-audit-20261016.json",
-  "candidate_head_at_audit": "6eafec6405dfce05bb843c82707ba0b2d5aaeee9",
+  "candidate_head_at_audit": "9d40b11ea8b90d712e4b38e70a3da690acc2c330",
   "requirements": [
     {
       "requirement": "Original learned coefficients, references and encoder tolerances remain unchanged",
@@ -79,21 +79,24 @@
     {
       "requirement": "Required repository checks for the resulting candidate",
       "status": "not_achieved",
-      "last_terminal_ci_run": 38785455573,
-      "last_terminal_ci_head": "9741d1e1392c4d4b845bb3ff9cc420d02a03df0b",
-      "result": "Python four environments, package and workflow lint passed; audio ONNX on silence and Required CI failed.",
-      "candidate_ci_run": 38791582723,
-      "candidate_ci_head": "6eafec6405dfce05bb843c82707ba0b2d5aaeee9",
-      "candidate_ci_last_observation": "in_progress",
+      "last_terminal_ci_run": 38793751475,
+      "last_terminal_ci_head": "11db7b17b640ea85ab6b04bef066a737d3e5ee41",
+      "result": "Python four environments, package and workflow lint pass; audio ONNX and Required CI fail.",
+      "candidate_ci_run": 38798000979,
+      "candidate_ci_head": "9d40b11ea8b90d712e4b38e70a3da690acc2c330",
+      "candidate_ci_last_observation": "pending",
       "candidate_ci_aggregate_conclusion": "",
       "evidence": [
         "m4-saved-full-silence-onnx-candidate-failed-20261016.json",
         "m4-saved-full-silence-ordered-rms-onnx-failed-20261016.json",
         "m4-original-layer8-to-final-onnx-14-failures-20261016.json",
         "m4-silu-tail-domain-stop-and-boundary-tdd-20261016.json",
-        "m4-fixed-tail-joint-and-same-host-baseline-failed-20261016.json"
+        "m4-fixed-tail-joint-and-same-host-baseline-failed-20261016.json",
+        "m4-real-matmul192-all1146880-bit-exact-20261016.json",
+        "m4-isolated-audio-primitives-all185-within-tolerance-20261016.json",
+        "m4-ordered-static-linear-tail-original-tolerance-passed-20261016.json"
       ],
-      "next_action": "Compare individual matrix products and other kernels on identical native inputs/weights/output targets on the same host; avoid additional whole-encoder arithmetic combinations before isolating a primitive."
+      "next_action": "Extend the original-tolerance-passing ordered static linear tail through all12layers from original frozen subsample input; full original input/all6signals and Required CI remain required."
     }
   ],
   "documentation": {
@@ -131,15 +134,28 @@
     "first_silu_segment_conclusion": "polynomial input domain rejected before ONNX comparison",
     "explicit_tail_rerun": 38790946377,
     "explicit_tail_rerun_last_observation": "completed_numerical_candidate_failed",
-    "latest_related_local_test_count": 79,
+    "latest_related_local_test_count": 82,
     "latest_related_local_tests_skipped": 0,
     "additional_expanded_silu_onnx_boundary_tests": 9,
     "explicit_tail_rerun_tolerance_failures": 7,
     "explicit_tail_rerun_maximum_tolerance_ratio": 2.1517931271366337,
-    "next_diagnostic": "Compare individual matrix products and other kernels on identical native inputs/weights/output targets on the same host; avoid additional whole-encoder arithmetic combinations before isolating a primitive.",
+    "next_diagnostic": "Extend the original-tolerance-passing ordered static linear tail through all12layers from original frozen subsample input; full original input/all6signals and Required CI remain required.",
     "joint_tail_run": 38791597473,
     "joint_tail_conclusion": "baseline9_and_joint14_tolerance_failures_same_host_both_rejected",
     "joint_current_native_tolerance_failures": 10,
-    "joint_current_native_qualified": false
+    "joint_current_native_qualified": false,
+    "primitive_run": 38793754616,
+    "primitive_comparisons": 185,
+    "primitive_local_tolerance_failures": 0,
+    "real_matrix_run": 38796651780,
+    "real_matrix_values_bit_exact": 1146880,
+    "ordered_tail_run": 38797993059,
+    "ordered_tail_native_onnx_baseline_failures": 8,
+    "ordered_tail_candidate_failures": 0,
+    "ordered_tail_maximum_tolerance_ratio": 0.864782663766798,
+    "ordered_tail_bit_differences": 133830,
+    "ordered_tail_native_is_passthrough_only": true,
+    "all12_from_frozen_subsample_run": 38798918931,
+    "all12_last_observation": "in_progress"
   }
 }

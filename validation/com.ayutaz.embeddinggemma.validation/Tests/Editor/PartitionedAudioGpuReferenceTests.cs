@@ -154,6 +154,19 @@ namespace EmbeddingGemma.Validation.Tests
         public void ObserveConnectedNativeAttentionOperandsWithoutChangingNormalFinalBits()
             =>Execute("silence",true,nativeSilu:true,nativeBmm:true,observeBmm:true);
 
+        [TestCase("silence")]
+        [TestCase("impulse")]
+        [TestCase("sine")]
+        [TestCase("nyquist")]
+        [TestCase("noise")]
+        [TestCase("padded_noise")]
+        public void NativeQueryScalePartitionsGpuMatchOriginalGolden(string signal)
+            =>Execute(signal,true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true);
+
+        [Test]
+        public void ObserveNativeQueryScaleConnectedAttentionOperandsWithoutChangingNormalFinalBits()
+            =>Execute("silence",true,nativeSilu:true,nativeBmm:true,observeBmm:true,nativeQueryScale:true);
+
         [Test]
         public void ObserveNativeSiluFirstFeedForwardWithoutChangingNormalFinalBits()
             =>Execute("silence",true,false,false,true,true);
@@ -162,14 +175,14 @@ namespace EmbeddingGemma.Validation.Tests
         public void ObserveFirstAttentionAndConvolutionWithoutChangingNormalFinalBits()
             =>Execute("silence",true,false,false,true,true,true);
 
-        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false)
+        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var folder=nativeBmm?"GpuAudioPartitionedNativeBmm":nativeSilu?"GpuAudioPartitionedNativeSilu":isolated?"GpuAudioPartitionedLayer10":allStatic?"GpuAudioPartitionedAllStatic":"GpuAudioPartitionedFirstFf";
+            var folder=nativeQueryScale?"GpuAudioPartitionedNativeQueryScale":nativeBmm?"GpuAudioPartitionedNativeBmm":nativeSilu?"GpuAudioPartitionedNativeSilu":isolated?"GpuAudioPartitionedLayer10":allStatic?"GpuAudioPartitionedAllStatic":"GpuAudioPartitionedFirstFf";
             var root=Path.Combine(Application.dataPath,folder);
             var originalRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-real-chain/audio-runtime-reference"));
-            var stem=observeBmm?"partitioned-native-bmm-operands-observation-":nativeBmm?"partitioned-native-bmm-gpu-":attention?"partitioned-native-silu-attention-observation-":nativeSilu?(early?"partitioned-native-silu-early-observation-":"partitioned-native-silu-gpu-"):
+            var stem=nativeQueryScale?(observeBmm?"partitioned-native-query-scale-operands-observation-":"partitioned-native-query-scale-gpu-"):observeBmm?"partitioned-native-bmm-operands-observation-":nativeBmm?"partitioned-native-bmm-gpu-":attention?"partitioned-native-silu-attention-observation-":nativeSilu?(early?"partitioned-native-silu-early-observation-":"partitioned-native-silu-gpu-"):
                 early?"partitioned-early-audio-observation-":isolated?"partitioned-layer10-original-input-":observe?"partitioned-all-static-layer-observation-":allStatic?"partitioned-all-static-gpu-":"partitioned-first-ff-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
@@ -245,12 +258,18 @@ namespace EmbeddingGemma.Validation.Tests
                 }
                 var inputs=new List<string>();var bindingsByOperation=new List<string[]>();var outputs=new List<string>();
                 var operations=(JArray)plan[nativeSilu?"operations":"projections"];
-                if(nativeSilu){Assert.That(plan.Value<int>("silu_count"),Is.EqualTo(36));Assert.That(operations.Count,Is.EqualTo(nativeBmm?207:171));}
+                if(nativeSilu){Assert.That(plan.Value<int>("silu_count"),Is.EqualTo(36));Assert.That(operations.Count,Is.EqualTo(nativeQueryScale?219:nativeBmm?207:171));}
                 if(nativeBmm)Assert.That(plan.Value<int>("dynamic_matmul_count"),Is.EqualTo(36));
+                if(nativeQueryScale)Assert.That(plan.Value<int>("query_scale_count"),Is.EqualTo(12));
                 foreach(var projection in operations)
                 {
                     if(projection.Value<string>("kind")=="silu")kernels.Add(new GpuSilu());
                     else if(projection.Value<string>("kind")=="batched_matmul")kernels.Add(new GpuBatchedMatmul());
+                    else if(projection.Value<string>("kind")=="sequential_scale")
+                    {
+                        var weightPath=Path.Combine(root,projection.Value<string>("file"));Check(weightPath,projection.Value<string>("weight_sha256"));
+                        kernels.Add(new GpuSequentialScale(projection.Value<float>("first_scale"),Floats(weightPath)));
+                    }
                     else
                     {
                         var shape=projection["weight_shape"].ToObject<int[]>();var weightPath=Path.Combine(root,projection.Value<string>("file"));
@@ -263,6 +282,7 @@ namespace EmbeddingGemma.Validation.Tests
                 report["projection_count"]=((JArray)plan["projections"]).Count;report["operation_count"]=kernels.Count;report["silu_count"]=nativeSilu?36:0;
                 using var pipeline=new GpuProjectionPipeline(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray());
                 report["dynamic_matmul_count"]=nativeBmm?36:0;
+                report["query_scale_count"]=nativeQueryScale?12:0;
                 report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
                 using var input=new Tensor<float>(new TensorShape(inputShape),inputValues);ComputeTensorData.Pin(input);
                 report["phase"]="execute";Save();timer.Restart();

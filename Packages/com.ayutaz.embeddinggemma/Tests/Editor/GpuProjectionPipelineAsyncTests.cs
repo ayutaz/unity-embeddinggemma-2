@@ -32,11 +32,13 @@ namespace EmbeddingGemma.Tests
             for (var i = 0; i < names.Length; i++) model.outputs[i] = new Model.Output { index = model.outputs[i].index, name = names[i] };
             return model;
         }
-        static GpuProjectionPipeline Pipeline(Operation operation,bool release=true)
+        static GpuProjectionPipeline Pipeline(Operation operation,bool release=true,bool nativeGemm=false)
         {
             Assert.That(SystemInfo.supportsGraphicsFence, Is.True, "Actual graphics-fence support required; no skip.");
             var first = new FunctionalGraph(); var x = first.AddInput<float>(new TensorShape(1, 2), "input");
-            var before = Rename(first.Compile(x, x * x + x), "input", "work");
+            var work = nativeGemm ? x * x + Functional.MatMul(x, Functional.Constant(new TensorShape(2, 2), new[] { 1f, 0f, 0f, 1f })) : x * x + x;
+            var before = Rename(first.Compile(x, work), "input", "work");
+            if (nativeGemm) Assert.That(before.layers.Exists(layer => layer.GetType().Name == "MatMul" || layer.GetType().Name == "MatMul2D"), Is.True, "Exercise a real ML-device GEMM operator cache.");
             var last = new FunctionalGraph(); var residual = last.AddInput<float>(new TensorShape(1, 2), "input"); var projected = last.AddInput<float>(new TensorShape(1, 2), "projected");
             var after = Rename(last.Compile(projected * projected + residual), "final");
             return new GpuProjectionPipeline(new[] { before, after }, new[] { new[] { "work" } }, new[] { "projected" }, new IGpuTensorOperation[] { operation }, release);
@@ -67,7 +69,7 @@ namespace EmbeddingGemma.Tests
             var contextField = type.GetField("m_GfxContext", fields); Assert.That(contextField, Is.Not.Null);
             foreach (var release in new[] { false, true })
             {
-                using var pipeline = Pipeline(operation, release);
+                using var pipeline = Pipeline(operation, release, true);
                 var workers = (Worker[])typeof(GpuProjectionPipeline).GetField("workers", fields).GetValue(pipeline);
                 var backend = typeof(Worker).GetField("m_Backend", fields).GetValue(workers[0]); Assert.That(type.IsInstanceOfType(backend), Is.True);
                 var before = contextField.GetValue(backend); var pending = Start(pipeline, input);

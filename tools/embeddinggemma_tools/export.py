@@ -493,21 +493,28 @@ def fp32_cascade_mean1536(values):
     return _fp32_cascade_mean(values, 1536)
 
 
-def fp32_cascade_mean768(values):
+def _vision_vector_width(width):
+    if type(width) is not int or width not in (8,16):
+        raise ValueError("vision vector width must be 8 or 16")
+    return width
+
+
+def fp32_cascade_mean768(values, *, vector_width=8):
     """Opt-in contiguous vision RMS reduction, including its half-block tail.
 
     Independent CPU/ONNX checks qualify this arithmetic only; actual GPU and
     original full-image numerical gates remain separate requirements.
     """
-    return _fp32_cascade_sum768(values) / 768
+    return _fp32_cascade_sum768(values, vector_width=vector_width) / 768
 
 
-def _fp32_cascade_sum768(values):
+def _fp32_cascade_sum768(values, *, vector_width=8):
+    _vision_vector_width(vector_width)
     if not torch.compiler.is_compiling() and not torch.jit.is_tracing():
         if (values.dtype != torch.float32 or values.ndim < 2 or values.shape[-1] != 768
                 or not values.numel() or not values.is_contiguous() or not torch.isfinite(values).all()):
             raise ValueError("vision cascade requires finite contiguous 768-wide FP32 rows")
-    grouped = torch.nn.functional.pad(values, (0, 256)).reshape(-1, 2, 16, 4, 8)
+    grouped = torch.nn.functional.pad(values, (0, 256)).reshape(-1, 1024//(16*4*vector_width), 16, 4, vector_width)
     partial = _fp32_ordered_sum(grouped, -3)
     accumulated = _fp32_ordered_sum(partial, -4)
     combined = _fp32_ordered_sum(accumulated, -2)
@@ -582,13 +589,14 @@ def fp32_refined_rstd(values, *, maximum_statistic=1e6):
     return fp32_fma(inverse, reciprocal_residual, inverse)
 
 
-def fp32_cascade_mean64(values):
+def fp32_cascade_mean64(values, *, vector_width=8):
     """Opt-in contiguous vision head reduction with two four-vector steps."""
+    _vision_vector_width(vector_width)
     if not torch.compiler.is_compiling() and not torch.jit.is_tracing():
         if (values.dtype != torch.float32 or values.ndim < 2 or values.shape[-1] != 64
                 or not values.numel() or not values.is_contiguous() or not torch.isfinite(values).all()):
             raise ValueError("vision head cascade requires finite contiguous 64-wide FP32 rows")
-    grouped = values.reshape(-1, 2, 4, 8)
+    grouped = values.reshape(-1, 64//(4*vector_width), 4, vector_width)
     partial = _fp32_ordered_sum(grouped, -3)
     combined = _fp32_ordered_sum(partial, -2)
     total = _fp32_ordered_sum(combined, -1)
@@ -600,7 +608,7 @@ class VisionHeadRmsExport(nn.Module):
 
     Local equation parity does not prove original native-context or GPU parity.
     """
-    def __init__(self, scale, epsilon):
+    def __init__(self, scale, epsilon, *, vector_width=8):
         super().__init__()
         if (scale is not None and (not isinstance(scale, torch.Tensor) or scale.dtype != torch.float32
                 or tuple(scale.shape) != (64,) or not scale.is_contiguous() or not torch.isfinite(scale).all())):
@@ -608,9 +616,10 @@ class VisionHeadRmsExport(nn.Module):
         if float(torch.tensor(epsilon, dtype=torch.float32)) != float(torch.tensor(1e-6, dtype=torch.float32)):
             raise ValueError("vision head RMS requires epsilon 1e-6")
         self.register_buffer("scale", scale)
+        self.vector_width = _vision_vector_width(vector_width)
 
     def forward(self, values):
-        mean = fp32_cascade_mean64(values.square())
+        mean = fp32_cascade_mean64(values.square(), vector_width=self.vector_width)
         inverse = fp32_refined_rstd(mean + 1e-6)
         normalized = values * inverse
         return normalized if self.scale is None else normalized * self.scale
@@ -622,7 +631,7 @@ class VisionRmsExport(nn.Module):
     CPU/ONNX parity is not original-context or GPU encoder acceptance. Keep
     scalar division and refined inverse operations explicit in exported graphs.
     """
-    def __init__(self, scale, epsilon):
+    def __init__(self, scale, epsilon, *, vector_width=8):
         super().__init__()
         if (not isinstance(scale, torch.Tensor) or scale.dtype != torch.float32
                 or tuple(scale.shape) != (768,) or not scale.is_contiguous()
@@ -631,9 +640,10 @@ class VisionRmsExport(nn.Module):
             raise ValueError("vision RMS requires the original finite FP32 width-768 scale and epsilon 1e-6")
         self.register_buffer("scale", scale)
         self.epsilon = 1e-6
+        self.vector_width = _vision_vector_width(vector_width)
 
     def forward(self, values):
-        mean = fp32_cascade_mean768(values.square())
+        mean = fp32_cascade_mean768(values.square(), vector_width=self.vector_width)
         inverse = fp32_refined_rstd(mean + self.epsilon)
         return (values * inverse) * self.scale
 
@@ -645,7 +655,7 @@ class VisionInlineRmsExport(VisionRmsExport):
     bit. Original-context, GPU and full encoder gates remain independent.
     """
     def forward(self, values):
-        total = _fp32_cascade_sum768(values.square())
+        total = _fp32_cascade_sum768(values.square(), vector_width=self.vector_width)
         quotient = total / 768
         residual = fp32_fma(-quotient, torch.full_like(total, 768), total)
         mean = fp32_fma(residual, torch.full_like(total, 1 / 768), quotient)
@@ -659,8 +669,12 @@ class VisionTailRmsExport(nn.Module):
     This preserves the existing RMS exporters and their default domain. CPU
     equation/export parity does not prove GPU or original-golden acceptance.
     """
+    def __init__(self, *, vector_width=8):
+        super().__init__()
+        self.vector_width = _vision_vector_width(vector_width)
+
     def forward(self, values):
-        total = _fp32_cascade_sum768(values.square())
+        total = _fp32_cascade_sum768(values.square(), vector_width=self.vector_width)
         quotient = total / 768
         residual = fp32_fma(-quotient, torch.full_like(total, 768), total)
         mean = fp32_fma(residual, torch.full_like(total, 1 / 768), quotient)

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Cryptography;
 using EmbeddingGemma.Tests;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -16,13 +17,23 @@ namespace EmbeddingGemma.Validation.Tests
         [TestCase("landscape-0")] [TestCase("landscape-1")]
         [TestCase("portrait-0")] [TestCase("portrait-1")]
         public void NativePatch384OriginalVisionEncoderMustMatchGoldenOnGpu(string caseId)
+            => Run(caseId,false);
+
+        [TestCase("square-0")] [TestCase("square-1")]
+        [TestCase("landscape-0")] [TestCase("landscape-1")]
+        [TestCase("portrait-0")] [TestCase("portrait-1")]
+        public void InlineAllVisionLayerRmsOriginalEncoderMustMatchGoldenOnGpu(string caseId)
+            => Run(caseId,true);
+
+        static void Run(string caseId,bool inlineAllRms)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-encoder"));
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-native-patch-whole-gpu-"+source+"-"+caseId+".json"));
+            var label=inlineAllRms?"vision-inline-all-layer-rms-whole-gpu-":"vision-native-patch-whole-gpu-";
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+"-"+caseId+".json"));
             Assert.That(File.Exists(output),Is.False);
-            var report=new JObject{["success"]=false,["scope"]="one_original_vision_encoder_gpu_native_patch384_candidate",["runtime_source"]=source,
+            var report=new JObject{["success"]=false,["scope"]=inlineAllRms?"one_original_vision_encoder_gpu_all_sixteen_layer_rms_and_native_patch384_candidate":"one_original_vision_encoder_gpu_native_patch384_candidate",["runtime_source"]=source,
                 ["case_id"]=caseId,["phase"]="audit",["all_profiles_validated"]=false,["end_to_end_validated"]=false};
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
@@ -40,12 +51,33 @@ namespace EmbeddingGemma.Validation.Tests
                 Check(Path.Combine(root,profile+"-fp32.sentis"),modelSha);report["profile"]=profile;report["saved_model_sha256"]=modelSha;
                 report["phase"]="prepare";Save();var timer=System.Diagnostics.Stopwatch.StartNew();
                 var original=TextModelFile.Load(Path.Combine(root,profile+"-fp32.sentis"));var constants=original.constants.ToDictionary(value=>value.index);
+                var working=original;var originalCoefficients=CoefficientsHash(original);
+                if(inlineAllRms)
+                {
+                    Check(Path.Combine(Application.dataPath,"GpuVisionInlineRmsCandidate/inline-rms.onnx"),"15c8ec537c8d40386e61b675c05aaaa65b296667c0d38c39dc7d12fe28a25ccb");
+                    var preparationPath=Path.Combine(Application.dataPath,"GpuVisionHeadRmsCandidates/head-rms-candidates.json");
+                    Check(preparationPath,"bb1f2d3df3905551b34723badefd7f1dfdc23da08a9ab4c72545d5d1368ce229");
+                    var preparation=JObject.Parse(File.ReadAllText(preparationPath));
+                    Model Head(int index)
+                    {
+                        var entry=((JArray)preparation["rows"]).Single(value=>value.Value<int>("index")==index);
+                        var asset="GpuVisionHeadRmsCandidates/"+entry["onnx"].Value<string>("file");Check(Path.Combine(Application.dataPath,asset),entry["onnx"].Value<string>("sha256"));
+                        return ModelLoader.Load(UnityEditor.AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/"+asset));
+                    }
+                    var template=ModelLoader.Load(UnityEditor.AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/GpuVisionInlineRmsCandidate/inline-rms.onnx"));
+                    working=QualifiedVisionRmsOperation.InlineLayerRms(original,template,Head(1),Head(3),16);
+                    Assert.That(original.constants.All(value=>working.constants.Any(other=>ReferenceEquals(value,other))),Is.True);
+                    report["inline_rms_count"]=112;report["layer_count"]=working.layers.Count;
+                    report["original_square_count"]=original.layers.Count(layer=>layer.GetType().Name=="Square");
+                    report["remaining_original_rms_count"]=original.layers.Count(layer=>layer.GetType().Name=="Square")-112;
+                    report["all_original_coefficient_descriptors_retained"]=true;
+                }
                 var projection=original.layers.First(layer=>layer.GetType().Name=="MatMul"&&constants.TryGetValue(layer.inputs[1],out var w)&&w.shape==new TensorShape(768,768));
                 var raw=(ArraySegment<byte>)typeof(Constant).GetField("array",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(constants[projection.inputs[1]]);
                 using(var stream=new MemoryStream(raw.Array,raw.Offset,raw.Count,false))Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo("696c2e091ed4ad117c10faa6bf9707eb808649fb09c84fee457d2327408acc90"));
                 var weights=new float[raw.Count/4];Buffer.BlockCopy(raw.Array,raw.Offset,weights,0,raw.Count);
-                var before=ModelTensorSlice.Extract(original,projection.inputs[0],"projection_input");
-                var after=ModelTensorSlice.Extract(original,original.outputs[0].index,"soft_tokens",new[]{new Model.Input{
+                var before=ModelTensorSlice.Extract(working,projection.inputs[0],"projection_input");
+                var after=ModelTensorSlice.Extract(working,working.outputs[0].index,"soft_tokens",new[]{new Model.Input{
                     name="projection_output",index=projection.outputs[0],dataType=DataType.Float,shape=new DynamicTensorShape(2520,768)}});
                 Assert.That(before.inputs.Count,Is.EqualTo(1));Assert.That(after.inputs.Count,Is.EqualTo(1));
                 using var operation=new GpuBlockedMatmul(768,768,weights,384);
@@ -67,10 +99,17 @@ namespace EmbeddingGemma.Validation.Tests
                     var d=Math.Abs((double)actual[i]-expected[i]);var allowed=1e-5+1e-4*Math.Abs((double)expected[i]);if(d>allowed)bad++;maximum=Math.Max(maximum,d);ratio=Math.Max(ratio,d/allowed);
                 }
                 report["actual_backend"]="GPUCompute";report["mismatched_elements"]=bad;report["maximum_absolute_error"]=maximum;report["maximum_tolerance_ratio"]=ratio;report["phase"]="completed";Save();
+                Assert.That(CoefficientsHash(original),Is.EqualTo(originalCoefficients));report["original_coefficient_bytes_preserved"]=true;report["original_coefficients_sha256"]=originalCoefficients;
                 Assert.That(bad,Is.Zero,"Keep the unchanged original FP32 elementwise gate.");report["success"]=true;
             }
             catch(Exception error){report["error"]=error.ToString();throw;}
             finally{Save();}
+        }
+        static string CoefficientsHash(Model model)
+        {
+            var field=typeof(Constant).GetField("array",BindingFlags.Instance|BindingFlags.NonPublic);using var hash=IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
+            foreach(var constant in model.constants){var raw=(ArraySegment<byte>)field.GetValue(constant);hash.AppendData(raw.Array,raw.Offset,raw.Count);}
+            return BitConverter.ToString(hash.GetHashAndReset()).Replace("-","").ToLowerInvariant();
         }
         static float[] Floats(string path){var bytes=File.ReadAllBytes(path);var data=new float[bytes.Length/4];Buffer.BlockCopy(bytes,0,data,0,bytes.Length);return data;}
     }

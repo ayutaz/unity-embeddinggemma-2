@@ -9,6 +9,28 @@ namespace EmbeddingGemma.Tests
 {
     public sealed class GpuProjectionPipelineTests
     {
+        [TestCase(false)] [TestCase(true)]
+        public void OptInReleaseAlsoClearsBackendScratchPoolAndKeepsLiveGpuValues(bool release)
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
+            var first=new FunctionalGraph();var x=first.AddInput<float>(new TensorShape(1,2),"input");var before=Rename(first.Compile(Functional.Softmax(x,-1)),"work");
+            var last=new FunctionalGraph();var y=last.AddInput<float>(new TensorShape(1,2),"projected");var after=Rename(last.Compile(y),"final");
+            using var operation=new ObservedOperation();using var pipeline=new GpuProjectionPipeline(new[]{before,after},new[]{new[]{"work"}},new[]{"projected"},new IGpuTensorOperation[]{operation},release);
+            operation.BeforeExecute=()=>
+            {
+                const BindingFlags fields=BindingFlags.Instance|BindingFlags.NonPublic;
+                var workers=(Worker[])typeof(GpuProjectionPipeline).GetField("workers",fields).GetValue(pipeline);
+                var backend=typeof(Worker).GetField("m_Backend",fields).GetValue(workers[0]);
+                var cache=backend.GetType().GetField("m_MemoryPool",fields).GetValue(backend);
+                var count=((IDictionary)cache.GetType().GetField("freeBuffers",fields).GetValue(cache)).Count;
+                if(release)Assert.That(count,Is.Zero,"GPU backend scratch buffers must also be released after boundary copies.");else Assert.That(count,Is.GreaterThan(0));
+            };
+            using var input=new Tensor<float>(new TensorShape(1,2),new[]{0f,0f});ComputeTensorData.Pin(input);
+            using var output=pipeline.Execute(input);using var repeated=pipeline.Execute(input);pipeline.Dispose();
+            Assert.That(output.DownloadToArray(),Is.EqualTo(new[]{.5f,.5f}));Assert.That(repeated.DownloadToArray(),Is.EqualTo(new[]{.5f,.5f}));
+            Assert.That(input.DownloadToArray(),Is.EqualTo(new[]{0f,0f}));operation.BeforeExecute=null;
+        }
+
         sealed class ObservedOperation : IGpuTensorOperation
         {
             readonly GpuBlockedMatmul identity=new GpuBlockedMatmul(2,2,new[]{1f,0f,0f,1f});

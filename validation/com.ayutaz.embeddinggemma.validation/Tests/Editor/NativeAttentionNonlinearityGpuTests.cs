@@ -93,7 +93,7 @@ namespace EmbeddingGemma.Validation.Tests
             var cpu=(HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallback",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(worker);
             var flush=(HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallbackShouldFlushGPU",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(worker);
             Assert.That(cpu.Intersect(model.layers.SelectMany(l=>l.outputs).Concat(model.inputs.Select(i=>i.index))).Count(),Is.Zero);Assert.That(flush.Count,Is.Zero);
-            worker.Schedule(input);Tensor output=null;worker.CopyOutput(ref output);return (Tensor<float>)output;
+            worker.Schedule(input);Tensor output=null;worker.CopyOutput(0,ref output);return (Tensor<float>)output;
         }
     }
 }

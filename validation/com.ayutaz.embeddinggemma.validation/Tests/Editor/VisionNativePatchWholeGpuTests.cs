@@ -134,6 +134,11 @@ namespace EmbeddingGemma.Validation.Tests
                 var actual=encoded.DownloadToArray();report["execute_and_final_download_ms"]=timer.Elapsed.TotalMilliseconds;
                 var capture=Path.ChangeExtension(output,"bin");Assert.That(File.Exists(capture),Is.False);var capturedBytes=new byte[actual.Length*4];Buffer.BlockCopy(actual,0,capturedBytes,0,capturedBytes.Length);File.WriteAllBytes(capture,capturedBytes);
                 using(var stream=File.OpenRead(capture))report["capture_sha256"]=PlayerFileHash.Compute(stream,out _);
+                if(releaseUnusedGpuCache&&caseId=="square-0")
+                {
+                    Assert.That(report.Value<string>("capture_sha256"),Is.EqualTo("43fa98f573bd55a0f634075bf17f42fcde2ff9e89894c2d5b1b238c8ab451aab"),"Memory retirement must preserve every bit of the fixed cache-only candidate.");
+                    report["cache_only_candidate_bits_preserved"]=true;
+                }
                 GpuExecutionProfiler.ReadProcessMemory(process,out var memoryAfter,out var peak);report["host_working_set_after_download_bytes"]=memoryAfter;report["host_peak_working_set_bytes"]=peak;
                 var expected=row["features"].ToObject<float[][]>().SelectMany(values=>values).ToArray();Assert.That(actual.Length,Is.EqualTo(expected.Length));
                 Assert.That(encoded.shape,Is.EqualTo(new TensorShape(reference["profiles"][profile].Value<int>("feature_count"),512)));

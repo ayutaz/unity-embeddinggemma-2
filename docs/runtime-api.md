@@ -10,6 +10,8 @@
 
 2026-10-15のDraft PR #81には、分割モデル用の `PartitionedAudioFeatureEncoder(Model[] models, string[][] operationInputs, string[] operationOutputs, IGpuTensorOperation[] operations, AudioEncoderProfile profile)` もある。`IAudioFeatureEncoder` を実装し、GPUCompute専用でWorkerを構築時に一度だけ作る。入力は同device・同prefixの `AudioPreprocessingResult`、返り値はGPU上の独立所有 `AudioEncodingResult`。encoderのDisposeはWorkerを解放し、借用model・operation・入力は解放しないため、呼出側でoperationを別途Disposeする。渡す分割modelは指定profileと係数を監査したものに限る。元音声6ケース・2 profileのencoder数値gateと、adapter経由の元impulseは実GPUで合格したが、実PCM→最終768次元の全条件は未検証。[固定証拠](results/m4-padded-audio-and-gpu-encoder-adapter-20261015.json)。
 
+`GpuBlockedMatmul(width, columns, coefficients)` は既存のblock192順を維持する。4引数版の最後の `blockSize` は1〜4096の明示的な加算区切りで、対象profileの独立参照に照合して使う。画像patchの固定入力では384が全bit一致したが、画像全encoderは未合格であり、他の投影・入力・GPUに同じ区切りを適用してよい証拠にはならない。[局所一致と全体不合格](results/m3-patch384-gpu-and-original-encoder-20261015.json)。
+
 利用者向け経路は各stageを `BackendType.GPUCompute` で構築する。同backend / profileを要求し、GPU不在をCPUで代替しない。Runtime APIのCPU選択肢は残るが、対象実モデル検証のGPU専用化は2 fixtureに限定される。構成テスト合格と実モデル受け入れを分ける。[最新状態](status.md) / [音声API](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-embedder.md)。
 
 更新日: 2026-10-10。[現在の状態](status.md)でmain / PRと検証範囲を確認する。

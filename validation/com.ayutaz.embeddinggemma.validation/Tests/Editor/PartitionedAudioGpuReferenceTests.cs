@@ -214,6 +214,19 @@ namespace EmbeddingGemma.Validation.Tests
         public void ObserveNativeConvolutionModulesWithoutChangingNormalFinalBits()
             =>Execute("silence",true,early:true,nativeSilu:true,attention:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,convolutionDetail:true);
 
+        [TestCase("silence")]
+        [TestCase("impulse")]
+        [TestCase("sine")]
+        [TestCase("nyquist")]
+        [TestCase("noise")]
+        [TestCase("padded_noise")]
+        public void NativeGluPartitionsGpuMatchOriginalGolden(string signal)
+            =>Execute(signal,true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,nativeGlu:true);
+
+        [Test]
+        public void ObserveNativeGluConvolutionModulesWithoutChangingNormalFinalBits()
+            =>Execute("silence",true,early:true,nativeSilu:true,attention:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,convolutionDetail:true,nativeGlu:true);
+
         [Test]
         public void ObserveNativeSiluFirstFeedForwardWithoutChangingNormalFinalBits()
             =>Execute("silence",true,false,false,true,true);
@@ -222,17 +235,18 @@ namespace EmbeddingGemma.Validation.Tests
         public void ObserveFirstAttentionAndConvolutionWithoutChangingNormalFinalBits()
             =>Execute("silence",true,false,false,true,true,true);
 
-        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false,bool convolutionDetail=false)
+        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false,bool convolutionDetail=false,bool nativeGlu=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var folder=nativeSoftmax?"GpuAudioPartitionedNativeSoftmax":nativeDivision?"GpuAudioPartitionedNativeDivision":nativeTanh?"GpuAudioPartitionedNativeTanh":nativeQueryScale?"GpuAudioPartitionedNativeQueryScale":nativeBmm?"GpuAudioPartitionedNativeBmm":nativeSilu?"GpuAudioPartitionedNativeSilu":isolated?"GpuAudioPartitionedLayer10":allStatic?"GpuAudioPartitionedAllStatic":"GpuAudioPartitionedFirstFf";
+            var folder=nativeGlu?"GpuAudioPartitionedNativeGlu":nativeSoftmax?"GpuAudioPartitionedNativeSoftmax":nativeDivision?"GpuAudioPartitionedNativeDivision":nativeTanh?"GpuAudioPartitionedNativeTanh":nativeQueryScale?"GpuAudioPartitionedNativeQueryScale":nativeBmm?"GpuAudioPartitionedNativeBmm":nativeSilu?"GpuAudioPartitionedNativeSilu":isolated?"GpuAudioPartitionedLayer10":allStatic?"GpuAudioPartitionedAllStatic":"GpuAudioPartitionedFirstFf";
             var root=Path.Combine(Application.dataPath,folder);
             var originalRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-real-chain/audio-runtime-reference"));
             var stem=nativeSoftmax?(observeBmm?"partitioned-native-softmax-operands-observation-":"partitioned-native-softmax-gpu-"):nativeDivision?(observeBmm?"partitioned-native-division-operands-observation-":"partitioned-native-division-gpu-"):nativeTanh?(observeBmm?"partitioned-native-tanh-operands-observation-":"partitioned-native-tanh-gpu-"):nativeQueryScale?(observeBmm?"partitioned-native-query-scale-operands-observation-":"partitioned-native-query-scale-gpu-"):observeBmm?"partitioned-native-bmm-operands-observation-":nativeBmm?"partitioned-native-bmm-gpu-":attention?"partitioned-native-silu-attention-observation-":nativeSilu?(early?"partitioned-native-silu-early-observation-":"partitioned-native-silu-gpu-"):
                 early?"partitioned-early-audio-observation-":isolated?"partitioned-layer10-original-input-":observe?"partitioned-all-static-layer-observation-":allStatic?"partitioned-all-static-gpu-":"partitioned-first-ff-gpu-";
             if(nativeSoftmax&&early&&attention)stem="partitioned-native-softmax-post-convolution-observation-";
             if(convolutionDetail)stem="partitioned-native-convolution-modules-observation-";
+            if(nativeGlu)stem=convolutionDetail?"partitioned-native-glu-convolution-observation-":"partitioned-native-glu-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject { ["success"]=false,["scope"]=early?"original_early_audio_observation_only":isolated?"one_original_audio_layer_isolation_gpu_numeric_gate":observe?"original_audio_layer_observation_only":"one_partitioned_original_audio_encoder_gpu_numeric_gate",
@@ -307,18 +321,20 @@ namespace EmbeddingGemma.Validation.Tests
                 }
                 var inputs=new List<string>();var bindingsByOperation=new List<string[]>();var outputs=new List<string>();
                 var operations=(JArray)plan[nativeSilu?"operations":"projections"];
-                if(nativeSilu){Assert.That(plan.Value<int>("silu_count"),Is.EqualTo(36));Assert.That(operations.Count,Is.EqualTo(nativeSoftmax?255:nativeDivision?243:nativeTanh?231:nativeQueryScale?219:nativeBmm?207:171));}
+                if(nativeSilu){Assert.That(plan.Value<int>("silu_count"),Is.EqualTo(36));Assert.That(operations.Count,Is.EqualTo(nativeGlu?267:nativeSoftmax?255:nativeDivision?243:nativeTanh?231:nativeQueryScale?219:nativeBmm?207:171));}
                 if(nativeBmm)Assert.That(plan.Value<int>("dynamic_matmul_count"),Is.EqualTo(36));
                 if(nativeQueryScale)Assert.That(plan.Value<int>("query_scale_count"),Is.EqualTo(12));
                 if(nativeTanh)Assert.That(plan.Value<int>("tanh_count"),Is.EqualTo(12));
                 if(nativeDivision)Assert.That(plan.Value<int>("scalar_divide_count"),Is.EqualTo(12));
                 if(nativeSoftmax)Assert.That(plan.Value<int>("softmax_count"),Is.EqualTo(12));
+                if(nativeGlu)Assert.That(plan.Value<int>("glu_count"),Is.EqualTo(12));
                 foreach(var projection in operations)
                 {
                     if(projection.Value<string>("kind")=="silu")kernels.Add(new GpuSilu());
                     else if(projection.Value<string>("kind")=="tanh")kernels.Add(new GpuTanh());
                     else if(projection.Value<string>("kind")=="scalar_divide")kernels.Add(new GpuScalarDivide(projection.Value<float>("divisor")));
                     else if(projection.Value<string>("kind")=="softmax")kernels.Add(new GpuSoftmax());
+                    else if(projection.Value<string>("kind")=="glu")kernels.Add(new GpuGlu());
                     else if(projection.Value<string>("kind")=="batched_matmul")kernels.Add(new GpuBatchedMatmul());
                     else if(projection.Value<string>("kind")=="sequential_scale")
                     {
@@ -341,6 +357,7 @@ namespace EmbeddingGemma.Validation.Tests
                 report["tanh_count"]=nativeTanh?12:0;
                 report["scalar_divide_count"]=nativeDivision?12:0;
                 report["softmax_count"]=nativeSoftmax?12:0;
+                report["glu_count"]=nativeGlu?12:0;
                 report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
                 using var input=new Tensor<float>(new TensorShape(inputShape),inputValues);ComputeTensorData.Pin(input);
                 report["phase"]="execute";Save();timer.Restart();
@@ -479,6 +496,11 @@ namespace EmbeddingGemma.Validation.Tests
                             (name:"conv_activation",boundary:"/lconv1d/act_fn/NativeSiLU_output_0",part:"lconv1d.act_fn.output",minimum:float.NegativeInfinity,maximum:float.PositiveInfinity),
                             (name:"conv_linear_end_input",boundary:"/lconv1d/linear_end/Clip_output_0",part:"lconv1d.act_fn.output",minimum:-5.8125f,maximum:5.78125f),
                             (name:"conv_linear_end",boundary:"/lconv1d/linear_end/linear/MatMul_output_0",part:"lconv1d.linear_end.output",minimum:-6.25f,maximum:6.1875f)}).ToArray();
+                        if(nativeGlu)
+                        {
+                            var operation=operations.First(p=>p.Value<string>("kind")=="glu");
+                            bindings=bindings.Append((name:"conv_glu_output",boundary:operation.Value<string>("output"),part:"lconv1d.glu.output",minimum:float.NegativeInfinity,maximum:float.PositiveInfinity)).ToArray();
+                        }
                     }
                     report["phase"]="observe_early";Save();
                     encoded.Dispose();pipeline.Dispose();
@@ -529,7 +551,7 @@ namespace EmbeddingGemma.Validation.Tests
                             ["actual_transform"]=clipObserved?"original_fp32_output_clip_for_diagnostic_comparison_only":"identity",
                             ["actual_file"]=capture,["actual_sha256"]=captureSha,["bit_differences"]=bits,["mismatched_elements"]=bad,["maximum_tolerance_ratio"]=maxRatio});Save();
                     }
-                    Assert.That(stages.Count,Is.EqualTo(convolutionDetail?18:attention?12:5));report["observation_completed"]=true;report["success"]=true;report["phase"]="completed_observation";return;
+                    Assert.That(stages.Count,Is.EqualTo(convolutionDetail?(nativeGlu?19:18):attention?12:5));report["observation_completed"]=true;report["success"]=true;report["phase"]="completed_observation";return;
                 }
                 if(observe)
                 {

@@ -1,4 +1,5 @@
 // Copyright (C) 2024 Intel Corporation. SPDX-License-Identifier: MIT
+// Copyright Naoki Shibata and contributors 2010 - 2024 (paired arithmetic, BSL-1.0).
 // Coefficients adapted from Intel IGC tanh_s_ha.cl, commit
 // 5db21d8c7390c667d0782618e6befb08c32f26da (_dbP table).
 // See ../../INTEL-IGC-LICENSE.txt. Paired arithmetic is adapted from SLEEF

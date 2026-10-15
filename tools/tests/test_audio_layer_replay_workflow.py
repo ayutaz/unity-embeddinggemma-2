@@ -67,8 +67,24 @@ def test_selected_layer_is_bound_to_attention_scope_and_its_original_context_pai
     job=workflow['jobs']['replay'];binding=job['env']['REPLAY_LAYER']
     assert "inputs.scope == 'attention'" in binding and "|| '0'" in binding
     steps=job['steps'];fetch=next(s for s in steps if s.get('name')=='Fetch only frozen stage input and output')
-    assert 'REPLAY_LAYER' in fetch['run'] and 'silence-stage-${input_stage}' in fetch['run'] and 'silence-stage-${output_stage}' in fetch['run']
+    assert 'REPLAY_LAYER' in fetch['run'] and '${REPLAY_SIGNAL}-stage-${input_stage}' in fetch['run'] and '${REPLAY_SIGNAL}-stage-${output_stage}' in fetch['run']
     attention=next(s for s in steps if s.get('name')=='Capture attention projections against pinned layer final')
     full=next(s for s in steps if s.get('name')=='Replay official layer 0 against unchanged native final')
     assert '--layer-index "$REPLAY_LAYER"' in attention['run']
     assert '--layer-index' not in full['run'] and '--subsample-input' in full['run']
+
+
+def test_selected_signal_is_bound_to_attention_scope_and_original_stage_paths():
+    path=Path(__file__).resolve().parents[2]/'.github/workflows/audio-layer-replay.yml'
+    workflow=yaml.safe_load(path.read_text());triggers=workflow.get('on',workflow.get(True))
+    selection=triggers['workflow_dispatch']['inputs'].get('signal')
+    assert selection is not None,'Original non-silence signal selection is missing'
+    assert selection['default']=='silence' and selection['options']==['silence','impulse','sine','nyquist','noise']
+    job=workflow['jobs']['replay'];binding=job['env']['REPLAY_SIGNAL']
+    assert "inputs.scope == 'attention'" in binding and "inputs.signal" in binding and "|| 'silence'" in binding
+    fetch=next(s for s in job['steps'] if s.get('name')=='Fetch only frozen stage input and output')
+    assert '${REPLAY_SIGNAL}-stage-${input_stage}' in fetch['run'] and '${REPLAY_SIGNAL}-stage-${output_stage}' in fetch['run']
+    attention=next(s for s in job['steps'] if s.get('name')=='Capture attention projections against pinned layer final')
+    full=next(s for s in job['steps'] if s.get('name')=='Replay official layer 0 against unchanged native final')
+    assert '--case-id "$REPLAY_SIGNAL"' in attention['run'] and '--case-id' not in full['run']
+    assert '--subsample-input' in full['run'] and '--subsample-input' not in attention['run']

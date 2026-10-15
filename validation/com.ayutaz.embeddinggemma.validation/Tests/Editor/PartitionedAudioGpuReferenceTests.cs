@@ -1,14 +1,17 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using EmbeddingGemma.Tests;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using UnityEditor;
 using Unity.InferenceEngine;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace EmbeddingGemma.Validation.Tests
 {
@@ -279,15 +282,24 @@ namespace EmbeddingGemma.Validation.Tests
         [Test] public void FinalPcmDocumentNyquistMustMatchOnGpu()=>FinalPcm("nyquist");
         [Test] public void FinalPcmDocumentNoiseMustMatchOnGpu()=>FinalPcm("noise");
         [Test] public void FinalPcmDocumentPaddedNoiseMustMatchOnGpu()=>FinalPcm("padded_noise");
-        [Test] public void FinalPcmImpulseAllRolesMustMatchOnGpu()=>FinalPcm("impulse",true);
-        [Test] public void FinalPcmSilenceAllRolesMustMatchOnGpu()=>FinalPcm("silence",true);
-        [Test] public void FinalPcmSineAllRolesMustMatchOnGpu()=>FinalPcm("sine",true);
-        [Test] public void FinalPcmNyquistAllRolesMustMatchOnGpu()=>FinalPcm("nyquist",true);
-        [Test] public void FinalPcmNoiseAllRolesMustMatchOnGpu()=>FinalPcm("noise",true);
-        [Test] public void FinalPcmPaddedNoiseAllRolesMustMatchOnGpu()=>FinalPcm("padded_noise",true);
+        [UnityTest] public IEnumerator FinalPcmImpulseAllRolesMustMatchOnGpu()=>FinalPcmStaged("impulse");
+        [UnityTest] public IEnumerator FinalPcmSilenceAllRolesMustMatchOnGpu()=>FinalPcmStaged("silence");
+        [UnityTest] public IEnumerator FinalPcmSineAllRolesMustMatchOnGpu()=>FinalPcmStaged("sine");
+        [UnityTest] public IEnumerator FinalPcmNyquistAllRolesMustMatchOnGpu()=>FinalPcmStaged("nyquist");
+        [UnityTest] public IEnumerator FinalPcmNoiseAllRolesMustMatchOnGpu()=>FinalPcmStaged("noise");
+        [UnityTest] public IEnumerator FinalPcmPaddedNoiseAllRolesMustMatchOnGpu()=>FinalPcmStaged("padded_noise");
         void FinalPcm(string signal,bool allRoles=false)=>Execute(signal,true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,nativeGlu:true,firstNormFma:true,scalarMomentFma:true,finalPcm:true,allAudioRoles:allRoles);
+        IEnumerator FinalPcmStaged(string signal)
+        {
+            var pending=ExecuteCore(signal,true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,nativeGlu:true,firstNormFma:true,scalarMomentFma:true,finalPcm:true,allAudioRoles:true);
+            while(!pending.IsCompleted){UnityEditor.EditorApplication.QueuePlayerLoopUpdate();yield return null;}
+            pending.GetAwaiter().GetResult();
+        }
 
         void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false,bool convolutionDetail=false,bool nativeGlu=false,int layerObservation=0,bool firstNormFma=false,bool scalarMomentFma=false,bool adapterMode=false,bool finalPcm=false,bool allAudioRoles=false)
+            =>ExecuteCore(signal,allStatic,observe,isolated,early,nativeSilu,attention,nativeBmm,observeBmm,nativeQueryScale,nativeTanh,nativeDivision,nativeSoftmax,convolutionDetail,nativeGlu,layerObservation,firstNormFma,scalarMomentFma,adapterMode,finalPcm,allAudioRoles).GetAwaiter().GetResult();
+
+        async Task ExecuteCore(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false,bool convolutionDetail=false,bool nativeGlu=false,int layerObservation=0,bool firstNormFma=false,bool scalarMomentFma=false,bool adapterMode=false,bool finalPcm=false,bool allAudioRoles=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
@@ -438,7 +450,7 @@ namespace EmbeddingGemma.Validation.Tests
                 {
                     Assert.That(scalarMomentFma&&!observe&&!isolated&&!early&&!adapterMode&&!observeBmm&&layerObservation==0,Is.True);
                     using var pcmEncoder=new PartitionedAudioFeatureEncoder(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray(),new AudioEncoderProfile(originalPadded?839:1119));
-                    QualifiedRealAudioApiCase.Run(pcmEncoder,signal,report,output,Save,allAudioRoles);
+                    await QualifiedRealAudioApiCase.Run(pcmEncoder,signal,report,output,Save,allAudioRoles);
                     return;
                 }
                 if(adapterMode)

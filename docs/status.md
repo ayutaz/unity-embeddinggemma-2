@@ -1,6 +1,10 @@
 # 現在の状態
 
-最新checkpoint: [pooling単独の修正と全体未達](results/m3-native-pooling-component-and-whole-failure-20261015.json)。元nativeの最終encoder出力を入力したconstant-left poolingは、標準Sentis GPUで78,179 bit差・2要素超過、block192 GPUで全196,608値bit一致。係数を所有し入力を借用する`GpuFixedLeftMatmul`と固定leftの分割境界を9 intended Red→関連23 Greenで追加した。既存Runtime既定経路は維持する。
+最新の局所化: [集約前の最終encoder出力とCPU診断の限定検証](results/m3-last-encoder-boundary-and-ordered-diagnostic-20261015.json)。元square-0の最初の1層は全bit一致だが、`c950de5`で16層後・padding / pooling / 末尾RMS / projection前を直接比較すると1,894,029 bit差・13,977要素超過・最大許容差比33.287118。1 fail / skip0、GPUCompute・CPU fallback / 中間flush0・元係数保持、host peak4,658,409,472 bytes / process83.612秒。集約前にも差があり、poolingだけの修正では足りない。これは内部境界の診断であり、下記の旧候補6件の最終出力判定を付け替えない。
+
+次の層比較に向け、元AVX512 softmaxの16-lane順序とSLEEF式を再現するCPU専用・明示opt-inの診断を追加。9 Red＋dispatch2 Red＋workflow2 Red→関連61 Green。固定中間入力483,840値に全bit一致したが、encoder全体の再現とは扱わない。元patchと最初の1層のSHAが一致した時だけ全層captureへ進む[Actions 38739806295](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38739806295)は実行中。診断範囲でsoftmaxを置換し、保存graph / 元期待値 / global native dispatch / 製品GPU経路は変更しない。重い計算はActionsに置き、ローカルUnity・監視は終了済み。source `85ac28d`のPython回帰[38737799598](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38737799598)は4環境すべて各1,039 pass / skip0。新しい診断sourceや最終Required CIの合格とは分ける。
+
+直前checkpoint: [pooling単独の修正と全体未達](results/m3-native-pooling-component-and-whole-failure-20261015.json)。元nativeの最終encoder出力を入力したconstant-left poolingは、標準Sentis GPUで78,179 bit差・2要素超過、block192 GPUで全196,608値bit一致。係数を所有し入力を借用する`GpuFixedLeftMatmul`と固定leftの分割境界を9 intended Red→関連23 Greenで追加した。既存Runtime既定経路は維持する。
 
 ただし接続した`182dc0a`の元square-1全体は**1 fail / skip0、5要素超過・最大比1.409017**のまま。GPUCompute・計算/入力CPU fallback0・中間flush0・元学習済み係数保持。host peak4,634,521,600 bytes、実行＋最終取得24.474秒 / process82.066秒の単発観測。数値失敗後にbatchを停止したため、この最新pooling候補の他5画像ケースは未実行。下の4 pass / 2 failは以前のrotary候補の固定証拠であり、この新候補の結果へ付け替えない。製品ImageFeatureEncoderへの採用、全体精度・実入力API・sample / Player・Required CI・長期memoryは未完了。runner / owned監視はterminal、Unity終了済み。
 

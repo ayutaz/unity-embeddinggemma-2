@@ -4,7 +4,9 @@
 
 ## 2026-10-15の実行方針と再開順
 
-最新checkpoint: [pooling単独の修正と全体未達](results/m3-native-pooling-component-and-whole-failure-20261015.json)。標準Sentisの元constant-left poolingは78,179 bit差・2要素超過、同じ入力と係数のblock192は196,608値全bit一致。固定left演算と分割境界を9 Red→関連23 Greenで追加したが、接続した元square-1は5要素超過・最大比1.409017の1 fail / skip0。batchを停止し、最新pooling候補の他5件は未実行。旧rotary候補の下表4 pass / 2 failと分離する。既存Runtime既定経路を維持し、製品採用・工程3/4の完了とは扱わない。次は最初の1層より後の差を切り分ける。
+最新局所化: [集約前の最終encoder出力](results/m3-last-encoder-boundary-and-ordered-diagnostic-20261015.json)。元square-0の第1層全bit一致に対し、16層後・集約前は1,894,029 bit差 / 13,977要素超過・最大比33.287118の1 fail / skip0。GPUCompute・CPU fallback / 中間flush0・元係数保持。poolingだけでは説明できない。次は明示CPU診断の元patch / 第1層SHA→最終bit一致gateを通った捕捉だけで層を局所化する。CPU softmax単独483,840値bit一致・関連61 Greenは、元encoderの再現やGPU全体合格とは別。Actions 38739806295は実行中。製品GPU経路と元参照・許容差、実入力API / sample / Playerを含む工程3・4の全範囲を維持する。
+
+直前checkpoint: [pooling単独の修正と全体未達](results/m3-native-pooling-component-and-whole-failure-20261015.json)。標準Sentisの元constant-left poolingは78,179 bit差・2要素超過、同じ入力と係数のblock192は196,608値全bit一致。固定left演算と分割境界を9 Red→関連23 Greenで追加したが、接続した元square-1は5要素超過・最大比1.409017の1 fail / skip0。batchを停止し、最新pooling候補の他5件は未実行。旧rotary候補の下表4 pass / 2 failと分離する。既存Runtime既定経路を維持し、製品採用・工程3/4の完了とは扱わない。
 
 局所checkpoint: [第1層と演算順序の実GPU照合](results/m3-component-order-and-first-layer-gpu-20261015.json)。元nativeのpatch→第1層1,935,360値がGPUで全bit一致し、slice回帰を含む7 pass / skip0。AVX512同一入力のsoftmax / GELU / scale前RMS、AVX2の4行列形状のblock192、固定65,536統計値の逆平方根も各限定範囲で全bit一致。最初のscale境界誤比較とslice index誤分類はharness失敗、ISA-only環境のAVX512不足はモデル未実行として保持。第2層以降や全体の合格には数えない。その後のpooling結果は上のcheckpointを参照。工程3・4の全範囲を維持する。
 

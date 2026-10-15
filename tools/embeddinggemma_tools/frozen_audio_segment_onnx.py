@@ -11,14 +11,14 @@ from onnx.reference import ReferenceEvaluator
 
 from .frozen_audio_prefix_onnx import (
     FrozenStageReference, PrefixExport, STAGES, audit_rms_nodes, boundary_for_stage,
-    exact_difference, export_audio_native_onnx, file_digest, load_frozen_input,
+    exact_difference, expected_rms_count, export_audio_native_onnx, file_digest, load_frozen_input,
     load_frozen_stage_reference, tensor, weight_digests,
 )
 from .reference_context_failure import feature_error_metrics
 from .native_silu_onnx import fp32_native_silu
 from .streaming_reference import run_flat_reference
 
-VARIANTS = ("native", "refined_mean_moment_rms", "native_silu")
+VARIANTS = ("native", "refined_mean_moment_rms", "native_silu", "refined_mean_moment_rms_silu")
 
 
 def extract_segment(program, from_boundary, to_boundary):
@@ -63,10 +63,10 @@ class SegmentExport(PrefixExport):
         if any(node.target == torch.ops.aten.native_layer_norm.default for node in segment.graph.nodes):
             raise ValueError("Segment must start after both original native normalizations")
         self.prefix, self.variant, self.selected = segment, variant, []
-        self.rms_means, self.rms_inverses = audit_rms_nodes(segment) if variant == "refined_mean_moment_rms" else (set(), set())
+        self.rms_means, self.rms_inverses = audit_rms_nodes(segment) if variant.startswith("refined_mean_moment_rms") else (set(), set())
         self.silu_nodes = {node for node in segment.graph.nodes
-                           if node.op == "call_function" and node.target == torch.ops.aten.silu.default} if variant == "native_silu" else set()
-        if variant == "native_silu" and not self.silu_nodes:
+                           if node.op == "call_function" and node.target == torch.ops.aten.silu.default} if variant.endswith("_silu") else set()
+        if variant.endswith("_silu") and not self.silu_nodes:
             raise ValueError("Explicit SiLU candidate requires original SiLU nodes")
         self.silu_candidate = fp32_native_silu
         self.silu_observations = []
@@ -161,14 +161,23 @@ def main(argv=None):
     start = load_frozen_stage_reference(args.frozen_stage_source, args.from_stage)
     end = load_frozen_stage_reference(args.frozen_stage_source, args.stage)
     start_boundary, end_boundary = (boundary_for_stage(program, stage) for stage in (args.from_stage, args.stage))
-    if args.variant == "native_silu":
+    if args.variant != "native":
         audited = SegmentExport(extract_segment(program, start_boundary, end_boundary), args.variant)
+    if args.variant.endswith("_silu"):
         layer_count = min(tuple(STAGES).index(args.stage), 12) - tuple(STAGES).index(args.from_stage)
         if len(audited.silu_nodes) != layer_count * 3:
             raise ValueError("Pinned segment SiLU replacement count differs")
         provenance["silu_expected_count"] = layer_count * 3
+    if args.variant.startswith("refined_mean_moment_rms"):
+        rms_count = expected_rms_count(args.stage) - expected_rms_count(args.from_stage)
+        if len(audited.rms_means) != rms_count or len(audited.rms_inverses) != rms_count:
+            raise ValueError("Pinned segment RMS replacement count differs")
+        provenance["rms_expected_count"] = rms_count
+    # The joint candidate carries a same-host ONNX baseline; comparisons from
+    # earlier jobs alone cannot establish the source of a small drift.
+    variants = ("native", args.variant) if args.variant == "refined_mean_moment_rms_silu" else (args.variant,)
     report = probe_segment(program, start, end, args.output,
-        from_boundary=start_boundary, to_boundary=end_boundary, variants=(args.variant,), provenance=provenance)
+        from_boundary=start_boundary, to_boundary=end_boundary, variants=variants, provenance=provenance)
     print(json.dumps(dict(complete=report["complete"], cases=report["cases"], full_encoder_validated=False)))
     return 0 if report["complete"] else 1
 

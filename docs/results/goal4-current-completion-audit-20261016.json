@@ -4,7 +4,7 @@
   "goal": "4\u307e\u3067\u9032\u3081\u3066\u304f\u3060\u3055\u3044",
   "status": "active_not_complete",
   "scope_source": "goal4-scope-audit-20261016.json",
-  "candidate_head_at_audit": "b37807099fa7461c0d82b147875bdc5c79f9300c",
+  "candidate_head_at_audit": "2ac246a6c79834efc51d524228217126e4cb021b",
   "requirements": [
     {
       "requirement": "Original learned coefficients, references and encoder tolerances remain unchanged",
@@ -79,19 +79,20 @@
     {
       "requirement": "Required repository checks for the resulting candidate",
       "status": "not_achieved",
-      "evidence": "m4-complete-prefix-rejected-onnx-and-reproduced-native-20261016.json",
-      "last_terminal_ci_run": 38771922063,
-      "last_terminal_ci_head": "4cdb2330645fa3705b8d46f18fb64e66897a301f",
-      "result": "Python four environments, package and workflow lint passed; model-reference audio ONNX and Required CI failed.",
-      "candidate_ci_run": 38774804527,
-      "candidate_ci_last_observation": "queued",
-      "full_refined_onnx_candidate_run": 38771944636,
-      "full_refined_onnx_failed_cases": 6,
-      "next_action": "Use a native context that reproduces original saved output to localize the ONNX arithmetic difference; retain all six signal gates and original tolerances.",
+      "last_terminal_ci_run": 38785455573,
+      "last_terminal_ci_head": "9741d1e1392c4d4b845bb3ff9cc420d02a03df0b",
+      "result": "Python four environments, package and workflow lint passed; audio ONNX on silence and Required CI failed.",
+      "candidate_ci_run": 38790942568,
+      "candidate_ci_head": "2ac246a6c79834efc51d524228217126e4cb021b",
+      "candidate_ci_last_observation": "pending",
       "candidate_ci_aggregate_conclusion": "",
-      "candidate_model_reference_conclusion": "failure",
-      "candidate_python_environments": 4,
-      "candidate_python_passes_per_environment": 1111
+      "evidence": [
+        "m4-saved-full-silence-onnx-candidate-failed-20261016.json",
+        "m4-saved-full-silence-ordered-rms-onnx-failed-20261016.json",
+        "m4-original-layer8-to-final-onnx-14-failures-20261016.json",
+        "m4-silu-tail-domain-stop-and-boundary-tdd-20261016.json"
+      ],
+      "next_action": "Use audited original stage inputs to test the reproduced FP32 SiLU arithmetic in the isolated tail; preserve all six signal gates and original tolerance."
     }
   ],
   "documentation": {
@@ -108,5 +109,32 @@
     "Player / other OS and devices",
     "Integration / release"
   ],
-  "completion_claimed": false
+  "completion_claimed": false,
+  "current_runtime_source_coverage": {
+    "verified_against": "0857edc8be1a94d5f46af570058076b5df0eda34",
+    "diff_command": "git diff --name-only 0857edc8be1a94d5f46af570058076b5df0eda34 HEAD -- Packages/com.ayutaz.embeddinggemma/Runtime",
+    "diff_empty": true,
+    "runtime_tree": "0107566b07481969d9d2392da075efc91de8c6ee",
+    "limit": "Coverage by unchanged Runtime source; no claim of all GPU cases rerun at latest head."
+  },
+  "diagnostics_not_acceptance": {
+    "rejected_full_silence_candidates": {
+      "refined_layernorm_mismatches": 475,
+      "ordered_rms_mismatches": 583
+    },
+    "fixed_layer8_to_final_native_bit_differences": 0,
+    "fixed_layer8_to_final_native_onnx_tolerance_failures": 14,
+    "portable_fp32_first_ffn_silu_fixed_values": 1146880,
+    "portable_fp32_first_ffn_silu_bit_differences": 0,
+    "first_silu_segment_run": 38790287795,
+    "first_silu_segment_conclusion": "polynomial input domain rejected before ONNX comparison",
+    "explicit_tail_rerun": 38790946377,
+    "explicit_tail_rerun_last_observation": "completed_numerical_candidate_failed",
+    "latest_related_local_test_count": 79,
+    "latest_related_local_tests_skipped": 0,
+    "additional_expanded_silu_onnx_boundary_tests": 9,
+    "explicit_tail_rerun_tolerance_failures": 7,
+    "explicit_tail_rerun_maximum_tolerance_ratio": 2.1517931271366337,
+    "next_diagnostic": "Same-host native ONNX baseline and joint fixed RMS28 / SiLU9 in the isolated tail."
+  }
 }

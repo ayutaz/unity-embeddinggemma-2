@@ -53,6 +53,8 @@ source `9741d1e`の[最新確定CI](https://github.com/ayutaz/unity-embeddinggem
 
 最初のSiLU区間候補は、`silu_34`の入力が±80の多項式適用範囲を超え、ONNX書き出し前に停止しました。[停止記録と境界TDD](results/m4-silu-tail-domain-stop-and-boundary-tdd-20261016.json)。nativeの区間計算はこのホストでも元最終出力と全bit一致ですが、候補の数値結果は未取得です。診断側にも既存shaderと同じ範囲外の式 `x/(1+exp(-x))` を明示し、入力自体をclipせず、多項式の未使用branchだけを範囲内に制限しました。極端な正負入力・負の0・ONNXでの有限出力を確認しています。関連78 pass / skip0、追加したONNX境界チェックを含む単体9 passです。
 
+範囲外分岐を含む[SiLU区間再検証](results/m4-original-layer8-to-final-native-silu-7-failures-20261016.json)は9か所を置換し、候補のnative計算は元最終出力と全bit一致しました。ONNXは7要素超過で不合格、最大許容差比2.15で、先の標準ONNX1.42より悪化しています。別ホスト間の件数減少だけをSiLUの因果証明や改善とは扱いません。次は固定区間内でRMS28か所とSiLU9か所の順序を同時に表す明示候補を、同じホストの標準ONNXと比較します。元参照・許容差と製品Runtimeは維持します。
+
 ## 後続工程
 
 手順5はモデル準備の再利用・配布、検索sample、連続推論のメモリ / 速度、Windows Player、他OS / 実機。手順6は依存PR、導入、ライセンス、配布の整理です。merge・公開は別途明示された範囲で進めます。

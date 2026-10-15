@@ -47,6 +47,23 @@ namespace EmbeddingGemma.Validation.Tests
                 var values=Floats(Node("view_21"));var expected=Floats(Node("gelu"));var shape=new TensorShape(1,16,3072);
                 using var input=new Tensor<float>(shape,values);ComputeTensorData.Pin(input);
                 using var separate=new GpuGelu(shape,true);using var fused=new GpuGelu(shape,true,true,sleef);
+                if(sleef)
+                {
+                    // Diagnostic readbacks only: locate the existing failed bit gate without
+                    // adding intermediate transfers to the runtime operation.
+                    const System.Reflection.BindingFlags fields=System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic;
+                    var pipeline=(GpuProjectionPipeline)typeof(GpuGelu).GetField("pipeline",fields).GetValue(fused);
+                    var models=(Model[])typeof(GpuProjectionPipeline).GetField("models",fields).GetValue(pipeline);
+                    using var before=new GpuProjectionPipeline(new[]{models[0]},Array.Empty<string>(),Array.Empty<string>(),Array.Empty<IGpuTensorOperation>());
+                    using var inner=before.Execute(input);using var activation=new GpuTanh(true);using var activated=activation.Execute(inner);
+                    foreach(var stage in new[]{("inner",inner),("tanh",activated)})
+                    {
+                        var data=stage.Item2.DownloadToArray();var bytes=new byte[data.Length*4];Buffer.BlockCopy(data,0,bytes,0,bytes.Length);
+                        var capture=Path.ChangeExtension(output,stage.Item1+".bin");File.WriteAllBytes(capture,bytes);
+                        using var stream=new MemoryStream(bytes,false);report[stage.Item1+"_capture_sha256"]=PlayerFileHash.Compute(stream,out _);
+                    }
+                    report["diagnostic_stage_readbacks"]=2;
+                }
                 using var baseline=separate.Execute(input);using var candidate=fused.Execute(input);
                 Assert.That(candidate.backendType,Is.EqualTo(BackendType.GPUCompute));var actual=candidate.DownloadToArray();
                 report["separate"]=Metrics(baseline.DownloadToArray(),expected);report["fused"]=Metrics(actual,expected);

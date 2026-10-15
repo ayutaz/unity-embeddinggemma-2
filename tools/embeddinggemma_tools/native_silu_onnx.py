@@ -1,4 +1,4 @@
-"""Bounded standard-FP32 SiLU candidate for explicit CPU/ONNX diagnosis only.
+"""Standard-FP32 SiLU candidate for explicit CPU/ONNX diagnosis only.
 
 The expression follows Runtime/Resources/EmbeddingGemmaNativeSilu.compute.
 Exp polynomial adapted from SLEEF 5a1d179, src/libm/sleefsimdsp.c xexpf.
@@ -15,9 +15,13 @@ from .export import fp32_fma
 def fp32_native_silu(values):
     if not torch.compiler.is_compiling() and not torch.jit.is_tracing():
         if (values.dtype != torch.float32 or values.device.type != "cpu" or not values.numel()
-                or not torch.isfinite(values).all() or torch.any(values.abs() > 80)):
-            raise ValueError("SiLU candidate requires bounded finite CPU FP32 inputs in [-80,80]")
-    negative = -values
+                or not torch.isfinite(values).all()):
+            raise ValueError("SiLU candidate requires nonempty finite CPU FP32 inputs")
+    # The existing shader qualifies its polynomial only inside [-80,80].
+    # Clamp only the unused polynomial branch; preserve the shader's original
+    # mathematical expression for actual out-of-range values, not a clipped SiLU.
+    core = values.clamp(-80, 80)
+    negative = -core
     q = torch.round(negative * 1.4426950408889634073599246810018921374)
     s = fp32_fma(q, torch.full_like(values, -0.693145751953125), negative)
     s = fp32_fma(q, torch.full_like(values, -1.428606765330187045e-6), s)
@@ -29,5 +33,7 @@ def fp32_native_silu(values):
     exponential = u * torch.pow(torch.full_like(values, 2.0), q)
     # CPU / standard ONNX Div already rounds the division. The extra GPU
     # approximate-division refinement is unnecessary for this CPU candidate.
-    result = values / (1.0 + exponential)
-    return torch.where(values == 0, values, result)
+    result = core / (1.0 + exponential)
+    tail = values / (1.0 + torch.exp(-values))
+    selected = torch.where(values.abs() > 80, tail, result)
+    return torch.where(values == 0, values, selected)

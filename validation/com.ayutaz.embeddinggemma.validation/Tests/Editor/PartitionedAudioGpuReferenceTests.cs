@@ -151,6 +151,10 @@ namespace EmbeddingGemma.Validation.Tests
             =>Execute(signal,true,nativeSilu:true,nativeBmm:true);
 
         [Test]
+        public void ObserveConnectedNativeAttentionOperandsWithoutChangingNormalFinalBits()
+            =>Execute("silence",true,nativeSilu:true,nativeBmm:true,observeBmm:true);
+
+        [Test]
         public void ObserveNativeSiluFirstFeedForwardWithoutChangingNormalFinalBits()
             =>Execute("silence",true,false,false,true,true);
 
@@ -158,14 +162,14 @@ namespace EmbeddingGemma.Validation.Tests
         public void ObserveFirstAttentionAndConvolutionWithoutChangingNormalFinalBits()
             =>Execute("silence",true,false,false,true,true,true);
 
-        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false)
+        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var folder=nativeBmm?"GpuAudioPartitionedNativeBmm":nativeSilu?"GpuAudioPartitionedNativeSilu":isolated?"GpuAudioPartitionedLayer10":allStatic?"GpuAudioPartitionedAllStatic":"GpuAudioPartitionedFirstFf";
             var root=Path.Combine(Application.dataPath,folder);
             var originalRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-real-chain/audio-runtime-reference"));
-            var stem=nativeBmm?"partitioned-native-bmm-gpu-":attention?"partitioned-native-silu-attention-observation-":nativeSilu?(early?"partitioned-native-silu-early-observation-":"partitioned-native-silu-gpu-"):
+            var stem=observeBmm?"partitioned-native-bmm-operands-observation-":nativeBmm?"partitioned-native-bmm-gpu-":attention?"partitioned-native-silu-attention-observation-":nativeSilu?(early?"partitioned-native-silu-early-observation-":"partitioned-native-silu-gpu-"):
                 early?"partitioned-early-audio-observation-":isolated?"partitioned-layer10-original-input-":observe?"partitioned-all-static-layer-observation-":allStatic?"partitioned-all-static-gpu-":"partitioned-first-ff-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
@@ -274,6 +278,52 @@ namespace EmbeddingGemma.Validation.Tests
                 }
                 report["actual_backend"]=encoded.backendType.ToString();report["mismatched_elements"]=mismatch;
                 report["maximum_absolute_error"]=maximum;report["maximum_tolerance_ratio"]=ratio;report["phase"]="completed";Save();
+                if(observeBmm)
+                {
+                    report["scope"]="connected_first_attention_operand_observation_only";report["full_encoder_validated"]=false;
+                    var referenceRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/native-attention-operations-5a51cff-20261015"));
+                    var referenceFile=Path.Combine(referenceRoot,"audio-attention-replay-report.json");
+                    Check(referenceFile,"d16f82c1c343769577106a39203da32f00fb797468cc656ab1b12b685b8e691e");
+                    var native=JObject.Parse(File.ReadAllText(referenceFile));
+                    Assert.That(native.Value<bool>("success")&&native.Value<bool>("context_validated")&&native.Value<bool>("native_final_exact_match"),Is.True);
+                    Assert.That(native.Value<string>("reference_source"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));
+                    var products=operations.Where(p=>p.Value<string>("kind")=="batched_matmul").Take(3).ToArray();
+                    Assert.That(products.Select(p=>p.Value<string>("node")),Is.EqualTo(new[]{"/attentions.0/MatMul","/attentions.0/MatMul_1","/attentions.0/MatMul_2"}));
+                    var wanted=products.SelectMany(p=>p["inputs"].ToObject<string[]>().Append(p.Value<string>("output"))).ToHashSet();
+                    var snapshots=ObserveOperationBoundaries(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray(),input,wanted);
+                    Assert.That(snapshots["__final"].Select(BitConverter.SingleToInt32Bits),Is.EqualTo(actual.Select(BitConverter.SingleToInt32Bits)));
+                    report["normal_final_matches_observed_bits"]=true;
+                    var captureRoot=Path.ChangeExtension(output,null)+"-captures";Assert.That(Directory.Exists(captureRoot),Is.False);Directory.CreateDirectory(captureRoot);
+                    var stages=new JArray();report["stages"]=stages;var names=new[]{"matrix_ac","matrix_bd","weighted_values"};
+                    for(var product=0;product<3;product++)
+                    {
+                        var operation=products[product];var boundaries=operation["inputs"].ToObject<string[]>().Append(operation.Value<string>("output")).ToArray();
+                        var shapes=new[]{operation["input_shape"],operation["right_shape"],operation["output_shape"]};
+                        var kinds=new[]{"left","right","output"};
+                        for(var operand=0;operand<3;operand++)
+                        {
+                            var partName="self_attn."+names[product]+"."+kinds[operand];var part=native["parts"][partName];
+                            var expectedPath=Path.Combine(referenceRoot,"audio-attention-replay",part.Value<string>("file"));Check(expectedPath,part.Value<string>("sha256"));
+                            // ONNX retains leading batch axes; collapsing them preserves native BMM row order.
+                            var actualShape=shapes[operand].ToObject<int[]>();var nativeShape=part["shape"].ToObject<int[]>();
+                            Assert.That(actualShape.Skip(actualShape.Length-2),Is.EqualTo(nativeShape.Skip(1)));
+                            Assert.That(actualShape.Take(actualShape.Length-2).Aggregate(1,(a,b)=>a*b),Is.EqualTo(nativeShape[0]));
+                            var observed=snapshots[boundaries[operand]];var golden=Floats(expectedPath);Assert.That(observed.Length,Is.EqualTo(golden.Length));
+                            int bits=0,bad=0;double maxRatio=0;
+                            for(var i=0;i<observed.Length;i++)
+                            {
+                                Assert.That(float.IsNaN(observed[i])||float.IsInfinity(observed[i]),Is.False);
+                                if(BitConverter.SingleToInt32Bits(observed[i])!=BitConverter.SingleToInt32Bits(golden[i]))bits++;
+                                var delta=Math.Abs((double)observed[i]-golden[i]);var allowed=1e-5+1e-4*Math.Abs((double)golden[i]);
+                                if(delta>allowed)bad++;maxRatio=Math.Max(maxRatio,delta/allowed);
+                            }
+                            var capture=Path.Combine(captureRoot,partName+"-fp32.bin");var bytes=new byte[observed.Length*4];Buffer.BlockCopy(observed,0,bytes,0,bytes.Length);File.WriteAllBytes(capture,bytes);
+                            using var stream=File.OpenRead(capture);var hash=PlayerFileHash.Compute(stream,out _);
+                            stages.Add(new JObject{["part"]=partName,["boundary"]=boundaries[operand],["actual_shape"]=shapes[operand].DeepClone(),["native_shape"]=part["shape"].DeepClone(),["count"]=observed.Length,["bit_differences"]=bits,["mismatched_elements"]=bad,["maximum_tolerance_ratio"]=maxRatio,["capture"]=capture,["sha256"]=hash,["native_sha256"]=part["sha256"]});Save();
+                        }
+                    }
+                    Assert.That(stages.Count,Is.EqualTo(9));report["success"]=true;report["observation_completed"]=true;return;
+                }
                 if(early)
                 {
                     var nativeRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-native-feed-forward-replay"));
@@ -407,6 +457,9 @@ namespace EmbeddingGemma.Validation.Tests
         }
         // Diagnostic-only downloads; the product GPU pipeline is unchanged.
         static Dictionary<string,float[]> ObserveBoundaries(Model[] models,string[] inputs,string[] outputs,IGpuTensorOperation[] kernels,Tensor<float> input,HashSet<string> wanted)
+            =>ObserveOperationBoundaries(models,inputs.Select(name=>new[]{name}).ToArray(),outputs,kernels,input,wanted);
+
+        static Dictionary<string,float[]> ObserveOperationBoundaries(Model[] models,string[][] inputs,string[] outputs,IGpuTensorOperation[] kernels,Tensor<float> input,HashSet<string> wanted)
         {
             if(!wanted.IsSubsetOf(models.SelectMany(m=>m.outputs.Select(o=>o.name)).Concat(outputs)))throw new ArgumentException("Observed boundary is missing.");
             float[] baseline;
@@ -433,7 +486,10 @@ namespace EmbeddingGemma.Validation.Tests
                     }
                     if(stage<kernels.Length)
                     {
-                        var value=kernels[stage].Execute(values[inputs[stage]]);owned.Add(value);Assert.That(value.backendType,Is.EqualTo(BackendType.GPUCompute));values[outputs[stage]]=value;
+                        var operation=kernels[stage];var value=operation is IGpuBinaryTensorOperation binary
+                            ?binary.Execute(values[inputs[stage][0]],values[inputs[stage][1]])
+                            :operation.Execute(values[inputs[stage][0]]);
+                        owned.Add(value);Assert.That(value.backendType,Is.EqualTo(BackendType.GPUCompute));values[outputs[stage]]=value;
                         if(wanted.Contains(outputs[stage]))snapshots[outputs[stage]]=value.DownloadToArray();
                     }
                 }

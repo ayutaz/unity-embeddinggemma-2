@@ -22,6 +22,29 @@ namespace EmbeddingGemma.Validation.Tests
         public void FrozenNativeTanhCandidateMustMatchAllBitsOnGpu()
             =>Execute("tanh",true);
 
+        [Test]
+        public void FrozenNativeSoftmaxCandidateMustMatchAllBitsOnGpu()
+            =>Execute("softmax",true);
+
+        static Type RequiredSoftmax()
+        {
+            var type=typeof(GpuSilu).Assembly.GetType("EmbeddingGemma.GpuSoftmax");Assert.That(type,Is.Not.Null,"Native-order GPU softmax is missing.");return type;
+        }
+
+        [Test]
+        public void NativeSoftmaxBorrowsInputAndReusesAfterRejectedCpuInput()
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
+            var type=RequiredSoftmax();using var operation=(IDisposable)Activator.CreateInstance(type);var execute=type.GetMethod("Execute");var values=new float[48];
+            using var cpu=new Tensor<float>(new TensorShape(2,24),values);
+            var error=Assert.Throws<TargetInvocationException>(()=>execute.Invoke(operation,new object[]{cpu}));Assert.That(error.InnerException,Is.InstanceOf<ArgumentException>());
+            using var input=new Tensor<float>(new TensorShape(2,24),values);ComputeTensorData.Pin(input);
+            using var result=(Tensor<float>)execute.Invoke(operation,new object[]{input});using var other=(Tensor<float>)execute.Invoke(operation,new object[]{input});
+            operation.Dispose();operation.Dispose();Assert.That(result.backendType,Is.EqualTo(BackendType.GPUCompute));Assert.That(result.shape,Is.EqualTo(input.shape));
+            Assert.That(result.DownloadToArray(),Is.EqualTo(Enumerable.Repeat(1f/24f,48).ToArray()));Assert.That(other.DownloadToArray(),Is.EqualTo(result.DownloadToArray()));
+            Assert.That(input.DownloadToArray(),Is.EqualTo(values));error=Assert.Throws<TargetInvocationException>(()=>execute.Invoke(operation,new object[]{input}));Assert.That(error.InnerException,Is.InstanceOf<ObjectDisposedException>());
+        }
+
         static Type RequiredTanh()
         {
             var type=typeof(GpuSilu).Assembly.GetType("EmbeddingGemma.GpuTanh");Assert.That(type,Is.Not.Null,"Native-rounding GPU tanh is missing.");return type;
@@ -49,7 +72,7 @@ namespace EmbeddingGemma.Validation.Tests
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/native-attention-operations-5a51cff-20261015"));
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+(nativeCandidate?"frozen-native-tanh-candidate-gpu-":"frozen-native-attention-nonlinearity-gpu-")+source+"-"+name+".json"));Assert.That(File.Exists(output),Is.False);
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+(nativeCandidate?"frozen-native-"+name+"-candidate-gpu-":"frozen-native-attention-nonlinearity-gpu-")+source+"-"+name+".json"));Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["scope"]="one_frozen_native_attention_nonlinearity_gpu_bit_gate",["runtime_source"]=source,["operation"]=name,["full_encoder_validated"]=false,["end_to_end_validated"]=false};
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}Save();
@@ -86,7 +109,7 @@ namespace EmbeddingGemma.Validation.Tests
         {
             if(nativeCandidate)
             {
-                using var operation=(IGpuTensorOperation)Activator.CreateInstance(RequiredTanh());return operation.Execute(input);
+                using var operation=(IGpuTensorOperation)Activator.CreateInstance(name=="tanh"?RequiredTanh():RequiredSoftmax());return operation.Execute(input);
             }
             var graph=new FunctionalGraph();var x=graph.AddInput<float>(input.shape,"input");var model=graph.Compile(name=="tanh"?Functional.Tanh(x):Functional.Softmax(x,-1));
             using var worker=new Worker(model,BackendType.GPUCompute);

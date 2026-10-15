@@ -192,3 +192,23 @@ def test_segment_silu_candidate_rejects_a_segment_without_silu():
     source, cut, end = program()
     with pytest.raises(ValueError, match="SiLU"):
         probe.SegmentExport(probe.extract_segment(source, cut, end), "native_silu")
+
+
+def test_joint_candidate_replaces_both_original_rms_and_silu_and_exports(tmp_path):
+    class Module(torch.nn.Module):
+        def forward(self, x):
+            y = torch.ops.aten.silu.default(x)
+            return y * (y.pow(2).mean(-1, keepdim=True) + 1e-6).pow(-0.5)
+    values = torch.randn(2, 1024, generator=torch.Generator().manual_seed(63)) * 3
+    exported = torch.export.export(Module(), (values,)).run_decompositions({}).module()
+    segment = torch.fx.GraphModule(exported, exported.graph)
+    before = str(segment.graph)
+    wrapper = probe.SegmentExport(segment, "refined_mean_moment_rms_silu")
+    assert len(wrapper.silu_nodes) == len(wrapper.rms_means) == len(wrapper.rms_inverses) == 1
+    expected = Module()(values)
+    torch.testing.assert_close(wrapper(values), expected, atol=1e-5, rtol=1e-4)
+    path = tmp_path / "joint.onnx"
+    probe.export_audio_native_onnx(wrapper, values, path)
+    actual = probe.run_flat_reference(probe.ReferenceEvaluator(str(path)), {"input": values.numpy()})[0]
+    np.testing.assert_allclose(actual, expected.numpy(), atol=1e-5, rtol=1e-4)
+    assert str(segment.graph) == before

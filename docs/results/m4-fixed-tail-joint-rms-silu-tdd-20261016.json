@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "explicit_fixed_tail_joint_rms_silu_candidate_tdd",
+  "tdd": {
+    "segment-rms-silu-joint-red": {
+      "sha256": "b06ab1ae3473c1f5f774326867cb94a5cbbea9000f420df1b5dcd044e84be4ed",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "segment-rms-silu-joint-related-green": {
+      "sha256": "a644a7501219129f25aaf73c93312e6c2101cc804f583de701c9e07b470129fa",
+      "tests": 79,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "expected_counts": {
+    "rms_means": 28,
+    "rms_inverses": 28,
+    "silu": 9
+  },
+  "same_host_native_onnx_baseline_required_for_joint_cli": true,
+  "prior_single_silu_onnx_candidate_rejected": true,
+  "default_export_or_tolerance_changed": false,
+  "product_runtime_changed": false,
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "end_to_end_validated": false
+}

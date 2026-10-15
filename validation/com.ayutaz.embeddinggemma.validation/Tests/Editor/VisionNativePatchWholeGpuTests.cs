@@ -88,7 +88,15 @@ namespace EmbeddingGemma.Validation.Tests
             pending.GetAwaiter().GetResult();
         }
 
-        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false,bool editorFramePump=false,bool nativeOperators=false,int nativeStaticBlockSize=384)
+        [UnityTest]
+        public IEnumerator OriginalSavedContextAllRmsBlock192SquareZeroMustMatchOriginalOnGpu()
+        {
+            var pending=Run("square-0",true,true,true,true,true,false,true,true,192,true);
+            while(!pending.IsCompleted){UnityEditor.EditorApplication.QueuePlayerLoopUpdate();yield return null;}
+            pending.GetAwaiter().GetResult();
+        }
+
+        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false,bool editorFramePump=false,bool nativeOperators=false,int nativeStaticBlockSize=384,bool inlineTailRms=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
@@ -97,6 +105,7 @@ namespace EmbeddingGemma.Validation.Tests
             if(planOnly)label="vision-partition-boundary-audit-";
             if(nativeOperators)label="vision-qualified-native-operators-whole-gpu-";
             if(nativeOperators&&nativeStaticBlockSize!=384)label="vision-original-context-block"+nativeStaticBlockSize+"-whole-gpu-";
+            if(inlineTailRms)label="vision-original-context-all-rms-block"+nativeStaticBlockSize+"-whole-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+"-"+caseId+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["scope"]=releaseUnusedGpuCache?"one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate":nativeGelu?"one_original_vision_encoder_gpu_native_gelu_all_layer_rms_and_patch384_candidate":inlineAllRms?"one_original_vision_encoder_gpu_all_sixteen_layer_rms_and_native_patch384_candidate":"one_original_vision_encoder_gpu_native_patch384_candidate",["runtime_source"]=source,
@@ -104,6 +113,7 @@ namespace EmbeddingGemma.Validation.Tests
                 ["scheduling_mode"]=staged?"gpu_fence_per_stage":"synchronous_queue",["intermediate_tensor_readback_added"]=false,["gelu_internal_cache_release"]=releaseGeluCaches,["editor_frame_pump"]=editorFramePump,["test_forced_gc_during_run"]=false};
             report["qualified_operator_reconnection"]=nativeOperators;
             if(nativeOperators)report["native_static_block_size"]=nativeStaticBlockSize;
+            report["inline_tail_rms"]=inlineTailRms;
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
             var operations=new List<IGpuTensorOperation>();Save();
@@ -143,6 +153,15 @@ namespace EmbeddingGemma.Validation.Tests
                     report["original_square_count"]=original.layers.Count(layer=>layer.GetType().Name=="Square");
                     report["remaining_original_rms_count"]=original.layers.Count(layer=>layer.GetType().Name=="Square")-112;
                     report["all_original_coefficient_descriptors_retained"]=true;
+                    if(inlineTailRms)
+                    {
+                        var tailPath=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-saved-original-cpu-tail-gpu-c3460fc20d6fc7f8599abcb626d210b0d23aef20-captures/candidate-tail-rms.sentis"));
+                        Check(tailPath,"215fd08ac859acc3501b111104c048fb4450f11092418be4ea45a9fc3d985835");
+                        working=QualifiedVisionRmsOperation.InlineTailRms(working,TextModelFile.Load(tailPath));
+                        Assert.That(original.constants.All(value=>working.constants.Any(other=>ReferenceEquals(value,other))),Is.True);
+                        Assert.That(working.layers.Count(layer=>layer.GetType().Name=="Square"),Is.Zero);
+                        report["inline_rms_count"]=113;report["remaining_original_rms_count"]=0;report["layer_count"]=working.layers.Count;
+                    }
                 }
                 report["graph_rewrite_ms"]=phaseTimer.Elapsed.TotalMilliseconds;report["phase"]="prepare_gpu_pipeline";Save();phaseTimer.Restart();
                 var projection=original.layers.First(layer=>layer.GetType().Name=="MatMul"&&constants.TryGetValue(layer.inputs[1],out var w)&&w.shape==new TensorShape(768,768));

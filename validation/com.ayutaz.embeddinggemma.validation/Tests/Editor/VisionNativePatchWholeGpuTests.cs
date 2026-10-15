@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
 using EmbeddingGemma.Tests;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -144,11 +143,7 @@ namespace EmbeddingGemma.Validation.Tests
             finally{foreach(var operation in operations)operation.Dispose();Save();}
         }
         static string CoefficientsHash(Model model)
-        {
-            var field=typeof(Constant).GetField("array",BindingFlags.Instance|BindingFlags.NonPublic);using var hash=IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
-            foreach(var constant in model.constants){var raw=(ArraySegment<byte>)field.GetValue(constant);hash.AppendData(raw.Array,raw.Offset,raw.Count);}
-            return BitConverter.ToString(hash.GetHashAndReset()).Replace("-","").ToLowerInvariant();
-        }
+            =>ModelCoefficientHash.Compute(model,out _);
         static float[] Floats(string path){var bytes=File.ReadAllBytes(path);var data=new float[bytes.Length/4];Buffer.BlockCopy(bytes,0,data,0,bytes.Length);return data;}
     }
 }

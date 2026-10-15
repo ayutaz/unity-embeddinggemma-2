@@ -1,8 +1,14 @@
 # 現在の状態と残タスク
 
-更新日: 2026-10-15。最新の全encoder GPU / 初期5境界観測は `3ae76bd182fb80dd74c9b7851a99ce719e4da67d`。135投影＋36 SiLUの候補は無音203要素不合格、初期5境界は元参照へ全bit一致。最新の12層観測は `b29c5adc8db5ae79dce60445cef04a59230e1e39`、元入力のlayer_10単独は `e25217575b591e37f68e37943d49e47986f19682`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
+更新日: 2026-10-15。最新の全encoder数値gateは `746fbc037a2b32001f482528013781c103d518b7`。135投影＋36 SiLU＋36 Attention行列積の候補は無音415要素不合格。GPUComputeで実行し、計算fallback / flushは0。工程3・4は未完了。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
 
 ## 現在の判定
+
+**最新のGPU行列積接続:** 固定native入力の3種類のAttention行列積はGPU上で全bit一致し、API検証を合わせて5 pass / fail0 / skip0。二入力のGPU pipeline接続は4 pass / fail0 / skip0。[固定入力での成功](results/m4-native-bmm-frozen-gpu-green-20261015.json)。固定shapeを再計算する後続subgraphが切出し済み演算へ戻る問題は、小型再現1 Red→関連43 Greenで修正。形状を参照する元GPU tensorを保持し、元の演算・重みを維持した208 segmentの生成に成功した。
+
+ただし、接続した元silence全encoderは**415要素不合格・最大許容差比9.637922**。元許容差・参照値は変更していない。準備12.692秒、実行＋最終診断download2.266秒、NUnit0 pass / 1 fail / skip0 / exit2。前候補の203要素より件数が増えたため、接続先の入力誤差を観測する必要がある。[全体の失敗証拠](results/m4-native-bmm-whole-gpu-failure-20261015.json)。固定入力での成功を全encoder・全profile・最終APIの成功へ流用しない。
+
+接続入力9箇所の初回診断 `62b1501` は通常実行と観測のモデル重複保持で13.14GiBに達し、所有Unity PIDをメモリ上限で停止した。XML欠測・exit4294967295で不合格、観測完了ではない。`9404b92`で通常Workerを先に解放し、既に取得済みの通常最終値を比較に再利用するよう修正。再検証は小型の単入力・二入力観測を合わせて**3 pass / fail0 / skip0、66.965秒で完了**。通常最終bitを変えず、scaled Qは93,060値にbit差（局所超過0）、K・relative-K・V入力は全bit一致。weighted_values入力には26,294値、出力には192,816値のbit差が残る（いずれも局所超過0）。次はQスケーリングの定数・FP32演算順を固定nativeと比較する。[接続演算の観測](results/m4-connected-native-attention-operands-20261015.json)。Persistent allocation警告1件は残り、リーク解消や製品性能の合格は未証明。以下は過去の切り分け記録。
 
 **2026-10-15最新のattention切り分け:** 直接GPU operation出力の観測を1 Red→1 GPU Greenで追加。`1008d6a`の12境界観測は通常最終bitを変えず、最初のFFまでの5境界に加え、Q / K / V / relative-K投影を元のClip境界で全bit一致させた。最初の差はself_attnの201,927値（局所許容差超過0・最大比0.255179）、attention残差68,209値、lconv1d201,063値へ伝播する。観測1 pass / skip0は全encoder成功ではなく、全体203要素不合格を再現した。
 

@@ -1,0 +1,111 @@
+{
+  "success": true,
+  "scope": "frozen_native_attention_gpu_products_and_binary_binding_only",
+  "runtime_source": "c766d76c332479412513c8c214e93b8e462bafe2",
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "parts": [
+    {
+      "actual_backend": "GPUCompute",
+      "bit_differences": 0,
+      "operation": "matrix_ac",
+      "count": 55296,
+      "sha256": "33fbb4daf6a86126fe684798b45730bfd9eaf028bc7a4c994d0087836c8e9aef",
+      "path": "artifacts\\acceptance-consumer\\artifacts\\frozen-native-attention-bmm-gpu-c766d76c332479412513c8c214e93b8e462bafe2-matrix_ac.json",
+      "success": true
+    },
+    {
+      "actual_backend": "GPUCompute",
+      "bit_differences": 0,
+      "operation": "matrix_bd",
+      "count": 29952,
+      "sha256": "00788d68c42eae6a7be722be314ee5d22e76a4cc67d4792eb1223cf8607a89b9",
+      "path": "artifacts\\acceptance-consumer\\artifacts\\frozen-native-attention-bmm-gpu-c766d76c332479412513c8c214e93b8e462bafe2-matrix_bd.json",
+      "success": true
+    },
+    {
+      "actual_backend": "GPUCompute",
+      "bit_differences": 0,
+      "operation": "weighted_values",
+      "count": 294912,
+      "sha256": "6425945f0b67a8b7df8bb2546025531e92179edcc816cbaf1fec124abb86ed94",
+      "path": "artifacts\\acceptance-consumer\\artifacts\\frozen-native-attention-bmm-gpu-c766d76c332479412513c8c214e93b8e462bafe2-weighted_values.json",
+      "success": true
+    }
+  ],
+  "gpu_execution": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      ".\\artifacts\\acceptance-consumer",
+      "-logFile",
+      ".\\artifacts\\numerical-acceptance-state\\native-batched-matmul-api-and-real-candidate-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "GpuBatchedMatmulTests|NativeAttentionBmmGpuTests",
+      "-testResults",
+      ".\\artifacts\\numerical-acceptance-state\\native-batched-matmul-api-and-real-candidate-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-15T09:49:34.079058+09:00",
+    "pid": 38416,
+    "exit_code": 0,
+    "unity_results": ".\\artifacts\\numerical-acceptance-state\\native-batched-matmul-api-and-real-candidate-20261015.xml",
+    "unity_counts": {
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 35.95316180000373,
+    "completed_utc": "2026-10-15T09:50:10.03222+09:00"
+  },
+  "binary_binding_execution": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      ".\\artifacts\\acceptance-consumer",
+      "-logFile",
+      ".\\artifacts\\numerical-acceptance-state\\binary-gpu-stage-binding-green-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Tests.GpuProjectionPipelineTests",
+      "-testResults",
+      ".\\artifacts\\numerical-acceptance-state\\binary-gpu-stage-binding-green-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-15T09:54:22.187999+09:00",
+    "pid": 85572,
+    "exit_code": 0,
+    "unity_results": ".\\artifacts\\numerical-acceptance-state\\binary-gpu-stage-binding-green-20261015.xml",
+    "unity_counts": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 37.54095769999549,
+    "completed_utc": "2026-10-15T09:54:59.728968+09:00"
+  },
+  "planner_shape_dependency_tdd": {
+    "green_xml": "artifacts/numerical-acceptance-state/dynamic-shape-dependency-related-green-20261015.xml",
+    "related_green": 43,
+    "red": 1,
+    "red_xml": "artifacts/numerical-acceptance-state/dynamic-shape-dependency-red-20261015.xml"
+  },
+  "qualification": "Frozen product results do not prove connected input agreement or whole encoder acceptance."
+}

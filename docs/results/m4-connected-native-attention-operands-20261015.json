@@ -1,0 +1,292 @@
+{
+  "success": true,
+  "scope": "connected_first_attention_operand_observation_only",
+  "runtime_source": "9404b92aee3cc8b50e0149735cac9509a9c16453",
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "normal_final_matches_observed_bits": true,
+  "whole_encoder_mismatched_elements": 415,
+  "actual_backend": "GPUCompute",
+  "cpu_computation_or_input_count": 0,
+  "readback_flush_count": 0,
+  "stages": [
+    {
+      "part": "self_attn.matrix_ac.left",
+      "boundary": "/attentions.0/Transpose_3_output_0",
+      "actual_shape": [
+        1,
+        8,
+        24,
+        12,
+        128
+      ],
+      "native_shape": [
+        192,
+        12,
+        128
+      ],
+      "count": 294912,
+      "bit_differences": 93060,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.000797018106593584,
+      "capture": ".\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-bmm-operands-observation-9404b92aee3cc8b50e0149735cac9509a9c16453-silence-captures\\self_attn.matrix_ac.left-fp32.bin",
+      "sha256": "81328daceb840be031ca5b368e74953fc74bae04ba86c70f8adcdff481a344da",
+      "native_sha256": "42f5dd2c98dcd71110e0752b4a33d1da134633c2a512554b94d4f7ce323180a4"
+    },
+    {
+      "part": "self_attn.matrix_ac.right",
+      "boundary": "/attentions.0/Transpose_4_output_0",
+      "actual_shape": [
+        1,
+        8,
+        24,
+        128,
+        24
+      ],
+      "native_shape": [
+        192,
+        128,
+        24
+      ],
+      "count": 589824,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.0,
+      "capture": ".\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-bmm-operands-observation-9404b92aee3cc8b50e0149735cac9509a9c16453-silence-captures\\self_attn.matrix_ac.right-fp32.bin",
+      "sha256": "f51fb537ae80a52ff62fdaa2ff7ac0cddd77b4ccb104ac8980b53ba361b4e65c",
+      "native_sha256": "f51fb537ae80a52ff62fdaa2ff7ac0cddd77b4ccb104ac8980b53ba361b4e65c"
+    },
+    {
+      "part": "self_attn.matrix_ac.output",
+      "boundary": "/attentions.0/MatMul_output_0",
+      "actual_shape": [
+        1,
+        8,
+        24,
+        12,
+        24
+      ],
+      "native_shape": [
+        192,
+        12,
+        24
+      ],
+      "count": 55296,
+      "bit_differences": 19627,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.0017487079409072416,
+      "capture": ".\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-bmm-operands-observation-9404b92aee3cc8b50e0149735cac9509a9c16453-silence-captures\\self_attn.matrix_ac.output-fp32.bin",
+      "sha256": "06d80be6d1f41d5862c5f2549c48c32fbd97da787ce1a1c75be04e764d01d998",
+      "native_sha256": "dc2ccd24975382b9f7c5568bd6c472f585ff2c826aa9e82d71e38b7677a19275"
+    },
+    {
+      "part": "self_attn.matrix_bd.left",
+      "boundary": "/attentions.0/Reshape_11_output_0",
+      "actual_shape": [
+        1,
+        8,
+        288,
+        128
+      ],
+      "native_shape": [
+        8,
+        288,
+        128
+      ],
+      "count": 294912,
+      "bit_differences": 93060,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.000797018106593584,
+      "capture": ".\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-bmm-operands-observation-9404b92aee3cc8b50e0149735cac9509a9c16453-silence-captures\\self_attn.matrix_bd.left-fp32.bin",
+      "sha256": "81328daceb840be031ca5b368e74953fc74bae04ba86c70f8adcdff481a344da",
+      "native_sha256": "42f5dd2c98dcd71110e0752b4a33d1da134633c2a512554b94d4f7ce323180a4"
+    },
+    {
+      "part": "self_attn.matrix_bd.right",
+      "boundary": "/attentions.0/Transpose_5_output_0",
+      "actual_shape": [
+        8,
+        128,
+        13
+      ],
+      "native_shape": [
+        8,
+        128,
+        13
+      ],
+      "count": 13312,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.0,
+      "capture": ".\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-bmm-operands-observation-9404b92aee3cc8b50e0149735cac9509a9c16453-silence-captures\\self_attn.matrix_bd.right-fp32.bin",
+      "sha256": "efaec5a90a68c97767f7646e60a06e47e17acce94fad898febe0a54fd078fc3b",
+      "native_sha256": "efaec5a90a68c97767f7646e60a06e47e17acce94fad898febe0a54fd078fc3b"
+    },
+    {
+      "part": "self_attn.matrix_bd.output",
+      "boundary": "/attentions.0/MatMul_1_output_0",
+      "actual_shape": [
+        1,
+        8,
+        288,
+        13
+      ],
+      "native_shape": [
+        8,
+        288,
+        13
+      ],
+      "count": 29952,
+      "bit_differences": 6179,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.001653181609174576,
+      "capture": ".\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-bmm-operands-observation-9404b92aee3cc8b50e0149735cac9509a9c16453-silence-captures\\self_attn.matrix_bd.output-fp32.bin",
+      "sha256": "c2a330b1912fbd495a0c2aebd7a3948ac55c6512ca445684d6dd16ab0c2f9002",
+      "native_sha256": "d74554fbcdbe3125f30cf181072ceafd5f0e1369d151b8a7c222b3eb9ad1d4c7"
+    },
+    {
+      "part": "self_attn.weighted_values.left",
+      "boundary": "/attentions.0/Cast_8_output_0",
+      "actual_shape": [
+        1,
+        8,
+        24,
+        12,
+        24
+      ],
+      "native_shape": [
+        192,
+        12,
+        24
+      ],
+      "count": 55296,
+      "bit_differences": 26294,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.050983670549871275,
+      "capture": ".\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-bmm-operands-observation-9404b92aee3cc8b50e0149735cac9509a9c16453-silence-captures\\self_attn.weighted_values.left-fp32.bin",
+      "sha256": "c9ae12794722dd8b4ecdb5c4da70e4ab5537bc6b96635f854be09a822d223eb9",
+      "native_sha256": "3d4a0b09a88aaa78ece91b5717b59ac92d93ea3fa7829bf3623c39435ceba7f5"
+    },
+    {
+      "part": "self_attn.weighted_values.right",
+      "boundary": "/attentions.0/Transpose_7_output_0",
+      "actual_shape": [
+        1,
+        8,
+        24,
+        24,
+        128
+      ],
+      "native_shape": [
+        192,
+        24,
+        128
+      ],
+      "count": 589824,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.0,
+      "capture": ".\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-bmm-operands-observation-9404b92aee3cc8b50e0149735cac9509a9c16453-silence-captures\\self_attn.weighted_values.right-fp32.bin",
+      "sha256": "54bc12c1544a8a69f0e671c1d9394cbea1bfe9aef7de2c59d8de21ade678b8cd",
+      "native_sha256": "54bc12c1544a8a69f0e671c1d9394cbea1bfe9aef7de2c59d8de21ade678b8cd"
+    },
+    {
+      "part": "self_attn.weighted_values.output",
+      "boundary": "/attentions.0/MatMul_2_output_0",
+      "actual_shape": [
+        1,
+        8,
+        24,
+        12,
+        128
+      ],
+      "native_shape": [
+        192,
+        12,
+        128
+      ],
+      "count": 294912,
+      "bit_differences": 192816,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.3475458401553832,
+      "capture": ".\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-bmm-operands-observation-9404b92aee3cc8b50e0149735cac9509a9c16453-silence-captures\\self_attn.weighted_values.output-fp32.bin",
+      "sha256": "932b36cb63797af84a5bfe1af61e239aed5943f328bd750bdd8b2625031e5a19",
+      "native_sha256": "724ad7359d6c1047c7055ff06d604ad42cb53e94b6fee6f97c9524f076d652da"
+    }
+  ],
+  "interpretation": "The scaled query operands differ before GPU BMM; original K, relative-K and V operands are bit-identical. Local tolerance mismatches are zero but whole encoder acceptance still fails.",
+  "next": "Compare native and exported Q scaling constants and FP32 operation ordering before pursuing tanh or softmax.",
+  "execution": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      ".\\artifacts\\acceptance-consumer",
+      "-logFile",
+      ".\\artifacts\\numerical-acceptance-state\\binary-boundary-and-connected-attention-memory-fixed-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "BinaryBoundaryObservationPreservesNormalBitsAndBorrowedGpuResources|SmallBoundaryObservationPreservesFinalBitsAndBorrowedGpuResources|ObserveConnectedNativeAttentionOperandsWithoutChangingNormalFinalBits",
+      "-testResults",
+      ".\\artifacts\\numerical-acceptance-state\\binary-boundary-and-connected-attention-memory-fixed-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-15T10:06:04.475949+09:00",
+    "pid": 82776,
+    "exit_code": 0,
+    "unity_results": ".\\artifacts\\numerical-acceptance-state\\binary-boundary-and-connected-attention-memory-fixed-20261015.xml",
+    "unity_counts": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 66.96497690000979,
+    "completed_utc": "2026-10-15T10:07:11.440925+09:00"
+  },
+  "earlier_memory_guard_failure": {
+    "termination": "Stopped exact owned Unity PID 84628 above 12 GiB",
+    "execution": {
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        ".\\artifacts\\acceptance-consumer",
+        "-logFile",
+        ".\\artifacts\\numerical-acceptance-state\\binary-boundary-and-connected-attention-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "BinaryBoundaryObservationPreservesNormalBitsAndBorrowedGpuResources|SmallBoundaryObservationPreservesFinalBitsAndBorrowedGpuResources|ObserveConnectedNativeAttentionOperandsWithoutChangingNormalFinalBits",
+        "-testResults",
+        ".\\artifacts\\numerical-acceptance-state\\binary-boundary-and-connected-attention-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": false,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-15T10:04:28.51523+09:00",
+      "pid": 84628,
+      "exit_code": 4294967295,
+      "unity_results": ".\\artifacts\\numerical-acceptance-state\\binary-boundary-and-connected-attention-20261015.xml",
+      "unity_evidence_error": "Unity execution XML is missing or invalid",
+      "elapsed_seconds": 73.52356240000518,
+      "completed_utc": "2026-10-15T10:05:42.038798+09:00"
+    },
+    "observed_working_set_gib": 13.14,
+    "runtime_source": "62b1501c9b8c58f787210838bfc88fc059c0b123"
+  },
+  "persistent_allocation_warning": "One Persistent allocation warning remains; memory leak freedom is not proven.",
+  "evidence": {
+    "sha256": "7c754bbbea8bd2b82a0dece2e61689ba9628883eb444c6c43e4ae14132ae4645",
+    "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-bmm-operands-observation-9404b92aee3cc8b50e0149735cac9509a9c16453-silence.json"
+  }
+}

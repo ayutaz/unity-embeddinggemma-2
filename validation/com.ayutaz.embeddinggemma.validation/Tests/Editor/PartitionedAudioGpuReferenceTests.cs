@@ -279,9 +279,15 @@ namespace EmbeddingGemma.Validation.Tests
         [Test] public void FinalPcmDocumentNyquistMustMatchOnGpu()=>FinalPcm("nyquist");
         [Test] public void FinalPcmDocumentNoiseMustMatchOnGpu()=>FinalPcm("noise");
         [Test] public void FinalPcmDocumentPaddedNoiseMustMatchOnGpu()=>FinalPcm("padded_noise");
-        void FinalPcm(string signal)=>Execute(signal,true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,nativeGlu:true,firstNormFma:true,scalarMomentFma:true,finalPcm:true);
+        [Test] public void FinalPcmImpulseAllRolesMustMatchOnGpu()=>FinalPcm("impulse",true);
+        [Test] public void FinalPcmSilenceAllRolesMustMatchOnGpu()=>FinalPcm("silence",true);
+        [Test] public void FinalPcmSineAllRolesMustMatchOnGpu()=>FinalPcm("sine",true);
+        [Test] public void FinalPcmNyquistAllRolesMustMatchOnGpu()=>FinalPcm("nyquist",true);
+        [Test] public void FinalPcmNoiseAllRolesMustMatchOnGpu()=>FinalPcm("noise",true);
+        [Test] public void FinalPcmPaddedNoiseAllRolesMustMatchOnGpu()=>FinalPcm("padded_noise",true);
+        void FinalPcm(string signal,bool allRoles=false)=>Execute(signal,true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,nativeGlu:true,firstNormFma:true,scalarMomentFma:true,finalPcm:true,allAudioRoles:allRoles);
 
-        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false,bool convolutionDetail=false,bool nativeGlu=false,int layerObservation=0,bool firstNormFma=false,bool scalarMomentFma=false,bool adapterMode=false,bool finalPcm=false)
+        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false,bool convolutionDetail=false,bool nativeGlu=false,int layerObservation=0,bool firstNormFma=false,bool scalarMomentFma=false,bool adapterMode=false,bool finalPcm=false,bool allAudioRoles=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
@@ -301,6 +307,7 @@ namespace EmbeddingGemma.Validation.Tests
             if(scalarMomentFma)stem="partitioned-scalar-moment-fma-gpu-";
             if(adapterMode)stem="partitioned-audio-encoder-adapter-gpu-";
             if(finalPcm)stem="final-pcm-document-api-gpu-";
+            if(allAudioRoles)stem="final-pcm-allroles-api-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject { ["success"]=false,["scope"]=early?"original_early_audio_observation_only":isolated?"one_original_audio_layer_isolation_gpu_numeric_gate":observe?"original_audio_layer_observation_only":"one_partitioned_original_audio_encoder_gpu_numeric_gate",
@@ -431,7 +438,7 @@ namespace EmbeddingGemma.Validation.Tests
                 {
                     Assert.That(scalarMomentFma&&!observe&&!isolated&&!early&&!adapterMode&&!observeBmm&&layerObservation==0,Is.True);
                     using var pcmEncoder=new PartitionedAudioFeatureEncoder(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray(),new AudioEncoderProfile(originalPadded?839:1119));
-                    QualifiedRealAudioApiCase.Run(pcmEncoder,signal,report,output,Save);
+                    QualifiedRealAudioApiCase.Run(pcmEncoder,signal,report,output,Save,allAudioRoles);
                     return;
                 }
                 if(adapterMode)

@@ -44,6 +44,20 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.That(Last.SoftTokens.shape,Is.EqualTo(new TensorShape(Profile.FeatureCount,512)));return Last;
             }
         }
+        sealed class ObservedBackbone : IMultimodalBackbone
+        {
+            readonly IMultimodalBackbone inner;
+            public bool FailNext;
+            public BackendType Backend=>inner.Backend;
+            public MultimodalBackboneProfile Profile=>inner.Profile;
+            public ObservedBackbone(IMultimodalBackbone inner){this.inner=inner;}
+            public float[] Embed(int[] ids,int[] mask,Tensor<float> image,Tensor<float> audio)
+            {
+                Assert.That(audio.backendType,Is.EqualTo(BackendType.GPUCompute));
+                if(FailNext){FailNext=false;throw new InvalidOperationException("Expected diagnostic backbone failure after actual GPU encoder.");}
+                return inner.Embed(ids,mask,image,audio);
+            }
+        }
         static string Hash(string path)=>QualifiedImageBackboneSquare.Hash(path);
         static float[] Floats(string path){var bytes=File.ReadAllBytes(path);var values=new float[bytes.Length/4];Buffer.BlockCopy(bytes,0,values,0,bytes.Length);return values;}
         static int[] Ints(string path){var bytes=File.ReadAllBytes(path);var values=new int[bytes.Length/4];Buffer.BlockCopy(bytes,0,values,0,bytes.Length);return values;}
@@ -58,7 +72,7 @@ namespace EmbeddingGemma.Validation.Tests
             Assert.That(cpu.Intersect(data),Is.Empty,"No model computation or nonempty feature input may fall back to CPU.");
             Assert.That(flush,Is.Empty);
         }
-        public static void Run(PartitionedAudioFeatureEncoder encoder,string signal,JObject report,string reportPath,Action save)
+        public static void Run(PartitionedAudioFeatureEncoder encoder,string signal,JObject report,string reportPath,Action save,bool allRoles=false)
         {
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-real-chain"));
             var ppRoot=Path.Combine(root,"audio-runtime-preprocessing");
@@ -97,7 +111,8 @@ namespace EmbeddingGemma.Validation.Tests
             using var backbone=new MultimodalBackbone(backboneModel,profile,BackendType.GPUCompute);
             AuditWorker(pp,ppModel,false);AuditWorker(backbone,backboneModel,true);
             var pre=new ObservedPreprocessor(pp);var enc=new ObservedEncoder(encoder);
-            using var api=new AudioEmbedder(pre,enc,backbone,builder);
+            var back=new ObservedBackbone(backbone);
+            using var api=new AudioEmbedder(pre,enc,back,builder);
             if(signal=="impulse")
             {
                 Assert.Throws<ArgumentNullException>(()=>api.Embed(null));
@@ -105,31 +120,67 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.Throws<ArgumentException>(()=>api.Embed(new AudioPcmInput(new float[161])));
                 Assert.That(pre.Calls,Is.Zero);Assert.That(enc.Calls,Is.Zero);
                 report["invalid_input_recovery_checks"]=new JArray("null_pcm","invalid_role","different_fixed_profile");
+                if(allRoles)
+                {
+                    var marker=JObject.Parse(File.ReadAllText(Path.Combine(tokenizerRoot,"tokenizer_config.json"))).Value<string>("audio_token");
+                    Assert.That(string.IsNullOrEmpty(marker),Is.False);
+                    Assert.Throws<ArgumentException>(()=>api.Embed(input,TextRole.Document,marker));
+                    ((JArray)report["invalid_input_recovery_checks"]).Add("actual_reserved_audio_marker_in_title");
+                    back.FailNext=true;
+                    var failed=Assert.Throws<InvalidOperationException>(()=>api.Embed(input));
+                    Assert.That(failed.Message,Does.StartWith("Expected diagnostic backbone failure"));
+                    Assert.Throws<ObjectDisposedException>(()=>{var ignored=pre.Last.Features;});
+                    Assert.Throws<ObjectDisposedException>(()=>{var ignored=enc.Last.SoftTokens;});
+                    report["real_stage_failure_owned_intermediates_disposed"]=true;
+                }
             }
-            report["phase"]="execute_pcm_document_api";save();
-            var timer=System.Diagnostics.Stopwatch.StartNew();var actual=api.Embed(input,TextRole.Document);
-            report["execute_and_final_download_ms"]=timer.Elapsed.TotalMilliseconds;
-            Assert.That(pre.Calls,Is.EqualTo(1));Assert.That(enc.Calls,Is.EqualTo(1));
-            Assert.Throws<ObjectDisposedException>(()=>{var ignored=pre.Last.Features;});
-            Assert.Throws<ObjectDisposedException>(()=>{var ignored=enc.Last.SoftTokens;});
-            var expected=row["embedding"].ToObject<float[]>();Assert.That(actual.Length,Is.EqualTo(768));Assert.That(expected.Length,Is.EqualTo(768));
-            double dot=0,aa=0,bb=0,maximum=0;var mismatches=0;
-            for(var i=0;i<actual.Length;i++)
+            var results=new JArray();if(allRoles){report["scope"]="real_pcm_accepted_gpu_encoder_original_backbone_all_roles_final768_api";report["final_api_cases"]=results;}
+            float[] documentVector=null;
+            foreach(var role in allRoles?new[]{TextRole.Query,TextRole.Document,TextRole.Raw}:new[]{TextRole.Document})
             {
-                Assert.That(float.IsNaN(actual[i])||float.IsInfinity(actual[i]),Is.False);
-                dot+=(double)actual[i]*expected[i];aa+=(double)actual[i]*actual[i];bb+=(double)expected[i]*expected[i];
-                var diff=Math.Abs((double)actual[i]-expected[i]);maximum=Math.Max(maximum,diff);if(diff>1e-5+1e-4*Math.Abs((double)expected[i]))mismatches++;
+                var roleName=role.ToString().ToLowerInvariant();
+                var expectedRow=role==TextRole.Document?row:((JArray)QualifiedFrozenAudioRoleReference.Load(role)["cases"]).Single(value=>value.Value<string>("id")==signal);
+                Assert.That(expectedRow.Value<string>("profile"),Is.EqualTo(profileName));
+                var rolePrompt=builder.BuildAudio(input.ValidFrameCount,role);
+                Assert.That(rolePrompt.InputIds,Is.EqualTo(expectedRow["input_ids"].ToObject<int[]>()));Assert.That(rolePrompt.AttentionMask,Is.EqualTo(expectedRow["attention_mask"].ToObject<int[]>()));
+                report["phase"]="execute_pcm_"+roleName+"_api";save();
+                var preCalls=pre.Calls;var encCalls=enc.Calls;
+                var timer=System.Diagnostics.Stopwatch.StartNew();var actual=api.Embed(input,role);
+                var duration=timer.Elapsed.TotalMilliseconds;
+                Assert.That(pre.Calls,Is.EqualTo(preCalls+1));Assert.That(enc.Calls,Is.EqualTo(encCalls+1));
+                Assert.Throws<ObjectDisposedException>(()=>{var ignored=pre.Last.Features;});
+                Assert.Throws<ObjectDisposedException>(()=>{var ignored=enc.Last.SoftTokens;});
+                var expected=expectedRow["embedding"].ToObject<float[]>();Assert.That(actual.Length,Is.EqualTo(768));Assert.That(expected.Length,Is.EqualTo(768));
+                double dot=0,aa=0,bb=0,maximum=0;var mismatches=0;
+                for(var i=0;i<actual.Length;i++)
+                {
+                    Assert.That(float.IsNaN(actual[i])||float.IsInfinity(actual[i]),Is.False);
+                    dot+=(double)actual[i]*expected[i];aa+=(double)actual[i]*actual[i];bb+=(double)expected[i]*expected[i];
+                    var diff=Math.Abs((double)actual[i]-expected[i]);maximum=Math.Max(maximum,diff);if(diff>1e-5+1e-4*Math.Abs((double)expected[i]))mismatches++;
+                }
+                var cosine=dot/Math.Sqrt(aa*bb);
+                var capture=allRoles?Path.Combine(Path.GetDirectoryName(reportPath),Path.GetFileNameWithoutExtension(reportPath)+"-"+roleName+".bin"):Path.ChangeExtension(reportPath,".bin");Assert.That(File.Exists(capture),Is.False);
+                var bytes=new byte[actual.Length*4];Buffer.BlockCopy(actual,0,bytes,0,bytes.Length);File.WriteAllBytes(capture,bytes);
+                var result=new JObject{["signal"]=signal,["role"]=roleName,["profile"]=profileName,["embedding_dimension"]=768,
+                    ["cosine"]=cosine,["norm_squared"]=aa,["elementwise_diagnostic_mismatches"]=mismatches,["maximum_absolute_error"]=maximum,
+                    ["execute_and_final_download_ms"]=duration,["capture"]=Path.GetFileName(capture),["capture_sha256"]=Hash(capture),
+                    ["reference_sha256"]=role==TextRole.Document?"281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001":QualifiedFrozenAudioRoleReference.ReferenceSha(role),
+                    ["owned_intermediates_disposed"]=true,["success"]=cosine>=0.999&&Math.Abs(aa-1)<=0.002};
+                if(allRoles)results.Add(result);else foreach(var item in result)report[item.Key]=item.Value.DeepClone();
+                if(role==TextRole.Document)documentVector=actual;
+                save();Assert.That(cosine,Is.GreaterThanOrEqualTo(0.999));Assert.That(Math.Abs(aa-1),Is.LessThanOrEqualTo(0.002));
             }
-            var cosine=dot/Math.Sqrt(aa*bb);report["cosine"]=cosine;report["norm_squared"]=aa;
-            report["elementwise_diagnostic_mismatches"]=mismatches;report["maximum_absolute_error"]=maximum;
-            var capture=Path.ChangeExtension(reportPath,".bin");Assert.That(File.Exists(capture),Is.False);
-            var bytes=new byte[actual.Length*4];Buffer.BlockCopy(actual,0,bytes,0,bytes.Length);File.WriteAllBytes(capture,bytes);
-            report["capture_sha256"]=Hash(capture);report["profile"]=profileName;report["role"]="document";
+            report["profile"]=profileName;
             report["source_sample_count"]=count;report["valid_frame_count"]=input.ValidFrameCount;
             report["actual_pcm_preprocessing_validated"]=true;report["owned_intermediates_disposed"]=true;
             report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;report["intermediate_readback_count"]=0;
-            save();Assert.That(cosine,Is.GreaterThanOrEqualTo(0.999));Assert.That(Math.Abs(aa-1),Is.LessThanOrEqualTo(0.002));
             api.Dispose();Assert.Throws<ObjectDisposedException>(()=>api.Embed(input));
+            if(allRoles&&signal=="impulse")
+            {
+                using var processed=pp.Process(input);using var encoded=encoder.Encode(processed);using var empty=new Tensor<float>(new TensorShape(0,512));
+                var reused=backbone.Embed(prompt.InputIds,prompt.AttentionMask,empty,encoded.SoftTokens);
+                Assert.That(reused,Is.EqualTo(documentVector));report["borrowed_stages_reused_after_api_dispose"]=true;
+            }
             report["api_dispose_rejected_reuse"]=true;report["success"]=true;report["phase"]="completed";save();
         }
     }

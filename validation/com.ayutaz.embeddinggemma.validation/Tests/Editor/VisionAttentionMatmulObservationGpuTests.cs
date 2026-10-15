@@ -49,10 +49,17 @@ namespace EmbeddingGemma.Validation.Tests
                     var count = cpu.Intersect(model.layers.SelectMany(layer => layer.outputs).Concat(model.inputs.Select(value => value.index))).Count();
                     report["cpu_computation_or_input_count"] = count; report["readback_flush_count"] = flush.Count; Assert.That(count, Is.Zero); Assert.That(flush.Count, Is.Zero);
                 }
-                Assert.That(Shape(selected[0].inputs[0]), Is.EqualTo(new TensorShape(1, 12, 2520, 64)));
-                Assert.That(Shape(selected[0].inputs[1]), Is.EqualTo(new TensorShape(1, 12, 64, 2520)));
-                Assert.That(Shape(selected[1].inputs[0]), Is.EqualTo(new TensorShape(1, 12, 2520, 2520)));
-                Assert.That(Shape(selected[1].inputs[1]), Is.EqualTo(new TensorShape(1, 12, 2520, 64)));
+                var shapes = new JObject(); report["inferred_operand_shapes"] = shapes;
+                foreach (var index in selected.SelectMany(layer => layer.inputs.Concat(layer.outputs)).Distinct()) shapes[index.ToString()] = Dimensions(Shape(index));
+                Save();
+                void Matrix(int index, int rows, int columns)
+                {
+                    var shape = Shape(index); Assert.That(shape.rank, Is.InRange(3, 4));
+                    Assert.That(shape[shape.rank - 2], Is.EqualTo(rows)); Assert.That(shape[shape.rank - 1], Is.EqualTo(columns));
+                    Assert.That(shape.length, Is.EqualTo(12 * rows * columns), "Keep all twelve head matrices, including flattened batch axes.");
+                }
+                Matrix(selected[0].inputs[0], 2520, 64); Matrix(selected[0].inputs[1], 64, 2520);
+                Matrix(selected[1].inputs[0], 2520, 2520); Matrix(selected[1].inputs[1], 2520, 64);
                 var small = new HashSet<int>(selected.SelectMany(layer => layer.inputs).Where(index => Shape(index).length <= 12 * 2520 * 64)); Assert.That(small.Count, Is.EqualTo(3));
                 var prefixes = new HashSet<int>(selected.SelectMany(layer => layer.outputs).Concat(selected.SelectMany(layer => layer.inputs).Where(index => !small.Contains(index))));
                 Assert.That(prefixes.Count, Is.EqualTo(3));

@@ -44,6 +44,10 @@ namespace EmbeddingGemma.Validation.Tests
         public void CacheReleasedIncludingGeluPreservesSquareZeroCandidateAndOriginalReferenceGate()
             => Run("square-0",true,true,true,false,true).GetAwaiter().GetResult();
 
+        [Test]
+        public void AuditSquareZeroPartitionBoundariesWithoutExecutingModel()
+            => Run("square-0",true,true,true,false,true,true).GetAwaiter().GetResult();
+
         [UnityTest]
         public IEnumerator StageFencesPreserveSquareZeroCandidateAndOriginalReferenceGate()
         {
@@ -60,12 +64,13 @@ namespace EmbeddingGemma.Validation.Tests
             pending.GetAwaiter().GetResult();
         }
 
-        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false)
+        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-encoder"));
             var label=releaseGeluCaches&&staged?"vision-staged-nested-gelu-cache-release-whole-gpu-":releaseGeluCaches?"vision-nested-gelu-cache-release-whole-gpu-":staged?"vision-staged-cache-release-native-gelu-rms-whole-gpu-":releaseUnusedGpuCache?"vision-cache-release-native-gelu-rms-whole-gpu-":nativeGelu?"vision-native-gelu-inline-rms-whole-gpu-":inlineAllRms?"vision-inline-all-layer-rms-whole-gpu-":"vision-native-patch-whole-gpu-";
+            if(planOnly)label="vision-partition-boundary-audit-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+"-"+caseId+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["scope"]=releaseUnusedGpuCache?"one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate":nativeGelu?"one_original_vision_encoder_gpu_native_gelu_all_layer_rms_and_patch384_candidate":inlineAllRms?"one_original_vision_encoder_gpu_all_sixteen_layer_rms_and_native_patch384_candidate":"one_original_vision_encoder_gpu_native_patch384_candidate",["runtime_source"]=source,
@@ -146,6 +151,12 @@ namespace EmbeddingGemma.Validation.Tests
                     Assert.That(before.inputs.Count,Is.EqualTo(1));Assert.That(after.inputs.Count,Is.EqualTo(1));
                     parts=new[]{before,after};inputs=new[]{new[]{"projection_input"}};outputs=new[]{"projection_output"};operations.Add(new GpuBlockedMatmul(768,768,weights,384));
                 }
+                if(planOnly)
+                {
+                    report["plan_audit"]=AuditPlan(parts,inputs,outputs);report["inference_executed"]=false;
+                    Assert.That(CoefficientsHash(original),Is.EqualTo(originalCoefficients));report["original_coefficient_bytes_preserved"]=true;
+                    report["original_coefficients_sha256"]=originalCoefficients;report["phase"]="audit_complete";report["success"]=true;return;
+                }
                 using var pipeline=new GpuProjectionPipeline(parts,inputs,outputs,operations.ToArray(),releaseUnusedGpuCache);
                 report["release_unused_gpu_cache"]=releaseUnusedGpuCache;
                 report["pipeline_prepare_ms"]=phaseTimer.Elapsed.TotalMilliseconds;report["segment_count"]=parts.Length;report["gpu_operation_count"]=operations.Count;
@@ -200,6 +211,50 @@ namespace EmbeddingGemma.Validation.Tests
         }
         static string CoefficientsHash(Model model)
             =>ModelCoefficientHash.Compute(model,out _);
+        static JObject AuditPlan(Model[] models,string[][] operationInputs,string[] operationOutputs)
+        {
+            var shapes=new Dictionary<string,TensorShape>();var rows=new JArray();
+            var analysis=typeof(Worker).Assembly.GetType("Unity.InferenceEngine.Compiler.Analyser.PartialInferenceAnalysis");
+            JObject Describe(string name,TensorShape shape)
+            {
+                if(shapes.TryGetValue(name,out var previous))Assert.That(shape,Is.EqualTo(previous));else shapes.Add(name,shape);
+                return new JObject{["name"]=name,["shape"]=JArray.FromObject(Enumerable.Range(0,shape.rank).Select(i=>shape[i]).ToArray()),["bytes"]=shape.length*4L};
+            }
+            long constants=0;int layers=0;
+            for(var stage=0;stage<models.Length;stage++)
+            {
+                var model=models[stage];var context=analysis.GetMethod("InferModelPartialTensors").Invoke(null,new object[]{model});
+                var incoming=new JArray();foreach(var input in model.inputs){Assert.That(input.shape.IsStatic(),Is.True);incoming.Add(Describe(input.name,input.shape.ToTensorShape()));}
+                var outgoing=new JArray();foreach(var output in model.outputs)
+                {
+                    var partial=context.GetType().GetMethod("GetPartialTensor").Invoke(context,new object[]{output.index});
+                    var shape=(DynamicTensorShape)partial.GetType().GetProperty("shape").GetValue(partial);Assert.That(shape.IsStatic(),Is.True);outgoing.Add(Describe(output.name,shape.ToTensorShape()));
+                }
+                var bytes=model.constants.Sum(value=>(long)value.lengthBytes);constants+=bytes;layers+=model.layers.Count;
+                rows.Add(new JObject{["stage"]=stage,["layers"]=model.layers.Count,["shape_layers"]=model.layers.Count(layer=>layer.GetType().Name=="Shape"),
+                    ["coefficient_bytes"]=bytes,["inputs"]=incoming,["outputs"]=outgoing});
+            }
+            var liveAfter=new HashSet<string>[models.Length];var live=new HashSet<string>{models[models.Length-1].outputs[0].name};
+            for(var stage=models.Length-1;stage>=0;stage--)
+            {
+                liveAfter[stage]=new HashSet<string>(live);live.UnionWith(models[stage].inputs.Select(value=>value.name));
+                if(stage<operationInputs.Length)live.UnionWith(operationInputs[stage]);
+            }
+            var values=new Dictionary<string,int>{{models[0].inputs[0].name,0}};var owned=new Dictionary<int,(string name,int stage,long bytes)>();var serial=0;long peak=0;
+            for(var stage=0;stage<models.Length;stage++)
+            {
+                void Copy(string name){var id=++serial;values[name]=id;owned.Add(id,(name,stage,shapes[name].length*4L));}
+                foreach(var output in models[stage].outputs)Copy(output.name);if(stage<operationOutputs.Length)Copy(operationOutputs[stage]);
+                var before=owned.Values.Sum(value=>value.bytes);
+                foreach(var name in values.Keys.Where(name=>!liveAfter[stage].Contains(name)).ToArray())values.Remove(name);
+                var retained=new HashSet<int>(values.Values);foreach(var id in owned.Keys.Where(id=>!retained.Contains(id)).ToArray())owned.Remove(id);
+                var after=owned.Values.Sum(value=>value.bytes);peak=Math.Max(peak,after);
+                var row=(JObject)rows[stage];row["owned_before_release_bytes"]=before;row["retained_after_stage_bytes"]=after;row["retained_after_stage_count"]=owned.Count;
+                row["largest_retained"]=JArray.FromObject(owned.Values.OrderByDescending(value=>value.bytes).Take(5).Select(value=>new{name=value.name,created_stage=value.stage,bytes=value.bytes}).ToArray());
+            }
+            return new JObject{["models"]=rows,["sum_partition_layers"]=layers,["sum_partition_coefficient_bytes"]=constants,["maximum_retained_boundary_bytes"]=peak,
+                ["scope"]="static_metadata_and_runtime_boundary_liveness_simulation_only_no_model_inference"};
+        }
         static float[] Floats(string path){var bytes=File.ReadAllBytes(path);var data=new float[bytes.Length/4];Buffer.BlockCopy(bytes,0,data,0,bytes.Length);return data;}
     }
 }

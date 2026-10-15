@@ -38,3 +38,19 @@ def test_replay_compares_compensated_fp32_without_relaxing_failure():
     commands = "\n".join(step.get("run", "") for step in job["steps"])
     assert "--compensated-projection" in commands, "Real FP32 candidate is not exercised"
     assert not any(step.get("continue-on-error") for step in job["steps"])
+
+
+def test_attention_reference_scope_keeps_full_subsample_replay_as_separate_default_gate():
+    path=Path(__file__).resolve().parents[2]/'.github/workflows/audio-layer-replay.yml'
+    workflow=yaml.safe_load(path.read_text(encoding='utf-8'));triggers=workflow.get('on',workflow.get(True))
+    dispatch=triggers['workflow_dispatch']
+    assert isinstance(dispatch,dict),'Independent pinned-attention diagnostic scope is missing'
+    assert dispatch['inputs']['scope']['default']=='full'
+    steps=workflow['jobs']['replay']['steps']
+    full=next(s for s in steps if s.get('name')=='Replay official layer 0 against unchanged native final')
+    attention=next(s for s in steps if s.get('name')=='Capture attention projections against pinned layer final')
+    assert "inputs.scope != 'attention'" in full['if'] and '--subsample-input' in full['run']
+    assert "inputs.scope == 'attention'" in attention['if']
+    assert '--detail-attention-projections' in attention['run'] and '--subsample-input' not in attention['run']
+    assert '--reference-source 4edbe17a8105233c5aaa1514faa2862b08a4f7e0' in attention['run']
+    assert not any(s.get('continue-on-error') for s in steps)

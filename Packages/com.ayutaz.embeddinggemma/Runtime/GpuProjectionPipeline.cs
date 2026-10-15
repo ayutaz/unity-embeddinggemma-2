@@ -16,6 +16,7 @@ namespace EmbeddingGemma
         readonly string[][] projectionInputs;
         readonly string[] projectionOutputs;
         readonly IGpuTensorOperation[] projections;
+        readonly HashSet<string>[] liveAfterStage;
         Worker[] workers;
 
         public GpuProjectionPipeline(Model[] models,string[] projectionInputs,string[] projectionOutputs,GpuBlockedMatmul[] projections)
@@ -39,6 +40,16 @@ namespace EmbeddingGemma
                 throw new ArgumentException("Expected one fixed float input and one final output.");
             this.models=(Model[])models.Clone();this.projectionInputs=projectionInputs.Select(names=>(string[])names.Clone()).ToArray();
             this.projectionOutputs=(string[])projectionOutputs.Clone();this.projections=(IGpuTensorOperation[])projections.Clone();
+            // Compute once: residual branches can consume a value many stages later.
+            // Keep the final output live until it is transferred to the caller.
+            liveAfterStage=new HashSet<string>[models.Length];
+            var live=new HashSet<string>{models[models.Length-1].outputs[0].name};
+            for(var stage=models.Length-1;stage>=0;stage--)
+            {
+                liveAfterStage[stage]=new HashSet<string>(live);
+                live.UnionWith(models[stage].inputs.Select(boundary=>boundary.name));
+                if(stage<projections.Length)live.UnionWith(this.projectionInputs[stage]);
+            }
             workers=new Worker[models.Length];
             try
             {
@@ -95,6 +106,12 @@ namespace EmbeddingGemma
                         owned.Add(projected);
                         if(projected.backendType!=BackendType.GPUCompute)throw new InvalidOperationException("GPU operation output left GPUCompute.");
                         values[projectionOutputs[stage]]=projected;
+                    }
+                    foreach(var name in values.Keys.Where(name=>!liveAfterStage[stage].Contains(name)).ToArray())values.Remove(name);
+                    var retained=new HashSet<Tensor<float>>(values.Values);
+                    foreach(var value in owned.Where(value=>!retained.Contains(value)).ToArray())
+                    {
+                        value.Dispose();owned.Remove(value);
                     }
                 }
                 var output=values[models[models.Length-1].outputs[0].name];owned.Remove(output);return output;

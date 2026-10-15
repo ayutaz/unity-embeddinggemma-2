@@ -329,6 +329,7 @@ namespace EmbeddingGemma.Validation.Tests
                     model=CompensatedModel.CreateWithDynamicMatMuls(model,16);model=CompensatedModel.Create(model,64);
                     models.Add(model);layers.Add(model.layers.Count);
                 }
+                var modelLoadMs=timer.Elapsed.TotalMilliseconds;report["model_load_and_transform_ms"]=modelLoadMs;
                 var inputs=new List<string>();var bindingsByOperation=new List<string[]>();var outputs=new List<string>();
                 var operations=(JArray)plan[nativeSilu?"operations":"projections"];
                 if(nativeSilu){Assert.That(plan.Value<int>("silu_count"),Is.EqualTo(36));Assert.That(operations.Count,Is.EqualTo(nativeGlu?267:nativeSoftmax?255:nativeDivision?243:nativeTanh?231:nativeQueryScale?219:nativeBmm?207:171));}
@@ -360,8 +361,11 @@ namespace EmbeddingGemma.Validation.Tests
                     bindingsByOperation.Add(projection["inputs"]?.ToObject<string[]>()??new[]{projection.Value<string>("input")});
                 }
                 report["segment_layer_counts"]=layers;report["prepare_ms"]=timer.Elapsed.TotalMilliseconds;
+                report["native_operation_prepare_ms"]=timer.Elapsed.TotalMilliseconds-modelLoadMs;
                 report["projection_count"]=((JArray)plan["projections"]).Count;report["operation_count"]=kernels.Count;report["silu_count"]=nativeSilu?36:0;
+                var workerTimer=System.Diagnostics.Stopwatch.StartNew();
                 using var pipeline=new GpuProjectionPipeline(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray());
+                report["worker_creation_ms"]=workerTimer.Elapsed.TotalMilliseconds;
                 report["dynamic_matmul_count"]=nativeBmm?36:0;
                 report["query_scale_count"]=nativeQueryScale?12:0;
                 report["tanh_count"]=nativeTanh?12:0;
@@ -369,10 +373,17 @@ namespace EmbeddingGemma.Validation.Tests
                 report["softmax_count"]=nativeSoftmax?12:0;
                 report["glu_count"]=nativeGlu?12:0;
                 report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
+                workerTimer.Restart();
                 using var input=new Tensor<float>(new TensorShape(inputShape),inputValues);ComputeTensorData.Pin(input);
+                report["input_tensor_creation_and_pin_ms"]=workerTimer.Elapsed.TotalMilliseconds;
+                using var process=System.Diagnostics.Process.GetCurrentProcess();process.Refresh();
+                report["host_working_set_before_execute_bytes"]=process.WorkingSet64;
                 report["phase"]="execute";Save();timer.Restart();
                 using var encoded=pipeline.Execute(input);Assert.That(encoded.backendType,Is.EqualTo(BackendType.GPUCompute));
+                var enqueueMs=timer.Elapsed.TotalMilliseconds;report["execute_enqueue_ms"]=enqueueMs;
                 var actual=encoded.DownloadToArray();report["execute_and_final_download_ms"]=timer.Elapsed.TotalMilliseconds;
+                report["final_download_and_gpu_wait_ms"]=timer.Elapsed.TotalMilliseconds-enqueueMs;
+                process.Refresh();report["host_working_set_after_download_bytes"]=process.WorkingSet64;report["host_peak_working_set_bytes"]=process.PeakWorkingSet64;
                 Assert.That(actual.Length,Is.EqualTo(expected.Length));
                 int mismatch=0;double maximum=0,ratio=0;
                 for(var i=0;i<actual.Length;i++)

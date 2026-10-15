@@ -13,7 +13,7 @@ namespace EmbeddingGemma.Tests
             public int LayerIndex, TensorIndex;
             public string LayerType;
             public BackendType Backend;
-            public TensorShape Shape;
+            public TensorShape Shape, OriginalShape;
             public float[] Values;
         }
         public sealed class Result
@@ -33,7 +33,31 @@ namespace EmbeddingGemma.Tests
             return ObserveCore(model, backend, input, default, indexes.Count, indexes);
         }
 
-        static Result ObserveCore(Model model, BackendType backend, Tensor<float> input, TensorShape captureShape, int limit, HashSet<int> indexes)
+        /// <summary>Diagnostic readbacks of the first rows in every group before the last two axes. Never downloads a full selected tensor first.</summary>
+        public static Result ObserveRowPrefixes(Model model, Tensor<float> input, HashSet<int> indexes, int rowsPerGroup)
+        {
+            if (rowsPerGroup < 1) throw new ArgumentOutOfRangeException(nameof(rowsPerGroup));
+            if (indexes == null || indexes.Count == 0) throw new ArgumentException("Request at least one tensor index.", nameof(indexes));
+            if (input == null) throw new ArgumentNullException(nameof(input));
+            if (input.backendType != BackendType.GPUCompute || !(input.dataOnBackend is ComputeTensorData))
+                throw new ArgumentException("Row observation requires a borrowed GPU input.", nameof(input));
+            return ObserveCore(model, BackendType.GPUCompute, input, default, indexes.Count, indexes, rowsPerGroup);
+        }
+
+        static float[] RowPrefixes(Tensor<float> value, int rowsPerGroup, out TensorShape capturedShape)
+        {
+            if (value.shape.rank < 2 || value.shape.length == 0 || value.backendType != BackendType.GPUCompute || !(value.dataOnBackend is ComputeTensorData data))
+                throw new NotSupportedException("Row observation requires a nonempty GPU tensor of rank at least two.");
+            var rank = value.shape.rank; var width = value.shape[rank - 1]; var rows = value.shape[rank - 2];
+            var count = Math.Min(rows, rowsPerGroup) * width; var groups = value.shape.length / (rows * width);
+            var dimensions = new int[rank]; for (var i = 0; i < rank; i++) dimensions[i] = value.shape[i];
+            dimensions[rank - 2] = Math.Min(rows, rowsPerGroup); capturedShape = new TensorShape(dimensions);
+            var values = new float[groups * count];
+            for (var group = 0; group < groups; group++) data.buffer.GetData(values, group * count, group * rows * width, count);
+            return values;
+        }
+
+        static Result ObserveCore(Model model, BackendType backend, Tensor<float> input, TensorShape captureShape, int limit, HashSet<int> indexes, int rowsPerGroup = 0)
         {
             if (model == null || input == null) throw new ArgumentNullException();
             if (limit < 1) throw new ArgumentOutOfRangeException(nameof(limit));
@@ -69,8 +93,12 @@ namespace EmbeddingGemma.Tests
                             catch (TargetInvocationException error) when (error.InnerException is KeyNotFoundException)
                             { result.UnavailableTensorIndexes.Add(index); continue; }
                             if (tensor is Tensor<float> value && (indexes != null ? indexes.Contains(index) : value.shape == captureShape) && result.Snapshots.Count < limit)
+                            {
+                                var shape = value.shape;
+                                var values = rowsPerGroup > 0 ? RowPrefixes(value, rowsPerGroup, out shape) : value.DownloadToArray();
                                 result.Snapshots.Add(new Snapshot { LayerIndex = layerIndex, TensorIndex = index,
-                                    LayerType = layer.GetType().Name, Backend = value.backendType, Shape = value.shape, Values = value.DownloadToArray() });
+                                    LayerType = layer.GetType().Name, Backend = value.backendType, Shape = shape, OriginalShape = value.shape, Values = values });
+                            }
                         }
                     }
                     yieldedIndex++;

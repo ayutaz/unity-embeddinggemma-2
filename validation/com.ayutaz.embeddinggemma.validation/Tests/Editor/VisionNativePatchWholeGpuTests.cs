@@ -31,15 +31,21 @@ namespace EmbeddingGemma.Validation.Tests
         public void NativeGeluAndInlineVisionRmsEncoderMustMatchGoldenOnGpu(string caseId)
             => Run(caseId,true,true);
 
-        static void Run(string caseId,bool inlineAllRms,bool nativeGelu=false)
+        [TestCase("square-0")] [TestCase("square-1")]
+        [TestCase("landscape-0")] [TestCase("landscape-1")]
+        [TestCase("portrait-0")] [TestCase("portrait-1")]
+        public void CacheReleasedNativeGeluVisionEncoderMustMatchGoldenOnGpu(string caseId)
+            => Run(caseId,true,true,true);
+
+        static void Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-encoder"));
-            var label=nativeGelu?"vision-native-gelu-inline-rms-whole-gpu-":inlineAllRms?"vision-inline-all-layer-rms-whole-gpu-":"vision-native-patch-whole-gpu-";
+            var label=releaseUnusedGpuCache?"vision-cache-release-native-gelu-rms-whole-gpu-":nativeGelu?"vision-native-gelu-inline-rms-whole-gpu-":inlineAllRms?"vision-inline-all-layer-rms-whole-gpu-":"vision-native-patch-whole-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+"-"+caseId+".json"));
             Assert.That(File.Exists(output),Is.False);
-            var report=new JObject{["success"]=false,["scope"]=nativeGelu?"one_original_vision_encoder_gpu_native_gelu_all_layer_rms_and_patch384_candidate":inlineAllRms?"one_original_vision_encoder_gpu_all_sixteen_layer_rms_and_native_patch384_candidate":"one_original_vision_encoder_gpu_native_patch384_candidate",["runtime_source"]=source,
+            var report=new JObject{["success"]=false,["scope"]=releaseUnusedGpuCache?"one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate":nativeGelu?"one_original_vision_encoder_gpu_native_gelu_all_layer_rms_and_patch384_candidate":inlineAllRms?"one_original_vision_encoder_gpu_all_sixteen_layer_rms_and_native_patch384_candidate":"one_original_vision_encoder_gpu_native_patch384_candidate",["runtime_source"]=source,
                 ["case_id"]=caseId,["phase"]="audit",["all_profiles_validated"]=false,["end_to_end_validated"]=false};
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
@@ -116,7 +122,8 @@ namespace EmbeddingGemma.Validation.Tests
                     Assert.That(before.inputs.Count,Is.EqualTo(1));Assert.That(after.inputs.Count,Is.EqualTo(1));
                     parts=new[]{before,after};inputs=new[]{new[]{"projection_input"}};outputs=new[]{"projection_output"};operations.Add(new GpuBlockedMatmul(768,768,weights,384));
                 }
-                using var pipeline=new GpuProjectionPipeline(parts,inputs,outputs,operations.ToArray());
+                using var pipeline=new GpuProjectionPipeline(parts,inputs,outputs,operations.ToArray(),releaseUnusedGpuCache);
+                report["release_unused_gpu_cache"]=releaseUnusedGpuCache;
                 report["pipeline_prepare_ms"]=phaseTimer.Elapsed.TotalMilliseconds;report["segment_count"]=parts.Length;report["gpu_operation_count"]=operations.Count;
                 report["prepare_ms"]=timer.Elapsed.TotalMilliseconds;report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
                 var pixelsName=row.Value<string>("pixels");Check(Path.Combine(root,pixelsName),audit["files"][pixelsName].Value<string>("sha256"));
@@ -125,6 +132,8 @@ namespace EmbeddingGemma.Validation.Tests
                 report["host_working_set_before_execute_bytes"]=memoryBefore;report["phase"]="execute";Save();timer.Restart();
                 using var encoded=pipeline.Execute(input);Assert.That(encoded.backendType,Is.EqualTo(BackendType.GPUCompute));
                 var actual=encoded.DownloadToArray();report["execute_and_final_download_ms"]=timer.Elapsed.TotalMilliseconds;
+                var capture=Path.ChangeExtension(output,"bin");Assert.That(File.Exists(capture),Is.False);var capturedBytes=new byte[actual.Length*4];Buffer.BlockCopy(actual,0,capturedBytes,0,capturedBytes.Length);File.WriteAllBytes(capture,capturedBytes);
+                using(var stream=File.OpenRead(capture))report["capture_sha256"]=PlayerFileHash.Compute(stream,out _);
                 GpuExecutionProfiler.ReadProcessMemory(process,out var memoryAfter,out var peak);report["host_working_set_after_download_bytes"]=memoryAfter;report["host_peak_working_set_bytes"]=peak;
                 var expected=row["features"].ToObject<float[][]>().SelectMany(values=>values).ToArray();Assert.That(actual.Length,Is.EqualTo(expected.Length));
                 Assert.That(encoded.shape,Is.EqualTo(new TensorShape(reference["profiles"][profile].Value<int>("feature_count"),512)));

@@ -2,7 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using Unity.InferenceEngine;
+using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace EmbeddingGemma
 {
@@ -18,7 +22,9 @@ namespace EmbeddingGemma
         readonly IGpuTensorOperation[] projections;
         readonly HashSet<string>[] liveAfterStage;
         readonly Action[] releaseGpuCache;
+        readonly int ownerThread=Thread.CurrentThread.ManagedThreadId;
         Worker[] workers;
+        bool executing,disposeRequested;
 
         public GpuProjectionPipeline(Model[] models,string[] projectionInputs,string[] projectionOutputs,GpuBlockedMatmul[] projections)
             : this(models,projectionInputs,projectionOutputs,(IGpuTensorOperation[])projections) { }
@@ -107,60 +113,125 @@ namespace EmbeddingGemma
 
         public Tensor<float> Execute(Tensor<float> input)
         {
-            if(workers==null)throw new ObjectDisposedException(nameof(GpuProjectionPipeline));
+            using var call=BeginCall(input);
+            for(var stage=0;stage<models.Length;stage++)call.RunStage(stage);
+            return call.TakeResult();
+        }
+
+        /// <summary>
+        /// Executes on Unity's main thread, yielding between GPU-complete stages to
+        /// bound work in flight. Uses graphics fences, never intermediate tensor readback.
+        /// Borrows input and operations; transfers the final tensor only on success.
+        /// Cancellation or Dispose aborts at a stage boundary and releases per-call tensors.
+        /// Await completion before reusing the pipeline or disposing borrowed resources.
+        /// </summary>
+        public async Task<Tensor<float>> ExecuteAsync(Tensor<float> input,CancellationToken cancellationToken=default)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if(Thread.CurrentThread.ManagedThreadId!=ownerThread||SynchronizationContext.Current==null)
+                throw new InvalidOperationException("GPU asynchronous execution requires Unity's main thread and synchronization context.");
+            if(!SystemInfo.supportsGraphicsFence)throw new NotSupportedException("Staged GPU execution requires graphics fences.");
+            using var call=BeginCall(input);
+            for(var stage=0;stage<models.Length;stage++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();call.RunStage(stage);
+                var fence=Graphics.CreateGraphicsFence(GraphicsFenceType.AsyncQueueSynchronisation,SynchronisationStageFlags.AllGPUOperations);
+                do
+                {
+                    await Task.Yield();
+                    cancellationToken.ThrowIfCancellationRequested();ThrowIfDisposed();
+                }while(!fence.passed);
+            }
+            return call.TakeResult();
+        }
+
+        void ThrowIfDisposed()
+        {
+            if(workers==null||disposeRequested)throw new ObjectDisposedException(nameof(GpuProjectionPipeline));
+        }
+        Call BeginCall(Tensor<float> input)
+        {
+            ThrowIfDisposed();
+            if(executing)throw new InvalidOperationException("Only one GPU pipeline execution may be active.");
+            if(Thread.CurrentThread.ManagedThreadId!=ownerThread)throw new InvalidOperationException("GPU execution requires the creating main thread.");
             if(input==null)throw new ArgumentNullException(nameof(input));
             if(input.dataOnBackend==null)throw new ObjectDisposedException(nameof(input));
             if(input.backendType!=BackendType.GPUCompute || input.shape!=models[0].inputs[0].shape.ToTensorShape())
                 throw new ArgumentException("Input must match the fixed shape and already be on GPUCompute.");
-            var values=new Dictionary<string,Tensor<float>>{{models[0].inputs[0].name,input}};
-            var owned=new HashSet<Tensor<float>>();
-            try
+            var call=new Call(this,input);executing=true;return call;
+        }
+        void EndCall()
+        {
+            executing=false;if(disposeRequested)DisposeWorkers();
+        }
+        sealed class Call : IDisposable
+        {
+            readonly GpuProjectionPipeline owner;
+            readonly Dictionary<string,Tensor<float>> values;
+            readonly HashSet<Tensor<float>> owned=new HashSet<Tensor<float>>();
+            bool disposed;
+            public Call(GpuProjectionPipeline owner,Tensor<float> input)
             {
-                for(var stage=0;stage<workers.Length;stage++)
-                {
-                    foreach(var boundary in models[stage].inputs)
-                    {
-                        if(!values.TryGetValue(boundary.name,out var value))throw new InvalidOperationException("GPU boundary input is missing: "+boundary.name);
-                        workers[stage].SetInput(boundary.name,value);
-                    }
-                    workers[stage].Schedule();
-                    foreach(var boundary in models[stage].outputs)
-                    {
-                        Tensor copy=null;
-                        workers[stage].CopyOutput(boundary.name,ref copy);
-                        var value=copy as Tensor<float>;
-                        if(value==null){copy?.Dispose();throw new InvalidOperationException("Expected a float GPU boundary.");}
-                        owned.Add(value);
-                        if(value.backendType!=BackendType.GPUCompute)throw new InvalidOperationException("Intermediate output left GPUCompute.");
-                        values[boundary.name]=value;
-                    }
-                    releaseGpuCache?[stage]?.Invoke();
-                    if(stage<projections.Length)
-                    {
-                        var operands=new Tensor<float>[projectionInputs[stage].Length];
-                        for(var index=0;index<operands.Length;index++)
-                            if(!values.TryGetValue(projectionInputs[stage][index],out operands[index]))throw new InvalidOperationException("GPU operation input is missing.");
-                        var projected=projections[stage] is IGpuBinaryTensorOperation binary?binary.Execute(operands[0],operands[1]):projections[stage].Execute(operands[0]);
-                        if(projected==null || operands.Any(value=>ReferenceEquals(projected,value)))throw new InvalidOperationException("GPU operation must return an independent owned tensor.");
-                        owned.Add(projected);
-                        if(projected.backendType!=BackendType.GPUCompute)throw new InvalidOperationException("GPU operation output left GPUCompute.");
-                        values[projectionOutputs[stage]]=projected;
-                    }
-                    foreach(var name in values.Keys.Where(name=>!liveAfterStage[stage].Contains(name)).ToArray())values.Remove(name);
-                    var retained=new HashSet<Tensor<float>>(values.Values);
-                    foreach(var value in owned.Where(value=>!retained.Contains(value)).ToArray())
-                    {
-                        value.Dispose();owned.Remove(value);
-                    }
-                }
-                var output=values[models[models.Length-1].outputs[0].name];owned.Remove(output);return output;
+                this.owner=owner;values=new Dictionary<string,Tensor<float>>{{owner.models[0].inputs[0].name,input}};
             }
-            finally { foreach(var value in owned)value.Dispose(); }
+            public void RunStage(int stage)
+            {
+                owner.ThrowIfDisposed();
+                var model=owner.models[stage];var worker=owner.workers[stage];
+                foreach(var boundary in model.inputs)
+                {
+                    if(!values.TryGetValue(boundary.name,out var value))throw new InvalidOperationException("GPU boundary input is missing: "+boundary.name);
+                    worker.SetInput(boundary.name,value);
+                }
+                worker.Schedule();
+                foreach(var boundary in model.outputs)
+                {
+                    Tensor copy=null;worker.CopyOutput(boundary.name,ref copy);
+                    var value=copy as Tensor<float>;
+                    if(value==null){copy?.Dispose();throw new InvalidOperationException("Expected a float GPU boundary.");}
+                    owned.Add(value);
+                    if(value.backendType!=BackendType.GPUCompute)throw new InvalidOperationException("Intermediate output left GPUCompute.");
+                    values[boundary.name]=value;
+                }
+                owner.releaseGpuCache?[stage]?.Invoke();
+                if(stage<owner.projections.Length)
+                {
+                    var operands=new Tensor<float>[owner.projectionInputs[stage].Length];
+                    for(var index=0;index<operands.Length;index++)
+                        if(!values.TryGetValue(owner.projectionInputs[stage][index],out operands[index]))throw new InvalidOperationException("GPU operation input is missing.");
+                    var operation=owner.projections[stage];
+                    var projected=operation is IGpuBinaryTensorOperation binary?binary.Execute(operands[0],operands[1]):operation.Execute(operands[0]);
+                    if(projected==null || operands.Any(value=>ReferenceEquals(projected,value)))throw new InvalidOperationException("GPU operation must return an independent owned tensor.");
+                    owned.Add(projected);
+                    if(projected.backendType!=BackendType.GPUCompute)throw new InvalidOperationException("GPU operation output left GPUCompute.");
+                    values[owner.projectionOutputs[stage]]=projected;
+                }
+                foreach(var name in values.Keys.Where(name=>!owner.liveAfterStage[stage].Contains(name)).ToArray())values.Remove(name);
+                var retained=new HashSet<Tensor<float>>(values.Values);
+                foreach(var value in owned.Where(value=>!retained.Contains(value)).ToArray())
+                {
+                    value.Dispose();owned.Remove(value);
+                }
+            }
+            public Tensor<float> TakeResult()
+            {
+                owner.ThrowIfDisposed();var output=values[owner.models[owner.models.Length-1].outputs[0].name];owned.Remove(output);return output;
+            }
+            public void Dispose()
+            {
+                if(disposed)return;disposed=true;
+                try{foreach(var value in owned)value.Dispose();}
+                finally{owned.Clear();owner.EndCall();}
+            }
         }
 
         public void Dispose()
         {
-            if(workers==null)return;
+            if(workers==null)return;disposeRequested=true;
+            if(!executing)DisposeWorkers();
+        }
+        void DisposeWorkers()
+        {
             foreach(var worker in workers)worker?.Dispose();workers=null;
         }
     }

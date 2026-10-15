@@ -31,7 +31,7 @@ namespace EmbeddingGemma.Validation.Tests
                 throw new CryptographicException("Simulated interrupted native audit.");
             };
             var actual=Compute(model,out var backend,interrupted?fail:null);Assert.That(actual,Is.EqualTo(expected));
-            Assert.That(backend,interrupted?Is.EqualTo("dotnet_sha256"):Is.AnyOf("windows_cng","dotnet_sha256"));
+            if(interrupted)Assert.That(backend,Is.EqualTo("dotnet_sha256"));else Assert.That(backend=="windows_cng"||backend=="dotnet_sha256",Is.True);
             var after=(ArraySegment<byte>)field.GetValue(model.constants[0]);Assert.That(after.Array,Is.SameAs(padded));Assert.That(after.Offset,Is.EqualTo(3));Assert.That(after.Count,Is.EqualTo(8));
             Assert.That(padded[3],Is.Zero);Assert.That(padded[10],Is.EqualTo(64));
         }
@@ -42,7 +42,7 @@ namespace EmbeddingGemma.Validation.Tests
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-coefficient-audit-"+source+".json"));Assert.That(File.Exists(output),Is.False);
             var path=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-encoder/square-fp32.sentis"));
             using(var stream=File.OpenRead(path))Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo("4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7"));
-            var model=EmbeddingGemma.Tests.TextModelFile.Load(path);var timer=System.Diagnostics.Stopwatch.StartNew();
+            var model=TextModelFile.Load(path);var timer=System.Diagnostics.Stopwatch.StartNew();
             var digest=Compute(model,out var backend);var elapsed=timer.Elapsed.TotalMilliseconds;
             Assert.That(digest,Is.EqualTo("3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886"));
             var report=new JObject{["success"]=true,["runtime_source"]=source,["scope"]="same_pinned_original_coefficient_bytes_hash_only_no_model_inference",

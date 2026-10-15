@@ -1,0 +1,58 @@
+{
+  "scope": "existing_gpu_block_captures_vs_current_original_saved_cpu_patch_only_no_inference",
+  "expected_sha256": "1e99fa140cb0084e624b5019d96ae424192eff77346ef2f7ffea892c1bea0607",
+  "original_golden_unchanged": true,
+  "expected_is_current_cpu_context_not_frozen_original_intermediate": true,
+  "rows": [
+    {
+      "file": "vision-native-patch-projection-gpu-2ff6f27e8b2db802e98cc980f37f0794d77e2ae7-block128.bin",
+      "sha256": "a52ced30e5c0aed9fb1abd753acd60fce98877128b6bb51c197a23252317dfa4",
+      "bit_differences": 1153835,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 1.1444091796875e-05,
+      "maximum_tolerance_ratio": 0.45926650546412323
+    },
+    {
+      "file": "vision-native-patch-projection-gpu-2ff6f27e8b2db802e98cc980f37f0794d77e2ae7-block192.bin",
+      "sha256": "1e99fa140cb0084e624b5019d96ae424192eff77346ef2f7ffea892c1bea0607",
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0
+    },
+    {
+      "file": "vision-native-patch-projection-gpu-2ff6f27e8b2db802e98cc980f37f0794d77e2ae7-block256.bin",
+      "sha256": "e153e44cbace0ca12bb82377f9d50f957012a28e1cecf9622a77177441ee4c27",
+      "bit_differences": 1188107,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 1.049041748046875e-05,
+      "maximum_tolerance_ratio": 0.535810923041477
+    },
+    {
+      "file": "vision-native-patch-projection-gpu-2ff6f27e8b2db802e98cc980f37f0794d77e2ae7-block384.bin",
+      "sha256": "bc4c19c9aaf9688801c99ed073fdde22f0daf6b822dc2c9c4b7a3f7c9aded636",
+      "bit_differences": 1225584,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 1.71661376953125e-05,
+      "maximum_tolerance_ratio": 0.6770952713170907
+    },
+    {
+      "file": "vision-native-patch-projection-gpu-2ff6f27e8b2db802e98cc980f37f0794d77e2ae7-block512.bin",
+      "sha256": "3a0a441e1a45e77c6f33dfda8a8430d1defad1eac70c4f03cb6fdef4649c0ea1",
+      "bit_differences": 1237939,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 1.71661376953125e-05,
+      "maximum_tolerance_ratio": 0.7198880890772243
+    },
+    {
+      "file": "vision-native-patch-projection-gpu-2ff6f27e8b2db802e98cc980f37f0794d77e2ae7-block768.bin",
+      "sha256": "00d1f25a8a533feff243becbb0a1571c1202eaf655497f688e51245f10447deb",
+      "bit_differences": 1307337,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 3.814697265625e-05,
+      "maximum_tolerance_ratio": 0.6928922857368285
+    }
+  ],
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

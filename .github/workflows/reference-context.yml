@@ -186,7 +186,10 @@ jobs:
           report = replay_saved_reference_context(Path('../artifacts/original-context-input'), 'image',
               source_commit='e2a6dc01fbca8c9be1f3bbe875325ad338de0ca0',
               revision='914f7f89142e33e77833254d9c9b90c3cef7303b', case_id='square-0',
-              capture_nodes=('add_1', 'cat', 'cat_1', 'add_15', 'mul_372', 'mul_373', 'mm_113', 'add_225')
+              capture_nodes=('add_1', 'cat', 'cat_1', 'add_15', 'mul_372', 'mul_373', 'mm_113', 'add_225',
+                  'add_10', '_softmax', 'view_21', 'gelu', 'mul_4')
+                  if os.environ['PROBE_CONTEXT'] == 'native' else None,
+              capture_row_prefixes={'add_10': 16, '_softmax': 16, 'view_21': 16, 'gelu': 16, 'mul_4': 16}
                   if os.environ['PROBE_CONTEXT'] == 'native' else None,
               capture_destination=Path('../artifacts/original-context-results/captures'))
           report.update(job_source=os.environ['GITHUB_SHA'], probe_context=os.environ['PROBE_CONTEXT'])

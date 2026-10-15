@@ -79,23 +79,34 @@ def probe_cpu_threads(program, inputs, expected, *, thread_counts=(1, 2, 4)):
                 full_encoder_validated=False, end_to_end_validated=False)
 
 
-def capture_saved_program_nodes(program, inputs, node_names, destination, expected):
+def capture_saved_program_nodes(program, inputs, node_names, destination, expected, *, row_prefixes=None):
     """Observe the existing saved graph without re-exporting or editing its ops."""
     available = {node.name for node in program.graph.nodes if node.op == 'call_function'}
     if (not node_names or len(set(node_names)) != len(node_names)
             or any(not isinstance(name, str) or re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', name) is None
                    or name not in available for name in node_names)):
         raise ValueError('Capture requires unique existing operation node names')
-    observed = {}
+    row_prefixes = {} if row_prefixes is None else row_prefixes
+    if (not isinstance(row_prefixes, dict) or any(name not in node_names or type(count) is not int or count < 1
+                                               for name, count in row_prefixes.items())):
+        raise ValueError('Capture row prefixes need selected nodes and positive integer counts')
+    observed, source_shapes = {}, {}
 
     class Observer(torch.fx.Interpreter):
         def run_node(self, node):
             value = super().run_node(node)
             if node.name in node_names:
-                if (not isinstance(value, torch.Tensor) or value.dtype != torch.float32
-                        or value.device.type != 'cpu' or not torch.isfinite(value).all()):
+                if (not isinstance(value, torch.Tensor) or value.dtype != torch.float32 or value.device.type != 'cpu'):
                     raise ValueError('Captured node must be a finite CPU FP32 tensor')
-                observed[node.name] = value.detach().clone()
+                capture = value.detach()
+                if node.name in row_prefixes:
+                    if value.ndim < 2 or row_prefixes[node.name] > value.shape[-2]:
+                        raise ValueError('Capture row prefix exceeds the source tensor rows')
+                    source_shapes[node.name] = list(value.shape)
+                    capture = capture.narrow(-2, 0, row_prefixes[node.name])
+                if not torch.isfinite(capture).all():
+                    raise ValueError('Captured node must be a finite CPU FP32 tensor')
+                observed[node.name] = capture.clone()
             return value
 
     with torch.no_grad():
@@ -120,6 +131,8 @@ def capture_saved_program_nodes(program, inputs, node_names, destination, expect
         path.write_bytes(raw)
         rows.append(dict(node=name, file=path.name, shape=list(value.shape), bytes=len(raw),
                          sha256=hashlib.sha256(raw).hexdigest()))
+        if name in row_prefixes:
+            rows[-1].update(source_shape=source_shapes[name], prefix_rows=row_prefixes[name])
     return dict(scope='saved_program_node_observation_only', nodes=rows,
                 observed_final_matches_normal_bits=True,
                 original_golden_metrics=feature_error_metrics(actual, expected),
@@ -127,7 +140,7 @@ def capture_saved_program_nodes(program, inputs, node_names, destination, expect
 
 
 def replay_saved_reference_context(directory, modality, *, source_commit, revision, case_id,
-                                   capture_nodes=None, capture_destination=None):
+                                   capture_nodes=None, capture_destination=None, capture_row_prefixes=None):
     """Audit the saved graph and selected fixture; this is not full acceptance."""
     if modality not in ("audio", "image") or any(re.fullmatch(r"[0-9a-f]{40}", value) is None for value in (source_commit, revision)):
         raise ValueError("Replay needs a fixed modality, source and revision")
@@ -183,5 +196,5 @@ def replay_saved_reference_context(directory, modality, *, source_commit, revisi
         if capture_destination is None:
             raise ValueError('Node capture destination is required')
         report['saved_node_capture'] = capture_saved_program_nodes(
-            program, (values,), capture_nodes, capture_destination, expected)
+            program, (values,), capture_nodes, capture_destination, expected, row_prefixes=capture_row_prefixes)
     return report

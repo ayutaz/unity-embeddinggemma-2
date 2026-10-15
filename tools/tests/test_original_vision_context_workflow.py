@@ -67,6 +67,15 @@ def test_original_probe_checks_pool_layout_on_captured_last_encoder_output_after
     assert 'embeddinggemma_tools.vision_pooling_context' in step['run']
 
 
+def test_original_probe_captures_bounded_native_first_layer_nonlinearity_operands():
+    steps=workflow()['jobs']['original_vision_probe']['steps']
+    execute=next(step['run'] for step in steps if step.get('name')=='Replay original saved graph against unchanged golden')
+    assert 'capture_row_prefixes=' in execute
+    for name in ('add_10','_softmax','view_21','gelu','mul_4'):
+        assert f"'{name}'" in execute
+        assert f"'{name}': 16" in execute
+
+
 @pytest.mark.parametrize('conditions,reproduced', [
     ([dict(executed=True, mismatched_elements=0)], True),
     ([dict(executed=True, mismatched_elements=1)], False),

@@ -278,6 +278,8 @@ namespace EmbeddingGemma.Validation.Tests
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var folder=nativeGlu?"GpuAudioPartitionedNativeGlu":nativeSoftmax?"GpuAudioPartitionedNativeSoftmax":nativeDivision?"GpuAudioPartitionedNativeDivision":nativeTanh?"GpuAudioPartitionedNativeTanh":nativeQueryScale?"GpuAudioPartitionedNativeQueryScale":nativeBmm?"GpuAudioPartitionedNativeBmm":nativeSilu?"GpuAudioPartitionedNativeSilu":isolated?"GpuAudioPartitionedLayer10":allStatic?"GpuAudioPartitionedAllStatic":"GpuAudioPartitionedFirstFf";
+            var originalPadded=scalarMomentFma&&signal=="padded_noise";
+            if(originalPadded)folder="GpuAudioPartitionedScalarMomentPadded";
             var root=Path.Combine(Application.dataPath,folder);
             var originalRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-real-chain/audio-runtime-reference"));
             var stem=nativeSoftmax?(observeBmm?"partitioned-native-softmax-operands-observation-":"partitioned-native-softmax-gpu-"):nativeDivision?(observeBmm?"partitioned-native-division-operands-observation-":"partitioned-native-division-gpu-"):nativeTanh?(observeBmm?"partitioned-native-tanh-operands-observation-":"partitioned-native-tanh-gpu-"):nativeQueryScale?(observeBmm?"partitioned-native-query-scale-operands-observation-":"partitioned-native-query-scale-gpu-"):observeBmm?"partitioned-native-bmm-operands-observation-":nativeBmm?"partitioned-native-bmm-gpu-":attention?"partitioned-native-silu-attention-observation-":nativeSilu?(early?"partitioned-native-silu-early-observation-":"partitioned-native-silu-gpu-"):
@@ -304,10 +306,21 @@ namespace EmbeddingGemma.Validation.Tests
                 var locked=JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath,"../Packages/packages-lock.json")));
                 foreach(var package in new[]{"com.ayutaz.embeddinggemma","com.ayutaz.embeddinggemma.validation"})
                     Assert.That(locked["dependencies"][package].Value<string>("hash"),Is.EqualTo(source));
-                var plan=JObject.Parse(File.ReadAllText(Path.Combine(root,"partition-plan.json")));
-                Assert.That(plan.Value<string>("source_graph_sha256"),Is.EqualTo(allStatic?"c050c2efa87d83aea45587b25f7b8d1d24dc471f33cc732dcf17d89588c70c13":"63f24d4883047ebe1f30572d7d45ad5bead33891bbe79a256f9ee10867a564b2"));
+                var planPath=Path.Combine(root,"partition-plan.json");
+                if(originalPadded)Check(planPath,"dbb6588db0086ccd3957d52db9d6fdfe55135c630a2ed7e567c2d8397534e6d9");
+                var plan=JObject.Parse(File.ReadAllText(planPath));
+                Assert.That(plan.Value<string>(originalPadded?"base_graph_sha256":"source_graph_sha256"),Is.EqualTo(allStatic?"c050c2efa87d83aea45587b25f7b8d1d24dc471f33cc732dcf17d89588c70c13":"63f24d4883047ebe1f30572d7d45ad5bead33891bbe79a256f9ee10867a564b2"));
                 Assert.That(plan.Value<string>("reference_source"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));
-                Assert.That(plan.Value<bool>("source_initializer_bytes_preserved"),Is.True);
+                Assert.That(plan.Value<bool>("source_initializer_bytes_preserved"),Is.EqualTo(!originalPadded));
+                if(originalPadded)
+                {
+                    Assert.That(plan.Value<bool>("learned_coefficients_preserved")&&plan.Value<bool>("profile_mask_mutations_only"),Is.True);
+                    Assert.That(plan.Value<string>("original_profile_source_graph_sha256"),Is.EqualTo("7770a8af258f2de32c5587497b820596ea4e1ed7ec5382c3ee90eada2bec7e4a"));
+                    Assert.That(plan.Value<string>("original_profile_target_graph_sha256"),Is.EqualTo("af2e97b777349fa2e5f74790d24bb4b2d899c6a8438f372253737bc5940944c7"));
+                    Check(Path.Combine(root,"original-profile-delta.json"),"5379420fbcc12f49a75fcd1c67c8b5d52e73888517051a7de5871d8364e0e292");
+                    report["original_profile_delta_sha256"]=plan["original_profile_delta_sha256"];
+                    report["profile"]=plan["profile"];
+                }
                 foreach(var file in (JObject)plan["files"])
                 {
                     var path=Path.Combine(root,file.Key);Assert.That(new FileInfo(path).Length,Is.EqualTo(file.Value.Value<long>("bytes")));
@@ -352,7 +365,7 @@ namespace EmbeddingGemma.Validation.Tests
                 foreach(var segment in (JArray)plan["segments"])
                 {
                     var segmentFile=segment.Value<string>("file");
-                    if(firstNormFma&&segmentFile=="segment-0.onnx")
+                    if(firstNormFma&&!originalPadded&&segmentFile=="segment-0.onnx")
                     {
                         Assert.That(nativeGlu,Is.True);segmentFile=scalarMomentFma?"segment-0-scalar-moment-fma.onnx":"segment-0-first-norm-fma.onnx";
                         var segmentSha=scalarMomentFma?"650929620cdb4974eec0ee41d1d21c6dfe376c6703cb9cf5091d261171dbd949":"9bc00c121b589af7444e026532b4c01452a21b32b1b2b290e2377b55aa6fe19b";

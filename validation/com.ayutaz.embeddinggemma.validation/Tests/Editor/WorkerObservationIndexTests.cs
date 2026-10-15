@@ -24,6 +24,9 @@ namespace EmbeddingGemma.Tests
             Assert.That(result.Snapshots.Count, Is.EqualTo(1));
             Assert.That(result.Snapshots[0].TensorIndex, Is.EqualTo(requested));
             Assert.That(result.Snapshots[0].Values, Is.EqualTo(new[] { 4f, 6f }));
+            var shape=typeof(WorkerObservation.Snapshot).GetField("Shape");
+            Assert.That(shape,Is.Not.Null,"Captured tensor shape is missing.");
+            Assert.That(shape.GetValue(result.Snapshots[0]),Is.EqualTo(new TensorShape(1,2)));
         }
     }
 }

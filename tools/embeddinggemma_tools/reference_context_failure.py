@@ -87,6 +87,18 @@ def run_saved_graph_prefix(program, inputs, node_name):
     """
     if not isinstance(program, torch.fx.GraphModule) or not any(node.name == node_name for node in program.graph.nodes):
         raise ValueError('Prefix node is absent from the saved graph')
+    target=next(node for node in program.graph.nodes if node.name==node_name)
+    needed=set();pending=[target]
+    while pending:
+        node=pending.pop()
+        if node in needed:continue
+        needed.add(node);pending.extend(node.all_input_nodes)
+    graph=torch.fx.Graph();mapping={}
+    for node in program.graph.nodes:
+        if node.op=='placeholder' or node in needed:
+            mapping[node]=graph.node_copy(node,lambda previous:mapping[previous])
+    graph.output(mapping[target])
+    prefix=torch.fx.GraphModule(program,graph)
 
     class Complete(Exception):
         pass
@@ -101,7 +113,7 @@ def run_saved_graph_prefix(program, inputs, node_name):
                 raise Complete()
             return value
 
-    runner = Prefix(program)
+    runner = Prefix(prefix)
     with torch.no_grad():
         try:
             runner.run(*inputs)

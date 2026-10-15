@@ -666,7 +666,7 @@
   },
   "original_golden_changed": false,
   "learned_weights_changed": false,
-  "original_gpu_square_remaining_violations": 1,
+  "original_gpu_square_remaining_violations": 0,
   "original_all_six_image_gpu_cases_validated": false,
   "full_encoder_validated": false,
   "end_to_end_validated": false,
@@ -1006,6 +1006,112 @@
         "completed_utc": "2026-10-15T11:36:29.041274+00:00"
       }
     },
-    "other_five_cases_executed": false
-  }
+    "all_other_five_cases_executed": false
+  },
+  "one_original_gpu_square_case_validated": true,
+  "native_rotary_square_one_gpu": {
+    "file": "vision-original-native-rotary-whole-gpu-759f11663933e54c696d27bf094e77853acc1d7a-square-1.json",
+    "sha256": "423688bef85cba55af3dd234dae00fb8bde786e58c8d0613e0271ca2c655e621",
+    "success": false,
+    "runtime_source": "759f11663933e54c696d27bf094e77853acc1d7a",
+    "phase": "completed",
+    "actual_backend": "GPUCompute",
+    "mismatched_elements": 5,
+    "maximum_absolute_error": 2.7060508728027344e-05,
+    "maximum_tolerance_ratio": 1.4062215715395514,
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "host_peak_working_set_bytes": 4646338560,
+    "execute_and_final_download_ms": 14711.0493,
+    "original_coefficient_bytes_preserved": true,
+    "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+    "capture_sha256": "177560aa69e8df59a311f92ffe9d901e1e246fa4974de9a9f588baa62d052380",
+    "derived_rotary_rebound_tables": 4,
+    "derived_rotary_changed_multiplication_operands": 128,
+    "derived_rotary_scope": "audited_data_independent_original_square_position_tables",
+    "test": {
+      "file": "vision-original-native-rotary-square1-20261015.xml",
+      "sha256": "e26e8dc057c34d07a9f3907a9b4adcfbd1dc1806dd5087b40abc1222452cebf9",
+      "totals": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Failed(Child)",
+        "total": "1",
+        "passed": "0",
+        "failed": "1",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 11:38:14Z",
+        "end-time": "2026-10-15 11:38:45Z",
+        "duration": "31.3020611"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-square1-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "OriginalContextNativeRotarySquareOneMustMatchOriginalOnGpu",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-square1-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T11:37:37.268836+00:00",
+        "pid": 104256,
+        "exit_code": 2,
+        "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-square1-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        },
+        "elapsed_seconds": 72.82814120000694,
+        "completed_utc": "2026-10-15T11:38:50.096981+00:00"
+      }
+    }
+  },
+  "rotary_only_preparation_tests": [
+    {
+      "file": "original-rotary-only-dispatch-red-20261015.xml",
+      "sha256": "2290edd594d88410a3ead74df4d1b17631d8542e0e897498a6717b1e7200a03d",
+      "totals": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "2",
+        "skipped": "0",
+        "tests": "2",
+        "time": "1.689",
+        "timestamp": "2026-10-15T20:39:17.864230+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      }
+    },
+    {
+      "file": "original-rotary-only-dispatch-green-20261015.xml",
+      "sha256": "c5d74f6b377dbc237f61043cfb974aa979f5d33d0c231b3b59cf72d2113d7327",
+      "totals": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "52",
+        "time": "3.105",
+        "timestamp": "2026-10-15T20:40:18.171460+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      }
+    }
+  ]
 }

@@ -311,9 +311,12 @@ def capture_attention_operations(layer, hidden, blocked_mask, positions, pinned_
 
 def prepare(snapshot, context, output, *, reference_source, diagnostic_source, detail_feed_forward=False, detail_attention_projections=False, detail_attention_ops=False, detail_convolution=False,
             with_projection_oracle=False, with_compensated_projection=False, chunk_size=64,
-            subsample_input=None, subsample_input_sha256=None):
-    """Produce internal references for the frozen, fully valid silence layer 0."""
+            subsample_input=None, subsample_input_sha256=None, layer_index=0):
+    """Produce internal references against one original frozen silence layer."""
     snapshot, context, output = map(Path, (snapshot, context, output))
+    if type(layer_index) is not int or layer_index<0:raise ValueError('Select a nonnegative layer index')
+    if layer_index!=0 and (subsample_input is not None or subsample_input_sha256 is not None):
+        raise ValueError('subsample replay requires layer 0')
     if any(re.fullmatch(r"[0-9a-f]{40}", value) is None
            for value in (reference_source, diagnostic_source)):
         raise ValueError("source must be an immutable SHA")
@@ -333,9 +336,13 @@ def prepare(snapshot, context, output, *, reference_source, diagnostic_source, d
         raise ValueError("select one fully valid silence context")
     case = cases[0]
     stages = {value["name"]: value for value in case["stages"]}
+    input_stage='subsample' if layer_index==0 else f'layer_{layer_index-1}'
+    output_stage=f'layer_{layer_index}'
+    if any(name not in stages for name in (input_stage,output_stage)):
+        raise ValueError('Selected layer requires original input and final context stages')
     tensors = []
     input_files = {}
-    for name in ("subsample", "layer_0"):
+    for name in (input_stage, output_stage):
         stage = stages[name]
         path = (context / stage["expected"]).resolve()
         if not path.is_relative_to(context.resolve()):
@@ -361,7 +368,7 @@ def prepare(snapshot, context, output, *, reference_source, diagnostic_source, d
         features = torch.from_numpy(np.fromfile(subsample_input, dtype="<f4").reshape(shape))
     elif subsample_input_sha256 is not None:
         raise ValueError("subsample input hash requires an explicit input path")
-    layer, config = load_layer(snapshot)
+    layer, config = load_layer(snapshot,index=layer_index)
     hidden, pinned_final = tensors
     frames = reference["profiles"][case["profile"]]["feature_shape"][1]
     if tuple(hidden.shape) != (1, (frames + 3) // 4, config.hidden_size):
@@ -401,6 +408,7 @@ def prepare(snapshot, context, output, *, reference_source, diagnostic_source, d
         tensor.numpy().astype("<f4").tofile(path)
         files[name] = dict(file=path.name, shape=list(tensor.shape), **_identity(path))
     report = dict(context_validated=True, native_final_exact_match=True,
+                  layer_index=layer_index,input_stage=input_stage,output_stage=output_stage,
                   reference_source=reference_source, diagnostic_source=diagnostic_source,
                   model_revision=metadata["model_revision"], profile=case["profile"],
                   case=case["id"], input_files=input_files, parts=files,
@@ -442,6 +450,7 @@ def main(argv=None):
     parser.add_argument("--detail-attention-projections", action="store_true")
     parser.add_argument("--detail-attention-ops", action="store_true")
     parser.add_argument("--detail-convolution", action="store_true")
+    parser.add_argument("--layer-index",type=int,default=0)
     parser.add_argument("--projection-oracle", action="store_true")
     parser.add_argument("--compensated-projection", action="store_true")
     parser.add_argument("--chunk-size", type=int, default=64)
@@ -451,10 +460,12 @@ def main(argv=None):
     if args.report.exists():
         raise ValueError("refusing to overwrite replay report")
     report = dict(success=False, context_validated=False, native_final_exact_match=False,
+                  layer_index=args.layer_index,
                   full_encoder_validated=False, unity_validated=False,
                   reference_source=args.reference_source, diagnostic_source=args.diagnostic_source,
                   torch_version=torch.__version__, torch_threads=torch.get_num_threads())
     try:
+        if args.layer_index<0:raise ValueError('Select a nonnegative layer index')
         snapshot = args.snapshot
         if snapshot is None:
             from .prepare import MODEL_ID
@@ -470,6 +481,7 @@ def main(argv=None):
                               detail_attention_projections=args.detail_attention_projections,
                               detail_attention_ops=args.detail_attention_ops,
                               detail_convolution=args.detail_convolution,
+                              layer_index=args.layer_index,
                               with_compensated_projection=args.compensated_projection, chunk_size=args.chunk_size,
                               subsample_input=args.subsample_input, subsample_input_sha256=args.subsample_input_sha256))
         report["success"] = (report.get("fp64_projection_gate_passed", True)

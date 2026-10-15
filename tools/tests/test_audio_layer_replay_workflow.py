@@ -56,3 +56,19 @@ def test_attention_reference_scope_keeps_full_subsample_replay_as_separate_defau
     assert '--detail-convolution' in attention['run'],'Native convolution boundaries are missing from the pinned reference job'
     assert '--reference-source 4edbe17a8105233c5aaa1514faa2862b08a4f7e0' in attention['run']
     assert not any(s.get('continue-on-error') for s in steps)
+
+
+def test_selected_layer_is_bound_to_attention_scope_and_its_original_context_pair():
+    path=Path(__file__).resolve().parents[2]/'.github/workflows/audio-layer-replay.yml'
+    workflow=yaml.safe_load(path.read_text());triggers=workflow.get('on',workflow.get(True))
+    selection=triggers['workflow_dispatch']['inputs'].get('layer_index')
+    assert selection is not None,'Original later-layer selection is missing'
+    assert selection['default']=='0' and selection['options']==[str(i) for i in range(12)]
+    job=workflow['jobs']['replay'];binding=job['env']['REPLAY_LAYER']
+    assert "inputs.scope == 'attention'" in binding and "|| '0'" in binding
+    steps=job['steps'];fetch=next(s for s in steps if s.get('name')=='Fetch only frozen stage input and output')
+    assert 'REPLAY_LAYER' in fetch['run'] and 'silence-stage-${input_stage}' in fetch['run'] and 'silence-stage-${output_stage}' in fetch['run']
+    attention=next(s for s in steps if s.get('name')=='Capture attention projections against pinned layer final')
+    full=next(s for s in steps if s.get('name')=='Replay official layer 0 against unchanged native final')
+    assert '--layer-index "$REPLAY_LAYER"' in attention['run']
+    assert '--layer-index' not in full['run'] and '--subsample-input' in full['run']

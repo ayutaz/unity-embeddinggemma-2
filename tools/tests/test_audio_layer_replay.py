@@ -222,6 +222,51 @@ def preparer():
     return value
 
 
+def later_layer_bundle(tmp_path):
+    snapshot,context=bundle(tmp_path);audio,_=audio_models();_,hidden,blocked,positions,first_final=fixture()
+    with torch.no_grad():second_final=audio.layers[1](first_final.clone(),attention_mask=blocked,position_embeddings=positions)
+    save_file({'audio_tower.layers.1.'+key:value.contiguous() for key,value in audio.layers[1].state_dict().items()},snapshot/'model.safetensors')
+    second_final.numpy().astype('<f4').tofile(context/'layer1.bin')
+    for name in ('audio-stage-reference.json','audio-stage-validation.json'):
+        path=context/name;data=json.loads(path.read_text())
+        data['metadata']['input_sha256']['model.safetensors']=hashlib.sha256((snapshot/'model.safetensors').read_bytes()).hexdigest()
+        if name=='audio-stage-reference.json':data['cases'][0]['stages'].append(dict(name='layer_1',shape=list(second_final.shape),expected='layer1.bin'))
+        else:data['files']['layer1.bin']=dict(bytes=(context/'layer1.bin').stat().st_size,sha256=hashlib.sha256((context/'layer1.bin').read_bytes()).hexdigest())
+        path.write_text(json.dumps(data))
+    return snapshot,context
+
+
+def test_later_layer_replay_uses_original_previous_layer_output_and_selected_weights(tmp_path):
+    snapshot,context=later_layer_bundle(tmp_path)
+    report=preparer()(snapshot,context,tmp_path/'out',reference_source='a'*40,diagnostic_source='c'*40,layer_index=1)
+    assert report['layer_index']==1 and report['input_stage']=='layer_0' and report['output_stage']=='layer_1'
+    assert set(report['input_files'])=={'final.bin','layer1.bin'} and report['native_final_exact_match']
+    assert not report['full_encoder_validated'] and not report['unity_validated']
+
+
+@pytest.mark.parametrize('index',[-1,True,2])
+def test_later_layer_selection_refuses_invalid_or_missing_context_before_weights(tmp_path,monkeypatch,index):
+    snapshot,context=bundle(tmp_path)
+    monkeypatch.setattr(audio_layer_replay,'load_layer',lambda *args,**kwargs:pytest.fail('Selection audit must precede weights'))
+    with pytest.raises(ValueError,match='layer|context'):
+        preparer()(snapshot,context,tmp_path/'out',reference_source='a'*40,diagnostic_source='c'*40,layer_index=index)
+    assert not (tmp_path/'out').exists()
+
+
+def test_later_layer_never_reuses_its_input_as_subsample_final(tmp_path):
+    snapshot,context=later_layer_bundle(tmp_path)
+    with pytest.raises(ValueError,match='subsample.*layer 0'):
+        preparer()(snapshot,context,tmp_path/'out',reference_source='a'*40,diagnostic_source='c'*40,layer_index=1,subsample_input=context/'input.bin')
+    assert not (tmp_path/'out').exists()
+
+
+def test_cli_passes_selected_layer_index_to_audited_producer(tmp_path,monkeypatch):
+    calls=[];monkeypatch.setattr(audio_layer_replay,'prepare',lambda *args,**kwargs:calls.append(kwargs) or {'native_final_exact_match':True})
+    result=audio_layer_replay.main(['--snapshot',str(tmp_path),'--context',str(tmp_path),'--output',str(tmp_path/'out'),
+        '--reference-source','a'*40,'--diagnostic-source','c'*40,'--report',str(tmp_path/'report.json'),'--layer-index','1'])
+    assert result==0 and calls[0]['layer_index']==1
+
+
 def test_producer_writes_parts_only_after_fixed_context_matches(tmp_path):
     run = preparer()
     snapshot, context = bundle(tmp_path)

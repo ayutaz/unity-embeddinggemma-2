@@ -20,6 +20,10 @@ on:
         description: Original vision only; capture data-independent rotary tables for all profiles without encoder inference
         type: boolean
         default: false
+      original_matmul_only:
+        description: Original vision only; probe static matrix shapes on an AMD host without encoder inference
+        type: boolean
+        default: false
   pull_request:
     types: [opened, synchronize, labeled]
 
@@ -139,7 +143,7 @@ jobs:
           if-no-files-found: warn
 
   original_vision_probe:
-    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && !inputs.original_rotary_only
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && !inputs.original_rotary_only && !inputs.original_matmul_only
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -314,7 +318,7 @@ jobs:
           if-no-files-found: warn
 
   original_rotary_probe:
-    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_rotary_only
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_rotary_only && !inputs.original_matmul_only
     runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:
@@ -394,3 +398,7 @@ jobs:
           path: artifacts/original-rotary-results/
           retention-days: 7
           if-no-files-found: warn
+
+  original_static_matmul_probe:
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_matmul_only
+    uses: ./.github/workflows/vision-matmul-context.yml

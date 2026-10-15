@@ -13,13 +13,16 @@ namespace EmbeddingGemma.Tests
         [Test]
         public void ExplicitFusedInnerGeluPreservesDefaultAndOwnedResults()
         {
-            var shape=new TensorShape(1,257);
+            // Fixed procedural-corpus inputs that distinguish the rounding paths.
+            var values=new[]{-1.985658884048462f,-1.8951334953308105f,-1.2458938360214233f,-.9991238117218018f,
+                -1.2450087070465088f,-1.072245478630066f,-1.2215272188186646f,-.5450138449668884f,
+                -1.258405089378357f,-2.172506809234619f,-.9882657527923584f,-1.1261590719223022f};
+            var shape=new TensorShape(1,values.Length);
             var constructor=typeof(GpuGelu).GetConstructor(new[]{typeof(TensorShape),typeof(bool),typeof(bool)});
             Assert.That(constructor,Is.Not.Null,"Explicit fused GELU inner expression is missing.");
             using var fused=(IGpuTensorOperation)constructor.Invoke(new object[]{shape,true,true});
             using var separate=(IGpuTensorOperation)constructor.Invoke(new object[]{shape,true,false});
             using var original=new GpuGelu(shape,true);
-            var values=new float[257];for(var i=0;i<values.Length;i++)values[i]=(i-128)*.0273f;
             using var input=new Tensor<float>(shape,values);ComputeTensorData.Pin(input);
             using var result=fused.Execute(input);using var baseline=separate.Execute(input);using var prior=original.Execute(input);
             var actual=result.DownloadToArray();var normal=baseline.DownloadToArray();var legacy=prior.DownloadToArray();var changed=0;

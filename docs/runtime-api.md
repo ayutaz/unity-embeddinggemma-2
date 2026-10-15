@@ -1,18 +1,18 @@
-# テキスト推論 API
+# 推論API
 
-> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。実モデル実行は停止中。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
+> 文書整合確認: 2026-10-16。mainの既存テキストAPIと、Draft PR #81の画像・音声APIは統合状態を区別します。[現在の状態](status.md)にsource別の固定証拠を記載しています。
 
-## 現在のAPI範囲とGPU設定
+## マルチモーダルAPIとGPU設定
 
-2026-10-14、mainにはテキストAPI、公式prompt・共通backbone、画像GPU前処理、PCM / 音声GPU前処理がある。Draft PR #81の依存branchには `ImageFeatureEncoder` / `ImageEmbedder`、`AudioFeatureEncoder` / `AudioEmbedder`が実装・合成契約検証されている。以下のテキスト手順を、マルチモーダルAPIが未実装という意味に読み替えない。実encoder gate・Unity実入力から最終APIの全条件は未達。
+Draft branchの`PartitionedImageFeatureEncoder` / `ImageEmbedder.EmbedAsync`と`PartitionedAudioFeatureEncoder` / `AudioEmbedder.EmbedAsync`は、実Texture・PCMから前処理→encoder→backbone→正規化済み768次元をGPUComputeで実行する検証済み経路です。画像・音声は各6ケースとQuery / Document / Rawの18条件、計算 / 入力CPU fallback・中間readback0。元encoderの画像全3 / 音声全2 profileの厳密数値gateも合格しています。必須CIの音声ONNX比較が失敗しているため、手順4全体・正式配布は未完了です。
 
-画像は `ImageEmbedder.Embed(Texture, TextRole role = TextRole.Raw, string title = null)`、音声は `AudioEmbedder.Embed(AudioPcmInput, TextRole role = TextRole.Raw, string title = null)`。両APIとも前処理・encoder・backboneとprompt builderを借用し、各呼び出しの中間結果を所有して解放する。返す768次元CPU配列は独立コピーで、APIのDisposeは借用Workerを破棄しない。
+両APIはstageとprompt builderを借用し、呼び出しごとの中間結果を所有します。返す768次元CPU配列は独立コピーです。非同期encoderはGPU分割境界を待ち、音声では完了済みキャッシュを解放します。前処理とbackboneはメインスレッド同期処理のため`Task.Run`へ移しません。呼び出しをawaitしてから借用stage / operationをDisposeしてください。CPU APIの選択肢と、ここで検証したGPU専用経路を区別します。
 
-2026-10-15のDraft PR #81には、分割モデル用の `PartitionedAudioFeatureEncoder(Model[] models, string[][] operationInputs, string[] operationOutputs, IGpuTensorOperation[] operations, AudioEncoderProfile profile)` もある。`IAudioFeatureEncoder` を実装し、GPUCompute専用でWorkerを構築時に一度だけ作る。入力は同device・同prefixの `AudioPreprocessingResult`、返り値はGPU上の独立所有 `AudioEncodingResult`。encoderのDisposeはWorkerを解放し、借用model・operation・入力は解放しないため、呼出側でoperationを別途Disposeする。渡す分割modelは指定profileと係数を監査したものに限る。元音声6ケース・2 profileのencoder数値gateと、adapter経由の元impulseは実GPUで合格したが、実PCM→最終768次元の全条件は未検証。[固定証拠](results/m4-padded-audio-and-gpu-encoder-adapter-20261015.json)。
+使用例・prefix / mask・キャンセルと所有権は[音声API](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-embedder.md)と[音声encoder](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-feature-encoder.md)を参照してください。分割Model・係数・operation接続表は対象profileを監査したものを呼び出し側で準備します。自動ダウンロード・profile選択は行いません。単一Modelの同期encoder APIを、この実モデル受け入れ経路と同一視しません。
 
-`GpuBlockedMatmul(width, columns, coefficients)` は既存のblock192順を維持する。4引数版の最後の `blockSize` は1〜4096の明示的な加算区切りで、対象profileの独立参照に照合して使う。画像patchの固定入力では384が全bit一致したが、画像全encoderは未合格であり、他の投影・入力・GPUに同じ区切りを適用してよい証拠にはならない。[局所一致と全体不合格](results/m3-patch384-gpu-and-original-encoder-20261015.json)。
+`GpuBlockedMatmul`の加算blockは係数・形状と独立参照に照合して指定します。局所patchのblock384成功を他の行列へ一般化せず、採用済み全encoderの計算順を保持します。モデル準備の再利用、長期メモリ / 速度、sample / Player、他端末は後続工程です。
 
-利用者向け経路は各stageを `BackendType.GPUCompute` で構築する。同backend / profileを要求し、GPU不在をCPUで代替しない。Runtime APIのCPU選択肢は残るが、対象実モデル検証のGPU専用化は2 fixtureに限定される。構成テスト合格と実モデル受け入れを分ける。[最新状態](status.md) / [音声API](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-embedder.md)。
+## 既存テキストAPI
 
 更新日: 2026-10-10。[現在の状態](status.md)でmain / PRと検証範囲を確認する。
 

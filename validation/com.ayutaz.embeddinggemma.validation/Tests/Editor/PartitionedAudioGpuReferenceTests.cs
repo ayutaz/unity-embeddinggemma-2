@@ -228,6 +228,10 @@ namespace EmbeddingGemma.Validation.Tests
             =>Execute("silence",true,early:true,nativeSilu:true,attention:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,convolutionDetail:true,nativeGlu:true);
 
         [Test]
+        public void ObserveNativeGluAllLayersWithoutChangingNormalFinalBits()
+            =>Execute("silence",true,observe:true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,nativeGlu:true);
+
+        [Test]
         public void ObserveNativeSiluFirstFeedForwardWithoutChangingNormalFinalBits()
             =>Execute("silence",true,false,false,true,true);
 
@@ -247,6 +251,7 @@ namespace EmbeddingGemma.Validation.Tests
             if(nativeSoftmax&&early&&attention)stem="partitioned-native-softmax-post-convolution-observation-";
             if(convolutionDetail)stem="partitioned-native-convolution-modules-observation-";
             if(nativeGlu)stem=convolutionDetail?"partitioned-native-glu-convolution-observation-":"partitioned-native-glu-gpu-";
+            if(nativeGlu&&observe)stem="partitioned-native-glu-layer-observation-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject { ["success"]=false,["scope"]=early?"original_early_audio_observation_only":isolated?"one_original_audio_layer_isolation_gpu_numeric_gate":observe?"original_audio_layer_observation_only":"one_partitioned_original_audio_encoder_gpu_numeric_gate",
@@ -568,7 +573,8 @@ namespace EmbeddingGemma.Validation.Tests
                     var anchors=(JArray)JObject.Parse(File.ReadAllText(anchorPath))["anchors"];
                     var wanted=anchors.Select(a=>a.Value<string>("onnx_node")+"_output_0").ToHashSet();
                     report["phase"]="observe";Save();
-                    var snapshots=ObserveBoundaries(models.ToArray(),inputs.ToArray(),outputs.ToArray(),kernels.ToArray(),input,wanted);
+                    encoded.Dispose();pipeline.Dispose();
+                    var snapshots=CaptureOperationBoundaries(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray(),input,wanted,actual);
                     Assert.That(snapshots["__final"].Select(BitConverter.SingleToInt32Bits),Is.EqualTo(actual.Select(BitConverter.SingleToInt32Bits)));
                     report["normal_final_matches_observed_bits"]=true;var stages=new JArray();report["stages"]=stages;
                     foreach(var anchor in anchors)

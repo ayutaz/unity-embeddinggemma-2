@@ -1,0 +1,457 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "original_six_png_textures_three_profiles_three_roles_actual_gpu_preprocessing_encoder_backbone_final768_api",
+  "counts": {
+    "image_cases": 6,
+    "profiles": 3,
+    "numerical_role_conditions": 18,
+    "passed": 18,
+    "failed": 0,
+    "skipped": 0,
+    "nunit_test_cases": 6,
+    "nunit_passed": 6
+  },
+  "environment": {
+    "unity": "6000.3.16f1",
+    "sentis": "2.6.1",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12"
+  },
+  "source_scope": {
+    "sources": [
+      "caac33200738edb4301c09e5792481d2e9386c91",
+      "d45330e990b10a1f2e80957c188fd24510d5588f"
+    ],
+    "common_runtime_tree_git_oid": "bac1d8bec5997a16a743ed373b4917f3f91f2275",
+    "note": "Square-1 ran before validation helper generalization. All production Runtime code and resources are byte-identical across these sources. Report source is retained per case; no claim that all six executed at a single head."
+  },
+  "final_acceptance": {
+    "fp32_cosine_minimum": 0.999,
+    "embedding_dimension": 768,
+    "norm_squared_absolute_tolerance": 0.002,
+    "elementwise_metrics_are_additional_diagnostics": true
+  },
+  "summary": {
+    "minimum_cosine": 0.9999999999976248,
+    "maximum_absolute_error": 2.4959444999694824e-07,
+    "elementwise_diagnostic_mismatches": 0,
+    "maximum_host_peak_working_set_bytes": 8495095808,
+    "minimum_api_and_final_download_ms": 11976.243,
+    "maximum_api_and_final_download_ms": 22947.7294
+  },
+  "cases": [
+    {
+      "case_id": "square-0",
+      "runtime_source": "d45330e990b10a1f2e80957c188fd24510d5588f",
+      "report": "vision-final-image-api-allroles-gpu-d45330e990b10a1f2e80957c188fd24510d5588f-square-0.json",
+      "report_sha256": "005e041098d6bb7b586232e7d980edc353e6defcb6829e3978fc5a8debc0c679",
+      "conditions": [
+        {
+          "case_id": "square-0",
+          "role": "query",
+          "dimension": 768,
+          "cosine": 0.9999999999997315,
+          "norm_squared": 1.0000000336862742,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 1.043081283569336e-07,
+          "maximum_tolerance_ratio": 0.006781857693726651,
+          "capture_sha256": "d2a0cd2990a681f2fccf1bc4bcf313493147cb30ea094b201a1702cca3c00890",
+          "reference_sha256": "dc4ad0a8e43e391a251e7ff3fb4f569b6bddb7442852f8721b1b7657ea91f82d",
+          "execute_and_final_download_ms": 15210.805900000001,
+          "owned_intermediates_disposed": true
+        },
+        {
+          "case_id": "square-0",
+          "role": "document",
+          "dimension": 768,
+          "cosine": 0.9999999999997137,
+          "norm_squared": 0.9999998644722634,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 1.1548399925231934e-07,
+          "maximum_tolerance_ratio": 0.009342307335272013,
+          "capture_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f",
+          "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+          "execute_and_final_download_ms": 12797.77,
+          "owned_intermediates_disposed": true
+        },
+        {
+          "case_id": "square-0",
+          "role": "raw",
+          "dimension": 768,
+          "cosine": 0.9999999999999494,
+          "norm_squared": 0.999999925812776,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 5.960464477539063e-08,
+          "maximum_tolerance_ratio": 0.003531062535672014,
+          "capture_sha256": "b20c434ca45886897bc3ca75d7a7849a71107acc3c9c4df0b1080cf3beedee69",
+          "reference_sha256": "120faf6aea190466b625f7c606a4c14e38315101a265c7dd457af13694512e9c",
+          "execute_and_final_download_ms": 12309.574,
+          "owned_intermediates_disposed": true
+        }
+      ],
+      "host_peak_working_set_bytes": 8456974336,
+      "process_elapsed_seconds": 112.65951179998228,
+      "process_sha256": "0b8fbfb0d92924cd90751c001c9c7e98f1e4e785d87ede2cde5665f680ee447b",
+      "xml_sha256": "f706713a95903bbd5e4d9982e27ea5a7515b5b7fd3024764251d4d7a0101ebee",
+      "log_sha256": "1c189c018fb987582df2071b3901db1e14191cf8f37107258d578d761e458196",
+      "nunit_counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "terminal": true,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "intermediate_readback_count": 0,
+      "backbone_after_hash_audit_present": true
+    },
+    {
+      "case_id": "square-1",
+      "runtime_source": "caac33200738edb4301c09e5792481d2e9386c91",
+      "report": "vision-final-image-api-allroles-gpu-caac33200738edb4301c09e5792481d2e9386c91-square-1.json",
+      "report_sha256": "fb7749b26423e0ffebc71344a46d82954f427ed3ddb36f6db7e820361066a7ac",
+      "conditions": [
+        {
+          "case_id": "square-1",
+          "role": "query",
+          "dimension": 768,
+          "cosine": 0.9999999999996538,
+          "norm_squared": 1.0000000656999932,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 8.940696716308594e-08,
+          "maximum_tolerance_ratio": 0.007387165542322806,
+          "capture_sha256": "ad693ab931ed23f10191f96b7f38dffd0b9c0fa6a7af9af5c56e912217a4ad4a",
+          "reference_sha256": "dc4ad0a8e43e391a251e7ff3fb4f569b6bddb7442852f8721b1b7657ea91f82d",
+          "execute_and_final_download_ms": 22947.7294,
+          "owned_intermediates_disposed": true
+        },
+        {
+          "case_id": "square-1",
+          "role": "document",
+          "dimension": 768,
+          "cosine": 0.9999999999995672,
+          "norm_squared": 0.9999999846391651,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 1.0989606380462646e-07,
+          "maximum_tolerance_ratio": 0.01016064997742751,
+          "capture_sha256": "ca4184139b735b707616a1142c8d6849cb7baeb5326ef10cbede338f452e9579",
+          "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+          "execute_and_final_download_ms": 12556.9437,
+          "owned_intermediates_disposed": true
+        },
+        {
+          "case_id": "square-1",
+          "role": "raw",
+          "dimension": 768,
+          "cosine": 0.9999999999998819,
+          "norm_squared": 1.000000106795021,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 8.940696716308594e-08,
+          "maximum_tolerance_ratio": 0.006059225103271009,
+          "capture_sha256": "8704ac3a3c8ddfe741e61d5dc91e316605441e5e8c80958b4cef0d77134eb5c2",
+          "reference_sha256": "120faf6aea190466b625f7c606a4c14e38315101a265c7dd457af13694512e9c",
+          "execute_and_final_download_ms": 12594.2579,
+          "owned_intermediates_disposed": true
+        }
+      ],
+      "host_peak_working_set_bytes": 7768006656,
+      "process_elapsed_seconds": 129.11656329999096,
+      "process_sha256": "2b0170abac3a132121f53b62a29e8cc0caf584a22a3996774d916c7f60aa8b67",
+      "xml_sha256": "a11c6e72fb39f1be9bb7a2ea06615fae81247817ec1578527ee878c8d45929a0",
+      "log_sha256": "3e2cc110aab8718dc4b2b59ae956b86fa0ef446671173e11f47f57e018c455f5",
+      "nunit_counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "terminal": true,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "intermediate_readback_count": 0,
+      "backbone_after_hash_audit_present": false
+    },
+    {
+      "case_id": "landscape-0",
+      "runtime_source": "d45330e990b10a1f2e80957c188fd24510d5588f",
+      "report": "vision-final-image-api-allroles-gpu-d45330e990b10a1f2e80957c188fd24510d5588f-landscape-0.json",
+      "report_sha256": "8caf77a89a744ae903b4b223ccc5bff7a6e59d7d2ccd2e84c95c6e684e00d81b",
+      "conditions": [
+        {
+          "case_id": "landscape-0",
+          "role": "query",
+          "dimension": 768,
+          "cosine": 0.9999999999993336,
+          "norm_squared": 1.000000039026363,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 1.3969838619232178e-07,
+          "maximum_tolerance_ratio": 0.011384421551324592,
+          "capture_sha256": "ceb757a51380bd0650c91ca12231aa09a5bb28e9cab7da10ccbae36d6eb09d9c",
+          "reference_sha256": "dc4ad0a8e43e391a251e7ff3fb4f569b6bddb7442852f8721b1b7657ea91f82d",
+          "execute_and_final_download_ms": 13922.0665,
+          "owned_intermediates_disposed": true
+        },
+        {
+          "case_id": "landscape-0",
+          "role": "document",
+          "dimension": 768,
+          "cosine": 0.9999999999989977,
+          "norm_squared": 1.0000000234680546,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 2.1606683731079102e-07,
+          "maximum_tolerance_ratio": 0.015009556584677461,
+          "capture_sha256": "48532cc0c6ed58fb27df7619c524a5037b26c598d88e56b0ed1184f6e97f0ee8",
+          "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+          "execute_and_final_download_ms": 12616.776,
+          "owned_intermediates_disposed": true
+        },
+        {
+          "case_id": "landscape-0",
+          "role": "raw",
+          "dimension": 768,
+          "cosine": 0.9999999999998936,
+          "norm_squared": 0.999999987119097,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 9.12696123123169e-08,
+          "maximum_tolerance_ratio": 0.008003989815775629,
+          "capture_sha256": "c10e38cd5a4e9faabfd6e643cb91a59dc1bcbaac3a900e66b809300a36eace66",
+          "reference_sha256": "120faf6aea190466b625f7c606a4c14e38315101a265c7dd457af13694512e9c",
+          "execute_and_final_download_ms": 12573.7104,
+          "owned_intermediates_disposed": true
+        }
+      ],
+      "host_peak_working_set_bytes": 7847104512,
+      "process_elapsed_seconds": 122.03437819998362,
+      "process_sha256": "ec8ccca3e57fba96259f46db2ff86329bc5b5040498e59e4d1921760b867bb9b",
+      "xml_sha256": "1aeffb22cc035ce8fbf8eb47a54b1a3907bc4d32ff2b0b814be77327087592b9",
+      "log_sha256": "f5b12ea9226634eab3799163670dbbdfaab273f436c1a6733e8a921dddf6e890",
+      "nunit_counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "terminal": true,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "intermediate_readback_count": 0,
+      "backbone_after_hash_audit_present": true
+    },
+    {
+      "case_id": "landscape-1",
+      "runtime_source": "d45330e990b10a1f2e80957c188fd24510d5588f",
+      "report": "vision-final-image-api-allroles-gpu-d45330e990b10a1f2e80957c188fd24510d5588f-landscape-1.json",
+      "report_sha256": "1c8f8364c0c9bed50094b5a03e5146ae675815bf42f0274125ad5b3a53a4a822",
+      "conditions": [
+        {
+          "case_id": "landscape-1",
+          "role": "query",
+          "dimension": 768,
+          "cosine": 0.9999999999995238,
+          "norm_squared": 0.999999960783605,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 1.4156103134155273e-07,
+          "maximum_tolerance_ratio": 0.010862289844562804,
+          "capture_sha256": "1d19ab8b32bc9e77f72beed81619baae4e7f0172c47907d4c168a8407c71bd2d",
+          "reference_sha256": "dc4ad0a8e43e391a251e7ff3fb4f569b6bddb7442852f8721b1b7657ea91f82d",
+          "execute_and_final_download_ms": 14622.394900000001,
+          "owned_intermediates_disposed": true
+        },
+        {
+          "case_id": "landscape-1",
+          "role": "document",
+          "dimension": 768,
+          "cosine": 0.9999999999996281,
+          "norm_squared": 1.0000000078186857,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 9.406358003616333e-08,
+          "maximum_tolerance_ratio": 0.008623083125700414,
+          "capture_sha256": "ed12dbaf9c20fd054ae8c2b0c88e1d4b96cd11fc8d1d01117bf15d52d8a5a119",
+          "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+          "execute_and_final_download_ms": 13750.382800000001,
+          "owned_intermediates_disposed": true
+        },
+        {
+          "case_id": "landscape-1",
+          "role": "raw",
+          "dimension": 768,
+          "cosine": 0.9999999999998823,
+          "norm_squared": 1.0000000528384871,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 5.960464477539063e-08,
+          "maximum_tolerance_ratio": 0.004850001622455453,
+          "capture_sha256": "6f0567a03012faf5166c2c644907651180048cb7085f08f459bc8fed42a9f038",
+          "reference_sha256": "120faf6aea190466b625f7c606a4c14e38315101a265c7dd457af13694512e9c",
+          "execute_and_final_download_ms": 12755.065700000001,
+          "owned_intermediates_disposed": true
+        }
+      ],
+      "host_peak_working_set_bytes": 8495095808,
+      "process_elapsed_seconds": 111.37848029998713,
+      "process_sha256": "692e540b0841d24cd1e6cf60d75d46467608a68cc7abc84bc1a6464537c12d20",
+      "xml_sha256": "00ffe1d93609c92c3aacbeafd43905acb2993613c6f7f080e7181e517eb13396",
+      "log_sha256": "2c6582a2138156d8b4601cf6ea89c6c17dbdd772a9bf41e0fb7dbbe9dbd04987",
+      "nunit_counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "terminal": true,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "intermediate_readback_count": 0,
+      "backbone_after_hash_audit_present": true
+    },
+    {
+      "case_id": "portrait-0",
+      "runtime_source": "d45330e990b10a1f2e80957c188fd24510d5588f",
+      "report": "vision-final-image-api-allroles-gpu-d45330e990b10a1f2e80957c188fd24510d5588f-portrait-0.json",
+      "report_sha256": "465ebac4a02adf9ebaa307fcf3481032feaf84ec34b189f61a1dd68d68fef6f7",
+      "conditions": [
+        {
+          "case_id": "portrait-0",
+          "role": "query",
+          "dimension": 768,
+          "cosine": 0.9999999999996951,
+          "norm_squared": 1.000000048818788,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 1.0058283805847168e-07,
+          "maximum_tolerance_ratio": 0.009280965259985823,
+          "capture_sha256": "8b364745a6a2d71744b41549085a753ec6ee0f1cbd17f963edd9af2a208bacfb",
+          "reference_sha256": "dc4ad0a8e43e391a251e7ff3fb4f569b6bddb7442852f8721b1b7657ea91f82d",
+          "execute_and_final_download_ms": 13879.7293,
+          "owned_intermediates_disposed": true
+        },
+        {
+          "case_id": "portrait-0",
+          "role": "document",
+          "dimension": 768,
+          "cosine": 0.9999999999997848,
+          "norm_squared": 1.0000000495263595,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 7.729977369308472e-08,
+          "maximum_tolerance_ratio": 0.007331466086063547,
+          "capture_sha256": "32e654f9670aa0c38152de46e20b5b15c6d5df04048df41c3d52186d2aa881d3",
+          "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+          "execute_and_final_download_ms": 13312.347300000001,
+          "owned_intermediates_disposed": true
+        },
+        {
+          "case_id": "portrait-0",
+          "role": "raw",
+          "dimension": 768,
+          "cosine": 0.9999999999999447,
+          "norm_squared": 1.000000180154597,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 5.960464477539063e-08,
+          "maximum_tolerance_ratio": 0.004895024601198497,
+          "capture_sha256": "98f8e4e84de6e064698cfebb63ff52302ae81664c9fb2d6026ce4ee48e6979c4",
+          "reference_sha256": "120faf6aea190466b625f7c606a4c14e38315101a265c7dd457af13694512e9c",
+          "execute_and_final_download_ms": 12725.052000000001,
+          "owned_intermediates_disposed": true
+        }
+      ],
+      "host_peak_working_set_bytes": 7751180288,
+      "process_elapsed_seconds": 113.7319709000003,
+      "process_sha256": "4e9f798547abf7b4dc46b73ec2b0fe65f20ebe49542d8939659e5b4086a94a89",
+      "xml_sha256": "72d811da546612132a4cbdfb9262cda9780ceab3ab14aa342e72de6de3f6a2a0",
+      "log_sha256": "ab585bbca0bec6bf84ce134fd60bc8ea977326572f907c3c07f23b37c8082ef9",
+      "nunit_counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "terminal": true,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "intermediate_readback_count": 0,
+      "backbone_after_hash_audit_present": true
+    },
+    {
+      "case_id": "portrait-1",
+      "runtime_source": "d45330e990b10a1f2e80957c188fd24510d5588f",
+      "report": "vision-final-image-api-allroles-gpu-d45330e990b10a1f2e80957c188fd24510d5588f-portrait-1.json",
+      "report_sha256": "1f3d95670f30c92ece0ea6060aaa62b43840275d1a022bd3aa9895d8ef64af6a",
+      "conditions": [
+        {
+          "case_id": "portrait-1",
+          "role": "query",
+          "dimension": 768,
+          "cosine": 0.9999999999993094,
+          "norm_squared": 1.0000001008100505,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 1.471489667892456e-07,
+          "maximum_tolerance_ratio": 0.013080570105555727,
+          "capture_sha256": "6d8f5adf77202bed3a93bfab7b881caf02cad3f09f18929c4903454e174669bc",
+          "reference_sha256": "dc4ad0a8e43e391a251e7ff3fb4f569b6bddb7442852f8721b1b7657ea91f82d",
+          "execute_and_final_download_ms": 13662.814600000002,
+          "owned_intermediates_disposed": true
+        },
+        {
+          "case_id": "portrait-1",
+          "role": "document",
+          "dimension": 768,
+          "cosine": 0.9999999999976248,
+          "norm_squared": 1.0000001724068608,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 2.4959444999694824e-07,
+          "maximum_tolerance_ratio": 0.020967249975531305,
+          "capture_sha256": "93b163e99a227cae94d18377d85d34c123f426b5b772371249be7be226a0181a",
+          "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+          "execute_and_final_download_ms": 12292.3081,
+          "owned_intermediates_disposed": true
+        },
+        {
+          "case_id": "portrait-1",
+          "role": "raw",
+          "dimension": 768,
+          "cosine": 0.9999999999990223,
+          "norm_squared": 1.0000001676349073,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 2.0489096641540527e-07,
+          "maximum_tolerance_ratio": 0.016380554178331508,
+          "capture_sha256": "0a19202c48ad2634bc5f240de849fed12274c3f2da2c90461791fd2552150021",
+          "reference_sha256": "120faf6aea190466b625f7c606a4c14e38315101a265c7dd457af13694512e9c",
+          "execute_and_final_download_ms": 11976.243,
+          "owned_intermediates_disposed": true
+        }
+      ],
+      "host_peak_working_set_bytes": 7795838976,
+      "process_elapsed_seconds": 108.80529730001581,
+      "process_sha256": "32911beae7a4ed8dbdc2dfc7d31d88376c025757bb7122351db0fdcce80b4016",
+      "xml_sha256": "9e3a6c78dd5dfd5960319b1329a4bc1b2a4e45d569c336f6c07270257ff7adbe",
+      "log_sha256": "57706e5d69d1d955f958480fab444559df0243cb26110967097deafbe355520a",
+      "nunit_counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "terminal": true,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "intermediate_readback_count": 0,
+      "backbone_after_hash_audit_present": true
+    }
+  ],
+  "original_references_unchanged": true,
+  "encoder_elementwise_gate_unchanged": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "previous_encoder_gate_receipt": "m3-adjacent-reciprocal-all-image-gpu-passed-20261015.json",
+  "actual_image_case_role_matrix_validated": true,
+  "actual_pcm_audio_api_accepted": false,
+  "steps_3_4_complete": false,
+  "limitations": [
+    "Original PNG input fixtures loaded as non-readable linear byte Texture2D; RenderTexture and real error-recovery integration remain separate gates.",
+    "Per-call GPU tensors were checked disposed; persistent allocation warnings and long-term resource behavior remain unresolved.",
+    "Timing includes preprocessing, staged encoder, backbone and final CPU vector; single API observations, not GPU kernel or steady-state benchmarks.",
+    "Actual audio PCM roles/profiles, remaining boundaries/lifetimes/error recovery, text regression and final repository checks remain required for execution step4.",
+    "Model preparation reuse, samples, Player and other OS/device qualification remain project step5 requirements; see goal4-scope-audit-20261016.json."
+  ]
+}

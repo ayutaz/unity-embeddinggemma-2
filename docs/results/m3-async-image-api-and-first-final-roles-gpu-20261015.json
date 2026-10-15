@@ -1,0 +1,221 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "scope": "async_image_api_contracts_and_original_square_one_actual_texture_to_final768_three_roles_only",
+  "tdd": {
+    "red_source": "4f4c082",
+    "red": {
+      "prefix": "gpu-async-image-api-red-20261015",
+      "process_sha256": "859ddd37df1a26b224e2f6a0e1cd8966510ef5c0d1b5734245f89a10e2fb7c5e",
+      "exit_code": 2,
+      "elapsed_seconds": 43.222091700008605,
+      "terminal": true,
+      "counts": {
+        "total": 8,
+        "passed": 0,
+        "failed": 8,
+        "skipped": 0
+      },
+      "xml_sha256": "b5acb11119e133b7f529256a2ee9f302d6b7af31f79e871ae423ece9ae99d08d"
+    },
+    "green_source": "a7425bf",
+    "green": {
+      "prefix": "gpu-async-image-api-related-green-20261015",
+      "process_sha256": "869d5f39ea1f8123fd0cc300713e150ef5147807702f52e8e9780ddc26dcec33",
+      "exit_code": 0,
+      "elapsed_seconds": 49.45346950000385,
+      "terminal": true,
+      "counts": {
+        "total": 38,
+        "passed": 38,
+        "failed": 0,
+        "skipped": 0
+      },
+      "xml_sha256": "4386728976791f076a3571d976cb056d2f59374d5e51c4c4a39ce990a1652dc6"
+    },
+    "covered": [
+      "Query/Document/Raw prompt/mask parity and independent normalized768 output",
+      "Owned GPU tensors survive pending encoding and are disposed afterward",
+      "Pre-cancellation and cancellation during encoding; successful reuse",
+      "Dispose cancels active call and retains borrowed stages and texture",
+      "Concurrent async/synchronous calls rejected without poisoning active call",
+      "Encoder/backbone errors and invalid vectors release resources and permit reuse",
+      "Missing staged encoder rejected before GPU work"
+    ],
+    "limitation": "Controlled small GPU stages; actual models are checked separately below."
+  },
+  "backbone_staging": {
+    "success": true,
+    "source": "eeb00d51e193bfeff1580ce7dbd2f3123a5b390b",
+    "scope": "fixed_original_image_square_backbone_serialization_only",
+    "original_graph_sha256": "ad45dd7d0b7be3f0d94f0391b674d8e95d09ea3f72edbf2408e9fae89ac7f03f",
+    "saved_sha256": "f6f4ba9d036e70c3d26b5932daca3facecbc0c45753a66b2da72e7b8f02519ce",
+    "original_coefficients_sha256": "c234c173d9a1f15fbe4bf7a3adbb7e2e5f17fdb8c6f4b85c0befe4d5fb2b097b",
+    "coefficient_bytes_preserved": true,
+    "inference_executed": false,
+    "gpu_validated": false,
+    "end_to_end_validated": false,
+    "report_sha256": "05238e775d41b282120e98160b71d7afd8334d9c4d748b377b3b3afafff3a600",
+    "execution": {
+      "prefix": "unity-stage-original-image-square-backbone-20261015",
+      "process_sha256": "cffe2fe9946357db7676e2da5693d8c27c554ba3b8654f9242c90ce878956b2a",
+      "exit_code": 0,
+      "elapsed_seconds": 170.0433531999879,
+      "terminal": true,
+      "counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "xml_sha256": "f2046dcda0886896f491be15c2663cc3967655684f96143f58a3f3b7b493f537"
+    }
+  },
+  "actual_gpu_comparisons": [
+    {
+      "source": "0744a2878d65b028af0541160dec4df8f0fc7657",
+      "report": "vision-final-image-api-raw-gpu-0744a2878d65b028af0541160dec4df8f0fc7657-square-1.json",
+      "report_sha256": "b299d45597cce33be597fea2d648b94a086f20399520a4ab267d857e9f31af7f",
+      "scope": "actual_png_texture_gpu_preprocessing_encoder_backbone_final_image_api_recorded_cases_only",
+      "cases": [
+        {
+          "role": "raw",
+          "case_id": "square-1",
+          "values": 768,
+          "cosine": 0.9999999999998819,
+          "norm_squared": 1.000000106795021,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 8.940696716308594e-08,
+          "capture_sha256": "8704ac3a3c8ddfe741e61d5dc91e316605441e5e8c80958b4cef0d77134eb5c2",
+          "reference_sha256": "120faf6aea190466b625f7c606a4c14e38315101a265c7dd457af13694512e9c",
+          "execute_and_final_download_ms": 24936.7651,
+          "owned_intermediates_disposed": true
+        }
+      ],
+      "execution": {
+        "prefix": "gpu-final-image-api-square1-raw-v2-20261015",
+        "process_sha256": "cf1e24c7a24b9404a8ee745822baac38d2ce0c38c0e81c257d788ed359005a71",
+        "exit_code": 0,
+        "elapsed_seconds": 103.90795870000147,
+        "terminal": true,
+        "counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "xml_sha256": "bc3540312411d4d3cd917bb82a2819fb0a3e45508222b39a59f1a785becc250b"
+      },
+      "host_peak_working_set_bytes": 7636283392,
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "intermediate_readback_count": 0
+    },
+    {
+      "source": "caac33200738edb4301c09e5792481d2e9386c91",
+      "report": "vision-final-image-api-allroles-gpu-caac33200738edb4301c09e5792481d2e9386c91-square-1.json",
+      "report_sha256": "fb7749b26423e0ffebc71344a46d82954f427ed3ddb36f6db7e820361066a7ac",
+      "scope": "actual_png_texture_gpu_preprocessing_encoder_backbone_final_image_api_recorded_cases_only",
+      "cases": [
+        {
+          "role": "query",
+          "case_id": "square-1",
+          "values": 768,
+          "cosine": 0.9999999999996538,
+          "norm_squared": 1.0000000656999932,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 8.940696716308594e-08,
+          "capture_sha256": "ad693ab931ed23f10191f96b7f38dffd0b9c0fa6a7af9af5c56e912217a4ad4a",
+          "reference_sha256": "dc4ad0a8e43e391a251e7ff3fb4f569b6bddb7442852f8721b1b7657ea91f82d",
+          "execute_and_final_download_ms": 22947.7294,
+          "owned_intermediates_disposed": true
+        },
+        {
+          "role": "document",
+          "case_id": "square-1",
+          "values": 768,
+          "cosine": 0.9999999999995672,
+          "norm_squared": 0.9999999846391651,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 1.0989606380462646e-07,
+          "capture_sha256": "ca4184139b735b707616a1142c8d6849cb7baeb5326ef10cbede338f452e9579",
+          "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+          "execute_and_final_download_ms": 12556.9437,
+          "owned_intermediates_disposed": true
+        },
+        {
+          "role": "raw",
+          "case_id": "square-1",
+          "values": 768,
+          "cosine": 0.9999999999998819,
+          "norm_squared": 1.000000106795021,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 8.940696716308594e-08,
+          "capture_sha256": "8704ac3a3c8ddfe741e61d5dc91e316605441e5e8c80958b4cef0d77134eb5c2",
+          "reference_sha256": "120faf6aea190466b625f7c606a4c14e38315101a265c7dd457af13694512e9c",
+          "execute_and_final_download_ms": 12594.2579,
+          "owned_intermediates_disposed": true
+        }
+      ],
+      "execution": {
+        "prefix": "gpu-final-image-api-square1-allroles-20261015",
+        "process_sha256": "2b0170abac3a132121f53b62a29e8cc0caf584a22a3996774d916c7f60aa8b67",
+        "exit_code": 0,
+        "elapsed_seconds": 129.11656329999096,
+        "terminal": true,
+        "counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "xml_sha256": "a11c6e72fb39f1be9bb7a2ea06615fae81247817ec1578527ee878c8d45929a0"
+      },
+      "host_peak_working_set_bytes": 7768006656,
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "intermediate_readback_count": 0
+    }
+  ],
+  "unique_case_role_conditions": 3,
+  "duplicate_raw_capture_bits_identical": true,
+  "common_runtime_blob_sha256": {
+    "Packages/com.ayutaz.embeddinggemma/Runtime/ImageEmbedder.cs": "67143f6ad040e2e2c2c4f0628c84063de946b97c623826a1fd3bf2354f9a8a4c",
+    "Packages/com.ayutaz.embeddinggemma/Runtime/PartitionedImageFeatureEncoder.cs": "764bdced71ca9f4315eed197b54d0268a7d878a3909eb56ae4174e9c3b0972f1",
+    "Packages/com.ayutaz.embeddinggemma/Runtime/GpuProjectionPipeline.cs": "391c2d9f9eaefd3e64361029704ce17ca0ae4098edc01ef4837eeffbe5909a94",
+    "Packages/com.ayutaz.embeddinggemma/Runtime/ImagePreprocessor.cs": "564a3c2a297ef6ea5afee35d2e8a24dea04022e27eac7a8738be1945a66caf43",
+    "Packages/com.ayutaz.embeddinggemma/Runtime/MultimodalBackbone.cs": "02ecde7f3feb8d66b9d33a66286ad35890ecea623a85e06622f372190f1f18a9",
+    "Packages/com.ayutaz.embeddinggemma/Runtime/GpuConstantWorker.cs": "7550f2dbd95c27cb243834237bbaa0f0472c83e71872d5787dd16534713684aa"
+  },
+  "original_reference_unchanged": true,
+  "original_model_weights_unchanged": true,
+  "final_acceptance": {
+    "fp32_cosine_minimum": 0.999,
+    "embedding_dimension": 768,
+    "norm_squared_absolute_tolerance": 0.002,
+    "elementwise_metrics_are_additional_diagnostics": true,
+    "encoder_elementwise_gate_unchanged": {
+      "atol": 1e-05,
+      "rtol": 0.0001
+    }
+  },
+  "retained_setup_failure": {
+    "prefix": "gpu-final-image-api-square1-raw-20261015",
+    "process_sha256": "5058d2e87ccba6e519c6b358c5d9d02f545dbcbe9cb57312b3a41eaa5ba05e97",
+    "exit_code": 1,
+    "elapsed_seconds": 26.06825729997945,
+    "terminal": true,
+    "classification": "compile_failure_before_test_execution"
+  },
+  "all_image_case_role_matrix_validated": false,
+  "actual_audio_pcm_to_final768_validated": false,
+  "steps_3_4_complete": false,
+  "latest_head_required_ci_validated": false,
+  "remaining": [
+    "Other five actual images across all roles, including rectangular backbone/profile qualification.",
+    "Actual PCM counterpart, all masks/boundaries, cancellation during real work, ownership/Dispose/error recovery and text regression.",
+    "Reusable packaging, samples, stripped Player, required environments, final Required CI, long-term memory and persistent allocation warnings."
+  ]
+}

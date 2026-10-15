@@ -2,7 +2,13 @@
 
 > 文書整合確認: 2026-10-15。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。冒頭の現在方針が、下の旧checkpointの着手順より優先する。
 
-## 2026-10-15の画像の現在地
+## 現在の画像API検証
+
+2026-10-16: [実Texture全6件 × Query / Document / Raw](results/m3-final-image-api-all-cases-all-roles-gpu-20261016.json)の全18条件が最終GPU APIで合格。原本参照・encoder `atol=1e-5, rtol=1e-4`を維持し、元FP32全6 encoderの全bit一致を前提として、前処理→encoder→backbone→正規化768次元を照合した。最小cosine 0.9999999999976248、追加の最終要素診断も超過0。ケースごとのsourceと同一Runtime treeを記録し、単一head実行へ付け替えない。
+
+[実RenderTextureと拒否 / 解放 / 再利用・text回帰](results/m3-rendertexture-recovery-and-text-gpu-regression-20261016.json)では、不正入力6種類と実GPU stage後キャンセルから全3 roleへ復帰し、PNG最終captureと全bit一致。実text128はFP32 / Float16重みとも10ベクトル・全4順位 / score合格、選択した契約回帰90 Green。非同期APIは8 Red→38 Greenで追加。元の[実行工程4](results/goal4-scope-audit-20261016.json)の画像API側を進めた結果であり、音声PCM側と最終checksの完了は別に判定する。M3全体の検索sample・Player / device / 長期memory等は後続の工程5に保持する。Persistent allocation警告を成功へ置き換えない。
+
+以下は以前のcheckpointと当時の状態。
 
 画像encoder全体は[元FP32全6ケース・3 profileでGPU合格](results/m3-adjacent-reciprocal-all-image-gpu-passed-20261015.json)。固定source `38baf10`で元778,240値全bit一致、6 pass / fail0 / skip0、fallback / 中間readback0。旧候補の未達とは別結果。製品接続adapterは6 Red→関連36 Greenまで実装し、[製品adapterと実Texture](results/m3-production-image-adapter-and-real-texture-gpu-20261015.json)は、元square-1の131,072値がGPU前処理から全bit一致・1 pass / skip0。次は残り実画像ケースとbackbone / 全role最終768 APIへ進む。初回PNGのARGB32形式拒否は2 Red→関連23 Greenで修正し、推論前の失敗履歴も保持する。sample / Player・必須環境・Required CI・長期memoryも残す。Python回帰はsource `cd08e0f`で4環境各1,070 pass / skip0。
 

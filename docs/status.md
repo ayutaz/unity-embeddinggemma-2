@@ -1,5 +1,15 @@
 # 現在の状態
 
+2026-10-16最新: [実PNG全6画像・3 profile・全3 roleの最終GPU API](results/m3-final-image-api-all-cases-all-roles-gpu-20261016.json)は18 pass / fail0 / skip0。Texture→GPU前処理→採用encoder→原本backbone→有限・正規化768次元を、元Query / Document / Raw参照へ照合した。最小cosine 0.9999999999976248、要素ごとの追加診断も全18条件で超過0。sourceはケースごとに保持し、全RuntimeコードとResourcesのGit treeが同一であることを確認した。単一headで全6件を実行したとは扱わない。
+
+[RenderTexture・実不正入力 / GPUキャンセル後の復帰とtext回帰](results/m3-rendertexture-recovery-and-text-gpu-regression-20261016.json)も成功。null / role / 実tokenizer予約語を含むtitle / 破棄済みTexture / Float形式 / 別profileの6拒否、実GPU stage yield後のキャンセルを挟み、同じAPIで全3 roleへ復帰。RenderTextureの最終値はPNGの対応3 captureと全bit一致。実text128はFP32 / Float16重みとも6 document・4 query、全4順位 / scoreが合格し、Float16と選択した契約回帰は90 pass / skip0。非同期画像APIは8 Red→関連38 Green。これらは全て実GPUで、計算/入力CPU fallback・中間readback0。
+
+元の[「4まで」の実行範囲](results/goal4-scope-audit-20261016.json)は、工程3の元音声6信号 / 両profile・元画像FP32全profileのGPU受け入れと、工程4の実Texture / PCMから最終API・全role / 境界 / mask / 所有権 / 解放 / 例外後再利用 / text回帰である。画像の上記条件と元encoder gateは合格したが、**音声の実PCMから全roleまでの最新採用encoder接続と、最終repository checksは未完了**。音声Query / Rawの旧参照生成はCPU encoder文脈差で停止した履歴を保持し、既存Document原本や元goldenを変更しない。次はDocument原本から実PCM連結を検証し、残るrole参照を同じ原本に結び付ける。
+
+初回backbone変換・保存の係数保持はsquare / rectangular双方で合格。初回処理は約170 / 186秒、host peakは約11.2 GiB、保存モデルを以後使用した。最終APIのPNG条件は単発約12〜23秒、host peak最大約7.91 GiBで、GPU kernel性能や定常benchmarkとは分ける。各runner / 監視はterminal、ローカルUnityは終了済み。Persistent allocation警告は未解決で、per-call TensorのDispose成功をleak-free終了の証明にはしない。モデル準備の再利用改善・検索sample・長期memory / 性能・Player・他OS / deviceは工程5以降として計画に残す。工程4全体はまだ完了ではない。
+
+以下は以前のcheckpointと当時の状態。
+
 画像encoder全体の最新判定: [元FP32全6ケース・3 profileの実GPU合格](results/m3-adjacent-reciprocal-all-image-gpu-passed-20261015.json)。source `38baf10321226d4af24380adc046679e595ee048`で全778,240値が元参照と全bit一致、6 pass / fail0 / skip0。全件GPUCompute、計算/入力CPU fallback・中間readback0、元係数・参照・許容差不変。旧4 pass / 2 failやpooling候補の失敗は別sourceの履歴として保持する。製品接続用`PartitionedImageFeatureEncoder`は6 Red→既存音声・画像・pipelineを含む36 Green。[製品adapterと実Textureの検証](results/m3-production-image-adapter-and-real-texture-gpu-20261015.json)では、初回ARGB32拒否を2 Red→関連23 Greenで修正し、source `2340fb1`の読み取り不可PNG Texture→GPU前処理→製品adapter→元square-1の131,072値が全bit一致・1 pass / skip0。最終768 API全role、sample / Player、必須環境、長期memoryと工程3/4全体は未完了。Python回帰はsource `cd08e0f`のActions 38748232407でWindows / Linux ×3.13 / 3.14すべて各1,070 pass / skip0。source `38baf10`のpackage / workflow lintも成功。これらを最新headのRequired CIと混同しない。
 
 2026-10-15最新: [元参照の再現と層の局所化](results/m3-reproduced-cpu-context-and-prefix-localization-20261015.json)を経て、[実GPUの逆数丸めと第4層を修正](results/m3-gpu-reciprocal-midpoint-and-fourth-layer-fixed-20261015.json)。明示CPU診断のActions 38739806295は完了・元最終131,072値全bit一致、第4層の限定capture 38743853944も完了。GPUで第1〜3層は全bit一致、第4層のtoken173だけ522 bit差だった原因をQuery RMSのhead9へ局所化した。CPUの正しいseedを保持するだけの候補は実GPUの63 bit差を直せず不合格。GPUではseedとNewton補正がともに1 ULP下に残るため、上下の隣接候補をFP32の補償残差で比較する修正を3 Red→関連42 Greenで追加した。標準ONNX・固定graph規模上限を維持し、実GPU65,601統計値・第4層7 RMSとGELU・接続4層の全1,935,360値が全bit一致。CPU fallback / 中間readback0、元係数・参照・許容差不変。元画像6件の新候補gateは上記の通り全件合格し、製品採用・最終768 API・工程3/4全体はまだ完了ではない。

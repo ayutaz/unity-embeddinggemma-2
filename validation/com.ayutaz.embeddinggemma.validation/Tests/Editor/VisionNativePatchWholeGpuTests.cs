@@ -144,6 +144,18 @@ namespace EmbeddingGemma.Validation.Tests
         [UnityTest]
         public IEnumerator OriginalContextNativeRotarySquareOneMustMatchOriginalOnGpu()
             =>NativeRotarySquareCase("square-1");
+        [UnityTest]
+        public IEnumerator OriginalContextNativeRotaryLandscapeZeroMustMatchOriginalOnGpu()
+            =>NativeRotarySquareCase("landscape-0");
+        [UnityTest]
+        public IEnumerator OriginalContextNativeRotaryLandscapeOneMustMatchOriginalOnGpu()
+            =>NativeRotarySquareCase("landscape-1");
+        [UnityTest]
+        public IEnumerator OriginalContextNativeRotaryPortraitZeroMustMatchOriginalOnGpu()
+            =>NativeRotarySquareCase("portrait-0");
+        [UnityTest]
+        public IEnumerator OriginalContextNativeRotaryPortraitOneMustMatchOriginalOnGpu()
+            =>NativeRotarySquareCase("portrait-1");
 
         static IEnumerator NativeRotarySquareCase(string caseId)
         {
@@ -232,12 +244,11 @@ namespace EmbeddingGemma.Validation.Tests
                 }
                 if(nativeRotary)
                 {
-                    Assert.That(profile,Is.EqualTo("square"),"This frozen position fixture qualifies the square profile only.");
-                    var before=working;working=QualifiedVisionRotaryTables.RebindOriginalSquareForValidation(before);
+                    var before=working;working=QualifiedVisionRotaryTables.RebindOriginalProfileForValidation(before,profile);
                     var changed=before.layers.Zip(working.layers,(a,b)=>a.inputs.SequenceEqual(b.inputs)?0:1).Sum();
                     Assert.That(changed,Is.EqualTo(128));Assert.That(original.constants.All(c=>working.constants.Contains(c)),Is.True);
                     report["derived_rotary_rebound_tables"]=4;report["derived_rotary_changed_multiplication_operands"]=changed;
-                    report["derived_rotary_scope"]="audited_data_independent_original_square_position_tables";
+                    report["derived_rotary_scope"]="audited_data_independent_original_"+profile+"_position_tables";
                 }
                 report["graph_rewrite_ms"]=phaseTimer.Elapsed.TotalMilliseconds;report["phase"]="prepare_gpu_pipeline";Save();phaseTimer.Restart();
                 var projection=original.layers.First(layer=>layer.GetType().Name=="MatMul"&&constants.TryGetValue(layer.inputs[1],out var w)&&w.shape==new TensorShape(768,768));

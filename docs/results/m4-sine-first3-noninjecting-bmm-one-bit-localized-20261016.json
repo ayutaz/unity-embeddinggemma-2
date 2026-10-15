@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "original_sine_first_three_layers_noninjecting_isolated_operator_comparison_only",
+  "run_url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38821847176",
+  "source": "6c50bdc82fbcb09833fc24e438bf41bb5f42da11",
+  "artifact": {
+    "id": 12013103163,
+    "bytes": 100154657
+  },
+  "report_sha256": "d1f46b0cf7830af1c296ba59e187b8bb5a389894171899c371dd9519773f1b82",
+  "original_context_qualified": true,
+  "native_segment_original_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 0.0,
+    "maximum_tolerance_ratio": 0.0,
+    "worst_index": 0,
+    "worst_actual": -0.20140400528907776,
+    "worst_expected": -0.20140400528907776,
+    "exact_difference_count": 0
+  },
+  "native_interpreter_control_bits_equal": true,
+  "isolated_outputs_never_injected": true,
+  "coefficients_unchanged": true,
+  "comparisons": 147,
+  "candidate_comparisons": 117,
+  "operators": {
+    "Conv": {
+      "comparisons": 3,
+      "tolerance_failures": 0,
+      "bit_differences": 0,
+      "maximum_tolerance_ratio": 0.0
+    },
+    "Div": {
+      "comparisons": 3,
+      "tolerance_failures": 0,
+      "bit_differences": 0,
+      "maximum_tolerance_ratio": 0.0
+    },
+    "MatMul": {
+      "comparisons": 42,
+      "tolerance_failures": 0,
+      "bit_differences": 1,
+      "maximum_tolerance_ratio": 0.0010124080118487373
+    },
+    "Pow": {
+      "comparisons": 54,
+      "tolerance_failures": 0,
+      "bit_differences": 0,
+      "maximum_tolerance_ratio": 0.0
+    },
+    "ReduceMean": {
+      "comparisons": 27,
+      "tolerance_failures": 0,
+      "bit_differences": 0,
+      "maximum_tolerance_ratio": 0.0
+    },
+    "SiLU": {
+      "comparisons": 9,
+      "tolerance_failures": 0,
+      "bit_differences": 22,
+      "maximum_tolerance_ratio": 1.836709923159824e-35
+    },
+    "Sigmoid": {
+      "comparisons": 3,
+      "tolerance_failures": 0,
+      "bit_differences": 0,
+      "maximum_tolerance_ratio": 0.0
+    },
+    "Softmax": {
+      "comparisons": 3,
+      "tolerance_failures": 0,
+      "bit_differences": 0,
+      "maximum_tolerance_ratio": 0.0
+    },
+    "Tanh": {
+      "comparisons": 3,
+      "tolerance_failures": 0,
+      "bit_differences": 0,
+      "maximum_tolerance_ratio": 0.0
+    }
+  },
+  "all_saved_capture_files_hashed": 104,
+  "worst_bmm": {
+    "node": "bmm_8",
+    "variant": "ordered_original_tanh",
+    "operator": "MatMul",
+    "attributes": {
+      "execution": "actual_standard_fp32_onnx_on_same_native_inputs",
+      "graph_sha256": "65d341b10557ca1ab75ab893f6f59ba5a017ce25233babfd228fe98ecdcec66e",
+      "candidate_function": "static_block192_bmm_export",
+      "native_forward_used_as_candidate_evidence": false
+    },
+    "maximum_tolerance_ratio": 0.0010124080118487373,
+    "exact_difference_count": 1,
+    "files": [
+      {
+        "file": "worst-MatMul-input0-fp32.bin",
+        "shape": [
+          192,
+          12,
+          128
+        ],
+        "native_strides": [
+          1536,
+          128,
+          1
+        ],
+        "sha256": "24d7e9e1b85107294984a882afc178e31ba65786e55cc1a3d1e88704aa720030"
+      },
+      {
+        "file": "worst-MatMul-input1-fp32.bin",
+        "shape": [
+          192,
+          128,
+          24
+        ],
+        "native_strides": [
+          3072,
+          24,
+          1
+        ],
+        "sha256": "a18e31779572c7105df41ce732d8b3cb81a85f51de0714b775cce941912b3a21"
+      },
+      {
+        "file": "worst-MatMul-native-fp32.bin",
+        "shape": [
+          192,
+          12,
+          24
+        ],
+        "native_strides": [
+          288,
+          24,
+          1
+        ],
+        "sha256": "0662798f9a46412b7a2d66db8101e280f5b34fc004e72618b36ae07c0b9c7c2e"
+      },
+      {
+        "file": "worst-MatMul-onnx-fp32.bin",
+        "shape": [
+          192,
+          12,
+          24
+        ],
+        "native_strides": [
+          288,
+          24,
+          1
+        ],
+        "sha256": "2dcc3e5b5ca6cae15167fa862a6b90500ae7cf41f6a6d07730ad396f177c71a7"
+      }
+    ]
+  },
+  "independently_recomputed_worst_bmm_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 9.5367431640625e-07,
+    "maximum_tolerance_ratio": 0.0010124080118487373,
+    "worst_index": 26788,
+    "worst_actual": -9.319860458374023,
+    "worst_expected": -9.31986141204834,
+    "exact_difference_count": 1
+  },
+  "whole_encoder_validated": false,
+  "gpu_validated": false
+}

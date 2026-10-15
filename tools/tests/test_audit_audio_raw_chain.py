@@ -130,6 +130,20 @@ def test_audit_requires_independent_original_bytes_and_rejects_escaped_captures(
     with pytest.raises(ValueError,match='hash'):audit.audit_report(path,original)
 
 
+def test_midpoint_report_requires_explicit_expected_variant_and_keeps_default_tanh_contract(evidence):
+    audit,original,path,report,_=evidence
+    report['cases'][1]['variant']='ordered_original_midpoint_bmm';path.write_text(json.dumps(report))
+    with pytest.raises(ValueError,match='candidate'):audit.audit_report(path,original)
+    r=audit.audit_report(path,original,expected_variant='ordered_original_midpoint_bmm')
+    assert r['candidate_variant']=='ordered_original_midpoint_bmm' and r['original_tolerance_passed']
+
+
+def test_auditor_rejects_an_unregistered_expected_candidate_before_artifact_access(tmp_path):
+    audit=module()
+    with pytest.raises(ValueError,match='candidate'):
+        audit.audit_report(tmp_path/'missing',tmp_path/'missing',expected_variant='unqualified')
+
+
 @pytest.mark.parametrize('problem', ['missing','duplicate','profile','mixed_source','none'])
 def test_all_case_audit_requires_exact_six_case_two_profile_matrix_and_retains_failure(problem,monkeypatch):
     audit=module(); names=['silence','impulse','sine','nyquist','noise','padded_noise']

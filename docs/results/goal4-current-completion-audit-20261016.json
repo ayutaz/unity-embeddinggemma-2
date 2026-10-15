@@ -4,7 +4,7 @@
   "goal": "4まで進めてください",
   "status": "active_not_complete",
   "scope_source": "goal4-scope-audit-20261016.json",
-  "candidate_head_at_audit": "f0593c7a8ffe221f11fd7b1b84ae169b31a4d9ff",
+  "candidate_head_at_audit": "6c50bdc82fbcb09833fc24e438bf41bb5f42da11",
   "requirements": [
     {
       "requirement": "Original learned coefficients, references and encoder tolerances remain unchanged",
@@ -79,11 +79,11 @@
     {
       "requirement": "Required repository checks for the resulting candidate",
       "status": "not_achieved",
-      "last_terminal_ci_run": 38818901317,
-      "last_terminal_ci_head": "f0593c7a8ffe221f11fd7b1b84ae169b31a4d9ff",
-      "result": "Three Python environments, package and workflow lint pass; Linux/Python3.13 Tanh2 tests, audio ONNX and Required CI fail.",
-      "candidate_ci_run": 38818901317,
-      "candidate_ci_head": "f0593c7a8ffe221f11fd7b1b84ae169b31a4d9ff",
+      "last_terminal_ci_run": 38821377276,
+      "last_terminal_ci_head": "0618de70a7fbc542d22716ae5dc4cbdb2800ec5b",
+      "result": "All four Python environments, package/actionlint success; audio ONNX1309 failures and Required CI fail. New diagnostic/midpoint candidate changes have not yet completed CI.",
+      "candidate_ci_run": 38821377276,
+      "candidate_ci_head": "0618de70a7fbc542d22716ae5dc4cbdb2800ec5b",
       "candidate_ci_last_observation": "completed_failure",
       "candidate_ci_aggregate_conclusion": "failure",
       "evidence": [
@@ -124,9 +124,16 @@
         "m4-audio-cpu-context-recording-tdd-20261016.json",
         "m4-linux-python313-tanh-native-context-failure-20261016.json",
         "m4-original-raw-all-six-attempt-four-pass-sine-two-fail-padded-timeout-20261016.json",
-        "m4-original-raw-sine-cut-localization-20261016.json"
+        "m4-original-raw-sine-cut-localization-20261016.json",
+        "m4-native-original-matrix-windows-amd7763-bit-exact-20261016.json",
+        "m4-sine-original-tanh-position-div-noninjecting-tdd-20261016.json",
+        "m4-sine-first3-noninjecting-bmm-one-bit-localized-20261016.json",
+        "m4-sine-original-bmm8-exact-fma-midpoint-cause-20261016.json",
+        "m4-sine-original-bmm8-midpoint-all55296-actual-onnx-bit-exact-20261016.json",
+        "m4-ordered-original-midpoint-qk-bmm-candidate-tdd-20261016.json",
+        "m4-latest-ci0618-four-python-pass-audio1309-fail-cpu-context-20261016.json"
       ],
-      "next_action": "Localize sine body operator drift on qualified original stage inputs without injecting isolated outputs; investigate native Tanh/MKL CPU contexts with small fixtures. Rejected raw candidate must not be promoted. Padded final and Required CI remain mandatory."
+      "next_action": "Evaluate the causally changed midpoint-QK candidate through actual raw sine full12layer carry. Then all six original cases and Required CI with unchanged default/native gates remain mandatory. Do not promote isolated BMM success."
     }
   ],
   "documentation": {
@@ -235,6 +242,15 @@
       "tolerance_failures": 145,
       "bit_differences": 138186,
       "interpretation": "Both comparisons retained; pinned candidate match does not replace fresh-native gate."
+    },
+    "sine_first3_primitives": {
+      "run": 38821847176,
+      "context_qualified": true,
+      "comparisons": 147,
+      "original_qk_bmm_bit_difference": 1,
+      "midpoint_qk_actual_onnx_bit_difference": 0,
+      "midpoint_qk_values": 55296,
+      "sine_whole_candidate_pending": true
     }
   },
   "pending_candidate_code_sha256": {

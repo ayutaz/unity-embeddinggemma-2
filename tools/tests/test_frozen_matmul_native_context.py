@@ -103,3 +103,45 @@ def test_matrix_hosts_record_cpu_and_keep_distinct_artifacts_without_downloading
     assert 'runner.os' in upload['with']['name']
     fetch = next(s for s in job['steps'] if s.get('name', '').startswith('Fetch only audited'))
     assert '12001831037' in fetch['run'] and '.pt2' not in fetch['run']
+
+
+def test_native_worker_records_tanh_context_on_same_fixed_inputs_without_claiming_onnx(tmp_path,monkeypatch):
+    probe=module();a,b=torch.ones(3,4),torch.ones(4,2)
+    monkeypatch.delenv('MKL_ENABLE_INSTRUCTIONS',raising=False)
+    monkeypatch.setenv('GITHUB_SHA','a'*40)
+    monkeypatch.setattr(probe,'load_capture',lambda _:(a,b,a@b,{'unit_fixture':True}))
+    r=probe.worker(tmp_path/'input',tmp_path/'out','default')
+    activation=r['activation_context']
+    assert activation['scope']=='fixed_synthetic_native_tanh_vs_original_order_only'
+    assert not activation['onnx_executed'] and not activation['encoder_validated']
+    assert {c['id'] for c in activation['cases']}=={'dense32771','random514'}
+    for c in activation['cases']:
+        assert c['shape']==([32771] if c['id']=='dense32771' else [2,257])
+        for f in c['files']:
+            p=tmp_path/'out'/f['file']
+            assert p.is_file() and probe.file_digest(p)==f['sha256']
+
+
+def test_tanh_native_drift_is_recorded_without_changing_matrix_target_or_becoming_a_pass(tmp_path,monkeypatch):
+    probe=module();a,b=torch.ones(3,4),torch.ones(4,2)
+    monkeypatch.delenv('MKL_ENABLE_INSTRUCTIONS',raising=False)
+    monkeypatch.setenv('GITHUB_SHA','a'*40)
+    monkeypatch.setattr(probe,'load_capture',lambda _:(a,b,a@b,{'unit_fixture':True}))
+    monkeypatch.setattr(probe.torch,'tanh',lambda values:torch.zeros_like(values))
+    r=probe.worker(tmp_path/'input',tmp_path/'out','default')
+    assert r['metrics']['exact_difference_count']==0
+    assert all(c['original_order_vs_native']['mismatched_elements']>0 for c in r['activation_context']['cases'])
+    assert not r['gpu_validated'] and not r['full_encoder_validated']
+
+
+def test_parent_rejects_native_activation_contexts_with_different_actual_inputs(tmp_path,monkeypatch):
+    probe=module()
+    def run(command,**kwargs):
+        context=command[command.index('--context')+1];p=Path(command[command.index('--output')+1]);p.mkdir(parents=True)
+        (p/'native-context.json').write_text(json.dumps(dict(complete=True,context=context,
+            capture_provenance={'same_original_fixture':True},activation_context=dict(cases=[dict(
+                id='dense32771',input_sha256=('a' if context=='default' else 'b')*64)]))))
+        return subprocess.CompletedProcess(command,0,stdout='',stderr='')
+    monkeypatch.setattr(probe.subprocess,'run',run)
+    with pytest.raises(ValueError,match='activation.*input'):
+        probe.probe_native_contexts(tmp_path/'input',tmp_path/'out')

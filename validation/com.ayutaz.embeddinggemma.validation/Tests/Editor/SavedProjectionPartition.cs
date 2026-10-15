@@ -88,16 +88,35 @@ namespace EmbeddingGemma.Validation.Tests
                 var marker=kind=="Identity";Constant weight=null;
                 if(marker&&(layer.inputs.Length!=1||layer.outputs.Length!=1))throw new ArgumentException("GPU unary marker arity differs.");
                 if(!marker&&((kind!="MatMul"&&kind!="MatMul2D") || layer.inputs.Length!=2 || layer.outputs.Length!=1
-                    || constants.ContainsKey(layer.inputs[0]) || !constants.TryGetValue(layer.inputs[1],out weight)
-                    || weight.shape.rank!=2 || weight.dataType!=DataType.Float || weight.lengthBytes!=weight.shape.length*4))
-                    throw new ArgumentException("Selected output is not an audited static FP32 projection.",nameof(selectedOutputs));
+                    || constants.ContainsKey(layer.inputs[0])))
+                    throw new ArgumentException("Selected output is not an audited FP32 matrix operation.",nameof(selectedOutputs));
+                var binary=!marker&&!constants.TryGetValue(layer.inputs[1],out weight);
+                if(!marker&&!binary&&(weight.shape.rank!=2 || weight.dataType!=DataType.Float || weight.lengthBytes!=weight.shape.length*4))
+                    throw new ArgumentException("Selected coefficients are not an audited static FP32 projection.",nameof(selectedOutputs));
+                if(binary&&(constantValues.Contains(layer.inputs[0])||constantValues.Contains(layer.inputs[1])))
+                    throw new NotSupportedException("Derived constants require separate projection qualification.");
                 if((bool?)layer.GetType().GetField("transposeA")?.GetValue(layer)==true)throw new NotSupportedException("Transposed data requires separate qualification.");
                 var transposed=(bool?)layer.GetType().GetField("transposeB")?.GetValue(layer)??false;
-                var shape=Shape(layer.inputs[0]).ToTensorShape();var width=shape[shape.rank-1];var count=marker?width:weight.shape[transposed?0:1];
-                if((marker?(shape.rank<2||shape.rank>4):(shape.rank!=2&&shape.rank!=3)) || shape.length==0 || Type(layer.inputs[0])!=DataType.Float || (!marker&&weight.shape[transposed?1:0]!=width))
+                if(binary&&transposed)throw new NotSupportedException("Transposed dynamic operands require separate qualification.");
+                var shape=Shape(layer.inputs[0]).ToTensorShape();
+                if((marker||binary?(shape.rank<2||shape.rank>4):(shape.rank!=2&&shape.rank!=3)) || shape.length==0 || Type(layer.inputs[0])!=DataType.Float)
                     throw new NotSupportedException("Fixed GPU matrix shape or type differs.");
+                var width=shape[shape.rank-1];var count=width;
+                if(binary)
+                {
+                    var right=Shape(layer.inputs[1]).ToTensorShape();
+                    if(Type(layer.inputs[1])!=DataType.Float||right.rank!=shape.rank||right.length==0||right[right.rank-2]!=width
+                        ||Enumerable.Range(0,shape.rank-2).Any(axis=>shape[axis]!=right[axis]))
+                        throw new NotSupportedException("Dynamic matrix operands require equal fixed batch axes and matching inner dimensions.");
+                    count=right[right.rank-1];
+                }
+                else if(!marker)
+                {
+                    count=weight.shape[transposed?0:1];if(weight.shape[transposed?1:0]!=width)throw new NotSupportedException("Projection inner dimension differs.");
+                }
                 var outputShape=Shape(layer.outputs[0]).ToTensorShape();
-                if(outputShape.rank!=shape.rank || outputShape.length!=shape.length/width*count || outputShape[outputShape.rank-1]!=count || (marker&&outputShape!=shape))
+                if(outputShape.rank!=shape.rank || outputShape.length!=shape.length/width*count || outputShape[outputShape.rank-1]!=count
+                    ||Enumerable.Range(0,shape.rank-1).Any(axis=>outputShape[axis]!=shape[axis]) || (marker&&outputShape!=shape))
                     throw new NotSupportedException("Projection output shape differs from its coefficients.");
                 for(var index=cursor;index<row.index;index++)foreach(var value in source.layers[index].outputs)
                     if(value>=0&&seen.Add(value))available.Add(value);
@@ -111,12 +130,13 @@ namespace EmbeddingGemma.Validation.Tests
                     foreach(var operand in parent.inputs.Where(index=>index>=0))if(future.Add(operand))pending.Push(operand);
                 }
                 var live=available.Where(value=>future.Contains(value)&&!constantValues.Contains(value)).ToList();
-                if(!live.Contains(layer.inputs[0]))throw new InvalidOperationException("Projection data is not live at its boundary.");
+                var operands=binary?layer.inputs:new[]{layer.inputs[0]};
+                if(operands.Any(index=>!live.Contains(index)))throw new InvalidOperationException("Projection data is not live at its boundary.");
                 foreach(var value in live)if(Type(value)!=DataType.Float)throw new NotSupportedException("Only GPU float carriers are qualified.");
                 parts.Add(Part(live.Select(index=>new Model.Output{index=index,name=Name(index)}).ToArray()));
-                inputs.Add(new[]{Name(layer.inputs[0])});outputs.Add(Name(layer.outputs[0]));
+                inputs.Add(operands.Select(Name).ToArray());outputs.Add(Name(layer.outputs[0]));
                 widths.Add(width);columns.Add(count);rows.Add(shape.length/width);
-                if(marker)weights.Add(null);
+                if(marker||binary)weights.Add(null);
                 else
                 {
                     var raw=(ArraySegment<byte>)typeof(Constant).GetField("array",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(weight);

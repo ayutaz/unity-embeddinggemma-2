@@ -114,8 +114,26 @@ namespace EmbeddingGemma.Validation.Tests
 
         [UnityTest]
         public IEnumerator OriginalContextPreciseSleefGeluSquareZeroMustMatchOriginalOnGpu()
+            =>PreciseSleefCase("square-0");
+        [UnityTest]
+        public IEnumerator OriginalContextPreciseSleefGeluSquareOneMustMatchOriginalOnGpu()
+            =>PreciseSleefCase("square-1");
+        [UnityTest]
+        public IEnumerator OriginalContextPreciseSleefGeluLandscapeZeroMustMatchOriginalOnGpu()
+            =>PreciseSleefCase("landscape-0");
+        [UnityTest]
+        public IEnumerator OriginalContextPreciseSleefGeluLandscapeOneMustMatchOriginalOnGpu()
+            =>PreciseSleefCase("landscape-1");
+        [UnityTest]
+        public IEnumerator OriginalContextPreciseSleefGeluPortraitZeroMustMatchOriginalOnGpu()
+            =>PreciseSleefCase("portrait-0");
+        [UnityTest]
+        public IEnumerator OriginalContextPreciseSleefGeluPortraitOneMustMatchOriginalOnGpu()
+            =>PreciseSleefCase("portrait-1");
+
+        static IEnumerator PreciseSleefCase(string caseId)
         {
-            var pending=Run("square-0",true,true,true,true,true,false,true,true,192,true,16,true,true);
+            var pending=Run(caseId,true,true,true,true,true,false,true,true,192,true,16,true,true);
             while(!pending.IsCompleted){UnityEditor.EditorApplication.QueuePlayerLoopUpdate();yield return null;}
             pending.GetAwaiter().GetResult();
         }
@@ -185,8 +203,11 @@ namespace EmbeddingGemma.Validation.Tests
                     report["all_original_coefficient_descriptors_retained"]=true;
                     if(inlineTailRms)
                     {
-                        var tailPath=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-saved-original-cpu-tail-gpu-c3460fc20d6fc7f8599abcb626d210b0d23aef20-captures/candidate-tail-rms.sentis"));
-                        Check(tailPath,"215fd08ac859acc3501b111104c048fb4450f11092418be4ea45a9fc3d985835");
+                        var featureCount=reference["profiles"][profile].Value<int>("feature_count");Assert.That(featureCount==252||featureCount==256,Is.True);
+                        var tailFile=featureCount==252?"vision-tail-252-gpu-a4df94698cb1f7c7ea78081830a14111c38c3ce0.sentis":"vision-saved-original-cpu-tail-gpu-c3460fc20d6fc7f8599abcb626d210b0d23aef20-captures/candidate-tail-rms.sentis";
+                        var tailSha=featureCount==252?"36b688b118f091490b75af9deab3e2e4873172dbab64e9f021cd99c3c7ba5599":"215fd08ac859acc3501b111104c048fb4450f11092418be4ea45a9fc3d985835";
+                        var tailPath=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+tailFile));Check(tailPath,tailSha);
+                        report["tail_template_feature_count"]=featureCount;report["tail_template_sha256"]=tailSha;
                         working=QualifiedVisionRmsOperation.InlineTailRms(working,TextModelFile.Load(tailPath));
                         Assert.That(original.constants.All(value=>working.constants.Any(other=>ReferenceEquals(value,other))),Is.True);
                         Assert.That(working.layers.Count(layer=>layer.GetType().Name=="Square"),Is.Zero);

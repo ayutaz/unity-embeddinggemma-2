@@ -4,6 +4,8 @@
 
 ## 2026-10-15の画像の現在地
 
+現在の次工程はRMS正規化の固定GPU照合。元patch入力のlayer 0は通常4要素超過、7投影のblock384候補は1要素超過。全114投影を元square-0 encoderへ戻しても579要素超過・最大比5.757522で未合格だった。実行＋取得30.978秒・host peak10.969GiBのため、この全体候補を反復せず小さい正規化/活性化テストへ戻る。768幅平均は7 Red→CPU/ONNX関連25 Green、元patch64行の平均もbit差0。有界1万点のCPU probeでは補正inverseがnative powerへbit差0だが、GPU成功・元全context合格へは数えない。[固定証拠と残件](results/m3-layer0-static-gpu-and-rms-next-20261015.json)。以下は前回checkpoint。
+
 元画像のpatch prefixで1,256,626 bit差を再現し、係数を保つGPU block384投影で元1,935,360値へ全bit一致した。128/192/256/512/768の不一致も保持する。sliceの入力番号問題を小さいCPU/GPU Redから修正し、GPU投影・slice関連24 Green、package22 Green。[固定receipt](results/m3-patch384-gpu-and-original-encoder-20261015.json)。ただし、この投影を元全encoderへ戻したsquare-0は579要素超過・最大許容差比7.406214で不合格。局所一致を全体合格へ置き換えない。次は正確なpatch出力を起点にlayer 0の残る投影・演算を切り分け、元3 profileの全条件を確認してから実Texture→正規化768 APIへ進む。画像全chain / role / mask / 所有権 / text回帰 / sample / Playerは未完了。以下は前回checkpoint。
 
 GPU画像前処理はmain、ImageFeatureEncoder / ImageEmbedderはDraft実装・合成契約合格。画像PythonのQuery / Document / Rawは3 profile・6画像×3 roleで18件合格した。[receipt](results/m3-real-image-all-role-reference-20261014.json)。元FP32 encoderの固定gateとUnity実Texture→768次元の全chainは未達。

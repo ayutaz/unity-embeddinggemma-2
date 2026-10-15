@@ -90,6 +90,8 @@ def main(argv=None):
     final_audio.add_argument("--role", choices=("query", "document", "raw"), default="document")
     final_audio.add_argument("--encoder-source-commit", type=revision)
     final_audio.add_argument("--backbone-source", type=Path)
+    final_audio.add_argument("--frozen-encoder-features", action="store_true",
+                             help="Explicit reference-only frozen encoder boundary, anchored to every original Document vector")
     silu=commands.add_parser("prepare-silu-probe",help="Weights-free native SiLU and ONNX Swish probe")
     silu.add_argument("--output",type=Path,required=True)
     args = parser.parse_args(argv)
@@ -112,7 +114,8 @@ def main(argv=None):
         summary = prepare_audio_embeddings(snapshot, args.encoder_source, args.output, sequence_length=args.sequence_length,
                                            revision=args.revision, source_commit=os.environ.get("GITHUB_SHA", "local"),
                                            role=args.role, encoder_source_commit=args.encoder_source_commit,
-                                           backbone_source=args.backbone_source)
+                                           backbone_source=args.backbone_source,
+                                           **(dict(frozen_encoder_features=True) if args.frozen_encoder_features else {}))
         print(json.dumps({name: summary[name] for name in (
             "success", "stage", "case_count", "profile_count", "unity_validated", "gpu_chain_validated", "onnx_encoder_numerically_validated")}))
         return

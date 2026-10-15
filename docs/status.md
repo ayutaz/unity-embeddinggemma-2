@@ -1,5 +1,9 @@
 # 現在の状態
 
+2026-10-16音声の実入力更新: [採用GPU encoderで実PCMからDocument最終API](results/m4-real-pcm-document-final-api-gpu-20261016.json)は元6信号・両profileで6 pass / fail0 / skip0。前処理→採用PartitionedAudioFeatureEncoder→原本backbone→有限・正規化768次元まで、元Document参照・既存cosine≥0.999基準を維持して確認した。最小cosine 0.9999998052055729、計算/非空feature入力CPU fallback・中間readback / flush0。不正PCM / role / 別profileの拒否後に同じAPIで成功し、per-call Tensor解放とDispose後拒否を確認。追加の要素比較診断はnyquistだけ439超過で、全要素一致とはしない。各ケースはsource `41fb5ab02492223e4cc99bed70d20703f0f113ff`で実行、最大host peak約10.18 GiB、API実行＋最終取得は単発約9.2〜18.8秒。全runner / 監視はterminal、Unity終了済み。
+
+音声Query / Raw参照向けに、[明示opt-inの固定encoder出力→公式backbone参照経路](results/m4-frozen-audio-role-reference-tdd-20261016.json)を追加した。7 Red→7 Green、統合5 Red→関連20 Green、CLI1 Red→Windows文字コードのharness修正を経て最終関連32 Green。元encoder出力をSHA監査し、公式forwardのencoder境界だけへ渡し、全6元Documentのprompt / vectorが元の厳しい参照基準へ一致する場合のみ新roleを受け入れる。通常native encoderの経路とRequired CIのONNX gateは維持する。これは実モデル・GPU合格の代替ではなく、実モデル参照生成と実PCM Query / Raw検証は未完了。最新確認のCI run38759401904 / head c290c26はPython4環境・package / lintが成功、model-referenceは `audio ONNX export mismatch: silence` で失敗、Required CIはqueued。Persistent allocation警告も未解決で工程4は未完了。
+
 2026-10-16最新: [実PNG全6画像・3 profile・全3 roleの最終GPU API](results/m3-final-image-api-all-cases-all-roles-gpu-20261016.json)は18 pass / fail0 / skip0。Texture→GPU前処理→採用encoder→原本backbone→有限・正規化768次元を、元Query / Document / Raw参照へ照合した。最小cosine 0.9999999999976248、要素ごとの追加診断も全18条件で超過0。sourceはケースごとに保持し、全RuntimeコードとResourcesのGit treeが同一であることを確認した。単一headで全6件を実行したとは扱わない。
 
 [RenderTexture・実不正入力 / GPUキャンセル後の復帰とtext回帰](results/m3-rendertexture-recovery-and-text-gpu-regression-20261016.json)も成功。null / role / 実tokenizer予約語を含むtitle / 破棄済みTexture / Float形式 / 別profileの6拒否、実GPU stage yield後のキャンセルを挟み、同じAPIで全3 roleへ復帰。RenderTextureの最終値はPNGの対応3 captureと全bit一致。実text128はFP32 / Float16重みとも6 document・4 query、全4順位 / scoreが合格し、Float16と選択した契約回帰は90 pass / skip0。非同期画像APIは8 Red→関連38 Green。これらは全て実GPUで、計算/入力CPU fallback・中間readback0。

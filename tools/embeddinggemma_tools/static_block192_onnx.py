@@ -35,6 +35,10 @@ class _StaticBlock192(torch.autograd.Function):
 
     @staticmethod
     def symbolic(g, values, weights):
+        return _StaticBlock192.graph(g, values, weights)
+
+    @staticmethod
+    def graph(g, values, weights, bias=None):
         left, right = (symbolic_helper._get_tensor_sizes(x) for x in (values, weights))
         if (left is None or right is None or len(left) != 2 or len(right) != 2
                 or any(type(d) is not int or d < 1 for d in (*left, *right)) or left[1] != right[0]):
@@ -61,12 +65,14 @@ class _StaticBlock192(torch.autograd.Function):
             b = g.op("Reshape", g.op("Gather", coefficients, ints(index), axis_i=1), right_shape)
             partial = fma_graph(g, a, b, partial, splitter)
         total = g.op("Gather", partial, ints(0), axis_i=0)
+        if bias is not None:
+            total = g.op("Add", total, bias)
         for index in range(1, blocks):
             total = g.op("Add", total, g.op("Gather", partial, ints(index), axis_i=0))
         return total.setType(values.type().with_sizes([rows, columns]))
 
 
-def static_block192_export(values, weights):
+def validate_matrices(values, weights):
     if (values.dtype != torch.float32 or weights.dtype != torch.float32
             or values.device.type != "cpu" or weights.device.type != "cpu"
             or values.ndim != 2 or weights.ndim != 2 or values.shape[1] != weights.shape[0]):
@@ -76,4 +82,29 @@ def static_block192_export(values, weights):
                 or not torch.isfinite(weights).all() or torch.any(values.abs() > 1e6)
                 or torch.any(weights.abs() > 100)):
             raise ValueError("Static block192 export requires qualified finite bounded matrices")
+
+
+def static_block192_export(values, weights):
+    validate_matrices(values, weights)
     return _StaticBlock192.apply(values, weights)
+
+
+class _StaticBlock192Bias(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx, bias, values, weights):
+        return torch.addmm(bias, values, weights)
+
+    @staticmethod
+    def symbolic(g, bias, values, weights):
+        return _StaticBlock192.graph(g, values, weights, bias)
+
+
+def static_block192_addmm_export(bias, values, weights):
+    validate_matrices(values, weights)
+    if (bias.dtype != torch.float32 or bias.device.type != "cpu" or bias.ndim != 1
+            or bias.shape[0] != weights.shape[1]):
+        raise ValueError("Static biased export requires the original matching CPU FP32 bias vector")
+    if not torch.jit.is_tracing() and not torch.compiler.is_compiling():
+        if not torch.isfinite(bias).all() or torch.any(bias.abs() > 1e6):
+            raise ValueError("Static biased export requires a finite bounded bias")
+    return _StaticBlock192Bias.apply(bias, values, weights)

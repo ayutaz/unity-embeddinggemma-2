@@ -159,9 +159,18 @@ class PrefixExport(torch.nn.Module):
         silu_nodes = getattr(self, "silu_nodes", set())
         silu_candidate = getattr(self, "silu_candidate", None)
         silu_observations = getattr(self, "silu_observations", None)
+        linear_nodes = getattr(self, "linear_nodes", set())
+        linear_candidate = getattr(self, "linear_candidate", None)
+        biased_linear_candidate = getattr(self, "biased_linear_candidate", None)
 
         class Replay(torch.fx.Interpreter):
             def run_node(self, node):
+                if node in linear_nodes:
+                    args, kwargs = self.fetch_args_kwargs_from_env(node)
+                    if kwargs:
+                        raise ValueError("Only original default MatMul/addmm contracts are audited")
+                    return (linear_candidate(*args) if node.target == torch.ops.aten.mm.default
+                            else biased_linear_candidate(*args))
                 if node in silu_nodes:
                     args, kwargs = self.fetch_args_kwargs_from_env(node)
                     if len(args) != 1 or kwargs:

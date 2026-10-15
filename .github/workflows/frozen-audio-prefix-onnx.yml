@@ -108,9 +108,16 @@ jobs:
             *) echo 'Unknown original audio case.' >&2; exit 1 ;;
           esac
           echo "PROBE_PROFILE=$profile" >> "$GITHUB_ENV"
-          if [ "$PROBE_CASE" != silence ] && { [ "$PRIMITIVE_REPLAY" = true ] || { [ "$PROBE_FROM_STAGE" != none ] && [ "$CHAINED_PROBE" != true ]; }; }; then
-            echo 'Non-silence cases require prefix or connected diagnosis.' >&2
-            exit 1
+          if [ "$PROBE_CASE" != silence ]; then
+            if [ "$PRIMITIVE_REPLAY" = true ]; then
+              case "$PROBE_VARIANT" in
+                ordered_original_primitives|ordered_original_positions|ordered_original_tanh) ;;
+                *) echo 'Non-silence primitive replay requires an explicit audited candidate.' >&2; exit 1 ;;
+              esac
+            elif [ "$PROBE_FROM_STAGE" != none ] && [ "$CHAINED_PROBE" != true ]; then
+              echo 'Non-silence segments require connected or explicit primitive diagnosis.' >&2
+              exit 1
+            fi
           fi
       - name: Validate explicit primitive replay input boundary
         run: |
@@ -191,14 +198,14 @@ jobs:
           fi
           if [ "$PRIMITIVE_REPLAY" = true ]; then
             candidate_args=()
-            if [ "$PROBE_VARIANT" = ordered_original_primitives ]; then
-              candidate_args=(--variant "$PROBE_VARIANT")
-            fi
+            case "$PROBE_VARIANT" in
+              ordered_original_primitives|ordered_original_positions|ordered_original_tanh) candidate_args=(--variant "$PROBE_VARIANT") ;;
+            esac
             uv run --locked python -m embeddinggemma_tools.audio_primitive_replay \
               --input ../artifacts/frozen-prefix-input/audio-runtime-reference \
               --output ../artifacts/frozen-audio-prefix-onnx \
               --frozen-stage-source ../artifacts/frozen-stage-reference/audio-runtime-stages \
-              --from-stage "$PROBE_FROM_STAGE" --stage "$PROBE_STAGE" "${candidate_args[@]}"
+              --from-stage "$PROBE_FROM_STAGE" --stage "$PROBE_STAGE" --case "$PROBE_CASE" "${candidate_args[@]}"
             exit
           fi
           if [ "$PROBE_FROM_STAGE" != none ]; then

@@ -13,7 +13,7 @@ import torch
 
 from .export import fp32_refined_rstd
 from .frozen_audio_prefix_onnx import file_digest, ordered_rms_mean, tensor
-from .frozen_audio_segment_onnx import PRECISE, SegmentExport
+from .frozen_audio_segment_onnx import PRECISE, PRECISE_POSITIONS, PRECISE_TANH, SegmentExport
 from .streaming_reference import run_flat_reference
 
 
@@ -27,11 +27,18 @@ def replacements(wrapper):
         if selected.keys() & nodes:
             raise ValueError('Candidate node belongs to multiple replacement families')
         selected.update(dict.fromkeys(nodes, function))
+    tanh = getattr(wrapper, 'tanh_nodes', set())
+    if selected.keys() & tanh:
+        raise ValueError('Candidate node belongs to multiple replacement families')
+    if tanh:
+        selected.update(dict.fromkeys(tanh, wrapper.tanh_candidate))
     return selected
 
 
-def audited_replacements(segment):
-    return replacements(SegmentExport(segment, PRECISE))
+def audited_replacements(segment, *, variant=PRECISE):
+    if variant not in (PRECISE, PRECISE_POSITIONS, PRECISE_TANH):
+        raise ValueError('Unknown audited isolated candidate variant')
+    return replacements(SegmentExport(segment, variant))
 
 
 def run_candidate(function, inputs, output):

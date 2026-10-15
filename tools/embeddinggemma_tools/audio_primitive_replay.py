@@ -16,6 +16,7 @@ import torch
 from .frozen_audio_prefix_onnx import (FrozenStageReference, STAGES, boundary_for_stage,
     exact_difference, file_digest, load_frozen_input, load_frozen_stage_reference, tensor, weight_digests)
 from .frozen_audio_segment_onnx import extract_segment
+from .frozen_audio_segment_onnx import PRECISE, PRECISE_POSITIONS, PRECISE_TANH
 from .reference_context_failure import feature_error_metrics
 
 OPERATORS = {
@@ -24,6 +25,7 @@ OPERATORS = {
     torch.ops.aten.convolution.default: "Conv", torch.ops.aten.mean.dim: "ReduceMean",
     torch.ops.aten.pow.Tensor_Scalar: "Pow",
 }
+EXTRA_OPERATORS = {torch.ops.aten.tanh.default: 'Tanh', torch.ops.aten.div.Tensor: 'Div'}
 
 
 def onnx_run(kind, arrays, attributes):
@@ -49,12 +51,12 @@ def onnx_run(kind, arrays, attributes):
 
 
 def primitive_outputs(target, args, kwargs):
-    if target not in OPERATORS or kwargs:
+    if target not in (OPERATORS | EXTRA_OPERATORS) or kwargs:
         raise ValueError("Unaudited primitive target or keyword arguments")
     tensors = [value for value in args if isinstance(value, torch.Tensor)]
     if not tensors or any(value.dtype != torch.float32 or value.device.type != "cpu" for value in tensors):
         raise ValueError("Primitive inputs must retain CPU FP32 dtype")
-    kind = OPERATORS[target]
+    kind = (OPERATORS | EXTRA_OPERATORS)[target]
     arrays = [value.detach().numpy() for value in tensors]
     if kind == "MatMul":
         rank = 2 if target == torch.ops.aten.mm.default else 3
@@ -62,7 +64,17 @@ def primitive_outputs(target, args, kwargs):
             raise ValueError("MatMul requires two original matrices")
         return [("native_layout", onnx_run(kind, arrays, {}), {}),
                 ("contiguous_inputs", onnx_run(kind, [np.ascontiguousarray(a) for a in arrays], {}), {})]
-    if kind == "Softmax":
+    if kind == 'Tanh':
+        if len(args) != 1:
+            raise ValueError('Tanh must be the original unary operation')
+        attributes = {}
+    elif kind == 'Div':
+        if (len(args) != 2 or len(tensors) != 2 or tensors[1].ndim != 0
+                or not torch.isfinite(tensors[1]) or tensors[1] == 0):
+            raise ValueError('Only original nonzero finite scalar-buffer division is audited')
+        attributes = dict(divisor=float(tensors[1]))
+        return [('standard_onnx', onnx_run(kind, arrays, {}), attributes)]
+    elif kind == "Softmax":
         if len(args) != 3 or args[1] != -1 or args[2] is not False:
             raise ValueError("Only original last-axis FP32 softmax is audited")
         attributes = dict(axis=-1)
@@ -98,8 +110,7 @@ def metrics(actual, expected):
 
 def probe_primitives(program, frozen_input, frozen_output, output, *, from_boundary, to_boundary, provenance=None,
                      variant='standard'):
-    from .frozen_audio_segment_onnx import PRECISE
-    if variant not in ('standard', PRECISE):
+    if variant not in ('standard', PRECISE, PRECISE_POSITIONS, PRECISE_TANH):
         raise ValueError('Unknown isolated primitive variant')
     if not all(isinstance(value, FrozenStageReference) for value in (frozen_input, frozen_output)):
         raise ValueError("Primitive replay requires both audited frozen stage references")
@@ -109,9 +120,10 @@ def probe_primitives(program, frozen_input, frozen_output, output, *, from_bound
         raise ValueError("Refusing to overwrite primitive replay evidence")
     segment = extract_segment(program, from_boundary, to_boundary)
     candidate_nodes = {}
-    if variant == PRECISE:
+    if variant != 'standard':
         from .audio_candidate_primitives import audited_replacements, run_candidate
-        candidate_nodes = audited_replacements(segment)
+        candidate_nodes = (audited_replacements(segment) if variant == PRECISE
+                           else audited_replacements(segment, variant=variant))
     before = weight_digests(segment)
     values, expected = tensor(frozen_input.expected), tensor(frozen_output.expected)
     output.mkdir(parents=True, exist_ok=True)
@@ -151,7 +163,8 @@ def probe_primitives(program, frozen_input, frozen_output, output, *, from_bound
 
         class Replay(torch.fx.Interpreter):
             def run_node(self, node):
-                selected = node.op == "call_function" and (node.target in OPERATORS or node in candidate_nodes)
+                selected = node.op == "call_function" and (node.target in OPERATORS or node in candidate_nodes
+                    or variant == PRECISE_TANH and node.target in EXTRA_OPERATORS)
                 if selected:
                     args, kwargs = self.fetch_args_kwargs_from_env(node)
                 result = super().run_node(node)
@@ -166,7 +179,7 @@ def probe_primitives(program, frozen_input, frozen_output, output, *, from_bound
                     else:
                         results = primitive_outputs(node.target, args, kwargs)
                     for label, actual, attrs in results:
-                        kind = OPERATORS.get(node.target, {torch.ops.aten.addmm.default: 'Gemm',
+                        kind = (OPERATORS | EXTRA_OPERATORS).get(node.target, {torch.ops.aten.addmm.default: 'Gemm',
                             torch.ops.aten.sigmoid.default: 'Sigmoid'}.get(node.target))
                         if kind is None:
                             raise ValueError('Missing audited isolated operator label')
@@ -177,7 +190,7 @@ def probe_primitives(program, frozen_input, frozen_output, output, *, from_bound
                                 for value in args if isinstance(value, torch.Tensor)])
                         report["cases"].append(row)
                         capture(row["operator"], row, args, target, actual)
-                        if variant == PRECISE:
+                        if variant != 'standard':
                             contract = dict(target=row['target'], variant=label,
                                 inputs=[dict(shape=spec['shape'], strides=spec['strides']) for spec in row['inputs']])
                             key = hashlib.sha256(json.dumps(contract, sort_keys=True).encode()).hexdigest()[:20]
@@ -208,19 +221,23 @@ def main(argv=None):
     parser.add_argument("--frozen-stage-source", type=Path, required=True)
     parser.add_argument("--from-stage", choices=tuple(STAGES)[:-1], required=True)
     parser.add_argument("--stage", choices=tuple(STAGES), required=True)
-    parser.add_argument('--variant', choices=('standard', 'ordered_original_primitives'), default='standard')
+    parser.add_argument('--variant', choices=('standard', PRECISE, PRECISE_POSITIONS, PRECISE_TANH), default='standard')
+    parser.add_argument('--case', choices=('silence','impulse','sine','nyquist','noise','padded_noise'), default='silence')
     args = parser.parse_args(argv)
     source = os.environ.get("GITHUB_SHA", "")
     if re.fullmatch("[0-9a-f]{40}", source) is None:
         raise ValueError("Primitive replay needs immutable job provenance")
     if tuple(STAGES).index(args.from_stage) >= tuple(STAGES).index(args.stage):
         raise ValueError("Primitive input boundary must precede output boundary")
-    program, _, _, provenance = load_frozen_input(args.input)
+    case_options = {'case_id': args.case} if args.case != 'silence' else {}
+    program, _, _, provenance = load_frozen_input(args.input, **case_options)
+    profile = provenance.get('profile', 'frames-1119-valid-1119')
+    boundary_options = {'profile': profile} if profile != 'frames-1119-valid-1119' else {}
     provenance.update(job_source=source, torch_version=str(torch.__version__), numpy_version=np.__version__,
                       cpu_capability=torch.backends.cpu.get_cpu_capability(), threads=torch.get_num_threads())
-    result = probe_primitives(program, load_frozen_stage_reference(args.frozen_stage_source, args.from_stage),
-        load_frozen_stage_reference(args.frozen_stage_source, args.stage), args.output,
-        from_boundary=boundary_for_stage(program, args.from_stage), to_boundary=boundary_for_stage(program, args.stage),
+    result = probe_primitives(program, load_frozen_stage_reference(args.frozen_stage_source, args.from_stage, **case_options),
+        load_frozen_stage_reference(args.frozen_stage_source, args.stage, **case_options), args.output,
+        from_boundary=boundary_for_stage(program, args.from_stage, **boundary_options), to_boundary=boundary_for_stage(program, args.stage, **boundary_options),
         provenance=provenance, variant=args.variant)
     print(json.dumps(dict(complete=result["complete"], operator_comparisons=len(result["cases"]),
         local_failure_cases=sum(row["metrics"]["mismatched_elements"] > 0 for row in result["cases"]),

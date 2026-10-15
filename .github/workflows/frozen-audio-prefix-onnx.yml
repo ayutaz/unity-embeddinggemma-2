@@ -12,7 +12,7 @@ on:
         description: Select one candidate for bounded whole-encoder diagnosis, or all for a prefix
         type: choice
         default: all
-        options: [all, native, refined_moment, refined_mean_moment, refined_mean_moment_rms, native_silu, refined_mean_moment_rms_silu, ordered_static_linear, ordered_static_linear_refined, ordered_static_linear_attention, ordered_static_linear_all_bmm, ordered_original_primitives, ordered_original_stem]
+        options: [all, native, refined_moment, refined_mean_moment, refined_mean_moment_rms, native_silu, refined_mean_moment_rms_silu, ordered_static_linear, ordered_static_linear_refined, ordered_static_linear_attention, ordered_static_linear_all_bmm, ordered_original_primitives, ordered_original_positions, ordered_original_stem]
       from_stage:
         description: Optional audited frozen INPUT for isolated segment diagnosis only
         type: choice
@@ -90,7 +90,7 @@ jobs:
               exit 1
             fi
             case "$PROBE_VARIANT" in
-              native|ordered_static_linear_all_bmm|ordered_original_primitives) ;;
+              native|ordered_static_linear_all_bmm|ordered_original_primitives|ordered_original_positions) ;;
               *) echo 'Chained diagnosis requires an explicit supported candidate.' >&2; exit 1 ;;
             esac
           fi
@@ -237,6 +237,11 @@ jobs:
           uv run --locked python -m embeddinggemma_tools.frozen_matmul_probe
           --input ../artifacts/frozen-matmul-input/frozen-audio-prefix-onnx
           --output ../artifacts/frozen-matmul-probe
+      - name: Compare native default and MKL AVX2 on the same small original fixture
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.frozen_matmul_native_context
+          --input ../artifacts/frozen-matmul-input/frozen-audio-prefix-onnx
+          --output ../artifacts/frozen-matmul-probe/native-contexts
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

@@ -13,7 +13,7 @@ from onnx.reference import ReferenceEvaluator
 
 from .frozen_audio_prefix_onnx import (FrozenStageReference, boundary_for_stage, exact_difference, file_digest,
     load_frozen_input, load_frozen_stage_reference, tensor, weight_digests)
-from .frozen_audio_segment_onnx import PRECISE, VARIANTS, SegmentExport, extract_segment
+from .frozen_audio_segment_onnx import PRECISE, PRECISE_POSITIONS, VARIANTS, SegmentExport, extract_segment
 from .export import export_audio_native_onnx
 from .reference_context_failure import feature_error_metrics
 from .streaming_reference import run_flat_reference
@@ -111,6 +111,7 @@ def probe_chained_segments(program, frozen_input, frozen_output, output, *, boun
                         input_sha256=input_sha, output_sha256=capture(f'{variant}-part{index}-output-fp32.bin', values),
                         native_input_strides=list(example.stride()), actual_output_strides=list(values.strides),
                         linear_replacements=len(wrapper.linear_nodes), attention_bmm_replacements=len(wrapper.bmm_nodes-wrapper.parameter_bmm_nodes),
+                        relative_position_replacements=len(wrapper.position_nodes),
                         parameter_bmm_replacements=len(wrapper.parameter_bmm_nodes),
                         rms_mean_replacements=len(wrapper.rms_means), rms_inverse_replacements=len(wrapper.rms_inverses),
                         silu_replacements=len(wrapper.silu_nodes), softmax_replacements=len(wrapper.softmax_nodes),
@@ -138,7 +139,7 @@ def main(argv=None):
     parser.add_argument('--input', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--frozen-stage-source', type=Path, required=True)
-    parser.add_argument('--variant', choices=('native', 'ordered_static_linear_all_bmm', PRECISE), default='ordered_static_linear_all_bmm')
+    parser.add_argument('--variant', choices=('native', 'ordered_static_linear_all_bmm', PRECISE, PRECISE_POSITIONS), default='ordered_static_linear_all_bmm')
     args = parser.parse_args(argv)
     source = os.environ.get('GITHUB_SHA', '')
     if re.fullmatch('[0-9a-f]{40}', source) is None:
@@ -151,11 +152,12 @@ def main(argv=None):
     if args.variant != 'native':
         for index, (start, end) in enumerate(zip(boundaries, boundaries[1:])):
             wrapper = SegmentExport(extract_segment(program, start, end), args.variant)
-            if (len(wrapper.linear_nodes) != (29 if index == 3 else 27)
+            count = (29 if index == 3 else 27) + (3 if args.variant == PRECISE_POSITIONS else 0)
+            if (len(wrapper.linear_nodes) != count
                     or len(wrapper.bmm_nodes-wrapper.parameter_bmm_nodes) != 9
                     or len(wrapper.parameter_bmm_nodes) != 3):
                 raise ValueError('Pinned chained static-linear/BMM coverage differs')
-            if args.variant == PRECISE:
+            if args.variant in (PRECISE, PRECISE_POSITIONS):
                 rms = 28 if index == 3 else 27
                 if (len(wrapper.rms_means) != rms or len(wrapper.rms_inverses) != rms
                         or len(wrapper.silu_nodes) != 9

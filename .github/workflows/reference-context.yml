@@ -15,7 +15,7 @@ on:
         description: Original native vision only; optionally constrain MKL while retaining native ATen
         type: choice
         default: native
-        options: [native, avx2]
+        options: [native, avx2, avx2_isa]
       original_rotary_only:
         description: Original vision only; capture data-independent rotary tables for all profiles without encoder inference
         type: boolean
@@ -191,6 +191,9 @@ jobs:
       - name: Constrain only original native BLAS context
         if: inputs.original_blas_context == 'avx2' && matrix.context == 'native'
         run: echo 'MKL_CBWR=AVX2' >> "$GITHUB_ENV"
+      - name: Constrain only original native BLAS instruction set
+        if: inputs.original_blas_context == 'avx2_isa' && matrix.context == 'native'
+        run: echo 'MKL_ENABLE_INSTRUCTIONS=AVX2' >> "$GITHUB_ENV"
       - name: Fetch original frozen graph and first fixture
         env:
           GH_TOKEN: ${{ github.token }}
@@ -212,7 +215,7 @@ jobs:
           mkdir -p ../artifacts/original-context-results
           lscpu --json > ../artifacts/original-context-results/cpu-host.json
       - name: Gate original patch before constrained BLAS full replay
-        if: inputs.original_blas_context == 'avx2' && matrix.context == 'native'
+        if: inputs.original_blas_context != 'native' && matrix.context == 'native'
         run: |
           uv run --locked python - <<'PY'
           import hashlib, json, os
@@ -228,6 +231,7 @@ jobs:
           expected = '1e99fa140cb0084e624b5019d96ae424192eff77346ef2f7ffea892c1bea0607'
           report = dict(scope='original_saved_patch_only_before_blas_context_replay', job_source=os.environ['GITHUB_SHA'],
               actual_cpu_capability=torch.backends.cpu.get_cpu_capability(), mkl_cbwr=os.environ.get('MKL_CBWR'),
+              mkl_enable_instructions=os.environ.get('MKL_ENABLE_INSTRUCTIONS'),
               patch_shape=list(patch.shape), patch_sha256=digest, original_native_patch_sha256=expected,
               patch_matches_original_native=digest == expected, full_encoder_executed=False)
           output = Path('../artifacts/original-context-results/patch-prerequisite.json')
@@ -235,6 +239,29 @@ jobs:
           print(json.dumps(report))
           if digest != expected:
               raise SystemExit('Constrained BLAS patch differs from original native; full replay was not executed')
+          PY
+      - name: Gate original first layer before ISA-only full replay
+        if: inputs.original_blas_context == 'avx2_isa' && matrix.context == 'native'
+        run: |
+          uv run --locked python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          import numpy as np
+          import torch
+          from embeddinggemma_tools.reference_context_failure import run_saved_graph_prefix
+          root=Path('../artifacts/original-context-input')
+          program=torch.export.load(root/'square/vision.pt2').module()
+          values=torch.from_numpy(np.fromfile(root/'square/0-pixels-fp32.bin','<f4').reshape(1,2520,768).copy())
+          layer=run_saved_graph_prefix(program,(values,),'add_15');raw=layer.numpy().tobytes()
+          digest=hashlib.sha256(raw).hexdigest();expected='fb33092e54e997da999b87246aefe2089ce2d0f376a89586b8c329db069bb7fa'
+          output=Path('../artifacts/original-context-results');captures=output/'captures';captures.mkdir(parents=True,exist_ok=True)
+          (captures/'first-layer-prerequisite-fp32.bin').write_bytes(raw)
+          report=dict(scope='original_first_layer_only_before_isa_context_full_replay',job_source=os.environ['GITHUB_SHA'],
+              actual_cpu_capability=torch.backends.cpu.get_cpu_capability(),mkl_cbwr=os.environ.get('MKL_CBWR'),
+              mkl_enable_instructions=os.environ.get('MKL_ENABLE_INSTRUCTIONS'),shape=list(layer.shape),
+              sha256=digest,original_native_sha256=expected,matches_original_native=digest==expected,full_encoder_executed=False)
+          (output/'first-layer-prerequisite.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8');print(json.dumps(report))
+          if digest!=expected:raise SystemExit('ISA-only first layer differs from original native; full replay was not executed')
           PY
       - name: Replay original saved graph against unchanged golden
         run: |

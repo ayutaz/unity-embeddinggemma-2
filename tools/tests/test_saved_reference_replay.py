@@ -43,6 +43,13 @@ def test_standalone_replay_uses_fixed_program_input_and_original_expected(saved_
     assert report["model_weights_downloaded"] is False and report["full_encoder_validated"] is False
 
 
+def test_replay_records_instruction_set_restriction_separately_from_cnr(saved_source,monkeypatch):
+    monkeypatch.setenv('MKL_ENABLE_INSTRUCTIONS','AVX2');monkeypatch.delenv('MKL_CBWR',raising=False)
+    report=replay(saved_source,'audio',source_commit='a'*40,revision='b'*40,case_id='silence')
+    assert report['runtime']['env'].get('MKL_ENABLE_INSTRUCTIONS')=='AVX2','ISA dispatch restriction was not recorded'
+    assert report['runtime']['env']['MKL_CBWR'] is None
+
+
 def test_optional_node_capture_uses_audited_original_program_and_preserves_golden(saved_source):
     destination = saved_source / 'captures'
     report = replay(saved_source, 'audio', source_commit='a' * 40, revision='b' * 40,

@@ -223,6 +223,15 @@ namespace EmbeddingGemma.Validation.Tests
         public void NativeGluPartitionsGpuMatchOriginalGolden(string signal)
             =>Execute(signal,true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,nativeGlu:true);
 
+        [TestCase("silence")]
+        [TestCase("impulse")]
+        [TestCase("sine")]
+        [TestCase("nyquist")]
+        [TestCase("noise")]
+        [TestCase("padded_noise")]
+        public void FirstNormFmaPartitionsGpuMatchOriginalGolden(string signal)
+            =>Execute(signal,true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,nativeGlu:true,firstNormFma:true);
+
         [Test]
         public void ObserveNativeGluConvolutionModulesWithoutChangingNormalFinalBits()
             =>Execute("silence",true,early:true,nativeSilu:true,attention:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,convolutionDetail:true,nativeGlu:true);
@@ -251,7 +260,7 @@ namespace EmbeddingGemma.Validation.Tests
         public void ObserveFirstAttentionAndConvolutionWithoutChangingNormalFinalBits()
             =>Execute("silence",true,false,false,true,true,true);
 
-        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false,bool convolutionDetail=false,bool nativeGlu=false,int layerObservation=0)
+        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false,bool convolutionDetail=false,bool nativeGlu=false,int layerObservation=0,bool firstNormFma=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
@@ -265,6 +274,7 @@ namespace EmbeddingGemma.Validation.Tests
             if(nativeGlu)stem=convolutionDetail?"partitioned-native-glu-convolution-observation-":"partitioned-native-glu-gpu-";
             if(nativeGlu&&observe)stem="partitioned-native-glu-layer-observation-";
             if(layerObservation>0)stem="partitioned-native-layer"+layerObservation+"-parts-observation-";
+            if(firstNormFma)stem="partitioned-first-norm-fma-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject { ["success"]=false,["scope"]=early?"original_early_audio_observation_only":isolated?"one_original_audio_layer_isolation_gpu_numeric_gate":observe?"original_audio_layer_observation_only":"one_partitioned_original_audio_encoder_gpu_numeric_gate",
@@ -326,7 +336,14 @@ namespace EmbeddingGemma.Validation.Tests
                 var models=new List<Model>();var layers=new JArray();var timer=System.Diagnostics.Stopwatch.StartNew();
                 foreach(var segment in (JArray)plan["segments"])
                 {
-                    var asset=AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/"+folder+"/"+segment.Value<string>("file"));
+                    var segmentFile=segment.Value<string>("file");
+                    if(firstNormFma&&segmentFile=="segment-0.onnx")
+                    {
+                        Assert.That(nativeGlu,Is.True);segmentFile="segment-0-first-norm-fma.onnx";
+                        Check(Path.Combine(root,segmentFile),"9bc00c121b589af7444e026532b4c01452a21b32b1b2b290e2377b55aa6fe19b");
+                        report["first_norm_fma_segment_sha256"]="9bc00c121b589af7444e026532b4c01452a21b32b1b2b290e2377b55aa6fe19b";
+                    }
+                    var asset=AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/"+folder+"/"+segmentFile);
                     Assert.That(asset,Is.Not.Null);var model=ModelLoader.Load(asset);
                     var aliases=(JObject)segment["output_aliases"];
                     for(var index=0;index<model.outputs.Count;index++)

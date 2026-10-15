@@ -13,7 +13,7 @@
 | 実PCMから最終768次元、全6信号・全role | 18条件合格、最小cosine 0.9999997097692651 | [音声API](results/m4-real-pcm-all-roles-staged-gpu-20261016.json) |
 | 音声例外後再利用・借用stage・中間Tensor解放 | 実GPU encoder後のbackbone例外から復帰、API破棄後も借用stage再利用 | [音声所有権](results/m4-real-pcm-all-roles-staged-gpu-20261016.json) |
 | テキスト回帰・API / 境界 / 非同期契約 | FP32・Float16、6文書・4queryの全順位 / score合格、関連189 pass / skip0 | [最新テキスト回帰](results/m4-staged-original-encoder-and-final-text-gpu-regression-20261016.json) |
-| 必須repository checks | **未達**。確定済み9d40b11eのCIはPython4環境・package・workflow lint成功、音声ONNX比較とRequired CI失敗 | [CI 38798000979](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38798000979) |
+| 必須repository checks | **未達**。確定済み2058ed67のCIはPython4環境・package・workflow lint成功、音声ONNX比較とRequired CI失敗 | [CI 38807548175](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38807548175) |
 
 追加確認: source `b378070`の[CI 38774804527](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38774804527)では、Windows / Linux × Python3.13 / 3.14の全4環境で各1,111 pass・fail0・skip0、package / workflow lintも合格しました。実モデルの音声ONNX比較は失敗しており、Required CIの完了条件は満たしていません。4環境のJUnit XMLを取得・監査済みです。
 
@@ -33,7 +33,7 @@ GPU結果はWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER /
 
 ## 残る音声ONNX問題
 
-必須CIの残件は、実音声encoderのONNX出力とPython native出力の数値差です。source `9d40b11e`の[最新確定CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38798000979)では、Windows / Linux × Python3.13 /3.14、package、workflow lintは成功しましたが、音声ONNXとRequired CIは失敗しました。既定export、元参照、重み、許容差と製品Runtimeは変更していません。
+必須CIの残件は、実音声encoderのONNX出力とPython native出力の数値差です。source `2058ed67`の[最新確定CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38807548175)では、Windows / Linux × Python3.13 /3.14、package、workflow lintは成功しましたが、音声ONNXとRequired CIは失敗しました。既定export、元参照、重み、許容差と製品Runtimeは変更していません。
 
 [後半3層の独立した185演算比較](results/m4-isolated-audio-primitives-all185-within-tolerance-20261016.json)は、各ONNX演算へ同じnative入力を渡すと全件が元許容差内でした。比較値は後続へ注入せず、元のnative区間出力は元最終参照と全bit一致しています。最大の単体差は`mm_109`の許容差比0.67で、接続したONNX区間の失敗と合わせると、小さな丸め差の蓄積が疑われます。これは単独の原因演算の確定や全encoder合格ではありません。
 
@@ -51,11 +51,15 @@ GPU結果はWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER /
 
 [第1層の元クリッピング付きpointwise投影](results/m4-original-clipped-pointwise-bmm-all286720-bit-exact-20261016.json)は全286,720値が実ONNXで元出力とbit一致しました。元の入力・出力のclip係数、重みと期待値のSHAを照合し、同じclip順序を維持しています。これはclip後のmodule境界の一致で、clip前の生BMM全値のbit一致とは主張しません。`ordered_static_linear_all_bmm`で、元のparameterからview /expand /transposeだけで構成される4番目の投影を追加しました。[全12層比較](results/m4-all-bmm-full12-numerical-failure-and-upload-timeout-20261016.json)は、同じホストでnativeが元出力と全bit一致、標準ONNX414要素超過、候補321要素超過で不合格でした。計算は完了しましたが、モデルのupload中に20分上限でjobがcancelledとなっています。公開済みartifactから全数値captureを回収してSHAと許容差を独立照合し、job成功にも数値合格にも数えません。RMS /SiLU /Convは引き続き維持します。[TDDと範囲制約](results/m4-ordered-parameter-bmm-tdd-20261016.json)は新規red2件→green5件、関連96 pass /skip0、workflow lint合格です。
 
-[元の単体Softmax /GLU /Depthwise比較](results/m4-original-softmax-glu-depthwise-actual-onnx-bit-exact-20261016.json)は、保存済みの元native入力を使った実ONNXで全628,736値がbit一致しました。新規Softmax9件、GLU /Depthwise /Sigmoid13件をTDDで追加し、関連127 pass /skip0です。[元のRMS /SiLU入力](results/m4-original-rms-and-silu-worst-input-onnx-qualified-20261016.json)でも平均280値と逆平方根280値はbit一致、SiLU286,720値は許容差超過0で極小のbit差4を残します。いずれも単体の証拠で、全encoderの合格や既定変換への採用とは数えません。現在の全12層BMM診断にはまだこれらを加えていません。
+[元の単体Softmax /GLU /Depthwise比較](results/m4-original-softmax-glu-depthwise-actual-onnx-bit-exact-20261016.json)は、保存済みの元native入力を使った実ONNXで全628,736値がbit一致しました。新規Softmax9件、GLU /Depthwise /Sigmoid13件をTDDで追加し、関連127 pass /skip0です。[元のRMS /SiLU入力](results/m4-original-rms-and-silu-worst-input-onnx-qualified-20261016.json)でも平均280値と逆平方根280値はbit一致、SiLU286,720値は許容差超過0で極小のbit差4を残します。いずれも単体の証拠で、全encoderの合格や既定変換への採用とは数えません。下記の接続診断でこれらを追加しましたが、全体の数値合格には至りませんでした。
 
-[ONNX区間接続のTDD](results/m4-connected-onnx-partitions-no-reference-reset-tdd-20261016.json)で、元subsampleから全12層を3層ずつ変換する明示的な診断モードを準備しました。各区間の実ONNX出力をそのまま次へ渡し、途中の正解Tensorへ戻しません。別のnative制御はcutの物理layoutを保ち、未分割のnativeと全bit一致することを要求します。最初のONNX出力を意図的に誤らせるテストでは最後まで誤差が伝わり、元最終参照の比較で検出されます。区間ごとのcapture /graph SHA、進行段階と経過時間を保存します。関連134 pass /skip0、workflow lint合格。実モデルでの区間接続は未実行で、速度改善や全encoder合格とは数えません。
+[ONNX区間接続のTDD](results/m4-connected-onnx-partitions-no-reference-reset-tdd-20261016.json)で、元subsampleから全12層を3層ずつ変換する明示的な診断モードを準備しました。各区間の実ONNX出力をそのまま次へ渡し、途中の正解Tensorへ戻しません。別のnative制御はcutの物理layoutを保ち、未分割のnativeと全bit一致することを要求します。最初のONNX出力を意図的に誤らせるテストでは最後まで誤差が伝わり、元最終参照の比較で検出されます。区間ごとのcapture /graph SHA、進行段階と経過時間を保存します。関連134 pass /skip0、workflow lint合格。実モデルの区間接続は下記の全12層診断で実行済みですが、数値は不合格です。速度改善や全encoder合格とは数えません。
 
-[次の明示的な接続候補](results/m4-connected-original-operator-candidate-and-upload-tdd-20261016.json)は、検証済みの固定行列積 /全BMMへRMS /SiLU /Softmax /Sigmoid /Depthwiseの元順序を加える`ordered_original_primitives`です。小さな接続モデルの実ONNX比較と関連139 pass /skip0、workflow lintに合格しました。元subsampleから全12層を3層ずつ接続する実モデルの比較が次の確認であり、まだ合格とは数えません。数値JSON /binを任意の大きなONNX graph archiveより先にuploadし、chained modeではgraph archiveを省きます。20分上限は維持し、元参照・重み・許容差・既定exportと製品GPU Runtimeは変更しません。
+[次の明示的な接続候補](results/m4-connected-original-operator-candidate-and-upload-tdd-20261016.json)は、検証済みの固定行列積 /全BMMへRMS /SiLU /Softmax /Sigmoid /Depthwiseの元順序を加える`ordered_original_primitives`です。小さな接続モデルの実ONNX比較と関連139 pass /skip0、workflow lintに合格しました。[実モデルの全12層接続](results/m4-connected-original-primitives-all12-numerical-failure-20261016.json)は完走しましたが、標準ONNX414要素超過、候補561要素超過で不合格でした。同じホストのnative全区間とnative区間接続は元参照にbit一致しています。候補の第2・5・8層cutはいずれも元許容差内でしたがbit一致ではなく、最終段で超過しています。診断収集の成功を数値合格とせず、この候補は採用しません。全captureのSHAと区間間のcarryを独立照合済みです。数値JSON /binを任意の大きなONNX graph archiveより先にuploadし、chained modeではgraph archiveを省きます。20分上限は維持し、元参照・重み・許容差・既定exportと製品GPU Runtimeは変更しません。
+
+[元stage13から最後の正規化・投影](results/m4-original-final-rms-and-projection-all143360-bit-exact-20261016.json)は、元の入力・重みを固定した実ONNXで全143,360値がbit一致しました。単体の最終投影は再現可能ですが、全encoderの接続で入力誤差が増幅しない証拠ではありません。[非注入の候補演算診断](results/m4-noninjecting-original-candidate-operators-tdd-20261016.json)は新規8件のredから実装し、新旧18 pass、関連158 pass /skip0、workflow lint合格です。次は後半3層の同じnative入力で候補演算を独立比較し、比較結果を後続へ注入せず、形状・strideごとに最大差の入力と出力を保存します。
+
+元入力からの先頭区間へ向け、[元の第1・第2畳み込みの固定16座標ずつ](results/m4-static-stem-conv-original-selected2560-bit-exact-20261016.json)を抽出し、端・角・中央の全2,560値が実ONNXで元出力とbit一致しました。全畳み込みや全先頭区間の合格ではありません。[明示的な`ordered_original_stem`候補](results/m4-ordered-original-stem-and-static-conv-tdd-20261016.json)は2畳み込み・2正規化・1投影だけを対象とし、元subsample境界以外を拒否します。大きな実Tensor上のFMA列をexport前に実行せず、native forwardは元Conv2dを通すだけ、実ONNX出力を別に検証します。小さな接続モデルの実ONNXと関連166 pass /skip0で確認済み、実モデルの全先頭区間は次の確認です。既定exportと製品GPU Runtimeは維持します。
 
 先行する全silence候補は475要素、RMS追加候補は583要素超過で不採用です。RMS /SiLUの後半候補も[同一ホスト比較](results/m4-fixed-tail-joint-and-same-host-baseline-failed-20261016.json)で不合格でした。同じONNX /入力 /期待値でもAMDとIntelでは結果が変わり、Intelではnative自体の元参照との差も残っています。CPU環境差、変換差、失敗・未実行を分けて保持します。過去のsource付きreceiptは`docs/results/`に残し、部分診断やActions収集の完了をGPU /全encoder合格へ読み替えません。
 

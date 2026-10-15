@@ -4,7 +4,7 @@
   "goal": "4\u307e\u3067\u9032\u3081\u3066\u304f\u3060\u3055\u3044",
   "status": "active_not_complete",
   "scope_source": "goal4-scope-audit-20261016.json",
-  "candidate_head_at_audit": "18cb03f2aa823eada9de430049b45cb92c458436",
+  "candidate_head_at_audit": "2058ed675f9109a2929cfde373f39ba12be69227",
   "requirements": [
     {
       "requirement": "Original learned coefficients, references and encoder tolerances remain unchanged",
@@ -79,13 +79,13 @@
     {
       "requirement": "Required repository checks for the resulting candidate",
       "status": "not_achieved",
-      "last_terminal_ci_run": 38798000979,
-      "last_terminal_ci_head": "9d40b11ea8b90d712e4b38e70a3da690acc2c330",
+      "last_terminal_ci_run": 38807548175,
+      "last_terminal_ci_head": "2058ed675f9109a2929cfde373f39ba12be69227",
       "result": "Python four environments, package and workflow lint pass; audio ONNX and Required CI fail.",
-      "candidate_ci_run": 38806138349,
-      "candidate_ci_head": "18cb03f2aa823eada9de430049b45cb92c458436",
-      "candidate_ci_last_observation": "in_progress_at_recording_not_success",
-      "candidate_ci_aggregate_conclusion": "",
+      "candidate_ci_run": 38807548175,
+      "candidate_ci_head": "2058ed675f9109a2929cfde373f39ba12be69227",
+      "candidate_ci_last_observation": "completed_failure",
+      "candidate_ci_aggregate_conclusion": "failure",
       "evidence": [
         "m4-saved-full-silence-onnx-candidate-failed-20261016.json",
         "m4-saved-full-silence-ordered-rms-onnx-failed-20261016.json",
@@ -102,7 +102,10 @@
         "m4-original-clipped-pointwise-bmm-all286720-bit-exact-20261016.json",
         "m4-all-bmm-full12-numerical-failure-and-upload-timeout-20261016.json",
         "m4-original-softmax-glu-depthwise-actual-onnx-bit-exact-20261016.json",
-        "m4-connected-original-operator-candidate-and-upload-tdd-20261016.json"
+        "m4-connected-original-operator-candidate-and-upload-tdd-20261016.json",
+        "m4-connected-original-primitives-all12-numerical-failure-20261016.json",
+        "m4-original-final-rms-and-projection-all143360-bit-exact-20261016.json",
+        "m4-noninjecting-original-candidate-operators-tdd-20261016.json"
       ],
       "next_action": "Evaluate all12layers with actual ONNX carry and independently qualified original operators. Whole original-input/all6signals and Required CI remain mandatory."
     }

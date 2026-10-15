@@ -3,6 +3,33 @@ import torch
 import torch.nn.functional as F
 
 
+def validate_native_stem_conv(values, weight):
+    """Audit bounded CPU tensors before an explicit stem diagnostic."""
+    if not torch.compiler.is_compiling() and not torch.jit.is_tracing():
+        if (values.dtype != torch.float32 or weight.dtype != torch.float32
+                or values.device.type != 'cpu' or weight.device.type != 'cpu'
+                or values.ndim != 4 or weight.ndim != 4 or tuple(weight.shape[-2:]) != (3, 3)
+                or values.shape[1] != weight.shape[1] or (weight.shape[1] != 1 and weight.shape[1] % 16)
+                or not values.numel() or not weight.numel() or not torch.isfinite(values).all()
+                or not torch.isfinite(weight).all() or torch.any(values.abs() > 1e6)
+                or torch.any(weight.abs() > 100)):
+            raise ValueError('Native stem convolution requires bounded CPU FP32 Cin1 or16-block3x3 tensors')
+
+
+def fp32_native_stem_conv2d(values, weight):
+    """Opt-in original kernel order: Cin1 FMA9 or existing Cin16-block order."""
+    from .export import fp32_fma
+    validate_native_stem_conv(values, weight)
+    if weight.shape[1] != 1:
+        return fp32_block16_conv2d(values, weight)
+    patches = F.unfold(values, 3, padding=1, stride=2).transpose(1, 2)
+    coefficients = weight.reshape(weight.shape[0], 9)
+    total = values.new_zeros((values.shape[0], patches.shape[1], weight.shape[0]))
+    for kernel in range(9):
+        total = fp32_fma(patches[..., kernel:kernel+1], coefficients[:, kernel][None, None, :], total)
+    return total.transpose(1, 2).reshape(values.shape[0], weight.shape[0], (values.shape[2]+1)//2, (values.shape[3]+1)//2)
+
+
 def fp32_block16_conv2d(values,weight):
     """Pinned oneDNN AVX512 block16 FMA/reset/store order, standard FP32 only.
 

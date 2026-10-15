@@ -17,9 +17,10 @@ from .export import fp32_cascade_mean1024, fp32_cascade_mean1536, fp32_outer_cas
 from .reference_context_failure import feature_error_metrics
 from .static_block192_onnx import audit_static_linear_nodes, static_block192_export, static_block192_addmm_export
 from .streaming_reference import run_flat_reference
+from .static_stem_conv_onnx import static_stem_conv_export
 
 VARIANTS = ("native", "refined_moment", "refined_mean_moment")
-EXPERIMENTAL_VARIANTS = (*VARIANTS, "refined_mean_moment_rms", "ordered_static_linear_refined")
+EXPERIMENTAL_VARIANTS = (*VARIANTS, "refined_mean_moment_rms", "ordered_static_linear_refined", "ordered_original_stem")
 STAGE_REFERENCE_SHA = "6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a"
 STAGE_AUDIT_SHA = "3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b"
 
@@ -158,6 +159,28 @@ def ordered_rms_mean(values):
     raise ValueError("RMS candidate has an unqualified width or reduction layout")
 
 
+def audit_stem_convolutions(prefix):
+    selected, shapes = set(), []
+    for node in prefix.graph.nodes:
+        if node.op != 'call_function' or node.target != torch.ops.aten.convolution.default:
+            continue
+        if (len(node.args) != 9 or node.kwargs or node.args[2] is not None
+                or tuple(node.args[3]) != (2, 2) or tuple(node.args[4]) != (1, 1)
+                or tuple(node.args[5]) != (1, 1) or node.args[6] is not False
+                or tuple(node.args[7]) != (0, 0) or node.args[8] != 1):
+            raise ValueError('Unqualified original stem convolution contract')
+        left, right = node.args[:2]
+        values = [arg.meta.get('val') for arg in (left, right)]
+        if (right.op != 'get_attr' or not all(isinstance(v, torch.Tensor) and v.dtype == torch.float32
+                and v.device.type == 'cpu' and v.ndim == 4 for v in values)
+                or values[0].shape[1] != values[1].shape[1]):
+            raise ValueError('Unqualified original stem convolution tensors')
+        selected.add(node); shapes.append(tuple(values[1].shape))
+    if sorted(shapes) != sorted([(128, 1, 3, 3), (32, 128, 3, 3)]):
+        raise ValueError('Original stem convolution coverage differs')
+    return selected
+
+
 class PrefixExport(torch.nn.Module):
     def __init__(self, prefix, variant):
         super().__init__()
@@ -165,11 +188,16 @@ class PrefixExport(torch.nn.Module):
         self.variant = variant
         self.selected = checked_normalizations(prefix)
         self.rms_means, self.rms_inverses = audit_rms_nodes(prefix) if variant == "refined_mean_moment_rms" else (set(), set())
-        self.linear_nodes = audit_static_linear_nodes(prefix) if variant == "ordered_static_linear_refined" else set()
-        if variant == "ordered_static_linear_refined" and not self.linear_nodes:
+        ordered = variant in ("ordered_static_linear_refined", "ordered_original_stem")
+        self.linear_nodes = audit_static_linear_nodes(prefix) if ordered else set()
+        if ordered and not self.linear_nodes:
             raise ValueError("Ordered prefix requires original 280-row parameter projections")
         self.linear_candidate = static_block192_export
         self.biased_linear_candidate = static_block192_addmm_export
+        self.convolution_nodes = audit_stem_convolutions(prefix) if variant == 'ordered_original_stem' else set()
+        if variant == 'ordered_original_stem' and (len(self.selected) != 2 or len(self.linear_nodes) != 1):
+            raise ValueError('Original stem requires2normalizations and1projection')
+        self.convolution_candidate = static_stem_conv_export
 
     def forward(self, values):
         selected, variant, rms_means, rms_inverses = self.selected, self.variant, self.rms_means, self.rms_inverses
@@ -242,7 +270,7 @@ class PrefixExport(torch.nn.Module):
                     return torch.softmax(args[0], dim=-1)
                 if variant != "native" and node in selected:
                     args, kwargs = self.fetch_args_kwargs_from_env(node)
-                    return candidate_output(*args, "refined_mean_moment" if variant in ("refined_mean_moment_rms", "ordered_static_linear_refined") else variant)
+                    return candidate_output(*args, "refined_mean_moment" if variant in ("refined_mean_moment_rms", "ordered_static_linear_refined", "ordered_original_stem") else variant)
                 return super().run_node(node)
 
         return Replay(self.prefix).run(values)
@@ -339,7 +367,7 @@ def probe_prefix(program, values, expected, output, *, boundary, provenance=None
             # Keep default qualification unchanged. This explicit large-graph
             # diagnostic uses the same kernels/order with last-consumer release
             # for both its same-host baseline and candidate.
-            streaming = "ordered_static_linear_refined" in variants
+            streaming = any(v in ("ordered_static_linear_refined", "ordered_original_stem") for v in variants)
             values_onnx = (run_flat_reference(evaluator, {"input": values.numpy()})[0] if streaming
                            else evaluator.run(None, {"input": values.numpy()})[0])
             actual = tensor(torch.from_numpy(values_onnx))
@@ -358,6 +386,8 @@ def probe_prefix(program, values, expected, output, *, boundary, provenance=None
                 normalization_replacements=len(wrapper.selected) if variant != "native" else 0,
                 linear_replacements=len(wrapper.linear_nodes), ordered_linear_nodes=sorted(node.name for node in wrapper.linear_nodes),
                 ordered_linear_native_execution="original_MatMul_addmm_passthrough_not_fixed_order_execution" if wrapper.linear_nodes else None,
+                convolution_replacements=len(wrapper.convolution_nodes),
+                convolution_native_execution='original_conv2d_passthrough_not_fixed_order_execution' if wrapper.convolution_nodes else None,
                 reference_execution="same_kernels_original_order_last_consumer_release" if streaming else "default_ReferenceEvaluator"))
             save()
         report["complete"] = True
@@ -373,6 +403,8 @@ def main(argv=None):
     parser.add_argument("--frozen-stage-source", type=Path)
     parser.add_argument("--variant", choices=("all", *EXPERIMENTAL_VARIANTS), default="all")
     args = parser.parse_args(argv)
+    if args.variant == 'ordered_original_stem' and args.stage != 'subsample':
+        raise ValueError('Original stem candidate requires the subsample boundary')
     source = os.environ.get("GITHUB_SHA", "")
     if re.fullmatch("[0-9a-f]{40}", source) is None:
         raise ValueError("Frozen prefix needs immutable job provenance")
@@ -383,9 +415,9 @@ def main(argv=None):
     provenance["stage"] = args.stage
     frozen = load_frozen_stage_reference(args.frozen_stage_source, args.stage) if args.frozen_stage_source else None
     variants = (VARIANTS if args.variant == "all" else
-                ("native", args.variant) if args.variant == "ordered_static_linear_refined" else (args.variant,))
-    if "ordered_static_linear_refined" in variants:
-        audited = PrefixExport(extract_prefix(program, boundary), "ordered_static_linear_refined")
+                ("native", args.variant) if args.variant in ("ordered_static_linear_refined", "ordered_original_stem") else (args.variant,))
+    if any(v in ("ordered_static_linear_refined", "ordered_original_stem") for v in variants):
+        audited = PrefixExport(extract_prefix(program, boundary), args.variant)
         count = expected_linear_count(args.stage)
         if len(audited.linear_nodes) != count:
             raise ValueError("Pinned280-row prefix linear replacement count differs")

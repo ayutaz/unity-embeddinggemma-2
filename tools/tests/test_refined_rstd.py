@@ -38,6 +38,25 @@ def test_refinement_does_not_move_correct_quotient_to_a_rounded_newton_midpoint(
     assert torch.equal(actual.view(torch.int32),expected.view(torch.int32))
 
 
+@pytest.mark.parametrize('seed_offset', [-1, 0, 1])
+def test_reciprocal_correction_recovers_adjacent_gpu_seed_on_both_midpoint_sides(seed_offset):
+    import numpy as np
+    correct = getattr(export, '_fp32_correct_reciprocal', None)
+    assert callable(correct), 'GPU reciprocal correction must consider adjacent representable candidates'
+    rng = np.random.default_rng(41016)
+    statistic_bits = rng.integers(np.float32(1e-6).view('u4'), np.float32(2e6).view('u4'), 65536, dtype='u4')
+    witness_bits = np.arange(1081870327-32, 1081870327+33, dtype='u4')
+    roots = np.sqrt(np.concatenate((statistic_bits, witness_bits)).view('f4').astype('f8')).astype('f4')
+    # Include exact powers of two and their neighbors: a relative half-ULP
+    # increment must reach an adjacent value even at a binade boundary.
+    powers = np.exp2(np.arange(-9, 11)).astype('f4')
+    roots = np.concatenate((roots, powers, np.nextafter(powers, np.float32(0)), np.nextafter(powers, np.float32(np.inf))))
+    expected = (1 / roots.astype('f8')).astype('f4')
+    seeds = (expected.view('u4').astype('i8') + seed_offset).astype('u4').view('f4')
+    actual = correct(torch.from_numpy(roots.copy()), torch.from_numpy(seeds.copy()))
+    assert np.array_equal(actual.numpy().view('u4'), expected.view('u4'))
+
+
 @pytest.mark.parametrize('values', [
     torch.tensor([1.], dtype=torch.float16),
     torch.tensor([0., 1.]),

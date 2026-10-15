@@ -2,6 +2,11 @@ name: Frozen native CPU context diagnostics
 
 on:
   workflow_dispatch:
+    inputs:
+      original_vision:
+        description: Replay the original frozen vision graph instead of the newer context matrix
+        type: boolean
+        default: false
   pull_request:
     types: [opened, synchronize, labeled]
 
@@ -16,7 +21,7 @@ concurrency:
 jobs:
   probe:
     if: >-
-      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_dispatch' && !inputs.original_vision) ||
       (github.event.pull_request.head.repo.full_name == github.repository &&
        contains(github.event.pull_request.labels.*.name, 'reference-context-diagnostics'))
     runs-on: ubuntu-latest
@@ -117,5 +122,93 @@ jobs:
           path: |
             artifacts/context-results/*.json
             artifacts/context-input/range-receipt.json
+          retention-days: 7
+          if-no-files-found: warn
+
+  original_vision_probe:
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        context: [native, avx2]
+    defaults:
+      run:
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+      PROBE_CONTEXT: ${{ matrix.context }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - name: Constrain the original graph AVX2 context
+        if: matrix.context == 'avx2'
+        run: |
+          {
+            echo 'ATEN_CPU_CAPABILITY=avx2'
+            echo 'MKL_CBWR=AVX2'
+            echo 'DNNL_MAX_CPU_ISA=AVX2'
+          } >> "$GITHUB_ENV"
+      - name: Fetch original frozen graph and first fixture
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          uv run --locked python -m embeddinggemma_tools.artifact_zip \
+            --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11774238857 \
+            --output ../artifacts/original-context-input --max-entry-bytes 2147483648 \
+            --member vision-reference.json --member vision-validation.json \
+            --member square/vision.pt2 --member square/0-pixels-fp32.bin
+          sha256sum --check <<'EOF'
+          3dfccd1a487ce04df3f8d640483ca045f7a7a56231bc1096ad0f845c923a29c6  ../artifacts/original-context-input/vision-reference.json
+          ab1aa775b553f33a5e2892abed2cdcef7768e35fbad6fa5af9ec3286a7ba90ba  ../artifacts/original-context-input/vision-validation.json
+          f9c5175a1d75289ce814a9651f496f9bdae5e873ac66199a5c3d03e0172c16cc  ../artifacts/original-context-input/square/vision.pt2
+          d25852af1b53b8f4ed484b760280b1859b8a3b63e3456f7cbb378f33877761b7  ../artifacts/original-context-input/square/0-pixels-fp32.bin
+          EOF
+      - name: Record original replay CPU host
+        if: always()
+        run: |
+          mkdir -p ../artifacts/original-context-results
+          lscpu --json > ../artifacts/original-context-results/cpu-host.json
+      - name: Replay original saved graph against unchanged golden
+        run: |
+          uv run --locked python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from embeddinggemma_tools.reference_context_failure import replay_saved_reference_context
+          report = replay_saved_reference_context(Path('../artifacts/original-context-input'), 'image',
+              source_commit='e2a6dc01fbca8c9be1f3bbe875325ad338de0ca0',
+              revision='914f7f89142e33e77833254d9c9b90c3cef7303b', case_id='square-0')
+          report.update(job_source=os.environ['GITHUB_SHA'], probe_context=os.environ['PROBE_CONTEXT'])
+          conditions = report['thread_contexts']['conditions']
+          report['reference_reproduced'] = any(
+              condition.get('executed') and condition.get('mismatched_elements') == 0
+              for condition in conditions)
+          output = Path('../artifacts/original-context-results')
+          output.mkdir(parents=True, exist_ok=True)
+          path = output / f"original-image-{os.environ['PROBE_CONTEXT']}.json"
+          path.write_text(json.dumps(report, indent=2, allow_nan=False) + '\n', encoding='utf-8')
+          print(json.dumps(report, allow_nan=False))
+          if not report['reference_reproduced']:
+              raise SystemExit('Original saved graph did not reproduce the unchanged fixed reference')
+          PY
+      - name: Record original replay scope
+        if: always()
+        run: |
+          echo 'Original saved-graph CPU reference replay only; not GPU or full-chain acceptance.' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: original-vision-context-${{ matrix.context }}-${{ github.sha }}
+          path: |
+            artifacts/original-context-results/*.json
+            artifacts/original-context-input/range-receipt.json
           retention-days: 7
           if-no-files-found: warn

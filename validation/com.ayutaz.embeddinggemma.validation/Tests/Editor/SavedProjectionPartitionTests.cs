@@ -20,6 +20,29 @@ namespace EmbeddingGemma.Validation.Tests
         }
         static int[] Selected(Model model)=>model.layers.Where(layer=>layer.GetType().Name.StartsWith("MatMul")).Select(layer=>layer.outputs[0]).ToArray();
 
+        [Test]
+        public void SavedGeluMarkerRetainsResidualAndOriginalModelBytes()
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
+            var graph=new FunctionalGraph();var x=graph.AddInput<float>(new TensorShape(1,2),"input");var source=graph.Compile(Functional.Relu(x)+x);
+            var original=source.layers.Single(layer=>layer.GetType().Name=="Relu");
+            var type=typeof(Worker).Assembly.GetTypes().Single(value=>value.Name=="GeluFast"&&typeof(Layer).IsAssignableFrom(value));
+            var gelu=(Layer)Activator.CreateInstance(type);gelu.inputs=(int[])original.inputs.Clone();gelu.outputs=(int[])original.outputs.Clone();source.layers[source.layers.IndexOf(original)]=gelu;
+            var before=Bytes(source);var method=typeof(SavedProjectionPartition).GetMethod("MarkGelu");Assert.That(method,Is.Not.Null,"Saved GELU GPU markers are missing.");
+            var marked=((Model model,int[] outputs))method.Invoke(null,new object[]{source});Assert.That(marked.outputs,Is.EqualTo(gelu.outputs));
+            var plan=SavedProjectionPartition.Create(marked.model,marked.outputs);
+            using var operation=new GpuSequentialScale(2f,new[]{1f,1f});using var input=new Tensor<float>(new TensorShape(1,2),new[]{1f,2f});ComputeTensorData.Pin(input);
+            using var pipeline=new GpuProjectionPipeline(plan.Models,plan.Inputs,plan.Outputs,new IGpuTensorOperation[]{operation});using var output=pipeline.Execute(input);
+            Assert.That(output.DownloadToArray(),Is.EqualTo(new[]{3f,6f}));Assert.That(Bytes(source),Is.EqualTo(before));
+        }
+        [Test]
+        public void SavedGeluMarkerRejectsModelWithoutGeluAndKeepsSource()
+        {
+            var source=Fixture();var before=Bytes(source);var method=typeof(SavedProjectionPartition).GetMethod("MarkGelu");Assert.That(method,Is.Not.Null,"Saved GELU GPU markers are missing.");
+            var error=Assert.Throws<TargetInvocationException>(()=>method.Invoke(null,new object[]{source}));Assert.That(error.InnerException,Is.TypeOf<ArgumentException>());
+            Assert.That(Bytes(source),Is.EqualTo(before));
+        }
+
         [TestCase(2)] [TestCase(4)]
         public void ExplicitUnaryGpuMarkerKeepsTheOriginalResidualAndDoesNotRecomputeItsPlaceholder(int rank)
         {

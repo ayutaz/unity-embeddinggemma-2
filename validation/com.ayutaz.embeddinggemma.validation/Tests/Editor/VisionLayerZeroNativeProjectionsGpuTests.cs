@@ -25,6 +25,10 @@ namespace EmbeddingGemma.Validation.Tests
         public void AllSevenRmsAndNativeProjectionsMatchOriginalLayerZeroOnGpu()
             => Run(7);
 
+        [Test]
+        public void InlineSevenRmsPreserveQualifiedLayerBitsAndOriginalNativeGateOnGpu()
+            => Run(8);
+
         static void Run(int normCount)
         {
             var qualifiedFirstRms=normCount>0;
@@ -32,10 +36,10 @@ namespace EmbeddingGemma.Validation.Tests
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-diagnostics"));
             var modelPath=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-layer0-original-patch-gpu-e39bdf1b5d0faf2ea424023d83076315736c6fde-captures/layer0.sentis"));
-            var label=normCount==7?"vision-layer0-seven-rms-native-projections-gpu-":qualifiedFirstRms?"vision-layer0-first-rms-native-projections-gpu-":"vision-layer0-native-projections-gpu-";
+            var label=normCount==8?"vision-layer0-inline-rms-native-projections-gpu-":normCount==7?"vision-layer0-seven-rms-native-projections-gpu-":qualifiedFirstRms?"vision-layer0-first-rms-native-projections-gpu-":"vision-layer0-native-projections-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+".json"));
             Assert.That(File.Exists(output),Is.False);
-            var report=new JObject{["success"]=false,["scope"]=normCount==7?"original_vision_layer0_seven_rms_and_seven_native_gpu_projections_candidate":qualifiedFirstRms?"original_vision_layer0_first_rms_and_seven_native_gpu_projections_candidate":"original_vision_layer0_seven_native_gpu_projections_candidate",["runtime_source"]=source,
+            var report=new JObject{["success"]=false,["scope"]=normCount==8?"original_vision_layer0_inline_rms_and_seven_native_gpu_projections_candidate":normCount==7?"original_vision_layer0_seven_rms_and_seven_native_gpu_projections_candidate":qualifiedFirstRms?"original_vision_layer0_first_rms_and_seven_native_gpu_projections_candidate":"original_vision_layer0_seven_native_gpu_projections_candidate",["runtime_source"]=source,
                 ["full_encoder_validated"]=false,["end_to_end_validated"]=false,["phase"]="audit"};
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
@@ -52,6 +56,21 @@ namespace EmbeddingGemma.Validation.Tests
                     &&constants.TryGetValue(layer.inputs[1],out var w)&&w.shape.rank==2).Select(layer=>layer.outputs[0]).ToArray();
                 Assert.That(selected.Length,Is.EqualTo(7));
                 var original=model;var sourceHash=SerializedHash(original);Model rmsTemplate=null;int[] normOutputs=null;Constant[] normScales=null;
+                if(normCount==8)
+                {
+                    var method=typeof(QualifiedVisionRmsOperation).GetMethod("InlineLayerRms");Assert.That(method,Is.Not.Null,"Inline RMS graph grafting is missing.");
+                    Check(Path.Combine(Application.dataPath,"GpuVisionInlineRmsCandidate/inline-rms.onnx"),"15c8ec537c8d40386e61b675c05aaaa65b296667c0d38c39dc7d12fe28a25ccb");
+                    Check(Path.Combine(Application.dataPath,"GpuVisionHeadRmsCandidates/head-rms-candidates.json"),"bb1f2d3df3905551b34723badefd7f1dfdc23da08a9ab4c72545d5d1368ce229");
+                    var preparation=JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath,"GpuVisionHeadRmsCandidates/head-rms-candidates.json")));
+                    Model LoadHead(int index)
+                    {
+                        var entry=((JArray)preparation["rows"]).Single(value=>value.Value<int>("index")==index);
+                        var asset="GpuVisionHeadRmsCandidates/"+entry["onnx"].Value<string>("file");Check(Path.Combine(Application.dataPath,asset),entry["onnx"].Value<string>("sha256"));
+                        return ModelLoader.Load(UnityEditor.AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/"+asset));
+                    }
+                    var template=ModelLoader.Load(UnityEditor.AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/GpuVisionInlineRmsCandidate/inline-rms.onnx"));
+                    model=(Model)method.Invoke(null,new object[]{model,template,LoadHead(1),LoadHead(3),1});report["inline_rms_count"]=7;report["layer_count"]=model.layers.Count;
+                }
                 if(normCount==1)
                 {
                     var templatePath=Path.Combine(Application.dataPath,"GpuVisionFirstRmsCandidate/first-rms.onnx");
@@ -147,6 +166,11 @@ namespace EmbeddingGemma.Validation.Tests
                 report["execute_and_final_download_ms"]=timer.Elapsed.TotalMilliseconds;var expected=Floats(expectedPath);Assert.That(actual.Length,Is.EqualTo(expected.Length));
                 var capture=Path.ChangeExtension(output,"bin");var raw=new byte[actual.Length*4];Buffer.BlockCopy(actual,0,raw,0,raw.Length);File.WriteAllBytes(capture,raw);
                 using(var stream=File.OpenRead(capture))report["capture_sha256"]=PlayerFileHash.Compute(stream,out _);
+                if(normCount==8)
+                {
+                    Assert.That(report.Value<string>("capture_sha256"),Is.EqualTo("8312ee24467c3ee955dbd21f27e79fcd980c31e5b23ad442f8a4ee324c422448"),"Inlining must preserve every bit of the qualified seven-RMS layer.");
+                    report["qualified_seven_rms_layer_bits_preserved"]=true;
+                }
                 int bits=0,bad=0;double maximum=0,ratio=0;
                 for(var i=0;i<actual.Length;i++)
                 {

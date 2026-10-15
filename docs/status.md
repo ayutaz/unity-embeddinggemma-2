@@ -1,5 +1,17 @@
 # 現在の状態
 
+更新日: 2026-10-15。**元音声encoderの全6ケース・2 profileが実GPU数値gateに合格。工程3・4全体は未完了。** 通常5ケースは `a26317f`、`padded_noise` は `d955554335bed9ea8006d6287b47a3a1908932c2` の固定証拠。両source間で既存Runtimeの数値処理は未変更。RTX 4070 Ti SUPER / Direct3D12 / GPUCompute、各ケースの許容差超過・計算/入力CPU fallback・中間flushは0、fail0 / skip0。元参照値・学習済み係数・`atol=1e-5` / `rtol=1e-4`は維持した。[通常5ケース](results/m4-scalar-moment-fma-full-profile-gpu-20261015.json) / [パディング・エンコーダーAPI接続](results/m4-padded-audio-and-gpu-encoder-adapter-20261015.json)。全6件を最新headで再実行したという主張ではない。
+
+`padded_noise` は正確な `frames-1119-valid-839`、最終210×512出力を使う。元full/padded graphのSHAを固定して比較すると、差分はbinary mask initializer 3個・最終crop Constant 1個・出力形状で、その他583 initializer / 5,638 nodeは一致した。CPUモデル推論は行わず、bounded local構造比較は6〜9秒で完了。Actions 38680976728はrunner待ちのため所有jobをcancelし、Actions passには数えない。
+
+差分はIdentity aliasをたどって安定したconsumerへ照合し、全partitionを監査してから14パーツ・15 tensor箇所へ適用。maskが変わるため「全initializer不変」はfalse、「学習済み係数保持」はtrueと分ける。継承されたplan metadataを訂正した履歴もreceiptへ保存した。Python比較9 Red、workflow1 Red、consumer/alias各1 Red、適用を含む10 Redから関連27 Green。元profile不一致を拒否するUnity 1 Redを保持し、正しいpadded modelは1 pass / fail0 / skip0 / exit0、最大絶対誤差1.430512e-6、最大許容差比0.042265。
+
+新しい `PartitionedAudioFeatureEncoder` は `IAudioFeatureEncoder` を実装し、Workerと返却結果を所有、入力・model・GPU operationを借用する。3 Red→既存encoderを含む26 Greenで、Dispose後の結果寿命、CPU入力の拒否、prefix不一致、例外後再利用を確認。`cf3ed61` の元impulse実モデルもこのadapter経由で1 pass / fail0 / skip0、280×512 GPU出力・許容差超過0。これは保存feature→encoderの証拠で、実PCM前処理→正規化768次元APIの合格ではない。
+
+次は画像FP32全3 profile、その後に実PCM / Texture→GPU前処理→encoder→backbone→正規化768次元APIの全role / mask / 長さ境界 / 所有権 / Dispose / 例外後再利用 / text回帰。[全体計画](multimodal-tdd-plan.md)の工程3・4にあるsample / Player等も未達として維持する。最新Required CI、Persistent allocation警告と長期memory安定性は別gate。Draft PR #81、main未統合。Unityは各検証後に終了し、実モデル1件/process・300秒上限・owned PID監視を維持する。
+
+以下は前回checkpoint。
+
 更新日: 2026-10-15。**通常音声profileの元5信号が、同一候補の実GPU全encoder gateに合格。工程3・4全体は未完了。** `a26317fbfbcfbf896dff4a6577124109c6cf977c`、RTX 4070 Ti SUPER / Direct3D12 / GPUCompute。元参照・モデル係数・`atol=1e-5` / `rtol=1e-4`は変更していない。Draft PR #81、main未統合。
 
 前段2正規化のscalar moment更新で内側の乗算・加算をFP32 FMAにし、外側のmoment加算順を保持した。8レーンの順番・係数・幅32/128を監査してから適用し、既存initializer bytesを保持する。exportの意図した2 Red→6 Green、ONNX rewriteの8 Red→幅32/128を含む関連21 Green。元impulseの前段出力は1,290 bit差→候補の全bit一致となり、実GPU 1 pass / fail0 / skip0。診断captureのreadbackは製品経路の証拠と分ける。

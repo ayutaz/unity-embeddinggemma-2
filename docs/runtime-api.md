@@ -8,6 +8,8 @@
 
 画像は `ImageEmbedder.Embed(Texture, TextRole role = TextRole.Raw, string title = null)`、音声は `AudioEmbedder.Embed(AudioPcmInput, TextRole role = TextRole.Raw, string title = null)`。両APIとも前処理・encoder・backboneとprompt builderを借用し、各呼び出しの中間結果を所有して解放する。返す768次元CPU配列は独立コピーで、APIのDisposeは借用Workerを破棄しない。
 
+2026-10-15のDraft PR #81には、分割モデル用の `PartitionedAudioFeatureEncoder(Model[] models, string[][] operationInputs, string[] operationOutputs, IGpuTensorOperation[] operations, AudioEncoderProfile profile)` もある。`IAudioFeatureEncoder` を実装し、GPUCompute専用でWorkerを構築時に一度だけ作る。入力は同device・同prefixの `AudioPreprocessingResult`、返り値はGPU上の独立所有 `AudioEncodingResult`。encoderのDisposeはWorkerを解放し、借用model・operation・入力は解放しないため、呼出側でoperationを別途Disposeする。渡す分割modelは指定profileと係数を監査したものに限る。元音声6ケース・2 profileのencoder数値gateと、adapter経由の元impulseは実GPUで合格したが、実PCM→最終768次元の全条件は未検証。[固定証拠](results/m4-padded-audio-and-gpu-encoder-adapter-20261015.json)。
+
 利用者向け経路は各stageを `BackendType.GPUCompute` で構築する。同backend / profileを要求し、GPU不在をCPUで代替しない。Runtime APIのCPU選択肢は残るが、対象実モデル検証のGPU専用化は2 fixtureに限定される。構成テスト合格と実モデル受け入れを分ける。[最新状態](status.md) / [音声API](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-embedder.md)。
 
 更新日: 2026-10-10。[現在の状態](status.md)でmain / PRと検証範囲を確認する。

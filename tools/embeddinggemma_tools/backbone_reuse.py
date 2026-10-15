@@ -48,4 +48,4 @@ def audit_backbone_source(directory, modality, *, revision, input_sha256, profil
             raise ValueError("backbone fixed shape/profile mismatch")
         programs[name] = audited(spec.get("graph"))
     return dict(source_commit=context["source_commit"], reference_sha256=receipt["files"][reference_path.name]["sha256"],
-                programs=programs)
+                programs=programs, reference=reference)

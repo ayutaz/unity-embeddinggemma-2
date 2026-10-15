@@ -1,5 +1,7 @@
 # M2・M3・M4から正式リリースまでのTDD計画
 
+2026-10-16音声の更新: [実PCM→採用GPU encoder→元Document最終768 API](results/m4-real-pcm-document-final-api-gpu-20261016.json)は元6信号 / 両profileで6 pass・skip0。CPU fallback / 中間readback0、最小cosine 0.9999998052055729、per-call Tensor解放と不正入力後の復帰を確認。nyquistの追加要素診断439超過は保持する。次は[固定原本encoder出力からのrole参照生成](results/m4-frozen-audio-role-reference-tdd-20261016.json)をActionsで実行し、元Document全6参照への一致を確認してから、実PCM Query / RawのGPU最終APIへ進む。新経路の関連32 Greenは実モデル合格とは扱わない。通常のnative / ONNX gateを維持し、CIのsilence ONNX差とPersistent allocation警告は未解決として残す。工程4は未完了。
+
 > 文書整合確認: 2026-10-15。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。冒頭の現在方針が、下の旧checkpointの着手順より優先する。
 
 ## 2026-10-15の実行方針と再開順

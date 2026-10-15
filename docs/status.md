@@ -1,5 +1,15 @@
 # 現在の状態
 
+更新日: 2026-10-15。**GPU stage単位の完了待ち、GELU内部cache、backend scratchと完了済みML演算子contextの解放を確認したが、全体の高いmemory peakは解決していない。** [固定receipt](results/m3-gpu-stage-lifetime-and-cache-peak-unresolved-20261015.json)。GPU計算・元係数・固定参照・許容差は維持し、画像全体571要素超過、工程3・4未完了を保持する。
+
+`ExecuteAsync`はUnity main threadで各stageのgraphics fence完了を待ち、途中tensorのCPU取得を追加しない。重複呼び出しを拒否し、cancel / Disposeは投入済みstageのGPU完了後に所有tensorを解放する。4 intended Red→既存26 Green。GELUの内部2 Worker cacheは既存保持1 pass＋新API1 Red→関連32 Green。継承されたprivate fieldのlookupを誤った最初のscratch診断の2前提失敗を別記し、修正後はscratch解放・完了済みcontext解放・linker保持の3 intended Red（既存保持1 pass）→元layer 0のbit保持を含む36 Green。初回GEMM診断は恒等行列の最適化で前提失敗と記録し、非恒等GEMM / async / linkerの6 Greenへ修正。package22 Green。元layer 0は`fe3b9fe2...`全bit保持・元native許容差超過0。既存constructor / cacheの既定動作は維持し、算術kernelは変更していない。Player linker metadataの保持を実Player合格には数えない。
+
+**4つの全体比較を性能改善として採用しない。** 同じ18 segment / square-0候補で、fenceのみ、GELU内部cacheのみ、その併用、さらにbackend scratchとGPU完了済みML contextの解放を比較した。すべて最終hash `43fa98f5...`と元係数digestを保持し、571要素超過 / 最大比6.883229で各数値gate不合格。最後のsource `99a6565...`では18 backendのscratch0 / context再作成と32 GELU cache0を確認したが、host peak10,257,428,480 byte（約9.55GiB）。実行中のdevice VRAMも高止まりした。各runは単発観測で、定常benchmark / 真のVRAM peak / 他GPUへ一般化しない。最初のfence-only resource監視は準備中に終了したため、実行中VRAM peak欠測として別記。
+
+推論を行わないstatic auditでは、分割layer総数19,518で再計算の重複なし、区間を跨いで保持するboundary tensorは最大46,448,640 byte（約44.3MiB）、未消費内部出力0だった。これらの確認やcacheの機械的解放を全体memory改善へ置き換えない。GPUComputeの実装はこの環境ではUnity 6の`GfxDeviceBackend`で、CPU fallbackではない。次は同じ全体cache実験を反復せず、元の1層または1区間で実buffer容量とnative / driver allocationを分けて調べる。その後、数値合格済みattention等を全profileへ接続する。全画像FP32 / 残る元RMS・scaling、実PCM / Texture→正規化768 APIの全role / mask / 境界 / 所有権 / Dispose / 例外後再利用 / text回帰、工程3・4 sample / Playerは未完了。Required CI、Persistent allocation警告・長期memoryも未達。Unity終了済み。
+
+以下は前回checkpoint。
+
 更新日: 2026-10-15。**画像attentionの2つの行列積は、元GPU入力の先頭16行に対する独立した現CPU式へ実GPUで全bit一致した。最初の層への再接続も元native参照の許容差超過0。ただし画像全encoderと高いmemory peakは未解決。** [固定receipt](results/m3-attention-softmax-and-matmul-gpu-20261015.json)。工程3・4は未完了のまま。
 
 診断用の行prefix取得は3 intended Red→既存観測を含む10 Green。元の`[1,12,2520,2520]`を全量downloadせず、各headの先頭16行だけを取得した。観測後の元layer 0出力は旧GPU hash `bc417e7f...` と全bit一致し、source model serialized bytesも保持。これは診断readbackであり、製品の中間readbackなしを証明する試験ではない。

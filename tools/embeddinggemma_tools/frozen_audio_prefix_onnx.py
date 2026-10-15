@@ -13,9 +13,11 @@ from onnx.reference import ReferenceEvaluator
 
 from .audio_native_norm_replay import PRODUCER, REVISION, REFERENCE_SHA, candidate_output, checked_normalizations, load_frozen_input
 from .export import export_audio_native_onnx
+from .export import fp32_cascade_mean1024, fp32_cascade_mean1536, fp32_outer_cascade_mean1024, fp32_refined_rstd
 from .reference_context_failure import feature_error_metrics
 
 VARIANTS = ("native", "refined_moment", "refined_mean_moment")
+EXPERIMENTAL_VARIANTS = (*VARIANTS, "refined_mean_moment_rms")
 STAGE_REFERENCE_SHA = "6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a"
 STAGE_AUDIT_SHA = "3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b"
 
@@ -99,18 +101,70 @@ def extract_prefix(program, boundary):
     return torch.fx.GraphModule(program, graph)
 
 
+def expected_rms_count(stage):
+    if stage == "subsample":
+        return 0
+    if stage == "projected_features":
+        return 109
+    if stage in STAGES and stage.startswith("layer_"):
+        return 9 * (int(stage.removeprefix("layer_")) + 1)
+    raise ValueError("Unknown fixed RMS stage")
+
+
+def audit_rms_nodes(prefix):
+    means, inverses = set(), set()
+    for mean in prefix.graph.nodes:
+        if mean.op != "call_function" or mean.target != torch.ops.aten.mean.dim:
+            continue
+        square = mean.args[0]
+        if (len(mean.args) != 3 or mean.kwargs or tuple(mean.args[1]) != (-1,) or mean.args[2] is not True
+                or not isinstance(square, torch.fx.Node) or square.target != torch.ops.aten.pow.Tensor_Scalar
+                or len(square.args) != 2 or square.args[1] != 2 or len(mean.users) != 1):
+            raise ValueError("RMS mean must be an unambiguous squared last-axis FP32 reduction")
+        addition = next(iter(mean.users))
+        if (addition.target != torch.ops.aten.add.Tensor or addition.args != (mean, 1e-6)
+                or addition.kwargs or len(addition.users) != 1):
+            raise ValueError("RMS epsilon must remain exactly 1e-6")
+        inverse = next(iter(addition.users))
+        if inverse.target != torch.ops.aten.pow.Tensor_Scalar or inverse.args != (addition, -0.5) or inverse.kwargs:
+            raise ValueError("RMS inverse must retain the original negative-half power")
+        means.add(mean)
+        inverses.add(inverse)
+    return means, inverses
+
+
+def ordered_rms_mean(values):
+    width = values.shape[-1]
+    if values.dtype != torch.float32 or values.device.type != "cpu":
+        raise ValueError("RMS candidate requires original CPU FP32 statistics")
+    if values.is_contiguous() and width == 1024:
+        return fp32_cascade_mean1024(values)
+    if values.is_contiguous() and width == 1536:
+        return fp32_cascade_mean1536(values)
+    if tuple(values.shape) == (1, 280, 1024) and values.stride() == (286720, 1, 280):
+        return fp32_outer_cascade_mean1024(values)
+    raise ValueError("RMS candidate has an unqualified width or reduction layout")
+
+
 class PrefixExport(torch.nn.Module):
     def __init__(self, prefix, variant):
         super().__init__()
         self.prefix = prefix
         self.variant = variant
         self.selected = checked_normalizations(prefix)
+        self.rms_means, self.rms_inverses = audit_rms_nodes(prefix) if variant == "refined_mean_moment_rms" else (set(), set())
 
     def forward(self, values):
-        selected, variant = self.selected, self.variant
+        selected, variant, rms_means, rms_inverses = self.selected, self.variant, self.rms_means, self.rms_inverses
 
         class Replay(torch.fx.Interpreter):
             def run_node(self, node):
+                if node in rms_means:
+                    args, kwargs = self.fetch_args_kwargs_from_env(node)
+                    return ordered_rms_mean(args[0])
+                if node in rms_inverses:
+                    args, kwargs = self.fetch_args_kwargs_from_env(node)
+                    return fp32_refined_rstd(args[0])
                 if node.op == "call_function" and node.target == torch.ops.aten._to_copy.default:
                     args, kwargs = self.fetch_args_kwargs_from_env(node)
                     if (len(args) != 1 or kwargs != {"dtype": torch.bool} or args[0].dtype != torch.int64
@@ -126,7 +180,7 @@ class PrefixExport(torch.nn.Module):
                     return torch.softmax(args[0], dim=-1)
                 if variant != "native" and node in selected:
                     args, kwargs = self.fetch_args_kwargs_from_env(node)
-                    return candidate_output(*args, variant)
+                    return candidate_output(*args, "refined_mean_moment" if variant == "refined_mean_moment_rms" else variant)
                 return super().run_node(node)
 
         return Replay(self.prefix).run(values)
@@ -159,7 +213,7 @@ def weight_digests(prefix):
 
 
 def probe_prefix(program, values, expected, output, *, boundary, provenance=None, frozen_stage=None, variants=VARIANTS):
-    if (not isinstance(variants, (tuple, list)) or not variants or any(not isinstance(value, str) or value not in VARIANTS for value in variants)
+    if (not isinstance(variants, (tuple, list)) or not variants or any(not isinstance(value, str) or value not in EXPERIMENTAL_VARIANTS for value in variants)
             or len(set(variants)) != len(variants)):
         raise ValueError("Prefix variants must be unique supported choices")
     output = Path(output)
@@ -232,7 +286,7 @@ def probe_prefix(program, values, expected, output, *, boundary, provenance=None
             report["cases"].append(dict(variant=variant, graph=path.name, graph_sha256=file_digest(path),
                 capture=capture.name, capture_sha256=file_digest(capture), metrics=metrics,
                 native_wrapper_bits_equal=same_native, native_whole_encoder_exact_difference_count=exact,
-                coefficients_unchanged=True))
+                coefficients_unchanged=True, rms_mean_replacements=len(wrapper.rms_means), rms_inverse_replacements=len(wrapper.rms_inverses)))
             save()
         report["complete"] = True
         save()
@@ -245,7 +299,7 @@ def main(argv=None):
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--stage", choices=tuple(STAGES), default="subsample")
     parser.add_argument("--frozen-stage-source", type=Path)
-    parser.add_argument("--variant", choices=("all", *VARIANTS), default="all")
+    parser.add_argument("--variant", choices=("all", *EXPERIMENTAL_VARIANTS), default="all")
     args = parser.parse_args(argv)
     source = os.environ.get("GITHUB_SHA", "")
     if re.fullmatch("[0-9a-f]{40}", source) is None:
@@ -257,6 +311,12 @@ def main(argv=None):
     provenance["stage"] = args.stage
     frozen = load_frozen_stage_reference(args.frozen_stage_source, args.stage) if args.frozen_stage_source else None
     variants = VARIANTS if args.variant == "all" else (args.variant,)
+    if "refined_mean_moment_rms" in variants:
+        audited = PrefixExport(extract_prefix(program, boundary), "refined_mean_moment_rms")
+        count = expected_rms_count(args.stage)
+        if len(audited.rms_means) != count or len(audited.rms_inverses) != count:
+            raise ValueError("Pinned RMS replacement count differs")
+        provenance["rms_expected_count"] = count
     report = probe_prefix(program, values, expected, args.output, boundary=boundary, provenance=provenance, frozen_stage=frozen, variants=variants)
     print(json.dumps(report))
     return 0 if report["complete"] else 1

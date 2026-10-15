@@ -207,6 +207,10 @@ namespace EmbeddingGemma.Validation.Tests
             =>Execute("silence",true,nativeSilu:true,nativeBmm:true,observeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true);
 
         [Test]
+        public void ObserveNativeSoftmaxPostAndConvolutionWithoutChangingNormalFinalBits()
+            =>Execute("silence",true,early:true,nativeSilu:true,attention:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true);
+
+        [Test]
         public void ObserveNativeSiluFirstFeedForwardWithoutChangingNormalFinalBits()
             =>Execute("silence",true,false,false,true,true);
 
@@ -223,6 +227,7 @@ namespace EmbeddingGemma.Validation.Tests
             var originalRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-real-chain/audio-runtime-reference"));
             var stem=nativeSoftmax?(observeBmm?"partitioned-native-softmax-operands-observation-":"partitioned-native-softmax-gpu-"):nativeDivision?(observeBmm?"partitioned-native-division-operands-observation-":"partitioned-native-division-gpu-"):nativeTanh?(observeBmm?"partitioned-native-tanh-operands-observation-":"partitioned-native-tanh-gpu-"):nativeQueryScale?(observeBmm?"partitioned-native-query-scale-operands-observation-":"partitioned-native-query-scale-gpu-"):observeBmm?"partitioned-native-bmm-operands-observation-":nativeBmm?"partitioned-native-bmm-gpu-":attention?"partitioned-native-silu-attention-observation-":nativeSilu?(early?"partitioned-native-silu-early-observation-":"partitioned-native-silu-gpu-"):
                 early?"partitioned-early-audio-observation-":isolated?"partitioned-layer10-original-input-":observe?"partitioned-all-static-layer-observation-":allStatic?"partitioned-all-static-gpu-":"partitioned-first-ff-gpu-";
+            if(nativeSoftmax&&early&&attention)stem="partitioned-native-softmax-post-convolution-observation-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject { ["success"]=false,["scope"]=early?"original_early_audio_observation_only":isolated?"one_original_audio_layer_isolation_gpu_numeric_gate":observe?"original_audio_layer_observation_only":"one_partitioned_original_audio_encoder_gpu_numeric_gate",
@@ -451,7 +456,8 @@ namespace EmbeddingGemma.Validation.Tests
                             (name:"relative_k_proj",boundary:"/attentions.0/relative_k_proj/MatMul_output_0",part:"self_attn.relative_k_proj",minimum:float.NegativeInfinity,maximum:float.PositiveInfinity)}).ToArray();
                     }
                     report["phase"]="observe_early";Save();
-                    var snapshots=ObserveBoundaries(models.ToArray(),inputs.ToArray(),outputs.ToArray(),kernels.ToArray(),input,bindings.Select(b=>b.boundary).ToHashSet());
+                    encoded.Dispose();pipeline.Dispose();
+                    var snapshots=CaptureOperationBoundaries(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray(),input,bindings.Select(b=>b.boundary).ToHashSet(),actual);
                     Assert.That(snapshots["__final"].Select(BitConverter.SingleToInt32Bits),Is.EqualTo(actual.Select(BitConverter.SingleToInt32Bits)));
                     report["normal_final_matches_observed_bits"]=true;report["full_encoder_validated"]=false;
                     var captureRoot=Path.ChangeExtension(output,null)+"-captures";Assert.That(Directory.Exists(captureRoot),Is.False);Directory.CreateDirectory(captureRoot);

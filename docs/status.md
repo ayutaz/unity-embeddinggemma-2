@@ -4,6 +4,14 @@
 
 ## 現在の判定
 
+**最新のnative tanh切り分け:** `223f47d`の`GpuTanh`はSLEEF固定commitの演算をFP32の残差ペアでGPU実装し、元55,296値へ全bit一致。実GPU2 Red→2 Green、符号付きゼロ・CPU入力拒否後の再利用・借用入力と独立出力・二重Disposeも確認した。最初のCopyOutput呼出しのcompile失敗は未実行として別記録。plannerは5 Red→関連56 Green、元の重みdigestを保持する231 operation / 232 segmentを生成した。[単体GPUとsoftmax oracle](results/m4-native-tanh-frozen-gpu-and-softmax-oracle-20261015.json)。
+
+`2a0fea6`の接続観測は元silenceで320要素の許容差超過を記録し、直前166要素より悪化した。最初のmatrix_ac / matrix_bdの6境界とV入力は全bit一致するが、tanh入力21,923値・出力17,473値、softmax後の重み25,153値にbit差が残る（局所許容差超過0）。単一の実モデル観測を新しいUnity processで実行し、通常最終bit不変・11境界観測1 pass / fail0 / skip0、54.387秒で完了。これは観測成功で、全encoder数値合格ではない。
+
+固定native BMM出力から元rel_shiftとFP32加算を再現すると、`sum / float32(50)`はnative tanh入力へ全bit一致し、`sum * (float32(1)/float32(50))`は現在のGPU tanh入力へ全bit一致した。次は元除算のFP32丸めをGPU上で保持する。softmaxも元SLEEF expと元vector加算順のoffline oracleで55,296値へ全bit一致したが、GPU softmaxは未実装・未検証。[接続観測と除算原因](results/m4-native-tanh-connected-and-division-diagnosis-20261015.json)。
+
+全体数値gateと観測を同じprocessで連続した最初のrunは13.76GiBに達し、所有PIDを停止、XML欠測。既存の未完了出力をarchiveする前に開始した一度の再試行は出力重複guardで失敗し、推論未実行として記録。その後の単独観測のみが上記1 pass。以後の実モデル全体ケースは1 processに1ケースとする。独立Python回帰38664601644 / `8975030`は4 XML各874 pass / fail0 / error0 / skip0。[Python固定証拠](results/python-full-native-query-scale-planner-green-20261015.json)。tanh planner追加後の38666006647 / `2a0fea6`は別runで、未確定の間は成功へ数えない。以下は以前のcheckpoint。
+
 **最新のQスケーリング修正:** 元の`(Q × scalar) × vector`は固定native出力へ全bit一致する一方、`Q × (scalar × vector)`は修正前GPU出力へ全bit一致し、93,060値の差の原因を再現した。元の2回のFP32丸めを保持する`GpuSequentialScale`は2 Red→実GPU2 Green、286,720値を全bit一致。plannerは厳密な2 Mul chain、係数・shape・内部値の専用利用を確認し、8 Red→関連51 Green。元initializer digestを保つ219 operation / 220 segmentを生成した。[固定GPUと接続観測](results/m4-native-query-scale-frozen-and-connected-gpu-20261015.json)。
 
 `b9cf8d6`の観測は使用済みWorker・中間GPU tensorを各段で解放し、小型単入力 / 二入力観測を含む3 pass / fail0 / skip0、68.110秒で完了。通常最終bitを変えず、最初のmatrix_ac / matrix_bdの左右入力と出力の6箇所がすべて元参照へ全bit一致。weighted_valuesの左入力に25,744値、出力に189,856値のbit差が残る（局所許容差超過0）、右入力Vは全bit一致した。

@@ -172,7 +172,20 @@ namespace EmbeddingGemma.Validation.Tests
             pending.GetAwaiter().GetResult();
         }
 
-        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false,bool editorFramePump=false,bool nativeOperators=false,int nativeStaticBlockSize=384,bool inlineTailRms=false,int softmaxVectorWidth=8,bool fuseGeluInner=false,bool sleefGelu=false,bool nativeRotary=false,bool firstLayerOnly=false)
+        [UnityTest] public IEnumerator OriginalContextNativePoolingSquareZeroMustMatchOriginalOnGpu()=>NativePoolingCase("square-0");
+        [UnityTest] public IEnumerator OriginalContextNativePoolingSquareOneMustMatchOriginalOnGpu()=>NativePoolingCase("square-1");
+        [UnityTest] public IEnumerator OriginalContextNativePoolingLandscapeZeroMustMatchOriginalOnGpu()=>NativePoolingCase("landscape-0");
+        [UnityTest] public IEnumerator OriginalContextNativePoolingLandscapeOneMustMatchOriginalOnGpu()=>NativePoolingCase("landscape-1");
+        [UnityTest] public IEnumerator OriginalContextNativePoolingPortraitZeroMustMatchOriginalOnGpu()=>NativePoolingCase("portrait-0");
+        [UnityTest] public IEnumerator OriginalContextNativePoolingPortraitOneMustMatchOriginalOnGpu()=>NativePoolingCase("portrait-1");
+        static IEnumerator NativePoolingCase(string caseId)
+        {
+            var pending=Run(caseId,true,true,true,true,true,false,true,true,192,true,16,true,true,true,false,true);
+            while(!pending.IsCompleted){UnityEditor.EditorApplication.QueuePlayerLoopUpdate();yield return null;}
+            pending.GetAwaiter().GetResult();
+        }
+
+        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false,bool editorFramePump=false,bool nativeOperators=false,int nativeStaticBlockSize=384,bool inlineTailRms=false,int softmaxVectorWidth=8,bool fuseGeluInner=false,bool sleefGelu=false,bool nativeRotary=false,bool firstLayerOnly=false,bool nativePooling=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
@@ -187,6 +200,7 @@ namespace EmbeddingGemma.Validation.Tests
             if(sleefGelu)label="vision-original-context-precise-sleef-gelu-softmax"+softmaxVectorWidth+"-all-rms-block"+nativeStaticBlockSize+"-whole-gpu-";
             if(nativeRotary)label="vision-original-native-rotary-whole-gpu-";
             if(firstLayerOnly)label="vision-original-native-rotary-first-layer-gpu-";
+            if(nativePooling)label="vision-original-native-pooling-whole-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+"-"+caseId+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["scope"]=releaseUnusedGpuCache?"one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate":nativeGelu?"one_original_vision_encoder_gpu_native_gelu_all_layer_rms_and_patch384_candidate":inlineAllRms?"one_original_vision_encoder_gpu_all_sixteen_layer_rms_and_native_patch384_candidate":"one_original_vision_encoder_gpu_native_patch384_candidate",["runtime_source"]=source,
@@ -200,6 +214,7 @@ namespace EmbeddingGemma.Validation.Tests
             report["precise_sleef_gelu"]=sleefGelu;
             report["native_derived_rotary"]=nativeRotary;
             report["first_layer_only"]=firstLayerOnly;
+            report["native_fixed_left_pooling"]=nativePooling;
             if(firstLayerOnly){report["scope"]="original_square_zero_patch_and_first_layer_against_golden_reproducing_native_bits_only";report["full_encoder_validated"]=false;}
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
@@ -283,12 +298,14 @@ namespace EmbeddingGemma.Validation.Tests
                     var matrices=working.layers.Where(layer=>layer.GetType().Name=="MatMul"||layer.GetType().Name=="MatMul2D").ToArray();
                     var staticProducts=new HashSet<int>(matrices.Where(layer=>workingConstants.ContainsKey(layer.inputs[1])).Select(layer=>layer.outputs[0]));
                     var binaryProducts=new HashSet<int>(matrices.Where(layer=>!workingConstants.ContainsKey(layer.inputs[0])&&!workingConstants.ContainsKey(layer.inputs[1])).Select(layer=>layer.outputs[0]));
-                    var preserved=matrices.Where(layer=>!staticProducts.Contains(layer.outputs[0])&&!binaryProducts.Contains(layer.outputs[0])).ToArray();
+                    var leftProducts=new HashSet<int>(matrices.Where(layer=>workingConstants.ContainsKey(layer.inputs[0])&&!workingConstants.ContainsKey(layer.inputs[1])).Select(layer=>layer.outputs[0]));
+                    if(nativePooling){Assert.That(firstLayerOnly,Is.False);Assert.That(leftProducts.Count,Is.EqualTo(1));}
+                    var preserved=matrices.Where(layer=>!staticProducts.Contains(layer.outputs[0])&&!binaryProducts.Contains(layer.outputs[0])&&(!nativePooling||!leftProducts.Contains(layer.outputs[0]))).ToArray();
                     report["preserved_original_matrix_operations"]=new JArray(preserved.Select(layer=>new JObject{["output_index"]=layer.outputs[0],
                         ["left_is_constant"]=workingConstants.ContainsKey(layer.inputs[0]),["right_is_constant"]=workingConstants.ContainsKey(layer.inputs[1]),
                         ["left_constant_shape"]=workingConstants.TryGetValue(layer.inputs[0],out var coefficient)?JArray.FromObject(Enumerable.Range(0,coefficient.shape.rank).Select(axis=>coefficient.shape[axis]).ToArray()):null}));Save();
                     Assert.That(staticProducts.Count,Is.EqualTo(firstLayerOnly?8:114));Assert.That(binaryProducts.Count,Is.EqualTo(firstLayerOnly?2:32));
-                    Assert.That(preserved.Length,Is.EqualTo(firstLayerOnly?0:1));foreach(var matrix in preserved)Assert.That(workingConstants.ContainsKey(matrix.inputs[0]),Is.True);
+                    Assert.That(preserved.Length,Is.EqualTo(firstLayerOnly||nativePooling?0:1));foreach(var matrix in preserved)Assert.That(workingConstants.ContainsKey(matrix.inputs[0]),Is.True);
                     var marked=SavedProjectionPartition.MarkGelu(working);working=marked.model;var geluOutputs=new HashSet<int>(marked.outputs);Assert.That(geluOutputs.Count,Is.EqualTo(firstLayerOnly?1:16));
                     var softmaxes=working.layers.Where(layer=>layer.GetType().Name=="Softmax").ToArray();Assert.That(softmaxes.Length,Is.EqualTo(firstLayerOnly?1:16));
                     var identity=typeof(Worker).Assembly.GetTypes().Single(type=>type.Name=="Identity"&&typeof(Layer).IsAssignableFrom(type));
@@ -303,13 +320,21 @@ namespace EmbeddingGemma.Validation.Tests
                     working=new Model{ProducerName=working.ProducerName+"/qualified-native-operators",inputs=new List<Model.Input>(working.inputs),outputs=new List<Model.Output>(working.outputs),
                         constants=new List<Constant>(working.constants),layers=working.layers.Select(layer=>replacements.TryGetValue(layer,out var marker)?marker:layer).ToList()};
                     var wanted=new HashSet<int>(staticProducts.Concat(binaryProducts).Concat(geluOutputs).Concat(softmaxOutputs));
-                    var selected=working.layers.Where(layer=>wanted.Contains(layer.outputs[0])).Select(layer=>layer.outputs[0]).ToArray();Assert.That(selected.Length,Is.EqualTo(firstLayerOnly?12:178));
+                    if(nativePooling)wanted.UnionWith(leftProducts);
+                    var selected=working.layers.Where(layer=>wanted.Contains(layer.outputs[0])).Select(layer=>layer.outputs[0]).ToArray();Assert.That(selected.Length,Is.EqualTo(firstLayerOnly?12:nativePooling?179:178));
                     var plan=SavedProjectionPartition.Create(working,selected);Assert.That(plan.Models.Length,Is.EqualTo(selected.Length+1));
                     var operationRows=new JArray();report["qualified_operations"]=operationRows;
                     for(var i=0;i<selected.Length;i++)
                     {
                         string kind;
-                        if(binaryProducts.Contains(selected[i]))
+                        if(nativePooling&&leftProducts.Contains(selected[i]))
+                        {
+                            var count=reference["profiles"][profile].Value<int>("feature_count");
+                            Assert.That(plan.Rows[i],Is.EqualTo(count));Assert.That(plan.Widths[i],Is.EqualTo(2520));Assert.That(plan.Columns[i],Is.EqualTo(768));
+                            Assert.That(plan.LeftWeightShapes[i],Is.EqualTo(new TensorShape(1,count,2520)));Assert.That(plan.Weights[i],Is.Null);
+                            operations.Add(new GpuFixedLeftMatmul(plan.LeftWeightShapes[i],plan.LeftWeights[i]));kind="native_fixed_left_pooling_block192";
+                        }
+                        else if(binaryProducts.Contains(selected[i]))
                         {
                             Assert.That(plan.Inputs[i].Length,Is.EqualTo(2));Assert.That(plan.Rows[i],Is.EqualTo(30240));
                             Assert.That((plan.Widths[i]==64&&plan.Columns[i]==2520)||(plan.Widths[i]==2520&&plan.Columns[i]==64),Is.True);
@@ -334,6 +359,7 @@ namespace EmbeddingGemma.Validation.Tests
                         operationRows.Add(new JObject{["output_index"]=selected[i],["kind"]=kind,["rows"]=plan.Rows[i],["width"]=plan.Widths[i],["columns"]=plan.Columns[i]});
                     }
                     parts=plan.Models;inputs=plan.Inputs;outputs=plan.Outputs;report["native_static_projection_count"]=staticProducts.Count;report["native_batched_matmul_count"]=binaryProducts.Count;report["native_softmax_count"]=softmaxes.Length;report["native_gelu_count"]=geluOutputs.Count;
+                    report["native_fixed_left_pooling_count"]=nativePooling?leftProducts.Count:0;
                 }
                 else if(nativeGelu)
                 {

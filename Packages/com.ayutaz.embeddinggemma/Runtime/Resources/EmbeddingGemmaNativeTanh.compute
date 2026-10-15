@@ -1,6 +1,7 @@
 // Copyright Naoki Shibata and contributors 2010 - 2024.
-// Adapted from SLEEF 5a1d179, src/libm/sleefsimdsp.c xtanhf / expk2f
-// and src/common/df.h, under Boost Software License 1.0.
+// Range reduction and paired arithmetic adapted from SLEEF 5a1d179,
+// src/libm/sleefsimdsp.c and src/common/df.h, under BSL-1.0.
+// Exponential uses degree-12 Taylor coefficients with FP32 residuals.
 // See ../../SLEEF-LICENSE.txt. All arithmetic below is FP32, including float2 residual pairs.
 #pragma kernel NativeTanh
 #pragma use_dxc
@@ -85,14 +86,19 @@ float2 ExponentialPair(float y)
     precise float second=(float)q*-1.428606765330187045e-06f;
     precise float2 s=Add2Scalar(float2(y,0),first);
     s=Add2Scalar(s,second);
-    precise float u=0.1980960224e-3f;
-    u=mad(u,s.x,0.1394256484e-2f);
-    u=mad(u,s.x,0.8333456703e-2f);
-    u=mad(u,s.x,0.4166637361e-1f);
-    precise float2 t=Add2Scalar(MultiplyScalar(s,u),0.166666659414234244790680580464f);
-    t=Add2Scalar(Multiply(s,t),0.5f);
-    t=Add2(s,Multiply(Square(s),t));
-    t=AddScalarPair(1.0f,t);
+    precise float2 t=float2(2.0876755879584152e-9f,1.1082839809204342e-16f);
+    t=Add2(Multiply(s,t),float2(2.5052107943679403e-8f,4.4176230446483665e-16f));
+    t=Add2(Multiply(s,t),float2(2.755731998149713e-7f,-7.575112209051195e-15f));
+    t=Add2(Multiply(s,t),float2(2.7557318844628753e-6f,3.793571224297229e-14f));
+    t=Add2(Multiply(s,t),float2(2.4801587642286904e-5f,-3.40699609366682e-13f));
+    t=Add2(Multiply(s,t),float2(0.00019841270113829523f,-2.725596874933456e-12f));
+    t=Add2(Multiply(s,t),float2(0.0013888889225199819f,-3.3631094437103215e-11f));
+    t=Add2(Multiply(s,t),float2(0.008333333767950535f,-4.34617203337595e-10f));
+    t=Add2(Multiply(s,t),float2(0.0416666679084301f,-1.2417634698280722e-9f));
+    t=Add2(Multiply(s,t),float2(0.1666666716337204f,-4.967053879312289e-9f));
+    t=Add2(Multiply(s,t),float2(0.5f,0));
+    t=Add2(Multiply(s,t),float2(1,0));
+    t=Add2(float2(1,0),Multiply(s,t));
     precise float factor=asfloat((uint)(q+127)<<23);
     precise float high=t.x*factor;
     precise float low=t.y*factor;
@@ -105,6 +111,8 @@ void NativeTanh(uint3 thread : SV_DispatchThreadID)
     if(index>=Count)return;
     precise float x=Input[index];
     if(x==0){Output[index]=x;return;}
+    // In this interval the cubic correction is less than half a FP32 ULP.
+    if(abs(x)<=0.000244140625f){Output[index]=x;return;}
     if(isnan(x)){Output[index]=x;return;}
     if(abs(x)>8.664339742f){Output[index]=asfloat((asuint(x)&0x80000000u)|asuint(1.0f));return;}
     precise float2 d=ExponentialPair(abs(x));

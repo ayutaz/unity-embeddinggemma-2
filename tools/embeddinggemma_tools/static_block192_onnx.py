@@ -209,3 +209,30 @@ def audit_attention_bmm_nodes(segment):
                 and tuple(tuple(x.shape) for x in values) in qualified):
             selected.add(node)
     return selected
+
+
+def audit_parameter_bmm_nodes(segment):
+    def parameter_view(node):
+        if node.op == "get_attr":
+            return True
+        if node.op != "call_function" or node.kwargs or len(node.args) != 2:
+            return False
+        if node.target == torch.ops.aten.permute.default:
+            valid = tuple(node.args[1]) == (1, 0)
+        elif node.target in (torch.ops.aten.view.default, torch.ops.aten.expand.default):
+            valid = tuple(node.args[1]) == (1, 1024, 1024)
+        else:
+            return False
+        return valid and isinstance(node.args[0], torch.fx.Node) and parameter_view(node.args[0])
+
+    selected = set()
+    for node in segment.graph.nodes:
+        if (node.op != "call_function" or node.target != torch.ops.aten.bmm.default
+                or node.kwargs or len(node.args) != 2):
+            continue
+        values = [arg.meta.get("val") for arg in node.args]
+        if (all(isinstance(x, torch.Tensor) and x.dtype == torch.float32 and x.device.type == "cpu" for x in values)
+                and tuple(tuple(x.shape) for x in values) == ((1, 280, 1024), (1, 1024, 1024))
+                and parameter_view(node.args[1])):
+            selected.add(node)
+    return selected

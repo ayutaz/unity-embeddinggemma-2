@@ -45,7 +45,11 @@ GPU結果はWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER /
 
 [元特徴量から先頭subsampleまでの実ONNX比較](results/m4-ordered-original-input-stem-tolerance-passed-20261016.json)は、同じホストの標準ONNX505要素超過、既存refined_mean_moment正規化2か所と280行投影1か所の候補が286,720値で許容差超過0、最大許容差比0.1957でした。bit差279,359が残ります。native全encoder自体は元出力から288要素超過のため、独立監査済みの元stage参照による明示的な区間診断として記録し、native文脈合格とは数えません。[先頭経路TDD](results/m4-ordered-original-input-prefix-tdd-20261016.json)。
 
-次の独立した候補として、[元第0・第1層の注意機構BMM6条件](results/m4-six-original-attention-bmm-actual-onnx-bit-exact-20261016.json)を実ONNXで評価し、元native全出力が固定参照と一致した文脈から保存された全760,320値でbit一致を確認しました。対象は監査済み3形状だけで、各層の4番目のBMM投影は未適用です。新しい`ordered_static_linear_attention`は行列積のみの候補と標準ONNXも同じホストで実行し、接続した1層で効果を比較します。RMS /SiLU /Convは同時に変更しません。既定export、元参照・重み・許容差と製品Runtimeは維持します。
+次の独立した候補として、[元第0・第1層の注意機構BMM6条件](results/m4-six-original-attention-bmm-actual-onnx-bit-exact-20261016.json)を実ONNXで評価し、元native全出力が固定参照と一致した文脈から保存された全760,320値でbit一致を確認しました。対象は監査済み3形状だけで、各層の4番目のBMM投影は未適用です。`ordered_static_linear_attention`は行列積のみの候補と標準ONNXも同じホストで実行し、接続した1層で効果を比較しました。RMS /SiLU /Convは同時に変更しません。既定export、元参照・重み・許容差と製品Runtimeは維持します。
+
+[接続した第0層の比較](results/m4-first-layer-attention-bmm-connected-tolerance-passed-20261016.json)は標準・固定行列積・注意BMM追加の3通りすべてが元286,720値で許容差超過0、最大許容差比0.2108 /0.1498 /0.1352でした。元nativeはbit一致ですが、候補はbit一致ではありません。第0層の改善だけで全encoderの修正とは数えません。
+
+[第1層の元クリッピング付きpointwise投影](results/m4-original-clipped-pointwise-bmm-all286720-bit-exact-20261016.json)は全286,720値が実ONNXで元出力とbit一致しました。元の入力・出力のclip係数、重みと期待値のSHAを照合し、同じclip順序を維持しています。これはclip後のmodule境界の一致で、clip前の生BMM全値のbit一致とは主張しません。`ordered_static_linear_all_bmm`で、元のparameterからview /expand /transposeだけで構成される4番目の投影を追加し、元subsampleから全12層への接続を比較します。RMS /SiLU /Convは引き続き維持します。[TDDと範囲制約](results/m4-ordered-parameter-bmm-tdd-20261016.json)は新規red2件→green5件、関連96 pass /skip0、workflow lint合格です。
 
 先行する全silence候補は475要素、RMS追加候補は583要素超過で不採用です。RMS /SiLUの後半候補も[同一ホスト比較](results/m4-fixed-tail-joint-and-same-host-baseline-failed-20261016.json)で不合格でした。同じONNX /入力 /期待値でもAMDとIntelでは結果が変わり、Intelではnative自体の元参照との差も残っています。CPU環境差、変換差、失敗・未実行を分けて保持します。過去のsource付きreceiptは`docs/results/`に残し、部分診断やActions収集の完了をGPU /全encoder合格へ読み替えません。
 

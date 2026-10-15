@@ -10,6 +10,32 @@ namespace EmbeddingGemma.Tests
 {
     public sealed class GpuGeluTests
     {
+        [Test]
+        public void ExplicitFusedInnerGeluPreservesDefaultAndOwnedResults()
+        {
+            var shape=new TensorShape(1,257);
+            var constructor=typeof(GpuGelu).GetConstructor(new[]{typeof(TensorShape),typeof(bool),typeof(bool)});
+            Assert.That(constructor,Is.Not.Null,"Explicit fused GELU inner expression is missing.");
+            using var fused=(IGpuTensorOperation)constructor.Invoke(new object[]{shape,true,true});
+            using var separate=(IGpuTensorOperation)constructor.Invoke(new object[]{shape,true,false});
+            using var original=new GpuGelu(shape,true);
+            var values=new float[257];for(var i=0;i<values.Length;i++)values[i]=(i-128)*.0273f;
+            using var input=new Tensor<float>(shape,values);ComputeTensorData.Pin(input);
+            using var result=fused.Execute(input);using var baseline=separate.Execute(input);using var prior=original.Execute(input);
+            var actual=result.DownloadToArray();var normal=baseline.DownloadToArray();var legacy=prior.DownloadToArray();var changed=0;
+            for(var i=0;i<values.Length;i++)
+            {
+                Assert.That(BitConverter.SingleToInt32Bits(normal[i]),Is.EqualTo(BitConverter.SingleToInt32Bits(legacy[i])));
+                if(BitConverter.SingleToInt32Bits(actual[i])!=BitConverter.SingleToInt32Bits(normal[i]))changed++;
+                var x=(double)values[i];var expected=.5*x*(1+Math.Tanh(.7978845608028654*(x+.044715*x*x*x)));
+                Assert.That(Math.Abs(actual[i]-expected),Is.LessThanOrEqualTo(1e-5+1e-4*Math.Abs(expected)));
+            }
+            Assert.That(changed,Is.GreaterThan(0),"Fixture must distinguish fused and separate rounding.");
+            using var again=fused.Execute(input);Assert.That(again.DownloadToArray(),Is.EqualTo(actual));
+            fused.Dispose();fused.Dispose();Assert.That(result.DownloadToArray(),Is.EqualTo(actual));Assert.That(input.DownloadToArray(),Is.EqualTo(values));
+            Assert.Throws<ObjectDisposedException>(()=>fused.Execute(input));
+        }
+
         [TestCase(false)] [TestCase(true)]
         public void OptInReleaseClearsBothInternalGeluCachesAndPreservesOwnedResults(bool release)
         {

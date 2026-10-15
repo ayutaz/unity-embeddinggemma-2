@@ -13,6 +13,7 @@ namespace EmbeddingGemma.Tests
             public int LayerIndex, TensorIndex;
             public string LayerType;
             public BackendType Backend;
+            public TensorShape Shape;
             public float[] Values;
         }
         public sealed class Result
@@ -69,7 +70,7 @@ namespace EmbeddingGemma.Tests
                             { result.UnavailableTensorIndexes.Add(index); continue; }
                             if (tensor is Tensor<float> value && (indexes != null ? indexes.Contains(index) : value.shape == captureShape) && result.Snapshots.Count < limit)
                                 result.Snapshots.Add(new Snapshot { LayerIndex = layerIndex, TensorIndex = index,
-                                    LayerType = layer.GetType().Name, Backend = value.backendType, Values = value.DownloadToArray() });
+                                    LayerType = layer.GetType().Name, Backend = value.backendType, Shape = value.shape, Values = value.DownloadToArray() });
                         }
                     }
                     yieldedIndex++;

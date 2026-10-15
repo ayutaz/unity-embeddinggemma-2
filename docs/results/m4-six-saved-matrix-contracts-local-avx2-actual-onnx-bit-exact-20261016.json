@@ -1,0 +1,200 @@
+{
+  "scope": "same_saved_intel_native_inputs_local_avx2_native_vs_actual_portable_onnx_only",
+  "source_report_sha256": "54548162ea8b943a8bdde6a853e8a2d3576327bb84ab9c5bc0e66697945004b8",
+  "cpu_capability": "AVX2",
+  "torch_version": "2.14.1+cpu",
+  "threads": 2,
+  "original_reference_context_qualified": false,
+  "original_context_limit": "Intel tail native source differs from fixed original by10elements; local per-matrix comparisons do not qualify original encoder context.",
+  "all_capture_files_sha_verified": 114,
+  "cases": [
+    {
+      "contract": "cce08b185848a5be0021",
+      "node": "mm_109",
+      "input_sha256": [
+        "46210d4b9518d877cb0a4dee7713078ec19e5efe2e6c487dde36f2e8e44a713b",
+        "01fb83fc0b25bfc812deb9987388e660e97e415641c08703e6dd6846ee397752"
+      ],
+      "actual_onnx_vs_local_native": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "worst_index": 0,
+        "worst_actual": -28.171316146850586,
+        "worst_expected": -28.171316146850586,
+        "exact_difference_count": 0
+      },
+      "intel_native_vs_local_native": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 2.47955322265625e-05,
+        "maximum_tolerance_ratio": 0.6854165453748172,
+        "worst_index": 37064,
+        "worst_actual": 0.04782390594482422,
+        "worst_expected": 0.047834038734436035,
+        "exact_difference_count": 912628
+      }
+    },
+    {
+      "contract": "f8182e05005acc6056e6",
+      "node": "mm_100",
+      "input_sha256": [
+        "fe0878b93f21ecb0f04738f4775179efc9d48f824d2cea9f34b6677a7427a10c",
+        "b5f7780c10c1f02830d1d770aac0b6815d83d28ef8c2c2054a9638cd12298a62"
+      ],
+      "actual_onnx_vs_local_native": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "worst_index": 0,
+        "worst_actual": -0.2311224639415741,
+        "worst_expected": -0.2311224639415741,
+        "exact_difference_count": 0
+      },
+      "intel_native_vs_local_native": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 5.7220458984375e-06,
+        "maximum_tolerance_ratio": 0.07849297066233565,
+        "worst_index": 69864,
+        "worst_actual": 0.016039222478866577,
+        "worst_expected": 0.01604013331234455,
+        "exact_difference_count": 246965
+      }
+    },
+    {
+      "contract": "47954a6d01d1258af272",
+      "node": "mm_107",
+      "input_sha256": [
+        "d9457ed18f2df49b1cbd90537d7646c0916008b83619c8c713e2000e41c76a03",
+        "fa954dae673bd11ee78ca23d09d23450e5551e39020b52da5fd712958fef406a"
+      ],
+      "actual_onnx_vs_local_native": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "worst_index": 0,
+        "worst_actual": 0.3184638023376465,
+        "worst_expected": 0.3184638023376465,
+        "exact_difference_count": 0
+      },
+      "intel_native_vs_local_native": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 1.52587890625e-05,
+        "maximum_tolerance_ratio": 0.43619797630310875,
+        "worst_index": 17453,
+        "worst_actual": -0.009311914443969727,
+        "worst_expected": -0.009316682815551758,
+        "exact_difference_count": 243628
+      }
+    },
+    {
+      "contract": "950a26fc73c984259f31",
+      "node": "mm_118",
+      "input_sha256": [
+        "c413c18cd184806dcaf789820743565d6a814c8859eabb63c1004a1cbdf2aafb",
+        "d62fb76a2634b8b7fa2cefacd15a70dd7efc2228d0a36d1a47b024ca19e592ca"
+      ],
+      "actual_onnx_vs_local_native": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "worst_index": 0,
+        "worst_actual": 1.7258987426757812,
+        "worst_expected": 1.7258987426757812,
+        "exact_difference_count": 0
+      },
+      "intel_native_vs_local_native": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 8.58306884765625e-06,
+        "maximum_tolerance_ratio": 0.2777184442956928,
+        "worst_index": 45741,
+        "worst_actual": -0.010533690452575684,
+        "worst_expected": -0.010530620813369751,
+        "exact_difference_count": 492433
+      }
+    },
+    {
+      "contract": "b800dc83f360ab54793a",
+      "node": "addmm",
+      "input_sha256": [
+        "23af6e6c62234a65d85fa4fc34603e781f5aac4ce2bb61f267691781ee2baec8",
+        "c813899d8264ac800797c65b4592dc9985d944e68b281edb78941b8cbd269c57",
+        "26b765cf97cbe94ca7c8ca60cf94e197235a56d5bb1223956dd0fe8b476705b1"
+      ],
+      "actual_onnx_vs_local_native": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "worst_index": 0,
+        "worst_actual": -4.143837928771973,
+        "worst_expected": -4.143837928771973,
+        "exact_difference_count": 0
+      },
+      "intel_native_vs_local_native": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 3.62396240234375e-05,
+        "maximum_tolerance_ratio": 0.5319838665697383,
+        "worst_index": 153945,
+        "worst_actual": -0.0943828821182251,
+        "worst_expected": -0.09439322352409363,
+        "exact_difference_count": 382491
+      }
+    },
+    {
+      "contract": "6e909a9e6b93b10f253b",
+      "node": "mm_121",
+      "input_sha256": [
+        "72272bf49a4f55e91cafb73370270684ff700b80788e5df6f4915d80500cf799",
+        "9e4f86c0c15eeab67aa1cc5e926eb08cbcf9c83331566427d3cb9fce56912618"
+      ],
+      "actual_onnx_vs_local_native": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "worst_index": 0,
+        "worst_actual": -3.5933918952941895,
+        "worst_expected": -3.5933918952941895,
+        "exact_difference_count": 0
+      },
+      "intel_native_vs_local_native": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 1.9073486328125e-06,
+        "maximum_tolerance_ratio": 0.09290220024307655,
+        "worst_index": 61187,
+        "worst_actual": 0.017489135265350342,
+        "worst_expected": 0.01749022677540779,
+        "exact_difference_count": 125443
+      }
+    }
+  ],
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "report_sha256": "ddd1857b3b6dd4dfca874fd025643b02915eb6af88597253b299f08f725b7f9b",
+  "source": "bd3900a54f0a7a3e12269b1601105ef6b47cac7b",
+  "source_artifact_id": 12008144644
+}

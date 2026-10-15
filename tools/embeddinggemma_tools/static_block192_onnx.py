@@ -163,7 +163,7 @@ def static_block192_bmm_export(values, weights):
     return _StaticBlock192Bmm.apply(values, weights)
 
 
-def audit_static_linear_nodes(segment):
+def audit_static_linear_nodes(segment, *, rows=280):
     def parameter_matrix(node):
         if node.op == "get_attr":
             return True
@@ -180,7 +180,7 @@ def audit_static_linear_nodes(segment):
         left, right = node.args[-2:]
         a, b = (value.meta.get("val") for value in (left, right))
         if (not all(isinstance(value, torch.Tensor) and value.dtype == torch.float32 and value.ndim == 2
-                    for value in (a, b)) or a.shape[0] != 280 or a.shape[1] != b.shape[0]
+                    for value in (a, b)) or a.shape[0] != rows or a.shape[1] != b.shape[0]
                 or not parameter_matrix(right)):
             continue
         if biased:
@@ -191,6 +191,13 @@ def audit_static_linear_nodes(segment):
                 continue
         selected.add(node)
     return selected
+
+
+def audit_relative_position_linear_nodes(segment):
+    return {node for node in audit_static_linear_nodes(segment, rows=13)
+            if node.target == torch.ops.aten.mm.default
+            and tuple(node.args[0].meta['val'].shape) == (13, 1024)
+            and tuple(node.args[1].meta['val'].shape) == (1024, 1024)}
 
 
 def audit_attention_bmm_nodes(segment):

@@ -21,9 +21,11 @@ from .native_audio_primitives_onnx import fp32_native_sigmoid, fp32_native_depth
 from .streaming_reference import run_flat_reference
 from .static_block192_onnx import audit_static_linear_nodes, static_block192_export, static_block192_addmm_export
 from .static_block192_onnx import audit_attention_bmm_nodes, audit_parameter_bmm_nodes, static_block192_bmm_export
+from .static_block192_onnx import audit_relative_position_linear_nodes
 
 PRECISE = "ordered_original_primitives"
-VARIANTS = ("native", "refined_mean_moment_rms", "native_silu", "refined_mean_moment_rms_silu", "ordered_static_linear", "ordered_static_linear_attention", "ordered_static_linear_all_bmm", PRECISE)
+PRECISE_POSITIONS = "ordered_original_positions"
+VARIANTS = ("native", "refined_mean_moment_rms", "native_silu", "refined_mean_moment_rms_silu", "ordered_static_linear", "ordered_static_linear_attention", "ordered_static_linear_all_bmm", PRECISE, PRECISE_POSITIONS)
 
 
 def extract_segment(program, from_boundary, to_boundary):
@@ -101,7 +103,7 @@ class SegmentExport(PrefixExport):
         if any(node.target == torch.ops.aten.native_layer_norm.default for node in segment.graph.nodes):
             raise ValueError("Segment must start after both original native normalizations")
         self.prefix, self.variant, self.selected = segment, variant, []
-        precise = variant == PRECISE
+        precise = variant in (PRECISE, PRECISE_POSITIONS)
         self.rms_means, self.rms_inverses = audit_rms_nodes(segment) if variant.startswith("refined_mean_moment_rms") or precise else (set(), set())
         self.silu_nodes = {node for node in segment.graph.nodes
                            if node.op == "call_function" and node.target == torch.ops.aten.silu.default} if variant.endswith("_silu") or precise else set()
@@ -112,9 +114,13 @@ class SegmentExport(PrefixExport):
         self.linear_nodes = audit_static_linear_nodes(segment) if variant.startswith("ordered_static_linear") or precise else set()
         if (variant.startswith("ordered_static_linear") or precise) and not self.linear_nodes:
             raise ValueError("Ordered static linear candidate requires original280-row parameter projections")
+        self.position_nodes = audit_relative_position_linear_nodes(segment) if variant == PRECISE_POSITIONS else set()
+        if variant == PRECISE_POSITIONS and not self.position_nodes:
+            raise ValueError('Ordered position candidate requires original13-row parameter projections')
+        self.linear_nodes |= self.position_nodes
         self.linear_candidate = static_block192_export
         self.biased_linear_candidate = static_block192_addmm_export
-        batched = variant in ("ordered_static_linear_attention", "ordered_static_linear_all_bmm", PRECISE)
+        batched = variant in ("ordered_static_linear_attention", "ordered_static_linear_all_bmm", PRECISE, PRECISE_POSITIONS)
         self.bmm_nodes = audit_attention_bmm_nodes(segment) if batched else set()
         if batched and not self.bmm_nodes:
             raise ValueError("Ordered attention candidate requires qualified original attention BMM nodes")
@@ -188,6 +194,7 @@ def probe_segment(program, frozen_input, frozen_output, output, *, from_boundary
                 capture=name, capture_sha256=capture(name, actual), metrics=metrics(actual),
                 native_wrapper_bits_equal=exact_difference(wrapped, native) == 0,
                 coefficients_unchanged=True, rms_mean_replacements=len(wrapper.rms_means),
+                relative_position_replacements=len(wrapper.position_nodes),
                 rms_inverse_replacements=len(wrapper.rms_inverses), silu_replacements=len(wrapper.silu_nodes),
                 silu_input_domains=wrapper.silu_observations, linear_replacements=len(wrapper.linear_nodes),
                 ordered_linear_native_execution="original_MatMul_addmm_passthrough_not_fixed_order_execution" if wrapper.linear_nodes else None,
@@ -227,38 +234,38 @@ def main(argv=None):
     start_boundary, end_boundary = (boundary_for_stage(program, stage) for stage in (args.from_stage, args.stage))
     if args.variant != "native":
         audited = SegmentExport(extract_segment(program, start_boundary, end_boundary), args.variant)
-    if args.variant.endswith("_silu") or args.variant == PRECISE:
+    if args.variant.endswith("_silu") or args.variant in (PRECISE, PRECISE_POSITIONS):
         layer_count = min(tuple(STAGES).index(args.stage), 12) - tuple(STAGES).index(args.from_stage)
         if len(audited.silu_nodes) != layer_count * 3:
             raise ValueError("Pinned segment SiLU replacement count differs")
         provenance["silu_expected_count"] = layer_count * 3
-    if args.variant.startswith("refined_mean_moment_rms") or args.variant == PRECISE:
+    if args.variant.startswith("refined_mean_moment_rms") or args.variant in (PRECISE, PRECISE_POSITIONS):
         rms_count = expected_rms_count(args.stage) - expected_rms_count(args.from_stage)
         if len(audited.rms_means) != rms_count or len(audited.rms_inverses) != rms_count:
             raise ValueError("Pinned segment RMS replacement count differs")
         provenance["rms_expected_count"] = rms_count
-    if args.variant.startswith("ordered_static_linear") or args.variant == PRECISE:
+    if args.variant.startswith("ordered_static_linear") or args.variant in (PRECISE, PRECISE_POSITIONS):
         layer_count = min(tuple(STAGES).index(args.stage), 12) - tuple(STAGES).index(args.from_stage)
-        count = layer_count * 9 + (2 if args.stage == "projected_features" else 0)
+        count = layer_count * (10 if args.variant == PRECISE_POSITIONS else 9) + (2 if args.stage == "projected_features" else 0)
         if len(audited.linear_nodes) != count:
             raise ValueError("Pinned280-row static linear replacement count differs")
         provenance["ordered_linear_expected_count"] = count
-        if args.variant in ("ordered_static_linear_attention", "ordered_static_linear_all_bmm", PRECISE):
+        if args.variant in ("ordered_static_linear_attention", "ordered_static_linear_all_bmm", PRECISE, PRECISE_POSITIONS):
             if len(audited.bmm_nodes - audited.parameter_bmm_nodes) != layer_count * 3:
                 raise ValueError("Pinned attention BMM replacement count differs")
             provenance["ordered_attention_bmm_expected_count"] = layer_count * 3
-            if args.variant in ("ordered_static_linear_all_bmm", PRECISE):
+            if args.variant in ("ordered_static_linear_all_bmm", PRECISE, PRECISE_POSITIONS):
                 if len(audited.parameter_bmm_nodes) != layer_count:
                     raise ValueError("Pinned parameter-backed BMM replacement count differs")
                 provenance["ordered_parameter_bmm_expected_count"] = layer_count
-    if args.variant == PRECISE:
+    if args.variant in (PRECISE, PRECISE_POSITIONS):
         if any(len(nodes) != layer_count for nodes in (audited.softmax_nodes, audited.sigmoid_nodes, audited.convolution_nodes)):
             raise ValueError('Pinned original audio leaf replacement count differs')
         provenance['audio_leaf_expected_count_per_family'] = layer_count
     # The joint candidate carries a same-host ONNX baseline; comparisons from
     # earlier jobs alone cannot establish the source of a small drift.
     variants = (("native", "ordered_static_linear", args.variant) if args.variant == "ordered_static_linear_attention" else
-                ("native", args.variant) if args.variant in ("refined_mean_moment_rms_silu", "ordered_static_linear", "ordered_static_linear_all_bmm", PRECISE) else (args.variant,))
+                ("native", args.variant) if args.variant in ("refined_mean_moment_rms_silu", "ordered_static_linear", "ordered_static_linear_all_bmm", PRECISE, PRECISE_POSITIONS) else (args.variant,))
     report = probe_segment(program, start, end, args.output,
         from_boundary=start_boundary, to_boundary=end_boundary, variants=variants, provenance=provenance)
     print(json.dumps(dict(complete=report["complete"], cases=report["cases"], full_encoder_validated=False)))

@@ -345,7 +345,7 @@ namespace EmbeddingGemma.Validation.Tests
                         if(releaseGeluCaches)Assert.That(free.Count,Is.Zero,"Both internal GELU Workers must release their unused caches.");
                     }
                 }
-                if(nativeGelu)Assert.That(geluCaches.Count,Is.EqualTo(32));
+                if(nativeGelu)Assert.That(geluCaches.Count,Is.EqualTo(sleefGelu?16:32),"Audit every GELU kernel, or both Workers per legacy GELU.");
                 var capture=Path.ChangeExtension(output,"bin");Assert.That(File.Exists(capture),Is.False);var capturedBytes=new byte[actual.Length*4];Buffer.BlockCopy(actual,0,capturedBytes,0,capturedBytes.Length);File.WriteAllBytes(capture,capturedBytes);
                 using(var stream=File.OpenRead(capture))report["capture_sha256"]=PlayerFileHash.Compute(stream,out _);
                 if(releaseUnusedGpuCache&&caseId=="square-0"&&!nativeOperators)

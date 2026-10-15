@@ -96,7 +96,15 @@ namespace EmbeddingGemma.Validation.Tests
             pending.GetAwaiter().GetResult();
         }
 
-        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false,bool editorFramePump=false,bool nativeOperators=false,int nativeStaticBlockSize=384,bool inlineTailRms=false)
+        [UnityTest]
+        public IEnumerator OriginalContextSoftmaxSixteenSquareZeroMustMatchOriginalOnGpu()
+        {
+            var pending=Run("square-0",true,true,true,true,true,false,true,true,192,true,16);
+            while(!pending.IsCompleted){UnityEditor.EditorApplication.QueuePlayerLoopUpdate();yield return null;}
+            pending.GetAwaiter().GetResult();
+        }
+
+        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false,bool editorFramePump=false,bool nativeOperators=false,int nativeStaticBlockSize=384,bool inlineTailRms=false,int softmaxVectorWidth=8)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
@@ -106,6 +114,7 @@ namespace EmbeddingGemma.Validation.Tests
             if(nativeOperators)label="vision-qualified-native-operators-whole-gpu-";
             if(nativeOperators&&nativeStaticBlockSize!=384)label="vision-original-context-block"+nativeStaticBlockSize+"-whole-gpu-";
             if(inlineTailRms)label="vision-original-context-all-rms-block"+nativeStaticBlockSize+"-whole-gpu-";
+            if(softmaxVectorWidth==16)label="vision-original-context-softmax16-all-rms-block"+nativeStaticBlockSize+"-whole-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+"-"+caseId+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["scope"]=releaseUnusedGpuCache?"one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate":nativeGelu?"one_original_vision_encoder_gpu_native_gelu_all_layer_rms_and_patch384_candidate":inlineAllRms?"one_original_vision_encoder_gpu_all_sixteen_layer_rms_and_native_patch384_candidate":"one_original_vision_encoder_gpu_native_patch384_candidate",["runtime_source"]=source,
@@ -114,6 +123,7 @@ namespace EmbeddingGemma.Validation.Tests
             report["qualified_operator_reconnection"]=nativeOperators;
             if(nativeOperators)report["native_static_block_size"]=nativeStaticBlockSize;
             report["inline_tail_rms"]=inlineTailRms;
+            report["softmax_vector_width"]=softmaxVectorWidth;
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
             var operations=new List<IGpuTensorOperation>();Save();
@@ -215,7 +225,7 @@ namespace EmbeddingGemma.Validation.Tests
                         else if(softmaxOutputs.Contains(selected[i]))
                         {
                             Assert.That(plan.Rows[i],Is.EqualTo(30240));Assert.That(plan.Widths[i],Is.EqualTo(2520));
-                            operations.Add(new GpuSoftmax());kind="native_softmax";
+                            operations.Add(new GpuSoftmax(softmaxVectorWidth));kind="native_softmax";
                         }
                         else
                         {

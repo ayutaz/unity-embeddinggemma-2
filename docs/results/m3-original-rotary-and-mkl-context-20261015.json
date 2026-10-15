@@ -931,5 +931,81 @@
       }
     }
   ],
-  "correction_scope": "Validation-only, data-independent square-profile position constants; bounded 1e-6 changes, caller arrays copied, original graph and learned tensors retained. Static audits and API tests are not GPU or full-model acceptance."
+  "correction_scope": "Validation-only, data-independent square-profile position constants; bounded 1e-6 changes, caller arrays copied, original graph and learned tensors retained. Static audits and API tests are not GPU or full-model acceptance.",
+  "native_rotary_square_gpu": {
+    "file": "vision-original-native-rotary-whole-gpu-d345886675e7ff5e70faa518766623d9775c6bc7-square-0.json",
+    "sha256": "15220dd31843d8d72fad089611ea99bb9b1eb8a056084e280f3f8666b0a0f34c",
+    "success": true,
+    "runtime_source": "d345886675e7ff5e70faa518766623d9775c6bc7",
+    "phase": "completed",
+    "actual_backend": "GPUCompute",
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 1.239776611328125e-05,
+    "maximum_tolerance_ratio": 0.5937759453608594,
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "host_peak_working_set_bytes": 4941717504,
+    "execute_and_final_download_ms": 25539.3387,
+    "original_coefficient_bytes_preserved": true,
+    "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+    "capture_sha256": "fd362e99fca24a8c63cecc48d7f36912c5a7debb781311c4bfae5ded1fd23d29",
+    "derived_rotary_rebound_tables": 4,
+    "derived_rotary_changed_multiplication_operands": 128,
+    "derived_rotary_scope": "audited_data_independent_original_square_position_tables",
+    "test": {
+      "file": "vision-original-native-rotary-square0-20261015.xml",
+      "sha256": "d1bacef0ac3104fb50f98704788e7afee3e6456e3a569e84c86e6bafd0ca99a5",
+      "totals": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Passed",
+        "total": "1",
+        "passed": "1",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 11:35:41Z",
+        "end-time": "2026-10-15 11:36:24Z",
+        "duration": "42.7229482"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-square0-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "OriginalContextNativeRotarySquareZeroMustMatchOriginalOnGpu",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-square0-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": true,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T11:35:02.141336+00:00",
+        "pid": 93828,
+        "exit_code": 0,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-square0-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "elapsed_seconds": 86.89993500000855,
+        "completed_utc": "2026-10-15T11:36:29.041274+00:00"
+      }
+    },
+    "other_five_cases_executed": false
+  }
 }

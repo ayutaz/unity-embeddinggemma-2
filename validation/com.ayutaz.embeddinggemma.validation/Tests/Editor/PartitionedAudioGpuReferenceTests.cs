@@ -122,6 +122,15 @@ namespace EmbeddingGemma.Validation.Tests
         public void NativeSiluPartitionsGpuMatchOriginalGolden(string signal)
             =>Execute(signal,true,false,false,false,true);
 
+        [TestCase("silence")]
+        [TestCase("impulse")]
+        [TestCase("sine")]
+        [TestCase("nyquist")]
+        [TestCase("noise")]
+        [TestCase("padded_noise")]
+        public void NativeBmmPartitionsGpuMatchOriginalGolden(string signal)
+            =>Execute(signal,true,nativeSilu:true,nativeBmm:true);
+
         [Test]
         public void ObserveNativeSiluFirstFeedForwardWithoutChangingNormalFinalBits()
             =>Execute("silence",true,false,false,true,true);
@@ -130,14 +139,14 @@ namespace EmbeddingGemma.Validation.Tests
         public void ObserveFirstAttentionAndConvolutionWithoutChangingNormalFinalBits()
             =>Execute("silence",true,false,false,true,true,true);
 
-        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false)
+        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var folder=nativeSilu?"GpuAudioPartitionedNativeSilu":isolated?"GpuAudioPartitionedLayer10":allStatic?"GpuAudioPartitionedAllStatic":"GpuAudioPartitionedFirstFf";
+            var folder=nativeBmm?"GpuAudioPartitionedNativeBmm":nativeSilu?"GpuAudioPartitionedNativeSilu":isolated?"GpuAudioPartitionedLayer10":allStatic?"GpuAudioPartitionedAllStatic":"GpuAudioPartitionedFirstFf";
             var root=Path.Combine(Application.dataPath,folder);
             var originalRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-real-chain/audio-runtime-reference"));
-            var stem=attention?"partitioned-native-silu-attention-observation-":nativeSilu?(early?"partitioned-native-silu-early-observation-":"partitioned-native-silu-gpu-"):
+            var stem=nativeBmm?"partitioned-native-bmm-gpu-":attention?"partitioned-native-silu-attention-observation-":nativeSilu?(early?"partitioned-native-silu-early-observation-":"partitioned-native-silu-gpu-"):
                 early?"partitioned-early-audio-observation-":isolated?"partitioned-layer10-original-input-":observe?"partitioned-all-static-layer-observation-":allStatic?"partitioned-all-static-gpu-":"partitioned-first-ff-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
@@ -211,22 +220,26 @@ namespace EmbeddingGemma.Validation.Tests
                     model=CompensatedModel.CreateWithDynamicMatMuls(model,16);model=CompensatedModel.Create(model,64);
                     models.Add(model);layers.Add(model.layers.Count);
                 }
-                var inputs=new List<string>();var outputs=new List<string>();
+                var inputs=new List<string>();var bindingsByOperation=new List<string[]>();var outputs=new List<string>();
                 var operations=(JArray)plan[nativeSilu?"operations":"projections"];
-                if(nativeSilu){Assert.That(plan.Value<int>("silu_count"),Is.EqualTo(36));Assert.That(operations.Count,Is.EqualTo(171));}
+                if(nativeSilu){Assert.That(plan.Value<int>("silu_count"),Is.EqualTo(36));Assert.That(operations.Count,Is.EqualTo(nativeBmm?207:171));}
+                if(nativeBmm)Assert.That(plan.Value<int>("dynamic_matmul_count"),Is.EqualTo(36));
                 foreach(var projection in operations)
                 {
                     if(projection.Value<string>("kind")=="silu")kernels.Add(new GpuSilu());
+                    else if(projection.Value<string>("kind")=="batched_matmul")kernels.Add(new GpuBatchedMatmul());
                     else
                     {
                         var shape=projection["weight_shape"].ToObject<int[]>();var weightPath=Path.Combine(root,projection.Value<string>("file"));
                         Check(weightPath,projection.Value<string>("weight_sha256"));kernels.Add(new GpuBlockedMatmul(shape[0],shape[1],Floats(weightPath)));
                     }
                     inputs.Add(projection.Value<string>("input"));outputs.Add(projection.Value<string>("output"));
+                    bindingsByOperation.Add(projection["inputs"]?.ToObject<string[]>()??new[]{projection.Value<string>("input")});
                 }
                 report["segment_layer_counts"]=layers;report["prepare_ms"]=timer.Elapsed.TotalMilliseconds;
                 report["projection_count"]=((JArray)plan["projections"]).Count;report["operation_count"]=kernels.Count;report["silu_count"]=nativeSilu?36:0;
-                using var pipeline=new GpuProjectionPipeline(models.ToArray(),inputs.ToArray(),outputs.ToArray(),kernels.ToArray());
+                using var pipeline=new GpuProjectionPipeline(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray());
+                report["dynamic_matmul_count"]=nativeBmm?36:0;
                 report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
                 using var input=new Tensor<float>(new TensorShape(inputShape),inputValues);ComputeTensorData.Pin(input);
                 report["phase"]="execute";Save();timer.Restart();

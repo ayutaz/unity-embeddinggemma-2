@@ -16,6 +16,15 @@ namespace EmbeddingGemma.Validation.Tests
 {
     public sealed class VisionNativePatchWholeGpuTests
     {
+        [Test]
+        public void OriginalPngTexturePreprocessingMustMatchFrozenPixelsOnGpu()
+        {
+            var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-encoder"));
+            var audit=JObject.Parse(File.ReadAllText(Path.Combine(root,"vision-validation.json")));
+            using var fixture=new QualifiedTextureInput(root,"square/1.png",audit);
+            var expected=Floats(Path.Combine(root,"square/1-pixels-fp32.bin"));var actual=fixture.Processed.Pixels.DownloadToArray();
+            Assert.That(actual,Is.EqualTo(expected),"Isolate original PNG ingress and GPU preprocessing before the encoder.");
+        }
         [TestCase("square-0")] [TestCase("square-1")]
         [TestCase("landscape-0")] [TestCase("landscape-1")]
         [TestCase("portrait-0")] [TestCase("portrait-1")]
@@ -612,6 +621,10 @@ namespace EmbeddingGemma.Validation.Tests
                     var path=Path.Combine(root,image);using(var stream=File.OpenRead(path))Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(audit["files"][image].Value<string>("sha256")));
                     texture=new Texture2D(2,2,TextureFormat.RGBA32,false,true);
                     Assert.That(ImageConversion.LoadImage(texture,File.ReadAllBytes(path),true),Is.True);Assert.That(texture.isReadable,Is.False);
+                    Assert.That(texture.graphicsFormat,Is.AnyOf(UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8B8_UNorm,
+                        UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8B8_SRGB,UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8B8A8_UNorm,
+                        UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8B8A8_SRGB,UnityEngine.Experimental.Rendering.GraphicsFormat.B8G8R8A8_UNorm,
+                        UnityEngine.Experimental.Rendering.GraphicsFormat.B8G8R8A8_SRGB),"Decoded PNG format: "+texture.format+" / "+texture.graphicsFormat);
                     using var preprocessor=new ImagePreprocessor(BackendType.GPUCompute);Processed=preprocessor.Process(texture);
                     Assert.That(Processed.Pixels.backendType,Is.EqualTo(BackendType.GPUCompute));
                 }

@@ -1,8 +1,10 @@
 # M3: 画像対応のTDD計画
 
-> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。冒頭の現在方針が、下の旧checkpointの着手順より優先する。
+> 文書整合確認: 2026-10-15。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。冒頭の現在方針が、下の旧checkpointの着手順より優先する。
 
-## 2026-10-14の画像の現在地
+## 2026-10-15の画像の現在地
+
+元画像のpatch prefixで1,256,626 bit差を再現し、係数を保つGPU block384投影で元1,935,360値へ全bit一致した。128/192/256/512/768の不一致も保持する。sliceの入力番号問題を小さいCPU/GPU Redから修正し、GPU投影・slice関連24 Green、package22 Green。[固定receipt](results/m3-patch384-gpu-and-original-encoder-20261015.json)。ただし、この投影を元全encoderへ戻したsquare-0は579要素超過・最大許容差比7.406214で不合格。局所一致を全体合格へ置き換えない。次は正確なpatch出力を起点にlayer 0の残る投影・演算を切り分け、元3 profileの全条件を確認してから実Texture→正規化768 APIへ進む。画像全chain / role / mask / 所有権 / text回帰 / sample / Playerは未完了。以下は前回checkpoint。
 
 GPU画像前処理はmain、ImageFeatureEncoder / ImageEmbedderはDraft実装・合成契約合格。画像PythonのQuery / Document / Rawは3 profile・6画像×3 roleで18件合格した。[receipt](results/m3-real-image-all-role-reference-20261014.json)。元FP32 encoderの固定gateとUnity実Texture→768次元の全chainは未達。
 

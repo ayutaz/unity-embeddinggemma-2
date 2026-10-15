@@ -1,5 +1,17 @@
 # 現在の状態
 
+更新日: 2026-10-15。画像FP32の最初の差を5層のpatch prefixまで絞った。元の係数・入力・参照を固定し、通常GPUの1,256,626 bit差（局所許容差超過0）を再現。入力・出力・係数をhash付きで捕捉し、診断downloadが通常prefix最終値を変えないことを確認した。これは画像全encoderの合格ではない。[画像前段・全体・音声回帰の固定receipt](results/m3-patch384-gpu-and-original-encoder-20261015.json)。
+
+FP32投影の加算区切り128 / 192 / 256 / 384 / 512 / 768を同じ固定入力で比較すると、**384だけが元patch出力の全1,935,360値に全bit一致**した。他5候補の不一致も保存している。これは特定入力の値を置換する補正ではなく、係数を保持する逐次FP32 FMAとblock保存加算の順序。既存3引数constructorは192を維持し、明示4引数constructorだけ1〜4096の区切りを選べる。元Block192 shader entry本体の不変も確認した。新API 9 Red→slice / 既存GPUを含む24 Green、package関連22 Green。
+
+saved-model切出しは元のlayer descriptorをコピーし、係数backing bytesを借用する。基本2 Red、外部境界2 RedからCPU/GPUを確認。実prefix接続でSentisの入力番号不整合を検出したため、入力list位置へ全tensor indexを衝突なく再配置した。小さい2 Red→関連6 Greenを保存。番号不整合で止まったrunは数値候補の成功/失敗へ混ぜない。
+
+**画像全体候補は未採用:** `47226d3dc2d7365e5c4bcb11345ca4bdea2c5168` のsquare-0で、正しいpatch384投影を元encoderへ戻すと579要素が元FP32許容差を超過し、最大許容差比7.406214、1 fail / skip0。GPUCompute・計算/入力CPU fallback / 中間flush0。準備1.353秒・実行と最終取得3.357秒はこの単独runのphase観測で、定常benchmarkではない。次は正確なpatch出力を起点にlayer 0内の残る投影・演算差を絞る。画像全3 profileの全条件、実Texture/PCMから正規化768次元API、role / mask / 境界 / 所有権 / Dispose / 例外後再利用 / text回帰、工程3・4のsample / Playerは未達を維持する。
+
+同sourceの元音声impulse全encoder回帰は1 pass / fail0 / skip0、許容差超過0・最大絶対誤差1.907349e-6、GPUCompute・計算/入力CPU fallback / flush0。過去に合格した音声6ケース・2 profileの固定証拠は下に保持し、全件を最新headで再実行したとは扱わない。Unityは検証後に終了。最新Required CIと長期memory / Persistent allocation警告は別gate。Draft PR #81、main未統合。
+
+以下は前回checkpoint。
+
 更新日: 2026-10-15。**元音声encoderの全6ケース・2 profileが実GPU数値gateに合格。工程3・4全体は未完了。** 通常5ケースは `a26317f`、`padded_noise` は `d955554335bed9ea8006d6287b47a3a1908932c2` の固定証拠。両source間で既存Runtimeの数値処理は未変更。RTX 4070 Ti SUPER / Direct3D12 / GPUCompute、各ケースの許容差超過・計算/入力CPU fallback・中間flushは0、fail0 / skip0。元参照値・学習済み係数・`atol=1e-5` / `rtol=1e-4`は維持した。[通常5ケース](results/m4-scalar-moment-fma-full-profile-gpu-20261015.json) / [パディング・エンコーダーAPI接続](results/m4-padded-audio-and-gpu-encoder-adapter-20261015.json)。全6件を最新headで再実行したという主張ではない。
 
 `padded_noise` は正確な `frames-1119-valid-839`、最終210×512出力を使う。元full/padded graphのSHAを固定して比較すると、差分はbinary mask initializer 3個・最終crop Constant 1個・出力形状で、その他583 initializer / 5,638 nodeは一致した。CPUモデル推論は行わず、bounded local構造比較は6〜9秒で完了。Actions 38680976728はrunner待ちのため所有jobをcancelし、Actions passには数えない。

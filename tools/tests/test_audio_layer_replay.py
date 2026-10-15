@@ -92,6 +92,39 @@ def test_attention_projection_capture_rejects_changed_final_and_removes_hooks():
     assert [set(module._forward_hooks) for module in modules]==before
 
 
+def test_attention_operations_capture_preserves_native_final_and_bmm_results():
+    run=getattr(audio_layer_replay,'capture_attention_operations',None)
+    assert callable(run),'Pinned attention operation capture is missing'
+    layer,hidden,blocked,positions,expected=fixture();before=hidden.clone()
+    values=run(layer,hidden,blocked,positions,expected)
+    assert len(values)==13
+    for name in ['matrix_ac','matrix_bd','weighted_values']:
+        assert torch.equal(values[name+'.output'],torch.bmm(values[name+'.left'],values[name+'.right']))
+    assert torch.equal(values['softmax.output'],torch.softmax(values['softmax.input'],dim=-1))
+    assert torch.equal(values['tanh.output'],torch.tanh(values['tanh.input']))
+    assert torch.equal(hidden,before)
+
+
+def test_attention_operation_capture_restores_external_hooks_on_failure():
+    run=getattr(audio_layer_replay,'capture_attention_operations',None)
+    assert callable(run),'Pinned attention operation capture is missing'
+    layer,hidden,blocked,positions,expected=fixture();attention=layer.self_attn
+    external=attention.register_forward_hook(lambda *args:None)
+    before=(set(attention._forward_hooks),set(attention._forward_pre_hooks))
+    try:
+        with pytest.raises(ValueError,match='pinned.*final'):run(layer,hidden,blocked,positions,expected+0.1)
+        assert (set(attention._forward_hooks),set(attention._forward_pre_hooks))==before
+    finally:external.remove()
+
+
+def test_producer_records_attention_operation_inputs_and_outputs(tmp_path):
+    snapshot,context=bundle(tmp_path)
+    report=preparer()(snapshot,context,tmp_path/'out',reference_source='a'*40,diagnostic_source='c'*40,detail_attention_ops=True)
+    assert report['detail_attention_ops'] and report['native_final_exact_match']
+    assert len(report['parts'])==20 and 'self_attn.matrix_ac.left' in report['parts']
+    assert not report['full_encoder_validated'] and not report['unity_validated']
+
+
 def test_loader_allocates_only_selected_layer_and_loads_exact_pinned_weights(tmp_path):
     load = getattr(audio_layer_replay, "load_layer", None)
     assert callable(load), "Selected audio layer loader is missing"

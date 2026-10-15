@@ -260,7 +260,39 @@ def capture_attention_projections(layer, hidden, blocked_mask, positions, pinned
     return {name: values["self_attn." + name] for name in ATTENTION_PROJECTION_PARTS}
 
 
-def prepare(snapshot, context, output, *, reference_source, diagnostic_source, detail_feed_forward=False, detail_attention_projections=False,
+def capture_attention_operations(layer, hidden, blocked_mask, positions, pinned_final):
+    """Observe native attention dispatch without replacing its operators."""
+    from torch.utils._python_dispatch import TorchDispatchMode
+    class Capture(TorchDispatchMode):
+        def __init__(self):
+            super().__init__();self.active=False;self.products=0;self.values={}
+        def __torch_dispatch__(self,func,types,args=(),kwargs=None):
+            result=func(*args,**(kwargs or {}))
+            if self.active:
+                if func==torch.ops.aten.bmm.default:
+                    if self.products>=3:raise ValueError('Pinned attention matrix structure changed')
+                    name=('matrix_ac','matrix_bd','weighted_values')[self.products];self.products+=1
+                    self.values[name+'.left']=args[0].detach().clone();self.values[name+'.right']=args[1].detach().clone()
+                    self.values[name+'.output']=result.detach().clone()
+                elif func in (torch.ops.aten.tanh.default,torch.ops.aten._softmax.default):
+                    name='tanh' if func==torch.ops.aten.tanh.default else 'softmax'
+                    if name+'.input' in self.values:raise ValueError('Pinned attention activation structure changed')
+                    self.values[name+'.input']=args[0].detach().clone();self.values[name+'.output']=result.detach().clone()
+            return result
+    mode=Capture()
+    def begin(*args):mode.active=True
+    def end(*args):mode.active=False
+    handles=[layer.self_attn.register_forward_pre_hook(begin),layer.self_attn.register_forward_hook(end)]
+    try:
+        with mode:_capture_named(layer,hidden,blocked_mask,positions,pinned_final,('self_attn',))
+    finally:
+        for handle in handles:handle.remove()
+    if mode.products!=3 or len(mode.values)!=13 or any(v.dtype!=torch.float32 or not torch.isfinite(v).all() for v in mode.values.values()):
+        raise ValueError('Pinned attention operation capture is incomplete')
+    return mode.values
+
+
+def prepare(snapshot, context, output, *, reference_source, diagnostic_source, detail_feed_forward=False, detail_attention_projections=False, detail_attention_ops=False,
             with_projection_oracle=False, with_compensated_projection=False, chunk_size=64,
             subsample_input=None, subsample_input_sha256=None):
     """Produce internal references for the frozen, fully valid silence layer 0."""
@@ -329,6 +361,8 @@ def prepare(snapshot, context, output, *, reference_source, diagnostic_source, d
     names = (*PARTS, *(FEED_FORWARD_PATHS if detail_feed_forward else ()),
              *(ATTENTION_PROJECTION_PATHS if detail_attention_projections else ()))
     parts = _capture_named(layer, hidden, blocked, positions, pinned_final, names)
+    if detail_attention_ops:
+        parts.update({'self_attn.'+name:value for name,value in capture_attention_operations(layer,hidden,blocked,positions,pinned_final).items()})
     if features is not None:
         module = Gemma4AudioSubSampleConvProjection(config).float().eval()
         prefix = "audio_tower.subsample_conv_projection."
@@ -353,6 +387,7 @@ def prepare(snapshot, context, output, *, reference_source, diagnostic_source, d
                   case=case["id"], input_files=input_files, parts=files,
                   detail_feed_forward=detail_feed_forward,
                   detail_attention_projections=detail_attention_projections,
+                  detail_attention_ops=detail_attention_ops,
                   full_encoder_validated=False, unity_validated=False)
     if features is not None:
         report.update(subsample_native_final_exact_match=True, subsample_input=_identity(Path(subsample_input)))
@@ -385,6 +420,7 @@ def main(argv=None):
     parser.add_argument("--report", required=True, type=Path)
     parser.add_argument("--detail-feed-forward", action="store_true")
     parser.add_argument("--detail-attention-projections", action="store_true")
+    parser.add_argument("--detail-attention-ops", action="store_true")
     parser.add_argument("--projection-oracle", action="store_true")
     parser.add_argument("--compensated-projection", action="store_true")
     parser.add_argument("--chunk-size", type=int, default=64)
@@ -411,6 +447,7 @@ def main(argv=None):
                               reference_source=args.reference_source, diagnostic_source=args.diagnostic_source,
                               detail_feed_forward=args.detail_feed_forward, with_projection_oracle=args.projection_oracle,
                               detail_attention_projections=args.detail_attention_projections,
+                              detail_attention_ops=args.detail_attention_ops,
                               with_compensated_projection=args.compensated_projection, chunk_size=args.chunk_size,
                               subsample_input=args.subsample_input, subsample_input_sha256=args.subsample_input_sha256))
         report["success"] = (report.get("fp64_projection_gate_passed", True)

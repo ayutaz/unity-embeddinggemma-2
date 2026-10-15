@@ -348,7 +348,7 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
     output of our preprocessing graph. This is not final embeddings or Unity proof.
     """
     snapshot, preprocessing, destination = Path(snapshot), Path(preprocessing).resolve(), Path(destination)
-    if onnx_layernorm not in ("native", "torch_welford8") or (onnx_layernorm != "native" and not native_silu):
+    if onnx_layernorm not in ("native", "torch_welford8", "torch_welford8_refined_moment") or (onnx_layernorm != "native" and not native_silu):
         raise ValueError("ONNX LayerNorm candidate requires the native SiLU companion route")
     if onnx_linear not in ("native", "compensated64") or (onnx_linear != "native" and not native_silu):
         raise ValueError("ONNX projection candidate requires the native SiLU companion route")

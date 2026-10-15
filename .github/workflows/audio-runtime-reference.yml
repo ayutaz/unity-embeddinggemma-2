@@ -15,7 +15,7 @@ on:
         description: Experimental ONNX LayerNorm arithmetic; original native references remain unchanged
         type: choice
         default: native
-        options: [native, torch_welford8]
+        options: [native, torch_welford8, torch_welford8_refined_moment]
       onnx_linear:
         description: Experimental compensated static projections; original native references remain unchanged
         type: choice

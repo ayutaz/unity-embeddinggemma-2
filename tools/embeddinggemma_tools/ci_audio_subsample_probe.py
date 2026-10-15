@@ -29,6 +29,15 @@ def digest(path):
     with Path(path).open("rb") as stream:return hashlib.file_digest(stream,"sha256").hexdigest()
 
 
+def fixed_float_shape(model,name):
+    values=[value for value in (*model.graph.input,*model.graph.value_info,*model.graph.output) if value.name==name]
+    shapes={tuple(dimension.dim_value for dimension in value.type.tensor_type.shape.dim) for value in values}
+    if (not values or len(shapes)!=1 or any(value.type.tensor_type.elem_type!=onnx.TensorProto.FLOAT for value in values)
+            or not next(iter(shapes)) or any(dimension<=0 for dimension in next(iter(shapes)))):
+        raise ValueError("Pinned FP32 boundary shape is missing, ambiguous or dynamic: "+name)
+    return list(next(iter(shapes)))
+
+
 class CompensatedMatmul(torch.nn.Module):
     def forward(self,values,weights):
         total=values.new_zeros((*values.shape[:-1],weights.shape[1]));correction=torch.zeros_like(total)
@@ -85,8 +94,7 @@ def probe(directory,output,*,source_commit):
     evaluate(graph,"original_control",[])
     candidate=copy.deepcopy(graph);rewrites=[]
     for node in [node for node in candidate.graph.node if node.op_type=="LayerNormalization"]:
-        infos={value.name:value for value in (*candidate.graph.input,*candidate.graph.value_info,*candidate.graph.output)}
-        shape=[dimension.dim_value for dimension in infos[node.input[0]].type.tensor_type.shape.dim]
+        shape=fixed_float_shape(candidate,node.input[0])
         if len(shape)!=4 or shape[-1] not in (32,128):raise ValueError("Pinned subsample LayerNorm scope changed")
         epsilon=next(attribute.f for attribute in node.attribute if attribute.name=="epsilon")
         weight=next(weight for weight in candidate.graph.initializer if weight.name==node.input[1]);scale=numpy_helper.to_array(weight)
@@ -95,7 +103,7 @@ def probe(directory,output,*,source_commit):
     if len(rewrites)!=2:raise ValueError("Pinned subsample must contain exactly two LayerNorm nodes")
     evaluate(candidate,"refined_welford_moment",list(rewrites))
     projection=next(node for node in candidate.graph.node if node.name=="/input_proj_linear/MatMul")
-    info=next(value for value in candidate.graph.value_info if value.name==projection.input[0]);shape=[dimension.dim_value for dimension in info.type.tensor_type.shape.dim]
+    shape=fixed_float_shape(candidate,projection.input[0])
     weight=next(weight for weight in candidate.graph.initializer if weight.name==projection.input[1]);values=numpy_helper.to_array(weight)
     built=template(CompensatedMatmul(),(torch.zeros(shape),torch.from_numpy(values.copy())),output/"projection-template.onnx")
     rewrites.append(refine_static_matmul(candidate,built,node_name=projection.name,expected_weight_sha256=hashlib.sha256(values.astype("<f4").tobytes()).hexdigest()))

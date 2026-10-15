@@ -57,7 +57,7 @@ def main(argv=None):
     audio.add_argument("--snapshot", type=Path)
     audio.add_argument("--revision", type=revision, default=MODEL_REVISION)
     audio.add_argument("--native-silu",action="store_true",help="Keep native SiLU math and create standard division-order ONNX companions")
-    audio.add_argument("--onnx-layernorm", choices=("native", "torch_welford8"), default="native",
+    audio.add_argument("--onnx-layernorm", choices=("native", "torch_welford8", "torch_welford8_refined_moment"), default="native",
                        help="Explicit bounded FP32 moment-order candidate for the ONNX companion only")
     audio.add_argument("--onnx-linear", choices=("native", "compensated64"), default="native",
                        help="Explicit compensated static projection candidate for the ONNX companion only")

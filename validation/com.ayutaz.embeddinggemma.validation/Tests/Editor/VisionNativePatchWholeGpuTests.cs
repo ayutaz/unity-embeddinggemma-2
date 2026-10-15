@@ -197,12 +197,15 @@ namespace EmbeddingGemma.Validation.Tests
 
         [UnityTest] public IEnumerator SecondVisionLayerPrefixMustMatchQualifiedContextBitsOnGpu()=>SecondLayerCase(false);
         [UnityTest] public IEnumerator IsolatedSecondVisionLayerMustMatchQualifiedContextBitsOnGpu()=>SecondLayerCase(true);
+        [UnityTest] public IEnumerator EighthVisionLayerPrefixMustMatchQualifiedContextBitsOnGpu()=>QualifiedLayerCase(8,false);
         static IEnumerator SecondLayerCase(bool isolated)
+            =>QualifiedLayerCase(2,isolated);
+        static IEnumerator QualifiedLayerCase(int count,bool isolated)
         {
             var pending=Run("square-0",inlineAllRms:true,nativeGelu:true,releaseUnusedGpuCache:true,staged:true,
                 releaseGeluCaches:true,editorFramePump:true,nativeOperators:true,nativeStaticBlockSize:192,
                 inlineTailRms:true,softmaxVectorWidth:16,fuseGeluInner:true,sleefGelu:true,nativeRotary:true,
-                encoderPrefixLayers:2,isolatedLayer:isolated);
+                encoderPrefixLayers:count,isolatedLayer:isolated);
             while(!pending.IsCompleted){UnityEditor.EditorApplication.QueuePlayerLoopUpdate();yield return null;}
             pending.GetAwaiter().GetResult();
         }

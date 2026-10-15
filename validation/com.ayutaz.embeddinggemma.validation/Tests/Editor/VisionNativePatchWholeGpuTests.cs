@@ -52,12 +52,20 @@ namespace EmbeddingGemma.Validation.Tests
             pending.GetAwaiter().GetResult();
         }
 
+        [UnityTest]
+        public IEnumerator StageFencesAndReleasedGeluCachesPreserveSquareZeroCandidateAndOriginalReferenceGate()
+        {
+            var pending=Run("square-0",true,true,true,true,true);
+            while(!pending.IsCompleted)yield return null;
+            pending.GetAwaiter().GetResult();
+        }
+
         static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-encoder"));
-            var label=releaseGeluCaches?"vision-nested-gelu-cache-release-whole-gpu-":staged?"vision-staged-cache-release-native-gelu-rms-whole-gpu-":releaseUnusedGpuCache?"vision-cache-release-native-gelu-rms-whole-gpu-":nativeGelu?"vision-native-gelu-inline-rms-whole-gpu-":inlineAllRms?"vision-inline-all-layer-rms-whole-gpu-":"vision-native-patch-whole-gpu-";
+            var label=releaseGeluCaches&&staged?"vision-staged-nested-gelu-cache-release-whole-gpu-":releaseGeluCaches?"vision-nested-gelu-cache-release-whole-gpu-":staged?"vision-staged-cache-release-native-gelu-rms-whole-gpu-":releaseUnusedGpuCache?"vision-cache-release-native-gelu-rms-whole-gpu-":nativeGelu?"vision-native-gelu-inline-rms-whole-gpu-":inlineAllRms?"vision-inline-all-layer-rms-whole-gpu-":"vision-native-patch-whole-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+"-"+caseId+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["scope"]=releaseUnusedGpuCache?"one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate":nativeGelu?"one_original_vision_encoder_gpu_native_gelu_all_layer_rms_and_patch384_candidate":inlineAllRms?"one_original_vision_encoder_gpu_all_sixteen_layer_rms_and_native_patch384_candidate":"one_original_vision_encoder_gpu_native_patch384_candidate",["runtime_source"]=source,

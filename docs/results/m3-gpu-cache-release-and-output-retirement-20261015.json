@@ -1,0 +1,505 @@
+{
+  "scope": "opt_in_unused_gpu_cache_release_copied_output_retirement_and_unchanged_numerical_failure",
+  "original_references_changed": false,
+  "learned_coefficients_changed": false,
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "default_cache_policy_unchanged": true,
+  "cache_policy_intended_red": {
+    "file": "gpu-unused-cache-policy-red-20261015-process.json",
+    "sha256": "79117ddb96947e304c3dbc2d0f85eb2cb3c09eb52e40ff13a47f1ef5d181a695",
+    "xml_sha256": "e092275496b85ce63aad5d27221e8ea2725a8cc5afd095bc987d71ae35f15e93",
+    "counts": {
+      "total": 3,
+      "passed": 0,
+      "failed": 3,
+      "skipped": 0
+    },
+    "exit_code": 2,
+    "elapsed_seconds": 42.908431200005,
+    "failures": [
+      {
+        "name": "EmbeddingGemma.Tests.GpuProjectionPipelineTests.CacheReleaseRemainsReusableAfterBorrowedOperationThrows",
+        "message": "  Opt-in unused GPU cache release is missing.\n  Expected: not null\n  But was:  null\n"
+      },
+      {
+        "name": "EmbeddingGemma.Tests.GpuProjectionPipelineTests.OptInCacheReleaseKeepsLiveResidualOwnedOutputsAndBorrowedOperation(False)",
+        "message": "  Opt-in unused GPU cache release is missing.\n  Expected: not null\n  But was:  null\n"
+      },
+      {
+        "name": "EmbeddingGemma.Tests.GpuProjectionPipelineTests.OptInCacheReleaseKeepsLiveResidualOwnedOutputsAndBorrowedOperation(True)",
+        "message": "  Opt-in unused GPU cache release is missing.\n  Expected: not null\n  But was:  null\n"
+      }
+    ]
+  },
+  "cache_policy_green_and_linker_red": {
+    "file": "gpu-unused-cache-policy-green-linker-red-20261015-process.json",
+    "sha256": "45965525577e8ed2c8be565374da2b9a0300de878e9872dd04bd3409e2dfb1c0",
+    "xml_sha256": "c995f9e54b7c3b849be55932729100e8b7315ca4e2254b37b3ac770ef6b143ed",
+    "counts": {
+      "total": 4,
+      "passed": 3,
+      "failed": 1,
+      "skipped": 0
+    },
+    "exit_code": 2,
+    "elapsed_seconds": 41.2993165999942,
+    "failures": [
+      {
+        "name": "EmbeddingGemma.Tests.GpuConstantLinkerPreservationTests.PackageSuppliesPrivateSentisMembersThroughLinkerCallback",
+        "message": "  Expected: equivalent to < \"m_Storage\", \"m_LayerCPUFallback\", \"m_LayerCPUFallbackShouldFlushGPU\" >\n  But was:  < \"m_Storage\", \"m_LayerCPUFallback\" >\n"
+      }
+    ]
+  },
+  "first_layer_and_related_green": {
+    "file": "gpu-unused-cache-policy-layer-and-regression-green-20261015-process.json",
+    "sha256": "871324b48f7dcf257d03cfb049582371d796406c11f4032233b4dfbbeb045b69",
+    "xml_sha256": "b184be5746e694e9b22da0c4050664e2f243d8e7290738eccf09380598a829d2",
+    "counts": {
+      "total": 14,
+      "passed": 14,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exit_code": 0,
+    "elapsed_seconds": 44.37458940000215,
+    "failures": []
+  },
+  "first_layer": {
+    "file": "vision-layer0-cache-release-gelu-rms-gpu-cf1eafd72dd9df94d84cdcb9ef4f988ad7da59b3.json",
+    "sha256": "727bea6c49909bc0b511e76391c9e578867c0de17f06c9f4ad7d9de5e2000f4b",
+    "result": {
+      "success": true,
+      "scope": "original_vision_layer0_cache_release_native_gelu_inline_rms_candidate",
+      "runtime_source": "cf1eafd72dd9df94d84cdcb9ef4f988ad7da59b3",
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "phase": "completed",
+      "inline_rms_count": 7,
+      "layer_count": 1220,
+      "gelu_count": 1,
+      "projections": [
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e0f98883c238d21192d6e086f0205f07c428847307a94817d34f3adf20e7338f"
+        },
+        {
+          "kind": "native_tanh_gelu",
+          "rows": 2520,
+          "width": 3072
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e9f675da30561ba275e17507b5455fda4d49e6a883747c5678d2a46eb8df0102"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "0174befbd8ff8c841032996393c3e80d3334dfc8dbd10ee58d804a420601de5a"
+        }
+      ],
+      "release_unused_gpu_cache": true,
+      "prepare_ms": 660.3875,
+      "segment_count": 9,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "execute_and_final_download_ms": 1032.8347,
+      "capture_sha256": "fe3b9fe2e554d83acf9bbf82e6f89974c78db06a93f99cad4f63a7ac251e59ba",
+      "qualified_gelu_rms_layer_bits_preserved": true,
+      "actual_backend": "GPUCompute",
+      "bit_differences": 1515672,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 2.09808349609375e-05,
+      "maximum_tolerance_ratio": 0.8429030931171905,
+      "source_model_bytes_preserved": true,
+      "source_model_serialized_sha256": "0e934178e391f2aea5bd691b6a59c441c8304500afc36e4be321c776ed873634"
+    }
+  },
+  "first_package": {
+    "file": "gpu-unused-cache-package-green-20261015.xml",
+    "sha256": "70667f529ed5bb1c52269465f22dd2b6995d35f5e88f2ef3d0d5fe7f735bed78",
+    "tests": 22,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "cache_only_full_execution": {
+    "file": "vision-cache-release-native-gelu-rms-square0-20261015-process.json",
+    "sha256": "4f35daa695f03cdf79c949f1a4c84e7ae754cd28e6e80f7ff40097f3ab61f18d",
+    "xml_sha256": "0897da5c1f78f5006f295d7e6f180bb8885a22d7587e3eaed8866e5a6eb46145",
+    "counts": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "exit_code": 2,
+    "elapsed_seconds": 57.47524590000103,
+    "failures": [
+      {
+        "name": "EmbeddingGemma.Validation.Tests.VisionNativePatchWholeGpuTests.CacheReleasedNativeGeluVisionEncoderMustMatchGoldenOnGpu(\"square-0\")",
+        "message": "  Keep the unchanged original FP32 elementwise gate.\n  Expected: 0\n  But was:  571\n"
+      }
+    ]
+  },
+  "cache_only_full": {
+    "file": "vision-cache-release-native-gelu-rms-whole-gpu-5a20d5095df29ad82d58b285718e309aaf7cba19-square-0.json",
+    "sha256": "28c846ba9ec1359b10126fb95e4e6fd8edf1f1865c69c81b3e1d01998f378251",
+    "result": {
+      "success": false,
+      "scope": "one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate",
+      "runtime_source": "5a20d5095df29ad82d58b285718e309aaf7cba19",
+      "case_id": "square-0",
+      "phase": "completed",
+      "all_profiles_validated": false,
+      "end_to_end_validated": false,
+      "model_file_audit_ms": 434.77950000000004,
+      "profile": "square",
+      "saved_model_sha256": "4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7",
+      "model_load_ms": 899.0849000000001,
+      "coefficient_audit_before_ms": 428.7815,
+      "inline_rms_count": 112,
+      "layer_count": 19535,
+      "original_square_count": 113,
+      "remaining_original_rms_count": 1,
+      "all_original_coefficient_descriptors_retained": true,
+      "graph_rewrite_ms": 1582.6643000000001,
+      "native_gelu_count": 16,
+      "release_unused_gpu_cache": true,
+      "pipeline_prepare_ms": 1392.064,
+      "segment_count": 18,
+      "gpu_operation_count": 17,
+      "prepare_ms": 4309.3558,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "host_working_set_before_execute_bytes": 3361869824,
+      "execute_and_final_download_ms": 8067.9791000000005,
+      "capture_sha256": "43fa98f573bd55a0f634075bf17f42fcde2ff9e89894c2d5b1b238c8ab451aab",
+      "host_working_set_after_download_bytes": 9630670848,
+      "host_peak_working_set_bytes": 9630670848,
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 571,
+      "maximum_absolute_error": 0.00012803077697753906,
+      "maximum_tolerance_ratio": 6.883228917760353,
+      "original_coefficient_bytes_preserved": true,
+      "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+      "coefficient_audit_after_ms": 488.874,
+      "failure_message": "NUnit.Framework.AssertionException:   Keep the unchanged original FP32 elementwise gate."
+    }
+  },
+  "copied_output_and_linker_intended_red": {
+    "file": "gpu-copied-output-retirement-red-20261015-process.json",
+    "sha256": "3ceab4083e6b3af1b0cd9d23e931674c78957718485780b2341521f4e675807a",
+    "xml_sha256": "bfd8c3a4b8420a38f471713eca39d36dd384ef26db442e6262fdcefabb360c06",
+    "counts": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "skipped": 0
+    },
+    "exit_code": 2,
+    "elapsed_seconds": 41.547058500000276,
+    "failures": [
+      {
+        "name": "EmbeddingGemma.Tests.GpuConstantLinkerPreservationTests.PackageSuppliesPrivateSentisMembersThroughLinkerCallback",
+        "message": "  Expected: equivalent to < \"m_TensorPool\", \"m_InUseTensorsPool\" >\n  But was:  < \"m_TensorPool\" >\n"
+      },
+      {
+        "name": "EmbeddingGemma.Tests.GpuProjectionPipelineTests.CacheReleaseRetiresCopiedWorkerOutputsButKeepsInputsAndConstants",
+        "message": "  Copied Worker-owned output must be retired before the next operation.\n  Expected: False\n  But was:  True\n"
+      }
+    ]
+  },
+  "copied_output_layer_and_related_green": {
+    "file": "gpu-copied-output-retirement-layer-green-20261015-process.json",
+    "sha256": "c3d6b440d93c9a4905df278f62e3d0993f56a4a3d91ce0772533ecb7162b417d",
+    "xml_sha256": "5bcd028fb52114ecf9f4f4af7544e467229d654638779b6e1a67d3a5bdf7b25b",
+    "counts": {
+      "total": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exit_code": 0,
+    "elapsed_seconds": 45.3738130999991,
+    "failures": []
+  },
+  "copied_output_layer": {
+    "file": "vision-layer0-cache-release-gelu-rms-gpu-6cb2224d1286678035b7cdc6d7ce318e3c61a533.json",
+    "sha256": "0e02f667960cea364b29aacc947729c395f34333aeb3845699e11d7fc5ea4df4",
+    "result": {
+      "success": true,
+      "scope": "original_vision_layer0_cache_release_native_gelu_inline_rms_candidate",
+      "runtime_source": "6cb2224d1286678035b7cdc6d7ce318e3c61a533",
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "phase": "completed",
+      "inline_rms_count": 7,
+      "layer_count": 1220,
+      "gelu_count": 1,
+      "projections": [
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e0f98883c238d21192d6e086f0205f07c428847307a94817d34f3adf20e7338f"
+        },
+        {
+          "kind": "native_tanh_gelu",
+          "rows": 2520,
+          "width": 3072
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e9f675da30561ba275e17507b5455fda4d49e6a883747c5678d2a46eb8df0102"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "0174befbd8ff8c841032996393c3e80d3334dfc8dbd10ee58d804a420601de5a"
+        }
+      ],
+      "release_unused_gpu_cache": true,
+      "prepare_ms": 382.2124,
+      "segment_count": 9,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "execute_and_final_download_ms": 1011.0379,
+      "capture_sha256": "fe3b9fe2e554d83acf9bbf82e6f89974c78db06a93f99cad4f63a7ac251e59ba",
+      "qualified_gelu_rms_layer_bits_preserved": true,
+      "actual_backend": "GPUCompute",
+      "bit_differences": 1515672,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 2.09808349609375e-05,
+      "maximum_tolerance_ratio": 0.8429030931171905,
+      "source_model_bytes_preserved": true,
+      "source_model_serialized_sha256": "0e934178e391f2aea5bd691b6a59c441c8304500afc36e4be321c776ed873634"
+    }
+  },
+  "second_package": {
+    "file": "gpu-copied-output-package-green-20261015.xml",
+    "sha256": "cd276abafbc2fd3e6e00596c8c0bcb7dbcf19aa3725b3712e7cd8a0574ea0f49",
+    "tests": 22,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "copied_output_full_execution": {
+    "file": "vision-copied-output-retirement-square0-20261015-process.json",
+    "sha256": "48972bd4573ae4fba96fb859343afe425bc02283150e3466751c1f4f33cfb305",
+    "xml_sha256": "d0e6cc3b864e84c47acf3f4c84a96bd9e04c5f0ec31e7739c73124fd71c9ada6",
+    "counts": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "exit_code": 2,
+    "elapsed_seconds": 59.48210000000836,
+    "failures": [
+      {
+        "name": "EmbeddingGemma.Validation.Tests.VisionNativePatchWholeGpuTests.CacheReleasedNativeGeluVisionEncoderMustMatchGoldenOnGpu(\"square-0\")",
+        "message": "  Keep the unchanged original FP32 elementwise gate.\n  Expected: 0\n  But was:  571\n"
+      }
+    ]
+  },
+  "copied_output_full": {
+    "file": "vision-cache-release-native-gelu-rms-whole-gpu-1ee8f2c00408e2466e7df3c8ca55608e24f442cc-square-0.json",
+    "sha256": "5392cd17d99c1d97959b2b6e5ed712121e9a11bd735dd315d505f695d473b985",
+    "result": {
+      "success": false,
+      "scope": "one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate",
+      "runtime_source": "1ee8f2c00408e2466e7df3c8ca55608e24f442cc",
+      "case_id": "square-0",
+      "phase": "completed",
+      "all_profiles_validated": false,
+      "end_to_end_validated": false,
+      "model_file_audit_ms": 422.42830000000004,
+      "profile": "square",
+      "saved_model_sha256": "4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7",
+      "model_load_ms": 690.6887,
+      "coefficient_audit_before_ms": 415.67330000000004,
+      "inline_rms_count": 112,
+      "layer_count": 19535,
+      "original_square_count": 113,
+      "remaining_original_rms_count": 1,
+      "all_original_coefficient_descriptors_retained": true,
+      "graph_rewrite_ms": 1640.9592,
+      "native_gelu_count": 16,
+      "release_unused_gpu_cache": true,
+      "pipeline_prepare_ms": 1411.4667000000002,
+      "segment_count": 18,
+      "gpu_operation_count": 17,
+      "prepare_ms": 4163.4682,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "host_working_set_before_execute_bytes": 3384377344,
+      "execute_and_final_download_ms": 7111.0169000000005,
+      "capture_sha256": "43fa98f573bd55a0f634075bf17f42fcde2ff9e89894c2d5b1b238c8ab451aab",
+      "cache_only_candidate_bits_preserved": true,
+      "host_working_set_after_download_bytes": 9652461568,
+      "host_peak_working_set_bytes": 9652461568,
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 571,
+      "maximum_absolute_error": 0.00012803077697753906,
+      "maximum_tolerance_ratio": 6.883228917760353,
+      "original_coefficient_bytes_preserved": true,
+      "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+      "coefficient_audit_after_ms": 428.75350000000003,
+      "failure_message": "NUnit.Framework.AssertionException:   Keep the unchanged original FP32 elementwise gate."
+    }
+  },
+  "prior_no_release_candidate": {
+    "file": "vision-native-gelu-inline-rms-whole-gpu-ca6883efdd696db4d0ef0355b5ede2afe666f48c-square-0.json",
+    "sha256": "fdbe2d2c73ca4049086a06e41d4fa88d5f115fc95d8d852945216461f0fb8aea",
+    "result": {
+      "success": false,
+      "scope": "one_original_vision_encoder_gpu_native_gelu_all_layer_rms_and_patch384_candidate",
+      "runtime_source": "ca6883efdd696db4d0ef0355b5ede2afe666f48c",
+      "case_id": "square-0",
+      "phase": "completed",
+      "all_profiles_validated": false,
+      "end_to_end_validated": false,
+      "model_file_audit_ms": 517.4015,
+      "profile": "square",
+      "saved_model_sha256": "4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7",
+      "model_load_ms": 1006.1146,
+      "coefficient_audit_before_ms": 46802.0549,
+      "inline_rms_count": 112,
+      "layer_count": 19535,
+      "original_square_count": 113,
+      "remaining_original_rms_count": 1,
+      "all_original_coefficient_descriptors_retained": true,
+      "graph_rewrite_ms": 1550.6714000000002,
+      "native_gelu_count": 16,
+      "pipeline_prepare_ms": 1401.9442000000001,
+      "segment_count": 18,
+      "gpu_operation_count": 17,
+      "prepare_ms": 50765.783800000005,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "host_working_set_before_execute_bytes": 3287871488,
+      "execute_and_final_download_ms": 25902.563100000003,
+      "host_working_set_after_download_bytes": 9934274560,
+      "host_peak_working_set_bytes": 9934274560,
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 571,
+      "maximum_absolute_error": 0.00012803077697753906,
+      "maximum_tolerance_ratio": 6.883228917760353,
+      "original_coefficient_bytes_preserved": true,
+      "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+      "coefficient_audit_after_ms": 46135.065,
+      "failure_message": "NUnit.Framework.AssertionException:   Keep the unchanged original FP32 elementwise gate."
+    }
+  },
+  "sampled_resources": {
+    "file": "vision-copied-output-retirement-resources-20261015.jsonl",
+    "sha256": "fea75f6567a5c0d77c2cbb0c9a78230fd93826a2199f8dc71fc5c1b9094a659d",
+    "samples": 22,
+    "sampling_interval_about_seconds": 2,
+    "execution_samples": 4,
+    "observed_device_gpu_used_max_mib": 15674,
+    "observed_host_peak_max_bytes": 9653788672,
+    "includes_background_device_gpu_use": true,
+    "true_vram_peak_guaranteed": false
+  },
+  "performance_limits": "Single-run observations with same fixed model/coefficients/input/workload. Full output bit identity is established between cache-only and copied-output-retirement candidates. Earlier no-release candidate lacks an output capture; only its original-reference error metrics match. Preparation also benefits from the separately qualified accelerated coefficient hash. No steady-state or other-device performance claim.",
+  "unused_pool_released_and_copied_worker_outputs_retired": true,
+  "caller_inputs_results_constants_and_borrowed_operations_preserved": true,
+  "local_layer_bit_identity": true,
+  "full_cache_candidate_bit_identity": true,
+  "full_original_reference_gate_passed": false,
+  "memory_peak_problem_resolved": false,
+  "player_runtime_verified": false,
+  "linker_member_metadata_verified": true,
+  "full_candidate_adopted": false,
+  "full_candidate_repetition_stopped": true,
+  "gpu_gelu_tanh_softmax_batched_matmul_and_audio_arithmetic_unchanged": true,
+  "image_all_three_profiles_validated": false,
+  "end_to_end_validated": false,
+  "other_cases_not_executed_for_this_candidate": [
+    "square-1",
+    "landscape-0",
+    "landscape-1",
+    "portrait-0",
+    "portrait-1"
+  ],
+  "next_action": "Capture a bounded first-row subset of the original attention/softmax inputs on GPU; qualify the existing native softmax and attention arithmetic against independent references before another full numerical candidate. High peak allocation remains unresolved; do not treat mechanical cache release as resource acceptance.",
+  "remaining": [
+    "all original image profile conditions and remaining original RMS",
+    "actual PCM/Texture to GPU preprocessing encoder backbone normalized 768 APIs with required roles masks boundaries ownership Dispose error reuse and text regression",
+    "stage3/4 samples and Player verification"
+  ]
+}

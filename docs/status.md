@@ -1,5 +1,15 @@
 # 現在の状態
 
+更新日: 2026-10-15。**未使用GPU cache解放とコピー済みWorker出力の退役をopt-inで追加し、元layer 0と全体候補の出力bit保持を確認した。ただし画像全体の571要素超過と高いmemory peakは未解決。** 既存constructorの既定動作は維持。3 intended Red→cache契約3 Green＋linker保持1 Red→関連14 Green、コピー済み出力 / 保持メンバーの2 Red→関連15 Green、package22 Green。[固定receipt](results/m3-gpu-cache-release-and-output-retirement-20261015.json)。
+
+解放はWorkerが所有する未使用poolだけに適用し、全境界のCopyOutput完了後は既にコピー済みのWorker出力を退役する。入力・係数・caller所有の結果・借用operationを保持し、反復・例外後再利用・二重Disposeを確認。最初の層は前候補hash `fe3b9fe2...` と全bit一致し、元native layer gate超過0 / source model bytes保持。Player用link.xmlには実際に参照するprivate field / generic pool constructor・Disposeを明示追加し、広いpreserve指定は使わない。保持metadataの検証であり、Player実行合格ではない。既存GELU / tanh / softmax / batched matmul / 音声算術は不変。
+
+全体square-0のcache-only `5a20d5095df29ad82d58b285718e309aaf7cba19` と出力退役 `1ee8f2c00408e2466e7df3c8ca55608e24f442cc` は最終出力hash `43fa98f5...` が完全一致した。両者とも元参照571要素超過・最大比6.883229、各1 fail / skip0。CPU computation/input fallback・中間flush0。前者は準備4.309秒 / GPU実行＋最終取得8.068秒 / host peak9,630,670,848 byte、後者は4.163秒 / 7.111秒 / 9,652,461,568 byte。係数監査は前後0.4〜0.5秒。同じ仕事量の単発観測で、定常benchmarkや他環境の性能合格ではない。退役runは約2秒間隔でresourceを記録し、実行中のdevice VRAM観測最大15,674 / 16,376MiB、OS host peak観測最大9,653,788,672 byte。device値は他processを含み、真のVRAM peakを保証しない。未使用poolが空になることとコピー済み出力の退役は確認したが、peak低減の受け入れは未達。
+
+この全体候補は未採用・反復停止、他5case未実行。次は元attention / softmax入力の先頭行だけをGPUで捕捉し、小さい独立参照で照合する。残る元RMS1か所、全3 profile、実PCM/Texture→GPU前処理→encoder→backbone→正規化768 APIの全role / mask / 境界 / 所有権 / Dispose / 例外後再利用 / text回帰、工程3・4のsample / Playerは未完了。ローカルUnity終了済み。Required CI、Persistent allocation警告・長期memoryは別gate。
+
+以下は前回checkpoint。
+
 更新日: 2026-10-15。**GPU GELUと元layer 0の局所gateは合格、画像全体は571要素超過で未合格。** 新しい `GpuGelu` は固定shapeの2 Worker＋既存GPU tanhを所有し、入力を借用、結果を独立所有で返す。API 5 Red、初回は関連9 Green＋実データ境界確認1 fail（投影後reshapeの見落としで数値比較未実行）、境界marker 2 Redを経て、関連16 Green / skip0。元の投影入出力・shapeを監査してから照合した。[固定receipt](results/m3-gelu-gpu-layer-and-full-failure-audit-fix-20261015.json)。
 
 捕捉gate入力7,741,440値に対する独立した現CPU tanh-GELU式では、既存処理3,048,817 bit差→候補6,716 bit差、双方の許容差超過0。候補最大比0.015367。元native内部値の全bit再現ではない。`61a4dcea5d86bd6f5ef465d280918b6991896d1a` の元layer 0は7 RMS / 7投影 / GELUをGPU接続して許容差超過0、最大比0.842903、source model bytes保持。GPUCompute・計算/入力CPU fallback・中間flush0。既存tanh / softmax / batched matmul / 音声経路は未変更で、Runtime追加はGpuGeluのみ。package22 Green。

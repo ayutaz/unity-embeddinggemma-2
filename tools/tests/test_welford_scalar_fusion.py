@@ -10,7 +10,7 @@ def fused(a, b, c):
     return (a.double() * b.double() + c.double()).float()
 
 
-def oracle(values, weight, *, fuse_mean):
+def oracle(values, weight, *, fuse_mean, fuse_moment=False):
     width = values.shape[-1]
     count = width // 8
     mean = torch.zeros_like(values[..., :8])
@@ -27,7 +27,9 @@ def oracle(values, weight, *, fuse_mean):
         delta = mean[..., lane:lane+1] - total_mean
         coefficient = values.new_tensor(count / (previous+count))
         total_mean = fused(coefficient, delta, total_mean) if fuse_mean else total_mean + coefficient * delta
-        total_moment = total_moment + (moment[..., lane:lane+1] + delta * delta * coefficient * previous)
+        increment=(fused(delta*delta*coefficient,values.new_tensor(previous),moment[...,lane:lane+1])
+                   if fuse_moment else moment[...,lane:lane+1]+delta*delta*coefficient*previous)
+        total_moment = total_moment + increment
     inverse = export.fp32_refined_rstd(total_moment / width + 1e-6)
     return (values-total_mean) * inverse * weight
 
@@ -52,6 +54,17 @@ def test_scalar_fusion_default_preserves_previous_eight_lane_order():
     explicit = export.TorchWelfordLayerNorm(source, refine_inverse=True, fuse_scalar_mean=False)
     assert torch.equal(implicit(values), explicit(values))
     assert torch.equal(implicit(values), oracle(values, source.weight, fuse_mean=False))
+
+
+@pytest.mark.parametrize('width',[32,128])
+def test_opt_in_scalar_moment_fma_matches_independent_rounding_and_borrows_scale(width):
+    values=torch.randn(64,width,generator=torch.Generator().manual_seed(120))*7
+    source=torch.nn.LayerNorm(width,eps=1e-6,bias=False)
+    expected=oracle(values,source.weight,fuse_mean=True,fuse_moment=True)
+    assert not torch.equal(expected,oracle(values,source.weight,fuse_mean=True,fuse_moment=False))
+    model=export.TorchWelfordLayerNorm(source,refine_inverse=True,fuse_scalar_mean=True,fuse_scalar_moment=True)
+    assert torch.equal(model(values),expected)
+    assert model.weight is source.weight
 
 
 def test_scalar_fused_export_is_standard_fp32_and_preserves_rounding(tmp_path):

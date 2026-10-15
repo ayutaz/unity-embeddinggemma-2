@@ -129,6 +129,96 @@ def refine_welford_scalar_means(model, template, *, prefix, expected_count):
                 node_count=len(model.graph.node), full_encoder_validated=False)
 
 
+def refine_welford_scalar_moments(model,template,*,prefix,width,expected_count):
+    """Fuse only m2_add + (delta*delta*c)*previous_count; retain outer addition."""
+    unsupported={onnx.TensorProto.DOUBLE,onnx.TensorProto.FLOAT16,onnx.TensorProto.BFLOAT16}
+    if (not isinstance(prefix,str) or not prefix or width not in (32,128) or expected_count!=8
+            or len(template.graph.input)!=3 or len(template.graph.output)!=1
+            or any(v.type.tensor_type.elem_type!=onnx.TensorProto.FLOAT for v in (*template.graph.input,*template.graph.output))
+            or any(w.data_type in unsupported for w in (*model.graph.initializer,*template.graph.initializer))
+            or any(n.domain not in ('','ai.onnx') for n in template.graph.node)
+            or any((n.op_type=='Cast' and a.name=='to' and a.i in unsupported)
+                   or (a.type==onnx.AttributeProto.TENSOR and a.t.data_type in unsupported)
+                   for n in template.graph.node for a in n.attribute)):
+        raise ValueError('Scalar moments require eight audited lanes and an FP32 FMA template')
+    producers={value:node for node in model.graph.node for value in node.output}
+    weights={w.name:w for w in model.graph.initializer}
+    infos={v.name:v for v in (*model.graph.input,*model.graph.output,*model.graph.value_info)}
+    def constant(name):
+        if name in weights:return numpy_helper.to_array(weights[name])
+        node=producers.get(name)
+        if node is None or node.op_type!='Constant':return None
+        tensors=[a.t for a in node.attribute if a.name=='value']
+        return numpy_helper.to_array(tensors[0]) if len(tensors)==1 else None
+    def scalar(name,value):
+        actual=constant(name)
+        return actual is not None and actual.dtype==np.float32 and actual.size==1 and actual.item()==np.float32(value)
+    def slice_source(node,lane):
+        if node is None or node.op_type!='Slice' or len(node.input)!=5:raise ValueError('Moment lane Slice is missing')
+        bounds=[constant(v) for v in node.input[1:]];info=infos.get(node.input[0])
+        shape=info.type.tensor_type.shape.dim if info is not None else []
+        if (not shape or shape[-1].dim_value!=8
+                or any(v is None or v.dtype!=np.int64 or v.size!=1 for v in bounds)
+                or [int(v.item()) for v in bounds[:2]]!=[lane,lane+1]
+                or int(bounds[2].item()) not in (-1,len(shape)-1) or int(bounds[3].item())!=1):
+            raise ValueError('Moment lane bounds or source shape differ')
+        return node.input[0]
+    targets=[];moment_source=mean_source=previous_outer=None
+    for node in model.graph.node:
+        if not node.name.startswith(prefix) or node.op_type!='Add' or len(node.input)!=2:continue
+        sliced=producers.get(node.input[0]);product=producers.get(node.input[1])
+        if sliced is None or sliced.op_type!='Slice' or product is None or product.op_type!='Mul':continue
+        lane=len(targets)
+        if lane>=8 or len(product.input)!=2 or not scalar(product.input[1],lane*(width//8)):
+            raise ValueError('Moment previous-count coefficient differs')
+        scaled=producers.get(product.input[0])
+        if scaled is None or scaled.op_type!='Mul' or len(scaled.input)!=2 or not scalar(scaled.input[1],1/(lane+1)):
+            raise ValueError('Moment reciprocal coefficient differs')
+        square=producers.get(scaled.input[0])
+        if square is None or square.op_type!='Mul' or len(square.input)!=2 or square.input[0]!=square.input[1]:
+            raise ValueError('Moment delta square differs')
+        delta=producers.get(square.input[0])
+        if delta is None or delta.op_type!='Sub' or len(delta.input)!=2:raise ValueError('Moment mean delta differs')
+        current_moment=slice_source(sliced,lane);current_mean=slice_source(producers.get(delta.input[0]),lane)
+        outer=[n for n in model.graph.node if n.name.startswith(prefix) and n.op_type=='Add' and len(n.input)==2 and n.input[1]==node.output[0]]
+        if len(outer)!=1:raise ValueError('Moment outer addition is missing or ambiguous')
+        if lane==0:
+            zeros=constant(outer[0].input[0])
+            if zeros is None or zeros.dtype!=np.float32 or not np.all(zeros==0):raise ValueError('Moment initial accumulator differs')
+            moment_source=current_moment;mean_source=current_mean
+        elif current_moment!=moment_source or current_mean!=mean_source or outer[0].input[0]!=previous_outer:
+            raise ValueError('Moment ordered lane chain differs')
+        previous_outer=outer[0].output[0]
+        targets.append((node,(product.input[0],product.input[1],node.input[0])))
+    if len(targets)!=expected_count:raise ValueError('Scalar moment target count differs')
+    reserved={v.name for v in (*model.graph.input,*model.graph.output,*model.graph.initializer,*model.graph.value_info)}
+    reserved.update(value for n in model.graph.node for value in (*n.input,*n.output))
+    def fresh(value):
+        while value in reserved:value+='_'
+        reserved.add(value);return value
+    replacements={};extra=[]
+    for lane,(target,inputs) in enumerate(targets):
+        names=dict(zip((v.name for v in template.graph.input),inputs));names[template.graph.output[0].name]=target.output[0]
+        def rename(value):
+            if not value:return value
+            if value not in names:names[value]=fresh(f'__eg_scalar_moment_{lane}_'+value)
+            return names[value]
+        for original in template.graph.initializer:
+            value=copy.deepcopy(original);value.name=rename(value.name);extra.append(value)
+        nodes=[]
+        for original in template.graph.node:
+            value=copy.deepcopy(original);value.name=fresh(f'__eg_scalar_moment_{lane}_node_'+value.name)
+            value.input[:]=[rename(v) for v in original.input];value.output[:]=[rename(v) for v in original.output];nodes.append(value)
+        replacements[target.name]=nodes
+    before=_initializer_digest(model.graph.initializer);count=len(model.graph.initializer)
+    rewritten=[value for node in model.graph.node for value in replacements.get(node.name,[node])]
+    del model.graph.node[:];model.graph.node.extend(rewritten);model.graph.initializer.extend(extra)
+    if _initializer_digest(model.graph.initializer[:count])!=before:raise RuntimeError('Existing scalar moment initializer bytes changed')
+    return dict(replaced_scalar_moment_count=len(targets),prefix=prefix,width=width,
+                existing_initializer_bytes_preserved=True,existing_initializer_sha256=before,
+                node_count=len(model.graph.node),full_encoder_validated=False)
+
+
 def refine_layernorm_inverses(model, template, *, prefixes=(
         '/subsample_conv_projection/layer0/norm', '/subsample_conv_projection/layer1/norm')):
     """Inline a bounded FP32 refinement at explicitly named Sqrt/Reciprocal pairs.

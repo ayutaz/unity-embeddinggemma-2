@@ -26,6 +26,10 @@ on:
         description: Compare individual ONNX operators on native inputs without injecting their results; requires from_stage
         type: boolean
         default: false
+      matrix_probe:
+        description: Run only the audited frozen real MatMul fixture; downloads no encoder model
+        type: boolean
+        default: false
   pull_request:
     types: [opened, synchronize, labeled]
 
@@ -40,7 +44,7 @@ concurrency:
 jobs:
   probe:
     if: >-
-      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_dispatch' && !inputs.matrix_probe) ||
       (github.event.pull_request.head.repo.full_name == github.repository &&
        (contains(github.event.pull_request.labels.*.name, 'frozen-audio-prefix-onnx') ||
         contains(github.event.pull_request.labels.*.name, 'frozen-audio-layer0-onnx') ||
@@ -154,5 +158,55 @@ jobs:
             artifacts/frozen-audio-prefix-onnx/*.onnx
             artifacts/frozen-prefix-input/range-receipt.json
             artifacts/frozen-stage-reference/range-receipt.json
+          retention-days: 7
+          if-no-files-found: warn
+
+  matrix_probe:
+    if: github.event_name == 'workflow_dispatch' && inputs.matrix_probe == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+      OPENBLAS_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - name: Fetch only audited native primitive input coefficient and target
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.artifact_zip
+          --repo ayutaz/unity-embeddinggemma-2 --artifact-id 12001831037
+          --output ../artifacts/frozen-matmul-input
+          --member frozen-audio-prefix-onnx/audio-primitive-replay.json
+          --member frozen-audio-prefix-onnx/worst-MatMul-input0-fp32.bin
+          --member frozen-audio-prefix-onnx/worst-MatMul-input1-fp32.bin
+          --member frozen-audio-prefix-onnx/worst-MatMul-native-fp32.bin
+      - name: Record actual CPU host
+        run: |
+          mkdir -p ../artifacts/frozen-matmul-probe
+          lscpu --json > ../artifacts/frozen-matmul-probe/cpu-host.json
+      - name: Validate explicit FP32 FMA lowering against qualified real primitive capture
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.frozen_matmul_probe
+          --input ../artifacts/frozen-matmul-input/frozen-audio-prefix-onnx
+          --output ../artifacts/frozen-matmul-probe
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: frozen-matmul-probe-${{ github.sha }}
+          path: |
+            artifacts/frozen-matmul-probe/
+            artifacts/frozen-matmul-input/range-receipt.json
           retention-days: 7
           if-no-files-found: warn

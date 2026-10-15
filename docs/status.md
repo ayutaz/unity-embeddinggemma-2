@@ -1,8 +1,16 @@
 # 現在の状態と残タスク
 
-更新日: 2026-10-15。最新の全encoder数値gateは `a0ec8844ea07ce20987a3d3fbe758cfa9d2068cc`。135投影＋36 SiLU＋36 Attention行列積＋12 Qスケーリングの候補は無音166要素不合格。GPUComputeで実行し、計算fallback / flushは0。工程3・4は未完了。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
+更新日: 2026-10-15。最新の全encoder数値gateは `b6c96cf1283b857aebafa1587d2dec2866825400`。native除算・tanh・softmaxまで接続した候補は無音125要素不合格、最初のAttention内部13境界は全bit一致。GPUComputeで実行し、計算fallback / flushは0。工程3・4は未完了。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
 
 ## 現在の判定
+
+**最新のnative除算・softmax接続:** `GpuScalarDivide`は残差FMA補正を使い、固定native softcap除算55,296値を全bit一致、2 Red→実GPU2 Green。plannerは9 Red→関連65 Green。`GpuSoftmax`は元指数関数と8 laneのFP32加算順を用い、固定native55,296値を全bit一致、2 Red→実GPU2 Green。plannerは6 Red→関連71 Green。ともにGPU入力借用・独立出力・CPU入力拒否後の再利用・Disposeを検証した。[固定GPU成功](results/m4-native-division-and-softmax-frozen-gpu-green-20261015.json)。他GPU・全native入力・全profileのbit一致は未証明。
+
+元initializer digestを保つ255 operation / 256 segmentを生成。除算までの`961f617`は元silence全encoder269要素不合格。softmaxまでの`b6c96cf`は**125要素不合格・最大許容差比3.300957**、NUnit0 pass / 1 fail / skip0 / exit2。準備19.774秒、実行＋最終診断download6.740秒、Unity全process87.526秒。これらは計測した一実行の値で、製品benchmarkや純GPU時間ではない。計算fallback / flush0を確認した。
+
+同sourceの最初のAttention内部13境界（matrix_ac / matrix_bd / weighted_valuesの左右入力・出力と、tanh / softmaxの入力・出力）は**すべて元参照へ全bit一致**。観測は通常最終bitを変えず、独立したUnity processで1 pass / fail0 / skip0、66.102秒。全体125要素不合格を再現し、観測成功を数値合格へ数えない。次は後段のpost投影とlconv1d境界を比較する。[全体gateと13境界観測](results/m4-native-softmax-whole-and-first-attention-20261015.json)。Persistent allocation警告1件は残り、リーク解消は未証明。
+
+独立Python回帰38666006647 / `2a0fea6`は4 XML各879 pass / fail0 / error0 / skip0を確認。[Python固定証拠](results/python-full-native-tanh-planner-green-20261015.json)。除算・softmax planner追加後の38667280645 / `b6c96cf`は別runで、未確定の間は成功へ数えない。音声全6信号・2 profile、画像FP32全3 profile、実PCM / Textureから最終768次元GPU APIまでのgateは引き続き未達。以下は以前のcheckpoint。
 
 **最新のnative tanh切り分け:** `223f47d`の`GpuTanh`はSLEEF固定commitの演算をFP32の残差ペアでGPU実装し、元55,296値へ全bit一致。実GPU2 Red→2 Green、符号付きゼロ・CPU入力拒否後の再利用・借用入力と独立出力・二重Disposeも確認した。最初のCopyOutput呼出しのcompile失敗は未実行として別記録。plannerは5 Red→関連56 Green、元の重みdigestを保持する231 operation / 232 segmentを生成した。[単体GPUとsoftmax oracle](results/m4-native-tanh-frozen-gpu-and-softmax-oracle-20261015.json)。
 

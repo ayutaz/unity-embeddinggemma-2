@@ -192,13 +192,13 @@ def _mark_query_scale_boundaries(model,names):
     return result,metadata
 
 
-def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_node_names=(),dynamic_node_names=(),query_scale_node_names=(),tanh_node_names=(),scalar_divide_node_names=()):
+def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_node_names=(),dynamic_node_names=(),query_scale_node_names=(),tanh_node_names=(),scalar_divide_node_names=(),softmax_node_names=()):
     """Return unchanged-op segments and audited external projection boundaries.
 
     Coefficients stay in their original bytes. The caller supplies the GPU
     projections; this planner never executes or validates a full encoder.
     """
-    if ((not node_names and not silu_node_names and not dynamic_node_names and not query_scale_node_names and not tanh_node_names and not scalar_divide_node_names) or len(set(node_names))!=len(node_names)
+    if ((not node_names and not silu_node_names and not dynamic_node_names and not query_scale_node_names and not tanh_node_names and not scalar_divide_node_names and not softmax_node_names) or len(set(node_names))!=len(node_names)
             or len(node_names)!=len(expected_weight_sha256)):
         raise ValueError('Select unique ordered projection names and coefficient hashes')
     if set(node_names).intersection(silu_node_names):raise ValueError('GPU boundaries overlap')
@@ -210,6 +210,8 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_
         raise ValueError('Tanh GPU boundaries overlap')
     if len(set(scalar_divide_node_names))!=len(scalar_divide_node_names) or set(scalar_divide_node_names).intersection((*node_names,*silu_node_names,*dynamic_node_names,*query_scale_node_names,*tanh_node_names)):
         raise ValueError('Scalar division GPU boundaries overlap')
+    if len(set(softmax_node_names))!=len(softmax_node_names) or set(softmax_node_names).intersection((*node_names,*silu_node_names,*dynamic_node_names,*query_scale_node_names,*tanh_node_names,*scalar_divide_node_names)):
+        raise ValueError('Softmax GPU boundaries overlap')
     wanted_hash=dict(zip(node_names,expected_weight_sha256))
     original_order=[n.name for n in model.graph.node if n.name in wanted_hash]
     if original_order!=list(node_names):raise ValueError('Projection order or identity differs')
@@ -217,8 +219,8 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_
         model=_mark_silu_boundaries(model,silu_node_names)
     query_scales={}
     if query_scale_node_names:model,query_scales=_mark_query_scale_boundaries(model,query_scale_node_names)
-    if silu_node_names or dynamic_node_names or query_scale_node_names or tanh_node_names or scalar_divide_node_names:
-        chosen=set(node_names)|set(silu_node_names)|set(dynamic_node_names)|set(query_scale_node_names)|set(tanh_node_names)|set(scalar_divide_node_names);node_names=[n.name for n in model.graph.node if n.name in chosen]
+    if silu_node_names or dynamic_node_names or query_scale_node_names or tanh_node_names or scalar_divide_node_names or softmax_node_names:
+        chosen=set(node_names)|set(silu_node_names)|set(dynamic_node_names)|set(query_scale_node_names)|set(tanh_node_names)|set(scalar_divide_node_names)|set(softmax_node_names);node_names=[n.name for n in model.graph.node if n.name in chosen]
         if len(node_names)!=len(chosen):raise ValueError('A GPU boundary is missing or ambiguous')
     nodes=list(model.graph.node);weights={w.name:w for w in model.graph.initializer}
     fixed_scalars=dict(weights)
@@ -236,6 +238,14 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_
         matches=[(i,n) for i,n in enumerate(nodes) if n.name==name]
         if len(matches)!=1:raise ValueError('Selected projection is missing or ambiguous')
         index,node=matches[0]
+        if name in softmax_node_names:
+            if node.domain or node.op_type!='Softmax' or len(node.input)!=1 or len(node.output)!=1:raise ValueError('Softmax operator differs')
+            dimensions=shape(node.input[0]);output_shape=shape(node.output[0])
+            default_axis=-1 if next(o.version for o in model.opset_import if o.domain=='')>=13 else 1
+            axis=next((a.i for a in node.attribute if a.name=='axis'),default_axis)
+            if len(dimensions)>8 or dimensions!=output_shape or axis not in (-1,len(dimensions)-1):raise ValueError('Softmax must retain a fixed last axis')
+            selected.append((index,node,dict(kind='softmax',node=name,input=node.input[0],output=node.output[0],input_shape=dimensions,output_shape=output_shape,axis=-1)))
+            previous=index;continue
         if name in scalar_divide_node_names:
             if node.domain or node.op_type!='Div' or len(node.input)!=2 or len(node.output)!=1:raise ValueError('Scalar division operator differs')
             scalar=fixed_scalars.get(node.input[1])

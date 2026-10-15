@@ -134,6 +134,34 @@ def scalar_division_model():
     return source
 
 
+def test_last_axis_softmax_partition_reconnects_without_moving_tensor_values_to_host():
+    source=dynamic_model();source.graph.node[-1].op_type='Softmax';source.graph.node[-1].name='softmax';before=source.SerializeToString()
+    parts,plan=required()(source,node_names=[],expected_weight_sha256=[],softmax_node_names=['softmax'])
+    assert source.SerializeToString()==before and len(parts)==2
+    operation=plan['operations'][0];assert operation['kind']=='softmax' and operation['axis']==-1
+    values={'input':np.arange(12,dtype=np.float32).reshape(2,2,3)/10}
+    for index,part in enumerate(parts):
+        onnx.checker.check_model(part);assert not any(n.name=='softmax' for n in part.graph.node)
+        result=ReferenceEvaluator(part).run(None,{v.name:values[v.name] for v in part.graph.input})
+        aliases=plan['segments'][index]['output_aliases'];values.update(zip([aliases.get(v.name,v.name) for v in part.graph.output],result))
+        if index==0:
+            x=values[operation['input']];exponential=np.exp(x-x.max(axis=-1,keepdims=True));values[operation['output']]=exponential/exponential.sum(axis=-1,keepdims=True)
+    np.testing.assert_array_equal(values['out'],ReferenceEvaluator(source).run(None,{'input':values['input']})[0])
+
+
+@pytest.mark.parametrize('problem',['missing','duplicate','axis','operator','shape'])
+def test_softmax_partition_refuses_unverified_axis_or_boundary_without_mutation(problem):
+    source=dynamic_model();source.graph.node[-1].op_type='Softmax';source.graph.node[-1].name='softmax';names=['softmax']
+    if problem=='missing':names=['missing']
+    elif problem=='duplicate':names*=2
+    elif problem=='axis':source.graph.node[-1].attribute.append(helper.make_attribute('axis',0))
+    elif problem=='operator':source.graph.node[-1].op_type='LogSoftmax'
+    elif problem=='shape':source.graph.value_info[1].type.tensor_type.shape.dim[1].ClearField('dim_value')
+    before=source.SerializeToString()
+    with pytest.raises(ValueError):required()(source,node_names=[],expected_weight_sha256=[],softmax_node_names=names)
+    assert source.SerializeToString()==before
+
+
 def test_scalar_division_partition_preserves_original_divisor_and_rounding_boundary():
     source=scalar_division_model();before=source.SerializeToString()
     parts,plan=required()(source,node_names=[],expected_weight_sha256=[],scalar_divide_node_names=['divide'])

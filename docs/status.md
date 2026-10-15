@@ -1,5 +1,11 @@
 # 現在の状態
 
+更新日: 2026-10-15。**最初のRMSと7つのblock384投影を元layer 0へ戻し、元の固定layer参照のGPU数値gateに合格した。** `ac2dc3355b5d957064a6df463bc95c4e422a3402`、境界・RMS単体・実layerを含め15 pass / fail0 / skip0 / exit0。layer 0の許容差超過0、最大比0.842903、bit差1,539,872であり、全bit一致ではない。元Model serialized bytes / scale / 入力・参照・許容差を保持。[固定receipt](results/m3-first-layer-rms-reconnection-20261015.json)。
+
+**画像全体は未合格。** `dd3875616488e9fb0d8f6c1dd34de52887e4f312` のsquare-0へ、確認済みpatch・最初のRMS・layer 0の7投影だけを接続（8投影＋RMS、10 segment）すると566要素超過、最大比6.791765、1 fail / skip0 / exit2だった。GPUCompute・計算/入力CPU fallback・中間flush0。準備1.949秒、実行＋最終取得3.660秒、host peak4,312,829,952 byte（約4.017GiB）。単発観測であり、115 segmentの旧候補との同仕事量benchmarkではない。他5 caseはこの候補で未実行。全体の反復を止め、残るRMS / 活性化 / 積和を局所照合するため7つのRMS境界観測へ進む。工程3・4全体、最終API / sample / Playerは未完了。
+
+以下は前回checkpoint。
+
 更新日: 2026-10-15。**最初の画像RMS正規化は、元patch入力と元scaleを使い、現CPU式の全1,935,360値へ実GPUで全bit一致した。** `2fe78b5acda3522bdb2c6a16171c036b48e10e8a`、GPUCompute・計算/入力CPU fallback・中間flush0、1 pass / fail0 / skip0 / exit0。元Modelのserialized bytesも保持した。[正規化単体・除算境界修正の固定receipt](results/m3-first-rms-gpu-explicit-division-20261015.json)。元Linuxの未取得native内部値へ一致した証拠ではなく、画像全encoder・全profile・最終APIの合格ではない。
 
 切り分け順: まず元RMSだけの7層を切出し、旧layer0観測のprojection入力をGPUで全bit再現（1 pass / skip0）、scale hash / epsilonを固定した。新しい768幅RMS exportは10 Red→CPU/ONNX関連35 Green、全元patch入力でも現CPU式へbit差0。最初のGPU候補は325,961 bit差・局所許容差超過0で厳密gateに失敗した。成功扱いへ置き換えず保存している。

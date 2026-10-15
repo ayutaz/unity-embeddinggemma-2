@@ -4,6 +4,8 @@
 
 ## 2026-10-15の画像の現在地
 
+最初のRMS＋7つのblock384投影を元layer 0へ戻した実GPU gateは、元参照・係数・入力・許容差のまま超過0。境界 / RMS単体を含む15 pass / fail0 / skip0。全bit一致ではなく、画像全体合格へは流用しない。確認済み最初の層だけを元全encoderへ接続したsquare-0は566要素超過・最大比6.791765で1 fail / skip0。10 segment、host peak約4.017GiB、実行＋取得3.660秒だが、定常性能合格ではない。[固定receipt](results/m3-first-layer-rms-reconnection-20261015.json)。次は全体反復を止め、7か所のRMS入力 / 出力 / scaleを通常GPU最終bitを保持して捕捉し、残る64 / 768幅の正規化・活性化・積和を局所照合する。元3 profileの全条件、実Texture→768 API、role / mask / 寿命 / text回帰 / sample / Playerは未完了。以下は前回checkpoint。
+
 最初のRMS単体は、元patch / scaleと現CPU式を使い、実GPUの全1,935,360値で全bit一致した。原因はSentisが除算768→epsilon加算をScalarMadへまとめた丸め差で、明示GPU除算の境界を保持して修正。元RMS観測の再現・失敗候補・統計FMA診断・1 pass / fail0 / skip0を[固定receipt](results/m3-first-rms-gpu-explicit-division-20261015.json)へ分離した。元native内部参照は未取得で、画像encoder合格には数えない。次はこのRMSを元layer 0へ戻し、元固定参照で改善を検証する。他のRMS/活性化、全3 profileの全条件、最終API / role / mask / 寿命 / text回帰 / sample / Playerは未完了。以下は前回checkpoint。
 
 現在の次工程はRMS正規化の固定GPU照合。元patch入力のlayer 0は通常4要素超過、7投影のblock384候補は1要素超過。全114投影を元square-0 encoderへ戻しても579要素超過・最大比5.757522で未合格だった。実行＋取得30.978秒・host peak10.969GiBのため、この全体候補を反復せず小さい正規化/活性化テストへ戻る。768幅平均は7 Red→CPU/ONNX関連25 Green、元patch64行の平均もbit差0。有界1万点のCPU probeでは補正inverseがnative powerへbit差0だが、GPU成功・元全context合格へは数えない。[固定証拠と残件](results/m3-layer0-static-gpu-and-rms-next-20261015.json)。以下は前回checkpoint。

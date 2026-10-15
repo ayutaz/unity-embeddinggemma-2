@@ -252,7 +252,8 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_
             if value in constants and value not in live:live.append(value)
             if value not in live:raise ValueError('GPU operation input is not live at its boundary')
         part=extractor.extract_model(frontier,live)
-        if any(n.name in node_names for n in part.graph.node):raise ValueError('A selected projection escaped its cut')
+        escaped=[n.name for n in part.graph.node if n.name in node_names]
+        if escaped:raise ValueError(f'A selected projection escaped its cut before {target.name}: {escaped}')
         for weight in part.graph.initializer:
             if weight.name not in weights or weight.SerializeToString()!=weights[weight.name].SerializeToString():
                 raise ValueError('Extracted coefficient bytes differ')

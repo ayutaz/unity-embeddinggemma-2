@@ -8,6 +8,8 @@ namespace EmbeddingGemma.Validation.Tests
 {
     public static class ModelTensorSlice
     {
+        public static Model Extract(Model source,Model.Output[] outputs,Model.Input[] boundaries)
+            =>throw new NotImplementedException("Multiple live saved-model slice outputs are missing.");
         public static Model Extract(Model source,int tensorIndex,string outputName,Model.Input[] boundaries)
         {
             if(source==null)throw new ArgumentNullException(nameof(source));

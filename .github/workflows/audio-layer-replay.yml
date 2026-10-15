@@ -13,6 +13,11 @@ on:
         type: choice
         options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']
         default: '0'
+      signal:
+        description: Original full-profile signal for attention diagnostics; full retains silence
+        type: choice
+        options: [silence, impulse, sine, nyquist, noise]
+        default: silence
   pull_request:
     types: [opened, synchronize, labeled]
 
@@ -39,6 +44,7 @@ jobs:
       OMP_NUM_THREADS: '4'
       MKL_NUM_THREADS: '4'
       REPLAY_LAYER: ${{ github.event_name == 'workflow_dispatch' && inputs.scope == 'attention' && inputs.layer_index || '0' }}
+      REPLAY_SIGNAL: ${{ github.event_name == 'workflow_dispatch' && inputs.scope == 'attention' && inputs.signal || 'silence' }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
@@ -53,6 +59,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           [[ "$REPLAY_LAYER" =~ ^([0-9]|1[01])$ ]] || exit 2
+          [[ "$REPLAY_SIGNAL" =~ ^(silence|impulse|sine|nyquist|noise)$ ]] || exit 2
           printf -v input_stage '%02d' "$REPLAY_LAYER"
           printf -v output_stage '%02d' "$((REPLAY_LAYER + 1))"
           uv run --locked python -m embeddinggemma_tools.artifact_zip \
@@ -60,8 +67,8 @@ jobs:
           --output ../artifacts/frozen-audio-layer \
           --member audio-runtime-stages/audio-stage-reference.json \
           --member audio-runtime-stages/audio-stage-validation.json \
-          --member "audio-runtime-stages/frames-1119-valid-1119/silence-stage-${input_stage}-fp32.bin" \
-          --member "audio-runtime-stages/frames-1119-valid-1119/silence-stage-${output_stage}-fp32.bin" \
+          --member "audio-runtime-stages/frames-1119-valid-1119/${REPLAY_SIGNAL}-stage-${input_stage}-fp32.bin" \
+          --member "audio-runtime-stages/frames-1119-valid-1119/${REPLAY_SIGNAL}-stage-${output_stage}-fp32.bin" \
           --member audio-runtime-reference/frames-1119-valid-1119/silence-features-fp32.bin
       - name: Verify pinned context manifests before model download
         run: |
@@ -95,6 +102,7 @@ jobs:
           --diagnostic-source "$GITHUB_SHA"
           --report ../artifacts/audio-attention-replay-report.json
           --layer-index "$REPLAY_LAYER"
+          --case-id "$REPLAY_SIGNAL"
           --detail-feed-forward
           --detail-attention-projections
           --detail-attention-ops

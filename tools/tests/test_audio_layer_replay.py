@@ -222,6 +222,31 @@ def preparer():
     return value
 
 
+def test_selected_signal_replay_uses_its_original_context_pair(tmp_path):
+    snapshot,context=bundle(tmp_path)
+    path=context/'audio-stage-reference.json';reference=json.loads(path.read_text())
+    selected=json.loads(json.dumps(reference['cases'][0]));selected['id']='impulse'
+    reference['cases'][0]['stages'][0]['expected']='wrong-silence-input.bin'
+    reference['cases'].append(selected);path.write_text(json.dumps(reference))
+    report=preparer()(snapshot,context,tmp_path/'out',reference_source='a'*40,diagnostic_source='c'*40,case_id='impulse')
+    assert report['case']=='impulse' and report['native_final_exact_match']
+    assert set(report['input_files'])=={'input.bin','final.bin'}
+
+
+def test_missing_selected_signal_is_rejected_before_weights_load(tmp_path,monkeypatch):
+    snapshot,context=bundle(tmp_path)
+    monkeypatch.setattr(audio_layer_replay,'load_layer',lambda *a,**k:pytest.fail('Must validate the selected original case before weights'))
+    with pytest.raises(ValueError,match='select one fully valid'):
+        preparer()(snapshot,context,tmp_path/'out',reference_source='a'*40,diagnostic_source='c'*40,case_id='impulse')
+
+
+def test_cli_passes_original_signal_selection_to_audited_producer(tmp_path,monkeypatch):
+    calls=[]
+    monkeypatch.setattr(audio_layer_replay,'prepare',lambda *a,**k:(calls.append(k) or dict(context_validated=True,native_final_exact_match=True)))
+    result=audio_layer_replay.main(['--snapshot',str(tmp_path),'--context',str(tmp_path),'--output',str(tmp_path/'out'),'--reference-source','a'*40,'--diagnostic-source','c'*40,'--report',str(tmp_path/'report.json'),'--case-id','impulse'])
+    assert result==0 and calls[0]['case_id']=='impulse'
+
+
 def later_layer_bundle(tmp_path):
     snapshot,context=bundle(tmp_path);audio,_=audio_models();_,hidden,blocked,positions,first_final=fixture()
     with torch.no_grad():second_final=audio.layers[1](first_final.clone(),attention_mask=blocked,position_embeddings=positions)

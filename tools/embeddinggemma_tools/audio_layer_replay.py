@@ -311,8 +311,8 @@ def capture_attention_operations(layer, hidden, blocked_mask, positions, pinned_
 
 def prepare(snapshot, context, output, *, reference_source, diagnostic_source, detail_feed_forward=False, detail_attention_projections=False, detail_attention_ops=False, detail_convolution=False,
             with_projection_oracle=False, with_compensated_projection=False, chunk_size=64,
-            subsample_input=None, subsample_input_sha256=None, layer_index=0):
-    """Produce internal references against one original frozen silence layer."""
+            subsample_input=None, subsample_input_sha256=None, layer_index=0, case_id='silence'):
+    """Produce internal references against one original frozen signal/layer pair."""
     snapshot, context, output = map(Path, (snapshot, context, output))
     if type(layer_index) is not int or layer_index<0:raise ValueError('Select a nonnegative layer index')
     if layer_index!=0 and (subsample_input is not None or subsample_input_sha256 is not None):
@@ -330,10 +330,10 @@ def prepare(snapshot, context, output, *, reference_source, diagnostic_source, d
             or metadata.get("feature_rtol") != 1e-4 or metadata.get("feature_atol") != 1e-5
             or re.fullmatch(r"[0-9a-f]{40}", metadata.get("model_revision", "")) is None):
         raise ValueError("pinned context metadata mismatch")
-    cases = [case for case in reference["cases"] if case["id"] == "silence"
+    cases = [case for case in reference["cases"] if case["id"] == case_id
              and case["profile"].split("-")[1] == case["profile"].split("-")[3]]
     if len(cases) != 1:
-        raise ValueError("select one fully valid silence context")
+        raise ValueError("select one fully valid original signal context")
     case = cases[0]
     stages = {value["name"]: value for value in case["stages"]}
     input_stage='subsample' if layer_index==0 else f'layer_{layer_index-1}'
@@ -451,6 +451,7 @@ def main(argv=None):
     parser.add_argument("--detail-attention-ops", action="store_true")
     parser.add_argument("--detail-convolution", action="store_true")
     parser.add_argument("--layer-index",type=int,default=0)
+    parser.add_argument("--case-id",choices=('silence','impulse','sine','nyquist','noise'),default='silence')
     parser.add_argument("--projection-oracle", action="store_true")
     parser.add_argument("--compensated-projection", action="store_true")
     parser.add_argument("--chunk-size", type=int, default=64)
@@ -460,7 +461,7 @@ def main(argv=None):
     if args.report.exists():
         raise ValueError("refusing to overwrite replay report")
     report = dict(success=False, context_validated=False, native_final_exact_match=False,
-                  layer_index=args.layer_index,
+                  layer_index=args.layer_index,case=args.case_id,
                   full_encoder_validated=False, unity_validated=False,
                   reference_source=args.reference_source, diagnostic_source=args.diagnostic_source,
                   torch_version=torch.__version__, torch_threads=torch.get_num_threads())
@@ -482,6 +483,7 @@ def main(argv=None):
                               detail_attention_ops=args.detail_attention_ops,
                               detail_convolution=args.detail_convolution,
                               layer_index=args.layer_index,
+                              case_id=args.case_id,
                               with_compensated_projection=args.compensated_projection, chunk_size=args.chunk_size,
                               subsample_input=args.subsample_input, subsample_input_sha256=args.subsample_input_sha256))
         report["success"] = (report.get("fp64_projection_gate_passed", True)

@@ -80,7 +80,15 @@ namespace EmbeddingGemma.Validation.Tests
             pending.GetAwaiter().GetResult();
         }
 
-        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false,bool editorFramePump=false,bool nativeOperators=false)
+        [UnityTest]
+        public IEnumerator OriginalSavedContextBlock192SquareZeroMustMatchOriginalOnGpu()
+        {
+            var pending=Run("square-0",true,true,true,true,true,false,true,true,192);
+            while(!pending.IsCompleted){UnityEditor.EditorApplication.QueuePlayerLoopUpdate();yield return null;}
+            pending.GetAwaiter().GetResult();
+        }
+
+        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false,bool editorFramePump=false,bool nativeOperators=false,int nativeStaticBlockSize=384)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
@@ -88,12 +96,14 @@ namespace EmbeddingGemma.Validation.Tests
             var label=releaseGeluCaches&&staged?"vision-staged-nested-gelu-cache-release-whole-gpu-":releaseGeluCaches?"vision-nested-gelu-cache-release-whole-gpu-":staged?"vision-staged-cache-release-native-gelu-rms-whole-gpu-":releaseUnusedGpuCache?"vision-cache-release-native-gelu-rms-whole-gpu-":nativeGelu?"vision-native-gelu-inline-rms-whole-gpu-":inlineAllRms?"vision-inline-all-layer-rms-whole-gpu-":"vision-native-patch-whole-gpu-";
             if(planOnly)label="vision-partition-boundary-audit-";
             if(nativeOperators)label="vision-qualified-native-operators-whole-gpu-";
+            if(nativeOperators&&nativeStaticBlockSize!=384)label="vision-original-context-block"+nativeStaticBlockSize+"-whole-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+"-"+caseId+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["scope"]=releaseUnusedGpuCache?"one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate":nativeGelu?"one_original_vision_encoder_gpu_native_gelu_all_layer_rms_and_patch384_candidate":inlineAllRms?"one_original_vision_encoder_gpu_all_sixteen_layer_rms_and_native_patch384_candidate":"one_original_vision_encoder_gpu_native_patch384_candidate",["runtime_source"]=source,
                 ["case_id"]=caseId,["phase"]="audit",["all_profiles_validated"]=false,["end_to_end_validated"]=false,
                 ["scheduling_mode"]=staged?"gpu_fence_per_stage":"synchronous_queue",["intermediate_tensor_readback_added"]=false,["gelu_internal_cache_release"]=releaseGeluCaches,["editor_frame_pump"]=editorFramePump,["test_forced_gc_during_run"]=false};
             report["qualified_operator_reconnection"]=nativeOperators;
+            if(nativeOperators)report["native_static_block_size"]=nativeStaticBlockSize;
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
             var operations=new List<IGpuTensorOperation>();Save();
@@ -192,7 +202,7 @@ namespace EmbeddingGemma.Validation.Tests
                         {
                             Assert.That(staticProducts.Contains(selected[i]),Is.True);Assert.That(plan.Weights[i],Is.Not.Null);Assert.That(plan.Inputs[i].Length,Is.EqualTo(1));
                             Assert.That(plan.Rows[i]==2520||plan.Rows[i]==reference["profiles"][profile].Value<int>("feature_count"),Is.True);
-                            operations.Add(new GpuBlockedMatmul(plan.Widths[i],plan.Columns[i],plan.Weights[i],384));kind="native_static_block384";
+                            operations.Add(new GpuBlockedMatmul(plan.Widths[i],plan.Columns[i],plan.Weights[i],nativeStaticBlockSize));kind="native_static_block"+nativeStaticBlockSize;
                         }
                         operationRows.Add(new JObject{["output_index"]=selected[i],["kind"]=kind,["rows"]=plan.Rows[i],["width"]=plan.Widths[i],["columns"]=plan.Columns[i]});
                     }

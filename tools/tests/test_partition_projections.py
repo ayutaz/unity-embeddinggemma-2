@@ -90,6 +90,33 @@ def dynamic_model():
     return helper.make_model(graph,opset_imports=[helper.make_opsetid('',24)],ir_version=9)
 
 
+def test_tanh_partition_keeps_fixed_gpu_input_and_reconnects_exactly():
+    source=dynamic_model();source.graph.node[-1].op_type='Tanh';source.graph.node[-1].name='tanh'
+    before=source.SerializeToString()
+    parts,plan=required()(source,node_names=[],expected_weight_sha256=[],tanh_node_names=['tanh'])
+    assert source.SerializeToString()==before and len(parts)==2
+    op=plan['operations'][0];assert op['kind']=='tanh' and op['inputs']==['product'] and op['output']=='out'
+    values={'input':np.arange(12,dtype=np.float32).reshape(2,2,3)/10}
+    for index,part in enumerate(parts):
+        onnx.checker.check_model(part);assert not any(n.name=='tanh' for n in part.graph.node)
+        result=ReferenceEvaluator(part).run(None,{v.name:values[v.name] for v in part.graph.input})
+        aliases=plan['segments'][index]['output_aliases'];values.update(zip([aliases.get(v.name,v.name) for v in part.graph.output],result))
+        if index==0:values[op['output']]=np.tanh(values[op['input']])
+    np.testing.assert_array_equal(values['out'],ReferenceEvaluator(source).run(None,{'input':values['input']})[0])
+
+
+@pytest.mark.parametrize('problem',['missing','duplicate','operator','shape'])
+def test_tanh_partition_refuses_invalid_cut_without_mutation(problem):
+    source=dynamic_model();source.graph.node[-1].op_type='Tanh';source.graph.node[-1].name='tanh';names=['tanh']
+    if problem=='missing':names=['missing']
+    elif problem=='duplicate':names*=2
+    elif problem=='operator':source.graph.node[-1].op_type='Relu'
+    elif problem=='shape':source.graph.value_info[1].type.tensor_type.shape.dim[1].ClearField('dim_value')
+    before=source.SerializeToString()
+    with pytest.raises(ValueError):required()(source,node_names=[],expected_weight_sha256=[],tanh_node_names=names)
+    assert source.SerializeToString()==before
+
+
 def query_scale_model():
     def info(name):return helper.make_tensor_value_info(name,TensorProto.FLOAT,[2,3])
     nodes=[helper.make_node('Mul',['input','scalar'],['scaled'],name='first_scale'),

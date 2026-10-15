@@ -1,0 +1,115 @@
+// Copyright Naoki Shibata and contributors 2010 - 2024.
+// Adapted from SLEEF 5a1d179, src/libm/sleefsimdsp.c xtanhf / expk2f
+// and src/common/df.h, under Boost Software License 1.0.
+// See ../../SLEEF-LICENSE.txt. All arithmetic below is FP32, including float2 residual pairs.
+#pragma kernel NativeTanh
+#pragma use_dxc
+StructuredBuffer<float> Input;
+RWStructuredBuffer<float> Output;
+uint Count,DispatchWidth;
+
+float RoundedReciprocal(float x)
+{
+    precise float q=1.0f/x;
+    precise float residual=mad(-q,x,1.0f);
+    precise float result=mad(residual,q,q);
+    return result;
+}
+float2 Add2Scalar(float2 x,float y)
+{
+    precise float s=x.x+y;
+    precise float v=s-x.x;
+    precise float t=(x.x-(s-v))+(y-v);
+    precise float low=t+x.y;
+    return float2(s,low);
+}
+float2 Add2(float2 x,float2 y)
+{
+    precise float s=x.x+y.x;
+    precise float v=s-x.x;
+    precise float t=(x.x-(s-v))+(y.x-v);
+    precise float low=t+(x.y+y.y);
+    return float2(s,low);
+}
+float2 Add(float2 x,float2 y)
+{
+    precise float s=x.x+y.x;
+    precise float low=(((x.x-s)+y.x)+x.y)+y.y;
+    return float2(s,low);
+}
+float2 AddScalarPair(float x,float2 y)
+{
+    precise float s=x+y.x;
+    precise float low=((x-s)+y.x)+y.y;
+    return float2(s,low);
+}
+float2 MultiplyScalar(float2 x,float y)
+{
+    precise float s=x.x*y;
+    precise float low=mad(x.y,y,mad(x.x,y,-s));
+    return float2(s,low);
+}
+float2 Multiply(float2 x,float2 y)
+{
+    precise float s=x.x*y.x;
+    precise float low=mad(x.x,y.y,mad(x.y,y.x,mad(x.x,y.x,-s)));
+    return float2(s,low);
+}
+float2 Square(float2 x)
+{
+    precise float s=x.x*x.x;
+    precise float twice=x.x+x.x;
+    precise float low=mad(twice,x.y,mad(x.x,x.x,-s));
+    return float2(s,low);
+}
+float2 Reciprocal(float2 d)
+{
+    precise float s=RoundedReciprocal(d.x);
+    precise float low=s*mad(-d.y,s,mad(-d.x,s,1.0f));
+    return float2(s,low);
+}
+float2 Divide(float2 n,float2 d)
+{
+    precise float t=RoundedReciprocal(d.x);
+    precise float s=n.x*t;
+    precise float u=mad(t,n.x,-s);
+    precise float v=mad(-d.y,t,mad(-d.x,t,1.0f));
+    precise float low=mad(s,v,mad(n.y,t,u));
+    return float2(s,low);
+}
+float2 ExponentialPair(float y)
+{
+    precise float scaled=y*1.4426950408889634073599246810018921374f;
+    int q=(int)round(scaled);
+    precise float first=(float)q*-0.693145751953125f;
+    precise float second=(float)q*-1.428606765330187045e-06f;
+    precise float2 s=Add2Scalar(float2(y,0),first);
+    s=Add2Scalar(s,second);
+    precise float u=0.1980960224e-3f;
+    u=mad(u,s.x,0.1394256484e-2f);
+    u=mad(u,s.x,0.8333456703e-2f);
+    u=mad(u,s.x,0.4166637361e-1f);
+    precise float2 t=Add2Scalar(MultiplyScalar(s,u),0.166666659414234244790680580464f);
+    t=Add2Scalar(Multiply(s,t),0.5f);
+    t=Add2(s,Multiply(Square(s),t));
+    t=AddScalarPair(1.0f,t);
+    precise float factor=asfloat((uint)(q+127)<<23);
+    precise float high=t.x*factor;
+    precise float low=t.y*factor;
+    return float2(high,low);
+}
+[numthreads(64,1,1)]
+void NativeTanh(uint3 thread : SV_DispatchThreadID)
+{
+    uint index=thread.x+thread.y*DispatchWidth;
+    if(index>=Count)return;
+    precise float x=Input[index];
+    if(x==0){Output[index]=x;return;}
+    if(isnan(x)){Output[index]=x;return;}
+    if(abs(x)>8.664339742f){Output[index]=asfloat((asuint(x)&0x80000000u)|asuint(1.0f));return;}
+    precise float2 d=ExponentialPair(abs(x));
+    precise float2 e=Reciprocal(d);
+    precise float2 ratio=Divide(Add(d,-e),Add(d,e));
+    precise float value=ratio.x+ratio.y;
+    Output[index]=asfloat((asuint(x)&0x80000000u)|asuint(value));
+}

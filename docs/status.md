@@ -1,8 +1,16 @@
 # 現在の状態と残タスク
 
-更新日: 2026-10-15。最新の全encoder数値gateは `746fbc037a2b32001f482528013781c103d518b7`。135投影＋36 SiLU＋36 Attention行列積の候補は無音415要素不合格。GPUComputeで実行し、計算fallback / flushは0。工程3・4は未完了。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
+更新日: 2026-10-15。最新の全encoder数値gateは `a0ec8844ea07ce20987a3d3fbe758cfa9d2068cc`。135投影＋36 SiLU＋36 Attention行列積＋12 Qスケーリングの候補は無音166要素不合格。GPUComputeで実行し、計算fallback / flushは0。工程3・4は未完了。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
 
 ## 現在の判定
+
+**最新のQスケーリング修正:** 元の`(Q × scalar) × vector`は固定native出力へ全bit一致する一方、`Q × (scalar × vector)`は修正前GPU出力へ全bit一致し、93,060値の差の原因を再現した。元の2回のFP32丸めを保持する`GpuSequentialScale`は2 Red→実GPU2 Green、286,720値を全bit一致。plannerは厳密な2 Mul chain、係数・shape・内部値の専用利用を確認し、8 Red→関連51 Green。元initializer digestを保つ219 operation / 220 segmentを生成した。[固定GPUと接続観測](results/m4-native-query-scale-frozen-and-connected-gpu-20261015.json)。
+
+`b9cf8d6`の観測は使用済みWorker・中間GPU tensorを各段で解放し、小型単入力 / 二入力観測を含む3 pass / fail0 / skip0、68.110秒で完了。通常最終bitを変えず、最初のmatrix_ac / matrix_bdの左右入力と出力の6箇所がすべて元参照へ全bit一致。weighted_valuesの左入力に25,744値、出力に189,856値のbit差が残る（局所許容差超過0）、右入力Vは全bit一致した。
+
+`a0ec884`の元silence全encoderは**166要素不合格・最大許容差比4.229706**。準備12.692秒、実行＋最終診断download2.094秒。固定native入力の標準GPU tanhは31,467値、softmaxは14,877値のbit差（ともに局所許容差超過0）。3つの厳密gateは0 pass / 3 fail / skip0 / exit2。次はこれらの丸めを固定参照で切り分ける。[全体と非線形演算の失敗証拠](results/m4-native-query-scale-whole-and-nonlinearity-failures-20261015.json)。
+
+独立Python全体回帰 [38663414106](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38663414106) / `746fbc0`はterminal success、4 XMLで各866 pass / fail0 / error0 / skip0を確認した。[固定回帰証拠](results/python-full-native-bmm-planner-green-20261015.json)。Qスケーリング追加後の`8975030`を対象とする38664601644は別runで、未確定の間は成功に数えない。以下は以前のcheckpoint。
 
 **最新のGPU行列積接続:** 固定native入力の3種類のAttention行列積はGPU上で全bit一致し、API検証を合わせて5 pass / fail0 / skip0。二入力のGPU pipeline接続は4 pass / fail0 / skip0。[固定入力での成功](results/m4-native-bmm-frozen-gpu-green-20261015.json)。固定shapeを再計算する後続subgraphが切出し済み演算へ戻る問題は、小型再現1 Red→関連43 Greenで修正。形状を参照する元GPU tensorを保持し、元の演算・重みを維持した208 segmentの生成に成功した。
 

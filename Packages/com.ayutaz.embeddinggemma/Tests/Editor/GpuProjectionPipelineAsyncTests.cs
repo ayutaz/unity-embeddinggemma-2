@@ -36,9 +36,9 @@ namespace EmbeddingGemma.Tests
         {
             Assert.That(SystemInfo.supportsGraphicsFence, Is.True, "Actual graphics-fence support required; no skip.");
             var first = new FunctionalGraph(); var x = first.AddInput<float>(new TensorShape(1, 2), "input");
-            var work = nativeGemm ? x * x + Functional.MatMul(x, Functional.Constant(new TensorShape(2, 2), new[] { 1f, 0f, 0f, 1f })) : x * x + x;
+            var work = nativeGemm ? x * x + Functional.MatMul(x, Functional.Constant(new TensorShape(2, 2), new[] { 1f, 2f, 3f, 4f })) : x * x + x;
             var before = Rename(first.Compile(x, work), "input", "work");
-            if (nativeGemm) Assert.That(before.layers.Exists(layer => layer.GetType().Name == "MatMul" || layer.GetType().Name == "MatMul2D"), Is.True, "Exercise a real ML-device GEMM operator cache.");
+            if (nativeGemm) Assert.That(before.layers.Exists(layer => layer.GetType().Name.Contains("MatMul") || layer.GetType().Name.StartsWith("Dense")), Is.True, "Exercise a real ML-device GEMM operator cache.");
             var last = new FunctionalGraph(); var residual = last.AddInput<float>(new TensorShape(1, 2), "input"); var projected = last.AddInput<float>(new TensorShape(1, 2), "projected");
             var after = Rename(last.Compile(projected * projected + residual), "final");
             return new GpuProjectionPipeline(new[] { before, after }, new[] { new[] { "work" } }, new[] { "projected" }, new IGpuTensorOperation[] { operation }, release);
@@ -78,7 +78,7 @@ namespace EmbeddingGemma.Tests
                 if (release) Assert.That(contextField.GetValue(backend), Is.Not.SameAs(before), "Completed compiled-operator caches must be released when opted in.");
                 else Assert.That(contextField.GetValue(backend), Is.SameAs(before));
                 var repeat = Start(pipeline, input); yield return Wait(repeat); using var repeated = repeat.GetAwaiter().GetResult();
-                Assert.That(result.DownloadToArray(), Is.EqualTo(new[] { 33f, 404f })); Assert.That(repeated.DownloadToArray(), Is.EqualTo(new[] { 33f, 404f }));
+                Assert.That(result.DownloadToArray(), Is.EqualTo(new[] { 321f, 680f })); Assert.That(repeated.DownloadToArray(), Is.EqualTo(new[] { 321f, 680f }));
             }
             Assert.That(input.DownloadToArray(), Is.EqualTo(new[] { -3f, 4f }));
         }

@@ -237,12 +237,13 @@ namespace EmbeddingGemma.Validation.Tests
         [UnityTest] public IEnumerator FinalImageApiLandscapeOneAllRolesMustMatchOriginalOnGpu()=>FinalImageApiCase(true,"landscape-1");
         [UnityTest] public IEnumerator FinalImageApiPortraitZeroAllRolesMustMatchOriginalOnGpu()=>FinalImageApiCase(true,"portrait-0");
         [UnityTest] public IEnumerator FinalImageApiPortraitOneAllRolesMustMatchOriginalOnGpu()=>FinalImageApiCase(true,"portrait-1");
-        static IEnumerator FinalImageApiCase(bool allRoles,string caseId="square-1")
+        [UnityTest] public IEnumerator FinalRenderTextureAllRolesAndErrorRecoveryMustMatchOnGpu()=>FinalImageApiCase(true,"square-1",true);
+        static IEnumerator FinalImageApiCase(bool allRoles,string caseId="square-1",bool renderTextureRecovery=false)
         {
             var pending=Run(caseId,inlineAllRms:true,nativeGelu:true,releaseUnusedGpuCache:true,staged:true,
                 releaseGeluCaches:true,editorFramePump:true,nativeOperators:true,nativeStaticBlockSize:192,
                 inlineTailRms:true,softmaxVectorWidth:16,fuseGeluInner:true,sleefGelu:true,nativeRotary:true,
-                nativePooling:true,midpointRms:true,imageAdapter:true,finalImageRole:TextRole.Raw,allFinalImageRoles:allRoles);
+                nativePooling:true,midpointRms:true,imageAdapter:true,finalImageRole:TextRole.Raw,allFinalImageRoles:allRoles,renderTextureRecovery:renderTextureRecovery);
             while(!pending.IsCompleted){UnityEditor.EditorApplication.QueuePlayerLoopUpdate();yield return null;}
             pending.GetAwaiter().GetResult();
         }
@@ -267,7 +268,7 @@ namespace EmbeddingGemma.Validation.Tests
             pending.GetAwaiter().GetResult();
         }
 
-        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false,bool editorFramePump=false,bool nativeOperators=false,int nativeStaticBlockSize=384,bool inlineTailRms=false,int softmaxVectorWidth=8,bool fuseGeluInner=false,bool sleefGelu=false,bool nativeRotary=false,bool firstLayerOnly=false,bool nativePooling=false,bool lastEncoderOnly=false,int encoderPrefixLayers=0,bool isolatedLayer=false,bool midpointRms=false,bool imageAdapter=false,TextRole? finalImageRole=null,bool allFinalImageRoles=false)
+        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false,bool editorFramePump=false,bool nativeOperators=false,int nativeStaticBlockSize=384,bool inlineTailRms=false,int softmaxVectorWidth=8,bool fuseGeluInner=false,bool sleefGelu=false,bool nativeRotary=false,bool firstLayerOnly=false,bool nativePooling=false,bool lastEncoderOnly=false,int encoderPrefixLayers=0,bool isolatedLayer=false,bool midpointRms=false,bool imageAdapter=false,TextRole? finalImageRole=null,bool allFinalImageRoles=false,bool renderTextureRecovery=false)
         {
             Assert.That(encoderPrefixLayers,Is.InRange(0,16));Assert.That(encoderPrefixLayers>0&&(firstLayerOnly||lastEncoderOnly),Is.False);
             var encoderOnly=firstLayerOnly||lastEncoderOnly||encoderPrefixLayers>0;
@@ -294,6 +295,7 @@ namespace EmbeddingGemma.Validation.Tests
             if(midpointRms)label=encoderPrefixLayers>0?"vision-midpoint-rms-qualified-"+(isolatedLayer?"isolated-layer":"prefix")+encoderPrefixLayers+"-gpu-":"vision-original-midpoint-rms-whole-gpu-";
             if(imageAdapter){Assert.That(encoderOnly||planOnly||!staged||!midpointRms,Is.False);label="vision-real-texture-production-adapter-gpu-";}
             if(finalImageRole.HasValue){Assert.That(imageAdapter,Is.True);label="vision-final-image-api-"+(allFinalImageRoles?"allroles":finalImageRole.Value.ToString().ToLowerInvariant())+"-gpu-";}
+            if(renderTextureRecovery){Assert.That(finalImageRole.HasValue&&allFinalImageRoles,Is.True);label="vision-final-rendertexture-recovery-allroles-gpu-";}
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+"-"+caseId+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["scope"]=releaseUnusedGpuCache?"one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate":nativeGelu?"one_original_vision_encoder_gpu_native_gelu_all_layer_rms_and_patch384_candidate":inlineAllRms?"one_original_vision_encoder_gpu_all_sixteen_layer_rms_and_native_patch384_candidate":"one_original_vision_encoder_gpu_native_patch384_candidate",["runtime_source"]=source,
@@ -524,7 +526,7 @@ namespace EmbeddingGemma.Validation.Tests
                     Assert.That(CoefficientsHash(original),Is.EqualTo(originalCoefficients));report["original_coefficient_bytes_preserved"]=true;
                     report["original_coefficients_sha256"]=originalCoefficients;report["phase"]="audit_complete";report["success"]=true;return;
                 }
-                using var textureInput=imageAdapter?new QualifiedTextureInput(root,row.Value<string>("image"),audit,!finalImageRole.HasValue):null;
+                using var textureInput=imageAdapter?new QualifiedTextureInput(root,row.Value<string>("image"),audit,!finalImageRole.HasValue,renderTextureRecovery):null;
                 using var adapter=imageAdapter?new PartitionedImageFeatureEncoder(parts,inputs,outputs,operations.ToArray(),
                     finalImageRole.HasValue?new ImageEncoderProfile(profile=="landscape"?1008:profile=="portrait"?576:768,profile=="landscape"?576:profile=="portrait"?1008:768):new ImageEncoderProfile(textureInput.Processed.ResizedWidth,textureInput.Processed.ResizedHeight)):null;
                 using var standalonePipeline=imageAdapter?null:new GpuProjectionPipeline(parts,inputs,outputs,operations.ToArray(),releaseUnusedGpuCache);
@@ -541,7 +543,7 @@ namespace EmbeddingGemma.Validation.Tests
                 if(finalImageRole.HasValue)
                 {
                     await QualifiedRealImageApiCase.Run(adapter,textureInput.Preprocessor,textureInput.Texture,caseId,
-                        allFinalImageRoles?new[]{TextRole.Query,TextRole.Document,TextRole.Raw}:new[]{finalImageRole.Value},report,output,Save);
+                        allFinalImageRoles?new[]{TextRole.Query,TextRole.Document,TextRole.Raw}:new[]{finalImageRole.Value},report,output,Save,renderTextureRecovery);
                     Assert.That(CoefficientsHash(original),Is.EqualTo(originalCoefficients));report["original_coefficient_bytes_preserved"]=true;
                     report["original_coefficients_sha256"]=originalCoefficients;report["phase"]="completed";report["success"]=true;Save();return;
                 }
@@ -638,23 +640,29 @@ namespace EmbeddingGemma.Validation.Tests
         sealed class QualifiedTextureInput : IDisposable
         {
             Texture2D texture;
+            RenderTexture render;
             ImagePreprocessor preprocessor;
-            public Texture Texture=>texture;
+            public Texture Texture=>render!=null?(Texture)render:texture;
             public IImagePreprocessor Preprocessor=>preprocessor;
             public ImagePreprocessingResult Processed {get;private set;}
-            public QualifiedTextureInput(string root,string image,JObject audit,bool prepare=true)
+            public QualifiedTextureInput(string root,string image,JObject audit,bool prepare=true,bool renderInput=false)
             {
                 try
                 {
                     var path=Path.Combine(root,image);using(var stream=File.OpenRead(path))Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(audit["files"][image].Value<string>("sha256")));
                     texture=new Texture2D(2,2,TextureFormat.RGBA32,false,true);
                     Assert.That(ImageConversion.LoadImage(texture,File.ReadAllBytes(path),true),Is.True);Assert.That(texture.isReadable,Is.False);
+                    if(renderInput)
+                    {
+                        render=new RenderTexture(texture.width,texture.height,0,RenderTextureFormat.ARGB32,RenderTextureReadWrite.Linear);
+                        Assert.That(render.Create(),Is.True);Graphics.Blit(texture,render);
+                    }
                     preprocessor=new ImagePreprocessor(BackendType.GPUCompute);
-                    if(prepare){Processed=preprocessor.Process(texture);Assert.That(Processed.Pixels.backendType,Is.EqualTo(BackendType.GPUCompute));}
+                    if(prepare){Processed=preprocessor.Process(Texture);Assert.That(Processed.Pixels.backendType,Is.EqualTo(BackendType.GPUCompute));}
                 }
                 catch{Dispose();throw;}
             }
-            public void Dispose(){Processed?.Dispose();Processed=null;preprocessor?.Dispose();preprocessor=null;if(texture!=null)UnityEngine.Object.DestroyImmediate(texture);texture=null;}
+            public void Dispose(){Processed?.Dispose();Processed=null;preprocessor?.Dispose();preprocessor=null;if(render!=null){render.Release();UnityEngine.Object.DestroyImmediate(render);}render=null;if(texture!=null)UnityEngine.Object.DestroyImmediate(texture);texture=null;}
         }
         static JObject AuditPlan(Model[] models,string[][] operationInputs,string[] operationOutputs)
         {

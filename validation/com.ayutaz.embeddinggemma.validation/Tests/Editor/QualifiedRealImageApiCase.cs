@@ -37,7 +37,7 @@ namespace EmbeddingGemma.Validation.Tests
             }
         }
         public static async Task Run(PartitionedImageFeatureEncoder encoder,IImagePreprocessor preprocessing,Texture texture,
-            string caseId,TextRole[] roles,JObject report,string reportPath,Action save)
+            string caseId,TextRole[] roles,JObject report,string reportPath,Action save,bool validateInputRecovery=false)
         {
             var featureCount=encoder.Profile.FeatureCount;Assert.That(featureCount==252||featureCount==256,Is.True);
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/image-role-reference-real/image-role-reference"));
@@ -62,6 +62,32 @@ namespace EmbeddingGemma.Validation.Tests
             Assert.That(cpu.Intersect(data),Is.Empty,"No backbone computation or nonempty feature input may fall back to CPU.");Assert.That(flush,Is.Empty);
             var pre=new ObservedPreprocessor(preprocessing);var enc=new ObservedEncoder(encoder);
             using var api=new ImageEmbedder(pre,enc,backbone,builder);var results=new JArray();report["final_api_cases"]=results;
+            report["input_texture_kind"]=texture is RenderTexture?"RenderTexture":"Texture2D";
+            if(validateInputRecovery)
+            {
+                var failures=new JArray();report["real_input_recovery_checks"]=failures;report["phase"]="reject_real_invalid_inputs";save();
+                async Task Reject(Func<Task<float[]>> operation,Type expected,string name)
+                {
+                    Exception actual=null;try{await operation();}catch(Exception error){actual=error;}
+                    Assert.That(actual,Is.Not.Null,name);Assert.That(expected.IsInstanceOfType(actual),Is.True,name+": "+actual);
+                    failures.Add(new JObject{["name"]=name,["exception"]=actual.GetType().FullName,["success"]=true});save();
+                }
+                await Reject(()=>api.EmbedAsync(null),typeof(ArgumentNullException),"null_texture");
+                await Reject(()=>api.EmbedAsync(texture,(TextRole)99),typeof(ArgumentOutOfRangeException),"invalid_role");
+                await Reject(()=>api.EmbedAsync(texture,TextRole.Document,"<image>"),typeof(ArgumentException),"marker_in_title");
+                var destroyed=new Texture2D(2,2);UnityEngine.Object.DestroyImmediate(destroyed);
+                await Reject(()=>api.EmbedAsync(destroyed),typeof(ArgumentException),"destroyed_texture");
+                Assert.That(pre.Calls,Is.Zero);Assert.That(enc.Calls,Is.Zero);
+                var unsupported=new Texture2D(16,16,TextureFormat.RGBAFloat,false,true);
+                try{await Reject(()=>api.EmbedAsync(unsupported),typeof(ArgumentException),"unsupported_float_storage");}
+                finally{UnityEngine.Object.DestroyImmediate(unsupported);}
+                var wrongGeometry=new Texture2D(160,96,TextureFormat.RGBA32,false,true);wrongGeometry.Apply(false,true);
+                try{await Reject(()=>api.EmbedAsync(wrongGeometry),typeof(ArgumentException),"different_fixed_profile");}
+                finally{UnityEngine.Object.DestroyImmediate(wrongGeometry);}
+                Assert.That(pre.Calls,Is.EqualTo(2));Assert.That(enc.Calls,Is.EqualTo(1));
+                Assert.Throws<ObjectDisposedException>(()=>{var ignored=pre.Last.Pixels;});
+                pre.Calls=0;enc.Calls=0;report["real_invalid_input_owned_tensors_disposed"]=true;save();
+            }
             foreach(var role in roles)
             {
                 var name=role.ToString().ToLowerInvariant();var referencePath=Path.Combine(root,name,"image-embedding-reference.json");

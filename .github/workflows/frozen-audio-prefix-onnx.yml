@@ -35,6 +35,11 @@ on:
         description: Run only the audited frozen real MatMul fixture; downloads no encoder model
         type: boolean
         default: false
+      matrix_runner:
+        description: Host for the small matrix-only diagnostic; does not change encoder jobs
+        type: choice
+        default: ubuntu-latest
+        options: [ubuntu-latest, windows-latest]
       chained_probe:
         description: Full12layers in connected3layer partitions; actual ONNX carry, no frozen resets
         type: boolean
@@ -236,11 +241,12 @@ jobs:
 
   matrix_probe:
     if: github.event_name == 'workflow_dispatch' && inputs.matrix_probe == true
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.matrix_runner || 'ubuntu-latest' }}
     timeout-minutes: 10
     defaults:
       run:
         working-directory: tools
+        shell: bash
     env:
       OMP_NUM_THREADS: '2'
       MKL_NUM_THREADS: '2'
@@ -268,7 +274,11 @@ jobs:
       - name: Record actual CPU host
         run: |
           mkdir -p ../artifacts/frozen-matmul-probe
-          lscpu --json > ../artifacts/frozen-matmul-probe/cpu-host.json
+          if [ "$RUNNER_OS" = Windows ]; then
+            pwsh -NoProfile -Command 'Get-CimInstance Win32_Processor | Select-Object Name,Manufacturer,NumberOfCores,NumberOfLogicalProcessors | ConvertTo-Json' > ../artifacts/frozen-matmul-probe/cpu-host.json
+          else
+            lscpu --json > ../artifacts/frozen-matmul-probe/cpu-host.json
+          fi
       - name: Validate explicit FP32 FMA lowering against qualified real primitive capture
         run: >-
           uv run --locked python -m embeddinggemma_tools.frozen_matmul_probe
@@ -282,7 +292,7 @@ jobs:
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
-          name: frozen-matmul-probe-${{ github.sha }}
+          name: frozen-matmul-probe-${{ github.sha }}${{ runner.os != 'Linux' && format('-{0}', runner.os) || '' }}
           path: |
             artifacts/frozen-matmul-probe/
             artifacts/frozen-matmul-input/range-receipt.json

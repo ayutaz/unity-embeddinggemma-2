@@ -13,7 +13,7 @@
 | 実PCMから最終768次元、全6信号・全role | 18条件合格、最小cosine 0.9999997097692651 | [音声API](results/m4-real-pcm-all-roles-staged-gpu-20261016.json) |
 | 音声例外後再利用・借用stage・中間Tensor解放 | 実GPU encoder後のbackbone例外から復帰、API破棄後も借用stage再利用 | [音声所有権](results/m4-real-pcm-all-roles-staged-gpu-20261016.json) |
 | テキスト回帰・API / 境界 / 非同期契約 | FP32・Float16、6文書・4queryの全順位 / score合格、関連189 pass / skip0 | [最新テキスト回帰](results/m4-staged-original-encoder-and-final-text-gpu-regression-20261016.json) |
-| 必須repository checks | **未達**。最新bf3b6cfのCIはPython4環境・package・workflow lint成功、音声ONNX比較とRequired CI失敗 | [CI 38816675509](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38816675509) |
+| 必須repository checks | **未達**。最新f0593c7のCIはPython3環境・package・workflow lint成功、Linux/Python3.13のTanh2件・音声ONNX比較・Required CI失敗 | [CI 38818901317](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38818901317) |
 
 追加確認: source `b378070`の[CI 38774804527](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38774804527)では、Windows / Linux × Python3.13 / 3.14の全4環境で各1,111 pass・fail0・skip0、package / workflow lintも合格しました。実モデルの音声ONNX比較は失敗しており、Required CIの完了条件は満たしていません。4環境のJUnit XMLを取得・監査済みです。
 
@@ -33,7 +33,7 @@ GPU結果はWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER /
 
 ## 残る音声ONNX問題
 
-必須CIの残件は、実音声encoderのONNX出力とPython native出力の数値差です。source `bf3b6cf`の[最新確定CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38816675509)では、Windows / Linux × Python3.13 /3.14、package、workflow lintは成功しましたが、音声ONNXとRequired CIは失敗しました。既定export、元参照、重み、許容差と製品Runtimeは変更していません。
+必須CIの残件は、実音声encoderのONNX出力とPython native出力の数値差です。source `f0593c7`の[最新確定CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38818901317)は、Python3環境・package・workflow lintが成功し、Linux /Python3.13のTanh2件と音声ONNX・Required CIが失敗しました。既定export、元参照、重み、許容差と製品Runtimeは変更していません。
 
 [後半3層の独立した185演算比較](results/m4-isolated-audio-primitives-all185-within-tolerance-20261016.json)は、各ONNX演算へ同じnative入力を渡すと全件が元許容差内でした。比較値は後続へ注入せず、元のnative区間出力は元最終参照と全bit一致しています。最大の単体差は`mm_109`の許容差比0.67で、接続したONNX区間の失敗と合わせると、小さな丸め差の蓄積が疑われます。これは単独の原因演算の確定や全encoder合格ではありません。
 
@@ -73,9 +73,15 @@ GPU結果はWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER /
 
 [元入力から全先頭区間・全6ケース](results/m4-original-entire-stem-all-six-1720320-actual-onnx-bit-exact-20261016.json)もsource bf3b6cfのActionsで実行し、全1,720,320値が元stage00参照とbit一致しました。各captureのSHAと元参照に対するmetricsを独立再計算しています。これは5 full /1 paddedケースの先頭区間合格で、全12層を含むencoder合格ではありません。native raw wholeの環境差も別に保持します。
 
-[元特徴量から先頭区間→全12層の実ONNX接続](results/m4-original-raw-input-connected-chain-tdd-20261016.json)を明示的なraw_inputモードとしてTDDで準備しました。途中stage正解ファイルはdownload /loadせず、前の実ONNX出力をそのまま次へ渡します。誤った先頭出力が最後まで伝わって失敗すること、未実行 /先頭まで実行 /全区間完了を区別することを小さいモデルで確認しました。関連101 pass /skip0に加え、2Conv先頭候補とTanh body候補を実ONNXでつないだ追加1件も合格、workflow lint合格。実モデルのraw全接続はまだ未実行です。
+[元特徴量から先頭区間→全12層の実ONNX接続](results/m4-original-raw-input-connected-chain-tdd-20261016.json)を明示的なraw_inputモードとしてTDDで準備しました。途中stage正解ファイルはdownload /loadせず、前の実ONNX出力をそのまま次へ渡します。誤った先頭出力が最後まで伝わって失敗すること、未実行 /先頭まで実行 /全区間完了を区別することを小さいモデルで確認しました。関連101 pass /skip0に加え、2Conv先頭候補とTanh body候補を実ONNXでつないだ追加1件も合格、workflow lint合格。実モデルの[raw全6ケース試行](results/m4-original-raw-all-six-attempt-four-pass-sine-two-fail-padded-timeout-20261016.json)は終了し、4件合格・sine2要素不合格・padded_noise最終未取得でした。候補は不採用です。
 
 先行する全silence候補は475要素、RMS追加候補は583要素超過で不採用です。RMS /SiLUの後半候補も[同一ホスト比較](results/m4-fixed-tail-joint-and-same-host-baseline-failed-20261016.json)で不合格でした。同じONNX /入力 /期待値でもAMDとIntelでは結果が変わり、Intelではnative自体の元参照との差も残っています。CPU環境差、変換差、失敗・未実行を分けて保持します。過去のsource付きreceiptは`docs/results/`に残し、部分診断やActions収集の完了をGPU /全encoder合格へ読み替えません。
+
+最新CI bf3b6cfの[失敗時official silence出力](results/m4-fresh-ci-official-vs-original-silence-drift-20261016.json)も取得し、元固定参照から145要素超過することを確認しました。標準ONNX対そのfresh officialは443要素超過です。元固定参照への候補一致だけでfresh nativeのCI合格へ置き換えず、両方の比較を維持します。小さな元行列だけの[Windows host選択](results/m4-small-native-matrix-windows-host-selection-tdd-20261016.json)をTDDで準備し、Intel/MKL経路の仮説を確認できるようにしました。2 red→関連15 pass /skip0、workflow lint合格。新しい実host結果はまだありません。既定referenceやencoder jobのCPU設定は変更していません。
+
+[独立したraw数値監査](results/m4-independent-raw-chain-numeric-auditor-tdd-20261016.json)を追加し、元JSON /auditの固定SHA、元入力、全区間captureと隣接carry、元最終値・新旧native /candidate metrics・cosineを再計算します。途中値の取り違え、偽の差分0、ケース欠落 /重複 /profile変更 /source混在を拒否し、正直な失敗は失敗として保存します。関連27 pass /skip0。実run38818905732の先行5ケースではsilence /impulse /noise /nyquistの4件が元許容差内、sineは2要素超過で不合格でした。padded_noiseは20分上限でcandidate part3評価中にcancelされ、先頭＋第5層まで3partの実出力 /carry SHAは回収・照合できましたが、最終値がないため未達です。[sineの元先頭区間](results/m4-original-raw-sine-cut-localization-20261016.json)はbit一致、第2 /5 /8層cutは許容差内で小さいbit差が増え、最終で超過します。この候補の採用は行いません。
+
+[Linux /Python3.13のTanh2件の失敗](results/m4-linux-python313-tanh-native-context-failure-20261016.json)は同hostのnative出力へのbit比較で、元qualified55,296値の参照差とは区別します。期待値・テスト・許容差は変更していません。[CPU数値環境の保存](results/m4-audio-cpu-context-recording-tdd-20261016.json)をTDDで追加し、今後の成功・失敗時に重みload前のCPU /Torch /許可した数値設定だけを残します。2 red＋stale context1 red→関連24 pass、最終context3 pass。既定のnative /ONNX計算や参照生成は維持します。
 
 ## 後続工程
 

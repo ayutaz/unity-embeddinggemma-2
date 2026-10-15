@@ -50,6 +50,26 @@ def test_capture_reports_failed_original_golden_without_replacing_it(tmp_path):
     assert torch.equal(golden, original)
 
 
+def test_capture_row_prefix_limits_only_saved_observation_and_keeps_full_final_bits(tmp_path):
+    values=torch.arange(6,dtype=torch.float32).reshape(3,2)
+    module=torch.export.export(TwoStages(),(values,)).module()
+    report=capture(module,(values,),('add',),tmp_path,module(values),row_prefixes={'add':1})
+    row,=report['nodes']
+    assert row['source_shape']==[3,2] and row['shape']==[1,2] and row['prefix_rows']==1
+    assert row['bytes']==8
+    assert np.array_equal(np.fromfile(tmp_path/row['file'],'<f4'),[1.,2.])
+    assert report['observed_final_matches_normal_bits'] is True
+    assert report['original_golden_metrics']['mismatched_elements']==0
+
+
+@pytest.mark.parametrize('prefixes',[{'missing':1},{'add':0},{'add':True},{'add':2}])
+def test_capture_rejects_invalid_row_prefixes_without_writing_files(tmp_path,prefixes):
+    module,values=program()
+    with pytest.raises(ValueError,match='prefix'):
+        capture(module,(values,),('add',),tmp_path,module(values),row_prefixes=prefixes)
+    assert list(tmp_path.iterdir())==[]
+
+
 @pytest.mark.parametrize('names', [('missing',), ('add', 'add'), ('../add',), ()])
 def test_capture_rejects_invalid_names_before_execution(tmp_path, names):
     module, values = program()

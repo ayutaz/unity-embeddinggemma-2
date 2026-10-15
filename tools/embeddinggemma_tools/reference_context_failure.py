@@ -130,6 +130,73 @@ def run_saved_graph_prefix(program, inputs, node_name):
         return result.detach().clone()
 
 
+def extract_saved_graph_interval(program, input_node_name, output_node_name):
+    """Borrow saved coefficients for one exact FX interval with one external input.
+
+    Prunes all work before the boundary and after the requested output. Rejects
+    any dynamic ancestor not covered by the boundary; never edits the source.
+    Extraction itself does not run any model or establish reference acceptance.
+    """
+    if not isinstance(program, torch.fx.GraphModule):
+        raise ValueError('Interval extraction requires a saved FX GraphModule')
+    nodes = {node.name: node for node in program.graph.nodes}
+    if (input_node_name == output_node_name or input_node_name not in nodes or output_node_name not in nodes
+            or nodes[input_node_name].op != 'call_function' or nodes[output_node_name].op != 'call_function'):
+        raise ValueError('Interval boundaries must be distinct existing operation nodes')
+    boundary, target = nodes[input_node_name], nodes[output_node_name]
+    needed = set(); pending = [target]
+    while pending:
+        node = pending.pop()
+        if node in needed:
+            continue
+        needed.add(node)
+        if node is not boundary:
+            pending.extend(node.all_input_nodes)
+    if boundary not in needed or any(node.op == 'placeholder' for node in needed):
+        raise ValueError('Interval boundary does not cover every dynamic input')
+    graph = torch.fx.Graph(); mapping = {boundary: graph.placeholder(input_node_name)}
+    for node in program.graph.nodes:
+        if node in needed and node is not boundary:
+            mapping[node] = graph.node_copy(node, lambda previous: mapping[previous])
+    graph.output(mapping[target])
+    return torch.fx.GraphModule(program, graph)
+
+
+def describe_vision_layer_intermediates(program):
+    """Audit seven saved RMS chains and one tanh GELU without executing a layer."""
+    if not isinstance(program, torch.fx.GraphModule):
+        raise ValueError('Vision layer description requires a saved FX interval')
+    def one(values, label):
+        values = list(values)
+        if len(values) != 1:
+            raise ValueError(f'Vision layer {label} is missing or ambiguous')
+        return values[0]
+    means = [node for node in program.graph.nodes if node.target == torch.ops.aten.mean.dim]
+    if len(means) != 7:
+        raise ValueError('Vision layer must contain exactly seven RMS operations')
+    rows = []
+    for index, mean in enumerate(means):
+        square = mean.args[0]
+        if square.target != torch.ops.aten.pow.Tensor_Scalar or square.args[1] != 2:
+            raise ValueError('Vision RMS requires its original squared input')
+        incoming = square.args[0]
+        statistic = one((n for n in mean.users if n.target == torch.ops.aten.add.Tensor and n.args[1] == 1e-6), 'RMS epsilon')
+        inverse = one((n for n in statistic.users if n.target == torch.ops.aten.pow.Tensor_Scalar and n.args[1] == -.5), 'RMS inverse')
+        normalized = one((n for n in inverse.users if n.target == torch.ops.aten.mul.Tensor and incoming in n.args), 'RMS normalization')
+        scaled = [n for n in normalized.users if n.target == torch.ops.aten.mul.Tensor and any(a.op == 'get_attr' for a in n.all_input_nodes)]
+        if len(scaled) > 1 or bool(scaled) != (index != 3):
+            raise ValueError('Vision RMS scale is missing or ambiguous')
+        output = scaled[0] if scaled else normalized
+        scale = one((n for n in output.all_input_nodes if n.op == 'get_attr'), 'RMS scale attribute') if scaled else None
+        rows.append(dict(index=index,input_node=incoming.name,mean_node=mean.name,statistic_node=statistic.name,
+                         inverse_node=inverse.name,normalized_node=normalized.name,output_node=output.name,
+                         scale_target=scale.target if scale is not None else None))
+    gelu = one((n for n in program.graph.nodes if n.target == torch.ops.aten.gelu.default), 'GELU')
+    if gelu.kwargs.get('approximate', 'none') != 'tanh':
+        raise ValueError('Vision layer requires the original tanh GELU')
+    return dict(rms_operations=rows,gelu=dict(input_node=gelu.args[0].name,output_node=gelu.name))
+
+
 def ordered_vision_softmax16(values):
     """CPU-only diagnostic of the pinned 2520-wide AVX512 lane reduction.
 

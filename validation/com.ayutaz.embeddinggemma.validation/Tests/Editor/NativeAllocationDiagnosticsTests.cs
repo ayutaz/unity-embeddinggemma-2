@@ -53,5 +53,18 @@ namespace EmbeddingGemma.Validation.Tests
         }
         [Test] public void NoInferenceNativeAllocationBaseline()=>Run(false);
         [Test] public void TinyGpuOwnershipWithNativeAllocationTrace()=>Run(true);
+        [Test] public void EditorShutdownCleanupReleasesSharedSentisGpuResources()
+        {
+            Run(true);
+            var reaper=typeof(Worker).Assembly.GetType("Unity.InferenceEngine.ComputeTensorDataReaper");
+            var dummy=reaper.GetField("m_DummyDestination",BindingFlags.Static|BindingFlags.NonPublic);
+            var commands=reaper.GetField("m_AsyncCallbackCommandBuffer",BindingFlags.Static|BindingFlags.NonPublic);
+            var allocated=(ComputeBuffer)dummy.GetValue(null);Assert.That(allocated,Is.Not.Null);Assert.That(allocated.IsValid(),Is.True);
+            var cleanup=AppDomain.CurrentDomain.GetAssemblies().Select(assembly=>assembly.GetType("EmbeddingGemma.Editor.SentisEditorGpuCleanup")).FirstOrDefault(value=>value!=null);
+            Assert.That(cleanup,Is.Not.Null,"EditMode must register the pinned shared Sentis GPU resource cleanup on Editor exit/reload.");
+            var method=cleanup.GetMethod("CleanupForEditorShutdown",BindingFlags.Static|BindingFlags.NonPublic);Assert.That(method,Is.Not.Null);
+            method.Invoke(null,null);method.Invoke(null,null);
+            Assert.That(dummy.GetValue(null),Is.Null);Assert.That(commands.GetValue(null),Is.Null);Assert.That(allocated.IsValid(),Is.False);
+        }
     }
 }

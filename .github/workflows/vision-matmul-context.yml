@@ -2,6 +2,7 @@ name: Original vision static matmul context
 
 on:
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read

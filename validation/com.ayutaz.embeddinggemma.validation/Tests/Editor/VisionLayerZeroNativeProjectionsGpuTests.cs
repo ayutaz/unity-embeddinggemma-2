@@ -37,6 +37,10 @@ namespace EmbeddingGemma.Validation.Tests
         public void ReleasedUnusedCachesPreserveNativeGeluLayerBitsOnGpu()
             => Run(10);
 
+        [Test]
+        public void QualifiedSoftmaxAndNativeGeluInlineRmsMatchOriginalLayerZeroOnGpu()
+            => Run(11);
+
         static void Run(int normCount)
         {
             var qualifiedFirstRms=normCount>0;
@@ -44,10 +48,10 @@ namespace EmbeddingGemma.Validation.Tests
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-diagnostics"));
             var modelPath=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-layer0-original-patch-gpu-e39bdf1b5d0faf2ea424023d83076315736c6fde-captures/layer0.sentis"));
-            var label=normCount==10?"vision-layer0-cache-release-gelu-rms-gpu-":normCount==9?"vision-layer0-native-gelu-inline-rms-gpu-":normCount==8?"vision-layer0-inline-rms-native-projections-gpu-":normCount==7?"vision-layer0-seven-rms-native-projections-gpu-":qualifiedFirstRms?"vision-layer0-first-rms-native-projections-gpu-":"vision-layer0-native-projections-gpu-";
+            var label=normCount==11?"vision-layer0-native-softmax-gelu-rms-gpu-":normCount==10?"vision-layer0-cache-release-gelu-rms-gpu-":normCount==9?"vision-layer0-native-gelu-inline-rms-gpu-":normCount==8?"vision-layer0-inline-rms-native-projections-gpu-":normCount==7?"vision-layer0-seven-rms-native-projections-gpu-":qualifiedFirstRms?"vision-layer0-first-rms-native-projections-gpu-":"vision-layer0-native-projections-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+".json"));
             Assert.That(File.Exists(output),Is.False);
-            var report=new JObject{["success"]=false,["scope"]=normCount==10?"original_vision_layer0_cache_release_native_gelu_inline_rms_candidate":normCount==9?"original_vision_layer0_native_gelu_inline_rms_and_seven_native_gpu_projections_candidate":normCount==8?"original_vision_layer0_inline_rms_and_seven_native_gpu_projections_candidate":normCount==7?"original_vision_layer0_seven_rms_and_seven_native_gpu_projections_candidate":qualifiedFirstRms?"original_vision_layer0_first_rms_and_seven_native_gpu_projections_candidate":"original_vision_layer0_seven_native_gpu_projections_candidate",["runtime_source"]=source,
+            var report=new JObject{["success"]=false,["scope"]=normCount==11?"original_vision_layer0_native_softmax_gelu_inline_rms_and_seven_native_gpu_projections_candidate":normCount==10?"original_vision_layer0_cache_release_native_gelu_inline_rms_candidate":normCount==9?"original_vision_layer0_native_gelu_inline_rms_and_seven_native_gpu_projections_candidate":normCount==8?"original_vision_layer0_inline_rms_and_seven_native_gpu_projections_candidate":normCount==7?"original_vision_layer0_seven_rms_and_seven_native_gpu_projections_candidate":qualifiedFirstRms?"original_vision_layer0_first_rms_and_seven_native_gpu_projections_candidate":"original_vision_layer0_seven_native_gpu_projections_candidate",["runtime_source"]=source,
                 ["full_encoder_validated"]=false,["end_to_end_validated"]=false,["phase"]="audit"};
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
@@ -63,7 +67,7 @@ namespace EmbeddingGemma.Validation.Tests
                 var selected=model.layers.Where(layer=>layer.GetType().Name=="MatMul"&&!constants.ContainsKey(layer.inputs[0])
                     &&constants.TryGetValue(layer.inputs[1],out var w)&&w.shape.rank==2).Select(layer=>layer.outputs[0]).ToArray();
                 Assert.That(selected.Length,Is.EqualTo(7));
-                var original=model;var sourceHash=SerializedHash(original);Model rmsTemplate=null;int[] normOutputs=null;Constant[] normScales=null;
+                var original=model;var sourceHash=SerializedHash(original);Model rmsTemplate=null;int[] normOutputs=null;Constant[] normScales=null;var softmaxOutput=-1;
                 if(normCount>=8)
                 {
                     var method=typeof(QualifiedVisionRmsOperation).GetMethod("InlineLayerRms");Assert.That(method,Is.Not.Null,"Inline RMS graph grafting is missing.");
@@ -83,6 +87,19 @@ namespace EmbeddingGemma.Validation.Tests
                         var marked=SavedProjectionPartition.MarkGelu(model);model=marked.model;Assert.That(marked.outputs.Length,Is.EqualTo(1));
                         var wanted=new HashSet<int>(selected.Concat(marked.outputs));selected=model.layers.Where(layer=>wanted.Contains(layer.outputs[0])).Select(layer=>layer.outputs[0]).ToArray();
                         report["gelu_count"]=1;
+                    }
+                    if(normCount==11)
+                    {
+                        var softmax=model.layers.Single(layer=>layer.GetType().Name=="Softmax");
+                        Assert.That(softmax.inputs.Length,Is.EqualTo(1));Assert.That(softmax.outputs.Length,Is.EqualTo(1));
+                        Assert.That((int)softmax.GetType().GetField("axis").GetValue(softmax),Is.EqualTo(-1));
+                        var identity=typeof(Worker).Assembly.GetTypes().Single(type=>type.Name=="Identity"&&typeof(Layer).IsAssignableFrom(type));
+                        var marker=(Layer)Activator.CreateInstance(identity);marker.inputs=(int[])softmax.inputs.Clone();marker.outputs=(int[])softmax.outputs.Clone();
+                        softmaxOutput=marker.outputs[0];
+                        model=new Model{ProducerName=model.ProducerName+"/qualified-softmax-marker",inputs=new List<Model.Input>(model.inputs),outputs=new List<Model.Output>(model.outputs),
+                            constants=new List<Constant>(model.constants),layers=model.layers.Select(layer=>ReferenceEquals(layer,softmax)?marker:layer).ToList()};
+                        var wanted=new HashSet<int>(selected){softmaxOutput};selected=model.layers.Where(layer=>wanted.Contains(layer.outputs[0])).Select(layer=>layer.outputs[0]).ToArray();
+                        Assert.That(selected.Length,Is.EqualTo(9));report["softmax_count"]=1;
                     }
                 }
                 if(normCount==1)
@@ -136,6 +153,11 @@ namespace EmbeddingGemma.Validation.Tests
                 {
                     if(plan.Weights[i]==null)
                     {
+                        if(selected[i]==softmaxOutput)
+                        {
+                            Assert.That(plan.Widths[i],Is.EqualTo(2520));Assert.That(plan.Rows[i],Is.EqualTo(30240));
+                            operations.Add(new GpuSoftmax());rows.Add(new JObject{["kind"]="native_softmax",["rows"]=plan.Rows[i],["width"]=plan.Widths[i]});continue;
+                        }
                         if(normCount>=9)
                         {
                             Assert.That(plan.Widths[i],Is.EqualTo(3072));Assert.That(plan.Rows[i],Is.EqualTo(2520));
@@ -175,8 +197,8 @@ namespace EmbeddingGemma.Validation.Tests
                     var bytes=new byte[plan.Weights[i].Length*4];Buffer.BlockCopy(plan.Weights[i],0,bytes,0,bytes.Length);
                     using var stream=new MemoryStream(bytes);rows.Add(new JObject{["width"]=plan.Widths[i],["columns"]=plan.Columns[i],["rows"]=plan.Rows[i],["block"]=384,["weight_sha256"]=PlayerFileHash.Compute(stream,out _)});
                 }
-                using var pipeline=new GpuProjectionPipeline(plan.Models,plan.Inputs,plan.Outputs,operations.ToArray(),normCount==10);
-                report["release_unused_gpu_cache"]=normCount==10;
+                using var pipeline=new GpuProjectionPipeline(plan.Models,plan.Inputs,plan.Outputs,operations.ToArray(),normCount>=10);
+                report["release_unused_gpu_cache"]=normCount>=10;
                 report["prepare_ms"]=timer.Elapsed.TotalMilliseconds;report["segment_count"]=plan.Models.Length;report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
                 var inputPath=Path.Combine(root,"native-stage-0.bin");var expectedPath=Path.Combine(root,"native-stage-3.bin");
                 foreach(var file in new[]{inputPath,expectedPath})Check(file,reference["files"][Path.GetFileName(file)].Value<string>("sha256"));

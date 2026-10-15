@@ -83,6 +83,25 @@ namespace EmbeddingGemma.Validation.Tests
             using var reused=kernel.Execute(input);Assert.That(reused.backendType,Is.EqualTo(BackendType.GPUCompute));
         }
 
+        [Test]
+        public void BinaryBoundaryObservationPreservesNormalBitsAndBorrowedGpuResources()
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
+            var method=typeof(PartitionedAudioGpuReferenceTests).GetMethod("ObserveOperationBoundaries",BindingFlags.Static|BindingFlags.NonPublic);
+            Assert.That(method,Is.Not.Null,"Binary boundary observation is missing.");
+            var a=new FunctionalGraph();var x=a.AddInput<float>(new TensorShape(2,3),"input");
+            var prefix=a.Compile(x,Functional.Transpose(x,0,1));
+            var named=prefix.outputs[0];named.name="left";prefix.outputs[0]=named;
+            named=prefix.outputs[1];named.name="right";prefix.outputs[1]=named;
+            var b=new FunctionalGraph();var product=b.AddInput<float>(new TensorShape(2,2),"product");var tail=b.Compile(product);
+            named=tail.outputs[0];named.name="final";tail.outputs[0]=named;
+            using var kernel=new GpuBatchedMatmul();using var input=new Tensor<float>(new TensorShape(2,3),new[]{1f,2f,3f,4f,5f,6f});ComputeTensorData.Pin(input);
+            var snapshots=(Dictionary<string,float[]>)method.Invoke(null,new object[]{new[]{prefix,tail},new[]{new[]{"left","right"}},new[]{"product"},new IGpuTensorOperation[]{kernel},input,new HashSet<string>{"right","product"}});
+            Assert.That(snapshots["product"],Is.EqualTo(new[]{14f,32f,32f,77f}));
+            Assert.That(snapshots["__final"],Is.EqualTo(snapshots["product"]));
+            Assert.That(input.DownloadToArray(),Is.EqualTo(new[]{1f,2f,3f,4f,5f,6f}));
+        }
+
         [TestCase("silence")]
         [TestCase("impulse")]
         [TestCase("sine")]

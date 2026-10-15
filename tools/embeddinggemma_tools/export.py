@@ -578,8 +578,18 @@ def fp32_refined_rstd(values, *, maximum_statistic=1e6):
     residual = fp32_fma(-root, root, values)
     rounded_root = root + (residual * 0.5) / root
     inverse = 1.0 / rounded_root
-    reciprocal_residual = fp32_fma(-rounded_root, inverse, torch.ones_like(values))
-    refined = fp32_fma(inverse, reciprocal_residual, inverse)
+    return _fp32_correct_reciprocal(rounded_root, inverse)
+
+
+def _fp32_correct_reciprocal(rounded_root, inverse):
+    """Select the closest reciprocal around a bounded normal FP32 GPU seed.
+
+    A Newton step can round to a midpoint and leave a faithful seed one ULP
+    away, so comparing only seed and refined values is insufficient. Examine
+    both adjacent representable values using a relative step strictly above
+    half an ULP, including powers of two. No integer bitcast or FP64 is exported.
+    """
+    ones = torch.ones_like(rounded_root)
 
     def error_pair(quotient):
         # The product is near one. TwoProd followed by a compensated
@@ -587,16 +597,23 @@ def fp32_refined_rstd(values, *, maximum_statistic=1e6):
         # rounds away at hard reciprocal midpoints. All operations stay FP32.
         product = rounded_root * quotient
         product_low = fp32_fma(rounded_root, quotient, -product)
-        difference = torch.ones_like(values) - product
+        difference = ones - product
         high = difference - product_low
         low = (difference - high) - product_low
         return high.abs(), torch.where(high < 0, -low, low)
 
-    original_high, original_low = error_pair(inverse)
-    refined_high, refined_low = error_pair(refined)
-    original_closer = ((original_high < refined_high)
-                       | ((original_high == refined_high) & (original_low < refined_low)))
-    return torch.where(original_closer, inverse, refined)
+    # The next FP32 number above 2**-24 makes the increment strictly greater
+    # than half an ULP at an exact binade boundary; away from it, still <1 ULP.
+    step = inverse * (2.0**-24 + 2.0**-47)
+    best = inverse
+    best_high, best_low = error_pair(best)
+    for candidate in (inverse + step, inverse - step):
+        high, low = error_pair(candidate)
+        closer = (high < best_high) | ((high == best_high) & (low < best_low))
+        best = torch.where(closer, candidate, best)
+        best_high = torch.where(closer, high, best_high)
+        best_low = torch.where(closer, low, best_low)
+    return best
 
 
 def fp32_cascade_mean64(values):

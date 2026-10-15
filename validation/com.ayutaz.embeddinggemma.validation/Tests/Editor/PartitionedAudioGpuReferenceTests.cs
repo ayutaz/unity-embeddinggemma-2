@@ -674,14 +674,14 @@ namespace EmbeddingGemma.Validation.Tests
         static void ObserveLayerOneManifest(Model[] models,string[][] inputs,string[] outputs,IGpuTensorOperation[] kernels,Tensor<float> input,float[] baseline,string output,JObject report,Action save)
         {
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
-            var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state"));var manifestFile=Path.Combine(root,"layer1-native-boundary-manifest-20261015.json");
-            Check(manifestFile,"f29ce5a0e489e05f74f53d005b225a12295cb7d2f097a72311f0461e92834396");var manifest=JObject.Parse(File.ReadAllText(manifestFile));
+            var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state"));var manifestFile=Path.Combine(root,"layer1-native-attention-boundary-manifest-20261015.json");
+            Check(manifestFile,"c72769f97ab1c82b684aed947579b8c8b83759be377b5037c268477d0e7a28f5");var manifest=JObject.Parse(File.ReadAllText(manifestFile));
             Assert.That(manifest.Value<string>("source_graph_sha256"),Is.EqualTo("c050c2efa87d83aea45587b25f7b8d1d24dc471f33cc732dcf17d89588c70c13"));Assert.That(manifest.Value<int>("layer_index"),Is.EqualTo(1));
             var referenceFile=Path.Combine(root,manifest.Value<string>("reference_file"));Check(referenceFile,"08a1d5d60402d9cda0624c1ab14edc81db42b8e70d3e50f2554f1fdc0d54cafb");
             var reference=JObject.Parse(File.ReadAllText(referenceFile));Assert.That(reference.Value<bool>("success")&&reference.Value<bool>("context_validated")&&reference.Value<bool>("native_final_exact_match"),Is.True);
             Assert.That(reference.Value<int>("layer_index"),Is.EqualTo(1));Assert.That(reference.Value<string>("input_stage"),Is.EqualTo("layer_0"));Assert.That(reference.Value<string>("output_stage"),Is.EqualTo("layer_1"));
             Assert.That(reference.Value<string>("reference_source"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));Assert.That(reference.Value<string>("diagnostic_source"),Is.EqualTo("9d719229e739a788cfc685946033a4414daa0e16"));
-            var bindings=(JArray)manifest["bindings"];Assert.That(bindings.Count,Is.EqualTo(22));var wanted=bindings.Select(b=>b.Value<string>("boundary")).ToHashSet();
+            var bindings=(JArray)manifest["bindings"];Assert.That(bindings.Count,Is.EqualTo(35));var wanted=bindings.Select(b=>b.Value<string>("boundary")).ToHashSet();
             const string entry="/norm_out/Mul_1_output_0";wanted.Add(entry);report["scope"]="one_original_layer1_module_observation_only";report["phase"]="observe_layer1";report["full_encoder_validated"]=false;save();
             var snapshots=CaptureOperationBoundaries(models,inputs,outputs,kernels,input,wanted,baseline);
             var entryFile=Path.GetFullPath(Path.Combine(root,"../k/artifacts/audio-current-stage-context/silence-stage-01-fp32.bin"));Check(entryFile,"3cc353963c7eafd2a209526c5c19daedd66c9c0da7cdf43dc6a4f4ccee158cf2");
@@ -692,18 +692,26 @@ namespace EmbeddingGemma.Validation.Tests
             foreach(var binding in bindings)
             {
                 var label=binding.Value<string>("stage");var boundary=binding.Value<string>("boundary");var expectedFile=Path.Combine(root,binding.Value<string>("expected_file"));Check(expectedFile,binding.Value<string>("expected_sha256"));
-                var actual=snapshots[boundary];var expected=Floats(expectedFile);Assert.That(actual.Length,Is.EqualTo(expected.Length));Assert.That(binding["actual_shape"].ToObject<int[]>(),Is.EqualTo(binding["expected_shape"].ToObject<int[]>()));
+                var actual=snapshots[boundary];var expected=Floats(expectedFile);Assert.That(actual.Length,Is.EqualTo(expected.Length));
+                var actualShape=binding["actual_shape"].ToObject<int[]>();var expectedShape=binding["expected_shape"].ToObject<int[]>();
+                if(binding.Value<bool>("collapsed"))
+                {
+                    Assert.That(actualShape.Skip(actualShape.Length-2),Is.EqualTo(expectedShape.Skip(expectedShape.Length-2)));
+                    Assert.That(actualShape.Take(actualShape.Length-2).Aggregate(1,(a,b)=>a*b),Is.EqualTo(expectedShape.Take(expectedShape.Length-2).Aggregate(1,(a,b)=>a*b)));
+                }
+                else Assert.That(actualShape,Is.EqualTo(expectedShape));
                 var clip=binding["clip"] is JArray limits?limits.ToObject<float[]>():null;bool clipActual=binding.Value<bool>("clip_actual");int bits=0,bad=0;double maxRatio=0;
+                Assert.That(actual.Any(value=>float.IsNaN(value)||float.IsInfinity(value)),Is.False);
                 for(var i=0;i<actual.Length;i++)
                 {
-                    Assert.That(float.IsNaN(actual[i])||float.IsInfinity(actual[i]),Is.False);var target=clip==null?expected[i]:Math.Max(clip[0],Math.Min(clip[1],expected[i]));
+                    var target=clip==null?expected[i]:Math.Max(clip[0],Math.Min(clip[1],expected[i]));
                     var value=clipActual?Math.Max(clip[0],Math.Min(clip[1],actual[i])):actual[i];if(BitConverter.SingleToInt32Bits(value)!=BitConverter.SingleToInt32Bits(target))bits++;
                     var delta=Math.Abs((double)value-target);var allowed=1e-5+1e-4*Math.Abs((double)target);if(delta>allowed)bad++;maxRatio=Math.Max(maxRatio,delta/allowed);
                 }
                 var capture=Path.Combine(captureRoot,label+"-fp32.bin");var bytes=new byte[actual.Length*4];Buffer.BlockCopy(actual,0,bytes,0,bytes.Length);File.WriteAllBytes(capture,bytes);using var stream=File.OpenRead(capture);var hash=PlayerFileHash.Compute(stream,out _);
                 stages.Add(new JObject{["stage"]=label,["part"]=binding["part"].DeepClone(),["boundary"]=boundary,["bit_differences"]=bits,["mismatched_elements"]=bad,["maximum_tolerance_ratio"]=maxRatio,["actual_file"]=capture,["actual_sha256"]=hash,["expected_sha256"]=binding["expected_sha256"].DeepClone(),["expected_transform"]=clip==null?"identity":"original_fp32_clip",["actual_transform"]=clipActual?"original_fp32_output_clip_for_diagnostic_comparison_only":"identity"});save();
             }
-            Assert.That(stages.Count,Is.EqualTo(22));report["observation_completed"]=true;report["success"]=true;report["phase"]="completed_observation";save();
+            Assert.That(stages.Count,Is.EqualTo(35));report["observation_completed"]=true;report["success"]=true;report["phase"]="completed_observation";save();
         }
         static float[] Floats(string path){var bytes=File.ReadAllBytes(path);var values=new float[bytes.Length/4];Buffer.BlockCopy(bytes,0,values,0,bytes.Length);return values;}
     }

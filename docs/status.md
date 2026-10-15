@@ -1,5 +1,32 @@
 # 現在の状態
 
+更新日: 2026-10-15。工程3・4は未完了。**元音声encoderの無音ケースはGPU数値gateに合格したが、他信号は未合格。** `c1f90de187f2b17f30461f61cbaf22d522bacd34`の元silenceは許容差超過0、最大絶対差1.430512e-6・最大許容差比0.037594、NUnit 1 pass / fail0 / skip0。RTX 4070 Ti SUPER / Direct3D12 / GPUCompute、計算・入力CPU fallback / 中間flushは0。元参照・モデル係数・`atol=1e-5` / `rtol=1e-4`は変更していない。Draft PR #81、main未統合。[今回の固定receipt](results/m4-native-table-tanh-and-original-audio-signals-20261015.json)。
+
+通常profile `frames-1119-valid-1119` の実GPU結果（各1ケース／Unity process）は次のとおり。無音の合格を全信号・全profile・最終APIの合格へ流用しない。
+
+| 元信号 | 許容差超過数 | 数値gate |
+| --- | ---: | --- |
+| silence | 0 | pass |
+| impulse | 396 | fail |
+| sine | 423 | fail |
+| nyquist | 783 | fail |
+| noise | 1 | fail |
+
+前3ケースは `c1f90de`、後2ケースは `5d4f5ba`。後者の変更は観測テストだけで、Runtimeは同一。全5件skip0、requested / actual GPUCompute、計算・入力CPU fallback / flush0。`padded_noise`の `frames-1119-valid-839` は対応する分割候補をまだ準備しておらず、この候補では未実行。
+
+**今回の修正:** Intel IGCのMITライセンス付き一般27区間・6次多項式係数をFP32 high / residualへ分け、GPU上のFP32だけで評価する。特定のモデル入力値を置き換える補正ではない。元layer_3のtanh固定テストは4 bit差の1 Redから0 bit差へ修正し、layer_0・1・3の計165,888値が元nativeへ全bit一致。入力借用・Disposeを含む4 GPUテストはpass4 / fail0 / skip0。小表版oracleの不一致も保存し、選んだ係数表のsource SHA・MIT / BSL noticeをpackageに保持する。Windows CPUの小さい同一入力診断も元値へ全bit一致したが、それはGPU合格の代わりには数えない。
+
+`5d4f5ba`の元impulse・12層観測は通常最終bitを変えず1 pass / fail0 / skip0。layer_0から13,864値のbit差があり、最初の局所許容差超過はlayer_8の1要素。`4b2dbb7b2cd652df59e4bb1cc6759cd20d557256`でsubsampleを加えた13境界観測も1 pass / fail0 / skip0、通常最終bit不変。**subsample出力ですでに1,290値のbit差（局所超過0、最大許容差比0.114856）がある。** 次はこの前段の最初の差を切り分ける。観測成功は元impulse全encoderの396要素不合格を取り消さない。
+
+元の信号を明示してnative層参照を生成する機能を追加。producer / CLIの3 Red、workflowの1 Redから関連40 Greenへ進めた。既定のfull scopeは元silenceのsubsample gateを保持し、attention scopeだけで元full-profile信号と層を選択できる。`91284239131a4fdc64a8eaddadd816c5de6f7677`の[impulse layer_0参照38676003460](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38676003460)は、元の入力・最終値を固定してnative finalへ全bit一致。45 partsの生成とreport SHAを確認した。binary partsはローカル未取得で、subsample内部のnative参照はまだ生成していない。
+
+package関連Pythonテストは22 pass / fail0 / error0 / skip0、現packageの配布監査もsuccess。これはGPU全chainやRequired CI全合格ではない。`5d4f5ba`のCI38675402233はcancelledを確認し、成功へ数えない。既存の独立Python915件×4環境の固定結果は前sourceの証拠として保持し、今回の信号選択追加後の全回帰へ置き換えない。
+
+次の順序: (1) impulseのsubsample差と残る音声数値誤差を修正、(2) 元音声全6信号・両profileと画像FP32全3 profileの実GPU gate、(3) 実PCM / Texture→GPU前処理→encoder→backbone→正規化768次元APIの全role / mask / 長さ境界 / 所有権 / Dispose / 例外後再利用 / text回帰、(4) 証拠とPRを整備する。[全体計画](multimodal-tdd-plan.md)の全範囲を維持する。最終API・全環境・正式公開は未達。Persistent allocation警告の原因と長期メモリ安定性も未解決。
+
+以下は前回checkpoint。
+
+
 更新日: 2026-10-15。工程3・4は継続中、未完了。最新の実モデル全encoder gateは `a2ad709067422f0040e0533f665b0ae2521828ac`、元silenceで**179要素不合格・最大許容差比4.642802**。GPUCompute / RTX 4070 Ti SUPER / D3D12で、計算・入力CPU fallback / 中間readback flushは0。参照値・モデル係数・`atol=1e-5` / `rtol=1e-4`は変更していない。main未統合、Draft PR #81。実行順と全範囲は[全体計画](multimodal-tdd-plan.md)を維持する。
 
 モデル準備はCPUで行う処理を含むが、モデルの計算はGPU。`a2ad709`の一実行では読込・graph変換1.435秒、native operationの係数確認・構築12.626秒、Worker作成0.073秒、入力作成・pin0.002秒、推論投入1.748秒、最終download・GPU待機0.523秒。投入から最終取得は2.271秒で、純GPU kernel時間や定常benchmarkではない。Windows native counterでhost peak working setは4,160,483,328 byte（約3.87 GiB）。これはVRAMではなく、変更前とのメモリ削減量も未計測。[負荷と寿命の固定receipt](results/gpu-intermediate-lifetime-and-phase-profile-20261015.json)。

@@ -17,7 +17,7 @@ on:
         description: Select one candidate for bounded whole-encoder diagnosis, or all for a prefix
         type: choice
         default: all
-        options: [all, native, refined_moment, refined_mean_moment, refined_mean_moment_rms, native_silu, refined_mean_moment_rms_silu, ordered_static_linear, ordered_static_linear_refined, ordered_static_linear_attention, ordered_static_linear_all_bmm, ordered_original_primitives, ordered_original_positions, ordered_original_tanh, ordered_original_stem]
+        options: [all, native, refined_moment, refined_mean_moment, refined_mean_moment_rms, native_silu, refined_mean_moment_rms_silu, ordered_static_linear, ordered_static_linear_refined, ordered_static_linear_attention, ordered_static_linear_all_bmm, ordered_original_primitives, ordered_original_positions, ordered_original_tanh, ordered_original_midpoint_bmm, ordered_original_stem]
       from_stage:
         description: Optional audited frozen INPUT for isolated segment diagnosis only
         type: choice
@@ -121,6 +121,10 @@ jobs:
           fi
       - name: Validate explicit primitive replay input boundary
         run: |
+          if [ "$PROBE_VARIANT" = ordered_original_midpoint_bmm ] && [ "$CHAINED_PROBE" != true ]; then
+            echo 'Midpoint candidate requires connected diagnosis.' >&2
+            exit 1
+          fi
           if [ "$RAW_INPUT" = true ] && [ "$CHAINED_PROBE" != true ]; then
             echo 'Raw feature input requires connected diagnosis.' >&2
             exit 1
@@ -135,7 +139,7 @@ jobs:
               exit 1
             fi
             case "$PROBE_VARIANT" in
-              native|ordered_static_linear_all_bmm|ordered_original_primitives|ordered_original_positions|ordered_original_tanh) ;;
+              native|ordered_static_linear_all_bmm|ordered_original_primitives|ordered_original_positions|ordered_original_tanh|ordered_original_midpoint_bmm) ;;
               *) echo 'Chained diagnosis requires an explicit supported candidate.' >&2; exit 1 ;;
             esac
           fi

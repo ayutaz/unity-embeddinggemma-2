@@ -15,7 +15,7 @@ from onnx.reference import ReferenceEvaluator
 
 from .frozen_audio_prefix_onnx import (FrozenStageReference, PrefixExport, extract_prefix, boundary_for_stage, exact_difference, file_digest,
     load_frozen_input, load_frozen_stage_reference, tensor, weight_digests)
-from .frozen_audio_segment_onnx import PRECISE, PRECISE_POSITIONS, PRECISE_TANH, VARIANTS, SegmentExport, extract_segment
+from .frozen_audio_segment_onnx import PRECISE, PRECISE_POSITIONS, PRECISE_TANH, PRECISE_MIDPOINT, VARIANTS, SegmentExport, extract_segment
 from .export import export_audio_native_onnx
 from .reference_context_failure import feature_error_metrics
 from .streaming_reference import run_flat_reference
@@ -57,6 +57,7 @@ def _replacement_counts(wrapper, *, is_stem):
         attention_bmm_replacements=len(nodes('bmm_nodes') - nodes('parameter_bmm_nodes')),
         parameter_bmm_replacements=len(nodes('parameter_bmm_nodes')),
         relative_position_replacements=len(nodes('position_nodes')), tanh_replacements=len(nodes('tanh_nodes')),
+        midpoint_attention_bmm_replacements=len(nodes('midpoint_bmm_nodes')),
         rms_mean_replacements=len(nodes('rms_means')), rms_inverse_replacements=len(nodes('rms_inverses')),
         silu_replacements=len(nodes('silu_nodes')), softmax_replacements=len(nodes('softmax_nodes')),
         sigmoid_replacements=len(nodes('sigmoid_nodes')),
@@ -198,7 +199,7 @@ def main(argv=None):
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--frozen-stage-source', type=Path)
     parser.add_argument('--raw-input', action='store_true')
-    parser.add_argument('--variant', choices=('native', 'ordered_static_linear_all_bmm', PRECISE, PRECISE_POSITIONS, PRECISE_TANH), default='ordered_static_linear_all_bmm')
+    parser.add_argument('--variant', choices=('native', 'ordered_static_linear_all_bmm', PRECISE, PRECISE_POSITIONS, PRECISE_TANH, PRECISE_MIDPOINT), default='ordered_static_linear_all_bmm')
     parser.add_argument('--case', choices=('silence', 'impulse', 'sine', 'nyquist', 'noise', 'padded_noise'), default='silence')
     args = parser.parse_args(argv)
     source = os.environ.get('GITHUB_SHA', '')
@@ -221,19 +222,21 @@ def main(argv=None):
                 raise ValueError('Pinned raw prefix coverage differs')
         for index, (start, end) in enumerate(zip(boundaries, boundaries[1:])):
             wrapper = SegmentExport(extract_segment(program, start, end), args.variant)
-            count = (29 if index == 3 else 27) + (3 if args.variant in (PRECISE_POSITIONS, PRECISE_TANH) else 0)
+            count = (29 if index == 3 else 27) + (3 if args.variant in (PRECISE_POSITIONS, PRECISE_TANH, PRECISE_MIDPOINT) else 0)
             if (len(wrapper.linear_nodes) != count
                     or len(wrapper.bmm_nodes-wrapper.parameter_bmm_nodes) != 9
                     or len(wrapper.parameter_bmm_nodes) != 3):
                 raise ValueError('Pinned chained static-linear/BMM coverage differs')
-            if args.variant in (PRECISE, PRECISE_POSITIONS, PRECISE_TANH):
+            if args.variant in (PRECISE, PRECISE_POSITIONS, PRECISE_TANH, PRECISE_MIDPOINT):
                 rms = 28 if index == 3 else 27
                 if (len(wrapper.rms_means) != rms or len(wrapper.rms_inverses) != rms
                         or len(wrapper.silu_nodes) != 9
                         or any(len(nodes) != 3 for nodes in (wrapper.softmax_nodes, wrapper.sigmoid_nodes, wrapper.convolution_nodes))):
                     raise ValueError('Pinned chained RMS/SiLU/audio leaf coverage differs')
-            if args.variant == PRECISE_TANH and len(wrapper.tanh_nodes) != 3:
+            if args.variant in (PRECISE_TANH, PRECISE_MIDPOINT) and len(wrapper.tanh_nodes) != 3:
                 raise ValueError('Pinned chained Tanh coverage differs')
+            if args.variant == PRECISE_MIDPOINT and len(wrapper.midpoint_bmm_nodes) != 3:
+                raise ValueError('Pinned chained query-key midpoint BMM coverage differs')
     variants = ('native', args.variant) if args.variant != 'native' else ('native',)
     if args.raw_input:
         report = probe_raw_chained_segments(program, RawAudioCase(values, expected, provenance), args.output,

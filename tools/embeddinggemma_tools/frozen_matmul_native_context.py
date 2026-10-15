@@ -24,6 +24,27 @@ def context_environments(source):
     return {'default': dict(base), 'avx2': {**base, 'MKL_ENABLE_INSTRUCTIONS': 'AVX2'}}
 
 
+def _activation_context(output):
+    from .native_tanh_onnx import fp32_native_tanh
+    fixtures = {
+        'dense32771': torch.cat((torch.linspace(-8.7,8.7,32769),torch.tensor([-100.,100.]))),
+        'random514': torch.randn(2,257,generator=torch.Generator().manual_seed(161024))*1.5,
+    }
+    cases=[]
+    for name,values in fixtures.items():
+        native,original_order=torch.tanh(values),fp32_native_tanh(values)
+        files=[]
+        for label,array in (('input',values),('native',native),('original-order',original_order)):
+            path=output/f'tanh-{name}-{label}-fp32.bin'
+            array.contiguous().numpy().astype('<f4').tofile(path)
+            files.append(dict(file=path.name,sha256=file_digest(path),bytes=path.stat().st_size))
+        cases.append(dict(id=name,shape=list(values.shape),input_sha256=files[0]['sha256'],files=files,
+                          original_order_vs_native=metrics(original_order,native)))
+    return dict(scope='fixed_synthetic_native_tanh_vs_original_order_only',
+        execution='native_torch_tanh_and_original_order_eager_control_not_actual_onnx',cases=cases,
+        onnx_executed=False,encoder_validated=False)
+
+
 def worker(directory, output, context):
     source = os.environ.get('GITHUB_SHA', '')
     if re.fullmatch('[0-9a-f]{40}', source) is None:
@@ -49,6 +70,7 @@ def worker(directory, output, context):
         environment={key: os.environ.get(key) for key in keys}, torch_build_config=torch.__config__.show(),
         metrics=metrics(actual, expected), capture=path.name, capture_sha256=file_digest(path),
         full_encoder_validated=False, gpu_validated=False)
+    report['activation_context'] = _activation_context(output)
     receipt.write_text(json.dumps(report, indent=2, allow_nan=False) + '\n', encoding='utf-8')
     return report
 
@@ -81,6 +103,12 @@ def probe_native_contexts(directory, output):
         report['same_original_fixture'] = report['cases'][0]['capture_provenance'] == report['cases'][1]['capture_provenance']
         if not report['same_original_fixture']:
             raise ValueError('Native contexts did not consume the same audited fixture')
+        if any('activation_context' in row for row in report['cases']):
+            inputs = [{c['id']:c['input_sha256'] for c in row.get('activation_context',{}).get('cases',[])}
+                      for row in report['cases']]
+            report['same_activation_inputs'] = bool(inputs[0]) and inputs[0] == inputs[1]
+            if not report['same_activation_inputs']:
+                raise ValueError('Native activation contexts did not consume the same actual inputs')
         report['complete'] = True
         save()
     except Exception as error:

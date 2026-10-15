@@ -19,6 +19,7 @@ from .native_silu_onnx import fp32_native_silu
 from .native_softmax_onnx import fp32_native_softmax24
 from .native_audio_primitives_onnx import fp32_native_sigmoid, fp32_native_depthwise5
 from .native_tanh_onnx import fp32_native_tanh
+from .midpoint_fp32_fma import midpoint_query_key_bmm_export
 from .streaming_reference import run_flat_reference
 from .static_block192_onnx import audit_static_linear_nodes, static_block192_export, static_block192_addmm_export
 from .static_block192_onnx import audit_attention_bmm_nodes, audit_parameter_bmm_nodes, static_block192_bmm_export
@@ -27,7 +28,8 @@ from .static_block192_onnx import audit_relative_position_linear_nodes
 PRECISE = "ordered_original_primitives"
 PRECISE_POSITIONS = "ordered_original_positions"
 PRECISE_TANH = "ordered_original_tanh"
-VARIANTS = ("native", "refined_mean_moment_rms", "native_silu", "refined_mean_moment_rms_silu", "ordered_static_linear", "ordered_static_linear_attention", "ordered_static_linear_all_bmm", PRECISE, PRECISE_POSITIONS, PRECISE_TANH)
+PRECISE_MIDPOINT = 'ordered_original_midpoint_bmm'
+VARIANTS = ("native", "refined_mean_moment_rms", "native_silu", "refined_mean_moment_rms_silu", "ordered_static_linear", "ordered_static_linear_attention", "ordered_static_linear_all_bmm", PRECISE, PRECISE_POSITIONS, PRECISE_TANH, PRECISE_MIDPOINT)
 
 
 def extract_segment(program, from_boundary, to_boundary):
@@ -105,7 +107,7 @@ class SegmentExport(PrefixExport):
         if any(node.target == torch.ops.aten.native_layer_norm.default for node in segment.graph.nodes):
             raise ValueError("Segment must start after both original native normalizations")
         self.prefix, self.variant, self.selected = segment, variant, []
-        precise = variant in (PRECISE, PRECISE_POSITIONS, PRECISE_TANH)
+        precise = variant in (PRECISE, PRECISE_POSITIONS, PRECISE_TANH, PRECISE_MIDPOINT)
         self.rms_means, self.rms_inverses = audit_rms_nodes(segment) if variant.startswith("refined_mean_moment_rms") or precise else (set(), set())
         self.silu_nodes = {node for node in segment.graph.nodes
                            if node.op == "call_function" and node.target == torch.ops.aten.silu.default} if variant.endswith("_silu") or precise else set()
@@ -116,13 +118,13 @@ class SegmentExport(PrefixExport):
         self.linear_nodes = audit_static_linear_nodes(segment) if variant.startswith("ordered_static_linear") or precise else set()
         if (variant.startswith("ordered_static_linear") or precise) and not self.linear_nodes:
             raise ValueError("Ordered static linear candidate requires original280-row parameter projections")
-        self.position_nodes = audit_relative_position_linear_nodes(segment) if variant in (PRECISE_POSITIONS, PRECISE_TANH) else set()
-        if variant in (PRECISE_POSITIONS, PRECISE_TANH) and not self.position_nodes:
+        self.position_nodes = audit_relative_position_linear_nodes(segment) if variant in (PRECISE_POSITIONS, PRECISE_TANH, PRECISE_MIDPOINT) else set()
+        if variant in (PRECISE_POSITIONS, PRECISE_TANH, PRECISE_MIDPOINT) and not self.position_nodes:
             raise ValueError('Ordered position candidate requires original13-row parameter projections')
         self.linear_nodes |= self.position_nodes
         self.linear_candidate = static_block192_export
         self.biased_linear_candidate = static_block192_addmm_export
-        batched = variant in ("ordered_static_linear_attention", "ordered_static_linear_all_bmm", PRECISE, PRECISE_POSITIONS, PRECISE_TANH)
+        batched = variant in ("ordered_static_linear_attention", "ordered_static_linear_all_bmm", PRECISE, PRECISE_POSITIONS, PRECISE_TANH, PRECISE_MIDPOINT)
         self.bmm_nodes = audit_attention_bmm_nodes(segment) if batched else set()
         if batched and not self.bmm_nodes:
             raise ValueError("Ordered attention candidate requires qualified original attention BMM nodes")
@@ -134,7 +136,7 @@ class SegmentExport(PrefixExport):
         self.softmax_nodes, self.sigmoid_nodes, self.convolution_nodes = audit_audio_leaf_nodes(segment) if precise else (set(), set(), set())
         self.softmax_candidate, self.sigmoid_candidate, self.convolution_candidate = fp32_native_softmax24, fp32_native_sigmoid, fp32_native_depthwise5
         self.tanh_nodes = set()
-        if variant == PRECISE_TANH:
+        if variant in (PRECISE_TANH, PRECISE_MIDPOINT):
             for node in segment.graph.nodes:
                 if node.op != 'call_function' or node.target != torch.ops.aten.tanh.default:
                     continue
@@ -146,6 +148,14 @@ class SegmentExport(PrefixExport):
             if not self.tanh_nodes:
                 raise ValueError('Ordered Tanh candidate requires original attention Tanh nodes')
         self.tanh_candidate = fp32_native_tanh
+        self.midpoint_bmm_nodes = set()
+        if variant == PRECISE_MIDPOINT:
+            self.midpoint_bmm_nodes = {n for n in self.bmm_nodes-self.parameter_bmm_nodes
+                if tuple(n.args[0].meta['val'].shape)==(192,12,128)
+                and tuple(n.args[1].meta['val'].shape)==(192,128,24)}
+            if len(self.midpoint_bmm_nodes) != len(self.tanh_nodes):
+                raise ValueError('Pinned query-key midpoint attention BMM coverage differs')
+            self.bmm_candidate = midpoint_query_key_bmm_export
 
 
 def probe_segment(program, frozen_input, frozen_output, output, *, from_boundary, to_boundary,

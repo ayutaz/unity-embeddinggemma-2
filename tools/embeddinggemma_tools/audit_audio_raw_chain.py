@@ -33,7 +33,9 @@ def _cosine(actual, expected):
     return float(np.min(np.sum(a*b, axis=-1) / denominator)) if np.all(denominator > 0) else 0.0
 
 
-def audit_report(report_path, original):
+def audit_report(report_path, original, *, expected_variant='ordered_original_tanh'):
+    if expected_variant not in ('ordered_original_tanh','ordered_original_midpoint_bmm'):
+        raise ValueError('Unregistered expected raw candidate')
     original = Path(original).resolve()
     for name, expected_sha in (('audio-encoder-reference.json', REFERENCE_SHA),
                                ('audio-encoder-validation.json', AUDIT_SHA)):
@@ -98,8 +100,8 @@ def audit_report(report_path, original):
     if native_metrics != report['native_whole_metrics'] or report['context_qualified'] != (native_metrics['exact_difference_count']==0):
         raise ValueError('Independent native metrics/context differ')
     cases = report['cases']
-    if len(cases)!=2 or [c['variant'] for c in cases] != ['native','ordered_original_tanh']:
-        raise ValueError('Both native ONNX baseline and explicit Tanh candidate required')
+    if len(cases)!=2 or [c['variant'] for c in cases] != ['native',expected_variant]:
+        raise ValueError('Both native ONNX baseline and explicitly requested candidate required')
     audited=[]
     for c in cases:
         if (len(c['parts']) != 5 or c['coefficients_unchanged'] is not True
@@ -122,7 +124,7 @@ def audit_report(report_path, original):
         audited.append(dict(variant=c['variant'],metrics=measured,minimum_cosine=_cosine(actual,expected),
             final_sha256=last,vs_current_native=_metrics(actual,native)))
     candidate=audited[1]
-    return dict(case_id=case_id,profile=profile,source=provenance['job_source'],
+    return dict(case_id=case_id,profile=profile,source=provenance['job_source'],candidate_variant=expected_variant,
         report_sha256=digest(report_path),raw_input_sha256=report['input_sha256'],
         reference_sha256=report['reference_sha256'],native_context_qualified=report['context_qualified'],
         native_whole_metrics=native_metrics,candidate_metrics=candidate['metrics'],
@@ -132,8 +134,9 @@ def audit_report(report_path, original):
         graphs_independently_rehashed=False,gpu_validated=False,default_export_promoted=False)
 
 
-def audit_reports(paths, original):
-    rows = [audit_report(path, original) for path in paths]
+def audit_reports(paths, original, *, expected_variant='ordered_original_tanh'):
+    options={} if expected_variant=='ordered_original_tanh' else {'expected_variant':expected_variant}
+    rows = [audit_report(path, original, **options) for path in paths]
     signals = {'silence','impulse','sine','nyquist','noise','padded_noise'}
     if len(rows)!=6 or {r['case_id'] for r in rows} != signals:
         raise ValueError('Exactly six distinct original cases required')
@@ -144,7 +147,7 @@ def audit_reports(paths, original):
         raise ValueError('All six cases must use the same immutable source')
     return dict(scope='all_six_original_raw_input_connected_onnx_numeric_capture_audit_only',
         success=all(r['original_tolerance_passed'] for r in rows),case_count=6,profile_count=2,
-        source=rows[0]['source'],values_compared=sum(r['values_compared'] for r in rows),
+        source=rows[0]['source'],candidate_variant=expected_variant,values_compared=sum(r['values_compared'] for r in rows),
         candidate_tolerance_failures=sum(r['candidate_metrics']['mismatched_elements'] for r in rows),
         candidate_bit_differences=sum(r['candidate_metrics']['exact_difference_count'] for r in rows),
         native_all_six_context_qualified=all(r['native_context_qualified'] for r in rows),cases=rows,

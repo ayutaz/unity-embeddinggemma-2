@@ -117,6 +117,10 @@ class _StaticBlock192Bmm(torch.autograd.Function):
 
     @staticmethod
     def symbolic(g, values, weights):
+        return _StaticBlock192Bmm.graph(g, values, weights)
+
+    @staticmethod
+    def graph(g, values, weights, *, fma=fma_graph):
         left, right = (symbolic_helper._get_tensor_sizes(x) for x in (values, weights))
         if (left is None or right is None or len(left) != 3 or len(right) != 3
                 or any(type(d) is not int or d < 1 for d in (*left, *right))
@@ -142,14 +146,14 @@ class _StaticBlock192Bmm(torch.autograd.Function):
         for index in range(chunk):
             a = g.op("Slice", chunks, ints([index]), ints([index + 1]), axis)
             b = g.op("Reshape", g.op("Gather", coefficients, ints(index), axis_i=2), ints([blocks, batch, 1, columns]))
-            partial = fma_graph(g, a, b, partial, splitter)
+            partial = fma(g, a, b, partial, splitter)
         total = g.op("Gather", partial, ints(0), axis_i=0)
         for index in range(1, blocks):
             total = g.op("Add", total, g.op("Gather", partial, ints(index), axis_i=0))
         return total.setType(values.type().with_sizes([batch, rows, columns]))
 
 
-def static_block192_bmm_export(values, weights):
+def validate_batched_matrices(values, weights):
     if (values.dtype != torch.float32 or weights.dtype != torch.float32
             or values.device.type != "cpu" or weights.device.type != "cpu"
             or values.ndim != 3 or weights.ndim != 3 or values.shape[0] != weights.shape[0]
@@ -160,6 +164,10 @@ def static_block192_bmm_export(values, weights):
                 or not torch.isfinite(weights).all() or torch.any(values.abs() > 1e6)
                 or torch.any(weights.abs() > 1e6)):
             raise ValueError("Static block192 BMM requires qualified finite bounded matrices")
+
+
+def static_block192_bmm_export(values, weights):
+    validate_batched_matrices(values, weights)
     return _StaticBlock192Bmm.apply(values, weights)
 
 

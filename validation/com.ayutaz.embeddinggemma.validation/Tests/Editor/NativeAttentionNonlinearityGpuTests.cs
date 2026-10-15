@@ -127,7 +127,7 @@ namespace EmbeddingGemma.Validation.Tests
                 if(sleef)
                 {
                     var constructor=RequiredTanh().GetConstructor(new[]{typeof(bool)});Assert.That(constructor,Is.Not.Null,"Explicit SLEEF tanh candidate is missing.");
-                    using var operation=(IGpuTensorOperation)constructor.Invoke(new object[]{true});return operation.Execute(input);
+                    using var sleefOperation=(IGpuTensorOperation)constructor.Invoke(new object[]{true});return sleefOperation.Execute(input);
                 }
                 using var operation=(IGpuTensorOperation)Activator.CreateInstance(name=="tanh"?RequiredTanh():RequiredSoftmax());return operation.Execute(input);
             }

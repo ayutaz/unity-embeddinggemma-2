@@ -12,7 +12,7 @@ import yaml
 from embeddinggemma_tools import frozen_audio_prefix_onnx as probe
 
 
-def program(*, mask=False):
+def program(*, mask=False, softmax=False):
     root = torch.nn.Module()
     root.register_buffer("scale", torch.linspace(0.75, 1.25, 32))
     root.register_buffer("matrix", torch.randn(32, 8, generator=torch.Generator().manual_seed(51)))
@@ -23,6 +23,8 @@ def program(*, mask=False):
         fixed_mask = graph.get_attr("fixed_mask")
         boolean = graph.call_function(torch.ops.aten._to_copy.default, (fixed_mask,), {"dtype": torch.bool})
         value = graph.call_function(torch.ops.aten.mul.Tensor, (value, boolean))
+    if softmax:
+        value = graph.call_function(torch.ops.aten._softmax.default, (value, -1, False))
     scale = graph.get_attr("scale")
     norm = graph.call_function(torch.ops.aten.native_layer_norm.default, (value, [32], scale, None, 1e-6))
     normalized = graph.call_function(operator.getitem, (norm, 0))
@@ -110,6 +112,23 @@ def test_copy_translation_rejects_unqualified_dtype_changes():
     prefix = probe.extract_prefix(source, boundary)
     with pytest.raises(ValueError, match="mask"):
         probe.PrefixExport(prefix, "native")(torch.zeros(1, 32))
+
+
+def test_saved_fp32_last_axis_softmax_exports_and_preserves_native_bits(tmp_path):
+    source, boundary = program(softmax=True)
+    values = torch.randn(2, 32, generator=torch.Generator().manual_seed(82))
+    report = probe.probe_prefix(source, values, source(values).detach(), tmp_path, boundary=boundary)
+    assert report["complete"] and report["cases"][0]["native_wrapper_bits_equal"]
+    assert "_softmax" in str(source.graph)
+
+
+def test_softmax_alias_rejects_unqualified_axis():
+    source, boundary = program(softmax=True)
+    node = next(node for node in source.graph.nodes if node.target == torch.ops.aten._softmax.default)
+    node.args = (node.args[0], 0, False)
+    source.recompile()
+    with pytest.raises(ValueError, match="softmax"):
+        probe.PrefixExport(probe.extract_prefix(source, boundary), "native")(torch.zeros(2, 32))
 
 
 def test_decomposed_two_convolution_prefix_exports_mask_norm_clone_relu_and_projection(tmp_path):

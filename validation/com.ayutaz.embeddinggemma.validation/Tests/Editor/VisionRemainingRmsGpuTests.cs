@@ -34,7 +34,7 @@ namespace EmbeddingGemma.Validation.Tests
                 var expectedPath=Path.Combine(root,row["expected"].Value<string>("file"));Check(expectedPath,row["expected"].Value<string>("sha256"));
                 Check(row["scale"].Value<string>("file"),row["scale"].Value<string>("sha256"));
                 Check(Path.Combine(Application.dataPath,"GpuVisionFirstRmsCandidate/first-rms.onnx"),"724605434efc0b70bb28b59b5dc639f8b0aeb765a4170ec782397506f6549976");
-                var template=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/GpuVisionFirstRmsCandidate/first-rms.onnx")));
+                var template=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/GpuVisionFirstRmsCandidate/first-rms.onnx"));
                 var original=TextModelFile.Load(modelPath);var before=SerializedHash(template);var originalBefore=SerializedHash(original);
                 var scale=original.constants.Single(value=>value.dataType==DataType.Float&&value.shape==new TensorShape(768));
                 var bound=QualifiedVisionRmsOperation.BorrowScale(template,scale);using var operation=new QualifiedVisionRmsOperation(bound);

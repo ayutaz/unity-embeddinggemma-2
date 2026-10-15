@@ -1,5 +1,26 @@
 # 現在の状態
 
+更新日: 2026-10-15。工程3・4は未完了。元無音の全encoder GPU gateは合格済みだが、元音声全6信号・両profile、画像FP32全3 profile、実PCM / Texture→正規化768次元APIの全条件は未達。元参照・モデル係数・`atol=1e-5` / `rtol=1e-4`を保持する。Draft PR #81、main未統合。
+
+**Unityの待ちへの対処:** 現在の検証consumerがglobal Accelerator設定を継承し、到達できないサーバーへの接続timeoutを繰り返していた。`create_consumer(automation=True)`の既存方針へ戻し、consumer内だけでCacheServerMode.Disabled / download0 / upload0を適用した。所有Unityが停止していることを確認し、設定の変更前backupと前後SHAを保存。root projectのEditorSettingsとglobal preferencesは変更していない。現在のローカルbounded runnerも起動前にこの方針を再適用する。
+
+`39c2559afa61c33aa029dc1328f781dc12442261`のEditor API確認は変更前1 Red。変更後は同sourceでcache設定・CPU/GPUのshape捕捉・tiny GPU profilerを含む4 pass / fail0 / skip0、全process29.157秒。到達不能サーバーと接続timeoutのログは消え、tiny GPUはGPUCompute・計算/入力CPU fallback / flush0。変更前は40.164秒だったが、test数が違う各1回の観測なのでbenchmarkや一律の速度改善率とは呼ばない。[設定・ログ・GPU固定receipt](results/local-consumer-cache-and-gpu-check-20261015.json)。[Unity公式のproject単位Disabled設定](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/CacheServerMode.Disabled.html)。Persistent allocation警告の原因・長期安定性は別問題として未解決。
+
+**音声前段の切り分け:** 全encoderの繰返しを減らすため、元のsegment-0と最初のGPU投影だけを使う小さい固定テストを追加。実際のTensorShapeも捕捉し、通常の前段出力を診断downloadが変えないことを確認する。shape捕捉はCPU/GPUの2 Redから2 Green。`0420495`では元impulse subsample出力との1,290 bit差を再現し、局所許容差超過は0。6内部境界・投影前後・最初のConv係数をhash付きで保存した。診断用readbackは製品経路のreadbackなしという主張へ含めない。
+
+最初のConvについて独立offline FP32 FMA oracleを比較すると、GPUの4,587,520値がkernel height/width順の単一FMAと全bit一致し、乗算・加算を別々に丸める版とは2,473,076値が異なる。これはGPUの計算順の確認で、取得できていないnative中間値の合格ではない。最初の正規化のGPU値も、scalar mean更新をunfusedで計算するoffline式へ全bit一致した。
+
+**候補は未採用:** 最初の正規化のscalar mean更新8か所をFP32 FMAへ変えたderived segmentを作り、既存initializer bytesの一致を確認した。`f268d1c`の前段は元impulseとのbit差が1,290→521、局所超過0・最大許容差比0.0765705。しかし厳密bit gateは1 fail / skip0。元全encoderも360要素超過・最大許容差比20.973450で1 fail / skip0（以前の396要素・13.077703より件数は減るが最大比は悪化）。GPUCompute・計算/入力CPU fallback / flush0。候補の局所改善を全体合格や採用へ置き換えない。[参照不一致・捕捉・候補失敗receipt](results/m4-impulse-subsample-context-and-first-norm-fma-20261015.json)。
+
+**CPU参照の現状:** signalを選ぶ`subsample`診断scopeを追加し、既定のfull gateは保持した。元feature hash・stage input/finalを固定した[38676791482](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38676791482)は、元subsample finalを再現できずfailure。失敗診断を追加した[38677340121](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38677340121)もfailure。後者はCPU実行条件24通り（threads1/2/4、oneDNN有無、係数/feature配置）を全て実行したがbit一致は0件。各条件の局所許容差超過0を元context合格と扱わず、新しいnative partsは保存していない。診断後は元のCPU設定・入力・重み・hookを保持する。workflow1 Red→関連41 Green、診断3 Red→関連51 Green。これらはCPU診断・Python単体の証拠で、GPU全体合格ではない。
+
+動的feature選択へ対応する既存workflowテストも、default/fullのsilence入力・元hash・subsample gateを検証する形に更新した。旧文字列形式による1 Redを確認し、packageを含む関連Python回帰は74 pass / fail0 / error0 / skip0。全環境のRequired CI合格へは流用しない。
+
+次は保存した小さいGPU前段で、正規化の残るmoment/varianceの演算順と元CPU参照の実行文脈を調べる。全体の順序と範囲は[全体計画](multimodal-tdd-plan.md)を維持し、音声全6信号・2 profile、画像全3 profile、最終APIの全role / mask / 長さ境界 / 所有権 / Dispose / 例外後再利用 / text回帰を未達のまま追う。生成model・重み・大きなcaptureはGit/LFSへ含めない。
+
+以下は前回checkpoint。
+
+
 更新日: 2026-10-15。工程3・4は未完了。**元音声encoderの無音ケースはGPU数値gateに合格したが、他信号は未合格。** `c1f90de187f2b17f30461f61cbaf22d522bacd34`の元silenceは許容差超過0、最大絶対差1.430512e-6・最大許容差比0.037594、NUnit 1 pass / fail0 / skip0。RTX 4070 Ti SUPER / Direct3D12 / GPUCompute、計算・入力CPU fallback / 中間flushは0。元参照・モデル係数・`atol=1e-5` / `rtol=1e-4`は変更していない。Draft PR #81、main未統合。[今回の固定receipt](results/m4-native-table-tanh-and-original-audio-signals-20261015.json)。
 
 通常profile `frames-1119-valid-1119` の実GPU結果（各1ケース／Unity process）は次のとおり。無音の合格を全信号・全profile・最終APIの合格へ流用しない。

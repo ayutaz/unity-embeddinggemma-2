@@ -45,7 +45,6 @@ namespace EmbeddingGemma.Validation.Tests
                 using var input=new Tensor<float>(new TensorShape(1,2520,768),Floats(inputPath));ComputeTensorData.Pin(input);
                 var observed=WorkerObservation.ObserveIndexes(model,BackendType.GPUCompute,input,new HashSet<int>(selected.Select(row=>row.layer.outputs[0])));
                 Assert.That(observed.FinalMatchesBaselineBits,Is.True);
-                var baseline=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-first-rms-refined-gpu-ec2b39f36a06112584f7c8754978f4a342aab706.bin"));
                 // Prior capture is independently hash-pinned rather than inferred from a current source label.
                 var baselineBytes=new byte[observed.Final.Length*4];Buffer.BlockCopy(observed.Final,0,baselineBytes,0,baselineBytes.Length);
                 using(var stream=new MemoryStream(baselineBytes))Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo("687a68f9956e6c1587cdb0fd5359dd75840355ecb80c6f74c6819c90377109c9"));

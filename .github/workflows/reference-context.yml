@@ -7,6 +7,10 @@ on:
         description: Replay the original frozen vision graph instead of the newer context matrix
         type: boolean
         default: false
+      require_avx512_native:
+        description: Original vision only; require actual AVX512 before model download and run native context only
+        type: boolean
+        default: false
   pull_request:
     types: [opened, synchronize, labeled]
 
@@ -132,7 +136,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        context: [native, avx2]
+        context: ${{ inputs.require_avx512_native && fromJSON('["native"]') || fromJSON('["native","avx2"]') }}
     defaults:
       run:
         working-directory: tools
@@ -157,6 +161,24 @@ jobs:
             echo 'MKL_CBWR=AVX2'
             echo 'DNNL_MAX_CPU_ISA=AVX2'
           } >> "$GITHUB_ENV"
+      - name: Require actual AVX512 before original model download
+        if: inputs.require_avx512_native
+        run: |
+          uv run --locked python - <<'PY'
+          import json, os
+          from pathlib import Path
+          import torch
+          capability = torch.backends.cpu.get_cpu_capability()
+          satisfied = capability == 'AVX512' and os.environ['PROBE_CONTEXT'] == 'native'
+          output = Path('../artifacts/original-context-results')
+          output.mkdir(parents=True, exist_ok=True)
+          report = dict(job_source=os.environ['GITHUB_SHA'], actual_cpu_capability=capability,
+              satisfied=satisfied, model_executed=False, scope='original_reference_cpu_prerequisite_only')
+          (output / 'cpu-prerequisite.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+          print(json.dumps(report))
+          if not satisfied:
+              raise SystemExit('Actual AVX512 native context unavailable; no model download or replay was performed')
+          PY
       - name: Fetch original frozen graph and first fixture
         env:
           GH_TOKEN: ${{ github.token }}
@@ -206,7 +228,7 @@ jobs:
               raise SystemExit('Original saved graph did not reproduce the unchanged fixed reference')
           PY
       - name: Compare original official and saved pooling layouts
-        if: always() && matrix.context == 'native'
+        if: always() && matrix.context == 'native' && hashFiles('artifacts/original-context-results/original-image-native.json') != ''
         run: |
           uv run --locked python -m embeddinggemma_tools.vision_pooling_context \
             --input ../artifacts/original-context-input \

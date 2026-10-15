@@ -655,18 +655,274 @@
       "readback_flush_count": 0
     }
   },
+  "whole_precise_first_attempt": {
+    "test": {
+      "file": "vision-original-context-precise-sleef-gelu-square0-20261015.xml",
+      "sha256": "f11b78256d2e2993921b16058103de043bd18d60405d00d95115d1c45806a06e",
+      "totals": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Failed(Child)",
+        "total": "1",
+        "passed": "0",
+        "failed": "1",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 10:50:31Z",
+        "end-time": "2026-10-15 10:51:05Z",
+        "duration": "33.5269184"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-context-precise-sleef-gelu-square0-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "OriginalContextPreciseSleefGeluSquareZeroMustMatchOriginalOnGpu",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-context-precise-sleef-gelu-square0-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T10:49:53.466290+00:00",
+        "pid": 94708,
+        "exit_code": 2,
+        "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-context-precise-sleef-gelu-square0-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        },
+        "elapsed_seconds": 76.1943054000003,
+        "completed_utc": "2026-10-15T10:51:09.660597+00:00"
+      }
+    },
+    "qualification": "Post-inference harness failure: expected 32 old internal Worker rows but got 16 direct GPU kernel rows; original numerical comparison not reached."
+  },
+  "precise_gpu_full_image": {
+    "file": "vision-original-context-precise-sleef-gelu-softmax16-all-rms-block192-whole-gpu-155d5520d9d69f1236270f7cd3e3dfc03200d6f9-square-0.json",
+    "sha256": "f93ff08616c236c21eb9782edcbb676a3dce29c8acb64969f581422a026f1aaf",
+    "success": false,
+    "runtime_source": "155d5520d9d69f1236270f7cd3e3dfc03200d6f9",
+    "actual_backend": "GPUCompute",
+    "gpu_operation_count": 178,
+    "segment_count": 179,
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "host_peak_working_set_bytes": 4940636160,
+    "execute_and_final_download_ms": 16837.3414,
+    "mismatched_elements": 1,
+    "maximum_absolute_error": 2.753734588623047e-05,
+    "maximum_tolerance_ratio": 1.085958475244881,
+    "original_coefficient_bytes_preserved": true,
+    "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+    "capture_sha256": "b5bb5738486c2662057b15edb9913437ea72e2dc9e5feb9515b4db17d1c63363",
+    "fused_gelu_inner": true,
+    "softmax_vector_width": 16,
+    "precise_sleef_gelu": true,
+    "test": {
+      "file": "vision-original-context-precise-sleef-gelu-fixed-audit-square0-20261015.xml",
+      "sha256": "dec3c97b5398e277e645757de81de1d302906459886f363a85903f7fb1db72d9",
+      "totals": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Failed(Child)",
+        "total": "1",
+        "passed": "0",
+        "failed": "1",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 10:52:17Z",
+        "end-time": "2026-10-15 10:52:51Z",
+        "duration": "33.5506701"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-context-precise-sleef-gelu-fixed-audit-square0-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "OriginalContextPreciseSleefGeluSquareZeroMustMatchOriginalOnGpu",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-context-precise-sleef-gelu-fixed-audit-square0-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T10:51:38.300742+00:00",
+        "pid": 41884,
+        "exit_code": 2,
+        "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-context-precise-sleef-gelu-fixed-audit-square0-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        },
+        "elapsed_seconds": 77.34145049999643,
+        "completed_utc": "2026-10-15T10:52:55.642194+00:00"
+      }
+    },
+    "remaining_original_gate_failures": [
+      {
+        "index": 12918,
+        "row": 25,
+        "column": 118,
+        "actual": 0.016758710145950317,
+        "expected": 0.016771391034126282,
+        "difference": 1.2680888175964355e-05,
+        "bound": 1.1677139103412628e-05
+      }
+    ],
+    "resource_log": {
+      "file": "vision-original-context-precise-sleef-gelu-fixed-audit-resources-20261015.jsonl",
+      "sha256": "de73a2473c68a4a4d941a229b7b71a4b58e00629ed0d75585bb3c6a0161cc2d1"
+    },
+    "adopted": false,
+    "other_five_image_cases_executed": false
+  },
   "package_checks": {
-    "file": "gelu-sleef-package-green-20261015.xml",
-    "sha256": "c875426af42f67e48e964f26720c2a97c7a5ff65ee705fd8e8386bc90d361f62",
+    "file": "precise-gelu-package-green-20261015.xml",
+    "sha256": "39c513fd1a2afe8f7d8ab3b8638494014d0fe209a2a01a1f24588b4296739d45",
     "totals": {
       "name": "pytest",
       "errors": "0",
       "failures": "0",
       "skipped": "0",
       "tests": "22",
-      "time": "1.571",
-      "timestamp": "2026-10-15T19:47:21.226444+09:00",
+      "time": "1.951",
+      "timestamp": "2026-10-15T19:52:12.845843+09:00",
       "hostname": "DESKTOP-7PPH62N"
     }
-  }
+  },
+  "native_softmax_prefix": {
+    "file": "vision-original-prefix-softmax-gpu-cef18c28af3540d2c2817249ba4f7ca8b1c9b75a.json",
+    "sha256": "e11e716d6676bbad175800c43028c994ad2ebe4fd14421461c0ceb8544bc834e",
+    "report": {
+      "success": true,
+      "runtime_source": "cef18c28af3540d2c2817249ba4f7ca8b1c9b75a",
+      "scope": "captured_linux_avx2_original_first_softmax_prefix_only",
+      "reference_reproduces_original_golden": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "candidate": {
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "capture_sha256": "1b504b14d71b949e6216ccdc2ff3070309a8906c39df2e44ff6b05d1015948d4"
+    },
+    "test": {
+      "file": "gpu-original-first-softmax-prefix-bit-gate-20261015.xml",
+      "sha256": "377c2d72e7d38a58088d9dcca12937cdb5039608e2a4ad535c739123f994780d",
+      "totals": {
+        "id": "2",
+        "testcasecount": "5",
+        "result": "Passed",
+        "total": "5",
+        "passed": "5",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 10:55:04Z",
+        "end-time": "2026-10-15 10:55:05Z",
+        "duration": "0.7789587"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-original-first-softmax-prefix-bit-gate-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "CapturedOriginalLinuxPrefixSoftmaxMustMatchNativeBitsOnGpu|GpuSoftmaxVectorWidthTests",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-original-first-softmax-prefix-bit-gate-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": true,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T10:54:27.204872+00:00",
+        "pid": 100976,
+        "exit_code": 0,
+        "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-original-first-softmax-prefix-bit-gate-20261015.xml",
+        "unity_counts": {
+          "total": 5,
+          "passed": 5,
+          "failed": 0,
+          "skipped": 0
+        },
+        "elapsed_seconds": 42.516653500002576,
+        "completed_utc": "2026-10-15T10:55:09.721526+00:00"
+      }
+    }
+  },
+  "avx512_prerequisite_workflow_tests": [
+    {
+      "file": "original-avx512-prerequisite-red-20261015.xml",
+      "sha256": "d96c09c4225bafb16ec7562d2045b516bcae7f6cd64d206d7a942a8cd5196ebb",
+      "totals": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "2",
+        "skipped": "0",
+        "tests": "2",
+        "time": "0.156",
+        "timestamp": "2026-10-15T19:56:21.299102+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      }
+    },
+    {
+      "file": "original-avx512-prerequisite-green-20261015.xml",
+      "sha256": "aa06f15a1fff90f3bd41a1bcfcf352352ab9ffd2d17b0dede62293851b7f6439",
+      "totals": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "26",
+        "time": "0.522",
+        "timestamp": "2026-10-15T19:56:44.793297+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      }
+    }
+  ]
 }

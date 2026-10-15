@@ -233,7 +233,11 @@ namespace EmbeddingGemma.Validation.Tests
 
         [Test]
         public void ObserveOriginalLayerOnePartsWithoutChangingNormalFinalBits()
-            =>Execute("silence",true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,nativeGlu:true,layerOneObservation:true);
+            =>Execute("silence",true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,nativeGlu:true,layerObservation:1);
+
+        [Test]
+        public void ObserveOriginalLayerThreePartsWithoutChangingNormalFinalBits()
+            =>Execute("silence",true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,nativeGlu:true,layerObservation:3);
 
         [Test]
         public void ObserveNativeSiluFirstFeedForwardWithoutChangingNormalFinalBits()
@@ -243,7 +247,7 @@ namespace EmbeddingGemma.Validation.Tests
         public void ObserveFirstAttentionAndConvolutionWithoutChangingNormalFinalBits()
             =>Execute("silence",true,false,false,true,true,true);
 
-        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false,bool convolutionDetail=false,bool nativeGlu=false,bool layerOneObservation=false)
+        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false,bool convolutionDetail=false,bool nativeGlu=false,int layerObservation=0)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
@@ -256,7 +260,7 @@ namespace EmbeddingGemma.Validation.Tests
             if(convolutionDetail)stem="partitioned-native-convolution-modules-observation-";
             if(nativeGlu)stem=convolutionDetail?"partitioned-native-glu-convolution-observation-":"partitioned-native-glu-gpu-";
             if(nativeGlu&&observe)stem="partitioned-native-glu-layer-observation-";
-            if(layerOneObservation)stem="partitioned-native-layer1-parts-observation-";
+            if(layerObservation>0)stem="partitioned-native-layer"+layerObservation+"-parts-observation-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject { ["success"]=false,["scope"]=early?"original_early_audio_observation_only":isolated?"one_original_audio_layer_isolation_gpu_numeric_gate":observe?"original_audio_layer_observation_only":"one_partitioned_original_audio_encoder_gpu_numeric_gate",
@@ -396,10 +400,10 @@ namespace EmbeddingGemma.Validation.Tests
                 }
                 report["actual_backend"]=encoded.backendType.ToString();report["mismatched_elements"]=mismatch;
                 report["maximum_absolute_error"]=maximum;report["maximum_tolerance_ratio"]=ratio;report["phase"]="completed";Save();
-                if(layerOneObservation)
+                if(layerObservation>0)
                 {
                     encoded.Dispose();pipeline.Dispose();
-                    ObserveLayerOneManifest(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray(),input,actual,output,report,Save);
+                    ObserveSelectedLayerManifest(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray(),input,actual,output,report,Save,layerObservation);
                     return;
                 }
                 if(observeBmm)
@@ -684,22 +688,27 @@ namespace EmbeddingGemma.Validation.Tests
             }
             finally {foreach(var value in owned)value.Dispose();}
         }
-        static void ObserveLayerOneManifest(Model[] models,string[][] inputs,string[] outputs,IGpuTensorOperation[] kernels,Tensor<float> input,float[] baseline,string output,JObject report,Action save)
+        static void ObserveSelectedLayerManifest(Model[] models,string[][] inputs,string[] outputs,IGpuTensorOperation[] kernels,Tensor<float> input,float[] baseline,string output,JObject report,Action save,int layerIndex)
         {
+            Assert.That(layerIndex,Is.EqualTo(1).Or.EqualTo(3));
+            var manifestSha=layerIndex==1?"c72769f97ab1c82b684aed947579b8c8b83759be377b5037c268477d0e7a28f5":"e521184be954eacc264d0d12c2aaf5dc4ee7dfab4a0339fb79ed829c3c3f8018";
+            var referenceSha=layerIndex==1?"08a1d5d60402d9cda0624c1ab14edc81db42b8e70d3e50f2554f1fdc0d54cafb":"13d560530a892a363f0ecdb1beb6d98f11697501e5f8249613f9e80fca63c866";
+            var diagnosticSource=layerIndex==1?"9d719229e739a788cfc685946033a4414daa0e16":"56c9f5ec3919ca0ce0774e411bc6ad8b4cf95262";
+            var entrySha=layerIndex==1?"3cc353963c7eafd2a209526c5c19daedd66c9c0da7cdf43dc6a4f4ccee158cf2":"5452f03c4aa0f6b518b3c2b8deb0d9c679508b6ec19a8e7849c7948f21ec30f2";
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
-            var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state"));var manifestFile=Path.Combine(root,"layer1-native-attention-boundary-manifest-20261015.json");
-            Check(manifestFile,"c72769f97ab1c82b684aed947579b8c8b83759be377b5037c268477d0e7a28f5");var manifest=JObject.Parse(File.ReadAllText(manifestFile));
-            Assert.That(manifest.Value<string>("source_graph_sha256"),Is.EqualTo("c050c2efa87d83aea45587b25f7b8d1d24dc471f33cc732dcf17d89588c70c13"));Assert.That(manifest.Value<int>("layer_index"),Is.EqualTo(1));
-            var referenceFile=Path.Combine(root,manifest.Value<string>("reference_file"));Check(referenceFile,"08a1d5d60402d9cda0624c1ab14edc81db42b8e70d3e50f2554f1fdc0d54cafb");
+            var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state"));var manifestFile=Path.Combine(root,"layer"+layerIndex+"-native-attention-boundary-manifest-20261015.json");
+            Check(manifestFile,manifestSha);var manifest=JObject.Parse(File.ReadAllText(manifestFile));
+            Assert.That(manifest.Value<string>("source_graph_sha256"),Is.EqualTo("c050c2efa87d83aea45587b25f7b8d1d24dc471f33cc732dcf17d89588c70c13"));Assert.That(manifest.Value<int>("layer_index"),Is.EqualTo(layerIndex));
+            var referenceFile=Path.Combine(root,manifest.Value<string>("reference_file"));Check(referenceFile,referenceSha);
             var reference=JObject.Parse(File.ReadAllText(referenceFile));Assert.That(reference.Value<bool>("success")&&reference.Value<bool>("context_validated")&&reference.Value<bool>("native_final_exact_match"),Is.True);
-            Assert.That(reference.Value<int>("layer_index"),Is.EqualTo(1));Assert.That(reference.Value<string>("input_stage"),Is.EqualTo("layer_0"));Assert.That(reference.Value<string>("output_stage"),Is.EqualTo("layer_1"));
-            Assert.That(reference.Value<string>("reference_source"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));Assert.That(reference.Value<string>("diagnostic_source"),Is.EqualTo("9d719229e739a788cfc685946033a4414daa0e16"));
+            Assert.That(reference.Value<int>("layer_index"),Is.EqualTo(layerIndex));Assert.That(reference.Value<string>("input_stage"),Is.EqualTo("layer_"+(layerIndex-1)));Assert.That(reference.Value<string>("output_stage"),Is.EqualTo("layer_"+layerIndex));
+            Assert.That(reference.Value<string>("reference_source"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));Assert.That(reference.Value<string>("diagnostic_source"),Is.EqualTo(diagnosticSource));
             var bindings=(JArray)manifest["bindings"];Assert.That(bindings.Count,Is.EqualTo(35));var wanted=bindings.Select(b=>b.Value<string>("boundary")).ToHashSet();
-            const string entry="/norm_out/Mul_1_output_0";wanted.Add(entry);report["scope"]="one_original_layer1_module_observation_only";report["phase"]="observe_layer1";report["full_encoder_validated"]=false;save();
+            var entry="/norm_out"+(layerIndex==1?"":"_"+(layerIndex-1))+"/Mul_1_output_0";wanted.Add(entry);report["scope"]="one_original_layer"+layerIndex+"_module_observation_only";report["phase"]="observe_layer"+layerIndex;report["full_encoder_validated"]=false;save();
             var snapshots=CaptureOperationBoundaries(models,inputs,outputs,kernels,input,wanted,baseline);
-            var entryFile=Path.GetFullPath(Path.Combine(root,"../k/artifacts/audio-current-stage-context/silence-stage-01-fp32.bin"));Check(entryFile,"3cc353963c7eafd2a209526c5c19daedd66c9c0da7cdf43dc6a4f4ccee158cf2");
+            var entryFile=Path.GetFullPath(Path.Combine(root,"../k/artifacts/audio-current-stage-context/silence-stage-"+layerIndex.ToString("D2")+"-fp32.bin"));Check(entryFile,entrySha);
             Assert.That(snapshots[entry].Select(BitConverter.SingleToInt32Bits),Is.EqualTo(Floats(entryFile).Select(BitConverter.SingleToInt32Bits)),"Selected layer must receive its original native input.");
-            report["original_layer_input_matches_bits"]=true;report["normal_final_matches_observed_bits"]=true;report["reference_report_sha256"]="08a1d5d60402d9cda0624c1ab14edc81db42b8e70d3e50f2554f1fdc0d54cafb";
+            report["original_layer_input_matches_bits"]=true;report["normal_final_matches_observed_bits"]=true;report["reference_report_sha256"]=referenceSha;
             report["not_observed"]=manifest["not_observed"].DeepClone();var stages=new JArray();report["stages"]=stages;
             var captureRoot=Path.ChangeExtension(output,null)+"-captures";Assert.That(Directory.Exists(captureRoot),Is.False);Directory.CreateDirectory(captureRoot);
             foreach(var binding in bindings)

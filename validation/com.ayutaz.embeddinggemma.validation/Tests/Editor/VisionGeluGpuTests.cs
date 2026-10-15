@@ -15,7 +15,7 @@ namespace EmbeddingGemma.Validation.Tests
         public void CapturedOriginalLinuxPrefixGeluFusedInnerMustImproveNativeBitsOnGpu()
         {
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/original-vision-first-layer-prefix-run-38719644488/original-vision-context-native-bfd8b0b36cd68365930fa636eb17dacbeef983e4/original-context-results"));
+            var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/np38719644488"));
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-original-prefix-fused-gelu-gpu-"+source+".json"));Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["runtime_source"]=source,["scope"]="captured_linux_avx2_original_first_gelu_prefix_only",
                 ["full_encoder_validated"]=false,["end_to_end_validated"]=false,["reference_reproduces_original_golden"]=false};

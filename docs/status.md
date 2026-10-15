@@ -1,5 +1,15 @@
 # 現在の状態
 
+更新日: 2026-10-15。**最初の画像RMS正規化は、元patch入力と元scaleを使い、現CPU式の全1,935,360値へ実GPUで全bit一致した。** `2fe78b5acda3522bdb2c6a16171c036b48e10e8a`、GPUCompute・計算/入力CPU fallback・中間flush0、1 pass / fail0 / skip0 / exit0。元Modelのserialized bytesも保持した。[正規化単体・除算境界修正の固定receipt](results/m3-first-rms-gpu-explicit-division-20261015.json)。元Linuxの未取得native内部値へ一致した証拠ではなく、画像全encoder・全profile・最終APIの合格ではない。
+
+切り分け順: まず元RMSだけの7層を切出し、旧layer0観測のprojection入力をGPUで全bit再現（1 pass / skip0）、scale hash / epsilonを固定した。新しい768幅RMS exportは10 Red→CPU/ONNX関連35 Green、全元patch入力でも現CPU式へbit差0。最初のGPU候補は325,961 bit差・局所許容差超過0で厳密gateに失敗した。成功扱いへ置き換えず保存している。
+
+小さい統計tensorの観測で通常GPU最終bitを保持（1 pass / skip0）した上で、除算768とepsilon加算が単一ScalarMadへ変換されたことを確認。2,520統計値のうち1,406値が現CPUの除算→加算と異なり、GPU値は「FP32逆数乗算＋epsilonを一度丸めるFMA」のoffline oracleに全bit一致した。FP64はこの単一FMA丸め診断だけで、RuntimeはFP32。既存 `GpuScalarDivide(768)` を二つのGPU segmentの間へ置き、epsilon加算を保持すると差が0になった。新しい重み・参照値・許容差変更はない。
+
+次はこの正規化を元layer 0へ戻し、元の固定layer参照で確認する。他のRMS / 活性化、画像全3 profileの全条件、実PCM/Texture→GPU前処理→encoder→backbone→正規化768次元APIの全role / mask / 境界 / 所有権 / Dispose / 例外後再利用 / text回帰、工程3・4のsample / Playerは未完了。全体モデルの再反復はまだ行っていない。package22 Green、既存Runtimeは前checkpointから未変更。Unityは終了済み、最新Required CIと長期memoryは別gate。Draft PR #81、main未統合。
+
+以下は前回checkpoint。
+
 更新日: 2026-10-15。画像layer 0を元の正確なpatch入力から切り出すと、通常GPUは4要素超過、7静的投影をblock384へ変えた候補は1要素超過だった。元の入力・係数・参照・`atol=1e-5` / `rtol=1e-4`は維持。通常と診断downloadの最終bit不変、全projection入出力・係数のhash/shapeを記録した。[層0・全体候補・次のRMS切り分けの固定receipt](results/m3-layer0-static-gpu-and-rms-next-20261015.json)。1要素超過も不合格で、元全encoderの合格には数えない。
 
 saved-model分割は、複数live出力・将来の残差・係数bytes・固定形状を保持し、切出した投影の再計算を拒否する。正しい残差fixtureの6 Redから、既存sliceを含む12 Greenへ進めた。同processの実layer 0だけは1 fail / skip0。初回の不正GUIDによるcompile失敗/XML欠測と、fixture前提の誤りを含む初期runは別に記録し、意図したTDD Redへ置き換えない。

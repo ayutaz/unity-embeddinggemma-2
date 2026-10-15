@@ -1,0 +1,127 @@
+{
+  "scope": "single_fixed_original_first_ffn_linear_component",
+  "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "native_replay_report_sha256": "99529dc0fa6c74825b23fca653d82091797ff1e5267d26c5cdae723fcf86f501",
+  "inputs": {
+    "feed_forward1.pre_layer_norm": {
+      "file": "feed_forward1.pre_layer_norm-fp32.bin",
+      "shape": [
+        1,
+        280,
+        1024
+      ],
+      "bytes": 1146880,
+      "sha256": "5cc9770575ad3c8873e4fd9f9b0fcec826626c60242217bec9edee7c6362c917"
+    },
+    "feed_forward1.ffw_layer_1": {
+      "file": "feed_forward1.ffw_layer_1-fp32.bin",
+      "shape": [
+        1,
+        280,
+        4096
+      ],
+      "bytes": 4587520,
+      "sha256": "e5ac1da2d80e0013714a5be3e3336272bc954176baf71bd932107db62b8318b4"
+    }
+  },
+  "weight_sha256": "564d441a5f6a90d63bee38d4a79f2f47ca3cea3f288e8d7d6d073fc8e8d1cc62",
+  "clamp_bounds": {
+    "input_min": {
+      "value": -12.875,
+      "sha256": "96f7071e1fc78f51580198929d07e994acb27fee15fcc69d74b9a67e898eb06c",
+      "path": "audio/data/weights/weight_274"
+    },
+    "input_max": {
+      "value": 12.8125,
+      "sha256": "965adfd105defed437a871f429d123fb16d948f6b72eb48c680117284b148d5f",
+      "path": "audio/data/weights/weight_275"
+    },
+    "output_min": {
+      "value": -40.0,
+      "sha256": "bd5cbc36d144a3f1f63fab2093cbf3b2c2d7b852d5359a482720b6a6d45fdf02",
+      "path": "audio/data/weights/weight_276"
+    },
+    "output_max": {
+      "value": 39.75,
+      "sha256": "dd93d66da4ccca0f648de5ac5785dcfa7589cbf82e83f5cca4db9a13a3c3aac7",
+      "path": "audio/data/weights/weight_277"
+    },
+    "range_bytes": 75645
+  },
+  "input_clip_differences": 0,
+  "numpy_version": "2.5.3",
+  "torch_version": "2.14.1+cpu",
+  "cpu_capability": "AVX2",
+  "torch_threads": 2,
+  "cases": [
+    {
+      "variant": "torch_linear",
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.0,
+      "maximum_absolute_error": 0.0,
+      "bit_differences": 0
+    },
+    {
+      "variant": "numpy_native",
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.09445080282001761,
+      "maximum_absolute_error": 3.814697265625e-06,
+      "bit_differences": 854643
+    },
+    {
+      "variant": "numpy_chunk64",
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.07083810211501321,
+      "maximum_absolute_error": 3.814697265625e-06,
+      "bit_differences": 769083
+    },
+    {
+      "variant": "numpy_chunk128",
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.07083810211501321,
+      "maximum_absolute_error": 2.86102294921875e-06,
+      "bit_differences": 783507
+    },
+    {
+      "variant": "numpy_chunk192",
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.07682408875640621,
+      "maximum_absolute_error": 2.86102294921875e-06,
+      "bit_differences": 312329
+    },
+    {
+      "variant": "numpy_chunk256",
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.06188607149821612,
+      "maximum_absolute_error": 3.814697265625e-06,
+      "bit_differences": 821642
+    },
+    {
+      "variant": "numpy_chunk384",
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.06188607149821612,
+      "maximum_absolute_error": 2.86102294921875e-06,
+      "bit_differences": 692415
+    },
+    {
+      "variant": "numpy_chunk512",
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.06188607149821612,
+      "maximum_absolute_error": 3.337860107421875e-06,
+      "bit_differences": 821810
+    },
+    {
+      "variant": "float64_independent_oracle_only",
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.07906449955301158,
+      "maximum_absolute_error": 2.86102294921875e-06,
+      "bit_differences": 763147
+    }
+  ],
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "elapsed_seconds": 0.7585666000086349,
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "interpretation": "All isolated alternatives pass the unchanged tolerance; native exactly reproduces the original. Block choices reduce some bit differences but do not establish a whole-encoder fix. FP64 is only an independent diagnostic oracle, not a candidate inference graph."
+}

@@ -45,3 +45,12 @@ def test_prefix_refuses_unqualified_dtype_or_nonfinite_output(values,error):
 def test_prefix_refuses_nontensor_target_without_executing_tail():
     value=torch.fx.Graph();input=value.placeholder('input');prefix=value.call_function(len,(input,));value.output(prefix)
     with pytest.raises(TypeError):run(torch.fx.GraphModule({},value),(torch.ones(2),),prefix.name)
+
+
+def test_independent_constant_prefix_does_not_execute_unrelated_earlier_model_nodes():
+    value=torch.fx.Graph();input=value.placeholder('input');value.call_function(forbidden_tail,(input,))
+    buffer=value.get_attr('positions');prefix=value.call_function(torch.add,(buffer,2.0));value.output(prefix)
+    root=torch.nn.Module();root.register_buffer('positions',torch.arange(4,dtype=torch.float32))
+    module=torch.fx.GraphModule(root,value);before=module.code
+    result=run(module,(torch.ones(1),),prefix.name)
+    assert torch.equal(result,torch.arange(4,dtype=torch.float32)+2) and module.code==before

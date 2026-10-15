@@ -92,6 +92,21 @@ def test_blas_context_probe_keeps_aten_native_and_checks_original_patch_before_f
     assert 'full_encoder_executed=False' in prefix['run'] and 'raise SystemExit' in prefix['run']
 
 
+def test_rotary_only_dispatch_captures_original_position_constants_for_all_profiles_without_encoder():
+    value=workflow();trigger=value.get('on',value.get(True));inputs=trigger['workflow_dispatch']['inputs']
+    assert 'original_rotary_only' in inputs,'Original data-independent rotary dispatch is missing'
+    assert inputs['original_rotary_only']['default'] is False
+    assert '!inputs.original_rotary_only' in value['jobs']['original_vision_probe']['if']
+    job=value['jobs']['original_rotary_probe'];assert 'inputs.original_rotary_only' in job['if']
+    assert job['strategy']['matrix']['profile']==['square','landscape','portrait']
+    commands='\n'.join(s.get('run','') for s in job['steps'])
+    assert '--artifact-id 11774238857' in commands and 'run_saved_graph_prefix' in commands
+    assert 'placeholder' in commands and 'full_encoder_executed=False' in commands
+    assert 'replay_saved_reference_context' not in commands and 'prepare_vision' not in commands
+    upload=next(s for s in job['steps'] if 'actions/upload-artifact@' in s.get('uses',''))
+    assert '.pt2' not in upload['with']['path'] and 'original-rotary-' in upload['with']['name']
+
+
 @pytest.mark.parametrize('capability,accepted', [('AVX512',True),('AVX2',False)])
 def test_avx512_only_dispatch_rejects_wrong_actual_capability_before_model_fetch(
         tmp_path,monkeypatch,capability,accepted):

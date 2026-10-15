@@ -170,7 +170,10 @@ def test_workflow_is_opt_in_and_downloads_only_frozen_graph_and_one_fixture():
     path = Path(__file__).resolve().parents[2] / ".github/workflows/frozen-audio-prefix-onnx.yml"
     text = path.read_text()
     job = yaml.safe_load(text)["jobs"]["probe"]
-    assert "frozen-audio-prefix-onnx" in job["if"] and job["timeout-minutes"] <= 20
+    assert "frozen-audio-prefix-onnx" in job["if"]
+    # The measured padded raw full12 execution exceeds20minutes. Keep the
+    # ordinary budget20 and permit35 only for that explicit connected case.
+    assert job['timeout-minutes'] == "${{ inputs.raw_input && inputs.chained_probe && matrix.case_id == 'padded_noise' && 35 || 20 }}"
     assert "11814567883" in text and "frozen_audio_prefix_onnx" in text
     assert "HF_TOKEN" not in text and "snapshot_download" not in text
     assert "if: always()" in text

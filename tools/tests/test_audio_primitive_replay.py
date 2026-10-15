@@ -139,4 +139,4 @@ def test_workflow_requires_explicit_primitive_mode_and_uses_original_saved_progr
     text = (Path(__file__).resolve().parents[2] / ".github/workflows/frozen-audio-prefix-onnx.yml").read_text()
     assert 'primitive_replay:' in text and 'PRIMITIVE_REPLAY' in text
     assert 'embeddinggemma_tools.audio_primitive_replay' in text
-    assert '11814567883' in text and 'timeout-minutes: 20' in text
+    assert '11814567883' in text and "matrix.case_id == 'padded_noise' && 35 || 20" in text

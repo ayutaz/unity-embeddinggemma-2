@@ -21,6 +21,8 @@ def test_cpu_math_context_is_recorded_before_weight_loading_even_when_loading_fa
         assert 'UNRELATED_PRIVATE_ENV' not in r['environment']
         assert r['torch_threads']==torch.get_num_threads() and r['torch_version']==str(torch.__version__)
         assert r['torch_build_configuration'] and r['system']
+        assert r['numpy_version'] and r['numpy_blas']['name'] and r['numpy_blas']['version']
+        assert 'include directory' not in r['numpy_blas'] and 'lib directory' not in r['numpy_blas']
         assert not r['encoder_validated'] and not r['gpu_validated']
         raise RuntimeError('unit-test stop before weights')
     monkeypatch.setattr(prepare,'load_audio_models',load)

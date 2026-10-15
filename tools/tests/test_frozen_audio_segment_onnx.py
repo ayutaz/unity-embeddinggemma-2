@@ -144,7 +144,7 @@ def test_workflow_segment_is_explicit_and_downloads_both_audited_boundaries():
     assert "from_stage:" in text and "default: none" in text
     assert 'PROBE_FROM_STAGE' in text and 'frozen_audio_segment_onnx' in text
     assert '--from-stage' in text and 'source_index' in text
-    assert 'timeout-minutes: 20' in text
+    assert "matrix.case_id == 'padded_noise' && 35 || 20" in text
 
 
 def test_segment_rejects_native_layer_norm_instead_of_silently_skipping_audit():

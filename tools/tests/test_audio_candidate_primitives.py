@@ -115,4 +115,4 @@ def test_candidate_mode_rejects_unknown_variant_and_does_not_change_default_sele
 def test_workflow_wires_only_explicit_candidate_mode_and_retains_boundaries_and_timeout():
     text = (Path(__file__).resolve().parents[2] / '.github/workflows/frozen-audio-prefix-onnx.yml').read_text()
     assert 'candidate_args' in text and '--variant "$PROBE_VARIANT"' in text
-    assert 'ordered_original_primitives' in text and 'timeout-minutes: 20' in text
+    assert 'ordered_original_primitives' in text and "matrix.case_id == 'padded_noise' && 35 || 20" in text

@@ -424,12 +424,16 @@ def prepare_audio_encoder(snapshot, preprocessing, destination, *, revision=MODE
         processor = next((line.split(':',1)[1].strip() for line in cpuinfo.read_text().splitlines()
                           if line.startswith('model name') and ':' in line), processor)
     math_environment = ('MKL_ENABLE_INSTRUCTIONS','MKL_CBWR','ATEN_CPU_CAPABILITY','ONEDNN_MAX_CPU_ISA',
-                        'DNNL_MAX_CPU_ISA','OMP_NUM_THREADS','MKL_NUM_THREADS','OPENBLAS_NUM_THREADS')
+                        'DNNL_MAX_CPU_ISA','OMP_NUM_THREADS','MKL_NUM_THREADS','OPENBLAS_NUM_THREADS',
+                        'OPENBLAS_CORETYPE','NPY_DISABLE_CPU_FEATURES')
+    blas = np.__config__.show(mode='dicts').get('Build Dependencies',{}).get('blas',{})
+    blas = {key:blas[key] for key in ('name','version','openblas configuration','blas configuration') if key in blas}
     context_path = destination / 'audio-cpu-context.json'
     context_path.write_text(json.dumps(dict(source_commit=source_commit,system=platform.system(),
         machine=platform.machine(),processor=processor,torch_version=str(torch.__version__),
         cpu_capability=torch.backends.cpu.get_cpu_capability(),torch_threads=torch.get_num_threads(),
         torch_interop_threads=torch.get_num_interop_threads(),torch_build_configuration=torch.__config__.show(),
+        numpy_version=np.__version__,numpy_blas=blas,
         environment={name:os.environ.get(name) for name in math_environment},
         encoder_validated=False,gpu_validated=False),indent=2)+'\n',encoding='utf-8')
     audio, projection = load_audio_models(snapshot)

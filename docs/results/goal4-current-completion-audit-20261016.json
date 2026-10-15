@@ -4,7 +4,7 @@
   "goal": "4まで進めてください",
   "status": "active_not_complete",
   "scope_source": "goal4-scope-audit-20261016.json",
-  "candidate_head_at_audit": "6c50bdc82fbcb09833fc24e438bf41bb5f42da11",
+  "candidate_head_at_audit": "d838ecb7d1bac9169f5afc525d823de0d4a578ae",
   "requirements": [
     {
       "requirement": "Original learned coefficients, references and encoder tolerances remain unchanged",
@@ -79,11 +79,11 @@
     {
       "requirement": "Required repository checks for the resulting candidate",
       "status": "not_achieved",
-      "last_terminal_ci_run": 38821377276,
-      "last_terminal_ci_head": "0618de70a7fbc542d22716ae5dc4cbdb2800ec5b",
-      "result": "All four Python environments, package/actionlint success; audio ONNX1309 failures and Required CI fail. New diagnostic/midpoint candidate changes have not yet completed CI.",
-      "candidate_ci_run": 38821377276,
-      "candidate_ci_head": "0618de70a7fbc542d22716ae5dc4cbdb2800ec5b",
+      "last_terminal_ci_run": 38823835930,
+      "last_terminal_ci_head": "d838ecb7d1bac9169f5afc525d823de0d4a578ae",
+      "result": "All four Python jobs and package/actionlint success; real audio ONNX comparison and Required CI fail.",
+      "candidate_ci_run": 38823835930,
+      "candidate_ci_head": "d838ecb7d1bac9169f5afc525d823de0d4a578ae",
       "candidate_ci_last_observation": "completed_failure",
       "candidate_ci_aggregate_conclusion": "failure",
       "evidence": [
@@ -131,9 +131,13 @@
         "m4-sine-original-bmm8-exact-fma-midpoint-cause-20261016.json",
         "m4-sine-original-bmm8-midpoint-all55296-actual-onnx-bit-exact-20261016.json",
         "m4-ordered-original-midpoint-qk-bmm-candidate-tdd-20261016.json",
-        "m4-latest-ci0618-four-python-pass-audio1309-fail-cpu-context-20261016.json"
+        "m4-latest-ci0618-four-python-pass-audio1309-fail-cpu-context-20261016.json",
+        "m4-original-raw-sine-full12-midpoint-qk-tolerance-passed-20261016.json",
+        "m4-native-amd7763-matrix-and-tanh-mkl-contexts-20261016.json",
+        "m4-padded-raw-connected-measured35minute-budget-20261016.json",
+        "m4-audio-numpy-blas-context-tdd-20261016.json"
       ],
-      "next_action": "Evaluate the causally changed midpoint-QK candidate through actual raw sine full12layer carry. Then all six original cases and Required CI with unchanged default/native gates remain mandatory. Do not promote isolated BMM success."
+      "next_action": "Qualify the same causally corrected midpointQK candidate across all six original raw cases with measured35minute budget only for padded raw chain. Default fresh-native ONNX and Required CI remain unchanged mandatory failures until resolved."
     }
   ],
   "documentation": {
@@ -251,6 +255,15 @@
       "midpoint_qk_actual_onnx_bit_difference": 0,
       "midpoint_qk_values": 55296,
       "sine_whole_candidate_pending": true
+    },
+    "sine_midpoint_raw_full12": {
+      "run": 38823852007,
+      "source": "d838ecb7d1bac9169f5afc525d823de0d4a578ae",
+      "tolerance_failures": 0,
+      "maximum_tolerance_ratio": 0.4823762130641813,
+      "bit_differences": 34679,
+      "all_capture_and_carry_hashes_verified": true,
+      "all_six_cases": false
     }
   },
   "pending_candidate_code_sha256": {

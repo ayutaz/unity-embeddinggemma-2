@@ -13,7 +13,7 @@
 | 実PCMから最終768次元、全6信号・全role | 18条件合格、最小cosine 0.9999997097692651 | [音声API](results/m4-real-pcm-all-roles-staged-gpu-20261016.json) |
 | 音声例外後再利用・借用stage・中間Tensor解放 | 実GPU encoder後のbackbone例外から復帰、API破棄後も借用stage再利用 | [音声所有権](results/m4-real-pcm-all-roles-staged-gpu-20261016.json) |
 | テキスト回帰・API / 境界 / 非同期契約 | FP32・Float16、6文書・4queryの全順位 / score合格、関連189 pass / skip0 | [最新テキスト回帰](results/m4-staged-original-encoder-and-final-text-gpu-regression-20261016.json) |
-| 必須repository checks | **未達**。最新0618de7のCIはPython4環境・package・workflow lint成功、音声ONNX比較1309要素超過・Required CI失敗 | [CI 38821377276](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38821377276) |
+| 必須repository checks | **未達**。最新d838ecbのCIはPython4環境・package・workflow lint成功、音声ONNX比較・Required CI失敗 | [CI 38823835930](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38823835930) |
 
 追加確認: source `b378070`の[CI 38774804527](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38774804527)では、Windows / Linux × Python3.13 / 3.14の全4環境で各1,111 pass・fail0・skip0、package / workflow lintも合格しました。実モデルの音声ONNX比較は失敗しており、Required CIの完了条件は満たしていません。4環境のJUnit XMLを取得・監査済みです。
 
@@ -33,7 +33,7 @@ GPU結果はWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER /
 
 ## 残る音声ONNX問題
 
-必須CIの残件は、実音声encoderのONNX出力とPython native出力の数値差です。source `0618de7`の[最新確定CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38821377276)は、Python4環境・package・workflow lintが成功し、音声ONNX1309要素超過とRequired CIが失敗しました。先行f0593c7のLinux /Python3.13 Tanh2件失敗は保存し、最新hostのgreenだけで原因解消とは扱いません。既定export、元参照、重み、許容差と製品Runtimeは変更していません。
+必須CIの残件は、実音声encoderのONNX出力とPython native出力の数値差です。source `d838ecb`の[最新確定CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38823835930)は、Python4環境・package・workflow lintが成功し、音声ONNX比較とRequired CIが失敗しました。先行0618de7の1309要素超過も固定receiptに保持します。先行f0593c7のLinux /Python3.13 Tanh2件失敗は保存し、最新hostのgreenだけで原因解消とは扱いません。既定export、元参照、重み、許容差と製品Runtimeは変更していません。
 
 [後半3層の独立した185演算比較](results/m4-isolated-audio-primitives-all185-within-tolerance-20261016.json)は、各ONNX演算へ同じnative入力を渡すと全件が元許容差内でした。比較値は後続へ注入せず、元のnative区間出力は元最終参照と全bit一致しています。最大の単体差は`mm_109`の許容差比0.67で、接続したONNX区間の失敗と合わせると、小さな丸め差の蓄積が疑われます。これは単独の原因演算の確定や全encoder合格ではありません。
 
@@ -83,13 +83,19 @@ GPU結果はWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER /
 
 [Linux /Python3.13のTanh2件の失敗](results/m4-linux-python313-tanh-native-context-failure-20261016.json)は同hostのnative出力へのbit比較で、元qualified55,296値の参照差とは区別します。期待値・テスト・許容差は変更していません。[CPU数値環境の保存](results/m4-audio-cpu-context-recording-tdd-20261016.json)をTDDで追加し、今後の成功・失敗時に重みload前のCPU /Torch /許可した数値設定だけを残します。2 red＋stale context1 red→関連24 pass、最終context3 pass。既定のnative /ONNX計算や参照生成は維持します。
 
-[Windowsの小さな元行列診断](results/m4-native-original-matrix-windows-amd7763-bit-exact-20261016.json)はAMD EPYC7763 /AVX2で完了しました。実ONNX、native既定、MKL AVX2指定の全1,146,880値が元qualified値とbit一致し、保存capture /log SHAも照合済みです。Intel hostではないためIntel経路の仮説は未解決です。sineの先頭3層へ向けた[非注入演算比較](results/m4-sine-original-tanh-position-div-noninjecting-tdd-20261016.json)を6 red→関連49 pass /skip0・workflow lint合格で追加し、同じ元入力・前後参照を選択します。接続候補と同じ位置投影 /Tanh関数に加え、未変更のscalar-buffer Divも観測します。比較値を後続へ渡さず、元native区間の参照一致を別判定します。実モデルのsine演算比較はまだ未実行です。
+[Windowsの小さな元行列診断](results/m4-native-original-matrix-windows-amd7763-bit-exact-20261016.json)はAMD EPYC7763 /AVX2で完了しました。実ONNX、native既定、MKL AVX2指定の全1,146,880値が元qualified値とbit一致し、保存capture /log SHAも照合済みです。Intel hostではないためIntel経路の仮説は未解決です。sineの先頭3層へ向けた[非注入演算比較](results/m4-sine-original-tanh-position-div-noninjecting-tdd-20261016.json)を6 red→関連49 pass /skip0・workflow lint合格で追加し、同じ元入力・前後参照を選択します。接続候補と同じ位置投影 /Tanh関数に加え、未変更のscalar-buffer Divも観測します。比較値を後続へ渡さず、元native区間の参照一致を別判定します。実モデルのsine演算比較は下記のqualified147比較として完了しました。
 
 [sine先頭3層の非注入147比較](results/m4-sine-first3-noninjecting-bmm-one-bit-localized-20261016.json)は、native区間 /native interpreterが元stage03とbit一致した文脈で完了しました。117候補演算を含み、104 captureファイルのSHAを独立照合しました。QK行列積bmm_8の1値だけに1bit差、SiLUは極小の22bit差、その他のTanh /Div /正規化 /Softmax /Sigmoid /Convはbit一致です。[元bmm_8の出力1値](results/m4-sine-original-bmm8-exact-fma-midpoint-cause-20261016.json)を正確な有理数FMAで追跡すると、積和k=43で既存FP32エミュレーションがmidpointの低残差を失うことを確認しました。
 
 [独立したmidpoint FMA候補](results/m4-isolated-fp32-fma-midpoint-residual-tdd-20261016.json)は旧実装の実数値red2件から追加し、30境界例と独立有理数oracleの2000正常 /相殺例、実標準FP32 ONNXで確認しました。[元bmm_8の実ONNX](results/m4-sine-original-bmm8-midpoint-all55296-actual-onnx-bit-exact-20261016.json)は全55,296値が元出力とbit一致しました。これは行列積単体の修正で、sine全encoderの合格はまだ証明しません。新しい[ordered_original_midpoint_bmm](results/m4-ordered-original-midpoint-qk-bmm-candidate-tdd-20261016.json)は元Tanh候補を維持し、各層の監査済みQK BMM1件だけをこの丸めへ変更します。3 red＋契約guard1 red→関連32 pass、追加の接続実ONNX1 pass、監査variant2 red→14 pass、workflow lint合格です。
 
 [最新CIのCPU情報](results/m4-latest-ci0618-four-python-pass-audio1309-fail-cpu-context-20261016.json)はAMD EPYC7763 /AVX2、Torch2.14.1+cu130でした。通常のnative /ONNX計算や期待値を変えずに失敗情報を回収しています。[小さなMKL context診断](results/m4-small-native-mkl-tanh-context-tdd-20261016.json)にも固定dense32771 /random514のnative Tanhと元順序の出力を追加し、fresh default /MKL AVX2子プロセスが同じ入力SHAを使うことを要求します。3 red→関連24 pass、拡張関連37 pass。これはnative比較で、Tanhの新たな実ONNX /全encoder合格ではありません。
+
+[MKL default /AVX2の小さなTanh比較](results/m4-native-amd7763-matrix-and-tanh-mkl-contexts-20261016.json)もsource d838ecbで完了しました。AMD EPYC7763 /AVX2上で、両子プロセスの入力SHAは同じ、dense32771 /random514の元順序とnative出力はbit一致でした。元行列1,146,880値もbit一致、capture /logとactivation metricsを独立照合済みです。Intelの仮説は依然未解決です。[NumPy BLAS情報の記録](results/m4-audio-numpy-blas-context-tdd-20261016.json)も重みload前のcontextへ追加しました。1 red→3 pass。これは情報の保存だけで、行列計算・参照値を変えません。
+
+前回padded_noiseのraw全接続は3層評価が約337 /355秒を要し、20分上限で最終未取得でした。[実測に基づくActions時間枠](results/m4-padded-raw-connected-measured35minute-budget-20261016.json)をその明示的raw＋chained＋padded_noiseだけ35分へ調整しました。他probeは20分、small matrixは10分です。関連77 pass /skip0、workflow lint合格。比較値・許容差・全6ケースの完了条件は維持し、旧timeoutは成功へ変更しません。新候補の全6実行はsineの結果確認後に進めます。
+
+[元特徴量からsine全12層のmidpoint QK候補](results/m4-original-raw-sine-full12-midpoint-qk-tolerance-passed-20261016.json)はsource d838ecbで完了し、元最終143,360値の許容差超過0、最大許容差比0.482376でした。bit差34,679は残るためbit一致とは扱いません。旧候補の2要素超過が解消し、元入力SHA・current native全出力SHA・標準ONNX最終SHAは旧runと同じでした。各partの実carry、capture SHA、QK12置換を独立監査し、途中stage参照downloadはskippedです。current native raw wholeは元参照から1085要素超過し、その比較は別に保持します。全6ケースの合格と既定exportへの採用はまだ未達です。
 
 ## 後続工程
 

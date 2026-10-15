@@ -67,23 +67,35 @@ namespace EmbeddingGemma
                     var data= models[i].layers.SelectMany(l=>l.outputs).Concat(models[i].inputs.Select(input=>input.index));
                     if(cpu.Intersect(data).Any() || flush.Count!=0)
                         throw new NotSupportedException("GPU composition cannot use CPU computation or intermediate readback.");
-                    if(releaseGpuCache!=null)releaseGpuCache[i]=CacheRelease(workers[i]);
+                    if(releaseGpuCache!=null)releaseGpuCache[i]=CacheRelease(workers[i],models[i]);
                 }
             }
             catch { Dispose();throw; }
         }
 
-        static Action CacheRelease(Worker worker)
+        static Action CacheRelease(Worker worker,Model model)
         {
             const BindingFlags fields=BindingFlags.Instance|BindingFlags.NonPublic;
             var storage=typeof(Worker).GetField("m_Storage",fields)?.GetValue(worker);
             var pool=storage?.GetType().GetField("m_TensorPool",fields)?.GetValue(storage);
             var cacheField=pool?.GetType().GetField("m_computeMemoryPool",fields);
             var freeField=cacheField?.FieldType.GetField("freeBuffers",fields);
-            if(cacheField==null||freeField==null||!typeof(IDisposable).IsAssignableFrom(cacheField.FieldType))
+            var valuesField=storage?.GetType().GetField("m_InUseTensorsPool",fields);
+            if(cacheField==null||freeField==null||valuesField==null||!typeof(IDisposable).IsAssignableFrom(cacheField.FieldType))
                 throw new NotSupportedException("Pinned unused GPU cache inspection is unavailable.");
+            var protectedIndices=new HashSet<int>(model.inputs.Select(value=>value.index).Concat(model.constants.Select(value=>value.index)));
+            var copiedOutputs=model.outputs.Select(value=>value.index).Where(index=>!protectedIndices.Contains(index)).Distinct().ToArray();
             return ()=>
             {
+                if(!(valuesField.GetValue(storage) is IDictionary<int,Tensor> values))throw new NotSupportedException("Pinned live tensor storage differs.");
+                var protectedTensors=new HashSet<Tensor>(protectedIndices.Where(values.ContainsKey).Select(index=>values[index]).Where(value=>value!=null));
+                var retired=new HashSet<Tensor>();
+                foreach(var index in copiedOutputs)
+                {
+                    if(!values.TryGetValue(index,out var value))continue;
+                    values.Remove(index);
+                    if(value!=null&&!protectedTensors.Contains(value)&&retired.Add(value))value.Dispose();
+                }
                 var cache=cacheField.GetValue(pool);
                 if(!(freeField.GetValue(cache) is System.Collections.IDictionary free))throw new NotSupportedException("Pinned free GPU cache differs.");
                 if(free.Count==0)return;

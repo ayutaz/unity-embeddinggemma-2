@@ -8,6 +8,10 @@ on:
         type: choice
         default: subsample
         options: [subsample, layer_0, layer_1, layer_2, layer_3, layer_4, layer_5, layer_6, layer_7, layer_8, layer_9, layer_10, layer_11]
+      frozen_stage_reference:
+        description: Compare only against audited original stage bytes; retain current native drift separately
+        type: boolean
+        default: false
   pull_request:
     types: [opened, synchronize, labeled]
 
@@ -25,7 +29,8 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       (github.event.pull_request.head.repo.full_name == github.repository &&
        (contains(github.event.pull_request.labels.*.name, 'frozen-audio-prefix-onnx') ||
-        contains(github.event.pull_request.labels.*.name, 'frozen-audio-layer0-onnx')))
+        contains(github.event.pull_request.labels.*.name, 'frozen-audio-layer0-onnx') ||
+        contains(github.event.pull_request.labels.*.name, 'frozen-audio-layer0-fixed-reference')))
     runs-on: ubuntu-latest
     timeout-minutes: 20
     defaults:
@@ -35,7 +40,8 @@ jobs:
       OMP_NUM_THREADS: '4'
       MKL_NUM_THREADS: '4'
       OPENBLAS_NUM_THREADS: '4'
-      PROBE_STAGE: ${{ inputs.stage || (contains(github.event.pull_request.labels.*.name, 'frozen-audio-layer0-onnx') && 'layer_0') || 'subsample' }}
+      PROBE_STAGE: ${{ inputs.stage || ((contains(github.event.pull_request.labels.*.name, 'frozen-audio-layer0-onnx') || contains(github.event.pull_request.labels.*.name, 'frozen-audio-layer0-fixed-reference')) && 'layer_0') || 'subsample' }}
+      USE_FROZEN_STAGE: ${{ inputs.frozen_stage_reference || contains(github.event.pull_request.labels.*.name, 'frozen-audio-layer0-fixed-reference') }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
@@ -56,16 +62,37 @@ jobs:
           --member audio-runtime-reference/audio-encoder-validation.json
           --member audio-runtime-reference/frames-1119-valid-1119/audio.pt2
           --member audio-runtime-reference/frames-1119-valid-1119/silence-features-fp32.bin
+      - name: Fetch independently audited original stage reference only when explicitly requested
+        if: env.USE_FROZEN_STAGE == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          case "$PROBE_STAGE" in
+            subsample) stage_index=00 ;;
+            layer_*) printf -v stage_index '%02d' "$(( ${PROBE_STAGE#layer_} + 1 ))" ;;
+            *) exit 1 ;;
+          esac
+          uv run --locked python -m embeddinggemma_tools.artifact_zip \
+            --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11814567883 \
+            --output ../artifacts/frozen-stage-reference \
+            --member audio-runtime-stages/audio-stage-reference.json \
+            --member audio-runtime-stages/audio-stage-validation.json \
+            --member "audio-runtime-stages/frames-1119-valid-1119/silence-stage-${stage_index}-fp32.bin"
       - name: Record actual CPU host
         run: |
           mkdir -p ../artifacts/frozen-audio-prefix-onnx
           lscpu --json > ../artifacts/frozen-audio-prefix-onnx/cpu-host.json
-      - name: Require original final bits before diagnosing first projection ONNX
-        run: >-
-          uv run --locked python -m embeddinggemma_tools.frozen_audio_prefix_onnx
-          --input ../artifacts/frozen-prefix-input/audio-runtime-reference
-          --output ../artifacts/frozen-audio-prefix-onnx
-          --stage "$PROBE_STAGE"
+      - name: Diagnose fixed boundary with original live-context gate or explicit frozen stage audit
+        shell: bash
+        run: |
+          reference_args=()
+          if [ "$USE_FROZEN_STAGE" = true ]; then
+            reference_args=(--frozen-stage-source ../artifacts/frozen-stage-reference/audio-runtime-stages)
+          fi
+          uv run --locked python -m embeddinggemma_tools.frozen_audio_prefix_onnx \
+            --input ../artifacts/frozen-prefix-input/audio-runtime-reference \
+            --output ../artifacts/frozen-audio-prefix-onnx \
+            --stage "$PROBE_STAGE" "${reference_args[@]}"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
@@ -75,5 +102,6 @@ jobs:
             artifacts/frozen-audio-prefix-onnx/*.bin
             artifacts/frozen-audio-prefix-onnx/*.onnx
             artifacts/frozen-prefix-input/range-receipt.json
+            artifacts/frozen-stage-reference/range-receipt.json
           retention-days: 7
           if-no-files-found: warn

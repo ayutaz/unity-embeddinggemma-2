@@ -127,6 +127,44 @@ def query_scale_model():
     return helper.make_model(graph,opset_imports=[helper.make_opsetid('',24)],ir_version=9)
 
 
+def scalar_division_model():
+    source=query_scale_model();source.graph.node[0].op_type='Div';source.graph.node[0].name='divide'
+    source.graph.node[1].CopyFrom(helper.make_node('Tanh',['scaled'],['out'],name='tanh'))
+    source.graph.initializer[0].CopyFrom(numpy_helper.from_array(np.array(50,dtype=np.float32),name='scalar'))
+    return source
+
+
+def test_scalar_division_partition_preserves_original_divisor_and_rounding_boundary():
+    source=scalar_division_model();before=source.SerializeToString()
+    parts,plan=required()(source,node_names=[],expected_weight_sha256=[],scalar_divide_node_names=['divide'])
+    assert source.SerializeToString()==before and len(parts)==2
+    operation=plan['operations'][0];assert operation['kind']=='scalar_divide' and operation['divisor']==50.0
+    assert operation['divisor_sha256']==hashlib.sha256(np.array(50,dtype='<f4').tobytes()).hexdigest()
+    values={'input':np.arange(6,dtype=np.float32).reshape(2,3)}
+    for index,part in enumerate(parts):
+        onnx.checker.check_model(part);assert not any(n.name=='divide' for n in part.graph.node)
+        result=ReferenceEvaluator(part).run(None,{v.name:values[v.name] for v in part.graph.input})
+        aliases=plan['segments'][index]['output_aliases'];values.update(zip([aliases.get(v.name,v.name) for v in part.graph.output],result))
+        if index==0:values['scaled']=values['input']/np.float32(operation['divisor'])
+    np.testing.assert_array_equal(values['out'],ReferenceEvaluator(source).run(None,{'input':values['input']})[0])
+
+
+@pytest.mark.parametrize('problem',['missing','duplicate','zero','nonfinite','vector','dynamic','operator','shape'])
+def test_scalar_division_partition_rejects_unverified_divisor_or_shape_before_mutation(problem):
+    source=scalar_division_model();names=['divide']
+    if problem=='missing':names=['missing']
+    elif problem=='duplicate':names*=2
+    elif problem in ('zero','nonfinite','vector'):
+        value=0 if problem=='zero' else float('inf') if problem=='nonfinite' else [50,50]
+        source.graph.initializer[0].CopyFrom(numpy_helper.from_array(np.array(value,dtype=np.float32),name='scalar'))
+    elif problem=='dynamic':source.graph.node[0].input[1]='input'
+    elif problem=='operator':source.graph.node[0].op_type='Mul'
+    elif problem=='shape':source.graph.input[0].type.tensor_type.shape.dim[1].ClearField('dim_value')
+    before=source.SerializeToString()
+    with pytest.raises(ValueError):required()(source,node_names=[],expected_weight_sha256=[],scalar_divide_node_names=names)
+    assert source.SerializeToString()==before
+
+
 def test_query_scale_partition_preserves_two_original_roundings_and_coefficient_bytes():
     source=query_scale_model();before=source.SerializeToString()
     parts,plan=required()(source,node_names=[],expected_weight_sha256=[],query_scale_node_names=['query_scale'])

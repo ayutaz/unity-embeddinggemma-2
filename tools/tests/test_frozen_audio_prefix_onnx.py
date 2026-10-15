@@ -10,12 +10,17 @@ import yaml
 from embeddinggemma_tools import frozen_audio_prefix_onnx as probe
 
 
-def program():
+def program(*, mask=False):
     root = torch.nn.Module()
     root.register_buffer("scale", torch.linspace(0.75, 1.25, 32))
     root.register_buffer("matrix", torch.randn(32, 8, generator=torch.Generator().manual_seed(51)))
     graph = torch.fx.Graph()
     value = graph.placeholder("value")
+    if mask:
+        root.register_buffer("fixed_mask", torch.arange(32, dtype=torch.int64) % 2)
+        fixed_mask = graph.get_attr("fixed_mask")
+        boolean = graph.call_function(torch.ops.aten._to_copy.default, (fixed_mask,), {"dtype": torch.bool})
+        value = graph.call_function(torch.ops.aten.mul.Tensor, (value, boolean))
     scale = graph.get_attr("scale")
     norm = graph.call_function(torch.ops.aten.native_layer_norm.default, (value, [32], scale, None, 1e-6))
     normalized = graph.call_function(operator.getitem, (norm, 0))
@@ -85,6 +90,24 @@ def test_original_final_bits_are_a_prerequisite_before_export(tmp_path, monkeypa
     report = probe.probe_prefix(source, values, torch.ones(1, 8), tmp_path, boundary=boundary)
     assert not report["context_qualified"] and not report["complete"]
     assert report["cases"] == [] and not report["full_encoder_validated"]
+
+
+def test_saved_int64_mask_bool_copy_exports_without_changing_native_bits(tmp_path):
+    source, boundary = program(mask=True)
+    values = torch.randn(2, 32, generator=torch.Generator().manual_seed(81))
+    report = probe.probe_prefix(source, values, source(values).detach(), tmp_path, boundary=boundary)
+    assert report["complete"] and report["cases"][0]["native_wrapper_bits_equal"]
+    assert "_to_copy" in str(source.graph)
+
+
+def test_copy_translation_rejects_unqualified_dtype_changes():
+    source, boundary = program(mask=True)
+    copy = next(node for node in source.graph.nodes if node.target == torch.ops.aten._to_copy.default)
+    copy.kwargs = {"dtype": torch.float32}
+    source.recompile()
+    prefix = probe.extract_prefix(source, boundary)
+    with pytest.raises(ValueError, match="mask"):
+        probe.PrefixExport(prefix, "native")(torch.zeros(1, 32))
 
 
 def test_refuses_overwriting_prior_evidence(tmp_path):

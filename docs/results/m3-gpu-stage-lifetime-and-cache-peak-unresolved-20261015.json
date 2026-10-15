@@ -1,0 +1,1249 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "scope": "gpu_stage_lifetime_cache_retirement_and_unchanged_high_peak_only",
+  "recorded_at_source": "6662a6f290d619d98c6ad78e22c098edb21e71c7",
+  "original_fp32_tolerances": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "baseline": {
+    "file": "vision-cache-release-native-gelu-rms-whole-gpu-1ee8f2c00408e2466e7df3c8ca55608e24f442cc-square-0.json",
+    "sha256": "5392cd17d99c1d97959b2b6e5ed712121e9a11bd735dd315d505f695d473b985",
+    "result": {
+      "success": false,
+      "scope": "one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate",
+      "runtime_source": "1ee8f2c00408e2466e7df3c8ca55608e24f442cc",
+      "case_id": "square-0",
+      "phase": "completed",
+      "all_profiles_validated": false,
+      "end_to_end_validated": false,
+      "model_file_audit_ms": 422.42830000000004,
+      "profile": "square",
+      "saved_model_sha256": "4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7",
+      "model_load_ms": 690.6887,
+      "coefficient_audit_before_ms": 415.67330000000004,
+      "inline_rms_count": 112,
+      "layer_count": 19535,
+      "original_square_count": 113,
+      "remaining_original_rms_count": 1,
+      "all_original_coefficient_descriptors_retained": true,
+      "graph_rewrite_ms": 1640.9592,
+      "native_gelu_count": 16,
+      "release_unused_gpu_cache": true,
+      "pipeline_prepare_ms": 1411.4667000000002,
+      "segment_count": 18,
+      "gpu_operation_count": 17,
+      "prepare_ms": 4163.4682,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "host_working_set_before_execute_bytes": 3384377344,
+      "execute_and_final_download_ms": 7111.0169000000005,
+      "capture_sha256": "43fa98f573bd55a0f634075bf17f42fcde2ff9e89894c2d5b1b238c8ab451aab",
+      "cache_only_candidate_bits_preserved": true,
+      "host_working_set_after_download_bytes": 9652461568,
+      "host_peak_working_set_bytes": 9652461568,
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 571,
+      "maximum_absolute_error": 0.00012803077697753906,
+      "maximum_tolerance_ratio": 6.883228917760353,
+      "original_coefficient_bytes_preserved": true,
+      "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+      "coefficient_audit_after_ms": 428.75350000000003,
+      "error_first_line": "NUnit.Framework.AssertionException:   Keep the unchanged original FP32 elementwise gate."
+    }
+  },
+  "experiments": [
+    {
+      "name": "stage_fences_only",
+      "report": {
+        "file": "vision-staged-cache-release-native-gelu-rms-whole-gpu-0acbefb465861c9b76cb007363bd8561d5cb4bda-square-0.json",
+        "sha256": "49e14184e2bff28ab4e6602b06e5cc00c76d942baece4de71fc8a19f589450fc",
+        "result": {
+          "success": false,
+          "scope": "one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate",
+          "runtime_source": "0acbefb465861c9b76cb007363bd8561d5cb4bda",
+          "case_id": "square-0",
+          "phase": "completed",
+          "all_profiles_validated": false,
+          "end_to_end_validated": false,
+          "scheduling_mode": "gpu_fence_per_stage",
+          "intermediate_tensor_readback_added": false,
+          "model_file_audit_ms": 515.7839,
+          "profile": "square",
+          "saved_model_sha256": "4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7",
+          "model_load_ms": 1198.2793000000001,
+          "coefficient_audit_before_ms": 493.7447,
+          "inline_rms_count": 112,
+          "layer_count": 19535,
+          "original_square_count": 113,
+          "remaining_original_rms_count": 1,
+          "all_original_coefficient_descriptors_retained": true,
+          "graph_rewrite_ms": 2236.0138,
+          "native_gelu_count": 16,
+          "release_unused_gpu_cache": true,
+          "pipeline_prepare_ms": 2151.9217000000003,
+          "segment_count": 18,
+          "gpu_operation_count": 17,
+          "prepare_ms": 6085.9816,
+          "cpu_computation_or_input_count": 0,
+          "readback_flush_count": 0,
+          "host_working_set_before_execute_bytes": 3318542336,
+          "execute_and_final_download_ms": 13967.448100000001,
+          "capture_sha256": "43fa98f573bd55a0f634075bf17f42fcde2ff9e89894c2d5b1b238c8ab451aab",
+          "cache_only_candidate_bits_preserved": true,
+          "host_working_set_after_download_bytes": 10157502464,
+          "host_peak_working_set_bytes": 10157502464,
+          "actual_backend": "GPUCompute",
+          "mismatched_elements": 571,
+          "maximum_absolute_error": 0.00012803077697753906,
+          "maximum_tolerance_ratio": 6.883228917760353,
+          "original_coefficient_bytes_preserved": true,
+          "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+          "coefficient_audit_after_ms": 609.0082,
+          "error_first_line": "NUnit.Framework.AssertionException:   Keep the unchanged original FP32 elementwise gate."
+        }
+      },
+      "execution": {
+        "file": "vision-staged-fences-fixed-square0-20261015-process.json",
+        "sha256": "1cf7fd373ea859207b458d5f9f4f8ce09321bcae6ca9df38bed8f298f02371cf",
+        "xml_sha256": "f4b7314986a0a23685807c77ccf1d5283bf568a5c5782ff5025a41d2994a8f2c",
+        "counts": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        },
+        "exit_code": 2,
+        "elapsed_seconds": 97.9927902000054,
+        "failures": [
+          {
+            "name": "EmbeddingGemma.Validation.Tests.VisionNativePatchWholeGpuTests.StageFencesPreserveSquareZeroCandidateAndOriginalReferenceGate",
+            "message": "  Keep the unchanged original FP32 elementwise gate.\n  Expected: 0\n  But was:  571\n"
+          }
+        ]
+      },
+      "resources": {
+        "file": "vision-staged-fences-square0-resources-20261015.jsonl",
+        "sha256": "ca683548ce19f8db66911e374c46d5bd69ca510b6dc0ff488d8587279fb20c2f",
+        "sample_count": 28,
+        "execution_sample_count": 0,
+        "maximum_observed_host_peak_bytes": 3281465344,
+        "maximum_device_gpu_used_mib": 3837,
+        "maximum_execution_device_gpu_used_mib": null,
+        "true_vram_peak_guaranteed": false,
+        "device_includes_background_processes": true
+      },
+      "memory_peak_acceptance": false,
+      "adopted": false
+    },
+    {
+      "name": "nested_gelu_cache_only",
+      "report": {
+        "file": "vision-nested-gelu-cache-release-whole-gpu-41afb8b88c9d5c52f2d421915fa2c000d3b4cf10-square-0.json",
+        "sha256": "832a1174221d01a4087dee6815877d69da790a74c13149b168082f191532a119",
+        "result": {
+          "success": false,
+          "scope": "one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate",
+          "runtime_source": "41afb8b88c9d5c52f2d421915fa2c000d3b4cf10",
+          "case_id": "square-0",
+          "phase": "completed",
+          "all_profiles_validated": false,
+          "end_to_end_validated": false,
+          "scheduling_mode": "synchronous_queue",
+          "intermediate_tensor_readback_added": false,
+          "gelu_internal_cache_release": true,
+          "model_file_audit_ms": 639.5962000000001,
+          "profile": "square",
+          "saved_model_sha256": "4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7",
+          "model_load_ms": 658.3936,
+          "coefficient_audit_before_ms": 497.2721,
+          "inline_rms_count": 112,
+          "layer_count": 19535,
+          "original_square_count": 113,
+          "remaining_original_rms_count": 1,
+          "all_original_coefficient_descriptors_retained": true,
+          "graph_rewrite_ms": 2043.0915,
+          "native_gelu_count": 16,
+          "release_unused_gpu_cache": true,
+          "pipeline_prepare_ms": 1842.6756,
+          "segment_count": 18,
+          "gpu_operation_count": 17,
+          "prepare_ms": 5046.2555,
+          "cpu_computation_or_input_count": 0,
+          "readback_flush_count": 0,
+          "host_working_set_before_execute_bytes": 3355082752,
+          "execute_and_final_download_ms": 7959.3109,
+          "gelu_internal_worker_caches": [
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            }
+          ],
+          "capture_sha256": "43fa98f573bd55a0f634075bf17f42fcde2ff9e89894c2d5b1b238c8ab451aab",
+          "cache_only_candidate_bits_preserved": true,
+          "host_working_set_after_download_bytes": 10285297664,
+          "host_peak_working_set_bytes": 10285297664,
+          "actual_backend": "GPUCompute",
+          "mismatched_elements": 571,
+          "maximum_absolute_error": 0.00012803077697753906,
+          "maximum_tolerance_ratio": 6.883228917760353,
+          "original_coefficient_bytes_preserved": true,
+          "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+          "coefficient_audit_after_ms": 542.0593,
+          "error_first_line": "NUnit.Framework.AssertionException:   Keep the unchanged original FP32 elementwise gate."
+        }
+      },
+      "execution": {
+        "file": "vision-nested-gelu-cache-fixed-square0-20261015-process.json",
+        "sha256": "d46dba6aee66adf0d934c186c7f3488788e9f7a303266cc6ecfc2c171f4a51ca",
+        "xml_sha256": "31130b5464c2f72da2d28e31d31acfa72a67591200cb85a0c380c33d5ba460e8",
+        "counts": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        },
+        "exit_code": 2,
+        "elapsed_seconds": 65.08584020000126,
+        "failures": [
+          {
+            "name": "EmbeddingGemma.Validation.Tests.VisionNativePatchWholeGpuTests.CacheReleasedIncludingGeluPreservesSquareZeroCandidateAndOriginalReferenceGate",
+            "message": "  Keep the unchanged original FP32 elementwise gate.\n  Expected: 0\n  But was:  571\n"
+          }
+        ]
+      },
+      "resources": {
+        "file": "vision-nested-gelu-cache-square0-resources-20261015.jsonl",
+        "sha256": "91c0935ef23b56f042ff04984813d9997a0d27b63ed0873703dce5f874902491",
+        "sample_count": 26,
+        "execution_sample_count": 4,
+        "maximum_observed_host_peak_bytes": 10285895680,
+        "maximum_device_gpu_used_mib": 15656,
+        "maximum_execution_device_gpu_used_mib": 15656,
+        "true_vram_peak_guaranteed": false,
+        "device_includes_background_processes": true
+      },
+      "memory_peak_acceptance": false,
+      "adopted": false
+    },
+    {
+      "name": "fences_and_nested_cache",
+      "report": {
+        "file": "vision-staged-nested-gelu-cache-release-whole-gpu-0b122a9864de132bcff332c4b0aba5842194f659-square-0.json",
+        "sha256": "4a846ba5c4a36136ebb9b948f1b5e3867b76cc3445b54e6238726f35dbaf8324",
+        "result": {
+          "success": false,
+          "scope": "one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate",
+          "runtime_source": "0b122a9864de132bcff332c4b0aba5842194f659",
+          "case_id": "square-0",
+          "phase": "completed",
+          "all_profiles_validated": false,
+          "end_to_end_validated": false,
+          "scheduling_mode": "gpu_fence_per_stage",
+          "intermediate_tensor_readback_added": false,
+          "gelu_internal_cache_release": true,
+          "model_file_audit_ms": 459.9257,
+          "profile": "square",
+          "saved_model_sha256": "4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7",
+          "model_load_ms": 928.8558,
+          "coefficient_audit_before_ms": 484.06170000000003,
+          "inline_rms_count": 112,
+          "layer_count": 19535,
+          "original_square_count": 113,
+          "remaining_original_rms_count": 1,
+          "all_original_coefficient_descriptors_retained": true,
+          "graph_rewrite_ms": 1974.4287000000002,
+          "native_gelu_count": 16,
+          "release_unused_gpu_cache": true,
+          "pipeline_prepare_ms": 1715.3434,
+          "segment_count": 18,
+          "gpu_operation_count": 17,
+          "prepare_ms": 5109.3296,
+          "cpu_computation_or_input_count": 0,
+          "readback_flush_count": 0,
+          "host_working_set_before_execute_bytes": 3380117504,
+          "execute_and_final_download_ms": 9627.492,
+          "gelu_internal_worker_caches": [
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            }
+          ],
+          "capture_sha256": "43fa98f573bd55a0f634075bf17f42fcde2ff9e89894c2d5b1b238c8ab451aab",
+          "cache_only_candidate_bits_preserved": true,
+          "host_working_set_after_download_bytes": 10245062656,
+          "host_peak_working_set_bytes": 10245062656,
+          "actual_backend": "GPUCompute",
+          "mismatched_elements": 571,
+          "maximum_absolute_error": 0.00012803077697753906,
+          "maximum_tolerance_ratio": 6.883228917760353,
+          "original_coefficient_bytes_preserved": true,
+          "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+          "coefficient_audit_after_ms": 547.7853,
+          "error_first_line": "NUnit.Framework.AssertionException:   Keep the unchanged original FP32 elementwise gate."
+        }
+      },
+      "execution": {
+        "file": "vision-staged-nested-gelu-cache-fixed-square0-20261015-process.json",
+        "sha256": "539592940bd461df7a092bbfaca07987ec67926a5c45820524960c360cbc7ae9",
+        "xml_sha256": "342af923b5adb436bf90e224954798b577ab61a257bf5ed9b959dccf25463a6b",
+        "counts": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        },
+        "exit_code": 2,
+        "elapsed_seconds": 69.07545180000307,
+        "failures": [
+          {
+            "name": "EmbeddingGemma.Validation.Tests.VisionNativePatchWholeGpuTests.StageFencesAndReleasedGeluCachesPreserveSquareZeroCandidateAndOriginalReferenceGate",
+            "message": "  Keep the unchanged original FP32 elementwise gate.\n  Expected: 0\n  But was:  571\n"
+          }
+        ]
+      },
+      "resources": {
+        "file": "vision-staged-nested-gelu-cache-square0-resources-20261015.jsonl",
+        "sha256": "2a3011ad347e9bfadfbc13cd4ac5a7d0ad1788b1dd9432e1ddb6d9e967caa8d5",
+        "sample_count": 28,
+        "execution_sample_count": 5,
+        "maximum_observed_host_peak_bytes": 10245361664,
+        "maximum_device_gpu_used_mib": 15629,
+        "maximum_execution_device_gpu_used_mib": 15629,
+        "true_vram_peak_guaranteed": false,
+        "device_includes_background_processes": true
+      },
+      "memory_peak_acceptance": false,
+      "adopted": false
+    },
+    {
+      "name": "backend_scratch_and_completed_ml_contexts",
+      "report": {
+        "file": "vision-staged-nested-gelu-cache-release-whole-gpu-99a6565650d242d9c5aaf5ccc346598141cd88c4-square-0.json",
+        "sha256": "0487a8857ad8000fc6b589432e861832ad92e6f75c06f16a82db661f5f99792f",
+        "result": {
+          "success": false,
+          "scope": "one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate",
+          "runtime_source": "99a6565650d242d9c5aaf5ccc346598141cd88c4",
+          "case_id": "square-0",
+          "phase": "completed",
+          "all_profiles_validated": false,
+          "end_to_end_validated": false,
+          "scheduling_mode": "gpu_fence_per_stage",
+          "intermediate_tensor_readback_added": false,
+          "gelu_internal_cache_release": true,
+          "model_file_audit_ms": 475.30080000000004,
+          "profile": "square",
+          "saved_model_sha256": "4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7",
+          "model_load_ms": 651.0418000000001,
+          "coefficient_audit_before_ms": 470.00980000000004,
+          "inline_rms_count": 112,
+          "layer_count": 19535,
+          "original_square_count": 113,
+          "remaining_original_rms_count": 1,
+          "all_original_coefficient_descriptors_retained": true,
+          "graph_rewrite_ms": 1906.479,
+          "native_gelu_count": 16,
+          "release_unused_gpu_cache": true,
+          "pipeline_prepare_ms": 1399.5325,
+          "segment_count": 18,
+          "gpu_operation_count": 17,
+          "prepare_ms": 4431.6013,
+          "cpu_computation_or_input_count": 0,
+          "readback_flush_count": 0,
+          "host_working_set_before_execute_bytes": 3358855168,
+          "execute_and_final_download_ms": 9371.0581,
+          "backend_caches": [
+            {
+              "stage": 0,
+              "type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "scratch_free_count": 0,
+              "scratch_free_bytes": 0,
+              "compiled_context_recreated": true
+            },
+            {
+              "stage": 1,
+              "type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "scratch_free_count": 0,
+              "scratch_free_bytes": 0,
+              "compiled_context_recreated": true
+            },
+            {
+              "stage": 2,
+              "type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "scratch_free_count": 0,
+              "scratch_free_bytes": 0,
+              "compiled_context_recreated": true
+            },
+            {
+              "stage": 3,
+              "type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "scratch_free_count": 0,
+              "scratch_free_bytes": 0,
+              "compiled_context_recreated": true
+            },
+            {
+              "stage": 4,
+              "type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "scratch_free_count": 0,
+              "scratch_free_bytes": 0,
+              "compiled_context_recreated": true
+            },
+            {
+              "stage": 5,
+              "type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "scratch_free_count": 0,
+              "scratch_free_bytes": 0,
+              "compiled_context_recreated": true
+            },
+            {
+              "stage": 6,
+              "type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "scratch_free_count": 0,
+              "scratch_free_bytes": 0,
+              "compiled_context_recreated": true
+            },
+            {
+              "stage": 7,
+              "type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "scratch_free_count": 0,
+              "scratch_free_bytes": 0,
+              "compiled_context_recreated": true
+            },
+            {
+              "stage": 8,
+              "type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "scratch_free_count": 0,
+              "scratch_free_bytes": 0,
+              "compiled_context_recreated": true
+            },
+            {
+              "stage": 9,
+              "type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "scratch_free_count": 0,
+              "scratch_free_bytes": 0,
+              "compiled_context_recreated": true
+            },
+            {
+              "stage": 10,
+              "type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "scratch_free_count": 0,
+              "scratch_free_bytes": 0,
+              "compiled_context_recreated": true
+            },
+            {
+              "stage": 11,
+              "type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "scratch_free_count": 0,
+              "scratch_free_bytes": 0,
+              "compiled_context_recreated": true
+            },
+            {
+              "stage": 12,
+              "type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "scratch_free_count": 0,
+              "scratch_free_bytes": 0,
+              "compiled_context_recreated": true
+            },
+            {
+              "stage": 13,
+              "type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "scratch_free_count": 0,
+              "scratch_free_bytes": 0,
+              "compiled_context_recreated": true
+            },
+            {
+              "stage": 14,
+              "type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "scratch_free_count": 0,
+              "scratch_free_bytes": 0,
+              "compiled_context_recreated": true
+            },
+            {
+              "stage": 15,
+              "type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "scratch_free_count": 0,
+              "scratch_free_bytes": 0,
+              "compiled_context_recreated": true
+            },
+            {
+              "stage": 16,
+              "type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "scratch_free_count": 0,
+              "scratch_free_bytes": 0,
+              "compiled_context_recreated": true
+            },
+            {
+              "stage": 17,
+              "type": "Unity.InferenceEngine.GfxDeviceBackend",
+              "scratch_free_count": 0,
+              "scratch_free_bytes": 0,
+              "compiled_context_recreated": true
+            }
+          ],
+          "gelu_internal_worker_caches": [
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            },
+            {
+              "free_buffer_count": 0,
+              "free_buffer_capacity_bytes": 0
+            }
+          ],
+          "capture_sha256": "43fa98f573bd55a0f634075bf17f42fcde2ff9e89894c2d5b1b238c8ab451aab",
+          "cache_only_candidate_bits_preserved": true,
+          "host_working_set_after_download_bytes": 10257428480,
+          "host_peak_working_set_bytes": 10257428480,
+          "actual_backend": "GPUCompute",
+          "mismatched_elements": 571,
+          "maximum_absolute_error": 0.00012803077697753906,
+          "maximum_tolerance_ratio": 6.883228917760353,
+          "original_coefficient_bytes_preserved": true,
+          "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+          "coefficient_audit_after_ms": 490.06120000000004,
+          "error_first_line": "NUnit.Framework.AssertionException:   Keep the unchanged original FP32 elementwise gate."
+        }
+      },
+      "execution": {
+        "file": "vision-gpu-context-retirement-fixed-square0-20261015-process.json",
+        "sha256": "7026064366911498f7e9f924c628139c05d4d750c2cfdacdc588c5647d9a863b",
+        "xml_sha256": "cc99d4bc909a306a8d862f4ba6564ff26539934277c0f07fc868d0305574073d",
+        "counts": {
+          "total": 2,
+          "passed": 0,
+          "failed": 2,
+          "skipped": 0
+        },
+        "exit_code": 2,
+        "elapsed_seconds": 71.1420855000033,
+        "failures": [
+          {
+            "name": "EmbeddingGemma.Tests.GpuProjectionPipelineAsyncTests.AsyncOptInRecreatesCompiledOperatorContextOnlyAfterGpuCompletion",
+            "message": "  Exercise a real ML-device GEMM operator cache.\n  Expected: True\n  But was:  False\n"
+          },
+          {
+            "name": "EmbeddingGemma.Validation.Tests.VisionNativePatchWholeGpuTests.StageFencesAndReleasedGeluCachesPreserveSquareZeroCandidateAndOriginalReferenceGate",
+            "message": "  Keep the unchanged original FP32 elementwise gate.\n  Expected: 0\n  But was:  571\n"
+          }
+        ]
+      },
+      "resources": {
+        "file": "vision-gpu-context-retirement-square0-resources-20261015.jsonl",
+        "sha256": "b44ec7247ef907aed72f68078230306eb6852efdb60aad7744c54260bc7444ae",
+        "sample_count": 29,
+        "execution_sample_count": 5,
+        "maximum_observed_host_peak_bytes": 10257928192,
+        "maximum_device_gpu_used_mib": 15648,
+        "maximum_execution_device_gpu_used_mib": 15648,
+        "true_vram_peak_guaranteed": false,
+        "device_includes_background_processes": true
+      },
+      "memory_peak_acceptance": false,
+      "adopted": false
+    }
+  ],
+  "static_plan_audits": [
+    {
+      "file": "vision-partition-boundary-audit-3e272d6c66c5f79523122b76103841ea126cd04d-square-0.json",
+      "sha256": "aaaac6d4c8498fefe51106c390f1bda80300a93fa73d64b18f0390121b83bd0e",
+      "inference_executed": false,
+      "summary": {
+        "sum_partition_layers": 19518,
+        "sum_partition_coefficient_bytes": 982712772,
+        "maximum_retained_boundary_bytes": 46448640,
+        "maximum_before_release_boundary_bytes": 123863040,
+        "stage_count": 18,
+        "shape_layer_count": 0
+      },
+      "execution": {
+        "file": "vision-boundary-static-lifetime-audit-20261015-process.json",
+        "sha256": "70331ccf8ace6061bfb00dbae66ea2518630b1cecbc20220a67ac06a4cddb439",
+        "xml_sha256": "d12037cba2e8ed2085ea264a2ea7a7a39f15818ad194c2757b230d27f796f4c2",
+        "counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "exit_code": 0,
+        "elapsed_seconds": 60.34176419999858,
+        "failures": []
+      }
+    },
+    {
+      "file": "vision-partition-boundary-audit-95554db023a2e4709de26330fe788dc024cc9f8c-square-0.json",
+      "sha256": "bc7fba44765b2ef3fea74f3d6c2f5bcc362e73d7b1a27254d4cad762d4ff8564",
+      "inference_executed": false,
+      "summary": {
+        "sum_partition_layers": 19518,
+        "sum_partition_coefficient_bytes": 982712772,
+        "maximum_retained_boundary_bytes": 46448640,
+        "maximum_before_release_boundary_bytes": 123863040,
+        "stage_count": 18,
+        "shape_layer_count": 0,
+        "unconsumed_internal_output_bytes": 0
+      },
+      "execution": {
+        "file": "vision-unconsumed-static-output-audit-20261015-process.json",
+        "sha256": "3c7e0a2bc36e9f33dd19c9b395054b83a2004fb42aa7041fc6861dc3ee35ad1d",
+        "xml_sha256": "192c3b792dce2af26ea74874e655b8528347c6b23a749cf1d364e0f9a6c6ace7",
+        "counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "exit_code": 0,
+        "elapsed_seconds": 59.37743560000672,
+        "failures": []
+      }
+    }
+  ],
+  "small_tests": {
+    "staged_api_intended_red": {
+      "file": "gpu-staged-fence-execution-red-20261015-process.json",
+      "sha256": "9b1465a46d95c490dac3166675313feeddd361a29b07131794a3b701634a879a",
+      "xml_sha256": "98b371170b8de6fe803a24eec655ce60b4e6368524ccfcc3a2b8359f6fdc3f40",
+      "counts": {
+        "total": 4,
+        "passed": 0,
+        "failed": 4,
+        "skipped": 0
+      },
+      "exit_code": 2,
+      "elapsed_seconds": 58.739673699994455,
+      "failures": [
+        {
+          "name": "EmbeddingGemma.Tests.GpuProjectionPipelineAsyncTests.AsyncKeepsSynchronousBitsBorrowedInputsAndIndependentOwnedResults",
+          "message": "  Staged GPU-fence execution is missing.\n  Expected: not null\n  But was:  null\n"
+        },
+        {
+          "name": "EmbeddingGemma.Tests.GpuProjectionPipelineAsyncTests.CancellationReleasesOwnedIntermediatesAndAllowsReuse",
+          "message": "  Staged GPU-fence execution is missing.\n  Expected: not null\n  But was:  null\n"
+        },
+        {
+          "name": "EmbeddingGemma.Tests.GpuProjectionPipelineAsyncTests.OperationFailureDoesNotPoisonLaterAsyncExecution",
+          "message": "  Staged GPU-fence execution is missing.\n  Expected: not null\n  But was:  null\n"
+        },
+        {
+          "name": "EmbeddingGemma.Tests.GpuProjectionPipelineAsyncTests.OverlapIsRejectedAndDisposalAbortsPendingCallWithoutOwningInput",
+          "message": "  Staged GPU-fence execution is missing.\n  Expected: not null\n  But was:  null\n"
+        }
+      ]
+    },
+    "staged_and_existing_green": {
+      "file": "gpu-staged-fence-and-ownership-green-20261015-process.json",
+      "sha256": "581cf422ce037943ca6e18b3b6d025f52c251aff102aa61611cd42426a057113",
+      "xml_sha256": "02dcd104ca50124bb9fac67b236ce3bcc1b5fe0eca5391302f61e700a22855d0",
+      "counts": {
+        "total": 26,
+        "passed": 26,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 52.83658329999889,
+      "failures": []
+    },
+    "nested_cache_existing_default_pass_and_new_api_red": {
+      "file": "gpu-gelu-internal-cache-policy-red-20261015-process.json",
+      "sha256": "9cba94c4071f1f14de05a6d88bd90c6269303a2aebf8eb9b1e06b8e20ac5c036",
+      "xml_sha256": "5a85f50c67bf5d9b025aa4b07f8ba6d7dfbfe63ee5079fd9ce16b5c3fad45cdb",
+      "counts": {
+        "total": 2,
+        "passed": 1,
+        "failed": 1,
+        "skipped": 0
+      },
+      "exit_code": 2,
+      "elapsed_seconds": 47.141437899990706,
+      "failures": [
+        {
+          "name": "EmbeddingGemma.Tests.GpuGeluTests.OptInReleaseClearsBothInternalGeluCachesAndPreservesOwnedResults(True)",
+          "message": "  GELU internal GPU cache release is missing.\n  Expected: not null\n  But was:  null\n"
+        }
+      ]
+    },
+    "nested_cache_and_existing_green": {
+      "file": "gpu-gelu-nested-cache-and-staged-regression-green-20261015-process.json",
+      "sha256": "f1c159b62e7ff84ccd9aec32c1008a23cb3a0bd805ef3242f65d2e86c70a8478",
+      "xml_sha256": "fe0a0b60c21b920d9f02233ba6a495428e45842569341b3bb814a61c7892facf",
+      "counts": {
+        "total": 32,
+        "passed": 32,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 48.05183280000347,
+      "failures": []
+    },
+    "scratch_probe_inherited_field_precondition_failure_and_linker_red": {
+      "file": "gpu-backend-scratch-and-linker-red-20261015-process.json",
+      "sha256": "6a7097b7f980085a057e0f98b78a9b68fe46224a6502524f224ab4d77c6a88d2",
+      "xml_sha256": "ae8b49f1ffbc1b28375b0243c955bb422cfa30bb7f6946bac5c24b41b8e85ece",
+      "counts": {
+        "total": 3,
+        "passed": 0,
+        "failed": 3,
+        "skipped": 0
+      },
+      "exit_code": 2,
+      "elapsed_seconds": 48.75316999999632,
+      "failures": [
+        {
+          "name": "EmbeddingGemma.Tests.GpuConstantLinkerPreservationTests.PackageSuppliesPrivateSentisMembersThroughLinkerCallback",
+          "message": "  Expected: equivalent to < \"m_Storage\", \"m_Backend\", \"m_LayerCPUFallback\", \"m_LayerCPUFallbackShouldFlushGPU\" >\n  But was:  < \"m_Storage\", \"m_LayerCPUFallback\", \"m_LayerCPUFallbackShouldFlushGPU\" >\n"
+        },
+        {
+          "name": "EmbeddingGemma.Tests.GpuProjectionPipelineTests.OptInReleaseAlsoClearsBackendScratchPoolAndKeepsLiveGpuValues(False)",
+          "message": "System.NullReferenceException : Object reference not set to an instance of an object"
+        },
+        {
+          "name": "EmbeddingGemma.Tests.GpuProjectionPipelineTests.OptInReleaseAlsoClearsBackendScratchPoolAndKeepsLiveGpuValues(True)",
+          "message": "System.NullReferenceException : Object reference not set to an instance of an object"
+        }
+      ]
+    },
+    "corrected_scratch_context_and_linker_intended_red": {
+      "file": "gpu-inherited-scratch-and-ml-context-red-20261015-process.json",
+      "sha256": "418e4e7b0c727ed1e6f38980986f62e30203d824f67765935cc7db001ed00c4a",
+      "xml_sha256": "b9fe4e055579f6b3b73190a792a508a39fac85eddcc5affb484393aa51fe2bf4",
+      "counts": {
+        "total": 4,
+        "passed": 1,
+        "failed": 3,
+        "skipped": 0
+      },
+      "exit_code": 2,
+      "elapsed_seconds": 45.16768689999299,
+      "failures": [
+        {
+          "name": "EmbeddingGemma.Tests.GpuConstantLinkerPreservationTests.PackageSuppliesPrivateSentisMembersThroughLinkerCallback",
+          "message": "  Expected: equivalent to < \"m_Storage\", \"m_Backend\", \"m_LayerCPUFallback\", \"m_LayerCPUFallbackShouldFlushGPU\" >\n  But was:  < \"m_Storage\", \"m_LayerCPUFallback\", \"m_LayerCPUFallbackShouldFlushGPU\" >\n"
+        },
+        {
+          "name": "EmbeddingGemma.Tests.GpuProjectionPipelineAsyncTests.AsyncOptInRecreatesCompiledOperatorContextOnlyAfterGpuCompletion",
+          "message": "  Completed compiled-operator caches must be released when opted in.\n  Expected: not same as <UnityEngine.Rendering.MachineLearningContext>\n  But was:  <UnityEngine.Rendering.MachineLearningContext>\n"
+        },
+        {
+          "name": "EmbeddingGemma.Tests.GpuProjectionPipelineTests.OptInReleaseAlsoClearsBackendScratchPoolAndKeepsLiveGpuValues(True)",
+          "message": "  GPU backend scratch buffers must also be released after boundary copies.\n  Expected: 0\n  But was:  2\n"
+        }
+      ]
+    },
+    "backend_context_and_original_layer_green": {
+      "file": "gpu-backend-context-and-original-layer-green-20261015-process.json",
+      "sha256": "fc7793a8c240273469987610c33ed08eaf48fc6dffe61bae985b53ac1febdd11",
+      "xml_sha256": "dfd72aedca4e18dcc5bd1481642ec6f51f4993ab8b4a2956e58ee2f290e3574e",
+      "counts": {
+        "total": 36,
+        "passed": 36,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 49.603159400008735,
+      "failures": []
+    },
+    "corrected_nonidentity_gemm_and_async_green": {
+      "file": "gpu-nonidentity-gemm-context-and-async-green-20261015-process.json",
+      "sha256": "0267c5c2b5d95ae2505f0b8388f3bfa8edf382b93780fa21ead23d09982ef8d3",
+      "xml_sha256": "867abb77eb39269a06e4d515f078d7262653ea90909fef3d50a9cec0eb13746e",
+      "counts": {
+        "total": 6,
+        "passed": 6,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 43.63107809999201,
+      "failures": []
+    }
+  },
+  "original_layer_bit_preservation": {
+    "file": "vision-layer0-cache-release-gelu-rms-gpu-da7612a0605801bac0eb337d1d7cc10fd47b1d94.json",
+    "sha256": "893f86a3889f86e97ebb59ccc7a8125a451b9bc6e7589e5f1d13022dcd52b508",
+    "result": {
+      "success": true,
+      "scope": "original_vision_layer0_cache_release_native_gelu_inline_rms_candidate",
+      "runtime_source": "da7612a0605801bac0eb337d1d7cc10fd47b1d94",
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "phase": "completed",
+      "inline_rms_count": 7,
+      "layer_count": 1220,
+      "gelu_count": 1,
+      "projections": [
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e0f98883c238d21192d6e086f0205f07c428847307a94817d34f3adf20e7338f"
+        },
+        {
+          "kind": "native_tanh_gelu",
+          "rows": 2520,
+          "width": 3072
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e9f675da30561ba275e17507b5455fda4d49e6a883747c5678d2a46eb8df0102"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "0174befbd8ff8c841032996393c3e80d3334dfc8dbd10ee58d804a420601de5a"
+        }
+      ],
+      "release_unused_gpu_cache": true,
+      "prepare_ms": 418.72990000000004,
+      "segment_count": 9,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "execute_and_final_download_ms": 1094.2308,
+      "capture_sha256": "fe3b9fe2e554d83acf9bbf82e6f89974c78db06a93f99cad4f63a7ac251e59ba",
+      "qualified_gelu_rms_layer_bits_preserved": true,
+      "actual_backend": "GPUCompute",
+      "bit_differences": 1515672,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 2.09808349609375e-05,
+      "maximum_tolerance_ratio": 0.8429030931171905,
+      "source_model_bytes_preserved": true,
+      "source_model_serialized_sha256": "0e934178e391f2aea5bd691b6a59c441c8304500afc36e4be321c776ed873634"
+    }
+  },
+  "package": {
+    "file": "gpu-ml-context-cache-package-green-20261015.xml",
+    "sha256": "df37d0f0858a7ef3900ee12aa9cb87058626ad6a4667874174db5b5166b0aafe",
+    "tests": 22,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "inference_arithmetic_changed": false,
+  "intermediate_tensor_readback_added": false,
+  "implementation": "Optional main-thread asynchronous stage fences, cancellation/overlap/disposal ownership, nested GELU cache opt-in, base GPU backend scratch release, and GPU-complete ML-device context retirement. Existing constructors retain default behavior.",
+  "evidence_limits": [
+    "First backend probe used a derived-type lookup for a private base field; record two NullReference precondition failures separately from the linker intended failure.",
+    "The final whole-model run also contains one identity-GEMM precondition failure; the optimizer removed that test GEMM. Six subsequent tests retain a nonidentity GEMM and pass.",
+    "Stage-fences-only resource samples ended before execution, so no execution VRAM peak was observed in that experiment.",
+    "Mechanical cache retirement, context replacement, and liveness metadata do not establish a reduction in native/driver peak allocation.",
+    "Single observations are not steady-state or cross-device benchmarks."
+  ],
+  "memory_peak_resolved": false,
+  "full_image_reference_validated": false,
+  "end_to_end_validated": false,
+  "stage3_complete": false,
+  "stage4_complete": false,
+  "next": "Stop repeating these full-model cache experiments. Profile live buffer capacities/native-driver allocation within one original layer or one segment, then reconnect qualified numerical operators under the bounded resource policy.",
+  "remaining": [
+    "Full image FP32 three profiles/six GPU cases and remaining original RMS/scaling; historic CPU failures separate.",
+    "Actual PCM/Texture GPU preprocessing, encoder, backbone and normalized 768 API, all roles/masks/boundaries/ownership/Dispose/error reuse/text regression.",
+    "Stage 3/4 samples and actual stripped Player/required environments; Required CI and Persistent allocation/long-term memory."
+  ]
+}

@@ -14,11 +14,11 @@ namespace EmbeddingGemma.Validation.Tests
         public const string OriginalGraphSha="ad45dd7d0b7be3f0d94f0391b674d8e95d09ea3f72edbf2408e9fae89ac7f03f";
         public static string Root=>Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/ib11830367896"));
         public static string Hash(string path){using var stream=File.OpenRead(path);return PlayerFileHash.Compute(stream,out _);}
-        public static void Validate(Model model)
+        public static void Validate(Model model,int imageFeatureCount=256)
         {
             Assert.That(model.inputs.Count,Is.EqualTo(4));Assert.That(model.outputs.Count,Is.EqualTo(1));
             foreach(var row in new[]{("input_ids",DataType.Int,new TensorShape(1,1024)),("attention_mask",DataType.Int,new TensorShape(1,1024)),
-                ("image_features",DataType.Float,new TensorShape(256,512)),("audio_features",DataType.Float,new TensorShape(0,512))})
+                ("image_features",DataType.Float,new TensorShape(imageFeatureCount,512)),("audio_features",DataType.Float,new TensorShape(0,512))})
             {
                 var input=model.inputs.Single(value=>value.name==row.Item1);Assert.That(input.dataType,Is.EqualTo(row.Item2));Assert.That(input.shape.ToTensorShape(),Is.EqualTo(row.Item3));
             }

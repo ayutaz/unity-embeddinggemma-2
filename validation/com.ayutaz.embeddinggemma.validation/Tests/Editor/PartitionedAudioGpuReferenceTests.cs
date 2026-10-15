@@ -76,8 +76,9 @@ namespace EmbeddingGemma.Validation.Tests
             var tail=b.Compile(residual+projected);named=tail.outputs[0];named.name="final";tail.outputs[0]=named;
             using var kernel=new GpuBlockedMatmul(2,2,new[]{2f,0f,0f,3f});
             using var input=new Tensor<float>(new TensorShape(1,2),new[]{-3f,4f});ComputeTensorData.Pin(input);
-            var snapshots=(Dictionary<string,float[]>)method.Invoke(null,new object[]{new[]{prefix,tail},new[]{"input"},new[]{"projected"},new[]{kernel},input,new HashSet<string>{"input"}});
+            var snapshots=(Dictionary<string,float[]>)method.Invoke(null,new object[]{new[]{prefix,tail},new[]{"input"},new[]{"projected"},new[]{kernel},input,new HashSet<string>{"input","projected"}});
             Assert.That(snapshots["input"],Is.EqualTo(new[]{-3f,4f}));
+            Assert.That(snapshots["projected"],Is.EqualTo(new[]{-6f,12f}));
             Assert.That(snapshots["__final"],Is.EqualTo(new[]{-9f,16f}));
             using var reused=kernel.Execute(input);Assert.That(reused.backendType,Is.EqualTo(BackendType.GPUCompute));
         }

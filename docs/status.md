@@ -1,5 +1,17 @@
 # 現在の状態
 
+更新日: 2026-10-15。**GPU GELUと元layer 0の局所gateは合格、画像全体は571要素超過で未合格。** 新しい `GpuGelu` は固定shapeの2 Worker＋既存GPU tanhを所有し、入力を借用、結果を独立所有で返す。API 5 Red、初回は関連9 Green＋実データ境界確認1 fail（投影後reshapeの見落としで数値比較未実行）、境界marker 2 Redを経て、関連16 Green / skip0。元の投影入出力・shapeを監査してから照合した。[固定receipt](results/m3-gelu-gpu-layer-and-full-failure-audit-fix-20261015.json)。
+
+捕捉gate入力7,741,440値に対する独立した現CPU tanh-GELU式では、既存処理3,048,817 bit差→候補6,716 bit差、双方の許容差超過0。候補最大比0.015367。元native内部値の全bit再現ではない。`61a4dcea5d86bd6f5ef465d280918b6991896d1a` の元layer 0は7 RMS / 7投影 / GELUをGPU接続して許容差超過0、最大比0.842903、source model bytes保持。GPUCompute・計算/入力CPU fallback・中間flush0。既存tanh / softmax / batched matmul / 音声経路は未変更で、Runtime追加はGpuGeluのみ。package22 Green。
+
+全体候補 `ca6883efdd696db4d0ef0355b5ede2afe666f48c` のsquare-0は112 RMS＋16 GELU＋patch384、18 segmentで571要素超過・最大比6.883229、1 fail / skip0。未採用・反復停止、他5case未実行。host peak観測9,934,274,560 byte（約9.252GiB）、実行中の別snapshotでVRAM15,638 / 16,376MiB。GPU実行＋最終取得25.903秒、process全体170.406秒。各WorkerのTensorPool保持がメモリ増加へ寄与する可能性はソースからの推定で、制御したcache解放比較は未実施。元係数descriptor / bytes / 参照・許容差は保持。
+
+**遅い準備のうち係数監査を修正した。** instrumented runはfile SHA0.517秒、model load1.006秒、係数監査前46.802秒 / 後46.135秒、graph変換1.551秒、GPU pipeline準備1.402秒だった。同じ順序・全係数bytesを借用するread-only streamから既存Windows CNG hashを使うよう変更し、未実装3 Red→既存hash回帰を含む10 Green。`1db7f961f989b3ae4ab74098dd36466472424999` の実係数単体監査は0.467秒、旧digest `3e14a1b4...` と完全一致。失敗後のstream巻き戻し / fallback / ArraySegment offset / 借用bytes保持も確認。追加testのcompile失敗は意図したRedと別記録。これは同じ係数の単発監査比較で、全推論の速度改善や数値合格ではない。監査修正後に重い全encoderは再実行していない。
+
+次は未使用GPU cacheだけを任意に解放する方針を小さいTDDで検証し、live tensor / 入力 / 結果bit / 例外後再利用を保持する。その後attention / softmaxを局所照合してから元全profileへ戻す。残る元RMS1か所、実PCM/Texture→GPU前処理→encoder→backbone→正規化768 APIの全role / mask / 境界 / 所有権 / Dispose / 例外後再利用 / text回帰、工程3・4のsample / Playerは未完了。ローカルUnity終了済み。Required CI、Persistent allocation警告・長期memoryは別gate。
+
+以下は前回checkpoint。
+
 更新日: 2026-10-15。**除算のFP32残差補正を一つのモデル内へ置き、最初のRMSは1 Workerで現CPU式の全1,935,360値へ実GPU全bit一致した。** Python 3 Red→音声算術 / packageを含む79 Green、`8c4ea1c898ff91384aa6720b3be4b37efe9a3b74` のGPU 1 pass / skip0。元input / scale / 比較値を保持し、source model bytesも不変。[固定receipt](results/m3-inline-rms-layer-equivalence-and-whole-failed-20261015.json)。元native内部値の合格や全encoder合格ではない。
 
 7 RMSのgraph組込みは1 intended Red→関連20 Green。`1c8ed7fd06cbf2d36fec3ae61a8af3a9c8ae6d56` の元layer 0は、前回7 RMS方式の出力hash `8312ee...` を全bit保持し、元native layer参照の許容差超過0。segment 15→8、1,220層。元係数・model bytesは不変。単発の実行＋取得は0.689秒だが、定常benchmarkや他環境の性能合格ではない。

@@ -66,6 +66,8 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.That(reference["metadata"].Value<string>("model_revision"),Is.EqualTo("914f7f89142e33e77833254d9c9b90c3cef7303b"));
                 Assert.That(reference["metadata"].Value<string>("source_commit"),Is.EqualTo("891ce9004deecc262437e56b2fd9a2eaf1054632"));
                 var expectedRow=reference["cases"].Single(row=>row.Value<string>("id")==caseId);Assert.That(expectedRow.Value<string>("role"),Is.EqualTo(name));
+                var pixels=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-encoder",expectedRow.Value<string>("pixels")));
+                Check(pixels,expectedRow.Value<string>("pixels_sha256"));
                 var prompt=builder.BuildImage(256,role);Assert.That(prompt.InputIds,Is.EqualTo(expectedRow["input_ids"].Values<int>().ToArray()));
                 Assert.That(prompt.AttentionMask,Is.EqualTo(expectedRow["attention_mask"].Values<int>().ToArray()));
                 var metric=new JObject{["case_id"]=caseId,["role"]=name,["success"]=false,["reference_sha256"]=digest};results.Add(metric);

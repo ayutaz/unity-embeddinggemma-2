@@ -25,9 +25,13 @@ namespace EmbeddingGemma.Validation.Tests
         }
         public static Model Load()
         {
-            var receipt=JObject.Parse(File.ReadAllText(Path.Combine(Root,"square-sentis-staging.json")));
+            var receiptPath=Path.Combine(Root,"square-sentis-staging.json");
+            Assert.That(Hash(receiptPath),Is.EqualTo("05238e775d41b282120e98160b71d7afd8334d9c4d748b377b3b3afafff3a600"));
+            var receipt=JObject.Parse(File.ReadAllText(receiptPath));
             Assert.That(receipt.Value<bool>("success"),Is.True);Assert.That(receipt.Value<string>("original_graph_sha256"),Is.EqualTo(OriginalGraphSha));
             Assert.That(receipt.Value<bool>("inference_executed"),Is.False);
+            Assert.That(receipt.Value<string>("saved_sha256"),Is.EqualTo("f6f4ba9d036e70c3d26b5932daca3facecbc0c45753a66b2da72e7b8f02519ce"));
+            Assert.That(receipt.Value<string>("original_coefficients_sha256"),Is.EqualTo("c234c173d9a1f15fbe4bf7a3adbb7e2e5f17fdb8c6f4b85c0befe4d5fb2b097b"));
             var path=Path.Combine(Root,"square-fp32.sentis");Assert.That(Hash(path),Is.EqualTo(receipt.Value<string>("saved_sha256")));
             var model=TextModelFile.Load(path);Validate(model);return model;
         }

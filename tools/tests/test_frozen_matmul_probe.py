@@ -5,6 +5,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 import torch
+import yaml
 
 from embeddinggemma_tools import frozen_matmul_probe as probe
 
@@ -70,8 +71,12 @@ def test_actual_onnx_results_are_separate_from_native_passthrough_and_whole_enco
 
 
 def test_workflow_downloads_only_pinned_primitive_fixture_and_never_whole_model():
-    p = Path(__file__).resolve().parents[2] / ".github/workflows/frozen-matmul-onnx.yml"
-    text = p.read_text()
+    p = Path(__file__).resolve().parents[2] / ".github/workflows/frozen-audio-prefix-onnx.yml"
+    workflow = yaml.safe_load(p.read_text())
+    job = workflow["jobs"]["matrix_probe"]
+    text = json.dumps(job)
     assert '12001831037' in text and 'frozen_matmul_probe' in text
     assert 'audio.pt2' not in text and 'snapshot_download' not in text
-    assert 'timeout-minutes: 10' in text and 'workflow_dispatch:' in text
+    assert job["timeout-minutes"] == 10 and "workflow_dispatch" in job["if"]
+    assert 'inputs.matrix_probe' in job["if"]
+    assert '!inputs.matrix_probe' in workflow["jobs"]["probe"]["if"]

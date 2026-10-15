@@ -12,7 +12,7 @@ namespace EmbeddingGemma
     /// </summary>
     public sealed class GpuBlockedMatmul : IGpuTensorOperation
     {
-        readonly int width, columns;
+        readonly int width, columns, blockSize;
         ComputeBuffer weights;
         ComputeShader shader;
         int kernel;
@@ -20,7 +20,12 @@ namespace EmbeddingGemma
         public BackendType Backend => BackendType.GPUCompute;
 
         public GpuBlockedMatmul(int width,int columns,float[] coefficients)
+            :this(width,columns,coefficients,192) { }
+
+        /// <summary>Explicit reference-qualified accumulation order; existing callers retain block192.</summary>
+        public GpuBlockedMatmul(int width,int columns,float[] coefficients,int blockSize)
         {
+            if(blockSize<1 || blockSize>4096)throw new ArgumentOutOfRangeException(nameof(blockSize),"Expected a bounded accumulation block from 1 to 4096.");
             if(width<1 || columns<1 || coefficients==null || (long)width*columns!=coefficients.Length)
                 throw new ArgumentException("Expected a nonempty fixed KxN coefficient matrix.");
             foreach(var value in coefficients)
@@ -28,13 +33,13 @@ namespace EmbeddingGemma
                     throw new ArgumentException("Expected bounded finite FP32 coefficients.",nameof(coefficients));
             if(!SystemInfo.supportsComputeShaders)
                 throw new NotSupportedException("This projection requires an actual compute GPU.");
-            this.width=width;this.columns=columns;
+            this.width=width;this.columns=columns;this.blockSize=blockSize;
             try
             {
                 var resource=Resources.Load<ComputeShader>("EmbeddingGemmaBlockedMatmul");
                 if(resource==null)throw new InvalidOperationException("GPU projection shader is missing.");
                 shader=UnityEngine.Object.Instantiate(resource);
-                kernel=shader.FindKernel("Block192");
+                kernel=shader.FindKernel(blockSize==192?"Block192":"VariableBlock");
                 weights=new ComputeBuffer(coefficients.Length,sizeof(float));
                 weights.SetData(coefficients);
             }
@@ -65,6 +70,7 @@ namespace EmbeddingGemma
                 commands.SetComputeIntParam(shader,"Columns",columns);
                 commands.SetComputeIntParam(shader,"Rows",input.shape.length/width);
                 commands.SetComputeIntParam(shader,"DispatchWidth",groupsX*64);
+                if(blockSize!=192)commands.SetComputeIntParam(shader,"BlockSize",blockSize);
                 commands.SetComputeBufferParam(shader,kernel,"Input",source.buffer);
                 commands.SetComputeBufferParam(shader,kernel,"Weights",weights);
                 commands.SetComputeBufferParam(shader,kernel,"Output",destination.buffer);

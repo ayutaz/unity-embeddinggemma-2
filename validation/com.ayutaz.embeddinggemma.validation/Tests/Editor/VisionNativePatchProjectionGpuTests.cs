@@ -14,14 +14,25 @@ namespace EmbeddingGemma.Validation.Tests
     {
         [Test]
         public void NativeBlock192VisionPatchProjectionMustMatchOriginalPatchBitsOnGpu()
+            =>Assert.That(Run(192),Is.Zero,"Keep the unchanged native patch bits.");
+
+        [Test]
+        public void VisionPatchAccumulationBlockSweepFindsAnExactNativeOrder()
+        {
+            var exact=0;
+            foreach(var block in new[]{128,192,256,384,512,768})if(Run(block)==0)exact++;
+            Assert.That(exact,Is.GreaterThan(0),"Record every failed candidate; no block may redefine the original golden.");
+        }
+
+        int Run(int block)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-diagnostics"));
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-native-patch-projection-gpu-"+source+".json"));
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-native-patch-projection-gpu-"+source+"-block"+block+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["scope"]="one_original_vision_patch_prefix_native_gpu_projection_candidate",["runtime_source"]=source,
-                ["full_encoder_validated"]=false,["end_to_end_validated"]=false,["phase"]="audit"};
+                ["full_encoder_validated"]=false,["end_to_end_validated"]=false,["phase"]="audit",["accumulation_block_size"]=block};
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
             Save();
@@ -42,8 +53,8 @@ namespace EmbeddingGemma.Validation.Tests
                 var after=ModelTensorSlice.Extract(prefix,prefix.outputs[0].index,"patch_output",new[]{new Model.Input{
                     name="projection_output",index=projection.outputs[0],dataType=DataType.Float,shape=new DynamicTensorShape(2520,768)}});
                 Assert.That(before.inputs.Count,Is.EqualTo(1));Assert.That(after.inputs.Count,Is.EqualTo(1));
-                using var operation=new GpuBlockedMatmul(768,768,coefficients);
-                using var pipeline=new GpuProjectionPipeline(new[]{before,after},new[]{"projection_input"},new[]{"projection_output"},new[]{operation});
+                using var operation=(IGpuTensorOperation)Activator.CreateInstance(typeof(GpuBlockedMatmul),768,768,coefficients,block);
+                using var pipeline=new GpuProjectionPipeline(new[]{before,after},new[]{"projection_input"},new[]{"projection_output"},new IGpuTensorOperation[]{operation});
                 report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;report["prefix_layers_before"]=before.layers.Count;report["prefix_layers_after"]=after.layers.Count;
                 var pixelsPath=Path.Combine(root,"pixels-fp32.bin");var expectedPath=Path.Combine(root,"native-stage-0.bin");
                 foreach(var file in new[]{pixelsPath,expectedPath})Check(file,reference["files"][Path.GetFileName(file)].Value<string>("sha256"));
@@ -60,7 +71,7 @@ namespace EmbeddingGemma.Validation.Tests
                     var d=Math.Abs((double)actual[i]-expected[i]);var allowed=1e-5+1e-4*Math.Abs((double)expected[i]);if(d>allowed)bad++;ratio=Math.Max(ratio,d/allowed);maximum=Math.Max(maximum,d);
                 }
                 report["actual_backend"]="GPUCompute";report["bit_differences"]=bits;report["mismatched_elements"]=bad;report["maximum_absolute_error"]=maximum;report["maximum_tolerance_ratio"]=ratio;report["phase"]="completed";Save();
-                Assert.That(bits,Is.Zero,"Keep the unchanged native patch bits.");report["success"]=true;
+                report["success"]=bits==0;return bits;
             }
             catch(Exception error){report["error"]=error.ToString();throw;}
             finally{Save();}

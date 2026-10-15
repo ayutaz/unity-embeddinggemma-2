@@ -202,6 +202,8 @@ namespace EmbeddingGemma.Validation.Tests
         [UnityTest] public IEnumerator IsolatedThirdVisionLayerMustMatchQualifiedContextBitsOnGpu()=>QualifiedLayerCase(3,true);
         [UnityTest] public IEnumerator FifthVisionLayerPrefixMustMatchQualifiedContextBitsOnGpu()=>QualifiedLayerCase(5,false);
         [UnityTest] public IEnumerator IsolatedFifthVisionLayerMustMatchQualifiedContextBitsOnGpu()=>QualifiedLayerCase(5,true);
+        [UnityTest] public IEnumerator FourthVisionLayerPrefixMustMatchQualifiedContextBitsOnGpu()=>QualifiedLayerCase(4,false);
+        [UnityTest] public IEnumerator IsolatedFourthVisionLayerMustMatchQualifiedContextBitsOnGpu()=>QualifiedLayerCase(4,true);
         static IEnumerator SecondLayerCase(bool isolated)
             =>QualifiedLayerCase(2,isolated);
         static IEnumerator QualifiedLayerCase(int count,bool isolated)

@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Unity.InferenceEngine;
 using UnityEngine;
 
@@ -10,7 +12,7 @@ namespace EmbeddingGemma
     /// preprocessing tensors. Dispose the borrowed operations separately.
     /// The supplied segments must have been audited for exactly this profile.
     /// </summary>
-    public sealed class PartitionedAudioFeatureEncoder : IAudioFeatureEncoder, IDisposable
+    public sealed class PartitionedAudioFeatureEncoder : IAsyncAudioFeatureEncoder, IDisposable
     {
         GpuProjectionPipeline pipeline;
         public BackendType Backend => BackendType.GPUCompute;
@@ -27,10 +29,10 @@ namespace EmbeddingGemma
                 || models[0].inputs[0].shape.ToTensorShape()!=new TensorShape(1,AudioEncoderProfile.FrameCount,AudioEncoderProfile.MelBinCount))
                 throw new ArgumentException("Expected fixed float [1,1119,128] input named input.",nameof(models));
             Profile=profile;
-            pipeline=new GpuProjectionPipeline(models,operationInputs,operationOutputs,operations);
+            pipeline=new GpuProjectionPipeline(models,operationInputs,operationOutputs,operations,true);
         }
 
-        public AudioEncodingResult Encode(AudioPreprocessingResult input)
+        Tensor<float> Validate(AudioPreprocessingResult input)
         {
             if(pipeline==null)throw new ObjectDisposedException(nameof(PartitionedAudioFeatureEncoder));
             if(input==null)throw new ArgumentNullException(nameof(input));
@@ -41,15 +43,27 @@ namespace EmbeddingGemma
                 || mask.shape!=new TensorShape(1,AudioEncoderProfile.FrameCount)
                 || features.backendType!=Backend || mask.backendType!=Backend)
                 throw new ArgumentException("Preprocessing prefix, tensor shapes and devices must match the fixed GPU encoder profile.",nameof(input));
-            Tensor<float> output=null;
-            try
+            return features;
+        }
+
+        AudioEncodingResult TakeResult(Tensor<float> output)
+        {
+            if(output.shape!=new TensorShape(Profile.FeatureCount,AudioEncoderProfile.FeatureWidth) || output.backendType!=Backend)
             {
-                output=pipeline.Execute(features);
-                if(output.shape!=new TensorShape(Profile.FeatureCount,AudioEncoderProfile.FeatureWidth) || output.backendType!=Backend)
-                    throw new InvalidOperationException("Expected projected float soft tokens on GPUCompute.");
-                var result=new AudioEncodingResult(output,Profile.ValidFrameCount);output=null;return result;
+                output.Dispose();throw new InvalidOperationException("Expected projected float soft tokens on GPUCompute.");
             }
-            finally { output?.Dispose(); }
+            return new AudioEncodingResult(output,Profile.ValidFrameCount);
+        }
+
+        public AudioEncodingResult Encode(AudioPreprocessingResult input)
+        {
+            var features=Validate(input);return TakeResult(pipeline.Execute(features));
+        }
+
+        /// <summary>Retires completed GPU segment caches at fences without intermediate readback.</summary>
+        public async Task<AudioEncodingResult> EncodeAsync(AudioPreprocessingResult input,CancellationToken cancellationToken=default)
+        {
+            var features=Validate(input);return TakeResult(await pipeline.ExecuteAsync(features,cancellationToken));
         }
 
         public void Dispose(){pipeline?.Dispose();pipeline=null;}

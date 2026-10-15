@@ -88,3 +88,24 @@ def test_selected_signal_is_bound_to_attention_scope_and_original_stage_paths():
     full=next(s for s in job['steps'] if s.get('name')=='Replay official layer 0 against unchanged native final')
     assert '--case-id "$REPLAY_SIGNAL"' in attention['run'] and '--case-id' not in full['run']
     assert '--subsample-input' in full['run'] and '--subsample-input' not in attention['run']
+
+
+def test_subsample_scope_keeps_original_signal_features_and_both_native_final_gates():
+    path=Path(__file__).resolve().parents[2]/'.github/workflows/audio-layer-replay.yml'
+    workflow=yaml.safe_load(path.read_text());triggers=workflow.get('on',workflow.get(True))
+    assert 'subsample' in triggers['workflow_dispatch']['inputs']['scope']['options'],'Selected-signal subsample scope is missing'
+    job=workflow['jobs']['replay'];assert "inputs.scope == 'subsample'" in job['env']['REPLAY_SIGNAL']
+    steps=job['steps'];fetch=next(s for s in steps if s.get('name')=='Fetch only frozen stage input and output')
+    assert '${REPLAY_SIGNAL}-features-fp32.bin' in fetch['run']
+    verify=next(s for s in steps if s.get('name')=='Verify pinned context manifests before model download')
+    for digest in ('366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24','2202541551e06a429b222d31f3d495a2b051fca70191287c82c7f6a6d8803c82','dcc0ed05018d225a140916249cb3a3ab948c4cc50e5f457abac24e909e9c64c5','eaaa9e11f4d282294a9c57d4eddd392d2a257ea1f342d0452d99984602ff1e96','b26f15554a3123e12cb39949709ea94588c27a5324f4cadefc701fba124c5c42'):
+        assert digest in verify['run']
+    assert 'REPLAY_FEATURE_SHA256' in verify['run'] and 'sha256sum --check' in verify['run']
+    capture=next(s for s in steps if s.get('name')=='Capture subsample against original signal and layer final')
+    assert "inputs.scope == 'subsample'" in capture['if']
+    assert '--case-id "$REPLAY_SIGNAL"' in capture['run'] and '--layer-index 0' in capture['run']
+    assert '${REPLAY_SIGNAL}-features-fp32.bin' in capture['run']
+    assert '--subsample-input-sha256 "$REPLAY_FEATURE_SHA256"' in capture['run']
+    full=next(s for s in steps if s.get('name')=='Replay official layer 0 against unchanged native final')
+    assert "inputs.scope != 'subsample'" in full['if'] and '--compensated-projection' in full['run']
+    assert not any(s.get('continue-on-error') for s in steps)

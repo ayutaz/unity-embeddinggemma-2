@@ -4,6 +4,25 @@
 
 ## 2026-10-15の画像の現在地
 
+全画像GPU checkpoint: [元FP32全6ケースの実測](results/m3-native-rotary-all-image-gates-20261015.json)。**全6ケースを実行し、4 pass / 2 fail / skip0。** 不合格はsquare-1の5要素とlandscape-0の1要素で、元参照・`atol=1e-5, rtol=1e-4`を維持する。各receiptは実際の固定source SHAを保持する。profileやモデル全体の合格へ未実行 / 不合格を混ぜない。
+
+| case | 実GPU判定 | 許容差超過 | 最大許容差比 |
+| --- | --- | ---: | ---: |
+| square-0 | pass | 0 | 0.593776 |
+| square-1 | fail | 5 | 1.406222 |
+| landscape-0 | fail | 1 | 1.321967 |
+| landscape-1 | pass | 0 | 0.224743 |
+| portrait-0 | pass | 0 | 0.203042 |
+| portrait-1 | pass | 0 | 0.056726 |
+
+全ケースでGPUCompute、計算/入力CPU fallback0・中間flush0、元学習済み投影係数の保持を確認。派生rotary表のみ、元nativeの入力非依存値へ有界補正したvalidation候補。最大host peakは約4.64GiBで、各caseは別native process / 300秒上限 / owned 12GiB監視付き。実行＋最終取得は約14.7〜25.7秒の単発観測で、正式benchmarkではない。全runner / watcherはterminal、Unity終了済み。
+
+全3 profileのrotary表は[入力非依存の元graphだけから取得済み](results/m3-original-rotary-profile-captures-20261015.json)。Squareは既存の元native byteを再現。profile対応付けは4 intended Red→関連Editor15 Greenで、誤対応 / 曖昧さ / 非有限を拒否する。FP32 252行tail templateも各該当profileで使用した。source `a5423c4...`のPython回帰はWindows / Linux ×3.13 / 3.14で各1,029 pass / skip0。これは最新headのRequired CIやGPUモデル全条件合格とは別である。
+
+次は不合格2ケースの境界値から残る算術差を切り分け、同じ全6 gateへ戻す。製品ImageFeatureEncoderへの採用、実PCM / Texture→GPU前処理→encoder→backbone→正規化768 API全role / mask / 境界 / 所有権 / Dispose / 例外後再利用 / text回帰、工程3・4 sample / Player / 必須環境 / Required CI / 長期memoryは未完了。既存音声6ケース / 2 profileの元GPU証拠は保持し、画像の未達を縮めず工程4まで進める。
+
+以下は前回checkpoint。
+
 最新GPU checkpoint: [元rotary定数の丸め差・修正と全体GPU結果](results/m3-original-rotary-and-mkl-context-20261015.json)。元保存modelはCos / Sin演算やfull-widthの定数Concatを持たず、`[1,2520,1,32]`の4種類の派生rotary表をQ / K ×16層で32回ずつ持つ。元nativeの対応表へcos各半分21,936 bit差、sin各半分12,576 bit差、最大差5.96e-8を静的auditで確認した。初めの2種類の探索失敗は数値未実行のsetup failureとして分離。元graph / caller配列を変更せず、1e-6以内の位置表補正だけを独立所有で再bindするhelperを4 API Red→元表2 Redを含む関連6 Greenで確認。これはvalidation-onlyの定数補正であり、学習済み投影係数や元goldenは変えていない。
 
 補正4表を128箇所のrotary乗算へ接続した`d345886...`は、**元square-0の全GPU gateに1 pass / skip0、許容差超過0・最大比0.593776で合格**。GPUCompute・計算/入力CPU fallback0・中間flush0・元学習済み係数保持。host peak4,941,717,504 bytes（約4.60GiB）、実行＋最終取得25.539秒 / process86.900秒の単発観測。続く`759f116...`のsquare-1は**5要素超過・最大比1.406222で1 fail / skip0**。host peak4,646,338,560 bytes、実行＋最終取得14.711秒 / process72.828秒。正方形profile全体や他4画像caseの合格へ広げず、製品のImageFeatureEncoder既定経路には未採用。runner / owned監視は全てterminalでUnity終了済み。

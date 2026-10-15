@@ -1,6 +1,7 @@
 """Partition fixed ONNX projections while retaining every live residual edge."""
 import hashlib
 import copy
+import math
 import onnx
 from onnx import numpy_helper,helper
 from onnx.utils import Extractor
@@ -153,25 +154,67 @@ def _mark_silu_boundaries(model,names):
     return result
 
 
-def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_node_names=(),dynamic_node_names=()):
+def _mark_query_scale_boundaries(model,names):
+    if len(set(names))!=len(names):raise ValueError('Select unique query scale nodes')
+    nodes=list(model.graph.node);by_name={n.name:(i,n) for i,n in enumerate(nodes)}
+    producer={v:(i,n) for i,n in enumerate(nodes) for v in n.output}
+    constants={w.name:w for w in model.graph.initializer}
+    constants.update({n.output[0]:next((a.t for a in n.attribute if a.name=='value'),None)
+                      for n in nodes if n.op_type=='Constant' and len(n.output)==1})
+    weights={w.name:w for w in model.graph.initializer};outputs={v.name for v in model.graph.output}
+    uses={v:[] for n in nodes for v in n.output}
+    for index,node in enumerate(nodes):
+        for value in node.input:
+            if value in uses:uses[value].append(index)
+    removed=set();markers={};metadata={}
+    for name in names:
+        entry=by_name.get(name)
+        if entry is None:raise ValueError('Query scale node is missing')
+        index,second=entry
+        if second.domain or second.op_type!='Mul' or len(second.input)!=2 or len(second.output)!=1:raise ValueError('Second query scale differs')
+        first_entry=producer.get(second.input[0]);vector=weights.get(second.input[1])
+        if first_entry is None or vector is None or vector.data_type!=onnx.TensorProto.FLOAT or len(vector.dims)!=1 or vector.dims[0]<=0:
+            raise ValueError('Query scale vector differs')
+        first_index,first=first_entry
+        if (first_index>=index or first.domain or first.op_type!='Mul' or len(first.input)!=2 or len(first.output)!=1
+                or uses[first.output[0]]!=[index] or first.output[0] in outputs or first_index in removed):
+            raise ValueError('First query scale is shared or differs')
+        scalar=constants.get(first.input[1])
+        if scalar is None or scalar.data_type!=onnx.TensorProto.FLOAT or len(scalar.dims)!=0:raise ValueError('Query scale scalar differs')
+        scalar_value=float(numpy_helper.to_array(scalar))
+        vector_values=numpy_helper.to_array(vector)
+        if not math.isfinite(scalar_value) or not all(math.isfinite(float(v)) for v in vector_values):raise ValueError('Query scale coefficients must be finite')
+        metadata[name]=dict(kind='sequential_scale',first_scale=scalar_value,scale_weight=vector.name,
+                            weight_shape=list(vector.dims),weight_sha256=hashlib.sha256(vector_values.astype('<f4').tobytes()).hexdigest())
+        removed.add(first_index);markers[index]=helper.make_node('Identity',[first.input[0]],list(second.output),name=name)
+    result=copy.deepcopy(model);del result.graph.node[:]
+    result.graph.node.extend(markers.get(i,n) for i,n in enumerate(nodes) if i not in removed)
+    return result,metadata
+
+
+def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_node_names=(),dynamic_node_names=(),query_scale_node_names=()):
     """Return unchanged-op segments and audited external projection boundaries.
 
     Coefficients stay in their original bytes. The caller supplies the GPU
     projections; this planner never executes or validates a full encoder.
     """
-    if ((not node_names and not silu_node_names and not dynamic_node_names) or len(set(node_names))!=len(node_names)
+    if ((not node_names and not silu_node_names and not dynamic_node_names and not query_scale_node_names) or len(set(node_names))!=len(node_names)
             or len(node_names)!=len(expected_weight_sha256)):
         raise ValueError('Select unique ordered projection names and coefficient hashes')
     if set(node_names).intersection(silu_node_names):raise ValueError('GPU boundaries overlap')
     if len(set(dynamic_node_names))!=len(dynamic_node_names) or set(dynamic_node_names).intersection((*node_names,*silu_node_names)):
         raise ValueError('Dynamic GPU boundaries overlap')
+    if len(set(query_scale_node_names))!=len(query_scale_node_names) or set(query_scale_node_names).intersection((*node_names,*silu_node_names,*dynamic_node_names)):
+        raise ValueError('Query scale GPU boundaries overlap')
     wanted_hash=dict(zip(node_names,expected_weight_sha256))
     original_order=[n.name for n in model.graph.node if n.name in wanted_hash]
     if original_order!=list(node_names):raise ValueError('Projection order or identity differs')
     if silu_node_names:
         model=_mark_silu_boundaries(model,silu_node_names)
-    if silu_node_names or dynamic_node_names:
-        chosen=set(node_names)|set(silu_node_names)|set(dynamic_node_names);node_names=[n.name for n in model.graph.node if n.name in chosen]
+    query_scales={}
+    if query_scale_node_names:model,query_scales=_mark_query_scale_boundaries(model,query_scale_node_names)
+    if silu_node_names or dynamic_node_names or query_scale_node_names:
+        chosen=set(node_names)|set(silu_node_names)|set(dynamic_node_names)|set(query_scale_node_names);node_names=[n.name for n in model.graph.node if n.name in chosen]
         if len(node_names)!=len(chosen):raise ValueError('A GPU boundary is missing or ambiguous')
     nodes=list(model.graph.node);weights={w.name:w for w in model.graph.initializer}
     infos={v.name:v for v in (*model.graph.input,*model.graph.output,*model.graph.value_info)}
@@ -186,6 +229,11 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_
         matches=[(i,n) for i,n in enumerate(nodes) if n.name==name]
         if len(matches)!=1:raise ValueError('Selected projection is missing or ambiguous')
         index,node=matches[0]
+        if name in query_scales:
+            dimensions=shape(node.input[0]);output_shape=shape(node.output[0]);scale=query_scales[name]
+            if len(dimensions)>8 or dimensions!=output_shape or dimensions[-1]!=scale['weight_shape'][0]:raise ValueError('Query scale boundary shapes differ')
+            selected.append((index,node,dict(**scale,node=name,input=node.input[0],output=node.output[0],input_shape=dimensions,output_shape=output_shape)))
+            previous=index;continue
         if name in dynamic_node_names:
             if node.op_type!='MatMul' or len(node.input)!=2 or len(node.output)!=1 or node.input[1] in weights:raise ValueError('Dynamic MatMul operands differ')
             left,right=shape(node.input[0]),shape(node.input[1]);output_shape=shape(node.output[0])

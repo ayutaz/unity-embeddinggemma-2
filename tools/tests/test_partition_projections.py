@@ -90,6 +90,50 @@ def dynamic_model():
     return helper.make_model(graph,opset_imports=[helper.make_opsetid('',24)],ir_version=9)
 
 
+def query_scale_model():
+    def info(name):return helper.make_tensor_value_info(name,TensorProto.FLOAT,[2,3])
+    nodes=[helper.make_node('Mul',['input','scalar'],['scaled'],name='first_scale'),
+           helper.make_node('Mul',['scaled','vector'],['out'],name='query_scale')]
+    graph=helper.make_graph(nodes,'scaling',[info('input')],[info('out')],value_info=[info('scaled')],
+        initializer=[numpy_helper.from_array(np.array(.127517431974411,dtype=np.float32),name='scalar'),
+                     numpy_helper.from_array(np.array([.004766542,.023,.1278625],dtype=np.float32),name='vector')])
+    return helper.make_model(graph,opset_imports=[helper.make_opsetid('',24)],ir_version=9)
+
+
+def test_query_scale_partition_preserves_two_original_roundings_and_coefficient_bytes():
+    source=query_scale_model();before=source.SerializeToString()
+    parts,plan=required()(source,node_names=[],expected_weight_sha256=[],query_scale_node_names=['query_scale'])
+    assert source.SerializeToString()==before and len(parts)==2 and plan['projections']==[]
+    operation=plan['operations'][0];assert operation['kind']=='sequential_scale'
+    assert operation['inputs']==['input'] and operation['scale_weight']=='vector'
+    vector=numpy_helper.to_array(source.graph.initializer[1]);scalar=numpy_helper.to_array(source.graph.initializer[0])
+    assert operation['first_scale']==float(scalar)
+    assert operation['weight_sha256']==hashlib.sha256(vector.astype('<f4').tobytes()).hexdigest()
+    values={'input':np.arange(6,dtype=np.float32).reshape(2,3)}
+    for index,part in enumerate(parts):
+        onnx.checker.check_model(part)
+        assert not any(n.name in ('first_scale','query_scale') for n in part.graph.node)
+        result=ReferenceEvaluator(part).run(None,{v.name:values[v.name] for v in part.graph.input})
+        aliases=plan['segments'][index]['output_aliases'];values.update(zip([aliases.get(v.name,v.name) for v in part.graph.output],result))
+        if index==0:values['out']=(values['input']*scalar)*vector
+    np.testing.assert_array_equal(values['out'],ReferenceEvaluator(source).run(None,{'input':values['input']})[0])
+
+
+@pytest.mark.parametrize('problem',['missing','duplicate','scalar','vector','operator','shared','shape'])
+def test_query_scale_partition_refuses_unverified_chain_without_mutation(problem):
+    source=query_scale_model();names=['query_scale']
+    if problem=='missing':names=['missing']
+    elif problem=='duplicate':names*=2
+    elif problem=='scalar':source.graph.initializer[0].CopyFrom(numpy_helper.from_array(np.array([1,2],dtype=np.float32),name='scalar'))
+    elif problem=='vector':source.graph.initializer[1].CopyFrom(numpy_helper.from_array(np.array([1,2],dtype=np.float32),name='vector'))
+    elif problem=='operator':source.graph.node[0].op_type='Add'
+    elif problem=='shared':source.graph.output.append(helper.make_tensor_value_info('scaled',TensorProto.FLOAT,[2,3]))
+    elif problem=='shape':source.graph.input[0].type.tensor_type.shape.dim[1].ClearField('dim_value')
+    before=source.SerializeToString()
+    with pytest.raises(ValueError):required()(source,node_names=[],expected_weight_sha256=[],query_scale_node_names=names)
+    assert source.SerializeToString()==before
+
+
 def test_dynamic_matmul_partition_binds_both_live_gpu_operands():
     source=dynamic_model();before=source.SerializeToString()
     parts,plan=required()(source,node_names=[],expected_weight_sha256=[],dynamic_node_names=['dynamic'])

@@ -22,6 +22,7 @@ namespace EmbeddingGemma
         readonly IGpuTensorOperation[] projections;
         readonly HashSet<string>[] liveAfterStage;
         readonly Action[] releaseGpuCache;
+        readonly Action[] releaseCompletedBackendCache;
         readonly int ownerThread=Thread.CurrentThread.ManagedThreadId;
         Worker[] workers;
         bool executing,disposeRequested;
@@ -61,7 +62,7 @@ namespace EmbeddingGemma
                 if(stage<projections.Length)live.UnionWith(this.projectionInputs[stage]);
             }
             workers=new Worker[models.Length];
-            if(releaseUnusedGpuCache)releaseGpuCache=new Action[models.Length];
+            if(releaseUnusedGpuCache){releaseGpuCache=new Action[models.Length];releaseCompletedBackendCache=new Action[models.Length];}
             try
             {
                 for(var i=0;i<models.Length;i++)
@@ -73,7 +74,10 @@ namespace EmbeddingGemma
                     var data= models[i].layers.SelectMany(l=>l.outputs).Concat(models[i].inputs.Select(input=>input.index));
                     if(cpu.Intersect(data).Any() || flush.Count!=0)
                         throw new NotSupportedException("GPU composition cannot use CPU computation or intermediate readback.");
-                    if(releaseGpuCache!=null)releaseGpuCache[i]=CacheRelease(workers[i],models[i]);
+                    if(releaseGpuCache!=null)
+                    {
+                        releaseGpuCache[i]=CacheRelease(workers[i],models[i]);releaseCompletedBackendCache[i]=CompletedBackendCacheRelease(workers[i]);
+                    }
                 }
             }
             catch { Dispose();throw; }
@@ -85,10 +89,22 @@ namespace EmbeddingGemma
             var storage=typeof(Worker).GetField("m_Storage",fields)?.GetValue(worker);
             var pool=storage?.GetType().GetField("m_TensorPool",fields)?.GetValue(storage);
             var cacheField=pool?.GetType().GetField("m_computeMemoryPool",fields);
+            var backend=typeof(Worker).GetField("m_Backend",fields)?.GetValue(worker);
+            var backendType=typeof(Worker).Assembly.GetType("Unity.InferenceEngine.GPUComputeBackend");
+            var scratchField=backendType?.GetField("m_MemoryPool",fields);
             var freeField=cacheField?.FieldType.GetField("freeBuffers",fields);
             var valuesField=storage?.GetType().GetField("m_InUseTensorsPool",fields);
-            if(cacheField==null||freeField==null||valuesField==null||!typeof(IDisposable).IsAssignableFrom(cacheField.FieldType))
+            if(cacheField==null||freeField==null||valuesField==null||scratchField==null||!backendType.IsInstanceOfType(backend)||scratchField.FieldType!=cacheField.FieldType||!typeof(IDisposable).IsAssignableFrom(cacheField.FieldType))
                 throw new NotSupportedException("Pinned unused GPU cache inspection is unavailable.");
+            void ClearPool(object container,FieldInfo field)
+            {
+                var cache=field.GetValue(container);
+                if(!(freeField.GetValue(cache) is System.Collections.IDictionary free))throw new NotSupportedException("Pinned free GPU cache differs.");
+                if(free.Count==0)return;
+                var replacement=Activator.CreateInstance(field.FieldType,true);
+                try{((IDisposable)cache).Dispose();field.SetValue(container,replacement);}
+                catch{((IDisposable)replacement).Dispose();throw;}
+            }
             var protectedIndices=new HashSet<int>(model.inputs.Select(value=>value.index).Concat(model.constants.Select(value=>value.index)));
             var copiedOutputs=model.outputs.Select(value=>value.index).Where(index=>!protectedIndices.Contains(index)).Distinct().ToArray();
             return ()=>
@@ -102,12 +118,23 @@ namespace EmbeddingGemma
                     values.Remove(index);
                     if(value!=null&&!protectedTensors.Contains(value)&&retired.Add(value))value.Dispose();
                 }
-                var cache=cacheField.GetValue(pool);
-                if(!(freeField.GetValue(cache) is System.Collections.IDictionary free))throw new NotSupportedException("Pinned free GPU cache differs.");
-                if(free.Count==0)return;
-                var replacement=Activator.CreateInstance(cacheField.FieldType,true);
-                try{((IDisposable)cache).Dispose();cacheField.SetValue(pool,replacement);}
-                catch{((IDisposable)replacement).Dispose();throw;}
+                ClearPool(pool,cacheField);ClearPool(backend,scratchField);
+            };
+        }
+
+        static Action CompletedBackendCacheRelease(Worker worker)
+        {
+            const BindingFlags fields=BindingFlags.Instance|BindingFlags.NonPublic;
+            var backend=typeof(Worker).GetField("m_Backend",fields)?.GetValue(worker);
+            var type=typeof(Worker).Assembly.GetType("Unity.InferenceEngine.GfxDeviceBackend");
+            if(type==null||!type.IsInstanceOfType(backend))return null;
+            var context=type.GetField("m_GfxContext",fields);
+            if(context==null||!typeof(IDisposable).IsAssignableFrom(context.FieldType))throw new NotSupportedException("Pinned compiled GPU operator context is unavailable.");
+            return ()=>
+            {
+                var previous=(IDisposable)context.GetValue(backend);var replacement=(IDisposable)Activator.CreateInstance(context.FieldType);
+                try{previous.Dispose();context.SetValue(backend,replacement);}
+                catch{replacement.Dispose();throw;}
             };
         }
 
@@ -121,6 +148,7 @@ namespace EmbeddingGemma
         /// <summary>
         /// Executes on Unity's main thread, yielding between GPU-complete stages to
         /// bound work in flight. Uses graphics fences, never intermediate tensor readback.
+        /// With cache release enabled, also retires completed ML-device compiled operators.
         /// Borrows input and operations; transfers the final tensor only on success.
         /// Cancellation or Dispose aborts at a stage boundary and releases per-call tensors.
         /// Await completion before reusing the pipeline or disposing borrowed resources.
@@ -139,8 +167,9 @@ namespace EmbeddingGemma
                 do
                 {
                     await Task.Yield();
-                    cancellationToken.ThrowIfCancellationRequested();ThrowIfDisposed();
                 }while(!fence.passed);
+                releaseCompletedBackendCache?[stage]?.Invoke();
+                cancellationToken.ThrowIfCancellationRequested();ThrowIfDisposed();
             }
             return call.TakeResult();
         }

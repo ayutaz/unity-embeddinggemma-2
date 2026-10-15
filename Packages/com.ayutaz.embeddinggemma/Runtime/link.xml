@@ -2,6 +2,7 @@
   <assembly fullname="Unity.InferenceEngine">
     <type fullname="Unity.InferenceEngine.Worker">
       <field name="m_Storage" />
+      <field name="m_Backend" />
       <field name="m_LayerCPUFallback" />
       <field name="m_LayerCPUFallbackShouldFlushGPU" />
     </type>
@@ -9,6 +10,12 @@
       <field name="m_TensorPool" />
       <field name="m_InUseTensorsPool" />
       <method name="GetTensor" />
+    </type>
+    <type fullname="Unity.InferenceEngine.GPUComputeBackend">
+      <field name="m_MemoryPool" />
+    </type>
+    <type fullname="Unity.InferenceEngine.GfxDeviceBackend">
+      <field name="m_GfxContext" />
     </type>
     <type fullname="Unity.InferenceEngine.TensorPool">
       <field name="m_computeMemoryPool" />

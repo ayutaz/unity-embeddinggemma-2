@@ -12,12 +12,21 @@ namespace EmbeddingGemma.Validation.Tests
     {
         [Test]
         public void CapturedOriginalLinuxPrefixSoftmaxMustMatchNativeBitsOnGpu()
+            =>RunNativePrefix(8);
+
+        [Test]
+        public void CapturedOriginalAvx512PrefixSoftmaxSixteenMustMatchNativeBitsOnGpu()
+            =>RunNativePrefix(16);
+
+        static void RunNativePrefix(int vectorWidth)
         {
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/np38719644488"));
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-original-prefix-softmax-gpu-"+source+".json"));
+            var avx512=vectorWidth==16;
+            var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/"+(avx512?"sp38726074447":"np38719644488")));
+            var label=avx512?"vision-original-prefix-softmax16-gpu-":"vision-original-prefix-softmax-gpu-";
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+".json"));
             Assert.That(File.Exists(output),Is.False);
-            var report=new JObject{["success"]=false,["runtime_source"]=source,["scope"]="captured_linux_avx2_original_first_softmax_prefix_only",
+            var report=new JObject{["success"]=false,["runtime_source"]=source,["scope"]=avx512?"captured_linux_avx512_original_first_softmax_prefix_only":"captured_linux_avx2_original_first_softmax_prefix_only",
                 ["reference_reproduces_original_golden"]=false,["full_encoder_validated"]=false,["end_to_end_validated"]=false};
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
@@ -26,8 +35,9 @@ namespace EmbeddingGemma.Validation.Tests
             {
                 var locked=JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath,"../Packages/packages-lock.json")));
                 foreach(var package in new[]{"com.ayutaz.embeddinggemma","com.ayutaz.embeddinggemma.validation"})Assert.That(locked["dependencies"][package].Value<string>("hash"),Is.EqualTo(source));
-                var path=Path.Combine(root,"original-image-native.json");Check(path,"b36c8af5e9e248d587eb2cb99f20407375f5656a0a173ad1dc0063e740863bd6");
+                var path=Path.Combine(root,"original-image-native.json");Check(path,avx512?"1d67a2deb19c90333020abced6338baba04212a19d6fb67c51671bf45b9e104b":"b36c8af5e9e248d587eb2cb99f20407375f5656a0a173ad1dc0063e740863bd6");
                 var reference=JObject.Parse(File.ReadAllText(path));Assert.That(reference["saved_node_capture"].Value<bool>("observed_final_matches_normal_bits"),Is.True);
+                Assert.That(reference["runtime"].Value<string>("cpu_capability"),Is.EqualTo(avx512?"AVX512":"AVX2"));
                 Assert.That(reference.Value<string>("graph_sha256"),Is.EqualTo("f9c5175a1d75289ce814a9651f496f9bdae5e873ac66199a5c3d03e0172c16cc"));
                 string Node(string name)
                 {
@@ -37,13 +47,14 @@ namespace EmbeddingGemma.Validation.Tests
                 }
                 var values=Floats(Node("add_10"));var expected=Floats(Node("_softmax"));
                 using var input=new Tensor<float>(new TensorShape(1,12,16,2520),values);ComputeTensorData.Pin(input);
-                using var operation=new GpuSoftmax(8);using var result=operation.Execute(input);var actual=result.DownloadToArray();
+                using var operation=new GpuSoftmax(vectorWidth);using var result=operation.Execute(input);var actual=result.DownloadToArray();
+                report["vector_width"]=vectorWidth;
                 report["candidate"]=Metrics(actual,expected);report["actual_backend"]=result.backendType.ToString();
                 report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
                 var raw=new byte[actual.Length*4];Buffer.BlockCopy(actual,0,raw,0,raw.Length);File.WriteAllBytes(Path.ChangeExtension(output,"bin"),raw);
                 using(var stream=new MemoryStream(raw,false))report["capture_sha256"]=PlayerFileHash.Compute(stream,out _);
                 Assert.That(input.DownloadToArray(),Is.EqualTo(values));Save();
-                Assert.That(report["candidate"].Value<int>("bit_differences"),Is.Zero,"Keep same-input native AVX2 softmax bits.");
+                Assert.That(report["candidate"].Value<int>("bit_differences"),Is.Zero,"Keep same-input native softmax bits for the selected CPU vector width.");
                 report["success"]=true;
             }
             catch(Exception error){report["error"]=error.ToString();throw;}

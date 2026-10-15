@@ -4,6 +4,8 @@
 
 ## 2026-10-15の画像の現在地
 
+元layer 0の全7 RMSと7投影をGPU接続し、固定元layer参照の許容差超過0・最大比0.766697へ到達。bit差1,518,970は残り、全bit一致ではない。4次元境界 / 元scale借用の5 Red→関連22 Green、全RMS marker / callable headの4 Red→27 Green。768幅4か所と64幅3か所は捕捉入力上の現CPU式へ実GPU全bit一致、元model / scale bytes・参照 / 許容差を維持した。[固定receipt](results/m3-seven-rms-original-layer0-gpu-20261015.json)。追加fixtureのcompile失敗 / XML欠測は別証拠として保持。既存Runtimeは未変更。画像全体は再実行せず、以前のsquare-0の566要素超過が未達のまま。次はGELU / attention積和を局所照合する。小さいGELU CPU probeは分離式にも55 bit差が残り未採用で、GPU成功や元内部参照の再現とは扱わない。全3 profile / 実API / sample / Playerの範囲は維持する。以下は前回checkpoint。
+
 元layer 0の7 RMSを、通常GPU最終bitと旧hashを保持して捕捉（1 pass / skip0）。64幅3か所は新しいscaled / unscaled exportで13 Red→関連30 Green・音声算術 / package込み76 Green、捕捉元入力と元scaleを使う現CPU式へ実GPU全bit一致（3 pass / fail0 / skip0 / fallback0 / flush0）。768幅4か所も既存exportのCPU式全bit一致だが、GPU確認は最初の1か所のみ。[固定receipt](results/m3-all-rms-observation-and-head-gpu-20261015.json)。次は4次元unary境界 / 元scale借用をTDDで実装し、残る768幅3か所をGPU照合してから7 RMSを元layer 0へ戻す。元native内部参照や全encoder合格とは扱わず、下記wholeの566要素不合格と全profile / 最終API / sample / Playerを未達のまま保持する。以下は前回checkpoint。
 
 最初のRMS＋7つのblock384投影を元layer 0へ戻した実GPU gateは、元参照・係数・入力・許容差のまま超過0。境界 / RMS単体を含む15 pass / fail0 / skip0。全bit一致ではなく、画像全体合格へは流用しない。確認済み最初の層だけを元全encoderへ接続したsquare-0は566要素超過・最大比6.791765で1 fail / skip0。10 segment、host peak約4.017GiB、実行＋取得3.660秒だが、定常性能合格ではない。[固定receipt](results/m3-first-layer-rms-reconnection-20261015.json)。次は全体反復を止め、7か所のRMS入力 / 出力 / scaleを通常GPU最終bitを保持して捕捉し、残る64 / 768幅の正規化・活性化・積和を局所照合する。元3 profileの全条件、実Texture→768 API、role / mask / 寿命 / text回帰 / sample / Playerは未完了。以下は前回checkpoint。

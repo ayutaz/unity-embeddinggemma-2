@@ -2,7 +2,15 @@
 
 > 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。冒頭の現在方針が、下の旧checkpointの着手順より優先する。
 
-## 2026-10-14の音声の現在地
+## 2026-10-15の音声の現在地
+
+元encoderの6ケース / 2 profileは固定sourceで実GPU数値gateへ合格済み。通常5ケースは`a26317fbfbcfbf896dff4a6577124109c6cf977c`、padded_noiseは`d955554335bed9ea8006d6287b47a3a1908932c2`。各caseの元FP32許容差超過0、計算/入力CPU fallback0、中間flush0、fail0 / skip0。[通常5ケース](results/m4-scalar-moment-fma-full-profile-gpu-20261015.json) / [paddedとadapter](results/m4-padded-audio-and-gpu-encoder-adapter-20261015.json)。元参照・学習済み係数・許容差は保持。最新headで全件再実行したという主張ではなく、CPU合格にも数えない。
+
+`PartitionedAudioFeatureEncoder`はIAudioFeatureEncoderの所有権 / Dispose / 例外後再利用を3 Red→関連26 Greenで実装し、`cf3ed61`の元impulseもadapter経由の保存feature→280×512 GPU出力が合格した。**実PCM→GPU前処理→encoder→backbone→正規化768 APIでは未合格**。全role / mask / 長さ境界・text回帰、検索 / 再生 / 明示収録sample、Player / 必須環境・長期memoryは未完了。画像gate修正と並行して独立sample契約は進められるが、sample実操作と実モデルの受け入れを合成テストで代用しない。
+
+以下は以前のcheckpoint。旧候補の不合格や当時の次の作業を、現在のGPU encoder合格や実入力APIの状態へ上書きしない。
+
+## 2026-10-14の音声checkpoint
 
 PCM入力とGPU前処理はmain、AudioFeatureEncoder / AudioEmbedderはDraft実装・合成契約合格。最新norm1 / dynamic16補償候補は元6信号×CPU/GPUの12数値条件すべて不合格。[receipt](results/m4-norm1-dynamic16-full-encoder-failed-20261014.json)。GPU fallback / flush 0や最終cosineだけでencoder gateを合格にしない。
 

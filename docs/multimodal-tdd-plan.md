@@ -4,6 +4,8 @@
 
 ## 2026-10-15の実行方針と再開順
 
+元保存graphのsquare-0は[実AVX512環境で元固定golden全bit再現](results/m3-original-reference-avx512-reproduced-20261015.json)。AMD EPYC 9V45 / thread 1 / 2 / 4で全131,072値一致、同型CPUのAVX2指定側は3要素超過。patch / rotaryは既存AVX2捕捉と同一、最初の層からbit差が現れる。元golden再現文脈上の公式 / 保存poolingは全bit一致し、配置差仮説は支持されなかった。次はこの文脈の最初の層のRMS / attentionへ比較を絞る。GPU全体は5要素超過・他5case未実行。古いAVX2一致や局所Greenで元GPU gate・実入力API / 工程3・4 sample / Player・必須環境・Required CI・長期memoryを完了扱いしない。以下は前回checkpoint。
+
 末尾のRMS候補とblock192投影は[今回の固定CPU入力へ実GPU全bit一致](results/m3-original-saved-tail-rms-gpu-20261015.json)。既存の既定統計量範囲は維持し、末尾専用の2e6上限を明示opt-inで追加した。6 Red→関連38 Green、局所GPU1 pass。全113 RMSへ接続した[元全体GPU候補は5要素超過のまま](results/m3-all-rms-original-gpu-gate-still-five-20261015.json)、超過5要素のbitも不変、1 fail / skip0。他5case未実行。次は元最終encoder出力をActionsで観測し、公式poolingの転置280行 / 保存graphの連続256行を比較する。形状差を原因と断定せず、元固定参照・許容差・全画像 / 音声・最終API・工程3・4 sample / Player・必須環境・Required CI・長期memoryの範囲を維持。Unity終了済み。
 
 最新は[元保存graphの直接観測](results/m3-original-saved-graph-node-context-20261015.json)→[既存GPU patch比較](results/m3-original-patch-existing-gpu-blocks-20261015.json)→[block192全体GPU](results/m3-original-context-block192-gpu-20261015.json)。元graph通常 / 観測の最終全bit一致、rotaryは旧診断nativeと同一、patchは今回CPU値が既存block192と同一であることを確認。全体GPUの元固定golden超過は566→5へ減ったが未合格、今回CPU出力へも3要素超過。GPUCompute・fallback / 中間flush0・元係数とgolden / 許容差は維持。1 fail / skip0、他5画像caseは未実行、Unity終了済み。次は取得済み末尾入力のRMS / 最終投影を個別比較し、今回CPU / 元goldenの差と分離する。以下の全画像FP32・音声6ケース / 2 profile・実入力から最終768 API全条件・工程3・4 sample / Player・Required CI / 必須環境 / 長期memoryの範囲を維持する。

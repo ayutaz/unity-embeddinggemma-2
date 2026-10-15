@@ -494,12 +494,12 @@ namespace EmbeddingGemma.Validation.Tests
         {
             if(!wanted.IsSubsetOf(models.SelectMany(m=>m.outputs.Select(o=>o.name)).Concat(outputs)))throw new ArgumentException("Observed boundary is missing.");
             var values=new Dictionary<string,Tensor<float>>{{models[0].inputs[0].name,input}};
-            var owned=new HashSet<Tensor<float>>();var workers=new List<Worker>();var snapshots=new Dictionary<string,float[]>();
+            var owned=new HashSet<Tensor<float>>();var snapshots=new Dictionary<string,float[]>();
             try
             {
                 for(var stage=0;stage<models.Length;stage++)
                 {
-                    var model=models[stage];var worker=new Worker(model,BackendType.GPUCompute);workers.Add(worker);
+                    var model=models[stage];using var worker=new Worker(model,BackendType.GPUCompute);
                     var cpu=(HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallback",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(worker);
                     var flush=(HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallbackShouldFlushGPU",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(worker);
                     Assert.That(cpu.Intersect(model.layers.SelectMany(l=>l.outputs).Concat(model.inputs.Select(i=>i.index))).Count(),Is.Zero);Assert.That(flush.Count,Is.Zero);
@@ -520,12 +520,20 @@ namespace EmbeddingGemma.Validation.Tests
                         owned.Add(value);Assert.That(value.backendType,Is.EqualTo(BackendType.GPUCompute));values[outputs[stage]]=value;
                         if(wanted.Contains(outputs[stage]))snapshots[outputs[stage]]=value.DownloadToArray();
                     }
+                    // This observer schedules each stage once. Retain only
+                    // values consumed by future stages, as in the product path.
+                    var future=models.Skip(stage+1).SelectMany(m=>m.inputs.Select(i=>i.name))
+                        .Concat(inputs.Skip(stage+1).SelectMany(names=>names))
+                        .Append(models.Last().outputs.Single().name).ToHashSet();
+                    foreach(var name in values.Keys.Where(name=>!future.Contains(name)).ToArray())values.Remove(name);
+                    var retained=values.Values.ToHashSet();
+                    foreach(var value in owned.Where(value=>!retained.Contains(value)).ToArray()){value.Dispose();owned.Remove(value);}
                 }
                 snapshots["__final"]=values[models.Last().outputs.Single().name].DownloadToArray();
                 Assert.That(snapshots["__final"].Select(BitConverter.SingleToInt32Bits),Is.EqualTo(baseline.Select(BitConverter.SingleToInt32Bits)),"Diagnostic downloads changed normal final bits.");
                 Assert.That(snapshots.Keys.Where(k=>k!="__final"),Is.EquivalentTo(wanted));return snapshots;
             }
-            finally {foreach(var value in owned)value.Dispose();foreach(var worker in workers)worker.Dispose();}
+            finally {foreach(var value in owned)value.Dispose();}
         }
         static float[] Floats(string path){var bytes=File.ReadAllBytes(path);var values=new float[bytes.Length/4];Buffer.BlockCopy(bytes,0,values,0,bytes.Length);return values;}
     }

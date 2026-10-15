@@ -1,8 +1,10 @@
 # M2・M3・M4から正式リリースまでのTDD計画
 
-> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。冒頭の現在方針が、下の旧checkpointの着手順より優先する。
+> 文書整合確認: 2026-10-15。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。冒頭の現在方針が、下の旧checkpointの着手順より優先する。
 
-## 2026-10-14の実行方針と再開順
+## 2026-10-15の実行方針と再開順
+
+現在の優先順: 元音声encoderの6ケース・2 profileは実GPU gateに合格した。[通常5件](results/m4-scalar-moment-fma-full-profile-gpu-20261015.json) / [padded_noiseとGPU encoder adapter](results/m4-padded-audio-and-gpu-encoder-adapter-20261015.json)。保存featureを入力するadapter経由の元impulseも合格したが、実PCM / Textureからの最終768次元API、画像FP32全3 profile、工程3・4のsample / Player等は未完了。次は画像FP32の差を小さい固定入力で切り分け、その後に全実入力API・role / mask / 境界 / 寿命 / 例外後再利用 / text回帰を検証する。元参照・学習済み係数・許容差を維持し、main統合は行わない。以下は過去のcheckpointであり、未達の古い音声結果を最新結果として扱わない。
 
 2026-10-15現在: GPU partition接続を2 Red→2 Green、planner / Sentis用Identity / aliasを関連19 Greenへ修正。直接GPUの最初の2投影を元全encoderへ戻し、無音175要素不合格・最大許容差比4.043479へ改善したが、元数値gateは未達。[固定接続結果](results/m4-partitioned-first-ff-whole-gpu-failed-20261015.json)。次のR2は135 static MatMulの固定shapeを元Sentis modelから係数hashと結び付けて監査し、ONNXの不明dimensionを推測で置換せず、確認した投影から元全encoderへ戻す。全音声6信号 / 両profile・画像FP32全3 profileの後、R3最終768 API全条件へ進む。工程3・4の全範囲と元許容差を維持する。以下は前回checkpoint。
 

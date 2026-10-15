@@ -4,6 +4,8 @@
 
 ## 2026-10-15の画像の現在地
 
+RMSを全体へ戻す際のWorker増加を抑えるため、除算をFP32残差で補正するopt-in exportを追加。3 Red→関連79 Green、現CPU式の全1,935,360値へ1 Workerの実GPU全bit一致。元layer 0への7 RMS組込みも、1 Red→関連20 Greenで前回のqualified GPU出力bitを全保持し、元native layer gateの超過0、segmentは15→8。[固定receipt](results/m3-inline-rms-layer-equivalence-and-whole-failed-20261015.json)。全16層の112 RMSを組み込んだsquare-0は577要素超過・最大比7.556308で不合格。元RMS1か所は未変更、他5caseは未実行。host peak約4.331GiB、GPU実行＋取得4.142秒だが、準備46.964秒には係数hash監査等も含むので製品の純粋な準備benchmarkではない。この全体候補は未採用・反復停止。次は活性化とattention積和の局所参照を確認してから元全profileへ戻す。最終API / role / mask / 寿命 / text回帰 / sample / Playerは未完了。以下は前回checkpoint。
+
 元layer 0の全7 RMSと7投影をGPU接続し、固定元layer参照の許容差超過0・最大比0.766697へ到達。bit差1,518,970は残り、全bit一致ではない。4次元境界 / 元scale借用の5 Red→関連22 Green、全RMS marker / callable headの4 Red→27 Green。768幅4か所と64幅3か所は捕捉入力上の現CPU式へ実GPU全bit一致、元model / scale bytes・参照 / 許容差を維持した。[固定receipt](results/m3-seven-rms-original-layer0-gpu-20261015.json)。追加fixtureのcompile失敗 / XML欠測は別証拠として保持。既存Runtimeは未変更。画像全体は再実行せず、以前のsquare-0の566要素超過が未達のまま。次はGELU / attention積和を局所照合する。小さいGELU CPU probeは分離式にも55 bit差が残り未採用で、GPU成功や元内部参照の再現とは扱わない。全3 profile / 実API / sample / Playerの範囲は維持する。以下は前回checkpoint。
 
 元layer 0の7 RMSを、通常GPU最終bitと旧hashを保持して捕捉（1 pass / skip0）。64幅3か所は新しいscaled / unscaled exportで13 Red→関連30 Green・音声算術 / package込み76 Green、捕捉元入力と元scaleを使う現CPU式へ実GPU全bit一致（3 pass / fail0 / skip0 / fallback0 / flush0）。768幅4か所も既存exportのCPU式全bit一致だが、GPU確認は最初の1か所のみ。[固定receipt](results/m3-all-rms-observation-and-head-gpu-20261015.json)。次は4次元unary境界 / 元scale借用をTDDで実装し、残る768幅3か所をGPU照合してから7 RMSを元layer 0へ戻す。元native内部参照や全encoder合格とは扱わず、下記wholeの566要素不合格と全profile / 最終API / sample / Playerを未達のまま保持する。以下は前回checkpoint。

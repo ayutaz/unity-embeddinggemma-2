@@ -1,0 +1,256 @@
+{
+  "scope": "single_worker_refined_division_rms_and_inlined_layer_equivalence_with_failed_original_full_encoder_candidate",
+  "original_references_changed": false,
+  "learned_coefficients_changed": false,
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "all_runtime_float_arithmetic_fp32": true,
+  "original_internal_rms_native_reference_available": false,
+  "original_full_context_replayed": false,
+  "python_tdd_red": {
+    "file": "vision-inline-rms-export-red-20261015.xml",
+    "sha256": "3245a6f32f80169e01e4d8878d0ad31cf73785852e82ce42dd6c9b7198df2422",
+    "tests": 3,
+    "failures": 3,
+    "errors": 0,
+    "skipped": 0
+  },
+  "related_and_package_green": {
+    "file": "vision-inline-rms-related-green-20261015.xml",
+    "sha256": "4fea4c60796f30b3229f23e3145dcc144142f545b7453e9eef8ce9a2e6351a65",
+    "tests": 79,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "preparation": {
+    "file": "vision-inline-rms-candidate-preparation-20261015.json",
+    "sha256": "28de8f01f4f8e6114d98b84221160ad0e1060e88cfcb8ade5a3e1b53553ecc66",
+    "result": {
+      "scope": "single_model_vision_rms_refined_division_candidate_current_cpu_equation_only",
+      "producer": "5347ee1a7890975aef7301adfcebae11c9327cc8",
+      "cpu_candidate_bit_differences": 0,
+      "original_input_sha256": "bc4c19c9aaf9688801c99ed073fdde22f0daf6b822dc2c9c4b7a3f7c9aded636",
+      "original_scale_sha256": "acc544061ccfe25009301bdfc15bab61468511ef6f27962b70c54efb65da9cb7",
+      "expected_sha256": "881b26f2dba59d783185646334a9d50fe9fe1e3c78315d1a3644b6a09313db4d",
+      "onnx_sha256": "15c8ec537c8d40386e61b675c05aaaa65b296667c0d38c39dc7d12fe28a25ccb",
+      "node_count": 289,
+      "original_internal_native_reference_available": false,
+      "gpu_validated": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false
+    }
+  },
+  "single_model_gpu_execution": {
+    "file": "vision-inline-refined-mean-rms-gpu-20261015-process.json",
+    "sha256": "dfc4f79ecf15cdeaaa0597b338681a6cbf8257c52b10aa4f60880616aa1c8723",
+    "xml_sha256": "ca26f68d44a05179402b089cee48899df3fc32f1632cefeaca32d67d9a726e3c",
+    "counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exit_code": 0,
+    "elapsed_seconds": 51.182382200000575
+  },
+  "single_model_gpu": {
+    "file": "vision-inline-rms-gpu-8c4ea1c898ff91384aa6720b3be4b37efe9a3b74.json",
+    "sha256": "28545edd4c2cf9be5c5319f4c83f6d3746886e731781f61adbd3b592cdd9bc0c",
+    "result": {
+      "success": true,
+      "scope": "single_model_first_vision_rms_gpu_against_current_cpu_equation_only",
+      "runtime_source": "8c4ea1c898ff91384aa6720b3be4b37efe9a3b74",
+      "original_internal_native_reference_available": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "phase": "completed",
+      "layer_count": 198,
+      "mean_division_gpu_boundary_preserved": false,
+      "inline_mean_division_refined": true,
+      "worker_count": 1,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "capture_sha256": "881b26f2dba59d783185646334a9d50fe9fe1e3c78315d1a3644b6a09313db4d",
+      "actual_backend": "GPUCompute",
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "source_model_bytes_preserved": true
+    }
+  },
+  "graph_graft_intended_red": {
+    "file": "vision-inline-rms-layer-graft-red-20261015-process.json",
+    "sha256": "2faddc72deccd13a058242f246fa1267cfe45ca9e83cf70e26e0bb061ff48b3d",
+    "xml_sha256": "418f8d044486cf3a9b5549c3c8cf192a422cf44bfbccdb4a9c084a8e6c9919da",
+    "counts": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "exit_code": 2,
+    "elapsed_seconds": 38.395674600003986
+  },
+  "graph_graft_and_regression_green": {
+    "file": "vision-inline-rms-layer-graft-and-regression-20261015-process.json",
+    "sha256": "4c0f94dc044108b4196344884e5071330e1e64a9dd3c7030906e7bd3e12f777a",
+    "xml_sha256": "62a1e69949754ecd32d7dcf93baddf1e7897b952aa370de029fc501977f67002",
+    "counts": {
+      "total": 20,
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exit_code": 0,
+    "elapsed_seconds": 79.05866019999667
+  },
+  "original_layer0": {
+    "file": "vision-layer0-inline-rms-native-projections-gpu-1c8ed7fd06cbf2d36fec3ae61a8af3a9c8ae6d56.json",
+    "sha256": "4988766de8556aeede374b3b946763fbdb9a702a6734d632ea6ffe4f1c8a2aa9",
+    "result": {
+      "success": true,
+      "scope": "original_vision_layer0_inline_rms_and_seven_native_gpu_projections_candidate",
+      "runtime_source": "1c8ed7fd06cbf2d36fec3ae61a8af3a9c8ae6d56",
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "phase": "completed",
+      "inline_rms_count": 7,
+      "layer_count": 1220,
+      "projections": [
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e0f98883c238d21192d6e086f0205f07c428847307a94817d34f3adf20e7338f"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e9f675da30561ba275e17507b5455fda4d49e6a883747c5678d2a46eb8df0102"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "0174befbd8ff8c841032996393c3e80d3334dfc8dbd10ee58d804a420601de5a"
+        }
+      ],
+      "prepare_ms": 391.4588,
+      "segment_count": 8,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "execute_and_final_download_ms": 689.421,
+      "capture_sha256": "8312ee24467c3ee955dbd21f27e79fcd980c31e5b23ad442f8a4ee324c422448",
+      "qualified_seven_rms_layer_bits_preserved": true,
+      "actual_backend": "GPUCompute",
+      "bit_differences": 1518970,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 1.9073486328125e-05,
+      "maximum_tolerance_ratio": 0.7666971300993025,
+      "source_model_bytes_preserved": true,
+      "source_model_serialized_sha256": "0e934178e391f2aea5bd691b6a59c441c8304500afc36e4be321c776ed873634"
+    }
+  },
+  "full_encoder_execution": {
+    "file": "vision-inline-all-layer-rms-square0-20261015-process.json",
+    "sha256": "88e0d43eaebfdb545e14f4cf61ddcf004cc8f851132598a10a27a74087ae1c9d",
+    "xml_sha256": "a912499682eeabd9964739ff826e5e156fecda25a79573154f49fcf5f7bc3dfd",
+    "counts": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "exit_code": 2,
+    "elapsed_seconds": 138.77094850000867
+  },
+  "full_encoder": {
+    "file": "vision-inline-all-layer-rms-whole-gpu-341934265036f90527efaa19c9ea1201058a1d9b-square-0.json",
+    "sha256": "ba5608991c639e1b0e89100c821c89355ca19a9975c677375c9d073a9d1acd5e",
+    "result": {
+      "success": false,
+      "scope": "one_original_vision_encoder_gpu_all_sixteen_layer_rms_and_native_patch384_candidate",
+      "runtime_source": "341934265036f90527efaa19c9ea1201058a1d9b",
+      "case_id": "square-0",
+      "phase": "completed",
+      "all_profiles_validated": false,
+      "end_to_end_validated": false,
+      "profile": "square",
+      "saved_model_sha256": "4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7",
+      "inline_rms_count": 112,
+      "layer_count": 19535,
+      "original_square_count": 113,
+      "remaining_original_rms_count": 1,
+      "all_original_coefficient_descriptors_retained": true,
+      "prepare_ms": 46963.850600000005,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "host_working_set_before_execute_bytes": 3400261632,
+      "execute_and_final_download_ms": 4142.3525,
+      "host_working_set_after_download_bytes": 4650835968,
+      "host_peak_working_set_bytes": 4650835968,
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 577,
+      "maximum_absolute_error": 0.00011229515075683594,
+      "maximum_tolerance_ratio": 7.5563078613369195,
+      "original_coefficient_bytes_preserved": true,
+      "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+      "failure_message": "NUnit.Framework.AssertionException:   Keep the unchanged original FP32 elementwise gate."
+    }
+  },
+  "phase_timing_limits": "Prepare includes loading, coefficient-byte hashing, graph rewrite and Worker setup. Execution includes final download. The closing coefficient audit is not included in execute time. These are single-run observations, not a matched-work performance benchmark.",
+  "full_encoder_candidate_adopted": false,
+  "full_encoder_candidate_repetition_stopped": true,
+  "other_cases_not_executed_for_this_candidate": [
+    "square-1",
+    "landscape-0",
+    "landscape-1",
+    "portrait-0",
+    "portrait-1"
+  ],
+  "existing_runtime_files_unchanged_since_prior_checkpoint": true,
+  "image_all_three_profiles_validated": false,
+  "end_to_end_validated": false,
+  "next_action": "Qualify remaining activation and attention arithmetic on fixed inputs. Use a locally qualified candidate before another full encoder run; then verify all original profiles and actual PCM/Texture APIs.",
+  "remaining": [
+    "all original image profile conditions and the remaining original RMS",
+    "actual PCM/Texture to GPU preprocessing encoder backbone normalized 768 APIs with required roles masks boundaries ownership Dispose error reuse and text regression",
+    "stage3/4 samples and Player verification"
+  ]
+}

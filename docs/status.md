@@ -1,5 +1,15 @@
 # 現在の状態
 
+更新日: 2026-10-15。**除算のFP32残差補正を一つのモデル内へ置き、最初のRMSは1 Workerで現CPU式の全1,935,360値へ実GPU全bit一致した。** Python 3 Red→音声算術 / packageを含む79 Green、`8c4ea1c898ff91384aa6720b3be4b37efe9a3b74` のGPU 1 pass / skip0。元input / scale / 比較値を保持し、source model bytesも不変。[固定receipt](results/m3-inline-rms-layer-equivalence-and-whole-failed-20261015.json)。元native内部値の合格や全encoder合格ではない。
+
+7 RMSのgraph組込みは1 intended Red→関連20 Green。`1c8ed7fd06cbf2d36fec3ae61a8af3a9c8ae6d56` の元layer 0は、前回7 RMS方式の出力hash `8312ee...` を全bit保持し、元native layer参照の許容差超過0。segment 15→8、1,220層。元係数・model bytesは不変。単発の実行＋取得は0.689秒だが、定常benchmarkや他環境の性能合格ではない。
+
+**全16層候補は未採用。** `341934265036f90527efaa19c9ea1201058a1d9b` のsquare-0で112 RMSを組込み（元RMS1か所は残る）、19,535層の候補を実GPU実行した。577要素超過・最大比7.556308、1 fail / skip0 / exit2。元coefficient descriptor / 全coefficient bytesのSHAを前後で保持。準備46.964秒は読込・係数hash監査・graph変換・Worker準備を含み、GPU実行＋最終取得は4.142秒、host peak4,650,835,968 byte（約4.331GiB）。後段の係数監査・起動終了を含むprocess全体138.771秒を推論時間へ混ぜない。全件GPUCompute・計算/入力CPU fallback・中間flush0。以前の別候補566要素超過も保持し、改善や採用へ置換しない。他5画像caseはこの候補では未実行。
+
+次は活性化 / attention積和の局所照合へ戻り、合格した候補だけを全encoderへ接続する。元全3 profile・残るRMS・実PCM/Texture→GPU前処理→encoder→backbone→正規化768 APIの全role / mask / 境界 / 所有権 / Dispose / 例外後再利用 / text回帰、工程3・4のsample / Playerは未完了。既存Runtime package filesは前checkpointから未変更。ローカルUnity終了済み。Required CI、Persistent allocation警告と長期memoryは別gate。
+
+以下は前回checkpoint。
+
 更新日: 2026-10-15。**元layer 0の全7 RMS＋7投影をGPUで接続し、元の固定layer参照の数値gateに合格した。** `c189347998e2a6950a80f75a9ab1e5f1bf11a8f5`、関連27 pass / fail0 / skip0 / exit0。layer 0の許容差超過0、最大比0.766697、bit差1,518,970。元Model serialized bytes / 6つのscale / 7投影係数・入力・参照・許容差を保持。GPUCompute、計算/入力CPU fallback・中間flush0、15 segment。[固定receipt](results/m3-seven-rms-original-layer0-gpu-20261015.json)。全bit一致や画像全encoder合格には数えない。
 
 4次元unary境界 / 元scale借用は5 intended fail＋旧2次元1 passから関連22 Green。追加fixtureの括弧誤りによるcompile失敗 / XML欠測も別記録し、TDD Redや数値結果へ混ぜない。768幅4か所は元scaleを借用して現CPU式へ実GPU全bit一致、template / coefficient source bytes保持。全7境界 / callable head操作は4 intended failから27 Green。64幅q/k/vもwrapper経由で現CPU式へ全bit一致した。これらは捕捉入力上の局所式の証拠で、元native内部値は未取得。

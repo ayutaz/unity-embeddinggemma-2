@@ -27,6 +27,10 @@ namespace EmbeddingGemma.Validation.Tests
             =>Execute("tanh",true,1);
 
         [Test]
+        public void FrozenLayerThreeNativeTanhCandidateMustMatchAllBitsOnGpu()
+            =>Execute("tanh",true,3);
+
+        [Test]
         public void FrozenNativeSoftmaxCandidateMustMatchAllBitsOnGpu()
             =>Execute("softmax",true);
 
@@ -75,8 +79,9 @@ namespace EmbeddingGemma.Validation.Tests
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/"+(layerIndex==1?"native-layer1-reference-9d71922-20261015":"native-attention-operations-5a51cff-20261015")));
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+(nativeCandidate?"frozen-native-"+name+"-candidate-gpu-":"frozen-native-attention-nonlinearity-gpu-")+source+"-"+name+(layerIndex==1?"-layer1":"")+".json"));Assert.That(File.Exists(output),Is.False);
+            Assert.That(layerIndex,Is.EqualTo(0).Or.EqualTo(1).Or.EqualTo(3));
+            var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/"+(layerIndex==3?"native-layer3-selected-reference-56c9f5e-20261015":layerIndex==1?"native-layer1-reference-9d71922-20261015":"native-attention-operations-5a51cff-20261015")));
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+(nativeCandidate?"frozen-native-"+name+"-candidate-gpu-":"frozen-native-attention-nonlinearity-gpu-")+source+"-"+name+(layerIndex>0?"-layer"+layerIndex:"")+".json"));Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["scope"]="one_frozen_native_attention_nonlinearity_gpu_bit_gate",["runtime_source"]=source,["operation"]=name,["full_encoder_validated"]=false,["end_to_end_validated"]=false};
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}Save();
@@ -84,10 +89,10 @@ namespace EmbeddingGemma.Validation.Tests
             {
                 var locked=JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath,"../Packages/packages-lock.json")));
                 foreach(var package in new[]{"com.ayutaz.embeddinggemma","com.ayutaz.embeddinggemma.validation"})Assert.That(locked["dependencies"][package].Value<string>("hash"),Is.EqualTo(source));
-                var referenceFile=Path.Combine(root,"audio-attention-replay-report.json");Check(referenceFile,layerIndex==1?"08a1d5d60402d9cda0624c1ab14edc81db42b8e70d3e50f2554f1fdc0d54cafb":"d16f82c1c343769577106a39203da32f00fb797468cc656ab1b12b685b8e691e");
+                var referenceFile=Path.Combine(root,"audio-attention-replay-report.json");Check(referenceFile,layerIndex==3?"13d560530a892a363f0ecdb1beb6d98f11697501e5f8249613f9e80fca63c866":layerIndex==1?"08a1d5d60402d9cda0624c1ab14edc81db42b8e70d3e50f2554f1fdc0d54cafb":"d16f82c1c343769577106a39203da32f00fb797468cc656ab1b12b685b8e691e");
                 var reference=JObject.Parse(File.ReadAllText(referenceFile));Assert.That(reference.Value<bool>("success")&&reference.Value<bool>("native_final_exact_match"),Is.True);
                 Assert.That(reference.Value<string>("reference_source"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));
-                report["layer_index"]=layerIndex;if(layerIndex==1)Assert.That(reference.Value<int>("layer_index"),Is.EqualTo(1));
+                report["layer_index"]=layerIndex;if(layerIndex>0)Assert.That(reference.Value<int>("layer_index"),Is.EqualTo(layerIndex));
                 float[] Read(string kind,out int[] shape)
                 {
                     var part=reference["parts"]["self_attn."+name+"."+kind];var path=Path.Combine(root,"audio-attention-replay",part.Value<string>("file"));Check(path,part.Value<string>("sha256"));

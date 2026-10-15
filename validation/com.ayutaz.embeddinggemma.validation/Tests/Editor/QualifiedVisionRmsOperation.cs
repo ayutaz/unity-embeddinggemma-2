@@ -15,6 +15,56 @@ namespace EmbeddingGemma.Validation.Tests
         GpuProjectionPipeline pipeline;
         GpuScalarDivide divide;
         public BackendType Backend=>BackendType.GPUCompute;
+        public static Model InlineLayerRms(Model source,Model hiddenTemplate,Model scaledHeadTemplate,Model unscaledHeadTemplate,int layerCount)
+        {
+            if(source==null||hiddenTemplate==null||scaledHeadTemplate==null||unscaledHeadTemplate==null||layerCount<1||layerCount>16)
+                throw new ArgumentException("Expected audited fixed vision RMS templates and one to sixteen layers.");
+            var squares=source.layers.Where(layer=>layer.GetType().Name=="Square").Take(layerCount*7).ToArray();
+            if(squares.Length!=layerCount*7)throw new ArgumentException("Original vision layer RMS count differs.");
+            var constants=source.constants.ToDictionary(value=>value.index);var added=new List<Constant>();
+            var removed=new HashSet<Layer>();var insertions=new Dictionary<Layer,List<Layer>>();
+            var next=source.inputs.Select(value=>value.index).Concat(source.constants.Select(value=>value.index)).Concat(source.layers.SelectMany(layer=>layer.outputs.Concat(layer.inputs))).Max()+1;
+            var clone=typeof(object).GetMethod("MemberwiseClone",BindingFlags.Instance|BindingFlags.NonPublic);
+            Layer Next(Layer current,string kind)=>source.layers.Single(layer=>layer.GetType().Name==kind&&layer.inputs.Contains(current.outputs[0]));
+            for(var ordinal=0;ordinal<squares.Length;ordinal++)
+            {
+                var square=squares[ordinal];var mean=Next(square,"ReduceMean");var scalar=Next(mean,"ScalarMad");var inverse=Next(scalar,"Rsqrt");var multiply=Next(inverse,"Mul");
+                Assert.That(multiply.inputs.Contains(square.inputs[0]),Is.True);
+                Assert.That((float)scalar.GetType().GetField("sFloat").GetValue(scalar),Is.EqualTo(1f));
+                Assert.That((float)scalar.GetType().GetField("bFloat").GetValue(scalar),Is.EqualTo(1e-6f));
+                var scaled=source.layers.SingleOrDefault(layer=>layer.GetType().Name=="Mul"&&layer.inputs.Contains(multiply.outputs[0])
+                    &&layer.inputs.Any(index=>constants.TryGetValue(index,out var constant)&&constant.dataType==DataType.Float&&constant.shape.rank==1));
+                var scale=scaled==null?null:constants[scaled.inputs.Single(constants.ContainsKey)];
+                var position=ordinal%7;var head=position>=1&&position<=3;var unscaled=position==3;var width=head?64:768;
+                Assert.That(scale==null,Is.EqualTo(unscaled));if(scale!=null)Assert.That(scale.shape,Is.EqualTo(new TensorShape(width)));
+                var final=scaled??multiply;var chain=new HashSet<Layer>{square,mean,scalar,inverse,multiply};if(scaled!=null)chain.Add(scaled);
+                foreach(var layer in chain.Where(layer=>!ReferenceEquals(layer,final)))
+                    Assert.That(source.layers.Where(consumer=>consumer.inputs.Intersect(layer.outputs).Any()).All(chain.Contains),Is.True,"An internal RMS value escapes its replacement.");
+                removed.UnionWith(chain);
+                var template=head?(unscaled?unscaledHeadTemplate:scaledHeadTemplate):hiddenTemplate;
+                Assert.That(template.inputs.Count,Is.EqualTo(1));Assert.That(template.outputs.Count,Is.EqualTo(1));
+                Assert.That(template.inputs[0].shape.ToTensorShape(),Is.EqualTo(head?new TensorShape(1,2520,12,64):new TensorShape(1,2520,768)));
+                var map=new Dictionary<int,int>{{template.inputs[0].index,square.inputs[0]},{template.outputs[0].index,final.outputs[0]}};
+                var templateScale=unscaled?null:template.constants.Single(value=>value.dataType==DataType.Float&&value.shape==new TensorShape(width));
+                foreach(var constant in template.constants)
+                {
+                    if(ReferenceEquals(constant,templateScale)){map.Add(constant.index,scale.index);continue;}
+                    var copy=(Constant)clone.Invoke(constant,null);copy.index=next++;map.Add(constant.index,copy.index);added.Add(copy);
+                }
+                foreach(var layer in template.layers)foreach(var output in layer.outputs)if(output>=0&&!map.ContainsKey(output))map.Add(output,next++);
+                var layers=new List<Layer>();
+                foreach(var layer in template.layers)
+                {
+                    var copy=(Layer)clone.Invoke(layer,null);copy.inputs=layer.inputs.Select(index=>index<0?index:map[index]).ToArray();copy.outputs=layer.outputs.Select(index=>index<0?index:map[index]).ToArray();layers.Add(copy);
+                }
+                insertions.Add(square,layers);
+            }
+            var result=new Model{ProducerName=source.ProducerName+"/inline-qualified-vision-rms",inputs=new List<Model.Input>(source.inputs),outputs=new List<Model.Output>(source.outputs),constants=source.constants.Concat(added).ToList()};
+            foreach(var layer in source.layers)
+                if(insertions.TryGetValue(layer,out var replacement))result.layers.AddRange(replacement);
+                else if(!removed.Contains(layer))result.layers.Add(layer);
+            return result;
+        }
         public static Model BorrowScale(Model template,Constant originalScale)
         {
             if(template==null||originalScale==null||originalScale.dataType!=DataType.Float||originalScale.shape!=new TensorShape(768)||originalScale.lengthBytes!=768*4)

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "explicit_sine_case_noninjecting_original_tanh_positions_and_division_diagnosis_tdd",
+  "source_base": "0618de70a7fbc542d22716ae5dc4cbdb2800ec5b",
+  "red": {
+    "file": "sine-primitive-tanh-case-red-20261016.xml",
+    "sha256": "4e160f1390f4f8f4378e2927bf2869b10c4f748e2d39b086b368724fc34870cc",
+    "tests": "6",
+    "failures": "6",
+    "errors": "0",
+    "skipped": "0",
+    "time": "2.684"
+  },
+  "green": {
+    "file": "sine-primitive-tanh-case-green-20261016.xml",
+    "sha256": "503d90d7474c62c40050e7273888dee5747a083c1e5c1c32c1c4748d575db32f",
+    "tests": "24",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "6.870"
+  },
+  "related_green": {
+    "file": "sine-primitive-tanh-case-related-green-20261016.xml",
+    "sha256": "569f5cf101a6cd475da63c6699ede0fee872fa25344f7b8d751ad8efd9d825fc",
+    "tests": "49",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "27.427"
+  },
+  "actionlint": "passed",
+  "behavior": [
+    "Select the same pinned case for raw source audit and both independent frozen endpoints; silence remains default.",
+    "Explicit PRECISE_TANH uses exactly the connected candidate position/Tanh/other operator functions.",
+    "Only explicit PRECISE_TANH additionally observes unchanged scalar-buffer Div and standard Tanh. Standard/default comparison selection stays unchanged.",
+    "Each isolated exported ONNX graph uses standard FP32 operators and original native input; its result is never returned into the native interpreter.",
+    "Deliberately wrong isolated Tanh output is detected while original native final/control bits remain unchanged.",
+    "Case/profile provenance, original shape/hash checks, weights and tolerances remain unchanged; no full/GPU proof from local toy tests."
+  ],
+  "real_sine_operator_run_pending": true,
+  "default_export_promoted": false,
+  "gpu_validated": false,
+  "required_ci_passed": false
+}

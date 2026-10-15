@@ -83,6 +83,8 @@ GPU結果はWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER /
 
 [Linux /Python3.13のTanh2件の失敗](results/m4-linux-python313-tanh-native-context-failure-20261016.json)は同hostのnative出力へのbit比較で、元qualified55,296値の参照差とは区別します。期待値・テスト・許容差は変更していません。[CPU数値環境の保存](results/m4-audio-cpu-context-recording-tdd-20261016.json)をTDDで追加し、今後の成功・失敗時に重みload前のCPU /Torch /許可した数値設定だけを残します。2 red＋stale context1 red→関連24 pass、最終context3 pass。既定のnative /ONNX計算や参照生成は維持します。
 
+[Windowsの小さな元行列診断](results/m4-native-original-matrix-windows-amd7763-bit-exact-20261016.json)はAMD EPYC7763 /AVX2で完了しました。実ONNX、native既定、MKL AVX2指定の全1,146,880値が元qualified値とbit一致し、保存capture /log SHAも照合済みです。Intel hostではないためIntel経路の仮説は未解決です。sineの先頭3層へ向けた[非注入演算比較](results/m4-sine-original-tanh-position-div-noninjecting-tdd-20261016.json)を6 red→関連49 pass /skip0・workflow lint合格で追加し、同じ元入力・前後参照を選択します。接続候補と同じ位置投影 /Tanh関数に加え、未変更のscalar-buffer Divも観測します。比較値を後続へ渡さず、元native区間の参照一致を別判定します。実モデルのsine演算比較はまだ未実行です。
+
 ## 後続工程
 
 手順5はモデル準備の再利用・配布、検索sample、連続推論のメモリ / 速度、Windows Player、他OS / 実機。手順6は依存PR、導入、ライセンス、配布の整理です。merge・公開は別途明示された範囲で進めます。

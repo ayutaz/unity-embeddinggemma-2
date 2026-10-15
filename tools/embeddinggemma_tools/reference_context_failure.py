@@ -129,6 +129,58 @@ def run_saved_graph_prefix(program, inputs, node_name):
         return result.detach().clone()
 
 
+def probe_saved_static_matmuls(program, destination, node_names, *, rows=2520, prefix_rows=16, seed=41015):
+    """Probe original weight/layout and full native GEMM shape, saving row prefixes.
+
+    Uses deterministic synthetic operands, not encoder activations or a new golden.
+    This does not call the saved program's forward or qualify full GPU inference.
+    """
+    destination=Path(destination)
+    if destination.exists():raise FileExistsError('Matmul evidence destination already exists')
+    if (not isinstance(program,torch.fx.GraphModule) or not node_names or len(set(node_names))!=len(node_names)
+            or type(rows) is not int or rows<1 or type(prefix_rows) is not int or not 1<=prefix_rows<=rows
+            or type(seed) is not int or seed<0):
+        raise ValueError('Unique static matmul nodes and positive full/prefix row counts are required')
+    nodes={node.name:node for node in program.graph.nodes};selected=[]
+    for name in node_names:
+        if not isinstance(name,str) or re.fullmatch(r'[A-Za-z_][A-Za-z_0-9]*',name) is None or name not in nodes:
+            raise ValueError('Matmul node is missing or invalid')
+        node=nodes[name]
+        if node.op!='call_function' or node.target!=torch.ops.aten.mm.default or len(node.args)!=2 or not isinstance(node.args[1],torch.fx.Node):
+            raise ValueError('Expected a saved two-dimensional static-weight mm node')
+        pending=[node.args[1]];needed=set()
+        while pending:
+            ancestor=pending.pop()
+            if ancestor in needed:continue
+            needed.add(ancestor);pending.extend(ancestor.all_input_nodes)
+        if any(ancestor.op=='placeholder' for ancestor in needed):raise ValueError('Matmul weight must not depend on model input')
+        selected.append((name,node.args[1].name))
+    inputs=(None,)*sum(node.op=='placeholder' for node in program.graph.nodes)
+    weights=[run_saved_graph_prefix(program,inputs,name) for _,name in selected]
+    if any(weight.ndim!=2 or not weight.numel() or min(weight.shape)<1 for weight in weights):raise ValueError('Expected finite FP32 matrix weights')
+    destination.mkdir(parents=True)
+    def save(name,tensor):
+        raw=tensor.contiguous().numpy().tobytes();path=destination/name;path.write_bytes(raw)
+        return dict(file=name,sha256=hashlib.sha256(raw).hexdigest(),shape=list(tensor.shape),bytes=len(raw))
+    matrices=[]
+    with torch.no_grad():
+        for index,((name,weight_node),weight) in enumerate(zip(selected,weights,strict=True)):
+            generator=torch.Generator().manual_seed(seed+index)
+            values=torch.randn((rows,weight.shape[0]),generator=generator,dtype=torch.float32)
+            actual=torch.mm(values,weight)
+            if not torch.isfinite(actual).all():raise ValueError('Native matmul probe produced nonfinite values')
+            matrices.append(dict(node=name,weight_node=weight_node,seed=seed+index,
+                native_input_shape=list(values.shape),native_output_shape=list(actual.shape),saved_input_shape=[prefix_rows,weight.shape[0]],
+                weight_stride=list(weight.stride()),input_stride=list(values.stride()),
+                input=save(name+'-input-fp32.bin',values[:prefix_rows]),weights=save(name+'-weights-fp32.bin',weight),
+                expected=save(name+'-expected-fp32.bin',actual[:prefix_rows])))
+    report=dict(scope='saved_static_matmul_full_native_shape_and_prefix_only',matrices=matrices,
+        runtime=dict(torch_version=torch.__version__,cpu_capability=torch.backends.cpu.get_cpu_capability(),threads=torch.get_num_threads()),
+        full_encoder_executed=False,learned_weights_changed=False,full_gpu_encoder_validated=False,end_to_end_validated=False)
+    (destination/'matmul-reference.json').write_text(json.dumps(report,indent=2,allow_nan=False)+'\n',encoding='utf-8')
+    return report
+
+
 def capture_saved_program_nodes(program, inputs, node_names, destination, expected, *, row_prefixes=None):
     """Observe the existing saved graph without re-exporting or editing its ops."""
     available = {node.name for node in program.graph.nodes if node.op == 'call_function'}

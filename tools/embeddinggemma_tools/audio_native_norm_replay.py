@@ -121,7 +121,7 @@ def replay_norm_variants(program, values, expected, output, *, provenance=None):
     return report
 
 
-def load_frozen_input(directory):
+def load_frozen_input(directory, *, case_id='silence'):
     root = Path(directory).resolve()
     for name, sha in (("audio-encoder-reference.json", REFERENCE_SHA), ("audio-encoder-validation.json", AUDIT_SHA)):
         if not (root / name).is_file() or digest(root / name) != sha:
@@ -133,7 +133,10 @@ def load_frozen_input(directory):
             or metadata["feature_atol"] != 1e-5 or metadata["feature_rtol"] != 1e-4 or not audit["native_reference_complete"]
             or str(torch.__version__).split("+")[0] != metadata["versions"]["torch"]):
         raise ValueError("Original frozen audio producer, tolerance or torch context differs")
-    case = next(row for row in reference["cases"] if row["id"] == "silence")
+    cases = [row for row in reference['cases'] if row['id'] == case_id]
+    if len(cases) != 1:
+        raise ValueError('Original frozen case must identify one pinned input without fallback')
+    case = cases[0]
     spec = reference["profiles"][case["profile"]]
     paths = []
     for name in (case["input_features"], spec["native_graph"]):
@@ -148,6 +151,7 @@ def load_frozen_input(directory):
     if sorted(node.args[1][0] for node in checked_normalizations(program)) != [32, 128]:
         raise ValueError("Original frozen graph requires exactly the two pinned normalization widths")
     return program, values, expected, dict(reference_source=PRODUCER, model_revision=REVISION,
+        case_id=case_id, profile=case['profile'],
         reference_sha256=REFERENCE_SHA, audit_sha256=AUDIT_SHA,
         graph_sha256=audit["files"][spec["native_graph"]]["sha256"],
         input_sha256=audit["files"][case["input_features"]]["sha256"])

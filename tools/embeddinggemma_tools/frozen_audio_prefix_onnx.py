@@ -31,7 +31,7 @@ class FrozenStageReference:
     provenance: dict
 
 
-def load_frozen_stage_reference(directory, stage):
+def load_frozen_stage_reference(directory, stage, *, case_id='silence'):
     if stage not in STAGES:
         raise ValueError("Unknown frozen reference stage")
     root = Path(directory).resolve()
@@ -47,13 +47,15 @@ def load_frozen_stage_reference(directory, stage):
             or metadata["encoder_reference_sha256"] != REFERENCE_SHA or metadata["feature_atol"] != 1e-5
             or metadata["feature_rtol"] != 1e-4):
         raise ValueError("Frozen stage provenance, context or tolerance differs")
-    rows = [row for row in reference["cases"] if row["id"] == "silence"]
+    rows = [row for row in reference["cases"] if row["id"] == case_id]
+    profiles = {'frames-1119-valid-1119': 280, 'frames-1119-valid-839': 210}
     if (len(rows) != 1 or not rows[0]["native_final_matches_original"] or not rows[0]["trace_numpy_matches_original"]
-            or rows[0]["profile"] != "frames-1119-valid-1119"
-            or rows[0]["input_features"] != "frames-1119-valid-1119/silence-features-fp32.bin"):
-        raise ValueError("Frozen silence input/final context differs")
+            or rows[0]["profile"] not in profiles
+            or rows[0]["input_features"] != f"{rows[0]['profile']}/{case_id}-features-fp32.bin"):
+        raise ValueError("Frozen case input/final context differs")
+    profile = rows[0]['profile']
     entries = [entry for entry in rows[0]["stages"] if entry["name"] == stage]
-    shape = [280, 512] if stage == "projected_features" else [1, 280, 1024]
+    shape = [profiles[profile], 512] if stage == "projected_features" else [1, 280, 1024]
     if len(entries) != 1 or entries[0]["shape"] != shape:
         raise ValueError("Frozen stage output shape differs")
     entry = entries[0]
@@ -63,7 +65,7 @@ def load_frozen_stage_reference(directory, stage):
             or path.stat().st_size != spec.get("bytes") or file_digest(path) != spec.get("sha256")):
         raise ValueError("Frozen stage tensor path, size or hash mismatch")
     expected = tensor(torch.from_numpy(np.fromfile(path, dtype="<f4").reshape(shape)))
-    return FrozenStageReference(expected, dict(stage=stage, reference_sha256=STAGE_REFERENCE_SHA,
+    return FrozenStageReference(expected, dict(stage=stage, case_id=case_id, profile=profile, reference_sha256=STAGE_REFERENCE_SHA,
         audit_sha256=STAGE_AUDIT_SHA, expected_sha256=spec["sha256"], reference_source=PRODUCER,
         model_revision=REVISION, encoder_reference_sha256=REFERENCE_SHA))
 # Names verified against b85a2ad... serialized schema in the pinned graph.
@@ -72,13 +74,30 @@ STAGES = {"subsample": ("view_2", torch.ops.aten.view.default),
           "projected_features": ("select", torch.ops.aten.select.int)}
 
 
-def boundary_for_stage(program, stage):
+def boundary_for_stage(program, stage, *, profile='frames-1119-valid-1119'):
     if stage not in STAGES:
         raise ValueError("Unknown fixed audio stage")
+    if profile not in ('frames-1119-valid-1119', 'frames-1119-valid-839'):
+        raise ValueError('Unknown fixed audio profile boundary')
     name, target = STAGES[stage]
+    padded = stage == 'projected_features' and profile == 'frames-1119-valid-839'
+    if padded:
+        name, target = 'slice_51', torch.ops.aten.slice.Tensor
     matches = [node for node in program.graph.nodes if node.name == name]
     if len(matches) != 1 or matches[0].op != "call_function" or matches[0].target != target:
         raise ValueError("Frozen audio stage boundary differs")
+    if padded:
+        node = matches[0]
+        if (node.kwargs or len(node.args) not in (4, 5) or node.args[1:4] != (0, 0, 210)
+                or len(node.args) == 5 and node.args[4] != 1):
+            raise ValueError('Pinned padded final crop boundary differs')
+    if stage == 'projected_features':
+        outputs = [node for node in program.graph.nodes if node.op == 'output']
+        final = outputs[0].args[0] if len(outputs) == 1 else None
+        if isinstance(final, tuple) and len(final) == 1:
+            final = final[0]
+        if final is not matches[0]:
+            raise ValueError('Pinned final boundary does not produce the original graph output')
     return name
 
 
@@ -212,13 +231,15 @@ class PrefixExport(torch.nn.Module):
         softmax_nodes = getattr(self, 'softmax_nodes', set())
         sigmoid_nodes = getattr(self, 'sigmoid_nodes', set())
         convolution_nodes = getattr(self, 'convolution_nodes', set())
+        tanh_nodes = getattr(self, 'tanh_nodes', set())
         softmax_candidate = getattr(self, 'softmax_candidate', None)
         sigmoid_candidate = getattr(self, 'sigmoid_candidate', None)
         convolution_candidate = getattr(self, 'convolution_candidate', None)
+        tanh_candidate = getattr(self, 'tanh_candidate', None)
 
         class Replay(torch.fx.Interpreter):
             def run_node(self, node):
-                if node in softmax_nodes or node in sigmoid_nodes or node in convolution_nodes:
+                if node in softmax_nodes or node in sigmoid_nodes or node in convolution_nodes or node in tanh_nodes:
                     args, kwargs = self.fetch_args_kwargs_from_env(node)
                     if kwargs:
                         raise ValueError('Only the original audited audio leaf contracts are supported')
@@ -226,6 +247,8 @@ class PrefixExport(torch.nn.Module):
                         return softmax_candidate(args[0])
                     if node in sigmoid_nodes:
                         return sigmoid_candidate(args[0])
+                    if node in tanh_nodes:
+                        return tanh_candidate(args[0])
                     return convolution_candidate(args[0], args[1])
                 if node in bmm_nodes:
                     args, kwargs = self.fetch_args_kwargs_from_env(node)
@@ -402,18 +425,22 @@ def main(argv=None):
     parser.add_argument("--stage", choices=tuple(STAGES), default="subsample")
     parser.add_argument("--frozen-stage-source", type=Path)
     parser.add_argument("--variant", choices=("all", *EXPERIMENTAL_VARIANTS), default="all")
+    parser.add_argument('--case', choices=('silence', 'impulse', 'sine', 'nyquist', 'noise', 'padded_noise'), default='silence')
     args = parser.parse_args(argv)
     if args.variant == 'ordered_original_stem' and args.stage != 'subsample':
         raise ValueError('Original stem candidate requires the subsample boundary')
     source = os.environ.get("GITHUB_SHA", "")
     if re.fullmatch("[0-9a-f]{40}", source) is None:
         raise ValueError("Frozen prefix needs immutable job provenance")
-    program, values, expected, provenance = load_frozen_input(args.input)
+    case_options = {'case_id': args.case} if args.case != 'silence' else {}
+    program, values, expected, provenance = load_frozen_input(args.input, **case_options)
     provenance.update(job_source=source, torch_version=str(torch.__version__), threads=torch.get_num_threads(),
                       cpu_capability=torch.backends.cpu.get_cpu_capability())
-    boundary = boundary_for_stage(program, args.stage)
+    profile = provenance.get('profile', 'frames-1119-valid-1119')
+    boundary_options = {'profile': profile} if profile != 'frames-1119-valid-1119' else {}
+    boundary = boundary_for_stage(program, args.stage, **boundary_options)
     provenance["stage"] = args.stage
-    frozen = load_frozen_stage_reference(args.frozen_stage_source, args.stage) if args.frozen_stage_source else None
+    frozen = load_frozen_stage_reference(args.frozen_stage_source, args.stage, **case_options) if args.frozen_stage_source else None
     variants = (VARIANTS if args.variant == "all" else
                 ("native", args.variant) if args.variant in ("ordered_static_linear_refined", "ordered_original_stem") else (args.variant,))
     if any(v in ("ordered_static_linear_refined", "ordered_original_stem") for v in variants):

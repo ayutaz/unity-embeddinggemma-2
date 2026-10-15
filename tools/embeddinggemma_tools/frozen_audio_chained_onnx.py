@@ -1,5 +1,6 @@
 """Bounded FX partitions with actual ONNX carry, never frozen stage resets."""
 import argparse
+from collections import Counter
 import gc
 import json
 import os
@@ -13,7 +14,7 @@ from onnx.reference import ReferenceEvaluator
 
 from .frozen_audio_prefix_onnx import (FrozenStageReference, boundary_for_stage, exact_difference, file_digest,
     load_frozen_input, load_frozen_stage_reference, tensor, weight_digests)
-from .frozen_audio_segment_onnx import PRECISE, PRECISE_POSITIONS, VARIANTS, SegmentExport, extract_segment
+from .frozen_audio_segment_onnx import PRECISE, PRECISE_POSITIONS, PRECISE_TANH, VARIANTS, SegmentExport, extract_segment
 from .export import export_audio_native_onnx
 from .reference_context_failure import feature_error_metrics
 from .streaming_reference import run_flat_reference
@@ -106,12 +107,14 @@ def probe_chained_segments(program, frozen_input, frozen_output, output, *, boun
                             or not np.isfinite(values).all()):
                         raise ValueError('Chained ONNX part output shape/dtype/finite contract differs')
                     row['parts'].append(dict(index=index, graph=graph.name, graph_sha256=file_digest(graph),
+                        onnx_operator_counts=dict(Counter(node.op_type for node in evaluator.proto_.graph.node)),
                         from_boundary=boundaries[index], to_boundary=boundaries[index + 1],
                         input_capture=f'{variant}-part{index}-input-fp32.bin', output_capture=f'{variant}-part{index}-output-fp32.bin',
                         input_sha256=input_sha, output_sha256=capture(f'{variant}-part{index}-output-fp32.bin', values),
                         native_input_strides=list(example.stride()), actual_output_strides=list(values.strides),
                         linear_replacements=len(wrapper.linear_nodes), attention_bmm_replacements=len(wrapper.bmm_nodes-wrapper.parameter_bmm_nodes),
                         relative_position_replacements=len(wrapper.position_nodes),
+                        tanh_replacements=len(wrapper.tanh_nodes),
                         parameter_bmm_replacements=len(wrapper.parameter_bmm_nodes),
                         rms_mean_replacements=len(wrapper.rms_means), rms_inverse_replacements=len(wrapper.rms_inverses),
                         silu_replacements=len(wrapper.silu_nodes), softmax_replacements=len(wrapper.softmax_nodes),
@@ -139,33 +142,39 @@ def main(argv=None):
     parser.add_argument('--input', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--frozen-stage-source', type=Path, required=True)
-    parser.add_argument('--variant', choices=('native', 'ordered_static_linear_all_bmm', PRECISE, PRECISE_POSITIONS), default='ordered_static_linear_all_bmm')
+    parser.add_argument('--variant', choices=('native', 'ordered_static_linear_all_bmm', PRECISE, PRECISE_POSITIONS, PRECISE_TANH), default='ordered_static_linear_all_bmm')
+    parser.add_argument('--case', choices=('silence', 'impulse', 'sine', 'nyquist', 'noise', 'padded_noise'), default='silence')
     args = parser.parse_args(argv)
     source = os.environ.get('GITHUB_SHA', '')
     if re.fullmatch('[0-9a-f]{40}', source) is None:
         raise ValueError('Chained diagnosis requires immutable job provenance')
-    program, _, _, provenance = load_frozen_input(args.input)
+    case_options = {'case_id': args.case} if args.case != 'silence' else {}
+    program, _, _, provenance = load_frozen_input(args.input, **case_options)
     stages = ('subsample', 'layer_2', 'layer_5', 'layer_8', 'projected_features')
-    boundaries = [boundary_for_stage(program, stage) for stage in stages]
+    profile = provenance.get('profile', 'frames-1119-valid-1119')
+    boundary_options = {'profile': profile} if profile != 'frames-1119-valid-1119' else {}
+    boundaries = [boundary_for_stage(program, stage, **boundary_options) for stage in stages]
     provenance.update(job_source=source, torch_version=str(torch.__version__), threads=torch.get_num_threads(),
                       cpu_capability=torch.backends.cpu.get_cpu_capability(), stages=stages)
     if args.variant != 'native':
         for index, (start, end) in enumerate(zip(boundaries, boundaries[1:])):
             wrapper = SegmentExport(extract_segment(program, start, end), args.variant)
-            count = (29 if index == 3 else 27) + (3 if args.variant == PRECISE_POSITIONS else 0)
+            count = (29 if index == 3 else 27) + (3 if args.variant in (PRECISE_POSITIONS, PRECISE_TANH) else 0)
             if (len(wrapper.linear_nodes) != count
                     or len(wrapper.bmm_nodes-wrapper.parameter_bmm_nodes) != 9
                     or len(wrapper.parameter_bmm_nodes) != 3):
                 raise ValueError('Pinned chained static-linear/BMM coverage differs')
-            if args.variant in (PRECISE, PRECISE_POSITIONS):
+            if args.variant in (PRECISE, PRECISE_POSITIONS, PRECISE_TANH):
                 rms = 28 if index == 3 else 27
                 if (len(wrapper.rms_means) != rms or len(wrapper.rms_inverses) != rms
                         or len(wrapper.silu_nodes) != 9
                         or any(len(nodes) != 3 for nodes in (wrapper.softmax_nodes, wrapper.sigmoid_nodes, wrapper.convolution_nodes))):
                     raise ValueError('Pinned chained RMS/SiLU/audio leaf coverage differs')
+            if args.variant == PRECISE_TANH and len(wrapper.tanh_nodes) != 3:
+                raise ValueError('Pinned chained Tanh coverage differs')
     report = probe_chained_segments(program,
-        load_frozen_stage_reference(args.frozen_stage_source, stages[0]),
-        load_frozen_stage_reference(args.frozen_stage_source, stages[-1]), args.output,
+        load_frozen_stage_reference(args.frozen_stage_source, stages[0], **case_options),
+        load_frozen_stage_reference(args.frozen_stage_source, stages[-1], **case_options), args.output,
         boundaries=boundaries, variants=('native', args.variant) if args.variant != 'native' else ('native',),
         provenance=provenance)
     print(json.dumps(dict(complete=report['complete'], context_qualified=report['context_qualified'],

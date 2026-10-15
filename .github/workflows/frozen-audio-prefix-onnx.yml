@@ -8,11 +8,16 @@ on:
         type: choice
         default: subsample
         options: [subsample, layer_0, layer_1, layer_2, layer_3, layer_4, layer_5, layer_6, layer_7, layer_8, layer_9, layer_10, layer_11, projected_features]
+      case_id:
+        description: Prefix or connected diagnosis case; all selects the six original cases across both fixed profiles
+        type: choice
+        default: silence
+        options: [silence, all, impulse, sine, nyquist, noise, padded_noise]
       variant:
         description: Select one candidate for bounded whole-encoder diagnosis, or all for a prefix
         type: choice
         default: all
-        options: [all, native, refined_moment, refined_mean_moment, refined_mean_moment_rms, native_silu, refined_mean_moment_rms_silu, ordered_static_linear, ordered_static_linear_refined, ordered_static_linear_attention, ordered_static_linear_all_bmm, ordered_original_primitives, ordered_original_positions, ordered_original_stem]
+        options: [all, native, refined_moment, refined_mean_moment, refined_mean_moment_rms, native_silu, refined_mean_moment_rms_silu, ordered_static_linear, ordered_static_linear_refined, ordered_static_linear_attention, ordered_static_linear_all_bmm, ordered_original_primitives, ordered_original_positions, ordered_original_tanh, ordered_original_stem]
       from_stage:
         description: Optional audited frozen INPUT for isolated segment diagnosis only
         type: choice
@@ -56,6 +61,11 @@ jobs:
         contains(github.event.pull_request.labels.*.name, 'frozen-audio-encoder-fixed-reference')))
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        case_id: ${{ fromJSON(inputs.case_id == 'all' && '["silence","impulse","sine","nyquist","noise","padded_noise"]' || format('["{0}"]', inputs.case_id || 'silence')) }}
     defaults:
       run:
         working-directory: tools
@@ -69,6 +79,7 @@ jobs:
       PROBE_FROM_STAGE: ${{ inputs.from_stage || 'none' }}
       PRIMITIVE_REPLAY: ${{ inputs.primitive_replay || false }}
       CHAINED_PROBE: ${{ inputs.chained_probe || false }}
+      PROBE_CASE: ${{ matrix.case_id }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
@@ -78,6 +89,19 @@ jobs:
           enable-cache: true
           cache-dependency-glob: tools/uv.lock
       - run: uv sync --locked
+      - name: Select pinned original case profile before any model download
+        shell: bash
+        run: |
+          case "$PROBE_CASE" in
+            silence|impulse|sine|nyquist|noise) profile=frames-1119-valid-1119 ;;
+            padded_noise) profile=frames-1119-valid-839 ;;
+            *) echo 'Unknown original audio case.' >&2; exit 1 ;;
+          esac
+          echo "PROBE_PROFILE=$profile" >> "$GITHUB_ENV"
+          if [ "$PROBE_CASE" != silence ] && { [ "$PRIMITIVE_REPLAY" = true ] || { [ "$PROBE_FROM_STAGE" != none ] && [ "$CHAINED_PROBE" != true ]; }; }; then
+            echo 'Non-silence cases require prefix or connected diagnosis.' >&2
+            exit 1
+          fi
       - name: Validate explicit primitive replay input boundary
         run: |
           if [ "$PRIMITIVE_REPLAY" = true ] && [ "$PROBE_FROM_STAGE" = none ]; then
@@ -90,7 +114,7 @@ jobs:
               exit 1
             fi
             case "$PROBE_VARIANT" in
-              native|ordered_static_linear_all_bmm|ordered_original_primitives|ordered_original_positions) ;;
+              native|ordered_static_linear_all_bmm|ordered_original_primitives|ordered_original_positions|ordered_original_tanh) ;;
               *) echo 'Chained diagnosis requires an explicit supported candidate.' >&2; exit 1 ;;
             esac
           fi
@@ -103,8 +127,8 @@ jobs:
           --output ../artifacts/frozen-prefix-input --max-entry-bytes 2147483648
           --member audio-runtime-reference/audio-encoder-reference.json
           --member audio-runtime-reference/audio-encoder-validation.json
-          --member audio-runtime-reference/frames-1119-valid-1119/audio.pt2
-          --member audio-runtime-reference/frames-1119-valid-1119/silence-features-fp32.bin
+          --member "audio-runtime-reference/${PROBE_PROFILE}/audio.pt2"
+          --member "audio-runtime-reference/${PROBE_PROFILE}/${PROBE_CASE}-features-fp32.bin"
       - name: Fetch independently audited original stage reference only when explicitly requested
         if: env.USE_FROZEN_STAGE == 'true' || env.PROBE_FROM_STAGE != 'none'
         env:
@@ -123,14 +147,14 @@ jobs:
               layer_*) printf -v source_index '%02d' "$(( ${PROBE_FROM_STAGE#layer_} + 1 ))" ;;
               *) exit 1 ;;
             esac
-            source_members=(--member "audio-runtime-stages/frames-1119-valid-1119/silence-stage-${source_index}-fp32.bin")
+            source_members=(--member "audio-runtime-stages/${PROBE_PROFILE}/${PROBE_CASE}-stage-${source_index}-fp32.bin")
           fi
           uv run --locked python -m embeddinggemma_tools.artifact_zip \
             --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11814567883 \
             --output ../artifacts/frozen-stage-reference \
             --member audio-runtime-stages/audio-stage-reference.json \
             --member audio-runtime-stages/audio-stage-validation.json \
-            --member "audio-runtime-stages/frames-1119-valid-1119/silence-stage-${stage_index}-fp32.bin" \
+            --member "audio-runtime-stages/${PROBE_PROFILE}/${PROBE_CASE}-stage-${stage_index}-fp32.bin" \
             "${source_members[@]}"
       - name: Record actual CPU host
         run: |
@@ -144,7 +168,7 @@ jobs:
               --input ../artifacts/frozen-prefix-input/audio-runtime-reference \
               --output ../artifacts/frozen-audio-prefix-onnx \
               --frozen-stage-source ../artifacts/frozen-stage-reference/audio-runtime-stages \
-              --variant "$PROBE_VARIANT"
+              --variant "$PROBE_VARIANT" --case "$PROBE_CASE"
             exit
           fi
           if [ "$PRIMITIVE_REPLAY" = true ]; then
@@ -174,11 +198,11 @@ jobs:
           uv run --locked python -m embeddinggemma_tools.frozen_audio_prefix_onnx \
             --input ../artifacts/frozen-prefix-input/audio-runtime-reference \
             --output ../artifacts/frozen-audio-prefix-onnx \
-            --stage "$PROBE_STAGE" --variant "$PROBE_VARIANT" "${reference_args[@]}"
+            --stage "$PROBE_STAGE" --variant "$PROBE_VARIANT" --case "$PROBE_CASE" "${reference_args[@]}"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
-          name: frozen-audio-prefix-onnx-${{ github.sha }}
+          name: frozen-audio-prefix-onnx-${{ github.sha }}${{ matrix.case_id != 'silence' && format('-{0}', matrix.case_id) || '' }}
           path: |
             artifacts/frozen-audio-prefix-onnx/*.json
             artifacts/frozen-audio-prefix-onnx/*.bin
@@ -192,7 +216,7 @@ jobs:
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always() && env.CHAINED_PROBE != 'true'
         with:
-          name: frozen-audio-prefix-onnx-models-${{ github.sha }}
+          name: frozen-audio-prefix-onnx-models-${{ github.sha }}${{ matrix.case_id != 'silence' && format('-{0}', matrix.case_id) || '' }}
           path: artifacts/frozen-audio-prefix-onnx/*.onnx
           retention-days: 7
           if-no-files-found: warn

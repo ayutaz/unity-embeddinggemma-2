@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "explicit_original_igc_tanh_candidate_and_graph_telemetry_tdd",
+  "source_base": "db7192005d2236b5213549c82b41b27b6538bac5",
+  "standalone_red": {
+    "file": "native-tanh-red-20261016.xml",
+    "sha256": "dad76e6998cbffd2cb9c4a0927018175ada5eb3af803695fb2976cad667dcd87",
+    "tests": "8",
+    "failures": "8",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.287"
+  },
+  "rejected_sleef_attempt": {
+    "file": "native-tanh-sleef-initial-failed-20261016.xml",
+    "sha256": "b043c1c64a236b175327b52eda49b8f5db50105b4ec5c12a530014f49c9ce55f",
+    "tests": "8",
+    "failures": "2",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.721"
+  },
+  "standalone_green": {
+    "file": "native-tanh-igc-green-20261016.xml",
+    "sha256": "3c7a4e075734934a21a78561250711261811a085b2f307a71b8c88774f1053b7",
+    "tests": "8",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.843"
+  },
+  "connected_and_telemetry_red": {
+    "file": "ordered-audio-tanh-and-graph-counts-red-20261016.xml",
+    "sha256": "cc5f66aaa22ff97f182329a76f8f6895e7e120cc50d49c0b2f2f5a6bfb656569",
+    "tests": "4",
+    "failures": "4",
+    "errors": "0",
+    "skipped": "0",
+    "time": "3.979"
+  },
+  "related_green": {
+    "file": "ordered-tanh-six-cases-related-green-20261016.xml",
+    "sha256": "0a2fca0c463608e682f7413b9265226957fc44a7b81e2963c8503b5a6b5ad826",
+    "tests": "140",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "95.559"
+  },
+  "actionlint": "passed",
+  "behavior": [
+    "New ordered_original_tanh retains ordered_original_positions math and adds only12audited original attention Tanh replacements.",
+    "IGC27interval paired-FP32 polynomial is the existing native GPU shader algorithm, ported to standard operators; original learning coefficients unchanged.",
+    "TDD preserves signedzero/small finite values, broad native domain and saturation; actual ONNX adapter rejects FP64/constants/custom domains.",
+    "Initial SLEEF attempt failed native equality and introduced a double constant in unused Clip; discarded without changing tests/expected values/tolerances.",
+    "Actual connected synthetic graph has no residual selected Tanh operator; prior positions candidate remains unchanged.",
+    "Actual exported operator counts perpart are retained for future diagnosis without uploading large graphs. Matrix count test accepts equivalent exported Gemm lowering.",
+    "Original weights/references/clips/masks/tolerances, default conversion and product Runtime remain unchanged."
+  ],
+  "real_full12_candidate_pending": true,
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "required_ci_passed": false
+}

@@ -1,0 +1,437 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "noninjecting_isolated_onnx_operators_on_audited_frozen_input_segment",
+  "run_id": 38793754616,
+  "artifact_id": 12001831037,
+  "source": "11db7b17b640ea85ab6b04bef066a737d3e5ee41",
+  "report_sha256": "f27073b3503e82a4b963a64b3ff2c1e2f782d891a8408eb10cb22413a3aa5fdf",
+  "provenance": {
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+    "audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+    "graph_sha256": "dc43d56b896b64077d8e86d56c3fd2b89cfe3d31170eabaa387165ea961438d7",
+    "input_sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+    "job_source": "11db7b17b640ea85ab6b04bef066a737d3e5ee41",
+    "torch_version": "2.14.1+cu130",
+    "numpy_version": "2.5.3",
+    "cpu_capability": "AVX2",
+    "threads": 2
+  },
+  "native_segment_original_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 0.0,
+    "maximum_tolerance_ratio": 0.0,
+    "worst_index": 0,
+    "worst_actual": -3.593391180038452,
+    "worst_expected": -3.593391180038452,
+    "exact_difference_count": 0
+  },
+  "native_interpreter_control_bits_equal": true,
+  "coefficients_unchanged": true,
+  "operator_comparisons": 185,
+  "local_failure_cases": 0,
+  "summary_by_target": {
+    "aten.pow.Tensor_Scalar": {
+      "comparisons": 56,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.0010765187596635051,
+      "bit_exact_comparisons": 28
+    },
+    "aten.mean.dim": {
+      "comparisons": 28,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.014869641613122398,
+      "bit_exact_comparisons": 0
+    },
+    "aten.mm.default": {
+      "comparisons": 62,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.6699684292933118,
+      "bit_exact_comparisons": 0
+    },
+    "aten.silu.default": {
+      "comparisons": 9,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.002380138562463904,
+      "bit_exact_comparisons": 0
+    },
+    "aten.bmm.default": {
+      "comparisons": 24,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.22920374319020645,
+      "bit_exact_comparisons": 6
+    },
+    "aten._softmax.default": {
+      "comparisons": 3,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.002384276090206368,
+      "bit_exact_comparisons": 0
+    },
+    "aten.convolution.default": {
+      "comparisons": 3,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.03492768033272489,
+      "bit_exact_comparisons": 0
+    }
+  },
+  "worst_operator_captures": {
+    "Pow": {
+      "node": "pow_192",
+      "variant": "standard_onnx",
+      "attributes": {
+        "exponent": -0.5
+      },
+      "maximum_tolerance_ratio": 0.0010765187596635051,
+      "files": [
+        {
+          "file": "worst-Pow-input0-fp32.bin",
+          "shape": [
+            1,
+            280,
+            1
+          ],
+          "native_strides": [
+            280,
+            1,
+            1
+          ],
+          "sha256": "4cad70c4b530555d311652028e1415855c7da42bc522dbc4b617cdc7c64fd85f"
+        },
+        {
+          "file": "worst-Pow-native-fp32.bin",
+          "shape": [
+            1,
+            280,
+            1
+          ],
+          "native_strides": [
+            280,
+            1,
+            1
+          ],
+          "sha256": "7e105229e611245f86a4d322c3b511a490c668b831b200fc7dec425de3d88c57"
+        },
+        {
+          "file": "worst-Pow-onnx-fp32.bin",
+          "shape": [
+            1,
+            280,
+            1
+          ],
+          "native_strides": [
+            280,
+            1,
+            1
+          ],
+          "sha256": "6dd3f6e926d2589613ecbf536f1b6ee247e3906a32c46ffdb0b289c22f3ec8f2"
+        }
+      ]
+    },
+    "ReduceMean": {
+      "node": "mean_95",
+      "variant": "standard_onnx",
+      "attributes": {
+        "keepdims": 1
+      },
+      "maximum_tolerance_ratio": 0.014869641613122398,
+      "files": [
+        {
+          "file": "worst-ReduceMean-input0-fp32.bin",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "native_strides": [
+            286720,
+            1,
+            280
+          ],
+          "sha256": "0ddb7d37b661389b4147ece5452e1a83c0da19257186fa302f90effd4c1eacb9"
+        },
+        {
+          "file": "worst-ReduceMean-native-fp32.bin",
+          "shape": [
+            1,
+            280,
+            1
+          ],
+          "native_strides": [
+            280,
+            1,
+            1
+          ],
+          "sha256": "e0a800d6d9a30ecc9c4c479fc8063941fec8ca688ee72da898be8b2f01a0c74c"
+        },
+        {
+          "file": "worst-ReduceMean-onnx-fp32.bin",
+          "shape": [
+            1,
+            280,
+            1
+          ],
+          "native_strides": [
+            280,
+            1,
+            280
+          ],
+          "sha256": "89701e3f9c7be061b8f9fe6d4033f53a14949576db152f4923480b4b629bac65"
+        }
+      ]
+    },
+    "MatMul": {
+      "node": "mm_109",
+      "variant": "native_layout",
+      "attributes": {},
+      "maximum_tolerance_ratio": 0.6699684292933118,
+      "files": [
+        {
+          "file": "worst-MatMul-input0-fp32.bin",
+          "shape": [
+            280,
+            1024
+          ],
+          "native_strides": [
+            1024,
+            1
+          ],
+          "sha256": "8d2b3824507574ca5bc29747d65e2b80ca01e9082c29e379a9160baea87ed7c0"
+        },
+        {
+          "file": "worst-MatMul-input1-fp32.bin",
+          "shape": [
+            1024,
+            4096
+          ],
+          "native_strides": [
+            1,
+            1024
+          ],
+          "sha256": "01fb83fc0b25bfc812deb9987388e660e97e415641c08703e6dd6846ee397752"
+        },
+        {
+          "file": "worst-MatMul-native-fp32.bin",
+          "shape": [
+            280,
+            4096
+          ],
+          "native_strides": [
+            4096,
+            1
+          ],
+          "sha256": "976262f7b77423809d25ad1b43ce48a9ef5b2beb22c5ed1d46715fc16130e9ad"
+        },
+        {
+          "file": "worst-MatMul-onnx-fp32.bin",
+          "shape": [
+            280,
+            4096
+          ],
+          "native_strides": [
+            4096,
+            1
+          ],
+          "sha256": "d6dd363c733618fabb38abefd77ae1d192524e50c5eeb3687de4881130557916"
+        }
+      ]
+    },
+    "SiLU": {
+      "node": "silu_34",
+      "variant": "standard_onnx",
+      "attributes": {},
+      "maximum_tolerance_ratio": 0.002380138562463904,
+      "files": [
+        {
+          "file": "worst-SiLU-input0-fp32.bin",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "native_strides": [
+            286720,
+            1,
+            280
+          ],
+          "sha256": "12216c544c81d76a7dd3c7a7cd7ab4b1e26d1817978a7d25037c9a3c179c75e1"
+        },
+        {
+          "file": "worst-SiLU-native-fp32.bin",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "native_strides": [
+            286720,
+            1024,
+            1
+          ],
+          "sha256": "dceeeb07062a58bff6bb447041acd303e4643996111f837d6128e47fd44dbdb0"
+        },
+        {
+          "file": "worst-SiLU-onnx-fp32.bin",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "native_strides": [
+            286720,
+            1024,
+            1
+          ],
+          "sha256": "581eda5acc1a7e1812d802f0b170708524c778f8c95e074d758ce4ca4f425453"
+        }
+      ]
+    },
+    "Softmax": {
+      "node": "_softmax_10",
+      "variant": "standard_onnx",
+      "attributes": {
+        "axis": -1
+      },
+      "maximum_tolerance_ratio": 0.002384276090206368,
+      "files": [
+        {
+          "file": "worst-Softmax-input0-fp32.bin",
+          "shape": [
+            1,
+            8,
+            24,
+            12,
+            24
+          ],
+          "native_strides": [
+            55296,
+            6912,
+            288,
+            24,
+            1
+          ],
+          "sha256": "6e606bd2286f20ac6a416e62da080024157918f0e7b9cbb4788f3418d14d50c3"
+        },
+        {
+          "file": "worst-Softmax-native-fp32.bin",
+          "shape": [
+            1,
+            8,
+            24,
+            12,
+            24
+          ],
+          "native_strides": [
+            55296,
+            6912,
+            288,
+            24,
+            1
+          ],
+          "sha256": "578caa34cae0568fca8029959dfe0e79f6e7b438b1173206bad8eaeb5c72b367"
+        },
+        {
+          "file": "worst-Softmax-onnx-fp32.bin",
+          "shape": [
+            1,
+            8,
+            24,
+            12,
+            24
+          ],
+          "native_strides": [
+            55296,
+            6912,
+            288,
+            24,
+            1
+          ],
+          "sha256": "e3f5ba22b437f614d15c027f42a87730af546d178b4ead8d5de4f438b8b54a55"
+        }
+      ]
+    },
+    "Conv": {
+      "node": "convolution_12",
+      "variant": "standard_onnx",
+      "attributes": {
+        "strides": [
+          1
+        ],
+        "pads": [
+          0,
+          0
+        ],
+        "dilations": [
+          1
+        ],
+        "group": 1024
+      },
+      "maximum_tolerance_ratio": 0.03492768033272489,
+      "files": [
+        {
+          "file": "worst-Conv-input0-fp32.bin",
+          "shape": [
+            1,
+            1024,
+            284
+          ],
+          "native_strides": [
+            290816,
+            284,
+            1
+          ],
+          "sha256": "a81e14b77b8bbfd5467008831d751f528c2c29eadb14fa7196d13334bf0b9a0f"
+        },
+        {
+          "file": "worst-Conv-input1-fp32.bin",
+          "shape": [
+            1024,
+            1,
+            5
+          ],
+          "native_strides": [
+            5,
+            5,
+            1
+          ],
+          "sha256": "88c132826bcd0087f4d7b6b0ed95d3a7bd977f29692ae81f0235ea46a99cb6b5"
+        },
+        {
+          "file": "worst-Conv-native-fp32.bin",
+          "shape": [
+            1,
+            1024,
+            280
+          ],
+          "native_strides": [
+            286720,
+            280,
+            1
+          ],
+          "sha256": "82640be6959286e7d8c64f402b37e2a1238a1f0c4cdeaad9d5b0fb06fe538dba"
+        },
+        {
+          "file": "worst-Conv-onnx-fp32.bin",
+          "shape": [
+            1,
+            1024,
+            280
+          ],
+          "native_strides": [
+            286720,
+            280,
+            1
+          ],
+          "sha256": "a65db210a046e58c250005550cdbb6ee0fb14b155155f1e7726a774a0c2ff901"
+        }
+      ]
+    }
+  },
+  "interpretation": "Each selected primitive passes on identical native inputs, while separate accumulated ONNX chains still fail. The largest isolated ratio is MatMul mm109 at0.67. This supports rounding-error propagation rather than an individually tolerance-breaking primitive, not a complete encoder acceptance or a sole proven causal operator.",
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "end_to_end_validated": false
+}

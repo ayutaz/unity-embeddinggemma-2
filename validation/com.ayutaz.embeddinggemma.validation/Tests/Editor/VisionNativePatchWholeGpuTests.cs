@@ -140,8 +140,14 @@ namespace EmbeddingGemma.Validation.Tests
 
         [UnityTest]
         public IEnumerator OriginalContextNativeRotarySquareZeroMustMatchOriginalOnGpu()
+            =>NativeRotarySquareCase("square-0");
+        [UnityTest]
+        public IEnumerator OriginalContextNativeRotarySquareOneMustMatchOriginalOnGpu()
+            =>NativeRotarySquareCase("square-1");
+
+        static IEnumerator NativeRotarySquareCase(string caseId)
         {
-            var pending=Run("square-0",true,true,true,true,true,false,true,true,192,true,16,true,true,true);
+            var pending=Run(caseId,true,true,true,true,true,false,true,true,192,true,16,true,true,true);
             while(!pending.IsCompleted){UnityEditor.EditorApplication.QueuePlayerLoopUpdate();yield return null;}
             pending.GetAwaiter().GetResult();
         }

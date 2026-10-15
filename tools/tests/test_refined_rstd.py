@@ -26,6 +26,18 @@ def test_refined_inverse_keeps_scalar_two_rounding_order_without_fp64_runtime():
     assert torch.equal(values, before)
 
 
+def test_refinement_does_not_move_correct_quotient_to_a_rounded_newton_midpoint():
+    import numpy as np
+    # Original layer four, token 173, query head 9. Its first reciprocal is
+    # correctly rounded; one residual/Newton step lands on the lower midpoint.
+    bits=np.arange(1081870327-32,1081870327+33,dtype='u4')
+    values=torch.from_numpy(bits.view('f4').copy())
+    roots=np.sqrt(values.numpy().astype('f8')).astype('f4')
+    expected=torch.from_numpy((1/roots.astype('f8')).astype('f4'))
+    actual=required()(values)
+    assert torch.equal(actual.view(torch.int32),expected.view(torch.int32))
+
+
 @pytest.mark.parametrize('values', [
     torch.tensor([1.], dtype=torch.float16),
     torch.tensor([0., 1.]),

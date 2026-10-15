@@ -4,7 +4,7 @@
   "goal": "4\u307e\u3067\u9032\u3081\u3066\u304f\u3060\u3055\u3044",
   "status": "active_not_complete",
   "scope_source": "goal4-scope-audit-20261016.json",
-  "candidate_head_at_audit": "2ac246a6c79834efc51d524228217126e4cb021b",
+  "candidate_head_at_audit": "6eafec6405dfce05bb843c82707ba0b2d5aaeee9",
   "requirements": [
     {
       "requirement": "Original learned coefficients, references and encoder tolerances remain unchanged",
@@ -82,17 +82,18 @@
       "last_terminal_ci_run": 38785455573,
       "last_terminal_ci_head": "9741d1e1392c4d4b845bb3ff9cc420d02a03df0b",
       "result": "Python four environments, package and workflow lint passed; audio ONNX on silence and Required CI failed.",
-      "candidate_ci_run": 38790942568,
-      "candidate_ci_head": "2ac246a6c79834efc51d524228217126e4cb021b",
-      "candidate_ci_last_observation": "pending",
+      "candidate_ci_run": 38791582723,
+      "candidate_ci_head": "6eafec6405dfce05bb843c82707ba0b2d5aaeee9",
+      "candidate_ci_last_observation": "in_progress",
       "candidate_ci_aggregate_conclusion": "",
       "evidence": [
         "m4-saved-full-silence-onnx-candidate-failed-20261016.json",
         "m4-saved-full-silence-ordered-rms-onnx-failed-20261016.json",
         "m4-original-layer8-to-final-onnx-14-failures-20261016.json",
-        "m4-silu-tail-domain-stop-and-boundary-tdd-20261016.json"
+        "m4-silu-tail-domain-stop-and-boundary-tdd-20261016.json",
+        "m4-fixed-tail-joint-and-same-host-baseline-failed-20261016.json"
       ],
-      "next_action": "Use audited original stage inputs to test the reproduced FP32 SiLU arithmetic in the isolated tail; preserve all six signal gates and original tolerance."
+      "next_action": "Compare individual matrix products and other kernels on identical native inputs/weights/output targets on the same host; avoid additional whole-encoder arithmetic combinations before isolating a primitive."
     }
   ],
   "documentation": {
@@ -135,6 +136,10 @@
     "additional_expanded_silu_onnx_boundary_tests": 9,
     "explicit_tail_rerun_tolerance_failures": 7,
     "explicit_tail_rerun_maximum_tolerance_ratio": 2.1517931271366337,
-    "next_diagnostic": "Same-host native ONNX baseline and joint fixed RMS28 / SiLU9 in the isolated tail."
+    "next_diagnostic": "Compare individual matrix products and other kernels on identical native inputs/weights/output targets on the same host; avoid additional whole-encoder arithmetic combinations before isolating a primitive.",
+    "joint_tail_run": 38791597473,
+    "joint_tail_conclusion": "baseline9_and_joint14_tolerance_failures_same_host_both_rejected",
+    "joint_current_native_tolerance_failures": 10,
+    "joint_current_native_qualified": false
   }
 }

@@ -290,7 +290,10 @@ namespace EmbeddingGemma.Validation.Tests
                     var products=operations.Where(p=>p.Value<string>("kind")=="batched_matmul").Take(3).ToArray();
                     Assert.That(products.Select(p=>p.Value<string>("node")),Is.EqualTo(new[]{"/attentions.0/MatMul","/attentions.0/MatMul_1","/attentions.0/MatMul_2"}));
                     var wanted=products.SelectMany(p=>p["inputs"].ToObject<string[]>().Append(p.Value<string>("output"))).ToHashSet();
-                    var snapshots=ObserveOperationBoundaries(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray(),input,wanted);
+                    // Reuse the already recorded normal result and release its
+                    // workers before creating diagnostic workers.
+                    encoded.Dispose();pipeline.Dispose();
+                    var snapshots=CaptureOperationBoundaries(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray(),input,wanted,actual);
                     Assert.That(snapshots["__final"].Select(BitConverter.SingleToInt32Bits),Is.EqualTo(actual.Select(BitConverter.SingleToInt32Bits)));
                     report["normal_final_matches_observed_bits"]=true;
                     var captureRoot=Path.ChangeExtension(output,null)+"-captures";Assert.That(Directory.Exists(captureRoot),Is.False);Directory.CreateDirectory(captureRoot);
@@ -461,10 +464,15 @@ namespace EmbeddingGemma.Validation.Tests
 
         static Dictionary<string,float[]> ObserveOperationBoundaries(Model[] models,string[][] inputs,string[] outputs,IGpuTensorOperation[] kernels,Tensor<float> input,HashSet<string> wanted)
         {
-            if(!wanted.IsSubsetOf(models.SelectMany(m=>m.outputs.Select(o=>o.name)).Concat(outputs)))throw new ArgumentException("Observed boundary is missing.");
             float[] baseline;
             using(var normal=new GpuProjectionPipeline(models,inputs,outputs,kernels))
             using(var final=normal.Execute(input))baseline=final.DownloadToArray();
+            return CaptureOperationBoundaries(models,inputs,outputs,kernels,input,wanted,baseline);
+        }
+
+        static Dictionary<string,float[]> CaptureOperationBoundaries(Model[] models,string[][] inputs,string[] outputs,IGpuTensorOperation[] kernels,Tensor<float> input,HashSet<string> wanted,float[] baseline)
+        {
+            if(!wanted.IsSubsetOf(models.SelectMany(m=>m.outputs.Select(o=>o.name)).Concat(outputs)))throw new ArgumentException("Observed boundary is missing.");
             var values=new Dictionary<string,Tensor<float>>{{models[0].inputs[0].name,input}};
             var owned=new HashSet<Tensor<float>>();var workers=new List<Worker>();var snapshots=new Dictionary<string,float[]>();
             try

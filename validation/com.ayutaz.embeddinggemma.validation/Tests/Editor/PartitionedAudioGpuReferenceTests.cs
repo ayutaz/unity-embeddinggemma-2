@@ -211,6 +211,10 @@ namespace EmbeddingGemma.Validation.Tests
             =>Execute("silence",true,early:true,nativeSilu:true,attention:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true);
 
         [Test]
+        public void ObserveNativeConvolutionModulesWithoutChangingNormalFinalBits()
+            =>Execute("silence",true,early:true,nativeSilu:true,attention:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,convolutionDetail:true);
+
+        [Test]
         public void ObserveNativeSiluFirstFeedForwardWithoutChangingNormalFinalBits()
             =>Execute("silence",true,false,false,true,true);
 
@@ -218,7 +222,7 @@ namespace EmbeddingGemma.Validation.Tests
         public void ObserveFirstAttentionAndConvolutionWithoutChangingNormalFinalBits()
             =>Execute("silence",true,false,false,true,true,true);
 
-        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false)
+        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false,bool convolutionDetail=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
@@ -228,6 +232,7 @@ namespace EmbeddingGemma.Validation.Tests
             var stem=nativeSoftmax?(observeBmm?"partitioned-native-softmax-operands-observation-":"partitioned-native-softmax-gpu-"):nativeDivision?(observeBmm?"partitioned-native-division-operands-observation-":"partitioned-native-division-gpu-"):nativeTanh?(observeBmm?"partitioned-native-tanh-operands-observation-":"partitioned-native-tanh-gpu-"):nativeQueryScale?(observeBmm?"partitioned-native-query-scale-operands-observation-":"partitioned-native-query-scale-gpu-"):observeBmm?"partitioned-native-bmm-operands-observation-":nativeBmm?"partitioned-native-bmm-gpu-":attention?"partitioned-native-silu-attention-observation-":nativeSilu?(early?"partitioned-native-silu-early-observation-":"partitioned-native-silu-gpu-"):
                 early?"partitioned-early-audio-observation-":isolated?"partitioned-layer10-original-input-":observe?"partitioned-all-static-layer-observation-":allStatic?"partitioned-all-static-gpu-":"partitioned-first-ff-gpu-";
             if(nativeSoftmax&&early&&attention)stem="partitioned-native-softmax-post-convolution-observation-";
+            if(convolutionDetail)stem="partitioned-native-convolution-modules-observation-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject { ["success"]=false,["scope"]=early?"original_early_audio_observation_only":isolated?"one_original_audio_layer_isolation_gpu_numeric_gate":observe?"original_audio_layer_observation_only":"one_partitioned_original_audio_encoder_gpu_numeric_gate",
@@ -424,6 +429,7 @@ namespace EmbeddingGemma.Validation.Tests
                     Check(replayPath,"99529dc0fa6c74825b23fca653d82091797ff1e5267d26c5cdae723fcf86f501");
                     var replay=JObject.Parse(File.ReadAllText(replayPath));
                     JObject projectionReplay=null;string projectionRoot=null;
+                    JObject convolutionReplay=null;string convolutionRoot=null;
                     Assert.That(replay.Value<bool>("success")&&replay.Value<bool>("native_final_exact_match"),Is.True);
                     Assert.That(replay.Value<string>("reference_source"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));
                     Assert.That(plan["projections"][1].Value<string>("weight_sha256"),Is.EqualTo("d598344ee23d0545a76fa6d95173fbc886e8f2dd46d5907e6bd50b6cfa4891df"));
@@ -455,6 +461,25 @@ namespace EmbeddingGemma.Validation.Tests
                             (name:"v_proj",boundary:"/attentions.0/v_proj/linear/MatMul_output_0",part:"self_attn.v_proj",minimum:-34.5f,maximum:34.25f),
                             (name:"relative_k_proj",boundary:"/attentions.0/relative_k_proj/MatMul_output_0",part:"self_attn.relative_k_proj",minimum:float.NegativeInfinity,maximum:float.PositiveInfinity)}).ToArray();
                     }
+                    if(convolutionDetail)
+                    {
+                        var referenceRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/native-convolution-reference-5d5c5eb-20261015/audio-layer-replay-5d5c5eb8a58b4d84f65caea9f7cddf5b5ae0a4ab"));
+                        var referenceFile=Path.Combine(referenceRoot,"audio-attention-replay-report.json");Check(referenceFile,"906d186ec19f25e7397ddc3e826d0fa0f6ab07ecd988c1ec314cfeaab95d7c78");
+                        convolutionReplay=JObject.Parse(File.ReadAllText(referenceFile));convolutionRoot=Path.Combine(referenceRoot,"audio-attention-replay");
+                        Assert.That(convolutionReplay.Value<bool>("success")&&convolutionReplay.Value<bool>("context_validated")&&convolutionReplay.Value<bool>("native_final_exact_match"),Is.True);
+                        Assert.That(convolutionReplay.Value<string>("reference_source"),Is.EqualTo("4edbe17a8105233c5aaa1514faa2862b08a4f7e0"));
+                        Assert.That(convolutionReplay.Value<string>("diagnostic_source"),Is.EqualTo("5d5c5eb8a58b4d84f65caea9f7cddf5b5ae0a4ab"));
+                        var oldFile=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/native-attention-operations-5a51cff-20261015/audio-attention-replay-report.json"));
+                        Check(oldFile,"d16f82c1c343769577106a39203da32f00fb797468cc656ab1b12b685b8e691e");
+                        foreach(var part in (JObject)JObject.Parse(File.ReadAllText(oldFile))["parts"])Assert.That(convolutionReplay["parts"][part.Key].Value<string>("sha256"),Is.EqualTo(part.Value.Value<string>("sha256")));
+                        bindings=bindings.Concat(new[]{
+                            (name:"conv_pre_norm",boundary:"/lconv1d/linear_start/Clip_output_0",part:"lconv1d.pre_layer_norm.output",minimum:-32.5f,maximum:32.25f),
+                            (name:"conv_linear_start",boundary:"/lconv1d/linear_start/linear/MatMul_output_0",part:"lconv1d.linear_start.output",minimum:-29.625f,maximum:29.375f),
+                            (name:"conv_norm",boundary:"/lconv1d/conv_norm/Mul_1_output_0",part:"lconv1d.conv_norm.output",minimum:float.NegativeInfinity,maximum:float.PositiveInfinity),
+                            (name:"conv_activation",boundary:"/lconv1d/act_fn/NativeSiLU_output_0",part:"lconv1d.act_fn.output",minimum:float.NegativeInfinity,maximum:float.PositiveInfinity),
+                            (name:"conv_linear_end_input",boundary:"/lconv1d/linear_end/Clip_output_0",part:"lconv1d.act_fn.output",minimum:-5.8125f,maximum:5.78125f),
+                            (name:"conv_linear_end",boundary:"/lconv1d/linear_end/linear/MatMul_output_0",part:"lconv1d.linear_end.output",minimum:-6.25f,maximum:6.1875f)}).ToArray();
+                    }
                     report["phase"]="observe_early";Save();
                     encoded.Dispose();pipeline.Dispose();
                     var snapshots=CaptureOperationBoundaries(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray(),input,bindings.Select(b=>b.boundary).ToHashSet(),actual);
@@ -473,8 +498,9 @@ namespace EmbeddingGemma.Validation.Tests
                         else
                         {
                             var projectedPart=binding.part.StartsWith("self_attn.",StringComparison.Ordinal);
-                            var part=(projectedPart?projectionReplay:replay)["parts"][binding.part];
-                            path=projectedPart?Path.Combine(projectionRoot,part.Value<string>("file")):Path.Combine(nativeRoot,"audio-layer-replay",part.Value<string>("file"));expectedSha=part.Value<string>("sha256");
+                            var convolutionPart=binding.part.StartsWith("lconv1d.",StringComparison.Ordinal);
+                            var part=(convolutionPart?convolutionReplay:projectedPart?projectionReplay:replay)["parts"][binding.part];
+                            path=convolutionPart?Path.Combine(convolutionRoot,part.Value<string>("file")):projectedPart?Path.Combine(projectionRoot,part.Value<string>("file")):Path.Combine(nativeRoot,"audio-layer-replay",part.Value<string>("file"));expectedSha=part.Value<string>("sha256");
                         }
                         Check(path,expectedSha);var native=Floats(path);var values=snapshots[binding.boundary];Assert.That(values.Length,Is.EqualTo(native.Length));
                         if(binding.name=="attention_residual")
@@ -485,12 +511,12 @@ namespace EmbeddingGemma.Validation.Tests
                         }
                         Assert.That(values.Any(v=>float.IsNaN(v)||float.IsInfinity(v)),Is.False);
                         int bits=0,bad=0;double maxRatio=0;
+                        var clipObserved=binding.name=="self_attn"||binding.name=="q_proj"||binding.name=="k_proj"||binding.name=="v_proj"||binding.name=="conv_linear_start"||binding.name=="conv_linear_end";
                         for(var index=0;index<values.Length;index++)
                         {
                             // Transform only the immutable expected values to the original
                             // quantized-linear input Clip boundary. Product computation stays GPU.
                             var target=Math.Max(binding.minimum,Math.Min(binding.maximum,native[index]));
-                            var clipObserved=binding.name=="self_attn"||binding.name=="q_proj"||binding.name=="k_proj"||binding.name=="v_proj";
                             var observed=clipObserved?Math.Max(binding.minimum,Math.Min(binding.maximum,values[index])):values[index];
                             if(BitConverter.SingleToInt32Bits(observed)!=BitConverter.SingleToInt32Bits(target))bits++;
                             var difference=Math.Abs((double)observed-target);var allowed=1e-5+1e-4*Math.Abs((double)target);
@@ -499,11 +525,11 @@ namespace EmbeddingGemma.Validation.Tests
                         var bytes=new byte[values.Length*4];Buffer.BlockCopy(values,0,bytes,0,bytes.Length);var capture=Path.Combine(captureRoot,binding.name+"-fp32.bin");File.WriteAllBytes(capture,bytes);
                         using var stream=File.OpenRead(capture);var captureSha=PlayerFileHash.Compute(stream,out _);
                         stages.Add(new JObject{["stage"]=binding.name,["boundary"]=binding.boundary,["original_native_sha256"]=expectedSha,
-                            ["expected_transform"]=binding.name=="attention_residual"?"original_fp32_residual_sum":binding.part=="feed_forward1.pre_layer_norm"||binding.part=="feed_forward1.act_fn"?"original_fp32_input_clip":"identity",
-                            ["actual_transform"]=binding.name=="self_attn"||binding.name=="q_proj"||binding.name=="k_proj"||binding.name=="v_proj"?"original_fp32_output_clip_for_diagnostic_comparison_only":"identity",
+                            ["expected_transform"]=binding.name=="attention_residual"?"original_fp32_residual_sum":!clipObserved&&(!float.IsInfinity(binding.minimum)||!float.IsInfinity(binding.maximum))?"original_fp32_input_clip":"identity",
+                            ["actual_transform"]=clipObserved?"original_fp32_output_clip_for_diagnostic_comparison_only":"identity",
                             ["actual_file"]=capture,["actual_sha256"]=captureSha,["bit_differences"]=bits,["mismatched_elements"]=bad,["maximum_tolerance_ratio"]=maxRatio});Save();
                     }
-                    Assert.That(stages.Count,Is.EqualTo(attention?12:5));report["observation_completed"]=true;report["success"]=true;report["phase"]="completed_observation";return;
+                    Assert.That(stages.Count,Is.EqualTo(convolutionDetail?18:attention?12:5));report["observation_completed"]=true;report["success"]=true;report["phase"]="completed_observation";return;
                 }
                 if(observe)
                 {

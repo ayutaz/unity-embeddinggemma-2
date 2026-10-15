@@ -19,13 +19,17 @@ namespace EmbeddingGemma.Validation.Tests
         public void CapturedOriginalLinuxPrefixSleefGeluMustMatchNativeBitsOnGpu()
             =>RunNativePrefix(true);
 
-        void RunNativePrefix(bool sleef)
+        [Test]
+        public void CapturedOriginalAvx512PrefixSleefGeluMustMatchNativeBitsOnGpu()
+            =>RunNativePrefix(true,true);
+
+        void RunNativePrefix(bool sleef,bool avx512=false)
         {
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
-            var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/np38719644488"));
-            var label=sleef?"vision-original-prefix-sleef-gelu-gpu-":"vision-original-prefix-fused-gelu-gpu-";
+            var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/"+(avx512?"sp38726074447":"np38719644488")));
+            var label=avx512?"vision-original-avx512-prefix-sleef-gelu-gpu-":sleef?"vision-original-prefix-sleef-gelu-gpu-":"vision-original-prefix-fused-gelu-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+".json"));Assert.That(File.Exists(output),Is.False);
-            var report=new JObject{["success"]=false,["runtime_source"]=source,["scope"]="captured_linux_avx2_original_first_gelu_prefix_only",
+            var report=new JObject{["success"]=false,["runtime_source"]=source,["scope"]=avx512?"captured_linux_avx512_original_first_gelu_prefix_only":"captured_linux_avx2_original_first_gelu_prefix_only",
                 ["full_encoder_validated"]=false,["end_to_end_validated"]=false,["reference_reproduces_original_golden"]=false};
             void Save(){File.WriteAllText(output,report.ToString());}
             void Check(string path,string expected){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(expected));}
@@ -34,8 +38,9 @@ namespace EmbeddingGemma.Validation.Tests
             {
                 var locked=JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath,"../Packages/packages-lock.json")));
                 foreach(var package in new[]{"com.ayutaz.embeddinggemma","com.ayutaz.embeddinggemma.validation"})Assert.That(locked["dependencies"][package].Value<string>("hash"),Is.EqualTo(source));
-                var path=Path.Combine(root,"original-image-native.json");Check(path,"b36c8af5e9e248d587eb2cb99f20407375f5656a0a173ad1dc0063e740863bd6");
+                var path=Path.Combine(root,"original-image-native.json");Check(path,avx512?"1d67a2deb19c90333020abced6338baba04212a19d6fb67c51671bf45b9e104b":"b36c8af5e9e248d587eb2cb99f20407375f5656a0a173ad1dc0063e740863bd6");
                 var reference=JObject.Parse(File.ReadAllText(path));Assert.That(reference["saved_node_capture"].Value<bool>("observed_final_matches_normal_bits"),Is.True);
+                Assert.That(reference["runtime"].Value<string>("cpu_capability"),Is.EqualTo(avx512?"AVX512":"AVX2"));
                 Assert.That(reference.Value<string>("graph_sha256"),Is.EqualTo("f9c5175a1d75289ce814a9651f496f9bdae5e873ac66199a5c3d03e0172c16cc"));
                 var nodes=(JArray)reference["saved_node_capture"]["nodes"];
                 string Node(string name)

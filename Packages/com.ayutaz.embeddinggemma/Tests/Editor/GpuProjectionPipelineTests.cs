@@ -8,6 +8,23 @@ namespace EmbeddingGemma.Tests
     public sealed class GpuProjectionPipelineTests
     {
         [Test]
+        public void BinaryGpuStageCopiesInputNamesAndBorrowsOperation()
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
+            var constructor=Required().GetConstructor(new[]{typeof(Model[]),typeof(string[][]),typeof(string[]),typeof(IGpuTensorOperation[])});
+            Assert.That(constructor,Is.Not.Null,"Binary GPU stage binding is missing.");
+            var graph=new FunctionalGraph();var x=graph.AddInput<float>(new TensorShape(2,3),"input");var prefix=Rename(graph.Compile(x,Functional.Transpose(x)),"left","right");
+            var finalGraph=new FunctionalGraph();var product=finalGraph.AddInput<float>(new TensorShape(2,2),"product");var tail=Rename(finalGraph.Compile(product),"final");
+            using var operation=new GpuBatchedMatmul();var names=new[]{new[]{"left","right"}};
+            using var pipeline=(IDisposable)constructor.Invoke(new object[]{new[]{prefix,tail},names,new[]{"product"},new IGpuTensorOperation[]{operation}});
+            names[0][0]="changed";
+            using var input=new Tensor<float>(new TensorShape(2,3),new[]{1f,2f,3f,4f,5f,6f});ComputeTensorData.Pin(input);
+            using var output=Execute(pipeline,input);pipeline.Dispose();Assert.That(output.DownloadToArray(),Is.EqualTo(new[]{14f,32f,32f,77f}));
+            using var right=new Tensor<float>(new TensorShape(3,2),new[]{1f,4f,2f,5f,3f,6f});ComputeTensorData.Pin(right);
+            using var reused=operation.Execute(input,right);Assert.That(reused.backendType,Is.EqualTo(BackendType.GPUCompute));
+        }
+
+        [Test]
         public void MixedGpuStagesPreserveResidualOutputsAndBorrowedSiluAfterDispose()
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");

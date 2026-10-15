@@ -80,6 +80,42 @@ def test_silu_partition_preserves_unrelated_unnamed_onnx_nodes():
     assert len(parts)==4 and [n.op_type for n in parts[-1].graph.node]==['Add']
 
 
+def dynamic_model():
+    def info(name,shape):return helper.make_tensor_value_info(name,TensorProto.FLOAT,shape)
+    nodes=[helper.make_node('Transpose',['input'],['right'],name='transpose',perm=[0,2,1]),
+           helper.make_node('MatMul',['input','right'],['product'],name='dynamic'),
+           helper.make_node('Relu',['product'],['out'],name='finish')]
+    graph=helper.make_graph(nodes,'dynamic',[info('input',[2,2,3])],[info('out',[2,2,2])],
+        value_info=[info('right',[2,3,2]),info('product',[2,2,2])])
+    return helper.make_model(graph,opset_imports=[helper.make_opsetid('',24)],ir_version=9)
+
+
+def test_dynamic_matmul_partition_binds_both_live_gpu_operands():
+    source=dynamic_model();before=source.SerializeToString()
+    parts,plan=required()(source,node_names=[],expected_weight_sha256=[],dynamic_node_names=['dynamic'])
+    assert source.SerializeToString()==before and len(parts)==2 and plan['projections']==[]
+    op=plan['operations'][0];assert op['kind']=='batched_matmul' and op['inputs']==['input','right']
+    values={'input':np.arange(12,dtype=np.float32).reshape(2,2,3)}
+    for index,part in enumerate(parts):
+        onnx.checker.check_model(part);outputs=ReferenceEvaluator(part).run(None,{v.name:values[v.name] for v in part.graph.input})
+        aliases=plan['segments'][index]['output_aliases'];values.update(dict(zip([aliases.get(v.name,v.name) for v in part.graph.output],outputs)))
+        if index==0:values[op['output']]=values[op['inputs'][0]]@values[op['inputs'][1]]
+    np.testing.assert_array_equal(values['out'],ReferenceEvaluator(source).run(None,{'input':values['input']})[0])
+
+
+@pytest.mark.parametrize('problem',['missing','duplicate','shape','inner','batch'])
+def test_dynamic_matmul_boundary_rejects_invalid_metadata_before_mutation(problem):
+    source=dynamic_model();names=['dynamic']
+    if problem=='missing':names=['missing']
+    elif problem=='duplicate':names=['dynamic','dynamic']
+    elif problem=='shape':source.graph.value_info[0].type.tensor_type.shape.dim[0].ClearField('dim_value')
+    elif problem=='inner':source.graph.value_info[0].type.tensor_type.shape.dim[1].dim_value=4
+    elif problem=='batch':source.graph.value_info[0].type.tensor_type.shape.dim[0].dim_value=3
+    before=source.SerializeToString()
+    with pytest.raises(ValueError):required()(source,node_names=[],expected_weight_sha256=[],dynamic_node_names=names)
+    assert source.SerializeToString()==before
+
+
 def test_partition_reconnects_exact_residual_and_preserves_source_bytes():
     source,w=model();before=source.SerializeToString();sha=hashlib.sha256(w.tobytes()).hexdigest()
     parts,plan=required()(source,node_names=['first','second'],expected_weight_sha256=[sha,sha])

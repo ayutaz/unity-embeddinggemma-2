@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "original_audio_encoder_outputs_official_backbone_qualified_role_reference_only",
+  "action_run": 38764026134,
+  "artifact_id": 11990006373,
+  "head_source": "93f3609515311e7bedb4ad46e8ec6aa9efbbc25d",
+  "actual_reference_producer": "0a8ad5b5c7b9e2582e65a381c0f22c3d1289cfb6",
+  "roles": [
+    {
+      "role": "document",
+      "reference_sha256": "064e01856ef5f425eb119540e1e88304a813d3572ccd097f8191207840e9b458",
+      "validation_sha256": "9c2cad5a24e7ac6793818ca573d011c87296a6be3d08969334179e1f05b7ed45",
+      "case_count": 6,
+      "profile_count": 2,
+      "minimum_reported_cosine": 0.9999998807907104,
+      "original_document_anchor_cases": 6,
+      "all_frozen_encoder_outputs_bit_identical": true,
+      "independently_recalculated_document_cosine": 0.9999999999985975,
+      "independently_recalculated_document_elementwise_mismatches": 0
+    },
+    {
+      "role": "query",
+      "reference_sha256": "515a32124c94437b372f81b3be4eb605717b1c4ae9293bf2c3b851450f35565b",
+      "validation_sha256": "f7d50f1a47d85abeebf614f5a7c57d2478c7a1cee81cbddaae70ee77e8590ac9",
+      "case_count": 6,
+      "profile_count": 2,
+      "minimum_reported_cosine": 0.9999998807907104,
+      "original_document_anchor_cases": 6,
+      "all_frozen_encoder_outputs_bit_identical": true,
+      "independently_recalculated_document_cosine": null,
+      "independently_recalculated_document_elementwise_mismatches": null
+    },
+    {
+      "role": "raw",
+      "reference_sha256": "ea4298313a536aa3b0c1f5eac7934240abaf3cb68170be36deb64c214fbb92a9",
+      "validation_sha256": "750a88ba7901b46c15e2e71223618eab075e3122535e92209da765996760c281",
+      "case_count": 6,
+      "profile_count": 2,
+      "minimum_reported_cosine": 0.9999998807907104,
+      "original_document_anchor_cases": 6,
+      "all_frozen_encoder_outputs_bit_identical": true,
+      "independently_recalculated_document_cosine": null,
+      "independently_recalculated_document_elementwise_mismatches": null
+    }
+  ],
+  "original_encoder_or_document_goldens_changed": false,
+  "python_role_conditions": 18,
+  "actual_gpu_or_pcm_executed": false,
+  "legacy_native_encoder_context_or_onnx_failures_reclassified": false,
+  "next_required": "Compare actual PCM GPU final APIs for all six original signals / both profiles and Query/Document/Raw to these pinned references, retaining the original Document golden."
+}

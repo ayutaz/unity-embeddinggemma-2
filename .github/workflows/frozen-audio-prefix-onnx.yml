@@ -22,6 +22,10 @@ on:
         description: Compare only against audited original stage bytes; retain current native drift separately
         type: boolean
         default: false
+      primitive_replay:
+        description: Compare individual ONNX operators on native inputs without injecting their results; requires from_stage
+        type: boolean
+        default: false
   pull_request:
     types: [opened, synchronize, labeled]
 
@@ -55,6 +59,7 @@ jobs:
       PROBE_VARIANT: ${{ inputs.variant || (contains(github.event.pull_request.labels.*.name, 'frozen-audio-encoder-fixed-reference') && 'refined_mean_moment') || 'all' }}
       USE_FROZEN_STAGE: ${{ inputs.frozen_stage_reference || contains(github.event.pull_request.labels.*.name, 'frozen-audio-layer0-fixed-reference') || contains(github.event.pull_request.labels.*.name, 'frozen-audio-encoder-fixed-reference') }}
       PROBE_FROM_STAGE: ${{ inputs.from_stage || 'none' }}
+      PRIMITIVE_REPLAY: ${{ inputs.primitive_replay || false }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
@@ -64,6 +69,12 @@ jobs:
           enable-cache: true
           cache-dependency-glob: tools/uv.lock
       - run: uv sync --locked
+      - name: Validate explicit primitive replay input boundary
+        run: |
+          if [ "$PRIMITIVE_REPLAY" = true ] && [ "$PROBE_FROM_STAGE" = none ]; then
+            echo 'Primitive replay requires an explicit audited input stage.' >&2
+            exit 1
+          fi
       - name: Fetch original saved graph and one fixture without Hugging Face downloads
         env:
           GH_TOKEN: ${{ github.token }}
@@ -109,6 +120,14 @@ jobs:
       - name: Diagnose fixed boundary with original live-context gate or explicit frozen stage audit
         shell: bash
         run: |
+          if [ "$PRIMITIVE_REPLAY" = true ]; then
+            uv run --locked python -m embeddinggemma_tools.audio_primitive_replay \
+              --input ../artifacts/frozen-prefix-input/audio-runtime-reference \
+              --output ../artifacts/frozen-audio-prefix-onnx \
+              --frozen-stage-source ../artifacts/frozen-stage-reference/audio-runtime-stages \
+              --from-stage "$PROBE_FROM_STAGE" --stage "$PROBE_STAGE"
+            exit
+          fi
           if [ "$PROBE_FROM_STAGE" != none ]; then
             uv run --locked python -m embeddinggemma_tools.frozen_audio_segment_onnx \
               --input ../artifacts/frozen-prefix-input/audio-runtime-reference \

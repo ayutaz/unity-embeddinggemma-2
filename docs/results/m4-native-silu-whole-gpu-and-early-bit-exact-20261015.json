@@ -159,7 +159,10 @@
   "independent_python_regression": {
     "run_id": 38657424472,
     "source": "3ae76bd182fb80dd74c9b7851a99ce719e4da67d",
-    "verified_pass": false
+    "verified_pass": true,
+    "environments": 4,
+    "tests_each": 851,
+    "receipt": "python-full-native-silu-partition-green-20261015.json"
   },
   "unresolved": [
     "Whole encoder is numerically failing",

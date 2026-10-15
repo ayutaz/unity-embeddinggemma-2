@@ -575,6 +575,28 @@ def fp32_refined_rstd(values):
     return fp32_fma(inverse, reciprocal_residual, inverse)
 
 
+class VisionRmsExport(nn.Module):
+    """Opt-in fixed 768-wide FP32 RMS candidate; borrows the original scale.
+
+    CPU/ONNX parity is not original-context or GPU encoder acceptance. Keep
+    scalar division and refined inverse operations explicit in exported graphs.
+    """
+    def __init__(self, scale, epsilon):
+        super().__init__()
+        if (not isinstance(scale, torch.Tensor) or scale.dtype != torch.float32
+                or tuple(scale.shape) != (768,) or not scale.is_contiguous()
+                or not torch.isfinite(scale).all()
+                or float(torch.tensor(epsilon, dtype=torch.float32)) != float(torch.tensor(1e-6, dtype=torch.float32))):
+            raise ValueError("vision RMS requires the original finite FP32 width-768 scale and epsilon 1e-6")
+        self.register_buffer("scale", scale)
+        self.epsilon = 1e-6
+
+    def forward(self, values):
+        mean = fp32_cascade_mean768(values.square())
+        inverse = fp32_refined_rstd(mean + self.epsilon)
+        return (values * inverse) * self.scale
+
+
 class TorchWelfordLayerNorm(nn.Module):
     """Editor export candidate for the pinned eight-lane FP32 moment order.
 

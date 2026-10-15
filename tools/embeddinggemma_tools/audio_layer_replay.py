@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import math
 import re
+import copy
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -246,10 +247,47 @@ def capture_subsample_parts(module, features, frame_mask, pinned_final):
         for handle in handles:
             handle.remove()
     if not torch.equal(actual, pinned_final):
-        raise ValueError("native replay does not match pinned subsample final")
+        error=ValueError("native replay does not match pinned subsample final")
+        try:error.context_diagnostics=diagnose_subsample_context(module,features,frame_mask,pinned_final)
+        except Exception as diagnostic_error:error.context_diagnostics=dict(scope='subsample_cpu_context_diagnosis_only',error=str(diagnostic_error))
+        raise error
     if set(values) != set(SUBSAMPLE_PARTS) or any(not torch.isfinite(value).all() for value in values.values()):
         raise ValueError("subsample replay parts are incomplete or nonfinite")
     return {name: values[name] for name in SUBSAMPLE_PARTS}
+
+
+def diagnose_subsample_context(module,features,frame_mask,expected):
+    """Failure-only finite grid; never change the pinned output or accept a probe."""
+    from .conv_reference_context import _runtime
+    from .reference_context_failure import feature_error_metrics
+    initial_threads=torch.get_num_threads();initial_mkldnn=torch.backends.mkldnn.enabled
+    rows=[];runtime=_runtime()
+    try:
+        for weight_layout in ('contiguous','channels_last'):
+            candidate=copy.deepcopy(module)
+            candidate.to(memory_format=torch.contiguous_format if weight_layout=='contiguous' else torch.channels_last)
+            for feature_layout in ('contiguous','time_contiguous'):
+                values=features.detach().clone().contiguous()
+                if feature_layout=='time_contiguous':values=values.transpose(1,2).contiguous().transpose(1,2)
+                for enabled in (True,False):
+                    for requested in (1,2,4):
+                        row=dict(weight_layout=weight_layout,feature_layout=feature_layout,
+                                 feature_strides=list(values.stride()),mkldnn_enabled=enabled,
+                                 requested_threads=requested,executed=False)
+                        rows.append(row)
+                        try:
+                            torch.backends.mkldnn.enabled=enabled;torch.set_num_threads(requested)
+                            row['actual_threads']=torch.get_num_threads()
+                            with torch.no_grad():actual,_=candidate(values.clone(),frame_mask.clone())
+                            row.update(feature_error_metrics(actual,expected))
+                            if actual.shape==expected.shape:
+                                row['bit_differences']=int(torch.count_nonzero(actual.contiguous().view(torch.int32)!=expected.contiguous().view(torch.int32)))
+                            row['executed']=True
+                        except Exception as error:row['error']=f'{type(error).__name__}: {error}'
+    finally:
+        torch.set_num_threads(initial_threads);torch.backends.mkldnn.enabled=initial_mkldnn
+    return dict(scope='subsample_cpu_context_diagnosis_only',runtime=runtime,conditions=rows,
+                full_encoder_validated=False,unity_validated=False,end_to_end_validated=False)
 
 
 def _identity(path):
@@ -490,6 +528,7 @@ def main(argv=None):
                              and report.get("fp32_compensated_gate_passed", True))
     except Exception as error:
         report.update(error_type=type(error).__name__, error=str(error))
+        if hasattr(error,'context_diagnostics'):report['subsample_context_diagnostics']=error.context_diagnostics
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(json.dumps(report))

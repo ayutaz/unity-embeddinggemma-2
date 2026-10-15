@@ -51,6 +51,10 @@ GPU結果はWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER /
 
 [第1層の元クリッピング付きpointwise投影](results/m4-original-clipped-pointwise-bmm-all286720-bit-exact-20261016.json)は全286,720値が実ONNXで元出力とbit一致しました。元の入力・出力のclip係数、重みと期待値のSHAを照合し、同じclip順序を維持しています。これはclip後のmodule境界の一致で、clip前の生BMM全値のbit一致とは主張しません。`ordered_static_linear_all_bmm`で、元のparameterからview /expand /transposeだけで構成される4番目の投影を追加し、元subsampleから全12層への接続を比較します。RMS /SiLU /Convは引き続き維持します。[TDDと範囲制約](results/m4-ordered-parameter-bmm-tdd-20261016.json)は新規red2件→green5件、関連96 pass /skip0、workflow lint合格です。
 
+[元の単体Softmax /GLU /Depthwise比較](results/m4-original-softmax-glu-depthwise-actual-onnx-bit-exact-20261016.json)は、保存済みの元native入力を使った実ONNXで全628,736値がbit一致しました。新規Softmax9件、GLU /Depthwise /Sigmoid13件をTDDで追加し、関連127 pass /skip0です。[元のRMS /SiLU入力](results/m4-original-rms-and-silu-worst-input-onnx-qualified-20261016.json)でも平均280値と逆平方根280値はbit一致、SiLU286,720値は許容差超過0で極小のbit差4を残します。いずれも単体の証拠で、全encoderの合格や既定変換への採用とは数えません。現在の全12層BMM診断にはまだこれらを加えていません。
+
+[ONNX区間接続のTDD](results/m4-connected-onnx-partitions-no-reference-reset-tdd-20261016.json)で、元subsampleから全12層を3層ずつ変換する明示的な診断モードを準備しました。各区間の実ONNX出力をそのまま次へ渡し、途中の正解Tensorへ戻しません。別のnative制御はcutの物理layoutを保ち、未分割のnativeと全bit一致することを要求します。最初のONNX出力を意図的に誤らせるテストでは最後まで誤差が伝わり、元最終参照の比較で検出されます。区間ごとのcapture /graph SHA、進行段階と経過時間を保存します。関連134 pass /skip0、workflow lint合格。実モデルでの区間接続は未実行で、速度改善や全encoder合格とは数えません。
+
 先行する全silence候補は475要素、RMS追加候補は583要素超過で不採用です。RMS /SiLUの後半候補も[同一ホスト比較](results/m4-fixed-tail-joint-and-same-host-baseline-failed-20261016.json)で不合格でした。同じONNX /入力 /期待値でもAMDとIntelでは結果が変わり、Intelではnative自体の元参照との差も残っています。CPU環境差、変換差、失敗・未実行を分けて保持します。過去のsource付きreceiptは`docs/results/`に残し、部分診断やActions収集の完了をGPU /全encoder合格へ読み替えません。
 
 ## 後続工程

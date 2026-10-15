@@ -30,6 +30,10 @@ on:
         description: Run only the audited frozen real MatMul fixture; downloads no encoder model
         type: boolean
         default: false
+      chained_probe:
+        description: Full12layers in connected3layer partitions; actual ONNX carry, no frozen resets
+        type: boolean
+        default: false
   pull_request:
     types: [opened, synchronize, labeled]
 
@@ -64,6 +68,7 @@ jobs:
       USE_FROZEN_STAGE: ${{ inputs.frozen_stage_reference || contains(github.event.pull_request.labels.*.name, 'frozen-audio-layer0-fixed-reference') || contains(github.event.pull_request.labels.*.name, 'frozen-audio-encoder-fixed-reference') }}
       PROBE_FROM_STAGE: ${{ inputs.from_stage || 'none' }}
       PRIMITIVE_REPLAY: ${{ inputs.primitive_replay || false }}
+      CHAINED_PROBE: ${{ inputs.chained_probe || false }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
@@ -78,6 +83,16 @@ jobs:
           if [ "$PRIMITIVE_REPLAY" = true ] && [ "$PROBE_FROM_STAGE" = none ]; then
             echo 'Primitive replay requires an explicit audited input stage.' >&2
             exit 1
+          fi
+          if [ "$CHAINED_PROBE" = true ]; then
+            if [ "$PRIMITIVE_REPLAY" = true ] || [ "$PROBE_FROM_STAGE" != subsample ] || [ "$PROBE_STAGE" != projected_features ]; then
+              echo 'Chained diagnosis requires original subsample through all12layers, without primitive replay.' >&2
+              exit 1
+            fi
+            case "$PROBE_VARIANT" in
+              native|ordered_static_linear_all_bmm) ;;
+              *) echo 'Chained diagnosis requires an explicit supported candidate.' >&2; exit 1 ;;
+            esac
           fi
       - name: Fetch original saved graph and one fixture without Hugging Face downloads
         env:
@@ -124,6 +139,14 @@ jobs:
       - name: Diagnose fixed boundary with original live-context gate or explicit frozen stage audit
         shell: bash
         run: |
+          if [ "$CHAINED_PROBE" = true ]; then
+            uv run --locked python -m embeddinggemma_tools.frozen_audio_chained_onnx \
+              --input ../artifacts/frozen-prefix-input/audio-runtime-reference \
+              --output ../artifacts/frozen-audio-prefix-onnx \
+              --frozen-stage-source ../artifacts/frozen-stage-reference/audio-runtime-stages \
+              --variant "$PROBE_VARIANT"
+            exit
+          fi
           if [ "$PRIMITIVE_REPLAY" = true ]; then
             uv run --locked python -m embeddinggemma_tools.audio_primitive_replay \
               --input ../artifacts/frozen-prefix-input/audio-runtime-reference \

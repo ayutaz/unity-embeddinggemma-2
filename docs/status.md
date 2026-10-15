@@ -10,7 +10,7 @@ Sentisのmetadata監査で元の483境界を確定（NUnit1 pass、推論なし�
 
 初期5境界（入力投影・最初のpre norm後の入力・活性化後の入力・最初のFF出力・norm_pre_attn）は元参照へすべて全bit一致し、診断readbackを加えても通常最終bitは変わらなかった。元Clip境界を合わせる期待値変換と、参照ファイル本体の不変を分ける。**全encoderへの接続はできたが、数値受け入れは未完了。** 次はbit一致したnorm_pre_attnの直後のattentionブロックを元native参照で観測する。[固定接続・TDD・監査・全体不合格と初期一致](results/m4-native-silu-whole-gpu-and-early-bit-exact-20261015.json)。Persistent allocation警告は再発し、発生元は未検証。所有Unityはterminal。
 
-Python全体の新しい独立Actions [38657424472](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38657424472) / 固定source `3ae76bd182fb80dd74c9b7851a99ce719e4da67d`は結果待ち。以前の843件×4環境には今回のpartition拡張を含めない。工程3・4の音声元6信号 / 両profile、画像FP32全3 profile、最終768 APIの全条件は未達のまま。以降は前回checkpoint。
+Python全体の新しい独立Actions [38657424472](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38657424472) / 固定source `3ae76bd182fb80dd74c9b7851a99ce719e4da67d`はterminal success。全4 XMLで各851 pass / fail0 / skip0を確認した。[固定回帰](results/python-full-native-silu-partition-green-20261015.json)。Python成功を実GPU全encoder成功へ流用しない。工程3・4の音声元6信号 / 両profile、画像FP32全3 profile、最終768 APIの全条件は未達のまま。以降は前回checkpoint。
 
 **2026-10-15最新のSiLU修正:** `f774707`の5境界観測は通常最終bitを変えず、input_projectionと最初のpre_layer_norm後の入力を元参照へ全bit一致させた。最初の差はactivation_inputの826,899値（元の局所許容差超過0・最大比0.001836）。最初のFF出力89,170値、norm_pre_attn81,727値へbit差が伝播する。観測値をhash付きのGit対象外binaryへ保存した。元のquantized-linear入力Clipは期待値だけに適用し、参照ファイル / 製品GPU計算は変更しない。
 

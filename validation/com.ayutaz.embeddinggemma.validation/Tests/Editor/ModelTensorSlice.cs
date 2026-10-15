@@ -7,6 +7,8 @@ namespace EmbeddingGemma.Validation.Tests
 {
     public static class ModelTensorSlice
     {
+        public static Model Extract(Model source,int tensorIndex,string outputName,Model.Input[] boundaries)
+            =>throw new NotImplementedException("Saved-model slicing across an external GPU boundary is missing.");
         public static Model Extract(Model source,int tensorIndex,string outputName)
         {
             if(source==null)throw new ArgumentNullException(nameof(source));

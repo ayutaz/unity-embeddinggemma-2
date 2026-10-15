@@ -138,7 +138,15 @@ namespace EmbeddingGemma.Validation.Tests
             pending.GetAwaiter().GetResult();
         }
 
-        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false,bool editorFramePump=false,bool nativeOperators=false,int nativeStaticBlockSize=384,bool inlineTailRms=false,int softmaxVectorWidth=8,bool fuseGeluInner=false,bool sleefGelu=false)
+        [UnityTest]
+        public IEnumerator OriginalContextNativeRotarySquareZeroMustMatchOriginalOnGpu()
+        {
+            var pending=Run("square-0",true,true,true,true,true,false,true,true,192,true,16,true,true,true);
+            while(!pending.IsCompleted){UnityEditor.EditorApplication.QueuePlayerLoopUpdate();yield return null;}
+            pending.GetAwaiter().GetResult();
+        }
+
+        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false,bool editorFramePump=false,bool nativeOperators=false,int nativeStaticBlockSize=384,bool inlineTailRms=false,int softmaxVectorWidth=8,bool fuseGeluInner=false,bool sleefGelu=false,bool nativeRotary=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
@@ -151,6 +159,7 @@ namespace EmbeddingGemma.Validation.Tests
             if(softmaxVectorWidth==16)label="vision-original-context-softmax16-all-rms-block"+nativeStaticBlockSize+"-whole-gpu-";
             if(fuseGeluInner)label="vision-original-context-fused-gelu-softmax"+softmaxVectorWidth+"-all-rms-block"+nativeStaticBlockSize+"-whole-gpu-";
             if(sleefGelu)label="vision-original-context-precise-sleef-gelu-softmax"+softmaxVectorWidth+"-all-rms-block"+nativeStaticBlockSize+"-whole-gpu-";
+            if(nativeRotary)label="vision-original-native-rotary-whole-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+"-"+caseId+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["scope"]=releaseUnusedGpuCache?"one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate":nativeGelu?"one_original_vision_encoder_gpu_native_gelu_all_layer_rms_and_patch384_candidate":inlineAllRms?"one_original_vision_encoder_gpu_all_sixteen_layer_rms_and_native_patch384_candidate":"one_original_vision_encoder_gpu_native_patch384_candidate",["runtime_source"]=source,
@@ -162,6 +171,7 @@ namespace EmbeddingGemma.Validation.Tests
             report["softmax_vector_width"]=softmaxVectorWidth;
             report["fused_gelu_inner"]=fuseGeluInner;
             report["precise_sleef_gelu"]=sleefGelu;
+            report["native_derived_rotary"]=nativeRotary;
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
             var operations=new List<IGpuTensorOperation>();Save();
@@ -213,6 +223,15 @@ namespace EmbeddingGemma.Validation.Tests
                         Assert.That(working.layers.Count(layer=>layer.GetType().Name=="Square"),Is.Zero);
                         report["inline_rms_count"]=113;report["remaining_original_rms_count"]=0;report["layer_count"]=working.layers.Count;
                     }
+                }
+                if(nativeRotary)
+                {
+                    Assert.That(profile,Is.EqualTo("square"),"This frozen position fixture qualifies the square profile only.");
+                    var before=working;working=QualifiedVisionRotaryTables.RebindOriginalSquareForValidation(before);
+                    var changed=before.layers.Zip(working.layers,(a,b)=>a.inputs.SequenceEqual(b.inputs)?0:1).Sum();
+                    Assert.That(changed,Is.EqualTo(128));Assert.That(original.constants.All(c=>working.constants.Contains(c)),Is.True);
+                    report["derived_rotary_rebound_tables"]=4;report["derived_rotary_changed_multiplication_operands"]=changed;
+                    report["derived_rotary_scope"]="audited_data_independent_original_square_position_tables";
                 }
                 report["graph_rewrite_ms"]=phaseTimer.Elapsed.TotalMilliseconds;report["phase"]="prepare_gpu_pipeline";Save();phaseTimer.Restart();
                 var projection=original.layers.First(layer=>layer.GetType().Name=="MatMul"&&constants.TryGetValue(layer.inputs[1],out var w)&&w.shape==new TensorShape(768,768));

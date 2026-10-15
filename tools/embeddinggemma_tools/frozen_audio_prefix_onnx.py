@@ -116,6 +116,12 @@ class PrefixExport(torch.nn.Module):
                         raise ValueError("Only the audited int64 mask to bool copy is supported")
                     # Same copy semantics; Tensor.to traces as supported ONNX Cast.
                     return args[0].to(dtype=torch.bool, copy=True)
+                if node.op == "call_function" and node.target == torch.ops.aten._softmax.default:
+                    args, kwargs = self.fetch_args_kwargs_from_env(node)
+                    if (len(args) != 3 or kwargs or args[1] != -1 or args[2] is not False
+                            or args[0].dtype != torch.float32 or args[0].device.type != "cpu"):
+                        raise ValueError("Only the audited FP32 last-axis softmax is supported")
+                    return torch.softmax(args[0], dim=-1)
                 if variant != "native" and node in selected:
                     args, kwargs = self.fetch_args_kwargs_from_env(node)
                     return candidate_output(*args, variant)

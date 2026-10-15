@@ -4,6 +4,8 @@
 
 ## 2026-10-15の画像の現在地
 
+最新は[元graphの直接中間観測](results/m3-original-saved-graph-node-context-20261015.json)と[block192全体GPU](results/m3-original-context-block192-gpu-20261015.json)。観測あり / 通常CPU実行の最終全bit一致を確認し、rotaryは旧診断nativeと全bit一致、差はpatchで既に存在すると分かった。今回CPU patchは保存済みGPU block192と全bit一致する。元の全体候補をblock192へ接続した1ケースはGPUCompute・fallback / 中間flush0・元係数保持のまま、元固定golden超過566→5、最大比1.256657へ減少。まだ1 fail / skip0、他5case未実行。今回CPU出力へも3要素超過が残る。host peak約4.37GiB、実行＋最終取得30.050秒、Unity終了済み。次は取得済み末尾入力で残るRMSと最終投影を単独比較する。参照と許容差を変更せず、API全条件 / sample / Player / 必須環境の範囲を維持。以下は前回checkpoint。
+
 元保存graphのActions再実行は完了し、両AMD EPYC 7763 / AVX2 runnerのthread 1 / 2 / 4全条件で元square-0参照3要素超過・最大比1.182998。AVX512は未実行。推論なしのarchive照合ではmetadata以外の2,321演算 / 218保存dataは元と診断で全て一致した。SHA差だけを演算変更とせず、元保存graphから直接中間値を捕捉し、診断参照との最初の相違を確認する。元goldenは保持する。
 
 最優先は[元の固定参照と診断参照の文脈不一致](results/m3-original-reference-context-misalignment-20261015.json)の解消。入力と元定数contentは揃うが、診断native出力自体が元固定参照にsquare-0で598要素超過する。診断manifestの一致flagは、そのjobで再exportした別SHAのgraphとの一致だった。局所stage / layer合格を元固定golden合格としない。178 custom GPU演算を接続した候補は元固定参照566要素超過、診断nativeへ6要素超過で不採用。他5case未実行。元graph・参照・許容差は保持し、Actionsで元保存graphのnative / AVX2・thread条件を再現してから追加の全体GPU修正へ戻る。学習係数違い、ISA、threadを原因として断定しない。工程3・4の全範囲は未完了のまま。以下は前回checkpoint。

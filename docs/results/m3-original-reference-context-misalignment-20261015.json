@@ -378,6 +378,10 @@
       218
     ],
     "differing_data_members": [],
+    "input_bindings_equal": true,
+    "graph_inputs_equal": true,
+    "weight_storage_config_equal": true,
+    "constant_storage_config_equal": true,
     "canonical_operation_sha256": [
       "e456f21e202b298f5b6233c92ebad4194c7b1c10a3df2b759f4b2ba3be2c2192",
       "e456f21e202b298f5b6233c92ebad4194c7b1c10a3df2b759f4b2ba3be2c2192"

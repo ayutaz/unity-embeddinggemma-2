@@ -1,0 +1,140 @@
+{
+  "scope": "block192_reconnection_against_unchanged_original_vision_golden_one_gpu_case",
+  "runtime_source": "a9db1db00f20b3727b349926ecb4f29b6b3beeff",
+  "original_reference_unchanged": true,
+  "tolerances": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "reason": "Existing GPU block192 patch capture equals current original saved CPU patch bits, while block384 equals the older diagnostic-native patch. This is not proof of the original golden intermediate values.",
+  "result": {
+    "file": "vision-original-context-block192-whole-gpu-a9db1db00f20b3727b349926ecb4f29b6b3beeff-square-0.json",
+    "sha256": "9046f17679a2bde84468e7e1da66903ffb302aee41f29ac57e187b98fa4e0706",
+    "success": false,
+    "runtime_source": "a9db1db00f20b3727b349926ecb4f29b6b3beeff",
+    "phase": "completed",
+    "actual_backend": "GPUCompute",
+    "native_static_block_size": 192,
+    "gpu_operation_count": 178,
+    "segment_count": 179,
+    "inline_rms_count": 112,
+    "remaining_original_rms_count": 1,
+    "native_static_projection_count": 114,
+    "native_batched_matmul_count": 32,
+    "native_softmax_count": 16,
+    "native_gelu_count": 16,
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "intermediate_tensor_readback_added": false,
+    "host_peak_working_set_bytes": 4694650880,
+    "execute_and_final_download_ms": 30049.6757,
+    "capture_sha256": "686cfb4a983f1b4a862c7603044f1494e1440d3a878d7cc96bfe2ae66b27036a",
+    "mismatched_elements": 5,
+    "maximum_absolute_error": 3.325939178466797e-05,
+    "maximum_tolerance_ratio": 1.2566566110701023,
+    "original_coefficient_bytes_preserved": true,
+    "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886"
+  },
+  "versus_current_original_saved_cpu_final": {
+    "expected_sha256": "41c296d96565c9e608f8cb367cb4d5c7d6fd7c9dbf40e39605dfba858cff16f7",
+    "bit_differences": 127152,
+    "mismatched_elements": 3,
+    "maximum_absolute_error": 1.677870750427246e-05,
+    "maximum_tolerance_ratio": 1.0956652509935516
+  },
+  "process": {
+    "file": "vision-original-context-block192-square0-20261015-process.json",
+    "sha256": "f30ab00a507f1bbecc702d02dd0caddc58a7419d4067a7d1cc477c2ec5cb6adf",
+    "result": {
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+        "-logFile",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-context-block192-square0-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "OriginalSavedContextBlock192SquareZeroMustMatchOriginalOnGpu",
+        "-testResults",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-context-block192-square0-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": false,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-15T09:33:47.795980+00:00",
+      "pid": 94468,
+      "exit_code": 2,
+      "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-context-block192-square0-20261015.xml",
+      "unity_counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      },
+      "elapsed_seconds": 125.47860319999745,
+      "completed_utc": "2026-10-15T09:35:53.274588+00:00"
+    }
+  },
+  "test": {
+    "file": "vision-original-context-block192-square0-20261015.xml",
+    "sha256": "0bd7bfeb590e3198744a6cafbb57116c6dc66e95a917f209e8483d98034566d9",
+    "totals": {
+      "id": "2",
+      "testcasecount": "1",
+      "result": "Failed(Child)",
+      "total": "1",
+      "passed": "0",
+      "failed": "1",
+      "inconclusive": "0",
+      "skipped": "0",
+      "asserts": "0",
+      "engine-version": "3.5.0.0",
+      "clr-version": "4.0.30319.42000",
+      "start-time": "2026-10-15 09:34:58Z",
+      "end-time": "2026-10-15 09:35:48Z",
+      "duration": "50.2408017"
+    }
+  },
+  "capture_tests": {
+    "file": "original-node-capture-related-green-20261015.xml",
+    "sha256": "44adc847d67855cbe74d86081bbb15afda3afd373dad92426ebdecafb1969bbd",
+    "totals": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "26",
+      "time": "3.187",
+      "timestamp": "2026-10-15T18:27:58.639796+09:00",
+      "hostname": "DESKTOP-7PPH62N"
+    }
+  },
+  "resources": {
+    "file": "vision-original-context-block192-resources-20261015.jsonl",
+    "sha256": "993bc662b44cf8b21fecbce76be4e86b7fd5390de134963acf0459cce8e07db8",
+    "sample_count": 51,
+    "sampling": "Approximately two-second snapshots; device usage includes other processes and is not a true peak or benchmark.",
+    "phases": [
+      "audit",
+      "audit_saved_model_file",
+      "completed",
+      "execute_async_stage_fences",
+      "prepare_gpu_pipeline",
+      "rewrite_layer_rms",
+      "startup"
+    ],
+    "maximum_observed_host_peak_bytes": 4694650880,
+    "maximum_observed_device_used_mib": 7490,
+    "first_utc": "2026-10-15T09:34:04.5079534Z",
+    "last_utc": "2026-10-15T09:35:51.1742088Z"
+  },
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "other_image_cases_executed": false,
+  "next": "Use current saved-graph tail inputs for a bounded component comparison of the remaining RMS and final projection. Separate GPU/current-CPU drift from the current-CPU/original-golden drift. Do not update the golden or count diagnostic agreement as original acceptance."
+}

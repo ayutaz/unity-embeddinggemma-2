@@ -23,6 +23,10 @@ namespace EmbeddingGemma
 
         /// <summary>Explicitly opts into one-rounding kappa*cube+input; all arithmetic remains FP32 on GPU.</summary>
         public GpuGelu(TensorShape shape,bool releaseUnusedGpuCache,bool fuseInner)
+            :this(shape,releaseUnusedGpuCache,fuseInner,false) { }
+
+        /// <summary>Explicitly selects the paired-exponential SLEEF tanh candidate.</summary>
+        public GpuGelu(TensorShape shape,bool releaseUnusedGpuCache,bool fuseInner,bool sleefTanh)
         {
             if(shape.rank<1||shape.length==0)throw new ArgumentException("Expected a nonempty fixed GELU shape.",nameof(shape));
             if(!SystemInfo.supportsComputeShaders)throw new NotSupportedException("GELU requires an actual compute GPU.");
@@ -46,7 +50,7 @@ namespace EmbeddingGemma
             var after=last.Compile((.5f*original)*(1f+activated));
             try
             {
-                tanh=new GpuTanh();
+                tanh=new GpuTanh(sleefTanh);
                 pipeline=new GpuProjectionPipeline(new[]{before,after},new[]{new[]{"tanh_input"}},new[]{"tanh_output"},new IGpuTensorOperation[]{tanh},releaseUnusedGpuCache);
             }
             catch{Dispose();throw;}

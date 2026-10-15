@@ -13,10 +13,18 @@ namespace EmbeddingGemma.Validation.Tests
     {
         [Test]
         public void CapturedOriginalLinuxPrefixGeluFusedInnerMustImproveNativeBitsOnGpu()
+            =>RunNativePrefix(false);
+
+        [Test]
+        public void CapturedOriginalLinuxPrefixSleefGeluMustMatchNativeBitsOnGpu()
+            =>RunNativePrefix(true);
+
+        void RunNativePrefix(bool sleef)
         {
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/np38719644488"));
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-original-prefix-fused-gelu-gpu-"+source+".json"));Assert.That(File.Exists(output),Is.False);
+            var label=sleef?"vision-original-prefix-sleef-gelu-gpu-":"vision-original-prefix-fused-gelu-gpu-";
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+".json"));Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["runtime_source"]=source,["scope"]="captured_linux_avx2_original_first_gelu_prefix_only",
                 ["full_encoder_validated"]=false,["end_to_end_validated"]=false,["reference_reproduces_original_golden"]=false};
             void Save(){File.WriteAllText(output,report.ToString());}
@@ -38,7 +46,7 @@ namespace EmbeddingGemma.Validation.Tests
                 }
                 var values=Floats(Node("view_21"));var expected=Floats(Node("gelu"));var shape=new TensorShape(1,16,3072);
                 using var input=new Tensor<float>(shape,values);ComputeTensorData.Pin(input);
-                using var separate=new GpuGelu(shape,true);using var fused=new GpuGelu(shape,true,true);
+                using var separate=new GpuGelu(shape,true);using var fused=new GpuGelu(shape,true,true,sleef);
                 using var baseline=separate.Execute(input);using var candidate=fused.Execute(input);
                 Assert.That(candidate.backendType,Is.EqualTo(BackendType.GPUCompute));var actual=candidate.DownloadToArray();
                 report["separate"]=Metrics(baseline.DownloadToArray(),expected);report["fused"]=Metrics(actual,expected);
@@ -46,6 +54,7 @@ namespace EmbeddingGemma.Validation.Tests
                 using(var stream=new MemoryStream(raw,false))report["capture_sha256"]=PlayerFileHash.Compute(stream,out _);
                 Assert.That(input.DownloadToArray(),Is.EqualTo(values));report["actual_backend"]="GPUCompute";report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;Save();
                 Assert.That(report["fused"].Value<int>("mismatched_elements"),Is.Zero);
+                if(sleef)Assert.That(report["fused"].Value<int>("bit_differences"),Is.Zero,"Keep captured native GELU bits.");
                 Assert.That(report["fused"].Value<int>("bit_differences"),Is.LessThan(report["separate"].Value<int>("bit_differences")));
                 report["success"]=true;
             }

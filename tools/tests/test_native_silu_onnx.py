@@ -22,12 +22,22 @@ def test_silu_preserves_signed_zero():
     assert torch.equal(candidate.fp32_native_silu(values).view(torch.int32), values.view(torch.int32))
 
 
-@pytest.mark.parametrize("values", [torch.tensor([81.0]), torch.tensor([-81.0]),
-                                    torch.tensor([float("nan")]), torch.tensor([float("inf")]),
+@pytest.mark.parametrize("values", [torch.tensor([float("nan")]), torch.tensor([float("inf")]),
                                     torch.tensor([1.0], dtype=torch.float64), torch.empty(0)])
 def test_silu_rejects_unqualified_inputs(values):
     with pytest.raises(ValueError, match="bounded|FP32"):
         candidate.fp32_native_silu(values)
+
+
+def test_silu_uses_original_shader_mathematical_tail_outside_polynomial_domain():
+    values = torch.tensor([-1e10, -100., -89., -88., -85., -81., -80., 80., 81., 100., 1e10])
+    actual = candidate.fp32_native_silu(values)
+    expected = torch.nn.functional.silu(values)
+    assert torch.isfinite(actual).all()
+    torch.testing.assert_close(actual, expected, atol=1e-5, rtol=1e-4)
+    # Positive tails round to their input, negative overflow tails preserve -0.
+    assert torch.equal(actual[-4:].view(torch.int32), values[-4:].view(torch.int32))
+    assert torch.equal(actual[:3].view(torch.int32), expected[:3].view(torch.int32))
 
 
 def test_silu_exports_only_standard_fp32_operators_and_matches_cpu(tmp_path):
@@ -51,3 +61,10 @@ def test_silu_exports_only_standard_fp32_operators_and_matches_cpu(tmp_path):
     np.testing.assert_array_equal(actual.view('u4'), streamed.view('u4'))
     expected = Module()(values).detach().numpy()
     np.testing.assert_array_equal(actual.view('u4'), expected.view('u4'))
+    tails = values.clone()
+    tails[0, :6] = torch.tensor([-1e10, -100., -89., -88., -85., -81.])
+    tails[1, :3] = torch.tensor([81., 100., 1e10])
+    with np.errstate(over="ignore"):
+        actual_tails = run_flat_reference(evaluator, {"input": tails.numpy()})[0]
+    assert np.isfinite(actual_tails).all()
+    np.testing.assert_allclose(actual_tails, torch.nn.functional.silu(tails).numpy(), atol=1e-5, rtol=1e-4)

@@ -158,6 +158,7 @@ class PrefixExport(torch.nn.Module):
         selected, variant, rms_means, rms_inverses = self.selected, self.variant, self.rms_means, self.rms_inverses
         silu_nodes = getattr(self, "silu_nodes", set())
         silu_candidate = getattr(self, "silu_candidate", None)
+        silu_observations = getattr(self, "silu_observations", None)
 
         class Replay(torch.fx.Interpreter):
             def run_node(self, node):
@@ -165,6 +166,12 @@ class PrefixExport(torch.nn.Module):
                     args, kwargs = self.fetch_args_kwargs_from_env(node)
                     if len(args) != 1 or kwargs:
                         raise ValueError("SiLU candidate requires the audited unary operation")
+                    if silu_observations is not None and not torch.jit.is_tracing():
+                        value = args[0]
+                        silu_observations.append(dict(node=node.name, shape=list(value.shape),
+                            minimum=float(value.min()), maximum=float(value.max()),
+                            positive_tail_elements=int((value > 80).sum()),
+                            negative_tail_elements=int((value < -80).sum())))
                     return silu_candidate(args[0])
                 if node in rms_means:
                     args, kwargs = self.fetch_args_kwargs_from_env(node)

@@ -69,6 +69,7 @@ class SegmentExport(PrefixExport):
         if variant == "native_silu" and not self.silu_nodes:
             raise ValueError("Explicit SiLU candidate requires original SiLU nodes")
         self.silu_candidate = fp32_native_silu
+        self.silu_observations = []
 
 
 def probe_segment(program, frozen_input, frozen_output, output, *, from_boundary, to_boundary,
@@ -132,7 +133,8 @@ def probe_segment(program, frozen_input, frozen_output, output, *, from_boundary
                 capture=name, capture_sha256=capture(name, actual), metrics=metrics(actual),
                 native_wrapper_bits_equal=exact_difference(wrapped, native) == 0,
                 coefficients_unchanged=True, rms_mean_replacements=len(wrapper.rms_means),
-                rms_inverse_replacements=len(wrapper.rms_inverses), silu_replacements=len(wrapper.silu_nodes)))
+                rms_inverse_replacements=len(wrapper.rms_inverses), silu_replacements=len(wrapper.silu_nodes),
+                silu_input_domains=wrapper.silu_observations))
             save()
     report["complete"] = True
     save()

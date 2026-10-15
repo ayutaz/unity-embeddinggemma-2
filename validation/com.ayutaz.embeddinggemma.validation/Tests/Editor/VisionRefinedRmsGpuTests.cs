@@ -68,6 +68,16 @@ namespace EmbeddingGemma.Validation.Tests
                 }
                 else Check(inputPath,"bc4c19c9aaf9688801c99ed073fdde22f0daf6b822dc2c9c4b7a3f7c9aded636");
                 var model=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/"+asset));report["layer_count"]=model.layers.Count;
+                if(capturedAvx512)
+                {
+                    // Saved mul_4 is BEFORE the learned scale (mul_5). Compare
+                    // that exact boundary, without undoing rounded products.
+                    var scale=model.constants.Single(value=>value.dataType==DataType.Float&&value.shape==new TensorShape(768));
+                    var final=model.layers.Single(layer=>layer.outputs.Contains(model.outputs[0].index));
+                    Assert.That(final.GetType().Name,Is.EqualTo("Mul"));Assert.That(final.inputs.Contains(scale.index),Is.True);
+                    model=ModelTensorSlice.Extract(model,final.inputs.Single(index=>index!=scale.index),"unscaled_rms");
+                    report["reference_node"]="mul_4";report["comparison_before_learned_scale"]=true;
+                }
                 using var beforeBytes=new MemoryStream();ModelWriter.Save(beforeBytes,model);
                 using var operation=inline?null:new QualifiedVisionRmsOperation(model);
                 using var single=inline?new GpuProjectionPipeline(new[]{model},Array.Empty<string>(),Array.Empty<string>(),Array.Empty<IGpuTensorOperation>()):null;

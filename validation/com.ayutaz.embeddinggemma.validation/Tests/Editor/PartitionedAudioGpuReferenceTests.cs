@@ -232,6 +232,10 @@ namespace EmbeddingGemma.Validation.Tests
             =>Execute("silence",true,observe:true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,nativeGlu:true);
 
         [Test]
+        public void ObserveOriginalImpulseAllLayersWithoutChangingNormalFinalBits()
+            =>Execute("impulse",true,observe:true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,nativeGlu:true);
+
+        [Test]
         public void ObserveOriginalLayerOnePartsWithoutChangingNormalFinalBits()
             =>Execute("silence",true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,nativeGlu:true,layerObservation:1);
 
@@ -614,9 +618,9 @@ namespace EmbeddingGemma.Validation.Tests
                         Check(path,layerAudit["files"][file].Value<string>("sha256"));
                         var values=snapshots[boundary];var native=Floats(path);Assert.That(values.Length,Is.EqualTo(native.Length));
                         int bits=0,bad=0;double maxRatio=0;
+                        Assert.That(values.Any(value=>float.IsNaN(value)||float.IsInfinity(value)),Is.False);
                         for(var i=0;i<values.Length;i++)
                         {
-                            Assert.That(float.IsNaN(values[i])||float.IsInfinity(values[i]),Is.False);
                             if(BitConverter.SingleToInt32Bits(values[i])!=BitConverter.SingleToInt32Bits(native[i]))bits++;
                             var difference=Math.Abs((double)values[i]-native[i]);var allowed=1e-5+1e-4*Math.Abs((double)native[i]);
                             if(difference>allowed)bad++;maxRatio=Math.Max(maxRatio,difference/allowed);

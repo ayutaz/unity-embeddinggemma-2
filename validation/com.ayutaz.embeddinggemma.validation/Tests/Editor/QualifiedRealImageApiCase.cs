@@ -33,24 +33,29 @@ namespace EmbeddingGemma.Validation.Tests
             public async Task<ImageEncodingResult> EncodeAsync(ImagePreprocessingResult input,CancellationToken token=default)
             {
                 Calls++;Last=await inner.EncodeAsync(input,token);Assert.That(Last.SoftTokens.backendType,Is.EqualTo(BackendType.GPUCompute));
-                Assert.That(Last.SoftTokens.shape,Is.EqualTo(new TensorShape(256,512)));return Last;
+                Assert.That(Last.SoftTokens.shape,Is.EqualTo(new TensorShape(Profile.FeatureCount,512)));return Last;
             }
         }
         public static async Task Run(PartitionedImageFeatureEncoder encoder,IImagePreprocessor preprocessing,Texture texture,
             string caseId,TextRole[] roles,JObject report,string reportPath,Action save)
         {
-            Assert.That(encoder.Profile.FeatureCount,Is.EqualTo(256));
+            var featureCount=encoder.Profile.FeatureCount;Assert.That(featureCount==252||featureCount==256,Is.True);
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/image-role-reference-real/image-role-reference"));
             var tokenizer=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/multimodal-prompts"));
             void Check(string path,string expected)=>Assert.That(QualifiedImageBackboneSquare.Hash(path),Is.EqualTo(expected));
             Check(Path.Combine(tokenizer,"tokenizer.json"),"4d777ef5bdc1aa36227abdfb77c3e49e7b9c892d16e1b6bda41c393504828be4");
             Check(Path.Combine(tokenizer,"tokenizer_config.json"),"17bd5d6e9364ca49a534e1502076593317c298d4a663623091ed45388f004874");
-            var profile=new MultimodalBackboneProfile(1024,258880,258881,256,0,262144,0);
+            var profile=new MultimodalBackboneProfile(1024,258880,258881,featureCount,0,262144,0);
             var builder=new MultimodalPromptBuilder(File.ReadAllText(Path.Combine(tokenizer,"tokenizer.json")),File.ReadAllText(Path.Combine(tokenizer,"tokenizer_config.json")),profile);
-            report["phase"]="prepare_real_backbone";save();var model=QualifiedImageBackboneSquare.Load();
+            report["phase"]="prepare_real_backbone";save();var model=featureCount==256?QualifiedImageBackboneSquare.Load():QualifiedImageBackboneSquare.LoadRectangular();
+            var coefficients=ModelCoefficientHash.Compute(model,out _);
+            Assert.That(coefficients,Is.EqualTo("c234c173d9a1f15fbe4bf7a3adbb7e2e5f17fdb8c6f4b85c0befe4d5fb2b097b"));
             using var backbone=new MultimodalBackbone(model,profile,BackendType.GPUCompute);
             const BindingFlags fields=BindingFlags.Instance|BindingFlags.NonPublic;
             var worker=(Worker)typeof(MultimodalBackbone).GetField("worker",fields).GetValue(backbone);
+            var workerOwner=(GpuConstantWorker)typeof(MultimodalBackbone).GetField("workerOwner",fields).GetValue(backbone);
+            report["backbone_constant_upload"]=new JObject{["uploaded_constant_count"]=workerOwner.UploadedConstantCount,
+                ["upload_calls"]=workerOwner.UploadCallCount,["maximum_upload_bytes"]=workerOwner.MaximumUploadBytes,["skipped_cpu_shape_constants"]=workerOwner.SkippedCpuConstantCount};
             var cpu=(HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallback",fields).GetValue(worker);
             var flush=(HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallbackShouldFlushGPU",fields).GetValue(worker);
             var data=model.layers.SelectMany(layer=>layer.outputs).Concat(model.inputs.Where(input=>input.name=="image_features").Select(input=>input.index));
@@ -66,9 +71,10 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.That(reference["metadata"].Value<string>("model_revision"),Is.EqualTo("914f7f89142e33e77833254d9c9b90c3cef7303b"));
                 Assert.That(reference["metadata"].Value<string>("source_commit"),Is.EqualTo("891ce9004deecc262437e56b2fd9a2eaf1054632"));
                 var expectedRow=reference["cases"].Single(row=>row.Value<string>("id")==caseId);Assert.That(expectedRow.Value<string>("role"),Is.EqualTo(name));
+                Assert.That(reference["profiles"][expectedRow.Value<string>("profile")].Value<int>("image_feature_count"),Is.EqualTo(featureCount));
                 var pixels=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-encoder",expectedRow.Value<string>("pixels")));
                 Check(pixels,expectedRow.Value<string>("pixels_sha256"));
-                var prompt=builder.BuildImage(256,role);Assert.That(prompt.InputIds,Is.EqualTo(expectedRow["input_ids"].Values<int>().ToArray()));
+                var prompt=builder.BuildImage(featureCount,role);Assert.That(prompt.InputIds,Is.EqualTo(expectedRow["input_ids"].Values<int>().ToArray()));
                 Assert.That(prompt.AttentionMask,Is.EqualTo(expectedRow["attention_mask"].Values<int>().ToArray()));
                 var metric=new JObject{["case_id"]=caseId,["role"]=name,["success"]=false,["reference_sha256"]=digest};results.Add(metric);
                 report["phase"]="execute_final_api_"+name;save();var timer=Stopwatch.StartNew();
@@ -94,6 +100,8 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.That(texture==null,Is.False,"Input texture is borrowed.");metric["owned_intermediates_disposed"]=true;metric["success"]=true;save();
             }
             Assert.That(pre.Calls,Is.EqualTo(roles.Length));Assert.That(enc.Calls,Is.EqualTo(roles.Length));
+            Assert.That(ModelCoefficientHash.Compute(model,out _),Is.EqualTo(coefficients));report["backbone_coefficient_bytes_preserved"]=true;
+            report["backbone_original_coefficients_sha256"]=coefficients;
             using var process=Process.GetCurrentProcess();GpuExecutionProfiler.ReadProcessMemory(process,out var current,out var peak);
             report["host_working_set_after_final_bytes"]=current;report["host_peak_working_set_bytes"]=peak;
             report["actual_backend"]="GPUCompute";report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;report["intermediate_readback_count"]=0;

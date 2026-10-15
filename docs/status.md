@@ -1,5 +1,13 @@
 # 現在の状態
 
+最新checkpoint: [pooling単独の修正と全体未達](results/m3-native-pooling-component-and-whole-failure-20261015.json)。元nativeの最終encoder出力を入力したconstant-left poolingは、標準Sentis GPUで78,179 bit差・2要素超過、block192 GPUで全196,608値bit一致。係数を所有し入力を借用する`GpuFixedLeftMatmul`と固定leftの分割境界を9 intended Red→関連23 Greenで追加した。既存Runtime既定経路は維持する。
+
+ただし接続した`182dc0a`の元square-1全体は**1 fail / skip0、5要素超過・最大比1.409017**のまま。GPUCompute・計算/入力CPU fallback0・中間flush0・元学習済み係数保持。host peak4,634,521,600 bytes、実行＋最終取得24.474秒 / process82.066秒の単発観測。数値失敗後にbatchを停止したため、この最新pooling候補の他5画像ケースは未実行。下の4 pass / 2 failは以前のrotary候補の固定証拠であり、この新候補の結果へ付け替えない。製品ImageFeatureEncoderへの採用、全体精度・実入力API・sample / Player・Required CI・長期memoryは未完了。runner / owned監視はterminal、Unity終了済み。
+
+追加checkpoint: [元参照を再現した最初の1層と演算単独のGPU照合](results/m3-component-order-and-first-layer-gpu-20261015.json)。`05b80dd`のpatch→第1層は元nativeの全1,935,360値に全bit一致し、slice回帰を含む7 pass / skip0。GPUCompute・CPU fallback / 中間flush0、元学習済み係数保持、host peak3,961,540,608 bytes。これは最初の1層だけの証拠であり、画像全体は下表の4 pass / 2 failのまま。Persistent allocation警告も未解決として保持する。
+
+同じ入力のAVX512 softmax483,840値、GELU49,152値、重み乗算前RMS12,288値もGPUで全bit一致。後者の最初の比較はscale前後を誤ったharness失敗として分離し、比較境界を直して2 Green。4種類の実学習済み行列と固定合成入力によるAVX2部分参照は、GPU block192で全bit一致・4 Green。形状ごとにblockを変える根拠は得られなかった。独立FP64 oracleをFP32へ2段階丸めした65,536統計値も、標準FP32 ONNX / GPUの逆平方根と全bit一致・1 Green。これらの局所合格を元全encoderの合格へ広げない。ISA-only Actionsの実AVX2前提失敗はモデル未実行として記録。その後のpooling結果は冒頭を参照。製品採用は未完了。
+
 全画像GPU checkpoint: [元FP32全6ケースの実測](results/m3-native-rotary-all-image-gates-20261015.json)。**全6ケースを実行し、4 pass / 2 fail / skip0。** 不合格はsquare-1の5要素とlandscape-0の1要素で、元参照・`atol=1e-5, rtol=1e-4`を維持する。各receiptは実際の固定source SHAを保持する。profileやモデル全体の合格へ未実行 / 不合格を混ぜない。
 
 | case | 実GPU判定 | 許容差超過 | 最大許容差比 |

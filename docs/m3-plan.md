@@ -4,6 +4,10 @@
 
 ## 2026-10-15の画像の現在地
 
+最新checkpoint: [pooling単独の修正と全体未達](results/m3-native-pooling-component-and-whole-failure-20261015.json)。標準Sentisの元constant-left poolingは78,179 bit差・2要素超過、同じ入力と係数のblock192は196,608値全bit一致。固定left演算と分割境界を9 Red→関連23 Greenで追加したが、接続した元square-1は5要素超過・最大比1.409017の1 fail / skip0。batchを停止し、最新pooling候補の他5件は未実行。旧rotary候補の下表4 pass / 2 failと分離する。既存Runtime既定経路を維持し、製品採用・工程3/4の完了とは扱わない。次は最初の1層より後の差を切り分ける。
+
+局所checkpoint: [第1層と演算順序の実GPU照合](results/m3-component-order-and-first-layer-gpu-20261015.json)。元nativeのpatch→第1層1,935,360値がGPUで全bit一致し、slice回帰を含む7 pass / skip0。AVX512同一入力のsoftmax / GELU / scale前RMS、AVX2の4行列形状のblock192、固定65,536統計値の逆平方根も各限定範囲で全bit一致。最初のscale境界誤比較とslice index誤分類はharness失敗、ISA-only環境のAVX512不足はモデル未実行として保持。第2層以降や全体の合格には数えない。その後のpooling結果は上のcheckpointを参照。
+
 全画像GPU checkpoint: [元FP32全6ケースの実測](results/m3-native-rotary-all-image-gates-20261015.json)。**全6ケースを実行し、4 pass / 2 fail / skip0。** 不合格はsquare-1の5要素とlandscape-0の1要素で、元参照・`atol=1e-5, rtol=1e-4`を維持する。各receiptは実際の固定source SHAを保持する。profileやモデル全体の合格へ未実行 / 不合格を混ぜない。
 
 | case | 実GPU判定 | 許容差超過 | 最大許容差比 |

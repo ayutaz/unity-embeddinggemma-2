@@ -4,6 +4,12 @@
 
 ## 現在の判定
 
+**2026-10-15最新のattention切り分け:** 直接GPU operation出力の観測を1 Red→1 GPU Greenで追加。`1008d6a`の12境界観測は通常最終bitを変えず、最初のFFまでの5境界に加え、Q / K / V / relative-K投影を元のClip境界で全bit一致させた。最初の差はself_attnの201,927値（局所許容差超過0・最大比0.255179）、attention残差68,209値、lconv1d201,063値へ伝播する。観測1 pass / skip0は全encoder成功ではなく、全体203要素不合格を再現した。
+
+native投影の記録は5 Red→関連20 Green。full replay Actions `38659893615` / source `7ba22ac`はCPU subsample終端不一致で失敗し、失敗receiptを保持した。独立したattention scopeを1 Red→関連21 Greenで追加し、既存full / subsample gateをdefaultとして保持。Actions `38660240389` / source `c030222`のattention scopeは成功し、固定layer_0終端と厳密一致、既存12 partのhashも元`99529dc0…`の保存値と全件一致した。この基準でGPUのQ / K / V / relative-Kが全bit一致することを確認した。
+
+次の内部演算captureは4 Red→関連24 Green。native operatorを置き換えずに3つのbmmの左右入力 / 出力、tanh / softmaxの入力 / 出力を記録し、元layer終端のbit一致とhook復元を維持する。独立attention Actions [38661214188](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38661214188) / source `5a51cfff0efa955b6862abc481b2230f312b87ac`はterminal success。取得した30 partのうち既存17 partはすべてhash一致。固定native入力のoffline FP32-FMA丸めoracleでは、K=128 / 128 / 24の3 bmmすべてが連続積和（192項以内なので途中resetなし）で全bit一致し、16項resetの候補には39,299 / 22,407 / 65,721値のbit差が残った。FP64はこのoracleのみで、GPU成功には数えない。[固定native演算とoracle](results/m4-native-attention-operation-reference-and-fma-oracle-20261015.json)。次はGPU上のscaled Q/Kと入力を照合し、native順のbatched matmulを実GPUで検証する。[固定GPU観測・native投影・full失敗・TDD](results/m4-first-attention-projections-bit-exact-20261015.json)。製品計算はGPUのままで、raw GPU snapshotのClipと元残差和は診断比較だけに使う。工程3・4の全条件は未達のまま。以降は前回checkpoint。
+
 **2026-10-15最新のSiLU全接続:** GPU投影とSiLUを借用する`IGpuTensorOperation`を追加し、既存の投影専用constructorを保持した。混在接続は実GPU1 Red→関連3 Green。plannerは元SiLUのNeg / Exp / Add / Div chainを厳密に確認し、内部値の外部参照・係数 / shape不一致を拒否してGPU境界へ分割する。7 Red→関連35 Green。元exportの内部3 nodeが無名であるケースは1 Red→関連36 Greenで、無関係な無名nodeも保持するよう修正した。無名nodeの識別失敗とshape未確定の準備拒否はGPU未実行として別記録。
 
 Sentisのmetadata監査で元の483境界を確定（NUnit1 pass、推論なし）。元initializer digest `1154ac70…`を保つ135投影＋36 SiLU / 171 GPU operation / 172 segment / 41,830 ONNX nodeを生成した。`3ae76bd`の元silence全encoderは**203要素不合格・最大許容差比6.967976**、GPUCompute・計算fallback / flush0。前の全135投影539要素から件数は減ったが、元許容差を満たさず、以前の2投影175要素より優れるとも判定しない。準備13.295秒、実行＋最終診断download2.497秒。数値gateと観測を合わせたNUnitは1 pass / 1 fail / skip0 / exit2。

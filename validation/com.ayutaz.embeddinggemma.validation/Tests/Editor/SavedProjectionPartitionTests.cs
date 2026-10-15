@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using NUnit.Framework;
 using Unity.InferenceEngine;
 using UnityEngine;
@@ -18,6 +19,24 @@ namespace EmbeddingGemma.Validation.Tests
             return graph.Compile(input+a+b*b);
         }
         static int[] Selected(Model model)=>model.layers.Where(layer=>layer.GetType().Name.StartsWith("MatMul")).Select(layer=>layer.outputs[0]).ToArray();
+
+        [Test]
+        public void ExplicitUnaryGpuMarkerKeepsTheOriginalResidualAndDoesNotRecomputeItsPlaceholder()
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
+            var graph=new FunctionalGraph();var x=graph.AddInput<float>(new TensorShape(1,2),"input");
+            var source=graph.Compile(Functional.Relu(x)+x);var original=source.layers.Single(layer=>layer.GetType().Name=="Relu");
+            var type=typeof(Worker).Assembly.GetTypes().Single(value=>value.Name=="Identity"&&typeof(Layer).IsAssignableFrom(value));
+            var marker=(Layer)Activator.CreateInstance(type);marker.inputs=(int[])original.inputs.Clone();marker.outputs=(int[])original.outputs.Clone();
+            source.layers[source.layers.IndexOf(original)]=marker;var before=Bytes(source);
+            var plan=SavedProjectionPartition.Create(source,new[]{marker.outputs[0]});
+            Assert.That(plan.Weights.Single(),Is.Null,"Explicit markers require the caller's GPU operation, not matrix coefficients.");
+            using var operation=new GpuSequentialScale(2f,new[]{1f,1f});
+            using var input=new Tensor<float>(new TensorShape(1,2),new[]{1f,2f});ComputeTensorData.Pin(input);
+            using var pipeline=new GpuProjectionPipeline(plan.Models,plan.Inputs,plan.Outputs,new IGpuTensorOperation[]{operation});
+            using var output=pipeline.Execute(input);Assert.That(output.DownloadToArray(),Is.EqualTo(new[]{3f,6f}));
+            Assert.That(Bytes(source),Is.EqualTo(before));Assert.That(input.DownloadToArray(),Is.EqualTo(new[]{1f,2f}));
+        }
 
         [TestCase(BackendType.CPU)] [TestCase(BackendType.GPUCompute)]
         public void MultipleOutputsKeepNamesValuesAndImmutableSource(BackendType backend)

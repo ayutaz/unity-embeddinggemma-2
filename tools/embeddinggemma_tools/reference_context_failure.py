@@ -133,7 +133,7 @@ def run_saved_graph_prefix(program, inputs, node_name):
 def ordered_vision_softmax16(values):
     """CPU-only diagnostic of the pinned 2520-wide AVX512 lane reduction.
 
-    Does not change native dispatch, a saved graph, or any frozen reference.
+    Does not change global native dispatch, a saved graph, or any frozen reference.
     Same-input native captures qualify the ordering; an encoder replay using
     this function remains a separate candidate, not a new native golden.
     """

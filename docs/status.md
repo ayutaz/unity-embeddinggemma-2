@@ -1,5 +1,17 @@
 # 現在の状態
 
+更新日: 2026-10-15。画像layer 0を元の正確なpatch入力から切り出すと、通常GPUは4要素超過、7静的投影をblock384へ変えた候補は1要素超過だった。元の入力・係数・参照・`atol=1e-5` / `rtol=1e-4`は維持。通常と診断downloadの最終bit不変、全projection入出力・係数のhash/shapeを記録した。[層0・全体候補・次のRMS切り分けの固定receipt](results/m3-layer0-static-gpu-and-rms-next-20261015.json)。1要素超過も不合格で、元全encoderの合格には数えない。
+
+saved-model分割は、複数live出力・将来の残差・係数bytes・固定形状を保持し、切出した投影の再計算を拒否する。正しい残差fixtureの6 Redから、既存sliceを含む12 Greenへ進めた。同processの実layer 0だけは1 fail / skip0。初回の不正GUIDによるcompile失敗/XML欠測と、fixture前提の誤りを含む初期runは別に記録し、意図したTDD Redへ置き換えない。
+
+**全114静的投影候補も未採用:** `a9aac194b88dadb4da79b5d4d61560c2463964df` のsquare-0は115 segmentをGPU接続し、579要素超過・最大許容差比5.757522で1 fail / skip0。計算/入力CPU fallback・中間flush0。準備8.780秒、実行＋最終取得30.978秒、host peak 11,777,482,752 byte（10.969GiB、VRAMではない）。数値gateが未達で負荷も増えるため、この候補の全体反復を止めた。他5画像caseはこの候補では未実行。次は正規化と活性化の小さい固定テストへ戻る。
+
+768幅のRMS平均候補を独立CPU/ONNXへ照合し、7 Red→関連25 Green、package22 Green。元patchの先頭64行でも平均のbit差0。Windows Torch 2.14.1+cpuの有界1万点probeでは、`pow(x,-0.5)`と単純な`1/sqrt(x)`に1,321 bit差があり、既存の補正inverse式は同probeのnative powerへbit差0だった。これは小さいCPU算術の証拠で、元Linux全contextの再生・GPU RMS合格・画像全体合格ではない。次はこの768幅平均と補正inverseを元の固定norm入力で実GPU照合してから、全体候補を再評価する。
+
+このcheckpointでは既存Runtimeファイルは前回から未変更。音声6ケース/2 profileと直近impulseの固定合格は下のsourceに保持する。画像全3 profile、実PCM/Texture→GPU前処理→encoder→backbone→正規化768次元APIの全role / mask / 境界 / 所有権 / Dispose / 例外後再利用 / text回帰、工程3・4のsample / Playerは未完了。Draft PR #81、main未統合。ローカルUnityは終了済み。最新Required CIとPersistent allocation警告/長期memoryは別gate。
+
+以下は前回checkpoint。
+
 更新日: 2026-10-15。画像FP32の最初の差を5層のpatch prefixまで絞った。元の係数・入力・参照を固定し、通常GPUの1,256,626 bit差（局所許容差超過0）を再現。入力・出力・係数をhash付きで捕捉し、診断downloadが通常prefix最終値を変えないことを確認した。これは画像全encoderの合格ではない。[画像前段・全体・音声回帰の固定receipt](results/m3-patch384-gpu-and-original-encoder-20261015.json)。
 
 FP32投影の加算区切り128 / 192 / 256 / 384 / 512 / 768を同じ固定入力で比較すると、**384だけが元patch出力の全1,935,360値に全bit一致**した。他5候補の不一致も保存している。これは特定入力の値を置換する補正ではなく、係数を保持する逐次FP32 FMAとblock保存加算の順序。既存3引数constructorは192を維持し、明示4引数constructorだけ1〜4096の区切りを選べる。元Block192 shader entry本体の不変も確認した。新API 9 Red→slice / 既存GPUを含む24 Green、package関連22 Green。

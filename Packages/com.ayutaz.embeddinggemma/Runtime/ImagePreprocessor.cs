@@ -34,7 +34,11 @@ namespace EmbeddingGemma
             if (!(input is Texture2D) && !(input is RenderTexture))
                 throw new ArgumentException("Expected a 2D Texture or RenderTexture.", nameof(input));
             var format = input.graphicsFormat;
-            if (format != GraphicsFormat.R8G8B8_UNorm && format != GraphicsFormat.R8G8B8_SRGB &&
+            // LoadImage can expose legacy ARGB32 storage with a native graphics
+            // format absent from the managed enum. GPU sampling handles its
+            // channel order; qualify the explicit byte TextureFormat instead.
+            var nativeArgb = Backend == BackendType.GPUCompute && input is Texture2D decoded && decoded.format == TextureFormat.ARGB32;
+            if (!nativeArgb && format != GraphicsFormat.R8G8B8_UNorm && format != GraphicsFormat.R8G8B8_SRGB &&
                 format != GraphicsFormat.R8G8B8A8_UNorm && format != GraphicsFormat.R8G8B8A8_SRGB &&
                 format != GraphicsFormat.B8G8R8A8_UNorm && format != GraphicsFormat.B8G8R8A8_SRGB)
                 throw new ArgumentException("Expected uncompressed 8-bit RGB / RGBA storage; alpha is ignored.", nameof(input));

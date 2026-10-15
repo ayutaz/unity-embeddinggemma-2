@@ -4,6 +4,8 @@
 
 ## 2026-10-15の画像の現在地
 
+元layer 0の7 RMSを、通常GPU最終bitと旧hashを保持して捕捉（1 pass / skip0）。64幅3か所は新しいscaled / unscaled exportで13 Red→関連30 Green・音声算術 / package込み76 Green、捕捉元入力と元scaleを使う現CPU式へ実GPU全bit一致（3 pass / fail0 / skip0 / fallback0 / flush0）。768幅4か所も既存exportのCPU式全bit一致だが、GPU確認は最初の1か所のみ。[固定receipt](results/m3-all-rms-observation-and-head-gpu-20261015.json)。次は4次元unary境界 / 元scale借用をTDDで実装し、残る768幅3か所をGPU照合してから7 RMSを元layer 0へ戻す。元native内部参照や全encoder合格とは扱わず、下記wholeの566要素不合格と全profile / 最終API / sample / Playerを未達のまま保持する。以下は前回checkpoint。
+
 最初のRMS＋7つのblock384投影を元layer 0へ戻した実GPU gateは、元参照・係数・入力・許容差のまま超過0。境界 / RMS単体を含む15 pass / fail0 / skip0。全bit一致ではなく、画像全体合格へは流用しない。確認済み最初の層だけを元全encoderへ接続したsquare-0は566要素超過・最大比6.791765で1 fail / skip0。10 segment、host peak約4.017GiB、実行＋取得3.660秒だが、定常性能合格ではない。[固定receipt](results/m3-first-layer-rms-reconnection-20261015.json)。次は全体反復を止め、7か所のRMS入力 / 出力 / scaleを通常GPU最終bitを保持して捕捉し、残る64 / 768幅の正規化・活性化・積和を局所照合する。元3 profileの全条件、実Texture→768 API、role / mask / 寿命 / text回帰 / sample / Playerは未完了。以下は前回checkpoint。
 
 最初のRMS単体は、元patch / scaleと現CPU式を使い、実GPUの全1,935,360値で全bit一致した。原因はSentisが除算768→epsilon加算をScalarMadへまとめた丸め差で、明示GPU除算の境界を保持して修正。元RMS観測の再現・失敗候補・統計FMA診断・1 pass / fail0 / skip0を[固定receipt](results/m3-first-rms-gpu-explicit-division-20261015.json)へ分離した。元native内部参照は未取得で、画像encoder合格には数えない。次はこのRMSを元layer 0へ戻し、元固定参照で改善を検証する。他のRMS/活性化、全3 profileの全条件、最終API / role / mask / 寿命 / text回帰 / sample / Playerは未完了。以下は前回checkpoint。

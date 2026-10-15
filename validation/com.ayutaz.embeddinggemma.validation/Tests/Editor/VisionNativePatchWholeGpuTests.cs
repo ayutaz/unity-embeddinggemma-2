@@ -613,6 +613,7 @@ namespace EmbeddingGemma.Validation.Tests
         sealed class QualifiedTextureInput : IDisposable
         {
             Texture2D texture;
+            ImagePreprocessor preprocessor;
             public ImagePreprocessingResult Processed {get;private set;}
             public QualifiedTextureInput(string root,string image,JObject audit)
             {
@@ -621,12 +622,12 @@ namespace EmbeddingGemma.Validation.Tests
                     var path=Path.Combine(root,image);using(var stream=File.OpenRead(path))Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(audit["files"][image].Value<string>("sha256")));
                     texture=new Texture2D(2,2,TextureFormat.RGBA32,false,true);
                     Assert.That(ImageConversion.LoadImage(texture,File.ReadAllBytes(path),true),Is.True);Assert.That(texture.isReadable,Is.False);
-                    using var preprocessor=new ImagePreprocessor(BackendType.GPUCompute);Processed=preprocessor.Process(texture);
+                    preprocessor=new ImagePreprocessor(BackendType.GPUCompute);Processed=preprocessor.Process(texture);
                     Assert.That(Processed.Pixels.backendType,Is.EqualTo(BackendType.GPUCompute));
                 }
                 catch{Dispose();throw;}
             }
-            public void Dispose(){Processed?.Dispose();Processed=null;if(texture!=null)UnityEngine.Object.DestroyImmediate(texture);texture=null;}
+            public void Dispose(){Processed?.Dispose();Processed=null;preprocessor?.Dispose();preprocessor=null;if(texture!=null)UnityEngine.Object.DestroyImmediate(texture);texture=null;}
         }
         static JObject AuditPlan(Model[] models,string[][] operationInputs,string[] operationOutputs)
         {

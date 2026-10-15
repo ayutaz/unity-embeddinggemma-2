@@ -1,0 +1,935 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "scope": "bounded_original_blas_context_failure_and_saved_rotary_rounding_discovery",
+  "blas_probe": {
+    "run_id": 38726074447,
+    "source": "3d442cd68c0f81dba5d0ed805847dfc4b4e37518",
+    "manifest": {
+      "file": "original-image-native.json",
+      "sha256": "1d67a2deb19c90333020abced6338baba04212a19d6fb67c51671bf45b9e104b"
+    },
+    "patch_prerequisite": {
+      "scope": "original_saved_patch_only_before_blas_context_replay",
+      "job_source": "3d442cd68c0f81dba5d0ed805847dfc4b4e37518",
+      "actual_cpu_capability": "AVX512",
+      "mkl_cbwr": "AVX2",
+      "patch_shape": [
+        1,
+        2520,
+        768
+      ],
+      "patch_sha256": "1e99fa140cb0084e624b5019d96ae424192eff77346ef2f7ffea892c1bea0607",
+      "original_native_patch_sha256": "1e99fa140cb0084e624b5019d96ae424192eff77346ef2f7ffea892c1bea0607",
+      "patch_matches_original_native": true,
+      "full_encoder_executed": false
+    },
+    "runtime": {
+      "torch_version": "2.14.1+cu130",
+      "cpu_capability": "AVX512",
+      "torch_interop_threads": 2,
+      "env": {
+        "ATEN_CPU_CAPABILITY": null,
+        "MKL_CBWR": "AVX2",
+        "DNNL_MAX_CPU_ISA": null
+      }
+    },
+    "host": {
+      "lscpu": [
+        {
+          "field": "Architecture:",
+          "data": "x86_64"
+        },
+        {
+          "field": "CPU op-mode(s):",
+          "data": "32-bit, 64-bit"
+        },
+        {
+          "field": "Address sizes:",
+          "data": "48 bits physical, 57 bits virtual"
+        },
+        {
+          "field": "Byte Order:",
+          "data": "Little Endian"
+        },
+        {
+          "field": "CPU(s):",
+          "data": "4"
+        },
+        {
+          "field": "On-line CPU(s) list:",
+          "data": "0-3"
+        },
+        {
+          "field": "Vendor ID:",
+          "data": "GenuineIntel"
+        },
+        {
+          "field": "Model name:",
+          "data": "INTEL(R) XEON(R) PLATINUM 8573C"
+        },
+        {
+          "field": "CPU family:",
+          "data": "6"
+        },
+        {
+          "field": "Model:",
+          "data": "207"
+        },
+        {
+          "field": "Thread(s) per core:",
+          "data": "2"
+        },
+        {
+          "field": "Core(s) per socket:",
+          "data": "2"
+        },
+        {
+          "field": "Socket(s):",
+          "data": "1"
+        },
+        {
+          "field": "Stepping:",
+          "data": "2"
+        },
+        {
+          "field": "CPU(s) scaling MHz:",
+          "data": "150%"
+        },
+        {
+          "field": "CPU max MHz:",
+          "data": "2300.0000"
+        },
+        {
+          "field": "CPU min MHz:",
+          "data": "800.0000"
+        },
+        {
+          "field": "BogoMIPS:",
+          "data": "4599.99"
+        },
+        {
+          "field": "Flags:",
+          "data": "fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology tsc_reliable nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch tpr_shadow ept vpid ept_ad fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves user_shstk avx_vnni avx512_bf16 vnmi avx512vbmi umip waitpkg avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq la57 rdpid cldemote movdiri movdir64b fsrm serialize tsxldtrk ibt amx_bf16 avx512_fp16 amx_tile amx_int8 arch_capabilities"
+        },
+        {
+          "field": "Virtualization:",
+          "data": "VT-x"
+        },
+        {
+          "field": "Hypervisor vendor:",
+          "data": "Microsoft"
+        },
+        {
+          "field": "Virtualization type:",
+          "data": "full"
+        },
+        {
+          "field": "L1d cache:",
+          "data": "96 KiB (2 instances)"
+        },
+        {
+          "field": "L1i cache:",
+          "data": "64 KiB (2 instances)"
+        },
+        {
+          "field": "L2 cache:",
+          "data": "4 MiB (2 instances)"
+        },
+        {
+          "field": "L3 cache:",
+          "data": "260 MiB (1 instance)"
+        },
+        {
+          "field": "NUMA node(s):",
+          "data": "1"
+        },
+        {
+          "field": "NUMA node0 CPU(s):",
+          "data": "0-3"
+        },
+        {
+          "field": "Vulnerability Gather data sampling:",
+          "data": "Not affected"
+        },
+        {
+          "field": "Vulnerability Ghostwrite:",
+          "data": "Not affected"
+        },
+        {
+          "field": "Vulnerability Indirect target selection:",
+          "data": "Mitigation; Aligned branch/return thunks"
+        },
+        {
+          "field": "Vulnerability Itlb multihit:",
+          "data": "Not affected"
+        },
+        {
+          "field": "Vulnerability L1tf:",
+          "data": "Not affected"
+        },
+        {
+          "field": "Vulnerability Mds:",
+          "data": "Not affected"
+        },
+        {
+          "field": "Vulnerability Meltdown:",
+          "data": "Not affected"
+        },
+        {
+          "field": "Vulnerability Mmio stale data:",
+          "data": "Not affected"
+        },
+        {
+          "field": "Vulnerability Old microcode:",
+          "data": "Not affected"
+        },
+        {
+          "field": "Vulnerability Reg file data sampling:",
+          "data": "Not affected"
+        },
+        {
+          "field": "Vulnerability Retbleed:",
+          "data": "Vulnerable"
+        },
+        {
+          "field": "Vulnerability Spec rstack overflow:",
+          "data": "Not affected"
+        },
+        {
+          "field": "Vulnerability Spec store bypass:",
+          "data": "Vulnerable"
+        },
+        {
+          "field": "Vulnerability Spectre v1:",
+          "data": "Mitigation; usercopy/swapgs barriers and __user pointer sanitization"
+        },
+        {
+          "field": "Vulnerability Spectre v2:",
+          "data": "Mitigation; Retpolines; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Retpoline"
+        },
+        {
+          "field": "Vulnerability Srbds:",
+          "data": "Not affected"
+        },
+        {
+          "field": "Vulnerability Tsa:",
+          "data": "Not affected"
+        },
+        {
+          "field": "Vulnerability Tsx async abort:",
+          "data": "Not affected"
+        },
+        {
+          "field": "Vulnerability Vmscape:",
+          "data": "Not affected"
+        }
+      ]
+    },
+    "reference_reproduced": false,
+    "conditions": [
+      {
+        "requested_threads": 1,
+        "executed": true,
+        "actual_threads": 1,
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 5,
+        "maximum_absolute_error": 2.855062484741211e-05,
+        "maximum_tolerance_ratio": 1.4873147578071357,
+        "worst_index": 102938,
+        "worst_actual": 0.045895934104919434,
+        "worst_expected": 0.04587423801422119
+      },
+      {
+        "requested_threads": 2,
+        "executed": true,
+        "actual_threads": 2,
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 5,
+        "maximum_absolute_error": 2.855062484741211e-05,
+        "maximum_tolerance_ratio": 1.4873147578071357,
+        "worst_index": 102938,
+        "worst_actual": 0.045895934104919434,
+        "worst_expected": 0.04587423801422119
+      },
+      {
+        "requested_threads": 4,
+        "executed": true,
+        "actual_threads": 4,
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 5,
+        "maximum_absolute_error": 2.855062484741211e-05,
+        "maximum_tolerance_ratio": 1.4873147578071357,
+        "worst_index": 102938,
+        "worst_actual": 0.045895934104919434,
+        "worst_expected": 0.04587423801422119
+      }
+    ],
+    "raw_capture_hashes_verified": true,
+    "current_capture_qualified_as_original_reference": false,
+    "result": "On Intel 8573C with native ATen AVX512 and MKL_CBWR=AVX2, patch is bit-exact to original but the full result still has five tolerance failures in each actual 1/2/4-thread execution."
+  },
+  "rotary_precondition_failures": [
+    {
+      "file": "vision-original-rotary-native-bit-gate-20261015.xml",
+      "sha256": "0f7e709bea10cb20d21dbf8af3af442ec9fd0c2c4701902008fb68f9bc4bba5d",
+      "totals": {
+        "id": "2",
+        "testcasecount": "2",
+        "result": "Failed(Child)",
+        "total": "2",
+        "passed": "0",
+        "failed": "2",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 11:23:00Z",
+        "end-time": "2026-10-15 11:23:03Z",
+        "duration": "2.9114067"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\vision-original-rotary-native-bit-gate-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "VisionOriginalRotaryGpuTests",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\vision-original-rotary-native-bit-gate-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T11:22:24.830922+00:00",
+        "pid": 9836,
+        "exit_code": 2,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\vision-original-rotary-native-bit-gate-20261015.xml",
+        "unity_counts": {
+          "total": 2,
+          "passed": 0,
+          "failed": 2,
+          "skipped": 0
+        },
+        "elapsed_seconds": 43.779532200001995,
+        "completed_utc": "2026-10-15T11:23:08.610456+00:00"
+      }
+    },
+    {
+      "file": "vision-original-rotary-saved-assembly-bit-gate-20261015.xml",
+      "sha256": "878323bae61a44b1b68411bb5f03cd701add04831a8a6ee70a28a7be5b33b7d2",
+      "totals": {
+        "id": "2",
+        "testcasecount": "2",
+        "result": "Failed(Child)",
+        "total": "2",
+        "passed": "0",
+        "failed": "2",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 11:25:48Z",
+        "end-time": "2026-10-15 11:25:51Z",
+        "duration": "2.9223157"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\vision-original-rotary-saved-assembly-bit-gate-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "VisionOriginalRotaryGpuTests",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\vision-original-rotary-saved-assembly-bit-gate-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T11:25:11.926543+00:00",
+        "pid": 97048,
+        "exit_code": 2,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\vision-original-rotary-saved-assembly-bit-gate-20261015.xml",
+        "unity_counts": {
+          "total": 2,
+          "passed": 0,
+          "failed": 2,
+          "skipped": 0
+        },
+        "elapsed_seconds": 44.11859360001108,
+        "completed_utc": "2026-10-15T11:25:56.045138+00:00"
+      }
+    }
+  ],
+  "rotary_precondition_note": "Original saved graph has no Cos/Sin or image-independent full-width Concat nodes. It already stores four half-width position tables, repeated in Q/K across sixteen layers. These two setup attempts performed no numerical model comparison.",
+  "rotary_numerical_red": {
+    "file": "vision-original-rotary-half-constant-red-20261015.xml",
+    "sha256": "072b80d28c00621ac6f7c31a5d43a843b6d9d33f63fb9454f8e1cafee6d2e26a",
+    "totals": {
+      "id": "2",
+      "testcasecount": "2",
+      "result": "Failed(Child)",
+      "total": "2",
+      "passed": "0",
+      "failed": "2",
+      "inconclusive": "0",
+      "skipped": "0",
+      "asserts": "0",
+      "engine-version": "3.5.0.0",
+      "clr-version": "4.0.30319.42000",
+      "start-time": "2026-10-15 11:29:15Z",
+      "end-time": "2026-10-15 11:29:18Z",
+      "duration": "3.3822223"
+    },
+    "process": {
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        ".\\artifacts\\acceptance-consumer",
+        "-logFile",
+        ".\\artifacts\\numerical-acceptance-state\\vision-original-rotary-half-constant-red-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "VisionOriginalRotaryGpuTests",
+        "-testResults",
+        ".\\artifacts\\numerical-acceptance-state\\vision-original-rotary-half-constant-red-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": false,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-15T11:28:39.850718+00:00",
+      "pid": 91944,
+      "exit_code": 2,
+      "unity_results": ".\\artifacts\\numerical-acceptance-state\\vision-original-rotary-half-constant-red-20261015.xml",
+      "unity_counts": {
+        "total": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0
+      },
+      "elapsed_seconds": 43.39089129999047,
+      "completed_utc": "2026-10-15T11:29:23.241612+00:00"
+    }
+  },
+  "rotary_audits": [
+    {
+      "file": "vision-original-rotary-constant-audit-cb360d216e683c49e84363c998dc368ac63400ca-cos.json",
+      "sha256": "ddcf80af8ee99ddef8aee6cec00f44f50435e2ef03784683fbbd035de148c8c9",
+      "report": {
+        "success": false,
+        "runtime_source": "cb360d216e683c49e84363c998dc368ac63400ca",
+        "scope": "saved_rotary_constants_vs_original_native_halves_without_inference",
+        "gpu_validated": false,
+        "model_inference_executed": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "comparisons": [
+          {
+            "constant_sha256": "622f85993d68e4c044e47b8e2052d63fc291c876b7dae56d5b2758ba36f76ffe",
+            "occurrences": 32,
+            "native_half": 0,
+            "bit_differences": 21936,
+            "maximum_absolute_error": 5.960464477539063e-08
+          },
+          {
+            "constant_sha256": "622f85993d68e4c044e47b8e2052d63fc291c876b7dae56d5b2758ba36f76ffe",
+            "occurrences": 32,
+            "native_half": 1,
+            "bit_differences": 75610,
+            "maximum_absolute_error": 1.9999682903289795
+          },
+          {
+            "constant_sha256": "cf3705ffb0b26cee4d3374d0f7c822b3ac5f9c4f8d53959dcba5727e1acfd5e1",
+            "occurrences": 32,
+            "native_half": 0,
+            "bit_differences": 80640,
+            "maximum_absolute_error": 1.4141910076141357
+          },
+          {
+            "constant_sha256": "cf3705ffb0b26cee4d3374d0f7c822b3ac5f9c4f8d53959dcba5727e1acfd5e1",
+            "occurrences": 32,
+            "native_half": 1,
+            "bit_differences": 80640,
+            "maximum_absolute_error": 1.9999902248382568
+          },
+          {
+            "constant_sha256": "b4b3f08873b84818e3eef4ebcc4b8bd43a3718b6a91bd70b09b0c744ffb4f5ba",
+            "occurrences": 32,
+            "native_half": 0,
+            "bit_differences": 75610,
+            "maximum_absolute_error": 1.9999682903289795
+          },
+          {
+            "constant_sha256": "b4b3f08873b84818e3eef4ebcc4b8bd43a3718b6a91bd70b09b0c744ffb4f5ba",
+            "occurrences": 32,
+            "native_half": 1,
+            "bit_differences": 21936,
+            "maximum_absolute_error": 5.960464477539063e-08
+          },
+          {
+            "constant_sha256": "a8e17435db4001e3bb11fa9e174ebafecb0005e902a27ee8e9e6fe525094caa1",
+            "occurrences": 32,
+            "native_half": 0,
+            "bit_differences": 80640,
+            "maximum_absolute_error": 1.9999902248382568
+          },
+          {
+            "constant_sha256": "a8e17435db4001e3bb11fa9e174ebafecb0005e902a27ee8e9e6fe525094caa1",
+            "occurrences": 32,
+            "native_half": 1,
+            "bit_differences": 80640,
+            "maximum_absolute_error": 1.4141910076141357
+          }
+        ],
+        "best_half_bit_differences": [
+          21936,
+          21936
+        ],
+        "error": "NUnit.Framework.AssertionException:   Saved derived rotary tables must preserve native bits.\r\n  Expected and actual are both <System.Int32[2]>\r\n  Values differ at index [0]\r\n  Expected: 0\r\n  But was:  21936\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.VisionOriginalRotaryGpuTests.SavedRotaryConstantsMustMatchOriginalNativeHalves (System.String kind, System.String node, System.String expectedSha) [0x0051b] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@3c5664585900\\Tests\\Editor\\VisionOriginalRotaryGpuTests.cs:64 "
+      }
+    },
+    {
+      "file": "vision-original-rotary-constant-audit-cb360d216e683c49e84363c998dc368ac63400ca-sin.json",
+      "sha256": "a4e4e33aa3757ba5303730290614dbc0c70f2f000cffc74b7a214ccfaebafb0a",
+      "report": {
+        "success": false,
+        "runtime_source": "cb360d216e683c49e84363c998dc368ac63400ca",
+        "scope": "saved_rotary_constants_vs_original_native_halves_without_inference",
+        "gpu_validated": false,
+        "model_inference_executed": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "comparisons": [
+          {
+            "constant_sha256": "622f85993d68e4c044e47b8e2052d63fc291c876b7dae56d5b2758ba36f76ffe",
+            "occurrences": 32,
+            "native_half": 0,
+            "bit_differences": 80640,
+            "maximum_absolute_error": 1.4141911268234253
+          },
+          {
+            "constant_sha256": "622f85993d68e4c044e47b8e2052d63fc291c876b7dae56d5b2758ba36f76ffe",
+            "occurrences": 32,
+            "native_half": 1,
+            "bit_differences": 80640,
+            "maximum_absolute_error": 1.9999902248382568
+          },
+          {
+            "constant_sha256": "cf3705ffb0b26cee4d3374d0f7c822b3ac5f9c4f8d53959dcba5727e1acfd5e1",
+            "occurrences": 32,
+            "native_half": 0,
+            "bit_differences": 12576,
+            "maximum_absolute_error": 5.960464477539063e-08
+          },
+          {
+            "constant_sha256": "cf3705ffb0b26cee4d3374d0f7c822b3ac5f9c4f8d53959dcba5727e1acfd5e1",
+            "occurrences": 32,
+            "native_half": 1,
+            "bit_differences": 72454,
+            "maximum_absolute_error": 1.999902069568634
+          },
+          {
+            "constant_sha256": "b4b3f08873b84818e3eef4ebcc4b8bd43a3718b6a91bd70b09b0c744ffb4f5ba",
+            "occurrences": 32,
+            "native_half": 0,
+            "bit_differences": 80640,
+            "maximum_absolute_error": 1.9999902248382568
+          },
+          {
+            "constant_sha256": "b4b3f08873b84818e3eef4ebcc4b8bd43a3718b6a91bd70b09b0c744ffb4f5ba",
+            "occurrences": 32,
+            "native_half": 1,
+            "bit_differences": 80640,
+            "maximum_absolute_error": 1.4141911268234253
+          },
+          {
+            "constant_sha256": "a8e17435db4001e3bb11fa9e174ebafecb0005e902a27ee8e9e6fe525094caa1",
+            "occurrences": 32,
+            "native_half": 0,
+            "bit_differences": 72454,
+            "maximum_absolute_error": 1.999902069568634
+          },
+          {
+            "constant_sha256": "a8e17435db4001e3bb11fa9e174ebafecb0005e902a27ee8e9e6fe525094caa1",
+            "occurrences": 32,
+            "native_half": 1,
+            "bit_differences": 12576,
+            "maximum_absolute_error": 5.960464477539063e-08
+          }
+        ],
+        "best_half_bit_differences": [
+          12576,
+          12576
+        ],
+        "error": "NUnit.Framework.AssertionException:   Saved derived rotary tables must preserve native bits.\r\n  Expected and actual are both <System.Int32[2]>\r\n  Values differ at index [0]\r\n  Expected: 0\r\n  But was:  12576\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.VisionOriginalRotaryGpuTests.SavedRotaryConstantsMustMatchOriginalNativeHalves (System.String kind, System.String node, System.String expectedSha) [0x0051b] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@3c5664585900\\Tests\\Editor\\VisionOriginalRotaryGpuTests.cs:64 "
+      }
+    }
+  ],
+  "rotary_finding": "Each cos half differs in 21936 of 80640 values; each sin half in 12576. Maximum absolute error is 5.960464477539063e-8, consistent with one FP32 ULP on corresponding table values. The learned projection weights and original golden have not been changed.",
+  "python_matrix": {
+    "run_id": 38723984887,
+    "source": "9cf229255789b208252468891f4af8c41bf7f77a",
+    "environments": [
+      {
+        "environment": "python-ubuntu-latest-3.13",
+        "file": "python-tests.xml",
+        "sha256": "f8b20154acb1aebfa6d21ddac8c3c63e7ef8934ad8afeab3a1857e66ad44cd0b",
+        "totals": {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "1020",
+          "time": "276.061",
+          "timestamp": "2026-10-15T11:16:41.858951+00:00",
+          "hostname": "runnervmmprz5"
+        }
+      },
+      {
+        "environment": "python-ubuntu-latest-3.14",
+        "file": "python-tests.xml",
+        "sha256": "580020eaa45828d77df8c5ed4442628b2f6ad2376b448c138e198413986c77f7",
+        "totals": {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "1020",
+          "time": "351.834",
+          "timestamp": "2026-10-15T11:05:17.646491+00:00",
+          "hostname": "runnervm8k3b6"
+        }
+      },
+      {
+        "environment": "python-windows-latest-3.13",
+        "file": "python-tests.xml",
+        "sha256": "657db7eec7527327de252c59464a0dd7cca01098736704e5aae2c675998d4f0a",
+        "totals": {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "1020",
+          "time": "707.220",
+          "timestamp": "2026-10-15T11:06:29.505517+00:00",
+          "hostname": "runnervm0xl3a"
+        }
+      },
+      {
+        "environment": "python-windows-latest-3.14",
+        "file": "python-tests.xml",
+        "sha256": "3c745f33c1fa68fbf9fc39cecddd120d46e79f99b4fac31455c8c5c22c9f21bb",
+        "totals": {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "1020",
+          "time": "554.459",
+          "timestamp": "2026-10-15T11:05:20.873301+00:00",
+          "hostname": "runnervmfi6oq"
+        }
+      }
+    ],
+    "qualification": "1020 tests per environment; this older-source offline Python matrix is separate from latest-head CI, GPU or original full-encoder acceptance."
+  },
+  "latest_workflow_lint": {
+    "run_id": 38726155839,
+    "source": "3d442cd68c0f81dba5d0ed805847dfc4b4e37518",
+    "result": "success"
+  },
+  "original_golden_changed": false,
+  "learned_weights_changed": false,
+  "original_gpu_square_remaining_violations": 1,
+  "original_all_six_image_gpu_cases_validated": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "stages_3_4_complete": false,
+  "rebind_api_red": {
+    "file": "vision-rotary-table-rebind-api-red-20261015.xml",
+    "sha256": "7328050f5d0adbdf708d8fcbc8879871a119c159cb18dfb7d843ae9062df7918",
+    "totals": {
+      "id": "2",
+      "testcasecount": "4",
+      "result": "Failed(Child)",
+      "total": "4",
+      "passed": "0",
+      "failed": "4",
+      "inconclusive": "0",
+      "skipped": "0",
+      "asserts": "0",
+      "engine-version": "3.5.0.0",
+      "clr-version": "4.0.30319.42000",
+      "start-time": "2026-10-15 11:32:09Z",
+      "end-time": "2026-10-15 11:32:09Z",
+      "duration": "0.3407647"
+    },
+    "process": {
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        ".\\artifacts\\acceptance-consumer",
+        "-logFile",
+        ".\\artifacts\\numerical-acceptance-state\\vision-rotary-table-rebind-api-red-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "QualifiedVisionRotaryTableTests",
+        "-testResults",
+        ".\\artifacts\\numerical-acceptance-state\\vision-rotary-table-rebind-api-red-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": false,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-15T11:31:30.086995+00:00",
+      "pid": 71372,
+      "exit_code": 2,
+      "unity_results": ".\\artifacts\\numerical-acceptance-state\\vision-rotary-table-rebind-api-red-20261015.xml",
+      "unity_counts": {
+        "total": 4,
+        "passed": 0,
+        "failed": 4,
+        "skipped": 0
+      },
+      "elapsed_seconds": 43.52535829998669,
+      "completed_utc": "2026-10-15T11:32:13.612354+00:00"
+    }
+  },
+  "rebind_green": {
+    "file": "vision-rotary-table-rebind-green-20261015.xml",
+    "sha256": "1d497aae8091d4710942b38f3a0a8e6c2ef91775ea0760971b3551ec6a3d311a",
+    "totals": {
+      "id": "2",
+      "testcasecount": "6",
+      "result": "Passed",
+      "total": "6",
+      "passed": "6",
+      "failed": "0",
+      "inconclusive": "0",
+      "skipped": "0",
+      "asserts": "0",
+      "engine-version": "3.5.0.0",
+      "clr-version": "4.0.30319.42000",
+      "start-time": "2026-10-15 11:34:14Z",
+      "end-time": "2026-10-15 11:34:17Z",
+      "duration": "3.2791716"
+    },
+    "process": {
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        ".\\artifacts\\acceptance-consumer",
+        "-logFile",
+        ".\\artifacts\\numerical-acceptance-state\\vision-rotary-table-rebind-green-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "QualifiedVisionRotaryTableTests|VisionOriginalRotaryGpuTests",
+        "-testResults",
+        ".\\artifacts\\numerical-acceptance-state\\vision-rotary-table-rebind-green-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": true,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-15T11:33:35.611714+00:00",
+      "pid": 103192,
+      "exit_code": 0,
+      "unity_results": ".\\artifacts\\numerical-acceptance-state\\vision-rotary-table-rebind-green-20261015.xml",
+      "unity_counts": {
+        "total": 6,
+        "passed": 6,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 46.75472470000386,
+      "completed_utc": "2026-10-15T11:34:22.366439+00:00"
+    }
+  },
+  "corrected_position_table_audits": [
+    {
+      "file": "vision-corrected-rotary-constant-audit-da8dbbd67fded01511e88e90ad4fb5d8e9216151-cos.json",
+      "sha256": "bf74218a5cb9e312b24fd04c7eec64d0036d124fe9f5d6cabe5c5de96440f7b3",
+      "report": {
+        "success": true,
+        "runtime_source": "da8dbbd67fded01511e88e90ad4fb5d8e9216151",
+        "scope": "corrected_derived_rotary_constants_vs_original_native_halves_without_inference",
+        "gpu_validated": false,
+        "model_inference_executed": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "comparisons": [
+          {
+            "constant_sha256": "3af3d7a6d3ece5d6ae5696e4f39494505f497f9ed9c5b5073635b5b344b55bc0",
+            "occurrences": 1,
+            "native_half": 0,
+            "bit_differences": 0,
+            "maximum_absolute_error": 0.0
+          },
+          {
+            "constant_sha256": "3af3d7a6d3ece5d6ae5696e4f39494505f497f9ed9c5b5073635b5b344b55bc0",
+            "occurrences": 1,
+            "native_half": 1,
+            "bit_differences": 72192,
+            "maximum_absolute_error": 1.9999682903289795
+          },
+          {
+            "constant_sha256": "7dbd23c54a1f916d60b62794736a1b6d9dc825692f5e364931d1b0007281fddd",
+            "occurrences": 1,
+            "native_half": 0,
+            "bit_differences": 80640,
+            "maximum_absolute_error": 1.4141910672187805
+          },
+          {
+            "constant_sha256": "7dbd23c54a1f916d60b62794736a1b6d9dc825692f5e364931d1b0007281fddd",
+            "occurrences": 1,
+            "native_half": 1,
+            "bit_differences": 80640,
+            "maximum_absolute_error": 1.9999902248382568
+          },
+          {
+            "constant_sha256": "4bac20e4bb9847f0950071eaf5f2138dd644b02aaa8f6708dafc47fc61e62a06",
+            "occurrences": 1,
+            "native_half": 0,
+            "bit_differences": 72192,
+            "maximum_absolute_error": 1.9999682903289795
+          },
+          {
+            "constant_sha256": "4bac20e4bb9847f0950071eaf5f2138dd644b02aaa8f6708dafc47fc61e62a06",
+            "occurrences": 1,
+            "native_half": 1,
+            "bit_differences": 0,
+            "maximum_absolute_error": 0.0
+          },
+          {
+            "constant_sha256": "3335ed00a55405fc2837794f47bc71d33e9a609967939a0df78d1b77b6f7f218",
+            "occurrences": 1,
+            "native_half": 0,
+            "bit_differences": 80640,
+            "maximum_absolute_error": 1.9999902248382568
+          },
+          {
+            "constant_sha256": "3335ed00a55405fc2837794f47bc71d33e9a609967939a0df78d1b77b6f7f218",
+            "occurrences": 1,
+            "native_half": 1,
+            "bit_differences": 80640,
+            "maximum_absolute_error": 1.4141910672187805
+          }
+        ],
+        "best_half_bit_differences": [
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "file": "vision-corrected-rotary-constant-audit-da8dbbd67fded01511e88e90ad4fb5d8e9216151-sin.json",
+      "sha256": "de6c8fbdfe5d0d8b413f84f3783cdda54ea3b4245d57767de06e375cc123ff82",
+      "report": {
+        "success": true,
+        "runtime_source": "da8dbbd67fded01511e88e90ad4fb5d8e9216151",
+        "scope": "corrected_derived_rotary_constants_vs_original_native_halves_without_inference",
+        "gpu_validated": false,
+        "model_inference_executed": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "comparisons": [
+          {
+            "constant_sha256": "3af3d7a6d3ece5d6ae5696e4f39494505f497f9ed9c5b5073635b5b344b55bc0",
+            "occurrences": 1,
+            "native_half": 0,
+            "bit_differences": 80640,
+            "maximum_absolute_error": 1.4141910672187805
+          },
+          {
+            "constant_sha256": "3af3d7a6d3ece5d6ae5696e4f39494505f497f9ed9c5b5073635b5b344b55bc0",
+            "occurrences": 1,
+            "native_half": 1,
+            "bit_differences": 80640,
+            "maximum_absolute_error": 1.9999902248382568
+          },
+          {
+            "constant_sha256": "7dbd23c54a1f916d60b62794736a1b6d9dc825692f5e364931d1b0007281fddd",
+            "occurrences": 1,
+            "native_half": 0,
+            "bit_differences": 0,
+            "maximum_absolute_error": 0.0
+          },
+          {
+            "constant_sha256": "7dbd23c54a1f916d60b62794736a1b6d9dc825692f5e364931d1b0007281fddd",
+            "occurrences": 1,
+            "native_half": 1,
+            "bit_differences": 72192,
+            "maximum_absolute_error": 1.999902069568634
+          },
+          {
+            "constant_sha256": "4bac20e4bb9847f0950071eaf5f2138dd644b02aaa8f6708dafc47fc61e62a06",
+            "occurrences": 1,
+            "native_half": 0,
+            "bit_differences": 80640,
+            "maximum_absolute_error": 1.9999902248382568
+          },
+          {
+            "constant_sha256": "4bac20e4bb9847f0950071eaf5f2138dd644b02aaa8f6708dafc47fc61e62a06",
+            "occurrences": 1,
+            "native_half": 1,
+            "bit_differences": 80640,
+            "maximum_absolute_error": 1.4141910672187805
+          },
+          {
+            "constant_sha256": "3335ed00a55405fc2837794f47bc71d33e9a609967939a0df78d1b77b6f7f218",
+            "occurrences": 1,
+            "native_half": 0,
+            "bit_differences": 72192,
+            "maximum_absolute_error": 1.999902069568634
+          },
+          {
+            "constant_sha256": "3335ed00a55405fc2837794f47bc71d33e9a609967939a0df78d1b77b6f7f218",
+            "occurrences": 1,
+            "native_half": 1,
+            "bit_differences": 0,
+            "maximum_absolute_error": 0.0
+          }
+        ],
+        "best_half_bit_differences": [
+          0,
+          0
+        ]
+      }
+    }
+  ],
+  "correction_scope": "Validation-only, data-independent square-profile position constants; bounded 1e-6 changes, caller arrays copied, original graph and learned tensors retained. Static audits and API tests are not GPU or full-model acceptance."
+}

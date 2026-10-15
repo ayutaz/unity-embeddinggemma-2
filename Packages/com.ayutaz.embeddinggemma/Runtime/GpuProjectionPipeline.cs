@@ -17,6 +17,7 @@ namespace EmbeddingGemma
         readonly string[] projectionOutputs;
         readonly IGpuTensorOperation[] projections;
         readonly HashSet<string>[] liveAfterStage;
+        readonly Action[] releaseGpuCache;
         Worker[] workers;
 
         public GpuProjectionPipeline(Model[] models,string[] projectionInputs,string[] projectionOutputs,GpuBlockedMatmul[] projections)
@@ -26,6 +27,9 @@ namespace EmbeddingGemma
             : this(models,projectionInputs?.Select(name=>new[]{name}).ToArray(),projectionOutputs,projections) { }
 
         public GpuProjectionPipeline(Model[] models,string[][] projectionInputs,string[] projectionOutputs,IGpuTensorOperation[] projections)
+            : this(models,projectionInputs,projectionOutputs,projections,false) { }
+
+        public GpuProjectionPipeline(Model[] models,string[][] projectionInputs,string[] projectionOutputs,IGpuTensorOperation[] projections,bool releaseUnusedGpuCache)
         {
             if(models==null || projections==null || projectionInputs==null || projectionOutputs==null
                 || models.Length!=projections.Length+1 || projectionInputs.Length!=projections.Length
@@ -51,6 +55,7 @@ namespace EmbeddingGemma
                 if(stage<projections.Length)live.UnionWith(this.projectionInputs[stage]);
             }
             workers=new Worker[models.Length];
+            if(releaseUnusedGpuCache)releaseGpuCache=new Action[models.Length];
             try
             {
                 for(var i=0;i<models.Length;i++)
@@ -62,9 +67,30 @@ namespace EmbeddingGemma
                     var data= models[i].layers.SelectMany(l=>l.outputs).Concat(models[i].inputs.Select(input=>input.index));
                     if(cpu.Intersect(data).Any() || flush.Count!=0)
                         throw new NotSupportedException("GPU composition cannot use CPU computation or intermediate readback.");
+                    if(releaseGpuCache!=null)releaseGpuCache[i]=CacheRelease(workers[i]);
                 }
             }
             catch { Dispose();throw; }
+        }
+
+        static Action CacheRelease(Worker worker)
+        {
+            const BindingFlags fields=BindingFlags.Instance|BindingFlags.NonPublic;
+            var storage=typeof(Worker).GetField("m_Storage",fields)?.GetValue(worker);
+            var pool=storage?.GetType().GetField("m_TensorPool",fields)?.GetValue(storage);
+            var cacheField=pool?.GetType().GetField("m_computeMemoryPool",fields);
+            var freeField=cacheField?.FieldType.GetField("freeBuffers",fields);
+            if(cacheField==null||freeField==null||!typeof(IDisposable).IsAssignableFrom(cacheField.FieldType))
+                throw new NotSupportedException("Pinned unused GPU cache inspection is unavailable.");
+            return ()=>
+            {
+                var cache=cacheField.GetValue(pool);
+                if(!(freeField.GetValue(cache) is System.Collections.IDictionary free))throw new NotSupportedException("Pinned free GPU cache differs.");
+                if(free.Count==0)return;
+                var replacement=Activator.CreateInstance(cacheField.FieldType,true);
+                try{((IDisposable)cache).Dispose();cacheField.SetValue(pool,replacement);}
+                catch{((IDisposable)replacement).Dispose();throw;}
+            };
         }
 
         public Tensor<float> Execute(Tensor<float> input)
@@ -96,6 +122,7 @@ namespace EmbeddingGemma
                         if(value.backendType!=BackendType.GPUCompute)throw new InvalidOperationException("Intermediate output left GPUCompute.");
                         values[boundary.name]=value;
                     }
+                    releaseGpuCache?[stage]?.Invoke();
                     if(stage<projections.Length)
                     {
                         var operands=new Tensor<float>[projectionInputs[stage].Length];

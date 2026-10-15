@@ -39,6 +39,10 @@ on:
         description: Full12layers in connected3layer partitions; actual ONNX carry, no frozen resets
         type: boolean
         default: false
+      raw_input:
+        description: Prepend original feature-input stem to connected full12 diagnosis; no intermediate stage goldens downloaded
+        type: boolean
+        default: false
   pull_request:
     types: [opened, synchronize, labeled]
 
@@ -80,6 +84,7 @@ jobs:
       PRIMITIVE_REPLAY: ${{ inputs.primitive_replay || false }}
       CHAINED_PROBE: ${{ inputs.chained_probe || false }}
       PROBE_CASE: ${{ matrix.case_id }}
+      RAW_INPUT: ${{ inputs.raw_input || false }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
@@ -104,6 +109,10 @@ jobs:
           fi
       - name: Validate explicit primitive replay input boundary
         run: |
+          if [ "$RAW_INPUT" = true ] && [ "$CHAINED_PROBE" != true ]; then
+            echo 'Raw feature input requires connected diagnosis.' >&2
+            exit 1
+          fi
           if [ "$PRIMITIVE_REPLAY" = true ] && [ "$PROBE_FROM_STAGE" = none ]; then
             echo 'Primitive replay requires an explicit audited input stage.' >&2
             exit 1
@@ -130,7 +139,7 @@ jobs:
           --member "audio-runtime-reference/${PROBE_PROFILE}/audio.pt2"
           --member "audio-runtime-reference/${PROBE_PROFILE}/${PROBE_CASE}-features-fp32.bin"
       - name: Fetch independently audited original stage reference only when explicitly requested
-        if: env.USE_FROZEN_STAGE == 'true' || env.PROBE_FROM_STAGE != 'none'
+        if: env.RAW_INPUT != 'true' && (env.USE_FROZEN_STAGE == 'true' || env.PROBE_FROM_STAGE != 'none')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -164,10 +173,14 @@ jobs:
         shell: bash
         run: |
           if [ "$CHAINED_PROBE" = true ]; then
+            source_args=(--frozen-stage-source ../artifacts/frozen-stage-reference/audio-runtime-stages)
+            if [ "$RAW_INPUT" = true ]; then
+              source_args=(--raw-input)
+            fi
             uv run --locked python -m embeddinggemma_tools.frozen_audio_chained_onnx \
               --input ../artifacts/frozen-prefix-input/audio-runtime-reference \
               --output ../artifacts/frozen-audio-prefix-onnx \
-              --frozen-stage-source ../artifacts/frozen-stage-reference/audio-runtime-stages \
+              "${source_args[@]}" \
               --variant "$PROBE_VARIANT" --case "$PROBE_CASE"
             exit
           fi

@@ -9,7 +9,7 @@ using Unity.InferenceEngine;
 
 namespace EmbeddingGemma.Validation.Tests
 {
-    /// <summary>Fixed first-RMS diagnostic operation; owns Workers/division, borrows the audited template.</summary>
+    /// <summary>Fixed vision RMS diagnostic operation; owns Workers/division, borrows the audited template.</summary>
     public sealed class QualifiedVisionRmsOperation : IGpuTensorOperation
     {
         GpuProjectionPipeline pipeline;
@@ -32,6 +32,34 @@ namespace EmbeddingGemma.Validation.Tests
             replacement.index=target.index;
             return new Model{ProducerName=template.ProducerName+"/borrow-original-scale",inputs=new List<Model.Input>(template.inputs),outputs=new List<Model.Output>(template.outputs),
                 layers=new List<Layer>(template.layers),constants=template.constants.Select(value=>ReferenceEquals(value,target)?replacement:value).ToList()};
+        }
+        public static (Model model,int[] outputs,Constant[] scales) MarkAll(Model source)
+        {
+            if(source==null)throw new ArgumentNullException(nameof(source));
+            var constants=source.constants.ToDictionary(value=>value.index);
+            var squares=source.layers.Where(layer=>layer.GetType().Name=="Square").ToArray();
+            if(squares.Length!=7)throw new ArgumentException("Expected exactly the seven original vision layer RMS operations.",nameof(source));
+            Layer Next(Layer current,string kind)=>source.layers.Single(layer=>layer.GetType().Name==kind&&layer.inputs.Contains(current.outputs[0]));
+            var changes=new Dictionary<Layer,Layer>();var outputs=new List<int>();var scales=new List<Constant>();
+            var identity=typeof(Worker).Assembly.GetTypes().Single(type=>type.Name=="Identity"&&typeof(Layer).IsAssignableFrom(type));
+            foreach(var square in squares)
+            {
+                var mean=Next(square,"ReduceMean");var scalar=Next(mean,"ScalarMad");var inverse=Next(scalar,"Rsqrt");var multiply=Next(inverse,"Mul");
+                Assert.That(multiply.inputs.Contains(square.inputs[0]),Is.True);
+                Assert.That((float)scalar.GetType().GetField("sFloat").GetValue(scalar),Is.EqualTo(1f));
+                Assert.That((float)scalar.GetType().GetField("bFloat").GetValue(scalar),Is.EqualTo(1e-6f));
+                var scaled=source.layers.SingleOrDefault(layer=>layer.GetType().Name=="Mul"&&layer.inputs.Contains(multiply.outputs[0])
+                    &&layer.inputs.Any(index=>constants.TryGetValue(index,out var constant)&&constant.dataType==DataType.Float&&constant.shape.rank==1));
+                var scale=scaled==null?null:constants[scaled.inputs.Single(constants.ContainsKey)];
+                if(scale!=null)Assert.That(scale.shape==new TensorShape(64)||scale.shape==new TensorShape(768),Is.True);
+                var final=scaled??multiply;var chain=new HashSet<Layer>{square,mean,scalar,inverse,multiply};if(scaled!=null)chain.Add(scaled);
+                foreach(var layer in chain.Where(layer=>!ReferenceEquals(layer,final)))
+                    Assert.That(source.layers.Where(consumer=>consumer.inputs.Intersect(layer.outputs).Any()).All(chain.Contains),Is.True,"An internal RMS value escapes its cut.");
+                var marker=(Layer)Activator.CreateInstance(identity);marker.inputs=new[]{square.inputs[0]};marker.outputs=(int[])final.outputs.Clone();
+                changes.Add(final,marker);outputs.Add(marker.outputs[0]);scales.Add(scale);
+            }
+            return(new Model{ProducerName=source.ProducerName+"/qualified-seven-rms-markers",inputs=new List<Model.Input>(source.inputs),outputs=new List<Model.Output>(source.outputs),
+                constants=new List<Constant>(source.constants),layers=source.layers.Select(layer=>changes.TryGetValue(layer,out var marker)?marker:layer).ToList()},outputs.ToArray(),scales.ToArray());
         }
         // Diagnostic graph surgery only: validate the exact six-node original RMS,
         // preserve every descriptor/coefficient, and expose its unchanged tensor ID.
@@ -65,7 +93,13 @@ namespace EmbeddingGemma.Validation.Tests
         public QualifiedVisionRmsOperation(Model model)
         {
             if(model==null)throw new ArgumentNullException(nameof(model));
-            if(model.inputs.Count!=1||!model.inputs[0].shape.IsStatic()||model.inputs[0].shape.ToTensorShape()!=new TensorShape(1,2520,768))
+            if(model.inputs.Count!=1||!model.inputs[0].shape.IsStatic())
+                throw new ArgumentException("Expected a fixed qualified vision RMS template.",nameof(model));
+            if(model.inputs[0].shape.ToTensorShape()==new TensorShape(1,2520,12,64))
+            {
+                pipeline=new GpuProjectionPipeline(new[]{model},Array.Empty<string>(),Array.Empty<string>(),Array.Empty<IGpuTensorOperation>());return;
+            }
+            if(model.inputs[0].shape.ToTensorShape()!=new TensorShape(1,2520,768))
                 throw new ArgumentException("Expected the qualified fixed first vision RMS template.",nameof(model));
             var scalar=model.layers.Single(layer=>layer.GetType().Name=="ScalarMad"
                 &&(float)layer.GetType().GetField("sFloat").GetValue(layer)==1f/768f

@@ -15,22 +15,27 @@ namespace EmbeddingGemma.Validation.Tests
     {
         [Test]
         public void NativeBlock384VisionLayerZeroFromExactPatchMatchesOriginalOnGpu()
-            => Run(false);
+            => Run(0);
 
         [Test]
         public void ExplicitDivisionFirstRmsAndNativeProjectionsMatchOriginalLayerZeroOnGpu()
-            => Run(true);
+            => Run(1);
 
-        static void Run(bool qualifiedFirstRms)
+        [Test]
+        public void AllSevenRmsAndNativeProjectionsMatchOriginalLayerZeroOnGpu()
+            => Run(7);
+
+        static void Run(int normCount)
         {
+            var qualifiedFirstRms=normCount>0;
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-diagnostics"));
             var modelPath=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-layer0-original-patch-gpu-e39bdf1b5d0faf2ea424023d83076315736c6fde-captures/layer0.sentis"));
-            var label=qualifiedFirstRms?"vision-layer0-first-rms-native-projections-gpu-":"vision-layer0-native-projections-gpu-";
+            var label=normCount==7?"vision-layer0-seven-rms-native-projections-gpu-":qualifiedFirstRms?"vision-layer0-first-rms-native-projections-gpu-":"vision-layer0-native-projections-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+".json"));
             Assert.That(File.Exists(output),Is.False);
-            var report=new JObject{["success"]=false,["scope"]=qualifiedFirstRms?"original_vision_layer0_first_rms_and_seven_native_gpu_projections_candidate":"original_vision_layer0_seven_native_gpu_projections_candidate",["runtime_source"]=source,
+            var report=new JObject{["success"]=false,["scope"]=normCount==7?"original_vision_layer0_seven_rms_and_seven_native_gpu_projections_candidate":qualifiedFirstRms?"original_vision_layer0_first_rms_and_seven_native_gpu_projections_candidate":"original_vision_layer0_seven_native_gpu_projections_candidate",["runtime_source"]=source,
                 ["full_encoder_validated"]=false,["end_to_end_validated"]=false,["phase"]="audit"};
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
@@ -46,8 +51,8 @@ namespace EmbeddingGemma.Validation.Tests
                 var selected=model.layers.Where(layer=>layer.GetType().Name=="MatMul"&&!constants.ContainsKey(layer.inputs[0])
                     &&constants.TryGetValue(layer.inputs[1],out var w)&&w.shape.rank==2).Select(layer=>layer.outputs[0]).ToArray();
                 Assert.That(selected.Length,Is.EqualTo(7));
-                var original=model;var sourceHash=SerializedHash(original);Model rmsTemplate=null;
-                if(qualifiedFirstRms)
+                var original=model;var sourceHash=SerializedHash(original);Model rmsTemplate=null;int[] normOutputs=null;Constant[] normScales=null;
+                if(normCount==1)
                 {
                     var templatePath=Path.Combine(Application.dataPath,"GpuVisionFirstRmsCandidate/first-rms.onnx");
                     Check(templatePath,"724605434efc0b70bb28b59b5dc639f8b0aeb765a4170ec782397506f6549976");
@@ -83,16 +88,51 @@ namespace EmbeddingGemma.Validation.Tests
                     selected=new[]{marker.outputs[0]}.Concat(selected).ToArray();
                     report["first_rms_replaced"]=true;report["source_scale_sha256"]="acc544061ccfe25009301bdfc15bab61468511ef6f27962b70c54efb65da9cb7";
                 }
+                if(normCount==7)
+                {
+                    Check(Path.Combine(Application.dataPath,"GpuVisionFirstRmsCandidate/first-rms.onnx"),"724605434efc0b70bb28b59b5dc639f8b0aeb765a4170ec782397506f6549976");
+                    rmsTemplate=ModelLoader.Load(UnityEditor.AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/GpuVisionFirstRmsCandidate/first-rms.onnx"));
+                    var marked=QualifiedVisionRmsOperation.MarkAll(model);model=marked.model;normOutputs=marked.outputs;normScales=marked.scales;
+                    var wanted=new HashSet<int>(selected.Concat(normOutputs));selected=model.layers.Where(layer=>wanted.Contains(layer.outputs[0])).Select(layer=>layer.outputs[0]).ToArray();
+                    Assert.That(selected.Length,Is.EqualTo(14));report["rms_count"]=7;
+                }
                 report["phase"]="prepare";Save();
                 var timer=System.Diagnostics.Stopwatch.StartNew();var plan=SavedProjectionPartition.Create(model,selected);
-                Assert.That(plan.Rows,Is.All.EqualTo(2520));var rows=new JArray();report["projections"]=rows;
+                var rows=new JArray();report["projections"]=rows;
                 for(var i=0;i<selected.Length;i++)
                 {
                     if(plan.Weights[i]==null)
                     {
-                        Assert.That(qualifiedFirstRms&&i==0,Is.True);operations.Add(new QualifiedVisionRmsOperation(rmsTemplate));
-                        rows.Add(new JObject{["kind"]="explicit_division_first_rms",["rows"]=plan.Rows[i],["width"]=plan.Widths[i]});continue;
+                        if(normCount==1)
+                        {
+                            Assert.That(i,Is.Zero);operations.Add(new QualifiedVisionRmsOperation(rmsTemplate));
+                            rows.Add(new JObject{["kind"]="explicit_division_first_rms",["rows"]=plan.Rows[i],["width"]=plan.Widths[i]});continue;
+                        }
+                        Assert.That(normCount,Is.EqualTo(7));var ordinal=Array.IndexOf(normOutputs,selected[i]);Assert.That(ordinal,Is.GreaterThanOrEqualTo(0));
+                        Model template;
+                        if(plan.Widths[i]==64)
+                        {
+                            Assert.That(ordinal,Is.InRange(1,3));Assert.That(plan.Rows[i],Is.EqualTo(30240));
+                            var headRoot=Path.Combine(Application.dataPath,"GpuVisionHeadRmsCandidates");
+                            Check(Path.Combine(headRoot,"head-rms-candidates.json"),"bb1f2d3df3905551b34723badefd7f1dfdc23da08a9ab4c72545d5d1368ce229");
+                            var preparation=JObject.Parse(File.ReadAllText(Path.Combine(headRoot,"head-rms-candidates.json")));
+                            var entry=((JArray)preparation["rows"]).Single(value=>value.Value<int>("index")==ordinal);
+                            Check(Path.Combine(headRoot,entry["onnx"].Value<string>("file")),entry["onnx"].Value<string>("sha256"));
+                            template=ModelLoader.Load(UnityEditor.AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/GpuVisionHeadRmsCandidates/"+entry["onnx"].Value<string>("file")));
+                            if(normScales[ordinal]!=null)
+                                Assert.That(CoefficientHash(template.constants.Single(value=>value.dataType==DataType.Float&&value.shape==new TensorShape(64))),Is.EqualTo(CoefficientHash(normScales[ordinal])));
+                            else Assert.That(template.constants.Any(value=>value.dataType==DataType.Float&&value.shape==new TensorShape(64)),Is.False);
+                        }
+                        else
+                        {
+                            Assert.That(plan.Widths[i],Is.EqualTo(768));Assert.That(plan.Rows[i],Is.EqualTo(2520));
+                            template=QualifiedVisionRmsOperation.BorrowScale(rmsTemplate,normScales[ordinal]);
+                        }
+                        operations.Add(new QualifiedVisionRmsOperation(template));
+                        rows.Add(new JObject{["kind"]="qualified_rms",["ordinal"]=ordinal,["rows"]=plan.Rows[i],["width"]=plan.Widths[i],
+                            ["scale_sha256"]=normScales[ordinal]==null?null:CoefficientHash(normScales[ordinal])});continue;
                     }
+                    Assert.That(plan.Rows[i],Is.EqualTo(2520));
                     operations.Add(new GpuBlockedMatmul(plan.Widths[i],plan.Columns[i],plan.Weights[i],384));
                     var bytes=new byte[plan.Weights[i].Length*4];Buffer.BlockCopy(plan.Weights[i],0,bytes,0,bytes.Length);
                     using var stream=new MemoryStream(bytes);rows.Add(new JObject{["width"]=plan.Widths[i],["columns"]=plan.Columns[i],["rows"]=plan.Rows[i],["block"]=384,["weight_sha256"]=PlayerFileHash.Compute(stream,out _)});
@@ -121,6 +161,7 @@ namespace EmbeddingGemma.Validation.Tests
             catch(Exception error){report["error"]=error.ToString();throw;}
             finally{foreach(var operation in operations)operation.Dispose();Save();}
         }
+        static string CoefficientHash(Constant value){var raw=(ArraySegment<byte>)typeof(Constant).GetField("array",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(value);using var stream=new MemoryStream(raw.Array,raw.Offset,raw.Count,false);return PlayerFileHash.Compute(stream,out _);}
         static string SerializedHash(Model model){using var stream=new MemoryStream();ModelWriter.Save(stream,model);stream.Position=0;return PlayerFileHash.Compute(stream,out _);}
         static float[] Floats(string path){var bytes=File.ReadAllBytes(path);var data=new float[bytes.Length/4];Buffer.BlockCopy(bytes,0,data,0,bytes.Length);return data;}
     }

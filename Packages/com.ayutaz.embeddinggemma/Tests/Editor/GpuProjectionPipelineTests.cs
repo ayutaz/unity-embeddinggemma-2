@@ -21,7 +21,7 @@ namespace EmbeddingGemma.Tests
                 const BindingFlags fields=BindingFlags.Instance|BindingFlags.NonPublic;
                 var workers=(Worker[])typeof(GpuProjectionPipeline).GetField("workers",fields).GetValue(pipeline);
                 var backend=typeof(Worker).GetField("m_Backend",fields).GetValue(workers[0]);
-                var cache=backend.GetType().GetField("m_MemoryPool",fields).GetValue(backend);
+                var cache=typeof(Worker).Assembly.GetType("Unity.InferenceEngine.GPUComputeBackend").GetField("m_MemoryPool",fields).GetValue(backend);
                 var count=((IDictionary)cache.GetType().GetField("freeBuffers",fields).GetValue(cache)).Count;
                 if(release)Assert.That(count,Is.Zero,"GPU backend scratch buffers must also be released after boundary copies.");else Assert.That(count,Is.GreaterThan(0));
             };

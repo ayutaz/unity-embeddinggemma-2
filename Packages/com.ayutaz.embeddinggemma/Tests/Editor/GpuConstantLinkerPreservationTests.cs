@@ -28,6 +28,8 @@ namespace EmbeddingGemma.Tests
                 Is.EquivalentTo(new[] { "m_Storage", "m_Backend", "m_LayerCPUFallback", "m_LayerCPUFallbackShouldFlushGPU" }));
             var backend=assembly.Elements("type").Single(value=>(string)value.Attribute("fullname")=="Unity.InferenceEngine.GPUComputeBackend");
             Assert.That(backend.Elements("field").Select(value=>(string)value.Attribute("name")),Is.EqualTo(new[]{"m_MemoryPool"}));
+            var device=assembly.Elements("type").Single(value=>(string)value.Attribute("fullname")=="Unity.InferenceEngine.GfxDeviceBackend");
+            Assert.That(device.Elements("field").Select(value=>(string)value.Attribute("name")),Is.EqualTo(new[]{"m_GfxContext"}));
             var storage = assembly.Elements("type").Single(value => (string)value.Attribute("fullname") == "Unity.InferenceEngine.ModelStorage");
             Assert.That(storage.Elements("method").Select(value => (string)value.Attribute("name")), Is.EqualTo(new[] { "GetTensor" }));
             Assert.That(storage.Elements("field").Select(value => (string)value.Attribute("name")), Is.EquivalentTo(new[] { "m_TensorPool", "m_InUseTensorsPool" }));

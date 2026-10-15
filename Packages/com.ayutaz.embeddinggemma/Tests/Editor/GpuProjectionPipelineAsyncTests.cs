@@ -32,14 +32,14 @@ namespace EmbeddingGemma.Tests
             for (var i = 0; i < names.Length; i++) model.outputs[i] = new Model.Output { index = model.outputs[i].index, name = names[i] };
             return model;
         }
-        static GpuProjectionPipeline Pipeline(Operation operation)
+        static GpuProjectionPipeline Pipeline(Operation operation,bool release=true)
         {
             Assert.That(SystemInfo.supportsGraphicsFence, Is.True, "Actual graphics-fence support required; no skip.");
             var first = new FunctionalGraph(); var x = first.AddInput<float>(new TensorShape(1, 2), "input");
             var before = Rename(first.Compile(x, x * x + x), "input", "work");
             var last = new FunctionalGraph(); var residual = last.AddInput<float>(new TensorShape(1, 2), "input"); var projected = last.AddInput<float>(new TensorShape(1, 2), "projected");
             var after = Rename(last.Compile(projected * projected + residual), "final");
-            return new GpuProjectionPipeline(new[] { before, after }, new[] { new[] { "work" } }, new[] { "projected" }, new IGpuTensorOperation[] { operation }, true);
+            return new GpuProjectionPipeline(new[] { before, after }, new[] { new[] { "work" } }, new[] { "projected" }, new IGpuTensorOperation[] { operation }, release);
         }
         static Task<Tensor<float>> Start(GpuProjectionPipeline pipeline, Tensor<float> input, CancellationToken token = default)
         {
@@ -55,6 +55,30 @@ namespace EmbeddingGemma.Tests
         static Tensor<float> Input()
         {
             var input = new Tensor<float>(new TensorShape(1, 2), new[] { -3f, 4f }); ComputeTensorData.Pin(input); return input;
+        }
+
+        [UnityTest]
+        public IEnumerator AsyncOptInRecreatesCompiledOperatorContextOnlyAfterGpuCompletion()
+        {
+            Assert.That(SystemInfo.supportsMachineLearning, Is.True, "Actual ML-device GPU required for this context lifetime gate; no skip.");
+            using var operation = new Operation(); using var input = Input();
+            const BindingFlags fields = BindingFlags.Instance | BindingFlags.NonPublic;
+            var type = typeof(Worker).Assembly.GetType("Unity.InferenceEngine.GfxDeviceBackend");
+            var contextField = type.GetField("m_GfxContext", fields); Assert.That(contextField, Is.Not.Null);
+            foreach (var release in new[] { false, true })
+            {
+                using var pipeline = Pipeline(operation, release);
+                var workers = (Worker[])typeof(GpuProjectionPipeline).GetField("workers", fields).GetValue(pipeline);
+                var backend = typeof(Worker).GetField("m_Backend", fields).GetValue(workers[0]); Assert.That(type.IsInstanceOfType(backend), Is.True);
+                var before = contextField.GetValue(backend); var pending = Start(pipeline, input);
+                Assert.That(contextField.GetValue(backend), Is.SameAs(before), "A queued GPU stage still owns its compiled operators.");
+                yield return Wait(pending); using var result = pending.GetAwaiter().GetResult();
+                if (release) Assert.That(contextField.GetValue(backend), Is.Not.SameAs(before), "Completed compiled-operator caches must be released when opted in.");
+                else Assert.That(contextField.GetValue(backend), Is.SameAs(before));
+                var repeat = Start(pipeline, input); yield return Wait(repeat); using var repeated = repeat.GetAwaiter().GetResult();
+                Assert.That(result.DownloadToArray(), Is.EqualTo(new[] { 33f, 404f })); Assert.That(repeated.DownloadToArray(), Is.EqualTo(new[] { 33f, 404f }));
+            }
+            Assert.That(input.DownloadToArray(), Is.EqualTo(new[] { -3f, 4f }));
         }
 
         [UnityTest]

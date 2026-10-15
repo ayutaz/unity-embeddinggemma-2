@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "saved_original_full_silence_encoder_one_onnx_candidate",
+  "run_id": 38781578996,
+  "artifact_id": 11995163514,
+  "head_source": "54ce75add2a53d351b256f4fae4a5d155a0df8fa",
+  "actual_producer": "596832e405cfd3469060ba97286a786b83e2a72f",
+  "conclusion": "diagnostic_collection_completed_numeric_candidate_failed",
+  "variant": "refined_mean_moment",
+  "report_sha256": "05779950851724ba5a353b8e63b63eebc2ef7f3b7abdcf02c2941800aad0999a",
+  "metrics": {
+    "mismatched_elements": 475,
+    "maximum_absolute_error": 0.00017261505126953125,
+    "maximum_tolerance_ratio": 8.130694107895879,
+    "exact_difference_count": 140723,
+    "minimum_cosine": 0.9999999994016908
+  },
+  "provenance": {
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+    "audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+    "graph_sha256": "dc43d56b896b64077d8e86d56c3fd2b89cfe3d31170eabaa387165ea961438d7",
+    "input_sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+    "job_source": "596832e405cfd3469060ba97286a786b83e2a72f",
+    "torch_version": "2.14.1+cu130",
+    "threads": 2,
+    "cpu_capability": "AVX2",
+    "stage": "projected_features"
+  },
+  "fixed_reference": {
+    "stage": "projected_features",
+    "reference_sha256": "6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a",
+    "audit_sha256": "3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b",
+    "expected_sha256": "e9ac5425c93912ac7e4983ed98e80b4020e1f8f2d81c2950adfd31b1022441ad",
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9"
+  },
+  "reference_sha256": "e9ac5425c93912ac7e4983ed98e80b4020e1f8f2d81c2950adfd31b1022441ad",
+  "capture_sha256": "2e164ede0e2897c12381a7a1e50f4fd39c2d1a13b0005b789b3593265bb1408e",
+  "graph_sha256_reported_by_producer": "f151fdeeaa7ee1e7c53b39f046d9e33bc823858cee4eb5c371fdf1b1a878273b",
+  "native_wrapper_control_bits_equal": true,
+  "native_wrapper_bits_equal": true,
+  "current_native_context_qualified": false,
+  "current_native_whole_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 288,
+    "maximum_absolute_error": 0.0001811981201171875,
+    "maximum_tolerance_ratio": 8.712747897611987,
+    "worst_index": 23176,
+    "worst_actual": 0.007174745202064514,
+    "worst_expected": 0.007268205285072327,
+    "exact_difference_count": 135855
+  },
+  "captures_independently_hashed_and_compared": true,
+  "large_graph_locally_downloaded_or_rechecked": false,
+  "range_receipt": {
+    "selected_count": 5,
+    "range_bytes": 1242918,
+    "range_requests": 18,
+    "archive_bytes": 167838957,
+    "files": {
+      "frozen-audio-prefix-onnx/frozen-audio-prefix-onnx.json": {
+        "bytes": 161467,
+        "crc32": 1221089879,
+        "sha256": "05779950851724ba5a353b8e63b63eebc2ef7f3b7abdcf02c2941800aad0999a",
+        "cache_reused": false
+      },
+      "frozen-audio-prefix-onnx/cpu-host.json": {
+        "bytes": 4483,
+        "crc32": 2250323336,
+        "sha256": "eda047d6a2a8a735ae06c3c4b5fe8cf2f09af8a2646057a1a5bcab415d0b6401",
+        "cache_reused": false
+      },
+      "frozen-audio-prefix-onnx/reference-prefix-fp32.bin": {
+        "bytes": 573440,
+        "crc32": 4121953647,
+        "sha256": "e9ac5425c93912ac7e4983ed98e80b4020e1f8f2d81c2950adfd31b1022441ad",
+        "cache_reused": false
+      },
+      "frozen-audio-prefix-onnx/native-prefix-fp32.bin": {
+        "bytes": 573440,
+        "crc32": 507248508,
+        "sha256": "b5b6dda034a3c92b2cce6ee2e14d05847c4206dc6ccbcf97f5c2f70f195d394c",
+        "cache_reused": false
+      },
+      "frozen-audio-prefix-onnx/refined_mean_moment-fp32.bin": {
+        "bytes": 573440,
+        "crc32": 1987338887,
+        "sha256": "2e164ede0e2897c12381a7a1e50f4fd39c2d1a13b0005b789b3593265bb1408e",
+        "cache_reused": false
+      }
+    },
+    "artifact_id": 11995163514,
+    "artifact_name": "frozen-audio-prefix-onnx-596832e405cfd3469060ba97286a786b83e2a72f"
+  },
+  "first_layer_reference_receipt": "m4-fixed-original-layer0-three-onnx-variants-20261016.json",
+  "next_action": "Locate drift between first-layer end and final encoder against unchanged original intermediate stage bytes.",
+  "original_golden_weights_or_tolerances_changed": false,
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "end_to_end_validated": false,
+  "required_ci_passed": false
+}

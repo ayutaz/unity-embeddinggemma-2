@@ -22,7 +22,7 @@ def test_original_vision_probe_is_separate_opt_in_and_keeps_default_matrix():
     assert 'original_vision_probe' in value['jobs'], 'Frozen original vision replay job is missing'
     job = value['jobs']['original_vision_probe']
     assert 'inputs.original_vision' in job['if'] and 'workflow_dispatch' in job['if']
-    assert job['strategy']['matrix']['context'] == ['native', 'avx2']
+    assert job['strategy']['matrix']['context'] == '${{ inputs.require_avx512_native && fromJSON(\'["native"]\') || fromJSON(\'["native","avx2"]\') }}'
     assert value['jobs']['probe']['strategy']['matrix']['modality'] == ['audio', 'image']
     assert '!inputs.original_vision' in value['jobs']['probe']['if']
 
@@ -74,6 +74,31 @@ def test_original_probe_captures_bounded_native_first_layer_nonlinearity_operand
     for name in ('add_10','_softmax','view_21','gelu','mul_4'):
         assert f"'{name}'" in execute
         assert f"'{name}': 16" in execute
+
+
+@pytest.mark.parametrize('capability,accepted', [('AVX512',True),('AVX2',False)])
+def test_avx512_only_dispatch_rejects_wrong_actual_capability_before_model_fetch(
+        tmp_path,monkeypatch,capability,accepted):
+    value=workflow();trigger=value.get('on',value.get(True));inputs=trigger['workflow_dispatch']['inputs']
+    assert 'require_avx512_native' in inputs, 'Explicit native AVX512 prerequisite is missing'
+    assert inputs['require_avx512_native']['default'] is False
+    job=value['jobs']['original_vision_probe'];matrix=job['strategy']['matrix']['context']
+    assert 'inputs.require_avx512_native' in matrix and "fromJSON('[\"native\"]')" in matrix
+    assert "fromJSON('[\"native\",\"avx2\"]')" in matrix
+    steps=job['steps'];gate=next(s for s in steps if s.get('name')=='Require actual AVX512 before original model download')
+    assert gate['if']=='inputs.require_avx512_native'
+    assert steps.index(gate)<next(i for i,s in enumerate(steps) if s.get('name')=='Fetch original frozen graph and first fixture')
+    fake=types.ModuleType('torch');fake.backends=types.SimpleNamespace(cpu=types.SimpleNamespace(get_cpu_capability=lambda:capability))
+    monkeypatch.setitem(sys.modules,'torch',fake);work=tmp_path/'tools';work.mkdir();monkeypatch.chdir(work)
+    monkeypatch.setenv('PROBE_CONTEXT','native');monkeypatch.setenv('GITHUB_SHA','b'*40)
+    script=gate['run'].split("<<'PY'\n",1)[1].rsplit('\nPY',1)[0]
+    if accepted:exec(compile(script,'<avx512-prerequisite>','exec'),{})
+    else:
+        with pytest.raises(SystemExit,match='Actual AVX512'):
+            exec(compile(script,'<avx512-prerequisite>','exec'),{})
+    report=json.loads((tmp_path/'artifacts/original-context-results/cpu-prerequisite.json').read_text())
+    assert report['actual_cpu_capability']==capability and report['satisfied'] is accepted
+    assert report['model_executed'] is False
 
 
 @pytest.mark.parametrize('conditions,reproduced', [

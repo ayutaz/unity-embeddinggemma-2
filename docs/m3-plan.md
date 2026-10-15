@@ -4,6 +4,14 @@
 
 ## 2026-10-15の画像の現在地
 
+最新checkpoint: [GELUの丸め切り分けと実GPU結果](results/m3-native-gelu-rounding-gpu-20261015.json)。保存済みLinux AVX2のGELU先頭49,152要素に対し、旧分離式194 bit差、graph内FMA候補130 bit差、SLEEF tanh接続後82 bit差だった。境界の直接観測で前段に203 bit差、同じGPU前段入力へのtanh自体は全bit一致と判明。FP32の明示FMA / 非FMA境界を単一compute kernelで保持するopt-in経路に修正し、同一入力のGELUを全49,152値で全bit一致、入力所有権 / 再利用 / Dispose / 不正入力と既定tanh回帰を含むGPU13 pass / skip0、package22 Greenを確認した。既定GELU経路は保持する。これはAVX2同一入力の局所証拠であり、元AVX512全encoderの合格ではない。
+
+全体接続の最初の実行`8d67fa8...`は旧32 Worker行のharness assertionが16単一kernel行を拒否し、数値比較前に失敗。検証を修正した`155d552...`の元square-0全体は、**元goldenの許容差超過3→1要素、最大許容差比1.085958で未合格・未採用**。残りはrow25 / column118、実値0.0167587101 / 期待値0.0167713910、絶対差1.26809e-5に対して許容1.16771e-5。GPUCompute・計算/入力CPU fallback0・中間flush0・元係数保持、113 RMS / 178 GPU演算 / 179 segment。1 fail / skip0、他5画像case未実行。host peak4,940,636,160 bytes（約4.60GiB）、実行＋最終取得16.837秒、process77.341秒の単発観測。runner / owned監視はterminal。数値差を解消した候補だけを全画像条件へ広げる。
+
+元graphの最初のsoftmax prefixも同一入力483,840値でLinux AVX2 nativeへ全bit一致し、関連GPU5 pass / skip0。次は元goldenを再現したAVX512環境から同じprefixを取得し、その文脈のRMS / attentionを比較する。Actionsに実AVX512をmodel download前に確認する明示opt-inを2 Red→関連26 Greenで追加し、そのmodeでは既知のAVX2再実行を省く。実AVX512がない場合は前提失敗・モデル未実行として記録する。元golden・学習済み係数・`atol=1e-5, rtol=1e-4`と、元画像全3 profile / 6 GPUケース、既存音声6ケース / 2 profile、実PCM / Texture→GPU前処理→encoder→backbone→正規化768 APIの全role / mask / 境界 / 所有権 / Dispose / 例外後再利用 / text回帰、工程3・4 sample / Player / 必須環境 / Required CI / 長期memoryの範囲を維持する。工程3・4は未完了。ローカルUnity終了済み。
+
+以下は前回checkpoint。
+
 元square-0参照の再現条件を[AVX512実行で確認](results/m3-original-reference-avx512-reproduced-20261015.json)。元保存graph・元入力を固定し、AMD EPYC 9V45 / AVX512のthread 1 / 2 / 4全条件で全131,072値を元goldenへ全bit一致。同型CPUのAVX2指定jobは3要素超過のまま。patch / rotaryは前AVX2捕捉と同一、最初の層からbit差が現れる。同じ捕捉上で公式 / 保存poolingのfeature・RMS・最終値は全bit一致し、配置差仮説は支持されない。次は元golden再現文脈を参照として最初の層のRMS / attentionを比較し、GPUの残る5要素超過を修正する。他5case未実行、工程3・4全体未完了。以下は前回checkpoint。
 
 末尾RMS / block192投影は[今回の固定CPU入力へ実GPU全bit一致](results/m3-original-saved-tail-rms-gpu-20261015.json)。Python6 Red→関連38 Green、GPU局所1 pass / skip0。新しい末尾RMSの統計量上限2e6は明示opt-inで、既存の既定1e6は保つ。全113 RMSへ接続した全体候補は[元固定golden5要素超過のまま](results/m3-all-rms-original-gpu-gate-still-five-20261015.json)、全5要素のbitも前候補と同じ。GPUCompute・fallback / 中間flush0・元係数を保持、1 fail / skip0、他5case未実行。次は取得する元最終encoder入力上で公式poolingの転置280行 / 保存graphの連続256行をActionsで比較する。原因と断定せず元golden・許容差を保つ。Unity終了済み。

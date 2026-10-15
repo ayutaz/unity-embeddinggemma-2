@@ -1,5 +1,13 @@
 # 現在の状態
 
+最新checkpoint: [GELUの丸め切り分けと実GPU結果](results/m3-native-gelu-rounding-gpu-20261015.json)。保存済みLinux AVX2のGELU先頭49,152要素に対し、旧分離式194 bit差、graph内FMA候補130 bit差、SLEEF tanh接続後82 bit差だった。境界の直接観測で前段に203 bit差、同じGPU前段入力へのtanh自体は全bit一致と判明。FP32の明示FMA / 非FMA境界を単一compute kernelで保持するopt-in経路に修正し、同一入力のGELUを全49,152値で全bit一致、入力所有権 / 再利用 / Dispose / 不正入力と既定tanh回帰を含むGPU13 pass / skip0、package22 Greenを確認した。既定GELU経路は保持する。これはAVX2同一入力の局所証拠であり、元AVX512全encoderの合格ではない。
+
+全体接続の最初の実行`8d67fa8...`は旧32 Worker行のharness assertionが16単一kernel行を拒否し、数値比較前に失敗。検証を修正した`155d552...`の元square-0全体は、**元goldenの許容差超過3→1要素、最大許容差比1.085958で未合格・未採用**。残りはrow25 / column118、実値0.0167587101 / 期待値0.0167713910、絶対差1.26809e-5に対して許容1.16771e-5。GPUCompute・計算/入力CPU fallback0・中間flush0・元係数保持、113 RMS / 178 GPU演算 / 179 segment。1 fail / skip0、他5画像case未実行。host peak4,940,636,160 bytes（約4.60GiB）、実行＋最終取得16.837秒、process77.341秒の単発観測。runner / owned監視はterminal。数値差を解消した候補だけを全画像条件へ広げる。
+
+元graphの最初のsoftmax prefixも同一入力483,840値でLinux AVX2 nativeへ全bit一致し、関連GPU5 pass / skip0。次は元goldenを再現したAVX512環境から同じprefixを取得し、その文脈のRMS / attentionを比較する。Actionsに実AVX512をmodel download前に確認する明示opt-inを2 Red→関連26 Greenで追加し、そのmodeでは既知のAVX2再実行を省く。実AVX512がない場合は前提失敗・モデル未実行として記録する。元golden・学習済み係数・`atol=1e-5, rtol=1e-4`と、元画像全3 profile / 6 GPUケース、既存音声6ケース / 2 profile、実PCM / Texture→GPU前処理→encoder→backbone→正規化768 APIの全role / mask / 境界 / 所有権 / Dispose / 例外後再利用 / text回帰、工程3・4 sample / Player / 必須環境 / Required CI / 長期memoryの範囲を維持する。工程3・4は未完了。ローカルUnity終了済み。
+
+以下は前回checkpoint。
+
 更新日: 2026-10-15。**元の固定参照を変更せず、元保存graphのsquare-0全131,072値をAVX512環境で全bit再現した。** [固定receipt](results/m3-original-reference-avx512-reproduced-20261015.json) / [Actions 38716679261](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38716679261)。AMD EPYC 9V45のnative jobは実AVX512でthread 1 / 2 / 4すべて最大絶対誤差0、観測 / 通常の最終bitも一致。同じCPU型番のAVX2指定jobは以前と同じ3要素超過。workflow全体はAVX2側の不合格を保持してfailure、native jobの限定成功を全体CI合格へ置き換えない。他profile / caseのCPU・GPU合格ではない。
 
 元graphのpatch / rotaryは前のAVX2捕捉と全bit一致するが、layer 0からbit差が出る。今回の元golden再現文脈では、公式の転置280行poolingと保存graphの連続256行poolingが、feature・RMS・最終出力の全bitで一致した。保存側controlも全bit一致し、ここではpooling配置仮説は支持されない。次は古い診断native / AVX2一致を合格目標にせず、元goldenを再現した文脈の最初の層のRMS・attentionを比較する。個別のATen / MKL / oneDNN演算を原因と断定した段階ではない。GPUの最新全体結果は5要素超過、他5画像case未実行のまま。元重み・golden・許容差・既存音声証拠と工程3・4の全範囲を維持。Unity終了済み。

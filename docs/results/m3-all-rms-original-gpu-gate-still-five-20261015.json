@@ -1,0 +1,133 @@
+{
+  "scope": "all_113_rms_block192_original_gpu_gate_one_case",
+  "source": "a36625a53095a9bb2adde69cf84afb515c04cbb9",
+  "report_file": "vision-original-context-all-rms-block192-whole-gpu-a36625a53095a9bb2adde69cf84afb515c04cbb9-square-0.json",
+  "report_sha256": "89f35e6fbe7f7fd01b020794406e78195aa7eabb8d76aea4eed381c935e4c90a",
+  "result": {
+    "success": false,
+    "actual_backend": "GPUCompute",
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "inline_rms_count": 113,
+    "remaining_original_rms_count": 0,
+    "host_peak_working_set_bytes": 4655656960,
+    "execute_and_final_download_ms": 16420.554200000002,
+    "capture_sha256": "c62902fd50fcb3fc526d080506ab20276695fcc47c0b790a65532d5ea4d9abfb",
+    "mismatched_elements": 5,
+    "maximum_absolute_error": 3.325939178466797e-05,
+    "maximum_tolerance_ratio": 1.2566566110701023,
+    "original_coefficient_bytes_preserved": true
+  },
+  "previous_candidate_bit_differences": 50671,
+  "current_cpu_comparison": {
+    "mismatched_elements": 3,
+    "maximum_tolerance_ratio": 1.085756133736504
+  },
+  "original_gate_failures": [
+    {
+      "index": 6944,
+      "row": 13,
+      "column": 288,
+      "actual": -0.04412758722901344,
+      "previous": -0.04412758722901344,
+      "original": -0.04411313310265541,
+      "current_cpu": -0.0441218763589859,
+      "maximum_allowed": 1.4411313310265542e-05
+    },
+    {
+      "index": 25168,
+      "row": 49,
+      "column": 80,
+      "actual": -0.033535413444042206,
+      "previous": -0.033535413444042206,
+      "original": -0.03351863473653793,
+      "current_cpu": -0.03353442996740341,
+      "maximum_allowed": 1.3351863473653794e-05
+    },
+    {
+      "index": 25554,
+      "row": 49,
+      "column": 466,
+      "actual": -0.05350193381309509,
+      "previous": -0.05350193381309509,
+      "original": -0.05348357558250427,
+      "current_cpu": -0.05350154638290405,
+      "maximum_allowed": 1.534835755825043e-05
+    },
+    {
+      "index": 27215,
+      "row": 53,
+      "column": 79,
+      "actual": -0.001127392053604126,
+      "previous": -0.001127392053604126,
+      "original": -0.0011154860258102417,
+      "current_cpu": -0.0011170655488967896,
+      "maximum_allowed": 1.0111548602581025e-05
+    },
+    {
+      "index": 118278,
+      "row": 231,
+      "column": 6,
+      "actual": -0.0010381489992141724,
+      "previous": -0.0010381489992141724,
+      "original": -0.0010279417037963867,
+      "current_cpu": -0.001033976674079895,
+      "maximum_allowed": 1.010279417037964e-05
+    }
+  ],
+  "test_counts": {
+    "id": "2",
+    "testcasecount": "1",
+    "result": "Failed(Child)",
+    "total": "1",
+    "passed": "0",
+    "failed": "1",
+    "inconclusive": "0",
+    "skipped": "0",
+    "asserts": "0",
+    "engine-version": "3.5.0.0",
+    "clr-version": "4.0.30319.42000",
+    "start-time": "2026-10-15 09:49:08Z",
+    "end-time": "2026-10-15 09:49:44Z",
+    "duration": "35.8265095"
+  },
+  "process": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+      "-logFile",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-context-all-rms-block192-square0-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "OriginalSavedContextAllRmsBlock192SquareZeroMustMatchOriginalOnGpu",
+      "-testResults",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-context-all-rms-block192-square0-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-15T09:48:20.466027+00:00",
+    "pid": 90712,
+    "exit_code": 2,
+    "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-context-all-rms-block192-square0-20261015.xml",
+    "unity_counts": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "elapsed_seconds": 88.6825305000093,
+    "completed_utc": "2026-10-15T09:49:49.148559+00:00"
+  },
+  "original_golden_unchanged": true,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "other_five_cases_executed": false,
+  "next": "Do not repeat this full candidate. Check original official pooling shape/strides versus fixed exported pooling, and separately identify upstream GPU drift using fixed captures."
+}

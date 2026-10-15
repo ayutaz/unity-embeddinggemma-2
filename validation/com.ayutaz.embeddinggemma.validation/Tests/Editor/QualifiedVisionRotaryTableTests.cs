@@ -58,5 +58,30 @@ namespace EmbeddingGemma.Validation.Tests
             Assert.That(source.constants.Select(c=>Hash(Bytes(c))).ToArray(),Is.EqualTo(hashes));
         }
         static byte[] FloatBytes(float[] values){var bytes=new byte[values.Length*4];Buffer.BlockCopy(values,0,bytes,0,bytes.Length);return bytes;}
+        static Model RebindNative(Model source,float[][] tables)
+        {
+            var type=typeof(QualifiedVisionRmsOperation).Assembly.GetType("EmbeddingGemma.Validation.Tests.QualifiedVisionRotaryTables");
+            var method=type.GetMethod("RebindFromNativeTables");Assert.That(method,Is.Not.Null,"Native profile rotary matching is missing.");
+            try{return (Model)method.Invoke(null,new object[]{source,tables});}
+            catch(TargetInvocationException error){System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(error.InnerException).Throw();throw;}
+        }
+        [Test]
+        public void NativeProfileTablesAreMatchedByValuesAndCopiedIndependently()
+        {
+            var source=Source();var tables=Corrections(source).Values.Reverse().ToArray();var hashes=tables.Select(v=>Hash(FloatBytes(v))).ToArray();
+            var before=source.constants.Select(c=>Hash(Bytes(c))).ToArray();var result=RebindNative(source,tables);
+            foreach(var table in tables)Array.Fill(table,99f);
+            foreach(var hash in hashes)Assert.That(result.constants.Any(c=>Hash(Bytes(c))==hash),Is.True);
+            Assert.That(source.constants.Select(c=>Hash(Bytes(c))),Is.EqualTo(before));
+            Assert.That(result.constants.Count,Is.EqualTo(source.constants.Count+4));
+        }
+        [TestCase("mismatch")] [TestCase("ambiguous")] [TestCase("nonfinite")]
+        public void NativeProfileTablesRejectMismatchAmbiguityAndNonfiniteValues(string problem)
+        {
+            var source=Source();var tables=Corrections(source).Values.ToArray();var before=source.constants.Select(c=>Hash(Bytes(c))).ToArray();
+            if(problem=="ambiguous")tables[1]=(float[])tables[0].Clone();else tables[0][0]=problem=="nonfinite"?float.NaN:.9f;
+            Assert.Throws<ArgumentException>(()=>RebindNative(source,tables));
+            Assert.That(source.constants.Select(c=>Hash(Bytes(c))),Is.EqualTo(before));
+        }
     }
 }

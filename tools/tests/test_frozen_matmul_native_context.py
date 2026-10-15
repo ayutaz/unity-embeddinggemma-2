@@ -85,7 +85,7 @@ def test_small_matrix_host_selection_is_explicit_and_does_not_change_model_jobs(
     inputs = workflow.get('on', workflow.get(True))['workflow_dispatch']['inputs']
     selection = inputs['matrix_runner']
     assert selection['default'] == 'ubuntu-latest'
-    assert selection['options'] == ['ubuntu-latest', 'windows-latest']
+    assert selection['options'] == ['ubuntu-latest', 'windows-latest', 'windows-2022']
     assert workflow['jobs']['probe']['runs-on'] == 'ubuntu-latest'
     job = workflow['jobs']['matrix_probe']
     assert job['runs-on'] == "${{ inputs.matrix_runner || 'ubuntu-latest' }}"

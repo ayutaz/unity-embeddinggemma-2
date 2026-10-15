@@ -13,9 +13,9 @@ namespace EmbeddingGemma.Validation.Tests
         static Model Fixture()
         {
             var graph=new FunctionalGraph();var input=graph.AddInput<float>(new TensorShape(1,2),"input");
-            var a=Functional.MatMul(input,Functional.Constant(new TensorShape(2,2),new[]{1f,0f,0f,1f}));
+            var a=Functional.MatMul(input,Functional.Constant(new TensorShape(2,2),new[]{1f,2f,3f,4f}));
             var b=Functional.MatMul(Functional.Relu(a),Functional.Constant(new TensorShape(2,2),new[]{2f,0f,0f,2f}));
-            return graph.Compile(input+b);
+            return graph.Compile(input+a+b*b);
         }
         static int[] Selected(Model model)=>model.layers.Where(layer=>layer.GetType().Name.StartsWith("MatMul")).Select(layer=>layer.outputs[0]).ToArray();
 
@@ -46,7 +46,7 @@ namespace EmbeddingGemma.Validation.Tests
                 using var input=new Tensor<float>(new TensorShape(1,2),new[]{-2f,3f});ComputeTensorData.Pin(input);
                 using var pipeline=new GpuProjectionPipeline(plan.Models,plan.Inputs,plan.Outputs,operations.Cast<IGpuTensorOperation>().ToArray());
                 using var output=pipeline.Execute(input);pipeline.Dispose();
-                Assert.That(output.DownloadToArray(),Is.EqualTo(new[]{-2f,9f}));Assert.That(input.DownloadToArray(),Is.EqualTo(new[]{-2f,3f}));
+                Assert.That(output.DownloadToArray(),Is.EqualTo(new[]{201f,267f}));Assert.That(input.DownloadToArray(),Is.EqualTo(new[]{-2f,3f}));
                 Assert.That(Bytes(source),Is.EqualTo(before));
             }
             finally{foreach(var operation in operations)operation.Dispose();}

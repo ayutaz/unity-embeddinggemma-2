@@ -51,6 +51,13 @@ class PrefixExport(torch.nn.Module):
 
         class Replay(torch.fx.Interpreter):
             def run_node(self, node):
+                if node.op == "call_function" and node.target == torch.ops.aten._to_copy.default:
+                    args, kwargs = self.fetch_args_kwargs_from_env(node)
+                    if (len(args) != 1 or kwargs != {"dtype": torch.bool} or args[0].dtype != torch.int64
+                            or args[0].device.type != "cpu"):
+                        raise ValueError("Only the audited int64 mask to bool copy is supported")
+                    # Same copy semantics; Tensor.to traces as supported ONNX Cast.
+                    return args[0].to(dtype=torch.bool, copy=True)
                 if variant != "native" and node in selected:
                     args, kwargs = self.fetch_args_kwargs_from_env(node)
                     return candidate_output(*args, variant)

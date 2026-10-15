@@ -15,6 +15,43 @@ namespace EmbeddingGemma.Validation.Tests
         GpuProjectionPipeline pipeline;
         GpuScalarDivide divide;
         public BackendType Backend=>BackendType.GPUCompute;
+        public static Model InlineTailRms(Model source,Model template)
+        {
+            if(source==null||template==null)throw new ArgumentNullException();
+            Assert.That(template.inputs.Count,Is.EqualTo(1));Assert.That(template.outputs.Count,Is.EqualTo(1));
+            Assert.That(template.inputs[0].shape.ToTensorShape(),Is.EqualTo(new TensorShape(256,768)));
+            var square=source.layers.Single(layer=>layer.GetType().Name=="Square");
+            Layer Next(Layer current,string kind)=>source.layers.Single(layer=>layer.GetType().Name==kind&&layer.inputs.Contains(current.outputs[0]));
+            var mean=Next(square,"ReduceMean");var scalar=Next(mean,"ScalarMad");var inverse=Next(scalar,"Rsqrt");var final=Next(inverse,"Mul");
+            Assert.That(final.inputs.Contains(square.inputs[0]),Is.True);
+            Assert.That((float)scalar.GetType().GetField("sFloat").GetValue(scalar),Is.EqualTo(1f));
+            Assert.That((float)scalar.GetType().GetField("bFloat").GetValue(scalar),Is.EqualTo(1e-6f));
+            var chain=new HashSet<Layer>{square,mean,scalar,inverse,final};
+            foreach(var layer in chain.Where(layer=>!ReferenceEquals(layer,final)))
+            {
+                Assert.That(source.outputs.Any(output=>layer.outputs.Contains(output.index)),Is.False);
+                Assert.That(source.layers.Where(consumer=>consumer.inputs.Intersect(layer.outputs).Any()).All(chain.Contains),Is.True);
+            }
+            var next=source.inputs.Select(value=>value.index).Concat(source.constants.Select(value=>value.index)).Concat(source.layers.SelectMany(layer=>layer.outputs.Concat(layer.inputs))).Max()+1;
+            var map=new Dictionary<int,int>{{template.inputs[0].index,square.inputs[0]},{template.outputs[0].index,final.outputs[0]}};
+            var clone=typeof(object).GetMethod("MemberwiseClone",BindingFlags.Instance|BindingFlags.NonPublic);
+            var constants=new List<Constant>(source.constants);
+            foreach(var constant in template.constants)
+            {
+                var copy=(Constant)clone.Invoke(constant,null);copy.index=next++;map.Add(constant.index,copy.index);constants.Add(copy);
+            }
+            foreach(var layer in template.layers)foreach(var output in layer.outputs)if(output>=0&&!map.ContainsKey(output))map.Add(output,next++);
+            var replacements=new List<Layer>();
+            foreach(var layer in template.layers)
+            {
+                var copy=(Layer)clone.Invoke(layer,null);copy.inputs=layer.inputs.Select(index=>index<0?index:map[index]).ToArray();copy.outputs=layer.outputs.Select(index=>index<0?index:map[index]).ToArray();replacements.Add(copy);
+            }
+            var result=new Model{ProducerName=source.ProducerName+"/inline-unscaled-tail-rms",inputs=new List<Model.Input>(source.inputs),outputs=new List<Model.Output>(source.outputs),constants=constants};
+            foreach(var layer in source.layers)
+                if(ReferenceEquals(layer,square))result.layers.AddRange(replacements);
+                else if(!chain.Contains(layer))result.layers.Add(layer);
+            return result;
+        }
         public static Model InlineLayerRms(Model source,Model hiddenTemplate,Model scaledHeadTemplate,Model unscaledHeadTemplate,int layerCount)
         {
             if(source==null||hiddenTemplate==null||scaledHeadTemplate==null||unscaledHeadTemplate==null||layerCount<1||layerCount>16)

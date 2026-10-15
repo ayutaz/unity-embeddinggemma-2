@@ -4,6 +4,8 @@
 
 ## 2026-10-15の実行方針と再開順
 
+追加checkpoint: [252行の末尾RMSとprofile形状の修正](results/m3-tail-profile-shape-gpu-20261015.json)。正しい252行templateを拒否し、252行のsourceへ256行templateを誤接続できる問題を4 intended Redで確認。sourceの実中間shapeを推論してtemplateと照合する修正により形状5 Green、source / templateの非破壊性と異なるprofile / widthの拒否を確認した。元AVX512 square末尾の先頭252行を使う独立fixtureで、Python / 標準FP32 ONNX / 実GPUの193,536値が全bit一致。GPU1件と形状5件の合計6 pass / skip0、fallback / flush0。252行の生成templateを元全画像6ケースのharnessへ接続し、接続後のC# compile / 形状5 pass / skip0も確認。横長 / 縦長の実encoder全体は未実行で合格とは扱わない。代表square-0の元全体gateは1要素超過のまま。元golden / 許容差、実入力API・sample / Playerを含む工程3・4の全範囲を維持する。AVX512 prefix取得と回帰CIは既存Actions runを待ち、同一jobを再投入しない。
+
 最新checkpoint: [GELUの丸め切り分けと実GPU結果](results/m3-native-gelu-rounding-gpu-20261015.json)。保存済みLinux AVX2のGELU先頭49,152要素に対し、旧分離式194 bit差、graph内FMA候補130 bit差、SLEEF tanh接続後82 bit差だった。境界の直接観測で前段に203 bit差、同じGPU前段入力へのtanh自体は全bit一致と判明。FP32の明示FMA / 非FMA境界を単一compute kernelで保持するopt-in経路に修正し、同一入力のGELUを全49,152値で全bit一致、入力所有権 / 再利用 / Dispose / 不正入力と既定tanh回帰を含むGPU13 pass / skip0、package22 Greenを確認した。既定GELU経路は保持する。これはAVX2同一入力の局所証拠であり、元AVX512全encoderの合格ではない。
 
 全体接続の最初の実行`8d67fa8...`は旧32 Worker行のharness assertionが16単一kernel行を拒否し、数値比較前に失敗。検証を修正した`155d552...`の元square-0全体は、**元goldenの許容差超過3→1要素、最大許容差比1.085958で未合格・未採用**。残りはrow25 / column118、実値0.0167587101 / 期待値0.0167713910、絶対差1.26809e-5に対して許容1.16771e-5。GPUCompute・計算/入力CPU fallback0・中間flush0・元係数保持、113 RMS / 178 GPU演算 / 179 segment。1 fail / skip0、他5画像case未実行。host peak4,940,636,160 bytes（約4.60GiB）、実行＋最終取得16.837秒、process77.341秒の単発観測。runner / owned監視はterminal。数値差を解消した候補だけを全画像条件へ広げる。

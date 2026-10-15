@@ -134,6 +134,45 @@ def scalar_division_model():
     return source
 
 
+def glu_model():
+    def info(name,width):return helper.make_tensor_value_info(name,TensorProto.FLOAT,[2,width])
+    nodes=[helper.make_node('Split',['input'],['a','b'],name='split',axis=-1,num_outputs=2),
+           helper.make_node('Sigmoid',['b'],['gate'],name='sigmoid'),helper.make_node('Mul',['a','gate'],['out'],name='glu')]
+    graph=helper.make_graph(nodes,'glu',[info('input',6)],[info('out',3)],value_info=[info(n,3) for n in ['a','b','gate']])
+    return helper.make_model(graph,opset_imports=[helper.make_opsetid('',24)],ir_version=9)
+
+
+def test_glu_partition_removes_only_verified_split_sigmoid_multiply_and_halves_last_axis():
+    source=glu_model();before=source.SerializeToString()
+    parts,plan=required()(source,node_names=[],expected_weight_sha256=[],glu_node_names=['glu'])
+    assert source.SerializeToString()==before and len(parts)==2
+    operation=plan['operations'][0];assert operation['kind']=='glu' and operation['input_shape']==[2,6] and operation['output_shape']==[2,3]
+    values={'input':np.array([[1,2,3,0,0,0],[-1,-2,-3,0,0,0]],dtype=np.float32)}
+    for index,part in enumerate(parts):
+        onnx.checker.check_model(part);assert not any(n.name in ('split','sigmoid','glu') for n in part.graph.node)
+        result=ReferenceEvaluator(part).run(None,{v.name:values[v.name] for v in part.graph.input})
+        aliases=plan['segments'][index]['output_aliases'];values.update(zip([aliases.get(v.name,v.name) for v in part.graph.output],result))
+        if index==0:
+            a,b=np.split(values[operation['input']],2,axis=-1);values[operation['output']]=a*(np.float32(1)/(np.float32(1)+np.exp(-b)))
+    np.testing.assert_array_equal(values['out'],ReferenceEvaluator(source).run(None,{'input':values['input']})[0])
+
+
+@pytest.mark.parametrize('problem',['missing','duplicate','axis','split','operator','side','shared','shape'])
+def test_glu_partition_refuses_unverified_chain_without_mutation(problem):
+    source=glu_model();names=['glu']
+    if problem=='missing':names=['missing']
+    elif problem=='duplicate':names*=2
+    elif problem=='axis':source.graph.node[0].attribute[0].i=0
+    elif problem=='split':source.graph.node[0].attribute[1].i=3
+    elif problem=='operator':source.graph.node[1].op_type='Tanh'
+    elif problem=='side':source.graph.node[1].input[0]='a'
+    elif problem=='shared':source.graph.output.append(helper.make_tensor_value_info('gate',TensorProto.FLOAT,[2,3]))
+    elif problem=='shape':source.graph.input[0].type.tensor_type.shape.dim[1].ClearField('dim_value')
+    before=source.SerializeToString()
+    with pytest.raises(ValueError):required()(source,node_names=[],expected_weight_sha256=[],glu_node_names=names)
+    assert source.SerializeToString()==before
+
+
 def test_last_axis_softmax_partition_reconnects_without_moving_tensor_values_to_host():
     source=dynamic_model();source.graph.node[-1].op_type='Softmax';source.graph.node[-1].name='softmax';before=source.SerializeToString()
     parts,plan=required()(source,node_names=[],expected_weight_sha256=[],softmax_node_names=['softmax'])

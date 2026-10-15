@@ -192,13 +192,61 @@ def _mark_query_scale_boundaries(model,names):
     return result,metadata
 
 
-def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_node_names=(),dynamic_node_names=(),query_scale_node_names=(),tanh_node_names=(),scalar_divide_node_names=(),softmax_node_names=()):
+def _mark_glu_boundaries(model,names):
+    if len(set(names))!=len(names):raise ValueError('Select unique GLU nodes')
+    nodes=list(model.graph.node);by_name={n.name:(i,n) for i,n in enumerate(nodes)};producer={v:(i,n) for i,n in enumerate(nodes) for v in n.output}
+    outputs={v.name for v in model.graph.output};uses={v:[] for n in nodes for v in n.output}
+    constants={w.name:w for w in model.graph.initializer}
+    constants.update({n.output[0]:next((a.t for a in n.attribute if a.name=='value'),None) for n in nodes if n.op_type=='Constant' and len(n.output)==1})
+    infos={v.name:v for v in (*model.graph.input,*model.graph.output,*model.graph.value_info)}
+    def shape(value):
+        info=infos.get(value);dimensions=[d.dim_value for d in info.type.tensor_type.shape.dim] if info is not None else []
+        if info is None or info.type.tensor_type.elem_type!=onnx.TensorProto.FLOAT or not dimensions or any(d<=0 for d in dimensions):raise ValueError('GLU requires explicit fixed FP32 boundaries')
+        return dimensions
+    for i,node in enumerate(nodes):
+        for value in node.input:
+            if value in uses:uses[value].append(i)
+    removed=set();markers={}
+    for name in names:
+        entry=by_name.get(name)
+        if entry is None:raise ValueError('GLU multiply is missing')
+        index,multiply=entry
+        if multiply.domain or multiply.op_type!='Mul' or len(multiply.input)!=2 or len(multiply.output)!=1:raise ValueError('GLU multiply differs')
+        sigmoid_entry=producer.get(multiply.input[1])
+        split_entry=producer.get(multiply.input[0])
+        if sigmoid_entry is None or split_entry is None:raise ValueError('GLU chain is incomplete')
+        sigmoid_index,sigmoid=sigmoid_entry;split_index,split=split_entry
+        if (sigmoid.domain or sigmoid.op_type!='Sigmoid' or len(sigmoid.input)!=1 or len(sigmoid.output)!=1
+                or split.domain or split.op_type!='Split' or len(split.input) not in (1,2) or len(split.output)!=2
+                or list(multiply.input)!=[split.output[0],sigmoid.output[0]] or list(sigmoid.input)!=[split.output[1]]
+                or not split_index<sigmoid_index<index):raise ValueError('GLU split or sigmoid differs')
+        dimensions=shape(split.input[0]);expected=[*dimensions[:-1],dimensions[-1]//2]
+        attributes={a.name:a for a in split.attribute};axis=attributes['axis'].i if 'axis' in attributes else 0
+        if len(dimensions)>8 or dimensions[-1]%2 or axis not in (-1,len(dimensions)-1):raise ValueError('GLU must split its even last axis')
+        if 'num_outputs' in attributes and attributes['num_outputs'].i!=2:raise ValueError('GLU split count differs')
+        sizes=list(attributes['split'].ints) if 'split' in attributes else None
+        if len(split.input)==2:
+            value=constants.get(split.input[1])
+            if value is None or value.data_type!=onnx.TensorProto.INT64 or list(value.dims)!=[2]:raise ValueError('GLU split sizes differ')
+            sizes=numpy_helper.to_array(value).tolist()
+        if sizes is not None and sizes!=[expected[-1],expected[-1]]:raise ValueError('GLU split sizes differ')
+        if any(shape(v)!=expected for v in (*split.output,*sigmoid.output,*multiply.output)):raise ValueError('GLU output shape differs')
+        for value,consumer in [(split.output[0],index),(split.output[1],sigmoid_index),(sigmoid.output[0],index)]:
+            if value in outputs or uses[value]!=[consumer]:raise ValueError('GLU internal output is shared')
+        if removed.intersection((split_index,sigmoid_index,index)):raise ValueError('GLU chains overlap')
+        removed.update((split_index,sigmoid_index,index));markers[index]=helper.make_node('Identity',[split.input[0]],list(multiply.output),name=name)
+    result=copy.deepcopy(model);del result.graph.node[:]
+    result.graph.node.extend(markers[i] if i in markers else n for i,n in enumerate(nodes) if i in markers or i not in removed)
+    return result
+
+
+def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_node_names=(),dynamic_node_names=(),query_scale_node_names=(),tanh_node_names=(),scalar_divide_node_names=(),softmax_node_names=(),glu_node_names=()):
     """Return unchanged-op segments and audited external projection boundaries.
 
     Coefficients stay in their original bytes. The caller supplies the GPU
     projections; this planner never executes or validates a full encoder.
     """
-    if ((not node_names and not silu_node_names and not dynamic_node_names and not query_scale_node_names and not tanh_node_names and not scalar_divide_node_names and not softmax_node_names) or len(set(node_names))!=len(node_names)
+    if ((not node_names and not silu_node_names and not dynamic_node_names and not query_scale_node_names and not tanh_node_names and not scalar_divide_node_names and not softmax_node_names and not glu_node_names) or len(set(node_names))!=len(node_names)
             or len(node_names)!=len(expected_weight_sha256)):
         raise ValueError('Select unique ordered projection names and coefficient hashes')
     if set(node_names).intersection(silu_node_names):raise ValueError('GPU boundaries overlap')
@@ -212,6 +260,8 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_
         raise ValueError('Scalar division GPU boundaries overlap')
     if len(set(softmax_node_names))!=len(softmax_node_names) or set(softmax_node_names).intersection((*node_names,*silu_node_names,*dynamic_node_names,*query_scale_node_names,*tanh_node_names,*scalar_divide_node_names)):
         raise ValueError('Softmax GPU boundaries overlap')
+    if len(set(glu_node_names))!=len(glu_node_names) or set(glu_node_names).intersection((*node_names,*silu_node_names,*dynamic_node_names,*query_scale_node_names,*tanh_node_names,*scalar_divide_node_names,*softmax_node_names)):
+        raise ValueError('GLU GPU boundaries overlap')
     wanted_hash=dict(zip(node_names,expected_weight_sha256))
     original_order=[n.name for n in model.graph.node if n.name in wanted_hash]
     if original_order!=list(node_names):raise ValueError('Projection order or identity differs')
@@ -219,8 +269,9 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_
         model=_mark_silu_boundaries(model,silu_node_names)
     query_scales={}
     if query_scale_node_names:model,query_scales=_mark_query_scale_boundaries(model,query_scale_node_names)
-    if silu_node_names or dynamic_node_names or query_scale_node_names or tanh_node_names or scalar_divide_node_names or softmax_node_names:
-        chosen=set(node_names)|set(silu_node_names)|set(dynamic_node_names)|set(query_scale_node_names)|set(tanh_node_names)|set(scalar_divide_node_names)|set(softmax_node_names);node_names=[n.name for n in model.graph.node if n.name in chosen]
+    if glu_node_names:model=_mark_glu_boundaries(model,glu_node_names)
+    if silu_node_names or dynamic_node_names or query_scale_node_names or tanh_node_names or scalar_divide_node_names or softmax_node_names or glu_node_names:
+        chosen=set(node_names)|set(silu_node_names)|set(dynamic_node_names)|set(query_scale_node_names)|set(tanh_node_names)|set(scalar_divide_node_names)|set(softmax_node_names)|set(glu_node_names);node_names=[n.name for n in model.graph.node if n.name in chosen]
         if len(node_names)!=len(chosen):raise ValueError('A GPU boundary is missing or ambiguous')
     nodes=list(model.graph.node);weights={w.name:w for w in model.graph.initializer}
     fixed_scalars=dict(weights)
@@ -238,6 +289,11 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_
         matches=[(i,n) for i,n in enumerate(nodes) if n.name==name]
         if len(matches)!=1:raise ValueError('Selected projection is missing or ambiguous')
         index,node=matches[0]
+        if name in glu_node_names:
+            dimensions=shape(node.input[0]);output_shape=shape(node.output[0])
+            if len(dimensions)>8 or dimensions[-1]%2 or output_shape!=[*dimensions[:-1],dimensions[-1]//2]:raise ValueError('GLU fixed shapes differ')
+            selected.append((index,node,dict(kind='glu',node=name,input=node.input[0],output=node.output[0],input_shape=dimensions,output_shape=output_shape)))
+            previous=index;continue
         if name in softmax_node_names:
             if node.domain or node.op_type!='Softmax' or len(node.input)!=1 or len(node.output)!=1:raise ValueError('Softmax operator differs')
             dimensions=shape(node.input[0]);output_shape=shape(node.output[0])

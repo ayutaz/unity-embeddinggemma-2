@@ -23,6 +23,10 @@ namespace EmbeddingGemma.Validation.Tests
             =>Execute("tanh",true);
 
         [Test]
+        public void FrozenNativeSleefTanhCandidateMustMatchAllBitsOnGpu()
+            =>Execute("tanh",true,0,true);
+
+        [Test]
         public void FrozenLayerOneNativeTanhCandidateMustMatchAllBitsOnGpu()
             =>Execute("tanh",true,1);
 
@@ -75,13 +79,14 @@ namespace EmbeddingGemma.Validation.Tests
             error=Assert.Throws<TargetInvocationException>(()=>execute.Invoke(operation,new object[]{input}));Assert.That(error.InnerException,Is.InstanceOf<ObjectDisposedException>());
         }
 
-        void Execute(string name,bool nativeCandidate,int layerIndex=0)
+        void Execute(string name,bool nativeCandidate,int layerIndex=0,bool sleef=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             Assert.That(layerIndex,Is.EqualTo(0).Or.EqualTo(1).Or.EqualTo(3));
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/"+(layerIndex==3?"native-layer3-selected-reference-56c9f5e-20261015":layerIndex==1?"native-layer1-reference-9d71922-20261015":"native-attention-operations-5a51cff-20261015")));
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+(nativeCandidate?"frozen-native-"+name+"-candidate-gpu-":"frozen-native-attention-nonlinearity-gpu-")+source+"-"+name+(layerIndex>0?"-layer"+layerIndex:"")+".json"));Assert.That(File.Exists(output),Is.False);
+            var label=sleef?"frozen-native-tanh-sleef-candidate-gpu-":nativeCandidate?"frozen-native-"+name+"-candidate-gpu-":"frozen-native-attention-nonlinearity-gpu-";
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+"-"+name+(layerIndex>0?"-layer"+layerIndex:"")+".json"));Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["scope"]="one_frozen_native_attention_nonlinearity_gpu_bit_gate",["runtime_source"]=source,["operation"]=name,["full_encoder_validated"]=false,["end_to_end_validated"]=false};
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}Save();
@@ -100,7 +105,7 @@ namespace EmbeddingGemma.Validation.Tests
                 }
                 var values=Read("input",out var shape);var expected=Read("output",out var outputShape);Assert.That(outputShape,Is.EqualTo(shape));
                 using var input=new Tensor<float>(new TensorShape(shape),values);ComputeTensorData.Pin(input);
-                using var result=Run(input,name,nativeCandidate);
+                using var result=Run(input,name,nativeCandidate,sleef);
                 Assert.That(result.backendType,Is.EqualTo(BackendType.GPUCompute));var actual=result.DownloadToArray();Assert.That(actual.Length,Is.EqualTo(expected.Length));int bits=0,bad=0;double maxRatio=0;
                 for(var i=0;i<actual.Length;i++)
                 {
@@ -115,10 +120,15 @@ namespace EmbeddingGemma.Validation.Tests
             finally{Save();}
         }
 
-        static Tensor<float> Run(Tensor<float> input,string name,bool nativeCandidate)
+        static Tensor<float> Run(Tensor<float> input,string name,bool nativeCandidate,bool sleef=false)
         {
             if(nativeCandidate)
             {
+                if(sleef)
+                {
+                    var constructor=RequiredTanh().GetConstructor(new[]{typeof(bool)});Assert.That(constructor,Is.Not.Null,"Explicit SLEEF tanh candidate is missing.");
+                    using var operation=(IGpuTensorOperation)constructor.Invoke(new object[]{true});return operation.Execute(input);
+                }
                 using var operation=(IGpuTensorOperation)Activator.CreateInstance(name=="tanh"?RequiredTanh():RequiredSoftmax());return operation.Execute(input);
             }
             var graph=new FunctionalGraph();var x=graph.AddInput<float>(input.shape,"input");var model=graph.Compile(name=="tanh"?Functional.Tanh(x):Functional.Softmax(x,-1));

@@ -526,7 +526,7 @@ namespace EmbeddingGemma.Validation.Tests
                 }
                 using var textureInput=imageAdapter?new QualifiedTextureInput(root,row.Value<string>("image"),audit,!finalImageRole.HasValue):null;
                 using var adapter=imageAdapter?new PartitionedImageFeatureEncoder(parts,inputs,outputs,operations.ToArray(),
-                    finalImageRole.HasValue?new ImageEncoderProfile(768,768):new ImageEncoderProfile(textureInput.Processed.ResizedWidth,textureInput.Processed.ResizedHeight)):null;
+                    finalImageRole.HasValue?new ImageEncoderProfile(profile=="landscape"?1008:profile=="portrait"?576:768,profile=="landscape"?576:profile=="portrait"?1008:768):new ImageEncoderProfile(textureInput.Processed.ResizedWidth,textureInput.Processed.ResizedHeight)):null;
                 using var standalonePipeline=imageAdapter?null:new GpuProjectionPipeline(parts,inputs,outputs,operations.ToArray(),releaseUnusedGpuCache);
                 var pipeline=imageAdapter?(GpuProjectionPipeline)typeof(PartitionedImageFeatureEncoder).GetField("pipeline",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(adapter):standalonePipeline;
                 const BindingFlags privateFields=BindingFlags.Instance|BindingFlags.NonPublic;
@@ -540,7 +540,6 @@ namespace EmbeddingGemma.Validation.Tests
                 report["prepare_ms"]=timer.Elapsed.TotalMilliseconds;report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
                 if(finalImageRole.HasValue)
                 {
-                    Assert.That(profile,Is.EqualTo("square"),"This first final API gate uses the qualified square backbone only.");
                     await QualifiedRealImageApiCase.Run(adapter,textureInput.Preprocessor,textureInput.Texture,caseId,
                         allFinalImageRoles?new[]{TextRole.Query,TextRole.Document,TextRole.Raw}:new[]{finalImageRole.Value},report,output,Save);
                     Assert.That(CoefficientsHash(original),Is.EqualTo(originalCoefficients));report["original_coefficient_bytes_preserved"]=true;

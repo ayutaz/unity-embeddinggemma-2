@@ -35,6 +35,18 @@ namespace EmbeddingGemma.Validation.Tests
             var path=Path.Combine(Root,"square-fp32.sentis");Assert.That(Hash(path),Is.EqualTo(receipt.Value<string>("saved_sha256")));
             var model=TextModelFile.Load(path);Validate(model);return model;
         }
+        public static Model LoadRectangular()
+        {
+            var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/il11830367896"));
+            var receiptPath=Path.Combine(root,"landscape-sentis-staging.json");
+            Assert.That(Hash(receiptPath),Is.EqualTo("4d8f35691fa76f5eccc01f001a33e01f9576b875f80778d3b9a65b63df8d7578"));
+            var receipt=JObject.Parse(File.ReadAllText(receiptPath));Assert.That(receipt.Value<bool>("success"),Is.True);
+            Assert.That(receipt.Value<string>("original_graph_sha256"),Is.EqualTo("56955cba4fba156149786fdaa90bfd045021085090f08398c13ace603efe4f20"));
+            Assert.That(receipt.Value<bool>("inference_executed"),Is.False);
+            var path=Path.Combine(root,"landscape-fp32.sentis");
+            Assert.That(Hash(path),Is.EqualTo("178aea5983304c6f6bac3c52044c9c12dc71a459a38bd856e7fba75b70478597"));
+            var model=TextModelFile.Load(path);Validate(model,252);return model;
+        }
     }
     public sealed class OriginalImageBackboneStagingTests
     {

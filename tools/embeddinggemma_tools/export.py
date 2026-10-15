@@ -579,7 +579,24 @@ def fp32_refined_rstd(values, *, maximum_statistic=1e6):
     rounded_root = root + (residual * 0.5) / root
     inverse = 1.0 / rounded_root
     reciprocal_residual = fp32_fma(-rounded_root, inverse, torch.ones_like(values))
-    return fp32_fma(inverse, reciprocal_residual, inverse)
+    refined = fp32_fma(inverse, reciprocal_residual, inverse)
+
+    def error_pair(quotient):
+        # The product is near one. TwoProd followed by a compensated
+        # subtraction retains the low residual that a single Newton/FMA
+        # rounds away at hard reciprocal midpoints. All operations stay FP32.
+        product = rounded_root * quotient
+        product_low = fp32_fma(rounded_root, quotient, -product)
+        difference = torch.ones_like(values) - product
+        high = difference - product_low
+        low = (difference - high) - product_low
+        return high.abs(), torch.where(high < 0, -low, low)
+
+    original_high, original_low = error_pair(inverse)
+    refined_high, refined_low = error_pair(refined)
+    original_closer = ((original_high < refined_high)
+                       | ((original_high == refined_high) & (original_low < refined_low)))
+    return torch.where(original_closer, inverse, refined)
 
 
 def fp32_cascade_mean64(values):

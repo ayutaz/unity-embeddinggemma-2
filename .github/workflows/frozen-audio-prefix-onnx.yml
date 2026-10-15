@@ -12,7 +12,7 @@ on:
         description: Select one candidate for bounded whole-encoder diagnosis, or all for a prefix
         type: choice
         default: all
-        options: [all, native, refined_moment, refined_mean_moment, refined_mean_moment_rms]
+        options: [all, native, refined_moment, refined_mean_moment, refined_mean_moment_rms, native_silu]
       from_stage:
         description: Optional audited frozen INPUT for isolated segment diagnosis only
         type: choice

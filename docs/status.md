@@ -49,6 +49,8 @@ GPU結果はWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER /
 
 source `9741d1e`の[最新確定CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38785455573)も、Python4環境・package・workflow lintは成功、model-referenceとRequired CIは失敗です。製品Runtimeは実GPU検証source `0857edc8`から変更されていません。
 
+[元の第9層終端を入力にした後半3層の比較](results/m4-original-layer8-to-final-onnx-14-failures-20261016.json)は、同じ入力に対するnative計算が元最終出力と全bit一致、標準ONNXは14要素超過でした。後半だけでも変換後の差が発生する証拠であり、最初の不一致演算を確定した結果ではありません。[固定したSiLU小区間](results/m4-fixed-original-silu-fp32-candidate-20261016.json)では、標準NumPy式は許容差内ながら375,259値にbit差があり、既存GPU shaderと同じ順序を標準FP32演算で表す候補は元1,146,880値と全bit一致しました。この候補だけを後半区間へ明示適用して検証します。診断時のメモリ保持を減らすため、ONNX ReferenceEvaluatorの同じkernel・同じ実行順序を維持し、最終利用後に中間値を解放する実行をTDDで追加しました。既定の全体参照ゲートは変更していません。
+
 ## 後続工程
 
 手順5はモデル準備の再利用・配布、検索sample、連続推論のメモリ / 速度、Windows Player、他OS / 実機。手順6は依存PR、導入、ライセンス、配布の整理です。merge・公開は別途明示された範囲で進めます。

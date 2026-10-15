@@ -13,7 +13,7 @@
 | 実PCMから最終768次元、全6信号・全role | 18条件合格、最小cosine 0.9999997097692651 | [音声API](results/m4-real-pcm-all-roles-staged-gpu-20261016.json) |
 | 音声例外後再利用・借用stage・中間Tensor解放 | 実GPU encoder後のbackbone例外から復帰、API破棄後も借用stage再利用 | [音声所有権](results/m4-real-pcm-all-roles-staged-gpu-20261016.json) |
 | テキスト回帰・API / 境界 / 非同期契約 | FP32・Float16、6文書・4queryの全順位 / score合格、関連189 pass / skip0 | [最新テキスト回帰](results/m4-staged-original-encoder-and-final-text-gpu-regression-20261016.json) |
-| 必須repository checks | **未達**。確定済み4cdb233のCIはPython4環境・package・workflow lint成功、音声ONNX比較とRequired CI失敗 | [CI 38771922063](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38771922063) |
+| 必須repository checks | **未達**。確定済み11db7b17のCIはPython4環境・package・workflow lint成功、音声ONNX比較とRequired CI失敗 | [CI 38793751475](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38793751475) |
 
 追加確認: source `b378070`の[CI 38774804527](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38774804527)では、Windows / Linux × Python3.13 / 3.14の全4環境で各1,111 pass・fail0・skip0、package / workflow lintも合格しました。実モデルの音声ONNX比較は失敗しており、Required CIの完了条件は満たしていません。4環境のJUnit XMLを取得・監査済みです。
 
@@ -33,29 +33,17 @@ GPU結果はWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER /
 
 ## 残る音声ONNX問題
 
-固定6 MBのprefix診断では、元係数を維持したrefined Welford候補が合格しました。[完了したprefix実験](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38771944210)。ただし同候補の[全音声ONNX実験](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38771944636)は6信号すべて不合格です。部分成功を全encoderの成功へ拡張せず、必須CIの既定方式へ採用していません。
+必須CIの残件は、実音声encoderのONNX出力とPython native出力の数値差です。source `11db7b17`の[最新確定CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38793751475)では、Windows / Linux × Python3.13 /3.14、package、workflow lintは成功しましたが、音声ONNXとRequired CIは失敗しました。既定export、元参照、重み、許容差と製品Runtimeは変更していません。
 
-現在のPython native出力も元の固定参照と異なるため、元保存graphの2か所のLayerNormだけに介入する診断を追加しました。[新しい固定証拠](results/m4-complete-prefix-rejected-onnx-and-reproduced-native-20261016.json)では、AMD EPYC 9V74 / AVX512で元silenceの最終143,360値を全bit再現しました。native controlとInterpreterもbit一致。scalar mean / moment両方のFMA候補は同じ最終bitを再現し、他2候補は許容差内ですが464 bit差を残しました。これらは1信号のCPU診断で、全6信号・ONNX・GPUの新たな合格ではありません。元参照・係数・許容差・製品GPU経路は変更していません。
+[後半3層の独立した185演算比較](results/m4-isolated-audio-primitives-all185-within-tolerance-20261016.json)は、各ONNX演算へ同じnative入力を渡すと全件が元許容差内でした。比較値は後続へ注入せず、元のnative区間出力は元最終参照と全bit一致しています。最大の単体差は`mm_109`の許容差比0.67で、接続したONNX区間の失敗と合わせると、小さな丸め差の蓄積が疑われます。これは単独の原因演算の確定や全encoder合格ではありません。
 
-次はこの診断結果で最初の差を局所化し、原因を再現する小さいテストから修正し、全6信号と必須CIを再確認します。必須CIが失敗している間、手順4全体は未完了です。
+元のblock192 FMA /store-add順序を標準FP32演算へ直接書き出す方式を追加しました。[実行列積の全1,146,880値](results/m4-real-matmul192-all1146880-bit-exact-20261016.json)が、元最終出力を再現したnative実行から保存した演算出力と全bit一致しました。旧native行列積を通すだけのCPU forwardは、固定順序の実行証拠には数えません。実際のONNX出力を別に取得・SHA照合しています。別のMatMul2によるFMA表現は小区間で遅くなったため不採用とし、コードとexport flagを元へ戻しました。[固定比較と不採用記録](results/m4-fixed-matmul192-order-and-rejected-fma2-20261016.json)。
 
-追加の固定参照比較: [最初の投影](results/m4-original-context-subsample-onnx-three-variants-20261016.json)は標準ONNX563要素超過に対し、明示LayerNormの2候補は超過0。[第1層終端](results/m4-fixed-original-layer0-three-onnx-variants-20261016.json)も元286,720値に対して標準284要素超過、2候補とも超過0でした。現在ホストのnative全encoderは元参照と251要素が異なり、その失敗を保持したまま、監査済みの元stage出力を明示的な比較対象としています。これはsilenceの部分区間の結果で、全encoder・全6信号の合格ではありません。
+[元stage12→13のバイアス付き投影](results/m4-original-output-projection-first-block-bias-order-20261016.json)は、元の入力・出力・係数・biasのSHAを照合しました。native全430,080値が元出力とbit一致し、96列の独立FMA比較と実ONNX比較では、最初の192項の部分和へbiasを足してから残りを加える順序が元26,880値とbit一致しました。
 
-保存グラフのmask型変換とSoftmaxの内部演算名を、同じCPU FP32計算の公開APIで表す診断用bridgeをTDDで追加しました。元グラフ・製品GPU処理は変更していません。[最終encoder単一候補](results/m4-saved-full-silence-onnx-candidate-failed-20261016.json)は元最終143,360値に対して475要素が許容差を超過して不合格でした。[第6・第9・第12層終端](results/m4-late-stage-localization-and-rms-candidate-tdd-20261016.json)では、前2区間は超過0、最終層終端は1827超過でした。ただし別CPUホスト間の比較なので、最初に差が生じる演算を確定したとは扱いません。
+[後半区間の実ONNX比較](results/m4-ordered-static-linear-tail-original-tolerance-passed-20261016.json)は、同じホストの標準ONNXが8要素超過、`ordered_static_linear`が元最終143,360値に対して許容差超過0でした。最大許容差比0.8648、bit差133,830で、bit一致とは表現しません。監査した280行の固定係数mm /addmm29か所だけを変更し、13行の相対位置投影と動的係数の積は維持しました。[TDDと範囲制約](results/m4-ordered-static-linear-segment-and-bias-tdd-20261016.json)。関連82 pass /skip0、workflow lint合格。次の[全12層比較](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38798918931)は、元subsample出力を入力に固定し、同方式110か所を比較しています。これはまだ元特徴量からの全encoder・全6信号・必須CIの合格ではありません。
 
-追加した[明示RMS候補](results/m4-saved-full-silence-ordered-rms-onnx-failed-20261016.json)も109か所すべてを置き換えて583要素超過となり、不採用です。元参照・重み・許容差は維持しています。これらのActions成功表示は診断収集の完了であり、数値合格ではありません。
-
-[固定した小区間の比較](results/m4-fixed-rms-and-final-projection-components-20261016.json)では、第1層末尾RMSは8-lane加算・sqrt後の逆数で元286,720値とbit一致、最終投影も元stage13を入力にすると元143,360値とbit一致しました。NumPyで最終投影を計算した場合も許容差超過0です。全体の誤差を切り分けるため、元stageを入力にして後続の保存graphだけを実行する明示的な診断経路を追加しています。この経路は前半を実行しないため、全encoder・GPU・最終APIの合格証拠には数えません。
-
-source `9741d1e`の[最新確定CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38785455573)も、Python4環境・package・workflow lintは成功、model-referenceとRequired CIは失敗です。製品Runtimeは実GPU検証source `0857edc8`から変更されていません。
-
-[元の第9層終端を入力にした後半3層の比較](results/m4-original-layer8-to-final-onnx-14-failures-20261016.json)は、同じ入力に対するnative計算が元最終出力と全bit一致、標準ONNXは14要素超過でした。後半だけでも変換後の差が発生する証拠であり、最初の不一致演算を確定した結果ではありません。[固定したSiLU小区間](results/m4-fixed-original-silu-fp32-candidate-20261016.json)では、標準NumPy式は許容差内ながら375,259値にbit差があり、既存GPU shaderと同じ順序を標準FP32演算で表す候補は元1,146,880値と全bit一致しました。この候補だけを後半区間へ明示適用して検証します。診断時のメモリ保持を減らすため、ONNX ReferenceEvaluatorの同じkernel・同じ実行順序を維持し、最終利用後に中間値を解放する実行をTDDで追加しました。既定の全体参照ゲートは変更していません。
-
-最初のSiLU区間候補は、`silu_34`の入力が±80の多項式適用範囲を超え、ONNX書き出し前に停止しました。[停止記録と境界TDD](results/m4-silu-tail-domain-stop-and-boundary-tdd-20261016.json)。nativeの区間計算はこのホストでも元最終出力と全bit一致ですが、候補の数値結果は未取得です。診断側にも既存shaderと同じ範囲外の式 `x/(1+exp(-x))` を明示し、入力自体をclipせず、多項式の未使用branchだけを範囲内に制限しました。極端な正負入力・負の0・ONNXでの有限出力を確認しています。関連78 pass / skip0、追加したONNX境界チェックを含む単体9 passです。
-
-範囲外分岐を含む[SiLU区間再検証](results/m4-original-layer8-to-final-native-silu-7-failures-20261016.json)は9か所を置換し、候補のnative計算は元最終出力と全bit一致しました。ONNXは7要素超過で不合格、最大許容差比2.15で、先の標準ONNX1.42より悪化しています。別ホスト間の件数減少だけをSiLUの因果証明や改善とは扱いません。次は固定区間内でRMS28か所とSiLU9か所の順序を同時に表す明示候補を、同じホストの標準ONNXと比較します。元参照・許容差と製品Runtimeは維持します。
-
-[同一ホストの標準ONNXとRMS28＋SiLU9の比較](results/m4-fixed-tail-joint-and-same-host-baseline-failed-20261016.json)も完了し、元参照に対して標準9要素・候補14要素が許容差を超過しました。候補は不採用です。今回のIntel Xeon8573Cではnative区間計算自体にも元参照との10要素超過があり、現在nativeを相手にしたONNX比較にも標準13要素・候補10要素の超過を確認しました。元AMD EPYC9V74ホストと同じONNX SHA・固定入力・元参照でも出力が変わるため、CPU環境差と変換差を分けて保持します。正規化・SiLUだけで解消したとは扱いません。次は候補の組み合わせを増やす前に、同じ入出力・元係数で個別の行列積などを比較します。ローカルUnityは停止状態を維持しています。
+先行する全silence候補は475要素、RMS追加候補は583要素超過で不採用です。RMS /SiLUの後半候補も[同一ホスト比較](results/m4-fixed-tail-joint-and-same-host-baseline-failed-20261016.json)で不合格でした。同じONNX /入力 /期待値でもAMDとIntelでは結果が変わり、Intelではnative自体の元参照との差も残っています。CPU環境差、変換差、失敗・未実行を分けて保持します。過去のsource付きreceiptは`docs/results/`に残し、部分診断やActions収集の完了をGPU /全encoder合格へ読み替えません。
 
 ## 後続工程
 

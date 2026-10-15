@@ -1,8 +1,16 @@
 # 現在の状態と残タスク
 
-更新日: 2026-10-15。最新の実GPU全層観測は `b29c5adc8db5ae79dce60445cef04a59230e1e39`、元入力のlayer_10単独は `e25217575b591e37f68e37943d49e47986f19682`。全encoder数値gateの `a2fca44551f250a68674e6b235372c043edda6b5`は539要素不合格で、全135投影候補は不採用。前の2投影候補は `e9e5c92a7c97bf4228d13f6e1abc911e4fa12c5f`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
+更新日: 2026-10-15。最新の全encoder GPU / 初期5境界観測は `3ae76bd182fb80dd74c9b7851a99ce719e4da67d`。135投影＋36 SiLUの候補は無音203要素不合格、初期5境界は元参照へ全bit一致。最新の12層観測は `b29c5adc8db5ae79dce60445cef04a59230e1e39`、元入力のlayer_10単独は `e25217575b591e37f68e37943d49e47986f19682`。この文書が現在の状態の入口で、実行順は[全体計画](multimodal-tdd-plan.md)、固定source別の証拠は[工程1〜3](steps-1-3-acceptance.md)にまとめる。
 
 ## 現在の判定
+
+**2026-10-15最新のSiLU全接続:** GPU投影とSiLUを借用する`IGpuTensorOperation`を追加し、既存の投影専用constructorを保持した。混在接続は実GPU1 Red→関連3 Green。plannerは元SiLUのNeg / Exp / Add / Div chainを厳密に確認し、内部値の外部参照・係数 / shape不一致を拒否してGPU境界へ分割する。7 Red→関連35 Green。元exportの内部3 nodeが無名であるケースは1 Red→関連36 Greenで、無関係な無名nodeも保持するよう修正した。無名nodeの識別失敗とshape未確定の準備拒否はGPU未実行として別記録。
+
+Sentisのmetadata監査で元の483境界を確定（NUnit1 pass、推論なし）。元initializer digest `1154ac70…`を保つ135投影＋36 SiLU / 171 GPU operation / 172 segment / 41,830 ONNX nodeを生成した。`3ae76bd`の元silence全encoderは**203要素不合格・最大許容差比6.967976**、GPUCompute・計算fallback / flush0。前の全135投影539要素から件数は減ったが、元許容差を満たさず、以前の2投影175要素より優れるとも判定しない。準備13.295秒、実行＋最終診断download2.497秒。数値gateと観測を合わせたNUnitは1 pass / 1 fail / skip0 / exit2。
+
+初期5境界（入力投影・最初のpre norm後の入力・活性化後の入力・最初のFF出力・norm_pre_attn）は元参照へすべて全bit一致し、診断readbackを加えても通常最終bitは変わらなかった。元Clip境界を合わせる期待値変換と、参照ファイル本体の不変を分ける。**全encoderへの接続はできたが、数値受け入れは未完了。** 次はbit一致したnorm_pre_attnの直後のattentionブロックを元native参照で観測する。[固定接続・TDD・監査・全体不合格と初期一致](results/m4-native-silu-whole-gpu-and-early-bit-exact-20261015.json)。Persistent allocation警告は再発し、発生元は未検証。所有Unityはterminal。
+
+Python全体の新しい独立Actions [38657424472](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38657424472) / 固定source `3ae76bd182fb80dd74c9b7851a99ce719e4da67d`は結果待ち。以前の843件×4環境には今回のpartition拡張を含めない。工程3・4の音声元6信号 / 両profile、画像FP32全3 profile、最終768 APIの全条件は未達のまま。以降は前回checkpoint。
 
 **2026-10-15最新のSiLU修正:** `f774707`の5境界観測は通常最終bitを変えず、input_projectionと最初のpre_layer_norm後の入力を元参照へ全bit一致させた。最初の差はactivation_inputの826,899値（元の局所許容差超過0・最大比0.001836）。最初のFF出力89,170値、norm_pre_attn81,727値へbit差が伝播する。観測値をhash付きのGit対象外binaryへ保存した。元のquantized-linear入力Clipは期待値だけに適用し、参照ファイル / 製品GPU計算は変更しない。
 

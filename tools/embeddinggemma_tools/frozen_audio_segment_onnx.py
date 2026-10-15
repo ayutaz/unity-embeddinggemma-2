@@ -17,7 +17,7 @@ from .frozen_audio_prefix_onnx import (
 from .reference_context_failure import feature_error_metrics
 from .native_silu_onnx import fp32_native_silu
 from .streaming_reference import run_flat_reference
-from .static_block192_onnx import static_block192_export, static_block192_addmm_export
+from .static_block192_onnx import audit_static_linear_nodes, static_block192_export, static_block192_addmm_export
 
 VARIANTS = ("native", "refined_mean_moment_rms", "native_silu", "refined_mean_moment_rms_silu", "ordered_static_linear")
 
@@ -53,36 +53,6 @@ def extract_segment(program, from_boundary, to_boundary):
     graph.output(copied[end])
     graph.lint()
     return torch.fx.GraphModule(program, graph)
-
-
-def audit_static_linear_nodes(segment):
-    def parameter_matrix(node):
-        if node.op == "get_attr":
-            return True
-        return (node.op == "call_function" and node.target == torch.ops.aten.permute.default
-                and len(node.args) == 2 and tuple(node.args[1]) == (1, 0)
-                and isinstance(node.args[0], torch.fx.Node) and node.args[0].op == "get_attr")
-    selected = set()
-    for node in segment.graph.nodes:
-        if node.op != "call_function" or node.target not in (torch.ops.aten.mm.default, torch.ops.aten.addmm.default):
-            continue
-        biased = node.target == torch.ops.aten.addmm.default
-        if node.kwargs or len(node.args) != (3 if biased else 2):
-            continue
-        left, right = node.args[-2:]
-        a, b = (value.meta.get("val") for value in (left, right))
-        if (not all(isinstance(value, torch.Tensor) and value.dtype == torch.float32 and value.ndim == 2
-                    for value in (a, b)) or a.shape[0] != 280 or a.shape[1] != b.shape[0]
-                or not parameter_matrix(right)):
-            continue
-        if biased:
-            bias = node.args[0]
-            value = bias.meta.get("val")
-            if (bias.op != "get_attr" or not isinstance(value, torch.Tensor) or value.dtype != torch.float32
-                    or tuple(value.shape) != (b.shape[1],)):
-                continue
-        selected.add(node)
-    return selected
 
 
 class SegmentExport(PrefixExport):

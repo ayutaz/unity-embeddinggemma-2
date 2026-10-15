@@ -15,9 +15,11 @@ from .audio_native_norm_replay import PRODUCER, REVISION, REFERENCE_SHA, candida
 from .export import export_audio_native_onnx
 from .export import fp32_cascade_mean1024, fp32_cascade_mean1536, fp32_outer_cascade_mean1024, fp32_refined_rstd
 from .reference_context_failure import feature_error_metrics
+from .static_block192_onnx import audit_static_linear_nodes, static_block192_export, static_block192_addmm_export
+from .streaming_reference import run_flat_reference
 
 VARIANTS = ("native", "refined_moment", "refined_mean_moment")
-EXPERIMENTAL_VARIANTS = (*VARIANTS, "refined_mean_moment_rms")
+EXPERIMENTAL_VARIANTS = (*VARIANTS, "refined_mean_moment_rms", "ordered_static_linear_refined")
 STAGE_REFERENCE_SHA = "6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a"
 STAGE_AUDIT_SHA = "3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b"
 
@@ -111,6 +113,16 @@ def expected_rms_count(stage):
     raise ValueError("Unknown fixed RMS stage")
 
 
+def expected_linear_count(stage):
+    if stage == "subsample":
+        return 1
+    if stage == "projected_features":
+        return 111
+    if stage in STAGES and stage.startswith("layer_"):
+        return 1 + 9 * (int(stage.removeprefix("layer_")) + 1)
+    raise ValueError("Unknown fixed linear stage")
+
+
 def audit_rms_nodes(prefix):
     means, inverses = set(), set()
     for mean in prefix.graph.nodes:
@@ -153,6 +165,11 @@ class PrefixExport(torch.nn.Module):
         self.variant = variant
         self.selected = checked_normalizations(prefix)
         self.rms_means, self.rms_inverses = audit_rms_nodes(prefix) if variant == "refined_mean_moment_rms" else (set(), set())
+        self.linear_nodes = audit_static_linear_nodes(prefix) if variant == "ordered_static_linear_refined" else set()
+        if variant == "ordered_static_linear_refined" and not self.linear_nodes:
+            raise ValueError("Ordered prefix requires original 280-row parameter projections")
+        self.linear_candidate = static_block192_export
+        self.biased_linear_candidate = static_block192_addmm_export
 
     def forward(self, values):
         selected, variant, rms_means, rms_inverses = self.selected, self.variant, self.rms_means, self.rms_inverses
@@ -203,7 +220,7 @@ class PrefixExport(torch.nn.Module):
                     return torch.softmax(args[0], dim=-1)
                 if variant != "native" and node in selected:
                     args, kwargs = self.fetch_args_kwargs_from_env(node)
-                    return candidate_output(*args, "refined_mean_moment" if variant == "refined_mean_moment_rms" else variant)
+                    return candidate_output(*args, "refined_mean_moment" if variant in ("refined_mean_moment_rms", "ordered_static_linear_refined") else variant)
                 return super().run_node(node)
 
         return Replay(self.prefix).run(values)
@@ -241,7 +258,7 @@ def probe_prefix(program, values, expected, output, *, boundary, provenance=None
         raise ValueError("Prefix variants must be unique supported choices")
     output = Path(output)
     receipt = output / "frozen-audio-prefix-onnx.json"
-    if receipt.exists() or any((output / (variant + ".onnx")).exists() for variant in VARIANTS):
+    if receipt.exists() or any((output / (variant + ".onnx")).exists() for variant in EXPERIMENTAL_VARIANTS):
         raise ValueError("Refusing to overwrite prefix diagnostic evidence")
     output.mkdir(parents=True, exist_ok=True)
     report = dict(scope="original_context_qualified_audio_prefix_onnx_only", context_qualified=False,
@@ -296,7 +313,13 @@ def probe_prefix(program, values, expected, output, *, boundary, provenance=None
                 raise ValueError("Native prefix wrapper differs from original prefix bits")
             path = output / (variant + ".onnx")
             export_audio_native_onnx(wrapper, values, path)
-            values_onnx = ReferenceEvaluator(str(path)).run(None, {"input": values.numpy()})[0]
+            evaluator = ReferenceEvaluator(str(path))
+            # Keep default qualification unchanged. This explicit large-graph
+            # diagnostic uses the same kernels/order with last-consumer release
+            # for both its same-host baseline and candidate.
+            streaming = "ordered_static_linear_refined" in variants
+            values_onnx = (run_flat_reference(evaluator, {"input": values.numpy()})[0] if streaming
+                           else evaluator.run(None, {"input": values.numpy()})[0])
             actual = tensor(torch.from_numpy(values_onnx))
             if actual.shape != native.shape:
                 raise ValueError("Prefix ONNX output shape differs")
@@ -309,7 +332,11 @@ def probe_prefix(program, values, expected, output, *, boundary, provenance=None
             report["cases"].append(dict(variant=variant, graph=path.name, graph_sha256=file_digest(path),
                 capture=capture.name, capture_sha256=file_digest(capture), metrics=metrics,
                 native_wrapper_bits_equal=same_native, native_whole_encoder_exact_difference_count=exact,
-                coefficients_unchanged=True, rms_mean_replacements=len(wrapper.rms_means), rms_inverse_replacements=len(wrapper.rms_inverses)))
+                coefficients_unchanged=True, rms_mean_replacements=len(wrapper.rms_means), rms_inverse_replacements=len(wrapper.rms_inverses),
+                normalization_replacements=len(wrapper.selected) if variant != "native" else 0,
+                linear_replacements=len(wrapper.linear_nodes), ordered_linear_nodes=sorted(node.name for node in wrapper.linear_nodes),
+                ordered_linear_native_execution="original_MatMul_addmm_passthrough_not_fixed_order_execution" if wrapper.linear_nodes else None,
+                reference_execution="same_kernels_original_order_last_consumer_release" if streaming else "default_ReferenceEvaluator"))
             save()
         report["complete"] = True
         save()
@@ -333,7 +360,14 @@ def main(argv=None):
     boundary = boundary_for_stage(program, args.stage)
     provenance["stage"] = args.stage
     frozen = load_frozen_stage_reference(args.frozen_stage_source, args.stage) if args.frozen_stage_source else None
-    variants = VARIANTS if args.variant == "all" else (args.variant,)
+    variants = (VARIANTS if args.variant == "all" else
+                ("native", args.variant) if args.variant == "ordered_static_linear_refined" else (args.variant,))
+    if "ordered_static_linear_refined" in variants:
+        audited = PrefixExport(extract_prefix(program, boundary), "ordered_static_linear_refined")
+        count = expected_linear_count(args.stage)
+        if len(audited.linear_nodes) != count:
+            raise ValueError("Pinned280-row prefix linear replacement count differs")
+        provenance["ordered_linear_expected_count"] = count
     if "refined_mean_moment_rms" in variants:
         audited = PrefixExport(extract_prefix(program, boundary), "refined_mean_moment_rms")
         count = expected_rms_count(args.stage)

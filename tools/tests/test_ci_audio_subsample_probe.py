@@ -30,6 +30,18 @@ def test_probe_projection_covers_a_partial_final_block_with_exact_integer_oracle
     assert torch.equal(actual,(values.double()@weights.double()).float())
 
 
+def test_probe_resolves_projection_handoff_exposed_as_graph_output():
+    import onnx
+    from onnx import helper,TensorProto
+    module=producer()
+    graph=helper.make_graph([helper.make_node("Identity",["input"],["handoff"])],"handoff",
+        [helper.make_tensor_value_info("input",TensorProto.FLOAT,[1,2,200])],
+        [helper.make_tensor_value_info("handoff",TensorProto.FLOAT,[1,2,200])])
+    model=helper.make_model(graph)
+    assert module.fixed_float_shape(model,"handoff")==[1,2,200]
+    with pytest.raises(ValueError,match="shape"):module.fixed_float_shape(model,"missing")
+
+
 def test_prefix_workflow_is_opt_in_small_and_retains_the_full_onnx_gate():
     root=Path(__file__).resolve().parents[2]
     path=root/".github/workflows/ci-audio-subsample-probe.yml"

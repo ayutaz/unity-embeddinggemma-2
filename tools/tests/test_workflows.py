@@ -47,7 +47,7 @@ def test_audio_candidate_dispatch_keeps_original_pinned_golden_and_all_six_outpu
     workflow=load('audio-runtime-reference.yml')
     option=workflow['on']['workflow_dispatch']['inputs']['onnx_layernorm']
     assert option['type']=='choice' and option['default']=='native'
-    assert option['options']==['native','torch_welford8']
+    assert option['options']==['native','torch_welford8','torch_welford8_refined_moment']
     assert workflow['permissions']['actions']=='read'
     steps=workflow['jobs']['native-reference']['steps']
     commands='\n'.join(s.get('run','') for s in steps)

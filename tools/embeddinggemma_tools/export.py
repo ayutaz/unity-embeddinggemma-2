@@ -760,7 +760,7 @@ def export_audio_native_onnx(wrapper, features, destination, *, layernorm_algori
     import onnx
     destination=Path(destination)
     destination.parent.mkdir(parents=True,exist_ok=True)
-    if layernorm_algorithm not in ("native", "torch_welford8"):
+    if layernorm_algorithm not in ("native", "torch_welford8", "torch_welford8_refined_moment"):
         raise ValueError("Unknown ONNX LayerNorm algorithm")
     if linear_algorithm not in ("native", "compensated64"):
         raise ValueError("Unknown ONNX linear algorithm")
@@ -770,11 +770,12 @@ def export_audio_native_onnx(wrapper, features, destination, *, layernorm_algori
         return graph.op(domain+"::NativeSiLU",value).setType(value.type())
     torch.onnx.register_custom_op_symbolic("aten::silu",silu_symbolic,20)
     try:
-        if layernorm_algorithm == "torch_welford8":
+        if layernorm_algorithm in ("torch_welford8", "torch_welford8_refined_moment"):
             for parent in list(wrapper.modules()):
                 for name, child in list(parent.named_children()):
                     if isinstance(child, nn.LayerNorm):
-                        replacement = TorchWelfordLayerNorm(child)
+                        refined = layernorm_algorithm == "torch_welford8_refined_moment"
+                        replacement = TorchWelfordLayerNorm(child,refine_inverse=refined,fuse_scalar_moment=refined)
                         restored.append((parent, name, child))
                         parent.add_module(name, replacement)
             if not restored:

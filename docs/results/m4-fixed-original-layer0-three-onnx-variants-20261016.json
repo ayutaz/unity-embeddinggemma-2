@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "original_fixed_silence_layer0_end_onnx_three_variants",
+  "run_id": 38780550947,
+  "artifact_id": 11995262264,
+  "head_source": "42b2929a512ed2b7366cef44f474efb694224650",
+  "actual_producer": "c8632117500904c0c83f111a81c7597fd0caf7ca",
+  "conclusion": "success_diagnostic_collection_only",
+  "provenance": {
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+    "audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+    "graph_sha256": "dc43d56b896b64077d8e86d56c3fd2b89cfe3d31170eabaa387165ea961438d7",
+    "input_sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+    "job_source": "c8632117500904c0c83f111a81c7597fd0caf7ca",
+    "torch_version": "2.14.1+cu130",
+    "threads": 2,
+    "cpu_capability": "AVX512",
+    "stage": "layer_0"
+  },
+  "frozen_stage_provenance": {
+    "stage": "layer_0",
+    "reference_sha256": "6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a",
+    "audit_sha256": "3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b",
+    "expected_sha256": "3cc353963c7eafd2a209526c5c19daedd66c9c0da7cdf43dc6a4f4ccee158cf2",
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9"
+  },
+  "report_sha256": "8f7425ba9b7fb3a97e3394fb734ac971634d5ba8adaae7ddcaa7f1efbe4b4a07",
+  "reference_sha256": "3cc353963c7eafd2a209526c5c19daedd66c9c0da7cdf43dc6a4f4ccee158cf2",
+  "original_expected_values": 286720,
+  "reference_qualified": true,
+  "current_native_context_qualified": false,
+  "native_whole_encoder_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 251,
+    "maximum_absolute_error": 0.0002269744873046875,
+    "maximum_tolerance_ratio": 8.871237013984649,
+    "worst_index": 18019,
+    "worst_actual": 0.032756462693214417,
+    "worst_expected": 0.0326387956738472,
+    "exact_difference_count": 138322
+  },
+  "native_prefix_vs_reference_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 6.103515625e-05,
+    "maximum_tolerance_ratio": 0.2902575933320518,
+    "worst_index": 389,
+    "worst_actual": 0.03097154013812542,
+    "worst_expected": 0.030975341796875,
+    "exact_difference_count": 255925
+  },
+  "candidates": [
+    {
+      "variant": "native",
+      "metrics": {
+        "mismatched_elements": 284,
+        "exact_difference_count": 285424,
+        "maximum_absolute_error": 0.0001373291015625,
+        "maximum_tolerance_ratio": 4.782299992633078
+      },
+      "capture_sha256": "aecc5291046dc3228bb453c532460c5ddb82eb241555ebf588fb2bd97ae1c03b",
+      "graph_sha256_reported_by_producer": "3fa30760855cae0102529d36518b093b2d0b97f4933fd6307da8d5d3ca8b346d",
+      "native_wrapper_bits_equal": true
+    },
+    {
+      "variant": "refined_moment",
+      "metrics": {
+        "mismatched_elements": 0,
+        "exact_difference_count": 267974,
+        "maximum_absolute_error": 6.103515625e-05,
+        "maximum_tolerance_ratio": 0.4774448538006263
+      },
+      "capture_sha256": "d50bdc2083f3685a37fae63a5031d5609ee4f779da0bdcfba07379b1ca7b21b6",
+      "graph_sha256_reported_by_producer": "f5950fca703f387033bba1cc8301c1ca1ed28c3c6e2222b3e07224ab948c1ef4",
+      "native_wrapper_bits_equal": false
+    },
+    {
+      "variant": "refined_mean_moment",
+      "metrics": {
+        "mismatched_elements": 0,
+        "exact_difference_count": 270200,
+        "maximum_absolute_error": 4.57763671875e-05,
+        "maximum_tolerance_ratio": 0.45106965894580026
+      },
+      "capture_sha256": "5cbe3c4bc7a13b57f87f40110176655e2f28a2cbcb16617d5e513dd294ada513",
+      "graph_sha256_reported_by_producer": "d6433f098fa58fe7e456ffc8646c08f62c1b8b4da5fa12ad7919b0a27b03824a",
+      "native_wrapper_bits_equal": true
+    }
+  ],
+  "captures_independently_hashed_and_compared": true,
+  "large_onnx_graphs_locally_downloaded_or_rechecked": false,
+  "selected_artifact_range_receipt": {
+    "selected_count": 7,
+    "range_bytes": 1662511,
+    "range_requests": 24,
+    "archive_bytes": 47398988,
+    "files": {
+      "frozen-audio-prefix-onnx/frozen-audio-prefix-onnx.json": {
+        "bytes": 19646,
+        "crc32": 2579624604,
+        "sha256": "8f7425ba9b7fb3a97e3394fb734ac971634d5ba8adaae7ddcaa7f1efbe4b4a07",
+        "cache_reused": false
+      },
+      "frozen-audio-prefix-onnx/cpu-host.json": {
+        "bytes": 4826,
+        "crc32": 3976100457,
+        "sha256": "9500c70fdd7108c0b7df3e8f1aa65a09be738204ac2e62f979eb3b4925c1b95a",
+        "cache_reused": false
+      },
+      "frozen-audio-prefix-onnx/reference-prefix-fp32.bin": {
+        "bytes": 1146880,
+        "crc32": 4291122629,
+        "sha256": "3cc353963c7eafd2a209526c5c19daedd66c9c0da7cdf43dc6a4f4ccee158cf2",
+        "cache_reused": false
+      },
+      "frozen-audio-prefix-onnx/native-prefix-fp32.bin": {
+        "bytes": 1146880,
+        "crc32": 2450559685,
+        "sha256": "1f65b55d07d0fca75415dd1124bfd06aa1d97bd0f2a87ef99eba01b6615d3147",
+        "cache_reused": false
+      },
+      "frozen-audio-prefix-onnx/native-fp32.bin": {
+        "bytes": 1146880,
+        "crc32": 3862958423,
+        "sha256": "aecc5291046dc3228bb453c532460c5ddb82eb241555ebf588fb2bd97ae1c03b",
+        "cache_reused": false
+      },
+      "frozen-audio-prefix-onnx/refined_moment-fp32.bin": {
+        "bytes": 1146880,
+        "crc32": 940032021,
+        "sha256": "d50bdc2083f3685a37fae63a5031d5609ee4f779da0bdcfba07379b1ca7b21b6",
+        "cache_reused": false
+      },
+      "frozen-audio-prefix-onnx/refined_mean_moment-fp32.bin": {
+        "bytes": 1146880,
+        "crc32": 746045916,
+        "sha256": "5cbe3c4bc7a13b57f87f40110176655e2f28a2cbcb16617d5e513dd294ada513",
+        "cache_reused": false
+      }
+    },
+    "artifact_id": 11995262264,
+    "artifact_name": "frozen-audio-prefix-onnx-c8632117500904c0c83f111a81c7597fd0caf7ca"
+  },
+  "first_projection_fixed_reference_receipt": "m4-original-context-subsample-onnx-three-variants-20261016.json",
+  "conclusion_detail": "Native ONNX first-layer end has284 fixed-tolerance failures; both refined LayerNorm variants have0. One silence case / first layer only. The later whole-encoder ONNX failure is not resolved.",
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "end_to_end_validated": false,
+  "required_ci_passed": false,
+  "original_golden_weights_or_tolerances_changed": false
+}

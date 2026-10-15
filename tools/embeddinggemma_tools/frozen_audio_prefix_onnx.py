@@ -48,21 +48,23 @@ def load_frozen_stage_reference(directory, stage):
             or rows[0]["input_features"] != "frames-1119-valid-1119/silence-features-fp32.bin"):
         raise ValueError("Frozen silence input/final context differs")
     entries = [entry for entry in rows[0]["stages"] if entry["name"] == stage]
-    if len(entries) != 1 or entries[0]["shape"] != [1, 280, 1024]:
+    shape = [280, 512] if stage == "projected_features" else [1, 280, 1024]
+    if len(entries) != 1 or entries[0]["shape"] != shape:
         raise ValueError("Frozen stage output shape differs")
     entry = entries[0]
     path = (root / entry["expected"]).resolve()
     spec = audit["files"].get(entry["expected"], {})
-    if (not path.is_relative_to(root) or not path.is_file() or path.stat().st_size != 1146880
+    if (not path.is_relative_to(root) or not path.is_file() or path.stat().st_size != int(np.prod(shape)) * 4
             or path.stat().st_size != spec.get("bytes") or file_digest(path) != spec.get("sha256")):
         raise ValueError("Frozen stage tensor path, size or hash mismatch")
-    expected = tensor(torch.from_numpy(np.fromfile(path, dtype="<f4").reshape(1, 280, 1024)))
+    expected = tensor(torch.from_numpy(np.fromfile(path, dtype="<f4").reshape(shape)))
     return FrozenStageReference(expected, dict(stage=stage, reference_sha256=STAGE_REFERENCE_SHA,
         audit_sha256=STAGE_AUDIT_SHA, expected_sha256=spec["sha256"], reference_source=PRODUCER,
         model_revision=REVISION, encoder_reference_sha256=REFERENCE_SHA))
 # Names verified against b85a2ad... serialized schema in the pinned graph.
 STAGES = {"subsample": ("view_2", torch.ops.aten.view.default),
-          **{f"layer_{index}": (f"mul_{27 + 25 * index}", torch.ops.aten.mul.Tensor) for index in range(12)}}
+          **{f"layer_{index}": (f"mul_{27 + 25 * index}", torch.ops.aten.mul.Tensor) for index in range(12)},
+          "projected_features": ("select", torch.ops.aten.select.int)}
 
 
 def boundary_for_stage(program, stage):
@@ -156,7 +158,10 @@ def weight_digests(prefix):
             for name, value in prefix.state_dict().items()}
 
 
-def probe_prefix(program, values, expected, output, *, boundary, provenance=None, frozen_stage=None):
+def probe_prefix(program, values, expected, output, *, boundary, provenance=None, frozen_stage=None, variants=VARIANTS):
+    if (not isinstance(variants, (tuple, list)) or not variants or any(not isinstance(value, str) or value not in VARIANTS for value in variants)
+            or len(set(variants)) != len(variants)):
+        raise ValueError("Prefix variants must be unique supported choices")
     output = Path(output)
     receipt = output / "frozen-audio-prefix-onnx.json"
     if receipt.exists() or any((output / (variant + ".onnx")).exists() for variant in VARIANTS):
@@ -184,6 +189,11 @@ def probe_prefix(program, values, expected, output, *, boundary, provenance=None
         prefix = extract_prefix(program, boundary)
         before = weight_digests(prefix)
         native = tensor(prefix(values))
+        control = tensor(PrefixExport(prefix, "native")(values))
+        report["native_wrapper_control_bits_equal"] = exact_difference(control, native) == 0
+        save()
+        if not report["native_wrapper_control_bits_equal"]:
+            raise ValueError("Native prefix wrapper control differs from original prefix bits")
         reference_prefix = native
         if frozen_stage is not None:
             if not isinstance(frozen_stage, FrozenStageReference):
@@ -201,7 +211,7 @@ def probe_prefix(program, values, expected, output, *, boundary, provenance=None
         report.update(prefix_shape=list(native.shape), original_prefix_weights=before,
                       native_prefix_sha256=file_digest(output / "native-prefix-fp32.bin"))
         save()
-        for variant in VARIANTS:
+        for variant in variants:
             wrapper = PrefixExport(prefix, variant)
             wrapped = tensor(wrapper(values))
             same_native = exact_difference(wrapped, native) == 0
@@ -235,6 +245,7 @@ def main(argv=None):
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--stage", choices=tuple(STAGES), default="subsample")
     parser.add_argument("--frozen-stage-source", type=Path)
+    parser.add_argument("--variant", choices=("all", *VARIANTS), default="all")
     args = parser.parse_args(argv)
     source = os.environ.get("GITHUB_SHA", "")
     if re.fullmatch("[0-9a-f]{40}", source) is None:
@@ -245,7 +256,8 @@ def main(argv=None):
     boundary = boundary_for_stage(program, args.stage)
     provenance["stage"] = args.stage
     frozen = load_frozen_stage_reference(args.frozen_stage_source, args.stage) if args.frozen_stage_source else None
-    report = probe_prefix(program, values, expected, args.output, boundary=boundary, provenance=provenance, frozen_stage=frozen)
+    variants = VARIANTS if args.variant == "all" else (args.variant,)
+    report = probe_prefix(program, values, expected, args.output, boundary=boundary, provenance=provenance, frozen_stage=frozen, variants=variants)
     print(json.dumps(report))
     return 0 if report["complete"] else 1
 

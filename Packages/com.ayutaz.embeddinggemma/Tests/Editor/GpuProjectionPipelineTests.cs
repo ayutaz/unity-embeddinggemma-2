@@ -7,6 +7,46 @@ namespace EmbeddingGemma.Tests
 {
     public sealed class GpuProjectionPipelineTests
     {
+        sealed class ObservedOperation : IGpuTensorOperation
+        {
+            readonly GpuBlockedMatmul identity=new GpuBlockedMatmul(2,2,new[]{1f,0f,0f,1f});
+            public Action BeforeExecute;
+            public Tensor<float> LastOutput;
+            public BackendType Backend=>BackendType.GPUCompute;
+            public Tensor<float> Execute(Tensor<float> input)
+            {
+                BeforeExecute?.Invoke();return LastOutput=identity.Execute(input);
+            }
+            public void Dispose()=>identity.Dispose();
+        }
+
+        [Test]
+        public void DeadIntermediatesAreReleasedBeforeLaterGpuOperationsAndBorrowedInputsSurvive()
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
+            Model Identity(string input,string output)
+            {
+                var graph=new FunctionalGraph();var value=graph.AddInput<float>(new TensorShape(1,2),input);
+                return Rename(graph.Compile(value),output);
+            }
+            using var first=new ObservedOperation();using var second=new ObservedOperation();using var third=new ObservedOperation();
+            using var input=new Tensor<float>(new TensorShape(1,2),new[]{-3f,4f});ComputeTensorData.Pin(input);
+            third.BeforeExecute=()=>
+            {
+                Assert.That(first.LastOutput.dataOnBackend,Is.Null,"Dead stage output must be released before a later operation.");
+                Assert.That(input.dataOnBackend,Is.Not.Null,"Caller input is borrowed.");
+            };
+            using var pipeline=new GpuProjectionPipeline(
+                new[]{Identity("input","x"),Identity("a","b"),Identity("c","d"),Identity("e","final")},
+                new[]{"x","b","d"},new[]{"a","c","e"},new IGpuTensorOperation[]{first,second,third});
+            using var result=pipeline.Execute(input);using var repeated=pipeline.Execute(input);
+            pipeline.Dispose();
+            Assert.That(result.DownloadToArray(),Is.EqualTo(new[]{-3f,4f}));
+            Assert.That(repeated.DownloadToArray(),Is.EqualTo(new[]{-3f,4f}));
+            Assert.That(third.LastOutput.dataOnBackend,Is.Null,"Final stage consumes and releases its operation input.");
+            using var reused=first.Execute(input);Assert.That(reused.DownloadToArray(),Is.EqualTo(new[]{-3f,4f}));
+        }
+
         [Test]
         public void BinaryGpuStageCopiesInputNamesAndBorrowsOperation()
         {

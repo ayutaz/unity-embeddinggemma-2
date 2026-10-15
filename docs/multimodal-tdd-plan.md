@@ -1,5 +1,7 @@
 # M2・M3・M4から正式リリースまでのTDD計画
 
+2026-10-16音声API更新: [実PCM全6信号 / 両profile / 全3 roleの最終GPU API](results/m4-real-pcm-all-roles-staged-gpu-20261016.json)は18 pass・skip0。同期試行の12 GiB監視停止は失敗証拠として残し、音声staged encoder / 非同期APIを11 Red→関連39 Greenで追加。最大host peak約7.13 GiBで同APIの全role・実GPU stage後例外からの復帰・借用stageのAPI Dispose後再利用を確認した。元Document全6最終値は先行版と全bit一致。追加要素診断1213超過は最終cosine合格と分ける。次はstaged encoder単体の元厳密全6 gate・最新text回帰・Required CIを確認する。CIの最初の差は、元失敗graph / native入力・出力の約6 MBだけを使う明示opt-in prefix probeで調べ、通常の全ONNX gateは維持する。工程4は未完了。
+
 2026-10-16終了時解放: [EditModeでSentis共有GPU bufferが解放登録されない原因を修正](results/m4-sentis-editor-shared-gpu-cleanup-20261016.json)。1 Red→1 Green、実PCM最終APIを含む45 Greenと通常終了時の当該Persistent警告0を確認。Runtime計算コード不変・最終ベクトル全bit一致。これは長期性能 / 他deviceの検証を置き換えない。残るRequired CI ONNX失敗は[最初のLayerNorm差とsubsample projectionの超過へ局所化](results/m4-required-ci-audio-onnx-failure-localized-20261016.json)し、gateを維持する。既存の音声role参照Actions run38764026134の結果を受け取り、元Document全6参照が合格した時のみQuery / Raw実PCMの最終GPU APIへ進む。工程4は未完了。
 
 2026-10-16音声の更新: [実PCM→採用GPU encoder→元Document最終768 API](results/m4-real-pcm-document-final-api-gpu-20261016.json)は元6信号 / 両profileで6 pass・skip0。CPU fallback / 中間readback0、最小cosine 0.9999998052055729、per-call Tensor解放と不正入力後の復帰を確認。nyquistの追加要素診断439超過は保持する。次は[固定原本encoder出力からのrole参照生成](results/m4-frozen-audio-role-reference-tdd-20261016.json)をActionsで実行し、元Document全6参照への一致を確認してから、実PCM Query / RawのGPU最終APIへ進む。新経路の関連32 Greenは実モデル合格とは扱わない。通常のnative / ONNX gateを維持し、CIのsilence ONNX差とPersistent allocation警告は未解決として残す。工程4は未完了。

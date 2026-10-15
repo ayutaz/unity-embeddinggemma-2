@@ -295,11 +295,19 @@ namespace EmbeddingGemma.Validation.Tests
             while(!pending.IsCompleted){UnityEditor.EditorApplication.QueuePlayerLoopUpdate();yield return null;}
             pending.GetAwaiter().GetResult();
         }
+        [UnityTest] public IEnumerator StagedEncoderAllFullProfileSignalsMustMatchOriginalOnGpu()=>StagedEncoderGate("silence");
+        [UnityTest] public IEnumerator StagedEncoderPaddedProfileMustMatchOriginalOnGpu()=>StagedEncoderGate("padded_noise");
+        IEnumerator StagedEncoderGate(string signal)
+        {
+            var pending=ExecuteCore(signal,true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,nativeGlu:true,firstNormFma:true,scalarMomentFma:true,adapterMode:true,stagedEncoderGate:true);
+            while(!pending.IsCompleted){UnityEditor.EditorApplication.QueuePlayerLoopUpdate();yield return null;}
+            pending.GetAwaiter().GetResult();
+        }
 
         void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false,bool convolutionDetail=false,bool nativeGlu=false,int layerObservation=0,bool firstNormFma=false,bool scalarMomentFma=false,bool adapterMode=false,bool finalPcm=false,bool allAudioRoles=false)
             =>ExecuteCore(signal,allStatic,observe,isolated,early,nativeSilu,attention,nativeBmm,observeBmm,nativeQueryScale,nativeTanh,nativeDivision,nativeSoftmax,convolutionDetail,nativeGlu,layerObservation,firstNormFma,scalarMomentFma,adapterMode,finalPcm,allAudioRoles).GetAwaiter().GetResult();
 
-        async Task ExecuteCore(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false,bool convolutionDetail=false,bool nativeGlu=false,int layerObservation=0,bool firstNormFma=false,bool scalarMomentFma=false,bool adapterMode=false,bool finalPcm=false,bool allAudioRoles=false)
+        async Task ExecuteCore(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false,bool convolutionDetail=false,bool nativeGlu=false,int layerObservation=0,bool firstNormFma=false,bool scalarMomentFma=false,bool adapterMode=false,bool finalPcm=false,bool allAudioRoles=false,bool stagedEncoderGate=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
@@ -320,6 +328,7 @@ namespace EmbeddingGemma.Validation.Tests
             if(adapterMode)stem="partitioned-audio-encoder-adapter-gpu-";
             if(finalPcm)stem="final-pcm-document-api-gpu-";
             if(allAudioRoles)stem="final-pcm-allroles-api-gpu-";
+            if(stagedEncoderGate)stem="partitioned-audio-encoder-staged-original-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject { ["success"]=false,["scope"]=early?"original_early_audio_observation_only":isolated?"one_original_audio_layer_isolation_gpu_numeric_gate":observe?"original_audio_layer_observation_only":"one_partitioned_original_audio_encoder_gpu_numeric_gate",
@@ -456,9 +465,14 @@ namespace EmbeddingGemma.Validation.Tests
                 if(adapterMode)
                 {
                     Assert.That(scalarMomentFma&&!observe&&!isolated&&!early&&!observeBmm&&layerObservation==0,Is.True);
-                    Assert.That(plan.Value<string>("profile"),Is.EqualTo("frames-1119-valid-1119"));
+                    if(!stagedEncoderGate)Assert.That(plan.Value<string>("profile"),Is.EqualTo("frames-1119-valid-1119"));
                 }
-                using var adapter=adapterMode?new PartitionedAudioFeatureEncoder(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray(),new AudioEncoderProfile(1119)):null;
+                using var adapter=adapterMode?new PartitionedAudioFeatureEncoder(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray(),new AudioEncoderProfile(originalPadded?839:1119)):null;
+                if(stagedEncoderGate)
+                {
+                    await QualifiedStagedAudioEncoderGate.Run(adapter,originalRoot,reference,audit,report,output,Save);
+                    return;
+                }
                 using var pipeline=adapterMode?null:new GpuProjectionPipeline(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray());
                 report["worker_creation_ms"]=workerTimer.Elapsed.TotalMilliseconds;
                 report["dynamic_matmul_count"]=nativeBmm?36:0;

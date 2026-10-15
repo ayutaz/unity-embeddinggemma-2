@@ -493,6 +493,24 @@ def fp32_cascade_mean1536(values):
     return _fp32_cascade_mean(values, 1536)
 
 
+def fp32_cascade_mean768(values):
+    """Opt-in contiguous vision RMS reduction, including its half-block tail.
+
+    Independent CPU/ONNX checks qualify this arithmetic only; actual GPU and
+    original full-image numerical gates remain separate requirements.
+    """
+    if not torch.compiler.is_compiling() and not torch.jit.is_tracing():
+        if (values.dtype != torch.float32 or values.ndim < 2 or values.shape[-1] != 768
+                or not values.numel() or not values.is_contiguous() or not torch.isfinite(values).all()):
+            raise ValueError("vision cascade requires finite contiguous 768-wide FP32 rows")
+    grouped = torch.nn.functional.pad(values, (0, 256)).reshape(-1, 2, 16, 4, 8)
+    partial = _fp32_ordered_sum(grouped, -3)
+    accumulated = _fp32_ordered_sum(partial, -4)
+    combined = _fp32_ordered_sum(accumulated, -2)
+    total = _fp32_ordered_sum(combined, -1)
+    return total.reshape_as(values[..., :1]) / 768
+
+
 def _fp32_cascade_mean(values, width):
     if not torch.compiler.is_compiling() and not torch.jit.is_tracing():
         if (values.dtype != torch.float32 or values.ndim < 2 or values.shape[-1] != width

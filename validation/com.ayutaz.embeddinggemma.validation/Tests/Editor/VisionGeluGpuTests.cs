@@ -33,8 +33,13 @@ namespace EmbeddingGemma.Validation.Tests
                 var expectedPath=Path.Combine(root,reference["expected"].Value<string>("file"));Check(expectedPath,reference["expected"].Value<string>("sha256"));
                 var model=TextModelFile.Load(reference["original_layer_model"].Value<string>("file"));var constants=model.constants.ToDictionary(value=>value.index);
                 var projections=model.layers.Where(layer=>layer.GetType().Name=="MatMul"&&constants.TryGetValue(layer.inputs[1],out var weight)&&weight.shape.rank==2).ToArray();
-                var gelu=model.layers.Single(layer=>layer.GetType().Name=="GeluFast");Assert.That(gelu.inputs[0],Is.EqualTo(projections[4].outputs[0]));
-                var shape=new TensorShape(2520,3072);var slice=ModelTensorSlice.Extract(model,gelu.outputs[0],"gelu",new[]{new Model.Input{name="input",index=gelu.inputs[0],dataType=DataType.Float,shape=new DynamicTensorShape(shape)}});
+                var gelu=model.layers.Single(layer=>layer.GetType().Name=="GeluFast");var reshape=model.layers.Single(layer=>layer.outputs.Contains(gelu.inputs[0]));
+                Assert.That(reshape.GetType().Name,Is.EqualTo("Reshape"));Assert.That(reshape.inputs[0],Is.EqualTo(projections[4].outputs[0]));
+                var analysis=typeof(Worker).Assembly.GetType("Unity.InferenceEngine.Compiler.Analyser.PartialInferenceAnalysis");
+                var context=analysis.GetMethod("InferModelPartialTensors").Invoke(null,new object[]{model});var partial=context.GetType().GetMethod("GetPartialTensor").Invoke(context,new object[]{gelu.inputs[0]});
+                var inferred=(DynamicTensorShape)partial.GetType().GetProperty("shape").GetValue(partial);Assert.That(inferred.IsStatic(),Is.True);
+                var shape=inferred.ToTensorShape();Assert.That(shape,Is.EqualTo(new TensorShape(1,2520,3072)));report["original_projection_reshape_preserved"]=true;
+                var slice=ModelTensorSlice.Extract(model,gelu.outputs[0],"gelu",new[]{new Model.Input{name="input",index=gelu.inputs[0],dataType=DataType.Float,shape=new DynamicTensorShape(shape)}});
                 using var baseline=new GpuProjectionPipeline(new[]{slice},Array.Empty<string>(),Array.Empty<string>(),Array.Empty<IGpuTensorOperation>());
                 using var candidate=(IGpuTensorOperation)Activator.CreateInstance(type,new object[]{shape});
                 using var input=new Tensor<float>(shape,Floats(reference["input"].Value<string>("file")));ComputeTensorData.Pin(input);

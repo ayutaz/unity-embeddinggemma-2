@@ -560,16 +560,19 @@ def fp32_outer_cascade_mean1024(values):
     return torch.cat((head, tail), dim=1) / 1024
 
 
-def fp32_refined_rstd(values):
+def fp32_refined_rstd(values, *, maximum_statistic=1e6):
     """Bounded FP32 sqrt then reciprocal, correcting GPU approximation residuals.
 
     Keep native's two rounding steps instead of a contracted rsqrt. This is an
     experimental standard-op candidate for positive statistics in [1e-6, 1e6],
+    with an explicit 2e6 upper bound for the final vision RMS candidate,
     not an IEEE implementation for arbitrary FP32 inputs.
     """
+    if maximum_statistic not in (1e6, 2e6):
+        raise ValueError("refinement requires a qualified bounded FP32 statistic domain")
     if not torch.compiler.is_compiling() and not torch.jit.is_tracing():
         if (values.dtype != torch.float32 or not values.numel() or not torch.isfinite(values).all()
-                or torch.any(values < 1e-6) or torch.any(values > 1e6)):
+                or torch.any(values < 1e-6) or torch.any(values > maximum_statistic)):
             raise ValueError("refinement requires bounded positive FP32 statistics")
     root = torch.sqrt(values)
     residual = fp32_fma(-root, root, values)
@@ -648,6 +651,21 @@ class VisionInlineRmsExport(VisionRmsExport):
         mean = fp32_fma(residual, torch.full_like(total, 1 / 768), quotient)
         inverse = fp32_refined_rstd(mean + self.epsilon)
         return (values * inverse) * self.scale
+
+
+class VisionTailRmsExport(nn.Module):
+    """Opt-in unscaled final width-768 vision RMS; fixed FP32 statistics <=2e6.
+
+    This preserves the existing RMS exporters and their default domain. CPU
+    equation/export parity does not prove GPU or original-golden acceptance.
+    """
+    def forward(self, values):
+        total = _fp32_cascade_sum768(values.square())
+        quotient = total / 768
+        residual = fp32_fma(-quotient, torch.full_like(total, 768), total)
+        mean = fp32_fma(residual, torch.full_like(total, 1 / 768), quotient)
+        inverse = fp32_refined_rstd(mean + 1e-6, maximum_statistic=2e6)
+        return values * inverse
 
 
 class TorchWelfordLayerNorm(nn.Module):

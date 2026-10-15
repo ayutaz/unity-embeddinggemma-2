@@ -4,7 +4,7 @@
   "goal": "4\u307e\u3067\u9032\u3081\u3066\u304f\u3060\u3055\u3044",
   "status": "active_not_complete",
   "scope_source": "goal4-scope-audit-20261016.json",
-  "candidate_head_at_audit": "bd3900a54f0a7a3e12269b1601105ef6b47cac7b",
+  "candidate_head_at_audit": "db7192005d2236b5213549c82b41b27b6538bac5",
   "requirements": [
     {
       "requirement": "Original learned coefficients, references and encoder tolerances remain unchanged",
@@ -79,11 +79,11 @@
     {
       "requirement": "Required repository checks for the resulting candidate",
       "status": "not_achieved",
-      "last_terminal_ci_run": 38811480496,
-      "last_terminal_ci_head": "bd3900a54f0a7a3e12269b1601105ef6b47cac7b",
+      "last_terminal_ci_run": 38813573269,
+      "last_terminal_ci_head": "db7192005d2236b5213549c82b41b27b6538bac5",
       "result": "Python four environments, package and workflow lint pass; audio ONNX and Required CI fail.",
-      "candidate_ci_run": 38811480496,
-      "candidate_ci_head": "bd3900a54f0a7a3e12269b1601105ef6b47cac7b",
+      "candidate_ci_run": 38813573269,
+      "candidate_ci_head": "db7192005d2236b5213549c82b41b27b6538bac5",
       "candidate_ci_last_observation": "completed_failure",
       "candidate_ci_aggregate_conclusion": "failure",
       "evidence": [
@@ -109,7 +109,12 @@
         "m4-original-candidate-tail149-local-tolerance-and-native-context-failure-20261016.json",
         "m4-six-saved-matrix-contracts-local-avx2-actual-onnx-bit-exact-20261016.json",
         "m4-original13row-position-candidate-tdd-and-isolated-smoke-20261016.json",
-        "m4-small-native-matrix-context-diagnosis-tdd-20261016.json"
+        "m4-small-native-matrix-context-diagnosis-tdd-20261016.json",
+        "m4-connected-original-positions-all12-numerical-failure-20261016.json",
+        "m4-original-entire-stem-all286720-actual-onnx-bit-exact-20261016.json",
+        "m4-original-tanh-all55296-actual-onnx-bit-exact-20261016.json",
+        "m4-connected-original-tanh-and-operator-counts-tdd-20261016.json",
+        "m4-original-all-six-frozen-case-and-profile-selection-tdd-20261016.json"
       ],
       "next_action": "Evaluate all12layers with actual ONNX carry and independently qualified original operators. Whole original-input/all6signals and Required CI remain mandatory."
     }

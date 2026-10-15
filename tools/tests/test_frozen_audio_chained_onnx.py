@@ -47,6 +47,8 @@ def test_connected_partitions_keep_actual_onnx_carry_and_compare_only_original_f
     assert row['metrics']['mismatched_elements'] == 0 and len(row['parts']) == 3
     for a, b in zip(row['parts'], row['parts'][1:]):
         assert a['output_sha256'] == b['input_sha256']
+    assert all(sum(part['onnx_operator_counts'].get(op, 0) for op in ('MatMul', 'Gemm')) == 1
+               for part in row['parts'])
     assert row['actual_carry'] == 'previous_onnx_output_without_frozen_stage_reset'
     assert str(source.graph) == before
 
@@ -121,7 +123,8 @@ def test_workflow_chain_mode_keeps_full_scope_and_does_not_fetch_middle_stage_go
     assert 'chained_probe:' in text and 'CHAINED_PROBE' in text
     assert 'embeddinggemma_tools.frozen_audio_chained_onnx' in text
     assert 'timeout-minutes: 20' in text
-    assert '--member "audio-runtime-stages/frames-1119-valid-1119/silence-stage-${stage_index}-fp32.bin"' in text
+    assert '--member "audio-runtime-stages/${PROBE_PROFILE}/${PROBE_CASE}-stage-${stage_index}-fp32.bin"' in text
+    assert 'silence|impulse|sine|nyquist|noise) profile=frames-1119-valid-1119' in text
 
 
 @pytest.mark.parametrize('variant', ['native', 'ordered_static_linear_all_bmm', 'ordered_original_primitives'])

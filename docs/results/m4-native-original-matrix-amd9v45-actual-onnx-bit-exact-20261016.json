@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "source": "db7192005d2236b5213549c82b41b27b6538bac5",
+  "scope": "one_original_qualified_matrix_only",
+  "actions_run": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38813572875",
+  "artifact_id": 12009163889,
+  "report_sha256": "fbe622d421508b8668499813a42b8300c5d80f7c74312fea621bff2ed5a62bff",
+  "cpu_model": "AMD EPYC 9V45 96-Core Processor",
+  "cpu_capability": "AVX512",
+  "native_default_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 0.0,
+    "maximum_tolerance_ratio": 0.0,
+    "worst_index": 0,
+    "worst_actual": -28.171314239501953,
+    "worst_expected": -28.171314239501953,
+    "exact_difference_count": 0
+  },
+  "native_mkl_avx2_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 0.0,
+    "maximum_tolerance_ratio": 0.0,
+    "worst_index": 0,
+    "worst_actual": -28.171314239501953,
+    "worst_expected": -28.171314239501953,
+    "exact_difference_count": 0
+  },
+  "portable_actual_onnx_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 0.0,
+    "maximum_tolerance_ratio": 0.0,
+    "worst_index": 0,
+    "worst_actual": -28.171314239501953,
+    "worst_expected": -28.171314239501953,
+    "exact_difference_count": 0
+  },
+  "same_original_fixture": true,
+  "capture_and_log_sha_verified": true,
+  "interpretation": "Both native contexts and actual portable ONNX reproduce the original matrix exactly on this AMD host. This does not test whether MKL_ENABLE_INSTRUCTIONS changes the Intel8573C discrepancy; the Intel-specific hypothesis remains unverified. No default setting adopted.",
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "state_receipt_sha256": "de9527f839fd234b6bc3f8ae794fc7d0fafb379a6eb7774eaadec600164df995",
+  "intel_hypothesis_resolved": false
+}

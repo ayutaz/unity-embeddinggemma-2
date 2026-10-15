@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using EmbeddingGemma.Tests;
+using NUnit.Framework;
 using Unity.InferenceEngine;
 
 namespace EmbeddingGemma.Validation.Tests
@@ -12,6 +15,35 @@ namespace EmbeddingGemma.Validation.Tests
         GpuProjectionPipeline pipeline;
         GpuScalarDivide divide;
         public BackendType Backend=>BackendType.GPUCompute;
+        // Diagnostic graph surgery only: validate the exact six-node original RMS,
+        // preserve every descriptor/coefficient, and expose its unchanged tensor ID.
+        public static (Model model,int output) MarkFirst(Model source,int projectionOutput)
+        {
+            var constants=source.constants.ToDictionary(value=>value.index);
+            var producer=source.layers.SelectMany(layer=>layer.outputs.Where(index=>index>=0).Select(index=>(index,layer))).ToDictionary(row=>row.index,row=>row.layer);
+            var reshape=producer[producer[projectionOutput].inputs[0]];Assert.That(reshape.GetType().Name,Is.EqualTo("Reshape"));
+            var final=producer[reshape.inputs[0]];Assert.That(final.GetType().Name,Is.EqualTo("Mul"));
+            var scale=constants[final.inputs.Single(constants.ContainsKey)];
+            Assert.That(scale.shape,Is.EqualTo(new TensorShape(768)));Assert.That(scale.dataType,Is.EqualTo(DataType.Float));
+            var raw=(ArraySegment<byte>)typeof(Constant).GetField("array",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(scale);
+            using(var bytes=new MemoryStream(raw.Array,raw.Offset,raw.Count,false))
+                Assert.That(PlayerFileHash.Compute(bytes,out _),Is.EqualTo("acc544061ccfe25009301bdfc15bab61468511ef6f27962b70c54efb65da9cb7"));
+            var multiply=producer[final.inputs.Single(index=>!constants.ContainsKey(index))];Assert.That(multiply.GetType().Name,Is.EqualTo("Mul"));
+            var inverse=producer[multiply.inputs.Single(index=>producer.TryGetValue(index,out var layer)&&layer.GetType().Name=="Rsqrt")];
+            var scalar=producer[inverse.inputs[0]];Assert.That(scalar.GetType().Name,Is.EqualTo("ScalarMad"));
+            var mean=producer[scalar.inputs[0]];Assert.That(mean.GetType().Name,Is.EqualTo("ReduceMean"));
+            var square=producer[mean.inputs[0]];Assert.That(square.GetType().Name,Is.EqualTo("Square"));
+            var input=square.inputs[0];Assert.That(multiply.inputs.Single(index=>index!=inverse.outputs[0]),Is.EqualTo(input));
+            Assert.That((float)scalar.GetType().GetField("sFloat").GetValue(scalar),Is.EqualTo(1f));
+            Assert.That((float)scalar.GetType().GetField("bFloat").GetValue(scalar),Is.EqualTo(1e-6f));
+            var chain=new HashSet<Layer>{final,multiply,inverse,scalar,mean,square};Assert.That(chain.Count,Is.EqualTo(6));
+            foreach(var layer in chain.Where(layer=>!ReferenceEquals(layer,final)))
+                Assert.That(source.layers.Where(consumer=>consumer.inputs.Intersect(layer.outputs).Any()).All(chain.Contains),Is.True,"An internal RMS value escapes its cut.");
+            var identity=typeof(Worker).Assembly.GetTypes().Single(type=>type.Name=="Identity"&&typeof(Layer).IsAssignableFrom(type));
+            var marker=(Layer)Activator.CreateInstance(identity);marker.inputs=new[]{input};marker.outputs=(int[])final.outputs.Clone();
+            return(new Model{ProducerName=source.ProducerName+"/qualified-first-rms-marker",inputs=new List<Model.Input>(source.inputs),outputs=new List<Model.Output>(source.outputs),
+                constants=new List<Constant>(source.constants),layers=source.layers.Select(layer=>ReferenceEquals(layer,final)?marker:layer).ToList()},marker.outputs[0]);
+        }
         public QualifiedVisionRmsOperation(Model model)
         {
             if(model==null)throw new ArgumentNullException(nameof(model));

@@ -16,13 +16,23 @@ namespace EmbeddingGemma.Validation.Tests
         [TestCase("landscape-0")] [TestCase("landscape-1")]
         [TestCase("portrait-0")] [TestCase("portrait-1")]
         public void NativeStaticVisionProjectionsMatchOriginalGoldenOnGpu(string caseId)
+            => Run(caseId,false);
+
+        [TestCase("square-0")] [TestCase("square-1")]
+        [TestCase("landscape-0")] [TestCase("landscape-1")]
+        [TestCase("portrait-0")] [TestCase("portrait-1")]
+        public void FirstLayerQualifiedVisionEncoderMatchesOriginalGoldenOnGpu(string caseId)
+            => Run(caseId,true);
+
+        static void Run(string caseId,bool firstLayerOnly)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-encoder"));
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-all-static-gpu-"+source+"-"+caseId+".json"));
+            var label=firstLayerOnly?"vision-first-layer-qualified-whole-gpu-":"vision-all-static-gpu-";
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+"-"+caseId+".json"));
             Assert.That(File.Exists(output),Is.False);
-            var report=new JObject{["success"]=false,["scope"]="one_original_vision_encoder_native_static_gpu_projection_candidate",["runtime_source"]=source,
+            var report=new JObject{["success"]=false,["scope"]=firstLayerOnly?"one_original_vision_encoder_qualified_patch_first_rms_and_first_layer_candidate":"one_original_vision_encoder_native_static_gpu_projection_candidate",["runtime_source"]=source,
                 ["case_id"]=caseId,["phase"]="audit",["all_profiles_validated"]=false,["end_to_end_validated"]=false};
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
@@ -43,10 +53,26 @@ namespace EmbeddingGemma.Validation.Tests
                 var model=TextModelFile.Load(Path.Combine(root,profile+"-fp32.sentis"));var constants=model.constants.ToDictionary(value=>value.index);
                 var selected=model.layers.Where(layer=>layer.GetType().Name=="MatMul"&&!constants.ContainsKey(layer.inputs[0])
                     &&constants.TryGetValue(layer.inputs[1],out var w)&&w.shape.rank==2).Select(layer=>layer.outputs[0]).ToArray();
-                Assert.That(selected.Length,Is.GreaterThanOrEqualTo(113));var plan=SavedProjectionPartition.Create(model,selected);
+                Assert.That(selected.Length,Is.GreaterThanOrEqualTo(113));Model rmsTemplate=null;
+                if(firstLayerOnly)
+                {
+                    report["original_projection_count"]=selected.Length;
+                    Check(Path.Combine(Application.dataPath,"GpuVisionFirstRmsCandidate/first-rms.onnx"),"724605434efc0b70bb28b59b5dc639f8b0aeb765a4170ec782397506f6549976");
+                    rmsTemplate=ModelLoader.Load(UnityEditor.AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/GpuVisionFirstRmsCandidate/first-rms.onnx"));
+                    selected=selected.Take(8).ToArray(); // Patch projection and the seven layer-0 projections only.
+                    var marked=QualifiedVisionRmsOperation.MarkFirst(model,selected[1]);model=marked.model;
+                    selected=new[]{selected[0],marked.output}.Concat(selected.Skip(1)).ToArray();
+                    report["first_rms_replaced"]=true;
+                }
+                var plan=SavedProjectionPartition.Create(model,selected);
                 var projections=new JArray();report["projections"]=projections;
                 for(var i=0;i<selected.Length;i++)
                 {
+                    if(plan.Weights[i]==null)
+                    {
+                        Assert.That(firstLayerOnly&&i==1,Is.True);operations.Add(new QualifiedVisionRmsOperation(rmsTemplate));
+                        projections.Add(new JObject{["kind"]="explicit_division_first_rms",["rows"]=plan.Rows[i],["width"]=plan.Widths[i]});continue;
+                    }
                     Assert.That(plan.Rows[i]==2520||plan.Rows[i]==features,Is.True,"Qualify each original token-row profile; never guess dynamic shapes.");
                     var block=plan.Rows[i]==2520?384:192;
                     operations.Add(new GpuBlockedMatmul(plan.Widths[i],plan.Columns[i],plan.Weights[i],block));
@@ -54,7 +80,7 @@ namespace EmbeddingGemma.Validation.Tests
                     using var stream=new MemoryStream(bytes);projections.Add(new JObject{["width"]=plan.Widths[i],["columns"]=plan.Columns[i],["rows"]=plan.Rows[i],["block"]=block,["weight_sha256"]=PlayerFileHash.Compute(stream,out _)});
                 }
                 using var pipeline=new GpuProjectionPipeline(plan.Models,plan.Inputs,plan.Outputs,operations.ToArray());
-                report["prepare_ms"]=timer.Elapsed.TotalMilliseconds;report["projection_count"]=selected.Length;report["segment_count"]=plan.Models.Length;report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
+                report["prepare_ms"]=timer.Elapsed.TotalMilliseconds;report["projection_count"]=selected.Length-(firstLayerOnly?1:0);report["gpu_operation_count"]=selected.Length;report["segment_count"]=plan.Models.Length;report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
                 var pixelsName=row.Value<string>("pixels");Check(Path.Combine(root,pixelsName),audit["files"][pixelsName].Value<string>("sha256"));
                 using var input=new Tensor<float>(new TensorShape(1,2520,768),Floats(Path.Combine(root,pixelsName)));ComputeTensorData.Pin(input);
                 using var process=System.Diagnostics.Process.GetCurrentProcess();GpuExecutionProfiler.ReadProcessMemory(process,out var before,out _);report["host_working_set_before_execute_bytes"]=before;

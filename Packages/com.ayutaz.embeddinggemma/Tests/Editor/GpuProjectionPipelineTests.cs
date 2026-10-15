@@ -22,11 +22,11 @@ namespace EmbeddingGemma.Tests
             public void Dispose()=>identity.Dispose();
         }
 
-        static GpuProjectionPipeline CachePipeline(IGpuTensorOperation operation,bool release)
+        static GpuProjectionPipeline CachePipeline(IGpuTensorOperation operation,bool release,bool constantPrefix=false)
         {
             var constructor=typeof(GpuProjectionPipeline).GetConstructor(new[]{typeof(Model[]),typeof(string[][]),typeof(string[]),typeof(IGpuTensorOperation[]),typeof(bool)});
             Assert.That(constructor,Is.Not.Null,"Opt-in unused GPU cache release is missing.");
-            var first=new FunctionalGraph();var x=first.AddInput<float>(new TensorShape(1,2),"input");var before=Rename(first.Compile(x,x*x+x),"input","work");
+            var first=new FunctionalGraph();var x=first.AddInput<float>(new TensorShape(1,2),"input");var work=constantPrefix?x*x+Functional.Constant(new TensorShape(1,2),new[]{1f,2f}):x*x+x;var before=Rename(first.Compile(x,work),"input","work");
             var last=new FunctionalGraph();var residual=last.AddInput<float>(new TensorShape(1,2),"input");var projected=last.AddInput<float>(new TensorShape(1,2),"projected");
             var after=Rename(last.Compile(projected*projected+residual),"final");
             return (GpuProjectionPipeline)constructor.Invoke(new object[]{new[]{before,after},new[]{new[]{"work"}},new[]{"projected"},new[]{operation},release});
@@ -62,6 +62,28 @@ namespace EmbeddingGemma.Tests
             operation.BeforeExecute=()=>throw new InvalidOperationException("Controlled borrowed operation failure.");Assert.Throws<InvalidOperationException>(()=>pipeline.Execute(input));
             operation.BeforeExecute=null;using var output=pipeline.Execute(input);Assert.That(output.DownloadToArray(),Is.EqualTo(new[]{33f,404f}));
             Assert.That(CachedGpuBuffers(pipeline,0),Is.Zero);Assert.That(CachedGpuBuffers(pipeline,1),Is.Zero);
+        }
+        [Test]
+        public void CacheReleaseRetiresCopiedWorkerOutputsButKeepsInputsAndConstants()
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
+            using var operation=new ObservedOperation();using var pipeline=CachePipeline(operation,true,true);
+            operation.BeforeExecute=()=>
+            {
+                const BindingFlags fields=BindingFlags.Instance|BindingFlags.NonPublic;
+                var workers=(Worker[])typeof(GpuProjectionPipeline).GetField("workers",fields).GetValue(pipeline);
+                var models=(Model[])typeof(GpuProjectionPipeline).GetField("models",fields).GetValue(pipeline);
+                var storage=typeof(Worker).GetField("m_Storage",fields).GetValue(workers[0]);
+                var values=(IDictionary)storage.GetType().GetField("m_InUseTensorsPool",fields).GetValue(storage);
+                foreach(var output in models[0].outputs)
+                    if(!models[0].inputs.Exists(input=>input.index==output.index))Assert.That(values.Contains(output.index),Is.False,"Copied Worker-owned output must be retired before the next operation.");
+                foreach(var input in models[0].inputs)Assert.That(((Tensor)values[input.index]).dataOnBackend,Is.Not.Null);
+                Assert.That(models[0].constants.Count,Is.GreaterThan(0));foreach(var constant in models[0].constants)Assert.That(((Tensor)values[constant.index]).dataOnBackend,Is.Not.Null);
+            };
+            using var input=new Tensor<float>(new TensorShape(1,2),new[]{-3f,4f});ComputeTensorData.Pin(input);
+            using var output=pipeline.Execute(input);using var repeated=pipeline.Execute(input);pipeline.Dispose();
+            Assert.That(output.DownloadToArray(),Is.EqualTo(new[]{97f,328f}));Assert.That(repeated.DownloadToArray(),Is.EqualTo(new[]{97f,328f}));
+            Assert.That(input.DownloadToArray(),Is.EqualTo(new[]{-3f,4f}));
         }
 
         [Test]

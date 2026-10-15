@@ -16,12 +16,20 @@ namespace EmbeddingGemma.Validation.Tests
     {
         [Test]
         public void RefinedFirstVisionRmsMatchesIndependentCurrentCpuEquationOnGpu()
+            => Run(false);
+
+        [Test]
+        public void InlineRefinedMeanDivisionMatchesIndependentCurrentCpuEquationOnGpu()
+            => Run(true);
+
+        static void Run(bool inline)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");var root=Path.Combine(Application.dataPath,"GpuVisionFirstRmsCandidate");
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-first-rms-refined-gpu-"+source+".json"));
+            var label=inline?"vision-inline-rms-gpu-":"vision-first-rms-refined-gpu-";
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+".json"));
             Assert.That(File.Exists(output),Is.False);
-            var report=new JObject{["success"]=false,["scope"]="first_vision_rms_gpu_against_current_cpu_equation_only",["runtime_source"]=source,
+            var report=new JObject{["success"]=false,["scope"]=inline?"single_model_first_vision_rms_gpu_against_current_cpu_equation_only":"first_vision_rms_gpu_against_current_cpu_equation_only",["runtime_source"]=source,
                 ["original_internal_native_reference_available"]=false,["full_encoder_validated"]=false,["end_to_end_validated"]=false,["phase"]="audit"};
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
@@ -30,17 +38,19 @@ namespace EmbeddingGemma.Validation.Tests
             {
                 var locked=JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath,"../Packages/packages-lock.json")));
                 foreach(var package in new[]{"com.ayutaz.embeddinggemma","com.ayutaz.embeddinggemma.validation"})Assert.That(locked["dependencies"][package].Value<string>("hash"),Is.EqualTo(source));
-                Check(Path.Combine(root,"first-rms.onnx"),"724605434efc0b70bb28b59b5dc639f8b0aeb765a4170ec782397506f6549976");
+                var asset=inline?"GpuVisionInlineRmsCandidate/inline-rms.onnx":"GpuVisionFirstRmsCandidate/first-rms.onnx";
+                Check(Path.Combine(Application.dataPath,asset),inline?"15c8ec537c8d40386e61b675c05aaaa65b296667c0d38c39dc7d12fe28a25ccb":"724605434efc0b70bb28b59b5dc639f8b0aeb765a4170ec782397506f6549976");
                 Check(Path.Combine(root,"scale-fp32.bin"),"acc544061ccfe25009301bdfc15bab61468511ef6f27962b70c54efb65da9cb7");
                 Check(Path.Combine(root,"current-cpu-equation-fp32.bin"),"881b26f2dba59d783185646334a9d50fe9fe1e3c78315d1a3644b6a09313db4d");
                 var inputPath=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-diagnostics/native-stage-0.bin"));
                 Check(inputPath,"bc4c19c9aaf9688801c99ed073fdde22f0daf6b822dc2c9c4b7a3f7c9aded636");
-                var model=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/GpuVisionFirstRmsCandidate/first-rms.onnx"));report["layer_count"]=model.layers.Count;
+                var model=ModelLoader.Load(AssetDatabase.LoadAssetAtPath<ModelAsset>("Assets/"+asset));report["layer_count"]=model.layers.Count;
                 using var beforeBytes=new MemoryStream();ModelWriter.Save(beforeBytes,model);
-                using var operation=new QualifiedVisionRmsOperation(model);
-                report["mean_division_gpu_boundary_preserved"]=true;report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
+                using var operation=inline?null:new QualifiedVisionRmsOperation(model);
+                using var single=inline?new GpuProjectionPipeline(new[]{model},Array.Empty<string>(),Array.Empty<string>(),Array.Empty<IGpuTensorOperation>()):null;
+                report["mean_division_gpu_boundary_preserved"]=!inline;report["inline_mean_division_refined"]=inline;report["worker_count"]=inline?1:2;report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
                 using var input=new Tensor<float>(new TensorShape(1,2520,768),Floats(inputPath));ComputeTensorData.Pin(input);report["phase"]="execute";Save();
-                using var tensor=operation.Execute(input);Assert.That(tensor.backendType,Is.EqualTo(BackendType.GPUCompute));
+                using var tensor=inline?single.Execute(input):operation.Execute(input);Assert.That(tensor.backendType,Is.EqualTo(BackendType.GPUCompute));
                 var actual=tensor.DownloadToArray();var expected=Floats(Path.Combine(root,"current-cpu-equation-fp32.bin"));Assert.That(actual.Length,Is.EqualTo(expected.Length));
                 var path=Path.ChangeExtension(output,"bin");var bytes=new byte[actual.Length*4];Buffer.BlockCopy(actual,0,bytes,0,bytes.Length);File.WriteAllBytes(path,bytes);
                 using(var stream=File.OpenRead(path))report["capture_sha256"]=PlayerFileHash.Compute(stream,out _);

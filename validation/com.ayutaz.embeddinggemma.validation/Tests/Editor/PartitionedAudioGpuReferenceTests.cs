@@ -376,14 +376,16 @@ namespace EmbeddingGemma.Validation.Tests
                 workerTimer.Restart();
                 using var input=new Tensor<float>(new TensorShape(inputShape),inputValues);ComputeTensorData.Pin(input);
                 report["input_tensor_creation_and_pin_ms"]=workerTimer.Elapsed.TotalMilliseconds;
-                using var process=System.Diagnostics.Process.GetCurrentProcess();process.Refresh();
-                report["host_working_set_before_execute_bytes"]=process.WorkingSet64;
+                using var process=System.Diagnostics.Process.GetCurrentProcess();
+                GpuExecutionProfiler.ReadProcessMemory(process,out var workingSetBefore,out _);
+                report["host_working_set_before_execute_bytes"]=workingSetBefore;
                 report["phase"]="execute";Save();timer.Restart();
                 using var encoded=pipeline.Execute(input);Assert.That(encoded.backendType,Is.EqualTo(BackendType.GPUCompute));
                 var enqueueMs=timer.Elapsed.TotalMilliseconds;report["execute_enqueue_ms"]=enqueueMs;
                 var actual=encoded.DownloadToArray();report["execute_and_final_download_ms"]=timer.Elapsed.TotalMilliseconds;
                 report["final_download_and_gpu_wait_ms"]=timer.Elapsed.TotalMilliseconds-enqueueMs;
-                process.Refresh();report["host_working_set_after_download_bytes"]=process.WorkingSet64;report["host_peak_working_set_bytes"]=process.PeakWorkingSet64;
+                GpuExecutionProfiler.ReadProcessMemory(process,out var workingSetAfter,out var peakWorkingSet);
+                report["host_working_set_after_download_bytes"]=workingSetAfter;report["host_peak_working_set_bytes"]=peakWorkingSet;
                 Assert.That(actual.Length,Is.EqualTo(expected.Length));
                 int mismatch=0;double maximum=0,ratio=0;
                 for(var i=0;i<actual.Length;i++)

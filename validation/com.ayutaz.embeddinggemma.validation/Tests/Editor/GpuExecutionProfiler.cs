@@ -26,6 +26,19 @@ namespace EmbeddingGemma.Validation.Tests
         [DllImport("psapi.dll", SetLastError = true)]
         static extern bool GetProcessMemoryInfo(IntPtr process, ref MemoryCounters counters, uint size);
 
+        internal static void ReadProcessMemory(Process process,out long workingSet,out long peak)
+        {
+            process.Refresh();workingSet=process.WorkingSet64;peak=process.PeakWorkingSet64;
+            if(SystemInfo.operatingSystemFamily==OperatingSystemFamily.Windows)
+            {
+                var memory=new MemoryCounters{size=(uint)Marshal.SizeOf<MemoryCounters>()};
+                if(!GetProcessMemoryInfo(GetCurrentProcess(),ref memory,memory.size))
+                    throw new InvalidOperationException("Native memory counters unavailable: "+Marshal.GetLastWin32Error());
+                workingSet=(long)memory.workingSet.ToUInt64();peak=(long)memory.peakWorkingSet.ToUInt64();
+            }
+            Assert.That(workingSet,Is.GreaterThan(0),"Missing process memory must not pass.");
+        }
+
         public static JObject Run(bool real)
         {
             Assert.That(SystemInfo.supportsComputeShaders, Is.True, "GPU required; no CPU fallback or skip.");
@@ -54,14 +67,7 @@ namespace EmbeddingGemma.Validation.Tests
                     row["cpu_seconds"] = (process.TotalProcessorTime - cpu).TotalSeconds;
                     // Unity Mono returns zero for Process.WorkingSet64 on this host.
                     // Read Windows' native counters rather than substituting managed heap size.
-                    long workingSet = process.WorkingSet64, peak = process.PeakWorkingSet64;
-                    if (SystemInfo.operatingSystemFamily == OperatingSystemFamily.Windows)
-                    {
-                        var memory = new MemoryCounters { size = (uint)Marshal.SizeOf<MemoryCounters>() };
-                        if (!GetProcessMemoryInfo(GetCurrentProcess(), ref memory, memory.size))
-                            throw new InvalidOperationException("Native memory counters unavailable: " + Marshal.GetLastWin32Error());
-                        workingSet = (long)memory.workingSet.ToUInt64(); peak = (long)memory.peakWorkingSet.ToUInt64();
-                    }
+                    ReadProcessMemory(process,out var workingSet,out var peak);
                     row["working_set_bytes"] = workingSet;
                     row["peak_working_set_bytes"] = peak;
                     row["unity_allocated_bytes"] = UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong(); Save();

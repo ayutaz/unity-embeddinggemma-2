@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "layer_zero_native_context_rejection_and_explicit_audited_stage_reference",
+  "rejected_live_context": {
+    "run_id": 38778892912,
+    "artifact_id": 11993894907,
+    "head_source": "dba89116687192ba0d6410837e77122678ecb165",
+    "actual_producer": "81ebdb39d09f19eafbb9f6fa3a6c6b9f9f9c7ce8",
+    "conclusion": "failure",
+    "report_sha256": "245ac15f0e6ce0472ec792cfdaf67a3e1d1667f224a5cac229a573edf61bbdda",
+    "provenance": {
+      "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+      "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+      "reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+      "audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+      "graph_sha256": "dc43d56b896b64077d8e86d56c3fd2b89cfe3d31170eabaa387165ea961438d7",
+      "input_sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+      "job_source": "81ebdb39d09f19eafbb9f6fa3a6c6b9f9f9c7ce8",
+      "torch_version": "2.14.1+cu130",
+      "threads": 2,
+      "cpu_capability": "AVX2",
+      "stage": "layer_0"
+    },
+    "metrics": {
+      "actual_finite": true,
+      "same_shape": true,
+      "mismatched_elements": 288,
+      "maximum_absolute_error": 0.0001811981201171875,
+      "maximum_tolerance_ratio": 8.712747897611987,
+      "worst_index": 23176,
+      "worst_actual": 0.007174745202064514,
+      "worst_expected": 0.007268205285072327,
+      "exact_difference_count": 135855
+    },
+    "onnx_comparison_executed": false
+  },
+  "original_fixed_stage_reference": {
+    "artifact_id": 11814567883,
+    "reference_sha256": "6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a",
+    "audit_sha256": "3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b",
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+    "selected_stage": "layer_0",
+    "selected_expected_sha256": "3cc353963c7eafd2a209526c5c19daedd66c9c0da7cdf43dc6a4f4ccee158cf2",
+    "shape": [
+      1,
+      280,
+      1024
+    ],
+    "native_context_validated": true,
+    "original_onnx_numerically_validated": false
+  },
+  "explicit_mode": "--frozen-stage-source audits original stage metadata and binary bytes before comparisons. Native context drift is still reported as failure evidence; default live-context qualification is unchanged. Diagnostic completion does not qualify a full encoder or Required CI.",
+  "tdd": [
+    {
+      "file": "frozen-prefix-stage-selection-red-20261016.xml",
+      "sha256": "75e312a2f86a8c8e98a1be67476fc82edc24a26747f66753a6a911007e8ae9ae",
+      "counts": {
+        "tests": 2,
+        "failures": 2,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "file": "frozen-prefix-stage-and-related-green-20261016.xml",
+      "sha256": "5598a6e164505bb743af3321c762dbf1c2a1c14250b54cc4bd0a3459bf1c2692",
+      "counts": {
+        "tests": 28,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "file": "frozen-prefix-independent-stage-red-20261016.xml",
+      "sha256": "f54a36d819a0abb1693525b29a1139e9ef5c2aac6c256ca7cc8235a437636cae",
+      "counts": {
+        "tests": 3,
+        "failures": 3,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "file": "frozen-stage-workflow-red-20261016.xml",
+      "sha256": "fbc52b0ad5c733a7c7da339e34e76467d2982faea3c287a3ddbeda10a5a03fb3",
+      "counts": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "file": "frozen-stage-audit-and-related-green-20261016.xml",
+      "sha256": "af23b389482d8dbac09098520648ad51f7129168ad3ef06a7b81af1575b51b94",
+      "counts": {
+        "tests": 32,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "actionlint_exit_code": 0,
+  "corrected_layer0_fixed_reference_execution_pending": true,
+  "production_gpu_code_changed": false,
+  "original_golden_weights_or_tolerances_changed": false,
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "end_to_end_validated": false
+}

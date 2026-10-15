@@ -1,4 +1,6 @@
 import operator
+import hashlib
+import json
 from pathlib import Path
 
 import numpy as np
@@ -182,3 +184,65 @@ def test_cli_explicit_stage_is_forwarded_without_changing_default(tmp_path, monk
     monkeypatch.setattr(probe, "probe_prefix", record)
     assert probe.main(["--input", str(tmp_path), "--output", str(tmp_path / "output"), "--stage", "layer_0"]) == 0
     assert calls[0]["boundary"] == "mul_27"
+    assert calls[0]["frozen_stage"] is None
+
+
+def frozen_fixture(tmp_path, monkeypatch):
+    directory = tmp_path / "frozen"
+    directory.mkdir()
+    binary = directory / "frames-1119-valid-1119/silence-stage-01-fp32.bin"
+    binary.parent.mkdir()
+    binary.write_bytes(bytes(1 * 280 * 1024 * 4))
+    metadata = dict(stage="audio_runtime_stage_context_only", source_commit=probe.PRODUCER,
+                    model_revision=probe.REVISION, encoder_reference_sha256=probe.REFERENCE_SHA,
+                    feature_atol=1e-5, feature_rtol=1e-4)
+    reference = dict(metadata=metadata, cases=[dict(id="silence", profile="frames-1119-valid-1119",
+        input_features="frames-1119-valid-1119/silence-features-fp32.bin", native_final_matches_original=True,
+        trace_numpy_matches_original=True, stages=[dict(name="layer_0", shape=[1, 280, 1024], expected=binary.relative_to(directory).as_posix())])])
+    ref = directory / "audio-stage-reference.json"
+    ref.write_text(json.dumps(reference))
+    digest = lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
+    audit = dict(success=True, context_validated=True, metadata=metadata,
+                 files={path.relative_to(directory).as_posix(): dict(bytes=path.stat().st_size, sha256=digest(path)) for path in (ref, binary)})
+    audit_path = directory / "audio-stage-validation.json"
+    audit_path.write_text(json.dumps(audit))
+    monkeypatch.setattr(probe, "STAGE_REFERENCE_SHA", digest(ref))
+    monkeypatch.setattr(probe, "STAGE_AUDIT_SHA", digest(audit_path))
+    return directory, binary
+
+
+def test_fixed_stage_loader_audits_reference_manifest_and_expected_bytes(tmp_path, monkeypatch):
+    directory, binary = frozen_fixture(tmp_path, monkeypatch)
+    frozen = probe.load_frozen_stage_reference(directory, "layer_0")
+    assert frozen.expected.shape == (1, 280, 1024)
+    assert frozen.provenance["expected_sha256"] == hashlib.sha256(binary.read_bytes()).hexdigest()
+    assert frozen.provenance["stage"] == "layer_0"
+
+
+def test_fixed_stage_loader_rejects_tampered_bytes(tmp_path, monkeypatch):
+    directory, binary = frozen_fixture(tmp_path, monkeypatch)
+    raw = bytearray(binary.read_bytes())
+    raw[0] ^= 1
+    binary.write_bytes(raw)
+    with pytest.raises(ValueError, match="hash"):
+        probe.load_frozen_stage_reference(directory, "layer_0")
+
+
+def test_explicit_frozen_stage_keeps_native_drift_and_numeric_failures_visible(tmp_path):
+    source, boundary = program()
+    values = torch.zeros(1, 32)
+    frozen = probe.FrozenStageReference(torch.ones(1, 8), dict(stage="synthetic_unit_test", expected_sha256="unit-test"))
+    report = probe.probe_prefix(source, values, torch.ones(1, 8), tmp_path, boundary=boundary, frozen_stage=frozen)
+    assert not report["context_qualified"] and report["reference_qualified"] and report["complete"]
+    assert report["native_whole_encoder_metrics"]["mismatched_elements"] == 8
+    assert all(row["metrics"]["mismatched_elements"] == 8 for row in report["cases"])
+    assert not report["full_encoder_validated"] and not report["gpu_validated"]
+
+
+def test_workflow_frozen_reference_is_explicit_and_keeps_original_artifact_pins():
+    path = Path(__file__).resolve().parents[2] / ".github/workflows/frozen-audio-prefix-onnx.yml"
+    text = path.read_text()
+    assert "frozen-audio-layer0-fixed-reference" in text
+    assert "--frozen-stage-source" in text
+    assert "audio-runtime-stages/audio-stage-reference.json" in text
+    assert "audio-runtime-stages/audio-stage-validation.json" in text

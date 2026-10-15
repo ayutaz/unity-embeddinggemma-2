@@ -1,0 +1,1146 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "scope": "vision_component_order_and_original_first_layer_qualification_only",
+  "original_reference_unchanged": true,
+  "tolerances": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "full_original_image_gate": {
+    "passed": 4,
+    "failed": 2,
+    "skipped": 0,
+    "receipt": "m3-native-rotary-all-image-gates-20261015.json",
+    "not_reexecuted": true
+  },
+  "native_static_shape_probe": {
+    "actions_run": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38734071287",
+    "reference_manifest_sha256": "f43cfd94d4d451b108de28b7b792edacfc4ce8f934f3d654986308b8c48f1841",
+    "reference": {
+      "scope": "saved_static_matmul_full_native_shape_and_prefix_only",
+      "matrices": [
+        {
+          "node": "mm_1",
+          "weight_node": "permute_1",
+          "seed": 41015,
+          "native_input_shape": [
+            2520,
+            768
+          ],
+          "native_output_shape": [
+            2520,
+            768
+          ],
+          "saved_input_shape": [
+            16,
+            768
+          ],
+          "weight_stride": [
+            1,
+            768
+          ],
+          "input_stride": [
+            768,
+            1
+          ],
+          "input": {
+            "file": "mm_1-input-fp32.bin",
+            "sha256": "3fea3d98e8385dde278dc2e9fade773fd684b34d035813fccf9eb3fe543bc513",
+            "shape": [
+              16,
+              768
+            ],
+            "bytes": 49152
+          },
+          "weights": {
+            "file": "mm_1-weights-fp32.bin",
+            "sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48",
+            "shape": [
+              768,
+              768
+            ],
+            "bytes": 2359296
+          },
+          "expected": {
+            "file": "mm_1-expected-fp32.bin",
+            "sha256": "2ab0ae5acd34e4ec746d991ef279f3ee273be7c23db57ec1407780eadbc34b06",
+            "shape": [
+              16,
+              768
+            ],
+            "bytes": 49152
+          }
+        },
+        {
+          "node": "mm_5",
+          "weight_node": "permute_10",
+          "seed": 41016,
+          "native_input_shape": [
+            2520,
+            768
+          ],
+          "native_output_shape": [
+            2520,
+            3072
+          ],
+          "saved_input_shape": [
+            16,
+            768
+          ],
+          "weight_stride": [
+            1,
+            768
+          ],
+          "input_stride": [
+            768,
+            1
+          ],
+          "input": {
+            "file": "mm_5-input-fp32.bin",
+            "sha256": "8d5d2c9d31a0b106f45955c21e294870413233d8ed32ecc80ff451046688aaf3",
+            "shape": [
+              16,
+              768
+            ],
+            "bytes": 49152
+          },
+          "weights": {
+            "file": "mm_5-weights-fp32.bin",
+            "sha256": "e0f98883c238d21192d6e086f0205f07c428847307a94817d34f3adf20e7338f",
+            "shape": [
+              768,
+              3072
+            ],
+            "bytes": 9437184
+          },
+          "expected": {
+            "file": "mm_5-expected-fp32.bin",
+            "sha256": "7c342bdac236f8b2c7634cc22eb6e6507660d4724677d02c5f1f89ca3bfb208b",
+            "shape": [
+              16,
+              3072
+            ],
+            "bytes": 196608
+          }
+        },
+        {
+          "node": "mm_6",
+          "weight_node": "permute_11",
+          "seed": 41017,
+          "native_input_shape": [
+            2520,
+            768
+          ],
+          "native_output_shape": [
+            2520,
+            3072
+          ],
+          "saved_input_shape": [
+            16,
+            768
+          ],
+          "weight_stride": [
+            1,
+            768
+          ],
+          "input_stride": [
+            768,
+            1
+          ],
+          "input": {
+            "file": "mm_6-input-fp32.bin",
+            "sha256": "7d5c3543a9f117d82fab1310b13442499a287ecc6a27cc8a6ff7fb42b7c05fa8",
+            "shape": [
+              16,
+              768
+            ],
+            "bytes": 49152
+          },
+          "weights": {
+            "file": "mm_6-weights-fp32.bin",
+            "sha256": "e9f675da30561ba275e17507b5455fda4d49e6a883747c5678d2a46eb8df0102",
+            "shape": [
+              768,
+              3072
+            ],
+            "bytes": 9437184
+          },
+          "expected": {
+            "file": "mm_6-expected-fp32.bin",
+            "sha256": "dad03d9e1516b414df020406cd665653c88a9f167b6f24f33808d970957cf38e",
+            "shape": [
+              16,
+              3072
+            ],
+            "bytes": 196608
+          }
+        },
+        {
+          "node": "mm_7",
+          "weight_node": "permute_12",
+          "seed": 41018,
+          "native_input_shape": [
+            2520,
+            3072
+          ],
+          "native_output_shape": [
+            2520,
+            768
+          ],
+          "saved_input_shape": [
+            16,
+            3072
+          ],
+          "weight_stride": [
+            1,
+            3072
+          ],
+          "input_stride": [
+            3072,
+            1
+          ],
+          "input": {
+            "file": "mm_7-input-fp32.bin",
+            "sha256": "c2bbaaa6060086846d93620cf7afa82e714e1da75a4a2117da4d0fb78aae1e93",
+            "shape": [
+              16,
+              3072
+            ],
+            "bytes": 196608
+          },
+          "weights": {
+            "file": "mm_7-weights-fp32.bin",
+            "sha256": "0174befbd8ff8c841032996393c3e80d3334dfc8dbd10ee58d804a420601de5a",
+            "shape": [
+              3072,
+              768
+            ],
+            "bytes": 9437184
+          },
+          "expected": {
+            "file": "mm_7-expected-fp32.bin",
+            "sha256": "7290ebffcd9c6fefacb03cb87417212419ded78b6b00b5f115aff231f74708a0",
+            "shape": [
+              16,
+              768
+            ],
+            "bytes": 49152
+          }
+        }
+      ],
+      "runtime": {
+        "torch_version": "2.14.1+cu130",
+        "cpu_capability": "AVX2",
+        "threads": 2
+      },
+      "full_encoder_executed": false,
+      "learned_weights_changed": false,
+      "full_gpu_encoder_validated": false,
+      "end_to_end_validated": false,
+      "source": "750258ae760c1ed11674e8af8c354b949324d336",
+      "original_graph_sha256": "f9c5175a1d75289ce814a9651f496f9bdae5e873ac66199a5c3d03e0172c16cc",
+      "native_patch_matches_original": true,
+      "reference_scope": "Native GEMM shape/layout only; deterministic synthetic inputs, not a new original encoder golden"
+    },
+    "matrices": [
+      {
+        "success": true,
+        "runtime_source": "81648956a6802a5dee162411de11a90ee6bf4ce9",
+        "node": "mm_1",
+        "reference_source": "750258ae760c1ed11674e8af8c354b949324d336",
+        "scope": "native_full_shape_static_gemm_synthetic_input_first_16_rows_only",
+        "reference_cpu_capability": "AVX2",
+        "original_full_encoder_reference_reproduced": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "candidates": [
+          {
+            "block_size": 96,
+            "bit_differences": 10660,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 2.0265579223632812e-06,
+            "maximum_tolerance_ratio": 0.08438663541591541,
+            "capture_sha256": "397e602c0c3d0917115ec3ab73e5816b9d6c85d2ac055345201174857ed0ce06"
+          },
+          {
+            "block_size": 128,
+            "bit_differences": 10804,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 1.6689300537109375e-06,
+            "maximum_tolerance_ratio": 0.07789535576853732,
+            "capture_sha256": "7c939fd15abb7e4795984452fe0f78f8917ff4b91b3e9e2fb22aba72361e3e1c"
+          },
+          {
+            "block_size": 192,
+            "bit_differences": 0,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "capture_sha256": "2ab0ae5acd34e4ec746d991ef279f3ee273be7c23db57ec1407780eadbc34b06"
+          },
+          {
+            "block_size": 256,
+            "bit_differences": 11054,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 2.384185791015625e-06,
+            "maximum_tolerance_ratio": 0.09574637479882711,
+            "capture_sha256": "4cd1fa4b5af4337d09158623231bf6c794f5b01f7cac0b413ab476b4b4d44e01"
+          },
+          {
+            "block_size": 384,
+            "bit_differences": 11080,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 3.0994415283203125e-06,
+            "maximum_tolerance_ratio": 0.2136120429343117,
+            "capture_sha256": "9238c1c258c149fcf1b37a23e067cf805377def8681f5a3d34de04b232b208f8"
+          },
+          {
+            "block_size": 512,
+            "bit_differences": 11243,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 2.9802322387695312e-06,
+            "maximum_tolerance_ratio": 0.10762919520359254,
+            "capture_sha256": "8fd653833e59c417b4aeb56bee113939180c95216a79edc8e16df6ccc6f187e5"
+          },
+          {
+            "block_size": 768,
+            "bit_differences": 11548,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 5.245208740234375e-06,
+            "maximum_tolerance_ratio": 0.1107947597684041,
+            "capture_sha256": "99dc87a6642446feded9a5c02af2b03a61579b84ff336b5425703aae5f2e9eb5"
+          }
+        ],
+        "borrowed_input_preserved": true,
+        "actual_backend": "GPUCompute",
+        "cpu_fallback_count": 0,
+        "intermediate_readback_count": 0,
+        "native_input_shape": [
+          2520,
+          768
+        ],
+        "weight_shape": [
+          768,
+          768
+        ],
+        "phase": "completed",
+        "report_file": "vision-static-shape-matmul-gpu-81648956a6802a5dee162411de11a90ee6bf4ce9-mm_1.json",
+        "report_sha256": "653254a36162cd4724a758a337ac105a810760fb442102cd129b4d4aae48b20d"
+      },
+      {
+        "success": true,
+        "runtime_source": "81648956a6802a5dee162411de11a90ee6bf4ce9",
+        "node": "mm_5",
+        "reference_source": "750258ae760c1ed11674e8af8c354b949324d336",
+        "scope": "native_full_shape_static_gemm_synthetic_input_first_16_rows_only",
+        "reference_cpu_capability": "AVX2",
+        "original_full_encoder_reference_reproduced": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "candidates": [
+          {
+            "block_size": 96,
+            "bit_differences": 43008,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 1.8477439880371094e-06,
+            "maximum_tolerance_ratio": 0.09918061642036619,
+            "capture_sha256": "f4d6211665dbb3e87fc29b1668450107bb2115dbf1ebc1ca40d5cdf881dcfe9f"
+          },
+          {
+            "block_size": 128,
+            "bit_differences": 43407,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 1.5497207641601562e-06,
+            "maximum_tolerance_ratio": 0.11597876567974921,
+            "capture_sha256": "0c5e2a87dc6f055024128280ded8f00fe119bdc21f975931f688576a68a23c1c"
+          },
+          {
+            "block_size": 192,
+            "bit_differences": 0,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "capture_sha256": "7c342bdac236f8b2c7634cc22eb6e6507660d4724677d02c5f1f89ca3bfb208b"
+          },
+          {
+            "block_size": 256,
+            "bit_differences": 44119,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 2.086162567138672e-06,
+            "maximum_tolerance_ratio": 0.15752215549116982,
+            "capture_sha256": "fc03cd87000a7fdedb79e894a7b988742b0b584df45d9620263f055f2f8218bb"
+          },
+          {
+            "block_size": 384,
+            "bit_differences": 44225,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 3.0994415283203125e-06,
+            "maximum_tolerance_ratio": 0.15370408576200772,
+            "capture_sha256": "fc97ef9db1df0cd76fa9eec722fb1a40c07e727780893398e62acb4ad5bb71dc"
+          },
+          {
+            "block_size": 512,
+            "bit_differences": 44965,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 3.337860107421875e-06,
+            "maximum_tolerance_ratio": 0.1458538476770091,
+            "capture_sha256": "1e4c436a3c3e81e4be896cc05eef12c1627cfc681644469292766b8c31d78f15"
+          },
+          {
+            "block_size": 768,
+            "bit_differences": 46300,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 4.291534423828125e-06,
+            "maximum_tolerance_ratio": 0.147250818678984,
+            "capture_sha256": "6f48b62e2f6d9b2094787539ed335345900b4bd622d0fa68c1531570838d5b2b"
+          }
+        ],
+        "borrowed_input_preserved": true,
+        "actual_backend": "GPUCompute",
+        "cpu_fallback_count": 0,
+        "intermediate_readback_count": 0,
+        "native_input_shape": [
+          2520,
+          768
+        ],
+        "weight_shape": [
+          768,
+          3072
+        ],
+        "phase": "completed",
+        "report_file": "vision-static-shape-matmul-gpu-81648956a6802a5dee162411de11a90ee6bf4ce9-mm_5.json",
+        "report_sha256": "442945838472f151bf1bf7f68a9134409966105585e2fa1ccc6e52de304eb345"
+      },
+      {
+        "success": true,
+        "runtime_source": "81648956a6802a5dee162411de11a90ee6bf4ce9",
+        "node": "mm_6",
+        "reference_source": "750258ae760c1ed11674e8af8c354b949324d336",
+        "scope": "native_full_shape_static_gemm_synthetic_input_first_16_rows_only",
+        "reference_cpu_capability": "AVX2",
+        "original_full_encoder_reference_reproduced": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "candidates": [
+          {
+            "block_size": 96,
+            "bit_differences": 42991,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 1.5497207641601562e-06,
+            "maximum_tolerance_ratio": 0.07255459384925106,
+            "capture_sha256": "0e90973c6646ac9a4ebcc4b45eb0f0f17b5ddf16fcb4072b408a7471b6d3536a"
+          },
+          {
+            "block_size": 128,
+            "bit_differences": 43388,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 1.7881393432617188e-06,
+            "maximum_tolerance_ratio": 0.08861866133840388,
+            "capture_sha256": "3a20fa1b013d77091e160a52553b34e4eca5e44a22bf5d635cae855ac8cd3f5d"
+          },
+          {
+            "block_size": 192,
+            "bit_differences": 0,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "capture_sha256": "dad03d9e1516b414df020406cd665653c88a9f167b6f24f33808d970957cf38e"
+          },
+          {
+            "block_size": 256,
+            "bit_differences": 44019,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 2.086162567138672e-06,
+            "maximum_tolerance_ratio": 0.1157516246387175,
+            "capture_sha256": "54a3ddd97d582a8b66dc772df0df0c4086b3c551ff47d64c04aeec98eb243f8b"
+          },
+          {
+            "block_size": 384,
+            "bit_differences": 44222,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 3.0994415283203125e-06,
+            "maximum_tolerance_ratio": 0.1669673488893176,
+            "capture_sha256": "446eb73f75bb8a4ef274fb1a32cab8f5b94928b41c2bf6257b892c02128c30a7"
+          },
+          {
+            "block_size": 512,
+            "bit_differences": 45006,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 3.337860107421875e-06,
+            "maximum_tolerance_ratio": 0.14723090381201195,
+            "capture_sha256": "c5147d634aa621a9016b4e1cac6a2d126d3678b5c80fa197906e567f4213ae23"
+          },
+          {
+            "block_size": 768,
+            "bit_differences": 46274,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 4.76837158203125e-06,
+            "maximum_tolerance_ratio": 0.1650154060152658,
+            "capture_sha256": "7a7b64a8a5f81b066e328824fcb714a119b713c86a7cf2a5e9bbaec6c6d6e5ad"
+          }
+        ],
+        "borrowed_input_preserved": true,
+        "actual_backend": "GPUCompute",
+        "cpu_fallback_count": 0,
+        "intermediate_readback_count": 0,
+        "native_input_shape": [
+          2520,
+          768
+        ],
+        "weight_shape": [
+          768,
+          3072
+        ],
+        "phase": "completed",
+        "report_file": "vision-static-shape-matmul-gpu-81648956a6802a5dee162411de11a90ee6bf4ce9-mm_6.json",
+        "report_sha256": "5990893b795c8792cfff953fde790beeca23d41c4a01d72df73d9cf7170b6a48"
+      },
+      {
+        "success": true,
+        "runtime_source": "81648956a6802a5dee162411de11a90ee6bf4ce9",
+        "node": "mm_7",
+        "reference_source": "750258ae760c1ed11674e8af8c354b949324d336",
+        "scope": "native_full_shape_static_gemm_synthetic_input_first_16_rows_only",
+        "reference_cpu_capability": "AVX2",
+        "original_full_encoder_reference_reproduced": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "candidates": [
+          {
+            "block_size": 96,
+            "bit_differences": 11076,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 3.337860107421875e-06,
+            "maximum_tolerance_ratio": 0.09032163760956861,
+            "capture_sha256": "06a8a27205befc6477ea92d3453c52009874400c18ddef1e682d06d80b2e3801"
+          },
+          {
+            "block_size": 128,
+            "bit_differences": 11063,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 2.384185791015625e-06,
+            "maximum_tolerance_ratio": 0.08004624133759476,
+            "capture_sha256": "7ac5c8be3404c064f38f29a17ba118a358b9fecb146565cc7be3d69e0a415805"
+          },
+          {
+            "block_size": 192,
+            "bit_differences": 0,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "capture_sha256": "7290ebffcd9c6fefacb03cb87417212419ded78b6b00b5f115aff231f74708a0"
+          },
+          {
+            "block_size": 256,
+            "bit_differences": 11268,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 2.9206275939941406e-06,
+            "maximum_tolerance_ratio": 0.10116472735867942,
+            "capture_sha256": "f70130b409fd4b38a949781ff00c4c24b3275379e3244a68b67fcd09f3fd612f"
+          },
+          {
+            "block_size": 384,
+            "bit_differences": 11164,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 3.337860107421875e-06,
+            "maximum_tolerance_ratio": 0.12356952824861199,
+            "capture_sha256": "fa1e49138951d43ac0d117914a90d2cef402b878753d0a5a7fc0e342c03d6505"
+          },
+          {
+            "block_size": 512,
+            "bit_differences": 11434,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 3.814697265625e-06,
+            "maximum_tolerance_ratio": 0.12880710140456417,
+            "capture_sha256": "91e6309007764bcb7557f4a7418999efc746d7388f01ac0b1e886c820a4f991e"
+          },
+          {
+            "block_size": 768,
+            "bit_differences": 11560,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 4.76837158203125e-06,
+            "maximum_tolerance_ratio": 0.18060513227246242,
+            "capture_sha256": "d510fe3bbdafc6a8b1a1c22df7836ec0b50c02ee94249af1c481751ee76fbc44"
+          }
+        ],
+        "borrowed_input_preserved": true,
+        "actual_backend": "GPUCompute",
+        "cpu_fallback_count": 0,
+        "intermediate_readback_count": 0,
+        "native_input_shape": [
+          2520,
+          3072
+        ],
+        "weight_shape": [
+          3072,
+          768
+        ],
+        "phase": "completed",
+        "report_file": "vision-static-shape-matmul-gpu-81648956a6802a5dee162411de11a90ee6bf4ce9-mm_7.json",
+        "report_sha256": "155ff180b6e7d8905bb4d5fad5d0e4bb2e7ad37bd47353b5b42adb69ee4d42c6"
+      }
+    ],
+    "conclusion": "All four native AVX2 synthetic full-M static products match current GPU block192 bitwise; no shape-specific block change justified."
+  },
+  "native_avx512_softmax_prefix": {
+    "values": 483840,
+    "report": {
+      "success": true,
+      "runtime_source": "aa644d4ff65a227603251f9796d70571d48d522a",
+      "scope": "captured_linux_avx512_original_first_softmax_prefix_only",
+      "reference_reproduces_original_golden": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "vector_width": 16,
+      "candidate": {
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "capture_sha256": "6821c6d6e630cafad73480a7ffbd310253cece18efd3a8de478d8ed2ff681b58",
+      "report_file": "vision-original-prefix-softmax16-gpu-aa644d4ff65a227603251f9796d70571d48d522a.json",
+      "report_sha256": "ae51dd8f80c0fdda8c6eae1f74b011d938bd78b360c41cfc0a77db23d7f38541"
+    },
+    "runner": {
+      "prefix": "gpu-native-avx512-softmax-sixteen-bit-gate-20261015",
+      "process_sha256": "48045dc1caf6ac8b05581bdd1680e4145ac1811d8f8248f6c6a3b88f5467c2b1",
+      "xml_sha256": "3e8c4372264d94c45db6554414673163e6a5f873bc1b1bc257ae5cd490eb143e",
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+        "-logFile",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-native-avx512-softmax-sixteen-bit-gate-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "CapturedOriginalAvx512PrefixSoftmaxSixteenMustMatchNativeBitsOnGpu|CapturedOriginalLinuxPrefixSoftmaxMustMatchNativeBitsOnGpu|GpuSoftmaxVectorWidthTests",
+        "-testResults",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-native-avx512-softmax-sixteen-bit-gate-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": true,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-15T12:07:46.050402+00:00",
+      "pid": 107044,
+      "exit_code": 0,
+      "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-native-avx512-softmax-sixteen-bit-gate-20261015.xml",
+      "unity_counts": {
+        "total": 6,
+        "passed": 6,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 61.53881840000395,
+      "completed_utc": "2026-10-15T12:08:47.589222+00:00"
+    }
+  },
+  "native_avx512_gelu_prefix": {
+    "values": 49152,
+    "report": {
+      "success": true,
+      "runtime_source": "cb9ff6e04d025cef3c2530ea7e8d6dbb8c803553",
+      "scope": "captured_linux_avx512_original_first_gelu_prefix_only",
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "reference_reproduces_original_golden": false,
+      "separate": {
+        "bit_differences": 198,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 1.1920928955078125e-07,
+        "maximum_tolerance_ratio": 0.00794238494614434
+      },
+      "fused": {
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      "capture_sha256": "5e0c44b26e234ba1ca49e524937ee4fe5d93e2b0250002feb4b9aa52de2fcde4",
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "report_file": "vision-original-avx512-prefix-sleef-gelu-gpu-cb9ff6e04d025cef3c2530ea7e8d6dbb8c803553.json",
+      "report_sha256": "7a7a62069d272e9a75b6a63f4e78709f9107d1fad1a33aafdb4ed09f8eca78a7"
+    }
+  },
+  "native_avx512_unscaled_rms_prefix": {
+    "values": 12288,
+    "report": {
+      "success": true,
+      "scope": "captured_linux_avx512_first_rms_first_16_rows_only",
+      "runtime_source": "3de78a870a8d8d768861ed7fcf57958a22531e53",
+      "original_internal_native_reference_available": true,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "phase": "completed",
+      "reference_reproduces_original_golden": false,
+      "compared_prefix_rows": 16,
+      "layer_count": 198,
+      "reference_node": "mul_4",
+      "comparison_before_learned_scale": true,
+      "mean_division_gpu_boundary_preserved": false,
+      "inline_mean_division_refined": true,
+      "worker_count": 1,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "capture_sha256": "ac47cbfae5b633186cf99b786c21be045de7d618a9f3eb22aec6d164e49fbb8c",
+      "actual_backend": "GPUCompute",
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "source_model_bytes_preserved": true,
+      "report_file": "vision-original-avx512-first-rms-prefix-gpu-3de78a870a8d8d768861ed7fcf57958a22531e53.json",
+      "report_sha256": "17576a42858e97037fd896b486ec344fa0cd5d176c396b5b5e553f8cbc39e0c5"
+    },
+    "runner": {
+      "prefix": "gpu-native-avx512-unscaled-rms-prefix-20261015",
+      "process_sha256": "9eaad833a079c7311909543f38079ce638691b421bb9213a28818314768b55c4",
+      "xml_sha256": "e46368228bb286a89b65704a475d72b1b311210d5a50218f0a729a873b3224db",
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+        "-logFile",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-native-avx512-unscaled-rms-prefix-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "CapturedOriginalAvx512FirstRmsPrefixMustMatchNativeBitsOnGpu|InlineRefinedMeanDivisionMatchesIndependentCurrentCpuEquationOnGpu",
+        "-testResults",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-native-avx512-unscaled-rms-prefix-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": true,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-15T12:30:53.006884+00:00",
+      "pid": 106080,
+      "exit_code": 0,
+      "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-native-avx512-unscaled-rms-prefix-20261015.xml",
+      "unity_counts": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 46.850541400010115,
+      "completed_utc": "2026-10-15T12:31:39.857426+00:00"
+    }
+  },
+  "original_native_first_layer": {
+    "values": 1935360,
+    "report": {
+      "success": true,
+      "scope": "original_square_zero_patch_and_first_layer_against_golden_reproducing_native_bits_only",
+      "runtime_source": "05b80ddf4ba037c96648f5182c45ff9f8a34cdfe",
+      "case_id": "square-0",
+      "phase": "completed",
+      "all_profiles_validated": false,
+      "end_to_end_validated": false,
+      "scheduling_mode": "gpu_fence_per_stage",
+      "intermediate_tensor_readback_added": false,
+      "gelu_internal_cache_release": true,
+      "editor_frame_pump": true,
+      "test_forced_gc_during_run": false,
+      "qualified_operator_reconnection": true,
+      "native_static_block_size": 192,
+      "inline_tail_rms": true,
+      "softmax_vector_width": 16,
+      "fused_gelu_inner": true,
+      "precise_sleef_gelu": true,
+      "native_derived_rotary": true,
+      "first_layer_only": true,
+      "full_encoder_validated": false,
+      "model_file_audit_ms": 473.3734,
+      "profile": "square",
+      "saved_model_sha256": "4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7",
+      "model_load_ms": 569.8765000000001,
+      "coefficient_audit_before_ms": 446.3381,
+      "inline_rms_count": 113,
+      "layer_count": 19727,
+      "original_square_count": 113,
+      "remaining_original_rms_count": 0,
+      "all_original_coefficient_descriptors_retained": true,
+      "tail_template_feature_count": 256,
+      "tail_template_sha256": "215fd08ac859acc3501b111104c048fb4450f11092418be4ea45a9fc3d985835",
+      "derived_rotary_rebound_tables": 4,
+      "derived_rotary_changed_multiplication_operands": 128,
+      "derived_rotary_scope": "audited_data_independent_original_square_position_tables",
+      "executed_layer_count": 1,
+      "executed_rms_count": 7,
+      "graph_rewrite_ms": 2168.6699000000003,
+      "preserved_original_matrix_operations": [],
+      "qualified_operations": [
+        {
+          "output_index": 389,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 617,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 768,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 918,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 1054,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 64,
+          "columns": 2520
+        },
+        {
+          "output_index": 1057,
+          "kind": "native_softmax",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 2520
+        },
+        {
+          "output_index": 1060,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 64
+        },
+        {
+          "output_index": 1065,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 1517,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 1519,
+          "kind": "native_precise_sleef_gelu",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 3072
+        },
+        {
+          "output_index": 1520,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 1524,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 768
+        }
+      ],
+      "native_static_projection_count": 8,
+      "native_batched_matmul_count": 2,
+      "native_softmax_count": 1,
+      "native_gelu_count": 1,
+      "release_unused_gpu_cache": true,
+      "pipeline_prepare_ms": 396.6745,
+      "segment_count": 13,
+      "gpu_operation_count": 12,
+      "prepare_ms": 3585.2716,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "host_working_set_before_execute_bytes": 3342192640,
+      "frame_before_execute": 8,
+      "rendered_frame_before_execute": 8,
+      "frame_after_execute": 98,
+      "rendered_frame_after_execute": 98,
+      "execute_and_final_download_ms": 2001.3883,
+      "backend_caches": [
+        {
+          "stage": 0,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 1,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 2,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 3,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 4,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 5,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 6,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 7,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 8,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 9,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 10,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 11,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 12,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        }
+      ],
+      "gelu_internal_worker_caches": [
+        {
+          "single_compute_kernel": true,
+          "internal_worker_count": 0
+        }
+      ],
+      "capture_sha256": "fb33092e54e997da999b87246aefe2089ce2d0f376a89586b8c329db069bb7fa",
+      "host_working_set_after_download_bytes": 3393544192,
+      "host_peak_working_set_bytes": 3961540608,
+      "reference_sha256": "fb33092e54e997da999b87246aefe2089ce2d0f376a89586b8c329db069bb7fa",
+      "actual_backend": "GPUCompute",
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "original_coefficient_bytes_preserved": true,
+      "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+      "coefficient_audit_after_ms": 426.91580000000005,
+      "report_file": "vision-original-native-rotary-first-layer-gpu-05b80ddf4ba037c96648f5182c45ff9f8a34cdfe-square-0.json",
+      "report_sha256": "f98a6294356f626c50b23f0e173f477b2cbe5729a66dc09bc19c50baf95e2251"
+    },
+    "runner": {
+      "prefix": "gpu-original-native-rotary-first-layer-remapped-20261015",
+      "process_sha256": "d03b60ece7ff9ff560d955264aec6fbe3e20b30869167922509e39cc726da1bf",
+      "xml_sha256": "df7858aaa153ee1030908c2d21490968a5c8c130f4d9e140aa1e1060e5a792cc",
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+        "-logFile",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-original-native-rotary-first-layer-remapped-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "OriginalNativeRotaryFirstLayerMustMatchGoldenBitsOnGpu|ModelTensorSliceTests",
+        "-testResults",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-original-native-rotary-first-layer-remapped-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": true,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-15T12:34:39.801892+00:00",
+      "pid": 95464,
+      "exit_code": 0,
+      "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-original-native-rotary-first-layer-remapped-20261015.xml",
+      "unity_counts": {
+        "total": 7,
+        "passed": 7,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 52.37304130001576,
+      "completed_utc": "2026-10-15T12:35:32.174934+00:00"
+    },
+    "conclusion": "Original golden-reproducing native patch plus complete first layer matches every GPU output bit; full encoder remains incomplete."
+  },
+  "bounded_scalar_rstd": {
+    "report": {
+      "success": true,
+      "runtime_source": "db14bd04459228c77a3a4b42c4f91159bfc4b082",
+      "scope": "bounded_scalar_rstd_standard_fp32_graph_only_no_model",
+      "count": 65536,
+      "seed": 41015,
+      "domain": [
+        1e-06,
+        2000000.0
+      ],
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "capture_sha256": "26b876f00e3f33d92290204d204c0ed0af19149c4edd5de61ac3e223b82ee923",
+      "borrowed_input_preserved": true,
+      "actual_backend": "GPUCompute",
+      "cpu_fallback_count": 0,
+      "intermediate_readback_count": 0,
+      "bit_differences": 0,
+      "maximum_absolute_error": 0.0,
+      "witnesses": [],
+      "phase": "completed",
+      "report_file": "bounded-rstd-gpu-db14bd04459228c77a3a4b42c4f91159bfc4b082.json",
+      "report_sha256": "51ef34e278d9634205a53f1a91e414843a858bfc5451a3dba37af1fbb4009ab1"
+    },
+    "runner": {
+      "prefix": "gpu-bounded-rstd-independent-oracle-20261015",
+      "process_sha256": "8d7dc4b53405935404c4ecd50501a67766516b8df6f614e19cc484c2e5de8773",
+      "xml_sha256": "04aa357d7bf539328ef157aecc6dd04fd5111ceb2dd3da9e839b2cbbaad97c46",
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+        "-logFile",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-bounded-rstd-independent-oracle-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "BoundedRstdGpuTests",
+        "-testResults",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-bounded-rstd-independent-oracle-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": true,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-15T12:37:14.532049+00:00",
+      "pid": 106708,
+      "exit_code": 0,
+      "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-bounded-rstd-independent-oracle-20261015.xml",
+      "unity_counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 43.122653600003105,
+      "completed_utc": "2026-10-15T12:37:57.654705+00:00"
+    }
+  },
+  "setup_failures_preserved": [
+    {
+      "source": "cb9ff6e04d025cef3c2530ea7e8d6dbb8c803553",
+      "runner": "gpu-native-avx512-gelu-rms-prefix-20261015",
+      "passed": 3,
+      "failed": 1,
+      "skipped": 0,
+      "classification": "wrong diagnostic boundary: compared scaled GPU RMS against native unscaled mul_4; not evidence of model error; corrected by 3de78a8"
+    },
+    {
+      "source": "c56defa08a4e4ee580dc603bdd91bcc3ba8bd049",
+      "runner": "gpu-original-native-rotary-first-layer-20261015",
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0,
+      "classification": "slice remapped tensor indices; original-index classification rejected setup before inference; corrected by 05b80dd"
+    },
+    {
+      "actions_run": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38732144164",
+      "classification": "ISA-only diagnostic failed AVX512 prerequisite; actual AVX2; no model download or execution"
+    }
+  ],
+  "python_related": {
+    "tests": 62,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "xml_sha256": "ea43559f98f511bfd7beb14f95d4291772150bc1f25b77c81de4180a6d235354"
+  },
+  "runtime_math_changed": false,
+  "production_vision_candidate_adopted": false,
+  "end_to_end_validated": false,
+  "steps_3_4_complete": false,
+  "known_limitations": [
+    "AVX512 operator fixtures are from a CPU run that did not reproduce the original full golden; only same-input operator claims apply.",
+    "Static GEMM fixture uses deterministic synthetic inputs and AVX2; not a new encoder golden.",
+    "First-layer exactness does not prove later layers or the two remaining failed original cases.",
+    "Persistent allocation warning remains in first-layer terminal Editor log; no long-term memory acceptance.",
+    "Actual input-to-768 APIs, samples, stripped Player, required environments and final Required CI remain unfinished."
+  ]
+}

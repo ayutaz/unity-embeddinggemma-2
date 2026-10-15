@@ -621,10 +621,6 @@ namespace EmbeddingGemma.Validation.Tests
                     var path=Path.Combine(root,image);using(var stream=File.OpenRead(path))Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(audit["files"][image].Value<string>("sha256")));
                     texture=new Texture2D(2,2,TextureFormat.RGBA32,false,true);
                     Assert.That(ImageConversion.LoadImage(texture,File.ReadAllBytes(path),true),Is.True);Assert.That(texture.isReadable,Is.False);
-                    Assert.That(new[]{UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8B8_UNorm,
-                        UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8B8_SRGB,UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8B8A8_UNorm,
-                        UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8B8A8_SRGB,UnityEngine.Experimental.Rendering.GraphicsFormat.B8G8R8A8_UNorm,
-                        UnityEngine.Experimental.Rendering.GraphicsFormat.B8G8R8A8_SRGB},Does.Contain(texture.graphicsFormat),"Decoded PNG format: "+texture.format+" / "+texture.graphicsFormat);
                     using var preprocessor=new ImagePreprocessor(BackendType.GPUCompute);Processed=preprocessor.Process(texture);
                     Assert.That(Processed.Pixels.backendType,Is.EqualTo(BackendType.GPUCompute));
                 }

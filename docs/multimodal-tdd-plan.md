@@ -4,6 +4,12 @@
 
 ## 2026-10-15の実行方針と再開順
 
+画像の元FP32 encoderは[新候補の全6ケース・3 profileで実GPU合格](results/m3-adjacent-reciprocal-all-image-gpu-passed-20261015.json)。固定source `38baf10`で全778,240値bit一致・6 pass / skip0、CPU fallback / 中間readback0、元参照 / 係数 / 許容差不変。製品adapterの6 Red→関連36 Greenを経て、[R3の実Texture→GPU前処理→製品adapter](results/m3-production-image-adapter-and-real-texture-gpu-20261015.json)は元square-1の131,072値全bit一致・1 pass / skip0まで確認。初回ARGB32拒否は推論前のsetup失敗として保持し、2 Red→関連23 Greenで修正した。実PCM / Texture→最終768の全role / mask / 境界 / 所有権 / Dispose・例外後再利用・text回帰、sample / Player・必須環境・Required CI・長期memoryまでの元範囲は維持し、工程3/4全体は未完了。修正済みPythonはsource `cd08e0f`の4環境各1,070 pass / skip0。
+
+最新: [参照再現と第4層への局所化](results/m3-reproduced-cpu-context-and-prefix-localization-20261015.json)から[GPUの逆数丸めを修正](results/m3-gpu-reciprocal-midpoint-and-fourth-layer-fixed-20261015.json)。CPUだけで通ったseed保持候補はGPUで63 bit差を保持したため不採用。FP32の隣接候補と補償残差の比較を3 Red→関連42 Greenで実装し、実GPU65,601統計値と第4層成分・接続4層1,935,360値が全bit一致した。元係数・参照・`atol=1e-5, rtol=1e-4`、GPUCompute・CPU fallback / 中間readback0を維持。R2の元画像全6件は新候補で全件合格し、R3は製品encoder採用後の実Texture / PCM→最終768 APIを全role・mask・境界・所有権 / Dispose・例外後再利用・text回帰まで検証する。sample / Player / 必須環境 / Required CI / 長期memoryを含む全範囲を維持し、工程3/4の完了とはしない。
+
+以下は前回checkpointと当時の実行状態。
+
 最新局所化: [集約前の最終encoder出力](results/m3-last-encoder-boundary-and-ordered-diagnostic-20261015.json)。元square-0の第1層全bit一致に対し、16層後・集約前は1,894,029 bit差 / 13,977要素超過・最大比33.287118の1 fail / skip0。GPUCompute・CPU fallback / 中間flush0・元係数保持。poolingだけでは説明できない。次は明示CPU診断の元patch / 第1層SHA→最終bit一致gateを通った捕捉だけで層を局所化する。CPU softmax単独483,840値bit一致・関連61 Greenは、元encoderの再現やGPU全体合格とは別。Actions 38739806295は実行中。製品GPU経路と元参照・許容差、実入力API / sample / Playerを含む工程3・4の全範囲を維持する。
 
 直前checkpoint: [pooling単独の修正と全体未達](results/m3-native-pooling-component-and-whole-failure-20261015.json)。標準Sentisの元constant-left poolingは78,179 bit差・2要素超過、同じ入力と係数のblock192は196,608値全bit一致。固定left演算と分割境界を9 Red→関連23 Greenで追加したが、接続した元square-1は5要素超過・最大比1.409017の1 fail / skip0。batchを停止し、最新pooling候補の他5件は未実行。旧rotary候補の下表4 pass / 2 failと分離する。既存Runtime既定経路を維持し、製品採用・工程3/4の完了とは扱わない。

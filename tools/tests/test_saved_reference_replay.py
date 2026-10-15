@@ -43,6 +43,17 @@ def test_standalone_replay_uses_fixed_program_input_and_original_expected(saved_
     assert report["model_weights_downloaded"] is False and report["full_encoder_validated"] is False
 
 
+def test_optional_node_capture_uses_audited_original_program_and_preserves_golden(saved_source):
+    destination = saved_source / 'captures'
+    report = replay(saved_source, 'audio', source_commit='a' * 40, revision='b' * 40,
+                    case_id='silence', capture_nodes=('add',), capture_destination=destination)
+    observed = report['saved_node_capture']
+    assert observed['observed_final_matches_normal_bits'] is True
+    assert observed['original_golden_metrics']['mismatched_elements'] == 0
+    assert report['expected_unchanged'] is True
+    assert np.array_equal(np.fromfile(destination / 'add-fp32.bin', '<f4'), [2., 3.])
+
+
 def test_image_replay_audits_the_selected_graph_and_pixels_without_unrelated_pngs(saved_source):
     original = json.loads((saved_source / "audio-encoder-reference.json").read_text())
     profile = original["profiles"]["fixed"]

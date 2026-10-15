@@ -79,7 +79,55 @@ def probe_cpu_threads(program, inputs, expected, *, thread_counts=(1, 2, 4)):
                 full_encoder_validated=False, end_to_end_validated=False)
 
 
-def replay_saved_reference_context(directory, modality, *, source_commit, revision, case_id):
+def capture_saved_program_nodes(program, inputs, node_names, destination, expected):
+    """Observe the existing saved graph without re-exporting or editing its ops."""
+    available = {node.name for node in program.graph.nodes if node.op == 'call_function'}
+    if (not node_names or len(set(node_names)) != len(node_names)
+            or any(not isinstance(name, str) or re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', name) is None
+                   or name not in available for name in node_names)):
+        raise ValueError('Capture requires unique existing operation node names')
+    observed = {}
+
+    class Observer(torch.fx.Interpreter):
+        def run_node(self, node):
+            value = super().run_node(node)
+            if node.name in node_names:
+                if (not isinstance(value, torch.Tensor) or value.dtype != torch.float32
+                        or value.device.type != 'cpu' or not torch.isfinite(value).all()):
+                    raise ValueError('Captured node must be a finite CPU FP32 tensor')
+                observed[node.name] = value.detach().clone()
+            return value
+
+    with torch.no_grad():
+        normal = program(*inputs)
+        actual = Observer(program).run(*inputs)
+    # Interpreter returns the FX graph's tuple, before ExportedProgram's output
+    # pytree hook. This diagnostic accepts one final tensor only.
+    if isinstance(actual, tuple) and len(actual) == 1:
+        actual = actual[0]
+    if (not isinstance(normal, torch.Tensor) or not isinstance(actual, torch.Tensor)
+            or normal.dtype != torch.float32 or actual.dtype != torch.float32
+            or normal.shape != actual.shape or not torch.isfinite(actual).all()
+            or not torch.equal(normal.contiguous().view(torch.int32), actual.contiguous().view(torch.int32))):
+        raise ValueError('Observed final output differs from normal saved-program bits')
+    destination = Path(destination)
+    destination.mkdir(parents=True, exist_ok=True)
+    rows = []
+    for name in node_names:
+        value = observed[name]
+        path = destination / f'{name}-fp32.bin'
+        raw = value.numpy().astype('<f4').tobytes()
+        path.write_bytes(raw)
+        rows.append(dict(node=name, file=path.name, shape=list(value.shape), bytes=len(raw),
+                         sha256=hashlib.sha256(raw).hexdigest()))
+    return dict(scope='saved_program_node_observation_only', nodes=rows,
+                observed_final_matches_normal_bits=True,
+                original_golden_metrics=feature_error_metrics(actual, expected),
+                full_encoder_validated=False, end_to_end_validated=False)
+
+
+def replay_saved_reference_context(directory, modality, *, source_commit, revision, case_id,
+                                   capture_nodes=None, capture_destination=None):
     """Audit the saved graph and selected fixture; this is not full acceptance."""
     if modality not in ("audio", "image") or any(re.fullmatch(r"[0-9a-f]{40}", value) is None for value in (source_commit, revision)):
         raise ValueError("Replay needs a fixed modality, source and revision")
@@ -122,7 +170,7 @@ def replay_saved_reference_context(directory, modality, *, source_commit, revisi
         raise ValueError("Replay expected features must be finite and nonempty")
     before_load_threads = torch.get_num_threads()
     program = torch.export.load(graph_path).module()
-    return dict(scope="audited_saved_reference_context_probe_only", modality=modality, case=case_id,
+    report = dict(scope="audited_saved_reference_context_probe_only", modality=modality, case=case_id,
                 reference_source=source_commit, model_revision=revision, input_sha256=audit["files"][input_name]["sha256"],
                 graph_sha256=audit["files"][graph_path.relative_to(root).as_posix()]["sha256"],
                 threads_before_program_load=before_load_threads, threads_after_program_load=torch.get_num_threads(),
@@ -131,3 +179,9 @@ def replay_saved_reference_context(directory, modality, *, source_commit, revisi
                              env={name: os.environ.get(name) for name in ("ATEN_CPU_CAPABILITY", "MKL_CBWR", "DNNL_MAX_CPU_ISA")}),
                 thread_contexts=probe_cpu_threads(program, (values,), expected),
                 model_weights_downloaded=False, expected_unchanged=True, full_encoder_validated=False, end_to_end_validated=False)
+    if capture_nodes is not None:
+        if capture_destination is None:
+            raise ValueError('Node capture destination is required')
+        report['saved_node_capture'] = capture_saved_program_nodes(
+            program, (values,), capture_nodes, capture_destination, expected)
+    return report

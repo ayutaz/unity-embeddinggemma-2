@@ -1,0 +1,601 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "scope": "original_reference_context_misalignment_and_unadopted_gpu_candidate",
+  "original_reference_unchanged": true,
+  "tolerances": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "original_reference_source": "e2a6dc01fbca8c9be1f3bbe875325ad338de0ca0",
+  "diagnostic_source": "736a4684be754563bbb953a67c2023d688c4a312",
+  "original_graph_sha256": "f9c5175a1d75289ce814a9651f496f9bdae5e873ac66199a5c3d03e0172c16cc",
+  "diagnostic_manifest": {
+    "file": "vision-diagnostics.json",
+    "sha256": "998b7d0d200b257b0bc19de32f45ef27be4328088d2d51706ea956cc3b4461ce",
+    "original_graph": {
+      "bytes": 687039098,
+      "sha256": "508f44c5a415d0b86a1b24903dcf71addee542d49703055412a244b6d1486b8f"
+    },
+    "trace_matches_original_saved": true,
+    "limitation": "This flag compares against the fresh export in the diagnostic producer, not the frozen original e2a6 graph."
+  },
+  "file_context": {
+    "scope": "file_context_only_no_model_inference",
+    "diagnostic_cases": [
+      {
+        "id": "case_0",
+        "pixels": "pixels-fp32.bin"
+      },
+      {
+        "id": "case_1",
+        "pixels": "pixels-case-1-fp32.bin"
+      }
+    ],
+    "files": [
+      {
+        "file": "vision-encoder\\square\\0-pixels-fp32.bin",
+        "bytes": 7741440,
+        "sha256": "d25852af1b53b8f4ed484b760280b1859b8a3b63e3456f7cbb378f33877761b7"
+      },
+      {
+        "file": "vision-encoder\\square\\1-pixels-fp32.bin",
+        "bytes": 7741440,
+        "sha256": "48d457e337dc010dbc4b512ee186ee874416cef1e5cbca0c6a9a84b42a6d7366"
+      },
+      {
+        "file": "vision-diagnostics\\pixels-case-1-fp32.bin",
+        "bytes": 7741440,
+        "sha256": "48d457e337dc010dbc4b512ee186ee874416cef1e5cbca0c6a9a84b42a6d7366"
+      },
+      {
+        "file": "vision-diagnostics\\pixels-fp32.bin",
+        "bytes": 7741440,
+        "sha256": "d25852af1b53b8f4ed484b760280b1859b8a3b63e3456f7cbb378f33877761b7"
+      },
+      {
+        "file": "vision-encoder\\square\\vision.pt2",
+        "bytes": 687039098,
+        "sha256": "f9c5175a1d75289ce814a9651f496f9bdae5e873ac66199a5c3d03e0172c16cc"
+      },
+      {
+        "file": "vision-diagnostics\\vision-stages.pt2",
+        "bytes": 687079144,
+        "sha256": "bf40d181cbe99829afe404dda3f0f1e1f3f490bf813f07c17df90a2d1fc7aa0c"
+      }
+    ]
+  },
+  "metrics": {
+    "file": "vision-reference-context-metrics-20261015.json",
+    "sha256": "00ed67628df584384fd9beb70f728049aab3deb2a0d4efde1208eda716439e60",
+    "scope": "fixed_reference_context_metrics_only_no_model_inference",
+    "rows": [
+      {
+        "case": "square-0",
+        "comparison": "trace_native_vs_original_native_reference",
+        "bit_differences": 129674,
+        "mismatched_elements": 598,
+        "maximum_absolute_error": 0.00015985965728759766,
+        "maximum_tolerance_ratio": 5.768531797804444
+      },
+      {
+        "case": "square-0",
+        "comparison": "qualified_candidate_vs_trace_native",
+        "bit_differences": 127821,
+        "mismatched_elements": 6,
+        "maximum_absolute_error": 3.0279159545898438e-05,
+        "maximum_tolerance_ratio": 1.4868310751040739
+      },
+      {
+        "case": "square-0",
+        "comparison": "qualified_candidate_vs_original_native_reference",
+        "bit_differences": 129697,
+        "mismatched_elements": 566,
+        "maximum_absolute_error": 0.0001646280288696289,
+        "maximum_tolerance_ratio": 6.8717093087328065
+      },
+      {
+        "case": "square-0",
+        "comparison": "previous_partial_candidate_vs_trace_native",
+        "bit_differences": 128550,
+        "mismatched_elements": 23,
+        "maximum_absolute_error": 4.07099723815918e-05,
+        "maximum_tolerance_ratio": 1.6753617314811873
+      },
+      {
+        "case": "square-0",
+        "comparison": "previous_partial_candidate_vs_original_native_reference",
+        "bit_differences": 129733,
+        "mismatched_elements": 571,
+        "maximum_absolute_error": 0.00012803077697753906,
+        "maximum_tolerance_ratio": 6.883228917760353
+      },
+      {
+        "case": "square-1",
+        "comparison": "trace_native_vs_original_native_reference",
+        "bit_differences": 129078,
+        "mismatched_elements": 51,
+        "maximum_absolute_error": 5.447864532470703e-05,
+        "maximum_tolerance_ratio": 2.58704231960917
+      }
+    ]
+  },
+  "saved_constants_audit": {
+    "file": "vision-saved-context-audit-78cda910da353f9d161ea948b92315a0bcedb6b4.json",
+    "sha256": "175e4222de4a8d54e6da3ccd78876503cd682ad3ed0ed89be4df113045448e16",
+    "runtime_source": "78cda910da353f9d161ea948b92315a0bcedb6b4",
+    "inference_executed": false,
+    "original_constant_count": 1355,
+    "trace_constant_count": 1357,
+    "original_layers": 1823,
+    "trace_layers": 1823,
+    "original_unshared_constants": [],
+    "trace_unshared_constants": [
+      {
+        "index": 4590,
+        "dtype": "Float",
+        "shape": [
+          1,
+          2520,
+          64
+        ],
+        "elements": 161280,
+        "bytes": 645120,
+        "sha256": "f4c614b98036ccc30248664e4bcc6f7f3c3c5ec9de259eeb97357cf46e97ce89"
+      },
+      {
+        "index": 4591,
+        "dtype": "Float",
+        "shape": [
+          1,
+          2520,
+          64
+        ],
+        "elements": 161280,
+        "bytes": 645120,
+        "sha256": "ff154c0a23f93445d6fcea5c68964f6b0dde0c5415cf769c4c3d8a0313d7c587"
+      }
+    ],
+    "rotary_constant_comparisons": [
+      {
+        "model": "trace",
+        "index": 4590,
+        "native_cos": {
+          "bit_differences": 43872,
+          "maximum_absolute_error": 5.960464477539063e-08
+        },
+        "native_sin": {
+          "bit_differences": 161280,
+          "maximum_absolute_error": 1.4141911268234253
+        }
+      },
+      {
+        "model": "trace",
+        "index": 4591,
+        "native_cos": {
+          "bit_differences": 161280,
+          "maximum_absolute_error": 1.4141910076141357
+        },
+        "native_sin": {
+          "bit_differences": 25152,
+          "maximum_absolute_error": 5.960464477539063e-08
+        }
+      }
+    ],
+    "conclusion": "All original constant content hashes occur in trace. Two derived rotary constants are added; no changed learned coefficient has been established."
+  },
+  "tail_components": {
+    "file": "vision-tail-native-gpu-56b388df578cee16db0e1ec69eed953bccac90b6.json",
+    "sha256": "f275b91ad6fd071fcee6585332d0be86bbfcc95078c9825d6858fa9c387c5459",
+    "success": true,
+    "runtime_source": "56b388df578cee16db0e1ec69eed953bccac90b6",
+    "projection_blocks_exact_on_both_cases": [
+      384
+    ],
+    "limitation": "RMS/projection comparisons use diagnostic-native stages, not original frozen-golden intermediate values."
+  },
+  "unadopted_gpu_candidate": {
+    "file": "vision-qualified-native-operators-whole-gpu-32d9471c798adfcf0bc7b5803ec55b0a2bbe8162-square-0.json",
+    "sha256": "e70b346a29dac349dcdb20128fcaa7245d10453a7d33c24386440da2cad48cfa",
+    "success": false,
+    "runtime_source": "32d9471c798adfcf0bc7b5803ec55b0a2bbe8162",
+    "case_id": "square-0",
+    "phase": "completed",
+    "actual_backend": "GPUCompute",
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "intermediate_tensor_readback_added": false,
+    "native_static_projection_count": 114,
+    "native_batched_matmul_count": 32,
+    "native_softmax_count": 16,
+    "native_gelu_count": 16,
+    "gpu_operation_count": 178,
+    "segment_count": 179,
+    "inline_rms_count": 112,
+    "remaining_original_rms_count": 1,
+    "preserved_original_matrix_operations": [
+      {
+        "output_index": 4565,
+        "left_is_constant": true,
+        "right_is_constant": false,
+        "left_constant_shape": [
+          1,
+          256,
+          2520
+        ]
+      }
+    ],
+    "execute_and_final_download_ms": 30180.2422,
+    "host_peak_working_set_bytes": 5244043264,
+    "capture_sha256": "f3a1816ef76e912ede1a2da130c71dc8b4d9d59025e442d9f226c5a67cebfd36",
+    "mismatched_elements": 566,
+    "maximum_absolute_error": 0.0001646280288696289,
+    "maximum_tolerance_ratio": 6.8717093087328065,
+    "original_coefficient_bytes_preserved": true,
+    "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886"
+  },
+  "setup_failure": {
+    "source": "593be8f",
+    "inference_executed": false,
+    "reason": "Assumed 32 remaining matrix operations; the additional original constant-left pooling matmul made 33. Preserve pooling and classify only the 32 dynamic attention operations.",
+    "test": {
+      "file": "vision-qualified-native-operators-square0-20261015.xml",
+      "sha256": "0b2582d36c865dd7ef266325a7baf407a33248b82f872510541e50231dbac173",
+      "totals": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Failed(Child)",
+        "total": "1",
+        "passed": "0",
+        "failed": "1",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 08:52:36Z",
+        "end-time": "2026-10-15 08:52:43Z",
+        "duration": "6.9698799"
+      }
+    }
+  },
+  "native_tests": [
+    {
+      "file": "vision-tail-native-components-20261015.xml",
+      "sha256": "96a925f074d7ff567218e05f04eca3030e1aca2d9d80eb4ca2b92fdb52902770",
+      "totals": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Passed",
+        "total": "1",
+        "passed": "1",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 08:48:41Z",
+        "end-time": "2026-10-15 08:48:45Z",
+        "duration": "3.2560888"
+      }
+    },
+    {
+      "file": "vision-qualified-native-operators-pooling-preserved-square0-20261015.xml",
+      "sha256": "d31c54de96dc86deebc8174b68446cc0b58cc384c16d27f11e49c4fcf4325a31",
+      "totals": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Failed(Child)",
+        "total": "1",
+        "passed": "0",
+        "failed": "1",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 08:57:00Z",
+        "end-time": "2026-10-15 08:57:50Z",
+        "duration": "49.8534085"
+      }
+    },
+    {
+      "file": "vision-original-trace-saved-context-audit-20261015.xml",
+      "sha256": "659efd98e5f07d7f0567412693f22ab59c63b4cbf0d78846501223faf95d12ed",
+      "totals": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Passed",
+        "total": "1",
+        "passed": "1",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 09:02:47Z",
+        "end-time": "2026-10-15 09:02:53Z",
+        "duration": "6.3176597"
+      }
+    }
+  ],
+  "workflow_tests": [
+    {
+      "file": "original-vision-context-workflow-red-20261015.xml",
+      "sha256": "9f5d7f16b96830585d5cd402e3fd60cf3d6a81a2c9422ccd29d11581ee9d7d30",
+      "totals": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "2",
+        "skipped": "0",
+        "tests": "2",
+        "time": "0.099",
+        "timestamp": "2026-10-15T18:13:43.701305+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      }
+    },
+    {
+      "file": "original-vision-replay-report-red-20261015.xml",
+      "sha256": "b57cdf3b1fb1b839f9a2a25adde54759c93f7052e7ce3a3330f1fca5dc19d3ea",
+      "totals": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "3",
+        "skipped": "0",
+        "tests": "5",
+        "time": "0.155",
+        "timestamp": "2026-10-15T18:18:25.590512+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      }
+    },
+    {
+      "file": "original-vision-context-workflow-green-20261015.xml",
+      "sha256": "a1044a88c11684adb8e8794d1e53aa70ba8c33183d793ff92cca173e3b489879",
+      "totals": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "7",
+        "time": "0.192",
+        "timestamp": "2026-10-15T18:18:50.786148+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      }
+    }
+  ],
+  "static_pt2_comparison": {
+    "scope": "saved_pt2_static_operation_and_data_comparison_no_inference",
+    "aligned_node_counts": [
+      2321,
+      2321
+    ],
+    "aligned_node_differences": 0,
+    "ignored_node_field": "metadata",
+    "data_member_counts": [
+      218,
+      218
+    ],
+    "differing_data_members": [],
+    "canonical_operation_sha256": [
+      "e456f21e202b298f5b6233c92ebad4194c7b1c10a3df2b759f4b2ba3be2c2192",
+      "e456f21e202b298f5b6233c92ebad4194c7b1c10a3df2b759f4b2ba3be2c2192"
+    ],
+    "canonical_data_index_sha256": [
+      "e9a7853c63ba145e03b25fd9ad8e7a783ec4f62d8ca06abc66f2afa348c580ea",
+      "e9a7853c63ba145e03b25fd9ad8e7a783ec4f62d8ca06abc66f2afa348c580ea"
+    ],
+    "output_names": [
+      [
+        "mm_113"
+      ],
+      [
+        "add_1",
+        "cat",
+        "cat_1",
+        "add_15",
+        "add_29",
+        "add_43",
+        "add_57",
+        "add_71",
+        "add_85",
+        "add_99",
+        "add_113",
+        "add_127",
+        "add_141",
+        "add_155",
+        "add_169",
+        "add_183",
+        "add_197",
+        "add_211",
+        "add_225",
+        "mul_372",
+        "mul_373",
+        "mm_113"
+      ]
+    ],
+    "conclusion": "The same ordered operations and all serialized tensor/constant data match. Different archive SHA alone does not prove different inference arithmetic. Runtime context drift remains a hypothesis."
+  },
+  "original_replay": {
+    "source": "37682d578bb55c0b6eeb22dd19f2a24abe8063dd",
+    "artifact_id": 11774238857,
+    "run_id": 38712084754,
+    "url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38712084754",
+    "status_at_recording": "completed",
+    "conclusion": "failure",
+    "result_verified": true,
+    "reports": [
+      {
+        "file": "original-image-avx2.json",
+        "sha256": "8f468dbfc282ded66aedd8a46e2f7468f61c14af88a5b120068fcfb6279924c0",
+        "report": {
+          "scope": "audited_saved_reference_context_probe_only",
+          "modality": "image",
+          "case": "square-0",
+          "reference_source": "e2a6dc01fbca8c9be1f3bbe875325ad338de0ca0",
+          "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+          "input_sha256": "d25852af1b53b8f4ed484b760280b1859b8a3b63e3456f7cbb378f33877761b7",
+          "graph_sha256": "f9c5175a1d75289ce814a9651f496f9bdae5e873ac66199a5c3d03e0172c16cc",
+          "threads_before_program_load": 2,
+          "threads_after_program_load": 2,
+          "runtime": {
+            "torch_version": "2.14.1+cu130",
+            "cpu_capability": "AVX2",
+            "torch_interop_threads": 4,
+            "env": {
+              "ATEN_CPU_CAPABILITY": "avx2",
+              "MKL_CBWR": "AVX2",
+              "DNNL_MAX_CPU_ISA": "AVX2"
+            }
+          },
+          "thread_contexts": {
+            "scope": "controlled_cpu_thread_replay_only",
+            "original_threads": 2,
+            "conditions": [
+              {
+                "requested_threads": 1,
+                "executed": true,
+                "actual_threads": 1,
+                "actual_finite": true,
+                "same_shape": true,
+                "mismatched_elements": 3,
+                "maximum_absolute_error": 2.962350845336914e-05,
+                "maximum_tolerance_ratio": 1.182998230669901,
+                "worst_index": 25168,
+                "worst_actual": -0.03353442996740341,
+                "worst_expected": -0.03351863473653793
+              },
+              {
+                "requested_threads": 2,
+                "executed": true,
+                "actual_threads": 2,
+                "actual_finite": true,
+                "same_shape": true,
+                "mismatched_elements": 3,
+                "maximum_absolute_error": 2.962350845336914e-05,
+                "maximum_tolerance_ratio": 1.182998230669901,
+                "worst_index": 25168,
+                "worst_actual": -0.03353442996740341,
+                "worst_expected": -0.03351863473653793
+              },
+              {
+                "requested_threads": 4,
+                "executed": true,
+                "actual_threads": 4,
+                "actual_finite": true,
+                "same_shape": true,
+                "mismatched_elements": 3,
+                "maximum_absolute_error": 2.962350845336914e-05,
+                "maximum_tolerance_ratio": 1.182998230669901,
+                "worst_index": 25168,
+                "worst_actual": -0.03353442996740341,
+                "worst_expected": -0.03351863473653793
+              }
+            ],
+            "full_encoder_validated": false,
+            "end_to_end_validated": false
+          },
+          "model_weights_downloaded": false,
+          "expected_unchanged": true,
+          "full_encoder_validated": false,
+          "end_to_end_validated": false,
+          "job_source": "37682d578bb55c0b6eeb22dd19f2a24abe8063dd",
+          "probe_context": "avx2",
+          "reference_reproduced": false
+        }
+      },
+      {
+        "file": "original-image-native.json",
+        "sha256": "a274028fad3289d18dc8d34254ab62476e3dc0b197d793d0af16d54540f8645a",
+        "report": {
+          "scope": "audited_saved_reference_context_probe_only",
+          "modality": "image",
+          "case": "square-0",
+          "reference_source": "e2a6dc01fbca8c9be1f3bbe875325ad338de0ca0",
+          "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+          "input_sha256": "d25852af1b53b8f4ed484b760280b1859b8a3b63e3456f7cbb378f33877761b7",
+          "graph_sha256": "f9c5175a1d75289ce814a9651f496f9bdae5e873ac66199a5c3d03e0172c16cc",
+          "threads_before_program_load": 2,
+          "threads_after_program_load": 2,
+          "runtime": {
+            "torch_version": "2.14.1+cu130",
+            "cpu_capability": "AVX2",
+            "torch_interop_threads": 4,
+            "env": {
+              "ATEN_CPU_CAPABILITY": null,
+              "MKL_CBWR": null,
+              "DNNL_MAX_CPU_ISA": null
+            }
+          },
+          "thread_contexts": {
+            "scope": "controlled_cpu_thread_replay_only",
+            "original_threads": 2,
+            "conditions": [
+              {
+                "requested_threads": 1,
+                "executed": true,
+                "actual_threads": 1,
+                "actual_finite": true,
+                "same_shape": true,
+                "mismatched_elements": 3,
+                "maximum_absolute_error": 2.962350845336914e-05,
+                "maximum_tolerance_ratio": 1.182998230669901,
+                "worst_index": 25168,
+                "worst_actual": -0.03353442996740341,
+                "worst_expected": -0.03351863473653793
+              },
+              {
+                "requested_threads": 2,
+                "executed": true,
+                "actual_threads": 2,
+                "actual_finite": true,
+                "same_shape": true,
+                "mismatched_elements": 3,
+                "maximum_absolute_error": 2.962350845336914e-05,
+                "maximum_tolerance_ratio": 1.182998230669901,
+                "worst_index": 25168,
+                "worst_actual": -0.03353442996740341,
+                "worst_expected": -0.03351863473653793
+              },
+              {
+                "requested_threads": 4,
+                "executed": true,
+                "actual_threads": 4,
+                "actual_finite": true,
+                "same_shape": true,
+                "mismatched_elements": 3,
+                "maximum_absolute_error": 2.962350845336914e-05,
+                "maximum_tolerance_ratio": 1.182998230669901,
+                "worst_index": 25168,
+                "worst_actual": -0.03353442996740341,
+                "worst_expected": -0.03351863473653793
+              }
+            ],
+            "full_encoder_validated": false,
+            "end_to_end_validated": false
+          },
+          "model_weights_downloaded": false,
+          "expected_unchanged": true,
+          "full_encoder_validated": false,
+          "end_to_end_validated": false,
+          "job_source": "37682d578bb55c0b6eeb22dd19f2a24abe8063dd",
+          "probe_context": "native",
+          "reference_reproduced": false
+        }
+      }
+    ],
+    "conclusion_detail": "Both hosts report AVX2 on AMD EPYC 7763. Every one of the six executed thread/context conditions has 3 original-golden violations, identical error metrics. AVX512 was not tested.",
+    "scope": "Original saved CPU graph, square-0, native/AVX2, threads 1/2/4; no GPU acceptance."
+  },
+  "not_proven": [
+    "Exact cause of original/diagnostic reference drift",
+    "All six original image GPU cases",
+    "Actual PCM/Texture through preprocessing, encoder, backbone and normalized 768 API for all roles and boundaries",
+    "Stage 3/4 samples, Player, required environments and long-term memory"
+  ],
+  "next": "Inspect original saved-graph CPU replay before further whole-image GPU operator changes. Keep original reference and tolerance fixed.",
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "stages_3_4_complete": false
+}

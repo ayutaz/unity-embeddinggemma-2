@@ -14,12 +14,22 @@ namespace EmbeddingGemma.Validation.Tests
     {
         [Test]
         public void OriginalTailRmsAndProjectionQualifyAgainstPinnedNativeStagesOnGpu()
+            =>Run(false);
+
+        [Test]
+        public void SavedOriginalCpuTailRmsAndBlock192ProjectionMustMatchObservedBitsOnGpu()
+            =>Run(true);
+
+        void Run(bool savedOriginalCpuContext)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-diagnostics"));
-            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-tail-native-gpu-"+source+".json"));Assert.That(File.Exists(output),Is.False);
+            var label=savedOriginalCpuContext?"vision-saved-original-cpu-tail-gpu-":"vision-tail-native-gpu-";
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+".json"));Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["runtime_source"]=source,["scope"]="original_final_rms_and_projection_exact_native_input_component_gates_only",
                 ["full_encoder_validated"]=false,["end_to_end_validated"]=false,["phase"]="audit"};
+            report["saved_original_cpu_context"]=savedOriginalCpuContext;
+            report["original_generation_intermediate_reference"]=false;
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             string Hash(string path){using var stream=File.OpenRead(path);return PlayerFileHash.Compute(stream,out _);}
             void Check(string path,string hash)=>Assert.That(Hash(path),Is.EqualTo(hash));
@@ -30,6 +40,16 @@ namespace EmbeddingGemma.Validation.Tests
                 foreach(var package in new[]{"com.ayutaz.embeddinggemma","com.ayutaz.embeddinggemma.validation"})Assert.That(locked["dependencies"][package].Value<string>("hash"),Is.EqualTo(source));
                 Check(Path.Combine(root,"vision-diagnostics.json"),"998b7d0d200b257b0bc19de32f45ef27be4328088d2d51706ea956cc3b4461ce");
                 var reference=JObject.Parse(File.ReadAllText(Path.Combine(root,"vision-diagnostics.json")));
+                var cpuRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/original-vision-node-capture-run-38713178242/original-vision-context-native-d2663b56068d6cb4c49c6eae79d2cef58782211a/original-context-results"));
+                JObject cpuReference=null;
+                if(savedOriginalCpuContext)
+                {
+                    var cpuReport=Path.Combine(cpuRoot,"original-image-native.json");Check(cpuReport,"cb3b46ae4cc6ec2d7aabb5e2e2abe756df9274ab864b824fc7363e955306885a");
+                    cpuReference=JObject.Parse(File.ReadAllText(cpuReport));
+                    Assert.That(cpuReference.Value<string>("graph_sha256"),Is.EqualTo("f9c5175a1d75289ce814a9651f496f9bdae5e873ac66199a5c3d03e0172c16cc"));
+                    Assert.That(cpuReference["saved_node_capture"].Value<bool>("observed_final_matches_normal_bits"),Is.True);
+                    report["reference_cpu_graph_sha256"]=cpuReference["graph_sha256"];
+                }
                 var path=Path.Combine(root,"vision-stages-fp32.sentis");Check(path,"63f25d442e6921529e009c4dbf9ca7cec7528499959aaf3a043f072723135508");
                 var original=TextModelFile.Load(path);Assert.That(original.outputs.Count,Is.EqualTo(22));var before=ModelCoefficientHash.Compute(original,out _);
                 var analysis=typeof(Worker).Assembly.GetType("Unity.InferenceEngine.Compiler.Analyser.PartialInferenceAnalysis");
@@ -66,10 +86,17 @@ namespace EmbeddingGemma.Validation.Tests
                 report["projection_weights"]=Write("projection-weights",plan.Weights.Single(),new TensorShape(768,512));
                 var cases=new JArray();report["cases"]=cases;var exactBlocks=new HashSet<int>{192,384};var passed=true;
                 report["phase"]="execute_components";Save();
-                for(var caseIndex=0;caseIndex<2;caseIndex++)
+                for(var caseIndex=0;caseIndex<(savedOriginalCpuContext?1:2);caseIndex++)
                 {
-                    string Stage(int index)=>Path.Combine(root,caseIndex==0?"native-stage-"+index+".bin":"native-case-1-stage-"+index+".bin");
-                    foreach(var stage in new[]{19,20,21})Check(Stage(stage),reference["files"][Path.GetFileName(Stage(stage))].Value<string>("sha256"));
+                    string Node(int index)=>index==19?"mul_372":index==20?"mul_373":"mm_113";
+                    string Stage(int index)=>savedOriginalCpuContext?Path.Combine(cpuRoot,"captures",Node(index)+"-fp32.bin"):
+                        Path.Combine(root,caseIndex==0?"native-stage-"+index+".bin":"native-case-1-stage-"+index+".bin");
+                    foreach(var stage in new[]{19,20,21})
+                    {
+                        var hash=savedOriginalCpuContext?((JArray)cpuReference["saved_node_capture"]["nodes"]).Single(value=>value.Value<string>("node")==Node(stage)).Value<string>("sha256"):
+                            reference["files"][Path.GetFileName(Stage(stage))].Value<string>("sha256");
+                        Check(Stage(stage),hash);
+                    }
                     using var features=new Tensor<float>(new TensorShape(256,768),Floats(Stage(19)));ComputeTensorData.Pin(features);
                     using var normalized=new Tensor<float>(new TensorShape(256,768),Floats(Stage(20)));ComputeTensorData.Pin(normalized);
                     using var rmsPipeline=new GpuProjectionPipeline(new[]{rms},Array.Empty<string>(),Array.Empty<string>(),Array.Empty<IGpuTensorOperation>());
@@ -89,6 +116,8 @@ namespace EmbeddingGemma.Validation.Tests
                     }
                     passed&=row["rms"].Value<int>("mismatched_elements")==0&&row["projection"].Value<int>("mismatched_elements")==0;
                     passed&=candidates.Any(value=>value.Value<int>("mismatched_elements")==0);Save();
+                    if(savedOriginalCpuContext)
+                        passed&=row["rms"].Value<int>("bit_differences")==0&&candidates.Single(value=>value.Value<int>("block")==192).Value<int>("bit_differences")==0;
                 }
                 report["projection_blocks_exact_on_both_cases"]=JArray.FromObject(exactBlocks.OrderBy(value=>value).ToArray());
                 Assert.That(ModelCoefficientHash.Compute(original,out _),Is.EqualTo(before));report["original_coefficients_sha256"]=before;report["original_coefficient_bytes_preserved"]=true;

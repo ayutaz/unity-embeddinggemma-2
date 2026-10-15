@@ -5,10 +5,23 @@ using System.Reflection;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Unity.InferenceEngine;
+using UnityEditor;
 using UnityEngine;
 
 namespace EmbeddingGemma.Validation.Tests
 {
+    [InitializeOnLoad]
+    static class OptionalNativeAllocationTracing
+    {
+        static OptionalNativeAllocationTracing()
+        {
+            if(Environment.GetEnvironmentVariable("EG_TRACE_NATIVE_ALLOCATIONS")!="1")return;
+            var mode=NativeAllocationDiagnosticsTests.ModeProperty();
+            mode.SetValue(null,Enum.Parse(mode.PropertyType,"EnabledWithStackTrace"));
+            Debug.Log("EG_NATIVE_ALLOCATION_TRACE_MODE="+mode.GetValue(null));
+        }
+    }
+
     // Diagnostic-only: compare an Editor/Test Runner baseline against small
     // production GPU ownership contracts. Neither proves real-model numerics.
     public sealed class NativeAllocationDiagnosticsTests

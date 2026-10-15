@@ -41,6 +41,14 @@ namespace EmbeddingGemma.Validation.Tests
         public void QualifiedSoftmaxAndNativeGeluInlineRmsMatchOriginalLayerZeroOnGpu()
             => Run(11);
 
+        [Test]
+        public void QualifiedAttentionMatmulsWithStandardSoftmaxMatchOriginalLayerZeroOnGpu()
+            => Run(12);
+
+        [Test]
+        public void QualifiedAttentionMatmulsAndSoftmaxMatchOriginalLayerZeroOnGpu()
+            => Run(13);
+
         static void Run(int normCount)
         {
             var qualifiedFirstRms=normCount>0;
@@ -48,10 +56,10 @@ namespace EmbeddingGemma.Validation.Tests
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-diagnostics"));
             var modelPath=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-layer0-original-patch-gpu-e39bdf1b5d0faf2ea424023d83076315736c6fde-captures/layer0.sentis"));
-            var label=normCount==11?"vision-layer0-native-softmax-gelu-rms-gpu-":normCount==10?"vision-layer0-cache-release-gelu-rms-gpu-":normCount==9?"vision-layer0-native-gelu-inline-rms-gpu-":normCount==8?"vision-layer0-inline-rms-native-projections-gpu-":normCount==7?"vision-layer0-seven-rms-native-projections-gpu-":qualifiedFirstRms?"vision-layer0-first-rms-native-projections-gpu-":"vision-layer0-native-projections-gpu-";
+            var label=normCount==13?"vision-layer0-native-bmm-softmax-gelu-rms-gpu-":normCount==12?"vision-layer0-native-bmm-gelu-rms-gpu-":normCount==11?"vision-layer0-native-softmax-gelu-rms-gpu-":normCount==10?"vision-layer0-cache-release-gelu-rms-gpu-":normCount==9?"vision-layer0-native-gelu-inline-rms-gpu-":normCount==8?"vision-layer0-inline-rms-native-projections-gpu-":normCount==7?"vision-layer0-seven-rms-native-projections-gpu-":qualifiedFirstRms?"vision-layer0-first-rms-native-projections-gpu-":"vision-layer0-native-projections-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+".json"));
             Assert.That(File.Exists(output),Is.False);
-            var report=new JObject{["success"]=false,["scope"]=normCount==11?"original_vision_layer0_native_softmax_gelu_inline_rms_and_seven_native_gpu_projections_candidate":normCount==10?"original_vision_layer0_cache_release_native_gelu_inline_rms_candidate":normCount==9?"original_vision_layer0_native_gelu_inline_rms_and_seven_native_gpu_projections_candidate":normCount==8?"original_vision_layer0_inline_rms_and_seven_native_gpu_projections_candidate":normCount==7?"original_vision_layer0_seven_rms_and_seven_native_gpu_projections_candidate":qualifiedFirstRms?"original_vision_layer0_first_rms_and_seven_native_gpu_projections_candidate":"original_vision_layer0_seven_native_gpu_projections_candidate",["runtime_source"]=source,
+            var report=new JObject{["success"]=false,["scope"]=normCount>=12?"original_vision_layer0_native_batched_matmuls_gelu_rms_candidate":normCount==11?"original_vision_layer0_native_softmax_gelu_inline_rms_and_seven_native_gpu_projections_candidate":normCount==10?"original_vision_layer0_cache_release_native_gelu_inline_rms_candidate":normCount==9?"original_vision_layer0_native_gelu_inline_rms_and_seven_native_gpu_projections_candidate":normCount==8?"original_vision_layer0_inline_rms_and_seven_native_gpu_projections_candidate":normCount==7?"original_vision_layer0_seven_rms_and_seven_native_gpu_projections_candidate":qualifiedFirstRms?"original_vision_layer0_first_rms_and_seven_native_gpu_projections_candidate":"original_vision_layer0_seven_native_gpu_projections_candidate",["runtime_source"]=source,
                 ["full_encoder_validated"]=false,["end_to_end_validated"]=false,["phase"]="audit"};
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
@@ -68,6 +76,7 @@ namespace EmbeddingGemma.Validation.Tests
                     &&constants.TryGetValue(layer.inputs[1],out var w)&&w.shape.rank==2).Select(layer=>layer.outputs[0]).ToArray();
                 Assert.That(selected.Length,Is.EqualTo(7));
                 var original=model;var sourceHash=SerializedHash(original);Model rmsTemplate=null;int[] normOutputs=null;Constant[] normScales=null;var softmaxOutput=-1;
+                var bmmOutputs=original.layers.Where(layer=>layer.GetType().Name=="MatMul"&&!constants.ContainsKey(layer.inputs[1])).Select(layer=>layer.outputs[0]).ToArray();
                 if(normCount>=8)
                 {
                     var method=typeof(QualifiedVisionRmsOperation).GetMethod("InlineLayerRms");Assert.That(method,Is.Not.Null,"Inline RMS graph grafting is missing.");
@@ -88,7 +97,7 @@ namespace EmbeddingGemma.Validation.Tests
                         var wanted=new HashSet<int>(selected.Concat(marked.outputs));selected=model.layers.Where(layer=>wanted.Contains(layer.outputs[0])).Select(layer=>layer.outputs[0]).ToArray();
                         report["gelu_count"]=1;
                     }
-                    if(normCount==11)
+                    if(normCount==11||normCount==13)
                     {
                         var softmax=model.layers.Single(layer=>layer.GetType().Name=="Softmax");
                         Assert.That(softmax.inputs.Length,Is.EqualTo(1));Assert.That(softmax.outputs.Length,Is.EqualTo(1));
@@ -100,6 +109,12 @@ namespace EmbeddingGemma.Validation.Tests
                             constants=new List<Constant>(model.constants),layers=model.layers.Select(layer=>ReferenceEquals(layer,softmax)?marker:layer).ToList()};
                         var wanted=new HashSet<int>(selected){softmaxOutput};selected=model.layers.Where(layer=>wanted.Contains(layer.outputs[0])).Select(layer=>layer.outputs[0]).ToArray();
                         Assert.That(selected.Length,Is.EqualTo(9));report["softmax_count"]=1;
+                    }
+                    if(normCount>=12)
+                    {
+                        Assert.That(bmmOutputs.Length,Is.EqualTo(2));var wanted=new HashSet<int>(selected.Concat(bmmOutputs));
+                        selected=model.layers.Where(layer=>wanted.Contains(layer.outputs[0])).Select(layer=>layer.outputs[0]).ToArray();
+                        Assert.That(selected.Length,Is.EqualTo(normCount==13?11:10));report["dynamic_matmul_count"]=2;report["native_softmax"]=normCount==13;
                     }
                 }
                 if(normCount==1)
@@ -151,6 +166,12 @@ namespace EmbeddingGemma.Validation.Tests
                 var rows=new JArray();report["projections"]=rows;
                 for(var i=0;i<selected.Length;i++)
                 {
+                    if(plan.Inputs[i].Length==2)
+                    {
+                        Assert.That(normCount,Is.GreaterThanOrEqualTo(12));var ordinal=Array.IndexOf(bmmOutputs,selected[i]);Assert.That(ordinal,Is.InRange(0,1));
+                        Assert.That(plan.Rows[i],Is.EqualTo(30240));Assert.That(plan.Widths[i],Is.EqualTo(ordinal==0?64:2520));Assert.That(plan.Columns[i],Is.EqualTo(ordinal==0?2520:64));
+                        operations.Add(new GpuBatchedMatmul());rows.Add(new JObject{["kind"]="native_batched_matmul",["ordinal"]=ordinal,["rows"]=plan.Rows[i],["width"]=plan.Widths[i],["columns"]=plan.Columns[i]});continue;
+                    }
                     if(plan.Weights[i]==null)
                     {
                         if(selected[i]==softmaxOutput)

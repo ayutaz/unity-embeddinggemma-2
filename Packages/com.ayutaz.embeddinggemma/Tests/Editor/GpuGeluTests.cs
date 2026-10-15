@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using NUnit.Framework;
@@ -9,6 +10,32 @@ namespace EmbeddingGemma.Tests
 {
     public sealed class GpuGeluTests
     {
+        [TestCase(false)] [TestCase(true)]
+        public void OptInReleaseClearsBothInternalGeluCachesAndPreservesOwnedResults(bool release)
+        {
+            var shape=new TensorShape(1,9);
+            var constructor=typeof(GpuGelu).GetConstructor(new[]{typeof(TensorShape),typeof(bool)});
+            if(release)Assert.That(constructor,Is.Not.Null,"GELU internal GPU cache release is missing.");
+            using var operation=release?(IGpuTensorOperation)constructor.Invoke(new object[]{shape,true}):Create(shape);
+            using var input=new Tensor<float>(shape,Values);ComputeTensorData.Pin(input);
+            using var output=operation.Execute(input);using var repeated=operation.Execute(input);
+            const BindingFlags fields=BindingFlags.Instance|BindingFlags.NonPublic;
+            var pipeline=(GpuProjectionPipeline)typeof(GpuGelu).GetField("pipeline",fields).GetValue(operation);
+            var workers=(Worker[])typeof(GpuProjectionPipeline).GetField("workers",fields).GetValue(pipeline);
+            Assert.That(workers.Length,Is.EqualTo(2));
+            foreach(var worker in workers)
+            {
+                var storage=typeof(Worker).GetField("m_Storage",fields).GetValue(worker);
+                var pool=storage.GetType().GetField("m_TensorPool",fields).GetValue(storage);
+                var cache=pool.GetType().GetField("m_computeMemoryPool",fields).GetValue(pool);
+                var count=((IDictionary)cache.GetType().GetField("freeBuffers",fields).GetValue(cache)).Count;
+                if(release)Assert.That(count,Is.Zero);else Assert.That(count,Is.GreaterThan(0),"The existing default keeps both internal Worker caches.");
+            }
+            var actual=output.DownloadToArray();Assert.That(repeated.DownloadToArray(),Is.EqualTo(actual));operation.Dispose();operation.Dispose();
+            Assert.That(output.DownloadToArray(),Is.EqualTo(actual));Assert.That(input.DownloadToArray(),Is.EqualTo(Values));
+            for(var i=0;i<actual.Length;i++)Assert.That(Math.Abs((double)actual[i]-Expected[i]),Is.LessThanOrEqualTo(1e-5+1e-4*Math.Abs((double)Expected[i])));
+        }
+
         static IGpuTensorOperation Create(TensorShape shape)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");

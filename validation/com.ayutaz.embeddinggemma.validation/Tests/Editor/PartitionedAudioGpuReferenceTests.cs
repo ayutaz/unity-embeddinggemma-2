@@ -242,6 +242,10 @@ namespace EmbeddingGemma.Validation.Tests
             =>Execute(signal,true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,nativeGlu:true,firstNormFma:true,scalarMomentFma:true);
 
         [Test]
+        public void PartitionedAudioEncoderAdapterMatchesOriginalImpulseOnGpu()
+            =>Execute("impulse",true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,nativeGlu:true,firstNormFma:true,scalarMomentFma:true,adapterMode:true);
+
+        [Test]
         public void ObserveNativeGluConvolutionModulesWithoutChangingNormalFinalBits()
             =>Execute("silence",true,early:true,nativeSilu:true,attention:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,nativeSoftmax:true,convolutionDetail:true,nativeGlu:true);
 
@@ -269,7 +273,7 @@ namespace EmbeddingGemma.Validation.Tests
         public void ObserveFirstAttentionAndConvolutionWithoutChangingNormalFinalBits()
             =>Execute("silence",true,false,false,true,true,true);
 
-        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false,bool convolutionDetail=false,bool nativeGlu=false,int layerObservation=0,bool firstNormFma=false,bool scalarMomentFma=false)
+        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false,bool convolutionDetail=false,bool nativeGlu=false,int layerObservation=0,bool firstNormFma=false,bool scalarMomentFma=false,bool adapterMode=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
@@ -285,6 +289,7 @@ namespace EmbeddingGemma.Validation.Tests
             if(layerObservation>0)stem="partitioned-native-layer"+layerObservation+"-parts-observation-";
             if(firstNormFma)stem="partitioned-first-norm-fma-gpu-";
             if(scalarMomentFma)stem="partitioned-scalar-moment-fma-gpu-";
+            if(adapterMode)stem="partitioned-audio-encoder-adapter-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject { ["success"]=false,["scope"]=early?"original_early_audio_observation_only":isolated?"one_original_audio_layer_isolation_gpu_numeric_gate":observe?"original_audio_layer_observation_only":"one_partitioned_original_audio_encoder_gpu_numeric_gate",
@@ -400,7 +405,13 @@ namespace EmbeddingGemma.Validation.Tests
                 report["native_operation_prepare_ms"]=timer.Elapsed.TotalMilliseconds-modelLoadMs;
                 report["projection_count"]=((JArray)plan["projections"]).Count;report["operation_count"]=kernels.Count;report["silu_count"]=nativeSilu?36:0;
                 var workerTimer=System.Diagnostics.Stopwatch.StartNew();
-                using var pipeline=new GpuProjectionPipeline(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray());
+                if(adapterMode)
+                {
+                    Assert.That(scalarMomentFma&&!observe&&!isolated&&!early&&!observeBmm&&layerObservation==0,Is.True);
+                    Assert.That(plan.Value<string>("profile"),Is.EqualTo("frames-1119-valid-1119"));
+                }
+                using var adapter=adapterMode?new PartitionedAudioFeatureEncoder(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray(),new AudioEncoderProfile(1119)):null;
+                using var pipeline=adapterMode?null:new GpuProjectionPipeline(models.ToArray(),bindingsByOperation.ToArray(),outputs.ToArray(),kernels.ToArray());
                 report["worker_creation_ms"]=workerTimer.Elapsed.TotalMilliseconds;
                 report["dynamic_matmul_count"]=nativeBmm?36:0;
                 report["query_scale_count"]=nativeQueryScale?12:0;
@@ -411,12 +422,22 @@ namespace EmbeddingGemma.Validation.Tests
                 report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;
                 workerTimer.Restart();
                 using var input=new Tensor<float>(new TensorShape(inputShape),inputValues);ComputeTensorData.Pin(input);
+                using var frameMask=adapterMode?new Tensor<int>(new TensorShape(1,1119),Enumerable.Repeat(1,1119).ToArray()):null;
+                if(frameMask!=null)ComputeTensorData.Pin(frameMask);
+                using var preprocessing=adapterMode?(AudioPreprocessingResult)Activator.CreateInstance(typeof(AudioPreprocessingResult),BindingFlags.Instance|BindingFlags.NonPublic,null,new object[]{input,frameMask,1119},null):null;
                 report["input_tensor_creation_and_pin_ms"]=workerTimer.Elapsed.TotalMilliseconds;
                 using var process=System.Diagnostics.Process.GetCurrentProcess();
                 GpuExecutionProfiler.ReadProcessMemory(process,out var workingSetBefore,out _);
                 report["host_working_set_before_execute_bytes"]=workingSetBefore;
                 report["phase"]="execute";Save();timer.Restart();
-                using var encoded=pipeline.Execute(input);Assert.That(encoded.backendType,Is.EqualTo(BackendType.GPUCompute));
+                using var adapterResult=adapterMode?adapter.Encode(preprocessing):null;
+                using var encoded=adapterMode?adapterResult.SoftTokens:pipeline.Execute(input);Assert.That(encoded.backendType,Is.EqualTo(BackendType.GPUCompute));
+                if(adapterMode)
+                {
+                    Assert.That(adapterResult.ValidFrameCount,Is.EqualTo(1119));
+                    Assert.That(encoded.shape,Is.EqualTo(new TensorShape(280,512)));
+                    report["encoder_api_adapter_validated"]=true;report["actual_pcm_preprocessing_validated"]=false;
+                }
                 var enqueueMs=timer.Elapsed.TotalMilliseconds;report["execute_enqueue_ms"]=enqueueMs;
                 var actual=encoded.DownloadToArray();report["execute_and_final_download_ms"]=timer.Elapsed.TotalMilliseconds;
                 report["final_download_and_gpu_wait_ms"]=timer.Elapsed.TotalMilliseconds-enqueueMs;

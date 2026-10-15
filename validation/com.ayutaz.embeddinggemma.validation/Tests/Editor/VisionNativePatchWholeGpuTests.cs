@@ -232,9 +232,14 @@ namespace EmbeddingGemma.Validation.Tests
         }
         [UnityTest] public IEnumerator FinalImageApiSquareOneRawMustMatchOriginalOnGpu()=>FinalImageApiCase(false);
         [UnityTest] public IEnumerator FinalImageApiSquareOneAllRolesMustMatchOriginalOnGpu()=>FinalImageApiCase(true);
-        static IEnumerator FinalImageApiCase(bool allRoles)
+        [UnityTest] public IEnumerator FinalImageApiSquareZeroAllRolesMustMatchOriginalOnGpu()=>FinalImageApiCase(true,"square-0");
+        [UnityTest] public IEnumerator FinalImageApiLandscapeZeroAllRolesMustMatchOriginalOnGpu()=>FinalImageApiCase(true,"landscape-0");
+        [UnityTest] public IEnumerator FinalImageApiLandscapeOneAllRolesMustMatchOriginalOnGpu()=>FinalImageApiCase(true,"landscape-1");
+        [UnityTest] public IEnumerator FinalImageApiPortraitZeroAllRolesMustMatchOriginalOnGpu()=>FinalImageApiCase(true,"portrait-0");
+        [UnityTest] public IEnumerator FinalImageApiPortraitOneAllRolesMustMatchOriginalOnGpu()=>FinalImageApiCase(true,"portrait-1");
+        static IEnumerator FinalImageApiCase(bool allRoles,string caseId="square-1")
         {
-            var pending=Run("square-1",inlineAllRms:true,nativeGelu:true,releaseUnusedGpuCache:true,staged:true,
+            var pending=Run(caseId,inlineAllRms:true,nativeGelu:true,releaseUnusedGpuCache:true,staged:true,
                 releaseGeluCaches:true,editorFramePump:true,nativeOperators:true,nativeStaticBlockSize:192,
                 inlineTailRms:true,softmaxVectorWidth:16,fuseGeluInner:true,sleefGelu:true,nativeRotary:true,
                 nativePooling:true,midpointRms:true,imageAdapter:true,finalImageRole:TextRole.Raw,allFinalImageRoles:allRoles);

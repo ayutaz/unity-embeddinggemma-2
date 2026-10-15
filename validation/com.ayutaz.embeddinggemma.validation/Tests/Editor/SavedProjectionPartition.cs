@@ -8,6 +8,19 @@ namespace EmbeddingGemma.Validation.Tests
 {
     public static class SavedProjectionPartition
     {
+        public static (Model model,int[] outputs) MarkGelu(Model source)
+        {
+            if(source==null)throw new ArgumentNullException(nameof(source));
+            var selected=source.layers.Where(layer=>layer.GetType().Name=="GeluFast").ToArray();
+            if(selected.Length==0||selected.Any(layer=>layer.inputs.Length!=1||layer.outputs.Length!=1))throw new ArgumentException("Expected original unary tanh GELU layers.",nameof(source));
+            var identity=typeof(Worker).Assembly.GetTypes().Single(type=>type.Name=="Identity"&&typeof(Layer).IsAssignableFrom(type));
+            var replacements=selected.ToDictionary(layer=>layer,layer=>
+            {
+                var marker=(Layer)Activator.CreateInstance(identity);marker.inputs=(int[])layer.inputs.Clone();marker.outputs=(int[])layer.outputs.Clone();return marker;
+            });
+            return(new Model{ProducerName=source.ProducerName+"/external-gpu-gelu",inputs=new List<Model.Input>(source.inputs),outputs=new List<Model.Output>(source.outputs),
+                constants=new List<Constant>(source.constants),layers=source.layers.Select(layer=>replacements.TryGetValue(layer,out var marker)?marker:layer).ToList()},selected.Select(layer=>layer.outputs[0]).ToArray());
+        }
         public sealed class Plan
         {
             public Model[] Models;

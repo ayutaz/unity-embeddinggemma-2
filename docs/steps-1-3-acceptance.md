@@ -2,6 +2,8 @@
 
 > 文書整合確認: 2026-10-15。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。ユーザー指定の実行計画3・4は継続中、未完了。直近の所有Unity processは終了済み。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
 
+2026-10-15最新: 固定native投影を5 Red→関連20 Greenで追加し、独立attention scopeは1 Red→関連21 Green。full CPU subsample replayの失敗は別記録のまま保持し、attention scopeは元layer終端と既存12 partのhashを厳密一致させた。`1008d6a`のGPU観測では初期5境界に加えQ / K / V / relative-Kも元Clip境界で全bit一致。最初の差はself_attn201,927値、後の残差と畳み込みにもbit差があるが局所許容差内。全encoder203要素不合格は維持する。[固定観測・基準・失敗](results/m4-first-attention-projections-bit-exact-20261015.json)。内部演算capture4 Red→関連24 Greenの独立Actions38661214188は成功し、次はscaled Q/K・bmm・tanh / softmaxを直接照合する。工程3・4の全条件は未達。以下は前回checkpoint。
+
 2026-10-15最新: native SiLU 36個と元135投影をGPU tensorのまま接続した。混在接続1 Red→実GPU関連3 Green、SiLU planner7 Red→関連35 Green、無名node保持1 Red→関連36 Green。固定shape483境界を別の推論なし監査で確定し、172 segmentを生成した。`3ae76bd`の元silence全encoderは203要素不合格・最大許容差比6.967976、GPUCompute・計算fallback / flush0。最初の入力投影からnorm_pre_attnまで5境界は元参照と全bit一致し、観測で通常最終bitは変わらない。全体数値gateと観測の合計はNUnit1 pass / 1 fail / skip0 / exit2。[固定接続・全体失敗・初期一致](results/m4-native-silu-whole-gpu-and-early-bit-exact-20261015.json)。次は直後のattentionブロックを元native値で観測する。元全信号 / profile・画像FP32・最終API全条件とallocation警告の解決は未達。以下は前回checkpoint。
 
 2026-10-15最新: 最初の入力投影 / pre_layer_norm後の入力は元参照と全bit一致し、その後の活性化で826,899値のbit差を確認した。元PyTorch / SLEEFの手順に沿うoffline oracleを経て、GPU API / 固定活性化2 Red→2 Green。`e2121e9`のFP32 GPU SiLUは元1,146,880値を全bit一致、skip0 / exit0。[固定観測・TDD・GPU成功](results/m4-native-silu-frozen-gpu-green-20261015.json)。全encoderへの接続は未完了で539要素不合格は維持する。次は中間readbackなしでGPU stageを接続する。独立Python全体はe252175の4環境各843 pass / skip0を全XMLで確認した。[固定回帰](results/python-full-projection-shape-audit-green-20261015.json)。工程3・4の元全信号 / profile・画像FP32・最終API・寿命 / 例外再利用と既存allocation警告の解決は未達。以下は前回checkpoint。

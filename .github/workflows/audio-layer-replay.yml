@@ -64,6 +64,7 @@ jobs:
           --diagnostic-source "$GITHUB_SHA"
           --report ../artifacts/audio-layer-replay-report.json
           --detail-feed-forward
+          --detail-attention-projections
           --projection-oracle
           --compensated-projection
           --subsample-input ../artifacts/frozen-audio-layer/audio-runtime-reference/frames-1119-valid-1119/silence-features-fp32.bin

@@ -205,6 +205,21 @@ namespace EmbeddingGemma.Validation.Tests
         [UnityTest] public IEnumerator FourthVisionLayerPrefixMustMatchQualifiedContextBitsOnGpu()=>QualifiedLayerCase(4,false);
         [UnityTest] public IEnumerator IsolatedFourthVisionLayerMustMatchQualifiedContextBitsOnGpu()=>QualifiedLayerCase(4,true);
         [UnityTest] public IEnumerator MidpointReciprocalFourthLayerPrefixMustMatchQualifiedContextBitsOnGpu()=>QualifiedLayerCase(4,false,true);
+        [UnityTest] public IEnumerator AdjacentReciprocalSquareZeroMustMatchOriginalOnGpu()=>AdjacentReciprocalCase("square-0");
+        [UnityTest] public IEnumerator AdjacentReciprocalSquareOneMustMatchOriginalOnGpu()=>AdjacentReciprocalCase("square-1");
+        [UnityTest] public IEnumerator AdjacentReciprocalLandscapeZeroMustMatchOriginalOnGpu()=>AdjacentReciprocalCase("landscape-0");
+        [UnityTest] public IEnumerator AdjacentReciprocalLandscapeOneMustMatchOriginalOnGpu()=>AdjacentReciprocalCase("landscape-1");
+        [UnityTest] public IEnumerator AdjacentReciprocalPortraitZeroMustMatchOriginalOnGpu()=>AdjacentReciprocalCase("portrait-0");
+        [UnityTest] public IEnumerator AdjacentReciprocalPortraitOneMustMatchOriginalOnGpu()=>AdjacentReciprocalCase("portrait-1");
+        static IEnumerator AdjacentReciprocalCase(string caseId)
+        {
+            var pending=Run(caseId,inlineAllRms:true,nativeGelu:true,releaseUnusedGpuCache:true,staged:true,
+                releaseGeluCaches:true,editorFramePump:true,nativeOperators:true,nativeStaticBlockSize:192,
+                inlineTailRms:true,softmaxVectorWidth:16,fuseGeluInner:true,sleefGelu:true,nativeRotary:true,
+                nativePooling:true,midpointRms:true);
+            while(!pending.IsCompleted){UnityEditor.EditorApplication.QueuePlayerLoopUpdate();yield return null;}
+            pending.GetAwaiter().GetResult();
+        }
         static IEnumerator SecondLayerCase(bool isolated)
             =>QualifiedLayerCase(2,isolated);
         static IEnumerator QualifiedLayerCase(int count,bool isolated,bool midpoint=false)

@@ -19,11 +19,28 @@ namespace EmbeddingGemma
 
         /// <summary>Optionally retires copied internal Worker outputs and releases unused GPU caches after each boundary.</summary>
         public GpuGelu(TensorShape shape,bool releaseUnusedGpuCache)
+            : this(shape,releaseUnusedGpuCache,false) { }
+
+        /// <summary>Explicitly opts into one-rounding kappa*cube+input; all arithmetic remains FP32 on GPU.</summary>
+        public GpuGelu(TensorShape shape,bool releaseUnusedGpuCache,bool fuseInner)
         {
             if(shape.rank<1||shape.length==0)throw new ArgumentException("Expected a nonempty fixed GELU shape.",nameof(shape));
             if(!SystemInfo.supportsComputeShaders)throw new NotSupportedException("GELU requires an actual compute GPU.");
             var first=new FunctionalGraph();var input=first.AddInput<float>(shape,"input");
-            var before=first.Compile(.7978845608028654f*(input+.044715f*(input*input*input)));
+            var inner=input+.044715f*(input*input*input);
+            if(fuseInner)
+            {
+                // Bounded FP32 Dekker/TwoSum, as in the qualified export helper.
+                // This is not a general IEEE FMA implementation for extreme inputs.
+                const float a=.044715f;var cube=input*input*input;var product=a*cube;
+                var aSplit=a*4097f;var aHigh=aSplit-(aSplit-a);var aLow=a-aHigh;
+                var bSplit=cube*4097f;var bHigh=bSplit-(bSplit-cube);var bLow=cube-bHigh;
+                var productError=((aHigh*bHigh-product)+aHigh*bLow+aLow*bHigh)+aLow*bLow;
+                var total=product+input;var recovered=total-product;
+                var sumError=(product-(total-recovered))+(input-recovered);
+                inner=total+(productError+sumError);
+            }
+            var before=first.Compile(.7978845608028654f*inner);
             var boundary=before.outputs[0];boundary.name="tanh_input";before.outputs[0]=boundary;
             var last=new FunctionalGraph();var original=last.AddInput<float>(shape,"input");var activated=last.AddInput<float>(shape,"tanh_output");
             var after=last.Compile((.5f*original)*(1f+activated));

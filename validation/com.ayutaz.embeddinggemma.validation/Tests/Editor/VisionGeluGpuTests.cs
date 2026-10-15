@@ -12,6 +12,48 @@ namespace EmbeddingGemma.Validation.Tests
     public sealed class VisionGeluGpuTests
     {
         [Test]
+        public void CapturedOriginalLinuxPrefixGeluFusedInnerMustImproveNativeBitsOnGpu()
+        {
+            var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
+            var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../numerical-acceptance-state/original-vision-first-layer-prefix-run-38719644488/original-vision-context-native-bfd8b0b36cd68365930fa636eb17dacbeef983e4/original-context-results"));
+            var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/vision-original-prefix-fused-gelu-gpu-"+source+".json"));Assert.That(File.Exists(output),Is.False);
+            var report=new JObject{["success"]=false,["runtime_source"]=source,["scope"]="captured_linux_avx2_original_first_gelu_prefix_only",
+                ["full_encoder_validated"]=false,["end_to_end_validated"]=false,["reference_reproduces_original_golden"]=false};
+            void Save(){File.WriteAllText(output,report.ToString());}
+            void Check(string path,string expected){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(expected));}
+            Save();
+            try
+            {
+                var locked=JObject.Parse(File.ReadAllText(Path.Combine(Application.dataPath,"../Packages/packages-lock.json")));
+                foreach(var package in new[]{"com.ayutaz.embeddinggemma","com.ayutaz.embeddinggemma.validation"})Assert.That(locked["dependencies"][package].Value<string>("hash"),Is.EqualTo(source));
+                var path=Path.Combine(root,"original-image-native.json");Check(path,"b36c8af5e9e248d587eb2cb99f20407375f5656a0a173ad1dc0063e740863bd6");
+                var reference=JObject.Parse(File.ReadAllText(path));Assert.That(reference["saved_node_capture"].Value<bool>("observed_final_matches_normal_bits"),Is.True);
+                Assert.That(reference.Value<string>("graph_sha256"),Is.EqualTo("f9c5175a1d75289ce814a9651f496f9bdae5e873ac66199a5c3d03e0172c16cc"));
+                var nodes=(JArray)reference["saved_node_capture"]["nodes"];
+                string Node(string name)
+                {
+                    var row=nodes.Single(value=>value.Value<string>("node")==name);Assert.That(row.Value<int>("prefix_rows"),Is.EqualTo(16));
+                    Assert.That(row["shape"].Values<int>().ToArray(),Is.EqualTo(new[]{1,16,3072}));
+                    var result=Path.Combine(root,"captures",row.Value<string>("file"));Check(result,row.Value<string>("sha256"));return result;
+                }
+                var values=Floats(Node("view_21"));var expected=Floats(Node("gelu"));var shape=new TensorShape(1,16,3072);
+                using var input=new Tensor<float>(shape,values);ComputeTensorData.Pin(input);
+                using var separate=new GpuGelu(shape,true);using var fused=new GpuGelu(shape,true,true);
+                using var baseline=separate.Execute(input);using var candidate=fused.Execute(input);
+                Assert.That(candidate.backendType,Is.EqualTo(BackendType.GPUCompute));var actual=candidate.DownloadToArray();
+                report["separate"]=Metrics(baseline.DownloadToArray(),expected);report["fused"]=Metrics(actual,expected);
+                var raw=new byte[actual.Length*4];Buffer.BlockCopy(actual,0,raw,0,raw.Length);File.WriteAllBytes(Path.ChangeExtension(output,"bin"),raw);
+                using(var stream=new MemoryStream(raw,false))report["capture_sha256"]=PlayerFileHash.Compute(stream,out _);
+                Assert.That(input.DownloadToArray(),Is.EqualTo(values));report["actual_backend"]="GPUCompute";report["cpu_computation_or_input_count"]=0;report["readback_flush_count"]=0;Save();
+                Assert.That(report["fused"].Value<int>("mismatched_elements"),Is.Zero);
+                Assert.That(report["fused"].Value<int>("bit_differences"),Is.LessThan(report["separate"].Value<int>("bit_differences")));
+                report["success"]=true;
+            }
+            catch(Exception error){report["error"]=error.ToString();throw;}
+            finally{Save();}
+        }
+
+        [Test]
         public void OriginalGateProjectionGeluMatchesCurrentCpuEquationOnGpu()
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; no skip.");

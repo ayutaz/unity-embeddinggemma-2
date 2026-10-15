@@ -15,6 +15,24 @@ namespace EmbeddingGemma.Tests
             return type;
         }
 
+        [TestCase(128,128,0f)] [TestCase(192,128,1f)] [TestCase(192,192,0f)]
+        [TestCase(256,192,1f)] [TestCase(384,384,0f)] [TestCase(768,384,1f)]
+        public void ExplicitAccumulationBlockPreservesItsOwnResetBoundary(int block,int boundary,float expected)
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
+            var coefficients=new float[512];for(var i=0;i<512;i++)coefficients[i]=1;
+            var values=new float[512];values[0]=1e8f;values[boundary]=-1e8f;values[boundary+1]=1;
+            using var operation=(IDisposable)Activator.CreateInstance(RequiredType(),512,1,coefficients,block);
+            using var input=new Tensor<float>(new TensorShape(1,512),values);ComputeTensorData.Pin(input);
+            using var output=Execute(operation,input);Assert.That(output.DownloadToArray(),Is.EqualTo(new[]{expected}));
+        }
+        [TestCase(-1)] [TestCase(0)] [TestCase(4097)]
+        public void ExplicitAccumulationBlockRejectsUnboundedDispatchLoops(int block)
+        {
+            var error=Assert.Throws<TargetInvocationException>(()=>Activator.CreateInstance(RequiredType(),1,1,new[]{1f},block));
+            Assert.That(error.InnerException,Is.InstanceOf<ArgumentOutOfRangeException>());
+        }
+
         [Test]
         public void DirectGpuKernelMustExposeADeviceOnlyOwnedOutputContract()
         {

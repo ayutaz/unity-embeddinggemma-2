@@ -15,6 +15,10 @@ namespace EmbeddingGemma
         GpuTanh tanh;
         public BackendType Backend=>BackendType.GPUCompute;
         public GpuGelu(TensorShape shape)
+            : this(shape,false) { }
+
+        /// <summary>Optionally retires copied internal Worker outputs and releases unused GPU caches after each boundary.</summary>
+        public GpuGelu(TensorShape shape,bool releaseUnusedGpuCache)
         {
             if(shape.rank<1||shape.length==0)throw new ArgumentException("Expected a nonempty fixed GELU shape.",nameof(shape));
             if(!SystemInfo.supportsComputeShaders)throw new NotSupportedException("GELU requires an actual compute GPU.");
@@ -26,7 +30,7 @@ namespace EmbeddingGemma
             try
             {
                 tanh=new GpuTanh();
-                pipeline=new GpuProjectionPipeline(new[]{before,after},new[]{"tanh_input"},new[]{"tanh_output"},new IGpuTensorOperation[]{tanh});
+                pipeline=new GpuProjectionPipeline(new[]{before,after},new[]{new[]{"tanh_input"}},new[]{"tanh_output"},new IGpuTensorOperation[]{tanh},releaseUnusedGpuCache);
             }
             catch{Dispose();throw;}
         }

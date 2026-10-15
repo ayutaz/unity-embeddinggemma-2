@@ -126,14 +126,18 @@ namespace EmbeddingGemma.Validation.Tests
         public void ObserveNativeSiluFirstFeedForwardWithoutChangingNormalFinalBits()
             =>Execute("silence",true,false,false,true,true);
 
-        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false)
+        [Test]
+        public void ObserveFirstAttentionAndConvolutionWithoutChangingNormalFinalBits()
+            =>Execute("silence",true,false,false,true,true,true);
+
+        void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false)
         {
             Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var folder=nativeSilu?"GpuAudioPartitionedNativeSilu":isolated?"GpuAudioPartitionedLayer10":allStatic?"GpuAudioPartitionedAllStatic":"GpuAudioPartitionedFirstFf";
             var root=Path.Combine(Application.dataPath,folder);
             var originalRoot=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/audio-real-chain/audio-runtime-reference"));
-            var stem=nativeSilu?(early?"partitioned-native-silu-early-observation-":"partitioned-native-silu-gpu-"):
+            var stem=attention?"partitioned-native-silu-attention-observation-":nativeSilu?(early?"partitioned-native-silu-early-observation-":"partitioned-native-silu-gpu-"):
                 early?"partitioned-early-audio-observation-":isolated?"partitioned-layer10-original-input-":observe?"partitioned-all-static-layer-observation-":allStatic?"partitioned-all-static-gpu-":"partitioned-first-ff-gpu-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
@@ -254,6 +258,10 @@ namespace EmbeddingGemma.Validation.Tests
                         (name:"activation_input",boundary:"/feed_forward1/ffw_layer_2/Clip_output_0",part:"feed_forward1.act_fn",minimum:-11.1875f,maximum:11.0625f),
                         (name:"feed_forward1_output",boundary:"/feed_forward1/Add_output_0",part:"feed_forward1",minimum:float.NegativeInfinity,maximum:float.PositiveInfinity),
                         (name:"norm_pre_attn",boundary:"/norm_pre_attn/Mul_1_output_0",part:"norm_pre_attn",minimum:float.NegativeInfinity,maximum:float.PositiveInfinity)};
+                    if(attention)bindings=bindings.Concat(new[]{
+                        (name:"self_attn",boundary:"/attentions.0/post/linear/MatMul_output_0",part:"self_attn",minimum:-101.5f,maximum:100.5f),
+                        (name:"attention_residual",boundary:"/lconv1d/pre_layer_norm/Cast_output_0",part:"norm_post_attn",minimum:float.NegativeInfinity,maximum:float.PositiveInfinity),
+                        (name:"lconv1d",boundary:"/lconv1d/Add_output_0",part:"lconv1d",minimum:float.NegativeInfinity,maximum:float.PositiveInfinity)}).ToArray();
                     report["phase"]="observe_early";Save();
                     var snapshots=ObserveBoundaries(models.ToArray(),inputs.ToArray(),outputs.ToArray(),kernels.ToArray(),input,bindings.Select(b=>b.boundary).ToHashSet());
                     Assert.That(snapshots["__final"].Select(BitConverter.SingleToInt32Bits),Is.EqualTo(actual.Select(BitConverter.SingleToInt32Bits)));
@@ -273,6 +281,12 @@ namespace EmbeddingGemma.Validation.Tests
                             var part=replay["parts"][binding.part];path=Path.Combine(nativeRoot,"audio-layer-replay",part.Value<string>("file"));expectedSha=part.Value<string>("sha256");
                         }
                         Check(path,expectedSha);var native=Floats(path);var values=snapshots[binding.boundary];Assert.That(values.Length,Is.EqualTo(native.Length));
+                        if(binding.name=="attention_residual")
+                        {
+                            var part=replay["parts"]["feed_forward1"];var residualPath=Path.Combine(nativeRoot,"audio-layer-replay",part.Value<string>("file"));
+                            Check(residualPath,part.Value<string>("sha256"));var residual=Floats(residualPath);Assert.That(residual.Length,Is.EqualTo(native.Length));
+                            for(var index=0;index<native.Length;index++)native[index]=native[index]+residual[index];
+                        }
                         Assert.That(values.Any(v=>float.IsNaN(v)||float.IsInfinity(v)),Is.False);
                         int bits=0,bad=0;double maxRatio=0;
                         for(var index=0;index<values.Length;index++)
@@ -280,17 +294,19 @@ namespace EmbeddingGemma.Validation.Tests
                             // Transform only the immutable expected values to the original
                             // quantized-linear input Clip boundary. Product computation stays GPU.
                             var target=Math.Max(binding.minimum,Math.Min(binding.maximum,native[index]));
-                            if(BitConverter.SingleToInt32Bits(values[index])!=BitConverter.SingleToInt32Bits(target))bits++;
-                            var difference=Math.Abs((double)values[index]-target);var allowed=1e-5+1e-4*Math.Abs((double)target);
+                            var observed=binding.name=="self_attn"?Math.Max(binding.minimum,Math.Min(binding.maximum,values[index])):values[index];
+                            if(BitConverter.SingleToInt32Bits(observed)!=BitConverter.SingleToInt32Bits(target))bits++;
+                            var difference=Math.Abs((double)observed-target);var allowed=1e-5+1e-4*Math.Abs((double)target);
                             if(difference>allowed)bad++;maxRatio=Math.Max(maxRatio,difference/allowed);
                         }
                         var bytes=new byte[values.Length*4];Buffer.BlockCopy(values,0,bytes,0,bytes.Length);var capture=Path.Combine(captureRoot,binding.name+"-fp32.bin");File.WriteAllBytes(capture,bytes);
                         using var stream=File.OpenRead(capture);var captureSha=PlayerFileHash.Compute(stream,out _);
                         stages.Add(new JObject{["stage"]=binding.name,["boundary"]=binding.boundary,["original_native_sha256"]=expectedSha,
-                            ["expected_transform"]=binding.part=="feed_forward1.pre_layer_norm"||binding.part=="feed_forward1.act_fn"?"original_fp32_input_clip":"identity",
+                            ["expected_transform"]=binding.name=="attention_residual"?"original_fp32_residual_sum":binding.part=="feed_forward1.pre_layer_norm"||binding.part=="feed_forward1.act_fn"?"original_fp32_input_clip":"identity",
+                            ["actual_transform"]=binding.name=="self_attn"?"original_fp32_output_clip_for_diagnostic_comparison_only":"identity",
                             ["actual_file"]=capture,["actual_sha256"]=captureSha,["bit_differences"]=bits,["mismatched_elements"]=bad,["maximum_tolerance_ratio"]=maxRatio});Save();
                     }
-                    Assert.That(stages.Count,Is.EqualTo(5));report["observation_completed"]=true;report["success"]=true;report["phase"]="completed_observation";return;
+                    Assert.That(stages.Count,Is.EqualTo(attention?8:5));report["observation_completed"]=true;report["success"]=true;report["phase"]="completed_observation";return;
                 }
                 if(observe)
                 {
@@ -339,7 +355,7 @@ namespace EmbeddingGemma.Validation.Tests
         // Diagnostic-only downloads; the product GPU pipeline is unchanged.
         static Dictionary<string,float[]> ObserveBoundaries(Model[] models,string[] inputs,string[] outputs,IGpuTensorOperation[] kernels,Tensor<float> input,HashSet<string> wanted)
         {
-            if(!wanted.IsSubsetOf(models.SelectMany(m=>m.outputs.Select(o=>o.name))))throw new ArgumentException("Observed boundary is missing.");
+            if(!wanted.IsSubsetOf(models.SelectMany(m=>m.outputs.Select(o=>o.name)).Concat(outputs)))throw new ArgumentException("Observed boundary is missing.");
             float[] baseline;
             using(var normal=new GpuProjectionPipeline(models,inputs,outputs,kernels))
             using(var final=normal.Execute(input))baseline=final.DownloadToArray();
@@ -362,7 +378,11 @@ namespace EmbeddingGemma.Validation.Tests
                         owned.Add(value);Assert.That(value.backendType,Is.EqualTo(BackendType.GPUCompute));values[boundary.name]=value;
                         if(wanted.Contains(boundary.name))snapshots[boundary.name]=value.DownloadToArray();
                     }
-                    if(stage<kernels.Length){var value=kernels[stage].Execute(values[inputs[stage]]);owned.Add(value);values[outputs[stage]]=value;}
+                    if(stage<kernels.Length)
+                    {
+                        var value=kernels[stage].Execute(values[inputs[stage]]);owned.Add(value);Assert.That(value.backendType,Is.EqualTo(BackendType.GPUCompute));values[outputs[stage]]=value;
+                        if(wanted.Contains(outputs[stage]))snapshots[outputs[stage]]=value.DownloadToArray();
+                    }
                 }
                 snapshots["__final"]=values[models.Last().outputs.Single().name].DownloadToArray();
                 Assert.That(snapshots["__final"].Select(BitConverter.SingleToInt32Bits),Is.EqualTo(baseline.Select(BitConverter.SingleToInt32Bits)),"Diagnostic downloads changed normal final bits.");

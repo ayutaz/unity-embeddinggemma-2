@@ -19,8 +19,17 @@ namespace EmbeddingGemma.Validation.Tests
         {
             if(source==null||template==null)throw new ArgumentNullException();
             Assert.That(template.inputs.Count,Is.EqualTo(1));Assert.That(template.outputs.Count,Is.EqualTo(1));
-            Assert.That(template.inputs[0].shape.ToTensorShape(),Is.EqualTo(new TensorShape(256,768)));
             var square=source.layers.Single(layer=>layer.GetType().Name=="Square");
+            var analysis=typeof(Worker).Assembly.GetType("Unity.InferenceEngine.Compiler.Analyser.PartialInferenceAnalysis");
+            if(analysis==null)throw new NotSupportedException("Pinned tail shape analysis is unavailable.");
+            var context=analysis.GetMethod("InferModelPartialTensors").Invoke(null,new object[]{source});
+            var partial=context.GetType().GetMethod("GetPartialTensor").Invoke(context,new object[]{square.inputs[0]});
+            var inferred=(DynamicTensorShape)partial.GetType().GetProperty("shape").GetValue(partial);
+            if(!inferred.IsStatic()||!template.inputs[0].shape.IsStatic())
+                throw new ArgumentException("Tail RMS replacement requires a proven fixed intermediate shape.");
+            var target=inferred.ToTensorShape();
+            if(target.rank!=2||target[1]!=768||template.inputs[0].shape.ToTensorShape()!=target)
+                throw new ArgumentException("Tail RMS template must match the source profile's actual width-768 intermediate.",nameof(template));
             Layer Next(Layer current,string kind)=>source.layers.Single(layer=>layer.GetType().Name==kind&&layer.inputs.Contains(current.outputs[0]));
             var mean=Next(square,"ReduceMean");var scalar=Next(mean,"ScalarMad");var inverse=Next(scalar,"Rsqrt");var final=Next(inverse,"Mul");
             Assert.That(final.inputs.Contains(square.inputs[0]),Is.True);

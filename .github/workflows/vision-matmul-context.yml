@@ -1,0 +1,89 @@
+name: Original vision static matmul context
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: vision-matmul-context-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - name: Require AMD host before original graph download
+        run: |
+          uv run --no-project --python 3.13 python - <<'PY'
+          import json,os,subprocess
+          from pathlib import Path
+          host=json.loads(subprocess.check_output(['lscpu','--json'],text=True));rows={r['field'].rstrip(':'):r['data'] for r in host['lscpu']}
+          output=Path('../artifacts/vision-matmul-context');output.mkdir(parents=True,exist_ok=True)
+          satisfied=rows.get('Vendor ID')=='AuthenticAMD'
+          report=dict(source=os.environ['GITHUB_SHA'],host=host,amd_host_satisfied=satisfied,model_executed=False)
+          (output/'host-prerequisite.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8');print(json.dumps(report))
+          if not satisfied:raise SystemExit('AMD BLAS reference host unavailable; no model download or execution performed')
+          PY
+      - run: uv sync --locked
+      - name: Fetch original square graph and patch fixture
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          uv run --locked python -m embeddinggemma_tools.artifact_zip \
+            --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11774238857 \
+            --output ../artifacts/vision-matmul-input --max-entry-bytes 2147483648 \
+            --member vision-reference.json --member vision-validation.json \
+            --member square/vision.pt2 --member square/0-pixels-fp32.bin
+          sha256sum --check <<'EOF'
+          3dfccd1a487ce04df3f8d640483ca045f7a7a56231bc1096ad0f845c923a29c6  ../artifacts/vision-matmul-input/vision-reference.json
+          ab1aa775b553f33a5e2892abed2cdcef7768e35fbad6fa5af9ec3286a7ba90ba  ../artifacts/vision-matmul-input/vision-validation.json
+          f9c5175a1d75289ce814a9651f496f9bdae5e873ac66199a5c3d03e0172c16cc  ../artifacts/vision-matmul-input/square/vision.pt2
+          d25852af1b53b8f4ed484b760280b1859b8a3b63e3456f7cbb378f33877761b7  ../artifacts/vision-matmul-input/square/0-pixels-fp32.bin
+          EOF
+      - name: Check original patch and capture native full-shape matrix prefixes
+        run: |
+          uv run --locked python - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          import numpy as np
+          import torch
+          from embeddinggemma_tools.reference_context_failure import run_saved_graph_prefix,probe_saved_static_matmuls
+          root=Path('../artifacts/vision-matmul-input');output=Path('../artifacts/vision-matmul-context')
+          program=torch.export.load(root/'square/vision.pt2').module()
+          pixels=torch.from_numpy(np.fromfile(root/'square/0-pixels-fp32.bin','<f4').reshape(1,2520,768).copy())
+          patch=run_saved_graph_prefix(program,(pixels,),'add_1');digest=hashlib.sha256(patch.numpy().tobytes()).hexdigest()
+          expected='1e99fa140cb0084e624b5019d96ae424192eff77346ef2f7ffea892c1bea0607'
+          prerequisite=dict(scope='original_patch_only_before_static_matmul_probe',source=os.environ['GITHUB_SHA'],
+              native_patch_sha256=digest,expected_patch_sha256=expected,matches_original_native=digest==expected,full_encoder_executed=False)
+          (output/'patch-prerequisite.json').write_text(json.dumps(prerequisite,indent=2)+'\n',encoding='utf-8')
+          if digest!=expected:raise SystemExit('Native BLAS patch does not match original; shape probes were not executed')
+          report=probe_saved_static_matmuls(program,output/'captures',('mm_1', 'mm_5', 'mm_6', 'mm_7'),rows=2520,prefix_rows=16,seed=41015)
+          report.update(source=os.environ['GITHUB_SHA'],original_graph_sha256='f9c5175a1d75289ce814a9651f496f9bdae5e873ac66199a5c3d03e0172c16cc',
+              native_patch_matches_original=True,reference_scope='Native GEMM shape/layout only; deterministic synthetic inputs, not a new original encoder golden')
+          (output/'matmul-reference.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8');print(json.dumps(report))
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: original-vision-matmul-${{ github.sha }}
+          path: artifacts/vision-matmul-context/
+          retention-days: 7
+          if-no-files-found: warn

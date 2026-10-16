@@ -1,5 +1,7 @@
 using Unity.InferenceEngine;
 using UnityEngine;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace EmbeddingGemma
 {
@@ -14,5 +16,10 @@ namespace EmbeddingGemma
         BackendType Backend { get; }
         ImageEncoderProfile Profile { get; }
         ImageEncodingResult Encode(ImagePreprocessingResult input);
+    }
+
+    public interface IAsyncImageFeatureEncoder : IImageFeatureEncoder
+    {
+        Task<ImageEncodingResult> EncodeAsync(ImagePreprocessingResult input, CancellationToken cancellationToken = default);
     }
 }

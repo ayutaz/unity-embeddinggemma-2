@@ -5,7 +5,8 @@ from pathlib import Path
 
 import torch
 from safetensors import safe_open
-from transformers import EmbeddingGemma2TextConfig, EmbeddingGemma2TextModel, Gemma4VisionConfig, Gemma4VisionModel
+from transformers import (EmbeddingGemma2TextConfig, EmbeddingGemma2TextModel,
+                          Gemma4AudioConfig, Gemma4AudioModel, Gemma4VisionConfig, Gemma4VisionModel)
 from transformers.models.embedding_gemma2.modeling_embedding_gemma2 import EmbeddingGemma2MultimodalEmbedder
 from transformers import EmbeddingGemma2Config, EmbeddingGemma2Model
 
@@ -22,6 +23,20 @@ def load_image_embedding_model(snapshot: Path):
         core = EmbeddingGemma2Model(config)
     core.language_model = load_text_model(snapshot)
     core.vision_tower, core.embed_vision = load_vision_models(snapshot)
+    return core.eval()
+
+
+def load_audio_embedding_model(snapshot: Path):
+    """Official audio-only forward, allocating only strict active text/audio weights."""
+    configuration = json.loads((snapshot / "config.json").read_text(encoding="utf-8"))
+    configuration["vision_config"] = None
+    config = EmbeddingGemma2Config.from_dict(configuration)
+    config.text_config._attn_implementation = "eager"
+    config.audio_config._attn_implementation = "sdpa"
+    with torch.device("meta"):
+        core = EmbeddingGemma2Model(config)
+    core.language_model = load_text_model(snapshot)
+    core.audio_tower, core.embed_audio = load_audio_models(snapshot)
     return core.eval()
 
 
@@ -53,3 +68,22 @@ def load_vision_models(snapshot: Path):
                      for key in weights.keys() if key.startswith(prefix)}
             module.load_state_dict(state, strict=True)
     return vision.eval(), projection.eval()
+
+
+def load_audio_models(snapshot: Path):
+    """Load only the official audio tower and its projection to text hidden width."""
+    configuration = json.loads((snapshot / "config.json").read_text(encoding="utf-8"))
+    config = Gemma4AudioConfig.from_dict(configuration["audio_config"])
+    # Audio attention consumes a boolean blocked mask. In the pinned library,
+    # eager mask construction produces an additive float mask instead.
+    config._attn_implementation = "sdpa"
+    audio = Gemma4AudioModel(config).float()
+    projection = EmbeddingGemma2MultimodalEmbedder(
+        config, EmbeddingGemma2TextConfig.from_dict(configuration["text_config"])
+    ).float()
+    with safe_open(snapshot / "model.safetensors", framework="pt", device="cpu") as weights:
+        for prefix, module in (("audio_tower.", audio), ("embed_audio.", projection)):
+            state = {key.removeprefix(prefix): weights.get_tensor(key).to(torch.float32)
+                     for key in weights.keys() if key.startswith(prefix)}
+            module.load_state_dict(state, strict=True)
+    return audio.eval(), projection.eval()

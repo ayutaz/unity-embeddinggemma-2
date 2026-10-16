@@ -1,0 +1,527 @@
+{
+  "scope": "original_padded_audio_encoder_gpu_and_partitioned_encoder_adapter",
+  "original_references_changed": false,
+  "learned_coefficients_changed": false,
+  "profile_masks_changed_to_exact_original_padded_values": true,
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "original_graph_comparison": {
+    "report_sha256": "5379420fbcc12f49a75fcd1c67c8b5d52e73888517051a7de5871d8364e0e292",
+    "report": {
+      "success": true,
+      "scope": "original_onnx_profile_structure_comparison_only",
+      "source_sha256": "7770a8af258f2de32c5587497b820596ea4e1ed7ec5382c3ee90eada2bec7e4a",
+      "target_sha256": "af2e97b777349fa2e5f74790d24bb4b2d899c6a8438f372253737bc5940944c7",
+      "numeric_validated": false,
+      "gpu_validated": false,
+      "changed_initializers": [
+        {
+          "name": "onnx::Slice_7784",
+          "before": {
+            "dtype": "BOOL",
+            "shape": [
+              1,
+              1119
+            ],
+            "sha256": "1c781187d2c5bfbe32cde73d722575577c7a4eb88fc41efda544b02c82c97ea7"
+          },
+          "after": {
+            "dtype": "BOOL",
+            "shape": [
+              1,
+              1119
+            ],
+            "sha256": "fdc289a37ee15385230012ca2bd46f36065a6afe595c8310aac669f804d8638a"
+          },
+          "consumers": [
+            {
+              "node": "/subsample_conv_projection/layer0/Slice",
+              "input_index": 0
+            }
+          ]
+        },
+        {
+          "name": "onnx::Mul_7787",
+          "before": {
+            "dtype": "FLOAT",
+            "shape": [
+              1,
+              1,
+              1119,
+              1
+            ],
+            "sha256": "5fa525efcbb9e5e8c1444f3b3d2d3831ac37e1446b0f73c2a960bee6eb04da9f"
+          },
+          "after": {
+            "dtype": "FLOAT",
+            "shape": [
+              1,
+              1,
+              1119,
+              1
+            ],
+            "sha256": "a35e745411a021395e638c37dafd4ee7f02b68aa617e20d9d0aa90ddd090aa04"
+          },
+          "consumers": [
+            {
+              "node": "/subsample_conv_projection/layer0/Mul",
+              "input_index": 1
+            }
+          ]
+        },
+        {
+          "name": "onnx::Where_7920",
+          "before": {
+            "dtype": "BOOL",
+            "shape": [
+              1,
+              1,
+              24,
+              12,
+              24
+            ],
+            "sha256": "ba0531679f735e4b1b52eaf946fcb363aa4187d0af54aee34cdea996e83b41e6"
+          },
+          "after": {
+            "dtype": "BOOL",
+            "shape": [
+              1,
+              1,
+              24,
+              12,
+              24
+            ],
+            "sha256": "d3d64a7778233c38eaca22816e6ca5383a1aa2aac5a1615f3d22d6e35577559a"
+          },
+          "consumers": [
+            {
+              "node": "/attentions.0/Where",
+              "input_index": 0
+            },
+            {
+              "node": "/attentions.1/Where",
+              "input_index": 0
+            },
+            {
+              "node": "/attentions.10/Where",
+              "input_index": 0
+            },
+            {
+              "node": "/attentions.11/Where",
+              "input_index": 0
+            },
+            {
+              "node": "/attentions.2/Where",
+              "input_index": 0
+            },
+            {
+              "node": "/attentions.3/Where",
+              "input_index": 0
+            },
+            {
+              "node": "/attentions.4/Where",
+              "input_index": 0
+            },
+            {
+              "node": "/attentions.5/Where",
+              "input_index": 0
+            },
+            {
+              "node": "/attentions.6/Where",
+              "input_index": 0
+            },
+            {
+              "node": "/attentions.7/Where",
+              "input_index": 0
+            },
+            {
+              "node": "/attentions.8/Where",
+              "input_index": 0
+            },
+            {
+              "node": "/attentions.9/Where",
+              "input_index": 0
+            }
+          ]
+        }
+      ],
+      "changed_nodes": [
+        {
+          "name": "/Constant_74",
+          "before_sha256": "29d2e78f6d36590cfab95c3b7d0179877813fdd13ae6abbe0fb4d1c4183d5cd1",
+          "after_sha256": "babac3cea0c61dd84506dbf0f976e03ce726cccb2da955e22041a92f8383349d",
+          "before": {
+            "name": "/Constant_74",
+            "op_type": "Constant",
+            "attributes": [
+              {
+                "name": "value",
+                "tensor": {
+                  "dtype": "INT64",
+                  "shape": [
+                    1
+                  ],
+                  "sha256": "b15303f15d28fd059ea76737e80b214d32d4f4f1e355ed70ba4ebcf9a986d659",
+                  "values": [
+                    280
+                  ]
+                }
+              }
+            ]
+          },
+          "after": {
+            "name": "/Constant_74",
+            "op_type": "Constant",
+            "attributes": [
+              {
+                "name": "value",
+                "tensor": {
+                  "dtype": "INT64",
+                  "shape": [
+                    1
+                  ],
+                  "sha256": "8344270b4399046d80dfb912312aeab307f1121f2eb14a889af1ba0785df1f9d",
+                  "values": [
+                    210
+                  ]
+                }
+              }
+            ]
+          },
+          "consumers": [
+            {
+              "node": "/Slice",
+              "input_index": 2
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "before": {
+            "name": "output",
+            "dtype": "FLOAT",
+            "shape": [
+              280,
+              512
+            ]
+          },
+          "after": {
+            "name": "output",
+            "dtype": "FLOAT",
+            "shape": [
+              210,
+              512
+            ]
+          }
+        }
+      ],
+      "unchanged_initializer_count": 583,
+      "unchanged_node_count": 5638
+    },
+    "execution": {
+      "command": [
+        ".\\artifacts\\numerical-acceptance-work\\tools\\.venv\\Scripts\\python.exe",
+        "-m",
+        "embeddinggemma_tools.audio_profile_delta",
+        "--source",
+        "../../k/artifacts/audio-real-chain/audio-runtime-reference/frames-1119-valid-1119/audio.onnx",
+        "--target",
+        "../../k/artifacts/audio-real-chain/audio-runtime-reference/frames-1119-valid-839/audio.onnx",
+        "--source-sha256",
+        "7770a8af258f2de32c5587497b820596ea4e1ed7ec5382c3ee90eada2bec7e4a",
+        "--target-sha256",
+        "af2e97b777349fa2e5f74790d24bb4b2d899c6a8438f372253737bc5940944c7",
+        "--output",
+        "../../numerical-acceptance-state/audio-original-profile-delta-stable-consumers-20261015.json"
+      ],
+      "timeout_seconds": 60.0,
+      "success": true,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-15T04:32:08.201902+00:00",
+      "pid": 68892,
+      "exit_code": 0,
+      "elapsed_seconds": 6.11016959999688,
+      "completed_utc": "2026-10-15T04:32:14.312071+00:00"
+    }
+  },
+  "comparison_workflow": {
+    "run": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38680976728",
+    "conclusion": "cancelled",
+    "reason": "Cancelled owned queued comparison after bounded local metadata-only comparison completed; not an Actions pass"
+  },
+  "preparation": {
+    "scope": "original_profile_delta_applied_to_scalar_moment_fma_gpu_partitions",
+    "producer": "1a9dc651bc7937bf45e9f4c9411434eccc3f3e6c",
+    "original_profile_delta_sha256": "5379420fbcc12f49a75fcd1c67c8b5d52e73888517051a7de5871d8364e0e292",
+    "base_partition_plan_sha256": "969d578115d170d10c471cb142adae868dfaa5a251626c07e9ab4f0c41554151",
+    "output_plan_sha256": "0b10238dbc44fc151738895d3fa9e0d67c3a6466dd7c7721fc24c70d627ca516",
+    "application": {
+      "profile_items_applied": 4,
+      "updated_tensor_count": 15,
+      "updated_output_contracts": 2,
+      "changed_parts": [
+        0,
+        13,
+        35,
+        57,
+        79,
+        101,
+        123,
+        145,
+        167,
+        189,
+        211,
+        233,
+        255,
+        267
+      ],
+      "gpu_validated": false,
+      "numeric_validated": false,
+      "delta_sha256": "e3915781234e6eef6a8ff379a4c68d048af4c66709ee2bfb9644e29eb211fc5a",
+      "original_source_sha256": "7770a8af258f2de32c5587497b820596ea4e1ed7ec5382c3ee90eada2bec7e4a",
+      "original_target_sha256": "af2e97b777349fa2e5f74790d24bb4b2d899c6a8438f372253737bc5940944c7"
+    },
+    "changed_initializer_occurrences": 14,
+    "initializer_mutations_limited_to_audited_profile_masks": true,
+    "learned_coefficients_changed": false,
+    "gpu_validated": false,
+    "full_encoder_validated": false,
+    "end_to_end_validated": false
+  },
+  "mask_metadata_correction": {
+    "scope": "correct_inherited_full_profile_initializer_metadata_only",
+    "before_plan_sha256": "0b10238dbc44fc151738895d3fa9e0d67c3a6466dd7c7721fc24c70d627ca516",
+    "after_plan_sha256": "dbb6588db0086ccd3957d52db9d6fdfe55135c630a2ed7e567c2d8397534e6d9",
+    "source_initializer_bytes_preserved": false,
+    "learned_coefficients_preserved": true,
+    "profile_mask_mutations_only": true,
+    "model_or_weight_files_modified": false,
+    "numeric_validated": false,
+    "gpu_validated": false
+  },
+  "python_tdd": {
+    "comparison_red": {
+      "file": "audio-profile-delta-api-red-20261015.xml",
+      "sha256": "1a213c24fa40fe7e90fcbd0d761d80e9ea136eb8c26e9f3a8b52fe187c833cae",
+      "tests": 9,
+      "failures": 9,
+      "errors": 0,
+      "skipped": 0
+    },
+    "workflow_red": {
+      "file": "audio-profile-workflow-red-20261015.xml",
+      "sha256": "9c6375d2ef19c4af4fb92f82d9abec72736a43c20804644b1514d7e4e7a4a1b5",
+      "tests": 11,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "consumer_red": {
+      "file": "audio-profile-delta-consumer-red-20261015.xml",
+      "sha256": "84f3704d028966a810eddd61decc72517b6f9980a32cdd4ff7336d898f8175ad",
+      "tests": 11,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "alias_red": {
+      "file": "audio-profile-alias-consumer-red-20261015.xml",
+      "sha256": "aeb8b591f8e6b2b84cb5027a49f18db79faff7524ed8ca1396d9f88a9b909bad",
+      "tests": 12,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "application_red": {
+      "file": "audio-profile-application-red-20261015.xml",
+      "sha256": "8cb4f17ecdc0490cda554f24f48069deba974d937dc34311448237d7130105cf",
+      "tests": 21,
+      "failures": 10,
+      "errors": 0,
+      "skipped": 0
+    },
+    "related_green": {
+      "file": "audio-profile-application-green-20261015.xml",
+      "sha256": "4a9c05eb24e6ae4cbdd6ad71089cc5b9b311191e76ce2413954bd2c9bd7ecc95",
+      "tests": 27,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "padded_wrong_profile_red": {
+    "file": "scalar-moment-fma-original-padded-profile-red-20261015-process.json",
+    "sha256": "aaaddd3df703b3d5ac112c926dfef8681402b268eb3f18b1d9ab4ef7d85143bd",
+    "xml_sha256": "ea6eb32732c0dbe673ea58edc37cbca3667ed129c3d3a3526111a6f8185aa66f",
+    "counts": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "exit_code": 2,
+    "elapsed_seconds": 60.25478600000497
+  },
+  "padded_gpu_execution": {
+    "file": "scalar-moment-fma-original-padded-gpu-20261015-process.json",
+    "sha256": "637056f07f1dd2ffd59aec0c99881cee15465a9171f04c17b7e9842ec150ec30",
+    "xml_sha256": "1b61ea06726bd407b4c079e08ba512c663104b1ef3ae8cd7a766a4298e668a80",
+    "counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exit_code": 0,
+    "elapsed_seconds": 64.5507585000014
+  },
+  "padded_gpu": {
+    "file": "partitioned-scalar-moment-fma-gpu-d955554335bed9ea8006d6287b47a3a1908932c2-padded_noise.json",
+    "sha256": "358c6493df1d3476b6752f696977f13883f93ca516716061d1dfc686705ff97a",
+    "result": {
+      "success": true,
+      "scope": "one_partitioned_original_audio_encoder_gpu_numeric_gate",
+      "runtime_source": "d955554335bed9ea8006d6287b47a3a1908932c2",
+      "signal": "padded_noise",
+      "requested_backend": "GPUCompute",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "phase": "completed",
+      "end_to_end_validated": false,
+      "all_original_signals_validated": false,
+      "original_profile_delta_sha256": "5379420fbcc12f49a75fcd1c67c8b5d52e73888517051a7de5871d8364e0e292",
+      "profile": "frames-1119-valid-839",
+      "partition_producer": "1a9dc651bc7937bf45e9f4c9411434eccc3f3e6c",
+      "model_load_and_transform_ms": 1404.5329000000002,
+      "prepare_ms": 14796.236,
+      "native_operation_prepare_ms": 13391.7155,
+      "projection_count": 135,
+      "operation_count": 267,
+      "silu_count": 36,
+      "worker_creation_ms": 128.2937,
+      "dynamic_matmul_count": 36,
+      "query_scale_count": 12,
+      "tanh_count": 12,
+      "scalar_divide_count": 12,
+      "softmax_count": 12,
+      "glu_count": 12,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "input_tensor_creation_and_pin_ms": 5.9455,
+      "host_working_set_before_execute_bytes": 3406405632,
+      "execute_enqueue_ms": 3988.0636000000004,
+      "execute_and_final_download_ms": 4578.1371,
+      "final_download_and_gpu_wait_ms": 590.1007,
+      "host_working_set_after_download_bytes": 4145840128,
+      "host_peak_working_set_bytes": 4145840128,
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 1.430511474609375e-06,
+      "maximum_tolerance_ratio": 0.042264721566013186
+    }
+  },
+  "encoder_adapter_tdd_red": {
+    "file": "partitioned-audio-adapter-red-20261015-process.json",
+    "sha256": "43a4c716f0d0ab948cb9c47e80f05392300f16838310614483753b49bac686b3",
+    "xml_sha256": "379aec6010a47aca79e91f1114ea64beb3f32b83993cb3961ca0c8ab9152f298",
+    "counts": {
+      "total": 3,
+      "passed": 0,
+      "failed": 3,
+      "skipped": 0
+    },
+    "exit_code": 2,
+    "elapsed_seconds": 44.717433199999505
+  },
+  "encoder_adapter_related_green": {
+    "file": "partitioned-audio-adapter-green-20261015-process.json",
+    "sha256": "9aa7d67c5db4472c3886304fdfa727c542df73d8866031777d3c333ccc627467",
+    "xml_sha256": "60eb6460637748b96760e6c3a7c5a20be4a519e6152993e86bab8185d22075ec",
+    "counts": {
+      "total": 26,
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exit_code": 0,
+    "elapsed_seconds": 41.564291299990145
+  },
+  "encoder_adapter_real_execution": {
+    "file": "partitioned-audio-adapter-real-impulse-20261015-process.json",
+    "sha256": "532c6e12a75063d577a417a9765ff6b20ed9653af27b0768f6a6505c598da6ab",
+    "xml_sha256": "40a696220b44caf652196d94744a4d2938fbf1a988073d9cb6401c060817c06e",
+    "counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exit_code": 0,
+    "elapsed_seconds": 59.7164735999977
+  },
+  "encoder_adapter_real": {
+    "file": "partitioned-audio-encoder-adapter-gpu-cf3ed61256e4a5131d4945e8b9ba5281054a6baa-impulse.json",
+    "sha256": "bcd995f74281a9d32c617e0f673387d37806a2a9ae63bd1ffe6054ec6f659ed0",
+    "result": {
+      "success": true,
+      "scope": "one_partitioned_original_audio_encoder_gpu_numeric_gate",
+      "runtime_source": "cf3ed61256e4a5131d4945e8b9ba5281054a6baa",
+      "signal": "impulse",
+      "requested_backend": "GPUCompute",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "phase": "completed",
+      "end_to_end_validated": false,
+      "all_original_signals_validated": false,
+      "partition_producer": "4c21ce313fb814a58010cfbe077692090ad5c771",
+      "scalar_moment_fma_segment_sha256": "650929620cdb4974eec0ee41d1d21c6dfe376c6703cb9cf5091d261171dbd949",
+      "model_load_and_transform_ms": 1518.8392000000001,
+      "prepare_ms": 13199.591,
+      "native_operation_prepare_ms": 11680.7673,
+      "projection_count": 135,
+      "operation_count": 267,
+      "silu_count": 36,
+      "worker_creation_ms": 125.5582,
+      "dynamic_matmul_count": 36,
+      "query_scale_count": 12,
+      "tanh_count": 12,
+      "scalar_divide_count": 12,
+      "softmax_count": 12,
+      "glu_count": 12,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "input_tensor_creation_and_pin_ms": 6.2743,
+      "host_working_set_before_execute_bytes": 3369811968,
+      "encoder_api_adapter_validated": true,
+      "actual_pcm_preprocessing_validated": false,
+      "execute_enqueue_ms": 1845.6007000000002,
+      "execute_and_final_download_ms": 2491.6266,
+      "final_download_and_gpu_wait_ms": 646.0716999999997,
+      "host_working_set_after_download_bytes": 4113391616,
+      "host_peak_working_set_bytes": 4113391616,
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 1.9073486328125e-06,
+      "maximum_tolerance_ratio": 0.04657292832930413
+    }
+  },
+  "other_five_original_cases_receipt": {
+    "file": "m4-scalar-moment-fma-full-profile-gpu-20261015.json",
+    "sha256": "a5850d921b498df9d87fb8f6a3e06beae1f1ffcc1fe42da74a106304a928174e",
+    "source": "a26317fbfbcfbf896dff4a6577124109c6cf977c"
+  },
+  "existing_numeric_runtime_files_unchanged_since_five_signal_passes": true,
+  "all_six_original_encoder_cases_across_two_profiles_passed": true,
+  "all_cases_rerun_at_latest_head": false,
+  "actual_pcm_preprocessing_validated": false,
+  "image_fp32_three_profiles_validated": false,
+  "end_to_end_validated": false,
+  "remaining": [
+    "image FP32 three profiles",
+    "actual PCM/Texture through GPU preprocessing encoder backbone normalized 768 API",
+    "all required roles masks length boundaries ownership Dispose error reuse text regression",
+    "required stage3/4 samples and Player verification"
+  ]
+}

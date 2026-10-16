@@ -2,6 +2,14 @@
 
 ## 0.1.0-pre.1 — Unreleased
 
+- 2026-10-16 draft-branch snapshot: actual Texture / PCM inputs reach normalized768 GPU vectors for all18 image and18 audio role conditions. Original image and audio encoder gates retain learned coefficients, original references and strict tolerances. Source-specific evidence is retained in `docs/results`; these changes are not merged into main or released.
+- Add staged `PartitionedAudioFeatureEncoder.EncodeAsync` and `AudioEmbedder.EmbedAsync`, with GPU-complete fences, completed cache retirement, owned intermediates, overlap rejection, cancellation and recovery. Only the final vector is downloaded; no CPU inference fallback. The failed synchronous12 GiB guard stop is retained separately.
+- Add an Editor-only exit/reload hook for the pinned Sentis2.6.1 shared64-byte buffer cleanup. Tested normal shutdowns report no Persistent warning; long-term allocation stability remains unqualified.
+- Actual FP32 / Float16 text regression and related API contracts pass189 tests. Required CI still fails the audio ONNX comparison; a passing fixed prefix candidate failed full six-signal acceptance and is not adopted as the default export path. Player, other devices, performance and release qualification remain subsequent work.
+
+Earlier implementation checkpoints follow; their original counts and scope describe the state when each change was introduced. Current acceptance is summarized above and in `docs/status.md`.
+
+
 - Add GPU-only 8-bit Texture / RenderTexture preprocessing with official bicubic antialias rounding, RGB patch order, position metadata and owned output tensors. Image encoder integration and final embedding API remain in development.
 
 - Add owned CPU / GPU PCM preprocessing outputs and Worker reuse / disposal contracts; audio encoder and final embedding integration remain in development.

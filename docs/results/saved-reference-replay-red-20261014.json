@@ -1,0 +1,8 @@
+{
+  "scope": "audited_standalone_saved_reference_replay_red",
+  "source_base": "80bae4becc1f0c1e2cd400f79b934ebbc5a5eee9",
+  "command": "uv run --locked pytest tests/test_saved_reference_replay.py -q --tb=short",
+  "passed": 0,
+  "failed": 4,
+  "reason": "Audited standalone saved-reference replay is missing"
+}

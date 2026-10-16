@@ -1,0 +1,247 @@
+{
+  "success": false,
+  "stage": "audio_encoder_projector_only",
+  "source_commit": "dc2156c954e66aba418f31f1ce88ca7da089b355",
+  "profile": "frames-1119-valid-1119",
+  "case_id": "silence",
+  "minimum_cosine": 0.9999997615814209,
+  "saved_vs_official_maximum_absolute_error": 0.00021576881408691406,
+  "eager_vs_official_maximum_absolute_error": 0.0,
+  "saved_vs_eager_maximum_absolute_error": 0.00021576881408691406,
+  "maximum_tolerance_ratio": 9.733773231506348,
+  "mismatched_elements": 368,
+  "graph_sha256": "a3613f18227b4106e3bdf3ac52af6c8e11c239d42fc49c237f728f1f9ac7fcbc",
+  "unity_validated": false,
+  "end_to_end_validated": false,
+  "operators": [
+    "<built-in function getitem>",
+    "aten._softmax.default",
+    "aten._to_copy.default",
+    "aten.add.Tensor",
+    "aten.addmm.default",
+    "aten.arange.start_step",
+    "aten.bitwise_not.default",
+    "aten.bmm.default",
+    "aten.cat.default",
+    "aten.clamp.Tensor",
+    "aten.clamp.default",
+    "aten.clone.default",
+    "aten.constant_pad_nd.default",
+    "aten.convolution.default",
+    "aten.cos.default",
+    "aten.div.Tensor",
+    "aten.exp.default",
+    "aten.expand.default",
+    "aten.index.Tensor",
+    "aten.mean.dim",
+    "aten.mm.default",
+    "aten.mul.Tensor",
+    "aten.native_layer_norm.default",
+    "aten.neg.default",
+    "aten.permute.default",
+    "aten.pow.Tensor_Scalar",
+    "aten.relu.default",
+    "aten.scalar_tensor.default",
+    "aten.select.int",
+    "aten.sigmoid.default",
+    "aten.sin.default",
+    "aten.slice.Tensor",
+    "aten.tanh.default",
+    "aten.unsqueeze.default",
+    "aten.view.default",
+    "aten.where.self"
+  ],
+  "stage_diagnostics": {
+    "first_divergent_stage": "layer_10",
+    "stages": [
+      {
+        "name": "subsample",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_0",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 3.0517578125E-05,
+        "maximum_tolerance_ratio": 0.10503960400819778,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_1",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 4.57763671875E-05,
+        "maximum_tolerance_ratio": 0.10766929388046265,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_2",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 2.288818359375E-05,
+        "maximum_tolerance_ratio": 0.11602545529603958,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_3",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 4.57763671875E-05,
+        "maximum_tolerance_ratio": 0.18837235867977142,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_4",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 6.103515625E-05,
+        "maximum_tolerance_ratio": 0.35704049468040466,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_5",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 6.103515625E-05,
+        "maximum_tolerance_ratio": 0.28838586807250977,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_6",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 6.103515625E-05,
+        "maximum_tolerance_ratio": 0.33604922890663147,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_7",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 4.57763671875E-05,
+        "maximum_tolerance_ratio": 0.4106270372867584,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_8",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 4.57763671875E-05,
+        "maximum_tolerance_ratio": 0.4036117494106293,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_9",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 4.57763671875E-05,
+        "maximum_tolerance_ratio": 0.4741908609867096,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_10",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": false,
+        "maximum_absolute_error": 0.000148773193359375,
+        "maximum_tolerance_ratio": 3.572887659072876,
+        "mismatched_elements": 14
+      },
+      {
+        "name": "layer_11",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": false,
+        "maximum_absolute_error": 0.001194000244140625,
+        "maximum_tolerance_ratio": 37.763832092285156,
+        "mismatched_elements": 1146
+      },
+      {
+        "name": "output_projection",
+        "shape": [
+          1,
+          280,
+          1536
+        ],
+        "success": false,
+        "maximum_absolute_error": 0.0012426376342773438,
+        "maximum_tolerance_ratio": 62.27581024169922,
+        "mismatched_elements": 2713
+      },
+      {
+        "name": "projected_features",
+        "shape": [
+          280,
+          512
+        ],
+        "success": false,
+        "maximum_absolute_error": 0.00021576881408691406,
+        "maximum_tolerance_ratio": 9.733773231506348,
+        "mismatched_elements": 368
+      }
+    ],
+    "stage": "audio_encoder_stage_diagnostics_only",
+    "feature_rtol": 0.0001,
+    "feature_atol": 1E-05,
+    "trace_matches_failed_graph": true,
+    "trace_vs_failed_graph_maximum_absolute_error": 0.0,
+    "graph_sha256": "1f4d22331481b513bd77bdeeabba6f720c616b32b43bf8eb0401b7ecd610a240",
+    "graph_bytes": 1229309541
+  },
+  "ci_run": "38324421389",
+  "pr_head": "f77139fb5cb7c87ef6cda905fb158e3debd72a0e"
+}

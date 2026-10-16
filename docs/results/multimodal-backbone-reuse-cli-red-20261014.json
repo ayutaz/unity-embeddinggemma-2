@@ -1,0 +1,9 @@
+{
+  "source": "e9e7fa3fd288081496c8229eb72001c8d4adb6f5",
+  "api_failed": 0,
+  "api_passed": 12,
+  "cli_failed": 2,
+  "scope": "audited_backbone_reuse_api_green_and_cli_red",
+  "reason": "Missing --backbone-source CLI flag",
+  "real_model_validated": false
+}

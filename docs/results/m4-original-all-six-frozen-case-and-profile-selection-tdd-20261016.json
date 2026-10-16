@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "source_base": "db7192005d2236b5213549c82b41b27b6538bac5",
+  "scope": "original_all_six_case_selection_profiles_and_cli_diagnosis_tdd_only",
+  "input_red": {
+    "file": "frozen-six-case-loading-red-20261016.xml",
+    "sha256": "ee1f20541f1f89457ada4bd5eb5cb4db27e33eb6e3cf2fc67d662599d3286952",
+    "tests": "13",
+    "failures": "13",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.429"
+  },
+  "input_related_green": {
+    "file": "frozen-six-case-loading-related-green-20261016.xml",
+    "sha256": "37d678d7a1178abca75a060786b72726b65762f258888a707f3787addf5d29fd",
+    "tests": "50",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "12.144"
+  },
+  "stage_red": {
+    "file": "frozen-six-stage-cases-red-20261016.xml",
+    "sha256": "9b73854b8d765fb4e261a040502d9e7e31d8b2b237888eab9da71c90805c0242",
+    "tests": "15",
+    "failures": "15",
+    "errors": "0",
+    "skipped": "0",
+    "time": "1.007"
+  },
+  "stage_related_green": {
+    "file": "frozen-six-case-and-stage-related-green-20261016.xml",
+    "sha256": "308590378759c7f19a9f9867ae42f8e43d4ca6c12fdcdcf2dcce8cd7223f046c",
+    "tests": "95",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "20.873"
+  },
+  "cli_red": {
+    "file": "frozen-six-case-cli-red-20261016.xml",
+    "sha256": "94340e21947be93ea4364f67b09c3543d903e8991c526e6bbc139399f482c866",
+    "tests": "3",
+    "failures": "3",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.439"
+  },
+  "cli_related_green": {
+    "file": "frozen-six-case-cli-related-green-20261016.xml",
+    "sha256": "2b56717e9a7d52c61f079b68d751c293f5f327f1e7743625a3837324721d6799",
+    "tests": "104",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "46.893"
+  },
+  "actionlint": "passed",
+  "behavior": [
+    "Default silence input, original metadata/reference/audit SHA pins, learned coefficients and tolerances unchanged.",
+    "Explicit case_id selects one unique pinned original input, its full/padded saved graph, and its original embedded expected output.",
+    "Unknown/duplicate cases, selected input/graph/stage hash failures and selected native context failures reject without silence fallback.",
+    "All intermediate tensors stay280rows; padded final tensor is210x512 and requires original final slice_51(dim0,start0,end210).",
+    "Both prefix and connected CLI carry explicit case/profile to graph boundaries and audited endpoints.",
+    "Workflow all selects exactly six original cases: five full profiles and one padded profile; distinct numeric/model artifacts per case; fail-fast false, maximum6parallel.",
+    "Non-silence primitive/segment diagnosis remains rejected; no unsupported mode silently substitutes silence.",
+    "No model full execution or GPU pass is established by these unit tests or static data checks."
+  ],
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "required_ci_passed": false
+}

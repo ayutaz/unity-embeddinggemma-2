@@ -1,0 +1,195 @@
+{
+  "full_encoder_validated": false,
+  "scope": "norm4_silence_component_observations_only",
+  "source": "44920528de57b8cb39112eea5783e835d5a53718",
+  "conditions": [
+    {
+      "success": false,
+      "directory": "compensated-norm-feed-forward-results",
+      "backend": "CPU",
+      "stages": [
+        {
+          "stage": "subsample",
+          "mismatches": 0,
+          "maximum_absolute_error": 1.9073486328125E-05,
+          "maximum_tolerance_ratio": 0.4021570751409161
+        },
+        {
+          "stage": "pre_layer_norm",
+          "mismatches": 0,
+          "maximum_absolute_error": 5.424022674560547E-06,
+          "maximum_tolerance_ratio": 0.22204838498258705
+        },
+        {
+          "stage": "ffw_layer_1",
+          "mismatches": 0,
+          "maximum_absolute_error": 7.867813110351562E-06,
+          "maximum_tolerance_ratio": 0.6481045629553438
+        },
+        {
+          "stage": "act_fn",
+          "mismatches": 0,
+          "maximum_absolute_error": 7.62939453125E-06,
+          "maximum_tolerance_ratio": 0.3467397641993691
+        },
+        {
+          "stage": "ffw_layer_2",
+          "mismatches": 0,
+          "maximum_absolute_error": 1.0728836059570312E-05,
+          "maximum_tolerance_ratio": 0.3369057033051512
+        },
+        {
+          "stage": "post_layer_norm",
+          "mismatches": 1,
+          "maximum_absolute_error": 6.4849853515625E-05,
+          "maximum_tolerance_ratio": 1.9556766590328563
+        }
+      ],
+      "final_bits_preserved": true
+    },
+    {
+      "success": false,
+      "directory": "compensated-norm-feed-forward-results",
+      "backend": "GPUCompute",
+      "stages": [
+        {
+          "stage": "subsample",
+          "mismatches": 0,
+          "maximum_absolute_error": 4.00543212890625E-05,
+          "maximum_tolerance_ratio": 0.6822158595297996
+        },
+        {
+          "stage": "pre_layer_norm",
+          "mismatches": 0,
+          "maximum_absolute_error": 2.0503997802734375E-05,
+          "maximum_tolerance_ratio": 0.524340660207243
+        },
+        {
+          "stage": "ffw_layer_1",
+          "mismatches": 0,
+          "maximum_absolute_error": 5.91278076171875E-05,
+          "maximum_tolerance_ratio": 0.9539660224733126
+        },
+        {
+          "stage": "act_fn",
+          "mismatches": 0,
+          "maximum_absolute_error": 5.91278076171875E-05,
+          "maximum_tolerance_ratio": 0.4947705037758414
+        },
+        {
+          "stage": "ffw_layer_2",
+          "mismatches": 0,
+          "maximum_absolute_error": 5.736947059631348E-06,
+          "maximum_tolerance_ratio": 0.28596908820671507
+        },
+        {
+          "stage": "post_layer_norm",
+          "mismatches": 3,
+          "maximum_absolute_error": 0.000156402587890625,
+          "maximum_tolerance_ratio": 5.019224609023257
+        }
+      ],
+      "final_bits_preserved": true
+    },
+    {
+      "success": true,
+      "directory": "compensated-norm-subsample-results",
+      "backend": "CPU",
+      "stages": [
+        {
+          "stage": "layer0.conv",
+          "mismatches": 0,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0
+        },
+        {
+          "stage": "layer0.norm",
+          "mismatches": 0,
+          "maximum_absolute_error": 1.9073486328125E-06,
+          "maximum_tolerance_ratio": 0.02885567902342006
+        },
+        {
+          "stage": "layer0.act",
+          "mismatches": 0,
+          "maximum_absolute_error": 1.9073486328125E-06,
+          "maximum_tolerance_ratio": 0.026145385346946715
+        },
+        {
+          "stage": "layer1.conv",
+          "mismatches": 0,
+          "maximum_absolute_error": 4.76837158203125E-06,
+          "maximum_tolerance_ratio": 0.034555780678361
+        },
+        {
+          "stage": "layer1.norm",
+          "mismatches": 0,
+          "maximum_absolute_error": 7.62939453125E-06,
+          "maximum_tolerance_ratio": 0.07894101902651397
+        },
+        {
+          "stage": "layer1.act",
+          "mismatches": 0,
+          "maximum_absolute_error": 7.62939453125E-06,
+          "maximum_tolerance_ratio": 0.059428671736230794
+        },
+        {
+          "stage": "input_proj_linear",
+          "mismatches": 0,
+          "maximum_absolute_error": 1.9073486328125E-05,
+          "maximum_tolerance_ratio": 0.4021570751409161
+        }
+      ],
+      "final_bits_preserved": true
+    },
+    {
+      "success": true,
+      "directory": "compensated-norm-subsample-results",
+      "backend": "GPUCompute",
+      "stages": [
+        {
+          "stage": "layer0.conv",
+          "mismatches": 0,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0
+        },
+        {
+          "stage": "layer0.norm",
+          "mismatches": 0,
+          "maximum_absolute_error": 2.86102294921875E-06,
+          "maximum_tolerance_ratio": 0.12235624948701612
+        },
+        {
+          "stage": "layer0.act",
+          "mismatches": 0,
+          "maximum_absolute_error": 2.86102294921875E-06,
+          "maximum_tolerance_ratio": 0.11177012986771186
+        },
+        {
+          "stage": "layer1.conv",
+          "mismatches": 0,
+          "maximum_absolute_error": 8.58306884765625E-06,
+          "maximum_tolerance_ratio": 0.05122408838026632
+        },
+        {
+          "stage": "layer1.norm",
+          "mismatches": 0,
+          "maximum_absolute_error": 1.5974044799804688E-05,
+          "maximum_tolerance_ratio": 0.16683258784027893
+        },
+        {
+          "stage": "layer1.act",
+          "mismatches": 0,
+          "maximum_absolute_error": 1.5974044799804688E-05,
+          "maximum_tolerance_ratio": 0.09148511752841254
+        },
+        {
+          "stage": "input_proj_linear",
+          "mismatches": 0,
+          "maximum_absolute_error": 4.00543212890625E-05,
+          "maximum_tolerance_ratio": 0.6822158595297996
+        }
+      ],
+      "final_bits_preserved": true
+    }
+  ]
+}

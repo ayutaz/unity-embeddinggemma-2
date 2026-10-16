@@ -1,5 +1,7 @@
 # M3画像encoder / projectorの固定profile export
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 更新日: 2026-10-13。[M3計画](m3-plan.md)のI1 / I2を進める。画像end-to-end API / sample / GPU前処理・Sentis実モデルは未完了。**この段階の出力は共通本体へ渡す512次元のsoft tokenであり、最終768次元embeddingではない**。
 
 ## 実装とTDD

@@ -1,0 +1,115 @@
+{
+  "unity": "6000.3.16f1",
+  "failed": 2,
+  "skipped": 0,
+  "scope": "compensated_silence_feed_forward_observation_failed",
+  "reports": [
+    {
+      "final_bits_preserved": true,
+      "report_sha256": "72cf688de7cc26504e0e4881f22b526f1fac91fdd857bf254a48343df8e5cc6c",
+      "first_failed_stage": "ffw_layer_1",
+      "stages": [
+        {
+          "stage": "subsample",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 5.91278076171875E-05,
+          "maximum_tolerance_ratio": 0.7322561426248949
+        },
+        {
+          "stage": "pre_layer_norm",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 1.8596649169921875E-05,
+          "maximum_tolerance_ratio": 0.707781436454975
+        },
+        {
+          "stage": "ffw_layer_1",
+          "elementwise_passed": false,
+          "mismatches": 1,
+          "maximum_absolute_error": 5.53131103515625E-05,
+          "maximum_tolerance_ratio": 1.34742428533963
+        },
+        {
+          "stage": "act_fn",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 5.53131103515625E-05,
+          "maximum_tolerance_ratio": 0.7208492605190696
+        },
+        {
+          "stage": "ffw_layer_2",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 1.430511474609375E-05,
+          "maximum_tolerance_ratio": 0.43049749691715233
+        },
+        {
+          "stage": "post_layer_norm",
+          "elementwise_passed": false,
+          "mismatches": 284,
+          "maximum_absolute_error": 0.000148773193359375,
+          "maximum_tolerance_ratio": 6.101596689933319
+        }
+      ],
+      "source": "f38ea33ee52fc91624244048df10489063a5d46a",
+      "backend": "CPU"
+    },
+    {
+      "final_bits_preserved": true,
+      "report_sha256": "02779bd7d39267a21f15f00100e88107a46b8d2d3208fad28c55d73e070512e2",
+      "first_failed_stage": "post_layer_norm",
+      "stages": [
+        {
+          "stage": "subsample",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 4.00543212890625E-05,
+          "maximum_tolerance_ratio": 0.6638164849742562
+        },
+        {
+          "stage": "pre_layer_norm",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 2.2411346435546875E-05,
+          "maximum_tolerance_ratio": 0.5260853309476305
+        },
+        {
+          "stage": "ffw_layer_1",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 6.4849853515625E-05,
+          "maximum_tolerance_ratio": 0.9515954998757574
+        },
+        {
+          "stage": "act_fn",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 6.4849853515625E-05,
+          "maximum_tolerance_ratio": 0.49352847633225855
+        },
+        {
+          "stage": "ffw_layer_2",
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 6.079673767089844E-06,
+          "maximum_tolerance_ratio": 0.34691578968279346
+        },
+        {
+          "stage": "post_layer_norm",
+          "elementwise_passed": false,
+          "mismatches": 5,
+          "maximum_absolute_error": 0.000148773193359375,
+          "maximum_tolerance_ratio": 4.052336195386062
+        }
+      ],
+      "source": "f38ea33ee52fc91624244048df10489063a5d46a",
+      "backend": "GPUCompute"
+    }
+  ],
+  "passed": 0,
+  "sentis": "2.6.1",
+  "end_to_end_validated": false,
+  "source": "f38ea33ee52fc91624244048df10489063a5d46a",
+  "full_encoder_validated": false
+}

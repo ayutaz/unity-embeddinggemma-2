@@ -1,0 +1,12 @@
+{
+  "exit_code": 2,
+  "actual_initializer_bytes": 30965760,
+  "passed": 11,
+  "xml_sha256": "89a0f94948d806b8db5d85b3bfe541b9aca5d51258717ef2f500597bc68a0aee",
+  "source": "e968a29684aac6509fb693c76c3b2351eed0d302",
+  "full_encoder_validated": false,
+  "failed": 1,
+  "expected_maximum_initializer_bytes": 24576,
+  "skipped": 0,
+  "scope": "vision_sized_projection_zero_initializer_tdd_red"
+}

@@ -1,0 +1,11 @@
+{
+  "scope": "onnx_native_silu_fp32_division_order_green",
+  "source_base": "f87164835ab3c73a3bbd52ca5c977d399dd46fd6",
+  "command": "uv run --locked pytest tests/test_native_audio_export.py tests/test_audio_onnx_diagnostics.py tests/test_audio_encoder.py -q --tb=short --disable-warnings",
+  "passed": 37,
+  "failed": 0,
+  "counterexample_mismatches_after_fix": 0,
+  "native_pt2_unchanged": true,
+  "full_encoder_validated": false,
+  "original_real_reference_unchanged": true
+}

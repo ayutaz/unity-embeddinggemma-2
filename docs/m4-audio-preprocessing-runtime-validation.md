@@ -1,5 +1,7 @@
 # M4: PCM前処理RuntimeとGPU出力所有権
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 更新日: 2026-10-13。A3の製品Runtime接続として `AudioPreprocessor`と`AudioPreprocessingResult`を追加する。実音声encoder・最終768次元API・音声sampleは別工程であり、正式Release / 公開tagは作成しない。
 
 ## 所有権と処理境界

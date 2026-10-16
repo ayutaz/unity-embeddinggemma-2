@@ -1,0 +1,177 @@
+{
+  "scope": "static_symbolic_original_stem16selected_spatial_centers_each_only",
+  "source_native_report_sha256": "664a8242d079f53bf98d2032f9398de6d2c8d6bcd2312d1baaa35bb498ce5fb8",
+  "native_forward": "original_conv2d_passthrough_not_fixed_order_execution",
+  "cases": [
+    {
+      "convolution": "first",
+      "spatial_coordinates": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          32
+        ],
+        [
+          0,
+          63
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          32
+        ],
+        [
+          1,
+          63
+        ],
+        [
+          280,
+          0
+        ],
+        [
+          280,
+          1
+        ],
+        [
+          280,
+          32
+        ],
+        [
+          280,
+          63
+        ],
+        [
+          559,
+          0
+        ],
+        [
+          559,
+          1
+        ],
+        [
+          559,
+          32
+        ],
+        [
+          559,
+          63
+        ]
+      ],
+      "original_input_sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+      "original_full_output_sha256": "c36aa611eedea3b78551a16577d17df98dd7d451cc0e1d1e7bc1c5e073173d9c",
+      "original_weight_sha256": "e4d4ee18dc86a9945d38c159a861784a2c3d9467d6e0be9c48a414e60e2b92fd",
+      "patch_input_sha256": "b517bd168d6e9e8fe69d833f70690118da274767b38ac4faec1f5a6d9f9da7ec",
+      "selected_expected_sha256": "653074beb4eecddf99c376462b569cdb35873f1fb4aa99a90785bb421e613f24",
+      "capture_sha256": "653074beb4eecddf99c376462b569cdb35873f1fb4aa99a90785bb421e613f24",
+      "graph_sha256": "21b32946d016e1679eb0e0e473a3ae4dd612b5dde9b52467a402c49cdc3981db",
+      "elements": 2048,
+      "bit_differences": 0,
+      "mismatched_elements": 0
+    },
+    {
+      "convolution": "second",
+      "spatial_coordinates": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          16
+        ],
+        [
+          0,
+          31
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          16
+        ],
+        [
+          1,
+          31
+        ],
+        [
+          140,
+          0
+        ],
+        [
+          140,
+          1
+        ],
+        [
+          140,
+          16
+        ],
+        [
+          140,
+          31
+        ],
+        [
+          279,
+          0
+        ],
+        [
+          279,
+          1
+        ],
+        [
+          279,
+          16
+        ],
+        [
+          279,
+          31
+        ]
+      ],
+      "original_input_sha256": "1f117877ec3cd7c830a74b22e4f46c97c3caf2ff3f1bda5b641c43385c5d19c4",
+      "original_full_output_sha256": "b8bceb8d5c1a3e7f204b90155f5fccb8aa5a9885c1ca0357c2ef6920264e0d10",
+      "original_weight_sha256": "68309f01ea3e738fccb24a0db5db608841a3a8e59b0a4fa5d0fb521ed60bf43c",
+      "patch_input_sha256": "d367af98e6d95803057818588c58c6026de37016dd9475622f7dc209cfc11a59",
+      "selected_expected_sha256": "f3c163753f727bdc4013b7469bbf6497d4fc294f9a5c388d01174906209cb73f",
+      "capture_sha256": "f3c163753f727bdc4013b7469bbf6497d4fc294f9a5c388d01174906209cb73f",
+      "graph_sha256": "38366e1a2af7ef7bf6ef95e924cde30a2cf18abc7ea38a372519c427152b0b97",
+      "elements": 512,
+      "bit_differences": 0,
+      "mismatched_elements": 0
+    }
+  ],
+  "whole_stem_validated": false,
+  "whole_encoder_validated": false,
+  "gpu_validated": false,
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "source_base": "2058ed675f9109a2929cfde373f39ba12be69227",
+  "report_sha256": "e929edeea845108e90a104d19a7d9f790d1fd0e04b42e2213af694dcfdaa15c1",
+  "implementation_sha256": "349c8d25a02fa2c709bd4cd9accd7b334879fa7443e9fdc5fe938acf2e179147",
+  "limitation": "Exactly16 preselected corner/edge/interior spatial centers in each original first/second convolution; not complete convolutions, complete stem, full encoder or GPU acceptance.",
+  "original_references_unchanged": true,
+  "original_coefficients_unchanged": true,
+  "required_ci_passed": false
+}

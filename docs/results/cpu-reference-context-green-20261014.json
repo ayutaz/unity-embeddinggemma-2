@@ -1,0 +1,14 @@
+{
+  "scope": "controlled_cpu_thread_context_probe_green",
+  "source_base": "48ea804",
+  "commands": [
+    "uv run --locked pytest tests/test_cpu_reference_context.py -q --tb=short",
+    "uv run --locked pytest tests/test_multimodal_reference_roles.py -k feature_drift -q --tb=short"
+  ],
+  "unit_passed": 6,
+  "integration_passed": 2,
+  "failed": 0,
+  "real_context_validated": false,
+  "expected_unchanged": true,
+  "caller_threads_restored": true
+}

@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "isolated_original_softmax_glu_and_depthwise_actual_onnx_not_connected_acceptance",
+  "source_base": "731f10bba3d95529caf389c553b09052e1a71e2b",
+  "source_report_sha256": [
+    "8a71d255a8de5bd5fb5810f84b119908ed992e9910746515233e95d83a637c49",
+    "7e3ecad1d4a2dee208efee56986da6852e95289ef89b38c122fc8b40b3618112",
+    "ac7602fc146b4aa56847f2f79ba32fe4b6cae909f33b7963c9dcc0371b07b5bc"
+  ],
+  "cases": [
+    {
+      "scope": "one_original_worst_softmax24_input_actual_onnx_only",
+      "node": "_softmax_10",
+      "source_report_sha256": "f27073b3503e82a4b963a64b3ff2c1e2f782d891a8408eb10cb22413a3aa5fdf",
+      "input_sha256": "6e606bd2286f20ac6a416e62da080024157918f0e7b9cbb4788f3418d14d50c3",
+      "reference_sha256": "578caa34cae0568fca8029959dfe0e79f6e7b438b1173206bad8eaeb5c72b367",
+      "shape": [
+        1,
+        8,
+        24,
+        12,
+        24
+      ],
+      "elements": 55296,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "graph_sha256": "c8db603b0a7b5000139c821a9fe3eb4809ae810e8fa9aa3f52b6e640d2cc7f5d",
+      "capture_sha256": "578caa34cae0568fca8029959dfe0e79f6e7b438b1173206bad8eaeb5c72b367",
+      "whole_encoder_validated": false,
+      "gpu_validated": false
+    },
+    {
+      "scope": "original_glu_after_extracted_sigmoid_companion_actual_onnx_only",
+      "source_report_sha256": "1ff0e32b87977057a457294ae58de1242686fcd67b044e20630a84c69a537fb7",
+      "input_sha256": "ca94b79ec0c76d82798b4418a0d4dc8445f701e3d67fc96559e325cd9844264e",
+      "reference_sha256": "e23fa9beaa2904934d867ac06931f9d19da217271ed55360e8d8e6f59843bcd9",
+      "implementation_sha256": "c58db37a0ce335a6e101fba7522bb5da82caa6e169bc7240e53195467087a2a2",
+      "graph_sha256": "8805a7e5e3de96b30144e59119c0b05fd9ade1598b8a942c96b07dc944973f1e",
+      "capture_sha256": "e23fa9beaa2904934d867ac06931f9d19da217271ed55360e8d8e6f59843bcd9",
+      "elements": 286720,
+      "bit_differences": 0,
+      "whole_encoder_validated": false,
+      "gpu_validated": false
+    },
+    {
+      "kind": "depthwise",
+      "input_shape": [
+        1,
+        1024,
+        284
+      ],
+      "source_report_sha256": "f27073b3503e82a4b963a64b3ff2c1e2f782d891a8408eb10cb22413a3aa5fdf",
+      "input_sha256": "a81e14b77b8bbfd5467008831d751f528c2c29eadb14fa7196d13334bf0b9a0f",
+      "weight_sha256": "88c132826bcd0087f4d7b6b0ed95d3a7bd977f29692ae81f0235ea46a99cb6b5",
+      "reference_sha256": "82640be6959286e7d8c64f402b37e2a1238a1f0c4cdeaad9d5b0fb06fe538dba",
+      "elements": 286720,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "graph_sha256": "f26e77debd8a333259d46ff352307455d4d8bbf93e7a2de1e327b02d3ba25182",
+      "capture_sha256": "82640be6959286e7d8c64f402b37e2a1238a1f0c4cdeaad9d5b0fb06fe538dba"
+    }
+  ],
+  "actual_onnx_evaluated": true,
+  "bit_differences": 0,
+  "elements": 628736,
+  "preserved": [
+    "Original source-qualified inputs and expected bytes",
+    "Original learned coefficients",
+    "FP32 standard ONNX only",
+    "Default export / GPU Runtime / original tolerances unchanged"
+  ],
+  "implementation_sha256": {
+    "native_softmax_onnx.py": "bf3752f66ca80d84b0f51dc4b44f152ed6229f9321b23c85cd7998330b37de61",
+    "native_audio_primitives_onnx.py": "c58db37a0ce335a6e101fba7522bb5da82caa6e169bc7240e53195467087a2a2"
+  },
+  "tdd_red": [
+    {
+      "file": "native-softmax-port-red-20261016.xml",
+      "sha256": "384a82018778c72df29019e4eed995b41a06c43af69493dd8c69baf51f5f5709",
+      "tests": "9",
+      "failures": "9",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.233"
+    },
+    {
+      "file": "native-audio-primitives-red-20261016.xml",
+      "sha256": "726288fa25976cf78d5ae462fe98d6ce9cb425dd5e2caacb2b0d18718a4a67ca",
+      "tests": "12",
+      "failures": "12",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.335"
+    },
+    {
+      "file": "native-sigmoid-companion-red-20261016.xml",
+      "sha256": "038c10912f206469d6b105f56b7b6b62a19c6ca0cf8f4d484632a2435a533ad7",
+      "tests": "1",
+      "failures": "1",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.181"
+    }
+  ],
+  "tdd_green": {
+    "file": "native-audio-leaf-primitives-green-20261016.xml",
+    "sha256": "a1e57bd2650e7658994c5a76444b4aa6944e904851a2bf3a0575181795874987",
+    "tests": "22",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "1.892"
+  },
+  "related_green": {
+    "file": "native-audio-leaf-related-green-20261016.xml",
+    "sha256": "66fc08beb8a82c775c1fdd9839973a71c9466a975fff8071cacf9f8599f0d8b1",
+    "tests": "127",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "46.376"
+  },
+  "test_measurement": "Normalization is measured using FP64 summation only in the unit-test assertion; exported operations remain FP32. Original encoder tolerances are untouched.",
+  "source_qualification": "Original native full/tail control reproduced original final bits before capturing these inputs/outputs; stage/module hashes independently checked.",
+  "limitation": "Only3 isolated original operator captures. No downstream injection or full encoder/GPU claim. New candidates are not selected by existing export.",
+  "whole_encoder_validated": false,
+  "gpu_validated": false,
+  "required_ci_passed": false
+}

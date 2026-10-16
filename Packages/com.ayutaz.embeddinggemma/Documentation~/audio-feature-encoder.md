@@ -1,28 +1,26 @@
 # 音声encoderへのTensor接続
 
-`AudioFeatureEncoder`は`AudioPreprocessor`の結果を受け取り、投影済みsoft tokenを返す低レベルAPIです。メインスレッドで同期実行します。最終768次元の埋め込みAPIではありません。
+2026-10-16、Draft PR #81の`PartitionedAudioFeatureEncoder`は元6信号・両profileの実GPU比較に合格しています。全824,320値で元`atol=1e-5 / rtol=1e-4`の超過0、計算 / 入力CPU fallback0。Windows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER / D3D12の固定sourceでの結果です。音声ONNXの必須CIは別に失敗中で、正式リリースの認定ではありません。
 
-CPU / GPUComputeを明示し、前処理とencoderを同じbackendで構成します。GPUではfeature / maskをCPUへダウンロードせず、既存のfeature Tensorをそのままencoderへ渡します。PCMのuploadは前処理の入力境界です。
+`PartitionedAudioFeatureEncoder`は`IAsyncAudioFeatureEncoder`を実装するGPUCompute専用の低レベルAPIです。固定profileと係数を監査した分割Model、operation接続表、`IGpuTensorOperation[]`を受け取ります。モデル準備・自動選択・取得は行いません。最終768次元APIは[AudioEmbedder](audio-embedder.md)です。
 
 ```csharp
-// 両Modelは呼び出し側で取得・監査・ロードしたもの。
-// encoderModelはpcm.ValidFrameCountと同じprefixでexportしたモデルを選びます。
+// Unityメインスレッドから呼ぶasyncメソッド内。全引数は同じ固定profileで監査済み。
 var pcm = new AudioPcmInput(samples, samplingRate: 16000, channels: 1);
 var profile = new AudioEncoderProfile(pcm.ValidFrameCount);
 using var preprocessor = new AudioPreprocessor(preprocessingModel, BackendType.GPUCompute);
-using var encoder = new AudioFeatureEncoder(encoderModel, BackendType.GPUCompute, profile);
+using var encoder = new PartitionedAudioFeatureEncoder(
+    segments, operationInputs, operationOutputs, operations, profile);
 using var processed = preprocessor.Process(pcm);
-using var encoded = encoder.Encode(processed);
+using var encoded = await encoder.EncodeAsync(processed, cancellationToken);
 Tensor<float> borrowedSoftTokens = encoded.SoftTokens;
-// encodedを保持したまま、共通backboneへborrowedSoftTokensを渡します。
+// encodedを保持したままbackboneへ渡す。operationsは借用物なので別途Disposeする。
 ```
 
-入力はfloat `[1,1119,128]`の`input`一つ、出力はfloat `[ceil(validFrames/4),512]`です。有効frame数は1〜1119。既存export候補のfull / partial profileは1119 / 839 frames、280 / 210 soft tokenです。APIはモデルを生成・自動選択しません。shape確認に加え、モデル内の固定maskとprofileの出自照合は取得・変換段階の監査で行います。
+入力はGPU上のfloat `[1,1119,128]` featureとint32 `[1,1119]` maskを所有する`AudioPreprocessingResult`です。有効prefixはprofileと厳密に一致させます。出力はGPU上のfloat `[ceil(validFrames/4),512]`。検証済み固定profileは1119 / 839 frames、280 / 210 soft tokensです。同じsoft token数でも有効frame数が異なる入力は拒否します。CPU前処理からの暗黙uploadや中間readbackは行いません。
 
-`Encode`は有効frame数を厳密に照合します。2 framesと3 framesはどちらも1 soft tokenですが、別の固定maskとして扱い、異なるprefixを拒否します。CPU前処理の結果をGPU encoderへ渡す暗黙uploadも行いません。
+Model、operation、入力結果は借用します。encoderは分割Workerを所有し、`AudioEncodingResult`は独立した出力を所有します。`EncodeAsync`はGPU境界を待ちながら完了済みキャッシュを解放します。キャンセル / 例外時も、await終了まで入力と借用operationを保持してください。結果のDispose後に`SoftTokens`を参照できません。encoderのDisposeと、呼び出し側によるoperationのDisposeは別です。
 
-Modelは借用、Workerはencoderが所有します。前処理結果は呼び出し側が所有し、encoderは破棄しません。`AudioEncodingResult`は出力のdevice copyを所有するため、worker再利用・解放後も保持できます。結果のDispose後は`SoftTokens`を使用できません。中間Tensorは最終処理が終わってから解放してください。
+単一Modelを受け取る同期`AudioFeatureEncoder`も互換APIとして残っていますが、上記の分割実モデルの受け入れ経路ではありません。`AudioEmbedder.EmbedAsync`に非同期encoderを渡さない場合、前処理を始める前に`NotSupportedException`となり、同期 / CPUへの自動切替はしません。
 
-今回の小さいCPU / 実GPUテストはprofile、入力拒否、所有権、GPU受け渡しの確認です。実音声encoderの固定数値条件、最終埋め込み・検索sample・Player・他OSの受け入れは未完了です。
-
-前処理・encoder・共通backboneを合成する開発中のAPIは[AudioEmbedder](audio-embedder.md)を参照してください。最終768次元APIの小さい合成検証と、実モデル数値の受け入れを区別します。
+[元参照との厳密比較・テキスト回帰](../../../docs/results/m4-staged-original-encoder-and-final-text-gpu-regression-20261016.json)と[実PCM最終API全role](../../../docs/results/m4-real-pcm-all-roles-staged-gpu-20261016.json)を参照してください。分割Model配布、長期メモリ・速度、Player・他端末は後続工程です。

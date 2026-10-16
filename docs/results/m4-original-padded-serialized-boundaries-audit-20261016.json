@@ -1,0 +1,102 @@
+{
+  "scope": "bounded_original_padded_serialized_schema_boundary_audit_only",
+  "source_artifact_id": 11814567883,
+  "native_graph_expected_sha256": "3fe30ee43891ab5fb605fe97ca157370b501e27328dbfd43cc44479af56e2f6a",
+  "native_whole_hash_independently_recomputed": false,
+  "schema_sha256": "c5c11156484b2b82245ddf8a845366d3d1320cafb982958a8ff77a4f9b8bea7e",
+  "schema_bytes": 5487666,
+  "torch_version": "2.14.1+cu130",
+  "boundaries": [
+    {
+      "stage": "subsample",
+      "boundary": "view_2",
+      "target": "torch.ops.aten.view.default"
+    },
+    {
+      "stage": "layer_0",
+      "boundary": "mul_27",
+      "target": "torch.ops.aten.mul.Tensor"
+    },
+    {
+      "stage": "layer_1",
+      "boundary": "mul_52",
+      "target": "torch.ops.aten.mul.Tensor"
+    },
+    {
+      "stage": "layer_2",
+      "boundary": "mul_77",
+      "target": "torch.ops.aten.mul.Tensor"
+    },
+    {
+      "stage": "layer_3",
+      "boundary": "mul_102",
+      "target": "torch.ops.aten.mul.Tensor"
+    },
+    {
+      "stage": "layer_4",
+      "boundary": "mul_127",
+      "target": "torch.ops.aten.mul.Tensor"
+    },
+    {
+      "stage": "layer_5",
+      "boundary": "mul_152",
+      "target": "torch.ops.aten.mul.Tensor"
+    },
+    {
+      "stage": "layer_6",
+      "boundary": "mul_177",
+      "target": "torch.ops.aten.mul.Tensor"
+    },
+    {
+      "stage": "layer_7",
+      "boundary": "mul_202",
+      "target": "torch.ops.aten.mul.Tensor"
+    },
+    {
+      "stage": "layer_8",
+      "boundary": "mul_227",
+      "target": "torch.ops.aten.mul.Tensor"
+    },
+    {
+      "stage": "layer_9",
+      "boundary": "mul_252",
+      "target": "torch.ops.aten.mul.Tensor"
+    },
+    {
+      "stage": "layer_10",
+      "boundary": "mul_277",
+      "target": "torch.ops.aten.mul.Tensor"
+    },
+    {
+      "stage": "layer_11",
+      "boundary": "mul_302",
+      "target": "torch.ops.aten.mul.Tensor"
+    },
+    {
+      "stage": "projected_features",
+      "boundary": "slice_51",
+      "target": "torch.ops.aten.slice.Tensor"
+    }
+  ],
+  "final_crop_arguments": [
+    0,
+    0,
+    210
+  ],
+  "range_receipt": {
+    "artifact_id": 11814567883,
+    "outer_member": "audio-runtime-reference/frames-1119-valid-839/audio.pt2",
+    "outer_native_graph_bytes": 1229071109,
+    "nested_member": "audio/models/model.json",
+    "schema_bytes": 5487666,
+    "schema_sha256": "c5c11156484b2b82245ddf8a845366d3d1320cafb982958a8ff77a4f9b8bea7e",
+    "range_bytes": 5547700,
+    "range_requests": 7
+  },
+  "actual_encoder_executed": false,
+  "gpu_validated": false,
+  "interpretation": "Read only5.5MB serialized schema from original1.229GB graph; verified all14 fixed boundaries and final210-row crop. Full graph deserialization/execution remains Actions work.",
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "report_sha256": "5ed7fd010fc2db008561989d74ad3b8f80425808f3b7888455bbfa1f5760a008"
+}

@@ -1,0 +1,288 @@
+{
+  "success": true,
+  "scope": "real_audio_chain_staging_only",
+  "producer": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "artifact_id": 11814567883,
+  "groups": [
+    {
+      "selected_count": 1,
+      "range_bytes": 1224229794,
+      "range_requests": 152,
+      "archive_bytes": 7486823730,
+      "files": {
+        "audio-runtime-reference/frames-1119-valid-1119/audio.onnx": {
+          "bytes": 1224214325,
+          "crc32": 1978256327,
+          "sha256": "7770a8af258f2de32c5587497b820596ea4e1ed7ec5382c3ee90eada2bec7e4a",
+          "cache_reused": false
+        }
+      }
+    },
+    {
+      "selected_count": 1,
+      "range_bytes": 1224229793,
+      "range_requests": 152,
+      "archive_bytes": 7486823730,
+      "files": {
+        "audio-runtime-reference/frames-1119-valid-839/audio.onnx": {
+          "bytes": 1224214325,
+          "crc32": 2599495244,
+          "sha256": "af2e97b777349fa2e5f74790d24bb4b2d899c6a8438f372253737bc5940944c7",
+          "cache_reused": false
+        }
+      }
+    },
+    {
+      "selected_count": 10,
+      "range_bytes": 3466375,
+      "range_requests": 31,
+      "archive_bytes": 7486823730,
+      "files": {
+        "audio-runtime-reference/frames-1119-valid-1119/silence-features-fp32.bin": {
+          "bytes": 572928,
+          "crc32": 481288143,
+          "sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+          "cache_reused": false
+        },
+        "audio-runtime-reference/frames-1119-valid-1119/impulse-features-fp32.bin": {
+          "bytes": 572928,
+          "crc32": 789858951,
+          "sha256": "2202541551e06a429b222d31f3d495a2b051fca70191287c82c7f6a6d8803c82",
+          "cache_reused": false
+        },
+        "audio-runtime-reference/frames-1119-valid-1119/sine-features-fp32.bin": {
+          "bytes": 572928,
+          "crc32": 3013154374,
+          "sha256": "dcc0ed05018d225a140916249cb3a3ab948c4cc50e5f457abac24e909e9c64c5",
+          "cache_reused": false
+        },
+        "audio-runtime-reference/frames-1119-valid-1119/nyquist-features-fp32.bin": {
+          "bytes": 572928,
+          "crc32": 249456202,
+          "sha256": "eaaa9e11f4d282294a9c57d4eddd392d2a257ea1f342d0452d99984602ff1e96",
+          "cache_reused": false
+        },
+        "audio-runtime-reference/frames-1119-valid-1119/noise-features-fp32.bin": {
+          "bytes": 572928,
+          "crc32": 3044152530,
+          "sha256": "b26f15554a3123e12cb39949709ea94588c27a5324f4cadefc701fba124c5c42",
+          "cache_reused": false
+        },
+        "audio-runtime-reference/frames-1119-valid-1119/frame-mask-int32.bin": {
+          "bytes": 4476,
+          "crc32": 3356389002,
+          "sha256": "d1d720a6b7013a4b396f2a8595d52f9648132b665f40f899b09bc62918e57c95",
+          "cache_reused": false
+        },
+        "audio-runtime-reference/frames-1119-valid-839/padded_noise-features-fp32.bin": {
+          "bytes": 572928,
+          "crc32": 3119610981,
+          "sha256": "6065504b6b2d244526df3a79cb5b88e9463e8e576ff877b5b8fa90b9bf18b1b0",
+          "cache_reused": false
+        },
+        "audio-runtime-reference/frames-1119-valid-839/frame-mask-int32.bin": {
+          "bytes": 4476,
+          "crc32": 3076555308,
+          "sha256": "604c12a03e7bce1f3f9379373dd926eedce33386844fd1f23ec4687834a551ec",
+          "cache_reused": false
+        },
+        "audio-runtime-reference/audio-encoder-reference.json": {
+          "bytes": 25186055,
+          "crc32": 724359019,
+          "sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+          "cache_reused": true
+        },
+        "audio-runtime-reference/audio-onnx-diagnostic-failures.json": {
+          "bytes": 3580,
+          "crc32": 2954021174,
+          "sha256": "63eaaded10d38f83e4ccc45e5fe39b7960239db25567892f2773b235ca3219f5",
+          "cache_reused": false
+        }
+      },
+      "artifact_id": 11814567883
+    },
+    {
+      "selected_count": 28,
+      "range_bytes": 18977434,
+      "range_requests": 87,
+      "archive_bytes": 18977862,
+      "files": {
+        "audio-preprocessor.pt2": {
+          "bytes": 6898310,
+          "crc32": 3528889257,
+          "sha256": "fc78992de7a167cc207c7c33e47f52be5004323417f9c46eeabea6a0477235ab",
+          "cache_reused": false
+        },
+        "silence-pcm-fp32.bin": {
+          "bytes": 716800,
+          "crc32": 2745751090,
+          "sha256": "c9c9803e19adb2d139ad00b54f4af71f80c2b2530b10828a913b5b82c18559b8",
+          "cache_reused": false
+        },
+        "silence-samples-int32.bin": {
+          "bytes": 716800,
+          "crc32": 3443500523,
+          "sha256": "566ca677807f155211b10c5da2e5cc4f6b9f0dfd69107d123ef042451d1eac8d",
+          "cache_reused": false
+        },
+        "silence-features-fp32.bin": {
+          "bytes": 572928,
+          "crc32": 481288143,
+          "sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+          "cache_reused": false
+        },
+        "silence-frames-int32.bin": {
+          "bytes": 4476,
+          "crc32": 3356389002,
+          "sha256": "d1d720a6b7013a4b396f2a8595d52f9648132b665f40f899b09bc62918e57c95",
+          "cache_reused": false
+        },
+        "impulse-pcm-fp32.bin": {
+          "bytes": 716800,
+          "crc32": 3603807717,
+          "sha256": "f63b23440fec4277e71da24be5412671c11051256fe6354ecbd0da5436b40f1d",
+          "cache_reused": false
+        },
+        "impulse-samples-int32.bin": {
+          "bytes": 716800,
+          "crc32": 3443500523,
+          "sha256": "566ca677807f155211b10c5da2e5cc4f6b9f0dfd69107d123ef042451d1eac8d",
+          "cache_reused": false
+        },
+        "impulse-features-fp32.bin": {
+          "bytes": 572928,
+          "crc32": 789858951,
+          "sha256": "2202541551e06a429b222d31f3d495a2b051fca70191287c82c7f6a6d8803c82",
+          "cache_reused": false
+        },
+        "impulse-frames-int32.bin": {
+          "bytes": 4476,
+          "crc32": 3356389002,
+          "sha256": "d1d720a6b7013a4b396f2a8595d52f9648132b665f40f899b09bc62918e57c95",
+          "cache_reused": false
+        },
+        "sine-pcm-fp32.bin": {
+          "bytes": 716800,
+          "crc32": 2463270558,
+          "sha256": "086b7b0033dbb8e73a33cfdf72717e24e527909b6b4c9051f6a260218762d0d2",
+          "cache_reused": false
+        },
+        "sine-samples-int32.bin": {
+          "bytes": 716800,
+          "crc32": 3443500523,
+          "sha256": "566ca677807f155211b10c5da2e5cc4f6b9f0dfd69107d123ef042451d1eac8d",
+          "cache_reused": false
+        },
+        "sine-features-fp32.bin": {
+          "bytes": 572928,
+          "crc32": 3013154374,
+          "sha256": "dcc0ed05018d225a140916249cb3a3ab948c4cc50e5f457abac24e909e9c64c5",
+          "cache_reused": false
+        },
+        "sine-frames-int32.bin": {
+          "bytes": 4476,
+          "crc32": 3356389002,
+          "sha256": "d1d720a6b7013a4b396f2a8595d52f9648132b665f40f899b09bc62918e57c95",
+          "cache_reused": false
+        },
+        "nyquist-pcm-fp32.bin": {
+          "bytes": 716800,
+          "crc32": 1933543898,
+          "sha256": "e4e9bcbac1eb9086949cccb4fb354be91e8064772acaf97200dfc4c59360da49",
+          "cache_reused": false
+        },
+        "nyquist-samples-int32.bin": {
+          "bytes": 716800,
+          "crc32": 3443500523,
+          "sha256": "566ca677807f155211b10c5da2e5cc4f6b9f0dfd69107d123ef042451d1eac8d",
+          "cache_reused": false
+        },
+        "nyquist-features-fp32.bin": {
+          "bytes": 572928,
+          "crc32": 249456202,
+          "sha256": "eaaa9e11f4d282294a9c57d4eddd392d2a257ea1f342d0452d99984602ff1e96",
+          "cache_reused": false
+        },
+        "nyquist-frames-int32.bin": {
+          "bytes": 4476,
+          "crc32": 3356389002,
+          "sha256": "d1d720a6b7013a4b396f2a8595d52f9648132b665f40f899b09bc62918e57c95",
+          "cache_reused": false
+        },
+        "noise-pcm-fp32.bin": {
+          "bytes": 716800,
+          "crc32": 921949209,
+          "sha256": "7bb6279a9712e9ccda41f4ff1edd826c45c30a1d9cfee822977009457b50063d",
+          "cache_reused": false
+        },
+        "noise-samples-int32.bin": {
+          "bytes": 716800,
+          "crc32": 3443500523,
+          "sha256": "566ca677807f155211b10c5da2e5cc4f6b9f0dfd69107d123ef042451d1eac8d",
+          "cache_reused": false
+        },
+        "noise-features-fp32.bin": {
+          "bytes": 572928,
+          "crc32": 3044152530,
+          "sha256": "b26f15554a3123e12cb39949709ea94588c27a5324f4cadefc701fba124c5c42",
+          "cache_reused": false
+        },
+        "noise-frames-int32.bin": {
+          "bytes": 4476,
+          "crc32": 3356389002,
+          "sha256": "d1d720a6b7013a4b396f2a8595d52f9648132b665f40f899b09bc62918e57c95",
+          "cache_reused": false
+        },
+        "padded_noise-pcm-fp32.bin": {
+          "bytes": 716800,
+          "crc32": 1606998017,
+          "sha256": "ca189983f2a78b942e20d70ddaf77b71aade9eb75ccc7c6b645f764427cc0e91",
+          "cache_reused": false
+        },
+        "padded_noise-samples-int32.bin": {
+          "bytes": 716800,
+          "crc32": 3633136254,
+          "sha256": "61bd8a396bb9df446e6c4c8e8684428147150c79f159a2194469a94b7a3971ce",
+          "cache_reused": false
+        },
+        "padded_noise-features-fp32.bin": {
+          "bytes": 572928,
+          "crc32": 3119610981,
+          "sha256": "6065504b6b2d244526df3a79cb5b88e9463e8e576ff877b5b8fa90b9bf18b1b0",
+          "cache_reused": false
+        },
+        "padded_noise-frames-int32.bin": {
+          "bytes": 4476,
+          "crc32": 3076555308,
+          "sha256": "604c12a03e7bce1f3f9379373dd926eedce33386844fd1f23ec4687834a551ec",
+          "cache_reused": false
+        },
+        "audio-reference.json": {
+          "bytes": 2778,
+          "crc32": 3162891984,
+          "sha256": "1209e2f95df2d0527db23d9185e01c38289b365c46e623e03d3e9ce26f8dfcf8",
+          "cache_reused": false
+        },
+        "processor_config.json": {
+          "bytes": 1788,
+          "crc32": 2908405523,
+          "sha256": "168f6a08522f3ce5dea596d94d003af2fd691742d4f41fe1f9d8cce76bfbf69c",
+          "cache_reused": false
+        },
+        "audio-validation.json": {
+          "bytes": 5068,
+          "crc32": 2865477394,
+          "sha256": "4e325f708e8d103a9de358a411380ddbb51cfe953984e9dcb73e291d919630fa",
+          "cache_reused": false
+        }
+      },
+      "artifact_id": 11813259359
+    }
+  ],
+  "native_encoder_validation_success": false,
+  "seconds": 699.6185938999988,
+  "preprocessing_artifact_id": 11813259359,
+  "preprocessing_pcm_feature_and_mask_hashes_match_runtime_manifest": true,
+  "preprocessing_graph_hash_matches_runtime_manifest": false,
+  "acquisition_failure": "Native diagnostic artifact contained only the preprocessing JSON. Required artifact supplies a separately audited graph with identical metadata and PCM/feature/mask hashes."
+}

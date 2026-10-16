@@ -1,5 +1,13 @@
 # M3: 実画像から最終embeddingへのPython参照
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
+## 2026-10-14の追加状況
+
+画像Query / Document / Rawの実Python参照は後続Actionsで18件合格した。[追加receipt](results/m3-real-image-all-role-reference-20261014.json)。旧Documentのみの実測は履歴として保持。Unity全chain・元FP32 gateは未達。
+
+## 当時の実測・実装記録
+
 2026-10-13。I1 / I4へ渡す最終vector参照と、実feature数に対応するbackbone profileをTDDで追加した。これは画像Runtime API / sampleやSentis GPU連結の完了ではない。既知の画像FP32・音声encoder不合格、元の全12条件、最終空consumer・Player / 他OSのgateを維持し、正式Release / tagを作成しない。
 
 ## 参照と保存経路

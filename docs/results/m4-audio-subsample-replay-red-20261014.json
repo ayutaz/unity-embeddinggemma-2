@@ -1,0 +1,8 @@
+{
+  "failed": 7,
+  "reason": "missing capture API, producer parameters and CLI arguments",
+  "full_encoder_validated": false,
+  "command": "uv run pytest tests/test_audio_subsample_replay.py -q --tb=short",
+  "scope": "pinned_subsample_replay_tdd_red",
+  "passed": 0
+}

@@ -1,5 +1,7 @@
 # 音声encoder Runtime接続のTDD
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 2026-10-13。`AudioEncoderProfile` / `AudioFeatureEncoder` / `AudioEncodingResult`を追加した。前処理Tensorを借用し、encoderの投影済みsoft tokenを独立したdevice copyとして返す。モデル取得・監査・export、最終768次元APIは別契約。[使い方](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-feature-encoder.md)、[実測receipt](results/m4-audio-encoder-runtime-contract-windows-20261013.json)。
 
 まずRuntime型が存在しない固定Git `8a7d2f0…`のconsumerへテストのみを配置し、23 assertion failed / passed 0 / skip 0 / CLI exit 1を確認した。未実装型へのreflectionを使い、compile errorを意図したredに数えない。全failureは`AudioEncoderProfile`未実装に由来する。

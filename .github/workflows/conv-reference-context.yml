@@ -1,0 +1,115 @@
+name: Frozen convolution CPU context
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, labeled]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: conv-reference-context-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       contains(github.event.pull_request.labels.*.name, 'conv-reference-diagnostics'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        context: [native, avx2]
+    defaults:
+      run:
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+      ONEDNN_VERBOSE: '1'
+      DNNL_VERBOSE: '1'
+      CONV_PROBE_CONTEXT: ${{ matrix.context }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - name: Constrain only the AVX2 comparison
+        if: matrix.context == 'avx2'
+        run: |
+          {
+            echo 'ATEN_CPU_CAPABILITY=avx2'
+            echo 'MKL_CBWR=AVX2'
+            echo 'DNNL_MAX_CPU_ISA=AVX2'
+          } >> "$GITHUB_ENV"
+      - name: Record actual host before replay
+        run: |
+          mkdir -p ../artifacts/conv-context
+          lscpu --json > ../artifacts/conv-context/cpu-host.json
+      - name: Require the native reference ISA before downloading a model
+        if: matrix.context == 'native'
+        run: |
+          uv run --locked python - <<'PY'
+          import json, os
+          from pathlib import Path
+          import torch
+          actual = torch.backends.cpu.get_cpu_capability()
+          available = actual == 'AVX512'
+          report = dict(success=available, scope='native_conv_host_preflight_only',
+              execution_status='ready' if available else 'missing_required_cpu',
+              required_cpu_capability='AVX512', actual_cpu_capability=actual,
+              job_source=os.environ['GITHUB_SHA'], gpu_validated=False,
+              full_encoder_validated=False, end_to_end_validated=False)
+          Path('../artifacts/conv-context/host-preflight.json').write_text(json.dumps(report, indent=2)+'\n')
+          print(json.dumps(report))
+          raise SystemExit(0 if available else 1)
+          PY
+      - name: Fetch immutable native graph and the frozen convolution tensors
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          uv run --locked python -m embeddinggemma_tools.artifact_zip \
+            --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11814567883 \
+            --output ../artifacts/conv-encoder --max-entry-bytes 2147483648 \
+            --member audio-runtime-reference/audio-encoder-reference.json \
+            --member audio-runtime-reference/audio-encoder-validation.json \
+            --member audio-runtime-reference/frames-1119-valid-1119/audio.pt2
+          uv run --locked python -m embeddinggemma_tools.artifact_zip \
+            --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11881872190 \
+            --output ../artifacts/conv-subsample \
+            --member audio-layer-replay-report.json \
+            --member audio-layer-replay/subsample.layer0.act-fp32.bin \
+            --member audio-layer-replay/subsample.layer1.conv-fp32.bin
+          sha256sum --check <<'EOF'
+          dc43d56b896b64077d8e86d56c3fd2b89cfe3d31170eabaa387165ea961438d7  ../artifacts/conv-encoder/audio-runtime-reference/frames-1119-valid-1119/audio.pt2
+          664a8242d079f53bf98d2032f9398de6d2c8d6bcd2312d1baaa35bb498ce5fb8  ../artifacts/conv-subsample/audio-layer-replay-report.json
+          EOF
+      - name: Trace one original convolution and retain failed comparison
+        shell: bash
+        run: |
+          set -o pipefail
+          uv run --locked python -m embeddinggemma_tools.conv_reference_context \
+            --encoder ../artifacts/conv-encoder/audio-runtime-reference \
+            --subsample ../artifacts/conv-subsample \
+            --encoder-reference-sha256 ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9 \
+            --encoder-audit-sha256 68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1 \
+            --subsample-reference-sha256 664a8242d079f53bf98d2032f9398de6d2c8d6bcd2312d1baaa35bb498ce5fb8 \
+            --weight-sha256 68309f01ea3e738fccb24a0db5db608841a3a8e59b0a4fa5d0fb521ed60bf43c \
+            --output "../artifacts/conv-context/conv-${CONV_PROBE_CONTEXT}.json" \
+            2>&1 | tee "../artifacts/conv-context/onednn-${CONV_PROBE_CONTEXT}.log"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: conv-context-${{ matrix.context }}-${{ github.sha }}
+          path: artifacts/conv-context/
+          retention-days: 7
+          if-no-files-found: warn

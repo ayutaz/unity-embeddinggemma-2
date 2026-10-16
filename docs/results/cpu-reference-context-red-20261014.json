@@ -1,0 +1,9 @@
+{
+  "scope": "controlled_cpu_thread_context_probe_red",
+  "source_base": "465d983",
+  "command": "uv run --locked pytest tests/test_cpu_reference_context.py -q --tb=short",
+  "passed": 0,
+  "failed": 6,
+  "reason": "Controlled CPU thread context probe is missing",
+  "real_context_validated": false
+}

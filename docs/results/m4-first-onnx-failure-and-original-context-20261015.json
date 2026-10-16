@@ -1,0 +1,409 @@
+{
+  "scope": "step3_first_failure_localization_and_immutable_context_check",
+  "success": false,
+  "source": "4ee8195b34b9dcd5df0509259a1b82747e49e545",
+  "action_run_id": 38590425392,
+  "artifact_id": 11907742570,
+  "action_conclusion": "failure",
+  "case_id": "silence",
+  "original_reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "original_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+  "same_run_trace_context_validated": true,
+  "immutable_original_context_validated": false,
+  "immutable_native_context": {
+    "bit_match": false,
+    "exact_difference_count": 138186,
+    "mismatched_elements": 145,
+    "maximum_absolute_error": 8.380413055419922e-05
+  },
+  "first_nonzero_same_run_stage": "layer0.norm",
+  "first_tolerance_exceeding_same_run_stage": "projection",
+  "immutable_original_cause_proven": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "diagnostics": {
+    "success": false,
+    "stage": "audio_encoder_onnx",
+    "source_commit": "4ee8195b34b9dcd5df0509259a1b82747e49e545",
+    "profile": "frames-1119-valid-1119",
+    "case_id": "silence",
+    "minimum_cosine": 0.9999997615814209,
+    "onnx_vs_official_maximum_absolute_error": 0.00022602081298828125,
+    "maximum_tolerance_ratio": 7.7126145362854,
+    "mismatched_elements": 443,
+    "graph_sha256": "d9bc91c24716661dbb9275b1625edc9c93cbd7e8e76271b9a0947c30d7852d9d",
+    "unity_validated": false,
+    "end_to_end_validated": false,
+    "onnx_stage_diagnostics": {
+      "first_divergent_stage": "subsample",
+      "stages": [
+        {
+          "name": "subsample",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 9.5367431640625e-05,
+          "maximum_tolerance_ratio": 2.1327381134033203,
+          "mismatched_elements": 562
+        },
+        {
+          "name": "layer_0",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.0001068115234375,
+          "maximum_tolerance_ratio": 4.667693138122559,
+          "mismatched_elements": 80
+        },
+        {
+          "name": "layer_1",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.0001373291015625,
+          "maximum_tolerance_ratio": 2.074702024459839,
+          "mismatched_elements": 298
+        },
+        {
+          "name": "layer_2",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 8.7738037109375e-05,
+          "maximum_tolerance_ratio": 2.938889741897583,
+          "mismatched_elements": 277
+        },
+        {
+          "name": "layer_3",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.0001373291015625,
+          "maximum_tolerance_ratio": 3.1944684982299805,
+          "mismatched_elements": 26
+        },
+        {
+          "name": "layer_4",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.00017547607421875,
+          "maximum_tolerance_ratio": 3.618596315383911,
+          "mismatched_elements": 504
+        },
+        {
+          "name": "layer_5",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.00018860399723052979,
+          "maximum_tolerance_ratio": 5.647279262542725,
+          "mismatched_elements": 373
+        },
+        {
+          "name": "layer_6",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.00020862743258476257,
+          "maximum_tolerance_ratio": 13.153557777404785,
+          "mismatched_elements": 281
+        },
+        {
+          "name": "layer_7",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.00028628110885620117,
+          "maximum_tolerance_ratio": 3.850729465484619,
+          "mismatched_elements": 43
+        },
+        {
+          "name": "layer_8",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.0002975165843963623,
+          "maximum_tolerance_ratio": 7.17218017578125,
+          "mismatched_elements": 553
+        },
+        {
+          "name": "layer_9",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.00032757222652435303,
+          "maximum_tolerance_ratio": 22.73067855834961,
+          "mismatched_elements": 368
+        },
+        {
+          "name": "layer_10",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.0004819631576538086,
+          "maximum_tolerance_ratio": 4.3207292556762695,
+          "mismatched_elements": 592
+        },
+        {
+          "name": "layer_11",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.0010678768157958984,
+          "maximum_tolerance_ratio": 27.284496307373047,
+          "mismatched_elements": 1706
+        },
+        {
+          "name": "output_projection",
+          "shape": [
+            1,
+            280,
+            1536
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.00113677978515625,
+          "maximum_tolerance_ratio": 43.256385803222656,
+          "mismatched_elements": 4435
+        },
+        {
+          "name": "projected_features",
+          "shape": [
+            280,
+            512
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.00022602081298828125,
+          "maximum_tolerance_ratio": 7.7126145362854,
+          "mismatched_elements": 443
+        }
+      ],
+      "stage": "audio_encoder_onnx_stage_diagnostics_only",
+      "detail_layer": null,
+      "feature_rtol": 0.0001,
+      "feature_atol": 1e-05,
+      "trace_matches_failed_graph": true,
+      "native_reference_matches_original": true,
+      "native_reference_vs_original_maximum_absolute_error": 0.0,
+      "localization_validated": true,
+      "encoders_validated": false,
+      "end_to_end_validated": false,
+      "first_nonzero_stage": "subsample",
+      "trace_vs_failed_graph_maximum_absolute_error": 0.0,
+      "graph_sha256": "a79b0a023abadf2742898a62d34a235ccf8e63ab174be9a3fb0e175d792290a3",
+      "graph_bytes": 1224226738,
+      "subsample_diagnostics": {
+        "first_divergent_stage": "projection",
+        "stages": [
+          {
+            "name": "layer0.masked_input",
+            "shape": [
+              1,
+              1,
+              1119,
+              128
+            ],
+            "success": true,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "mismatched_elements": 0
+          },
+          {
+            "name": "layer0.conv",
+            "shape": [
+              1,
+              128,
+              560,
+              64
+            ],
+            "success": true,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "mismatched_elements": 0
+          },
+          {
+            "name": "layer0.norm",
+            "shape": [
+              1,
+              560,
+              64,
+              128
+            ],
+            "success": true,
+            "maximum_absolute_error": 4.76837158203125e-06,
+            "maximum_tolerance_ratio": 0.2448447346687317,
+            "mismatched_elements": 0
+          },
+          {
+            "name": "layer0.relu",
+            "shape": [
+              1,
+              128,
+              560,
+              64
+            ],
+            "success": true,
+            "maximum_absolute_error": 4.76837158203125e-06,
+            "maximum_tolerance_ratio": 0.223540261387825,
+            "mismatched_elements": 0
+          },
+          {
+            "name": "layer1.masked_input",
+            "shape": [
+              1,
+              128,
+              560,
+              64
+            ],
+            "success": true,
+            "maximum_absolute_error": 4.76837158203125e-06,
+            "maximum_tolerance_ratio": 0.223540261387825,
+            "mismatched_elements": 0
+          },
+          {
+            "name": "layer1.conv",
+            "shape": [
+              1,
+              32,
+              280,
+              32
+            ],
+            "success": true,
+            "maximum_absolute_error": 1.811981201171875e-05,
+            "maximum_tolerance_ratio": 0.14117543399333954,
+            "mismatched_elements": 0
+          },
+          {
+            "name": "layer1.norm",
+            "shape": [
+              1,
+              280,
+              32,
+              32
+            ],
+            "success": true,
+            "maximum_absolute_error": 3.4332275390625e-05,
+            "maximum_tolerance_ratio": 0.30497902631759644,
+            "mismatched_elements": 0
+          },
+          {
+            "name": "layer1.relu",
+            "shape": [
+              1,
+              32,
+              280,
+              32
+            ],
+            "success": true,
+            "maximum_absolute_error": 3.4332275390625e-05,
+            "maximum_tolerance_ratio": 0.17040057480335236,
+            "mismatched_elements": 0
+          },
+          {
+            "name": "projection_input",
+            "shape": [
+              1,
+              280,
+              1024
+            ],
+            "success": true,
+            "maximum_absolute_error": 3.4332275390625e-05,
+            "maximum_tolerance_ratio": 0.17040057480335236,
+            "mismatched_elements": 0
+          },
+          {
+            "name": "projection",
+            "shape": [
+              1,
+              280,
+              1024
+            ],
+            "success": false,
+            "maximum_absolute_error": 9.5367431640625e-05,
+            "maximum_tolerance_ratio": 2.1327381134033203,
+            "mismatched_elements": 562
+          }
+        ],
+        "stage": "audio_onnx_subsample_diagnostics_only",
+        "trace_matches_full_subsample": true,
+        "native_reference_matches_full_subsample": true,
+        "trace_vs_full_subsample_maximum_absolute_error": 0.0,
+        "native_vs_full_subsample_maximum_absolute_error": 0.0,
+        "localization_validated": true,
+        "encoders_validated": false,
+        "end_to_end_validated": false,
+        "feature_rtol": 0.0001,
+        "feature_atol": 1e-05,
+        "first_nonzero_stage": "layer0.norm",
+        "files": {
+          "graph": {
+            "path": "audio-onnx-subsample-stages.onnx",
+            "bytes": 4357883,
+            "sha256": "581f6562bbf0e4f6ac4ad7703ebd7a86c47dc55f43404932a9ae21b67a95ae27"
+          },
+          "native_input": {
+            "path": "audio-subsample-native_input.bin",
+            "bytes": 572928,
+            "sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24"
+          },
+          "frame_mask": {
+            "path": "audio-subsample-frame_mask.bin",
+            "bytes": 4476,
+            "sha256": "d1d720a6b7013a4b396f2a8595d52f9648132b665f40f899b09bc62918e57c95"
+          },
+          "native_subsample": {
+            "path": "audio-subsample-native_subsample.bin",
+            "bytes": 1146880,
+            "sha256": "ef8ed757c419086c1e0b680ae2815b61e6c8b36cc1ff89e0d0209c63a1e8d42f"
+          }
+        }
+      }
+    }
+  },
+  "reference_tolerance_unchanged": true,
+  "raw_sha256": {
+    "audio-encoder-failure.json": "0195116ef68c1725d66ac997e2c3e75c9cf9456be71ec39d26fad9e63b608b79",
+    "frames-1119-valid-1119/audio-onnx-stages-diagnostics.json": "92f5d50604f8039bc6b1429155f1b98f3e72660030059cc271c0aa27934f7505",
+    "frames-1119-valid-1119/audio-onnx-subsample-diagnostics.json": "85a507e7f62b937c51b3f46617baca8276f46706aec9fd050dc4718a8d87764b"
+  },
+  "native_actual_sha256": "38b5ef284546d068a855e9c9537e36c6354920b7b536b06d62364c37f0360f46"
+}

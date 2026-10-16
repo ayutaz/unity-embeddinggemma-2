@@ -1,0 +1,14 @@
+{
+  "scope": "matrix_projection_transform_and_existing_hash_helper",
+  "source": "a084197eafa029fbb696cd12dd12b28337274477",
+  "broadcast_red_source": "35f83990b4cd7ae673e3eff9e5f2e1e0e66c8619",
+  "red_passed": 3,
+  "red_failed": 1,
+  "green_passed": 11,
+  "green_failed": 0,
+  "skipped": 0,
+  "exit_code": 0,
+  "xml_sha256": "bb9f0b5b3708f02c5fe902968a84ffaf5d4880fed541931bbd7ed4f700202f85",
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

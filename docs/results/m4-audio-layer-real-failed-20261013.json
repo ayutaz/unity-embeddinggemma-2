@@ -1,0 +1,511 @@
+{
+  "success": false,
+  "stage": "audio_encoder_projector_only",
+  "source_commit": "adede1c25500bc05542c4c65f90530eec7a606ee",
+  "profile": "frames-1119-valid-1119",
+  "case_id": "silence",
+  "minimum_cosine": 0.9999998211860657,
+  "saved_vs_official_maximum_absolute_error": 0.00013375282287597656,
+  "eager_vs_official_maximum_absolute_error": 0.0,
+  "saved_vs_eager_maximum_absolute_error": 0.00013375282287597656,
+  "maximum_tolerance_ratio": 5.294248580932617,
+  "mismatched_elements": 328,
+  "graph_sha256": "a16dc6a711f346c390e5dde4985b05f3c9076292f9bf9b7e78c83f31050b79a0",
+  "unity_validated": false,
+  "end_to_end_validated": false,
+  "operators": [
+    "<built-in function getitem>",
+    "aten._softmax.default",
+    "aten._to_copy.default",
+    "aten.add.Tensor",
+    "aten.addmm.default",
+    "aten.arange.start_step",
+    "aten.bitwise_not.default",
+    "aten.bmm.default",
+    "aten.cat.default",
+    "aten.clamp.Tensor",
+    "aten.clamp.default",
+    "aten.clone.default",
+    "aten.constant_pad_nd.default",
+    "aten.convolution.default",
+    "aten.cos.default",
+    "aten.div.Tensor",
+    "aten.exp.default",
+    "aten.expand.default",
+    "aten.index.Tensor",
+    "aten.mean.dim",
+    "aten.mm.default",
+    "aten.mul.Tensor",
+    "aten.native_layer_norm.default",
+    "aten.neg.default",
+    "aten.permute.default",
+    "aten.pow.Tensor_Scalar",
+    "aten.relu.default",
+    "aten.scalar_tensor.default",
+    "aten.select.int",
+    "aten.sigmoid.default",
+    "aten.sin.default",
+    "aten.slice.Tensor",
+    "aten.tanh.default",
+    "aten.unsqueeze.default",
+    "aten.view.default",
+    "aten.where.self"
+  ],
+  "stage_diagnostics": {
+    "first_divergent_stage": "layer_10",
+    "stages": [
+      {
+        "name": "subsample",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_0",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 4.57763671875E-05,
+        "maximum_tolerance_ratio": 0.11000543087720871,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_1",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 4.57763671875E-05,
+        "maximum_tolerance_ratio": 0.1340426802635193,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_2",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 3.814697265625E-05,
+        "maximum_tolerance_ratio": 0.15093812346458435,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_3",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 6.103515625E-05,
+        "maximum_tolerance_ratio": 0.15643645823001862,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_4",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 7.62939453125E-05,
+        "maximum_tolerance_ratio": 0.27671101689338684,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_5",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 9.1552734375E-05,
+        "maximum_tolerance_ratio": 0.35717636346817017,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_6",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 7.62939453125E-05,
+        "maximum_tolerance_ratio": 0.22946852445602417,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_7",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 4.57763671875E-05,
+        "maximum_tolerance_ratio": 0.24445398151874542,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_8",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 4.57763671875E-05,
+        "maximum_tolerance_ratio": 0.4553920030593872,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_9",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 6.103515625E-05,
+        "maximum_tolerance_ratio": 0.7606722712516785,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "layer_10",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": false,
+        "maximum_absolute_error": 0.0001373291015625,
+        "maximum_tolerance_ratio": 2.137939691543579,
+        "mismatched_elements": 33
+      },
+      {
+        "name": "layer_11",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": false,
+        "maximum_absolute_error": 0.0006651878356933594,
+        "maximum_tolerance_ratio": 22.44794273376465,
+        "mismatched_elements": 1159
+      },
+      {
+        "name": "output_projection",
+        "shape": [
+          1,
+          280,
+          1536
+        ],
+        "success": false,
+        "maximum_absolute_error": 0.000736236572265625,
+        "maximum_tolerance_ratio": 37.30947494506836,
+        "mismatched_elements": 2884
+      },
+      {
+        "name": "projected_features",
+        "shape": [
+          280,
+          512
+        ],
+        "success": false,
+        "maximum_absolute_error": 0.00013375282287597656,
+        "maximum_tolerance_ratio": 5.294248580932617,
+        "mismatched_elements": 328
+      }
+    ],
+    "stage": "audio_encoder_stage_diagnostics_only",
+    "feature_rtol": 0.0001,
+    "feature_atol": 1E-05,
+    "trace_matches_failed_graph": true,
+    "trace_vs_failed_graph_maximum_absolute_error": 0.0,
+    "graph_sha256": "1d0274cf6e7a1b99732b10ca7e516b883faa8b60c55419404e8e7a6c151a2f08",
+    "graph_bytes": 1229392101,
+    "layer_diagnostics": {
+      "first_divergent_stage": "layer_10",
+      "stages": [
+        {
+          "name": "subsample",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": true,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "mismatched_elements": 0
+        },
+        {
+          "name": "layer_0.feed_forward1",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": true,
+          "maximum_absolute_error": 3.814697265625E-06,
+          "maximum_tolerance_ratio": 0.02367383986711502,
+          "mismatched_elements": 0
+        },
+        {
+          "name": "layer_0.norm_pre_attn",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": true,
+          "maximum_absolute_error": 7.62939453125E-06,
+          "maximum_tolerance_ratio": 0.02435072511434555,
+          "mismatched_elements": 0
+        },
+        {
+          "name": "layer_0.self_attn",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": true,
+          "maximum_absolute_error": 1.52587890625E-05,
+          "maximum_tolerance_ratio": 0.16008567810058594,
+          "mismatched_elements": 0
+        },
+        {
+          "name": "layer_0.norm_post_attn",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": true,
+          "maximum_absolute_error": 1.52587890625E-05,
+          "maximum_tolerance_ratio": 0.046258632093667984,
+          "mismatched_elements": 0
+        },
+        {
+          "name": "layer_0.lconv1d",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": true,
+          "maximum_absolute_error": 1.621246337890625E-05,
+          "maximum_tolerance_ratio": 0.07216478139162064,
+          "mismatched_elements": 0
+        },
+        {
+          "name": "layer_0.feed_forward2",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": true,
+          "maximum_absolute_error": 1.9073486328125E-05,
+          "maximum_tolerance_ratio": 0.14341071248054504,
+          "mismatched_elements": 0
+        },
+        {
+          "name": "layer_0",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": true,
+          "maximum_absolute_error": 4.57763671875E-05,
+          "maximum_tolerance_ratio": 0.11000543087720871,
+          "mismatched_elements": 0
+        },
+        {
+          "name": "layer_1",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": true,
+          "maximum_absolute_error": 4.57763671875E-05,
+          "maximum_tolerance_ratio": 0.1340426802635193,
+          "mismatched_elements": 0
+        },
+        {
+          "name": "layer_2",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": true,
+          "maximum_absolute_error": 3.814697265625E-05,
+          "maximum_tolerance_ratio": 0.15093812346458435,
+          "mismatched_elements": 0
+        },
+        {
+          "name": "layer_3",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": true,
+          "maximum_absolute_error": 6.103515625E-05,
+          "maximum_tolerance_ratio": 0.15643645823001862,
+          "mismatched_elements": 0
+        },
+        {
+          "name": "layer_4",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": true,
+          "maximum_absolute_error": 7.62939453125E-05,
+          "maximum_tolerance_ratio": 0.27671101689338684,
+          "mismatched_elements": 0
+        },
+        {
+          "name": "layer_5",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": true,
+          "maximum_absolute_error": 9.1552734375E-05,
+          "maximum_tolerance_ratio": 0.35717636346817017,
+          "mismatched_elements": 0
+        },
+        {
+          "name": "layer_6",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": true,
+          "maximum_absolute_error": 7.62939453125E-05,
+          "maximum_tolerance_ratio": 0.22946852445602417,
+          "mismatched_elements": 0
+        },
+        {
+          "name": "layer_7",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": true,
+          "maximum_absolute_error": 4.57763671875E-05,
+          "maximum_tolerance_ratio": 0.24445398151874542,
+          "mismatched_elements": 0
+        },
+        {
+          "name": "layer_8",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": true,
+          "maximum_absolute_error": 4.57763671875E-05,
+          "maximum_tolerance_ratio": 0.4553920030593872,
+          "mismatched_elements": 0
+        },
+        {
+          "name": "layer_9",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": true,
+          "maximum_absolute_error": 6.103515625E-05,
+          "maximum_tolerance_ratio": 0.7606722712516785,
+          "mismatched_elements": 0
+        },
+        {
+          "name": "layer_10",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.0001373291015625,
+          "maximum_tolerance_ratio": 2.137939691543579,
+          "mismatched_elements": 33
+        },
+        {
+          "name": "layer_11",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.0006651878356933594,
+          "maximum_tolerance_ratio": 22.44794273376465,
+          "mismatched_elements": 1159
+        },
+        {
+          "name": "output_projection",
+          "shape": [
+            1,
+            280,
+            1536
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.000736236572265625,
+          "maximum_tolerance_ratio": 37.30947494506836,
+          "mismatched_elements": 2884
+        },
+        {
+          "name": "projected_features",
+          "shape": [
+            280,
+            512
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.00013375282287597656,
+          "maximum_tolerance_ratio": 5.294248580932617,
+          "mismatched_elements": 328
+        }
+      ],
+      "stage": "audio_encoder_layer_diagnostics_only",
+      "detail_layer": 0,
+      "feature_rtol": 0.0001,
+      "feature_atol": 1E-05,
+      "trace_matches_failed_graph": true,
+      "trace_vs_failed_graph_maximum_absolute_error": 0.0,
+      "graph_sha256": "e9236533cc1583e009506ac00aefd53632a6884188cef42b7bf7ef7866b1872d",
+      "graph_bytes": 1229399525
+    }
+  },
+  "ci_run": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38327706633",
+  "pr_head": "0d4b53d8b77bd2213fb3af9683265ac47c727f43"
+}

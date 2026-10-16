@@ -1,0 +1,161 @@
+{
+  "success": false,
+  "scope": "full_offline_python_regression_and_two_stale_workflow_contract_tests",
+  "run_id": 38625994348,
+  "source": "139283e1dc96c96cbf07357eecc3997c1ff685b4",
+  "status": "completed",
+  "conclusion": "failure",
+  "matrix": [
+    {
+      "platform": "ubuntu313",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "2",
+        "skipped": "0",
+        "tests": "744",
+        "time": "488.686",
+        "timestamp": "2026-10-14T19:43:26.292521+00:00",
+        "hostname": "runnervmmprz5"
+      },
+      "failures": [
+        {
+          "classname": "tests.test_audio_runtime_diagnostic_reference",
+          "name": "test_runtime_diagnostic_workflow_is_opt_in_read_only_and_retains_failure"
+        },
+        {
+          "classname": "tests.test_audio_runtime_stage_cli",
+          "name": "test_opt_in_workflow_produces_stages_after_failed_native_collection_without_masking_failure"
+        }
+      ],
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-139283e-ubuntu313\\python-tests.xml",
+        "bytes": 106610,
+        "sha256": "fcfca2afb8fef35cb047b0d3ba077ba54a100c1f276d08801c3344295508c3bd"
+      }
+    },
+    {
+      "platform": "ubuntu314",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "2",
+        "skipped": "0",
+        "tests": "744",
+        "time": "447.143",
+        "timestamp": "2026-10-14T19:43:27.291955+00:00",
+        "hostname": "runnervmmprz5"
+      },
+      "failures": [
+        {
+          "classname": "tests.test_audio_runtime_diagnostic_reference",
+          "name": "test_runtime_diagnostic_workflow_is_opt_in_read_only_and_retains_failure"
+        },
+        {
+          "classname": "tests.test_audio_runtime_stage_cli",
+          "name": "test_opt_in_workflow_produces_stages_after_failed_native_collection_without_masking_failure"
+        }
+      ],
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-139283e-ubuntu314\\python-tests.xml",
+        "bytes": 106601,
+        "sha256": "648c1ce05ec410257bfa1b09e3cc31d2a6452c5fad503ef2cd478233aab5a2de"
+      }
+    },
+    {
+      "platform": "windows313",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "2",
+        "skipped": "0",
+        "tests": "744",
+        "time": "691.770",
+        "timestamp": "2026-10-14T19:43:37.725832+00:00",
+        "hostname": "runnervm0xl3a"
+      },
+      "failures": [
+        {
+          "classname": "tests.test_audio_runtime_diagnostic_reference",
+          "name": "test_runtime_diagnostic_workflow_is_opt_in_read_only_and_retains_failure"
+        },
+        {
+          "classname": "tests.test_audio_runtime_stage_cli",
+          "name": "test_opt_in_workflow_produces_stages_after_failed_native_collection_without_masking_failure"
+        }
+      ],
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-139283e-windows313\\python-tests.xml",
+        "bytes": 106658,
+        "sha256": "868983ca3922d47c72ac2fd2efee87016933b36aff83ba15484b87cb87b3b51b"
+      }
+    },
+    {
+      "platform": "windows314",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "2",
+        "skipped": "0",
+        "tests": "744",
+        "time": "625.242",
+        "timestamp": "2026-10-14T19:43:42.514875+00:00",
+        "hostname": "runnervmfi6oq"
+      },
+      "failures": [
+        {
+          "classname": "tests.test_audio_runtime_diagnostic_reference",
+          "name": "test_runtime_diagnostic_workflow_is_opt_in_read_only_and_retains_failure"
+        },
+        {
+          "classname": "tests.test_audio_runtime_stage_cli",
+          "name": "test_opt_in_workflow_produces_stages_after_failed_native_collection_without_masking_failure"
+        }
+      ],
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-139283e-windows314\\python-tests.xml",
+        "bytes": 106656,
+        "sha256": "12950d47e9bc49b83d780f84c69a1a9fd0942ed3c265a16430cbfec4a5d48740"
+      }
+    }
+  ],
+  "changes": [
+    "Require read-only contents and actions permissions for immutable artifact retrieval",
+    "Select the uniquely named native-reference artifact, require unconditional failure retention and both native reference and stage paths"
+  ],
+  "observed_ci_red_before_changes": true,
+  "local_selected_red_counts": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "1",
+    "skipped": "0",
+    "tests": "2",
+    "time": "7.260",
+    "timestamp": "2026-10-15T04:52:09.414159+09:00",
+    "hostname": "DESKTOP-7PPH62N"
+  },
+  "local_selected_red_raw": {
+    "path": "artifacts\\numerical-acceptance-state\\audio-workflow-contract-red-20261015.xml",
+    "bytes": 1162,
+    "sha256": "a24b5faf02d5a92115175c1e1f9d35bbfdaf194eedb72c0fb9924c7cd3e3cd9e"
+  },
+  "local_red_note": "Local selection overlapped test-file edits and loaded one old assertion and one corrected assertion; the authoritative two-red baseline is the completed CI XML from all four environments",
+  "related_green_counts": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "52",
+    "time": "27.634",
+    "timestamp": "2026-10-15T04:52:19.717068+09:00",
+    "hostname": "DESKTOP-7PPH62N"
+  },
+  "related_green_raw": {
+    "path": "artifacts\\numerical-acceptance-state\\audio-workflow-contract-related-green-20261015.xml",
+    "bytes": 7434,
+    "sha256": "7d6f915d2083b9acc1dc58934804e55148b9775aa4f5ee8f60f3e29c9f083ced"
+  },
+  "corrected_full_regression_verified": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

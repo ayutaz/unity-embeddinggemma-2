@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "original_raw_sine_full12_connected_actual_onnx_midpoint_qk_candidate_only",
+  "run_url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38823852007",
+  "source": "d838ecb7d1bac9169f5afc525d823de0d4a578ae",
+  "artifact": {
+    "id": 12014388578,
+    "bytes": 20679379
+  },
+  "github_conclusion": "success",
+  "audit": {
+    "case_id": "sine",
+    "profile": "frames-1119-valid-1119",
+    "source": "d838ecb7d1bac9169f5afc525d823de0d4a578ae",
+    "candidate_variant": "ordered_original_midpoint_bmm",
+    "report_sha256": "6c6486a0066e2ca91d128d035823725833e17e6bb2bb1d1ff970108aff27031f",
+    "raw_input_sha256": "dcc0ed05018d225a140916249cb3a3ab948c4cc50e5f457abac24e909e9c64c5",
+    "reference_sha256": "80a5d8c1f8505edab44be1dbbcb0cc77287477b71e0dca4175a6196751a19d73",
+    "native_context_qualified": false,
+    "native_whole_metrics": {
+      "actual_finite": true,
+      "same_shape": true,
+      "mismatched_elements": 1085,
+      "maximum_absolute_error": 0.00025200843811035156,
+      "maximum_tolerance_ratio": 12.952690872169804,
+      "worst_index": 43097,
+      "worst_actual": 0.013440556824207306,
+      "worst_expected": 0.01358768343925476,
+      "exact_difference_count": 138441
+    },
+    "candidate_metrics": {
+      "actual_finite": true,
+      "same_shape": true,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 1.4185905456542969e-05,
+      "maximum_tolerance_ratio": 0.4823762130641813,
+      "worst_index": 19726,
+      "worst_actual": 0.08628268539905548,
+      "worst_expected": 0.08627369999885559,
+      "exact_difference_count": 34679
+    },
+    "candidate_vs_current_native": {
+      "actual_finite": true,
+      "same_shape": true,
+      "mismatched_elements": 1076,
+      "maximum_absolute_error": 0.00025200843811035156,
+      "maximum_tolerance_ratio": 12.8755699117766,
+      "worst_index": 43097,
+      "worst_actual": 0.0135866180062294,
+      "worst_expected": 0.013440556824207306,
+      "exact_difference_count": 138489
+    },
+    "minimum_cosine": 0.9999999999964044,
+    "original_tolerance_passed": true,
+    "values_compared": 143360,
+    "all_capture_and_carry_hashes_verified": true,
+    "cases": [
+      {
+        "variant": "native",
+        "metrics": {
+          "actual_finite": true,
+          "same_shape": true,
+          "mismatched_elements": 1096,
+          "maximum_absolute_error": 0.000244140625,
+          "maximum_tolerance_ratio": 13.606009941961949,
+          "worst_index": 117006,
+          "worst_actual": 0.01967260241508484,
+          "worst_expected": 0.01983565092086792,
+          "exact_difference_count": 139900
+        },
+        "minimum_cosine": 0.9999999988625468,
+        "final_sha256": "9754945e6a882aa6994be8935570976d9420bbe5c3e07b0fc446d7521fe763f2",
+        "vs_current_native": {
+          "actual_finite": true,
+          "same_shape": true,
+          "mismatched_elements": 916,
+          "maximum_absolute_error": 0.0002821683883666992,
+          "maximum_tolerance_ratio": 9.989893058494625,
+          "worst_index": 19726,
+          "worst_actual": 0.08619219064712524,
+          "worst_expected": 0.08637838065624237,
+          "exact_difference_count": 140086
+        }
+      },
+      {
+        "variant": "ordered_original_midpoint_bmm",
+        "metrics": {
+          "actual_finite": true,
+          "same_shape": true,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 1.4185905456542969e-05,
+          "maximum_tolerance_ratio": 0.4823762130641813,
+          "worst_index": 19726,
+          "worst_actual": 0.08628268539905548,
+          "worst_expected": 0.08627369999885559,
+          "exact_difference_count": 34679
+        },
+        "minimum_cosine": 0.9999999999964044,
+        "final_sha256": "00d6fbe5cfb7fb03936340519d617ce9dc737711eb8af025973b83a22cdbe3da",
+        "vs_current_native": {
+          "actual_finite": true,
+          "same_shape": true,
+          "mismatched_elements": 1076,
+          "maximum_absolute_error": 0.00025200843811035156,
+          "maximum_tolerance_ratio": 12.8755699117766,
+          "worst_index": 43097,
+          "worst_actual": 0.0135866180062294,
+          "worst_expected": 0.013440556824207306,
+          "exact_difference_count": 138489
+        }
+      }
+    ],
+    "graphs_independently_rehashed": false,
+    "gpu_validated": false,
+    "default_export_promoted": false
+  },
+  "elapsed_diagnostic_seconds": 883.154245147,
+  "midpoint_qk_replacements": 12,
+  "all_part_capture_and_carry_hashes_verified": true,
+  "original_stage_fetch": "skipped",
+  "old_comparison": {
+    "run": 38818905732,
+    "variant": "ordered_original_tanh",
+    "metrics": {
+      "actual_finite": true,
+      "same_shape": true,
+      "mismatched_elements": 2,
+      "maximum_absolute_error": 3.170967102050781e-05,
+      "maximum_tolerance_ratio": 1.7295393368347012,
+      "worst_index": 131022,
+      "worst_actual": -0.012888986617326736,
+      "worst_expected": -0.012908514589071274,
+      "exact_difference_count": 48054
+    },
+    "same_raw_input_sha": true,
+    "same_current_native_output_sha": true,
+    "same_standard_onnx_final_sha": true
+  },
+  "all_six_validated": false,
+  "gpu_validated": false,
+  "default_export_promoted": false,
+  "required_ci_passed": false
+}

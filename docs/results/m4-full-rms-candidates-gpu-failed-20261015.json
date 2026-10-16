@@ -1,0 +1,255 @@
+{
+  "scope": "two_silence_only_full_encoder_rms_candidates",
+  "success": false,
+  "cases": [
+    {
+      "report": {
+        "success": false,
+        "scope": "one_saved_onnx_audio_encoder_gpu_vs_immutable_original",
+        "signal": "silence",
+        "runtime_source": "3346bc45509e9b55fa917b01c9d6070ace511409",
+        "requested_backend": "GPUCompute",
+        "unity": "6000.3.16f1",
+        "sentis": "2.6.1",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphics_api": "Direct3D12",
+        "end_to_end_validated": false,
+        "all_original_signals_validated": false,
+        "phase": "completed",
+        "candidate_source": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "candidate_python_gate_passed": false,
+        "candidate_folder": "GpuAudioCascadeCandidate",
+        "graph_transform": {
+          "replaced_inverse_count": 2,
+          "prefixes": [
+            "/subsample_conv_projection/layer0/norm",
+            "/subsample_conv_projection/layer1/norm"
+          ],
+          "existing_initializer_bytes_preserved": true,
+          "existing_initializer_sha256": "1bf6702c73c5124fb83b629fadf150e32392d21bc5f024c2a4c88062b336ca6a",
+          "node_count": 7409,
+          "full_encoder_validated": false,
+          "source_commit": "9af88c45edca97e6c3d73b298f6c065b7638b837",
+          "original_graph_sha256": "f43f3275c1ba48837b626fc09c738a8204dabd25e2ff3c74d7e75abcb3591899",
+          "template_sha256": "026e6136b2cb4c940b0d320fe9da4e82529d6e47e1a1fbbdeb8c4209f19d858b",
+          "source_model_producer": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+          "algorithm": "bounded_fp32_sqrt_then_reciprocal_residual_refinement",
+          "original_node_count": 7237,
+          "old_graph_onnx_results_reused": false,
+          "graph_sha256": "8aefc4b83fd0cc709544a0d6337b8c1837d2c864ad1d3c8cbd39fcd568abc222",
+          "profile": "frames-1119-valid-1119"
+        },
+        "rms_graph_transform": {
+          "replaced_rms_count": 109,
+          "existing_initializer_bytes_preserved": true,
+          "existing_initializer_sha256": "42776517d990ebd9ef43161f7063e8ff0d810d35fd2b20f137dcdc9fa4235b6f",
+          "node_count": 108953,
+          "full_encoder_validated": false,
+          "source_commit": "f1754d6a1b9198d8f00e495f34db03ad8b23bede",
+          "source_graph_sha256": "8aefc4b83fd0cc709544a0d6337b8c1837d2c864ad1d3c8cbd39fcd568abc222",
+          "original_node_count": 7409,
+          "algorithm": "pinned_cascade8_fp32_mean_and_refined_inverse",
+          "template_widths": [
+            1024,
+            1536
+          ],
+          "graph_sha256": "a883493d23b9c0213ff28bc1be4fd7021e50843e83bff2d09ab28776a5d9e5d5"
+        },
+        "graph_sha256": "a883493d23b9c0213ff28bc1be4fd7021e50843e83bff2d09ab28776a5d9e5d5",
+        "saved_graph_layer_count": 42345,
+        "attention_compensated_layer_count": 45117,
+        "runtime_graph_transform": "dynamic16_then_static64",
+        "projection_chunk": 64,
+        "layer_count": 82777,
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "actual_backend": "GPUCompute",
+        "mismatched_elements": 327,
+        "maximum_absolute_error": 0.0001518726348876953,
+        "maximum_tolerance_ratio": 5.959844533551391
+      },
+      "process": {
+        "terminal": true,
+        "exit_code": 2,
+        "elapsed_seconds": 114.54508640000131,
+        "timed_out": false,
+        "pid": 67104
+      },
+      "nunit": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Failed(Child)",
+        "total": "1",
+        "passed": "0",
+        "failed": "1",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-14 19:16:00Z",
+        "end-time": "2026-10-14 19:16:55Z",
+        "duration": "55.1531053"
+      },
+      "raw": [
+        {
+          "path": "artifacts\\acceptance-consumer\\artifacts\\saved-onnx-audio-gpu-3346bc45509e9b55fa917b01c9d6070ace511409-cascade-attention16-static64-silence.json",
+          "bytes": 3643,
+          "sha256": "d2a81ca1c07e7572be010116fa82a60cf1c1ac6cd84e3ff20b48999b6165e3f4"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\cascade-rms-attention16-static64-gpu-silence-20261015-process.json",
+          "bytes": 1115,
+          "sha256": "6e5b28472b540a70bc1eba4ad2de389678f5925a7172297047b8fed8af4da2ad"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\cascade-rms-attention16-static64-gpu-silence-20261015.xml",
+          "bytes": 6456,
+          "sha256": "fce2bfac8599f13176aacb7d1212c3b924d0da2ab353947892d17eb5810baca1"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\cascade-rms-attention16-static64-gpu-silence-20261015.log",
+          "bytes": 47824,
+          "sha256": "b77c5811e836779cd91f89c1178ff275b4e8375093273d5b7d2bf37756f8d834"
+        }
+      ]
+    },
+    {
+      "report": {
+        "success": false,
+        "scope": "one_saved_onnx_audio_encoder_gpu_vs_immutable_original",
+        "signal": "silence",
+        "runtime_source": "a4c38eaf38028324a9db9d17339c032f85d85214",
+        "requested_backend": "GPUCompute",
+        "unity": "6000.3.16f1",
+        "sentis": "2.6.1",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphics_api": "Direct3D12",
+        "end_to_end_validated": false,
+        "all_original_signals_validated": false,
+        "phase": "completed",
+        "candidate_source": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "candidate_python_gate_passed": false,
+        "candidate_folder": "GpuAudioCascadeLayoutCandidate",
+        "graph_transform": {
+          "replaced_inverse_count": 2,
+          "prefixes": [
+            "/subsample_conv_projection/layer0/norm",
+            "/subsample_conv_projection/layer1/norm"
+          ],
+          "existing_initializer_bytes_preserved": true,
+          "existing_initializer_sha256": "1bf6702c73c5124fb83b629fadf150e32392d21bc5f024c2a4c88062b336ca6a",
+          "node_count": 7409,
+          "full_encoder_validated": false,
+          "source_commit": "9af88c45edca97e6c3d73b298f6c065b7638b837",
+          "original_graph_sha256": "f43f3275c1ba48837b626fc09c738a8204dabd25e2ff3c74d7e75abcb3591899",
+          "template_sha256": "026e6136b2cb4c940b0d320fe9da4e82529d6e47e1a1fbbdeb8c4209f19d858b",
+          "source_model_producer": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+          "algorithm": "bounded_fp32_sqrt_then_reciprocal_residual_refinement",
+          "original_node_count": 7237,
+          "old_graph_onnx_results_reused": false,
+          "graph_sha256": "8aefc4b83fd0cc709544a0d6337b8c1837d2c864ad1d3c8cbd39fcd568abc222",
+          "profile": "frames-1119-valid-1119"
+        },
+        "rms_graph_transform": {
+          "replaced_rms_count": 97,
+          "existing_initializer_bytes_preserved": true,
+          "excluded_mean_names": [
+            "/lconv1d/conv_norm/ReduceMean",
+            "/lconv1d/conv_norm_1/ReduceMean",
+            "/lconv1d/conv_norm_2/ReduceMean",
+            "/lconv1d/conv_norm_3/ReduceMean",
+            "/lconv1d/conv_norm_4/ReduceMean",
+            "/lconv1d/conv_norm_5/ReduceMean",
+            "/lconv1d/conv_norm_6/ReduceMean",
+            "/lconv1d/conv_norm_7/ReduceMean",
+            "/lconv1d/conv_norm_8/ReduceMean",
+            "/lconv1d/conv_norm_9/ReduceMean",
+            "/lconv1d/conv_norm_10/ReduceMean",
+            "/lconv1d/conv_norm_11/ReduceMean"
+          ],
+          "existing_initializer_sha256": "42776517d990ebd9ef43161f7063e8ff0d810d35fd2b20f137dcdc9fa4235b6f",
+          "node_count": 97817,
+          "full_encoder_validated": false,
+          "source_commit": "2458779a7f4f2a6599a83c33c3eb40230185ea3c",
+          "source_graph_sha256": "8aefc4b83fd0cc709544a0d6337b8c1837d2c864ad1d3c8cbd39fcd568abc222",
+          "original_node_count": 7409,
+          "algorithm": "pinned_cascade8_fp32_mean_and_refined_inverse",
+          "template_widths": [
+            1024,
+            1536
+          ],
+          "graph_sha256": "bc80cbff22cfa3f60807d13e728ad2ffc19c7854a3a68e48ae6944e4a12ac923"
+        },
+        "graph_sha256": "bc80cbff22cfa3f60807d13e728ad2ffc19c7854a3a68e48ae6944e4a12ac923",
+        "saved_graph_layer_count": 38025,
+        "attention_compensated_layer_count": 40797,
+        "runtime_graph_transform": "dynamic16_then_static64",
+        "projection_chunk": 64,
+        "layer_count": 78457,
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "actual_backend": "GPUCompute",
+        "mismatched_elements": 213,
+        "maximum_absolute_error": 0.00014448165893554688,
+        "maximum_tolerance_ratio": 6.901991060153883
+      },
+      "process": {
+        "terminal": true,
+        "exit_code": 2,
+        "elapsed_seconds": 111.93508180000936,
+        "timed_out": false,
+        "pid": 75568
+      },
+      "nunit": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Failed(Child)",
+        "total": "1",
+        "passed": "0",
+        "failed": "1",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-14 19:24:18Z",
+        "end-time": "2026-10-14 19:25:11Z",
+        "duration": "53.027474"
+      },
+      "raw": [
+        {
+          "path": "artifacts\\acceptance-consumer\\artifacts\\saved-onnx-audio-gpu-a4c38eaf38028324a9db9d17339c032f85d85214-cascade-layout-attention16-static64-silence.json",
+          "bytes": 4189,
+          "sha256": "e95143e3cde5f13f34dba27dccf04849d333ec6e2657ddd16baea0e19a355550"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\cascade-layout-rms-attention16-static64-gpu-silence-20261015-process.json",
+          "bytes": 1135,
+          "sha256": "61857399b03192914de5496d02e6c336632b10607613f09e0100f82ba81f9921"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\cascade-layout-rms-attention16-static64-gpu-silence-20261015.xml",
+          "bytes": 6490,
+          "sha256": "6b78dc1a7de4222dccaf88c9e162e8378119fbf0447513e695d7c5b343a22fa0"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\cascade-layout-rms-attention16-static64-gpu-silence-20261015.log",
+          "bytes": 47878,
+          "sha256": "c7b8c3709cabe68545160f57f78cd7d2dc9da213426c5e6aff0013c37a7c30c5"
+        }
+      ]
+    }
+  ],
+  "original_tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "layout_discovery": "12 lconv conv_norm inputs are transposed: 1x280x1024 strides [286720,1,280]; contiguous reduction order is not applicable",
+  "all_original_signals_validated": false,
+  "all_profiles_validated": false,
+  "end_to_end_validated": false,
+  "next_action": "Calibrate pinned outer CPU reduction order locally on original native replay, compact independent accumulators, then return to original full GPU gate"
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "ordered_static_linear_fixed_segment_candidate_tdd",
+  "tdd": {
+    "static-block192-bias-red": {
+      "sha256": "1e4aa18715b06c9ca8ff3c8922e8b021f1751e518d0713951a6d1b9e01ae0489",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "ordered-static-linear-segment-red": {
+      "sha256": "2e115f444bc1e8cab2f887ee97dd851bc0195108c21620c8a2fa0819df54c278",
+      "tests": 2,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0
+    },
+    "ordered-static-linear-and-bias-related-green": {
+      "sha256": "9c16000b319b98d12b608fdc56c9c4f249bf11732eb4fad5c18b37cbf9063f68",
+      "tests": 82,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "explicit_variant": "ordered_static_linear",
+  "planned_segment": {
+    "from_stage": "layer_8",
+    "to_stage": "projected_features",
+    "expected_replacements": 29
+  },
+  "replacement_policy": "Only parameter-backed original mm/addmm with audited280-row FP32 inputs. Preserve13-row relative projections and dynamic-weight products; require original empty/default addmm arguments.",
+  "bias_policy": "First block FMA partial is completed, bias is added, then remaining block partials are added.",
+  "native_mode": "Original mm/addmm passthrough only; actual fixed-order ONNX output remains independently gated.",
+  "original_export_defaults_runtime_weights_goldens_tolerances_unchanged": true,
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "end_to_end_validated": false
+}

@@ -1,0 +1,9 @@
+{
+  "scope": "fixed_image_role_manifest_completeness_green",
+  "source_base": "de57aec",
+  "command": "uv run --locked pytest tests/test_image_role_reference_workflow.py tests/test_audio_role_reference_workflow.py tests/test_artifact_zip.py -q --tb=short",
+  "passed": 10,
+  "failed": 0,
+  "manifest_audit_unchanged": true,
+  "real_context_validated": false
+}

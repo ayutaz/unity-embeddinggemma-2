@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "noninjecting_original_input_primitive_replay_tdd",
+  "tdd": {
+    "audio-primitive-replay-red": {
+      "sha256": "a6e57ed0024aed05e4601d4e052863978f9b096ebb28bb5f3d09afdf393d73cb",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "skipped": 0
+    },
+    "audio-primitive-replay-related-green": {
+      "sha256": "448943855532d15d9e6294c32b842b1e9c1549a24ef5d242a8417eeafb8a4ea5",
+      "tests": 64,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "operators": [
+    "MatMul",
+    "Softmax",
+    "Conv",
+    "SiLU as Neg Exp Add Div",
+    "ReduceMean",
+    "Pow"
+  ],
+  "reference_evaluator": "Unmodified ONNX ReferenceEvaluator and standard opset24 operators; checked isolated ONNX models.",
+  "native_chain": "Original native operations only, with bit-level Interpreter control and source coefficient hashes before/after.",
+  "capture_policy": "Largest original-tolerance ratio per operator retains native input values, strides, scalar attributes and native/ONNX outputs. Artifacts only; no arrays or weights in Git.",
+  "comparison_scope": "Each ONNX primitive uses exactly the current native node inputs; no accumulated ONNX errors are injected into downstream native nodes.",
+  "context_failure_retained": true,
+  "default_export_or_tolerance_changed": false,
+  "product_runtime_changed": false,
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "end_to_end_validated": false
+}

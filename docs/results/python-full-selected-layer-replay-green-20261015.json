@@ -1,0 +1,41 @@
+{
+  "success": true,
+  "scope": "python_regression_only",
+  "gpu_compatibility_claimed": false,
+  "source": "3ee827968bc180c3a85ca936f142cb43b81bf3b1",
+  "run": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38671700527",
+  "results": [
+    {
+      "file": "python-full-3ee8279-20261015/python-ubuntu-latest-3.13/python-tests.xml",
+      "sha256": "e29d2e895b6ca3dab89bda37b1d2be0d7ee6a0b09c0125617a62813786626a2a",
+      "tests": 915,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "python-full-3ee8279-20261015/python-ubuntu-latest-3.14/python-tests.xml",
+      "sha256": "4d468f4e021c55ff6954d2bd5228624f9c858b989b3f7fc991e32ddff52c9b1e",
+      "tests": 915,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "python-full-3ee8279-20261015/python-windows-latest-3.13/python-tests.xml",
+      "sha256": "caf7d5a1e5bf0128138925771ef9cb01c10c7da961be88bd55a036b9f47026bb",
+      "tests": 915,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "python-full-3ee8279-20261015/python-windows-latest-3.14/python-tests.xml",
+      "sha256": "95b0c00f51416edd1e4a0704ea9b6923e3d4732014c0f54b662f82c554596659",
+      "tests": 915,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ]
+}

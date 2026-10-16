@@ -5,6 +5,7 @@ import importlib.metadata
 import json
 from pathlib import Path
 import re
+import shutil
 from types import SimpleNamespace
 
 import numpy as np
@@ -14,14 +15,20 @@ from transformers import AutoTokenizer, EmbeddingGemma2Processor
 from . import export
 from .model import load_image_embedding_model
 from .text import format_text
+from .backbone_reuse import audit_backbone_source, validate_reuse_destination
+from .reference_context_failure import record_feature_drift
 
 
-def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequence_length=1024, revision, source_commit):
+def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequence_length=1024, revision, source_commit,
+                             role="document", vision_source_commit=None, backbone_source=None):
     snapshot, vision_directory, destination = Path(snapshot), Path(vision_directory).resolve(), Path(destination)
+    validate_reuse_destination(backbone_source, destination)
     destination.mkdir(parents=True, exist_ok=True)
     receipt = destination/"image-embedding-validation.json"
     receipt.unlink(missing_ok=True)
-    if any(not isinstance(value,str) or re.fullmatch(r"[0-9a-f]{40}",value) is None for value in (revision,source_commit)):
+    format_text("", role)
+    vision_source_commit = source_commit if vision_source_commit is None else vision_source_commit
+    if any(not isinstance(value,str) or re.fullmatch(r"[0-9a-f]{40}",value) is None for value in (revision,source_commit,vision_source_commit)):
         raise ValueError("Image embedding reference requires immutable provenance")
     def digest(path):
         with path.open("rb") as stream:
@@ -29,7 +36,7 @@ def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequenc
     manifest = json.loads((vision_directory/"vision-validation.json").read_text(encoding="utf-8"))
     reference = json.loads((vision_directory/"vision-reference.json").read_text(encoding="utf-8"))
     for metadata in (manifest["metadata"],reference["metadata"]):
-        if metadata["source_commit"] != source_commit or metadata["model_revision"] != revision:
+        if metadata["source_commit"] != vision_source_commit or metadata["model_revision"] != revision:
             raise ValueError("Image reference provenance mismatch")
         if set(metadata["input_sha256"]) != {"config.json","processor_config.json","model.safetensors"}:
             raise ValueError("Image reference snapshot hash names are invalid")
@@ -61,6 +68,13 @@ def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequenc
             raise ValueError("Image reference case IDs must be unique")
         seen.add(row["id"])
         audited_path(row["pixels"])
+    input_hashes = {name: digest(snapshot / name) for name in ("config.json", "processor_config.json", "model.safetensors", "tokenizer.json", "tokenizer_config.json", "config_sentence_transformers.json")}
+    reuse = None
+    if backbone_source is not None:
+        hidden_size = json.loads((snapshot / "config.json").read_text())["text_config"]["hidden_size"]
+        specs = {name: dict(sequence_length=sequence_length, image_feature_count=value["feature_count"], audio_feature_count=0, feature_width=hidden_size)
+                 for name, value in reference["profiles"].items()}
+        reuse = audit_backbone_source(backbone_source, "image", revision=revision, input_sha256=input_hashes, profiles=specs)
     core = load_image_embedding_model(snapshot)
     tokenizer = AutoTokenizer.from_pretrained(snapshot,local_files_only=True)
     token_configuration=json.loads((snapshot/"tokenizer_config.json").read_text(encoding="utf-8"))
@@ -71,8 +85,8 @@ def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequenc
     if tokenizer.convert_tokens_to_ids(processor.image_token) != core.config.image_token_id:
         raise ValueError("Image token configuration disagrees with model")
     prefixes=json.loads((snapshot/"config_sentence_transformers.json").read_text(encoding="utf-8"))["prompts"]
-    if prefixes["document"]!=format_text("","document"):
-        raise ValueError("Image document prompt differs from the fixed official prefix")
+    if prefixes.get(role, "")!=format_text("",role):
+        raise ValueError(f"Image {role} prompt differs from the fixed official prefix")
     profiles,rows,produced,similarities,graphs={},[],[],[],{}
     for profile,spec in reference["profiles"].items():
         if re.fullmatch(r"[a-z][a-z0-9_-]*",profile) is None:
@@ -84,7 +98,7 @@ def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequenc
         positions=torch.from_numpy(np.fromfile(audited_path(spec["positions"]),dtype="<i4").copy()).long().reshape(spec["positions_shape"])
         saved_encoder=torch.export.load(audited_path(spec["graph"])).module()
         expanded=EmbeddingGemma2Processor.replace_image_token(processor,{"num_soft_tokens_per_image":[count]},0)
-        formatted=format_text(expanded,"document")
+        formatted=format_text(expanded,role)
         encoded=tokenizer(formatted,padding="max_length",max_length=sequence_length,truncation=False,return_tensors="pt")
         ids,mask=encoded["input_ids"],encoded["attention_mask"]
         if ids.shape!=(1,sequence_length) or int((ids==core.config.image_token_id).sum())!=count:
@@ -92,6 +106,10 @@ def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequenc
         key=(sequence_length,count,0)
         graph=graphs.get(key,destination/profile/"backbone.pt2")
         exported=torch.export.load(graph).module() if key in graphs else None
+        if exported is None and reuse is not None:
+            graph.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(reuse["programs"][profile], graph)
+            exported=torch.export.load(graph).module(); produced.append(graph); graphs[key]=graph
         for original in (row for row in reference["cases"] if row["profile"]==profile):
             pixels=torch.from_numpy(np.fromfile(audited_path(original["pixels"]),dtype="<f4").copy()).reshape(spec["pixel_shape"])
             with torch.no_grad():
@@ -100,6 +118,9 @@ def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequenc
                 expected=torch.nn.functional.normalize(native.last_hidden_state[:,mask[0].bool()].mean(dim=1),dim=-1)
                 golden_features=torch.tensor(original["features"])
                 if features.shape!=golden_features.shape or not torch.allclose(features,golden_features,rtol=1e-4,atol=1e-5):
+                    record_feature_drift(destination, "image", features, golden_features, role=role, profile=profile,
+                                         case=original["id"], source_commit=source_commit, input_source_commit=vision_source_commit,
+                                         saved_encoder=lambda: saved_encoder(pixels))
                     raise ValueError("Official image embedding reference changed the encoder features")
                 audio=torch.empty(0,core.config.text_config.hidden_size)
                 wrapper.validate_inputs(ids,mask,features,audio)
@@ -124,7 +145,7 @@ def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequenc
             features.detach().numpy().astype("<f4").tofile(feature_file);produced.append(feature_file)
             rows.append(dict(id=original["id"],profile=profile,pixels=original["pixels"],
                 pixels_sha256=digest(audited_path(original["pixels"])),input_ids=ids[0].tolist(),attention_mask=mask[0].tolist(),
-                features_file=feature_file.relative_to(destination).as_posix(),formatted_text=formatted,role="document",
+                features_file=feature_file.relative_to(destination).as_posix(),formatted_text=formatted,role=role,
                 backbone_cosine=cosine,saved_chain_cosine=chain_cosine,
                 embedding=expected[0].tolist()))
             del native,features,actual,encoded_features,chain
@@ -133,13 +154,16 @@ def prepare_image_embeddings(snapshot, vision_directory, destination, *, sequenc
         del exported,wrapper,saved_encoder
     if not rows or len(rows)!=manifest["case_count"]:
         raise ValueError("Image reference must cover every encoder case")
-    metadata=dict(source_commit=source_commit,model_revision=revision,embedding_dimension=core.config.text_config.embedding_dim,
+    metadata=dict(source_commit=source_commit,vision_source_commit=vision_source_commit,role=role,
+                  model_revision=revision,embedding_dimension=core.config.text_config.embedding_dim,
                   image_token_id=core.config.image_token_id,audio_token_id=core.config.audio_token_id,
                   vocabulary_size=core.config.text_config.vocab_size,pad_token_id=core.config.text_config.pad_token_id,
                   vision_reference_sha256=digest(vision_directory/"vision-reference.json"),
-                  input_sha256={name:digest(snapshot/name) for name in ("config.json","processor_config.json","model.safetensors","tokenizer.json","tokenizer_config.json","config_sentence_transformers.json")},
+                  input_sha256=input_hashes,
                   versions={name:importlib.metadata.version(name) for name in ("torch","transformers")})
     path=destination/"image-embedding-reference.json"
+    if reuse is not None:
+        metadata.update(backbone_source_commit=reuse["source_commit"], backbone_reference_sha256=reuse["reference_sha256"])
     path.write_text(json.dumps(dict(metadata=metadata,profiles=profiles,cases=rows),indent=2,allow_nan=False)+"\n",encoding="utf-8");produced.append(path)
     report=dict(success=True,stage="python_image_embeddings_only",unity_validated=False,gpu_chain_validated=False,
                 python_saved_chain_validated=True,end_to_end_validated=False,

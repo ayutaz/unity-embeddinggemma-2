@@ -1,8 +1,155 @@
 # M2・M3・M4から正式リリースまでのTDD計画
 
+## 現在の実行位置（2026-10-16）
+
+[現在の状態](status.md)と[手順4の要件別監査](results/goal4-current-completion-audit-20261016.json)を現行の判定とします。元の「4まで」は実Texture / PCM→最終768 APIの全role・固定profile / mask・境界・所有権 / 解放・例外後再利用・text回帰と必須repository checksです。画像18条件・音声18条件、元encoder全画像6件 / 3 profile・音声6信号 / 2 profile、関連189テストのGPU証拠はそろいました。**音声ONNXのRequired CI失敗が残り、手順4全体は未完了です。**
+
+[元入力から全6ケースの先頭区間](results/m4-original-entire-stem-all-six-1720320-actual-onnx-bit-exact-20261016.json)は全1,720,320値が元参照にbit一致し、[silenceの元stemから全12層](results/m4-connected-original-tanh-all12-143360-bit-exact-20261016.json)も最終143,360値がbit一致しました。source f0593c7の元特徴量→先頭区間→全12層の[raw全6ケース試行](results/m4-original-raw-all-six-attempt-four-pass-sine-two-fail-padded-timeout-20261016.json)は4件合格・sine2要素不合格・padded_noise20分上限で最終未取得でした。候補は採用しません。最新確定CI f0593c7も音声ONNXとLinux/Python3.13のTanh2件が失敗し、fresh officialと元固定参照の差を別に保持しています。部分合格を全encoder・必須CI合格へ読み替えず、元係数・golden・許容差とfresh native比較を維持します。
+
+検索sample、モデル準備再利用、長期memory / 性能、Player、各OS / 実機は元提案の手順5以降、統合・配布は手順6として残します。以下の詳細計画・過去checkpointは当時の状態を含み、実行手順3 / 4とproject milestone M3 / M4全体の範囲を混同しません。
+
+## 過去checkpointと詳細計画
+
+2026-10-16追加確認: [staged音声encoderの元全6信号 / 両profile厳密gateと最新text GPU回帰](results/m4-staged-original-encoder-and-final-text-gpu-regression-20261016.json)が合格。元824,320音声値の許容差超過0、text両precision各10ベクトル / 全4順位、関連189 Green・skip0、終了時の当該Persistent警告0。これで実入力APIの画像18条件・音声18条件と元encoder gate、境界 / 所有権 / 復帰 / text回帰の証拠を保持する。工程4を完了するにはRequired CIのONNX失敗を解消する必要がある。[固定prefixの正規化候補](results/m4-ci-prefix-normalization-and-full-mode-tdd-20261016.json)は限定scopeで0超過だが、probe全体のshape取得失敗は修正前の失敗として保持する。元native参照 / 係数 / default / gateを変えない明示modeで、全ONNX条件をActions上で検証する。
+
+2026-10-16音声API更新: [実PCM全6信号 / 両profile / 全3 roleの最終GPU API](results/m4-real-pcm-all-roles-staged-gpu-20261016.json)は18 pass・skip0。同期試行の12 GiB監視停止は失敗証拠として残し、音声staged encoder / 非同期APIを11 Red→関連39 Greenで追加。最大host peak約7.13 GiBで同APIの全role・実GPU stage後例外からの復帰・借用stageのAPI Dispose後再利用を確認した。元Document全6最終値は先行版と全bit一致。追加要素診断1213超過は最終cosine合格と分ける。次はstaged encoder単体の元厳密全6 gate・最新text回帰・Required CIを確認する。CIの最初の差は、元失敗graph / native入力・出力の約6 MBだけを使う明示opt-in prefix probeで調べ、通常の全ONNX gateは維持する。工程4は未完了。
+
+2026-10-16終了時解放: [EditModeでSentis共有GPU bufferが解放登録されない原因を修正](results/m4-sentis-editor-shared-gpu-cleanup-20261016.json)。1 Red→1 Green、実PCM最終APIを含む45 Greenと通常終了時の当該Persistent警告0を確認。Runtime計算コード不変・最終ベクトル全bit一致。これは長期性能 / 他deviceの検証を置き換えない。残るRequired CI ONNX失敗は[最初のLayerNorm差とsubsample projectionの超過へ局所化](results/m4-required-ci-audio-onnx-failure-localized-20261016.json)し、gateを維持する。既存の音声role参照Actions run38764026134の結果を受け取り、元Document全6参照が合格した時のみQuery / Raw実PCMの最終GPU APIへ進む。工程4は未完了。
+
+2026-10-16音声の更新: [実PCM→採用GPU encoder→元Document最終768 API](results/m4-real-pcm-document-final-api-gpu-20261016.json)は元6信号 / 両profileで6 pass・skip0。CPU fallback / 中間readback0、最小cosine 0.9999998052055729、per-call Tensor解放と不正入力後の復帰を確認。nyquistの追加要素診断439超過は保持する。次は[固定原本encoder出力からのrole参照生成](results/m4-frozen-audio-role-reference-tdd-20261016.json)をActionsで実行し、元Document全6参照への一致を確認してから、実PCM Query / RawのGPU最終APIへ進む。新経路の関連32 Greenは実モデル合格とは扱わない。通常のnative / ONNX gateを維持し、CIのsilence ONNX差とPersistent allocation警告は未解決として残す。工程4は未完了。
+
+> 文書整合確認: 2026-10-15。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。冒頭の現在方針が、下の旧checkpointの着手順より優先する。
+
+## 2026-10-15の実行方針と再開順
+
+2026-10-16最新: [実PNG全6件・全3 roleの最終768 GPU API](results/m3-final-image-api-all-cases-all-roles-gpu-20261016.json)は18 pass / fail0 / skip0。最小cosine 0.9999999999976248、追加要素診断も超過0、CPU fallback / 中間readback0。[RenderTexture、実不正入力6拒否、実GPU stage後キャンセルと同APIの復帰、text GPU回帰](results/m3-rendertexture-recovery-and-text-gpu-regression-20261016.json)も合格。text128 FP32 / Float16重みの各10ベクトル・全4順位 / scoreを確認し、選択した契約回帰90 Green。非同期画像APIは8 Red→関連38 Green。
+
+[元の実行計画に対する範囲監査](results/goal4-scope-audit-20261016.json)に従い、「4まで」はR2の元encoder GPU gateとR3の最終API検証までを完了させる。元音声6ケース / 2 profileと画像FP32全6件の既存GPU成功を保持する。次は音声の実PCM→採用GPU encoder→backbone→最終768を既存Document原本から受け入れ、Query / Raw、全mask / 境界・所有権 / Dispose・例外後再利用と最終checksをそろえる。旧role生成でのCPU文脈失敗は保持し、新goldenで既知の失敗を消さない。工程4全体は未完了。
+
+検索sample、モデル準備再利用の改善、長期性能 / memory、Player、各OS / deviceは、元の最終提案の工程5以降に含まれる。projectのM3 / M4全体要件として残すが、実行計画3 / 4とM3 / M4の完了条件を混同しない。Persistent allocation警告は未解決。ローカルUnityと今回のowned監視は終了済み。以下は以前のcheckpointと当時の状態。
+
+画像の元FP32 encoderは[新候補の全6ケース・3 profileで実GPU合格](results/m3-adjacent-reciprocal-all-image-gpu-passed-20261015.json)。固定source `38baf10`で全778,240値bit一致・6 pass / skip0、CPU fallback / 中間readback0、元参照 / 係数 / 許容差不変。製品adapterの6 Red→関連36 Greenを経て、[R3の実Texture→GPU前処理→製品adapter](results/m3-production-image-adapter-and-real-texture-gpu-20261015.json)は元square-1の131,072値全bit一致・1 pass / skip0まで確認。初回ARGB32拒否は推論前のsetup失敗として保持し、2 Red→関連23 Greenで修正した。実PCM / Texture→最終768の全role / mask / 境界 / 所有権 / Dispose・例外後再利用・text回帰、sample / Player・必須環境・Required CI・長期memoryまでの元範囲は維持し、工程3/4全体は未完了。修正済みPythonはsource `cd08e0f`の4環境各1,070 pass / skip0。
+
+最新: [参照再現と第4層への局所化](results/m3-reproduced-cpu-context-and-prefix-localization-20261015.json)から[GPUの逆数丸めを修正](results/m3-gpu-reciprocal-midpoint-and-fourth-layer-fixed-20261015.json)。CPUだけで通ったseed保持候補はGPUで63 bit差を保持したため不採用。FP32の隣接候補と補償残差の比較を3 Red→関連42 Greenで実装し、実GPU65,601統計値と第4層成分・接続4層1,935,360値が全bit一致した。元係数・参照・`atol=1e-5, rtol=1e-4`、GPUCompute・CPU fallback / 中間readback0を維持。R2の元画像全6件は新候補で全件合格し、R3は製品encoder採用後の実Texture / PCM→最終768 APIを全role・mask・境界・所有権 / Dispose・例外後再利用・text回帰まで検証する。sample / Player / 必須環境 / Required CI / 長期memoryを含む全範囲を維持し、工程3/4の完了とはしない。
+
+以下は前回checkpointと当時の実行状態。
+
+最新局所化: [集約前の最終encoder出力](results/m3-last-encoder-boundary-and-ordered-diagnostic-20261015.json)。元square-0の第1層全bit一致に対し、16層後・集約前は1,894,029 bit差 / 13,977要素超過・最大比33.287118の1 fail / skip0。GPUCompute・CPU fallback / 中間flush0・元係数保持。poolingだけでは説明できない。次は明示CPU診断の元patch / 第1層SHA→最終bit一致gateを通った捕捉だけで層を局所化する。CPU softmax単独483,840値bit一致・関連61 Greenは、元encoderの再現やGPU全体合格とは別。Actions 38739806295は実行中。製品GPU経路と元参照・許容差、実入力API / sample / Playerを含む工程3・4の全範囲を維持する。
+
+直前checkpoint: [pooling単独の修正と全体未達](results/m3-native-pooling-component-and-whole-failure-20261015.json)。標準Sentisの元constant-left poolingは78,179 bit差・2要素超過、同じ入力と係数のblock192は196,608値全bit一致。固定left演算と分割境界を9 Red→関連23 Greenで追加したが、接続した元square-1は5要素超過・最大比1.409017の1 fail / skip0。batchを停止し、最新pooling候補の他5件は未実行。旧rotary候補の下表4 pass / 2 failと分離する。既存Runtime既定経路を維持し、製品採用・工程3/4の完了とは扱わない。
+
+局所checkpoint: [第1層と演算順序の実GPU照合](results/m3-component-order-and-first-layer-gpu-20261015.json)。元nativeのpatch→第1層1,935,360値がGPUで全bit一致し、slice回帰を含む7 pass / skip0。AVX512同一入力のsoftmax / GELU / scale前RMS、AVX2の4行列形状のblock192、固定65,536統計値の逆平方根も各限定範囲で全bit一致。最初のscale境界誤比較とslice index誤分類はharness失敗、ISA-only環境のAVX512不足はモデル未実行として保持。第2層以降や全体の合格には数えない。その後のpooling結果は上のcheckpointを参照。工程3・4の全範囲を維持する。
+
+全画像GPU checkpoint: [元FP32全6ケースの実測](results/m3-native-rotary-all-image-gates-20261015.json)。**全6ケースを実行し、4 pass / 2 fail / skip0。** 不合格はsquare-1の5要素とlandscape-0の1要素で、元参照・`atol=1e-5, rtol=1e-4`を維持する。各receiptは実際の固定source SHAを保持する。profileやモデル全体の合格へ未実行 / 不合格を混ぜない。
+
+| case | 実GPU判定 | 許容差超過 | 最大許容差比 |
+| --- | --- | ---: | ---: |
+| square-0 | pass | 0 | 0.593776 |
+| square-1 | fail | 5 | 1.406222 |
+| landscape-0 | fail | 1 | 1.321967 |
+| landscape-1 | pass | 0 | 0.224743 |
+| portrait-0 | pass | 0 | 0.203042 |
+| portrait-1 | pass | 0 | 0.056726 |
+
+全ケースでGPUCompute、計算/入力CPU fallback0・中間flush0、元学習済み投影係数の保持を確認。派生rotary表のみ、元nativeの入力非依存値へ有界補正したvalidation候補。最大host peakは約4.64GiBで、各caseは別native process / 300秒上限 / owned 12GiB監視付き。実行＋最終取得は約14.7〜25.7秒の単発観測で、正式benchmarkではない。全runner / watcherはterminal、Unity終了済み。
+
+全3 profileのrotary表は[入力非依存の元graphだけから取得済み](results/m3-original-rotary-profile-captures-20261015.json)。Squareは既存の元native byteを再現。profile対応付けは4 intended Red→関連Editor15 Greenで、誤対応 / 曖昧さ / 非有限を拒否する。FP32 252行tail templateも各該当profileで使用した。source `a5423c4...`のPython回帰はWindows / Linux ×3.13 / 3.14で各1,029 pass / skip0。これは最新headのRequired CIやGPUモデル全条件合格とは別である。
+
+次は不合格2ケースの境界値から残る算術差を切り分け、同じ全6 gateへ戻す。製品ImageFeatureEncoderへの採用、実PCM / Texture→GPU前処理→encoder→backbone→正規化768 API全role / mask / 境界 / 所有権 / Dispose / 例外後再利用 / text回帰、工程3・4 sample / Player / 必須環境 / Required CI / 長期memoryは未完了。既存音声6ケース / 2 profileの元GPU証拠は保持し、画像の未達を縮めず工程4まで進める。
+
+以下は前回checkpoint。
+
+最新GPU checkpoint: [元rotary定数の丸め差・修正と全体GPU結果](results/m3-original-rotary-and-mkl-context-20261015.json)。元保存modelはCos / Sin演算やfull-widthの定数Concatを持たず、`[1,2520,1,32]`の4種類の派生rotary表をQ / K ×16層で32回ずつ持つ。元nativeの対応表へcos各半分21,936 bit差、sin各半分12,576 bit差、最大差5.96e-8を静的auditで確認した。初めの2種類の探索失敗は数値未実行のsetup failureとして分離。元graph / caller配列を変更せず、1e-6以内の位置表補正だけを独立所有で再bindするhelperを4 API Red→元表2 Redを含む関連6 Greenで確認。これはvalidation-onlyの定数補正であり、学習済み投影係数や元goldenは変えていない。
+
+補正4表を128箇所のrotary乗算へ接続した`d345886...`は、**元square-0の全GPU gateに1 pass / skip0、許容差超過0・最大比0.593776で合格**。GPUCompute・計算/入力CPU fallback0・中間flush0・元学習済み係数保持。host peak4,941,717,504 bytes（約4.60GiB）、実行＋最終取得25.539秒 / process86.900秒の単発観測。続く`759f116...`のsquare-1は**5要素超過・最大比1.406222で1 fail / skip0**。host peak4,646,338,560 bytes、実行＋最終取得14.711秒 / process72.828秒。正方形profile全体や他4画像caseの合格へ広げず、製品のImageFeatureEncoder既定経路には未採用。runner / owned監視は全てterminalでUnity終了済み。
+
+CPU参照の追加調査は、Intel Xeon8573C / 実AVX512のnativeでは598〜600超過、MKLのみAVX2制限ではpatch全bit一致でも全体5超過を保持し、いずれも新しいgoldenにしない。次は元保存graphの画像入力から独立したrotary依存部分だけを評価し、全3 profileの位置表をActionsで取得する。無関係な前段やencoderを実行しないFX sliceとdispatchを2 Red→関連52 Greenで追加した。横長 / 縦長の元4 GPUケースとsquare-1の修正は未完了。Python回帰のsource `9cf2292...`はWindows / Linux ×3.13 / 3.14すべて各1,020 pass / skip0で、最新headのRequired CIやモデルGPU合格とは別。元画像全6条件、既存音声6ケース / 2 profile、実PCM / Texture→GPU前処理→encoder→backbone→正規化768 API全role / mask / 境界 / 所有権 / Dispose / 例外後再利用 / text回帰、工程3・4 sample / Player / 必須環境 / 長期memoryの全範囲を維持する。工程3・4は未完了。
+
+最新参照checkpoint: [実AVX512でも元参照を再現しなかったhost差](results/m3-avx512-host-context-failed-20261015.json)。[Actions 38723926213](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38723926213)は実AVX512事前確認後、Intel Xeon Platinum 8573Cでthread 1 / 2は598要素、4は600要素が元golden超過しfailure。以前のAMD EPYC 9V45では元値を全bit再現した。同じ保存graph / 入力SHA・torch版・AVX512表示でも、今回のpatch `add_1`は最初から異なり、rotaryは一致。全捕捉fileのSHAと通常 / 観測の最終bit一致を確認したが、新しい捕捉を元参照として採用しない。AVX512の有無だけで参照文脈を同一と扱わない。次はATen nativeを保ちMKLだけAVX2に制限する仮説をActionsで確認する。元patch SHAと全bit一致した時だけ全encoder参照再生へ進む前段gateを7 Red→関連50 Greenで追加。prefix以降が実行されないこと、非有限 / FP64の拒否、graph / 入力の保持を小さいFXで確認。MKL仮説の実モデル結果はまだ未取得。画像GPU元全体の残り1要素、全6画像条件と工程3・4 API / sample / Player / 必須環境 / Required CI / 長期memoryの未達を維持する。ローカルUnity終了済み。
+
+追加checkpoint: [252行の末尾RMSとprofile形状の修正](results/m3-tail-profile-shape-gpu-20261015.json)。正しい252行templateを拒否し、252行のsourceへ256行templateを誤接続できる問題を4 intended Redで確認。sourceの実中間shapeを推論してtemplateと照合する修正により形状5 Green、source / templateの非破壊性と異なるprofile / widthの拒否を確認した。元AVX512 square末尾の先頭252行を使う独立fixtureで、Python / 標準FP32 ONNX / 実GPUの193,536値が全bit一致。GPU1件と形状5件の合計6 pass / skip0、fallback / flush0。252行の生成templateを元全画像6ケースのharnessへ接続し、接続後のC# compile / 形状5 pass / skip0も確認。横長 / 縦長の実encoder全体は未実行で合格とは扱わない。代表square-0の元全体gateは1要素超過のまま。元golden / 許容差、実入力API・sample / Playerを含む工程3・4の全範囲を維持する。AVX512 prefix取得と回帰CIは既存Actions runを待ち、同一jobを再投入しない。
+
+最新checkpoint: [GELUの丸め切り分けと実GPU結果](results/m3-native-gelu-rounding-gpu-20261015.json)。保存済みLinux AVX2のGELU先頭49,152要素に対し、旧分離式194 bit差、graph内FMA候補130 bit差、SLEEF tanh接続後82 bit差だった。境界の直接観測で前段に203 bit差、同じGPU前段入力へのtanh自体は全bit一致と判明。FP32の明示FMA / 非FMA境界を単一compute kernelで保持するopt-in経路に修正し、同一入力のGELUを全49,152値で全bit一致、入力所有権 / 再利用 / Dispose / 不正入力と既定tanh回帰を含むGPU13 pass / skip0、package22 Greenを確認した。既定GELU経路は保持する。これはAVX2同一入力の局所証拠であり、元AVX512全encoderの合格ではない。
+
+全体接続の最初の実行`8d67fa8...`は旧32 Worker行のharness assertionが16単一kernel行を拒否し、数値比較前に失敗。検証を修正した`155d552...`の元square-0全体は、**元goldenの許容差超過3→1要素、最大許容差比1.085958で未合格・未採用**。残りはrow25 / column118、実値0.0167587101 / 期待値0.0167713910、絶対差1.26809e-5に対して許容1.16771e-5。GPUCompute・計算/入力CPU fallback0・中間flush0・元係数保持、113 RMS / 178 GPU演算 / 179 segment。1 fail / skip0、他5画像case未実行。host peak4,940,636,160 bytes（約4.60GiB）、実行＋最終取得16.837秒、process77.341秒の単発観測。runner / owned監視はterminal。数値差を解消した候補だけを全画像条件へ広げる。
+
+元graphの最初のsoftmax prefixも同一入力483,840値でLinux AVX2 nativeへ全bit一致し、関連GPU5 pass / skip0。次は元goldenを再現したAVX512環境から同じprefixを取得し、その文脈のRMS / attentionを比較する。Actionsに実AVX512をmodel download前に確認する明示opt-inを2 Red→関連26 Greenで追加し、そのmodeでは既知のAVX2再実行を省く。実AVX512がない場合は前提失敗・モデル未実行として記録する。元golden・学習済み係数・`atol=1e-5, rtol=1e-4`と、元画像全3 profile / 6 GPUケース、既存音声6ケース / 2 profile、実PCM / Texture→GPU前処理→encoder→backbone→正規化768 APIの全role / mask / 境界 / 所有権 / Dispose / 例外後再利用 / text回帰、工程3・4 sample / Player / 必須環境 / Required CI / 長期memoryの範囲を維持する。工程3・4は未完了。ローカルUnity終了済み。
+
+以下は前回checkpoint。
+
+元保存graphのsquare-0は[実AVX512環境で元固定golden全bit再現](results/m3-original-reference-avx512-reproduced-20261015.json)。AMD EPYC 9V45 / thread 1 / 2 / 4で全131,072値一致、同型CPUのAVX2指定側は3要素超過。patch / rotaryは既存AVX2捕捉と同一、最初の層からbit差が現れる。元golden再現文脈上の公式 / 保存poolingは全bit一致し、配置差仮説は支持されなかった。次はこの文脈の最初の層のRMS / attentionへ比較を絞る。GPU全体は5要素超過・他5case未実行。古いAVX2一致や局所Greenで元GPU gate・実入力API / 工程3・4 sample / Player・必須環境・Required CI・長期memoryを完了扱いしない。以下は前回checkpoint。
+
+末尾のRMS候補とblock192投影は[今回の固定CPU入力へ実GPU全bit一致](results/m3-original-saved-tail-rms-gpu-20261015.json)。既存の既定統計量範囲は維持し、末尾専用の2e6上限を明示opt-inで追加した。6 Red→関連38 Green、局所GPU1 pass。全113 RMSへ接続した[元全体GPU候補は5要素超過のまま](results/m3-all-rms-original-gpu-gate-still-five-20261015.json)、超過5要素のbitも不変、1 fail / skip0。他5case未実行。次は元最終encoder出力をActionsで観測し、公式poolingの転置280行 / 保存graphの連続256行を比較する。形状差を原因と断定せず、元固定参照・許容差・全画像 / 音声・最終API・工程3・4 sample / Player・必須環境・Required CI・長期memoryの範囲を維持。Unity終了済み。
+
+最新は[元保存graphの直接観測](results/m3-original-saved-graph-node-context-20261015.json)→[既存GPU patch比較](results/m3-original-patch-existing-gpu-blocks-20261015.json)→[block192全体GPU](results/m3-original-context-block192-gpu-20261015.json)。元graph通常 / 観測の最終全bit一致、rotaryは旧診断nativeと同一、patchは今回CPU値が既存block192と同一であることを確認。全体GPUの元固定golden超過は566→5へ減ったが未合格、今回CPU出力へも3要素超過。GPUCompute・fallback / 中間flush0・元係数とgolden / 許容差は維持。1 fail / skip0、他5画像caseは未実行、Unity終了済み。次は取得済み末尾入力のRMS / 最終投影を個別比較し、今回CPU / 元goldenの差と分離する。以下の全画像FP32・音声6ケース / 2 profile・実入力から最終768 API全条件・工程3・4 sample / Player・Required CI / 必須環境 / 長期memoryの範囲を維持する。
+
+元保存graphの[Actions再実行](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38712084754)は完了。native / AVX2指定の実機はいずれもAMD EPYC 7763 / AVX2で、thread 1 / 2 / 4全条件が同じ3要素超過。AVX512は未実行。静的archive照合では元 / 診断のmetadata以外の2,321演算と218保存dataが全て一致した。以下のSHA差は演算変更の証明ではない。次は元保存graphから直接中間値を取得し、診断参照との最初の相違を絞る。
+
+最新数値checkpoint: [元固定参照と診断参照の不一致](results/m3-original-reference-context-misalignment-20261015.json)。診断native出力自体が元画像固定goldenへ598 / 51要素超過し、診断manifestの一致flagが別jobの再export graphを指すことを確認した。入力pixelは同一、元の全定数content hashは診断側にもある。学習係数変更が原因との証拠はない。全体GPU候補は元固定参照566要素超過・診断native参照6要素超過で不採用。過去の局所native比較は診断文脈内の証拠として保持する。次は元保存graphをActions上のnative / AVX2・thread 1 / 2 / 4で再実行し、元参照の再現条件を確認する。元golden / 許容差を変更せず、重いローカル反復は行わない。下記の全画像FP32、音声6ケース / 2 profile、実入力から最終768 APIの全条件、工程3・4 sample / Player・必須環境・Required CI・長期memoryの範囲を維持する。
+
+最新Editor実行checkpoint: [frame進行とbuffer容量監査](results/m3-editor-frame-progress-and-buffer-accounting-20261015.json)。task yieldだけではEditor描画frameが進まずGPU資源の遅延解放が止まる条件を確認し、検証harnessでplayer loopを更新した。同一候補の最終bit / 元係数 / GPU実行を保持し、GC診断を含めない独立runでhost peak約9.55→3.34GiBを観測。全体数値gateは571要素超過のまま。他環境 / 長期memoryの受入や正式benchmarkではない。次はframe進行するharnessで残るRMS / scalingと局所合格済み演算の全profile接続を検証し、元音声6ケース / 2 profile、実PCM / Textureから最終768 API・全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰、工程3・4 sample / Player / Required CIの全範囲を維持する。
+
+最新memory checkpoint: [stage寿命とcache解放・peak未解決](results/m3-gpu-stage-lifetime-and-cache-peak-unresolved-20261015.json)。GPU完了待ち / 内部GELU cache / backend scratch・完了済みML context解放をTDDと固定全体候補で確認したが、571要素超過と高いhost / device peakは未解決。候補の最終bit・元係数・元layer 0 gateを保持。static auditで区間間の保持44.3MiB・未消費内部出力0・分割計算重複なしを確認したが、推論合格やmemory改善ではない。全体cache比較を反復せず、次は1層 / 1区間の実buffer容量とnative / driver allocationを照合する。下記の音声元6ケース / 2 profileの既存GPU合格、画像全FP32条件、実PCM / Textureから最終768 API・全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰、工程3・4 sample / PlayerとRequired CIの範囲を維持する。
+
+最新checkpoint: [元attentionの局所GPU検証とlayer 0再接続](results/m3-attention-softmax-and-matmul-gpu-20261015.json)。先頭16行の捕捉で元最終GPU bit / source bytesを保持し、2つの行列積は独立した現CPU式へ全bit一致。両入力と残差の分割は2 Red→関連24 Green。元layer 0は標準softmax / 候補softmaxの両方で元native許容差超過0となった。ただしsoftmaxだけを追加した途中候補は1要素超過で不合格として保持する。元native内部値の全bit取得や全encoder合格ではない。全体は再実行せず、前候補square-0の571要素超過・高いmemory peakを未解決として保持。次は残るattention/scaling / 元RMSと全体のallocation寿命を確認し、ピーク対策後に全profileへ接続する。下記の元音声6ケース / 2 profile、全実入力の最終768 API・全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰、工程3・4のsample / Playerの範囲を維持する。
+
+現在の優先順: 元音声encoderの6ケース・2 profileは実GPU gateに合格した。[通常5件](results/m4-scalar-moment-fma-full-profile-gpu-20261015.json) / [padded_noiseとGPU encoder adapter](results/m4-padded-audio-and-gpu-encoder-adapter-20261015.json)。保存featureを入力するadapter経由の元impulseも合格したが、実PCM / Textureからの最終768次元API、画像FP32全3 profile、工程3・4のsample / Player等は未完了。次は画像FP32の差を小さい固定入力で切り分け、その後に全実入力API・role / mask / 境界 / 寿命 / 例外後再利用 / text回帰を検証する。元参照・学習済み係数・許容差を維持し、main統合は行わない。以下は過去のcheckpointであり、未達の古い音声結果を最新結果として扱わない。
+
+2026-10-15現在: GPU partition接続を2 Red→2 Green、planner / Sentis用Identity / aliasを関連19 Greenへ修正。直接GPUの最初の2投影を元全encoderへ戻し、無音175要素不合格・最大許容差比4.043479へ改善したが、元数値gateは未達。[固定接続結果](results/m4-partitioned-first-ff-whole-gpu-failed-20261015.json)。次のR2は135 static MatMulの固定shapeを元Sentis modelから係数hashと結び付けて監査し、ONNXの不明dimensionを推測で置換せず、確認した投影から元全encoderへ戻す。全音声6信号 / 両profile・画像FP32全3 profileの後、R3最終768 API全条件へ進む。工程3・4の全範囲と元許容差を維持する。以下は前回checkpoint。
+
+2026-10-15現在: 最初のfeed-forwardの標準FMA展開GPUは36.7GBのworking setと出力欠測 / timeoutで失敗し、owned processの終了をlive確認した。直接GPU kernelへ切り替え、API8 Red→8 Greenと、元280行の2投影2 GPU Green / 全bit一致を確認。[資源失敗](results/m4-first-ff-expanded-gpu-resource-failure-20261015.json) / [直接kernel成功](results/m4-direct-gpu-first-ff-projections-green-20261015.json)。R2の次は、元graphの投影前 / 投影間 / 後段をGPU tensorで接続し、元係数・clip・その他演算・入力 / maskを維持して全encoderへ戻す。原則として中間readbackを入れず、重いFMA展開graphの反復を避ける。native MADの丸めは現在GPUだけで実測済み、他GPUは別gate。音声元6信号 / 両profile・画像FP32全3 profileを合格後、R3の最終768 API全条件へ進む。工程3・4は未完了のまま。以下は前回checkpoint。
+
+2026-10-15現在: block192による入力投影のGPU局所全bit一致を確認したが、全encoderは無音295要素・最大許容差比7.637025で不合格。[固定結果](results/m4-block192-input-projection-gpu-and-whole-failed-20261015.json)。次のR2は元clip / 係数 / 期待値を保った最初のfeed-forwardの2投影をGPUへ分離する。両方のoffline候補は元値を全bit再現したが、GPU成功には数えない。局所GPU→元音声全6信号 / 両profile・画像FP32全3 profile→R3最終API全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰の順を維持する。モデル計算はGPU、CPUのgraph変換 / schedule負荷も別に測定し、元許容差を変えず工程3・4の未達を保持する。以下は前回checkpoint。
+
+2026-10-15現在: Conv2のblock16リセット / 保存加算と、Norm1の8-lane scalar平均FMAを元参照の演算順に合わせ、実GPUでsubsampleの最初の6段階を全bit一致させた。全encoderは417要素不合格で未完了。[局所修正](results/m4-source-order-conv-and-scalar-mean-20261015.json) / [全体・負荷](results/m4-scalar-mean-full-gpu-and-load-analysis-20261015.json)。次のR2は元layer1.act・元投影係数の固定入力でinput_proj_linearを独立照合し、差を消す候補だけを元encoderへ戻す。その後、元音声6信号 / 両profile・画像FP32全3 profileを受け入れ、R3の実PCM / Texture→GPU前処理→encoder→backbone→正規化768 APIの全role / mask / 境界 / 寿命 / 例外後再利用 / text回帰へ進む。中間readback / CPU計算fallbackなしと元許容差は維持する。
+
+負荷調査では検証用64,050層graphのCPU変換19.245秒、CPU schedule10.431秒を確認した。次の軽量化は、同じ参照値を保つことを小さいテストで確認しながら、候補graphの変換をActionsで事前生成し、model / Workerを準備時に一度だけ作って再利用する経路を検証する。既存AudioFeatureEncoderはconstructorでWorkerを作っており、毎EmbedでWorker生成する実装にはしない。CPU scheduleとGPU処理は重なるため、完了待ち0.661秒だけを推論性能と報告しない。cold import・拡張graphと通常製品graphの差・継続memory / Disposeは別の測定が必要。Python全体回帰は固定b4b817aで4環境各787 passだが、それ以降のrewrite / XML監査の全体回帰とは区別する。以下は前回checkpoint。
+
+2026-10-15最新: 保存nativeの既存AVX512再生は元最終値を完全再現し、AVX2制限は不一致。新しいConv2診断Actionsはnative条件もAVX2 runtime / VM feature maskだったため元bitを再現せず、元期待値を維持。[CPU参照の未達](results/m4-saved-conv-cpu-context-unavailable-20261015.json)。CPU診断 / workflow / 失敗監査 / download前のISA確認は関連40 Green。次のR2はpinned oneDNN3.12のAVX512生成コードと互換kernel証拠を調べ、小さいGPU成分→元encoder全条件へ戻す。前回sourceのPython全体回帰は4環境各767 pass、新しい診断の全体回帰とは区別する。R2 / R3と工程3・4の全範囲は未完了のまま。以下は直前checkpoint。
+
+2026-10-15最新: 2番目のConvだけをunfold + FP32補償積和へ置換した実GPU候補は219要素不合格・最大許容差比6.78027で、201要素版より悪化し不採用。[失敗と局所TDD](results/m4-compensated-conv-full-gpu-failed-20261015.json)。CPU実行mode / oneDNNと42種類のFMA順序でも元conv2のbit再現は未達。R2の次はimmutable参照のhost / convolution kernel文脈を調べ、小さいGPU成分の忠実性→元encoder全条件へ進む。参照値と許容差は変更しない。前回sourceのPython回帰は4環境各744 pass、新しい畳み込み関連は68 Greenで別証拠。R2 / R3全範囲と工程3・4未完了を維持する。以下は直前checkpoint。
+
+2026-10-15最新切り分け: compact候補は元12層の観測でも最初の超過がlayer_9の1要素。layer_9単独は観測値をbit再現し、元layer_8入力なら超過0。入力側ではlayer0.conv / norm / actが元値と全bit一致し、最初の差がlayer1.convへ進んだ。[固定GPU切り分け](results/m4-compact-gpu-drift-localization-20261015.json)。R2の次は保存した元conv2値と入力・係数を維持し、固定CPUの集計順 / 文脈と一般的なGPU FP32補償候補を局所TDDへ分解する。現CPUconv2の再計算は元bitを再現しないため新goldenにしない。全信号 / profileの受け入れとR3全chainの範囲は維持する。Python全体回帰の契約2 failは関連52 Greenへ修正済み、修正後全体回帰は未検証。以下は直前checkpoint。
+
+2026-10-15最新checkpoint: 非連続layoutのouter RMSは元native lconvの独立replayを使い、実GPU局所2 Red→2 Green、全bit一致、計算fallback / flush0。compact候補は元silence全encoderで201要素不合格、最大許容差比3.73996、60,546層、約91.71秒。[局所GPU](results/m4-frozen-outer-rms-compact-gpu-20261015.json) / [全encoder不合格](results/m4-compact-outer-rms-full-gpu-failed-20261015.json)。次のR2はcompact候補の元12層観測→最初の超過の局所TDD→音声全6信号 / 両profile・画像FP32全3 profileの受け入れ。R3はその後に実Texture / PCM→GPU前処理→encoder→backbone→正規化768次元、Query / Document / Raw・mask / 境界・所有権 / Dispose・例外後再利用・text回帰・中間readback / CPU計算fallbackなしを検証する。実行計画3・4とも未完了で、範囲や許容差を縮めない。以下は前回checkpoint。
+
+2026-10-15単独層の追加結果: layer_9は全モデルで観測した入力・出力をbit再現し、元layer_8入力を与えると元layer_9との不一致0。最初の層超過について前段入力差の伝播を確認した。[固定GPU単独照合](results/m4-layer9-original-input-gpu-isolation-20261015.json)。次は前段のdynamic attention積和を切り分け、元encoder gateへ戻す。R2 / R3の全条件を維持する。以下の単独層比較前の着手順は前回checkpoint。
+
+2026-10-15最新checkpoint: 最初のGPU正規化の逆標準偏差をFP32だけで補正し、元6種類の入力行でnormal / mean / inverseのbit一致を確認した。元重みの再exportを避ける監査済みinverse-only rewriteも追加。ただし全encoderはinverseのみ472要素、static64組合せ287要素不合格。12層の通常最終値を変えない観測でlayer_0〜8は許容差内、layer_9で1要素超過し後段で増幅する。次は元layer_8入力を使うlayer_9単独GPU照合へ分解する。R2の画像全profile・音声元全信号とR3の実API全role / 境界 / 寿命 / 例外後再利用 / text回帰は維持する。[現在の判定](status.md) / [固定全層観測](results/m4-refined-static64-full-layer-observation-20261015.json)。全encoderActionsのrunner通信断は別の未取得結果として保持し、同一jobをそのまま再試行しない。
+
+2026-10-15: 実行計画の3（数値修正）・4（最終API）までが新しく許可された。R2の音声数値差を進行中で、R2 / R3の完了は未証明。小さいGPU演算probeの4 passを全encoderへ流用しない。実Welford8 ONNXは旧golden全6件で不合格。最新native参照の再計算にも環境差があるため、新しいnative値を期待値に採用せず、保存した実ONNX出力を旧goldenへ直接比較する。[現在の判定](status.md)が以下の前回checkpointより優先する。画像FP32全profileと実APIの全role・境界・資源寿命・例外後再利用・text回帰の範囲は維持する。
+
+ユーザー指定の実行計画1・2までを実施した。最新Unity実測は `b796e504367fb9165a4992ff036a205fb2e7d429`、mainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。Draft PR #81のGPU専用変更を含むcompile、tiny / 実square 1件のGPU計測は合格。SiLU修正後のActions実ONNXは元6信号・2 profile全件実行、全6件不合格。[今回の結果](gpu-execution-and-silu-validation.md) / [最新状態](status.md)。R2の数値修正以降は未着手。
+
+| 順序 | 着手条件と作業 | 渡す証拠 / 完了条件 |
+| --- | --- | --- |
+| R0 GPUと負荷 | 固定Git SHA / Unity / Sentisを監査し、compileと小さいGPU probe。CPUへ代替しない | requested / actual backend、実GPU / API、fallback / flush 0。load / transform / Worker / upload / schedule / final readback / disposeの時間とmemory |
+| R1 実装済み修正 | 標準ONNX SiLU除算順序修正をActionsの元6信号・2 profileで照合 | 保存graph hash・独立評価・固定許容差。小さい37+4 passは実モデル成功の代替にしない |
+| R2 数値差 | 一つのGPU入力で参照文脈と最初の差を確認し、独立した小さいredから最小修正 | 元golden・入力 / model hash・`atol=1e-5` / `rtol=1e-4`不変。局所合格後に画像全profile・音声全信号のGPU gate |
+| R3 最終API | R2のencoder gate後、実Texture / PCM→encoder→backbone→768次元 | Query / Document / Raw、全profile・mask・境界、所有権 / Dispose・例外後再利用、GPU中間readbackなし、text回帰 |
+| R4 全体受け入れ | M2〜M4の残りsample・混在検索・反復 / 性能・Player・必須実機 | Windows / macOS / iOS / Androidのsource対応結果、最終candidateの空Git consumer、正常終了 |
+| R5 配布準備 | 全必須gateと依存差分を確認 | version / CHANGELOG / license / 配布監査。公開tag / Releaseは準備後の別工程 |
+
+ローカル実モデルは1試行・1失敗経路に絞り、新しいbounded_processで5分の外部上限を適用する。上限超過時は所有processだけを止めてPIDと部分結果を保存し、未完了と記録する。旧ignored launcherへのtimeoutは実装していない。重い全条件・モデル取得 / exportはActions優先。GPU runner / ライセンス不在は未実行としCPU結果で補わない。
+
+今回の計測では新しい `embeddinggemma_tools.bounded_process` の外部300秒上限を実装・使用した。timeoutで所有processだけを停止する3件の小さいテストと、実Unityの正常終了を確認済み。以前のignored launcherの上限は依然未実装。R0はWindows単発測定の範囲で完了、R1は検証実行完了・数値不合格としてR2へ渡す。
+
+CPUを含む下記の以前の検証matrixは互換性の履歴・契約として保持する。今後の主実行経路はGPUで、従来のCPU/GPU全条件の完了flagをGPU専用結果へ流用しない。RuntimeのCPU対応を削除したとは主張しない。
+
 更新日: 2026-10-14。**正式リリースはM2〜M4の全対応と全必須検証の完了後**とする。工程6までは開発・検証・配布準備であり、公開tag / GitHub Releaseを作成しない。振る舞いを追加・変更するすべての実装と自動化を、独立した期待値によるred → green → refactorで進める。
 
-## 現在の基準
+## 以前の基準と当時の優先順
+
+2026-10-14のmainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。追加実装はDraft PR #81の依存branchで、mainと分ける。最新の実測・未達は[status](status.md)、sourceごとの証拠は[工程1〜3のledger](steps-1-3-acceptance.md)を参照する。以下の以前の基準とcheckpointは各sourceの履歴として保持する。
+
+1. 参照・PR依存・環境・採用候補を固定する。工程1の整理は済んでいるが、新しい候補ごとにsourceと実結果を追記する。
+2. 旧golden・モデル・許容差を維持し、Python参照の演算文脈を再現して画像FP32/音声ONNX・Sentisの元不合格を修正する。現在は保存native graphも旧期待値に一致しないrunnerがあり、thread条件を制御した診断で切り分ける。音声候補のsilence norm出力はCPU layer_5 / GPU layer_6から不合格。小さいgreenを全encoder成功へ置き換えない。
+3. 工程2合格後、実Texture/PCM→前処理→encoder→backbone→最終768次元APIを受け入れる。Query/Document/Raw、全profile・mask・境界・所有権・例外後再利用、GPU中間readback/fallback禁止、text回帰を含む。独立した契約TDDは先に進めてよいが、実全chain合格とは別に記録する。
+4. 画像検索・音声検索/再生/明示収録sample、反復資源・性能、Player・必須実機、最終空Git consumer・配布監査へ渡す。実機・Unity CI環境の確保は並行する。公開tag/Releaseは全必須gate後の別工程。
+
+工程2・3は未完了。以下の工程1〜6、各C/I/A契約と全必須環境の範囲を維持する。
+
+## 以前の基準
 
 今回確認したローカルmainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`（計画更新PR #66）。基盤・公式prompt・最終画像Python参照は統合済み。画像 / 音声API、CPU画像前処理、GPU分割転送は各Draft PRで実装・検証を進めているがmain未統合。画像 / 音声sampleは未実装。実音声chainは最終cosineを全24条件で満たしたが、encoder単独の数値gateは未達でM4全体は未完了。残作業は検証だけではない。以下の最新checkpointと、過去の固定sourceの実測を区別する。[以前の計画snapshot](results/tdd-plan-checkpoint-20261013.json)、[音声前処理Runtime受け入れ](results/m4-audio-preprocessing-runtime-windows-20261013.json)、[診断未達](results/tdd-acceptance-plan-checkpoint-20261013.json)は保持する。
 

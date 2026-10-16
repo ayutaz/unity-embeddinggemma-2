@@ -1,0 +1,7 @@
+{
+  "scope": "subsample_replay_tdd_green_and_related_regression",
+  "full_encoder_validated": false,
+  "command": "uv run pytest tests/test_audio_subsample_replay.py tests/test_audio_layer_replay.py tests/test_compensated_projection.py tests/test_audio_norm_propagation.py -q --tb=short",
+  "failed": 0,
+  "passed": 56
+}

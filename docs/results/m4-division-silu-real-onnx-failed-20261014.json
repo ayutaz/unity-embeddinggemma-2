@@ -1,0 +1,183 @@
+{
+  "scope": "step2_actual_saved_onnx_vs_original_official_six_signals_two_profiles",
+  "validation_executed": true,
+  "success": false,
+  "action_run_id": 38578451611,
+  "action_conclusion": "failure",
+  "source": "a8033bbfdcfb6bcac9936a5cd9a3e119352e121c",
+  "artifact_id": 11901382904,
+  "artifact_archive_bytes": 4935240774,
+  "retrieved_range_bytes": 25196241,
+  "case_count": 6,
+  "profile_count": 2,
+  "passed_case_count": 0,
+  "failed_case_count": 6,
+  "native_reference_complete": true,
+  "onnx_structurally_validated": true,
+  "unity_validated": false,
+  "end_to_end_validated": false,
+  "metadata": {
+    "model_id": "google/embeddinggemma-2",
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "source_commit": "a8033bbfdcfb6bcac9936a5cd9a3e119352e121c",
+    "stage": "audio_encoder_projector_only",
+    "dtype": "float32",
+    "batch_size": 1,
+    "attention_implementation": "sdpa",
+    "minimum_cosine": 0.999999,
+    "feature_rtol": 0.0001,
+    "feature_atol": 1e-05,
+    "preprocessing_reference_sha256": "e8e6f225603f1c8834abc50be58784978ecc350d0b5df18b89765f9e41801eed",
+    "fixture_provenance": "procedurally_generated_pcm_no_user_audio",
+    "input_sha256": {
+      "config.json": "b8f1e9931b57fbc054acdb445c41765d55b0074c58d145fa82839941ad1b5bb3",
+      "processor_config.json": "168f6a08522f3ce5dea596d94d003af2fd691742d4f41fe1f9d8cce76bfbf69c",
+      "model.safetensors": "197a32965d4b1105faf060417baa899e193fb73cd401f42ec9295234d5553d79"
+    },
+    "versions": {
+      "torch": "2.14.1",
+      "transformers": "5.19.0"
+    }
+  },
+  "original_golden_unchanged": true,
+  "original_inputs_sha_equal": true,
+  "original_masks_sha_equal": true,
+  "original_official_values_bit_equal": true,
+  "original_reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "pinned_context_status": false,
+  "graph_hash_changes": {
+    "frames-1119-valid-1119": false,
+    "frames-1119-valid-839": false
+  },
+  "graph_hash_change_reason": "comparison covers the intentional saved ONNX SiLU graph change; old binaries were not modified",
+  "profiles": {
+    "frames-1119-valid-1119": {
+      "feature_shape": [
+        1,
+        1119,
+        128
+      ],
+      "feature_count": 280,
+      "feature_width": 512,
+      "frame_mask_shape": [
+        1,
+        1119
+      ],
+      "frame_mask": "frames-1119-valid-1119/frame-mask-int32.bin",
+      "graph": "frames-1119-valid-1119/audio.onnx",
+      "native_graph": "frames-1119-valid-1119/audio.pt2",
+      "import_format": "onnx"
+    },
+    "frames-1119-valid-839": {
+      "feature_shape": [
+        1,
+        1119,
+        128
+      ],
+      "feature_count": 210,
+      "feature_width": 512,
+      "frame_mask_shape": [
+        1,
+        1119
+      ],
+      "frame_mask": "frames-1119-valid-839/frame-mask-int32.bin",
+      "graph": "frames-1119-valid-839/audio.onnx",
+      "native_graph": "frames-1119-valid-839/audio.pt2",
+      "import_format": "onnx"
+    }
+  },
+  "cases": [
+    {
+      "success": false,
+      "stage": "audio_encoder_onnx",
+      "source_commit": "a8033bbfdcfb6bcac9936a5cd9a3e119352e121c",
+      "profile": "frames-1119-valid-1119",
+      "case_id": "silence",
+      "minimum_cosine": 0.9999997615814209,
+      "onnx_vs_official_maximum_absolute_error": 0.00025391578674316406,
+      "maximum_tolerance_ratio": 9.763528823852539,
+      "mismatched_elements": 588,
+      "graph_sha256": "288adedacec86788009c346eeb9c41bed8bc365c76a5b866474b4ac6b8a5cc63",
+      "unity_validated": false,
+      "end_to_end_validated": false
+    },
+    {
+      "success": false,
+      "stage": "audio_encoder_onnx",
+      "source_commit": "a8033bbfdcfb6bcac9936a5cd9a3e119352e121c",
+      "profile": "frames-1119-valid-1119",
+      "case_id": "impulse",
+      "minimum_cosine": 0.9999998211860657,
+      "onnx_vs_official_maximum_absolute_error": 0.0005371570587158203,
+      "maximum_tolerance_ratio": 22.793981552124023,
+      "mismatched_elements": 1410,
+      "graph_sha256": "288adedacec86788009c346eeb9c41bed8bc365c76a5b866474b4ac6b8a5cc63",
+      "unity_validated": false,
+      "end_to_end_validated": false
+    },
+    {
+      "success": false,
+      "stage": "audio_encoder_onnx",
+      "source_commit": "a8033bbfdcfb6bcac9936a5cd9a3e119352e121c",
+      "profile": "frames-1119-valid-1119",
+      "case_id": "sine",
+      "minimum_cosine": 0.9999997615814209,
+      "onnx_vs_official_maximum_absolute_error": 0.00024247169494628906,
+      "maximum_tolerance_ratio": 13.384051322937012,
+      "mismatched_elements": 715,
+      "graph_sha256": "288adedacec86788009c346eeb9c41bed8bc365c76a5b866474b4ac6b8a5cc63",
+      "unity_validated": false,
+      "end_to_end_validated": false
+    },
+    {
+      "success": false,
+      "stage": "audio_encoder_onnx",
+      "source_commit": "a8033bbfdcfb6bcac9936a5cd9a3e119352e121c",
+      "profile": "frames-1119-valid-1119",
+      "case_id": "nyquist",
+      "minimum_cosine": 0.9999998211860657,
+      "onnx_vs_official_maximum_absolute_error": 0.0002467632293701172,
+      "maximum_tolerance_ratio": 11.467110633850098,
+      "mismatched_elements": 1529,
+      "graph_sha256": "288adedacec86788009c346eeb9c41bed8bc365c76a5b866474b4ac6b8a5cc63",
+      "unity_validated": false,
+      "end_to_end_validated": false
+    },
+    {
+      "success": false,
+      "stage": "audio_encoder_onnx",
+      "source_commit": "a8033bbfdcfb6bcac9936a5cd9a3e119352e121c",
+      "profile": "frames-1119-valid-1119",
+      "case_id": "noise",
+      "minimum_cosine": 0.9999997615814209,
+      "onnx_vs_official_maximum_absolute_error": 0.00012421607971191406,
+      "maximum_tolerance_ratio": 5.0740790367126465,
+      "mismatched_elements": 294,
+      "graph_sha256": "288adedacec86788009c346eeb9c41bed8bc365c76a5b866474b4ac6b8a5cc63",
+      "unity_validated": false,
+      "end_to_end_validated": false
+    },
+    {
+      "success": false,
+      "stage": "audio_encoder_onnx",
+      "source_commit": "a8033bbfdcfb6bcac9936a5cd9a3e119352e121c",
+      "profile": "frames-1119-valid-839",
+      "case_id": "padded_noise",
+      "minimum_cosine": 0.9999997615814209,
+      "onnx_vs_official_maximum_absolute_error": 0.00012421607971191406,
+      "maximum_tolerance_ratio": 5.0740790367126465,
+      "mismatched_elements": 248,
+      "graph_sha256": "db9904afeb912e6b01d1ecbdad914c73b88671055ec5c7d2ffae8518bd94e3d3",
+      "unity_validated": false,
+      "end_to_end_validated": false
+    }
+  ],
+  "evidence_sha256": {
+    "audio-encoder-validation.json": "6e0d8f0f44768ad35df222a47f8215cca125cf3943f1f851b5fbe3b44906efc1",
+    "audio-encoder-reference.json": "85aeef4b86bab1edcb44857ca04d27dcfff218325d7a34e5ba63095a10e590b0",
+    "audio-onnx-diagnostic-failures.json": "645a2fcfc121bd9aeca675b22571c8df563b30a4fe9bffd12168562efa1dde15",
+    "audio-encoder-failure.json": "4882cc1d416bf915b8838029faaf1bdc33fc654660ff2ab5a55cfea78ca67176"
+  },
+  "pinned_context_report_sha256": "702a6d484c9494d459354b9c61c28cf1a34ee94992b2d53a83c5367946f97899",
+  "next_step": "step3: isolate earliest numerical divergence on one input; keep original golden and tolerance"
+}

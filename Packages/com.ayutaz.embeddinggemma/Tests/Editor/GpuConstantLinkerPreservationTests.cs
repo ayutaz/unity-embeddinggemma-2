@@ -25,9 +25,19 @@ namespace EmbeddingGemma.Tests
             Assert.That((string)assembly.Attribute("fullname"), Is.EqualTo("Unity.InferenceEngine"));
             var worker = assembly.Elements("type").Single(value => (string)value.Attribute("fullname") == "Unity.InferenceEngine.Worker");
             Assert.That(worker.Elements("field").Select(value => (string)value.Attribute("name")),
-                Is.EquivalentTo(new[] { "m_Storage", "m_LayerCPUFallback" }));
+                Is.EquivalentTo(new[] { "m_Storage", "m_Backend", "m_LayerCPUFallback", "m_LayerCPUFallbackShouldFlushGPU" }));
+            var backend=assembly.Elements("type").Single(value=>(string)value.Attribute("fullname")=="Unity.InferenceEngine.GPUComputeBackend");
+            Assert.That(backend.Elements("field").Select(value=>(string)value.Attribute("name")),Is.EqualTo(new[]{"m_MemoryPool"}));
+            var device=assembly.Elements("type").Single(value=>(string)value.Attribute("fullname")=="Unity.InferenceEngine.GfxDeviceBackend");
+            Assert.That(device.Elements("field").Select(value=>(string)value.Attribute("name")),Is.EqualTo(new[]{"m_GfxContext"}));
             var storage = assembly.Elements("type").Single(value => (string)value.Attribute("fullname") == "Unity.InferenceEngine.ModelStorage");
             Assert.That(storage.Elements("method").Select(value => (string)value.Attribute("name")), Is.EqualTo(new[] { "GetTensor" }));
+            Assert.That(storage.Elements("field").Select(value => (string)value.Attribute("name")), Is.EquivalentTo(new[] { "m_TensorPool", "m_InUseTensorsPool" }));
+            var pool=assembly.Elements("type").Single(value=>(string)value.Attribute("fullname")=="Unity.InferenceEngine.TensorPool");
+            Assert.That(pool.Elements("field").Select(value=>(string)value.Attribute("name")),Is.EqualTo(new[]{"m_computeMemoryPool"}));
+            var cache=assembly.Elements("type").Single(value=>(string)value.Attribute("fullname")=="Unity.InferenceEngine.TensorDataPool`1");
+            Assert.That(cache.Elements("field").Select(value=>(string)value.Attribute("name")),Is.EqualTo(new[]{"freeBuffers"}));
+            Assert.That(cache.Elements("method").Select(value=>(string)value.Attribute("name")),Is.EquivalentTo(new[]{".ctor","Dispose"}));
             Assert.That(assembly.DescendantsAndSelf().Attributes("preserve").Any(), Is.False, "Keep explicit members without broadly preserving all Sentis code.");
         }
     }

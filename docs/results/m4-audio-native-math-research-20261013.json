@@ -1,0 +1,66 @@
+{
+  "scope": "weights_free_audio_activation_math_path_research_only",
+  "torch": "2.14.1+cpu",
+  "actual_cpu_capability": "AVX2",
+  "mkl_available": true,
+  "compiled_at_mkl_enabled": 1,
+  "source_paths": {
+    "tensor_exp": "UnaryOpsKernel VML -> float MKL specialization",
+    "native_silu_vector_exp": "Vectorized<float>.exp -> Sleef_expf8_u10",
+    "native_silu_scalar_exp": "std::exp"
+  },
+  "fixture": {
+    "seed": 412,
+    "shape": [
+      17
+    ],
+    "div_exp": -0.2739681005477905,
+    "index": 2,
+    "native_scalar": -0.2739681005477905,
+    "native_vector_vs_div_exp_mismatches": 1,
+    "input": -1.0837361812591553,
+    "native_vector_vs_scalar_mismatches": 1,
+    "scale": 2,
+    "native_vector": -0.2739681303501129
+  },
+  "source_urls": [
+    "https://github.com/pytorch/pytorch/blob/v2.14.1/aten/src/ATen/native/cpu/Activation.cpp",
+    "https://github.com/pytorch/pytorch/blob/v2.14.1/aten/src/ATen/native/cpu/UnaryOpsKernel.cpp"
+  ],
+  "evidence_files": {
+    "artifacts/audio-native-math-backend.log": {
+      "sha256": "554479822b2db52b146f947dda332f21da190ca5f1ae36f656ec12dbf1dd9bd3",
+      "bytes": 64
+    },
+    "artifacts/audio-native-vector-scalar-research.log": {
+      "sha256": "d5c2c73a1752b3053fc19cfac7bbe6a7f2359f9a898a128b247bfc59b66326fc",
+      "bytes": 237
+    },
+    "artifacts/numerical-source/UnaryOpsKernel.cpp": {
+      "sha256": "15cf2f206fc3274a2c263ce279984e5a425ac573082032367dd415e747eff637",
+      "bytes": 36728
+    },
+    "artifacts/numerical-source/ActivationCPU.cpp": {
+      "sha256": "66cca1278103413ab9c566585004f58213a5f870a4daa07c0bc75bd2f30b19b1",
+      "bytes": 55918
+    },
+    "tools/.venv/Lib/site-packages/torch/include/ATen/cpu/vml.h": {
+      "sha256": "9cde364ac16b476aa82dbf86fb010ac7e8ca987385cd664a162537e189d710c2",
+      "bytes": 6502
+    },
+    "tools/.venv/Lib/site-packages/torch/include/ATen/cpu/vec/vec256/vec256_float.h": {
+      "sha256": "959df6fc22c28f021524043bc644b17b251279316ce9f78ed288cd7e6d789046",
+      "bytes": 28679
+    },
+    "tools/.venv/Lib/site-packages/torch/include/ATen/Config.h": {
+      "sha256": "eaca6d1fa3f174a1e21ca0fbb0510fa0cca159f6f3d7e813018d9d64034cb909",
+      "bytes": 1083
+    }
+  },
+  "product_fix_implemented": false,
+  "full_real_signal_gate_passed": false,
+  "exact_full_error_cause_proven": false,
+  "sentis_encoder_validated": false,
+  "tolerances_changed": false,
+  "weights_loaded": false
+}

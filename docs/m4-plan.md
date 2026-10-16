@@ -1,8 +1,28 @@
 # M4: 音声対応のTDD計画
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。冒頭の現在方針が、下の旧checkpointの着手順より優先する。
+
+## 2026-10-15の音声の現在地
+
+元encoderの6ケース / 2 profileは固定sourceで実GPU数値gateへ合格済み。通常5ケースは`a26317fbfbcfbf896dff4a6577124109c6cf977c`、padded_noiseは`d955554335bed9ea8006d6287b47a3a1908932c2`。各caseの元FP32許容差超過0、計算/入力CPU fallback0、中間flush0、fail0 / skip0。[通常5ケース](results/m4-scalar-moment-fma-full-profile-gpu-20261015.json) / [paddedとadapter](results/m4-padded-audio-and-gpu-encoder-adapter-20261015.json)。元参照・学習済み係数・許容差は保持。最新headで全件再実行したという主張ではなく、CPU合格にも数えない。
+
+`PartitionedAudioFeatureEncoder`はIAudioFeatureEncoderの所有権 / Dispose / 例外後再利用を3 Red→関連26 Greenで実装し、`cf3ed61`の元impulseもadapter経由の保存feature→280×512 GPU出力が合格した。**実PCM→GPU前処理→encoder→backbone→正規化768 APIでは未合格**。全role / mask / 長さ境界・text回帰、検索 / 再生 / 明示収録sample、Player / 必須環境・長期memoryは未完了。画像gate修正と並行して独立sample契約は進められるが、sample実操作と実モデルの受け入れを合成テストで代用しない。
+
+以下は以前のcheckpoint。旧候補の不合格や当時の次の作業を、現在のGPU encoder合格や実入力APIの状態へ上書きしない。
+
+## 2026-10-14の音声checkpoint
+
+PCM入力とGPU前処理はmain、AudioFeatureEncoder / AudioEmbedderはDraft実装・合成契約合格。最新norm1 / dynamic16補償候補は元6信号×CPU/GPUの12数値条件すべて不合格。[receipt](results/m4-norm1-dynamic16-full-encoder-failed-20261014.json)。GPU fallback / flush 0や最終cosineだけでencoder gateを合格にしない。
+
+SiLUの標準ONNX exportを `Neg→Exp→Add→Div` へ修正し、native除算の順序を保持した。関連37件・準備回帰4件は合格、修正後の実モデルは未検証。音声のQuery / Raw実参照も未完了。画像3 roleの18件成功を音声へ流用しない。
+
+再開は[全体計画R0〜R5](multimodal-tdd-plan.md)に従い、まず既存ONNX修正の元6信号 / 2 profileをActionsで確認する。SentisはGPUの一つの失敗入力へ絞り、局所red→最小修正→全信号へ進む。実PCM→768次元の全role・mask / 長さ境界、GPU中間readback禁止、所有権・例外後再利用、text / image回帰、検索・再生・明示収録sample、必須環境まで範囲を維持する。
+
+## 以前の音声計画・固定sourceの履歴
+
 更新日: 2026-10-13。**音声end-to-end API / sampleはmainに未実装。PR #60のnative保存参照は元6信号 / 2 profileで合格したが、NumPy ONNX全6信号とSentis FP32のCPU / GPU全12条件は固定elementwise許容差で不合格**。音声前処理単独はPythonとWindows Sentis CPU / 実GPUで合格済み。[全体計画](multimodal-tdd-plan.md)の工程4として進める。M4実装だけでは公開せず、3モダリティと全必須環境の受け入れを揃える。
 
-### 最新checkpointと次のRed
+### 履歴checkpointと次のRed
 
 Draft [PR #60](https://github.com/ayutaz/unity-embeddinggemma-2/pull/60)の確認headは `70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1`。参照producerは `271f5a12ca2aab081eb330f45cf593d404330374`であり、PR headへ付け替えない。[全6信号のnative / NumPy結果](https://github.com/ayutaz/unity-embeddinggemma-2/blob/70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1/docs/results/m4-audio-all-six-native-reference-real-20261013.json)、[全encoderのSentis不合格](https://github.com/ayutaz/unity-embeddinggemma-2/blob/70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1/docs/results/m4-audio-full-encoder-fp32-sentis-windows-failed-20261013.json)を固定する。Sentisはcosine全条件合格でもelementwise全条件不合格。skip 0 / CLI exit 1であり、GPU fallback / readback flushは0。subsample単独のCPU / GPU合格を全encoderの成功と数えない。
 
@@ -16,6 +36,8 @@ Draft [PR #60](https://github.com/ayutaz/unity-embeddinggemma-2/pull/60)の確�
 以下のPR #40 / 初期PR #60のsilenceだけの失敗は、そのsourceでの履歴として保持する。「残り5信号未実行」は当時の範囲であり、現在のPR #60は全6信号実行済み。次の作業は上表の診断文脈保証から進め、原因をactivationへ限定しない。
 
 A1 / A3の前処理exportと参照・必須Actions gateはTDD実装し、PR #38 / #46をmainへ統合した。[係数・許容差の根拠](m4-audio-preprocessing-validation.md)。35 redから前処理契約を満たし、監査 / 回帰を含め110 passed / skip 0。Windows UnityはCPU / 実GPU各6信号、保存 / 再読込、mask完全一致が合格。最大絶対誤差は両backendとも `0.0038890838623046875`、GPU計算 / 入力fallbackとreadback flushは0件。[実行条件・診断readback・未達範囲](m4-audio-preprocessing-sentis-validation.md)。製品PCM Runtime APIと本番GPU連結、音声encoder以降、他OSの成功とは分ける。
+
+A1 / A4の音声encoder / projector固定profile exportと独立PCM参照・必須Actions gateをTDDで実装した。[実装と参照設定・検証範囲](m4-audio-encoder-validation.md)。encoder20 red、SDPA契約2 red、参照 / CLI8 red、workflow1 redを観測し、最終の関連小さい回帰145 passed / skip 0。実重みActionsとSentis・A5以降は別gateとして残す。
 
 ### 直近のTDD順序
 
@@ -31,6 +53,10 @@ PCM境界PR #48と前処理Runtime PR #50はmainへ統合済み。A2 / A3の固�
 追加の重みを使わない調査の作業ブランチ `9f51b198e1a8e982b89328401827a394635dac48`ではvector比較2件がredだった。Draft PR #60のnative SiLU保持・標準ONNX Swish変換は追加4 + 2 + 1 redから実装し、以前の2件を含む関連58 passed。ONNX数値gateの2 redから関連43 / feed-forward17 green。[実モデルCI 38362823692](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38362823692)はONNX silence不合格で、最大差0.00013065338134765625 / 許容差比3.971386671066284 / 292要素不一致。producer `cb7f2b00e8135d016c55ef8e00adfe9faafa387b`とhead `05b48e6a2aa363d229f7eb18c163f9d5c19c94b4`を区別する。次は不合格を保持するONNX stage診断をTDD追加し、元graph / 参照と一致した文脈で原因修正へ進む。元6信号全体・Sentis encoderの合格はまだ証明していない。
 
 PR #57の[重みなしnative SiLU / 標準Swish probe](results/m4-native-silu-swish-probe-windows-20261013.json)はmainへ統合済みで、CPU / 実GPU × 2 shape全4条件が固定許容差内。GPUの全値完全一致は要求・主張していない。この単独probeをfull encoderの成功へ流用しない。公式prompt / mask契約もPR #55で統合済み。次はnative保存参照と標準ONNXの構造・数値照合、Sentis保存 / 再読込・元6信号、GPU前処理 → 実encoder → 共通本体の連結、AudioEmbedder相当API、検索 / 再生 / 明示収録、Playerの順に各契約をTDDで受け入れる。
+
+[段階別実モデルCI 38324421389](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38324421389)は不合格で完了。subsampleは完全一致、`layer_0`から小さい差があり、許容差を最初に超えるのは`layer_10`。診断graphと元の不合格graphの最終値は完全一致した。層内診断は小さいTDDで追加済み。次は実重みActionsで原因演算を特定し、元の固定数値条件へ戻す。[全stageと未検証ケース](m4-audio-encoder-validation.md)。
+
+Feed-forward診断は追加16 red → 16 green、余分なexportを防ぐ追加1 red → 関連76 greenまで実装した。[TDDの証拠](results/m4-audio-feed-forward-tdd-20261013.json)。公式入力・各演算の値と単独対full stage一致を比較する。実重みでの原因演算と元の6信号合格は未確認であり、次のActionsで判定する。PR #43は全8 CI成功後にmainへ統合済み。合成featureのbackbone単独と、実音声encoder連結の未完了を分ける。
 
 ## 範囲と参照固定
 

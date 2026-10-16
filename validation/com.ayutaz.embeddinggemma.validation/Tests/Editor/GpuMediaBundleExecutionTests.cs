@@ -26,14 +26,14 @@ namespace EmbeddingGemma.Validation.Tests
             var task = RunImage(cancellation.Token); long peak = 0;
             while (!task.IsCompleted)
             {
-                using var process = Process.GetCurrentProcess(); process.Refresh(); peak = Math.Max(peak, process.WorkingSet64);
+                peak = Math.Max(peak, MediaExecutionMemory.Peak());
                 if (peak > 12L * 1024 * 1024 * 1024) cancellation.Cancel();
                 UnityEditor.EditorApplication.QueuePlayerLoopUpdate(); yield return null;
             }
             var output = Environment.GetEnvironmentVariable("EG_MEDIA_EXECUTION_REPORT");
             if (!string.IsNullOrEmpty(output) && File.Exists(output))
             {
-                var report = JObject.Parse(File.ReadAllText(output)); report["host_frame_sampled_peak_bytes"] = peak;
+                var report = JObject.Parse(File.ReadAllText(output)); report["host_native_peak_bytes"] = peak;
                 File.WriteAllText(output, report.ToString());
             }
             task.GetAwaiter().GetResult(); Assert.That(peak, Is.GreaterThan(0).And.LessThanOrEqualTo(12L * 1024 * 1024 * 1024));

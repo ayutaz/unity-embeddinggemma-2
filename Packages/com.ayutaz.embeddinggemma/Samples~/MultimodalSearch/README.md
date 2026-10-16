@@ -14,3 +14,5 @@ Package Manager の EmbeddingGemma の Samples から **Image and Audio Search**
 **キャンセル**は読み込み中、またはencoderのGPU処理境界で反映されます。失敗・キャンセル後は同じ画面から再実行できます。GPUComputeに非対応の環境やCPUへの計算fallbackが必要なモデルは拒否します。
 
 このサンプルはWindows Editor向けです。他OS・モバイル・WebGLの動作確認は別途必要です。準備処理の正常終了と、実GPUでの数値検証は別の結果として扱います。モデル準備の固定source・元参照・実行条件はrepositoryの検証記録を参照してください。
+
+repositoryの今回の作業環境では `artifacts/step3-media-bundle-5d1a66f` に全6 moduleの準備済みbundleがあります。その絶対パスを指定すれば追加変換は不要です。別の環境では、別途取得した監査済みbundleが必要です。モデル・係数・tokenizerはGitへ含めません。

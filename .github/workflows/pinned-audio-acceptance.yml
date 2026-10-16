@@ -44,10 +44,15 @@ jobs:
             *) exit 1 ;;
           esac
           echo "PROFILE=$profile" >> "$GITHUB_ENV"
+      - name: Resolve preserved immutable original reference
+        id: original
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.pinned_reference_archive resolve
+          --output ../artifacts/reference-selection.json
       - name: Fetch original pinned graph and raw input only
         run: >-
           uv run --locked python -m embeddinggemma_tools.artifact_zip
-          --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11814567883
+          --repo ayutaz/unity-embeddinggemma-2 --artifact-id ${{ steps.original.outputs.artifact-id }}
           --output ../artifacts/original --max-entry-bytes 2147483648
           --member audio-runtime-reference/audio-encoder-reference.json
           --member audio-runtime-reference/audio-encoder-validation.json
@@ -69,6 +74,7 @@ jobs:
             artifacts/pinned-audio/*.json
             artifacts/pinned-audio/*.bin
             artifacts/original/range-receipt.json
+            artifacts/reference-selection.json
           retention-days: 7
           if-no-files-found: error
 
@@ -93,12 +99,19 @@ jobs:
         with:
           pattern: pinned-audio-${{ github.sha }}-*
           path: artifacts/pinned-audio-cases
+      - name: Resolve preserved immutable original reference
+        id: original
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.pinned_reference_archive resolve
+          --output ../artifacts/reference-selection.json
       - name: Fetch independent original reference and audit manifests
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
           uv run --locked python -m embeddinggemma_tools.artifact_zip
-          --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11814567883
+          --repo ayutaz/unity-embeddinggemma-2 --artifact-id ${{ steps.original.outputs.artifact-id }}
           --output ../artifacts/original
           --member audio-runtime-reference/audio-encoder-reference.json
           --member audio-runtime-reference/audio-encoder-validation.json

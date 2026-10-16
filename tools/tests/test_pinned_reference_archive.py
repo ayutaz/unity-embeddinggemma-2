@@ -26,6 +26,16 @@ def test_original_fallback_and_expiry_fail_closed():
         archive.select_artifact([artifact(2,expired=True)],dict(old,expired=True))
 
 
+def test_existing_copy_does_not_require_deleted_original_metadata(monkeypatch):
+    calls=[]
+    def api(endpoint):
+        calls.append(endpoint)
+        assert '?name=' in endpoint
+        return dict(artifacts=[artifact(3)])
+    monkeypatch.setattr(archive,'_api',api)
+    assert archive.resolve_artifact()['id']==3 and len(calls)==1
+
+
 @pytest.mark.parametrize('change',['wrong_name','fork','expired_timestamp'])
 def test_untrusted_or_stale_backup_is_not_selected(change):
     bad=artifact(2)
@@ -64,6 +74,30 @@ def test_copy_verification_checks_original_bytes_without_model_execution(origina
 def test_corrupt_reference_graph_or_input_cannot_be_preserved_as_valid(original,name):
     p=original/name;p.write_bytes(p.read_bytes()+b'corrupt')
     with pytest.raises(ValueError):archive.verify_original(original)
+
+
+def test_same_size_graph_corruption_fails_sha_verification(original):
+    p=original/'graph.pt2';raw=bytearray(p.read_bytes());raw[0]^=1;p.write_bytes(raw)
+    with pytest.raises(ValueError,match='SHA256'):archive.verify_original(original)
+
+
+def test_audited_paths_cannot_escape_the_original_directory(original,monkeypatch):
+    p=original/'audio-encoder-validation.json';d=json.loads(p.read_text())
+    d['files']['../escape.bin']=dict(bytes=0,sha256='0'*64)
+    p.write_text(json.dumps(d),encoding='utf-8')
+    monkeypatch.setattr(archive,'AUDIT_SHA',hashlib.sha256(p.read_bytes()).hexdigest())
+    with pytest.raises(ValueError,match='escapes'):archive.verify_original(original)
+
+
+def test_required_consumer_resolves_preserved_reference_for_execution_and_audit():
+    root=Path(__file__).resolve().parents[2]/'.github/workflows'
+    w=yaml.load((root/'pinned-audio-acceptance.yml').read_text(encoding='utf-8'),Loader=yaml.BaseLoader)
+    for name in ('execute','audit'):
+        steps=w['jobs'][name]['steps']
+        resolver=next(i for i,s in enumerate(steps) if 'pinned_reference_archive resolve' in s.get('run',''))
+        fetch=next(i for i,s in enumerate(steps) if 'embeddinggemma_tools.artifact_zip' in s.get('run',''))
+        assert resolver<fetch
+        assert '--artifact-id ${{ steps.original.outputs.artifact-id }}' in steps[fetch]['run']
 
 
 def test_resolve_cli_records_immutable_id_and_run_for_actions(tmp_path,monkeypatch):

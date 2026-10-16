@@ -25,7 +25,14 @@ def audit_sample_process(report, process):
     runtime_start, runtime_end = _date(runtime.get('started_utc')), _date(runtime.get('completed_utc'))
     _require(process_start <= runtime_start <= runtime_end <= process_end,
              'Runtime timestamps must be inside the completed process interval')
-    runtime_passed = (all(runtime.get(field) is True for field in
+    profile = runtime.get('gpu_execution')
+    worker_gpu_verified = (isinstance(profile, dict) and profile.get('success') is True
+                           and profile.get('worker_backend') == 'GPUCompute'
+                           and type(profile.get('computed_layer_output_count')) is int
+                           and profile['computed_layer_output_count'] > 0
+                           and profile.get('computation_cpu_fallback_indices') == []
+                           and profile.get('intermediate_flush_indices') == [])
+    runtime_passed = (worker_gpu_verified and all(runtime.get(field) is True for field in
                          ('success', 'gpu_verified', 'worker_released', 'font_destroyed',
                           'blank_rejected', 'missing_model_rejected'))
                       and runtime.get('is_editor') is False and runtime.get('batch_mode') is False
@@ -36,6 +43,7 @@ def audit_sample_process(report, process):
         'schema_version': 1, 'run_id': run_id, 'source_commit': source,
         'runtime_report_success': runtime.get('success') is True,
         'runtime_gpu_verified': runtime.get('gpu_verified') is True,
+        'runtime_worker_gpu_execution_verified': worker_gpu_verified,
         'runtime_completion_checks_passed': runtime_passed,
         'process_exit_code': exit_code, 'process_exit_zero': exit_code == 0,
         'process_seconds': (process_end - process_start).total_seconds(),

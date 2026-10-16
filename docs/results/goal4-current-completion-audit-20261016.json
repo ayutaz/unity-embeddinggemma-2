@@ -2,9 +2,9 @@
   "schema_version": 1,
   "date_jst": "2026-10-16",
   "goal": "4まで進めてください",
-  "status": "active_not_complete",
+  "status": "not_complete_reference_policy_answer_required",
   "scope_source": "goal4-scope-audit-20261016.json",
-  "candidate_head_at_audit": "948efa5d6fb63e33544e047f4a16c290f2d9d390",
+  "candidate_head_at_audit": "7e7c07decf670dddf0369deda20d61c4f5311f6e",
   "requirements": [
     {
       "requirement": "Original learned coefficients, references and encoder tolerances remain unchanged",
@@ -271,17 +271,22 @@
     "raw_midpoint_all_six_current": {
       "run": 38825780838,
       "source": "e99c44214ab7d7f526b0fede5b561862460f1d66",
-      "last_observation": "terminal_cancelled_noise20minute_limit",
-      "independently_audited_cases": 5,
-      "values_compared": 680960,
+      "last_observation": "complete_with_audited_actual_noise_carry_continuation",
+      "independently_audited_cases": 6,
+      "values_compared": 824320,
       "tolerance_failures": 0,
-      "all_six_passed": false,
+      "all_six_passed": true,
       "default_export_promoted": false,
       "gpu_validated": false,
-      "complete_cases": 5,
-      "missing_final_cases": 1,
+      "complete_cases": 6,
+      "missing_final_cases": 0,
       "noise_partial_capture_carry_hashes_verified": true,
-      "evidence": "m4-raw-midpoint-all-six-five-pass-noise-timeout-20261016.json"
+      "evidence": "m4-original-raw-all-six-midpoint-candidate-resumed-noise-tolerance-passed-20261016.json",
+      "execution_sources": [
+        "c994563101f126f537bbd036b2c60047cd533aae",
+        "e99c44214ab7d7f526b0fede5b561862460f1d66"
+      ],
+      "all_six_at_one_job_source": false
     }
   },
   "pending_candidate_code_sha256": {
@@ -292,19 +297,18 @@
   "pr_head_at_audit": "e99c44214ab7d7f526b0fede5b561862460f1d66",
   "current_execution_state": {
     "unity_running": false,
-    "live_actions_runs": [
-      38829612885
-    ],
-    "new_heavy_jobs_started": true,
+    "live_actions_runs": [],
+    "new_heavy_jobs_started": false,
     "main_merged": false,
     "scope_complete": false,
     "remaining": [
-      "noise final candidate capture and original tolerance verification",
-      "Required CI: audio ONNX vs fresh official; Linux native Tanh2 bit comparisons"
+      "User decision on required CI reference policy",
+      "Implement chosen CI reference policy without changing original model/GPU tolerances",
+      "Required repository CI for resulting candidate"
     ],
     "result_consolidation_branch": "diag/audio-sine-primitive-20261016",
     "pr_head": "e99c44214ab7d7f526b0fede5b561862460f1d66",
-    "new_job_scope": "one explicit pinned-noise continuation; prefix graph identity then only two remaining evaluations"
+    "new_job_scope": "existing noise continuation completed and independently audited; no further jobs dispatched this turn"
   },
   "synthetic_tanh_test_contract_change": {
     "evidence": "m4-tanh-pinned-captures-and-native-rounding-contract-tdd-20261016.json",
@@ -318,7 +322,16 @@
     "run": 38829612885,
     "execution_source": "c994563101f126f537bbd036b2c60047cd533aae",
     "math_source": "e99c44214ab7d7f526b0fede5b561862460f1d66",
-    "result_established": false,
-    "evidence": "m4-pinned-noise-prediction-resume-and-independent-auditor-tdd-20261016.json"
+    "result_established": true,
+    "evidence": "m4-original-raw-all-six-midpoint-candidate-resumed-noise-tolerance-passed-20261016.json",
+    "conclusion": "success",
+    "values_compared": 143360,
+    "tolerance_failures": 0
+  },
+  "reference_policy_question": {
+    "answer_received": false,
+    "pending_goal_turns": 3,
+    "required_before_ci_gate_changes": true,
+    "independent_noise_work_complete": true
   }
 }

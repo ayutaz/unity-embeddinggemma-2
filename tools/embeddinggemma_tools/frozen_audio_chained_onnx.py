@@ -145,6 +145,11 @@ def _probe_connected(pieces, whole, initial, expected, output, *, boundaries, va
                 carried = _raw_tensor(piece(carried))
                 native_outputs.append(carried)
             report['native_chain_control_bits_equal'] = exact_difference(carried, native) == 0
+            report['native_chain_control_sha256'] = capture('native-chain-output-fp32.bin', carried.numpy())
+            report['native_chain_control_metrics'] = metrics(carried, native)
+            report['native_control_context'] = dict(mkl_cbwr=os.environ.get('MKL_CBWR'),
+                mkl_dynamic=os.environ.get('MKL_DYNAMIC'), threads=torch.get_num_threads(),
+                cpu_capability=torch.backends.cpu.get_cpu_capability())
             if not report['native_chain_control_bits_equal']:
                 raise ValueError('Native partition carry changed original control bits')
             save()

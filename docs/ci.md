@@ -1,5 +1,6 @@
 # CI と開発手順
 
+最新状況（2026-10-16）: main `012f3cc` のCI38893482024は合格。PR #31の新しいcandidateで標準導入・Playerを再検証します。以下の過去runは当時の証拠です。
 
 ## 固定音声参照の保存と更新（2026-10-16）
 
@@ -15,7 +16,7 @@ gh workflow run frozen-audio-prefix-onnx.yml --ref main -f preserve_original=tru
 
 > 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。実モデル実行は停止中。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
 
-## 現在のCIとGPU受け入れの区別
+## 2026-10-14時点のCIとGPU受け入れの区別
 
 2026-10-14、PR #81のコード基準 `a237dee2874cdb0fbcdf4fe333aebae7193ad390` のCI `38571522044` と前headの `38569646238` は停止指示によりcancelled。最新headのRequired CI合格を主張しない。画像role参照のActions `38562190876` はPython18件合格、CPU文脈matrix `38563722587` は診断実行完了で、Unity / GPU全chainの合格ではない。
 
@@ -23,6 +24,12 @@ gh workflow run frozen-audio-prefix-onnx.yml --ref main -f preserve_original=tru
 
 更新日: 2026-10-10。確認基準main: `4ee0cbb`（PR #12統合後）。
 CI・UPM監査・検索基盤・サンプル・準備最適化はmain統合済み。[CI run 37975720534](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975720534)の全8 job成功を確認した。
+
+PR #31の旧checkpoint（2026-10-10）:
+更新日: 2026-10-10。確認基準main: `6f55a85`（PR #30統合後）。
+CI・UPM監査・検索基盤・サンプル・準備 / cache・Editor font寿命修正はmain統合済み。[main CI run 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)の全8 job成功。draft PR #31の実装checkpoint `cd6b8bf`も[CI run 38040187805](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38040187805)全8 job成功。通常表示sample Playerの終了クラッシュは未解決で、CI成功だけでmergeやM2完了としない。
+
+このPR runの実checkoutはmerge ref `3a8f52e`（head `cd6b8bf` + base `6f55a85`）。ログでPython4環境各253 passedを確認した。実Unity・GPU・モバイル実機を実行した8 jobではない。追加の文書headは同じ必須CIをPRで確認する。
 文書のみのPR #7も全8 job成功後に未マージで閉じた。[現在の状態](status.md)を参照。
 GitHub側のmain保護は設定済み。M1のWindows実測は [完了検証](m1-completion-validation.md)、UPM移行の結果は [パッケージ検証](m2-package-validation.md)を参照。
 

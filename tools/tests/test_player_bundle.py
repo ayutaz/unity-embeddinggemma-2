@@ -45,6 +45,29 @@ def test_bundle_preserves_all_hashes_and_never_claims_player_or_gpu_execution(pr
     assert not (output / "model.pt2").exists()
 
 
+@pytest.mark.parametrize("version", ["6000.3.16f1", "6000.3.21f1"])
+def test_bundle_preserves_supported_preparation_version(prepared, tmp_path, version):
+    directory, _, _ = prepared
+    receipt_path = directory / "preparation.json"
+    receipt = json.loads(receipt_path.read_text())
+    receipt["unityVersion"] = version
+    receipt_path.write_text(json.dumps(receipt))
+    report = stage_player_bundle(*prepared, tmp_path / "bundle")
+    assert report["unity_preparation_version"] == version
+    assert report["unity_executed"] is False
+
+
+@pytest.mark.parametrize("version", ["6000.3.15f1", "6000.3.22f1", None])
+def test_bundle_rejects_unverified_preparation_version(prepared, tmp_path, version):
+    directory, _, _ = prepared
+    receipt_path = directory / "preparation.json"
+    receipt = json.loads(receipt_path.read_text())
+    receipt["unityVersion"] = version
+    receipt_path.write_text(json.dumps(receipt))
+    with pytest.raises(ValueError, match="pinned"):
+        stage_player_bundle(*prepared, tmp_path / "bundle")
+
+
 @pytest.mark.parametrize("fault", ["model_hash", "tokenizer_hash", "reference_hash", "receipt_failure",
                                  "source", "search_source", "model_origin_hash", "revision", "path_traversal"])
 def test_bad_source_cannot_publish_a_success_bundle(prepared, tmp_path, fault):

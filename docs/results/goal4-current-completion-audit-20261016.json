@@ -302,5 +302,13 @@
     ],
     "result_consolidation_branch": "diag/audio-sine-primitive-20261016",
     "pr_head": "e99c44214ab7d7f526b0fede5b561862460f1d66"
+  },
+  "synthetic_tanh_test_contract_change": {
+    "evidence": "m4-tanh-pinned-captures-and-native-rounding-contract-tdd-20261016.json",
+    "local_related_passes": 29,
+    "original_pinned_bit_gate_strengthened_values": 33285,
+    "current_host_comparison_uses_original_encoder_tolerances": true,
+    "model_math_changed": false,
+    "required_ci_remains_unproven": true
   }
 }

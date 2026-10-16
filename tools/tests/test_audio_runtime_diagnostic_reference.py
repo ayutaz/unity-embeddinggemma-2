@@ -68,7 +68,7 @@ def test_collect_mode_requires_standard_onnx_route(tmp_path):
                                       collect_onnx_failures=True)
 
 
-def test_cli_collect_flag_is_explicit_and_required_workflow_keeps_strict_gate(tmp_path, monkeypatch):
+def test_cli_collect_is_explicit_and_ci_separates_original_gate_from_cpu_diagnostic(tmp_path, monkeypatch):
     calls = []
     def generate(*args, **kwargs):
         calls.append(kwargs)
@@ -78,9 +78,20 @@ def test_cli_collect_flag_is_explicit_and_required_workflow_keeps_strict_gate(tm
     cli.main(["prepare-audio-encoder", "--snapshot", str(tmp_path), "--preprocessing", str(tmp_path),
               "--output", str(tmp_path / "out"), "--native-silu", "--collect-onnx-failures"])
     assert calls[0]["collect_onnx_failures"] is True
+    cli.main(["prepare-audio-encoder", "--snapshot", str(tmp_path), "--preprocessing", str(tmp_path),
+              "--output", str(tmp_path / "default"), "--native-silu"])
+    assert calls[1]["collect_onnx_failures"] is False
     from pathlib import Path
-    workflow = Path(__file__).resolve().parents[2] / ".github/workflows/model-reference.yml"
-    assert "--collect-onnx-failures" not in workflow.read_text(encoding="utf-8")
+    import yaml
+    path = Path(__file__).resolve().parents[2] / ".github/workflows/model-reference.yml"
+    workflow = yaml.safe_load(path.read_text(encoding="utf-8"))
+    diagnostic = next(s for s in workflow['jobs']['reference']['steps']
+                      if 'prepare-audio-encoder' in s.get('run', ''))
+    assert '--collect-onnx-failures' in diagnostic['run']
+    assert diagnostic['continue-on-error'] is True
+    pinned = workflow['jobs']['pinned-audio']
+    assert pinned['uses'] == './.github/workflows/pinned-audio-acceptance.yml'
+    assert not pinned.get('continue-on-error') and not pinned.get('if')
 
 
 def test_runtime_diagnostic_workflow_is_opt_in_read_only_and_retains_failure():

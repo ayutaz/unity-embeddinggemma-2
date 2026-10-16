@@ -129,7 +129,7 @@ def test_cli_connects_pinned_snapshot_preprocessing_and_ci_source(tmp_path, monk
     assert json.loads(capsys.readouterr().out)["end_to_end_validated"] is False
 
 
-def test_required_reference_workflow_runs_audio_encoder_after_preprocessing():
+def test_fresh_cpu_diagnostic_runs_after_preprocessing_and_pinned_gate_is_required():
     root = __import__("pathlib").Path(__file__).resolve().parents[2]
     workflow = yaml.safe_load((root / ".github/workflows/model-reference.yml").read_text(encoding="utf-8"))
     steps = workflow["jobs"]["reference"]["steps"]
@@ -138,4 +138,8 @@ def test_required_reference_workflow_runs_audio_encoder_after_preprocessing():
     assert len(encoders) == 1, "real audio encoder export is absent from the required reference workflow"
     assert encoders[0][0] > preprocess
     assert "--preprocessing ../artifacts/audio-preprocessing" in encoders[0][1]["run"]
-    assert not encoders[0][1].get("continue-on-error", False)
+    assert encoders[0][1].get("continue-on-error") is True
+    assert "--collect-onnx-failures" in encoders[0][1]["run"]
+    pinned = workflow["jobs"]["pinned-audio"]
+    assert pinned["uses"] == "./.github/workflows/pinned-audio-acceptance.yml"
+    assert not pinned.get("continue-on-error") and not pinned.get("if")

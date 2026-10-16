@@ -58,14 +58,15 @@ namespace EmbeddingGemma.Validation
         public IReadOnlyList<SearchHit> Results => (IReadOnlyList<SearchHit>)Property("Results");
         public string ActualBackend
         {
-            get
-            {
-                var session = Field("session") as TextSearchSession;
-                var embedder = session == null ? null : typeof(TextSearchSession).GetField("embedder", Private).GetValue(session) as TextEmbedder;
-                var worker = embedder == null ? null : typeof(TextEmbedder).GetField("worker", Private).GetValue(embedder) as Worker;
-                return worker?.backendType.ToString();
-            }
+            get => CurrentWorker()?.backendType.ToString();
         }
+        Worker CurrentWorker()
+        {
+            var session = Field("session") as TextSearchSession;
+            var embedder = session == null ? null : typeof(TextSearchSession).GetField("embedder", Private).GetValue(session) as TextEmbedder;
+            return embedder == null ? null : typeof(TextEmbedder).GetField("worker", Private).GetValue(embedder) as Worker;
+        }
+        public JObject InspectGpuExecution() => PlayerGpuExecutionAudit.Inspect(CurrentWorker());
         public bool Search(string query) => (bool)Call("Search", query);
         public void Release() => Call("ReleaseDocuments");
         public IEnumerator Prepare(string bundle, string cacheRoot)

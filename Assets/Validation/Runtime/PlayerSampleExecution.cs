@@ -93,6 +93,7 @@ namespace EmbeddingGemma.Validation
                 if (!view.Ready) throw new InvalidOperationException("Sample is not ready: " + view.Error);
                 report["actual_backend"] = view.ActualBackend;
                 if (view.ActualBackend != "GPUCompute") throw new InvalidOperationException("An actual GPUCompute Worker is required.");
+                if (view is PlayerSampleView realSample) report["gpu_execution"] = realSample.InspectGpuExecution();
                 report["cache"] = view.CacheSnapshot;
                 if (!view.FontAlive) throw new InvalidOperationException("The sample lost its GUI font during model preparation.");
                 for (var i = 0; i < bundle.Reference.Queries.Length; i++)

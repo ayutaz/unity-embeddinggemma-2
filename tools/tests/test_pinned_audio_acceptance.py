@@ -60,7 +60,8 @@ def test_required_ci_has_real_pinned_six_case_execution_and_fresh_cpu_is_diagnos
     assert cases['strategy']['fail-fast']=='false'
     commands='\n'.join(s.get('run','') for s in cases['steps'])
     assert '--raw-input --variant ordered_original_midpoint_bmm' in commands
-    assert '--artifact-id 11814567883' in commands
+    assert 'pinned_reference_archive resolve' in commands
+    assert '--artifact-id ${{ steps.original.outputs.artifact-id }}' in commands
     assert 'frozen-stage-source' not in commands
     audit=workflow['jobs']['audit']
     assert audit['needs']==['execute'] and not audit.get('continue-on-error')

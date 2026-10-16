@@ -45,7 +45,9 @@ GPU結果はWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER /
 
 Windows2022の[小さな行列/Tanh診断](results/m4-native-windows2022-amd9v74-avx512-matrix-tanh-bit-exact-20261016.json)はAMD9V74 /ATenAVX512で全bit一致でしたが、後続の[無変更native全6ケース](results/m4-native-full-six-windows2022-amd7763-original-context-failed-20261016.json)は同じrunner指定でもAMD7763 /AVX2となり、全6件で元許容差を超過しました。全824,320値、capture SHAとmetricsを独立照合しています。収集jobのsuccessは数値合格ではありません。runner名だけでCPU命令セットを保証できず、ランダムなhost再試行は行いません。新しい診断の関連26件と追加19件のテスト、workflow lintは合格しましたが、fresh official /ONNX /GPU合格への置き換えには使いません。
 
-既存runの結果回収と、取得済み全出力の独立照合は完了しました。残件はnoiseの最終値取得と、必須CIの音声ONNX /native Tanh比較の修正です。固定参照に一致する候補と、現在のnativeへの一致は別の条件です。候補の固定参照一致だけで既定CIの失敗を解消済みとは扱いません。今回は結果と残件の整理までで区切り、新しい重い診断は起動していません。Unityも停止中です。
+元runの結果回収と取得済み出力の独立照合は完了しました。残件はnoiseの最終値取得と、必須CIの音声ONNX /native Tanh比較です。[noise再開と監査のTDD](results/m4-pinned-noise-prediction-resume-and-independent-auditor-tdd-20261016.json)を追加し、保存済みの実出力から残り2区間だけを評価します。先頭3区間は元係数からグラフを再生成して旧SHAへ一致させ、推論は繰り返しません。元の計算コード・依存lock計61ファイルをe99c442へ固定し、異なる新しいjob sourceを明示します。関連39 pass /skip0、追加集計8件のred→green、最終再開＋集計23 pass /skip0、workflow lint合格です。実保存記録のcapture /carry /layoutと残区間の演算数もモデルをloadせず照合しました。
+
+[再開run38829612885](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38829612885)、source c994563はrunner待ちです。元6信号・2 profile・824,320値の基準を維持し、途中stage正解を使いません。固定参照に一致する候補と現在のnativeへの一致も別条件として維持し、既定の実モデルCIの不合格は未解決です。Unityは停止中です。
 
 過去の候補、失敗とTDD経緯は[更新前の固定文書](https://github.com/ayutaz/unity-embeddinggemma-2/blob/e99c44214ab7d7f526b0fede5b561862460f1d66/docs/status.md)とsource付き`docs/results/`に保持しています。
 

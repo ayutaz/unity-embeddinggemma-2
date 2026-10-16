@@ -248,8 +248,36 @@ def audit_resume(report_path,predecessor,original):
         execution_sources=sorted({PREDECESSOR_SOURCE,r['job_source']}),report_sha256=file_digest(report_path),
         predecessor_report_sha256=PREDECESSOR_REPORT_SHA,final_capture_sha256=last,
         candidate_metrics=measured,minimum_cosine=cosine,candidate_vs_predecessor_native=native_metrics,
+        predecessor_native_context_qualified=bool(previous.get('context_qualified',False)),
         all_capture_and_carry_hashes_verified=True,prefix_graphs_reexported_and_bit_identity_verified=True,
         graphs_independently_rehashed=False,gpu_validated=False,default_export_promoted=False)
+
+
+def audit_six_with_resume(completed_paths,resume_report,predecessor,original):
+    from .audit_audio_raw_chain import audit_report
+    rows=[audit_report(p,original,expected_variant=PRECISE_MIDPOINT) for p in completed_paths]
+    if (len(rows)!=5 or {r['case_id'] for r in rows}!={'silence','impulse','sine','nyquist','padded_noise'}
+            or any(r['source']!=PREDECESSOR_SOURCE for r in rows)):
+        raise ValueError('Exactly five completed original cases at predecessor source required')
+    for row in rows:
+        padded=row['case_id']=='padded_noise'
+        if (row['profile']!=('frames-1119-valid-839' if padded else 'frames-1119-valid-1119')
+                or row['values_compared']!=(107520 if padded else 143360)):
+            raise ValueError('Original case/profile/value coverage differs')
+    last=audit_resume(resume_report,predecessor,original)
+    if (last['case_id']!='noise' or last['profile']!='frames-1119-valid-1119'
+            or last['predecessor_source']!=PREDECESSOR_SOURCE or last['values_compared']!=143360):
+        raise ValueError('Original resumed noise/source/value coverage differs')
+    native_qualified=all(r['native_context_qualified'] for r in rows) and last['predecessor_native_context_qualified']
+    rows.append(last)
+    return dict(scope='all_six_original_raw_input_candidate_with_audited_actual_prediction_resume',
+        success=all(r['original_tolerance_passed'] for r in rows),case_count=6,profile_count=2,
+        math_source=PREDECESSOR_SOURCE,math_source_manifest_sha256=verify_math_source(),
+        execution_sources=last['execution_sources'],all_six_at_one_job_source=False,
+        values_compared=824320,candidate_tolerance_failures=sum(r['candidate_metrics']['mismatched_elements'] for r in rows),
+        candidate_bit_differences=sum(r['candidate_metrics']['exact_difference_count'] for r in rows),cases=rows,
+        native_all_six_context_qualified=native_qualified,original_reference_unchanged=True,
+        intermediate_stage_reference_used=False,gpu_validated=False,default_export_promoted=False)
 
 
 def main(argv=None):

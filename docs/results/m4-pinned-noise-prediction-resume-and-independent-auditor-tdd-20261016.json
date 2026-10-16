@@ -32,7 +32,12 @@
   "original_weights_references_tolerances_unchanged": true,
   "default_export_unchanged": true,
   "product_gpu_runtime_unchanged": true,
-  "real_resume_execution": "not_yet_dispatched",
+  "real_resume_execution": {
+    "run": 38829612885,
+    "source": "c994563101f126f537bbd036b2c60047cd533aae",
+    "last_observation": "queued",
+    "result_established": false
+  },
   "whole_encoder_qualified": false,
   "gpu_validated": false,
   "required_ci_passed": false,
@@ -42,5 +47,16 @@
     "Previous baseline/native evidence retains its original host context. New job source is distinct; math source is the pinned predecessor.",
     "Exactly two remaining actual ONNX outputs are evaluated; every actual carry/capture and final metric is independently audited.",
     "No all-six claim or real-model/GPU pass follows from unit tests."
-  ]
+  ],
+  "all_six_auditor_tdd": {
+    "red": "8 missing-API failures",
+    "green": "8 aggregation cases pass; final resume+aggregation23pass,306warnings,9.80seconds",
+    "coverage": [
+      "Exactly five predecessor cases plus resumed noise",
+      "Each original profile and per-case value count",
+      "No redistributed counts hiding missing values",
+      "Explicit two execution sources and fixed original math source",
+      "Honest numeric failure remains failure"
+    ]
+  }
 }

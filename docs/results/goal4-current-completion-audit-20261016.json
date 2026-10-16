@@ -292,8 +292,10 @@
   "pr_head_at_audit": "e99c44214ab7d7f526b0fede5b561862460f1d66",
   "current_execution_state": {
     "unity_running": false,
-    "live_actions_runs": [],
-    "new_heavy_jobs_started": false,
+    "live_actions_runs": [
+      38829612885
+    ],
+    "new_heavy_jobs_started": true,
     "main_merged": false,
     "scope_complete": false,
     "remaining": [
@@ -301,7 +303,8 @@
       "Required CI: audio ONNX vs fresh official; Linux native Tanh2 bit comparisons"
     ],
     "result_consolidation_branch": "diag/audio-sine-primitive-20261016",
-    "pr_head": "e99c44214ab7d7f526b0fede5b561862460f1d66"
+    "pr_head": "e99c44214ab7d7f526b0fede5b561862460f1d66",
+    "new_job_scope": "one explicit pinned-noise continuation; prefix graph identity then only two remaining evaluations"
   },
   "synthetic_tanh_test_contract_change": {
     "evidence": "m4-tanh-pinned-captures-and-native-rounding-contract-tdd-20261016.json",
@@ -310,5 +313,12 @@
     "current_host_comparison_uses_original_encoder_tolerances": true,
     "model_math_changed": false,
     "required_ci_remains_unproven": true
+  },
+  "noise_resume": {
+    "run": 38829612885,
+    "execution_source": "c994563101f126f537bbd036b2c60047cd533aae",
+    "math_source": "e99c44214ab7d7f526b0fede5b561862460f1d66",
+    "result_established": false,
+    "evidence": "m4-pinned-noise-prediction-resume-and-independent-auditor-tdd-20261016.json"
   }
 }

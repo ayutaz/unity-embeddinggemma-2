@@ -4,7 +4,9 @@
 
 ## マルチモーダルAPIとGPU設定
 
-Draft branchの`PartitionedImageFeatureEncoder` / `ImageEmbedder.EmbedAsync`と`PartitionedAudioFeatureEncoder` / `AudioEmbedder.EmbedAsync`は、実Texture・PCMから前処理→encoder→backbone→正規化済み768次元をGPUComputeで実行する検証済み経路です。画像・音声は各6ケースとQuery / Document / Rawの18条件、計算 / 入力CPU fallback・中間readback0。元encoderの画像全3 / 音声全2 profileの厳密数値gateも合格しています。必須CIの音声ONNX比較が失敗しているため、手順4全体・正式配布は未完了です。
+mainへ統合済みの`PartitionedImageFeatureEncoder` / `ImageEmbedder.EmbedAsync`と`PartitionedAudioFeatureEncoder` / `AudioEmbedder.EmbedAsync`は、実Texture・PCMから前処理→encoder→backbone→正規化済み768次元をGPUComputeで実行する固定source検証済み経路です。画像・音声は各6ケースとQuery / Document / Rawの18条件、計算 / 入力CPU fallback・中間readback0。元encoderの画像全3 / 音声全2 profileの厳密数値gateと必須CIも合格しています。[元API検証](results/goal4-current-completion-audit-20261016.json)と[現在のサンプル検証](multimodal-search-sample.md)を区別してください。全端末・正式配布の合格は表しません。
+
+作業中の`IAsyncAudioPreprocessor` / `AudioPreprocessor.ProcessAsync`は、GPU fence完了までPCM入力・出力copyを保持し、完了した前処理のGPU cacheを解放します。`AudioEmbedder.EmbedAsync`は対応stageがあればこの経路を待ちます。反復処理には非同期APIを使用し、キャンセル・Dispose後も返されたtaskの完了前に借用stageを破棄しないでください。`GpuMediaSession.CloseAsync`はその完了と所有stageの解放を待ちます。
 
 両APIはstageとprompt builderを借用し、呼び出しごとの中間結果を所有します。返す768次元CPU配列は独立コピーです。非同期encoderはGPU分割境界を待ち、音声では完了済みキャッシュを解放します。前処理とbackboneはメインスレッド同期処理のため`Task.Run`へ移しません。呼び出しをawaitしてから借用stage / operationをDisposeしてください。CPU APIの選択肢と、ここで検証したGPU専用経路を区別します。
 

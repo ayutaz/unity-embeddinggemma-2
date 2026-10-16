@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using Unity.InferenceEngine;
 using UnityEngine;
 using UnityEngine.TestTools;
 
@@ -49,6 +50,22 @@ namespace EmbeddingGemma.Validation.Tests
         static T Property<T>(Component sample, string name) => (T)sample.GetType().GetProperty(name).GetValue(sample);
         static void Set(Component sample, string field, object value) => sample.GetType().GetField(field).SetValue(sample, value);
         static Task Call(Component sample, string method) => (Task)sample.GetType().GetMethod(method).Invoke(sample, method == "CloseAsync" ? Array.Empty<object>() : new object[] { CancellationToken.None });
+        internal static void AssertReleased(GpuMediaSession session)
+        {
+            Assert.That(session.IsClosed, Is.True);
+            var resources = (IDisposable[])typeof(GpuMediaSession).GetField("resources", Private).GetValue(session);
+            foreach (var resource in resources)
+                foreach (var field in resource.GetType().GetFields(Private))
+                {
+                    var value = field.GetValue(resource);
+                    if (typeof(Worker).IsAssignableFrom(field.FieldType) || field.FieldType == typeof(GpuProjectionPipeline) || field.FieldType == typeof(GpuConstantWorker))
+                        Assert.That(value, Is.Null, resource.GetType().Name + "." + field.Name + " must release its Worker owner.");
+                    if (value is ComputeBuffer buffer) Assert.That(buffer.IsValid(), Is.False, "Owned coefficient buffer must be released.");
+                    if (value is ComputeShader shader) Assert.That(shader == null, Is.True, "Owned shader must be destroyed.");
+                    if (value is Tensor tensor)
+                        try { Assert.That(tensor.dataOnBackend, Is.Null, "Owned tensor backend must be released."); } catch (ObjectDisposedException) { }
+                }
+        }
 
         [UnityTest] public IEnumerator ActualImportedSampleRegistersMediaSearchesPinnedQueriesAndClosesItsCacheLease()
         {
@@ -68,6 +85,8 @@ namespace EmbeddingGemma.Validation.Tests
         [UnityTest] public IEnumerator ImportedSampleRendersItsRealSearchResultsInPlayMode()
         {
             Assert.That(Environment.GetEnvironmentVariable("EG_MEDIA_SAMPLE_SCREENSHOT"), Is.Not.Null.And.Not.Empty);
+            UnityEditor.SceneManagement.EditorSceneManager.OpenScene("Assets/EmbeddingGemmaMultimodalSearch/MultimodalSearch.unity");
+            Assert.That(UnityEditor.EditorApplication.ExecuteMenuItem("Window/General/Game"), Is.True);
             yield return new EnterPlayMode();
             using var cancellation = new CancellationTokenSource(); var task = Run(cancellation.Token); long peak = 0;
             while (!task.IsCompleted)
@@ -89,15 +108,31 @@ namespace EmbeddingGemma.Validation.Tests
             var selections = (Environment.GetEnvironmentVariable("EG_MEDIA_SAMPLE_CASES") ?? "image-square:square-0,image-square:square-1").Split(',');
             var expectedWarm = Environment.GetEnvironmentVariable("EG_MEDIA_SAMPLE_WARM") == "1";
             Assert.That(bundlePath, Is.Not.Null.And.Not.Empty); Assert.That(cachePath, Is.Not.Null.And.Not.Empty); Assert.That(output, Is.Not.Null.And.Not.Empty);
+            // Validate every original audio input before paying for any GPU model load.
+            foreach (var selection in selections.Where(value => value.StartsWith("audio-", StringComparison.Ordinal)))
+            {
+                var id = selection.Split(':')[1]; var pcmRoot = Cache("k/artifacts/audio-real-chain/audio-runtime-preprocessing");
+                var auditPath = Path.Combine(pcmRoot, "audio-validation.json");
+                Assert.That(Hash(auditPath), Is.EqualTo("4e325f708e8d103a9de358a411380ddbb51cfe953984e9dcb73e291d919630fa"));
+                var audit = JObject.Parse(File.ReadAllText(auditPath));
+                foreach (var name in new[] { id + "-pcm-fp32.bin", id + "-samples-int32.bin" })
+                {
+                    Assert.That(new FileInfo(Path.Combine(pcmRoot, name)).Length, Is.EqualTo((long)audit["files"][name]["bytes"]));
+                    Assert.That(Hash(Path.Combine(pcmRoot, name)), Is.EqualTo((string)audit["files"][name]["sha256"]));
+                }
+            }
             Assert.That(File.Exists(output), Is.False); var report = new JObject { ["success"] = false, ["scope"] = "actual_imported_sample_real_media_fixed_queries",
                 ["runtime_source"] = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE"), ["cache_expected_warm"] = expectedWarm,
                 ["unity"] = Application.unityVersion, ["gpu"] = SystemInfo.graphicsDeviceName, ["graphics_api"] = SystemInfo.graphicsDeviceType.ToString(),
                 ["bundle_descriptor_sha256"] = Hash(Path.Combine(bundlePath, "bundle.json")), ["registrations"] = new JArray(), ["queries"] = new JArray() };
             void Save() => File.WriteAllText(output, report.ToString());
-            var host = new GameObject("Actual GPU media search acceptance"); Component sample = null; GpuMediaSession previous = null;
+            var existing = Application.isPlaying ? Resources.FindObjectsOfTypeAll(SampleType()).OfType<Component>()
+                .SingleOrDefault(value => value.gameObject.scene.IsValid() && value.gameObject.activeInHierarchy) : null;
+            var host = existing != null ? existing.gameObject : new GameObject("Actual GPU media search acceptance");
+            Component sample = null; GpuMediaSession previous = null;
             try
             {
-                sample = host.AddComponent(SampleType()); Set(sample, "SourceDirectory", bundlePath); Set(sample, "CacheDirectory", cachePath);
+                sample = existing != null ? existing : host.AddComponent(SampleType()); Set(sample, "SourceDirectory", bundlePath); Set(sample, "CacheDirectory", cachePath);
                 var expectedVectors = new List<float[]>();
                 foreach (var selection in selections)
                 {
@@ -116,7 +151,7 @@ namespace EmbeddingGemma.Validation.Tests
                         var referencePath = Cache("k/artifacts/audio-final-backbone/audio-embedding-reference.json");
                         Assert.That(Hash(referencePath), Is.EqualTo("281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001"));
                         var reference = JObject.Parse(File.ReadAllText(referencePath)); expected = reference["cases"].Single(row => (string)row["id"] == id)["embedding"].Values<float>().ToArray();
-                        var pcmRoot = Cache("k/artifacts/audio-real-chain/audio-runtime-preprocessing"); var pcmName = id + "-waveform-fp32.bin"; var maskName = id + "-samples-int32.bin";
+                        var pcmRoot = Cache("k/artifacts/audio-real-chain/audio-runtime-preprocessing"); var pcmName = id + "-pcm-fp32.bin"; var maskName = id + "-samples-int32.bin";
                         var audit = JObject.Parse(File.ReadAllText(Path.Combine(pcmRoot, "audio-validation.json")));
                         foreach (var name in new[] { pcmName, maskName }) Assert.That(Hash(Path.Combine(pcmRoot, name)), Is.EqualTo((string)audit["files"][name]["sha256"]));
                         var maskBytes = File.ReadAllBytes(Path.Combine(pcmRoot, maskName)); var mask = new int[maskBytes.Length / 4]; Buffer.BlockCopy(maskBytes, 0, mask, 0, maskBytes.Length);
@@ -136,8 +171,9 @@ namespace EmbeddingGemma.Validation.Tests
                         report["cancelled_after_real_gpu_stage_yield"] = true; Save();
                     }
                     var pending = Call(sample, "AddAsync"); using (cancellation.Register(() => sample.GetType().GetMethod("Cancel").Invoke(sample, null))) await pending;
+                    Assert.That(Property<string>(sample, "LastError"), Is.Null);
                     var current = (GpuMediaSession)sample.GetType().GetField("session", Private).GetValue(sample);
-                    if (previous != null && !ReferenceEquals(previous, current)) Assert.That(previous.IsClosed, Is.True, "Switch must close previous GPU owners."); previous = current;
+                    if (previous != null && !ReferenceEquals(previous, current)) AssertReleased(previous); previous = current;
                     var vectors = (List<float[]>)sample.GetType().GetField("vectors", Private).GetValue(sample); var vector = vectors.Last();
                     var cosine = TextSearchIndex.Cosine(vector, expected); Assert.That(cosine, Is.GreaterThanOrEqualTo(.999)); expectedVectors.Add(expected);
                     var capture = Path.ChangeExtension(output, null) + "-" + id + "-vector.bin"; var bytes = new byte[vector.Length * 4]; Buffer.BlockCopy(vector, 0, bytes, 0, bytes.Length); File.WriteAllBytes(capture, bytes);
@@ -152,7 +188,7 @@ namespace EmbeddingGemma.Validation.Tests
                 foreach (var query in queries["queries"])
                 {
                     cancellation.ThrowIfCancellationRequested(); Set(sample, "Query", (string)query["text"]); report["phase"] = "query_" + (string)query["id"]; Save();
-                    await Call(sample, "SearchAsync"); Assert.That(previous.IsClosed, Is.True); var hits = Property<SearchHit[]>(sample, "Hits");
+                    await Call(sample, "SearchAsync"); Assert.That(Property<string>(sample, "LastError"), Is.Null); AssertReleased(previous); var hits = Property<SearchHit[]>(sample, "Hits");
                     var queryVector = query["embedding"].Values<float>().ToArray();
                     var expectedHits = expectedVectors.Select((vector, index) => new { Id = "media-" + index, Score = TextSearchIndex.Cosine(queryVector, vector) })
                         .OrderByDescending(hit => hit.Score).ThenBy(hit => hit.Id, StringComparer.Ordinal).ToArray();
@@ -184,9 +220,10 @@ namespace EmbeddingGemma.Validation.Tests
                 }
                 if (expectedWarm) Assert.That(Property<int>(sample, "LastTransferredFiles"), Is.EqualTo(1));
                 var finalSession = (GpuMediaSession)sample.GetType().GetField("session", Private).GetValue(sample);
-                report["phase"] = "close"; Save(); await Call(sample, "CloseAsync"); Assert.That(finalSession.IsClosed, Is.True);
+                report["phase"] = "close"; Save(); await Call(sample, "CloseAsync"); AssertReleased(finalSession); Assert.That(Property<string>(sample, "LastError"), Is.Null);
                 using var unlocked = await GpuMediaBundleCache.AcquireAsync(bundlePath, "text", cachePath, cancellation);
                 Assert.That(unlocked.TransferredFiles, Is.EqualTo(1)); report["cache_lease_released"] = true;
+                report["closed_worker_kernel_and_tensor_fields_inspected"] = true;
                 Assert.That(Property<int>(sample, "DocumentCount"), Is.EqualTo(selections.Length)); report["session_closed"] = true; report["success"] = true;
             }
             catch (Exception error) { report["error"] = error.ToString(); throw; }

@@ -1,6 +1,6 @@
 # 現在の状況
 
-更新: 2026-10-17。[PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)はmain `58a6aa2`へマージ済みで、[main CI38921023089](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38921023089)も成功しました。今回の「3まで進める」の手順1・2は完了、手順3の画像・音声検索サンプルは作業中です。[現行サンプルの実装・検証・残る条件](multimodal-search-sample.md)を参照してください。以下は元計画の画像・音声API検証と、その時点の履歴です。
+更新: 2026-10-17。[PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)はmain `58a6aa2`へマージ済みで、[main CI38921023089](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38921023089)も成功しました。今回の「3まで進める」の画像・音声検索サンプルは実装・実GPU・PlayMode表示・505件の全体回帰を検証済みです。[delivery PR #83](https://github.com/ayutaz/unity-embeddinggemma-2/pull/83)で最終CIと統合状態を確認できます。[現行サンプルの実装・固定検証結果](multimodal-search-sample.md)を参照してください。以下は元計画の画像・音声API検証と、その時点の履歴です。
 
 ## 元計画のGPU / API検証記録
 

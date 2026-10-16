@@ -1,6 +1,6 @@
 # 画像・音声検索サンプルの作業状況と受け入れ
 
-更新: 2026-10-17。現在の依頼「3まで進める」の手順1・2はPR #31の統合とWindows Playerの固定source検証で完了。手順3は実装・実モデル・画面の検証を終え、全体回帰と最終PR / CI確認を進めています。元計画の画像・音声API数値検証の完了と、今回のサンプル完成を区別します。
+更新: 2026-10-17。現在の依頼「3まで進める」の手順1・2はPR #31の統合とWindows Playerの固定source検証で完了。手順3は実装・実モデル・画面・全体回帰の検証済みです。最終CIと統合状態は[delivery PR #83](https://github.com/ayutaz/unity-embeddinggemma-2/pull/83)を参照してください。元計画の画像・音声API数値検証と、今回のサンプル検証を区別します。
 
 ## 実装済み
 
@@ -40,10 +40,11 @@ PR #83の旧CI38931525134ではIntel Xeon8370Cのnyquistで、native全体とnat
 
 CPU対照の候補対策として、必須workflowのnative BLAS branchを `MKL_CBWR=COMPATIBLE`、dynamic threadを無効へ固定しました。元のnative bit一致gate、5 partの実carry、元ONNX許容差は維持し、不一致carry自体も保存するようにしました。関連Python59件は合格。PR head `ee90c2a` の[CI38933177757](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38933177757)は全15 jobが成功しました。code path・alignment・threadが丸め順へ影響し得るという[IntelのCNR説明](https://www.intel.com/content/www/us/en/developer/archive/training/conditional-numerical-reproducibility-cnr.html)を参照した対策で、CPU failureの原因確定とは表現しません。後続のGPU前処理修正を含む最終PR headのCIは別gateです。
 
-## 残る受け入れ
+## 全体回帰と統合gate
 
-1. 最終sourceのpackageと両sampleの全体回帰を実行する。
-2. 最終PR headの必須CI成功後にfeature PRを統合し、要件ごとの最終監査を行う。
+source `bf19e20` の[canonical全体回帰](results/multimodal-sample-canonical-regression-20261017.json)は、packageとText Search / Image and Audio Search両sampleのEditMode505件がすべて合格、fail0 / skip0 / exit0でした。テストassetのGUID形式不備を修正し、Pythonのpackage / metadata30件も再確認済みです。
+
+統合には最終PR headの必須CI成功と要件別監査を要求します。CI成功は、上記の別途実行したWindows実GPU結果の代わりには数えません。
 
 performance campaign、他OS / mobile qualification、tag / releaseは今回の手順1〜3の後です。
 

@@ -4,7 +4,7 @@
   "goal": "4まで進めてください",
   "status": "active_not_complete",
   "scope_source": "goal4-scope-audit-20261016.json",
-  "candidate_head_at_audit": "d838ecb7d1bac9169f5afc525d823de0d4a578ae",
+  "candidate_head_at_audit": "948efa5d6fb63e33544e047f4a16c290f2d9d390",
   "requirements": [
     {
       "requirement": "Original learned coefficients, references and encoder tolerances remain unchanged",
@@ -79,11 +79,11 @@
     {
       "requirement": "Required repository checks for the resulting candidate",
       "status": "not_achieved",
-      "last_terminal_ci_run": 38823835930,
-      "last_terminal_ci_head": "d838ecb7d1bac9169f5afc525d823de0d4a578ae",
-      "result": "All four Python jobs and package/actionlint success; real audio ONNX comparison and Required CI fail.",
-      "candidate_ci_run": 38823835930,
-      "candidate_ci_head": "d838ecb7d1bac9169f5afc525d823de0d4a578ae",
+      "last_terminal_ci_run": 38825766738,
+      "last_terminal_ci_head": "e99c44214ab7d7f526b0fede5b561862460f1d66",
+      "result": "Three Python environments/package/actionlint pass; Ubuntu/Python3.14 native Tanh two failures, audio ONNX1309 tolerance failures and Required CI fail. New auxiliary diagnostics are not a correction of those failures.",
+      "candidate_ci_run": 38825766738,
+      "candidate_ci_head": "e99c44214ab7d7f526b0fede5b561862460f1d66",
       "candidate_ci_last_observation": "completed_failure",
       "candidate_ci_aggregate_conclusion": "failure",
       "evidence": [
@@ -135,9 +135,12 @@
         "m4-original-raw-sine-full12-midpoint-qk-tolerance-passed-20261016.json",
         "m4-native-amd7763-matrix-and-tanh-mkl-contexts-20261016.json",
         "m4-padded-raw-connected-measured35minute-budget-20261016.json",
-        "m4-audio-numpy-blas-context-tdd-20261016.json"
+        "m4-audio-numpy-blas-context-tdd-20261016.json",
+        "m4-ci-e99-audio1309-and-linux314-tanh-two-failures-20261016.json",
+        "m4-native-full-six-windows2022-amd7763-original-context-failed-20261016.json"
       ],
-      "next_action": "Qualify the same causally corrected midpointQK candidate across all six original raw cases with measured35minute budget only for padded raw chain. Default fresh-native ONNX and Required CI remain unchanged mandatory failures until resolved."
+      "next_action": "Qualify the same causally corrected midpointQK candidate across all six original raw cases with measured35minute budget only for padded raw chain. Default fresh-native ONNX and Required CI remain unchanged mandatory failures until resolved.",
+      "execution_merge_source": "9e18b1c1ed7d7fad8b4f1a8ec4e1e2a13cd5699c"
     }
   ],
   "documentation": {
@@ -254,7 +257,7 @@
       "original_qk_bmm_bit_difference": 1,
       "midpoint_qk_actual_onnx_bit_difference": 0,
       "midpoint_qk_values": 55296,
-      "sine_whole_candidate_pending": true
+      "sine_whole_candidate_pending": false
     },
     "sine_midpoint_raw_full12": {
       "run": 38823852007,
@@ -264,11 +267,40 @@
       "bit_differences": 34679,
       "all_capture_and_carry_hashes_verified": true,
       "all_six_cases": false
+    },
+    "raw_midpoint_all_six_current": {
+      "run": 38825780838,
+      "source": "e99c44214ab7d7f526b0fede5b561862460f1d66",
+      "last_observation": "terminal_cancelled_noise20minute_limit",
+      "independently_audited_cases": 5,
+      "values_compared": 680960,
+      "tolerance_failures": 0,
+      "all_six_passed": false,
+      "default_export_promoted": false,
+      "gpu_validated": false,
+      "complete_cases": 5,
+      "missing_final_cases": 1,
+      "noise_partial_capture_carry_hashes_verified": true,
+      "evidence": "m4-raw-midpoint-all-six-five-pass-noise-timeout-20261016.json"
     }
   },
   "pending_candidate_code_sha256": {
     "frozen_audio_prefix_onnx.py": "c2f0215f43dcdae8fc04006137a1a4719b9567a358bc71dc8c2034597b3f26a6",
     "frozen_audio_segment_onnx.py": "68f176f0485875d08ca4e28bedb2c8af4e3d6463ac1ef2767bfc6616ce40b79f",
     "frozen_audio_chained_onnx.py": "099ee2ce03844a930b307d28c1ddeb08302447e93dfafa031f7c8d97c662a4ef"
+  },
+  "pr_head_at_audit": "e99c44214ab7d7f526b0fede5b561862460f1d66",
+  "current_execution_state": {
+    "unity_running": false,
+    "live_actions_runs": [],
+    "new_heavy_jobs_started": false,
+    "main_merged": false,
+    "scope_complete": false,
+    "remaining": [
+      "noise final candidate capture and original tolerance verification",
+      "Required CI: audio ONNX vs fresh official; Linux native Tanh2 bit comparisons"
+    ],
+    "result_consolidation_branch": "diag/audio-sine-primitive-20261016",
+    "pr_head": "e99c44214ab7d7f526b0fede5b561862460f1d66"
   }
 }

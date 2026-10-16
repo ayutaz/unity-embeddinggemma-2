@@ -1,6 +1,6 @@
 # 現在の状況
 
-更新: 2026-10-16。最新の結果整理は補助ブランチ`diag/audio-sine-primitive-20261016`に保存し、既知の失敗CIを再実行するpushは保留しています。PR headはe99c442です。対象はDraft [PR #81](https://github.com/ayutaz/unity-embeddinggemma-2/pull/81)の`feat/multimodal-numerical-acceptance`。main統合・リリースは未実施です。ユーザー指定「4まで」の完了条件は[元計画の監査](results/goal4-scope-audit-20261016.json)を維持します。
+更新: 2026-10-16。ユーザーが選択肢1を指定したため、固定Python参照を必須CI基準とし、fresh CPUの差は診断として保持する方針を実装しました。[決定とTDD](results/m4-user-selected-pinned-reference-ci-policy-20261016.json)。同一の現行実行sourceで元6ケース・2 profileの実ONNX carryを実行し、824,320値と全capture /carryを独立監査するjobを必須CIへ接続しています。新CIの合格はまだ未確認です。対象はDraft [PR #81](https://github.com/ayutaz/unity-embeddinggemma-2/pull/81)の`feat/multimodal-numerical-acceptance`。main統合・リリースは未実施です。ユーザー指定「4まで」の完了条件は[元計画の監査](results/goal4-scope-audit-20261016.json)を維持します。
 
 ## 手順3・4の検証
 
@@ -51,7 +51,7 @@ Windows2022の[小さな行列/Tanh診断](results/m4-native-windows2022-amd9v74
 
 [再開run38829612885](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38829612885)、source c994563は正常終了し、先頭3グラフの再生成SHAが元記録と一致しました。実際の前回予測から残り2区間を実行したnoiseは143,360値で元許容差超過0、最大許容差比0.251034、bit差45,930でした。全capture /carry SHAと最終metricsを独立再計算しています。[全6ケースの固定結果](results/m4-original-raw-all-six-midpoint-candidate-resumed-noise-tolerance-passed-20261016.json)は計824,320値、元許容差超過0、bit差162,697です。全6件を同じ新job sourceで実行したという意味ではなく、e99c442の元5件・noise先頭3区間とc994563の続行を、同一の元計算コード61ファイルとグラフSHAで監査しています。途中stage正解は使っていません。
 
-このCPU ONNX候補の元参照合格は、現在CPUのnative比較・既定CI合格・新たなGPU実行の証明ではありません。必須CIの方針質問は未回答で、合格条件は変更していません。今後はその方針に沿うCI修正と合格確認が必要です。Unityと今回のActionsはすべて終了しています。
+このCPU ONNX候補の元参照合格は、現在CPUのnative比較・既定CI合格・新たなGPU実行の証明ではありません。ユーザー指定の選択肢1に従い、固定参照の元許容差を必須基準とするCIへ接続しました。fresh CPU比較は全6ケースを診断収集し、失敗をsuccess=falseのまま保存します。新たなCI合格は未確認で、製品GPU Runtimeと既定consumer exportは変更していません。Unityは停止したままです。
 
 過去の候補、失敗とTDD経緯は[更新前の固定文書](https://github.com/ayutaz/unity-embeddinggemma-2/blob/e99c44214ab7d7f526b0fede5b561862460f1d66/docs/status.md)とsource付き`docs/results/`に保持しています。
 

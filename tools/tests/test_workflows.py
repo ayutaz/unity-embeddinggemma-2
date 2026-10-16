@@ -110,7 +110,7 @@ def test_required_ci_runs_on_every_pr_including_documentation():
     assert "pull_request" in workflow["on"]
     assert not workflow["on"]["pull_request"]
     assert workflow["on"]["push"]["branches"] == ["main"]
-    assert workflow["permissions"] == {"contents": "read"}
+    assert workflow["permissions"] == {"contents": "read", "actions": "read"}
     assert "pull_request_target" not in workflow["on"]
 
 

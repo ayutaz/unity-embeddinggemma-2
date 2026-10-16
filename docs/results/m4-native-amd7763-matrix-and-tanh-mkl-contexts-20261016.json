@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "run": 38823855948,
+  "source": "d838ecb7d1bac9169f5afc525d823de0d4a578ae",
+  "scope": "small_native_mkl_context_matrix_and_synthetic_activation_only",
+  "artifact": {
+    "id": 12013054484,
+    "bytes": 12825328
+  },
+  "cpu_model": "AMD EPYC7763",
+  "cpu_capability": "AVX2",
+  "report_sha256": "67464022c63225178d6ffcd5eb4d40137ab3a9bff1e68e58a3c38392da6ee6b8",
+  "all_capture_hashes_and_activation_metrics_independently_verified": true,
+  "contexts": [
+    {
+      "context": "default",
+      "cpu_capability": "AVX2",
+      "environment": {
+        "MKL_ENABLE_INSTRUCTIONS": null,
+        "MKL_CBWR": null,
+        "ATEN_CPU_CAPABILITY": null,
+        "ONEDNN_MAX_CPU_ISA": null,
+        "MKL_VERBOSE": "1"
+      },
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "worst_index": 0,
+        "worst_actual": -28.171314239501953,
+        "worst_expected": -28.171314239501953,
+        "exact_difference_count": 0
+      },
+      "activation_context": {
+        "scope": "fixed_synthetic_native_tanh_vs_original_order_only",
+        "execution": "native_torch_tanh_and_original_order_eager_control_not_actual_onnx",
+        "cases": [
+          {
+            "id": "dense32771",
+            "shape": [
+              32771
+            ],
+            "input_sha256": "5566e15821fa8741ee5c9032e98ec8db66803c044659c84ee5c4a77cce572409",
+            "files": [
+              {
+                "file": "tanh-dense32771-input-fp32.bin",
+                "sha256": "5566e15821fa8741ee5c9032e98ec8db66803c044659c84ee5c4a77cce572409",
+                "bytes": 131084
+              },
+              {
+                "file": "tanh-dense32771-native-fp32.bin",
+                "sha256": "04c9f7965bcd4aa607098405b9d85488bef86e19d2b33c5ed5e2083e55bb5b27",
+                "bytes": 131084
+              },
+              {
+                "file": "tanh-dense32771-original-order-fp32.bin",
+                "sha256": "04c9f7965bcd4aa607098405b9d85488bef86e19d2b33c5ed5e2083e55bb5b27",
+                "bytes": 131084
+              }
+            ],
+            "original_order_vs_native": {
+              "actual_finite": true,
+              "same_shape": true,
+              "mismatched_elements": 0,
+              "maximum_absolute_error": 0.0,
+              "maximum_tolerance_ratio": 0.0,
+              "worst_index": 0,
+              "worst_actual": -0.9999999403953552,
+              "worst_expected": -0.9999999403953552,
+              "exact_difference_count": 0
+            }
+          },
+          {
+            "id": "random514",
+            "shape": [
+              2,
+              257
+            ],
+            "input_sha256": "d84caa8f88e0a842c2784bc0734b07aa43e75d1788f44df3d4d04866c1e5d794",
+            "files": [
+              {
+                "file": "tanh-random514-input-fp32.bin",
+                "sha256": "d84caa8f88e0a842c2784bc0734b07aa43e75d1788f44df3d4d04866c1e5d794",
+                "bytes": 2056
+              },
+              {
+                "file": "tanh-random514-native-fp32.bin",
+                "sha256": "1ed666420d33124caefc53c1808fb2bd658a269375410a91b3ca59c87b8c8016",
+                "bytes": 2056
+              },
+              {
+                "file": "tanh-random514-original-order-fp32.bin",
+                "sha256": "1ed666420d33124caefc53c1808fb2bd658a269375410a91b3ca59c87b8c8016",
+                "bytes": 2056
+              }
+            ],
+            "original_order_vs_native": {
+              "actual_finite": true,
+              "same_shape": true,
+              "mismatched_elements": 0,
+              "maximum_absolute_error": 0.0,
+              "maximum_tolerance_ratio": 0.0,
+              "worst_index": 0,
+              "worst_actual": 0.8357657194137573,
+              "worst_expected": 0.8357657194137573,
+              "exact_difference_count": 0
+            }
+          }
+        ],
+        "onnx_executed": false,
+        "encoder_validated": false
+      },
+      "log_sha256": "9ebf48170688338cea8583aa4054659807e41ce72bceaf52db23585f84b346b8"
+    },
+    {
+      "context": "avx2",
+      "cpu_capability": "AVX2",
+      "environment": {
+        "MKL_ENABLE_INSTRUCTIONS": "AVX2",
+        "MKL_CBWR": null,
+        "ATEN_CPU_CAPABILITY": null,
+        "ONEDNN_MAX_CPU_ISA": null,
+        "MKL_VERBOSE": "1"
+      },
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "worst_index": 0,
+        "worst_actual": -28.171314239501953,
+        "worst_expected": -28.171314239501953,
+        "exact_difference_count": 0
+      },
+      "activation_context": {
+        "scope": "fixed_synthetic_native_tanh_vs_original_order_only",
+        "execution": "native_torch_tanh_and_original_order_eager_control_not_actual_onnx",
+        "cases": [
+          {
+            "id": "dense32771",
+            "shape": [
+              32771
+            ],
+            "input_sha256": "5566e15821fa8741ee5c9032e98ec8db66803c044659c84ee5c4a77cce572409",
+            "files": [
+              {
+                "file": "tanh-dense32771-input-fp32.bin",
+                "sha256": "5566e15821fa8741ee5c9032e98ec8db66803c044659c84ee5c4a77cce572409",
+                "bytes": 131084
+              },
+              {
+                "file": "tanh-dense32771-native-fp32.bin",
+                "sha256": "04c9f7965bcd4aa607098405b9d85488bef86e19d2b33c5ed5e2083e55bb5b27",
+                "bytes": 131084
+              },
+              {
+                "file": "tanh-dense32771-original-order-fp32.bin",
+                "sha256": "04c9f7965bcd4aa607098405b9d85488bef86e19d2b33c5ed5e2083e55bb5b27",
+                "bytes": 131084
+              }
+            ],
+            "original_order_vs_native": {
+              "actual_finite": true,
+              "same_shape": true,
+              "mismatched_elements": 0,
+              "maximum_absolute_error": 0.0,
+              "maximum_tolerance_ratio": 0.0,
+              "worst_index": 0,
+              "worst_actual": -0.9999999403953552,
+              "worst_expected": -0.9999999403953552,
+              "exact_difference_count": 0
+            }
+          },
+          {
+            "id": "random514",
+            "shape": [
+              2,
+              257
+            ],
+            "input_sha256": "d84caa8f88e0a842c2784bc0734b07aa43e75d1788f44df3d4d04866c1e5d794",
+            "files": [
+              {
+                "file": "tanh-random514-input-fp32.bin",
+                "sha256": "d84caa8f88e0a842c2784bc0734b07aa43e75d1788f44df3d4d04866c1e5d794",
+                "bytes": 2056
+              },
+              {
+                "file": "tanh-random514-native-fp32.bin",
+                "sha256": "1ed666420d33124caefc53c1808fb2bd658a269375410a91b3ca59c87b8c8016",
+                "bytes": 2056
+              },
+              {
+                "file": "tanh-random514-original-order-fp32.bin",
+                "sha256": "1ed666420d33124caefc53c1808fb2bd658a269375410a91b3ca59c87b8c8016",
+                "bytes": 2056
+              }
+            ],
+            "original_order_vs_native": {
+              "actual_finite": true,
+              "same_shape": true,
+              "mismatched_elements": 0,
+              "maximum_absolute_error": 0.0,
+              "maximum_tolerance_ratio": 0.0,
+              "worst_index": 0,
+              "worst_actual": 0.8357657194137573,
+              "worst_expected": 0.8357657194137573,
+              "exact_difference_count": 0
+            }
+          }
+        ],
+        "onnx_executed": false,
+        "encoder_validated": false
+      },
+      "log_sha256": "bd80c6bdbae3ee5849eaf337a6d63ba46b5c3f3b1b22c027a33bfcbebe2a328c"
+    }
+  ],
+  "native_tanh_default_and_avx2_bit_differences": 0,
+  "native_matrix_matches_original_qualified_values": 1146880,
+  "intel_hypothesis_resolved": false,
+  "activation_actual_onnx_executed": false,
+  "whole_encoder_validated": false,
+  "gpu_validated": false
+}

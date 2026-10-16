@@ -1,0 +1,36 @@
+{
+  "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+  "CompletedAt": "2026-10-13T16:17:36.6441696Z",
+  "FailedCount": 3,
+  "FailedTests": [
+    {
+      "FullName": "EmbeddingGemma.Tests.CpuImagePreprocessorIntegrationTests.OtherAcceptedByteFormatsKeepStoredRgb(RGB24,False)",
+      "Message": "Unhandled log message: '[Error] 'R8G8B8_UNorm' doesn't support ReadPixels usage on this platform. Async GPU readback failed.'. Use UnityEngine.TestTools.LogAssert.Expect",
+      "File": "./Library/PackageCache/com.ayutaz.embeddinggemma@f78cf565f2af/Runtime/ImagePreprocessor.cs",
+      "Line": 142
+    },
+    {
+      "FullName": "EmbeddingGemma.Tests.CpuImagePreprocessorIntegrationTests.OtherAcceptedByteFormatsKeepStoredRgb(BGRA32,False)",
+      "Message": "Unhandled log message: '[Error] 'B8G8R8A8_UNorm' doesn't support ReadPixels usage on this platform. Async GPU readback failed.'. Use UnityEngine.TestTools.LogAssert.Expect",
+      "File": "./Library/PackageCache/com.ayutaz.embeddinggemma@f78cf565f2af/Runtime/ImagePreprocessor.cs",
+      "Line": 142
+    },
+    {
+      "FullName": "EmbeddingGemma.Tests.CpuImagePreprocessorIntegrationTests.RealTextureCpuPreprocessingConnectsToSyntheticFinalApi",
+      "Message": "  Expected: 0.45733540469874051d +/- 9.9999999999999995E-07d\r\n  But was:  0.457341015f\r\n",
+      "File": ".\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CpuImagePreprocessorIntegrationTests.cs",
+      "Line": 62
+    }
+  ],
+  "HasFailures": true,
+  "InconclusiveCount": 0,
+  "Message": "Test execution completed with status: Failed",
+  "NoTestsFound": false,
+  "NoTestsFoundExplanation": "",
+  "PassedCount": 14,
+  "SkippedCount": 0,
+  "Status": "Failed",
+  "Success": false,
+  "TestCount": 17,
+  "XmlPath": ".\\artifacts\\k\\.uloop\\outputs\\TestResults\\20261013_161736_6497180_3e3ae90e32a24534948d307eb0cccfda.xml"
+}

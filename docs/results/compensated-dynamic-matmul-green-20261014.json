@@ -1,0 +1,10 @@
+{
+  "scope": "sentis_dynamic_batched_compensated_matmul_tdd_green",
+  "source": "468452b366e2bd8779047c7c67c8d50483f6ce9d",
+  "passed": 6,
+  "failed": 0,
+  "skipped": 0,
+  "exit_code": 0,
+  "real_gpu_required": true,
+  "full_encoder_validated": false
+}

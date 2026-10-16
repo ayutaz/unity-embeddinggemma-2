@@ -1,0 +1,9 @@
+{
+  "scope": "role_reference_saved_context_comparison_red",
+  "source_base": "a952042",
+  "command": "uv run --locked pytest tests/test_multimodal_reference_roles.py -k feature_drift -q --tb=short",
+  "passed": 0,
+  "failed": 2,
+  "deselected": 14,
+  "reason": "Saved encoder context was not compared after official feature drift"
+}

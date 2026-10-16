@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "isolated_fp32_fma_midpoint_residual_candidate_only",
+  "source_base": "6c50bdc82fbcb09833fc24e438bf41bb5f42da11",
+  "missing_api_red": {
+    "file": "midpoint-fp32-fma-red-20261016.xml",
+    "sha256": "62c8de7f6d35e3931c1f4f92a0899b2e6824d29f81587a6c846f56bcea4d0621",
+    "tests": "3",
+    "failures": "3",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.318"
+  },
+  "original_algorithm_actual_numerical_red": {
+    "file": "midpoint-fp32-fma-original-numerical-red-20261016.xml",
+    "sha256": "c8b8d97cc64fe45fc6d7a91985bde1990609343e88b4f3c008edad918b314881",
+    "tests": "3",
+    "failures": "2",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.497"
+  },
+  "initial_green": {
+    "file": "midpoint-fp32-fma-green-20261016.xml",
+    "sha256": "fbb3208bbb56e74d9d0cac51a6b7652332e5a2a57fa0563eb619ed4c2dcb9740",
+    "tests": "3",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.535"
+  },
+  "expanded_related_green": {
+    "file": "midpoint-fma-and-native-context-related-green-20261016.xml",
+    "sha256": "fdc0a33db8ae1d058e95c8f594c3deca2e9239e9c56b7a21d3db0a5bfe0d0491",
+    "tests": "37",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "7.318"
+  },
+  "original_numerical_red_failed_midpoint_values": 20,
+  "expanded_verified_midpoint_values": 30,
+  "independent_exact_rational_random_and_cancellation_triples": 2000,
+  "oracle": "Fraction exact product+sum; choose nearest representableFP32 among3neighbors with ties-to-even. No inference FP64.",
+  "behavior": [
+    "Retain the low residual of the sum of product/addition errors; use it to select the correct side at an exact midpoint.",
+    "Get positive and negative output steps by finiteFP32 perturbation; handle exponent-bin boundary toward zero separately.",
+    "Standard actual ONNX graph independently checked; isolated runner rejects FP64/custom domains.",
+    "Existing original FMA helper, default static FMA lowering and existing connected variants are unchanged; a separate explicit midpoint-QK variant is prepared.",
+    "Model coefficients and original expected values/tolerances unchanged.",
+    "Product underflow/overflow remain outside this bounded candidate qualification; no universal IEEE claim."
+  ],
+  "sine_failure_cause_proven": false,
+  "whole_encoder_validated": false,
+  "gpu_validated": false,
+  "default_export_promoted": false,
+  "static_bmm_red": {
+    "file": "midpoint-static-bmm-red-20261016.xml",
+    "sha256": "e9f7964e7a7a93b21dae4d287295aa46d04cc983991579f2f12a470f82a941af",
+    "tests": "1",
+    "failures": "1",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.249"
+  },
+  "static_bmm_related_green": {
+    "file": "midpoint-static-bmm-related-green-20261016.xml",
+    "sha256": "fb1e00ddd4d3ecaa33a7626a4bada75a3075fdfa65fc3a9dce02e667cf19ce17",
+    "tests": "15",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "9.957"
+  }
+}

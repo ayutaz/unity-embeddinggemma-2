@@ -1,0 +1,47 @@
+{
+  "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "native_replay_source": "6ac2c92191a62ada4830adeee5235fb3c4b90f15",
+  "native_replay_report_sha256": "99529dc0fa6c74825b23fca653d82091797ff1e5267d26c5cdae723fcf86f501",
+  "original_graph_sha256": "7770a8af258f2de32c5587497b820596ea4e1ed7ec5382c3ee90eada2bec7e4a",
+  "anchors": [
+    {
+      "stage": "pre_layer_norm",
+      "node_name": "/feed_forward1/pre_layer_norm/Mul_1",
+      "original_output": "/feed_forward1/pre_layer_norm/Mul_1_output_0",
+      "coefficient_name": "onnx::Mul_7799",
+      "coefficient_sha256": "ae8174ce6362f0f8447e02a23fd55c4e38177939f69f5dd49c8a327d902dbaaa",
+      "coefficient_bytes": 4096,
+      "coefficient_dims": [
+        1024
+      ]
+    },
+    {
+      "stage": "post_layer_norm",
+      "node_name": "/feed_forward1/post_layer_norm/Mul_1",
+      "original_output": "/feed_forward1/post_layer_norm/Mul_1_output_0",
+      "coefficient_name": "onnx::Mul_7812",
+      "coefficient_sha256": "1e6392c0cb44215f7b52e59b830bdbd75b8769354922316bad49e5242ce7ea11",
+      "coefficient_bytes": 4096,
+      "coefficient_dims": [
+        1024
+      ],
+      "original_coefficient_sha256": "57b626c26e3c796f890dc79142330ea0c4a7b338e38d4d87a4e0343443da0ce4",
+      "coefficient_multiplier": 0.5,
+      "restore_multiplier": 2
+    }
+  ],
+  "folded_scale_audit": {
+    "original_coefficient_sha256": "57b626c26e3c796f890dc79142330ea0c4a7b338e38d4d87a4e0343443da0ce4",
+    "folded_coefficient_sha256": "1e6392c0cb44215f7b52e59b830bdbd75b8769354922316bad49e5242ce7ea11",
+    "coefficient_multiplier": 0.5,
+    "restore_multiplier": 2,
+    "native_residual_half_exact": true,
+    "saved_constant_matches": [
+      {
+        "index": 102,
+        "sha256": "1e6392c0cb44215f7b52e59b830bdbd75b8769354922316bad49e5242ce7ea11"
+      }
+    ],
+    "read_weight_bytes": 4096
+  }
+}

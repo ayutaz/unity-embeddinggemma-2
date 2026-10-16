@@ -1,0 +1,146 @@
+{
+  "success": true,
+  "scope": "native_convolution_reference_and_frozen_glu_gpu_only",
+  "reference_producer": "5d5c5eb8a58b4d84f65caea9f7cddf5b5ae0a4ab",
+  "run_id": 38668286237,
+  "url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38668286237",
+  "reference_sha256": "906d186ec19f25e7397ddc3e826d0fa0f6ab07ecd988c1ec314cfeaab95d7c78",
+  "context_validated": true,
+  "native_final_exact_match": true,
+  "part_count": 45,
+  "previous_native_parts_bit_identical": 30,
+  "capture_tdd": {
+    "intended_red": 5,
+    "combined_related_green": 29,
+    "workflow_intended_red": 1,
+    "module_green": 26
+  },
+  "glu_gpu_execution": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      ".\\artifacts\\acceptance-consumer",
+      "-logFile",
+      ".\\artifacts\\numerical-acceptance-state\\native-glu-api-and-frozen-candidate-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "NativeGluGpuTests",
+      "-testResults",
+      ".\\artifacts\\numerical-acceptance-state\\native-glu-api-and-frozen-candidate-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-15T11:06:18.218795+09:00",
+    "pid": 87808,
+    "exit_code": 0,
+    "unity_results": ".\\artifacts\\numerical-acceptance-state\\native-glu-api-and-frozen-candidate-20261015.xml",
+    "unity_counts": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 42.27005240001017,
+    "completed_utc": "2026-10-15T11:07:00.488848+09:00"
+  },
+  "glu_gpu_red": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      ".\\artifacts\\acceptance-consumer",
+      "-logFile",
+      ".\\artifacts\\numerical-acceptance-state\\native-glu-api-and-frozen-red-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "NativeGluGpuTests",
+      "-testResults",
+      ".\\artifacts\\numerical-acceptance-state\\native-glu-api-and-frozen-red-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-15T11:04:27.666822+09:00",
+    "pid": 59472,
+    "exit_code": 2,
+    "unity_results": ".\\artifacts\\numerical-acceptance-state\\native-glu-api-and-frozen-red-20261015.xml",
+    "unity_counts": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "skipped": 0
+    },
+    "elapsed_seconds": 37.92851650000375,
+    "completed_utc": "2026-10-15T11:05:05.595339+09:00"
+  },
+  "glu_frozen": {
+    "success": true,
+    "scope": "one_frozen_original_glu_gpu_bit_gate",
+    "runtime_source": "81893c75b6a5619ec94fd5a886d8384acd9f867e",
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "actual_backend": "GPUCompute",
+    "count": 286720,
+    "bit_differences": 0
+  },
+  "glu_planner_tdd": {
+    "intended_red": 9,
+    "related_green": 80
+  },
+  "glu_offline_oracle": {
+    "scope": "offline_native_glu_rounding_oracle_only",
+    "count": 286720,
+    "rows": [
+      {
+        "candidate": "native_inverse_then_multiply",
+        "bit_differences": 0,
+        "maximum_absolute_error": 0.0
+      },
+      {
+        "candidate": "combined_division",
+        "bit_differences": 58634,
+        "maximum_absolute_error": 1.9073486328125E-06
+      }
+    ],
+    "gpu_validated": false,
+    "full_encoder_validated": false,
+    "source": "https://github.com/pytorch/pytorch/blob/5c4886908584029761b579af026dcfb627c84070/aten/src/ATen/native/cpu/Activation.cpp"
+  },
+  "depthwise_offline_oracle": {
+    "scope": "offline_native_depthwise_accumulation_order_only",
+    "count": 286720,
+    "kernel_width": 5,
+    "rows": [
+      {
+        "candidate": "forward_fma",
+        "bit_differences": 0,
+        "maximum_absolute_error": 0.0
+      },
+      {
+        "candidate": "reverse_fma",
+        "bit_differences": 163376,
+        "maximum_absolute_error": 3.814697265625E-06
+      },
+      {
+        "candidate": "separate_mul_add",
+        "bit_differences": 126629,
+        "maximum_absolute_error": 7.62939453125E-06
+      }
+    ],
+    "gpu_validated": false,
+    "full_encoder_validated": false
+  },
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "qualification": "Native layer references and frozen GLU qualify only the stated scope. FP64 appears only in offline individual-FMA rounding probes; product computation remains FP32 GPU."
+}

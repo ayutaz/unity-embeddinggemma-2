@@ -1,5 +1,15 @@
 # M2: 基盤安定化と全対応後の正式リリースへの受け渡し
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。冒頭の現在方針が、下の旧checkpointの着手順より優先する。
+
+## 2026-10-14の基準と受け渡し
+
+現在のmainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。PR #31はDraft / 未統合で、旧21f1 Player実測を現在の16f1 consumerや最新candidateの成功に付け替えない。公開tag / GitHub ReleaseはGitHub再確認で各0件。
+
+実装・実モデル検証は停止中。[最新状態](status.md)と[全体計画R0〜R5](multimodal-tdd-plan.md)を現在の順序とする。M2の標準環境再現・性能 / 寿命・最終空Git consumer、M3 / M4、必須macOS / Windows / iOS / Android、配布監査の未達を保持する。GPU条件をCPU fallbackで補わない。正式Releaseとmain mergeは別の明示指示後に扱う。
+
+## 以前の基盤安定化計画と実行履歴
+
 作成日: 2026-10-10。開始時点のmainは `2329507eb763202a297c1b15f385a83512eb6e1f`。
 最終更新: 2026-10-13。main / PR / CI / Secrets / runner / tag / ReleaseをGitHub APIで再確認した。今回の更新は文書のみで、Unity起動・build・実機測定は追加していない。
 当初は安定性・高速化、Git URL導入、他環境の実測、text-onlyリリースの4段階を扱った。2026-10-13のユーザー指定により、**正式リリースはM3画像・M4音声を含む全対応と必須検証の完了後へ移す**。[全体TDD計画](multimodal-tdd-plan.md) / [M3](m3-plan.md) / [M4](m4-plan.md)を全体の順序とする。
@@ -15,6 +25,14 @@ PR #31はdraft / 未統合。2026-10-12に承認された6000.3.21f1で、通常
 | 2. 固定Git導入 | `fc66af7`の空consumerで解決 / source / 実モデル4条件 / UI / cache合格。後続fixture配置を分けて記録 | 最終candidateの固定Git回帰。候補sourceが変われば必要な範囲だけ再検証 |
 | 3. 他環境・Player実測 | 21f1 Windows精度Player通常モード4条件とsample通常GUI / GPU、独立2起動の終了を確認。Androidは16f1の実APK監査まで | Android実機、Mac / iOS環境と各CPU / GPU・配置 / cache・測定結果。21f1移行後のAndroid toolchainも確認 |
 | 4. 全対応後の正式配布 | 開発版0.1.0-pre.1のみ。candidate / tag / Release未実施 | M2基盤 → M3画像 → M4音声 → 全必須環境の統合検証 → version / license / CHANGELOG → tag固定consumer → 正式Release |
+
+## 2026-10-13の計画更新
+
+現在のmainは `f41546d`（PR #50まで統合）、[main CI 38336919527](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38336919527)成功。共通Runtime・PCM入力・音声前処理Runtimeは統合済みで、実画像 / 実音声encoder接続と最終API / sample、最終空consumerの受け入れが残る。上のSHA / 測定値は過去の条件として維持する。固定Git導入helperは[PR #36](https://github.com/ayutaz/unity-embeddinggemma-2/pull/36)でPR #31の作業ブランチへ統合済みであり、未着手ではない。mainへの反映と最終candidateの新規導入が残る。今回確認した範囲はmain / open PR / 該当CIと保存された実行証拠であり、上記Secrets / runner / tag / Releaseの件数は過去の読み戻し記録とする。
+
+共通Runtimeの固定Git版 `21e598c`を既存consumerへ更新し、source overlayなしで実1024長backbone4条件が合格した。[receipt](results/multimodal-git-runtime-upgrade-windows-20261013.json)。embedded公式Test Frameworkの条件、合成featureの範囲を記録し、M2の最終空consumer・sample / Player・全環境の合格には数えない。
+
+以後は[全体TDD計画](multimodal-tdd-plan.md)の6工程を優先する。M2の残る振る舞いの変更は原因別red → green → refactor、最適化は同一入力・hash・backendの比較を要求する。正式公開はM3 / M4・全必須環境の完了後。工程6では配布準備だけを行い、公開tag / Releaseを作成しない。
 
 ## 次に進める順序
 

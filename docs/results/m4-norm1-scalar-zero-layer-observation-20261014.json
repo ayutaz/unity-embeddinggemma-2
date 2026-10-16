@@ -1,0 +1,292 @@
+{
+  "scope": "norm1_reciprocal_scalar_zero_layer_observation_only",
+  "source": "465d98373aed61240e5c69892b38c997a0fc2f86",
+  "passed": 2,
+  "failed": 0,
+  "skipped": 0,
+  "exit_code": 0,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "conditions": [
+    {
+      "stages": [
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 7.62939453125E-05,
+          "maximum_tolerance_ratio": 0.6481507636971175,
+          "stage": "layer_0",
+          "layer_index": 6960,
+          "tensor_index": 407,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "1523738acdf79e3b34e42c2dc4c7145dd1b9c0db1dd3f77120d7ca37b7c186e9"
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 4.57763671875E-05,
+          "maximum_tolerance_ratio": 0.6394217943438204,
+          "stage": "layer_1",
+          "layer_index": 10178,
+          "tensor_index": 765,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "3551addcc0a4e8dc1c5160c8931ec31fa74eade9b442b8e8bc19e31c159f3ecc"
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 4.57763671875E-05,
+          "maximum_tolerance_ratio": 0.4420680135129924,
+          "stage": "layer_2",
+          "layer_index": 13396,
+          "tensor_index": 1123,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "aa2fbead0fecbd58e5742c392d4c1fd75e8faf5e6f6127becc15fc8e8bd1bd9d"
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 6.103515625E-05,
+          "maximum_tolerance_ratio": 0.5069147866417993,
+          "stage": "layer_3",
+          "layer_index": 16614,
+          "tensor_index": 1481,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "c2722b2bf82c82d4f4185d8aad8682fc2e4667d3e307a2b0977a3f6c2b9683f3"
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 7.62939453125E-05,
+          "maximum_tolerance_ratio": 0.5649215181773416,
+          "stage": "layer_4",
+          "layer_index": 19832,
+          "tensor_index": 1839,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "4fa4dc2321d873dca8933b31cf303c2ef861237b95cc4e6c3ba806c7e2204cac"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 1,
+          "maximum_absolute_error": 6.103515625E-05,
+          "maximum_tolerance_ratio": 1.0282303532121537,
+          "stage": "layer_5",
+          "layer_index": 23050,
+          "tensor_index": 2197,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "86f86b14b203c016e62a32374bca51ee49dce859393ceaeff8aa49e6690977a8"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 1,
+          "maximum_absolute_error": 7.62939453125E-05,
+          "maximum_tolerance_ratio": 1.4304293895825082,
+          "stage": "layer_6",
+          "layer_index": 26268,
+          "tensor_index": 2555,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "52b96d19d71ba2283db6645e8f2727a89080e5118ef66b399e85f2a9ac1d3d6b"
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 7.62939453125E-05,
+          "maximum_tolerance_ratio": 0.9870044646134746,
+          "stage": "layer_7",
+          "layer_index": 29486,
+          "tensor_index": 2913,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "8e39d41d2db7e77038ee435d648db5ef12a38112721da33f0d1bc3f61084ebe6"
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 4.57763671875E-05,
+          "maximum_tolerance_ratio": 0.9754277054144822,
+          "stage": "layer_8",
+          "layer_index": 32704,
+          "tensor_index": 3271,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "5edb38300e28de5ddf2a2cc097b3fa6fa2657c3c74665404e91705b0844efc35"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 1,
+          "maximum_absolute_error": 6.103515625E-05,
+          "maximum_tolerance_ratio": 2.476133183556833,
+          "stage": "layer_9",
+          "layer_index": 35922,
+          "tensor_index": 3629,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "350b5a43e1fabf9bc12bb64063e6de5a85a35874c1501d4205c1d445298ac3ea"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 35,
+          "maximum_absolute_error": 0.00018310546875,
+          "maximum_tolerance_ratio": 4.545189399022474,
+          "stage": "layer_10",
+          "layer_index": 39140,
+          "tensor_index": 3987,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "0a0eae3abc75c0c3dbf75c0a6d9c1062b313b93a35f7681cc16c52a7cc7fcda3"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 1312,
+          "maximum_absolute_error": 0.001178741455078125,
+          "maximum_tolerance_ratio": 24.446340168636233,
+          "stage": "layer_11",
+          "layer_index": 42358,
+          "tensor_index": 4345,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "4c6521e8baee03ae3f28de21ccc95fd372c89ef5f8390e9f77a52952bf7d5ae8"
+        }
+      ],
+      "report_sha256": "a2b10352312035dc1f628edacdb4926891bf3bde6ca71e4ce5578ac811af3c70",
+      "first_failed_stage": "layer_5",
+      "normal_final_matches_observed_bits": true,
+      "backend": "CPU"
+    },
+    {
+      "stages": [
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 4.57763671875E-05,
+          "maximum_tolerance_ratio": 0.3838671995210376,
+          "stage": "layer_0",
+          "layer_index": 6960,
+          "tensor_index": 407,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "1523738acdf79e3b34e42c2dc4c7145dd1b9c0db1dd3f77120d7ca37b7c186e9"
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 6.103515625E-05,
+          "maximum_tolerance_ratio": 0.301525940819337,
+          "stage": "layer_1",
+          "layer_index": 10178,
+          "tensor_index": 765,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "3551addcc0a4e8dc1c5160c8931ec31fa74eade9b442b8e8bc19e31c159f3ecc"
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 3.814697265625E-05,
+          "maximum_tolerance_ratio": 0.22046184813052927,
+          "stage": "layer_2",
+          "layer_index": 13396,
+          "tensor_index": 1123,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "aa2fbead0fecbd58e5742c392d4c1fd75e8faf5e6f6127becc15fc8e8bd1bd9d"
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 6.103515625E-05,
+          "maximum_tolerance_ratio": 0.5353868726756449,
+          "stage": "layer_3",
+          "layer_index": 16614,
+          "tensor_index": 1481,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "c2722b2bf82c82d4f4185d8aad8682fc2e4667d3e307a2b0977a3f6c2b9683f3"
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 9.1552734375E-05,
+          "maximum_tolerance_ratio": 0.5369501514224839,
+          "stage": "layer_4",
+          "layer_index": 19832,
+          "tensor_index": 1839,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "4fa4dc2321d873dca8933b31cf303c2ef861237b95cc4e6c3ba806c7e2204cac"
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 9.1552734375E-05,
+          "maximum_tolerance_ratio": 0.5297693363727178,
+          "stage": "layer_5",
+          "layer_index": 23050,
+          "tensor_index": 2197,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "86f86b14b203c016e62a32374bca51ee49dce859393ceaeff8aa49e6690977a8"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 1,
+          "maximum_absolute_error": 9.1552734375E-05,
+          "maximum_tolerance_ratio": 1.0276073201023765,
+          "stage": "layer_6",
+          "layer_index": 26268,
+          "tensor_index": 2555,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "52b96d19d71ba2283db6645e8f2727a89080e5118ef66b399e85f2a9ac1d3d6b"
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 6.103515625E-05,
+          "maximum_tolerance_ratio": 0.5135192578379582,
+          "stage": "layer_7",
+          "layer_index": 29486,
+          "tensor_index": 2913,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "8e39d41d2db7e77038ee435d648db5ef12a38112721da33f0d1bc3f61084ebe6"
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 6.103515625E-05,
+          "maximum_tolerance_ratio": 0.6910618770419892,
+          "stage": "layer_8",
+          "layer_index": 32704,
+          "tensor_index": 3271,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "5edb38300e28de5ddf2a2cc097b3fa6fa2657c3c74665404e91705b0844efc35"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 1,
+          "maximum_absolute_error": 6.103515625E-05,
+          "maximum_tolerance_ratio": 1.8445615227268748,
+          "stage": "layer_9",
+          "layer_index": 35922,
+          "tensor_index": 3629,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "350b5a43e1fabf9bc12bb64063e6de5a85a35874c1501d4205c1d445298ac3ea"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 31,
+          "maximum_absolute_error": 0.00017309188842773438,
+          "maximum_tolerance_ratio": 6.21826047661811,
+          "stage": "layer_10",
+          "layer_index": 39140,
+          "tensor_index": 3987,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "0a0eae3abc75c0c3dbf75c0a6d9c1062b313b93a35f7681cc16c52a7cc7fcda3"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 1179,
+          "maximum_absolute_error": 0.000759124755859375,
+          "maximum_tolerance_ratio": 23.94601719411246,
+          "stage": "layer_11",
+          "layer_index": 42358,
+          "tensor_index": 4345,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "4c6521e8baee03ae3f28de21ccc95fd372c89ef5f8390e9f77a52952bf7d5ae8"
+        }
+      ],
+      "report_sha256": "ea99c8525749278f1e893384205215e88f8b1207861b64f13406c2f2e507db88",
+      "first_failed_stage": "layer_6",
+      "normal_final_matches_observed_bits": true,
+      "backend": "GPUCompute"
+    }
+  ]
+}

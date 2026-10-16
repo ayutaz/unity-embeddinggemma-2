@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "explicit_connected_original_query_key_midpoint_candidate_tdd_only",
+  "source_base": "6c50bdc82fbcb09833fc24e438bf41bb5f42da11",
+  "red": {
+    "file": "ordered-midpoint-bmm-variant-red-20261016.xml",
+    "sha256": "a7b46e25021b7306e0b89249a1acff43245eb2e9700debafed89feca6734b74e",
+    "tests": "4",
+    "failures": "3",
+    "errors": "0",
+    "skipped": "0",
+    "time": "2.867"
+  },
+  "qualified_guard_red": {
+    "file": "ordered-midpoint-bmm-guard-red-20261016.xml",
+    "sha256": "4f8a75d3a66101cee85aaaaf96e2c3119796bb4b1acc1c13f429f7ada8aad78c",
+    "tests": "1",
+    "failures": "1",
+    "errors": "0",
+    "skipped": "0",
+    "time": "2.479"
+  },
+  "related_green": {
+    "file": "ordered-midpoint-bmm-variant-related-green-20261016.xml",
+    "sha256": "ef307baa73d12d9a03bae257cb1b6b8e43250c98fa03bb3c2c0110d214884256",
+    "tests": "32",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "35.945"
+  },
+  "additional_connected_actual_onnx_green": {
+    "file": "ordered-midpoint-bmm-connected-green-20261016.xml",
+    "sha256": "518e8c702dd654f07a81696b965adb3f5318be1bad25cae34c7a0a9bd127cb9b",
+    "tests": "1",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "23.336"
+  },
+  "actionlint": "passed",
+  "behavior": [
+    "Retain all original Tanh candidate operator families and parameters.",
+    "Only query-key BMM [192,12,128]x[192,128,24] changes to midpoint-corrected standardFP32 FMA. All other BMM use the old lowering.",
+    "Audit exactly one changedQK per original layer and three per connected three-layer part.",
+    "Raw stem, positions, clipping, masks, normalization, final crop and coefficients remain unchanged.",
+    "Native forwards are original BMM passthrough only; actual ONNX execution is independently qualified.",
+    "Workflow rejects this opt-in candidate outside connected mode before downloading the original graph.",
+    "No new original expected values or tolerance changes. Existing variants/default export/GPU Runtime remain unchanged.",
+    "Independent raw auditor requires the explicit expected candidate name; default remains oldTanh and unknown candidates reject before artifact access."
+  ],
+  "real_full_sine_pending": true,
+  "all_six_passed": false,
+  "gpu_validated": false,
+  "default_export_promoted": false,
+  "required_ci_passed": false,
+  "auditor_variant_red": {
+    "file": "midpoint-auditor-variant-red-20261016.xml",
+    "sha256": "bbfa539aad659039e292966a00dd724323678b3bf9fdf2c22b2c3e764fd8bb87",
+    "tests": "2",
+    "failures": "2",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.150"
+  },
+  "auditor_variant_green": {
+    "file": "midpoint-auditor-variant-green-20261016.xml",
+    "sha256": "9528d3d853a3401e6afa0a5e33348221207cd9bb289cb1f4a0de3d1312d69595",
+    "tests": "14",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.486"
+  }
+}

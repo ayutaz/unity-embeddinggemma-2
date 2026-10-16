@@ -1,0 +1,177 @@
+{
+  "date": "2026-10-13",
+  "scope": "real_fp32_audio_encoder_projector_all_six_failed",
+  "reference_workflow_run": 38375956180,
+  "reference_producer": "271f5a12ca2aab081eb330f45cf593d404330374",
+  "artifact_id": 11801396759,
+  "harness_commit": "98f33c67d6fcd9181bb2baa52c4908340cbbe90e",
+  "unity": "6000.3.21f1",
+  "sentis": "2.6.1",
+  "runtime_requested_and_resolved_git": "8a7d2f0dea30be95a3158830fb0d9c9de895efc4",
+  "runtime_source_overlay": false,
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "compile_errors": 0,
+  "compile_warnings": 0,
+  "nunit_passed": 0,
+  "nunit_failed": 2,
+  "nunit_skipped": 0,
+  "cli_exit_code": 1,
+  "expected_signal_count": 6,
+  "backend_signal_conditions_executed": 12,
+  "all_cosine_conditions_passed": true,
+  "all_fixed_elementwise_conditions_passed": false,
+  "conditions": [
+    {
+      "requested_backend": "CPU",
+      "success": false,
+      "signal_count": 6,
+      "cpu_computation_or_inputs": [],
+      "readback_flush": [],
+      "cases": [
+        {
+          "id": "silence",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU",
+          "mismatched_elements": 537,
+          "maximum_absolute_error": 0.00015497207641601562,
+          "maximum_tolerance_ratio": 6.813356841880732,
+          "minimum_cosine": 0.9999999995716242,
+          "success": false
+        },
+        {
+          "id": "impulse",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU",
+          "mismatched_elements": 929,
+          "maximum_absolute_error": 0.0002970695495605469,
+          "maximum_tolerance_ratio": 12.761040780643713,
+          "minimum_cosine": 0.9999999985124065,
+          "success": false
+        },
+        {
+          "id": "sine",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU",
+          "mismatched_elements": 1014,
+          "maximum_absolute_error": 0.000286102294921875,
+          "maximum_tolerance_ratio": 15.800193893998493,
+          "minimum_cosine": 0.9999999984429141,
+          "success": false
+        },
+        {
+          "id": "nyquist",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU",
+          "mismatched_elements": 1887,
+          "maximum_absolute_error": 0.0003660917282104492,
+          "maximum_tolerance_ratio": 13.922236024766596,
+          "minimum_cosine": 0.9999999970062879,
+          "success": false
+        },
+        {
+          "id": "noise",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU",
+          "mismatched_elements": 566,
+          "maximum_absolute_error": 0.00021591782569885254,
+          "maximum_tolerance_ratio": 9.15315652761811,
+          "minimum_cosine": 0.9999999987576192,
+          "success": false
+        },
+        {
+          "id": "padded_noise",
+          "profile": "frames-1119-valid-839",
+          "actual_backend": "CPU",
+          "mismatched_elements": 484,
+          "maximum_absolute_error": 0.00021591782569885254,
+          "maximum_tolerance_ratio": 9.15315652761811,
+          "minimum_cosine": 0.9999999987576192,
+          "success": false
+        }
+      ]
+    },
+    {
+      "requested_backend": "GPUCompute",
+      "success": false,
+      "signal_count": 6,
+      "cpu_computation_or_inputs": [],
+      "readback_flush": [],
+      "cases": [
+        {
+          "id": "silence",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute",
+          "mismatched_elements": 553,
+          "maximum_absolute_error": 0.0003186464309692383,
+          "maximum_tolerance_ratio": 10.89746292491483,
+          "minimum_cosine": 0.999999998114366,
+          "success": false
+        },
+        {
+          "id": "impulse",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute",
+          "mismatched_elements": 1011,
+          "maximum_absolute_error": 0.00033473968505859375,
+          "maximum_tolerance_ratio": 13.610273396664804,
+          "minimum_cosine": 0.9999999978177508,
+          "success": false
+        },
+        {
+          "id": "sine",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute",
+          "mismatched_elements": 481,
+          "maximum_absolute_error": 0.00018864870071411133,
+          "maximum_tolerance_ratio": 8.475118765485314,
+          "minimum_cosine": 0.9999999995217632,
+          "success": false
+        },
+        {
+          "id": "nyquist",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute",
+          "mismatched_elements": 938,
+          "maximum_absolute_error": 0.00018203258514404297,
+          "maximum_tolerance_ratio": 9.09270644479074,
+          "minimum_cosine": 0.9999999992441407,
+          "success": false
+        },
+        {
+          "id": "noise",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute",
+          "mismatched_elements": 181,
+          "maximum_absolute_error": 0.00010082125663757324,
+          "maximum_tolerance_ratio": 4.466840995446843,
+          "minimum_cosine": 0.9999999997245844,
+          "success": false
+        },
+        {
+          "id": "padded_noise",
+          "profile": "frames-1119-valid-839",
+          "actual_backend": "GPUCompute",
+          "mismatched_elements": 179,
+          "maximum_absolute_error": 0.00010082125663757324,
+          "maximum_tolerance_ratio": 4.466840995446843,
+          "minimum_cosine": 0.9999999997245844,
+          "success": false
+        }
+      ]
+    }
+  ],
+  "completed_utc": "2026-10-13T10:00:45.7894084Z",
+  "numpy_onnx_numerically_validated": false,
+  "float16_validated": false,
+  "gpu_preprocessing_validated": false,
+  "end_to_end_validated": false,
+  "tolerances_changed": false,
+  "formal_release_created": false,
+  "evidence_sha256": {
+    "compile_json": "b20aaa9e6a36d5a0933e32aeb8916f99af80e130ef6468b3572c50240086ce5e",
+    "run_tests_json": "2bc72a1a27f544e7a2be202d9da5e95785b22b1bab2fc6a8f4225649246772a5",
+    "unity_results_json": "b70a8c2acd5614663821b6648782f8bb49bdab654ac52315ddd2596bc78257d4",
+    "harness_source": "0c8a0b302ed3570b78513c1992a307eda6b3b58bce18fa813f399f85f654f2ab"
+  }
+}

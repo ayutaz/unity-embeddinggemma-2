@@ -1,0 +1,24 @@
+{
+  "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+  "CompletedAt": "2026-10-13T17:11:05.3979837Z",
+  "FailedCount": 1,
+  "FailedTests": [
+    {
+      "FullName": "EmbeddingGemma.Tests.GpuConstantWorkerTests.OddFloat16ConstantUsesPackedWordsAndKeepsTheProjection",
+      "Message": "System.Collections.Generic.KeyNotFoundException : The given key '2' was not present in the dictionary.",
+      "File": "\u003c41d29b352f6a475ab1bf7c6628b82790\u003e",
+      "Line": 0
+    }
+  ],
+  "HasFailures": true,
+  "InconclusiveCount": 0,
+  "Message": "Test execution completed with status: Failed",
+  "NoTestsFound": false,
+  "NoTestsFoundExplanation": "",
+  "PassedCount": 12,
+  "SkippedCount": 0,
+  "Status": "Failed",
+  "Success": false,
+  "TestCount": 13,
+  "XmlPath": ".\\artifacts\\k\\.uloop\\outputs\\TestResults\\20261013_171105_4004972_d9109d5a8a2b48ad94ce695094184cb8.xml"
+}

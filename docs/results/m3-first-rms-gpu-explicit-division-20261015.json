@@ -1,0 +1,375 @@
+{
+  "scope": "first_vision_rms_current_cpu_equation_gpu_parity_and_mean_division_fusion_fix",
+  "original_references_changed": false,
+  "learned_coefficients_changed": false,
+  "all_runtime_float_arithmetic_fp32": true,
+  "original_internal_native_reference_available": false,
+  "original_full_context_replayed": false,
+  "baseline_observed_gpu_replay_execution": {
+    "file": "vision-first-rms-original-gpu-20261015-process.json",
+    "sha256": "af7aa4a4da4de0b1098f5e1d33e0ccaca5304ec771fec09b7fbdc20f5e9b54d1",
+    "xml_sha256": "d0a2c7a14a8416cff38a4cf11aa0a007707267edaf646ecf5d89bc574b1d68c2",
+    "counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 47.248455599998124,
+    "exit_code": 0
+  },
+  "baseline_observed_gpu_replay": {
+    "file": "vision-first-rms-original-gpu-6b6c8cc387c7bcf124b0ea2c5fccbc6a45fb7a92.json",
+    "sha256": "5bb769437b550affef5424c35495043459074e8e9c946da3e28dd4be887186f1",
+    "result": {
+      "success": true,
+      "scope": "isolated_first_vision_rms_observed_gpu_replay_only",
+      "runtime_source": "6b6c8cc387c7bcf124b0ea2c5fccbc6a45fb7a92",
+      "native_reference_validated": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "phase": "completed",
+      "epsilon": 1e-06,
+      "layer_count": 7,
+      "scale_sha256": "acc544061ccfe25009301bdfc15bab61468511ef6f27962b70c54efb65da9cb7",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "actual_backend": "GPUCompute",
+      "bit_differences_against_observed_gpu": 0
+    }
+  },
+  "python_export_tdd_red": {
+    "file": "vision-rms-export-red-20261015.xml",
+    "sha256": "bfddd929868083eb30ac3dc8971f7c9af90f976ca5656cae54d64227f05d40b6",
+    "tests": 10,
+    "failures": 10,
+    "errors": 0,
+    "skipped": 0
+  },
+  "python_export_related_green": {
+    "file": "vision-rms-export-related-green-20261015.xml",
+    "sha256": "84c733039b91d3e9ccbe086aa2fd106d3d3a497bd15857eb101f751b086c0ace",
+    "tests": 35,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "preparation": {
+    "scope": "first_vision_rms_candidate_and_current_cpu_equation_only",
+    "producer": "7f332e0c03c220029531b601e7de43b6b5e1c2b1",
+    "original_input_sha256": "bc4c19c9aaf9688801c99ed073fdde22f0daf6b822dc2c9c4b7a3f7c9aded636",
+    "original_scale_sha256": "acc544061ccfe25009301bdfc15bab61468511ef6f27962b70c54efb65da9cb7",
+    "epsilon": 1e-06,
+    "shape": [
+      1,
+      2520,
+      768
+    ],
+    "original_internal_native_reference_available": false,
+    "original_full_context_replayed": false,
+    "torch_version": "2.14.1+cpu",
+    "torch_git": "5c4886908584029761b579af026dcfb627c84070",
+    "cpu_candidate_bit_differences": 0,
+    "node_count": 234,
+    "scale_initializer_bytes_preserved": true,
+    "gpu_validated": false,
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "files": {
+      "current-cpu-equation-fp32.bin": {
+        "bytes": 7741440,
+        "sha256": "881b26f2dba59d783185646334a9d50fe9fe1e3c78315d1a3644b6a09313db4d"
+      },
+      "first-rms.onnx": {
+        "bytes": 55579,
+        "sha256": "724605434efc0b70bb28b59b5dc639f8b0aeb765a4170ec782397506f6549976"
+      },
+      "scale-fp32.bin": {
+        "bytes": 3072,
+        "sha256": "acc544061ccfe25009301bdfc15bab61468511ef6f27962b70c54efb65da9cb7"
+      }
+    }
+  },
+  "initial_candidate_execution": {
+    "file": "vision-first-rms-refined-gpu-20261015-process.json",
+    "sha256": "29002ea027692081a0858ca3b2547662db133cd5c047711643e00b379e886d43",
+    "xml_sha256": "3806fcd796ae64f80af33d8090ed74f82b81b2972eef0b866d1c6842a7b831a2",
+    "counts": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "elapsed_seconds": 55.44602179998765,
+    "exit_code": 2
+  },
+  "initial_candidate": {
+    "file": "vision-first-rms-refined-gpu-ec2b39f8971993be369ebe0c02257a159bf4bbda.json",
+    "sha256": "1e8fbfd2d87cb88c017e71743d61b4b318fddd6ac9b2b36f4c6cc97b374d9349",
+    "result": {
+      "success": false,
+      "scope": "first_vision_rms_gpu_against_current_cpu_equation_only",
+      "runtime_source": "ec2b39f8971993be369ebe0c02257a159bf4bbda",
+      "original_internal_native_reference_available": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "phase": "completed",
+      "layer_count": 154,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "capture_sha256": "687a68f9956e6c1587cdb0fd5359dd75840355ecb80c6f74c6819c90377109c9",
+      "actual_backend": "GPUCompute",
+      "bit_differences": 325961,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 1.1444091796875e-05,
+      "maximum_tolerance_ratio": 0.0030228251105840105,
+      "failure_message": "NUnit.Framework.AssertionException:   Qualify the exported RMS against its independent current CPU equation before encoder integration."
+    }
+  },
+  "statistics_execution": {
+    "file": "vision-rms-statistics-gpu-20261015-process.json",
+    "sha256": "e2434f9bfe42a507eac0be8bbf91aaab772e3a8dc8eb57bc76d8f436b359840b",
+    "xml_sha256": "b9a2dd3ae99d392f7f01d163cb523ee5bbfa75c12f17c57e978e3b2040f74f18",
+    "counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 140.1722876999993,
+    "exit_code": 0
+  },
+  "statistics": {
+    "file": "vision-rms-statistics-gpu-2ba68496f55c89409c517cddd99726b848fe2136.json",
+    "sha256": "68ba7a39f5a69d38d64b3f95d787ab6fcc6fa2b7be372344dfaa56e67924ddea",
+    "result": {
+      "success": true,
+      "scope": "vision_rms_small_statistics_gpu_observation_only",
+      "runtime_source": "2ba68496f55c89409c517cddd99726b848fe2136",
+      "native_reference_validated": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "diagnostic_readbacks_only": true,
+      "statistics": [
+        {
+          "tensor_index": 160,
+          "type": "ScalarMad",
+          "shape": [
+            1,
+            2520,
+            1
+          ],
+          "sFloat": 0.0013020833721384406,
+          "bFloat": 9.999999974752427e-07,
+          "sha256": "028719ecbfd1cf76f85a0b7829827addb1df7348e01d007c4487de914e663bf5",
+          "file": "tensor-160.bin"
+        },
+        {
+          "tensor_index": 161,
+          "type": "Sqrt",
+          "shape": [
+            1,
+            2520,
+            1
+          ],
+          "sha256": "5b84c0713a86cf04d97d570cf6fe1e7cfafa7b8b86e83df27dfb3acd9a94fdef",
+          "file": "tensor-161.bin"
+        },
+        {
+          "tensor_index": 168,
+          "type": "ScalarMad",
+          "shape": [
+            1,
+            2520,
+            1
+          ],
+          "sFloat": 4097.0,
+          "bFloat": 0.0,
+          "sha256": "35eb39d3545a2711340f70c5db576bcc4743859282785b5de064ff09d2dfb2a1",
+          "file": "tensor-168.bin"
+        },
+        {
+          "tensor_index": 175,
+          "type": "ScalarMad",
+          "shape": [
+            1,
+            2520,
+            1
+          ],
+          "sFloat": 4097.0,
+          "bFloat": 0.0,
+          "sha256": "906c727085f1ee9bb6678b6b7d099e1a743596e476b17613806ee6b22bc1c516",
+          "file": "tensor-175.bin"
+        },
+        {
+          "tensor_index": 203,
+          "type": "ScalarMad",
+          "shape": [
+            1,
+            2520,
+            1
+          ],
+          "sFloat": 0.5,
+          "bFloat": 0.0,
+          "sha256": "b3975f60cb483efebe9fb93fc7a49e5c013077d5b459b5c2a78b03f3f6c84beb",
+          "file": "tensor-203.bin"
+        },
+        {
+          "tensor_index": 204,
+          "type": "Div",
+          "shape": [
+            1,
+            2520,
+            1
+          ],
+          "sha256": "4d9d37946daa034af56948c1b26cd87f2eb2079db7c618d5f8b2d8a78814cadd",
+          "file": "tensor-204.bin"
+        },
+        {
+          "tensor_index": 206,
+          "type": "Reciprocal",
+          "shape": [
+            1,
+            2520,
+            1
+          ],
+          "sha256": "a3bb6b412244abfa58d14efeb3e725901996f342c75662161c682ddcb1db0534",
+          "file": "tensor-206.bin"
+        },
+        {
+          "tensor_index": 213,
+          "type": "ScalarMad",
+          "shape": [
+            1,
+            2520,
+            1
+          ],
+          "sFloat": 1.0,
+          "bFloat": 0.0,
+          "sha256": "a3bb6b412244abfa58d14efeb3e725901996f342c75662161c682ddcb1db0534",
+          "file": "tensor-213.bin"
+        },
+        {
+          "tensor_index": 219,
+          "type": "ScalarMad",
+          "shape": [
+            1,
+            2520,
+            1
+          ],
+          "sFloat": 4097.0,
+          "bFloat": 0.0,
+          "sha256": "c1fa6a88df08fd93ee4761bb6353eeb6f437597dde14a6e963fe4b0d68616240",
+          "file": "tensor-219.bin"
+        },
+        {
+          "tensor_index": 226,
+          "type": "ScalarMad",
+          "shape": [
+            1,
+            2520,
+            1
+          ],
+          "sFloat": 4097.0,
+          "bFloat": 0.0,
+          "sha256": "e4e7327e3d35cd1bbd1a5aee33c56472754e103432d4c6f00c1e0e1ccb0ecf68",
+          "file": "tensor-226.bin"
+        },
+        {
+          "tensor_index": 257,
+          "type": "ScalarMad",
+          "shape": [
+            1,
+            2520,
+            1
+          ],
+          "sFloat": 4097.0,
+          "bFloat": 0.0,
+          "sha256": "2577992ad54c557f6f822f6955dee6888e1fef97cc52bb9b330dd8e636cd9d8f",
+          "file": "tensor-257.bin"
+        }
+      ],
+      "normal_final_matches_observed_bits": true,
+      "actual_backend": "GPUCompute"
+    }
+  },
+  "scalar_fusion_diagnosis": {
+    "report_sha256": "97903dcef690fe9b9f8cb84bb592eb790ce9d8eb2ff2c27b279d3280601ddff3",
+    "result": {
+      "scope": "original_vision_rms_scalar_mad_rounding_localization_only",
+      "statistics_report_sha256": "68ba7a39f5a69d38d64b3f95d787ab6fcc6fa2b7be372344dfaa56e67924ddea",
+      "original_input_sha256": "bc4c19c9aaf9688801c99ed073fdde22f0daf6b822dc2c9c4b7a3f7c9aded636",
+      "candidate_graph_sha256": "724605434efc0b70bb28b59b5dc639f8b0aeb765a4170ec782397506f6549976",
+      "scalar_mad": {
+        "tensor_index": 160,
+        "scale": 0.0013020833721384406,
+        "bias": 9.999999974752427e-07,
+        "capture_sha256": "028719ecbfd1cf76f85a0b7829827addb1df7348e01d007c4487de914e663bf5"
+      },
+      "source_divide_then_epsilon_vs_current_native_stats_bits": 0,
+      "gpu_stats_vs_current_native_stats_bits": 1406,
+      "gpu_stats_vs_fused_reciprocal_multiply_plus_epsilon_bits": 0,
+      "gpu_stats_vs_unfused_reciprocal_multiply_plus_epsilon_bits": 888,
+      "fp64_only_single_fma_offline_oracle": true,
+      "original_internal_native_reference_available": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false
+    }
+  },
+  "explicit_division_execution": {
+    "file": "vision-first-rms-explicit-division-gpu-20261015-process.json",
+    "sha256": "31923ad9177373c3d210a5c519e7a793f1d6e5bee14b8fcca9472e0e5ab724df",
+    "xml_sha256": "2ed44570bf4dbe8ad1f900b969aaf96a063033cb1ee4539ed6a500246dc782b5",
+    "counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 44.96303879999323,
+    "exit_code": 0
+  },
+  "explicit_division": {
+    "file": "vision-first-rms-refined-gpu-2fe78b5acda3522bdb2c6a16171c036b48e10e8a.json",
+    "sha256": "05fca0e42ace6aa4f8686046a2e202c6cab1420362b567e82639b18bcd9eab47",
+    "result": {
+      "success": true,
+      "scope": "first_vision_rms_gpu_against_current_cpu_equation_only",
+      "runtime_source": "2fe78b5acda3522bdb2c6a16171c036b48e10e8a",
+      "original_internal_native_reference_available": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "phase": "completed",
+      "layer_count": 154,
+      "mean_division_gpu_boundary_preserved": true,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "capture_sha256": "881b26f2dba59d783185646334a9d50fe9fe1e3c78315d1a3644b6a09313db4d",
+      "actual_backend": "GPUCompute",
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "source_model_bytes_preserved": true
+    }
+  },
+  "package_regression": {
+    "file": "vision-rms-package-green-20261015.xml",
+    "sha256": "99bf292a310bae703cd96e41d48b16461996a045af9ea06be88ad289ec41cdd9",
+    "tests": 22,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "preserved_gpu_scalar_divide_runtime_unchanged": true,
+  "existing_runtime_files_unchanged_since_prior_checkpoint": true,
+  "first_rms_current_cpu_equation_gpu_all_bits_match": true,
+  "image_all_three_profiles_validated": false,
+  "end_to_end_validated": false,
+  "next_action": "Reconnect the qualified first RMS into original layer0, preserving original fixed layer reference, before any full encoder rerun.",
+  "remaining": [
+    "remaining image RMS and activation operators and all original profile conditions",
+    "actual PCM/Texture to GPU preprocessing encoder backbone normalized 768 APIs with all required roles masks boundaries ownership Dispose error reuse and text regression",
+    "stage3/4 samples and Player verification"
+  ]
+}

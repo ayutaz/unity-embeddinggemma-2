@@ -1,0 +1,45 @@
+{
+  "unity_validated": false,
+  "real_model_validated": false,
+  "end_to_end_validated": false,
+  "python": "3.14",
+  "initial_api_probe": {
+    "failed": 9,
+    "note": "Missing keyword / method probe; not counted as the assertion-red checkpoint."
+  },
+  "feature_atol": 1E-05,
+  "source_sha256": {
+    "tools/embeddinggemma_tools/prepare.py": "99b5d1fd9d709afd17831b64d894ae3fba06556f7c37daa5971f8b4efbea2b0b",
+    "tools/tests/test_audio_layer_diagnostics.py": "0e0c4582862b2c63d13d4389d716711faccbec067fe5c4c1c300a74cb4785296",
+    "tools/embeddinggemma_tools/export.py": "d8fdf9e2e0c75dcc1b3558772ed4ef6db09ecc39650f8b4bbddc2e5512c088fd"
+  },
+  "localization_red": {
+    "failed": 3,
+    "reason": "Missing automatic first-nonzero layer diagnosis and persisted coarse receipt.",
+    "log_sha256": "b327ac66a20c88a1a53b19a7885ac3aeb4f2ecc6e344ecdc4067ebfb62fa73a0"
+  },
+  "omp_threads": 4,
+  "feature_rtol": 0.0001,
+  "scope": "audio_layer_diagnostic_tdd_only",
+  "base_source": "c4676f7b38f01ce98a9dedca87fb450febea20b9",
+  "assertion_red": {
+    "failed": 10,
+    "reason": "Missing selected-layer export / native capture contracts and layer diagnostic method.",
+    "log_sha256": "1de0c6e18da9d884a0dd3127bf3b22dabb84274695291a1c7600ab14c7e59e39"
+  },
+  "mkl_threads": 4,
+  "first_green": {
+    "failed": 0,
+    "skipped": 0,
+    "duration_seconds": 128.79,
+    "passed": 56,
+    "log_sha256": "503294f48e524c9277093f734dce2a6befb9ce083e29152f378df0b01feeef6c"
+  },
+  "final_green": {
+    "failed": 0,
+    "skipped": 0,
+    "duration_seconds": 177.64,
+    "passed": 59,
+    "log_sha256": "1628c5a44276d0e916d5a74812fc949b07538d05f63b8d5bf39421d946a3bbe4"
+  }
+}

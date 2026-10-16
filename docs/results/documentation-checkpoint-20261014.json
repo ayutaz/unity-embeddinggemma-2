@@ -1,0 +1,711 @@
+{
+  "scope": "documentation_and_plan_refresh",
+  "date": "2026-10-14",
+  "code_baseline": "a237dee2874cdb0fbcdf4fe333aebae7193ad390",
+  "main": "c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1",
+  "pr": {
+    "number": 81,
+    "state": "OPEN",
+    "draft": true,
+    "base": "test/audio-post-norm-isolation",
+    "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/81"
+  },
+  "open_prs": [
+    {
+      "baseRefName": "test/audio-post-norm-isolation",
+      "headRefName": "feat/multimodal-numerical-acceptance",
+      "headRefOid": "a237dee2874cdb0fbcdf4fe333aebae7193ad390",
+      "isDraft": true,
+      "number": 81,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/81"
+    },
+    {
+      "baseRefName": "test/audio-layer-zero-feed-forward-reference",
+      "headRefName": "test/audio-fp64-projection-oracle",
+      "headRefOid": "d33c3c114157fed33d8a58d3c8e1fcb2ece5513a",
+      "isDraft": true,
+      "number": 80,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/80"
+    },
+    {
+      "baseRefName": "test/audio-feed-forward-stage-observation",
+      "headRefName": "test/audio-post-norm-isolation",
+      "headRefOid": "ebd16f534fc8a12992258d417dfdfabc0404d862",
+      "isDraft": true,
+      "number": 79,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/79"
+    },
+    {
+      "baseRefName": "test/audio-layer-zero-stage-observation",
+      "headRefName": "test/audio-feed-forward-stage-observation",
+      "headRefOid": "59f26abcdf973ad85b8ad5b08edb55045f36ff49",
+      "isDraft": true,
+      "number": 78,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/78"
+    },
+    {
+      "baseRefName": "test/audio-layer-zero-native-reference",
+      "headRefName": "test/audio-layer-zero-feed-forward-reference",
+      "headRefOid": "d0153b6061bdf106a7785fb2fbf8c80adc372641",
+      "isDraft": true,
+      "number": 77,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/77"
+    },
+    {
+      "baseRefName": "test/audio-onnx-stage-map",
+      "headRefName": "test/audio-layer-zero-stage-observation",
+      "headRefOid": "dbcc35b3276dd19ae59943af9a8723c4714e3425",
+      "isDraft": true,
+      "number": 76,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/76"
+    },
+    {
+      "baseRefName": "feat/audio-native-silu-onnx",
+      "headRefName": "test/audio-layer-zero-native-reference",
+      "headRefOid": "aec39f3882c71c5f263998120494171766661101",
+      "isDraft": true,
+      "number": 75,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/75"
+    },
+    {
+      "baseRefName": "test/current-audio-encoder-reference",
+      "headRefName": "test/audio-onnx-stage-map",
+      "headRefOid": "2712b8944321f436569247e98d5ff432a82b05ac",
+      "isDraft": true,
+      "number": 74,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/74"
+    },
+    {
+      "baseRefName": "test/current-audio-encoder-reference",
+      "headRefName": "test/audio-native-pow-probe",
+      "headRefOid": "f9afacef8f9f7e54198e4fbdb9f4d59646b25deb",
+      "isDraft": true,
+      "number": 73,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/73"
+    },
+    {
+      "baseRefName": "test/gpu-constant-il2cpp",
+      "headRefName": "test/current-audio-encoder-reference",
+      "headRefOid": "076fbee089ec0f4fb810c5cd5da28f5c08faffc7",
+      "isDraft": true,
+      "number": 72,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/72"
+    },
+    {
+      "baseRefName": "feat/bounded-gpu-constant-upload",
+      "headRefName": "test/gpu-constant-il2cpp",
+      "headRefOid": "24f0cb290934eb334b0e168f4b9419cbf60ae78d",
+      "isDraft": true,
+      "number": 71,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/71"
+    },
+    {
+      "baseRefName": "feat/bounded-gpu-constant-upload",
+      "headRefName": "test/bounded-audio-chain",
+      "headRefOid": "5985d54a26ed10222c4c43b131d511abe21e4054",
+      "isDraft": true,
+      "number": 70,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/70"
+    },
+    {
+      "baseRefName": "feat/image-cpu-preprocessing",
+      "headRefName": "feat/bounded-gpu-constant-upload",
+      "headRefOid": "2479a9cd2ea3efc2aa30f14ba7e7c6fcaa44713e",
+      "isDraft": true,
+      "number": 69,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/69"
+    },
+    {
+      "baseRefName": "feat/image-cpu-preprocessing",
+      "headRefName": "test/image-encoder-api-real",
+      "headRefOid": "60a74a4b372e2090424e27ccaa6841d9ad232c8a",
+      "isDraft": true,
+      "number": 68,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/68"
+    },
+    {
+      "baseRefName": "feat/image-embedder-runtime",
+      "headRefName": "feat/image-cpu-preprocessing",
+      "headRefOid": "0d53aedbbb86ba9d02bde5ca654703ae651b72cf",
+      "isDraft": true,
+      "number": 67,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/67"
+    },
+    {
+      "baseRefName": "feat/audio-encoder-runtime",
+      "headRefName": "feat/image-embedder-runtime",
+      "headRefOid": "f6794ef4fa8cd85a0e69dcc7d144978d0ab46b59",
+      "isDraft": true,
+      "number": 65,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/65"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "feat/image-feature-encoder-runtime",
+      "headRefOid": "46cea116f505e6836f9222e53a14ac536c6b176b",
+      "isDraft": true,
+      "number": 64,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/64"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "feat/audio-encoder-runtime",
+      "headRefOid": "280250e4ebba9d1006a74c377d39181fcbd93a55",
+      "isDraft": true,
+      "number": 62,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/62"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "feat/audio-native-silu-onnx",
+      "headRefOid": "a9cef60500b44039b87b42a4239aa9ffe74624f0",
+      "isDraft": true,
+      "number": 60,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/60"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "feat/vision-layer-diagnostics",
+      "headRefOid": "d500b5f0e3b4a61c2672d63aa0d87608f9522459",
+      "isDraft": true,
+      "number": 53,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/53"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "test/vision-sentis-reference",
+      "headRefOid": "b5766154a209622849e9d71d11955b9bd7e0a65c",
+      "isDraft": true,
+      "number": 41,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/41"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "feat/audio-encoder-export",
+      "headRefOid": "e13adcd96ed3e10802131dfc94c48d9533f37ee2",
+      "isDraft": false,
+      "number": 40,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/40"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "feat/m2-player-sample-validation",
+      "headRefOid": "a34bf9057694e141e939ac41bea3e2b713b0a15b",
+      "isDraft": true,
+      "number": 31,
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/31"
+    }
+  ],
+  "public_tag_count": 0,
+  "github_release_count": 0,
+  "unity_process_count_at_refresh": 0,
+  "prior_ci": [
+    {
+      "id": 38569646238,
+      "status": "completed",
+      "conclusion": "cancelled"
+    },
+    {
+      "id": 38571522044,
+      "status": "completed",
+      "conclusion": "cancelled"
+    }
+  ],
+  "steps": {
+    "1": "organized",
+    "2": "incomplete",
+    "3": "incomplete"
+  },
+  "gpu_policy": {
+    "fixtures": [
+      "CompensatedVisionReferenceTests",
+      "CompensatedNormAudioEncoderReferenceTests"
+    ],
+    "configuration_tdd_red_failed": 2,
+    "configuration_tdd_green_passed": 2,
+    "post_change_unity_compile_executed": false,
+    "post_change_real_model_executed": false,
+    "runtime_cpu_options_removed": false
+  },
+  "evidence": [
+    "m3-real-image-all-role-reference-20261014.json",
+    "native-first-fixture-context-matrix-20261014.json",
+    "m4-norm1-dynamic16-full-encoder-failed-20261014.json",
+    "native-silu-division-order-green-20261014.json",
+    "m3-vision-norm4-user-interrupted-20261014.json"
+  ],
+  "documents": [
+    {
+      "path": "README.md",
+      "classification": "現在の仕様・手順",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/automation.md",
+      "classification": "現在の仕様・手順",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/ci.md",
+      "classification": "現在の仕様・手順",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/embeddinggemma-2-unity-novelty.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/goal.md",
+      "classification": "現在の仕様・手順",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/gpu-constant-il2cpp-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/gpu-constant-upload-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m1-completion-plan.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m1-completion-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m1-plan.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m1-runtime-plan.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m1-runtime-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m1-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m2-android-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m2-bundle-cache-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m2-editor-font-lifetime-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m2-font-git-consumer-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m2-git-consumer-runtime-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m2-latest-git-consumer-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m2-package-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m2-plan.md",
+      "classification": "現在の計画と履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m2-player-il2cpp-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m2-release-plan.md",
+      "classification": "現在の計画と履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m2-sample-cache-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m2-search-plan.md",
+      "classification": "現在の計画と履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m2-search-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m2-stability-environment-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m2-ui-font-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m2-unity-21-upgrade-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m3-image-cpu-preprocessing-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m3-image-embedder-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m3-image-embedding-reference-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m3-image-feature-encoder-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m3-image-preprocessing-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m3-plan.md",
+      "classification": "現在の計画と履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m3-vision-export-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-audio-embedder-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-audio-encoder-runtime-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-audio-encoder-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-audio-final-reference-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-audio-native-onnx-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-audio-preprocessing-runtime-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-audio-preprocessing-sentis-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-audio-preprocessing-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-audio-real-chain-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-current-coefficient-bound-layer-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-current-encoder-observation-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-feed-forward-stage-observation-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-fp64-projection-oracle-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-layer-zero-norm-observation-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-native-feed-forward-reference-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-native-layer-replay-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-native-silu-swish-probe-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-pcm-input-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-plan.md",
+      "classification": "現在の計画と履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/m4-post-norm-isolation-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/model-license.md",
+      "classification": "現在の仕様・手順",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/model-preparation.md",
+      "classification": "現在の仕様・手順",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/multimodal-backbone-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/multimodal-prompt-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/multimodal-runtime-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/multimodal-tdd-plan.md",
+      "classification": "現在の計画と履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/player-validation.md",
+      "classification": "固定sourceの履歴",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/runtime-api.md",
+      "classification": "現在の仕様・手順",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/status.md",
+      "classification": "現在の仕様・手順",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/steps-1-3-acceptance.md",
+      "classification": "現在の仕様・手順",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "docs/technical-approach.md",
+      "classification": "現在の仕様・手順",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "Packages/com.ayutaz.embeddinggemma/CHANGELOG.md",
+      "classification": "現在の仕様・手順",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "Packages/com.ayutaz.embeddinggemma/Documentation~/audio-embedder.md",
+      "classification": "現在の仕様・手順",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "Packages/com.ayutaz.embeddinggemma/Documentation~/audio-feature-encoder.md",
+      "classification": "現在の仕様・手順",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "Packages/com.ayutaz.embeddinggemma/Documentation~/index.md",
+      "classification": "現在の仕様・手順",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "Packages/com.ayutaz.embeddinggemma/README.md",
+      "classification": "現在の仕様・手順",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "Packages/com.ayutaz.embeddinggemma/Samples~/README.md",
+      "classification": "現在の仕様・手順",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "Packages/com.ayutaz.embeddinggemma/Samples~/TextSearch/README.md",
+      "classification": "現在の仕様・手順",
+      "source_read": true,
+      "updated": true
+    },
+    {
+      "path": "validation/com.ayutaz.embeddinggemma.validation/README.md",
+      "classification": "現在の仕様・手順",
+      "source_read": true,
+      "updated": true
+    }
+  ],
+  "model_or_unity_execution_added_by_refresh": false,
+  "external_specifications_researched_again": false,
+  "preserved": [
+    "AGENTS.md",
+    "package license",
+    "original evidence JSON",
+    "main user changes",
+    "model/input hashes",
+    "fixed tolerances"
+  ],
+  "documentation_validation": {
+    "documents_reviewed": 75,
+    "scope_matches": true,
+    "new_missing_links": [],
+    "preexisting_missing_links": [],
+    "code_changes": [],
+    "json_and_evidence_checked": true,
+    "interruption_matches_saved_raw_hash": true,
+    "diff_check_passed": true,
+    "unity_started": false,
+    "models_generated": false
+  }
+}

@@ -1,0 +1,51 @@
+#pragma kernel Block192
+#pragma kernel VariableBlock
+#pragma use_dxc
+
+StructuredBuffer<float> Input;
+StructuredBuffer<float> Weights;
+RWStructuredBuffer<float> Output;
+uint Width, Columns, Rows, DispatchWidth;
+uint BlockSize;
+
+// Native MAD may be fused or non-fused on different hardware. Fixed-reference
+// GPU gates qualify this candidate; never assume portable IEEE FMA from syntax.
+[numthreads(64,1,1)]
+void Block192(uint3 thread : SV_DispatchThreadID)
+{
+    uint index=thread.x+thread.y*DispatchWidth;
+    if(index>=Rows*Columns)return;
+    uint row=index/Columns;
+    uint column=index%Columns;
+    precise float total=0;
+    [loop] for(uint start=0;start<Width;start+=192)
+    {
+        precise float partial=0;
+        uint end=min(start+192,Width);
+        [loop] for(uint k=start;k<end;k++)
+            partial=mad(Input[row*Width+k],Weights[k*Columns+column],partial);
+        total=start==0?partial:total+partial;
+    }
+    Output[index]=total;
+}
+
+// Opt-in reference-qualified block order. Keep the original Block192 entry
+// unchanged so existing audio callers retain their qualified arithmetic.
+[numthreads(64,1,1)]
+void VariableBlock(uint3 thread : SV_DispatchThreadID)
+{
+    uint index=thread.x+thread.y*DispatchWidth;
+    if(index>=Rows*Columns)return;
+    uint row=index/Columns;
+    uint column=index%Columns;
+    precise float total=0;
+    [loop] for(uint start=0;start<Width;start+=BlockSize)
+    {
+        precise float partial=0;
+        uint end=min(start+BlockSize,Width);
+        [loop] for(uint k=start;k<end;k++)
+            partial=mad(Input[row*Width+k],Weights[k*Columns+column],partial);
+        total=start==0?partial:total+partial;
+    }
+    Output[index]=total;
+}

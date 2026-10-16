@@ -1,5 +1,15 @@
 # M2 詳細計画と残作業
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。冒頭の現在方針が、下の旧checkpointの着手順より優先する。
+
+## 2026-10-14の残作業
+
+M1のWindowsテキスト受け入れは維持する。M2の固定Git・sample・Player実測は各sourceの条件付き結果で、最新candidateの標準空consumer・寿命 / 性能・必須他環境は未完了。PR #31はDraft / 未統合。現在のコード基準と停止状態は[status](status.md)、再開順は[全体計画R0〜R5](multimodal-tdd-plan.md)を参照。
+
+GPU推論を主経路とし、旧CPU/GPU一括suiteをローカルで再実行しない。M3 / M4の数値gate・全chainの受け入れ後に、text回帰・最終空Git consumer・Player正常終了・全必須実機を同じcandidateへ対応付ける。M2単独のtext-only正式公開は行わない。
+
+## 以前のM2計画と実測
+
 2026-10-13の計画変更: **正式リリースはM3画像・M4音声と全必須検証の完了後**。[全体TDD計画](multimodal-tdd-plan.md) / [M3](m3-plan.md) / [M4](m4-plan.md)を現在の順序とする。M2の安定化・Git URL導入・他環境実測は[M2基盤詳細計画](m2-release-plan.md)で扱う。以下の順序・実測はPR #12時点の履歴で、当時のSHAを維持する。text-only公開をM3 / M4の着手条件にしない。
 
 Windowsの既存固定Git導入・実モデル4条件・sample UIと、検証専用Windows IL2CPP Playerは確認済み。[Git consumer結果](m2-latest-git-consumer-validation.md) / [Player結果](m2-player-il2cpp-validation.md)を参照。現在の未達項目は標準21f1 / 新candidate再現、残る性能・安定性、他環境、M3 / M4、最終候補 / tag導入と正式Release。[最新状態](status.md)で補修 / overlay条件と実測SHAを確認し、未検証の環境を対応済みにしない。
@@ -118,5 +128,5 @@ Float16重みは保存サイズ削減済みだが、M1では速度改善は確�
 
 M3で画像エンコーダとGPU上の画像前処理、共通テキスト本体への特徴量入力、テキスト→画像の固定参照順位照合を実装する。
 M4で音声エンコーダとGPU上のメルスペクトログラム前処理、共通空間への入力、テキスト→音声の固定参照順位照合を実装する。
-どちらも実装未着手。[M3詳細TDD計画](m3-plan.md) / [M4詳細TDD計画](m4-plan.md)を作成済み。固定参照の前処理契約を確認し、red / greenと実モデル照合を各段階で実行する。正式公開は両者と全必須環境の検証後へ移した。
+M3 / M4は実装中。画像GPU前処理、PCM境界、音声前処理Runtime、共通本体Runtimeはmainへ統合済み。画像FP32と音声encoderの数値gate、実encoder連結、最終API / sample / Playerは未完了。[M3詳細TDD計画](m3-plan.md) / [M4詳細TDD計画](m4-plan.md)のred / greenと実モデル照合を各段階で実行する。正式公開は両者と全必須環境の検証後とする。
 全体の完了条件は [ゴール](goal.md)を維持する。

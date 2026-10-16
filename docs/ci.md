@@ -1,5 +1,31 @@
 # CI と開発手順
 
+最新状況（2026-10-16）: main `012f3cc` のCI38893482024は合格。PR #31の新しいcandidateで標準導入・Playerを再検証します。以下の過去runは当時の証拠です。
+
+## 固定音声参照の保存と更新（2026-10-16）
+
+main統合PR #79の必須CI38883782797は全15job成功です。元artifact `11814567883` は2026-10-16 12:44:58 UTCで期限切れになるため、[保存run38886883870](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38886883870)で監査対象14ファイルのsize/SHA256を照合し、全体をartifact `12039809670` へ90日保存しました。新しい期限は **2027-01-14 10:23:16 UTC** です。[保存証拠](results/pinned-audio-reference-preservation-20261016.json)。モデル実行・GPU検証は行っていません。
+
+必須音声CIのexecute/auditは `pinned_reference_archive resolve` で同じrepositoryの有効な保存コピーを優先し、選択したartifact IDを記録します。コピーがなければ有効な元artifactへfallbackし、両方がなければ失敗します。元reference/auditの固定SHA256、元6信号・2 profile、実ONNXのcapture/carry監査、824,320値の許容差gateは維持します。
+
+期限前に以下を実行し、保存jobの成功、14ファイル照合、新artifactの期限を確認してください。既存コピーからも再保存できます。定期実行は設定していません。
+
+```powershell
+gh workflow run frozen-audio-prefix-onnx.yml --ref main -f preserve_original=true
+```
+
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。実モデル実行は停止中。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
+
+## 2026-10-14時点のCIとGPU受け入れの区別
+
+2026-10-14、PR #81のコード基準 `a237dee2874cdb0fbcdf4fe333aebae7193ad390` のCI `38571522044` と前headの `38569646238` は停止指示によりcancelled。最新headのRequired CI合格を主張しない。画像role参照のActions `38562190876` はPython18件合格、CPU文脈matrix `38563722587` は診断実行完了で、Unity / GPU全chainの合格ではない。
+
+通常CIの `model-reference` は実重み生成を含むため、文書だけのpushでも自動開始し得る。実モデル検証停止中は不要な重いrunを識別してcancelし、cancelを成功へ読み替えず記録する。workflowとRequired CI規則は今回変更しない。GPU runner / ライセンスの実行条件を再確認してから[全体計画R0〜R5](multimodal-tdd-plan.md)へ進む。CPU Pythonの参照生成は独立期待値用で、Unityモデル推論をCPUへ切り替える許可ではない。
+
+更新日: 2026-10-10。確認基準main: `4ee0cbb`（PR #12統合後）。
+CI・UPM監査・検索基盤・サンプル・準備最適化はmain統合済み。[CI run 37975720534](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975720534)の全8 job成功を確認した。
+
+PR #31の旧checkpoint（2026-10-10）:
 更新日: 2026-10-10。確認基準main: `6f55a85`（PR #30統合後）。
 CI・UPM監査・検索基盤・サンプル・準備 / cache・Editor font寿命修正はmain統合済み。[main CI run 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)の全8 job成功。draft PR #31の実装checkpoint `cd6b8bf`も[CI run 38040187805](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38040187805)全8 job成功。通常表示sample Playerの終了クラッシュは未解決で、CI成功だけでmergeやM2完了としない。
 

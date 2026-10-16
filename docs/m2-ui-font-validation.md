@@ -1,5 +1,7 @@
 # テキスト検索サンプルの文字欠け修正
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 Windows Editorの検索画面で、label・入力欄・button・結果本文の文字が縦方向に欠けていた。実際のOS fontを描画する一方で、font未指定のGUIStyleが別のfontで高さを計算する状態を、実glyph境界とGUILayoutの計算値で再現した。
 
 修正はサンプル内に限定する。fontとfontSizeを明示したGUIStyleを初回OnGUIで作って再利用し、本文は折り返す。共有GUISkinを書き換えず、破棄時はstyleのfont参照を外してからサンプル所有のfontを破棄する。推論Runtimeは変更しない。

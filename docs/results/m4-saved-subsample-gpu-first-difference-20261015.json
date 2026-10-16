@@ -1,0 +1,192 @@
+{
+  "scope": "one_saved_welford8_gpu_subsample_first_microdifference_only",
+  "success": true,
+  "source": "a685db3c7f5c34cdf51b13156d4bfb5c8dc24043",
+  "report": {
+    "success": true,
+    "scope": "one_saved_gpu_subsample_observation_only",
+    "runtime_source": "a685db3c7f5c34cdf51b13156d4bfb5c8dc24043",
+    "candidate_source": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+    "requested_backend": "GPUCompute",
+    "stages": [
+      {
+        "stage": "layer0.conv",
+        "mismatches": 0,
+        "exact_difference_count": 0,
+        "numeric_passed": true,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "actual_backend": "GPUCompute"
+      },
+      {
+        "stage": "layer0.norm",
+        "mismatches": 0,
+        "exact_difference_count": 11214,
+        "numeric_passed": true,
+        "maximum_absolute_error": 1.9073486328125e-06,
+        "maximum_tolerance_ratio": 0.0017503381390733966,
+        "actual_backend": "GPUCompute"
+      },
+      {
+        "stage": "layer0.act",
+        "mismatches": 0,
+        "exact_difference_count": 4851,
+        "numeric_passed": true,
+        "maximum_absolute_error": 1.9073486328125e-06,
+        "maximum_tolerance_ratio": 0.0015656941873900775,
+        "actual_backend": "GPUCompute"
+      },
+      {
+        "stage": "layer1.conv",
+        "mismatches": 0,
+        "exact_difference_count": 224652,
+        "numeric_passed": true,
+        "maximum_absolute_error": 1.9073486328125e-06,
+        "maximum_tolerance_ratio": 0.023904574577457618,
+        "actual_backend": "GPUCompute"
+      },
+      {
+        "stage": "layer1.norm",
+        "mismatches": 0,
+        "exact_difference_count": 241672,
+        "numeric_passed": true,
+        "maximum_absolute_error": 3.814697265625e-06,
+        "maximum_tolerance_ratio": 0.044506499124213894,
+        "actual_backend": "GPUCompute"
+      },
+      {
+        "stage": "layer1.act",
+        "mismatches": 0,
+        "exact_difference_count": 115239,
+        "numeric_passed": true,
+        "maximum_absolute_error": 3.814697265625e-06,
+        "maximum_tolerance_ratio": 0.033517408341697225,
+        "actual_backend": "GPUCompute"
+      },
+      {
+        "stage": "input_proj_linear",
+        "mismatches": 0,
+        "exact_difference_count": 267972,
+        "numeric_passed": true,
+        "maximum_absolute_error": 2.288818359375e-05,
+        "maximum_tolerance_ratio": 0.2047318314900181,
+        "actual_backend": "GPUCompute"
+      }
+    ],
+    "phase": "completed",
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "bound_outputs": {
+      "layer0.norm": 1594,
+      "layer1.norm": 2181,
+      "layer0.conv": 13,
+      "layer1.conv": 1608,
+      "layer0.act": 1597,
+      "layer1.act": 2184,
+      "input_proj_linear": 2191
+    },
+    "normal_final_matches_observed_bits": true,
+    "capture_directory": ".\\artifacts\\acceptance-consumer\\artifacts\\saved-onnx-subsample-gpu-a685db3c7f5c34cdf51b13156d4bfb5c8dc24043-captures",
+    "first_nonzero_stage": "layer0.norm",
+    "first_tolerance_exceeding_stage": null,
+    "observation_completed": true
+  },
+  "original_native_row_grouping_and_cpu_diagnosis": {
+    "scope": "frozen_native_subsample_conv_rows_statistics_lanes_only",
+    "gpu_validated": false,
+    "full_encoder_validated": false,
+    "torch_version": "2.14.1+cpu",
+    "cpu_capability": "AVX2",
+    "cases": [
+      {
+        "stage": "layer0",
+        "row_count": 6,
+        "native_element_count": 768,
+        "full_native_row_count": 35840,
+        "all_native_rows_preserved_by_exact_input_grouping": true,
+        "results": {
+          "native_current_host": {
+            "exact_difference_count": 0,
+            "mismatches": 0,
+            "maximum_absolute_error": 0.0
+          },
+          "welford8": {
+            "exact_difference_count": 0,
+            "mismatches": 0,
+            "maximum_absolute_error": 0.0
+          },
+          "welford16": {
+            "exact_difference_count": 458,
+            "mismatches": 0,
+            "maximum_absolute_error": 2.86102294921875e-06
+          }
+        }
+      },
+      {
+        "stage": "layer1",
+        "row_count": 6,
+        "native_element_count": 192,
+        "full_native_row_count": 8960,
+        "all_native_rows_preserved_by_exact_input_grouping": true,
+        "results": {
+          "native_current_host": {
+            "exact_difference_count": 40,
+            "mismatches": 0,
+            "maximum_absolute_error": 9.5367431640625e-07
+          },
+          "welford8": {
+            "exact_difference_count": 40,
+            "mismatches": 0,
+            "maximum_absolute_error": 9.5367431640625e-07
+          },
+          "welford16": {
+            "exact_difference_count": 134,
+            "mismatches": 0,
+            "maximum_absolute_error": 3.814697265625e-06
+          }
+        }
+      }
+    ]
+  },
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "first_convolution_original_bits_match": true,
+  "first_microdifference_stage": "layer0.norm",
+  "first_norm_cpu_welford8_original_bits_match_for_all_six_distinct_native_rows": true,
+  "intermediate_readback_scope": "diagnostic snapshots only; not product API proof",
+  "tdd": {
+    "source_red": "29521157de9aa50c4048dda88b1af6170d7c81eb",
+    "red_failed": 3,
+    "combined_source": "a685db3c7f5c34cdf51b13156d4bfb5c8dc24043",
+    "combined_total": 4,
+    "combined_passed": 3,
+    "combined_failed": 1,
+    "combined_skipped": 0,
+    "combined_failure": "valid Functional.Transpose uses MoveDim; missing layout kind support",
+    "green_source": "c16a66151c3b7943b6d402d688717ffa539903e9",
+    "green_total": 6,
+    "green_passed": 6,
+    "green_failed": 0,
+    "green_skipped": 0,
+    "green_scope": "small ReLU/SiLU graph path binding tests, not numeric encoder acceptance",
+    "initial_compile_error_source": "67906f159b65dad22be096c553a7cc018f08e139",
+    "initial_compile_error_test_execution_missing": true
+  },
+  "next_action": "isolate first GPU Welford128 statistics and inverse on the six exact frozen native rows before another full export",
+  "limits": [
+    "silence, fully valid profile only",
+    "all seven observed stages fit tolerance but later first post-norm fails",
+    "first LayerNorm GPU microdifference cause not yet resolved",
+    "second norm current CPU also has small bit drift"
+  ],
+  "raw_sha256": {
+    "saved-onnx-subsample-gpu-a685db3c7f5c34cdf51b13156d4bfb5c8dc24043.json": "837f374e777e390054fd516f26c43894be5cc9670d5ded007574762a8635a6b8",
+    "subsample-path-test-red-20261015.xml": "545b0c70a2902e8ffba4f0b16e330c2a5400748a347145ae6f5beb4e47083836",
+    "subsample-path-and-observation-20261015.xml": "5a3e8f3e1f47b36c389d6f449552d8c68d95b98557cfe6bb1513f53511ebf754",
+    "subsample-path-and-observation-20261015-process.json": "226c42525fa25dde0be7515d26e0ba36d0b5caa6de0afebfe75979fbdae411c9",
+    "activation-path-green-20261015.xml": "7ef44cfdf8565f18217285f35d7d0df6d5cf81a1dcabd80a799598eb9474c5a2",
+    "activation-path-green-20261015-process.json": "88e8e9550dfc986423edf851fa19df53360ad9c3c825eb7a7692503674f590ee",
+    "real-layernorm-lane-grouping-20261015.json": "b01b31b2b16be366bad102de3278948dca236fdd16384927743e1918f58056f5",
+    "real-layernorm-lane-grouping-20261015-process.json": "40b87a9edde6d6557590257c883d020d77c3fc868d4896094fc7037a6086d5e7"
+  }
+}

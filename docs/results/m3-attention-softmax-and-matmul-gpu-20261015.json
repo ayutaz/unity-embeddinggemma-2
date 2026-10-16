@@ -1,0 +1,1201 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "scope": "bounded_image_attention_diagnosis_and_original_layer0_reconnection_only",
+  "recorded_at_source": "eca9428500669a4a329441190239a130078fcd03",
+  "original_fp32_tolerances": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "stage3_complete": false,
+  "stage4_complete": false,
+  "executions": {
+    "bounded_observation_intended_red": {
+      "file": "vision-row-prefix-red-20261015-process.json",
+      "sha256": "03723519d770141a93b9d6ec12d08b090f6fb860342c4d17a08b897cadf186cd",
+      "xml_sha256": "4ce969422de9ec466685c12e2793dd94d22bedfe759bb680ae6dbff24bc27201",
+      "counts": {
+        "total": 3,
+        "passed": 0,
+        "failed": 3,
+        "skipped": 0
+      },
+      "elapsed_seconds": 42.21797010001319,
+      "exit_code": 2,
+      "failures": [
+        {
+          "name": "EmbeddingGemma.Tests.WorkerObservationRowPrefixTests.OnlyFirstRowsOfEveryGroupAreCopiedWithoutChangingNormalOutput(2)",
+          "message": "  Bounded per-group GPU row observation is missing.\n  Expected: not null\n  But was:  null\n"
+        },
+        {
+          "name": "EmbeddingGemma.Tests.WorkerObservationRowPrefixTests.OnlyFirstRowsOfEveryGroupAreCopiedWithoutChangingNormalOutput(8)",
+          "message": "  Bounded per-group GPU row observation is missing.\n  Expected: not null\n  But was:  null\n"
+        },
+        {
+          "name": "EmbeddingGemma.Tests.WorkerObservationRowPrefixTests.ZeroRowLimitIsRejectedBeforeScheduling",
+          "message": "  Bounded per-group GPU row observation is missing.\n  Expected: not null\n  But was:  null\n"
+        }
+      ]
+    },
+    "observation_and_original_capture_green": {
+      "file": "vision-row-prefix-green-and-original-capture-20261015-process.json",
+      "sha256": "360c6e948b0b4147284ef77b142158096391900665c18d1e35c48635134df8ea",
+      "xml_sha256": "f285ddfc429eabca1fa051f6f13c75441b463f6c17557dd78229f212c50b093e",
+      "counts": {
+        "total": 10,
+        "passed": 10,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 47.62056309999025,
+      "exit_code": 0,
+      "failures": []
+    },
+    "softmax_equation_and_borrowing_green": {
+      "file": "vision-softmax-independent-equation-20261015-process.json",
+      "sha256": "8ae52e732a0d490779389a2f7b3a02c169880685c08f4380ca5aab6940c35eb8",
+      "xml_sha256": "5dfabb9c0c64545dfa28d3a7468e0e11babf01fe9d0a1b5b754ddb3491f56874",
+      "counts": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 53.276896499999566,
+      "exit_code": 0,
+      "failures": []
+    },
+    "softmax_only_original_layer_failed": {
+      "file": "vision-softmax-original-layer0-20261015-process.json",
+      "sha256": "377a926e8fcf9d6240a4ee7076bfaa884ec27ba75a9f1dcc8aa50df620e0cc3a",
+      "xml_sha256": "3ed59348f3f2726ff7f032c627e9946ead585bb5b1e1f87d61136cbafe195e69",
+      "counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      },
+      "elapsed_seconds": 44.7692459999962,
+      "exit_code": 2,
+      "failures": [
+        {
+          "name": "EmbeddingGemma.Validation.Tests.VisionLayerZeroNativeProjectionsGpuTests.QualifiedSoftmaxAndNativeGeluInlineRmsMatchOriginalLayerZeroOnGpu",
+          "message": "  Keep the unchanged original layer-0 FP32 gate.\n  Expected: 0\n  But was:  1\n"
+        }
+      ]
+    },
+    "matmul_capture_shape_precondition_failed_not_numerical_red": {
+      "file": "vision-attention-matmul-original-capture-20261015-process.json",
+      "sha256": "9fd7170032da1d6c419bd9fa9c232ac561f32d9ab65e6f86ef6aa493146a4724",
+      "xml_sha256": "0cee98e0dc1c9d4dc632716d50f691abc1509711d6a9c2f0faeb774b9799bd80",
+      "counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      },
+      "elapsed_seconds": 44.17629099999613,
+      "exit_code": 2,
+      "failures": [
+        {
+          "name": "EmbeddingGemma.Validation.Tests.VisionAttentionMatmulObservationGpuTests.OriginalAttentionOperandsAndOutputRowPrefixesPreserveNormalLayerBits",
+          "message": "  Expected: (1, 12, 2520, 64)\n  But was:  (12, 2520, 64)\n"
+        }
+      ]
+    },
+    "corrected_matmul_capture_green": {
+      "file": "vision-attention-matmul-shape-corrected-capture-20261015-process.json",
+      "sha256": "a75698f4debfecca97c675934a242d59119bc6de212a7e5c3203abbb7747de2f",
+      "xml_sha256": "8337bd53cc95e9dae2caf17e619aab38309abaf7b5f0d5374892feed0fd639e8",
+      "counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 45.812866599997506,
+      "exit_code": 0,
+      "failures": []
+    },
+    "matmul_equations_green": {
+      "file": "vision-attention-matmul-independent-equations-20261015-process.json",
+      "sha256": "57b56a98c43f27bc57fd075360f6a30faf66caba7e77dfd79a7c46b5ac4928b6",
+      "xml_sha256": "9fb6b0b430d40e23bd086974fb0ab8758783d08eaae0a44564f3c0a05b89cb79",
+      "counts": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 48.21006349999516,
+      "exit_code": 0,
+      "failures": []
+    },
+    "dynamic_partition_intended_red": {
+      "file": "vision-binary-partition-red-20261015-process.json",
+      "sha256": "e6d1a22f28b0ce063c4a8249b993aefc420b12f7f2aeb2aac5d687f7e498fd1c",
+      "xml_sha256": "f8b08d47f5cdd750df7575c689f87b0bf3224ec717c41efc7340a787f82177e4",
+      "counts": {
+        "total": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0
+      },
+      "elapsed_seconds": 46.743282600000384,
+      "exit_code": 2,
+      "failures": [
+        {
+          "name": "EmbeddingGemma.Validation.Tests.SavedProjectionPartitionTests.DynamicBatchedMatmulKeepsBothGpuOperandsAndOriginalResidual(3)",
+          "message": "System.ArgumentException : Selected output is not an audited static FP32 projection.\nParameter name: selectedOutputs"
+        },
+        {
+          "name": "EmbeddingGemma.Validation.Tests.SavedProjectionPartitionTests.DynamicBatchedMatmulKeepsBothGpuOperandsAndOriginalResidual(4)",
+          "message": "System.ArgumentException : Selected output is not an audited static FP32 projection.\nParameter name: selectedOutputs"
+        }
+      ]
+    },
+    "dynamic_partition_and_regression_green": {
+      "file": "vision-binary-partition-and-existing-green-20261015-process.json",
+      "sha256": "6ccc5b616ac39b12b541fd98b7db1e66caaa424fbb2e98e0d80a97dde8d6b12f",
+      "xml_sha256": "0d44f8e2c2e84c6a49fb7a165679ebeb3148d8339d270da416a27baa1470dc61",
+      "counts": {
+        "total": 24,
+        "passed": 24,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 44.987426899999264,
+      "exit_code": 0,
+      "failures": []
+    },
+    "two_original_layer_candidates_green": {
+      "file": "vision-native-attention-original-layer0-20261015-process.json",
+      "sha256": "276a28d1cbb401f07b3ea8260599556d9dd273ffd36bf2775d130042c801fd3e",
+      "xml_sha256": "21e99188cead3bdcbc5964a7212c30a5dfffeb948248e7c4de156b5e7fbc2d33",
+      "counts": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 53.84164939999755,
+      "exit_code": 0,
+      "failures": []
+    }
+  },
+  "original_softmax_capture": {
+    "file": "vision-softmax-row-observation-gpu-f7b8d06c851eba622a3c4b465077be12964b666b.json",
+    "sha256": "fc251bef6b142d7c652525a56fc1fa6ebd068972127d3533df817e88fc479b72",
+    "result": {
+      "success": true,
+      "runtime_source": "f7b8d06c851eba622a3c4b465077be12964b666b",
+      "scope": "original_layer0_softmax_first_16_rows_per_head_only",
+      "diagnostic_readbacks_only": true,
+      "original_internal_native_reference_available": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "softmax_input_index": 189,
+      "softmax_output_index": 191,
+      "softmax_axis": -1,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "phase": "complete",
+      "input": {
+        "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-softmax-row-observation-gpu-f7b8d06c851eba622a3c4b465077be12964b666b-captures\\input.bin",
+        "sha256": "9faff3fe67068a6f8469faed0f774236abcd5f9cf4cc3d602601dc9b6aa6e18f",
+        "shape": [
+          1,
+          12,
+          16,
+          2520
+        ],
+        "elements": 483840,
+        "original_shape": [
+          1,
+          12,
+          2520,
+          2520
+        ],
+        "tensor_index": 189
+      },
+      "output": {
+        "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-softmax-row-observation-gpu-f7b8d06c851eba622a3c4b465077be12964b666b-captures\\output.bin",
+        "sha256": "0d5b41647819074c7e50def648ed58346f850af422280c3ee9620a01ccc445b8",
+        "shape": [
+          1,
+          12,
+          16,
+          2520
+        ],
+        "elements": 483840,
+        "original_shape": [
+          1,
+          12,
+          2520,
+          2520
+        ],
+        "tensor_index": 191
+      },
+      "final": {
+        "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-softmax-row-observation-gpu-f7b8d06c851eba622a3c4b465077be12964b666b-captures\\layer0-output.bin",
+        "sha256": "bc417e7f0e3486a5ac0025878d58c2c0b612ea5dea99a53e6b8db0e6f93b1513",
+        "shape": [
+          1,
+          2520,
+          768
+        ],
+        "elements": 1935360
+      },
+      "original_layer_model": {
+        "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-layer0-original-patch-gpu-e39bdf1b5d0faf2ea424023d83076315736c6fde-captures\\layer0.sentis",
+        "sha256": "d09b8884fae82ecd0245967774a0c8671efe09156c50367c45b9f133fc53983d"
+      },
+      "original_patch_input": {
+        "file": ".\\artifacts\\k\\artifacts\\vision-diagnostics\\native-stage-0.bin",
+        "sha256": "bc4c19c9aaf9688801c99ed073fdde22f0daf6b822dc2c9c4b7a3f7c9aded636"
+      },
+      "normal_final_matches_observed_bits": true,
+      "source_model_bytes_preserved": true,
+      "source_model_serialized_sha256": "0e934178e391f2aea5bd691b6a59c441c8304500afc36e4be321c776ed873634",
+      "actual_backend": "GPUCompute",
+      "rows_per_head": 16
+    }
+  },
+  "independent_current_cpu_references": [
+    {
+      "file": "vision-softmax-reference-preparation-20261015.json",
+      "sha256": "acdb3482351de51370576b4d611dc7371e8ac60cbf766a1de4fc6d7af2ed8b17",
+      "result": {
+        "reference": {
+          "scope": "first_16_rows_per_head_captured_gpu_input_current_cpu_softmax_equation_only",
+          "producer": "f7b8d06c851eba622a3c4b465077be12964b666b",
+          "torch_version": "2.14.1+cpu",
+          "torch_git": "5c4886908584029761b579af026dcfb627c84070",
+          "torch_cpu_capability": "AVX2",
+          "threads": 2,
+          "shape": [
+            1,
+            12,
+            16,
+            2520
+          ],
+          "axis": -1,
+          "rows_per_head": 16,
+          "input": {
+            "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-softmax-row-observation-gpu-f7b8d06c851eba622a3c4b465077be12964b666b-captures\\input.bin",
+            "sha256": "9faff3fe67068a6f8469faed0f774236abcd5f9cf4cc3d602601dc9b6aa6e18f",
+            "shape": [
+              1,
+              12,
+              16,
+              2520
+            ],
+            "elements": 483840,
+            "original_shape": [
+              1,
+              12,
+              2520,
+              2520
+            ],
+            "tensor_index": 189
+          },
+          "captured_full_shape_gpu_output": {
+            "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-softmax-row-observation-gpu-f7b8d06c851eba622a3c4b465077be12964b666b-captures\\output.bin",
+            "sha256": "0d5b41647819074c7e50def648ed58346f850af422280c3ee9620a01ccc445b8",
+            "shape": [
+              1,
+              12,
+              16,
+              2520
+            ],
+            "elements": 483840,
+            "original_shape": [
+              1,
+              12,
+              2520,
+              2520
+            ],
+            "tensor_index": 191
+          },
+          "original_layer_model": {
+            "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-layer0-original-patch-gpu-e39bdf1b5d0faf2ea424023d83076315736c6fde-captures\\layer0.sentis",
+            "sha256": "d09b8884fae82ecd0245967774a0c8671efe09156c50367c45b9f133fc53983d"
+          },
+          "original_patch_input": {
+            "file": ".\\artifacts\\k\\artifacts\\vision-diagnostics\\native-stage-0.bin",
+            "sha256": "bc4c19c9aaf9688801c99ed073fdde22f0daf6b822dc2c9c4b7a3f7c9aded636"
+          },
+          "capture": {
+            "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-softmax-row-observation-gpu-f7b8d06c851eba622a3c4b465077be12964b666b.json",
+            "sha256": "fc251bef6b142d7c652525a56fc1fa6ebd068972127d3533df817e88fc479b72"
+          },
+          "expected": {
+            "file": "expected-fp32.bin",
+            "sha256": "68b4ff1dc8ada5f60a8c64ce548d051ffefdc2a60eaacb781f293579515ad7bc"
+          },
+          "baseline": {
+            "bit_differences": 419773,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 5.960464477539062e-07,
+            "maximum_tolerance_ratio": 0.006033308593550335
+          },
+          "original_internal_native_reference_available": false,
+          "full_encoder_validated": false,
+          "end_to_end_validated": false,
+          "gpu_candidate_validated": false
+        },
+        "reference_sha256": "f289e51e7f3a72dc9deaf66b9b1e01370dc2783545dcd0b0370b9d64899db0e9"
+      }
+    },
+    {
+      "file": "vision-attention-matmul-reference-preparation-20261015.json",
+      "sha256": "5f9408988aeca363aaf23178350e555af291d9b1998ecdf92e2d2ca249bd3570",
+      "result": {
+        "reference": {
+          "scope": "first_16_query_rows_two_captured_original_gpu_attention_matmuls_current_cpu_equations_only",
+          "producer": "e36c9596c90c802e1bd630d01400f87df501bd2d",
+          "torch_version": "2.14.1+cpu",
+          "torch_git": "5c4886908584029761b579af026dcfb627c84070",
+          "torch_cpu_capability": "AVX2",
+          "threads": 2,
+          "capture": {
+            "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-attention-matmul-observation-gpu-e36c9596c90c802e1bd630d01400f87df501bd2d.json",
+            "sha256": "6d077daf12a0643fba86a6a0c95a489ded58bee4514b4ac7fa09b7470f0fe365"
+          },
+          "original_layer_model": {
+            "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-layer0-original-patch-gpu-e39bdf1b5d0faf2ea424023d83076315736c6fde-captures\\layer0.sentis",
+            "sha256": "d09b8884fae82ecd0245967774a0c8671efe09156c50367c45b9f133fc53983d"
+          },
+          "original_patch_input": {
+            "file": ".\\artifacts\\k\\artifacts\\vision-diagnostics\\native-stage-0.bin",
+            "sha256": "bc4c19c9aaf9688801c99ed073fdde22f0daf6b822dc2c9c4b7a3f7c9aded636"
+          },
+          "rows": [
+            {
+              "ordinal": 0,
+              "left": {
+                "file": "matmul-0-left-fp32.bin",
+                "sha256": "0c8d8325d432d131d9075fe8c84abf982dd364edfe2ee7ad1e66de526f076c55",
+                "shape": [
+                  12,
+                  16,
+                  64
+                ]
+              },
+              "right": {
+                "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-attention-matmul-observation-gpu-e36c9596c90c802e1bd630d01400f87df501bd2d-captures\\tensor-183.bin",
+                "sha256": "888ee38c9165e890a9da3c3ae5f0e7b3284465644a7137aaa827afe3b2a3ec44",
+                "shape": [
+                  12,
+                  64,
+                  2520
+                ],
+                "elements": 1935360,
+                "original_shape": [
+                  12,
+                  64,
+                  2520
+                ],
+                "row_prefix_only": false
+              },
+              "captured_left_source": {
+                "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-attention-matmul-observation-gpu-e36c9596c90c802e1bd630d01400f87df501bd2d-captures\\tensor-180.bin",
+                "sha256": "1f1446feae8da66ac1c3e5d5109539d98db3970c17ad94f34c82afc4d11a0a3a",
+                "shape": [
+                  12,
+                  2520,
+                  64
+                ],
+                "elements": 1935360,
+                "original_shape": [
+                  12,
+                  2520,
+                  64
+                ],
+                "row_prefix_only": false
+              },
+              "captured_output": {
+                "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-attention-matmul-observation-gpu-e36c9596c90c802e1bd630d01400f87df501bd2d-captures\\tensor-184.bin",
+                "sha256": "ab7904f2504fab6339173442c808fd1b435b1e5051105365425b3095fdf2a743",
+                "shape": [
+                  12,
+                  16,
+                  2520
+                ],
+                "elements": 483840,
+                "original_shape": [
+                  12,
+                  2520,
+                  2520
+                ],
+                "row_prefix_only": true
+              },
+              "expected": {
+                "file": "matmul-0-expected-fp32.bin",
+                "sha256": "0c5da5a5a098eec8e1906bf53292436f27a4b902f9008e063cc3f504af2c6d60",
+                "shape": [
+                  12,
+                  16,
+                  2520
+                ]
+              },
+              "baseline": {
+                "bit_differences": 368928,
+                "mismatched_elements": 0,
+                "maximum_absolute_error": 1.1444091796875e-05,
+                "maximum_tolerance_ratio": 0.4493718352153758
+              }
+            },
+            {
+              "ordinal": 1,
+              "left": {
+                "file": "matmul-1-left-fp32.bin",
+                "sha256": "0d5b41647819074c7e50def648ed58346f850af422280c3ee9620a01ccc445b8",
+                "shape": [
+                  12,
+                  16,
+                  2520
+                ]
+              },
+              "right": {
+                "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-attention-matmul-observation-gpu-e36c9596c90c802e1bd630d01400f87df501bd2d-captures\\tensor-197.bin",
+                "sha256": "fe274cdaa1303cef5c6cc26b3ace45d1d4edaf15e2dd7150f7865acdff32cc66",
+                "shape": [
+                  12,
+                  2520,
+                  64
+                ],
+                "elements": 1935360,
+                "original_shape": [
+                  12,
+                  2520,
+                  64
+                ],
+                "row_prefix_only": false
+              },
+              "captured_left_source": {
+                "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-attention-matmul-observation-gpu-e36c9596c90c802e1bd630d01400f87df501bd2d-captures\\tensor-194.bin",
+                "sha256": "0d5b41647819074c7e50def648ed58346f850af422280c3ee9620a01ccc445b8",
+                "shape": [
+                  12,
+                  16,
+                  2520
+                ],
+                "elements": 483840,
+                "original_shape": [
+                  12,
+                  2520,
+                  2520
+                ],
+                "row_prefix_only": true
+              },
+              "captured_output": {
+                "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-attention-matmul-observation-gpu-e36c9596c90c802e1bd630d01400f87df501bd2d-captures\\tensor-198.bin",
+                "sha256": "e003cad29abfe10a4fb0648e9dc0d83284a38d3dbde0b1a3dd47c03f34583322",
+                "shape": [
+                  12,
+                  16,
+                  64
+                ],
+                "elements": 12288,
+                "original_shape": [
+                  12,
+                  2520,
+                  64
+                ],
+                "row_prefix_only": true
+              },
+              "expected": {
+                "file": "matmul-1-expected-fp32.bin",
+                "sha256": "7334ad8534f75239ed62e3823a665be2645f895a6f4b081294cf52317572fc74",
+                "shape": [
+                  12,
+                  16,
+                  64
+                ]
+              },
+              "baseline": {
+                "bit_differences": 10926,
+                "mismatched_elements": 0,
+                "maximum_absolute_error": 5.0067901611328125e-06,
+                "maximum_tolerance_ratio": 0.030996726906821617
+              }
+            }
+          ],
+          "original_internal_native_reference_available": false,
+          "gpu_candidate_validated": false,
+          "full_encoder_validated": false,
+          "end_to_end_validated": false
+        },
+        "reference_sha256": "de8c267ed994afbeeea3388f767521e38eb935a59a5c800feb98ab7dc06d7579"
+      }
+    }
+  ],
+  "softmax_local_qualification": {
+    "file": "vision-softmax-equation-gpu-43a3f0b96418e661ef0d2307b8875d4c43435834.json",
+    "sha256": "1dd17a96d6cc455319b94a1d3b4e6343b3d9ab716fec80b3151cae5d7665b5ed",
+    "result": {
+      "success": true,
+      "runtime_source": "43a3f0b96418e661ef0d2307b8875d4c43435834",
+      "scope": "first_16_rows_per_head_captured_gpu_input_current_cpu_softmax_equation_only",
+      "original_internal_native_reference_available": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "baseline_captured_full_shape": {
+        "bit_differences": 419773,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 5.960464477539062e-07,
+        "maximum_tolerance_ratio": 0.006033308593550335
+      },
+      "candidate": {
+        "bit_differences": 157609,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 3.5762786865234375e-07,
+        "maximum_tolerance_ratio": 0.003314766112920623
+      },
+      "capture_sha256": "6d4ca9a4126570fbeead8948b3cfea7bf614e381ee0a3f1f3e75fbc0cca38c1f",
+      "borrowed_input_preserved": true,
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "reference_sha256": "f289e51e7f3a72dc9deaf66b9b1e01370dc2783545dcd0b0370b9d64899db0e9"
+    }
+  },
+  "softmax_only_layer_rejected": {
+    "file": "vision-layer0-native-softmax-gelu-rms-gpu-143312ea7726484cff9e6307ebeee78645e4d25f.json",
+    "sha256": "9abfb0c5884f76d916ae26f10e01f87fe85b45161fc8162a3f76f1d5025f4a4f",
+    "result": {
+      "success": false,
+      "scope": "original_vision_layer0_native_softmax_gelu_inline_rms_and_seven_native_gpu_projections_candidate",
+      "runtime_source": "143312ea7726484cff9e6307ebeee78645e4d25f",
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "phase": "completed",
+      "inline_rms_count": 7,
+      "layer_count": 1220,
+      "gelu_count": 1,
+      "softmax_count": 1,
+      "projections": [
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b"
+        },
+        {
+          "kind": "native_softmax",
+          "rows": 30240,
+          "width": 2520
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e0f98883c238d21192d6e086f0205f07c428847307a94817d34f3adf20e7338f"
+        },
+        {
+          "kind": "native_tanh_gelu",
+          "rows": 2520,
+          "width": 3072
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e9f675da30561ba275e17507b5455fda4d49e6a883747c5678d2a46eb8df0102"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "0174befbd8ff8c841032996393c3e80d3334dfc8dbd10ee58d804a420601de5a"
+        }
+      ],
+      "release_unused_gpu_cache": true,
+      "prepare_ms": 793.1113,
+      "segment_count": 10,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "execute_and_final_download_ms": 1760.6973,
+      "capture_sha256": "50335305bc493ff04f6e11c40380a760166d4217ef08367f1b18d39800ee8900",
+      "actual_backend": "GPUCompute",
+      "bit_differences": 1504228,
+      "mismatched_elements": 1,
+      "maximum_absolute_error": 1.9073486328125e-05,
+      "maximum_tolerance_ratio": 1.1826831532698232,
+      "source_model_bytes_preserved": true,
+      "source_model_serialized_sha256": "0e934178e391f2aea5bd691b6a59c441c8304500afc36e4be321c776ed873634",
+      "error_first_line": "NUnit.Framework.AssertionException:   Keep the unchanged original layer-0 FP32 gate."
+    }
+  },
+  "matmul_capture_precondition_failure": {
+    "file": "vision-attention-matmul-observation-gpu-e2652a6d0eaf6d0e1a56ead3e1c94cecd0c4c098.json",
+    "sha256": "98d3b9e437cbf144eb49d747b8a76e2a9e8809d1f1e1f1bdbd1e69c03b3c6b01",
+    "result": {
+      "success": false,
+      "runtime_source": "e2652a6d0eaf6d0e1a56ead3e1c94cecd0c4c098",
+      "scope": "original_layer0_two_attention_matmuls_bounded_outputs_only",
+      "diagnostic_readbacks_only": true,
+      "original_internal_native_reference_available": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "error_first_line": "NUnit.Framework.AssertionException:   Expected: (1, 12, 2520, 64)"
+    }
+  },
+  "original_matmul_capture": {
+    "file": "vision-attention-matmul-observation-gpu-e36c9596c90c802e1bd630d01400f87df501bd2d.json",
+    "sha256": "6d077daf12a0643fba86a6a0c95a489ded58bee4514b4ac7fa09b7470f0fe365",
+    "result": {
+      "success": true,
+      "runtime_source": "e36c9596c90c802e1bd630d01400f87df501bd2d",
+      "scope": "original_layer0_two_attention_matmuls_bounded_outputs_only",
+      "diagnostic_readbacks_only": true,
+      "original_internal_native_reference_available": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "inferred_operand_shapes": {
+        "180": [
+          12,
+          2520,
+          64
+        ],
+        "183": [
+          12,
+          64,
+          2520
+        ],
+        "184": [
+          12,
+          2520,
+          2520
+        ],
+        "194": [
+          12,
+          2520,
+          2520
+        ],
+        "197": [
+          12,
+          2520,
+          64
+        ],
+        "198": [
+          12,
+          2520,
+          64
+        ]
+      },
+      "phase": "complete",
+      "tensors": {
+        "180": {
+          "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-attention-matmul-observation-gpu-e36c9596c90c802e1bd630d01400f87df501bd2d-captures\\tensor-180.bin",
+          "sha256": "1f1446feae8da66ac1c3e5d5109539d98db3970c17ad94f34c82afc4d11a0a3a",
+          "shape": [
+            12,
+            2520,
+            64
+          ],
+          "elements": 1935360,
+          "original_shape": [
+            12,
+            2520,
+            64
+          ],
+          "row_prefix_only": false
+        },
+        "183": {
+          "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-attention-matmul-observation-gpu-e36c9596c90c802e1bd630d01400f87df501bd2d-captures\\tensor-183.bin",
+          "sha256": "888ee38c9165e890a9da3c3ae5f0e7b3284465644a7137aaa827afe3b2a3ec44",
+          "shape": [
+            12,
+            64,
+            2520
+          ],
+          "elements": 1935360,
+          "original_shape": [
+            12,
+            64,
+            2520
+          ],
+          "row_prefix_only": false
+        },
+        "197": {
+          "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-attention-matmul-observation-gpu-e36c9596c90c802e1bd630d01400f87df501bd2d-captures\\tensor-197.bin",
+          "sha256": "fe274cdaa1303cef5c6cc26b3ace45d1d4edaf15e2dd7150f7865acdff32cc66",
+          "shape": [
+            12,
+            2520,
+            64
+          ],
+          "elements": 1935360,
+          "original_shape": [
+            12,
+            2520,
+            64
+          ],
+          "row_prefix_only": false
+        },
+        "184": {
+          "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-attention-matmul-observation-gpu-e36c9596c90c802e1bd630d01400f87df501bd2d-captures\\tensor-184.bin",
+          "sha256": "ab7904f2504fab6339173442c808fd1b435b1e5051105365425b3095fdf2a743",
+          "shape": [
+            12,
+            16,
+            2520
+          ],
+          "elements": 483840,
+          "original_shape": [
+            12,
+            2520,
+            2520
+          ],
+          "row_prefix_only": true
+        },
+        "194": {
+          "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-attention-matmul-observation-gpu-e36c9596c90c802e1bd630d01400f87df501bd2d-captures\\tensor-194.bin",
+          "sha256": "0d5b41647819074c7e50def648ed58346f850af422280c3ee9620a01ccc445b8",
+          "shape": [
+            12,
+            16,
+            2520
+          ],
+          "elements": 483840,
+          "original_shape": [
+            12,
+            2520,
+            2520
+          ],
+          "row_prefix_only": true
+        },
+        "198": {
+          "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-attention-matmul-observation-gpu-e36c9596c90c802e1bd630d01400f87df501bd2d-captures\\tensor-198.bin",
+          "sha256": "e003cad29abfe10a4fb0648e9dc0d83284a38d3dbde0b1a3dd47c03f34583322",
+          "shape": [
+            12,
+            16,
+            64
+          ],
+          "elements": 12288,
+          "original_shape": [
+            12,
+            2520,
+            64
+          ],
+          "row_prefix_only": true
+        }
+      },
+      "matmuls": [
+        {
+          "left": 180,
+          "right": 183,
+          "output": 184
+        },
+        {
+          "left": 194,
+          "right": 197,
+          "output": 198
+        }
+      ],
+      "source_model_bytes_preserved": true,
+      "source_model_serialized_sha256": "0e934178e391f2aea5bd691b6a59c441c8304500afc36e4be321c776ed873634",
+      "original_layer_model": {
+        "file": ".\\artifacts\\acceptance-consumer\\artifacts\\vision-layer0-original-patch-gpu-e39bdf1b5d0faf2ea424023d83076315736c6fde-captures\\layer0.sentis",
+        "sha256": "d09b8884fae82ecd0245967774a0c8671efe09156c50367c45b9f133fc53983d"
+      },
+      "original_patch_input": {
+        "file": ".\\artifacts\\k\\artifacts\\vision-diagnostics\\native-stage-0.bin",
+        "sha256": "bc4c19c9aaf9688801c99ed073fdde22f0daf6b822dc2c9c4b7a3f7c9aded636"
+      },
+      "normal_final_matches_observed_bits": true,
+      "actual_backend": "GPUCompute"
+    }
+  },
+  "matmul_local_qualifications": [
+    {
+      "file": "vision-attention-matmul-equation-gpu-d41c4b330b8a71b474cc8ff0e9772b551498ddbe-0.json",
+      "sha256": "c3b8e0600b3f5fc96374a9616ebbf303070b3a7f9c75405a3772ff23f2605e39",
+      "result": {
+        "success": true,
+        "runtime_source": "d41c4b330b8a71b474cc8ff0e9772b551498ddbe",
+        "ordinal": 0,
+        "scope": "first_16_query_rows_captured_gpu_attention_matmul_current_cpu_equation_only",
+        "original_internal_native_reference_available": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "baseline_captured_full_shape": {
+          "bit_differences": 368928,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 1.1444091796875e-05,
+          "maximum_tolerance_ratio": 0.4493718352153758
+        },
+        "candidate": {
+          "bit_differences": 0,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0
+        },
+        "capture_sha256": "0c5da5a5a098eec8e1906bf53292436f27a4b902f9008e063cc3f504af2c6d60",
+        "borrowed_inputs_preserved": true,
+        "actual_backend": "GPUCompute",
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "reference_sha256": "de8c267ed994afbeeea3388f767521e38eb935a59a5c800feb98ab7dc06d7579"
+      }
+    },
+    {
+      "file": "vision-attention-matmul-equation-gpu-d41c4b330b8a71b474cc8ff0e9772b551498ddbe-1.json",
+      "sha256": "a0ea85db812a62102a53e1f09cd713e434dbd14fb1410ab114974b067f1bcc94",
+      "result": {
+        "success": true,
+        "runtime_source": "d41c4b330b8a71b474cc8ff0e9772b551498ddbe",
+        "ordinal": 1,
+        "scope": "first_16_query_rows_captured_gpu_attention_matmul_current_cpu_equation_only",
+        "original_internal_native_reference_available": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "baseline_captured_full_shape": {
+          "bit_differences": 10926,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 5.0067901611328125e-06,
+          "maximum_tolerance_ratio": 0.030996726906821617
+        },
+        "candidate": {
+          "bit_differences": 0,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0
+        },
+        "capture_sha256": "7334ad8534f75239ed62e3823a665be2645f895a6f4b081294cf52317572fc74",
+        "borrowed_inputs_preserved": true,
+        "actual_backend": "GPUCompute",
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "reference_sha256": "de8c267ed994afbeeea3388f767521e38eb935a59a5c800feb98ab7dc06d7579"
+      }
+    }
+  ],
+  "original_native_layer_gates": [
+    {
+      "file": "vision-layer0-native-bmm-gelu-rms-gpu-eca9428500669a4a329441190239a130078fcd03.json",
+      "sha256": "3547824183f09c54243e934633fd631a1190fa0a8c4e792b1fe2893bc71f2b0c",
+      "result": {
+        "success": true,
+        "scope": "original_vision_layer0_native_batched_matmuls_gelu_rms_candidate",
+        "runtime_source": "eca9428500669a4a329441190239a130078fcd03",
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "phase": "completed",
+        "inline_rms_count": 7,
+        "layer_count": 1220,
+        "gelu_count": 1,
+        "dynamic_matmul_count": 2,
+        "native_softmax": false,
+        "projections": [
+          {
+            "width": 768,
+            "columns": 768,
+            "rows": 2520,
+            "block": 384,
+            "weight_sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48"
+          },
+          {
+            "width": 768,
+            "columns": 768,
+            "rows": 2520,
+            "block": 384,
+            "weight_sha256": "3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe"
+          },
+          {
+            "width": 768,
+            "columns": 768,
+            "rows": 2520,
+            "block": 384,
+            "weight_sha256": "63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b"
+          },
+          {
+            "kind": "native_batched_matmul",
+            "ordinal": 0,
+            "rows": 30240,
+            "width": 64,
+            "columns": 2520
+          },
+          {
+            "kind": "native_batched_matmul",
+            "ordinal": 1,
+            "rows": 30240,
+            "width": 2520,
+            "columns": 64
+          },
+          {
+            "width": 768,
+            "columns": 768,
+            "rows": 2520,
+            "block": 384,
+            "weight_sha256": "b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5"
+          },
+          {
+            "width": 768,
+            "columns": 3072,
+            "rows": 2520,
+            "block": 384,
+            "weight_sha256": "e0f98883c238d21192d6e086f0205f07c428847307a94817d34f3adf20e7338f"
+          },
+          {
+            "kind": "native_tanh_gelu",
+            "rows": 2520,
+            "width": 3072
+          },
+          {
+            "width": 768,
+            "columns": 3072,
+            "rows": 2520,
+            "block": 384,
+            "weight_sha256": "e9f675da30561ba275e17507b5455fda4d49e6a883747c5678d2a46eb8df0102"
+          },
+          {
+            "width": 3072,
+            "columns": 768,
+            "rows": 2520,
+            "block": 384,
+            "weight_sha256": "0174befbd8ff8c841032996393c3e80d3334dfc8dbd10ee58d804a420601de5a"
+          }
+        ],
+        "release_unused_gpu_cache": true,
+        "prepare_ms": 391.9753,
+        "segment_count": 11,
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "execute_and_final_download_ms": 1026.4889,
+        "capture_sha256": "747e55d6ff639d84ff03db1c83c14f42b079f0f1dfa64e08c0762e1828c016fb",
+        "actual_backend": "GPUCompute",
+        "bit_differences": 1463550,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 1.52587890625e-05,
+        "maximum_tolerance_ratio": 0.7391769707936395,
+        "source_model_bytes_preserved": true,
+        "source_model_serialized_sha256": "0e934178e391f2aea5bd691b6a59c441c8304500afc36e4be321c776ed873634"
+      }
+    },
+    {
+      "file": "vision-layer0-native-bmm-softmax-gelu-rms-gpu-eca9428500669a4a329441190239a130078fcd03.json",
+      "sha256": "1bd549b75b2e50a412d8c5317c787ade709620ffbeef4aeb18b33f12a07a15cb",
+      "result": {
+        "success": true,
+        "scope": "original_vision_layer0_native_batched_matmuls_gelu_rms_candidate",
+        "runtime_source": "eca9428500669a4a329441190239a130078fcd03",
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "phase": "completed",
+        "inline_rms_count": 7,
+        "layer_count": 1220,
+        "gelu_count": 1,
+        "softmax_count": 1,
+        "dynamic_matmul_count": 2,
+        "native_softmax": true,
+        "projections": [
+          {
+            "width": 768,
+            "columns": 768,
+            "rows": 2520,
+            "block": 384,
+            "weight_sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48"
+          },
+          {
+            "width": 768,
+            "columns": 768,
+            "rows": 2520,
+            "block": 384,
+            "weight_sha256": "3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe"
+          },
+          {
+            "width": 768,
+            "columns": 768,
+            "rows": 2520,
+            "block": 384,
+            "weight_sha256": "63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b"
+          },
+          {
+            "kind": "native_batched_matmul",
+            "ordinal": 0,
+            "rows": 30240,
+            "width": 64,
+            "columns": 2520
+          },
+          {
+            "kind": "native_softmax",
+            "rows": 30240,
+            "width": 2520
+          },
+          {
+            "kind": "native_batched_matmul",
+            "ordinal": 1,
+            "rows": 30240,
+            "width": 2520,
+            "columns": 64
+          },
+          {
+            "width": 768,
+            "columns": 768,
+            "rows": 2520,
+            "block": 384,
+            "weight_sha256": "b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5"
+          },
+          {
+            "width": 768,
+            "columns": 3072,
+            "rows": 2520,
+            "block": 384,
+            "weight_sha256": "e0f98883c238d21192d6e086f0205f07c428847307a94817d34f3adf20e7338f"
+          },
+          {
+            "kind": "native_tanh_gelu",
+            "rows": 2520,
+            "width": 3072
+          },
+          {
+            "width": 768,
+            "columns": 3072,
+            "rows": 2520,
+            "block": 384,
+            "weight_sha256": "e9f675da30561ba275e17507b5455fda4d49e6a883747c5678d2a46eb8df0102"
+          },
+          {
+            "width": 3072,
+            "columns": 768,
+            "rows": 2520,
+            "block": 384,
+            "weight_sha256": "0174befbd8ff8c841032996393c3e80d3334dfc8dbd10ee58d804a420601de5a"
+          }
+        ],
+        "release_unused_gpu_cache": true,
+        "prepare_ms": 586.7520000000001,
+        "segment_count": 12,
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "execute_and_final_download_ms": 2571.7270000000003,
+        "capture_sha256": "40cf083c0f8fddba40fc0e20d8e6cfd49edff0a391928d3ea23b4ab13d317214",
+        "actual_backend": "GPUCompute",
+        "bit_differences": 1461483,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 1.52587890625e-05,
+        "maximum_tolerance_ratio": 0.613357704079442,
+        "source_model_bytes_preserved": true,
+        "source_model_serialized_sha256": "0e934178e391f2aea5bd691b6a59c441c8304500afc36e4be321c776ed873634"
+      }
+    }
+  ],
+  "package": {
+    "file": "vision-attention-final-package-green-20261015.xml",
+    "sha256": "1a1508dc24bcfe7b4987800589d1d548507a0dc647547e9267c571045840c5bd",
+    "tests": 22,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "process_resource_observations": {
+    "file": "vision-native-attention-layer0-resources-20261015.jsonl",
+    "sha256": "061e8fbe5501c75b90a5e2791bb91939c28ea324f36d5a815b72b30d2995dbf5",
+    "source": "eca9428500669a4a329441190239a130078fcd03",
+    "pid": 91788,
+    "sample_count": 12,
+    "maximum_observed_host_peak_bytes": 3868901376,
+    "maximum_observed_device_gpu_used_mib": 6994,
+    "true_peak_guaranteed": false,
+    "device_includes_other_processes": true,
+    "execution_phase_classified": false,
+    "note": "Monitor phase lookup targets a different full-model fixture; startup labels do not classify these layer tests."
+  },
+  "excluded_monitor": {
+    "file": "vision-row-prefix-capture-resources-20261015.jsonl",
+    "sha256": "911eb15b95d90ac238414efc68b873d3e05485af413ecfa73536cd3c8e32fb30",
+    "reason": "Manual source tag typo; not valid source-linked resource evidence. Do not use its memory numbers."
+  },
+  "previous_full_image_failure_not_reexecuted": {
+    "file": "vision-cache-release-native-gelu-rms-whole-gpu-1ee8f2c00408e2466e7df3c8ca55608e24f442cc-square-0.json",
+    "sha256": "5392cd17d99c1d97959b2b6e5ed712121e9a11bd735dd315d505f695d473b985",
+    "result": {
+      "success": false,
+      "scope": "one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate",
+      "runtime_source": "1ee8f2c00408e2466e7df3c8ca55608e24f442cc",
+      "case_id": "square-0",
+      "phase": "completed",
+      "all_profiles_validated": false,
+      "end_to_end_validated": false,
+      "model_file_audit_ms": 422.42830000000004,
+      "profile": "square",
+      "saved_model_sha256": "4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7",
+      "model_load_ms": 690.6887,
+      "coefficient_audit_before_ms": 415.67330000000004,
+      "inline_rms_count": 112,
+      "layer_count": 19535,
+      "original_square_count": 113,
+      "remaining_original_rms_count": 1,
+      "all_original_coefficient_descriptors_retained": true,
+      "graph_rewrite_ms": 1640.9592,
+      "native_gelu_count": 16,
+      "release_unused_gpu_cache": true,
+      "pipeline_prepare_ms": 1411.4667000000002,
+      "segment_count": 18,
+      "gpu_operation_count": 17,
+      "prepare_ms": 4163.4682,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "host_working_set_before_execute_bytes": 3384377344,
+      "execute_and_final_download_ms": 7111.0169000000005,
+      "capture_sha256": "43fa98f573bd55a0f634075bf17f42fcde2ff9e89894c2d5b1b238c8ab451aab",
+      "cache_only_candidate_bits_preserved": true,
+      "host_working_set_after_download_bytes": 9652461568,
+      "host_peak_working_set_bytes": 9652461568,
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 571,
+      "maximum_absolute_error": 0.00012803077697753906,
+      "maximum_tolerance_ratio": 6.883228917760353,
+      "original_coefficient_bytes_preserved": true,
+      "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+      "coefficient_audit_after_ms": 428.75350000000003,
+      "error_first_line": "NUnit.Framework.AssertionException:   Keep the unchanged original FP32 elementwise gate."
+    }
+  },
+  "runtime_arithmetic_changed": false,
+  "intermediate_tensor_readbacks_in_diagnostics_only": true,
+  "implementation": "TDD bounded row observation and dynamic binary partition only; existing GPU arithmetic unchanged.",
+  "next": "Qualify remaining attention/scaling and original RMS, then lower full-candidate peak before further bounded whole-image acceptance.",
+  "remaining": [
+    "Full original image three profiles/six GPU cases; historic CPU failures kept separate.",
+    "High full-pipeline host/VRAM peak and persistent allocation warning/long-term memory.",
+    "Actual PCM/Texture GPU preprocessing, encoder, backbone and normalized 768 API across all roles, masks and boundaries.",
+    "Ownership, Dispose, error reuse and text regression; stage 3/4 samples and actual stripped Player.",
+    "Required CI; skipped/queued runs are not passes."
+  ]
+}

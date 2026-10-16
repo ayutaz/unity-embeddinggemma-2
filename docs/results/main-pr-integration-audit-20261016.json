@@ -1,0 +1,1109 @@
+{
+  "date_jst": "2026-10-16",
+  "user_request": "Merge necessary changes first and organize PRs",
+  "integration_pr": 79,
+  "integration_branch": "test/audio-post-norm-isolation",
+  "target": "main",
+  "accepted_source": "be21d0c87987c36958c6556c7b6304aaff5da292",
+  "accepted_ci": 38850001042,
+  "prior_pr81_merge": "bc493f1ed3b15131282af1c61f08f329336a1d84",
+  "main_at_preparation": "c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1",
+  "main_changes_merged": [
+    "92eda69bebe87bcd1d965f6ce2d12d435d43bb13",
+    "c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1"
+  ],
+  "conflict_resolution": "Two roadmap documents preserve newer accepted status and historical checkpoints. Original main snapshots remain in Git history.",
+  "runtime_changed_from_accepted": false,
+  "planned_close_after_main_merge": 20,
+  "retain": [
+    31
+  ],
+  "branches_to_delete": [],
+  "integration_ci_verified": true,
+  "prs": [
+    {
+      "baseRefName": "test/audio-layer-zero-feed-forward-reference",
+      "headRefName": "test/audio-fp64-projection-oracle",
+      "headRefOid": "d33c3c114157fed33d8a58d3c8e1fcb2ece5513a",
+      "isDraft": true,
+      "number": 80,
+      "title": "test: 固定native入力とFP64 projectionの精度差を比較",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/80",
+      "ancestor_of_accepted_source": true,
+      "unique_changed_paths": 0,
+      "merge_base": "d33c3c114157fed33d8a58d3c8e1fcb2ece5513a",
+      "disposition": "covered_by_accepted_runtime",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/80"
+    },
+    {
+      "baseRefName": "test/audio-feed-forward-stage-observation",
+      "headRefName": "test/audio-post-norm-isolation",
+      "headRefOid": "bc493f1ed3b15131282af1c61f08f329336a1d84",
+      "isDraft": true,
+      "number": 79,
+      "title": "test: 固定native入力でpost norm単独をCPUとGPU検証",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/79",
+      "ancestor_of_accepted_source": false,
+      "unique_changed_paths": 871,
+      "merge_base": "ebd16f534fc8a12992258d417dfdfabc0404d862",
+      "disposition": "integrate_to_main_via_existing_pr79",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/79"
+    },
+    {
+      "baseRefName": "test/audio-layer-zero-stage-observation",
+      "headRefName": "test/audio-feed-forward-stage-observation",
+      "headRefOid": "59f26abcdf973ad85b8ad5b08edb55045f36ff49",
+      "isDraft": true,
+      "number": 78,
+      "title": "test: 固定feed_forward1の内部数値差と統合係数を検証",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/78",
+      "ancestor_of_accepted_source": true,
+      "unique_changed_paths": 0,
+      "merge_base": "59f26abcdf973ad85b8ad5b08edb55045f36ff49",
+      "disposition": "covered_by_accepted_runtime",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/78"
+    },
+    {
+      "baseRefName": "test/audio-layer-zero-native-reference",
+      "headRefName": "test/audio-layer-zero-feed-forward-reference",
+      "headRefOid": "d0153b6061bdf106a7785fb2fbf8c80adc372641",
+      "isDraft": true,
+      "number": 77,
+      "title": "feat: 固定音声feed_forward1内部参照を不変再実行で生成",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/77",
+      "ancestor_of_accepted_source": true,
+      "unique_changed_paths": 0,
+      "merge_base": "d0153b6061bdf106a7785fb2fbf8c80adc372641",
+      "disposition": "covered_by_accepted_runtime",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/77"
+    },
+    {
+      "baseRefName": "test/audio-onnx-stage-map",
+      "headRefName": "test/audio-layer-zero-stage-observation",
+      "headRefOid": "dbcc35b3276dd19ae59943af9a8723c4714e3425",
+      "isDraft": true,
+      "number": 76,
+      "title": "test: 音声layer 0の正規化入力から数値不合格を局所化",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/76",
+      "ancestor_of_accepted_source": true,
+      "unique_changed_paths": 0,
+      "merge_base": "dbcc35b3276dd19ae59943af9a8723c4714e3425",
+      "disposition": "covered_by_accepted_runtime",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/76"
+    },
+    {
+      "baseRefName": "feat/audio-native-silu-onnx",
+      "headRefName": "test/audio-layer-zero-native-reference",
+      "headRefOid": "aec39f3882c71c5f263998120494171766661101",
+      "isDraft": true,
+      "number": 75,
+      "title": "feat: 固定native音声layer 0の内部参照を監査して生成",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/75",
+      "ancestor_of_accepted_source": true,
+      "unique_changed_paths": 0,
+      "merge_base": "aec39f3882c71c5f263998120494171766661101",
+      "disposition": "covered_by_accepted_runtime",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/75"
+    },
+    {
+      "baseRefName": "test/current-audio-encoder-reference",
+      "headRefName": "test/audio-onnx-stage-map",
+      "headRefOid": "2712b8944321f436569247e98d5ff432a82b05ac",
+      "isDraft": true,
+      "number": 74,
+      "title": "test: 音声の元ONNX係数を保存層へ結び付け数値差を局所化",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/74",
+      "ancestor_of_accepted_source": true,
+      "unique_changed_paths": 0,
+      "merge_base": "2712b8944321f436569247e98d5ff432a82b05ac",
+      "disposition": "covered_by_accepted_runtime",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/74"
+    },
+    {
+      "baseRefName": "test/current-audio-encoder-reference",
+      "headRefName": "test/audio-native-pow-probe",
+      "headRefOid": "f9afacef8f9f7e54198e4fbdb9f4d59646b25deb",
+      "isDraft": true,
+      "number": 73,
+      "title": "test: native inverse power候補の実encoder不合格を記録",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/73",
+      "ancestor_of_accepted_source": false,
+      "unique_changed_paths": 8,
+      "merge_base": "076fbee089ec0f4fb810c5cd5da28f5c08faffc7",
+      "unique_commits": [
+        "f9aface docs: reject inverse-power candidate after all real encoder failures",
+        "188a6da test: evaluate native inverse-power candidate against real encoder references",
+        "d09a877 test: require native inverse-power candidate without model mutation"
+      ],
+      "changed_paths": [
+        "Assets/Tests/Editor/NativeInversePowerCandidate.cs",
+        "Assets/Tests/Editor/NativeInversePowerCandidate.cs.meta",
+        "Assets/Tests/Editor/NativeInversePowerCandidateTests.cs",
+        "Assets/Tests/Editor/NativeInversePowerCandidateTests.cs.meta",
+        "Assets/Tests/Editor/NativePowerAudioEncoderReferenceTests.cs",
+        "Assets/Tests/Editor/NativePowerAudioEncoderReferenceTests.cs.meta",
+        "docs/m4-native-inverse-power-candidate-validation.md",
+        "docs/results/m4-native-inverse-power-candidate-windows-20261014.json"
+      ],
+      "file_comparison": [
+        {
+          "path": "Assets/Tests/Editor/NativeInversePowerCandidate.cs",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Tests/Editor/NativeInversePowerCandidate.cs.meta",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Tests/Editor/NativeInversePowerCandidateTests.cs",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Tests/Editor/NativeInversePowerCandidateTests.cs.meta",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Tests/Editor/NativePowerAudioEncoderReferenceTests.cs",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Tests/Editor/NativePowerAudioEncoderReferenceTests.cs.meta",
+          "status": "missing"
+        },
+        {
+          "path": "docs/m4-native-inverse-power-candidate-validation.md",
+          "status": "missing"
+        },
+        {
+          "path": "docs/results/m4-native-inverse-power-candidate-windows-20261014.json",
+          "status": "missing"
+        }
+      ],
+      "disposition": "retire_superseded_diagnostic",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/73",
+      "reason": "Rejected inverse-power experiment explicitly failed all original real encoder conditions; do not adopt it."
+    },
+    {
+      "baseRefName": "test/gpu-constant-il2cpp",
+      "headRefName": "test/current-audio-encoder-reference",
+      "headRefOid": "076fbee089ec0f4fb810c5cd5da28f5c08faffc7",
+      "isDraft": true,
+      "number": 72,
+      "title": "test: 現在の音声encoder数値gateと保存モデルを観測",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/72",
+      "ancestor_of_accepted_source": true,
+      "unique_changed_paths": 0,
+      "merge_base": "076fbee089ec0f4fb810c5cd5da28f5c08faffc7",
+      "disposition": "covered_by_accepted_runtime",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/72"
+    },
+    {
+      "baseRefName": "feat/bounded-gpu-constant-upload",
+      "headRefName": "test/gpu-constant-il2cpp",
+      "headRefOid": "24f0cb290934eb334b0e168f4b9419cbf60ae78d",
+      "isDraft": true,
+      "number": 71,
+      "title": "fix: パッケージのGPU定数linker登録とIL2CPP probeを追加",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/71",
+      "ancestor_of_accepted_source": true,
+      "unique_changed_paths": 0,
+      "merge_base": "24f0cb290934eb334b0e168f4b9419cbf60ae78d",
+      "disposition": "covered_by_accepted_runtime",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/71"
+    },
+    {
+      "baseRefName": "feat/bounded-gpu-constant-upload",
+      "headRefName": "test/bounded-audio-chain",
+      "headRefOid": "5985d54a26ed10222c4c43b131d511abe21e4054",
+      "isDraft": true,
+      "number": 70,
+      "title": "test: 分割backboneで実PCM全chainを検証",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/70",
+      "ancestor_of_accepted_source": false,
+      "unique_changed_paths": 8,
+      "merge_base": "2479a9cd2ea3efc2aa30f14ba7e7c6fcaa44713e",
+      "unique_commits": [
+        "5985d54 docs: record bounded PCM chain final vectors and preserve encoder gates",
+        "9c5198c test: validate full PCM audio chain with bounded backbone and saved caches"
+      ],
+      "changed_paths": [
+        "Assets/Tests/Editor/AudioChainReferenceGuard.cs",
+        "Assets/Tests/Editor/AudioChainReferenceGuard.cs.meta",
+        "Assets/Tests/Editor/AudioChainReferenceGuardTests.cs",
+        "Assets/Tests/Editor/AudioChainReferenceGuardTests.cs.meta",
+        "Assets/Tests/Editor/BoundedAudioChainReferenceTests.cs",
+        "Assets/Tests/Editor/BoundedAudioChainReferenceTests.cs.meta",
+        "docs/m4-bounded-audio-chain-validation.md",
+        "docs/results/m4-bounded-audio-real-chain-windows-20261014.json"
+      ],
+      "file_comparison": [
+        {
+          "path": "Assets/Tests/Editor/AudioChainReferenceGuard.cs",
+          "status": "identical"
+        },
+        {
+          "path": "Assets/Tests/Editor/AudioChainReferenceGuard.cs.meta",
+          "status": "identical"
+        },
+        {
+          "path": "Assets/Tests/Editor/AudioChainReferenceGuardTests.cs",
+          "status": "identical"
+        },
+        {
+          "path": "Assets/Tests/Editor/AudioChainReferenceGuardTests.cs.meta",
+          "status": "identical"
+        },
+        {
+          "path": "Assets/Tests/Editor/BoundedAudioChainReferenceTests.cs",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Tests/Editor/BoundedAudioChainReferenceTests.cs.meta",
+          "status": "missing"
+        },
+        {
+          "path": "docs/m4-bounded-audio-chain-validation.md",
+          "status": "missing"
+        },
+        {
+          "path": "docs/results/m4-bounded-audio-real-chain-windows-20261014.json",
+          "status": "missing"
+        }
+      ],
+      "disposition": "retire_superseded_diagnostic",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/70",
+      "reason": "Earlier diagnostic or bounded integration harness is replaced by accepted original strict GPU encoder gates and real Texture/PCM final API acceptance. Keep closed PR/branch evidence; do not reintroduce obsolete harnesses."
+    },
+    {
+      "baseRefName": "feat/image-cpu-preprocessing",
+      "headRefName": "feat/bounded-gpu-constant-upload",
+      "headRefOid": "2479a9cd2ea3efc2aa30f14ba7e7c6fcaa44713e",
+      "isDraft": true,
+      "number": 69,
+      "title": "feat: 大きいGPU定数を分割転送し実backboneを検証",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/69",
+      "ancestor_of_accepted_source": true,
+      "unique_changed_paths": 0,
+      "merge_base": "2479a9cd2ea3efc2aa30f14ba7e7c6fcaa44713e",
+      "disposition": "covered_by_accepted_runtime",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/69"
+    },
+    {
+      "baseRefName": "feat/image-cpu-preprocessing",
+      "headRefName": "test/image-encoder-api-real",
+      "headRefOid": "60a74a4b372e2090424e27ccaa6841d9ad232c8a",
+      "isDraft": true,
+      "number": 68,
+      "title": "test: 実画像encoder APIとbackbone定数サイズを検証",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/68",
+      "ancestor_of_accepted_source": false,
+      "unique_changed_paths": 9,
+      "merge_base": "da1e68d44fe31735052a29168d2616956271ab1b",
+      "unique_commits": [
+        "60a74a4 docs: record real image API gates context mismatch and large constants",
+        "431c986 test: inspect audited backbone constant sizes without GPU scheduling",
+        "2539332 test: exercise public image encoder API with fixed saved real models"
+      ],
+      "changed_paths": [
+        "Assets/Tests/Editor/BackboneConstantInspectionTests.cs",
+        "Assets/Tests/Editor/BackboneConstantInspectionTests.cs.meta",
+        "Assets/Tests/Editor/ImageEncoderApiReferenceTests.cs",
+        "Assets/Tests/Editor/ImageEncoderApiReferenceTests.cs.meta",
+        "docs/m3-image-encoder-api-real-validation.md",
+        "docs/results/backbone-constant-float16-inspection-20261014.json",
+        "docs/results/backbone-constant-fp32-inspection-20261014.json",
+        "docs/results/m3-image-encoder-api-real-windows-20261014.json",
+        "docs/results/m3-native-vision-context-identity-20261014.json"
+      ],
+      "file_comparison": [
+        {
+          "path": "Assets/Tests/Editor/BackboneConstantInspectionTests.cs",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Tests/Editor/BackboneConstantInspectionTests.cs.meta",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Tests/Editor/ImageEncoderApiReferenceTests.cs",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Tests/Editor/ImageEncoderApiReferenceTests.cs.meta",
+          "status": "missing"
+        },
+        {
+          "path": "docs/m3-image-encoder-api-real-validation.md",
+          "status": "missing"
+        },
+        {
+          "path": "docs/results/backbone-constant-float16-inspection-20261014.json",
+          "status": "missing"
+        },
+        {
+          "path": "docs/results/backbone-constant-fp32-inspection-20261014.json",
+          "status": "missing"
+        },
+        {
+          "path": "docs/results/m3-image-encoder-api-real-windows-20261014.json",
+          "status": "missing"
+        },
+        {
+          "path": "docs/results/m3-native-vision-context-identity-20261014.json",
+          "status": "missing"
+        }
+      ],
+      "disposition": "retire_superseded_diagnostic",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/68",
+      "reason": "Earlier diagnostic or bounded integration harness is replaced by accepted original strict GPU encoder gates and real Texture/PCM final API acceptance. Keep closed PR/branch evidence; do not reintroduce obsolete harnesses."
+    },
+    {
+      "baseRefName": "feat/image-embedder-runtime",
+      "headRefName": "feat/image-cpu-preprocessing",
+      "headRefOid": "0d53aedbbb86ba9d02bde5ca654703ae651b72cf",
+      "isDraft": true,
+      "number": 67,
+      "title": "feat: CPU画像前処理とRGB形式の入力変換を追加",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/67",
+      "ancestor_of_accepted_source": true,
+      "unique_changed_paths": 0,
+      "merge_base": "0d53aedbbb86ba9d02bde5ca654703ae651b72cf",
+      "disposition": "covered_by_accepted_runtime",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/67"
+    },
+    {
+      "baseRefName": "feat/audio-encoder-runtime",
+      "headRefName": "feat/image-embedder-runtime",
+      "headRefOid": "f6794ef4fa8cd85a0e69dcc7d144978d0ab46b59",
+      "isDraft": true,
+      "number": 65,
+      "title": "feat: 画像の最終768次元APIとstage接続を追加",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/65",
+      "ancestor_of_accepted_source": true,
+      "unique_changed_paths": 0,
+      "merge_base": "f6794ef4fa8cd85a0e69dcc7d144978d0ab46b59",
+      "disposition": "covered_by_accepted_runtime",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/65"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "feat/image-feature-encoder-runtime",
+      "headRefOid": "46cea116f505e6836f9222e53a14ac536c6b176b",
+      "isDraft": true,
+      "number": 64,
+      "title": "feat: 固定画像profileのencoder Runtime APIを追加",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/64",
+      "ancestor_of_accepted_source": false,
+      "unique_changed_paths": 8,
+      "merge_base": "5e9311ab86362118398e5c004964b7004961838a",
+      "unique_commits": [
+        "46cea11 docs: record image encoder API red green and fixed Git regression",
+        "3c9bf7d feat: encode audited fixed image profiles with owned device tokens",
+        "833e7e0 test: pin image encoder geometry ownership and backend contracts",
+        "92eda69 docs: refresh full TDD plan with audio API and real reference gates (#63)"
+      ],
+      "changed_paths": [
+        "Packages/com.ayutaz.embeddinggemma/Runtime/ImageFeatureEncoder.cs",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/ImageFeatureEncoder.cs.meta",
+        "Packages/com.ayutaz.embeddinggemma/Tests/Editor/ImageFeatureEncoderTests.cs",
+        "Packages/com.ayutaz.embeddinggemma/Tests/Editor/ImageFeatureEncoderTests.cs.meta",
+        "docs/m3-image-feature-encoder-validation.md",
+        "docs/m4-plan.md",
+        "docs/multimodal-tdd-plan.md",
+        "docs/results/m3-image-feature-encoder-tdd-windows-20261014.json"
+      ],
+      "file_comparison": [
+        {
+          "path": "Packages/com.ayutaz.embeddinggemma/Runtime/ImageFeatureEncoder.cs",
+          "status": "evolved"
+        },
+        {
+          "path": "Packages/com.ayutaz.embeddinggemma/Runtime/ImageFeatureEncoder.cs.meta",
+          "status": "identical"
+        },
+        {
+          "path": "Packages/com.ayutaz.embeddinggemma/Tests/Editor/ImageFeatureEncoderTests.cs",
+          "status": "identical"
+        },
+        {
+          "path": "Packages/com.ayutaz.embeddinggemma/Tests/Editor/ImageFeatureEncoderTests.cs.meta",
+          "status": "identical"
+        },
+        {
+          "path": "docs/m3-image-feature-encoder-validation.md",
+          "status": "evolved"
+        },
+        {
+          "path": "docs/m4-plan.md",
+          "status": "evolved"
+        },
+        {
+          "path": "docs/multimodal-tdd-plan.md",
+          "status": "evolved"
+        },
+        {
+          "path": "docs/results/m3-image-feature-encoder-tdd-windows-20261014.json",
+          "status": "identical"
+        }
+      ],
+      "disposition": "covered_by_accepted_runtime",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/64",
+      "reason": "Original encoder and tests retained; only runtime difference is implementing IImageFeatureEncoder. Four original files remain bit-identical."
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "feat/audio-encoder-runtime",
+      "headRefOid": "280250e4ebba9d1006a74c377d39181fcbd93a55",
+      "isDraft": true,
+      "number": 62,
+      "title": "feat: 音声GPUパイプラインと最終768次元APIを追加",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/62",
+      "ancestor_of_accepted_source": true,
+      "unique_changed_paths": 0,
+      "merge_base": "280250e4ebba9d1006a74c377d39181fcbd93a55",
+      "disposition": "covered_by_accepted_runtime",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/62"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "feat/audio-native-silu-onnx",
+      "headRefOid": "a9cef60500b44039b87b42a4239aa9ffe74624f0",
+      "isDraft": true,
+      "number": 60,
+      "title": "feat: 固定音声参照と実最終backboneを検証しencoder不合格を保持",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/60",
+      "ancestor_of_accepted_source": true,
+      "unique_changed_paths": 0,
+      "merge_base": "a9cef60500b44039b87b42a4239aa9ffe74624f0",
+      "disposition": "covered_by_accepted_runtime",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/60"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "feat/vision-layer-diagnostics",
+      "headRefOid": "d500b5f0e3b4a61c2672d63aa0d87608f9522459",
+      "isDraft": true,
+      "number": 53,
+      "title": "feat: diagnose real vision FP32 stages without changing the failed path",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/53",
+      "ancestor_of_accepted_source": false,
+      "unique_changed_paths": 20,
+      "merge_base": "2d4f7be7487faef02ca2ee60ca168274b3d0671d",
+      "unique_commits": [
+        "d500b5f fix: require pinned native context before vision localization",
+        "d512626 fix: reuse verified artifact entries after signed download expiry",
+        "8a0359b docs: record diagnostic acceptance gates and separate stage artifact upload",
+        "7b002a2 test: gate vision diagnostics on the original failed Sentis path",
+        "5760d7b feat: add native vision stage diagnostics and gate original numerical context"
+      ],
+      "changed_paths": [
+        ".github/workflows/model-reference.yml",
+        "Assets/Tests/Editor/VisionDiagnosticAnalysis.cs",
+        "Assets/Tests/Editor/VisionDiagnosticAnalysis.cs.meta",
+        "Assets/Tests/Editor/VisionDiagnosticAnalysisTests.cs",
+        "Assets/Tests/Editor/VisionDiagnosticAnalysisTests.cs.meta",
+        "Assets/Tests/Editor/VisionDiagnosticReferenceTests.cs",
+        "Assets/Tests/Editor/VisionDiagnosticReferenceTests.cs.meta",
+        "docs/m3-vision-diagnostic-validation.md",
+        "docs/results/m3-vision-diagnostic-python-tdd-20261013.json",
+        "docs/results/m3-vision-diagnostic-unity-tdd-20261013.json",
+        "docs/results/m3-vision-reference-context-windows-20261013.json",
+        "tools/embeddinggemma_tools/__main__.py",
+        "tools/embeddinggemma_tools/artifact_subset.py",
+        "tools/embeddinggemma_tools/prepare.py",
+        "tools/embeddinggemma_tools/reference_environment.py",
+        "tools/embeddinggemma_tools/vision_diagnostics.py",
+        "tools/tests/test_artifact_subset.py",
+        "tools/tests/test_vision_diagnostics.py",
+        "tools/tests/test_vision_diagnostics_prepare.py",
+        "tools/tests/test_vision_prepare.py"
+      ],
+      "file_comparison": [
+        {
+          "path": ".github/workflows/model-reference.yml",
+          "status": "evolved"
+        },
+        {
+          "path": "Assets/Tests/Editor/VisionDiagnosticAnalysis.cs",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Tests/Editor/VisionDiagnosticAnalysis.cs.meta",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Tests/Editor/VisionDiagnosticAnalysisTests.cs",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Tests/Editor/VisionDiagnosticAnalysisTests.cs.meta",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Tests/Editor/VisionDiagnosticReferenceTests.cs",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Tests/Editor/VisionDiagnosticReferenceTests.cs.meta",
+          "status": "missing"
+        },
+        {
+          "path": "docs/m3-vision-diagnostic-validation.md",
+          "status": "missing"
+        },
+        {
+          "path": "docs/results/m3-vision-diagnostic-python-tdd-20261013.json",
+          "status": "missing"
+        },
+        {
+          "path": "docs/results/m3-vision-diagnostic-unity-tdd-20261013.json",
+          "status": "missing"
+        },
+        {
+          "path": "docs/results/m3-vision-reference-context-windows-20261013.json",
+          "status": "missing"
+        },
+        {
+          "path": "tools/embeddinggemma_tools/__main__.py",
+          "status": "evolved"
+        },
+        {
+          "path": "tools/embeddinggemma_tools/artifact_subset.py",
+          "status": "missing"
+        },
+        {
+          "path": "tools/embeddinggemma_tools/prepare.py",
+          "status": "evolved"
+        },
+        {
+          "path": "tools/embeddinggemma_tools/reference_environment.py",
+          "status": "missing"
+        },
+        {
+          "path": "tools/embeddinggemma_tools/vision_diagnostics.py",
+          "status": "missing"
+        },
+        {
+          "path": "tools/tests/test_artifact_subset.py",
+          "status": "missing"
+        },
+        {
+          "path": "tools/tests/test_vision_diagnostics.py",
+          "status": "missing"
+        },
+        {
+          "path": "tools/tests/test_vision_diagnostics_prepare.py",
+          "status": "missing"
+        },
+        {
+          "path": "tools/tests/test_vision_prepare.py",
+          "status": "evolved"
+        }
+      ],
+      "disposition": "retire_superseded_diagnostic",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/53",
+      "reason": "Earlier diagnostic or bounded integration harness is replaced by accepted original strict GPU encoder gates and real Texture/PCM final API acceptance. Keep closed PR/branch evidence; do not reintroduce obsolete harnesses."
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "test/vision-sentis-reference",
+      "headRefOid": "b5766154a209622849e9d71d11955b9bd7e0a65c",
+      "isDraft": true,
+      "number": 41,
+      "title": "test: validate real Sentis vision profiles and distinguish CPU constants from fallback",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/41",
+      "ancestor_of_accepted_source": false,
+      "unique_changed_paths": 7,
+      "merge_base": "c5402fdc3b6776903a49d2843404c4aacb7bd2f4",
+      "unique_commits": [
+        "b576615 docs: record completed real GPU vision encoder acceptance and FP32 failures",
+        "66a0506 docs: keep initial vision evidence compact and label residency precisely",
+        "3a1d629 test: add real Sentis vision acceptance and audit CPU computation precisely"
+      ],
+      "changed_paths": [
+        ".gitignore",
+        "Assets/Tests/Editor/EmbeddingGemma.Editor.Tests.asmdef",
+        "Assets/Tests/Editor/VisionReferenceTests.cs",
+        "Assets/Tests/Editor/VisionReferenceTests.cs.meta",
+        "docs/m3-sentis-vision-validation.md",
+        "docs/results/m3-vision-windows-initial-20261013.json",
+        "docs/results/m3-vision-windows-revised-20261013.json"
+      ],
+      "file_comparison": [
+        {
+          "path": ".gitignore",
+          "status": "evolved"
+        },
+        {
+          "path": "Assets/Tests/Editor/EmbeddingGemma.Editor.Tests.asmdef",
+          "status": "evolved"
+        },
+        {
+          "path": "Assets/Tests/Editor/VisionReferenceTests.cs",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Tests/Editor/VisionReferenceTests.cs.meta",
+          "status": "missing"
+        },
+        {
+          "path": "docs/m3-sentis-vision-validation.md",
+          "status": "missing"
+        },
+        {
+          "path": "docs/results/m3-vision-windows-initial-20261013.json",
+          "status": "missing"
+        },
+        {
+          "path": "docs/results/m3-vision-windows-revised-20261013.json",
+          "status": "missing"
+        }
+      ],
+      "disposition": "retire_superseded_diagnostic",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/41",
+      "reason": "Earlier diagnostic or bounded integration harness is replaced by accepted original strict GPU encoder gates and real Texture/PCM final API acceptance. Keep closed PR/branch evidence; do not reintroduce obsolete harnesses."
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "feat/audio-encoder-export",
+      "headRefOid": "e13adcd96ed3e10802131dfc94c48d9533f37ee2",
+      "isDraft": false,
+      "number": 40,
+      "title": "feat: export fixed audio encoder and gate official real-weight references",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/40",
+      "ancestor_of_accepted_source": true,
+      "unique_changed_paths": 0,
+      "merge_base": "e13adcd96ed3e10802131dfc94c48d9533f37ee2",
+      "disposition": "covered_by_accepted_runtime",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/40"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "feat/m2-player-sample-validation",
+      "headRefOid": "a34bf9057694e141e939ac41bea3e2b713b0a15b",
+      "isDraft": true,
+      "number": 31,
+      "title": "Validate sample Player shutdown on Unity21 and default FP32 GPU",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/31",
+      "ancestor_of_accepted_source": false,
+      "unique_changed_paths": 47,
+      "merge_base": "bd275a7fd78874227221958c7196df61a19d7463",
+      "unique_commits": [
+        "a34bf90 Merge main roadmap updates into Unity21 validation branch",
+        "4431453 fix: reproduce Unity21 Git consumer tests with embedded official framework (#36)",
+        "fde79e2 Merge updated M2 plan from main into sample validation",
+        "193e31f Record Unity21 native shutdown and FP32 sample acceptance",
+        "28529f2 Report FP32 precision accurately in sample validation receipts",
+        "cdd7c30 Align GPU sample validation with the FP32 sample default",
+        "725200a Retain model preparation origins across Unity patch upgrade",
+        "d6d027e Pin Unity 6000.3.21f1 for shutdown regression validation",
+        "e81ccec Add saved Editor reload profiling and timing evidence",
+        "4645503 Refresh project documentation and four-stage release plan",
+        "cd6b8bf Gate sample results on process exit and record visible shutdown failure",
+        "3761c94 docs: retain native sample batch rejection evidence",
+        "41dc0be fix: reject batch mode before sample GUI rendering waits",
+        "a909d37 docs: clarify prior successful Player batch mode",
+        "e8b15b1 docs: compare model-free Player shutdown conditions",
+        "cd95562 docs: record sample Player failures and update release gates",
+        "747f986 perf: check sample rendering before loading validation models",
+        "904879d fix: wait for sample GUI readiness and capture failure diagnostics",
+        "2399925 feat: add opt-in Windows sample Player validation harness"
+      ],
+      "changed_paths": [
+        ".github/workflows/unity-validation.yml",
+        "Assets/Validation/Editor/ValidationPlayerBuild.Sample.cs",
+        "Assets/Validation/Editor/ValidationPlayerBuild.Sample.cs.meta",
+        "Assets/Validation/Editor/ValidationPlayerBuild.cs",
+        "Assets/Validation/Runtime/PlayerBundleLoader.cs",
+        "Assets/Validation/Runtime/PlayerRunProtocol.cs",
+        "Assets/Validation/Runtime/PlayerSampleExecution.cs",
+        "Assets/Validation/Runtime/PlayerSampleExecution.cs.meta",
+        "Assets/Validation/Runtime/PlayerSampleRunner.cs",
+        "Assets/Validation/Runtime/PlayerSampleRunner.cs.meta",
+        "Assets/Validation/Runtime/PlayerSampleView.cs",
+        "Assets/Validation/Runtime/PlayerSampleView.cs.meta",
+        "Assets/Validation/Runtime/link.xml",
+        "Assets/Validation/Tests/Editor/PlayerBundleLoaderTests.cs",
+        "Assets/Validation/Tests/Editor/PlayerRunProtocolTests.cs",
+        "Assets/Validation/Tests/Editor/PlayerSampleExecutionTests.cs",
+        "Assets/Validation/Tests/Editor/PlayerSampleExecutionTests.cs.meta",
+        "Assets/Validation/Tests/Editor/PlayerSampleValidationTests.cs",
+        "Assets/Validation/Tests/Editor/PlayerSampleValidationTests.cs.meta",
+        "Packages/com.ayutaz.embeddinggemma/CHANGELOG.md",
+        "Packages/com.ayutaz.embeddinggemma/Documentation~/index.md",
+        "Packages/com.ayutaz.embeddinggemma/README.md",
+        "Packages/com.ayutaz.embeddinggemma/Samples~/TextSearch/README.md",
+        "ProjectSettings/ProjectVersion.txt",
+        "docs/automation.md",
+        "docs/ci.md",
+        "docs/images/m2-player-sample-gui-failure-windows.png",
+        "docs/m2-editor-profile-validation.md",
+        "docs/m2-embedded-framework-validation.md",
+        "docs/m2-player-il2cpp-validation.md",
+        "docs/m2-player-sample-validation.md",
+        "docs/player-validation.md",
+        "docs/results/m2-editor-profile-windows-20261012.json",
+        "docs/results/m2-embedded-consumer-windows-20261013.json",
+        "docs/results/m2-player-sample-batch-preflight-windows-20261010.json",
+        "docs/results/m2-player-sample-visible-windows-20261010.json",
+        "docs/results/m2-player-sample-windows-20261010.json",
+        "docs/results/m2-player-shutdown-comparison-windows-20261010.json",
+        "tools/embeddinggemma_tools/editor_profile.py",
+        "tools/embeddinggemma_tools/package.py",
+        "tools/embeddinggemma_tools/player.py",
+        "tools/embeddinggemma_tools/sample_process.py",
+        "tools/tests/test_editor_profile.py",
+        "tools/tests/test_package.py",
+        "tools/tests/test_player_bundle.py",
+        "tools/tests/test_sample_process.py",
+        "tools/tests/test_workflows.py"
+      ],
+      "file_comparison": [
+        {
+          "path": ".github/workflows/unity-validation.yml",
+          "status": "evolved"
+        },
+        {
+          "path": "Assets/Validation/Editor/ValidationPlayerBuild.Sample.cs",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Validation/Editor/ValidationPlayerBuild.Sample.cs.meta",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Validation/Editor/ValidationPlayerBuild.cs",
+          "status": "evolved"
+        },
+        {
+          "path": "Assets/Validation/Runtime/PlayerBundleLoader.cs",
+          "status": "evolved"
+        },
+        {
+          "path": "Assets/Validation/Runtime/PlayerRunProtocol.cs",
+          "status": "evolved"
+        },
+        {
+          "path": "Assets/Validation/Runtime/PlayerSampleExecution.cs",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Validation/Runtime/PlayerSampleExecution.cs.meta",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Validation/Runtime/PlayerSampleRunner.cs",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Validation/Runtime/PlayerSampleRunner.cs.meta",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Validation/Runtime/PlayerSampleView.cs",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Validation/Runtime/PlayerSampleView.cs.meta",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Validation/Runtime/link.xml",
+          "status": "evolved"
+        },
+        {
+          "path": "Assets/Validation/Tests/Editor/PlayerBundleLoaderTests.cs",
+          "status": "evolved"
+        },
+        {
+          "path": "Assets/Validation/Tests/Editor/PlayerRunProtocolTests.cs",
+          "status": "evolved"
+        },
+        {
+          "path": "Assets/Validation/Tests/Editor/PlayerSampleExecutionTests.cs",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Validation/Tests/Editor/PlayerSampleExecutionTests.cs.meta",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Validation/Tests/Editor/PlayerSampleValidationTests.cs",
+          "status": "missing"
+        },
+        {
+          "path": "Assets/Validation/Tests/Editor/PlayerSampleValidationTests.cs.meta",
+          "status": "missing"
+        },
+        {
+          "path": "Packages/com.ayutaz.embeddinggemma/CHANGELOG.md",
+          "status": "evolved"
+        },
+        {
+          "path": "Packages/com.ayutaz.embeddinggemma/Documentation~/index.md",
+          "status": "evolved"
+        },
+        {
+          "path": "Packages/com.ayutaz.embeddinggemma/README.md",
+          "status": "evolved"
+        },
+        {
+          "path": "Packages/com.ayutaz.embeddinggemma/Samples~/TextSearch/README.md",
+          "status": "evolved"
+        },
+        {
+          "path": "ProjectSettings/ProjectVersion.txt",
+          "status": "evolved"
+        },
+        {
+          "path": "docs/automation.md",
+          "status": "evolved"
+        },
+        {
+          "path": "docs/ci.md",
+          "status": "evolved"
+        },
+        {
+          "path": "docs/images/m2-player-sample-gui-failure-windows.png",
+          "status": "missing"
+        },
+        {
+          "path": "docs/m2-editor-profile-validation.md",
+          "status": "missing"
+        },
+        {
+          "path": "docs/m2-embedded-framework-validation.md",
+          "status": "missing"
+        },
+        {
+          "path": "docs/m2-player-il2cpp-validation.md",
+          "status": "evolved"
+        },
+        {
+          "path": "docs/m2-player-sample-validation.md",
+          "status": "missing"
+        },
+        {
+          "path": "docs/player-validation.md",
+          "status": "evolved"
+        },
+        {
+          "path": "docs/results/m2-editor-profile-windows-20261012.json",
+          "status": "missing"
+        },
+        {
+          "path": "docs/results/m2-embedded-consumer-windows-20261013.json",
+          "status": "missing"
+        },
+        {
+          "path": "docs/results/m2-player-sample-batch-preflight-windows-20261010.json",
+          "status": "missing"
+        },
+        {
+          "path": "docs/results/m2-player-sample-visible-windows-20261010.json",
+          "status": "missing"
+        },
+        {
+          "path": "docs/results/m2-player-sample-windows-20261010.json",
+          "status": "missing"
+        },
+        {
+          "path": "docs/results/m2-player-shutdown-comparison-windows-20261010.json",
+          "status": "missing"
+        },
+        {
+          "path": "tools/embeddinggemma_tools/editor_profile.py",
+          "status": "missing"
+        },
+        {
+          "path": "tools/embeddinggemma_tools/package.py",
+          "status": "evolved"
+        },
+        {
+          "path": "tools/embeddinggemma_tools/player.py",
+          "status": "evolved"
+        },
+        {
+          "path": "tools/embeddinggemma_tools/sample_process.py",
+          "status": "missing"
+        },
+        {
+          "path": "tools/tests/test_editor_profile.py",
+          "status": "missing"
+        },
+        {
+          "path": "tools/tests/test_package.py",
+          "status": "evolved"
+        },
+        {
+          "path": "tools/tests/test_player_bundle.py",
+          "status": "evolved"
+        },
+        {
+          "path": "tools/tests/test_sample_process.py",
+          "status": "missing"
+        },
+        {
+          "path": "tools/tests/test_workflows.py",
+          "status": "evolved"
+        }
+      ],
+      "disposition": "retain_player_followup",
+      "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/31",
+      "reason": "Independent Player sample implementation is not present in the accepted tree; main merge is conflicting. Retain Draft for adaptation and fresh Player qualification after main integration."
+    }
+  ],
+  "integration_head": "2ec11abe95df8199d02902e6bf18bb583130c853",
+  "integration_ci": 38883782797,
+  "integration_ci_source": "128dcb534fb2e7351cdeba66923bddab99f96627",
+  "required_jobs_passed": 15,
+  "python_tests_per_environment": 1433,
+  "python_environments": 4,
+  "main_merge": "d925824dea2221994c7a49212cf04c5fcf581a01",
+  "merged_at": "2026-10-16T10:32:01Z",
+  "merged_tree_equals_tested_head": true,
+  "closed_prs": [
+    {
+      "number": 80,
+      "state": "CLOSED",
+      "head": "d33c3c114157fed33d8a58d3c8e1fcb2ece5513a",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/80#issuecomment-6213565317",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 78,
+      "state": "CLOSED",
+      "head": "59f26abcdf973ad85b8ad5b08edb55045f36ff49",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/78#issuecomment-6213566689",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 77,
+      "state": "CLOSED",
+      "head": "d0153b6061bdf106a7785fb2fbf8c80adc372641",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/77#issuecomment-6213568283",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 76,
+      "state": "CLOSED",
+      "head": "dbcc35b3276dd19ae59943af9a8723c4714e3425",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/76#issuecomment-6213570461",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 75,
+      "state": "CLOSED",
+      "head": "aec39f3882c71c5f263998120494171766661101",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/75#issuecomment-6213571873",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 74,
+      "state": "CLOSED",
+      "head": "2712b8944321f436569247e98d5ff432a82b05ac",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/74#issuecomment-6213585418",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 73,
+      "state": "CLOSED",
+      "head": "f9afacef8f9f7e54198e4fbdb9f4d59646b25deb",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/73#issuecomment-6213586903",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 72,
+      "state": "CLOSED",
+      "head": "076fbee089ec0f4fb810c5cd5da28f5c08faffc7",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/72#issuecomment-6213588340",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 71,
+      "state": "CLOSED",
+      "head": "24f0cb290934eb334b0e168f4b9419cbf60ae78d",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/71#issuecomment-6213589784",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 70,
+      "state": "CLOSED",
+      "head": "5985d54a26ed10222c4c43b131d511abe21e4054",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/70#issuecomment-6213591032",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 69,
+      "state": "CLOSED",
+      "head": "2479a9cd2ea3efc2aa30f14ba7e7c6fcaa44713e",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/69#issuecomment-6213601733",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 68,
+      "state": "CLOSED",
+      "head": "60a74a4b372e2090424e27ccaa6841d9ad232c8a",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/68#issuecomment-6213603107",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 67,
+      "state": "CLOSED",
+      "head": "0d53aedbbb86ba9d02bde5ca654703ae651b72cf",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/67#issuecomment-6213604542",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 65,
+      "state": "CLOSED",
+      "head": "f6794ef4fa8cd85a0e69dcc7d144978d0ab46b59",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/65#issuecomment-6213606033",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 64,
+      "state": "CLOSED",
+      "head": "46cea116f505e6836f9222e53a14ac536c6b176b",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/64#issuecomment-6213607296",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 62,
+      "state": "CLOSED",
+      "head": "280250e4ebba9d1006a74c377d39181fcbd93a55",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/62#issuecomment-6213624319",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 60,
+      "state": "CLOSED",
+      "head": "a9cef60500b44039b87b42a4239aa9ffe74624f0",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/60#issuecomment-6213625470",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 53,
+      "state": "CLOSED",
+      "head": "d500b5f0e3b4a61c2672d63aa0d87608f9522459",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/53#issuecomment-6213627078",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 41,
+      "state": "CLOSED",
+      "head": "b5766154a209622849e9d71d11955b9bd7e0a65c",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/41#issuecomment-6213628608",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 40,
+      "state": "CLOSED",
+      "head": "e13adcd96ed3e10802131dfc94c48d9533f37ee2",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/40#issuecomment-6213629951",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    }
+  ],
+  "closed_count": 20,
+  "retained_draft_pr": 31
+}

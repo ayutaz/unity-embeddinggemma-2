@@ -1,0 +1,266 @@
+{
+  "scope": "first_native_feed_forward_post_rms_280_rows_only",
+  "success": true,
+  "cases": [
+    {
+      "variant": "baseline",
+      "source": "7725a3911eab1d143aab71c115d6d441328eab54",
+      "rows": [
+        {
+          "success": false,
+          "scope": "first_frozen_native_post_rms_gpu_components_only",
+          "source": "7725a3911eab1d143aab71c115d6d441328eab54",
+          "probe_variant": "baseline",
+          "case": "normal",
+          "requested_backend": "GPUCompute",
+          "full_encoder_validated": false,
+          "end_to_end_validated": false,
+          "phase": "completed",
+          "layer_kinds": {
+            "Mul": 3,
+            "ReduceMean": 1,
+            "ScalarMad": 1,
+            "Rsqrt": 1
+          },
+          "cpu_computation_or_input_count": 0,
+          "readback_flush_count": 0,
+          "exact_differences": 998,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 7.62939453125e-06,
+          "error": "NUnit.Framework.AssertionException:   Diagnostic stronger local bit target; full encoder original tolerance remains unchanged.\r\n  Expected: 0\r\n  But was:  998\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.FrozenLayerNormGpuTests.Execute (System.String name, System.String folder) [0x00755] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@dc42e7014908\\Tests\\Editor\\FrozenLayerNormGpuTests.cs:72 "
+        },
+        {
+          "success": false,
+          "scope": "first_frozen_native_post_rms_gpu_components_only",
+          "source": "7725a3911eab1d143aab71c115d6d441328eab54",
+          "probe_variant": "baseline",
+          "case": "mean_inverse",
+          "requested_backend": "GPUCompute",
+          "full_encoder_validated": false,
+          "end_to_end_validated": false,
+          "phase": "completed",
+          "layer_kinds": {
+            "Mul": 1,
+            "ReduceMean": 1,
+            "ScalarMad": 1,
+            "Rsqrt": 1,
+            "Concat": 1
+          },
+          "cpu_computation_or_input_count": 0,
+          "readback_flush_count": 0,
+          "exact_differences": 280,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 4.76837158203125e-07,
+          "error": "NUnit.Framework.AssertionException:   Diagnostic stronger local bit target; full encoder original tolerance remains unchanged.\r\n  Expected: 0\r\n  But was:  280\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.FrozenLayerNormGpuTests.Execute (System.String name, System.String folder) [0x00755] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@dc42e7014908\\Tests\\Editor\\FrozenLayerNormGpuTests.cs:72 "
+        }
+      ],
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\frozen-rms-baseline-gpu-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "EmbeddingGemma.Validation.Tests.FrozenLayerNormGpuTests.FrozenRmsRowsMatchIndependentNativeBits",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\frozen-rms-baseline-gpu-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-14T19:04:14.211467+00:00",
+        "pid": 80720,
+        "exit_code": 2,
+        "elapsed_seconds": 36.74989779999305,
+        "completed_utc": "2026-10-14T19:04:50.961369+00:00"
+      },
+      "nunit": {
+        "total": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0
+      },
+      "raw_sha256": {
+        "frozen-rms-baseline-gpu-20261015.xml": "c10e766eba592aa311b441a52a69062d9e4e5eb9b1f56d7d33e6809acf377240",
+        "frozen-rms-baseline-gpu-20261015.log": "e784fb259b9e2d8d806f8bd3472bbf3ea4619a1653e4050461809c37e3d338ad",
+        "frozen-rms-baseline-gpu-20261015-process.json": "3cda45eb6ddb96ee9a9c02b2b44c89ff34b15785d9f246f33d9bb56e6935d0c5"
+      }
+    },
+    {
+      "variant": "cascade",
+      "source": "7725a3911eab1d143aab71c115d6d441328eab54",
+      "rows": [
+        {
+          "success": true,
+          "scope": "first_frozen_native_post_rms_gpu_components_only",
+          "source": "7725a3911eab1d143aab71c115d6d441328eab54",
+          "probe_variant": "cascade",
+          "case": "normal",
+          "requested_backend": "GPUCompute",
+          "full_encoder_validated": false,
+          "end_to_end_validated": false,
+          "phase": "completed",
+          "layer_kinds": {
+            "Mul": 18,
+            "Slice": 136,
+            "Add": 169,
+            "ScalarMad": 8,
+            "Sqrt": 1,
+            "Neg": 2,
+            "Sub": 30,
+            "Div": 1,
+            "Reciprocal": 1
+          },
+          "cpu_computation_or_input_count": 0,
+          "readback_flush_count": 0,
+          "exact_differences": 0,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 0.0
+        },
+        {
+          "success": true,
+          "scope": "first_frozen_native_post_rms_gpu_components_only",
+          "source": "7725a3911eab1d143aab71c115d6d441328eab54",
+          "probe_variant": "cascade",
+          "case": "mean_inverse",
+          "requested_backend": "GPUCompute",
+          "full_encoder_validated": false,
+          "end_to_end_validated": false,
+          "phase": "completed",
+          "layer_kinds": {
+            "Mul": 16,
+            "Slice": 136,
+            "Add": 169,
+            "ScalarMad": 9,
+            "Sqrt": 1,
+            "Neg": 2,
+            "Sub": 30,
+            "Div": 1,
+            "Reciprocal": 1,
+            "Concat": 1
+          },
+          "cpu_computation_or_input_count": 0,
+          "readback_flush_count": 0,
+          "exact_differences": 0,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 0.0
+        }
+      ],
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\frozen-rms-cascade-gpu-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "EmbeddingGemma.Validation.Tests.FrozenLayerNormGpuTests.FrozenRmsRowsMatchIndependentNativeBits",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\frozen-rms-cascade-gpu-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": true,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-14T19:05:20.216911+00:00",
+        "pid": 75780,
+        "exit_code": 0,
+        "elapsed_seconds": 29.96180699999968,
+        "completed_utc": "2026-10-14T19:05:50.178720+00:00"
+      },
+      "nunit": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0
+      },
+      "raw_sha256": {
+        "frozen-rms-cascade-gpu-20261015.xml": "f70428decf45529bb1c3b9df9623497ad78b11bf1ccbbe43eed024336bb84b87",
+        "frozen-rms-cascade-gpu-20261015.log": "20bb1c4e0b8233046e50d8ecf6043b64e6216495f6a6a69b85ca9a0e5c57f45d",
+        "frozen-rms-cascade-gpu-20261015-process.json": "6a1122a816b9525ee12a8df2767acecec02418032c210a1a36a36149fdd63237"
+      }
+    }
+  ],
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "fp64_runtime_used": false,
+  "original_golden_changed": false,
+  "original_encoder_tolerance_changed": false,
+  "diagnostic_bit_target_stronger_than_encoder_gate": true,
+  "cpu_frozen_order_diagnosis": {
+    "scope": "frozen_native_first_rms_mean_order_only",
+    "gpu_validated": false,
+    "full_encoder_validated": false,
+    "cases": {
+      "8": {
+        "exact_difference_count": 0,
+        "maximum_absolute_error": 0.0
+      },
+      "16": {
+        "exact_difference_count": 279,
+        "maximum_absolute_error": 4.76837158203125e-07
+      }
+    }
+  },
+  "cpu_variance_reference_diagnosis": {
+    "scope": "frozen_native_first_post_rms_cpu_arithmetic_diagnosis_only",
+    "gpu_validated": false,
+    "full_encoder_validated": false,
+    "variance_exact_differences": 279,
+    "cases": {
+      "native_mean_pow": {
+        "exact_differences": 0,
+        "mismatches": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      "double_sum_pow": {
+        "exact_differences": 210888,
+        "mismatches": 0,
+        "maximum_absolute_error": 7.62939453125e-06,
+        "maximum_tolerance_ratio": 0.0028078731340021694
+      },
+      "native_mean_refined_inverse": {
+        "exact_differences": 0,
+        "mismatches": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      "double_sum_refined_inverse": {
+        "exact_differences": 210888,
+        "mismatches": 0,
+        "maximum_absolute_error": 7.62939453125e-06,
+        "maximum_tolerance_ratio": 0.0028078731340021694
+      }
+    }
+  },
+  "python_tdd": {
+    "cascade_missing_red": 7,
+    "cascade_related_green": 13,
+    "projection_width1536_missing_red": 2,
+    "related_width1536_green": 23,
+    "rms_rewrite_missing_red": 7,
+    "rms_rewrite_related_green": 30
+  },
+  "pinned_sum_source": "https://github.com/pytorch/pytorch/blob/5c4886908584029761b579af026dcfb627c84070/aten/src/ATen/native/cpu/SumKernel.cpp",
+  "raw_python_sha256": {
+    "cascade-mean-red-20261015.xml": "28f7d19ba97541ce053dc9a41e3fdf78865c6adcaa04f865254732f33a375f55",
+    "cascade-mean-green-20261015.xml": "79c67aeed459c996ff615b6c444489c30ae6a3ca2aad827411e91e9059b50973",
+    "cascade-mean1536-red-20261015.xml": "3eeba4b858fef762c7a2a99f94ea81961c5b16c61fd6a634cea2f9c0b84a1483",
+    "cascade-mean1536-green-20261015.xml": "961d3cf70f9766a47024efc1cec397999c8ef0f41f6654fd4d8a597a3e3d12e9",
+    "rms-rewrite-red-20261015.xml": "7860a269a6775c225d47103ab0024446beeccd0d61484346854dace20fa956fb",
+    "rms-rewrite-green-20261015.xml": "e13a9d03da2eebb5d1c5cbcda9d034538f365492560c51deabc6f35570b3809d"
+  }
+}

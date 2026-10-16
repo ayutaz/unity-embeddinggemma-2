@@ -1,0 +1,16 @@
+{
+  "scope": "small_saved_model_compensation_tdd",
+  "red_source": "5611210f4e14d52369aeeadd3167b97af612047b",
+  "red_failed": 3,
+  "red_passed": 0,
+  "green_source": "bbf8368dda355631881fb479e7e7b4f30de82045",
+  "green_passed": 3,
+  "green_failed": 0,
+  "skipped": 0,
+  "exit_code": 0,
+  "xml_sha256": "419eb8dbb3d5e89b17025b9fd0e635e1545717c5ef0dff9a068c2c3cd822d5cf",
+  "source_serialized_bytes_preserved": true,
+  "dynamic_operand_preserved": true,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

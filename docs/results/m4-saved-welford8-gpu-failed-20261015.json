@@ -1,0 +1,79 @@
+{
+  "scope": "one_saved_onnx_audio_encoder_gpu_vs_immutable_original",
+  "success": false,
+  "source": "335ba60a9609ac786068755571020abb03d95c8d",
+  "report": {
+    "success": false,
+    "scope": "one_saved_onnx_audio_encoder_gpu_vs_immutable_original",
+    "signal": "silence",
+    "runtime_source": "335ba60a9609ac786068755571020abb03d95c8d",
+    "requested_backend": "GPUCompute",
+    "unity": "6000.3.16f1",
+    "sentis": "2.6.1",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "end_to_end_validated": false,
+    "all_original_signals_validated": false,
+    "phase": "completed",
+    "candidate_source": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "candidate_python_gate_passed": false,
+    "graph_sha256": "f43f3275c1ba48837b626fc09c738a8204dabd25e2ff3c74d7e75abcb3591899",
+    "layer_count": 2817,
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "actual_backend": "GPUCompute",
+    "mismatched_elements": 355,
+    "maximum_absolute_error": 0.00014734268188476562,
+    "maximum_tolerance_ratio": 6.290722137274609,
+    "error": "NUnit.Framework.AssertionException:   Preserve the original FP32 encoder numeric gate.\r\n  Expected: 0\r\n  But was:  355\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.SavedOnnxAudioGpuReferenceTests.SavedCandidateGpuMatchesOriginalGolden (System.String signal) [0x00a7d] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@5766e2350432\\Tests\\Editor\\SavedOnnxAudioGpuReferenceTests.cs:111 "
+  },
+  "process": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      ".\\artifacts\\acceptance-consumer",
+      "-logFile",
+      ".\\artifacts\\numerical-acceptance-state\\saved-onnx-silence-gpu-regex-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.SavedOnnxAudioGpuReferenceTests.SavedCandidateGpuMatchesOriginalGolden.*silence.*",
+      "-testResults",
+      ".\\artifacts\\numerical-acceptance-state\\saved-onnx-silence-gpu-regex-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-14T17:01:01.862852+00:00",
+    "pid": 58008,
+    "exit_code": 2,
+    "elapsed_seconds": 40.78605369999423,
+    "completed_utc": "2026-10-14T17:01:42.648905+00:00"
+  },
+  "nunit": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0
+  },
+  "original_golden_changed": false,
+  "original_tolerance_changed": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "earlier_zero_case_run": {
+    "prefix": "saved-onnx-silence-gpu-20261015",
+    "total": 0,
+    "accepted": false
+  },
+  "raw_sha256": {
+    "saved-onnx-audio-gpu-335ba60a9609ac786068755571020abb03d95c8d-silence.json": "aa0563149a3e477919a3e9ba53fe8f2d936807b48b541e49b4d7ff6f31a56608",
+    "saved-onnx-silence-gpu-regex-20261015.xml": "dbed9c3b2d5619d0889ec6c543f3e3a159406a7ca209828ffc5009b6de95516b",
+    "saved-onnx-silence-gpu-regex-20261015.log": "128e2e4e639039dbdaa4c3639fe4646ebd0b9fbba41576f2558f02ba4be8860c",
+    "saved-onnx-silence-gpu-regex-20261015-process.json": "f5438802f31a0872f9e554fa857d7b3f1baa3f83a701f2a12c14402a9fba775f"
+  }
+}

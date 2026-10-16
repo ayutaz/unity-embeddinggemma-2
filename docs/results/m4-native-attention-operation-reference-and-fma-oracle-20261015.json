@@ -1,0 +1,269 @@
+{
+  "success": true,
+  "scope": "independent_native_attention_reference_and_offline_fp32_fma_oracle_only",
+  "run_id": 38661214188,
+  "url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38661214188",
+  "source": "5a51cfff0efa955b6862abc481b2230f312b87ac",
+  "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "native_final_exact_match": true,
+  "original_common_parts_bit_identical": 17,
+  "part_count": 30,
+  "original_reference_changed": false,
+  "operation_names": [
+    "self_attn.matrix_ac.left",
+    "self_attn.matrix_ac.right",
+    "self_attn.matrix_ac.output",
+    "self_attn.matrix_bd.left",
+    "self_attn.matrix_bd.right",
+    "self_attn.matrix_bd.output",
+    "self_attn.tanh.input",
+    "self_attn.tanh.output",
+    "self_attn.softmax.input",
+    "self_attn.softmax.output",
+    "self_attn.weighted_values.left",
+    "self_attn.weighted_values.right",
+    "self_attn.weighted_values.output"
+  ],
+  "offline_oracle": {
+    "scope": "offline_native_attention_fp32_accumulation_order_probe_only",
+    "rows": [
+      {
+        "operation": "matrix_ac",
+        "chunk": 16,
+        "shape": [
+          192,
+          12,
+          24
+        ],
+        "bit_differences": 39299,
+        "maximum_absolute_error": 1.52587890625e-05
+      },
+      {
+        "operation": "matrix_ac",
+        "chunk": 192,
+        "shape": [
+          192,
+          12,
+          24
+        ],
+        "bit_differences": 0,
+        "maximum_absolute_error": 0.0
+      },
+      {
+        "operation": "matrix_bd",
+        "chunk": 16,
+        "shape": [
+          8,
+          288,
+          13
+        ],
+        "bit_differences": 22407,
+        "maximum_absolute_error": 2.288818359375e-05
+      },
+      {
+        "operation": "matrix_bd",
+        "chunk": 192,
+        "shape": [
+          8,
+          288,
+          13
+        ],
+        "bit_differences": 0,
+        "maximum_absolute_error": 0.0
+      },
+      {
+        "operation": "weighted_values",
+        "chunk": 16,
+        "shape": [
+          192,
+          12,
+          128
+        ],
+        "bit_differences": 65721,
+        "maximum_absolute_error": 7.62939453125e-06
+      },
+      {
+        "operation": "weighted_values",
+        "chunk": 192,
+        "shape": [
+          192,
+          12,
+          128
+        ],
+        "bit_differences": 0,
+        "maximum_absolute_error": 0.0
+      }
+    ],
+    "gpu_validated": false,
+    "full_encoder_validated": false,
+    "note": "FP64 is only an offline FP32-FMA rounding oracle. Native reference is unchanged."
+  },
+  "interpretation": "For these three fixed native products, K is 128 or 24. One continuous FP32 FMA accumulation reproduces the reference; resetting every 16 terms does not. Actual GPU qualification and encoder integration remain separate gates.",
+  "product_fp64_used": false,
+  "unity_validated": false,
+  "gpu_validated": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "evidence": [
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay-report.json",
+      "bytes": 8675,
+      "sha256": "d16f82c1c343769577106a39203da32f00fb797468cc656ab1b12b685b8e691e"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\attention-native-accumulation-order-20261015.json",
+      "bytes": 1532,
+      "sha256": "42a64535e2f5164459c2d971e73a46fde898a27a199d1fa0efb78b91fdaf7858"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\feed_forward1-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "d5931033c782ff11a24e1caf8f184c620904a85b6b508547108f3a3503622aa5"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\norm_pre_attn-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "53456d0a3731ffab84bca09d6397232777bcaeadea34ff369826169d87785e5d"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\self_attn-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "46ea551902314faf4c3d4650ad793ffd8ec94da8f8f11f947df36c55d86beb87"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\norm_post_attn-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "3502a18ac5eb7e786b6074f7d696b1a2e4f543abc034fc9403a9cc159d374982"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\lconv1d-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "a1452fb4b832a371af1255b6d6cf384144755ba91d951abc36841ec3b327b982"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\feed_forward2-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "77859c615f05becf1a687f5c017cdd63ee23ac79493ed863de3d09407e9fab54"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\norm_out-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "3cc353963c7eafd2a209526c5c19daedd66c9c0da7cdf43dc6a4f4ccee158cf2"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\feed_forward1.pre_layer_norm-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "5cc9770575ad3c8873e4fd9f9b0fcec826626c60242217bec9edee7c6362c917"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\feed_forward1.ffw_layer_1-fp32.bin",
+      "bytes": 4587520,
+      "sha256": "e5ac1da2d80e0013714a5be3e3336272bc954176baf71bd932107db62b8318b4"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\feed_forward1.act_fn-fp32.bin",
+      "bytes": 4587520,
+      "sha256": "ad35b972c4e5e513fc9edb68192470de427833ef17c054bc0a55f6c869e8ba5f"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\feed_forward1.ffw_layer_2-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "efafce302f7c558de3f9d62778a6be2d419d841e98a4a797e79ee7222fce1686"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\feed_forward1.post_layer_norm-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "9180b1086d108c961810817816908c02fc103e52c10f44412f08044739326ff4"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\self_attn.q_proj-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "578c51afdf6b3477817d25c04ba8d66c79c75b77439d2ada54adac26e63726bb"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\self_attn.k_proj-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "b97b6b9cb8a45f34c9fff0c99101c765df27ec022f5ec12eb3222b69cd72f577"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\self_attn.v_proj-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "139c51573680b3bb8b7a519a5dc611db4ee87f9879af7c7826c76f54ec818e15"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\self_attn.relative_k_proj-fp32.bin",
+      "bytes": 53248,
+      "sha256": "48b27e03f9d2480518acdad03d90c41ed2224208c72dac56a5a4bbcff1bd064e"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\self_attn.post-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "46ea551902314faf4c3d4650ad793ffd8ec94da8f8f11f947df36c55d86beb87"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\self_attn.matrix_ac.left-fp32.bin",
+      "bytes": 1179648,
+      "sha256": "42f5dd2c98dcd71110e0752b4a33d1da134633c2a512554b94d4f7ce323180a4"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\self_attn.matrix_ac.right-fp32.bin",
+      "bytes": 2359296,
+      "sha256": "f51fb537ae80a52ff62fdaa2ff7ac0cddd77b4ccb104ac8980b53ba361b4e65c"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\self_attn.matrix_ac.output-fp32.bin",
+      "bytes": 221184,
+      "sha256": "dc2ccd24975382b9f7c5568bd6c472f585ff2c826aa9e82d71e38b7677a19275"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\self_attn.matrix_bd.left-fp32.bin",
+      "bytes": 1179648,
+      "sha256": "42f5dd2c98dcd71110e0752b4a33d1da134633c2a512554b94d4f7ce323180a4"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\self_attn.matrix_bd.right-fp32.bin",
+      "bytes": 53248,
+      "sha256": "efaec5a90a68c97767f7646e60a06e47e17acce94fad898febe0a54fd078fc3b"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\self_attn.matrix_bd.output-fp32.bin",
+      "bytes": 119808,
+      "sha256": "d74554fbcdbe3125f30cf181072ceafd5f0e1369d151b8a7c222b3eb9ad1d4c7"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\self_attn.tanh.input-fp32.bin",
+      "bytes": 221184,
+      "sha256": "31cf8ab2377a3869d28a3b0d66a619d84360381be233773adc891542056eea89"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\self_attn.tanh.output-fp32.bin",
+      "bytes": 221184,
+      "sha256": "4c6c136c3dfa9168f804c90ddc4f8b971d15bc1254c06ee715428cb22a6e6be1"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\self_attn.softmax.input-fp32.bin",
+      "bytes": 221184,
+      "sha256": "c5c1cef711054ae571ba71dedc0fafe3e0d89f9754fa92a7e65e54e57c55802c"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\self_attn.softmax.output-fp32.bin",
+      "bytes": 221184,
+      "sha256": "3d4a0b09a88aaa78ece91b5717b59ac92d93ea3fa7829bf3623c39435ceba7f5"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\self_attn.weighted_values.left-fp32.bin",
+      "bytes": 221184,
+      "sha256": "3d4a0b09a88aaa78ece91b5717b59ac92d93ea3fa7829bf3623c39435ceba7f5"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\self_attn.weighted_values.right-fp32.bin",
+      "bytes": 2359296,
+      "sha256": "54bc12c1544a8a69f0e671c1d9394cbea1bfe9aef7de2c59d8de21ade678b8cd"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-operations-5a51cff-20261015\\audio-attention-replay\\self_attn.weighted_values.output-fp32.bin",
+      "bytes": 1179648,
+      "sha256": "724ad7359d6c1047c7055ff06d604ad42cb53e94b6fee6f97c9524f076d652da"
+    }
+  ]
+}

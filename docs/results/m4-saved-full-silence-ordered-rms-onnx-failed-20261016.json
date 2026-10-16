@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "saved_original_full_silence_ordered_rms_onnx_candidate",
+  "run_id": 38785475201,
+  "artifact_id": 11998580646,
+  "head_source": "9741d1e1392c4d4b845bb3ff9cc420d02a03df0b",
+  "conclusion": "diagnostic_collection_completed_numeric_candidate_failed",
+  "report_sha256": "cf12ba038e304131f67feb913fe412a16e2735ad02ee76a0d8de0466dce7f465",
+  "provenance": {
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+    "audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+    "graph_sha256": "dc43d56b896b64077d8e86d56c3fd2b89cfe3d31170eabaa387165ea961438d7",
+    "input_sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+    "job_source": "9741d1e1392c4d4b845bb3ff9cc420d02a03df0b",
+    "torch_version": "2.14.1+cu130",
+    "threads": 2,
+    "cpu_capability": "AVX2",
+    "stage": "projected_features",
+    "rms_expected_count": 109
+  },
+  "frozen_stage_provenance": {
+    "stage": "projected_features",
+    "reference_sha256": "6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a",
+    "audit_sha256": "3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b",
+    "expected_sha256": "e9ac5425c93912ac7e4983ed98e80b4020e1f8f2d81c2950adfd31b1022441ad",
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9"
+  },
+  "native_wrapper_control_bits_equal": true,
+  "native_whole_encoder_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 288,
+    "maximum_absolute_error": 0.0001811981201171875,
+    "maximum_tolerance_ratio": 8.712747897611987,
+    "worst_index": 23176,
+    "worst_actual": 0.007174745202064514,
+    "worst_expected": 0.007268205285072327,
+    "exact_difference_count": 135855
+  },
+  "cases": [
+    {
+      "variant": "refined_mean_moment_rms",
+      "graph": "refined_mean_moment_rms.onnx",
+      "graph_sha256": "c4a4d2abcce66f6805d791c19e16e8946ead6de10d5fee782f5c195e1accbf21",
+      "capture": "refined_mean_moment_rms-fp32.bin",
+      "capture_sha256": "fd012f4983e61aaf965fe741fbafeaf972543e42b1fd067b863bd407f499c4ba",
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 583,
+        "maximum_absolute_error": 0.00022804737091064453,
+        "maximum_tolerance_ratio": 7.728710464146482,
+        "worst_index": 16240,
+        "worst_actual": -0.0198257677257061,
+        "worst_expected": -0.019918449223041534,
+        "exact_difference_count": 140767
+      },
+      "native_wrapper_bits_equal": true,
+      "native_whole_encoder_exact_difference_count": 135855,
+      "coefficients_unchanged": true,
+      "rms_mean_replacements": 109,
+      "rms_inverse_replacements": 109
+    }
+  ],
+  "original_golden_weights_or_tolerances_changed": false,
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "end_to_end_validated": false,
+  "required_ci_passed": false,
+  "next_action": "Isolate downstream segments on original fixed inputs before another full encoder candidate.",
+  "captures_independently_hashed_and_compared": true,
+  "independent_metrics": {
+    "mismatched_elements": 583,
+    "maximum_tolerance_ratio": 7.728710464146482,
+    "maximum_absolute_error": 0.00022804737091064453,
+    "exact_difference_count": 140767
+  }
+}

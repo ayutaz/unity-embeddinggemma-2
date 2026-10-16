@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "explicit_connected_original_operator_candidate_tdd_not_real_model_acceptance",
+  "source_base": "18cb03f2aa823eada9de430049b45cb92c458436",
+  "red": {
+    "file": "ordered-original-primitives-red-20261016.xml",
+    "sha256": "c14d71f35cc9c14928ed8074a593c5093f52119e5fe06da5d88b4568b7197d05",
+    "tests": "2",
+    "failures": "2",
+    "errors": "0",
+    "skipped": "0",
+    "time": "3.080"
+  },
+  "green": {
+    "file": "ordered-original-primitives-green-20261016.xml",
+    "sha256": "af61fa4c96df2b12aff679216fa29c3c8666c983b506050a394a270cf8e9982e",
+    "tests": "2",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "20.844"
+  },
+  "related_green": {
+    "file": "ordered-original-primitives-related-green-20261016.xml",
+    "sha256": "3059c57066f24750f89c9698ec74e1f2fd9ed13efb6c42cbe2b61116410fe56d",
+    "tests": "139",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "67.816"
+  },
+  "upload_red": {
+    "file": "numeric-upload-first-red-20261016.xml",
+    "sha256": "cd3f5abfd63660954803c5baf0281c4adac700836071ef55d8f9764e7e1a4d6b",
+    "tests": "1",
+    "failures": "1",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.326"
+  },
+  "upload_green": {
+    "file": "numeric-upload-first-green-20261016.xml",
+    "sha256": "6f12edb33a1d5090bce996ba85df1e6b3e99dc7808122ff610f058cb02d644ed",
+    "tests": "1",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.294"
+  },
+  "chain_cli_red": {
+    "file": "chained-precise-cli-red-20261016.xml",
+    "sha256": "de1d9122c39ca935e250d8f340fd5eb42b9643a54b7e350fb16accbf4d35da8b",
+    "tests": "3",
+    "failures": "1",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.455"
+  },
+  "chained_green": {
+    "file": "chained-precise-and-upload-green-20261016.xml",
+    "sha256": "dcc167285ca2f3df18616dd1c87f1f2ee7e9c2b82f0ae5ed86fe86e9364ec8e9",
+    "tests": "12",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "5.940"
+  },
+  "actual_synthetic_connected_onnx_executed": true,
+  "actionlint": "passed",
+  "independent_real_input_evidence": [
+    "m4-six-original-attention-bmm-actual-onnx-bit-exact-20261016.json",
+    "m4-original-clipped-pointwise-bmm-all286720-bit-exact-20261016.json",
+    "m4-original-softmax-glu-depthwise-actual-onnx-bit-exact-20261016.json",
+    "m4-original-rms-and-silu-worst-input-onnx-qualified-20261016.json"
+  ],
+  "expected_whole12_counts": {
+    "static_linear": 110,
+    "attention_bmm": 36,
+    "parameter_bmm": 12,
+    "rms_mean": 109,
+    "rms_inverse": 109,
+    "silu": 36,
+    "softmax": 12,
+    "sigmoid": 12,
+    "depthwise": 12
+  },
+  "changes": [
+    "New explicit ordered_original_primitives combines only independently diagnosed original FP32 computation orders.",
+    "Original constants/clips/masks/learned coefficients and strict reference tolerances retained.",
+    "Chained mode evaluates all12layers with actual ONNX carry; native control separately preserves original layouts.",
+    "Small JSON/bin evidence uploaded before optional ONNX archive; chain mode omits the large graph archive to retain evidence under the unchanged20minute cap.",
+    "Default export, default variants and production GPU Runtime unchanged."
+  ],
+  "inference_dtype": "Standard ONNX FP32; FP64 only in independent test/assertion oracles",
+  "actual_whole_model_validated": false,
+  "gpu_validated": false,
+  "required_ci_passed": false
+}

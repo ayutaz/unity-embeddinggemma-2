@@ -1,0 +1,61 @@
+{
+  "success": true,
+  "scope": "offline_python_full_regression_only",
+  "run_id": 38657424472,
+  "url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38657424472",
+  "source": "3ae76bd182fb80dd74c9b7851a99ce719e4da67d",
+  "environments": [
+    {
+      "environment": "python-ubuntu-latest-3.13",
+      "tests": 851,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-3ae76bd-20261015\\python-ubuntu-latest-3.13\\python-tests.xml",
+        "sha256": "490dd2f7e930e6071601540a1ffbe447d63cde9eddf7779a8499996746263521",
+        "bytes": 119663
+      }
+    },
+    {
+      "environment": "python-ubuntu-latest-3.14",
+      "tests": 851,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-3ae76bd-20261015\\python-ubuntu-latest-3.14\\python-tests.xml",
+        "sha256": "afc1e492a11447c9f97178a782b271ec07566a49a31e63e7d8afd985ad2c580b",
+        "bytes": 119662
+      }
+    },
+    {
+      "environment": "python-windows-latest-3.13",
+      "tests": 851,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-3ae76bd-20261015\\python-windows-latest-3.13\\python-tests.xml",
+        "sha256": "acec06dd3f5729f56c2ad65abe96ccd8781c61c265935fb44aa7f45167483473",
+        "bytes": 119662
+      }
+    },
+    {
+      "environment": "python-windows-latest-3.14",
+      "tests": 851,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-3ae76bd-20261015\\python-windows-latest-3.14\\python-tests.xml",
+        "sha256": "af09f5ee9d5f196b2d492c8c8497f17d641e39871d9e69ae08ceb49728c5478c",
+        "bytes": 119682
+      }
+    }
+  ],
+  "unity_validated": false,
+  "gpu_validated": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

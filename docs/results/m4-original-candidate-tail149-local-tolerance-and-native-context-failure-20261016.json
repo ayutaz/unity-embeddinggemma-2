@@ -1,0 +1,423 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "noninjecting_candidate_operators_last3layers_native_input_only",
+  "source": "bd3900a54f0a7a3e12269b1601105ef6b47cac7b",
+  "actions_run": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38811482397",
+  "artifact_id": 12008144644,
+  "artifact_archive_bytes": 94007743,
+  "report_sha256": "54548162ea8b943a8bdde6a853e8a2d3576327bb84ab9c5bc0e66697945004b8",
+  "cpu_model": "INTEL(R) XEON(R) PLATINUM 8573C",
+  "complete": true,
+  "original_context_qualified": false,
+  "native_segment_original_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 10,
+    "maximum_absolute_error": 4.38690185546875e-05,
+    "maximum_tolerance_ratio": 2.0684441357691723,
+    "worst_index": 23176,
+    "worst_actual": 0.0072460174560546875,
+    "worst_expected": 0.007268205285072327,
+    "exact_difference_count": 135110
+  },
+  "native_interpreter_control_bits_equal": true,
+  "candidate_nodes": 115,
+  "comparisons": 149,
+  "contract_captures": 24,
+  "summaries": [
+    {
+      "operator": "Pow",
+      "candidate_replaced": false,
+      "input_shapes": [
+        [
+          1,
+          280,
+          1024
+        ]
+      ],
+      "cases": 27,
+      "tolerance_failures": 0,
+      "exact_differences": 0,
+      "maximum_tolerance_ratio": 0.0,
+      "worst_node": "pow_163"
+    },
+    {
+      "operator": "ReduceMean",
+      "candidate_replaced": true,
+      "input_shapes": [
+        [
+          1,
+          280,
+          1024
+        ]
+      ],
+      "cases": 27,
+      "tolerance_failures": 0,
+      "exact_differences": 0,
+      "maximum_tolerance_ratio": 0.0,
+      "worst_node": "mean_81"
+    },
+    {
+      "operator": "Pow",
+      "candidate_replaced": true,
+      "input_shapes": [
+        [
+          1,
+          280,
+          1
+        ]
+      ],
+      "cases": 28,
+      "tolerance_failures": 0,
+      "exact_differences": 0,
+      "maximum_tolerance_ratio": 0.0,
+      "worst_node": "pow_164"
+    },
+    {
+      "operator": "MatMul",
+      "candidate_replaced": true,
+      "input_shapes": [
+        [
+          280,
+          1024
+        ],
+        [
+          1024,
+          4096
+        ]
+      ],
+      "cases": 6,
+      "tolerance_failures": 0,
+      "exact_differences": 5472128,
+      "maximum_tolerance_ratio": 0.6854635281791637,
+      "worst_node": "mm_109"
+    },
+    {
+      "operator": "SiLU",
+      "candidate_replaced": true,
+      "input_shapes": [
+        [
+          1,
+          280,
+          4096
+        ]
+      ],
+      "cases": 6,
+      "tolerance_failures": 0,
+      "exact_differences": 0,
+      "maximum_tolerance_ratio": 0.0,
+      "worst_node": "silu_27"
+    },
+    {
+      "operator": "MatMul",
+      "candidate_replaced": true,
+      "input_shapes": [
+        [
+          280,
+          4096
+        ],
+        [
+          4096,
+          1024
+        ]
+      ],
+      "cases": 6,
+      "tolerance_failures": 0,
+      "exact_differences": 1454980,
+      "maximum_tolerance_ratio": 0.0784935867818161,
+      "worst_node": "mm_100"
+    },
+    {
+      "operator": "MatMul",
+      "candidate_replaced": true,
+      "input_shapes": [
+        [
+          280,
+          1024
+        ],
+        [
+          1024,
+          1024
+        ]
+      ],
+      "cases": 12,
+      "tolerance_failures": 0,
+      "exact_differences": 2920538,
+      "maximum_tolerance_ratio": 0.4362170040005461,
+      "worst_node": "mm_107"
+    },
+    {
+      "operator": "MatMul",
+      "candidate_replaced": false,
+      "input_shapes": [
+        [
+          13,
+          1024
+        ],
+        [
+          1024,
+          1024
+        ]
+      ],
+      "cases": 6,
+      "tolerance_failures": 0,
+      "exact_differences": 72124,
+      "maximum_tolerance_ratio": 0.3571218864187672,
+      "worst_node": "mm_106"
+    },
+    {
+      "operator": "MatMul",
+      "candidate_replaced": true,
+      "input_shapes": [
+        [
+          192,
+          12,
+          128
+        ],
+        [
+          192,
+          128,
+          24
+        ]
+      ],
+      "cases": 3,
+      "tolerance_failures": 0,
+      "exact_differences": 0,
+      "maximum_tolerance_ratio": 0.0,
+      "worst_node": "bmm_36"
+    },
+    {
+      "operator": "MatMul",
+      "candidate_replaced": true,
+      "input_shapes": [
+        [
+          8,
+          288,
+          128
+        ],
+        [
+          8,
+          128,
+          13
+        ]
+      ],
+      "cases": 3,
+      "tolerance_failures": 0,
+      "exact_differences": 0,
+      "maximum_tolerance_ratio": 0.0,
+      "worst_node": "bmm_37"
+    },
+    {
+      "operator": "Softmax",
+      "candidate_replaced": true,
+      "input_shapes": [
+        [
+          1,
+          8,
+          24,
+          12,
+          24
+        ]
+      ],
+      "cases": 3,
+      "tolerance_failures": 0,
+      "exact_differences": 0,
+      "maximum_tolerance_ratio": 0.0,
+      "worst_node": "_softmax_9"
+    },
+    {
+      "operator": "MatMul",
+      "candidate_replaced": true,
+      "input_shapes": [
+        [
+          192,
+          12,
+          24
+        ],
+        [
+          192,
+          24,
+          128
+        ]
+      ],
+      "cases": 3,
+      "tolerance_failures": 0,
+      "exact_differences": 0,
+      "maximum_tolerance_ratio": 0.0,
+      "worst_node": "bmm_38"
+    },
+    {
+      "operator": "MatMul",
+      "candidate_replaced": true,
+      "input_shapes": [
+        [
+          280,
+          1024
+        ],
+        [
+          1024,
+          2048
+        ]
+      ],
+      "cases": 3,
+      "tolerance_failures": 0,
+      "exact_differences": 1482819,
+      "maximum_tolerance_ratio": 0.27771073175645405,
+      "worst_node": "mm_118"
+    },
+    {
+      "operator": "Sigmoid",
+      "candidate_replaced": true,
+      "input_shapes": [
+        [
+          1,
+          280,
+          1024
+        ]
+      ],
+      "cases": 3,
+      "tolerance_failures": 0,
+      "exact_differences": 0,
+      "maximum_tolerance_ratio": 0.0,
+      "worst_node": "sigmoid_9"
+    },
+    {
+      "operator": "Conv",
+      "candidate_replaced": true,
+      "input_shapes": [
+        [
+          1,
+          1024,
+          284
+        ],
+        [
+          1024,
+          1,
+          5
+        ]
+      ],
+      "cases": 3,
+      "tolerance_failures": 0,
+      "exact_differences": 0,
+      "maximum_tolerance_ratio": 0.0,
+      "worst_node": "convolution_11"
+    },
+    {
+      "operator": "SiLU",
+      "candidate_replaced": true,
+      "input_shapes": [
+        [
+          1,
+          280,
+          1024
+        ]
+      ],
+      "cases": 3,
+      "tolerance_failures": 0,
+      "exact_differences": 5,
+      "maximum_tolerance_ratio": 9.18354961579912e-36,
+      "worst_node": "silu_34"
+    },
+    {
+      "operator": "MatMul",
+      "candidate_replaced": true,
+      "input_shapes": [
+        [
+          1,
+          280,
+          1024
+        ],
+        [
+          1,
+          1024,
+          1024
+        ]
+      ],
+      "cases": 3,
+      "tolerance_failures": 0,
+      "exact_differences": 726345,
+      "maximum_tolerance_ratio": 0.17467975087872648,
+      "worst_node": "bmm_47"
+    },
+    {
+      "operator": "Gemm",
+      "candidate_replaced": true,
+      "input_shapes": [
+        [
+          1536
+        ],
+        [
+          280,
+          1024
+        ],
+        [
+          1024,
+          1536
+        ]
+      ],
+      "cases": 1,
+      "tolerance_failures": 0,
+      "exact_differences": 382491,
+      "maximum_tolerance_ratio": 0.5320121687587981,
+      "worst_node": "addmm"
+    },
+    {
+      "operator": "Pow",
+      "candidate_replaced": false,
+      "input_shapes": [
+        [
+          1,
+          280,
+          1536
+        ]
+      ],
+      "cases": 1,
+      "tolerance_failures": 0,
+      "exact_differences": 0,
+      "maximum_tolerance_ratio": 0.0,
+      "worst_node": "pow_217"
+    },
+    {
+      "operator": "ReduceMean",
+      "candidate_replaced": true,
+      "input_shapes": [
+        [
+          1,
+          280,
+          1536
+        ]
+      ],
+      "cases": 1,
+      "tolerance_failures": 0,
+      "exact_differences": 0,
+      "maximum_tolerance_ratio": 0.0,
+      "worst_node": "mean_108"
+    },
+    {
+      "operator": "MatMul",
+      "candidate_replaced": true,
+      "input_shapes": [
+        [
+          280,
+          1536
+        ],
+        [
+          1536,
+          512
+        ]
+      ],
+      "cases": 1,
+      "tolerance_failures": 0,
+      "exact_differences": 125443,
+      "maximum_tolerance_ratio": 0.09290306333297584,
+      "worst_node": "mm_121"
+    }
+  ],
+  "all_capture_files_sha_verified": 114,
+  "coefficients_unchanged": true,
+  "distinction": "All149 isolated comparisons meet tolerance against the same-input current native operator. The current Intel tail native result fails10 original final elements, so none of these captures is promoted to original-output-qualified full-context proof. Five SiLU denormal bit differences remain. Matrix differences are host dependent; nonlinears are otherwise bit-exact.",
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "required_ci_passed": false
+}

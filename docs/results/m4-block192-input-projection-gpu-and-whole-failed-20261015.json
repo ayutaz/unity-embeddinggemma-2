@@ -1,0 +1,1033 @@
+{
+  "success": false,
+  "scope": "one_original_input_projection_gpu_repair_and_failed_whole_silence_encoder",
+  "original_reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "original_reference_changed": false,
+  "records": [
+    {
+      "report": {
+        "success": false,
+        "source": "16b9e40a656564aae38f6095ac8d9fcf050b5156",
+        "variant": "static64",
+        "scope": "one_original_280_row_input_projection_gpu_bits_only",
+        "phase": "completed",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphics_api": "Direct3D12",
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "layer_count": 194,
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "actual_backend": "GPUCompute",
+        "exact_differences": 249203,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 7.62939453125e-06,
+        "error": "NUnit.Framework.AssertionException:   Strong local source-order target; original full-encoder tolerance remains unchanged.\r\n  Expected: 0\r\n  But was:  249203\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.FrozenBlockConvGpuTests.Execute (System.String folder, System.String graph, System.String reportStem, System.String scope) [0x00746] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@c50dbd64f688\\Tests\\Editor\\FrozenBlockConvGpuTests.cs:79 "
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\frozen-input-projection-static64-gpu-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "OriginalInputProjectionMustMatchAllSavedNativeBitsOnGpu",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\frozen-input-projection-static64-gpu-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-14T21:41:51.558844+00:00",
+        "pid": 74480,
+        "exit_code": 2,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\frozen-input-projection-static64-gpu-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        },
+        "elapsed_seconds": 36.88449870000477,
+        "completed_utc": "2026-10-14T21:42:28.443342+00:00"
+      },
+      "nunit": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      },
+      "evidence": [
+        {
+          "path": "artifacts\\acceptance-consumer\\artifacts\\frozen-input-projection-gpu-16b9e40a656564aae38f6095ac8d9fcf050b5156-static64.json",
+          "bytes": 1282,
+          "sha256": "1ae2b8d2cf709d70c05f2a7c2f494ed3a5003e1e1b90701c4a89617c92e53793"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-input-projection-static64-gpu-20261015-process.json",
+          "bytes": 1304,
+          "sha256": "24f93a6ef0bd5e0eb147ca59da934652f9b53597b196a56f07d9d2eb0a2387b5"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-input-projection-static64-gpu-20261015.xml",
+          "bytes": 5587,
+          "sha256": "89c888c187e931ca0448b27590d3b0da7f2c16122f6ce9c7c3eab04a2e3fa30d"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-input-projection-static64-gpu-20261015.log",
+          "bytes": 46814,
+          "sha256": "569e26cd38f4133a82dcbcf12856b58b6c6e5fc3cf38892d67003154602b90f2"
+        }
+      ]
+    },
+    {
+      "report": {
+        "success": true,
+        "source": "16b9e40a656564aae38f6095ac8d9fcf050b5156",
+        "variant": "block192",
+        "scope": "one_original_280_row_input_projection_gpu_bits_only",
+        "phase": "completed",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphics_api": "Direct3D12",
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "layer_count": 4238,
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "actual_backend": "GPUCompute",
+        "exact_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\frozen-input-projection-block192-gpu-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "OriginalInputProjectionMustMatchAllSavedNativeBitsOnGpu",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\frozen-input-projection-block192-gpu-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": true,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-14T21:42:59.189604+00:00",
+        "pid": 81580,
+        "exit_code": 0,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\frozen-input-projection-block192-gpu-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "elapsed_seconds": 30.334503300007782,
+        "completed_utc": "2026-10-14T21:43:29.524108+00:00"
+      },
+      "nunit": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": [
+        {
+          "path": "artifacts\\acceptance-consumer\\artifacts\\frozen-input-projection-gpu-16b9e40a656564aae38f6095ac8d9fcf050b5156-block192.json",
+          "bytes": 566,
+          "sha256": "3568ad5a50ec111884d581063f1c8324891d30529426ad1799fe781a32c6db9e"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-input-projection-block192-gpu-20261015-process.json",
+          "bytes": 1304,
+          "sha256": "e4cb72d13d8a017df600318bfba364e893ec62576359eeefd5e71b165ebb0aa6"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-input-projection-block192-gpu-20261015.xml",
+          "bytes": 3963,
+          "sha256": "69856355c92e8fa58fb76fb75f781a11f0c4e4e49ec90191e376c8022e9d7816"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-input-projection-block192-gpu-20261015.log",
+          "bytes": 39985,
+          "sha256": "e1604026453a6bec24c4f7abe0b3263226580f62cba6e6b32904b2776fc9b3d0"
+        }
+      ]
+    },
+    {
+      "report": {
+        "success": false,
+        "scope": "one_saved_onnx_audio_encoder_gpu_vs_immutable_original",
+        "signal": "silence",
+        "runtime_source": "43c252d3b908ab9fee657ec9e06cb2c1e2843224",
+        "requested_backend": "GPUCompute",
+        "unity": "6000.3.16f1",
+        "sentis": "2.6.1",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphics_api": "Direct3D12",
+        "end_to_end_validated": false,
+        "all_original_signals_validated": false,
+        "phase": "completed",
+        "candidate_source": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "candidate_python_gate_passed": false,
+        "candidate_folder": "GpuAudioBlock192ProjectionCandidate",
+        "graph_transform": {
+          "replaced_inverse_count": 2,
+          "prefixes": [
+            "/subsample_conv_projection/layer0/norm",
+            "/subsample_conv_projection/layer1/norm"
+          ],
+          "existing_initializer_bytes_preserved": true,
+          "existing_initializer_sha256": "1bf6702c73c5124fb83b629fadf150e32392d21bc5f024c2a4c88062b336ca6a",
+          "node_count": 7409,
+          "full_encoder_validated": false,
+          "source_commit": "9af88c45edca97e6c3d73b298f6c065b7638b837",
+          "original_graph_sha256": "f43f3275c1ba48837b626fc09c738a8204dabd25e2ff3c74d7e75abcb3591899",
+          "template_sha256": "026e6136b2cb4c940b0d320fe9da4e82529d6e47e1a1fbbdeb8c4209f19d858b",
+          "source_model_producer": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+          "algorithm": "bounded_fp32_sqrt_then_reciprocal_residual_refinement",
+          "original_node_count": 7237,
+          "old_graph_onnx_results_reused": false,
+          "graph_sha256": "8aefc4b83fd0cc709544a0d6337b8c1837d2c864ad1d3c8cbd39fcd568abc222",
+          "profile": "frames-1119-valid-1119"
+        },
+        "rms_graph_transform": {
+          "replaced_rms_count": 109,
+          "existing_initializer_bytes_preserved": true,
+          "excluded_mean_names": [],
+          "explicit_mean_override_names": [
+            "/lconv1d/conv_norm/ReduceMean",
+            "/lconv1d/conv_norm_1/ReduceMean",
+            "/lconv1d/conv_norm_2/ReduceMean",
+            "/lconv1d/conv_norm_3/ReduceMean",
+            "/lconv1d/conv_norm_4/ReduceMean",
+            "/lconv1d/conv_norm_5/ReduceMean",
+            "/lconv1d/conv_norm_6/ReduceMean",
+            "/lconv1d/conv_norm_7/ReduceMean",
+            "/lconv1d/conv_norm_8/ReduceMean",
+            "/lconv1d/conv_norm_9/ReduceMean",
+            "/lconv1d/conv_norm_10/ReduceMean",
+            "/lconv1d/conv_norm_11/ReduceMean"
+          ],
+          "existing_initializer_sha256": "42776517d990ebd9ef43161f7063e8ff0d810d35fd2b20f137dcdc9fa4235b6f",
+          "node_count": 31727,
+          "full_encoder_validated": false,
+          "source_commit": "d8714aa4f2ec1fb92a4578f07e4e46408132dd18",
+          "source_graph_sha256": "8aefc4b83fd0cc709544a0d6337b8c1837d2c864ad1d3c8cbd39fcd568abc222",
+          "original_node_count": 7409,
+          "algorithm": "pinned_compact_inner8_and_explicit_outer280_fp32_mean_and_refined_inverse",
+          "template_widths": [
+            1024,
+            1536
+          ],
+          "mean_template_node_counts": {
+            "1024": 121,
+            "1536": 124
+          },
+          "override_shape_contract": {
+            "input": [
+              1,
+              1119,
+              128
+            ],
+            "conv_norm": [
+              1,
+              280,
+              1024
+            ],
+            "scope": "one fixed full-valid profile; native lconv replay and 12 same-size causal convolutions audited"
+          },
+          "generator_sha256": "0571cf2cd7daa9d4fa2dc6bc86831fc7c39a3d5a8785df66b18c35d2c3c58631",
+          "graph_sha256": "11607255142478773e621f5e9feebf2d3269457feb67d63215cecbc55fc61b67"
+        },
+        "conv_graph_transform": {
+          "replaced_conv_count": 1,
+          "target_node": "/subsample_conv_projection/layer1/conv/Conv",
+          "weight_sha256": "68309f01ea3e738fccb24a0db5db608841a3a8e59b0a4fa5d0fb521ed60bf43c",
+          "existing_initializer_bytes_preserved": true,
+          "existing_initializer_sha256": "1154ac702080fbd58adb2770693221efc81f56750563f8d4310ddb7fcf870bfd",
+          "node_count": 36931,
+          "full_encoder_validated": false,
+          "source_commit": "8df85b3e5488f76f3f24ec8a61a808e4c9d5de8e",
+          "source_graph_sha256": "11607255142478773e621f5e9feebf2d3269457feb67d63215cecbc55fc61b67",
+          "original_node_count": 31727,
+          "algorithm": "pinned_block16_reset_fma_then_fp32_store_add",
+          "template_node_count": 5205,
+          "template_sha256": "eb2c7a93397a60d6a69380d34a84fa65239b5aeebb262c2cfb5d2ec8bc723c62",
+          "fixed_profile": "frames-1119-valid-1119",
+          "input_shape": [
+            1,
+            128,
+            560,
+            64
+          ],
+          "generator_sha256": "324c6ca5297b1041e5e2be9a4f53afa01c3d88c062b229e92847f75fcb670fe6",
+          "graph_sha256": "8a376cc5bc258e13fbdc2212bb6d352eafdd2b618d553113b7cf9f0aa8192fb0"
+        },
+        "scalar_mean_graph_transform": {
+          "replaced_scalar_mean_count": 8,
+          "prefix": "/subsample_conv_projection/layer1/norm/",
+          "existing_initializer_bytes_preserved": true,
+          "existing_initializer_sha256": "1154ac702080fbd58adb2770693221efc81f56750563f8d4310ddb7fcf870bfd",
+          "node_count": 37139,
+          "full_encoder_validated": false,
+          "source_commit": "f5ff1262614706946c373ca74db547eb1b881ef2",
+          "source_graph_sha256": "8a376cc5bc258e13fbdc2212bb6d352eafdd2b618d553113b7cf9f0aa8192fb0",
+          "original_node_count": 36931,
+          "algorithm": "eight_lane_welford_fused_scalar_mean_only",
+          "template_sha256": "c9a6e4f90b1a38d274e2e5ad088a8cbf316b55ed58d5daa143e84de934e644c0",
+          "generator_sha256": "c9b776be5a50fd80a5cff575ebfacf8bdc88615912e69e69c491ac59b82f283e",
+          "fixed_profile": "frames-1119-valid-1119",
+          "graph_sha256": "c050c2efa87d83aea45587b25f7b8d1d24dc471f33cc732dcf17d89588c70c13"
+        },
+        "input_projection_graph_transform": {
+          "replaced_matmul_count": 1,
+          "target_node": "/subsample_conv_projection/input_proj_linear/MatMul",
+          "weight_sha256": "a59650e614c2746ee18bbb23c475f65677beeb9ffe49350854af2aad873052a1",
+          "existing_initializer_bytes_preserved": true,
+          "existing_initializer_sha256": "1154ac702080fbd58adb2770693221efc81f56750563f8d4310ddb7fcf870bfd",
+          "node_count": 44112,
+          "full_encoder_validated": false,
+          "source_commit": "4ebd4e20030a1484b6210dd4017553b49e315959",
+          "source_graph_sha256": "c050c2efa87d83aea45587b25f7b8d1d24dc471f33cc732dcf17d89588c70c13",
+          "original_node_count": 37139,
+          "algorithm": "block192_reset_fma_then_fp32_store_add",
+          "template_sha256": "0d3894a6a7040a9a4ee9be76e2f80d8e971ae5f3f28687b42bb1c269279c5999",
+          "generator_sha256": "bfc743db0c3bfcc47ab9b1494b335b0c6043422af33e8131afee196b43394ebe",
+          "fixed_profile": "frames-1119-valid-1119",
+          "graph_sha256": "63f24d4883047ebe1f30572d7d45ad5bead33891bbe79a256f9ee10867a564b2"
+        },
+        "graph_sha256": "63f24d4883047ebe1f30572d7d45ad5bead33891bbe79a256f9ee10867a564b2",
+        "stage_timings_ms": {
+          "asset_and_model_load": 2337.1395,
+          "runtime_graph_transforms": 18639.2773,
+          "worker_creation": 111.4839,
+          "input_and_audit_preparation": 29.494400000000002,
+          "cpu_schedule": 18322.4157,
+          "gpu_completion_and_output_download": 817.8048
+        },
+        "saved_graph_layer_count": 27855,
+        "attention_compensated_layer_count": 30627,
+        "runtime_graph_transform": "dynamic16_then_static64",
+        "projection_chunk": 64,
+        "layer_count": 68094,
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "actual_backend": "GPUCompute",
+        "unity_allocated_bytes_after_inference": 242858710,
+        "editor_peak_working_set_bytes": 0,
+        "mismatched_elements": 295,
+        "maximum_absolute_error": 0.0001709461212158203,
+        "maximum_tolerance_ratio": 7.637024977775685,
+        "error": "NUnit.Framework.AssertionException:   Preserve the original FP32 encoder numeric gate.\r\n  Expected: 0\r\n  But was:  295\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.SavedOnnxAudioGpuReferenceTests.Execute (System.String signal, System.String candidateFolder, System.Boolean compensateStatic, System.Int32 attentionChunk, System.Int32 projectionChunk) [0x01294] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@1a2541ada2fc\\Tests\\Editor\\SavedOnnxAudioGpuReferenceTests.cs:283 "
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\block192-input-projection-full-gpu-silence-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "EmbeddingGemma.Validation.Tests.SavedOnnxAudioGpuReferenceTests.Block192ProjectionCandidateGpuMatchesOriginalGolden.*silence.*",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\block192-input-projection-full-gpu-silence-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-14T21:46:41.707259+00:00",
+        "pid": 76536,
+        "exit_code": 2,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\block192-input-projection-full-gpu-silence-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        },
+        "elapsed_seconds": 99.60911189999024,
+        "completed_utc": "2026-10-14T21:48:21.316371+00:00"
+      },
+      "nunit": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      },
+      "evidence": [
+        {
+          "path": "artifacts\\acceptance-consumer\\artifacts\\saved-onnx-audio-gpu-43c252d3b908ab9fee657ec9e06cb2c1e2843224-block192-projection-attention16-static64-silence.json",
+          "bytes": 8234,
+          "sha256": "f794424262cd6e05d6fc4b58d30b3c6de51c957b93bf5356d5ed4561956227ee"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\block192-input-projection-full-gpu-silence-20261015-process.json",
+          "bytes": 1393,
+          "sha256": "7e1394beb49d93a712baee90fb27cf2f9a3b8669341dac1519e3f17cfe43147e"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\block192-input-projection-full-gpu-silence-20261015.xml",
+          "bytes": 6509,
+          "sha256": "7fa74f9cf08ef746d9f753fff5d9d6939218567d6547d08150cf320338cd0ab8"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\block192-input-projection-full-gpu-silence-20261015.log",
+          "bytes": 47740,
+          "sha256": "ab02b6bc0e55242f74b6e5ba6dcdde4fa0118371b4cdedf021bfafbfe62653d8"
+        }
+      ]
+    }
+  ],
+  "tdd": [
+    {
+      "counts": {
+        "tests": 8,
+        "failures": 8,
+        "errors": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\block192-matmul-red-20261015.xml",
+        "bytes": 6317,
+        "sha256": "81ca97af1b30d5d8be71ac9f1b7b46afefc3765b10672ac896f5f21d2cf54883"
+      }
+    },
+    {
+      "counts": {
+        "tests": 30,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\block192-matmul-related-green-20261015.xml",
+        "bytes": 7097,
+        "sha256": "ab28e7156bf36bb48a0a56bee320c0a7ae1c376d4a443b28addd510f1cbb5757"
+      }
+    },
+    {
+      "counts": {
+        "tests": 30,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\block192-matmul-related-green2-20261015.xml",
+        "bytes": 4593,
+        "sha256": "56d0594a813e24a993e85356531aea2967aa4cacee7e622cfe28b4ac555a1b20"
+      }
+    },
+    {
+      "counts": {
+        "tests": 6,
+        "failures": 6,
+        "errors": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\block192-matmul-rewrite-red-20261015.xml",
+        "bytes": 9995,
+        "sha256": "7a0c288d107646b13850475063beb0ec77910b755e23c1ba87ca42ba4606e5f5"
+      }
+    },
+    {
+      "counts": {
+        "tests": 22,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\block192-matmul-rewrite-related-green-20261015.xml",
+        "bytes": 3338,
+        "sha256": "695faedd77b1383839401afc0156055ffe2b7dced11806c363f62252c11ac4cb"
+      }
+    }
+  ],
+  "offline_diagnostics": [
+    {
+      "report": {
+        "scope": "original_silence_subsample_input_projection_only",
+        "original_reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "native_report_sha256": "664a8242d079f53bf98d2032f9398de6d2c8d6bcd2312d1baaa35bb498ce5fb8",
+        "input_shape": [
+          280,
+          1024
+        ],
+        "unique_shape": [
+          3,
+          1024
+        ],
+        "all_original_rows_preserved": true,
+        "full_original_rows": 280,
+        "input_sha256": "139b37b6932ec8ae237925842d10a1f8d3eea7f62bed80ac381c5a2fe2aa10b6",
+        "expected_sha256": "dc54774840fed958a310c6092e5c5c3483de74be52df7914d2bd128a99192969",
+        "weight_sha256": "a59650e614c2746ee18bbb23c475f65677beeb9ffe49350854af2aad873052a1",
+        "source_graph_sha256": "c050c2efa87d83aea45587b25f7b8d1d24dc471f33cc732dcf17d89588c70c13",
+        "files": {
+          "unique-input.bin": {
+            "bytes": 12288,
+            "sha256": "6883548f38d0d89b6f316157992f5db2f80f94e0388c2cbc9a32c8f58634e38a"
+          },
+          "unique-expected.bin": {
+            "bytes": 12288,
+            "sha256": "5865b97279c4e0bfde65d1881d4bcf019b3cb26da9ecc3d428ebd09feafe0b9e"
+          },
+          "weight.bin": {
+            "bytes": 4194304,
+            "sha256": "a59650e614c2746ee18bbb23c475f65677beeb9ffe49350854af2aad873052a1"
+          }
+        },
+        "cases": {
+          "current_cpu_matmul": {
+            "unique_bit_differences": 2835,
+            "full_bit_differences": 264323,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.52587890625e-05,
+            "maximum_tolerance_ratio": 0.24846238024596443
+          },
+          "fp64_single_round_oracle": {
+            "unique_bit_differences": 2637,
+            "full_bit_differences": 245012,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06,
+            "maximum_tolerance_ratio": 0.1222650916956829
+          },
+          "block1024_reset_fma_store_add": {
+            "unique_bit_differences": 2862,
+            "full_bit_differences": 266566,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.1444091796875e-05,
+            "maximum_tolerance_ratio": 0.17863500418907433
+          },
+          "block256_reset_fma_store_add": {
+            "unique_bit_differences": 2689,
+            "full_bit_differences": 246449,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06,
+            "maximum_tolerance_ratio": 0.25235457331678446
+          },
+          "block128_reset_fma_store_add": {
+            "unique_bit_differences": 2649,
+            "full_bit_differences": 241700,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.1444091796875e-05,
+            "maximum_tolerance_ratio": 0.1336921242434624
+          },
+          "block64_reset_fma_store_add": {
+            "unique_bit_differences": 2531,
+            "full_bit_differences": 237427,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06,
+            "maximum_tolerance_ratio": 0.1420580491001936
+          },
+          "block32_reset_fma_store_add": {
+            "unique_bit_differences": 2677,
+            "full_bit_differences": 248653,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.1444091796875e-05,
+            "maximum_tolerance_ratio": 0.10702045631810246
+          },
+          "block16_reset_fma_store_add": {
+            "unique_bit_differences": 2723,
+            "full_bit_differences": 252300,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.1444091796875e-05,
+            "maximum_tolerance_ratio": 0.17614179649473555
+          },
+          "block8_reset_fma_store_add": {
+            "unique_bit_differences": 2810,
+            "full_bit_differences": 262082,
+            "mismatches": 0,
+            "maximum_absolute_error": 3.0517578125e-05,
+            "maximum_tolerance_ratio": 0.22334646354777546
+          },
+          "block4_reset_fma_store_add": {
+            "unique_bit_differences": 2838,
+            "full_bit_differences": 264880,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.52587890625e-05,
+            "maximum_tolerance_ratio": 0.21442724392482052
+          }
+        },
+        "fp64_scope": "offline oracle only",
+        "gpu_validated": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\input-projection-frozen-context\\context.json",
+        "bytes": 3894,
+        "sha256": "94a47c043ee85afd73ddfec6c73f3a8429f4343e20abed244c294a102c8c7041"
+      }
+    },
+    {
+      "report": {
+        "scope": "one_original_projection_full280_rows_cpu_diagnostic_only",
+        "context_sha256": "94a47c043ee85afd73ddfec6c73f3a8429f4343e20abed244c294a102c8c7041",
+        "cases": {
+          "threads1_matmul_contiguous_rhs": {
+            "bit_differences": 0,
+            "mismatches": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0
+          },
+          "threads1_linear_transposed_rhs": {
+            "bit_differences": 0,
+            "mismatches": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0
+          },
+          "threads1_linear_batched": {
+            "bit_differences": 0,
+            "mismatches": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0
+          },
+          "threads2_matmul_contiguous_rhs": {
+            "bit_differences": 0,
+            "mismatches": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0
+          },
+          "threads2_linear_transposed_rhs": {
+            "bit_differences": 0,
+            "mismatches": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0
+          },
+          "threads2_linear_batched": {
+            "bit_differences": 0,
+            "mismatches": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0
+          },
+          "threads4_matmul_contiguous_rhs": {
+            "bit_differences": 0,
+            "mismatches": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0
+          },
+          "threads4_linear_transposed_rhs": {
+            "bit_differences": 0,
+            "mismatches": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0
+          },
+          "threads4_linear_batched": {
+            "bit_differences": 0,
+            "mismatches": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0
+          }
+        },
+        "torch_config": "PyTorch built with:\n  - C++ Version: 202002\n  - MSVC 194234444\n  - Intel(R) oneAPI Math Kernel Library Version 2026.1-Product Build 20260612 for Intel(R) 64 architecture applications\n  - Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)\n  - OpenMP 2019\n  - LAPACK is enabled (usually provided by MKL)\n  - CPU capability usage: AVX2\n  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, COMMIT_SHA=5c4886908584029761b579af026dcfb627c84070, CUDA_FLAGS= -DLIBCUDACXX_ENABLE_SIMPLIFIED_COMPLEX_OPERATIONS -Xcompiler /Zc:__cplusplus -Xcompiler /Zc:preprocessor -Xcompiler /w -w -Xcompiler /FS -Xfatbin -compress-all  -Xcompiler=/wd4819,/wd4503,/wd4190,/wd4244,/wd4251,/wd4275,/wd4522 -Wno-deprecated-gpu-targets --expt-extended-lambda -DCUB_WRAPPED_NAMESPACE=at_cuda_detail -DDISABLE_CUSPARSE_DEPRECATED -DCUDA_HAS_FP16=1 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__, CXX_COMPILER=C:/actions-runner/_work/pytorch/pytorch/.ci/pytorch/windows/tmp_bin/sccache-cl.exe, CXX_FLAGS=/DWIN32 /D_WINDOWS /EHsc /Zc:__cplusplus /bigobj /FS /utf-8 -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DSYMBOLICATE_MOBILE_DEBUG_HANDLE /wd4624 /wd4068 /wd4067 /wd4267 /wd4661 /wd4717 /wd4244 /wd4804 /wd4273, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, TORCH_VERSION=2.14.1, USE_CUDA=0, USE_CUDNN=OFF, USE_CUSPARSELT=OFF, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_GLOO=ON, USE_HIPSPARSELT=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=OFF, USE_NNPACK=OFF, USE_OPENMP=ON, USE_ROCM=OFF, USE_ROCM_KERNEL_ASSERT=OFF, USE_XCCL=OFF, USE_XPU=OFF, \n",
+        "cpu_capability": "AVX2",
+        "gpu_validated": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\input-projection-full-row-cpu-layout-20261015.json",
+        "bytes": 3549,
+        "sha256": "d6710c13c4222554672620aa5c21778aacc995c9652f564268fcc2c872597aa0"
+      }
+    },
+    {
+      "report": {
+        "scope": "three_unique_original_projection_rows_hypotheses_only",
+        "context_sha256": "94a47c043ee85afd73ddfec6c73f3a8429f4343e20abed244c294a102c8c7041",
+        "cases": {
+          "block1024_ilp1_treeFalse": {
+            "bit_differences": 2862,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.1444091796875e-05
+          },
+          "block1024_ilp1_treeTrue": {
+            "bit_differences": 2862,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.1444091796875e-05
+          },
+          "block1024_ilp2_treeFalse": {
+            "bit_differences": 2841,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.33514404296875e-05
+          },
+          "block1024_ilp2_treeTrue": {
+            "bit_differences": 2841,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.33514404296875e-05
+          },
+          "block1024_ilp4_treeFalse": {
+            "bit_differences": 2755,
+            "mismatches": 0,
+            "maximum_absolute_error": 6.67572021484375e-06
+          },
+          "block1024_ilp4_treeTrue": {
+            "bit_differences": 2747,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block1024_ilp8_treeFalse": {
+            "bit_differences": 2695,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.1444091796875e-05
+          },
+          "block1024_ilp8_treeTrue": {
+            "bit_differences": 2702,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block512_ilp1_treeFalse": {
+            "bit_differences": 2814,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.52587890625e-05
+          },
+          "block512_ilp1_treeTrue": {
+            "bit_differences": 2814,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.52587890625e-05
+          },
+          "block512_ilp2_treeFalse": {
+            "bit_differences": 2773,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.1444091796875e-05
+          },
+          "block512_ilp2_treeTrue": {
+            "bit_differences": 2773,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.1444091796875e-05
+          },
+          "block512_ilp4_treeFalse": {
+            "bit_differences": 2701,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.1444091796875e-05
+          },
+          "block512_ilp4_treeTrue": {
+            "bit_differences": 2692,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.1444091796875e-05
+          },
+          "block512_ilp8_treeFalse": {
+            "bit_differences": 2682,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block512_ilp8_treeTrue": {
+            "bit_differences": 2707,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block384_ilp1_treeFalse": {
+            "bit_differences": 2718,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.1444091796875e-05
+          },
+          "block384_ilp1_treeTrue": {
+            "bit_differences": 2718,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.1444091796875e-05
+          },
+          "block384_ilp2_treeFalse": {
+            "bit_differences": 2707,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.52587890625e-05
+          },
+          "block384_ilp2_treeTrue": {
+            "bit_differences": 2707,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.52587890625e-05
+          },
+          "block384_ilp4_treeFalse": {
+            "bit_differences": 2688,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block384_ilp4_treeTrue": {
+            "bit_differences": 2679,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block384_ilp8_treeFalse": {
+            "bit_differences": 2634,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block384_ilp8_treeTrue": {
+            "bit_differences": 2611,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block320_ilp1_treeFalse": {
+            "bit_differences": 2641,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.1444091796875e-05
+          },
+          "block320_ilp1_treeTrue": {
+            "bit_differences": 2641,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.1444091796875e-05
+          },
+          "block320_ilp2_treeFalse": {
+            "bit_differences": 2653,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block320_ilp2_treeTrue": {
+            "bit_differences": 2653,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block320_ilp4_treeFalse": {
+            "bit_differences": 2663,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block320_ilp4_treeTrue": {
+            "bit_differences": 2644,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block320_ilp8_treeFalse": {
+            "bit_differences": 2636,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block320_ilp8_treeTrue": {
+            "bit_differences": 2625,
+            "mismatches": 0,
+            "maximum_absolute_error": 3.814697265625e-06
+          },
+          "block288_ilp1_treeFalse": {
+            "bit_differences": 2689,
+            "mismatches": 0,
+            "maximum_absolute_error": 5.7220458984375e-06
+          },
+          "block288_ilp1_treeTrue": {
+            "bit_differences": 2689,
+            "mismatches": 0,
+            "maximum_absolute_error": 5.7220458984375e-06
+          },
+          "block288_ilp2_treeFalse": {
+            "bit_differences": 2712,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.1444091796875e-05
+          },
+          "block288_ilp2_treeTrue": {
+            "bit_differences": 2712,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.1444091796875e-05
+          },
+          "block288_ilp4_treeFalse": {
+            "bit_differences": 2699,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.52587890625e-05
+          },
+          "block288_ilp4_treeTrue": {
+            "bit_differences": 2677,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block288_ilp8_treeFalse": {
+            "bit_differences": 2684,
+            "mismatches": 0,
+            "maximum_absolute_error": 3.814697265625e-06
+          },
+          "block288_ilp8_treeTrue": {
+            "bit_differences": 2656,
+            "mismatches": 0,
+            "maximum_absolute_error": 3.814697265625e-06
+          },
+          "block256_ilp1_treeFalse": {
+            "bit_differences": 2689,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block256_ilp1_treeTrue": {
+            "bit_differences": 2689,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block256_ilp2_treeFalse": {
+            "bit_differences": 2700,
+            "mismatches": 0,
+            "maximum_absolute_error": 5.7220458984375e-06
+          },
+          "block256_ilp2_treeTrue": {
+            "bit_differences": 2700,
+            "mismatches": 0,
+            "maximum_absolute_error": 5.7220458984375e-06
+          },
+          "block256_ilp4_treeFalse": {
+            "bit_differences": 2679,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block256_ilp4_treeTrue": {
+            "bit_differences": 2684,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block256_ilp8_treeFalse": {
+            "bit_differences": 2611,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block256_ilp8_treeTrue": {
+            "bit_differences": 2628,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block192_ilp1_treeFalse": {
+            "bit_differences": 0,
+            "mismatches": 0,
+            "maximum_absolute_error": 0.0
+          },
+          "block192_ilp1_treeTrue": {
+            "bit_differences": 0,
+            "mismatches": 0,
+            "maximum_absolute_error": 0.0
+          },
+          "block192_ilp2_treeFalse": {
+            "bit_differences": 2575,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block192_ilp2_treeTrue": {
+            "bit_differences": 2575,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block192_ilp4_treeFalse": {
+            "bit_differences": 2621,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block192_ilp4_treeTrue": {
+            "bit_differences": 2617,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block192_ilp8_treeFalse": {
+            "bit_differences": 2575,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "block192_ilp8_treeTrue": {
+            "bit_differences": 2573,
+            "mismatches": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          }
+        },
+        "full_280_cpu_gemm_matches_original": true,
+        "gpu_validated": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\input-projection-accumulator-order-20261015.json",
+        "bytes": 8662,
+        "sha256": "a61c3ccae70f33f4c9f1e47bbee1db0e4dda179fbaff8d55ba0ea16b1c30efd6"
+      }
+    },
+    {
+      "report": {
+        "scope": "first_feed_forward_two_fixed_linears_offline_only",
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "native_report_sha256": "99529dc0fa6c74825b23fca653d82091797ff1e5267d26c5cdae723fcf86f501",
+        "cases": {
+          "ffw_layer_1": {
+            "unique_rows": 3,
+            "current_full280_cpu": {
+              "bit_differences": 0,
+              "mismatches": 0,
+              "maximum_absolute_error": 0.0
+            },
+            "block192_unique": {
+              "bit_differences": 0,
+              "mismatches": 0,
+              "maximum_absolute_error": 0.0
+            },
+            "block192_all280": {
+              "bit_differences": 0,
+              "mismatches": 0,
+              "maximum_absolute_error": 0.0
+            },
+            "input_sha256": "5cc9770575ad3c8873e4fd9f9b0fcec826626c60242217bec9edee7c6362c917",
+            "expected_sha256": "e5ac1da2d80e0013714a5be3e3336272bc954176baf71bd932107db62b8318b4",
+            "weight_sha256": "d598344ee23d0545a76fa6d95173fbc886e8f2dd46d5907e6bd50b6cfa4891df"
+          },
+          "ffw_layer_2": {
+            "unique_rows": 3,
+            "current_full280_cpu": {
+              "bit_differences": 0,
+              "mismatches": 0,
+              "maximum_absolute_error": 0.0
+            },
+            "block192_unique": {
+              "bit_differences": 0,
+              "mismatches": 0,
+              "maximum_absolute_error": 0.0
+            },
+            "block192_all280": {
+              "bit_differences": 0,
+              "mismatches": 0,
+              "maximum_absolute_error": 0.0
+            },
+            "input_sha256": "ad35b972c4e5e513fc9edb68192470de427833ef17c054bc0a55f6c869e8ba5f",
+            "expected_sha256": "efafce302f7c558de3f9d62778a6be2d419d841e98a4a797e79ee7222fce1686",
+            "weight_sha256": "50ff67bc3a9a8704f925183042667884c6a2114de99565c2fa93f79570bd77b6"
+          }
+        },
+        "gpu_validated": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\first-ff-block192-original-input-20261015.json",
+        "bytes": 1822,
+        "sha256": "a9f5385cc9fc5ce948f5f4fe77317b5e63d50fea44d9fdffe1c7c7b4c5cf84bd"
+      }
+    }
+  ],
+  "algorithm_scope": "block192 was inferred from fixed saved SGEMM outputs; arbitrary MKL contexts are not proven",
+  "fp64_scope": "independent offline rounding oracle only; exported/runtime arithmetic is FP32",
+  "full_gpu_bit_inline_match_proven": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "next_step": "GPU frozen first feed-forward two projections, then original whole-encoder gate",
+  "remaining": [
+    "audio original six signals and both profiles",
+    "image FP32 all three profiles",
+    "real PCM/Texture through GPU stages to normalized768 API all roles/masks/boundaries",
+    "ownership/dispose/exception reuse/text regression/no product intermediate readback or CPU fallback"
+  ]
+}

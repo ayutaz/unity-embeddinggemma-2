@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "real_rendertexture_image_api_invalid_input_and_gpu_cancellation_recovery_plus_original_text128_gpu_regression",
+  "rendertexture": {
+    "source": "5926d184ef4f15ef5054f746c994d0eb0ff9571b",
+    "report": "vision-final-rendertexture-recovery-allroles-gpu-5926d184ef4f15ef5054f746c994d0eb0ff9571b-square-1.json",
+    "report_sha256": "626416059dacc0340acc0bdbbd388344afecaa9a916a9637e1a00b0e3cb8e77e",
+    "input_texture_kind": "RenderTexture",
+    "negative_and_cancellation_checks": [
+      {
+        "name": "null_texture",
+        "exception": "System.ArgumentNullException",
+        "success": true
+      },
+      {
+        "name": "invalid_role",
+        "exception": "System.ArgumentOutOfRangeException",
+        "success": true
+      },
+      {
+        "name": "marker_in_title",
+        "exception": "System.ArgumentException",
+        "success": true
+      },
+      {
+        "name": "destroyed_texture",
+        "exception": "System.ArgumentException",
+        "success": true
+      },
+      {
+        "name": "unsupported_float_storage",
+        "exception": "System.ArgumentException",
+        "success": true
+      },
+      {
+        "name": "different_fixed_profile",
+        "exception": "System.ArgumentException",
+        "success": true
+      },
+      {
+        "name": "cancel_after_real_gpu_stage_yield",
+        "exception": "System.OperationCanceledException",
+        "success": true
+      }
+    ],
+    "recovery_roles": [
+      {
+        "role": "query",
+        "cosine": 0.9999999999996538,
+        "capture_sha256": "ad693ab931ed23f10191f96b7f38dffd0b9c0fa6a7af9af5c56e912217a4ad4a",
+        "same_bits_as_png_capture": true,
+        "owned_intermediates_disposed": true,
+        "execute_and_final_download_ms": 47635.6434
+      },
+      {
+        "role": "document",
+        "cosine": 0.9999999999995672,
+        "capture_sha256": "ca4184139b735b707616a1142c8d6849cb7baeb5326ef10cbede338f452e9579",
+        "same_bits_as_png_capture": true,
+        "owned_intermediates_disposed": true,
+        "execute_and_final_download_ms": 25380.2688
+      },
+      {
+        "role": "raw",
+        "cosine": 0.9999999999998819,
+        "capture_sha256": "8704ac3a3c8ddfe741e61d5dc91e316605441e5e8c80958b4cef0d77134eb5c2",
+        "same_bits_as_png_capture": true,
+        "owned_intermediates_disposed": true,
+        "execute_and_final_download_ms": 22363.6293
+      }
+    ],
+    "host_peak_working_set_bytes": 7798345728,
+    "actual_backend": "GPUCompute",
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "intermediate_readback_count": 0,
+    "execution": {
+      "prefix": "gpu-final-rendertexture-api-recovery-v2-20261016",
+      "process_sha256": "a62d2896020e0b1f6851af73db38609cc18e6c3cca5e55f86dfce4dab87c1d51",
+      "xml_sha256": "fc0b12d0a0ddd9c31b03cbad9664db457aacff649ba000b56cd622718fe83389",
+      "counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 208.79525229998399,
+      "terminal": true
+    }
+  },
+  "failed_initial_harness": {
+    "report": "vision-final-rendertexture-recovery-allroles-gpu-3995219bd8c31af5cd80fd55bbb7baaad2ceb442-square-1.json",
+    "report_sha256": "dcdd169c9414e0eba3d4d89260fcf4126befb73009a027102b052a613e7dd2ca",
+    "classification": "wrong_negative_fixture_marker_not_a_reserved_token_in_real_tokenizer",
+    "supplied_literal": "<image>",
+    "actual_pinned_token": "<|image|>",
+    "execution": {
+      "prefix": "gpu-final-rendertexture-api-recovery-20261016",
+      "process_sha256": "462ed2cc77c7f5bc4c31e5c9484f9338b8454792e3909c0da2c9a3ec6967b4f5",
+      "xml_sha256": "76f2844b7091ac7a358c31690238085854d014ec2e27298608a64ed1d2b58154",
+      "counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      },
+      "exit_code": 2,
+      "elapsed_seconds": 130.7857433000172,
+      "terminal": true
+    },
+    "note": "Valid title unexpectedly completed inference; the assertion was wrong. Production prompt behavior was retained; negative test now reads the pinned configuration."
+  },
+  "text_regression": {
+    "reference_sha256": "3530756b36316a812ac853f0722bed5479e92e6bb02ca6aa41c06660d32a71ec",
+    "conditions": [
+      {
+        "source": "c290c262699c37b7f4650ca27b588d04a94147e2",
+        "precision": "fp32",
+        "report": "text128-regression-gpu-c290c262699c37b7f4650ca27b588d04a94147e2-fp32.json",
+        "report_sha256": "29497c0ef488a328a07566ee654a529fc8e156ba14bf049e84385782628f865c",
+        "capture_sha256": "87044df656a4a966bba05955e8c7bab40ef793dc72814ce41d53b4c7e5452586",
+        "vectors": 10,
+        "minimum_cosine": 0.9999999999995122,
+        "rankings": [
+          {
+            "query_id": "query-cat-ja",
+            "full_ranking_matched": true,
+            "maximum_score_error": 8.637552673107507e-08
+          },
+          {
+            "query_id": "query-space-en",
+            "full_ranking_matched": true,
+            "maximum_score_error": 9.186151761486627e-08
+          },
+          {
+            "query_id": "query-recipe-ja",
+            "full_ranking_matched": true,
+            "maximum_score_error": 8.582897570441617e-08
+          },
+          {
+            "query_id": "query-cat-en",
+            "full_ranking_matched": true,
+            "maximum_score_error": 3.178196916753251e-08
+          }
+        ],
+        "actual_backend": "GPUCompute",
+        "cpu_computation_count": 0,
+        "readback_flush_count": 0
+      },
+      {
+        "source": "c290c262699c37b7f4650ca27b588d04a94147e2",
+        "precision": "float16",
+        "report": "text128-regression-gpu-c290c262699c37b7f4650ca27b588d04a94147e2-float16.json",
+        "report_sha256": "2791cc202c0744e3b937d2df283eca2d227dc6739be6d5ca3e19801ac5e06ae7",
+        "capture_sha256": "426cae2408217475a5d0e07862298d1d89e4ac8a0cde2a295df20de08d837b8a",
+        "vectors": 10,
+        "minimum_cosine": 0.9999999999994986,
+        "rankings": [
+          {
+            "query_id": "query-cat-ja",
+            "full_ranking_matched": true,
+            "maximum_score_error": 6.890311793350534e-08
+          },
+          {
+            "query_id": "query-space-en",
+            "full_ranking_matched": true,
+            "maximum_score_error": 1.0256953353326992e-07
+          },
+          {
+            "query_id": "query-recipe-ja",
+            "full_ranking_matched": true,
+            "maximum_score_error": 8.874540458059244e-08
+          },
+          {
+            "query_id": "query-cat-en",
+            "full_ranking_matched": true,
+            "maximum_score_error": 2.1853739373689507e-08
+          }
+        ],
+        "actual_backend": "GPUCompute",
+        "cpu_computation_count": 0,
+        "readback_flush_count": 0
+      }
+    ],
+    "fp32_execution": {
+      "prefix": "gpu-text128-fp32-real-regression-20261016",
+      "process_sha256": "8fa92fd0abba2487b4fe194288526fe849c40262f54da30c96164b0d87a4e9e5",
+      "xml_sha256": "a8207d50baaa069853728a1ecfdc4d1046c27275ea10c45ae067e656d1d2202f",
+      "counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 66.83793650000007,
+      "terminal": true
+    },
+    "float16_and_small_contract_regressions": {
+      "prefix": "gpu-text-float16-and-api-regressions-20261016",
+      "process_sha256": "1533c6f16823a285b55e364b362e2169f92bcee31f212caf6f1cb5224bd2345a",
+      "xml_sha256": "ee7fdaaf1af6ff0fba2ceb10157994a8122f2b846b0d7fe989bbd10442c669d9",
+      "counts": {
+        "total": 90,
+        "passed": 90,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 54.24618280000868,
+      "terminal": true
+    },
+    "numerical_vectors": 20,
+    "full_rankings_checked": 8,
+    "float16_means_stored_weight_quantization_not_all_ops_half_precision": true
+  },
+  "per_call_owned_tensors_released": true,
+  "all_audio_pcm_api_roles_accepted": false,
+  "steps_3_4_complete": false,
+  "limitations": [
+    "RenderTexture condition covers original square-1 in all three roles; PNG six-case/three-profile matrix is a separate receipt.",
+    "Persistent allocation warnings and long-term resource/performance behavior remain unresolved; per-call tensor disposal is not a claim of leak-free shutdown.",
+    "Actual PCM API role/profile coverage and final repository checks remain required for the original execution step4. Samples/Player/device qualification remain project step5."
+  ]
+}

@@ -1,0 +1,928 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "scope": "same_input_native_gelu_rounding_isolation_and_one_original_image_case",
+  "original_golden_unchanged": true,
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "failed_fused_graph_full_image": {
+    "file": "vision-original-context-fused-gelu-softmax16-all-rms-block192-whole-gpu-273bfcdd63f10bf0587aad71199cf1c6c7ff8648-square-0.json",
+    "sha256": "2a459cdfbbb73c16ccdd968219ad40547cd25ee9783e1395caf47da765fa776b",
+    "success": false,
+    "runtime_source": "273bfcdd63f10bf0587aad71199cf1c6c7ff8648",
+    "actual_backend": "GPUCompute",
+    "gpu_operation_count": 178,
+    "segment_count": 179,
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "host_peak_working_set_bytes": 4930781184,
+    "execute_and_final_download_ms": 21462.1754,
+    "mismatched_elements": 3,
+    "maximum_absolute_error": 2.205371856689453e-05,
+    "maximum_tolerance_ratio": 1.0915835177902096,
+    "original_coefficient_bytes_preserved": true,
+    "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+    "capture_sha256": "a86ccbcf0a214b5c1d9e75d664337ab7ce37d94a3fc5894477d99748a4eea9e0",
+    "fused_gelu_inner": true,
+    "softmax_vector_width": 16,
+    "test": {
+      "file": "vision-original-context-fused-gelu-softmax16-square0-20261015.xml",
+      "sha256": "d04d61b74bb3f558efe7c3215acd2f2c451f737b7a3eed02b52d9d4a6a0e69ee",
+      "totals": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Failed(Child)",
+        "total": "1",
+        "passed": "0",
+        "failed": "1",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 10:36:35Z",
+        "end-time": "2026-10-15 10:37:19Z",
+        "duration": "43.9880453"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\vision-original-context-fused-gelu-softmax16-square0-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "OriginalContextFusedGeluSoftmaxSixteenSquareZeroMustMatchOriginalOnGpu",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\vision-original-context-fused-gelu-softmax16-square0-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T10:35:54.436555+00:00",
+        "pid": 99820,
+        "exit_code": 2,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\vision-original-context-fused-gelu-softmax16-square0-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        },
+        "elapsed_seconds": 90.27756809999119,
+        "completed_utc": "2026-10-15T10:37:24.714122+00:00"
+      }
+    }
+  },
+  "prior_component_results": [
+    {
+      "file": "gpu-gelu-fused-inner-native-prefix-green-20261015.xml",
+      "sha256": "9d943babf2e1d41a0c431db5294147ae812252b6d684669c2a78cccf1c2168f2",
+      "totals": {
+        "id": "2",
+        "testcasecount": "9",
+        "result": "Failed(Child)",
+        "total": "9",
+        "passed": "7",
+        "failed": "2",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 10:29:41Z",
+        "end-time": "2026-10-15 10:29:43Z",
+        "duration": "2.2561806"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-gelu-fused-inner-native-prefix-green-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "GpuGeluTests|VisionGeluGpuTests.CapturedOriginalLinuxPrefixGeluFusedInnerMustImproveNativeBitsOnGpu|VisionGeluGpuTests.OriginalGateProjectionGeluMatchesCurrentCpuEquationOnGpu",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-gelu-fused-inner-native-prefix-green-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T10:28:58.117994+00:00",
+        "pid": 93584,
+        "exit_code": 2,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\gpu-gelu-fused-inner-native-prefix-green-20261015.xml",
+        "unity_counts": {
+          "total": 9,
+          "passed": 7,
+          "failed": 2,
+          "skipped": 0
+        },
+        "elapsed_seconds": 50.45028220000677,
+        "completed_utc": "2026-10-15T10:29:48.568280+00:00"
+      }
+    },
+    {
+      "file": "gpu-gelu-fused-inner-native-prefix-short-path-20261015.xml",
+      "sha256": "b60cec28ba9a76de3355f9a30bec31ae440160f1f7bdb1ad171aab37ee96cf07",
+      "totals": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Passed",
+        "total": "1",
+        "passed": "1",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 10:32:03Z",
+        "end-time": "2026-10-15 10:32:03Z",
+        "duration": "0.6889711"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-gelu-fused-inner-native-prefix-short-path-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "VisionGeluGpuTests.CapturedOriginalLinuxPrefixGeluFusedInnerMustImproveNativeBitsOnGpu",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-gelu-fused-inner-native-prefix-short-path-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": true,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T10:31:23.029081+00:00",
+        "pid": 98180,
+        "exit_code": 0,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\gpu-gelu-fused-inner-native-prefix-short-path-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "elapsed_seconds": 45.28947889999836,
+        "completed_utc": "2026-10-15T10:32:08.318560+00:00"
+      }
+    },
+    {
+      "file": "gpu-gelu-fused-inner-witness-green-20261015.xml",
+      "sha256": "491d5a5df2522eb01de8bb4c4cebc579dd90ebd996020fe92dad90471d32f31f",
+      "totals": {
+        "id": "2",
+        "testcasecount": "9",
+        "result": "Passed",
+        "total": "9",
+        "passed": "9",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 10:35:07Z",
+        "end-time": "2026-10-15 10:35:09Z",
+        "duration": "2.0258459"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-gelu-fused-inner-witness-green-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "GpuGeluTests|VisionGeluGpuTests.CapturedOriginalLinuxPrefixGeluFusedInnerMustImproveNativeBitsOnGpu|VisionGeluGpuTests.OriginalGateProjectionGeluMatchesCurrentCpuEquationOnGpu",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-gelu-fused-inner-witness-green-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": true,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T10:34:27.187097+00:00",
+        "pid": 91600,
+        "exit_code": 0,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\gpu-gelu-fused-inner-witness-green-20261015.xml",
+        "unity_counts": {
+          "total": 9,
+          "passed": 9,
+          "failed": 0,
+          "skipped": 0
+        },
+        "elapsed_seconds": 47.75215049998951,
+        "completed_utc": "2026-10-15T10:35:14.939247+00:00"
+      }
+    },
+    {
+      "file": "gpu-sleef-tanh-api-red-fixed-20261015.xml",
+      "sha256": "6eec7b137b531c95fdead97322acbfb72e55c0cae4cb019e203543adba46e83f",
+      "totals": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Failed(Child)",
+        "total": "1",
+        "passed": "0",
+        "failed": "1",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 10:41:05Z",
+        "end-time": "2026-10-15 10:41:05Z",
+        "duration": "0.1178917"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-sleef-tanh-api-red-fixed-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "FrozenNativeSleefTanhCandidateMustMatchAllBitsOnGpu",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-sleef-tanh-api-red-fixed-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T10:40:27.617414+00:00",
+        "pid": 104212,
+        "exit_code": 2,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\gpu-sleef-tanh-api-red-fixed-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        },
+        "elapsed_seconds": 43.06207529999665,
+        "completed_utc": "2026-10-15T10:41:10.679493+00:00"
+      }
+    },
+    {
+      "file": "gpu-sleef-tanh-and-prefix-candidate-20261015.xml",
+      "sha256": "dae254c7ad466cc580bb1d24b799a8495263f927fcd4196d0b6dde0f4ecbb6e8",
+      "totals": {
+        "id": "2",
+        "testcasecount": "10",
+        "result": "Failed(Child)",
+        "total": "10",
+        "passed": "9",
+        "failed": "1",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 10:43:02Z",
+        "end-time": "2026-10-15 10:43:03Z",
+        "duration": "1.0955588"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-sleef-tanh-and-prefix-candidate-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "FrozenNativeSleefTanhCandidateMustMatchAllBitsOnGpu|FrozenNativeTanhCandidateMustMatchAllBitsOnGpu|VisionGeluGpuTests.CapturedOriginalLinuxPrefixSleefGeluMustMatchNativeBitsOnGpu|GpuGeluTests",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-sleef-tanh-and-prefix-candidate-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T10:42:22.784772+00:00",
+        "pid": 68636,
+        "exit_code": 2,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\gpu-sleef-tanh-and-prefix-candidate-20261015.xml",
+        "unity_counts": {
+          "total": 10,
+          "passed": 9,
+          "failed": 1,
+          "skipped": 0
+        },
+        "elapsed_seconds": 45.099308799995924,
+        "completed_utc": "2026-10-15T10:43:07.884083+00:00"
+      }
+    },
+    {
+      "file": "gpu-sleef-gelu-prefix-stage-localization-20261015.xml",
+      "sha256": "a798c8b303b9b4493a156a68448683df20974558ec4413f50ba6d1a785464560",
+      "totals": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Failed(Child)",
+        "total": "1",
+        "passed": "0",
+        "failed": "1",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 10:47:15Z",
+        "end-time": "2026-10-15 10:47:16Z",
+        "duration": "0.5881594"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-sleef-gelu-prefix-stage-localization-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "VisionGeluGpuTests.CapturedOriginalLinuxPrefixSleefGeluMustMatchNativeBitsOnGpu",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-sleef-gelu-prefix-stage-localization-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T10:46:37.360519+00:00",
+        "pid": 63936,
+        "exit_code": 2,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\gpu-sleef-gelu-prefix-stage-localization-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        },
+        "elapsed_seconds": 43.39690749999136,
+        "completed_utc": "2026-10-15T10:47:20.757426+00:00"
+      }
+    }
+  ],
+  "preconditions": {
+    "first_sleef_api_attempt": "Compilation CS0136; no numerical execution. Corrected in f56408a before intended missing-API Red.",
+    "first_prefix_attempt": "Unity Mono cannot open 264-character capture path. Verified hash-preserving short copy; rerun separately.",
+    "first_fused_witness_attempt": "Uniform fixture did not distinguish rounding. Replaced with fixed procedural-corpus witnesses; assertions retained."
+  },
+  "localization": {
+    "scope": "offline_same_input_rounding_probe_only",
+    "count": 49152,
+    "comparisons": [
+      {
+        "formula": "separate",
+        "native_bit_differences": 147,
+        "gpu_bit_differences": 149,
+        "witnesses": [
+          {
+            "index": 324,
+            "input": -1.8951334953308105,
+            "expected": -0.05502096936106682,
+            "actual": -0.055021025240421295,
+            "gpu": -0.05502096936106682
+          },
+          {
+            "index": 1062,
+            "input": -0.9991238117218018,
+            "expected": -0.15888062119483948,
+            "actual": -0.1588805913925171,
+            "gpu": -0.15888062119483948
+          },
+          {
+            "index": 1117,
+            "input": -1.072245478630066,
+            "expected": -0.15222708880901337,
+            "actual": -0.15222704410552979,
+            "gpu": -0.15222708880901337
+          },
+          {
+            "index": 1129,
+            "input": -1.7627053260803223,
+            "expected": -0.06879410892724991,
+            "actual": -0.06879405677318573,
+            "gpu": -0.06879405677318573
+          },
+          {
+            "index": 1801,
+            "input": -1.7607425451278687,
+            "expected": -0.06901104748249054,
+            "actual": -0.06901099532842636,
+            "gpu": -0.06901099532842636
+          }
+        ],
+        "gpu_inner_bit_differences": 395
+      },
+      {
+        "formula": "fma_inner",
+        "native_bit_differences": 0,
+        "gpu_bit_differences": 82,
+        "witnesses": [],
+        "gpu_inner_bit_differences": 203
+      },
+      {
+        "formula": "dekker_inner",
+        "native_bit_differences": 0,
+        "gpu_bit_differences": 82,
+        "witnesses": [],
+        "gpu_inner_bit_differences": 203
+      },
+      {
+        "formula": "fma_beta",
+        "native_bit_differences": 2802,
+        "gpu_bit_differences": 2804,
+        "witnesses": [
+          {
+            "index": 22,
+            "input": -0.7006715536117554,
+            "expected": -0.16944560408592224,
+            "actual": -0.16944563388824463,
+            "gpu": -0.16944560408592224
+          },
+          {
+            "index": 92,
+            "input": -1.0524559020996094,
+            "expected": -0.15414011478424072,
+            "actual": -0.15414008498191833,
+            "gpu": -0.15414011478424072
+          },
+          {
+            "index": 96,
+            "input": -1.985658884048462,
+            "expected": -0.04664818197488785,
+            "actual": -0.04664812237024307,
+            "gpu": -0.04664812237024307
+          },
+          {
+            "index": 111,
+            "input": -0.40754732489585876,
+            "expected": -0.13930898904800415,
+            "actual": -0.13930897414684296,
+            "gpu": -0.13930898904800415
+          },
+          {
+            "index": 130,
+            "input": -0.0367465540766716,
+            "expected": -0.017834702506661415,
+            "actual": -0.017834704369306564,
+            "gpu": -0.017834702506661415
+          }
+        ],
+        "gpu_inner_bit_differences": 12859
+      },
+      {
+        "formula": "fma_last_cube",
+        "native_bit_differences": 108,
+        "gpu_bit_differences": 124,
+        "witnesses": [
+          {
+            "index": 96,
+            "input": -1.985658884048462,
+            "expected": -0.04664818197488785,
+            "actual": -0.04664812237024307,
+            "gpu": -0.04664812237024307
+          },
+          {
+            "index": 324,
+            "input": -1.8951334953308105,
+            "expected": -0.05502096936106682,
+            "actual": -0.055021025240421295,
+            "gpu": -0.05502096936106682
+          },
+          {
+            "index": 1117,
+            "input": -1.072245478630066,
+            "expected": -0.15222708880901337,
+            "actual": -0.15222704410552979,
+            "gpu": -0.15222708880901337
+          },
+          {
+            "index": 1129,
+            "input": -1.7627053260803223,
+            "expected": -0.06879410892724991,
+            "actual": -0.06879405677318573,
+            "gpu": -0.06879405677318573
+          },
+          {
+            "index": 1752,
+            "input": -1.4076762199401855,
+            "expected": -0.11230211704969406,
+            "actual": -0.11230207979679108,
+            "gpu": -0.11230211704969406
+          }
+        ],
+        "gpu_inner_bit_differences": 305
+      }
+    ],
+    "fma_vs_dekker_inner_bits": 0,
+    "stage_localization": {
+      "inner_bit_differences": 203,
+      "same_gpu_inner_tanh_bit_differences": 0,
+      "expected_inner_tanh_bit_differences": 115,
+      "after_equation_bit_differences": 82
+    }
+  },
+  "component_reference_context": "Captured Linux AVX2 first-layer prefix; capture does not reproduce original AVX512 final golden. Its same-input operator gate is not original all-model qualification.",
+  "original_image_all_cases_validated": false,
+  "end_to_end_validated": false,
+  "stages_3_4_complete": false,
+  "precise_gpu_component": {
+    "file": "gpu-sleef-gelu-precise-prefix-green-20261015.xml",
+    "sha256": "4edacae3edc033718a3c1f331d6057ff1bcaddb7387b232b3817860efe33bbc3",
+    "totals": {
+      "id": "2",
+      "testcasecount": "13",
+      "result": "Passed",
+      "total": "13",
+      "passed": "13",
+      "failed": "0",
+      "inconclusive": "0",
+      "skipped": "0",
+      "asserts": "0",
+      "engine-version": "3.5.0.0",
+      "clr-version": "4.0.30319.42000",
+      "start-time": "2026-10-15 10:49:09Z",
+      "end-time": "2026-10-15 10:49:10Z",
+      "duration": "0.8965712"
+    },
+    "process": {
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        ".\\artifacts\\acceptance-consumer",
+        "-logFile",
+        ".\\artifacts\\numerical-acceptance-state\\gpu-sleef-gelu-precise-prefix-green-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "GpuGeluTests|FrozenNativeSleefTanhCandidateMustMatchAllBitsOnGpu|FrozenNativeTanhCandidateMustMatchAllBitsOnGpu|VisionGeluGpuTests.CapturedOriginalLinuxPrefixSleefGeluMustMatchNativeBitsOnGpu",
+        "-testResults",
+        ".\\artifacts\\numerical-acceptance-state\\gpu-sleef-gelu-precise-prefix-green-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": true,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-15T10:48:31.526407+00:00",
+      "pid": 72072,
+      "exit_code": 0,
+      "unity_results": ".\\artifacts\\numerical-acceptance-state\\gpu-sleef-gelu-precise-prefix-green-20261015.xml",
+      "unity_counts": {
+        "total": 13,
+        "passed": 13,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 43.56887600000482,
+      "completed_utc": "2026-10-15T10:49:15.095285+00:00"
+    }
+  },
+  "precise_native_prefix": {
+    "file": "vision-original-prefix-sleef-gelu-gpu-105e09b822a281491c02e1c91160c317f3037cb1.json",
+    "sha256": "f389470164b28d009dc5617970228a0c000ce77f924a4d97a5b257020bbc9bc7",
+    "report": {
+      "success": true,
+      "runtime_source": "105e09b822a281491c02e1c91160c317f3037cb1",
+      "scope": "captured_linux_avx2_original_first_gelu_prefix_only",
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "reference_reproduces_original_golden": false,
+      "separate": {
+        "bit_differences": 194,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 1.1920928955078125e-07,
+        "maximum_tolerance_ratio": 0.007057317509716229
+      },
+      "fused": {
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      "capture_sha256": "379541f31ef4e3778d0d847a74fa9eead745268e4065ad8f632342e89d445c57",
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0
+    }
+  },
+  "whole_precise_first_attempt": {
+    "test": {
+      "file": "vision-original-context-precise-sleef-gelu-square0-20261015.xml",
+      "sha256": "f11b78256d2e2993921b16058103de043bd18d60405d00d95115d1c45806a06e",
+      "totals": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Failed(Child)",
+        "total": "1",
+        "passed": "0",
+        "failed": "1",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 10:50:31Z",
+        "end-time": "2026-10-15 10:51:05Z",
+        "duration": "33.5269184"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\vision-original-context-precise-sleef-gelu-square0-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "OriginalContextPreciseSleefGeluSquareZeroMustMatchOriginalOnGpu",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\vision-original-context-precise-sleef-gelu-square0-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T10:49:53.466290+00:00",
+        "pid": 94708,
+        "exit_code": 2,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\vision-original-context-precise-sleef-gelu-square0-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        },
+        "elapsed_seconds": 76.1943054000003,
+        "completed_utc": "2026-10-15T10:51:09.660597+00:00"
+      }
+    },
+    "qualification": "Post-inference harness failure: expected 32 old internal Worker rows but got 16 direct GPU kernel rows; original numerical comparison not reached."
+  },
+  "precise_gpu_full_image": {
+    "file": "vision-original-context-precise-sleef-gelu-softmax16-all-rms-block192-whole-gpu-155d5520d9d69f1236270f7cd3e3dfc03200d6f9-square-0.json",
+    "sha256": "f93ff08616c236c21eb9782edcbb676a3dce29c8acb64969f581422a026f1aaf",
+    "success": false,
+    "runtime_source": "155d5520d9d69f1236270f7cd3e3dfc03200d6f9",
+    "actual_backend": "GPUCompute",
+    "gpu_operation_count": 178,
+    "segment_count": 179,
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "host_peak_working_set_bytes": 4940636160,
+    "execute_and_final_download_ms": 16837.3414,
+    "mismatched_elements": 1,
+    "maximum_absolute_error": 2.753734588623047e-05,
+    "maximum_tolerance_ratio": 1.085958475244881,
+    "original_coefficient_bytes_preserved": true,
+    "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+    "capture_sha256": "b5bb5738486c2662057b15edb9913437ea72e2dc9e5feb9515b4db17d1c63363",
+    "fused_gelu_inner": true,
+    "softmax_vector_width": 16,
+    "precise_sleef_gelu": true,
+    "test": {
+      "file": "vision-original-context-precise-sleef-gelu-fixed-audit-square0-20261015.xml",
+      "sha256": "dec3c97b5398e277e645757de81de1d302906459886f363a85903f7fb1db72d9",
+      "totals": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Failed(Child)",
+        "total": "1",
+        "passed": "0",
+        "failed": "1",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 10:52:17Z",
+        "end-time": "2026-10-15 10:52:51Z",
+        "duration": "33.5506701"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\vision-original-context-precise-sleef-gelu-fixed-audit-square0-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "OriginalContextPreciseSleefGeluSquareZeroMustMatchOriginalOnGpu",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\vision-original-context-precise-sleef-gelu-fixed-audit-square0-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T10:51:38.300742+00:00",
+        "pid": 41884,
+        "exit_code": 2,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\vision-original-context-precise-sleef-gelu-fixed-audit-square0-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        },
+        "elapsed_seconds": 77.34145049999643,
+        "completed_utc": "2026-10-15T10:52:55.642194+00:00"
+      }
+    },
+    "remaining_original_gate_failures": [
+      {
+        "index": 12918,
+        "row": 25,
+        "column": 118,
+        "actual": 0.016758710145950317,
+        "expected": 0.016771391034126282,
+        "difference": 1.2680888175964355e-05,
+        "bound": 1.1677139103412628e-05
+      }
+    ],
+    "resource_log": {
+      "file": "vision-original-context-precise-sleef-gelu-fixed-audit-resources-20261015.jsonl",
+      "sha256": "de73a2473c68a4a4d941a229b7b71a4b58e00629ed0d75585bb3c6a0161cc2d1"
+    },
+    "adopted": false,
+    "other_five_image_cases_executed": false
+  },
+  "package_checks": {
+    "file": "precise-gelu-package-green-20261015.xml",
+    "sha256": "39c513fd1a2afe8f7d8ab3b8638494014d0fe209a2a01a1f24588b4296739d45",
+    "totals": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "22",
+      "time": "1.951",
+      "timestamp": "2026-10-15T19:52:12.845843+09:00",
+      "hostname": "DESKTOP-7PPH62N"
+    }
+  },
+  "native_softmax_prefix": {
+    "file": "vision-original-prefix-softmax-gpu-cef18c28af3540d2c2817249ba4f7ca8b1c9b75a.json",
+    "sha256": "e11e716d6676bbad175800c43028c994ad2ebe4fd14421461c0ceb8544bc834e",
+    "report": {
+      "success": true,
+      "runtime_source": "cef18c28af3540d2c2817249ba4f7ca8b1c9b75a",
+      "scope": "captured_linux_avx2_original_first_softmax_prefix_only",
+      "reference_reproduces_original_golden": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "candidate": {
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "capture_sha256": "1b504b14d71b949e6216ccdc2ff3070309a8906c39df2e44ff6b05d1015948d4"
+    },
+    "test": {
+      "file": "gpu-original-first-softmax-prefix-bit-gate-20261015.xml",
+      "sha256": "377c2d72e7d38a58088d9dcca12937cdb5039608e2a4ad535c739123f994780d",
+      "totals": {
+        "id": "2",
+        "testcasecount": "5",
+        "result": "Passed",
+        "total": "5",
+        "passed": "5",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 10:55:04Z",
+        "end-time": "2026-10-15 10:55:05Z",
+        "duration": "0.7789587"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-original-first-softmax-prefix-bit-gate-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "CapturedOriginalLinuxPrefixSoftmaxMustMatchNativeBitsOnGpu|GpuSoftmaxVectorWidthTests",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-original-first-softmax-prefix-bit-gate-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": true,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T10:54:27.204872+00:00",
+        "pid": 100976,
+        "exit_code": 0,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\gpu-original-first-softmax-prefix-bit-gate-20261015.xml",
+        "unity_counts": {
+          "total": 5,
+          "passed": 5,
+          "failed": 0,
+          "skipped": 0
+        },
+        "elapsed_seconds": 42.516653500002576,
+        "completed_utc": "2026-10-15T10:55:09.721526+00:00"
+      }
+    }
+  },
+  "avx512_prerequisite_workflow_tests": [
+    {
+      "file": "original-avx512-prerequisite-red-20261015.xml",
+      "sha256": "d96c09c4225bafb16ec7562d2045b516bcae7f6cd64d206d7a942a8cd5196ebb",
+      "totals": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "2",
+        "skipped": "0",
+        "tests": "2",
+        "time": "0.156",
+        "timestamp": "2026-10-15T19:56:21.299102+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      }
+    },
+    {
+      "file": "original-avx512-prerequisite-green-20261015.xml",
+      "sha256": "aa06f15a1fff90f3bd41a1bcfcf352352ab9ffd2d17b0dede62293851b7f6439",
+      "totals": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "26",
+        "time": "0.522",
+        "timestamp": "2026-10-15T19:56:44.793297+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      }
+    }
+  ]
+}

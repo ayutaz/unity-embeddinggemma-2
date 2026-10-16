@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-13",
+  "scope": "synthetic_audio_encoder_runtime_contract_and_device_ownership_only",
+  "unity": "6000.3.21f1",
+  "sentis": "2.6.1",
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "editor_pid": 16260,
+  "runtime_source_overlay": false,
+  "consumer_kind": "existing_fixed_git_consumer_update_not_fresh_install",
+  "test_framework": "official_1.6.0_embedded",
+  "red": {
+    "runtime_git": "8a7d2f0dea30be95a3158830fb0d9c9de895efc4",
+    "assertion_failed": 23,
+    "passed": 0,
+    "skipped": 0,
+    "cli_exit_code": 1,
+    "failure": "Audio encoder Runtime API is missing: AudioEncoderProfile",
+    "report_sha256": "685a48bf534e40e3b768fef6c6dd3ed81c82484785dd9f0167d63bdc3b52b5ff"
+  },
+  "green": {
+    "runtime_requested_and_resolved_git": "235d9fa7b276aaad99c62074a10ba9a58ffdc8d8",
+    "passed": 23,
+    "failed": 0,
+    "skipped": 0,
+    "cli_exit_code": 0,
+    "compile_errors": 0,
+    "compile_warnings": 0,
+    "report_sha256": "8fda263a5ebf47574084a536260ac76c6aae049061cb4a8be69d4576938e2e81"
+  },
+  "package_regression": {
+    "runtime_git": "235d9fa7b276aaad99c62074a10ba9a58ffdc8d8",
+    "passed": 165,
+    "failed": 0,
+    "skipped": 0,
+    "cli_exit_code": 0,
+    "report_sha256": "39523414fa8b9d51180c058d9e090b6ba612dffd3f4746723d0ac4fe57688269"
+  },
+  "typed_api_refactor_green": {
+    "runtime_requested_and_resolved_git": "9de71f73c67620a23b8683ab4746366dde347716",
+    "passed": 23,
+    "failed": 0,
+    "skipped": 0,
+    "cli_exit_code": 0,
+    "compile_errors": 0,
+    "compile_warnings": 0,
+    "report_sha256": "cc4af7d959ed7088a220067f6ae5418d048567449f15698d8520182fafca73c9"
+  },
+  "fixed_git_source_audit": {
+    "normalization": "CRLF to LF only",
+    "runtime_cache_matches": true,
+    "typed_test_cache_matches": true,
+    "runtime_canonical_lf_sha256": "b31cb867450bc6f434d85d4e4650f47f6d5b767f25f0072b0ffbcf28aab7ea3b",
+    "test_canonical_lf_sha256": "e0ed457f8ef13e3682d9f3ff5a247e1c9bac2d511360d6c903c80012c15c8fbb"
+  },
+  "gpu_fallback_and_flush_assertions_passed": true,
+  "intermediate_cpu_readback_used_by_runtime": false,
+  "diagnostic_result_readback_after_inference": true,
+  "real_encoder_numeric_acceptance": false,
+  "final_audio_embedding_api_validated": false,
+  "formal_release_created": false
+}

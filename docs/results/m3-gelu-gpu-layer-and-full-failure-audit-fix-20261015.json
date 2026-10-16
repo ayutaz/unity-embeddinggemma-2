@@ -1,0 +1,424 @@
+{
+  "scope": "gpu_gelu_local_and_original_layer_acceptance_failed_full_candidate_and_accelerated_identical_coefficient_audit",
+  "original_references_changed": false,
+  "learned_coefficients_changed": false,
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "all_runtime_float_arithmetic_fp32": true,
+  "original_internal_gelu_native_reference_available": false,
+  "preparation": {
+    "file": "vision-gelu-reference-preparation-20261015.json",
+    "sha256": "299a1103cf47a5d1751dd30ce5fb7bf163103953a7bb690f0798943012d678cc",
+    "result": {
+      "reference": {
+        "scope": "full_captured_gate_projection_current_cpu_tanh_gelu_equation_only",
+        "producer": "769d502e61b864c556ffffc17d48d052f57f5915",
+        "torch_version": "2.14.1+cpu",
+        "torch_git": "5c4886908584029761b579af026dcfb627c84070",
+        "shape": [
+          2520,
+          3072
+        ],
+        "input": {
+          "file": "projection-4-output-fp32.bin",
+          "sha256": "1478cf36007708e04cb8bd771e763a369c60db26169c995709da9ffeb842a69b"
+        },
+        "expected": {
+          "file": "expected-fp32.bin",
+          "sha256": "f32272b3bd0f5bb81d0d2677de923669985621653434d48b4048b4cd02e2624b"
+        },
+        "original_layer_model": {
+          "file": "layer0.sentis",
+          "sha256": "d09b8884fae82ecd0245967774a0c8671efe09156c50367c45b9f133fc53983d"
+        },
+        "original_internal_native_reference_available": false,
+        "gpu_validated": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false
+      },
+      "reference_sha256": "e8dc7c1a82b3ac06e902554a67c9235db547141408c0067ce9136abfcaa9ceaa"
+    }
+  },
+  "api_intended_red": {
+    "file": "vision-gelu-owned-api-red-20261015-process.json",
+    "sha256": "02ca235f1fedab2d855d3444aa4d4381adefa58529f629ba27c1298751dd6267",
+    "exit_code": 2,
+    "elapsed_seconds": 45.65680789999897,
+    "xml_sha256": "2c277582253ef0166bf04ed0d3002138ff4757c25ca1d190408aa56bb99b63cc",
+    "counts": {
+      "total": 5,
+      "passed": 0,
+      "failed": 5,
+      "skipped": 0
+    },
+    "failures": [
+      {
+        "name": "EmbeddingGemma.Tests.GpuGeluTests.GpuGeluPreservesInputAndReturnsOwnedResultsAcrossReuseAndDispose(False)",
+        "message": "  Fixed-shape GPU tanh GELU is missing.\n  Expected: not null\n  But was:  null\n"
+      },
+      {
+        "name": "EmbeddingGemma.Tests.GpuGeluTests.GpuGeluPreservesInputAndReturnsOwnedResultsAcrossReuseAndDispose(True)",
+        "message": "  Fixed-shape GPU tanh GELU is missing.\n  Expected: not null\n  But was:  null\n"
+      },
+      {
+        "name": "EmbeddingGemma.Tests.GpuGeluTests.GpuGeluRejectsEmptyFixedShape",
+        "message": "  Expected: <System.ArgumentException>\n  But was:  <NUnit.Framework.AssertionException:   Fixed-shape GPU tanh GELU is missing.\n  Expected: not null\n  But was:  null\n\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \n  at EmbeddingGemma.Tests.GpuGeluTests.Create (Unity.InferenceEngine.TensorShape shape) [0x00035] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma@2444a6439b61\\Tests\\Editor\\GpuGeluTests.cs:16 \n  at EmbeddingGemma.Tests.GpuGeluTests+<>c.<GpuGeluRejectsEmptyFixedShape>b__5_0 () [0x00000] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma@2444a6439b61\\Tests\\Editor\\GpuGeluTests.cs:46 \n  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x0002f] in <f577cd9686154d6ab10efd7e65e64366>:0 >\n"
+      },
+      {
+        "name": "EmbeddingGemma.Tests.GpuGeluTests.GpuGeluRejectsInvalidInputsAndRemainsReusable",
+        "message": "  Fixed-shape GPU tanh GELU is missing.\n  Expected: not null\n  But was:  null\n"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.VisionGeluGpuTests.OriginalGateProjectionGeluMatchesCurrentCpuEquationOnGpu",
+        "message": "  GPU GELU candidate is missing.\n  Expected: not null\n  But was:  null\n"
+      }
+    ]
+  },
+  "initial_api_and_pipeline_green_with_unexecuted_real_numerical_case": {
+    "file": "vision-gelu-owned-api-and-related-gpu-20261015-process.json",
+    "sha256": "efd67e3fc1dcd3ec702c398bd615c96d35a09bb43af0169739d958a647486beb",
+    "exit_code": 2,
+    "elapsed_seconds": 47.48702020000201,
+    "xml_sha256": "4d4867459b93cc166083afbb54b0180e6b9f0653126c5b73dfdb39a5795409d8",
+    "counts": {
+      "total": 10,
+      "passed": 9,
+      "failed": 1,
+      "skipped": 0
+    },
+    "failures": [
+      {
+        "name": "EmbeddingGemma.Validation.Tests.VisionGeluGpuTests.OriginalGateProjectionGeluMatchesCurrentCpuEquationOnGpu",
+        "message": "  Expected: 250\n  But was:  253\n"
+      }
+    ]
+  },
+  "initial_real_fixture": {
+    "file": "vision-gelu-gpu-c3d74b3547987c02fec6d78fee38bc1b43305759.json",
+    "sha256": "a0814f8f2610808358253fa6808ed602c419c07ae0030a095f94a9481c45a5b5",
+    "result": {
+      "success": false,
+      "runtime_source": "c3d74b3547987c02fec6d78fee38bc1b43305759",
+      "scope": "captured_gate_gelu_against_independent_current_cpu_equation_only",
+      "original_internal_native_reference_available": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "failure_message": "NUnit.Framework.AssertionException:   Expected: 250"
+    }
+  },
+  "initial_real_fixture_failure_reason": "A source Reshape separates static projection and GeluFast. Initial assertion failed before GPU comparison; preserve as missing numerical execution, not a GELU numerical failure.",
+  "marker_intended_red_and_real_equation": {
+    "file": "vision-gelu-markers-red-and-real-equation-20261015-process.json",
+    "sha256": "50cea4a1405ee9e8fbe4a8c69695eded6fddda5d4ce111a6e227765af936fc99",
+    "exit_code": 2,
+    "elapsed_seconds": 45.54109800000151,
+    "xml_sha256": "0cdd8bf68308ab7cfceb0ce8d1d5042b9337e034ac11497249135b59d64df5d5",
+    "counts": {
+      "total": 3,
+      "passed": 1,
+      "failed": 2,
+      "skipped": 0
+    },
+    "failures": [
+      {
+        "name": "EmbeddingGemma.Validation.Tests.SavedProjectionPartitionTests.SavedGeluMarkerRejectsModelWithoutGeluAndKeepsSource",
+        "message": "  Saved GELU GPU markers are missing.\n  Expected: not null\n  But was:  null\n"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.SavedProjectionPartitionTests.SavedGeluMarkerRetainsResidualAndOriginalModelBytes",
+        "message": "  Saved GELU GPU markers are missing.\n  Expected: not null\n  But was:  null\n"
+      }
+    ]
+  },
+  "local_gelu": {
+    "file": "vision-gelu-gpu-c9957b3569a94c14c7313ddf25662ab13643f812.json",
+    "sha256": "b55ecc9d7e69e9b98451d6722176d3dd005b82041c7cb4f07c9bebc0a5ce631f",
+    "result": {
+      "success": true,
+      "runtime_source": "c9957b3569a94c14c7313ddf25662ab13643f812",
+      "scope": "captured_gate_gelu_against_independent_current_cpu_equation_only",
+      "original_internal_native_reference_available": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "original_projection_reshape_preserved": true,
+      "baseline": {
+        "bit_differences": 3048817,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 9.5367431640625e-07,
+        "maximum_tolerance_ratio": 0.0410402973435777
+      },
+      "candidate": {
+        "bit_differences": 6716,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 2.384185791015625e-07,
+        "maximum_tolerance_ratio": 0.015367250227882321
+      },
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0
+    }
+  },
+  "related_and_original_layer_green": {
+    "file": "vision-native-gelu-layer-and-related-gpu-20261015-process.json",
+    "sha256": "0bc87dcbbebee8eb51175622c9067cedac4c8e15ea1c5492b02f610aec73b89b",
+    "exit_code": 0,
+    "elapsed_seconds": 50.10275530000217,
+    "xml_sha256": "7e28114e1335e68db7b38d88c38d0a38037f26a6175804993da2936634b70c90",
+    "counts": {
+      "total": 16,
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0
+    },
+    "failures": []
+  },
+  "original_layer0": {
+    "file": "vision-layer0-native-gelu-inline-rms-gpu-61a4dcea5d86bd6f5ef465d280918b6991896d1a.json",
+    "sha256": "3f93d8f72aab07b73d42f68d50906746dea2fd92aaa5086d4bef36a05192526f",
+    "result": {
+      "success": true,
+      "scope": "original_vision_layer0_native_gelu_inline_rms_and_seven_native_gpu_projections_candidate",
+      "runtime_source": "61a4dcea5d86bd6f5ef465d280918b6991896d1a",
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "phase": "completed",
+      "inline_rms_count": 7,
+      "layer_count": 1220,
+      "gelu_count": 1,
+      "projections": [
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e0f98883c238d21192d6e086f0205f07c428847307a94817d34f3adf20e7338f"
+        },
+        {
+          "kind": "native_tanh_gelu",
+          "rows": 2520,
+          "width": 3072
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e9f675da30561ba275e17507b5455fda4d49e6a883747c5678d2a46eb8df0102"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "0174befbd8ff8c841032996393c3e80d3334dfc8dbd10ee58d804a420601de5a"
+        }
+      ],
+      "prepare_ms": 509.86190000000005,
+      "segment_count": 9,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "execute_and_final_download_ms": 1341.4022,
+      "capture_sha256": "fe3b9fe2e554d83acf9bbf82e6f89974c78db06a93f99cad4f63a7ac251e59ba",
+      "actual_backend": "GPUCompute",
+      "bit_differences": 1515672,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 2.09808349609375e-05,
+      "maximum_tolerance_ratio": 0.8429030931171905,
+      "source_model_bytes_preserved": true,
+      "source_model_serialized_sha256": "0e934178e391f2aea5bd691b6a59c441c8304500afc36e4be321c776ed873634"
+    }
+  },
+  "package_regression": {
+    "file": "vision-gelu-package-green-20261015.xml",
+    "sha256": "c20bdbe15caf4703e8f00544d049e138363b7e66fcd45582b7ff4be0fec882d7",
+    "tests": 22,
+    "failures": 0,
+    "errors": 0
+  },
+  "full_candidate_execution": {
+    "file": "vision-native-gelu-inline-rms-square0-20261015-process.json",
+    "sha256": "b995bbdb3369d5d059412cd5a924b93a035f9b471131b581fb84ddf28f5ab5e7",
+    "exit_code": 2,
+    "elapsed_seconds": 170.4058398000052,
+    "xml_sha256": "4009d5d483ebac74559813a38cac831f753d958e19dcaee7aa24e5c291cccad6",
+    "counts": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "failures": [
+      {
+        "name": "EmbeddingGemma.Validation.Tests.VisionNativePatchWholeGpuTests.NativeGeluAndInlineVisionRmsEncoderMustMatchGoldenOnGpu(\"square-0\")",
+        "message": "  Keep the unchanged original FP32 elementwise gate.\n  Expected: 0\n  But was:  571\n"
+      }
+    ]
+  },
+  "full_candidate": {
+    "file": "vision-native-gelu-inline-rms-whole-gpu-ca6883efdd696db4d0ef0355b5ede2afe666f48c-square-0.json",
+    "sha256": "fdbe2d2c73ca4049086a06e41d4fa88d5f115fc95d8d852945216461f0fb8aea",
+    "result": {
+      "success": false,
+      "scope": "one_original_vision_encoder_gpu_native_gelu_all_layer_rms_and_patch384_candidate",
+      "runtime_source": "ca6883efdd696db4d0ef0355b5ede2afe666f48c",
+      "case_id": "square-0",
+      "phase": "completed",
+      "all_profiles_validated": false,
+      "end_to_end_validated": false,
+      "model_file_audit_ms": 517.4015,
+      "profile": "square",
+      "saved_model_sha256": "4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7",
+      "model_load_ms": 1006.1146,
+      "coefficient_audit_before_ms": 46802.0549,
+      "inline_rms_count": 112,
+      "layer_count": 19535,
+      "original_square_count": 113,
+      "remaining_original_rms_count": 1,
+      "all_original_coefficient_descriptors_retained": true,
+      "graph_rewrite_ms": 1550.6714000000002,
+      "native_gelu_count": 16,
+      "pipeline_prepare_ms": 1401.9442000000001,
+      "segment_count": 18,
+      "gpu_operation_count": 17,
+      "prepare_ms": 50765.783800000005,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "host_working_set_before_execute_bytes": 3287871488,
+      "execute_and_final_download_ms": 25902.563100000003,
+      "host_working_set_after_download_bytes": 9934274560,
+      "host_peak_working_set_bytes": 9934274560,
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 571,
+      "maximum_absolute_error": 0.00012803077697753906,
+      "maximum_tolerance_ratio": 6.883228917760353,
+      "original_coefficient_bytes_preserved": true,
+      "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+      "coefficient_audit_after_ms": 46135.065,
+      "failure_message": "NUnit.Framework.AssertionException:   Keep the unchanged original FP32 elementwise gate."
+    }
+  },
+  "full_candidate_adopted": false,
+  "full_candidate_repetition_stopped": true,
+  "resource_observation": {
+    "source": "manual tool snapshot while owned Unity PID 56296 was alive",
+    "gpu_used_mib": 15638,
+    "gpu_total_mib": 16376,
+    "host_working_set_bytes": 9934381056,
+    "precise_observation_timestamp_recorded": false,
+    "worker_cache_cause": "Inferred from high use and pinned per-Worker TensorPool reuse; not yet verified by a controlled cache-release comparison."
+  },
+  "coefficient_audit_compile_failure": {
+    "file": "vision-coefficient-audit-red-20261015-process.json",
+    "sha256": "d6e45d006b849147e1d67638ab539519bfa27e1f4bd22a021acfe14233e14966",
+    "exit_code": 1,
+    "elapsed_seconds": 24.835353700007545,
+    "missing_execution_evidence": "Unity execution XML is missing or invalid"
+  },
+  "coefficient_audit_compile_failure_reason": "Unsupported NUnit Is.AnyOf and wrong explicit model-loader namespace. Corrected before intended missing-implementation Red.",
+  "coefficient_audit_intended_red": {
+    "file": "vision-coefficient-audit-fixed-fixture-red-20261015-process.json",
+    "sha256": "f1eeee9db0118b2c68c7979877794abff2f6bc4accfd35389cf678ad8dcbfed0",
+    "exit_code": 2,
+    "elapsed_seconds": 41.48117219998676,
+    "xml_sha256": "88e825b880187c599b637bba4c49d68299deed9fe39ed868a29eac37ccaa412b",
+    "counts": {
+      "total": 3,
+      "passed": 0,
+      "failed": 3,
+      "skipped": 0
+    },
+    "failures": [
+      {
+        "name": "EmbeddingGemma.Validation.Tests.ModelCoefficientHashTests.CoefficientAuditMatchesIndependentConcatenationAndPreservesBorrowedSegments(False)",
+        "message": "  Accelerated borrowed coefficient-byte audit is missing.\n  Expected: not null\n  But was:  null\n"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.ModelCoefficientHashTests.CoefficientAuditMatchesIndependentConcatenationAndPreservesBorrowedSegments(True)",
+        "message": "  Accelerated borrowed coefficient-byte audit is missing.\n  Expected: not null\n  But was:  null\n"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.ModelCoefficientHashTests.CoefficientAuditMatchesPinnedWholeVisionDigestWithoutModelInference",
+        "message": "  Accelerated borrowed coefficient-byte audit is missing.\n  Expected: not null\n  But was:  null\n"
+      }
+    ]
+  },
+  "coefficient_audit_and_native_hash_green": {
+    "file": "vision-coefficient-audit-and-hash-regression-green-20261015-process.json",
+    "sha256": "413cdcd54351b15d98f288d66374115606113a05b6c680a38b723cf1d8fb8c2c",
+    "exit_code": 0,
+    "elapsed_seconds": 47.28523120000318,
+    "xml_sha256": "3151954a04d81e43516268c57fcc443c72f1e773e9d1cf1ae48a0c103990a241",
+    "counts": {
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0
+    },
+    "failures": []
+  },
+  "accelerated_same_coefficient_audit": {
+    "file": "vision-coefficient-audit-1db7f961f989b3ae4ab74098dd36466472424999.json",
+    "sha256": "c9e913f4974bae3275107a985b65cbb477ab3a4509abcb8bd8e1a29d3d7df1b3",
+    "result": {
+      "success": true,
+      "runtime_source": "1db7f961f989b3ae4ab74098dd36466472424999",
+      "scope": "same_pinned_original_coefficient_bytes_hash_only_no_model_inference",
+      "digest": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+      "backend": "windows_cng",
+      "audit_ms": 466.9891,
+      "model_inference_performed": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false
+    }
+  },
+  "audit_timing_limits": "Same pinned ordered coefficient bytes and digest; isolated single-run native audit timing compared with instrumented prior IncrementalHash audit. Does not establish full-encoder numerical acceptance or overall throughput.",
+  "existing_runtime_files_unchanged": true,
+  "new_runtime_file_only": "GpuGelu.cs",
+  "gpu_tanh_softmax_batched_matmul_and_audio_paths_unchanged": true,
+  "full_candidate_not_repeated_after_audit_change": true,
+  "image_all_three_profiles_validated": false,
+  "end_to_end_validated": false,
+  "other_cases_not_executed_for_this_candidate": [
+    "square-1",
+    "landscape-0",
+    "landscape-1",
+    "portrait-0",
+    "portrait-1"
+  ],
+  "next_action": "Use small TDD cases to verify an opt-in policy that releases unused per-stage GPU cache without altering live tensors or output bits; independently qualify attention/softmax arithmetic before another full image candidate.",
+  "remaining": [
+    "all original image profile conditions and remaining original RMS",
+    "actual PCM/Texture to GPU preprocessing encoder backbone normalized 768 APIs with required roles masks boundaries ownership Dispose error reuse and text regression",
+    "stage3/4 samples and Player verification"
+  ]
+}

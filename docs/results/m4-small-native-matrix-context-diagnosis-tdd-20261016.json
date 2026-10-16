@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "small_original_qualified_native_matrix_contexts_diagnostic_only",
+  "red": {
+    "file": "native-matmul-context-red-20261016.xml",
+    "sha256": "7f457217394c97543d3ccbaf3d8c6717a35c0aa4695e56166e1cdd43421f9e43",
+    "tests": "5",
+    "failures": "5",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.111"
+  },
+  "related_green": {
+    "file": "native-matmul-context-related-green-20261016.xml",
+    "sha256": "78d56e899273529da6308c62e8b68557bd1dfe087824e7c302699835aa2cf8d9",
+    "tests": "30",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "8.034"
+  },
+  "behavior": [
+    "Only explicit matrix_probe workflow job, with pinned audited original one-matrix fixture and no encoder download.",
+    "Fresh children compare inherited native default to MKL_ENABLE_INSTRUCTIONS=AVX2 before Torch initialization.",
+    "ATen/oneDNN/default native model reference/export and product GPU Runtime unchanged.",
+    "Both workers use identical source-verified original captures and retain output metrics, original source, CPU capabilities and MKL verbose logs.",
+    "Each worker timeout120seconds; workflow10minutes; partial failure receipt retained; no skipped/failed numerical result counted as pass."
+  ],
+  "primary_documentation": "https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2023-2/instruction-set-specific-dispatch-on-intel-archs.html",
+  "interpretation": "Intel documents MKL_ENABLE_INSTRUCTIONS=AVX2 as limiting dispatch on Intel CPUs. Whether this reproduces the original matrix remains an untested hypothesis. This setting does not qualify the model or GPU.",
+  "real_native_context_probe_pending": true,
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "local_child_process_integration": {
+    "execution_environment": "local_AVX2_not_GitHub_Actions",
+    "report_sha256": "6e9f549595293243f28e3d07a3de03604a052b5e7510537fc877ea591344491e",
+    "reported_job_source_environment_is_base_sha_only": true,
+    "complete": true,
+    "same_original_fixture": true,
+    "cases": [
+      {
+        "context": "default",
+        "metrics": {
+          "actual_finite": true,
+          "same_shape": true,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "worst_index": 0,
+          "worst_actual": -28.171314239501953,
+          "worst_expected": -28.171314239501953,
+          "exact_difference_count": 0
+        }
+      },
+      {
+        "context": "avx2",
+        "metrics": {
+          "actual_finite": true,
+          "same_shape": true,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "worst_index": 0,
+          "worst_actual": -28.171314239501953,
+          "worst_expected": -28.171314239501953,
+          "exact_difference_count": 0
+        }
+      }
+    ],
+    "limit": "Both contexts on already AVX2 local CPU match original matrix. Intel environment diagnosis remains unexecuted."
+  }
+}

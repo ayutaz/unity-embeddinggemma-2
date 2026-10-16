@@ -1,0 +1,61 @@
+{
+  "success": true,
+  "scope": "offline_python_full_regression_only",
+  "run_id": 38654418805,
+  "url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38654418805",
+  "source": "e25217575b591e37f68e37943d49e47986f19682",
+  "environments": [
+    {
+      "environment": "python-ubuntu-latest-3.13",
+      "tests": 843,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-e252-20261015\\python-ubuntu-latest-3.13\\python-tests.xml",
+        "bytes": 118428,
+        "sha256": "4de8422a29f7cfaacaa98a12e1d3f98b292889da78a9b7f62587677ca5e2db6d"
+      }
+    },
+    {
+      "environment": "python-ubuntu-latest-3.14",
+      "tests": 843,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-e252-20261015\\python-ubuntu-latest-3.14\\python-tests.xml",
+        "bytes": 118429,
+        "sha256": "88ddc15f4ae41346853e7a170e55737c6d368da2f4a87c0523dc1b61ba306f5f"
+      }
+    },
+    {
+      "environment": "python-windows-latest-3.13",
+      "tests": 843,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-e252-20261015\\python-windows-latest-3.13\\python-tests.xml",
+        "bytes": 118442,
+        "sha256": "dc2bff2c610b1011304fed6ce20d4b6e28fe8d277485b52d471409b9005b9461"
+      }
+    },
+    {
+      "environment": "python-windows-latest-3.14",
+      "tests": 843,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "artifact": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-e252-20261015\\python-windows-latest-3.14\\python-tests.xml",
+        "bytes": 118435,
+        "sha256": "2c02697d77bc59f0100b6bff7ef12665ef2249233a21851016e0395eab3dca2a"
+      }
+    }
+  ],
+  "unity_validated": false,
+  "gpu_validated": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

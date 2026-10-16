@@ -1,0 +1,123 @@
+{
+  "success": true,
+  "stage": "sentis_projected_features_backbone_only",
+  "encoders_validated": false,
+  "end_to_end_validated": false,
+  "gpu_preprocessing_validated": false,
+  "expected_conditions": 4,
+  "unity": "6000.3.21f1",
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "started_utc": "2026-10-13T00:54:36.1611829Z",
+  "conditions": [
+    {
+      "precision": "fp32",
+      "requested_backend": "CPU",
+      "success": true,
+      "phase": "completed",
+      "saved_sha256": "b1bf3bed14bc2750a6a7078d7fd7b4101da6ffc1d1b2671833675bf06cdf46c7",
+      "saved_bytes": 1176805260,
+      "actual_worker_backend": "CPU",
+      "cpu_computation_or_feature_input_indices": [],
+      "cpu_readback_flush_indices": [],
+      "actual_output_backend": "CPU",
+      "minimum_cosine": 0.9999999998910367
+    },
+    {
+      "precision": "fp32",
+      "requested_backend": "GPUCompute",
+      "success": true,
+      "phase": "completed",
+      "saved_sha256": "b1bf3bed14bc2750a6a7078d7fd7b4101da6ffc1d1b2671833675bf06cdf46c7",
+      "saved_bytes": 1176805260,
+      "actual_worker_backend": "GPUCompute",
+      "cpu_computation_or_feature_input_indices": [],
+      "cpu_readback_flush_indices": [],
+      "actual_output_backend": "GPUCompute",
+      "minimum_cosine": 0.9999999999368913
+    },
+    {
+      "precision": "float16",
+      "requested_backend": "CPU",
+      "success": true,
+      "phase": "completed",
+      "saved_sha256": "ce7bd5f3be6cae7b31407c5d4f11271979f83241064c4b720e441478a22fae1c",
+      "saved_bytes": 634982524,
+      "actual_worker_backend": "CPU",
+      "cpu_computation_or_feature_input_indices": [],
+      "cpu_readback_flush_indices": [],
+      "actual_output_backend": "CPU",
+      "minimum_cosine": 0.9999999998834702
+    },
+    {
+      "precision": "float16",
+      "requested_backend": "GPUCompute",
+      "success": true,
+      "phase": "completed",
+      "saved_sha256": "ce7bd5f3be6cae7b31407c5d4f11271979f83241064c4b720e441478a22fae1c",
+      "saved_bytes": 634982524,
+      "actual_worker_backend": "GPUCompute",
+      "cpu_computation_or_feature_input_indices": [],
+      "cpu_readback_flush_indices": [],
+      "actual_output_backend": "GPUCompute",
+      "minimum_cosine": 0.9999999999423765
+    }
+  ],
+  "reference_source": "e521e39af8962bbe9b9a9821e5608e6ade351639",
+  "config_sha256": "b8f1e9931b57fbc054acdb445c41765d55b0074c58d145fa82839941ad1b5bb3",
+  "completed_utc": "2026-10-13T01:02:12.0459826Z",
+  "artifact_run": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38325796546",
+  "artifact_files": {
+    "backbone.pt2": {
+      "bytes": 1095916312,
+      "sha256": "ea0db38d0794c082798da553f9b81ba6032eff92a572d85792dd4feada4ad6e4"
+    },
+    "backbone-reference.json": {
+      "bytes": 18108176,
+      "sha256": "40bdc220d39a419064391ab8e3d34f624e8001f98c4a7493cb24c9984e61202e"
+    },
+    "processor_config.json": {
+      "bytes": 1788,
+      "sha256": "168f6a08522f3ce5dea596d94d003af2fd691742d4f41fe1f9d8cce76bfbf69c"
+    }
+  },
+  "raw_report_sha256": "2405c2fcb55706b1c4f09e36ec904b6b0783b50f0ebca2d25673c7511d60468d",
+  "fixture_sha256": "e56ebb3cb33da123406880a8d427839afb2b6f3c95355f91fda9d91c8d79ea86",
+  "installed_git_revision": "21e598c5b53d5ad73557ee6d606b12770254d73b",
+  "resolved_package": {
+    "version": "https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/com.ayutaz.embeddinggemma#21e598c5b53d5ad73557ee6d606b12770254d73b",
+    "depth": 0,
+    "source": "git",
+    "dependencies": {
+      "com.unity.ai.inference": "2.6.1",
+      "com.unity.nuget.newtonsoft-json": "3.2.2"
+    },
+    "hash": "21e598c5b53d5ad73557ee6d606b12770254d73b"
+  },
+  "source_audit": {
+    "comparison": "Canonical Git content with Windows CRLF normalization. package.json compared semantically after removing only generated _fingerprint.",
+    "canonical_blob_matches": 97,
+    "source_mismatches": 0,
+    "generated_manifest_metadata": {
+      "_fingerprint": "b592d460c01404cba973fe4e3d65abad6cdc794f"
+    },
+    "audited_source_files": 98,
+    "git_revision": "21e598c5b53d5ad73557ee6d606b12770254d73b",
+    "package_cache": "com.ayutaz.embeddinggemma@b592d460c014",
+    "manifest_semantics_match": true
+  },
+  "runtime_source_overlay_present": false,
+  "git_runtime_upgrade_validated": true,
+  "fresh_consumer_validated": false,
+  "consumer_scope": "Existing Windows consumer upgraded to a pinned Git Runtime package; Runtime source overlays removed. Real text weights with synthetic projected image/audio features, not encoder or end-to-end acceptance. Official Test Framework 1.6.0 embedded workaround retained; not an unmodified built-in environment pass.",
+  "test_runner": {
+    "completed_utc": "2026-10-13T01:02:13.4590208Z",
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "inconclusive": 0,
+    "cli_exit_code": 0,
+    "skip_compile": true,
+    "note": "Used the already compiled package. This four-condition run did not invoke compilation."
+  }
+}

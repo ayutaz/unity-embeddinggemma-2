@@ -1,4 +1,18 @@
-# テキスト推論 API
+# 推論API
+
+> 文書整合確認: 2026-10-16。mainの既存テキストAPIと、Draft PR #81の画像・音声APIは統合状態を区別します。[現在の状態](status.md)にsource別の固定証拠を記載しています。
+
+## マルチモーダルAPIとGPU設定
+
+Draft branchの`PartitionedImageFeatureEncoder` / `ImageEmbedder.EmbedAsync`と`PartitionedAudioFeatureEncoder` / `AudioEmbedder.EmbedAsync`は、実Texture・PCMから前処理→encoder→backbone→正規化済み768次元をGPUComputeで実行する検証済み経路です。画像・音声は各6ケースとQuery / Document / Rawの18条件、計算 / 入力CPU fallback・中間readback0。元encoderの画像全3 / 音声全2 profileの厳密数値gateも合格しています。必須CIの音声ONNX比較が失敗しているため、手順4全体・正式配布は未完了です。
+
+両APIはstageとprompt builderを借用し、呼び出しごとの中間結果を所有します。返す768次元CPU配列は独立コピーです。非同期encoderはGPU分割境界を待ち、音声では完了済みキャッシュを解放します。前処理とbackboneはメインスレッド同期処理のため`Task.Run`へ移しません。呼び出しをawaitしてから借用stage / operationをDisposeしてください。CPU APIの選択肢と、ここで検証したGPU専用経路を区別します。
+
+使用例・prefix / mask・キャンセルと所有権は[音声API](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-embedder.md)と[音声encoder](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-feature-encoder.md)を参照してください。分割Model・係数・operation接続表は対象profileを監査したものを呼び出し側で準備します。自動ダウンロード・profile選択は行いません。単一Modelの同期encoder APIを、この実モデル受け入れ経路と同一視しません。
+
+`GpuBlockedMatmul`の加算blockは係数・形状と独立参照に照合して指定します。局所patchのblock384成功を他の行列へ一般化せず、採用済み全encoderの計算順を保持します。モデル準備の再利用、長期メモリ / 速度、sample / Player、他端末は後続工程です。
+
+## 既存テキストAPI
 
 更新日: 2026-10-10。[現在の状態](status.md)でmain / PRと検証範囲を確認する。
 
@@ -10,7 +24,7 @@ API導入当時は単体契約24件、M1完了時は保存・測定を含む30�
 Unity 6000.3.16f1 / Sentis 2.6.1 の、batch 1 / length 128 / fp32 / 768次元の export を対象とする。
 モデル・tokenizerは [CI成果物を検証して配置](automation.md)する。
 PR #6でRuntimeを `Packages/com.ayutaz.embeddinggemma/Runtime/` へ移行し、元のソース・assembly名・GUIDを維持した。
-このUPM構成はPR #6でmainへ反映済み。実行依存はSentis 2.6.1とNewtonsoft JSON 3.2.2。検索APIはPR #10でmainへ統合し、検索シーンはPR #11で追加している。画像・音声APIは未実装。
+このUPM構成はPR #6でmainへ反映済み。実行依存はSentis 2.6.1とNewtonsoft JSON 3.2.2。検索APIはPR #10でmainへ統合し、検索シーンはPR #11で追加している。main未統合の画像・音声APIは上記の開発範囲を参照。
 別プロジェクトへの導入は [パッケージ文書](../Packages/com.ayutaz.embeddinggemma/Documentation~/index.md)、結果は [UPM検証](m2-package-validation.md)を参照。
 
 ```csharp

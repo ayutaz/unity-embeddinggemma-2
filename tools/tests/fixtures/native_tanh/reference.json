@@ -1,0 +1,44 @@
+{
+  "scope": "fixed_synthetic_native_tanh_diagnostic_captures_not_real_encoder_reference",
+  "source": "d838ecb7d1bac9169f5afc525d823de0d4a578ae",
+  "run": 38823855948,
+  "artifact_id": 12013054484,
+  "parent_report_sha256": "67464022c63225178d6ffcd5eb4d40137ab3a9bff1e68e58a3c38392da6ee6b8",
+  "cpu": "AMD EPYC7763 AVX2",
+  "fixture_generation": "Previously captured native Torch outputs; not generated from the ONNX candidate in this change.",
+  "cases": [
+    {
+      "id": "dense32771",
+      "shape": [
+        32771
+      ],
+      "input": {
+        "file": "tanh-dense32771-input-fp32.bin",
+        "sha256": "5566e15821fa8741ee5c9032e98ec8db66803c044659c84ee5c4a77cce572409",
+        "bytes": 131084
+      },
+      "native": {
+        "file": "tanh-dense32771-native-fp32.bin",
+        "sha256": "04c9f7965bcd4aa607098405b9d85488bef86e19d2b33c5ed5e2083e55bb5b27",
+        "bytes": 131084
+      }
+    },
+    {
+      "id": "random514",
+      "shape": [
+        2,
+        257
+      ],
+      "input": {
+        "file": "tanh-random514-input-fp32.bin",
+        "sha256": "d84caa8f88e0a842c2784bc0734b07aa43e75d1788f44df3d4d04866c1e5d794",
+        "bytes": 2056
+      },
+      "native": {
+        "file": "tanh-random514-native-fp32.bin",
+        "sha256": "1ed666420d33124caefc53c1808fb2bd658a269375410a91b3ca59c87b8c8016",
+        "bytes": 2056
+      }
+    }
+  ]
+}

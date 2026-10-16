@@ -1,0 +1,125 @@
+{
+  "scope": "fixed_silence_propagated_input_norm_error_budget_only",
+  "native_reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "native_replay_source": "6ac2c92191a62ada4830adeee5235fb3c4b90f15",
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "results": [
+    {
+      "input_vs_native": {
+        "mismatches": 0,
+        "maximum_absolute_error": 1.430511474609375E-05,
+        "maximum_tolerance_ratio": 0.43049749691715233
+      },
+      "output_vs_native": {
+        "mismatches": 284,
+        "maximum_absolute_error": 0.000148773193359375,
+        "maximum_tolerance_ratio": 6.101596689933319
+      },
+      "propagation_vs_native_oracle": {
+        "mismatches": 284,
+        "maximum_absolute_error": 0.00015354275068801826,
+        "maximum_tolerance_ratio": 6.1015729141779405
+      },
+      "backend_vs_propagated_oracle": {
+        "mismatches": 0,
+        "maximum_absolute_error": 3.963151883112914E-06,
+        "maximum_tolerance_ratio": 0.001375608091283508
+      },
+      "native_vs_native_oracle": {
+        "mismatches": 0,
+        "maximum_absolute_error": 7.1084753443528825E-06,
+        "maximum_tolerance_ratio": 0.0017050202259224585
+      },
+      "components_peak_absolute": {
+        "propagated_input": 0.00015354275068801826,
+        "backend": 3.963151883112914E-06,
+        "native_reference": 7.1084753443528825E-06
+      },
+      "decomposition_maximum_remainder": 0.0,
+      "decomposition_verified": true,
+      "numeric_gate_passed": false,
+      "full_encoder_validated": false,
+      "backend": "CPU",
+      "capture_source": "1477d88e99c98f1bf8937355437f238599c9951e",
+      "capture_report_sha256": "4ee2479f419742481c032371a63f831f858adb5926b796150921b6068c508a07",
+      "epsilon": 1E-06,
+      "weight": {
+        "file": "CPU-post-norm-folded-weight-fp32.bin",
+        "bytes": 4096,
+        "sha256": "1e6392c0cb44215f7b52e59b830bdbd75b8769354922316bad49e5242ce7ea11"
+      },
+      "stage_captures": [
+        {
+          "file": "CPU-ffw_layer_2-fp32.bin",
+          "bytes": 1146880,
+          "sha256": "9e46042218249c5409e770b20ccae649398d4a0fd60a67e90df83d0b5e59b102"
+        },
+        {
+          "file": "CPU-post_layer_norm-fp32.bin",
+          "bytes": 1146880,
+          "sha256": "91aec6d70ac53b653774801c48b27bbc486095f2ac1eb979c25cf1a27becd9e6"
+        }
+      ]
+    },
+    {
+      "input_vs_native": {
+        "mismatches": 0,
+        "maximum_absolute_error": 6.079673767089844E-06,
+        "maximum_tolerance_ratio": 0.34691578968279346
+      },
+      "output_vs_native": {
+        "mismatches": 5,
+        "maximum_absolute_error": 0.000148773193359375,
+        "maximum_tolerance_ratio": 4.052336195386062
+      },
+      "propagation_vs_native_oracle": {
+        "mismatches": 5,
+        "maximum_absolute_error": 0.0001494445165164393,
+        "maximum_tolerance_ratio": 4.052358530687619
+      },
+      "backend_vs_propagated_oracle": {
+        "mismatches": 0,
+        "maximum_absolute_error": 6.632632135961103E-06,
+        "maximum_tolerance_ratio": 0.0012421792982421143
+      },
+      "native_vs_native_oracle": {
+        "mismatches": 0,
+        "maximum_absolute_error": 7.1084753443528825E-06,
+        "maximum_tolerance_ratio": 0.0017050202259224585
+      },
+      "components_peak_absolute": {
+        "propagated_input": 0.0001494445165164393,
+        "backend": 6.632632135961103E-06,
+        "native_reference": 7.1084753443528825E-06
+      },
+      "decomposition_maximum_remainder": 0.0,
+      "decomposition_verified": true,
+      "numeric_gate_passed": false,
+      "full_encoder_validated": false,
+      "backend": "GPUCompute",
+      "capture_source": "1477d88e99c98f1bf8937355437f238599c9951e",
+      "capture_report_sha256": "da21a9a85900b7d22185562efaf16a64f0768649451bd02460dc969908151625",
+      "epsilon": 1E-06,
+      "weight": {
+        "file": "GPUCompute-post-norm-folded-weight-fp32.bin",
+        "bytes": 4096,
+        "sha256": "1e6392c0cb44215f7b52e59b830bdbd75b8769354922316bad49e5242ce7ea11"
+      },
+      "stage_captures": [
+        {
+          "file": "GPUCompute-ffw_layer_2-fp32.bin",
+          "bytes": 1146880,
+          "sha256": "5e1816b4ee29680501fe17db6e3ce04bb215180e81cb2394044282e41aeeb425"
+        },
+        {
+          "file": "GPUCompute-post_layer_norm-fp32.bin",
+          "bytes": 1146880,
+          "sha256": "f677c2c5c9271bf1e48b44c99b71ea1becd131e258b09a644aa95bc2aac45d32"
+        }
+      ]
+    }
+  ],
+  "analysis_source_base": "b230748c8306990b7aa39098c0892486ca87f795",
+  "implementation_sha256": "051e654ce45ad80aa0ffce64658fb9d32df78483887cd9d93f25f3102020e963"
+}

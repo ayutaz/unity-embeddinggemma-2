@@ -1,0 +1,6 @@
+{
+  "name": "EmbeddingGemma.Editor",
+  "references": [],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": true
+}

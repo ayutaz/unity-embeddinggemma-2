@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-13",
+  "scope": "artifact_streaming_and_real_audio_final_backbone_acceptance_harness",
+  "implementation_commit": "eeec732",
+  "artifact_streaming": {
+    "red": {"failed": 3, "passed": 1, "sha256": "f32cb8488330642aff6fb187291abd7f3a0ea0531cc3ebd44472f2853df9d4f8"},
+    "green": {"passed": 15, "failed": 0, "seconds": 0.24, "sha256": "0e537acc810bfca03d9bafcdc4a4d1ba41196227703d2be25191e1d02179d0ef"},
+    "contracts": ["bounded_member_read", "at_most_four_ordered_parallel_ranges", "crc_verified_cache_reuse", "crc_failure_preserves_old_target"]
+  },
+  "unity_guard": {
+    "red": {"passed": 0, "failed": 9, "skipped": 0, "cli_exit_code": 1, "completed_utc": "2026-10-13T13:03:55.2040343Z", "sha256": "91b7ae10e52c64254530f5a5f8182f09d150f149b27cf5d860c694a69b45c1f2"},
+    "green": {"passed": 9, "failed": 0, "skipped": 0, "cli_exit_code": 0, "completed_utc": "2026-10-13T13:07:07.5222869Z", "sha256": "a01bfb1325746ae56a30be3632ae7aaec6b0c7d94f94dd23b49bde21785cee52"},
+    "compile": {"errors": 0, "warnings": 0, "sha256": "b20aaa9e6a36d5a0933e32aeb8916f99af80e130ef6468b3572c50240086ce5e"},
+    "consumer_requested_and_resolved_sha": "9c6f7943ca6319849dd3db54611acc477e7d0981",
+    "runtime_source_overlay": false,
+    "unity": "6000.3.21f1",
+    "sentis": "2.6.1",
+    "test_framework": "1.6.0 embedded",
+    "test_only_harness_path": "Assets/ReferenceTests/Editor",
+    "red_reason": "Missing acceptance guard asserted through reflection; compile succeeded.",
+    "final_vector_criteria": {"fp32_minimum_cosine": 0.999, "float16_minimum_cosine": 0.99},
+    "encoder_criteria_unchanged": {"rtol": 0.0001, "atol": 0.00001}
+  },
+  "actual_model_acceptance": "not_run_at_this_checkpoint",
+  "encoders_validated": false,
+  "end_to_end_validated": false,
+  "artifact_acquisition_failure": "Initial staging terminated with HTTP 403; completed CRC-verified members retained. Fresh signed redirect acquisition is a separate operation.",
+  "release_created": false
+}

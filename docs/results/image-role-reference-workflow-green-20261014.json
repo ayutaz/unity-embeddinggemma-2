@@ -1,0 +1,9 @@
+{
+  "scope": "fixed_image_role_reference_workflow_green",
+  "source_base": "c7e9bbd",
+  "command": "uv run --locked pytest tests/test_image_role_reference_workflow.py tests/test_audio_role_reference_workflow.py tests/test_artifact_zip.py -q --tb=short",
+  "passed": 10,
+  "failed": 0,
+  "real_context_validated": false,
+  "original_vision_reference_unchanged": true
+}

@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "explicit_raw_feature_input_connected_prefix_and_body_diagnostic_tdd_only",
+  "source_base": "bf3b6cf9336ce2ed676683921c187a84b64e1e48",
+  "initial_red": {
+    "file": "raw-original-chain-red-20261016.xml",
+    "sha256": "7811ea36256db2102c1d51d2f87f3d5f2128fa9f0f7e821a7eb2758098450638",
+    "tests": "5",
+    "failures": "5",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.485"
+  },
+  "source_guard_red": {
+    "file": "raw-chain-frozen-source-guard-red-20261016.xml",
+    "sha256": "df2b4b1e106039c5ae7cf8ddb81bc997bd12d64e34be8b91ac1eed8ad7c23f88",
+    "tests": "1",
+    "failures": "1",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.420"
+  },
+  "execution_flag_red": {
+    "file": "raw-chain-execution-flags-red-20261016.xml",
+    "sha256": "a3acf65ac494d02f4ec3473b499cf037d3f34deb880ca9f44753a491eabc202d",
+    "tests": "2",
+    "failures": "2",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.736"
+  },
+  "initial_green": {
+    "file": "raw-original-chain-green-20261016.xml",
+    "sha256": "8b5d508ce1156f0132e35b94a75080a77b6a840a837bcaeaee56078df587ad88",
+    "tests": "19",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "6.332"
+  },
+  "related_green": {
+    "file": "raw-original-chain-related-green-20261016.xml",
+    "sha256": "66515c4c9f988b114bf334e77027d2dd4811bf519230aba6a9eca9407c8403a9",
+    "tests": "101",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "47.337"
+  },
+  "additional_actual_candidate_connection_green": {
+    "file": "raw-original-candidate-coupled-green-20261016.xml",
+    "sha256": "9dcc09b5e5356627e545dd5051638a1e529eeaa908514dbb74466e5eb54bf19e",
+    "tests": "1",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "28.527"
+  },
+  "actionlint": "passed",
+  "behavior": [
+    "Explicit raw_input defaults false and prepends only the original audited stem to all12layer parts.",
+    "Only original raw feature bytes and original embedded final expected values are loaded; raw mode never downloads/loads intermediate stage goldens.",
+    "Each actual ONNX output directly feeds the next part. Deliberately wrong prefix output reaches final comparison unchanged and fails.",
+    "Independent native chain retains physical layout and must match the untouched native whole graph exactly.",
+    "First-part wrapper uses qualified twoConv/twoLayerNorm/oneprojection stem; body keeps chosen explicit audited variant and original coefficients.",
+    "Final cut must be actual original graph output, including the padded210row crop. No truncation to an earlier cut.",
+    "Requesting raw mode and actually executing its prefix are separate receipt flags. Partial failures retain incomplete evidence, never whole/GPU pass.",
+    "Original frozen-endpoint mode, strict reference tolerances, default native/ONNX generation and product Runtime remain unchanged."
+  ],
+  "real_model_raw_chain_pending": true,
+  "whole_encoder_validated": false,
+  "gpu_validated": false,
+  "required_ci_passed": false
+}

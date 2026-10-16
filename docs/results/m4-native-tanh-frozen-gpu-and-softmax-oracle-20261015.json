@@ -1,0 +1,160 @@
+{
+  "success": true,
+  "scope": "frozen_native_tanh_gpu_and_offline_softmax_order_only",
+  "runtime_source": "223f47d8a8bf27869286018b571e110621e8edf3",
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "frozen_gpu": {
+    "success": true,
+    "scope": "one_frozen_native_attention_nonlinearity_gpu_bit_gate",
+    "runtime_source": "223f47d8a8bf27869286018b571e110621e8edf3",
+    "operation": "tanh",
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "actual_backend": "GPUCompute",
+    "count": 55296,
+    "bit_differences": 0,
+    "mismatched_elements": 0,
+    "maximum_tolerance_ratio": 0.0
+  },
+  "gpu_execution": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      ".\\artifacts\\acceptance-consumer",
+      "-logFile",
+      ".\\artifacts\\numerical-acceptance-state\\native-tanh-api-and-frozen-candidate-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "FrozenNativeTanhCandidateMustMatchAllBitsOnGpu|NativeTanhPreservesSignedZeroAndBorrowedGpuResourcesAfterRejectedInput",
+      "-testResults",
+      ".\\artifacts\\numerical-acceptance-state\\native-tanh-api-and-frozen-candidate-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-15T10:24:41.528592+09:00",
+    "pid": 78336,
+    "exit_code": 0,
+    "unity_results": ".\\artifacts\\numerical-acceptance-state\\native-tanh-api-and-frozen-candidate-20261015.xml",
+    "unity_counts": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 36.371864900007495,
+    "completed_utc": "2026-10-15T10:25:17.900457+09:00"
+  },
+  "intended_gpu_red": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      ".\\artifacts\\acceptance-consumer",
+      "-logFile",
+      ".\\artifacts\\numerical-acceptance-state\\native-tanh-api-and-frozen-compilefixed-red-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "FrozenNativeTanhCandidateMustMatchAllBitsOnGpu|NativeTanhPreservesSignedZeroAndBorrowedGpuResourcesAfterRejectedInput",
+      "-testResults",
+      ".\\artifacts\\numerical-acceptance-state\\native-tanh-api-and-frozen-compilefixed-red-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-15T10:22:33.057117+09:00",
+    "pid": 54656,
+    "exit_code": 2,
+    "unity_results": ".\\artifacts\\numerical-acceptance-state\\native-tanh-api-and-frozen-compilefixed-red-20261015.xml",
+    "unity_counts": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "skipped": 0
+    },
+    "elapsed_seconds": 35.001193000003695,
+    "completed_utc": "2026-10-15T10:23:08.058311+09:00"
+  },
+  "earlier_compile_failure": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      ".\\artifacts\\acceptance-consumer",
+      "-logFile",
+      ".\\artifacts\\numerical-acceptance-state\\native-tanh-api-and-frozen-red-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "FrozenNativeTanhCandidateMustMatchAllBitsOnGpu|NativeTanhPreservesSignedZeroAndBorrowedGpuResourcesAfterRejectedInput",
+      "-testResults",
+      ".\\artifacts\\numerical-acceptance-state\\native-tanh-api-and-frozen-red-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-15T10:21:55.343029+09:00",
+    "pid": 85904,
+    "exit_code": 1,
+    "unity_results": ".\\artifacts\\numerical-acceptance-state\\native-tanh-api-and-frozen-red-20261015.xml",
+    "unity_evidence_error": "Unity execution XML is missing or invalid",
+    "elapsed_seconds": 21.806724400012172,
+    "completed_utc": "2026-10-15T10:22:17.149757+09:00"
+  },
+  "planner_tdd": {
+    "green_xml": "artifacts/numerical-acceptance-state/tanh-planner-related-green-20261015.xml",
+    "intended_red": 5,
+    "related_green": 56,
+    "red_xml": "artifacts/numerical-acceptance-state/tanh-planner-red-20261015.xml"
+  },
+  "offline_tanh": {
+    "scope": "offline_sleef_tanh_fp32_fma_oracle_only",
+    "count": 55296,
+    "minimum": -0.36738529801368713,
+    "maximum": 2.5506110191345215,
+    "bit_differences": 0,
+    "maximum_absolute_error": 0.0,
+    "sleef_commit": "5a1d179df9cf652951b59010a2d2075372d67f68",
+    "gpu_validated": false,
+    "full_encoder_validated": false
+  },
+  "offline_softmax": {
+    "scope": "offline_native_softmax_fp32_rounding_oracle_only",
+    "rows": [
+      {
+        "vector_width": 8,
+        "count": 55296,
+        "bit_differences": 0,
+        "maximum_absolute_error": 0.0
+      },
+      {
+        "vector_width": 16,
+        "count": 55296,
+        "bit_differences": 0,
+        "maximum_absolute_error": 0.0
+      }
+    ],
+    "gpu_validated": false,
+    "full_encoder_validated": false,
+    "source": "https://github.com/pytorch/pytorch/blob/5c4886908584029761b579af026dcfb627c84070/aten/src/ATen/native/cpu/SoftMaxKernel.cpp"
+  },
+  "sources": [
+    "https://github.com/shibatch/sleef/blob/5a1d179df9cf652951b59010a2d2075372d67f68/src/common/df.h",
+    "https://github.com/shibatch/sleef/blob/5a1d179df9cf652951b59010a2d2075372d67f68/src/libm/sleefsimdsp.c",
+    "https://github.com/pytorch/pytorch/blob/5c4886908584029761b579af026dcfb627c84070/aten/src/ATen/native/cpu/SoftMaxKernel.cpp"
+  ],
+  "qualification": "Paired residuals in the product are float2 FP32. FP64 is only an offline single-FMA rounding oracle. No GPU softmax implementation has been qualified by this receipt."
+}

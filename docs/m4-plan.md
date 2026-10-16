@@ -2,7 +2,13 @@
 
 > 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。冒頭の現在方針が、下の旧checkpointの着手順より優先する。
 
-## 2026-10-15の音声の現在地
+## 2026-10-16の現在地
+
+元の実GPU音声encoder全6ケース / 2 profile、実PCM→最終768のQuery / Document / Raw全18条件と回復・所有権・text回帰が合格しました。固定参照を必須とするCI38850001042も合格し、元の実行手順3・4は完了です。[完了監査](results/goal4-current-completion-audit-20261016.json)。fresh CPU対ONNXの6件不合格は診断として保持し、元係数・golden・許容差を変更していません。
+
+現在はPR #79で必要差分のmain統合と依存PR整理を先行します。続いて準備済みmodel / Workerの再利用、音声検索・再生・明示収録sample、反復memory / 性能、Player・他実機、配布準備へ進みます。元計画全体や正式リリースの完了を示すものではありません。旧mainの[音声計画snapshot](https://github.com/ayutaz/unity-embeddinggemma-2/blob/92eda69bebe87bcd1d965f6ce2d12d435d43bb13/docs/m4-plan.md)も履歴として保持します。
+
+## 2026-10-15の音声checkpoint（過去source）
 
 元encoderの6ケース / 2 profileは固定sourceで実GPU数値gateへ合格済み。通常5ケースは`a26317fbfbcfbf896dff4a6577124109c6cf977c`、padded_noiseは`d955554335bed9ea8006d6287b47a3a1908932c2`。各caseの元FP32許容差超過0、計算/入力CPU fallback0、中間flush0、fail0 / skip0。[通常5ケース](results/m4-scalar-moment-fma-full-profile-gpu-20261015.json) / [paddedとadapter](results/m4-padded-audio-and-gpu-encoder-adapter-20261015.json)。元参照・学習済み係数・許容差は保持。最新headで全件再実行したという主張ではなく、CPU合格にも数えない。
 

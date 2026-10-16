@@ -2,11 +2,13 @@
 
 ## 現在の実行位置（2026-10-16）
 
-[現在の状態](status.md)と[手順4の要件別監査](results/goal4-current-completion-audit-20261016.json)を現行の判定とします。元の「4まで」は実Texture / PCM→最終768 APIの全role・固定profile / mask・境界・所有権 / 解放・例外後再利用・text回帰と必須repository checksです。画像18条件・音声18条件、元encoder全画像6件 / 3 profile・音声6信号 / 2 profile、関連189テストのGPU証拠はそろいました。**音声ONNXのRequired CI失敗が残り、手順4全体は未完了です。**
+[現在の状態](status.md)と[手順4の完了監査](results/goal4-current-completion-audit-20261016.json)を現行の判定とします。元encoderの実GPU gate、実Texture / PCM→最終768 APIの全role・profile / mask・境界・所有権 / 解放・例外後再利用・text回帰、固定参照の必須CIが合格し、元計画の手順3・4は完了しました。CIはaccepted source be21d0c / merge実行1058dbeで、4環境各1,433 pass / skip0、元音声824,320値の許容差超過0です。GPU結果は各receiptの実行source・Windows Editor / RTX4070 Ti SUPER / D3D12の範囲に限定します。
 
-[元入力から全6ケースの先頭区間](results/m4-original-entire-stem-all-six-1720320-actual-onnx-bit-exact-20261016.json)は全1,720,320値が元参照にbit一致し、[silenceの元stemから全12層](results/m4-connected-original-tanh-all12-143360-bit-exact-20261016.json)も最終143,360値がbit一致しました。source f0593c7の元特徴量→先頭区間→全12層の[raw全6ケース試行](results/m4-original-raw-all-six-attempt-four-pass-sine-two-fail-padded-timeout-20261016.json)は4件合格・sine2要素不合格・padded_noise20分上限で最終未取得でした。候補は採用しません。最新確定CI f0593c7も音声ONNXとLinux/Python3.13のTanh2件が失敗し、fresh officialと元固定参照の差を別に保持しています。部分合格を全encoder・必須CI合格へ読み替えず、元係数・golden・許容差とfresh native比較を維持します。
+ユーザー指定により、必要差分のmain統合とPR整理を性能検証より先に進めます。既存PR #79をmain向けの統合PRとして再利用し、新たな統合候補の必須CIを確認してからマージします。その後、包含済み・置き換え済みの20件を閉じ、独立したPlayer sample差分と競合のあるPR #31は後続へ残します。[PRごとの判断](results/main-pr-integration-audit-20261016.json)。
 
-検索sample、モデル準備再利用、長期memory / 性能、Player、各OS / 実機は元提案の手順5以降、統合・配布は手順6として残します。以下の詳細計画・過去checkpointは当時の状態を含み、実行手順3 / 4とproject milestone M3 / M4全体の範囲を混同しません。
+次はモデル準備の再利用、検索sample、反復memory / 性能、Windows Player、他OS / 実機です。手順6の導入・バージョン・ライセンス・配布準備も残します。**正式リリースはM2〜M4の全対応と全必須検証の完了後**とし、公開tag / GitHub Releaseは今回作成しません。すべての振る舞いの変更は独立した期待値によるred → green → refactorで進めます。統合候補では製品Runtimeを変更せず、合格済みsourceと同一に保ちます。
+
+mainの旧計画更新2件は、[2026-10-14の固定snapshot](https://github.com/ayutaz/unity-embeddinggemma-2/blob/c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1/docs/multimodal-tdd-plan.md)とGitの親履歴に保持します。以下のcheckpointは当時の状態であり、現在の未達事項へ読み替えません。
 
 ## 過去checkpointと詳細計画
 

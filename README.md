@@ -2,9 +2,9 @@
 
 Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.unity.ai.inference@2.6/manual/index.html) だけを使って、Google の [EmbeddingGemma 2](https://huggingface.co/google/embeddinggemma-2) を動かすプロジェクトです。テキスト・画像・音声を、同じ 768 次元の空間の埋め込みに変換できるようにします。
 
-> **2026-10-16: PR #81で実GPUの画像・音声encoderと最終APIを検証済みですが、手順4は未完了です。** 固定sourceのWindows Editorで、元画像6件・3 profileは778,240値がbit一致、元音声6信号・2 profileは824,320値で元の許容差超過0でした。実Texture / PCMから正規化768次元までのQuery / Document / Rawは各18条件に合格し、計算・非空feature入力のCPU fallbackとAPI中間readback /flushは0です。RenderTexture、入力境界、所有権・破棄、例外後の復帰、テキスト回帰も確認しています。[確認済み結果と残件](docs/status.md) / [公開API](docs/runtime-api.md)。
+> **2026-10-16: 手順3・4の実GPU数値・最終API・固定参照CIは完了し、PR #79でmainへの統合とPR整理を進めています。** 固定sourceのWindows Editorで、元画像6件・3 profileは778,240値がbit一致、元音声6信号・2 profileは824,320値で元の許容差超過0でした。実Texture / PCMから正規化768次元までのQuery / Document / Rawは各18条件に合格し、計算・非空feature入力のCPU fallbackとAPI中間readback /flushは0です。RenderTexture、入力境界、所有権・破棄、例外後の復帰、テキスト回帰も確認しています。[確認済み結果と残件](docs/status.md) / [公開API](docs/runtime-api.md)。
 >
-> これらはUnity6000.3.16f1 /Sentis2.6.1 /RTX4070 Ti SUPER /D3D12のsource付き結果です。最新headで全条件を再実行したという主張ではなく、main統合・正式リリースも未実施です。必須CIは音声ONNX比較で失敗し、CPU参照基準の方針確認とCIの修正が残っています。CPU ONNX候補もnoiseの再開を含む元全6信号で許容差超過0を確認しました。実GPU結果とCPU変換の診断は別に扱います。過去の不合格も[固定記録](docs/gpu-execution-and-silu-validation.md)と`docs/results/`に保持しています。
+> これらはUnity6000.3.16f1 /Sentis2.6.1 /RTX4070 Ti SUPER /D3D12のsource付き結果です。最新headで全条件を再実行したという主張ではなく、main統合・正式リリースも未実施です。固定参照を必須とするCI38850001042は15job合格し、4環境各1,433テストが合格しました。単一sourceの元音声6信号・824,320値で許容差超過0です。fresh CPU対ONNXの6件不合格は診断として保持しています。実GPU結果とCPU変換の診断は別に扱います。過去の不合格も[固定記録](docs/gpu-execution-and-silu-validation.md)と`docs/results/`に保持しています。
 
 > **状態: Windows EditorのM1受け入れ検証完了**
 > 2026-10-09: PR #1〜#4はmain `8146107`へ統合済み。[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)で`.sentis`保存・再読み込み、Float16重み量子化、性能・メモリ測定まで実装・検証しました。
@@ -36,7 +36,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor受け入れ検証完了（保存・量子化・測定を含む） |
 | M2 | テキストUPM・サンプル・検証基盤を安定化する | Windows実測あり。標準環境再現・新candidate・性能・他環境は未完了 |
 | M3 | GPU画像前処理・encoder・共通本体・画像検索 | PR #81の固定sourceで画像6件 /3 profileと実Texture /RenderTextureの全role合格。main統合・sample・Player等は未完了 |
-| M4 | GPU音声前処理・encoder・共通本体・音声検索 | PR #81の固定sourceで元6信号 /2 profileと実PCMの全role合格。CPU ONNX /必須CI・main統合・sample・Player等は未完了 |
+| M4 | GPU音声前処理・encoder・共通本体・音声検索 | PR #81の固定sourceで元6信号 /2 profileと実PCMの全role合格。固定参照CIも合格。main統合・sample・Player等は別工程 |
 | 最終公開 | 全対応と必須環境の検証後に正式リリース | 未着手 |
 
 ## 動作環境
@@ -93,7 +93,7 @@ uv run --locked python -m embeddinggemma_tools prepare --output ../artifacts/m1
 モデルの revision を固定して参照データ・設定済み tokenizer・`.pt2` を生成し、保存後のモデルを参照実装と比較します。
 この Python 側の一致と、Sentis 側の M1 合格は別々に検証します。
 
-M1のWindows Editor結果とテキスト検索・固定Git導入の既存実測を維持します。PR #81では元encoderのGPU数値gateと実入力→最終APIを固定sourceで確認済みですが、必須CIは未達です。手順4の残件を解消した後、sample /性能・メモリ /Player・必須環境 /最終空consumerへ進みます。
+M1のWindows Editor結果とテキスト検索・固定Git導入の既存実測を維持します。PR #81では元encoderのGPU数値gateと実入力→最終APIを固定sourceで確認済みですが、固定参照の必須CIも合格しました。main統合とPR整理を先に進め、その後sample /性能・メモリ /Player・必須環境 /最終空consumerへ進みます。
 残作業の順序・依存・完了条件は [M2計画](docs/m2-plan.md)、実装済みAPIは [C# API手順](docs/runtime-api.md) を参照してください。
 新しい実装も作業ブランチ / PR を使い、マージは依頼があるまで行いません。
 M1の完了条件と当時の測定は [M1計画](docs/m1-plan.md) / [完了検証記録](docs/m1-completion-validation.md)、最新のCIとUPM検証は [現在の状態](docs/status.md)を参照してください。

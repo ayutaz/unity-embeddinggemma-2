@@ -89,7 +89,8 @@ namespace EmbeddingGemma
         }
         void ValidateOperation(JToken operation)
         {
-            var kind = (string)operation?["kind"];
+            Require(operation is JObject, "A GPU operation recipe object is required.");
+            var kind = (string)operation["kind"];
             Require(operation is JObject && OperationKinds.Contains(kind ?? ""), "Unknown GPU operation.");
             Require(operation["inputs"] is JArray inputs && inputs.Count == (kind == "batched_matmul" ? 2 : 1)
                 && inputs.All(Text) && Text(operation["output"]), "Explicit GPU operation bindings are required.");
@@ -99,8 +100,8 @@ namespace EmbeddingGemma
                 Require(Positive(operation["width"]) && Positive(operation["columns"]) && Positive(operation["block_size"]), "Static matrix dimensions and block size are required.");
                 Require((long)descriptor["files"][(string)operation["weight_file"]]["bytes"] == (long)operation["width"] * (long)operation["columns"] * 4, "Static matrix coefficient size differs.");
             }
-            if (kind == "fixed_left_matmul") Require(operation["weight_shape"] is JArray shape && shape.Count > 0 && shape.All(Positive), "Fixed-left coefficient geometry is required.");
-            if (kind == "gelu") Require(operation["shape"] is JArray shape && shape.Count > 0 && shape.All(Positive)
+            if (kind == "fixed_left_matmul") Require(operation["weight_shape"] is JArray weightShape && weightShape.Count > 0 && weightShape.All(Positive), "Fixed-left coefficient geometry is required.");
+            if (kind == "gelu") Require(operation["shape"] is JArray geluShape && geluShape.Count > 0 && geluShape.All(Positive)
                 && operation["release_cache"]?.Type == JTokenType.Boolean && operation["fuse_inner"]?.Type == JTokenType.Boolean
                 && operation["sleef_tanh"]?.Type == JTokenType.Boolean, "Qualified GELU shape and arithmetic options are required.");
             if (kind == "softmax") Require((int?)operation["vector_width"] == 8 || (int?)operation["vector_width"] == 16, "Qualified softmax vector width is required.");

@@ -137,6 +137,39 @@ namespace EmbeddingGemma.Tests
             readonly Enc inner;public SyncEncoder(Enc inner){this.inner=inner;}public BackendType Backend=>inner.Backend;public AudioEncoderProfile Profile=>inner.Profile;
             public AudioEncodingResult Encode(AudioPreprocessingResult input)=>inner.Encode(input);
         }
+        sealed class PendingPre : IAsyncAudioPreprocessor
+        {
+            readonly Pre inner; public PendingPre(Pre inner) { this.inner = inner; }
+            public BackendType Backend => BackendType.GPUCompute;
+            public int AsyncCalls, SyncCalls; public TaskCompletionSource<AudioPreprocessingResult> Pending;
+            public AudioPreprocessingResult Process(AudioPcmInput input) { SyncCalls++; throw new InvalidOperationException("Await the preprocessing fence before encoding."); }
+            public Task<AudioPreprocessingResult> ProcessAsync(AudioPcmInput input, CancellationToken token = default)
+            {
+                AsyncCalls++; Pending = new TaskCompletionSource<AudioPreprocessingResult>(); var captured = Pending;
+                token.Register(() => captured.TrySetCanceled()); return Pending.Task;
+            }
+            public void Release(AudioPcmInput input) => Pending.SetResult(inner.Process(input));
+        }
+        [UnityTest] public IEnumerator AsyncPreprocessingIsAwaitedBeforeEncodingAndItsOwnedOutputsAreReleased()
+        {
+            using var p = new Parts(); var pre = new PendingPre(p.Pre); using var api = new AudioEmbedder(pre, p.Enc, p.Back, p.Prompts);
+            var pending = Call(api, p.Input); Assert.That(pre.AsyncCalls, Is.EqualTo(1)); Assert.That(pre.SyncCalls, Is.Zero); Assert.That(p.Enc.Pending, Is.Null);
+            pre.Release(p.Input); while (p.Enc.Pending == null) yield return null;
+            p.Enc.Release(); yield return Wait(pending); Assert.That(pending.GetAwaiter().GetResult().Length, Is.EqualTo(768)); p.Released();
+        }
+        [UnityTest] public IEnumerator CancellationDuringPreprocessingCannotStartTheEncoder()
+        {
+            using var p = new Parts(); var pre = new PendingPre(p.Pre); using var api = new AudioEmbedder(pre, p.Enc, p.Back, p.Prompts);
+            using var cancellation = new CancellationTokenSource(); var pending = Call(api, p.Input, token: cancellation.Token);
+            Assert.That(pre.AsyncCalls, Is.EqualTo(1)); cancellation.Cancel(); yield return Wait(pending);
+            Assert.That(pending.IsCanceled, Is.True); Assert.That(p.Enc.Pending, Is.Null); Assert.That(p.Pre.Calls, Is.Zero);
+        }
+        [UnityTest] public IEnumerator DisposingFacadeCancelsPreprocessingWithoutDisposingBorrowedStage()
+        {
+            using var p = new Parts(); var pre = new PendingPre(p.Pre); using var api = new AudioEmbedder(pre, p.Enc, p.Back, p.Prompts);
+            var pending = Call(api, p.Input); Assert.That(pre.AsyncCalls, Is.EqualTo(1)); api.Dispose(); yield return Wait(pending);
+            Assert.That(pending.IsCanceled, Is.True); Assert.That(p.Pre.Disposed, Is.False); Assert.That(p.Enc.Pending, Is.Null);
+        }
         [Test] public void MissingStagedEncoderIsRejectedBeforePreprocessing()
         {
             using var p=new Parts();using var api=new AudioEmbedder(p.Pre,new SyncEncoder(p.Enc),p.Back,p.Prompts);

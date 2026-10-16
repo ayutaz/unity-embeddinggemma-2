@@ -39,6 +39,10 @@ on:
         description: Observe untouched native encoder on all six original inputs; no ONNX or GPU qualification
         type: boolean
         default: false
+      resume_noise:
+        description: Continue only pinned interrupted noise prediction after re-exporting and verifying its prefix graphs
+        type: boolean
+        default: false
       matrix_runner:
         description: Host for the small matrix-only diagnostic; does not change encoder jobs
         type: choice
@@ -66,7 +70,7 @@ concurrency:
 jobs:
   probe:
     if: >-
-      (github.event_name == 'workflow_dispatch' && !inputs.matrix_probe && !inputs.native_context_probe) ||
+      (github.event_name == 'workflow_dispatch' && !inputs.matrix_probe && !inputs.native_context_probe && !inputs.resume_noise) ||
       (github.event.pull_request.head.repo.full_name == github.repository &&
        (contains(github.event.pull_request.labels.*.name, 'frozen-audio-prefix-onnx') ||
         contains(github.event.pull_request.labels.*.name, 'frozen-audio-layer0-onnx') ||
@@ -256,8 +260,69 @@ jobs:
           retention-days: 7
           if-no-files-found: warn
 
+  resume_noise:
+    if: github.event_name == 'workflow_dispatch' && inputs.resume_noise
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+      OPENBLAS_NUM_THREADS: '4'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - name: Verify original math source and dependency lock before model download
+        run: uv run --locked python -m embeddinggemma_tools.audio_raw_resume --verify-source
+      - name: Fetch pinned actual prediction captures from interrupted run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh run download 38825780838 --repo ayutaz/unity-embeddinggemma-2
+          --name frozen-audio-prefix-onnx-e99c44214ab7d7f526b0fede5b561862460f1d66-noise
+          --dir ../artifacts/raw-noise-predecessor
+      - name: Fetch only original full-profile graph reference and noise input
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.artifact_zip
+          --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11814567883
+          --output ../artifacts/raw-noise-original --max-entry-bytes 2147483648
+          --member audio-runtime-reference/audio-encoder-reference.json
+          --member audio-runtime-reference/audio-encoder-validation.json
+          --member audio-runtime-reference/frames-1119-valid-1119/audio.pt2
+          --member audio-runtime-reference/frames-1119-valid-1119/noise-features-fp32.bin
+      - name: Record actual CPU host
+        run: |
+          mkdir -p ../artifacts/raw-noise-resume
+          lscpu --json > ../artifacts/raw-noise-resume/cpu-host.json
+      - name: Verify all three prefix graph SHAs and continue only remaining two actual ONNX parts
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.audio_raw_resume
+          --input ../artifacts/raw-noise-original/audio-runtime-reference
+          --predecessor ../artifacts/raw-noise-predecessor/frozen-audio-prefix-onnx
+          --output ../artifacts/raw-noise-resume
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: raw-noise-resume-${{ github.sha }}
+          path: |
+            artifacts/raw-noise-resume/*.json
+            artifacts/raw-noise-resume/*.bin
+            artifacts/raw-noise-original/range-receipt.json
+          retention-days: 7
+          if-no-files-found: warn
+
   native_context_probe:
-    if: github.event_name == 'workflow_dispatch' && inputs.native_context_probe
+    if: github.event_name == 'workflow_dispatch' && inputs.native_context_probe && !inputs.resume_noise
     runs-on: ${{ inputs.matrix_runner || 'windows-2022' }}
     timeout-minutes: 10
     defaults:
@@ -319,7 +384,7 @@ jobs:
           if-no-files-found: warn
 
   matrix_probe:
-    if: github.event_name == 'workflow_dispatch' && inputs.matrix_probe == true && !inputs.native_context_probe
+    if: github.event_name == 'workflow_dispatch' && inputs.matrix_probe == true && !inputs.native_context_probe && !inputs.resume_noise
     runs-on: ${{ inputs.matrix_runner || 'ubuntu-latest' }}
     timeout-minutes: 10
     defaults:

@@ -203,7 +203,18 @@ def test_repository_package_can_be_consumed_without_asset_runtime():
 def test_repository_sample_is_registered_and_can_be_imported_into_empty_consumer(tmp_path):
     package = ROOT / "Packages" / PACKAGE_NAME
     manifest = json.loads((package / "package.json").read_text())
-    assert manifest["samples"] == [{"displayName": "Text Search", "description": "Search a small Japanese/English corpus using a separately prepared Sentis model.", "path": "Samples~/TextSearch"}]
+    assert manifest["samples"] == [
+        {"displayName": "Text Search", "description": "Search a small Japanese/English corpus using a separately prepared Sentis model.", "path": "Samples~/TextSearch"},
+        {"displayName": "Image and Audio Search", "description": "Register real images and mono PCM audio on GPU, then search their embeddings with text.", "path": "Samples~/MultimodalSearch"},
+    ]
+    media = package / "Samples~/MultimodalSearch"
+    assert (media / "MultimodalSearch.unity").is_file()
+    assert (media / "MultimodalSearchSample.cs").is_file()
+    assert (media / "MediaSampleInput.cs").is_file()
+    assert (media / "README.md").is_file()
+    for path in media.rglob("*"):
+        if path.suffix != ".meta":
+            assert path.with_name(path.name + ".meta").is_file()
     project = tmp_path / "consumer"
     create_consumer(project, package, sample=True)
     imported = project / "Assets/EmbeddingGemmaTextSearch"

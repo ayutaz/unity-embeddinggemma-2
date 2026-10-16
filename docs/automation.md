@@ -1,5 +1,21 @@
 # Unity のローカル自動操作
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。実モデル実行は停止中。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
+
+## 現在の実モデル実行方針
+
+2026-10-14、計画1・2を指定範囲まで実行し終了した。下のm1 / runtime / completion / searchのコマンドは従来のCPU/GPU履歴suiteを含み、GPU専用の現行入口ではない。今の要件に対して全suiteをローカル起動しない。
+
+GPU専用へ変更した対象は別validation packageの `EmbeddingGemma.Validation.Tests.CompensatedVisionReferenceTests` と `EmbeddingGemma.Validation.Tests.CompensatedNormAudioEncoderReferenceTests`。Runtimeとvalidationを同じ固定Git SHAにし、requested / resolved SHAを確認してからcompileする。変更を含む `b796e504367fb9165a4992ff036a205fb2e7d429` のcompileとGPU計測を確認した。対象2 fixtureの全数値条件は未再実行。
+
+新しい実行は `tools/embeddinggemma_tools/bounded_process.py` を使い、起動したUnityの所有handleへ300秒上限を適用する。時間超過ではそのprocessをkillして終了を待ち、terminal / timed_out / exit_code / PID / elapsedをJSONへ保存する。自然終了0だけをprocess成功とし、別途NUnit・backend・fallback・計測値を確認する。既存JSONを上書きしない。子process全体の終了を保証するものではなく、起動前・終了後に対象Unityの実プロセスを確認する。
+
+`GpuExecutionProfileTests` だけをbatchmodeで指定し、固定Git Runtime / validationのSHA一致、tinyと実square 1件の2 pass・skip0・exit0を確認した。[今回の負荷・失敗結果](gpu-execution-and-silu-validation.md)。下の古いlauncher / suiteの注意は引き続き適用する。
+
+再開時は[全体計画R0〜R5](multimodal-tdd-plan.md)の一つのGPU入力を選び、実GPU / graphics API、actual backend、fallback / flush 0を保存する。GPUモデルでもload / graph変換・shape解析 / Worker準備 / hash / uploadはCPU負荷を伴うため、各段階を計測する。ローカルは外部5分上限を設定・確認し、期限時に対象PIDのidentityを確認して停止、部分結果とexitを別scopeで保存する。既存ignored launcherは長いWaitForExitを使うため、この上限が実装済みとは扱わない。新しいlauncher自動化を追加する場合はTDDでtimeout・子process終了を検証する。
+
+観測timeoutだけで新しいEditorを起動しない。同operation / PIDを追跡し、GPU未対応・未実行・中断・数値不合格を区別する。重い全条件の実行はGPU runner / ライセンスを確保したActionsを優先し、CPU runnerの結果を実GPU合格に数えない。
+
 更新日: 2026-10-10（main統合状況を更新。Unityの実測は以前の記録を維持）
 最新のmain / PR / CIと実行範囲は [現在の状態](status.md)、UPM移行の検証は [パッケージ検証](m2-package-validation.md)を参照。
 

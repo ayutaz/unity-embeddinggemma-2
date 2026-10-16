@@ -1,0 +1,231 @@
+{
+  "run": 38827020854,
+  "source": "948efa5d6fb63e33544e047f4a16c290f2d9d390",
+  "cpu": {
+    "Name": "AMD EPYC 7763 64-Core Processor                ",
+    "Manufacturer": "AuthenticAMD",
+    "NumberOfCores": 2,
+    "NumberOfLogicalProcessors": 4
+  },
+  "runtime": {
+    "system": "Windows",
+    "processor": "AMD64 Family 25 Model 1 Stepping 1, AuthenticAMD",
+    "torch_version": "2.14.1+cpu",
+    "cpu_capability": "AVX2",
+    "threads": 2,
+    "interop_threads": 2,
+    "torch_build_configuration": "PyTorch built with:\n  - C++ Version: 202002\n  - MSVC 194234444\n  - Intel(R) oneAPI Math Kernel Library Version 2026.1-Product Build 20260612 for Intel(R) 64 architecture applications\n  - Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)\n  - OpenMP 2019\n  - LAPACK is enabled (usually provided by MKL)\n  - CPU capability usage: AVX2\n  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, COMMIT_SHA=5c4886908584029761b579af026dcfb627c84070, CUDA_FLAGS= -DLIBCUDACXX_ENABLE_SIMPLIFIED_COMPLEX_OPERATIONS -Xcompiler /Zc:__cplusplus -Xcompiler /Zc:preprocessor -Xcompiler /w -w -Xcompiler /FS -Xfatbin -compress-all  -Xcompiler=/wd4819,/wd4503,/wd4190,/wd4244,/wd4251,/wd4275,/wd4522 -Wno-deprecated-gpu-targets --expt-extended-lambda -DCUB_WRAPPED_NAMESPACE=at_cuda_detail -DDISABLE_CUSPARSE_DEPRECATED -DCUDA_HAS_FP16=1 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__, CXX_COMPILER=C:/actions-runner/_work/pytorch/pytorch/.ci/pytorch/windows/tmp_bin/sccache-cl.exe, CXX_FLAGS=/DWIN32 /D_WINDOWS /EHsc /Zc:__cplusplus /bigobj /FS /utf-8 -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DSYMBOLICATE_MOBILE_DEBUG_HANDLE /wd4624 /wd4068 /wd4067 /wd4267 /wd4661 /wd4717 /wd4244 /wd4804 /wd4273, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, TORCH_VERSION=2.14.1, USE_CUDA=0, USE_CUDNN=OFF, USE_CUSPARSELT=OFF, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_GLOO=ON, USE_HIPSPARSELT=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=OFF, USE_NNPACK=OFF, USE_OPENMP=ON, USE_ROCM=OFF, USE_ROCM_KERNEL_ASSERT=OFF, USE_XCCL=OFF, USE_XPU=OFF, \n",
+    "environment": {
+      "MKL_ENABLE_INSTRUCTIONS": null,
+      "MKL_CBWR": null,
+      "ATEN_CPU_CAPABILITY": null,
+      "ONEDNN_MAX_CPU_ISA": null,
+      "DNNL_MAX_CPU_ISA": null,
+      "OMP_NUM_THREADS": "2",
+      "MKL_NUM_THREADS": "2",
+      "OPENBLAS_NUM_THREADS": "2"
+    }
+  },
+  "complete": true,
+  "values_compared": 824320,
+  "original_tolerance_passed": false,
+  "report_sha256": "5d8a077d0dc2dc32e39487c401d1c6e4ed4d17580b65a6d373c90300f74f1c19",
+  "all_original_inputs_graphs_output_hashes_and_metrics_independently_audited": true,
+  "cases": [
+    {
+      "case_id": "silence",
+      "profile": "frames-1119-valid-1119",
+      "provenance": {
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "case_id": "silence",
+        "profile": "frames-1119-valid-1119",
+        "reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+        "audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+        "graph_sha256": "dc43d56b896b64077d8e86d56c3fd2b89cfe3d31170eabaa387165ea961438d7",
+        "input_sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24"
+      },
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 240,
+        "maximum_absolute_error": 0.0001308917999267578,
+        "maximum_tolerance_ratio": 4.445545642996783,
+        "worst_index": 15930,
+        "worst_actual": -0.03823918104171753,
+        "worst_expected": -0.038300663232803345,
+        "exact_difference_count": 140192
+      },
+      "shape": [
+        280,
+        512
+      ],
+      "capture": "silence-native-fp32.bin",
+      "capture_sha256": "45188ac6ead9d54ece1978894d372a28004a347dd4fde663cce24667e0a0eed0"
+    },
+    {
+      "case_id": "impulse",
+      "profile": "frames-1119-valid-1119",
+      "provenance": {
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "case_id": "impulse",
+        "profile": "frames-1119-valid-1119",
+        "reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+        "audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+        "graph_sha256": "dc43d56b896b64077d8e86d56c3fd2b89cfe3d31170eabaa387165ea961438d7",
+        "input_sha256": "2202541551e06a429b222d31f3d495a2b051fca70191287c82c7f6a6d8803c82"
+      },
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 389,
+        "maximum_absolute_error": 0.00016546249389648438,
+        "maximum_tolerance_ratio": 12.93181653213429,
+        "worst_index": 17676,
+        "worst_actual": -0.0002285987138748169,
+        "worst_expected": -9.91523265838623e-05,
+        "exact_difference_count": 140017
+      },
+      "shape": [
+        280,
+        512
+      ],
+      "capture": "impulse-native-fp32.bin",
+      "capture_sha256": "e7d34a971f7c282825567c41650259bf65929e0c447a5845cc0e150e8c49481e"
+    },
+    {
+      "case_id": "sine",
+      "profile": "frames-1119-valid-1119",
+      "provenance": {
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "case_id": "sine",
+        "profile": "frames-1119-valid-1119",
+        "reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+        "audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+        "graph_sha256": "dc43d56b896b64077d8e86d56c3fd2b89cfe3d31170eabaa387165ea961438d7",
+        "input_sha256": "dcc0ed05018d225a140916249cb3a3ab948c4cc50e5f457abac24e909e9c64c5"
+      },
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 1085,
+        "maximum_absolute_error": 0.00028514862060546875,
+        "maximum_tolerance_ratio": 14.553821090378468,
+        "worst_index": 43097,
+        "worst_actual": 0.013422369956970215,
+        "worst_expected": 0.01358768343925476,
+        "exact_difference_count": 138911
+      },
+      "shape": [
+        280,
+        512
+      ],
+      "capture": "sine-native-fp32.bin",
+      "capture_sha256": "6f89f42471d8e4bf3e4f9bd78dee08fcbcbe75c5d2406dbce4f1a35172d0bb88"
+    },
+    {
+      "case_id": "nyquist",
+      "profile": "frames-1119-valid-1119",
+      "provenance": {
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "case_id": "nyquist",
+        "profile": "frames-1119-valid-1119",
+        "reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+        "audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+        "graph_sha256": "dc43d56b896b64077d8e86d56c3fd2b89cfe3d31170eabaa387165ea961438d7",
+        "input_sha256": "eaaa9e11f4d282294a9c57d4eddd392d2a257ea1f342d0452d99984602ff1e96"
+      },
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 1251,
+        "maximum_absolute_error": 0.00015050172805786133,
+        "maximum_tolerance_ratio": 4.6989224773161355,
+        "worst_index": 31525,
+        "worst_actual": -0.00916435569524765,
+        "worst_expected": -0.009215675294399261,
+        "exact_difference_count": 141146
+      },
+      "shape": [
+        280,
+        512
+      ],
+      "capture": "nyquist-native-fp32.bin",
+      "capture_sha256": "d9a3cd0369cfff5b6190de4d323b7004569fd63b61c86abb1487c6b5d31a3be9"
+    },
+    {
+      "case_id": "noise",
+      "profile": "frames-1119-valid-1119",
+      "provenance": {
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "case_id": "noise",
+        "profile": "frames-1119-valid-1119",
+        "reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+        "audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+        "graph_sha256": "dc43d56b896b64077d8e86d56c3fd2b89cfe3d31170eabaa387165ea961438d7",
+        "input_sha256": "b26f15554a3123e12cb39949709ea94588c27a5324f4cadefc701fba124c5c42"
+      },
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 202,
+        "maximum_absolute_error": 0.00010585784912109375,
+        "maximum_tolerance_ratio": 4.003945161839839,
+        "worst_index": 21274,
+        "worst_actual": -0.0030289888381958008,
+        "worst_expected": -0.003070257604122162,
+        "exact_difference_count": 138867
+      },
+      "shape": [
+        280,
+        512
+      ],
+      "capture": "noise-native-fp32.bin",
+      "capture_sha256": "e9fab4ea9624d8f9c91e67faf3ddb4ea3828e731c4ae772e3c95059b8fb41f16"
+    },
+    {
+      "case_id": "padded_noise",
+      "profile": "frames-1119-valid-839",
+      "provenance": {
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "case_id": "padded_noise",
+        "profile": "frames-1119-valid-839",
+        "reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+        "audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+        "graph_sha256": "3fe30ee43891ab5fb605fe97ca157370b501e27328dbfd43cc44479af56e2f6a",
+        "input_sha256": "6065504b6b2d244526df3a79cb5b88e9463e8e576ff877b5b8fa90b9bf18b1b0"
+      },
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 176,
+        "maximum_absolute_error": 0.00010585784912109375,
+        "maximum_tolerance_ratio": 4.003945161839839,
+        "worst_index": 21274,
+        "worst_actual": -0.0030289888381958008,
+        "worst_expected": -0.003070257604122162,
+        "exact_difference_count": 104153
+      },
+      "shape": [
+        210,
+        512
+      ],
+      "capture": "padded_noise-native-fp32.bin",
+      "capture_sha256": "45f52ca1532dad9113de7a18fa9ae9b1bee0f257becedba1de3e1f0c403af207"
+    }
+  ],
+  "fresh_official_validated": false,
+  "onnx_validated": false,
+  "gpu_validated": false,
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "untouched_saved_native_all_six_original_context_failure_only",
+  "github_collection_conclusion": "success",
+  "required_ci_passed": false,
+  "limit": "Requested Windows2022 returned AMD7763/AVX2, unlike prior small probe AMD9V74/AVX512. Host label does not guarantee ISA. All six captures exceed original tolerance; collection success is not numerical success. No random host retry is scheduled."
+}

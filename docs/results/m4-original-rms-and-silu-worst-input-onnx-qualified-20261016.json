@@ -1,0 +1,80 @@
+{
+  "scope": "three_original_worst_nonlinear_operator_actual_onnx_candidates_only",
+  "source_report_sha256": "f27073b3503e82a4b963a64b3ff2c1e2f782d891a8408eb10cb22413a3aa5fdf",
+  "cases": [
+    {
+      "kind": "ReduceMean",
+      "node": "mean_95",
+      "shape": [
+        1,
+        280,
+        1024
+      ],
+      "native_strides": [
+        286720,
+        1,
+        280
+      ],
+      "input_sha256": "0ddb7d37b661389b4147ece5452e1a83c0da19257186fa302f90effd4c1eacb9",
+      "reference_sha256": "e0a800d6d9a30ecc9c4c479fc8063941fec8ca688ee72da898be8b2f01a0c74c",
+      "graph_sha256": "e427f44d1a92ff7fa0f8d0f1d773045393fdb6a566068b8132b030b7a9d8c50e",
+      "capture_sha256": "e0a800d6d9a30ecc9c4c479fc8063941fec8ca688ee72da898be8b2f01a0c74c",
+      "elements": 280,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.0
+    },
+    {
+      "kind": "Pow",
+      "node": "pow_192",
+      "shape": [
+        1,
+        280,
+        1
+      ],
+      "native_strides": [
+        280,
+        1,
+        1
+      ],
+      "input_sha256": "4cad70c4b530555d311652028e1415855c7da42bc522dbc4b617cdc7c64fd85f",
+      "reference_sha256": "7e105229e611245f86a4d322c3b511a490c668b831b200fc7dec425de3d88c57",
+      "graph_sha256": "bf2cd4a92de78536bcc057b9c53f9d79862779a80aa66c0746e4a6d7f661eddd",
+      "capture_sha256": "7e105229e611245f86a4d322c3b511a490c668b831b200fc7dec425de3d88c57",
+      "elements": 280,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.0
+    },
+    {
+      "kind": "SiLU",
+      "node": "silu_34",
+      "shape": [
+        1,
+        280,
+        1024
+      ],
+      "native_strides": [
+        286720,
+        1,
+        280
+      ],
+      "input_sha256": "12216c544c81d76a7dd3c7a7cd7ab4b1e26d1817978a7d25037c9a3c179c75e1",
+      "reference_sha256": "dceeeb07062a58bff6bb447041acd303e4643996111f837d6128e47fd44dbdb0",
+      "graph_sha256": "2f251e48bb0616278252244565a78715a8e358461a66e42b71f5ed93db34b61b",
+      "capture_sha256": "c9c987ce512d620e5a37f1675f56c86263ba4111fba5b29f11aabfa8a7f83871",
+      "elements": 286720,
+      "bit_differences": 4,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 9.18354961579912e-36
+    }
+  ],
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "source_base": "731f10bba3d95529caf389c553b09052e1a71e2b",
+  "report_sha256": "6c62f0648ab919b77f21c114cdb21d1f17686d089663d7fe15253262e86da747",
+  "scope_limit": "One worst captured operator per kind only. Mean280 and inverse280 bit-exact; SiLU286720 has4 tiny bit differences but no original tolerance failure. Existing helpers, default export unchanged.",
+  "required_ci_passed": false
+}

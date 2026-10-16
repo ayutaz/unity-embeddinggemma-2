@@ -1,0 +1,20 @@
+#pragma kernel RoundedDivide
+#pragma use_dxc
+StructuredBuffer<float> Input;
+RWStructuredBuffer<float> Output;
+uint Count,DispatchWidth;
+float Divisor;
+[numthreads(64,1,1)]
+void RoundedDivide(uint3 thread : SV_DispatchThreadID)
+{
+    uint index=thread.x+thread.y*DispatchWidth;
+    if(index>=Count)return;
+    precise float x=Input[index];
+    if(x==0){Output[index]=asfloat(asuint(x)^(asuint(Divisor)&0x80000000u));return;}
+    precise float quotient=x/Divisor;
+    if(isinf(quotient)||isnan(quotient)){Output[index]=quotient;return;}
+    precise float residual=mad(-quotient,Divisor,x);
+    if(residual==0){Output[index]=quotient;return;}
+    precise float inverse=1.0f/Divisor;
+    Output[index]=mad(residual,inverse,quotient);
+}

@@ -1,0 +1,451 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "run": 38825766738,
+  "pr_head": "e99c44214ab7d7f526b0fede5b561862460f1d66",
+  "execution_merge_source": "9e18b1c1ed7d7fad8b4f1a8ec4e1e2a13cd5699c",
+  "conclusion": "failure",
+  "python": {
+    "windows313": "success",
+    "windows314": "success",
+    "ubuntu313": "success",
+    "ubuntu314": "failure_two_native_tanh_bit_comparisons"
+  },
+  "package": "success",
+  "actionlint": "success",
+  "model_reference": "failure",
+  "required_ci": "failure",
+  "audio_failure": {
+    "success": false,
+    "stage": "audio_encoder_onnx",
+    "source_commit": "9e18b1c1ed7d7fad8b4f1a8ec4e1e2a13cd5699c",
+    "profile": "frames-1119-valid-1119",
+    "case_id": "silence",
+    "minimum_cosine": 0.9999997615814209,
+    "onnx_vs_official_maximum_absolute_error": 0.0004932880401611328,
+    "maximum_tolerance_ratio": 24.043516159057617,
+    "mismatched_elements": 1309,
+    "graph_sha256": "288adedacec86788009c346eeb9c41bed8bc365c76a5b866474b4ac6b8a5cc63",
+    "unity_validated": false,
+    "end_to_end_validated": false,
+    "onnx_stage_diagnostics": {
+      "first_divergent_stage": "subsample",
+      "stages": [
+        {
+          "name": "subsample",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 8.96453857421875e-05,
+          "maximum_tolerance_ratio": 2.1150693893432617,
+          "mismatched_elements": 562
+        },
+        {
+          "name": "layer_0",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.0001373291015625,
+          "maximum_tolerance_ratio": 4.86046028137207,
+          "mismatched_elements": 220
+        },
+        {
+          "name": "layer_1",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.000152587890625,
+          "maximum_tolerance_ratio": 2.4139959812164307,
+          "mismatched_elements": 494
+        },
+        {
+          "name": "layer_2",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 8.392333984375e-05,
+          "maximum_tolerance_ratio": 2.7809884548187256,
+          "mismatched_elements": 281
+        },
+        {
+          "name": "layer_3",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.000156402587890625,
+          "maximum_tolerance_ratio": 2.6842825412750244,
+          "mismatched_elements": 32
+        },
+        {
+          "name": "layer_4",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.000152587890625,
+          "maximum_tolerance_ratio": 3.6888937950134277,
+          "mismatched_elements": 802
+        },
+        {
+          "name": "layer_5",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.00017780065536499023,
+          "maximum_tolerance_ratio": 5.323738098144531,
+          "mismatched_elements": 612
+        },
+        {
+          "name": "layer_6",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.0001972094178199768,
+          "maximum_tolerance_ratio": 12.433317184448242,
+          "mismatched_elements": 284
+        },
+        {
+          "name": "layer_7",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.00027167797088623047,
+          "maximum_tolerance_ratio": 3.6543338298797607,
+          "mismatched_elements": 89
+        },
+        {
+          "name": "layer_8",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.00028252601623535156,
+          "maximum_tolerance_ratio": 6.810719966888428,
+          "mismatched_elements": 559
+        },
+        {
+          "name": "layer_9",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.0003113485872745514,
+          "maximum_tolerance_ratio": 21.60407066345215,
+          "mismatched_elements": 379
+        },
+        {
+          "name": "layer_10",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.0004584789276123047,
+          "maximum_tolerance_ratio": 6.870394229888916,
+          "mismatched_elements": 714
+        },
+        {
+          "name": "layer_11",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.00299835205078125,
+          "maximum_tolerance_ratio": 59.39921569824219,
+          "mismatched_elements": 4157
+        },
+        {
+          "name": "output_projection",
+          "shape": [
+            1,
+            280,
+            1536
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.003047943115234375,
+          "maximum_tolerance_ratio": 96.18882751464844,
+          "mismatched_elements": 9452
+        },
+        {
+          "name": "projected_features",
+          "shape": [
+            280,
+            512
+          ],
+          "success": false,
+          "maximum_absolute_error": 0.0004932880401611328,
+          "maximum_tolerance_ratio": 24.043516159057617,
+          "mismatched_elements": 1309
+        }
+      ],
+      "stage": "audio_encoder_onnx_stage_diagnostics_only",
+      "detail_layer": null,
+      "feature_rtol": 0.0001,
+      "feature_atol": 1e-05,
+      "trace_matches_failed_graph": true,
+      "native_reference_matches_original": true,
+      "native_reference_vs_original_maximum_absolute_error": 0.0,
+      "localization_validated": true,
+      "encoders_validated": false,
+      "end_to_end_validated": false,
+      "first_nonzero_stage": "subsample",
+      "trace_vs_failed_graph_maximum_absolute_error": 0.0,
+      "graph_sha256": "87f0b7fe49d8b71f8f7d816851bdd23b4b9473aeae3c1bad4ef4b61f633b56d4",
+      "graph_bytes": 1224226738,
+      "subsample_diagnostics": {
+        "first_divergent_stage": "projection",
+        "stages": [
+          {
+            "name": "layer0.masked_input",
+            "shape": [
+              1,
+              1,
+              1119,
+              128
+            ],
+            "success": true,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "mismatched_elements": 0
+          },
+          {
+            "name": "layer0.conv",
+            "shape": [
+              1,
+              128,
+              560,
+              64
+            ],
+            "success": true,
+            "maximum_absolute_error": 9.5367431640625e-07,
+            "maximum_tolerance_ratio": 0.031381040811538696,
+            "mismatched_elements": 0
+          },
+          {
+            "name": "layer0.norm",
+            "shape": [
+              1,
+              560,
+              64,
+              128
+            ],
+            "success": true,
+            "maximum_absolute_error": 5.62518835067749e-06,
+            "maximum_tolerance_ratio": 0.37124791741371155,
+            "mismatched_elements": 0
+          },
+          {
+            "name": "layer0.relu",
+            "shape": [
+              1,
+              128,
+              560,
+              64
+            ],
+            "success": true,
+            "maximum_absolute_error": 4.76837158203125e-06,
+            "maximum_tolerance_ratio": 0.3348558247089386,
+            "mismatched_elements": 0
+          },
+          {
+            "name": "layer1.masked_input",
+            "shape": [
+              1,
+              128,
+              560,
+              64
+            ],
+            "success": true,
+            "maximum_absolute_error": 4.76837158203125e-06,
+            "maximum_tolerance_ratio": 0.3348558247089386,
+            "mismatched_elements": 0
+          },
+          {
+            "name": "layer1.conv",
+            "shape": [
+              1,
+              32,
+              280,
+              32
+            ],
+            "success": true,
+            "maximum_absolute_error": 1.71661376953125e-05,
+            "maximum_tolerance_ratio": 0.14166541397571564,
+            "mismatched_elements": 0
+          },
+          {
+            "name": "layer1.norm",
+            "shape": [
+              1,
+              280,
+              32,
+              32
+            ],
+            "success": true,
+            "maximum_absolute_error": 3.9577484130859375e-05,
+            "maximum_tolerance_ratio": 0.30414876341819763,
+            "mismatched_elements": 0
+          },
+          {
+            "name": "layer1.relu",
+            "shape": [
+              1,
+              32,
+              280,
+              32
+            ],
+            "success": true,
+            "maximum_absolute_error": 3.9577484130859375e-05,
+            "maximum_tolerance_ratio": 0.2501014173030853,
+            "mismatched_elements": 0
+          },
+          {
+            "name": "projection_input",
+            "shape": [
+              1,
+              280,
+              1024
+            ],
+            "success": true,
+            "maximum_absolute_error": 3.9577484130859375e-05,
+            "maximum_tolerance_ratio": 0.2501014173030853,
+            "mismatched_elements": 0
+          },
+          {
+            "name": "projection",
+            "shape": [
+              1,
+              280,
+              1024
+            ],
+            "success": false,
+            "maximum_absolute_error": 8.96453857421875e-05,
+            "maximum_tolerance_ratio": 2.1150693893432617,
+            "mismatched_elements": 562
+          }
+        ],
+        "stage": "audio_onnx_subsample_diagnostics_only",
+        "trace_matches_full_subsample": true,
+        "native_reference_matches_full_subsample": true,
+        "trace_vs_full_subsample_maximum_absolute_error": 0.0,
+        "native_vs_full_subsample_maximum_absolute_error": 0.0,
+        "localization_validated": true,
+        "encoders_validated": false,
+        "end_to_end_validated": false,
+        "feature_rtol": 0.0001,
+        "feature_atol": 1e-05,
+        "first_nonzero_stage": "layer0.conv",
+        "files": {
+          "graph": {
+            "path": "audio-onnx-subsample-stages.onnx",
+            "bytes": 4357883,
+            "sha256": "581f6562bbf0e4f6ac4ad7703ebd7a86c47dc55f43404932a9ae21b67a95ae27"
+          },
+          "native_input": {
+            "path": "audio-subsample-native_input.bin",
+            "bytes": 572928,
+            "sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24"
+          },
+          "frame_mask": {
+            "path": "audio-subsample-frame_mask.bin",
+            "bytes": 4476,
+            "sha256": "d1d720a6b7013a4b396f2a8595d52f9648132b665f40f899b09bc62918e57c95"
+          },
+          "native_subsample": {
+            "path": "audio-subsample-native_subsample.bin",
+            "bytes": 1146880,
+            "sha256": "8cc5ae3cb4d0bd5224f697fdda35e1f4cfe9ac4457bc95fa4d93898f05446b7b"
+          }
+        }
+      }
+    }
+  },
+  "cpu_context": {
+    "source_commit": "9e18b1c1ed7d7fad8b4f1a8ec4e1e2a13cd5699c",
+    "system": "Linux",
+    "machine": "x86_64",
+    "processor": "AMD EPYC 7763 64-Core Processor",
+    "torch_version": "2.14.1+cu130",
+    "cpu_capability": "AVX2",
+    "torch_threads": 2,
+    "torch_interop_threads": 4,
+    "torch_build_configuration": "PyTorch built with:\n  - GCC 13.3\n  - C++ Version: 202002\n  - Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications\n  - Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)\n  - OpenMP 201511 (a.k.a. OpenMP 4.5)\n  - LAPACK is enabled (usually provided by MKL)\n  - NNPACK is enabled\n  - CPU capability usage: AVX2\n  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, COMMIT_SHA=5c4886908584029761b579af026dcfb627c84070, CUDA_FLAGS= -DLIBCUDACXX_ENABLE_SIMPLIFIED_COMPLEX_OPERATIONS -Xfatbin -compress-all -DONNX_NAMESPACE=onnx_torch -gencode arch=compute_75,code=sm_75 -gencode arch=compute_80,code=sm_80 -gencode arch=compute_86,code=sm_86 -gencode arch=compute_90,code=sm_90 -gencode arch=compute_100,code=sm_100 -gencode arch=compute_120,code=sm_120 -Xcudafe --diag_suppress=cc_clobber_ignored,--diag_suppress=field_without_dll_interface,--diag_suppress=base_class_has_different_dll_interface,--diag_suppress=dll_interface_conflict_none_assumed,--diag_suppress=dll_interface_conflict_dllexport_assumed,--diag_suppress=bad_friend_decl --expt-relaxed-constexpr --expt-extended-lambda -Xfatbin -compress-all --threads 2 -compress-mode=size -Wno-deprecated-gpu-targets --expt-extended-lambda -DCUB_WRAPPED_NAMESPACE=at_cuda_detail -DDISABLE_CUSPARSE_DEPRECATED -DCUDA_HAS_FP16=1 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -DC10_NODEPRECATED, CUDA_VERSION=13.0, CUDNN_VERSION=9.24.0, CXX_COMPILER=/opt/rh/gcc-toolset-13/root/usr/bin/c++, CXX_FLAGS= -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DHAS_CUPTI -DUSE_FBGEMM -DUSE_MSLK -DUSE_PYTORCH_QNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -DC10_NODEPRECATED -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=range-loop-construct -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-unknown-pragmas -Wno-unused-parameter -Wno-strict-overflow -Wno-strict-aliasing -Wno-stringop-overflow -Wsuggest-override -Wno-psabi -Wno-error=old-style-cast -faligned-new -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-dangling-reference -Wno-error=dangling-reference -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, TORCH_VERSION=2.14.1, USE_CUDA=1, USE_CUDNN=ON, USE_CUSPARSELT=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_GLOO=ON, USE_HIPSPARSELT=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, USE_ROCM_KERNEL_ASSERT=OFF, USE_XCCL=OFF, USE_XPU=OFF, \n",
+    "numpy_version": "2.5.3",
+    "numpy_blas": {
+      "name": "scipy-openblas",
+      "version": "0.3.34.106.0",
+      "openblas configuration": "OpenBLAS 0.3.34.106.0  USE64BITINT DYNAMIC_ARCH NO_AFFINITY Haswell MAX_THREADS=64"
+    },
+    "environment": {
+      "MKL_ENABLE_INSTRUCTIONS": null,
+      "MKL_CBWR": null,
+      "ATEN_CPU_CAPABILITY": null,
+      "ONEDNN_MAX_CPU_ISA": null,
+      "DNNL_MAX_CPU_ISA": null,
+      "OMP_NUM_THREADS": "4",
+      "MKL_NUM_THREADS": "4",
+      "OPENBLAS_NUM_THREADS": null,
+      "OPENBLAS_CORETYPE": null,
+      "NPY_DISABLE_CPU_FEATURES": null
+    },
+    "encoder_validated": false,
+    "gpu_validated": false
+  },
+  "artifact": {
+    "id": 12015631393,
+    "archive_bytes": 3688223826,
+    "selected_json_range_bytes": 15785
+  },
+  "evidence_sha256": {
+    "audio-cpu-context.json": "8d8c50f10fff98ecb16313f7bce80657cc0b91f52cecfa8c4594d351753d29dd",
+    "audio-encoder-failure.json": "69a33be86f9279b86e7b10c64e9c8a74a3ded8469c8c1d258f96c9c70c329162"
+  },
+  "linux314_failure": {
+    "job": 116732753417,
+    "log_sha256": "86d84324ca0c9de99108d6291aea5745f69283d183bc668f32874f197cbb1985",
+    "tests": [
+      "test_paired_fp32_candidate_matches_native_cpu_tanh_across_attention_domain_and_saturation",
+      "test_actual_standard_fp32_onnx_output_is_checked_independently"
+    ],
+    "random514_actual_onnx_vs_native_bit_difference_count": 8,
+    "maximum_ulp_difference": 1
+  },
+  "reference_unchanged": true,
+  "tolerances_unchanged": true,
+  "default_export_unchanged": true,
+  "gpu_runtime_unchanged": true,
+  "limit": "Observed NumPy OpenBLAS metadata does not establish causality. PR head and PR merge execution source are recorded separately. No failing test was relaxed, skipped or relabelled as success."
+}

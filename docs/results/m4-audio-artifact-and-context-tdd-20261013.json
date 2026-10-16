@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-13",
+  "scope": "bounded_zip_selection_and_pinned_audio_context_auditors_only",
+  "implementation_commit": "e0a02c678bd3bf6ee88e683f791f3d59b3d62f19",
+  "initial_import_collection_error_excluded_from_assertion_red": 1,
+  "red_checkpoints": [
+    {"scope": "range_zip_selection", "assertion_failed": 6, "log_sha256": "7841ef5231ee8ca690051203a8062e3d8f4d362a88096509923e7ee9c8e72cba"},
+    {"scope": "http_and_selection_cli", "assertion_failed": 5, "log_sha256": "9d688f3350c7b8e4cfc8e8c1c73c81dcf3017485208da2e9db63d24f58955fd8"},
+    {"scope": "pinned_reference_context", "assertion_failed": 4, "log_sha256": "054f213e4300e047360dc9052c949ab9e7fcd5522082dd876f59afeab39d79df"},
+    {"scope": "pinned_context_cli", "assertion_failed": 2, "log_sha256": "fa7a611f713ca9bfb503ebf3908205061b833f1a8e33b9ddde2baef6e0940d6d"},
+    {"scope": "missing_values_are_not_matches", "assertion_failed": 2, "log_sha256": "8f7d4cdadaf1316f11b20474f44cb907559c6aa9ca096882908b1867524f778a"}
+  ],
+  "final_green": {"passed": 19, "failed": 0, "log_sha256": "8fabd7c4319d054c4682ad0d4194fe264db8552b203052a71cf7957c67ecd025"},
+  "real_context_gate_exit_code": 1,
+  "unity_stage_diagnostics_executed": false,
+  "full_encoder_validated": false
+}

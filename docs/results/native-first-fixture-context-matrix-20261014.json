@@ -1,0 +1,285 @@
+{
+  "scope": "frozen_native_first_fixture_cpu_context_matrix",
+  "workflow_run": 38563722587,
+  "head_commit": "d78066b2f5d608ab158773b2a64c1750299f0fc3",
+  "producer_commit": "5a2496d87689a03d35d8cd4b6c84e4f905c78487",
+  "job_execution_completed": true,
+  "original_expected_unchanged": true,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "settings_and_host_are_confounded": true,
+  "conditions": [
+    {
+      "report_sha256": "f285ba6ce30f0be766446f2cd02e91e4b572cd1818a3cc191d1a8afa1f9630e1",
+      "cpu_host_sha256": "0bc4f90dc0b0c3620783a1a4a620c44c8d6af5e2328ed494c152c1c473769dcf",
+      "probe_context": "native",
+      "graph_sha256": "c5ff40cd8effbbc719e0f7c3369d08ec528f6605d7392afc7a5e470ab46ec627",
+      "cpu_model": "AMD EPYC 9V45 96-Core Processor",
+      "case": "square-0",
+      "modality": "image",
+      "runtime": {
+        "torch_version": "2.14.1+cu130",
+        "cpu_capability": "AVX512",
+        "torch_interop_threads": 2,
+        "env": {
+          "ATEN_CPU_CAPABILITY": null,
+          "MKL_CBWR": null,
+          "DNNL_MAX_CPU_ISA": null
+        }
+      },
+      "cpu_vendor": "AuthenticAMD",
+      "input_sha256": "d25852af1b53b8f4ed484b760280b1859b8a3b63e3456f7cbb378f33877761b7",
+      "thread_contexts": {
+        "scope": "controlled_cpu_thread_replay_only",
+        "original_threads": 2,
+        "conditions": [
+          {
+            "requested_threads": 1,
+            "executed": true,
+            "actual_threads": 1,
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 3,
+            "maximum_absolute_error": 2.962350845336914E-05,
+            "maximum_tolerance_ratio": 1.1828582987424463,
+            "worst_index": 25168,
+            "worst_actual": -0.03351863473653793,
+            "worst_expected": -0.03353442996740341
+          },
+          {
+            "requested_threads": 2,
+            "executed": true,
+            "actual_threads": 2,
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 3,
+            "maximum_absolute_error": 2.962350845336914E-05,
+            "maximum_tolerance_ratio": 1.1828582987424463,
+            "worst_index": 25168,
+            "worst_actual": -0.03351863473653793,
+            "worst_expected": -0.03353442996740341
+          },
+          {
+            "requested_threads": 4,
+            "executed": true,
+            "actual_threads": 4,
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 3,
+            "maximum_absolute_error": 2.962350845336914E-05,
+            "maximum_tolerance_ratio": 1.1828582987424463,
+            "worst_index": 25168,
+            "worst_actual": -0.03351863473653793,
+            "worst_expected": -0.03353442996740341
+          }
+        ],
+        "full_encoder_validated": false,
+        "end_to_end_validated": false
+      }
+    },
+    {
+      "report_sha256": "186ddf83ba20c937f40839f7c46232082db2720dd53328bf3b523bd66d790af1",
+      "cpu_host_sha256": "eda047d6a2a8a735ae06c3c4b5fe8cf2f09af8a2646057a1a5bcab415d0b6401",
+      "probe_context": "avx2",
+      "graph_sha256": "c5ff40cd8effbbc719e0f7c3369d08ec528f6605d7392afc7a5e470ab46ec627",
+      "cpu_model": "AMD EPYC 7763 64-Core Processor",
+      "case": "square-0",
+      "modality": "image",
+      "runtime": {
+        "torch_version": "2.14.1+cu130",
+        "cpu_capability": "AVX2",
+        "torch_interop_threads": 4,
+        "env": {
+          "ATEN_CPU_CAPABILITY": "avx2",
+          "MKL_CBWR": "AVX2",
+          "DNNL_MAX_CPU_ISA": "AVX2"
+        }
+      },
+      "cpu_vendor": "AuthenticAMD",
+      "input_sha256": "d25852af1b53b8f4ed484b760280b1859b8a3b63e3456f7cbb378f33877761b7",
+      "thread_contexts": {
+        "scope": "controlled_cpu_thread_replay_only",
+        "original_threads": 2,
+        "conditions": [
+          {
+            "requested_threads": 1,
+            "executed": true,
+            "actual_threads": 1,
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "worst_index": 0,
+            "worst_actual": 1.4488065242767334,
+            "worst_expected": 1.4488065242767334
+          },
+          {
+            "requested_threads": 2,
+            "executed": true,
+            "actual_threads": 2,
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "worst_index": 0,
+            "worst_actual": 1.4488065242767334,
+            "worst_expected": 1.4488065242767334
+          },
+          {
+            "requested_threads": 4,
+            "executed": true,
+            "actual_threads": 4,
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "worst_index": 0,
+            "worst_actual": 1.4488065242767334,
+            "worst_expected": 1.4488065242767334
+          }
+        ],
+        "full_encoder_validated": false,
+        "end_to_end_validated": false
+      }
+    },
+    {
+      "report_sha256": "3857beadb7cde1bffadd0c6569b7d914011c03368e8f416194541b7987d63629",
+      "cpu_host_sha256": "8f1b85a1b5f0ac8e9fa22fd79b9906dd4093ba63ff4b89417708202b49186f6f",
+      "probe_context": "native",
+      "graph_sha256": "dc43d56b896b64077d8e86d56c3fd2b89cfe3d31170eabaa387165ea961438d7",
+      "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+      "case": "silence",
+      "modality": "audio",
+      "runtime": {
+        "torch_version": "2.14.1+cu130",
+        "cpu_capability": "AVX512",
+        "torch_interop_threads": 4,
+        "env": {
+          "ATEN_CPU_CAPABILITY": null,
+          "MKL_CBWR": null,
+          "DNNL_MAX_CPU_ISA": null
+        }
+      },
+      "cpu_vendor": "AuthenticAMD",
+      "input_sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+      "thread_contexts": {
+        "scope": "controlled_cpu_thread_replay_only",
+        "original_threads": 2,
+        "conditions": [
+          {
+            "requested_threads": 1,
+            "executed": true,
+            "actual_threads": 1,
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "worst_index": 0,
+            "worst_actual": -3.593391180038452,
+            "worst_expected": -3.593391180038452
+          },
+          {
+            "requested_threads": 2,
+            "executed": true,
+            "actual_threads": 2,
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "worst_index": 0,
+            "worst_actual": -3.593391180038452,
+            "worst_expected": -3.593391180038452
+          },
+          {
+            "requested_threads": 4,
+            "executed": true,
+            "actual_threads": 4,
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "worst_index": 0,
+            "worst_actual": -3.593391180038452,
+            "worst_expected": -3.593391180038452
+          }
+        ],
+        "full_encoder_validated": false,
+        "end_to_end_validated": false
+      }
+    },
+    {
+      "report_sha256": "a18ba70d2dcb9ffe181ccbce79ae6121ad6133c096dc5cb99adfd9b776a20497",
+      "cpu_host_sha256": "6c8b893701868b11ed8be26d68ee110a25507a2a173aa0f040051f69798053e4",
+      "probe_context": "avx2",
+      "graph_sha256": "dc43d56b896b64077d8e86d56c3fd2b89cfe3d31170eabaa387165ea961438d7",
+      "cpu_model": "INTEL(R) XEON(R) PLATINUM 8573C",
+      "case": "silence",
+      "modality": "audio",
+      "runtime": {
+        "torch_version": "2.14.1+cu130",
+        "cpu_capability": "AVX2",
+        "torch_interop_threads": 2,
+        "env": {
+          "ATEN_CPU_CAPABILITY": "avx2",
+          "MKL_CBWR": "AVX2",
+          "DNNL_MAX_CPU_ISA": "AVX2"
+        }
+      },
+      "cpu_vendor": "GenuineIntel",
+      "input_sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+      "thread_contexts": {
+        "scope": "controlled_cpu_thread_replay_only",
+        "original_threads": 2,
+        "conditions": [
+          {
+            "requested_threads": 1,
+            "executed": true,
+            "actual_threads": 1,
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 567,
+            "maximum_absolute_error": 0.00022411346435546875,
+            "maximum_tolerance_ratio": 10.95344661554058,
+            "worst_index": 23176,
+            "worst_actual": 0.007150709629058838,
+            "worst_expected": 0.007268205285072327
+          },
+          {
+            "requested_threads": 2,
+            "executed": true,
+            "actual_threads": 2,
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 275,
+            "maximum_absolute_error": 0.00018286705017089844,
+            "maximum_tolerance_ratio": 8.808599237684566,
+            "worst_index": 23176,
+            "worst_actual": 0.007173717021942139,
+            "worst_expected": 0.007268205285072327
+          },
+          {
+            "requested_threads": 4,
+            "executed": true,
+            "actual_threads": 4,
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 477,
+            "maximum_absolute_error": 0.0002079010009765625,
+            "maximum_tolerance_ratio": 10.101897753736347,
+            "worst_index": 23176,
+            "worst_actual": 0.0071598440408706665,
+            "worst_expected": 0.007268205285072327
+          }
+        ],
+        "full_encoder_validated": false,
+        "end_to_end_validated": false
+      }
+    }
+  ]
+}

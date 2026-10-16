@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "opt_in_original_parameter_backed_fourth_bmm_tdd_only",
+  "source_base": "7cdad81bc0020be627f40ae3cb1f6c99acf72bf0",
+  "red": {
+    "file": "ordered-all-bmm-segment-red-20261016.xml",
+    "sha256": "d2a632d299e1cfb565a2e8b4d9388661919804cd9783220aaa57b141d40333e2",
+    "tests": "2",
+    "failures": "2",
+    "errors": "0",
+    "skipped": "0",
+    "time": "2.363"
+  },
+  "green": {
+    "file": "ordered-all-bmm-segment-green-20261016.xml",
+    "sha256": "a32a0718cd6fb9b3856ace4a741fea03b522e9fb0add1d0df1c6a54002a4ee22",
+    "tests": "5",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "8.626"
+  },
+  "related_green": {
+    "file": "ordered-all-bmm-related-green-20261016.xml",
+    "sha256": "982100be722e5938b460664d822ebc7e80d9fbd1ce44a9ee1cead231d43b34aa",
+    "tests": "96",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "45.489"
+  },
+  "actionlint": "passed",
+  "actual_model_evidence": "m4-original-clipped-pointwise-bmm-all286720-bit-exact-20261016.json",
+  "qualified_shape_pair": [
+    [
+      1,
+      280,
+      1024
+    ],
+    [
+      1,
+      1024,
+      1024
+    ]
+  ],
+  "parameter_view_chain": "Only get_attr or original transpose(1,0)/expand(1,1024,1024)/view(1,1024,1024); reject dynamic RHS.",
+  "original_clips": "Preserved by original FX graph, not modified by lowering.",
+  "original_references_unchanged": true,
+  "original_weights_unchanged": true,
+  "tolerances_unchanged": true,
+  "default_export_unchanged": true,
+  "runtime_unchanged": true,
+  "whole_encoder_validated": false,
+  "gpu_validated": false,
+  "required_ci_passed": false
+}

@@ -1,0 +1,119 @@
+name: Pinned original audio acceptance
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    # Previous raw noise execution exceeded 20 minutes; all five parts must finish.
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        case_id: [silence, impulse, sine, nyquist, noise, padded_noise]
+    defaults:
+      run:
+        working-directory: tools
+        shell: bash
+    env:
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+      OPENBLAS_NUM_THREADS: '4'
+      CASE_ID: ${{ matrix.case_id }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - name: Select original full or padded input profile
+        run: |
+          case "$CASE_ID" in
+            silence|impulse|sine|nyquist|noise) profile=frames-1119-valid-1119 ;;
+            padded_noise) profile=frames-1119-valid-839 ;;
+            *) exit 1 ;;
+          esac
+          echo "PROFILE=$profile" >> "$GITHUB_ENV"
+      - name: Fetch original pinned graph and raw input only
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.artifact_zip
+          --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11814567883
+          --output ../artifacts/original --max-entry-bytes 2147483648
+          --member audio-runtime-reference/audio-encoder-reference.json
+          --member audio-runtime-reference/audio-encoder-validation.json
+          --member "audio-runtime-reference/${PROFILE}/audio.pt2"
+          --member "audio-runtime-reference/${PROFILE}/${CASE_ID}-features-fp32.bin"
+      - name: Execute original raw features through all five actual ONNX parts
+        run: |
+          mkdir -p ../artifacts/pinned-audio
+          lscpu --json > ../artifacts/pinned-audio/cpu-host.json
+          uv run --locked python -m embeddinggemma_tools.frozen_audio_chained_onnx \
+            --input ../artifacts/original/audio-runtime-reference \
+            --output ../artifacts/pinned-audio \
+            --raw-input --variant ordered_original_midpoint_bmm --case "$CASE_ID"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: pinned-audio-${{ github.sha }}-${{ matrix.case_id }}
+          path: |
+            artifacts/pinned-audio/*.json
+            artifacts/pinned-audio/*.bin
+            artifacts/original/range-receipt.json
+          retention-days: 7
+          if-no-files-found: error
+
+  audit:
+    needs: [execute]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: tools
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: pinned-audio-${{ github.sha }}-*
+          path: artifacts/pinned-audio-cases
+      - name: Fetch independent original reference and audit manifests
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.artifact_zip
+          --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11814567883
+          --output ../artifacts/original
+          --member audio-runtime-reference/audio-encoder-reference.json
+          --member audio-runtime-reference/audio-encoder-validation.json
+      - name: Require six complete actual carries at this execution source
+        env:
+          EXECUTION_SOURCE: ${{ github.sha }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.pinned_audio_acceptance
+          --original ../artifacts/original/audio-runtime-reference
+          --reports ../artifacts/pinned-audio-cases --source "$EXECUTION_SOURCE"
+          --output ../artifacts/pinned-audio-acceptance.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: pinned-audio-acceptance-${{ github.sha }}
+          path: artifacts/pinned-audio-acceptance.json
+          retention-days: 7
+          if-no-files-found: warn

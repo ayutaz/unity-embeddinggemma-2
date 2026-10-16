@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "audited_frozen_input_audio_segment_onnx_diagnosis_only",
+  "run_id": 38790946377,
+  "artifact_id": 11999238885,
+  "source": "2ac246a6c79834efc51d524228217126e4cb021b",
+  "report_sha256": "b7a723375cb5d1e308efab31a1def11531cdda2598b95e8922f0ed24aacf8985",
+  "provenance": {
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+    "audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+    "graph_sha256": "dc43d56b896b64077d8e86d56c3fd2b89cfe3d31170eabaa387165ea961438d7",
+    "input_sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+    "job_source": "2ac246a6c79834efc51d524228217126e4cb021b",
+    "torch_version": "2.14.1+cu130",
+    "threads": 2,
+    "cpu_capability": "AVX2",
+    "silu_expected_count": 9
+  },
+  "input_provenance": {
+    "stage": "layer_8",
+    "reference_sha256": "6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a",
+    "audit_sha256": "3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b",
+    "expected_sha256": "e909a23f955d2533d8cd304620f08a153bc3367371259ae70ecaf3cbf435d734",
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9"
+  },
+  "target_provenance": {
+    "stage": "projected_features",
+    "reference_sha256": "6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a",
+    "audit_sha256": "3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b",
+    "expected_sha256": "e9ac5425c93912ac7e4983ed98e80b4020e1f8f2d81c2950adfd31b1022441ad",
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9"
+  },
+  "native_segment_vs_reference_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 0.0,
+    "maximum_tolerance_ratio": 0.0,
+    "worst_index": 0,
+    "worst_actual": -3.593391180038452,
+    "worst_expected": -3.593391180038452,
+    "exact_difference_count": 0
+  },
+  "native_wrapper_control_bits_equal": true,
+  "reference_execution": "onnx.reference.ReferenceEvaluator kernels, original node order, release after last explicit consumer",
+  "cases": [
+    {
+      "variant": "native_silu",
+      "graph": "native_silu.onnx",
+      "graph_sha256": "46ddc125f605a39d91af451812b7c9d1e0dd354be463a9d139a5f7054dd1249a",
+      "capture": "native_silu-fp32.bin",
+      "capture_sha256": "f1854ed9f25a568d8f4cd6018501f1e06fc82f5e61cbbfaaf36586ff5a33227e",
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 7,
+        "maximum_absolute_error": 4.601478576660156e-05,
+        "maximum_tolerance_ratio": 2.1517931271366337,
+        "worst_index": 23176,
+        "worst_actual": 0.007245123386383057,
+        "worst_expected": 0.007268205285072327,
+        "exact_difference_count": 136113
+      },
+      "native_wrapper_bits_equal": true,
+      "coefficients_unchanged": true,
+      "rms_mean_replacements": 0,
+      "rms_inverse_replacements": 0,
+      "silu_replacements": 9,
+      "silu_input_domains": [
+        {
+          "node": "silu_27",
+          "shape": [
+            1,
+            280,
+            4096
+          ],
+          "minimum": -14.099578857421875,
+          "maximum": 9.41110897064209,
+          "positive_tail_elements": 0,
+          "negative_tail_elements": 0
+        },
+        {
+          "node": "silu_28",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "minimum": -52.44365310668945,
+          "maximum": 31.467201232910156,
+          "positive_tail_elements": 0,
+          "negative_tail_elements": 0
+        },
+        {
+          "node": "silu_29",
+          "shape": [
+            1,
+            280,
+            4096
+          ],
+          "minimum": -30.375,
+          "maximum": 30.125,
+          "positive_tail_elements": 0,
+          "negative_tail_elements": 0
+        },
+        {
+          "node": "silu_30",
+          "shape": [
+            1,
+            280,
+            4096
+          ],
+          "minimum": -13.625,
+          "maximum": 13.5625,
+          "positive_tail_elements": 0,
+          "negative_tail_elements": 0
+        },
+        {
+          "node": "silu_31",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "minimum": -66.45508575439453,
+          "maximum": 76.99882507324219,
+          "positive_tail_elements": 0,
+          "negative_tail_elements": 0
+        },
+        {
+          "node": "silu_32",
+          "shape": [
+            1,
+            280,
+            4096
+          ],
+          "minimum": -68.5,
+          "maximum": 42.21371841430664,
+          "positive_tail_elements": 0,
+          "negative_tail_elements": 0
+        },
+        {
+          "node": "silu_33",
+          "shape": [
+            1,
+            280,
+            4096
+          ],
+          "minimum": -17.343700408935547,
+          "maximum": 19.71562957763672,
+          "positive_tail_elements": 0,
+          "negative_tail_elements": 0
+        },
+        {
+          "node": "silu_34",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "minimum": -148.3451690673828,
+          "maximum": 151.27110290527344,
+          "positive_tail_elements": 530,
+          "negative_tail_elements": 750
+        },
+        {
+          "node": "silu_35",
+          "shape": [
+            1,
+            280,
+            4096
+          ],
+          "minimum": -31.98188591003418,
+          "maximum": 26.6591796875,
+          "positive_tail_elements": 0,
+          "negative_tail_elements": 0
+        }
+      ]
+    }
+  ],
+  "captures_independently_hashed_and_compared": true,
+  "conclusion": "diagnostic_complete_numeric_candidate_failed",
+  "baseline_receipt": "m4-original-layer8-to-final-onnx-14-failures-20261016.json",
+  "interpretation": "Seven tolerance failures remain. The count is below the earlier native-ONNX14 but maximum tolerance ratio is worse (2.15 versus1.42); neither is accepted. Probes can use different CPU hosts, so cross-run count differences do not establish a sole causal operator. Original weights, reference bytes and tolerances remain unchanged.",
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "end_to_end_validated": false,
+  "required_ci_passed": false
+}

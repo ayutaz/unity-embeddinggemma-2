@@ -1,0 +1,318 @@
+{
+  "success": false,
+  "scope": "native_gpu_silu_connected_to_original_whole_audio_encoder_and_early_bit_observation",
+  "runtime_source": "3ae76bd182fb80dd74c9b7851a99ce719e4da67d",
+  "partition_producer": "3ae76bd182fb80dd74c9b7851a99ce719e4da67d",
+  "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "original_reference_changed": false,
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "preparation": {
+    "projections": 135,
+    "silu": 36,
+    "operations": 171,
+    "segments": 172,
+    "nodes": 41830,
+    "source_graph_sha256": "c050c2efa87d83aea45587b25f7b8d1d24dc471f33cc732dcf17d89588c70c13",
+    "source_initializer_sha256": "1154ac702080fbd58adb2770693221efc81f56750563f8d4310ddb7fcf870bfd",
+    "source_initializer_bytes_preserved": true,
+    "all_segment_inputs_fixed_fp32": true,
+    "source_non_selected_operations_preserved": true
+  },
+  "metadata_audit": {
+    "success": true,
+    "boundaries": 483,
+    "inference_executed": false,
+    "gpu_validated": false,
+    "execution": {
+      "terminal": true,
+      "exit_code": 0,
+      "elapsed_seconds": 69.22630019999633,
+      "nunit": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "gpu_numeric_result": {
+    "actual_backend": "GPUCompute",
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "prepare_ms": 13294.6658,
+    "execute_and_final_download_ms": 2496.6310000000003,
+    "mismatched_elements": 203,
+    "maximum_absolute_error": 0.00014662742614746094,
+    "maximum_tolerance_ratio": 6.96797567831979
+  },
+  "combined_execution": {
+    "terminal": true,
+    "exit_code": 2,
+    "elapsed_seconds": 149.31960669999535,
+    "nunit": {
+      "total": 2,
+      "passed": 1,
+      "failed": 1,
+      "skipped": 0
+    }
+  },
+  "early_observation": {
+    "success": true,
+    "normal_final_matches_observed_bits": true,
+    "stages": [
+      {
+        "stage": "input_projection",
+        "boundary": "/subsample_conv_projection/input_proj_linear/MatMul_output_0",
+        "original_native_sha256": "dc54774840fed958a310c6092e5c5c3483de74be52df7914d2bd128a99192969",
+        "expected_transform": "identity",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-early-observation-3ae76bd182fb80dd74c9b7851a99ce719e4da67d-silence-captures\\input_projection-fp32.bin",
+        "actual_sha256": "dc54774840fed958a310c6092e5c5c3483de74be52df7914d2bd128a99192969",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      {
+        "stage": "pre_layer_norm_input",
+        "boundary": "/feed_forward1/ffw_layer_1/Clip_output_0",
+        "original_native_sha256": "5cc9770575ad3c8873e4fd9f9b0fcec826626c60242217bec9edee7c6362c917",
+        "expected_transform": "original_fp32_input_clip",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-early-observation-3ae76bd182fb80dd74c9b7851a99ce719e4da67d-silence-captures\\pre_layer_norm_input-fp32.bin",
+        "actual_sha256": "5cc9770575ad3c8873e4fd9f9b0fcec826626c60242217bec9edee7c6362c917",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      {
+        "stage": "activation_input",
+        "boundary": "/feed_forward1/ffw_layer_2/Clip_output_0",
+        "original_native_sha256": "ad35b972c4e5e513fc9edb68192470de427833ef17c054bc0a55f6c869e8ba5f",
+        "expected_transform": "original_fp32_input_clip",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-early-observation-3ae76bd182fb80dd74c9b7851a99ce719e4da67d-silence-captures\\activation_input-fp32.bin",
+        "actual_sha256": "266bfb8443ebeac47f94ddb4960b2b818618b017a2706e9090d153b386f4c3f5",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      {
+        "stage": "feed_forward1_output",
+        "boundary": "/feed_forward1/Add_output_0",
+        "original_native_sha256": "d5931033c782ff11a24e1caf8f184c620904a85b6b508547108f3a3503622aa5",
+        "expected_transform": "identity",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-early-observation-3ae76bd182fb80dd74c9b7851a99ce719e4da67d-silence-captures\\feed_forward1_output-fp32.bin",
+        "actual_sha256": "d5931033c782ff11a24e1caf8f184c620904a85b6b508547108f3a3503622aa5",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      {
+        "stage": "norm_pre_attn",
+        "boundary": "/norm_pre_attn/Mul_1_output_0",
+        "original_native_sha256": "53456d0a3731ffab84bca09d6397232777bcaeadea34ff369826169d87785e5d",
+        "expected_transform": "identity",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-early-observation-3ae76bd182fb80dd74c9b7851a99ce719e4da67d-silence-captures\\norm_pre_attn-fp32.bin",
+        "actual_sha256": "53456d0a3731ffab84bca09d6397232777bcaeadea34ff369826169d87785e5d",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.0
+      }
+    ],
+    "all_five_boundaries_bit_exact": true,
+    "note": "Clip-boundary expected values use the original fixed limits; native files are unchanged. Observation pass is not a whole-encoder pass."
+  },
+  "tdd": {
+    "python_chain": "7 intended API red -> related 35 green",
+    "unnamed_nodes": "1 red -> related 36 green",
+    "mixed_gpu_contract": "1 red -> 3 related GPU green",
+    "mixed_red": {
+      "terminal": true,
+      "exit_code": 2,
+      "elapsed_seconds": 37.419735400006175,
+      "nunit": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      }
+    },
+    "mixed_green": {
+      "terminal": true,
+      "exit_code": 0,
+      "elapsed_seconds": 35.66547730000457,
+      "nunit": {
+        "total": 3,
+        "passed": 3,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "comparison": {
+    "previous_all_static_mismatches": 539,
+    "current_mismatches": 203,
+    "previous_first_two_projection_mismatches": 175,
+    "note": "Count improves against the all-static candidate but does not pass the unchanged tolerance, and does not establish superiority over every older candidate."
+  },
+  "next_action": "Observe the first attention block after the now bit-exact norm_pre_attn boundary against the original native block reference.",
+  "independent_python_regression": {
+    "run_id": 38657424472,
+    "source": "3ae76bd182fb80dd74c9b7851a99ce719e4da67d",
+    "verified_pass": true,
+    "environments": 4,
+    "tests_each": 851,
+    "receipt": "python-full-native-silu-partition-green-20261015.json"
+  },
+  "unresolved": [
+    "Whole encoder is numerically failing",
+    "Other original audio signals and padded profile are not validated for this candidate",
+    "All FP32 image profiles",
+    "Actual PCM/Texture to normalized 768 API with all role, mask, boundary, ownership and exception reuse contracts",
+    "Persistent allocation warning recurs in the full validation log; origin and leak freedom remain unproven"
+  ],
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "evidence": [
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-gpu-3ae76bd182fb80dd74c9b7851a99ce719e4da67d-silence.json",
+      "bytes": 3133,
+      "sha256": "c8a982f1e6188db51d9214c7a46ba8a3ba5a115f9fd9cf0b99d25903219e8e2f"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-early-observation-3ae76bd182fb80dd74c9b7851a99ce719e4da67d-silence.json",
+      "bytes": 6306,
+      "sha256": "79b9299a90e6af0219779cde9b5f9f35efb4b76b0febceeb627f77c733f0b129"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\native-silu-boundary-shapes-3ae76bd182fb80dd74c9b7851a99ce719e4da67d.json",
+      "bytes": 43904,
+      "sha256": "a614a53b38abeb38b89884d732731abcc67ec77b0a7492b97653d629867bb485"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\partitioned-native-silu-real\\partition-plan.json",
+      "bytes": 300817,
+      "sha256": "db33f4c3cac7ba20e4846d49078f645160cc2e8f3b6ee3d955448f2e0f273fee"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-early-observation-3ae76bd182fb80dd74c9b7851a99ce719e4da67d-silence-captures\\input_projection-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "dc54774840fed958a310c6092e5c5c3483de74be52df7914d2bd128a99192969"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-early-observation-3ae76bd182fb80dd74c9b7851a99ce719e4da67d-silence-captures\\pre_layer_norm_input-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "5cc9770575ad3c8873e4fd9f9b0fcec826626c60242217bec9edee7c6362c917"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-early-observation-3ae76bd182fb80dd74c9b7851a99ce719e4da67d-silence-captures\\activation_input-fp32.bin",
+      "bytes": 4587520,
+      "sha256": "266bfb8443ebeac47f94ddb4960b2b818618b017a2706e9090d153b386f4c3f5"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-early-observation-3ae76bd182fb80dd74c9b7851a99ce719e4da67d-silence-captures\\feed_forward1_output-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "d5931033c782ff11a24e1caf8f184c620904a85b6b508547108f3a3503622aa5"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-early-observation-3ae76bd182fb80dd74c9b7851a99ce719e4da67d-silence-captures\\norm_pre_attn-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "53456d0a3731ffab84bca09d6397232777bcaeadea34ff369826169d87785e5d"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\mixed-gpu-silu-pipeline-red-20261015.xml",
+      "bytes": 4680,
+      "sha256": "55b0d744c4a3f96eced89f4c5759d08627df0d125bfa0a1d211201a9a1ce93b1"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\mixed-gpu-silu-pipeline-red-20261015-process.json",
+      "bytes": 1287,
+      "sha256": "60d2a2411ebe9a435df66295eea49ea0f172543f143572c767f37853dbc29f61"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\mixed-gpu-silu-pipeline-red-20261015.log",
+      "bytes": 45898,
+      "sha256": "c1d84eacce8377b7307ad3c318a52a4bab7cd577689a008d9ca8a60fffa940f4"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\mixed-gpu-silu-pipeline-green-20261015.xml",
+      "bytes": 4968,
+      "sha256": "b600f96a8633563974791895174bc7708c4cced920d427542ef525a0553695e8"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\mixed-gpu-silu-pipeline-green-20261015-process.json",
+      "bytes": 1274,
+      "sha256": "01642611b77286b0809d7fefea1a122795bd37d043db903ba0c49f0dcaec33e7"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\mixed-gpu-silu-pipeline-green-20261015.log",
+      "bytes": 46060,
+      "sha256": "d3216195ad499ae174713c4803b8234e6e599c42137b9b92d23fccfb2958126a"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-silu-boundary-shape-audit-20261015.xml",
+      "bytes": 3994,
+      "sha256": "8354f70a63272332f385581343795affe7f1f8c816f57216b71b1252d12bfb20"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-silu-boundary-shape-audit-20261015-process.json",
+      "bytes": 1288,
+      "sha256": "68f7ab89620625a96014940674890ec8eae43f078a70c29c6f742414c3b21860"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-silu-boundary-shape-audit-20261015.log",
+      "bytes": 46896,
+      "sha256": "ee50339df4ed38ca96b10035c1c0395bf2d27e69b2de498f38560fd6fe8f55d6"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-silu-whole-and-early-silence-20261015.xml",
+      "bytes": 7255,
+      "sha256": "f796f3d2505935cd7e2baa316de0363a7f6c49f5e05f8c43096c0b6944e36d66"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-silu-whole-and-early-silence-20261015-process.json",
+      "bytes": 1364,
+      "sha256": "9f05af5198664fa9c199bd1b12097440a138795e8d571b27d39ec6f461c91bdb"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-silu-whole-and-early-silence-20261015.log",
+      "bytes": 105506,
+      "sha256": "7ab2a020beb04ccead8c4b39c7632fcbfd6fd647865980e54f64a132d97924c2"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\silu-partition-chain-red-20261015.xml",
+      "bytes": 11950,
+      "sha256": "aa690d12413693172a053e7fb039d2b4b446b44733683f4885b98bba1cf2d4ee"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\mixed-gpu-silu-partition-related-green-20261015.xml",
+      "bytes": 5559,
+      "sha256": "7923f0370b5aa65053eb072c2d3b26dee125ca4aa9b116e1ba654897b80cd7da"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\unnamed-silu-chain-red-20261015.xml",
+      "bytes": 6405,
+      "sha256": "ca11df44e34d532ab14fe04a489d84ea61041d13a5be7b4256b24d4078e4558f"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\unnamed-silu-chain-related-green-20261015.xml",
+      "bytes": 5695,
+      "sha256": "43c3ebed562895ec34700585931d57b4d9a9c679ceaa3abadd6e344baaec9853"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\prepare-native-silu-encoder-20261015-process.json",
+      "bytes": 439,
+      "sha256": "9ad6e88cf3a33caa1665a689f46b6d60309d26146889d8732e91fa86e72249b5"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\prepare-native-silu-unnamed-fixed-20261015-process.json",
+      "bytes": 439,
+      "sha256": "9604d8e695cdba615b2a124f507f329664b3830a801955933eba9d6d5665a247"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\prepare-native-silu-audited-20261015-process.json",
+      "bytes": 437,
+      "sha256": "4817cc677fe36ae2a7935afad9e658fdd8fe0e7de240cf72457e239e920da584"
+    }
+  ]
+}

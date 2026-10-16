@@ -1,5 +1,7 @@
 # M1 保存・量子化・測定と完了監査
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 実行完了した計画の履歴（2026-10-09更新）。作業ブランチは `feat/m1-persistence-benchmark`。
 Unity 6000.3.16f1 / Sentis 2.6.1、固定モデルrevision・batch 1 / length 128 / 768次元で実行した。
 実測コード `329da92` で全段階の受け入れ条件が合格し、PR #4をmain `8146107`へ統合済み。[検証記録](m1-completion-validation.md)を参照。

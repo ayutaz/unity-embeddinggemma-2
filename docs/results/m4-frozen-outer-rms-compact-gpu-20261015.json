@@ -1,0 +1,407 @@
+{
+  "scope": "first_native_lconv_conv_norm_280_rows_only",
+  "success": true,
+  "source": "0d7394c2f70fe7bbce99ecf33f87e08b7fd4d80d",
+  "original_tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "cases": [
+    {
+      "variant": "baseline",
+      "rows": [
+        {
+          "report": {
+            "success": false,
+            "scope": "first_lconv_conv_norm_frozen_native_replay_gpu_components_only",
+            "source": "0d7394c2f70fe7bbce99ecf33f87e08b7fd4d80d",
+            "probe_variant": "baseline",
+            "case": "normal",
+            "requested_backend": "GPUCompute",
+            "full_encoder_validated": false,
+            "end_to_end_validated": false,
+            "phase": "completed",
+            "reference_context": "derived conv_norm input; full native lconv replay matches saved original bits",
+            "layer_kinds": {
+              "Mul": 3,
+              "ReduceMean": 1,
+              "ScalarMad": 1,
+              "Rsqrt": 1
+            },
+            "cpu_computation_or_input_count": 0,
+            "readback_flush_count": 0,
+            "exact_differences": 185159,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 7.62939453125e-06
+          },
+          "raw": {
+            "path": "artifacts\\acceptance-consumer\\artifacts\\frozen-outer-rms-gpu-0d7394c2f70fe7bbce99ecf33f87e08b7fd4d80d-baseline-normal.json",
+            "bytes": 1382,
+            "sha256": "6f6680e9a7a773985196821a9a26195b81b82dd047b476d2a1ed48270f2aec87"
+          }
+        },
+        {
+          "report": {
+            "success": false,
+            "scope": "first_lconv_conv_norm_frozen_native_replay_gpu_components_only",
+            "source": "0d7394c2f70fe7bbce99ecf33f87e08b7fd4d80d",
+            "probe_variant": "baseline",
+            "case": "mean_inverse",
+            "requested_backend": "GPUCompute",
+            "full_encoder_validated": false,
+            "end_to_end_validated": false,
+            "phase": "completed",
+            "reference_context": "derived conv_norm input; full native lconv replay matches saved original bits",
+            "layer_kinds": {
+              "Mul": 1,
+              "ReduceMean": 1,
+              "ScalarMad": 1,
+              "Rsqrt": 1,
+              "Concat": 1
+            },
+            "cpu_computation_or_input_count": 0,
+            "readback_flush_count": 0,
+            "exact_differences": 280,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 1.9073486328125e-06
+          },
+          "raw": {
+            "path": "artifacts\\acceptance-consumer\\artifacts\\frozen-outer-rms-gpu-0d7394c2f70fe7bbce99ecf33f87e08b7fd4d80d-baseline-mean_inverse.json",
+            "bytes": 1402,
+            "sha256": "0e3c7778bc6e7fa6dfceb457f604f76c113e6d2dea4dca38fcacbb4bf88f6afb"
+          }
+        }
+      ],
+      "nunit": {
+        "id": "2",
+        "testcasecount": "2",
+        "result": "Failed(Child)",
+        "total": "2",
+        "passed": "0",
+        "failed": "2",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-14 19:35:15Z",
+        "end-time": "2026-10-14 19:35:16Z",
+        "duration": "0.3286994"
+      },
+      "process": {
+        "terminal": true,
+        "exit_code": 2,
+        "elapsed_seconds": 39.91204850000213,
+        "timed_out": false,
+        "pid": 78808
+      },
+      "raw": [
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-outer-rms-baseline-gpu-20261015-process.json",
+          "bytes": 1066,
+          "sha256": "999ea5285f505fab2d839a2e2463079a26c1906dc09170eb67dc62d94eea0541"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-outer-rms-baseline-gpu-20261015.xml",
+          "bytes": 7851,
+          "sha256": "95b6404e91e931ce7246a12e2d12240f7d5d64a7659df6b761d27e381e494f2f"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-outer-rms-baseline-gpu-20261015.log",
+          "bytes": 47330,
+          "sha256": "fac6fb64d4dde5afd0b34f4155299c549cd445b2dff75387cb31762e20c4b7de"
+        }
+      ]
+    },
+    {
+      "variant": "outer",
+      "rows": [
+        {
+          "report": {
+            "success": true,
+            "scope": "first_lconv_conv_norm_frozen_native_replay_gpu_components_only",
+            "source": "0d7394c2f70fe7bbce99ecf33f87e08b7fd4d80d",
+            "probe_variant": "outer",
+            "case": "normal",
+            "requested_backend": "GPUCompute",
+            "full_encoder_validated": false,
+            "end_to_end_validated": false,
+            "phase": "completed",
+            "reference_context": "derived conv_norm input; full native lconv replay matches saved original bits",
+            "layer_kinds": {
+              "Mul": 18,
+              "Slice": 2,
+              "Reshape": 4,
+              "Split": 6,
+              "Squeeze": 72,
+              "Add": 94,
+              "Unsqueeze": 6,
+              "Concat": 1,
+              "ScalarMad": 8,
+              "Sqrt": 1,
+              "Neg": 2,
+              "Sub": 30,
+              "Div": 1,
+              "Reciprocal": 1
+            },
+            "cpu_computation_or_input_count": 0,
+            "readback_flush_count": 0,
+            "exact_differences": 0,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0
+          },
+          "raw": {
+            "path": "artifacts\\acceptance-consumer\\artifacts\\frozen-outer-rms-gpu-0d7394c2f70fe7bbce99ecf33f87e08b7fd4d80d-outer-normal.json",
+            "bytes": 880,
+            "sha256": "1170d06620ef96f6c158ea4746c77f6817a88ff3376459311ef58438a800dbb5"
+          }
+        },
+        {
+          "report": {
+            "success": true,
+            "scope": "first_lconv_conv_norm_frozen_native_replay_gpu_components_only",
+            "source": "0d7394c2f70fe7bbce99ecf33f87e08b7fd4d80d",
+            "probe_variant": "outer",
+            "case": "mean_inverse",
+            "requested_backend": "GPUCompute",
+            "full_encoder_validated": false,
+            "end_to_end_validated": false,
+            "phase": "completed",
+            "reference_context": "derived conv_norm input; full native lconv replay matches saved original bits",
+            "layer_kinds": {
+              "Mul": 16,
+              "Slice": 2,
+              "Reshape": 4,
+              "Split": 6,
+              "Squeeze": 72,
+              "Add": 94,
+              "Unsqueeze": 6,
+              "Concat": 2,
+              "ScalarMad": 9,
+              "Sqrt": 1,
+              "Neg": 2,
+              "Sub": 30,
+              "Div": 1,
+              "Reciprocal": 1
+            },
+            "cpu_computation_or_input_count": 0,
+            "readback_flush_count": 0,
+            "exact_differences": 0,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0
+          },
+          "raw": {
+            "path": "artifacts\\acceptance-consumer\\artifacts\\frozen-outer-rms-gpu-0d7394c2f70fe7bbce99ecf33f87e08b7fd4d80d-outer-mean_inverse.json",
+            "bytes": 886,
+            "sha256": "9c90d455ea6511c34177eeaefcc62f33c7730734e3d4f7db033dab212eb0c818"
+          }
+        }
+      ],
+      "nunit": {
+        "id": "2",
+        "testcasecount": "2",
+        "result": "Passed",
+        "total": "2",
+        "passed": "2",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-14 19:35:57Z",
+        "end-time": "2026-10-14 19:35:58Z",
+        "duration": "0.3184053"
+      },
+      "process": {
+        "terminal": true,
+        "exit_code": 0,
+        "elapsed_seconds": 27.739565500000026,
+        "timed_out": false,
+        "pid": 83400
+      },
+      "raw": [
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-outer-rms-candidate-gpu-20261015-process.json",
+          "bytes": 1068,
+          "sha256": "9c7e223fc320da7e432b2bfcad06603641c1ce1096b1231879d2f2f870d43506"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-outer-rms-candidate-gpu-20261015.xml",
+          "bytes": 5312,
+          "sha256": "2be34b04512070087e93b6c4ca0cf131c5759f8bbbd4f124cb6d1013f61c09b0"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-outer-rms-candidate-gpu-20261015.log",
+          "bytes": 40094,
+          "sha256": "c8fbce030884c13adae157aa2fdc2916c13b037a370d896cc6a4a97f8bb216ec"
+        }
+      ]
+    }
+  ],
+  "python_tdd": [
+    {
+      "name": "compact-outer-mean-red-20261015",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "4",
+        "skipped": "0",
+        "tests": "4",
+        "time": "1.727",
+        "timestamp": "2026-10-15T04:29:07.543131+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\compact-outer-mean-red-20261015.xml",
+        "bytes": 9435,
+        "sha256": "58bb6fb2c54ad0e64e3f721266012ae9d96eac1a4c00e3c5de675fb2192a6266"
+      }
+    },
+    {
+      "name": "compact-outer-mean-green-20261015",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "1",
+        "skipped": "0",
+        "tests": "36",
+        "time": "4.226",
+        "timestamp": "2026-10-15T04:29:43.663331+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\compact-outer-mean-green-20261015.xml",
+        "bytes": 8092,
+        "sha256": "ec67f0116caf904905b392a5f217e043f473f989b1af99d66f475377b0c6d350"
+      }
+    },
+    {
+      "name": "compact-outer-mean-green-corrected-20261015",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "36",
+        "time": "4.020",
+        "timestamp": "2026-10-15T04:30:12.721216+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\compact-outer-mean-green-corrected-20261015.xml",
+        "bytes": 5144,
+        "sha256": "90a3c05ddf22e2f0c5139847500dbeb548236604c5c973b6229c7659079e6e36"
+      }
+    },
+    {
+      "name": "compact-outer-mean-context-green-20261015",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "41",
+        "time": "4.239",
+        "timestamp": "2026-10-15T04:31:08.863772+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\compact-outer-mean-context-green-20261015.xml",
+        "bytes": 5791,
+        "sha256": "3eb7afa2dd5f8bbadfae510ce49ab9929d2d861d115c1009e4738cbeee091fb8"
+      }
+    },
+    {
+      "name": "rms-outer-override-red-20261015",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "4",
+        "skipped": "0",
+        "tests": "4",
+        "time": "1.216",
+        "timestamp": "2026-10-15T04:31:41.348925+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\rms-outer-override-red-20261015.xml",
+        "bytes": 5087,
+        "sha256": "cbac885f49c48648bc85e114e0bc9f96f8369c13933812af68a52bb58d4f46fd"
+      }
+    },
+    {
+      "name": "rms-outer-override-green-20261015",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "45",
+        "time": "5.263",
+        "timestamp": "2026-10-15T04:31:56.818525+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\rms-outer-override-green-20261015.xml",
+        "bytes": 6332,
+        "sha256": "81e6a2ffc60048b0b8a5f9023219fad8c5bb2bdedc34dd5280fd462ff54abdf1"
+      }
+    }
+  ],
+  "reference_contract": {
+    "scope": "first_lconv_conv_norm_frozen_native_replay_gpu_components_only",
+    "graph_variant": "outer",
+    "input_shape": [
+      1,
+      280,
+      1024
+    ],
+    "original_native_whole_lconv_bits_match": true,
+    "reference_input_strides": [
+      286720,
+      1,
+      280
+    ],
+    "native_normal_matches_original_bits": false,
+    "expected_normal_is_independent_pinned_native_replay": true,
+    "all_original_rows_preserved": true,
+    "original_row_count": 280,
+    "files": {
+      "input.bin": {
+        "bytes": 1146880,
+        "sha256": "fce407833e9867684108d5ca0b981c339059d543ef9e211aa147bfbb117793fe"
+      },
+      "normal.onnx": {
+        "bytes": 132078,
+        "sha256": "531d73b82c3792273583a92e4417382d2f3fb4dd533401909d72484846776f03"
+      },
+      "normal-expected.bin": {
+        "bytes": 1146880,
+        "sha256": "c9e0bf67a3d0239116e48bacd13eceba649d3a07c8fd7b0448cd468e75b1fadb"
+      },
+      "mean_inverse.onnx": {
+        "bytes": 127895,
+        "sha256": "bc0468bed2987c41b3720e0ee40aa55ef67e8314e69b9f716aed842615d37da9"
+      },
+      "mean_inverse-expected.bin": {
+        "bytes": 2240,
+        "sha256": "685268d3770d55c8cee4201e2e2bca4be898880c334893b3243397b8cfb705b0"
+      }
+    },
+    "original_reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "native_replay_source": "6ac2c92191a62ada4830adeee5235fb3c4b90f15",
+    "gpu_validated": false,
+    "full_encoder_validated": false
+  },
+  "backend_proof": "Worker(GPUCompute) and output backend assertion in pinned test source; no explicit actual_backend field in this local report",
+  "baseline_failure_is_stronger_bit_diagnostic": true,
+  "baseline_original_tolerance_mismatches": 0,
+  "original_whole_lconv_replay_matches_saved_bits": true,
+  "runtime_fp64": false,
+  "all_original_signals_validated": false,
+  "all_profiles_validated": false,
+  "end_to_end_validated": false,
+  "first_component_preparation_failure": "A manually copied reference-report hash contained a typo; corrected against the existing immutable receipt before any native replay or GPU execution",
+  "first_compact_rewrite_failure": "Template baked its prefix shape; reshape_as(input slice) corrected generic leading dimensions, then all related tests passed"
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "branch_only_new_workflow_dispatch_404_and_existing_registered_workflow_route",
+  "failed_dispatch": {
+    "source": "f8a2155",
+    "workflow": "frozen-matmul-onnx.yml",
+    "result": "HTTP404: workflow not found on default branch",
+    "numeric_comparison_started": false
+  },
+  "fix": "Use existing registered frozen-audio-prefix-onnx.yml workflow_dispatch matrix_probe=true. Its original full-model job is explicitly excluded for this mode; the matrix job selects only artifact12001831037 fixture files, with10-minute bound.",
+  "tdd": {
+    "frozen-matmul-existing-workflow-route-red": {
+      "sha256": "3509f776851e685b966747d769c40628e8668d84468c8f72753f982507503d0e",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "frozen-matmul-existing-workflow-route-green": {
+      "sha256": "e18ec2b5b26ddd1679958fb148f6e3629cdeecefa3ed0278ed4ae333aea9fb08",
+      "tests": 43,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "main_branch_or_merge_changed": false,
+  "full_encoder_validated": false,
+  "gpu_validated": false
+}

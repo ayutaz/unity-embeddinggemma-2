@@ -1,5 +1,7 @@
 # Text Search
 
+> 2026-10-14: 開発branchのTextSearchSampleはGPUComputeが既定で、CPUもUI選択肢に残ります。現在の要件ではGPUを使い、GPU未対応をCPU成功で代替しません。旧Windows実測は固定sourceの結果で、最新candidateの空consumer / 必須他環境は未検証です。
+
 別途用意したEmbeddingGemma 2のSentisモデルで、日本語 / 英語の固定6文書を検索するサンプルです。
 モデル・tokenizerは含まれず、自動ダウンロードしません。Unity 6000.3.16f1 / Sentis 2.6.1を対象にしています。
 

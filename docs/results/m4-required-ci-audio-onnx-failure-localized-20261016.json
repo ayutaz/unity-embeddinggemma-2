@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "existing_required_ci_audio_onnx_failure_localization_not_gpu_acceptance",
+  "action_run": 38759401904,
+  "head_source": "c290c262699c37b7f4650ca27b588d04a94147e2",
+  "actual_reference_producer": "040d4e91dc6d5fe862b4e6fb9b24f56f7e830faa",
+  "artifact_id": 11986081282,
+  "failure_file_sha256": "285c1b3aa5c7ad330f232ac78a488178c18a461d0b0f80564700a68ac35095bb",
+  "range_receipt_sha256": "5fdae497f96367025b7b02c63bdb5ec407ae504304c3c2462e8bb79994a0d6af",
+  "final_failure": {
+    "success": false,
+    "profile": "frames-1119-valid-1119",
+    "case_id": "silence",
+    "minimum_cosine": 0.9999997615814209,
+    "onnx_vs_official_maximum_absolute_error": 0.00022602081298828125,
+    "maximum_tolerance_ratio": 7.7126145362854,
+    "mismatched_elements": 443,
+    "graph_sha256": "d9bc91c24716661dbb9275b1625edc9c93cbd7e8e76271b9a0947c30d7852d9d"
+  },
+  "context": {
+    "native_reference_matches_original_in_this_run": true,
+    "trace_matches_failed_graph": true,
+    "note": "The CI-local original means this run's native output; it does not replace the frozen4edbe17 encoder golden used by the qualified GPU gates."
+  },
+  "first_nonzero_subsample_stage": "layer0.norm",
+  "first_failing_subsample_stage": "projection",
+  "subsample_stages": [
+    {
+      "name": "layer0.masked_input",
+      "shape": [
+        1,
+        1,
+        1119,
+        128
+      ],
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "mismatched_elements": 0
+    },
+    {
+      "name": "layer0.conv",
+      "shape": [
+        1,
+        128,
+        560,
+        64
+      ],
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "mismatched_elements": 0
+    },
+    {
+      "name": "layer0.norm",
+      "shape": [
+        1,
+        560,
+        64,
+        128
+      ],
+      "success": true,
+      "maximum_absolute_error": 4.76837158203125e-06,
+      "maximum_tolerance_ratio": 0.2448447346687317,
+      "mismatched_elements": 0
+    },
+    {
+      "name": "layer0.relu",
+      "shape": [
+        1,
+        128,
+        560,
+        64
+      ],
+      "success": true,
+      "maximum_absolute_error": 4.76837158203125e-06,
+      "maximum_tolerance_ratio": 0.223540261387825,
+      "mismatched_elements": 0
+    },
+    {
+      "name": "layer1.masked_input",
+      "shape": [
+        1,
+        128,
+        560,
+        64
+      ],
+      "success": true,
+      "maximum_absolute_error": 4.76837158203125e-06,
+      "maximum_tolerance_ratio": 0.223540261387825,
+      "mismatched_elements": 0
+    },
+    {
+      "name": "layer1.conv",
+      "shape": [
+        1,
+        32,
+        280,
+        32
+      ],
+      "success": true,
+      "maximum_absolute_error": 1.811981201171875e-05,
+      "maximum_tolerance_ratio": 0.14117543399333954,
+      "mismatched_elements": 0
+    },
+    {
+      "name": "layer1.norm",
+      "shape": [
+        1,
+        280,
+        32,
+        32
+      ],
+      "success": true,
+      "maximum_absolute_error": 3.4332275390625e-05,
+      "maximum_tolerance_ratio": 0.30497902631759644,
+      "mismatched_elements": 0
+    },
+    {
+      "name": "layer1.relu",
+      "shape": [
+        1,
+        32,
+        280,
+        32
+      ],
+      "success": true,
+      "maximum_absolute_error": 3.4332275390625e-05,
+      "maximum_tolerance_ratio": 0.17040057480335236,
+      "mismatched_elements": 0
+    },
+    {
+      "name": "projection_input",
+      "shape": [
+        1,
+        280,
+        1024
+      ],
+      "success": true,
+      "maximum_absolute_error": 3.4332275390625e-05,
+      "maximum_tolerance_ratio": 0.17040057480335236,
+      "mismatched_elements": 0
+    },
+    {
+      "name": "projection",
+      "shape": [
+        1,
+        280,
+        1024
+      ],
+      "success": false,
+      "maximum_absolute_error": 9.5367431640625e-05,
+      "maximum_tolerance_ratio": 2.1327381134033203,
+      "mismatched_elements": 562
+    }
+  ],
+  "outcome": "failure_retained",
+  "onnx_gate_removed_or_tolerance_changed": false,
+  "unity_or_gpu_executed": false,
+  "remaining": "Fix the full ONNX export arithmetic and verify all original cases; a GPU composition pass does not relabel this NumPy ONNX export failure as success."
+}

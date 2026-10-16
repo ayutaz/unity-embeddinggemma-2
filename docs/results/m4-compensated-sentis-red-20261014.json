@@ -1,0 +1,18 @@
+{
+  "scope": "sentis_compensated_projection_tdd_red_only",
+  "source": "afe6932d2697ad57ce15a593d15fea8240e7862a",
+  "unity": "6000.3.16f1",
+  "sentis": "2.6.1",
+  "test_count": 5,
+  "failed": 5,
+  "passed": 0,
+  "skipped": 0,
+  "exit_code": 2,
+  "reason": "Sentis FP32 compensated projection is missing",
+  "xml_sha256": "61abea183b47a94e19df37a76e368166c16634ebd522a53c2aa0b06ae3f7db90",
+  "runtime_overlay": false,
+  "test_framework": "1.6.0 embedded",
+  "uloop": "3.14.0 embedded",
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

@@ -1,0 +1,672 @@
+{
+  "scope": "all_layer0_rms_gpu_observation_and_three_head_rms_current_cpu_equation_gpu_qualification",
+  "original_references_changed": false,
+  "learned_coefficients_changed": false,
+  "all_runtime_float_arithmetic_fp32": true,
+  "original_internal_native_reference_available": false,
+  "original_full_context_replayed": false,
+  "observation_execution": {
+    "file": "vision-layer0-all-rms-observation-20261015-process.json",
+    "sha256": "1056f8d0f83ab839786232d1799bee5dee54d46714a1627f702989dea5b4f6b7",
+    "xml_sha256": "2749916bd1d95e76dfe0bca437b179902006bad676fab7419f00732f4073bf35",
+    "counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 43.382529099995736
+  },
+  "observation": {
+    "file": "vision-layer0-rms-observation-gpu-37a49a0ce64aee9068fa463106ecb3023395835f.json",
+    "sha256": "5e41f0c774e69970b16ffe9bd107e0c06b3cb1cf3e50a1dea19e2836fa91f752",
+    "result": {
+      "success": true,
+      "runtime_source": "37a49a0ce64aee9068fa463106ecb3023395835f",
+      "scope": "original_layer0_all_rms_gpu_boundary_observation_only",
+      "native_reference_validated": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "diagnostic_readbacks_only": true,
+      "norms": [
+        {
+          "index": 0,
+          "input_index": 0,
+          "output_index": 15,
+          "epsilon": 1e-06,
+          "input": {
+            "file": "rms-0-input.bin",
+            "sha256": "bc4c19c9aaf9688801c99ed073fdde22f0daf6b822dc2c9c4b7a3f7c9aded636",
+            "shape": [
+              1,
+              2520,
+              768
+            ]
+          },
+          "output": {
+            "file": "rms-0-output.bin",
+            "sha256": "9553e0d41e4aec086ee637d4d0cfff7777586e93cd2641088dbca4edc6e6a7f4",
+            "shape": [
+              1,
+              2520,
+              768
+            ]
+          },
+          "scale": {
+            "file": "rms-0-scale.bin",
+            "sha256": "acc544061ccfe25009301bdfc15bab61468511ef6f27962b70c54efb65da9cb7",
+            "shape": [
+              768
+            ]
+          }
+        },
+        {
+          "index": 1,
+          "input_index": 26,
+          "output_index": 41,
+          "epsilon": 1e-06,
+          "input": {
+            "file": "rms-1-input.bin",
+            "sha256": "b4b5ef521f1572be189296e8fdaef15fe666187df22558c871f5bae5574277f0",
+            "shape": [
+              1,
+              2520,
+              12,
+              64
+            ]
+          },
+          "output": {
+            "file": "rms-1-output.bin",
+            "sha256": "197e929881206817334c0a3aa817acdb36c93aabb045e1b045e3cbd84dc6cb5c",
+            "shape": [
+              1,
+              2520,
+              12,
+              64
+            ]
+          },
+          "scale": {
+            "file": "rms-1-scale.bin",
+            "sha256": "d5d01e690834022110f66ccb71a7ae23c9e9418bf54e01866bed7785ccadf3d5",
+            "shape": [
+              64
+            ]
+          }
+        },
+        {
+          "index": 2,
+          "input_index": 94,
+          "output_index": 109,
+          "epsilon": 1e-06,
+          "input": {
+            "file": "rms-2-input.bin",
+            "sha256": "b0baff2f86148b81866d513c427d6f6f68976303c330481e23654909287e0558",
+            "shape": [
+              1,
+              2520,
+              12,
+              64
+            ]
+          },
+          "output": {
+            "file": "rms-2-output.bin",
+            "sha256": "841425dcc30a31cd1d81b3a06163762dc835af8243f08b2d1d30bc65c66bbe63",
+            "shape": [
+              1,
+              2520,
+              12,
+              64
+            ]
+          },
+          "scale": {
+            "file": "rms-2-scale.bin",
+            "sha256": "a37ec95adcda6b8c3659a6720a0ab4d724b7280549466062a4e3c94eee6f1994",
+            "shape": [
+              64
+            ]
+          }
+        },
+        {
+          "index": 3,
+          "input_index": 160,
+          "output_index": 173,
+          "epsilon": 1e-06,
+          "input": {
+            "file": "rms-3-input.bin",
+            "sha256": "edef603f12a16f240cc12dd2a85f17c299d7d0df803e4dfb72fe4acb0d220c25",
+            "shape": [
+              1,
+              2520,
+              12,
+              64
+            ]
+          },
+          "output": {
+            "file": "rms-3-output.bin",
+            "sha256": "c894fbf4c40d3f1e81f291f9500b59f93a4853c62cb02549d9866b1821c6f2f0",
+            "shape": [
+              1,
+              2520,
+              12,
+              64
+            ]
+          }
+        },
+        {
+          "index": 4,
+          "input_index": 214,
+          "output_index": 229,
+          "epsilon": 1e-06,
+          "input": {
+            "file": "rms-4-input.bin",
+            "sha256": "d173f979ce63c88a208e130948271fd6b4040a98093e576c6a9234eef837841e",
+            "shape": [
+              1,
+              2520,
+              768
+            ]
+          },
+          "output": {
+            "file": "rms-4-output.bin",
+            "sha256": "70d7ca3a4b9b15894b892c70cc854d40b37a69a2ae9d3234144f24f9f8723fce",
+            "shape": [
+              1,
+              2520,
+              768
+            ]
+          },
+          "scale": {
+            "file": "rms-4-scale.bin",
+            "sha256": "5d05ae83acae162ce2d43a09cade4772f381e29112afd9a553e2978d2e196975",
+            "shape": [
+              768
+            ]
+          }
+        },
+        {
+          "index": 5,
+          "input_index": 230,
+          "output_index": 245,
+          "epsilon": 1e-06,
+          "input": {
+            "file": "rms-5-input.bin",
+            "sha256": "67e32c50ee593e0607d1ee264f497392bfacf7d0463caa38f35b56e06b2cf141",
+            "shape": [
+              1,
+              2520,
+              768
+            ]
+          },
+          "output": {
+            "file": "rms-5-output.bin",
+            "sha256": "4a505659f3942d4b4b9390a3e3fde87c944a9688b8865b55603b81efdfec75de",
+            "shape": [
+              1,
+              2520,
+              768
+            ]
+          },
+          "scale": {
+            "file": "rms-5-scale.bin",
+            "sha256": "fd3ecdc5a7487fd8e3c3e9c72ba32ffc820384f1938cf3bf53c5749d35a7e936",
+            "shape": [
+              768
+            ]
+          }
+        },
+        {
+          "index": 6,
+          "input_index": 268,
+          "output_index": 283,
+          "epsilon": 1e-06,
+          "input": {
+            "file": "rms-6-input.bin",
+            "sha256": "c237adf805f698d90ed0719c85b7876e4184751d336e76ea18ef4b9b24d7410d",
+            "shape": [
+              1,
+              2520,
+              768
+            ]
+          },
+          "output": {
+            "file": "rms-6-output.bin",
+            "sha256": "e7f40704c5aba82d15f3cfdc1d08da4d83808248f20c38670992ede91abad986",
+            "shape": [
+              1,
+              2520,
+              768
+            ]
+          },
+          "scale": {
+            "file": "rms-6-scale.bin",
+            "sha256": "24396304c2919debbeb04e257a63502fada7d63f4ba12e3758b697aae9b99907",
+            "shape": [
+              768
+            ]
+          }
+        }
+      ],
+      "normal_final_matches_observed_bits": true,
+      "final": {
+        "file": "layer0-output.bin",
+        "sha256": "bc417e7f0e3486a5ac0025878d58c2c0b612ea5dea99a53e6b8db0e6f93b1513",
+        "shape": [
+          1,
+          2520,
+          768
+        ]
+      },
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0
+    }
+  },
+  "independent_current_cpu_equations": {
+    "file": "vision-all-rms-current-cpu-equations-20261015.json",
+    "sha256": "6150e07646b2c04592ff5c03720037458d0a23f67f749b21ec56d343a5a89056",
+    "result": {
+      "scope": "seven_captured_gpu_rms_inputs_against_independent_current_cpu_equations_only",
+      "producer": "37a49a0ce64aee9068fa463106ecb3023395835f",
+      "observation_source": "37a49a0ce64aee9068fa463106ecb3023395835f",
+      "observation_sha256": "5e41f0c774e69970b16ffe9bd107e0c06b3cb1cf3e50a1dea19e2836fa91f752",
+      "torch_version": "2.14.1+cpu",
+      "torch_git": "5c4886908584029761b579af026dcfb627c84070",
+      "cpu_dispatch_capability": "AVX2",
+      "original_internal_native_reference_available": false,
+      "original_full_context_replayed": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "model_inference_on_cpu_performed": false,
+      "arithmetic_dtype": "float32",
+      "rows": [
+        {
+          "index": 0,
+          "shape": [
+            1,
+            2520,
+            768
+          ],
+          "scale_present": true,
+          "input_sha256": "bc4c19c9aaf9688801c99ed073fdde22f0daf6b822dc2c9c4b7a3f7c9aded636",
+          "output_sha256": "9553e0d41e4aec086ee637d4d0cfff7777586e93cd2641088dbca4edc6e6a7f4",
+          "gpu_vs_current_cpu_equation": {
+            "bit_differences": 733786,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 1.1444091796875e-05,
+            "maximum_tolerance_ratio": 0.003328334396958062
+          },
+          "scale_sha256": "acc544061ccfe25009301bdfc15bab61468511ef6f27962b70c54efb65da9cb7",
+          "existing_768_export_vs_current_cpu_equation": {
+            "bit_differences": 0,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0
+          },
+          "isolated_original_model_sha256": "355fb796005e91eab203362eb6d1b3cb40e5e3d1f55bc813c0ac3a7c0ea421bf"
+        },
+        {
+          "index": 1,
+          "shape": [
+            1,
+            2520,
+            12,
+            64
+          ],
+          "scale_present": true,
+          "input_sha256": "b4b5ef521f1572be189296e8fdaef15fe666187df22558c871f5bae5574277f0",
+          "output_sha256": "197e929881206817334c0a3aa817acdb36c93aabb045e1b045e3cbd84dc6cb5c",
+          "gpu_vs_current_cpu_equation": {
+            "bit_differences": 1022925,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 1.9073486328125e-06,
+            "maximum_tolerance_ratio": 0.0043190674822333
+          },
+          "scale_sha256": "d5d01e690834022110f66ccb71a7ae23c9e9418bf54e01866bed7785ccadf3d5",
+          "isolated_original_model_sha256": "916168d7502f177392cf0e1893074e9e2bca5af39ba02933bb8fcedbffb3b2aa"
+        },
+        {
+          "index": 2,
+          "shape": [
+            1,
+            2520,
+            12,
+            64
+          ],
+          "scale_present": true,
+          "input_sha256": "b0baff2f86148b81866d513c427d6f6f68976303c330481e23654909287e0558",
+          "output_sha256": "841425dcc30a31cd1d81b3a06163762dc835af8243f08b2d1d30bc65c66bbe63",
+          "gpu_vs_current_cpu_equation": {
+            "bit_differences": 1040835,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 7.152557373046875e-07,
+            "maximum_tolerance_ratio": 0.0035781290653696084
+          },
+          "scale_sha256": "a37ec95adcda6b8c3659a6720a0ab4d724b7280549466062a4e3c94eee6f1994",
+          "isolated_original_model_sha256": "dfd1820b84bdd5cf7fe3e121acff54838985002dcbbf72bf375d3d1dc2f9a283"
+        },
+        {
+          "index": 3,
+          "shape": [
+            1,
+            2520,
+            12,
+            64
+          ],
+          "scale_present": false,
+          "input_sha256": "edef603f12a16f240cc12dd2a85f17c299d7d0df803e4dfb72fe4acb0d220c25",
+          "output_sha256": "c894fbf4c40d3f1e81f291f9500b59f93a4853c62cb02549d9866b1821c6f2f0",
+          "gpu_vs_current_cpu_equation": {
+            "bit_differences": 1058704,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 2.384185791015625e-06,
+            "maximum_tolerance_ratio": 0.003666376138132979
+          },
+          "isolated_original_model_sha256": "4bc570decc38d94a3e7a54a2d7e1c91462ee604a7535bed2f968a4ffd03278b0"
+        },
+        {
+          "index": 4,
+          "shape": [
+            1,
+            2520,
+            768
+          ],
+          "scale_present": true,
+          "input_sha256": "d173f979ce63c88a208e130948271fd6b4040a98093e576c6a9234eef837841e",
+          "output_sha256": "70d7ca3a4b9b15894b892c70cc854d40b37a69a2ae9d3234144f24f9f8723fce",
+          "gpu_vs_current_cpu_equation": {
+            "bit_differences": 723324,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 7.62939453125e-06,
+            "maximum_tolerance_ratio": 0.0031988911193216456
+          },
+          "scale_sha256": "5d05ae83acae162ce2d43a09cade4772f381e29112afd9a553e2978d2e196975",
+          "existing_768_export_vs_current_cpu_equation": {
+            "bit_differences": 0,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0
+          },
+          "isolated_original_model_sha256": "cbf9accce5a80148cfa8b85b3a6ae6a33d7146c27620ae46700809db66f533b7"
+        },
+        {
+          "index": 5,
+          "shape": [
+            1,
+            2520,
+            768
+          ],
+          "scale_present": true,
+          "input_sha256": "67e32c50ee593e0607d1ee264f497392bfacf7d0463caa38f35b56e06b2cf141",
+          "output_sha256": "4a505659f3942d4b4b9390a3e3fde87c944a9688b8865b55603b81efdfec75de",
+          "gpu_vs_current_cpu_equation": {
+            "bit_differences": 930025,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 1.9073486328125e-06,
+            "maximum_tolerance_ratio": 0.0034346351965423277
+          },
+          "scale_sha256": "fd3ecdc5a7487fd8e3c3e9c72ba32ffc820384f1938cf3bf53c5749d35a7e936",
+          "existing_768_export_vs_current_cpu_equation": {
+            "bit_differences": 0,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0
+          },
+          "isolated_original_model_sha256": "c062f7b917e4eec5aaba03fdcf67b7bd37eb55087ed73228588e13d3eb316c79"
+        },
+        {
+          "index": 6,
+          "shape": [
+            1,
+            2520,
+            768
+          ],
+          "scale_present": true,
+          "input_sha256": "c237adf805f698d90ed0719c85b7876e4184751d336e76ea18ef4b9b24d7410d",
+          "output_sha256": "e7f40704c5aba82d15f3cfdc1d08da4d83808248f20c38670992ede91abad986",
+          "gpu_vs_current_cpu_equation": {
+            "bit_differences": 717411,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 1.1444091796875e-05,
+            "maximum_tolerance_ratio": 0.0031271405276912046
+          },
+          "scale_sha256": "24396304c2919debbeb04e257a63502fada7d63f4ba12e3758b697aae9b99907",
+          "existing_768_export_vs_current_cpu_equation": {
+            "bit_differences": 0,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0
+          },
+          "isolated_original_model_sha256": "dda2ed772272610d0ab401ce5bc32b4fec577d079c01335d3fd9b9ba726e33c6"
+        }
+      ]
+    }
+  },
+  "head_export_tdd_red": {
+    "file": "vision-head-rms-export-red-20261015.xml",
+    "sha256": "be71ad88a6454b840aa1b0305c093b253e7932d8570c40bd8c6d62b2f3931cc2",
+    "tests": 13,
+    "failures": 13,
+    "errors": 0,
+    "skipped": 0
+  },
+  "head_export_related_green": {
+    "file": "vision-head-rms-related-green-20261015.xml",
+    "sha256": "c5c467689c51e132ee33fa764123e036794004d84280bdee28c38850dfb8237a",
+    "tests": 30,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "head_export_related_and_package_green": {
+    "file": "vision-head-rms-export-related-and-package-green-20261015.xml",
+    "sha256": "66ad273fcd909210b139738b2243b1de33bcc009b1f3cea02657e1bff43aff03",
+    "tests": 76,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "preparation": {
+    "file": "vision-head-rms-candidate-preparation-20261015.json",
+    "sha256": "bb1f2d3df3905551b34723badefd7f1dfdc23da08a9ab4c72545d5d1368ce229",
+    "result": {
+      "scope": "three_head_rms_candidates_against_captured_inputs_current_cpu_equations_only",
+      "producer": "e07c878249f06dbdd7dab3ce7c600f38e5e69655",
+      "export_module_sha256": "a7631332698669418cf6d6ee6b300104b61e15cdf2cb20fd50c8c6a9e25f183c",
+      "original_internal_native_reference_available": false,
+      "original_full_context_replayed": false,
+      "gpu_validated": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "rows": [
+        {
+          "index": 1,
+          "shape": [
+            1,
+            2520,
+            12,
+            64
+          ],
+          "input": {
+            "file": "rms-1-input.bin",
+            "sha256": "b4b5ef521f1572be189296e8fdaef15fe666187df22558c871f5bae5574277f0",
+            "shape": [
+              1,
+              2520,
+              12,
+              64
+            ]
+          },
+          "scale": {
+            "file": "rms-1-scale.bin",
+            "sha256": "d5d01e690834022110f66ccb71a7ae23c9e9418bf54e01866bed7785ccadf3d5",
+            "shape": [
+              64
+            ]
+          },
+          "cpu_candidate_bit_differences": 0,
+          "node_count": 161,
+          "onnx": {
+            "file": "rms-1.onnx",
+            "sha256": "9dfd439b9010fa82bab8b333ccb800e739e8067455e319bbe35547f1a9a3195c"
+          },
+          "expected": {
+            "file": "rms-1-expected.bin",
+            "sha256": "18a098076915f50d3e1cf86fdd602b6a48e5b1ec8c0e39f95377a59bbae6652b"
+          }
+        },
+        {
+          "index": 2,
+          "shape": [
+            1,
+            2520,
+            12,
+            64
+          ],
+          "input": {
+            "file": "rms-2-input.bin",
+            "sha256": "b0baff2f86148b81866d513c427d6f6f68976303c330481e23654909287e0558",
+            "shape": [
+              1,
+              2520,
+              12,
+              64
+            ]
+          },
+          "scale": {
+            "file": "rms-2-scale.bin",
+            "sha256": "a37ec95adcda6b8c3659a6720a0ab4d724b7280549466062a4e3c94eee6f1994",
+            "shape": [
+              64
+            ]
+          },
+          "cpu_candidate_bit_differences": 0,
+          "node_count": 161,
+          "onnx": {
+            "file": "rms-2.onnx",
+            "sha256": "7b901bba684edc9ce5d1bf29c2c21f92cc605308fb5f07a06df680214be4fe99"
+          },
+          "expected": {
+            "file": "rms-2-expected.bin",
+            "sha256": "aee555f292a12fa2e7e160571e14d98adcc8d8a8358c34e5b1ef1301ed5175fa"
+          }
+        },
+        {
+          "index": 3,
+          "shape": [
+            1,
+            2520,
+            12,
+            64
+          ],
+          "input": {
+            "file": "rms-3-input.bin",
+            "sha256": "edef603f12a16f240cc12dd2a85f17c299d7d0df803e4dfb72fe4acb0d220c25",
+            "shape": [
+              1,
+              2520,
+              12,
+              64
+            ]
+          },
+          "scale": null,
+          "cpu_candidate_bit_differences": 0,
+          "node_count": 160,
+          "onnx": {
+            "file": "rms-3.onnx",
+            "sha256": "a252697c0dbe9259fc59109aa8d1a93379d147407407d09eb7888bdb6a749db4"
+          },
+          "expected": {
+            "file": "rms-3-expected.bin",
+            "sha256": "7012f2999c4c5ac092f30c435342f04ca2ee1dc097369b7a257dda06d70d69f4"
+          }
+        }
+      ]
+    }
+  },
+  "head_gpu_execution": {
+    "file": "vision-head-rms-current-equation-gpu-20261015-process.json",
+    "sha256": "b0fefe07ab2e5f2d36685f8281cc0d0cf13f641b8ff151e9c847fe0c1740efac",
+    "xml_sha256": "cf039be8c0891fa53a0df9f7c4bb0d1e27095c5313827252f20c82d9cae3340c",
+    "counts": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 52.76422909999383
+  },
+  "head_gpu_reports": [
+    {
+      "file": "vision-head-rms-gpu-e07c878249f06dbdd7dab3ce7c600f38e5e69655-1.json",
+      "sha256": "98cf7f2686f87b437f2c362ccb68b7a3deec30ca2b3314b5ac5d9b232490bea7",
+      "result": {
+        "success": true,
+        "scope": "one_vision_head_rms_against_captured_input_current_cpu_equation_only",
+        "runtime_source": "e07c878249f06dbdd7dab3ce7c600f38e5e69655",
+        "index": 1,
+        "original_internal_native_reference_available": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "layer_count": 119,
+        "actual_backend": "GPUCompute",
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      }
+    },
+    {
+      "file": "vision-head-rms-gpu-e07c878249f06dbdd7dab3ce7c600f38e5e69655-2.json",
+      "sha256": "058201d88ed5a8c475b9d00a9419c55bad354aac629ac22f4124d720bf89585c",
+      "result": {
+        "success": true,
+        "scope": "one_vision_head_rms_against_captured_input_current_cpu_equation_only",
+        "runtime_source": "e07c878249f06dbdd7dab3ce7c600f38e5e69655",
+        "index": 2,
+        "original_internal_native_reference_available": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "layer_count": 119,
+        "actual_backend": "GPUCompute",
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      }
+    },
+    {
+      "file": "vision-head-rms-gpu-e07c878249f06dbdd7dab3ce7c600f38e5e69655-3.json",
+      "sha256": "7f2199d385689496b11f6451b58f97188ff314ef432f75cb6d4d82cf847d4b4c",
+      "result": {
+        "success": true,
+        "scope": "one_vision_head_rms_against_captured_input_current_cpu_equation_only",
+        "runtime_source": "e07c878249f06dbdd7dab3ce7c600f38e5e69655",
+        "index": 3,
+        "original_internal_native_reference_available": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "layer_count": 118,
+        "actual_backend": "GPUCompute",
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      }
+    }
+  ],
+  "existing_runtime_files_unchanged_since_prior_checkpoint": true,
+  "image_all_three_profiles_validated": false,
+  "end_to_end_validated": false,
+  "next_action": "TDD four-dimensional unary GPU boundaries and original-scale binding; qualify the remaining three width-768 RMS operations on GPU; reconnect the seven operations into original layer0 and verify its unchanged native layer reference before another full encoder run.",
+  "remaining": [
+    "all original image profiles and conditions",
+    "actual PCM/Texture to GPU preprocessing encoder backbone normalized 768 APIs with required roles masks boundaries ownership Dispose error reuse and text regression",
+    "stage3/4 samples and Player verification"
+  ]
+}

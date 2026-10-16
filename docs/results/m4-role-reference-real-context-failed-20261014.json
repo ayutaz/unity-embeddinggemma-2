@@ -1,0 +1,17 @@
+{
+  "retry_requires_new_diagnostic_or_fix": true,
+  "head_commit": "678330657ba77bb21f93b0c204d3fa6938642271",
+  "fixed_native_manifest_audit": "success",
+  "failed_role": "document",
+  "workflow_run": 38555519280,
+  "producer_commit": "da22414ba70b6a91869972f435c4276f7f816526",
+  "workflow_conclusion": "failure",
+  "native_context_validated": false,
+  "end_to_end_validated": false,
+  "failure": "Audio reference official encoder features changed",
+  "scope": "real_audio_role_reference_context_failure",
+  "unity_validated": false,
+  "fixed_backbone_manifest_audit": "success",
+  "artifact_id": 11890062126,
+  "query_raw_executed": false
+}

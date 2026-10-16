@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "small_native_mkl_contexts_fixed_synthetic_tanh_capture_tdd_only",
+  "red": {
+    "file": "small-tanh-mkl-context-red-20261016.xml",
+    "sha256": "8148f5baa401ec033b1566e98917841756aa07d18af9debdedaf9cb27984d561",
+    "tests": "3",
+    "failures": "3",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.323"
+  },
+  "green": {
+    "file": "small-tanh-mkl-context-green-20261016.xml",
+    "sha256": "908a8221df280ad187f9fa047e7384a91c1b3704145fd70484b6d84b4576cc1d",
+    "tests": "24",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "6.834"
+  },
+  "expanded_related_green": {
+    "file": "midpoint-fma-and-native-context-related-green-20261016.xml",
+    "sha256": "fdc0a33db8ae1d058e95c8f594c3deca2e9239e9c56b7a21d3db0a5bfe0d0491",
+    "tests": "37",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "7.318"
+  },
+  "behavior": [
+    "Fresh default and MKL_ENABLE_INSTRUCTIONS=AVX2 children retain existing original matrix gate.",
+    "Each child also records the exact dense32771 and seeded random514 inputs used by the native Tanh comparison tests, current native result and isolated original-order eager result.",
+    "The parent requires identical actual activation input hashes across contexts before comparison.",
+    "Deliberately different native Tanh is recorded as a discrepancy without changing matrix target or claiming ONNX/encoder/GPU success.",
+    "Actual ONNX qualification remains separate; these activation captures are native context diagnosis only."
+  ],
+  "real_new_activation_execution_pending": true,
+  "default_reference_settings_changed": false,
+  "required_ci_passed": false
+}

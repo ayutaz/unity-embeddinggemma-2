@@ -1,0 +1,9 @@
+{
+  "command": "uv run pytest tests/test_multimodal_reference_roles.py -q --tb=line",
+  "scope": "multimodal_role_reference_and_provenance_tdd_red",
+  "real_model_validated": false,
+  "passed": 0,
+  "reason": "Missing role API/CLI and separate reference/input producer provenance",
+  "failed": 12,
+  "source": "44920528de57b8cb39112eea5783e835d5a53718"
+}

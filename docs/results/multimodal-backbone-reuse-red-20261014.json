@@ -1,0 +1,8 @@
+{
+  "command": "uv run pytest tests/test_backbone_reuse.py -q --tb=line",
+  "reason": "NotImplementedError from reuse audit stub",
+  "passed": 0,
+  "failed": 8,
+  "source": "8cefbcdae2d2419f950b0d9cc7767090eeafefdc",
+  "scope": "audited_backbone_reuse_tdd_red"
+}

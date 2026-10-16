@@ -1,0 +1,524 @@
+{
+  "scope": "compact_silence_gpu_drift_localization_only",
+  "success": true,
+  "records": [
+    {
+      "source": "5a8799e42b35dd4fdb37beb746b22cf65b672a0d",
+      "report": {
+        "success": true,
+        "scope": "silence_compact_outer_original_native_full_layer_observation_only",
+        "source": "5a8799e42b35dd4fdb37beb746b22cf65b672a0d",
+        "requested_backend": "GPUCompute",
+        "stages": [
+          {
+            "stage": "layer_0",
+            "mismatches": 0,
+            "numeric_passed": true,
+            "maximum_absolute_error": 4.57763671875e-05,
+            "maximum_tolerance_ratio": 0.3824234153144744,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer_1",
+            "mismatches": 0,
+            "numeric_passed": true,
+            "maximum_absolute_error": 4.57763671875e-05,
+            "maximum_tolerance_ratio": 0.4046973381922914,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer_2",
+            "mismatches": 0,
+            "numeric_passed": true,
+            "maximum_absolute_error": 3.814697265625e-05,
+            "maximum_tolerance_ratio": 0.2169970334933079,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer_3",
+            "mismatches": 0,
+            "numeric_passed": true,
+            "maximum_absolute_error": 4.57763671875e-05,
+            "maximum_tolerance_ratio": 0.3751616042106709,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer_4",
+            "mismatches": 0,
+            "numeric_passed": true,
+            "maximum_absolute_error": 6.103515625e-05,
+            "maximum_tolerance_ratio": 0.47367734828437924,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer_5",
+            "mismatches": 0,
+            "numeric_passed": true,
+            "maximum_absolute_error": 6.103515625e-05,
+            "maximum_tolerance_ratio": 0.43981124518571235,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer_6",
+            "mismatches": 0,
+            "numeric_passed": true,
+            "maximum_absolute_error": 6.103515625e-05,
+            "maximum_tolerance_ratio": 0.6360595709342253,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer_7",
+            "mismatches": 0,
+            "numeric_passed": true,
+            "maximum_absolute_error": 6.103515625e-05,
+            "maximum_tolerance_ratio": 0.6550251061423835,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer_8",
+            "mismatches": 0,
+            "numeric_passed": true,
+            "maximum_absolute_error": 4.57763671875e-05,
+            "maximum_tolerance_ratio": 0.7192795427333613,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer_9",
+            "mismatches": 1,
+            "numeric_passed": false,
+            "maximum_absolute_error": 6.103515625e-05,
+            "maximum_tolerance_ratio": 1.1954102986810187,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer_10",
+            "mismatches": 42,
+            "numeric_passed": false,
+            "maximum_absolute_error": 0.000152587890625,
+            "maximum_tolerance_ratio": 7.089516278466338,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer_11",
+            "mismatches": 1119,
+            "numeric_passed": false,
+            "maximum_absolute_error": 0.0005612373352050781,
+            "maximum_tolerance_ratio": 13.277790610812511,
+            "actual_backend": "GPUCompute"
+          }
+        ],
+        "phase": "completed",
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "graph_sha256": "11607255142478773e621f5e9feebf2d3269457feb67d63215cecbc55fc61b67",
+        "bound_outputs": {
+          "layer_0": 5467,
+          "layer_1": 8497,
+          "layer_2": 11527,
+          "layer_3": 14557,
+          "layer_4": 17587,
+          "layer_5": 20617,
+          "layer_6": 23647,
+          "layer_7": 26677,
+          "layer_8": 29707,
+          "layer_9": 32737,
+          "layer_10": 35767,
+          "layer_11": 38797
+        },
+        "layer_count": 60546,
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "normal_final_matches_observed_bits": true,
+        "final_original_mismatches": 201,
+        "final_original_maximum_tolerance_ratio": 3.739961971155319,
+        "capture_directory": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\compact-outer-full-layers-5a8799e42b35dd4fdb37beb746b22cf65b672a0d-captures",
+        "first_tolerance_exceeding_layer": "layer_9",
+        "observation_completed": true
+      },
+      "nunit": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Passed",
+        "total": "1",
+        "passed": "1",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-14 19:45:25Z",
+        "end-time": "2026-10-14 19:46:02Z",
+        "duration": "36.8642083"
+      },
+      "process": {
+        "terminal": true,
+        "exit_code": 0,
+        "elapsed_seconds": 71.59431369999947,
+        "timed_out": false,
+        "pid": 76152
+      },
+      "persistent_allocation_warning": true,
+      "raw": [
+        {
+          "path": "artifacts\\acceptance-consumer\\artifacts\\compact-outer-full-layers-5a8799e42b35dd4fdb37beb746b22cf65b672a0d.json",
+          "bytes": 4141,
+          "sha256": "38a7a205fb1dd145fd4bc411d664bcd085250e617b45bd5f7f20a78e78410e65"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\compact-outer-full-layer-observation-20261015-process.json",
+          "bytes": 1119,
+          "sha256": "8db00fcc23289d56feda0939a218d7a4c735619ee5d633fff85dc2635f71d496"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\compact-outer-full-layer-observation-20261015.xml",
+          "bytes": 4083,
+          "sha256": "fe4dd598f3b6f3f50d25c9e750a74b56697c7147945c7eb09a30ad50aea66e85"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\compact-outer-full-layer-observation-20261015.log",
+          "bytes": 46458,
+          "sha256": "6ae361bfb17d5f0568415b56ef38e926057c2ea860709d1256ed7c8dcb06b544"
+        }
+      ]
+    },
+    {
+      "source": "f24a539efdb41ff7433aa1464bb4097c1c0578f5",
+      "report": {
+        "success": true,
+        "scope": "one_layer9_original_input_gpu_isolation_only",
+        "source": "f24a539efdb41ff7433aa1464bb4097c1c0578f5",
+        "requested_backend": "GPUCompute",
+        "phase": "completed",
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "graph_sha256": "315fb183dfe0f77bcf67ed33dbfe18e8ad5241c6e00de75a5e4726f86d1d5b11",
+        "layer_count": 4874,
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "observed": {
+          "exact_differences": 0,
+          "mismatches": 0,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "actual_backend": "GPUCompute"
+        },
+        "original": {
+          "exact_differences": 206576,
+          "mismatches": 0,
+          "maximum_absolute_error": 3.0517578125e-05,
+          "maximum_tolerance_ratio": 0.2613334606565515,
+          "actual_backend": "GPUCompute"
+        }
+      },
+      "nunit": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Passed",
+        "total": "1",
+        "passed": "1",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-14 19:48:17Z",
+        "end-time": "2026-10-14 19:48:20Z",
+        "duration": "3.2290944"
+      },
+      "process": {
+        "terminal": true,
+        "exit_code": 0,
+        "elapsed_seconds": 40.05335249999189,
+        "timed_out": false,
+        "pid": 51416
+      },
+      "persistent_allocation_warning": true,
+      "raw": [
+        {
+          "path": "artifacts\\acceptance-consumer\\artifacts\\compact-layer9-isolation-gpu-f24a539efdb41ff7433aa1464bb4097c1c0578f5.json",
+          "bytes": 853,
+          "sha256": "b86940a1e988863167d5648a3120003ad05d55c1723963fb6d8db95cc89db811"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\compact-layer9-original-input-gpu-20261015-process.json",
+          "bytes": 1104,
+          "sha256": "80ccd6c7f845343f4b4130c71137a8619cbfe6bdf0b0237bee32c171c3936caa"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\compact-layer9-original-input-gpu-20261015.xml",
+          "bytes": 4020,
+          "sha256": "e6732f27c3f00b554a771bcbba6d04d278b2cd5a43ac4bb6d0c7fa842c38f816"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\compact-layer9-original-input-gpu-20261015.log",
+          "bytes": 46596,
+          "sha256": "19421cfcc250863a8481052a52d001ff7a8b4d19d5551ce3f3b067b6ce504d69"
+        }
+      ]
+    },
+    {
+      "source": "dbd836b385b5a450d7a23d5955408345a04b2831",
+      "report": {
+        "success": true,
+        "scope": "one_saved_gpu_subsample_observation_only",
+        "runtime_source": "dbd836b385b5a450d7a23d5955408345a04b2831",
+        "candidate_source": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+        "requested_backend": "GPUCompute",
+        "stages": [
+          {
+            "stage": "layer0.conv",
+            "mismatches": 0,
+            "exact_difference_count": 0,
+            "numeric_passed": true,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer0.norm",
+            "mismatches": 0,
+            "exact_difference_count": 0,
+            "numeric_passed": true,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer0.act",
+            "mismatches": 0,
+            "exact_difference_count": 0,
+            "numeric_passed": true,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer1.conv",
+            "mismatches": 0,
+            "exact_difference_count": 224650,
+            "numeric_passed": true,
+            "maximum_absolute_error": 1.9073486328125e-06,
+            "maximum_tolerance_ratio": 0.021631334454210623,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer1.norm",
+            "mismatches": 0,
+            "exact_difference_count": 241663,
+            "numeric_passed": true,
+            "maximum_absolute_error": 3.814697265625e-06,
+            "maximum_tolerance_ratio": 0.06310908058463138,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer1.act",
+            "mismatches": 0,
+            "exact_difference_count": 115236,
+            "numeric_passed": true,
+            "maximum_absolute_error": 3.814697265625e-06,
+            "maximum_tolerance_ratio": 0.033517408341697225,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "input_proj_linear",
+            "mismatches": 0,
+            "exact_difference_count": 272968,
+            "numeric_passed": true,
+            "maximum_absolute_error": 7.62939453125e-06,
+            "maximum_tolerance_ratio": 0.2765559645722268,
+            "actual_backend": "GPUCompute"
+          }
+        ],
+        "phase": "completed",
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "graph_sha256": "11607255142478773e621f5e9feebf2d3269457feb67d63215cecbc55fc61b67",
+        "layer_count": 60546,
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "bound_outputs": {
+          "layer0.norm": 1717,
+          "layer1.norm": 2427,
+          "layer0.conv": 13,
+          "layer1.conv": 1731,
+          "layer0.act": 1720,
+          "layer1.act": 2430,
+          "input_proj_linear": 2437
+        },
+        "normal_final_matches_observed_bits": true,
+        "capture_directory": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\compact-subsample-gpu-dbd836b385b5a450d7a23d5955408345a04b2831-captures",
+        "first_nonzero_stage": "layer1.conv",
+        "first_tolerance_exceeding_stage": null,
+        "observation_completed": true
+      },
+      "nunit": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Passed",
+        "total": "1",
+        "passed": "1",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-14 19:51:00Z",
+        "end-time": "2026-10-14 19:51:45Z",
+        "duration": "44.4465085"
+      },
+      "process": {
+        "terminal": true,
+        "exit_code": 0,
+        "elapsed_seconds": 79.14469869999448,
+        "timed_out": false,
+        "pid": 83024
+      },
+      "persistent_allocation_warning": true,
+      "raw": [
+        {
+          "path": "artifacts\\acceptance-consumer\\artifacts\\compact-subsample-gpu-dbd836b385b5a450d7a23d5955408345a04b2831.json",
+          "bytes": 3039,
+          "sha256": "0f2eda8c6f73486d85c6dfcee4249f750ac790c1c0c00aa26f2fe6e00df52dd5"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\compact-subsample-observation-gpu-20261015-process.json",
+          "bytes": 1106,
+          "sha256": "b122ea6cfa042f9b2af0eb5045ac9556fa27cfd2e13a184d3bc51a524e9c108d"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\compact-subsample-observation-gpu-20261015.xml",
+          "bytes": 4074,
+          "sha256": "b32cb4643e23f3fae082e52463d412fb5212f7afd435455f982f653e7dcd0966"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\compact-subsample-observation-gpu-20261015.log",
+          "bytes": 46574,
+          "sha256": "0ddcf2fbf9f77c37f2f5488264a1a3fd1f17dd3e0b55690e0560ff3e64e7426f"
+        }
+      ]
+    }
+  ],
+  "original_tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "first_input_side_difference": "layer1.conv; layer0.conv, norm, act all match saved native bits",
+  "first_layer_tolerance_exceedance": "layer_9, one element; exact original layer8 input brings layer9 within tolerance",
+  "cpu_second_convolution_context_failure": {
+    "scope": "second_subsample_conv_immutable_silence_arithmetic_diagnosis_only",
+    "input_shape": [
+      1,
+      128,
+      560,
+      64
+    ],
+    "weight_shape": [
+      32,
+      128,
+      3,
+      3
+    ],
+    "output_shape": [
+      1,
+      32,
+      280,
+      32
+    ],
+    "success": false,
+    "context_validated": false,
+    "original_reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "native_current_matches_original_bits": false,
+    "cases": {
+      "native_conv": {
+        "bit_differences": 268142,
+        "mismatches": 0,
+        "maximum_absolute_error": 4.76837158203125e-06,
+        "maximum_tolerance_ratio": 0.03680074314391867
+      },
+      "channel_major_linear": {
+        "bit_differences": 182146,
+        "mismatches": 0,
+        "maximum_absolute_error": 9.5367431640625e-07,
+        "maximum_tolerance_ratio": 0.022159587269456403
+      },
+      "kernel_major_linear": {
+        "bit_differences": 198490,
+        "mismatches": 0,
+        "maximum_absolute_error": 1.9073486328125e-06,
+        "maximum_tolerance_ratio": 0.030729293229999736
+      },
+      "offline_fp64_rounded_oracle": {
+        "bit_differences": 171769,
+        "mismatches": 0,
+        "maximum_absolute_error": 9.5367431640625e-07,
+        "maximum_tolerance_ratio": 0.013058328212358238
+      },
+      "observed_gpu_conv": {
+        "bit_differences": 224650,
+        "mismatches": 0,
+        "maximum_absolute_error": 1.9073486328125e-06,
+        "maximum_tolerance_ratio": 0.021631334454210623
+      }
+    },
+    "input_sha256": "1f117877ec3cd7c830a74b22e4f46c97c3caf2ff3f1bda5b641c43385c5d19c4",
+    "weight_sha256": "68309f01ea3e738fccb24a0db5db608841a3a8e59b0a4fa5d0fb521ed60bf43c",
+    "observed_gpu_sha256": "51b7b80e76c83f2ec20b82405d74df1e32483b07f05edb03934e4fd2d549aaef",
+    "gpu_candidate_validated": false,
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "native_gpu_bit_differences": 251780,
+    "fp64_scope": "independent offline oracle only",
+    "warning": "Current native convolution cannot be used as a replacement golden unless it reproduces the saved original bytes"
+  },
+  "cpu_raw": {
+    "path": "artifacts\\numerical-acceptance-state\\second-conv-frozen-cpu-context-diagnosis-20261015.json",
+    "bytes": 2090,
+    "sha256": "35e24d4fc4e1438d834eca3f2e68e6d2bbe3cae800d83862e148d4b46fd18d62"
+  },
+  "cpu_context_process": {
+    "command": [
+      "uv",
+      "run",
+      "--locked",
+      "python",
+      "../../numerical-acceptance-state/diagnose_second_conv_cpu.py"
+    ],
+    "timeout_seconds": 120.0,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-14T19:55:36.016073+00:00",
+    "pid": 66828,
+    "exit_code": 2,
+    "elapsed_seconds": 5.725912099995185,
+    "completed_utc": "2026-10-14T19:55:41.741987+00:00"
+  },
+  "first_cpu_context_refusal_process": {
+    "command": [
+      "uv",
+      "run",
+      "--locked",
+      "python",
+      "../../numerical-acceptance-state/diagnose_second_conv_cpu.py"
+    ],
+    "timeout_seconds": 120.0,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-14T19:54:39.348676+00:00",
+    "pid": 52644,
+    "exit_code": 1,
+    "elapsed_seconds": 5.948043099997449,
+    "completed_utc": "2026-10-14T19:54:45.296721+00:00"
+  },
+  "all_original_signals_validated": false,
+  "all_profiles_validated": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "disposal_validated": false,
+  "allocation_warning_origin_unresolved": true,
+  "next_action": "Use saved original conv2 bytes; investigate pinned convolution accumulation/context and a general GPU FP32 compensated convolution candidate without replacing golden values"
+}

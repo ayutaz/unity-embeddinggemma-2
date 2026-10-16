@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "original_native_context_qualified_prefix_export_first_failure_and_tdd",
+  "run_id": 38777575004,
+  "artifact_id": 11993498781,
+  "head_source": "92801ba52426c14ec0932738bcadea0174667873",
+  "actual_producer": "427ddc17f369cfb51011595e40682bdfede1904d",
+  "conclusion": "failure",
+  "report_sha256": "e065bbcfa797a2b6d072b060e7b9b6ad5a5b4a206f2517d4ea26d6f6f0fbaa4d",
+  "provenance": {
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+    "audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+    "graph_sha256": "dc43d56b896b64077d8e86d56c3fd2b89cfe3d31170eabaa387165ea961438d7",
+    "input_sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+    "job_source": "427ddc17f369cfb51011595e40682bdfede1904d",
+    "torch_version": "2.14.1+cu130",
+    "threads": 2,
+    "cpu_capability": "AVX512"
+  },
+  "native_whole_encoder_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 0.0,
+    "maximum_tolerance_ratio": 0.0,
+    "worst_index": 0,
+    "worst_actual": -3.593391180038452,
+    "worst_expected": -3.593391180038452,
+    "exact_difference_count": 0
+  },
+  "native_prefix_shape": [
+    1,
+    280,
+    1024
+  ],
+  "native_prefix_sha256": "dc54774840fed958a310c6092e5c5c3483de74be52df7914d2bd128a99192969",
+  "native_prefix_coefficient_audit": {
+    "frame_mask": {
+      "dtype": "torch.int64",
+      "shape": [
+        1,
+        1119
+      ],
+      "sha256": "dcab488472ac425a3fcbb518ca5c26250768ba1ed58736d0fb0fef705b3d34de"
+    },
+    "audio.subsample_conv_projection.layer0.conv.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        128,
+        1,
+        3,
+        3
+      ],
+      "sha256": "e4d4ee18dc86a9945d38c159a861784a2c3d9467d6e0be9c48a414e60e2b92fd"
+    },
+    "audio.subsample_conv_projection.layer0.norm.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        128
+      ],
+      "sha256": "dbb0fc3431144ac4a6265e965a3bac5bb1c0ee9e87b266bc4cb13d2b7d4d8c24"
+    },
+    "audio.subsample_conv_projection.layer1.conv.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        32,
+        128,
+        3,
+        3
+      ],
+      "sha256": "68309f01ea3e738fccb24a0db5db608841a3a8e59b0a4fa5d0fb521ed60bf43c"
+    },
+    "audio.subsample_conv_projection.layer1.norm.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        32
+      ],
+      "sha256": "7b744a9e296e2331f5553570fdb993412b8f760f1a000179f366554cc84b1434"
+    },
+    "audio.subsample_conv_projection.input_proj_linear.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        1024,
+        1024
+      ],
+      "sha256": "f2804071cf9b90ac060db083156c2a1cff444871fb0ec9a48a8e37d174bba5fc"
+    }
+  },
+  "failure": "UnsupportedOperatorError: aten::_to_copy to ONNX opset20 is unsupported for the saved int64 frame-mask to bool conversion.",
+  "onnx_numerical_comparison_executed": false,
+  "complete": false,
+  "fix": "Only the original CPU int64 mask-to-bool copy is expressed through Tensor.to(copy=True) in the diagnostic Interpreter. Unsupported dtype/device conversions are rejected; original saved graph and production GPU code are unchanged.",
+  "tdd": [
+    {
+      "file": "frozen-audio-prefix-onnx-red-20261016.xml",
+      "sha256": "197e51256e8c393e7d25f7f52d0c402afb1126d09756f852381567361b1a8a15",
+      "counts": {
+        "tests": 8,
+        "failures": 8,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "file": "frozen-prefix-weight-dtype-red-20261016.xml",
+      "sha256": "c6872858c6f857a261f3e8482bdef03ea5f1e5be89aaf05e70b46418f358d34d",
+      "counts": {
+        "tests": 2,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "file": "frozen-prefix-onnx-related-green-20261016.xml",
+      "sha256": "82d010533b333960164a321fb978dc5e95365b507ef624ab1efecf79b25687b3",
+      "counts": {
+        "tests": 23,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "file": "frozen-prefix-mask-bool-cast-red-20261016.xml",
+      "sha256": "8cbdc960cf083c106858da997e2efb6f0fec361d306bc44401cbf956c4108853",
+      "counts": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "file": "frozen-prefix-copy-scope-red-20261016.xml",
+      "sha256": "00952be9aa56075f4a9c5ce75fbdc905dfb1e50231c24662f25c457114ea65ac",
+      "counts": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "file": "frozen-prefix-mask-and-related-green-20261016.xml",
+      "sha256": "b8d7a2baad8f5f8d4cc2bfe055e0584af59e790b7c77c6c85e7d05e813070959",
+      "counts": {
+        "tests": 25,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "end_to_end_validated": false,
+  "original_golden_weights_tolerances_or_required_ci_default_changed": false,
+  "corrected_actual_prefix_probe_pending": true
+}

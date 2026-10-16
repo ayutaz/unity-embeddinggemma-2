@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "unchanged_original_late_audio_stage_observations_and_explicit_rms_candidate_tdd",
+  "stages": [
+    {
+      "layer_index": 5,
+      "run_id": 38782438366,
+      "artifact_id": 11995204288,
+      "head_source": "54ce75add2a53d351b256f4fae4a5d155a0df8fa",
+      "actual_producer": "54ce75add2a53d351b256f4fae4a5d155a0df8fa",
+      "report_sha256": "6073581c0f6a8b89b9e5971a740ef35f40dd016847198c7e551df4f87bee28e6",
+      "reference_sha256": "1062cccff7f4d8f9bf51e53763bce83265d9bfe815d017528bf2f165b773220c",
+      "capture_sha256": "f13b5218c2829a2f75bc0e2cdf88a5bd4235ab6f6bb98b5b1c12f0e380ce8e5f",
+      "metrics": {
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 6.103515625e-05,
+        "maximum_tolerance_ratio": 0.7811964367685167,
+        "exact_difference_count": 272017
+      },
+      "native_prefix_reference_metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 9.1552734375e-05,
+        "maximum_tolerance_ratio": 0.5986941247263294,
+        "worst_index": 35242,
+        "worst_actual": 0.016396209597587585,
+        "worst_expected": 0.016389241442084312,
+        "exact_difference_count": 272778
+      },
+      "native_context_qualified": false,
+      "cpu_capability": "AVX2",
+      "scope": "one_silence_fixed_stage_diagnostic_only"
+    },
+    {
+      "layer_index": 8,
+      "run_id": 38783569509,
+      "artifact_id": 11996434780,
+      "head_source": "54ce75add2a53d351b256f4fae4a5d155a0df8fa",
+      "actual_producer": "54ce75add2a53d351b256f4fae4a5d155a0df8fa",
+      "report_sha256": "ff9fad4197790915142f9b2bb7a3dab9f80159e1a62ccc0ab1048a57ec8d421c",
+      "reference_sha256": "e909a23f955d2533d8cd304620f08a153bc3367371259ae70ecaf3cbf435d734",
+      "capture_sha256": "984482c5e14e8b3052ef5314992104ec63364a95d95e1b465bd71b24149e4370",
+      "metrics": {
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 6.103515625e-05,
+        "maximum_tolerance_ratio": 0.7299794990608365,
+        "exact_difference_count": 274597
+      },
+      "native_prefix_reference_metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "worst_index": 0,
+        "worst_actual": 0.4125724136829376,
+        "worst_expected": 0.4125724136829376,
+        "exact_difference_count": 0
+      },
+      "native_context_qualified": true,
+      "cpu_capability": "AVX512",
+      "scope": "one_silence_fixed_stage_diagnostic_only"
+    },
+    {
+      "layer_index": 11,
+      "run_id": 38782944073,
+      "artifact_id": 11997020033,
+      "head_source": "54ce75add2a53d351b256f4fae4a5d155a0df8fa",
+      "actual_producer": "54ce75add2a53d351b256f4fae4a5d155a0df8fa",
+      "report_sha256": "03ec947abeb4a2a9f77d4fcc59b41dc214404a65d51a79f9d6196f78406e6e7b",
+      "reference_sha256": "7ba1e30b7781c0b491b024a60188cb9568fd6ccdaeefd579698d644690f1d026",
+      "capture_sha256": "58f8dacbc47c463fda45990e85fc4c3ab952a17147930d16e36eb5939c10c801",
+      "metrics": {
+        "mismatched_elements": 1827,
+        "maximum_absolute_error": 0.00074005126953125,
+        "maximum_tolerance_ratio": 30.124819126641125,
+        "exact_difference_count": 280840
+      },
+      "native_prefix_reference_metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "worst_index": 0,
+        "worst_actual": 2.1853036880493164,
+        "worst_expected": 2.1853036880493164,
+        "exact_difference_count": 0
+      },
+      "native_context_qualified": true,
+      "cpu_capability": "AVX512",
+      "scope": "one_silence_fixed_stage_diagnostic_only"
+    }
+  ],
+  "host_scope_limit": "Each stage was collected in a separate hosted CPU environment. Fixed targets are identical original references; these observations do not prove a first divergent operator or portable BLAS bits.",
+  "rejected_whole_candidate_receipt": "m4-saved-full-silence-onnx-candidate-failed-20261016.json",
+  "new_candidate": "refined_mean_moment_rms",
+  "new_math": "Audit each squared last-axis RMS mean, unchanged epsilon1e-6 and negative-half inverse. Use previously implemented FP32 1024/1536 cascade means, the fixed transposed convolution reduction and refined sqrt/reciprocal. No weights or goldens change.",
+  "rms_counts": {
+    "layer_5": 54,
+    "layer_11": 108,
+    "projected_features": 109
+  },
+  "default_three_prefix_variants_unchanged": true,
+  "tdd": [
+    {
+      "file": "frozen-audio-rms-variant-red-20261016.xml",
+      "sha256": "8734e392a570cef254c14cc789820134c087cb0d6ce63d893147bd55d33b8b27",
+      "counts": {
+        "tests": 6,
+        "failures": 6,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "file": "frozen-rms-stage-count-red-20261016.xml",
+      "sha256": "a3b6f512ae35836c8bfa411807fce1031130c27923fc89ae599cbd2041dd914c",
+      "counts": {
+        "tests": 4,
+        "failures": 4,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "file": "frozen-rms-candidate-related-green-20261016.xml",
+      "sha256": "e4a80e254b98041619c60bb1988bace1e154005d6cda51066bc53dd8b1dc71ea",
+      "counts": {
+        "tests": 51,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "actionlint_exit_code": 0,
+  "actual_new_rms_candidate_pending": true,
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "end_to_end_validated": false,
+  "required_ci_passed": false,
+  "original_golden_weights_or_tolerances_changed": false,
+  "production_gpu_code_changed": false
+}

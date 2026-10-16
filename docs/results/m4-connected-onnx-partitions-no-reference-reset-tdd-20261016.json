@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "connected_cpu_onnx_partition_diagnostic_tdd_only",
+  "source_base": "731f10bba3d95529caf389c553b09052e1a71e2b",
+  "red": {
+    "file": "chained-audio-onnx-red-20261016.xml",
+    "sha256": "a817763bcb60a8b3adab91064c0bb839852f59482c626789708cdcde14b5bf68",
+    "tests": "4",
+    "failures": "4",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.248"
+  },
+  "workflow_cli_red": {
+    "file": "chained-audio-workflow-cli-red-20261016.xml",
+    "sha256": "8578409527e4232aa9f043c5b27e35d5c5532a0b52090b89b6f8e3f45f792003",
+    "tests": "2",
+    "failures": "2",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.249"
+  },
+  "capture_red": {
+    "file": "chained-audio-captures-red-20261016.xml",
+    "sha256": "8b8f1850415c73c150d64007e8b943ee2bbd007503d9a0779d66c566a1ca75bf",
+    "tests": "1",
+    "failures": "1",
+    "errors": "0",
+    "skipped": "0",
+    "time": "3.124"
+  },
+  "green": {
+    "file": "chained-audio-onnx-green-20261016.xml",
+    "sha256": "9a668c7cba5eb1406e8a7fc372e489b646d677289bb4effcdcac1ae7b28f8214",
+    "tests": "7",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "5.175"
+  },
+  "related_green": {
+    "file": "chained-and-audio-leaf-related-green-20261016.xml",
+    "sha256": "25d5755ebebe43825132373ea595f1e71344def1296978ca39f440156f46e9a9",
+    "tests": "134",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "49.680"
+  },
+  "actionlint": "passed",
+  "scope_fixed": [
+    "original frozen subsample input",
+    "all12layers split into3+3+3+3layers",
+    "original final143360-value reference"
+  ],
+  "invariants": [
+    "Each actual ONNX output is fed unchanged to the next part; no frozen intermediate reset or file reload.",
+    "Native control separately preserves layout across all cuts and must reproduce unpartitioned native bits.",
+    "Original references, learned coefficients and tolerances are unchanged.",
+    "Per-part input/output capture hashes, graph hashes, layout and timings are saved; errors retain incomplete evidence.",
+    "Only explicit chained_probe mode; default export and existing diagnostics unchanged."
+  ],
+  "expected_coverage": {
+    "static_linear": 110,
+    "attention_bmm": 36,
+    "parameter_bmm": 12
+  },
+  "tests_include_wrong_first_onnx_carry_detected_at_final": true,
+  "tests_include_transposed_native_layout": true,
+  "actual_whole_model_chained_validated": false,
+  "gpu_validated": false,
+  "required_ci_passed": false
+}

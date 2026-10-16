@@ -1,0 +1,124 @@
+name: Original vision fourth-layer component context
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: vision-layer-four-context-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - name: Require AMD host before model download
+        run: |
+          uv run --no-project --python 3.13 python - <<'PY'
+          import json,os,subprocess
+          from pathlib import Path
+          host=json.loads(subprocess.check_output(['lscpu','--json'],text=True))
+          rows={r['field'].rstrip(':'):r['data'] for r in host['lscpu']}
+          output=Path('../artifacts/vision-layer-four-context');output.mkdir(parents=True,exist_ok=True)
+          satisfied=rows.get('Vendor ID')=='AuthenticAMD'
+          (output/'host-prerequisite.json').write_text(json.dumps(dict(source=os.environ['GITHUB_SHA'],host=host,amd_host_satisfied=satisfied,model_executed=False),indent=2)+'\n',encoding='utf-8')
+          if not satisfied:raise SystemExit('AMD context unavailable; no model download or execution')
+          PY
+      - run: uv sync --locked
+      - name: Fetch original graph and qualified fixed hidden capture
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          uv run --locked python -m embeddinggemma_tools.artifact_zip \
+            --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11774238857 \
+            --output ../artifacts/vision-layer-four-input --max-entry-bytes 2147483648 \
+            --member square/vision.pt2
+          uv run --locked python -m embeddinggemma_tools.artifact_zip \
+            --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11975007068 \
+            --output ../artifacts/vision-layer-four-qualified --max-entry-bytes 2147483648 \
+            --member ordered-context.json --member captures/add_43-fp32.bin --member captures/add_57-fp32.bin
+          sha256sum --check <<'EOF'
+          f9c5175a1d75289ce814a9651f496f9bdae5e873ac66199a5c3d03e0172c16cc  ../artifacts/vision-layer-four-input/square/vision.pt2
+          d17722473eca4a82c92e45f1952043598eba8f964bfbfd3a4f67c74b17bdcece  ../artifacts/vision-layer-four-qualified/ordered-context.json
+          b9c027566283327dd92420bf9bd30377d381841983533133f3bf63d485f0d82c  ../artifacts/vision-layer-four-qualified/captures/add_43-fp32.bin
+          4a0c4defc3aae91517db53ce803c69bede89b0455039396ad7256e4adcd65e71  ../artifacts/vision-layer-four-qualified/captures/add_57-fp32.bin
+          EOF
+      - name: Capture only original fourth-layer RMS and GELU at the differing row
+        run: |
+          uv run --locked python - <<'PY'
+          import hashlib,json,os,time
+          from pathlib import Path
+          import numpy as np
+          import torch
+          from embeddinggemma_tools.reference_context_failure import extract_saved_graph_interval,describe_vision_layer_intermediates,VisionSoftmax16Diagnostic,capture_saved_program_nodes
+          fixed=Path('../artifacts/vision-layer-four-qualified');output=Path('../artifacts/vision-layer-four-context')
+          context=json.loads((fixed/'ordered-context.json').read_text(encoding='utf-8'))
+          if not context['original_full_output_bit_exact'] or not context['observed_final_matches_normal_bits'] or context['capture']['original_golden_metrics']['maximum_absolute_error']!=0:
+              raise SystemExit('Prior context did not reproduce the unchanged original reference')
+          row_index=173;report=dict(scope='original_fourth_layer_selected_row_components_from_qualified_fixed_hidden_context_only',
+              source=os.environ['GITHUB_SHA'],qualified_source=context['source'],qualified_manifest_sha256='d17722473eca4a82c92e45f1952043598eba8f964bfbfd3a4f67c74b17bdcece',
+              row_index=row_index,full_encoder_executed=False,original_graph_changed=False,expected_unchanged=True,
+              gpu_validated=False,full_encoder_validated=False,end_to_end_validated=False,phase='extract')
+          def save():(output/'layer-four-context.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
+          save();program=torch.export.load('../artifacts/vision-layer-four-input/square/vision.pt2').module()
+          interval=extract_saved_graph_interval(program,'add_43','add_57');spec=describe_vision_layer_intermediates(interval)
+          values=torch.from_numpy(np.fromfile(fixed/'captures/add_43-fp32.bin','<f4').reshape(1,2520,768).copy())
+          expected=torch.from_numpy(np.fromfile(fixed/'captures/add_57-fp32.bin','<f4').reshape(1,2520,768).copy())
+          names=[]
+          for row in spec['rms_operations']:
+              names.extend(row[key] for key in ('input_node','mean_node','statistic_node','inverse_node','normalized_node','output_node'))
+          names.extend(spec['gelu'].values());names.append('add_57')
+          names=tuple(dict.fromkeys(name for name in names if name!='add_43'))
+          mode=VisionSoftmax16Diagnostic();timer=time.monotonic();report['phase']='capture_one_layer';save()
+          with mode:capture=capture_saved_program_nodes(interval,(values,),names,output/'full-captures',expected)
+          report.update(capture=capture,softmax_replacements=mode.replacements,elapsed_seconds=time.monotonic()-timer,
+              interval_matches_qualified_bits=capture['original_golden_metrics']['maximum_absolute_error']==0)
+          save()
+          if not report['interval_matches_qualified_bits'] or mode.replacements!=2:
+              raise SystemExit('Fourth-layer interval does not reproduce qualified bits; no accepted row reference')
+          selected=output/'row-captures';selected.mkdir();files={}
+          def write(name,array,source_sha,source_shape):
+              array=np.asarray(array,dtype='<f4');path=selected/(name+'-row173-fp32.bin');array.tofile(path)
+              files[name]=dict(file=path.name,shape=list(array.shape),source_shape=source_shape,source_sha256=source_sha,
+                  selected_axis=1,selected_start=row_index,selected_count=1,sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+          for entry in capture['nodes']:
+              shape=entry['shape']
+              if len(shape)<3 or shape[0]!=1 or shape[1]!=2520:raise SystemExit('Selected observation no longer has the original fixed token axis')
+              array=np.fromfile(output/'full-captures'/entry['file'],'<f4').reshape(shape)
+              write(entry['node'],array[:,row_index:row_index+1].copy(),entry['sha256'],shape)
+          write('add_43',values.numpy()[:,row_index:row_index+1].copy(),'b9c027566283327dd92420bf9bd30377d381841983533133f3bf63d485f0d82c',[1,2520,768])
+          for row in spec['rms_operations']:
+              if row['scale_target'] is not None:
+                  value=interval
+                  for part in row['scale_target'].split('.'):value=getattr(value,part)
+                  array=value.detach().numpy().astype('<f4');path=selected/('rms-'+str(row['index'])+'-scale-fp32.bin');array.tofile(path)
+                  row['scale']=dict(file=path.name,shape=list(array.shape),sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+          report.update(rms_operations=spec['rms_operations'],gelu=spec['gelu'],files=files,phase='completed',success=True);save()
+          print(json.dumps(dict(success=True,rms_operations=len(spec['rms_operations']),selected_row=row_index,softmax_replacements=mode.replacements)))
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: original-vision-layer-four-${{ github.sha }}
+          path: |
+            artifacts/vision-layer-four-context/*.json
+            artifacts/vision-layer-four-context/row-captures/*.bin
+          retention-days: 7
+          if-no-files-found: warn

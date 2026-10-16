@@ -1,5 +1,7 @@
 # 実モデル検証・ランタイム API の実行記録
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 日付: 2026-10-08。ブランチ: `feat/m1-sentis-runtime`。詳細は [計画](m1-runtime-plan.md)。
 この文書は配置・fp32・API実装時点の履歴。PR #3はmain `1f0e580`へ、その後PR #4はmain `8146107`へ統合済み。
 以下の「残作業」「未完了」はPR #3実行当時を指す。現在のM1は保存・量子化・測定まで完了。[M1完了検証](m1-completion-validation.md)と [M2計画](m2-plan.md)を参照。

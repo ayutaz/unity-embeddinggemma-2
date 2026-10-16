@@ -1,5 +1,7 @@
 # Windows Editorの起動環境とモデルなし安定性の切り分け
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 確認日: 2026-10-10。main `d6c84424498e5bfb67c0adf3b1292a66e97c3a7c`はPR #26統合後。[PR head CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38027163949)と[main CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38027319740)の全8 job成功を確認した。
 [機械可読結果](results/m2-stability-environment-windows-20261010.json)を参照。Android実APKのbuild source `751c30a`と[実APK結果](m2-android-validation.md)は変更しない。
 

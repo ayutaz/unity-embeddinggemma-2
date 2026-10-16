@@ -1,0 +1,61 @@
+{
+  "scope": "real_audio_saved_reference_thread_contexts_failed",
+  "workflow_run": 38561998469,
+  "head_commit": "9332de58aeae56aab3e42797936a88c171db617d",
+  "producer_commit": "891ce9004deecc262437e56b2fd9a2eaf1054632",
+  "artifact_id": 11892677166,
+  "cpu_capability": "AVX2",
+  "case": "silence",
+  "role": "document",
+  "thread_contexts": {
+    "scope": "controlled_cpu_thread_replay_only",
+    "original_threads": 2,
+    "conditions": [
+      {
+        "requested_threads": 1,
+        "executed": true,
+        "actual_threads": 1,
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 288,
+        "maximum_absolute_error": 0.0001811981201171875,
+        "maximum_tolerance_ratio": 8.712747897611987,
+        "worst_index": 23176,
+        "worst_actual": 0.007174745202064514,
+        "worst_expected": 0.007268205285072327
+      },
+      {
+        "requested_threads": 2,
+        "executed": true,
+        "actual_threads": 2,
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 288,
+        "maximum_absolute_error": 0.0001811981201171875,
+        "maximum_tolerance_ratio": 8.712747897611987,
+        "worst_index": 23176,
+        "worst_actual": 0.007174745202064514,
+        "worst_expected": 0.007268205285072327
+      },
+      {
+        "requested_threads": 4,
+        "executed": true,
+        "actual_threads": 4,
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 288,
+        "maximum_absolute_error": 0.0001811981201171875,
+        "maximum_tolerance_ratio": 8.712747897611987,
+        "worst_index": 23176,
+        "worst_actual": 0.007174745202064514,
+        "worst_expected": 0.007268205285072327
+      }
+    ],
+    "full_encoder_validated": false,
+    "end_to_end_validated": false
+  },
+  "expected_unchanged": true,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "diagnostic_sha256": "a43dc47e5adf0e6e823d3fc2eea430029103209291405a83e44e6a42f44287d8"
+}

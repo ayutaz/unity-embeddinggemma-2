@@ -1,0 +1,162 @@
+{
+  "encoder_only_failed": 2,
+  "passed": 2,
+  "scope": "compensated_centered_norm4_encoder_all_six_failed",
+  "numeric_encoder_conditions": 12,
+  "xml_sha256": "b2d372ac4cee758e6f63587df1627dda585563e011232d1da7270f670ebcb8ea",
+  "skipped": 0,
+  "conditions": [
+    {
+      "requested_backend": "CPU",
+      "success": false,
+      "cases": [
+        {
+          "success": false,
+          "mismatched_elements": 377,
+          "maximum_absolute_error": 0.0002789497375488281,
+          "maximum_tolerance_ratio": 9.441334797473365,
+          "minimum_cosine": 0.9999999985840439,
+          "id": "silence",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 589,
+          "maximum_absolute_error": 0.00027751922607421875,
+          "maximum_tolerance_ratio": 11.844657809189306,
+          "minimum_cosine": 0.9999999987280354,
+          "id": "impulse",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 934,
+          "maximum_absolute_error": 0.0002541542053222656,
+          "maximum_tolerance_ratio": 11.856141774275425,
+          "minimum_cosine": 0.9999999986009657,
+          "id": "sine",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 688,
+          "maximum_absolute_error": 0.00013577938079833984,
+          "maximum_tolerance_ratio": 6.200888095043102,
+          "minimum_cosine": 0.9999999995277022,
+          "id": "nyquist",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 359,
+          "maximum_absolute_error": 0.0001201629638671875,
+          "maximum_tolerance_ratio": 5.123986468631544,
+          "minimum_cosine": 0.9999999997135852,
+          "id": "noise",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 279,
+          "maximum_absolute_error": 0.0001201629638671875,
+          "maximum_tolerance_ratio": 5.123986468631544,
+          "minimum_cosine": 0.9999999997135852,
+          "id": "padded_noise",
+          "profile": "frames-1119-valid-839",
+          "actual_backend": "CPU"
+        }
+      ],
+      "cpu_fallback_count": 0,
+      "readback_flush_count": 0,
+      "phase": "completed",
+      "original_layer_count": 1657,
+      "candidate_layer_count": 40291,
+      "error": "NUnit.Framework.AssertionException:   Every current native feature must satisfy the unchanged encoder gate.\r\n  Expected: True\r\n  But was:  False\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.CompensatedNormAudioEncoderReferenceTests.SavedFp32EncoderApiMatchesCurrentSixNativeSignals (Unity.InferenceEngine.BackendType backend) [0x00625] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@ea69f6cc540e\\Tests\\Editor\\CompensatedNormAudioEncoderReferenceTests.cs:149 "
+    },
+    {
+      "requested_backend": "GPUCompute",
+      "success": false,
+      "cases": [
+        {
+          "success": false,
+          "mismatched_elements": 408,
+          "maximum_absolute_error": 0.00023865699768066406,
+          "maximum_tolerance_ratio": 9.409364352640843,
+          "minimum_cosine": 0.9999999989153957,
+          "id": "silence",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 636,
+          "maximum_absolute_error": 0.0002124309539794922,
+          "maximum_tolerance_ratio": 13.28313559528425,
+          "minimum_cosine": 0.9999999992526794,
+          "id": "impulse",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 521,
+          "maximum_absolute_error": 0.00020241737365722656,
+          "maximum_tolerance_ratio": 8.865038418806542,
+          "minimum_cosine": 0.9999999991102283,
+          "id": "sine",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 604,
+          "maximum_absolute_error": 9.5367431640625E-05,
+          "maximum_tolerance_ratio": 3.622682549244002,
+          "minimum_cosine": 0.9999999998067749,
+          "id": "nyquist",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 31,
+          "maximum_absolute_error": 4.673004150390625E-05,
+          "maximum_tolerance_ratio": 1.7051864295036876,
+          "minimum_cosine": 0.9999999999651968,
+          "id": "noise",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 22,
+          "maximum_absolute_error": 4.172325134277344E-05,
+          "maximum_tolerance_ratio": 1.5139859519233372,
+          "minimum_cosine": 0.9999999999651968,
+          "id": "padded_noise",
+          "profile": "frames-1119-valid-839",
+          "actual_backend": "GPUCompute"
+        }
+      ],
+      "cpu_fallback_count": 0,
+      "readback_flush_count": 0,
+      "phase": "completed",
+      "original_layer_count": 1657,
+      "candidate_layer_count": 40291,
+      "error": "NUnit.Framework.AssertionException:   Every current native feature must satisfy the unchanged encoder gate.\r\n  Expected: True\r\n  But was:  False\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.CompensatedNormAudioEncoderReferenceTests.SavedFp32EncoderApiMatchesCurrentSixNativeSignals (Unity.InferenceEngine.BackendType backend) [0x00625] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@ea69f6cc540e\\Tests\\Editor\\CompensatedNormAudioEncoderReferenceTests.cs:149 "
+    }
+  ],
+  "full_encoder_validated": false,
+  "report_sha256": "a044c1444ee29074f7c4d93bb780ec100b19acff7f14e7b042eccc638e467888",
+  "end_to_end_validated": false,
+  "failed": 4,
+  "feed_forward_only_failed": 2,
+  "exit_code": 2,
+  "subsample_only_passed": 2,
+  "source": "44920528de57b8cb39112eea5783e835d5a53718"
+}

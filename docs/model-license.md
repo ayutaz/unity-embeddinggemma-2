@@ -1,5 +1,7 @@
 # 配布コードと固定モデルのライセンス確認
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。実モデル実行は停止中。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
+
 確認日: 2026-10-10。
 
 - このリポジトリとUPMコードのライセンスは [Apache-2.0](../LICENSE)。UPMには [LICENSE.md](../Packages/com.ayutaz.embeddinggemma/LICENSE.md) を含める。

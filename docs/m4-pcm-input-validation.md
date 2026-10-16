@@ -1,5 +1,7 @@
 # M4: 固定PCM入力境界のTDD検証
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 更新日: 2026-10-13。A2の固定profile入力準備として `AudioPcmInput`をRuntimeへ追加した。**前処理Worker・音声encoder・最終768次元APIの実装や受け入れではない。** 入力境界の契約を先に固定し、GPU前処理Runtimeへ渡す。
 
 ## 入力と所有権

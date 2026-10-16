@@ -1,0 +1,1283 @@
+{
+  "scope": "original_image_layer0_static_projection_diagnosis_and_failed_whole_candidate",
+  "original_references_changed": false,
+  "learned_coefficients_changed": false,
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "exact_patch_input_sha256": "bc4c19c9aaf9688801c99ed073fdde22f0daf6b822dc2c9c4b7a3f7c9aded636",
+  "native_layer0_expected_sha256": "f9eaca61eb58d89445a623d8b8bfee5201b266cd822298439fb49f0528bcefdf",
+  "baseline_execution": {
+    "file": "vision-layer0-original-patch-20261015-process.json",
+    "sha256": "d9de76767e7b549a929a67051857645d646e37ae6bd789ad59007dc603e2298b",
+    "exit_code": 2,
+    "elapsed_seconds": 47.978106900001876,
+    "xml_sha256": "35df6bc6fb2a504c1500166f7de219737aa9bf2830ffefd5da064eece9e32b8c",
+    "counts": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    }
+  },
+  "baseline": {
+    "file": "vision-layer0-original-patch-gpu-e39bdf1b5d0faf2ea424023d83076315736c6fde.json",
+    "sha256": "66473747ff83d0a1a504eb664ed7862ffbc433b5adf8a8622a621130f1e7615d",
+    "result": {
+      "success": false,
+      "scope": "original_vision_layer0_exact_patch_gpu_diagnosis",
+      "runtime_source": "e39bdf1b5d0faf2ea424023d83076315736c6fde",
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "phase": "captured",
+      "diagnostic_readbacks_only": true,
+      "layer_count": 113,
+      "layer_types": {
+        "Square": 7,
+        "ReduceMean": 7,
+        "ScalarMad": 7,
+        "Rsqrt": 7,
+        "Mul": 22,
+        "Reshape": 21,
+        "MatMul": 9,
+        "Split": 2,
+        "Slice": 8,
+        "Neg": 4,
+        "Concat": 6,
+        "Add": 7,
+        "Transpose": 4,
+        "Softmax": 1,
+        "GeluFast": 1
+      },
+      "static_projection_count": 7,
+      "captures": {
+        "projection-0-input": {
+          "file": "projection-0-input-fp32.bin",
+          "sha256": "9553e0d41e4aec086ee637d4d0cfff7777586e93cd2641088dbca4edc6e6a7f4",
+          "shape": [
+            2520,
+            768
+          ]
+        },
+        "projection-0-output": {
+          "file": "projection-0-output-fp32.bin",
+          "sha256": "b4b5ef521f1572be189296e8fdaef15fe666187df22558c871f5bae5574277f0",
+          "shape": [
+            2520,
+            768
+          ]
+        },
+        "projection-0-weight": {
+          "file": "projection-0-weight-fp32.bin",
+          "sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48",
+          "shape": [
+            768,
+            768
+          ]
+        },
+        "projection-1-input": {
+          "file": "projection-1-input-fp32.bin",
+          "sha256": "9553e0d41e4aec086ee637d4d0cfff7777586e93cd2641088dbca4edc6e6a7f4",
+          "shape": [
+            2520,
+            768
+          ]
+        },
+        "projection-1-output": {
+          "file": "projection-1-output-fp32.bin",
+          "sha256": "b0baff2f86148b81866d513c427d6f6f68976303c330481e23654909287e0558",
+          "shape": [
+            2520,
+            768
+          ]
+        },
+        "projection-1-weight": {
+          "file": "projection-1-weight-fp32.bin",
+          "sha256": "3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe",
+          "shape": [
+            768,
+            768
+          ]
+        },
+        "projection-2-input": {
+          "file": "projection-2-input-fp32.bin",
+          "sha256": "9553e0d41e4aec086ee637d4d0cfff7777586e93cd2641088dbca4edc6e6a7f4",
+          "shape": [
+            2520,
+            768
+          ]
+        },
+        "projection-2-output": {
+          "file": "projection-2-output-fp32.bin",
+          "sha256": "edef603f12a16f240cc12dd2a85f17c299d7d0df803e4dfb72fe4acb0d220c25",
+          "shape": [
+            2520,
+            768
+          ]
+        },
+        "projection-2-weight": {
+          "file": "projection-2-weight-fp32.bin",
+          "sha256": "63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b",
+          "shape": [
+            768,
+            768
+          ]
+        },
+        "projection-3-input": {
+          "file": "projection-3-input-fp32.bin",
+          "sha256": "2a019fe79d886948433ed997bc97dc3b75326d551024d5d9967fe126def57b2b",
+          "shape": [
+            2520,
+            768
+          ]
+        },
+        "projection-3-output": {
+          "file": "projection-3-output-fp32.bin",
+          "sha256": "d173f979ce63c88a208e130948271fd6b4040a98093e576c6a9234eef837841e",
+          "shape": [
+            2520,
+            768
+          ]
+        },
+        "projection-3-weight": {
+          "file": "projection-3-weight-fp32.bin",
+          "sha256": "b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5",
+          "shape": [
+            768,
+            768
+          ]
+        },
+        "projection-4-input": {
+          "file": "projection-4-input-fp32.bin",
+          "sha256": "4a505659f3942d4b4b9390a3e3fde87c944a9688b8865b55603b81efdfec75de",
+          "shape": [
+            2520,
+            768
+          ]
+        },
+        "projection-4-output": {
+          "file": "projection-4-output-fp32.bin",
+          "sha256": "1478cf36007708e04cb8bd771e763a369c60db26169c995709da9ffeb842a69b",
+          "shape": [
+            2520,
+            3072
+          ]
+        },
+        "projection-4-weight": {
+          "file": "projection-4-weight-fp32.bin",
+          "sha256": "e0f98883c238d21192d6e086f0205f07c428847307a94817d34f3adf20e7338f",
+          "shape": [
+            768,
+            3072
+          ]
+        },
+        "projection-5-input": {
+          "file": "projection-5-input-fp32.bin",
+          "sha256": "4a505659f3942d4b4b9390a3e3fde87c944a9688b8865b55603b81efdfec75de",
+          "shape": [
+            2520,
+            768
+          ]
+        },
+        "projection-5-output": {
+          "file": "projection-5-output-fp32.bin",
+          "sha256": "92b39ceff24ed07a9e7a1e840697b933a8a5afd61521e897eb842302db3db980",
+          "shape": [
+            2520,
+            3072
+          ]
+        },
+        "projection-5-weight": {
+          "file": "projection-5-weight-fp32.bin",
+          "sha256": "e9f675da30561ba275e17507b5455fda4d49e6a883747c5678d2a46eb8df0102",
+          "shape": [
+            768,
+            3072
+          ]
+        },
+        "projection-6-input": {
+          "file": "projection-6-input-fp32.bin",
+          "sha256": "929dcd645a610ce0a8dbcc70f3f2240cbae74273206f3519b2a8984fc3cb4c56",
+          "shape": [
+            2520,
+            3072
+          ]
+        },
+        "projection-6-output": {
+          "file": "projection-6-output-fp32.bin",
+          "sha256": "c237adf805f698d90ed0719c85b7876e4184751d336e76ea18ef4b9b24d7410d",
+          "shape": [
+            2520,
+            768
+          ]
+        },
+        "projection-6-weight": {
+          "file": "projection-6-weight-fp32.bin",
+          "sha256": "0174befbd8ff8c841032996393c3e80d3334dfc8dbd10ee58d804a420601de5a",
+          "shape": [
+            3072,
+            768
+          ]
+        },
+        "layer0-output": {
+          "file": "layer0-output-fp32.bin",
+          "sha256": "bc417e7f0e3486a5ac0025878d58c2c0b612ea5dea99a53e6b8db0e6f93b1513",
+          "shape": [
+            1,
+            2520,
+            768
+          ]
+        }
+      },
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "normal_final_matches_observed_bits": true,
+      "actual_backend": "GPUCompute",
+      "bit_differences": 1679857,
+      "mismatched_elements": 4,
+      "maximum_absolute_error": 3.0517578125e-05,
+      "maximum_tolerance_ratio": 1.4393798628140138,
+      "failure_message": "NUnit.Framework.AssertionException:   Keep the unchanged original layer-0 FP32 tolerance."
+    }
+  },
+  "metadata_import_failure": {
+    "file": "saved-projection-partitions-red-20261015-process.json",
+    "sha256": "8c18ec41f22c913c6996f0a526b192b5283c68c8fbe6e20398a85c7bb679f56c",
+    "exit_code": 1,
+    "elapsed_seconds": 24.267024700006004,
+    "unity_xml_missing": true,
+    "counts_as_intended_tdd_red": false
+  },
+  "metadata_import_failure_reason": "Invalid 33-character GUID prevented importing helper; corrected to 32 characters. No numerical or TDD pass claimed.",
+  "superseded_api_red_execution": {
+    "file": "saved-projection-partitions-api-red-20261015-process.json",
+    "sha256": "3c8eab131e22190132415ced9a5e951bd854c29a9265537c176ef37d0380f4bc",
+    "exit_code": 2,
+    "elapsed_seconds": 38.44979149999563,
+    "xml_sha256": "634a26618739b20a9bc304eae4dc30d107d86285da767ac53d0e115c88c37de6",
+    "counts": {
+      "total": 6,
+      "passed": 0,
+      "failed": 6,
+      "skipped": 0
+    }
+  },
+  "superseded_api_red_note": "One fixture precondition failed before reaching the API; use the corrected residual fixture for intended TDD evidence.",
+  "intended_partition_red": {
+    "file": "saved-projection-partitions-residual-red-20261015-process.json",
+    "sha256": "14854ca80acf1302719269bea09c6059ff5470760a6a324a0488ca5cbe7dd242",
+    "exit_code": 2,
+    "elapsed_seconds": 40.215663900002255,
+    "xml_sha256": "9aa38dc31d784a876590429b2aa322bbe2f19eb64857d7d71441bb7375ba6f13",
+    "counts": {
+      "total": 6,
+      "passed": 0,
+      "failed": 6,
+      "skipped": 0
+    }
+  },
+  "partition_regression_and_real_layer_execution": {
+    "file": "saved-projection-partitions-and-vision-layer0-20261015-process.json",
+    "sha256": "62ec08c45a32dc1ab6075b75d3282109862fb4975329123cd70beb922261997f",
+    "exit_code": 2,
+    "elapsed_seconds": 44.48184429999674,
+    "xml_sha256": "1ba67f7a78063b8b1a85f300944615ad14fecfce925b807cb62434aa8f0f7776",
+    "counts": {
+      "total": 13,
+      "passed": 12,
+      "failed": 1,
+      "skipped": 0
+    }
+  },
+  "native_layer0": {
+    "file": "vision-layer0-native-projections-gpu-7799c290e213ee5135021718f755cb1d79788993.json",
+    "sha256": "66ff6d92437e0ff270f03ff12f683422e383c0d92c365339dc0cce62ecf204bf",
+    "result": {
+      "success": false,
+      "scope": "original_vision_layer0_seven_native_gpu_projections_candidate",
+      "runtime_source": "7799c290e213ee5135021718f755cb1d79788993",
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "phase": "completed",
+      "projections": [
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e0f98883c238d21192d6e086f0205f07c428847307a94817d34f3adf20e7338f"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e9f675da30561ba275e17507b5455fda4d49e6a883747c5678d2a46eb8df0102"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "0174befbd8ff8c841032996393c3e80d3334dfc8dbd10ee58d804a420601de5a"
+        }
+      ],
+      "prepare_ms": 446.9583,
+      "segment_count": 8,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "execute_and_final_download_ms": 745.3148,
+      "capture_sha256": "495e9fd45058458f51d64c8eeb781accab57fdb5142bbc8132b6b3b06192abff",
+      "actual_backend": "GPUCompute",
+      "bit_differences": 1537255,
+      "mismatched_elements": 1,
+      "maximum_absolute_error": 1.9073486328125e-05,
+      "maximum_tolerance_ratio": 1.226715408158884,
+      "failure_message": "NUnit.Framework.AssertionException:   Keep the unchanged original layer-0 FP32 gate."
+    }
+  },
+  "whole_candidate_execution": {
+    "file": "vision-all-static-square0-20261015-process.json",
+    "sha256": "78f1f96a27b94b7cf3af131f282063e0726834430e3d0086076e9be2f70db3d7",
+    "exit_code": 2,
+    "elapsed_seconds": 88.47030930001347,
+    "xml_sha256": "355ec37ec530f9c48450c14c525c445d573e759033073eff7f5f8cc97c07eaf6",
+    "counts": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    }
+  },
+  "whole_candidate": {
+    "file": "vision-all-static-gpu-a9aac194b88dadb4da79b5d4d61560c2463964df-square-0.json",
+    "sha256": "b4b1c98294d2a35ef64cd40405ed20ad7ab52cc0c6691551a7e94cb926d7c05e",
+    "result": {
+      "success": false,
+      "scope": "one_original_vision_encoder_native_static_gpu_projection_candidate",
+      "runtime_source": "a9aac194b88dadb4da79b5d4d61560c2463964df",
+      "case_id": "square-0",
+      "phase": "completed",
+      "all_profiles_validated": false,
+      "end_to_end_validated": false,
+      "profile": "square",
+      "saved_model_sha256": "4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7",
+      "projections": [
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "696c2e091ed4ad117c10faa6bf9707eb808649fb09c84fee457d2327408acc90"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e0f98883c238d21192d6e086f0205f07c428847307a94817d34f3adf20e7338f"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e9f675da30561ba275e17507b5455fda4d49e6a883747c5678d2a46eb8df0102"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "0174befbd8ff8c841032996393c3e80d3334dfc8dbd10ee58d804a420601de5a"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "7786e09844bdc70e94bd75309ec96a5e60776e7757567a784c2aeb1c0013f81f"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "5a30394dcb782975beb26e07eac024eb86e88c1ecf572152506d88937cab7a4a"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "65f2d41068c5fee95e7ab67d26f2d864184409d9243fe25adc01637f953426d3"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "0b6457b7559c2fde564fab03460d695439de1e7f5460272d18c0235170cbbcf5"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "88c324cd2b7da869c6d41db2c200205725f1857cbe112b72ac4b1f0e6b903b1d"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "5dbafcea833f898a37f45a44069b0d03ab7c0a0ba3d4424f67f3473233933724"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "eb6afa7e69285bd138deb8daa4b31f23c40d80064fd81df441acd7c42931691b"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "840405568895e1c5ce70eeff6a443c568012b455cc2d4bf29c5525d337ca5fd9"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "954437bd89ab2c388fc1a2e9cdc05f2bf3d1e790f31eefd3c14479365edc1e02"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3e26df7d6cf98e1c8ca41769ff5a7c2eff175a3ff1e80240c9785777b1387392"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "9d119cfdfa9704629f538868f4195d4b74682af6528c8eb069f5d275af740e26"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "5b89760f9e48658e7bd43ac7e48f91d884e01bf2fca7c73f8cc832bc8e803a09"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "74842d1fda0ec569ccb75fe328fd2ef844196cbf16dbc6f8092e631513ceffe6"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "4c28a48edcc5ed6ad000010564546cc6ecc1dce0297ec60f6071e9f7a1cc8667"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "2faeb0fc0a78796e3027ac4c32faaaeb271725e196aa799116f414e8bec94dbc"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "cc7d4f6f5e5154bfc0fdb4e0e165cd4b8b7b41a2e349a263c5c4210c919d23a3"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "cc04dad32eeac588739c0ac8ddca727a2c31334f547cb925db4cbea8cf47f2aa"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "a7a9f8bb29bbdccf884bed83abb52436f487a32d6b917af1c5a2dbf7d771908e"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "765df8621f98897deb737152b4310d74bb60fad14c807272a45eeb99ca6adb4c"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "c9c88089a23355cb25710309a690ee58461062e403086e8bc8db8922d67d07ea"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "f0699fdb71627600f707b285e00a77f972bedd3c4049816e6930f1eda9332aaa"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "318d59dc2f12c47b149061b5cda71718a35feb194cccaa289de7161c5e95581e"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3b6b012267d30d4f12f3491f996b86c59bdee01b54ed56e85b7086b8722b24d5"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "67a651fcd2b566b3a05d4c70c06ce5cf6c5a023b7d70ad858f0b3774409175a8"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "5ff5983bf011d064c76e16702f4c20f840224bee3c7dc776e9420430b65a79e5"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "580e9a8864560f1384e6c310bdbc16b799956ca38aca8a65c06c61585b857f2f"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e0679d574ff4912e5561aabe6490a6160321ed70b791b5fae2a2f4777fc2a724"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "61bb8570529f767b81fc8baa189b3ba0ddc0bb297351ac0c0e047011575ca28a"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "0880847117e5dd1850293cb0c3e2d6515eec543fb15c84f726dc939263702d73"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "aa7ca203d6f9c5bba083bd7f1ba236e6c424fb7222234a19107612444f352b3d"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "1de2d9ce6b72fc1f50f29444c90da89be3003ad085f5d248219dd03624f28959"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "43fa4f39cfccbf1ac0014ef6611512941209055f7004083ee8b980fcd0def5e6"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "02fc84161b7e96cc058afe31e47aaaaeb385633327d76fcaf0ddd96767ba0dba"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "d3c0dad858c3bbf413d4f3f92580bbdede6324cf19686438e3669c1ab9c11c1f"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "183a8e06eddffc08f4bb2d962ffd075cbc388f374576a59ce19680b6414a99e8"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "07196adc0467032a95a9783c8329f3b8eacabd164fbcc0b4ed1e6f95c53af0f5"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "103d87f82dd2ec4d9b57049fe60ab1eb6fd974385cd9d823abfa77b2ab2140c8"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3f8509a3a6497e99eae48b513b24a04511680f3d02f853e10f693ac5905eac01"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "7288359876c978fb952fedf2416305ed9e5efdddd42def97c23e412625ace2d4"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "7f0364733b6b69f06d20e24dbd49c2343f499adb9118a2ab917139afb7a3fe47"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "6f1b29d83cd5857181b2237f417a35d759dd3623e6dbebe320fb11b0604e0c62"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "386a502ca6e700966146e373ada62d80308ee01d2135dd8d1f2d514e0513a4ae"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "2b3b581a632bf56bbd5c5243073c909769365d0938c305b8dfab844867647fc4"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "b761997019d9a95058ad308df6f7fe45c6927c7c744636d18f0cf574edb9877b"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "bbc684bba06f5ca2c3569ee13640f76a3b205fc6613f96ab650994db0df7adc1"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e90adfa8bb0fa22985db1cbbf4c3ac9d4ae53139616fbad4d7ab750ba4de8510"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "753533991fa8920ffe3e670513fe0cef83b0f8a252ff65f16ab314ee4db52845"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "50286077101d180ea71b96cbe937397cdd1d226508c9ece6165e633d00f0ebcf"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "ec5974857a4d89ee0c65b2d1d9b1bb306a5433aa221ffbab77a62210741bc6d0"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3275ab88033d8b33fc3567cf852a1e1dc18d1de3bc116528eb348a28416afb34"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "498cab3225b469b207156cfed1008d05d5ff468341297015f0520036edd584f6"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "24ed1764118bba3ad63eea0a25a0013972b00eb15c6b78b585b4b11f1372a3d9"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "9c7314bc371efab196b507446babaa126542cf8e3accf9252f6fa147e738d51c"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "eac00850fa476b23c2a468780dc0abbf87b6a4dd512c2a43f9c8da660b39537f"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "bc4be64c24148bafac1db5562202410d514a8a4146f3387cd6a79edc1716e3f1"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "f4a246064f234ea66a995928de57ecb206cd46599e00dd74a437e0eb2f744dcd"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "b24ba5f1fdba3bda24ff34681cc5278696553fab8efbbb193bef92bdd436e278"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "205ba8c2efda071f891fe003bf693ae17fed56cfd9c317ee90c1de5c3ae0eba3"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "5fd9e37590a7ce85beac87bd69e7fa3646c7edbe2e362f786dbbdee033b01fd4"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "db8e405763d736febed42442dde5a1f6b630a750210baf47596ba0f54bafa88a"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3d6c5692d0789db322cdb763fe4ad58b83e5d9eaadb485080533eef2d456686e"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "bfa0ca064d0256d0aeb0720b0c58c18e1de37c3c61903f6c0e8ec8291fc8ab23"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "61af8ec315f15384a52d04b501e0b14e51803ba9de945a3b84dc20a1c07e02f6"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "22fed99bcd7c3329bb4f82a0f4b5e16d8461e8cc9e43978e7efa33e96f618477"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "1c431ad32ac449abbc517d36301a130ca8bde37f781852ffdfb731f60555f1ea"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "247e1fe7d182ef38ce94db6d473f869860cf5c549f72be127cd517a6cf620c1a"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "7953239e9bd3510c4ef8f8a8157cc25339383df30a7f253546930453e6403426"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "047ead7204ffa80bf6d2ec791ed010d455eb78d1e04a41469a053dbe14493960"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "c4f65d6a32d68d9184e795553c34a7d7d9a589f4e2fc55dfbaf91ef140fc0374"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "0b3228e05181488a2d60d34d4e16ff90b298c6f1a32763f3d42c3c5dcfd4e5f1"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "bf87f0e5bd1e1539f2379e63c2b16d51daa38c07470211e2cc6455be249bd604"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "7fc5410596b4d31b2229c47755f6816fedd58ef84635c42288ca681d2b5663d3"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "b739d341b83b5c40aa1d4296b67423c0390632b8941fb9abd1d102d8dff82867"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "d3260adfd5bfd185dfc2b815b47cb6d66463903d5d60b55c79b274b845e37ff8"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "8d95d3a02689b3feb94afaf81dc01b8c9c3afa3bd5e17594a060b4256e729444"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "348b0f9e16f66146dc5ddb89bee857b3716b6b4d88cc973fd5a49ec8fb919bc4"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "4343c7ad54be21c2dea86cd7d8ff27eb424810c9516e4f3c3a5470bad3808f7f"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "007866d7f7cc7a3a1b20985f30a2f8ae0b496911ec437ddb885dfff17e3b7621"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "aab960a1a15bb1ba7537893a658b3da44bdb3667cdb100a0926cfbd61e250493"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "b1141ff76d76f45e0fe1f76d36afabb7616c66b1fbccfd1dfad86fd80c4e3270"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "c662ccda55d4133799d3f12e336bd38717cd4c71bfba5cffe4ee3b8341dfe616"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "26d4bbafe70881201d9353a16359bfc1432f869591f36cbe34be5a704cebab24"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3b5b8991f26facd5905fa49c8174304a27ed9b3477fe520773baa28eefa27df4"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "15ebe583806cc2fbf441130b0d93ad1252ac340a03c74e225d9d57a2a6b11a27"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "132fb2440050afafd290ed186eb79b4fe8c902b3e630297b9e404df5e6dba08d"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "c9adff158c2e334cb38c64ae8d4821dd7e2c7043e00cabd2104324a756f51f2d"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "4aeff02b7eccaa0a85b38f935734c49c1942c478da51288cddeba675e1e8e132"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "9cf37abd5e5b071dd194a9e8558e240ced611f1e51333dbda96f07a10bd06b92"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "7e7a469555688a31c145936b7855e92553d6b526e28994ad10693325a072d060"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "536e81f66b9533550bb74b928bb4d0aad38249ec70eeda1531c5db4acdcd9faa"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "bd477f4d1e92ec35d7341eae30dc7094f1d6b18e13a981acdc6a30748476e483"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3ff85de4ef0462f999bca437107d23aa116790ee31651e8fb7353fe2c57162be"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "ec72930f6ec19265a26be66357399de52608dab5a68b149825069606090cf6b9"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "f61f57d62eb408e4eff769a4f9ced8f5995341b0155cad51fe23e4cffe550bb4"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "7be80f014fbe0f444cdfec629ff012938fdfb25686e8d050ccd30b01c4e05687"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "c689feb981f9d17e573304699c7d41d24f3a6168d17fc5ecafdba2a28925e917"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "0610014c9f6dae58a240c7dc9e5411bb0d9cd5bae1d7f5feab4fe320762cb848"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "463209cd0b02bfacc52020d73472be770ff98ae9b30cd6b50b0dde2d69b67f7c"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "19e91f0a2782cd45bd405c14fd696df9025da6dfdefea029da3a128d6fdc0a95"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e41d9cdfb0624e092cb59496f20b2faafca2d4561251a82264280443780d1ead"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "28676afe6557de8b5fd2006786279369a6683a067f7b75010ec8b573504555ee"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "9d8ba0d5af2641cbcd37fe82c129cc1a48479fc6969ea830872c9cec20a7c964"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "6492972c18fa5481cc1f15dc8bc65a762fcb0250512a899726d6df0d79ec0b7b"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "badac97a8f56f7f594e3cb8bf5063c6719333a34d5bdd969c4acc5e934203811"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3f27c0824b337d33772cd466d0f4450b669c794559fdb432b33f02f776c475c8"
+        },
+        {
+          "width": 768,
+          "columns": 512,
+          "rows": 256,
+          "block": 192,
+          "weight_sha256": "a81360a028f1a1dc0fb72bfe13bd4635dded41259e2b29a066176082daa3f385"
+        }
+      ],
+      "prepare_ms": 8779.9825,
+      "projection_count": 114,
+      "segment_count": 115,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "host_working_set_before_execute_bytes": 4131840000,
+      "execute_and_final_download_ms": 30977.507,
+      "host_working_set_after_download_bytes": 11777482752,
+      "host_peak_working_set_bytes": 11777482752,
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 579,
+      "maximum_absolute_error": 0.00014448165893554688,
+      "maximum_tolerance_ratio": 5.757521973799546,
+      "failure_message": "NUnit.Framework.AssertionException:   Keep the unchanged original vision FP32 elementwise gate."
+    }
+  },
+  "whole_candidate_adopted": false,
+  "whole_candidate_repetition_stopped": true,
+  "remaining_candidates_not_executed": [
+    "square-1",
+    "landscape-0",
+    "landscape-1",
+    "portrait-0",
+    "portrait-1"
+  ],
+  "mean768_tdd_red": {
+    "file": "vision-mean768-red-20261015.xml",
+    "sha256": "978f5d79c108fac5d4e58b5b4b31cd2d227953711a1357f07722ceebf2f6254c",
+    "tests": 7,
+    "failures": 7,
+    "errors": 0,
+    "skipped": 0
+  },
+  "mean768_related_green": {
+    "file": "vision-mean768-related-green-20261015.xml",
+    "sha256": "34284b9d625730094a3f9aac2b32ef313bafc52e46828e06a097a51b304ac165",
+    "tests": 25,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "package_regression": {
+    "file": "vision-saved-partitions-package-green-20261015.xml",
+    "sha256": "5ca4aac0d0b357a318be479081b77c7e78b9f00c02098d5f73ee3839b759b873",
+    "tests": 22,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "small_cpu_arithmetic": {
+    "report_sha256": "0498176abed3fc4b4305464213a2f813207862f85d53efc2bc6837dbe5d5afb8",
+    "result": {
+      "scope": "small_cpu_reference_arithmetic_only_not_model_inference",
+      "torch_version": "2.14.1+cpu",
+      "producer": "7609164581b70b42f44bf5d4611d55cfbbf8d1eb",
+      "export_module_sha256": "84bd9b7e178933808cbbfc89ca026163a0a9a262e5b57a36d8d35dd6e1d46710",
+      "torch_cpu_dispatch_capability": "AVX2",
+      "physical_hardware_isa_inferred": false,
+      "original_patch_sha256": "bc4c19c9aaf9688801c99ed073fdde22f0daf6b822dc2c9c4b7a3f7c9aded636",
+      "rows": 64,
+      "width": 768,
+      "mean": {
+        "bit_differences": 0,
+        "maximum_absolute_error": 0.0
+      },
+      "bounded_power_sample_count": 10000,
+      "power_minus_half_vs_sqrt_reciprocal": {
+        "bit_differences": 1321,
+        "maximum_absolute_error": 0.0001220703125
+      },
+      "refined_inverse_vs_native_power": {
+        "bit_differences": 0,
+        "maximum_absolute_error": 0.0
+      },
+      "original_full_context_replayed": false,
+      "gpu_validated": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false
+    }
+  },
+  "existing_runtime_files_unchanged_since_prior_checkpoint": true,
+  "image_all_three_profiles_validated": false,
+  "end_to_end_validated": false,
+  "next_action": "Qualify the bounded 768-wide RMS reduction and refined inverse on GPU using original fixed norm inputs before repeating full encoder candidates.",
+  "remaining": [
+    "all original image profiles and conditions",
+    "actual PCM/Texture to GPU preprocessing encoder backbone normalized 768 API with every required role mask length boundary lifecycle error reuse and text regression",
+    "stage3/4 sample and Player verification"
+  ]
+}

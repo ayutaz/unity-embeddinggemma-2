@@ -1,4 +1,6 @@
 using Unity.InferenceEngine;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace EmbeddingGemma
 {
@@ -12,6 +14,10 @@ namespace EmbeddingGemma
         BackendType Backend { get; }
         AudioEncoderProfile Profile { get; }
         AudioEncodingResult Encode(AudioPreprocessingResult input);
+    }
+    public interface IAsyncAudioFeatureEncoder : IAudioFeatureEncoder
+    {
+        Task<AudioEncodingResult> EncodeAsync(AudioPreprocessingResult input,CancellationToken cancellationToken=default);
     }
     public interface IMultimodalBackbone
     {

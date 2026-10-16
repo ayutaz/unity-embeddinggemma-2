@@ -1,0 +1,55 @@
+{
+  "end_to_end_validated": false,
+  "tdd": [
+    {
+      "failures": 5,
+      "path": "artifacts\\numerical-acceptance-state\\unity-execution-evidence-red-20261015.xml",
+      "tests": 5,
+      "skipped": 0,
+      "sha256": "f7e8809cece8d323a9c7a10e10f24375cba110e99dd6b59aaaf5d4dbfb7c8614",
+      "errors": 0
+    },
+    {
+      "failures": 3,
+      "path": "artifacts\\numerical-acceptance-state\\unity-execution-runner-red-20261015.xml",
+      "tests": 3,
+      "skipped": 0,
+      "sha256": "80d62108a2a2a4055e043e2c2eeafa2c79d24ce578299836023d996c8d653dab",
+      "errors": 0
+    },
+    {
+      "failures": 0,
+      "path": "artifacts\\numerical-acceptance-state\\unity-execution-evidence-green-20261015.xml",
+      "tests": 11,
+      "skipped": 0,
+      "sha256": "a152bac635eefe7f858b08dca55ba7f2aa21a075399d73c8a113aed03ab6ac06",
+      "errors": 0
+    }
+  ],
+  "cli_probe": {
+    "command": [
+      "uv",
+      "run",
+      "--locked",
+      "python",
+      "-c",
+      "pass"
+    ],
+    "timeout_seconds": 15.0,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-15T06:29:13.101557+09:00",
+    "pid": 73408,
+    "exit_code": 0,
+    "unity_results": "..\\..\\numerical-acceptance-state\\scalar-mean-full-gpu-silence-20261015.xml",
+    "unity_evidence_error": "Unity tests did not execute completely without skips",
+    "elapsed_seconds": 0.10840620000089984,
+    "completed_utc": "2026-10-15T06:29:13.209963+09:00"
+  },
+  "code_sha256": "b407e10e091bae3a0765d2c9d5ab2f32ca9a1bb2c79d800852ac8f5757187172",
+  "full_encoder_validated": false,
+  "scope": "owned_unity_xml_execution_audit_only",
+  "success": true,
+  "gpu_validated": false
+}

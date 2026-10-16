@@ -49,7 +49,7 @@ namespace EmbeddingGemma.Validation.Tests
         [Test] public void PublishedModulesRecordPreparationWithoutClaimingInference()
         {
             var writer = Create(); var model = AddText(writer); var bundle = GpuMediaBundle.Open(output);
-            Assert.That(bundle.VerifyFile(model), Is.EqualTo(Path.Combine(output, model)));
+            Assert.That(bundle.VerifyFile(model), Is.EqualTo(Path.GetFullPath(Path.Combine(output, model))));
             var data = JObject.Parse(File.ReadAllText(Path.Combine(output, "bundle.json")));
             Assert.That((bool)data["inference_executed"], Is.False); Assert.That((string)data["source_commit"], Is.EqualTo(new string('a', 40)));
         }

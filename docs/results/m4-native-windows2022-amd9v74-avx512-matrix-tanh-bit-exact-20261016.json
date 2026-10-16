@@ -1,0 +1,117 @@
+{
+  "run": 38826141212,
+  "source": "c4ee970454b955db9b67572fa840497c1f6f27d8",
+  "cpu": {
+    "Name": "AMD EPYC 9V74 80-Core Processor                ",
+    "Manufacturer": "AuthenticAMD",
+    "NumberOfCores": 2,
+    "NumberOfLogicalProcessors": 4
+  },
+  "report_sha256": "f18b72423d19a973cb6d33878d9045d2201d68c8503ca7e6b7c2fb11c3035b0b",
+  "actual_onnx_matrix": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 0.0,
+    "maximum_tolerance_ratio": 0.0,
+    "worst_index": 0,
+    "worst_actual": -28.171314239501953,
+    "worst_expected": -28.171314239501953,
+    "exact_difference_count": 0
+  },
+  "contexts": [
+    {
+      "context": "default",
+      "cpu_capability": "AVX512",
+      "torch_version": "2.14.1+cpu",
+      "matrix": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "worst_index": 0,
+        "worst_actual": -28.171314239501953,
+        "worst_expected": -28.171314239501953,
+        "exact_difference_count": 0
+      },
+      "activation_metrics": {
+        "dense32771": {
+          "actual_finite": true,
+          "same_shape": true,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "worst_index": 0,
+          "worst_actual": -0.9999999403953552,
+          "worst_expected": -0.9999999403953552,
+          "exact_difference_count": 0
+        },
+        "random514": {
+          "actual_finite": true,
+          "same_shape": true,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "worst_index": 0,
+          "worst_actual": 0.8357657194137573,
+          "worst_expected": 0.8357657194137573,
+          "exact_difference_count": 0
+        }
+      }
+    },
+    {
+      "context": "avx2",
+      "cpu_capability": "AVX512",
+      "torch_version": "2.14.1+cpu",
+      "matrix": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "worst_index": 0,
+        "worst_actual": -28.171314239501953,
+        "worst_expected": -28.171314239501953,
+        "exact_difference_count": 0
+      },
+      "activation_metrics": {
+        "dense32771": {
+          "actual_finite": true,
+          "same_shape": true,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "worst_index": 0,
+          "worst_actual": -0.9999999403953552,
+          "worst_expected": -0.9999999403953552,
+          "exact_difference_count": 0
+        },
+        "random514": {
+          "actual_finite": true,
+          "same_shape": true,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "worst_index": 0,
+          "worst_actual": 0.8357657194137573,
+          "worst_expected": 0.8357657194137573,
+          "exact_difference_count": 0
+        }
+      }
+    }
+  ],
+  "all_capture_hashes_and_metrics_independently_verified": true,
+  "intel_hypothesis_tested": false,
+  "gpu_validated": false,
+  "encoder_validated": false,
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "small_windows2022_amd9v74_avx512_original_matrix_and_native_tanh_only",
+  "artifact": {
+    "id": 12015392410,
+    "bytes": 12824329
+  },
+  "required_ci_passed": false,
+  "limit": "AMD AVX512 host observed. MKL AVX2 restriction is not an ATen restriction; both child CPU capabilities remain AVX512. No full encoder, fresh official, or Intel validation."
+}

@@ -1,0 +1,9 @@
+{
+  "tiny_or_static_checks_only": true,
+  "source_base": "7e3c4c872f8992047fed960fc2ad675d13720b23",
+  "real_model_execution": "pending",
+  "failed": 0,
+  "passed": 10,
+  "scope": "fixed_audio_role_reference_workflow_and_zip_cli_green",
+  "command": "uv run pytest tests/test_artifact_zip.py tests/test_artifact_zip_large_cli.py tests/test_audio_role_reference_workflow.py -q --tb=short"
+}

@@ -1,0 +1,8 @@
+{
+  "passed": 8,
+  "scope": "fixed_audio_role_reference_workflow_tdd_red",
+  "reason": "Missing opt-in role reference workflow",
+  "source": "c1309910372f9a790f1a0e0830e9cf4aa6574a10",
+  "real_model_validated": false,
+  "failed": 2
+}

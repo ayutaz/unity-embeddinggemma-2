@@ -1,0 +1,573 @@
+{
+  "scope": "official_image_cpu_preprocessing_only",
+  "runtime_source": "10fa49cd4a7db231cb3e27434dfabaf47b54fb1f",
+  "reference_source": "1fd94e28045c9bb4752bf92439f02912d57dd1f2",
+  "reference_sha256": "8076c38ded6c2486082092c0f0a43ec553760280ac46d8b98bfaccce829c3334",
+  "unity": "6000.3.21f1",
+  "sentis": "2.6.1",
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "encoder_validated": false,
+  "end_to_end_validated": false,
+  "readable_linear": [
+    {
+      "id": "square",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": false
+    },
+    {
+      "id": "landscape",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": false
+    },
+    {
+      "id": "portrait",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": false
+    },
+    {
+      "id": "odd",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": false
+    },
+    {
+      "id": "downsample",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": false
+    },
+    {
+      "id": "identity",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": false
+    }
+  ],
+  "last_completed_utc": "2026-10-13T16:23:57.0518812Z",
+  "readable_srgb": [
+    {
+      "id": "square",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": false
+    },
+    {
+      "id": "landscape",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": false
+    },
+    {
+      "id": "portrait",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": false
+    },
+    {
+      "id": "odd",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": false
+    },
+    {
+      "id": "downsample",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": false
+    },
+    {
+      "id": "identity",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": false
+    }
+  ],
+  "texture_linear": [
+    {
+      "id": "square",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "landscape",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "portrait",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "odd",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "downsample",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "identity",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    }
+  ],
+  "texture_srgb": [
+    {
+      "id": "square",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "landscape",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "portrait",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "odd",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "downsample",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "identity",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    }
+  ],
+  "render_linear": [
+    {
+      "id": "square",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "landscape",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "portrait",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "odd",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "downsample",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "identity",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    }
+  ],
+  "render_srgb": [
+    {
+      "id": "square",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "landscape",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "portrait",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "odd",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "downsample",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "identity",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    }
+  ],
+  "rgb_linear": [
+    {
+      "id": "square",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "landscape",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "portrait",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "odd",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "downsample",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "identity",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    }
+  ],
+  "rgb_srgb": [
+    {
+      "id": "square",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "landscape",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "portrait",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "odd",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "downsample",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "identity",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    }
+  ],
+  "bgra_linear": [
+    {
+      "id": "square",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "landscape",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "portrait",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "odd",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "downsample",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "identity",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    }
+  ],
+  "bgra_srgb": [
+    {
+      "id": "square",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "landscape",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "portrait",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "odd",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "downsample",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    },
+    {
+      "id": "identity",
+      "success": true,
+      "maximum_absolute_error": 0.0,
+      "downstream_maximum_absolute_error": 5.9604644775390625E-08,
+      "mismatched_elements": 0,
+      "actual_backend": "CPU",
+      "input_texture_readback_required": true
+    }
+  ]
+}

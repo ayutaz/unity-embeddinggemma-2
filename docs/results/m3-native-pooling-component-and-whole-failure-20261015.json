@@ -1,0 +1,2962 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "scope": "original_native_pooling_component_fix_and_failed_single_whole_encoder_candidate",
+  "original_reference_unchanged": true,
+  "original_learned_weights_unchanged": true,
+  "tolerances": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "original_pooling_component": {
+    "values": 196608,
+    "input_sha256": "1cd9bd4d278a8931ae75f068d4b44c876e8bfa1d56c366d0159db3341b3a4d32",
+    "expected_sha256": "d2cdd48b2e945fd0d0c6ec368d29e996be1fa7d03fcbbdc071714e830815b950",
+    "baseline": {
+      "success": false,
+      "runtime_source": "46f4745e167402cfc1dcc6dca265a7609c8b3594",
+      "scope": "original_golden_reproducing_last_encoder_output_to_scaled_pool_features_only",
+      "native_block192": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "phase": "completed",
+      "capture_sha256": "4537bcdb41cf8325ab18cd4c25fca61194a3ac3b5111542bb7992dd4152901d5",
+      "borrowed_input_preserved": true,
+      "actual_backend": "GPUCompute",
+      "cpu_fallback_count": 0,
+      "intermediate_readback_count": 0,
+      "bit_differences": 78179,
+      "mismatched_elements": 2,
+      "maximum_absolute_error": 0.0009765625,
+      "maximum_tolerance_ratio": 1.261762272802769,
+      "error": "NUnit.Framework.AssertionException:   Keep the original native pooling feature bits.\r\n  Expected: 0\r\n  But was:  78179\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.VisionOriginalPoolingGpuTests.OriginalGoldenContextPoolingMustMatchNativeBitsOnGpu (System.Boolean nativeOrder) [0x009df] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@2925bfa327ba\\Tests\\Editor\\VisionOriginalPoolingGpuTests.cs:85 ",
+      "report_file": "vision-original-pooling-gpu-46f4745e167402cfc1dcc6dca265a7609c8b3594-baseline.json",
+      "report_sha256": "084a4ce74c6998f506416e6c866d7e5c90aaa9215667bfa4c35e87c39c54bab0"
+    },
+    "native_block192": {
+      "success": true,
+      "runtime_source": "46f4745e167402cfc1dcc6dca265a7609c8b3594",
+      "scope": "original_golden_reproducing_last_encoder_output_to_scaled_pool_features_only",
+      "native_block192": true,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "phase": "completed",
+      "capture_sha256": "d2cdd48b2e945fd0d0c6ec368d29e996be1fa7d03fcbbdc071714e830815b950",
+      "borrowed_input_preserved": true,
+      "actual_backend": "GPUCompute",
+      "cpu_fallback_count": 0,
+      "intermediate_readback_count": 0,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "report_file": "vision-original-pooling-gpu-46f4745e167402cfc1dcc6dca265a7609c8b3594-block192.json",
+      "report_sha256": "c2ddf3f7875d0401bc0593af8a2143b6eb30200ed3cc8ed6c83d5725208d3f32"
+    },
+    "runner": {
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-original-native-pooling-component-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "VisionOriginalPoolingGpuTests",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-original-native-pooling-component-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T12:41:10.040657+00:00",
+        "pid": 83268,
+        "exit_code": 2,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\gpu-original-native-pooling-component-20261015.xml",
+        "unity_counts": {
+          "total": 2,
+          "passed": 1,
+          "failed": 1,
+          "skipped": 0
+        },
+        "elapsed_seconds": 48.54705749999266,
+        "completed_utc": "2026-10-15T12:41:58.587718+00:00"
+      },
+      "process_sha256": "b614caa600747c63554ffe6c7d78f2c6ee3cd80f33ab36c21a3a663c8571a02e",
+      "xml_sha256": "46c562d9eaf318436b8901e7a58af3607880fae3f51119a2554d62885e319ef2"
+    },
+    "conclusion": "Unchanged original constant-left pooling differs in default Sentis GPU execution; same-input native block192 is bit-exact. Baseline failure is retained."
+  },
+  "fixed_left_api_tdd": {
+    "red_source": "54d2ef3fb422d256cfe0dbb935cb1f4f1e6682d8",
+    "red": {
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-fixed-left-matmul-api-partition-red-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "GpuFixedLeftMatmulTests|FixedLeftMatrixBoundaryKeepsResidualAndOriginalCoefficients",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-fixed-left-matmul-api-partition-red-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T12:43:39.348172+00:00",
+        "pid": 96128,
+        "exit_code": 2,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\gpu-fixed-left-matmul-api-partition-red-20261015.xml",
+        "unity_counts": {
+          "total": 9,
+          "passed": 0,
+          "failed": 9,
+          "skipped": 0
+        },
+        "elapsed_seconds": 43.83928190000006,
+        "completed_utc": "2026-10-15T12:44:23.187454+00:00"
+      },
+      "process_sha256": "d4502256108514babffb4b640ee51123e02554680182d5eccd17f10d7e843341",
+      "xml_sha256": "3b9d9fdf8d4736cd2c9c9a89375a8740ae4f6a2f18896b8886146279ea53310a"
+    },
+    "green_source": "adf63683f48af9f6db0b53426f669d4103aa005c",
+    "green": {
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-fixed-left-matmul-api-partition-green-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "GpuFixedLeftMatmulTests|SavedProjectionPartitionTests|GpuBatchedMatmulTests",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\gpu-fixed-left-matmul-api-partition-green-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": true,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T12:45:09.718296+00:00",
+        "pid": 94796,
+        "exit_code": 0,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\gpu-fixed-left-matmul-api-partition-green-20261015.xml",
+        "unity_counts": {
+          "total": 23,
+          "passed": 23,
+          "failed": 0,
+          "skipped": 0
+        },
+        "elapsed_seconds": 43.44540820000111,
+        "completed_utc": "2026-10-15T12:45:53.163705+00:00"
+      },
+      "process_sha256": "8a7a0214dc05d9d32b459ee2fdbca19af31b3b2c783ef54d23d0613ae106cec5",
+      "xml_sha256": "0fb469e3b4856e4d9d539ac87121651a4bea781906a090a716cf7ae54f27d3be"
+    },
+    "coverage": [
+      "Owned fixed left coefficients; borrowed GPU right operand; independent outputs; reuse; idempotent Dispose; invalid-input recovery",
+      "Static rank-2/batch-one rank-3 partition boundaries, immutable source/weights, future residual routing",
+      "Existing fixed-right and dynamic-binary partitions and GPU batched matmul regressions"
+    ]
+  },
+  "original_square_one_whole_candidate": {
+    "report": {
+      "success": false,
+      "scope": "one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate",
+      "runtime_source": "182dc0ab6bd3048e13398cc6f2e1ea8e4c7b5ae9",
+      "case_id": "square-1",
+      "phase": "completed",
+      "all_profiles_validated": false,
+      "end_to_end_validated": false,
+      "scheduling_mode": "gpu_fence_per_stage",
+      "intermediate_tensor_readback_added": false,
+      "gelu_internal_cache_release": true,
+      "editor_frame_pump": true,
+      "test_forced_gc_during_run": false,
+      "qualified_operator_reconnection": true,
+      "native_static_block_size": 192,
+      "inline_tail_rms": true,
+      "softmax_vector_width": 16,
+      "fused_gelu_inner": true,
+      "precise_sleef_gelu": true,
+      "native_derived_rotary": true,
+      "first_layer_only": false,
+      "native_fixed_left_pooling": true,
+      "model_file_audit_ms": 474.53310000000005,
+      "profile": "square",
+      "saved_model_sha256": "4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7",
+      "model_load_ms": 661.6444,
+      "coefficient_audit_before_ms": 449.59880000000004,
+      "inline_rms_count": 113,
+      "layer_count": 19727,
+      "original_square_count": 113,
+      "remaining_original_rms_count": 0,
+      "all_original_coefficient_descriptors_retained": true,
+      "tail_template_feature_count": 256,
+      "tail_template_sha256": "215fd08ac859acc3501b111104c048fb4450f11092418be4ea45a9fc3d985835",
+      "derived_rotary_rebound_tables": 4,
+      "derived_rotary_changed_multiplication_operands": 128,
+      "derived_rotary_scope": "audited_data_independent_original_square_position_tables",
+      "graph_rewrite_ms": 2314.6819,
+      "preserved_original_matrix_operations": [],
+      "qualified_operations": [
+        {
+          "output_index": 11,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 36,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 104,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 170,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 200,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 64,
+          "columns": 2520
+        },
+        {
+          "output_index": 207,
+          "kind": "native_softmax",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 2520
+        },
+        {
+          "output_index": 214,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 64
+        },
+        {
+          "output_index": 227,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 266,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 270,
+          "kind": "native_precise_sleef_gelu",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 3072
+        },
+        {
+          "output_index": 272,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 281,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 768
+        },
+        {
+          "output_index": 320,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 388,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 454,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 484,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 64,
+          "columns": 2520
+        },
+        {
+          "output_index": 491,
+          "kind": "native_softmax",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 2520
+        },
+        {
+          "output_index": 498,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 64
+        },
+        {
+          "output_index": 511,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 550,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 554,
+          "kind": "native_precise_sleef_gelu",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 3072
+        },
+        {
+          "output_index": 556,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 565,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 768
+        },
+        {
+          "output_index": 604,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 672,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 738,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 768,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 64,
+          "columns": 2520
+        },
+        {
+          "output_index": 775,
+          "kind": "native_softmax",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 2520
+        },
+        {
+          "output_index": 782,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 64
+        },
+        {
+          "output_index": 795,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 834,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 838,
+          "kind": "native_precise_sleef_gelu",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 3072
+        },
+        {
+          "output_index": 840,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 849,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 768
+        },
+        {
+          "output_index": 888,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 956,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 1022,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 1052,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 64,
+          "columns": 2520
+        },
+        {
+          "output_index": 1059,
+          "kind": "native_softmax",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 2520
+        },
+        {
+          "output_index": 1066,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 64
+        },
+        {
+          "output_index": 1079,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 1118,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 1122,
+          "kind": "native_precise_sleef_gelu",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 3072
+        },
+        {
+          "output_index": 1124,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 1133,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 768
+        },
+        {
+          "output_index": 1172,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 1240,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 1306,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 1336,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 64,
+          "columns": 2520
+        },
+        {
+          "output_index": 1343,
+          "kind": "native_softmax",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 2520
+        },
+        {
+          "output_index": 1350,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 64
+        },
+        {
+          "output_index": 1363,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 1402,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 1406,
+          "kind": "native_precise_sleef_gelu",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 3072
+        },
+        {
+          "output_index": 1408,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 1417,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 768
+        },
+        {
+          "output_index": 1456,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 1524,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 1590,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 1620,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 64,
+          "columns": 2520
+        },
+        {
+          "output_index": 1627,
+          "kind": "native_softmax",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 2520
+        },
+        {
+          "output_index": 1634,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 64
+        },
+        {
+          "output_index": 1647,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 1686,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 1690,
+          "kind": "native_precise_sleef_gelu",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 3072
+        },
+        {
+          "output_index": 1692,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 1701,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 768
+        },
+        {
+          "output_index": 1740,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 1808,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 1874,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 1904,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 64,
+          "columns": 2520
+        },
+        {
+          "output_index": 1911,
+          "kind": "native_softmax",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 2520
+        },
+        {
+          "output_index": 1918,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 64
+        },
+        {
+          "output_index": 1931,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 1970,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 1974,
+          "kind": "native_precise_sleef_gelu",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 3072
+        },
+        {
+          "output_index": 1976,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 1985,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 768
+        },
+        {
+          "output_index": 2024,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 2092,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 2158,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 2188,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 64,
+          "columns": 2520
+        },
+        {
+          "output_index": 2195,
+          "kind": "native_softmax",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 2520
+        },
+        {
+          "output_index": 2202,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 64
+        },
+        {
+          "output_index": 2215,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 2254,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 2258,
+          "kind": "native_precise_sleef_gelu",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 3072
+        },
+        {
+          "output_index": 2260,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 2269,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 768
+        },
+        {
+          "output_index": 2308,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 2376,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 2442,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 2472,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 64,
+          "columns": 2520
+        },
+        {
+          "output_index": 2479,
+          "kind": "native_softmax",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 2520
+        },
+        {
+          "output_index": 2486,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 64
+        },
+        {
+          "output_index": 2499,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 2538,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 2542,
+          "kind": "native_precise_sleef_gelu",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 3072
+        },
+        {
+          "output_index": 2544,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 2553,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 768
+        },
+        {
+          "output_index": 2592,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 2660,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 2726,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 2756,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 64,
+          "columns": 2520
+        },
+        {
+          "output_index": 2763,
+          "kind": "native_softmax",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 2520
+        },
+        {
+          "output_index": 2770,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 64
+        },
+        {
+          "output_index": 2783,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 2822,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 2826,
+          "kind": "native_precise_sleef_gelu",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 3072
+        },
+        {
+          "output_index": 2828,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 2837,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 768
+        },
+        {
+          "output_index": 2876,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 2944,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 3010,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 3040,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 64,
+          "columns": 2520
+        },
+        {
+          "output_index": 3047,
+          "kind": "native_softmax",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 2520
+        },
+        {
+          "output_index": 3054,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 64
+        },
+        {
+          "output_index": 3067,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 3106,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 3110,
+          "kind": "native_precise_sleef_gelu",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 3072
+        },
+        {
+          "output_index": 3112,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 3121,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 768
+        },
+        {
+          "output_index": 3160,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 3228,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 3294,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 3324,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 64,
+          "columns": 2520
+        },
+        {
+          "output_index": 3331,
+          "kind": "native_softmax",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 2520
+        },
+        {
+          "output_index": 3338,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 64
+        },
+        {
+          "output_index": 3351,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 3390,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 3394,
+          "kind": "native_precise_sleef_gelu",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 3072
+        },
+        {
+          "output_index": 3396,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 3405,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 768
+        },
+        {
+          "output_index": 3444,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 3512,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 3578,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 3608,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 64,
+          "columns": 2520
+        },
+        {
+          "output_index": 3615,
+          "kind": "native_softmax",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 2520
+        },
+        {
+          "output_index": 3622,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 64
+        },
+        {
+          "output_index": 3635,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 3674,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 3678,
+          "kind": "native_precise_sleef_gelu",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 3072
+        },
+        {
+          "output_index": 3680,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 3689,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 768
+        },
+        {
+          "output_index": 3728,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 3796,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 3862,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 3892,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 64,
+          "columns": 2520
+        },
+        {
+          "output_index": 3899,
+          "kind": "native_softmax",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 2520
+        },
+        {
+          "output_index": 3906,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 64
+        },
+        {
+          "output_index": 3919,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 3958,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 3962,
+          "kind": "native_precise_sleef_gelu",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 3072
+        },
+        {
+          "output_index": 3964,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 3973,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 768
+        },
+        {
+          "output_index": 4012,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 4080,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 4146,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 4176,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 64,
+          "columns": 2520
+        },
+        {
+          "output_index": 4183,
+          "kind": "native_softmax",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 2520
+        },
+        {
+          "output_index": 4190,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 64
+        },
+        {
+          "output_index": 4203,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 4242,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 4246,
+          "kind": "native_precise_sleef_gelu",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 3072
+        },
+        {
+          "output_index": 4248,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 4257,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 768
+        },
+        {
+          "output_index": 4296,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 4364,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 4430,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 4460,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 64,
+          "columns": 2520
+        },
+        {
+          "output_index": 4467,
+          "kind": "native_softmax",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 2520
+        },
+        {
+          "output_index": 4474,
+          "kind": "native_batched_matmul",
+          "rows": 30240,
+          "width": 2520,
+          "columns": 64
+        },
+        {
+          "output_index": 4487,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 768
+        },
+        {
+          "output_index": 4526,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 4530,
+          "kind": "native_precise_sleef_gelu",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 3072
+        },
+        {
+          "output_index": 4532,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 768,
+          "columns": 3072
+        },
+        {
+          "output_index": 4541,
+          "kind": "native_static_block192",
+          "rows": 2520,
+          "width": 3072,
+          "columns": 768
+        },
+        {
+          "output_index": 4565,
+          "kind": "native_fixed_left_pooling_block192",
+          "rows": 256,
+          "width": 2520,
+          "columns": 768
+        },
+        {
+          "output_index": 4589,
+          "kind": "native_static_block192",
+          "rows": 256,
+          "width": 768,
+          "columns": 512
+        }
+      ],
+      "native_static_projection_count": 114,
+      "native_batched_matmul_count": 32,
+      "native_softmax_count": 16,
+      "native_gelu_count": 16,
+      "native_fixed_left_pooling_count": 1,
+      "release_unused_gpu_cache": true,
+      "pipeline_prepare_ms": 9303.610700000001,
+      "segment_count": 180,
+      "gpu_operation_count": 179,
+      "prepare_ms": 12733.522,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "host_working_set_before_execute_bytes": 3997552640,
+      "frame_before_execute": 4,
+      "rendered_frame_before_execute": 4,
+      "frame_after_execute": 1297,
+      "rendered_frame_after_execute": 1297,
+      "execute_and_final_download_ms": 24474.443300000003,
+      "backend_caches": [
+        {
+          "stage": 0,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 1,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 2,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 3,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 4,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 5,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 6,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 7,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 8,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 9,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 10,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 11,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 12,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 13,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 14,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 15,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 16,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 17,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 18,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 19,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 20,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 21,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 22,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 23,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 24,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 25,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 26,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 27,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 28,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 29,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 30,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 31,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 32,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 33,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 34,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 35,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 36,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 37,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 38,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 39,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 40,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 41,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 42,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 43,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 44,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 45,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 46,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 47,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 48,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 49,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 50,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 51,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 52,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 53,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 54,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 55,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 56,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 57,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 58,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 59,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 60,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 61,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 62,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 63,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 64,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 65,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 66,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 67,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 68,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 69,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 70,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 71,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 72,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 73,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 74,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 75,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 76,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 77,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 78,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 79,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 80,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 81,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 82,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 83,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 84,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 85,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 86,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 87,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 88,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 89,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 90,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 91,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 92,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 93,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 94,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 95,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 96,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 97,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 98,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 99,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 100,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 101,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 102,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 103,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 104,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 105,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 106,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 107,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 108,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 109,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 110,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 111,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 112,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 113,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 114,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 115,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 116,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 117,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 118,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 119,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 120,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 121,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 122,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 123,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 124,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 125,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 126,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 127,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 128,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 129,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 130,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 131,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 132,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 133,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 134,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 135,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 136,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 137,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 138,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 139,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 140,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 141,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 142,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 143,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 144,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 145,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 146,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 147,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 148,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 149,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 150,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 151,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 152,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 153,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 154,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 155,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 156,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 157,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 158,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 159,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 160,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 161,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 162,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 163,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 164,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 165,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 166,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 167,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 168,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 169,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 170,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 171,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 172,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 173,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 174,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 175,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 176,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 177,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 178,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        },
+        {
+          "stage": 179,
+          "type": "Unity.InferenceEngine.GfxDeviceBackend",
+          "scratch_free_count": 0,
+          "scratch_free_bytes": 0,
+          "compiled_context_recreated": true
+        }
+      ],
+      "gelu_internal_worker_caches": [
+        {
+          "single_compute_kernel": true,
+          "internal_worker_count": 0
+        },
+        {
+          "single_compute_kernel": true,
+          "internal_worker_count": 0
+        },
+        {
+          "single_compute_kernel": true,
+          "internal_worker_count": 0
+        },
+        {
+          "single_compute_kernel": true,
+          "internal_worker_count": 0
+        },
+        {
+          "single_compute_kernel": true,
+          "internal_worker_count": 0
+        },
+        {
+          "single_compute_kernel": true,
+          "internal_worker_count": 0
+        },
+        {
+          "single_compute_kernel": true,
+          "internal_worker_count": 0
+        },
+        {
+          "single_compute_kernel": true,
+          "internal_worker_count": 0
+        },
+        {
+          "single_compute_kernel": true,
+          "internal_worker_count": 0
+        },
+        {
+          "single_compute_kernel": true,
+          "internal_worker_count": 0
+        },
+        {
+          "single_compute_kernel": true,
+          "internal_worker_count": 0
+        },
+        {
+          "single_compute_kernel": true,
+          "internal_worker_count": 0
+        },
+        {
+          "single_compute_kernel": true,
+          "internal_worker_count": 0
+        },
+        {
+          "single_compute_kernel": true,
+          "internal_worker_count": 0
+        },
+        {
+          "single_compute_kernel": true,
+          "internal_worker_count": 0
+        },
+        {
+          "single_compute_kernel": true,
+          "internal_worker_count": 0
+        }
+      ],
+      "capture_sha256": "9f283e9e4e5448519ef46e3e4801e57c46610c75791ded17dc6d65805c9395a9",
+      "host_working_set_after_download_bytes": 3399163904,
+      "host_peak_working_set_bytes": 4634521600,
+      "actual_backend": "GPUCompute",
+      "bit_differences": 127702,
+      "mismatched_elements": 5,
+      "maximum_absolute_error": 2.7298927307128906e-05,
+      "maximum_tolerance_ratio": 1.4090172406678607,
+      "original_coefficient_bytes_preserved": true,
+      "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+      "coefficient_audit_after_ms": 459.1053,
+      "error": "NUnit.Framework.AssertionException:   Keep the unchanged original FP32 elementwise gate.\r\n  Expected: 0\r\n  But was:  5\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.VisionNativePatchWholeGpuTests.Run (System.String caseId, System.Boolean inlineAllRms, System.Boolean nativeGelu, System.Boolean releaseUnusedGpuCache, System.Boolean staged, System.Boolean releaseGeluCaches, System.Boolean planOnly, System.Boolean editorFramePump, System.Boolean nativeOperators, System.Int32 nativeStaticBlockSize, System.Boolean inlineTailRms, System.Int32 softmaxVectorWidth, System.Boolean fuseGeluInner, System.Boolean sleefGelu, System.Boolean nativeRotary, System.Boolean firstLayerOnly, System.Boolean nativePooling) [0x03af9] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@4a33f8cf3690\\Tests\\Editor\\VisionNativePatchWholeGpuTests.cs:480 ",
+      "report_file": "vision-original-native-pooling-whole-gpu-182dc0ab6bd3048e13398cc6f2e1ea8e4c7b5ae9-square-1.json",
+      "report_sha256": "6524b63cbcb9b1262d16b498dac487f619dccfb92b84c26ade84eccba0ebaae8"
+    },
+    "witnesses": [
+      {
+        "index": 27732,
+        "row": 54,
+        "column": 84,
+        "actual": 0.0028421878814697266,
+        "expected": 0.002853572368621826,
+        "absolute_error": 1.138448715209961e-05,
+        "bound": 1.0285357236862183e-05,
+        "ratio": 1.106863562434001
+      },
+      {
+        "index": 27752,
+        "row": 54,
+        "column": 104,
+        "actual": -0.006616771221160889,
+        "expected": -0.00660175085067749,
+        "absolute_error": 1.5020370483398438e-05,
+        "bound": 1.066017508506775e-05,
+        "ratio": 1.4090172406678607
+      },
+      {
+        "index": 27919,
+        "row": 54,
+        "column": 271,
+        "actual": 0.005347575061023235,
+        "expected": 0.005335591733455658,
+        "absolute_error": 1.1983327567577362e-05,
+        "bound": 1.0533559173345567e-05,
+        "ratio": 1.1376332890311502
+      },
+      {
+        "index": 35963,
+        "row": 70,
+        "column": 123,
+        "actual": 0.03508102893829346,
+        "expected": 0.03506577014923096,
+        "absolute_error": 1.52587890625e-05,
+        "bound": 1.3506577014923097e-05,
+        "ratio": 1.1297302821907376
+      },
+      {
+        "index": 36019,
+        "row": 70,
+        "column": 179,
+        "actual": 0.037081122398376465,
+        "expected": 0.037098050117492676,
+        "absolute_error": 1.6927719116210938e-05,
+        "bound": 1.3709805011749268e-05,
+        "ratio": 1.2347162561177147
+      }
+    ],
+    "runner": {
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          ".\\artifacts\\acceptance-consumer",
+          "-logFile",
+          ".\\artifacts\\numerical-acceptance-state\\vision-original-native-pooling-square1-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "OriginalContextNativePoolingSquareOneMustMatchOriginalOnGpu",
+          "-testResults",
+          ".\\artifacts\\numerical-acceptance-state\\vision-original-native-pooling-square1-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T12:47:03.370366+00:00",
+        "pid": 98116,
+        "exit_code": 2,
+        "unity_results": ".\\artifacts\\numerical-acceptance-state\\vision-original-native-pooling-square1-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        },
+        "elapsed_seconds": 82.06566930000554,
+        "completed_utc": "2026-10-15T12:48:25.436037+00:00"
+      },
+      "process_sha256": "3ca0bba3577ec39527793184c593989b1bf23879eb8542b858e71af576fcfa60",
+      "xml_sha256": "d7e60eaec95104500bc8cb03328884f323158aee023e46aca7744834ec478f6a"
+    },
+    "resource_sha256": "a9745dfe804c9c9ca8ae1b4d6fa1af9ab42d23df9fa231ea240a299b59617188",
+    "device_memory_samples_are_editor_wide_not_true_peak": true,
+    "conclusion": "Pooling component fix is insufficient: square-1 still fails five elements; maximum tolerance ratio 1.4090172406678607. Do not adopt or broaden acceptance."
+  },
+  "latest_candidate_cases": {
+    "executed": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0,
+    "not_executed": [
+      "square-0",
+      "landscape-0",
+      "landscape-1",
+      "portrait-0",
+      "portrait-1"
+    ]
+  },
+  "previous_complete_six_case_candidate": {
+    "passed": 4,
+    "failed": 2,
+    "skipped": 0,
+    "receipt": "m3-native-rotary-all-image-gates-20261015.json",
+    "unchanged": true
+  },
+  "followup_batch_stopped_after_numeric_failure": true,
+  "production_candidate_adopted": false,
+  "full_gpu_encoder_accepted": false,
+  "end_to_end_validated": false,
+  "steps_3_4_complete": false,
+  "pending": [
+    "Locate remaining divergence after the exact original first layer; pooling is a real local mismatch but not the full cause.",
+    "Qualify all original image cases and production paths at unchanged tolerance; do not turn local bit-exact results into full-model acceptance.",
+    "Complete real input-to-768 APIs, samples, Player, required environments, Required CI and long-term memory acceptance.",
+    "Persistent allocation warning remains; successful NUnit counts do not prove leak-free shutdown."
+  ]
+}

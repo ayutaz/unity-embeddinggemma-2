@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "bounded_attention_bmm_symbolic_lowering_and_connected_opt_in_tdd",
+  "source_base": "ffbfda7d74c0fe242cd5878d6a42f967f155f9af",
+  "bmm_red": {
+    "file": "static-bmm-red-20261016.xml",
+    "sha256": "b568aa0ae927e1d53a33bd3849e901e50cd9a2e83cb3071331189ab993f9c9b5",
+    "tests": "10",
+    "failures": "10",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.270"
+  },
+  "bmm_green": {
+    "file": "static-bmm-green-20261016.xml",
+    "sha256": "a5e2872c00b170452302504ca9e5be8f0f87faf3e8b1c7f6bb45aeca1d0b7e9e",
+    "tests": "10",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "5.968"
+  },
+  "segment_red": {
+    "file": "ordered-attention-segment-red-20261016.xml",
+    "sha256": "3094510eb15e664c9b7e83498f807cfe6b16872dfe39219a3c28c60e01737d5d",
+    "tests": "3",
+    "failures": "2",
+    "errors": "0",
+    "skipped": "0",
+    "time": "2.841"
+  },
+  "segment_green": {
+    "file": "ordered-attention-segment-green-20261016.xml",
+    "sha256": "84b8a68122305fdce42ce3e5a25e5c357d3d5b06fdafe1253efad4a147007a74",
+    "tests": "3",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "8.468"
+  },
+  "related_green": {
+    "file": "ordered-attention-related-green-20261016.xml",
+    "sha256": "3cb54fa07875641dd811956172af5fcef0046d3035aaf5a026052b9ddbe0229f",
+    "tests": "94",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "40.059"
+  },
+  "actual_connected_synthetic_onnx_checked": true,
+  "actual_model_primitive_evidence": "m4-six-original-attention-bmm-actual-onnx-bit-exact-20261016.json",
+  "attention_shape_pairs": [
+    [
+      [
+        192,
+        12,
+        128
+      ],
+      [
+        192,
+        128,
+        24
+      ]
+    ],
+    [
+      [
+        8,
+        288,
+        128
+      ],
+      [
+        8,
+        128,
+        13
+      ]
+    ],
+    [
+      [
+        192,
+        12,
+        24
+      ],
+      [
+        192,
+        24,
+        128
+      ]
+    ]
+  ],
+  "fourth_bmm_projection_unchanged": true,
+  "native_forward": "Original torch.bmm passthrough only, never counted as fixed-order execution.",
+  "same_host_variants": [
+    "native",
+    "ordered_static_linear",
+    "ordered_static_linear_attention"
+  ],
+  "preserves": [
+    "Original references / coefficients / tolerances",
+    "Existing export default and variants",
+    "RMS / SiLU / Conv and unqualified BMM shapes",
+    "No output injection / regenerated goldens",
+    "GPU Runtime"
+  ],
+  "reference_math": "Standard FP32 Dekker/TwoSum FMA192 then block store-add; native forward passthrough separate from actual ONNX.",
+  "actionlint": "passed",
+  "whole_encoder_validated": false,
+  "gpu_validated": false,
+  "required_ci_passed": false
+}

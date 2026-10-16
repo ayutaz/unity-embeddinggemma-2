@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "record_numpy_blas_context_before_audio_weights_only",
+  "red": {
+    "file": "audio-numpy-blas-context-red-20261016.xml",
+    "sha256": "c9d7bdfa948348da994799b595eaedd40886eeea739dcee4293b8a12bbb5a909",
+    "tests": "1",
+    "failures": "1",
+    "errors": "0",
+    "skipped": "0",
+    "time": "10.108"
+  },
+  "green": {
+    "file": "audio-numpy-blas-context-green-20261016.xml",
+    "sha256": "4ca0ee0abcb5a13c993dabcee90937bf93fe4f53f01537d708b19157e63df9e3",
+    "tests": "3",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "20.083"
+  },
+  "fields": [
+    "numpy_version",
+    "numpy_blas.name",
+    "numpy_blas.version",
+    "numpy_blas.openblas_configuration_if_available",
+    "OPENBLAS_CORETYPE",
+    "NPY_DISABLE_CPU_FEATURES"
+  ],
+  "exclude": [
+    "library/include/build paths",
+    "unrelated environment variables"
+  ],
+  "local_observation": {
+    "torch_mkl_available": true,
+    "numpy_blas": "scipy-openblas",
+    "numpy_blas_version": "0.3.34.106.0",
+    "cpu_capability": "AVX2"
+  },
+  "local_observation_proves_ci_backend": false,
+  "expected_values_changed": false,
+  "reference_evaluator_changed": false,
+  "real_ci_with_new_fields_pending": true
+}

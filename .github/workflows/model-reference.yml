@@ -10,12 +10,15 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: model-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  pinned-audio:
+    uses: ./.github/workflows/pinned-audio-acceptance.yml
   reference:
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -190,6 +193,39 @@ jobs:
         with:
           name: audio-preprocessing-${{ github.sha }}
           path: artifacts/audio-preprocessing/
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: warn
+      # User-selected policy: original pinned reference is mandatory above.
+      # Fresh CPU output is host-dependent; preserve actual failure, never a GPU pass.
+      - name: Diagnose fresh CPU audio encoder and ONNX against current official output
+        id: fresh-audio
+        continue-on-error: true
+        run: uv run --locked python -m embeddinggemma_tools prepare-audio-encoder --preprocessing ../artifacts/audio-preprocessing --output ../artifacts/audio-encoder --native-silu --collect-onnx-failures
+        env:
+          OMP_NUM_THREADS: '4'
+          MKL_NUM_THREADS: '4'
+      - name: Record audio encoder-only validation scope
+        if: always()
+        shell: bash
+        working-directory: .
+        run: |
+          {
+            echo 'Fresh CPU diagnostic outcome: ${{ steps.fresh-audio.outcome }} (not the pinned acceptance gate)'
+            echo '### Official mel references → audio encoder / projector (not Unity or final embeddings)'
+            if [ -f artifacts/audio-encoder/audio-encoder-validation.json ]; then
+              echo '```json'
+              cat artifacts/audio-encoder/audio-encoder-validation.json
+              echo '```'
+            else
+              echo 'Audio encoder validation did not complete. Sentis and final audio embeddings remain unverified.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: audio-encoder-${{ github.sha }}
+          path: artifacts/audio-encoder/
           compression-level: 0
           retention-days: 3
           if-no-files-found: warn

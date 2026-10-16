@@ -1,0 +1,93 @@
+{
+  "scope": "original_sine_raw_connected_candidate_cut_comparison_only",
+  "run": 38818905732,
+  "source": "f0593c7a8ffe221f11fd7b1b84ae169b31a4d9ff",
+  "case_id": "sine",
+  "original_stage_reference_sha256": "6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a",
+  "candidate_rejected": true,
+  "cuts": [
+    {
+      "stage": "subsample",
+      "original_stage_sha256": "962db419563ce96988fb3918febb35c106663d4afdcddc46ef09c2f6ba60c1e6",
+      "actual_sha256": "962db419563ce96988fb3918febb35c106663d4afdcddc46ef09c2f6ba60c1e6",
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "worst_index": 0,
+        "worst_actual": 2.3683009147644043,
+        "worst_expected": 2.3683009147644043,
+        "bit_differences": 0
+      }
+    },
+    {
+      "stage": "layer_2",
+      "original_stage_sha256": "a381bdb08266f794193cd121d713d3db25927b783f2936228fa662e6369b6c12",
+      "actual_sha256": "63d7b49dae534fb11f3b18295118e84d7d4bc50bf915510a426aeced6edaf7d5",
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 7.62939453125e-06,
+        "maximum_tolerance_ratio": 0.026120440655316577,
+        "worst_index": 261553,
+        "worst_actual": -0.026218794286251068,
+        "worst_expected": -0.026218464598059654,
+        "bit_differences": 3252
+      }
+    },
+    {
+      "stage": "layer_5",
+      "original_stage_sha256": "37df91ad58d6a3c5f6c378cd72c548cda6dbd8b602ff9632ef9d9350e441c777",
+      "actual_sha256": "aea6f1783ddbe38a3b3d3bd8b2e458face0c84197fa4257ec9ffe80c4308b3d9",
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 6.103515625e-05,
+        "maximum_tolerance_ratio": 0.14253391485371247,
+        "worst_index": 258915,
+        "worst_actual": -0.00032469991128891706,
+        "worst_expected": -0.0003261298988945782,
+        "bit_differences": 23771
+      }
+    },
+    {
+      "stage": "layer_8",
+      "original_stage_sha256": "db85b25f471595b1685f3b8b9f037242d897f5f01e24427a4ec54cdeb92abf44",
+      "actual_sha256": "2ae258af13db208cce1a4315221a66ef1ee0885808b03d66094045f7cbe792aa",
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 4.57763671875e-05,
+        "maximum_tolerance_ratio": 0.21598504083227002,
+        "worst_index": 258462,
+        "worst_actual": 0.00046584897791035473,
+        "worst_expected": 0.0004636791127268225,
+        "bit_differences": 48222
+      }
+    },
+    {
+      "stage": "projected_features",
+      "original_stage_sha256": "80a5d8c1f8505edab44be1dbbcb0cc77287477b71e0dca4175a6196751a19d73",
+      "actual_sha256": "1cca5cbbd8ccc2a3897fd993aa45b5ea3f52d3839f2a188bb52cf50a6fc843f6",
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 2,
+        "maximum_absolute_error": 3.170967102050781e-05,
+        "maximum_tolerance_ratio": 1.7295393368347012,
+        "worst_index": 131022,
+        "worst_actual": -0.012888986617326736,
+        "worst_expected": -0.012908514589071274,
+        "bit_differences": 48054
+      }
+    }
+  ],
+  "intermediate_references_used_as_diagnostic_comparisons_only": true,
+  "no_reference_injected_into_execution": true,
+  "gpu_validated": false
+}

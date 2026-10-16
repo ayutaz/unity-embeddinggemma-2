@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "explicit_candidate_adds_original13row_position_projection",
+  "source_base": "bd3900a54f0a7a3e12269b1601105ef6b47cac7b",
+  "red": {
+    "file": "ordered-audio-positions-red-20261016.xml",
+    "sha256": "ed6e70320de29b6ff984f74e25ffdd90b8825e8859d91f2da96fc43c059ebed5",
+    "tests": "3",
+    "failures": "3",
+    "errors": "0",
+    "skipped": "0",
+    "time": "2.432"
+  },
+  "related_green": {
+    "file": "ordered-audio-positions-related-green-20261016.xml",
+    "sha256": "f45a69e460bd103812dc3a85330ccfafdbbe08dd14ec99b3b2d05609b0273641",
+    "tests": "81",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "69.968"
+  },
+  "actual_saved13row_onnx_smoke": {
+    "scope": "isolated13row_relative_position_matrix_on_saved_inputs_local_native_only",
+    "source_node": "mm_106",
+    "metrics": {
+      "actual_finite": true,
+      "same_shape": true,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "worst_index": 0,
+      "worst_actual": 4.233677387237549,
+      "worst_expected": 4.233677387237549,
+      "exact_difference_count": 0
+    },
+    "source_original_context_qualified": false,
+    "old_qualified_replay_input_sha256": "f49ac9a819e33a8fde727834879d31188995f92f8a315790d562d33acebb1b46",
+    "captured_input_sha256": "f49ac9a819e33a8fde727834879d31188995f92f8a315790d562d33acebb1b46",
+    "input_identical_to_old_qualified_replay": true,
+    "metadata": {
+      "execution": "actual_standard_fp32_onnx_on_same_native_inputs",
+      "graph_sha256": "9786bb8957c71d8068eef01f6b4a3b163a2e5afea586dee9a372289f4f8cd1c8",
+      "candidate_function": "static_block192_export",
+      "native_forward_used_as_candidate_evidence": false
+    },
+    "full_encoder_validated": false,
+    "gpu_validated": false
+  },
+  "actual_saved13row_report_sha256": "cb8a8adb80dcae30809db0a26f31b24e1091f033d160f1a72f0dacf4cc21d2bf",
+  "behavior": [
+    "Previous ordered_original_primitives remains unchanged.",
+    "New ordered_original_positions additionally selects only original13x1024 by parameter-backed1024x1024 mm with original coefficients.",
+    "All prior RMS/SiLU/Softmax/Sigmoid/Depthwise/BMM families retained.",
+    "Three additional13row projections per3layer partition;122 total fixed linear replacements in full12layers.",
+    "Actual synthetic connected ONNX evaluated, no native MatMul retained for selected positions; native forward remains passthrough only.",
+    "Default export, original goldens, masks/clips, strict tolerances and product Runtime unchanged."
+  ],
+  "actionlint": "passed",
+  "real_connected_model_pending": true,
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "required_ci_passed": false
+}

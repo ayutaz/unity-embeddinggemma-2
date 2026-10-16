@@ -1,0 +1,119 @@
+{
+  "date_utc": "2026-10-16T05:10:25.930192+00:00",
+  "goal": "4まで進めてください",
+  "status": "complete_for_original_steps3_and4_with_source_qualified_gpu_evidence",
+  "completion_claimed": true,
+  "user_reference_policy": "Explicit user choice 1: original pinned mandatory, fresh CPU diagnostic only",
+  "candidate_head": "be21d0c87987c36958c6556c7b6304aaff5da292",
+  "ci_execution_source": "1058dbe57b0376589e4fe24910cff4c9de9269f1",
+  "ci_run": 38850001042,
+  "ci_url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38850001042",
+  "required_ci": {
+    "conclusion": "success",
+    "required_job_count": 15,
+    "all_jobs_success": true
+  },
+  "python": {
+    "windows313": {
+      "tests": 1433,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "b6fd8292b74edc0305b734e94dc1f358c53bbf639a09b5687b856ad4a8b7710a"
+    },
+    "windows314": {
+      "tests": 1433,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "cd71d3fbd40054ed9ff5de2c1b4ccea6a244c0ab51a5b4e1a2d0f67183d1136d"
+    },
+    "ubuntu313": {
+      "tests": 1433,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "76bec55877ddf26f4a4afa489bee68bf1da0c556db2cc1fa48f9a0ff9f0bec85"
+    },
+    "ubuntu314": {
+      "tests": 1433,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_sha256": "5d105f4af8c29389b90463a6336733209929728d76f85df5672bb38e40479d63"
+    }
+  },
+  "original_raw_onnx": {
+    "case_count": 6,
+    "profile_count": 2,
+    "values_compared": 824320,
+    "tolerance_failures": 0,
+    "bit_differences": 162697,
+    "source": "1058dbe57b0376589e4fe24910cff4c9de9269f1",
+    "all_six_at_one_execution_source": true,
+    "local_audit_equals_ci_audit": true,
+    "audit_sha256": "c11ce3471dd0f34811ce35b58c6af198c5c78e98ec7524e0ca29fb3e6f075377",
+    "gpu_validated_by_this_ci": false,
+    "original_reference_unchanged": true,
+    "learned_coefficients_unchanged": true,
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "original_math_manifest_sha256": "3d52d40b9786336aaed8dbc888f4f8357b408981176be4f71d6159203e7490a7",
+  "gpu_api_evidence": [
+    {
+      "file": "m3-adjacent-reciprocal-all-image-gpu-passed-20261015.json",
+      "sha256": "40e3e93490fb65e160b31e643d2292b6c13bacbe2ce06d52560557d924d0c7a3"
+    },
+    {
+      "file": "m3-final-image-api-all-cases-all-roles-gpu-20261016.json",
+      "sha256": "875b1356706ce4ea26a64151651bb1e6b255ea13a426da55e88d1cbc0ee7e7e6"
+    },
+    {
+      "file": "m3-rendertexture-recovery-and-text-gpu-regression-20261016.json",
+      "sha256": "e4275e33cb978168f26c9d49f4759393c42e2ac9ae5a66466ea8cece9446c4dc"
+    },
+    {
+      "file": "m4-real-pcm-all-roles-staged-gpu-20261016.json",
+      "sha256": "0ac9d85e8469bb604a2673108b454f746c916498a451e8897231fb70b77e18b4"
+    },
+    {
+      "file": "m4-staged-original-encoder-and-final-text-gpu-regression-20261016.json",
+      "sha256": "72dd292ff5deed4a513648db7ed715fb7d3a0e6fc4ed648779e65d9b76d2781d"
+    }
+  ],
+  "runtime_source_coverage": {
+    "tree": "0107566b07481969d9d2392da075efc91de8c6ee",
+    "unchanged_since_audio_api_source": "4b73a02ba652ec0d4fbf9a9ac4475f75046068ae",
+    "unchanged_since_final_strict_audio_and_text_source": "0857edc8be1a94d5f46af570058076b5df0eda34",
+    "only_audio_files_changed_since_accepted_png_api": [
+      "Packages/com.ayutaz.embeddinggemma/Runtime/AudioEmbedder.cs",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/AudioPipelineContracts.cs",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/PartitionedAudioFeatureEncoder.cs"
+    ],
+    "new_gpu_execution_claimed": false
+  },
+  "fresh_cpu_diagnostic": {
+    "success": false,
+    "failed_cases": 6,
+    "tolerance_failures": 5390,
+    "cpu": "AMD EPYC 7763 / AVX2",
+    "not_counted_as_pinned_or_gpu_pass": true
+  },
+  "retained_failures": [
+    "Earlier numerical failures and cancelled runs",
+    "Initial b050 CI legacy assertion failures and cancellation",
+    "Prior synchronous audio memory-guard failure"
+  ],
+  "remaining_for_this_goal": [],
+  "later_steps": [
+    "Preparation reuse and samples",
+    "Repeated memory/performance",
+    "Player and other devices",
+    "Integration and release"
+  ],
+  "unity_started_this_turn": false,
+  "default_unity_consumer_export_promoted": false,
+  "merged": false,
+  "released": false
+}

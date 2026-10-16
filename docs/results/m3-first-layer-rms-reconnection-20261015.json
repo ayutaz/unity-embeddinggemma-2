@@ -1,0 +1,343 @@
+{
+  "scope": "qualified_first_vision_rms_reconnected_to_original_layer0_and_bounded_full_encoder_candidate",
+  "original_references_changed": false,
+  "learned_coefficients_changed": false,
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "exact_patch_input_sha256": "bc4c19c9aaf9688801c99ed073fdde22f0daf6b822dc2c9c4b7a3f7c9aded636",
+  "native_layer0_expected_sha256": "f9eaca61eb58d89445a623d8b8bfee5201b266cd822298439fb49f0528bcefdf",
+  "unary_marker_intended_red": {
+    "file": "saved-unary-marker-red-20261015-process.json",
+    "sha256": "c429a7b2632f0bcb4a2efceef9a107f9f3cdbdd0dcd1c0b4305e8fbb2f0c6753",
+    "xml_sha256": "b82140637c593846cfc1b06e8ae90aea6414d84b0338537c178ab0f4713d4cff",
+    "counts": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "exit_code": 2,
+    "elapsed_seconds": 42.483078999997815,
+    "cases": [
+      {
+        "name": "EmbeddingGemma.Validation.Tests.SavedProjectionPartitionTests.ExplicitUnaryGpuMarkerKeepsTheOriginalResidualAndDoesNotRecomputeItsPlaceholder",
+        "result": "Failed"
+      }
+    ]
+  },
+  "boundary_rms_and_layer0_green": {
+    "file": "vision-layer0-first-rms-and-boundaries-20261015-process.json",
+    "sha256": "c24c18f329324c825dab95fe3f5122d90c3a88df26ec382e39022a6f4e43d0e9",
+    "xml_sha256": "40766c711bf9a69f2b8e5f61f40df290c4d149cc563dda8c0f0546bb0dd6463f",
+    "counts": {
+      "total": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exit_code": 0,
+    "elapsed_seconds": 52.81668569998874,
+    "cases": [
+      {
+        "name": "EmbeddingGemma.Validation.Tests.ModelTensorSliceTests.ExternalBoundaryDoesNotRecomputeTheRemovedProjectionAndRetainsResidualInput(CPU)",
+        "result": "Passed"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.ModelTensorSliceTests.ExternalBoundaryDoesNotRecomputeTheRemovedProjectionAndRetainsResidualInput(GPUCompute)",
+        "result": "Passed"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.ModelTensorSliceTests.SlicedHighTensorIndexIsRemappedToDenseInputListPosition(CPU)",
+        "result": "Passed"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.ModelTensorSliceTests.SlicedHighTensorIndexIsRemappedToDenseInputListPosition(GPUCompute)",
+        "result": "Passed"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.ModelTensorSliceTests.SliceKeepsResidualRoutingAndBorrowedCoefficientsWhilePruningUnrelatedWork(CPU)",
+        "result": "Passed"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.ModelTensorSliceTests.SliceKeepsResidualRoutingAndBorrowedCoefficientsWhilePruningUnrelatedWork(GPUCompute)",
+        "result": "Passed"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.SavedProjectionPartitionTests.ExplicitUnaryGpuMarkerKeepsTheOriginalResidualAndDoesNotRecomputeItsPlaceholder",
+        "result": "Passed"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.SavedProjectionPartitionTests.InvalidProjectionSelectionFailsWithoutChangingSource(\"missing\")",
+        "result": "Passed"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.SavedProjectionPartitionTests.InvalidProjectionSelectionFailsWithoutChangingSource(\"duplicate\")",
+        "result": "Passed"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.SavedProjectionPartitionTests.InvalidProjectionSelectionFailsWithoutChangingSource(\"reversed\")",
+        "result": "Passed"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.SavedProjectionPartitionTests.MultipleOutputsKeepNamesValuesAndImmutableSource(CPU)",
+        "result": "Passed"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.SavedProjectionPartitionTests.MultipleOutputsKeepNamesValuesAndImmutableSource(GPUCompute)",
+        "result": "Passed"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.SavedProjectionPartitionTests.OrderedGpuPartitionsRetainFutureResidualAndBorrowedInput",
+        "result": "Passed"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.VisionLayerZeroNativeProjectionsGpuTests.ExplicitDivisionFirstRmsAndNativeProjectionsMatchOriginalLayerZeroOnGpu",
+        "result": "Passed"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.VisionRefinedRmsGpuTests.RefinedFirstVisionRmsMatchesIndependentCurrentCpuEquationOnGpu",
+        "result": "Passed"
+      }
+    ]
+  },
+  "first_rms": {
+    "file": "vision-first-rms-refined-gpu-ac2dc3355b5d957064a6df463bc95c4e422a3402.json",
+    "sha256": "29e18865696391d38b610b2365573105b9be4d13be171e6d0c2ffd538ff4bfcf",
+    "result": {
+      "success": true,
+      "scope": "first_vision_rms_gpu_against_current_cpu_equation_only",
+      "runtime_source": "ac2dc3355b5d957064a6df463bc95c4e422a3402",
+      "original_internal_native_reference_available": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "phase": "completed",
+      "layer_count": 154,
+      "mean_division_gpu_boundary_preserved": true,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "capture_sha256": "881b26f2dba59d783185646334a9d50fe9fe1e3c78315d1a3644b6a09313db4d",
+      "actual_backend": "GPUCompute",
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "source_model_bytes_preserved": true
+    }
+  },
+  "original_layer0": {
+    "file": "vision-layer0-first-rms-native-projections-gpu-ac2dc3355b5d957064a6df463bc95c4e422a3402.json",
+    "sha256": "306f2a915e30b29d6b61b468ae51175932b174b267c7834bd1f2e92795295b71",
+    "result": {
+      "success": true,
+      "scope": "original_vision_layer0_first_rms_and_seven_native_gpu_projections_candidate",
+      "runtime_source": "ac2dc3355b5d957064a6df463bc95c4e422a3402",
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "phase": "completed",
+      "first_rms_replaced": true,
+      "source_scale_sha256": "acc544061ccfe25009301bdfc15bab61468511ef6f27962b70c54efb65da9cb7",
+      "projections": [
+        {
+          "kind": "explicit_division_first_rms",
+          "rows": 2520,
+          "width": 768
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e0f98883c238d21192d6e086f0205f07c428847307a94817d34f3adf20e7338f"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e9f675da30561ba275e17507b5455fda4d49e6a883747c5678d2a46eb8df0102"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "0174befbd8ff8c841032996393c3e80d3334dfc8dbd10ee58d804a420601de5a"
+        }
+      ],
+      "prepare_ms": 633.6372,
+      "segment_count": 9,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "execute_and_final_download_ms": 1042.4525,
+      "capture_sha256": "f26858081c316e1231b84a0ecc433f0cba7537528baa707581fc7a6a7289942d",
+      "actual_backend": "GPUCompute",
+      "bit_differences": 1539872,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 1.9073486328125e-05,
+      "maximum_tolerance_ratio": 0.8429030931171905,
+      "source_model_bytes_preserved": true,
+      "source_model_serialized_sha256": "0e934178e391f2aea5bd691b6a59c441c8304500afc36e4be321c776ed873634"
+    }
+  },
+  "bounded_full_encoder_execution": {
+    "file": "vision-first-layer-qualified-square0-20261015-process.json",
+    "sha256": "0fdaf5eafe1a3aa53d787a01bdcc5503f5492f8d7e78d28bbc1ec169b53226dd",
+    "xml_sha256": "8ee13e327189206b9e2d0172450b5242836e689b0c409f6f4f7a3ae5da469927",
+    "counts": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "exit_code": 2,
+    "elapsed_seconds": 54.26996489999874,
+    "cases": [
+      {
+        "name": "EmbeddingGemma.Validation.Tests.VisionAllStaticGpuTests.FirstLayerQualifiedVisionEncoderMatchesOriginalGoldenOnGpu(\"square-0\")",
+        "result": "Failed"
+      }
+    ]
+  },
+  "bounded_full_encoder": {
+    "file": "vision-first-layer-qualified-whole-gpu-dd3875616488e9fb0d8f6c1dd34de52887e4f312-square-0.json",
+    "sha256": "178564c0df07934bbdc862df92f72b6c2e1fc2d850f9b9f5f38b7487fdcbe351",
+    "result": {
+      "success": false,
+      "scope": "one_original_vision_encoder_qualified_patch_first_rms_and_first_layer_candidate",
+      "runtime_source": "dd3875616488e9fb0d8f6c1dd34de52887e4f312",
+      "case_id": "square-0",
+      "phase": "completed",
+      "all_profiles_validated": false,
+      "end_to_end_validated": false,
+      "profile": "square",
+      "saved_model_sha256": "4ecd0106463e833588c7584a58ea4973fdbab1eb1a56389c2f1597d3e7df34e7",
+      "original_projection_count": 114,
+      "first_rms_replaced": true,
+      "projections": [
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "696c2e091ed4ad117c10faa6bf9707eb808649fb09c84fee457d2327408acc90"
+        },
+        {
+          "kind": "explicit_division_first_rms",
+          "rows": 2520,
+          "width": 768
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e0f98883c238d21192d6e086f0205f07c428847307a94817d34f3adf20e7338f"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e9f675da30561ba275e17507b5455fda4d49e6a883747c5678d2a46eb8df0102"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "0174befbd8ff8c841032996393c3e80d3334dfc8dbd10ee58d804a420601de5a"
+        }
+      ],
+      "prepare_ms": 1948.6194,
+      "projection_count": 8,
+      "gpu_operation_count": 9,
+      "segment_count": 10,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "host_working_set_before_execute_bytes": 3365543936,
+      "execute_and_final_download_ms": 3660.1213000000002,
+      "host_working_set_after_download_bytes": 4312829952,
+      "host_peak_working_set_bytes": 4312829952,
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 566,
+      "maximum_absolute_error": 0.00014638900756835938,
+      "maximum_tolerance_ratio": 6.791765228563538,
+      "failure_message": "NUnit.Framework.AssertionException:   Keep the unchanged original vision FP32 elementwise gate."
+    }
+  },
+  "existing_runtime_files_unchanged_since_prior_checkpoint": true,
+  "original_layer0_gpu_gate_passed": true,
+  "image_all_three_profiles_validated": false,
+  "end_to_end_validated": false,
+  "original_internal_rms_native_reference_available": false,
+  "other_image_cases_not_executed_for_this_candidate": [
+    "square-1",
+    "landscape-0",
+    "landscape-1",
+    "portrait-0",
+    "portrait-1"
+  ],
+  "remaining": [
+    "remaining image layer arithmetic and original profile conditions",
+    "actual PCM/Texture to GPU preprocessing encoder backbone normalized 768 APIs with required roles masks boundaries ownership Dispose error reuse and text regression",
+    "stage3/4 samples and Player verification"
+  ]
+}

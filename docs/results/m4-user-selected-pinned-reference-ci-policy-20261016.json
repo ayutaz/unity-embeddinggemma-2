@@ -1,0 +1,28 @@
+{
+  "date_jst": "2026-10-16",
+  "user_decision": "1",
+  "policy": "Original pinned Python reference is mandatory; fresh CPU differences are diagnostic only.",
+  "original_reference_unchanged": true,
+  "original_weights_unchanged": true,
+  "feature_atol": 0.00001,
+  "feature_rtol": 0.0001,
+  "minimum_cosine": 0.999999,
+  "required_execution": "Six original raw-input cases, two profiles, five connected actual standard ONNX parts, independent capture/carry audit at the current immutable execution source.",
+  "required_values": 824320,
+  "fresh_cpu_diagnostic": "Collect all six cases and retain success=false, failed counts and actual outputs; no CPU/GPU qualification inferred from CI status.",
+  "gpu_runtime_changed": false,
+  "default_consumer_export_promoted": false,
+  "tdd": {
+    "red": "New module import failed; after module implementation required pinned-audio job was missing (8 passed, 1 intended failure).",
+    "green": "Initial 46 related tests passed, zero skips; actionlint passed. After CI exposed two old-policy workflow assertions, their complete related files passed 37 tests; the focused policy gate set passed 25 tests, zero skips.",
+    "checked": ["Native drift does not block pinned acceptance", "Original numeric failures block", "Missing case/profile/value coverage blocks", "Wrong immutable source blocks", "Real six-case raw ONNX execution is mandatory"]
+  },
+  "first_ci_attempt": {
+    "run": 38849189238,
+    "head": "b050f068b6f9d944317a11b9fc17d3b0c01eab83",
+    "ubuntu_python313": "1431 passed, 2 failed: old required fresh-CPU workflow assumptions conflicted with the explicit user-selected policy.",
+    "action": "Cancellation requested to stop obsolete heavy model jobs; failed assertions changed to require the pinned gate and explicitly preserve fresh-CPU diagnostic failure. Model math unchanged."
+  },
+  "required_ci_verified": false,
+  "step4_complete": false
+}

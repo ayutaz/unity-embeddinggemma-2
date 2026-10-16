@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "explicit_frozen_original_audio_encoder_output_to_official_backbone_role_reference_tdd",
+  "observed_results": [
+    {
+      "xml": "frozen-audio-boundary-red-20261016.xml",
+      "sha256": "a6686d3f78be0280e68eef19d7a78a7e1a92852c752724f429861bbf974241e8",
+      "total": 7,
+      "passed": 0,
+      "failed": 7,
+      "skipped": 0
+    },
+    {
+      "xml": "frozen-audio-boundary-green-20261016.xml",
+      "sha256": "28a6256460c93cc1d93f02c0ea39ea18c16b0184b11dc97d40d1da10334a87e2",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "xml": "frozen-audio-role-reference-red-20261016.xml",
+      "sha256": "cea29a690b55914d7e8438103b5f202368a8df5071f05e9613dd0a70706a80dc",
+      "total": 5,
+      "passed": 0,
+      "failed": 5,
+      "skipped": 0
+    },
+    {
+      "xml": "frozen-audio-role-reference-green-20261016.xml",
+      "sha256": "fe9cc5155955fb5abb376c20ff15de22da98098149bb46b39f76621799339924",
+      "total": 20,
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "xml": "frozen-audio-cli-workflow-red-20261016.xml",
+      "sha256": "1edb380804ab89b3e05d9f23e54acc9821abf4055caf12183148593688bb8111",
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    {
+      "xml": "frozen-audio-cli-workflow-green-20261016.xml",
+      "sha256": "3ea68b1876cd23f9584fa4fb4b093576bcafa599edee1a292bafb322f0272fca",
+      "total": 12,
+      "passed": 11,
+      "failed": 1,
+      "skipped": 0
+    },
+    {
+      "xml": "frozen-audio-reference-all-related-green-20261016.xml",
+      "sha256": "733ee21d84cba1045cb34c142879751963974905079ad235a48b12cc2f52d51a",
+      "total": 32,
+      "passed": 32,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "implementation_files_sha256": {
+    "tools/embeddinggemma_tools/audio_embeddings.py": "7b8686dec03df661170a172d4ab085213aa6050fa920d7c56d251872d32e34c6",
+    "tools/embeddinggemma_tools/backbone_reuse.py": "5d0becae70528b70d8bff338c3c75415e416ccb973c4360a5e2e071fb7ba5324",
+    "tools/embeddinggemma_tools/__main__.py": "6331a05185dca91ef96412efe0fa5348ea1699a4cd0500fe5bd6b03290e7bc5c",
+    "tools/tests/test_frozen_audio_features.py": "d1ce50e8ef1898e3fcbcfdc1bd86bea68f36a76fd619798d4295d0aff8a17c04",
+    "tools/tests/test_frozen_audio_role_reference.py": "df93e60c6bb801384e228e6744709db5fd4386f4c46d2ae01ef4e7efbd0c17ff",
+    "tools/tests/test_audio_embedding_cli.py": "f43140831353df153ae489ec9c4939c11c8af2e8005fc6b5e00497d43c77539d",
+    ".github/workflows/audio-frozen-role-reference.yml": "2a8ba5e7f4417336af60d4a0fc87b032a3b71ba4d7f801cacb01e61b098da582"
+  },
+  "acceptance_boundary": "Audit immutable encoder outputs and backbone source; validate every original Document vector and exact original Document prompt before accepting role-specific official forward vectors.",
+  "native_encoder_execution": false,
+  "gpu_execution": false,
+  "actual_pcm_chain_validated": false,
+  "real_model_role_reference_validated": false,
+  "default_native_reference_and_required_onnx_gates_unchanged": true,
+  "failure_notes": [
+    "The 12-case intermediate CLI/workflow run had one Windows cp932 fixture decoding error; explicit UTF-8 fixed the test and final related run passed all32.",
+    "Existing CPU native encoder context drift and Required CI ONNX silence failure remain failed evidence; explicit frozen-feature mode does not relabel them as successes."
+  ],
+  "remaining": [
+    "Actual-model Actions run must anchor all six Document cases before Query/Raw references are qualified.",
+    "Actual PCM GPU Query/Raw final API results remain separately required."
+  ]
+}

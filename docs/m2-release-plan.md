@@ -1,5 +1,15 @@
 # M2: 基盤安定化と全対応後の正式リリースへの受け渡し
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。冒頭の現在方針が、下の旧checkpointの着手順より優先する。
+
+## 2026-10-14の基準と受け渡し
+
+現在のmainは `c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1`。PR #31はDraft / 未統合で、旧21f1 Player実測を現在の16f1 consumerや最新candidateの成功に付け替えない。公開tag / GitHub ReleaseはGitHub再確認で各0件。
+
+実装・実モデル検証は停止中。[最新状態](status.md)と[全体計画R0〜R5](multimodal-tdd-plan.md)を現在の順序とする。M2の標準環境再現・性能 / 寿命・最終空Git consumer、M3 / M4、必須macOS / Windows / iOS / Android、配布監査の未達を保持する。GPU条件をCPU fallbackで補わない。正式Releaseとmain mergeは別の明示指示後に扱う。
+
+## 以前の基盤安定化計画と実行履歴
+
 作成日: 2026-10-10。開始時点のmainは `2329507eb763202a297c1b15f385a83512eb6e1f`。
 最終更新: 2026-10-13。main / PR / CI / Secrets / runner / tag / ReleaseをGitHub APIで再確認した。今回の更新は文書のみで、Unity起動・build・実機測定は追加していない。
 当初は安定性・高速化、Git URL導入、他環境の実測、text-onlyリリースの4段階を扱った。2026-10-13のユーザー指定により、**正式リリースはM3画像・M4音声を含む全対応と必須検証の完了後へ移す**。[全体TDD計画](multimodal-tdd-plan.md) / [M3](m3-plan.md) / [M4](m4-plan.md)を全体の順序とする。

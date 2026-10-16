@@ -1,0 +1,71 @@
+{
+  "scope": "fixed_native_inputs_compensated_projection_only",
+  "action_run_id": 38523505660,
+  "action_url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38523505660",
+  "head_source": "7f9dceeb486bfa896782c0fa69b5e324f9b94cd8",
+  "executed_merge_source": "50f4247bb3d8ae8d2741baacf11eb4b6e4b06cd0",
+  "report_sha256": "8e05d8ee4c678bb4f53f8ab0faf3a8acbe07382860b560f5b942a14f5d00554d",
+  "context_validated": true,
+  "native_final_exact_match": true,
+  "comparison": {
+    "scope": "exact_native_inputs_fp32_chunked_compensated_linears_then_fp32_post_norm",
+    "fp32_baselines_exact_match": true,
+    "chunk_size": 64,
+    "metrics": {
+      "linear1": {
+        "elementwise_passed": true,
+        "mismatches": 0,
+        "maximum_absolute_error": 2.86102294921875E-06,
+        "maximum_tolerance_ratio": 0.06828807889458331
+      },
+      "linear2": {
+        "elementwise_passed": true,
+        "mismatches": 0,
+        "maximum_absolute_error": 1.9073486328125E-06,
+        "maximum_tolerance_ratio": 0.04067426486371985
+      },
+      "linear2_post_norm": {
+        "elementwise_passed": true,
+        "mismatches": 0,
+        "maximum_absolute_error": 2.288818359375E-05,
+        "maximum_tolerance_ratio": 0.07749542104029311
+      }
+    },
+    "fp32_compensated_gate_passed": true,
+    "files": {
+      "linear1": {
+        "file": "candidate-compensated-linear1-fp32.bin",
+        "shape": [
+          1,
+          280,
+          4096
+        ],
+        "bytes": 4587520,
+        "sha256": "2e832695a0fb122fe3d83978069bd3e670d26fdeb8a936e251693e61e4ec81bb"
+      },
+      "linear2": {
+        "file": "candidate-compensated-linear2-fp32.bin",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "bytes": 1146880,
+        "sha256": "d0c64e999364a314671d4626ddf962fbedc4556990619736bc37e35e8b5a63cb"
+      },
+      "linear2_post_norm": {
+        "file": "candidate-compensated-linear2_post_norm-fp32.bin",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "bytes": 1146880,
+        "sha256": "4daf6a5bc67b97b534162d79a7e1c57936a901d4245799e7283f04f84e44bf5e"
+      }
+    }
+  },
+  "full_encoder_validated": false,
+  "actual_sentis_candidate_executed": false,
+  "end_to_end_validated": false
+}

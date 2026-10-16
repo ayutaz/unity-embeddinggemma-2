@@ -1,0 +1,31 @@
+{
+  "date_jst": "2026-10-14",
+  "scope": "image_only_final_api_synthetic_composition_tdd",
+  "real_image_chain_validated": false,
+  "real_texture_cpu_preprocessing_validated": false,
+  "known_vision_fp32_failure_resolved": false,
+  "red": {
+    "requested_source": "2bce67fa1474ba6439ee912693e07309f639af65",
+    "resolved_source": "2bce67fa1474ba6439ee912693e07309f639af65",
+    "completed_utc": "2026-10-13T15:45:27.0681320Z",
+    "passed": 0, "failed": 24, "skipped": 0, "cli_exit_code": 1,
+    "sha256": "953e04841c2df545fed7da916ee66f3abd46f70823de01d101693e3ff930fc34"
+  },
+  "green": {
+    "requested_source": "c2c5516e83339450bf7ff4c65432ef9ddae06861",
+    "resolved_source": "c2c5516e83339450bf7ff4c65432ef9ddae06861",
+    "runtime_overlay": false,
+    "completed_utc": "2026-10-13T15:48:15.6111754Z",
+    "passed": 24, "failed": 0, "skipped": 0, "cli_exit_code": 0,
+    "sha256": "79362f3ee1dc15b689c45afb5a06f3107b974be180a104907114ac94f2667c7f"
+  },
+  "package_regression": {
+    "completed_utc": "2026-10-13T15:49:22.6720537Z",
+    "passed": 225, "failed": 0, "skipped": 0, "cli_exit_code": 0,
+    "sha256": "869e778ebe4d4565fb24d71ed08593f8063c0608baa9f23d0efdc0601e260d0a"
+  },
+  "compile": {"errors": 0, "warnings": 0, "cli_exit_code": 0},
+  "environment": {"unity": "6000.3.21f1", "sentis": "2.6.1", "project": "artifacts/k", "fresh_consumer": false, "runtime_overlay": false, "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER", "graphics_api": "Direct3D12", "editor_pid": 149180, "embedded_test_framework": "1.6.0"},
+  "dependency_prs": [62, 64],
+  "release_created": false
+}

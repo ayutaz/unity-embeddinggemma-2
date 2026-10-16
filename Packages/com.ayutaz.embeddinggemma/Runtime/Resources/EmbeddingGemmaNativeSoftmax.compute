@@ -1,0 +1,112 @@
+// Copyright Naoki Shibata and contributors 2010 - 2024.
+// Exponential expression adapted from SLEEF 5a1d179 xexpf, BSL-1.0.
+// See ../../SLEEF-LICENSE.txt. Reduction ordering follows the pinned native
+// SoftMaxKernel.cpp / ATen cpu vec functional_base.h eight-lane FP32 path.
+#pragma kernel NativeSoftmax
+#pragma kernel NativeSoftmax16
+#pragma use_dxc
+StructuredBuffer<float> Input;
+RWStructuredBuffer<float> Output;
+uint Rows,Width,DispatchWidth;
+
+float NativeExp(float d)
+{
+    if(d<-104.0f)return 0.0f;
+    precise float scaled=d*1.4426950408889634073599246810018921374f;
+    int q=(int)round(scaled);
+    precise float s=mad((float)q,-0.693145751953125f,d);
+    s=mad((float)q,-1.428606765330187045e-06f,s);
+    precise float u=0.000198527617612853646278381f;
+    u=mad(u,s,0.00139304355252534151077271f);
+    u=mad(u,s,0.00833336077630519866943359f);
+    u=mad(u,s,0.0416664853692054748535156f);
+    u=mad(u,s,0.166666671633720397949219f);
+    u=mad(u,s,0.5f);
+    precise float square=s*s;
+    u=1.0f+mad(square,u,s);
+    int first=q/2;
+    precise float factorA=asfloat((uint)(first+127)<<23);
+    precise float factorB=asfloat((uint)(q-first+127)<<23);
+    precise float result=(u*factorA)*factorB;
+    return result;
+}
+[numthreads(64,1,1)]
+void NativeSoftmax(uint3 thread : SV_DispatchThreadID)
+{
+    uint row=thread.x+thread.y*DispatchWidth;
+    if(row>=Rows)return;
+    uint offset=row*Width;
+    precise float maximum=Input[offset];
+    for(uint column=1;column<Width;column++)maximum=max(maximum,Input[offset+column]);
+    precise float lanes[8];
+    [unroll]for(uint lane=0;lane<8;lane++)lanes[lane]=0.0f;
+    for(uint column=0;column<Width;column++)
+    {
+        precise float difference=Input[offset+column]-maximum;
+        precise float exponential=NativeExp(difference);
+        Output[offset+column]=exponential;
+        lanes[column%8]=lanes[column%8]+exponential;
+    }
+    precise float total;
+    if(Width<8)
+    {
+        total=lanes[0];for(uint column=1;column<Width;column++)total=total+lanes[column];
+    }
+    else
+    {
+        precise float a=lanes[0]+lanes[4];
+        precise float b=lanes[1]+lanes[5];
+        precise float c=lanes[2]+lanes[6];
+        precise float d=lanes[3]+lanes[7];
+        precise float left=a+c;
+        precise float right=b+d;
+        total=left+right;
+    }
+    precise float inverse=1.0f/total;
+    precise float residual=mad(-inverse,total,1.0f);
+    inverse=mad(residual,inverse,inverse);
+    for(uint column=0;column<Width;column++)Output[offset+column]=Output[offset+column]*inverse;
+}
+
+// Pinned AVX512 SoftMaxKernel's sixteen-lane accumulation and the
+// 256/128/64/32-bit shuffle order from VecReduceAllSIMD<float, Op>.
+// Keep the existing eight-lane kernel unchanged for existing callers.
+[numthreads(64,1,1)]
+void NativeSoftmax16(uint3 thread : SV_DispatchThreadID)
+{
+    uint row=thread.x+thread.y*DispatchWidth;
+    if(row>=Rows)return;
+    uint offset=row*Width;
+    precise float maximum=Input[offset];
+    for(uint column=1;column<Width;column++)maximum=max(maximum,Input[offset+column]);
+    precise float lanes[16];
+    [unroll]for(uint lane=0;lane<16;lane++)lanes[lane]=0.0f;
+    for(uint column=0;column<Width;column++)
+    {
+        precise float difference=Input[offset+column]-maximum;
+        precise float exponential=NativeExp(difference);
+        Output[offset+column]=exponential;
+        lanes[column%16]=lanes[column%16]+exponential;
+    }
+    precise float total;
+    if(Width<16)
+    {
+        total=lanes[0];for(uint column=1;column<Width;column++)total=total+lanes[column];
+    }
+    else
+    {
+        precise float combined[8];
+        [unroll]for(uint lane=0;lane<8;lane++)combined[lane]=lanes[lane]+lanes[lane+8];
+        precise float a=combined[0]+combined[4];
+        precise float b=combined[1]+combined[5];
+        precise float c=combined[2]+combined[6];
+        precise float d=combined[3]+combined[7];
+        precise float left=a+c;
+        precise float right=b+d;
+        total=left+right;
+    }
+    precise float inverse=1.0f/total;
+    precise float residual=mad(-inverse,total,1.0f);
+    inverse=mad(residual,inverse,inverse);
+    for(uint column=0;column<Width;column++)Output[offset+column]=Output[offset+column]*inverse;
+}

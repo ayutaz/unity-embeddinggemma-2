@@ -1,0 +1,570 @@
+{
+  "scope": "four_dimensional_rms_boundaries_original_scale_borrowing_and_seven_rms_original_layer0_gpu_acceptance",
+  "original_references_changed": false,
+  "learned_coefficients_changed": false,
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "all_runtime_float_arithmetic_fp32": true,
+  "original_internal_rms_native_reference_available": false,
+  "first_tdd_red": {
+    "file": "vision-rms-4d-scale-red-20261015-process.json",
+    "sha256": "b2bb98ae66f9b0a9e276c048ea92dff6e809d85d3c72fc07e23a073978cb3f62",
+    "exit_code": 2,
+    "elapsed_seconds": 43.50269730000582,
+    "xml_sha256": "3e1a6fd75528cdff1344685612d92da42d7655dc10328f46f8fdfa945022fc54",
+    "counts": {
+      "total": 6,
+      "passed": 1,
+      "failed": 5,
+      "skipped": 0
+    },
+    "failures": [
+      {
+        "name": "EmbeddingGemma.Validation.Tests.SavedProjectionPartitionTests.ExplicitUnaryGpuMarkerKeepsTheOriginalResidualAndDoesNotRecomputeItsPlaceholder(4)",
+        "message": "System.NotSupportedException : Fixed GPU matrix shape or type differs."
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.VisionRmsScaleBindingTests.OriginalScaleBindingBorrowsBytesAndPreservesTemplateAndCoefficientSource(CPU)",
+        "message": "  Original-scale borrowing is missing.\n  Expected: not null\n  But was:  null\n"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.VisionRmsScaleBindingTests.OriginalScaleBindingBorrowsBytesAndPreservesTemplateAndCoefficientSource(GPUCompute)",
+        "message": "  Original-scale borrowing is missing.\n  Expected: not null\n  But was:  null\n"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.VisionRmsScaleBindingTests.OriginalScaleBindingRejectsInvalidCoefficientsWithoutChangingTemplate(\"width\")",
+        "message": "  Original-scale borrowing is missing.\n  Expected: not null\n  But was:  null\n"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.VisionRmsScaleBindingTests.OriginalScaleBindingRejectsInvalidCoefficientsWithoutChangingTemplate(\"nonfinite\")",
+        "message": "  Original-scale borrowing is missing.\n  Expected: not null\n  But was:  null\n"
+      }
+    ]
+  },
+  "validation_compile_failure": {
+    "file": "vision-rms-4d-scale-and-remaining-gpu-20261015-process.json",
+    "sha256": "be774f00e5c781bd35bb552cb2d5498a7cc79c38bd07ff9079fac04e938f804f",
+    "exit_code": 1,
+    "elapsed_seconds": 24.696614600004978,
+    "missing_execution_evidence": "Unity execution XML is missing or invalid"
+  },
+  "validation_compile_failure_reason": "Extra closing parenthesis in the new model asset load. Syntax was corrected; this is not a numerical or intended TDD failure.",
+  "first_green_and_remaining_gpu": {
+    "file": "vision-rms-4d-scale-and-remaining-gpu-fixed-20261015-process.json",
+    "sha256": "1e477843c66f6a47a3f082be93c6361cc51664935af9e5662f16ce3d0f36b7e0",
+    "exit_code": 0,
+    "elapsed_seconds": 43.65653629999724,
+    "xml_sha256": "9b67cac429a88984cc7076015fd55b72c90e79fec784c296648ecef0af4a32ed",
+    "counts": {
+      "total": 22,
+      "passed": 22,
+      "failed": 0,
+      "skipped": 0
+    },
+    "failures": []
+  },
+  "original_scale_borrowing_gpu": [
+    {
+      "file": "vision-borrowed-rms-gpu-5aa05a81fe9e7330c2765c826c38be1fd593869a-0.json",
+      "sha256": "4548867a2811220354bc69f89017724b96548c7409d2d061e05f01cb3da327f0",
+      "result": {
+        "success": true,
+        "scope": "one_borrowed_width768_rms_against_captured_input_current_cpu_equation_only",
+        "runtime_source": "5aa05a81fe9e7330c2765c826c38be1fd593869a",
+        "index": 0,
+        "original_internal_native_reference_available": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "template_and_coefficient_source_bytes_preserved": true,
+        "actual_backend": "GPUCompute",
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      }
+    },
+    {
+      "file": "vision-borrowed-rms-gpu-5aa05a81fe9e7330c2765c826c38be1fd593869a-4.json",
+      "sha256": "3a0cdda9bda1a91897fedad6f442a5e699f32ebf4982ee8bf452692ef7a4e3a4",
+      "result": {
+        "success": true,
+        "scope": "one_borrowed_width768_rms_against_captured_input_current_cpu_equation_only",
+        "runtime_source": "5aa05a81fe9e7330c2765c826c38be1fd593869a",
+        "index": 4,
+        "original_internal_native_reference_available": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "template_and_coefficient_source_bytes_preserved": true,
+        "actual_backend": "GPUCompute",
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      }
+    },
+    {
+      "file": "vision-borrowed-rms-gpu-5aa05a81fe9e7330c2765c826c38be1fd593869a-5.json",
+      "sha256": "94bc46f845805146f56dd957ed4a95635c6c8924ce0cd63aab9f1f86566a1161",
+      "result": {
+        "success": true,
+        "scope": "one_borrowed_width768_rms_against_captured_input_current_cpu_equation_only",
+        "runtime_source": "5aa05a81fe9e7330c2765c826c38be1fd593869a",
+        "index": 5,
+        "original_internal_native_reference_available": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "template_and_coefficient_source_bytes_preserved": true,
+        "actual_backend": "GPUCompute",
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      }
+    },
+    {
+      "file": "vision-borrowed-rms-gpu-5aa05a81fe9e7330c2765c826c38be1fd593869a-6.json",
+      "sha256": "5f9a1bef3d0e27f4180ca631b34b24077350f3f0b1c33ea8ef6532365bb6ecb5",
+      "result": {
+        "success": true,
+        "scope": "one_borrowed_width768_rms_against_captured_input_current_cpu_equation_only",
+        "runtime_source": "5aa05a81fe9e7330c2765c826c38be1fd593869a",
+        "index": 6,
+        "original_internal_native_reference_available": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "template_and_coefficient_source_bytes_preserved": true,
+        "actual_backend": "GPUCompute",
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      }
+    }
+  ],
+  "preparation": {
+    "file": "vision-remaining-rms-reference-preparation-20261015.json",
+    "sha256": "f5b756e48b6042d5722e0585a6867390e8bbd651f07b452c9b5567ff3cca0c28",
+    "result": {
+      "reference": {
+        "scope": "captured_width768_norm_current_cpu_equations_only",
+        "producer": "e64090657eac275536c231798248fedde6b5f2b0",
+        "original_internal_native_reference_available": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "rows": [
+          {
+            "index": 0,
+            "input": {
+              "file": "rms-0-input.bin",
+              "sha256": "bc4c19c9aaf9688801c99ed073fdde22f0daf6b822dc2c9c4b7a3f7c9aded636",
+              "shape": [
+                1,
+                2520,
+                768
+              ]
+            },
+            "scale": {
+              "file": "rms-0-scale.bin",
+              "sha256": "acc544061ccfe25009301bdfc15bab61468511ef6f27962b70c54efb65da9cb7",
+              "shape": [
+                768
+              ]
+            },
+            "model": {
+              "file": "rms-0.sentis",
+              "sha256": "355fb796005e91eab203362eb6d1b3cb40e5e3d1f55bc813c0ac3a7c0ea421bf"
+            },
+            "expected": {
+              "file": "rms-0-expected.bin",
+              "sha256": "881b26f2dba59d783185646334a9d50fe9fe1e3c78315d1a3644b6a09313db4d"
+            }
+          },
+          {
+            "index": 4,
+            "input": {
+              "file": "rms-4-input.bin",
+              "sha256": "d173f979ce63c88a208e130948271fd6b4040a98093e576c6a9234eef837841e",
+              "shape": [
+                1,
+                2520,
+                768
+              ]
+            },
+            "scale": {
+              "file": "rms-4-scale.bin",
+              "sha256": "5d05ae83acae162ce2d43a09cade4772f381e29112afd9a553e2978d2e196975",
+              "shape": [
+                768
+              ]
+            },
+            "model": {
+              "file": "rms-4.sentis",
+              "sha256": "cbf9accce5a80148cfa8b85b3a6ae6a33d7146c27620ae46700809db66f533b7"
+            },
+            "expected": {
+              "file": "rms-4-expected.bin",
+              "sha256": "6b1ebc8ccb7588983a01342ae3b655614c0948eee0b6d9883bdf55b601b7be1e"
+            }
+          },
+          {
+            "index": 5,
+            "input": {
+              "file": "rms-5-input.bin",
+              "sha256": "67e32c50ee593e0607d1ee264f497392bfacf7d0463caa38f35b56e06b2cf141",
+              "shape": [
+                1,
+                2520,
+                768
+              ]
+            },
+            "scale": {
+              "file": "rms-5-scale.bin",
+              "sha256": "fd3ecdc5a7487fd8e3c3e9c72ba32ffc820384f1938cf3bf53c5749d35a7e936",
+              "shape": [
+                768
+              ]
+            },
+            "model": {
+              "file": "rms-5.sentis",
+              "sha256": "c062f7b917e4eec5aaba03fdcf67b7bd37eb55087ed73228588e13d3eb316c79"
+            },
+            "expected": {
+              "file": "rms-5-expected.bin",
+              "sha256": "c14edc55aa867a10ba0c5cff78b01b8f2e64957303d1084ac2339eb75623d160"
+            }
+          },
+          {
+            "index": 6,
+            "input": {
+              "file": "rms-6-input.bin",
+              "sha256": "c237adf805f698d90ed0719c85b7876e4184751d336e76ea18ef4b9b24d7410d",
+              "shape": [
+                1,
+                2520,
+                768
+              ]
+            },
+            "scale": {
+              "file": "rms-6-scale.bin",
+              "sha256": "24396304c2919debbeb04e257a63502fada7d63f4ba12e3758b697aae9b99907",
+              "shape": [
+                768
+              ]
+            },
+            "model": {
+              "file": "rms-6.sentis",
+              "sha256": "dda2ed772272610d0ab401ce5bc32b4fec577d079c01335d3fd9b9ba726e33c6"
+            },
+            "expected": {
+              "file": "rms-6-expected.bin",
+              "sha256": "c27b69fb2e4609f8bea0bbc5ea56bead3023e4ed6a3555cf9682fab4c04370cd"
+            }
+          }
+        ],
+        "torch_version": "2.14.1+cpu",
+        "torch_git": "5c4886908584029761b579af026dcfb627c84070"
+      },
+      "reference_sha256": "6ba555bef760f18cfd1bd01c5ddcbf3dc552544fc49951050f504aef62b9a797"
+    }
+  },
+  "second_tdd_red": {
+    "file": "vision-all-rms-markers-and-head-operation-red-20261015-process.json",
+    "sha256": "53adbd4ea07c55f2ae1ad5cbb24d074ee71145d204887bbb7366dd81320a7814",
+    "exit_code": 2,
+    "elapsed_seconds": 42.548486700005014,
+    "xml_sha256": "2d1709ee6b7d61fb15acd758a7a535fdedf3ab9702d2f771fc3dfb06071bcee7",
+    "counts": {
+      "total": 4,
+      "passed": 0,
+      "failed": 4,
+      "skipped": 0
+    },
+    "failures": [
+      {
+        "name": "EmbeddingGemma.Validation.Tests.VisionHeadRmsGpuTests.CapturedHeadRmsMatchesIndependentCurrentCpuEquationOnGpu(1)",
+        "message": "System.ArgumentException : Expected the qualified fixed first vision RMS template.\nParameter name: model"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.VisionHeadRmsGpuTests.CapturedHeadRmsMatchesIndependentCurrentCpuEquationOnGpu(2)",
+        "message": "System.ArgumentException : Expected the qualified fixed first vision RMS template.\nParameter name: model"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.VisionHeadRmsGpuTests.CapturedHeadRmsMatchesIndependentCurrentCpuEquationOnGpu(3)",
+        "message": "System.ArgumentException : Expected the qualified fixed first vision RMS template.\nParameter name: model"
+      },
+      {
+        "name": "EmbeddingGemma.Validation.Tests.VisionRmsScaleBindingTests.AllSevenOriginalRmsMarkersPreserveCoefficientBytesAndDenseGpuInputs",
+        "message": "  All-RMS graph boundaries are missing.\n  Expected: not null\n  But was:  null\n"
+      }
+    ]
+  },
+  "full_related_and_original_layer_green": {
+    "file": "vision-seven-rms-layer-and-related-gpu-20261015-process.json",
+    "sha256": "e4b7e83549efa5b75d0b15ce4aaaabfa49780fe1367249f050d87cd888e70839",
+    "exit_code": 0,
+    "elapsed_seconds": 89.40659169999708,
+    "xml_sha256": "e72c8fed7759223f1dc47f582f717a79558ed9430eb2d030ba284692e4ffdcc8",
+    "counts": {
+      "total": 27,
+      "passed": 27,
+      "failed": 0,
+      "skipped": 0
+    },
+    "failures": []
+  },
+  "callable_head_rms_gpu": [
+    {
+      "file": "vision-head-rms-gpu-c189347998e2a6950a80f75a9ab1e5f1bf11a8f5-1.json",
+      "sha256": "958e08a552bb496a621f6fe4fa9847ac28db61f5951c1dcfc82786cce3e2de28",
+      "result": {
+        "success": true,
+        "scope": "one_vision_head_rms_against_captured_input_current_cpu_equation_only",
+        "runtime_source": "c189347998e2a6950a80f75a9ab1e5f1bf11a8f5",
+        "index": 1,
+        "original_internal_native_reference_available": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "layer_count": 119,
+        "actual_backend": "GPUCompute",
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      }
+    },
+    {
+      "file": "vision-head-rms-gpu-c189347998e2a6950a80f75a9ab1e5f1bf11a8f5-2.json",
+      "sha256": "4c64cdb0a061dc416924f47a0a9e5840fa679bab9f6bc37bf4efebda0f3c671d",
+      "result": {
+        "success": true,
+        "scope": "one_vision_head_rms_against_captured_input_current_cpu_equation_only",
+        "runtime_source": "c189347998e2a6950a80f75a9ab1e5f1bf11a8f5",
+        "index": 2,
+        "original_internal_native_reference_available": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "layer_count": 119,
+        "actual_backend": "GPUCompute",
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      }
+    },
+    {
+      "file": "vision-head-rms-gpu-c189347998e2a6950a80f75a9ab1e5f1bf11a8f5-3.json",
+      "sha256": "14110709742a52024ded0a4f9621de9333fd97c8973c1050e7f744e12e13ed73",
+      "result": {
+        "success": true,
+        "scope": "one_vision_head_rms_against_captured_input_current_cpu_equation_only",
+        "runtime_source": "c189347998e2a6950a80f75a9ab1e5f1bf11a8f5",
+        "index": 3,
+        "original_internal_native_reference_available": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "layer_count": 118,
+        "actual_backend": "GPUCompute",
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      }
+    }
+  ],
+  "original_layer0": {
+    "file": "vision-layer0-seven-rms-native-projections-gpu-c189347998e2a6950a80f75a9ab1e5f1bf11a8f5.json",
+    "sha256": "64eb37a4e66f2f52aff20a6c7c6ed00a99c40782c76d911dfee8af974da3a4bf",
+    "result": {
+      "success": true,
+      "scope": "original_vision_layer0_seven_rms_and_seven_native_gpu_projections_candidate",
+      "runtime_source": "c189347998e2a6950a80f75a9ab1e5f1bf11a8f5",
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "phase": "completed",
+      "rms_count": 7,
+      "projections": [
+        {
+          "kind": "qualified_rms",
+          "ordinal": 0,
+          "rows": 2520,
+          "width": 768,
+          "scale_sha256": "acc544061ccfe25009301bdfc15bab61468511ef6f27962b70c54efb65da9cb7"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48"
+        },
+        {
+          "kind": "qualified_rms",
+          "ordinal": 1,
+          "rows": 30240,
+          "width": 64,
+          "scale_sha256": "d5d01e690834022110f66ccb71a7ae23c9e9418bf54e01866bed7785ccadf3d5"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe"
+        },
+        {
+          "kind": "qualified_rms",
+          "ordinal": 2,
+          "rows": 30240,
+          "width": 64,
+          "scale_sha256": "a37ec95adcda6b8c3659a6720a0ab4d724b7280549466062a4e3c94eee6f1994"
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b"
+        },
+        {
+          "kind": "qualified_rms",
+          "ordinal": 3,
+          "rows": 30240,
+          "width": 64,
+          "scale_sha256": null
+        },
+        {
+          "width": 768,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5"
+        },
+        {
+          "kind": "qualified_rms",
+          "ordinal": 4,
+          "rows": 2520,
+          "width": 768,
+          "scale_sha256": "5d05ae83acae162ce2d43a09cade4772f381e29112afd9a553e2978d2e196975"
+        },
+        {
+          "kind": "qualified_rms",
+          "ordinal": 5,
+          "rows": 2520,
+          "width": 768,
+          "scale_sha256": "fd3ecdc5a7487fd8e3c3e9c72ba32ffc820384f1938cf3bf53c5749d35a7e936"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e0f98883c238d21192d6e086f0205f07c428847307a94817d34f3adf20e7338f"
+        },
+        {
+          "width": 768,
+          "columns": 3072,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "e9f675da30561ba275e17507b5455fda4d49e6a883747c5678d2a46eb8df0102"
+        },
+        {
+          "width": 3072,
+          "columns": 768,
+          "rows": 2520,
+          "block": 384,
+          "weight_sha256": "0174befbd8ff8c841032996393c3e80d3334dfc8dbd10ee58d804a420601de5a"
+        },
+        {
+          "kind": "qualified_rms",
+          "ordinal": 6,
+          "rows": 2520,
+          "width": 768,
+          "scale_sha256": "24396304c2919debbeb04e257a63502fada7d63f4ba12e3758b697aae9b99907"
+        }
+      ],
+      "prepare_ms": 448.862,
+      "segment_count": 15,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "execute_and_final_download_ms": 1164.3533,
+      "capture_sha256": "8312ee24467c3ee955dbd21f27e79fcd980c31e5b23ad442f8a4ee324c422448",
+      "actual_backend": "GPUCompute",
+      "bit_differences": 1518970,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 1.9073486328125e-05,
+      "maximum_tolerance_ratio": 0.7666971300993025,
+      "source_model_bytes_preserved": true,
+      "source_model_serialized_sha256": "0e934178e391f2aea5bd691b6a59c441c8304500afc36e4be321c776ed873634"
+    }
+  },
+  "bounded_gelu_diagnosis": {
+    "file": "vision-gelu-small-current-cpu-arithmetic-20261015.json",
+    "sha256": "ab71199302f5c80b32841a9b9752844d670c8e1b4c7ff4f398c9cf1ebba8f065",
+    "result": {
+      "scope": "bounded_current_cpu_gelu_arithmetic_only_on_captured_gate_input",
+      "producer": "c189347998e2a6950a80f75a9ab1e5f1bf11a8f5",
+      "input_source": "e39bdf1b5d0faf2ea424023d83076315736c6fde",
+      "input_sha256": "1478cf36007708e04cb8bd771e763a369c60db26169c995709da9ffeb842a69b",
+      "sample_count": 65536,
+      "torch_version": "2.14.1+cpu",
+      "torch_git": "5c4886908584029761b579af026dcfb627c84070",
+      "rows": {
+        "separate": {
+          "bit_differences": 55,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 1.5116231111278466e-07
+        },
+        "fused": {
+          "bit_differences": 273,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 1.5116231111278466e-07
+        },
+        "factored": {
+          "bit_differences": 5058,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 1.5116231111278466e-07
+        }
+      },
+      "original_internal_native_reference_available": false,
+      "gpu_validated": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false
+    },
+    "pinned_source_url": "https://github.com/pytorch/pytorch/blob/5c4886908584029761b579af026dcfb627c84070/aten/src/ATen/native/cpu/Gelu.h",
+    "candidate_adopted": false
+  },
+  "existing_runtime_files_unchanged_since_prior_checkpoint": true,
+  "original_layer0_gpu_gate_passed": true,
+  "original_layer0_bit_identity": false,
+  "image_full_encoder_rerun_in_this_checkpoint": false,
+  "image_all_three_profiles_validated": false,
+  "end_to_end_validated": false,
+  "unchanged_prior_full_encoder_gate": {
+    "source": "dd3875616488e9fb0d8f6c1dd34de52887e4f312",
+    "case": "square-0",
+    "mismatched_elements": 566,
+    "passed": false
+  },
+  "next_action": "Isolate remaining layer activation and attention arithmetic with immutable captured inputs and independent references; do not repeat full encoder candidates until local qualification. Then validate all original image profiles and full APIs.",
+  "remaining": [
+    "all original image profiles and conditions",
+    "actual PCM/Texture to GPU preprocessing encoder backbone normalized 768 APIs with required roles masks boundaries ownership Dispose error reuse and text regression",
+    "stage3/4 samples and Player verification"
+  ]
+}

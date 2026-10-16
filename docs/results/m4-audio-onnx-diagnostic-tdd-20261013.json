@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-13",
+  "scope": "small_failure_only_onnx_diagnostic_tdd",
+  "source_parent": "edc3a4cdd98a3a13be77553ec601ffcf20b54847",
+  "source_state": "working_tree_after_parent_before_diagnostic_commit",
+  "stage_diagnostic_assertion_red": 5,
+  "initial_implementation_name_error_failed": 3,
+  "initial_implementation_passed": 6,
+  "corrected_related_green": 9,
+  "native_reference_context_assertion_red": 1,
+  "final_related_green": 10,
+  "original_real_onnx_failure_preserved": true,
+  "real_weight_stage_diagnostics_executed": false,
+  "real_weight_encoder_validated": false,
+  "unity_validated": false,
+  "tolerances_changed": false,
+  "evidence_sha256": {
+    "audio-onnx-stage-diagnostics-red.log": "67f133627b69b8c12b22ae32e33bb111d608417d180cac88bfd35e412b9daa72",
+    "audio-onnx-stage-diagnostics-first-green.log": "c5d470403dabbe45b76e534893f5c361cf27236058b67151c5715440437223b2",
+    "audio-onnx-stage-diagnostics-corrected-green.log": "b7ec819f9d4f0eac42b081aa0d2703feba362c14b2d077019c011fce459dbdfa",
+    "audio-onnx-diagnostic-reference-context-red.log": "5dff480b2cecda3e74f504dd0650e211c27d611f7dcfee16d7bf1222aefdbd7a",
+    "audio-onnx-diagnostic-context-related-green.log": "76102479d6d815992d54b3e70d4c5304b7db5ff4d3fc89c18a07f037cd55f3a6"
+  }
+}

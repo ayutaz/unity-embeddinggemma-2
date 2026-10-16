@@ -1,0 +1,298 @@
+{
+  "success": true,
+  "scope": "real_native_audio_features_to_final_backbone_only",
+  "encoders_validated": false,
+  "gpu_preprocessing_validated": false,
+  "end_to_end_validated": false,
+  "unity": "6000.3.21f1",
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "conditions": [
+    {
+      "precision": "fp32",
+      "requested_backend": "CPU",
+      "success": true,
+      "cases": [
+        {
+          "cosine": 0.99999999998554012,
+          "success": true,
+          "maximum_absolute_error": 7.1711838245391846E-07,
+          "maximum_tolerance_ratio": 0.066169537850567145,
+          "elementwise_mismatches": 0,
+          "id": "silence",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "cosine": 0.99999999999607447,
+          "success": true,
+          "maximum_absolute_error": 4.1420571506023407E-07,
+          "maximum_tolerance_ratio": 0.040150246818643279,
+          "elementwise_mismatches": 0,
+          "id": "impulse",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "cosine": 0.99999999999945888,
+          "success": true,
+          "maximum_absolute_error": 1.2293457984924316E-07,
+          "maximum_tolerance_ratio": 0.011103299974122915,
+          "elementwise_mismatches": 0,
+          "id": "sine",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "cosine": 0.99999999999738787,
+          "success": true,
+          "maximum_absolute_error": 2.775341272354126E-07,
+          "maximum_tolerance_ratio": 0.021649212252211569,
+          "elementwise_mismatches": 0,
+          "id": "nyquist",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "cosine": 0.9999999999995568,
+          "success": true,
+          "maximum_absolute_error": 1.1920928955078125E-07,
+          "maximum_tolerance_ratio": 0.009699016600945928,
+          "elementwise_mismatches": 0,
+          "id": "noise",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "cosine": 0.99999999999963229,
+          "success": true,
+          "maximum_absolute_error": 1.1920928955078125E-07,
+          "maximum_tolerance_ratio": 0.0085010496657326427,
+          "elementwise_mismatches": 0,
+          "id": "padded_noise",
+          "profile": "frames-1119-valid-839",
+          "actual_backend": "CPU"
+        }
+      ],
+      "phase": "completed",
+      "cpu_computation_or_nonempty_feature_inputs": [],
+      "readback_flush": []
+    },
+    {
+      "precision": "fp32",
+      "requested_backend": "GPUCompute",
+      "success": true,
+      "cases": [
+        {
+          "cosine": 0.99999999999408362,
+          "success": true,
+          "maximum_absolute_error": 3.9953738451004028E-07,
+          "maximum_tolerance_ratio": 0.036865885373887408,
+          "elementwise_mismatches": 0,
+          "id": "silence",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "cosine": 0.99999999999782963,
+          "success": true,
+          "maximum_absolute_error": 2.8684735298156738E-07,
+          "maximum_tolerance_ratio": 0.020496994767526276,
+          "elementwise_mismatches": 0,
+          "id": "impulse",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "cosine": 0.99999999999963007,
+          "success": true,
+          "maximum_absolute_error": 1.4901161193847656E-07,
+          "maximum_tolerance_ratio": 0.010537414681977978,
+          "elementwise_mismatches": 0,
+          "id": "sine",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "cosine": 0.99999999999781242,
+          "success": true,
+          "maximum_absolute_error": 3.0180672183632851E-07,
+          "maximum_tolerance_ratio": 0.029896777876142474,
+          "elementwise_mismatches": 0,
+          "id": "nyquist",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "cosine": 0.99999999999977418,
+          "success": true,
+          "maximum_absolute_error": 8.1956386566162109E-08,
+          "maximum_tolerance_ratio": 0.0077104138696657519,
+          "elementwise_mismatches": 0,
+          "id": "noise",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "cosine": 0.9999999999997824,
+          "success": true,
+          "maximum_absolute_error": 8.5681676864624023E-08,
+          "maximum_tolerance_ratio": 0.0072741841151893341,
+          "elementwise_mismatches": 0,
+          "id": "padded_noise",
+          "profile": "frames-1119-valid-839",
+          "actual_backend": "GPUCompute"
+        }
+      ],
+      "phase": "completed",
+      "cpu_computation_or_nonempty_feature_inputs": [],
+      "readback_flush": []
+    },
+    {
+      "precision": "float16",
+      "requested_backend": "CPU",
+      "success": true,
+      "cases": [
+        {
+          "cosine": 0.99999999999083722,
+          "success": true,
+          "maximum_absolute_error": 6.156042218208313E-07,
+          "maximum_tolerance_ratio": 0.056802681193798554,
+          "elementwise_mismatches": 0,
+          "id": "silence",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "cosine": 0.99999999999715161,
+          "success": true,
+          "maximum_absolute_error": 3.902241587638855E-07,
+          "maximum_tolerance_ratio": 0.0346099994595884,
+          "elementwise_mismatches": 0,
+          "id": "impulse",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "cosine": 0.99999999999923839,
+          "success": true,
+          "maximum_absolute_error": 1.73225998878479E-07,
+          "maximum_tolerance_ratio": 0.014328391719593459,
+          "elementwise_mismatches": 0,
+          "id": "sine",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "cosine": 0.99999999999701772,
+          "success": true,
+          "maximum_absolute_error": 2.8568319976329803E-07,
+          "maximum_tolerance_ratio": 0.02793184578454334,
+          "elementwise_mismatches": 0,
+          "id": "nyquist",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "cosine": 0.99999999999958278,
+          "success": true,
+          "maximum_absolute_error": 1.7881393432617188E-07,
+          "maximum_tolerance_ratio": 0.0085881418053029828,
+          "elementwise_mismatches": 0,
+          "id": "noise",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "cosine": 0.99999999999958322,
+          "success": true,
+          "maximum_absolute_error": 1.2293457984924316E-07,
+          "maximum_tolerance_ratio": 0.0082443585097105032,
+          "elementwise_mismatches": 0,
+          "id": "padded_noise",
+          "profile": "frames-1119-valid-839",
+          "actual_backend": "CPU"
+        }
+      ],
+      "phase": "completed",
+      "cpu_computation_or_nonempty_feature_inputs": [],
+      "readback_flush": []
+    },
+    {
+      "precision": "float16",
+      "requested_backend": "GPUCompute",
+      "success": true,
+      "cases": [
+        {
+          "cosine": 0.99999999998877542,
+          "success": true,
+          "maximum_absolute_error": 6.5099447965621948E-07,
+          "maximum_tolerance_ratio": 0.060068190853956413,
+          "elementwise_mismatches": 0,
+          "id": "silence",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "cosine": 0.99999999999835376,
+          "success": true,
+          "maximum_absolute_error": 2.3096799850463867E-07,
+          "maximum_tolerance_ratio": 0.020485154811403155,
+          "elementwise_mismatches": 0,
+          "id": "impulse",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "cosine": 0.99999999999962075,
+          "success": true,
+          "maximum_absolute_error": 1.7881393432617188E-07,
+          "maximum_tolerance_ratio": 0.010419748699143931,
+          "elementwise_mismatches": 0,
+          "id": "sine",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "cosine": 0.99999999999827227,
+          "success": true,
+          "maximum_absolute_error": 2.1979212760925293E-07,
+          "maximum_tolerance_ratio": 0.019633274574400218,
+          "elementwise_mismatches": 0,
+          "id": "nyquist",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "cosine": 0.999999999999788,
+          "success": true,
+          "maximum_absolute_error": 7.4505805969238281E-08,
+          "maximum_tolerance_ratio": 0.0060719991313865117,
+          "elementwise_mismatches": 0,
+          "id": "noise",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "cosine": 0.99999999999978528,
+          "success": true,
+          "maximum_absolute_error": 8.9406967163085938E-08,
+          "maximum_tolerance_ratio": 0.0066618545659031508,
+          "elementwise_mismatches": 0,
+          "id": "padded_noise",
+          "profile": "frames-1119-valid-839",
+          "actual_backend": "GPUCompute"
+        }
+      ],
+      "phase": "completed",
+      "cpu_computation_or_nonempty_feature_inputs": [],
+      "readback_flush": []
+    }
+  ],
+  "started_utc": "2026-10-13T13:26:03.3448649Z",
+  "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "source_encoder_success": false,
+  "onnx_encoder_numeric": false,
+  "import_phase": "frames-1119-valid-839",
+  "completed_utc": "2026-10-13T13:37:10.7590432Z"
+}

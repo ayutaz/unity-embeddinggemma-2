@@ -1,0 +1,537 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "all_six_original_raw_feature_inputs_through_entire_stem_only",
+  "source": "bf3b6cf9336ce2ed676683921c187a84b64e1e48",
+  "actions_run": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38816679334",
+  "github_job_conclusion": "success",
+  "cases": [
+    {
+      "case_id": "silence",
+      "profile": "frames-1119-valid-1119",
+      "report_sha256": "1219c0c6db8b179537ee17303a50b4b9b4479e15f570db3f6494e15799884783",
+      "native_whole_context_qualified": false,
+      "native_whole_metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 288,
+        "maximum_absolute_error": 0.0001811981201171875,
+        "maximum_tolerance_ratio": 8.712747897611987,
+        "worst_index": 23176,
+        "worst_actual": 0.007174745202064514,
+        "worst_expected": 0.007268205285072327,
+        "exact_difference_count": 135855
+      },
+      "cases": [
+        {
+          "variant": "native",
+          "metrics": {
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 505,
+            "maximum_absolute_error": 9.822845458984375e-05,
+            "maximum_tolerance_ratio": 2.0606276695431456,
+            "worst_index": 661,
+            "worst_actual": 0.0012183189392089844,
+            "worst_expected": 0.001239180564880371,
+            "exact_difference_count": 285848
+          },
+          "capture_sha256": "1af5d086cf65c4bd1329383a5a75fd59482b6ae341198c289a70527114711c70",
+          "graph_sha256": "d1b7b125b9fd7801e2f6a9a4f99b27e8df695609aac55e4600387116c90db826"
+        },
+        {
+          "variant": "ordered_original_stem",
+          "metrics": {
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "worst_index": 0,
+            "worst_actual": 1.377028226852417,
+            "worst_expected": 1.377028226852417,
+            "exact_difference_count": 0
+          },
+          "capture_sha256": "dc54774840fed958a310c6092e5c5c3483de74be52df7914d2bd128a99192969",
+          "graph_sha256": "8605da2fd76a75498f6b82e0ec11cc7bc2d6f964583c5ca570f1bd41a94d623d"
+        }
+      ],
+      "reference_provenance": {
+        "stage": "subsample",
+        "case_id": "silence",
+        "profile": "frames-1119-valid-1119",
+        "reference_sha256": "6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a",
+        "audit_sha256": "3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b",
+        "expected_sha256": "dc54774840fed958a310c6092e5c5c3483de74be52df7914d2bd128a99192969",
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9"
+      },
+      "cpu_model": "AMD EPYC 7763 64-Core Processor",
+      "native_prefix_vs_reference_metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 3.814697265625e-05,
+        "maximum_tolerance_ratio": 0.27221914003731856,
+        "worst_index": 890,
+        "worst_actual": -0.011671781539916992,
+        "worst_expected": -0.011668741703033447,
+        "exact_difference_count": 270201
+      },
+      "torch_cpu_capability": "AVX2",
+      "coverage": {
+        "convolution_replacements": 2,
+        "normalization_replacements": 2,
+        "linear_replacements": 1,
+        "coefficients_unchanged": true
+      }
+    },
+    {
+      "case_id": "impulse",
+      "profile": "frames-1119-valid-1119",
+      "report_sha256": "c179368b3318a126991d1b73b7f154d961057d40a4c1f6976bd4d2e85ed62621",
+      "native_whole_context_qualified": true,
+      "native_whole_metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "worst_index": 0,
+        "worst_actual": -4.100169658660889,
+        "worst_expected": -4.100169658660889,
+        "exact_difference_count": 0
+      },
+      "cases": [
+        {
+          "variant": "native",
+          "metrics": {
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 554,
+            "maximum_absolute_error": 8.678436279296875e-05,
+            "maximum_tolerance_ratio": 1.04968977629842,
+            "worst_index": 2400,
+            "worst_actual": 0.0033344030380249023,
+            "worst_expected": 0.0033452510833740234,
+            "exact_difference_count": 286042
+          },
+          "capture_sha256": "7d3893a2f9d020987ee14f83b62df541e4dff5e6b21dc2e424333c6a32f8c2fd",
+          "graph_sha256": "d1b7b125b9fd7801e2f6a9a4f99b27e8df695609aac55e4600387116c90db826"
+        },
+        {
+          "variant": "ordered_original_stem",
+          "metrics": {
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "worst_index": 0,
+            "worst_actual": 3.1951444149017334,
+            "worst_expected": 3.1951444149017334,
+            "exact_difference_count": 0
+          },
+          "capture_sha256": "fbbc24afa5f1d8dc1bfd45319339e087538ce0b2d8d43239c6ae6db3b41a0176",
+          "graph_sha256": "8605da2fd76a75498f6b82e0ec11cc7bc2d6f964583c5ca570f1bd41a94d623d"
+        }
+      ],
+      "reference_provenance": {
+        "stage": "subsample",
+        "case_id": "impulse",
+        "profile": "frames-1119-valid-1119",
+        "reference_sha256": "6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a",
+        "audit_sha256": "3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b",
+        "expected_sha256": "fbbc24afa5f1d8dc1bfd45319339e087538ce0b2d8d43239c6ae6db3b41a0176",
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9"
+      },
+      "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+      "native_prefix_vs_reference_metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "worst_index": 0,
+        "worst_actual": 3.1951444149017334,
+        "worst_expected": 3.1951444149017334,
+        "exact_difference_count": 0
+      },
+      "torch_cpu_capability": "AVX512",
+      "coverage": {
+        "convolution_replacements": 2,
+        "normalization_replacements": 2,
+        "linear_replacements": 1,
+        "coefficients_unchanged": true
+      }
+    },
+    {
+      "case_id": "noise",
+      "profile": "frames-1119-valid-1119",
+      "report_sha256": "7e24d3233ddd88839b0039bae2e687d88245405737ae341153f66e1632751a64",
+      "native_whole_context_qualified": false,
+      "native_whole_metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 206,
+        "maximum_absolute_error": 0.00010275840759277344,
+        "maximum_tolerance_ratio": 3.844192159354444,
+        "worst_index": 21274,
+        "worst_actual": -0.003030635416507721,
+        "worst_expected": -0.003070257604122162,
+        "exact_difference_count": 139059
+      },
+      "cases": [
+        {
+          "variant": "native",
+          "metrics": {
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 3.814697265625e-05,
+            "maximum_tolerance_ratio": 0.8824241957505659,
+            "worst_index": 14615,
+            "worst_actual": -0.018892288208007812,
+            "worst_expected": -0.018881797790527344,
+            "exact_difference_count": 274320
+          },
+          "capture_sha256": "1dcb7fe99493a2803018fe1cb74009d8f02f795b6926be70ba4791b34b2ffcae",
+          "graph_sha256": "d1b7b125b9fd7801e2f6a9a4f99b27e8df695609aac55e4600387116c90db826"
+        },
+        {
+          "variant": "ordered_original_stem",
+          "metrics": {
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "worst_index": 0,
+            "worst_actual": 5.847758769989014,
+            "worst_expected": 5.847758769989014,
+            "exact_difference_count": 0
+          },
+          "capture_sha256": "66434be9a3a6e63dcf592b220f706e06410bdee3188c2bd7aaa588254e4a3d4c",
+          "graph_sha256": "8605da2fd76a75498f6b82e0ec11cc7bc2d6f964583c5ca570f1bd41a94d623d"
+        }
+      ],
+      "reference_provenance": {
+        "stage": "subsample",
+        "case_id": "noise",
+        "profile": "frames-1119-valid-1119",
+        "reference_sha256": "6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a",
+        "audit_sha256": "3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b",
+        "expected_sha256": "66434be9a3a6e63dcf592b220f706e06410bdee3188c2bd7aaa588254e4a3d4c",
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9"
+      },
+      "cpu_model": "AMD EPYC 7763 64-Core Processor",
+      "native_prefix_vs_reference_metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 3.814697265625e-05,
+        "maximum_tolerance_ratio": 0.9912914077970705,
+        "worst_index": 126202,
+        "worst_actual": -0.022673845291137695,
+        "worst_expected": -0.022661685943603516,
+        "exact_difference_count": 275753
+      },
+      "torch_cpu_capability": "AVX2",
+      "coverage": {
+        "convolution_replacements": 2,
+        "normalization_replacements": 2,
+        "linear_replacements": 1,
+        "coefficients_unchanged": true
+      }
+    },
+    {
+      "case_id": "nyquist",
+      "profile": "frames-1119-valid-1119",
+      "report_sha256": "19e24dab53cea44d19d6477fabc9f3e08cb5da437147fdb7008ec7c1208f1e83",
+      "native_whole_context_qualified": true,
+      "native_whole_metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "worst_index": 0,
+        "worst_actual": -4.103002548217773,
+        "worst_expected": -4.103002548217773,
+        "exact_difference_count": 0
+      },
+      "cases": [
+        {
+          "variant": "native",
+          "metrics": {
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 1.33514404296875e-05,
+            "maximum_tolerance_ratio": 0.8025123480058233,
+            "worst_index": 1075,
+            "worst_actual": 0.025510549545288086,
+            "worst_expected": 0.025520622730255127,
+            "exact_difference_count": 281310
+          },
+          "capture_sha256": "782ae714aae537f78468f92dce9d79bb9b5b86bf7c468166982f9f79181a6f3a",
+          "graph_sha256": "d1b7b125b9fd7801e2f6a9a4f99b27e8df695609aac55e4600387116c90db826"
+        },
+        {
+          "variant": "ordered_original_stem",
+          "metrics": {
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "worst_index": 0,
+            "worst_actual": 0.12105655670166016,
+            "worst_expected": 0.12105655670166016,
+            "exact_difference_count": 0
+          },
+          "capture_sha256": "295bbe2c1e22b47c59350dc54fe3ec573576ccc88c18ea67a05cc76a362233f1",
+          "graph_sha256": "8605da2fd76a75498f6b82e0ec11cc7bc2d6f964583c5ca570f1bd41a94d623d"
+        }
+      ],
+      "reference_provenance": {
+        "stage": "subsample",
+        "case_id": "nyquist",
+        "profile": "frames-1119-valid-1119",
+        "reference_sha256": "6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a",
+        "audit_sha256": "3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b",
+        "expected_sha256": "295bbe2c1e22b47c59350dc54fe3ec573576ccc88c18ea67a05cc76a362233f1",
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9"
+      },
+      "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+      "native_prefix_vs_reference_metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "worst_index": 0,
+        "worst_actual": 0.12105655670166016,
+        "worst_expected": 0.12105655670166016,
+        "exact_difference_count": 0
+      },
+      "torch_cpu_capability": "AVX512",
+      "coverage": {
+        "convolution_replacements": 2,
+        "normalization_replacements": 2,
+        "linear_replacements": 1,
+        "coefficients_unchanged": true
+      }
+    },
+    {
+      "case_id": "padded_noise",
+      "profile": "frames-1119-valid-839",
+      "report_sha256": "553fe54bd5262f8f9b992fd26bbd05ca1db3125a8569dbf0aae183fdeed99246",
+      "native_whole_context_qualified": false,
+      "native_whole_metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 149,
+        "maximum_absolute_error": 0.00010275840759277344,
+        "maximum_tolerance_ratio": 3.844192159354444,
+        "worst_index": 21274,
+        "worst_actual": -0.003030635416507721,
+        "worst_expected": -0.003070257604122162,
+        "exact_difference_count": 104149
+      },
+      "cases": [
+        {
+          "variant": "native",
+          "metrics": {
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 3.814697265625e-05,
+            "maximum_tolerance_ratio": 0.8824241957505659,
+            "worst_index": 14615,
+            "worst_actual": -0.018892288208007812,
+            "worst_expected": -0.018881797790527344,
+            "exact_difference_count": 206627
+          },
+          "capture_sha256": "68227f2964d0eab6d7a3d63f78d1523abeb76781b2de6d83f4ab86eed8053172",
+          "graph_sha256": "10d6ba8be20dcc864fba358801324aa8e81ed9be51a72889fb90ac782261d3ec"
+        },
+        {
+          "variant": "ordered_original_stem",
+          "metrics": {
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "worst_index": 0,
+            "worst_actual": 5.847758769989014,
+            "worst_expected": 5.847758769989014,
+            "exact_difference_count": 0
+          },
+          "capture_sha256": "178fc38abbdf5b4d3c0a206287f27da85500548e35f52a21001509279f523b1b",
+          "graph_sha256": "2a843160db72a0bcf41eff6ff943e9c1a75c93ecde6f51dc67a3ac0dde1ee2c2"
+        }
+      ],
+      "reference_provenance": {
+        "stage": "subsample",
+        "case_id": "padded_noise",
+        "profile": "frames-1119-valid-839",
+        "reference_sha256": "6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a",
+        "audit_sha256": "3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b",
+        "expected_sha256": "178fc38abbdf5b4d3c0a206287f27da85500548e35f52a21001509279f523b1b",
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9"
+      },
+      "cpu_model": "AMD EPYC 7763 64-Core Processor",
+      "native_prefix_vs_reference_metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 3.814697265625e-05,
+        "maximum_tolerance_ratio": 0.9912914077970705,
+        "worst_index": 126202,
+        "worst_actual": -0.022673845291137695,
+        "worst_expected": -0.022661685943603516,
+        "exact_difference_count": 207719
+      },
+      "torch_cpu_capability": "AVX2",
+      "coverage": {
+        "convolution_replacements": 2,
+        "normalization_replacements": 2,
+        "linear_replacements": 1,
+        "coefficients_unchanged": true
+      }
+    },
+    {
+      "case_id": "sine",
+      "profile": "frames-1119-valid-1119",
+      "report_sha256": "ee68eefe36b4f51aac1d3d3b9a7cd3a205b9e788edd5b0f93b2cded3728e4084",
+      "native_whole_context_qualified": false,
+      "native_whole_metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 1085,
+        "maximum_absolute_error": 0.00025200843811035156,
+        "maximum_tolerance_ratio": 12.952690872169804,
+        "worst_index": 43097,
+        "worst_actual": 0.013440556824207306,
+        "worst_expected": 0.01358768343925476,
+        "exact_difference_count": 138441
+      },
+      "cases": [
+        {
+          "variant": "native",
+          "metrics": {
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 3.0517578125e-05,
+            "maximum_tolerance_ratio": 0.9288751944312481,
+            "worst_index": 226222,
+            "worst_actual": 0.008374832570552826,
+            "worst_expected": 0.008364766836166382,
+            "exact_difference_count": 274708
+          },
+          "capture_sha256": "c30a9297c394ed66a5a447990c27068e4b116e26e6033d226181c70af91b9672",
+          "graph_sha256": "d1b7b125b9fd7801e2f6a9a4f99b27e8df695609aac55e4600387116c90db826"
+        },
+        {
+          "variant": "ordered_original_stem",
+          "metrics": {
+            "actual_finite": true,
+            "same_shape": true,
+            "mismatched_elements": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "worst_index": 0,
+            "worst_actual": 2.3683009147644043,
+            "worst_expected": 2.3683009147644043,
+            "exact_difference_count": 0
+          },
+          "capture_sha256": "962db419563ce96988fb3918febb35c106663d4afdcddc46ef09c2f6ba60c1e6",
+          "graph_sha256": "8605da2fd76a75498f6b82e0ec11cc7bc2d6f964583c5ca570f1bd41a94d623d"
+        }
+      ],
+      "reference_provenance": {
+        "stage": "subsample",
+        "case_id": "sine",
+        "profile": "frames-1119-valid-1119",
+        "reference_sha256": "6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a",
+        "audit_sha256": "3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b",
+        "expected_sha256": "962db419563ce96988fb3918febb35c106663d4afdcddc46ef09c2f6ba60c1e6",
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9"
+      },
+      "cpu_model": "AMD EPYC 7763 64-Core Processor",
+      "native_prefix_vs_reference_metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 1.52587890625e-05,
+        "maximum_tolerance_ratio": 0.4395810342639071,
+        "worst_index": 59518,
+        "worst_actual": 0.0008861348032951355,
+        "worst_expected": 0.0008905697613954544,
+        "exact_difference_count": 268628
+      },
+      "torch_cpu_capability": "AVX2",
+      "coverage": {
+        "convolution_replacements": 2,
+        "normalization_replacements": 2,
+        "linear_replacements": 1,
+        "coefficients_unchanged": true
+      }
+    }
+  ],
+  "values_compared": 1720320,
+  "all_candidate_tolerance_failures": 0,
+  "all_candidate_bit_differences": 0,
+  "all_capture_sha_and_original_reference_metrics_independently_verified": true,
+  "full_original_encoder_validated": false,
+  "gpu_validated": false,
+  "required_ci_passed": false,
+  "distinction": "Six real original-input stem graphs executed in Actions and raw outputs independently compared against unchanged original stage00bytes. This is complete stem coverage across both profiles, not full12layers/raw encoder/GPU/requiredCI acceptance. Current native raw whole context failures remain separate.",
+  "artifacts": [
+    {
+      "id": 12011410302,
+      "name": "frozen-audio-prefix-onnx-bf3b6cf9336ce2ed676683921c187a84b64e1e48-noise",
+      "size_in_bytes": 4263018
+    },
+    {
+      "id": 12010957925,
+      "name": "frozen-audio-prefix-onnx-bf3b6cf9336ce2ed676683921c187a84b64e1e48-nyquist",
+      "size_in_bytes": 82452
+    },
+    {
+      "id": 12010833043,
+      "name": "frozen-audio-prefix-onnx-bf3b6cf9336ce2ed676683921c187a84b64e1e48-padded_noise",
+      "size_in_bytes": 3217459
+    },
+    {
+      "id": 12010638740,
+      "name": "frozen-audio-prefix-onnx-bf3b6cf9336ce2ed676683921c187a84b64e1e48",
+      "size_in_bytes": 131638
+    },
+    {
+      "id": 12010554285,
+      "name": "frozen-audio-prefix-onnx-bf3b6cf9336ce2ed676683921c187a84b64e1e48-impulse",
+      "size_in_bytes": 98542
+    },
+    {
+      "id": 12009954860,
+      "name": "frozen-audio-prefix-onnx-bf3b6cf9336ce2ed676683921c187a84b64e1e48-sine",
+      "size_in_bytes": 4269481
+    }
+  ],
+  "state_report_sha256": "dcc0d70350c4e70020ca79038480e2a5028402564c8a882cd32317dcc4ec1eb2"
+}

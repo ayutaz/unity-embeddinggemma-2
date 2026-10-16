@@ -1,0 +1,10 @@
+{
+  "scope": "role_reference_saved_context_comparison_green",
+  "source_base": "841cac733a234c27c5310efbdfd3238f6ab56c8c",
+  "command": "uv run --locked pytest tests/test_multimodal_reference_roles.py -k feature_drift -q --tb=short",
+  "passed": 2,
+  "failed": 0,
+  "deselected": 14,
+  "real_context_validated": false,
+  "original_failure_preserved": true
+}

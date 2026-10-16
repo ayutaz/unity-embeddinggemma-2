@@ -14,6 +14,61 @@ def load(name):
                      Loader=yaml.BaseLoader)
 
 
+def test_audio_encoder_only_dispatch_preserves_all_signals_without_extra_chain_exports():
+    workflow = load("audio-runtime-reference.yml")
+    option = workflow["on"]["workflow_dispatch"]["inputs"]["encoder_only"]
+    assert option["type"] == "boolean" and option["default"] == "true"
+    steps = workflow["jobs"]["native-reference"]["steps"]
+    encoder = next(s for s in steps if "prepare-audio-encoder" in s.get("run", ""))
+    assert "--native-silu --collect-onnx-failures" in encoder["run"]
+    assert "if" not in encoder
+    for command in ("prepare-audio-runtime-stages", "prepare-audio-embeddings"):
+        step = next(s for s in steps if command in s.get("run", ""))
+        assert "!inputs.encoder_only" in step["if"]
+        assert "always()" in step["if"]
+
+
+def test_audio_first_failure_dispatch_runs_existing_context_guarded_localization():
+    workflow = load("audio-runtime-reference.yml")
+    option = workflow["on"]["workflow_dispatch"]["inputs"]["diagnose_first_failure"]
+    assert option["type"] == "boolean" and option["default"] == "false"
+    encoder = next(s for s in workflow["jobs"]["native-reference"]["steps"]
+                   if "prepare-audio-encoder" in s.get("run", ""))
+    assert encoder["env"]["DIAGNOSE_FIRST_FAILURE"] == "${{ inputs.diagnose_first_failure }}"
+    command = encoder["run"]
+    assert 'if [ "$DIAGNOSE_FIRST_FAILURE" = true ]; then' in command
+    diagnostic, collection = command.split("else", 1)
+    assert "--native-silu" in diagnostic and "--collect-onnx-failures" not in diagnostic
+    assert "--native-silu --collect-onnx-failures" in collection
+    assert "continue-on-error" not in encoder and "|| true" not in command
+
+
+def test_audio_candidate_dispatch_keeps_original_pinned_golden_and_all_six_outputs():
+    workflow=load('audio-runtime-reference.yml')
+    option=workflow['on']['workflow_dispatch']['inputs']['onnx_layernorm']
+    assert option['type']=='choice' and option['default']=='native'
+    assert option['options']==['native','torch_welford8','torch_welford8_refined_moment']
+    assert workflow['permissions']['actions']=='read'
+    steps=workflow['jobs']['native-reference']['steps']
+    commands='\n'.join(s.get('run','') for s in steps)
+    assert '11814567883' in commands and 'ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9' in commands
+    validation=next(s for s in steps if 'embeddinggemma_tools.pinned_audio_onnx' in s.get('run',''))
+    assert 'always()' in validation['if']
+    assert '--pinned ../artifacts/pinned-audio/audio-runtime-reference' in validation['run']
+    assert '--output ../artifacts/audio-pinned-onnx.json' in validation['run']
+    assert not validation.get('continue-on-error')
+    assert any(s.get('with',{}).get('path')=='artifacts/audio-pinned-onnx.json' and s.get('if')=='always()' for s in steps)
+
+
+def test_audio_projection_candidate_is_explicit_and_preserves_default_math():
+    workflow=load('audio-runtime-reference.yml')
+    option=workflow['on']['workflow_dispatch']['inputs']['onnx_linear']
+    assert option['type']=='choice' and option['default']=='native'
+    assert option['options']==['native','compensated64']
+    encoder=next(s for s in workflow['jobs']['native-reference']['steps'] if 'prepare-audio-encoder' in s.get('run',''))
+    assert '--onnx-linear "$ONNX_LINEAR"' in encoder['run']
+
+
 def test_required_reference_job_validates_long_multimodal_backbone_and_retains_separate_evidence():
     steps = load("model-reference.yml")["jobs"]["reference"]["steps"]
     run = [step for step in steps if "prepare-backbone" in step.get("run", "")]
@@ -55,7 +110,7 @@ def test_required_ci_runs_on_every_pr_including_documentation():
     assert "pull_request" in workflow["on"]
     assert not workflow["on"]["pull_request"]
     assert workflow["on"]["push"]["branches"] == ["main"]
-    assert workflow["permissions"] == {"contents": "read"}
+    assert workflow["permissions"] == {"contents": "read", "actions": "read"}
     assert "pull_request_target" not in workflow["on"]
 
 

@@ -1,0 +1,494 @@
+{
+  "schema_version": 1,
+  "scope": "real_silence_saved_model_tensor_candidates_only",
+  "harness_source": "8ceef94",
+  "runtime_source": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+  "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "tolerances_changed": false,
+  "source_graph_reimported": false,
+  "stage_graph_downloaded": false,
+  "metadata_range_bytes": 89053,
+  "subsample_range_bytes": 1162361,
+  "observer_red": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T18:37:08.9939126Z",
+    "FailedCount": 2,
+    "FailedTests": [
+      {
+        "FullName": "EmbeddingGemma.Tests.WorkerObservationTests.LayerObservationPreservesNormalFinalBitsAndCopiesLiveOutputs(CPU)",
+        "Message": "  Unchanged-model layer observer is missing.\r\n  Expected: not null\r\n  But was:  null\r\n",
+        "File": ".\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CpuImagePreprocessorIntegrationTests.cs",
+        "Line": 114
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.WorkerObservationTests.LayerObservationPreservesNormalFinalBitsAndCopiesLiveOutputs(GPUCompute)",
+        "Message": "  Unchanged-model layer observer is missing.\r\n  Expected: not null\r\n  But was:  null\r\n",
+        "File": ".\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CpuImagePreprocessorIntegrationTests.cs",
+        "Line": 114
+      }
+    ],
+    "HasFailures": true,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Failed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 0,
+    "SkippedCount": 0,
+    "Status": "Failed",
+    "Success": false,
+    "TestCount": 2,
+    "XmlPath": ".\\artifacts\\k\\.uloop\\outputs\\TestResults\\20261013_183708_9979903_4b9c67a19cb74c03879b7724a71c6123.xml"
+  },
+  "observer_green": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T18:38:49.74105Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 2,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 2,
+    "XmlPath": null
+  },
+  "cpu_shape_assertion_red": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T19:07:57.1665315Z",
+    "FailedCount": 1,
+    "FailedTests": [
+      {
+        "FullName": "EmbeddingGemma.Tests.WorkerObservationTests.LayerObservationPreservesNormalFinalBitsAndCopiesLiveOutputs(GPUCompute,True)",
+        "Message": "  Expected: greater than or equal to 1\r\n  But was:  0\r\n",
+        "File": ".\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\WorkerObservationTests.cs",
+        "Line": 42
+      }
+    ],
+    "HasFailures": true,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Failed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 3,
+    "SkippedCount": 0,
+    "Status": "Failed",
+    "Success": false,
+    "TestCount": 4,
+    "XmlPath": ".\\artifacts\\k\\.uloop\\outputs\\TestResults\\20261013_190757_1715521_cd83ba858bc44f9c8cbc5f936e068fd1.xml"
+  },
+  "cpu_shape_green": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T19:08:33.5258733Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 4,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 4,
+    "XmlPath": null
+  },
+  "real_observation_nunit": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T19:10:23.4204455Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 2,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 2,
+    "XmlPath": null
+  },
+  "real_observation_cli_sha256": "f517a440a906b45ecbf9218e062b3e9c6c4e3bdcfd6ef690cb3d91b43bcad8ab",
+  "results": [
+    {
+      "success": true,
+      "scope": "silence_saved_fp32_model_live_tensor_candidates_only",
+      "requested_backend": "CPU",
+      "runtime_source": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+      "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+      "runtime_overlay": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "started_utc": "2026-10-13T19:10:02.3423315Z",
+      "normal_final_matches_observed_bits": true,
+      "model_layers_unchanged": true,
+      "unavailable_tensor_indexes": [],
+      "normal_final_vs_native": {
+        "elementwise_passed": false,
+        "mismatches": 728,
+        "maximum_absolute_error": 0.00015592575073242188,
+        "maximum_tolerance_ratio": 6.783585702505517
+      },
+      "candidates": [
+        {
+          "elementwise_passed": false,
+          "mismatches": 286720,
+          "maximum_absolute_error": 69.35928523540497,
+          "maximum_tolerance_ratio": 1395003.6271350842,
+          "layer_index": 14,
+          "tensor_index": 47,
+          "layer_type": "Reshape",
+          "actual_backend": "CPU"
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 5.53131103515625E-05,
+          "maximum_tolerance_ratio": 0.5718256073617635,
+          "layer_index": 15,
+          "tensor_index": 49,
+          "layer_type": "MatMul",
+          "actual_backend": "CPU"
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 5.53131103515625E-05,
+          "maximum_tolerance_ratio": 0.5718256073617635,
+          "layer_index": 16,
+          "tensor_index": 52,
+          "layer_type": "Clip",
+          "actual_backend": "CPU"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286720,
+          "maximum_absolute_error": 4774.177200317383,
+          "maximum_tolerance_ratio": 684988.2432569767,
+          "layer_index": 17,
+          "tensor_index": 53,
+          "layer_type": "Square",
+          "actual_backend": "CPU"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286720,
+          "maximum_absolute_error": 56.36773109436035,
+          "maximum_tolerance_ratio": 8087.515707657587,
+          "layer_index": 21,
+          "tensor_index": 65,
+          "layer_type": "Mul",
+          "actual_backend": "CPU"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286720,
+          "maximum_absolute_error": 69.60437998408452,
+          "maximum_tolerance_ratio": 18756.10170656306,
+          "layer_index": 22,
+          "tensor_index": 67,
+          "layer_type": "Mul",
+          "actual_backend": "CPU"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286720,
+          "maximum_absolute_error": 69.60437998408452,
+          "maximum_tolerance_ratio": 18756.10170656306,
+          "layer_index": 23,
+          "tensor_index": 70,
+          "layer_type": "Clip",
+          "actual_backend": "CPU"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286442,
+          "maximum_absolute_error": 70.34830659627914,
+          "maximum_tolerance_ratio": 528508.4356253647,
+          "layer_index": 28,
+          "tensor_index": 82,
+          "layer_type": "MatMul",
+          "actual_backend": "CPU"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286442,
+          "maximum_absolute_error": 70.34830659627914,
+          "maximum_tolerance_ratio": 528508.4356253647,
+          "layer_index": 29,
+          "tensor_index": 85,
+          "layer_type": "Clip",
+          "actual_backend": "CPU"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286442,
+          "maximum_absolute_error": 70.34830659627914,
+          "maximum_tolerance_ratio": 528508.4356253647,
+          "layer_index": 30,
+          "tensor_index": 88,
+          "layer_type": "Clip",
+          "actual_backend": "CPU"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286720,
+          "maximum_absolute_error": 87.09164428710938,
+          "maximum_tolerance_ratio": 2884629.1347036934,
+          "layer_index": 31,
+          "tensor_index": 89,
+          "layer_type": "Square",
+          "actual_backend": "CPU"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286720,
+          "maximum_absolute_error": 69.96670854091644,
+          "maximum_tolerance_ratio": 450738.2899503765,
+          "layer_index": 35,
+          "tensor_index": 101,
+          "layer_type": "Mul",
+          "actual_backend": "CPU"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286720,
+          "maximum_absolute_error": 74.90870141983032,
+          "maximum_tolerance_ratio": 1473605.1291791121,
+          "layer_index": 36,
+          "tensor_index": 103,
+          "layer_type": "Mul",
+          "actual_backend": "CPU"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286431,
+          "maximum_absolute_error": 58.23298782110214,
+          "maximum_tolerance_ratio": 1467368.5463970853,
+          "layer_index": 37,
+          "tensor_index": 104,
+          "layer_type": "Add",
+          "actual_backend": "CPU"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286431,
+          "maximum_absolute_error": 58.23298782110214,
+          "maximum_tolerance_ratio": 1467368.5463970853,
+          "layer_index": 38,
+          "tensor_index": 107,
+          "layer_type": "Clip",
+          "actual_backend": "CPU"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286720,
+          "maximum_absolute_error": 6725.582279205322,
+          "maximum_tolerance_ratio": 56722361.21120823,
+          "layer_index": 39,
+          "tensor_index": 108,
+          "layer_type": "Square",
+          "actual_backend": "CPU"
+        }
+      ],
+      "diagnostic_readback_count": 18,
+      "completed_utc": "2026-10-13T19:10:13.4399949Z"
+    },
+    {
+      "success": true,
+      "scope": "silence_saved_fp32_model_live_tensor_candidates_only",
+      "requested_backend": "GPUCompute",
+      "runtime_source": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+      "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+      "runtime_overlay": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "started_utc": "2026-10-13T19:10:13.4505531Z",
+      "normal_final_matches_observed_bits": true,
+      "model_layers_unchanged": true,
+      "unavailable_tensor_indexes": [],
+      "normal_final_vs_native": {
+        "elementwise_passed": false,
+        "mismatches": 665,
+        "maximum_absolute_error": 0.00021314620971679688,
+        "maximum_tolerance_ratio": 8.383664435745006
+      },
+      "candidates": [
+        {
+          "elementwise_passed": false,
+          "mismatches": 286720,
+          "maximum_absolute_error": 69.35928547382355,
+          "maximum_tolerance_ratio": 1395003.992819781,
+          "layer_index": 14,
+          "tensor_index": 47,
+          "layer_type": "Reshape",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 4.291534423828125E-05,
+          "maximum_tolerance_ratio": 0.6476258389992744,
+          "layer_index": 15,
+          "tensor_index": 49,
+          "layer_type": "MatMul",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 4.291534423828125E-05,
+          "maximum_tolerance_ratio": 0.6476258389992744,
+          "layer_index": 16,
+          "tensor_index": 52,
+          "layer_type": "Clip",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286720,
+          "maximum_absolute_error": 4774.179153442383,
+          "maximum_tolerance_ratio": 684988.5234869737,
+          "layer_index": 17,
+          "tensor_index": 53,
+          "layer_type": "Square",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286720,
+          "maximum_absolute_error": 56.36773109436035,
+          "maximum_tolerance_ratio": 8087.515707657587,
+          "layer_index": 21,
+          "tensor_index": 65,
+          "layer_type": "Mul",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286720,
+          "maximum_absolute_error": 69.60437998408452,
+          "maximum_tolerance_ratio": 18756.10451689847,
+          "layer_index": 22,
+          "tensor_index": 67,
+          "layer_type": "Mul",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286720,
+          "maximum_absolute_error": 69.60437998408452,
+          "maximum_tolerance_ratio": 18756.10451689847,
+          "layer_index": 23,
+          "tensor_index": 70,
+          "layer_type": "Clip",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286442,
+          "maximum_absolute_error": 70.34831237792969,
+          "maximum_tolerance_ratio": 528508.6200638462,
+          "layer_index": 28,
+          "tensor_index": 82,
+          "layer_type": "MatMul",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286442,
+          "maximum_absolute_error": 70.34831237792969,
+          "maximum_tolerance_ratio": 528508.6200638462,
+          "layer_index": 29,
+          "tensor_index": 85,
+          "layer_type": "Clip",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286442,
+          "maximum_absolute_error": 70.34831237792969,
+          "maximum_tolerance_ratio": 528508.6200638462,
+          "layer_index": 30,
+          "tensor_index": 88,
+          "layer_type": "Clip",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286720,
+          "maximum_absolute_error": 87.09166717529297,
+          "maximum_tolerance_ratio": 2884631.16352699,
+          "layer_index": 31,
+          "tensor_index": 89,
+          "layer_type": "Square",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286720,
+          "maximum_absolute_error": 69.96671116352081,
+          "maximum_tolerance_ratio": 450737.7827445523,
+          "layer_index": 35,
+          "tensor_index": 101,
+          "layer_type": "Mul",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286720,
+          "maximum_absolute_error": 74.90873908996582,
+          "maximum_tolerance_ratio": 1473605.41630138,
+          "layer_index": 36,
+          "tensor_index": 103,
+          "layer_type": "Mul",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286431,
+          "maximum_absolute_error": 58.23296111822128,
+          "maximum_tolerance_ratio": 1467368.8335193533,
+          "layer_index": 37,
+          "tensor_index": 104,
+          "layer_type": "Add",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286431,
+          "maximum_absolute_error": 58.23296111822128,
+          "maximum_tolerance_ratio": 1467368.8335193533,
+          "layer_index": 38,
+          "tensor_index": 107,
+          "layer_type": "Clip",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 286720,
+          "maximum_absolute_error": 6725.567142486572,
+          "maximum_tolerance_ratio": 56722384.18098967,
+          "layer_index": 39,
+          "tensor_index": 108,
+          "layer_type": "Square",
+          "actual_backend": "GPUCompute"
+        }
+      ],
+      "diagnostic_readback_count": 18,
+      "completed_utc": "2026-10-13T19:10:23.2932546Z"
+    }
+  ],
+  "unexecuted": [
+    "Original output-name to saved-layer-index mapping",
+    "Native layer 0 and later comparisons",
+    "Root-cause numeric fix",
+    "Remaining modalities samples platforms and distribution"
+  ],
+  "formal_release_created": false
+}

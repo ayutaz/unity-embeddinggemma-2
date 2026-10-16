@@ -1,0 +1,101 @@
+{
+  "scope": "gpu_pipeline_lifetime_regression_and_one_original_silence_phase_measurement",
+  "numeric_acceptance_claimed": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "red": {
+    "source_process_report": "dead-gpu-intermediates-red-20261015-process.json",
+    "process_report_sha256": "bbe3f046cfa35253b71440f681a1a4dcd3b5c3f877fef937608453916f9f2181",
+    "xml_sha256": "837679e358faa4677626b259de809d3d771279835993fd8463dd1a4fa00af2a0",
+    "counts": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "success": false,
+    "exit_code": 2,
+    "elapsed_seconds": 41.266199799996684
+  },
+  "green": {
+    "source_process_report": "dead-gpu-intermediates-related-green-20261015-process.json",
+    "process_report_sha256": "462ac3fa5bb362d8e0fc97a3d94c58f54502c8c8961d7532ecfc8415b89e4da8",
+    "xml_sha256": "904d38e65fd642b531cec7c5a6ad63f8da3270c2b15c3c7fb73b4d3565e23ddd",
+    "counts": {
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0
+    },
+    "success": true,
+    "exit_code": 0,
+    "elapsed_seconds": 41.75687040000048
+  },
+  "mixed_execution": {
+    "source_process_report": "liveness-full-audio-profile-20261015-process.json",
+    "process_report_sha256": "ba2e838840d825ec55a18a483a66a61270964daf8de24701829158a46abbe03c",
+    "xml_sha256": "0447347910435b6a42e536b583366f99696b601cb78b55d56ca35998b94006c8",
+    "counts": {
+      "total": 2,
+      "passed": 1,
+      "failed": 1,
+      "skipped": 0
+    },
+    "success": false,
+    "exit_code": 2,
+    "elapsed_seconds": 63.24601570000232
+  },
+  "profile": {
+    "success": false,
+    "scope": "one_partitioned_original_audio_encoder_gpu_numeric_gate",
+    "runtime_source": "a2ad709067422f0040e0533f665b0ae2521828ac",
+    "signal": "silence",
+    "requested_backend": "GPUCompute",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "phase": "completed",
+    "end_to_end_validated": false,
+    "all_original_signals_validated": false,
+    "partition_producer": "4c21ce313fb814a58010cfbe077692090ad5c771",
+    "model_load_and_transform_ms": 1434.8621,
+    "prepare_ms": 14060.6213,
+    "native_operation_prepare_ms": 12625.7732,
+    "projection_count": 135,
+    "operation_count": 267,
+    "silu_count": 36,
+    "worker_creation_ms": 73.03580000000001,
+    "dynamic_matmul_count": 36,
+    "query_scale_count": 12,
+    "tanh_count": 12,
+    "scalar_divide_count": 12,
+    "softmax_count": 12,
+    "glu_count": 12,
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "input_tensor_creation_and_pin_ms": 2.0387,
+    "host_working_set_before_execute_bytes": 3434201088,
+    "execute_enqueue_ms": 1748.2537,
+    "execute_and_final_download_ms": 2271.2187,
+    "final_download_and_gpu_wait_ms": 523.0031000000001,
+    "host_working_set_after_download_bytes": 4160446464,
+    "host_peak_working_set_bytes": 4160483328,
+    "actual_backend": "GPUCompute",
+    "mismatched_elements": 179,
+    "maximum_absolute_error": 8.940696716308594e-05,
+    "maximum_tolerance_ratio": 4.642801926097997,
+    "source_report_file": "partitioned-native-glu-gpu-a2ad709067422f0040e0533f665b0ae2521828ac-silence.json",
+    "source_report_sha256": "e0673c60acd86a4ac250179335d098c5d242673193b82237b29fafa71a3d2999"
+  },
+  "interpretation": {
+    "schedule_is_host_submission_time": true,
+    "final_download_includes_gpu_wait": true,
+    "memory_is_windows_host_process_not_gpu_vram": true,
+    "baseline_memory_reduction_not_measured": true,
+    "persistent_allocation_warning_unresolved": true,
+    "warning_also_present_in_small_red_test": true
+  },
+  "remaining_gates": [
+    "audio six original signals and both profiles",
+    "image FP32 three profiles",
+    "actual PCM/Texture to normalized 768 API and required lifecycle/error/text gates"
+  ]
+}

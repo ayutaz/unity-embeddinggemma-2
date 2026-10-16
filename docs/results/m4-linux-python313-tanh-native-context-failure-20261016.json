@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "linux_python313_native_tanh_context_failure_not_original_golden_failure",
+  "ci_run": 38818901317,
+  "pr_head": "f0593c7a8ffe221f11fd7b1b84ae169b31a4d9ff",
+  "merge_source": "aa9a9fc6fd0c18d187d93851e24bc242e0fcf6f7",
+  "junit_sha256": "bd0b270157591c1104f0a1026abfc511738f6d4552bf10468d0528bf30dc5d19",
+  "failures": [
+    {
+      "test": "tests.test_native_tanh_onnx.test_paired_fp32_candidate_matches_native_cpu_tanh_across_attention_domain_and_saturation",
+      "kind": "failure",
+      "message": "assert False\n +  where False = <built-in method equal of type object at 0x7f9a1d2a84e0>(tensor([-1082130433, -1082130433, -1082130433,  ...,  1065353215,\\n        -1082130432,  1065353216], dtype=torch.int32), tensor([-1082130433, -1082130433, -1082130433,  ...,  1065353215,\\n        -1082130432,  1065353216], dtype=torch.int32))\n +    where <built-in method equal of type object at 0x7f9a1d2a84e0> = torch.equal\n +    and   tensor([-1082130433, -1082130433, -1082130433,  ...,  1065353215,\\n        -1082130432,  1065353216], dtype=torch.int32) = <built-in method view of Tensor object at 0x7f99ac1a5e00>(torch.int32)\n +      where <built-in method view of Tensor object at 0x7f99ac1a5e00> = tensor([-1.0000, -1.0000, -1.0000,  ...,  1.0000, -1.0000,  1.0000]).view\n +      and   torch.int32 = torch.int32\n +    and   tensor([-1082130433, -1082130433, -1082130433,  ...,  1065353215,\\n        -1082130432,  1065353216], dtype=torch.int32) = <built-in method view of Tensor object at 0x7f99afe87480>(torch.int32)\n +      where <built-in method view of Tensor object at 0x7f99afe87480> = tensor([-1.0000, -1.0000, -1.0000,  ...,  1.0000, -1.0000,  1.0000]).view\n +      and   torch.int32 = torch.int32"
+    },
+    {
+      "test": "tests.test_native_tanh_onnx.test_actual_standard_fp32_onnx_output_is_checked_independently",
+      "kind": "failure",
+      "message": "AssertionError: \nArrays are not equal\n\nMismatched elements: 8 / 514 (1.56%)\nFirst 5 mismatches are at indices:\n [0, 61]: 3204377643 (ACTUAL), 3204377642 (DESIRED)\n [0, 72]: 1060752127 (ACTUAL), 1060752128 (DESIRED)\n [0, 113]: 1063778551 (ACTUAL), 1063778552 (DESIRED)\n [0, 125]: 3210347835 (ACTUAL), 3210347834 (DESIRED)\n [0, 183]: 3201919855 (ACTUAL), 3201919856 (DESIRED)\nMax absolute difference among violations: 1\nMax relative difference among violations: 9.45567336e-10\n ACTUAL: array([[1062597822, 3203908325, 3212367252, 3212263431, 1064153784,\n        3209758706, 3206957350, 1062214635, 1062596189, 3212157649,\n        1064462629, 1030531993, 1056135633, 1063646579, 3212025864,...\n DESIRED: array([[1062597822, 3203908325, 3212367252, 3212263431, 1064153784,\n        3209758706, 3206957350, 1062214635, 1062596189, 3212157649,\n        1064462629, 1030531993, 1056135633, 1063646579, 3212025864,..."
+    }
+  ],
+  "interpretation": "The tests require exact equality to the current host native Tanh. Eight of514 synthetic actual ONNX outputs differ by1ULP; these are not the original qualified55,296 capture. Host/ISA cause is not yet established. Tests, original captured targets and strict encoder gates remain unchanged.",
+  "local_avx2_followup": {
+    "synthetic_actual_inputs_514": 514,
+    "candidate_vs_local_native_bit_differences": 0,
+    "candidate_vs_fp64_tanh_rounded_bit_differences": 0,
+    "dense32771_vs_fp64_rounded_bit_differences": 56,
+    "note": "FP64 check is diagnostic only. It cannot replace the specified native or original contract."
+  },
+  "fixed": false,
+  "required_ci_passed": false
+}

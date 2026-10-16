@@ -1,0 +1,16 @@
+{
+  "date_jst": "2026-10-14",
+  "scope": "cpu_image_preprocessing_official_acceptance_with_preserved_synthetic_chain_failure",
+  "runtime_source": "10fa49cd4a7db231cb3e27434dfabaf47b54fb1f",
+  "runtime_overlay": false,
+  "real_model_chain_validated": false,
+  "red": {"test_source": "e6bb946b4bd9cca3bcb8c55405f81e91f2867f59", "runtime_source": "c2c5516e83339450bf7ff4c65432ef9ddae06861", "passed": 0, "failed": 12, "skipped": 0, "cli_exit_code": 1, "sha256": "0641f264c2c2e1d047663d4557e9e543a181173a93147e5558849b90489da05e"},
+  "initial_green": {"runtime_source": "b5dba83cb9d5c3f73ff1fd6abfa4ebe26e11405f", "passed": 12, "failed": 0, "skipped": 0, "cli_exit_code": 0, "sha256": "0492e0749c0f85c807e98cd37d1287b19161806dad49576b8a03e35ed0aa31f1"},
+  "corrected_formats_and_chain": {"passed": 16, "failed": 1, "skipped": 0, "cli_exit_code": 1, "sha256": "5b9b9019538ad71e29e01e0113694621de06b48c01277c06c770a9b9336ad446", "remaining_failure": "synthetic final vector fixed atol 1e-6"},
+  "official_cpu": {"case_count": 60, "nunit_passed": 10, "nunit_failed": 0, "skipped": 0, "cli_exit_code": 0, "completed_utc": "2026-10-13T16:23:57.1426750Z", "result_sha256": "d53e8766ebb13b3f82189187a7e0cb37f60e8a7d228340d15d32a141693c5c82", "cli_sha256": "7b05a613fb137cf709b1669f3dcd563825c4940f917a52811854790b9312d991", "maximum_absolute_error": 0, "positions_exact": true},
+  "gpu_regression": {"runtime_source": "b5dba83cb9d5c3f73ff1fd6abfa4ebe26e11405f", "case_count": 24, "nunit_passed": 4, "nunit_failed": 0, "skipped": 0, "cli_exit_code": 0, "result_sha256": "8477e79dd44a4c8f0a869ce21d892bdcb31399e52c084996c4c6fc6245956200", "cli_sha256": "17142a7a9c86eeeb8a8ca9d95b0d692531079addb848ed3da40062a0b56ba32f"},
+  "package_regression": {"passed": 237, "failed": 0, "skipped": 0, "cli_exit_code": 0, "completed_utc": "2026-10-13T16:26:45.9049756Z", "sha256": "ceccd77c84abd554ea61d4bea82fd0c8229091c4588a372c6482f94d8bdafa4c"},
+  "stage_diagnostic": {"fixed_final_passed": false, "sha256": "cbc3f757bc8b15216d9a69ab6c246ca26609217ba3322c9a2a5c1cc438c4c1e2"},
+  "compile": {"errors": 0, "warnings": 0, "cli_exit_code": 0},
+  "release_created": false
+}

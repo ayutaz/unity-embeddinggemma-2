@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-13",
+  "scope": "synthetic_audio_only_768_composition_and_scoped_ownership",
+  "unity": "6000.3.21f1",
+  "sentis": "2.6.1",
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "runtime_source_overlay": false,
+  "consumer_kind": "existing_fixed_git_consumer_update",
+  "test_framework": "official_1.6.0_embedded",
+  "red": {
+    "runtime_requested_and_resolved_git": "a09968a5cdbfb62d249c04068860b6795b144185",
+    "failure": "Final audio composition API is missing",
+    "failed": 20,
+    "passed": 0,
+    "skipped": 0,
+    "cli_exit_code": 1,
+    "compile_errors": 0,
+    "compile_warnings": 0,
+    "report_sha256": "82a5fbd6a597b0bbf4d1445ec7987131e8bdcf9c12ee4b949fbbf7a1b6e43cdd"
+  },
+  "green": {
+    "runtime_requested_and_resolved_git": "bf3cd0ae3d36143cd3730d9e91d043ffbd58134c",
+    "passed": 20,
+    "failed": 0,
+    "skipped": 0,
+    "cli_exit_code": 0,
+    "compile_errors": 0,
+    "compile_warnings": 0,
+    "report_sha256": "5a43f4cfda24e2839bbafa9e23e5c84b736c3373ad91756e217abb010df2e515"
+  },
+  "typed_api_package_regression": {
+    "runtime_requested_and_resolved_git": "9c6f7943ca6319849dd3db54611acc477e7d0981",
+    "passed": 185,
+    "failed": 0,
+    "skipped": 0,
+    "cli_exit_code": 0,
+    "report_sha256": "468fb232739d2943f535de7fee227fbd1aab98ef661bff308b6b26ce01400fc5"
+  },
+  "zero_image_profile_executed": true,
+  "cpu_and_actual_gpu_composition_executed": true,
+  "gpu_backbone_computation_fallback_assertion_passed": true,
+  "encoder_failure_cleanup_and_recovery_passed": true,
+  "backbone_failure_cleanup_and_recovery_passed": true,
+  "runtime_intermediate_cpu_readback_used": false,
+  "real_model_final_audio_reference_validated": false,
+  "real_encoder_numeric_acceptance": false,
+  "sample_player_and_required_devices_validated": false,
+  "formal_release_created": false
+}

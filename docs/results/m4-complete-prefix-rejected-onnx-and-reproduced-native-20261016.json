@@ -1,0 +1,417 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "completed_prefix_rejected_full_onnx_and_original_native_context_probe",
+  "prefix": {
+    "run_id": 38771944210,
+    "artifact_id": 11991537814,
+    "producer": "92f5b8e284d57bba393df45d32dd644bb00ef991",
+    "scope": "fixed_required_ci_silence_subsample_only",
+    "cases": [
+      {
+        "variant": "original_control",
+        "capture_sha256": "90e6db5834af5585e9459c6459d9d9f0c35c13449338d2deaa37b6945fb26a66",
+        "mismatched_elements": 562,
+        "maximum_absolute_error": 9.34600830078125e-05,
+        "maximum_tolerance_ratio": 2.1150755965109287,
+        "exact_difference_count": 285292
+      },
+      {
+        "variant": "refined_welford_moment",
+        "capture_sha256": "a224a5acf6e8217d20c23534d7c524541166750554c620c3910ae082e95ac09e",
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 3.4332275390625e-05,
+        "maximum_tolerance_ratio": 0.33494112275289617,
+        "exact_difference_count": 274955
+      },
+      {
+        "variant": "refined_welford_moment_compensated64",
+        "capture_sha256": "28d6f4bfb3f2dae287c0cb6dbbf447094864a415981268456c7685c51031f4e5",
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 2.288818359375e-05,
+        "maximum_tolerance_ratio": 0.2400277109740496,
+        "exact_difference_count": 278294
+      }
+    ],
+    "complete": true,
+    "full_encoder_validated": false
+  },
+  "full_onnx": {
+    "run_id": 38771944636,
+    "artifact_id": 11992426871,
+    "producer": "4cdb2330645fa3705b8d46f18fb64e66897a301f",
+    "mode": "torch_welford8_refined_moment",
+    "failed_cases": 6,
+    "cases": [
+      {
+        "signal": "silence",
+        "profile": "frames-1119-valid-1119",
+        "original_golden": {
+          "mismatched_elements": 571,
+          "maximum_absolute_error": 0.0003132820129394531,
+          "maximum_tolerance_ratio": 14.801391717005057,
+          "exact_difference_count": 140866
+        },
+        "current_native_vs_original": {
+          "mismatched_elements": 288,
+          "maximum_absolute_error": 0.0001811981201171875,
+          "maximum_tolerance_ratio": 8.712747897611987,
+          "exact_difference_count": 135855
+        },
+        "onnx_vs_own_current_native_report": {
+          "success": false,
+          "stage": "audio_encoder_onnx",
+          "source_commit": "4cdb2330645fa3705b8d46f18fb64e66897a301f",
+          "profile": "frames-1119-valid-1119",
+          "case_id": "silence",
+          "minimum_cosine": 0.9999997615814209,
+          "onnx_vs_official_maximum_absolute_error": 0.00013208389282226562,
+          "maximum_tolerance_ratio": 6.0939531326293945,
+          "mismatched_elements": 438,
+          "graph_sha256": "ca604be93eab696c0b48c2c9c11de3671aa9f1ce062800ee3d2917cffb3b351b",
+          "unity_validated": false,
+          "end_to_end_validated": false
+        },
+        "capture_sha256": "efd756891b19b2c3f7cc179fb0bf7be6c26ed88210d77cdc2ea33e5311bf1405"
+      },
+      {
+        "signal": "impulse",
+        "profile": "frames-1119-valid-1119",
+        "original_golden": {
+          "mismatched_elements": 567,
+          "maximum_absolute_error": 0.00026535987854003906,
+          "maximum_tolerance_ratio": 12.086641116441964,
+          "exact_difference_count": 141035
+        },
+        "current_native_vs_original": {
+          "mismatched_elements": 384,
+          "maximum_absolute_error": 0.0001468658447265625,
+          "maximum_tolerance_ratio": 6.247521942624222,
+          "exact_difference_count": 135992
+        },
+        "onnx_vs_own_current_native_report": {
+          "success": false,
+          "stage": "audio_encoder_onnx",
+          "source_commit": "4cdb2330645fa3705b8d46f18fb64e66897a301f",
+          "profile": "frames-1119-valid-1119",
+          "case_id": "impulse",
+          "minimum_cosine": 0.9999997615814209,
+          "onnx_vs_official_maximum_absolute_error": 0.0001767873764038086,
+          "maximum_tolerance_ratio": 17.16310691833496,
+          "mismatched_elements": 732,
+          "graph_sha256": "ca604be93eab696c0b48c2c9c11de3671aa9f1ce062800ee3d2917cffb3b351b",
+          "unity_validated": false,
+          "end_to_end_validated": false
+        },
+        "capture_sha256": "7fef98d54617b326219540befd0712c14cfab3e339347f50ee355eee1da5184e"
+      },
+      {
+        "signal": "sine",
+        "profile": "frames-1119-valid-1119",
+        "original_golden": {
+          "mismatched_elements": 620,
+          "maximum_absolute_error": 0.00026154518127441406,
+          "maximum_tolerance_ratio": 11.491252344571725,
+          "exact_difference_count": 138675
+        },
+        "current_native_vs_original": {
+          "mismatched_elements": 1085,
+          "maximum_absolute_error": 0.00025200843811035156,
+          "maximum_tolerance_ratio": 12.952690872169804,
+          "exact_difference_count": 138441
+        },
+        "onnx_vs_own_current_native_report": {
+          "success": false,
+          "stage": "audio_encoder_onnx",
+          "source_commit": "4cdb2330645fa3705b8d46f18fb64e66897a301f",
+          "profile": "frames-1119-valid-1119",
+          "case_id": "sine",
+          "minimum_cosine": 0.9999998211860657,
+          "onnx_vs_official_maximum_absolute_error": 0.0001666545867919922,
+          "maximum_tolerance_ratio": 7.543993949890137,
+          "mismatched_elements": 538,
+          "graph_sha256": "ca604be93eab696c0b48c2c9c11de3671aa9f1ce062800ee3d2917cffb3b351b",
+          "unity_validated": false,
+          "end_to_end_validated": false
+        },
+        "capture_sha256": "b0d3c3e8524f6fd3339bec1ef6fd46c6ea25e4fa94e65b06d8fedded81c356c9"
+      },
+      {
+        "signal": "nyquist",
+        "profile": "frames-1119-valid-1119",
+        "original_golden": {
+          "mismatched_elements": 2202,
+          "maximum_absolute_error": 0.00016641616821289062,
+          "maximum_tolerance_ratio": 12.049010506711674,
+          "exact_difference_count": 142104
+        },
+        "current_native_vs_original": {
+          "mismatched_elements": 772,
+          "maximum_absolute_error": 0.0001469254493713379,
+          "maximum_tolerance_ratio": 8.15203809745474,
+          "exact_difference_count": 138271
+        },
+        "onnx_vs_own_current_native_report": {
+          "success": false,
+          "stage": "audio_encoder_onnx",
+          "source_commit": "4cdb2330645fa3705b8d46f18fb64e66897a301f",
+          "profile": "frames-1119-valid-1119",
+          "case_id": "nyquist",
+          "minimum_cosine": 0.9999998211860657,
+          "onnx_vs_official_maximum_absolute_error": 0.00026285648345947266,
+          "maximum_tolerance_ratio": 20.217531204223633,
+          "mismatched_elements": 2090,
+          "graph_sha256": "ca604be93eab696c0b48c2c9c11de3671aa9f1ce062800ee3d2917cffb3b351b",
+          "unity_validated": false,
+          "end_to_end_validated": false
+        },
+        "capture_sha256": "d907705947a5645552f185966f1271eda619e9446d62f43a5dba0f114980f858"
+      },
+      {
+        "signal": "noise",
+        "profile": "frames-1119-valid-1119",
+        "original_golden": {
+          "mismatched_elements": 73,
+          "maximum_absolute_error": 6.014108657836914e-05,
+          "maximum_tolerance_ratio": 2.697570638121578,
+          "exact_difference_count": 138389
+        },
+        "current_native_vs_original": {
+          "mismatched_elements": 206,
+          "maximum_absolute_error": 0.00010275840759277344,
+          "maximum_tolerance_ratio": 3.844192159354444,
+          "exact_difference_count": 139059
+        },
+        "onnx_vs_own_current_native_report": {
+          "success": false,
+          "stage": "audio_encoder_onnx",
+          "source_commit": "4cdb2330645fa3705b8d46f18fb64e66897a301f",
+          "profile": "frames-1119-valid-1119",
+          "case_id": "noise",
+          "minimum_cosine": 0.9999998211860657,
+          "onnx_vs_official_maximum_absolute_error": 0.00011789798736572266,
+          "maximum_tolerance_ratio": 5.007303714752197,
+          "mismatched_elements": 289,
+          "graph_sha256": "ca604be93eab696c0b48c2c9c11de3671aa9f1ce062800ee3d2917cffb3b351b",
+          "unity_validated": false,
+          "end_to_end_validated": false
+        },
+        "capture_sha256": "0a7b0d644dfde35c3e01dd52e815a41721635ff1e409a9f2c18aa2f6ff316bbf"
+      },
+      {
+        "signal": "padded_noise",
+        "profile": "frames-1119-valid-839",
+        "original_golden": {
+          "mismatched_elements": 39,
+          "maximum_absolute_error": 4.780292510986328e-05,
+          "maximum_tolerance_ratio": 2.1150298947669635,
+          "exact_difference_count": 103757
+        },
+        "current_native_vs_original": {
+          "mismatched_elements": 149,
+          "maximum_absolute_error": 0.00010275840759277344,
+          "maximum_tolerance_ratio": 3.844192159354444,
+          "exact_difference_count": 104149
+        },
+        "onnx_vs_own_current_native_report": {
+          "success": false,
+          "stage": "audio_encoder_onnx",
+          "source_commit": "4cdb2330645fa3705b8d46f18fb64e66897a301f",
+          "profile": "frames-1119-valid-839",
+          "case_id": "padded_noise",
+          "minimum_cosine": 0.9999998211860657,
+          "onnx_vs_official_maximum_absolute_error": 0.00011789798736572266,
+          "maximum_tolerance_ratio": 5.007303714752197,
+          "mismatched_elements": 227,
+          "graph_sha256": "7b4ddb9a61175b62e9f3caa969d3b19280efe15424833df7794db8120bd341c0",
+          "unity_validated": false,
+          "end_to_end_validated": false
+        },
+        "capture_sha256": "0538ca855490afe40265c78abd20833da9a79206ac4e8ff67bba180188639ad0"
+      }
+    ],
+    "reference_sha256": "9da5f27c771247ec6ce0b1b2d47345e04e48471e40320fe2eedcc4cf1f423998",
+    "audit_sha256": "d54133eacda1f32f269828899c51ca65d9954b79e43099a8ff639bfe669beeae",
+    "captures_independently_downloaded_hashed_and_compared": true,
+    "full_graph_binary_audit_locally_repeated": false,
+    "adopted_into_required_ci": false
+  },
+  "frozen_native_probe": {
+    "run_id": 38774816236,
+    "artifact_id": 11993680843,
+    "head_source": "b37807099fa7461c0d82b147875bdc5c79f9300c",
+    "report_sha256": "e4713096fe1e4df5e5f887bff92e6e08bf340ee4e5f84d61256d98d94901f903",
+    "provenance": {
+      "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+      "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+      "reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+      "audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+      "graph_sha256": "dc43d56b896b64077d8e86d56c3fd2b89cfe3d31170eabaa387165ea961438d7",
+      "input_sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+      "job_source": "721799488afa9ddde742d7f6fa12ebba870dd35a",
+      "torch_version": "2.14.1+cu130",
+      "threads": 2,
+      "cpu_capability": "AVX512",
+      "env": {
+        "ATEN_CPU_CAPABILITY": null,
+        "MKL_CBWR": null,
+        "DNNL_MAX_CPU_ISA": null
+      }
+    },
+    "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+    "cases": [
+      {
+        "variant": "native",
+        "capture_sha256": "e9ac5425c93912ac7e4983ed98e80b4020e1f8f2d81c2950adfd31b1022441ad",
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "exact_difference_count": 0
+      },
+      {
+        "variant": "welford8",
+        "capture_sha256": "fa2fa5ff4b109e0f06b63412b0a5e226fd59c6d69f19f9bc7d5cc5f09500bfd3",
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 1.1920928955078125e-06,
+        "maximum_tolerance_ratio": 0.05138857286157848,
+        "exact_difference_count": 464
+      },
+      {
+        "variant": "refined_moment",
+        "capture_sha256": "fa2fa5ff4b109e0f06b63412b0a5e226fd59c6d69f19f9bc7d5cc5f09500bfd3",
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 1.1920928955078125e-06,
+        "maximum_tolerance_ratio": 0.05138857286157848,
+        "exact_difference_count": 464
+      },
+      {
+        "variant": "refined_mean_moment",
+        "capture_sha256": "e9ac5425c93912ac7e4983ed98e80b4020e1f8f2d81c2950adfd31b1022441ad",
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "exact_difference_count": 0
+      }
+    ],
+    "native_silence_original_bits_reproduced": true,
+    "interpreter_control_matches_native_bits": true,
+    "normalizations": [
+      {
+        "node": "native_layer_norm",
+        "width": 128
+      },
+      {
+        "node": "native_layer_norm_1",
+        "width": 32
+      }
+    ],
+    "complete": true,
+    "all_six_replayed": false,
+    "full_encoder_validated": false,
+    "gpu_validated": false,
+    "end_to_end_validated": false
+  },
+  "tdd": {
+    "initial_intended_failures": 8,
+    "related_final_passes": 35,
+    "skipped": 0,
+    "command": "uv run --locked pytest tests/test_audio_native_norm_replay.py tests/test_welford_scalar_fusion.py tests/test_torch_welford_layernorm.py tests/test_refined_audio_layernorm_export_mode.py -q --disable-warnings",
+    "final_local_observation": "35 passed, 38 warnings in 17.71s",
+    "actionlint_exit_code": 0
+  },
+  "required_ci": {
+    "run_id": 38771922063,
+    "head_source": "4cdb2330645fa3705b8d46f18fb64e66897a301f",
+    "conclusion": "failure",
+    "python_four_environments": "success",
+    "package": "success",
+    "workflow_lint": "success",
+    "model_reference": "failure"
+  },
+  "original_golden_weights_or_tolerances_changed": false,
+  "production_gpu_code_changed_in_probe": false,
+  "conclusion": "Full candidate rejected in all six signals. One AVX512 CPU host reproduces original silence bits; normalization interventions alone are not whole-encoder ONNX acceptance. Required CI remains unresolved.",
+  "subsequent_candidate_ci_observation": {
+    "run_id": 38774804527,
+    "head_source": "b37807099fa7461c0d82b147875bdc5c79f9300c",
+    "aggregate_status": "queued",
+    "aggregate_conclusion": "",
+    "jobs": [
+      {
+        "name": "workflow-lint / actionlint",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "package / package",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "model-reference / reference",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "name": "python / ubuntu-latest / Python 3.13",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "python / ubuntu-latest / Python 3.14",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "python / windows-latest / Python 3.13",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "python / windows-latest / Python 3.14",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "Required CI",
+        "status": "queued",
+        "conclusion": ""
+      }
+    ],
+    "downloaded_python_junit": [
+      {
+        "environment": "python-ubuntu-latest-3.13",
+        "xml_sha256": "94a8863f078afd33f78cd0ded6d10097a84008b5c8faab4a5c54065846963b05",
+        "tests": 1111,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "environment": "python-ubuntu-latest-3.14",
+        "xml_sha256": "b16b3425ccc50e2d399cabc909fa4603a485559fb01ecf9bc03035dc15ea1b2b",
+        "tests": 1111,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "environment": "python-windows-latest-3.13",
+        "xml_sha256": "d7421cecf9d3f97a7fd6918e522a938571b1949ab5b444aba67665f42b690e4f",
+        "tests": 1111,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "environment": "python-windows-latest-3.14",
+        "xml_sha256": "60316d4fa7aa86a1fef85c82be3fff059037168030a20d01699c1fe2010999ae",
+        "tests": 1111,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "all_required_dependencies_successful": false
+  }
+}

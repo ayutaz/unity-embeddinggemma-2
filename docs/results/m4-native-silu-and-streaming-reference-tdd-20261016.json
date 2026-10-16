@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "bounded_standard_fp32_native_silu_and_last_use_reference_release_diagnostic_tdd",
+  "tdd": {
+    "native-silu-standard-fp32-red": {
+      "sha256": "37ceec3426e598c79e99257290a016423568801fc5f04521d9329ea36dce1fe9",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "skipped": 0
+    },
+    "native-silu-standard-fp32-green": {
+      "sha256": "05aaf35e195e76ef1599f2ad9dd54e20a1b7126c80d254fc2169ea3cecda877f",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "frozen-segment-native-silu-red": {
+      "sha256": "c406c3a8aefe1dec7158e980fae9fbbb1a605c26c19d6382d542256bb9c31238",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "segment-silu-count-red": {
+      "sha256": "b6ff7b61e48092c1b9089c0d2823d967fcf7075ccfd4c5aca83d4313a105ae32",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "streaming-reference-red": {
+      "sha256": "f688640cc7fdd128426a56ae019cfcb938c6cce8fb290eefbd9160fcc64d777b",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "skipped": 0
+    },
+    "streaming-reference-green": {
+      "sha256": "fae157992e79028c1f9ac5a2e7ff68c19d306d8cb230e7729727a90decbecaac",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "segment-native-silu-streaming-related-green": {
+      "sha256": "e24e0913ca2fe5b854e1707c7e71772ec4d85e56ba4ee3e4d3d450fdfa4f4331",
+      "tests": 79,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "source_license": "Packages/com.ayutaz.embeddinggemma/SLEEF-LICENSE.txt",
+  "candidate_math": "Existing NativeSilu.compute expression; explicit bounded FP32 FMA, polynomial Exp, power-of-two scale and FP32 Div. No FP64 inference operators.",
+  "streaming_evaluation": "Same initialized ONNX reference node.run implementations and original order, release after final explicit consumer. Reject implicit context and linked attributes; symbolic shape checking is unsupported and rejected.",
+  "default_export_gates_unchanged": true,
+  "product_runtime_unchanged": true,
+  "next_actual_probe": {
+    "from_stage": "layer_8",
+    "stage": "projected_features",
+    "variant": "native_silu",
+    "expected_silu_replacements": 9
+  },
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "end_to_end_validated": false
+}

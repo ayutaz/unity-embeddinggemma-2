@@ -11,12 +11,13 @@ namespace EmbeddingGemma
     /// feature tensor values are never downloaded. Only the final vector is copied to CPU.
     /// Processor prompt construction and encoder execution are separate contracts.
     /// </summary>
-    public sealed class MultimodalBackbone : IDisposable
+    public sealed class MultimodalBackbone : IDisposable, IMultimodalBackbone
     {
         public const int EmbeddingDimension = 768;
         public BackendType Backend { get; }
         public MultimodalBackboneProfile Profile { get; }
         Worker worker;
+        GpuConstantWorker workerOwner;
 
         public MultimodalBackbone(Model model, MultimodalBackboneProfile profile, BackendType backend)
         {
@@ -34,7 +35,8 @@ namespace EmbeddingGemma
                 throw new ArgumentException("Expected four named static inputs matching the fixed multimodal profile.", nameof(model));
             Profile = profile;
             Backend = backend;
-            worker = new Worker(model, backend);
+            workerOwner = new GpuConstantWorker(model, backend);
+            worker = workerOwner.Worker;
             if (worker.backendType != backend)
             {
                 Dispose();
@@ -83,7 +85,8 @@ namespace EmbeddingGemma
 
         public void Dispose()
         {
-            worker?.Dispose();
+            workerOwner?.Dispose();
+            workerOwner = null;
             worker = null;
         }
     }

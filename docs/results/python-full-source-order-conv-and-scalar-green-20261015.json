@@ -1,0 +1,61 @@
+{
+  "success": true,
+  "scope": "python_offline_full_regression_four_environments_only",
+  "source": "b4b817a04e13d35d2dd35ea54412e69f33a2a3d4",
+  "run_id": 38639201752,
+  "run_url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38639201752",
+  "environments": [
+    {
+      "environment": "python-ubuntu-latest-3.13",
+      "tests": 787,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-b4b817a-20261015\\python-ubuntu-latest-3.13\\python-tests.xml",
+        "bytes": 109764,
+        "sha256": "bffbeea53d740415e5e21838eb8e24b14a3922a9382e0a2cd7c2555d44ffde2a"
+      }
+    },
+    {
+      "environment": "python-ubuntu-latest-3.14",
+      "tests": 787,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-b4b817a-20261015\\python-ubuntu-latest-3.14\\python-tests.xml",
+        "bytes": 109763,
+        "sha256": "d88fb304517d862c9a9bdd28f4ee339f712b7c23ae289dfcd7b9d49c15faec2a"
+      }
+    },
+    {
+      "environment": "python-windows-latest-3.13",
+      "tests": 787,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-b4b817a-20261015\\python-windows-latest-3.13\\python-tests.xml",
+        "bytes": 109766,
+        "sha256": "4813ebea0b9885dc47b55fefdd779c17c92a25b5b0254f464f1642c3c11514a9"
+      }
+    },
+    {
+      "environment": "python-windows-latest-3.14",
+      "tests": 787,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-b4b817a-20261015\\python-windows-latest-3.14\\python-tests.xml",
+        "bytes": 109773,
+        "sha256": "0bcebb12fa9de05a723577eeeb1711e9ebcb2f9f7f1f7bdab18e468200a91c6e"
+      }
+    }
+  ],
+  "graph_rewrite_and_execution_guard_included": false,
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "end_to_end_validated": false
+}

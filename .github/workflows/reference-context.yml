@@ -1,0 +1,420 @@
+name: Frozen native CPU context diagnostics
+
+on:
+  workflow_dispatch:
+    inputs:
+      original_vision:
+        description: Replay the original frozen vision graph instead of the newer context matrix
+        type: boolean
+        default: false
+      require_avx512_native:
+        description: Original vision only; require actual AVX512 before model download and run native context only
+        type: boolean
+        default: false
+      original_blas_context:
+        description: Original native vision only; optionally constrain MKL while retaining native ATen
+        type: choice
+        default: native
+        options: [native, avx2, avx2_isa]
+      original_rotary_only:
+        description: Original vision only; capture data-independent rotary tables for all profiles without encoder inference
+        type: boolean
+        default: false
+      original_matmul_only:
+        description: Original vision only; probe static matrix shapes on an AMD host without encoder inference
+        type: boolean
+        default: false
+      original_softmax16_replay:
+        description: Original vision only; diagnostic CPU lane-order replay guarded by original patch and first-layer bits
+        type: boolean
+        default: false
+      original_layer_four_detail:
+        description: Original vision only; capture fourth-layer RMS/GELU from the qualified fixed hidden context
+        type: boolean
+        default: false
+  pull_request:
+    types: [opened, synchronize, labeled]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: reference-context-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    if: >-
+      (github.event_name == 'workflow_dispatch' && !inputs.original_vision) ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       contains(github.event.pull_request.labels.*.name, 'reference-context-diagnostics'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        modality: [audio, image]
+        context: [native, avx2]
+    defaults:
+      run:
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+      MODALITY: ${{ matrix.modality }}
+      PROBE_CONTEXT: ${{ matrix.context }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - name: Constrain the common AVX2 context
+        if: matrix.context == 'avx2'
+        run: |
+          {
+            echo 'ATEN_CPU_CAPABILITY=avx2'
+            echo 'MKL_CBWR=AVX2'
+            echo 'DNNL_MAX_CPU_ISA=AVX2'
+          } >> "$GITHUB_ENV"
+      - name: Fetch fixed graph and first fixture
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$MODALITY" = audio ]; then
+            uv run --locked python -m embeddinggemma_tools.artifact_zip \
+              --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11814567883 \
+              --output ../artifacts/context-input --max-entry-bytes 2147483648 \
+              --member audio-runtime-reference/audio-encoder-reference.json \
+              --member audio-runtime-reference/audio-encoder-validation.json \
+              --member audio-runtime-reference/frames-1119-valid-1119/audio.pt2 \
+              --member audio-runtime-reference/frames-1119-valid-1119/silence-features-fp32.bin
+            sha256sum --check <<'EOF'
+          ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9  ../artifacts/context-input/audio-runtime-reference/audio-encoder-reference.json
+          68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1  ../artifacts/context-input/audio-runtime-reference/audio-encoder-validation.json
+          EOF
+          else
+            uv run --locked python -m embeddinggemma_tools.artifact_zip \
+              --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11830312950 \
+              --output ../artifacts/context-input --max-entry-bytes 2147483648 \
+              --member vision-reference.json --member vision-validation.json \
+              --member square/vision.pt2 --member square/0-pixels-fp32.bin
+            sha256sum --check <<'EOF'
+          7c183c5217e13c28205c2a804c04ff93c68642b40a948f1cfb3c55d7f3852a98  ../artifacts/context-input/vision-reference.json
+          3f48634edaa191fa15a8c7d5eb6ebdc8a452709f45ef6fab22e6ead45bdc0aa4  ../artifacts/context-input/vision-validation.json
+          EOF
+          fi
+      - name: Record actual CPU host
+        if: always()
+        run: |
+          mkdir -p ../artifacts/context-results
+          lscpu --json > ../artifacts/context-results/cpu-host.json
+      - name: Replay fixed expected features under controlled threads
+        run: |
+          uv run --locked python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from embeddinggemma_tools.reference_context_failure import replay_saved_reference_context
+          modality = os.environ['MODALITY']
+          root = Path('../artifacts/context-input')
+          producer = 'c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1'
+          case = 'square-0'
+          if modality == 'audio':
+              root /= 'audio-runtime-reference'
+              producer = '4edbe17a8105233c5aaa1514faa2862b08a4f7e0'
+              case = 'silence'
+          report = replay_saved_reference_context(root, modality, source_commit=producer,
+              revision='914f7f89142e33e77833254d9c9b90c3cef7303b', case_id=case)
+          report.update(job_source=os.environ['GITHUB_SHA'], probe_context=os.environ['PROBE_CONTEXT'])
+          output = Path('../artifacts/context-results')
+          output.mkdir(parents=True, exist_ok=True)
+          path = output / f"{modality}-{os.environ['PROBE_CONTEXT']}.json"
+          path.write_text(json.dumps(report, indent=2, allow_nan=False) + '\n', encoding='utf-8')
+          print(json.dumps(report, allow_nan=False))
+          PY
+      - name: Record diagnostic scope
+        if: always()
+        run: |
+          echo 'Saved-graph CPU context diagnostics only; the original encoder and full-chain gates remain separate.' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-context-${{ matrix.modality }}-${{ matrix.context }}-${{ github.sha }}
+          path: |
+            artifacts/context-results/*.json
+            artifacts/context-input/range-receipt.json
+          retention-days: 7
+          if-no-files-found: warn
+
+  original_vision_probe:
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && !inputs.original_rotary_only && !inputs.original_matmul_only && !inputs.original_softmax16_replay && !inputs.original_layer_four_detail
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        context: ${{ inputs.require_avx512_native && fromJSON('["native"]') || fromJSON('["native","avx2"]') }}
+    defaults:
+      run:
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+      PROBE_CONTEXT: ${{ matrix.context }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - name: Constrain the original graph AVX2 context
+        if: matrix.context == 'avx2'
+        run: |
+          {
+            echo 'ATEN_CPU_CAPABILITY=avx2'
+            echo 'MKL_CBWR=AVX2'
+            echo 'DNNL_MAX_CPU_ISA=AVX2'
+          } >> "$GITHUB_ENV"
+      - name: Require actual AVX512 before original model download
+        if: inputs.require_avx512_native
+        run: |
+          uv run --locked python - <<'PY'
+          import json, os
+          from pathlib import Path
+          import torch
+          capability = torch.backends.cpu.get_cpu_capability()
+          satisfied = capability == 'AVX512' and os.environ['PROBE_CONTEXT'] == 'native'
+          output = Path('../artifacts/original-context-results')
+          output.mkdir(parents=True, exist_ok=True)
+          report = dict(job_source=os.environ['GITHUB_SHA'], actual_cpu_capability=capability,
+              satisfied=satisfied, model_executed=False, scope='original_reference_cpu_prerequisite_only')
+          (output / 'cpu-prerequisite.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+          print(json.dumps(report))
+          if not satisfied:
+              raise SystemExit('Actual AVX512 native context unavailable; no model download or replay was performed')
+          PY
+      - name: Constrain only original native BLAS context
+        if: inputs.original_blas_context == 'avx2' && matrix.context == 'native'
+        run: echo 'MKL_CBWR=AVX2' >> "$GITHUB_ENV"
+      - name: Constrain only original native BLAS instruction set
+        if: inputs.original_blas_context == 'avx2_isa' && matrix.context == 'native'
+        run: echo 'MKL_ENABLE_INSTRUCTIONS=AVX2' >> "$GITHUB_ENV"
+      - name: Fetch original frozen graph and first fixture
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          uv run --locked python -m embeddinggemma_tools.artifact_zip \
+            --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11774238857 \
+            --output ../artifacts/original-context-input --max-entry-bytes 2147483648 \
+            --member vision-reference.json --member vision-validation.json \
+            --member square/vision.pt2 --member square/0-pixels-fp32.bin
+          sha256sum --check <<'EOF'
+          3dfccd1a487ce04df3f8d640483ca045f7a7a56231bc1096ad0f845c923a29c6  ../artifacts/original-context-input/vision-reference.json
+          ab1aa775b553f33a5e2892abed2cdcef7768e35fbad6fa5af9ec3286a7ba90ba  ../artifacts/original-context-input/vision-validation.json
+          f9c5175a1d75289ce814a9651f496f9bdae5e873ac66199a5c3d03e0172c16cc  ../artifacts/original-context-input/square/vision.pt2
+          d25852af1b53b8f4ed484b760280b1859b8a3b63e3456f7cbb378f33877761b7  ../artifacts/original-context-input/square/0-pixels-fp32.bin
+          EOF
+      - name: Record original replay CPU host
+        if: always()
+        run: |
+          mkdir -p ../artifacts/original-context-results
+          lscpu --json > ../artifacts/original-context-results/cpu-host.json
+      - name: Gate original patch before constrained BLAS full replay
+        if: inputs.original_blas_context != 'native' && matrix.context == 'native'
+        run: |
+          uv run --locked python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          import numpy as np
+          import torch
+          from embeddinggemma_tools.reference_context_failure import run_saved_graph_prefix
+          root = Path('../artifacts/original-context-input')
+          program = torch.export.load(root / 'square/vision.pt2').module()
+          values = torch.from_numpy(np.fromfile(root / 'square/0-pixels-fp32.bin', '<f4').reshape(1,2520,768).copy())
+          patch = run_saved_graph_prefix(program, (values,), 'add_1')
+          digest = hashlib.sha256(patch.numpy().tobytes()).hexdigest()
+          expected = '1e99fa140cb0084e624b5019d96ae424192eff77346ef2f7ffea892c1bea0607'
+          report = dict(scope='original_saved_patch_only_before_blas_context_replay', job_source=os.environ['GITHUB_SHA'],
+              actual_cpu_capability=torch.backends.cpu.get_cpu_capability(), mkl_cbwr=os.environ.get('MKL_CBWR'),
+              mkl_enable_instructions=os.environ.get('MKL_ENABLE_INSTRUCTIONS'),
+              patch_shape=list(patch.shape), patch_sha256=digest, original_native_patch_sha256=expected,
+              patch_matches_original_native=digest == expected, full_encoder_executed=False)
+          output = Path('../artifacts/original-context-results/patch-prerequisite.json')
+          output.write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+          print(json.dumps(report))
+          if digest != expected:
+              raise SystemExit('Constrained BLAS patch differs from original native; full replay was not executed')
+          PY
+      - name: Gate original first layer before ISA-only full replay
+        if: inputs.original_blas_context == 'avx2_isa' && matrix.context == 'native'
+        run: |
+          uv run --locked python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          import numpy as np
+          import torch
+          from embeddinggemma_tools.reference_context_failure import run_saved_graph_prefix
+          root=Path('../artifacts/original-context-input')
+          program=torch.export.load(root/'square/vision.pt2').module()
+          values=torch.from_numpy(np.fromfile(root/'square/0-pixels-fp32.bin','<f4').reshape(1,2520,768).copy())
+          layer=run_saved_graph_prefix(program,(values,),'add_15');raw=layer.numpy().tobytes()
+          digest=hashlib.sha256(raw).hexdigest();expected='fb33092e54e997da999b87246aefe2089ce2d0f376a89586b8c329db069bb7fa'
+          output=Path('../artifacts/original-context-results');captures=output/'captures';captures.mkdir(parents=True,exist_ok=True)
+          (captures/'first-layer-prerequisite-fp32.bin').write_bytes(raw)
+          report=dict(scope='original_first_layer_only_before_isa_context_full_replay',job_source=os.environ['GITHUB_SHA'],
+              actual_cpu_capability=torch.backends.cpu.get_cpu_capability(),mkl_cbwr=os.environ.get('MKL_CBWR'),
+              mkl_enable_instructions=os.environ.get('MKL_ENABLE_INSTRUCTIONS'),shape=list(layer.shape),
+              sha256=digest,original_native_sha256=expected,matches_original_native=digest==expected,full_encoder_executed=False)
+          (output/'first-layer-prerequisite.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8');print(json.dumps(report))
+          if digest!=expected:raise SystemExit('ISA-only first layer differs from original native; full replay was not executed')
+          PY
+      - name: Replay original saved graph against unchanged golden
+        run: |
+          uv run --locked python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from embeddinggemma_tools.reference_context_failure import replay_saved_reference_context
+          report = replay_saved_reference_context(Path('../artifacts/original-context-input'), 'image',
+              source_commit='e2a6dc01fbca8c9be1f3bbe875325ad338de0ca0',
+              revision='914f7f89142e33e77833254d9c9b90c3cef7303b', case_id='square-0',
+              capture_nodes=('add_1', 'cat', 'cat_1', 'add_15', 'mul_372', 'mul_373', 'mm_113', 'add_225',
+                  'add_10', '_softmax', 'view_21', 'gelu', 'mul_4')
+                  if os.environ['PROBE_CONTEXT'] == 'native' else None,
+              capture_row_prefixes={'add_10': 16, '_softmax': 16, 'view_21': 16, 'gelu': 16, 'mul_4': 16}
+                  if os.environ['PROBE_CONTEXT'] == 'native' else None,
+              capture_destination=Path('../artifacts/original-context-results/captures'))
+          report.update(job_source=os.environ['GITHUB_SHA'], probe_context=os.environ['PROBE_CONTEXT'])
+          conditions = report['thread_contexts']['conditions']
+          report['reference_reproduced'] = any(
+              condition.get('executed') and condition.get('mismatched_elements') == 0
+              for condition in conditions)
+          output = Path('../artifacts/original-context-results')
+          output.mkdir(parents=True, exist_ok=True)
+          path = output / f"original-image-{os.environ['PROBE_CONTEXT']}.json"
+          path.write_text(json.dumps(report, indent=2, allow_nan=False) + '\n', encoding='utf-8')
+          print(json.dumps(report, allow_nan=False))
+          if not report['reference_reproduced']:
+              raise SystemExit('Original saved graph did not reproduce the unchanged fixed reference')
+          PY
+      - name: Compare original official and saved pooling layouts
+        if: always() && matrix.context == 'native' && hashFiles('artifacts/original-context-results/original-image-native.json') != ''
+        run: |
+          uv run --locked python -m embeddinggemma_tools.vision_pooling_context \
+            --input ../artifacts/original-context-input \
+            --captures ../artifacts/original-context-results \
+            --output ../artifacts/original-context-results/pooling-context.json
+      - name: Record original replay scope
+        if: always()
+        run: |
+          echo 'Original saved-graph CPU reference replay only; not GPU or full-chain acceptance.' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: original-vision-context-${{ matrix.context }}-${{ github.sha }}
+          path: |
+            artifacts/original-context-results/*.json
+            artifacts/original-context-results/captures/*.bin
+            artifacts/original-context-input/range-receipt.json
+          retention-days: 7
+          if-no-files-found: warn
+
+  original_rotary_probe:
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_rotary_only && !inputs.original_matmul_only && !inputs.original_softmax16_replay && !inputs.original_layer_four_detail
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [square, landscape, portrait]
+    defaults:
+      run:
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+      PROFILE: ${{ matrix.profile }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - name: Fetch original saved profile without changing references
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          uv run --locked python -m embeddinggemma_tools.artifact_zip \
+            --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11774238857 \
+            --output ../artifacts/rotary-input --max-entry-bytes 2147483648 \
+            --member vision-reference.json --member vision-validation.json \
+            --member "$PROFILE/vision.pt2"
+          sha256sum --check <<'EOF'
+          3dfccd1a487ce04df3f8d640483ca045f7a7a56231bc1096ad0f845c923a29c6  ../artifacts/rotary-input/vision-reference.json
+          ab1aa775b553f33a5e2892abed2cdcef7768e35fbad6fa5af9ec3286a7ba90ba  ../artifacts/rotary-input/vision-validation.json
+          EOF
+      - name: Capture only original input-independent position tables
+        run: |
+          uv run --locked python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          import torch
+          from embeddinggemma_tools.reference_context_failure import run_saved_graph_prefix
+          root=Path('../artifacts/rotary-input');profile=os.environ['PROFILE']
+          reference=json.loads((root/'vision-reference.json').read_text());audit=json.loads((root/'vision-validation.json').read_text())
+          assert reference['metadata']==audit['metadata']
+          assert reference['metadata']['source_commit']=='e2a6dc01fbca8c9be1f3bbe875325ad338de0ca0'
+          assert reference['metadata']['model_revision']=='914f7f89142e33e77833254d9c9b90c3cef7303b'
+          name=f'{profile}/vision.pt2';path=root/name;entry=audit['files'][name]
+          with path.open('rb') as stream:digest=hashlib.file_digest(stream,'sha256').hexdigest()
+          assert path.stat().st_size==entry['bytes'] and digest==entry['sha256']
+          program=torch.export.load(path).module();nodes={node.name:node for node in program.graph.nodes}
+          values=torch.zeros(reference['profiles'][profile]['pixel_shape'],dtype=torch.float32)
+          output=Path('../artifacts/original-rotary-results');output.mkdir(parents=True,exist_ok=True);captures={}
+          for label,name in (('cos','cat'),('sin','cat_1')):
+              needed=set();pending=[nodes[name]]
+              while pending:
+                  node=pending.pop()
+                  if node in needed:continue
+                  needed.add(node);pending.extend(node.all_input_nodes)
+              assert not any(node.op=='placeholder' for node in needed),'Rotary table must not depend on image values'
+              tensor=run_saved_graph_prefix(program,(values,),name);assert tuple(tensor.shape)==(1,2520,64)
+              raw=tensor.numpy().tobytes();file=output/f'{label}-fp32.bin';file.write_bytes(raw)
+              captures[label]=dict(file=file.name,sha256=hashlib.sha256(raw).hexdigest(),shape=list(tensor.shape))
+          square_match=(captures['cos']['sha256']=='8e7ad14c37f14fb5b11e70b08701181c67ad24f4a874385eee5dd63655b39b75' and
+              captures['sin']['sha256']=='1eeda3ae4a8b5bf7f09e29b6d6c763054d9b49ec6de551e09d54a080232a331e')
+          report=dict(scope='original_data_independent_rotary_only',source=os.environ['GITHUB_SHA'],profile=profile,graph_sha256=digest,
+              runtime=dict(torch_version=torch.__version__,cpu_capability=torch.backends.cpu.get_cpu_capability()),captures=captures,
+              independent_of_image_input=True,patch_executed=False,full_encoder_executed=False,original_golden_changed=False,
+              square_original_native_match=square_match if profile=='square' else None,full_gpu_encoder_validated=False,end_to_end_validated=False)
+          (output/'rotary-reference.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8');print(json.dumps(report))
+          if profile=='square' and not square_match:raise SystemExit('Original square rotary bits were not reproduced')
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: original-rotary-${{ matrix.profile }}-${{ github.sha }}
+          path: artifacts/original-rotary-results/
+          retention-days: 7
+          if-no-files-found: warn
+
+  original_static_matmul_probe:
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_matmul_only && !inputs.original_softmax16_replay && !inputs.original_layer_four_detail
+    uses: ./.github/workflows/vision-matmul-context.yml
+
+  original_ordered_context_probe:
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_softmax16_replay && !inputs.original_layer_four_detail
+    uses: ./.github/workflows/vision-ordered-context.yml
+
+  original_layer_four_probe:
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_layer_four_detail
+    uses: ./.github/workflows/vision-layer-four-context.yml

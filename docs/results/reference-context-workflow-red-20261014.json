@@ -1,0 +1,8 @@
+{
+  "scope": "standalone_native_context_workflow_red",
+  "source_base": "3a26950",
+  "command": "uv run --locked pytest tests/test_reference_context_workflow.py -q --tb=short",
+  "passed": 0,
+  "failed": 2,
+  "reason": "Standalone native context workflow is missing"
+}

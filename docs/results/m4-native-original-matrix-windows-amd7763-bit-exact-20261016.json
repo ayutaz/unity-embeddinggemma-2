@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "small_original_matrix_actual_windows_onnx_and_native_contexts_only",
+  "run_url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38821384180",
+  "source": "0618de70a7fbc542d22716ae5dc4cbdb2800ec5b",
+  "artifact": {
+    "id": 12013171332,
+    "bytes": 12330381
+  },
+  "cpu": {
+    "Name": "AMD EPYC 7763 64-Core Processor                ",
+    "Manufacturer": "AuthenticAMD",
+    "NumberOfCores": 2,
+    "NumberOfLogicalProcessors": 4
+  },
+  "report_sha256": "80fab1f4c64d0ff1d7cbe8e4172d31a7d64084d64cf1463ec16ec6be72105a1a",
+  "native_context_report_sha256": "700ab8fba6899a048eca500b53e2a3186a9da7a698a087b9f27608f810bf9ad8",
+  "original_qualified_capture_provenance": {
+    "capture_source": "11db7b17b640ea85ab6b04bef066a737d3e5ee41",
+    "report_sha256": "f27073b3503e82a4b963a64b3ff2c1e2f782d891a8408eb10cb22413a3aa5fdf",
+    "node": "mm_109",
+    "tensor_sha256": {
+      "input0": "8d2b3824507574ca5bc29747d65e2b80ca01e9082c29e379a9160baea87ed7c0",
+      "input1": "01fb83fc0b25bfc812deb9987388e660e97e415641c08703e6dd6846ee397752",
+      "native": "976262f7b77423809d25ad1b43ce48a9ef5b2beb22c5ed1d46715fc16130e9ad"
+    }
+  },
+  "actual_onnx_capture_sha256": "976262f7b77423809d25ad1b43ce48a9ef5b2beb22c5ed1d46715fc16130e9ad",
+  "actual_onnx_values_bit_exact": 1146880,
+  "contexts": [
+    {
+      "context": "default",
+      "cpu_capability": "AVX2",
+      "environment": {
+        "MKL_ENABLE_INSTRUCTIONS": null,
+        "MKL_CBWR": null,
+        "ATEN_CPU_CAPABILITY": null,
+        "ONEDNN_MAX_CPU_ISA": null,
+        "MKL_VERBOSE": "1"
+      },
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "worst_index": 0,
+        "worst_actual": -28.171314239501953,
+        "worst_expected": -28.171314239501953,
+        "exact_difference_count": 0
+      },
+      "capture_sha256": "976262f7b77423809d25ad1b43ce48a9ef5b2beb22c5ed1d46715fc16130e9ad",
+      "log_sha256": "be9752ede6356f0a86f4a0c7cf4994715a43715b45bb69782fe2138e0e480257"
+    },
+    {
+      "context": "avx2",
+      "cpu_capability": "AVX2",
+      "environment": {
+        "MKL_ENABLE_INSTRUCTIONS": "AVX2",
+        "MKL_CBWR": null,
+        "ATEN_CPU_CAPABILITY": null,
+        "ONEDNN_MAX_CPU_ISA": null,
+        "MKL_VERBOSE": "1"
+      },
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "worst_index": 0,
+        "worst_actual": -28.171314239501953,
+        "worst_expected": -28.171314239501953,
+        "exact_difference_count": 0
+      },
+      "capture_sha256": "976262f7b77423809d25ad1b43ce48a9ef5b2beb22c5ed1d46715fc16130e9ad",
+      "log_sha256": "e3a103b5b726d3f8c3e73dbe39787873a7e86812668be775daeca85fc466b8ce"
+    }
+  ],
+  "all_saved_capture_and_log_hashes_verified": true,
+  "original_whole_encoder_loaded": false,
+  "intel_hypothesis_resolved": false,
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "default_math_settings_changed": false
+}

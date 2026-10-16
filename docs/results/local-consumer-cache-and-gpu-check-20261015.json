@@ -1,0 +1,149 @@
+{
+  "scope": "local_bounded_consumer_cache_and_tiny_gpu_validation_only",
+  "numeric_acceptance_claimed": false,
+  "source": "39c2559afa61c33aa029dc1328f781dc12442261",
+  "before": {
+    "file": "bounded-consumer-cache-red-20261015-process.json",
+    "sha256": "5ee761c03f8243b5dfd56472f5eace69fbc560f72b73607c485111758845e0e5",
+    "xml_sha256": "177e2d89b91ac397329ed3c0aef652aa84ae74e41810ef53fb1c54d9de1ff066",
+    "counts": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "success": false,
+    "exit_code": 2,
+    "elapsed_seconds": 40.164409799996065
+  },
+  "after": {
+    "file": "bounded-consumer-cache-and-gpu-green-20261015-process.json",
+    "sha256": "a15cbd51c80103e1ab5794c8026eeb2fde9561e3f15ca6ccd25e1ae3cb1d0f9f",
+    "xml_sha256": "fa03aae536a6d537307632504c4ae413392aab222497f54f417e7134c49d6630",
+    "counts": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0
+    },
+    "success": true,
+    "exit_code": 0,
+    "elapsed_seconds": 29.15678150000167
+  },
+  "configuration": {
+    "root_settings_changed": false,
+    "download": false,
+    "before_sha256": "4a87c54b3541c7bd242aad68c3fc28661083db1117ec56149694ee592156415e",
+    "scope": "local_acceptance_consumer_only",
+    "global_preferences_changed": false,
+    "upload": false,
+    "after_sha256": "1a77b99822c66d65db2276b26438110a4eb13f0db0aea4b31b53671926954202",
+    "mode": "Disabled",
+    "root_editor_settings_sha256": "6146f67666d3129a8b9846fa9b31d9c886b794ca05e6b7503b5ca3c534728119"
+  },
+  "before_log_sha256": "22947e2eab88b8048e974e5ef6f00e237554ecf8da1605703f5ebe48a3eff43c",
+  "after_log_sha256": "004927f7a431033ffb7f04dfadab46e31bbbfcff963c873a1c7601efdad77c60",
+  "unavailable_global_server_seen_before": true,
+  "unavailable_server_absent_after": true,
+  "connection_timeout_absent_after": true,
+  "benchmark": false,
+  "different_test_counts": true,
+  "root_and_global_preferences_changed": false,
+  "tiny_gpu": {
+    "file": "tiny-39c2559afa61c33aa029dc1328f781dc12442261.json",
+    "sha256": "56b8d6a1a18474f23b291f0f3a1e230208385fe25b9a8d16e8c687f135ce0add",
+    "result": {
+      "success": true,
+      "real_model": false,
+      "source": "39c2559afa61c33aa029dc1328f781dc12442261",
+      "unity": "6000.3.16f1",
+      "sentis": "2.6.1",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_api": "Direct3D12",
+      "requested_backend": "GPUCompute",
+      "numeric_acceptance_claimed": false,
+      "schedule_is_submission_time": true,
+      "final_readback_includes_gpu_wait": true,
+      "phases": [
+        {
+          "name": "load",
+          "completed": true,
+          "wall_seconds": 0.0083562,
+          "cpu_seconds": 0.0,
+          "working_set_bytes": 1854111744,
+          "peak_working_set_bytes": 1854111744,
+          "unity_allocated_bytes": 179566307
+        },
+        {
+          "name": "transform",
+          "completed": true,
+          "wall_seconds": 0.0009488999999999999,
+          "cpu_seconds": 0.0,
+          "working_set_bytes": 1854156800,
+          "peak_working_set_bytes": 1854156800,
+          "unity_allocated_bytes": 179566307
+        },
+        {
+          "name": "worker",
+          "completed": true,
+          "wall_seconds": 0.0042417999999999996,
+          "cpu_seconds": 0.0,
+          "working_set_bytes": 1854181376,
+          "peak_working_set_bytes": 1854181376,
+          "unity_allocated_bytes": 179567859
+        },
+        {
+          "name": "upload",
+          "completed": true,
+          "wall_seconds": 0.0010100999999999999,
+          "cpu_seconds": 0.0,
+          "working_set_bytes": 1854185472,
+          "peak_working_set_bytes": 1854185472,
+          "unity_allocated_bytes": 179568567
+        },
+        {
+          "name": "schedule",
+          "completed": true,
+          "wall_seconds": 0.001078,
+          "cpu_seconds": 0.0,
+          "working_set_bytes": 1854185472,
+          "peak_working_set_bytes": 1854185472,
+          "unity_allocated_bytes": 179569275
+        },
+        {
+          "name": "final_readback",
+          "completed": true,
+          "wall_seconds": 0.0040584,
+          "cpu_seconds": 0.0,
+          "working_set_bytes": 1854197760,
+          "peak_working_set_bytes": 1854197760,
+          "unity_allocated_bytes": 179569192
+        },
+        {
+          "name": "dispose",
+          "completed": true,
+          "wall_seconds": 0.0009199999999999999,
+          "cpu_seconds": 0.0,
+          "working_set_bytes": 1854201856,
+          "peak_working_set_bytes": 1854201856,
+          "unity_allocated_bytes": 179568120
+        }
+      ],
+      "started_utc": "2026-10-15T03:56:04.2524757Z",
+      "active_phase": "dispose",
+      "original_layer_count": 1,
+      "candidate_layer_count": 1,
+      "transform": "identity_tiny",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "actual_backend": "GPUCompute",
+      "output_elements": 2,
+      "output": [
+        2.0,
+        3.0
+      ],
+      "completed_utc": "2026-10-15T03:56:04.2887826Z"
+    }
+  },
+  "documentation": "https://docs.unity3d.com/6000.3/Documentation/ScriptReference/CacheServerMode.Disabled.html"
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "opt_in_untouched_saved_native_all_six_host_diagnosis_only",
+  "purpose": "Test whether observed native full-encoder drift is present on a recorded Windows2022 CPU host; no assumed CPU vendor or ISA.",
+  "tdd": {
+    "red": "5 failed: absent API and explicit workflow mode",
+    "green": "26 passed: new probe, existing native contexts and strict original loader tests"
+  },
+  "actionlint": "passed",
+  "original_reference_unchanged": true,
+  "default_model_reference_unchanged": true,
+  "production_gpu_runtime_unchanged": true,
+  "all_original_six_cases_required": true,
+  "interventions": false,
+  "diagnostic_completion_distinct_from_numerical_pass": true,
+  "local_model_executed": false,
+  "real_probe_status": "not_yet_dispatched",
+  "gpu_validated": false,
+  "fresh_official_validated": false,
+  "required_ci_passed": false
+}

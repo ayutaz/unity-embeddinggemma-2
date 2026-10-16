@@ -1,5 +1,7 @@
 # TextSearch sample: 選択モデルの配置・cache検証
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 確認日: 2026-10-10。実行ソースは `2e463a844f10ce84548c7d7f9339ae2c2aa6e068`、base mainはPR #23後の `197fae9f063300f669a99f83f9779be89f07e3ab`。
 [機械照合した結果](results/m2-sample-cache-windows-20261010.json)に、テストのred / green、実GPUの状態・全順位・score・hash backend、失敗、ログ、ソースhashを保持した。
 

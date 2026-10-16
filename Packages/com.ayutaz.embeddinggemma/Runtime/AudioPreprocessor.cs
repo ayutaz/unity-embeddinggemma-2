@@ -10,7 +10,7 @@ namespace EmbeddingGemma
     /// owns its Worker and per-call input tensors, and returns independently owned outputs.
     /// GPU processing never downloads intermediate features or masks.
     /// </summary>
-    public sealed class AudioPreprocessor : IDisposable
+    public sealed class AudioPreprocessor : IDisposable, IAudioPreprocessor
     {
         public BackendType Backend { get; }
         readonly string featureOutput, maskOutput;

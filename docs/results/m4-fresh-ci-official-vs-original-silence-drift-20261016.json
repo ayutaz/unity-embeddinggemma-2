@@ -1,0 +1,34 @@
+{
+  "ci_run": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38816675509",
+  "artifact_id": 12012300163,
+  "scope": "fresh_official_ci_silence_output_vs_pinned_original_final_only",
+  "metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 145,
+    "maximum_absolute_error": 8.380413055419922e-05,
+    "maximum_tolerance_ratio": 3.11813114174326,
+    "worst_index": 15930,
+    "worst_actual": -0.03825753927230835,
+    "worst_expected": -0.038300663232803345,
+    "bit_differences": 138186
+  },
+  "hashes": {
+    "failed-official-features-fp32.bin": "38b5ef284546d068a855e9c9537e36c6354920b7b536b06d62364c37f0360f46",
+    "reference-output-fp32.bin": "e9ac5425c93912ac7e4983ed98e80b4020e1f8f2d81c2950adfd31b1022441ad"
+  },
+  "whole_candidate_promoted": false,
+  "ci_source": "fb077bc1f4bfcc6a61ef9599512011358fd2e753",
+  "ci_source_kind": "pull_request_merge_commit",
+  "pr_head": "bf3b6cf9336ce2ed676683921c187a84b64e1e48",
+  "failure": {
+    "stage": "audio_encoder_onnx",
+    "case_id": "silence",
+    "profile": "frames-1119-valid-1119",
+    "mismatched_elements": 443,
+    "maximum_tolerance_ratio": 7.7126145362854,
+    "graph_sha256": "d9bc91c24716661dbb9275b1625edc9c93cbd7e8e76271b9a0947c30d7852d9d"
+  },
+  "interpretation": "Fresh official silence differs from the original pinned reference on this CI host. Exact pinned-candidate qualification cannot replace the independent fresh-native gate. Both references remain unchanged.",
+  "required_ci_passed": false
+}

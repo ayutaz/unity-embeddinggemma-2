@@ -1,0 +1,11 @@
+{
+  "scope": "onnx_native_silu_fp32_division_order_red",
+  "source_base": "998fa43d89814a90c9eebb899c71439879b79390",
+  "command": "uv run --locked pytest tests/test_native_audio_export.py -q --tb=short",
+  "passed": 3,
+  "failed": 3,
+  "counterexample_mismatches": 54,
+  "counterexample_elements": 257,
+  "reason": "Swish evaluator uses reciprocal multiplication instead of the native SiLU division order",
+  "full_encoder_validated": false
+}

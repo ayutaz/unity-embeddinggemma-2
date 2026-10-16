@@ -8,6 +8,22 @@ namespace EmbeddingGemma.Tests
     public sealed class ImagePreprocessorTests
     {
         [Test]
+        public void UnreadableArgbByteTextureKeepsStoredRgbOnGpu()
+        {
+            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
+            using var processor=new ImagePreprocessor(BackendType.GPUCompute);
+            var texture=new Texture2D(16,16,TextureFormat.ARGB32,false,true);
+            try
+            {
+                var colors=new Color32[256];Array.Fill(colors,new Color32(51,102,153,7));texture.SetPixels32(colors);texture.Apply(false,true);
+                Assert.That(texture.isReadable,Is.False);using var result=processor.Process(texture);
+                Assert.That(result.Pixels.backendType,Is.EqualTo(BackendType.GPUCompute));var actual=result.Pixels.DownloadToArray();
+                Assert.That(actual[0],Is.EqualTo(.2f).Within(1e-6));Assert.That(actual[1],Is.EqualTo(.4f).Within(1e-6));Assert.That(actual[2],Is.EqualTo(.6f).Within(1e-6));
+                Assert.That(actual[256*9*768],Is.Zero);
+            }
+            finally{UnityEngine.Object.DestroyImmediate(texture);}
+        }
+        [Test]
         public void NullInputIsRejected()
         {
             using var processor = new ImagePreprocessor();

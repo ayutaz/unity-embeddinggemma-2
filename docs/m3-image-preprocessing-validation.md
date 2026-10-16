@@ -1,5 +1,7 @@
 # M3: GPU画像前処理のTDDとWindows検証
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 2026-10-13。I3の製品前処理と重み不要の公式processor参照生成を追加した。画像encoder・共通本体・最終768次元API / sampleの合格とは分ける。正式Release / tagは作成しない。
 
 ## 入力と所有権

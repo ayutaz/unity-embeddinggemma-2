@@ -1,0 +1,8 @@
+{
+  "reason": "Overlapping source/destination not rejected before receipt changes and encoder access",
+  "failed": 6,
+  "scope": "backbone_reuse_destination_overlap_tdd_red",
+  "passed": 0,
+  "command": "uv run pytest tests/test_backbone_reuse_destination.py -q --tb=line",
+  "source": "179b826451552ccf75ba0aafd78dca2179fe0ea8"
+}

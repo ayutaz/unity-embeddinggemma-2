@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "isolated_tail_silu_candidate_domain_guard_stop_and_explicit_tail_tdd",
+  "run_id": 38790287795,
+  "artifact_id": 11999282593,
+  "source": "a20715530a0c23b01611917ad9d09667a4f26f35",
+  "report_sha256": "e1450dc97bdce4e5226921c6adc91916eb4898e5410ca67996cba582256fee0d",
+  "diagnostic_complete": false,
+  "conclusion": "input_domain_rejected_before_candidate_onnx_export_or_comparison",
+  "error": "SiLU candidate requires bounded finite CPU FP32 inputs in [-80,80]",
+  "error_node": "silu_34, input mul_295",
+  "native_segment_vs_reference_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 0.0,
+    "maximum_tolerance_ratio": 0.0,
+    "worst_index": 0,
+    "worst_actual": -3.593391180038452,
+    "worst_expected": -3.593391180038452,
+    "exact_difference_count": 0
+  },
+  "native_wrapper_control_bits_equal": true,
+  "candidate_numerical_result_available": false,
+  "fix": "Preserve existing shader mathematical tail x/(1+exp(-x)) outside polynomial domain. Clamp only unused polynomial branch, never actual model values/output. Record per-node input ranges and positive/negative tail counts.",
+  "tdd": {
+    "native-silu-tail-red": {
+      "sha256": "762f9301f87837d9368c5110ea53a609131e853931b40932df99628079208a47",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "native-silu-explicit-tail-green": {
+      "sha256": "cbeb70ef11da00b272a5fe5cc84726339dd970fd2e456ea993f2eb6a4e26141f",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "native-silu-explicit-tail-related-green": {
+      "sha256": "2840be9a83d9393a288394441673e11c16ca1b50db4ec651556c3620851c086a",
+      "tests": 78,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "weights_goldens_or_tolerances_changed": false,
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "end_to_end_validated": false
+}

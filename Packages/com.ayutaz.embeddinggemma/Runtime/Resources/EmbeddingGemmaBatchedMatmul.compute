@@ -1,0 +1,28 @@
+#pragma kernel Block192
+#pragma use_dxc
+StructuredBuffer<float> Left,Right;
+RWStructuredBuffer<float> Output;
+uint Rows,Columns,Width,BatchRank,Count,DispatchWidth;
+uint4 BatchShapeLo,BatchShapeHi,StrideALo,StrideAHi,StrideBLo,StrideBHi;
+
+[numthreads(64,1,1)]
+void Block192(uint3 thread : SV_DispatchThreadID)
+{
+    uint index=thread.x+thread.y*DispatchWidth;
+    if(index>=Count)return;
+    uint batch=index/(Rows*Columns),row=(index/Columns)%Rows,column=index%Columns;
+    uint offsetA=0,offsetB=0;
+    [loop] for(int axis=(int)BatchRank-1;axis>=0;axis--)
+    {
+        uint size=axis<4?BatchShapeLo[axis]:BatchShapeHi[axis-4];uint coordinate=batch%size;batch/=size;
+        offsetA+=coordinate*(axis<4?StrideALo[axis]:StrideAHi[axis-4]);offsetB+=coordinate*(axis<4?StrideBLo[axis]:StrideBHi[axis-4]);
+    }
+    precise float total=0;
+    [loop] for(uint start=0;start<Width;start+=192)
+    {
+        precise float partial=0;uint end=min(start+192,Width);
+        [loop] for(uint k=start;k<end;k++)partial=mad(Left[offsetA+row*Width+k],Right[offsetB+k*Columns+column],partial);
+        total=start==0?partial:total+partial;
+    }
+    Output[index]=total;
+}

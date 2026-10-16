@@ -1,0 +1,63 @@
+{
+  "runtime_source": "5d1a66fa3dbf4f76223e248378a146cfb9f15d86",
+  "unity": "6000.3.21f1",
+  "scope": "actual_imported_sample_square_images_fixed_text_queries",
+  "verified_runtime_source_files": 51,
+  "verified_imported_sample_source_files": 8,
+  "source_comparison": "exact UTF8 source after CRLF normalization",
+  "runs": [
+    {
+      "label": "media-sample-image-cold-5d1a66f",
+      "report_sha256": "62e2a5579bce8a14aeaefce19ca7acc43d540ff0ff657f6df206f1f35b564389",
+      "process_sha256": "c67569c63836076361c1406f9ebe80150888b946eb0f405ce732aad5aefdc157",
+      "exit_code": 0,
+      "native_host_peak_bytes": 9699717120,
+      "captures": [
+        {
+          "id": "square-0",
+          "sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f",
+          "cosine_to_pinned_document": 0.9999999999997135
+        },
+        {
+          "id": "square-1",
+          "sha256": "ca4184139b735b707616a1142c8d6849cb7baeb5326ef10cbede338f452e9579",
+          "cosine_to_pinned_document": 0.9999999999995672
+        }
+      ],
+      "query_count": 4,
+      "ranked_documents_per_query": 2,
+      "maximum_pinned_score_error": 1.0183251353268474e-07,
+      "active_image_module_transferred_files": 299,
+      "active_image_module_reused_objects": 0,
+      "cancelled_after_real_gpu_stage_yield": false
+    },
+    {
+      "label": "media-sample-image-warm-cancel-5d1a66f",
+      "report_sha256": "46174ad4e8768758de8043d28cb93380bb8f814400b779745d084caf709364f0",
+      "process_sha256": "96beaa2a77091451c645e34d443e56d9cb4a6de35fbb2653c7920c35658ec095",
+      "exit_code": 0,
+      "native_host_peak_bytes": 8136351744,
+      "captures": [
+        {
+          "id": "square-0",
+          "sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f",
+          "cosine_to_pinned_document": 0.9999999999997135
+        },
+        {
+          "id": "square-1",
+          "sha256": "ca4184139b735b707616a1142c8d6849cb7baeb5326ef10cbede338f452e9579",
+          "cosine_to_pinned_document": 0.9999999999995672
+        }
+      ],
+      "query_count": 4,
+      "ranked_documents_per_query": 2,
+      "maximum_pinned_score_error": 1.0183251353268474e-07,
+      "active_image_module_transferred_files": 1,
+      "active_image_module_reused_objects": 298,
+      "cancelled_after_real_gpu_stage_yield": true
+    }
+  ],
+  "all_image_profiles_validated": false,
+  "audio_sample_validated": false,
+  "success": true
+}

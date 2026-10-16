@@ -9,6 +9,10 @@ namespace EmbeddingGemma
         BackendType Backend { get; }
         AudioPreprocessingResult Process(AudioPcmInput input);
     }
+    public interface IAsyncAudioPreprocessor : IAudioPreprocessor
+    {
+        Task<AudioPreprocessingResult> ProcessAsync(AudioPcmInput input, CancellationToken cancellationToken = default);
+    }
     public interface IAudioFeatureEncoder
     {
         BackendType Backend { get; }

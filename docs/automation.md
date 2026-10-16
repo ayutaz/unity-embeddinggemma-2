@@ -1,8 +1,10 @@
 # Unity のローカル自動操作
 
+更新日: 2026-10-16。手順1〜3の実行を再開。必要なWindows GPU検証を対象ごとに直列実行し、上限・PID・結果を記録します。以下の2026-10-14 checkpointは当時の記録です。
+
 > 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。実モデル実行は停止中。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
 
-## 現在の実モデル実行方針
+## 2026-10-14時点の実モデル実行方針
 
 2026-10-14、計画1・2を指定範囲まで実行し終了した。下のm1 / runtime / completion / searchのコマンドは従来のCPU/GPU履歴suiteを含み、GPU専用の現行入口ではない。今の要件に対して全suiteをローカル起動しない。
 
@@ -23,6 +25,8 @@ Unity 6000.3.16f1 をローカルで起動し、Unity CLI Loop を介してコ�
 Python のモデル取得・変換は GitHub Actions に残す。ローカルで認証済みの Editor を使うため、GitHub Secrets は不要。
 
 ## 導入済みの構成
+
+追加Editor起動なしで待ち時間を調べる場合は、[保存ログの計測手順と限界](m2-editor-profile-validation.md)を使う。`tools/`で`uv run --locked python -m embeddinggemma_tools.editor_profile --log <saved-Editor.log>`を実行すると、完了reloadの時間・内訳、未完了のmarker、asset refreshを分けて出力する。完了したログの監査であり、Unityの実行・精度・高速化の合格判定には使わない。
 
 | 対象 | 固定バージョン |
 | --- | --- |
@@ -134,10 +138,10 @@ artifact の保持期間は3日。失効した場合は CI で再生成する。
 `--suite m1` は3件すべて、`--suite runtime` は両backendの2件すべて合格した。skip / failed / inconclusiveは0。
 各backendの全15ケースでfp32一致を確認し、C#単体契約24件も合格。詳細は [ランタイム検証記録](m1-runtime-validation.md)。
 続くPR #4では `--suite completion` の1件でfp32 / Float16重み・CPU / GPUCompute全60比較と180定常測定値が合格し、C#単体契約は30件合格した。
-M1完了時はPR #1〜#4をmain `8146107`へ統合し、当時のmain CI（run `37801650704`）は4環境各64件合格。確認基準main `4ee0cbb`はPR #12まで統合済みで、[run 37975720534](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975720534)の全8 job成功。CIのPython照合とローカルSentis実測は区別する。
+M1完了時はPR #1〜#4をmain `8146107`へ統合し、当時のmain CI（run `37801650704`）は4環境各64件合格。現在のmainはPR #30後の `6f55a85`、[CI run 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)の全8 job成功。CIのPython照合とローカルSentis実測は区別する。
 保存・量子化・測定とソース対応は [M1完了検証](m1-completion-validation.md)を参照。
 PR #6でUPM移行の導入・compile・契約29件と元プロジェクトの実モデルM1 3件 / API 2件が合格した。全保存・量子化・測定を移行後に再実行した結果ではない。
-PR #11の検索サンプルは元プロジェクトと新規consumerで4条件・CLI完了応答・画面操作を確認済み。[検索検証記録](m2-search-validation.md)を参照。他環境・Git URL導入・配布の残作業は [M2計画](m2-plan.md)へ記載する。
+検索サンプルは元プロジェクトと後続の固定Git consumerで実モデル4条件・画面 / cacheを確認済み。[最新のGit導入](m2-font-git-consumer-validation.md)。通常表示sample PlayerはGUI / GPU検索成功後に異常終了し、[sample検証と終了監査](m2-player-sample-validation.md)を保持する。他環境 / 実機・candidate / tag導入・正式配布は [M2計画](m2-plan.md)へ記載する。
 クラウドUnity workflowはSecretsが必要なLinux CPUの手動補助検証のみ。M1のWindows CPU/GPUCompute合格はこのローカルハーネスで確認する。
 詳細な履歴は [検証記録](m1-validation.md)を参照。
 

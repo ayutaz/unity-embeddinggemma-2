@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 import uuid
+import inspect
 
 import pytest
 
@@ -39,6 +40,65 @@ def package(tmp_path):
         if path.suffix in {".cs", ".asmdef"}:
             Path(str(path) + ".meta").write_text(f"fileFormatVersion: 2\nguid: {uuid.uuid4().hex}\n")
     return root
+
+
+@pytest.fixture
+def test_framework(tmp_path):
+    source = tmp_path / "editor-test-framework"
+    source.mkdir()
+    (source / "package.json").write_text(json.dumps({"name": "com.unity.test-framework", "version": "1.6.0"}))
+    (source / "LICENSE.md").write_text("Unity Companion License fixture")
+    (source / "UnityEngine.TestRunner").mkdir()
+    (source / "UnityEngine.TestRunner/Command.cs").write_text("namespace Fixture { class Command {} }")
+    return source
+
+
+def require_embedded_framework():
+    assert "test_framework_source" in inspect.signature(create_consumer).parameters, "embedded official framework option missing"
+
+
+def test_consumer_can_copy_framework_without_changing_vendor_code_or_adding_metas(package, test_framework, tmp_path):
+    require_embedded_framework()
+    project = tmp_path / "consumer"
+    create_consumer(project, package, test_framework_source=test_framework)
+    embedded = project / "Packages/com.unity.test-framework"
+    assert (embedded / "UnityEngine.TestRunner/Command.cs").read_bytes() == (test_framework / "UnityEngine.TestRunner/Command.cs").read_bytes()
+    assert not (embedded / "UnityEngine.TestRunner/Command.cs.meta").exists()
+    assert (embedded / "LICENSE.md").read_bytes() == (test_framework / "LICENSE.md").read_bytes()
+    receipt = json.loads((project / "ProjectSettings/EmbeddingGemmaTestFramework.json").read_text())
+    assert receipt["source_version"] == "1.6.0"
+    assert receipt["source_files"]["UnityEngine.TestRunner/Command.cs"]["sha256"]
+    assert receipt["unity_compiled"] is False
+    assert receipt["source_package"] == "com.unity.test-framework"
+
+
+@pytest.mark.parametrize("problem", ["wrong_name", "wrong_version", "license_missing"])
+def test_invalid_framework_source_is_rejected_without_creating_partial_project(package, test_framework, tmp_path, problem):
+    require_embedded_framework()
+    if problem == "license_missing":
+        (test_framework / "LICENSE.md").unlink()
+    else:
+        data = json.loads((test_framework / "package.json").read_text())
+        data["name" if problem == "wrong_name" else "version"] = "wrong"
+        (test_framework / "package.json").write_text(json.dumps(data))
+    project = tmp_path / "consumer"
+    with pytest.raises(ValueError):
+        create_consumer(project, package, test_framework_source=test_framework)
+    assert not project.exists()
+
+
+def test_existing_consumer_and_source_nested_in_destination_cannot_be_overwritten(package, test_framework, tmp_path):
+    require_embedded_framework()
+    with pytest.raises(ValueError):
+        create_consumer(test_framework, package, test_framework_source=test_framework)
+    assert (test_framework / "package.json").is_file()
+
+
+def test_embed_option_cannot_be_silently_ignored_by_audit_only_cli(package, test_framework):
+    from embeddinggemma_tools.package import main
+    with pytest.raises(SystemExit) as failure:
+        main(["--package", str(package), "--test-framework-source", str(test_framework)])
+    assert failure.value.code == 2
 
 
 def test_valid_package_and_missing_package(package, tmp_path):
@@ -83,7 +143,7 @@ def test_new_consumer_declares_only_package_and_test_dependencies(package, tmp_p
     assert manifest["dependencies"] == {
         PACKAGE_NAME: "file:" + package.resolve().as_posix(), "com.unity.test-framework": "1.6.0"}
     assert manifest["testables"] == [PACKAGE_NAME]
-    assert (project / "ProjectSettings/ProjectVersion.txt").read_text() == "m_EditorVersion: 6000.3.16f1\n"
+    assert (project / "ProjectSettings/ProjectVersion.txt").read_text() == "m_EditorVersion: 6000.3.21f1\n"
     assert (project / "Assets").is_dir()
     assert not (project / "Assets/EmbeddingGemma").exists()
 

@@ -1,0 +1,146 @@
+# Windows sample Player の検証
+
+2026-10-10。配布 TextSearch sample を実際の Windows Player に含め、GUI 表示・検索・解放を確認するためのハーネス。
+既存の M1 全条件 Player とは別の起動 marker `EmbeddingGemmaSampleValidationBuild` を使う。
+marker がない通常の Player と、Editor の Play では自動実行しない。
+
+PR #31はdraft / 未統合。実装checkpoint `cd6b8bf`の[CI run 38040187805](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38040187805)は全8 job成功。通常表示では実GUI / GPU検索 / 解放が成功したがprocess shutdownが失敗し、独立2起動の全体受け入れは未達。詳細は[通常表示での検証](#通常表示での検証)を参照する。Unity固定版は6000.3.16f1のまま。
+
+## 実装と TDD
+
+- 新規の sample proxy / 全6件 ranking / build 設定契約: 12件中11 failed → 全12 passed。
+- 実行と失敗時解放、結果保存、linker、scene / corpus の provenance: 新規12 failed → 全24 passed（上の12件を含む）。
+- Player 起動条件とモデル欠落: 5件中2 failed → 新規全29 passed。failed / skipped / inconclusive は0。
+- GUI の遅延準備: 新規1 failed → 全31 passed。GUI preflight: 新規1 failed → 全32 passed。モデルを準備する前に最大120 render frame待ち、GUI 不成立ならモデル監査・準備を行わない。
+- batch mode の早期終了: 新規1 failed → 全33 passed。sample proxy の取得 / モデル / screenshot / render-frame wait の前に対象外の条件を失敗報告へ保存する。[TDD と実 Player 記録](results/m2-player-sample-batch-preflight-windows-20261010.json)。注入した runtime 条件も `injected_contract` とし、GPU 合格とは扱わない。
+- Player validation assembly のまとめ実行は139 passed / 2 failed / skip 0。失敗した2件は Android target が必要な build integration 契約で、この Editor は StandaloneWindows64。対象違いの失敗を残し、Android 成功とは数えない。
+
+初期 source は `239992584b93142d7563be0156e95f7e1ffe962b`、描画待ち・診断は `904879d9cfa304d8fcc4210d45f52c45083facbc`、モデル前 preflight は `747f986c159d6ba78490c2b207e98c1ceb86af02`。
+ビルドには `BuildWindowsSample` を使い、import 済み `Assets/EmbeddingGemmaTextSearch/TextSearch.unity` を選ぶ。
+IL2CPP / compiler Release / High stripping / BuildOptions.None を指定し、元の scene と backend / stripping / compiler 設定を成功・失敗時とも復元する。
+注入した build を実 Player build 成功にしない。
+
+`Assets/Validation/Runtime/link.xml` は検証 assembly と optional sample assembly を保持し、Core の Worker 所有者の field を保持する。
+これは validation 用設定で、配布 UPM 本体には追加しない。任意 consumer の stripping 成功とは扱わない。
+optional assembly の `ignoreIfMissing` と fields の保持形式は [Unity 6.3 の link.xml reference](https://docs.unity3d.com/6000.3/Documentation/Manual/managed-code-stripping-xml-formatting.html) に基づく。
+
+## 実行の範囲
+
+ハーネスは sample の公開 API を呼ぶ。native keyboard / mouse 操作の検証ではない。
+Float16 重み / actual GPUCompute Worker / 固定6文書 / 4 query の全順位と有限 score（誤差上限0.02）を確認する。
+先頭の日本語・英語 query ごとに、Player 自身が end-of-frame 後に1280×800の PNG を保存する。
+空入力の拒否、Worker と cache lease の解放、モデル欠落の拒否、view がある間の native font と view 破棄後の font 解放も確認する。
+模擬 view / loader / capture を注入したテストは `injected_contract` となり、GPU 実行合格にはしない。
+
+同じ binary の独立2起動で、結果ディレクトリ内の専用 `sample-model-cache` を共有する。
+既存モデルは外部 bundle から `file://` を使い、sample の cache に配置する。全5ファイルを固定 Python 参照付き bundle loader で完全監査し、sample cache でも選択した model / tokenizer の完全 hash を照合する。
+同じ preparation receipt と bundle の source / 元model hash / 全3モデル descriptor の一致を起動前にも確認する。
+既存の準備済みモデルと Editor import / shader cache は再利用する。新規 download / conversion、cold-machine 性能の証拠ではない。
+
+## 実行状況
+
+[source・TDD・build・失敗実行の証拠](results/m2-player-sample-windows-20261010.json)を保存した。当時の `747f986` ビルドの37ファイルの正規化済み source hash が固定作業ソースと一致した。後続の batch preflight は別の変更で、この旧 binary の実行結果を新 source の成功とは扱わない。
+consumer は Git SHA `fc66af7` を解決した既存の `artifacts/j` を利用し、sample の測定 fixture 2ファイルと validation source を作業ソースで配置した条件。新しいハーネス SHA の空 Git 導入成功とは扱わない。
+
+| source | 実 build 秒 | errors / warnings | Player 観察 |
+| --- | ---: | --- | --- |
+| `2399925` | 231.830 | 0 / 485 | Direct3D12。実 Worker は GPUCompute、cold cache は3ファイル転送・完全CNG hash。GUI font 不在で query 前に失敗 |
+| `904879d` | 41.763 | 0 / 485 | Direct3D12。120 frame待っても font 不在。Direct3D11 の同 binary 比較も同じ。後者の cache はmanifestだけ1転送・完全CNG監査・再利用だが、query は0 |
+| `747f986` | 52.457 | 0 / 485 | Direct3D12。GUI preflight が失敗したためモデル監査・準備を未実行。カメラと viewport の状態を保存 |
+
+初回 build と差分 build は異なる source で、全て既存 cache 利用。41.8秒 / 52.5秒は同一条件の統計的高速化率ではない。
+各 build は受理後の同じ operation を観察し、再投入・Editor 追加起動なし。StreamingAssets の既存モデルは退避後に復元済み。
+元の sample scene（clean）、Play 停止、StandaloneWindows64、Mono2x / Disabled / Release への設定復元を確認した。
+
+5つの Player process は全て `success=false` / `gpu_verified=false`、終了 code `-1073741819`（`0xc0000005`）で異常終了した。
+最初の crash dump の例外アドレスは `UnityPlayer.dll+0xb12f91`。記録した候補アドレスは symbol 解決・stack unwind をしておらず、原因を特定した証拠ではない。dump と大きい binary / モデルは Git に含めない。
+最新版でも推論器を作る前に同じ異常終了が再現したため、Sentis Worker の生成・解放はこのモデル不要の再現には必要でない。GPU graphics device 自体は使用しているので、GPU/driver を全面的に除外しない。
+
+Direct3D11 / 12 の両方で1280×800の診断画像は全面黒、同じ完全 SHA-256 `bbdccdfa0f0eb1f22460f9faa6cd64dec41db193a88d8de9453e469e62e8fb6e`だった。
+sample は active / enabled / useGUILayout=true、splash 完了済み / batch=false / focused=true。
+最新観察は frame 122、active camera 1、Main Camera active / enabled、viewport 全面、1280×800、Forward、背景 RGBA(0.060,0.080,0.120,1)、target texture なし。Editor の同じ項目と一致した。
+同じ `747f986` binary を [Unity 6.3 公式の `-force-gfx-direct`](https://docs.unity3d.com/6000.3/Documentation/Manual/PlayerCommandLineArguments.html) でも比較し、実ログの `kGfxThreadingModeDirect` を確認した。font不在・モデル未実行は同じで、診断PNGの texture取得も失敗した。単一スレッドでも終了時アクセス違反が再現したため、これを修正とは扱わない。
+binary の Resources には sample 用 marker を確認し、既存の全条件検証 marker は検索結果になかった。CI の成功や marker 分離契約だけで実描画の原因を特定しない。
+ここまでの非表示起動は可視 UI が表示できた証拠ではない。後続の通常表示結果は下の「通常表示での検証」に分けて記録する。
+
+![失敗時の実Player診断画像。全面黒でsample UIは未表示](images/m2-player-sample-gui-failure-windows.png)
+
+`Start-Process -WindowStyle Hidden` で開始した条件を保存した。内部の focused=true だけで OS window の可視状態を確定しない。
+後続で通常表示の起動許可を得て、同じ新 binary の表示条件を比較した。shutdown は引き続き未解決。
+原因・修正確認が済むまで [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31) は draft とし、CI 成功を実Player成功の代用にしない。
+
+## モデル不要の終了処理の比較
+
+以前の精度検証で合格した `c742fb940b78393573b19e42352fe7b70256e74d` の IL2CPP / Release / High stripping binary を再利用した。元の実モデル2起動も保存済み arguments の `-batchmode -force-d3d12` を確認した。sample scene と新しい sample ハーネスを含まない既存 Player に、存在しない bundle directory を指定した。全条件で `DirectoryNotFoundException` を結果に保存し、model / tokenizer / Worker / query は実行していない。
+
+[3起動の比較条件・終了結果・元 report / log の hash](results/m2-player-shutdown-comparison-windows-20261010.json)を保持した。公開用の要約にはユーザー名・絶対パス・PID・機種情報・生の crash record を含めず、完全な原本は Git 管理外の local artifacts に維持した。前の process の終了を確認してから次を起動し、全て `Start-Process -WindowStyle Hidden`。新規 build・モデルの download / copy・Editor の追加起動はしていない。
+
+| 条件 | 実際の graphics API | process 終了 code | 観察 |
+| --- | --- | ---: | --- |
+| 通常モード、非表示、1280×800 windowed | Direct3D12 | -1073741819 (`0xc0000005`) | 失敗報告保存後にアクセス違反 |
+| `-batchmode -nographics` | Null | 1 | 想定した欠落エラーの終了 code で停止 |
+| `-batchmode -force-d3d12` | Direct3D12 | 1 | 想定した欠落エラーの終了 code で停止 |
+
+通常モードの旧 Player dump も sample Player と同じ native 例外位置だった。旧 Player と sample Player の `UnityPlayer.dll` は全ファイル SHA-256 `bef601ad70832ed45da76262346d90bd8136d97f2d338db743f02d9b2f314712` が一致した。これは共通の例外位置を示すが、symbol 解決 / stack unwind を行っておらず、原因特定ではない。生の例外情報は公開要約に含めない。
+
+sample font / scene / 新ハーネスと、モデルの準備は、旧 Player のこの再現には必要でない。batch mode で graphics device が有効でも終了できたため、graphics device 初期化だけを原因と断定しない。batch mode は window と実行条件も変えるため、単独要因の同定には通常モードの可視表示との比較が残る。以前の実モデル合格は当時の実行条件の証拠として維持し、この新しい欠落条件へ一般化しない。
+
+`-nographics` の意味は [Unity 6.3 公式 Player command-line reference](https://docs.unity3d.com/6000.3/Documentation/Manual/PlayerCommandLineArguments.html) に従う。batch mode の想定どおりの失敗終了は GUI / GPU 推論の合格ではなく、全3報告の `success=false` / `gpuVerified=false` を維持する。非表示起動を GUI 検証の推奨条件とは扱わない。
+
+サンプル GUI ハーネスでは batch mode を runtime preflight で拒否し、`NotSupportedException` を失敗報告へ保存する。既存の精度検証専用ハーネスは GUI を必須条件にしていない。Unity 6.3 の [WaitForEndOfFrame API](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/WaitForEndOfFrame.html) は Editor の batch mode でこの待機が実行されないことを説明している。これを全 Player の hang 再現証拠へ一般化せず、画面を必要とするハーネスで対象外の実行条件を先に検出する。
+
+source `41dc0bef68b1e1cd899033bfd02333eba49f00eb` の差分 IL2CPP / Release / High stripping build は40.455秒、errors 0 / warnings 485で成功し、37 source hash が作業ソースと一致した。同じ新 binary を `-batchmode -force-d3d12` / Hidden で1回実行し、実際の batch=true / is_editor=false / Direct3D12、`NotSupportedException` の保存、process 終了 code 1を確認した。queries 0、bundle / sample observation なし、success / gpu_verified は false。この対象外条件の正常な拒否であり、通常表示の黒画面・アクセス違反の修正や sample 検索の合格ではない。GUI 比較は新 binary で行う。
+
+ビルド中の StreamingAssets payload と meta は owned consumer 内へ退避し、終了後に全ファイルの名前・サイズと元配置の復元を確認した。scene clean / Play・Test Runner停止、Mono2x / Disabled / Release設定も元の状態と一致した。モデルの download / 変換・追加 Editor 起動はしていない。
+
+## 通常表示での検証
+
+ユーザーの許可後、同じ source `41dc0be` の binary を `Start-Process -WindowStyle Normal`、1280×800 windowed / Direct3D12 / batch=false で1回実行した。新規 build・モデル download / conversion・追加 Editor 起動なし。[公開用要約](results/m2-player-sample-visible-windows-20261010.json)に runtime と process の結果を分けて保持した。
+
+- 実 sample の公開 API で Float16 / GPUCompute の固定4 query を検索し、各6件の全順位と score が固定 Python 参照に一致した。最大 score 差は約 `1.03e-7`。native keyboard / mouse 操作の証拠ではない。
+- 最初の描画 frame で native font を取得でき、日本語・英語の Player 自身の PNG を目視確認した。モデル欄に local 絶対パスがあるため画像原本は Git 管理外に保持し、公開要約には寸法・サイズ・hashだけを保存した。
+- 空入力拒否、モデル欠落拒否、Worker / cache lease の解放、view 破棄後の font 解放を観察し、runtime Console は0件。runtime の `success=true` / `gpu_verified=true` はこの数値・GUI・解放確認の範囲を維持する。
+- その後の engine shutdown で process 終了 code `-1073741819`。外部終了ゲートは不合格で、独立2起動の sample 合格には数えない。失敗した初回から warm 成功へ進めず、2回目は実行していない。
+
+process 所要時間は UTC timestamp 差で25.4044秒。owned launcher の旧 `seconds` は UTC DateTime と文字列の local 変換を混在させ、9時間を加算していたため、原本を保持して訂正した。runtime 自体の長時間停止ではない。
+
+UnityPlayer PE の CodeView GUID / age と、インストール済み同一 variant の PDB GUID / age が一致した。LLVM の public symbols と `.text` 範囲から例外位置は `RuntimeStatic<PlatformAccessibilityManager>::StaticDestroy + 0x51` に対応した。命令は null pointer に対する offset `0xe0` の読み込みで、dump の read access violation と整合する。候補 return address は verified stack unwind ではなく、native engine の停止箇所の特定と根本原因の証明を区別する。dump・PDB・大量 symbol 出力は公開しない。
+
+[Unity 6000.3.21f1 の公式 release notes](https://unity.com/releases/editor/whats-new/6000.3.21f1)は UUM-146676 として、UI Automation client が接触した後の Windows Player shutdown crash の修正を記載している。今回の native subsystem と終了条件に整合する有力候補だが、UI Automation client の由来や同一原因は未確定で、修正版の比較実行も未実施。既存固定版 `6000.3.16f1` の変更はユーザーの回答待ち。Font / Sentis に未検証の回避コードを追加しない。
+
+## 外部 process 終了の監査
+
+`tools/embeddinggemma_tools/sample_process.py` は、runtime report と完了済み外部 process receipt の run ID / source / UTC 時刻範囲 / exit code を照合する。23 red → 23 green を確認した。実結果にも適用し、runtime 成功を保持しつつ `process_gate_passed=false` / CLI exit 1 と判定した。
+
+```powershell
+Set-Location tools
+uv run --locked python -m embeddinggemma_tools.sample_process --report '<runtime report.json>' --process '<completed process receipt.json>'
+```
+
+receipt の launcher 観察を監査する小さい後段のゲートであり、監査器自身の OS process 実行、数値参照の再照合、PNG の内容、独立2起動や M2 全環境の証明は行わない。返す公開用要約に local パス・PID・機種情報を含めない。未完了 receipt / 異なる source / 非UTC時刻を拒否し、終了 code 0だけで incomplete / injected / batch runtime を合格にしない。
+
+## 再現
+
+Unity 6000.3.16f1 / Sentis 2.6.1 の固定 Git consumer に TextSearch sample を import し、validation 用 `Assets/Validation` を固定 source から配置する。
+scene を保存し、Play と Test Runner を停止する。モデルを Player に同梱しない場合は既存の StreamingAssets のモデルを owned staging へ退避し、build 完了後に戻す。
+
+```csharp
+ValidationPlayerBuild.BuildWindowsSample("<new empty build directory>/Sample.exe", "<fixed 40-character source commit>");
+```
+
+次は許可済みの通常表示条件。GUI / 数値確認は成功したが shutdown は失敗したため、修正完了の再現手順ではない。過去の黒画面条件を再現する場合だけ `Hidden` を指定する。
+
+```powershell
+$arguments = @('-screen-width','1280','-screen-height','800','-screen-fullscreen','0','-force-d3d12',
+    '-logFile','<new owned results directory>/cold.log',
+    '--embeddinggemma-bundle','<audited local bundle including preparation.json>',
+    '--embeddinggemma-output','<new owned results directory>/cold.json',
+    '--embeddinggemma-run-id','<new 32-character lowercase hex id>')
+$player = Start-Process '<build directory>/Sample.exe' -ArgumentList $arguments -WindowStyle Normal -PassThru
+$player.WaitForExit()
+```
+
+最初の process の終了 code 0 / report / PNG が合格してから、同じ results directory に新しい run ID・`warm.json`・`warm.log` を指定して2回目を起動する。報告自身の success だけで進めない。
+既存結果先の上書き、受理済み operation の timeout による再起動はしない。
+
+macOS / iOS / Android 実機、Editor 検索 DB と native allocation の診断、正式候補 / tag の導入と Release は引き続き別の未達 gate。

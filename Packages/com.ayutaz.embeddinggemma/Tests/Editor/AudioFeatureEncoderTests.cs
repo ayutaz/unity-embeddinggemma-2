@@ -21,7 +21,9 @@ namespace EmbeddingGemma.Tests
         {
             var graph = new FunctionalGraph();
             var input = graph.AddInput<float>(new TensorShape(1, 1119, 128), "input");
-            var seed = Functional.ReduceSum(input, new[] { 0, 1, 2 }, false) / (1119 * 128f);
+            // Every synthetic feature is identical. Max preserves that value exactly;
+            // a large sum introduces backend-dependent rounding into an ownership test.
+            var seed = Functional.ReduceMax(input, new[] { 0, 1, 2 }, false);
             var output = seed * Functional.Constant(new TensorShape(problem == "shape" ? count + 1 : count, 512),
                 Enumerable.Repeat(1f, (problem == "shape" ? count + 1 : count) * 512).ToArray());
             return graph.Compile(problem == "type" ? output.Int() : output);

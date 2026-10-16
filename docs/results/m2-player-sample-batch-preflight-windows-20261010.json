@@ -1,0 +1,255 @@
+{
+  "schema_version": 1,
+  "scope": "Injected sample contracts and an actual IL2CPP Player batch rejection before GUI/model execution. This is not sample GUI or GPU inference acceptance.",
+  "test_filter": "EmbeddingGemma.Validation.Tests.PlayerSample.*",
+  "red": {
+    "passed": 0,
+    "failed": 1,
+    "completed_utc": "2026-10-10T07:57:13.4591136Z",
+    "total": 1,
+    "failure": "  Batch mode must finish without yielding a render-frame wait.\r\n  Expected: False\r\n  But was:  True\r\n"
+  },
+  "green": {
+    "passed": 33,
+    "skipped": 0,
+    "failed": 0,
+    "total": 33,
+    "completed_utc": "2026-10-10T07:58:02.8241144Z",
+    "inconclusive": 0
+  },
+  "batch_rejected_before": [
+    "sample view proxy creation",
+    "model load",
+    "screenshot capture",
+    "render-frame wait"
+  ],
+  "gpu_verified": false,
+  "native_batch_rejection_verified": true,
+  "native": {
+    "source_commit": "41dc0bef68b1e1cd899033bfd02333eba49f00eb",
+    "build_succeeded": true,
+    "injected_build": false,
+    "build_options": "None",
+    "compiler": "Release",
+    "build_seconds": 40.4551057,
+    "errors": 0,
+    "warnings": 485,
+    "source_files_matched": 37,
+    "source_checks": [
+      {
+        "name": "Assets/Validation/Runtime/PlayerBundleCache.cs",
+        "sha256": "8e17ce94c049d97d700363cd1446f8348aeaf2f2e0dbcc34c2c84fc349960fc9",
+        "matched": true
+      },
+      {
+        "name": "Assets/Validation/Runtime/PlayerBundleLoader.cs",
+        "sha256": "61f27369c26d75b50e27136b8464cd4a5ea472773dd045b82694fa77aca44921",
+        "matched": true
+      },
+      {
+        "name": "Assets/Validation/Runtime/PlayerBundleStager.cs",
+        "sha256": "b2041d88674d20ae62e272bbaffbee0e24e3d66c8d9e1ad9e110680e590f2940",
+        "matched": true
+      },
+      {
+        "name": "Assets/Validation/Runtime/PlayerFileHash.cs",
+        "sha256": "ecf0d009a00fad2c2234f9bbe7e292ac27e05c279fe96978aae9c748af75cd91",
+        "matched": true
+      },
+      {
+        "name": "Assets/Validation/Runtime/PlayerRunProtocol.cs",
+        "sha256": "99f474b98eaf7053d47b6ec42402779ebd54115ecfa718c8ef227ed66fbc864b",
+        "matched": true
+      },
+      {
+        "name": "Assets/Validation/Runtime/PlayerSampleExecution.cs",
+        "sha256": "9210650c5d8009bd9229718d6d0a75f76223061b82647dd4263d1539c39c0c61",
+        "matched": true
+      },
+      {
+        "name": "Assets/Validation/Runtime/PlayerSampleRunner.cs",
+        "sha256": "ce4d97887e13ab4a613ee501d72eef56652b0959b589ee0829e753e8d37f741e",
+        "matched": true
+      },
+      {
+        "name": "Assets/Validation/Runtime/PlayerSampleView.cs",
+        "sha256": "46c0492fe6ebd2fd0764050cb21a4d4343c5d20ead47f6c2dec09831b7ea25da",
+        "matched": true
+      },
+      {
+        "name": "Assets/Validation/Runtime/PlayerValidation.cs",
+        "sha256": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+        "matched": true
+      },
+      {
+        "name": "Assets/Validation/Runtime/PlayerValidationExecution.cs",
+        "sha256": "f219eca5073a12241d90c736d6d1339875792323585a369efade8956830fb7a1",
+        "matched": true
+      },
+      {
+        "name": "Assets/Validation/Runtime/PlayerValidationRunner.cs",
+        "sha256": "8b9e4ee9e1407569f24dae5be70eddf6410a97371af1bc27ab7b1085047a1a4b",
+        "matched": true
+      },
+      {
+        "name": "Assets/Validation/Runtime/link.xml",
+        "sha256": "8d1d42432c97f128d4c87978f3c7b1a4b2a4de47097ea15c3d89edff75023dcd",
+        "matched": true
+      },
+      {
+        "name": "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs",
+        "sha256": "85cb087541827169efe40ddec5074f6cc8b6a1dd995531a250ce5c4bbc66ec1e",
+        "matched": true
+      },
+      {
+        "name": "Packages/com.ayutaz.embeddinggemma/Runtime/TextModelFile.cs",
+        "sha256": "c4fb628f5ea5e4daacac88f9d4f09266f44e3133a0baf2236438c611917ede28",
+        "matched": true
+      },
+      {
+        "name": "Packages/com.ayutaz.embeddinggemma/Runtime/TextPrompts.cs",
+        "sha256": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5",
+        "matched": true
+      },
+      {
+        "name": "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchIndex.cs",
+        "sha256": "8a17c7ac6e995e6ceb36d9cead732f3ace63f418ab6e860e7f71fdd7a9ea43d0",
+        "matched": true
+      },
+      {
+        "name": "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchSession.cs",
+        "sha256": "e4a85fd2378a18b48dd022f82a6fdb4eb73ef9dd980f539c75e2ef5768f1f9f7",
+        "matched": true
+      },
+      {
+        "name": "Packages/com.ayutaz.embeddinggemma/Runtime/TextTokenizer.cs",
+        "sha256": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763",
+        "matched": true
+      },
+      {
+        "name": "Assets/EmbeddingGemmaTextSearch/AssemblyInfo.cs",
+        "sha256": "ec0d59ffd41af917084a28ce8734622beb475c42e5853af979a848edc0d32afa",
+        "matched": true
+      },
+      {
+        "name": "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchFileHash.cs",
+        "sha256": "a45422ba0538553ef844cd5cfd943727b0b3f1512affcd6014b51b6eb93208aa",
+        "matched": true
+      },
+      {
+        "name": "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchModelPreparation.cs",
+        "sha256": "b06fefa3a797f9f964c2457b2cc556f9d07d5afeaa29233b355f4f72f0b5b152",
+        "matched": true
+      },
+      {
+        "name": "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchEditorFontLifetimeTests.cs",
+        "sha256": "57d3f74ae505abd31e82aab059abf062a24b02ec80bc74eee553524b16c08acc",
+        "matched": true
+      },
+      {
+        "name": "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchFileHashTests.cs",
+        "sha256": "dc71a8475146d152c8003199ef7fe18850dfc940d5ddf68c88b5b23f70dfda1d",
+        "matched": true
+      },
+      {
+        "name": "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchGuiStylesTests.cs",
+        "sha256": "2883b875453830eb35ead546e7f86cf86bc02299e59d7c9b6efc2518fd12a85e",
+        "matched": true
+      },
+      {
+        "name": "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelCacheTests.cs",
+        "sha256": "ac239d80db0f4aac2fa1e1929c9042b8002c1ecb59cced2d09417506ba0655c3",
+        "matched": true
+      },
+      {
+        "name": "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelPreparationTests.cs",
+        "sha256": "f13b612e1fd9d751b9bddcfe1a7b15131e023aac064954bf89aaf35636091f22",
+        "matched": true
+      },
+      {
+        "name": "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchSampleTests.cs",
+        "sha256": "737a4c9ae8e2dae83c3e18f1ba80006cbcb16e31a410bf4195a028091a3d3ef2",
+        "matched": true
+      },
+      {
+        "name": "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchStreamHashTests.cs",
+        "sha256": "694071d34b1b7d335706a348bc18c242f570163bf6c8263d093a5837b2655a56",
+        "matched": true
+      },
+      {
+        "name": "Assets/EmbeddingGemmaTextSearch/Tests/PlayMode/TextSearchLifecycleTests.cs",
+        "sha256": "258eb784fbcf627116119eb628cf1b4f8a2a75213f64bcfe4d21674cebe6fa21",
+        "matched": true
+      },
+      {
+        "name": "Assets/EmbeddingGemmaTextSearch/TextSearchGuiFont.cs",
+        "sha256": "355373a0db2dc75066f758c08f1507042107cb9ed8dc81463f8b5a8cff0135a5",
+        "matched": true
+      },
+      {
+        "name": "Assets/EmbeddingGemmaTextSearch/TextSearchGuiStyles.cs",
+        "sha256": "586356b3c0760a158355e17e7a6d159dfbbb0e69abb0d3cda911d63046a82c53",
+        "matched": true
+      },
+      {
+        "name": "Assets/EmbeddingGemmaTextSearch/TextSearchModelCache.cs",
+        "sha256": "0c0b2d86cb0470a6e8a1b60cc4354520addc31953765ba3fe12cf46867b974a6",
+        "matched": true
+      },
+      {
+        "name": "Assets/EmbeddingGemmaTextSearch/TextSearchSample.cs",
+        "sha256": "ebdb65c3468b1b8e7d3fce54fa4b602c3ce549d8f2a9c4fa59be6031f1133683",
+        "matched": true
+      },
+      {
+        "name": "Assets/EmbeddingGemmaTextSearch/TextSearchStreamHash.cs",
+        "sha256": "dcf552f22fbd449938f98fe564128ba270875791532374b44611a686120ea279",
+        "matched": true
+      },
+      {
+        "name": "Assets/EmbeddingGemmaTextSearch/TextSearch.unity",
+        "sha256": "04c3e5d8bba0199accc793637576429e0002c66786d7ce909a34abaac104cd74",
+        "matched": true
+      },
+      {
+        "name": "Assets/EmbeddingGemmaTextSearch/Resources/EmbeddingGemmaTextSearch/corpus.json",
+        "sha256": "10bca454ed0893a67d0af903d88da6a884bb5506920846a483a812f48cedd926",
+        "matched": true
+      },
+      {
+        "name": "Assets/EmbeddingGemmaTextSearch/EmbeddingGemma.TextSearch.Sample.asmdef",
+        "sha256": "f5c349313be84166147c076da36c041ad61388c7f33e16e39f3c1cb8fd1aedb8",
+        "matched": true
+      }
+    ],
+    "process_completed": true,
+    "process_exit_code": 1,
+    "process_seconds": 10.4076668,
+    "flags": [
+      "-batchmode",
+      "-force-d3d12"
+    ],
+    "window_style": "Hidden",
+    "graphics_api": "Direct3D12",
+    "batch_mode": true,
+    "is_editor": false,
+    "report_success": false,
+    "report_gpu_verified": false,
+    "report_phase": "failed",
+    "error": "NotSupportedException: Sample GUI validation requires interactive rendering; batch mode is not supported.\n",
+    "queries_executed": 0,
+    "bundle_loaded": false,
+    "sample_observation_present": false,
+    "report_sha256": "32882b55d8e84fcc8c851c5d3147aa860ed1431168dae757f06c9dbe3a6721bf",
+    "log_sha256": "0a0a39391b4b6e148f05dc66cb0561ecc91e747585531d87e07891747c885e1d",
+    "build_receipt_sha256": "58f072ccf7dc6f231ae8b2ab76b715d5dc6a138741295828a86fb5d9f2c14ce8",
+    "scene_and_settings_restored": true,
+    "streaming_assets_restored": true
+  },
+  "limitations": [
+    "Normal windowed sample GUI and two independent accepted search runs remain unverified.",
+    "Original reports/logs with local environment information remain in ignored artifacts; only their hashes and a public summary are published.",
+    "The native run uses the existing Git consumer with validation source overlays; it is not a new Git install of this source commit.",
+    "No model was loaded and GPU inference was not run. Expected rejection is not a GPU pass."
+  ]
+}

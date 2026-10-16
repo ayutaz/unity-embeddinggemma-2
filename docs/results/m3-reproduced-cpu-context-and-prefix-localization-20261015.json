@@ -1,0 +1,628 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "scope": "original_square_zero_context_reproduction_and_layer_prefix_localization_only",
+  "original_reference_unchanged": true,
+  "original_model_weights_unchanged": true,
+  "tolerances": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "ordered_cpu_context": {
+    "source": "16abd7ca908c877152040520735053fcea1cf4b4",
+    "actions_run": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38739806295",
+    "report_sha256": "d17722473eca4a82c92e45f1952043598eba8f964bfbfd3a4f67c74b17bdcece",
+    "host_model": "AMD EPYC 7763 64-Core Processor",
+    "actual_torch_capability": "AVX2",
+    "scope": "cpu_diagnostic_candidate_not_native_dispatch",
+    "original_final_values": 131072,
+    "final_bit_differences": 0,
+    "known_original_native_stage_sha256": {
+      "add_15": "fb33092e54e997da999b87246aefe2089ce2d0f376a89586b8c329db069bb7fa",
+      "add_225": "1cd9bd4d278a8931ae75f068d4b44c876e8bfa1d56c366d0159db3341b3a4d32",
+      "mul_372": "d2cdd48b2e945fd0d0c6ec368d29e996be1fa7d03fcbbdc071714e830815b950",
+      "mul_373": "ac8ef12893fed5875bdc05fe90097cc2188fb796dee41d2827e3cc6ff7885c9d",
+      "mm_113": "482c634051ad46a754c43d32c19ffa9e29045d52894794163f6aea239dadeaf3"
+    },
+    "captured_nodes": [
+      {
+        "node": "add_15",
+        "file": "add_15-fp32.bin",
+        "shape": [
+          1,
+          2520,
+          768
+        ],
+        "bytes": 7741440,
+        "sha256": "fb33092e54e997da999b87246aefe2089ce2d0f376a89586b8c329db069bb7fa"
+      },
+      {
+        "node": "add_29",
+        "file": "add_29-fp32.bin",
+        "shape": [
+          1,
+          2520,
+          768
+        ],
+        "bytes": 7741440,
+        "sha256": "58cdfeda5d0d3cdfb783b8d2f3a6a6c8661f9e175365f2774969e6a3d78c4d2e"
+      },
+      {
+        "node": "add_43",
+        "file": "add_43-fp32.bin",
+        "shape": [
+          1,
+          2520,
+          768
+        ],
+        "bytes": 7741440,
+        "sha256": "b9c027566283327dd92420bf9bd30377d381841983533133f3bf63d485f0d82c"
+      },
+      {
+        "node": "add_57",
+        "file": "add_57-fp32.bin",
+        "shape": [
+          1,
+          2520,
+          768
+        ],
+        "bytes": 7741440,
+        "sha256": "4a0c4defc3aae91517db53ce803c69bede89b0455039396ad7256e4adcd65e71"
+      },
+      {
+        "node": "add_71",
+        "file": "add_71-fp32.bin",
+        "shape": [
+          1,
+          2520,
+          768
+        ],
+        "bytes": 7741440,
+        "sha256": "df32fdaabde775f2f467dbdbf7e1023ea257484d930de50219709277654eba05"
+      },
+      {
+        "node": "add_85",
+        "file": "add_85-fp32.bin",
+        "shape": [
+          1,
+          2520,
+          768
+        ],
+        "bytes": 7741440,
+        "sha256": "d18fc2562bb98050352162b06a6a74ca1512f6c1ad46527723c6e1efbcb6a7ba"
+      },
+      {
+        "node": "add_99",
+        "file": "add_99-fp32.bin",
+        "shape": [
+          1,
+          2520,
+          768
+        ],
+        "bytes": 7741440,
+        "sha256": "df7cffb1002aeb0ff73d57bf1eadc4fa4451c68592586048ef8e38b42d19061d"
+      },
+      {
+        "node": "add_113",
+        "file": "add_113-fp32.bin",
+        "shape": [
+          1,
+          2520,
+          768
+        ],
+        "bytes": 7741440,
+        "sha256": "3a0fe08da6181c5ced4be740fe5cd6f2f38ce7fc316c81e6d79821d0fe94a194"
+      },
+      {
+        "node": "add_127",
+        "file": "add_127-fp32.bin",
+        "shape": [
+          1,
+          2520,
+          768
+        ],
+        "bytes": 7741440,
+        "sha256": "d9ff092e85e888ac567c6b6225186e517cc435865e9dbb51f9b5c8afbda63706"
+      },
+      {
+        "node": "add_141",
+        "file": "add_141-fp32.bin",
+        "shape": [
+          1,
+          2520,
+          768
+        ],
+        "bytes": 7741440,
+        "sha256": "5dbef2b93bef14234fdb89664965c41d7f8f245caffa1992c69aa914f877cd13"
+      },
+      {
+        "node": "add_155",
+        "file": "add_155-fp32.bin",
+        "shape": [
+          1,
+          2520,
+          768
+        ],
+        "bytes": 7741440,
+        "sha256": "562d52c5b0fb405d7dd2924f85a7f0974d4bc236414759518a36e6a43f30d716"
+      },
+      {
+        "node": "add_169",
+        "file": "add_169-fp32.bin",
+        "shape": [
+          1,
+          2520,
+          768
+        ],
+        "bytes": 7741440,
+        "sha256": "44931eaf355de3cf6c52eab8c2425de0371f9526ac69ec031e8ebe859ef4109d"
+      },
+      {
+        "node": "add_183",
+        "file": "add_183-fp32.bin",
+        "shape": [
+          1,
+          2520,
+          768
+        ],
+        "bytes": 7741440,
+        "sha256": "ddac2c03bd82953437cc666bd4a01948cfbd91f3d5b7e6627ae678c3d501f173"
+      },
+      {
+        "node": "add_197",
+        "file": "add_197-fp32.bin",
+        "shape": [
+          1,
+          2520,
+          768
+        ],
+        "bytes": 7741440,
+        "sha256": "ace1c8526961463138ecccb7114976951a15cb57303ac7b771dbf110491fa5f1"
+      },
+      {
+        "node": "add_211",
+        "file": "add_211-fp32.bin",
+        "shape": [
+          1,
+          2520,
+          768
+        ],
+        "bytes": 7741440,
+        "sha256": "40587aba5ddb377901f8bf09c7839999319b781dccf721e9f9bca7780593061d"
+      },
+      {
+        "node": "add_225",
+        "file": "add_225-fp32.bin",
+        "shape": [
+          1,
+          2520,
+          768
+        ],
+        "bytes": 7741440,
+        "sha256": "1cd9bd4d278a8931ae75f068d4b44c876e8bfa1d56c366d0159db3341b3a4d32"
+      },
+      {
+        "node": "mul_372",
+        "file": "mul_372-fp32.bin",
+        "shape": [
+          256,
+          768
+        ],
+        "bytes": 786432,
+        "sha256": "d2cdd48b2e945fd0d0c6ec368d29e996be1fa7d03fcbbdc071714e830815b950"
+      },
+      {
+        "node": "mul_373",
+        "file": "mul_373-fp32.bin",
+        "shape": [
+          256,
+          768
+        ],
+        "bytes": 786432,
+        "sha256": "ac8ef12893fed5875bdc05fe90097cc2188fb796dee41d2827e3cc6ff7885c9d"
+      },
+      {
+        "node": "mm_113",
+        "file": "mm_113-fp32.bin",
+        "shape": [
+          256,
+          512
+        ],
+        "bytes": 524288,
+        "sha256": "482c634051ad46a754c43d32c19ffa9e29045d52894794163f6aea239dadeaf3"
+      }
+    ],
+    "normal_observed_final_bits_equal": true,
+    "first_layer_elapsed_seconds": 4.378302646999998,
+    "capture_elapsed_seconds": 135.46016736800004,
+    "native_global_dispatch_changed": false,
+    "saved_graph_mutated": false,
+    "softmax_replaced_in_diagnostic_scope": true,
+    "cpu_fp64_fma_oracle_not_exported": true,
+    "note": "Intermediate captures come from an explicit ordered CPU diagnostic reproducing original first/last/tail/final bits. Not new native AVX512 observations or a replacement golden; GPU/other cases remain separate."
+  },
+  "gpu_layer_comparisons": [
+    {
+      "runtime_source": "a756cf54832bc3a8abfa1f775d3dc635893b118c",
+      "success": true,
+      "scope": "original_square_zero_prefix_against_qualified_ordered_context_only",
+      "encoder_prefix_layers": 2,
+      "isolated_layer": false,
+      "executed_layer_count": 2,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "capture_sha256": "58cdfeda5d0d3cdfb783b8d2f3a6a6c8661f9e175365f2774969e6a3d78c4d2e",
+      "reference_sha256": "58cdfeda5d0d3cdfb783b8d2f3a6a6c8661f9e175365f2774969e6a3d78c4d2e",
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "original_coefficient_bytes_preserved": true,
+      "host_peak_working_set_bytes": 5415473152,
+      "execute_and_final_download_ms": 3324.3650000000002,
+      "segment_count": 24,
+      "gpu_operation_count": 23,
+      "report_file": "vision-original-qualified-prefix2-gpu-a756cf54832bc3a8abfa1f775d3dc635893b118c-square-0.json",
+      "report_sha256": "a56570088093efa813f201f0f899d0d244aec4ca7da23d2f38819a377af11169",
+      "values": 1935360
+    },
+    {
+      "runtime_source": "a756cf54832bc3a8abfa1f775d3dc635893b118c",
+      "success": true,
+      "scope": "one_original_vision_layer_from_qualified_fixed_hidden_input_only",
+      "encoder_prefix_layers": 2,
+      "isolated_layer": true,
+      "executed_layer_count": 1,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "capture_sha256": "58cdfeda5d0d3cdfb783b8d2f3a6a6c8661f9e175365f2774969e6a3d78c4d2e",
+      "reference_sha256": "58cdfeda5d0d3cdfb783b8d2f3a6a6c8661f9e175365f2774969e6a3d78c4d2e",
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "original_coefficient_bytes_preserved": true,
+      "host_peak_working_set_bytes": 4016590848,
+      "execute_and_final_download_ms": 2170.5577000000003,
+      "segment_count": 12,
+      "gpu_operation_count": 11,
+      "report_file": "vision-original-qualified-isolated-layer2-gpu-a756cf54832bc3a8abfa1f775d3dc635893b118c-square-0.json",
+      "report_sha256": "67e7781296196db0ac9e7d3845c2865ac29ab79855b3bd8eda08e4a318cc2ca6",
+      "values": 1935360
+    },
+    {
+      "runtime_source": "9910994beca7c6f7744bd9644b32fb9ce7afb3ce",
+      "success": true,
+      "scope": "original_square_zero_prefix_against_qualified_ordered_context_only",
+      "encoder_prefix_layers": 3,
+      "isolated_layer": false,
+      "executed_layer_count": 3,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "capture_sha256": "b9c027566283327dd92420bf9bd30377d381841983533133f3bf63d485f0d82c",
+      "reference_sha256": "b9c027566283327dd92420bf9bd30377d381841983533133f3bf63d485f0d82c",
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "original_coefficient_bytes_preserved": true,
+      "host_peak_working_set_bytes": 5445730304,
+      "execute_and_final_download_ms": 4707.4071,
+      "segment_count": 35,
+      "gpu_operation_count": 34,
+      "report_file": "vision-original-qualified-prefix3-gpu-9910994beca7c6f7744bd9644b32fb9ce7afb3ce-square-0.json",
+      "report_sha256": "19d3b3928e244648b4a3aaa936e77cf28a7a06c3207b897bd1bd898eb6628d3c",
+      "values": 1935360
+    },
+    {
+      "runtime_source": "9910994beca7c6f7744bd9644b32fb9ce7afb3ce",
+      "success": true,
+      "scope": "one_original_vision_layer_from_qualified_fixed_hidden_input_only",
+      "encoder_prefix_layers": 3,
+      "isolated_layer": true,
+      "executed_layer_count": 1,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "capture_sha256": "b9c027566283327dd92420bf9bd30377d381841983533133f3bf63d485f0d82c",
+      "reference_sha256": "b9c027566283327dd92420bf9bd30377d381841983533133f3bf63d485f0d82c",
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "original_coefficient_bytes_preserved": true,
+      "host_peak_working_set_bytes": 3984568320,
+      "execute_and_final_download_ms": 2546.7734,
+      "segment_count": 12,
+      "gpu_operation_count": 11,
+      "report_file": "vision-original-qualified-isolated-layer3-gpu-9910994beca7c6f7744bd9644b32fb9ce7afb3ce-square-0.json",
+      "report_sha256": "67736e29aab8f959deea73c471643afe257064c7a42a969ca698174a4238ca1d",
+      "values": 1935360
+    },
+    {
+      "runtime_source": "65d65e8b83f4588eb199fd1c8160719d7f922dba",
+      "success": false,
+      "scope": "original_square_zero_prefix_against_qualified_ordered_context_only",
+      "encoder_prefix_layers": 4,
+      "isolated_layer": false,
+      "executed_layer_count": 4,
+      "bit_differences": 522,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 1.52587890625e-05,
+      "maximum_tolerance_ratio": 0.030089311093186796,
+      "capture_sha256": "e8f7bbf7fa835f62af2315fb9003c9194d9fcf6ba467a35b5a4e1c1c3729f9fc",
+      "reference_sha256": "4a0c4defc3aae91517db53ce803c69bede89b0455039396ad7256e4adcd65e71",
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "original_coefficient_bytes_preserved": true,
+      "host_peak_working_set_bytes": 4109496320,
+      "execute_and_final_download_ms": 3741.5181000000002,
+      "segment_count": 46,
+      "gpu_operation_count": 45,
+      "report_file": "vision-original-qualified-prefix4-gpu-65d65e8b83f4588eb199fd1c8160719d7f922dba-square-0.json",
+      "report_sha256": "049dff234f09f45f7e9a671af74c3b923294a9d562fd437984234fcfed0a2013",
+      "values": 1935360
+    },
+    {
+      "runtime_source": "65d65e8b83f4588eb199fd1c8160719d7f922dba",
+      "success": false,
+      "scope": "one_original_vision_layer_from_qualified_fixed_hidden_input_only",
+      "encoder_prefix_layers": 4,
+      "isolated_layer": true,
+      "executed_layer_count": 1,
+      "bit_differences": 522,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 1.52587890625e-05,
+      "maximum_tolerance_ratio": 0.030089311093186796,
+      "capture_sha256": "e8f7bbf7fa835f62af2315fb9003c9194d9fcf6ba467a35b5a4e1c1c3729f9fc",
+      "reference_sha256": "4a0c4defc3aae91517db53ce803c69bede89b0455039396ad7256e4adcd65e71",
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "original_coefficient_bytes_preserved": true,
+      "host_peak_working_set_bytes": 5398753280,
+      "execute_and_final_download_ms": 1379.4930000000002,
+      "segment_count": 12,
+      "gpu_operation_count": 11,
+      "report_file": "vision-original-qualified-isolated-layer4-gpu-65d65e8b83f4588eb199fd1c8160719d7f922dba-square-0.json",
+      "report_sha256": "86d8907b7bdfc38cd7b766ca9a652a523fbb89401c7855b77d73fd252d1dec5f",
+      "values": 1935360
+    },
+    {
+      "runtime_source": "0b8c7b1f7b293f1cb29f9ce64aef709664747a0e",
+      "success": false,
+      "scope": "original_square_zero_prefix_against_qualified_ordered_context_only",
+      "encoder_prefix_layers": 5,
+      "isolated_layer": false,
+      "executed_layer_count": 5,
+      "bit_differences": 230326,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 3.0517578125e-05,
+      "maximum_tolerance_ratio": 0.05850705442958078,
+      "capture_sha256": "957128e7ef145e9dcdcd78ddaf9c538fd6b9eda4137bb8bdf1b21db6635d41cf",
+      "reference_sha256": "df32fdaabde775f2f467dbdbf7e1023ea257484d930de50219709277654eba05",
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "original_coefficient_bytes_preserved": true,
+      "host_peak_working_set_bytes": 4196446208,
+      "execute_and_final_download_ms": 4794.8265,
+      "segment_count": 57,
+      "gpu_operation_count": 56,
+      "report_file": "vision-original-qualified-prefix5-gpu-0b8c7b1f7b293f1cb29f9ce64aef709664747a0e-square-0.json",
+      "report_sha256": "7664b8ef4f10b97bf6225e0522275d1c86091c681f98ba93506edb1bec9e99f5",
+      "values": 1935360
+    },
+    {
+      "runtime_source": "0b8c7b1f7b293f1cb29f9ce64aef709664747a0e",
+      "success": true,
+      "scope": "one_original_vision_layer_from_qualified_fixed_hidden_input_only",
+      "encoder_prefix_layers": 5,
+      "isolated_layer": true,
+      "executed_layer_count": 1,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0,
+      "capture_sha256": "df32fdaabde775f2f467dbdbf7e1023ea257484d930de50219709277654eba05",
+      "reference_sha256": "df32fdaabde775f2f467dbdbf7e1023ea257484d930de50219709277654eba05",
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "original_coefficient_bytes_preserved": true,
+      "host_peak_working_set_bytes": 5387751424,
+      "execute_and_final_download_ms": 2738.4705000000004,
+      "segment_count": 12,
+      "gpu_operation_count": 11,
+      "report_file": "vision-original-qualified-isolated-layer5-gpu-0b8c7b1f7b293f1cb29f9ce64aef709664747a0e-square-0.json",
+      "report_sha256": "4a766d689fce4f4dca56789e7d4220e544a26458b0faebea3fc07b848fc61f08",
+      "values": 1935360
+    },
+    {
+      "runtime_source": "1d30d5a50e74d3f1f3499933c5edc265c8135f8d",
+      "success": false,
+      "scope": "original_square_zero_prefix_against_qualified_ordered_context_only",
+      "encoder_prefix_layers": 8,
+      "isolated_layer": false,
+      "executed_layer_count": 8,
+      "bit_differences": 1762709,
+      "mismatched_elements": 3,
+      "maximum_absolute_error": 0.0001220703125,
+      "maximum_tolerance_ratio": 3.195696719988534,
+      "capture_sha256": "fff4e502647a1a3c67f694400cf16c37d330eec79f1541ff2ba99e49e766ff03",
+      "reference_sha256": "3a0fe08da6181c5ced4be740fe5cd6f2f38ce7fc316c81e6d79821d0fe94a194",
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "original_coefficient_bytes_preserved": true,
+      "host_peak_working_set_bytes": 4576083968,
+      "execute_and_final_download_ms": 7241.738700000001,
+      "segment_count": 90,
+      "gpu_operation_count": 89,
+      "report_file": "vision-original-qualified-prefix8-gpu-1d30d5a50e74d3f1f3499933c5edc265c8135f8d-square-0.json",
+      "report_sha256": "e2b9ec93120e8d088e9fedde912a5f0c31733a17d0ab7ecf4b70b41a0f75a993",
+      "values": 1935360
+    }
+  ],
+  "runners": [
+    {
+      "prefix": "gpu-second-vision-layer-connected-isolated-20261015",
+      "process_sha256": "21d1acc61701779755b9e269f4d0a652d40ab95e29c0bd71b9dfe035583e8409",
+      "xml_sha256": "8e231a99130493c8ee0addf182dc9a83f24e18892e63e13ce442547b03ef3a6f",
+      "counts": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 67.69572510002763,
+      "terminal": true
+    },
+    {
+      "prefix": "gpu-third-vision-layer-connected-isolated-20261015",
+      "process_sha256": "0e85d4cc632e88798df81b357850ddbe79034354411c486df53fcb805ac7d82c",
+      "xml_sha256": "d507fb4054e4ffa6c97fa70f6d77c8c06f66e2b5e9a5380cda9ceae3eabdd6b3",
+      "counts": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exit_code": 0,
+      "elapsed_seconds": 71.09266910000588,
+      "terminal": true
+    },
+    {
+      "prefix": "gpu-eighth-vision-layer-prefix-20261015",
+      "process_sha256": "7255368d8367ab3ff1ead90a01873ada44c39dabcc1b574430e84cad1b6d7d1d",
+      "xml_sha256": "ca067403478946c28d34a2e36a37168ad914e293362cd19ce6a0476e72e90561",
+      "counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      },
+      "exit_code": 2,
+      "elapsed_seconds": 61.663005700014764,
+      "terminal": true
+    },
+    {
+      "prefix": "gpu-fifth-vision-layer-connected-isolated-20261015",
+      "process_sha256": "8ca4addee861ec2eecb972ee784ae6a85d5f2c65f7b3622814f28d2e023f3296",
+      "xml_sha256": "a3881c3e517135792454a9c64fc57ab7a69f85fcff0840eb39d1d0759b0aa03c",
+      "counts": {
+        "total": 2,
+        "passed": 1,
+        "failed": 1,
+        "skipped": 0
+      },
+      "exit_code": 2,
+      "elapsed_seconds": 70.34837209997931,
+      "terminal": true
+    },
+    {
+      "prefix": "gpu-fourth-vision-layer-connected-isolated-20261015",
+      "process_sha256": "99c7f40f22424450ac77423a1043e3080fdf1aa4e592cd7cd71f46cf84e2722f",
+      "xml_sha256": "344b982e0050fea0b412ef00a5b802d1ed4f320ed0ed1062e09157e05474e158",
+      "counts": {
+        "total": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0
+      },
+      "exit_code": 2,
+      "elapsed_seconds": 68.11280820000684,
+      "terminal": true
+    }
+  ],
+  "localization": {
+    "case": "square-0",
+    "first_three_layers_bit_exact": true,
+    "first_observed_drifting_layer_one_based": 4,
+    "affected_token_rows": [
+      173
+    ],
+    "fourth_layer_bit_differences": 522,
+    "fourth_layer_tolerance_violations": 0,
+    "isolated_and_connected_fourth_outputs_identical": true,
+    "eighth_layer_bit_differences": 1762709,
+    "eighth_layer_tolerance_violations": 3,
+    "note": "Strict internal bit gates are diagnostic and separate from original final-feature tolerance acceptance. Fourth-layer arithmetic is unresolved; later amplification is measured, not assumed."
+  },
+  "next_component_capture": {
+    "actions_run": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38743853944",
+    "source": "a368b198b519b56b4068ded06da7eb1df2a4a3f4",
+    "status_at_checkpoint": "queued",
+    "interval_extraction_red_tests": 7,
+    "component_descriptor_red_tests": 5,
+    "workflow_red_tests": 2,
+    "related_green_tests": 75,
+    "skipped": 0,
+    "scope": "Only original fourth layer from qualified fixed hidden input; require exact interval output before retaining selected row RMS/GELU observations; no full encoder replay."
+  },
+  "python_regression": {
+    "source": "16abd7ca908c877152040520735053fcea1cf4b4",
+    "actions_run": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38739973702",
+    "environments": [
+      {
+        "environment": "python-ubuntu-latest-3.13",
+        "tests": 1052,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "xml_sha256": "24e93ce973d5cb382f941e7dae5077102526940a5955c1dd0b5dab028a6cd051"
+      },
+      {
+        "environment": "python-ubuntu-latest-3.14",
+        "tests": 1052,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "xml_sha256": "f2bda6a5cdf7fe7cbff93d9f082a556042ae8b45245c62e46da8a498fbbd327b"
+      },
+      {
+        "environment": "python-windows-latest-3.13",
+        "tests": 1052,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "xml_sha256": "3543d1727301e94b9e12bfce41645013b1b66c0eafd3f412d85481e8df32ea89"
+      },
+      {
+        "environment": "python-windows-latest-3.14",
+        "tests": 1052,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "xml_sha256": "a7b0542a2b7206235b6d77ba04f4a35a13e83026abde116582207b51f6132826"
+      }
+    ],
+    "final_required_ci_validated": false
+  },
+  "previous_complete_six_case_candidate": {
+    "passed": 4,
+    "failed": 2,
+    "skipped": 0,
+    "receipt": "m3-native-rotary-all-image-gates-20261015.json"
+  },
+  "later_pooling_candidate": {
+    "executed": 1,
+    "failed": 1,
+    "other_five_not_executed": true,
+    "receipt": "m3-native-pooling-component-and-whole-failure-20261015.json"
+  },
+  "production_vision_adopted": false,
+  "full_gpu_encoder_accepted": false,
+  "end_to_end_validated": false,
+  "steps_3_4_complete": false,
+  "pending": [
+    "Resolve fourth-layer token-row-173 RMS/GELU or related arithmetic and retain independent case/profile evidence at unchanged original tolerance.",
+    "Actual PCM/Texture-to-768 APIs, samples, stripped Player, required environments, final Required CI and long-term memory remain incomplete.",
+    "Persistent allocation warnings are not cleared by successful NUnit or CPU-reference results."
+  ]
+}

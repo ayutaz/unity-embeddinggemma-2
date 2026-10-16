@@ -1,0 +1,221 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "scope": "opt_in_sixteen_lane_softmax_original_image_gpu_one_case",
+  "original_golden_unchanged": true,
+  "tolerances": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "rejected_rms_vector16": {
+    "source": "6d029c75ec90a5734983b6677ba145c973bad653",
+    "reverted_by": "e5fbb5a06738ac26f97ed5c6c896755f0251830d",
+    "report": {
+      "scope": "captured_native_avx512_tail_rms_equation_only_no_model_inference",
+      "original_reference_unchanged": true,
+      "reference_report_sha256": "6b52310bc163e19495e218fd854fc92bc6a0d8949003336908c39153d8cbd20e",
+      "rows": [
+        {
+          "vector_width": 8,
+          "bit_differences": 0,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0
+        },
+        {
+          "vector_width": 16,
+          "bit_differences": 52100,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 1.9073486328125e-06,
+          "maximum_tolerance_ratio": 0.0027207416117676934
+        }
+      ],
+      "source_note": "Pinned SumKernel registers sum_stub using REGISTER_DISPATCH, whose CPU_CAPABILITY_AVX512 branch registers nullptr. AVX512 host capability alone does not imply a sixteen-lane sum kernel.",
+      "gpu_validated": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false
+    },
+    "note": "Python scalar-order tests passed, but real AVX512-native tail rejected sixteen-lane RMS. Reverted the candidate before any GPU or full-model execution. Original eight-lane RMS remains."
+  },
+  "source_audit": {
+    "pytorch_revision": "5c4886908584029761b579af026dcfb627c84070",
+    "sum_avx512_dispatch": false,
+    "softmax_avx512_dispatch": true,
+    "reference_sum_kernel": "https://github.com/pytorch/pytorch/blob/5c4886908584029761b579af026dcfb627c84070/aten/src/ATen/native/cpu/SumKernel.cpp",
+    "reference_softmax_kernel": "https://github.com/pytorch/pytorch/blob/5c4886908584029761b579af026dcfb627c84070/aten/src/ATen/native/cpu/SoftMaxKernel.cpp",
+    "reference_horizontal_reduction": "https://github.com/pytorch/pytorch/blob/5c4886908584029761b579af026dcfb627c84070/aten/src/ATen/cpu/vec/functional_base.h"
+  },
+  "default_eight_lane_kernel_body_preserved": true,
+  "native_exp_body_preserved": true,
+  "result": {
+    "file": "vision-original-context-softmax16-all-rms-block192-whole-gpu-d0fd69bd882abaefdb988ded92403b94a424f836-square-0.json",
+    "sha256": "05e2191bacb1788e3b1d12a42e70520620a0468a2000fe385753401c94a81152",
+    "success": false,
+    "runtime_source": "d0fd69bd882abaefdb988ded92403b94a424f836",
+    "phase": "completed",
+    "actual_backend": "GPUCompute",
+    "softmax_vector_width": 16,
+    "native_static_block_size": 192,
+    "inline_rms_count": 113,
+    "remaining_original_rms_count": 0,
+    "gpu_operation_count": 178,
+    "segment_count": 179,
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "intermediate_tensor_readback_added": false,
+    "host_peak_working_set_bytes": 4641492992,
+    "execute_and_final_download_ms": 29452.1074,
+    "capture_sha256": "f246ebc7bb84f21b77f1f7943fbde705ed7618b52a9f2fcd9418cafa50ee2712",
+    "mismatched_elements": 3,
+    "maximum_absolute_error": 3.2782554626464844e-05,
+    "maximum_tolerance_ratio": 1.589793376971013,
+    "original_coefficient_bytes_preserved": true,
+    "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886"
+  },
+  "previous_candidate_bit_differences": 127078,
+  "original_golden_bit_differences": 126933,
+  "remaining_original_gate_failures": [
+    {
+      "index": 3652,
+      "row": 7,
+      "column": 68,
+      "actual": 0.0026226043701171875,
+      "expected": 0.0026106834411621094
+    },
+    {
+      "index": 25168,
+      "row": 49,
+      "column": 80,
+      "actual": -0.03353986144065857,
+      "expected": -0.03351863473653793
+    },
+    {
+      "index": 25554,
+      "row": 49,
+      "column": 466,
+      "actual": -0.05350011587142944,
+      "expected": -0.05348357558250427
+    }
+  ],
+  "tests": [
+    {
+      "file": "gpu-softmax-vector16-api-red-20261015.xml",
+      "sha256": "1b858c8d7383dff1ee97d2abe5b8f5781f94aa1ff2066209a0fdfb191c07fa0c",
+      "totals": {
+        "id": "2",
+        "testcasecount": "3",
+        "result": "Failed(Child)",
+        "total": "3",
+        "passed": "0",
+        "failed": "3",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 10:13:29Z",
+        "end-time": "2026-10-15 10:13:29Z",
+        "duration": "0.1168994"
+      }
+    },
+    {
+      "file": "gpu-softmax-vector16-api-green-20261015.xml",
+      "sha256": "75c7d5a7d32ad0e9700e2f0e41a9e6852696276dd37673e45e9b3bb2e417c26c",
+      "totals": {
+        "id": "2",
+        "testcasecount": "6",
+        "result": "Passed",
+        "total": "6",
+        "passed": "6",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 10:15:05Z",
+        "end-time": "2026-10-15 10:15:06Z",
+        "duration": "1.0816864"
+      }
+    },
+    {
+      "file": "softmax-vector16-package-green-20261015.xml",
+      "sha256": "0c86a3bc8bcc0b395cc6759dd810cd2a556c1e76f842e11da5111b5193a43859",
+      "totals": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "22",
+        "time": "2.495",
+        "timestamp": "2026-10-15T19:16:30.144526+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      }
+    },
+    {
+      "file": "vision-original-context-softmax16-square0-20261015.xml",
+      "sha256": "12e383803788e5d0be16aefc6df025be1b4a03a060151cfce0ef9fe9c4911f4b",
+      "totals": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Failed(Child)",
+        "total": "1",
+        "passed": "0",
+        "failed": "1",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 10:16:15Z",
+        "end-time": "2026-10-15 10:17:10Z",
+        "duration": "54.2411454"
+      }
+    }
+  ],
+  "process": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+      "-logFile",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-context-softmax16-square0-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "OriginalContextSoftmaxSixteenSquareZeroMustMatchOriginalOnGpu",
+      "-testResults",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-context-softmax16-square0-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-15T10:15:32.746229+00:00",
+    "pid": 107376,
+    "exit_code": 2,
+    "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-context-softmax16-square0-20261015.xml",
+    "unity_counts": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "elapsed_seconds": 102.73254070000257,
+    "completed_utc": "2026-10-15T10:17:15.478762+00:00"
+  },
+  "resources": {
+    "file": "vision-original-context-softmax16-resources-20261015.jsonl",
+    "sha256": "b0b46112705bb34ec7206b06addc02519a4f7e11e36cbda3a91cdef0a29fc7f6",
+    "sample_count": 40,
+    "maximum_observed_device_used_mib": 7269,
+    "note": "Approximately two-second device samples include other processes and are not the true peak or a steady-state benchmark."
+  },
+  "all_six_original_image_cases_validated": false,
+  "end_to_end_validated": false,
+  "stages_3_4_complete": false,
+  "next": "Pass all original image profiles/cases, preserving original references and separating missing/failed conditions. Then connect actual PCM/Texture APIs, samples and Player acceptance."
+}

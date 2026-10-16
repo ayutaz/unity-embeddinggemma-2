@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "bounded_single_candidate_saved_encoder_onnx_diagnostic_tdd_and_original_final_reference",
+  "tdd": [
+    {
+      "file": "frozen-final-encoder-selection-red-20261016.xml",
+      "sha256": "9222a2fe7578db7a00d3853bea1b887197b64e5135fd4f5d50e2b2383419b88d",
+      "counts": {
+        "tests": 6,
+        "failures": 6,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "file": "frozen-final-encoder-selection-green-20261016.xml",
+      "sha256": "e7c34e1589d45dde0032fbe62cbf79973b8360453cf05e2ecd6d7050ddcc3889",
+      "counts": {
+        "tests": 40,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    }
+  ],
+  "actionlint_exit_code": 0,
+  "final_boundary": {
+    "stage": "projected_features",
+    "node": "select",
+    "target": "aten.select.int",
+    "original_schema_sha256": "b85a2ad7967ad3282f411ebc4a19afa553d15dacb268a7573cb33d31b65c02c1"
+  },
+  "original_fixed_reference": {
+    "artifact_id": 11814567883,
+    "shape": [
+      280,
+      512
+    ],
+    "bytes": 573440,
+    "sha256": "e9ac5425c93912ac7e4983ed98e80b4020e1f8f2d81c2950adfd31b1022441ad",
+    "reference_sha256": "6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a",
+    "audit_sha256": "3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b",
+    "matches_original_silence_encoder_reference_bits": true,
+    "original_encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9"
+  },
+  "candidate": "refined_mean_moment",
+  "native_wrapper_bit_control_still_required": true,
+  "timeout_minutes": 20,
+  "actual_whole_encoder_onnx_execution_pending": true,
+  "original_golden_weights_or_tolerances_changed": false,
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "end_to_end_validated": false,
+  "required_ci_passed": false
+}

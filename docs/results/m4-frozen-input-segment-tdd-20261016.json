@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "audited_fixed_input_segment_diagnostic_tdd",
+  "tdd": {
+    "red": {
+      "sha256": "d0e823b96fd9441ba99924a2191445ec93ac3034f3b9332db270c021bec44bdf",
+      "tests": 1,
+      "failures": 0,
+      "errors": 1,
+      "skipped": 0
+    },
+    "green": {
+      "sha256": "1ca5c46cb444dec78a4a67e66f92db24be7546f53a69b6e322b96ab1924bc849",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "related-green": {
+      "sha256": "67db901988f7113095fe78cae7aa309124350f72e0cbf918cda7b18d68ea35bd",
+      "tests": 62,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "original_scope_preserved": true,
+  "original_full_program_native_layernorm_audit_unchanged": true,
+  "original_prefix_live_context_gate_unchanged": true,
+  "segment_inputs": "Only explicit audited original stage bytes; rejects original feature dependencies bypassing the cut.",
+  "current_native_segment_drift_retained": true,
+  "diagnostic_collection_success_is_not_numerical_pass": true,
+  "planned_actual_probe": {
+    "from_stage": "layer_8",
+    "to_stage": "projected_features",
+    "variant": "native",
+    "runner": "GitHub Actions CPU",
+    "timeout_minutes": 20
+  },
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "end_to_end_validated": false,
+  "required_ci_passed": false
+}

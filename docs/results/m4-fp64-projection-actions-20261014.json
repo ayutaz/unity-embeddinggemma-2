@@ -1,0 +1,218 @@
+{
+  "scope": "exact_native_inputs_projection_oracle_only",
+  "action_run_id": 38468940928,
+  "action_url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38468940928",
+  "head_source": "fd228343882a49cc1e292bcacdcc21ec19b6e3eb",
+  "executed_merge_source": "3a409fee32cda13ded99c96ca9c6c701df8929ba",
+  "report_sha256": "1e17becd43624955129f2b64e78a9a70ad4fdb3dfedfb08e6cc002cd80950b87",
+  "all_15_binary_hashes_validated": true,
+  "original_12_hashes_unchanged": true,
+  "result": {
+    "success": true,
+    "context_validated": true,
+    "native_final_exact_match": true,
+    "full_encoder_validated": false,
+    "unity_validated": false,
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "diagnostic_source": "3a409fee32cda13ded99c96ca9c6c701df8929ba",
+    "torch_version": "2.14.1+cu130",
+    "torch_threads": 2,
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "profile": "frames-1119-valid-1119",
+    "case": "silence",
+    "input_files": {
+      "frames-1119-valid-1119/silence-stage-00-fp32.bin": {
+        "bytes": 1146880,
+        "sha256": "dc54774840fed958a310c6092e5c5c3483de74be52df7914d2bd128a99192969"
+      },
+      "frames-1119-valid-1119/silence-stage-01-fp32.bin": {
+        "bytes": 1146880,
+        "sha256": "3cc353963c7eafd2a209526c5c19daedd66c9c0da7cdf43dc6a4f4ccee158cf2"
+      }
+    },
+    "parts": {
+      "feed_forward1": {
+        "file": "feed_forward1-fp32.bin",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "bytes": 1146880,
+        "sha256": "d5931033c782ff11a24e1caf8f184c620904a85b6b508547108f3a3503622aa5"
+      },
+      "norm_pre_attn": {
+        "file": "norm_pre_attn-fp32.bin",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "bytes": 1146880,
+        "sha256": "53456d0a3731ffab84bca09d6397232777bcaeadea34ff369826169d87785e5d"
+      },
+      "self_attn": {
+        "file": "self_attn-fp32.bin",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "bytes": 1146880,
+        "sha256": "46ea551902314faf4c3d4650ad793ffd8ec94da8f8f11f947df36c55d86beb87"
+      },
+      "norm_post_attn": {
+        "file": "norm_post_attn-fp32.bin",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "bytes": 1146880,
+        "sha256": "3502a18ac5eb7e786b6074f7d696b1a2e4f543abc034fc9403a9cc159d374982"
+      },
+      "lconv1d": {
+        "file": "lconv1d-fp32.bin",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "bytes": 1146880,
+        "sha256": "a1452fb4b832a371af1255b6d6cf384144755ba91d951abc36841ec3b327b982"
+      },
+      "feed_forward2": {
+        "file": "feed_forward2-fp32.bin",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "bytes": 1146880,
+        "sha256": "77859c615f05becf1a687f5c017cdd63ee23ac79493ed863de3d09407e9fab54"
+      },
+      "norm_out": {
+        "file": "norm_out-fp32.bin",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "bytes": 1146880,
+        "sha256": "3cc353963c7eafd2a209526c5c19daedd66c9c0da7cdf43dc6a4f4ccee158cf2"
+      },
+      "feed_forward1.pre_layer_norm": {
+        "file": "feed_forward1.pre_layer_norm-fp32.bin",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "bytes": 1146880,
+        "sha256": "5cc9770575ad3c8873e4fd9f9b0fcec826626c60242217bec9edee7c6362c917"
+      },
+      "feed_forward1.ffw_layer_1": {
+        "file": "feed_forward1.ffw_layer_1-fp32.bin",
+        "shape": [
+          1,
+          280,
+          4096
+        ],
+        "bytes": 4587520,
+        "sha256": "e5ac1da2d80e0013714a5be3e3336272bc954176baf71bd932107db62b8318b4"
+      },
+      "feed_forward1.act_fn": {
+        "file": "feed_forward1.act_fn-fp32.bin",
+        "shape": [
+          1,
+          280,
+          4096
+        ],
+        "bytes": 4587520,
+        "sha256": "ad35b972c4e5e513fc9edb68192470de427833ef17c054bc0a55f6c869e8ba5f"
+      },
+      "feed_forward1.ffw_layer_2": {
+        "file": "feed_forward1.ffw_layer_2-fp32.bin",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "bytes": 1146880,
+        "sha256": "efafce302f7c558de3f9d62778a6be2d419d841e98a4a797e79ee7222fce1686"
+      },
+      "feed_forward1.post_layer_norm": {
+        "file": "feed_forward1.post_layer_norm-fp32.bin",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "bytes": 1146880,
+        "sha256": "9180b1086d108c961810817816908c02fc103e52c10f44412f08044739326ff4"
+      }
+    },
+    "detail_feed_forward": true,
+    "fp64_projection_oracle": {
+      "scope": "exact_native_inputs_fp64_linears_only_then_fp32_post_norm",
+      "fp32_baselines_exact_match": true,
+      "metrics": {
+        "linear1": {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 2.86102294921875E-06,
+          "maximum_tolerance_ratio": 0.07906449955301158
+        },
+        "linear2": {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 1.9073486328125E-06,
+          "maximum_tolerance_ratio": 0.028338336171898074
+        },
+        "linear2_post_norm": {
+          "elementwise_passed": true,
+          "mismatches": 0,
+          "maximum_absolute_error": 2.288818359375E-05,
+          "maximum_tolerance_ratio": 0.22493946006172086
+        }
+      },
+      "fp64_projection_gate_passed": true,
+      "files": {
+        "linear1": {
+          "file": "candidate-linear1-fp32.bin",
+          "shape": [
+            1,
+            280,
+            4096
+          ],
+          "bytes": 4587520,
+          "sha256": "6f674bf7a397cdb96c204c8d8332c7c281dcb1e47c66943993ab4777320aa44d"
+        },
+        "linear2": {
+          "file": "candidate-linear2-fp32.bin",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "bytes": 1146880,
+          "sha256": "8748359bf3265bbf31e0e3bf9ccdcd17ff65972b85014a137aabb9480da73bfb"
+        },
+        "linear2_post_norm": {
+          "file": "candidate-linear2_post_norm-fp32.bin",
+          "shape": [
+            1,
+            280,
+            1024
+          ],
+          "bytes": 1146880,
+          "sha256": "d48ab472d1c72ad7265032ba05eacfb89211f447efea9a0b2503216cb4f0566d"
+        }
+      }
+    },
+    "fp64_projection_gate_passed": true
+  },
+  "actual_sentis_candidate_executed": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

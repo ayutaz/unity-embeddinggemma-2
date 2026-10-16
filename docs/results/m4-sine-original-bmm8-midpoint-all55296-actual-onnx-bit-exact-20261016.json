@@ -1,0 +1,99 @@
+{
+  "scope": "single_original_qualified_sine_attention_bmm8_actual_midpoint_onnx_only",
+  "source_base": "6c50bdc82fbcb09833fc24e438bf41bb5f42da11",
+  "input_report_sha256": "d1f46b0cf7830af1c296ba59e187b8bb5a389894171899c371dd9519773f1b82",
+  "original_context_qualified": true,
+  "original_capture": {
+    "node": "bmm_8",
+    "variant": "ordered_original_tanh",
+    "operator": "MatMul",
+    "attributes": {
+      "execution": "actual_standard_fp32_onnx_on_same_native_inputs",
+      "graph_sha256": "65d341b10557ca1ab75ab893f6f59ba5a017ce25233babfd228fe98ecdcec66e",
+      "candidate_function": "static_block192_bmm_export",
+      "native_forward_used_as_candidate_evidence": false
+    },
+    "maximum_tolerance_ratio": 0.0010124080118487373,
+    "exact_difference_count": 1,
+    "files": [
+      {
+        "file": "worst-MatMul-input0-fp32.bin",
+        "shape": [
+          192,
+          12,
+          128
+        ],
+        "native_strides": [
+          1536,
+          128,
+          1
+        ],
+        "sha256": "24d7e9e1b85107294984a882afc178e31ba65786e55cc1a3d1e88704aa720030"
+      },
+      {
+        "file": "worst-MatMul-input1-fp32.bin",
+        "shape": [
+          192,
+          128,
+          24
+        ],
+        "native_strides": [
+          3072,
+          24,
+          1
+        ],
+        "sha256": "a18e31779572c7105df41ce732d8b3cb81a85f51de0714b775cce941912b3a21"
+      },
+      {
+        "file": "worst-MatMul-native-fp32.bin",
+        "shape": [
+          192,
+          12,
+          24
+        ],
+        "native_strides": [
+          288,
+          24,
+          1
+        ],
+        "sha256": "0662798f9a46412b7a2d66db8101e280f5b34fc004e72618b36ae07c0b9c7c2e"
+      },
+      {
+        "file": "worst-MatMul-onnx-fp32.bin",
+        "shape": [
+          192,
+          12,
+          24
+        ],
+        "native_strides": [
+          288,
+          24,
+          1
+        ],
+        "sha256": "2dcc3e5b5ca6cae15167fa862a6b90500ae7cf41f6a6d07730ad396f177c71a7"
+      }
+    ]
+  },
+  "actual_metadata": {
+    "execution": "actual_standard_fp32_onnx_on_same_native_inputs",
+    "graph_sha256": "16dda20577b8b9e593e16d9d78064c54c7fb00a3c7914f8380ee8a6d865641ad",
+    "candidate_function": "static_midpoint_bmm_export",
+    "native_forward_used_as_candidate_evidence": false
+  },
+  "metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 0.0,
+    "maximum_tolerance_ratio": 0.0,
+    "worst_index": 0,
+    "worst_actual": 0.0,
+    "worst_expected": 0.0,
+    "exact_difference_count": 0
+  },
+  "actual_capture_sha256": "0662798f9a46412b7a2d66db8101e280f5b34fc004e72618b36ae07c0b9c7c2e",
+  "values_compared": 55296,
+  "elapsed_seconds": 2.959692400007043,
+  "whole_encoder_validated": false,
+  "gpu_validated": false
+}

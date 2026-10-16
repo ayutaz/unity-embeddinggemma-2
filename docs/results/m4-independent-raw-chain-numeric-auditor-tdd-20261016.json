@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "independent_saved_raw_chain_numeric_auditor_only",
+  "source_base": "f0593c7a8ffe221f11fd7b1b84ae169b31a4d9ff",
+  "missing_module_red": {
+    "file": "raw-chain-auditor-red-20261016.xml",
+    "sha256": "a9641be70c8b758f2364f9bad0c2774bcc339c0bcc8afab51797f5e51100128c",
+    "tests": "7",
+    "failures": "0",
+    "errors": "7",
+    "skipped": "0",
+    "time": "0.176"
+  },
+  "matrix_coverage_red": {
+    "file": "raw-chain-auditor-six-case-red-20261016.xml",
+    "sha256": "bb967f1d104f151eadd33358c87334ccc1ae94d2e355c453d9d763ce1780da7d",
+    "tests": "5",
+    "failures": "5",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.124"
+  },
+  "related_green": {
+    "file": "raw-chain-auditor-related-green-20261016.xml",
+    "sha256": "0e8104812ea0b9597613a9f50084fea503e41887b868a8132943340d5ccff03a",
+    "tests": "27",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "1.879"
+  },
+  "related_green_deselected": 1,
+  "behavior": [
+    "Independently pin original reference/audit SHA before reading any produced report. No model or weights loaded.",
+    "Compare actual raw bytes to original input SHA and embedded original final values to captured reference bytes.",
+    "Rehash every input/output capture and require five parts with unchanged full12layer/final crop boundaries and actual adjacent carry.",
+    "Recompute baseline/candidate/native final metrics and cosine; reject dishonest summaries. Preserve honest numerical failures.",
+    "Preserve current-native drift separately from original candidate pass; never substitute the candidate for a fresh-native CI gate.",
+    "Require six distinct original cases, five full / one padded profile and one immutable job source.",
+    "Escaped, nonfinite, partial, wrong-sized and hash-mismatched captures reject.",
+    "Graphs are not downloaded/rehashed; the receipt explicitly says so. No GPU, default promotion or Required CI pass is claimed."
+  ],
+  "real_all_six_execution": "running38818905732_not_yet_audited",
+  "gpu_validated": false,
+  "default_export_promoted": false,
+  "required_ci_passed": false
+}

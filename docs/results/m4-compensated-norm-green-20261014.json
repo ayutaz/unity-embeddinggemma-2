@@ -1,0 +1,12 @@
+{
+  "scope": "compensated_layer_norm_small_contract_and_regressions_green",
+  "passed": 25,
+  "source": "bee1e0afdef5b19f63edc7c93af1d79681f585f0",
+  "full_encoder_validated": false,
+  "exit_code": 0,
+  "unity": "6000.3.16f1",
+  "xml_sha256": "b14d4673ea06d48b4db973e6e47267c88fca4c3be683ce5c51b0c24fc07d271d",
+  "failed": 0,
+  "sentis": "2.6.1",
+  "skipped": 0
+}

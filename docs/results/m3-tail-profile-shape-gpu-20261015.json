@@ -1,0 +1,282 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "scope": "prepare_and_qualify_252_row_tail_template_and_profile_shape_rebinding_only",
+  "defect": {
+    "correct_252_row_template_previously_rejected": true,
+    "wrong_256_row_template_previously_accepted_for_252_source": true,
+    "fix": "Infer the actual source RMS operand shape and require the borrowed template to match it before graph replacement. Keep the source and template graph objects unchanged."
+  },
+  "tests": [
+    {
+      "file": "vision-tail-profile-shape-red-20261015.xml",
+      "sha256": "42a7bd911029679cd523f08537a5fd82bd4c84ee56060c80b8411632f3b41d3a",
+      "totals": {
+        "id": "2",
+        "testcasecount": "5",
+        "result": "Failed(Child)",
+        "total": "5",
+        "passed": "1",
+        "failed": "4",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 11:00:55Z",
+        "end-time": "2026-10-15 11:00:55Z",
+        "duration": "0.2814849"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-tail-profile-shape-red-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "VisionTailRmsShapeTests",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-tail-profile-shape-red-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T11:00:18.170480+00:00",
+        "pid": 99900,
+        "exit_code": 2,
+        "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-tail-profile-shape-red-20261015.xml",
+        "unity_counts": {
+          "total": 5,
+          "passed": 1,
+          "failed": 4,
+          "skipped": 0
+        },
+        "elapsed_seconds": 41.775067099995795,
+        "completed_utc": "2026-10-15T11:00:59.945548+00:00"
+      }
+    },
+    {
+      "file": "vision-tail-profile-shape-green-20261015.xml",
+      "sha256": "ca76c593c8e123c2a700dc2a4b0aeea6c045f3fea67c7be198b280bc6eccda4d",
+      "totals": {
+        "id": "2",
+        "testcasecount": "5",
+        "result": "Passed",
+        "total": "5",
+        "passed": "5",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 11:02:09Z",
+        "end-time": "2026-10-15 11:02:10Z",
+        "duration": "0.2889266"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-tail-profile-shape-green-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "VisionTailRmsShapeTests",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-tail-profile-shape-green-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": true,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T11:01:30.268806+00:00",
+        "pid": 105304,
+        "exit_code": 0,
+        "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-tail-profile-shape-green-20261015.xml",
+        "unity_counts": {
+          "total": 5,
+          "passed": 5,
+          "failed": 0,
+          "skipped": 0
+        },
+        "elapsed_seconds": 44.11032359999081,
+        "completed_utc": "2026-10-15T11:02:14.379131+00:00"
+      }
+    },
+    {
+      "file": "vision-tail-252-native-gpu-20261015.xml",
+      "sha256": "6916838ee225b0d807361f022b979962cffe2d9c73a9776d980384fed3f85dde",
+      "totals": {
+        "id": "2",
+        "testcasecount": "6",
+        "result": "Passed",
+        "total": "6",
+        "passed": "6",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 11:03:30Z",
+        "end-time": "2026-10-15 11:03:31Z",
+        "duration": "0.639212"
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-tail-252-native-gpu-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "VisionTail252GpuTests|VisionTailRmsShapeTests",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-tail-252-native-gpu-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": true,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T11:02:50.552149+00:00",
+        "pid": 97544,
+        "exit_code": 0,
+        "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-tail-252-native-gpu-20261015.xml",
+        "unity_counts": {
+          "total": 6,
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0
+        },
+        "elapsed_seconds": 45.336040000009234,
+        "completed_utc": "2026-10-15T11:03:35.888189+00:00"
+      }
+    }
+  ],
+  "preparation": {
+    "schema_version": 1,
+    "scope": "row_independent_rms_252_shape_on_first_252_rows_of_frozen_square_native_tail_only",
+    "source": "757d951d33f67212077d76ea0f266e0e3acf45bb",
+    "input_shape": [
+      252,
+      768
+    ],
+    "original_native_input_sha256": "d2cdd48b2e945fd0d0c6ec368d29e996be1fa7d03fcbbdc071714e830815b950",
+    "original_native_expected_sha256": "ac8ef12893fed5875bdc05fe90097cc2188fb796dee41d2827e3cc6ff7885c9d",
+    "input_sha256": "7717452a17ba2c863f3d950caa1cc3db9bfa74f608d283c13dbd1c5ea85af405",
+    "expected_sha256": "7a2249bd3ecb97637eb1fe58a327ba5f38c0f3f2fee7798cbbd03a8f462a9b72",
+    "onnx_sha256": "49188533bb488a10570c601ad526b295bdba4cdc7a3dcf37328ca5919f8f19f5",
+    "node_count": 288,
+    "cpu_bit_differences": 0,
+    "onnx_bit_differences": 0,
+    "landscape_or_portrait_encoder_validated": false,
+    "gpu_validated": false,
+    "full_encoder_validated": false,
+    "end_to_end_validated": false
+  },
+  "native_gpu_result": {
+    "file": "vision-tail-252-gpu-a4df94698cb1f7c7ea78081830a14111c38c3ce0.json",
+    "sha256": "ca148c33486b5de99f503051c58e1bbf6aa4f1f0e0aa7a5ba0b6148e01627c60",
+    "report": {
+      "success": true,
+      "runtime_source": "a4df94698cb1f7c7ea78081830a14111c38c3ce0",
+      "scope": "252_row_rms_on_first_252_rows_of_captured_square_native_tail_only",
+      "landscape_or_portrait_encoder_validated": false,
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "saved_template_sha256": "36b688b118f091490b75af9deab3e2e4873172dbab64e9f021cd99c3c7ba5599",
+      "saved_template_file": "vision-tail-252-gpu-a4df94698cb1f7c7ea78081830a14111c38c3ce0.sentis",
+      "bit_differences": 0,
+      "value_count": 193536,
+      "actual_backend": "GPUCompute",
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0
+    }
+  },
+  "reference_scope": "The fixture is the first 252 rows of a frozen square-case AVX512-native tail. RMS is row-independent. This proves this captured row subset and template shape, not landscape or portrait encoder inference.",
+  "gpu_model_arithmetic": "FP32 GPUCompute, zero computation/input CPU fallback and intermediate flush; all 193536 fixture output values bit-exact.",
+  "six_case_harness_source": "296e16a",
+  "six_case_harness_model_runs_executed": false,
+  "original_golden_changed": false,
+  "tolerances": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "original_square_full_gpu_remaining_violations": 1,
+  "original_all_six_image_gpu_cases_validated": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "stages_3_4_complete": false,
+  "harness_compile_and_shape_checks": {
+    "file": "vision-all-profile-harness-compile-and-shape-20261015.xml",
+    "sha256": "2c80909270c60c307fafd13d6a2759e4a2edae2e71764d072955d3157788fbf8",
+    "totals": {
+      "id": "2",
+      "testcasecount": "5",
+      "result": "Passed",
+      "total": "5",
+      "passed": "5",
+      "failed": "0",
+      "inconclusive": "0",
+      "skipped": "0",
+      "asserts": "0",
+      "engine-version": "3.5.0.0",
+      "clr-version": "4.0.30319.42000",
+      "start-time": "2026-10-15 11:05:17Z",
+      "end-time": "2026-10-15 11:05:17Z",
+      "duration": "0.2931401"
+    },
+    "process": {
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+        "-logFile",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-all-profile-harness-compile-and-shape-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "VisionTailRmsShapeTests",
+        "-testResults",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-all-profile-harness-compile-and-shape-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": true,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-15T11:04:41.272983+00:00",
+      "pid": 96680,
+      "exit_code": 0,
+      "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-all-profile-harness-compile-and-shape-20261015.xml",
+      "unity_counts": {
+        "total": 5,
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 40.87484220000624,
+      "completed_utc": "2026-10-15T11:05:22.147823+00:00"
+    }
+  }
+}

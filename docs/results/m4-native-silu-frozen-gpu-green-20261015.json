@@ -1,0 +1,249 @@
+{
+  "success": false,
+  "scope": "early_audio_bit_difference_diagnosis_and_frozen_native_gpu_silu_only",
+  "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "original_reference_changed": false,
+  "early_observation": {
+    "runtime_source": "f7747074a0e0013c5a4f57b4008ae3d9d43d1928",
+    "success": true,
+    "normal_final_matches_observed_bits": true,
+    "whole_encoder_mismatched_elements": 539,
+    "stages": [
+      {
+        "stage": "input_projection",
+        "boundary": "/subsample_conv_projection/input_proj_linear/MatMul_output_0",
+        "original_native_sha256": "dc54774840fed958a310c6092e5c5c3483de74be52df7914d2bd128a99192969",
+        "expected_transform": "identity",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-early-audio-observation-f7747074a0e0013c5a4f57b4008ae3d9d43d1928-silence-captures\\input_projection-fp32.bin",
+        "actual_sha256": "dc54774840fed958a310c6092e5c5c3483de74be52df7914d2bd128a99192969",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      {
+        "stage": "pre_layer_norm_input",
+        "boundary": "/feed_forward1/ffw_layer_1/Clip_output_0",
+        "original_native_sha256": "5cc9770575ad3c8873e4fd9f9b0fcec826626c60242217bec9edee7c6362c917",
+        "expected_transform": "original_fp32_input_clip",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-early-audio-observation-f7747074a0e0013c5a4f57b4008ae3d9d43d1928-silence-captures\\pre_layer_norm_input-fp32.bin",
+        "actual_sha256": "5cc9770575ad3c8873e4fd9f9b0fcec826626c60242217bec9edee7c6362c917",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      {
+        "stage": "activation_input",
+        "boundary": "/feed_forward1/ffw_layer_2/Clip_output_0",
+        "original_native_sha256": "ad35b972c4e5e513fc9edb68192470de427833ef17c054bc0a55f6c869e8ba5f",
+        "expected_transform": "original_fp32_input_clip",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-early-audio-observation-f7747074a0e0013c5a4f57b4008ae3d9d43d1928-silence-captures\\activation_input-fp32.bin",
+        "actual_sha256": "13827e585611bd624718e2eeb6af3093dc42382f0d12a91b841adb3a93399618",
+        "bit_differences": 826899,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.0018362251001908681
+      },
+      {
+        "stage": "feed_forward1_output",
+        "boundary": "/feed_forward1/Add_output_0",
+        "original_native_sha256": "d5931033c782ff11a24e1caf8f184c620904a85b6b508547108f3a3503622aa5",
+        "expected_transform": "identity",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-early-audio-observation-f7747074a0e0013c5a4f57b4008ae3d9d43d1928-silence-captures\\feed_forward1_output-fp32.bin",
+        "actual_sha256": "c70ac1b881a786f6ca2840d410cf9a7c883e9977d5eab9757a71b27ae2f9549d",
+        "bit_differences": 89170,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.024991224956137273
+      },
+      {
+        "stage": "norm_pre_attn",
+        "boundary": "/norm_pre_attn/Mul_1_output_0",
+        "original_native_sha256": "53456d0a3731ffab84bca09d6397232777bcaeadea34ff369826169d87785e5d",
+        "expected_transform": "identity",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-early-audio-observation-f7747074a0e0013c5a4f57b4008ae3d9d43d1928-silence-captures\\norm_pre_attn-fp32.bin",
+        "actual_sha256": "39ed0bf727e897463463ccc66b6fe99c40a19087130d4722cfd2dae893e5d612",
+        "bit_differences": 81727,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.021814504374274058
+      }
+    ],
+    "note": "Expected input Clip is applied only to independent native reference values using the original limits; original reference files remain unchanged.",
+    "execution": {
+      "terminal": true,
+      "exit_code": 0,
+      "elapsed_seconds": 92.82582640000328,
+      "nunit": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "offline_oracle": {
+    "scope": "offline_sleef_first_activation_rounding_oracle_only",
+    "sleef_commit": "5a1d179df9cf652951b59010a2d2075372d67f68",
+    "torch_commit": "5c4886908584029761b579af026dcfb627c84070",
+    "count": 1146880,
+    "bit_differences": 0,
+    "maximum_absolute_error": 0.0,
+    "gpu_validated": false,
+    "full_encoder_validated": false,
+    "note": "FP64 is used only for this offline FP32-FMA rounding oracle; no product CPU or FP64 execution was introduced."
+  },
+  "source": {
+    "torch_commit": "5c4886908584029761b579af026dcfb627c84070",
+    "sleef_commit": "5a1d179df9cf652951b59010a2d2075372d67f68",
+    "url": "https://github.com/shibatch/sleef/blob/5a1d179df9cf652951b59010a2d2075372d67f68/src/libm/sleefsimdsp.c#L1856",
+    "license": "BSL-1.0"
+  },
+  "gpu_silu": {
+    "runtime_source": "e2121e98a24bd7f18f9c604f2fa434b9beaa3b4f",
+    "success": true,
+    "actual_backend": "GPUCompute",
+    "count": 1146880,
+    "bit_differences": 0,
+    "implementation": "FP32 source-derived range reduction and polynomial with native MAD; FMA residual correction for division",
+    "cpu_computation_or_intermediate_readback_in_kernel": false,
+    "product_fp64_used": false,
+    "note": "Actual RTX 4070 Ti SUPER / D3D12 frozen input qualification only. Outside the bounded source-derived range the GPU mathematical route is not bit-qualified.",
+    "red": {
+      "terminal": true,
+      "exit_code": 2,
+      "elapsed_seconds": 36.12503020001168,
+      "nunit": {
+        "total": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0
+      }
+    },
+    "green": {
+      "terminal": true,
+      "exit_code": 0,
+      "elapsed_seconds": 35.72705549999955,
+      "nunit": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "pipeline_integration_completed": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "outstanding": [
+    "Connect native GPU SiLU to encoder segments without intermediate CPU readback",
+    "Original whole audio encoder remains 539 mismatches",
+    "All original six audio signals and both profiles",
+    "All three FP32 image profiles",
+    "Actual PCM/Texture to normalized 768 API and all role, mask, boundary, ownership, disposal and reuse contracts",
+    "Existing Persistent allocation warning origin remains unresolved"
+  ],
+  "evidence": [
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-early-audio-observation-f7747074a0e0013c5a4f57b4008ae3d9d43d1928-silence.json",
+      "bytes": 5999,
+      "sha256": "9c2a4d2c2f26cc0f8ac94d035a37fa255e6159555d4274fa317f937959fe5346"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\frozen-first-silu-gpu-e2121e98a24bd7f18f9c604f2fa434b9beaa3b4f.json",
+      "bytes": 292,
+      "sha256": "8541d77432f294c700695cb4b8ea727bd6bc7e064e6eb3643345602f9ee5a2d2"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\frozen-first-silu-gpu-e2121e98a24bd7f18f9c604f2fa434b9beaa3b4f.bin",
+      "bytes": 4587520,
+      "sha256": "ad35b972c4e5e513fc9edb68192470de427833ef17c054bc0a55f6c869e8ba5f"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\sleef-first-activation-offline-20261015.json",
+      "bytes": 465,
+      "sha256": "62c46ee21c5c1480b0831584e0fd812224a73a8b3a94e3912a86bf4451b8a867"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\sleefsimdsp-5a1d179.c",
+      "bytes": 153525,
+      "sha256": "726d962aaa9cfb0b1696122f4d26765495491c0cbc26c084c899704de46b2f5c"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\sleef-misc-5a1d179.h",
+      "bytes": 9456,
+      "sha256": "516ddeb5cc9501039b104967f1830b92e94cc6053c401fbb6773873dfb1b6178"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\SLEEF-LICENSE-5a1d179.txt",
+      "bytes": 1338,
+      "sha256": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-early-audio-observation-f7747074a0e0013c5a4f57b4008ae3d9d43d1928-silence-captures\\input_projection-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "dc54774840fed958a310c6092e5c5c3483de74be52df7914d2bd128a99192969"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-early-audio-observation-f7747074a0e0013c5a4f57b4008ae3d9d43d1928-silence-captures\\pre_layer_norm_input-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "5cc9770575ad3c8873e4fd9f9b0fcec826626c60242217bec9edee7c6362c917"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-early-audio-observation-f7747074a0e0013c5a4f57b4008ae3d9d43d1928-silence-captures\\activation_input-fp32.bin",
+      "bytes": 4587520,
+      "sha256": "13827e585611bd624718e2eeb6af3093dc42382f0d12a91b841adb3a93399618"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-early-audio-observation-f7747074a0e0013c5a4f57b4008ae3d9d43d1928-silence-captures\\feed_forward1_output-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "c70ac1b881a786f6ca2840d410cf9a7c883e9977d5eab9757a71b27ae2f9549d"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-early-audio-observation-f7747074a0e0013c5a4f57b4008ae3d9d43d1928-silence-captures\\norm_pre_attn-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "39ed0bf727e897463463ccc66b6fe99c40a19087130d4722cfd2dae893e5d612"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\partitioned-early-audio-original-reference-20261015.xml",
+      "bytes": 4047,
+      "sha256": "2214f30cdee8a9739e0071fe91d0036e6c7e2c86e300206a1c1b43ecaae50b93"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\partitioned-early-audio-original-reference-20261015-process.json",
+      "bytes": 1329,
+      "sha256": "ec4f22b1f225c8288289956cc3c0ddbc9d0fee1578abf608d7de1e951229a482"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\partitioned-early-audio-original-reference-20261015.log",
+      "bytes": 46788,
+      "sha256": "57eda249d15455c55b7d41c169e2880ee4666a204a82c6a83d6598d81b580973"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-gpu-silu-api-and-frozen-red-20261015.xml",
+      "bytes": 7063,
+      "sha256": "d9a6f34cb970f8b63549b79dfc02bf9bf176d5bd1790883e99d52e2657fbad54"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-gpu-silu-api-and-frozen-red-20261015-process.json",
+      "bytes": 1360,
+      "sha256": "b0d0b404fd8076201534ee21368481acc3c668502ea645d98ad99eab560fd593"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-gpu-silu-api-and-frozen-red-20261015.log",
+      "bytes": 45711,
+      "sha256": "07a9f51e1792099463db0feed6602b587464aca3655037d0f466b6851b79ee29"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-gpu-silu-api-and-frozen-candidate-20261015.xml",
+      "bytes": 4782,
+      "sha256": "ec5ef2c92ed6b04419bc190a6997f3b867c4bddb569bc11a73d18a5b051b2ea2"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-gpu-silu-api-and-frozen-candidate-20261015-process.json",
+      "bytes": 1377,
+      "sha256": "af961e826b15213e1c8903ecd01caea077d7d775c7ca1cf5fad19520963f36a2"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-gpu-silu-api-and-frozen-candidate-20261015.log",
+      "bytes": 46334,
+      "sha256": "bd83223f70cc3f41524b5c8b8019064a59a160b973bec61f0aa6dfaf15e249d7"
+    }
+  ]
+}

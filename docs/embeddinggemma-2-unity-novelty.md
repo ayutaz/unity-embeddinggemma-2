@@ -1,5 +1,7 @@
 # EmbeddingGemma 2 の Unity 対応に関する新規性調査
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 - 調査日: 2026-10-07
 - 文書の更新日: 2026-10-10（main統合状況を更新。限定検索は2026-10-09の記録を維持し、先行事例の網羅検索は未実施）
 - 対象: [google/embeddinggemma-2](https://huggingface.co/google/embeddinggemma-2)

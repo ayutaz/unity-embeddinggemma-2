@@ -1,0 +1,2062 @@
+{
+  "observed_utc": "2026-10-14T06:30:46.5083941Z",
+  "scope": "steps_1_to_3",
+  "main_sha": "c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1",
+  "prs": [
+    {
+      "baseRefName": "test/audio-layer-zero-feed-forward-reference",
+      "headRefName": "test/audio-fp64-projection-oracle",
+      "headRefOid": "d33c3c114157fed33d8a58d3c8e1fcb2ece5513a",
+      "isDraft": true,
+      "number": 80,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:21:17Z",
+          "conclusion": "SKIPPED",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38469953405/job/115546161053",
+          "name": "native-reference",
+          "startedAt": "2026-10-13T21:21:17Z",
+          "status": "COMPLETED",
+          "workflowName": "Audio native reference for runtime diagnostics"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:21:16Z",
+          "conclusion": "SKIPPED",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38469953292/job/115546160083",
+          "name": "replay",
+          "startedAt": "2026-10-13T21:21:17Z",
+          "status": "COMPLETED",
+          "workflowName": "Frozen native audio layer replay"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:29:46Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38469953379/job/115546883318",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T21:23:02Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:29:17Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38469953379/job/115546884777",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T21:23:02Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:31:56Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38469953379/job/115546883578",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T21:23:02Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:30:39Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38469953379/job/115546883759",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T21:23:02Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:23:26Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38469953379/job/115546883351",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T21:23:02Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:36:49Z",
+          "conclusion": "FAILURE",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38469953379/job/115546883490",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T21:23:02Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:23:22Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38469953379/job/115546883005",
+          "name": "package / package",
+          "startedAt": "2026-10-13T21:23:02Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:37:01Z",
+          "conclusion": "FAILURE",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38469953379/job/115552872488",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T21:36:53Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "test: 固定native入力とFP64 projectionの精度差を比較"
+    },
+    {
+      "baseRefName": "test/audio-feed-forward-stage-observation",
+      "headRefName": "test/audio-post-norm-isolation",
+      "headRefOid": "ebd16f534fc8a12992258d417dfdfabc0404d862",
+      "isDraft": true,
+      "number": 79,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:04:03Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38467509010/job/115537971670",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T21:02:10Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:06:04Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38467509010/job/115537971288",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T21:02:10Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:04:21Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38467509010/job/115537971171",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T21:02:09Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:04:32Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38467509010/job/115537971190",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T21:02:13Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:02:54Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38467509010/job/115537971187",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T21:02:10Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:12:06Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38467509010/job/115537971543",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T21:02:11Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:02:27Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38467509010/job/115537970957",
+          "name": "package / package",
+          "startedAt": "2026-10-13T21:02:10Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:12:28Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38467509010/job/115542127881",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T21:12:09Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "test: 固定native入力でpost norm単独をCPUとGPU検証"
+    },
+    {
+      "baseRefName": "test/audio-layer-zero-stage-observation",
+      "headRefName": "test/audio-feed-forward-stage-observation",
+      "headRefOid": "59f26abcdf973ad85b8ad5b08edb55045f36ff49",
+      "isDraft": true,
+      "number": 78,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:50:33Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38465729191/job/115531934604",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T20:48:28Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:50:22Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38465729191/job/115531934929",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T20:48:28Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:50:38Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38465729191/job/115531935004",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T20:48:29Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:50:48Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38465729191/job/115531934751",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T20:48:29Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:48:41Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38465729191/job/115531934146",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T20:48:28Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:00:14Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38465729191/job/115531935005",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T20:48:28Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:48:47Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38465729191/job/115531934563",
+          "name": "package / package",
+          "startedAt": "2026-10-13T20:48:28Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T21:00:35Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38465729191/job/115537122832",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T21:00:18Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "test: 固定feed_forward1の内部数値差と統合係数を検証"
+    },
+    {
+      "baseRefName": "test/audio-layer-zero-native-reference",
+      "headRefName": "test/audio-layer-zero-feed-forward-reference",
+      "headRefOid": "d0153b6061bdf106a7785fb2fbf8c80adc372641",
+      "isDraft": true,
+      "number": 77,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:47:41Z",
+          "conclusion": "SKIPPED",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38465628561/job/115531652267",
+          "name": "native-reference",
+          "startedAt": "2026-10-13T20:47:50Z",
+          "status": "COMPLETED",
+          "workflowName": "Audio native reference for runtime diagnostics"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:47:41Z",
+          "conclusion": "SKIPPED",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38465628497/job/115531617751",
+          "name": "replay",
+          "startedAt": "2026-10-13T20:47:46Z",
+          "status": "COMPLETED",
+          "workflowName": "Frozen native audio layer replay"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:54:23Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38465628619/job/115531577905",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T20:47:44Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:53:59Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38465628619/job/115531578214",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T20:47:44Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:54:30Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38465628619/job/115531578105",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T20:47:44Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:57:09Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38465628619/job/115531578483",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T20:47:44Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:47:55Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38465628619/job/115531577862",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T20:47:44Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:59:10Z",
+          "conclusion": "FAILURE",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38465628619/job/115531577614",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T20:47:44Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:48:29Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38465628619/job/115531577063",
+          "name": "package / package",
+          "startedAt": "2026-10-13T20:47:43Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:59:20Z",
+          "conclusion": "FAILURE",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38465628619/job/115536656468",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T20:59:13Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "feat: 固定音声feed_forward1内部参照を不変再実行で生成"
+    },
+    {
+      "baseRefName": "test/audio-onnx-stage-map",
+      "headRefName": "test/audio-layer-zero-stage-observation",
+      "headRefOid": "dbcc35b3276dd19ae59943af9a8723c4714e3425",
+      "isDraft": true,
+      "number": 76,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:27:30Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38462553318/job/115521796633",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T20:25:50Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:27:37Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38462553318/job/115521796602",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T20:25:51Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:27:55Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38462553318/job/115521796821",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T20:25:51Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:32:58Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38462553318/job/115521796541",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T20:30:51Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:25:58Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38462553318/job/115521794809",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T20:25:50Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:37:28Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38462553318/job/115521796837",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T20:25:51Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:26:02Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38462553318/job/115521795420",
+          "name": "package / package",
+          "startedAt": "2026-10-13T20:25:51Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:37:38Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38462553318/job/115527122855",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T20:37:31Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "test: 音声layer 0の正規化入力から数値不合格を局所化"
+    },
+    {
+      "baseRefName": "feat/audio-native-silu-onnx",
+      "headRefName": "test/audio-layer-zero-native-reference",
+      "headRefOid": "aec39f3882c71c5f263998120494171766661101",
+      "isDraft": true,
+      "number": 75,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:17:40Z",
+          "conclusion": "SKIPPED",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38461667666/job/115518186692",
+          "name": "native-reference",
+          "startedAt": "2026-10-13T20:17:50Z",
+          "status": "COMPLETED",
+          "workflowName": "Audio native reference for runtime diagnostics"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:17:40Z",
+          "conclusion": "SKIPPED",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38461667364/job/115518113937",
+          "name": "replay",
+          "startedAt": "2026-10-13T20:17:40Z",
+          "status": "COMPLETED",
+          "workflowName": "Frozen native audio layer replay"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:23:44Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38461667814/job/115518113647",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T20:17:43Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:26:54Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38461667814/job/115518114129",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T20:17:44Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:26:30Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38461667814/job/115518114156",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T20:17:43Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:26:54Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38461667814/job/115518114460",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T20:17:44Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:17:50Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38461667814/job/115518113931",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T20:17:43Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:42:31Z",
+          "conclusion": "FAILURE",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38461667814/job/115518114372",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T20:17:44Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:17:52Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38461667814/job/115518113349",
+          "name": "package / package",
+          "startedAt": "2026-10-13T20:17:43Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T20:42:52Z",
+          "conclusion": "FAILURE",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38461667814/job/115529120965",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T20:42:34Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "feat: 固定native音声layer 0の内部参照を監査して生成"
+    },
+    {
+      "baseRefName": "test/current-audio-encoder-reference",
+      "headRefName": "test/audio-onnx-stage-map",
+      "headRefOid": "2712b8944321f436569247e98d5ff432a82b05ac",
+      "isDraft": true,
+      "number": 74,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:44:38Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38457026157/job/115502284922",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T19:42:57Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:44:36Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38457026157/job/115502285311",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T19:42:57Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:45:06Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38457026157/job/115502285299",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T19:42:57Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:45:16Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38457026157/job/115502285367",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T19:42:57Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:43:12Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38457026157/job/115502284660",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T19:42:57Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:50:37Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38457026157/job/115502285236",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T19:42:57Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:43:09Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38457026157/job/115502284704",
+          "name": "package / package",
+          "startedAt": "2026-10-13T19:42:57Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:50:49Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38457026157/job/115505782326",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T19:50:40Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "test: 音声の元ONNX係数を保存層へ結び付け数値差を局所化"
+    },
+    {
+      "baseRefName": "test/current-audio-encoder-reference",
+      "headRefName": "test/audio-native-pow-probe",
+      "headRefOid": "f9afacef8f9f7e54198e4fbdb9f4d59646b25deb",
+      "isDraft": true,
+      "number": 73,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:25:56Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38454420324/job/115493342793",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T19:23:16Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:25:10Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38454420324/job/115493343169",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T19:23:17Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:25:44Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38454420324/job/115493342947",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T19:23:17Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:25:25Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38454420324/job/115493342886",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T19:23:21Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:23:25Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38454420324/job/115493342847",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T19:23:17Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:33:21Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38454420324/job/115493342871",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T19:23:17Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:23:30Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38454420324/job/115493342483",
+          "name": "package / package",
+          "startedAt": "2026-10-13T19:23:17Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:33:32Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38454420324/job/115497940669",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T19:33:24Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "test: native inverse power候補の実encoder不合格を記録"
+    },
+    {
+      "baseRefName": "test/gpu-constant-il2cpp",
+      "headRefName": "test/current-audio-encoder-reference",
+      "headRefOid": "076fbee089ec0f4fb810c5cd5da28f5c08faffc7",
+      "isDraft": true,
+      "number": 72,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:15:13Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38453128820/job/115488874760",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T19:13:31Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:15:15Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38453128820/job/115488874717",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T19:13:31Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:15:45Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38453128820/job/115488874912",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T19:13:31Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:15:32Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38453128820/job/115488874846",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T19:13:31Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:13:35Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38453128820/job/115488874234",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T19:13:30Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:24:16Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38453128820/job/115488874694",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T19:13:30Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:13:40Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38453128820/job/115488873663",
+          "name": "package / package",
+          "startedAt": "2026-10-13T19:13:30Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T19:24:29Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38453128820/job/115493814764",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T19:24:20Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "test: 現在の音声encoder数値gateと保存モデルを観測"
+    },
+    {
+      "baseRefName": "feat/bounded-gpu-constant-upload",
+      "headRefName": "test/gpu-constant-il2cpp",
+      "headRefOid": "24f0cb290934eb334b0e168f4b9419cbf60ae78d",
+      "isDraft": true,
+      "number": 71,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T18:22:36Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38446014716/job/115464491565",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T18:21:05Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T18:22:50Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38446014716/job/115464492107",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T18:21:06Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T18:23:17Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38446014716/job/115464492038",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T18:21:06Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T18:22:41Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38446014716/job/115464491834",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T18:21:05Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T18:21:17Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38446014716/job/115464491278",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T18:21:06Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T18:31:45Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38446014716/job/115464491537",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T18:21:05Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T18:21:16Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38446014716/job/115464491440",
+          "name": "package / package",
+          "startedAt": "2026-10-13T18:21:05Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T18:31:59Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38446014716/job/115469513903",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T18:31:48Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "fix: パッケージのGPU定数linker登録とIL2CPP probeを追加"
+    },
+    {
+      "baseRefName": "feat/bounded-gpu-constant-upload",
+      "headRefName": "test/bounded-audio-chain",
+      "headRefOid": "5985d54a26ed10222c4c43b131d511abe21e4054",
+      "isDraft": true,
+      "number": 70,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:43:57Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38440779619/job/115446471833",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T17:42:14Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:43:35Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38440779619/job/115446472122",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T17:42:13Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:44:02Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38440779619/job/115446471763",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T17:42:14Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:44:01Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38440779619/job/115446471907",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T17:42:13Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:42:23Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38440779619/job/115446471939",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T17:42:14Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:52:46Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38440779619/job/115446472117",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T17:42:13Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:42:34Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38440779619/job/115446471386",
+          "name": "package / package",
+          "startedAt": "2026-10-13T17:42:19Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:53:00Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38440779619/job/115451376860",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T17:52:49Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "test: 分割backboneで実PCM全chainを検証"
+    },
+    {
+      "baseRefName": "feat/image-cpu-preprocessing",
+      "headRefName": "feat/bounded-gpu-constant-upload",
+      "headRefOid": "2479a9cd2ea3efc2aa30f14ba7e7c6fcaa44713e",
+      "isDraft": true,
+      "number": 69,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:32:37Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38439218928/job/115441115079",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T17:30:36Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:32:34Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38439218928/job/115441115286",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T17:30:36Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:32:53Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38439218928/job/115441115210",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T17:30:36Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:32:11Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38439218928/job/115441115313",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T17:30:36Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:30:46Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38439218928/job/115441114596",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T17:30:36Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:43:07Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38439218928/job/115441114620",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T17:30:36Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:30:56Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38439218928/job/115441114796",
+          "name": "package / package",
+          "startedAt": "2026-10-13T17:30:36Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:43:28Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38439218928/job/115446910656",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T17:43:11Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "feat: 大きいGPU定数を分割転送し実backboneを検証"
+    },
+    {
+      "baseRefName": "feat/image-cpu-preprocessing",
+      "headRefName": "test/image-encoder-api-real",
+      "headRefOid": "60a74a4b372e2090424e27ccaa6841d9ad232c8a",
+      "isDraft": true,
+      "number": 68,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:00:48Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38434944855/job/115426391910",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T16:59:06Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:00:53Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38434944855/job/115426391468",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T16:59:06Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:01:25Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38434944855/job/115426391802",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T16:59:07Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:01:31Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38434944855/job/115426391397",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T16:59:07Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T16:59:21Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38434944855/job/115426391404",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T16:59:06Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:07:50Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38434944855/job/115426391529",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T16:59:06Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T16:59:28Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38434944855/job/115426390805",
+          "name": "package / package",
+          "startedAt": "2026-10-13T16:59:06Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:08:09Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38434944855/job/115430501577",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T17:07:53Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "test: 実画像encoder APIとbackbone定数サイズを検証"
+    },
+    {
+      "baseRefName": "feat/image-embedder-runtime",
+      "headRefName": "feat/image-cpu-preprocessing",
+      "headRefOid": "0d53aedbbb86ba9d02bde5ca654703ae651b72cf",
+      "isDraft": true,
+      "number": 67,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T16:58:55Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38434729633/job/115425642385",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T16:57:31Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T16:59:12Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38434729633/job/115425642458",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T16:57:31Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T16:59:56Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38434729633/job/115425641896",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T16:57:31Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T16:59:47Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38434729633/job/115425642246",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T16:57:31Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T16:57:38Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38434729633/job/115425641720",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T16:57:31Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:08:53Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38434729633/job/115425642358",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T16:57:32Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T16:57:42Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38434729633/job/115425641462",
+          "name": "package / package",
+          "startedAt": "2026-10-13T16:57:31Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T17:09:08Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38434729633/job/115431005241",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T17:08:56Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "feat: CPU画像前処理とRGB形式の入力変換を追加"
+    },
+    {
+      "baseRefName": "feat/audio-encoder-runtime",
+      "headRefName": "feat/image-embedder-runtime",
+      "headRefOid": "f6794ef4fa8cd85a0e69dcc7d144978d0ab46b59",
+      "isDraft": true,
+      "number": 65,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T15:55:14Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38425909568/job/115395119337",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T15:53:34Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T15:55:16Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38425909568/job/115395119358",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T15:53:33Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T15:55:27Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38425909568/job/115395119855",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T15:53:35Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T15:55:50Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38425909568/job/115395119374",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T15:53:34Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T15:53:43Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38425909568/job/115395119484",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T15:53:34Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T16:03:46Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38425909568/job/115395119876",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T15:53:34Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T15:53:46Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38425909568/job/115395118916",
+          "name": "package / package",
+          "startedAt": "2026-10-13T15:53:34Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T16:04:06Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38425909568/job/115400207639",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T16:03:49Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "feat: 画像の最終768次元APIとstage接続を追加"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "feat/image-feature-encoder-runtime",
+      "headRefOid": "46cea116f505e6836f9222e53a14ac536c6b176b",
+      "isDraft": true,
+      "number": 64,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T15:41:52Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38423962516/job/115388322951",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T15:40:10Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T15:41:52Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38423962516/job/115388322618",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T15:40:00Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T15:41:47Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38423962516/job/115388323068",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T15:40:03Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T15:42:01Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38423962516/job/115388322861",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T15:39:57Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T15:41:40Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38423962516/job/115388322035",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T15:41:33Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T15:49:52Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38423962516/job/115388322737",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T15:41:42Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T15:41:47Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38423962516/job/115388322692",
+          "name": "package / package",
+          "startedAt": "2026-10-13T15:41:33Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T15:50:11Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38423962516/job/115393347066",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T15:49:55Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "feat: 固定画像profileのencoder Runtime APIを追加"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "feat/audio-encoder-runtime",
+      "headRefOid": "280250e4ebba9d1006a74c377d39181fcbd93a55",
+      "isDraft": true,
+      "number": 62,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T12:19:23Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38396035894/job/115292030515",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T12:17:42Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T12:19:28Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38396035894/job/115292030451",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T12:17:42Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T12:19:58Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38396035894/job/115292030151",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T12:17:43Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T12:19:56Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38396035894/job/115292030656",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T12:17:43Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T12:17:54Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38396035894/job/115292030334",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T12:17:43Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T12:28:47Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38396035894/job/115292030414",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T12:17:42Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T12:17:53Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38396035894/job/115292030464",
+          "name": "package / package",
+          "startedAt": "2026-10-13T12:17:42Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T12:29:00Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38396035894/job/115296630673",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T12:28:50Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "feat: 音声GPUパイプラインと最終768次元APIを追加"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "feat/audio-native-silu-onnx",
+      "headRefOid": "a9cef60500b44039b87b42a4239aa9ffe74624f0",
+      "isDraft": true,
+      "number": 60,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T15:53:37Z",
+          "conclusion": "SKIPPED",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38425924409/job/115395171985",
+          "name": "native-reference",
+          "startedAt": "2026-10-13T15:53:38Z",
+          "status": "COMPLETED",
+          "workflowName": "Audio native reference for runtime diagnostics"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T16:00:28Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38425924552/job/115395168866",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T15:53:41Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T16:00:25Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38425924552/job/115395168889",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T15:53:41Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T16:01:57Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38425924552/job/115395169452",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T15:53:41Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T16:03:04Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38425924552/job/115395168820",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T15:53:40Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T15:53:50Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38425924552/job/115395168900",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T15:53:40Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T16:06:43Z",
+          "conclusion": "FAILURE",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38425924552/job/115395169027",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T15:53:40Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T15:53:49Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38425924552/job/115395168691",
+          "name": "package / package",
+          "startedAt": "2026-10-13T15:53:40Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T16:06:54Z",
+          "conclusion": "FAILURE",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38425924552/job/115401642898",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T16:06:46Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "feat: 固定音声参照と実最終backboneを検証しencoder不合格を保持"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "feat/vision-layer-diagnostics",
+      "headRefOid": "d500b5f0e3b4a61c2672d63aa0d87608f9522459",
+      "isDraft": true,
+      "number": 53,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T05:17:03Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38350476279/job/115141478759",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T05:15:37Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T05:17:02Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38350476279/job/115141478581",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T05:15:37Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T05:17:25Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38350476279/job/115141478720",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T05:15:36Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T05:17:23Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38350476279/job/115141478614",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T05:15:36Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T05:15:50Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38350476279/job/115141478590",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T05:15:37Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T05:23:32Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38350476279/job/115141478637",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T05:15:37Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T05:15:47Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38350476279/job/115141478396",
+          "name": "package / package",
+          "startedAt": "2026-10-13T05:15:37Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T05:23:42Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38350476279/job/115143581224",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T05:23:34Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "feat: diagnose real vision FP32 stages without changing the failed path"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "test/vision-sentis-reference",
+      "headRefOid": "b5766154a209622849e9d71d11955b9bd7e0a65c",
+      "isDraft": true,
+      "number": 41,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-12T23:05:47Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38320212347/job/115046269517",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-12T23:04:42Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-12T23:05:47Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38320212347/job/115046270046",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-12T23:04:42Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-12T23:06:07Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38320212347/job/115046270173",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-12T23:04:42Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-12T23:06:05Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38320212347/job/115046269865",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-12T23:04:42Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-12T23:04:50Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38320212347/job/115046268992",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-12T23:04:41Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-12T23:11:50Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38320212347/job/115046269644",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-12T23:04:42Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-12T23:04:51Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38320212347/job/115046269353",
+          "name": "package / package",
+          "startedAt": "2026-10-12T23:04:42Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-12T23:12:05Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38320212347/job/115048296686",
+          "name": "Required CI",
+          "startedAt": "2026-10-12T23:11:53Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "test: validate real Sentis vision profiles and distinguish CPU constants from fallback"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "feat/audio-encoder-export",
+      "headRefOid": "e13adcd96ed3e10802131dfc94c48d9533f37ee2",
+      "isDraft": false,
+      "number": 40,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T01:25:55Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331914586/job/115083336845",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-13T01:23:40Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T01:26:09Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331914586/job/115083336923",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-13T01:23:40Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T01:27:57Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331914586/job/115083336753",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-13T01:23:40Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T01:26:03Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331914586/job/115083336968",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-13T01:23:40Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T01:23:47Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331914586/job/115083336462",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-13T01:23:39Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T01:29:36Z",
+          "conclusion": "FAILURE",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331914586/job/115083336775",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-13T01:23:39Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T01:23:48Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331914586/job/115083336726",
+          "name": "package / package",
+          "startedAt": "2026-10-13T01:23:39Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-13T01:29:45Z",
+          "conclusion": "FAILURE",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331914586/job/115084817489",
+          "name": "Required CI",
+          "startedAt": "2026-10-13T01:29:38Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "feat: export fixed audio encoder and gate official real-weight references"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "feat/m2-player-sample-validation",
+      "headRefOid": "a34bf9057694e141e939ac41bea3e2b713b0a15b",
+      "isDraft": true,
+      "number": 31,
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-12T21:31:18Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38311045530/job/115016586439",
+          "name": "python / ubuntu-latest / Python 3.13",
+          "startedAt": "2026-10-12T21:30:26Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-12T21:31:21Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38311045530/job/115016586440",
+          "name": "python / ubuntu-latest / Python 3.14",
+          "startedAt": "2026-10-12T21:30:26Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-12T21:31:36Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38311045530/job/115016586377",
+          "name": "python / windows-latest / Python 3.13",
+          "startedAt": "2026-10-12T21:30:27Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-12T21:31:22Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38311045530/job/115016586468",
+          "name": "python / windows-latest / Python 3.14",
+          "startedAt": "2026-10-12T21:30:27Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-12T21:30:36Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38311045530/job/115016585675",
+          "name": "workflow-lint / actionlint",
+          "startedAt": "2026-10-12T21:30:26Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-12T21:33:13Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38311045530/job/115016586300",
+          "name": "model-reference / reference",
+          "startedAt": "2026-10-12T21:30:26Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-12T21:30:36Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38311045530/job/115016586007",
+          "name": "package / package",
+          "startedAt": "2026-10-12T21:30:26Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        },
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-10-12T21:33:28Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38311045530/job/115017553775",
+          "name": "Required CI",
+          "startedAt": "2026-10-12T21:33:16Z",
+          "status": "COMPLETED",
+          "workflowName": "CI"
+        }
+      ],
+      "title": "Validate sample Player shutdown on Unity21 and default FP32 GPU"
+    }
+  ],
+  "completion": {
+    "step_1": false,
+    "step_2": false,
+    "step_3": false
+  }
+}

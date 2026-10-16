@@ -1,0 +1,333 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "scope": "original_saved_cpu_tail_input_gpu_component_qualification_only",
+  "original_golden_unchanged": true,
+  "original_generation_intermediate_reference": false,
+  "reference_context": "Original saved graph f9c5175a... observed on current AVX2 CPU, normal/observed final bits match. Its final output still fails the frozen original golden at three elements.",
+  "baseline": {
+    "file": "vision-saved-original-cpu-tail-gpu-11c01fc130be1683567dade87f27038b452a1523.json",
+    "sha256": "c4ea8c466704bc25df5997ff44447eaa9586070e1004050bef9421006d831669",
+    "source": "11c01fc130be1683567dade87f27038b452a1523",
+    "success": false,
+    "case": {
+      "case_index": 0,
+      "rms": {
+        "bit_differences": 89563,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 1.9073486328125e-06,
+        "maximum_tolerance_ratio": 0.002340172497859093
+      },
+      "projection": {
+        "bit_differences": 116789,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 2.384185791015625e-06,
+        "maximum_tolerance_ratio": 0.12615523917771795
+      },
+      "rms_output": {
+        "file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\vision-saved-original-cpu-tail-gpu-11c01fc130be1683567dade87f27038b452a1523-captures\\case-0-rms-output.bin",
+        "sha256": "8dd1f6030b7952acbbc576d92662de7c43efd20fd223dc09c0838a539525b34c",
+        "shape": [
+          256,
+          768
+        ]
+      },
+      "projection_output": {
+        "file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\vision-saved-original-cpu-tail-gpu-11c01fc130be1683567dade87f27038b452a1523-captures\\case-0-projection-output.bin",
+        "sha256": "26561c9fd1ecf83757f8866e808cbedc7b2f15072e989948745c3460302b9bee",
+        "shape": [
+          256,
+          512
+        ]
+      },
+      "projection_candidates": [
+        {
+          "bit_differences": 0,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "block": 192,
+          "output": {
+            "file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\vision-saved-original-cpu-tail-gpu-11c01fc130be1683567dade87f27038b452a1523-captures\\case-0-projection-block-192.bin",
+            "sha256": "41c296d96565c9e608f8cb367cb4d5c7d6fd7c9dbf40e39605dfba858cff16f7",
+            "shape": [
+              256,
+              512
+            ]
+          }
+        },
+        {
+          "bit_differences": 116306,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 3.337860107421875e-06,
+          "maximum_tolerance_ratio": 0.15982709313112875,
+          "block": 384,
+          "output": {
+            "file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\vision-saved-original-cpu-tail-gpu-11c01fc130be1683567dade87f27038b452a1523-captures\\case-0-projection-block-384.bin",
+            "sha256": "3c726e96de24bd2747670d2c36572e495e387a7ed558fd9dd9f1e86ae1c3efd8",
+            "shape": [
+              256,
+              512
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "candidate": {
+    "file": "vision-saved-original-cpu-tail-gpu-c3460fc20d6fc7f8599abcb626d210b0d23aef20.json",
+    "sha256": "3003ddc4699aa0bb06275a72954d84c8056076a6182c450a4df288e7ce99bfb5",
+    "source": "c3460fc20d6fc7f8599abcb626d210b0d23aef20",
+    "success": true,
+    "case": {
+      "case_index": 0,
+      "rms": {
+        "bit_differences": 89563,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 1.9073486328125e-06,
+        "maximum_tolerance_ratio": 0.002340172497859093
+      },
+      "projection": {
+        "bit_differences": 116789,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 2.384185791015625e-06,
+        "maximum_tolerance_ratio": 0.12615523917771795
+      },
+      "rms_output": {
+        "file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\vision-saved-original-cpu-tail-gpu-c3460fc20d6fc7f8599abcb626d210b0d23aef20-captures\\case-0-rms-output.bin",
+        "sha256": "8dd1f6030b7952acbbc576d92662de7c43efd20fd223dc09c0838a539525b34c",
+        "shape": [
+          256,
+          768
+        ]
+      },
+      "projection_output": {
+        "file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\vision-saved-original-cpu-tail-gpu-c3460fc20d6fc7f8599abcb626d210b0d23aef20-captures\\case-0-projection-output.bin",
+        "sha256": "26561c9fd1ecf83757f8866e808cbedc7b2f15072e989948745c3460302b9bee",
+        "shape": [
+          256,
+          512
+        ]
+      },
+      "projection_candidates": [
+        {
+          "bit_differences": 0,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "block": 192,
+          "output": {
+            "file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\vision-saved-original-cpu-tail-gpu-c3460fc20d6fc7f8599abcb626d210b0d23aef20-captures\\case-0-projection-block-192.bin",
+            "sha256": "41c296d96565c9e608f8cb367cb4d5c7d6fd7c9dbf40e39605dfba858cff16f7",
+            "shape": [
+              256,
+              512
+            ]
+          }
+        },
+        {
+          "bit_differences": 116306,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 3.337860107421875e-06,
+          "maximum_tolerance_ratio": 0.15982709313112875,
+          "block": 384,
+          "output": {
+            "file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\vision-saved-original-cpu-tail-gpu-c3460fc20d6fc7f8599abcb626d210b0d23aef20-captures\\case-0-projection-block-384.bin",
+            "sha256": "3c726e96de24bd2747670d2c36572e495e387a7ed558fd9dd9f1e86ae1c3efd8",
+            "shape": [
+              256,
+              512
+            ]
+          }
+        }
+      ],
+      "candidate_rms": {
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "output": {
+          "file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\vision-saved-original-cpu-tail-gpu-c3460fc20d6fc7f8599abcb626d210b0d23aef20-captures\\case-0-candidate-rms-output.bin",
+          "sha256": "6712c45b6b69c54d07890f324f1999e960838a7c82121b678a33fbfa50553e1a",
+          "shape": [
+            256,
+            768
+          ]
+        },
+        "layer_count": 197
+      }
+    },
+    "actual_backend": "GPUCompute",
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0
+  },
+  "preparation": {
+    "scope": "one_unscaled_tail_rms_standard_fp32_onnx_preparation_only",
+    "producer": "01911b00699e69aa7dd6c8fb8c74310ce7e26d21",
+    "input_sha256": "014ba4aac25a915f4a1bdeae4c8182d675adfa9f6e99dbff7c229957e1b7d7b1",
+    "expected_sha256": "6712c45b6b69c54d07890f324f1999e960838a7c82121b678a33fbfa50553e1a",
+    "onnx_sha256": "af13361f2eee7c768e53ba4bedabead4e21c4092ddbd50a869e6735b1b2d8f5c",
+    "node_count": 288,
+    "cpu_candidate_bit_differences": 0,
+    "onnx_bit_differences": 0,
+    "statistics_minimum": 151862.328125,
+    "statistics_maximum": 1576229.625,
+    "gpu_validated": false,
+    "full_encoder_validated": false,
+    "end_to_end_validated": false
+  },
+  "equation_probe": {
+    "scope": "small_saved_tail_equation_probe_only_no_model_inference",
+    "rows": 256,
+    "width": 768,
+    "cpu_capability": "AVX2",
+    "torch_version": "2.14.1+cpu",
+    "statistics_minimum": 151862.328125,
+    "statistics_maximum": 1576229.625,
+    "original_golden_unchanged": true,
+    "gpu_validated": false,
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "comparisons": [
+      {
+        "mean": "current_native_mean",
+        "inverse": "pow",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      {
+        "mean": "current_native_mean",
+        "inverse": "sqrt_reciprocal",
+        "bit_differences": 18889,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 9.5367431640625e-07,
+        "maximum_tolerance_ratio": 0.0022629635109353862
+      },
+      {
+        "mean": "current_native_mean",
+        "inverse": "refined",
+        "executed": false,
+        "error": "refinement requires bounded positive FP32 statistics"
+      },
+      {
+        "mean": "current_native_mean",
+        "inverse": "offline_same_refinement_above_1e6_not_accepted_runtime",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      {
+        "mean": "explicit_cascade_mean768",
+        "inverse": "pow",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      {
+        "mean": "explicit_cascade_mean768",
+        "inverse": "sqrt_reciprocal",
+        "bit_differences": 18889,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 9.5367431640625e-07,
+        "maximum_tolerance_ratio": 0.0022629635109353862
+      },
+      {
+        "mean": "explicit_cascade_mean768",
+        "inverse": "refined",
+        "executed": false,
+        "error": "refinement requires bounded positive FP32 statistics"
+      },
+      {
+        "mean": "explicit_cascade_mean768",
+        "inverse": "offline_same_refinement_above_1e6_not_accepted_runtime",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      }
+    ]
+  },
+  "tests": [
+    {
+      "file": "vision-saved-original-tail-components-red-20261015.xml",
+      "sha256": "33a0263e15b7d2712ed8f7fb8e0a802ce81209ed9ace82bd90ad004f5f221cee",
+      "totals": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Failed(Child)",
+        "total": "1",
+        "passed": "0",
+        "failed": "1",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 09:40:54Z",
+        "end-time": "2026-10-15 09:40:58Z",
+        "duration": "3.2053001"
+      }
+    },
+    {
+      "file": "vision-tail-rms-export-red-20261015.xml",
+      "sha256": "dd6b1f75e3428b29b688cec5af6d7b8e79a0ec7e9e31944e5f5d06af32fb47d8",
+      "totals": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "6",
+        "skipped": "0",
+        "tests": "6",
+        "time": "0.294",
+        "timestamp": "2026-10-15T18:44:19.466342+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      }
+    },
+    {
+      "file": "vision-tail-rms-export-green-20261015.xml",
+      "sha256": "ab0c69087c4cd5dc865720666560ba832624ed26e50219029fe40b6cb220c25f",
+      "totals": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "38",
+        "time": "2.781",
+        "timestamp": "2026-10-15T18:44:43.026325+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      }
+    },
+    {
+      "file": "vision-saved-original-tail-components-candidate-20261015.xml",
+      "sha256": "bfe3ac427c2207336e5d21662a2b31bed4a0d02b0447a66a76e4861c0289849b",
+      "totals": {
+        "id": "2",
+        "testcasecount": "1",
+        "result": "Passed",
+        "total": "1",
+        "passed": "1",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 09:46:59Z",
+        "end-time": "2026-10-15 09:47:03Z",
+        "duration": "3.8871578"
+      }
+    }
+  ],
+  "change": "Opt-in unscaled width-768 RMS export uses ordered FP32 cascade, refined mean quotient, sqrt and reciprocal. Explicit 2e6 statistic ceiling; existing exporters/default 1e6 domain are unchanged. Standard FP32 ONNX only.",
+  "limitations": [
+    "One captured tail input only; no full encoder or other profile acceptance.",
+    "No change to original reference, learned coefficients or tolerance.",
+    "The new exported candidate is not adopted as product behavior.",
+    "CPU/GPU component exactness does not prove end-to-end or original-generation reference compatibility."
+  ],
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

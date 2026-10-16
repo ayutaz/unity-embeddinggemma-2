@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "scope": "three_original_input_independent_rotary_profile_captures_only",
+  "run_id": 38729203226,
+  "source": "a5423c400846d6429ed980895503da928bc69e85",
+  "profiles": [
+    {
+      "manifest_sha256": "5137c37ff4d83a9be21efeb7498dadd1edd138bc426c4fb6bbc6a96098b95b8a",
+      "report": {
+        "scope": "original_data_independent_rotary_only",
+        "source": "a5423c400846d6429ed980895503da928bc69e85",
+        "profile": "square",
+        "graph_sha256": "f9c5175a1d75289ce814a9651f496f9bdae5e873ac66199a5c3d03e0172c16cc",
+        "runtime": {
+          "torch_version": "2.14.1+cu130",
+          "cpu_capability": "AVX2"
+        },
+        "captures": {
+          "cos": {
+            "file": "cos-fp32.bin",
+            "sha256": "8e7ad14c37f14fb5b11e70b08701181c67ad24f4a874385eee5dd63655b39b75",
+            "shape": [
+              1,
+              2520,
+              64
+            ]
+          },
+          "sin": {
+            "file": "sin-fp32.bin",
+            "sha256": "1eeda3ae4a8b5bf7f09e29b6d6c763054d9b49ec6de551e09d54a080232a331e",
+            "shape": [
+              1,
+              2520,
+              64
+            ]
+          }
+        },
+        "independent_of_image_input": true,
+        "patch_executed": false,
+        "full_encoder_executed": false,
+        "original_golden_changed": false,
+        "square_original_native_match": true,
+        "full_gpu_encoder_validated": false,
+        "end_to_end_validated": false
+      }
+    },
+    {
+      "manifest_sha256": "02e43d7327de4e1790eafdb0bec154c460aff8e87fd3e0d70b8969e3161747f3",
+      "report": {
+        "scope": "original_data_independent_rotary_only",
+        "source": "a5423c400846d6429ed980895503da928bc69e85",
+        "profile": "landscape",
+        "graph_sha256": "0298009cc323902249fa0a828990191aa913745ca98b4e4cbc613ab5a411b7da",
+        "runtime": {
+          "torch_version": "2.14.1+cu130",
+          "cpu_capability": "AVX2"
+        },
+        "captures": {
+          "cos": {
+            "file": "cos-fp32.bin",
+            "sha256": "b340ca30a1c351cd7aa94e5d75c4736263380eb5d0175ceaacf3ef0022271658",
+            "shape": [
+              1,
+              2520,
+              64
+            ]
+          },
+          "sin": {
+            "file": "sin-fp32.bin",
+            "sha256": "7b144ae05e9483ad01bf4edf1efed8f48b7aa15cf4046d52d1f0fd26191d565d",
+            "shape": [
+              1,
+              2520,
+              64
+            ]
+          }
+        },
+        "independent_of_image_input": true,
+        "patch_executed": false,
+        "full_encoder_executed": false,
+        "original_golden_changed": false,
+        "square_original_native_match": null,
+        "full_gpu_encoder_validated": false,
+        "end_to_end_validated": false
+      }
+    },
+    {
+      "manifest_sha256": "eb2c3e4db71a9cffb67196d0e0abd8e886e4f7d1f49f5cd4f63a4629820fa85e",
+      "report": {
+        "scope": "original_data_independent_rotary_only",
+        "source": "a5423c400846d6429ed980895503da928bc69e85",
+        "profile": "portrait",
+        "graph_sha256": "eb54aabf49564f42a162f48fdd97312628a82969ed6b6ebc98ad7002d2653a2b",
+        "runtime": {
+          "torch_version": "2.14.1+cu130",
+          "cpu_capability": "AVX512"
+        },
+        "captures": {
+          "cos": {
+            "file": "cos-fp32.bin",
+            "sha256": "90a1ddb38c360f63b6a4c6b4e515b1deb738af63152ca3aa9c55c51671506bb6",
+            "shape": [
+              1,
+              2520,
+              64
+            ]
+          },
+          "sin": {
+            "file": "sin-fp32.bin",
+            "sha256": "d142a43075e758f7b08cb33c260ee19124de71e71585d2b3bdfc24260ed3f82f",
+            "shape": [
+              1,
+              2520,
+              64
+            ]
+          }
+        },
+        "independent_of_image_input": true,
+        "patch_executed": false,
+        "full_encoder_executed": false,
+        "original_golden_changed": false,
+        "square_original_native_match": null,
+        "full_gpu_encoder_validated": false,
+        "end_to_end_validated": false
+      }
+    }
+  ],
+  "original_manifest_unchanged": true,
+  "original_golden_changed": false,
+  "learned_weights_changed": false,
+  "qualification": "Square bytes match the prior golden-reproducing native capture. Landscape/portrait position tables are evaluated from audited saved graph ancestors without input, patch or encoder execution. Full six-case original GPU gates remain required.",
+  "all_original_image_gpu_cases_validated": false,
+  "end_to_end_validated": false,
+  "stages_3_4_complete": false
+}

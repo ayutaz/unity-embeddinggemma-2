@@ -1,5 +1,13 @@
 # 検索サンプル用モデルの取得・変換・配置・更新
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。実モデル実行は停止中。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
+
+## 現在の成果物利用と再生成の方針
+
+実モデル検証は2026-10-14に停止した。以下のtextモデル準備手順の固定source実測は維持する。画像はQuery / Document / RawのPython参照18件を生成済み、音声Query / Rawと修正後ONNXの実モデルgateは未完了。[最新状態](status.md)。
+
+監査済み保存graph・入力・参照JSONをhashとproducer SHAで再利用し、旧goldenを上書きしない。artifact期限切れ / 不足は未取得として記録し、再取得・再生成が必要な場合だけActionsを使う。RuntimeとvalidationのSHA、producerとgraph SHAは別々に監査する。GPU専用fixtureのコード変更だけで古いconsumerのUPM解決が更新されたとは扱わない。モデル・大きい中間値はGit / LFSへ含めない。
+
 対象: Unity 6000.3.16f1 / Sentis 2.6.1、固定`google/embeddinggemma-2` revision `914f7f89142e33e77833254d9c9b90c3cef7303b`。TextSearchの6文書 / 4queryとM1の15入力を使う。モデルをGit / LFSへコミットしない。
 
 モデル参照と`.pt2`の生成はActions、Sentisの`.sentis`変換と実GPU検証は認証済みEditorで行う。ローカル操作にGitHubのUnity Secretsは不要。Linux CPUの任意手動Unity workflowは別経路で、未実行を合格にしない。

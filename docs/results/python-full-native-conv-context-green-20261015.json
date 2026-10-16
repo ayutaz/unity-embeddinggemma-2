@@ -1,0 +1,49 @@
+{
+  "success": true,
+  "scope": "python_offline_full_regression_four_environments_only",
+  "source": "5e773ccbf5b4c6c9f086c96e5c026fcfc0cde614",
+  "run_id": 38635383175,
+  "run_url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38635383175",
+  "environments": [
+    {
+      "environment": "ubuntu313",
+      "tests": 776,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "path": "artifacts\\numerical-acceptance-state\\python-full-5e773cc-ubuntu313\\python-tests.xml",
+      "sha256": "8c05f8f053be6b1deb412ea58ae0dee779b0f7e62d2ae703966740d132b785a6"
+    },
+    {
+      "environment": "ubuntu314",
+      "tests": 776,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "path": "artifacts\\numerical-acceptance-state\\python-full-5e773cc-ubuntu314\\python-tests.xml",
+      "sha256": "ff2c369851ffaae49b7569c8cf953ca0142e79b876b8239648428cf21e39ec80"
+    },
+    {
+      "environment": "windows313",
+      "tests": 776,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "path": "artifacts\\numerical-acceptance-state\\python-full-5e773cc-windows313\\python-tests.xml",
+      "sha256": "298164ae96b95831c0608b41887ebcd0c008f92c6b6282b5aceed85f1a200e43"
+    },
+    {
+      "environment": "windows314",
+      "tests": 776,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "path": "artifacts\\numerical-acceptance-state\\python-full-5e773cc-windows314\\python-tests.xml",
+      "sha256": "60cd20e2f20cd74bd1ebd38371bdb5ccbae3a77e68ad8593b156b05c78bfdc24"
+    }
+  ],
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "end_to_end_validated": false,
+  "later_block16_and_scalar_fusion_changes_included": false
+}

@@ -1,0 +1,386 @@
+{
+  "success": false,
+  "scope": "original_context_first_attention_projection_diagnosis_only",
+  "runtime_source": "1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c",
+  "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "original_reference_changed": false,
+  "gpu_observation": {
+    "success": true,
+    "normal_final_matches_observed_bits": true,
+    "actual_backend": "GPUCompute",
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "whole_encoder_mismatched_elements": 203,
+    "stages": [
+      {
+        "stage": "input_projection",
+        "boundary": "/subsample_conv_projection/input_proj_linear/MatMul_output_0",
+        "original_native_sha256": "dc54774840fed958a310c6092e5c5c3483de74be52df7914d2bd128a99192969",
+        "expected_transform": "identity",
+        "actual_transform": "identity",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\input_projection-fp32.bin",
+        "actual_sha256": "dc54774840fed958a310c6092e5c5c3483de74be52df7914d2bd128a99192969",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      {
+        "stage": "pre_layer_norm_input",
+        "boundary": "/feed_forward1/ffw_layer_1/Clip_output_0",
+        "original_native_sha256": "5cc9770575ad3c8873e4fd9f9b0fcec826626c60242217bec9edee7c6362c917",
+        "expected_transform": "original_fp32_input_clip",
+        "actual_transform": "identity",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\pre_layer_norm_input-fp32.bin",
+        "actual_sha256": "5cc9770575ad3c8873e4fd9f9b0fcec826626c60242217bec9edee7c6362c917",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      {
+        "stage": "activation_input",
+        "boundary": "/feed_forward1/ffw_layer_2/Clip_output_0",
+        "original_native_sha256": "ad35b972c4e5e513fc9edb68192470de427833ef17c054bc0a55f6c869e8ba5f",
+        "expected_transform": "original_fp32_input_clip",
+        "actual_transform": "identity",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\activation_input-fp32.bin",
+        "actual_sha256": "266bfb8443ebeac47f94ddb4960b2b818618b017a2706e9090d153b386f4c3f5",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      {
+        "stage": "feed_forward1_output",
+        "boundary": "/feed_forward1/Add_output_0",
+        "original_native_sha256": "d5931033c782ff11a24e1caf8f184c620904a85b6b508547108f3a3503622aa5",
+        "expected_transform": "identity",
+        "actual_transform": "identity",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\feed_forward1_output-fp32.bin",
+        "actual_sha256": "d5931033c782ff11a24e1caf8f184c620904a85b6b508547108f3a3503622aa5",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      {
+        "stage": "norm_pre_attn",
+        "boundary": "/norm_pre_attn/Mul_1_output_0",
+        "original_native_sha256": "53456d0a3731ffab84bca09d6397232777bcaeadea34ff369826169d87785e5d",
+        "expected_transform": "identity",
+        "actual_transform": "identity",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\norm_pre_attn-fp32.bin",
+        "actual_sha256": "53456d0a3731ffab84bca09d6397232777bcaeadea34ff369826169d87785e5d",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      {
+        "stage": "self_attn",
+        "boundary": "/attentions.0/post/linear/MatMul_output_0",
+        "original_native_sha256": "46ea551902314faf4c3d4650ad793ffd8ec94da8f8f11f947df36c55d86beb87",
+        "expected_transform": "identity",
+        "actual_transform": "original_fp32_output_clip_for_diagnostic_comparison_only",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\self_attn-fp32.bin",
+        "actual_sha256": "ad407963aaffb992458ff2e75e47ca7f78002cb5e8178b5a7cbe392e89eb4b72",
+        "bit_differences": 201927,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.2551791261773593
+      },
+      {
+        "stage": "attention_residual",
+        "boundary": "/lconv1d/pre_layer_norm/Cast_output_0",
+        "original_native_sha256": "3502a18ac5eb7e786b6074f7d696b1a2e4f543abc034fc9403a9cc159d374982",
+        "expected_transform": "original_fp32_residual_sum",
+        "actual_transform": "identity",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\attention_residual-fp32.bin",
+        "actual_sha256": "bdd8576f7730167053f9a6b659e5e9d94d99c99011a9af17172707d8f8e69e6c",
+        "bit_differences": 68209,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.2326692951649326
+      },
+      {
+        "stage": "lconv1d",
+        "boundary": "/lconv1d/Add_output_0",
+        "original_native_sha256": "a1452fb4b832a371af1255b6d6cf384144755ba91d951abc36841ec3b327b982",
+        "expected_transform": "identity",
+        "actual_transform": "identity",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\lconv1d-fp32.bin",
+        "actual_sha256": "3086adec19fdad487da20c01799cf404c02875df7a331c741a5775b4ad7b449c",
+        "bit_differences": 201063,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.20205103739930064
+      },
+      {
+        "stage": "q_proj",
+        "boundary": "/attentions.0/q_proj/linear/MatMul_output_0",
+        "original_native_sha256": "578c51afdf6b3477817d25c04ba8d66c79c75b77439d2ada54adac26e63726bb",
+        "expected_transform": "identity",
+        "actual_transform": "original_fp32_output_clip_for_diagnostic_comparison_only",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\q_proj-fp32.bin",
+        "actual_sha256": "578c51afdf6b3477817d25c04ba8d66c79c75b77439d2ada54adac26e63726bb",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      {
+        "stage": "k_proj",
+        "boundary": "/attentions.0/k_proj/linear/MatMul_output_0",
+        "original_native_sha256": "b97b6b9cb8a45f34c9fff0c99101c765df27ec022f5ec12eb3222b69cd72f577",
+        "expected_transform": "identity",
+        "actual_transform": "original_fp32_output_clip_for_diagnostic_comparison_only",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\k_proj-fp32.bin",
+        "actual_sha256": "b97b6b9cb8a45f34c9fff0c99101c765df27ec022f5ec12eb3222b69cd72f577",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      {
+        "stage": "v_proj",
+        "boundary": "/attentions.0/v_proj/linear/MatMul_output_0",
+        "original_native_sha256": "139c51573680b3bb8b7a519a5dc611db4ee87f9879af7c7826c76f54ec818e15",
+        "expected_transform": "identity",
+        "actual_transform": "original_fp32_output_clip_for_diagnostic_comparison_only",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\v_proj-fp32.bin",
+        "actual_sha256": "8d7874fb5b4597979f2ba03fa1e757c6dfac2a59d5360cc89aef98ab8ebe978d",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.0
+      },
+      {
+        "stage": "relative_k_proj",
+        "boundary": "/attentions.0/relative_k_proj/MatMul_output_0",
+        "original_native_sha256": "48b27e03f9d2480518acdad03d90c41ed2224208c72dac56a5a4bbcff1bd064e",
+        "expected_transform": "identity",
+        "actual_transform": "identity",
+        "actual_file": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\relative_k_proj-fp32.bin",
+        "actual_sha256": "48b27e03f9d2480518acdad03d90c41ed2224208c72dac56a5a4bbcff1bd064e",
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_tolerance_ratio": 0.0
+      }
+    ],
+    "execution": {
+      "terminal": true,
+      "exit_code": 0,
+      "elapsed_seconds": 69.45432560000336,
+      "nunit": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "note": "Raw GPU projection snapshots remain raw. Original output Clip is applied only in diagnostic comparison; the product path remains GPU. The attention residual expected value is the original FP32 sum."
+  },
+  "native_projection_reference": {
+    "run_id": 38660240389,
+    "source": "c03022264c4bab5035f1e87721a6c71fe6a61d01",
+    "success": true,
+    "context_validated": true,
+    "native_final_exact_match": true,
+    "original_common_parts_bit_identical": 12,
+    "full_encoder_validated": false,
+    "unity_validated": false
+  },
+  "full_replay_failure": {
+    "run_id": 38659893615,
+    "source": "7ba22ac11667b3b65b66ca7c5aae0c6622679559",
+    "success": false,
+    "error": "native replay does not match pinned subsample final",
+    "note": "The CPU subsample diagnostic failed and remains failed. Independent attention capture preserves the pinned layer input/final gate; it does not substitute for the full subsample replay."
+  },
+  "tdd": {
+    "gpu_output_capture": "1 red -> 1 GPU green",
+    "projection_capture": "5 red -> related 20 green",
+    "independent_scope": "1 red -> related 21 green",
+    "operation_capture": "4 red -> related 24 green"
+  },
+  "next_action": "Compare scaled/blocked Q and K, native batched matrix products, tanh, softmax and attended values; raw Q/K/V and relative projection Clip boundaries are bit exact.",
+  "attention_operation_reference": {
+    "run_id": 38661214188,
+    "source": "5a51cfff0efa955b6862abc481b2230f312b87ac",
+    "verified_pass": true,
+    "original_common_parts_bit_identical": 17,
+    "part_count": 30,
+    "receipt": "m4-native-attention-operation-reference-and-fma-oracle-20261015.json"
+  },
+  "unresolved": [
+    "Whole audio encoder remains 203 mismatches",
+    "Other original audio signals and padded profile are unvalidated for this candidate",
+    "All three FP32 image profiles",
+    "Actual PCM/Texture to normalized 768 API and all role, mask, boundary, ownership and reuse contracts",
+    "Persistent allocation warning origin remains unresolved"
+  ],
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "evidence": [
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence.json",
+      "bytes": 11914,
+      "sha256": "b13b56a81319ee877893aab33ca6e6c9ba208fb668200b90ee0ded14ea1d578b"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-reference-c030222-20261015\\audio-attention-replay-report.json",
+      "bytes": 5135,
+      "sha256": "d7c46da5391561c2879c56bc7d1796b95aba38e7bf61d8875a5c685b4623d5bb"
+    },
+    {
+      "path": "artifacts\\k\\artifacts\\audio-native-feed-forward-replay\\audio-layer-replay-report.json",
+      "bytes": 3854,
+      "sha256": "99529dc0fa6c74825b23fca653d82091797ff1e5267d26c5cdae723fcf86f501"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\native-attention-replay-full-failed-7ba22ac-20261015\\audio-layer-replay-7ba22ac11667b3b65b66ca7c5aae0c6622679559\\audio-layer-replay-report.json",
+      "bytes": 438,
+      "sha256": "73bc5581347b140676bd98e606afa29d426c0777421d09cd254d344d6463c70b"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\input_projection-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "dc54774840fed958a310c6092e5c5c3483de74be52df7914d2bd128a99192969"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\pre_layer_norm_input-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "5cc9770575ad3c8873e4fd9f9b0fcec826626c60242217bec9edee7c6362c917"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\activation_input-fp32.bin",
+      "bytes": 4587520,
+      "sha256": "266bfb8443ebeac47f94ddb4960b2b818618b017a2706e9090d153b386f4c3f5"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\feed_forward1_output-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "d5931033c782ff11a24e1caf8f184c620904a85b6b508547108f3a3503622aa5"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\norm_pre_attn-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "53456d0a3731ffab84bca09d6397232777bcaeadea34ff369826169d87785e5d"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\self_attn-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "ad407963aaffb992458ff2e75e47ca7f78002cb5e8178b5a7cbe392e89eb4b72"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\attention_residual-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "bdd8576f7730167053f9a6b659e5e9d94d99c99011a9af17172707d8f8e69e6c"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\lconv1d-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "3086adec19fdad487da20c01799cf404c02875df7a331c741a5775b4ad7b449c"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\q_proj-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "578c51afdf6b3477817d25c04ba8d66c79c75b77439d2ada54adac26e63726bb"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\k_proj-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "b97b6b9cb8a45f34c9fff0c99101c765df27ec022f5ec12eb3222b69cd72f577"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\v_proj-fp32.bin",
+      "bytes": 1146880,
+      "sha256": "8d7874fb5b4597979f2ba03fa1e757c6dfac2a59d5360cc89aef98ab8ebe978d"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-silu-attention-observation-1008d6a82c3fda1dd7aa15aabdc8b6071c1d349c-silence-captures\\relative_k_proj-fp32.bin",
+      "bytes": 53248,
+      "sha256": "48b27e03f9d2480518acdad03d90c41ed2224208c72dac56a5a4bbcff1bd064e"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\direct-gpu-output-observation-red-20261015.xml",
+      "bytes": 7197,
+      "sha256": "4ec4dddf59618bd4286f151a4e22ef7e0cfeffe71d0c226750a0d8c63b3d53a1"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\direct-gpu-output-observation-red-20261015-process.json",
+      "bytes": 1305,
+      "sha256": "464337cc5f50d8f230245218431f6e2668199ef129851d2b58606b4bcd377ba5"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\direct-gpu-output-observation-red-20261015.log",
+      "bytes": 45852,
+      "sha256": "e3da051a3e09a12f07681d08d209fdf0259b99346744e902c42772073f2b84a2"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\direct-gpu-output-observation-green-20261015.xml",
+      "bytes": 4045,
+      "sha256": "7e27fe0863b4e994bf48243749ae35478b0cf13f5d0dd5b2e0cbc01b2bd79fe9"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\direct-gpu-output-observation-green-20261015-process.json",
+      "bytes": 1310,
+      "sha256": "66b214f72adc261ab0bcb87bfe8b0339d7d756e83f1c2cd3f95803bfef71eb87"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\direct-gpu-output-observation-green-20261015.log",
+      "bytes": 45878,
+      "sha256": "650a118f3b49b2413f87bea2fe79c2973522b65d7e667dc88ccb57a30da3a9a1"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\first-attention-original-block-observation-20261015.xml",
+      "bytes": 4052,
+      "sha256": "f5779e9263f8e5a462da576404bacf528e1edbf748fb218cb34f6a8dc0326e33"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\first-attention-original-block-observation-20261015-process.json",
+      "bytes": 1332,
+      "sha256": "9753aeaf300c98dc69434dc3e63047df435beca087ea710b36150e3a4484508a"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\first-attention-original-block-observation-20261015.log",
+      "bytes": 40051,
+      "sha256": "9d277ba0bb8e939934f3c0c8c8a37573dee0e490b9ace7f73d8aa690c9514567"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\first-attention-projection-original-observation-20261015.xml",
+      "bytes": 4053,
+      "sha256": "d0ea9e37791e08270a970e187ca88dc64f37aec79bd3c1161203c436e93b17d2"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\first-attention-projection-original-observation-20261015-process.json",
+      "bytes": 1346,
+      "sha256": "aa78c2122d0feeea36145dd0ef8d86b7a1212e2ef941b6bb3555324ee282c947"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\first-attention-projection-original-observation-20261015.log",
+      "bytes": 46294,
+      "sha256": "c37ce1e05a92a87c3d634336c95a752d681ef13b436ae74afa47769f3c85679b"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\attention-projection-native-capture-red-20261015.xml",
+      "bytes": 9439,
+      "sha256": "a8004130f47695316f12bc854a35e88018751d9c3530a194ca8df951b14930a4"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\attention-projection-native-capture-related-green-20261015.xml",
+      "bytes": 3131,
+      "sha256": "e7cfd0ba28128d86c47bda21477b22dcc0a3b05d8e75c218659f5cf53d62d943"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\independent-attention-replay-scope-red-20261015.xml",
+      "bytes": 1562,
+      "sha256": "577876c87837d08da8d126dcbe687341612812a293a48c4781c73d132f3f806e"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\independent-attention-replay-scope-related-green-20261015.xml",
+      "bytes": 3298,
+      "sha256": "9a0e8737c79a592405f315a0e1bc5ff4142b65611188614da91f7044ec9c4345"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\attention-native-operations-red-20261015.xml",
+      "bytes": 7457,
+      "sha256": "fd8a80aa9b9821ff43d68b240aa22024f3439c3c2121012a7e73d4b8676fba97"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\attention-native-operations-related-green-20261015.xml",
+      "bytes": 3722,
+      "sha256": "9e681ac8c0cfda642c2d96bc153e4eed3441d6c012db737d6d033e4174e8f42e"
+    }
+  ]
+}

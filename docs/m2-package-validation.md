@@ -1,5 +1,7 @@
 # CI・main保護・UPM移行の検証
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 更新日: 2026-10-10。Windows実測は2026-10-09のPR #6、ブランチ `feat/ci-upm-package` の記録を維持。
 実測したコード: `b74180ec8dcdce99faf88dc129a58904c50a7946`。基準main: `8146107`。
 確認済みPR head: `8a585bc634a210e5ffd9ceaa5d67b85f1c9316a3`。文書更新の新しいCIとこの過去実測を区別する。[現在の状態](status.md)を参照。

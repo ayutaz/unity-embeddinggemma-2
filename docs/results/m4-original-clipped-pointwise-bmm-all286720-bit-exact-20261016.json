@@ -1,0 +1,83 @@
+{
+  "scope": "original_layer1_lconv_linear_end_with_original_clips_all_values_only",
+  "source_report_sha256": "1ff0e32b87977057a457294ae58de1242686fcd67b044e20630a84c69a537fb7",
+  "input_sha256": "7655cb6fdf9dc62251a52245db2d4cc259e489503c4ad4bf13f2e631df1d22d7",
+  "reference_sha256": "e90d45f4ffbfcda9c0e19ff6238cafd53b7de74ce443a44f66b1d1b42dc170ee",
+  "weight_sha256": "6e01812fcb6dab5bdc75fce27446ba07cf6e6887d797950cabfef0c9937d6e40",
+  "original_clipping_parameters": [
+    {
+      "parameter": "audio.layers.1.lconv1d.linear_end.input_min",
+      "native_member": "audio/data/weights/weight_350",
+      "sha256": "62304e9a4ab5c3bffa811e6cf004f895ccd643939756189249e46811d5d3b22b",
+      "value": -7.75
+    },
+    {
+      "parameter": "audio.layers.1.lconv1d.linear_end.input_max",
+      "native_member": "audio/data/weights/weight_351",
+      "sha256": "447e16724ed300958bc5f74c9994a3f7dcaf532144774ce53511baacfc3b5df0",
+      "value": 7.6875
+    },
+    {
+      "parameter": "audio.layers.1.lconv1d.linear_end.output_min",
+      "native_member": "audio/data/weights/weight_352",
+      "sha256": "3db2fa1f12390caea6dd8d76f199938cfd27c60c0d96917ffb663ca2a36c0786",
+      "value": -8.125
+    },
+    {
+      "parameter": "audio.layers.1.lconv1d.linear_end.output_max",
+      "native_member": "audio/data/weights/weight_353",
+      "sha256": "50c1e23fda5d241937948b18d9807518188a63bf48d2ba847c306fc12c7e11d8",
+      "value": 8.0625
+    }
+  ],
+  "elements": 286720,
+  "bit_differences": 0,
+  "mismatched_elements": 0,
+  "maximum_tolerance_ratio": 0.0,
+  "graph_sha256": "e47611e5d74de2e0afd09a8dcda81f7edfcfb3f0b66ba69fbcb0921ad338f0be",
+  "capture_sha256": "e90d45f4ffbfcda9c0e19ff6238cafd53b7de74ce443a44f66b1d1b42dc170ee",
+  "whole_encoder_validated": false,
+  "gpu_validated": false,
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "source_base": "7cdad81bc0020be627f40ae3cb1f6c99acf72bf0",
+  "report_sha256": "7dee934d50dd2ccfab859a59d720d30674992e60cd96725d67ad8096ccdb7cf8",
+  "weight_provenance": {
+    "original_artifact": 11814567883,
+    "qualified_report_sha256": "a3463550303d91c0cb753edc1b101c5c216e52c0406759f9f6f652ae6011f050",
+    "parameters": [
+      {
+        "layer": 0,
+        "parameter": "audio.layers.0.lconv1d.linear_end.linear.weight",
+        "native_member": "audio/data/weights/weight_20",
+        "sha256": "34bcb345fe31b1a55bdd3d6fdd7c37047891258f7cd229c6858a24aecca7adee",
+        "bytes": 4194304,
+        "shape": [
+          1024,
+          1024
+        ]
+      },
+      {
+        "layer": 1,
+        "parameter": "audio.layers.1.lconv1d.linear_end.linear.weight",
+        "native_member": "audio/data/weights/weight_42",
+        "sha256": "6e01812fcb6dab5bdc75fce27446ba07cf6e6887d797950cabfef0c9937d6e40",
+        "bytes": 4194304,
+        "shape": [
+          1024,
+          1024
+        ]
+      }
+    ]
+  },
+  "native_execution": "Original torch.bmm passthrough, not fixed-order execution; actual exported ONNX is independently evaluated.",
+  "limitation": "Original layer1 clipped pointwise module output, not a raw pre-clip BMM bit-equivalence proof. Original clip constants and order are preserved. Other layers and connected outputs remain unverified.",
+  "unqualified_initial_comparison": {
+    "scope": "selected96columns_without_required_original_input_output_clips",
+    "mismatched_elements": 17772,
+    "result": "invalid_module_comparison_not_a_fixed_order_failure; corrected_by_preserving_original_clipping_not_by_changing_reference"
+  },
+  "original_coefficients_unchanged": true,
+  "original_reference_unchanged": true,
+  "required_ci_passed": false
+}

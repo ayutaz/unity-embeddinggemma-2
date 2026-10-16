@@ -1,0 +1,346 @@
+{
+  "scope": "audio_activation_diagnostic_and_vector_red_only",
+  "base_source": "e13adcd96ed3e10802131dfc94c48d9533f37ee2",
+  "real_ci_run": 38331914586,
+  "real_ci_conclusion": "failure",
+  "actual_producer_source": "e81255dcbdf9844752bfef0fa789b54635388a47",
+  "case_id": "silence",
+  "saved_vs_eager_maximum_absolute_error": 0.00021576881408691406,
+  "mismatched_elements": 368,
+  "maximum_tolerance_ratio": 9.733773231506348,
+  "feed_forward_diagnostics": {
+    "first_divergent_stage": null,
+    "stages": [
+      {
+        "name": "clamp_input",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "pre_layer_norm",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "ffw_layer_1",
+        "shape": [
+          1,
+          280,
+          4096
+        ],
+        "success": true,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "activation",
+        "shape": [
+          1,
+          280,
+          4096
+        ],
+        "success": true,
+        "maximum_absolute_error": 5.960464477539063E-08,
+        "maximum_tolerance_ratio": 0.0011215595295652747,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "ffw_layer_2",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 9.5367431640625E-07,
+        "maximum_tolerance_ratio": 0.00967935100197792,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "clamp_output",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 9.5367431640625E-07,
+        "maximum_tolerance_ratio": 0.00967935100197792,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "post_layer_norm",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 7.62939453125E-06,
+        "maximum_tolerance_ratio": 0.0810510665178299,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "post_layer_scale",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 3.814697265625E-06,
+        "maximum_tolerance_ratio": 0.04196758195757866,
+        "mismatched_elements": 0
+      },
+      {
+        "name": "residual_output",
+        "shape": [
+          1,
+          280,
+          1024
+        ],
+        "success": true,
+        "maximum_absolute_error": 7.62939453125E-06,
+        "maximum_tolerance_ratio": 0.04501582682132721,
+        "mismatched_elements": 0
+      }
+    ],
+    "stage": "audio_feed_forward_diagnostics_only",
+    "detail_layer": 0,
+    "part": "feed_forward1",
+    "feature_rtol": 0.0001,
+    "feature_atol": 1E-05,
+    "first_nonzero_stage": "activation",
+    "standalone_matches_full_stage": true,
+    "localization_validated": true,
+    "standalone_vs_full_stage_maximum_absolute_error": 0.0,
+    "encoders_validated": false,
+    "end_to_end_validated": false,
+    "native_input_shape": [
+      1,
+      280,
+      1024
+    ],
+    "operators": [
+      "aten.add.Tensor",
+      "aten.clamp.Tensor",
+      "aten.clamp.default",
+      "aten.clone.default",
+      "aten.div.Tensor",
+      "aten.exp.default",
+      "aten.mean.dim",
+      "aten.mm.default",
+      "aten.mul.Tensor",
+      "aten.neg.default",
+      "aten.permute.default",
+      "aten.pow.Tensor_Scalar",
+      "aten.view.default"
+    ],
+    "graph_sha256": "768fbd90509f4540ec28cc631864943e636f88f7b765393e151ad4154431eb98",
+    "graph_bytes": 34790786,
+    "native_input_sha256": "dc54774840fed958a310c6092e5c5c3483de74be52df7914d2bd128a99192969",
+    "native_input_bytes": 1146880
+  },
+  "vector_red": {
+    "duration_seconds": 18.76,
+    "seed": 412,
+    "mismatch_counts": [
+      1,
+      381
+    ],
+    "source_sha256": "95fc0a82089982910c353bf748177debe0cdb7ad2dd095aa02207385603f6dd2",
+    "shapes": [
+      [
+        17
+      ],
+      [
+        1,
+        2,
+        4096
+      ]
+    ],
+    "failed": 2,
+    "reason": "Saved division-exp decomposition does not preserve native vectorized SiLU rounding",
+    "deselected": 23,
+    "log_sha256": "6c0f66559dd4dc6981f13372c05faf5074a2ab3dcefddd446ba31ceff8306c3b",
+    "passed": 0
+  },
+  "weights_free_formula_research": [
+    {
+      "formula": "div_exp",
+      "mismatch_count": 381,
+      "maximum_absolute_error": 4.76837158203125E-07,
+      "examples": [
+        [
+          -2.341963529586792,
+          -0.2054058462381363,
+          -0.2054058313369751
+        ],
+        [
+          2.3077785968780518,
+          2.098968744277954,
+          2.098968982696533
+        ],
+        [
+          -1.0837361812591553,
+          -0.2739681303501129,
+          -0.2739681005477905
+        ]
+      ]
+    },
+    {
+      "formula": "div_expm1",
+      "mismatch_count": 1106,
+      "maximum_absolute_error": 9.5367431640625E-07,
+      "examples": [
+        [
+          -2.341963529586792,
+          -0.2054058462381363,
+          -0.2054058313369751
+        ],
+        [
+          1.837160587310791,
+          1.5847578048706055,
+          1.584757685661316
+        ],
+        [
+          0.26833027601242065,
+          0.1520581990480423,
+          0.1520581841468811
+        ]
+      ]
+    },
+    {
+      "formula": "div_exp2",
+      "mismatch_count": 1515,
+      "maximum_absolute_error": 4.76837158203125E-07,
+      "examples": [
+        [
+          -2.7002053260803223,
+          -0.17000827193260193,
+          -0.17000830173492432
+        ],
+        [
+          -1.518580675125122,
+          -0.2728443443775177,
+          -0.2728443145751953
+        ],
+        [
+          2.3077785968780518,
+          2.098968744277954,
+          2.098968982696533
+        ]
+      ]
+    },
+    {
+      "formula": "mul_sigmoid",
+      "mismatch_count": 1961,
+      "maximum_absolute_error": 4.76837158203125E-07,
+      "examples": [
+        [
+          3.3710639476776123,
+          3.259103775024414,
+          3.259104013442993
+        ],
+        [
+          -2.7002053260803223,
+          -0.17000827193260193,
+          -0.17000828683376312
+        ],
+        [
+          1.837160587310791,
+          1.5847578048706055,
+          1.584757924079895
+        ]
+      ]
+    },
+    {
+      "formula": "div_inverse_sigmoid",
+      "mismatch_count": 656,
+      "maximum_absolute_error": 5.960464477539063E-08,
+      "examples": [
+        [
+          -2.7002053260803223,
+          -0.17000827193260193,
+          -0.17000828683376312
+        ],
+        [
+          0.26833027601242065,
+          0.1520581990480423,
+          0.1520582139492035
+        ],
+        [
+          0.05678236857056618,
+          0.029197027906775475,
+          0.029197029769420624
+        ]
+      ]
+    },
+    {
+      "formula": "exp_f64_rounded",
+      "mismatch_count": 381,
+      "maximum_absolute_error": 2.384185791015625E-07,
+      "examples": [
+        [
+          -2.341963529586792,
+          -0.2054058462381363,
+          -0.2054058313369751
+        ],
+        [
+          2.3077785968780518,
+          2.098968744277954,
+          2.098968982696533
+        ],
+        [
+          -1.0837361812591553,
+          -0.2739681303501129,
+          -0.2739681005477905
+        ]
+      ]
+    },
+    {
+      "formula": "full_f64_rounded",
+      "mismatch_count": 2376,
+      "maximum_absolute_error": 4.76837158203125E-07,
+      "examples": [
+        [
+          0.26833027601242065,
+          0.1520581990480423,
+          0.1520581841468811
+        ],
+        [
+          -1.518580675125122,
+          -0.2728443443775177,
+          -0.2728443145751953
+        ],
+        [
+          2.3077785968780518,
+          2.098968744277954,
+          2.098968982696533
+        ]
+      ]
+    }
+  ],
+  "formula_log_sha256": "d8eccd72e5d4a77730d71c5df66149e9b00b9930c9da6764e0d381f2f9bcba37",
+  "production_activation_fix_implemented": false,
+  "original_tolerances_relaxed": false,
+  "remaining_five_signals_executed": false,
+  "unity_encoder_validated": false,
+  "end_to_end_validated": false,
+  "note": "Seven weight-free algebraic alternatives all retain mismatches. Research is not a green test or actual model / GPU acceptance. No Float64 or native-op workaround adopted."
+}

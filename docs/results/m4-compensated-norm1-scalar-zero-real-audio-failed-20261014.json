@@ -1,0 +1,165 @@
+{
+  "scope": "compensated_norm1_reciprocal_scalar_zero_encoder_all_six_failed",
+  "source": "a20ff165aa7bdc170350b68f20a86aaec660f399",
+  "unity": "6000.3.16f1",
+  "sentis": "2.6.1",
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "projection_chunk": 64,
+  "norm_chunk": 1,
+  "numeric_encoder_conditions": 12,
+  "passed": 0,
+  "failed": 2,
+  "skipped": 0,
+  "exit_code": 2,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "report_sha256": "c9fa5cc56680473c0b6e417887c27f693e6528e9c284ab38d48173b1bc76f006",
+  "xml_sha256": "2958a2fbaaacbe6415544a00184e4c175f2048ce094843656d203be3a2976ea0",
+  "conditions": [
+    {
+      "requested_backend": "CPU",
+      "success": false,
+      "cases": [
+        {
+          "success": false,
+          "mismatched_elements": 372,
+          "maximum_absolute_error": 0.0001544952392578125,
+          "maximum_tolerance_ratio": 6.691424969675191,
+          "minimum_cosine": 0.9999999994299077,
+          "id": "silence",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 432,
+          "maximum_absolute_error": 0.0001952648162841797,
+          "maximum_tolerance_ratio": 7.842071730663702,
+          "minimum_cosine": 0.9999999992531802,
+          "id": "impulse",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 898,
+          "maximum_absolute_error": 0.0002467632293701172,
+          "maximum_tolerance_ratio": 10.756377895678332,
+          "minimum_cosine": 0.9999999986817716,
+          "id": "sine",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 664,
+          "maximum_absolute_error": 0.00013053417205810547,
+          "maximum_tolerance_ratio": 6.527563716684411,
+          "minimum_cosine": 0.9999999995928917,
+          "id": "nyquist",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 294,
+          "maximum_absolute_error": 0.00010752677917480469,
+          "maximum_tolerance_ratio": 4.620976092827406,
+          "minimum_cosine": 0.9999999997693986,
+          "id": "noise",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "CPU"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 265,
+          "maximum_absolute_error": 0.00010752677917480469,
+          "maximum_tolerance_ratio": 4.620976092827406,
+          "minimum_cosine": 0.9999999997693986,
+          "id": "padded_noise",
+          "profile": "frames-1119-valid-839",
+          "actual_backend": "CPU"
+        }
+      ],
+      "cpu_fallback_count": 0,
+      "readback_flush_count": 0,
+      "phase": "completed",
+      "original_layer_count": 1657,
+      "candidate_layer_count": 42851,
+      "error": "NUnit.Framework.AssertionException:   Every current native feature must satisfy the unchanged encoder gate.\r\n  Expected: True\r\n  But was:  False\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.CompensatedNormAudioEncoderReferenceTests.SavedFp32EncoderApiMatchesCurrentSixNativeSignals (Unity.InferenceEngine.BackendType backend) [0x00625] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@32df99f7c081\\Tests\\Editor\\CompensatedNormAudioEncoderReferenceTests.cs:150 "
+    },
+    {
+      "requested_backend": "GPUCompute",
+      "success": false,
+      "cases": [
+        {
+          "success": false,
+          "mismatched_elements": 302,
+          "maximum_absolute_error": 0.00013685226440429688,
+          "maximum_tolerance_ratio": 5.163045337430501,
+          "minimum_cosine": 0.9999999996621319,
+          "id": "silence",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 517,
+          "maximum_absolute_error": 0.0002155303955078125,
+          "maximum_tolerance_ratio": 9.212438429271229,
+          "minimum_cosine": 0.9999999992354355,
+          "id": "impulse",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 718,
+          "maximum_absolute_error": 0.0002900362014770508,
+          "maximum_tolerance_ratio": 15.965140961641564,
+          "minimum_cosine": 0.9999999984613606,
+          "id": "sine",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 687,
+          "maximum_absolute_error": 0.0001366138458251953,
+          "maximum_tolerance_ratio": 5.483468908944859,
+          "minimum_cosine": 0.9999999995909139,
+          "id": "nyquist",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 55,
+          "maximum_absolute_error": 6.16312026977539E-05,
+          "maximum_tolerance_ratio": 2.7257999158174226,
+          "minimum_cosine": 0.9999999999184037,
+          "id": "noise",
+          "profile": "frames-1119-valid-1119",
+          "actual_backend": "GPUCompute"
+        },
+        {
+          "success": false,
+          "mismatched_elements": 16,
+          "maximum_absolute_error": 4.315376281738281E-05,
+          "maximum_tolerance_ratio": 1.505891237426122,
+          "minimum_cosine": 0.9999999999686804,
+          "id": "padded_noise",
+          "profile": "frames-1119-valid-839",
+          "actual_backend": "GPUCompute"
+        }
+      ],
+      "cpu_fallback_count": 0,
+      "readback_flush_count": 0,
+      "phase": "completed",
+      "original_layer_count": 1657,
+      "candidate_layer_count": 42851,
+      "error": "NUnit.Framework.AssertionException:   Every current native feature must satisfy the unchanged encoder gate.\r\n  Expected: True\r\n  But was:  False\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.CompensatedNormAudioEncoderReferenceTests.SavedFp32EncoderApiMatchesCurrentSixNativeSignals (Unity.InferenceEngine.BackendType backend) [0x00625] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@32df99f7c081\\Tests\\Editor\\CompensatedNormAudioEncoderReferenceTests.cs:150 "
+    }
+  ]
+}

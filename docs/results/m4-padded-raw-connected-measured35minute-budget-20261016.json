@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "measured_padded_raw_full12_only_actions_budget_adjustment",
+  "source_base": "d838ecb7d1bac9169f5afc525d823de0d4a578ae",
+  "trigger": {
+    "run": 38818905732,
+    "case_id": "padded_noise",
+    "job_conclusion": "cancelled",
+    "completed_candidate_parts": 3,
+    "last_phase": "candidate part3 evaluating",
+    "observed_evaluation_seconds_first_three_layer_parts": [
+      336.69,
+      354.82
+    ],
+    "final_output_missing": true
+  },
+  "policy": {
+    "explicit_raw_input_and_chained_padded_noise_minutes": 35,
+    "all_other_probe_minutes": 20,
+    "small_matrix_job_minutes": 10
+  },
+  "red": {
+    "file": "padded-raw-budget-red-20261016.xml",
+    "sha256": "9a2ae9d607b657b2ff553dbde147427efa79c14e3793f0fe714d741330bf8e1c",
+    "tests": "1",
+    "failures": "1",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.319"
+  },
+  "first_related": {
+    "file": "padded-raw-budget-first-related-20261016.xml",
+    "sha256": "bcdd0e2d1207b87b4e7e2609a8a514254843e05856f57bbc1177903b91956b7e",
+    "tests": "37",
+    "failures": "1",
+    "errors": "0",
+    "skipped": "0",
+    "time": "16.092",
+    "interpretation": "Only an older literal20minute text assertion remained; updated timeout policy assertions, no numerical expectations changed."
+  },
+  "green": {
+    "file": "padded-raw-budget-related-green-20261016.xml",
+    "sha256": "c2ac27a8152b922a1ac2901787c2d82e3874ba9d8cbcacff378215e970ef18f6",
+    "tests": "77",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "25.387"
+  },
+  "actionlint": "passed",
+  "numerical_gates_changed": false,
+  "original_references_changed": false,
+  "timeout_counted_as_pass": false,
+  "new_all_six_dispatch_depends_on_sine_result": true
+}

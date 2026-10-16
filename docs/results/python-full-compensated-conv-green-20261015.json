@@ -1,0 +1,86 @@
+{
+  "success": true,
+  "scope": "full_offline_python_regression_at_compensated_conv_commit",
+  "source": "fcaf611adb49befe731e00d0bb8e8c84f4b53c77",
+  "run_id": 38631235343,
+  "status": "completed",
+  "conclusion": "success",
+  "matrix": [
+    {
+      "platform": "ubuntu313",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "767",
+        "time": "354.912",
+        "timestamp": "2026-10-14T20:21:15.157066+00:00",
+        "hostname": "runnervm8k3b6"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-fcaf611-ubuntu313\\python-tests.xml",
+        "bytes": 106965,
+        "sha256": "f22646d842616dba0d87b79811a3775ebb0e536b62942e6f1127dde3e48c8b24"
+      }
+    },
+    {
+      "platform": "ubuntu314",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "767",
+        "time": "351.416",
+        "timestamp": "2026-10-14T20:21:09.778775+00:00",
+        "hostname": "runnervm8k3b6"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-fcaf611-ubuntu314\\python-tests.xml",
+        "bytes": 106965,
+        "sha256": "86934faab50a5f044587ba1fa85a248fea176ed043477556634d3c924e47078c"
+      }
+    },
+    {
+      "platform": "windows313",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "767",
+        "time": "523.069",
+        "timestamp": "2026-10-14T20:21:04.514735+00:00",
+        "hostname": "runnervmfi6oq"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-fcaf611-windows313\\python-tests.xml",
+        "bytes": 106977,
+        "sha256": "9972326aa4a75e2184c4210f558fe60d0754cf959f9707f45b320bf6848ecadc"
+      }
+    },
+    {
+      "platform": "windows314",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "767",
+        "time": "560.732",
+        "timestamp": "2026-10-14T20:21:09.295388+00:00",
+        "hostname": "runnervm0xl3a"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-fcaf611-windows314\\python-tests.xml",
+        "bytes": 106977,
+        "sha256": "8ff92d72d4d6653f0e69a1674cf984a4fe83c6b77346b1dece5afe8c91f83267"
+      }
+    }
+  ],
+  "new_saved_conv_context_tests_included": false,
+  "gpu_validated": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

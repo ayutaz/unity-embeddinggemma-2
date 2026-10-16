@@ -1,0 +1,85 @@
+{
+  "success": true,
+  "scope": "full_offline_python_regression_at_exact_previous_contract_fix",
+  "run_id": 38628144281,
+  "source": "2a6d1356db8e87e10b3576c27988399531272da0",
+  "status": "completed",
+  "conclusion": "success",
+  "matrix": [
+    {
+      "platform": "ubuntu313",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "744",
+        "time": "358.273",
+        "timestamp": "2026-10-14T19:59:45.434033+00:00",
+        "hostname": "runnervmmprz5"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-2a6d135-ubuntu313\\python-tests.xml",
+        "bytes": 103717,
+        "sha256": "18d790da862264fa691f738f0fc73ffcdd1630fe35dfbb0f68c09d8853cba401"
+      }
+    },
+    {
+      "platform": "ubuntu314",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "744",
+        "time": "437.417",
+        "timestamp": "2026-10-14T20:02:12.643998+00:00",
+        "hostname": "runnervmmprz5"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-2a6d135-ubuntu314\\python-tests.xml",
+        "bytes": 103720,
+        "sha256": "f8302f0fe82bbb8e87110a8fbaee2b6ef7975383dc83edf5de82cb81eb2720d3"
+      }
+    },
+    {
+      "platform": "windows313",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "744",
+        "time": "625.806",
+        "timestamp": "2026-10-14T19:59:44.625175+00:00",
+        "hostname": "runnervmfi6oq"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-2a6d135-windows313\\python-tests.xml",
+        "bytes": 103736,
+        "sha256": "906feda82db3bff1a877f22c09c91cc82c027e08a6426dd3c9411c7d869021f8"
+      }
+    },
+    {
+      "platform": "windows314",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "744",
+        "time": "388.416",
+        "timestamp": "2026-10-14T19:59:16.969230+00:00",
+        "hostname": "runnervmfi6oq"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\python-full-2a6d135-windows314\\python-tests.xml",
+        "bytes": 103719,
+        "sha256": "bc98b6013de3b9d86424bcfd21c950389adecf86389260b8d4485d9e5b0c5287"
+      }
+    }
+  ],
+  "new_compensated_conv_tests_included": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-13",
+  "scope": "small_native_reference_collection_and_opt_in_workflow_only",
+  "implementation_commit": "166ddf3ce0f6c19222c2c73c2368a8f77fbdc8a5",
+  "collection_api_and_cli_red": 4,
+  "workflow_assertion_red": 1,
+  "initial_green_attempt": {"passed": 16, "failed": 1, "reason": "test_read_text_used_cp932_for_utf8_workflow"},
+  "final_related_passed": 18,
+  "final_related_failed": 0,
+  "native_reference_failure_still_aborts": true,
+  "onnx_failure_keeps_success_false": true,
+  "onnx_failure_keeps_cli_exit_nonzero": true,
+  "required_workflow_collect_mode_enabled": false,
+  "diagnostic_workflow_opt_in": true,
+  "diagnostic_workflow_receives_secrets": false,
+  "real_native_reference_all_six_complete": false,
+  "unity_full_encoder_validated": false,
+  "tolerances_changed": false,
+  "evidence_sha256": {
+    "audio-runtime-diagnostic-reference-red.log": "fded2c52157c3477b21ba307daaac912860490834d658fecb1d179f40a462930",
+    "audio-runtime-reference-workflow-red.log": "05af03ad1eee1f9d8f3036de6646de5416e00f4d2cf1475029dcec28215c4def",
+    "audio-runtime-diagnostic-reference-green.log": "7bf21a9e1eb58c6cf0cf00d6e162e87b8eeb3f95689404cdfb76500b852e4e24",
+    "audio-runtime-diagnostic-reference-final-green.log": "356c8781926218ebee5111f16b6864e0f34f60041587bbe1ee5650f883ac02d0"
+  },
+  "formal_release_created": false
+}

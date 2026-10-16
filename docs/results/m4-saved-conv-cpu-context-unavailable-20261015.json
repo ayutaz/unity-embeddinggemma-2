@@ -1,0 +1,952 @@
+{
+  "success": false,
+  "scope": "immutable_saved_convolution_cpu_context_diagnosis_only",
+  "run_id": 38632854677,
+  "code_head": "3c29fd266daede872efaee8de7b87acf9a3ce661",
+  "executed_merge_source": "19e9981a4e54b2f876568d0201cc2a6c2bfd693a",
+  "status": "completed",
+  "conclusion": "failure",
+  "cases": [
+    {
+      "context": "native",
+      "report": {
+        "success": false,
+        "context_validated": false,
+        "scope": "frozen_original_conv2_cpu_context_only",
+        "expected_unchanged": true,
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "native_graph_sha256": "dc43d56b896b64077d8e86d56c3fd2b89cfe3d31170eabaa387165ea961438d7",
+        "weight_name": "audio.subsample_conv_projection.layer1.conv.weight",
+        "weight_sha256": "68309f01ea3e738fccb24a0db5db608841a3a8e59b0a4fa5d0fb521ed60bf43c",
+        "input_shape": [
+          1,
+          128,
+          560,
+          64
+        ],
+        "output_shape": [
+          1,
+          32,
+          280,
+          32
+        ],
+        "exact_differences": 268142,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 4.76837158203125e-06,
+        "maximum_tolerance_ratio": 0.03680074314391867,
+        "gpu_validated": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "runtime": {
+          "torch_version": "2.14.1+cu130",
+          "torch_threads": 2,
+          "cpu_capability": "AVX2",
+          "torch_config": "PyTorch built with:\n  - GCC 13.3\n  - C++ Version: 202002\n  - Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications\n  - Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)\n  - OpenMP 201511 (a.k.a. OpenMP 4.5)\n  - LAPACK is enabled (usually provided by MKL)\n  - NNPACK is enabled\n  - CPU capability usage: AVX2\n  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, COMMIT_SHA=5c4886908584029761b579af026dcfb627c84070, CUDA_FLAGS= -DLIBCUDACXX_ENABLE_SIMPLIFIED_COMPLEX_OPERATIONS -Xfatbin -compress-all -DONNX_NAMESPACE=onnx_torch -gencode arch=compute_75,code=sm_75 -gencode arch=compute_80,code=sm_80 -gencode arch=compute_86,code=sm_86 -gencode arch=compute_90,code=sm_90 -gencode arch=compute_100,code=sm_100 -gencode arch=compute_120,code=sm_120 -Xcudafe --diag_suppress=cc_clobber_ignored,--diag_suppress=field_without_dll_interface,--diag_suppress=base_class_has_different_dll_interface,--diag_suppress=dll_interface_conflict_none_assumed,--diag_suppress=dll_interface_conflict_dllexport_assumed,--diag_suppress=bad_friend_decl --expt-relaxed-constexpr --expt-extended-lambda -Xfatbin -compress-all --threads 2 -compress-mode=size -Wno-deprecated-gpu-targets --expt-extended-lambda -DCUB_WRAPPED_NAMESPACE=at_cuda_detail -DDISABLE_CUSPARSE_DEPRECATED -DCUDA_HAS_FP16=1 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -DC10_NODEPRECATED, CUDA_VERSION=13.0, CUDNN_VERSION=9.24.0, CXX_COMPILER=/opt/rh/gcc-toolset-13/root/usr/bin/c++, CXX_FLAGS= -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DHAS_CUPTI -DUSE_FBGEMM -DUSE_MSLK -DUSE_PYTORCH_QNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -DC10_NODEPRECATED -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=range-loop-construct -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-unknown-pragmas -Wno-unused-parameter -Wno-strict-overflow -Wno-strict-aliasing -Wno-stringop-overflow -Wsuggest-override -Wno-psabi -Wno-error=old-style-cast -faligned-new -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-dangling-reference -Wno-error=dangling-reference -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, TORCH_VERSION=2.14.1, USE_CUDA=1, USE_CUDNN=ON, USE_CUSPARSELT=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_GLOO=ON, USE_HIPSPARSELT=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, USE_ROCM_KERNEL_ASSERT=OFF, USE_XCCL=OFF, USE_XPU=OFF, \n",
+          "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+          "env": {
+            "OMP_NUM_THREADS": "4",
+            "MKL_NUM_THREADS": "4",
+            "ATEN_CPU_CAPABILITY": null,
+            "MKL_CBWR": null,
+            "DNNL_MAX_CPU_ISA": null,
+            "ONEDNN_VERBOSE": "1"
+          }
+        },
+        "job_source": "19e9981a4e54b2f876568d0201cc2a6c2bfd693a",
+        "requested_reference": {
+          "encoder": "../artifacts/conv-encoder/audio-runtime-reference",
+          "subsample": "../artifacts/conv-subsample",
+          "encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+          "encoder_audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+          "subsample_reference_sha256": "664a8242d079f53bf98d2032f9398de6d2c8d6bcd2312d1baaa35bb498ce5fb8",
+          "weight_sha256": "68309f01ea3e738fccb24a0db5db608841a3a8e59b0a4fa5d0fb521ed60bf43c"
+        }
+      },
+      "host": {
+        "lscpu": [
+          {
+            "field": "Architecture:",
+            "data": "x86_64"
+          },
+          {
+            "field": "CPU op-mode(s):",
+            "data": "32-bit, 64-bit"
+          },
+          {
+            "field": "Address sizes:",
+            "data": "48 bits physical, 48 bits virtual"
+          },
+          {
+            "field": "Byte Order:",
+            "data": "Little Endian"
+          },
+          {
+            "field": "CPU(s):",
+            "data": "4"
+          },
+          {
+            "field": "On-line CPU(s) list:",
+            "data": "0-3"
+          },
+          {
+            "field": "Vendor ID:",
+            "data": "AuthenticAMD"
+          },
+          {
+            "field": "Model name:",
+            "data": "AMD EPYC 9V74 80-Core Processor"
+          },
+          {
+            "field": "CPU family:",
+            "data": "25"
+          },
+          {
+            "field": "Model:",
+            "data": "17"
+          },
+          {
+            "field": "Thread(s) per core:",
+            "data": "2"
+          },
+          {
+            "field": "Core(s) per socket:",
+            "data": "2"
+          },
+          {
+            "field": "Socket(s):",
+            "data": "1"
+          },
+          {
+            "field": "Stepping:",
+            "data": "1"
+          },
+          {
+            "field": "BogoMIPS:",
+            "data": "5192.30"
+          },
+          {
+            "field": "Flags:",
+            "data": "fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl tsc_reliable nonstop_tsc cpuid extd_apicid aperfmperf tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw topoext vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves user_shstk clzero xsaveerptr rdpru arat npt nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold v_vmsave_vmload umip vaes vpclmulqdq rdpid fsrm"
+          },
+          {
+            "field": "Virtualization:",
+            "data": "AMD-V"
+          },
+          {
+            "field": "Hypervisor vendor:",
+            "data": "Microsoft"
+          },
+          {
+            "field": "Virtualization type:",
+            "data": "full"
+          },
+          {
+            "field": "L1d cache:",
+            "data": "64 KiB (2 instances)"
+          },
+          {
+            "field": "L1i cache:",
+            "data": "64 KiB (2 instances)"
+          },
+          {
+            "field": "L2 cache:",
+            "data": "2 MiB (2 instances)"
+          },
+          {
+            "field": "L3 cache:",
+            "data": "32 MiB (1 instance)"
+          },
+          {
+            "field": "NUMA node(s):",
+            "data": "1"
+          },
+          {
+            "field": "NUMA node0 CPU(s):",
+            "data": "0-3"
+          },
+          {
+            "field": "Vulnerability Gather data sampling:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Ghostwrite:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Indirect target selection:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Itlb multihit:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability L1tf:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Mds:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Meltdown:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Mmio stale data:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Old microcode:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Reg file data sampling:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Retbleed:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Spec rstack overflow:",
+            "data": "Vulnerable: Safe RET, no microcode"
+          },
+          {
+            "field": "Vulnerability Spec store bypass:",
+            "data": "Vulnerable"
+          },
+          {
+            "field": "Vulnerability Spectre v1:",
+            "data": "Mitigation; usercopy/swapgs barriers and __user pointer sanitization"
+          },
+          {
+            "field": "Vulnerability Spectre v2:",
+            "data": "Mitigation; Retpolines; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected"
+          },
+          {
+            "field": "Vulnerability Srbds:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Tsa:",
+            "data": "Vulnerable: No microcode"
+          },
+          {
+            "field": "Vulnerability Tsx async abort:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Vmscape:",
+            "data": "Not affected"
+          }
+        ]
+      },
+      "exposed_avx512f": false,
+      "raw": [
+        {
+          "path": "artifacts\\numerical-acceptance-state\\conv-context-38632854677-native\\conv-native.json",
+          "bytes": 4508,
+          "sha256": "a517aa15477e00374d35ced72e72ecdbde83f83e60a8aa0c595b7b0ece7eaf3d"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\conv-context-38632854677-native\\cpu-host.json",
+          "bytes": 4484,
+          "sha256": "a4f7cf65138a00b8f71ea8b09e24b6e369936f7a75ed9f1e8e386ed1c3fb7f82"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\conv-context-38632854677-native\\onednn-native.log",
+          "bytes": 5685,
+          "sha256": "50cab24bd5dffa4919df8fedef14c330b9d76fd78eea4a924469cf3e690ec66b"
+        }
+      ]
+    },
+    {
+      "context": "avx2",
+      "report": {
+        "success": false,
+        "context_validated": false,
+        "scope": "frozen_original_conv2_cpu_context_only",
+        "expected_unchanged": true,
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "native_graph_sha256": "dc43d56b896b64077d8e86d56c3fd2b89cfe3d31170eabaa387165ea961438d7",
+        "weight_name": "audio.subsample_conv_projection.layer1.conv.weight",
+        "weight_sha256": "68309f01ea3e738fccb24a0db5db608841a3a8e59b0a4fa5d0fb521ed60bf43c",
+        "input_shape": [
+          1,
+          128,
+          560,
+          64
+        ],
+        "output_shape": [
+          1,
+          32,
+          280,
+          32
+        ],
+        "exact_differences": 268142,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 4.76837158203125e-06,
+        "maximum_tolerance_ratio": 0.03680074314391867,
+        "gpu_validated": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "runtime": {
+          "torch_version": "2.14.1+cu130",
+          "torch_threads": 2,
+          "cpu_capability": "AVX2",
+          "torch_config": "PyTorch built with:\n  - GCC 13.3\n  - C++ Version: 202002\n  - Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications\n  - Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)\n  - OpenMP 201511 (a.k.a. OpenMP 4.5)\n  - LAPACK is enabled (usually provided by MKL)\n  - NNPACK is enabled\n  - CPU capability usage: AVX2\n  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, COMMIT_SHA=5c4886908584029761b579af026dcfb627c84070, CUDA_FLAGS= -DLIBCUDACXX_ENABLE_SIMPLIFIED_COMPLEX_OPERATIONS -Xfatbin -compress-all -DONNX_NAMESPACE=onnx_torch -gencode arch=compute_75,code=sm_75 -gencode arch=compute_80,code=sm_80 -gencode arch=compute_86,code=sm_86 -gencode arch=compute_90,code=sm_90 -gencode arch=compute_100,code=sm_100 -gencode arch=compute_120,code=sm_120 -Xcudafe --diag_suppress=cc_clobber_ignored,--diag_suppress=field_without_dll_interface,--diag_suppress=base_class_has_different_dll_interface,--diag_suppress=dll_interface_conflict_none_assumed,--diag_suppress=dll_interface_conflict_dllexport_assumed,--diag_suppress=bad_friend_decl --expt-relaxed-constexpr --expt-extended-lambda -Xfatbin -compress-all --threads 2 -compress-mode=size -Wno-deprecated-gpu-targets --expt-extended-lambda -DCUB_WRAPPED_NAMESPACE=at_cuda_detail -DDISABLE_CUSPARSE_DEPRECATED -DCUDA_HAS_FP16=1 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -DC10_NODEPRECATED, CUDA_VERSION=13.0, CUDNN_VERSION=9.24.0, CXX_COMPILER=/opt/rh/gcc-toolset-13/root/usr/bin/c++, CXX_FLAGS= -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DHAS_CUPTI -DUSE_FBGEMM -DUSE_MSLK -DUSE_PYTORCH_QNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -DC10_NODEPRECATED -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=range-loop-construct -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-unknown-pragmas -Wno-unused-parameter -Wno-strict-overflow -Wno-strict-aliasing -Wno-stringop-overflow -Wsuggest-override -Wno-psabi -Wno-error=old-style-cast -faligned-new -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-dangling-reference -Wno-error=dangling-reference -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, TORCH_VERSION=2.14.1, USE_CUDA=1, USE_CUDNN=ON, USE_CUSPARSELT=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_GLOO=ON, USE_HIPSPARSELT=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, USE_ROCM_KERNEL_ASSERT=OFF, USE_XCCL=OFF, USE_XPU=OFF, \n",
+          "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+          "env": {
+            "OMP_NUM_THREADS": "4",
+            "MKL_NUM_THREADS": "4",
+            "ATEN_CPU_CAPABILITY": "avx2",
+            "MKL_CBWR": "AVX2",
+            "DNNL_MAX_CPU_ISA": "AVX2",
+            "ONEDNN_VERBOSE": "1"
+          }
+        },
+        "job_source": "19e9981a4e54b2f876568d0201cc2a6c2bfd693a",
+        "requested_reference": {
+          "encoder": "../artifacts/conv-encoder/audio-runtime-reference",
+          "subsample": "../artifacts/conv-subsample",
+          "encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+          "encoder_audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+          "subsample_reference_sha256": "664a8242d079f53bf98d2032f9398de6d2c8d6bcd2312d1baaa35bb498ce5fb8",
+          "weight_sha256": "68309f01ea3e738fccb24a0db5db608841a3a8e59b0a4fa5d0fb521ed60bf43c"
+        }
+      },
+      "host": {
+        "lscpu": [
+          {
+            "field": "Architecture:",
+            "data": "x86_64"
+          },
+          {
+            "field": "CPU op-mode(s):",
+            "data": "32-bit, 64-bit"
+          },
+          {
+            "field": "Address sizes:",
+            "data": "48 bits physical, 48 bits virtual"
+          },
+          {
+            "field": "Byte Order:",
+            "data": "Little Endian"
+          },
+          {
+            "field": "CPU(s):",
+            "data": "4"
+          },
+          {
+            "field": "On-line CPU(s) list:",
+            "data": "0-3"
+          },
+          {
+            "field": "Vendor ID:",
+            "data": "AuthenticAMD"
+          },
+          {
+            "field": "Model name:",
+            "data": "AMD EPYC 7763 64-Core Processor"
+          },
+          {
+            "field": "CPU family:",
+            "data": "25"
+          },
+          {
+            "field": "Model:",
+            "data": "1"
+          },
+          {
+            "field": "Thread(s) per core:",
+            "data": "2"
+          },
+          {
+            "field": "Core(s) per socket:",
+            "data": "2"
+          },
+          {
+            "field": "Socket(s):",
+            "data": "1"
+          },
+          {
+            "field": "Stepping:",
+            "data": "1"
+          },
+          {
+            "field": "BogoMIPS:",
+            "data": "4890.85"
+          },
+          {
+            "field": "Flags:",
+            "data": "fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl tsc_reliable nonstop_tsc cpuid extd_apicid aperfmperf tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw topoext vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves user_shstk clzero xsaveerptr rdpru arat npt nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold v_vmsave_vmload umip vaes vpclmulqdq rdpid fsrm"
+          },
+          {
+            "field": "Virtualization:",
+            "data": "AMD-V"
+          },
+          {
+            "field": "Hypervisor vendor:",
+            "data": "Microsoft"
+          },
+          {
+            "field": "Virtualization type:",
+            "data": "full"
+          },
+          {
+            "field": "L1d cache:",
+            "data": "64 KiB (2 instances)"
+          },
+          {
+            "field": "L1i cache:",
+            "data": "64 KiB (2 instances)"
+          },
+          {
+            "field": "L2 cache:",
+            "data": "1 MiB (2 instances)"
+          },
+          {
+            "field": "L3 cache:",
+            "data": "32 MiB (1 instance)"
+          },
+          {
+            "field": "NUMA node(s):",
+            "data": "1"
+          },
+          {
+            "field": "NUMA node0 CPU(s):",
+            "data": "0-3"
+          },
+          {
+            "field": "Vulnerability Gather data sampling:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Ghostwrite:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Indirect target selection:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Itlb multihit:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability L1tf:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Mds:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Meltdown:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Mmio stale data:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Old microcode:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Reg file data sampling:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Retbleed:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Spec rstack overflow:",
+            "data": "Vulnerable: Safe RET, no microcode"
+          },
+          {
+            "field": "Vulnerability Spec store bypass:",
+            "data": "Vulnerable"
+          },
+          {
+            "field": "Vulnerability Spectre v1:",
+            "data": "Mitigation; usercopy/swapgs barriers and __user pointer sanitization"
+          },
+          {
+            "field": "Vulnerability Spectre v2:",
+            "data": "Mitigation; Retpolines; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected"
+          },
+          {
+            "field": "Vulnerability Srbds:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Tsa:",
+            "data": "Vulnerable: No microcode"
+          },
+          {
+            "field": "Vulnerability Tsx async abort:",
+            "data": "Not affected"
+          },
+          {
+            "field": "Vulnerability Vmscape:",
+            "data": "Not affected"
+          }
+        ]
+      },
+      "exposed_avx512f": false,
+      "raw": [
+        {
+          "path": "artifacts\\numerical-acceptance-state\\conv-context-38632854677-avx2\\conv-avx2.json",
+          "bytes": 4514,
+          "sha256": "5bb36d34448d643ac55294dadefdf238e963b481136e62e921f77766cb2cad7d"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\conv-context-38632854677-avx2\\cpu-host.json",
+          "bytes": 4483,
+          "sha256": "eda047d6a2a8a735ae06c3c4b5fe8cf2f09af8a2646057a1a5bcab415d0b6401"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\conv-context-38632854677-avx2\\onednn-avx2.log",
+          "bytes": 5691,
+          "sha256": "132427d55d9eb27a39205809c5ed4a3c0f9e86716fdd5025792127b5fb12436b"
+        }
+      ]
+    }
+  ],
+  "python_tdd": [
+    {
+      "name": "conv-reference-context-red-20261015",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "6",
+        "skipped": "0",
+        "tests": "6",
+        "time": "0.099",
+        "timestamp": "2026-10-15T05:24:48.196059+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\conv-reference-context-red-20261015.xml",
+        "bytes": 8510,
+        "sha256": "c4539000a62b5c9c2acf8794696a6c680292dbcf19f49f732290c330898c5271"
+      }
+    },
+    {
+      "name": "conv-reference-context-green-20261015",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "6",
+        "time": "0.246",
+        "timestamp": "2026-10-15T05:25:56.945665+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\conv-reference-context-green-20261015.xml",
+        "bytes": 1125,
+        "sha256": "43737bd5a09ab8e25e45058dba896e5345370afe57a877a3a85c2f22923614db"
+      }
+    },
+    {
+      "name": "conv-reference-workflow-red-20261015",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "1",
+        "skipped": "0",
+        "tests": "1",
+        "time": "0.073",
+        "timestamp": "2026-10-15T05:27:20.721613+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\conv-reference-workflow-red-20261015.xml",
+        "bytes": 1391,
+        "sha256": "7de0bcba35bada527e893333c6fde599e98a8855b9346425589fbae031e1d469"
+      }
+    },
+    {
+      "name": "conv-reference-cli-failure-red-20261015",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "1",
+        "skipped": "0",
+        "tests": "1",
+        "time": "0.087",
+        "timestamp": "2026-10-15T05:29:32.368254+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\conv-reference-cli-failure-red-20261015.xml",
+        "bytes": 1503,
+        "sha256": "0141ad527147c4b1de0b8453dc9817ade41d280f128509d10699c6c6108afa7e"
+      }
+    },
+    {
+      "name": "conv-reference-context-cli-related-green-20261015",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "39",
+        "time": "2.871",
+        "timestamp": "2026-10-15T05:30:06.185730+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\conv-reference-context-cli-related-green-20261015.xml",
+        "bytes": 5879,
+        "sha256": "a7204acb19d014f106cb1e6e6d914002d98b0adec7ddd77b5f95d8090664f490"
+      }
+    },
+    {
+      "name": "conv-native-host-preflight-red-20261015",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "1",
+        "skipped": "0",
+        "tests": "1",
+        "time": "0.080",
+        "timestamp": "2026-10-15T05:40:35.523403+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\conv-native-host-preflight-red-20261015.xml",
+        "bytes": 1254,
+        "sha256": "8f024c6e435eb49644069a85ac6c90fa4da2ece32ce870169d837fd3e2e10ddb"
+      }
+    },
+    {
+      "name": "conv-native-host-preflight-related-green-20261015",
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "40",
+        "time": "3.142",
+        "timestamp": "2026-10-15T05:41:07.719494+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "raw": {
+        "path": "artifacts\\numerical-acceptance-state\\conv-native-host-preflight-related-green-20261015.xml",
+        "bytes": 6022,
+        "sha256": "aded443a90968facac26299f55c5671a383882afd28ea8731bc6a7d9126df947"
+      }
+    }
+  ],
+  "historical_exact_replay": {
+    "scope": "audited_saved_reference_context_probe_only",
+    "modality": "audio",
+    "case": "silence",
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "input_sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+    "graph_sha256": "dc43d56b896b64077d8e86d56c3fd2b89cfe3d31170eabaa387165ea961438d7",
+    "threads_before_program_load": 2,
+    "threads_after_program_load": 2,
+    "runtime": {
+      "torch_version": "2.14.1+cu130",
+      "cpu_capability": "AVX512",
+      "torch_interop_threads": 4,
+      "env": {
+        "ATEN_CPU_CAPABILITY": null,
+        "MKL_CBWR": null,
+        "DNNL_MAX_CPU_ISA": null
+      }
+    },
+    "thread_contexts": {
+      "scope": "controlled_cpu_thread_replay_only",
+      "original_threads": 2,
+      "conditions": [
+        {
+          "requested_threads": 1,
+          "executed": true,
+          "actual_threads": 1,
+          "actual_finite": true,
+          "same_shape": true,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "worst_index": 0,
+          "worst_actual": -3.593391180038452,
+          "worst_expected": -3.593391180038452
+        },
+        {
+          "requested_threads": 2,
+          "executed": true,
+          "actual_threads": 2,
+          "actual_finite": true,
+          "same_shape": true,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "worst_index": 0,
+          "worst_actual": -3.593391180038452,
+          "worst_expected": -3.593391180038452
+        },
+        {
+          "requested_threads": 4,
+          "executed": true,
+          "actual_threads": 4,
+          "actual_finite": true,
+          "same_shape": true,
+          "mismatched_elements": 0,
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "worst_index": 0,
+          "worst_actual": -3.593391180038452,
+          "worst_expected": -3.593391180038452
+        }
+      ],
+      "full_encoder_validated": false,
+      "end_to_end_validated": false
+    },
+    "model_weights_downloaded": false,
+    "expected_unchanged": true,
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "job_source": "5a2496d87689a03d35d8cd4b6c84e4f905c78487",
+    "probe_context": "native"
+  },
+  "historical_host": {
+    "lscpu": [
+      {
+        "field": "Architecture:",
+        "data": "x86_64"
+      },
+      {
+        "field": "CPU op-mode(s):",
+        "data": "32-bit, 64-bit"
+      },
+      {
+        "field": "Address sizes:",
+        "data": "48 bits physical, 48 bits virtual"
+      },
+      {
+        "field": "Byte Order:",
+        "data": "Little Endian"
+      },
+      {
+        "field": "CPU(s):",
+        "data": "4"
+      },
+      {
+        "field": "On-line CPU(s) list:",
+        "data": "0-3"
+      },
+      {
+        "field": "Vendor ID:",
+        "data": "AuthenticAMD"
+      },
+      {
+        "field": "Model name:",
+        "data": "AMD EPYC 9V74 80-Core Processor"
+      },
+      {
+        "field": "CPU family:",
+        "data": "25"
+      },
+      {
+        "field": "Model:",
+        "data": "17"
+      },
+      {
+        "field": "Thread(s) per core:",
+        "data": "2"
+      },
+      {
+        "field": "Core(s) per socket:",
+        "data": "2"
+      },
+      {
+        "field": "Socket(s):",
+        "data": "1"
+      },
+      {
+        "field": "Stepping:",
+        "data": "1"
+      },
+      {
+        "field": "BogoMIPS:",
+        "data": "5192.28"
+      },
+      {
+        "field": "Flags:",
+        "data": "fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology tsc_reliable nonstop_tsc cpuid extd_apicid aperfmperf tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw topoext vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves user_shstk avx512_bf16 clzero xsaveerptr rdpru arat npt nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold v_vmsave_vmload avx512vbmi umip avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid fsrm"
+      },
+      {
+        "field": "Virtualization:",
+        "data": "AMD-V"
+      },
+      {
+        "field": "Hypervisor vendor:",
+        "data": "Microsoft"
+      },
+      {
+        "field": "Virtualization type:",
+        "data": "full"
+      },
+      {
+        "field": "L1d cache:",
+        "data": "64 KiB (2 instances)"
+      },
+      {
+        "field": "L1i cache:",
+        "data": "64 KiB (2 instances)"
+      },
+      {
+        "field": "L2 cache:",
+        "data": "2 MiB (2 instances)"
+      },
+      {
+        "field": "L3 cache:",
+        "data": "32 MiB (1 instance)"
+      },
+      {
+        "field": "NUMA node(s):",
+        "data": "1"
+      },
+      {
+        "field": "NUMA node0 CPU(s):",
+        "data": "0-3"
+      },
+      {
+        "field": "Vulnerability Gather data sampling:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Ghostwrite:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Indirect target selection:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Itlb multihit:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability L1tf:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Mds:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Meltdown:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Mmio stale data:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Old microcode:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Reg file data sampling:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Retbleed:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Spec rstack overflow:",
+        "data": "Vulnerable: Safe RET, no microcode"
+      },
+      {
+        "field": "Vulnerability Spec store bypass:",
+        "data": "Vulnerable"
+      },
+      {
+        "field": "Vulnerability Spectre v1:",
+        "data": "Mitigation; usercopy/swapgs barriers and __user pointer sanitization"
+      },
+      {
+        "field": "Vulnerability Spectre v2:",
+        "data": "Mitigation; Retpolines; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected"
+      },
+      {
+        "field": "Vulnerability Srbds:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Tsa:",
+        "data": "Vulnerable: No microcode"
+      },
+      {
+        "field": "Vulnerability Tsx async abort:",
+        "data": "Not affected"
+      },
+      {
+        "field": "Vulnerability Vmscape:",
+        "data": "Not affected"
+      }
+    ]
+  },
+  "historical_raw": [
+    {
+      "path": "artifacts\\numerical-acceptance-state\\context-matrix-audio-native\\context-results\\audio-native.json",
+      "bytes": 2306,
+      "sha256": "3857beadb7cde1bffadd0c6569b7d914011c03368e8f416194541b7987d63629"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\context-matrix-audio-native\\context-results\\cpu-host.json",
+      "bytes": 4633,
+      "sha256": "8f1b85a1b5f0ac8e9fa22fd79b9906dd4093ba63ff4b89417708202b49186f6f"
+    }
+  ],
+  "host_feature_difference": [
+    "avx512_bf16",
+    "avx512_bitalg",
+    "avx512_vbmi2",
+    "avx512_vnni",
+    "avx512_vpopcntdq",
+    "avx512bw",
+    "avx512cd",
+    "avx512dq",
+    "avx512f",
+    "avx512ifma",
+    "avx512vbmi",
+    "avx512vl",
+    "gfni",
+    "xtopology"
+  ],
+  "original_run": {
+    "id": 38398829258,
+    "producer": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "ubuntu": "24.04.5",
+    "image": "20261004.327.1",
+    "OMP_NUM_THREADS": "4",
+    "MKL_NUM_THREADS": "4",
+    "cpu_isa_not_logged": true
+  },
+  "original_run_log": {
+    "path": "artifacts\\numerical-acceptance-state\\original-4ed-reference-run-38398829258.log",
+    "bytes": 282634,
+    "sha256": "cfc8370247603b3a1836f0391ae25f581e49dcf424f42849bb0247ab7b5f2d13"
+  },
+  "decision": "Native label is not ISA evidence. Same EPYC 9V74 model name, but current VM lacks exposed AVX512 flags; do not substitute its output for original expected values.",
+  "workflow_dispatch_unavailable": "New workflow was not present on default branch; started via opt-in PR label, then removed the label to avoid duplicate large downloads on later pushes.",
+  "preflight_added": "Native jobs now reject missing AVX512 before large graph download, record missing_required_cpu and remain failed.",
+  "gpu_validated": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "next_action": "Inspect pinned oneDNN 3.12 AVX512 convolution generator source and recover compatible kernel evidence before another full GPU candidate"
+}

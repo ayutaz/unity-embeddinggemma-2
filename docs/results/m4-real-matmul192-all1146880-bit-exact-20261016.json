@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "single_qualified_replay_derived_real_matmul_onnx_only",
+  "run_id": 38796651780,
+  "artifact_id": 12002710826,
+  "source": "13d5bd2f5263032b7d9c3f4450bbaf8ed16d5350",
+  "report_sha256": "0ced4171955dae074b8e63e2c0723793b970910ac8f2d927d841424c971359bd",
+  "provenance": {
+    "job_source": "13d5bd2f5263032b7d9c3f4450bbaf8ed16d5350",
+    "torch_version": "2.14.1+cu130",
+    "numpy_version": "2.5.3",
+    "cpu_capability": "AVX2",
+    "threads": 2
+  },
+  "capture_provenance": {
+    "capture_source": "11db7b17b640ea85ab6b04bef066a737d3e5ee41",
+    "report_sha256": "f27073b3503e82a4b963a64b3ff2c1e2f782d891a8408eb10cb22413a3aa5fdf",
+    "node": "mm_109",
+    "tensor_sha256": {
+      "input0": "8d2b3824507574ca5bc29747d65e2b80ca01e9082c29e379a9160baea87ed7c0",
+      "input1": "01fb83fc0b25bfc812deb9987388e660e97e415641c08703e6dd6846ee397752",
+      "native": "976262f7b77423809d25ad1b43ce48a9ef5b2beb22c5ed1d46715fc16130e9ad"
+    }
+  },
+  "native_execution": "original_MatMul_passthrough_not_fixed_order_execution",
+  "native_passthrough_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 0.0,
+    "maximum_tolerance_ratio": 0.0,
+    "worst_index": 0,
+    "worst_actual": -28.171314239501953,
+    "worst_expected": -28.171314239501953,
+    "exact_difference_count": 0
+  },
+  "standard_onnx_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 2.288818359375e-05,
+    "maximum_tolerance_ratio": 0.6699684292933118,
+    "worst_index": 158025,
+    "worst_actual": -0.002971649169921875,
+    "worst_expected": -0.0029785484075546265,
+    "exact_difference_count": 909801
+  },
+  "onnx_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 0.0,
+    "maximum_tolerance_ratio": 0.0,
+    "worst_index": 0,
+    "worst_actual": -28.171314239501953,
+    "worst_expected": -28.171314239501953,
+    "exact_difference_count": 0
+  },
+  "values_compared": 1146880,
+  "capture_sha256": "976262f7b77423809d25ad1b43ce48a9ef5b2beb22c5ed1d46715fc16130e9ad",
+  "capture_independently_hashed_equal_to_pinned_qualified_primitive_target": true,
+  "weights_unchanged": true,
+  "graph_sha256_reported_by_producer": "9930c2e761543a04d55a64464e6a34eb4c1c0e4eb1faa2faaa7288e2bf0d9d26",
+  "large_graph_locally_downloaded_or_rechecked": false,
+  "export_seconds_observed": 1.111767786999998,
+  "evaluation_seconds_observed": 11.344232045000005,
+  "full_encoder_validated": false,
+  "gpu_validated": false,
+  "end_to_end_validated": false,
+  "limit": "Single replay-derived primitive in an original-final-output-qualified context. Not the literal old full-encoder reference and not a full-chain acceptance."
+}

@@ -1,0 +1,672 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "scope": "six_original_fp32_image_case_gpu_gates_with_qualified_native_position_tables",
+  "original_reference": {
+    "file": "vision-reference.json",
+    "sha256": "3dfccd1a487ce04df3f8d640483ca045f7a7a56231bc1096ad0f845c923a29c6"
+  },
+  "tolerances": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "original_golden_changed": false,
+  "learned_weights_changed": false,
+  "case_results": [
+    {
+      "file": "vision-original-native-rotary-whole-gpu-d345886675e7ff5e70faa518766623d9775c6bc7-square-0.json",
+      "sha256": "15220dd31843d8d72fad089611ea99bb9b1eb8a056084e280f3f8666b0a0f34c",
+      "success": true,
+      "runtime_source": "d345886675e7ff5e70faa518766623d9775c6bc7",
+      "case_id": "square-0",
+      "profile": "square",
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 1.239776611328125e-05,
+      "maximum_tolerance_ratio": 0.5937759453608594,
+      "host_peak_working_set_bytes": 4941717504,
+      "execute_and_final_download_ms": 25539.3387,
+      "original_coefficient_bytes_preserved": true,
+      "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+      "derived_rotary_rebound_tables": 4,
+      "derived_rotary_changed_multiplication_operands": 128,
+      "tail_template_feature_count": 256,
+      "tail_template_sha256": "215fd08ac859acc3501b111104c048fb4450f11092418be4ea45a9fc3d985835",
+      "all_element_bit_differences": 125790,
+      "remaining_failures": [],
+      "native_test": {
+        "file": "vision-original-native-rotary-square0-20261015.xml",
+        "sha256": "d1bacef0ac3104fb50f98704788e7afee3e6456e3a569e84c86e6bafd0ca99a5",
+        "totals": {
+          "id": "2",
+          "testcasecount": "1",
+          "result": "Passed",
+          "total": "1",
+          "passed": "1",
+          "failed": "0",
+          "inconclusive": "0",
+          "skipped": "0",
+          "asserts": "0",
+          "engine-version": "3.5.0.0",
+          "clr-version": "4.0.30319.42000",
+          "start-time": "2026-10-15 11:35:41Z",
+          "end-time": "2026-10-15 11:36:24Z",
+          "duration": "42.7229482"
+        }
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-square0-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "OriginalContextNativeRotarySquareZeroMustMatchOriginalOnGpu",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-square0-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": true,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T11:35:02.141336+00:00",
+        "pid": 93828,
+        "exit_code": 0,
+        "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-square0-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "elapsed_seconds": 86.89993500000855,
+        "completed_utc": "2026-10-15T11:36:29.041274+00:00"
+      }
+    },
+    {
+      "file": "vision-original-native-rotary-whole-gpu-759f11663933e54c696d27bf094e77853acc1d7a-square-1.json",
+      "sha256": "423688bef85cba55af3dd234dae00fb8bde786e58c8d0613e0271ca2c655e621",
+      "success": false,
+      "runtime_source": "759f11663933e54c696d27bf094e77853acc1d7a",
+      "case_id": "square-1",
+      "profile": "square",
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 5,
+      "maximum_absolute_error": 2.7060508728027344e-05,
+      "maximum_tolerance_ratio": 1.4062215715395514,
+      "host_peak_working_set_bytes": 4646338560,
+      "execute_and_final_download_ms": 14711.0493,
+      "original_coefficient_bytes_preserved": true,
+      "original_coefficients_sha256": "3e14a1b4f9ab810af4fc118e1a8b6842615b6f2b9342dbc5348067f8c20f6886",
+      "derived_rotary_rebound_tables": 4,
+      "derived_rotary_changed_multiplication_operands": 128,
+      "tail_template_feature_count": 256,
+      "tail_template_sha256": "215fd08ac859acc3501b111104c048fb4450f11092418be4ea45a9fc3d985835",
+      "all_element_bit_differences": 127737,
+      "remaining_failures": [
+        {
+          "index": 27732,
+          "row": 54,
+          "column": 84,
+          "actual": 0.0028423070907592773,
+          "expected": 0.002853572368621826,
+          "absolute_error": 1.1265277862548828e-05,
+          "tolerance": 1.0285357236862183e-05,
+          "ratio": 1.0952733680629643
+        },
+        {
+          "index": 27752,
+          "row": 54,
+          "column": 104,
+          "actual": -0.006616741418838501,
+          "expected": -0.00660175085067749,
+          "absolute_error": 1.4990568161010742e-05,
+          "tolerance": 1.066017508506775e-05,
+          "ratio": 1.4062215715395514
+        },
+        {
+          "index": 27919,
+          "row": 54,
+          "column": 271,
+          "actual": 0.005347586236894131,
+          "expected": 0.005335591733455658,
+          "absolute_error": 1.1994503438472748e-05,
+          "tolerance": 1.0533559173345567e-05,
+          "ratio": 1.1386942666847117
+        },
+        {
+          "index": 35963,
+          "row": 70,
+          "column": 123,
+          "actual": 0.03508102893829346,
+          "expected": 0.03506577014923096,
+          "absolute_error": 1.52587890625e-05,
+          "tolerance": 1.3506577014923097e-05,
+          "ratio": 1.1297302821907376
+        },
+        {
+          "index": 36019,
+          "row": 70,
+          "column": 179,
+          "actual": 0.03708076477050781,
+          "expected": 0.037098050117492676,
+          "absolute_error": 1.728534698486328e-05,
+          "tolerance": 1.3709805011749268e-05,
+          "ratio": 1.260801810824427
+        }
+      ],
+      "native_test": {
+        "file": "vision-original-native-rotary-square1-20261015.xml",
+        "sha256": "e26e8dc057c34d07a9f3907a9b4adcfbd1dc1806dd5087b40abc1222452cebf9",
+        "totals": {
+          "id": "2",
+          "testcasecount": "1",
+          "result": "Failed(Child)",
+          "total": "1",
+          "passed": "0",
+          "failed": "1",
+          "inconclusive": "0",
+          "skipped": "0",
+          "asserts": "0",
+          "engine-version": "3.5.0.0",
+          "clr-version": "4.0.30319.42000",
+          "start-time": "2026-10-15 11:38:14Z",
+          "end-time": "2026-10-15 11:38:45Z",
+          "duration": "31.3020611"
+        }
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-square1-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "OriginalContextNativeRotarySquareOneMustMatchOriginalOnGpu",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-square1-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T11:37:37.268836+00:00",
+        "pid": 104256,
+        "exit_code": 2,
+        "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-square1-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        },
+        "elapsed_seconds": 72.82814120000694,
+        "completed_utc": "2026-10-15T11:38:50.096981+00:00"
+      }
+    },
+    {
+      "file": "vision-original-native-rotary-whole-gpu-cbfd12807b9032e978c9ea422fc116fdb1734f11-landscape-0.json",
+      "sha256": "ec7b6cf87383388ec88b04bcec872f19eb00998e215342afdd2dd6a97ba1620c",
+      "success": false,
+      "runtime_source": "cbfd12807b9032e978c9ea422fc116fdb1734f11",
+      "case_id": "landscape-0",
+      "profile": "landscape",
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 1,
+      "maximum_absolute_error": 1.7404556274414062e-05,
+      "maximum_tolerance_ratio": 1.32196707066797,
+      "host_peak_working_set_bytes": 4680183808,
+      "execute_and_final_download_ms": 25708.6495,
+      "original_coefficient_bytes_preserved": true,
+      "original_coefficients_sha256": "6257d49a1f08e9b39d86fabf0381949332a56efc3f08526e595645011d44b611",
+      "derived_rotary_rebound_tables": 4,
+      "derived_rotary_changed_multiplication_operands": 128,
+      "tail_template_feature_count": 252,
+      "tail_template_sha256": "36b688b118f091490b75af9deab3e2e4873172dbab64e9f021cd99c3c7ba5599",
+      "all_element_bit_differences": 124385,
+      "remaining_failures": [
+        {
+          "index": 59003,
+          "row": 115,
+          "column": 123,
+          "actual": -0.01679295301437378,
+          "expected": -0.016777515411376953,
+          "absolute_error": 1.5437602996826172e-05,
+          "tolerance": 1.1677751541137696e-05,
+          "ratio": 1.32196707066797
+        }
+      ],
+      "native_test": {
+        "file": "vision-original-native-rotary-landscape0-20261015.xml",
+        "sha256": "e4b99995f3f3820e77cfd1137e3f055d6482cc2736e8771b65a9a78fde6676f3",
+        "totals": {
+          "id": "2",
+          "testcasecount": "1",
+          "result": "Failed(Child)",
+          "total": "1",
+          "passed": "0",
+          "failed": "1",
+          "inconclusive": "0",
+          "skipped": "0",
+          "asserts": "0",
+          "engine-version": "3.5.0.0",
+          "clr-version": "4.0.30319.42000",
+          "start-time": "2026-10-15 11:50:49Z",
+          "end-time": "2026-10-15 11:51:32Z",
+          "duration": "43.009515"
+        }
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-landscape0-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "OriginalContextNativeRotaryLandscapeZeroMustMatchOriginalOnGpu",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-landscape0-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T11:50:23.584977+00:00",
+        "pid": 93228,
+        "exit_code": 2,
+        "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-landscape0-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        },
+        "elapsed_seconds": 73.12583610000729,
+        "completed_utc": "2026-10-15T11:51:36.710814+00:00"
+      }
+    },
+    {
+      "file": "vision-original-native-rotary-whole-gpu-cbfd12807b9032e978c9ea422fc116fdb1734f11-landscape-1.json",
+      "sha256": "c78a079650a29dcb65b54237910eb63cabab893870384115dc43921aa06ddc0d",
+      "success": true,
+      "runtime_source": "cbfd12807b9032e978c9ea422fc116fdb1734f11",
+      "case_id": "landscape-1",
+      "profile": "landscape",
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 4.0531158447265625e-06,
+      "maximum_tolerance_ratio": 0.2247430856027023,
+      "host_peak_working_set_bytes": 4981207040,
+      "execute_and_final_download_ms": 14812.335700000001,
+      "original_coefficient_bytes_preserved": true,
+      "original_coefficients_sha256": "6257d49a1f08e9b39d86fabf0381949332a56efc3f08526e595645011d44b611",
+      "derived_rotary_rebound_tables": 4,
+      "derived_rotary_changed_multiplication_operands": 128,
+      "tail_template_feature_count": 252,
+      "tail_template_sha256": "36b688b118f091490b75af9deab3e2e4873172dbab64e9f021cd99c3c7ba5599",
+      "all_element_bit_differences": 119721,
+      "remaining_failures": [],
+      "native_test": {
+        "file": "vision-original-native-rotary-landscape1-20261015.xml",
+        "sha256": "3592dc1f504f9331ec079e7ad7931cdd423b8e4d388c396f91621be900500020",
+        "totals": {
+          "id": "2",
+          "testcasecount": "1",
+          "result": "Passed",
+          "total": "1",
+          "passed": "1",
+          "failed": "0",
+          "inconclusive": "0",
+          "skipped": "0",
+          "asserts": "0",
+          "engine-version": "3.5.0.0",
+          "clr-version": "4.0.30319.42000",
+          "start-time": "2026-10-15 11:52:08Z",
+          "end-time": "2026-10-15 11:52:39Z",
+          "duration": "31.4986036"
+        }
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-landscape1-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "OriginalContextNativeRotaryLandscapeOneMustMatchOriginalOnGpu",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-landscape1-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": true,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T11:51:40.641056+00:00",
+        "pid": 5140,
+        "exit_code": 0,
+        "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-landscape1-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "elapsed_seconds": 63.644488699996145,
+        "completed_utc": "2026-10-15T11:52:44.285545+00:00"
+      }
+    },
+    {
+      "file": "vision-original-native-rotary-whole-gpu-cbfd12807b9032e978c9ea422fc116fdb1734f11-portrait-0.json",
+      "sha256": "0b00ae9aaa848cf4b78f5cf970e3462ab62501132e2d2ca1a128db5be1a039d5",
+      "success": true,
+      "runtime_source": "cbfd12807b9032e978c9ea422fc116fdb1734f11",
+      "case_id": "portrait-0",
+      "profile": "portrait",
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 3.814697265625e-06,
+      "maximum_tolerance_ratio": 0.20304207357775744,
+      "host_peak_working_set_bytes": 4959481856,
+      "execute_and_final_download_ms": 17569.582300000002,
+      "original_coefficient_bytes_preserved": true,
+      "original_coefficients_sha256": "44736718af6426debc3d436f0ae66d1bf9edec2e3d5f42e01de108b611814520",
+      "derived_rotary_rebound_tables": 4,
+      "derived_rotary_changed_multiplication_operands": 128,
+      "tail_template_feature_count": 252,
+      "tail_template_sha256": "36b688b118f091490b75af9deab3e2e4873172dbab64e9f021cd99c3c7ba5599",
+      "all_element_bit_differences": 119863,
+      "remaining_failures": [],
+      "native_test": {
+        "file": "vision-original-native-rotary-portrait0-20261015.xml",
+        "sha256": "5a0045333e7ff37d1caba6d39a546ce3365327886def2ec3dd90bd6ec028b061",
+        "totals": {
+          "id": "2",
+          "testcasecount": "1",
+          "result": "Passed",
+          "total": "1",
+          "passed": "1",
+          "failed": "0",
+          "inconclusive": "0",
+          "skipped": "0",
+          "asserts": "0",
+          "engine-version": "3.5.0.0",
+          "clr-version": "4.0.30319.42000",
+          "start-time": "2026-10-15 11:53:14Z",
+          "end-time": "2026-10-15 11:53:49Z",
+          "duration": "34.9929356"
+        }
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-portrait0-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "OriginalContextNativeRotaryPortraitZeroMustMatchOriginalOnGpu",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-portrait0-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": true,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T11:52:48.123091+00:00",
+        "pid": 97876,
+        "exit_code": 0,
+        "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-portrait0-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "elapsed_seconds": 65.42725810001139,
+        "completed_utc": "2026-10-15T11:53:53.550350+00:00"
+      }
+    },
+    {
+      "file": "vision-original-native-rotary-whole-gpu-cbfd12807b9032e978c9ea422fc116fdb1734f11-portrait-1.json",
+      "sha256": "8c6a7807ff7b2fa5c403998ddaca42c4b2e762aea122f719e747f814c12d01fe",
+      "success": true,
+      "runtime_source": "cbfd12807b9032e978c9ea422fc116fdb1734f11",
+      "case_id": "portrait-1",
+      "profile": "portrait",
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 0,
+      "maximum_absolute_error": 1.6689300537109375e-06,
+      "maximum_tolerance_ratio": 0.05672647401851854,
+      "host_peak_working_set_bytes": 4679270400,
+      "execute_and_final_download_ms": 17566.1081,
+      "original_coefficient_bytes_preserved": true,
+      "original_coefficients_sha256": "44736718af6426debc3d436f0ae66d1bf9edec2e3d5f42e01de108b611814520",
+      "derived_rotary_rebound_tables": 4,
+      "derived_rotary_changed_multiplication_operands": 128,
+      "tail_template_feature_count": 252,
+      "tail_template_sha256": "36b688b118f091490b75af9deab3e2e4873172dbab64e9f021cd99c3c7ba5599",
+      "all_element_bit_differences": 85225,
+      "remaining_failures": [],
+      "native_test": {
+        "file": "vision-original-native-rotary-portrait1-20261015.xml",
+        "sha256": "32f7356043a2cbf1cade082abba27e1d7eb48755c2a25d92f5feaf280c5de96f",
+        "totals": {
+          "id": "2",
+          "testcasecount": "1",
+          "result": "Passed",
+          "total": "1",
+          "passed": "1",
+          "failed": "0",
+          "inconclusive": "0",
+          "skipped": "0",
+          "asserts": "0",
+          "engine-version": "3.5.0.0",
+          "clr-version": "4.0.30319.42000",
+          "start-time": "2026-10-15 11:54:24Z",
+          "end-time": "2026-10-15 11:54:58Z",
+          "duration": "34.7263951"
+        }
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-portrait1-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "OriginalContextNativeRotaryPortraitOneMustMatchOriginalOnGpu",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-portrait1-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": true,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-15T11:53:58.167515+00:00",
+        "pid": 68288,
+        "exit_code": 0,
+        "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\vision-original-native-rotary-portrait1-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "elapsed_seconds": 65.14161700000113,
+        "completed_utc": "2026-10-15T11:55:03.309132+00:00"
+      }
+    }
+  ],
+  "passed_cases": [
+    "square-0",
+    "landscape-1",
+    "portrait-0",
+    "portrait-1"
+  ],
+  "failed_cases": [
+    "square-1",
+    "landscape-0"
+  ],
+  "all_six_cases_executed": true,
+  "all_six_observed_cases_within_tolerance": false,
+  "source_qualification": "Case receipts retain their actual immutable source hashes. Later harness changes add profile fixtures/gates; final production/latest-head acceptance is still separate.",
+  "resource_qualification": "One GPU case per native process, 300-second timeout and owned 12-GiB memory guard. Single-case timings are not benchmarks.",
+  "production_encoder_adopted": false,
+  "end_to_end_validated": false,
+  "stages_3_4_complete": false,
+  "next": "Use failing-case boundary observations to isolate the remaining arithmetic difference. Preserve original references, all cases/profiles and complete input-to-768, sample/Player acceptance.",
+  "python_regression": {
+    "run_id": 38729275214,
+    "source": "a5423c400846d6429ed980895503da928bc69e85",
+    "environments": [
+      {
+        "environment": "python-ubuntu-latest-3.13",
+        "file": "python-tests.xml",
+        "sha256": "861a3899817c43edaa25cb5ee58f2d5cba3668887536eeca448ffb02652371e2",
+        "totals": {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "1029",
+          "time": "342.364",
+          "timestamp": "2026-10-15T11:43:20.786668+00:00",
+          "hostname": "runnervm8k3b6"
+        }
+      },
+      {
+        "environment": "python-ubuntu-latest-3.14",
+        "file": "python-tests.xml",
+        "sha256": "9199b1fb02dab5895f5fe99125572f79beee35fb89b4dfa6c49c6b95ea4c04d3",
+        "totals": {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "1029",
+          "time": "469.259",
+          "timestamp": "2026-10-15T11:43:16.595904+00:00",
+          "hostname": "runnervm8k3b6"
+        }
+      },
+      {
+        "environment": "python-windows-latest-3.13",
+        "file": "python-tests.xml",
+        "sha256": "b76c8180300534096a418bba349b36254934039a05bec2713926afb0c057e7b2",
+        "totals": {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "1029",
+          "time": "530.387",
+          "timestamp": "2026-10-15T11:43:16.544991+00:00",
+          "hostname": "runnervm0xl3a"
+        }
+      },
+      {
+        "environment": "python-windows-latest-3.14",
+        "file": "python-tests.xml",
+        "sha256": "00dbf8590c2ac4105304d832f8d5792df9bf54a4635246812fd622f5582d2157",
+        "totals": {
+          "name": "pytest",
+          "errors": "0",
+          "failures": "0",
+          "skipped": "0",
+          "tests": "1029",
+          "time": "678.008",
+          "timestamp": "2026-10-15T11:43:23.018907+00:00",
+          "hostname": "runnervmfi6oq"
+        }
+      }
+    ],
+    "qualification": "Four-environment offline Python regression; not latest-head Required CI or all-model GPU acceptance."
+  },
+  "profile_matching_checks": [
+    {
+      "file": "vision-native-profile-rotary-matching-red-20261015.xml",
+      "sha256": "7d8a9266c7fb17800a3d00449610ee9b83afffefea572ba4ab66b3e027585340",
+      "totals": {
+        "id": "2",
+        "testcasecount": "4",
+        "result": "Failed(Child)",
+        "total": "4",
+        "passed": "0",
+        "failed": "4",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 11:45:54Z",
+        "end-time": "2026-10-15 11:45:55Z",
+        "duration": "0.297817"
+      }
+    },
+    {
+      "file": "vision-native-profile-rotary-matching-green-20261015.xml",
+      "sha256": "55e381364cdf12db48963a492f4f805078e4a2874474eb97a5922186e64582da",
+      "totals": {
+        "id": "2",
+        "testcasecount": "15",
+        "result": "Passed",
+        "total": "15",
+        "passed": "15",
+        "failed": "0",
+        "inconclusive": "0",
+        "skipped": "0",
+        "asserts": "0",
+        "engine-version": "3.5.0.0",
+        "clr-version": "4.0.30319.42000",
+        "start-time": "2026-10-15 11:47:39Z",
+        "end-time": "2026-10-15 11:47:42Z",
+        "duration": "3.2883235"
+      }
+    }
+  ],
+  "mkl_dispatch_research": {
+    "primary_sources": [
+      "https://www.intel.com/content/www/us/en/docs/onemkl/developer-reference-c/2026-0/getting-started-with-conditional-numerical.html",
+      "https://www.intel.com/content/www/us/en/docs/onemkl/developer-reference-c/2026-0/mkl-enable-instructions.html"
+    ],
+    "finding": "Intel documents CNR control and ISA dispatch restriction separately. MKL_CBWR=AVX2 does not establish identical code paths on AMD and Intel.",
+    "unverified_next_hypothesis": "On an Intel host, restrict only MKL_ENABLE_INSTRUCTIONS=AVX2 without CNR while preserving native ATen; require the original patch prerequisite before any full reference replay.",
+    "hypothesis_executed": false,
+    "runtime_settings_changed": false
+  }
+}

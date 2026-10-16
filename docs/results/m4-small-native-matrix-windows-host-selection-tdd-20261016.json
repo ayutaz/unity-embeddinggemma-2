@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "explicit_small_matrix_runner_host_choice_only",
+  "red": {
+    "file": "native-matrix-host-selection-red-20261016.xml",
+    "sha256": "2144744c2bf694c3ea32b25f2e005f3a21d9ae3a82c0e13d168f172d058891bd",
+    "tests": "2",
+    "failures": "2",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.141"
+  },
+  "green": {
+    "file": "native-matrix-host-selection-green-20261016.xml",
+    "sha256": "b0e466e63aae9831877edc84df78b281b86ba6012a0a748772cd4e6209d7fb46",
+    "tests": "15",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "1.666"
+  },
+  "actionlint": "passed",
+  "default_runner": "ubuntu-latest",
+  "optional_runner": "windows-latest",
+  "model_download": false,
+  "encoder_job_changed": false,
+  "required_reference_settings_changed": false,
+  "real_windows_host_execution_pending": true,
+  "whole_encoder_validated": false,
+  "gpu_validated": false
+}

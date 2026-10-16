@@ -1,5 +1,13 @@
 # M4: native SiLU保持と標準ONNX Swishの小さい比較
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
+## 2026-10-14の追加状況
+
+このSwish単独probeの結果は元sourceの履歴。現在のnative音声exportは `Neg→Exp→Add→Div` に変更したが、実モデル未検証。[修正receipt](results/native-silu-division-order-green-20261014.json)。
+
+## 当時の実測・実装記録
+
 2026-10-13。音声encoderのexp分解で生じる丸め差を避ける候補として、native SiLUを保持した小さい`.pt2`参照と、標準ONNX Swishだけのimportを比較した。全音声encoderの不合格解消、元6信号・実CPU / GPUの受け入れは未完了。正式Release / tagは作成しない。
 
 [ONNX Swish仕様](https://onnx.ai/onnx/operators/onnx__Swish.html)はopset 24、alphaの既定値1である。導入済みSentis 2.6.1のONNX converterはSwishを専用layerへ変換し、CPU Burst / GPUCompute kernelは `v / (1 + exp(-alpha * v))` を実装している。native Torch `.pt2`のSiLUはSentis Torch converterに対応mappingがないため、native保持のPython成功をそのままTorch importの成功にしない。

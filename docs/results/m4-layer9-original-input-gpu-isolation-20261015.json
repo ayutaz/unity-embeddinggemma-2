@@ -1,0 +1,131 @@
+{
+  "scope": "one_layer9_original_input_gpu_isolation_only",
+  "success": true,
+  "source": "56a697d9732f0225ef25c1e2a25b4f6d26b44c58",
+  "report": {
+    "success": true,
+    "scope": "one_layer9_original_input_gpu_isolation_only",
+    "source": "56a697d9732f0225ef25c1e2a25b4f6d26b44c58",
+    "requested_backend": "GPUCompute",
+    "phase": "completed",
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "layer_count": 3227,
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "observed": {
+      "exact_differences": 0,
+      "mismatches": 0,
+      "maximum_absolute_error": 0.0,
+      "maximum_tolerance_ratio": 0.0
+    },
+    "original": {
+      "exact_differences": 216478,
+      "mismatches": 0,
+      "maximum_absolute_error": 3.0517578125e-05,
+      "maximum_tolerance_ratio": 0.2535043676753897
+    }
+  },
+  "process": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+      "-logFile",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\layer9-fixed-original-input-gpu-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.Layer9IsolationGpuTests",
+      "-testResults",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\layer9-fixed-original-input-gpu-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-14T18:41:53.259016+00:00",
+    "pid": 58708,
+    "exit_code": 0,
+    "elapsed_seconds": 43.88089489999402,
+    "completed_utc": "2026-10-14T18:42:37.139933+00:00"
+  },
+  "extraction": {
+    "scope": "one_layer9_gpu_isolation_preparation_only",
+    "source_graph_sha256": "8aefc4b83fd0cc709544a0d6337b8c1837d2c864ad1d3c8cbd39fcd568abc222",
+    "graph_sha256": "9336aba57dfe522be860d4778ed2ebc07aac549f4726d9554f8a95c98d76639d",
+    "graph_bytes": 100881334,
+    "node_count": 489,
+    "input_name": "/norm_out_8/Mul_1_output_0",
+    "output_name": "/norm_out_9/Mul_1_output_0",
+    "shape": [
+      1,
+      280,
+      1024
+    ],
+    "files": {
+      "original-input": {
+        "path": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\artifacts\\audio-current-stage-context\\silence-stage-09-fp32.bin",
+        "sha256": "e909a23f955d2533d8cd304620f08a153bc3367371259ae70ecaf3cbf435d734"
+      },
+      "original-expected": {
+        "path": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\artifacts\\audio-current-stage-context\\silence-stage-10-fp32.bin",
+        "sha256": "793aadff569c77e3ac632147d34d3d1c50d772b5176adcf53c31992ad22d6585"
+      },
+      "observed-input": {
+        "path": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\refined-static64-full-layers-dd8cfd4fd8656df9b7b3b6c5505b01bb952f336f-captures\\layer_8-actual.bin",
+        "sha256": "347e907402c73d8633e0a2b22ab7a9ceb4744efd77840ea01bae6e6b8bc4fb0d"
+      },
+      "observed-expected": {
+        "path": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\refined-static64-full-layers-dd8cfd4fd8656df9b7b3b6c5505b01bb952f336f-captures\\layer_9-actual.bin",
+        "sha256": "d0433a6147f9aa04cbdca86ae0d3fbf2a61f5f5882eba011f2aad578d6b5213a"
+      }
+    },
+    "batch_bound_to_immutable_original_profile": true,
+    "original_reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "observed_source": "dd8cfd4fd8656df9b7b3b6c5505b01bb952f336f",
+    "pending_checks": [
+      "on observed layer_8 input, static64 output must fit exact original observed layer_9 bits",
+      "then compare GPU output on immutable original layer_8 input to original layer_9"
+    ],
+    "gpu_validated": false,
+    "full_encoder_validated": false,
+    "end_to_end_validated": false
+  },
+  "nunit": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "observed_full_model_layer9_failed_elements": 1,
+  "exact_observed_replay_preserved": true,
+  "original_input_isolated_layer9_failed_elements": 0,
+  "upstream_propagation_confirmed_for_first_failed_layer": true,
+  "original_golden_changed": false,
+  "original_tolerance_changed": false,
+  "initial_setup_failure": {
+    "source": "5da6b312182a0076185dd7c2e57985fbf2937f0d",
+    "reason": "extracted input retained unknown batch; static projection candidate rejected before inference",
+    "gpu_inference_missing": true
+  },
+  "limits": [
+    "silence, fully valid profile, layer nine only",
+    "does not locate each upstream contribution",
+    "does not validate remaining layers or full API"
+  ],
+  "next_action": "reduce upstream error; compare dynamic attention matmul compensation with the same original encoder gate, then verify all original profiles/signals",
+  "raw_sha256": {
+    "layer9-isolation-gpu-56a697d9732f0225ef25c1e2a25b4f6d26b44c58.json": "dc50cb25c649531aafcab322f9f279ca8346b32031805522cbbf205a39931642",
+    "layer9-fixed-original-input-gpu-20261015.xml": "711b546b19c572e90b1eb21c7574f1b6c706cf0a7a24ee4c4c3d3fa79cb5ee36",
+    "layer9-fixed-original-input-gpu-20261015.log": "ad62c6ef3257a356a70391659f7c73657b532a7c69134f6eded0497e93f899ac",
+    "layer9-fixed-original-input-gpu-20261015-process.json": "d8176d270f3996850950f757223d601caa36caf8510f988f2f437cc5953ce64e",
+    "initial_setup_failure_xml": "7572a175cc68aaa77344fd2952c0ea3cbfaf3bb3453afa192807942da707ef77",
+    "extraction": "66584ee0231451f0d86bdb4d6c258e124aef85d1bfcb9f93600202b1673ed855"
+  }
+}

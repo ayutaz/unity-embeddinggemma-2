@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "pinned_sentis_editmode_shared_gpu_buffer_cleanup_and_actual_pcm_shutdown_regression",
+  "implementation_source": "2adbc4ca0570f81a24557ce3b4527bd016b2739c",
+  "common_runtime_tree": "bac1d8bec5997a16a743ed373b4917f3f91f2275",
+  "runtime_inference_code_changed": false,
+  "diagnosis": {
+    "native_allocation": "Sentis ComputeTensorDataReaper shared dummy ComputeBuffer",
+    "data_elements": 16,
+    "data_bytes": 64,
+    "stack_source": "ComputeTensorDataReaper..cctor / ComputeTensorData.cs:36",
+    "vendor_source_sha256": "526365fb76f39bb120b9cc11995e0158c2a88c733541caf5eb4c5f88763b3b34",
+    "cause": "Upstream registers cleanup from RuntimeInitializeOnLoadMethod. EditMode inference can initialize the shared buffer without entering PlayMode or invoking that registration.",
+    "fix": "Editor-only hook invokes the pinned idempotent upstream cleanup at EditorApplication.quitting and AssemblyReloadEvents.beforeAssemblyReload; never during inference."
+  },
+  "results": [
+    {
+      "prefix": "native-allocation-mode-red-20261016",
+      "counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      },
+      "success": false,
+      "process_sha256": "2a981ea44b235eb66f5bb8f18d67ed12cda66d073f745e297e7c2450c560dda4",
+      "xml_sha256": "3260b0265ea7ae874d80ed1061c41c331bc8a66e8ab2d0542292815b22cadd24",
+      "log_sha256": "910907eb8960dfdfe68e8d67ffc8d387e2900286f6ca81a7e46717018daeed64",
+      "persistent_native_warning_allocations": 0,
+      "process_elapsed_seconds": 54.85185999999521
+    },
+    {
+      "prefix": "native-allocation-baseline-green-20261016",
+      "counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "success": true,
+      "process_sha256": "ad45bb9788fc0f2d07bdf7190d81d1506c32520f3c9027131107ae73ea1f1e52",
+      "xml_sha256": "0db937d2516b308647a7dde70257691f047342e6b359d385bb479ad853dc024b",
+      "log_sha256": "60ef2992cd33d183cfa647cf0e9bf65afbbb0f415b1ce7397e8d4634cd70a1c2",
+      "persistent_native_warning_allocations": 0,
+      "process_elapsed_seconds": 45.23276059998898
+    },
+    {
+      "prefix": "native-allocation-tiny-gpu-green-20261016",
+      "counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "success": true,
+      "process_sha256": "9cfdd18102cb60940523cc406fbf3c7e2726f323fc8236bfa8dbd29dc39e085c",
+      "xml_sha256": "a92e73b9bc4621ca4bdd9577be07d3d0197a9c006557fa2e785c7e38f27ba495",
+      "log_sha256": "3c7d78f2db439fe7a5fbf5ef5592684edaffc4426ce4d71c753069fc2f1df3cb",
+      "persistent_native_warning_allocations": 1,
+      "process_elapsed_seconds": 43.558763700013515
+    },
+    {
+      "prefix": "sentis-editor-shared-cleanup-red-20261016",
+      "counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      },
+      "success": false,
+      "process_sha256": "a93fcbb6292964e5aabb99633a49e2fd063f30677e1a993bfd96b5fb2bdd3744",
+      "xml_sha256": "30c02c1dd72d4c280a7181411fd1bee7387e709e11aa2ff7957cd300db38b156",
+      "log_sha256": "61a4676637cdc38b73b3af84200ed1843fc7785938e7b1d0f04ad3bb3873a1dd",
+      "persistent_native_warning_allocations": 1,
+      "process_elapsed_seconds": 56.45497500000056
+    },
+    {
+      "prefix": "sentis-editor-shared-cleanup-green-20261016",
+      "counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "success": true,
+      "process_sha256": "e0d2f4d9d5e5576443a592d5b601802bfd9f9f73d522888a675fcdc322facd19",
+      "xml_sha256": "e89ff2149ea40b311afeaa8ecb1cca5093346e56d530a27181cf93db734d37e9",
+      "log_sha256": "63f9bb6c270f4247945728419c92dd5ce8ed1f0f6154b30ab68dd7219cb723cb",
+      "persistent_native_warning_allocations": 0,
+      "process_elapsed_seconds": 48.17637860000832
+    },
+    {
+      "prefix": "gpu-real-pcm-and-audio-contracts-clean-shutdown-20261016",
+      "counts": {
+        "total": 45,
+        "passed": 45,
+        "failed": 0,
+        "skipped": 0
+      },
+      "success": true,
+      "process_sha256": "97f0f30ce3472be754482929caab301cc5b8e132d1ecf52574a0fa58154691ed",
+      "xml_sha256": "7337d2a3d49eedf98709de80dbfd3d7ae5a69d0175cf038b5ecdc596bbc05139",
+      "log_sha256": "4da29f17e4ac15bec3c88a5f50349e1f1d7bc99285551771490de186fb35dc5e",
+      "persistent_native_warning_allocations": 0,
+      "process_elapsed_seconds": 104.67329060001066
+    }
+  ],
+  "actual_pcm_document_noise": {
+    "report": "final-pcm-document-api-gpu-2adbc4ca0570f81a24557ce3b4527bd016b2739c-noise.json",
+    "report_sha256": "df4f867cba822b746cce48e58b1d0fc7d11cfce79c2e4fd83ae4028bc1021445",
+    "capture_sha256": "db55c0799975dfa0c9d253d55aec46f578a2ecc8ce2cc49050fc6c498574b2f7",
+    "cosine": 0.9999999999986009,
+    "owned_intermediates_disposed": true,
+    "cpu_fallback": 0,
+    "intermediate_readbacks": 0
+  },
+  "limitations": [
+    "The observed single Persistent native allocation warning is resolved in the tested tiny and actual PCM Editor shutdown paths; this is not a claim of globally leak-free Unity shutdown.",
+    "No new image numerical rerun or long-term memory/performance/Player/device qualification is implied.",
+    "The Editor adapter is pinned to Sentis2.6.1 private lifecycle API and reports an error if it is unavailable.",
+    "Actual audio PCM Query/Raw, final Required CI and other missing goal4 evidence remain separate requirements."
+  ]
+}

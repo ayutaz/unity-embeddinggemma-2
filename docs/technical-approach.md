@@ -1,7 +1,17 @@
 # 技術調査: Sentis で EmbeddingGemma 2 を動かす方法
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。実モデル実行は停止中。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
+
+## 現在の実装と未達
+
+2026-10-14のコード基準 `a237dee2874cdb0fbcdf4fe333aebae7193ad390` では、GPU画像前処理・PCM / GPU音声前処理・公式prompt・共通backboneがmainにあり、最終画像 / 音声APIはDraft実装・合成契約合格。画像Python3 roleは18件合格、実encoder数値gateとUnity全chainは未達。[最新状態](status.md)と[全体計画](multimodal-tdd-plan.md)を実行順の基準にする。
+
+音声native ONNX候補は標準Swish一個から `Neg→Exp→Add→Div` へ変更し、小さいFP32除算順序の反例を修正した。実モデルの修正後gateは未検証。数値補償graphはEditor / test候補であり、画像25265層・音声45623層への展開をRuntime採用や高速化の証拠としない。GPU推論とCPU側の変換・準備負荷を別々に計測する。
+
+以下の外部仕様・新規性調査は記載された日付時点の調査で、今回最新の外部仕様を再調査したものではない。現行コードの前処理定数は固定processor参照と各実測receiptを確認する。
+
 - 調査日: 2026-10-07
-- 実装・計画の更新日: 2026-10-13
+- 実装・計画の更新日: 2026-10-14
 - 関連: [ゴール](goal.md) / [新規性調査](embeddinggemma-2-unity-novelty.md)
 
 > M1完了時はPR #1〜#4をmain `8146107`へ統合し、当時のPython CIは4環境各64件合格。
@@ -15,7 +25,7 @@
 - 採用する Sentis は **2.6.1**(2026-04-02 公開、パッケージ名 `com.unity.ai.inference`)。指定 Unity 6000.3.16f1 の Windows Editorで実モデルfp32 CPU / GPUComputeを全15件検証済み。
 - EmbeddingGemma 2 は「画像・音声のエンコーダの出力を、共通のテキスト本体の入力列に差し込む」構造。Sentis 側は **テキスト本体 + 画像 / 音声エンコーダ + 差し込み処理** として設計する。M1 はテキスト経路のみ。
 - テキストでは**PyTorch(`.pt2`)の直接読み込みを採用し、Windows CPU / GPUComputeで実モデル検証済み**。標準演算子だけのONNXは互換性問題が生じた場合の予備で、未実装。LiteRT版のint4経路は現行Sentisの対象外。
-- 画像のパッチ分割、音声のメルスペクトログラム、特徴量の差し込みはM3 / M4でSentisのGPUグラフとして実装する計画。現行APIはテキストのみ。
+- 画像のパッチ分割、音声のメルスペクトログラム、特徴量の差し込みはM3 / M4でSentisのGPUグラフとして実装する計画。mainとDraftのAPI範囲は上の現在実装を参照。
 - メモリはM2の実機でも検証する。現行SentisのFloat16重み量子化で保存サイズは約49.45%減ったが、Editorの段階別メモリをモデル専有量や他端末の必要量とは解釈しない。
 
 ## 1. 採用する Sentis の仕様

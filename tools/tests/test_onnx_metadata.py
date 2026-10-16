@@ -1,0 +1,113 @@
+import hashlib
+import io
+import json
+
+import onnx
+import pytest
+from onnx import TensorProto, helper
+
+from embeddinggemma_tools import onnx_metadata
+
+
+def scanner():
+    value = getattr(onnx_metadata, "scan", None)
+    assert callable(value), "Bounded ONNX metadata scanner is missing"
+    return value
+
+
+class LimitedReader(io.BytesIO):
+    def __init__(self, data):
+        super().__init__(data)
+        self.read_bytes = 0
+
+    def read(self, count=-1):
+        assert 0 <= count <= 1 << 20, "Never request an entire model or an unbounded read"
+        value = super().read(count)
+        self.read_bytes += len(value)
+        return value
+
+
+def model_bytes():
+    large = TensorProto(name="large", data_type=TensorProto.FLOAT, dims=[1 << 19], raw_data=b"a" * (2 << 20))
+    small = TensorProto(name="audio.layers.0.norm_out.weight", data_type=TensorProto.FLOAT, dims=[2], raw_data=b"\x00\x00\x80?" * 2)
+    graph = helper.make_graph([helper.make_node("Mul", ["input", small.name], ["hidden"], name="norm_out"),
+                              helper.make_node("Clip", ["hidden"], ["output"], name="clamp")],
+                             "fixture", [helper.make_tensor_value_info("input", TensorProto.FLOAT, [1, 2])],
+                             [helper.make_tensor_value_info("output", TensorProto.FLOAT, [1, 2])], [large, small])
+    return helper.make_model(graph, opset_imports=[helper.make_opsetid("", 24)]).SerializeToString()
+
+
+def test_names_structure_and_small_weight_identity_without_reading_large_weights():
+    run = scanner()
+    stream = LimitedReader(model_bytes())
+    report = run(stream, small_tensor_bytes=4096)
+    assert stream.read_bytes < 20000
+    assert report["nodes"][0] == dict(name="norm_out", op_type="Mul", domain="", inputs=["input", "audio.layers.0.norm_out.weight"], outputs=["hidden"])
+    assert report["outputs"] == ["output"]
+    weights = {row["name"]: row for row in report["initializers"]}
+    assert weights["large"]["raw_bytes"] == 2 << 20 and weights["large"].get("sha256") is None
+    assert weights["audio.layers.0.norm_out.weight"]["sha256"] == hashlib.sha256(b"\x00\x00\x80?" * 2).hexdigest()
+    assert weights["audio.layers.0.norm_out.weight"]["dims"] == [2]
+    assert report["model_executed"] is False and report["weights_fully_read"] is False
+
+
+@pytest.mark.parametrize("payload", [b"", b"\x3a\x80", b"\x3a\x05\x01"])
+def test_truncated_or_missing_graph_is_rejected(payload):
+    with pytest.raises(ValueError):
+        scanner()(LimitedReader(payload))
+
+
+def test_metadata_field_budget_is_enforced():
+    run = scanner()
+    graph = helper.make_graph([helper.make_node("Identity", ["x"], ["y"], name="x" * 1000)], "g", [], [])
+    data = helper.make_model(graph).SerializeToString()
+    with pytest.raises(ValueError, match="budget"):
+        run(LimitedReader(data), metadata_field_bytes=128)
+
+
+def test_cli_emits_metadata_without_claiming_binary_hash_audit(tmp_path, capsys):
+    main = getattr(onnx_metadata, "main", None)
+    assert callable(main), "ONNX metadata CLI is missing"
+    source = tmp_path / "model.onnx"
+    source.write_bytes(model_bytes())
+    output = tmp_path / "metadata.json"
+    main(["--model", str(source), "--output", str(output)])
+    report = json.loads(output.read_text())
+    assert report["binary_sha256_audited"] is False
+    assert report["model_executed"] is False and report["read_bytes"] < 20000
+    assert json.loads(capsys.readouterr().out)["node_count"] == 2
+
+
+def test_cli_cannot_overwrite_its_model_input(tmp_path):
+    main = getattr(onnx_metadata, "main", None)
+    assert callable(main), "ONNX metadata CLI is missing"
+    source = tmp_path / "model.onnx"
+    original = model_bytes()
+    source.write_bytes(original)
+    with pytest.raises(ValueError, match="overwrite"):
+        main(["--model", str(source), "--output", str(source)])
+    assert source.read_bytes() == original
+
+
+def test_audio_norm_anchors_bind_operator_to_small_constant_identity():
+    function = getattr(onnx_metadata, "audio_norm_anchors", None)
+    assert callable(function), "Audio norm anchors are missing"
+    metadata = dict(nodes=[dict(name="/norm_out/Mul_1", op_type="Mul", inputs=["h", "w"], outputs=["out"])],
+                    initializers=[dict(name="w", data_type=1, dims=[2], raw_bytes=8, sha256="a" * 64)])
+    assert function(metadata, layer_count=1) == [dict(stage="layer_0", node_name="/norm_out/Mul_1",
+        original_output="out", coefficient_name="w", coefficient_sha256="a" * 64, coefficient_bytes=8, coefficient_dims=[2])]
+
+
+@pytest.mark.parametrize("problem", ["missing_weight", "duplicate_stage", "missing_stage"])
+def test_ambiguous_or_unhashed_audio_norm_anchor_is_rejected(problem):
+    function = getattr(onnx_metadata, "audio_norm_anchors", None)
+    assert callable(function), "Audio norm anchors are missing"
+    node = dict(name="/norm_out/Mul_1", op_type="Mul", inputs=["h", "w"], outputs=["out"])
+    weight = dict(name="w", data_type=1, dims=[2], raw_bytes=8, sha256="a" * 64)
+    metadata = dict(nodes=[node], initializers=[weight])
+    if problem == "missing_weight":
+        weight.pop("sha256")
+    elif problem == "duplicate_stage":
+        metadata["nodes"].append(dict(node))
+    with pytest.raises(ValueError):
+        function(metadata, layer_count=2 if problem == "missing_stage" else 1)

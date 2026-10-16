@@ -1,0 +1,10 @@
+{
+  "passed": 34,
+  "scope": "multimodal_role_reference_and_existing_producer_regression_green",
+  "source_base": "9f6087a64719f1a3c9fb9b7dda0dd8231e2ef60f",
+  "command": "uv run pytest tests/test_multimodal_reference_roles.py tests/test_audio_embeddings.py tests/test_image_embeddings.py -q --tb=short",
+  "tiny_models_only": true,
+  "failed": 0,
+  "real_role_reference_validated": false,
+  "unity_validated": false
+}

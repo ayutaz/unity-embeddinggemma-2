@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "opt_in_ordered_static_linear_original_input_prefix_tdd_only",
+  "baseline_source": "8c00b5fc930d994603d822dd83a287ba64501174",
+  "reason": "Extend the qualified post-stem static linear lowering to original-input prefixes without promoting the diagnostic into default export.",
+  "tdd_red": {
+    "file": "ordered-prefix-red-20261016.xml",
+    "sha256": "74920638806f10518c838a4f3f3dd6226b1de953e8f6bbe01ae4a1ab6396fd36",
+    "tests": "8",
+    "failures": "8",
+    "errors": "0",
+    "skipped": "0",
+    "time": "2.631"
+  },
+  "tdd_green": {
+    "file": "ordered-prefix-green-20261016.xml",
+    "sha256": "29031e0793f8dfc7239a54af56f7bef28d99771448d48ee7167f83329462561e",
+    "tests": "8",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "5.684"
+  },
+  "related_green": {
+    "file": "ordered-prefix-related-green-20261016.xml",
+    "sha256": "909e20bbecdf38fec9f143e1df28f3ee230d62ddc4c81b8d10d6762af18fa354",
+    "tests": "81",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "34.045"
+  },
+  "actionlint": "passed",
+  "original_weights_unchanged": true,
+  "original_references_unchanged": true,
+  "tolerances_unchanged": true,
+  "default_variants_unchanged": true,
+  "runtime_unchanged": true,
+  "changes": [
+    "Shared existing audited280-row parameter projection selector between prefix and segment.",
+    "Explicit ordered_static_linear_refined keeps the previously diagnosed refined_mean_moment stem normalizations; RMS, SiLU, dynamic MatMul and13-row projections unchanged.",
+    "Fixed prefix coverage includes stem1, each layer9 and final2 projections; full111.",
+    "Same-host native ONNX baseline accompanies explicit candidate using unchanged ReferenceEvaluator kernels/order with last-consumer release.",
+    "Original whole-native bit gate retained unless explicit independently audited frozen-stage diagnosis selected; never overwrite prior experimental evidence."
+  ],
+  "native_forward": "Original torch.mm/addmm passthrough, not fixed-order candidate execution. Actual ONNX must be evaluated independently.",
+  "actual_original_stem_onnx_validated": false,
+  "whole_encoder_validated": false,
+  "gpu_validated": false,
+  "required_ci_passed": false
+}

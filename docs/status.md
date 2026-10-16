@@ -1,162 +1,68 @@
-# 現在の状態と残タスク
+# 現在の状況
 
-## 最新checkpoint: 全音声encoder検証後
+更新: 2026-10-16。元計画の手順3・4は、固定sourceのGPU/API検証と[必須CI38850001042](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38850001042)の合格で完了しました。[要件別の完了監査](results/goal4-current-completion-audit-20261016.json)。PR #81は依存ブランチへマージ済みで、mainへの統合は[PR #79](https://github.com/ayutaz/unity-embeddinggemma-2/pull/79)へ集約しています。この統合候補の新しいCI・mainへのマージは別途確認します。
 
-2026-10-13確認。mainは `a88ed9cffd942999bb271e597c86563298425f2c`。全体TDD計画PR #58まで統合済み。今回の更新は文書のみで、モデル生成・Unity実行は追加しない。
+固定Python参照を必須基準にするユーザー指定の方針に従い、同一実行source `1058dbe57b0376589e4fe24910cff4c9de9269f1`で元音声6ケース・2 profile・全12層の実ONNXを評価しました。824,320値で元許容差超過0、bit差162,697です。独立したcapture/carry監査をローカルでも再計算し、CIの監査JSONと一致しました。Windows / UbuntuのPython3.13 / 3.14は各1,433 pass / skip0、必須15jobが合格しています。fresh CPU対ONNXの6件・5,390値の不合格は診断として `success=false` のまま保持し、GPU合格には数えません。
 
-**M2〜M4は未完了。正式リリースは全実装・全必須検証・配布準備の完了後。** [全体TDD計画](multimodal-tdd-plan.md)、[M3](m3-plan.md)、[M4](m4-plan.md)のRed → 最小実装 → Green → 実モデル受け入れで進める。工程6まで公開tag / GitHub Releaseを作らない。
+[PR整理の監査](results/main-pr-integration-audit-20261016.json)に、履歴への包含、同一ファイルと変更済みファイル、旧診断の採否、残すPlayer PR #31を記録しました。main統合後に重複・旧診断20件を閉じ、独立したPlayer差分は失わず残します。統合作業で製品Runtime・元参照・学習済み係数・許容差は変更しません。Unityの再起動や新たなGPU検証は行わず、実機合格済みsourceとのコード一致を確認します。
 
-| 対象 | 確認済み / 不合格 | 次のTDDと完了条件 |
+## 手順3・4の検証
+
+| 条件 | 確認済み結果 | 固定証拠 |
 | --- | --- | --- |
-| M2 | WindowsテキストEditor / Playerの条件付き実測。PR #31はdraft | 導入・寿命・cache・性能の原因別red → 修正 → 最終candidateの空Git consumerと正常終了。Unity版更新・他OSも残る |
-| 共通 | PR #43 backbone、#55公式prompt / maskは統合済み。合成featureのCPU / GPU × 2精度は合格 | 実encoderの数・順序・mask・所有権・中間readbackのred → GPU連結 → 最終768次元 / text回帰 |
-| M3 | #52 GPU前処理と#56最終Python参照は統合済み。#41はFloat16全6条件合格、FP32全6条件不合格。#53診断は参照文脈未達 | 文脈不一致を拒否するred → 原因別修正 → 元12条件。Image API・画像検索sample・Playerは未完成 |
-| M4 | #48 PCM入力 / #50 GPU前処理は統合済み。draft #60のnative保存参照は全6信号合格。NumPy ONNX全6信号とSentis FP32全12条件は不合格 | 元の失敗を再現しないtrace / 参照を拒否するred → 演算差修正 → 全条件再照合。最終音声参照・Audio API・検索 / 再生 / 明示収録・Playerは未完成 |
-| 全統合 / 配布 | Windows以外の必須実機受け入れは不足 | 各OSで3モダリティ・実CPU / GPU・UI・反復資源 / 性能・終了。全合格後、空Git consumer・version / 文書 / license・配布監査 |
+| 元画像encoder、6画像・3 profile | 全778,240値が元参照とbit一致 | [画像encoder](results/m3-adjacent-reciprocal-all-image-gpu-passed-20261015.json) |
+| 元音声encoder、6信号・2 profile | 全824,320値で元atol=1e-5 / rtol=1e-4の超過0 | [分割音声encoder](results/m4-staged-original-encoder-and-final-text-gpu-regression-20261016.json) |
+| 実PNG Textureから最終768次元、全role | 18条件合格 | [画像API](results/m3-final-image-api-all-cases-all-roles-gpu-20261016.json) |
+| RenderTexture、実不正入力・GPUキャンセル後の復帰 | 3 role合格、PNGとbit一致、同じAPIで復帰 | [復帰・RenderTexture](results/m3-rendertexture-recovery-and-text-gpu-regression-20261016.json) |
+| 実PCMから最終768次元、全6信号・全role | 18条件合格、最小cosine 0.9999997097692651 | [音声API](results/m4-real-pcm-all-roles-staged-gpu-20261016.json) |
+| 音声例外後再利用・借用stage・中間Tensor解放 | 実GPU encoder後のbackbone例外から復帰、API破棄後も借用stage再利用 | [音声所有権](results/m4-real-pcm-all-roles-staged-gpu-20261016.json) |
+| テキスト回帰・API / 境界 / 非同期契約 | FP32・Float16、6文書・4queryの全順位 / score合格、関連189 pass / skip0 | [最新テキスト回帰](results/m4-staged-original-encoder-and-final-text-gpu-regression-20261016.json) |
+| 必須repository checks | **未達**。最新e99c442のCIはPython3環境・package・workflow lint成功、Linux/Python3.14のTanh2件・音声ONNX比較・Required CI失敗 | [CI 38825766738](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38825766738) |
 
-音声の根拠はPR #60の確認head `70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1`に固定する。[native / NumPyの全6信号](https://github.com/ayutaz/unity-embeddinggemma-2/blob/70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1/docs/results/m4-audio-all-six-native-reference-real-20261013.json)、[Sentis CPU / 実GPUの全12条件](https://github.com/ayutaz/unity-embeddinggemma-2/blob/70cb9eefae1caa8d6a5c78958f3fefe0121aa1f1/docs/results/m4-audio-full-encoder-fp32-sentis-windows-failed-20261013.json)。cosineだけの合格やsubsample単独の合格をencoder全体の成功にしない。旧PR #40の残り5信号未実行は当時のsourceの記録で、#60の最新範囲とは別。
+追加確認: source `b378070`の[CI 38774804527](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38774804527)では、Windows / Linux × Python3.13 / 3.14の全4環境で各1,111 pass・fail0・skip0、package / workflow lintも合格しました。実モデルの音声ONNX比較は失敗しており、Required CIの完了条件は満たしていません。4環境のJUnit XMLを取得・監査済みです。
 
-重い検証はActionsを優先し、Pythonはtools/ + uv。ローカルは小さいTDDと必要な実GPU / UI / 端末検証、Unity Editorは1つとする。すべて作業ブランチ / PR経由、必要checkと対象の受け入れを揃えてから統合する。以下は過去checkpointで、現在の作業順は上記と全体計画を使う。
+GPU結果はWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER / D3D12の固定sourceで得たものです。計算・非空feature入力のCPU fallbackと、最終API内の中間readback / flushは0。全結果を最新headで再実行したという主張ではありません。source、capture hash、実行条件は各receiptに保持しています。
 
-## 過去checkpoint: PR #50時点
+音声最終vectorは元cosine基準で合格していますが、追加の要素別診断には1213差分が残ります。encoderの厳密比較とは別の診断で、bit一致とは表現しません。Query / Raw参照は元encoder境界を監査して公式backboneへ供給する[明示的な参照生成](results/m4-qualified-frozen-audio-role-reference-20261016.json)で、元Documentも照合しました。この参照生成自体はencoder実行の合格を証明しません。
 
-確認日: 2026-10-13。main / PR / CIをGitHub APIで再確認し、PR #50統合後の全体TDD計画を更新した。今回の計画更新ではUnity実行・モデル取得 / 再export・buildを追加していない。前処理RuntimeのTDD、固定Git package回帰、公式CPU / 実GPU信号照合は[既存の実測](results/m4-audio-preprocessing-runtime-windows-20261013.json)を参照する。Secrets / runner・tag / Release・main保護の件数と[直前の計画snapshot](results/tdd-plan-checkpoint-20261013.json)は過去の記録として保持する。
+## Unityの重さとGPU要件
 
-**M2〜M4は未完了。未実装のAPI・前処理・sampleと数値不合格の修正が残る。正式リリースは全対応・全必須検証が終わった後。** [全体TDD計画](multimodal-tdd-plan.md)を6工程で更新し、[M3画像](m3-plan.md) / [M4音声](m4-plan.md)の各タスクに先に確認するRed、最小実装、Green・実モデル受け入れを定義した。配布準備では公開tag / GitHub Releaseを作成しない。
+同期音声APIの連続実行は、GPUキャッシュ保持によりホストメモリ13,570,727,936 bytesへ達し、12 GiB guardで停止しました。数値合格・正常終了とは数えません。
 
-## mainと作業ブランチ
+`PartitionedAudioFeatureEncoder.EncodeAsync`と`AudioEmbedder.EmbedAsync`がGPU分割境界を待ち、完了済みキャッシュを解放する実装へ変更しました。同じ上限の実PCM検証は6プロセスとも完了し、最大ホストピーク7,660,285,952 bytes（約7.13 GiB）。単発API観測1.28〜3.44秒であり、定常速度・VRAM使用量・長期安定性のbenchmarkではありません。前処理・backboneはメインスレッド同期処理のままです。
 
-| 対象 | 今回確認した状態 |
-| --- | --- |
-| main | `f41546dfd48ab77347d27772612b2ea43c992b70`、PR #50まで統合。[CI 38336919527](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38336919527)成功 |
-| [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31) | draft / 未統合。head `a34bf9057694e141e939ac41bea3e2b713b0a15b`。Windows Player終了・sampleの条件付き実測あり。導入helperのPR #36はこのブランチへ統合済みで、mainには未反映。最終空consumer・性能・native入力・他環境が残る |
-| [PR #40](https://github.com/ayutaz/unity-embeddinggemma-2/pull/40) | 未統合。head `e13adcd96ed3e10802131dfc94c48d9533f37ee2`。feed-forward診断をTDD追加して関連76件green。[実モデルCI 38331914586](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331914586)とRequired CIは不合格。最初の微差はlayer 0.feed_forward1のactivation、許容差超過はlayer 10。残り5信号未実行、修正未完了 |
-| [PR #41](https://github.com/ayutaz/unity-embeddinggemma-2/pull/41) | draft / 未統合。head `b5766154a209622849e9d71d11955b9bd7e0a65c`。[CI 38320212347](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38320212347)成功。画像Sentis Float16全6条件合格 / FP32全6条件elementwise不合格を維持 |
-| [PR #43](https://github.com/ayutaz/unity-embeddinggemma-2/pull/43) | mainへ統合済み。最終head `4feac7551bd99f2571a667f237ace85ba2d7093f`。[CI 38331086059](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331086059)全8 job成功。小さい配置 / cache契約68件と実1024長backbone4条件は別runで合格。固定Git `21e598c`のRuntime更新consumerも4条件合格。実測sourceを統合headへ付け替えず、実encoder接続・公式prompt / 前処理 / sampleと最終空consumerを別gateとする |
-| [PR #48](https://github.com/ayutaz/unity-embeddinggemma-2/pull/48) | mainへ統合済み。最終head `55221e5c53763ef0de9f00fa6459861dce3756d7`、全8 CI成功。PCM入力25 red → 25 green、固定Git Runtimeの型 / 全102ファイル監査とpackage assembly 87 green。[受け入れ範囲](m4-pcm-input-validation.md) |
-| [PR #50](https://github.com/ayutaz/unity-embeddinggemma-2/pull/50) | mainへ統合済み。最終head `6dc6651dacce126ad88c37eb89f01c4fda6d5049`、[全8 CI成功](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38336350087)。前処理Runtime 21 red → 21 green、固定Git package 108 green、公式CPU / 実GPU各6信号と次段検証graphへのTensor受け渡し合格。実encoder / 最終APIは別gate |
-| [PR #46](https://github.com/ayutaz/unity-embeddinggemma-2/pull/46) | mainへ統合済み。音声前処理のWindows Sentis CPU / 実GPU受け入れを追加。製品PCM入力API・encoder・end-to-endの成功ではない |
-| Unity / Sentis | 開発検証6000.3.21f1 / 2.6.1。mainのEditor固定はPR #31未統合のため6000.3.16f1。実測のsource / package / model hashを混同しない |
+終了時のPersistent allocation警告は、Sentis2.6.1がEditModeで登録し損ねる共有64-byte bufferのcleanupへ局所化し、Editor終了 / assembly reload hookで対応しました。[固定診断](results/m4-sentis-editor-shared-gpu-cleanup-20261016.json)。以後の対象音声6プロセスと最新テキスト回帰の正常終了で警告0を確認しましたが、長期的に全allocationが解消済みとは主張しません。
 
-## 最新の検証範囲
+ローカルの実モデルrunnerは終了済み。必要なUnity検証は所有プロセス・最大300秒・ホスト12 GiB guardに限定し、重いCPU変換と診断はGitHub Actionsを使います。
 
-| 対象 | 確認済みと証拠 | 未達・限界 |
-| --- | --- | --- |
-| M1テキスト | Windows Editor tokenizer15件、FP32 / Float16重み × CPU / GPU。[完了記録](m1-completion-validation.md) | text128長の受け入れを画像 / 音声・他OSへ流用しない |
-| 共通backbone固定Git Runtime | 既存consumerを固定SHAへ更新し、Runtime source overlayなし、requested / resolved一致。実text重み・合成project済みfeature、1024長・最終768次元、CPU / GPU × FP32 / Float16の4 passed / fail 0 / skip 0、CLI exit 0。[receipt](results/multimodal-git-runtime-upgrade-windows-20261013.json) | 公式Test Framework 1.6.0をembeddedにした条件。新規空consumer・実encoder・GPU前処理・公式prompt・sample / Player・他OSの合格ではない。初回import失敗は過去receiptへ保持 |
-| 画像encoder | 3 profile × CPU / GPU × FP32 / Float16。[12条件](results/m3-vision-windows-plan-snapshot-20261013.json) | Float16 6条件合格、FP32 6条件はcosine合格でもelementwise不合格。I3以降の実装が残る |
-| 音声前処理 | CPU / 実GPU各6信号、保存 / 再読込、mask完全一致。最大差 `0.0038890838623046875`。[実測](m4-audio-preprocessing-sentis-validation.md) | 診断出力のreadbackあり。製品PCM APIとencoder→backboneのGPU連結は別gate |
-| PCM入力境界 | PR #48統合済み。25 red → 25 green、固定Git更新consumerで実Runtime型と全102ファイルを監査、package assembly 87 green。[receipt](results/m4-pcm-input-windows-20261013.json) | 新規空consumer・実encoder / 最終APIの受け入れとは分ける |
-| 音声encoder診断 | 層内traceと単独feed-forwardが元の失敗経路へ一致。silence保存対eager最大差 `0.00021576881408691406`、許容差比 `9.733773231506348`、不一致368要素。[CI 38331914586](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38331914586)。最初の微差はactivation | 診断76件greenはencoder成功ではない。丸め差の修正・元の6信号合格・Sentis実encoderが残る。過去328要素不一致も保持。固定許容差を維持 |
-| Windows Player | 21f1精度4条件、sample日英GUI / FP32 GPU・全順位 / cache、独立2起動の実終了0。[条件と結果](m2-unity-21-upgrade-validation.md) | 既存実測SHA / 補修条件を維持。最終candidate・native入力・Float16性能・3モダリティのPlayerは未達 |
-| Android / macOS / iOS | Androidは既存実APK buildとpayload監査まで。[Android記録](m2-android-validation.md) | Android実機とMac / iOSの3モダリティ・CPU / 実GPU・sample・終了は未実行 |
+## 過去の音声ONNX失敗と解消までの記録
 
-## 次の作業と依存
+以下は各実行時点の履歴です。現行の合否は冒頭と完了監査を参照してください。
 
-I3画像GPU前処理はPR #52で実装・Windows固定Git受け入れまで進んだ。固定source `71284e3`でpackage118 green、公式24ケースのpixel / position一致、最大8192px入力のdispatch修正も合格。[receipt](results/m3-image-preprocessing-final-git-windows-20261013.json)。次は画像FP32 / 音声encoderの数値差と公式prompt / mask。GPU profiler・反復資源 / 性能、実encoder・最終API / sample、他環境と最終空consumerは別gate。全体のred / green・完了条件は[全体計画](multimodal-tdd-plan.md#直近の実行順と依存)を参照する。M2〜M4、必須環境、配布準備の全完了後に正式リリースを扱う。
+手順4は未完了です。[最新CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38825766738)は終了し、音声ONNX対fresh officialでsilenceの1,309値が元許容差を超過しました。最大許容差比24.0435です。Linux/Python3.14のnative Tanh bit比較2件も失敗し、固定random514入力の実ONNX対nativeは8値が1 ULP異なります。他のPython3環境、package、workflow lintは成功、Required CIは失敗です。[固定した失敗情報](results/m4-ci-e99-audio1309-and-linux314-tanh-two-failures-20261016.json)。PR headはe99c442、CIのPR merge実行sourceは9e18b1cで、両者を区別します。元参照、重み、許容差、既定export、製品GPU Runtimeは維持しています。
 
-1. M2の導入helper / 21f1更新をmainへ渡す条件を整理し、残る性能・安定性を原因別red → 最小修正 → 同条件比較で進める。
-2. PCM境界PR #48と共通Runtime PR #43は統合済み。前処理Runtime PR #50はTDD21 green、固定Git package108 green、公式CPU / 実GPU各6信号・mask・次段Tensor受け渡しが合格。[条件と失敗履歴](m4-audio-preprocessing-runtime-validation.md)。実encoder / backbone接続、最終空consumerは別gate。
-3. 画像FP32差と音声activation差をそれぞれ小さい独立参照redへ分離し、修正後に元の実モデル条件を確認する。診断追加だけでは合格にしない。
-4. I3画像GPU前処理と、A4合格後の実encoderへのGPU接続を境界・所有権・中間readback禁止のredから実装。I4 / A5の最終768次元、I5 / A6の検索sample、I6 / A7のPlayer・明示収録へ渡す。
-5. Windows / macOS Editor・iOS / Android実機で、3モダリティ・混在索引・切替・cache・UI・CPU / 実GPU・時間 / memory / 正常終了を確認する。環境確保とライセンス / runner準備は早期から並行する。
-6. すべての必須gate合格後、版 / 文書 / license / 配布監査と固定candidateの空Git consumerを確認する。正式Release / 公開tagは全対応後の別工程。
+[Tanhテストの対象整理](results/m4-tanh-pinned-captures-and-native-rounding-contract-tdd-20261016.json)では、PyTorchのoneMKL高精度モード呼出しとIntelのCPU依存丸め仕様を確認しました。毎回のCPU出力への無条件bit一致を、保存済み元contextの33,285入力・出力への厳密bit比較と、現在のnativeへの元encoder許容差比較へ分けました。実ONNXの固定参照bit比較も514値から33,285値へ拡張し、参照から1 ULP変わればnativeと一致しても失敗します。過去に保存・監査済みの重みなしfixture266,280bytesを使用し、候補から期待値を生成していません。記録済みCI5値のred1件とfixture不足red4件から、関連29 pass /skip0になりました。これは単体テスト仕様の修正で、実モデルの計算や既定CIの音声比較を変えたものではありません。新しい実モデルCIは実行していません。
 
-全振る舞いのTDD、tools/ + uv、Actions優先、main直push禁止を維持する。ローカルEditorは1つ、同operationの観測timeoutで重複実行しない。計画変更は文書レビューで確認し、架空のred / greenを追加しない。下記は過去の状態であり、現在の完了判定には上のscopeと固定receiptを使う。
+[同一入力の参照区間監査](results/m4-same-input-official-original-disjoint74-acceptance-intervals-20261016.json)では、失敗CIのofficial出力・ONNX出力・入力だけ約1.72MBをrange取得し、入力SHAが元参照と同一、ONNX対officialの1,309値失敗を独立再計算しました。official自体は元参照から288値が許容差超過し、74値は両参照の許容区間が重なりません。`abs(a-b) > 2*atol + rtol*(abs(a)+abs(b))`を各値の正確な有理数でも確認しました。同じ出力へ両方の基準を要求することは、この記録済みcontextでは不可能です。固定参照を必須基準としてCPU差を診断に残すか、現在CPUの基準も別変換経路／固定contextで必須維持するかは方針確認が必要です。CI gate・参照値・許容差は変更していません。
 
-## 履歴: PR #12時点のmainとブランチ
+実CIのCPUはAMD EPYC7763 /AVX2 /Torch2.14.1+cu130、NumPy2.5.3のBLASはscipy-openblas0.3.34.106.0 /Haswellでした。これは保存した実行条件で、数値差の原因確定ではありません。
 
-| 対象 | 確認した状態 |
-| --- | --- |
-| 確認基準main | `4ee0cbbde07fc99ca87d33ed52a44e6100ca0b0c`。PR #1〜#4・#6・#8〜#12統合済み。M1、CI・UPM、検索サンプル・モデル手順・準備最適化と統合記録を反映済み |
-| [PR #9](https://github.com/ayutaz/unity-embeddinggemma-2/pull/9) | 計画更新を2026-10-10 02:05:30 JSTにsquash merge。commit `de82a29fc737bca0478c87d06ffcc4d94fb07e64`、統合後CI run 37963795561成功 |
-| [PR #10](https://github.com/ayutaz/unity-embeddinggemma-2/pull/10) | 検索基盤を2026-10-10 02:09:08 JSTにsquash merge。commit `be791e00a1b344c5453f70037d7116184169c17f`、統合後CI run 37964228515成功 |
-| [PR #11](https://github.com/ayutaz/unity-embeddinggemma-2/pull/11) | 最終head `8c80526`のCI run 37974713580全8 job成功後、2026-10-10 03:41:24 JSTにsquash merge。commit `758cb04`、統合後CI run 37975026704全8 job成功。Windows consumer再現・UI・TDD完了 |
-| [PR #12](https://github.com/ayutaz/unity-embeddinggemma-2/pull/12) | 統合後の計画・証跡を2026-10-10 03:47:25 JSTにsquash merge。commit `4ee0cbb`、統合後CI run 37975720534全8 job成功。文書のみでUnityを再実行していない |
-| [PR #6](https://github.com/ayutaz/unity-embeddinggemma-2/pull/6) | CI整備・UPM化を2026-10-10 00:07:13 JSTにsquash merge。commit `5ae4e8c29a3a4c8639bd94f7848e3683d063f4d2` |
-| [PR #8](https://github.com/ayutaz/unity-embeddinggemma-2/pull/8) | 文書更新を最新mainへ更新し、全8チェック成功後に2026-10-10 00:11:01 JSTにsquash merge。commit `c7d11897e43d374fbb87f3761f65fb3faec60c7c` |
-| main保護 | サーバー設定済み。PR必須、strict Required CI（GitHub Actions App 15368）、管理者適用、force push / 削除禁止、linear history・会話解決。人手承認数0 |
-| [PR #5](https://github.com/ayutaz/unity-embeddinggemma-2/pull/5) | 文書変更をPR #6へ含め、未マージでクローズ |
-| [PR #7](https://github.com/ayutaz/unity-embeddinggemma-2/pull/7) | 文書のみPRのCI確認用。検証後に未マージでクローズ |
+元のQK行列積にあった1bit差は、有理数FMA追跡でmidpointの低残差欠落へ局所化しました。[元bmm_8の実ONNX](results/m4-sine-original-bmm8-midpoint-all55296-actual-onnx-bit-exact-20261016.json)は修正候補で全55,296値がbit一致しました。明示的な`ordered_original_midpoint_bmm`は各層の監査済みQK BMM1件だけを修正し、他のBMMと元の係数・mask・clipを維持します。[先行するraw sine全12層](results/m4-original-raw-sine-full12-midpoint-qk-tolerance-passed-20261016.json)は143,360値で元許容差超過0、最大許容差比0.482376、bit差34,679でした。bit一致とは表現しません。
 
-全PRを対象とするCI入口、UPMコードと検索APIはmainへ統合済み。サンプルとモデル準備手順はPR #11で追加。mainへの直接pushや保護の迂回は行っていない。[開発規則](../AGENTS.md)に従い、マージは依頼された範囲でCI・差分・競合を確認して行う。
+[先行するraw全6ケース試行](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38825780838)はsource e99c442で終了しました。5件が数値合格、noiseは20分上限でcancelledです。元特徴量→2Conv先頭区間→全12層の実ONNX出力を次へ渡し、途中stage正解ファイルをdownload /loadしません。silence、impulse、sine、nyquist、padded_noiseの計680,960値は独立監査済みで許容差超過0です。[全6件試行の終了記録](results/m4-raw-midpoint-all-six-five-pass-noise-timeout-20261016.json)。noiseは先頭＋第5層まで3partの実出力とcarry SHAを照合しましたが、第6〜8層の評価中に停止し、最終値はありません。全6件合格とは数えません。前回padded_noiseの20分timeoutは失敗のまま保存し、今回は実測に基づく35分上限で最後まで取得できました。
 
-## 履歴: 導入・検索基盤の検証
+Windows2022の[小さな行列/Tanh診断](results/m4-native-windows2022-amd9v74-avx512-matrix-tanh-bit-exact-20261016.json)はAMD9V74 /ATenAVX512で全bit一致でしたが、後続の[無変更native全6ケース](results/m4-native-full-six-windows2022-amd7763-original-context-failed-20261016.json)は同じrunner指定でもAMD7763 /AVX2となり、全6件で元許容差を超過しました。全824,320値、capture SHAとmetricsを独立照合しています。収集jobのsuccessは数値合格ではありません。runner名だけでCPU命令セットを保証できず、ランダムなhost再試行は行いません。新しい診断の関連26件と追加19件のテスト、workflow lintは合格しましたが、fresh official /ONNX /GPU合格への置き換えには使いません。
 
-| 対象 | 証拠・結果 | 限界 |
-| --- | --- | --- |
-| M1 | [完了検証](m1-completion-validation.md)。tokenizer全15件一致、fp32 / Float16重みのCPU / GPUCompute各15件、保存・再読み込み・時間 / メモリ測定合格 | Windows Editor 6000.3.16f1 / Sentis 2.6.1、固定モデル・batch 1 / length 128 / 768次元 |
-| 確認基準mainのCI | [run 37975720534](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975720534)。main `4ee0cbb`の全8 job成功。Python4環境、実モデルPython M1 / 検索照合、lint・パッケージ監査・Required CI成功 | Python照合・パッケージ静的監査であり、新たなUnity実行ではない |
-| PR #6のCI | [run 37812870591](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37812870591)。Ubuntu / Windows × Python 3.13 / 3.14各102件、lint、実モデルPython15件、パッケージ監査、Required CIの全8 job成功 | 実際のcheckoutは `9ccff937ae9fc675c12aee8e1533d08cc0502e9a`。確認したPR headとtree一致。Python照合はSentis実行ではない |
-| 文書のみPR | [run 37813857997](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37813857997)。PR #7はMarkdown 1ファイル・6行追加だけで全8 job成功 | baseは `feat/ci-upm-package`、headは `9633a1ca8d5f3a01eff427599187329c2447b68c`。古いmainへの統合済みという意味ではない |
-| UPM導入 | [パッケージ検証](m2-package-validation.md)。別の空のUnityプロジェクトでローカルフォルダ依存解決・compile・契約29件成功、URP依存なし | 当時はモデル不要の導入検証。後続consumerの実モデルGPU結果は別行。Git URL導入は未実行 |
-| UPM移行後の回帰 | 元プロジェクトで契約29件・測定契約1件、実モデルM1 3件・API 2件成功、failed / skipped / inconclusive = 0 | 保存・量子化・ベンチマーク全体を移行後に再実行した結果ではない。元M1実測を維持 |
-| 検索サンプルのCI | [run 37959339466](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37959339466)。PR #11の実装headで全8 job成功、Python4環境各132件、M1 15入力 + 検索10入力のexport照合合格 | 実checkout `13f194266162d2a728b2b2a0da9e9e58ae314ff6`。Python照合をSentis GPUの成功に数えない |
-| Windows検索実モデル | [検索検証記録](m2-search-validation.md) / [全順位と数値](results/m2-search-root-windows-20261010.json)。fp32 / Float16重み × CPU / GPUComputeの4 passed、failed / skipped / inconclusive = 0。固定6文書 / 4queryの全順位一致 | PR側のサンプル、元の検証プロジェクト。他環境や任意入力の品質保証ではない |
-| 検索画面操作 | 元プロジェクトGPUとconsumer CPUでGame View入力による準備・日英検索・空入力・解放を確認。元プロジェクトではモデル欠落も確認 | 画面画像と操作記録を保存。任意入力の品質評価ではない |
-| 新規consumer | [改善後記録](results/m2-search-consumer-completed-windows-20261010.json)。別checkout / 初期空consumer、導入・監査・変換、sample 18 passed、実モデル4 passed / skip 0、CLI完了応答・全順位・画面操作 | 以前の中断を履歴保持。ローカル依存 / artifactキャッシュは再利用。allocation / fontログの発生元は未確定 |
+元runの結果回収と取得済み出力の独立照合を終え、noiseの最終値を取得するために以下の再開処理を追加しました。[noise再開と監査のTDD](results/m4-pinned-noise-prediction-resume-and-independent-auditor-tdd-20261016.json)を追加し、保存済みの実出力から残り2区間だけを評価します。先頭3区間は元係数からグラフを再生成して旧SHAへ一致させ、推論は繰り返しません。元の計算コード・依存lock計61ファイルをe99c442へ固定し、異なる新しいjob sourceを明示します。関連39 pass /skip0、追加集計8件のred→green、最終再開＋集計23 pass /skip0、workflow lint合格です。実保存記録のcapture /carry /layoutと残区間の演算数もモデルをloadせず照合しました。
 
-パッケージは `com.ayutaz.embeddinggemma` / `0.1.0-pre.1`、未リリース。
-PR #6のUPM移行時にはRuntimeと契約テストの19ファイルが移行前とGit blob一致し、assembly名・GUIDを維持した。後続の検索API・契約追加は別のTDDと検証記録で扱う。
-直接依存はSentis 2.6.1 / Newtonsoft JSON 3.2.2。モデル・ネイティブプラグイン・URP・uloop・Pythonを配布Runtimeへ含めない。
+[再開run38829612885](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38829612885)、source c994563は正常終了し、先頭3グラフの再生成SHAが元記録と一致しました。実際の前回予測から残り2区間を実行したnoiseは143,360値で元許容差超過0、最大許容差比0.251034、bit差45,930でした。全capture /carry SHAと最終metricsを独立再計算しています。[全6ケースの固定結果](results/m4-original-raw-all-six-midpoint-candidate-resumed-noise-tolerance-passed-20261016.json)は計824,320値、元許容差超過0、bit差162,697です。全6件を同じ新job sourceで実行したという意味ではなく、e99c442の元5件・noise先頭3区間とc994563の続行を、同一の元計算コード61ファイルとグラフSHAで監査しています。途中stage正解は使っていません。
 
-## 履歴: 実装と検証の進展
+この段落までの候補・続行結果は当時の記録です。その後、冒頭に記した単一sourceの全6件と必須CIが合格しました。fresh CPUの不合格は保持し、新たなGPU実行やPlayer・他deviceの合格とは扱いません。
 
-PR #29統合SHA `fc66af7`を新しい空のGit consumerへ導入し、requested / resolved SHA、配布92 / sample 52ファイル、compile、UPM 38 / sample EditMode 66 / PlayMode 2、token15、実モデル4条件・全順位 / score、日英UI / 空入力 / 欠落モデル / 解放 / file URL初回・warm cacheを確認した。[結果と制約](m2-font-git-consumer-validation.md)。最初のUIでfont Warning 1 / Editor検索DB Error 1を保持した。測定fixtureが破棄済みfontをcacheへ残す経路を実証し、Editor test 2ファイルだけの修正 `bc3ac49`で1 failed → 1 passed、全67 passed、invalid font参照0、未準備UI 3回の停止前後Console 0を確認した。検索DB原因・native allocation・Player sample画面 / 他OS実機・候補 / tag / 正式Releaseは未完了。
+過去の候補、失敗とTDD経緯は[更新前の固定文書](https://github.com/ayutaz/unity-embeddinggemma-2/blob/e99c44214ab7d7f526b0fede5b561862460f1d66/docs/status.md)とsource付き`docs/results/`に保持しています。
 
-Windows Editorのsample fontが停止で破棄されてもIMGUI cacheに参照が残る経路を再現し、Editor内で1つのnative fontを共有する修正をTDDで確認した。red 2 failed → green 2 passed、sample EditMode 66 / PlayMode 2、未準備UI 3回の停止前後Console 0、実Float16 GPU日英検索の全6順位・score照合、空入力・解放・停止が合格。[当初の実測と制約](m2-editor-font-lifetime-validation.md)を参照。修正source `f7ffbfd`の当初検証は作業ソース配置で、後続 `fc66af7`の新Git導入は上記で別に確認した。正常Editor終了時の所有font破棄も確認済み。次は残るEditor検索DB / native allocation診断、Player sample画面、他OS / 実機・正式Release gateを進める。
+## 後続工程
 
-ユーザーが安定化から正式リリースまでの実行を依頼した。[詳細実行計画](m2-release-plan.md)に4段階の受け渡しと完了条件を記載した。新しい実測はその実行SHA・環境で記録し、以下の既存履歴を書き換えない。
+手順5はモデル準備の再利用・配布、検索sample、連続推論のメモリ / 速度、Windows Player、他OS / 実機。mainと依存PRの整理を先行し、手順6の導入、ライセンス、配布の整理は引き続き残します。merge・公開は別途明示された範囲で進めます。
 
-PR #14 / #15は統合済み。main `f564987` の [CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38008701772) は成功した。Git URLは固定commitのPackage Manager解決まで成功し、Editor初回起動は失敗している。Playerの監査済み実モデルbundle準備は成功し、build / 実行は未実行。Windows Editorの完全SHA-256改善は28契約テスト合格、実モデルキャッシュ照合7.38秒の単回測定を確認した。[高速化記録](results/m2-editor-sha256-windows-20261010.json)と詳細計画に現在の証拠を追記し、以下の既存履歴を維持する。
-
-PR #16も統合し、main `0a6e299` の [CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38009534632) 全8 job成功を確認した。続いてPlayer用のhash監査・厳密な参照照合APIをTDDで追加し、合成契約40件が合格した。実行component / build / 実機は未実行。[Player準備](player-validation.md)と詳細計画に受け渡しを記録している。
-
-そのAPIはPR #17で統合し、main `e7b3a54` の [CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38010849703) 全8 job成功を確認した。後続のWindows Playerでは起動・build・測定を接続し、契約65件と実モデル4条件の独立した2回の起動が合格した。M1 15ケース、検索全順位、25入力のtoken一致と終了 / 再起動を確認した。[実測と初回失敗](player-validation.md#windows-player実測-2026-10-10)を参照。Development / Mono2x / stripping Disabled限定で、build警告と終了時のmemory診断は残っている。Git URL consumerと他環境の完了を意味しない。
-
-Windows Playerの変更はPR #18の全8 CI成功後にmain `f44976b` へ統合した。続いて[新しいGit consumerの実動作](m2-git-consumer-runtime-validation.md)を確認し、Git固定SHA解決、compile、UPM 38 / sample 28契約、token15入力と実モデル検索4条件、Game Viewの日英検索 / 空入力 / 解放 / Play停止が合格した。元のconsumer起動失敗は履歴保持。標準layout・project path・SHA等を変えた成功であり、以前の停止原因は確定していない。画面の文字欠けとPersistent allocation Log 1件はリリース前に追跡する。
-
-1. macOS Editor・iOS・Androidのrunner / toolchain / 実機を確保し、精度・backend・速度・メモリを実測する。
-2. 測定と並行してhash確認の負荷を改善し、再現しなかったallocationログとEditor font警告を切り分ける。domain reloadの原因は未確定。
-3. Git URLのcommit / tag固定導入とサンプル起動、文書・ライセンス・CHANGELOGを確認し、テキスト版をリリースする。ここまででM2完了。
-4. M3で画像エンコーダ・GPU画像前処理・テキスト→画像検索を実装・照合する。
-5. M4で音声エンコーダ・GPUメル前処理・テキスト→音声検索を実装・照合する。
-
-詳細な依存・受け入れ条件は [M2計画](m2-plan.md)、全体のゴールは [ゴール](goal.md)。
-
-## 未実行と失敗の扱い
-
-- macOS / iOS / Android実機 / WebGPUは未検証。Android build・payload監査は成功したが実機成功ではない。旧16f1 sampleのshutdown失敗は履歴保持。21f1の通常Windows精度Playerとsampleでは独立2起動の実終了0を確認した。検証assemblyのpreserve-allや小さい契約モデルを任意consumer / 実機の成功へ一般化しない。
-- クラウドUnityは任意手動Linux CPU検証。Secrets / Variablesは未登録、Editor job未実行。必要なのはこのクラウド経路の利用時で、検索サンプルなどの開発を止める条件ではない。
-- PR #6当時のconsumerのuloop launch readinessはタイムアウト。後続run-testsのcompile・29 passedとは分けて履歴を保持する。検索導入では長いパスの失敗後、別の短いconsumerの起動・compile・テストが成功した。
-- GPU skipやCPU代替をGPU成功として扱わない。モデルと大きいartifactはGit管理外、LFSを使わずActionsで再生成する。
-
-## 履歴: 各checkpointの結果
-
-PR #26をhead `d888e66`の全8 CI成功後にsquash mergeし、main `d6c8442`の[CI run 38027319740](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38027319740)も全8 job成功。元checkoutのUnity設定変更を保持した。モデルなし空sceneでPackage Manager Errorを観測し、回復時の直接uloop起動ではALLUSERSPROFILEが欠けていたことを確認した。旧PID終了・Editor本体0確認後、既存uvハーネスで環境補完して1回起動し、compile Error / Warning 0。以降の空scene 3回はConsole 0件、未準備sample UI 3回は0 / Warning 1 / Warning 1で、font警告をモデル推論なしに再現した。元scene / leak設定は復元済み。6回の比較ではallocation診断は出なかったが、次のPlay開始直後にFound leak診断15件を観測した。責任箇所は未確定。font原因・解消とdomain reload単体の高速化は未確認。[条件・結果・次の切り分け](m2-stability-environment-validation.md)。
-
-Androidの現在のC#はcompileと12契約が合格した。約37分の継続したMainThreadBlockedを確認した後、旧Editor PID 110956の終了・本体0確認を経て1回だけ回復起動し、新PID 127008で実APKをbuildした。source `751c30a`、ARM64 / IL2CPP / compiler Release / High stripping、504.158秒 / errors 0 / warnings 970。SDK v2 debug署名検証と、実APK 1,720,031,692 bytesの全payload完全hash・ARM64監査が成功した。scene / settingsとsample payload / metaは復元済み。実receiptの固定BuildOptions対応は1 redからAPK19 green。[結果と限界](m2-android-validation.md)、[機械可読結果](results/m2-android-apk-build-20261010.json)を参照。実機・jar runtime・Android CPU / GPU・sample Player画面は未実行。停止原因・警告解消・他OS・安定性・tag / Releaseは未完了。PR #27はhead `6ab5278`の全8 CI成功後にmain `c3281cd`へ統合済み。PR #26もその文書更新を取り込んだ。当時の観測timeoutはEditor操作の終了証拠にはせず、その後の回復と区別する。元checkoutのUnity設定変更は保持した。
-
-Android Player報告の監査CLIを追加した。固定APK provenance / 同梱参照hash、全4条件のactual backend / 15ケース / 全順位・score / 解放、初回jar展開とwarm cache、3回warm timingと14段階memory、異なる非重複runを照合する。39 redと追加5 redから関連73 passed。小さいfixtureによる整合性監査で、ADB実行・端末identity・process終了は別の実測証拠を要求する。[回収手順と範囲](m2-android-validation.md#実機結果の回収と報告監査)。実APKは上記で確認済みだが、実機 / 他OSと正式Release gateは残る。
-
-Android用build helperとAPK payload監査の準備時点では、Windows targetでhelperの9 red、graphics保存リスト復元の2 redから既存を含む110 passed。小さいAPK fixtureは16 redから関連29 passedだった。その後のAPI変更を含むC#は当時再検証待ちでdraftにした。現在は上記のAndroid12契約と実APKの成功を追加したが、以前の110件の合格範囲は拡大しない。[準備履歴と現在の結果](m2-android-validation.md)。
-
-PR #24統合main `01f3d86`を新しい空のGit consumerへ固定導入し、requested / resolved SHA・88ファイル・import済みsampleを照合した。compile、UPM 38 / sample EditMode 64、token15入力、実モデル検索FP32 / Float16 × CPU / GPUの4条件と全順位・scoreが合格。sample PlayMode 2件は受理後のCLI接続失敗を保持し、同じ実行のUnity保存XMLから2 passedを回収した。Game Viewの日英入力・準備・検索・空入力・解放・warm完全hash・Play停止も確認した。[新規Git導入の結果](m2-latest-git-consumer-validation.md)。旧Editorの終了を確認してから新Editor1つを起動し、再起動なし。停止時Persistent allocation Log 1件の原因、実APK / 他OS / 実機 / tag導入と正式Release gateは残る。
-
-配布TextSearch sampleの選択モデル配置と所有cacheを実装し、実行source `2e463a8`でEditMode 64 / PlayMode 2 / uv Python 22件が合格した。Windows Editorの実file URL転送・FP32 / Float16のactual GPU準備・固定日英2queryの全順位とscore・空入力・解放・欠落モデル拒否・実worker使用中のleaseを確認した。warmではmanifestだけを転送しモデル再転送0、完全CNG監査約803ms / 418ms、成功後は選択Float16 1組の約586MBだけを保持した。[実測と制約](m2-sample-cache-validation.md)。stage時間はmodel deserialize / 文書推論を含まない。変更sample SHAの新規Git導入、実APK / 実機と新sample Player画面は未実行、font Warning 1件の由来も未確定。次は新規固定Git導入と実APK / 他環境のgateを進める。
-
-Windows IL2CPP / compiler Release / managed stripping Highのbuildと実モデル2起動を確認した。release build helperの3 red → 99 green、build 257.1秒 / errors 0 / warnings 485、両Player終了code 0。4条件のactual CPU / GPU、25入力token一致、M1・検索全順位・score・解放が合格。file URLの初回6件展開から2回目manifest 1件だけのcache再利用へ移行し、実CNGの完全hash監査1.47秒 / 1.55秒、モデル再転送0、保持1 bundleを確認した。[結果と範囲](m2-player-il2cpp-validation.md)。検証assemblyにpreserve-allを指定した条件で、任意consumerのstripping・他OS・native leak解消を証明した結果ではない。次は配布sampleのAndroid配置、実APK / 他OS / 実機、残る安定性とrelease gateを進める。
-
-PlayerのURL配置は、完全SHA-256を毎回照合する所有cacheへ改善した。cacheのred / greenとWindows CNGのred / green、全96契約が合格。同じ約1.68GBの実bundleでwarm監査3回が合格し、モデル再転送0、監査約1.5〜1.8秒を確認した。[測定と限界](m2-bundle-cache-validation.md)にbaseline約108秒の観測とNUnit timeout失敗を保存する。保持modelは成功後1 bundle、更新中最大2 bundle。後続のWindows Player / IL2CPP結果は上記に追加し、他OS・実機 / sample配置と安定性・正式releaseのgateは残る。
-
-Player用のStreamingAssets展開adapterは新規12件のredから、既存を含む77件のgreenへ移行した。Windows Editorの実UnityWebRequestによる小さいfile URL転送と欠落処理を確認し、jar transportは注入して検証した。[配置経路と残る条件](player-validation.md#streamingassetsからの展開adapter)を参照。展開後も完全SHA-256・token・全backend条件を要求する。後続のWindows実Player / cache確認は上記に追加した。実APK / Android端末 / 配布sample配置は未実行。環境inventoryではGitHub Secretとrunnerは0、ADB接続端末も0だった。他OS / 実機の合格や正式releaseを完了とはしない。
-
-検索UIの文字欠けは、実OS fontのglyph境界を使うTDDで再現し、font・sizeを明示したcached styleへ修正した。EditMode 34件とPlayMode 1件が合格し、Windows Game Viewの日英GPU検索の全順位・scoreが修正前と完全一致、空入力・解放・モデル欠落表示・Play停止も確認した。[表示修正の実測](m2-ui-font-validation.md)を参照。修正したsampleはGit consumerへ作業ソースとして配置したもので、修正SHAの新規Git導入成功とは扱わない。allocationとdomain reloadの原因、他OS / 実機と正式リリースの条件は未達のまま残す。Windows IL2CPP / release strippingの後続結果は上記を参照。
-
-## 文書の読み方
-
-README、ゴール、M2計画、CI、API、automationは現在の利用・作業手順。
-M1の各plan / validationは実行した段階の履歴で、当時のcommit・数値・失敗を維持する。
-[技術調査](technical-approach.md)は採用済みのテキスト経路と未実装の画像 / 音声設計を区別する。
-[新規性調査](embeddinggemma-2-unity-novelty.md)は2026-10-07の調査に2026-10-09の限定検索を追記したもので、先行実装の不存在を保証しない。
-package内の文書は導入 / API / 未リリースと、mainへ統合したサンプルの使い方を説明する。AGENTS.mdとApacheライセンスは規則・条文を維持する。
+過去checkpointの長い時系列は[更新前の固定文書](https://github.com/ayutaz/unity-embeddinggemma-2/blob/4cdb2330645fa3705b8d46f18fb64e66897a301f/docs/status.md)と`docs/results/`のsource付きreceiptに保持しています。過去の失敗・未実行結果を現状の合格で上書きしません。

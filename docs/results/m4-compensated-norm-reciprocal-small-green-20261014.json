@@ -1,0 +1,10 @@
+{
+  "source": "8ef7e849ccdc08b9d24ba29cc4bf88b87bb308b7",
+  "full_encoder_validated": false,
+  "exit_code": 0,
+  "failed": 0,
+  "xml_sha256": "29955191ca7fbc3fe4668dee73bd1bf1fa788d5b4aa92b435c34ec622262591b",
+  "skipped": 0,
+  "passed": 25,
+  "scope": "compensated_norm_reciprocal_small_contract_green"
+}

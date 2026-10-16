@@ -1,0 +1,23 @@
+{
+  "scope": "actual_full_audio_welford8_compensated64_attempt_missing_numeric_results",
+  "success": false,
+  "action_run_id": 38600337962,
+  "source": "1f52193a441d98d507e104ad7c5e03485b8c5eac",
+  "conclusion": "failure",
+  "terminal": true,
+  "created_at": "2026-10-14T16:42:20Z",
+  "updated_at": "2026-10-14T17:30:39Z",
+  "annotation": "The hosted runner lost communication with the server. Anything in your workflow that terminates the runner process, starves it for CPU/Memory, or blocks its network access can cause this error.",
+  "artifact_count": 0,
+  "numeric_result_available": false,
+  "numeric_failure_proven": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "next_action": "isolate upstream stages and use a small actual model candidate before another full encoder export",
+  "oom_proven": false,
+  "raw_sha256": {
+    "compensated-encoder-run-terminal-20261015.json": "ca9c2a75f4fbc6f942ffe1b4e355fe6c6a113762f9c776552d40324e435d07f8",
+    "compensated-encoder-run-annotations-20261015.json": "88073716f7360f0030f9dd762ddde74fefe0a1d4d2bed8f1360607d459ae6177",
+    "compensated-encoder-run-artifacts-20261015.json": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+  }
+}

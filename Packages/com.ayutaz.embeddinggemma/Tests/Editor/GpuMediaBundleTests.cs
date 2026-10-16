@@ -47,6 +47,13 @@ namespace EmbeddingGemma.Tests
             Assert.That((string)Module(bundle)["kind"], Is.EqualTo("image"));
             Assert.That(Verify(bundle, "part.sentis"), Is.EqualTo(Path.Combine(directory, "part.sentis")));
         }
+        [Test] public void DescriptorCanBeValidatedBeforePublishingOrDownloadingItsFiles()
+        {
+            var method = Required().GetMethod("Parse"); Assert.That(method, Is.Not.Null, "Preparation must validate a descriptor before publication.");
+            var bundle = method.Invoke(null, new object[] { manifest.ToString(), directory });
+            Assert.That((string)Module(bundle)["kind"], Is.EqualTo("image"));
+            Assert.That(File.Exists(Path.Combine(directory, "bundle.json")), Is.False);
+        }
         [TestCase("backend")] [TestCase("model_revision")] [TestCase("source_commit")] [TestCase("sentis_version")]
         public void MixedModelOrExecutionProvenanceIsRejected(string field)
         {

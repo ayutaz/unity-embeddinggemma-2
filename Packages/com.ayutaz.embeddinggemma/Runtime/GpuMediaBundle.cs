@@ -20,12 +20,15 @@ namespace EmbeddingGemma
         GpuMediaBundle(string directory, JObject descriptor) { this.directory = directory; this.descriptor = descriptor; }
 
         public static GpuMediaBundle Open(string directory)
+            => Parse(File.ReadAllText(Path.Combine(directory, "bundle.json")), directory);
+
+        public static GpuMediaBundle Parse(string json, string directory)
         {
             if (string.IsNullOrWhiteSpace(directory)) throw new ArgumentException("A prepared filesystem directory is required.", nameof(directory));
             directory = Path.GetFullPath(directory);
             try
             {
-                var data = JObject.Parse(File.ReadAllText(Path.Combine(directory, "bundle.json")));
+                var data = JObject.Parse(json);
                 Require((int?)data["schema_version"] == 1 && (string)data["backend"] == "GPUCompute"
                     && (string)data["sentis_version"] == "2.6.1" && (string)data["model_revision"] == PinnedRevision
                     && Regex.IsMatch((string)data["source_commit"] ?? "", "\\A[a-f0-9]{40}\\z"), "Pinned GPU model provenance is required.");

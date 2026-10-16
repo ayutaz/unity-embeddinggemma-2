@@ -4,7 +4,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 
 > **2026-10-16: PR #81で実GPUの画像・音声encoderと最終APIを検証済みですが、手順4は未完了です。** 固定sourceのWindows Editorで、元画像6件・3 profileは778,240値がbit一致、元音声6信号・2 profileは824,320値で元の許容差超過0でした。実Texture / PCMから正規化768次元までのQuery / Document / Rawは各18条件に合格し、計算・非空feature入力のCPU fallbackとAPI中間readback /flushは0です。RenderTexture、入力境界、所有権・破棄、例外後の復帰、テキスト回帰も確認しています。[確認済み結果と残件](docs/status.md) / [公開API](docs/runtime-api.md)。
 >
-> これらはUnity6000.3.16f1 /Sentis2.6.1 /RTX4070 Ti SUPER /D3D12のsource付き結果です。最新headで全条件を再実行したという主張ではなく、main統合・正式リリースも未実施です。必須CIは音声ONNX比較で失敗し、CPU参照基準の方針確認とnoiseのCPU ONNX最終値取得が残っています。実GPU結果とCPU変換の診断は別に扱います。過去の不合格も[固定記録](docs/gpu-execution-and-silu-validation.md)と`docs/results/`に保持しています。
+> これらはUnity6000.3.16f1 /Sentis2.6.1 /RTX4070 Ti SUPER /D3D12のsource付き結果です。最新headで全条件を再実行したという主張ではなく、main統合・正式リリースも未実施です。必須CIは音声ONNX比較で失敗し、CPU参照基準の方針確認とCIの修正が残っています。CPU ONNX候補もnoiseの再開を含む元全6信号で許容差超過0を確認しました。実GPU結果とCPU変換の診断は別に扱います。過去の不合格も[固定記録](docs/gpu-execution-and-silu-validation.md)と`docs/results/`に保持しています。
 
 > **状態: Windows EditorのM1受け入れ検証完了**
 > 2026-10-09: PR #1〜#4はmain `8146107`へ統合済み。[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)で`.sentis`保存・再読み込み、Float16重み量子化、性能・メモリ測定まで実装・検証しました。

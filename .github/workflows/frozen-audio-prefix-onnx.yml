@@ -43,6 +43,10 @@ on:
         description: Continue only pinned interrupted noise prediction after re-exporting and verifying its prefix graphs
         type: boolean
         default: false
+      preserve_original:
+        description: Copy and SHA256-verify the original reference with 90-day retention; no model execution
+        type: boolean
+        default: false
       matrix_runner:
         description: Host for the small matrix-only diagnostic; does not change encoder jobs
         type: choice
@@ -68,9 +72,49 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  preserve_original:
+    if: github.event_name == 'workflow_dispatch' && inputs.preserve_original
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: tools
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+      - name: Resolve original reference or already preserved copy
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          uv run --no-project --python 3.13 python -m embeddinggemma_tools.pinned_reference_archive resolve
+          --output ../artifacts/reference-selection.json
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          artifact-ids: ${{ steps.source.outputs.artifact-id }}
+          run-id: ${{ steps.source.outputs.run-id }}
+          github-token: ${{ github.token }}
+          repository: ayutaz/unity-embeddinggemma-2
+          path: artifacts/original-reference
+          merge-multiple: true
+      - name: Verify original pinned JSON and every audited file before preservation
+        run: >-
+          uv run --no-project --python 3.13 python -m embeddinggemma_tools.pinned_reference_archive verify
+          --input ../artifacts/original-reference/audio-runtime-reference
+          --output ../artifacts/original-reference/preservation-verification.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: pinned-audio-original-4edbe17a8105233c5aaa1514faa2862b08a4f7e0
+          path: artifacts/original-reference/
+          retention-days: 90
+          compression-level: 0
+          if-no-files-found: error
   probe:
     if: >-
-      (github.event_name == 'workflow_dispatch' && !inputs.matrix_probe && !inputs.native_context_probe && !inputs.resume_noise) ||
+      (github.event_name == 'workflow_dispatch' && !inputs.matrix_probe && !inputs.native_context_probe && !inputs.resume_noise && !inputs.preserve_original) ||
       (github.event.pull_request.head.repo.full_name == github.repository &&
        (contains(github.event.pull_request.labels.*.name, 'frozen-audio-prefix-onnx') ||
         contains(github.event.pull_request.labels.*.name, 'frozen-audio-layer0-onnx') ||
@@ -261,7 +305,7 @@ jobs:
           if-no-files-found: warn
 
   resume_noise:
-    if: github.event_name == 'workflow_dispatch' && inputs.resume_noise
+    if: github.event_name == 'workflow_dispatch' && inputs.resume_noise && !inputs.preserve_original
     runs-on: ubuntu-latest
     timeout-minutes: 20
     defaults:
@@ -322,7 +366,7 @@ jobs:
           if-no-files-found: warn
 
   native_context_probe:
-    if: github.event_name == 'workflow_dispatch' && inputs.native_context_probe && !inputs.resume_noise
+    if: github.event_name == 'workflow_dispatch' && inputs.native_context_probe && !inputs.resume_noise && !inputs.preserve_original
     runs-on: ${{ inputs.matrix_runner || 'windows-2022' }}
     timeout-minutes: 10
     defaults:
@@ -384,7 +428,7 @@ jobs:
           if-no-files-found: warn
 
   matrix_probe:
-    if: github.event_name == 'workflow_dispatch' && inputs.matrix_probe == true && !inputs.native_context_probe && !inputs.resume_noise
+    if: github.event_name == 'workflow_dispatch' && inputs.matrix_probe == true && !inputs.native_context_probe && !inputs.resume_noise && !inputs.preserve_original
     runs-on: ${{ inputs.matrix_runner || 'ubuntu-latest' }}
     timeout-minutes: 10
     defaults:

@@ -21,10 +21,12 @@ namespace EmbeddingGemma.Validation.Tests
             public int Queries;
             public int Preparations;
             int fontReads;
+            public int DeferredFontFrames, FontFramesAfterDestroy;
+            public void AdvanceFrame() { if (Destroyed) FontFramesAfterDestroy++; }
             public bool Ready => Fault != "preparation";
             public string Error => "injected preparation failure";
             public string ActualBackend => Fault == "backend" ? "CPU" : "GPUCompute";
-            public bool FontAlive => Fault == "font_missing" || Fault == "late_font" && fontReads++ < 3 ? false : !Destroyed || Fault == "font";
+            public bool FontAlive => Destroyed && DeferredFontFrames > 0 ? FontFramesAfterDestroy < DeferredFontFrames : Fault == "font_missing" || Fault == "late_font" && fontReads++ < 3 ? false : !Destroyed || Fault == "font";
             public int FontInstanceId => 42;
             public JObject CacheSnapshot => new JObject { ["Success"] = true, ["CacheReused"] = false, ["TransferredFiles"] = 3 };
             public IEnumerator Prepare(string bundle, string cacheRoot) { Preparations++; yield break; }
@@ -43,9 +45,9 @@ namespace EmbeddingGemma.Validation.Tests
         static PlayerReferenceSet Reference() => new PlayerReferenceSet { Queries = Enumerable.Range(0, 4).Select(q => new PlayerRow {
             id = "query-" + q, text = "query text " + q, ranking = Enumerable.Range(0, 6).Select(i => new PlayerRanking { document_id = "doc-" + i, score = 1 - i * 0.1 }).ToArray()
         }).ToArray() };
-        static void Drain(IEnumerator operation)
+        static void Drain(IEnumerator operation, Action advanceFrame = null)
         {
-            try { while (operation.MoveNext()) if (operation.Current is IEnumerator child) Drain(child); }
+            try { while (operation.MoveNext()) { if (operation.Current is IEnumerator child) Drain(child, advanceFrame); else if (operation.Current == null || operation.Current is UnityEngine.WaitForEndOfFrame) advanceFrame?.Invoke(); } }
             finally { (operation as IDisposable)?.Dispose(); }
         }
         JObject Run(View view, bool failCapture = false, bool failLoad = false)
@@ -54,8 +56,23 @@ namespace EmbeddingGemma.Validation.Tests
             JObject result = null;
             Drain(PlayerSampleExecution.Run(config, PlayerRunProtocolTests.Build(), _ => { }, report => result = report,
                 () => view, _ => failLoad ? throw new IOException("injected audit failure") : new PlayerBundle { Reference = Reference(), Receipt = new JObject { ["success"] = true } },
-                name => failCapture ? throw new IOException("injected capture failure") : new JObject { ["name"] = name, ["width"] = 1280, ["height"] = 800 }, isBatchMode: () => false));
+                name => failCapture ? throw new IOException("injected capture failure") : new JObject { ["name"] = name, ["width"] = 1280, ["height"] = 800 }, isBatchMode: () => false), view.AdvanceFrame);
             return result;
+        }
+        [TestCase(2)] [TestCase(3)]
+        public void DeferredNativeFontReleaseIsAwaitedAcrossRenderBoundaries(int frames)
+        {
+            var view = new View { DeferredFontFrames = frames }; var result = Run(view);
+            Assert.That((bool)result["success"], Is.True);
+            Assert.That((bool)result["font_destroyed"], Is.True);
+            Assert.That((int)result["font_destroy_wait_frames"], Is.EqualTo(frames));
+        }
+        [Test] public void NeverCompletingFontReleaseStillFailsWithinABoundedWait()
+        {
+            var result = Run(new View { DeferredFontFrames = int.MaxValue });
+            Assert.That((bool)result["success"], Is.False);
+            Assert.That((bool)result["font_destroyed"], Is.False);
+            Assert.That((int)result["font_destroy_wait_frames"], Is.LessThanOrEqualTo(3));
         }
         [Test] public void ContractRunChecksAllQueriesAndReleasesTheViewWithoutClaimingRealGpu()
         {

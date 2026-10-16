@@ -495,5 +495,33 @@
     "Actual Worker backend is GPUCompute. Per-layer CPU fallback/flush counts were not captured by this Player report; add explicit live Worker audit before claiming zero fallback.",
     "Image/audio search sample, module preparation/cache switching, and final three-step goal audit remain pending.",
     "No release/tag or other-device qualification."
-  ]
+  ],
+  "strict_worker_observation": {
+    "source_commit": "f9094ff48e537836c49a9a0e627f0d783a373b77",
+    "actual_player": true,
+    "worker_backend": "GPUCompute",
+    "computed_layer_output_count": 2925,
+    "computation_cpu_fallback_count": 0,
+    "intermediate_flush_count": 0,
+    "cpu_constant_shape_or_input_count": 1382,
+    "auditor_downloads_tensor_values": false,
+    "overall_player_run_passed": false,
+    "failure": "InvalidOperationException: The sample view retained its native font after destruction.\n",
+    "four_queries_completed": true,
+    "worker_released": true
+  },
+  "deferred_font_regression": {
+    "red": {
+      "passed": 22,
+      "failed": 3,
+      "skipped": 0
+    },
+    "green": {
+      "passed": 25,
+      "failed": 0,
+      "skipped": 0
+    },
+    "change": "Await up to three render boundaries for nested native destruction; retain bounded failure if font remains alive",
+    "new_native_player_reverification_pending": true
+  }
 }

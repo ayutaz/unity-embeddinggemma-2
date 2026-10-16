@@ -2,9 +2,9 @@
 
 Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.unity.ai.inference@2.6/manual/index.html) だけを使って、Google の [EmbeddingGemma 2](https://huggingface.co/google/embeddinggemma-2) を動かすプロジェクトです。テキスト・画像・音声を、同じ 768 次元の空間の埋め込みに変換できるようにします。
 
-> **2026-10-15: 数値修正と最終API受け入れを進行中、未完了です。** 小さいGPU演算probeは4件合格。実Welford8音声ONNX候補は元6信号・2 profileの全6件で固定goldenの数値判定に不合格。参照環境の差と候補の差を分け、元期待値・許容差を維持しています。[現在の状態](docs/status.md) / [計画](docs/multimodal-tdd-plan.md)。
-
-> **2026-10-14: 計画の1・2まで検証しました。** main `c868df5` にGPU画像前処理・PCM / GPU音声前処理・公式prompt・共通backboneがあります。PR #81のGPU専用変更を含むcompileと、tiny / 実画像1件のGPU段階計測は2 pass・skip0・exit0、fallback / flush0。音声SiLU修正後の実ONNXは元6信号・2 profileを全件照合し、全6件不合格でした。最終画像 / 音声APIはDraft実装で、元encoder数値gateとUnity実入力→768次元は未達です。[今回の結果](docs/gpu-execution-and-silu-validation.md) / [最新状態](docs/status.md) / [次の計画](docs/multimodal-tdd-plan.md)。以下の旧日付の実測は履歴です。
+> **2026-10-16: PR #81で実GPUの画像・音声encoderと最終APIを検証済みですが、手順4は未完了です。** 固定sourceのWindows Editorで、元画像6件・3 profileは778,240値がbit一致、元音声6信号・2 profileは824,320値で元の許容差超過0でした。実Texture / PCMから正規化768次元までのQuery / Document / Rawは各18条件に合格し、計算・非空feature入力のCPU fallbackとAPI中間readback /flushは0です。RenderTexture、入力境界、所有権・破棄、例外後の復帰、テキスト回帰も確認しています。[確認済み結果と残件](docs/status.md) / [公開API](docs/runtime-api.md)。
+>
+> これらはUnity6000.3.16f1 /Sentis2.6.1 /RTX4070 Ti SUPER /D3D12のsource付き結果です。最新headで全条件を再実行したという主張ではなく、main統合・正式リリースも未実施です。必須CIは音声ONNX比較で失敗し、CPU参照基準の方針確認とnoiseのCPU ONNX最終値取得が残っています。実GPU結果とCPU変換の診断は別に扱います。過去の不合格も[固定記録](docs/gpu-execution-and-silu-validation.md)と`docs/results/`に保持しています。
 
 > **状態: Windows EditorのM1受け入れ検証完了**
 > 2026-10-09: PR #1〜#4はmain `8146107`へ統合済み。[PR #4](https://github.com/ayutaz/unity-embeddinggemma-2/pull/4)で`.sentis`保存・再読み込み、Float16重み量子化、性能・メモリ測定まで実装・検証しました。
@@ -19,7 +19,7 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 > 選択モデルだけを保持するsample cacheはfile URL初回展開・warm完全hash・実GPU検索を確認済みです。Windows検証専用PlayerもIL2CPP / Release / High strippingのbuildと実モデル4条件・独立2起動を確認しました。[sample cache](docs/m2-sample-cache-validation.md) / [Playerの条件と結果](docs/m2-player-il2cpp-validation.md)。
 > この段落は2026-10-10の到達点です。後続のWindows Player実測・環境補修条件・残タスクは[現在の状態](docs/status.md)を参照してください。
 
-> **2026-10-13: 正式リリースは画像・音声を含む全対応と必須検証の完了後に行います。** M2の基盤安定化 → 共通マルチモーダル基盤 → M3画像 → M4音声 → 全対象環境の検証 → 配布準備の順です。全実装をTDDで進めます。[全体計画](docs/multimodal-tdd-plan.md) / [M3のRed・Greenと実モデル条件](docs/m3-plan.md) / [M4のRed・Greenと実モデル条件](docs/m4-plan.md)。画像encoder・音声前処理のPython照合は合格しています。画像Sentis FP32、音声encoderの保存graphには数値不合格が残り、GPU前処理から最終768次元までのAPI・検索sampleは未完成です。正式公開は配布準備後の別工程です。
+> **正式リリースは画像・音声を含む全対応と必須検証の完了後に行います。** M2の基盤安定化 → 共通マルチモーダル基盤 → M3画像 → M4音声 → 全対象環境の検証 → 配布準備の順です。全実装をTDDで進めます。[全体計画](docs/multimodal-tdd-plan.md) / [M3のRed・Greenと実モデル条件](docs/m3-plan.md) / [M4のRed・Greenと実モデル条件](docs/m4-plan.md)。画像・音声の検索sample、反復性能・メモリ、Windows Player・他OS /実機、配布準備は引き続き後続工程です。PR #81のGPU数値検証・最終API結果と必須CIの残件は上記の最新状態を参照してください。
 
 ## ゴール
 
@@ -35,8 +35,8 @@ Unity の推論ライブラリ [Sentis](https://docs.unity3d.com/Packages/com.un
 | --- | --- | --- |
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor受け入れ検証完了（保存・量子化・測定を含む） |
 | M2 | テキストUPM・サンプル・検証基盤を安定化する | Windows実測あり。標準環境再現・新candidate・性能・他環境は未完了 |
-| M3 | GPU画像前処理・encoder・共通本体・画像検索 | GPU前処理はmain、APIはDraft。Python3 role / 18件合格、元Sentis FP32と実全chain・sampleは未完了 |
-| M4 | GPU音声前処理・encoder・共通本体・音声検索 | PCM入力・GPU前処理はmain、APIはDraft。SiLU ONNX修正は小さい回帰のみ合格。encoder数値gate・実全chain・sampleは未完了 |
+| M3 | GPU画像前処理・encoder・共通本体・画像検索 | PR #81の固定sourceで画像6件 /3 profileと実Texture /RenderTextureの全role合格。main統合・sample・Player等は未完了 |
+| M4 | GPU音声前処理・encoder・共通本体・音声検索 | PR #81の固定sourceで元6信号 /2 profileと実PCMの全role合格。CPU ONNX /必須CI・main統合・sample・Player等は未完了 |
 | 最終公開 | 全対応と必須環境の検証後に正式リリース | 未着手 |
 
 ## 動作環境
@@ -93,7 +93,7 @@ uv run --locked python -m embeddinggemma_tools prepare --output ../artifacts/m1
 モデルの revision を固定して参照データ・設定済み tokenizer・`.pt2` を生成し、保存後のモデルを参照実装と比較します。
 この Python 側の一致と、Sentis 側の M1 合格は別々に検証します。
 
-M1はWindows Editorで完了。テキスト検索と固定Git導入の既存Windows実測を維持します。次の順序はGPUと負荷の確認、元encoder数値gate修正、実入力→最終API、sample / 必須環境 / 最終空consumerです。実モデルの再開は今回の文書更新には含めません。
+M1のWindows Editor結果とテキスト検索・固定Git導入の既存実測を維持します。PR #81では元encoderのGPU数値gateと実入力→最終APIを固定sourceで確認済みですが、必須CIは未達です。手順4の残件を解消した後、sample /性能・メモリ /Player・必須環境 /最終空consumerへ進みます。
 残作業の順序・依存・完了条件は [M2計画](docs/m2-plan.md)、実装済みAPIは [C# API手順](docs/runtime-api.md) を参照してください。
 新しい実装も作業ブランチ / PR を使い、マージは依頼があるまで行いません。
 M1の完了条件と当時の測定は [M1計画](docs/m1-plan.md) / [完了検証記録](docs/m1-completion-validation.md)、最新のCIとUPM検証は [現在の状態](docs/status.md)を参照してください。

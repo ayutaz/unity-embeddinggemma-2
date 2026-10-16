@@ -1,10 +1,10 @@
 # 現在の状況
 
-更新: 2026-10-16。元計画の手順3・4は、固定sourceのGPU/API検証と[必須CI38850001042](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38850001042)の合格で完了しました。[要件別の完了監査](results/goal4-current-completion-audit-20261016.json)。PR #81は依存ブランチへマージ済みで、mainへの統合は[PR #79](https://github.com/ayutaz/unity-embeddinggemma-2/pull/79)へ集約しています。この統合候補の新しいCI・mainへのマージは別途確認します。
+更新: 2026-10-16。元計画の手順3・4は、固定sourceのGPU/API検証と[必須CI38850001042](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38850001042)の合格で完了しました。[要件別の完了監査](results/goal4-current-completion-audit-20261016.json)。PR #81は依存ブランチへマージ済みで、[PR #79](https://github.com/ayutaz/unity-embeddinggemma-2/pull/79)でmain `d925824`へ統合済みです。統合候補 `2ec11ab` の[CI38883782797](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38883782797)は必須15job・Python4環境各1,433件が合格し、mainのtreeとの一致も確認しました。
 
 固定Python参照を必須基準にするユーザー指定の方針に従い、同一実行source `1058dbe57b0376589e4fe24910cff4c9de9269f1`で元音声6ケース・2 profile・全12層の実ONNXを評価しました。824,320値で元許容差超過0、bit差162,697です。独立したcapture/carry監査をローカルでも再計算し、CIの監査JSONと一致しました。Windows / UbuntuのPython3.13 / 3.14は各1,433 pass / skip0、必須15jobが合格しています。fresh CPU対ONNXの6件・5,390値の不合格は診断として `success=false` のまま保持し、GPU合格には数えません。
 
-[PR整理の監査](results/main-pr-integration-audit-20261016.json)に、履歴への包含、同一ファイルと変更済みファイル、旧診断の採否、残すPlayer PR #31を記録しました。main統合後に重複・旧診断20件を閉じ、独立したPlayer差分は失わず残します。統合作業で製品Runtime・元参照・学習済み係数・許容差は変更しません。Unityの再起動や新たなGPU検証は行わず、実機合格済みsourceとのコード一致を確認します。
+[PR整理の監査](results/main-pr-integration-audit-20261016.json)に、履歴への包含、同一ファイルと変更済みファイル、旧診断の採否、残すPlayer PR #31を記録しました。重複・旧診断20件をクローズ済みです。独立したPlayer差分PR #31はmainへの追従と新しいPlayer検証が必要なため、Draftで残しています。統合作業で製品Runtime・元参照・学習済み係数・許容差は変更していません。Unityの再起動や新たなGPU検証は行わず、実機合格済みsourceとのコード一致を確認します。
 
 ## 手順3・4の検証
 

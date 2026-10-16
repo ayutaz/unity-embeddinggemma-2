@@ -1,5 +1,18 @@
 # CI と開発手順
 
+
+## 固定音声参照の保存と更新（2026-10-16）
+
+main統合PR #79の必須CI38883782797は全15job成功です。元artifact `11814567883` は2026-10-16 12:44:58 UTCで期限切れになるため、[保存run38886883870](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38886883870)で監査対象14ファイルのsize/SHA256を照合し、全体をartifact `12039809670` へ90日保存しました。新しい期限は **2027-01-14 10:23:16 UTC** です。[保存証拠](results/pinned-audio-reference-preservation-20261016.json)。モデル実行・GPU検証は行っていません。
+
+必須音声CIのexecute/auditは `pinned_reference_archive resolve` で同じrepositoryの有効な保存コピーを優先し、選択したartifact IDを記録します。コピーがなければ有効な元artifactへfallbackし、両方がなければ失敗します。元reference/auditの固定SHA256、元6信号・2 profile、実ONNXのcapture/carry監査、824,320値の許容差gateは維持します。
+
+期限前に以下を実行し、保存jobの成功、14ファイル照合、新artifactの期限を確認してください。既存コピーからも再保存できます。定期実行は設定していません。
+
+```powershell
+gh workflow run frozen-audio-prefix-onnx.yml --ref main -f preserve_original=true
+```
+
 > 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。実モデル実行は停止中。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
 
 ## 現在のCIとGPU受け入れの区別

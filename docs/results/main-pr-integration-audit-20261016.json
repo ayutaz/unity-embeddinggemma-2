@@ -19,7 +19,7 @@
     31
   ],
   "branches_to_delete": [],
-  "integration_ci_verified": false,
+  "integration_ci_verified": true,
   "prs": [
     {
       "baseRefName": "test/audio-layer-zero-feed-forward-reference",
@@ -952,5 +952,158 @@
       "evidence_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/31",
       "reason": "Independent Player sample implementation is not present in the accepted tree; main merge is conflicting. Retain Draft for adaptation and fresh Player qualification after main integration."
     }
-  ]
+  ],
+  "integration_head": "2ec11abe95df8199d02902e6bf18bb583130c853",
+  "integration_ci": 38883782797,
+  "integration_ci_source": "128dcb534fb2e7351cdeba66923bddab99f96627",
+  "required_jobs_passed": 15,
+  "python_tests_per_environment": 1433,
+  "python_environments": 4,
+  "main_merge": "d925824dea2221994c7a49212cf04c5fcf581a01",
+  "merged_at": "2026-10-16T10:32:01Z",
+  "merged_tree_equals_tested_head": true,
+  "closed_prs": [
+    {
+      "number": 80,
+      "state": "CLOSED",
+      "head": "d33c3c114157fed33d8a58d3c8e1fcb2ece5513a",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/80#issuecomment-6213565317",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 78,
+      "state": "CLOSED",
+      "head": "59f26abcdf973ad85b8ad5b08edb55045f36ff49",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/78#issuecomment-6213566689",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 77,
+      "state": "CLOSED",
+      "head": "d0153b6061bdf106a7785fb2fbf8c80adc372641",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/77#issuecomment-6213568283",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 76,
+      "state": "CLOSED",
+      "head": "dbcc35b3276dd19ae59943af9a8723c4714e3425",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/76#issuecomment-6213570461",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 75,
+      "state": "CLOSED",
+      "head": "aec39f3882c71c5f263998120494171766661101",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/75#issuecomment-6213571873",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 74,
+      "state": "CLOSED",
+      "head": "2712b8944321f436569247e98d5ff432a82b05ac",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/74#issuecomment-6213585418",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 73,
+      "state": "CLOSED",
+      "head": "f9afacef8f9f7e54198e4fbdb9f4d59646b25deb",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/73#issuecomment-6213586903",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 72,
+      "state": "CLOSED",
+      "head": "076fbee089ec0f4fb810c5cd5da28f5c08faffc7",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/72#issuecomment-6213588340",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 71,
+      "state": "CLOSED",
+      "head": "24f0cb290934eb334b0e168f4b9419cbf60ae78d",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/71#issuecomment-6213589784",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 70,
+      "state": "CLOSED",
+      "head": "5985d54a26ed10222c4c43b131d511abe21e4054",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/70#issuecomment-6213591032",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 69,
+      "state": "CLOSED",
+      "head": "2479a9cd2ea3efc2aa30f14ba7e7c6fcaa44713e",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/69#issuecomment-6213601733",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 68,
+      "state": "CLOSED",
+      "head": "60a74a4b372e2090424e27ccaa6841d9ad232c8a",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/68#issuecomment-6213603107",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 67,
+      "state": "CLOSED",
+      "head": "0d53aedbbb86ba9d02bde5ca654703ae651b72cf",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/67#issuecomment-6213604542",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 65,
+      "state": "CLOSED",
+      "head": "f6794ef4fa8cd85a0e69dcc7d144978d0ab46b59",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/65#issuecomment-6213606033",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 64,
+      "state": "CLOSED",
+      "head": "46cea116f505e6836f9222e53a14ac536c6b176b",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/64#issuecomment-6213607296",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 62,
+      "state": "CLOSED",
+      "head": "280250e4ebba9d1006a74c377d39181fcbd93a55",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/62#issuecomment-6213624319",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 60,
+      "state": "CLOSED",
+      "head": "a9cef60500b44039b87b42a4239aa9ffe74624f0",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/60#issuecomment-6213625470",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 53,
+      "state": "CLOSED",
+      "head": "d500b5f0e3b4a61c2672d63aa0d87608f9522459",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/53#issuecomment-6213627078",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 41,
+      "state": "CLOSED",
+      "head": "b5766154a209622849e9d71d11955b9bd7e0a65c",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/41#issuecomment-6213628608",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    },
+    {
+      "number": 40,
+      "state": "CLOSED",
+      "head": "e13adcd96ed3e10802131dfc94c48d9533f37ee2",
+      "comment": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/40#issuecomment-6213629951",
+      "integrated_main": "d925824dea2221994c7a49212cf04c5fcf581a01"
+    }
+  ],
+  "closed_count": 20,
+  "retained_draft_pr": 31
 }

@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
@@ -6,6 +7,16 @@ import pytest
 import yaml
 
 from embeddinggemma_tools import pinned_reference_archive as archive
+
+
+@pytest.fixture(autouse=True)
+def fixed_clock(monkeypatch):
+    class FixedDatetime(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            value = datetime(2026, 10, 16, tzinfo=timezone.utc)
+            return value.astimezone(tz) if tz else value.replace(tzinfo=None)
+    monkeypatch.setattr(archive, 'datetime', FixedDatetime)
 
 
 def artifact(identifier, *, backup=True, expired=False, expires='2027-01-01T00:00:00Z'):

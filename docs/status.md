@@ -1,6 +1,10 @@
 # 現在の状況
 
-更新: 2026-10-16。ユーザーが選択肢1を指定したため、固定Python参照を必須CI基準とし、fresh CPUの差は診断として保持する方針を実装しました。[決定とTDD](results/m4-user-selected-pinned-reference-ci-policy-20261016.json)。同一の現行実行sourceで元6ケース・2 profileの実ONNX carryを実行し、824,320値と全capture /carryを独立監査するjobを必須CIへ接続しています。新CIの合格はまだ未確認です。対象はDraft [PR #81](https://github.com/ayutaz/unity-embeddinggemma-2/pull/81)の`feat/multimodal-numerical-acceptance`。main統合・リリースは未実施です。ユーザー指定「4まで」の完了条件は[元計画の監査](results/goal4-scope-audit-20261016.json)を維持します。
+更新: 2026-10-16。元計画の手順3・4は、固定sourceのGPU/API検証と[必須CI38850001042](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38850001042)の合格で完了しました。[要件別の完了監査](results/goal4-current-completion-audit-20261016.json)。PR #81は依存ブランチへマージ済みで、mainへの統合は[PR #79](https://github.com/ayutaz/unity-embeddinggemma-2/pull/79)へ集約しています。この統合候補の新しいCI・mainへのマージは別途確認します。
+
+固定Python参照を必須基準にするユーザー指定の方針に従い、同一実行source `1058dbe57b0376589e4fe24910cff4c9de9269f1`で元音声6ケース・2 profile・全12層の実ONNXを評価しました。824,320値で元許容差超過0、bit差162,697です。独立したcapture/carry監査をローカルでも再計算し、CIの監査JSONと一致しました。Windows / UbuntuのPython3.13 / 3.14は各1,433 pass / skip0、必須15jobが合格しています。fresh CPU対ONNXの6件・5,390値の不合格は診断として `success=false` のまま保持し、GPU合格には数えません。
+
+[PR整理の監査](results/main-pr-integration-audit-20261016.json)に、履歴への包含、同一ファイルと変更済みファイル、旧診断の採否、残すPlayer PR #31を記録しました。main統合後に重複・旧診断20件を閉じ、独立したPlayer差分は失わず残します。統合作業で製品Runtime・元参照・学習済み係数・許容差は変更しません。Unityの再起動や新たなGPU検証は行わず、実機合格済みsourceとのコード一致を確認します。
 
 ## 手順3・4の検証
 
@@ -31,7 +35,9 @@ GPU結果はWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER /
 
 ローカルの実モデルrunnerは終了済み。必要なUnity検証は所有プロセス・最大300秒・ホスト12 GiB guardに限定し、重いCPU変換と診断はGitHub Actionsを使います。
 
-## 残る音声ONNX問題
+## 過去の音声ONNX失敗と解消までの記録
+
+以下は各実行時点の履歴です。現行の合否は冒頭と完了監査を参照してください。
 
 手順4は未完了です。[最新CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38825766738)は終了し、音声ONNX対fresh officialでsilenceの1,309値が元許容差を超過しました。最大許容差比24.0435です。Linux/Python3.14のnative Tanh bit比較2件も失敗し、固定random514入力の実ONNX対nativeは8値が1 ULP異なります。他のPython3環境、package、workflow lintは成功、Required CIは失敗です。[固定した失敗情報](results/m4-ci-e99-audio1309-and-linux314-tanh-two-failures-20261016.json)。PR headはe99c442、CIのPR merge実行sourceは9e18b1cで、両者を区別します。元参照、重み、許容差、既定export、製品GPU Runtimeは維持しています。
 
@@ -51,12 +57,12 @@ Windows2022の[小さな行列/Tanh診断](results/m4-native-windows2022-amd9v74
 
 [再開run38829612885](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38829612885)、source c994563は正常終了し、先頭3グラフの再生成SHAが元記録と一致しました。実際の前回予測から残り2区間を実行したnoiseは143,360値で元許容差超過0、最大許容差比0.251034、bit差45,930でした。全capture /carry SHAと最終metricsを独立再計算しています。[全6ケースの固定結果](results/m4-original-raw-all-six-midpoint-candidate-resumed-noise-tolerance-passed-20261016.json)は計824,320値、元許容差超過0、bit差162,697です。全6件を同じ新job sourceで実行したという意味ではなく、e99c442の元5件・noise先頭3区間とc994563の続行を、同一の元計算コード61ファイルとグラフSHAで監査しています。途中stage正解は使っていません。
 
-このCPU ONNX候補の元参照合格は、現在CPUのnative比較・既定CI合格・新たなGPU実行の証明ではありません。ユーザー指定の選択肢1に従い、固定参照の元許容差を必須基準とするCIへ接続しました。fresh CPU比較は全6ケースを診断収集し、失敗をsuccess=falseのまま保存します。新たなCI合格は未確認で、製品GPU Runtimeと既定consumer exportは変更していません。Unityは停止したままです。
+この段落までの候補・続行結果は当時の記録です。その後、冒頭に記した単一sourceの全6件と必須CIが合格しました。fresh CPUの不合格は保持し、新たなGPU実行やPlayer・他deviceの合格とは扱いません。
 
 過去の候補、失敗とTDD経緯は[更新前の固定文書](https://github.com/ayutaz/unity-embeddinggemma-2/blob/e99c44214ab7d7f526b0fede5b561862460f1d66/docs/status.md)とsource付き`docs/results/`に保持しています。
 
 ## 後続工程
 
-手順5はモデル準備の再利用・配布、検索sample、連続推論のメモリ / 速度、Windows Player、他OS / 実機。手順6は依存PR、導入、ライセンス、配布の整理です。merge・公開は別途明示された範囲で進めます。
+手順5はモデル準備の再利用・配布、検索sample、連続推論のメモリ / 速度、Windows Player、他OS / 実機。mainと依存PRの整理を先行し、手順6の導入、ライセンス、配布の整理は引き続き残します。merge・公開は別途明示された範囲で進めます。
 
 過去checkpointの長い時系列は[更新前の固定文書](https://github.com/ayutaz/unity-embeddinggemma-2/blob/4cdb2330645fa3705b8d46f18fb64e66897a301f/docs/status.md)と`docs/results/`のsource付きreceiptに保持しています。過去の失敗・未実行結果を現状の合格で上書きしません。

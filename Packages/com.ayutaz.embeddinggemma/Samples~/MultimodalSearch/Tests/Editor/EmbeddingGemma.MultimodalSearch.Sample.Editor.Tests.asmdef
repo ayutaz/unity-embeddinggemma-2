@@ -1,0 +1,1 @@
+{"name":"EmbeddingGemma.MultimodalSearch.Sample.Editor.Tests","references":["EmbeddingGemma.Runtime","EmbeddingGemma.MultimodalSearch.Sample"],"includePlatforms":["Editor"],"optionalUnityReferences":["TestAssemblies"],"autoReferenced":false}

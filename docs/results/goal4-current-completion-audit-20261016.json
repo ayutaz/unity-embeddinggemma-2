@@ -2,7 +2,7 @@
   "schema_version": 1,
   "date_jst": "2026-10-16",
   "goal": "4まで進めてください",
-  "status": "not_complete_reference_policy_answer_required",
+  "status": "not_complete_awaiting_user_reference_policy",
   "scope_source": "goal4-scope-audit-20261016.json",
   "candidate_head_at_audit": "7e7c07decf670dddf0369deda20d61c4f5311f6e",
   "requirements": [
@@ -332,6 +332,7 @@
     "answer_received": false,
     "pending_goal_turns": 3,
     "required_before_ci_gate_changes": true,
-    "independent_noise_work_complete": true
+    "independent_noise_work_complete": true,
+    "remaining_work_requires_policy_choice": true
   }
 }

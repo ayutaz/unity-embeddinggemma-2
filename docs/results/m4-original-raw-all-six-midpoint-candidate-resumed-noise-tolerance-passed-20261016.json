@@ -700,5 +700,11 @@
     "The fixed61file math source and the two execution commits are distinct and recorded. No claim all6ran at one new job source.",
     "Current native comparison remains unqualified and is not replaced by the original-reference pass.",
     "Actual production GPU results are separate previously recorded source-qualified evidence; this CPU run does not add a new GPU pass."
-  ]
+  ],
+  "resume_cpu_host": {
+    "Architecture:": "x86_64",
+    "CPU(s):": "4",
+    "Vendor ID:": "AuthenticAMD",
+    "Model name:": "AMD EPYC 9V74 80-Core Processor"
+  }
 }

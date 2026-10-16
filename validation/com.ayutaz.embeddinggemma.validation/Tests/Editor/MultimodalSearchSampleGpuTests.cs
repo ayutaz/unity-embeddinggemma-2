@@ -65,6 +65,22 @@ namespace EmbeddingGemma.Validation.Tests
             task.GetAwaiter().GetResult(); Assert.That(peak, Is.GreaterThan(0).And.LessThanOrEqualTo(12L * 1024 * 1024 * 1024));
         }
 
+        [UnityTest] public IEnumerator ImportedSampleRendersItsRealSearchResultsInPlayMode()
+        {
+            Assert.That(Environment.GetEnvironmentVariable("EG_MEDIA_SAMPLE_SCREENSHOT"), Is.Not.Null.And.Not.Empty);
+            yield return new EnterPlayMode();
+            using var cancellation = new CancellationTokenSource(); var task = Run(cancellation.Token); long peak = 0;
+            while (!task.IsCompleted)
+            {
+                peak = Math.Max(peak, MediaExecutionMemory.Peak()); if (peak > 12L * 1024 * 1024 * 1024) cancellation.Cancel();
+                yield return null;
+            }
+            var path = Environment.GetEnvironmentVariable("EG_MEDIA_SAMPLE_REPORT"); var report = JObject.Parse(File.ReadAllText(path));
+            report["host_native_peak_bytes"] = peak; report["play_mode_execution"] = true; File.WriteAllText(path, report.ToString());
+            task.GetAwaiter().GetResult(); Assert.That(peak, Is.GreaterThan(0).And.LessThanOrEqualTo(12L * 1024 * 1024 * 1024));
+            yield return new ExitPlayMode();
+        }
+
         static async Task Run(CancellationToken cancellation)
         {
             var bundlePath = Environment.GetEnvironmentVariable("EG_MEDIA_BUNDLE_OUTPUT");
@@ -150,6 +166,21 @@ namespace EmbeddingGemma.Validation.Tests
                         rows.Add(new JObject { ["id"] = hits[index].Document.Id, ["score"] = hits[index].Score, ["pinned_score"] = expectedHits[index].Score, ["absolute_error"] = difference });
                     }
                     ((JArray)report["queries"]).Add(new JObject { ["id"] = (string)query["id"], ["hits"] = rows }); Save();
+                    report["text_module_transferred_files"] = Property<int>(sample, "LastTransferredFiles");
+                    report["text_module_reused_objects"] = Property<int>(sample, "LastReusedObjects");
+                    var screenshotRoot = Environment.GetEnvironmentVariable("EG_MEDIA_SAMPLE_SCREENSHOT");
+                    if (!string.IsNullOrWhiteSpace(screenshotRoot))
+                    {
+                        Assert.That(Application.isPlaying, Is.True, "A rendered sample screenshot requires actual PlayMode.");
+                        sample.GetType().GetField("scroll", Private).SetValue(sample, new Vector2(0, 10000));
+                        var screenshot = screenshotRoot + "-" + (string)query["id"] + ".png"; Assert.That(File.Exists(screenshot), Is.False);
+                        for (var frame = 0; frame < 3; frame++) await Task.Yield();
+                        ScreenCapture.CaptureScreenshot(screenshot);
+                        for (var frame = 0; frame < 120 && !File.Exists(screenshot); frame++) await Task.Yield();
+                        Assert.That(File.Exists(screenshot), Is.True); Assert.That(new FileInfo(screenshot).Length, Is.GreaterThan(1000));
+                        var images = report["screenshots"] as JArray; if (images == null) report["screenshots"] = images = new JArray();
+                        images.Add(new JObject { ["query"] = (string)query["id"], ["file"] = Path.GetFileName(screenshot), ["sha256"] = Hash(screenshot) }); Save();
+                    }
                 }
                 if (expectedWarm) Assert.That(Property<int>(sample, "LastTransferredFiles"), Is.EqualTo(1));
                 var finalSession = (GpuMediaSession)sample.GetType().GetField("session", Private).GetValue(sample);

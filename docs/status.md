@@ -35,6 +35,8 @@ GPU結果はWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER /
 
 手順4は未完了です。[最新CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38825766738)は終了し、音声ONNX対fresh officialでsilenceの1,309値が元許容差を超過しました。最大許容差比24.0435です。Linux/Python3.14のnative Tanh bit比較2件も失敗し、固定random514入力の実ONNX対nativeは8値が1 ULP異なります。他のPython3環境、package、workflow lintは成功、Required CIは失敗です。[固定した失敗情報](results/m4-ci-e99-audio1309-and-linux314-tanh-two-failures-20261016.json)。PR headはe99c442、CIのPR merge実行sourceは9e18b1cで、両者を区別します。元参照、重み、許容差、既定export、製品GPU Runtimeは維持しています。
 
+[Tanhテストの対象整理](results/m4-tanh-pinned-captures-and-native-rounding-contract-tdd-20261016.json)では、PyTorchのoneMKL高精度モード呼出しとIntelのCPU依存丸め仕様を確認しました。毎回のCPU出力への無条件bit一致を、保存済み元contextの33,285入力・出力への厳密bit比較と、現在のnativeへの元encoder許容差比較へ分けました。実ONNXの固定参照bit比較も514値から33,285値へ拡張し、参照から1 ULP変わればnativeと一致しても失敗します。過去に保存・監査済みの重みなしfixture266,280bytesを使用し、候補から期待値を生成していません。記録済みCI5値のred1件とfixture不足red4件から、関連29 pass /skip0になりました。これは単体テスト仕様の修正で、実モデルの計算や既定CIの音声比較を変えたものではありません。新しい実モデルCIは実行していません。
+
 実CIのCPUはAMD EPYC7763 /AVX2 /Torch2.14.1+cu130、NumPy2.5.3のBLASはscipy-openblas0.3.34.106.0 /Haswellでした。これは保存した実行条件で、数値差の原因確定ではありません。
 
 元のQK行列積にあった1bit差は、有理数FMA追跡でmidpointの低残差欠落へ局所化しました。[元bmm_8の実ONNX](results/m4-sine-original-bmm8-midpoint-all55296-actual-onnx-bit-exact-20261016.json)は修正候補で全55,296値がbit一致しました。明示的な`ordered_original_midpoint_bmm`は各層の監査済みQK BMM1件だけを修正し、他のBMMと元の係数・mask・clipを維持します。[先行するraw sine全12層](results/m4-original-raw-sine-full12-midpoint-qk-tolerance-passed-20261016.json)は143,360値で元許容差超過0、最大許容差比0.482376、bit差34,679でした。bit一致とは表現しません。

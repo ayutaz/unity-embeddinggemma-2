@@ -1,0 +1,438 @@
+"""Persist a rejected numeric context; never turn it into an accepted reference."""
+
+import hashlib
+import json
+import os
+import platform
+from pathlib import Path
+import re
+
+import numpy as np
+import torch
+from torch.utils._python_dispatch import TorchDispatchMode
+
+
+def record_feature_drift(destination, modality, actual, expected, *, role, profile, case,
+                         source_commit, input_source_commit, saved_encoder=None):
+    destination = Path(destination)
+    actual = actual.detach().cpu()
+    expected = expected.detach().cpu()
+    report = dict(success=False, scope="official_encoder_feature_context_failure_only", role=role,
+                  profile=profile, case=case, source_commit=source_commit, input_source_commit=input_source_commit,
+                  actual_shape=list(actual.shape), expected_shape=list(expected.shape),
+                  actual_dtype=str(actual.dtype), expected_dtype=str(expected.dtype), expected_unchanged=True,
+                  unity_validated=False, end_to_end_validated=False,
+                  runtime=dict(torch_version=torch.__version__, torch_threads=torch.get_num_threads(),
+                               torch_interop_threads=torch.get_num_interop_threads(),
+                               cpu_capability=torch.backends.cpu.get_cpu_capability(),
+                               platform=platform.platform(), processor=platform.processor(), torch_config=torch.__config__.show(),
+                               env={name: os.environ.get(name) for name in
+                                    ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "MKL_CBWR", "DNNL_MAX_CPU_ISA", "ATEN_CPU_CAPABILITY")}))
+    report.update(feature_error_metrics(actual, expected))
+    if saved_encoder is not None:
+        try:
+            report["saved_encoder_vs_expected"] = feature_error_metrics(saved_encoder(), expected)
+            report["saved_encoder_thread_contexts"] = probe_cpu_threads(saved_encoder, (), expected)
+        except Exception as error:
+            # Keep the original official mismatch even if saved replay cannot run.
+            report["saved_encoder_vs_expected"] = dict(error=f"{type(error).__name__}: {error}", validated=False)
+    path = destination / f"{modality}-role-context-actual-fp32.bin"
+    actual.float().numpy().astype("<f4").tofile(path)
+    report["actual_file"] = dict(file=path.name, bytes=path.stat().st_size, sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+    (destination / f"{modality}-role-context-failure.json").write_text(json.dumps(report, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+
+
+def feature_error_metrics(actual, expected):
+    actual, expected = actual.detach().cpu(), expected.detach().cpu()
+    report = dict(actual_finite=bool(torch.isfinite(actual).all()), same_shape=actual.shape == expected.shape)
+    if report["same_shape"] and report["actual_finite"] and torch.isfinite(expected).all():
+        difference = (actual.double() - expected.double()).abs()
+        allowed = 1e-5 + 1e-4 * expected.double().abs()
+        index = int((difference / allowed).argmax())
+        report.update(mismatched_elements=int((difference > allowed).sum()),
+                      maximum_absolute_error=float(difference.max()), maximum_tolerance_ratio=float((difference / allowed).max()),
+                      worst_index=index, worst_actual=float(actual.flatten()[index]), worst_expected=float(expected.flatten()[index]))
+    return report
+
+
+def probe_cpu_threads(program, inputs, expected, *, thread_counts=(1, 2, 4)):
+    """Failure-only controlled replay; restore the caller's intraop setting."""
+    if (not thread_counts or len(set(thread_counts)) != len(thread_counts)
+            or any(type(value) is not int or value <= 0 for value in thread_counts)):
+        raise ValueError("thread counts must be unique positive integers")
+    initial = torch.get_num_threads()
+    conditions = []
+    try:
+        for requested in thread_counts:
+            row = dict(requested_threads=requested, executed=False)
+            conditions.append(row)
+            try:
+                torch.set_num_threads(requested)
+                row["actual_threads"] = torch.get_num_threads()
+                with torch.no_grad():
+                    row.update(feature_error_metrics(program(*inputs), expected))
+                row["executed"] = True
+            except Exception as error:
+                row["error"] = f"{type(error).__name__}: {error}"
+    finally:
+        torch.set_num_threads(initial)
+    return dict(scope="controlled_cpu_thread_replay_only", original_threads=initial, conditions=conditions,
+                full_encoder_validated=False, end_to_end_validated=False)
+
+
+def run_saved_graph_prefix(program, inputs, node_name):
+    """Run through one saved FX node only; do not execute the remaining encoder.
+
+    Returns an independent finite FP32 CPU observation without editing the graph.
+    This diagnostic is not a full-program or original-golden acceptance result.
+    """
+    if not isinstance(program, torch.fx.GraphModule) or not any(node.name == node_name for node in program.graph.nodes):
+        raise ValueError('Prefix node is absent from the saved graph')
+    target=next(node for node in program.graph.nodes if node.name==node_name)
+    needed=set();pending=[target]
+    while pending:
+        node=pending.pop()
+        if node in needed:continue
+        needed.add(node);pending.extend(node.all_input_nodes)
+    graph=torch.fx.Graph();mapping={}
+    for node in program.graph.nodes:
+        if node.op=='placeholder' or node in needed:
+            mapping[node]=graph.node_copy(node,lambda previous:mapping[previous])
+    graph.output(mapping[target])
+    prefix=torch.fx.GraphModule(program,graph)
+
+    class Complete(Exception):
+        pass
+
+    class Prefix(torch.fx.Interpreter):
+        result = None
+
+        def run_node(self, node):
+            value = super().run_node(node)
+            if node.name == node_name:
+                self.result = value
+                raise Complete()
+            return value
+
+    runner = Prefix(prefix)
+    with torch.no_grad():
+        try:
+            runner.run(*inputs)
+        except Complete:
+            pass
+        else:
+            raise ValueError('Prefix node was not executed')
+        result = runner.result
+        if not isinstance(result, torch.Tensor) or result.dtype != torch.float32 or result.device.type != 'cpu':
+            raise TypeError('Prefix observation must be an FP32 CPU tensor')
+        if not torch.isfinite(result).all():
+            raise ValueError('Prefix observation must be finite')
+        return result.detach().clone()
+
+
+def extract_saved_graph_interval(program, input_node_name, output_node_name):
+    """Borrow saved coefficients for one exact FX interval with one external input.
+
+    Prunes all work before the boundary and after the requested output. Rejects
+    any dynamic ancestor not covered by the boundary; never edits the source.
+    Extraction itself does not run any model or establish reference acceptance.
+    """
+    if not isinstance(program, torch.fx.GraphModule):
+        raise ValueError('Interval extraction requires a saved FX GraphModule')
+    nodes = {node.name: node for node in program.graph.nodes}
+    if (input_node_name == output_node_name or input_node_name not in nodes or output_node_name not in nodes
+            or nodes[input_node_name].op != 'call_function' or nodes[output_node_name].op != 'call_function'):
+        raise ValueError('Interval boundaries must be distinct existing operation nodes')
+    boundary, target = nodes[input_node_name], nodes[output_node_name]
+    needed = set(); pending = [target]
+    while pending:
+        node = pending.pop()
+        if node in needed:
+            continue
+        needed.add(node)
+        if node is not boundary:
+            pending.extend(node.all_input_nodes)
+    if boundary not in needed or any(node.op == 'placeholder' for node in needed):
+        raise ValueError('Interval boundary does not cover every dynamic input')
+    graph = torch.fx.Graph(); mapping = {boundary: graph.placeholder(input_node_name)}
+    for node in program.graph.nodes:
+        if node in needed and node is not boundary:
+            mapping[node] = graph.node_copy(node, lambda previous: mapping[previous])
+    graph.output(mapping[target])
+    return torch.fx.GraphModule(program, graph)
+
+
+def describe_vision_layer_intermediates(program):
+    """Audit seven saved RMS chains and one tanh GELU without executing a layer."""
+    if not isinstance(program, torch.fx.GraphModule):
+        raise ValueError('Vision layer description requires a saved FX interval')
+    def one(values, label):
+        values = list(values)
+        if len(values) != 1:
+            raise ValueError(f'Vision layer {label} is missing or ambiguous')
+        return values[0]
+    means = [node for node in program.graph.nodes if node.target == torch.ops.aten.mean.dim]
+    if len(means) != 7:
+        raise ValueError('Vision layer must contain exactly seven RMS operations')
+    rows = []
+    for index, mean in enumerate(means):
+        square = mean.args[0]
+        if square.target != torch.ops.aten.pow.Tensor_Scalar or square.args[1] != 2:
+            raise ValueError('Vision RMS requires its original squared input')
+        incoming = square.args[0]
+        statistic = one((n for n in mean.users if n.target == torch.ops.aten.add.Tensor and n.args[1] == 1e-6), 'RMS epsilon')
+        inverse = one((n for n in statistic.users if n.target == torch.ops.aten.pow.Tensor_Scalar and n.args[1] == -.5), 'RMS inverse')
+        normalized = one((n for n in inverse.users if n.target == torch.ops.aten.mul.Tensor and incoming in n.args), 'RMS normalization')
+        scaled = [n for n in normalized.users if n.target == torch.ops.aten.mul.Tensor and any(a.op == 'get_attr' for a in n.all_input_nodes)]
+        if len(scaled) > 1 or bool(scaled) != (index != 3):
+            raise ValueError('Vision RMS scale is missing or ambiguous')
+        output = scaled[0] if scaled else normalized
+        scale = one((n for n in output.all_input_nodes if n.op == 'get_attr'), 'RMS scale attribute') if scaled else None
+        rows.append(dict(index=index,input_node=incoming.name,mean_node=mean.name,statistic_node=statistic.name,
+                         inverse_node=inverse.name,normalized_node=normalized.name,output_node=output.name,
+                         scale_target=scale.target if scale is not None else None))
+    gelu = one((n for n in program.graph.nodes if n.target == torch.ops.aten.gelu.default), 'GELU')
+    if gelu.kwargs.get('approximate', 'none') != 'tanh':
+        raise ValueError('Vision layer requires the original tanh GELU')
+    return dict(rms_operations=rows,gelu=dict(input_node=gelu.args[0].name,output_node=gelu.name))
+
+
+def ordered_vision_softmax16(values):
+    """CPU-only diagnostic of the pinned 2520-wide AVX512 lane reduction.
+
+    Does not change global native dispatch, a saved graph, or any frozen reference.
+    Same-input native captures qualify the ordering; an encoder replay using
+    this function remains a separate candidate, not a new native golden.
+    """
+    if not isinstance(values, torch.Tensor) or values.dtype != torch.float32 or values.device.type != 'cpu':
+        raise TypeError('Ordered vision softmax requires an FP32 CPU tensor')
+    if values.ndim < 2 or values.ndim > 4 or values.shape[-1] != 2520 or not values.numel() or not values.is_contiguous():
+        raise ValueError('Ordered vision softmax requires a nonempty contiguous 2520-wide rank-2..4 tensor')
+    if not torch.isfinite(values).all():
+        raise ValueError('Ordered vision softmax requires finite logits')
+    flat = values.reshape(-1, 2520)
+    # Windows native exp and Linux SLEEF exp are different numeric contexts.
+    # SLEEF xexpf (5a1d179), copyright Naoki Shibata and contributors,
+    # BSL-1.0; see Packages/com.ayutaz.embeddinggemma/SLEEF-LICENSE.txt.
+    # Reproduce only the pinned non-positive SLEEF xexpf expression here.
+    # FP64 is a CPU diagnostic FMA oracle, never an exported/model/GPU op.
+    difference = (flat - flat.amax(dim=-1, keepdim=True)).detach().numpy()
+    bounded = np.maximum(difference, np.float32(-104))
+    def fma(a, b, c):
+        return (np.asarray(a, dtype='f8') * np.asarray(b, dtype='f8') + np.asarray(c, dtype='f8')).astype('f4')
+    q = np.rint(bounded * np.float32(1.4426950408889634073599246810018921374)).astype('i4')
+    s = fma(q.astype('f4'), np.float32(-0.693145751953125), bounded)
+    s = fma(q.astype('f4'), np.float32(-1.428606765330187045e-6), s)
+    u = np.float32(0.000198527617612853646278381)
+    for coefficient in (0.00139304355252534151077271, 0.00833336077630519866943359,
+                        0.0416664853692054748535156, 0.166666671633720397949219, 0.5):
+        u = fma(u, s, np.float32(coefficient))
+    u = np.float32(1) + fma(s * s, u, s)
+    first = np.trunc(q / 2).astype('i4')
+    result = (u * np.ldexp(np.ones_like(bounded), first)) * np.ldexp(np.ones_like(bounded), q - first)
+    exponentials = torch.from_numpy(np.where(difference < -104, np.float32(0), result))
+    lanes = torch.zeros((flat.shape[0], 16), dtype=torch.float32)
+    for start in range(0, 2512, 16):
+        lanes = lanes + exponentials[:, start:start + 16]
+    lanes[:, :8] = lanes[:, :8] + exponentials[:, 2512:]
+    combined = lanes[:, :8] + lanes[:, 8:]
+    a = combined[:, 0] + combined[:, 4]
+    b = combined[:, 1] + combined[:, 5]
+    c = combined[:, 2] + combined[:, 6]
+    d = combined[:, 3] + combined[:, 7]
+    total = (a + c) + (b + d)
+    inverse = torch.ones_like(total) / total
+    return (exponentials * inverse[:, None]).reshape_as(values)
+
+
+class VisionSoftmax16Diagnostic(TorchDispatchMode):
+    """Opt-in CPU diagnostic; scopes one replacement without editing FX/global state."""
+    def __init__(self):
+        super().__init__()
+        self.replacements = 0
+
+    def __torch_dispatch__(self, func, types, args=(), kwargs=None):
+        kwargs = kwargs or {}
+        if func == torch.ops.aten._softmax.default:
+            values = args[0] if args else kwargs['self']
+            axis = args[1] if len(args) > 1 else kwargs['dim']
+            half_to_float = args[2] if len(args) > 2 else kwargs.get('half_to_float', False)
+            if axis not in (-1, values.ndim - 1) or half_to_float:
+                raise ValueError('Diagnostic softmax only qualifies the original FP32 last-axis path')
+            result = ordered_vision_softmax16(values)
+            self.replacements += 1
+            return result
+        return func(*args, **kwargs)
+
+
+def probe_saved_static_matmuls(program, destination, node_names, *, rows=2520, prefix_rows=16, seed=41015):
+    """Probe original weight/layout and full native GEMM shape, saving row prefixes.
+
+    Uses deterministic synthetic operands, not encoder activations or a new golden.
+    This does not call the saved program's forward or qualify full GPU inference.
+    """
+    destination=Path(destination)
+    if destination.exists():raise FileExistsError('Matmul evidence destination already exists')
+    if (not isinstance(program,torch.fx.GraphModule) or not node_names or len(set(node_names))!=len(node_names)
+            or type(rows) is not int or rows<1 or type(prefix_rows) is not int or not 1<=prefix_rows<=rows
+            or type(seed) is not int or seed<0):
+        raise ValueError('Unique static matmul nodes and positive full/prefix row counts are required')
+    nodes={node.name:node for node in program.graph.nodes};selected=[]
+    for name in node_names:
+        if not isinstance(name,str) or re.fullmatch(r'[A-Za-z_][A-Za-z_0-9]*',name) is None or name not in nodes:
+            raise ValueError('Matmul node is missing or invalid')
+        node=nodes[name]
+        if node.op!='call_function' or node.target!=torch.ops.aten.mm.default or len(node.args)!=2 or not isinstance(node.args[1],torch.fx.Node):
+            raise ValueError('Expected a saved two-dimensional static-weight mm node')
+        pending=[node.args[1]];needed=set()
+        while pending:
+            ancestor=pending.pop()
+            if ancestor in needed:continue
+            needed.add(ancestor);pending.extend(ancestor.all_input_nodes)
+        if any(ancestor.op=='placeholder' for ancestor in needed):raise ValueError('Matmul weight must not depend on model input')
+        selected.append((name,node.args[1].name))
+    inputs=(None,)*sum(node.op=='placeholder' for node in program.graph.nodes)
+    weights=[run_saved_graph_prefix(program,inputs,name) for _,name in selected]
+    if any(weight.ndim!=2 or not weight.numel() or min(weight.shape)<1 for weight in weights):raise ValueError('Expected finite FP32 matrix weights')
+    destination.mkdir(parents=True)
+    def save(name,tensor):
+        raw=tensor.contiguous().numpy().tobytes();path=destination/name;path.write_bytes(raw)
+        return dict(file=name,sha256=hashlib.sha256(raw).hexdigest(),shape=list(tensor.shape),bytes=len(raw))
+    matrices=[]
+    with torch.no_grad():
+        for index,((name,weight_node),weight) in enumerate(zip(selected,weights,strict=True)):
+            generator=torch.Generator().manual_seed(seed+index)
+            values=torch.randn((rows,weight.shape[0]),generator=generator,dtype=torch.float32)
+            actual=torch.mm(values,weight)
+            if not torch.isfinite(actual).all():raise ValueError('Native matmul probe produced nonfinite values')
+            matrices.append(dict(node=name,weight_node=weight_node,seed=seed+index,
+                native_input_shape=list(values.shape),native_output_shape=list(actual.shape),saved_input_shape=[prefix_rows,weight.shape[0]],
+                weight_stride=list(weight.stride()),input_stride=list(values.stride()),
+                input=save(name+'-input-fp32.bin',values[:prefix_rows]),weights=save(name+'-weights-fp32.bin',weight),
+                expected=save(name+'-expected-fp32.bin',actual[:prefix_rows])))
+    report=dict(scope='saved_static_matmul_full_native_shape_and_prefix_only',matrices=matrices,
+        runtime=dict(torch_version=torch.__version__,cpu_capability=torch.backends.cpu.get_cpu_capability(),threads=torch.get_num_threads()),
+        full_encoder_executed=False,learned_weights_changed=False,full_gpu_encoder_validated=False,end_to_end_validated=False)
+    (destination/'matmul-reference.json').write_text(json.dumps(report,indent=2,allow_nan=False)+'\n',encoding='utf-8')
+    return report
+
+
+def capture_saved_program_nodes(program, inputs, node_names, destination, expected, *, row_prefixes=None):
+    """Observe the existing saved graph without re-exporting or editing its ops."""
+    available = {node.name for node in program.graph.nodes if node.op == 'call_function'}
+    if (not node_names or len(set(node_names)) != len(node_names)
+            or any(not isinstance(name, str) or re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', name) is None
+                   or name not in available for name in node_names)):
+        raise ValueError('Capture requires unique existing operation node names')
+    row_prefixes = {} if row_prefixes is None else row_prefixes
+    if (not isinstance(row_prefixes, dict) or any(name not in node_names or type(count) is not int or count < 1
+                                               for name, count in row_prefixes.items())):
+        raise ValueError('Capture row prefixes need selected nodes and positive integer counts')
+    observed, source_shapes = {}, {}
+
+    class Observer(torch.fx.Interpreter):
+        def run_node(self, node):
+            value = super().run_node(node)
+            if node.name in node_names:
+                if (not isinstance(value, torch.Tensor) or value.dtype != torch.float32 or value.device.type != 'cpu'):
+                    raise ValueError('Captured node must be a finite CPU FP32 tensor')
+                capture = value.detach()
+                if node.name in row_prefixes:
+                    if value.ndim < 2 or row_prefixes[node.name] > value.shape[-2]:
+                        raise ValueError('Capture row prefix exceeds the source tensor rows')
+                    source_shapes[node.name] = list(value.shape)
+                    capture = capture.narrow(-2, 0, row_prefixes[node.name])
+                if not torch.isfinite(capture).all():
+                    raise ValueError('Captured node must be a finite CPU FP32 tensor')
+                observed[node.name] = capture.clone()
+            return value
+
+    with torch.no_grad():
+        normal = program(*inputs)
+        actual = Observer(program).run(*inputs)
+    # Interpreter returns the FX graph's tuple, before ExportedProgram's output
+    # pytree hook. This diagnostic accepts one final tensor only.
+    if isinstance(actual, tuple) and len(actual) == 1:
+        actual = actual[0]
+    if (not isinstance(normal, torch.Tensor) or not isinstance(actual, torch.Tensor)
+            or normal.dtype != torch.float32 or actual.dtype != torch.float32
+            or normal.shape != actual.shape or not torch.isfinite(actual).all()
+            or not torch.equal(normal.contiguous().view(torch.int32), actual.contiguous().view(torch.int32))):
+        raise ValueError('Observed final output differs from normal saved-program bits')
+    destination = Path(destination)
+    destination.mkdir(parents=True, exist_ok=True)
+    rows = []
+    for name in node_names:
+        value = observed[name]
+        path = destination / f'{name}-fp32.bin'
+        raw = value.numpy().astype('<f4').tobytes()
+        path.write_bytes(raw)
+        rows.append(dict(node=name, file=path.name, shape=list(value.shape), bytes=len(raw),
+                         sha256=hashlib.sha256(raw).hexdigest()))
+        if name in row_prefixes:
+            rows[-1].update(source_shape=source_shapes[name], prefix_rows=row_prefixes[name])
+    return dict(scope='saved_program_node_observation_only', nodes=rows,
+                observed_final_matches_normal_bits=True,
+                original_golden_metrics=feature_error_metrics(actual, expected),
+                full_encoder_validated=False, end_to_end_validated=False)
+
+
+def replay_saved_reference_context(directory, modality, *, source_commit, revision, case_id,
+                                   capture_nodes=None, capture_destination=None, capture_row_prefixes=None):
+    """Audit the saved graph and selected fixture; this is not full acceptance."""
+    if modality not in ("audio", "image") or any(re.fullmatch(r"[0-9a-f]{40}", value) is None for value in (source_commit, revision)):
+        raise ValueError("Replay needs a fixed modality, source and revision")
+    root = Path(directory).resolve()
+    prefix = "audio-encoder" if modality == "audio" else "vision"
+    audit = json.loads((root / (prefix + "-validation.json")).read_text(encoding="utf-8"))
+    if (audit.get("stage") != ("audio_encoder_projector_only" if modality == "audio" else "vision_encoder_projector_only")
+            or not (audit.get("native_reference_complete") if modality == "audio" else audit.get("success"))):
+        raise ValueError("Replay requires a completed native reference")
+    def audited(name):
+        if not isinstance(name, str) or name not in audit["files"]:
+            raise ValueError("Replay file is absent from the audit")
+        path = (root / name).resolve()
+        entry = audit["files"][name]
+        if not path.is_relative_to(root) or not path.is_file() or path.stat().st_size != entry["bytes"]:
+            raise ValueError("Replay file path/size mismatch")
+        with path.open("rb") as stream:
+            digest = hashlib.file_digest(stream, "sha256").hexdigest()
+        if digest != entry["sha256"]:
+            raise ValueError("Replay file hash mismatch")
+        return path
+    reference = json.loads(audited(prefix + "-reference.json").read_text(encoding="utf-8"))
+    metadata = reference["metadata"]
+    if metadata != audit["metadata"] or metadata.get("source_commit") != source_commit or metadata.get("model_revision") != revision:
+        raise ValueError("Replay reference provenance mismatch")
+    matches = [row for row in reference["cases"] if row["id"] == case_id]
+    if len(matches) != 1:
+        raise ValueError("Replay case is missing or ambiguous")
+    row = matches[0]; spec = reference["profiles"][row["profile"]]
+    input_name = row["input_features"] if modality == "audio" else row["pixels"]
+    input_path = audited(input_name)
+    graph_path = audited(spec.get("native_graph", spec.get("graph")))
+    shape = spec["feature_shape"] if modality == "audio" else spec["pixel_shape"]
+    raw = np.fromfile(input_path, dtype="<f4")
+    if not shape or any(type(value) is not int or value <= 0 for value in shape) or raw.size != int(np.prod(shape)) or not np.isfinite(raw).all():
+        raise ValueError("Replay input shape/finite mismatch")
+    values = torch.from_numpy(raw.reshape(shape).copy())
+    expected = torch.tensor(row["features"], dtype=torch.float32)
+    if not expected.numel() or not torch.isfinite(expected).all():
+        raise ValueError("Replay expected features must be finite and nonempty")
+    before_load_threads = torch.get_num_threads()
+    program = torch.export.load(graph_path).module()
+    report = dict(scope="audited_saved_reference_context_probe_only", modality=modality, case=case_id,
+                reference_source=source_commit, model_revision=revision, input_sha256=audit["files"][input_name]["sha256"],
+                graph_sha256=audit["files"][graph_path.relative_to(root).as_posix()]["sha256"],
+                threads_before_program_load=before_load_threads, threads_after_program_load=torch.get_num_threads(),
+                runtime=dict(torch_version=torch.__version__, cpu_capability=torch.backends.cpu.get_cpu_capability(),
+                             torch_interop_threads=torch.get_num_interop_threads(),
+                             env={name: os.environ.get(name) for name in ("ATEN_CPU_CAPABILITY", "MKL_CBWR", "MKL_ENABLE_INSTRUCTIONS", "DNNL_MAX_CPU_ISA")}),
+                thread_contexts=probe_cpu_threads(program, (values,), expected),
+                model_weights_downloaded=False, expected_unchanged=True, full_encoder_validated=False, end_to_end_validated=False)
+    if capture_nodes is not None:
+        if capture_destination is None:
+            raise ValueError('Node capture destination is required')
+        report['saved_node_capture'] = capture_saved_program_nodes(
+            program, (values,), capture_nodes, capture_destination, expected, row_prefixes=capture_row_prefixes)
+    return report

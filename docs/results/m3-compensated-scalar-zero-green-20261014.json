@@ -1,0 +1,12 @@
+{
+  "passed": 26,
+  "skipped": 0,
+  "xml_sha256": "d1ff780eaeabf51553d5f46d63f3fcca671811d70be1f9f5f82129b2b9ef6546",
+  "exit_code": 0,
+  "scope": "broadcast_scalar_projection_zero_tdd_green",
+  "failed": 0,
+  "sentis": "2.6.1",
+  "unity": "6000.3.16f1",
+  "source": "67ac6424c881e7868cfb2c55d0fefaa5e74d37b4",
+  "full_encoder_validated": false
+}

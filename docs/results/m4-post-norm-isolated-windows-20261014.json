@@ -1,0 +1,188 @@
+{
+  "scope": "isolated_post_norm_only_with_exact_native_linear2_input",
+  "harness_source": "cb55875526de1e9a24d5a83ec0b8ac38cf373fb4",
+  "harness_file_sha256": "c050856d754b0c93ae31d4bf4532eabc533d4d0a3a9d8a76948c902544c27cea",
+  "mapper_red": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T20:51:00.3114148Z",
+    "FailedCount": 5,
+    "FailedTests": [
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioNormIsolationTests.BorrowedSliceContainsOnlyNormAndReferencedConstantsPreservingSourceBytes",
+        "Message": "  Coefficient-bound norm isolation is missing.\r\n  Expected: not null\r\n  But was:  null\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioNormIsolationTests.cs",
+        "Line": 19
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioNormIsolationTests.EmptyInputShapeCannotProduceASlice",
+        "Message": "  Expected: <System.ArgumentException>\r\n  But was:  <NUnit.Framework.AssertionException:   Coefficient-bound norm isolation is missing.\r\n  Expected: not null\r\n  But was:  null\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Tests.AudioNormIsolationTests.Create (Unity.InferenceEngine.Model source, Newtonsoft.Json.Linq.JArray anchors, Unity.InferenceEngine.TensorShape shape) [0x00054] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioNormIsolationTests.cs:19 \r\n  at EmbeddingGemma.Tests.AudioNormIsolationTests+<>c.<EmptyInputShapeCannotProduceASlice>b__6_0 () [0x00000] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioNormIsolationTests.cs:68 \r\n  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x0002f] in <f577cd9686154d6ab10efd7e65e64366>:0 >\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioNormIsolationTests.cs",
+        "Line": 68
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioNormIsolationTests.ExactInputNormNumericsAreIndependentOfTheOriginalUpstream(CPU)",
+        "Message": "  Coefficient-bound norm isolation is missing.\r\n  Expected: not null\r\n  But was:  null\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioNormIsolationTests.cs",
+        "Line": 19
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioNormIsolationTests.ExactInputNormNumericsAreIndependentOfTheOriginalUpstream(GPUCompute)",
+        "Message": "  Coefficient-bound norm isolation is missing.\r\n  Expected: not null\r\n  But was:  null\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioNormIsolationTests.cs",
+        "Line": 19
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioNormIsolationTests.MissingNormIdentityCannotProduceASlice",
+        "Message": "  Expected: <System.InvalidOperationException>\r\n  But was:  <NUnit.Framework.AssertionException:   Coefficient-bound norm isolation is missing.\r\n  Expected: not null\r\n  But was:  null\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Tests.AudioNormIsolationTests.Create (Unity.InferenceEngine.Model source, Newtonsoft.Json.Linq.JArray anchors, Unity.InferenceEngine.TensorShape shape) [0x00054] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioNormIsolationTests.cs:19 \r\n  at EmbeddingGemma.Tests.AudioNormIsolationTests+<>c__DisplayClass5_0.<MissingNormIdentityCannotProduceASlice>b__0 () [0x00000] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioNormIsolationTests.cs:65 \r\n  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x0002f] in <f577cd9686154d6ab10efd7e65e64366>:0 >\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioNormIsolationTests.cs",
+        "Line": 65
+      }
+    ],
+    "HasFailures": true,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Failed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 0,
+    "SkippedCount": 0,
+    "Status": "Failed",
+    "Success": false,
+    "TestCount": 5,
+    "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\.uloop\\outputs\\TestResults\\20261013_205100_3149321_8f2cc483cc1f44d58de37c552a5b3c24.xml"
+  },
+  "intermediate_input_index_failure": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T20:52:35.5014469Z",
+    "FailedCount": 2,
+    "FailedTests": [
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioNormIsolationTests.ExactInputNormNumericsAreIndependentOfTheOriginalUpstream(CPU)",
+        "Message": "System.Collections.Generic.KeyNotFoundException : The given key '3' was not present in the dictionary.",
+        "File": "<41d29b352f6a475ab1bf7c6628b82790>",
+        "Line": 0
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioNormIsolationTests.ExactInputNormNumericsAreIndependentOfTheOriginalUpstream(GPUCompute)",
+        "Message": "System.Collections.Generic.KeyNotFoundException : The given key '3' was not present in the dictionary.",
+        "File": "<41d29b352f6a475ab1bf7c6628b82790>",
+        "Line": 0
+      }
+    ],
+    "HasFailures": true,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Failed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 3,
+    "SkippedCount": 0,
+    "Status": "Failed",
+    "Success": false,
+    "TestCount": 5,
+    "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\.uloop\\outputs\\TestResults\\20261013_205235_5049450_53e1a4e8756e452e92991b5c29a536b4.xml"
+  },
+  "mapper_green": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T20:55:24.048361Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 5,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 5,
+    "XmlPath": null
+  },
+  "actual_cli": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T20:57:49.0408089Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 2,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 2,
+    "XmlPath": null
+  },
+  "cpu": {
+    "success": true,
+    "isolated_norm_validated": true,
+    "scope": "saved_post_norm_with_frozen_exact_native_linear2_input",
+    "runtime_source": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+    "runtime_overlay": false,
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "native_replay_source": "6ac2c92191a62ada4830adeee5235fb3c4b90f15",
+    "requested_backend": "CPU",
+    "unity_version": "6000.3.21f1",
+    "graphics_device": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "started_utc": "2026-10-13T20:57:43.1355407Z",
+    "original_input_index": 88,
+    "isolated_input_index": 0,
+    "output_index": 103,
+    "layer_count": 6,
+    "constant_count": 2,
+    "constant_payload_bytes": 4100,
+    "source_layer_count_unchanged": true,
+    "native_input_unchanged_by_original_clip": true,
+    "calculation_fallback_count": 0,
+    "actual_backend": "CPU",
+    "metrics": {
+      "elementwise_passed": true,
+      "mismatches": 0,
+      "maximum_absolute_error": 7.62939453125E-06,
+      "maximum_tolerance_ratio": 0.0028078731340021694
+    },
+    "norm_execution_completed": true,
+    "diagnostic_restore_multiplier": 2,
+    "completed_utc": "2026-10-13T20:57:45.9275941Z"
+  },
+  "gpu": {
+    "success": true,
+    "isolated_norm_validated": true,
+    "scope": "saved_post_norm_with_frozen_exact_native_linear2_input",
+    "runtime_source": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+    "runtime_overlay": false,
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "native_replay_source": "6ac2c92191a62ada4830adeee5235fb3c4b90f15",
+    "requested_backend": "GPUCompute",
+    "unity_version": "6000.3.21f1",
+    "graphics_device": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "started_utc": "2026-10-13T20:57:45.9381394Z",
+    "original_input_index": 88,
+    "isolated_input_index": 0,
+    "output_index": 103,
+    "layer_count": 6,
+    "constant_count": 2,
+    "constant_payload_bytes": 4100,
+    "source_layer_count_unchanged": true,
+    "native_input_unchanged_by_original_clip": true,
+    "calculation_fallback_count": 0,
+    "actual_backend": "GPUCompute",
+    "metrics": {
+      "elementwise_passed": true,
+      "mismatches": 0,
+      "maximum_absolute_error": 7.62939453125E-06,
+      "maximum_tolerance_ratio": 0.0028078731340021694
+    },
+    "norm_execution_completed": true,
+    "diagnostic_restore_multiplier": 2,
+    "completed_utc": "2026-10-13T20:57:48.9929358Z"
+  },
+  "original_full_pipeline_still_failed": true,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

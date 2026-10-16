@@ -1,0 +1,55 @@
+{
+  "scope": "small_audio_stage_diagnostic_contracts",
+  "source_base": "2fb5c83504f46680fd5be40265715ea5eb992eac",
+  "source_note": "Red used uncommitted development tests at the source base. Source hashes below describe final green only; tests were extended after the initial red.",
+  "real_model_validated": false,
+  "unity_validated": false,
+  "end_to_end_validated": false,
+  "python": "3.14",
+  "omp_threads": 4,
+  "mkl_threads": 4,
+  "final_new_tests": 14,
+  "final_existing_tests": 32,
+  "final_source_sha256": {
+    "tools/embeddinggemma_tools/export.py": "21211f86d1c816e3fdef3db011043d656ddc7bbd6a471adfbc0940afc4fbbb70",
+    "tools/embeddinggemma_tools/prepare.py": "1b0f7580ccb79998a17dabece8d9e374392679164fa9d3d1dca5e4738d6ec22d",
+    "tools/tests/test_audio_stage_diagnostics.py": "083b0ef2d6b5aea6d21f4a03fe5705732b78af71e67cb89f082f3e30ef816956"
+  },
+  "phases": [
+    {
+      "phase": "initial_red",
+      "skipped": 0,
+      "failed": 12,
+      "log_sha256": "5178ff4e684bd1f07849e97a147193c5954eb520b4e3b1f386bdcbc0ec481187",
+      "file": "audio-stages-red.txt",
+      "passed": 0
+    },
+    {
+      "passed": 44,
+      "seconds": 66.43,
+      "skipped": 0,
+      "phase": "initial_green",
+      "file": "audio-stages-green.txt",
+      "failed": 0,
+      "log_sha256": "d1f492e0a4be5135a75fd14203605f692979e1af7a27f6a9a3d3b69e1d447bbf"
+    },
+    {
+      "passed": 0,
+      "skipped": 0,
+      "phase": "persist_before_diagnosis_red",
+      "file": "audio-stages-persist-red.txt",
+      "failed": 1,
+      "log_sha256": "c7118779ea2893271ba9e9e17564aef9efd41b4a7040e2363a6e651cffbb842e",
+      "deselected": 13
+    },
+    {
+      "passed": 46,
+      "seconds": 103.46,
+      "skipped": 0,
+      "phase": "final_green",
+      "file": "audio-stages-final-green.txt",
+      "failed": 0,
+      "log_sha256": "069fc262963651ee3e9b7640cac75b7f70537f6ee9f07b5485ce60b70ded8411"
+    }
+  ]
+}

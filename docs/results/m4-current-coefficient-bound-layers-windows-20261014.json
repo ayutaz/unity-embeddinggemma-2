@@ -1,0 +1,487 @@
+{
+  "schema_version": 1,
+  "scope": "coefficient_bound_original_saved_model_silence_layers_only",
+  "runtime_source": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+  "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "harness_source": "9625613",
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "formal_release_created": false,
+  "tolerances_changed": false,
+  "original_model_reimported": false,
+  "stage_onnx_downloaded": false,
+  "metadata_scan": {
+    "model_bytes": 1224214325,
+    "read_bytes": 1852533,
+    "node_count": 5639,
+    "initializer_count": 586,
+    "source_binary_sha256_audited_by_scanner": false
+  },
+  "metadata_json_sha256": "8eda29b31a2e9032e9c3497ca7e9b421c9982b97b2aa95055c1f9d4674f2f5f7",
+  "anchors_json_sha256": "6b8c78a85653dcaffeabde166f35148d1d11f1e44798690fb15b2cc0ec423706",
+  "native_stage_selected_bytes": 13779130,
+  "native_stage_range_requests": 40,
+  "python_tdd": {
+    "scanner_assertion_red": 5,
+    "scanner_green": 5,
+    "cli_assertion_red": 2,
+    "cli_green_with_existing": 7,
+    "anchor_assertion_red": 4,
+    "anchor_green_with_existing": 11
+  },
+  "csharp_map_red": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T19:32:14.6804257Z",
+    "FailedCount": 4,
+    "FailedTests": [
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioCoefficientLayerMapTests.DuplicateStageNameCannotBeAccepted",
+        "Message": "  Expected: <System.InvalidOperationException>\r\n  But was:  <NUnit.Framework.AssertionException:   Coefficient-to-layer mapping is missing.\r\n  Expected: not null\r\n  But was:  null\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Tests.AudioCoefficientLayerMapTests.Resolve (Unity.InferenceEngine.Model model, Newtonsoft.Json.Linq.JArray anchors) [0x00054] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMapTests.cs:19 \r\n  at EmbeddingGemma.Tests.AudioCoefficientLayerMapTests+<>c__DisplayClass6_0.<DuplicateStageNameCannotBeAccepted>b__0 () [0x00000] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMapTests.cs:55 \r\n  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x0002f] in <f577cd9686154d6ab10efd7e65e64366>:0 >\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMapTests.cs",
+        "Line": 55
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioCoefficientLayerMapTests.ExactCoefficientIdentityFindsOneOutputWithoutMutatingModel",
+        "Message": "  Coefficient-to-layer mapping is missing.\r\n  Expected: not null\r\n  But was:  null\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMapTests.cs",
+        "Line": 19
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioCoefficientLayerMapTests.MissingCoefficientCannotProduceAMapping",
+        "Message": "  Expected: <System.InvalidOperationException>\r\n  But was:  <NUnit.Framework.AssertionException:   Coefficient-to-layer mapping is missing.\r\n  Expected: not null\r\n  But was:  null\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Tests.AudioCoefficientLayerMapTests.Resolve (Unity.InferenceEngine.Model model, Newtonsoft.Json.Linq.JArray anchors) [0x00054] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMapTests.cs:19 \r\n  at EmbeddingGemma.Tests.AudioCoefficientLayerMapTests+<>c__DisplayClass4_0.<MissingCoefficientCannotProduceAMapping>b__0 () [0x00000] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMapTests.cs:48 \r\n  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x0002f] in <f577cd9686154d6ab10efd7e65e64366>:0 >\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMapTests.cs",
+        "Line": 48
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioCoefficientLayerMapTests.SharedCoefficientWithTwoConsumersCannotChooseOneArbitrarily",
+        "Message": "  Expected: <System.InvalidOperationException>\r\n  But was:  <NUnit.Framework.AssertionException:   Coefficient-to-layer mapping is missing.\r\n  Expected: not null\r\n  But was:  null\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Tests.AudioCoefficientLayerMapTests.Resolve (Unity.InferenceEngine.Model model, Newtonsoft.Json.Linq.JArray anchors) [0x00054] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMapTests.cs:19 \r\n  at EmbeddingGemma.Tests.AudioCoefficientLayerMapTests+<>c.<SharedCoefficientWithTwoConsumersCannotChooseOneArbitrarily>b__5_0 () [0x00000] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMapTests.cs:51 \r\n  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x0002f] in <f577cd9686154d6ab10efd7e65e64366>:0 >\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMapTests.cs",
+        "Line": 51
+      }
+    ],
+    "HasFailures": true,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Failed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 0,
+    "SkippedCount": 0,
+    "Status": "Failed",
+    "Success": false,
+    "TestCount": 4,
+    "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\.uloop\\outputs\\TestResults\\20261013_193214_6839511_d5cf9c055535425aad991ca45bbbc0d0.xml"
+  },
+  "csharp_map_green": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T19:33:30.868182Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 4,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 4,
+    "XmlPath": null
+  },
+  "selective_observer_red": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T19:35:02.2234426Z",
+    "FailedCount": 2,
+    "FailedTests": [
+      {
+        "FullName": "EmbeddingGemma.Tests.WorkerObservationIndexTests.OnlyRequestedTensorIsCapturedAndFinalBitsStayUnchanged(CPU)",
+        "Message": "  Selective layer observation is missing.\r\n  Expected: not null\r\n  But was:  null\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\WorkerObservationIndexTests.cs",
+        "Line": 16
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.WorkerObservationIndexTests.OnlyRequestedTensorIsCapturedAndFinalBitsStayUnchanged(GPUCompute)",
+        "Message": "  Selective layer observation is missing.\r\n  Expected: not null\r\n  But was:  null\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\WorkerObservationIndexTests.cs",
+        "Line": 16
+      }
+    ],
+    "HasFailures": true,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Failed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 0,
+    "SkippedCount": 0,
+    "Status": "Failed",
+    "Success": false,
+    "TestCount": 2,
+    "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\.uloop\\outputs\\TestResults\\20261013_193502_2269823_f9a9f97e8ea044a49f0857c8eabf99d9.xml"
+  },
+  "selective_observer_green": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T19:35:40.8399209Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 6,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 6,
+    "XmlPath": null
+  },
+  "real_nunit": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T19:38:10.3021679Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 2,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 2,
+    "XmlPath": null
+  },
+  "real_cli_sha256": "2a9ce105bc7dc9ababec824d9abf6c7e7ebb372dea4c1fa70400a03264524c0c",
+  "conditions": [
+    {
+      "success": true,
+      "scope": "silence_saved_fp32_norm_outputs_to_native_layer_references",
+      "runtime_source": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+      "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+      "requested_backend": "CPU",
+      "runtime_overlay": false,
+      "stages": [
+        {
+          "elementwise_passed": false,
+          "mismatches": 9,
+          "maximum_absolute_error": 0.0001373291015625,
+          "maximum_tolerance_ratio": 1.3983720504092492,
+          "stage": "layer_0",
+          "layer_index": 151,
+          "tensor_index": 407,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "1523738acdf79e3b34e42c2dc4c7145dd1b9c0db1dd3f77120d7ca37b7c186e9"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 3,
+          "maximum_absolute_error": 0.0001068115234375,
+          "maximum_tolerance_ratio": 1.0850077486108007,
+          "stage": "layer_1",
+          "layer_index": 287,
+          "tensor_index": 765,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "3551addcc0a4e8dc1c5160c8931ec31fa74eade9b442b8e8bc19e31c159f3ecc"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 4,
+          "maximum_absolute_error": 7.62939453125E-05,
+          "maximum_tolerance_ratio": 1.5207794409554154,
+          "stage": "layer_2",
+          "layer_index": 423,
+          "tensor_index": 1123,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "aa2fbead0fecbd58e5742c392d4c1fd75e8faf5e6f6127becc15fc8e8bd1bd9d"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 3,
+          "maximum_absolute_error": 0.00011444091796875,
+          "maximum_tolerance_ratio": 1.4306803799692895,
+          "stage": "layer_3",
+          "layer_index": 559,
+          "tensor_index": 1481,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "c2722b2bf82c82d4f4185d8aad8682fc2e4667d3e307a2b0977a3f6c2b9683f3"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 239,
+          "maximum_absolute_error": 0.0001373291015625,
+          "maximum_tolerance_ratio": 2.00591046455151,
+          "stage": "layer_4",
+          "layer_index": 695,
+          "tensor_index": 1839,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "4fa4dc2321d873dca8933b31cf303c2ef861237b95cc4e6c3ba806c7e2204cac"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 46,
+          "maximum_absolute_error": 0.0001068115234375,
+          "maximum_tolerance_ratio": 2.524073467823154,
+          "stage": "layer_5",
+          "layer_index": 831,
+          "tensor_index": 2197,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "86f86b14b203c016e62a32374bca51ee49dce859393ceaeff8aa49e6690977a8"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 242,
+          "maximum_absolute_error": 9.324401617050171E-05,
+          "maximum_tolerance_ratio": 5.879088279351425,
+          "stage": "layer_6",
+          "layer_index": 967,
+          "tensor_index": 2555,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "52b96d19d71ba2283db6645e8f2727a89080e5118ef66b399e85f2a9ac1d3d6b"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 8,
+          "maximum_absolute_error": 0.00012820959091186523,
+          "maximum_tolerance_ratio": 1.7942172904312126,
+          "stage": "layer_7",
+          "layer_index": 1103,
+          "tensor_index": 2913,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "8e39d41d2db7e77038ee435d648db5ef12a38112721da33f0d1bc3f61084ebe6"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 232,
+          "maximum_absolute_error": 0.0001373291015625,
+          "maximum_tolerance_ratio": 3.2352114697450034,
+          "stage": "layer_8",
+          "layer_index": 1239,
+          "tensor_index": 3271,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "5edb38300e28de5ddf2a2cc097b3fa6fa2657c3c74665404e91705b0844efc35"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 90,
+          "maximum_absolute_error": 0.00014750659465789795,
+          "maximum_tolerance_ratio": 10.23647625142163,
+          "stage": "layer_9",
+          "layer_index": 1375,
+          "tensor_index": 3629,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "350b5a43e1fabf9bc12bb64063e6de5a85a35874c1501d4205c1d445298ac3ea"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 212,
+          "maximum_absolute_error": 0.000274658203125,
+          "maximum_tolerance_ratio": 4.950087435640801,
+          "stage": "layer_10",
+          "layer_index": 1511,
+          "tensor_index": 3987,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "0a0eae3abc75c0c3dbf75c0a6d9c1062b313b93a35f7681cc16c52a7cc7fcda3"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 2324,
+          "maximum_absolute_error": 0.00116729736328125,
+          "maximum_tolerance_ratio": 27.424424360016037,
+          "stage": "layer_11",
+          "layer_index": 1647,
+          "tensor_index": 4345,
+          "actual_backend": "CPU",
+          "coefficient_sha256": "4c6521e8baee03ae3f28de21ccc95fd372c89ef5f8390e9f77a52952bf7d5ae8"
+        }
+      ],
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "started_utc": "2026-10-13T19:37:53.4389013Z",
+      "coefficient_bound_outputs": {
+        "layer_0": 407,
+        "layer_1": 765,
+        "layer_2": 1123,
+        "layer_3": 1481,
+        "layer_4": 1839,
+        "layer_5": 2197,
+        "layer_6": 2555,
+        "layer_7": 2913,
+        "layer_8": 3271,
+        "layer_9": 3629,
+        "layer_10": 3987,
+        "layer_11": 4345
+      },
+      "normal_final_matches_observed_bits": true,
+      "diagnostic_readback_count": 14,
+      "first_failed_stage": "layer_0",
+      "completed_utc": "2026-10-13T19:38:02.9170226Z"
+    },
+    {
+      "success": true,
+      "scope": "silence_saved_fp32_norm_outputs_to_native_layer_references",
+      "runtime_source": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+      "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+      "requested_backend": "GPUCompute",
+      "runtime_overlay": false,
+      "stages": [
+        {
+          "elementwise_passed": false,
+          "mismatches": 8,
+          "maximum_absolute_error": 9.1552734375E-05,
+          "maximum_tolerance_ratio": 2.149710387100482,
+          "stage": "layer_0",
+          "layer_index": 151,
+          "tensor_index": 407,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "1523738acdf79e3b34e42c2dc4c7145dd1b9c0db1dd3f77120d7ca37b7c186e9"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 2,
+          "maximum_absolute_error": 7.62939453125E-05,
+          "maximum_tolerance_ratio": 1.0940146889128552,
+          "stage": "layer_1",
+          "layer_index": 287,
+          "tensor_index": 765,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "3551addcc0a4e8dc1c5160c8931ec31fa74eade9b442b8e8bc19e31c159f3ecc"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 1,
+          "maximum_absolute_error": 5.340576171875E-05,
+          "maximum_tolerance_ratio": 1.2325532719689534,
+          "stage": "layer_2",
+          "layer_index": 423,
+          "tensor_index": 1123,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "aa2fbead0fecbd58e5742c392d4c1fd75e8faf5e6f6127becc15fc8e8bd1bd9d"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 1,
+          "maximum_absolute_error": 7.62939453125E-05,
+          "maximum_tolerance_ratio": 1.3060903122538199,
+          "stage": "layer_3",
+          "layer_index": 559,
+          "tensor_index": 1481,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "c2722b2bf82c82d4f4185d8aad8682fc2e4667d3e307a2b0977a3f6c2b9683f3"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 9,
+          "maximum_absolute_error": 9.1552734375E-05,
+          "maximum_tolerance_ratio": 1.5564379110832134,
+          "stage": "layer_4",
+          "layer_index": 695,
+          "tensor_index": 1839,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "4fa4dc2321d873dca8933b31cf303c2ef861237b95cc4e6c3ba806c7e2204cac"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 25,
+          "maximum_absolute_error": 9.1552734375E-05,
+          "maximum_tolerance_ratio": 2.384417290444924,
+          "stage": "layer_5",
+          "layer_index": 831,
+          "tensor_index": 2197,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "86f86b14b203c016e62a32374bca51ee49dce859393ceaeff8aa49e6690977a8"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 239,
+          "maximum_absolute_error": 8.787959814071655E-05,
+          "maximum_tolerance_ratio": 5.540858669992014,
+          "stage": "layer_6",
+          "layer_index": 967,
+          "tensor_index": 2555,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "52b96d19d71ba2283db6645e8f2727a89080e5118ef66b399e85f2a9ac1d3d6b"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 5,
+          "maximum_absolute_error": 0.00012034177780151367,
+          "maximum_tolerance_ratio": 1.6186822906360328,
+          "stage": "layer_7",
+          "layer_index": 1103,
+          "tensor_index": 2913,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "8e39d41d2db7e77038ee435d648db5ef12a38112721da33f0d1bc3f61084ebe6"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 43,
+          "maximum_absolute_error": 0.000125199556350708,
+          "maximum_tolerance_ratio": 3.0182374826557314,
+          "stage": "layer_8",
+          "layer_index": 1239,
+          "tensor_index": 3271,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "5edb38300e28de5ddf2a2cc097b3fa6fa2657c3c74665404e91705b0844efc35"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 52,
+          "maximum_absolute_error": 0.00013822317123413086,
+          "maximum_tolerance_ratio": 9.592236964156687,
+          "stage": "layer_9",
+          "layer_index": 1375,
+          "tensor_index": 3629,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "350b5a43e1fabf9bc12bb64063e6de5a85a35874c1501d4205c1d445298ac3ea"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 261,
+          "maximum_absolute_error": 0.00020241737365722656,
+          "maximum_tolerance_ratio": 3.35212473358569,
+          "stage": "layer_10",
+          "layer_index": 1511,
+          "tensor_index": 3987,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "0a0eae3abc75c0c3dbf75c0a6d9c1062b313b93a35f7681cc16c52a7cc7fcda3"
+        },
+        {
+          "elementwise_passed": false,
+          "mismatches": 1886,
+          "maximum_absolute_error": 0.0010690689086914062,
+          "maximum_tolerance_ratio": 37.341695128726094,
+          "stage": "layer_11",
+          "layer_index": 1647,
+          "tensor_index": 4345,
+          "actual_backend": "GPUCompute",
+          "coefficient_sha256": "4c6521e8baee03ae3f28de21ccc95fd372c89ef5f8390e9f77a52952bf7d5ae8"
+        }
+      ],
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "started_utc": "2026-10-13T19:38:02.9292843Z",
+      "coefficient_bound_outputs": {
+        "layer_0": 407,
+        "layer_1": 765,
+        "layer_2": 1123,
+        "layer_3": 1481,
+        "layer_4": 1839,
+        "layer_5": 2197,
+        "layer_6": 2555,
+        "layer_7": 2913,
+        "layer_8": 3271,
+        "layer_9": 3629,
+        "layer_10": 3987,
+        "layer_11": 4345
+      },
+      "normal_final_matches_observed_bits": true,
+      "diagnostic_readback_count": 14,
+      "first_failed_stage": "layer_0",
+      "completed_utc": "2026-10-13T19:38:10.2373171Z"
+    }
+  ],
+  "missing": [
+    "Inside layer 0 native reference and operator localization",
+    "Original full encoder numeric correction",
+    "Other signals layer-wise diagnostics",
+    "Image/audio samples, platform gates and distribution preparation"
+  ]
+}

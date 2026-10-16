@@ -1,0 +1,15 @@
+{
+  "scope": "full_audio_encoder_candidate_rejected_before_inference",
+  "source": "cbcd70b31849240d6c2b16958b021b820dde0166",
+  "reference_audited": true,
+  "model_and_inputs_reused": true,
+  "numerical_cases_executed": 0,
+  "passed": 0,
+  "failed": 2,
+  "skipped": 0,
+  "exit_code": 2,
+  "reason": "Candidate requires audited FP32 matrix weights",
+  "report_sha256": "1f73a9c186f26e57b50d5adfc67d8f8d0c149a75f423460e2464a2e2c18c9a05",
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

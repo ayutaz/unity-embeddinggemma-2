@@ -1,0 +1,9 @@
+{
+  "scope": "independent_multimodal_role_tokenizer_mask_and_vector_contracts",
+  "tiny_models_only": true,
+  "command": "uv run pytest tests/test_multimodal_reference_roles.py -q --tb=short",
+  "failed": 0,
+  "source": "8ef7e849ccdc08b9d24ba29cc4bf88b87bb308b7",
+  "real_role_reference_validated": false,
+  "passed": 12
+}

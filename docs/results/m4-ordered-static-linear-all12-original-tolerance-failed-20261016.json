@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "original_frozen_subsample_through_all12layers_silence_only",
+  "source": "9d40b11ea8b90d712e4b38e70a3da690acc2c330",
+  "actions_run": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38798918931",
+  "artifact_id": 12004845769,
+  "cpu_model": "AMD EPYC 7763",
+  "native_segment_vs_original": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 0.0,
+    "maximum_tolerance_ratio": 0.0,
+    "worst_index": 0,
+    "worst_actual": -3.593391180038452,
+    "worst_expected": -3.593391180038452,
+    "exact_difference_count": 0
+  },
+  "report_sha256": "a3463550303d91c0cb753edc1b101c5c216e52c0406759f9f6f652ae6011f050",
+  "independently_verified_elements": 143360,
+  "cases": [
+    {
+      "variant": "native",
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 414,
+        "maximum_absolute_error": 0.00015044212341308594,
+        "maximum_tolerance_ratio": 5.960612985263495,
+        "worst_index": 13305,
+        "worst_actual": 0.04996059834957123,
+        "worst_expected": 0.04987126588821411,
+        "exact_difference_count": 140766
+      },
+      "graph_sha256": "18c9ffec478dd645c614d75cda846db03347418f9c536f68795101a831a32ab0",
+      "capture_sha256": "2c4874bbf050d49ab000a7945a19b0e93f7a02feac2b651b3cfd3307ca197f4b",
+      "linear_replacements": 0
+    },
+    {
+      "variant": "ordered_static_linear",
+      "metrics": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 550,
+        "maximum_absolute_error": 0.0002541542053222656,
+        "maximum_tolerance_ratio": 12.093938647418678,
+        "worst_index": 23176,
+        "worst_actual": 0.007138475775718689,
+        "worst_expected": 0.007268205285072327,
+        "exact_difference_count": 139816
+      },
+      "graph_sha256": "5cf0bc5bc118166bc6d49456fc2381f744cb58752214dff6dca91e9ec7ec583f",
+      "capture_sha256": "4ce82298c81acb644377dcb18fda48bb266431295beeaf455dcb45af58801a6d",
+      "linear_replacements": 110
+    }
+  ],
+  "numerical_pass": false,
+  "candidate_adopted": false,
+  "original_weights_unchanged": true,
+  "original_reference_unchanged": true,
+  "tolerances": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "interpretation": "Same-host native segment is bit-exact to the original final reference. Standard ONNX414 failures; static-linear-only550 failures. Tail-only success does not generalize to full12layers; reject full-body adoption.",
+  "whole_original_input_validated": false,
+  "gpu_validated": false,
+  "required_ci_passed": false
+}

@@ -1,0 +1,29 @@
+{
+  "date": "2026-10-13",
+  "scope": "tiny_audio_runtime_stage_context_and_cli_only",
+  "implementation_commit": "dec7a54364d530685670fe72d93d37e07dd203f1",
+  "reference_tdd": {
+    "intended_red": 6,
+    "failure": "Pinned native and original-ONNX stage reference producer is missing",
+    "green_passed": 6,
+    "red_log_sha256": "29214b77b27b2cf105aa9d4a8a503790a21d3c4c4767e4a01907be95e8a11b63",
+    "green_log_sha256": "a4d9729071475b398c4ccd6764e6a6ed6350b6ad2ae4138f15e626317cfa5e96"
+  },
+  "cli_workflow_tdd": {
+    "intended_red": 2,
+    "failure": "CLI command and opt-in workflow stage export are missing",
+    "green_passed": 2,
+    "red_log_sha256": "6af53c1cea4a5b9b4015590ea7056ece8e0e10db3a93c64f3d9e4c50c9b1e2d0",
+    "green_log_sha256": "4297059af1946eefe0966ca2050547af40616cabf6cd3a42844913e469739511"
+  },
+  "failed_source_regression": {
+    "passed": 1,
+    "original_onnx_failure_preserved": true,
+    "log_sha256": "a265e8f13b4f7c399bd84c0cc9cb04e28a91af327a9ee29c515753425006a066"
+  },
+  "real_weight_stage_context_executed": false,
+  "unity_stage_diagnostics_executed": false,
+  "full_encoder_validated": false,
+  "tolerances_changed": false,
+  "formal_release_created": false
+}

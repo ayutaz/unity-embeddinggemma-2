@@ -1,0 +1,8 @@
+{
+  "scope": "audio_norm_budget_tdd_and_compensated_projection_regression_green",
+  "full_encoder_validated": false,
+  "implementation_sha256": "051e654ce45ad80aa0ffce64658fb9d32df78483887cd9d93f25f3102020e963",
+  "failed": 0,
+  "command": "uv run pytest tests/test_audio_norm_propagation.py tests/test_compensated_projection.py -q",
+  "passed": 35
+}

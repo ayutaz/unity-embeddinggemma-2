@@ -1,0 +1,147 @@
+{
+  "scope": "original_saved_graph_cpu_observation_vs_previous_diagnostic_native",
+  "run_id": 38713178242,
+  "source": "d2663b56068d6cb4c49c6eae79d2cef58782211a",
+  "original_graph_sha256": "f9c5175a1d75289ce814a9651f496f9bdae5e873ac66199a5c3d03e0172c16cc",
+  "original_reference_unchanged": true,
+  "report_sha256": "cb3b46ae4cc6ec2d7aabb5e2e2abe756df9274ab864b824fc7363e955306885a",
+  "runtime": {
+    "torch_version": "2.14.1+cu130",
+    "cpu_capability": "AVX2",
+    "torch_interop_threads": 4,
+    "env": {
+      "ATEN_CPU_CAPABILITY": null,
+      "MKL_CBWR": null,
+      "DNNL_MAX_CPU_ISA": null
+    }
+  },
+  "observed_final_matches_normal_bits": true,
+  "stages": [
+    {
+      "node": "add_1",
+      "stage": "patch_embeddings",
+      "shape": [
+        1,
+        2520,
+        768
+      ],
+      "actual_sha256": "1e99fa140cb0084e624b5019d96ae424192eff77346ef2f7ffea892c1bea0607",
+      "diagnostic_native_sha256": "bc4c19c9aaf9688801c99ed073fdde22f0daf6b822dc2c9c4b7a3f7c9aded636",
+      "versus_diagnostic_native": {
+        "bit_differences": 1225584,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 1.71661376953125e-05,
+        "maximum_tolerance_ratio": 0.6770494286204339
+      }
+    },
+    {
+      "node": "cat",
+      "stage": "rotary_cos",
+      "shape": [
+        1,
+        2520,
+        64
+      ],
+      "actual_sha256": "8e7ad14c37f14fb5b11e70b08701181c67ad24f4a874385eee5dd63655b39b75",
+      "diagnostic_native_sha256": "8e7ad14c37f14fb5b11e70b08701181c67ad24f4a874385eee5dd63655b39b75",
+      "versus_diagnostic_native": {
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      }
+    },
+    {
+      "node": "cat_1",
+      "stage": "rotary_sin",
+      "shape": [
+        1,
+        2520,
+        64
+      ],
+      "actual_sha256": "1eeda3ae4a8b5bf7f09e29b6d6c763054d9b49ec6de551e09d54a080232a331e",
+      "diagnostic_native_sha256": "1eeda3ae4a8b5bf7f09e29b6d6c763054d9b49ec6de551e09d54a080232a331e",
+      "versus_diagnostic_native": {
+        "bit_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0,
+        "maximum_tolerance_ratio": 0.0
+      }
+    },
+    {
+      "node": "add_15",
+      "stage": "layer_0",
+      "shape": [
+        1,
+        2520,
+        768
+      ],
+      "actual_sha256": "882d35dfc1143dae64383174b4ac45017c48f5d886cca5b70c170670341c1956",
+      "diagnostic_native_sha256": "f9eaca61eb58d89445a623d8b8bfee5201b266cd822298439fb49f0528bcefdf",
+      "versus_diagnostic_native": {
+        "bit_differences": 1807344,
+        "mismatched_elements": 4,
+        "maximum_absolute_error": 3.0517578125e-05,
+        "maximum_tolerance_ratio": 1.8400731122383263
+      }
+    },
+    {
+      "node": "mul_372",
+      "stage": "vision_features",
+      "shape": [
+        256,
+        768
+      ],
+      "actual_sha256": "014ba4aac25a915f4a1bdeae4c8182d675adfa9f6e99dbff7c229957e1b7d7b1",
+      "diagnostic_native_sha256": "1b39605a6955bb0b485879247599e947c54bea42d2b32e3b5f7cfd35a912fb53",
+      "versus_diagnostic_native": {
+        "bit_differences": 194711,
+        "mismatched_elements": 6205,
+        "maximum_absolute_error": 0.107421875,
+        "maximum_tolerance_ratio": 1030.1171855013488
+      }
+    },
+    {
+      "node": "mul_373",
+      "stage": "pre_projection_norm",
+      "shape": [
+        256,
+        768
+      ],
+      "actual_sha256": "6712c45b6b69c54d07890f324f1999e960838a7c82121b678a33fbfa50553e1a",
+      "diagnostic_native_sha256": "712f2d40be13e6000280299873b1be1e89e95d005d3fe15890e9e989bb7eea8c",
+      "versus_diagnostic_native": {
+        "bit_differences": 194958,
+        "mismatched_elements": 846,
+        "maximum_absolute_error": 0.00019037723541259766,
+        "maximum_tolerance_ratio": 6.276922805328559
+      }
+    },
+    {
+      "node": "mm_113",
+      "stage": "projected_features",
+      "shape": [
+        256,
+        512
+      ],
+      "actual_sha256": "41c296d96565c9e608f8cb367cb4d5c7d6fd7c9dbf40e39605dfba858cff16f7",
+      "diagnostic_native_sha256": "0a89205766140756e176e9b3962122778c036fbcb556851b9f40ccf15d83fc0e",
+      "versus_diagnostic_native": {
+        "bit_differences": 129689,
+        "mismatched_elements": 553,
+        "maximum_absolute_error": 0.0001480579376220703,
+        "maximum_tolerance_ratio": 5.8433094972882555
+      },
+      "versus_original_golden": {
+        "bit_differences": 127207,
+        "mismatched_elements": 3,
+        "maximum_absolute_error": 2.962350845336914e-05,
+        "maximum_tolerance_ratio": 1.182998230669901
+      }
+    }
+  ],
+  "first_nonidentical_observed_stage": "patch_embeddings",
+  "first_outside_tolerance_observed_stage": "layer_0",
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

@@ -10,12 +10,15 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: model-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  pinned-audio:
+    uses: ./.github/workflows/pinned-audio-acceptance.yml
   reference:
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -33,6 +36,23 @@ jobs:
           enable-cache: true
           cache-dependency-glob: tools/uv.lock
       - run: uv sync --locked
+      - name: Generate weights-free native SiLU and ONNX Swish probes
+        run: uv run --locked python -m embeddinggemma_tools prepare-silu-probe --output ../artifacts/native-silu
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: native-silu-${{ github.sha }}
+          path: artifacts/native-silu/
+          retention-days: 3
+          if-no-files-found: error
+      - name: Generate weights-free official multimodal prompt references
+        run: uv run --locked python -m embeddinggemma_tools prepare-prompts --output ../artifacts/multimodal-prompts
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: multimodal-prompts-${{ github.sha }}
+          path: artifacts/multimodal-prompts/
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: error
       - name: Generate real-model references and validate exported program
         run: uv run --locked python -m embeddinggemma_tools prepare --output ../artifacts/m1
         env:
@@ -69,6 +89,57 @@ jobs:
           compression-level: 0
           retention-days: 3
           if-no-files-found: warn
+      - name: Validate official image processor and real vision encoder / projector exports
+        run: uv run --locked python -m embeddinggemma_tools prepare-vision --output ../artifacts/vision-encoder
+        env:
+          OMP_NUM_THREADS: '4'
+          MKL_NUM_THREADS: '4'
+      - name: Validate official real-image final embeddings and profile backbones
+        run: uv run --locked python -m embeddinggemma_tools prepare-image-embeddings --vision-source ../artifacts/vision-encoder --output ../artifacts/image-embeddings
+        env:
+          OMP_NUM_THREADS: '4'
+          MKL_NUM_THREADS: '4'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: image-embeddings-${{ github.sha }}
+          path: artifacts/image-embeddings/
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: warn
+      - name: Generate weights-free official image preprocessing fixtures
+        run: |
+          uv run --locked python -c 'import os; from embeddinggemma_tools.image_preprocessing import prepare_reference; prepare_reference("../artifacts/vision-encoder/processor_config.json", "../artifacts/image-preprocessing", revision="914f7f89142e33e77833254d9c9b90c3cef7303b", source_commit=os.environ["GITHUB_SHA"])'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: image-preprocessing-${{ github.sha }}
+          path: artifacts/image-preprocessing/
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: error
+      - name: Record vision-only validation scope
+        if: always()
+        shell: bash
+        working-directory: .
+        run: |
+          {
+            echo '### Official image processor → vision / projector (not Unity or final embedding validation)'
+            if [ -f artifacts/vision-encoder/vision-validation.json ]; then
+              echo '```json'
+              cat artifacts/vision-encoder/vision-validation.json
+              echo '```'
+            else
+              echo 'Vision export validation did not complete. Sentis and end-to-end image embeddings remain unverified.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: vision-encoder-${{ github.sha }}
+          path: artifacts/vision-encoder/
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: warn
       - name: Validate real-weight multimodal backbone with long projected-feature inputs
         run: uv run --locked python -m embeddinggemma_tools prepare-backbone --output ../artifacts/multimodal-backbone
         env:
@@ -94,6 +165,67 @@ jobs:
         with:
           name: multimodal-backbone-${{ github.sha }}
           path: artifacts/multimodal-backbone/
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: warn
+      - name: Validate fixed audio preprocessing against official PCM references
+        run: uv run --locked python -m embeddinggemma_tools.audio --output ../artifacts/audio-preprocessing
+        env:
+          OMP_NUM_THREADS: '4'
+          MKL_NUM_THREADS: '4'
+      - name: Record audio preprocessing-only validation scope
+        if: always()
+        shell: bash
+        working-directory: .
+        run: |
+          {
+            echo '### PCM → log-magnitude mel (not encoder or Unity validation)'
+            if [ -f artifacts/audio-preprocessing/audio-validation.json ]; then
+              echo '```json'
+              cat artifacts/audio-preprocessing/audio-validation.json
+              echo '```'
+            else
+              echo 'Audio preprocessing validation did not complete. Audio encoder and Sentis remain unverified.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: audio-preprocessing-${{ github.sha }}
+          path: artifacts/audio-preprocessing/
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: warn
+      # User-selected policy: original pinned reference is mandatory above.
+      # Fresh CPU output is host-dependent; preserve actual failure, never a GPU pass.
+      - name: Diagnose fresh CPU audio encoder and ONNX against current official output
+        id: fresh-audio
+        continue-on-error: true
+        run: uv run --locked python -m embeddinggemma_tools prepare-audio-encoder --preprocessing ../artifacts/audio-preprocessing --output ../artifacts/audio-encoder --native-silu --collect-onnx-failures
+        env:
+          OMP_NUM_THREADS: '4'
+          MKL_NUM_THREADS: '4'
+      - name: Record audio encoder-only validation scope
+        if: always()
+        shell: bash
+        working-directory: .
+        run: |
+          {
+            echo 'Fresh CPU diagnostic outcome: ${{ steps.fresh-audio.outcome }} (not the pinned acceptance gate)'
+            echo '### Official mel references → audio encoder / projector (not Unity or final embeddings)'
+            if [ -f artifacts/audio-encoder/audio-encoder-validation.json ]; then
+              echo '```json'
+              cat artifacts/audio-encoder/audio-encoder-validation.json
+              echo '```'
+            else
+              echo 'Audio encoder validation did not complete. Sentis and final audio embeddings remain unverified.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: audio-encoder-${{ github.sha }}
+          path: artifacts/audio-encoder/
           compression-level: 0
           retention-days: 3
           if-no-files-found: warn

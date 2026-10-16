@@ -1,7 +1,9 @@
 # プロジェクトのゴール
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。実モデル実行は停止中。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
+
 - 設定日: 2026-10-07
-- 更新日: 2026-10-13
+- 更新日: 2026-10-14
 - 背景: [新規性調査](embeddinggemma-2-unity-novelty.md)
 
 リポジトリはpublicのOSSとして開発中。**正式リリースはM3画像・M4音声を含む全対応と必須検証の完了後に行う**。[全体TDD計画](multimodal-tdd-plan.md) / [M3](m3-plan.md) / [M4](m4-plan.md)を現在の実行順とする。Windowsの既存実測は[現在の状態](status.md)と[M2基盤計画](m2-release-plan.md)を参照する。標準環境の再現、必須他環境、残る安定性、最終候補 / tag導入・正式Releaseは未完了。
@@ -10,7 +12,7 @@
 確認基準mainの [CI run 37975720534](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975720534)は全8 job成功。Python4環境・実モデルPython照合・lint・パッケージ監査を確認。Sentisの実測はWindowsの検証記録を参照する。
 PR #6のCI整備・UPM移行はmainへ反映済み、GitHub側のmain保護も設定・再確認済み。
 文書のみのPR #7も全8 jobが成功し、未マージで閉じた。PR #5の文書変更はPR #6へ含め、#5は閉じた。
-検索サンプルとモデル準備手順はWindows consumer再現を含め確認し、PR #11で統合済み。次は [M2計画](m2-plan.md)の他環境検証、Git URL導入、配布を進める。M2全体の受け入れは未完了。
+検索サンプルとモデル準備手順はWindows consumer再現を含め確認し、PR #11で統合済み。再開順は[全体計画R0〜R5](multimodal-tdd-plan.md)のGPU / 負荷、数値gate、最終API、必須環境・最終consumer、配布準備とする。M2全体の受け入れは未完了。
 最新のmain / PRの区別は [現在の状態](status.md)、導入と回帰の証拠は [パッケージ検証](m2-package-validation.md)を参照。
 M1の証拠は [M1計画](m1-plan.md)、[完了検証記録](m1-completion-validation.md)を参照。
 リポジトリの公開と、全モダリティ対応後のUPMパッケージ / サンプルの正式リリースは別の段階として扱う。
@@ -39,7 +41,7 @@ M1の証拠は [M1計画](m1-plan.md)、[完了検証記録](m1-completion-valid
 | 正しさ(fp32) | 同じ入力に対し、Python の参照実装の埋め込みとのコサイン類似度が 0.999 以上 |
 | 正しさ(量子化版) | 同じくコサイン類似度が 0.99 以上 |
 | モダリティ横断 | 固定のテストセットで、テキスト→画像、テキスト→音声の検索順位が参照実装と一致する |
-| GPU 処理 | 画像と音声の前処理で、CPU への読み戻しが発生しない |
+| GPU 処理 | 前処理・encoder・共通backboneをGPUComputeで実行し、中間CPU readback・計算fallbackを禁止。GPU非対応をCPU推論で代替しない。入力upload・tokenizeと最終768次元のCPU取得は境界として記録 |
 | ネイティブ依存 | パッケージにネイティブプラグインが含まれない |
 | 動作環境(必須) | Unity Editor(macOS / Windows)、iOS、Android |
 | 動作環境(できれば) | Web(WebGPU) |
@@ -63,8 +65,8 @@ M1の証拠は [M1計画](m1-plan.md)、[完了検証記録](m1-completion-valid
 | --- | --- | --- | --- |
 | M1 | テキスト用モデルを Sentis で動かす | Windows Editor の CPU / GPUCompute で全 15 ケースの token ID / mask が完全一致、fp32 cosine >= 0.999。`.sentis` 保存・再読み込み、fp16 量子化版 cosine >= 0.99、時間・メモリ測定 | Windows Editor受け入れ検証完了 |
 | M2 | テキストUPM・サンプル・検証基盤を安定化する | 標準consumer / 固定Git導入、API・検索・Player・解放、macOS / Windows / iOS / Androidの精度・速度 / メモリ。正式公開は最終段階へ移す | Windows実測あり。標準21f1再現・新candidate・性能・他環境は未完了 |
-| M3 | 画像用モデルに対応する | [画像TDD計画](m3-plan.md)。GPU前処理 / encoder / 共通本体、実モデル精度、テキスト→画像順位、sample・Player | 共通backbone一部実装済み。画像API / sample未実装、実encoder / Unity未検証 |
-| M4 | 音声用モデルに対応する | [音声TDD計画](m4-plan.md)。GPU前処理 / encoder / 共通本体、実モデル精度、テキスト→音声順位、sample・収録 / 再生・Player | 共通backbone一部実装済み。音声API / sample未実装、実encoder / Unity未検証 |
+| M3 | 画像用モデルに対応する | [画像TDD計画](m3-plan.md)。GPU前処理 / encoder / 共通本体、実モデル精度、テキスト→画像順位、sample・Player | 画像encoder Python合格。PR #41のSentis Float16 CPU / GPU全6条件合格、FP32全6条件は要素単位許容差不合格。GPU前処理はmain、APIはDraft実装・合成契約合格、Python3 role / 18件合格。Unity実全chain・sample・元FP32 gateは未達 |
+| M4 | 音声用モデルに対応する | [音声TDD計画](m4-plan.md)。GPU前処理 / encoder / 共通本体、実モデル精度、テキスト→音声順位、sample・収録 / 再生・Player | 音声前処理Python合格・統合済み。音声encoderはPR #40に実装済みだが保存graphの実モデル照合不合格・未統合。PCM / GPU前処理はmain、APIはDraft実装・合成契約合格。SiLU ONNX修正は実モデル未検証、encoder gate・実全chain・sampleは未達 |
 | 最終公開 | 全対応後の正式リリース | M2〜M4と全必須環境、混在検索、最終candidate / tag固定導入、文書・ライセンス・GitHub Release | 未着手 |
 
 M2の再現可能な開発基盤 → 共通特徴量 / 長さ拡張 → M3 → M4 → 全必須環境の統合検証 → 正式公開の順とする。環境確保と実行可能な他OS検証は並行し、M2の全OS完了やtext-only ReleaseをM3・M4の着手条件にしない。必須macOS / Windows / iOS / Androidは維持し、Windows M1合格で他環境を成功扱いにしない。

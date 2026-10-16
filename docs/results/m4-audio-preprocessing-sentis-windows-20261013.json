@@ -1,0 +1,162 @@
+{
+  "success": true,
+  "stage": "sentis_audio_preprocessing_only",
+  "unity_validated": true,
+  "encoders_validated": false,
+  "end_to_end_validated": false,
+  "gpu_preprocessing_validated": true,
+  "diagnostic_output_readback": true,
+  "expected_conditions": 2,
+  "expected_cases_per_condition": 6,
+  "unity": "6000.3.21f1",
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "started_utc": "2026-10-13T00:19:59.4130093Z",
+  "conditions": [
+    {
+      "requested_backend": "CPU",
+      "success": true,
+      "phase": "completed",
+      "cases": [
+        {
+          "id": "silence",
+          "success": true,
+          "actual_feature_backend": "CPU",
+          "actual_mask_backend": "CPU",
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "mismatched_elements": 0
+        },
+        {
+          "id": "impulse",
+          "success": true,
+          "actual_feature_backend": "CPU",
+          "actual_mask_backend": "CPU",
+          "maximum_absolute_error": 4.76837158203125E-07,
+          "maximum_tolerance_ratio": 0.0001072118828333223,
+          "mismatched_elements": 0
+        },
+        {
+          "id": "sine",
+          "success": true,
+          "actual_feature_backend": "CPU",
+          "actual_mask_backend": "CPU",
+          "maximum_absolute_error": 0.0038890838623046875,
+          "maximum_tolerance_ratio": 0.8301271504209226,
+          "mismatched_elements": 0
+        },
+        {
+          "id": "nyquist",
+          "success": true,
+          "actual_feature_backend": "CPU",
+          "actual_mask_backend": "CPU",
+          "maximum_absolute_error": 0.0014133453369140625,
+          "maximum_tolerance_ratio": 0.3013034270367677,
+          "mismatched_elements": 0
+        },
+        {
+          "id": "noise",
+          "success": true,
+          "actual_feature_backend": "CPU",
+          "actual_mask_backend": "CPU",
+          "maximum_absolute_error": 7.867813110351562E-06,
+          "maximum_tolerance_ratio": 0.0017907848911956272,
+          "mismatched_elements": 0
+        },
+        {
+          "id": "padded_noise",
+          "success": true,
+          "actual_feature_backend": "CPU",
+          "actual_mask_backend": "CPU",
+          "maximum_absolute_error": 6.4373016357421875E-06,
+          "maximum_tolerance_ratio": 0.0014985765188156271,
+          "mismatched_elements": 0
+        }
+      ],
+      "actual_worker_backend": "CPU",
+      "cpu_computation_or_input_indices": [],
+      "cpu_readback_flush_indices": []
+    },
+    {
+      "requested_backend": "GPUCompute",
+      "success": true,
+      "phase": "completed",
+      "cases": [
+        {
+          "id": "silence",
+          "success": true,
+          "actual_feature_backend": "GPUCompute",
+          "actual_mask_backend": "GPUCompute",
+          "maximum_absolute_error": 0.0,
+          "maximum_tolerance_ratio": 0.0,
+          "mismatched_elements": 0
+        },
+        {
+          "id": "impulse",
+          "success": true,
+          "actual_feature_backend": "GPUCompute",
+          "actual_mask_backend": "GPUCompute",
+          "maximum_absolute_error": 4.76837158203125E-07,
+          "maximum_tolerance_ratio": 0.00010957452982569119,
+          "mismatched_elements": 0
+        },
+        {
+          "id": "sine",
+          "success": true,
+          "actual_feature_backend": "GPUCompute",
+          "actual_mask_backend": "GPUCompute",
+          "maximum_absolute_error": 0.0038890838623046875,
+          "maximum_tolerance_ratio": 0.8301271504209226,
+          "mismatched_elements": 0
+        },
+        {
+          "id": "nyquist",
+          "success": true,
+          "actual_feature_backend": "GPUCompute",
+          "actual_mask_backend": "GPUCompute",
+          "maximum_absolute_error": 0.0014138221740722656,
+          "maximum_tolerance_ratio": 0.30140508136437794,
+          "mismatched_elements": 0
+        },
+        {
+          "id": "noise",
+          "success": true,
+          "actual_feature_backend": "GPUCompute",
+          "actual_mask_backend": "GPUCompute",
+          "maximum_absolute_error": 7.867813110351562E-06,
+          "maximum_tolerance_ratio": 0.0017907848911956272,
+          "mismatched_elements": 0
+        },
+        {
+          "id": "padded_noise",
+          "success": true,
+          "actual_feature_backend": "GPUCompute",
+          "actual_mask_backend": "GPUCompute",
+          "maximum_absolute_error": 6.67572021484375E-06,
+          "maximum_tolerance_ratio": 0.0015540793528458355,
+          "mismatched_elements": 0
+        }
+      ],
+      "actual_worker_backend": "GPUCompute",
+      "cpu_computation_or_input_indices": [],
+      "cpu_readback_flush_indices": []
+    }
+  ],
+  "reference_source": "e35470212f616b020c0b150a4c515a007f0b937f",
+  "reference_sha256": "4da5aeaf282598c32ffdd920701cd836622880fb4f611d19e5ba470831f2768a",
+  "graph_sha256": "9a60b053ac36882bdea97d3cee968734af136e19c24cb8adee76099b187e3548",
+  "saved_sha256": "da7dd8f65ebb2789360235d657646f47e315f062fc8ccc3b10e3285ecaf6ed8d",
+  "saved_bytes": 6207316,
+  "completed_utc": "2026-10-13T00:20:10.7628707Z",
+  "fixture_sha256": "3d7becdb619dd9966ed652072007a81a7a9ed795b4586d106fe90d2bb8893f65",
+  "raw_report_sha256": "d867f3f253808ec072a895a7b51efc2dd2dbcec08604560a86b2f38d25162335",
+  "artifact_run": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38320110239",
+  "consumer_scope": "Acceptance fixture staged in existing consumer Editor test assembly; fixed Git candidate and production PCM API not validated.",
+  "test_runner": {
+    "compile_succeeded": true,
+    "failed": 0,
+    "passed": 2,
+    "skipped": 0,
+    "completed_utc": "2026-10-13T00:20:10.8318364Z"
+  }
+}

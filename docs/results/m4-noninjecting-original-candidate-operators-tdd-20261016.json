@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "explicit_noninjecting_actual_candidate_operator_onnx_diagnosis_tdd",
+  "source_base": "2058ed675f9109a2929cfde373f39ba12be69227",
+  "red": {
+    "file": "candidate-primitive-red-20261016.xml",
+    "sha256": "90790de6d076f7fa3505becd18b1efccfb9f4cc0a656e2eb1e03afa97172422f",
+    "tests": "8",
+    "failures": "8",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.315"
+  },
+  "green": {
+    "file": "candidate-primitive-initial-green-20261016.xml",
+    "sha256": "7be71ae1181e3ff41d9641e215d11d1f75197ef2c89cddcab2f0e8c09ce4609f",
+    "tests": "18",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "6.076"
+  },
+  "related_green": {
+    "file": "candidate-primitive-related-green-20261016.xml",
+    "sha256": "8ba4e11be756130152eacacf9a5221c5f12652548627f123a7af47695954f0d4",
+    "tests": "158",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "67.529"
+  },
+  "actionlint": "passed",
+  "behavior": [
+    "Explicit ordered_original_primitives only; existing standard primitive default unchanged.",
+    "Use the connected candidate exact same audited replacement functions and original native tensor arguments.",
+    "Actually export/evaluate standard FP32 ONNX; never treat native passthrough forward as candidate execution.",
+    "Return original native node result downstream, even when isolated candidate deliberately fails.",
+    "Retain native original reference context failure independently; full encoder/GPU gates remain false.",
+    "Store worst input/native/actual capture for each target,shape,stride,variant contract rather than merging all MatMul shapes.",
+    "Temporary per-node graphs deleted after SHA capture; raw weights and captures remain outside Git."
+  ],
+  "real_model_run_pending": true,
+  "whole_encoder_validated": false,
+  "gpu_validated": false,
+  "required_ci_passed": false
+}

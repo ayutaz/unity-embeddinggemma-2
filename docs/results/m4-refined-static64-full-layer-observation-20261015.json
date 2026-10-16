@@ -1,0 +1,190 @@
+{
+  "scope": "silence_refined_static64_original_native_full_layer_observation_only",
+  "success": true,
+  "source": "dd8cfd4fd8656df9b7b3b6c5505b01bb952f336f",
+  "report": {
+    "success": true,
+    "scope": "silence_refined_static64_original_native_full_layer_observation_only",
+    "source": "dd8cfd4fd8656df9b7b3b6c5505b01bb952f336f",
+    "requested_backend": "GPUCompute",
+    "stages": [
+      {
+        "stage": "layer_0",
+        "mismatches": 0,
+        "numeric_passed": true,
+        "maximum_absolute_error": 4.57763671875e-05,
+        "maximum_tolerance_ratio": 0.3984380445715365,
+        "actual_backend": "GPUCompute"
+      },
+      {
+        "stage": "layer_1",
+        "mismatches": 0,
+        "numeric_passed": true,
+        "maximum_absolute_error": 4.57763671875e-05,
+        "maximum_tolerance_ratio": 0.32205388176144456,
+        "actual_backend": "GPUCompute"
+      },
+      {
+        "stage": "layer_2",
+        "mismatches": 0,
+        "numeric_passed": true,
+        "maximum_absolute_error": 5.340576171875e-05,
+        "maximum_tolerance_ratio": 0.19180089532657935,
+        "actual_backend": "GPUCompute"
+      },
+      {
+        "stage": "layer_3",
+        "mismatches": 0,
+        "numeric_passed": true,
+        "maximum_absolute_error": 6.103515625e-05,
+        "maximum_tolerance_ratio": 0.3025856986342018,
+        "actual_backend": "GPUCompute"
+      },
+      {
+        "stage": "layer_4",
+        "mismatches": 0,
+        "numeric_passed": true,
+        "maximum_absolute_error": 7.62939453125e-05,
+        "maximum_tolerance_ratio": 0.509295424804121,
+        "actual_backend": "GPUCompute"
+      },
+      {
+        "stage": "layer_5",
+        "mismatches": 0,
+        "numeric_passed": true,
+        "maximum_absolute_error": 9.1552734375e-05,
+        "maximum_tolerance_ratio": 0.4469333217709519,
+        "actual_backend": "GPUCompute"
+      },
+      {
+        "stage": "layer_6",
+        "mismatches": 0,
+        "numeric_passed": true,
+        "maximum_absolute_error": 7.62939453125e-05,
+        "maximum_tolerance_ratio": 0.7997720971311068,
+        "actual_backend": "GPUCompute"
+      },
+      {
+        "stage": "layer_7",
+        "mismatches": 0,
+        "numeric_passed": true,
+        "maximum_absolute_error": 6.103515625e-05,
+        "maximum_tolerance_ratio": 0.4826212015844677,
+        "actual_backend": "GPUCompute"
+      },
+      {
+        "stage": "layer_8",
+        "mismatches": 0,
+        "numeric_passed": true,
+        "maximum_absolute_error": 4.57763671875e-05,
+        "maximum_tolerance_ratio": 0.5549873436755578,
+        "actual_backend": "GPUCompute"
+      },
+      {
+        "stage": "layer_9",
+        "mismatches": 1,
+        "numeric_passed": false,
+        "maximum_absolute_error": 6.103515625e-05,
+        "maximum_tolerance_ratio": 1.5071890227747273,
+        "actual_backend": "GPUCompute"
+      },
+      {
+        "stage": "layer_10",
+        "mismatches": 39,
+        "numeric_passed": false,
+        "maximum_absolute_error": 0.0001678466796875,
+        "maximum_tolerance_ratio": 3.751416751002092,
+        "actual_backend": "GPUCompute"
+      },
+      {
+        "stage": "layer_11",
+        "mismatches": 1218,
+        "numeric_passed": false,
+        "maximum_absolute_error": 0.001155853271484375,
+        "maximum_tolerance_ratio": 21.402445738641074,
+        "actual_backend": "GPUCompute"
+      }
+    ],
+    "phase": "completed",
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "bound_outputs": {
+      "layer_0": 2816,
+      "layer_1": 3195,
+      "layer_2": 3574,
+      "layer_3": 3953,
+      "layer_4": 4332,
+      "layer_5": 4711,
+      "layer_6": 5090,
+      "layer_7": 5469,
+      "layer_8": 5848,
+      "layer_9": 6227,
+      "layer_10": 6606,
+      "layer_11": 6985
+    },
+    "layer_count": 40633,
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "normal_final_matches_observed_bits": true,
+    "capture_directory": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\refined-static64-full-layers-dd8cfd4fd8656df9b7b3b6c5505b01bb952f336f-captures",
+    "first_tolerance_exceeding_layer": "layer_9",
+    "observation_completed": true
+  },
+  "process": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+      "-logFile",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\refined-static64-full-layer-auditfix-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.RefinedAudioFullLayerObservationTests",
+      "-testResults",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\refined-static64-full-layer-auditfix-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-14T18:25:42.633066+00:00",
+    "pid": 77844,
+    "exit_code": 0,
+    "elapsed_seconds": 77.59742230000847,
+    "completed_utc": "2026-10-14T18:27:00.230491+00:00"
+  },
+  "nunit": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "numeric_layer_conditions": {
+    "passed": 9,
+    "failed": 3
+  },
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "original_reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "original_golden_changed": false,
+  "original_tolerance_changed": false,
+  "first_observation_failure": {
+    "source": "2faec9c8bece47219ad825e4ab5285bc043c7908",
+    "normal_final_bits_preserved": true,
+    "numeric_stage_results_missing": true,
+    "reason": "local immutable binaries were flat; relative profile path used before preflight"
+  },
+  "next_action": "extract layer_9 and compare actual GPU output on immutable original layer_8 input to separate upstream propagation from direct backend error",
+  "interpretation": "NUnit pass proves completed observation; only layers 0-8 meet numeric gate; later layers and encoder remain failed",
+  "raw_sha256": {
+    "refined-static64-full-layers-dd8cfd4fd8656df9b7b3b6c5505b01bb952f336f.json": "e3e55aec826b0ea7638dc7b9fc8f01e59c7dedcc7f7a0773232d272030d9fcf3",
+    "refined-static64-full-layer-auditfix-20261015.xml": "acc4b23f7b82e3b31537c4339f13991711f75f5c17c13bd13b76d6c6c84a681f",
+    "refined-static64-full-layer-auditfix-20261015.log": "87da130ec49980eb1acaac07914569b7d8ee13d96dae063666128479bf4e6de6",
+    "refined-static64-full-layer-auditfix-20261015-process.json": "5a9119b6decefc25e08d4bf036e9d78dbecb9446505a8b829a3920890eb7fe08",
+    "first_failed_observation_xml": "dd830e4de24c1840c63e77ea3315ac7c25f2c5b24266c5c0c958b095f1761b07"
+  }
+}

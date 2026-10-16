@@ -1,0 +1,330 @@
+{
+  "scope": "five_feed_forward_stages_with_audited_half_scale_restoration",
+  "harness_source": "0cf171205ab1a2f09d12a7a5dbc61d5ea75014c2",
+  "harness_file_sha256": "d75fb2cbe6f7127d109d29a5977e3ee870a3c16f1f45c0f81a2a0bc82e696f77",
+  "native_reference_action": 38463246855,
+  "native_replay_report_sha256": "99529dc0fa6c74825b23fca653d82091797ff1e5267d26c5cdae723fcf86f501",
+  "folded_anchor_manifest_sha256": "95f3e32536dce9b3b3820050dac4bc837c0f460c75e4e56735381bf924007c33",
+  "initial_mapping_failure_source": "d7db2b6e785b2fa0eff448e54aef61274d7d72be",
+  "initial_mapping_numeric_observation_executed": false,
+  "initial_mapping_cli": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T20:36:44.7028624Z",
+    "FailedCount": 2,
+    "FailedTests": [
+      {
+        "FullName": "EmbeddingGemma.Tests.CurrentAudioFeedForwardReferenceTests.CompareFiveNativeFeedForwardStagesWithoutChangingNormalFinal(CPU)",
+        "Message": "System.InvalidOperationException : Coefficient layer is missing or ambiguous: post_layer_norm",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMap.cs",
+        "Line": 132
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.CurrentAudioFeedForwardReferenceTests.CompareFiveNativeFeedForwardStagesWithoutChangingNormalFinal(GPUCompute)",
+        "Message": "System.InvalidOperationException : Coefficient layer is missing or ambiguous: post_layer_norm",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMap.cs",
+        "Line": 132
+      }
+    ],
+    "HasFailures": true,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Failed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 0,
+    "SkippedCount": 0,
+    "Status": "Failed",
+    "Success": false,
+    "TestCount": 2,
+    "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\.uloop\\outputs\\TestResults\\20261013_203644_7073926_e8276dadd10540a28b1f0f0225e59a67.xml"
+  },
+  "mapper_green": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T20:41:36.5103925Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 16,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 16,
+    "XmlPath": null
+  },
+  "actual_numeric_cli": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T20:42:35.8443801Z",
+    "FailedCount": 2,
+    "FailedTests": [
+      {
+        "FullName": "EmbeddingGemma.Tests.CurrentAudioFeedForwardReferenceTests.CompareFiveNativeFeedForwardStagesWithoutChangingNormalFinal(CPU)",
+        "Message": "  Fixed feed-forward numeric gate failed; see saved stages.\r\n  Expected: True\r\n  But was:  False\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CurrentAudioFeedForwardReferenceTests.cs",
+        "Line": 104
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.CurrentAudioFeedForwardReferenceTests.CompareFiveNativeFeedForwardStagesWithoutChangingNormalFinal(GPUCompute)",
+        "Message": "  Fixed feed-forward numeric gate failed; see saved stages.\r\n  Expected: True\r\n  But was:  False\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CurrentAudioFeedForwardReferenceTests.cs",
+        "Line": 104
+      }
+    ],
+    "HasFailures": true,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Failed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 0,
+    "SkippedCount": 0,
+    "Status": "Failed",
+    "Success": false,
+    "TestCount": 2,
+    "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\.uloop\\outputs\\TestResults\\20261013_204235_8478972_35d07d7a30cf4e799c3b96b3072390bd.xml"
+  },
+  "cpu": {
+    "success": false,
+    "observation_completed": true,
+    "scope": "silence_layer_zero_feed_forward1_five_outputs",
+    "runtime_source": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "native_replay_source": "6ac2c92191a62ada4830adeee5235fb3c4b90f15",
+    "requested_backend": "CPU",
+    "runtime_overlay": false,
+    "unity_version": "6000.3.21f1",
+    "graphics_device": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "stages": [
+      {
+        "elementwise_passed": true,
+        "mismatches": 0,
+        "maximum_absolute_error": 1.6450881958007812E-05,
+        "maximum_tolerance_ratio": 0.6638036767098835,
+        "worst_index": 1228,
+        "worst_actual": 0.0215486363,
+        "worst_expected": 0.0215567052,
+        "diagnostic_restore_multiplier": 1,
+        "stage": "pre_layer_norm",
+        "layer_index": 22,
+        "tensor_index": 67,
+        "actual_backend": "CPU",
+        "linear2_outer_clamp_alias": false
+      },
+      {
+        "elementwise_passed": false,
+        "mismatches": 1,
+        "maximum_absolute_error": 5.435943603515625E-05,
+        "maximum_tolerance_ratio": 1.3083145272302559,
+        "worst_index": 677,
+        "worst_actual": -0.0200334676,
+        "worst_expected": -0.0200177655,
+        "diagnostic_restore_multiplier": 1,
+        "stage": "ffw_layer_1",
+        "layer_index": 25,
+        "tensor_index": 75,
+        "actual_backend": "CPU",
+        "linear2_outer_clamp_alias": false
+      },
+      {
+        "elementwise_passed": true,
+        "mismatches": 0,
+        "maximum_absolute_error": 5.435943603515625E-05,
+        "maximum_tolerance_ratio": 0.699919465368228,
+        "worst_index": 677,
+        "worst_actual": -0.00991640147,
+        "worst_expected": -0.009908709,
+        "diagnostic_restore_multiplier": 1,
+        "stage": "act_fn",
+        "layer_index": 26,
+        "tensor_index": 77,
+        "actual_backend": "CPU",
+        "linear2_outer_clamp_alias": false
+      },
+      {
+        "elementwise_passed": true,
+        "mismatches": 0,
+        "maximum_absolute_error": 1.621246337890625E-05,
+        "maximum_tolerance_ratio": 0.4671853253750527,
+        "worst_index": 1021,
+        "worst_actual": 0.0035661892,
+        "worst_expected": 0.003571028,
+        "diagnostic_restore_multiplier": 1,
+        "stage": "ffw_layer_2",
+        "layer_index": 30,
+        "tensor_index": 88,
+        "actual_backend": "CPU",
+        "linear2_outer_clamp_alias": true
+      },
+      {
+        "elementwise_passed": false,
+        "mismatches": 284,
+        "maximum_absolute_error": 0.00018310546875,
+        "maximum_tolerance_ratio": 6.158622984512298,
+        "worst_index": 298,
+        "worst_actual": -0.00731321,
+        "worst_expected": -0.007379341,
+        "diagnostic_restore_multiplier": 2,
+        "stage": "post_layer_norm",
+        "layer_index": 36,
+        "tensor_index": 103,
+        "actual_backend": "CPU",
+        "linear2_outer_clamp_alias": false
+      }
+    ],
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "started_utc": "2026-10-13T20:42:19.7535287Z",
+    "folded_scale_audit": {
+      "original_coefficient_sha256": "57b626c26e3c796f890dc79142330ea0c4a7b338e38d4d87a4e0343443da0ce4",
+      "folded_coefficient_sha256": "1e6392c0cb44215f7b52e59b830bdbd75b8769354922316bad49e5242ce7ea11",
+      "coefficient_multiplier": 0.5,
+      "restore_multiplier": 2,
+      "native_residual_half_exact": true,
+      "saved_constant_matches": [
+        {
+          "index": 102,
+          "sha256": "1e6392c0cb44215f7b52e59b830bdbd75b8769354922316bad49e5242ce7ea11"
+        }
+      ],
+      "read_weight_bytes": 4096
+    },
+    "coefficient_and_path_bound_outputs": {
+      "pre_layer_norm": 67,
+      "ffw_layer_1": 75,
+      "act_fn": 77,
+      "ffw_layer_2": 88,
+      "post_layer_norm": 103
+    },
+    "linear2_outer_clip_min": -10000000000.0,
+    "linear2_outer_clip_max": 10000000000.0,
+    "normal_final_matches_observed_bits": true,
+    "first_failed_observed_stage": "ffw_layer_1",
+    "error": "NUnit.Framework.AssertionException:   Fixed feed-forward numeric gate failed; see saved stages.\r\n  Expected: True\r\n  But was:  False\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Tests.CurrentAudioFeedForwardReferenceTests.CompareFiveNativeFeedForwardStagesWithoutChangingNormalFinal (Unity.InferenceEngine.BackendType backend) [0x00966] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CurrentAudioFeedForwardReferenceTests.cs:100 ",
+    "completed_utc": "2026-10-13T20:42:28.6412621Z"
+  },
+  "gpu": {
+    "success": false,
+    "observation_completed": true,
+    "scope": "silence_layer_zero_feed_forward1_five_outputs",
+    "runtime_source": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "native_replay_source": "6ac2c92191a62ada4830adeee5235fb3c4b90f15",
+    "requested_backend": "GPUCompute",
+    "runtime_overlay": false,
+    "unity_version": "6000.3.21f1",
+    "graphics_device": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "stages": [
+      {
+        "elementwise_passed": true,
+        "mismatches": 0,
+        "maximum_absolute_error": 2.002716064453125E-05,
+        "maximum_tolerance_ratio": 0.6171660906252986,
+        "worst_index": 1376,
+        "worst_actual": 0.004086513,
+        "worst_expected": 0.00409293734,
+        "diagnostic_restore_multiplier": 1,
+        "stage": "pre_layer_norm",
+        "layer_index": 22,
+        "tensor_index": 67,
+        "actual_backend": "GPUCompute",
+        "linear2_outer_clamp_alias": false
+      },
+      {
+        "elementwise_passed": true,
+        "mismatches": 0,
+        "maximum_absolute_error": 6.4849853515625E-05,
+        "maximum_tolerance_ratio": 0.9427907016562664,
+        "worst_index": 4371,
+        "worst_actual": -0.0100157857,
+        "worst_expected": -0.0100054145,
+        "diagnostic_restore_multiplier": 1,
+        "stage": "ffw_layer_1",
+        "layer_index": 25,
+        "tensor_index": 75,
+        "actual_backend": "GPUCompute",
+        "linear2_outer_clamp_alias": false
+      },
+      {
+        "elementwise_passed": true,
+        "mismatches": 0,
+        "maximum_absolute_error": 6.4849853515625E-05,
+        "maximum_tolerance_ratio": 0.489003947787778,
+        "worst_index": 4371,
+        "worst_actual": -0.004982814,
+        "worst_expected": -0.00497768074,
+        "diagnostic_restore_multiplier": 1,
+        "stage": "act_fn",
+        "layer_index": 26,
+        "tensor_index": 77,
+        "actual_backend": "GPUCompute",
+        "linear2_outer_clamp_alias": false
+      },
+      {
+        "elementwise_passed": true,
+        "mismatches": 0,
+        "maximum_absolute_error": 5.990266799926758E-06,
+        "maximum_tolerance_ratio": 0.3512320047954876,
+        "worst_index": 1021,
+        "worst_actual": 0.00356739014,
+        "worst_expected": 0.003571028,
+        "diagnostic_restore_multiplier": 1,
+        "stage": "ffw_layer_2",
+        "layer_index": 30,
+        "tensor_index": 88,
+        "actual_backend": "GPUCompute",
+        "linear2_outer_clamp_alias": true
+      },
+      {
+        "elementwise_passed": false,
+        "mismatches": 5,
+        "maximum_absolute_error": 0.000186920166015625,
+        "maximum_tolerance_ratio": 4.17788077546678,
+        "worst_index": 298,
+        "worst_actual": -0.007334479,
+        "worst_expected": -0.007379341,
+        "diagnostic_restore_multiplier": 2,
+        "stage": "post_layer_norm",
+        "layer_index": 36,
+        "tensor_index": 103,
+        "actual_backend": "GPUCompute",
+        "linear2_outer_clamp_alias": false
+      }
+    ],
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "started_utc": "2026-10-13T20:42:28.6512936Z",
+    "folded_scale_audit": {
+      "original_coefficient_sha256": "57b626c26e3c796f890dc79142330ea0c4a7b338e38d4d87a4e0343443da0ce4",
+      "folded_coefficient_sha256": "1e6392c0cb44215f7b52e59b830bdbd75b8769354922316bad49e5242ce7ea11",
+      "coefficient_multiplier": 0.5,
+      "restore_multiplier": 2,
+      "native_residual_half_exact": true,
+      "saved_constant_matches": [
+        {
+          "index": 102,
+          "sha256": "1e6392c0cb44215f7b52e59b830bdbd75b8769354922316bad49e5242ce7ea11"
+        }
+      ],
+      "read_weight_bytes": 4096
+    },
+    "coefficient_and_path_bound_outputs": {
+      "pre_layer_norm": 67,
+      "ffw_layer_1": 75,
+      "act_fn": 77,
+      "ffw_layer_2": 88,
+      "post_layer_norm": 103
+    },
+    "linear2_outer_clip_min": -10000000000.0,
+    "linear2_outer_clip_max": 10000000000.0,
+    "normal_final_matches_observed_bits": true,
+    "first_failed_observed_stage": "post_layer_norm",
+    "error": "NUnit.Framework.AssertionException:   Fixed feed-forward numeric gate failed; see saved stages.\r\n  Expected: True\r\n  But was:  False\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Tests.CurrentAudioFeedForwardReferenceTests.CompareFiveNativeFeedForwardStagesWithoutChangingNormalFinal (Unity.InferenceEngine.BackendType backend) [0x00966] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CurrentAudioFeedForwardReferenceTests.cs:100 ",
+    "completed_utc": "2026-10-13T20:42:35.7908691Z"
+  },
+  "python_anchor_red": 4,
+  "related_python_green": 19,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

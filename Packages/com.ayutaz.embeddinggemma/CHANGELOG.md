@@ -2,6 +2,24 @@
 
 ## 0.1.0-pre.1 — Unreleased
 
+- PR #31 is being adapted to current main; fresh consumer and Player acceptance are pending.
+- 2026-10-16 integrated runtime snapshot: actual Texture / PCM inputs reach normalized768 GPU vectors for all18 image and18 audio role conditions. Original image and audio encoder gates retain learned coefficients, original references and strict tolerances. Source-specific evidence is retained in `docs/results`; these changes are integrated through PR #79; no release has been published.
+- Add staged `PartitionedAudioFeatureEncoder.EncodeAsync` and `AudioEmbedder.EmbedAsync`, with GPU-complete fences, completed cache retirement, owned intermediates, overlap rejection, cancellation and recovery. Only the final vector is downloaded; no CPU inference fallback. The failed synchronous12 GiB guard stop is retained separately.
+- Add an Editor-only exit/reload hook for the pinned Sentis2.6.1 shared64-byte buffer cleanup. Tested normal shutdowns report no Persistent warning; long-term allocation stability remains unqualified.
+- Actual FP32 / Float16 text regression and related API contracts pass189 tests. Required CI now passes the full six-signal pinned original acceptance; fresh CPU comparison failures remain separately recorded diagnostics. Player, other devices, performance and release qualification remain subsequent work.
+
+Earlier implementation checkpoints follow; their original counts and scope describe the state when each change was introduced. Current acceptance is summarized above and in `docs/status.md`.
+
+
+- Add GPU-only 8-bit Texture / RenderTexture preprocessing with official bicubic antialias rounding, RGB patch order, position metadata and owned output tensors. Image encoder integration and final embedding API remain in development.
+
+- Add owned CPU / GPU PCM preprocessing outputs and Worker reuse / disposal contracts; audio encoder and final embedding integration remain in development.
+
+- 固定16kHz mono PCM入力のAudioPcmInputを追加。161〜179200 samplesと振幅[-1,1]を監査し、owned snapshot・右zero padding / prefix mask・公式frame境界を準備。25 red → 25 green。GPU前処理・encoder・最終音声embeddingは別の未完了gate。
+
+- 固定profileのproject済み画像 / 音声featureを扱うMultimodalBackboneを追加。token / mask / feature数・Model入出力を監査し、caller所有Tensorを借用して最終768次元だけをコピー。21 redから契約22 green、小さい実GPUを含め23 green、破棄featureの追加1 redから最終24件＋既存38件の62 green。実encoder・最終実モデル・GPU前処理・prompt / sample・新Git consumer / Playerは別の未完了gate。
+
+Historical text-only checkpoint (2026-10-10):
 - 2026-10-10の検証状況を更新。PR #30まで統合済み、固定Git consumer `fc66af7`の実モデル4条件・UI / cacheを確認。Androidは実APK・署名 / payload監査までで実機は未実行。draft PR #31では通常表示sampleのGUI / Float16 GPU全query・解放が成功した後に終了クラッシュを観測し、全体受け入れは未達。以下の各変更時点の未実行記録は当時の履歴として保持する。
 - GUI style測定テストもEditor所有fontを共有し、fixtureのCleanupでIMGUI cacheへ破棄済みfontを残さないように修正。元のglyph境界assertionを維持し、1 failed → 1 passed、sample全67 passed、未準備UI 3回の停止前後Console 0を確認。PR #29統合SHAの新規Git導入・実モデル4条件・UI / file URL cacheは別に合格。最初のEditor検索DBエラーの原因は未確定。
 - TextSearch sampleのEditor fontをEditor内で1つだけ所有し、Play / domain reload後も同じnative fontを再利用。修正前2件の失敗と修正後2件・sample EditMode 66件 / PlayMode 2件、Windows実Float16 GPU日英検索・空入力・解放、正常Editor終了時の所有font破棄を確認。新helperのPlayer実行・他OSとnative allocation診断の原因は未検証。

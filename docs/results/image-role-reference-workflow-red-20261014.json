@@ -1,0 +1,9 @@
+{
+  "scope": "fixed_image_role_reference_workflow_red",
+  "source_base": "a98a2f805c7c673d08acf9daf9c70fce473f5f4b",
+  "command": "uv run --locked pytest tests/test_image_role_reference_workflow.py -q --tb=short",
+  "passed": 0,
+  "failed": 2,
+  "reason": "Fixed image role reference workflow is missing",
+  "real_context_validated": false
+}

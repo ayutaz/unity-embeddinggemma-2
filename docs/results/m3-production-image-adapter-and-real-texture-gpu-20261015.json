@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "scope": "production_gpu_image_adapter_contracts_and_original_square_one_actual_png_to_projected_features_only",
+  "adapter_tdd": {
+    "red_source": "3049a3b",
+    "red": {
+      "process_prefix": "gpu-partitioned-image-adapter-red-20261015",
+      "process_sha256": "eef34d4b37085f02aa0917e9e9d3c136a9c520335047a9734a6b3221035f3b5f",
+      "xml_sha256": "1fef6aaef808defe7afefe9c86a545e960a4e0b771006224b22fd2048188fd1c",
+      "counts": {
+        "total": 6,
+        "passed": 0,
+        "failed": 6,
+        "skipped": 0
+      },
+      "exit_code": 2,
+      "terminal": true,
+      "elapsed_seconds": 43.464884199987864
+    },
+    "green_source": "1847f44",
+    "green": {
+      "process_prefix": "gpu-partitioned-image-adapter-green-20261015",
+      "process_sha256": "c35060ba3b36a08eccbf035a6a737e4075af36fe883b437a4e34cd25c968b206",
+      "xml_sha256": "954732367e98b1c87032362e7cbd7bd1af2cfe54a7dd7b0191d85726008eb081",
+      "counts": {
+        "total": 36,
+        "passed": 36,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exit_code": 0,
+      "terminal": true,
+      "elapsed_seconds": 46.09226519998629
+    },
+    "covered": [
+      "Three fixed image profiles",
+      "Independent outputs outlive encoder; borrowed inputs/operations survive Dispose",
+      "Invalid geometry/coordinates/device/null/disposed input rejected without poisoning reuse",
+      "Wrong output shape rejection and retry",
+      "Pre-canceled staged call and subsequent successful staged reuse"
+    ],
+    "limitation": "Small synthetic adapters; actual model evidence is the separate single-image texture gate."
+  },
+  "original_png_ingress": {
+    "initial_failure_report_sha256": "f5cb9dd036f74a5fcf58559bbf8be72fb46e6b147b6358b0045c0599dc0dbd09",
+    "initial_failure_phase": "prepare_gpu_pipeline",
+    "initial_encoder_not_executed": true,
+    "observed_unity_texture_format": "ARGB32",
+    "observed_native_graphics_format_value": 88,
+    "red": {
+      "process_prefix": "gpu-argb-byte-input-red-20261015",
+      "process_sha256": "ab249f71893b1f045b9a09ed8a8a27e38be6e7d6a93e8b3c8a538dc45db51aef",
+      "xml_sha256": "44728c73fe5dd1d039045512d13a5b0339d16ef21995790296c1ffbad6e1aca2",
+      "counts": {
+        "total": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0
+      },
+      "exit_code": 2,
+      "terminal": true,
+      "elapsed_seconds": 41.941589699999895
+    },
+    "green": {
+      "process_prefix": "gpu-argb-png-input-related-green-20261015",
+      "process_sha256": "8715e512c5c017bbf3891f1660e4712359f087712bea66c3bd00ca3891ea3ea7",
+      "xml_sha256": "df552ed5579710c7a310efb3bf7510e5101167809d3dac93067b9c02d1a8d74a",
+      "counts": {
+        "total": 23,
+        "passed": 23,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exit_code": 0,
+      "terminal": true,
+      "elapsed_seconds": 45.4071112999809
+    },
+    "correction": "GPU Texture2D ARGB32 byte storage accepted through its explicit TextureFormat; GPU sampler handles channel order. CPU storage contract unchanged.",
+    "original_png_preprocessing_matches_frozen_pixels": true,
+    "input_texture_non_readable": true,
+    "png_decoding_is_input_ingress_not_cpu_model_inference": true
+  },
+  "actual_texture_to_projected_features": {
+    "runtime_source": "2340fb1e4bb24cf779d199d82949b11924b6b19a",
+    "scope": "actual_png_texture_gpu_preprocessing_and_production_image_feature_adapter_only_not_final_embedding",
+    "input_kind": "original_non_readable_png_texture",
+    "actual_backend": "GPUCompute",
+    "bit_differences": 0,
+    "mismatched_elements": 0,
+    "maximum_tolerance_ratio": 0.0,
+    "cpu_computation_or_input_count": 0,
+    "readback_flush_count": 0,
+    "host_peak_working_set_bytes": 4717993984,
+    "execute_and_final_download_ms": 17282.3311,
+    "capture_sha256": "89e4ce0f45081a6d08fe2c84c20c557792cacc5875804a4b91c916520d1140f2",
+    "original_coefficient_bytes_preserved": true,
+    "report": "vision-real-texture-production-adapter-gpu-2340fb1e4bb24cf779d199d82949b11924b6b19a-square-1.json",
+    "report_sha256": "d51dbd9a230cac6f2a59f794ac6344204696ebf1fd226620bbbc3896c87a1c61",
+    "values": 131072,
+    "execution": {
+      "process_prefix": "gpu-real-texture-image-adapter-square1-v2-20261015",
+      "process_sha256": "5161ca39e7018c39d7bbc677e0bde1c427950958157f0a2888d8f343caa41c89",
+      "xml_sha256": "70ddb87000d43412f177c1d40137074b3e3e4b456e4810a0657c8d0e6d6e0884",
+      "counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exit_code": 0,
+      "terminal": true,
+      "elapsed_seconds": 66.09295429999474
+    }
+  },
+  "python_regression": {
+    "source": "cd08e0fe23403c08b682f5e4410f0c1c5f72991b",
+    "run": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38748232407",
+    "environments": [
+      {
+        "environment": "python-ubuntu-latest-3.13",
+        "tests": 1070,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "xml_sha256": "15b277e5405e1bdc1c463d8c0d1c615302fd7ad2c83190a7d7401912036b8141"
+      },
+      {
+        "environment": "python-ubuntu-latest-3.14",
+        "tests": 1070,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "xml_sha256": "03b7fc9fbc6eb42712717359f5f4659733138c6d8c9fa6b435c87bb7fb200d52"
+      },
+      {
+        "environment": "python-windows-latest-3.13",
+        "tests": 1070,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "xml_sha256": "7091eb0a3450c1c2bafdc10fa57beb7297d28f4b3774dd9124e609f540e91f6d"
+      },
+      {
+        "environment": "python-windows-latest-3.14",
+        "tests": 1070,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "xml_sha256": "fa83ffae7075aec49fa3763e6ac094cb854b969c55cfa71fc75bd6d4cf43e0b2"
+      }
+    ]
+  },
+  "package_and_workflow_lint": {
+    "source": "38baf10321226d4af24380adc046679e595ee048",
+    "package_run": 38749054489,
+    "lint_run": 38749048314,
+    "success": true
+  },
+  "setup_failures_retained": [
+    "Scalar test without meta: zero tests, rejected as missing execution.",
+    "Diagnostic Is.AnyOf assertion unavailable in pinned NUnit: compile failure, no test execution.",
+    "PNG ARGB32 rejected before encoder execution; numerical image gates unaffected."
+  ],
+  "all_texture_cases_validated": false,
+  "actual_texture_to_final_768_validated": false,
+  "end_to_end_validated": false,
+  "steps_3_4_complete": false,
+  "latest_head_required_ci_validated": false,
+  "pending": [
+    "Reusable packaging/adoption of qualified model segments and borrowed GPU operations.",
+    "Real Texture -> staged encoder -> backbone -> normalized768 API across all roles/profiles and PCM counterpart.",
+    "Masks/input boundaries, cancellation during work, exception recovery, Dispose, text regression, samples/Player/required environments/final Required CI/long-term memory."
+  ]
+}

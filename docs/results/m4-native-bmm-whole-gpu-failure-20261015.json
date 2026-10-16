@@ -1,0 +1,83 @@
+{
+  "success": false,
+  "scope": "native_bmm_original_whole_audio_encoder_gpu_numeric_gate",
+  "runtime_source": "746fbc037a2b32001f482528013781c103d518b7",
+  "partition_producer": "1ffda7faf9d99c6ced185f41f2952458662d3cd2",
+  "original_reference_changed": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "actual_backend": "GPUCompute",
+  "cpu_computation_or_input_count": 0,
+  "readback_flush_count": 0,
+  "operation_count": 207,
+  "dynamic_matmul_count": 36,
+  "prepare_ms": 12691.7296,
+  "execute_and_final_download_ms": 2265.8653,
+  "mismatched_elements": 415,
+  "maximum_absolute_error": 0.0001983642578125,
+  "maximum_tolerance_ratio": 9.63792170179081,
+  "prior_native_silu_mismatches": 203,
+  "interpretation": "Frozen native products pass separately; the connected whole encoder fails and has more tolerance mismatches. Do not count as acceptance.",
+  "remaining": [
+    "Locate connected attention operand differences",
+    "Original six audio signals and two profiles",
+    "Image FP32 three profiles",
+    "Real final GPU API acceptance"
+  ],
+  "execution": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+      "-logFile",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\native-bmm-whole-original-silence-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "NativeBmmPartitionsGpuMatchOriginalGolden\\(\"silence\"\\)",
+      "-testResults",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\native-bmm-whole-original-silence-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-15T10:01:18.577172+09:00",
+    "pid": 57276,
+    "exit_code": 2,
+    "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\native-bmm-whole-original-silence-20261015.xml",
+    "unity_counts": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "elapsed_seconds": 70.74247440000181,
+    "completed_utc": "2026-10-15T10:02:29.319648+09:00"
+  },
+  "evidence": [
+    {
+      "sha256": "b945e6f537c0a16ec0e0eb9a64c264372067fd71c8d02f4e40fcf1fcdb0afd73",
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-native-bmm-gpu-746fbc037a2b32001f482528013781c103d518b7-silence.json"
+    },
+    {
+      "sha256": "5ecf03cb1d45414575811e18d28eaace73d393a44fae0170963900279cceb06e",
+      "path": "artifacts\\numerical-acceptance-state\\native-bmm-whole-original-silence-20261015.xml"
+    },
+    {
+      "sha256": "ac062e05b56c17167761db47fb5c3b0255e8084e59e376e170488df70de5a486",
+      "path": "artifacts\\numerical-acceptance-state\\native-bmm-whole-original-silence-20261015.log"
+    },
+    {
+      "sha256": "17bb642a6a9b84ee9768065becff325273f2e8213e5cabb62fca79b6e8d91248",
+      "path": "artifacts\\numerical-acceptance-state\\dynamic-shape-dependency-red-20261015.xml"
+    },
+    {
+      "sha256": "2051264a0466a2bb12a38fcd52d286d0388cf7e57e8bbb391a1155579c2d8295",
+      "path": "artifacts\\numerical-acceptance-state\\dynamic-shape-dependency-related-green-20261015.xml"
+    }
+  ]
+}

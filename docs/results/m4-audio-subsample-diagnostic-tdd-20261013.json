@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-13",
+  "scope": "small_subsample_operator_diagnostics_only",
+  "red_api_checkpoint_commit": "ba0b26339bbac6595036ed4cf4e4ffc71db5452a",
+  "implementation_commit": "9024133d9fe9785baf702e2952d3dd96b688b333",
+  "api_and_context_assertion_red": 6,
+  "input_validation_assertion_red": 4,
+  "first_related_green": 16,
+  "coarse_routing_assertion_red": 2,
+  "routing_red_source_state": "standalone_diagnostic_working_tree_before_routing_added",
+  "final_related_green": 22,
+  "real_subsample_operators_executed": false,
+  "original_real_failure_preserved": true,
+  "real_encoder_validated": false,
+  "unity_validated": false,
+  "end_to_end_validated": false,
+  "tolerances_changed": false,
+  "source_files_sha256": {
+    "tools/embeddinggemma_tools/export.py": "551c43e2558b91da18cd22e211761244b2f2f00146812d45ffdcd23de3a52d79",
+    "tools/embeddinggemma_tools/prepare.py": "4c3fa71bdf3640effca37b8a01b79d02bafa294b7e9a64941168bb0900ebc49e",
+    "tools/tests/test_audio_subsample_diagnostics.py": "3b772dbdaa433ec103f97ffdb5546443c8483e3dc3be4319633efc500749fdea"
+  },
+  "evidence_sha256": {
+    "audio-subsample-diagnostics-red.log": "a453d2ba9c1226041f0b8c706a5f99621b1b9a698d892fe2ce7ad175f4d774c0",
+    "audio-subsample-validation-red.log": "1ee60ef4d64552c1b3faf3e05b2a46500d4401bdfdeabfc064be52ddc631ab89",
+    "audio-subsample-diagnostics-first-green.log": "bbdb7bcf4a7bf56081a7b0122159fc6d4900a956bf510913d2eedf76bfe6bea1",
+    "audio-subsample-routing-red.log": "891fff91366be6ec76ac81e315b5a7a0ab7c4dd2c44976639d9d17cc216449d5",
+    "audio-subsample-related-green.log": "22ba8cfc2ca9735f656d49d509f5dc5f401c6824bce0f32a40d69d48ce88d989"
+  }
+}

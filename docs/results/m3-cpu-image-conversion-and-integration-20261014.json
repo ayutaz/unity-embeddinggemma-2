@@ -1,0 +1,24 @@
+{
+  "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+  "CompletedAt": "2026-10-13T16:21:10.7741704Z",
+  "FailedCount": 1,
+  "FailedTests": [
+    {
+      "FullName": "EmbeddingGemma.Tests.CpuImagePreprocessorIntegrationTests.RealTextureCpuPreprocessingConnectsToSyntheticFinalApi",
+      "Message": "  Expected: 0.45733540469874051d +/- 9.9999999999999995E-07d\r\n  But was:  0.457341015f\r\n",
+      "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CpuImagePreprocessorIntegrationTests.cs",
+      "Line": 62
+    }
+  ],
+  "HasFailures": true,
+  "InconclusiveCount": 0,
+  "Message": "Test execution completed with status: Failed",
+  "NoTestsFound": false,
+  "NoTestsFoundExplanation": "",
+  "PassedCount": 16,
+  "SkippedCount": 0,
+  "Status": "Failed",
+  "Success": false,
+  "TestCount": 17,
+  "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\.uloop\\outputs\\TestResults\\20261013_162110_7777138_8292b34241994089afaf49deda28ffc2.xml"
+}

@@ -1,0 +1,77 @@
+{
+  "scope": "staged_source_contracts_and_small_real_gpu_graph",
+  "real_model_validated": false,
+  "git_consumer_validated": false,
+  "encoders_validated": false,
+  "gpu_preprocessing_validated": false,
+  "unity": "6000.3.21f1",
+  "sentis": "2.6.1",
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "base_commit": "e35470212f616b020c0b150a4c515a007f0b937f",
+  "source_note": "Uncommitted development source staged in existing consumer Assets test assembly; package runtime/vendor cache unchanged. Initial red used unimplemented stubs; final file hashes describe the final green source.",
+  "final_source_sha256": {
+    "Packages\\com.ayutaz.embeddinggemma\\Runtime\\MultimodalBackbone.cs": "6a9693b006739c9c2714ff6d1015c1bbf1583bfd012d08cc348b3df827f6fc02",
+    "Packages\\com.ayutaz.embeddinggemma\\Runtime\\MultimodalBackboneProfile.cs": "bba03d32a878ecb26210833fc6e2c4b3446b80db57b7896756931511eacedc09",
+    "Packages\\com.ayutaz.embeddinggemma\\Tests\\Editor\\MultimodalBackboneTests.cs": "1d2dcff150c61b33ae68201d715299fdff4d58461503f89fe91ea1cb80c00ce8"
+  },
+  "phases": [
+    {
+      "phase": "initial_red",
+      "success": false,
+      "test_count": 22,
+      "passed": 1,
+      "failed": 21,
+      "skipped": 0,
+      "completed_at": "2026-10-12T23:19:18.1639785Z",
+      "compile_note": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "cli_result_sha256": "29cbb0005fa334be710f5abb302c05c5d1166d27e3d92688ccc5dacf949bc8aa",
+      "xml_sha256": "e73a3af41c94ea6ae02b2e483e7fc455abd6c823276599f0beb4a0553b7c3e37"
+    },
+    {
+      "phase": "initial_green",
+      "success": true,
+      "test_count": 22,
+      "passed": 22,
+      "failed": 0,
+      "skipped": 0,
+      "completed_at": "2026-10-12T23:20:33.6668897Z",
+      "compile_note": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "cli_result_sha256": "8a05e2785e674f38f22d7a4253fce5af06afa7bb1cddd0ec34eea35285bb7150"
+    },
+    {
+      "phase": "gpu_acceptance",
+      "success": true,
+      "test_count": 23,
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0,
+      "completed_at": "2026-10-12T23:23:13.2180307Z",
+      "compile_note": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "cli_result_sha256": "479b54277a66af1ed56418ae2e9e579a623c40c9187e2fdab3d9722ddb2862cf"
+    },
+    {
+      "phase": "disposed_feature_red",
+      "success": false,
+      "test_count": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0,
+      "completed_at": "2026-10-12T23:24:44.7742064Z",
+      "compile_note": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "cli_result_sha256": "3bca04f20c8f3408eab2c186e3470d641be7cec8174017a7fe0f89dc57276aa6",
+      "xml_sha256": "770bc0bab6711fdebc3878f99d040e551638a4cf96a3a7e6275cff37b88d59c6"
+    },
+    {
+      "phase": "final_green",
+      "success": true,
+      "test_count": 62,
+      "passed": 62,
+      "failed": 0,
+      "skipped": 0,
+      "completed_at": "2026-10-12T23:25:50.6644887Z",
+      "compile_note": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "cli_result_sha256": "7176fc113505971cc37774644d00d96ddab543d654c5e359a90739b351559e72"
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "correct_synthetic_tanh_test_target_contract_not_model_math_fix",
+  "problem": "Tests incorrectly required one captured original-order candidate to match current native Tanh bits on every CPU. Recorded CI had8/514 one-ULP native differences. Fixed original context and current native context are separate requirements.",
+  "primary_sources": [
+    {
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/v2.14.1/aten/src/ATen/native/cpu/UnaryOpsKernel.cpp",
+      "finding": "Contiguous Tanh uses vml::vtanh."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/pytorch/pytorch/v2.14.1/aten/src/ATen/cpu/vml.h",
+      "finding": "MKL Tanh calls vmsTanh in VML_HA|VML_FTZDAZ_OFF|VML_ERRMODE_IGNORE."
+    },
+    {
+      "url": "https://www.intel.com/content/www/us/en/docs/onemkl/developer-reference-vector-math-performance-accuracy-data/2021-1/overview.html",
+      "finding": "HA accuracy is bounded; accuracy behavior is processor-specific and results may differ slightly."
+    }
+  ],
+  "local_vml_header_sha256": "9cde364ac16b476aa82dbf86fb010ac7e8ca987385cd664a162537e189d710c2",
+  "captured_fixture_provenance": {
+    "scope": "fixed_synthetic_native_tanh_diagnostic_captures_not_real_encoder_reference",
+    "source": "d838ecb7d1bac9169f5afc525d823de0d4a578ae",
+    "run": 38823855948,
+    "artifact_id": 12013054484,
+    "parent_report_sha256": "67464022c63225178d6ffcd5eb4d40137ab3a9bff1e68e58a3c38392da6ee6b8",
+    "cpu": "AMD EPYC7763 AVX2",
+    "fixture_generation": "Previously captured native Torch outputs; not generated from the ONNX candidate in this change.",
+    "cases": [
+      {
+        "id": "dense32771",
+        "shape": [
+          32771
+        ],
+        "input": {
+          "file": "tanh-dense32771-input-fp32.bin",
+          "sha256": "5566e15821fa8741ee5c9032e98ec8db66803c044659c84ee5c4a77cce572409",
+          "bytes": 131084
+        },
+        "native": {
+          "file": "tanh-dense32771-native-fp32.bin",
+          "sha256": "04c9f7965bcd4aa607098405b9d85488bef86e19d2b33c5ed5e2083e55bb5b27",
+          "bytes": 131084
+        }
+      },
+      {
+        "id": "random514",
+        "shape": [
+          2,
+          257
+        ],
+        "input": {
+          "file": "tanh-random514-input-fp32.bin",
+          "sha256": "d84caa8f88e0a842c2784bc0734b07aa43e75d1788f44df3d4d04866c1e5d794",
+          "bytes": 2056
+        },
+        "native": {
+          "file": "tanh-random514-native-fp32.bin",
+          "sha256": "1ed666420d33124caefc53c1808fb2bd658a269375410a91b3ca59c87b8c8016",
+          "bytes": 2056
+        }
+      }
+    ]
+  },
+  "fixed_original_eager_values": 33285,
+  "fixed_original_actual_onnx_values": 33285,
+  "actual_onnx_previously_tested_synthetic_values": 514,
+  "original_fixture_bits_required": true,
+  "current_host_comparison": {
+    "atol": 1e-05,
+    "rtol": 0.0001,
+    "universal_bit_identity_claim_removed": true,
+    "bit_difference_count_retained": true
+  },
+  "tdd": {
+    "recorded_ci_five_value_counterexample_red": "1 failed,1 passed: original bits survive but current native bits differ at all5 recorded values",
+    "fixed_fixture_missing_red": "4 failures before audited captures were installed",
+    "green": "29 passed,8 warnings,4.71seconds; no skipped tests"
+  },
+  "negative_controls": [
+    "Changed original output fails even if it matches the current native output",
+    "Current native exceeding original encoder tolerance still fails"
+  ],
+  "weights_free_binary_fixture_bytes": 266280,
+  "fixture_files": {
+    "reference.json": "b1beca29efc65ef4d805dd1307bfd33f688b9b572542057c5130db0cdaea75f6",
+    "tanh-dense32771-input-fp32.bin": "5566e15821fa8741ee5c9032e98ec8db66803c044659c84ee5c4a77cce572409",
+    "tanh-dense32771-native-fp32.bin": "04c9f7965bcd4aa607098405b9d85488bef86e19d2b33c5ed5e2083e55bb5b27",
+    "tanh-random514-input-fp32.bin": "d84caa8f88e0a842c2784bc0734b07aa43e75d1788f44df3d4d04866c1e5d794",
+    "tanh-random514-native-fp32.bin": "1ed666420d33124caefc53c1808fb2bd658a269375410a91b3ca59c87b8c8016"
+  },
+  "candidate_tanh_code_unchanged": true,
+  "product_runtime_unchanged": true,
+  "encoder_original_references_and_tolerances_unchanged": true,
+  "default_model_reference_gate_unchanged": true,
+  "fresh_model_ci_executed": false,
+  "required_ci_passed": false,
+  "noise_final_still_missing": true,
+  "gpu_validated_by_this_change": false,
+  "limit": "This corrects a synthetic unit-test specification. It does not fix the real encoder ONNX1309-value failure, qualify the missing noise final output, or claim a previously differing native kernel became bit-identical."
+}

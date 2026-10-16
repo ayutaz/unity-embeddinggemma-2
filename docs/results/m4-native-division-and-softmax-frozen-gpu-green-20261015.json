@@ -1,0 +1,184 @@
+{
+  "success": true,
+  "scope": "frozen_native_scalar_division_and_softmax_gpu_only",
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "frozen_gpu_results": [
+    {
+      "success": true,
+      "scope": "one_frozen_original_softcap_division_gpu_bit_gate",
+      "runtime_source": "d163b0b3509658c3902ca177ecc20fe01b887f0d",
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "actual_backend": "GPUCompute",
+      "count": 55296,
+      "bit_differences": 0
+    },
+    {
+      "success": true,
+      "scope": "one_frozen_native_attention_nonlinearity_gpu_bit_gate",
+      "runtime_source": "03e63b296e355a5f792125622cabadba82a1539b",
+      "operation": "softmax",
+      "full_encoder_validated": false,
+      "end_to_end_validated": false,
+      "actual_backend": "GPUCompute",
+      "count": 55296,
+      "bit_differences": 0,
+      "mismatched_elements": 0,
+      "maximum_tolerance_ratio": 0.0
+    }
+  ],
+  "division_red": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+      "-logFile",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\native-scalar-division-api-and-frozen-red-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "NativeScalarDivisionGpuTests",
+      "-testResults",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\native-scalar-division-api-and-frozen-red-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-15T10:34:41.059149+09:00",
+    "pid": 58528,
+    "exit_code": 2,
+    "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\native-scalar-division-api-and-frozen-red-20261015.xml",
+    "unity_counts": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "skipped": 0
+    },
+    "elapsed_seconds": 39.24091710000357,
+    "completed_utc": "2026-10-15T10:35:20.300067+09:00"
+  },
+  "division_green": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+      "-logFile",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\native-scalar-division-api-and-frozen-candidate-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "NativeScalarDivisionGpuTests",
+      "-testResults",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\native-scalar-division-api-and-frozen-candidate-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-15T10:35:56.583809+09:00",
+    "pid": 89912,
+    "exit_code": 0,
+    "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\native-scalar-division-api-and-frozen-candidate-20261015.xml",
+    "unity_counts": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 38.84992580000835,
+    "completed_utc": "2026-10-15T10:36:35.433735+09:00"
+  },
+  "softmax_red": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+      "-logFile",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\native-softmax-api-and-frozen-red-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "FrozenNativeSoftmaxCandidateMustMatchAllBitsOnGpu|NativeSoftmaxBorrowsInputAndReusesAfterRejectedCpuInput",
+      "-testResults",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\native-softmax-api-and-frozen-red-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-15T10:39:51.895896+09:00",
+    "pid": 89264,
+    "exit_code": 2,
+    "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\native-softmax-api-and-frozen-red-20261015.xml",
+    "unity_counts": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "skipped": 0
+    },
+    "elapsed_seconds": 43.44301610000548,
+    "completed_utc": "2026-10-15T10:40:35.338912+09:00"
+  },
+  "softmax_green": {
+    "command": [
+      "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-projectPath",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+      "-logFile",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\native-softmax-api-and-frozen-candidate-20261015.log",
+      "-force-d3d12",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "FrozenNativeSoftmaxCandidateMustMatchAllBitsOnGpu|NativeSoftmaxBorrowsInputAndReusesAfterRejectedCpuInput",
+      "-testResults",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\native-softmax-api-and-frozen-candidate-20261015.xml"
+    ],
+    "timeout_seconds": 300.0,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-15T10:41:24.750155+09:00",
+    "pid": 81620,
+    "exit_code": 0,
+    "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\native-softmax-api-and-frozen-candidate-20261015.xml",
+    "unity_counts": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 41.95585869999195,
+    "completed_utc": "2026-10-15T10:42:06.706012+09:00"
+  },
+  "planner_tdd": {
+    "division_related_green": 65,
+    "softmax_intended_red": 6,
+    "division_intended_red": 9,
+    "softmax_related_green": 71
+  },
+  "qualification": "Each fixed native operation matches 55,296 values on the tested GPU. This does not prove other native inputs, all profiles, or whole encoder success.",
+  "evidence": [
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\frozen-native-scalar-division-gpu-d163b0b3509658c3902ca177ecc20fe01b887f0d.json",
+      "sha256": "341a8f85809a9a85725246ebcc8fdac9bd6e882c749d3564802816e303bd3dd0"
+    },
+    {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\frozen-native-softmax-candidate-gpu-03e63b296e355a5f792125622cabadba82a1539b-softmax.json",
+      "sha256": "a82c751bcd2b5eabfa0df7222e65189c1a93d327a89efeb3590fac676856f0cd"
+    }
+  ]
+}

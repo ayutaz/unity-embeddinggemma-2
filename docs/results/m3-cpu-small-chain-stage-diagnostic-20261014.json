@@ -1,0 +1,16 @@
+{
+  "scope": "synthetic_cpu_graph_reduction_diagnostic_not_real_model",
+  "runtime_source": "10fa49cd4a7db231cb3e27434dfabaf47b54fb1f",
+  "fixed_final_atol": 1E-06,
+  "fixed_final_passed": false,
+  "pixel_mean_expected_from_float32_storage": 0.22946780068533762,
+  "pixel_mean_actual_double_accumulation": 0.22946780068533762,
+  "projected_mean_actual": 0.2294643372297287,
+  "projected_mean_error_vs_pixel_mean": -3.4634556089208068E-06,
+  "final_seed_expected_high_precision": 0.514267787114846,
+  "final_seed_inferred_from_output": 0.514275796518634,
+  "backbone_seed_error_vs_observed_projected_mean": 1.1459288905335541E-05,
+  "final_first_expected": 0.45733540469874051,
+  "final_first_actual": 0.457341015,
+  "real_model_validated": false
+}

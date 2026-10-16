@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "explicit_original_input_stem_candidate_tdd_only",
+  "source_base": "2058ed675f9109a2929cfde373f39ba12be69227",
+  "eager_red": {
+    "file": "native-stem-conv-red-20261016.xml",
+    "sha256": "a0a6d6af4e1be5415e826e1551f568de4b94bcf89e64957f7bc6425c4cbae349",
+    "tests": "9",
+    "failures": "9",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.236"
+  },
+  "static_red": {
+    "file": "static-stem-conv-red-20261016.xml",
+    "sha256": "82cca0915d6e28d54113b7df67a8cfd7adae91d0cff8a3db13b12ad566bf40ea",
+    "tests": "8",
+    "failures": "8",
+    "errors": "0",
+    "skipped": "0",
+    "time": "0.232"
+  },
+  "prefix_red": {
+    "file": "ordered-original-stem-red-20261016.xml",
+    "sha256": "30dd8090e58923b1a1fcaca8a12412bdf07b41d3d6c6d945ce47c179f62ba5e6",
+    "tests": "3",
+    "failures": "3",
+    "errors": "0",
+    "skipped": "0",
+    "time": "2.715"
+  },
+  "static_green": {
+    "file": "static-stem-conv-green-20261016.xml",
+    "sha256": "7920f005fb2e52898632b5965dbef28daef0fa6c38732191e41f8a19ee7d08b2",
+    "tests": "24",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "7.246"
+  },
+  "prefix_green": {
+    "file": "ordered-original-stem-green-20261016.xml",
+    "sha256": "3e02485a0b1f4dec2f47a23cba2069789daa588f8b7b9008c8b872b43ea8f057",
+    "tests": "3",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "8.335"
+  },
+  "related_green": {
+    "file": "ordered-original-stem-related-green-20261016.xml",
+    "sha256": "b164d2d7bcc614bdeccb358ce436f0d7bf7898ee029def0a392e292069ad5b7a",
+    "tests": "166",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0",
+    "time": "80.001"
+  },
+  "native_execution": "Original torch.conv2d passthrough, never counted as fixed-order candidate execution. Standard FP32 symbolic graph separately evaluated.",
+  "candidate": "ordered_original_stem",
+  "replacements": {
+    "convolution": 2,
+    "normalization": 2,
+    "static_linear": 1
+  },
+  "algorithm": "Original Cin1 kernel9 FMA order and Cin128 block16/reset/store-add; previously qualified refined_mean_moment norms; static FMA192 projection.",
+  "memory_policy": "No eager FMA replay on real stem during export; same reference kernels/order with last-consumer release for both same-host baseline and explicit candidate.",
+  "scope_guards": "Only exact original convolution contracts/weight shapes; CLI rejects later boundary before loading model. Defaults, coefficients, original references/tolerances and product Runtime unchanged.",
+  "isolated_original_evidence": "m4-static-stem-conv-original-selected2560-bit-exact-20261016.json",
+  "actual_small_connected_onnx_evaluated": true,
+  "actual_original_stem_validated": false,
+  "whole_encoder_validated": false,
+  "gpu_validated": false,
+  "required_ci_passed": false
+}

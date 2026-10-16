@@ -1,0 +1,61 @@
+{
+  "scope": "real_saved_encoder_context_drift_diagnostics_only",
+  "head_commit": "02413f70df338b9a16ba328b147223bd0e1e1e7d",
+  "producer_commit": "ea8b2f350c850dedd8f2ca20b35cebed1c7a3c15",
+  "expected_unchanged": true,
+  "cause_confirmed": false,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "conditions": [
+    {
+      "official_mismatches": 145,
+      "case": "silence",
+      "modality": "audio",
+      "workflow_run": 38560553234,
+      "role": "document",
+      "torch_version": "2.14.1+cu130",
+      "torch_threads": 2,
+      "saved_encoder_vs_expected": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 251,
+        "maximum_absolute_error": 0.0002269744873046875,
+        "maximum_tolerance_ratio": 8.871237013984649,
+        "worst_index": 18019,
+        "worst_actual": 0.032756462693214417,
+        "worst_expected": 0.0326387956738472
+      },
+      "official_maximum_tolerance_ratio": 3.11813114174326,
+      "diagnostic_sha256": "c4f2923b6acd0ff1087ba965d36432d40bace4b4b80a9c036d96fe3114bf556c",
+      "torch_interop_threads": 2,
+      "official_maximum_absolute_error": 8.380413055419922E-05,
+      "cpu_capability": "AVX512",
+      "artifact_id": 11892360294
+    },
+    {
+      "official_mismatches": 3,
+      "case": "square-0",
+      "modality": "image",
+      "workflow_run": 38560640093,
+      "role": "document",
+      "torch_version": "2.14.1+cu130",
+      "torch_threads": 2,
+      "saved_encoder_vs_expected": {
+        "actual_finite": true,
+        "same_shape": true,
+        "mismatched_elements": 3,
+        "maximum_absolute_error": 2.962350845336914E-05,
+        "maximum_tolerance_ratio": 1.1828582987424463,
+        "worst_index": 25168,
+        "worst_actual": -0.03351863473653793,
+        "worst_expected": -0.03353442996740341
+      },
+      "official_maximum_tolerance_ratio": 1.1828582987424463,
+      "diagnostic_sha256": "9a822fae1db2edaccf6e924acdd3eb5a871508263e9041a907ef4927c10a3940",
+      "torch_interop_threads": 2,
+      "official_maximum_absolute_error": 2.962350845336914E-05,
+      "cpu_capability": "AVX512",
+      "artifact_id": 11891934418
+    }
+  ]
+}

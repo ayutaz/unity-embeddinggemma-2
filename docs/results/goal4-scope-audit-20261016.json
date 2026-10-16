@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "goal": "4まで進めてください",
+  "status": "active_not_complete",
+  "authoritative_plan": {
+    "assistant_plan_timestamp_utc": "2026-10-14T15:30:35.205Z",
+    "goal_activation_timestamp_utc": "2026-10-14T15:30:44.520Z",
+    "step_3": "数値差の修正。元の期待値・許容差を維持し、音声全6信号・画像全3プロファイルがGPUで合格。",
+    "step_4": "最終APIの検証。実Texture / PCMから前処理→encoder→backbone→768次元まで接続確認。全role、入力境界、メモリ解放、例外後の再利用、テキスト回帰が合格。",
+    "step_5": "性能・実機確認。モデル変換の再利用を検討し、検索サンプル・反復実行・Player・各OSで検証。",
+    "step_6": "統合・配布準備。PR依存、導入、バージョン、ライセンスを整理。",
+    "workspace_cross_reference": "docs/multimodal-tdd-plan.md execution table R0-R3; docs/gpu-execution-and-silu-validation.md"
+  },
+  "required_for_current_goal": [
+    "Preserve original image/audio references, learned coefficients and encoder atol=1e-5 / rtol=1e-4.",
+    "Actual GPU image encoder all six cases / three profiles and audio encoder six original signals / both profiles; no skipped GPU passes.",
+    "Actual Texture and PCM through GPU preprocessing, accepted encoders, backbone and normalized finite768 APIs.",
+    "Query / Document / Raw and all fixed profiles / masks, input boundaries, explicit per-call Tensor and Worker ownership / Dispose, recovery after errors.",
+    "Existing text regression and required repository checks for the resulting candidate; retain failures and missing evidence separately."
+  ],
+  "later_project_requirements_retained": [
+    "Model preparation reuse / distributable packaging, search samples, playback / explicit microphone capture.",
+    "Long-term memory/performance, stripped Player, macOS / Android / iOS devices, release qualification.",
+    "PR merge and publication remain separately authorized actions."
+  ],
+  "interpretation": "The accepted final plan immediately before goal activation defines step4 as final API acceptance. Some later checkpoint prose conflated execution steps3/4 with full M3/M4 milestones. Those broader project requirements remain in the project plan, but are not substituted for the original goal's step4. Current API acceptance is still incomplete, including actual audio PCM role coverage, final regression and remaining lifetime/boundary evidence."
+}

@@ -1,0 +1,56 @@
+{
+  "scope": "fixed_original_first_ffn_activation_only",
+  "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "native_replay_report_sha256": "99529dc0fa6c74825b23fca653d82091797ff1e5267d26c5cdae723fcf86f501",
+  "input_sha256": "e5ac1da2d80e0013714a5be3e3336272bc954176baf71bd932107db62b8318b4",
+  "expected_sha256": "ad35b972c4e5e513fc9edb68192470de427833ef17c054bc0a55f6c869e8ba5f",
+  "shape": [
+    1,
+    280,
+    4096
+  ],
+  "input_range": [
+    -17.16006851196289,
+    22.753345489501953
+  ],
+  "cases": [
+    {
+      "variant": "torch_native",
+      "mismatched_elements": 0,
+      "bit_differences": 0,
+      "max_abs": 0.0,
+      "max_ratio": 0.0
+    },
+    {
+      "variant": "numpy_exp_divide",
+      "mismatched_elements": 0,
+      "bit_differences": 375259,
+      "max_abs": 4.76837158203125e-07,
+      "max_ratio": 0.0017017428194876644
+    },
+    {
+      "variant": "sleef_fp64_fma_oracle_divide",
+      "mismatched_elements": 0,
+      "bit_differences": 0,
+      "max_abs": 0.0,
+      "max_ratio": 0.0
+    },
+    {
+      "variant": "sleef_fp64_fma_oracle_corrected_divide",
+      "mismatched_elements": 0,
+      "bit_differences": 0,
+      "max_abs": 0.0,
+      "max_ratio": 0.0
+    },
+    {
+      "variant": "portable_standard_fp32_silu",
+      "mismatched_elements": 0,
+      "bit_differences": 0,
+      "max_abs": 0.0,
+      "max_ratio": 0.0
+    }
+  ],
+  "fp64_used_only_for_independent_fma_oracle": true,
+  "full_encoder_validated": false,
+  "gpu_validated": false
+}

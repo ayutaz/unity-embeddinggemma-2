@@ -1,5 +1,7 @@
 # Unity 6000.3.21f1更新と終了比較
 
+> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+
 2026-10-12にユーザーが6000.3.21f1への固定版更新を承認した。公式revisionは`c02631ffc030`。関連する[公式修正UUM-146676](https://unity.com/releases/editor/whats-new/6000.3.21f1)はWindows accessibilityの終了クラッシュであり、今回の問題との一致は実行比較で判断する。
 
 ## 更新範囲

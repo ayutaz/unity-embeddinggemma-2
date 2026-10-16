@@ -1,0 +1,1544 @@
+{
+  "scope": "original_silence_subsample_local_bit_repairs_and_one_failed_full_encoder",
+  "success": false,
+  "original_reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "native_reference_changed": false,
+  "records": [
+    {
+      "report": {
+        "success": false,
+        "source": "8df85b3e5488f76f3f24ec8a61a808e4c9d5de8e",
+        "variant": "baseline",
+        "scope": "one_frozen_conv2_original_silence_gpu_bits_only",
+        "phase": "completed",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphics_api": "Direct3D12",
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "layer_count": 1,
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "actual_backend": "GPUCompute",
+        "exact_differences": 224650,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 1.9073486328125e-06,
+        "error": "NUnit.Framework.AssertionException:   Strong local source-order target; original full-encoder tolerance remains unchanged.\r\n  Expected: 0\r\n  But was:  224650\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.FrozenBlockConvGpuTests.OriginalSecondConvMustMatchAllSavedNativeBitsOnGpu () [0x00663] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@1e87f1010649\\Tests\\Editor\\FrozenBlockConvGpuTests.cs:63 "
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\frozen-block-conv-baseline-gpu-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "EmbeddingGemma.Validation.Tests.FrozenBlockConvGpuTests.OriginalSecondConvMustMatchAllSavedNativeBitsOnGpu",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\frozen-block-conv-baseline-gpu-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-14T20:57:10.233824+00:00",
+        "pid": 72884,
+        "exit_code": 2,
+        "elapsed_seconds": 36.891648800010444,
+        "completed_utc": "2026-10-14T20:57:47.125477+00:00"
+      },
+      "nunit": {
+        "result": "Failed(Child)",
+        "total": "1",
+        "passed": "0",
+        "failed": "1",
+        "skipped": "0"
+      },
+      "evidence": [
+        {
+          "path": "artifacts\\acceptance-consumer\\artifacts\\frozen-block-conv-gpu-8df85b3e5488f76f3f24ec8a61a808e4c9d5de8e-baseline.json",
+          "bytes": 1233,
+          "sha256": "08289e27a3db45c0d21929de939ffcb732901ea92c6090505d69b1aa6841f628"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-block-conv-baseline-gpu-20261015-process.json",
+          "bytes": 1075,
+          "sha256": "3b1ab04abeebb86793d4bc9bfce7116e19f50001ced9af61addeb7aba2b652bc"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-block-conv-baseline-gpu-20261015.xml",
+          "bytes": 5279,
+          "sha256": "27b6ff1c019acbf515e8574c5c1027843515cd47614a42b3cf0c8e1c5b1d10eb"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-block-conv-baseline-gpu-20261015.log",
+          "bytes": 46929,
+          "sha256": "0cf5ae1910ba7ba2b176a830ec8c25b50a4d0cfaef3ed9ad7803fc59fd1cebe0"
+        }
+      ]
+    },
+    {
+      "report": {
+        "success": true,
+        "source": "8df85b3e5488f76f3f24ec8a61a808e4c9d5de8e",
+        "variant": "block16",
+        "scope": "one_frozen_conv2_original_silence_gpu_bits_only",
+        "phase": "completed",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphics_api": "Direct3D12",
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "layer_count": 3352,
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "actual_backend": "GPUCompute",
+        "exact_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\frozen-block-conv-block16-gpu-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "EmbeddingGemma.Validation.Tests.FrozenBlockConvGpuTests.OriginalSecondConvMustMatchAllSavedNativeBitsOnGpu",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\frozen-block-conv-block16-gpu-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": true,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-14T20:58:23.271788+00:00",
+        "pid": 55592,
+        "exit_code": 0,
+        "elapsed_seconds": 30.100844700005837,
+        "completed_utc": "2026-10-14T20:58:53.372636+00:00"
+      },
+      "nunit": {
+        "result": "Passed",
+        "total": "1",
+        "passed": "1",
+        "failed": "0",
+        "skipped": "0"
+      },
+      "evidence": [
+        {
+          "path": "artifacts\\acceptance-consumer\\artifacts\\frozen-block-conv-gpu-8df85b3e5488f76f3f24ec8a61a808e4c9d5de8e-block16.json",
+          "bytes": 561,
+          "sha256": "845603f1428bc4e15b1b3d181958722dd35076b90829e3f55b4f92d7979fb09f"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-block-conv-block16-gpu-20261015-process.json",
+          "bytes": 1072,
+          "sha256": "3260c302695c38c3e2a2fde4cbdf3fbeccf01c44147cebed402790e0d3a51d35"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-block-conv-block16-gpu-20261015.xml",
+          "bytes": 3948,
+          "sha256": "f485d211bedd878c5f9007d2f4017f9fad3bc7822e14c4661ab4d9e533ff087a"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-block-conv-block16-gpu-20261015.log",
+          "bytes": 40030,
+          "sha256": "1579a4b072967c31fd723907a458a3c14c301c2518714c1fccd29a4af4e4f5dd"
+        }
+      ]
+    },
+    {
+      "report": {
+        "success": false,
+        "scope": "one_saved_onnx_audio_encoder_gpu_vs_immutable_original",
+        "signal": "silence",
+        "runtime_source": "768899164962097e24933755cda8140c1289e7d9",
+        "requested_backend": "GPUCompute",
+        "unity": "6000.3.16f1",
+        "sentis": "2.6.1",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphics_api": "Direct3D12",
+        "end_to_end_validated": false,
+        "all_original_signals_validated": false,
+        "phase": "completed",
+        "candidate_source": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "candidate_python_gate_passed": false,
+        "candidate_folder": "GpuAudioBlock16ConvCandidate",
+        "graph_transform": {
+          "replaced_inverse_count": 2,
+          "prefixes": [
+            "/subsample_conv_projection/layer0/norm",
+            "/subsample_conv_projection/layer1/norm"
+          ],
+          "existing_initializer_bytes_preserved": true,
+          "existing_initializer_sha256": "1bf6702c73c5124fb83b629fadf150e32392d21bc5f024c2a4c88062b336ca6a",
+          "node_count": 7409,
+          "full_encoder_validated": false,
+          "source_commit": "9af88c45edca97e6c3d73b298f6c065b7638b837",
+          "original_graph_sha256": "f43f3275c1ba48837b626fc09c738a8204dabd25e2ff3c74d7e75abcb3591899",
+          "template_sha256": "026e6136b2cb4c940b0d320fe9da4e82529d6e47e1a1fbbdeb8c4209f19d858b",
+          "source_model_producer": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+          "algorithm": "bounded_fp32_sqrt_then_reciprocal_residual_refinement",
+          "original_node_count": 7237,
+          "old_graph_onnx_results_reused": false,
+          "graph_sha256": "8aefc4b83fd0cc709544a0d6337b8c1837d2c864ad1d3c8cbd39fcd568abc222",
+          "profile": "frames-1119-valid-1119"
+        },
+        "rms_graph_transform": {
+          "replaced_rms_count": 109,
+          "existing_initializer_bytes_preserved": true,
+          "excluded_mean_names": [],
+          "explicit_mean_override_names": [
+            "/lconv1d/conv_norm/ReduceMean",
+            "/lconv1d/conv_norm_1/ReduceMean",
+            "/lconv1d/conv_norm_2/ReduceMean",
+            "/lconv1d/conv_norm_3/ReduceMean",
+            "/lconv1d/conv_norm_4/ReduceMean",
+            "/lconv1d/conv_norm_5/ReduceMean",
+            "/lconv1d/conv_norm_6/ReduceMean",
+            "/lconv1d/conv_norm_7/ReduceMean",
+            "/lconv1d/conv_norm_8/ReduceMean",
+            "/lconv1d/conv_norm_9/ReduceMean",
+            "/lconv1d/conv_norm_10/ReduceMean",
+            "/lconv1d/conv_norm_11/ReduceMean"
+          ],
+          "existing_initializer_sha256": "42776517d990ebd9ef43161f7063e8ff0d810d35fd2b20f137dcdc9fa4235b6f",
+          "node_count": 31727,
+          "full_encoder_validated": false,
+          "source_commit": "d8714aa4f2ec1fb92a4578f07e4e46408132dd18",
+          "source_graph_sha256": "8aefc4b83fd0cc709544a0d6337b8c1837d2c864ad1d3c8cbd39fcd568abc222",
+          "original_node_count": 7409,
+          "algorithm": "pinned_compact_inner8_and_explicit_outer280_fp32_mean_and_refined_inverse",
+          "template_widths": [
+            1024,
+            1536
+          ],
+          "mean_template_node_counts": {
+            "1024": 121,
+            "1536": 124
+          },
+          "override_shape_contract": {
+            "input": [
+              1,
+              1119,
+              128
+            ],
+            "conv_norm": [
+              1,
+              280,
+              1024
+            ],
+            "scope": "one fixed full-valid profile; native lconv replay and 12 same-size causal convolutions audited"
+          },
+          "generator_sha256": "0571cf2cd7daa9d4fa2dc6bc86831fc7c39a3d5a8785df66b18c35d2c3c58631",
+          "graph_sha256": "11607255142478773e621f5e9feebf2d3269457feb67d63215cecbc55fc61b67"
+        },
+        "conv_graph_transform": {
+          "replaced_conv_count": 1,
+          "target_node": "/subsample_conv_projection/layer1/conv/Conv",
+          "weight_sha256": "68309f01ea3e738fccb24a0db5db608841a3a8e59b0a4fa5d0fb521ed60bf43c",
+          "existing_initializer_bytes_preserved": true,
+          "existing_initializer_sha256": "1154ac702080fbd58adb2770693221efc81f56750563f8d4310ddb7fcf870bfd",
+          "node_count": 36931,
+          "full_encoder_validated": false,
+          "source_commit": "8df85b3e5488f76f3f24ec8a61a808e4c9d5de8e",
+          "source_graph_sha256": "11607255142478773e621f5e9feebf2d3269457feb67d63215cecbc55fc61b67",
+          "original_node_count": 31727,
+          "algorithm": "pinned_block16_reset_fma_then_fp32_store_add",
+          "template_node_count": 5205,
+          "template_sha256": "eb2c7a93397a60d6a69380d34a84fa65239b5aeebb262c2cfb5d2ec8bc723c62",
+          "fixed_profile": "frames-1119-valid-1119",
+          "input_shape": [
+            1,
+            128,
+            560,
+            64
+          ],
+          "generator_sha256": "324c6ca5297b1041e5e2be9a4f53afa01c3d88c062b229e92847f75fcb670fe6",
+          "graph_sha256": "8a376cc5bc258e13fbdc2212bb6d352eafdd2b618d553113b7cf9f0aa8192fb0"
+        },
+        "graph_sha256": "8a376cc5bc258e13fbdc2212bb6d352eafdd2b618d553113b7cf9f0aa8192fb0",
+        "saved_graph_layer_count": 23465,
+        "attention_compensated_layer_count": 26237,
+        "runtime_graph_transform": "dynamic16_then_static64",
+        "projection_chunk": 64,
+        "layer_count": 63897,
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "actual_backend": "GPUCompute",
+        "mismatched_elements": 417,
+        "maximum_absolute_error": 0.00015664100646972656,
+        "maximum_tolerance_ratio": 6.736437438239218,
+        "error": "NUnit.Framework.AssertionException:   Preserve the original FP32 encoder numeric gate.\r\n  Expected: 0\r\n  But was:  417\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.SavedOnnxAudioGpuReferenceTests.Execute (System.String signal, System.String candidateFolder, System.Boolean compensateStatic, System.Int32 attentionChunk, System.Int32 projectionChunk) [0x00fd3] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@27cb7188670b\\Tests\\Editor\\SavedOnnxAudioGpuReferenceTests.cs:233 "
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\block16-conv-full-gpu-silence-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "EmbeddingGemma.Validation.Tests.SavedOnnxAudioGpuReferenceTests.Block16ConvCandidateGpuMatchesOriginalGolden.*silence.*",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\block16-conv-full-gpu-silence-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-14T21:01:13.852062+00:00",
+        "pid": 64024,
+        "exit_code": 2,
+        "elapsed_seconds": 93.89485579999746,
+        "completed_utc": "2026-10-14T21:02:47.746920+00:00"
+      },
+      "nunit": {
+        "result": "Failed(Child)",
+        "total": "1",
+        "passed": "0",
+        "failed": "1",
+        "skipped": "0"
+      },
+      "evidence": [
+        {
+          "path": "artifacts\\acceptance-consumer\\artifacts\\saved-onnx-audio-gpu-768899164962097e24933755cda8140c1289e7d9-block16-conv-attention16-static64-silence.json",
+          "bytes": 5862,
+          "sha256": "b5957fdbaab6bc0648b78e3e4386f5a09262f347425faeec5fd9e3d43ffcf6d0"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\block16-conv-full-gpu-silence-20261015-process.json",
+          "bytes": 1085,
+          "sha256": "dfd54d5e4027485ca149822e787e5ab43f4fe54a9b0dd30814f4a26a6152957a"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\block16-conv-full-gpu-silence-20261015.xml",
+          "bytes": 6466,
+          "sha256": "a58d1b3af2c592f3412150b35288f6613d35e99bde32d87ac8c3aeaa181d53b2"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\block16-conv-full-gpu-silence-20261015.log",
+          "bytes": 47666,
+          "sha256": "720bc5c31e5ee5c9e7ad2d304d00e880e46cd9081f7185e8d86d96e2729edfd6"
+        }
+      ]
+    },
+    {
+      "report": {
+        "success": true,
+        "scope": "one_saved_gpu_subsample_observation_only",
+        "runtime_source": "b065c1f3a65d5207459e5851d5e6efd8a3ea6db4",
+        "candidate_source": "6bceed7f63f74b8df012f41b853eddaca0e10702",
+        "requested_backend": "GPUCompute",
+        "stages": [
+          {
+            "stage": "layer0.conv",
+            "mismatches": 0,
+            "exact_difference_count": 0,
+            "numeric_passed": true,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer0.norm",
+            "mismatches": 0,
+            "exact_difference_count": 0,
+            "numeric_passed": true,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer0.act",
+            "mismatches": 0,
+            "exact_difference_count": 0,
+            "numeric_passed": true,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer1.conv",
+            "mismatches": 0,
+            "exact_difference_count": 0,
+            "numeric_passed": true,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer1.norm",
+            "mismatches": 0,
+            "exact_difference_count": 850,
+            "numeric_passed": true,
+            "maximum_absolute_error": 9.5367431640625e-07,
+            "maximum_tolerance_ratio": 0.03157640761060559,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "layer1.act",
+            "mismatches": 0,
+            "exact_difference_count": 438,
+            "numeric_passed": true,
+            "maximum_absolute_error": 4.172325134277344e-07,
+            "maximum_tolerance_ratio": 0.009256029280505396,
+            "actual_backend": "GPUCompute"
+          },
+          {
+            "stage": "input_proj_linear",
+            "mismatches": 0,
+            "exact_difference_count": 249215,
+            "numeric_passed": true,
+            "maximum_absolute_error": 1.52587890625e-05,
+            "maximum_tolerance_ratio": 0.13410795869485548,
+            "actual_backend": "GPUCompute"
+          }
+        ],
+        "phase": "completed",
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "graph_sha256": "8a376cc5bc258e13fbdc2212bb6d352eafdd2b618d553113b7cf9f0aa8192fb0",
+        "layer_count": 63897,
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "bound_outputs": {
+          "layer0.norm": 1717,
+          "layer1.norm": 7266,
+          "layer0.conv": 13,
+          "layer1.conv": 6570,
+          "layer0.act": 1720,
+          "layer1.act": 7269,
+          "input_proj_linear": 7276
+        },
+        "normal_final_matches_observed_bits": true,
+        "capture_directory": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer\\artifacts\\block16-subsample-gpu-b065c1f3a65d5207459e5851d5e6efd8a3ea6db4-captures",
+        "first_nonzero_stage": "layer1.norm",
+        "first_tolerance_exceeding_stage": null,
+        "observation_completed": true
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\block16-subsample-observation-gpu-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "EmbeddingGemma.Validation.Tests.SavedOnnxAudioSubsampleGpuObservationTests.ObserveBlock16SubsampleOnGpuWithoutChangingNormalFinalBits",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\block16-subsample-observation-gpu-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": true,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-14T21:06:23.486055+00:00",
+        "pid": 292,
+        "exit_code": 0,
+        "elapsed_seconds": 85.526188799995,
+        "completed_utc": "2026-10-14T21:07:49.012247+00:00"
+      },
+      "nunit": {
+        "result": "Passed",
+        "total": "1",
+        "passed": "1",
+        "failed": "0",
+        "skipped": "0"
+      },
+      "evidence": [
+        {
+          "path": "artifacts\\acceptance-consumer\\artifacts\\block16-subsample-gpu-b065c1f3a65d5207459e5851d5e6efd8a3ea6db4.json",
+          "bytes": 3001,
+          "sha256": "d4ef2da8bb68038f3b5ccd3abc4b875748b1682e4fd591e0610b4ae9242818cb"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\block16-subsample-observation-gpu-20261015-process.json",
+          "bytes": 1102,
+          "sha256": "d0c3ca8852efc0655a8e66f2cdb02f52c4aea8ea8b095c778134e91b8248b5e8"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\block16-subsample-observation-gpu-20261015.xml",
+          "bytes": 4073,
+          "sha256": "53c112f16d051e8050a91f001121b415c0639f1249064aa906597fccd7ad0e67"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\block16-subsample-observation-gpu-20261015.log",
+          "bytes": 46564,
+          "sha256": "81a060920b6918e348fec7f355c6ea3bc0f3e3a6180b91f59684c7b21b1ec40a"
+        }
+      ]
+    },
+    {
+      "report": {
+        "success": false,
+        "scope": "second_native_norm_six_unique_rows_all_8960_original_positions_preserved",
+        "source": "b4b817a04e13d35d2dd35ea54412e69f33a2a3d4",
+        "probe_variant": "baseline",
+        "case": "normal",
+        "requested_backend": "GPUCompute",
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "phase": "completed",
+        "reference_context": "original Conv2 and Norm1 bytes, all repeated positions preserved by exact input grouping",
+        "layer_kinds": {
+          "Slice": 20,
+          "Sub": 111,
+          "ScalarMad": 51,
+          "Add": 102,
+          "Mul": 45,
+          "Sqrt": 1,
+          "Neg": 2,
+          "Div": 1,
+          "Reciprocal": 1
+        },
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "actual_backend": "GPUCompute",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "exact_differences": 40,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 9.5367431640625e-07,
+        "error": "NUnit.Framework.AssertionException:   Diagnostic stronger local bit target; full encoder original tolerance remains unchanged.\r\n  Expected: 0\r\n  But was:  40\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.FrozenLayerNormGpuTests.Execute (System.String name, System.String folder) [0x008a4] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@19e76d0bd2a4\\Tests\\Editor\\FrozenLayerNormGpuTests.cs:92 "
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\frozen-second-norm-baseline-gpu-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "FrozenSecondNormRowsMatchOriginalNativeBits",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\frozen-second-norm-baseline-gpu-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-14T21:17:11.139695+00:00",
+        "pid": 84860,
+        "exit_code": 2,
+        "elapsed_seconds": 38.474020399997244,
+        "completed_utc": "2026-10-14T21:17:49.613717+00:00"
+      },
+      "nunit": {
+        "result": "Failed(Child)",
+        "total": "1",
+        "passed": "0",
+        "failed": "1",
+        "skipped": "0"
+      },
+      "evidence": [
+        {
+          "path": "artifacts\\acceptance-consumer\\artifacts\\frozen-second-norm-gpu-b4b817a04e13d35d2dd35ea54412e69f33a2a3d4-baseline-normal.json",
+          "bytes": 1561,
+          "sha256": "aae5d83dd81d61d33ebc91c34a49831516badc621abf26b2482d8d461c3dad1a"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-second-norm-baseline-gpu-20261015-process.json",
+          "bytes": 1014,
+          "sha256": "39ab1218a3ff6e150b162eedc94b512c80de7996b2084a1f1fb73c8f4ba9e0f0"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-second-norm-baseline-gpu-20261015.xml",
+          "bytes": 5490,
+          "sha256": "edd848e04bd34fcef6009627d1d73bab935741ec12e3d6d7f1145fdf4efb8c08"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-second-norm-baseline-gpu-20261015.log",
+          "bytes": 46824,
+          "sha256": "f8709a10e5128af56545ea19fc5ba54b331de2fedce4be23e9d886aa1ecd0cf4"
+        }
+      ]
+    },
+    {
+      "report": {
+        "success": true,
+        "scope": "second_native_norm_six_unique_rows_all_8960_original_positions_preserved",
+        "source": "b4b817a04e13d35d2dd35ea54412e69f33a2a3d4",
+        "probe_variant": "scalar-fused",
+        "case": "normal",
+        "requested_backend": "GPUCompute",
+        "full_encoder_validated": false,
+        "end_to_end_validated": false,
+        "phase": "completed",
+        "reference_context": "original Conv2 and Norm1 bytes, all repeated positions preserved by exact input grouping",
+        "layer_kinds": {
+          "Slice": 20,
+          "Sub": 175,
+          "ScalarMad": 92,
+          "Add": 150,
+          "Mul": 45,
+          "Sqrt": 1,
+          "Neg": 2,
+          "Div": 1,
+          "Reciprocal": 1
+        },
+        "cpu_computation_or_input_count": 0,
+        "readback_flush_count": 0,
+        "actual_backend": "GPUCompute",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "exact_differences": 0,
+        "mismatched_elements": 0,
+        "maximum_absolute_error": 0.0
+      },
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\frozen-second-norm-fused-gpu-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "FrozenSecondNormRowsMatchOriginalNativeBits",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\frozen-second-norm-fused-gpu-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": true,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-14T21:18:33.679675+00:00",
+        "pid": 69804,
+        "exit_code": 0,
+        "elapsed_seconds": 27.641767499997513,
+        "completed_utc": "2026-10-14T21:19:01.321442+00:00"
+      },
+      "nunit": {
+        "result": "Passed",
+        "total": "1",
+        "passed": "1",
+        "failed": "0",
+        "skipped": "0"
+      },
+      "evidence": [
+        {
+          "path": "artifacts\\acceptance-consumer\\artifacts\\frozen-second-norm-gpu-b4b817a04e13d35d2dd35ea54412e69f33a2a3d4-scalar-fused-normal.json",
+          "bytes": 898,
+          "sha256": "c98d81ecfe7df44ac9658aad343fdb9826b8344648574ec1b89abded833382f3"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-second-norm-fused-gpu-20261015-process.json",
+          "bytes": 1007,
+          "sha256": "2de3aab03392f5fb1725fefa1e5750d6a054f9df069d1e4a7f12cc14d24adabd"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-second-norm-fused-gpu-20261015.xml",
+          "bytes": 3927,
+          "sha256": "119c1ee29c7d0e892dfc222b9c48a73d9c2845168d488b2121d63e90478b377e"
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\frozen-second-norm-fused-gpu-20261015.log",
+          "bytes": 39769,
+          "sha256": "84e6c6220fbb3c6b17de3c8cbc4577aaea4950d063ea4d5bee7da99c4e3b7cb1"
+        }
+      ]
+    }
+  ],
+  "tdd": [
+    {
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "7",
+        "skipped": "0",
+        "tests": "7",
+        "time": "0.194",
+        "timestamp": "2026-10-15T05:52:53.191285+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\block16-conv-red-20261015.xml",
+        "bytes": 9329,
+        "sha256": "4bd7c561b105ffa27297ba6ac9583d97da9394ace389861e5c37331181f180d0"
+      }
+    },
+    {
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "30",
+        "time": "5.986",
+        "timestamp": "2026-10-15T05:53:43.719029+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\block16-conv-related-green-20261015.xml",
+        "bytes": 4425,
+        "sha256": "d1f2f6320ee2b7b7915a44f85c765798d86edf4e186f6ed342052d8f18973048"
+      }
+    },
+    {
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "4",
+        "skipped": "0",
+        "tests": "4",
+        "time": "0.175",
+        "timestamp": "2026-10-15T06:15:33.462301+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\welford-scalar-fusion-red-20261015.xml",
+        "bytes": 4129,
+        "sha256": "df7319faa7b603365c9fc277a56618a7f25cc0af97ca623dfbfc72377183baaa"
+      }
+    },
+    {
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "25",
+        "time": "14.011",
+        "timestamp": "2026-10-15T06:15:53.963760+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\welford-scalar-fusion-related-green2-20261015.xml",
+        "bytes": 3892,
+        "sha256": "46bea6f155455abdc184cbdf10c5c8d1968f08712a38f7b61f007c2fe7547d51"
+      }
+    },
+    {
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "5",
+        "skipped": "0",
+        "tests": "5",
+        "time": "2.157",
+        "timestamp": "2026-10-15T06:19:07.019615+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\scalar-mean-rewrite-red-20261015.xml",
+        "bytes": 11212,
+        "sha256": "6e0c448cbc3ef5e424a1e5c81b215eb3301900ab72cc191aea8256ef8c1addb4"
+      }
+    },
+    {
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "1",
+        "skipped": "0",
+        "tests": "1",
+        "time": "0.606",
+        "timestamp": "2026-10-15T06:21:29.604046+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\scalar-mean-rewrite-axis-red-20261015.xml",
+        "bytes": 755,
+        "sha256": "eb76ce4308b150e916b0e5a317c693f212848b89d35c36c369f4baecaaa25d0f"
+      }
+    },
+    {
+      "counts": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "18",
+        "time": "3.777",
+        "timestamp": "2026-10-15T06:21:43.438949+09:00",
+        "hostname": "DESKTOP-7PPH62N"
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\scalar-mean-rewrite-related-final-green-20261015.xml",
+        "bytes": 2911,
+        "sha256": "04b4bda8f5ecd2d9d5c876b23b0ed8d97e8eee3d96545fe5e5610bc78ac30154"
+      }
+    }
+  ],
+  "offline_diagnostics": [
+    {
+      "report": {
+        "scope": "conv2_offline_source_order_fma_components_only",
+        "unique_patch_count": 6,
+        "full_patch_count": 8960,
+        "cases": {
+          "block8_reset_fma_then_fp32_add": {
+            "bit_differences": 216001,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.9073486328125e-06,
+            "maximum_tolerance_ratio": 0.013665331654866195
+          },
+          "block16_reset_fma_then_fp32_add": {
+            "bit_differences": 0,
+            "mismatches": 0,
+            "maximum_absolute_error": 0.0,
+            "maximum_tolerance_ratio": 0.0
+          }
+        },
+        "source_commit": "80afa71049cd69a3df32adcccb623b12cd7baa22",
+        "source_sha256": "e9a5ca56cf4d6baf837c4a6650a10fd6a39c394ae66c06ae2d81ce47f2ef125f",
+        "algorithm": "prepare_output zeroes each ic block; kh/kw/ic FMA; store_output adds previous block result after FMA",
+        "fp64_scope": "independent offline fused-rounding oracle only",
+        "gpu_validated": false,
+        "full_encoder_validated": false,
+        "end_to_end_validated": false
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\second-conv-source-block-reset-20261015.json",
+        "bytes": 974,
+        "sha256": "c134d2962ad3b0b42407fdc2885e0430cb60b2520e914c54b55e853e9c6d2493"
+      }
+    },
+    {
+      "report": {
+        "scope": "second_norm_frozen_original_input_arithmetic_only",
+        "unique_rows": 6,
+        "full_rows": 8960,
+        "current_native": {
+          "unique_bit_differences": 40,
+          "full_bit_differences": 850,
+          "mismatches": 0,
+          "maximum_absolute_error": 9.5367431640625e-07
+        },
+        "welford8": {
+          "unique_bit_differences": 40,
+          "full_bit_differences": 850,
+          "mismatches": 0,
+          "maximum_absolute_error": 9.5367431640625e-07
+        },
+        "welford8_refined": {
+          "unique_bit_differences": 40,
+          "full_bit_differences": 850,
+          "mismatches": 0,
+          "maximum_absolute_error": 9.5367431640625e-07
+        },
+        "observed_gpu": {
+          "unique_bit_differences": 40,
+          "full_bit_differences": 850,
+          "mismatches": 0,
+          "maximum_absolute_error": 9.5367431640625e-07
+        },
+        "full_encoder_validated": false,
+        "end_to_end_validated": false
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\second-norm-exact-input-diagnosis-20261015.json",
+        "bytes": 12166,
+        "sha256": "6d96536b24216151564b4d7cffad9b5219d04c4d01dd8bb679e9f13f51076c94"
+      }
+    },
+    {
+      "report": {
+        "scope": "second_norm_frozen_original_input_arithmetic_only",
+        "unique_rows": 6,
+        "full_rows": 8960,
+        "current_native": {
+          "unique_bit_differences": 40,
+          "full_bit_differences": 850,
+          "mismatches": 0,
+          "maximum_absolute_error": 9.5367431640625e-07
+        },
+        "welford8": {
+          "unique_bit_differences": 40,
+          "full_bit_differences": 850,
+          "mismatches": 0,
+          "maximum_absolute_error": 9.5367431640625e-07
+        },
+        "welford8_refined": {
+          "unique_bit_differences": 40,
+          "full_bit_differences": 850,
+          "mismatches": 0,
+          "maximum_absolute_error": 9.5367431640625e-07
+        },
+        "welford16_refined": {
+          "unique_bit_differences": 134,
+          "full_bit_differences": 240350,
+          "mismatches": 0,
+          "maximum_absolute_error": 3.814697265625e-06
+        },
+        "observed_gpu": {
+          "unique_bit_differences": 40,
+          "full_bit_differences": 850,
+          "mismatches": 0,
+          "maximum_absolute_error": 9.5367431640625e-07
+        },
+        "full_encoder_validated": false,
+        "end_to_end_validated": false
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\second-norm-lanes16-diagnosis-20261015.json",
+        "bytes": 12343,
+        "sha256": "8f601bae9d97339c83d9816eebd2dd5ef19532cde669c4babbe8099403316f49"
+      }
+    },
+    {
+      "report": {
+        "scope": "six_unique_original_conv2_rows_with_all_positions_preserved",
+        "original_rows": 8960,
+        "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+        "results": [
+          {
+            "lanes": 8,
+            "fused_mean": false,
+            "fused_moment": "none",
+            "unique_bit_differences": 40,
+            "full_bit_differences": 850,
+            "mismatches": 0,
+            "maximum_absolute_error": 9.5367431640625e-07,
+            "mean": [
+              [
+                0.22195923328399658
+              ],
+              [
+                -0.2022048830986023
+              ],
+              [
+                0.15486128628253937
+              ],
+              [
+                0.24473413825035095
+              ],
+              [
+                0.44571584463119507
+              ],
+              [
+                0.5103755593299866
+              ]
+            ],
+            "inverse": [
+              [
+                0.393219918012619
+              ],
+              [
+                0.3997635245323181
+              ],
+              [
+                0.30510371923446655
+              ],
+              [
+                0.31208106875419617
+              ],
+              [
+                0.3881027400493622
+              ],
+              [
+                0.30652275681495667
+              ]
+            ]
+          },
+          {
+            "lanes": 8,
+            "fused_mean": false,
+            "fused_moment": "inner",
+            "unique_bit_differences": 40,
+            "full_bit_differences": 850,
+            "mismatches": 0,
+            "maximum_absolute_error": 9.5367431640625e-07,
+            "mean": [
+              [
+                0.22195923328399658
+              ],
+              [
+                -0.2022048830986023
+              ],
+              [
+                0.15486128628253937
+              ],
+              [
+                0.24473413825035095
+              ],
+              [
+                0.44571584463119507
+              ],
+              [
+                0.5103755593299866
+              ]
+            ],
+            "inverse": [
+              [
+                0.393219918012619
+              ],
+              [
+                0.3997635245323181
+              ],
+              [
+                0.30510371923446655
+              ],
+              [
+                0.31208106875419617
+              ],
+              [
+                0.3881027400493622
+              ],
+              [
+                0.30652275681495667
+              ]
+            ]
+          },
+          {
+            "lanes": 8,
+            "fused_mean": false,
+            "fused_moment": "outer",
+            "unique_bit_differences": 40,
+            "full_bit_differences": 850,
+            "mismatches": 0,
+            "maximum_absolute_error": 9.5367431640625e-07,
+            "mean": [
+              [
+                0.22195923328399658
+              ],
+              [
+                -0.2022048830986023
+              ],
+              [
+                0.15486128628253937
+              ],
+              [
+                0.24473413825035095
+              ],
+              [
+                0.44571584463119507
+              ],
+              [
+                0.5103755593299866
+              ]
+            ],
+            "inverse": [
+              [
+                0.393219918012619
+              ],
+              [
+                0.3997635245323181
+              ],
+              [
+                0.30510371923446655
+              ],
+              [
+                0.31208106875419617
+              ],
+              [
+                0.3881027400493622
+              ],
+              [
+                0.30652275681495667
+              ]
+            ]
+          },
+          {
+            "lanes": 8,
+            "fused_mean": true,
+            "fused_moment": "none",
+            "unique_bit_differences": 0,
+            "full_bit_differences": 0,
+            "mismatches": 0,
+            "maximum_absolute_error": 0.0,
+            "mean": [
+              [
+                0.22195923328399658
+              ],
+              [
+                -0.2022048830986023
+              ],
+              [
+                0.15486130118370056
+              ],
+              [
+                0.24473413825035095
+              ],
+              [
+                0.44571584463119507
+              ],
+              [
+                0.5103756785392761
+              ]
+            ],
+            "inverse": [
+              [
+                0.393219918012619
+              ],
+              [
+                0.3997635245323181
+              ],
+              [
+                0.30510371923446655
+              ],
+              [
+                0.31208106875419617
+              ],
+              [
+                0.3881027400493622
+              ],
+              [
+                0.30652275681495667
+              ]
+            ]
+          },
+          {
+            "lanes": 8,
+            "fused_mean": true,
+            "fused_moment": "inner",
+            "unique_bit_differences": 0,
+            "full_bit_differences": 0,
+            "mismatches": 0,
+            "maximum_absolute_error": 0.0,
+            "mean": [
+              [
+                0.22195923328399658
+              ],
+              [
+                -0.2022048830986023
+              ],
+              [
+                0.15486130118370056
+              ],
+              [
+                0.24473413825035095
+              ],
+              [
+                0.44571584463119507
+              ],
+              [
+                0.5103756785392761
+              ]
+            ],
+            "inverse": [
+              [
+                0.393219918012619
+              ],
+              [
+                0.3997635245323181
+              ],
+              [
+                0.30510371923446655
+              ],
+              [
+                0.31208106875419617
+              ],
+              [
+                0.3881027400493622
+              ],
+              [
+                0.30652275681495667
+              ]
+            ]
+          },
+          {
+            "lanes": 8,
+            "fused_mean": true,
+            "fused_moment": "outer",
+            "unique_bit_differences": 0,
+            "full_bit_differences": 0,
+            "mismatches": 0,
+            "maximum_absolute_error": 0.0,
+            "mean": [
+              [
+                0.22195923328399658
+              ],
+              [
+                -0.2022048830986023
+              ],
+              [
+                0.15486130118370056
+              ],
+              [
+                0.24473413825035095
+              ],
+              [
+                0.44571584463119507
+              ],
+              [
+                0.5103756785392761
+              ]
+            ],
+            "inverse": [
+              [
+                0.393219918012619
+              ],
+              [
+                0.3997635245323181
+              ],
+              [
+                0.30510371923446655
+              ],
+              [
+                0.31208106875419617
+              ],
+              [
+                0.3881027400493622
+              ],
+              [
+                0.30652275681495667
+              ]
+            ]
+          },
+          {
+            "lanes": 16,
+            "fused_mean": false,
+            "fused_moment": "none",
+            "unique_bit_differences": 134,
+            "full_bit_differences": 240350,
+            "mismatches": 0,
+            "maximum_absolute_error": 3.814697265625e-06,
+            "mean": [
+              [
+                0.2219592034816742
+              ],
+              [
+                -0.20220491290092468
+              ],
+              [
+                0.15486133098602295
+              ],
+              [
+                0.24473418295383453
+              ],
+              [
+                0.44571590423583984
+              ],
+              [
+                0.5103757381439209
+              ]
+            ],
+            "inverse": [
+              [
+                0.39321988821029663
+              ],
+              [
+                0.3997635245323181
+              ],
+              [
+                0.30510371923446655
+              ],
+              [
+                0.31208106875419617
+              ],
+              [
+                0.3881027400493622
+              ],
+              [
+                0.3065227270126343
+              ]
+            ]
+          },
+          {
+            "lanes": 16,
+            "fused_mean": false,
+            "fused_moment": "inner",
+            "unique_bit_differences": 134,
+            "full_bit_differences": 240350,
+            "mismatches": 0,
+            "maximum_absolute_error": 3.814697265625e-06,
+            "mean": [
+              [
+                0.2219592034816742
+              ],
+              [
+                -0.20220491290092468
+              ],
+              [
+                0.15486133098602295
+              ],
+              [
+                0.24473418295383453
+              ],
+              [
+                0.44571590423583984
+              ],
+              [
+                0.5103757381439209
+              ]
+            ],
+            "inverse": [
+              [
+                0.39321988821029663
+              ],
+              [
+                0.3997635245323181
+              ],
+              [
+                0.30510371923446655
+              ],
+              [
+                0.31208106875419617
+              ],
+              [
+                0.3881027400493622
+              ],
+              [
+                0.3065227270126343
+              ]
+            ]
+          },
+          {
+            "lanes": 16,
+            "fused_mean": false,
+            "fused_moment": "outer",
+            "unique_bit_differences": 132,
+            "full_bit_differences": 241523,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.9073486328125e-06,
+            "mean": [
+              [
+                0.2219592034816742
+              ],
+              [
+                -0.20220491290092468
+              ],
+              [
+                0.15486133098602295
+              ],
+              [
+                0.24473418295383453
+              ],
+              [
+                0.44571590423583984
+              ],
+              [
+                0.5103757381439209
+              ]
+            ],
+            "inverse": [
+              [
+                0.39321988821029663
+              ],
+              [
+                0.3997635245323181
+              ],
+              [
+                0.30510371923446655
+              ],
+              [
+                0.31208109855651855
+              ],
+              [
+                0.3881027400493622
+              ],
+              [
+                0.30652275681495667
+              ]
+            ]
+          },
+          {
+            "lanes": 16,
+            "fused_mean": true,
+            "fused_moment": "none",
+            "unique_bit_differences": 105,
+            "full_bit_differences": 7355,
+            "mismatches": 0,
+            "maximum_absolute_error": 3.814697265625e-06,
+            "mean": [
+              [
+                0.2219591736793518
+              ],
+              [
+                -0.20220491290092468
+              ],
+              [
+                0.15486133098602295
+              ],
+              [
+                0.24473410844802856
+              ],
+              [
+                0.44571584463119507
+              ],
+              [
+                0.5103757381439209
+              ]
+            ],
+            "inverse": [
+              [
+                0.39321988821029663
+              ],
+              [
+                0.3997635245323181
+              ],
+              [
+                0.30510371923446655
+              ],
+              [
+                0.31208106875419617
+              ],
+              [
+                0.3881027400493622
+              ],
+              [
+                0.3065227270126343
+              ]
+            ]
+          },
+          {
+            "lanes": 16,
+            "fused_mean": true,
+            "fused_moment": "inner",
+            "unique_bit_differences": 129,
+            "full_bit_differences": 214187,
+            "mismatches": 0,
+            "maximum_absolute_error": 3.814697265625e-06,
+            "mean": [
+              [
+                0.2219591736793518
+              ],
+              [
+                -0.20220491290092468
+              ],
+              [
+                0.15486133098602295
+              ],
+              [
+                0.24473410844802856
+              ],
+              [
+                0.44571584463119507
+              ],
+              [
+                0.5103757381439209
+              ]
+            ],
+            "inverse": [
+              [
+                0.39321988821029663
+              ],
+              [
+                0.3997635245323181
+              ],
+              [
+                0.30510371923446655
+              ],
+              [
+                0.31208106875419617
+              ],
+              [
+                0.38810276985168457
+              ],
+              [
+                0.3065227270126343
+              ]
+            ]
+          },
+          {
+            "lanes": 16,
+            "fused_mean": true,
+            "fused_moment": "outer",
+            "unique_bit_differences": 102,
+            "full_bit_differences": 8250,
+            "mismatches": 0,
+            "maximum_absolute_error": 1.9073486328125e-06,
+            "mean": [
+              [
+                0.2219591736793518
+              ],
+              [
+                -0.20220491290092468
+              ],
+              [
+                0.15486133098602295
+              ],
+              [
+                0.24473410844802856
+              ],
+              [
+                0.44571584463119507
+              ],
+              [
+                0.5103757381439209
+              ]
+            ],
+            "inverse": [
+              [
+                0.39321988821029663
+              ],
+              [
+                0.3997635245323181
+              ],
+              [
+                0.30510371923446655
+              ],
+              [
+                0.31208109855651855
+              ],
+              [
+                0.3881027400493622
+              ],
+              [
+                0.30652275681495667
+              ]
+            ]
+          }
+        ],
+        "full_encoder_validated": false,
+        "gpu_validated": false
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\second-norm-source-fusion-20261015.json",
+        "bytes": 11525,
+        "sha256": "1692ab4fcb314fff373f00ca048846238ecd3e78bc7d6fd54cb39fcb83841d35"
+      }
+    }
+  ],
+  "primary_source_files": [
+    {
+      "path": "artifacts\\numerical-acceptance-state\\onednn-3-12-jit-avx512-common-conv.cpp",
+      "bytes": 172090,
+      "sha256": "e9a5ca56cf4d6baf837c4a6650a10fd6a39c394ae66c06ae2d81ce47f2ef125f"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\pinned-layer_norm_kernel.cpp",
+      "bytes": 22476,
+      "sha256": "14c765e7e931ea313bf0ef42b0c9099d7e762c8f3d33ee408e96807435756711"
+    },
+    {
+      "path": "artifacts\\numerical-acceptance-state\\pinned-moments_utils.h",
+      "bytes": 6908,
+      "sha256": "ddc188f6752d2b7c04f443a476461d507f041ab6a2a141aa459a8cfa10ce3170"
+    }
+  ],
+  "cpu_oracle_is_not_product_fallback": true,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "remaining": [
+    "scalar mean full GPU failed417; see m4-scalar-mean-full-gpu-and-load-analysis-20261015.json",
+    "audio all six signals and both profiles",
+    "image FP32 all three profiles",
+    "real PCM/Texture to normalized 768 API all roles and masks",
+    "ownership/dispose/reuse/text regression and no intermediate readback"
+  ]
+}

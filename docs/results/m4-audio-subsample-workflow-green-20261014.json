@@ -1,0 +1,8 @@
+{
+  "command": "uv run pytest tests/test_audio_subsample_workflow.py -q",
+  "failed": 0,
+  "full_encoder_validated": false,
+  "real_weight_execution": "pending",
+  "passed": 1,
+  "scope": "pinned_subsample_workflow_tdd_green"
+}

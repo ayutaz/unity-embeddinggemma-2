@@ -1,0 +1,16 @@
+#pragma kernel SequentialScale
+#pragma use_dxc
+StructuredBuffer<float> Input;
+StructuredBuffer<float> Coefficients;
+RWStructuredBuffer<float> Output;
+uint Count,Width,DispatchWidth;
+float FirstScale;
+[numthreads(64,1,1)]
+void SequentialScale(uint3 thread : SV_DispatchThreadID)
+{
+    uint index=thread.x+thread.y*DispatchWidth;
+    if(index>=Count)return;
+    precise float first=Input[index]*FirstScale;
+    precise float second=first*Coefficients[index%Width];
+    Output[index]=second;
+}

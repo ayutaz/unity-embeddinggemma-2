@@ -1,0 +1,105 @@
+{
+  "scope": "vision_norm4_original_matrix_user_interrupted",
+  "source": "5c697a6472e0203d9f24c77da7a466f83735ce84",
+  "status": "interrupted_by_user",
+  "success": false,
+  "expected_conditions": 6,
+  "completed_conditions": 4,
+  "expected_numeric_cases": 12,
+  "completed_numeric_cases": 9,
+  "unity": "6000.3.16f1",
+  "sentis": "2.6.1",
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "stopped_pid": 64068,
+  "process_terminal_confirmed": true,
+  "nunit_completion_xml_available": false,
+  "report_sha256": "473639ee3eef9e9bc5b4dd378523e03a0f8199d9c4e3974f1df79239c2e11b49",
+  "conditions": [
+    {
+      "profile": "square",
+      "requested_backend": "CPU",
+      "phase": "completed",
+      "success": false,
+      "completed_numeric_cases": 2,
+      "passed_numeric_cases": 0,
+      "actual_backends": [
+        "CPU"
+      ],
+      "original_layer_count": 1823,
+      "candidate_layer_count": 25265,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0
+    },
+    {
+      "profile": "square",
+      "requested_backend": "GPUCompute",
+      "phase": "completed",
+      "success": false,
+      "completed_numeric_cases": 2,
+      "passed_numeric_cases": 0,
+      "actual_backends": [
+        "GPUCompute"
+      ],
+      "original_layer_count": 1823,
+      "candidate_layer_count": 25265,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0
+    },
+    {
+      "profile": "landscape",
+      "requested_backend": "CPU",
+      "phase": "completed",
+      "success": false,
+      "completed_numeric_cases": 2,
+      "passed_numeric_cases": 0,
+      "actual_backends": [
+        "CPU"
+      ],
+      "original_layer_count": 1823,
+      "candidate_layer_count": 25265,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0
+    },
+    {
+      "profile": "landscape",
+      "requested_backend": "GPUCompute",
+      "phase": "completed",
+      "success": false,
+      "completed_numeric_cases": 2,
+      "passed_numeric_cases": 0,
+      "actual_backends": [
+        "GPUCompute"
+      ],
+      "original_layer_count": 1823,
+      "candidate_layer_count": 25265,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0
+    },
+    {
+      "profile": "portrait",
+      "requested_backend": "CPU",
+      "phase": "evaluate_portrait-1",
+      "success": false,
+      "completed_numeric_cases": 1,
+      "passed_numeric_cases": 0,
+      "actual_backends": [
+        "CPU"
+      ],
+      "original_layer_count": 1823,
+      "candidate_layer_count": 25265,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0
+    }
+  ],
+  "unstarted_conditions": [
+    {
+      "profile": "portrait",
+      "requested_backend": "GPUCompute"
+    }
+  ],
+  "remaining_cases_are_unexecuted_not_numeric_failures": true,
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "phase_timings_measured": false
+}

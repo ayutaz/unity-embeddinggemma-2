@@ -1,0 +1,8 @@
+{
+  "passed": 1,
+  "failed": 1,
+  "command": "uv run pytest tests/test_artifact_zip_large_cli.py -q --tb=short",
+  "scope": "artifact_zip_explicit_large_model_limit_cli_red",
+  "reason": "Missing --max-entry-bytes CLI flag",
+  "source": "49eca26fbb36b378075cd5e99dbbf320c549bfd9"
+}

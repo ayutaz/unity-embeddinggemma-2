@@ -1,0 +1,2643 @@
+{
+  "success": false,
+  "scope": "first_two_direct_gpu_projections_reconnected_to_original_whole_audio_encoder",
+  "runtime_source": "e9e5c92a7c97bf4228d13f6e1abc911e4fa12c5f",
+  "partition_producer": "e9e5c92a7c97bf4228d13f6e1abc911e4fa12c5f",
+  "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "original_reference_changed": false,
+  "tolerance": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "partition_plan": {
+    "projections": [
+      {
+        "node": "/feed_forward1/ffw_layer_1/linear/MatMul",
+        "input": "/feed_forward1/ffw_layer_1/Clip_output_0",
+        "output": "/feed_forward1/ffw_layer_1/linear/MatMul_output_0",
+        "input_shape": [
+          1,
+          280,
+          1024
+        ],
+        "output_shape": [
+          1,
+          280,
+          4096
+        ],
+        "weight": "onnx::MatMul_9725",
+        "weight_shape": [
+          1024,
+          4096
+        ],
+        "weight_sha256": "d598344ee23d0545a76fa6d95173fbc886e8f2dd46d5907e6bd50b6cfa4891df",
+        "file": "weight-0.bin"
+      },
+      {
+        "node": "/feed_forward1/ffw_layer_2/linear/MatMul",
+        "input": "/feed_forward1/ffw_layer_2/Clip_output_0",
+        "output": "/feed_forward1/ffw_layer_2/linear/MatMul_output_0",
+        "input_shape": [
+          1,
+          280,
+          4096
+        ],
+        "output_shape": [
+          1,
+          280,
+          1024
+        ],
+        "weight": "onnx::MatMul_9730",
+        "weight_shape": [
+          4096,
+          1024
+        ],
+        "weight_sha256": "50ff67bc3a9a8704f925183042667884c6a2114de99565c2fa93f79570bd77b6",
+        "file": "weight-1.bin"
+      }
+    ],
+    "segments": [
+      {
+        "inputs": [
+          "input"
+        ],
+        "outputs": [
+          "/subsample_conv_projection/input_proj_linear/MatMul_output_0",
+          "/feed_forward1/ffw_layer_1/Clip_output_0"
+        ],
+        "output_aliases": {},
+        "node_count": 14292,
+        "file": "segment-0.onnx"
+      },
+      {
+        "inputs": [
+          "/subsample_conv_projection/input_proj_linear/MatMul_output_0",
+          "/feed_forward1/ffw_layer_1/linear/MatMul_output_0"
+        ],
+        "outputs": [
+          "/subsample_conv_projection/input_proj_linear/MatMul_output_0",
+          "/feed_forward1/ffw_layer_2/Clip_output_0"
+        ],
+        "output_aliases": {
+          "__eg_segment_1_carry_0": "/subsample_conv_projection/input_proj_linear/MatMul_output_0"
+        },
+        "node_count": 7,
+        "file": "segment-1.onnx"
+      },
+      {
+        "inputs": [
+          "/subsample_conv_projection/input_proj_linear/MatMul_output_0",
+          "/feed_forward1/ffw_layer_2/linear/MatMul_output_0"
+        ],
+        "outputs": [
+          "output"
+        ],
+        "output_aliases": {},
+        "node_count": 29586,
+        "file": "segment-2.onnx"
+      }
+    ],
+    "source_initializer_bytes_preserved": true,
+    "source_initializer_sha256": "1154ac702080fbd58adb2770693221efc81f56750563f8d4310ddb7fcf870bfd",
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "producer": "e9e5c92a7c97bf4228d13f6e1abc911e4fa12c5f",
+    "source_graph_sha256": "63f24d4883047ebe1f30572d7d45ad5bead33891bbe79a256f9ee10867a564b2",
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "profile": "frames-1119-valid-1119",
+    "source_reference_sha256": "6470127bda739d45346a3f9c3e18e201de24084286587952b1b4005b95b734a4",
+    "files": {
+      "audio-encoder-reference.json": {
+        "bytes": 22631646,
+        "sha256": "6470127bda739d45346a3f9c3e18e201de24084286587952b1b4005b95b734a4"
+      },
+      "audio-encoder-validation.json": {
+        "bytes": 9370,
+        "sha256": "77d17d54c68c9527980d22f1e3e1e06208c82d6e601dd9c953a2cb36a3d1c068"
+      },
+      "segment-0.onnx": {
+        "bytes": 14338169,
+        "sha256": "4ad924bdb80db832df5bb09f88403a97dbf751bf05c48180daf662d6f871b268"
+      },
+      "segment-1.onnx": {
+        "bytes": 1667,
+        "sha256": "ca7df751b0369cdbc6f080bddd051deb4c0637c36cdc4318bcbc369b4333b338"
+      },
+      "segment-2.onnx": {
+        "bytes": 1190336511,
+        "sha256": "b98fb00042db17d7845c301d294484bcb28297f436c2bd42b72ee5dfd7ecd2aa"
+      },
+      "weight-0.bin": {
+        "bytes": 16777216,
+        "sha256": "d598344ee23d0545a76fa6d95173fbc886e8f2dd46d5907e6bd50b6cfa4891df"
+      },
+      "weight-1.bin": {
+        "bytes": 16777216,
+        "sha256": "50ff67bc3a9a8704f925183042667884c6a2114de99565c2fa93f79570bd77b6"
+      }
+    },
+    "original_references_changed": false,
+    "gpu_validated": false
+  },
+  "partition_plan_evidence": {
+    "path": "artifacts\\numerical-acceptance-state\\partitioned-first-ff-identity-real\\partition-plan.json",
+    "sha256": "e778d2a1caead7dd38975c5e642b7b3d1edae2c3521fe2384b33da6ac85b0d93",
+    "bytes": 4032
+  },
+  "tdd": [
+    {
+      "counts": {
+        "tests": 6,
+        "failures": 6,
+        "errors": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\partition-projections-red-20261015.xml",
+        "sha256": "4683ff1d15adefac293bf3fb1097d078aca2ed895fc9a2081983119f32ab086c",
+        "bytes": 10017
+      }
+    },
+    {
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\partition-projections-green-20261015.xml",
+        "sha256": "b7bad5a32aefb8caa3cf89e2f83c3acd8d0e298abc358793c89f2ef6479b1c02",
+        "bytes": 1116
+      }
+    },
+    {
+      "counts": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\partition-projections-unused-input-red-20261015.xml",
+        "sha256": "1cbbad15c4222784e3cba9e97884f58291db6abb1edcc71644996d0bbca67a98",
+        "bytes": 1008
+      }
+    },
+    {
+      "counts": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\partition-projections-passthrough-red-20261015.xml",
+        "sha256": "a3aac0bc6dbc7737ef237bcac39223e39c4b1a41493e8305cd887efc8172e091",
+        "bytes": 1408
+      }
+    },
+    {
+      "counts": {
+        "tests": 19,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "artifacts\\numerical-acceptance-state\\partition-projections-alias-related-green-20261015.xml",
+        "sha256": "f270fec7ccb74e17d24a8ff099b4f75519457dc6e20caaf8449e2eb7443b7712",
+        "bytes": 3353
+      }
+    }
+  ],
+  "pipeline_red": {
+    "process": {
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+        "-logFile",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-projection-pipeline-red-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "GpuProjectionPipelineTests",
+        "-testResults",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-projection-pipeline-red-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": false,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-14T22:38:57.508512+00:00",
+      "pid": 84032,
+      "exit_code": 2,
+      "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-projection-pipeline-red-20261015.xml",
+      "unity_counts": {
+        "total": 2,
+        "passed": 0,
+        "failed": 2,
+        "skipped": 0
+      },
+      "elapsed_seconds": 34.48080020000634,
+      "completed_utc": "2026-10-14T22:39:31.989313+00:00"
+    },
+    "nunit": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "skipped": 0
+    },
+    "evidence": [
+      {
+        "path": "artifacts\\numerical-acceptance-state\\gpu-projection-pipeline-red-20261015-process.json",
+        "sha256": "3d533ed3e4d6feb12618972425f4a63380a55505cd14331753a0055e4fba4aac",
+        "bytes": 1248
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\gpu-projection-pipeline-red-20261015.xml",
+        "sha256": "333dd32c6062041fae579c44b1b0e38a75c0c9f573b4e90b932428bd5064d10c",
+        "bytes": 7576
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\gpu-projection-pipeline-red-20261015.log",
+        "sha256": "6300172dfdea0e0ac9be64f75b94af8641a06923346f7c88c6a9b0b4be74de44",
+        "bytes": 45511
+      }
+    ]
+  },
+  "pipeline_green": {
+    "process": {
+      "command": [
+        "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-projectPath",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+        "-logFile",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-projection-pipeline-green-20261015.log",
+        "-force-d3d12",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "GpuProjectionPipelineTests",
+        "-testResults",
+        "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-projection-pipeline-green-20261015.xml"
+      ],
+      "timeout_seconds": 300.0,
+      "success": true,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-14T22:40:50.562979+00:00",
+      "pid": 36100,
+      "exit_code": 0,
+      "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\gpu-projection-pipeline-green-20261015.xml",
+      "unity_counts": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 35.3785191999923,
+      "completed_utc": "2026-10-14T22:41:25.941499+00:00"
+    },
+    "nunit": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    "evidence": [
+      {
+        "path": "artifacts\\numerical-acceptance-state\\gpu-projection-pipeline-green-20261015-process.json",
+        "sha256": "92fdcaeb4d0783bb53ba0df4f0ab88ebd4556f6a762d18070532001e93a42459",
+        "bytes": 1252
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\gpu-projection-pipeline-green-20261015.xml",
+        "sha256": "087c59d5cb49cba30b81d6590fdb59cc46d6492e7182d14c558c30ca2298363f",
+        "bytes": 4239
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\gpu-projection-pipeline-green-20261015.log",
+        "sha256": "bccdbebdecc82ad22b913219afd832c4df5415416186455bb402cfed03d077dd",
+        "bytes": 45797
+      }
+    ]
+  },
+  "initial_import_failure": {
+    "report": {
+      "success": false,
+      "scope": "one_partitioned_original_audio_encoder_gpu_numeric_gate",
+      "runtime_source": "7005f515d7118a4951420507224d580aad4da8c1",
+      "signal": "silence",
+      "requested_backend": "GPUCompute",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "phase": "prepare",
+      "end_to_end_validated": false,
+      "all_original_signals_validated": false,
+      "partition_producer": "1de61e88ab54a096d1b40746e4a9d86c3ec487f2",
+      "error": "NUnit.Framework.AssertionException:   Expected: not null\r\n  But was:  null\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression) [0x00000] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.PartitionedAudioGpuReferenceTests.FirstFeedForwardPartitionGpuMatchesOriginalGolden (System.String signal) [0x00455] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@9020f886ff28\\Tests\\Editor\\PartitionedAudioGpuReferenceTests.cs:63 "
+    },
+    "evidence": {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-first-ff-gpu-7005f515d7118a4951420507224d580aad4da8c1-silence.json",
+      "sha256": "62a19852532f77ed8b3bc5f4f3adb40ce94847426bf0c29d89899b64214f5a7a",
+      "bytes": 1216
+    },
+    "invocation": {
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\partitioned-first-ff-full-gpu-silence-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "EmbeddingGemma.Validation.Tests.PartitionedAudioGpuReferenceTests.FirstFeedForwardPartitionGpuMatchesOriginalGolden.*silence.*",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\partitioned-first-ff-full-gpu-silence-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-14T22:42:28.595298+00:00",
+        "pid": 72924,
+        "exit_code": 2,
+        "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\partitioned-first-ff-full-gpu-silence-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        },
+        "elapsed_seconds": 74.15050490001158,
+        "completed_utc": "2026-10-14T22:43:42.745803+00:00"
+      },
+      "nunit": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      },
+      "evidence": [
+        {
+          "path": "artifacts\\numerical-acceptance-state\\partitioned-first-ff-full-gpu-silence-20261015-process.json",
+          "sha256": "4540195af8193891bfb20aa0cd04ea6110c9881ec6c22de8f6e92eb960608877",
+          "bytes": 1378
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\partitioned-first-ff-full-gpu-silence-20261015.xml",
+          "sha256": "27a3c811f40f5976a412a6e0985496fb4a9ac516244031a22365e7a2cce6803a",
+          "bytes": 6099
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\partitioned-first-ff-full-gpu-silence-20261015.log",
+          "sha256": "f86603b982ac19d1643bd5f18b1069c8bc83c38f1935a6096b8f884c62c19de3",
+          "bytes": 52630
+        }
+      ]
+    },
+    "execution_status": "inference_not_executed_due_to_middle_segment_passthrough_output_import_failure"
+  },
+  "full_encoder": {
+    "report": {
+      "success": false,
+      "scope": "one_partitioned_original_audio_encoder_gpu_numeric_gate",
+      "runtime_source": "e9e5c92a7c97bf4228d13f6e1abc911e4fa12c5f",
+      "signal": "silence",
+      "requested_backend": "GPUCompute",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "phase": "completed",
+      "end_to_end_validated": false,
+      "all_original_signals_validated": false,
+      "partition_producer": "e9e5c92a7c97bf4228d13f6e1abc911e4fa12c5f",
+      "segment_layer_counts": [
+        9120,
+        7,
+        58004
+      ],
+      "prepare_ms": 23370.9813,
+      "cpu_computation_or_input_count": 0,
+      "readback_flush_count": 0,
+      "execute_and_final_download_ms": 10948.331900000001,
+      "actual_backend": "GPUCompute",
+      "mismatched_elements": 175,
+      "maximum_absolute_error": 0.00010216236114501953,
+      "maximum_tolerance_ratio": 4.043478723621082,
+      "error": "NUnit.Framework.AssertionException:   Keep the original full FP32 audio encoder gate.\r\n  Expected: 0\r\n  But was:  175\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Validation.Tests.PartitionedAudioGpuReferenceTests.FirstFeedForwardPartitionGpuMatchesOriginalGolden (System.String signal) [0x00905] in .\\Library\\PackageCache\\com.ayutaz.embeddinggemma.validation@692d74b8f9ff\\Tests\\Editor\\PartitionedAudioGpuReferenceTests.cs:98 "
+    },
+    "evidence": {
+      "path": "artifacts\\acceptance-consumer\\artifacts\\partitioned-first-ff-gpu-e9e5c92a7c97bf4228d13f6e1abc911e4fa12c5f-silence.json",
+      "sha256": "6befcaa774b829075e5642a35aabac9a03c59b84fb2e1a90e94037660133d4cb",
+      "bytes": 1480
+    },
+    "invocation": {
+      "process": {
+        "command": [
+          "C:\\Program Files\\Unity\\Hub\\Editor\\6000.3.16f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\acceptance-consumer",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\partitioned-first-ff-full-gpu-identity-silence-20261015.log",
+          "-force-d3d12",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "EmbeddingGemma.Validation.Tests.PartitionedAudioGpuReferenceTests.FirstFeedForwardPartitionGpuMatchesOriginalGolden.*silence.*",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\partitioned-first-ff-full-gpu-identity-silence-20261015.xml"
+        ],
+        "timeout_seconds": 300.0,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-14T22:47:15.813503+00:00",
+        "pid": 82664,
+        "exit_code": 2,
+        "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\numerical-acceptance-state\\partitioned-first-ff-full-gpu-identity-silence-20261015.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        },
+        "elapsed_seconds": 96.89925129999756,
+        "completed_utc": "2026-10-14T22:48:52.712758+00:00"
+      },
+      "nunit": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      },
+      "evidence": [
+        {
+          "path": "artifacts\\numerical-acceptance-state\\partitioned-first-ff-full-gpu-identity-silence-20261015-process.json",
+          "sha256": "6824e272af2d0473b39256475dfdd23c35a604a7c2d8cca56e35fc388fc78ae1",
+          "bytes": 1405
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\partitioned-first-ff-full-gpu-identity-silence-20261015.xml",
+          "sha256": "95d5c5585fd6c03f3b304c08c031242e604333f6a2cafd42c5e00203108377f6",
+          "bytes": 6153
+        },
+        {
+          "path": "artifacts\\numerical-acceptance-state\\partitioned-first-ff-full-gpu-identity-silence-20261015.log",
+          "sha256": "ce08502234ae6a7e6a5a0dd0e6156a914d3d8b213e44f02dd8e21834166d33f4",
+          "bytes": 47498
+        }
+      ]
+    }
+  },
+  "previous_full_mismatches": 295,
+  "previous_maximum_tolerance_ratio": 7.637024977775685,
+  "all_static_attempt": {
+    "projection_count": 135,
+    "execution_status": "preparation_rejected_unknown_fixed_shapes",
+    "process": {
+      "command": [
+        "uv",
+        "run",
+        "--locked",
+        "python",
+        "../../numerical-acceptance-state/prepare_partitioned_all_static.py"
+      ],
+      "timeout_seconds": 300.0,
+      "success": false,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-14T22:51:56.552407+00:00",
+      "pid": 84848,
+      "exit_code": 1,
+      "elapsed_seconds": 3.7866566000011517,
+      "completed_utc": "2026-10-14T22:52:00.339065+00:00"
+    },
+    "shape_diagnostic": {
+      "targets": 135,
+      "missing": [
+        {
+          "node": "/attentions.0/post/linear/MatMul",
+          "value": "/attentions.0/post/Clip_output_0",
+          "shape": [
+            1,
+            280,
+            0
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear/MatMul",
+          "value": "/lconv1d/linear_end/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear/MatMul",
+          "value": "/lconv1d/linear_end/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear/MatMul",
+          "value": "/feed_forward2/ffw_layer_1/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear/MatMul",
+          "value": "/feed_forward2/ffw_layer_1/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear/MatMul",
+          "value": "/feed_forward2/ffw_layer_2/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear/MatMul",
+          "value": "/feed_forward2/ffw_layer_2/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_1/MatMul",
+          "value": "/feed_forward1/ffw_layer_1_1/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_1/MatMul",
+          "value": "/feed_forward1/ffw_layer_1/linear_1/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_1/MatMul",
+          "value": "/feed_forward1/ffw_layer_2_1/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_1/MatMul",
+          "value": "/feed_forward1/ffw_layer_2/linear_1/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.1/q_proj/linear/MatMul",
+          "value": "/attentions.1/q_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.1/q_proj/linear/MatMul",
+          "value": "/attentions.1/q_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.1/k_proj/linear/MatMul",
+          "value": "/attentions.1/k_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.1/k_proj/linear/MatMul",
+          "value": "/attentions.1/k_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.1/v_proj/linear/MatMul",
+          "value": "/attentions.1/v_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.1/v_proj/linear/MatMul",
+          "value": "/attentions.1/v_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.1/post/linear/MatMul",
+          "value": "/attentions.1/post/Clip_output_0",
+          "shape": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "node": "/attentions.1/post/linear/MatMul",
+          "value": "/attentions.1/post/linear/MatMul_output_0",
+          "shape": [
+            0,
+            0,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_1/MatMul",
+          "value": "/lconv1d/linear_start_1/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_1/MatMul",
+          "value": "/lconv1d/linear_start/linear_1/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            2048
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_1/MatMul",
+          "value": "/lconv1d/linear_end_1/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_1/MatMul",
+          "value": "/lconv1d/linear_end/linear_1/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_1/MatMul",
+          "value": "/feed_forward2/ffw_layer_1_1/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_1/MatMul",
+          "value": "/feed_forward2/ffw_layer_1/linear_1/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_1/MatMul",
+          "value": "/feed_forward2/ffw_layer_2_1/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_1/MatMul",
+          "value": "/feed_forward2/ffw_layer_2/linear_1/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_2/MatMul",
+          "value": "/feed_forward1/ffw_layer_1_2/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_2/MatMul",
+          "value": "/feed_forward1/ffw_layer_1/linear_2/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_2/MatMul",
+          "value": "/feed_forward1/ffw_layer_2_2/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_2/MatMul",
+          "value": "/feed_forward1/ffw_layer_2/linear_2/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.2/q_proj/linear/MatMul",
+          "value": "/attentions.2/q_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.2/q_proj/linear/MatMul",
+          "value": "/attentions.2/q_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.2/k_proj/linear/MatMul",
+          "value": "/attentions.2/k_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.2/k_proj/linear/MatMul",
+          "value": "/attentions.2/k_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.2/v_proj/linear/MatMul",
+          "value": "/attentions.2/v_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.2/v_proj/linear/MatMul",
+          "value": "/attentions.2/v_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.2/post/linear/MatMul",
+          "value": "/attentions.2/post/Clip_output_0",
+          "shape": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "node": "/attentions.2/post/linear/MatMul",
+          "value": "/attentions.2/post/linear/MatMul_output_0",
+          "shape": [
+            0,
+            0,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_2/MatMul",
+          "value": "/lconv1d/linear_start_2/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_2/MatMul",
+          "value": "/lconv1d/linear_start/linear_2/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            2048
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_2/MatMul",
+          "value": "/lconv1d/linear_end_2/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_2/MatMul",
+          "value": "/lconv1d/linear_end/linear_2/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_2/MatMul",
+          "value": "/feed_forward2/ffw_layer_1_2/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_2/MatMul",
+          "value": "/feed_forward2/ffw_layer_1/linear_2/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_2/MatMul",
+          "value": "/feed_forward2/ffw_layer_2_2/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_2/MatMul",
+          "value": "/feed_forward2/ffw_layer_2/linear_2/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_3/MatMul",
+          "value": "/feed_forward1/ffw_layer_1_3/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_3/MatMul",
+          "value": "/feed_forward1/ffw_layer_1/linear_3/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_3/MatMul",
+          "value": "/feed_forward1/ffw_layer_2_3/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_3/MatMul",
+          "value": "/feed_forward1/ffw_layer_2/linear_3/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.3/q_proj/linear/MatMul",
+          "value": "/attentions.3/q_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.3/q_proj/linear/MatMul",
+          "value": "/attentions.3/q_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.3/k_proj/linear/MatMul",
+          "value": "/attentions.3/k_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.3/k_proj/linear/MatMul",
+          "value": "/attentions.3/k_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.3/v_proj/linear/MatMul",
+          "value": "/attentions.3/v_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.3/v_proj/linear/MatMul",
+          "value": "/attentions.3/v_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.3/post/linear/MatMul",
+          "value": "/attentions.3/post/Clip_output_0",
+          "shape": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "node": "/attentions.3/post/linear/MatMul",
+          "value": "/attentions.3/post/linear/MatMul_output_0",
+          "shape": [
+            0,
+            0,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_3/MatMul",
+          "value": "/lconv1d/linear_start_3/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_3/MatMul",
+          "value": "/lconv1d/linear_start/linear_3/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            2048
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_3/MatMul",
+          "value": "/lconv1d/linear_end_3/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_3/MatMul",
+          "value": "/lconv1d/linear_end/linear_3/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_3/MatMul",
+          "value": "/feed_forward2/ffw_layer_1_3/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_3/MatMul",
+          "value": "/feed_forward2/ffw_layer_1/linear_3/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_3/MatMul",
+          "value": "/feed_forward2/ffw_layer_2_3/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_3/MatMul",
+          "value": "/feed_forward2/ffw_layer_2/linear_3/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_4/MatMul",
+          "value": "/feed_forward1/ffw_layer_1_4/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_4/MatMul",
+          "value": "/feed_forward1/ffw_layer_1/linear_4/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_4/MatMul",
+          "value": "/feed_forward1/ffw_layer_2_4/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_4/MatMul",
+          "value": "/feed_forward1/ffw_layer_2/linear_4/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.4/q_proj/linear/MatMul",
+          "value": "/attentions.4/q_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.4/q_proj/linear/MatMul",
+          "value": "/attentions.4/q_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.4/k_proj/linear/MatMul",
+          "value": "/attentions.4/k_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.4/k_proj/linear/MatMul",
+          "value": "/attentions.4/k_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.4/v_proj/linear/MatMul",
+          "value": "/attentions.4/v_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.4/v_proj/linear/MatMul",
+          "value": "/attentions.4/v_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.4/post/linear/MatMul",
+          "value": "/attentions.4/post/Clip_output_0",
+          "shape": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "node": "/attentions.4/post/linear/MatMul",
+          "value": "/attentions.4/post/linear/MatMul_output_0",
+          "shape": [
+            0,
+            0,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_4/MatMul",
+          "value": "/lconv1d/linear_start_4/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_4/MatMul",
+          "value": "/lconv1d/linear_start/linear_4/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            2048
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_4/MatMul",
+          "value": "/lconv1d/linear_end_4/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_4/MatMul",
+          "value": "/lconv1d/linear_end/linear_4/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_4/MatMul",
+          "value": "/feed_forward2/ffw_layer_1_4/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_4/MatMul",
+          "value": "/feed_forward2/ffw_layer_1/linear_4/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_4/MatMul",
+          "value": "/feed_forward2/ffw_layer_2_4/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_4/MatMul",
+          "value": "/feed_forward2/ffw_layer_2/linear_4/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_5/MatMul",
+          "value": "/feed_forward1/ffw_layer_1_5/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_5/MatMul",
+          "value": "/feed_forward1/ffw_layer_1/linear_5/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_5/MatMul",
+          "value": "/feed_forward1/ffw_layer_2_5/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_5/MatMul",
+          "value": "/feed_forward1/ffw_layer_2/linear_5/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.5/q_proj/linear/MatMul",
+          "value": "/attentions.5/q_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.5/q_proj/linear/MatMul",
+          "value": "/attentions.5/q_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.5/k_proj/linear/MatMul",
+          "value": "/attentions.5/k_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.5/k_proj/linear/MatMul",
+          "value": "/attentions.5/k_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.5/v_proj/linear/MatMul",
+          "value": "/attentions.5/v_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.5/v_proj/linear/MatMul",
+          "value": "/attentions.5/v_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.5/post/linear/MatMul",
+          "value": "/attentions.5/post/Clip_output_0",
+          "shape": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "node": "/attentions.5/post/linear/MatMul",
+          "value": "/attentions.5/post/linear/MatMul_output_0",
+          "shape": [
+            0,
+            0,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_5/MatMul",
+          "value": "/lconv1d/linear_start_5/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_5/MatMul",
+          "value": "/lconv1d/linear_start/linear_5/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            2048
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_5/MatMul",
+          "value": "/lconv1d/linear_end_5/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_5/MatMul",
+          "value": "/lconv1d/linear_end/linear_5/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_5/MatMul",
+          "value": "/feed_forward2/ffw_layer_1_5/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_5/MatMul",
+          "value": "/feed_forward2/ffw_layer_1/linear_5/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_5/MatMul",
+          "value": "/feed_forward2/ffw_layer_2_5/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_5/MatMul",
+          "value": "/feed_forward2/ffw_layer_2/linear_5/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_6/MatMul",
+          "value": "/feed_forward1/ffw_layer_1_6/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_6/MatMul",
+          "value": "/feed_forward1/ffw_layer_1/linear_6/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_6/MatMul",
+          "value": "/feed_forward1/ffw_layer_2_6/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_6/MatMul",
+          "value": "/feed_forward1/ffw_layer_2/linear_6/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.6/q_proj/linear/MatMul",
+          "value": "/attentions.6/q_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.6/q_proj/linear/MatMul",
+          "value": "/attentions.6/q_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.6/k_proj/linear/MatMul",
+          "value": "/attentions.6/k_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.6/k_proj/linear/MatMul",
+          "value": "/attentions.6/k_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.6/v_proj/linear/MatMul",
+          "value": "/attentions.6/v_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.6/v_proj/linear/MatMul",
+          "value": "/attentions.6/v_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.6/post/linear/MatMul",
+          "value": "/attentions.6/post/Clip_output_0",
+          "shape": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "node": "/attentions.6/post/linear/MatMul",
+          "value": "/attentions.6/post/linear/MatMul_output_0",
+          "shape": [
+            0,
+            0,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_6/MatMul",
+          "value": "/lconv1d/linear_start_6/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_6/MatMul",
+          "value": "/lconv1d/linear_start/linear_6/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            2048
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_6/MatMul",
+          "value": "/lconv1d/linear_end_6/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_6/MatMul",
+          "value": "/lconv1d/linear_end/linear_6/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_6/MatMul",
+          "value": "/feed_forward2/ffw_layer_1_6/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_6/MatMul",
+          "value": "/feed_forward2/ffw_layer_1/linear_6/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_6/MatMul",
+          "value": "/feed_forward2/ffw_layer_2_6/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_6/MatMul",
+          "value": "/feed_forward2/ffw_layer_2/linear_6/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_7/MatMul",
+          "value": "/feed_forward1/ffw_layer_1_7/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_7/MatMul",
+          "value": "/feed_forward1/ffw_layer_1/linear_7/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_7/MatMul",
+          "value": "/feed_forward1/ffw_layer_2_7/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_7/MatMul",
+          "value": "/feed_forward1/ffw_layer_2/linear_7/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.7/q_proj/linear/MatMul",
+          "value": "/attentions.7/q_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.7/q_proj/linear/MatMul",
+          "value": "/attentions.7/q_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.7/k_proj/linear/MatMul",
+          "value": "/attentions.7/k_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.7/k_proj/linear/MatMul",
+          "value": "/attentions.7/k_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.7/v_proj/linear/MatMul",
+          "value": "/attentions.7/v_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.7/v_proj/linear/MatMul",
+          "value": "/attentions.7/v_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.7/post/linear/MatMul",
+          "value": "/attentions.7/post/Clip_output_0",
+          "shape": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "node": "/attentions.7/post/linear/MatMul",
+          "value": "/attentions.7/post/linear/MatMul_output_0",
+          "shape": [
+            0,
+            0,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_7/MatMul",
+          "value": "/lconv1d/linear_start_7/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_7/MatMul",
+          "value": "/lconv1d/linear_start/linear_7/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            2048
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_7/MatMul",
+          "value": "/lconv1d/linear_end_7/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_7/MatMul",
+          "value": "/lconv1d/linear_end/linear_7/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_7/MatMul",
+          "value": "/feed_forward2/ffw_layer_1_7/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_7/MatMul",
+          "value": "/feed_forward2/ffw_layer_1/linear_7/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_7/MatMul",
+          "value": "/feed_forward2/ffw_layer_2_7/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_7/MatMul",
+          "value": "/feed_forward2/ffw_layer_2/linear_7/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_8/MatMul",
+          "value": "/feed_forward1/ffw_layer_1_8/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_8/MatMul",
+          "value": "/feed_forward1/ffw_layer_1/linear_8/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_8/MatMul",
+          "value": "/feed_forward1/ffw_layer_2_8/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_8/MatMul",
+          "value": "/feed_forward1/ffw_layer_2/linear_8/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.8/q_proj/linear/MatMul",
+          "value": "/attentions.8/q_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.8/q_proj/linear/MatMul",
+          "value": "/attentions.8/q_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.8/k_proj/linear/MatMul",
+          "value": "/attentions.8/k_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.8/k_proj/linear/MatMul",
+          "value": "/attentions.8/k_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.8/v_proj/linear/MatMul",
+          "value": "/attentions.8/v_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.8/v_proj/linear/MatMul",
+          "value": "/attentions.8/v_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.8/post/linear/MatMul",
+          "value": "/attentions.8/post/Clip_output_0",
+          "shape": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "node": "/attentions.8/post/linear/MatMul",
+          "value": "/attentions.8/post/linear/MatMul_output_0",
+          "shape": [
+            0,
+            0,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_8/MatMul",
+          "value": "/lconv1d/linear_start_8/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_8/MatMul",
+          "value": "/lconv1d/linear_start/linear_8/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            2048
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_8/MatMul",
+          "value": "/lconv1d/linear_end_8/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_8/MatMul",
+          "value": "/lconv1d/linear_end/linear_8/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_8/MatMul",
+          "value": "/feed_forward2/ffw_layer_1_8/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_8/MatMul",
+          "value": "/feed_forward2/ffw_layer_1/linear_8/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_8/MatMul",
+          "value": "/feed_forward2/ffw_layer_2_8/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_8/MatMul",
+          "value": "/feed_forward2/ffw_layer_2/linear_8/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_9/MatMul",
+          "value": "/feed_forward1/ffw_layer_1_9/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_9/MatMul",
+          "value": "/feed_forward1/ffw_layer_1/linear_9/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_9/MatMul",
+          "value": "/feed_forward1/ffw_layer_2_9/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_9/MatMul",
+          "value": "/feed_forward1/ffw_layer_2/linear_9/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.9/q_proj/linear/MatMul",
+          "value": "/attentions.9/q_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.9/q_proj/linear/MatMul",
+          "value": "/attentions.9/q_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.9/k_proj/linear/MatMul",
+          "value": "/attentions.9/k_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.9/k_proj/linear/MatMul",
+          "value": "/attentions.9/k_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.9/v_proj/linear/MatMul",
+          "value": "/attentions.9/v_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.9/v_proj/linear/MatMul",
+          "value": "/attentions.9/v_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.9/post/linear/MatMul",
+          "value": "/attentions.9/post/Clip_output_0",
+          "shape": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "node": "/attentions.9/post/linear/MatMul",
+          "value": "/attentions.9/post/linear/MatMul_output_0",
+          "shape": [
+            0,
+            0,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_9/MatMul",
+          "value": "/lconv1d/linear_start_9/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_9/MatMul",
+          "value": "/lconv1d/linear_start/linear_9/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            2048
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_9/MatMul",
+          "value": "/lconv1d/linear_end_9/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_9/MatMul",
+          "value": "/lconv1d/linear_end/linear_9/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_9/MatMul",
+          "value": "/feed_forward2/ffw_layer_1_9/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_9/MatMul",
+          "value": "/feed_forward2/ffw_layer_1/linear_9/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_9/MatMul",
+          "value": "/feed_forward2/ffw_layer_2_9/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_9/MatMul",
+          "value": "/feed_forward2/ffw_layer_2/linear_9/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_10/MatMul",
+          "value": "/feed_forward1/ffw_layer_1_10/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_10/MatMul",
+          "value": "/feed_forward1/ffw_layer_1/linear_10/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_10/MatMul",
+          "value": "/feed_forward1/ffw_layer_2_10/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_10/MatMul",
+          "value": "/feed_forward1/ffw_layer_2/linear_10/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.10/q_proj/linear/MatMul",
+          "value": "/attentions.10/q_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.10/q_proj/linear/MatMul",
+          "value": "/attentions.10/q_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.10/k_proj/linear/MatMul",
+          "value": "/attentions.10/k_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.10/k_proj/linear/MatMul",
+          "value": "/attentions.10/k_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.10/v_proj/linear/MatMul",
+          "value": "/attentions.10/v_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.10/v_proj/linear/MatMul",
+          "value": "/attentions.10/v_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.10/post/linear/MatMul",
+          "value": "/attentions.10/post/Clip_output_0",
+          "shape": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "node": "/attentions.10/post/linear/MatMul",
+          "value": "/attentions.10/post/linear/MatMul_output_0",
+          "shape": [
+            0,
+            0,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_10/MatMul",
+          "value": "/lconv1d/linear_start_10/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_10/MatMul",
+          "value": "/lconv1d/linear_start/linear_10/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            2048
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_10/MatMul",
+          "value": "/lconv1d/linear_end_10/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_10/MatMul",
+          "value": "/lconv1d/linear_end/linear_10/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_10/MatMul",
+          "value": "/feed_forward2/ffw_layer_1_10/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_10/MatMul",
+          "value": "/feed_forward2/ffw_layer_1/linear_10/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_10/MatMul",
+          "value": "/feed_forward2/ffw_layer_2_10/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_10/MatMul",
+          "value": "/feed_forward2/ffw_layer_2/linear_10/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_11/MatMul",
+          "value": "/feed_forward1/ffw_layer_1_11/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_1/linear_11/MatMul",
+          "value": "/feed_forward1/ffw_layer_1/linear_11/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_11/MatMul",
+          "value": "/feed_forward1/ffw_layer_2_11/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward1/ffw_layer_2/linear_11/MatMul",
+          "value": "/feed_forward1/ffw_layer_2/linear_11/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.11/q_proj/linear/MatMul",
+          "value": "/attentions.11/q_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.11/q_proj/linear/MatMul",
+          "value": "/attentions.11/q_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.11/k_proj/linear/MatMul",
+          "value": "/attentions.11/k_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.11/k_proj/linear/MatMul",
+          "value": "/attentions.11/k_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.11/v_proj/linear/MatMul",
+          "value": "/attentions.11/v_proj/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.11/v_proj/linear/MatMul",
+          "value": "/attentions.11/v_proj/linear/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/attentions.11/post/linear/MatMul",
+          "value": "/attentions.11/post/Clip_output_0",
+          "shape": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "node": "/attentions.11/post/linear/MatMul",
+          "value": "/attentions.11/post/linear/MatMul_output_0",
+          "shape": [
+            0,
+            0,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_11/MatMul",
+          "value": "/lconv1d/linear_start_11/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_start/linear_11/MatMul",
+          "value": "/lconv1d/linear_start/linear_11/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            2048
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_11/MatMul",
+          "value": "/lconv1d/linear_end_11/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/lconv1d/linear_end/linear_11/MatMul",
+          "value": "/lconv1d/linear_end/linear_11/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_11/MatMul",
+          "value": "/feed_forward2/ffw_layer_1_11/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_1/linear_11/MatMul",
+          "value": "/feed_forward2/ffw_layer_1/linear_11/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_11/MatMul",
+          "value": "/feed_forward2/ffw_layer_2_11/Clip_output_0",
+          "shape": [
+            0,
+            280,
+            4096
+          ]
+        },
+        {
+          "node": "/feed_forward2/ffw_layer_2/linear_11/MatMul",
+          "value": "/feed_forward2/ffw_layer_2/linear_11/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/output_proj/MatMul",
+          "value": "/norm_out_11/Mul_1_output_0",
+          "shape": [
+            0,
+            280,
+            1024
+          ]
+        },
+        {
+          "node": "/output_proj/MatMul",
+          "value": "/output_proj/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            1536
+          ]
+        },
+        {
+          "node": "/projection/embedding_projection/MatMul",
+          "value": "/projection/embedding_pre_projection_norm/Mul_output_0",
+          "shape": [
+            0,
+            280,
+            1536
+          ]
+        },
+        {
+          "node": "/projection/embedding_projection/MatMul",
+          "value": "/projection/embedding_projection/MatMul_output_0",
+          "shape": [
+            0,
+            280,
+            512
+          ]
+        }
+      ],
+      "scope": "metadata_inference_only",
+      "gpu_validated": false,
+      "full_encoder_validated": false
+    },
+    "evidence": [
+      {
+        "path": "artifacts\\numerical-acceptance-state\\partitioned-all-static-prepare-20261015-process.json",
+        "sha256": "d374fb1953176983d0f23a5ffa2c07a7f097f74b7a5dc90b9cfb2276b35018cc",
+        "bytes": 438
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\partitioned-all-static-prepare-20261015.log",
+        "sha256": "ae7d8b20c32564351bcd4290f2355b83ddc780e96a4bb2b175a0eff42bb30fe3",
+        "bytes": 1396
+      },
+      {
+        "path": "artifacts\\numerical-acceptance-state\\static-projection-shape-inference-20261015.json",
+        "sha256": "61112023cdfdc07a049a880fc5ce271778673f6a0a94eaaac8750339acf89223",
+        "bytes": 46359
+      }
+    ]
+  },
+  "full_encoder_validated": false,
+  "end_to_end_validated": false,
+  "next_step": "Audit actual fixed projection shapes; qualify remaining static GPU projections without modifying golden or tolerance",
+  "remaining": [
+    "audio original six signals and both profiles",
+    "image FP32 all three profiles",
+    "real PCM/Texture through GPU stages to normalized768 API all roles/masks/boundaries",
+    "ownership/dispose/exception reuse/text regression/no product intermediate readback or CPU fallback"
+  ],
+  "non_projection_nodes_and_coefficient_bytes_preserved": true,
+  "boundary_identity_and_output_aliases_added": true
+}

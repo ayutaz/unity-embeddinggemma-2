@@ -1,0 +1,145 @@
+name: Frozen native audio layer replay
+
+on:
+  workflow_dispatch:
+    inputs:
+      scope:
+        description: Fixed-context diagnostic scope; full retains the subsample gate
+        type: choice
+        options: [full, attention, subsample]
+        default: full
+      layer_index:
+        description: Original audio layer for attention diagnostics; full always uses layer 0
+        type: choice
+        options: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']
+        default: '0'
+      signal:
+        description: Original full-profile signal for attention/subsample diagnostics; full retains silence
+        type: choice
+        options: [silence, impulse, sine, nyquist, noise]
+        default: silence
+  pull_request:
+    types: [opened, synchronize, labeled]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: audio-layer-replay-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  replay:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+       contains(github.event.pull_request.labels.*.name, 'audio-layer-replay-diagnostics'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+      REPLAY_LAYER: ${{ github.event_name == 'workflow_dispatch' && inputs.scope == 'attention' && inputs.layer_index || '0' }}
+      REPLAY_SIGNAL: ${{ github.event_name == 'workflow_dispatch' && (inputs.scope == 'attention' || inputs.scope == 'subsample') && inputs.signal || 'silence' }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - name: Fetch only frozen stage input and output
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [[ "$REPLAY_LAYER" =~ ^([0-9]|1[01])$ ]] || exit 2
+          [[ "$REPLAY_SIGNAL" =~ ^(silence|impulse|sine|nyquist|noise)$ ]] || exit 2
+          printf -v input_stage '%02d' "$REPLAY_LAYER"
+          printf -v output_stage '%02d' "$((REPLAY_LAYER + 1))"
+          uv run --locked python -m embeddinggemma_tools.artifact_zip \
+          --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11814567883 \
+          --output ../artifacts/frozen-audio-layer \
+          --member audio-runtime-stages/audio-stage-reference.json \
+          --member audio-runtime-stages/audio-stage-validation.json \
+          --member "audio-runtime-stages/frames-1119-valid-1119/${REPLAY_SIGNAL}-stage-${input_stage}-fp32.bin" \
+          --member "audio-runtime-stages/frames-1119-valid-1119/${REPLAY_SIGNAL}-stage-${output_stage}-fp32.bin" \
+          --member "audio-runtime-reference/frames-1119-valid-1119/${REPLAY_SIGNAL}-features-fp32.bin"
+      - name: Verify pinned context manifests before model download
+        run: |
+          sha256sum --check <<'EOF'
+          6620f335563a91ccc484df7d9b89d4d889e58dab4ec3d7d0389b36abe36b454a  ../artifacts/frozen-audio-layer/audio-runtime-stages/audio-stage-reference.json
+          3edee8acdd9ebebb819ae488b753a3a94949b953aa0906995e516764932b0f9b  ../artifacts/frozen-audio-layer/audio-runtime-stages/audio-stage-validation.json
+          EOF
+          # Hashes from immutable original encoder audit 68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1.
+          case "$REPLAY_SIGNAL" in
+            silence) feature_sha=366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24 ;;
+            impulse) feature_sha=2202541551e06a429b222d31f3d495a2b051fca70191287c82c7f6a6d8803c82 ;;
+            sine) feature_sha=dcc0ed05018d225a140916249cb3a3ab948c4cc50e5f457abac24e909e9c64c5 ;;
+            nyquist) feature_sha=eaaa9e11f4d282294a9c57d4eddd392d2a257ea1f342d0452d99984602ff1e96 ;;
+            noise) feature_sha=b26f15554a3123e12cb39949709ea94588c27a5324f4cadefc701fba124c5c42 ;;
+            *) exit 2 ;;
+          esac
+          printf '%s  %s\n' "$feature_sha" "../artifacts/frozen-audio-layer/audio-runtime-reference/frames-1119-valid-1119/${REPLAY_SIGNAL}-features-fp32.bin" | sha256sum --check
+          printf 'REPLAY_FEATURE_SHA256=%s\n' "$feature_sha" >> "$GITHUB_ENV"
+      - name: Replay official layer 0 against unchanged native final
+        if: ${{ github.event_name != 'workflow_dispatch' || (inputs.scope != 'attention' && inputs.scope != 'subsample') }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.audio_layer_replay
+          --context ../artifacts/frozen-audio-layer/audio-runtime-stages
+          --output ../artifacts/audio-layer-replay
+          --reference-source 4edbe17a8105233c5aaa1514faa2862b08a4f7e0
+          --diagnostic-source "$GITHUB_SHA"
+          --report ../artifacts/audio-layer-replay-report.json
+          --detail-feed-forward
+          --detail-attention-projections
+          --projection-oracle
+          --compensated-projection
+          --subsample-input ../artifacts/frozen-audio-layer/audio-runtime-reference/frames-1119-valid-1119/silence-features-fp32.bin
+          --subsample-input-sha256 366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24
+      - name: Capture attention projections against pinned layer final
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.scope == 'attention' }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.audio_layer_replay
+          --context ../artifacts/frozen-audio-layer/audio-runtime-stages
+          --output ../artifacts/audio-attention-replay
+          --reference-source 4edbe17a8105233c5aaa1514faa2862b08a4f7e0
+          --diagnostic-source "$GITHUB_SHA"
+          --report ../artifacts/audio-attention-replay-report.json
+          --layer-index "$REPLAY_LAYER"
+          --case-id "$REPLAY_SIGNAL"
+          --detail-feed-forward
+          --detail-attention-projections
+          --detail-attention-ops
+          --detail-convolution
+      - name: Capture subsample against original signal and layer final
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.scope == 'subsample' }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.audio_layer_replay
+          --context ../artifacts/frozen-audio-layer/audio-runtime-stages
+          --output ../artifacts/audio-layer-replay
+          --reference-source 4edbe17a8105233c5aaa1514faa2862b08a4f7e0
+          --diagnostic-source "$GITHUB_SHA"
+          --report ../artifacts/audio-layer-replay-report.json
+          --layer-index 0
+          --case-id "$REPLAY_SIGNAL"
+          --subsample-input "../artifacts/frozen-audio-layer/audio-runtime-reference/frames-1119-valid-1119/${REPLAY_SIGNAL}-features-fp32.bin"
+          --subsample-input-sha256 "$REPLAY_FEATURE_SHA256"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: audio-layer-replay-${{ github.sha }}
+          path: |
+            artifacts/audio-layer-replay/
+            artifacts/audio-layer-replay-report.json
+            artifacts/audio-attention-replay/
+            artifacts/audio-attention-replay-report.json
+            artifacts/frozen-audio-layer/range-receipt.json
+          retention-days: 7
+          compression-level: 0
+          if-no-files-found: warn

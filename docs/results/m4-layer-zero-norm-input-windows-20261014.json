@@ -1,0 +1,268 @@
+{
+  "scope": "coefficient_and_squared_mean_bound_norm_input_observation",
+  "harness_source": "8003bf54a92ae13e9701314d454da8cd0a785dc0",
+  "harness_file_sha256": "411cc4c8e960c9c4a9671b83dd186d8407c9641249a16f940e06b56ee18792d1",
+  "runtime_source": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+  "source_red": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T20:18:54.9753125Z",
+    "FailedCount": 3,
+    "FailedTests": [
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioCoefficientLayerMapTests.NormInputIdentityFollowsSquaredReductionWithoutChangingModel",
+        "Message": "  Coefficient-bound norm input mapping is missing.\r\n  Expected: not null\r\n  But was:  null\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMapTests.cs",
+        "Line": 61
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioCoefficientLayerMapTests.NormInputMappingRejectsInverseWithoutSquaredReduction",
+        "Message": "  Expected: <System.InvalidOperationException>\r\n  But was:  <NUnit.Framework.AssertionException:   Coefficient-bound norm input mapping is missing.\r\n  Expected: not null\r\n  But was:  null\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Tests.AudioCoefficientLayerMapTests.NormInputs (Unity.InferenceEngine.Model model) [0x00066] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMapTests.cs:61 \r\n  at EmbeddingGemma.Tests.AudioCoefficientLayerMapTests+<>c__DisplayClass10_0.<NormInputMappingRejectsInverseWithoutSquaredReduction>b__0 () [0x00000] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMapTests.cs:83 \r\n  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x0002f] in <f577cd9686154d6ab10efd7e65e64366>:0 >\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMapTests.cs",
+        "Line": 83
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioCoefficientLayerMapTests.NormInputMappingRejectsPlainCoefficientMultiplication",
+        "Message": "  Expected: <System.InvalidOperationException>\r\n  But was:  <NUnit.Framework.AssertionException:   Coefficient-bound norm input mapping is missing.\r\n  Expected: not null\r\n  But was:  null\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Tests.AudioCoefficientLayerMapTests.NormInputs (Unity.InferenceEngine.Model model) [0x00066] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMapTests.cs:61 \r\n  at EmbeddingGemma.Tests.AudioCoefficientLayerMapTests+<>c.<NormInputMappingRejectsPlainCoefficientMultiplication>b__9_0 () [0x00000] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMapTests.cs:77 \r\n  at NUnit.Framework.Assert.Throws (NUnit.Framework.Constraints.IResolveConstraint expression, NUnit.Framework.TestDelegate code, System.String message, System.Object[] args) [0x0002f] in <f577cd9686154d6ab10efd7e65e64366>:0 >\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMapTests.cs",
+        "Line": 77
+      }
+    ],
+    "HasFailures": true,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Failed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 0,
+    "SkippedCount": 0,
+    "Status": "Failed",
+    "Success": false,
+    "TestCount": 3,
+    "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\.uloop\\outputs\\TestResults\\20261013_201854_9783117_4d0e3c76901641e995dff73142772583.xml"
+  },
+  "intermediate_scalar_mad_failure": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T20:19:45.3831117Z",
+    "FailedCount": 1,
+    "FailedTests": [
+      {
+        "FullName": "EmbeddingGemma.Tests.AudioCoefficientLayerMapTests.NormInputIdentityFollowsSquaredReductionWithoutChangingModel",
+        "Message": "System.InvalidOperationException : Expected a norm epsilon sum.",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\AudioCoefficientLayerMap.cs",
+        "Line": 38
+      }
+    ],
+    "HasFailures": true,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Failed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 6,
+    "SkippedCount": 0,
+    "Status": "Failed",
+    "Success": false,
+    "TestCount": 7,
+    "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\.uloop\\outputs\\TestResults\\20261013_201945_3861421_7c492a2c474a479c8a1a2ecab9a74c5e.xml"
+  },
+  "mapper_green": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T20:20:52.5497284Z",
+    "FailedCount": 0,
+    "HasFailures": false,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Passed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 7,
+    "SkippedCount": 0,
+    "Status": "Passed",
+    "Success": true,
+    "TestCount": 7,
+    "XmlPath": null
+  },
+  "actual_numeric_cli": {
+    "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+    "CompletedAt": "2026-10-13T20:21:43.5797253Z",
+    "FailedCount": 2,
+    "FailedTests": [
+      {
+        "FullName": "EmbeddingGemma.Tests.CurrentAudioLayerZeroNormTests.CompareNativeInternalNormsOnUnchangedSavedEncoder(CPU)",
+        "Message": "  Fixed native layer-zero numeric gate failed; see saved stages.\r\n  Expected: True\r\n  But was:  False\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CurrentAudioLayerZeroNormTests.cs",
+        "Line": 113
+      },
+      {
+        "FullName": "EmbeddingGemma.Tests.CurrentAudioLayerZeroNormTests.CompareNativeInternalNormsOnUnchangedSavedEncoder(GPUCompute)",
+        "Message": "  Fixed native layer-zero numeric gate failed; see saved stages.\r\n  Expected: True\r\n  But was:  False\r\n",
+        "File": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CurrentAudioLayerZeroNormTests.cs",
+        "Line": 113
+      }
+    ],
+    "HasFailures": true,
+    "InconclusiveCount": 0,
+    "Message": "Test execution completed with status: Failed",
+    "NoTestsFound": false,
+    "NoTestsFoundExplanation": "",
+    "PassedCount": 0,
+    "SkippedCount": 0,
+    "Status": "Failed",
+    "Success": false,
+    "TestCount": 2,
+    "XmlPath": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\.uloop\\outputs\\TestResults\\20261013_202143_5828052_f25f018e46654f8a9e21fb01e50cbfc2.xml"
+  },
+  "cpu": {
+    "success": false,
+    "observation_completed": true,
+    "scope": "silence_layer_zero_norm_input_and_three_outputs",
+    "runtime_source": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "native_replay_source": "9800c52957478fafa1377e2caa215f9f2e1477b0",
+    "requested_backend": "CPU",
+    "runtime_overlay": false,
+    "unity_version": "6000.3.21f1",
+    "graphics_device": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "stages": [
+      {
+        "elementwise_passed": false,
+        "mismatches": 281,
+        "maximum_absolute_error": 9.918212890625E-05,
+        "maximum_tolerance_ratio": 2.0597166303414722,
+        "stage": "norm_pre_attn_input",
+        "layer_index": 38,
+        "tensor_index": 107,
+        "actual_backend": "CPU"
+      },
+      {
+        "elementwise_passed": false,
+        "mismatches": 2,
+        "maximum_absolute_error": 0.00013136863708496094,
+        "maximum_tolerance_ratio": 2.1204016560003884,
+        "stage": "norm_pre_attn",
+        "layer_index": 44,
+        "tensor_index": 122,
+        "actual_backend": "CPU",
+        "coefficient_sha256": "c22ca47d6f70b7da106ca99050f334f11937ab4f95d14ff7093b28f0144de607"
+      },
+      {
+        "elementwise_passed": false,
+        "mismatches": 1,
+        "maximum_absolute_error": 7.62939453125E-05,
+        "maximum_tolerance_ratio": 1.0575427286748973,
+        "stage": "norm_post_attn",
+        "layer_index": 93,
+        "tensor_index": 259,
+        "actual_backend": "CPU",
+        "coefficient_sha256": "04ca760fb1df7ade391ed9e8ae11171aa89d91b616fcec04f9684cbf166577c1"
+      },
+      {
+        "elementwise_passed": false,
+        "mismatches": 9,
+        "maximum_absolute_error": 0.0001373291015625,
+        "maximum_tolerance_ratio": 1.3983720504092492,
+        "stage": "norm_out",
+        "layer_index": 151,
+        "tensor_index": 407,
+        "actual_backend": "CPU",
+        "coefficient_sha256": "1523738acdf79e3b34e42c2dc4c7145dd1b9c0db1dd3f77120d7ca37b7c186e9"
+      }
+    ],
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "started_utc": "2026-10-13T20:21:31.963167Z",
+    "coefficient_bound_outputs": {
+      "norm_pre_attn": 122,
+      "norm_post_attn": 259,
+      "norm_out": 407
+    },
+    "structurally_bound_norm_inputs": {
+      "norm_pre_attn": 107,
+      "norm_post_attn": 244,
+      "norm_out": 392
+    },
+    "norm_pre_attn_input_clip_min": -10000000000.0,
+    "norm_pre_attn_input_clip_max": 10000000000.0,
+    "normal_final_matches_observed_bits": true,
+    "first_failed_observed_stage": "norm_pre_attn_input",
+    "error": "NUnit.Framework.AssertionException:   Fixed native layer-zero numeric gate failed; see saved stages.\r\n  Expected: True\r\n  But was:  False\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Tests.CurrentAudioLayerZeroNormTests.CompareNativeInternalNormsOnUnchangedSavedEncoder (Unity.InferenceEngine.BackendType backend) [0x00a2f] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CurrentAudioLayerZeroNormTests.cs:109 ",
+    "completed_utc": "2026-10-13T20:21:38.5687403Z"
+  },
+  "gpu": {
+    "success": false,
+    "observation_completed": true,
+    "scope": "silence_layer_zero_norm_input_and_three_outputs",
+    "runtime_source": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "native_replay_source": "9800c52957478fafa1377e2caa215f9f2e1477b0",
+    "requested_backend": "GPUCompute",
+    "runtime_overlay": false,
+    "unity_version": "6000.3.21f1",
+    "graphics_device": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "stages": [
+      {
+        "elementwise_passed": false,
+        "mismatches": 280,
+        "maximum_absolute_error": 8.392333984375E-05,
+        "maximum_tolerance_ratio": 1.6098934581979325,
+        "stage": "norm_pre_attn_input",
+        "layer_index": 38,
+        "tensor_index": 107,
+        "actual_backend": "GPUCompute"
+      },
+      {
+        "elementwise_passed": false,
+        "mismatches": 280,
+        "maximum_absolute_error": 0.00013071298599243164,
+        "maximum_tolerance_ratio": 1.6591489397483195,
+        "stage": "norm_pre_attn",
+        "layer_index": 44,
+        "tensor_index": 122,
+        "actual_backend": "GPUCompute",
+        "coefficient_sha256": "c22ca47d6f70b7da106ca99050f334f11937ab4f95d14ff7093b28f0144de607"
+      },
+      {
+        "elementwise_passed": true,
+        "mismatches": 0,
+        "maximum_absolute_error": 3.814697265625E-05,
+        "maximum_tolerance_ratio": 0.6759525141920583,
+        "stage": "norm_post_attn",
+        "layer_index": 93,
+        "tensor_index": 259,
+        "actual_backend": "GPUCompute",
+        "coefficient_sha256": "04ca760fb1df7ade391ed9e8ae11171aa89d91b616fcec04f9684cbf166577c1"
+      },
+      {
+        "elementwise_passed": false,
+        "mismatches": 8,
+        "maximum_absolute_error": 9.1552734375E-05,
+        "maximum_tolerance_ratio": 2.149710387100482,
+        "stage": "norm_out",
+        "layer_index": 151,
+        "tensor_index": 407,
+        "actual_backend": "GPUCompute",
+        "coefficient_sha256": "1523738acdf79e3b34e42c2dc4c7145dd1b9c0db1dd3f77120d7ca37b7c186e9"
+      }
+    ],
+    "full_encoder_validated": false,
+    "end_to_end_validated": false,
+    "started_utc": "2026-10-13T20:21:38.5767659Z",
+    "coefficient_bound_outputs": {
+      "norm_pre_attn": 122,
+      "norm_post_attn": 259,
+      "norm_out": 407
+    },
+    "structurally_bound_norm_inputs": {
+      "norm_pre_attn": 107,
+      "norm_post_attn": 244,
+      "norm_out": 392
+    },
+    "norm_pre_attn_input_clip_min": -10000000000.0,
+    "norm_pre_attn_input_clip_max": 10000000000.0,
+    "normal_final_matches_observed_bits": true,
+    "first_failed_observed_stage": "norm_pre_attn_input",
+    "error": "NUnit.Framework.AssertionException:   Fixed native layer-zero numeric gate failed; see saved stages.\r\n  Expected: True\r\n  But was:  False\r\n\r\n  at NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) [0x00039] in <f577cd9686154d6ab10efd7e65e64366>:0 \r\n  at EmbeddingGemma.Tests.CurrentAudioLayerZeroNormTests.CompareNativeInternalNormsOnUnchangedSavedEncoder (Unity.InferenceEngine.BackendType backend) [0x00a2f] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\k\\Assets\\ReferenceTests\\Editor\\CurrentAudioLayerZeroNormTests.cs:109 ",
+    "completed_utc": "2026-10-13T20:21:43.4918324Z"
+  },
+  "full_encoder_validated": false,
+  "end_to_end_validated": false
+}

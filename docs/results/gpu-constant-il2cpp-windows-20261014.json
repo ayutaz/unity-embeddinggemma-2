@@ -1,0 +1,477 @@
+{
+  "schema_version": 1,
+  "verified_scope": "Windows IL2CPP Release High stripping D3D12 weights-free bounded GPU constant probe",
+  "real_model_player_validated": false,
+  "all_platforms_validated": false,
+  "runtime_overlay": false,
+  "source_commit": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+  "metadata_guid_fix_commit": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+  "build": {
+    "success": true,
+    "injected_build": false,
+    "source_commit": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+    "unity": "6000.3.21f1",
+    "sentis": "2.6.1",
+    "started_utc": "2026-10-13T18:15:48.8815623Z",
+    "source_sha256": {
+      "runtime/GpuConstantWorker.cs": "7550f2dbd95c27cb243834237bbaa0f0472c83e71872d5787dd16534713684aa",
+      "runtime/link.xml": "ad275c876350b9210534a4d62d76af4476fa2d4388c1b8d920d6f97dcf8894ce",
+      "probe/GpuConstantProbeChecks.cs": "1b48c5bae646c2438726f11b586bd4ea75f1893ddd63418120f830d1828684ff",
+      "probe/GpuConstantProbeRunner.cs": "73b8b0499d54760b9788a1d3ab8a92dd3234b0b573dc013ff898e6f4ac8589cc"
+    },
+    "scripting_backend": "IL2CPP",
+    "stripping": "High",
+    "compiler": "Release",
+    "graphics_api": "Direct3D12",
+    "build_result": "Succeeded",
+    "build_seconds": 36.4871121,
+    "build_bytes": 613969078,
+    "errors": 0,
+    "warnings": 185,
+    "completed_utc": "2026-10-13T18:16:27.0776095Z"
+  },
+  "build_receipt_sha256": "79481714c139dd513efc3fdb2c8282dcc536a9466620ee27d40ff3048d77bd60",
+  "build_cli_sha256": "d2c9bc6d03320255ea335583d2394795a701b2bcc6327d9c34b12533beddad9e",
+  "executable_sha256": "303b9b322f8be40b4273014b21932b9fd3b1e1ddc08877bcb9008af9f9330559",
+  "game_assembly_sha256": "8d0ccaa15ff04b3430a0d6de99bdfb4006731022499d347b2d415cdd8769038c",
+  "linker_input_response_sha256": "0ce00f8e922570c986a495b02622c778134a37035a0a7ab575134af7ea2cc2d2",
+  "package_link_xml_explicitly_registered": true,
+  "tdd": [
+    {
+      "name": "red",
+      "completed": "2026-10-13T17:45:05.3958305Z",
+      "passed": 0,
+      "failed": 2,
+      "skipped": 0,
+      "sha256": "f29f4bdf22532d3f70e112f70c4987b2220900e8183a09531502ed9811e471da"
+    },
+    {
+      "name": "green",
+      "completed": "2026-10-13T17:47:10.3204971Z",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "sha256": "35a6c3e2f26467d05d5741d2587d9ef138a41cce05eb91950481633fc311f256"
+    },
+    {
+      "name": "build-red",
+      "completed": "2026-10-13T17:49:05.4793913Z",
+      "passed": 0,
+      "failed": 2,
+      "skipped": 0,
+      "sha256": "13a715a708d67acb44f35c572908e682718db3d4209a659ea44c619af7eda9a8"
+    },
+    {
+      "name": "build-green",
+      "completed": "2026-10-13T17:55:38.8448751Z",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "sha256": "d84ff8d5912dab7b04ad981d808617ece2c053a57dfed35a22eeccdc695612f2"
+    },
+    {
+      "name": "runner-red",
+      "completed": "2026-10-13T17:56:43.0034663Z",
+      "passed": 0,
+      "failed": 2,
+      "skipped": 0,
+      "sha256": "b218c25a83e75f547b1639b3be5775b03c39a5ca8b0913f0e02fc5b15c76c45a"
+    },
+    {
+      "name": "runner-green",
+      "completed": "2026-10-13T17:57:45.9136749Z",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "sha256": "ad76f18b557beea72ed136e1489e8c3250240e4046fbe9f518322ffa9e796fd1"
+    },
+    {
+      "name": "probe-all-green",
+      "completed": "2026-10-13T17:59:55.4986955Z",
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "sha256": "2c4e3cc68625bf780af66531b3b78213451a558193682681abf74d0a769c5985"
+    },
+    {
+      "name": "linker-red",
+      "completed": "2026-10-13T18:00:10.6744719Z",
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0,
+      "sha256": "6af531fd356138c1a17bf76a8ca3b9787e8e6e2e003c2308b02af94cfded36e5"
+    },
+    {
+      "name": "linker-green",
+      "completed": "2026-10-13T18:02:12.5421892Z",
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "sha256": "7a49a0fdb802960ed4f7d585dab8c7521162e8c9aae10ef04a649ce6a15defe4"
+    },
+    {
+      "name": "package-green",
+      "completed": "2026-10-13T18:02:46.7325553Z",
+      "passed": 254,
+      "failed": 0,
+      "skipped": 0,
+      "sha256": "ca739d9311076000942f44578e36a00d1cc2108a5a52c62393a5a48014d1d2c6"
+    }
+  ],
+  "runs": [
+    {
+      "run": 1,
+      "process_id": 104696,
+      "exit_code": 0,
+      "result_sha256": "e31e5ec5a0c274e04dce15cb9e00c746110d49f5a998885943b7173d52905eae",
+      "process_sha256": "e9d3826068ea4b5f77e1ab7301a3a262551e0507c93bcae236f35008f5b22015",
+      "result": {
+        "success": true,
+        "checks_passed": true,
+        "injected_checks": false,
+        "is_editor": false,
+        "development_build": false,
+        "unity": "6000.3.21f1",
+        "platform": "WindowsPlayer",
+        "graphics_api": "Direct3D12",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "build_info": {
+          "success": false,
+          "injected_build": false,
+          "source_commit": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+          "unity": "6000.3.21f1",
+          "sentis": "2.6.1",
+          "started_utc": "2026-10-13T18:15:48.8815623Z",
+          "source_sha256": {
+            "runtime/GpuConstantWorker.cs": "7550f2dbd95c27cb243834237bbaa0f0472c83e71872d5787dd16534713684aa",
+            "runtime/link.xml": "ad275c876350b9210534a4d62d76af4476fa2d4388c1b8d920d6f97dcf8894ce",
+            "probe/GpuConstantProbeChecks.cs": "1b48c5bae646c2438726f11b586bd4ea75f1893ddd63418120f830d1828684ff",
+            "probe/GpuConstantProbeRunner.cs": "73b8b0499d54760b9788a1d3ab8a92dd3234b0b573dc013ff898e6f4ac8589cc"
+          },
+          "scripting_backend": "IL2CPP",
+          "stripping": "High",
+          "compiler": "Release",
+          "graphics_api": "Direct3D12"
+        },
+        "cases": [
+          {
+            "success": true,
+            "requested_backend": "CPU",
+            "output_elements": 2097153,
+            "actual_backend": "CPU",
+            "mismatches": 0,
+            "uploaded_constants": 0,
+            "upload_calls": 0,
+            "maximum_upload_bytes": 0,
+            "borrowed_model_reusable": true
+          },
+          {
+            "success": true,
+            "requested_backend": "GPUCompute",
+            "output_elements": 2097153,
+            "actual_backend": "GPUCompute",
+            "mismatches": 0,
+            "uploaded_constants": 1,
+            "upload_calls": 2,
+            "maximum_upload_bytes": 8388608,
+            "borrowed_model_reusable": true
+          }
+        ],
+        "started_utc": "2026-10-13T18:17:26.3745405Z",
+        "scope": "Weights-free bounded GPU constant storage and stripping probe; not real-model or platform acceptance.",
+        "il2cpp": true,
+        "completed_utc": "2026-10-13T18:17:26.6341897Z"
+      }
+    },
+    {
+      "run": 2,
+      "process_id": 163844,
+      "exit_code": 0,
+      "result_sha256": "d8dca52dd69751ce2654d518bd9ecffe897b89334cd02f16d4206998275ea9c1",
+      "process_sha256": "a3165a8a736b55cfa922ac03a5002b15751e8db928368b870213ede305cf9289",
+      "result": {
+        "success": true,
+        "checks_passed": true,
+        "injected_checks": false,
+        "is_editor": false,
+        "development_build": false,
+        "unity": "6000.3.21f1",
+        "platform": "WindowsPlayer",
+        "graphics_api": "Direct3D12",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "build_info": {
+          "success": false,
+          "injected_build": false,
+          "source_commit": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+          "unity": "6000.3.21f1",
+          "sentis": "2.6.1",
+          "started_utc": "2026-10-13T18:15:48.8815623Z",
+          "source_sha256": {
+            "runtime/GpuConstantWorker.cs": "7550f2dbd95c27cb243834237bbaa0f0472c83e71872d5787dd16534713684aa",
+            "runtime/link.xml": "ad275c876350b9210534a4d62d76af4476fa2d4388c1b8d920d6f97dcf8894ce",
+            "probe/GpuConstantProbeChecks.cs": "1b48c5bae646c2438726f11b586bd4ea75f1893ddd63418120f830d1828684ff",
+            "probe/GpuConstantProbeRunner.cs": "73b8b0499d54760b9788a1d3ab8a92dd3234b0b573dc013ff898e6f4ac8589cc"
+          },
+          "scripting_backend": "IL2CPP",
+          "stripping": "High",
+          "compiler": "Release",
+          "graphics_api": "Direct3D12"
+        },
+        "cases": [
+          {
+            "success": true,
+            "requested_backend": "CPU",
+            "output_elements": 2097153,
+            "actual_backend": "CPU",
+            "mismatches": 0,
+            "uploaded_constants": 0,
+            "upload_calls": 0,
+            "maximum_upload_bytes": 0,
+            "borrowed_model_reusable": true
+          },
+          {
+            "success": true,
+            "requested_backend": "GPUCompute",
+            "output_elements": 2097153,
+            "actual_backend": "GPUCompute",
+            "mismatches": 0,
+            "uploaded_constants": 1,
+            "upload_calls": 2,
+            "maximum_upload_bytes": 8388608,
+            "borrowed_model_reusable": true
+          }
+        ],
+        "started_utc": "2026-10-13T18:17:35.0349383Z",
+        "scope": "Weights-free bounded GPU constant storage and stripping probe; not real-model or platform acceptance.",
+        "il2cpp": true,
+        "completed_utc": "2026-10-13T18:17:35.2859457Z"
+      }
+    }
+  ],
+  "missing": [
+    "Actual full real-model IL2CPP validation",
+    "Long-running repetition and memory profiler",
+    "Byte constant-specific case",
+    "macOS iOS Android physical execution",
+    "Final fresh consumer",
+    "M3/M4 original encoder numeric gates",
+    "Image and audio samples",
+    "Distribution preparation"
+  ],
+  "release_created": false,
+  "metadata_fix_consumer": {
+    "requested": "https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/com.ayutaz.embeddinggemma#adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+    "resolved": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+    "runtime_overlay": false,
+    "linker_test": {
+      "CompileNote": "A compile ran before the tests and succeeded. Pass --skip-compile to run the tests without this compile step.",
+      "CompletedAt": "2026-10-13T18:12:36.6357952Z",
+      "FailedCount": 0,
+      "HasFailures": false,
+      "InconclusiveCount": 0,
+      "Message": "Test execution completed with status: Passed",
+      "NoTestsFound": false,
+      "NoTestsFoundExplanation": "",
+      "PassedCount": 1,
+      "SkippedCount": 0,
+      "Status": "Passed",
+      "Success": true,
+      "TestCount": 1,
+      "XmlPath": null
+    },
+    "cli_sha256": "652cbd5792d981db91eb6476c1ffd6476b7d99357e37c945af68bf84eef6318b"
+  },
+  "initial_execution": {
+    "source_commit": "f246eea58543f806aca1d880c2c37d0eee86fd21",
+    "build": {
+      "success": true,
+      "injected_build": false,
+      "source_commit": "f246eea58543f806aca1d880c2c37d0eee86fd21",
+      "unity": "6000.3.21f1",
+      "sentis": "2.6.1",
+      "started_utc": "2026-10-13T18:03:56.7045392Z",
+      "source_sha256": {
+        "runtime/GpuConstantWorker.cs": "7550f2dbd95c27cb243834237bbaa0f0472c83e71872d5787dd16534713684aa",
+        "runtime/link.xml": "ad275c876350b9210534a4d62d76af4476fa2d4388c1b8d920d6f97dcf8894ce",
+        "probe/GpuConstantProbeChecks.cs": "1b48c5bae646c2438726f11b586bd4ea75f1893ddd63418120f830d1828684ff",
+        "probe/GpuConstantProbeRunner.cs": "73b8b0499d54760b9788a1d3ab8a92dd3234b0b573dc013ff898e6f4ac8589cc"
+      },
+      "scripting_backend": "IL2CPP",
+      "stripping": "High",
+      "compiler": "Release",
+      "graphics_api": "Direct3D12",
+      "build_result": "Succeeded",
+      "build_seconds": 214.3889681,
+      "build_bytes": 613969078,
+      "errors": 0,
+      "warnings": 185,
+      "completed_utc": "2026-10-13T18:07:32.6493213Z"
+    },
+    "build_receipt_sha256": "641105b6bf53ab11952367fd9f4201da6fecac8d5d81a81e632de31772cd35df",
+    "build_cli_sha256": "d2c9bc6d03320255ea335583d2394795a701b2bcc6327d9c34b12533beddad9e",
+    "executable_sha256": "303b9b322f8be40b4273014b21932b9fd3b1e1ddc08877bcb9008af9f9330559",
+    "game_assembly_sha256": "8d0ccaa15ff04b3430a0d6de99bdfb4006731022499d347b2d415cdd8769038c",
+    "linker_input_response_sha256": "ff04a79196b8208c053e9fa54ef456dfe53e92f5a84458d383e869cf187f425e",
+    "runs": [
+      {
+        "run": 1,
+        "process_id": 69608,
+        "exit_code": 0,
+        "result_sha256": "eab556ce1795f82b7257a8b5cb115aa50d81a2d592cde03f4fdaad2fd1c04513",
+        "process_sha256": "96c42f442856dd4b1697eee726d6d771676385e1fd354a7d55b71bb437c88e77",
+        "result": {
+          "success": true,
+          "checks_passed": true,
+          "injected_checks": false,
+          "is_editor": false,
+          "development_build": false,
+          "unity": "6000.3.21f1",
+          "platform": "WindowsPlayer",
+          "graphics_api": "Direct3D12",
+          "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+          "build_info": {
+            "success": false,
+            "injected_build": false,
+            "source_commit": "f246eea58543f806aca1d880c2c37d0eee86fd21",
+            "unity": "6000.3.21f1",
+            "sentis": "2.6.1",
+            "started_utc": "2026-10-13T18:03:56.7045392Z",
+            "source_sha256": {
+              "runtime/GpuConstantWorker.cs": "7550f2dbd95c27cb243834237bbaa0f0472c83e71872d5787dd16534713684aa",
+              "runtime/link.xml": "ad275c876350b9210534a4d62d76af4476fa2d4388c1b8d920d6f97dcf8894ce",
+              "probe/GpuConstantProbeChecks.cs": "1b48c5bae646c2438726f11b586bd4ea75f1893ddd63418120f830d1828684ff",
+              "probe/GpuConstantProbeRunner.cs": "73b8b0499d54760b9788a1d3ab8a92dd3234b0b573dc013ff898e6f4ac8589cc"
+            },
+            "scripting_backend": "IL2CPP",
+            "stripping": "High",
+            "compiler": "Release",
+            "graphics_api": "Direct3D12"
+          },
+          "cases": [
+            {
+              "success": true,
+              "requested_backend": "CPU",
+              "output_elements": 2097153,
+              "actual_backend": "CPU",
+              "mismatches": 0,
+              "uploaded_constants": 0,
+              "upload_calls": 0,
+              "maximum_upload_bytes": 0,
+              "borrowed_model_reusable": true
+            },
+            {
+              "success": true,
+              "requested_backend": "GPUCompute",
+              "output_elements": 2097153,
+              "actual_backend": "GPUCompute",
+              "mismatches": 0,
+              "uploaded_constants": 1,
+              "upload_calls": 2,
+              "maximum_upload_bytes": 8388608,
+              "borrowed_model_reusable": true
+            }
+          ],
+          "started_utc": "2026-10-13T18:08:01.2304717Z",
+          "scope": "Weights-free bounded GPU constant storage and stripping probe; not real-model or platform acceptance.",
+          "il2cpp": true,
+          "completed_utc": "2026-10-13T18:08:01.5256347Z"
+        }
+      },
+      {
+        "run": 2,
+        "process_id": 139772,
+        "exit_code": 0,
+        "result_sha256": "4882e8e7e5101552aa7048144cff2e5798f865fd5315148f10a30a0b17b7a8a8",
+        "process_sha256": "374b7a88bae6030a16a7fc07a76a9b7105fb2a1e8c474df265be33cdb1863a7a",
+        "result": {
+          "success": true,
+          "checks_passed": true,
+          "injected_checks": false,
+          "is_editor": false,
+          "development_build": false,
+          "unity": "6000.3.21f1",
+          "platform": "WindowsPlayer",
+          "graphics_api": "Direct3D12",
+          "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+          "build_info": {
+            "success": false,
+            "injected_build": false,
+            "source_commit": "f246eea58543f806aca1d880c2c37d0eee86fd21",
+            "unity": "6000.3.21f1",
+            "sentis": "2.6.1",
+            "started_utc": "2026-10-13T18:03:56.7045392Z",
+            "source_sha256": {
+              "runtime/GpuConstantWorker.cs": "7550f2dbd95c27cb243834237bbaa0f0472c83e71872d5787dd16534713684aa",
+              "runtime/link.xml": "ad275c876350b9210534a4d62d76af4476fa2d4388c1b8d920d6f97dcf8894ce",
+              "probe/GpuConstantProbeChecks.cs": "1b48c5bae646c2438726f11b586bd4ea75f1893ddd63418120f830d1828684ff",
+              "probe/GpuConstantProbeRunner.cs": "73b8b0499d54760b9788a1d3ab8a92dd3234b0b573dc013ff898e6f4ac8589cc"
+            },
+            "scripting_backend": "IL2CPP",
+            "stripping": "High",
+            "compiler": "Release",
+            "graphics_api": "Direct3D12"
+          },
+          "cases": [
+            {
+              "success": true,
+              "requested_backend": "CPU",
+              "output_elements": 2097153,
+              "actual_backend": "CPU",
+              "mismatches": 0,
+              "uploaded_constants": 0,
+              "upload_calls": 0,
+              "maximum_upload_bytes": 0,
+              "borrowed_model_reusable": true
+            },
+            {
+              "success": true,
+              "requested_backend": "GPUCompute",
+              "output_elements": 2097153,
+              "actual_backend": "GPUCompute",
+              "mismatches": 0,
+              "uploaded_constants": 1,
+              "upload_calls": 2,
+              "maximum_upload_bytes": 8388608,
+              "borrowed_model_reusable": true
+            }
+          ],
+          "started_utc": "2026-10-13T18:08:49.1955544Z",
+          "scope": "Weights-free bounded GPU constant storage and stripping probe; not real-model or platform acceptance.",
+          "il2cpp": true,
+          "completed_utc": "2026-10-13T18:08:49.4363009Z"
+        }
+      }
+    ]
+  },
+  "linker_input_package_path": "C:/Users/yuta/Desktop/Private/unity-embeddinggemma-2/artifacts/k/Library/PackageCache/com.ayutaz.embeddinggemma@e0c2e2e13b24/Runtime/link.xml",
+  "initial_build_warning_categories": [
+    {
+      "Name": "integer_divide_performance",
+      "Count": 2
+    },
+    {
+      "Name": "integer_modulus_performance",
+      "Count": 7
+    },
+    {
+      "Name": "shader_loop",
+      "Count": 1
+    },
+    {
+      "Name": "signed_unsigned_mismatch",
+      "Count": 15
+    },
+    {
+      "Name": "unsupported_sentis_conv_variant",
+      "Count": 160
+    }
+  ],
+  "code_head_ci": {
+    "source_commit": "adccab24dbcc3f5dd8c8ac79911a7604a6014021",
+    "run_id": 38443982321,
+    "conclusion": "success",
+    "completed_utc": "2026-10-13T18:18:29Z",
+    "succeeded_jobs": 8,
+    "unity_execution_in_actions": false
+  }
+}

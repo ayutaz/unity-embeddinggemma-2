@@ -1,0 +1,59 @@
+{
+  "scope": "one_original_qualified_layer3_native_tanh_input_actual_onnx_only",
+  "producer": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "capture_source": "56c9f5ec3919ca0ce0774e411bc6ad8b4cf95262",
+  "source_report_sha256": "13d560530a892a363f0ecdb1beb6d98f11697501e5f8249613f9e80fca63c866",
+  "original_context_qualified": true,
+  "input_sha256": "71749964f68e8d60755a02f34837799b49f779ed6f968e64c5484750eb117089",
+  "reference_sha256": "8e0228782325af39e348292d62edebb2f39cba0c109000ad514a67eee5223979",
+  "elements": 55296,
+  "native_candidate_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 0.0,
+    "maximum_tolerance_ratio": 0.0,
+    "worst_index": 0,
+    "worst_actual": 0.25532227754592896,
+    "worst_expected": 0.25532227754592896,
+    "exact_difference_count": 0
+  },
+  "actual_onnx_metrics": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 0.0,
+    "maximum_tolerance_ratio": 0.0,
+    "worst_index": 0,
+    "worst_actual": 0.25532227754592896,
+    "worst_expected": 0.25532227754592896,
+    "exact_difference_count": 0
+  },
+  "metadata": {
+    "execution": "actual_standard_fp32_onnx_on_same_native_inputs",
+    "graph_sha256": "49b38cceb5ccad365bd4768f0f010091f0f359515e4eff8622c181c50373f332",
+    "candidate_function": "fp32_native_tanh",
+    "native_forward_used_as_candidate_evidence": false
+  },
+  "capture_sha256": "8e0228782325af39e348292d62edebb2f39cba0c109000ad514a67eee5223979",
+  "whole_encoder_validated": false,
+  "gpu_validated": false,
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "report_sha256": "7739e7f100fd2e194dc14f2f8a47dd6a06cfdb37a51474cee282dff60f02a736",
+  "standard_onnx_baseline": {
+    "actual_finite": true,
+    "same_shape": true,
+    "mismatched_elements": 0,
+    "maximum_absolute_error": 5.960464477539063e-08,
+    "maximum_tolerance_ratio": 0.0009933180882846415,
+    "worst_index": 49134,
+    "worst_actual": -0.5000560283660889,
+    "worst_expected": -0.5000559687614441,
+    "exact_difference_count": 9907
+  },
+  "source_shader": "Packages/com.ayutaz.embeddinggemma/Runtime/Resources/EmbeddingGemmaNativeTanh.compute",
+  "source_shader_sha256": "cecf9797eaad7eebaa183282ffcf0a9a81e9af7a03b497b404d2b6661d0ce1f8",
+  "coefficient_fp32_sha256": "d9032fea214304f70a15a39e48b3044f81182b4fe1bd8a85e64a89d238fe3a65",
+  "distinction": "Actual standard FP32 ONNX reproduces original qualified layer3 Tanh55296values exactly; no native passthrough proof or whole encoder/GPU pass."
+}

@@ -1,0 +1,35 @@
+{
+  "scope": "real_audio_role_context_diagnostic_failed",
+  "workflow_run": 38558654493,
+  "head_commit": "a98a2f805c7c673d08acf9daf9c70fce473f5f4b",
+  "producer_commit": "6da5da2fa12861b6e6f5f04c455a75130f6fb81c",
+  "artifact_id": 11891517443,
+  "workflow_conclusion": "failure",
+  "failed_role": "document",
+  "failed_case": "silence",
+  "mismatched_elements": 288,
+  "maximum_absolute_error": 0.0001811981201171875,
+  "maximum_tolerance_ratio": 8.712747897611987,
+  "actual_file": {
+    "file": "audio-role-context-actual-fp32.bin",
+    "bytes": 573440,
+    "sha256": "b5b6dda034a3c92b2cce6ee2e14d05847c4206dc6ccbcf97f5c2f70f195d394c"
+  },
+  "cpu_capability": "AVX2",
+  "torch_version": "2.14.1+cu130",
+  "torch_threads": 2,
+  "torch_interop_threads": 4,
+  "thread_environment": {
+    "OMP_NUM_THREADS": "4",
+    "MKL_NUM_THREADS": "4",
+    "MKL_CBWR": null,
+    "DNNL_MAX_CPU_ISA": null,
+    "ATEN_CPU_CAPABILITY": null
+  },
+  "diagnostic_sha256": "a973cc897ba45498d84b73adb2b7ea58cf260ec30653fd4cf428514b09ccb83d",
+  "expected_unchanged": true,
+  "query_raw_executed": false,
+  "native_context_validated": false,
+  "end_to_end_validated": false,
+  "cause_confirmed": false
+}

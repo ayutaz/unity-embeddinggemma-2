@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "date_jst": "2026-10-16",
+  "scope": "original_strict_staged_audio_encoder_all_six_and_final_text_gpu_api_regression",
+  "runtime_source": "0857edc8be1a94d5f46af570058076b5df0eda34",
+  "encoder": {
+    "original_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+    "case_count": 6,
+    "profile_count": 2,
+    "tolerance": {
+      "atol": 1e-05,
+      "rtol": 0.0001
+    },
+    "values_compared": 824320,
+    "mismatched_elements": 0,
+    "cases": [
+      {
+        "id": "silence",
+        "profile": "frames-1119-valid-1119",
+        "values": 143360,
+        "mismatched_elements": 0,
+        "bit_differences": 96638,
+        "maximum_absolute_error": 1.430511474609375e-06,
+        "maximum_tolerance_ratio": 0.037593715994207695,
+        "capture_sha256": "a60d82cfeb2725b71760b05c34e4fb0371f2b0d213f042c3bf83aa91679316c2",
+        "report": "partitioned-audio-encoder-staged-original-gpu-0857edc8be1a94d5f46af570058076b5df0eda34-silence.json",
+        "report_sha256": "ba06ab52e281ac0752bcf0522ec2ff940daedd320c8d8789879f741971280682"
+      },
+      {
+        "id": "impulse",
+        "profile": "frames-1119-valid-1119",
+        "values": 143360,
+        "mismatched_elements": 0,
+        "bit_differences": 96272,
+        "maximum_absolute_error": 1.9073486328125e-06,
+        "maximum_tolerance_ratio": 0.04657292832930413,
+        "capture_sha256": "daf0761248a3a0207eff5f901ba2c76b2c7b2c76214ccf87c7bf906c1f426a6a",
+        "report": "partitioned-audio-encoder-staged-original-gpu-0857edc8be1a94d5f46af570058076b5df0eda34-silence.json",
+        "report_sha256": "ba06ab52e281ac0752bcf0522ec2ff940daedd320c8d8789879f741971280682"
+      },
+      {
+        "id": "sine",
+        "profile": "frames-1119-valid-1119",
+        "values": 143360,
+        "mismatched_elements": 0,
+        "bit_differences": 88046,
+        "maximum_absolute_error": 1.430511474609375e-06,
+        "maximum_tolerance_ratio": 0.04120452465855162,
+        "capture_sha256": "2a6fcc15c5b6d3b0030f022987556fc5d7004748208136d8908ebc87e9e88691",
+        "report": "partitioned-audio-encoder-staged-original-gpu-0857edc8be1a94d5f46af570058076b5df0eda34-silence.json",
+        "report_sha256": "ba06ab52e281ac0752bcf0522ec2ff940daedd320c8d8789879f741971280682"
+      },
+      {
+        "id": "nyquist",
+        "profile": "frames-1119-valid-1119",
+        "values": 143360,
+        "mismatched_elements": 0,
+        "bit_differences": 96635,
+        "maximum_absolute_error": 1.430511474609375e-06,
+        "maximum_tolerance_ratio": 0.04383387842410816,
+        "capture_sha256": "1d90e3824b86c8820808035f3a2e9e840fb5500b84cbefc6b3513139df562ed0",
+        "report": "partitioned-audio-encoder-staged-original-gpu-0857edc8be1a94d5f46af570058076b5df0eda34-silence.json",
+        "report_sha256": "ba06ab52e281ac0752bcf0522ec2ff940daedd320c8d8789879f741971280682"
+      },
+      {
+        "id": "noise",
+        "profile": "frames-1119-valid-1119",
+        "values": 143360,
+        "mismatched_elements": 0,
+        "bit_differences": 88821,
+        "maximum_absolute_error": 1.9073486328125e-06,
+        "maximum_tolerance_ratio": 0.042264721566013186,
+        "capture_sha256": "ca207421213fd547d9914d3d1e6e703062444bd5ea34ff1ab140f1b3d1beeee7",
+        "report": "partitioned-audio-encoder-staged-original-gpu-0857edc8be1a94d5f46af570058076b5df0eda34-silence.json",
+        "report_sha256": "ba06ab52e281ac0752bcf0522ec2ff940daedd320c8d8789879f741971280682"
+      },
+      {
+        "id": "padded_noise",
+        "profile": "frames-1119-valid-839",
+        "values": 107520,
+        "mismatched_elements": 0,
+        "bit_differences": 66816,
+        "maximum_absolute_error": 1.430511474609375e-06,
+        "maximum_tolerance_ratio": 0.042264721566013186,
+        "capture_sha256": "8009bdd056d76e13ab2b911639e05c3b300ff4864804fc411cf82695165c1b7a",
+        "report": "partitioned-audio-encoder-staged-original-gpu-0857edc8be1a94d5f46af570058076b5df0eda34-padded_noise.json",
+        "report_sha256": "08f7d9997233d55b6ea31aa5767b3e835ce5a941f9159c99a39f11ea6236d081"
+      }
+    ],
+    "computation_or_nonempty_input_cpu_fallback": 0,
+    "intermediate_readbacks": 0,
+    "final_encoder_output_readbacks": 6,
+    "process": {
+      "prefix": "gpu-staged-encoder-original-all-six-20261016",
+      "counts": {
+        "total": 2,
+        "passed": 2,
+        "failed": 0,
+        "skipped": 0
+      },
+      "process_receipt_sha256": "9bff2b0ed80691a9d2f2f95cae843e47d5758781848f49676cfe9bacf595ba38",
+      "nunit_xml_sha256": "e283629634b9ea9b1aff65b7b42070f62fce23677bc1c5a39019270b30ab815d",
+      "log_sha256": "d0fa363266a294c4d34308ca49d9fe62c021d46674e08c7fffa95c53cc9067dd",
+      "persistent_native_warning_count": 0
+    }
+  },
+  "text": {
+    "reference_sha256": "3530756b36316a812ac853f0722bed5479e92e6bb02ca6aa41c06660d32a71ec",
+    "precisions": [
+      {
+        "precision": "fp32",
+        "vector_count": 10,
+        "minimum_cosine": 0.999999999999512,
+        "all_four_rankings_and_scores_matched": true,
+        "maximum_score_error": 9.186151761486627e-08,
+        "capture_sha256": "87044df656a4a966bba05955e8c7bab40ef793dc72814ce41d53b4c7e5452586",
+        "previous_capture_bit_identical": true,
+        "report_sha256": "c79aaca7205a1e712449a4ff4d4f0a868452b246f7054c971a8b521d6026701b"
+      },
+      {
+        "precision": "float16",
+        "vector_count": 10,
+        "minimum_cosine": 0.9999999999994984,
+        "all_four_rankings_and_scores_matched": true,
+        "maximum_score_error": 1.0256953353326992e-07,
+        "capture_sha256": "426cae2408217475a5d0e07862298d1d89e4ac8a0cde2a295df20de08d837b8a",
+        "previous_capture_bit_identical": true,
+        "report_sha256": "1cc88e24be447c7b3e53e84174d8cf20d6028a78d76b99db67eb226b0dd36681"
+      }
+    ],
+    "total_vectors": 20,
+    "full_rankings": 8,
+    "computation_cpu_fallback": 0,
+    "readback_flushes": 0,
+    "process": {
+      "prefix": "gpu-final-text-and-api-regressions-20261016",
+      "counts": {
+        "total": 189,
+        "passed": 189,
+        "failed": 0,
+        "skipped": 0
+      },
+      "process_receipt_sha256": "76edffa7ce13f5009ee5a2810f283328fc080dd1dd087f23e646d1348926b296",
+      "nunit_xml_sha256": "1fb982c030ab3155bf885590baf9bc3e3a9bd3df0561c8b1d5b2517dbcaa09e4",
+      "log_sha256": "17b31a89a6ce8df6d23cf9059bc44904070aff70dceef79d3ffa4128046a0306",
+      "persistent_native_warning_count": 0
+    }
+  },
+  "limitations": [
+    "Encoder-only final output readbacks are a separate strict gate; actual PCM final768 APIs retain zero intermediate readback.",
+    "This receipt does not establish Required CI success or release / Player / other device qualification."
+  ]
+}

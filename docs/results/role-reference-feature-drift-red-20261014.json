@@ -1,0 +1,9 @@
+{
+  "command": "uv run pytest tests/test_multimodal_reference_roles.py -k feature_drift -q --tb=short",
+  "passed": 0,
+  "reason": "Mismatch rejected but failure context JSON missing",
+  "failed": 2,
+  "deselected": 14,
+  "scope": "role_reference_feature_drift_diagnostics_red",
+  "source": "678330657ba77bb21f93b0c204d3fa6938642271"
+}

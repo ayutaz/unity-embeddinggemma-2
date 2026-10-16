@@ -30,7 +30,7 @@ namespace EmbeddingGemma
     public static class GpuMediaBundleCache
     {
         const string Owner = "EmbeddingGemma prepared GPU media cache v1\n";
-        static readonly Regex ObjectName = new Regex("\\A[a-f0-9]{64}\\.(sentis|f32|json)\\z");
+        static readonly Regex ObjectName = new Regex("\\A[a-f0-9]{64}\\.(sentis|f32|bin|json)\\z");
         static readonly Regex PendingName = new Regex("\\A[a-f0-9]{32}\\.part\\z");
 
         public static async Task<GpuMediaBundleLease> AcquireAsync(string sourceDirectory, string moduleName, string cacheDirectory,

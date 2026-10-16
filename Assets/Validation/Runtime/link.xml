@@ -5,4 +5,7 @@
     <type fullname="EmbeddingGemma.TextEmbedder" preserve="fields" />
     <type fullname="EmbeddingGemma.TextSearchSession" preserve="fields" />
   </assembly>
+  <assembly fullname="Unity.InferenceEngine">
+    <type fullname="Unity.InferenceEngine.Worker" preserve="fields" />
+  </assembly>
 </linker>

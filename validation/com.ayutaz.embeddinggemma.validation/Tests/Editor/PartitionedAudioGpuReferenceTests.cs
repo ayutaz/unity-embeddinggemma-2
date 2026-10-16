@@ -307,9 +307,13 @@ namespace EmbeddingGemma.Validation.Tests
         void Execute(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false,bool convolutionDetail=false,bool nativeGlu=false,int layerObservation=0,bool firstNormFma=false,bool scalarMomentFma=false,bool adapterMode=false,bool finalPcm=false,bool allAudioRoles=false)
             =>ExecuteCore(signal,allStatic,observe,isolated,early,nativeSilu,attention,nativeBmm,observeBmm,nativeQueryScale,nativeTanh,nativeDivision,nativeSoftmax,convolutionDetail,nativeGlu,layerObservation,firstNormFma,scalarMomentFma,adapterMode,finalPcm,allAudioRoles).GetAwaiter().GetResult();
 
-        async Task ExecuteCore(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false,bool convolutionDetail=false,bool nativeGlu=false,int layerObservation=0,bool firstNormFma=false,bool scalarMomentFma=false,bool adapterMode=false,bool finalPcm=false,bool allAudioRoles=false,bool stagedEncoderGate=false)
+        public Task PrepareGpuBundle(string signal,string directory)
+            =>ExecuteCore(signal,true,nativeSilu:true,nativeBmm:true,nativeQueryScale:true,nativeTanh:true,nativeDivision:true,
+                nativeSoftmax:true,nativeGlu:true,firstNormFma:true,scalarMomentFma:true,exportDirectory:directory);
+
+        async Task ExecuteCore(string signal,bool allStatic,bool observe=false,bool isolated=false,bool early=false,bool nativeSilu=false,bool attention=false,bool nativeBmm=false,bool observeBmm=false,bool nativeQueryScale=false,bool nativeTanh=false,bool nativeDivision=false,bool nativeSoftmax=false,bool convolutionDetail=false,bool nativeGlu=false,int layerObservation=0,bool firstNormFma=false,bool scalarMomentFma=false,bool adapterMode=false,bool finalPcm=false,bool allAudioRoles=false,bool stagedEncoderGate=false,string exportDirectory=null)
         {
-            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
+            if(exportDirectory==null)Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var folder=nativeGlu?"GpuAudioPartitionedNativeGlu":nativeSoftmax?"GpuAudioPartitionedNativeSoftmax":nativeDivision?"GpuAudioPartitionedNativeDivision":nativeTanh?"GpuAudioPartitionedNativeTanh":nativeQueryScale?"GpuAudioPartitionedNativeQueryScale":nativeBmm?"GpuAudioPartitionedNativeBmm":nativeSilu?"GpuAudioPartitionedNativeSilu":isolated?"GpuAudioPartitionedLayer10":allStatic?"GpuAudioPartitionedAllStatic":"GpuAudioPartitionedFirstFf";
             var originalPadded=scalarMomentFma&&signal=="padded_noise";
@@ -329,6 +333,7 @@ namespace EmbeddingGemma.Validation.Tests
             if(finalPcm)stem="final-pcm-document-api-gpu-";
             if(allAudioRoles)stem="final-pcm-allroles-api-gpu-";
             if(stagedEncoderGate)stem="partitioned-audio-encoder-staged-original-gpu-";
+            if(exportDirectory!=null)stem="media-audio-bundle-preparation-"+Guid.NewGuid().ToString("N")+"-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+stem+source+"-"+signal+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject { ["success"]=false,["scope"]=early?"original_early_audio_observation_only":isolated?"one_original_audio_layer_isolation_gpu_numeric_gate":observe?"original_audio_layer_observation_only":"one_partitioned_original_audio_encoder_gpu_numeric_gate",
@@ -337,6 +342,9 @@ namespace EmbeddingGemma.Validation.Tests
             void Save(){Directory.CreateDirectory(Path.GetDirectoryName(output));File.WriteAllText(output,report.ToString());}
             void Check(string path,string sha){using var stream=File.OpenRead(path);Assert.That(PlayerFileHash.Compute(stream,out _),Is.EqualTo(sha));}
             Save();
+            var preparedWriter=exportDirectory==null?null:new GpuMediaBundleWriter(exportDirectory,source);
+            var preparedOperations=new JArray();
+            if(preparedWriter!=null){report["scope"]="qualified_gpu_audio_model_preparation_no_inference";report["inference_executed"]=false;report["gpu_validation_performed"]=false;Save();}
             var kernels=new List<IGpuTensorOperation>();
             try
             {
@@ -432,6 +440,12 @@ namespace EmbeddingGemma.Validation.Tests
                 if(nativeGlu)Assert.That(plan.Value<int>("glu_count"),Is.EqualTo(12));
                 foreach(var projection in operations)
                 {
+                    if(preparedWriter!=null)
+                    {
+                        preparedOperations.Add(GpuMediaBundlePreparation.AudioOperation(preparedWriter,root,(JObject)projection));
+                        inputs.Add(projection.Value<string>("input"));outputs.Add(projection.Value<string>("output"));
+                        bindingsByOperation.Add(projection["inputs"]?.ToObject<string[]>()??new[]{projection.Value<string>("input")});continue;
+                    }
                     if(projection.Value<string>("kind")=="silu")kernels.Add(new GpuSilu());
                     else if(projection.Value<string>("kind")=="tanh")kernels.Add(new GpuTanh());
                     else if(projection.Value<string>("kind")=="scalar_divide")kernels.Add(new GpuScalarDivide(projection.Value<float>("divisor")));
@@ -454,6 +468,13 @@ namespace EmbeddingGemma.Validation.Tests
                 report["segment_layer_counts"]=layers;report["prepare_ms"]=timer.Elapsed.TotalMilliseconds;
                 report["native_operation_prepare_ms"]=timer.Elapsed.TotalMilliseconds-modelLoadMs;
                 report["projection_count"]=((JArray)plan["projections"]).Count;report["operation_count"]=kernels.Count;report["silu_count"]=nativeSilu?36:0;
+                if(preparedWriter!=null)
+                {
+                    Assert.That(nativeGlu&&firstNormFma&&scalarMomentFma,Is.True);
+                    GpuMediaBundlePreparation.CommitAudio(preparedWriter,originalPadded?839:1119,models.ToArray(),preparedOperations);
+                    report["prepared_operation_count"]=preparedOperations.Count;report["inference_executed"]=false;
+                    report["phase"]="preparation_complete";report["success"]=true;Save();return;
+                }
                 var workerTimer=System.Diagnostics.Stopwatch.StartNew();
                 if(finalPcm)
                 {

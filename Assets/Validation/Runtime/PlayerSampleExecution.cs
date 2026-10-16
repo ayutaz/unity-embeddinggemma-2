@@ -93,6 +93,7 @@ namespace EmbeddingGemma.Validation
                 if (!view.Ready) throw new InvalidOperationException("Sample is not ready: " + view.Error);
                 report["actual_backend"] = view.ActualBackend;
                 if (view.ActualBackend != "GPUCompute") throw new InvalidOperationException("An actual GPUCompute Worker is required.");
+                if (view is PlayerSampleView realSample) report["gpu_execution"] = realSample.InspectGpuExecution();
                 report["cache"] = view.CacheSnapshot;
                 if (!view.FontAlive) throw new InvalidOperationException("The sample lost its GUI font during model preparation.");
                 for (var i = 0; i < bundle.Reference.Queries.Length; i++)
@@ -118,7 +119,16 @@ namespace EmbeddingGemma.Validation
                 if (!view.RejectMissingModel()) throw new InvalidOperationException("A missing model was not rejected without retaining a Worker.");
                 report["missing_model_rejected"] = true;
                 if (!view.FontAlive) throw new InvalidOperationException("The native GUI font was destroyed before the view.");
-                view.DestroyView(); destroyed = true; yield return null;
+                view.DestroyView(); destroyed = true;
+                // Destroying the view can schedule a second deferred destruction
+                // from OnDestroy. Observe render boundaries rather than assuming
+                // the next Update has already released both native objects.
+                for (var frame = 1; frame <= 3; frame++)
+                {
+                    yield return new WaitForEndOfFrame();
+                    report["font_destroy_wait_frames"] = frame;
+                    if (!view.FontAlive) break;
+                }
                 report["font_destroyed"] = !view.FontAlive;
                 if (view.FontAlive) throw new InvalidOperationException("The sample view retained its native font after destruction.");
                 if (((JArray)report["console"]).Any(log => (string)log["type"] == "Error" || (string)log["type"] == "Exception" || (string)log["type"] == "Assert"))

@@ -1,0 +1,974 @@
+{
+  "date_jst": "2026-10-17",
+  "source_commit": "88c9929d2021b7d93f2bd5b4d2357110016ab705",
+  "base_main": "012f3cc354ac0a421a8b82d1206a75dffede2f96",
+  "runtime_changed_from_main": false,
+  "unity": "6000.3.21f1",
+  "sentis": "2.6.1",
+  "fresh_consumer": {
+    "git": {
+      "success": true,
+      "requested_revision": "53dafe8bf172c0368a25f85b90c1d4ea891140b6",
+      "resolved_revision": "53dafe8bf172c0368a25f85b90c1d4ea891140b6",
+      "unity_executed": false,
+      "errors": []
+    },
+    "runtime_source_files_verified": 34,
+    "framework_source_files_verified": 1168,
+    "package_cache_manually_patched": false,
+    "framework_embedded": true,
+    "unity_compile_completed": true,
+    "sample_tests": {
+      "passed": 67,
+      "failed": 0,
+      "skipped": 0
+    },
+    "package_tests": {
+      "passed": 372,
+      "failed": 1,
+      "skipped": 0
+    },
+    "package_test_failure": "Synthetic ownership graph reduction rounding on CPU; retained original failure"
+  },
+  "regression": {
+    "full-consumer-regression-88c9929": {
+      "total": 440,
+      "passed": 440,
+      "failed": 0,
+      "skipped": 0
+    },
+    "sample-playmode-88c9929": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "build": {
+    "success": true,
+    "result": "Succeeded",
+    "errors": 0,
+    "warnings": 0,
+    "build_seconds": 86.4916482,
+    "backend": "IL2CPP",
+    "stripping": "High",
+    "compiler": "Release",
+    "source_hashes": {
+      "Assets/Validation/Runtime/GpuConstantProbeChecks.cs": "1b48c5bae646c2438726f11b586bd4ea75f1893ddd63418120f830d1828684ff",
+      "Assets/Validation/Runtime/GpuConstantProbeRunner.cs": "73b8b0499d54760b9788a1d3ab8a92dd3234b0b573dc013ff898e6f4ac8589cc",
+      "Assets/Validation/Runtime/PlayerBundleCache.cs": "8e17ce94c049d97d700363cd1446f8348aeaf2f2e0dbcc34c2c84fc349960fc9",
+      "Assets/Validation/Runtime/PlayerBundleLoader.cs": "1b526f7fd4e80f87dcb3ed0a67184cebb16bb4e00b826d4a5fcfd3689d74391d",
+      "Assets/Validation/Runtime/PlayerBundleStager.cs": "b2041d88674d20ae62e272bbaffbee0e24e3d66c8d9e1ad9e110680e590f2940",
+      "Assets/Validation/Runtime/PlayerFileHash.cs": "ecf0d009a00fad2c2234f9bbe7e292ac27e05c279fe96978aae9c748af75cd91",
+      "Assets/Validation/Runtime/PlayerRunProtocol.cs": "71f5986d434b5799dd52a508fa928ea3918f57e8903d07607136cfe430b138e1",
+      "Assets/Validation/Runtime/PlayerSampleExecution.cs": "38f4704cafbaeb0f28b36b3250a847ca38092157f0050110d0e355cd9f7a639b",
+      "Assets/Validation/Runtime/PlayerSampleRunner.cs": "ce4d97887e13ab4a613ee501d72eef56652b0959b589ee0829e753e8d37f741e",
+      "Assets/Validation/Runtime/PlayerSampleView.cs": "c87a49057f7d36fe8e956e7a0cbca79705171ab7a4b989cb17e6f16b1801c193",
+      "Assets/Validation/Runtime/PlayerValidation.cs": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+      "Assets/Validation/Runtime/PlayerValidationExecution.cs": "f219eca5073a12241d90c736d6d1339875792323585a369efade8956830fb7a1",
+      "Assets/Validation/Runtime/PlayerValidationRunner.cs": "8b9e4ee9e1407569f24dae5be70eddf6410a97371af1bc27ab7b1085047a1a4b",
+      "Assets/Validation/Runtime/link.xml": "8d1d42432c97f128d4c87978f3c7b1a4b2a4de47097ea15c3d89edff75023dcd",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/AudioEmbedder.cs": "b6e3aa32eb700e8753fc915472f923cb71ac66ebfb7c1a9e3bf2390a679c5920",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/AudioFeatureEncoder.cs": "24b3d289270cc079c1893386d94588e7539a45377cd6a0b4d00cfb6489aeb45d",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/AudioPcmInput.cs": "dd09d4297aba5032ae0d7131c6d19e07733c5ac6dd79488f784e5531020a5661",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/AudioPipelineContracts.cs": "ab9c5fd40608fda0669d85cacf6e2a296f70b268933136df1c4047add2c2cdfe",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/AudioPreprocessor.cs": "aad3f49d0307c017630adfff8884271d2947fbc0ff08b8d1254f555d48d729b0",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/GpuBatchedMatmul.cs": "15f439f87490e360a3c0b1a899e16bb4810f137337bb4d29063362b432447bfe",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/GpuBlockedMatmul.cs": "6b46b9170c2900517be2267abdabbf17877f7dead1d7bce901f43c86b34f5855",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/GpuConstantWorker.cs": "7550f2dbd95c27cb243834237bbaa0f0472c83e71872d5787dd16534713684aa",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/GpuFixedLeftMatmul.cs": "69ca415b3fafe718e2b71223e5e61b8c9af10eab5e65c8804c390f2afe65b2c0",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/GpuGelu.cs": "d6969262b1c808ec1dcdba202fdd760fb6582b985880f0999a428a55293c14b5",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/GpuGlu.cs": "17b4cb86b84dbee174260f6a1c559c013d5a0f908e8b52bb74f75fd28594c7a7",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/GpuProjectionPipeline.cs": "391c2d9f9eaefd3e64361029704ce17ca0ae4098edc01ef4837eeffbe5909a94",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/GpuScalarDivide.cs": "58d09fed293a201c22cad576c370f70bf82d4fa92a713f3d0ec795bde7c666e0",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/GpuSequentialScale.cs": "81859f85672a1b1891f2becc94141de29c43d3e86ad4a9085bf07813df2d604d",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/GpuSilu.cs": "87da6e60ce8b07ef85c843189629eecb1889e641c9db302868de7a3217413fe3",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/GpuSoftmax.cs": "609c6de27c45a1398dbe48b319408f4ecac41fe7915d8bb00389aaff35379d4e",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/GpuTanh.cs": "342ee97b6ef10096b2dff9c9e6677613f496007615741f42bb75e1fc1fd8770a",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/IGpuBinaryTensorOperation.cs": "6404a3655a4760b391943ffb58e27049c28f5a1e150de1ea53dcb521dfb0739e",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/IGpuTensorOperation.cs": "1bfb4cac5e1136b7bd1c6a488068378b2803557eebbd73594e0f20f9dcdd676c",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/ImageEmbedder.cs": "67143f6ad040e2e2c2c4f0628c84063de946b97c623826a1fd3bf2354f9a8a4c",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/ImageFeatureEncoder.cs": "a468cd4f32da58d24710da7f7530a499018b2dba3eb4dd725d995f429d4a5f23",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/ImagePipelineContracts.cs": "f72b425768c1de6a80bb4d72b2a87c41974cfc48b3739ec9b83746ca83dda5ae",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/ImagePreprocessor.cs": "564a3c2a297ef6ea5afee35d2e8a24dea04022e27eac7a8738be1945a66caf43",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/MultimodalBackbone.cs": "02ecde7f3feb8d66b9d33a66286ad35890ecea623a85e06622f372190f1f18a9",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/MultimodalBackboneProfile.cs": "bba03d32a878ecb26210833fc6e2c4b3446b80db57b7896756931511eacedc09",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/MultimodalPromptBuilder.cs": "6ba293cb09e31b45b1d2f3019db6c2b71945bea5346e9d367db76074b747f2ad",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/PartitionedAudioFeatureEncoder.cs": "8650149ae19ebaf29aab519d735dc7f9f0d3cab51dfdfa1b3a59d7dec719df16",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/PartitionedImageFeatureEncoder.cs": "764bdced71ca9f4315eed197b54d0268a7d878a3909eb56ae4174e9c3b0972f1",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs": "85cb087541827169efe40ddec5074f6cc8b6a1dd995531a250ce5c4bbc66ec1e",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/TextModelFile.cs": "c4fb628f5ea5e4daacac88f9d4f09266f44e3133a0baf2236438c611917ede28",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/TextPrompts.cs": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchIndex.cs": "8a17c7ac6e995e6ceb36d9cead732f3ace63f418ab6e860e7f71fdd7a9ea43d0",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchSession.cs": "e4a85fd2378a18b48dd022f82a6fdb4eb73ef9dd980f539c75e2ef5768f1f9f7",
+      "Packages/com.ayutaz.embeddinggemma/Runtime/TextTokenizer.cs": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763",
+      "Assets/EmbeddingGemmaTextSearch/AssemblyInfo.cs": "ec0d59ffd41af917084a28ce8734622beb475c42e5853af979a848edc0d32afa",
+      "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchFileHash.cs": "a45422ba0538553ef844cd5cfd943727b0b3f1512affcd6014b51b6eb93208aa",
+      "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchModelPreparation.cs": "b06fefa3a797f9f964c2457b2cc556f9d07d5afeaa29233b355f4f72f0b5b152",
+      "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchEditorFontLifetimeTests.cs": "57d3f74ae505abd31e82aab059abf062a24b02ec80bc74eee553524b16c08acc",
+      "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchFileHashTests.cs": "dc71a8475146d152c8003199ef7fe18850dfc940d5ddf68c88b5b23f70dfda1d",
+      "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchGuiStylesTests.cs": "2883b875453830eb35ead546e7f86cf86bc02299e59d7c9b6efc2518fd12a85e",
+      "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelCacheTests.cs": "ac239d80db0f4aac2fa1e1929c9042b8002c1ecb59cced2d09417506ba0655c3",
+      "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelPreparationTests.cs": "f13b612e1fd9d751b9bddcfe1a7b15131e023aac064954bf89aaf35636091f22",
+      "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchSampleTests.cs": "737a4c9ae8e2dae83c3e18f1ba80006cbcb16e31a410bf4195a028091a3d3ef2",
+      "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchStreamHashTests.cs": "694071d34b1b7d335706a348bc18c242f570163bf6c8263d093a5837b2655a56",
+      "Assets/EmbeddingGemmaTextSearch/Tests/PlayMode/TextSearchLifecycleTests.cs": "258eb784fbcf627116119eb628cf1b4f8a2a75213f64bcfe4d21674cebe6fa21",
+      "Assets/EmbeddingGemmaTextSearch/TextSearchGuiFont.cs": "355373a0db2dc75066f758c08f1507042107cb9ed8dc81463f8b5a8cff0135a5",
+      "Assets/EmbeddingGemmaTextSearch/TextSearchGuiStyles.cs": "586356b3c0760a158355e17e7a6d159dfbbb0e69abb0d3cda911d63046a82c53",
+      "Assets/EmbeddingGemmaTextSearch/TextSearchModelCache.cs": "0c0b2d86cb0470a6e8a1b60cc4354520addc31953765ba3fe12cf46867b974a6",
+      "Assets/EmbeddingGemmaTextSearch/TextSearchSample.cs": "ebdb65c3468b1b8e7d3fce54fa4b602c3ce549d8f2a9c4fa59be6031f1133683",
+      "Assets/EmbeddingGemmaTextSearch/TextSearchStreamHash.cs": "dcf552f22fbd449938f98fe564128ba270875791532374b44611a686120ea279",
+      "Assets/EmbeddingGemmaTextSearch/TextSearch.unity": "04c3e5d8bba0199accc793637576429e0002c66786d7ce909a34abaac104cd74",
+      "Assets/EmbeddingGemmaTextSearch/Resources/EmbeddingGemmaTextSearch/corpus.json": "10bca454ed0893a67d0af903d88da6a884bb5506920846a483a812f48cedd926",
+      "Assets/EmbeddingGemmaTextSearch/EmbeddingGemma.TextSearch.Sample.asmdef": "f5c349313be84166147c076da36c041ad61388c7f33e16e39f3c1cb8fd1aedb8"
+    }
+  },
+  "runs": [
+    {
+      "phase": "cold",
+      "run_id": "40c734b77df84b9fb746aa614daf3cb7",
+      "started_utc": "2026-10-16T14:58:50.6760289Z",
+      "completed_utc": "2026-10-16T14:59:02.8304270Z",
+      "process_seconds": 28.74242670001695,
+      "actual_process_exit_code": 0,
+      "actual_gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_api": "Direct3D12",
+      "gpu_verified": true,
+      "queries": [
+        {
+          "id": "query-cat-ja",
+          "text": "猫を健康に育てるには",
+          "ranking": [
+            {
+              "document_id": "doc-cat-en",
+              "score": 0.7473303426040513
+            },
+            {
+              "document_id": "doc-cat-ja",
+              "score": 0.7248598136856715
+            },
+            {
+              "document_id": "doc-recipe-a",
+              "score": 0.5659783895424063
+            },
+            {
+              "document_id": "doc-recipe-b",
+              "score": 0.5659783895424063
+            },
+            {
+              "document_id": "doc-space-ja",
+              "score": 0.5122136388969601
+            },
+            {
+              "document_id": "doc-space-en",
+              "score": 0.4919057124303446
+            }
+          ],
+          "milliseconds": 33.9077,
+          "maximum_score_error": 8.637552584289665e-08
+        },
+        {
+          "id": "query-space-en",
+          "text": "How do scientists explore planets?",
+          "ranking": [
+            {
+              "document_id": "doc-space-en",
+              "score": 0.7798648642603759
+            },
+            {
+              "document_id": "doc-space-ja",
+              "score": 0.7117976097640415
+            },
+            {
+              "document_id": "doc-recipe-a",
+              "score": 0.5516260511443223
+            },
+            {
+              "document_id": "doc-recipe-b",
+              "score": 0.5516260511443223
+            },
+            {
+              "document_id": "doc-cat-en",
+              "score": 0.5359167231874132
+            },
+            {
+              "document_id": "doc-cat-ja",
+              "score": 0.5263622798476042
+            }
+          ],
+          "milliseconds": 36.5,
+          "maximum_score_error": 9.186151772588858e-08
+        },
+        {
+          "id": "query-recipe-ja",
+          "text": "パンの作り方",
+          "ranking": [
+            {
+              "document_id": "doc-recipe-a",
+              "score": 0.8117594395513761
+            },
+            {
+              "document_id": "doc-recipe-b",
+              "score": 0.8117594395513761
+            },
+            {
+              "document_id": "doc-cat-ja",
+              "score": 0.5771715142352556
+            },
+            {
+              "document_id": "doc-space-ja",
+              "score": 0.5589210756342383
+            },
+            {
+              "document_id": "doc-cat-en",
+              "score": 0.5229028996267017
+            },
+            {
+              "document_id": "doc-space-en",
+              "score": 0.5080020903058801
+            }
+          ],
+          "milliseconds": 47.2838,
+          "maximum_score_error": 8.582897670361689e-08
+        },
+        {
+          "id": "query-cat-en",
+          "text": "How should I care for a pet cat?",
+          "ranking": [
+            {
+              "document_id": "doc-cat-en",
+              "score": 0.7958339796363999
+            },
+            {
+              "document_id": "doc-cat-ja",
+              "score": 0.7167849951108329
+            },
+            {
+              "document_id": "doc-space-en",
+              "score": 0.5306740243407113
+            },
+            {
+              "document_id": "doc-recipe-a",
+              "score": 0.5133201512608726
+            },
+            {
+              "document_id": "doc-recipe-b",
+              "score": 0.5133201512608726
+            },
+            {
+              "document_id": "doc-space-ja",
+              "score": 0.5030711836112948
+            }
+          ],
+          "milliseconds": 35.8402,
+          "maximum_score_error": 3.1781969833666324e-08
+        }
+      ],
+      "independent_maximum_score_error": 9.186151772588858e-08,
+      "cache": {
+        "Success": true,
+        "CacheReused": false,
+        "TransferredFiles": 3,
+        "Milliseconds": 2176.5127,
+        "AuditMilliseconds": 969.2075000000001,
+        "HashBackends": {
+          "model-fp32.sentis": "windows_cng",
+          "tokenizer.json": "windows_cng"
+        },
+        "CacheRejectedError": null
+      },
+      "screenshots": [
+        {
+          "name": "40c734b77df84b9fb746aa614daf3cb7-query-cat-ja.png",
+          "width": 1280,
+          "height": 800,
+          "bytes": 175348,
+          "sha256": "e076976e81c1e862d4e7f2ba3fd24aca549115a25d26ad0004337233bf69c9bf",
+          "hash_backend": "windows_cng"
+        },
+        {
+          "name": "40c734b77df84b9fb746aa614daf3cb7-query-space-en.png",
+          "width": 1280,
+          "height": 800,
+          "bytes": 177112,
+          "sha256": "5961cb98c6169d69ab778adb3cb11e22e707c12d82428df4fc27d3ff6f868ab4",
+          "hash_backend": "windows_cng"
+        }
+      ],
+      "console_count": 0,
+      "worker_released": true,
+      "font_destroyed": true,
+      "blank_rejected": true,
+      "missing_model_rejected": true
+    },
+    {
+      "phase": "warm",
+      "run_id": "2f0234049d554a78963bec3e25a3e9e1",
+      "started_utc": "2026-10-16T14:59:34.0479432Z",
+      "completed_utc": "2026-10-16T14:59:42.9308454Z",
+      "process_seconds": 24.498463099997025,
+      "actual_process_exit_code": 0,
+      "actual_gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_api": "Direct3D12",
+      "gpu_verified": true,
+      "queries": [
+        {
+          "id": "query-cat-ja",
+          "text": "猫を健康に育てるには",
+          "ranking": [
+            {
+              "document_id": "doc-cat-en",
+              "score": 0.7473303426040513
+            },
+            {
+              "document_id": "doc-cat-ja",
+              "score": 0.7248598136856715
+            },
+            {
+              "document_id": "doc-recipe-a",
+              "score": 0.5659783895424063
+            },
+            {
+              "document_id": "doc-recipe-b",
+              "score": 0.5659783895424063
+            },
+            {
+              "document_id": "doc-space-ja",
+              "score": 0.5122136388969601
+            },
+            {
+              "document_id": "doc-space-en",
+              "score": 0.4919057124303446
+            }
+          ],
+          "milliseconds": 36.3738,
+          "maximum_score_error": 8.637552584289665e-08
+        },
+        {
+          "id": "query-space-en",
+          "text": "How do scientists explore planets?",
+          "ranking": [
+            {
+              "document_id": "doc-space-en",
+              "score": 0.7798648642603759
+            },
+            {
+              "document_id": "doc-space-ja",
+              "score": 0.7117976097640415
+            },
+            {
+              "document_id": "doc-recipe-a",
+              "score": 0.5516260511443223
+            },
+            {
+              "document_id": "doc-recipe-b",
+              "score": 0.5516260511443223
+            },
+            {
+              "document_id": "doc-cat-en",
+              "score": 0.5359167231874132
+            },
+            {
+              "document_id": "doc-cat-ja",
+              "score": 0.5263622798476042
+            }
+          ],
+          "milliseconds": 43.4343,
+          "maximum_score_error": 9.186151772588858e-08
+        },
+        {
+          "id": "query-recipe-ja",
+          "text": "パンの作り方",
+          "ranking": [
+            {
+              "document_id": "doc-recipe-a",
+              "score": 0.8117594395513761
+            },
+            {
+              "document_id": "doc-recipe-b",
+              "score": 0.8117594395513761
+            },
+            {
+              "document_id": "doc-cat-ja",
+              "score": 0.5771715142352556
+            },
+            {
+              "document_id": "doc-space-ja",
+              "score": 0.5589210756342383
+            },
+            {
+              "document_id": "doc-cat-en",
+              "score": 0.5229028996267017
+            },
+            {
+              "document_id": "doc-space-en",
+              "score": 0.5080020903058801
+            }
+          ],
+          "milliseconds": 47.448800000000006,
+          "maximum_score_error": 8.582897670361689e-08
+        },
+        {
+          "id": "query-cat-en",
+          "text": "How should I care for a pet cat?",
+          "ranking": [
+            {
+              "document_id": "doc-cat-en",
+              "score": 0.7958339796363999
+            },
+            {
+              "document_id": "doc-cat-ja",
+              "score": 0.7167849951108329
+            },
+            {
+              "document_id": "doc-space-en",
+              "score": 0.5306740243407113
+            },
+            {
+              "document_id": "doc-recipe-a",
+              "score": 0.5133201512608726
+            },
+            {
+              "document_id": "doc-recipe-b",
+              "score": 0.5133201512608726
+            },
+            {
+              "document_id": "doc-space-ja",
+              "score": 0.5030711836112948
+            }
+          ],
+          "milliseconds": 43.058800000000005,
+          "maximum_score_error": 3.1781969833666324e-08
+        }
+      ],
+      "independent_maximum_score_error": 9.186151772588858e-08,
+      "cache": {
+        "Success": true,
+        "CacheReused": true,
+        "TransferredFiles": 1,
+        "Milliseconds": 914.5689000000001,
+        "AuditMilliseconds": 893.9272000000001,
+        "HashBackends": {
+          "model-fp32.sentis": "windows_cng",
+          "tokenizer.json": "windows_cng"
+        },
+        "CacheRejectedError": null
+      },
+      "screenshots": [
+        {
+          "name": "2f0234049d554a78963bec3e25a3e9e1-query-cat-ja.png",
+          "width": 1280,
+          "height": 800,
+          "bytes": 175348,
+          "sha256": "e076976e81c1e862d4e7f2ba3fd24aca549115a25d26ad0004337233bf69c9bf",
+          "hash_backend": "windows_cng"
+        },
+        {
+          "name": "2f0234049d554a78963bec3e25a3e9e1-query-space-en.png",
+          "width": 1280,
+          "height": 800,
+          "bytes": 177112,
+          "sha256": "5961cb98c6169d69ab778adb3cb11e22e707c12d82428df4fc27d3ff6f868ab4",
+          "hash_backend": "windows_cng"
+        }
+      ],
+      "console_count": 0,
+      "worker_released": true,
+      "font_destroyed": true,
+      "blank_rejected": true,
+      "missing_model_rejected": true
+    }
+  ],
+  "retained_failures": [
+    "Initial test filter selected zero tests; retained as nonpassing execution.",
+    "Initial package suite: synthetic audio ownership CPU reduction rounding; minimal fixture change subsequently passed 23 targeted and 440 full tests.",
+    "First build wrapper lacked a direct validation assembly reference; corrected only the local wrapper.",
+    "Native Editor build crash with optional automation package; no root cause attribution.",
+    "First build without automation exceeded 300 seconds; cached continuation succeeded.",
+    "Hidden GUI startup did not render; normal GUI verified.",
+    "Launcher URI was rejected by filesystem-only bundle auditor; corrected argument, no Runtime change."
+  ],
+  "limitations": [
+    "Official framework source is embedded by documented helper; vanilla immutable builtin metadata defect is not fixed.",
+    "Programmatic GUI API, not native keyboard/mouse input acceptance.",
+    "Two launches are acceptance observations, not a performance benchmark.",
+    "Actual Worker backend is GPUCompute. Per-layer CPU fallback/flush counts were not captured by this Player report; add explicit live Worker audit before claiming zero fallback.",
+    "Image/audio search sample, module preparation/cache switching, and final three-step goal audit remain pending.",
+    "No release/tag or other-device qualification."
+  ],
+  "strict_worker_observation": {
+    "source_commit": "f9094ff48e537836c49a9a0e627f0d783a373b77",
+    "actual_player": true,
+    "worker_backend": "GPUCompute",
+    "computed_layer_output_count": 2925,
+    "computation_cpu_fallback_count": 0,
+    "intermediate_flush_count": 0,
+    "cpu_constant_shape_or_input_count": 1382,
+    "auditor_downloads_tensor_values": false,
+    "overall_player_run_passed": false,
+    "failure": "InvalidOperationException: The sample view retained its native font after destruction.\n",
+    "four_queries_completed": true,
+    "worker_released": true
+  },
+  "deferred_font_regression": {
+    "red": {
+      "passed": 22,
+      "failed": 3,
+      "skipped": 0
+    },
+    "green": {
+      "passed": 25,
+      "failed": 0,
+      "skipped": 0
+    },
+    "change": "Await up to three render boundaries for nested native destruction; retain bounded failure if font remains alive",
+    "new_native_player_reverification_pending": false
+  },
+  "strict_native_player_acceptance": {
+    "source_commit": "f6838e592cd3037f58819e0d8fc8dd05806e32df",
+    "success": true,
+    "build_errors": 0,
+    "build_warnings": 485,
+    "verified_source_hash_count": 69,
+    "build_info": {
+      "codeCommit": "f6838e592cd3037f58819e0d8fc8dd05806e32df",
+      "unityVersion": "6000.3.21f1",
+      "sentisVersion": "2.6.1",
+      "target": "StandaloneWindows64",
+      "scriptingBackend": "IL2CPP",
+      "stripping": "High",
+      "sourceSha256": {
+        "Assets/Validation/Runtime/GpuConstantProbeChecks.cs": "1b48c5bae646c2438726f11b586bd4ea75f1893ddd63418120f830d1828684ff",
+        "Assets/Validation/Runtime/GpuConstantProbeRunner.cs": "73b8b0499d54760b9788a1d3ab8a92dd3234b0b573dc013ff898e6f4ac8589cc",
+        "Assets/Validation/Runtime/PlayerBundleCache.cs": "8e17ce94c049d97d700363cd1446f8348aeaf2f2e0dbcc34c2c84fc349960fc9",
+        "Assets/Validation/Runtime/PlayerBundleLoader.cs": "1b526f7fd4e80f87dcb3ed0a67184cebb16bb4e00b826d4a5fcfd3689d74391d",
+        "Assets/Validation/Runtime/PlayerBundleStager.cs": "b2041d88674d20ae62e272bbaffbee0e24e3d66c8d9e1ad9e110680e590f2940",
+        "Assets/Validation/Runtime/PlayerFileHash.cs": "ecf0d009a00fad2c2234f9bbe7e292ac27e05c279fe96978aae9c748af75cd91",
+        "Assets/Validation/Runtime/PlayerGpuExecutionAudit.cs": "9da459178912cd08ec45a1287bf27883439dd40471160b00c0b7910b2b95a0a5",
+        "Assets/Validation/Runtime/PlayerRunProtocol.cs": "71f5986d434b5799dd52a508fa928ea3918f57e8903d07607136cfe430b138e1",
+        "Assets/Validation/Runtime/PlayerSampleExecution.cs": "74d7c29d0ede628ab8a50da5e4fdf55f112d3059f25c55ed74dcea2d7d51ca51",
+        "Assets/Validation/Runtime/PlayerSampleRunner.cs": "ce4d97887e13ab4a613ee501d72eef56652b0959b589ee0829e753e8d37f741e",
+        "Assets/Validation/Runtime/PlayerSampleView.cs": "feb2c07c6e461c66a01c917842463acf262c4f02b82b242c2f5567318a139670",
+        "Assets/Validation/Runtime/PlayerValidation.cs": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+        "Assets/Validation/Runtime/PlayerValidationExecution.cs": "f219eca5073a12241d90c736d6d1339875792323585a369efade8956830fb7a1",
+        "Assets/Validation/Runtime/PlayerValidationRunner.cs": "8b9e4ee9e1407569f24dae5be70eddf6410a97371af1bc27ab7b1085047a1a4b",
+        "Assets/Validation/Runtime/link.xml": "cc21419122535f59bcd831480b8f9cc6f885cbfc4a3092b8e3bc3fbf805faeb0",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/AudioEmbedder.cs": "b6e3aa32eb700e8753fc915472f923cb71ac66ebfb7c1a9e3bf2390a679c5920",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/AudioFeatureEncoder.cs": "24b3d289270cc079c1893386d94588e7539a45377cd6a0b4d00cfb6489aeb45d",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/AudioPcmInput.cs": "dd09d4297aba5032ae0d7131c6d19e07733c5ac6dd79488f784e5531020a5661",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/AudioPipelineContracts.cs": "ab9c5fd40608fda0669d85cacf6e2a296f70b268933136df1c4047add2c2cdfe",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/AudioPreprocessor.cs": "aad3f49d0307c017630adfff8884271d2947fbc0ff08b8d1254f555d48d729b0",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/GpuBatchedMatmul.cs": "15f439f87490e360a3c0b1a899e16bb4810f137337bb4d29063362b432447bfe",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/GpuBlockedMatmul.cs": "6b46b9170c2900517be2267abdabbf17877f7dead1d7bce901f43c86b34f5855",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/GpuConstantWorker.cs": "7550f2dbd95c27cb243834237bbaa0f0472c83e71872d5787dd16534713684aa",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/GpuFixedLeftMatmul.cs": "69ca415b3fafe718e2b71223e5e61b8c9af10eab5e65c8804c390f2afe65b2c0",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/GpuGelu.cs": "d6969262b1c808ec1dcdba202fdd760fb6582b985880f0999a428a55293c14b5",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/GpuGlu.cs": "17b4cb86b84dbee174260f6a1c559c013d5a0f908e8b52bb74f75fd28594c7a7",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/GpuProjectionPipeline.cs": "391c2d9f9eaefd3e64361029704ce17ca0ae4098edc01ef4837eeffbe5909a94",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/GpuScalarDivide.cs": "58d09fed293a201c22cad576c370f70bf82d4fa92a713f3d0ec795bde7c666e0",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/GpuSequentialScale.cs": "81859f85672a1b1891f2becc94141de29c43d3e86ad4a9085bf07813df2d604d",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/GpuSilu.cs": "87da6e60ce8b07ef85c843189629eecb1889e641c9db302868de7a3217413fe3",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/GpuSoftmax.cs": "609c6de27c45a1398dbe48b319408f4ecac41fe7915d8bb00389aaff35379d4e",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/GpuTanh.cs": "342ee97b6ef10096b2dff9c9e6677613f496007615741f42bb75e1fc1fd8770a",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/IGpuBinaryTensorOperation.cs": "6404a3655a4760b391943ffb58e27049c28f5a1e150de1ea53dcb521dfb0739e",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/IGpuTensorOperation.cs": "1bfb4cac5e1136b7bd1c6a488068378b2803557eebbd73594e0f20f9dcdd676c",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/ImageEmbedder.cs": "67143f6ad040e2e2c2c4f0628c84063de946b97c623826a1fd3bf2354f9a8a4c",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/ImageFeatureEncoder.cs": "a468cd4f32da58d24710da7f7530a499018b2dba3eb4dd725d995f429d4a5f23",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/ImagePipelineContracts.cs": "f72b425768c1de6a80bb4d72b2a87c41974cfc48b3739ec9b83746ca83dda5ae",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/ImagePreprocessor.cs": "564a3c2a297ef6ea5afee35d2e8a24dea04022e27eac7a8738be1945a66caf43",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/MultimodalBackbone.cs": "02ecde7f3feb8d66b9d33a66286ad35890ecea623a85e06622f372190f1f18a9",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/MultimodalBackboneProfile.cs": "bba03d32a878ecb26210833fc6e2c4b3446b80db57b7896756931511eacedc09",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/MultimodalPromptBuilder.cs": "6ba293cb09e31b45b1d2f3019db6c2b71945bea5346e9d367db76074b747f2ad",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/MultimodalSearchIndex.cs": "e618577362fcae6ced18da3a99d83c547a1bdd5e8274c6732ce886dafb3ba8d0",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/PartitionedAudioFeatureEncoder.cs": "8650149ae19ebaf29aab519d735dc7f9f0d3cab51dfdfa1b3a59d7dec719df16",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/PartitionedImageFeatureEncoder.cs": "764bdced71ca9f4315eed197b54d0268a7d878a3909eb56ae4174e9c3b0972f1",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs": "85cb087541827169efe40ddec5074f6cc8b6a1dd995531a250ce5c4bbc66ec1e",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/TextModelFile.cs": "c4fb628f5ea5e4daacac88f9d4f09266f44e3133a0baf2236438c611917ede28",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/TextPrompts.cs": "b1184ac5da2fa894f42e7ea554681dbbe70a4d64c239798738a00b6640560be5",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchIndex.cs": "8a17c7ac6e995e6ceb36d9cead732f3ace63f418ab6e860e7f71fdd7a9ea43d0",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/TextSearchSession.cs": "e4a85fd2378a18b48dd022f82a6fdb4eb73ef9dd980f539c75e2ef5768f1f9f7",
+        "Packages/com.ayutaz.embeddinggemma/Runtime/TextTokenizer.cs": "e717c724b30cb8e1b3b9c975b9be0bd659666af2467403c91f4f0a6b627de763",
+        "Assets/EmbeddingGemmaTextSearch/AssemblyInfo.cs": "ec0d59ffd41af917084a28ce8734622beb475c42e5853af979a848edc0d32afa",
+        "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchFileHash.cs": "a45422ba0538553ef844cd5cfd943727b0b3f1512affcd6014b51b6eb93208aa",
+        "Assets/EmbeddingGemmaTextSearch/Editor/TextSearchModelPreparation.cs": "b06fefa3a797f9f964c2457b2cc556f9d07d5afeaa29233b355f4f72f0b5b152",
+        "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchEditorFontLifetimeTests.cs": "57d3f74ae505abd31e82aab059abf062a24b02ec80bc74eee553524b16c08acc",
+        "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchFileHashTests.cs": "dc71a8475146d152c8003199ef7fe18850dfc940d5ddf68c88b5b23f70dfda1d",
+        "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchGuiStylesTests.cs": "2883b875453830eb35ead546e7f86cf86bc02299e59d7c9b6efc2518fd12a85e",
+        "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelCacheTests.cs": "ac239d80db0f4aac2fa1e1929c9042b8002c1ecb59cced2d09417506ba0655c3",
+        "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchModelPreparationTests.cs": "f13b612e1fd9d751b9bddcfe1a7b15131e023aac064954bf89aaf35636091f22",
+        "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchSampleTests.cs": "737a4c9ae8e2dae83c3e18f1ba80006cbcb16e31a410bf4195a028091a3d3ef2",
+        "Assets/EmbeddingGemmaTextSearch/Tests/Editor/TextSearchStreamHashTests.cs": "694071d34b1b7d335706a348bc18c242f570163bf6c8263d093a5837b2655a56",
+        "Assets/EmbeddingGemmaTextSearch/Tests/PlayMode/TextSearchLifecycleTests.cs": "258eb784fbcf627116119eb628cf1b4f8a2a75213f64bcfe4d21674cebe6fa21",
+        "Assets/EmbeddingGemmaTextSearch/TextSearchGuiFont.cs": "355373a0db2dc75066f758c08f1507042107cb9ed8dc81463f8b5a8cff0135a5",
+        "Assets/EmbeddingGemmaTextSearch/TextSearchGuiStyles.cs": "586356b3c0760a158355e17e7a6d159dfbbb0e69abb0d3cda911d63046a82c53",
+        "Assets/EmbeddingGemmaTextSearch/TextSearchModelCache.cs": "0c0b2d86cb0470a6e8a1b60cc4354520addc31953765ba3fe12cf46867b974a6",
+        "Assets/EmbeddingGemmaTextSearch/TextSearchSample.cs": "ebdb65c3468b1b8e7d3fce54fa4b602c3ce549d8f2a9c4fa59be6031f1133683",
+        "Assets/EmbeddingGemmaTextSearch/TextSearchStreamHash.cs": "dcf552f22fbd449938f98fe564128ba270875791532374b44611a686120ea279",
+        "Assets/EmbeddingGemmaTextSearch/TextSearch.unity": "04c3e5d8bba0199accc793637576429e0002c66786d7ce909a34abaac104cd74",
+        "Assets/EmbeddingGemmaTextSearch/Resources/EmbeddingGemmaTextSearch/corpus.json": "10bca454ed0893a67d0af903d88da6a884bb5506920846a483a812f48cedd926",
+        "Assets/EmbeddingGemmaTextSearch/EmbeddingGemma.TextSearch.Sample.asmdef": "f5c349313be84166147c076da36c041ad61388c7f33e16e39f3c1cb8fd1aedb8"
+      }
+    },
+    "runs": [
+      {
+        "phase": "cold",
+        "run_id": "dfc00bd9a60546a0b817a0a8a13a391a",
+        "started_utc": "2026-10-16T15:19:57.2482366Z",
+        "completed_utc": "2026-10-16T15:20:06.7770961Z",
+        "exit_code": 0,
+        "process_seconds": 24.65847819999908,
+        "actual_gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphics_api": "Direct3D12",
+        "computed_outputs": 2925,
+        "computation_cpu_fallback_count": 0,
+        "intermediate_flush_count": 0,
+        "cpu_constant_shape_or_input_count": 1382,
+        "font_destroy_wait_frames": 1,
+        "worker_released": true,
+        "font_destroyed": true,
+        "queries": [
+          {
+            "id": "query-cat-ja",
+            "text": "猫を健康に育てるには",
+            "ranking": [
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.7473303426040513
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.7248598136856715
+              },
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.5659783895424063
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.5659783895424063
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.5122136388969601
+              },
+              {
+                "document_id": "doc-space-en",
+                "score": 0.4919057124303446
+              }
+            ],
+            "milliseconds": 60.4587,
+            "maximum_score_error": 8.637552584289665e-08
+          },
+          {
+            "id": "query-space-en",
+            "text": "How do scientists explore planets?",
+            "ranking": [
+              {
+                "document_id": "doc-space-en",
+                "score": 0.7798648642603759
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.7117976097640415
+              },
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.5516260511443223
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.5516260511443223
+              },
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.5359167231874132
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.5263622798476042
+              }
+            ],
+            "milliseconds": 57.030300000000004,
+            "maximum_score_error": 9.186151772588858e-08
+          },
+          {
+            "id": "query-recipe-ja",
+            "text": "パンの作り方",
+            "ranking": [
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.8117594395513761
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.8117594395513761
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.5771715142352556
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.5589210756342383
+              },
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.5229028996267017
+              },
+              {
+                "document_id": "doc-space-en",
+                "score": 0.5080020903058801
+              }
+            ],
+            "milliseconds": 60.255700000000004,
+            "maximum_score_error": 8.582897670361689e-08
+          },
+          {
+            "id": "query-cat-en",
+            "text": "How should I care for a pet cat?",
+            "ranking": [
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.7958339796363999
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.7167849951108329
+              },
+              {
+                "document_id": "doc-space-en",
+                "score": 0.5306740243407113
+              },
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.5133201512608726
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.5133201512608726
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.5030711836112948
+              }
+            ],
+            "milliseconds": 58.161300000000004,
+            "maximum_score_error": 3.1781969833666324e-08
+          }
+        ],
+        "independent_max_score_error": 9.186151772588858e-08,
+        "cache": {
+          "Success": true,
+          "CacheReused": false,
+          "TransferredFiles": 3,
+          "Milliseconds": 1730.8836000000001,
+          "AuditMilliseconds": 843.3833000000001,
+          "HashBackends": {
+            "model-fp32.sentis": "windows_cng",
+            "tokenizer.json": "windows_cng"
+          },
+          "CacheRejectedError": null
+        },
+        "screenshots": [
+          {
+            "name": "dfc00bd9a60546a0b817a0a8a13a391a-query-cat-ja.png",
+            "width": 1280,
+            "height": 800,
+            "bytes": 175342,
+            "sha256": "99921856247abb103a8eed810316195305d4bbb1b9c650c37920bfe45aaa4aa7",
+            "hash_backend": "windows_cng"
+          },
+          {
+            "name": "dfc00bd9a60546a0b817a0a8a13a391a-query-space-en.png",
+            "width": 1280,
+            "height": 800,
+            "bytes": 177099,
+            "sha256": "26e15c6dc3d2e1b031f94fe634938d1eec406ed91bbde98c7fe190e8e51e8360",
+            "hash_backend": "windows_cng"
+          }
+        ]
+      },
+      {
+        "phase": "warm",
+        "run_id": "1d6d6b70186b40bcb7485cb4d1a8cf54",
+        "started_utc": "2026-10-16T15:20:22.1424539Z",
+        "completed_utc": "2026-10-16T15:20:29.9415499Z",
+        "exit_code": 0,
+        "process_seconds": 23.110684399987804,
+        "actual_gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "graphics_api": "Direct3D12",
+        "computed_outputs": 2925,
+        "computation_cpu_fallback_count": 0,
+        "intermediate_flush_count": 0,
+        "cpu_constant_shape_or_input_count": 1382,
+        "font_destroy_wait_frames": 1,
+        "worker_released": true,
+        "font_destroyed": true,
+        "queries": [
+          {
+            "id": "query-cat-ja",
+            "text": "猫を健康に育てるには",
+            "ranking": [
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.7473303426040513
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.7248598136856715
+              },
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.5659783895424063
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.5659783895424063
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.5122136388969601
+              },
+              {
+                "document_id": "doc-space-en",
+                "score": 0.4919057124303446
+              }
+            ],
+            "milliseconds": 60.6428,
+            "maximum_score_error": 8.637552584289665e-08
+          },
+          {
+            "id": "query-space-en",
+            "text": "How do scientists explore planets?",
+            "ranking": [
+              {
+                "document_id": "doc-space-en",
+                "score": 0.7798648642603759
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.7117976097640415
+              },
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.5516260511443223
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.5516260511443223
+              },
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.5359167231874132
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.5263622798476042
+              }
+            ],
+            "milliseconds": 61.718,
+            "maximum_score_error": 9.186151772588858e-08
+          },
+          {
+            "id": "query-recipe-ja",
+            "text": "パンの作り方",
+            "ranking": [
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.8117594395513761
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.8117594395513761
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.5771715142352556
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.5589210756342383
+              },
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.5229028996267017
+              },
+              {
+                "document_id": "doc-space-en",
+                "score": 0.5080020903058801
+              }
+            ],
+            "milliseconds": 57.8975,
+            "maximum_score_error": 8.582897670361689e-08
+          },
+          {
+            "id": "query-cat-en",
+            "text": "How should I care for a pet cat?",
+            "ranking": [
+              {
+                "document_id": "doc-cat-en",
+                "score": 0.7958339796363999
+              },
+              {
+                "document_id": "doc-cat-ja",
+                "score": 0.7167849951108329
+              },
+              {
+                "document_id": "doc-space-en",
+                "score": 0.5306740243407113
+              },
+              {
+                "document_id": "doc-recipe-a",
+                "score": 0.5133201512608726
+              },
+              {
+                "document_id": "doc-recipe-b",
+                "score": 0.5133201512608726
+              },
+              {
+                "document_id": "doc-space-ja",
+                "score": 0.5030711836112948
+              }
+            ],
+            "milliseconds": 58.883500000000005,
+            "maximum_score_error": 3.1781969833666324e-08
+          }
+        ],
+        "independent_max_score_error": 9.186151772588858e-08,
+        "cache": {
+          "Success": true,
+          "CacheReused": true,
+          "TransferredFiles": 1,
+          "Milliseconds": 789.6425,
+          "AuditMilliseconds": 769.8728,
+          "HashBackends": {
+            "model-fp32.sentis": "windows_cng",
+            "tokenizer.json": "windows_cng"
+          },
+          "CacheRejectedError": null
+        },
+        "screenshots": [
+          {
+            "name": "1d6d6b70186b40bcb7485cb4d1a8cf54-query-cat-ja.png",
+            "width": 1280,
+            "height": 800,
+            "bytes": 175342,
+            "sha256": "99921856247abb103a8eed810316195305d4bbb1b9c650c37920bfe45aaa4aa7",
+            "hash_backend": "windows_cng"
+          },
+          {
+            "name": "1d6d6b70186b40bcb7485cb4d1a8cf54-query-space-en.png",
+            "width": 1280,
+            "height": 800,
+            "bytes": 177099,
+            "sha256": "26e15c6dc3d2e1b031f94fe634938d1eec406ed91bbde98c7fe190e8e51e8360",
+            "hash_backend": "windows_cng"
+          }
+        ]
+      }
+    ],
+    "independent_reference_and_screenshot_audit": true,
+    "japanese_and_english_gui_visually_checked": true,
+    "scope": "Two native Windows FP32 GPU sample launches, programmatic GUI APIs, original fixed rankings/scores, cache reuse and normal termination. Not performance or native input qualification."
+  }
+}

@@ -15,6 +15,11 @@
       "displayName": "Text Search",
       "description": "Search a small Japanese/English corpus using a separately prepared Sentis model.",
       "path": "Samples~/TextSearch"
+    },
+    {
+      "displayName": "Image and Audio Search",
+      "description": "Register real images and mono PCM audio on GPU, then search their embeddings with text.",
+      "path": "Samples~/MultimodalSearch"
     }
   ],
   "author": {

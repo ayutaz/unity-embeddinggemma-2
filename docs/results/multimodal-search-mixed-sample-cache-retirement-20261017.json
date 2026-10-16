@@ -1,0 +1,89 @@
+{
+  "scope": "real_imported_sample_audio_silence_and_png_square0_fixed_queries",
+  "runtime_source_after_fix": "5ca5fdd44416216806916e5c0a1c8e54a2b13e47",
+  "verified_runtime_source_files": 51,
+  "verified_imported_sample_source_files": 8,
+  "source_comparison": "exact UTF8 source after CRLF normalization",
+  "gpu": "RTX 4070 Ti SUPER",
+  "graphics_api": "D3D12",
+  "unity": "6000.3.21f1",
+  "all_prepared_profiles_validated": false,
+  "runs": [
+    {
+      "label": "media-sample-mixed-cold-pcmfixed-ee90c2a",
+      "runtime_source": "ee90c2a7f3c9c60dbb0d922662c22abcb73de5ad",
+      "report_sha256": "fb7671c8b32a3aeb09c3fb373bc2b156fcfbb762f9a53fb0f4b3bca5ea9180bc",
+      "process_sha256": "609e39f52376e6fb98efd7d0a21dd6548b32e80c97a32498f318b62df379f595",
+      "success": true,
+      "exit_code": 0,
+      "host_native_peak_bytes": 10328625152,
+      "registrations": [
+        {
+          "id": "silence",
+          "module": "audio-1119",
+          "capture_sha256": "e8059c050b7f8204cd7ad54d034111b3c6aa9d74199412be6d7d85322be7b5c9",
+          "cosine_to_pinned_document": 0.9999999999928917,
+          "module_transferred_files": 420,
+          "module_reused_objects": 0
+        },
+        {
+          "id": "square-0",
+          "module": "image-square",
+          "capture_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f",
+          "cosine_to_pinned_document": 0.9999999999997135,
+          "module_transferred_files": 297,
+          "module_reused_objects": 2
+        }
+      ],
+      "fixed_query_count": 4,
+      "maximum_pinned_score_error": 1.7913466188179683e-07,
+      "text_module_transferred_files": 3,
+      "cache_lease_released": true,
+      "gpu_stage_cancel_recovery": false,
+      "closed_resource_fields_inspected": false
+    },
+    {
+      "label": "media-sample-mixed-warm-cachefix-5ca5fdd",
+      "runtime_source": "5ca5fdd44416216806916e5c0a1c8e54a2b13e47",
+      "report_sha256": "a7d231d51e63046e49c90c959d86dd48cf908637fa94f674ce37dec4f422c965",
+      "process_sha256": "e6c854b4e37f5b1b1e4b28ce276a2f96450e4c80433b01dd6380f359bdd48958",
+      "success": true,
+      "exit_code": 0,
+      "host_native_peak_bytes": 10190360576,
+      "registrations": [
+        {
+          "id": "silence",
+          "module": "audio-1119",
+          "capture_sha256": "e8059c050b7f8204cd7ad54d034111b3c6aa9d74199412be6d7d85322be7b5c9",
+          "cosine_to_pinned_document": 0.9999999999928917,
+          "module_transferred_files": 1,
+          "module_reused_objects": 419
+        },
+        {
+          "id": "square-0",
+          "module": "image-square",
+          "capture_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f",
+          "cosine_to_pinned_document": 0.9999999999997135,
+          "module_transferred_files": 1,
+          "module_reused_objects": 298
+        }
+      ],
+      "fixed_query_count": 4,
+      "maximum_pinned_score_error": 1.7913466188179683e-07,
+      "text_module_transferred_files": 1,
+      "cache_lease_released": true,
+      "gpu_stage_cancel_recovery": true,
+      "closed_resource_fields_inspected": true
+    }
+  ],
+  "retained_failed_warm_run": {
+    "label": "media-sample-mixed-warm-cancel-ee90c2a",
+    "success": false,
+    "runtime_source": "ee90c2a7f3c9c60dbb0d922662c22abcb73de5ad",
+    "host_native_peak_bytes": 16757751808,
+    "process_exit": 2,
+    "report_sha256": "eac12e7a2c3c6f1944cd9934915d5e10ce34a00525f6161ed08ae6d89563aeef"
+  },
+  "cache_retirement_preserved_captured_vector_bits": true,
+  "success": true
+}

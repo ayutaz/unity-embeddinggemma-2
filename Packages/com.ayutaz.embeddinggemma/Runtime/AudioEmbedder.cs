@@ -107,7 +107,10 @@ namespace EmbeddingGemma
             executing=true;pendingCancellation=cancellation;
             try
             {
-                using var processed=preprocessing.Process(input);cancellation.Token.ThrowIfCancellationRequested();
+                using var processed=preprocessing is IAsyncAudioPreprocessor stagedPreprocessing
+                    ? await stagedPreprocessing.ProcessAsync(input,cancellation.Token)
+                    : preprocessing.Process(input);
+                cancellation.Token.ThrowIfCancellationRequested();
                 using var encoded=await encoding.EncodeAsync(processed,cancellation.Token);cancellation.Token.ThrowIfCancellationRequested();
                 using var emptyImage=new Tensor<float>(new TensorShape(0,MultimodalBackboneProfile.FeatureWidth));
                 var vector=body.Embed(prompt.InputIds,prompt.AttentionMask,emptyImage,encoded.SoftTokens);

@@ -1,0 +1,58 @@
+{
+  "success": true,
+  "scope": "actual_imported_scene_PlayMode_GPU_registration_and_rendered_search_results",
+  "runtime_source": "5ca5fdd44416216806916e5c0a1c8e54a2b13e47",
+  "unity": "6000.3.21f1",
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "report_sha256": "43ff1fa1d0b2e6709b3e69d91ad5adb43d5008dc94c9a6492bf855e20ce88b48",
+  "process_sha256": "1e6e6a6e7234f8343730345b4a40e3e8d1bfb817dc2f2947bec7b6eec5e4e045",
+  "exit_code": 0,
+  "passed": 1,
+  "failed": 0,
+  "skipped": 0,
+  "host_native_peak_bytes": 10306600960,
+  "registered_media": [
+    "silence",
+    "square-0"
+  ],
+  "fixed_queries": 4,
+  "result_vectors_and_scores_match_audited_EditMode_run": true,
+  "worker_kernel_tensor_fields_inspected": true,
+  "cache_lease_released": true,
+  "screenshots": [
+    {
+      "query": "query-cat-ja",
+      "file": "media-sample-ui-5ca5fdd-query-cat-ja.png",
+      "sha256": "9168f50dd599f0cd353fbbf2d4bc070dd51559f68ab39d5677c65890adf359c6",
+      "width": 1379,
+      "height": 826
+    },
+    {
+      "query": "query-space-en",
+      "file": "media-sample-ui-5ca5fdd-query-space-en.png",
+      "sha256": "724f1afc8d57f5b93a283cec83d5b12007eaaca6e866d16fad93bb865476e672",
+      "width": 1379,
+      "height": 826
+    },
+    {
+      "query": "query-recipe-ja",
+      "file": "media-sample-ui-5ca5fdd-query-recipe-ja.png",
+      "sha256": "31c3a064cb4e283d6cc4eb1ac00f2f178475c9af7f7627533eebd509ff461606",
+      "width": 1379,
+      "height": 826
+    },
+    {
+      "query": "query-cat-en",
+      "file": "media-sample-ui-5ca5fdd-query-cat-en.png",
+      "sha256": "6a483775e45cb43061afb5d6a2c646f40ca43e11c026036157f56887f464be83",
+      "width": 1379,
+      "height": 826
+    }
+  ],
+  "visually_checked_screenshot_queries": [
+    "query-cat-ja",
+    "query-space-en"
+  ],
+  "manual_keyboard_mouse_exercised": false
+}

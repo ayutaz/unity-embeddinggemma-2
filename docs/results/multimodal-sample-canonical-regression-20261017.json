@@ -1,0 +1,37 @@
+{
+  "scope": "canonical_package_and_both_imported_sample_EditMode_regression",
+  "source": "bf19e20857842dac135d7fef0c615fb8e2b6a503",
+  "success": true,
+  "passed": 505,
+  "failed": 0,
+  "skipped": 0,
+  "exit_code": 0,
+  "unity": "6000.3.21f1",
+  "graphics_api": "D3D12",
+  "assemblies": [
+    {
+      "name": "EmbeddingGemma.MultimodalSearch.Sample.Editor.Tests.dll",
+      "total": "10",
+      "passed": "10",
+      "failed": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "EmbeddingGemma.Package.Editor.Tests.dll",
+      "total": "428",
+      "passed": "428",
+      "failed": "0",
+      "skipped": "0"
+    },
+    {
+      "name": "EmbeddingGemma.TextSearch.Sample.Editor.Tests.dll",
+      "total": "67",
+      "passed": "67",
+      "failed": "0",
+      "skipped": "0"
+    }
+  ],
+  "xml_sha256": "03fbee7f8edd8857992776a1b1b3174f4f15da3ebe1e698df9fd0ba339bc7d02",
+  "process_sha256": "e6aaea7a44d7d6272ea2afe3f8db9271702a51d230756a4808d9c2a2db503ac0",
+  "real_model_qualification_is_separate": true
+}

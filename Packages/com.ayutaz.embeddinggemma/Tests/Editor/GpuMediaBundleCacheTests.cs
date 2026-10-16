@@ -98,5 +98,16 @@ namespace EmbeddingGemma.Tests
             var next = Acquire(); yield return Wait(next); var lease = Result(next);
             Assert.That(Property<int>(lease, "TransferredFiles"), Is.EqualTo(1)); Assert.That(Property<int>(lease, "ReusedObjects"), Is.EqualTo(2)); Close(lease);
         }
+        [UnityTest] public IEnumerator OriginalAudioCoefficientObjectsMayKeepTheirBinExtension()
+        {
+            var coefficient = Store(new byte[] { 0, 0, 128, 63 }, ".bin");
+            descriptor["modules"]["audio"] = new JObject { ["kind"] = "audio", ["valid_audio_frames"] = 1119,
+                ["preprocessor"] = firstModel, ["backbone"] = firstModel, ["tokenizer"] = tokenizer, ["tokenizer_config"] = tokenizer,
+                ["models"] = new JArray(firstModel, firstModel), ["operations"] = new JArray(new JObject { ["kind"] = "sequential_scale",
+                    ["inputs"] = new JArray("input"), ["output"] = "output", ["first_scale"] = .25, ["weight_file"] = coefficient }) };
+            Publish(); var pending = Acquire("audio"); yield return Wait(pending); var lease = Result(pending);
+            Assert.That(Property<int>(lease, "TransferredFiles"), Is.EqualTo(4));
+            Property<GpuMediaBundle>(lease, "Bundle").VerifyFile(coefficient); Close(lease);
+        }
     }
 }

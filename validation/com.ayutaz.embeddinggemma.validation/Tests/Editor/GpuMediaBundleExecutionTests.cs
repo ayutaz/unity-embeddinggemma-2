@@ -93,5 +93,71 @@ namespace EmbeddingGemma.Validation.Tests
             catch (Exception error) { report["error"] = error.ToString(); throw; }
             finally { session?.Dispose(); Save(); }
         }
+
+        [UnityTest] public IEnumerator PreparedAudioModuleUsesOriginalPcmAndPinnedFinalDocumentReference()
+        {
+            using var cancellation = new CancellationTokenSource(); var task = RunAudio(cancellation.Token); long peak = 0;
+            while (!task.IsCompleted)
+            {
+                peak = Math.Max(peak, MediaExecutionMemory.Peak()); if (peak > 12L * 1024 * 1024 * 1024) cancellation.Cancel();
+                UnityEditor.EditorApplication.QueuePlayerLoopUpdate(); yield return null;
+            }
+            var output = Environment.GetEnvironmentVariable("EG_MEDIA_EXECUTION_REPORT");
+            if (!string.IsNullOrEmpty(output) && File.Exists(output))
+            { var report = JObject.Parse(File.ReadAllText(output)); report["host_native_peak_bytes"] = peak; File.WriteAllText(output, report.ToString()); }
+            task.GetAwaiter().GetResult(); Assert.That(peak, Is.GreaterThan(0).And.LessThanOrEqualTo(12L * 1024 * 1024 * 1024));
+        }
+        static async Task RunAudio(CancellationToken token)
+        {
+            var directory = Environment.GetEnvironmentVariable("EG_MEDIA_BUNDLE_OUTPUT");
+            var module = Environment.GetEnvironmentVariable("EG_MEDIA_BUNDLE_MODULE");
+            var output = Environment.GetEnvironmentVariable("EG_MEDIA_EXECUTION_REPORT");
+            Assert.That(directory, Is.Not.Null.And.Not.Empty); Assert.That(output, Is.Not.Null.And.Not.Empty); Assert.That(File.Exists(output), Is.False);
+            var bundle = GpuMediaBundle.Open(directory); var metadata = bundle.Module(module); Assert.That((string)metadata["kind"], Is.EqualTo("audio"));
+            var validFrames = (int)metadata["valid_audio_frames"];
+            var referencePath = Cache("k/artifacts/audio-final-backbone/audio-embedding-reference.json");
+            Assert.That(Hash(referencePath), Is.EqualTo("281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001"));
+            var reference = JObject.Parse(File.ReadAllText(referencePath));
+            var pcmRoot = Cache("k/artifacts/audio-real-chain/audio-runtime-preprocessing"); var auditPath = Path.Combine(pcmRoot, "audio-validation.json");
+            Assert.That(Hash(auditPath), Is.EqualTo("4e325f708e8d103a9de358a411380ddbb51cfe953984e9dcb73e291d919630fa"));
+            var audit = JObject.Parse(File.ReadAllText(auditPath)); var rows = reference["cases"].Where(row => (string)row["profile"] == "frames-1119-valid-" + validFrames).ToArray();
+            Assert.That(rows.Length, Is.EqualTo(validFrames == 1119 ? 5 : 1));
+            foreach (var row in rows)
+                foreach (var name in new[] { (string)row["id"] + "-pcm-fp32.bin", (string)row["id"] + "-samples-int32.bin" })
+                {
+                    Assert.That(new FileInfo(Path.Combine(pcmRoot, name)).Length, Is.EqualTo((long)audit["files"][name]["bytes"]));
+                    Assert.That(Hash(Path.Combine(pcmRoot, name)), Is.EqualTo((string)audit["files"][name]["sha256"]));
+                }
+            var report = new JObject { ["success"] = false, ["scope"] = "prepared_audio_module_original_pcm_final_document_768",
+                ["module"] = module, ["execution_source"] = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE"), ["reference_sha256"] = Hash(referencePath),
+                ["bundle_descriptor_sha256"] = Hash(Path.Combine(directory, "bundle.json")), ["actual_backend"] = "GPUCompute", ["cases"] = new JArray(),
+                ["encoder_full_reference_comparison"] = false, ["fixed_document_cosine_minimum"] = .999 };
+            void Save() => File.WriteAllText(output, report.ToString()); GpuMediaSession session = null;
+            try
+            {
+                report["phase"] = "load_verified_prepared_module"; Save(); session = await bundle.LoadAsync(module, token);
+                foreach (var row in rows)
+                {
+                    token.ThrowIfCancellationRequested(); var id = (string)row["id"];
+                    var pcmBytes = File.ReadAllBytes(Path.Combine(pcmRoot, id + "-pcm-fp32.bin")); var maskBytes = File.ReadAllBytes(Path.Combine(pcmRoot, id + "-samples-int32.bin"));
+                    var waveform = new float[pcmBytes.Length / 4]; var mask = new int[maskBytes.Length / 4];
+                    Buffer.BlockCopy(pcmBytes, 0, waveform, 0, pcmBytes.Length); Buffer.BlockCopy(maskBytes, 0, mask, 0, maskBytes.Length);
+                    var count = mask.Count(value => value == 1); Assert.That(waveform.Length, Is.EqualTo(179200));
+                    Assert.That(mask, Is.EqualTo(Enumerable.Repeat(1, count).Concat(Enumerable.Repeat(0, 179200 - count)).ToArray()));
+                    Assert.That(waveform.Skip(count), Is.All.EqualTo(0)); var input = new AudioPcmInput(waveform.Take(count).ToArray()); Assert.That(input.ValidFrameCount, Is.EqualTo(validFrames));
+                    report["phase"] = "encode_" + id; Save(); var actual = await session.EmbedAudioAsync(input, cancellationToken: token);
+                    var expected = row["embedding"].Values<float>().ToArray(); var cosine = TextSearchIndex.Cosine(actual, expected); var norm = actual.Sum(value => (double)value * value);
+                    var capture = Path.ChangeExtension(output, null) + "-" + id + ".bin"; Assert.That(File.Exists(capture), Is.False);
+                    var bytes = new byte[actual.Length * 4]; Buffer.BlockCopy(actual, 0, bytes, 0, bytes.Length); File.WriteAllBytes(capture, bytes);
+                    ((JArray)report["cases"]).Add(new JObject { ["id"] = id, ["cosine"] = cosine, ["norm_squared"] = norm, ["valid_audio_frames"] = validFrames,
+                        ["capture"] = Path.GetFileName(capture), ["capture_sha256"] = Hash(capture), ["original_pcm_sha256"] = Hash(Path.Combine(pcmRoot, id + "-pcm-fp32.bin")) }); Save();
+                    Assert.That(cosine, Is.GreaterThanOrEqualTo(.999)); Assert.That(Math.Abs(norm - 1), Is.LessThanOrEqualTo(.002));
+                }
+                report["phase"] = "close"; Save(); await session.CloseAsync(); MultimodalSearchSampleGpuTests.AssertReleased(session);
+                report["closed_worker_kernel_and_tensor_fields_inspected"] = true; report["session_closed"] = true; report["success"] = true;
+            }
+            catch (Exception error) { report["error"] = error.ToString(); throw; }
+            finally { session?.Dispose(); Save(); }
+        }
     }
 }

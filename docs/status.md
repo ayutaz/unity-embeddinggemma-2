@@ -37,6 +37,8 @@ GPU結果はWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER /
 
 [Tanhテストの対象整理](results/m4-tanh-pinned-captures-and-native-rounding-contract-tdd-20261016.json)では、PyTorchのoneMKL高精度モード呼出しとIntelのCPU依存丸め仕様を確認しました。毎回のCPU出力への無条件bit一致を、保存済み元contextの33,285入力・出力への厳密bit比較と、現在のnativeへの元encoder許容差比較へ分けました。実ONNXの固定参照bit比較も514値から33,285値へ拡張し、参照から1 ULP変わればnativeと一致しても失敗します。過去に保存・監査済みの重みなしfixture266,280bytesを使用し、候補から期待値を生成していません。記録済みCI5値のred1件とfixture不足red4件から、関連29 pass /skip0になりました。これは単体テスト仕様の修正で、実モデルの計算や既定CIの音声比較を変えたものではありません。新しい実モデルCIは実行していません。
 
+[同一入力の参照区間監査](results/m4-same-input-official-original-disjoint74-acceptance-intervals-20261016.json)では、失敗CIのofficial出力・ONNX出力・入力だけ約1.72MBをrange取得し、入力SHAが元参照と同一、ONNX対officialの1,309値失敗を独立再計算しました。official自体は元参照から288値が許容差超過し、74値は両参照の許容区間が重なりません。`abs(a-b) > 2*atol + rtol*(abs(a)+abs(b))`を各値の正確な有理数でも確認しました。同じ出力へ両方の基準を要求することは、この記録済みcontextでは不可能です。固定参照を必須基準としてCPU差を診断に残すか、現在CPUの基準も別変換経路／固定contextで必須維持するかは方針確認が必要です。CI gate・参照値・許容差は変更していません。
+
 実CIのCPUはAMD EPYC7763 /AVX2 /Torch2.14.1+cu130、NumPy2.5.3のBLASはscipy-openblas0.3.34.106.0 /Haswellでした。これは保存した実行条件で、数値差の原因確定ではありません。
 
 元のQK行列積にあった1bit差は、有理数FMA追跡でmidpointの低残差欠落へ局所化しました。[元bmm_8の実ONNX](results/m4-sine-original-bmm8-midpoint-all55296-actual-onnx-bit-exact-20261016.json)は修正候補で全55,296値がbit一致しました。明示的な`ordered_original_midpoint_bmm`は各層の監査済みQK BMM1件だけを修正し、他のBMMと元の係数・mask・clipを維持します。[先行するraw sine全12層](results/m4-original-raw-sine-full12-midpoint-qk-tolerance-passed-20261016.json)は143,360値で元許容差超過0、最大許容差比0.482376、bit差34,679でした。bit一致とは表現しません。
@@ -47,7 +49,7 @@ Windows2022の[小さな行列/Tanh診断](results/m4-native-windows2022-amd9v74
 
 元runの結果回収と取得済み出力の独立照合は完了しました。残件はnoiseの最終値取得と、必須CIの音声ONNX /native Tanh比較です。[noise再開と監査のTDD](results/m4-pinned-noise-prediction-resume-and-independent-auditor-tdd-20261016.json)を追加し、保存済みの実出力から残り2区間だけを評価します。先頭3区間は元係数からグラフを再生成して旧SHAへ一致させ、推論は繰り返しません。元の計算コード・依存lock計61ファイルをe99c442へ固定し、異なる新しいjob sourceを明示します。関連39 pass /skip0、追加集計8件のred→green、最終再開＋集計23 pass /skip0、workflow lint合格です。実保存記録のcapture /carry /layoutと残区間の演算数もモデルをloadせず照合しました。
 
-[再開run38829612885](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38829612885)、source c994563はrunner待ちです。元6信号・2 profile・824,320値の基準を維持し、途中stage正解を使いません。固定参照に一致する候補と現在のnativeへの一致も別条件として維持し、既定の実モデルCIの不合格は未解決です。Unityは停止中です。
+[再開run38829612885](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38829612885)、source c994563は実行中です。元6信号・2 profile・824,320値の基準を維持し、途中stage正解を使いません。固定参照に一致する候補と現在のnativeへの一致も別条件として維持し、既定の実モデルCIの不合格は未解決です。Unityは停止中です。
 
 過去の候補、失敗とTDD経緯は[更新前の固定文書](https://github.com/ayutaz/unity-embeddinggemma-2/blob/e99c44214ab7d7f526b0fede5b561862460f1d66/docs/status.md)とsource付き`docs/results/`に保持しています。
 

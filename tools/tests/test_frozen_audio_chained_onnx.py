@@ -34,6 +34,45 @@ def frozen(value):
     return FrozenStageReference(value, dict(stage='synthetic_unit_only'))
 
 
+def test_failed_native_control_preserves_the_actual_carry_and_does_not_run_onnx(tmp_path, monkeypatch):
+    probe = candidate()
+    source, x, boundaries = fixture()
+    real_extract = probe.extract_segment
+
+    class AlteredPiece(torch.nn.Module):
+        def __init__(self, original):
+            super().__init__()
+            self.original = original
+
+        def forward(self, value):
+            return self.original(value) + 1
+
+    def extract(program, start, end):
+        piece = real_extract(program, start, end)
+        return AlteredPiece(piece) if end == boundaries[1] else piece
+
+    monkeypatch.setattr(probe, 'extract_segment', extract)
+    with pytest.raises(ValueError, match='Native partition carry'):
+        probe.probe_chained_segments(source, frozen(x * 2), frozen(source(x)), tmp_path, boundaries=boundaries)
+    report = json.loads((tmp_path / 'frozen-audio-chained-onnx.json').read_text())
+    assert report['native_chain_control_bits_equal'] is False
+    assert report['native_chain_control_metrics']['exact_difference_count'] > 0
+    path = tmp_path / 'native-chain-output-fp32.bin'
+    assert probe.file_digest(path) == report['native_chain_control_sha256']
+    assert report['cases'] == [] and report['complete'] is False
+    assert not list(tmp_path.glob('*.onnx'))
+
+
+def test_pinned_acceptance_fixes_native_blas_branch_without_weakening_numeric_or_control_gates():
+    import yaml
+    root = Path(__file__).resolve().parents[2]
+    workflow = yaml.load((root / '.github/workflows/pinned-audio-acceptance.yml').read_text(encoding='utf-8'), Loader=yaml.BaseLoader)
+    environment = workflow['jobs']['execute']['env']
+    assert environment['MKL_CBWR'] == 'COMPATIBLE'
+    assert environment['MKL_DYNAMIC'] == 'FALSE'
+    assert environment['OMP_NUM_THREADS'] == environment['MKL_NUM_THREADS'] == '4'
+
+
 def test_connected_partitions_keep_actual_onnx_carry_and_compare_only_original_final_reference(tmp_path):
     probe = candidate()
     source, x, boundaries = fixture()

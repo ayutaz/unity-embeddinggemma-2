@@ -11,7 +11,10 @@ def fixture(tmp_path):
               'success': True, 'gpu_verified': True, 'phase': 'completed',
               'validation_mode': 'real_model', 'is_editor': False, 'batch_mode': False,
               'worker_released': True, 'font_destroyed': True, 'blank_rejected': True,
-              'missing_model_rejected': True, 'console': []}
+              'missing_model_rejected': True, 'console': [],
+              'gpu_execution': {'success': True, 'worker_backend': 'GPUCompute',
+                                'computed_layer_output_count': 1,
+                                'computation_cpu_fallback_indices': [], 'intermediate_flush_indices': []}}
     receipt = {'runId': '1' * 32, 'source': 'a' * 40, 'exitCode': 0,
                'startedUtc': '2026-10-10T08:54:08Z', 'completedUtc': '2026-10-10T08:54:33Z',
                'seconds': 32425}  # Old launcher bug: derive timing from UTC timestamps instead.
@@ -25,6 +28,24 @@ def change(path, key, value):
     data = json.loads(path.read_text())
     data[key] = value
     path.write_text(json.dumps(data), encoding='utf-8')
+
+
+@pytest.mark.parametrize('problem', ['missing', 'cpu_backend', 'computation_fallback', 'flush',
+                                   'empty_graph', 'failed_audit', 'invalid_indices', 'boolean_count'])
+def test_current_acceptance_requires_explicit_worker_gpu_execution_evidence(tmp_path, problem):
+    paths = fixture(tmp_path)
+    report = json.loads(paths[0].read_text())
+    profile = report['gpu_execution']
+    if problem == 'missing': report.pop('gpu_execution')
+    if problem == 'cpu_backend': profile['worker_backend'] = 'CPU'
+    if problem == 'computation_fallback': profile['computation_cpu_fallback_indices'] = [5]
+    if problem == 'flush': profile['intermediate_flush_indices'] = [5]
+    if problem == 'empty_graph': profile['computed_layer_output_count'] = 0
+    if problem == 'failed_audit': profile['success'] = False
+    if problem == 'invalid_indices': profile['computation_cpu_fallback_indices'] = None
+    if problem == 'boolean_count': profile['computed_layer_output_count'] = True
+    paths[0].write_text(json.dumps(report))
+    assert audit_sample_process(*paths)['process_gate_passed'] is False
 
 
 def test_successful_report_with_crashed_process_is_rejected(tmp_path):

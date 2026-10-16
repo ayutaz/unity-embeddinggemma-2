@@ -268,7 +268,12 @@ namespace EmbeddingGemma.Validation.Tests
             pending.GetAwaiter().GetResult();
         }
 
-        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false,bool editorFramePump=false,bool nativeOperators=false,int nativeStaticBlockSize=384,bool inlineTailRms=false,int softmaxVectorWidth=8,bool fuseGeluInner=false,bool sleefGelu=false,bool nativeRotary=false,bool firstLayerOnly=false,bool nativePooling=false,bool lastEncoderOnly=false,int encoderPrefixLayers=0,bool isolatedLayer=false,bool midpointRms=false,bool imageAdapter=false,TextRole? finalImageRole=null,bool allFinalImageRoles=false,bool renderTextureRecovery=false)
+        public static Task PrepareGpuBundle(string caseId,string directory)
+            =>Run(caseId,inlineAllRms:true,nativeGelu:true,releaseUnusedGpuCache:true,staged:true,releaseGeluCaches:true,
+                nativeOperators:true,nativeStaticBlockSize:192,inlineTailRms:true,softmaxVectorWidth:16,fuseGeluInner:true,
+                sleefGelu:true,nativeRotary:true,nativePooling:true,midpointRms:true,exportDirectory:directory);
+
+        static async Task Run(string caseId,bool inlineAllRms,bool nativeGelu=false,bool releaseUnusedGpuCache=false,bool staged=false,bool releaseGeluCaches=false,bool planOnly=false,bool editorFramePump=false,bool nativeOperators=false,int nativeStaticBlockSize=384,bool inlineTailRms=false,int softmaxVectorWidth=8,bool fuseGeluInner=false,bool sleefGelu=false,bool nativeRotary=false,bool firstLayerOnly=false,bool nativePooling=false,bool lastEncoderOnly=false,int encoderPrefixLayers=0,bool isolatedLayer=false,bool midpointRms=false,bool imageAdapter=false,TextRole? finalImageRole=null,bool allFinalImageRoles=false,bool renderTextureRecovery=false,string exportDirectory=null)
         {
             Assert.That(encoderPrefixLayers,Is.InRange(0,16));Assert.That(encoderPrefixLayers>0&&(firstLayerOnly||lastEncoderOnly),Is.False);
             var encoderOnly=firstLayerOnly||lastEncoderOnly||encoderPrefixLayers>0;
@@ -276,7 +281,7 @@ namespace EmbeddingGemma.Validation.Tests
             var executedLayers=isolatedLayer?1:prefixLayers;
             Assert.That(isolatedLayer&&encoderPrefixLayers==0,Is.False);
             Assert.That(firstLayerOnly&&lastEncoderOnly,Is.False);
-            Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
+            if(exportDirectory==null)Assert.That(SystemInfo.supportsComputeShaders,Is.True,"Actual GPU required; never skip.");
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var root=Path.GetFullPath(Path.Combine(Application.dataPath,"../../k/artifacts/vision-encoder"));
             var label=releaseGeluCaches&&staged?"vision-staged-nested-gelu-cache-release-whole-gpu-":releaseGeluCaches?"vision-nested-gelu-cache-release-whole-gpu-":staged?"vision-staged-cache-release-native-gelu-rms-whole-gpu-":releaseUnusedGpuCache?"vision-cache-release-native-gelu-rms-whole-gpu-":nativeGelu?"vision-native-gelu-inline-rms-whole-gpu-":inlineAllRms?"vision-inline-all-layer-rms-whole-gpu-":"vision-native-patch-whole-gpu-";
@@ -296,6 +301,7 @@ namespace EmbeddingGemma.Validation.Tests
             if(imageAdapter){Assert.That(encoderOnly||planOnly||!staged||!midpointRms,Is.False);label="vision-real-texture-production-adapter-gpu-";}
             if(finalImageRole.HasValue){Assert.That(imageAdapter,Is.True);label="vision-final-image-api-"+(allFinalImageRoles?"allroles":finalImageRole.Value.ToString().ToLowerInvariant())+"-gpu-";}
             if(renderTextureRecovery){Assert.That(finalImageRole.HasValue&&allFinalImageRoles,Is.True);label="vision-final-rendertexture-recovery-allroles-gpu-";}
+            if(exportDirectory!=null)label="media-image-bundle-preparation-"+Guid.NewGuid().ToString("N")+"-";
             var output=Path.GetFullPath(Path.Combine(Application.dataPath,"../artifacts/"+label+source+"-"+caseId+".json"));
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject{["success"]=false,["scope"]=releaseUnusedGpuCache?"one_original_vision_encoder_unused_cache_release_native_gelu_rms_candidate":nativeGelu?"one_original_vision_encoder_gpu_native_gelu_all_layer_rms_and_patch384_candidate":inlineAllRms?"one_original_vision_encoder_gpu_all_sixteen_layer_rms_and_native_patch384_candidate":"one_original_vision_encoder_gpu_native_patch384_candidate",["runtime_source"]=source,
@@ -333,6 +339,9 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.That(entry["shape"].Values<int>().ToArray(),Is.EqualTo(new[]{1,2520,768}));
                 var path=Path.Combine(directory,"captures",entry.Value<string>("file"));Check(path,entry.Value<string>("sha256"));return path;
             }
+            var preparedWriter=exportDirectory==null?null:new GpuMediaBundleWriter(exportDirectory,source);
+            var preparedOperations=new JArray();
+            if(preparedWriter!=null){report["scope"]="qualified_gpu_image_model_preparation_no_inference";report["inference_executed"]=false;report["gpu_validation_performed"]=false;}
             var operations=new List<IGpuTensorOperation>();Save();
             try
             {
@@ -462,30 +471,31 @@ namespace EmbeddingGemma.Validation.Tests
                             var count=reference["profiles"][profile].Value<int>("feature_count");
                             Assert.That(plan.Rows[i],Is.EqualTo(count));Assert.That(plan.Widths[i],Is.EqualTo(2520));Assert.That(plan.Columns[i],Is.EqualTo(768));
                             Assert.That(plan.LeftWeightShapes[i],Is.EqualTo(new TensorShape(1,count,2520)));Assert.That(plan.Weights[i],Is.Null);
-                            operations.Add(new GpuFixedLeftMatmul(plan.LeftWeightShapes[i],plan.LeftWeights[i]));kind="native_fixed_left_pooling_block192";
+                            if(preparedWriter==null)operations.Add(new GpuFixedLeftMatmul(plan.LeftWeightShapes[i],plan.LeftWeights[i]));kind="native_fixed_left_pooling_block192";
                         }
                         else if(binaryProducts.Contains(selected[i]))
                         {
                             Assert.That(plan.Inputs[i].Length,Is.EqualTo(2));Assert.That(plan.Rows[i],Is.EqualTo(30240));
                             Assert.That((plan.Widths[i]==64&&plan.Columns[i]==2520)||(plan.Widths[i]==2520&&plan.Columns[i]==64),Is.True);
-                            operations.Add(new GpuBatchedMatmul());kind="native_batched_matmul";
+                            if(preparedWriter==null)operations.Add(new GpuBatchedMatmul());kind="native_batched_matmul";
                         }
                         else if(geluOutputs.Contains(selected[i]))
                         {
                             Assert.That(plan.Rows[i],Is.EqualTo(2520));Assert.That(plan.Widths[i],Is.EqualTo(3072));
-                            operations.Add(new GpuGelu(new TensorShape(1,2520,3072),releaseGeluCaches,fuseGeluInner,sleefGelu));kind=sleefGelu?"native_precise_sleef_gelu":"native_tanh_gelu";
+                            if(preparedWriter==null)operations.Add(new GpuGelu(new TensorShape(1,2520,3072),releaseGeluCaches,fuseGeluInner,sleefGelu));kind=sleefGelu?"native_precise_sleef_gelu":"native_tanh_gelu";
                         }
                         else if(softmaxOutputs.Contains(selected[i]))
                         {
                             Assert.That(plan.Rows[i],Is.EqualTo(30240));Assert.That(plan.Widths[i],Is.EqualTo(2520));
-                            operations.Add(new GpuSoftmax(softmaxVectorWidth));kind="native_softmax";
+                            if(preparedWriter==null)operations.Add(new GpuSoftmax(softmaxVectorWidth));kind="native_softmax";
                         }
                         else
                         {
                             Assert.That(staticProducts.Contains(selected[i]),Is.True);Assert.That(plan.Weights[i],Is.Not.Null);Assert.That(plan.Inputs[i].Length,Is.EqualTo(1));
                             Assert.That(plan.Rows[i]==2520||plan.Rows[i]==reference["profiles"][profile].Value<int>("feature_count"),Is.True);
-                            operations.Add(new GpuBlockedMatmul(plan.Widths[i],plan.Columns[i],plan.Weights[i],nativeStaticBlockSize));kind="native_static_block"+nativeStaticBlockSize;
+                            if(preparedWriter==null)operations.Add(new GpuBlockedMatmul(plan.Widths[i],plan.Columns[i],plan.Weights[i],nativeStaticBlockSize));kind="native_static_block"+nativeStaticBlockSize;
                         }
+                        if(preparedWriter!=null)preparedOperations.Add(GpuMediaBundlePreparation.ImageOperation(preparedWriter,plan,i,kind,nativeStaticBlockSize,softmaxVectorWidth,releaseGeluCaches,fuseGeluInner,sleefGelu));
                         operationRows.Add(new JObject{["output_index"]=selected[i],["kind"]=kind,["rows"]=plan.Rows[i],["width"]=plan.Widths[i],["columns"]=plan.Columns[i]});
                     }
                     parts=plan.Models;inputs=plan.Inputs;outputs=plan.Outputs;report["native_static_projection_count"]=staticProducts.Count;report["native_batched_matmul_count"]=binaryProducts.Count;report["native_softmax_count"]=softmaxes.Length;report["native_gelu_count"]=geluOutputs.Count;
@@ -519,6 +529,14 @@ namespace EmbeddingGemma.Validation.Tests
                         name="projection_output",index=projection.outputs[0],dataType=DataType.Float,shape=new DynamicTensorShape(2520,768)}});
                     Assert.That(before.inputs.Count,Is.EqualTo(1));Assert.That(after.inputs.Count,Is.EqualTo(1));
                     parts=new[]{before,after};inputs=new[]{new[]{"projection_input"}};outputs=new[]{"projection_output"};operations.Add(new GpuBlockedMatmul(768,768,weights,384));
+                }
+                if(preparedWriter!=null)
+                {
+                    Assert.That(nativeOperators&&nativePooling&&midpointRms&&nativeRotary&&sleefGelu&&nativeStaticBlockSize==192,Is.True);
+                    Assert.That(CoefficientsHash(original),Is.EqualTo(originalCoefficients));
+                    GpuMediaBundlePreparation.CommitImage(preparedWriter,profile,parts,preparedOperations,originalCoefficients);
+                    report["prepared_operation_count"]=preparedOperations.Count;report["inference_executed"]=false;
+                    report["phase"]="preparation_complete";report["success"]=true;Save();return;
                 }
                 if(planOnly)
                 {

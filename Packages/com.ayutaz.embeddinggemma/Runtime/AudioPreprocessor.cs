@@ -1,7 +1,11 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Unity.InferenceEngine;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace EmbeddingGemma
 {
@@ -10,11 +14,14 @@ namespace EmbeddingGemma
     /// owns its Worker and per-call input tensors, and returns independently owned outputs.
     /// GPU processing never downloads intermediate features or masks.
     /// </summary>
-    public sealed class AudioPreprocessor : IDisposable, IAudioPreprocessor
+    public sealed class AudioPreprocessor : IDisposable, IAsyncAudioPreprocessor
     {
         public BackendType Backend { get; }
         readonly string featureOutput, maskOutput;
         Worker worker;
+        Action releaseGpuCache, releaseCompiledCache;
+        readonly int ownerThread = Thread.CurrentThread.ManagedThreadId;
+        bool processing, disposeRequested;
 
         public AudioPreprocessor(Model model, BackendType backend)
         {
@@ -33,11 +40,16 @@ namespace EmbeddingGemma
             maskOutput = model.outputs[1].name;
             Backend = backend;
             worker = new Worker(model, backend);
-            if (worker.backendType != backend)
+            try
             {
-                Dispose();
-                throw new NotSupportedException("The requested backend was not created.");
+                if (worker.backendType != backend) throw new NotSupportedException("The requested backend was not created.");
+                if (backend == BackendType.GPUCompute)
+                {
+                    releaseGpuCache = GpuProjectionPipeline.CacheRelease(worker, model);
+                    releaseCompiledCache = GpuProjectionPipeline.CompletedBackendCacheRelease(worker);
+                }
             }
+            catch { Dispose(); throw; }
         }
 
         static bool Matches(Model model, string name, DataType dataType, TensorShape shape) =>
@@ -46,10 +58,60 @@ namespace EmbeddingGemma
 
         public AudioPreprocessingResult Process(AudioPcmInput input)
         {
-            if (worker == null) throw new ObjectDisposedException(nameof(AudioPreprocessor));
+            Check(input);
+            var inputs = new List<Tensor>();
+            try { return ProcessCore(input, inputs); }
+            finally { foreach (var tensor in inputs) tensor.Dispose(); }
+        }
+
+        void Check(AudioPcmInput input)
+        {
+            if (worker == null || disposeRequested) throw new ObjectDisposedException(nameof(AudioPreprocessor));
+            if (processing) throw new InvalidOperationException("Only one preprocessing call may be active.");
             if (input == null) throw new ArgumentNullException(nameof(input));
-            using var waveform = new Tensor<float>(new TensorShape(1, AudioPcmInput.ProfileSampleCount), input.Waveform.ToArray());
-            using var sampleMask = new Tensor<int>(new TensorShape(1, AudioPcmInput.ProfileSampleCount), input.SampleMask.ToArray());
+        }
+
+        /// <summary>
+        /// Holds inputs and copied outputs through GPU completion, then retires
+        /// the Worker's copied outputs, free buffers and compiled operator context.
+        /// Cancellation and Dispose are observed after that fence; await before
+        /// disposing borrowed stages. Only the caller's final vector needs readback.
+        /// </summary>
+        public async Task<AudioPreprocessingResult> ProcessAsync(AudioPcmInput input, CancellationToken cancellationToken = default)
+        {
+            cancellationToken.ThrowIfCancellationRequested(); Check(input);
+            if (Backend == BackendType.GPUCompute && (Thread.CurrentThread.ManagedThreadId != ownerThread || SynchronizationContext.Current == null || !SystemInfo.supportsGraphicsFence))
+                throw new NotSupportedException("GPU preprocessing requires Unity's creating main thread and graphics fences.");
+            var inputs = new List<Tensor>(); AudioPreprocessingResult result = null; processing = true;
+            try
+            {
+                try { result = ProcessCore(input, inputs); }
+                finally
+                {
+                    if (Backend == BackendType.GPUCompute)
+                    {
+                        // Retire even if scheduling/output validation failed or the
+                        // caller cancelled: submitted copies must finish first.
+                        var fence = Graphics.CreateGraphicsFence(GraphicsFenceType.AsyncQueueSynchronisation, SynchronisationStageFlags.AllGPUOperations);
+                        do { await Task.Yield(); } while (!fence.passed);
+                        try { releaseGpuCache?.Invoke(); } finally { releaseCompiledCache?.Invoke(); }
+                    }
+                }
+                cancellationToken.ThrowIfCancellationRequested();
+                if (disposeRequested) throw new ObjectDisposedException(nameof(AudioPreprocessor));
+                var owned = result; result = null; return owned;
+            }
+            finally
+            {
+                result?.Dispose(); foreach (var tensor in inputs) tensor.Dispose();
+                processing = false; if (disposeRequested) DisposeWorker();
+            }
+        }
+
+        AudioPreprocessingResult ProcessCore(AudioPcmInput input, List<Tensor> inputs)
+        {
+            var waveform = new Tensor<float>(new TensorShape(1, AudioPcmInput.ProfileSampleCount), input.Waveform.ToArray()); inputs.Add(waveform);
+            var sampleMask = new Tensor<int>(new TensorShape(1, AudioPcmInput.ProfileSampleCount), input.SampleMask.ToArray()); inputs.Add(sampleMask);
             if (Backend == BackendType.GPUCompute)
             {
                 // PCM upload is the explicit CPU input boundary, before preprocessing.
@@ -84,8 +146,12 @@ namespace EmbeddingGemma
 
         public void Dispose()
         {
+            disposeRequested = true; if (!processing) DisposeWorker();
+        }
+        void DisposeWorker()
+        {
             worker?.Dispose();
-            worker = null;
+            worker = null; releaseGpuCache = null; releaseCompiledCache = null;
         }
     }
 

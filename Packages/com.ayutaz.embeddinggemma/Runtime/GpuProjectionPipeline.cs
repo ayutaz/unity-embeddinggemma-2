@@ -83,7 +83,7 @@ namespace EmbeddingGemma
             catch { Dispose();throw; }
         }
 
-        static Action CacheRelease(Worker worker,Model model)
+        internal static Action CacheRelease(Worker worker,Model model)
         {
             const BindingFlags fields=BindingFlags.Instance|BindingFlags.NonPublic;
             var storage=typeof(Worker).GetField("m_Storage",fields)?.GetValue(worker);
@@ -122,7 +122,7 @@ namespace EmbeddingGemma
             };
         }
 
-        static Action CompletedBackendCacheRelease(Worker worker)
+        internal static Action CompletedBackendCacheRelease(Worker worker)
         {
             const BindingFlags fields=BindingFlags.Instance|BindingFlags.NonPublic;
             var backend=typeof(Worker).GetField("m_Backend",fields)?.GetValue(worker);

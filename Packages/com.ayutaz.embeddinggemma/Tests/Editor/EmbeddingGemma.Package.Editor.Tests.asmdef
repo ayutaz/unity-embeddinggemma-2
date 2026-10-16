@@ -1,7 +1,21 @@
 {
   "name": "EmbeddingGemma.Package.Editor.Tests",
-  "references": ["EmbeddingGemma.Runtime", "Unity.InferenceEngine", "Unity.InferenceEngine.Tokenization"],
-  "includePlatforms": ["Editor"],
-  "optionalUnityReferences": ["TestAssemblies"],
-  "autoReferenced": false
+  "references": [
+    "EmbeddingGemma.Runtime",
+    "Unity.InferenceEngine",
+    "Unity.InferenceEngine.Tokenization",
+    "Unity.Newtonsoft.Json"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "autoReferenced": false,
+  "overrideReferences": true,
+  "precompiledReferences": [
+    "nunit.framework.dll",
+    "Newtonsoft.Json.dll"
+  ]
 }

@@ -1,6 +1,6 @@
 # commit固定Git URL consumerの実動作確認
 
-> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+> 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 
 2026-10-10。Windows Editor / Unity 6000.3.16f1 / Sentis 2.6.1 / RTX 4070 Ti SUPER / Direct3D12で確認した。[機械監査した結果](results/m2-git-consumer-runtime-windows-20261010.json)に条件・NUnit・全順位・UI状態を記録する。
 

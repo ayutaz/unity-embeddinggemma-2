@@ -1,6 +1,6 @@
 # 音声encoder Runtime接続のTDD
 
-> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+> 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 
 2026-10-13。`AudioEncoderProfile` / `AudioFeatureEncoder` / `AudioEncodingResult`を追加した。前処理Tensorを借用し、encoderの投影済みsoft tokenを独立したdevice copyとして返す。モデル取得・監査・export、最終768次元APIは別契約。[使い方](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-feature-encoder.md)、[実測receipt](results/m4-audio-encoder-runtime-contract-windows-20261013.json)。
 

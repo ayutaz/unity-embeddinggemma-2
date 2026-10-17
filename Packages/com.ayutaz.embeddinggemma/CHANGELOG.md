@@ -2,11 +2,14 @@
 
 ## 0.1.0-pre.1 — Unreleased
 
-- PR #31 is being adapted to current main; fresh consumer and Player acceptance are pending.
+- Integrated PR #31: fresh fixed-Git consumer and Windows text-search IL2CPP Release / High-stripping Player acceptance, independent cold / warm FP32 GPU runs and normal exits.
+- Integrated PR #83: importable Image and Audio Search sample, audited six-module preparation and cache, GPU cancellation / retry / switching / disposal, async audio-preprocessing cache retirement.
+- Actual Windows media validation: six image and six audio cases across five profiles, mixed text-query search, rendered PlayMode UI, and 505 canonical EditMode tests. These source-qualified results do not qualify other devices or multimodal Players.
+- Refresh user documentation and roadmap; fresh-checkout multimodal model preparation, manual interaction, remaining sample UX, performance and platform qualification remain open.
 - 2026-10-16 integrated runtime snapshot: actual Texture / PCM inputs reach normalized768 GPU vectors for all18 image and18 audio role conditions. Original image and audio encoder gates retain learned coefficients, original references and strict tolerances. Source-specific evidence is retained in `docs/results`; these changes are integrated through PR #79; no release has been published.
 - Add staged `PartitionedAudioFeatureEncoder.EncodeAsync` and `AudioEmbedder.EmbedAsync`, with GPU-complete fences, completed cache retirement, owned intermediates, overlap rejection, cancellation and recovery. Only the final vector is downloaded; no CPU inference fallback. The failed synchronous12 GiB guard stop is retained separately.
 - Add an Editor-only exit/reload hook for the pinned Sentis2.6.1 shared64-byte buffer cleanup. Tested normal shutdowns report no Persistent warning; long-term allocation stability remains unqualified.
-- Actual FP32 / Float16 text regression and related API contracts pass189 tests. Required CI now passes the full six-signal pinned original acceptance; fresh CPU comparison failures remain separately recorded diagnostics. Player, other devices, performance and release qualification remain subsequent work.
+- Actual FP32 / Float16 text regression and related API contracts pass189 tests. Required CI now passes the full six-signal pinned original acceptance; fresh CPU comparison failures remain separately recorded diagnostics. Multimodal Player, other devices, performance and release qualification remain subsequent work.
 
 Earlier implementation checkpoints follow; their original counts and scope describe the state when each change was introduced. Current acceptance is summarized above and in `docs/status.md`.
 

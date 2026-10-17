@@ -1,6 +1,6 @@
 # layer 0 feed_forward1の保存モデル数値照合
 
-> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+> 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 
 2026-10-14 JST。norm_pre_attn入力から既に固定条件を超えるため、同一native文脈のfeed_forward1内部5段階を保存Sentis encoderへ対応付けて比較した。Runtime / model / 元参照 / 許容差を変更せず、正式Release / tagは作成しない。
 

@@ -1,6 +1,6 @@
 # font修正後の固定Git導入と測定fixtureの寿命
 
-> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+> 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 
 2026-10-10。PR #29統合main `fc66af7bc9150ddcf759917a5e9c92b2c5afa991`を新しい空のconsumer `artifacts/j`へ固定Git URLで導入した。
 [結果JSON](results/m2-font-git-consumer-windows-20261010.json)は、最初のGit導入・実モデル結果と、その後のEditorテスト2ファイルだけの修正を分けて記録する。

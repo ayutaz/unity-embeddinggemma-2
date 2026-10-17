@@ -1,6 +1,6 @@
 # 共通マルチモーダル本体のRuntime契約
 
-> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+> 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 
 更新日: 2026-10-13。[全体TDD計画](multimodal-tdd-plan.md)のC3 / C4を進める。`MultimodalBackboneProfile`と`MultimodalBackbone`をUPM Runtimeへ追加し、合成project済み特徴量を使う実text重み・1024長backboneのSentis受け入れを確認した。**画像 / 音声encoder、公式prompt構築、GPU前処理から最終768次元までのend-to-end照合は未完了。** 既存consumerを固定Git Runtimeへ更新した4条件も合格した。最終candidateの空consumerと実encoderのend-to-endは別の残作業とする。以下の初回TDD / import失敗の履歴と、末尾の修正後実モデル4条件の合格を分けて記録する。
 

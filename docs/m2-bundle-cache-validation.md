@@ -1,6 +1,6 @@
 # Player bundleのcache再利用と完全SHA-256高速化
 
-> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+> 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 
 URL展開をrunごとの新しいdirectoryへ行うと、反復mobile検証のたびに約1.68GBをcopyして保持してしまう。検証PlayerのURL経路を、`persistentDataPath/EmbeddingGemmaValidation/BundleCache`にある所有marker付きcacheへ変更した。配布UPM Runtimeは変更していない。
 

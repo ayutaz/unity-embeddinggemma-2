@@ -1,6 +1,6 @@
 # 音声encoderへのTensor接続
 
-2026-10-16、Draft PR #81の`PartitionedAudioFeatureEncoder`は元6信号・両profileの実GPU比較に合格しています。全824,320値で元`atol=1e-5 / rtol=1e-4`の超過0、計算 / 入力CPU fallback0。Windows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER / D3D12の固定sourceでの結果です。音声ONNXの必須CIは別に失敗中で、正式リリースの認定ではありません。
+2026-10-17：`PartitionedAudioFeatureEncoder`はmain統合済みです。元6信号・両profileの実GPU比較は全824,320値で元`atol=1e-5 / rtol=1e-4`の超過0、計算 / 入力CPU fallback0。Windows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER / D3D12の固定sourceでの結果です。後続の必須CIも合格しています。正式リリースや他端末の合格は意味しません。[検証状況と固定証拠](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)を参照してください。
 
 `PartitionedAudioFeatureEncoder`は`IAsyncAudioFeatureEncoder`を実装するGPUCompute専用の低レベルAPIです。固定profileと係数を監査した分割Model、operation接続表、`IGpuTensorOperation[]`を受け取ります。モデル準備・自動選択・取得は行いません。最終768次元APIは[AudioEmbedder](audio-embedder.md)です。
 

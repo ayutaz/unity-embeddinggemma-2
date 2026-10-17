@@ -1,16 +1,37 @@
 # 検索サンプル用モデルの取得・変換・配置・更新
 
-> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。実モデル実行は停止中。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
+更新: 2026-10-17。[検証状況](status.md) / [ロードマップ](roadmap.md)。テキストの準備手順と、画像・音声bundleの未整備の範囲を分けて説明します。
 
-## 現在の成果物利用と再生成の方針
+## 何を準備できるか（2026-10-17）
 
-実モデル検証は2026-10-14に停止した。以下のtextモデル準備手順の固定source実測は維持する。画像はQuery / Document / RawのPython参照18件を生成済み、音声Query / Rawと修正後ONNXの実モデルgateは未完了。[最新状態](status.md)。
+| 利用する機能 | 必要なもの | 準備経路 |
+| --- | --- | --- |
+| Text Search / TextEmbedder | `.sentis`、tokenizer、監査receipt | 下記1〜4のActions取得→監査→Editor変換 |
+| Image and Audio Search | `bundle.json`と`objects/`。textと登録対象のimage / audio module | 既存のqualified graph入力cacheを持つ開発・検証環境で生成。空checkoutからの利用者向け一括手順・配布は未整備 |
 
-監査済み保存graph・入力・参照JSONをhashとproducer SHAで再利用し、旧goldenを上書きしない。artifact期限切れ / 不足は未取得として記録し、再取得・再生成が必要な場合だけActionsを使う。RuntimeとvalidationのSHA、producerとgraph SHAは別々に監査する。GPU専用fixtureのコード変更だけで古いconsumerのUPM解決が更新されたとは扱わない。モデル・大きい中間値はGit / LFSへ含めない。
+モデルはUPM・Git・LFSへ含めず、自動ダウンロードもしません。対象revisionは `914f7f89142e33e77833254d9c9b90c3cef7303b`。基準EditorはUnity6000.3.21f1 / Sentis2.6.1です。下のテキスト手順の旧16f1実測と、後続の21f1検証を区別します。
 
-対象: Unity 6000.3.16f1 / Sentis 2.6.1、固定`google/embeddinggemma-2` revision `914f7f89142e33e77833254d9c9b90c3cef7303b`。TextSearchの6文書 / 4queryとM1の15入力を使う。モデルをGit / LFSへコミットしない。
+### 画像・音声bundleについて
 
-モデル参照と`.pt2`の生成はActions、Sentisの`.sentis`変換と実GPU検証は認証済みEditorで行う。ローカル操作にGitHubのUnity Secretsは不要。Linux CPUの任意手動Unity workflowは別経路で、未実行を合格にしない。
+画像・音声のAPI・保存bundleの実GPU検証は完了していますが、新規利用者がモデル一式を準備できる経路の整備は別の残件です。配布済みbundleのdownload URLはありません。Text Searchの準備メニューだけで画像・音声moduleは作れません。
+
+既存のqualified graph入力を持つmaintainer向けの生成entry point・環境変数・producer制約は[サンプル検証記録のモデル準備](multimodal-search-sample.md)を参照してください。その手順は既存cacheが前提で、空checkoutからの変換コマンドではありません。準備後はbundleのproducer、全objectのsize・SHA256を照合し、実推論を別途検証します。
+
+準備済みのbundleがある場合は、[サンプル手順](../Packages/com.ayutaz.embeddinggemma/Samples~/MultimodalSearch/README.md)へ進めます。固定profileに対応した入力が必要です。新規準備・期限切れartifactからの回復を含む整備は[ロードマップの優先1](roadmap.md)です。
+
+### テキストモデルの準備
+
+以下は固定sourceのテキスト準備経路です。成功したActionsのartifactと実行sourceを照合し、既存goldenを上書きしません。RuntimeのGit SHA、参照producer、model graph hashはそれぞれ区別してください。モデル参照と`.pt2`生成はActions、Sentis形式への保存はEditorで行います。配置・変換の成功だけでは実GPUの数値合格になりません。
+
+モデル準備用の`tools/`はUPMには含まれません。Git、GitHub CLI、uv、対象Unity Editorを用意し、このリポジトリもcloneしてください。
+
+```powershell
+git clone https://github.com/ayutaz/unity-embeddinggemma-2.git
+cd unity-embeddinggemma-2
+gh auth login
+```
+
+以降はこのcloneのルート、または明示した`tools/`から実行します。認証済みなら`gh auth login`は不要です。モデルの利用条件は[ライセンス確認](model-license.md)を参照してください。
 
 ## 1. 成功したCI成果物を取得する
 
@@ -52,7 +73,7 @@ uv run --locked python -m embeddinggemma_tools.package --consumer ../artifacts/c
 uv run --locked python -m embeddinggemma_tools.stage --source "../artifacts/download/$runId" --project ../artifacts/c --source-commit $checkoutSha --search
 ```
 
-consumerをUnity 6000.3.16f1で開き、依存解決・compileの完了を確認する。上の`--automation`は検証用uloopと、外部Acceleratorを無効にするプロジェクト設定を加える。
+consumerをUnity 6000.3.21f1で開き、依存解決・compileの完了を確認する。上の`--automation`は検証用uloopと、外部Acceleratorを無効にするプロジェクト設定を加える。
 起動方法と失敗ログの扱いは [自動操作手順](automation.md)。起動待ちが失敗しても、後続の成功と混ぜない。
 
 Windowsではconsumerの絶対パスを短くする。今回の長いconsumerパスでは、267文字のuloopテンプレートをPowerShellは認識したがUnity側で`DirectoryNotFoundException`となり、起動接続待ちもタイムアウトした。短い`artifacts/c`で同じ新規導入を行うと起動・compile・自動操作が成功した。既存プロジェクトの移動やLibraryのコピーで回避せず、空の短いパスへ導入し直して検証する。
@@ -83,7 +104,7 @@ Assets/StreamingAssets/EmbeddingGemmaTextSearch/
 
 Float16重みを試す場合は`model-float16.sentis`を指定する。GPU非対応・モデル未準備・不正な入力・推論失敗は画面に表示し、CPUへ自動切り替えしない。
 同点は文書IDのordinal順。固定例の成功から任意の検索文の品質を保証しない。
-現在のサンプルは通常のファイルパスを同期読み込みする。Androidのjar内StreamingAssetsなどを含むPlayer配置は後続の端末検証で対応を確認する。
+通常filesystemパスに加え、Text Searchはfile URL / Android jar経路をcacheへ展開する実装があります。Android実機での配置・実GPU推論は未検証です。
 
 ## 5. 更新とartifact失効
 

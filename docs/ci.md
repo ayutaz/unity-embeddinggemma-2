@@ -1,6 +1,12 @@
 # CI と開発手順
 
-最新状況（2026-10-16）: main `012f3cc` のCI38893482024は合格。PR #31の新しいcandidateで標準導入・Playerを再検証します。以下の過去runは当時の証拠です。
+更新: 2026-10-17。PR #31・#83はマージ済みです。#83の最終head `613ada8` の[CI38939320058](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38939320058)は全15 job成功し、統合main `a965c09`と同じtreeです。[現在の対応範囲](status.md) / [ロードマップ](roadmap.md)。以下の過去runは当時の証拠です。
+
+## 現行の必須CI
+
+`.github/workflows/ci.yml`はPR・mainへのpush・手動起動で実行します。Python3.13 / 3.14 × Windows / Ubuntuの単体テスト、workflow lint、package監査、実モデル参照・exportと固定音声6条件のONNX比較を実行し、`Required CI`で集計します。
+
+通常CIは文書だけの変更でも実モデルのCPU参照生成・比較を含みます。これはUnity RuntimeをCPUで推論する設定ではありません。Unity実GPU・UI・Player・実機の受け入れは別に実施します。GPUテストのskipをGPU成功にせず、CI成功だけで正式公開条件を満たしたとしません。
 
 ## 固定音声参照の保存と更新（2026-10-16）
 
@@ -14,7 +20,7 @@ main統合PR #79の必須CI38883782797は全15job成功です。元artifact `118
 gh workflow run frozen-audio-prefix-onnx.yml --ref main -f preserve_original=true
 ```
 
-> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。実モデル実行は停止中。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
+> 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 
 ## 2026-10-14時点のCIとGPU受け入れの区別
 

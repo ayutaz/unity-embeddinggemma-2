@@ -1,6 +1,6 @@
 # 大きいGPU constantの分割転送
 
-> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+> 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 
 2026-10-14 JST。Sentis 2.6.1の`ComputeTensorData.Upload`は全wordを1回の`ComputeBuffer.SetData`へ渡す。保存済みbackboneの最大constantはFP32 512 MiB / Float16 256 MiBで、先のD3D12 logは16 MiB bufferに512 MiBを要求していた。`GpuConstantWorker`はWorker所有の既存constant Tensorを、8 MiB以下のraw int32 wordコピーでGPUへ転送してからscheduleする。Modelのinputs / layers / constants / weightsは変更しない。
 

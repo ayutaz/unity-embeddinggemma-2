@@ -1,8 +1,8 @@
 # Unity のローカル自動操作
 
-更新日: 2026-10-16。手順1〜3の実行を再開。必要なWindows GPU検証を対象ごとに直列実行し、上限・PID・結果を記録します。以下の2026-10-14 checkpointは当時の記録です。
+更新: 2026-10-17。PR #31 / #83のWindows consumer・text Player・画像音声sample検証は完了しています。[現在の対応範囲](status.md) / [ロードマップ](roadmap.md)。以下のcheckpointは当時の実行記録です。新しい実行では固定source・実GPU・PID・上限・終了を対象ごとに記録します。
 
-> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。実モデル実行は停止中。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
+> 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 
 ## 2026-10-14時点の実モデル実行方針
 
@@ -21,7 +21,7 @@ GPU専用へ変更した対象は別validation packageの `EmbeddingGemma.Valida
 更新日: 2026-10-10（main統合状況を更新。Unityの実測は以前の記録を維持）
 最新のmain / PR / CIと実行範囲は [現在の状態](status.md)、UPM移行の検証は [パッケージ検証](m2-package-validation.md)を参照。
 
-Unity 6000.3.16f1 をローカルで起動し、Unity CLI Loop を介してコンパイル・EditMode テスト・ログ取得を行う。
+現在の基準Unity 6000.3.21f1を使用し、Unity CLI Loopを介してコンパイル・EditModeテスト・ログ取得を行う。16f1で記録した過去の数値は変更しない。
 Python のモデル取得・変換は GitHub Actions に残す。ローカルで認証済みの Editor を使うため、GitHub Secrets は不要。
 
 ## 導入済みの構成
@@ -30,7 +30,7 @@ Python のモデル取得・変換は GitHub Actions に残す。ローカルで
 
 | 対象 | 固定バージョン |
 | --- | --- |
-| Unity | 6000.3.16f1 (`a56f230f6470`) |
+| Unity | 6000.3.21f1 (`c02631ffc030`、現在のProjectVersion.txt) |
 | Sentis | 2.6.1 |
 | Unity CLI Loop UPM パッケージ | 3.14.0（manifest / packages-lock） |
 | uloop dispatcher | 3.8.1（`artifacts/uloop/bin/uloop.exe`） |
@@ -141,7 +141,7 @@ artifact の保持期間は3日。失効した場合は CI で再生成する。
 M1完了時はPR #1〜#4をmain `8146107`へ統合し、当時のmain CI（run `37801650704`）は4環境各64件合格。現在のmainはPR #30後の `6f55a85`、[CI run 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)の全8 job成功。CIのPython照合とローカルSentis実測は区別する。
 保存・量子化・測定とソース対応は [M1完了検証](m1-completion-validation.md)を参照。
 PR #6でUPM移行の導入・compile・契約29件と元プロジェクトの実モデルM1 3件 / API 2件が合格した。全保存・量子化・測定を移行後に再実行した結果ではない。
-検索サンプルは元プロジェクトと後続の固定Git consumerで実モデル4条件・画面 / cacheを確認済み。[最新のGit導入](m2-font-git-consumer-validation.md)。通常表示sample PlayerはGUI / GPU検索成功後に異常終了し、[sample検証と終了監査](m2-player-sample-validation.md)を保持する。他環境 / 実機・candidate / tag導入・正式配布は [M2計画](m2-plan.md)へ記載する。
+検索サンプルは元プロジェクトと後続の固定Git consumerで実モデル4条件・画面 / cacheを確認済み。[当時のGit導入](m2-font-git-consumer-validation.md)。通常表示sample Playerの過去の異常終了は[sample検証と終了監査](m2-player-sample-validation.md)に保持し、その後PR #31の固定sourceで独立2起動の正常終了を確認した。[Player受け入れ](results/m2-current-main-player-acceptance-20261017.json)。他環境・最終candidate・正式公開の残件は[ロードマップ](roadmap.md)を参照。
 クラウドUnity workflowはSecretsが必要なLinux CPUの手動補助検証のみ。M1のWindows CPU/GPUCompute合格はこのローカルハーネスで確認する。
 詳細な履歴は [検証記録](m1-validation.md)を参照。
 

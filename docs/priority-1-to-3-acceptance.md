@@ -2,6 +2,8 @@
 
 更新: 2026-10-18。依頼「3まで進めてください」の範囲は、[ロードマップ](roadmap.md)のモデル準備・利用者操作・性能改善です。測定項目だけを終えて全体を完了にはしません。以下は固定された検証記録の監査であり、進行中のプロセスの成功を先取りしません。
 
+[元の9要件と実行記録の照合](results/priority-1-to-3-requirement-audit-adf7c24-20261018.json)を追加しました。PR #85 / #86 / #87の固定headを組み合わせたローカルpreviewで、取得41契約・実HTTPS7件・Windows counter21件の計69件が成功しました。SDK packageとvalidationは実行済みcomponentから変更していません。これはツールの組み合わせ検証であり、実モデル・実GPU・公開取得・実UIの追加合格ではありません。CI欄は取得時点のsnapshotで、最新headのchecksは各PRで確認します。
+
 ## 残タスク
 
 | 要件 | 現在の証拠 | 残る作業・完了条件 |
@@ -11,9 +13,9 @@
 | 2a: 固定Git consumerの操作 | [画像・音声登録、日英検索、キャンセル・再試行・切替・解放](results/fresh-git-native-ui-e28a5fd-20261018.json)と正常終了 | 公開手順で取得したモデルと最終candidateで再確認。非対応入力・モデル欠落・復帰も含め、最新sample修正を過去sourceの操作成功だけで合格にしない |
 | 2b: プレビュー・再生・停止 | 上記の画像プレビューと再生、別のwarm起動での[音声途中停止・解放](results/native-audio-early-stop-e28a5fd-20261018.json) | 最終candidateでの操作と統合。再生位置の進行を聴感品質の評価へ拡張しない |
 | 2c: 実マイク | 明示操作・失敗処理の実装と契約テスト。実録音は未実行 | 録音の明示許可後、開始・停止・中断復帰を実機で確認。権限拒否・deviceなしの扱いも記録。固定PCMやfake deviceを実マイク成功にしない |
-| 3a: 初回・warm・反復とstage別CPU/GPU時間 | 新SDK `d7b2233` の画像3・音声2 profile×両形式・40回で同一入力CPU/wall・独立参照・解放・exit0、encoder 17,176と前処理/backbone 80のGPU区間を確認。[media集約](media-gpu-submission-observations.md)と[同SDKのtext両形式4反復・停止CPU履歴](text-current-sdk-observations.md)を照合 | load/releaseのGPU時間の有無と測定範囲、非同期allocationの代表区間・個別stageの測定範囲と欠測を最終監査する。GPU Recorderと履歴の差を保持し、CPU wallとGPU queue区間を加減してkernel時間にしない |
+| 3a: 初回・warm・反復とstage別CPU/GPU時間 | 新SDK `d7b2233` の画像3・音声2 profile×両形式・40回で同一入力CPU/wall・独立参照・解放・exit0、encoder 17,176と前処理/backbone 80のGPU区間を確認。[media集約](media-gpu-submission-observations.md)と[同SDKのtext両形式4反復・停止CPU履歴](text-current-sdk-observations.md)を照合 | [load/release](load-release-measurement-scope.md)・[OS counter](windows-gpu-engine-observations.md)・非同期区間の範囲と欠測は監査済み。load/release全区間のGPU時間、個別stageの専有allocationは未取得であり、性能全体の合格にはしない。GPU Recorderと履歴の差を保持し、CPU wallとGPU queue区間を加減してkernel時間にしない |
 | 3a: ホスト・VRAM・Editor負荷 | media 9プロセスとtext両形式でtimestamp付きGPU memoryを確認し、欠測を明記。[Editor検索割り当て・空/再利用Library](editor-search-allocation-observations.md)は各10 pass / skip0 / exit0。[frame GC controlと代表実音声](async-frame-allocation-observations.md)も校正・記録欠落のRed・接続後Greenを確認。[両sample導入後の明示再構築](editor-index-rebuild-observations.md)に加え、[EditMode GC校正・実再構築中のframe全体allocationとnative memory](editor-frame-allocation-observations.md)は7 pass / skip0 / exit0、2反復で40文書と両scene保持 | 背景indexの専有allocation・非同期allocationの測定範囲と欠測の根拠を最終監査する。frame全体の値・プロセス全体・stage・寿命ピークと、重なるEditor時間を加算しない |
-| 3b: FP32/Float16と原因別改善 | [出力確保の新SDK候補](gpu-write-only-output-allocation.md)はTDD・GPU演算等120件、両形式の固定画像各4回byte一致と計測付きwarm反復の改善、[全6 module×両形式の単独参照32ケース](results/gpu-output-d7b2233-all-module-isolated-reference-20261018.json)、両形式の混在全順位・再試行・解放・exit0を確認 | 新SDKの40回の同一入力・CPU/wall/GPU・メモリ観測を基準に残る性能項目を受け入れる。元の精度・全順位・GPU要件・正常終了を維持し、旧sourceの成功や保存容量の減少を新SDK全体の合格・高速化にしない |
+| 3b: FP32/Float16と原因別改善 | [出力確保の新SDK候補](gpu-write-only-output-allocation.md)はTDD・GPU演算等120件、両形式の固定画像各4回byte一致と計測付きwarm反復の改善、[全6 module×両形式の単独参照32ケース](results/gpu-output-d7b2233-all-module-isolated-reference-20261018.json)、両形式の混在全順位・再試行・解放・exit0を確認 | 固定Windows/GPU・入力での原因別改善と回帰は監査済み。元の精度・全順位・GPU要件・正常終了を維持し、通常API全体・任意入力・形式間の速度保証へ拡張しない。3aの欠測と最終candidateの受け入れは別に残す |
 | delivery: PRと最終監査 | PR #85 UX、#86取得、#87性能・Float16が未統合。#87は#85に依存 | 最新headのRequired CI、差分・依存を確認し、依頼範囲内で統合。最終sourceとmodel hashへ全記録を対応させ、上記全行の証拠を揃えてから優先1〜3を完了とする |
 
 ## そのまま維持する失敗と境界

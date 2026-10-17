@@ -67,7 +67,7 @@ namespace EmbeddingGemma.Validation.Tests
             var captureFrames = Environment.GetEnvironmentVariable("EG_EDITOR_REBUILD_FRAME_ALLOCATION") == "1";
             var enabled = Profiler.enabled; var driver = ProfilerDriver.enabled;
             var editor = ProfilerDriver.profileEditor; var memory = Profiler.GetAreaEnabled(ProfilerArea.Memory);
-            var cpu = Profiler.GetAreaEnabled(ProfilerArea.CPU);
+            var cpuAreaEnabled = Profiler.GetAreaEnabled(ProfilerArea.CPU);
             try
             {
                 if (captureFrames)
@@ -171,7 +171,7 @@ namespace EmbeddingGemma.Validation.Tests
                 {
                     ProfilerDriver.enabled = false; Profiler.enabled = false;
                     ProfilerDriver.profileEditor = editor; Profiler.SetAreaEnabled(ProfilerArea.Memory, memory);
-                    Profiler.SetAreaEnabled(ProfilerArea.CPU, cpu);
+                    Profiler.SetAreaEnabled(ProfilerArea.CPU, cpuAreaEnabled);
                     Profiler.enabled = enabled; ProfilerDriver.enabled = driver;
                 }
                 if (Directory.Exists(Folder)) report["owned_fixture_removed"] = AssetDatabase.DeleteAsset(Folder);

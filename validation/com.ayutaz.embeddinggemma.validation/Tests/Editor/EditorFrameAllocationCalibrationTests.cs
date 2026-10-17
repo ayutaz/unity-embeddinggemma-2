@@ -41,7 +41,7 @@ namespace EmbeddingGemma.Validation.Tests
             report["background_and_observer_ceiling_bytes"] = 1024 * 1024;
             var enabled = Profiler.enabled; var driver = ProfilerDriver.enabled;
             var editor = ProfilerDriver.profileEditor; var memory = Profiler.GetAreaEnabled(ProfilerArea.Memory);
-            var cpu = Profiler.GetAreaEnabled(ProfilerArea.CPU);
+            var cpuAreaEnabled = Profiler.GetAreaEnabled(ProfilerArea.CPU);
             try
             {
                 Profiler.SetAreaEnabled(ProfilerArea.CPU, false); Profiler.SetAreaEnabled(ProfilerArea.Memory, true);
@@ -81,7 +81,7 @@ namespace EmbeddingGemma.Validation.Tests
             {
                 ProfilerDriver.enabled = false; Profiler.enabled = false;
                 ProfilerDriver.profileEditor = editor; Profiler.SetAreaEnabled(ProfilerArea.Memory, memory);
-                Profiler.SetAreaEnabled(ProfilerArea.CPU, cpu);
+                Profiler.SetAreaEnabled(ProfilerArea.CPU, cpuAreaEnabled);
                 Profiler.enabled = enabled; ProfilerDriver.enabled = driver;
             }
         }

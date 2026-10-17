@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "runtime_source": "d1548acbe7bf6cb838da60fab66dc7a374909b8a",
+  "all6_prepared_module_numerical_acceptance": true,
+  "scope": "Actual Windows Editor D3D12 local-file SDK tests of prepared FP32 models, original pinned references; not fresh-Git/manualUI/public acquisition/Float16/performance acceptance",
+  "modules": [
+    {
+      "module": "image-square",
+      "audit": "image-square-bounded-softmax-acceptance-20261017.json",
+      "sha256": "5176ac83d11fac43ee57f1325cd412bd4a173f5c154321cd295c4c4bb55c9ded",
+      "case_count": 2,
+      "minimum_cosine": 0.9999999999995679,
+      "exit_code": 0
+    },
+    {
+      "module": "image-landscape",
+      "audit": "image-landscape-bounded-softmax-acceptance-20261017.json",
+      "sha256": "c1d537ceec44f96f26245ab070e8b278b8621dbf9ee389966f0fd7797d04e2f2",
+      "case_count": 2,
+      "minimum_cosine": 0.9999999999989995,
+      "exit_code": 0
+    },
+    {
+      "module": "image-portrait",
+      "audit": "image-portrait-bounded-softmax-acceptance-20261017.json",
+      "sha256": "00ad8d2b08e52dd296e1cfc30499604757ecaa6ea211f47cff0b3d9cbef25a0c",
+      "case_count": 2,
+      "minimum_cosine": 0.9999999999976252,
+      "exit_code": 0
+    },
+    {
+      "module": "audio-1119",
+      "audit": "audio-1119-bounded-softmax-acceptance-20261017.json",
+      "sha256": "4f661b8e715386a66286d46e9236842b104ed23097791578b5a36e90e83bdf25",
+      "case_count": 5,
+      "minimum_cosine": 0.9999998052055729,
+      "exit_code": 0
+    },
+    {
+      "module": "audio-839",
+      "audit": "audio-839-bounded-softmax-acceptance-20261017.json",
+      "sha256": "1dee1583c19d481f9c1eaceaf7ebae68a16ab80171327a8b0fd0dae11a7a7580",
+      "case_count": 1,
+      "minimum_cosine": 0.9999999999981806,
+      "exit_code": 0
+    },
+    {
+      "module": "text",
+      "audit": "text-d1548ac-acceptance-20261018.json",
+      "sha256": "6d537cba26a9d93b2ad5f5b1c9c815317945d2100eb4decaf5bd88969a9914d0",
+      "case_count": 4,
+      "minimum_cosine": 0.9999999999998792,
+      "exit_code": 0
+    }
+  ],
+  "total_reference_cases": 16,
+  "integration_audit": "multimodal-sample-d1548ac-20261018.json",
+  "integration_sha256": "75af2d81fc8d185b4bac20df4487b2602d92df97a2a11ec2d5bc7f88082718ac",
+  "resource_condition_change": "Square ran with~2GiB freeGPU; later trials after existingWindowsTerminalPID7788 disappeared/new139868 and freeGPU~14GiB. No agent termination of otherapps. Different input/resource conditions cannot be aggregated as one performance baseline.",
+  "interrupted_trial": "Landscape initial supervisor/Unity disappeared, XML missing; preserved interruption receipt, not pass. Retried after authoritative terminal check and resource change.",
+  "remaining": [
+    "Public-source all6 cold acquisition",
+    "Fresh fixed-Git consumer and actual mouse/keyboard UI",
+    "Authorized live microphone",
+    "Same-input cold/warm/repeats, actualGPU time/VRAM/Editor allocation",
+    "Float16-weights isolated/consecutive and ranks",
+    "Exact-headCI/final requirement audit"
+  ]
+}

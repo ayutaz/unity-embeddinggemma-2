@@ -125,6 +125,9 @@ namespace EmbeddingGemma.Validation.Tests
                         ["exclusive_background_allocation_bytes"] = null,
                         ["allocation_scope"] = "Not measured: synchronous main-thread marker bytes cannot describe background rebuild allocation. No zero/all-thread attribution inferred." };
                     ((JArray)report["rounds"]).Add(row); File.WriteAllText(output, report.ToString());
+                    if (Environment.GetEnvironmentVariable("EG_EDITOR_REBUILD_FRAME_ALLOCATION") == "1")
+                        Assert.That(row["frame_managed_allocation"], Is.Not.Null,
+                            "An explicit rebuild allocation observation must not inherit the synchronous search marker's pass.");
                     Assert.That(polls, Is.GreaterThan(0)); Assert.That(Settled(database), Is.True);
                     Assert.That(found, Is.True); Assert.That(timer.Elapsed.TotalSeconds, Is.GreaterThan(0));
                     Assert.That(scenesFound.All(scene => scene.Value<bool>("found")), Is.True,

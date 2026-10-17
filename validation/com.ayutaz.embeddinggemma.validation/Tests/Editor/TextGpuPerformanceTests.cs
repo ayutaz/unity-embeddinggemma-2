@@ -20,6 +20,7 @@ namespace EmbeddingGemma.Validation.Tests
     /// <summary>Existing synchronous text API, fixed same-input rounds, actual GPU timestamps; no throughput claim.</summary>
     public sealed class TextGpuPerformanceTests
     {
+        [UnityTearDown] public IEnumerator Exit() { if (Application.isPlaying) yield return new ExitPlayMode(); }
         static string Hash(string path)
         { using var stream=File.OpenRead(path); using var hash=SHA256.Create(); return BitConverter.ToString(hash.ComputeHash(stream)).Replace("-","").ToLowerInvariant(); }
         static TimeSpan Cpu() { using var process=Process.GetCurrentProcess(); return process.TotalProcessorTime; }
@@ -42,6 +43,7 @@ namespace EmbeddingGemma.Validation.Tests
                 ["host_memory_limit_bytes"]=GpuMediaExecutionPolicy.CurrentMemoryLimitBytes,["rounds"]=new JArray(),
                 ["cold_definition"]="New process/session and first inference after load. OS file/shader caches are not purged.",
                 ["timing_scope"]="Profiled synchronous API calls. GPU inclusive timestamp intervals can include queue/idle gaps. GPU parent and child timings overlap; never add them.",
+                ["allocation_scope"]="GC cumulative bytes allocated on this main thread during each interval, including measurement wrapper allocations. Async load/release intervals include unrelated Editor callbacks; excludes other threads and native allocations.",
                 ["throughput_measured"]=false,["microphone_started"]=false };
             void Save()=>File.WriteAllText(output,report.ToString()); Save();
             var previousEnabled=Profiler.enabled; var previousGpu=Profiler.GetAreaEnabled(ProfilerArea.GPU);
@@ -62,22 +64,30 @@ namespace EmbeddingGemma.Validation.Tests
                 ProfilerDriver.connectedProfiler=candidates.Contains(previousTarget)?previousTarget:candidates[0];
                 ProfilerDriver.enabled=true; ProfilerDriver.profileEditor=true; Profiler.enabled=true; Profiler.SetAreaEnabled(ProfilerArea.GPU,true);
                 for(var frame=0;frame<5;frame++) yield return null;
-                var loadCpu=Cpu(); var load=Stopwatch.StartNew();
+                report["phase"]="load"; report["load_begin_utc"]=DateTime.UtcNow.ToString("O"); Save();
+                var loadAllocated=GC.GetAllocatedBytesForCurrentThread(); var loadCpu=Cpu(); var load=Stopwatch.StartNew();
                 var loading=GpuMediaBundle.Open(directory).LoadAsync("text",cancellation.Token);
                 while(!loading.IsCompleted)
                 { if(MediaExecutionMemory.Peak()>GpuMediaExecutionPolicy.CurrentMemoryLimitBytes)cancellation.Cancel(); EditorApplication.QueuePlayerLoopUpdate(); yield return null; }
                 session=loading.GetAwaiter().GetResult(); load.Stop();
+                Assert.That(session.Backend,Is.EqualTo(Unity.InferenceEngine.BackendType.GPUCompute));
+                report["actual_backend"]=session.Backend.ToString();
                 report["load_wall_seconds"]=load.Elapsed.TotalSeconds; report["load_process_cpu_seconds"]=(Cpu()-loadCpu).TotalSeconds;
+                report["load_main_thread_managed_allocated_bytes"]=GC.GetAllocatedBytesForCurrentThread()-loadAllocated;
+                report["load_end_utc"]=DateTime.UtcNow.ToString("O");
                 report["load_gpu_elapsed_ns"]=null; report["load_host_lifetime_peak_bytes"]=MediaExecutionMemory.Peak(); Save();
                 foreach(var name in new[] {"first","warm","repeat-1","repeat-2"})
                 {
+                    report["phase"]=name; Save(); var beginUtc=DateTime.UtcNow;
                     var sampler=CustomSampler.Create("EmbeddingGemma.TextBenchmark."+name,true);
                     var recorder=sampler.GetRecorder(); recorder.enabled=true; recorders.Add(recorder);
                     Assert.That(recorder.isValid,Is.True);
-                    var cpu=Cpu(); var watch=Stopwatch.StartNew(); float[] actual;
+                    var allocatedBefore=GC.GetAllocatedBytesForCurrentThread(); var cpu=Cpu(); var watch=Stopwatch.StartNew(); float[] actual;
                     sampler.Begin();
                     try { actual=session.EmbedQuery((string)query["text"]); }
                     finally { sampler.End(); watch.Stop(); }
+                    var endUtc=DateTime.UtcNow;
+                    var allocatedBytes=GC.GetAllocatedBytesForCurrentThread()-allocatedBefore;
                     var cpuSeconds=(Cpu()-cpu).TotalSeconds;
                     var cosine=TextSearchIndex.Cosine(actual,expected); var norm=actual.Sum(value=>(double)value*value);
                     Assert.That(actual.Length,Is.EqualTo(768)); Assert.That(cosine,Is.GreaterThanOrEqualTo(GpuMediaExecutionPolicy.CurrentMinimumCosine));
@@ -86,6 +96,8 @@ namespace EmbeddingGemma.Validation.Tests
                     var capture=Path.ChangeExtension(output,null)+"-"+name+".bin"; Assert.That(File.Exists(capture),Is.False);
                     var bytes=new byte[actual.Length*4]; Buffer.BlockCopy(actual,0,bytes,0,bytes.Length); File.WriteAllBytes(capture,bytes);
                     var row=new JObject { ["round"]=name,["wall_seconds"]=watch.Elapsed.TotalSeconds,["process_cpu_seconds"]=cpuSeconds,
+                        ["begin_utc"]=beginUtc.ToString("O"),["end_utc"]=endUtc.ToString("O"),
+                        ["main_thread_managed_allocated_bytes"]=allocatedBytes,["main_thread_managed_allocated_bytes_per_second"]=allocatedBytes/watch.Elapsed.TotalSeconds,
                         ["host_lifetime_peak_bytes"]=MediaExecutionMemory.Peak(),["unity_allocated_bytes"]=Profiler.GetTotalAllocatedMemoryLong(),
                         ["managed_heap_bytes"]=GC.GetTotalMemory(false),["cosine"]=cosine,["norm_squared"]=norm,
                         ["capture"]=Path.GetFileName(capture),["capture_sha256"]=Hash(capture),["observations"]=new JArray() };
@@ -104,9 +116,13 @@ namespace EmbeddingGemma.Validation.Tests
                     Assert.That(history.Count,Is.GreaterThan(0),"The local Editor GPU history must independently contain this exact marker.");
                     Assert.That(MediaExecutionMemory.Peak(),Is.LessThanOrEqualTo(GpuMediaExecutionPolicy.CurrentMemoryLimitBytes));
                 }
-                var close=Stopwatch.StartNew(); var closing=session.CloseAsync(); while(!closing.IsCompleted) yield return null;
+                report["phase"]="release"; report["release_begin_utc"]=DateTime.UtcNow.ToString("O"); Save();
+                var closeAllocated=GC.GetAllocatedBytesForCurrentThread(); var closeCpu=Cpu(); var close=Stopwatch.StartNew(); var closing=session.CloseAsync(); while(!closing.IsCompleted) yield return null;
                 closing.GetAwaiter().GetResult(); close.Stop(); MultimodalSearchSampleGpuTests.AssertReleased(session);
-                report["release_wall_seconds"]=close.Elapsed.TotalSeconds; report["session_closed"]=true; report["success"]=true;
+                report["release_wall_seconds"]=close.Elapsed.TotalSeconds; report["release_process_cpu_seconds"]=(Cpu()-closeCpu).TotalSeconds;
+                report["release_main_thread_managed_allocated_bytes"]=GC.GetAllocatedBytesForCurrentThread()-closeAllocated;
+                report["release_end_utc"]=DateTime.UtcNow.ToString("O"); report["phase"]="closed";
+                report["release_host_lifetime_peak_bytes"]=MediaExecutionMemory.Peak(); report["session_closed"]=true; report["success"]=true;
             }
             finally
             {

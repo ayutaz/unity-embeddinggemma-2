@@ -35,6 +35,12 @@ def fixture():
         modules[name] = dict(kind='image' if name.startswith('image-') else 'audio',
                              models=[model], backbone=model, tokenizer=tokenizer,
                              tokenizer_config=tokenizer, operations=[])
+        if name.startswith('image-'):
+            width, height = {'image-square': (768, 768), 'image-landscape': (1008, 576),
+                             'image-portrait': (576, 1008)}[name]
+            modules[name].update(resized_width=width, resized_height=height)
+        else:
+            modules[name].update(valid_audio_frames=int(name.split('-')[1]), preprocessor=model)
     data = dict(schema_version=1, backend='GPUCompute', sentis_version='2.6.1',
                 model_revision=REVISION, source_commit=SOURCE, prepared_only=True,
                 inference_executed=False, modules=modules,
@@ -84,7 +90,10 @@ def test_selected_module_never_advertises_unprepared_modules_or_fetches_unused_o
     name = f'objects/{digest(unused)}.bin'
     payloads[name] = unused
     data['files'][name] = dict(bytes=len(unused), sha256=digest(unused))
-    data['modules']['audio-839']['operations'] = [dict(kind='blocked_matmul', weight_file=name)]
+    module = data['modules']['audio-839']
+    module['models'] *= 2
+    module['operations'] = [dict(kind='sequential_scale', weight_file=name, first_scale=1.0,
+                                 inputs=['input'], output='output')]
     receipt, calls = prepare(tmp_path, data, payloads, modules=['text'])
     published = json.loads((tmp_path/'bundle.json').read_text())
     assert set(published['modules']) == {'text'} and name not in published['files']
@@ -165,3 +174,39 @@ def test_duplicate_metadata_keys_are_rejected(tmp_path):
     raw = json.dumps(fixture()[0]).replace('"schema_version": 1', '"schema_version": 1, "schema_version": 1').encode()
     with pytest.raises(ValueError):
         prepare_bundle(raw, tmp_path, source_url=BASE, descriptor_sha256=digest(raw), fetch=lambda _: pytest.fail('must not fetch'))
+
+
+@pytest.mark.parametrize(('module', 'field'), [
+    ('text', 'model'), ('text', 'tokenizer'),
+    ('image-square', 'tokenizer'), ('image-square', 'tokenizer_config'), ('image-square', 'backbone'),
+    ('audio-1119', 'tokenizer'), ('audio-1119', 'tokenizer_config'),
+    ('audio-1119', 'backbone'), ('audio-1119', 'preprocessor'),
+])
+def test_required_recipe_file_missing_is_rejected_before_fetch(tmp_path, module, field):
+    data, _ = fixture()
+    del data['modules'][module][field]
+    raw = json.dumps(data).encode()
+    with pytest.raises(ValueError):
+        prepare_bundle(raw, tmp_path, source_url=BASE, descriptor_sha256=digest(raw),
+                       fetch=lambda _: pytest.fail('invalid recipe must fail before fetching any object'))
+    assert not list(tmp_path.iterdir())
+
+
+@pytest.mark.parametrize('change', ['non_model_backbone', 'non_model_preprocessor', 'non_model_segment',
+                                   'missing_operations', 'non_list_operations', 'segment_count', 'module_cpu'])
+def test_incomplete_media_recipe_is_rejected_before_fetch(tmp_path, change):
+    data, _ = fixture()
+    module = data['modules']['audio-1119']
+    tokenizer = module['tokenizer']
+    if change == 'non_model_backbone': module['backbone'] = tokenizer
+    if change == 'non_model_preprocessor': module['preprocessor'] = tokenizer
+    if change == 'non_model_segment': module['models'] = [tokenizer]
+    if change == 'missing_operations': del module['operations']
+    if change == 'non_list_operations': module['operations'] = {}
+    if change == 'segment_count': module['models'] *= 2
+    if change == 'module_cpu': module['backend'] = 'CPU'
+    raw = json.dumps(data).encode()
+    with pytest.raises(ValueError):
+        prepare_bundle(raw, tmp_path, source_url=BASE, descriptor_sha256=digest(raw),
+                       fetch=lambda _: pytest.fail('invalid recipe must fail before fetching any object'))
+    assert not list(tmp_path.iterdir())

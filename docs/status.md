@@ -50,6 +50,8 @@ PR #31と#83はマージ済みです。#83の検証head `613ada824bd13a297660d8c
 
 同文書の小規模な転送・解放対照実験では、SetDataの3区間はGPU値・データ一致を確認しましたが、DisposeのGPU値は711描画frameでも欠測で、全体は0 pass / 1 fail / skip0 / exit2でした。先行の記録保存失敗と独立記録欠落のRedも保持し、実装後の試行名 `green` や演算controlの成功を、解放計時・実モデルの受け入れ成功とは扱いません。
 
+[Windowsのraw Timer100Nsによる別観測](windows-gpu-engine-observations.md)も追加しました。収集protocolを含む21件が成功し、実textを2プロセス・計8 vectorの参照一致と正常終了へ対応付けています。修正後のload内3観測点・14 engineで観測点間の差分0を確認しましたが、load全体の境界は覆えておらず、約10msのreleaseには観測点がありません。SDK専有のGPU時間とは扱わず、欠測は維持します。
+
 ### 進行中PRの確認済み範囲
 
 - [#85](https://github.com/ayutaz/unity-embeddinggemma-2/pull/85): 画像プレビュー・音声再生・明示的なマイク操作の実装。固定Git consumerで画像・音声登録、日英検索、エラー復帰・キャンセル再試行・切替・解放と正常終了を実際のマウス・キーボードで確認しました。実マイクは未実行です。

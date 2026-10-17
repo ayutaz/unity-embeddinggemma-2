@@ -38,3 +38,5 @@ GPU演算の独立controlはGPUCompute・期待値一致・18,432nsだった。�
 先行 `88b6536` はPlayMode domain reload前に初期化した保存先が失われ、ArgumentNullExceptionで失敗した。記録の初期化を切替後へ移した `c95e620` ではGPU controlを確認した後、独立した転送・解放の記録欠落で意図したRedを確認した。この2件も各exit2で保持する。新しいmarkerの欠測を解消するために既存の成功したdispatch計時を代入しない。
 
 Windowsには `GPU Engine / Running Time` counterも存在したが、ここでは実モデルの値は取得していない。別方式を用いる場合は、PID・adapter/engine・counter時刻・単位を校正し、複数engineの重なりとEditor自身のGPU仕事を区別する必要がある。
+
+その後の[Windows raw Timer100Nsの別観測](windows-gpu-engine-observations.md)では、同じSDKの実text4反復を2回、元参照・解放・正常終了と対応付けた。修正後のload内3観測点・14 engineの差分は、load全体16.308541秒のうち観測点間10.620599秒で0だった。境界のGPU転送や、観測点のない10.1547msのreleaseへ拡張しない。OSのprocess/engine活動量であってSDK専有のload/release GPU時間ではなく、欠測と元のproviderエラーを保持する。

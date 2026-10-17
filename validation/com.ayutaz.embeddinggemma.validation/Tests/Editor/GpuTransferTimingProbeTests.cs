@@ -17,10 +17,10 @@ namespace EmbeddingGemma.Validation.Tests
         [UnityTest, Timeout(180000)]
         public IEnumerator TransferAndRetirementMarkersRequireTheirOwnGpuEvidence()
         {
+            yield return new EnterPlayMode();
             var output = Environment.GetEnvironmentVariable("EG_GPU_TRANSFER_TIMING_REPORT");
             Assert.That(output, Is.Not.Null.And.Not.Empty);
             Assert.That(File.Exists(output), Is.False);
-            yield return new EnterPlayMode();
             var report = new JObject { ["success"] = false, ["real_model_qualified"] = false,
                 ["runtime_source"] = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE"),
                 ["validation_source"] = Environment.GetEnvironmentVariable("EG_VALIDATION_SOURCE"),

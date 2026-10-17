@@ -30,15 +30,15 @@ candidate・入力・model hashを固定し、最初に測定します。遅い�
 
 **完了条件**：load・初回・warm・前処理・encoder・backbone・解放、CPU / GPU時間、ホストメモリ / VRAMを別記すること。Editor import・検索DB・allocation・domain reloadも分離し、前後で精度・順位・正常終了を維持します。
 
-2026-10-18時点で、Float16の全6 module・固定16ケースの単独GPU参照比較は完了しました。FP32の12GiB guard中断と16GiB EditModeの900秒fixture timeoutは保持します。同じSDK・16GiBの混在PlayModeでは、FP32 / Float16とも5媒体と日英4 queryの連続順位・解放、直接テキスト4件、終了code0を確認しました。初期のGPU Recorderと履歴の値の差、割り当てAPIの全0は過去の欠測として保持します。その後、停止したCPU履歴のmarker内bytesをnoop / 64KiB / 128KiBで校正し、実GPUの同期テキストAPIでも両形式各4回の割り当て量・参照一致・解放・exit0を確認しました。[校正記録](results/managed-allocation-scoped-byte-calibration-20261018.json)と[検証状況](status.md)。画像3・音声2 profile×両形式の同一入力反復は、全10プロセス・計40回で参照一致・解放・exit0とstage別CPU/wallを確認しました。[反復測定とSearchの観測](media-repeat-measurements.md)。モデルなしの別consumerでも既定Search indexの初期化・準備待ちとpackage検索4回・exit0を確認しました。次はstage別GPU時間の校正、非同期割り当て、必要なEditor index再構築・cold import / allocationの受け入れです。load・frame待機・推論・Editor処理を分け、必要な改善をTDDで加えます。性能全体は未合格であり、保存容量や異なる実行条件から高速化を推定しません。
+2026-10-18時点のSDK `d7b2233` では、[GPU出力の不要なCPU storageを省く変更](gpu-write-only-output-allocation.md)をTDD・GPU演算等120件で検証しました。同条件の計測付き画像反復で旧出力とのbyte一致と改善を観測し、全6 module×FP32 / Float16重みの単独参照32ケース、両形式の混在検索の全順位・再試行・解放・正常終了も確認しています。保存重みのFloat16化を全演算FP16化や形式間の高速化にはしません。
 
-3の追加checkpointとして、固定source consumerでFP32 / Float16の送信前CPU待機とGPU仕事量の対照、および待機なしの同一入力・各1 dispatchを4回ずつ実行しました。[通常dispatchの観測](results/frozen-source-text-gpu-dispatch-observations-20261018.json)は参照一致・解放・exit0まで確認済みです。Recorder区間とProfiler履歴の解釈は分け、少数観測を形式間の速度改善へ拡張しません。3全体の完了条件と、画像・音声のstage別GPU時間・Editor測定の残件は維持します。
+同SDKの[画像3・音声2 profile×両形式・40反復](media-gpu-submission-observations.md)で元参照・解放・exit0、encoder 17,176区間と前処理/backbone 80区間、CPU/wall・9プロセスのGPU memoryを確認しました。[text両形式の固定query各4反復](text-current-sdk-observations.md)はmain-thread marker内のmanaged bytesを校正済みの停止CPU履歴で記録しています。GPU Recorderと履歴の値の差、短いstageのGPU memory欠測は保持し、CPU wallとの加減からkernel時間を作りません。
 
-[encoder区間の追加観測](encoder-gpu-dispatch-observations.md)では、旧SDKのFP32画像・音声とFloat16画像で12 vector・全5012区間を確認しました。画像の大きなGPU出力に不要なCPU storageを作っていたため、[出力確保の候補](gpu-write-only-output-allocation.md)をTDDとGPU演算等120件で検証しました。新SDKの固定画像は両形式とも各4出力が旧出力とbyte一致し、同じ計測付きwarm反復で改善を観測しました。新SDKの全6 module×両形式・単独参照32ケースと、両形式の混在検索の全順位・再試行・解放・正常終了も確認済みです。次は通常APIの対応条件・メモリ、残るstage GPU時間・非同期割り当て・Editor測定を確認します。旧SDKの受け入れを新SDKの完了に数えません。
+Editorでは[検索割り当て・空/再利用Library](editor-search-allocation-observations.md)、[両sampleと直接index再構築](editor-index-rebuild-observations.md)、[EditMode GC校正・実再構築中のframe全体allocationとnative memory](editor-frame-allocation-observations.md)を分けて確認しました。最後の条件は7 pass / skip0 / exit0で、40文書とfixture・両sceneの保持を2回確認しています。背景index専有bytesは未測定であり、frame全体の値や重なるstartup/import/reload時間を加算しません。
 
-直近の3のcheckpointでは、新SDKの[全5 profile×両形式・40反復](media-gpu-submission-observations.md)の元参照・解放・exit0、encoder 17,176区間と前処理/backbone 80区間、CPU/wall・9プロセスのGPU memoryを確認しました。[Editorの別測定](editor-search-allocation-observations.md)も、同一capture内の校正と検索4回、空/再利用Library、各10 pass / skip0 / exit0を記録しています。同SDKの[text両形式4反復](text-current-sdk-observations.md)と[frame GC control](async-frame-allocation-observations.md)も確認しました。次はload/release GPU区間の扱い、代表実音声の非同期allocation区間と個別stageの測定範囲の最終監査・明示的index再構築です。公開取得・実マイク・最終candidate操作を含む1〜3全体の条件は維持します。
+[ロード・解放の範囲監査](load-release-measurement-scope.md)と[Windows engine別のOS観測](windows-gpu-engine-observations.md)では、既存12実行のCPU/wallと、別の実text2実行のcounter時刻・範囲・欠測を照合しました。[frame GC controlと代表実音声](async-frame-allocation-observations.md)も、入力準備・load・検証I/O・release・Editorを含む累積量として保持します。load/release全体のGPU時間、個別非同期stage・背景indexの専有allocationを、この観測から確定はしません。
 
-Editor負荷の追加checkpointとして、[両sampleを導入した既存Libraryの明示的再構築](editor-index-rebuild-observations.md)を2回確認した。初期readyだけでは新規assetの索引反映を保証しないため、再構築後の40文書と固定fixture・両sceneの直接検索を完了条件にした。6 pass / skip0 / exit0で、最初の再構築と反復、import / 起動、背景専有allocationの欠測を分けて記録した。公開取得・実マイク・最終candidate操作、load/release GPU時間の扱いと非同期allocationの最終監査は引き続き残る。
+次は、これらの測定範囲・失敗・欠測を最終candidateへ対応付け、最新Required CIと要件別の監査を閉じます。性能全体は未合格です。過去の12GiB guard中断・16GiB EditMode900秒timeout・Profiler不整合・テスト未実行も[検証状況](status.md)と各記録に保持します。公開取得・実マイク・最終candidateの実操作を含む1〜3全体の条件を維持し、異なる実行条件から速度改善率や最低RAM / VRAMを推定しません。
 
 ### 4. WindowsマルチモーダルPlayer
 

@@ -90,12 +90,14 @@ SDK `d7b2233` / 計測 `10962fa` の[全5 profile・両形式の40反復](media-
 
 モデルなしの[frame GC control](async-frame-allocation-observations.md)は、既知の0 / 4MiB / 8MiBを実際のcounter更新に分けて取得し、10 pass / skip0 / exit0でした。描画frameだけを待った旧controlの9 pass / 1 fail / exit2を保持し、元の上限を変えていません。フレーム全体の値は無関係のEditor処理・observerも含み、実モデルの非同期allocationやSDKだけのbytesの合格ではありません。
 
+続く[FP32音声の代表実行](results/async-real-audio-frame-allocation-9bed619-20261018.json)では、元のGPU検証4 vector・解放の後に割り当て記録の欠落で失敗するRedを確認し、接続後は1 pass / skip0 / exit0でした。counter sample 2052個の合計は6,984,175,075 bytesです。入力準備・ロード・検証用I/O・解放・含まれるframeのEditor処理を含む累積割り当てで、SDKの個々のstageのexclusive bytesやホストピークではありません。元のasync呼び出し本体・参照・GPU要件は維持しました。
+
 ### 残る受け入れ
 
 - 空のcheckoutから画像・音声bundleを準備する公開手順と配布経路。
 - 最終統合candidateを新しいconsumerへ導入し、全モダリティを手動で一通り操作する最終受け入れ。
 - 結果画像プレビュー・音声再生・明示的なマイク操作のPR統合と実操作の受け入れ。
-- load/release GPU区間の扱い、非同期allocationの実モデル適用、明示的index再構築・背景処理。
+- load/release GPU区間の扱い、代表的な非同期割り当て区間と個別stageの測定範囲・欠測の最終監査、明示的index再構築・背景処理。
 - 画像・音声検索のWindows Player、macOS Editor、iOS / Android実機での精度・操作・cache・正常終了。Androidの過去のAPK build成功は実機GPU合格ではありません。
 - 全モダリティの採用Float16形式・明示CPU経路の環境別受け入れ、最終candidate / tag固定導入、正式Release。
 

@@ -1,0 +1,271 @@
+{
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "precision": "float16-weights",
+  "accepted": true,
+  "scope": "Combined imported-sample plus direct text GPU fixtures, local-file consumer. Not native UI, public cold acquisition, live microphone or full benchmark acceptance.",
+  "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+  "receipt": {
+    "command": [
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\step3-consumer-53dafe8",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.PreparedTextQueryReferenceTests.ActualGpuTextModuleMatchesAllPinnedQueryVectorsAndReleasesWorkers;EmbeddingGemma.Validation.Tests.MultimodalSearchSampleGpuTests.ImportedSampleRendersItsRealSearchResultsInPlayMode",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testResults",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-and-playmode-e28a5fd-float16-weights-16gib.xml",
+      "-logFile",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-and-playmode-e28a5fd-float16-weights-16gib.log"
+    ],
+    "timeout_seconds": 1200,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T18:07:39.304790+00:00",
+    "pid": 95584,
+    "exit_code": 0,
+    "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-and-playmode-e28a5fd-float16-weights-16gib.xml",
+    "unity_counts": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 583.0095797000104,
+    "completed_utc": "2026-10-17T18:17:22.314364+00:00"
+  },
+  "source": {
+    "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+    "validation_parent": "1607a28b3c1dfb080088502df2f12419bf7b2587",
+    "runtime_package_tree": "fc0e94e92b7cf71a101a70e34dcc6fdf0f2adac3",
+    "cache_existed": false,
+    "validation_files_sha256": {
+      "PreparedTextQueryReferenceTests.cs": "eb8d5f8192f988a31b43ef1c11d33cf79ba5204c0546d0fee63e50cd0309a2d8",
+      "MultimodalSearchSampleGpuTests.cs": "a29ebb8da978a5035ad1f89e22fe97548849fbb057e57dbf5f33a3b2838c9de2",
+      "MediaStageTiming.cs": "8e15fdd4ef806356912f92d50e6cf8daf08684b34ae96344d2efd213ddfaaff8"
+    },
+    "scope": "Two unchanged real-model fixtures in one actual GPU Editor, local file SDK; programmatic sample, not native UI, fresh Git, microphone or benchmark acceptance"
+  },
+  "physical_preflight": {
+    "physical_total_bytes": 68628013056,
+    "available_bytes": 39884996608,
+    "allowance_bytes": 17179869184,
+    "reserve_bytes": 4294967296,
+    "precision": "float16-weights",
+    "scope": "Bounded measurement allowance, not a minimum RAM or memory improvement claim"
+  },
+  "resource_condition": {
+    "snapshot": "NVIDIA GeForce RTX 4070 Ti SUPER, 610.88, 2594 MiB, 13470 MiB, 16376 MiB",
+    "scope": "Global snapshot before launch; not per-process allocation or minimum VRAM"
+  },
+  "registrations": [
+    {
+      "id": "square-0",
+      "cosine": 0.99999999999977,
+      "norm_squared": 0.9999999783486199,
+      "input_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399"
+    },
+    {
+      "id": "landscape-0",
+      "cosine": 0.9999999999990701,
+      "norm_squared": 1.000000145738682,
+      "input_sha256": "f2b3f32a22e6282b9876b98c4c5a7bbf75e7469dff933128e17d6503dd6d6e55"
+    },
+    {
+      "id": "portrait-0",
+      "cosine": 0.9999999999997247,
+      "norm_squared": 0.9999999824864825,
+      "input_sha256": "fce3474792c6401c4bae6ac0261a386f400bac0cece977ffda86388ee6682489"
+    },
+    {
+      "id": "silence",
+      "cosine": 0.999999999990707,
+      "norm_squared": 1.00000006446793,
+      "input_sha256": "c9c9803e19adb2d139ad00b54f4af71f80c2b2530b10828a913b5b82c18559b8"
+    },
+    {
+      "id": "padded_noise",
+      "cosine": 0.9999984475675923,
+      "norm_squared": 0.99999999512408,
+      "input_sha256": "a78defcfa0d000eecf8f5eca429135170bb9568f8f4b68d8e14e2e36fae62949"
+    }
+  ],
+  "direct_text_queries": [
+    {
+      "id": "query-cat-ja",
+      "cosine": 0.9999999999998961,
+      "norm_squared": 1.0000001871676687,
+      "input_sha256": null
+    },
+    {
+      "id": "query-space-en",
+      "cosine": 0.9999999999998783,
+      "norm_squared": 0.9999999259110461,
+      "input_sha256": null
+    },
+    {
+      "id": "query-recipe-ja",
+      "cosine": 0.9999999999998918,
+      "norm_squared": 1.0000000350165685,
+      "input_sha256": null
+    },
+    {
+      "id": "query-cat-en",
+      "cosine": 0.9999999999998682,
+      "norm_squared": 0.9999999974054657,
+      "input_sha256": null
+    }
+  ],
+  "full_query_rankings": [
+    {
+      "id": "query-cat-ja",
+      "rank": [
+        "media-3",
+        "media-0",
+        "media-1",
+        "media-2",
+        "media-4"
+      ],
+      "maximum_score_error": 0.00011192775005852695
+    },
+    {
+      "id": "query-space-en",
+      "rank": [
+        "media-4",
+        "media-0",
+        "media-1",
+        "media-3",
+        "media-2"
+      ],
+      "maximum_score_error": 5.5171780083407285e-05
+    },
+    {
+      "id": "query-recipe-ja",
+      "rank": [
+        "media-3",
+        "media-4",
+        "media-1",
+        "media-0",
+        "media-2"
+      ],
+      "maximum_score_error": 8.585729990973068e-05
+    },
+    {
+      "id": "query-cat-en",
+      "rank": [
+        "media-3",
+        "media-0",
+        "media-2",
+        "media-1",
+        "media-4"
+      ],
+      "maximum_score_error": 9.420627467271458e-05
+    }
+  ],
+  "actual_gpu_stage_cancel_retry": true,
+  "worker_kernel_tensor_and_cache_lease_release": true,
+  "host_native_lifetime_peaks_bytes": [
+    11157610496,
+    11157610496
+  ],
+  "host_allowance_bytes": 17179869184,
+  "prior_12gib_failure_preserved": true,
+  "memory_leak_fixed_claimed": false,
+  "gpu_execution_time_measured": false,
+  "performance_improvement_claimed": false,
+  "execution_mode": "playmode",
+  "rendered_screenshots": [
+    {
+      "file": "text-and-playmode-e28a5fd-float16-weights-16gib-rendered-query-cat-ja.png",
+      "sha256": "790e532740dc81ca7da59348f021abe499f255fc1801de61e475b30f67251587",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "text-and-playmode-e28a5fd-float16-weights-16gib-rendered-query-space-en.png",
+      "sha256": "e13a75e09200d90cab02410ce59fb794c67d3b0dcea36ad8854b5423e568858d",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "text-and-playmode-e28a5fd-float16-weights-16gib-rendered-query-recipe-ja.png",
+      "sha256": "c2228a6534d10839918fa857b2de77dd2c3b24762e8c6e3bc7c898438f60faaf",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "text-and-playmode-e28a5fd-float16-weights-16gib-rendered-query-cat-en.png",
+      "sha256": "a3ef0f22426abe8b5685a5711c398bf4e5a1625258f4232b2da628cb973f674b",
+      "width": 1280,
+      "height": 800
+    }
+  ],
+  "visual_inspection_completed": true,
+  "evidence_sha256": {
+    "text-and-playmode-e28a5fd-float16-weights-16gib-process.json": "7b376036909aa02f794b36c6446dbb1e90d5044e52439e4dcd5a525e417c4c09",
+    "text-and-playmode-e28a5fd-float16-weights-16gib.xml": "b2136c94868c072ac5ef7bb5ef0131d5754b6b61df4f1c6d33ab3c1e77859b17",
+    "text-and-playmode-e28a5fd-float16-weights-16gib.log": "c7b36c7ee24c47c7309806e198528493c2b439ed731e623a4a36e161f17d7b4a",
+    "text-and-playmode-e28a5fd-float16-weights-16gib-integration.json": "4523148a39e1c10769de5cb3e5b21ead640b465a83541e20c72c9c73f963167f",
+    "text-and-playmode-e28a5fd-float16-weights-16gib-text.json": "2fe93f733959c220e9b11f72a24c333d5a495e26dd8dbf63e2c0d5d6b38ce5cd"
+  },
+  "visual_inspection": {
+    "method": "All four saved 1280x800 PNGs inspected with view_image after capture",
+    "observations": [
+      "Ranked result rows and numeric scores rendered",
+      "Square/landscape/portrait synthetic previews rendered",
+      "Japanese audio playback labels rendered without missing glyphs"
+    ],
+    "limitations": [
+      "Programmatic imported sample, not actual native keyboard/mouse search",
+      "Playback buttons rendered; playback/stop not exercised by this fixture",
+      "Recipe query has a partial last row within the scroll viewport; native scrolling remains to verify"
+    ]
+  },
+  "foreground_observation": {
+    "recorded_utc": "2026-10-17T18:10:29.5740833Z",
+    "pid": 95584,
+    "window_id": 8394600,
+    "action": "sky.activate_window on the uniquely returned Unity window",
+    "execution_mode": "PlayMode",
+    "observed_status": "\u753b\u50cf\u3092GPU\u3067\u767b\u9332\u3057\u3066\u3044\u307e\u3059\u2026",
+    "observed_document_count": 0,
+    "native_sample_actions_invoked": false,
+    "actual_microphone_started": false,
+    "scope": "Foreground condition changed during initial GPU registration. This run is numerical/render verification; not a paired latency benchmark against FP32."
+  },
+  "foreground_observation_sha256": "df22f968aabbed4238a9031955b3246cab3a338e70379bd89853f9a2bf5d2795",
+  "windows_gpu_observation": {
+    "samples": 147,
+    "first_utc": "2026-10-17T18:08:30.0009757Z",
+    "last_utc": "2026-10-17T18:17:18.1836927Z",
+    "sampled_peak_allocations": [
+      {
+        "instance": "pid_95584_luid_0x00000000_0x00012525_phys_0",
+        "counter": "dedicated usage",
+        "bytes": 9133285376.0
+      },
+      {
+        "instance": "pid_95584_luid_0x00000000_0x00012525_phys_0",
+        "counter": "shared usage",
+        "bytes": 757903360.0
+      }
+    ],
+    "scope": "Sampled per-instance WDDM dedicated/shared allocations, not physical residency, unsampled peak or minimum VRAM."
+  },
+  "gpu_memory_observation_sha256": "67c0a8ca17b2f90230624b59b57caedfaaa6ea45657fe935abf44b610099542e",
+  "editor_observation": {
+    "reused_project": true,
+    "initial_refresh_seconds": 15.008,
+    "actual_imports": 0,
+    "nested_compile_seconds": 1.849,
+    "nested_domain_reload_seconds": 1.397,
+    "scope": "Nested durations overlap; separate startup observations, not model inference or a fresh project import benchmark."
+  }
+}

@@ -36,9 +36,18 @@ namespace EmbeddingGemma.Validation.Tests
             using var gpu=gpuRequested?new EncoderGpuDispatchTrace():null;
             var oldProfiler=Profiler.enabled;var oldDriver=ProfilerDriver.enabled;var oldEditor=ProfilerDriver.profileEditor;
             var oldGpuArea=Profiler.GetAreaEnabled(ProfilerArea.GPU);
+            var oldCpuArea=Profiler.GetAreaEnabled(ProfilerArea.CPU);var oldMemoryArea=Profiler.GetAreaEnabled(ProfilerArea.Memory);
+            var allocationRequested=Environment.GetEnvironmentVariable("EG_ASYNC_FRAME_ALLOCATION")=="1";
+            FrameManagedAllocationCapture allocation=null;
             try
             {
                 if(gpuRequested){ProfilerDriver.profileEditor=true;ProfilerDriver.enabled=true;Profiler.enabled=true;Profiler.SetAreaEnabled(ProfilerArea.GPU,true);}
+                if(allocationRequested)
+                {
+                    ProfilerDriver.profileEditor=true;ProfilerDriver.enabled=true;Profiler.enabled=true;
+                    Profiler.SetAreaEnabled(ProfilerArea.CPU,true);Profiler.SetAreaEnabled(ProfilerArea.Memory,true);
+                    allocation=new FrameManagedAllocationCapture("media-validation-run-including-input-load-query-release-and-io");
+                }
                 var task=Run(cancellation.Token,gpu);long peak=0;
                 while(!task.IsCompleted)
                 {
@@ -48,15 +57,23 @@ namespace EmbeddingGemma.Validation.Tests
                     EditorApplication.QueuePlayerLoopUpdate();yield return null;
                 }
                 task.GetAwaiter().GetResult();
+                allocation?.Complete();
                 if(gpu!=null)
                 {
                     var until=Time.frameCount+6;var drain=Stopwatch.StartNew();
                     while(Time.frameCount<until && drain.Elapsed.TotalSeconds<15){gpu.Capture();EditorApplication.QueuePlayerLoopUpdate();yield return null;}
                     gpu.Capture();Assert.That(Time.frameCount,Is.GreaterThanOrEqualTo(until),"GPU observation requires actual rendered frames.");
                 }
+                if(allocation!=null)
+                {
+                    var drain=Stopwatch.StartNew();
+                    while(!allocation.TryClose()&&drain.Elapsed.TotalSeconds<15){EditorApplication.QueuePlayerLoopUpdate();yield return null;}
+                }
                 Assert.That(peak,Is.GreaterThan(0).And.LessThanOrEqualTo(GpuMediaExecutionPolicy.CurrentMemoryLimitBytes));
                 var output=Environment.GetEnvironmentVariable("EG_MEDIA_EXECUTION_REPORT");
-                var report=JObject.Parse(File.ReadAllText(output));report["host_native_peak_bytes"]=peak;File.WriteAllText(output,report.ToString());
+                var report=JObject.Parse(File.ReadAllText(output));report["host_native_peak_bytes"]=peak;
+                if(allocation!=null)report["frame_managed_allocation_window"]=allocation.Snapshot();
+                File.WriteAllText(output,report.ToString());
                 if(Environment.GetEnvironmentVariable("EG_ASYNC_FRAME_ALLOCATION")=="1")
                     Assert.That(report["frame_managed_allocation_window"],Is.Not.Null,"Requested async frame allocation window must be recorded; missing is not zero.");
                 if(gpu!=null)
@@ -72,9 +89,11 @@ namespace EmbeddingGemma.Validation.Tests
             }
             finally
             {
+                allocation?.Dispose();
                 camera.targetTexture=null;UnityEngine.Object.DestroyImmediate(host);target.Release();UnityEngine.Object.DestroyImmediate(target);
                 Application.runInBackground=previous;Application.targetFrameRate=fps;QualitySettings.vSyncCount=vsync;
-                if(gpuRequested){Profiler.SetAreaEnabled(ProfilerArea.GPU,oldGpuArea);ProfilerDriver.profileEditor=oldEditor;ProfilerDriver.enabled=oldDriver;Profiler.enabled=oldProfiler;}
+                if(allocationRequested){Profiler.SetAreaEnabled(ProfilerArea.CPU,oldCpuArea);Profiler.SetAreaEnabled(ProfilerArea.Memory,oldMemoryArea);}
+                if(gpuRequested||allocationRequested){Profiler.SetAreaEnabled(ProfilerArea.GPU,oldGpuArea);ProfilerDriver.profileEditor=oldEditor;ProfilerDriver.enabled=oldDriver;Profiler.enabled=oldProfiler;}
             }
             yield return new ExitPlayMode();
         }

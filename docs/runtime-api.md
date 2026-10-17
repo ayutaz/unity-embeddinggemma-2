@@ -1,14 +1,14 @@
 # 推論API
 
-> 文書整合確認: 2026-10-16。mainの既存テキストAPIと、Draft PR #81の画像・音声APIは統合状態を区別します。[現在の状態](status.md)にsource別の固定証拠を記載しています。
+> 更新: 2026-10-17。画像・音声API、非同期音声前処理、bundle・検索sampleはPR #79 / #83でmainへ統合済みです。[導入の入口](../Packages/com.ayutaz.embeddinggemma/Documentation~/index.md) / [検証状況](status.md) / [ロードマップ](roadmap.md)。
 
 ## マルチモーダルAPIとGPU設定
 
 mainへ統合済みの`PartitionedImageFeatureEncoder` / `ImageEmbedder.EmbedAsync`と`PartitionedAudioFeatureEncoder` / `AudioEmbedder.EmbedAsync`は、実Texture・PCMから前処理→encoder→backbone→正規化済み768次元をGPUComputeで実行する固定source検証済み経路です。画像・音声は各6ケースとQuery / Document / Rawの18条件、計算 / 入力CPU fallback・中間readback0。元encoderの画像全3 / 音声全2 profileの厳密数値gateと必須CIも合格しています。[元API検証](results/goal4-current-completion-audit-20261016.json)と[現在のサンプル検証](multimodal-search-sample.md)を区別してください。全端末・正式配布の合格は表しません。
 
-作業中の`IAsyncAudioPreprocessor` / `AudioPreprocessor.ProcessAsync`は、GPU fence完了までPCM入力・出力copyを保持し、完了した前処理のGPU cacheを解放します。`AudioEmbedder.EmbedAsync`は対応stageがあればこの経路を待ちます。反復処理には非同期APIを使用し、キャンセル・Dispose後も返されたtaskの完了前に借用stageを破棄しないでください。`GpuMediaSession.CloseAsync`はその完了と所有stageの解放を待ちます。
+統合済みの`IAsyncAudioPreprocessor` / `AudioPreprocessor.ProcessAsync`は、GPU fence完了までPCM入力・出力copyを保持し、完了した前処理のGPU cacheを解放します。`AudioEmbedder.EmbedAsync`は対応stageがあればこの経路を待ちます。反復処理には非同期APIを使用し、キャンセル・Dispose後も返されたtaskの完了前に借用stageを破棄しないでください。`GpuMediaSession.CloseAsync`はその完了と所有stageの解放を待ちます。
 
-両APIはstageとprompt builderを借用し、呼び出しごとの中間結果を所有します。返す768次元CPU配列は独立コピーです。非同期encoderはGPU分割境界を待ち、音声では完了済みキャッシュを解放します。前処理とbackboneはメインスレッド同期処理のため`Task.Run`へ移しません。呼び出しをawaitしてから借用stage / operationをDisposeしてください。CPU APIの選択肢と、ここで検証したGPU専用経路を区別します。
+両APIはstageとprompt builderを借用し、呼び出しごとの中間結果を所有します。返す768次元CPU配列は独立コピーです。非同期encoderはGPU分割境界を待ち、音声では完了済みキャッシュを解放します。GPU処理のdispatchはメインスレッドで行い、`Task.Run`へ移しません。音声前処理は非同期fence待機に対応しますが、backbone呼び出しは同期処理です。呼び出しをawaitしてから借用stage / operationをDisposeしてください。CPU APIの選択肢と、ここで検証したGPU専用経路を区別します。
 
 使用例・prefix / mask・キャンセルと所有権は[音声API](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-embedder.md)と[音声encoder](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-feature-encoder.md)を参照してください。分割Model・係数・operation接続表は対象profileを監査したものを呼び出し側で準備します。自動ダウンロード・profile選択は行いません。単一Modelの同期encoder APIを、この実モデル受け入れ経路と同一視しません。
 
@@ -26,7 +26,7 @@ API導入当時は単体契約24件、M1完了時は保存・測定を含む30�
 Unity 6000.3.16f1 / Sentis 2.6.1 の、batch 1 / length 128 / fp32 / 768次元の export を対象とする。
 モデル・tokenizerは [CI成果物を検証して配置](automation.md)する。
 PR #6でRuntimeを `Packages/com.ayutaz.embeddinggemma/Runtime/` へ移行し、元のソース・assembly名・GUIDを維持した。
-このUPM構成はPR #6でmainへ反映済み。実行依存はSentis 2.6.1とNewtonsoft JSON 3.2.2。検索APIはPR #10でmainへ統合し、検索シーンはPR #11で追加している。main未統合の画像・音声APIは上記の開発範囲を参照。
+このUPM構成はPR #6でmainへ反映済み。実行依存はSentis 2.6.1とNewtonsoft JSON 3.2.2。検索APIはPR #10、検索シーンはPR #11で追加した。画像・音声APIもmainへ統合済みで、上のマルチモーダルAPI節を参照。
 別プロジェクトへの導入は [パッケージ文書](../Packages/com.ayutaz.embeddinggemma/Documentation~/index.md)、結果は [UPM検証](m2-package-validation.md)を参照。
 
 ```csharp

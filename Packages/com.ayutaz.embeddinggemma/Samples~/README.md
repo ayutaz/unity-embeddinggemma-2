@@ -1,9 +1,12 @@
 # サンプル
 
-> 2026-10-14: 配布sampleはText Searchです。画像・音声検索 / 再生・明示収録sampleは未完了。テキストsampleの主実行経路はGPUComputeです。
+Package ManagerでEmbeddingGemmaを選び、Samplesから目的のサンプルをImportします。モデルは同梱・自動取得しません。
 
-更新日: 2026-10-10。[Text Search](TextSearch/README.md) はPR #11でmainへ統合済みです。実行済み範囲はリポジトリの[検索検証記録](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/m2-search-validation.md)を参照してください。
+| サンプル | 内容 | 必要な準備 |
+| --- | --- | --- |
+| [Text Search](TextSearch/README.md) | 日本語・英語の固定文書をテキストで検索 | `.sentis`と`tokenizer.json` |
+| [Image and Audio Search](MultimodalSearch/README.md) | 実画像・mono PCMを登録し、テキストで横断検索 | 監査済みbundle、対応する固定入力profile |
 
-Package Managerのサンプル一覧からText SearchをImportし、モデルを別途準備して`TextSearch.unity`を開きます。
-Runtimeの使用例は [Documentation~/index.md](../Documentation~/index.md) を参照してください。
-モデルファイルはサンプルにも同梱しません。
+まず[導入・モデル準備](../Documentation~/index.md)を確認してください。画像・音声bundleの新規利用者向け一括準備は未整備です。両sampleの主経路はGPUComputeで、GPU非対応時にCPUへ自動切り替えしません。
+
+Windowsの固定source検証と他環境の未達条件は[検証状況](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)を参照してください。

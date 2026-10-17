@@ -1,6 +1,6 @@
-# 画像・音声検索サンプルの作業状況と受け入れ
+# 画像・音声検索サンプルの検証記録
 
-更新: 2026-10-17。現在の依頼「3まで進める」の手順1・2はPR #31の統合とWindows Playerの固定source検証で完了。手順3は実装・実モデル・画面・全体回帰の検証済みです。最終CIと統合状態は[delivery PR #83](https://github.com/ayutaz/unity-embeddinggemma-2/pull/83)を参照してください。元計画の画像・音声API数値検証と、今回のサンプル検証を区別します。
+更新: 2026-10-17。Windows text PlayerのPR #31と、画像・音声検索sampleの[PR #83](https://github.com/ayutaz/unity-embeddinggemma-2/pull/83)はマージ済みです。最終head `613ada824bd13a297660d8c4de4c2c14b4e317e8`の[CI38939320058](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38939320058)は全15 job成功。統合mainは `a965c09`、同じtreeです。以下はsource別の実装・実モデル・画面・全体回帰の記録です。利用者向けの入口は[サンプル操作](../Packages/com.ayutaz.embeddinggemma/Samples~/MultimodalSearch/README.md)、現在の残件は[ロードマップ](roadmap.md)を参照してください。
 
 ## 実装済み
 

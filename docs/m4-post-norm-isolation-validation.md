@@ -1,6 +1,6 @@
 # 固定native入力によるpost norm単独検証
 
-> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+> 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 
 2026-10-14 JST。実feed_forward1全経路ではCPUのpost normで284要素、GPUで5要素が元の固定許容差を超えた。演算自体と入力差の伝播を分けるため、同じ保存モデルからpost normだけを取り出し、固定native linear2出力を入力にした。Runtime・golden・モデル・許容差を変更せず、正式Release / tagは作成しない。
 

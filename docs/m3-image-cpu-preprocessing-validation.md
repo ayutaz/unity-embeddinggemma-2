@@ -1,6 +1,6 @@
 # CPU画像前処理と実測・未達条件
 
-> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+> 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 
 2026-10-14 JST。`ImagePreprocessor(BackendType.CPU)`を追加した。既存のparameterless constructorはGPUComputeのまま。CPUでも公式の寸法・bicubic antialias・uint8の横pass後clamp・patch順序・位置情報・zero padding・RGB rescaleを使用する。横passの中間値はbyte配列で保持する。CPU resultは独立したCPU Tensorを所有し、Textureは借用する。
 

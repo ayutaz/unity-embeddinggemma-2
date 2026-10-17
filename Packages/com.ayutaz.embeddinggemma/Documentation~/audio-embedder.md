@@ -1,6 +1,6 @@
 # 音声専用の埋め込みAPI
 
-2026-10-16、Draft PR #81の固定sourceで、実PCM → GPU前処理 → 分割音声encoder → 共通backbone → 正規化済み768次元の全6信号・Query / Document / Raw、18条件が合格しました。Windows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER / D3D12の結果です。必須CIの音声ONNX比較は失敗中で、main未統合・未リリースです。
+2026-10-17：main統合済みのAPIです。実PCM → GPU前処理 → 分割音声encoder → 共通backbone → 正規化済み768次元の全6信号・Query / Document / Raw、18条件は固定sourceのWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER / D3D12で合格しました。後続の21f1サンプルと非同期前処理の検証、必須CIも成功しています。正式リリースは未実施です。[対応範囲とsource別証拠](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)。
 
 実モデルの検証済み経路は`PartitionedAudioFeatureEncoder`と`AudioEmbedder.EmbedAsync`です。`AudioEmbedder`は`IAsyncAudioEmbedder`を実装します。同期`Embed`もありますが、連続同期実行ではGPUキャッシュ保持により12 GiBのホストメモリ上限を超えた失敗があり、同じ受け入れ結果として扱えません。
 

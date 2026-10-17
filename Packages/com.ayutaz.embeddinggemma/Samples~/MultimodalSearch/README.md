@@ -15,4 +15,4 @@ Package Manager の EmbeddingGemma の Samples から **Image and Audio Search**
 
 このサンプルはWindows Editor向けです。他OS・モバイル・WebGLの動作確認は別途必要です。準備処理の正常終了と、実GPUでの数値検証は別の結果として扱います。モデル準備の固定source・元参照・実行条件はrepositoryの検証記録を参照してください。
 
-repositoryの今回の作業環境では `artifacts/step3-media-bundle-5d1a66f` に全6 moduleの準備済みbundleがあります。その絶対パスを指定すれば追加変換は不要です。別の環境では、別途取得した監査済みbundleが必要です。モデル・係数・tokenizerはGitへ含めません。
+**新規利用者向けの制約**：モデルbundleの公開配布と、空のcheckoutからの一括生成手順は未整備です。開発環境に存在するローカルフォルダーはパッケージには含まれません。[準備経路と未整備の範囲](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/model-preparation.md)を確認してください。モデル・係数・tokenizerはGitへ含めません。

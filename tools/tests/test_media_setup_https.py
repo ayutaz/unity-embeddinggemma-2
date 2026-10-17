@@ -137,6 +137,13 @@ def test_retry_after_forced_cli_termination_releases_lease_and_removes_partial(h
             if pending: break
             time.sleep(.02)
         assert process.poll() is None and pending, 'The child must be alive with an actual received partial file before kill.'
+        before_requests = server.object_requests
+        before_receipt = (output/'preparation.json').read_bytes() if (output/'preparation.json').exists() else None
+        blocked = cli(server, output, digest(descriptor))
+        assert blocked.returncode == 1 and 'already active' in blocked.stderr
+        assert server.object_requests == before_requests and process.poll() is None
+        assert all(path.exists() and path.stat().st_size >= 1024*1024 for path in pending)
+        assert ((output/'preparation.json').read_bytes() if (output/'preparation.json').exists() else None) == before_receipt
         process.kill(); process.communicate(timeout=10)
         assert process.returncode != 0 and any(path.exists() for path in pending)
     finally:

@@ -4,7 +4,8 @@ Usage: uv run --locked python -m embeddinggemma_tools.media_setup --help
 The descriptor hash must be supplied independently of the download server.
 """
 import argparse
-from contextlib import closing
+from contextlib import closing, contextmanager
+import errno
 import hashlib
 import json
 import os
@@ -20,6 +21,8 @@ FILE_KEYS = frozenset(('model', 'tokenizer', 'tokenizer_config', 'backbone', 'pr
 OBJECT = re.compile(r'objects/([a-f0-9]{64})\.(sentis|json|f32|bin)\Z')
 CHUNK_BYTES = 1024 * 1024
 MAX_DESCRIPTOR_BYTES = 8 * CHUNK_BYTES
+OBJECT_PENDING = re.compile(r'\.[a-f0-9]{64}\.(sentis|json|f32|bin)\.[a-f0-9]{32}\.pending\Z')
+METADATA_PENDING = re.compile(r'\.(bundle|preparation)\.json\.[a-f0-9]{32}\.pending\Z')
 
 
 def _url(value):
@@ -120,6 +123,51 @@ def _download(url):
     return urlopen(url, timeout=60)
 
 
+@contextmanager
+def _preparation_lease(root):
+    """The OS releases this lock on normal close and process termination.
+
+    Keep the lock file: unlinking it could give different writers different
+    lock inodes. A rejected writer must not replace the owner's receipt.
+    """
+    path = root / '.preparation.lock'
+    if path.is_symlink():
+        raise ValueError('Preparation lock must be an owned regular file')
+    flags = os.O_CREAT | os.O_RDWR | getattr(os, 'O_BINARY', 0) | getattr(os, 'O_NOFOLLOW', 0)
+    descriptor = os.open(path, flags, 0o600)
+    try:
+        try:
+            if os.name == 'nt':
+                import msvcrt
+                msvcrt.locking(descriptor, msvcrt.LK_NBLCK, 1)
+            else:
+                import fcntl
+                fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError as error:
+            if error.errno in (errno.EACCES, errno.EAGAIN, errno.EDEADLK):
+                raise BlockingIOError(errno.EWOULDBLOCK,
+                    'Model preparation is already active for this output directory') from error
+            raise
+        yield
+    finally:
+        os.close(descriptor)
+
+
+def _remove_stale_pending(root):
+    """Only our flat, UUID-named files, with the exclusive lease held."""
+    removed = 0
+    for directory, pattern in ((root, METADATA_PENDING), (root / 'objects', OBJECT_PENDING)):
+        if not directory.is_dir():
+            continue
+        if not directory.resolve().is_relative_to(root):
+            raise ValueError('Output objects escape the preparation directory')
+        for path in directory.glob('.*.pending'):
+            if pattern.fullmatch(path.name) and path.is_file() and not path.is_symlink():
+                path.unlink()
+                removed += 1
+    return removed
+
+
 def prepare_bundle(descriptor, output, *, source_url, descriptor_sha256, modules=MODULES,
                    fetch=None, cancelled=None):
     """Hash-audit streaming transfers, repair/reuse objects, publish metadata last.
@@ -148,10 +196,20 @@ def prepare_bundle(descriptor, output, *, source_url, descriptor_sha256, modules
         raise ValueError('Selected modules have no declared objects')
     root = Path(output).resolve()
     root.mkdir(parents=True, exist_ok=True)
+    with _preparation_lease(root):
+        removed = _remove_stale_pending(root)
+        return _prepare_objects(data, root, names, source_url=source_url,
+            descriptor_sha256=descriptor_sha256, modules=modules, fetch=fetch,
+            cancelled=cancelled, stale_pending_files_removed=removed)
+
+
+def _prepare_objects(data, root, names, *, source_url, descriptor_sha256, modules,
+                     fetch, cancelled, stale_pending_files_removed):
     fetch, cancelled = fetch or _download, cancelled or (lambda: False)
     report = dict(success=False, model_revision=REVISION, producer=data['source_commit'],
                   descriptor_sha256=descriptor_sha256, source_url=source_url, modules=list(modules),
                   downloaded_files=0, reused_files=0, downloaded_bytes=0, reused_bytes=0,
+                  stale_pending_files_removed=stale_pending_files_removed,
                   inference_executed=False, gpu_validated=False)
     def check_cancelled():
         if cancelled():

@@ -1,0 +1,88 @@
+{
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "precision": "fp32",
+  "accepted": false,
+  "scope": "Combined imported-sample trial failed its existing 15-minute fixture timeout; no consecutive/rank acceptance or performance claim.",
+  "receipt": {
+    "command": [
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\step3-consumer-53dafe8",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.PreparedTextQueryReferenceTests.ActualGpuTextModuleMatchesAllPinnedQueryVectorsAndReleasesWorkers;EmbeddingGemma.Validation.Tests.MultimodalSearchSampleGpuTests.ActualImportedSampleRegistersMediaSearchesPinnedQueriesAndClosesItsCacheLease",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testResults",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-and-integration-e28a5fd-fp32-16gib.xml",
+      "-logFile",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-and-integration-e28a5fd-fp32-16gib.log"
+    ],
+    "timeout_seconds": 1200,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T17:32:39.452397+00:00",
+    "pid": 30808,
+    "exit_code": 2,
+    "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-and-integration-e28a5fd-fp32-16gib.xml",
+    "unity_counts": {
+      "total": 2,
+      "passed": 1,
+      "failed": 1,
+      "skipped": 0
+    },
+    "elapsed_seconds": 1141.3366402999964,
+    "completed_utc": "2026-10-17T17:51:40.789010+00:00"
+  },
+  "primary_failure": "Timeout value of 900000 ms was exceeded. If this is intended, increase the timeout value using a TimeoutAttribute.",
+  "phase": "register_padded_noise",
+  "completed_registration_ids": [
+    "square-0",
+    "landscape-0",
+    "portrait-0",
+    "silence"
+  ],
+  "completed_queries": 0,
+  "following_direct_text_fixture": {
+    "passed": true,
+    "reference_cases": 4,
+    "session_closed": true
+  },
+  "host_allowance_bytes": 17179869184,
+  "previous_12gib_failure_preserved": true,
+  "post_timeout_error": "UnityEngine.MissingReferenceException: The object of type 'UnityEngine.ComputeShader' has been destroyed but you are still trying to access it.\nYour script should either check if it is null or you should not destroy the object. Parameter name: computeShader\r\n  at UnityEngine.Object+MarshalledUnityObject.TryThrowEditorNullExceptionObject (UnityEngine.Object unityObj, System.String parameterName) [0x0006a] in <048e1259bbea40078e5d4fad1c7a86a5>:0 \r\n  at UnityEngine.Bindings.ThrowHelper.ThrowArgumentNullException (System.Object obj, System.String parameterName) [0x00010] in <048e1259bbea40078e5d4fad1c7a86a5>:0 \r\n  at UnityEngine.Rendering.CommandBuffer.SetComputeIntParam (UnityEngine.ComputeShader computeShader, System.Int32 nameID, System.Int32 val) [0x00025] in <048e1259bbea40078e5d4fad1c7a86a5>:0 \r\n  at UnityEngine.Rendering.CommandBuffer.SetComputeIntParam (UnityEngine.ComputeShader computeShader, System.String name, System.Int32 val) [0x00009] in <048e1259bbea40078e5d4fad1c7a86a5>:0 \r\n  at EmbeddingGemma.GpuSoftmax.Execute (Unity.InferenceEngine.Tensor`1[T] input) [0x00256] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\media-performance-work\\Packages\\com.ayutaz.embeddinggemma\\Runtime\\GpuSoftmax.cs:62 \r\n  at EmbeddingGemma.GpuProjectionPipeline+Call.RunStage (System.Int32 stage) [0x00256] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\media-performance-work\\Packages\\com.ayutaz.embeddinggemma\\Runtime\\GpuProjectionPipeline.cs:238 \r\n  at EmbeddingGemma.GpuProjectionPipeline.ExecuteAsync (Unity.InferenceEngine.Tensor`1[T] input, System.Threading.CancellationToken cancellationToken) [0x0009b] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\media-performance-work\\Packages\\com.ayutaz.embeddinggemma\\Runtime\\GpuProjectionPipeline.cs:171 \r\n  at EmbeddingGemma.PartitionedAudioFeatureEncoder.EncodeAsync (EmbeddingGemma.AudioPreprocessingResult input, System.Threading.CancellationToken cancellationToken) [0x00048] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\media-performance-work\\Packages\\com.ayutaz.embeddinggemma\\Runtime\\PartitionedAudioFeatureEncoder.cs:66 \r\n  at EmbeddingGemma.AudioEmbedder.EmbedAsync (EmbeddingGemma.AudioPcmInput input, EmbeddingGemma.TextRole role, System.String title, System.Threading.CancellationToken cancellationToken) [0x0020a] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\media-performance-work\\Packages\\com.ayutaz.embeddinggemma\\Runtime\\AudioEmbedder.cs:114 \r\n  at EmbeddingGemma.GpuMediaSession.Execute (System.Func`2[T,TResult] call, System.Threading.CancellationToken token) [0x0005d] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\media-performance-work\\Packages\\com.ayutaz.embeddinggemma\\Runtime\\GpuMediaSession.cs:70 \r\n  at EmbeddingGemma.Samples.MultimodalSearchSample.<AddAsync>b__79_0 (System.Threading.CancellationToken token) [0x003ac] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\step3-consumer-53dafe8\\Assets\\EmbeddingGemmaMultimodalSearch\\MultimodalSearchSample.cs:165 \r\n  at EmbeddingGemma.Samples.MultimodalSearchSample.Execute (System.Func`2[T,TResult] operation, System.Threading.CancellationTokenSource cancellation) [0x00159] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\step3-consumer-53dafe8\\Assets\\EmbeddingGemmaMultimodalSearch\\MultimodalSearchSample.cs:198 \r\n  at EmbeddingGemma.Validation.Tests.MultimodalSearchSampleGpuTests.Run (System.Threading.CancellationToken cancellation) [0x00e17] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\media-performance-work\\validation\\com.ayutaz.embeddinggemma.validation\\Tests\\Editor\\MultimodalSearchSampleGpuTests.cs:175 ",
+  "interpretation": "MissingReferenceException was captured after the fixture timeout while asynchronous registration was still active. It is not proof of an independent normal-operation shader lifetime defect. The wall-clock slowdown cause remains unverified; do not increase bounds and claim an improvement.",
+  "physical_preflight": {
+    "physical_total_bytes": 68628013056,
+    "available_bytes": 33522925568,
+    "allowance_bytes": 17179869184,
+    "reserve_bytes": 4294967296,
+    "precision": "fp32",
+    "scope": "Bounded measurement allowance, not a minimum RAM or memory improvement claim"
+  },
+  "source": {
+    "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+    "validation_parent": "581b23ff3c6cad20a006b1668363abc2c07de4c2",
+    "runtime_package_tree": "fc0e94e92b7cf71a101a70e34dcc6fdf0f2adac3",
+    "cache_existed": false,
+    "validation_files_sha256": {
+      "PreparedTextQueryReferenceTests.cs": "eb8d5f8192f988a31b43ef1c11d33cf79ba5204c0546d0fee63e50cd0309a2d8",
+      "MultimodalSearchSampleGpuTests.cs": "65836ad330322fbc5ed9b921aa74593e4cb867019284935412a522c39f9a47e1",
+      "MediaStageTiming.cs": "8e15fdd4ef806356912f92d50e6cf8daf08684b34ae96344d2efd213ddfaaff8"
+    },
+    "scope": "Two unchanged real-model fixtures in one actual GPU Editor, local file SDK; programmatic sample, not native UI, fresh Git, microphone or benchmark acceptance"
+  },
+  "evidence_sha256": {
+    "text-and-integration-e28a5fd-fp32-16gib-process.json": "b87aecd2157a07b3cb65f45aa1057d11bcf451285c8cbfca57e1d2b1f10b862a",
+    "text-and-integration-e28a5fd-fp32-16gib.xml": "52abffad2e36ff8c9a8391ef88c421ff1b33bb17704f73d36b96d747df4efc75",
+    "text-and-integration-e28a5fd-fp32-16gib.log": "14cff2194a910eb0a5ef922452d48e5b76d7a6e5e744ab5b03125129acfa70b2",
+    "text-and-integration-e28a5fd-fp32-16gib-integration.json": "8fa08c5ac3e0388d3cb5a91b9b846108fb5730f24b4072b9068a8c81ef7c8cc0",
+    "text-and-integration-e28a5fd-fp32-16gib-text.json": "c2e2a9b59008be6fa9dfe7becf5ce3abc9e7491c1745f8560cb6cbc626b823b4"
+  }
+}

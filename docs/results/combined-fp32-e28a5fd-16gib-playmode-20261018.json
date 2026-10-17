@@ -1,0 +1,218 @@
+{
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "precision": "fp32",
+  "accepted": true,
+  "scope": "Combined imported-sample plus direct text GPU fixtures, local-file consumer. Not native UI, public cold acquisition, live microphone or full benchmark acceptance.",
+  "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+  "receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\step3-consumer-53dafe8",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.PreparedTextQueryReferenceTests.ActualGpuTextModuleMatchesAllPinnedQueryVectorsAndReleasesWorkers;EmbeddingGemma.Validation.Tests.MultimodalSearchSampleGpuTests.ImportedSampleRendersItsRealSearchResultsInPlayMode",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testResults",
+      ".\\artifacts\\usability-state\\text-and-playmode-e28a5fd-fp32-16gib.xml",
+      "-logFile",
+      ".\\artifacts\\usability-state\\text-and-playmode-e28a5fd-fp32-16gib.log"
+    ],
+    "timeout_seconds": 1200,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T17:53:08.398138+00:00",
+    "pid": 135528,
+    "exit_code": 0,
+    "unity_results": ".\\artifacts\\usability-state\\text-and-playmode-e28a5fd-fp32-16gib.xml",
+    "unity_counts": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 836.6434409000212,
+    "completed_utc": "2026-10-17T18:07:05.041567+00:00"
+  },
+  "source": {
+    "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+    "validation_parent": "7340cbcd5eec62b37647bec5224cb53b7f94678b",
+    "runtime_package_tree": "fc0e94e92b7cf71a101a70e34dcc6fdf0f2adac3",
+    "cache_existed": false,
+    "validation_files_sha256": {
+      "PreparedTextQueryReferenceTests.cs": "eb8d5f8192f988a31b43ef1c11d33cf79ba5204c0546d0fee63e50cd0309a2d8",
+      "MultimodalSearchSampleGpuTests.cs": "a29ebb8da978a5035ad1f89e22fe97548849fbb057e57dbf5f33a3b2838c9de2",
+      "MediaStageTiming.cs": "8e15fdd4ef806356912f92d50e6cf8daf08684b34ae96344d2efd213ddfaaff8"
+    },
+    "scope": "Two unchanged real-model fixtures in one actual GPU Editor, local file SDK; programmatic sample, not native UI, fresh Git, microphone or benchmark acceptance"
+  },
+  "physical_preflight": {
+    "physical_total_bytes": 68628013056,
+    "available_bytes": 37079248896,
+    "allowance_bytes": 17179869184,
+    "reserve_bytes": 4294967296,
+    "precision": "fp32",
+    "scope": "Bounded measurement allowance, not a minimum RAM or memory improvement claim"
+  },
+  "resource_condition": {
+    "snapshot": "NVIDIA GeForce RTX 4070 Ti SUPER, 610.88, 2315 MiB, 13749 MiB, 16376 MiB",
+    "scope": "Global snapshot before launch; not per-process allocation or minimum VRAM"
+  },
+  "registrations": [
+    {
+      "id": "square-0",
+      "cosine": 0.9999999999997135,
+      "norm_squared": 0.9999998644722635,
+      "input_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399"
+    },
+    {
+      "id": "landscape-0",
+      "cosine": 0.9999999999989977,
+      "norm_squared": 1.0000000234680548,
+      "input_sha256": "f2b3f32a22e6282b9876b98c4c5a7bbf75e7469dff933128e17d6503dd6d6e55"
+    },
+    {
+      "id": "portrait-0",
+      "cosine": 0.9999999999997848,
+      "norm_squared": 1.0000000495263595,
+      "input_sha256": "fce3474792c6401c4bae6ac0261a386f400bac0cece977ffda86388ee6682489"
+    },
+    {
+      "id": "silence",
+      "cosine": 0.9999999999928917,
+      "norm_squared": 1.0000000994303668,
+      "input_sha256": "c9c9803e19adb2d139ad00b54f4af71f80c2b2530b10828a913b5b82c18559b8"
+    },
+    {
+      "id": "padded_noise",
+      "cosine": 0.9999999999981798,
+      "norm_squared": 0.9999999922162043,
+      "input_sha256": "a78defcfa0d000eecf8f5eca429135170bb9568f8f4b68d8e14e2e36fae62949"
+    }
+  ],
+  "direct_text_queries": [
+    {
+      "id": "query-cat-ja",
+      "cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355,
+      "input_sha256": null
+    },
+    {
+      "id": "query-space-en",
+      "cosine": 0.9999999999998965,
+      "norm_squared": 1.000000046468943,
+      "input_sha256": null
+    },
+    {
+      "id": "query-recipe-ja",
+      "cosine": 0.9999999999998783,
+      "norm_squared": 0.9999999230032577,
+      "input_sha256": null
+    },
+    {
+      "id": "query-cat-en",
+      "cosine": 0.9999999999998915,
+      "norm_squared": 0.9999998392781916,
+      "input_sha256": null
+    }
+  ],
+  "full_query_rankings": [
+    {
+      "id": "query-cat-ja",
+      "rank": [
+        "media-3",
+        "media-0",
+        "media-1",
+        "media-2",
+        "media-4"
+      ],
+      "maximum_score_error": 1.7913466188179683e-07
+    },
+    {
+      "id": "query-space-en",
+      "rank": [
+        "media-4",
+        "media-0",
+        "media-1",
+        "media-3",
+        "media-2"
+      ],
+      "maximum_score_error": 2.3957722850020957e-07
+    },
+    {
+      "id": "query-recipe-ja",
+      "rank": [
+        "media-3",
+        "media-4",
+        "media-1",
+        "media-0",
+        "media-2"
+      ],
+      "maximum_score_error": 1.5993362545430045e-07
+    },
+    {
+      "id": "query-cat-en",
+      "rank": [
+        "media-3",
+        "media-0",
+        "media-2",
+        "media-1",
+        "media-4"
+      ],
+      "maximum_score_error": 1.2983427366553002e-07
+    }
+  ],
+  "actual_gpu_stage_cancel_retry": true,
+  "worker_kernel_tensor_and_cache_lease_release": true,
+  "host_native_lifetime_peaks_bytes": [
+    14553006080,
+    14559334400
+  ],
+  "host_allowance_bytes": 17179869184,
+  "prior_12gib_failure_preserved": true,
+  "memory_leak_fixed_claimed": false,
+  "gpu_execution_time_measured": false,
+  "performance_improvement_claimed": false,
+  "execution_mode": "playmode",
+  "rendered_screenshots": [
+    {
+      "file": "text-and-playmode-e28a5fd-fp32-16gib-rendered-query-cat-ja.png",
+      "sha256": "a632aa22c87139528f45d5cd58813c3ef0eac605faec37156ee6d70bfed8df79",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "text-and-playmode-e28a5fd-fp32-16gib-rendered-query-space-en.png",
+      "sha256": "a4abd1371aef3aae6a8434b57b9c4cfb742a20f3ec14eb799afea3e3773459b5",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "text-and-playmode-e28a5fd-fp32-16gib-rendered-query-recipe-ja.png",
+      "sha256": "2fbbe4539383b40774d87ce554503c8c41def797f2547e229343f975f8179262",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "text-and-playmode-e28a5fd-fp32-16gib-rendered-query-cat-en.png",
+      "sha256": "528b957590a5e70f09c62f5e58782c550a1ee7232d4c8154dd6d2a0f2ef5d4c2",
+      "width": 1280,
+      "height": 800
+    }
+  ],
+  "visual_inspection_completed": false,
+  "evidence_sha256": {
+    "text-and-playmode-e28a5fd-fp32-16gib-process.json": "f0de8c73a977abc104ee1d8afd9a01f47f8dfca030754e9a313f4ffac8240caf",
+    "text-and-playmode-e28a5fd-fp32-16gib.xml": "000d6a1d5efb5702173377193465a6e3668eaba126fb3fa1736424585e694a4c",
+    "text-and-playmode-e28a5fd-fp32-16gib.log": "f20fededb8df6b47db84284cf9cd22840bddb70235e080f36aa992c61f9cea89",
+    "text-and-playmode-e28a5fd-fp32-16gib-integration.json": "7f30568c4f7e798437a28860e536e5059423dcd3ac00a28d4a8e764270c7f64a",
+    "text-and-playmode-e28a5fd-fp32-16gib-text.json": "7ccf21b369946878defcbd35f8d50205bbc6fdb2b99220545abad9fc5b2e165d"
+  }
+}

@@ -37,6 +37,7 @@ uv run --no-project --python 3.13 python -m embeddinggemma_tools.media_setup `
 - tokenizer、text model、media backbone・tokenizer config、音声preprocessorの必須参照を取得前に検証します。model参照は`.sentis`、module backendはGPUCompute、model segment数はoperation数+1を要求します。欠落したrecipeを準備成功にしません。この確認はUnityのrecipe全体・graphの実行可能性の検証を代替しません。
 - 同じコマンドの再実行でも、既存objectを全体ハッシュで検証します。正常objectは再利用し、サイズが同じ破損も検出して再取得します。
 - 通常の中断・転送失敗では未完了objectの一時ファイルを片付け、完了済みobjectを残します。プロセス強制終了で一時ファイルが残った場合は、次の準備が排他ロックを取得してから所有形式の一時ファイルを回収します。同じ出力先と固定参照で再試行してください。転送処理に入った後の捕捉可能な失敗は `preparation.json` に失敗として記録します。以前の公開済みdescriptorは成功するまで置き換えません。強制終了した呼び出し自体の成功判定にはしません。
+- Ctrl+Cはキャンセルのメッセージと終了code130を返します。object準備に入った後は `success=false` / `error_type=KeyboardInterrupt` を記録し、一時ファイルを削除して排他ロックを解放します。descriptor受信中など準備開始前には新しいreceiptがない場合があります。再試行は同じ固定URL・SHA・出力先を使い、完成済みobjectをhash照合して再利用します。ブロッキングI/O中の即時停止時間は保証しません。
 - descriptorのURL・SHA256・revision自体の検証に失敗した場合は、転送準備に入る前に終了するため、出力receiptがない場合があります。終了codeと標準エラーも保存してください。
 
 HTTP 404・期限切れ・認証不足は取得失敗です。ハッシュ検証を無効にしたり、似た名前のモデルへ置き換えたりせず、公開配布側の固定参照を確認してください。別revisionを使う場合は、producer・graphと数値参照を改めて監査します。
@@ -84,3 +85,13 @@ TLSの信頼は検証用child processの `SSL_CERT_FILE` だけに指定し、OS
 実FP32 bundleのコピーcacheでは、9MiB重みの受信中に、検証が起動したCLIだけを強制終了した。別CLIは拒否され、ownerの一時ファイル・旧receipt・descriptorを保持した。強制終了で残った受信済み一時ファイルは次の準備で1件回収し、重み1件を受信・819件再利用して終了code0。その後のwarmも全6 module・820件再利用・新規受信0で終了code0だった。出力820ファイルを独立に再hashし、元重み・元descriptorとuser変更4ファイルも照合した。
 
 この確認はOSが終了させた所有CLIからの復旧で、Ctrl+C signalの実証ではない。公開取得・GPU推論の受け入れは未完了のままである。過去の48件成功やf09317eの実データ受信を、変更後sourceの全条件再実行として数えない。
+
+## Ctrl+Cによる中断と再試行
+
+source `2b6f45d` では、descriptor受信中と実HTTPS object受信中のCtrl+Cを2件のRedで確認し、CLIの境界でKeyboardInterruptを捕捉する修正後、関連53件が成功した。[実Ctrl+Cと実FP32重みの監査](results/real-media-ctrl-c-2b6f45d-20261018.json)。旧sourceでは例外のtraceを表示し、Windowsの実CLIはキャンセルcode130を返さなかった。objectの検証・排他・receipt・後始末の処理は変更していない。
+
+Windowsの実イベントは、非表示の新規consoleに検証用relayと所有CLIだけを起動し、[GenerateConsoleCtrlEvent](https://learn.microsoft.com/en-us/windows/console/generateconsolectrlevent)のCTRL_C_EVENTを使った。送信前にconsole参加PIDがこの2件だけであることを確認し、呼び出し元のconsoleへ接続しない。先行fixtureではvenvの起動用processも参加し、検査で送信せず停止した。同じPythonのbase interpreterで2件だけを起動するようfixtureを直してから、意図したRedとGreenを確認している。POSIX分岐は所有PIDにSIGINTを送るが、ここでの実行結果はWindowsであり、他OSは最新CIで別に判定する。
+
+既存のコピーcacheを使った実FP32の9MiB重みでも、受信済み一時ファイルを確認してからイベントを送信した。CLIは強制killなしで終了code130、キャンセル表示、失敗receipt、旧descriptor保持、一時ファイルなしとなった。その後の再試行は1件受信・819件再利用、warmは全6 module・820件再利用・新規受信0で、どちらもexit0だった。出力820 objectのサイズ・SHA256をCLIとは別に照合し、元重み・固定source・既存user4ファイルを保持した。
+
+SSL受信のpauseはイベント送信後に解除した。この試行は実際のCtrl+C・後始末・再試行の確認であり、通信が停止したままの即時キャンセル時間、公開元からの取得、GPU推論や優先1〜3全体の合格ではない。source descriptorの入力pinと、選択module・object順序を整えて書き出す出力JSONのbyte hashも区別する。JSON内容・全objectは照合し、入力pinを変更していない。

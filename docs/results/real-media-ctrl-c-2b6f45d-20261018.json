@@ -1,0 +1,161 @@
+{
+  "actual_windows_ctrl_c_real_weight_recovery_accepted": true,
+  "public_acquisition_accepted": false,
+  "gpu_validated": false,
+  "inference_executed": false,
+  "full_priorities_1_to_3_accepted": false,
+  "red_source": "275fb9b",
+  "green_source": "2b6f45d33714728d5a023578b6e95c5313fe1705",
+  "intended_red": 2,
+  "related_green": 53,
+  "red_scope": "Descriptor interruption escaped as KeyboardInterrupt; actual Windows Ctrl+C CLI ended with NTSTATUS_CONTROL_C_EXIT instead of cancelled exit130.",
+  "preserved_fixture_failures": [
+    "Initial unit fixture exposed KeyboardInterrupt to pytest and stopped collection: no tests ran.",
+    "Initial console guard rejected four members caused by Windows venv redirectors; no event was sent.",
+    "Using the same base interpreter removed redirectors; two intended production Red results were then observed."
+  ],
+  "production_change": "Only catch KeyboardInterrupt at CLI boundary and exit130 with a cancellation/retry message. Existing receipt, hash/size, lock, cleanup, revision and GPU requirements remain unchanged.",
+  "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+  "producer": "5d1a66fa3dbf4f76223e248378a146cfb9f15d86",
+  "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+  "modules": [
+    "text",
+    "image-square",
+    "audio-1119",
+    "audio-839",
+    "image-landscape",
+    "image-portrait"
+  ],
+  "objects": 820,
+  "bytes": 8583084520,
+  "selected_weight": "objects/e0f98883c238d21192d6e086f0205f07c428847307a94817d34f3adf20e7338f.f32",
+  "selected_weight_bytes": 9437184,
+  "actual_received_partial_bytes": 1048576,
+  "real_signal": {
+    "relay_pid": 156032,
+    "signal_sent": true,
+    "forced_cleanup": false,
+    "child_pid": 35540,
+    "console_process_count": 2,
+    "console_processes": [
+      35540,
+      156032
+    ],
+    "signal_kind": "GenerateConsoleCtrlEvent(CTRL_C_EVENT,0) in isolated owned console",
+    "exit_code": 130,
+    "terminal": true
+  },
+  "cancelled_receipt": {
+    "success": false,
+    "error_type": "KeyboardInterrupt",
+    "reused_files": 716
+  },
+  "partial_cleaned_without_force_kill": true,
+  "old_descriptor_retained": true,
+  "output_descriptor_sha256_after_execution": "6d28202ffe4dd522414ea86b4b947df94e1418622ae61394b6eaa6cdffdc6b88",
+  "descriptor_serialization": "Source pin hashes original received bytes; output is independently serialized with sorted object names and selected module order. Parsed content equals all-six original. Retention across cancellation was checked against the pre-run output hash by the driver.",
+  "phases": [
+    {
+      "phase": "retry-after-ctrl-c",
+      "exit_code": 0,
+      "report": {
+        "success": true,
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "producer": "5d1a66fa3dbf4f76223e248378a146cfb9f15d86",
+        "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+        "source_url": "https://127.0.0.1:61305/bundle.json",
+        "modules": [
+          "text",
+          "image-square",
+          "image-landscape",
+          "image-portrait",
+          "audio-1119",
+          "audio-839"
+        ],
+        "downloaded_files": 1,
+        "reused_files": 819,
+        "downloaded_bytes": 9437184,
+        "reused_bytes": 8573647336,
+        "stale_pending_files_removed": 0,
+        "inference_executed": false,
+        "gpu_validated": false
+      }
+    },
+    {
+      "phase": "warm-all-six",
+      "exit_code": 0,
+      "report": {
+        "success": true,
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "producer": "5d1a66fa3dbf4f76223e248378a146cfb9f15d86",
+        "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+        "source_url": "https://127.0.0.1:61305/bundle.json",
+        "modules": [
+          "text",
+          "image-square",
+          "image-landscape",
+          "image-portrait",
+          "audio-1119",
+          "audio-839"
+        ],
+        "downloaded_files": 0,
+        "reused_files": 820,
+        "downloaded_bytes": 0,
+        "reused_bytes": 8583084520,
+        "stale_pending_files_removed": 0,
+        "inference_executed": false,
+        "gpu_validated": false
+      }
+    }
+  ],
+  "output_files_independently_rehashed": 820,
+  "source_original_weight_unchanged": true,
+  "protected_root_files_verified": 4,
+  "source_files": [
+    {
+      "path": "tools/embeddinggemma_tools/__init__.py",
+      "git_blob": "e3f6f8f8d9e6f09b2892eacfe5f3f17a3ba2d2db",
+      "sha256": "5fd4c0a65644f084df589943d1b69d8eaae78f80a47e1710a834ce509aed601f"
+    },
+    {
+      "path": "tools/embeddinggemma_tools/media_setup.py",
+      "git_blob": "43f31fb6200cf254ed2a4b50d9e87a6697fcc1e5",
+      "sha256": "64c1705c4447873b635febc9877552cb5aedb54e10d58a0d26f558a32766de4b"
+    },
+    {
+      "path": "tools/tests/media_setup_https_harness.py",
+      "git_blob": "d9f0212dcb1fb0a62dec2fdb6e47fe410cfd8344",
+      "sha256": "2a1e6d43759e8d0c962da1bb6f029713dae01f604a929b6be120e99311307b28"
+    },
+    {
+      "path": "tools/tests/media_setup_interrupt_harness.py",
+      "git_blob": "b302187e804470b2f62ce4b0bb701b58241b6fbc",
+      "sha256": "94785c8258dfb1235b61ddd4e230ef5480abda82bf98889d3a68bf6c82a2f0f4"
+    }
+  ],
+  "scope_limits": [
+    "Loopback HTTPS from existing qualified source, not public empty-cache acquisition.",
+    "Windows actual signal only; POSIX branch requires latest CI.",
+    "Paused SSL read was resumed after event delivery; no immediate network-cancellation latency guarantee.",
+    "No model inference, GPU execution or Unity in this check."
+  ],
+  "primary_references": [
+    "https://learn.microsoft.com/en-us/windows/console/generateconsolectrlevent",
+    "https://docs.python.org/3.14/library/subprocess.html#subprocess.CREATE_NEW_CONSOLE"
+  ],
+  "evidence_sha256": {
+    "real-media-interrupt-2b6f45d\\summary.json": "e4f66ca6cd6babdde1d98063a61147a7e091828ce49e51669d507eab53595e40",
+    "usability-state\\real-media-ctrl-c-controller.json": "26bcb53bbeb01e8d839e6d72235ab7c291df0025f4d4fb27c6ab6d47e62e1b42",
+    "real-media-interrupt-2b6f45d\\owned-console\\done.json": "706bfeb99bcca0c1043445ab075a2da315ee9cf27e07e87e03166aae61a6f181",
+    "real-media-interrupt-2b6f45d\\owned-console\\stderr.txt": "2eba514484459456c55eecb3a05e54d4fbf65312173b4add1941bce1aeec599c",
+    "real-media-interrupt-2b6f45d\\interrupted-preparation.json": "8122a3a2c8c6c96aac4415551ddd00d8e9bbcb39c67a0eb7cc2afb0c09e70e18",
+    "usability-state\\media-interrupt-red.txt": "d578fa4b3a0566356f7c595cc11d7ff4f7d4d48d9209228b39d4ee27b5343546",
+    "usability-state\\media-interrupt-red2.txt": "8eb94390e733bca0dcedc0c94d3c64d161e057df1a9933d1b10182f685134318",
+    "usability-state\\media-interrupt-relay-diagnostic.txt": "cc2c9230dbcf9909fd810396406bacd2522f7f1d6f9107a80532ded5448cbc3a",
+    "usability-state\\media-interrupt-red3.txt": "a6877f53c4852c7785c70bfbeb2d43ebe56441a3a09bc5762595e936a08dee8b",
+    "usability-state\\media-interrupt-green.txt": "14258a1616fb181f35920e20f65281d13742fe771d7b244b0e3897705320906c",
+    "usability-state\\run_real_media_ctrl_c.py": "816cca64de78826977785899e22d9cf394db26fe5cb57bf5d793ece789e1a18a",
+    "usability-state\\audit_real_media_ctrl_c.py": "594f1e8ed8ae0f19dbc0b260d2bb9f9eaa7842bd7ed50fc1a9546c00e8532d65"
+  },
+  "audited_utc": "2026-10-17T23:45:51.297963+00:00"
+}

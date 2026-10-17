@@ -62,3 +62,11 @@ SDK `e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4`、固定した派生bundle、Wind
 この起動の初期Refreshは81.042秒、実importは0件で、再利用projectの観測です。内包するcompile時間51.352秒・domain reload時間3.217秒を合計へ加算せず、GPU推論時間にも置き換えません。Windowsのプロセス別GPU allocationは244サンプルを記録しました。dedicated/shared allocationと実常駐VRAM、未観測のピーク、最低VRAMは区別します。
 
 fixtureの時間超過後に、継続した処理から破棄済みComputeShaderへのアクセスも記録されました。これだけで製品のmemory leakやGPU演算の失敗原因は確定しません。続く確認には、同じ5媒体・4検索・数値／順位／解放条件を持つ既存PlayMode描画fixtureを使います。このfixtureの実行上限もEditModeと同じ900,000msとし、Unity Test Frameworkの既定180,000msとの違いを明示します。Editorの更新待ちが寄与する程度は未測定であり、PlayModeで実行するだけで高速化を主張しません。
+
+## FP32のPlayMode連続検証
+
+SDK `e28a5fd`、同じ固定FP32 bundle、明示した16GiB割り当てで、PlayModeの既存描画fixtureと直接テキストfixtureが2 pass / fail0 / skip0 / exit0となりました。画像3件・音声2件の登録と固定Python参照との比較、日英4クエリの全順位・score許容差0.001、GPU処理中のcancel/retry、module切替、Worker/kernel/tensorとcache leaseの解放を確認しました。続くテキスト4件も独立に照合しています。[連続実行と描画の監査](results/combined-fp32-e28a5fd-16gib-playmode-20261018.json)を参照してください。
+
+4枚の1280×800 PNGでは、合成画像3種類のプレビューと、日本語の音声再生ボタン・順位・scoreの描画を目視確認しました。スクロール領域の最終行が一部だけ表示されるクエリもあります。実際のマウス／キーボード操作、再生・停止、実マイク、新規Git consumerの受け入れとは別の結果です。
+
+プロセス全体は836.64秒で、Editor起動も含みます。初回module準備中にUnityを前面へ切り替えた観測を記録しており、先のEditMode実行との時間差をモデル高速化へ帰属させません。ホスト生涯ピークは14,559,334,400 bytesでした。これはEditorを含む当該processの観測で、最低RAMやVRAMではありません。単独／連続のFloat16比較、同一入力の反復・各stageの実GPU時間は引き続き未完了です。

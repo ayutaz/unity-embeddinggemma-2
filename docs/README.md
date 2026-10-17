@@ -11,6 +11,7 @@
 | [Text Search](../Packages/com.ayutaz.embeddinggemma/Samples~/TextSearch/README.md) | テキスト検索サンプルの操作 |
 | [Image and Audio Search](../Packages/com.ayutaz.embeddinggemma/Samples~/MultimodalSearch/README.md) | 画像・音声の登録、入力profile、検索・キャンセル |
 | [API詳細](runtime-api.md) | GPU設定、前処理、encoder・backbone、保存API |
+| [低レベルのマルチモーダルAPI](../Packages/com.ayutaz.embeddinggemma/Documentation~/multimodal-api.md) | prompt・GPU特徴量・前処理の入力と所有権 |
 | [音声API](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-embedder.md) | 非同期呼び出し・stageの所有権 |
 | [モデルのライセンス](model-license.md) | コードとモデルの利用条件・配布境界 |
 

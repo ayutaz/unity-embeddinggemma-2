@@ -54,7 +54,7 @@ float[] raw = embedder.EmbedRaw("前置きなしの入力");
 
 `ImageEmbedder.EmbedAsync`と`AudioEmbedder.EmbedAsync`は、対応profile・監査済みstageを使い、前処理→encoder→共通backboneをGPUで実行します。画像はTexture / RenderTexture、音声は`AudioPcmInput`（16kHz mono）を受け取ります。最終768次元のみCPUへ取得します。
 
-高水準の利用例は[Image and Audio Search](../Samples~/MultimodalSearch/README.md)、stageの組み立ては[API詳細](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/runtime-api.md)、[音声embedder](audio-embedder.md)と[音声encoder](audio-feature-encoder.md)を参照してください。
+高水準の利用例は[Image and Audio Search](../Samples~/MultimodalSearch/README.md)、stageの組み立て・prompt・前処理の契約は[低レベルAPI](multimodal-api.md)、[音声embedder](audio-embedder.md)と[音声encoder](audio-feature-encoder.md)を参照してください。[API全体の補足](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/runtime-api.md)もあります。
 
 - 非同期呼び出しもUnityメインスレッドから行い、`Task.Run`へ移しません。
 - 借用Texture・model・stage・中間tensorは、そのGPU処理とtaskの完了まで生存させます。

@@ -1,0 +1,213 @@
+{
+  "accepted_cpu_wall_and_numerical_repeat": true,
+  "complete_performance_accepted": false,
+  "scope": "Same fixed real input, first/warm/two repeats in an actual GPU session. Stage wall and whole-process CPU only; GPU timestamps/VRAM/GC and Editor metrics are separate, not inferred from wall.",
+  "module": "image-landscape",
+  "precision": "fp32",
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+  "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+  "reference_case_id": "landscape-0",
+  "rounds": [
+    {
+      "round": "first",
+      "wall_seconds": 7.7015742,
+      "process_cpu_seconds": 1.578125,
+      "independent_cosine": 0.9999999999989977,
+      "norm_squared": 1.0000000234680548,
+      "input_sha256": "f2b3f32a22e6282b9876b98c4c5a7bbf75e7469dff933128e17d6503dd6d6e55",
+      "stages": [
+        {
+          "stage": "preprocessing",
+          "method": "Process",
+          "wall_seconds": 0.2723555,
+          "process_cpu_seconds": 0.046875,
+          "host_working_set_bytes": 8954974208,
+          "host_lifetime_peak_bytes": 8954974208
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "wall_seconds": 5.7774347,
+          "process_cpu_seconds": 1.234375,
+          "host_working_set_bytes": 8614682624,
+          "host_lifetime_peak_bytes": 8959582208
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "wall_seconds": 1.5948962,
+          "process_cpu_seconds": 0.25,
+          "host_working_set_bytes": 9505452032,
+          "host_lifetime_peak_bytes": 9505452032
+        }
+      ]
+    },
+    {
+      "round": "warm",
+      "wall_seconds": 4.8497123,
+      "process_cpu_seconds": 0.953125,
+      "independent_cosine": 0.9999999999989977,
+      "norm_squared": 1.0000000234680548,
+      "input_sha256": "f2b3f32a22e6282b9876b98c4c5a7bbf75e7469dff933128e17d6503dd6d6e55",
+      "stages": [
+        {
+          "stage": "preprocessing",
+          "method": "Process",
+          "wall_seconds": 0.0325673,
+          "process_cpu_seconds": 0.015625,
+          "host_working_set_bytes": 9523933184,
+          "host_lifetime_peak_bytes": 9523933184
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "wall_seconds": 4.6620918,
+          "process_cpu_seconds": 0.84375,
+          "host_working_set_bytes": 9016438784,
+          "host_lifetime_peak_bytes": 9536016384
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "wall_seconds": 0.1253955,
+          "process_cpu_seconds": 0.078125,
+          "host_working_set_bytes": 9017647104,
+          "host_lifetime_peak_bytes": 9536016384
+        }
+      ]
+    },
+    {
+      "round": "repeat-1",
+      "wall_seconds": 4.9835763,
+      "process_cpu_seconds": 0.859375,
+      "independent_cosine": 0.9999999999989977,
+      "norm_squared": 1.0000000234680548,
+      "input_sha256": "f2b3f32a22e6282b9876b98c4c5a7bbf75e7469dff933128e17d6503dd6d6e55",
+      "stages": [
+        {
+          "stage": "preprocessing",
+          "method": "Process",
+          "wall_seconds": 0.0116197,
+          "process_cpu_seconds": 0.015625,
+          "host_working_set_bytes": 9026109440,
+          "host_lifetime_peak_bytes": 9536016384
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "wall_seconds": 4.8070181,
+          "process_cpu_seconds": 0.75,
+          "host_working_set_bytes": 9204408320,
+          "host_lifetime_peak_bytes": 9536016384
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "wall_seconds": 0.1031945,
+          "process_cpu_seconds": 0.046875,
+          "host_working_set_bytes": 9205477376,
+          "host_lifetime_peak_bytes": 9536016384
+        }
+      ]
+    },
+    {
+      "round": "repeat-2",
+      "wall_seconds": 5.0921766,
+      "process_cpu_seconds": 0.703125,
+      "independent_cosine": 0.9999999999989977,
+      "norm_squared": 1.0000000234680548,
+      "input_sha256": "f2b3f32a22e6282b9876b98c4c5a7bbf75e7469dff933128e17d6503dd6d6e55",
+      "stages": [
+        {
+          "stage": "preprocessing",
+          "method": "Process",
+          "wall_seconds": 0.0106188,
+          "process_cpu_seconds": 0.0,
+          "host_working_set_bytes": 9214038016,
+          "host_lifetime_peak_bytes": 9536016384
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "wall_seconds": 4.8896426,
+          "process_cpu_seconds": 0.5625,
+          "host_working_set_bytes": 9406341120,
+          "host_lifetime_peak_bytes": 9536016384
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "wall_seconds": 0.1155365,
+          "process_cpu_seconds": 0.0625,
+          "host_working_set_bytes": 9407950848,
+          "host_lifetime_peak_bytes": 9536016384
+        }
+      ]
+    }
+  ],
+  "load": {
+    "load_wall_seconds": 36.1180107,
+    "load_process_cpu_seconds": 27.34375
+  },
+  "release": {
+    "release_wall_seconds": 0.028501,
+    "release_process_cpu_seconds": 0.03125
+  },
+  "host_native_peak_bytes": 9536016384,
+  "terminal_receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\submission-error-consumer-10962fa",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.MediaRepeatedInputPerformanceTests.FixedMediaInputFirstWarmRepeatedCallsKeepReferenceAndMeasureStages",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testResults",
+      ".\\artifacts\\usability-state\\submission-error-gpu-image-landscape-fp32-10962fa-first.xml",
+      "-logFile",
+      ".\\artifacts\\usability-state\\submission-error-gpu-image-landscape-fp32-10962fa-first.log"
+    ],
+    "timeout_seconds": 1260,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T21:17:37.872587+00:00",
+    "pid": 111316,
+    "exit_code": 0,
+    "unity_results": ".\\artifacts\\usability-state\\submission-error-gpu-image-landscape-fp32-10962fa-first.xml",
+    "unity_counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 89.15999590000138,
+    "completed_utc": "2026-10-17T21:19:07.032578+00:00"
+  },
+  "source": {
+    "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+    "validation_source": "10962faf0924bb1c5070ad2d3875fc06fd24bbe2",
+    "snapshot_receipt_sha256": "302e1f86976ad232410da86723d4c9d24025b594f4f45ec229f18e652fd85774",
+    "unit_only": false,
+    "precision": "fp32",
+    "module": "image-landscape",
+    "physical_available_before_bytes": 42655002624,
+    "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955"
+  },
+  "performance_improvement_claimed": false,
+  "evidence_sha256": {
+    "submission-error-gpu-image-landscape-fp32-10962fa-first.json": "007ea551890fbdce8b6e2e4cc310a32d9347f5f572fcc4a59553e0917890b3d0",
+    "submission-error-gpu-image-landscape-fp32-10962fa-first.xml": "f65e733a37153a68a74c300bca8db4f392a71e0782597a7432246d29c8e7c047",
+    "submission-error-gpu-image-landscape-fp32-10962fa-first-process.json": "22d5644d43281a71b40d01c1a80c627aaf952a0527f51311461c21bd03a37331",
+    "submission-error-gpu-image-landscape-fp32-10962fa-first-source.json": "d47fa22eacf4399bf89920074e8ba277cf50b169049350820f131ed938020b21",
+    "submission-error-gpu-image-landscape-fp32-10962fa-first.log": "540ec849ceeff0b65bfe905bec334fadb15801261281959778525dda0074b8f5"
+  }
+}

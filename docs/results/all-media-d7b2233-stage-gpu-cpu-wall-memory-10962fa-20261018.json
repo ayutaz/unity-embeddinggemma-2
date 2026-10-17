@@ -1,0 +1,1588 @@
+{
+  "same_source_ten_media_gpu_cpu_wall_reference_repeats_accepted": true,
+  "complete_performance_accepted": false,
+  "full_priorities_1_to_3_accepted": false,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "10962faf0924bb1c5070ad2d3875fc06fd24bbe2",
+  "processes": 10,
+  "reference_vectors": 40,
+  "encoder_gpu_intervals": 17176,
+  "preprocessing_backbone_gpu_intervals": 80,
+  "processes_with_actual_timestamped_gpu_memory": 9,
+  "source_files_verified_after": 554,
+  "records": [
+    {
+      "module": "image-square",
+      "precision": "fp32",
+      "input_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+      "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+      "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "minimum_reference_cosine": 0.9999999999997138,
+      "api_wall_seconds": [
+        30.4907331,
+        4.732345,
+        4.6302674999999995,
+        4.5569955
+      ],
+      "process_cpu_seconds": [
+        1.078125,
+        0.65625,
+        0.9375,
+        0.625
+      ],
+      "load": {
+        "load_wall_seconds": 34.2411586,
+        "load_process_cpu_seconds": 25.640625
+      },
+      "release": {
+        "release_wall_seconds": 0.0138806,
+        "release_process_cpu_seconds": 0.015625
+      },
+      "host_lifetime_peak_bytes": 9744793600,
+      "encoder_gpu_intervals_observed": 1436,
+      "preprocessing_backbone_gpu_scopes": [
+        {
+          "round": "first",
+          "preprocessing_gpu_queue_ns": 3691776,
+          "backbone_gpu_queue_ns": 156014592
+        },
+        {
+          "round": "warm",
+          "preprocessing_gpu_queue_ns": 602112,
+          "backbone_gpu_queue_ns": 85846016
+        },
+        {
+          "round": "repeat-1",
+          "preprocessing_gpu_queue_ns": 594944,
+          "backbone_gpu_queue_ns": 86105088
+        },
+        {
+          "round": "repeat-2",
+          "preprocessing_gpu_queue_ns": 677888,
+          "backbone_gpu_queue_ns": 81674240
+        }
+      ],
+      "gpu_memory": {
+        "process_observation": null,
+        "reason": "No counter trace recorded for this process; never zero memory."
+      },
+      "editor": {
+        "startup": {
+          "pid": 163516,
+          "project_info_seconds": {
+            "projectLoad": 15.2688899,
+            "projectInit": 14.0369221,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.3956055,
+            "assetDatabaseInit": 4.8628712,
+            "globalIlluminationInit": 0.0040983,
+            "assembliesLoad": 1.0590589,
+            "unityExtensionsInit": 0.0047617,
+            "assetDatabaseRefresh": 6.660608,
+            "sceneOpening": 0.847329
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 261,
+              "seconds": 6.66,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 875,
+              "seconds": 2.885,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 970,
+              "seconds": 0.11,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        },
+        "reload_completed": 3,
+        "reload_ms": {
+          "min": 1028,
+          "median": 2747,
+          "max": 5448
+        },
+        "allocation_bytes": null,
+        "index_rebuild_seconds": null
+      },
+      "independent_audits": {
+        "encoder": {
+          "file": "submission-error-gpu-image-square-fp32-10962fa-first-audit-20261018.json",
+          "sha256": "5004c7448aa67ee8e65ca6f5e8e9ec6743c2632c4b4667d5627022fd6d37230b"
+        },
+        "stages": {
+          "file": "submission-error-gpu-image-square-fp32-10962fa-first-stages-20261018.json",
+          "sha256": "1d2ef948c7dff85c36ab1eb684b22e6e078c7af9210d0a85dd53d2ec060b3ad2"
+        },
+        "cpu_wall": {
+          "file": "submission-error-gpu-image-square-fp32-10962fa-first-cpu-wall-audit-20261018.json",
+          "sha256": "e0982b4d92f67af9a32839add462fa0cacce94c5389bc11251981dbcabb5bcbe"
+        }
+      }
+    },
+    {
+      "module": "image-square",
+      "precision": "float16-weights",
+      "input_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+      "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+      "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "minimum_reference_cosine": 0.9999999999997702,
+      "api_wall_seconds": [
+        5.8446352,
+        4.5491059,
+        4.585705,
+        4.6143934
+      ],
+      "process_cpu_seconds": [
+        0.703125,
+        1.0,
+        0.578125,
+        1.125
+      ],
+      "load": {
+        "load_wall_seconds": 32.8963902,
+        "load_process_cpu_seconds": 24.859375
+      },
+      "release": {
+        "release_wall_seconds": 0.0216967,
+        "release_process_cpu_seconds": 0.015625
+      },
+      "host_lifetime_peak_bytes": 8381710336,
+      "encoder_gpu_intervals_observed": 1436,
+      "preprocessing_backbone_gpu_scopes": [
+        {
+          "round": "first",
+          "preprocessing_gpu_queue_ns": 3595008,
+          "backbone_gpu_queue_ns": 124623872
+        },
+        {
+          "round": "warm",
+          "preprocessing_gpu_queue_ns": 649216,
+          "backbone_gpu_queue_ns": 85061632
+        },
+        {
+          "round": "repeat-1",
+          "preprocessing_gpu_queue_ns": 601088,
+          "backbone_gpu_queue_ns": 90883072
+        },
+        {
+          "round": "repeat-2",
+          "preprocessing_gpu_queue_ns": 668672,
+          "backbone_gpu_queue_ns": 97304576
+        }
+      ],
+      "gpu_memory": {
+        "process_observation": {
+          "id": "process_observation_window",
+          "begin_utc": "2026-10-17T21:16:11.664783+00:00",
+          "end_utc": "2026-10-17T21:17:34.112076+00:00",
+          "sample_count": 24,
+          "available_sample_count": 22,
+          "available": true,
+          "largest_observed_dedicated_bytes": 4391231488,
+          "largest_observed_shared_bytes": 508710912,
+          "first_paired_sample_utc": "2026-10-17T21:16:20.787912+00:00",
+          "last_paired_sample_utc": "2026-10-17T21:17:30.771106+00:00",
+          "maximum_observed_sample_gap_seconds": 3.411282
+        },
+        "unavailable_intervals": [
+          "release",
+          "stage:first:backbone:Embed:3",
+          "stage:warm:preprocessing:Process:4",
+          "stage:warm:backbone:Embed:6",
+          "stage:repeat-1:preprocessing:Process:7",
+          "stage:repeat-1:backbone:Embed:9",
+          "stage:repeat-2:preprocessing:Process:10",
+          "stage:repeat-2:backbone:Embed:12"
+        ],
+        "audit_file": "submission-error-gpu-image-square-float16-weights-10962fa-first-memory-audit-20261018.json",
+        "audit_sha256": "d29fe670c25749cce5090fa2bc1245c09a6317f9bda0efa91777ee7cf29234cd"
+      },
+      "editor": {
+        "startup": {
+          "pid": 96200,
+          "project_info_seconds": {
+            "projectLoad": 15.119401,
+            "projectInit": 13.8566401,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.4723987,
+            "assetDatabaseInit": 4.8399999,
+            "globalIlluminationInit": 0.0036151,
+            "assembliesLoad": 1.018578,
+            "unityExtensionsInit": 0.0151593,
+            "assetDatabaseRefresh": 6.4454839,
+            "sceneOpening": 0.8740416
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 261,
+              "seconds": 6.445,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 417,
+              "seconds": 2.241,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 509,
+              "seconds": 0.07,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        },
+        "reload_completed": 3,
+        "reload_ms": {
+          "min": 986,
+          "median": 2135,
+          "max": 5255
+        },
+        "allocation_bytes": null,
+        "index_rebuild_seconds": null
+      },
+      "independent_audits": {
+        "encoder": {
+          "file": "submission-error-gpu-image-square-float16-weights-10962fa-first-audit-20261018.json",
+          "sha256": "9c67d0356e9128a0ee0760f2178ae96447c05f346adc3139a1967afeba09b522"
+        },
+        "stages": {
+          "file": "submission-error-gpu-image-square-float16-weights-10962fa-first-stages-20261018.json",
+          "sha256": "182e20b55a92fc56d94cd1a22c6af6f85e9ae4e69e286c8e7bb4579e03543888"
+        },
+        "cpu_wall": {
+          "file": "submission-error-gpu-image-square-float16-weights-10962fa-first-cpu-wall-audit-20261018.json",
+          "sha256": "4702ec9d4a69bda8b1d23a347b428b0359ce8921998b56dbf347f9d96fca6be5"
+        }
+      }
+    },
+    {
+      "module": "image-landscape",
+      "precision": "fp32",
+      "input_sha256": "f2b3f32a22e6282b9876b98c4c5a7bbf75e7469dff933128e17d6503dd6d6e55",
+      "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+      "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "minimum_reference_cosine": 0.9999999999989977,
+      "api_wall_seconds": [
+        7.7015742,
+        4.8497123,
+        4.9835763,
+        5.0921766
+      ],
+      "process_cpu_seconds": [
+        1.578125,
+        0.953125,
+        0.859375,
+        0.703125
+      ],
+      "load": {
+        "load_wall_seconds": 36.1180107,
+        "load_process_cpu_seconds": 27.34375
+      },
+      "release": {
+        "release_wall_seconds": 0.028501,
+        "release_process_cpu_seconds": 0.03125
+      },
+      "host_lifetime_peak_bytes": 9536016384,
+      "encoder_gpu_intervals_observed": 1436,
+      "preprocessing_backbone_gpu_scopes": [
+        {
+          "round": "first",
+          "preprocessing_gpu_queue_ns": 747264,
+          "backbone_gpu_queue_ns": 162755584
+        },
+        {
+          "round": "warm",
+          "preprocessing_gpu_queue_ns": 723968,
+          "backbone_gpu_queue_ns": 125534208
+        },
+        {
+          "round": "repeat-1",
+          "preprocessing_gpu_queue_ns": 1130496,
+          "backbone_gpu_queue_ns": 141275136
+        },
+        {
+          "round": "repeat-2",
+          "preprocessing_gpu_queue_ns": 756736,
+          "backbone_gpu_queue_ns": 111271936
+        }
+      ],
+      "gpu_memory": {
+        "process_observation": {
+          "id": "process_observation_window",
+          "begin_utc": "2026-10-17T21:17:37.872587+00:00",
+          "end_utc": "2026-10-17T21:19:07.032578+00:00",
+          "sample_count": 26,
+          "available_sample_count": 24,
+          "available": true,
+          "largest_observed_dedicated_bytes": 3921477632,
+          "largest_observed_shared_bytes": 793923584,
+          "first_paired_sample_utc": "2026-10-17T21:17:47.048692+00:00",
+          "last_paired_sample_utc": "2026-10-17T21:19:04.341988+00:00",
+          "maximum_observed_sample_gap_seconds": 3.547128
+        },
+        "unavailable_intervals": [
+          "release",
+          "stage:warm:preprocessing:Process:4",
+          "stage:warm:backbone:Embed:6",
+          "stage:repeat-1:preprocessing:Process:7",
+          "stage:repeat-1:backbone:Embed:9",
+          "stage:repeat-2:preprocessing:Process:10",
+          "stage:repeat-2:backbone:Embed:12"
+        ],
+        "audit_file": "submission-error-gpu-image-landscape-fp32-10962fa-first-memory-audit-20261018.json",
+        "audit_sha256": "ea9263c3f9fb7fcf44415130f57f613e349c0ab6584a27bdbc5cce22e749193f"
+      },
+      "editor": {
+        "startup": {
+          "pid": 111316,
+          "project_info_seconds": {
+            "projectLoad": 15.6624007,
+            "projectInit": 14.3848691,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.5514589,
+            "assetDatabaseInit": 5.2374187,
+            "globalIlluminationInit": 0.0037997,
+            "assembliesLoad": 1.0360277,
+            "unityExtensionsInit": 0.0221432,
+            "assetDatabaseRefresh": 6.4517938,
+            "sceneOpening": 0.8640119
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 261,
+              "seconds": 6.452,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 417,
+              "seconds": 2.182,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 509,
+              "seconds": 0.086,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        },
+        "reload_completed": 3,
+        "reload_ms": {
+          "min": 1004,
+          "median": 2082,
+          "max": 5271
+        },
+        "allocation_bytes": null,
+        "index_rebuild_seconds": null
+      },
+      "independent_audits": {
+        "encoder": {
+          "file": "submission-error-gpu-image-landscape-fp32-10962fa-first-audit-20261018.json",
+          "sha256": "1e0fa5ee6aa64c3ba7acc17c5e0011bd35421125fbf70e1c46f256bf1ca28ebe"
+        },
+        "stages": {
+          "file": "submission-error-gpu-image-landscape-fp32-10962fa-first-stages-20261018.json",
+          "sha256": "28f4424c8095569edda07f56a09c1a05b649dc78493d416524213a6be99435d3"
+        },
+        "cpu_wall": {
+          "file": "submission-error-gpu-image-landscape-fp32-10962fa-first-cpu-wall-audit-20261018.json",
+          "sha256": "1b34ebaec6560e3d65321e13ecef629bcb1960d946f0d6848467287903b7c94d"
+        }
+      }
+    },
+    {
+      "module": "image-landscape",
+      "precision": "float16-weights",
+      "input_sha256": "f2b3f32a22e6282b9876b98c4c5a7bbf75e7469dff933128e17d6503dd6d6e55",
+      "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+      "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "minimum_reference_cosine": 0.9999999999990703,
+      "api_wall_seconds": [
+        6.6096546,
+        4.7618252,
+        4.6782289,
+        4.6514437
+      ],
+      "process_cpu_seconds": [
+        1.5,
+        1.171875,
+        1.09375,
+        1.0625
+      ],
+      "load": {
+        "load_wall_seconds": 33.6141396,
+        "load_process_cpu_seconds": 25.171875
+      },
+      "release": {
+        "release_wall_seconds": 0.0179572,
+        "release_process_cpu_seconds": 0.015625
+      },
+      "host_lifetime_peak_bytes": 8394432512,
+      "encoder_gpu_intervals_observed": 1436,
+      "preprocessing_backbone_gpu_scopes": [
+        {
+          "round": "first",
+          "preprocessing_gpu_queue_ns": 3707136,
+          "backbone_gpu_queue_ns": 145051648
+        },
+        {
+          "round": "warm",
+          "preprocessing_gpu_queue_ns": 615424,
+          "backbone_gpu_queue_ns": 92453888
+        },
+        {
+          "round": "repeat-1",
+          "preprocessing_gpu_queue_ns": 718848,
+          "backbone_gpu_queue_ns": 95757312
+        },
+        {
+          "round": "repeat-2",
+          "preprocessing_gpu_queue_ns": 724992,
+          "backbone_gpu_queue_ns": 92788736
+        }
+      ],
+      "gpu_memory": {
+        "process_observation": {
+          "id": "process_observation_window",
+          "begin_utc": "2026-10-17T21:19:11.345995+00:00",
+          "end_utc": "2026-10-17T21:20:36.370682+00:00",
+          "sample_count": 25,
+          "available_sample_count": 23,
+          "available": true,
+          "largest_observed_dedicated_bytes": 4458340352,
+          "largest_observed_shared_bytes": 246304768,
+          "first_paired_sample_utc": "2026-10-17T21:19:20.443563+00:00",
+          "last_paired_sample_utc": "2026-10-17T21:20:33.932537+00:00",
+          "maximum_observed_sample_gap_seconds": 3.562294
+        },
+        "unavailable_intervals": [
+          "release",
+          "stage:first:preprocessing:Process:1",
+          "stage:first:backbone:Embed:3",
+          "stage:warm:preprocessing:Process:4",
+          "stage:warm:backbone:Embed:6",
+          "stage:repeat-1:preprocessing:Process:7",
+          "stage:repeat-1:backbone:Embed:9",
+          "stage:repeat-2:preprocessing:Process:10",
+          "stage:repeat-2:backbone:Embed:12"
+        ],
+        "audit_file": "submission-error-gpu-image-landscape-float16-weights-10962fa-first-memory-audit-20261018.json",
+        "audit_sha256": "4eea90f4acdd0d4caa22859f50d50cb49fd419b50a20d9c6ccf84c8ce581d3a6"
+      },
+      "editor": {
+        "startup": {
+          "pid": 179760,
+          "project_info_seconds": {
+            "projectLoad": 16.1681449,
+            "projectInit": 14.9678689,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.522623,
+            "assetDatabaseInit": 5.476307,
+            "globalIlluminationInit": 0.0043816,
+            "assembliesLoad": 1.0770088,
+            "unityExtensionsInit": 0.0139738,
+            "assetDatabaseRefresh": 6.7493372,
+            "sceneOpening": 0.8334751
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 261,
+              "seconds": 6.749,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 417,
+              "seconds": 2.167,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 509,
+              "seconds": 0.075,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        },
+        "reload_completed": 3,
+        "reload_ms": {
+          "min": 1039,
+          "median": 2071,
+          "max": 5543
+        },
+        "allocation_bytes": null,
+        "index_rebuild_seconds": null
+      },
+      "independent_audits": {
+        "encoder": {
+          "file": "submission-error-gpu-image-landscape-float16-weights-10962fa-first-audit-20261018.json",
+          "sha256": "96ed844c018039e69c8f627b5379168b66573cb09e40bb30040d85b5a68dd91f"
+        },
+        "stages": {
+          "file": "submission-error-gpu-image-landscape-float16-weights-10962fa-first-stages-20261018.json",
+          "sha256": "91fe4a3efe3eed7b9ace7b970f276e56a46ad2204a8767279921b5e995b36178"
+        },
+        "cpu_wall": {
+          "file": "submission-error-gpu-image-landscape-float16-weights-10962fa-first-cpu-wall-audit-20261018.json",
+          "sha256": "d57dc11daa583ba08aca5986f051b5b11075e88724c28647fe1aed3bd56f1f9d"
+        }
+      }
+    },
+    {
+      "module": "image-portrait",
+      "precision": "fp32",
+      "input_sha256": "fce3474792c6401c4bae6ac0261a386f400bac0cece977ffda86388ee6682489",
+      "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+      "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "minimum_reference_cosine": 0.9999999999997848,
+      "api_wall_seconds": [
+        7.930148699999999,
+        5.033589,
+        4.9793533,
+        4.981637399999999
+      ],
+      "process_cpu_seconds": [
+        1.25,
+        0.75,
+        1.015625,
+        0.703125
+      ],
+      "load": {
+        "load_wall_seconds": 34.6521344,
+        "load_process_cpu_seconds": 26.796875
+      },
+      "release": {
+        "release_wall_seconds": 0.0156313,
+        "release_process_cpu_seconds": 0.0
+      },
+      "host_lifetime_peak_bytes": 9583996928,
+      "encoder_gpu_intervals_observed": 1436,
+      "preprocessing_backbone_gpu_scopes": [
+        {
+          "round": "first",
+          "preprocessing_gpu_queue_ns": 3665920,
+          "backbone_gpu_queue_ns": 307742720
+        },
+        {
+          "round": "warm",
+          "preprocessing_gpu_queue_ns": 701440,
+          "backbone_gpu_queue_ns": 100700160
+        },
+        {
+          "round": "repeat-1",
+          "preprocessing_gpu_queue_ns": 913408,
+          "backbone_gpu_queue_ns": 98267136
+        },
+        {
+          "round": "repeat-2",
+          "preprocessing_gpu_queue_ns": 768000,
+          "backbone_gpu_queue_ns": 84642816
+        }
+      ],
+      "gpu_memory": {
+        "process_observation": {
+          "id": "process_observation_window",
+          "begin_utc": "2026-10-17T21:20:38.200526+00:00",
+          "end_utc": "2026-10-17T21:22:06.728161+00:00",
+          "sample_count": 26,
+          "available_sample_count": 24,
+          "available": true,
+          "largest_observed_dedicated_bytes": 4122812416,
+          "largest_observed_shared_bytes": 956182528,
+          "first_paired_sample_utc": "2026-10-17T21:20:47.194246+00:00",
+          "last_paired_sample_utc": "2026-10-17T21:22:04.488773+00:00",
+          "maximum_observed_sample_gap_seconds": 3.549341
+        },
+        "unavailable_intervals": [
+          "release",
+          "stage:first:preprocessing:Process:1",
+          "stage:warm:preprocessing:Process:4",
+          "stage:warm:backbone:Embed:6",
+          "stage:repeat-1:preprocessing:Process:7",
+          "stage:repeat-1:backbone:Embed:9",
+          "stage:repeat-2:preprocessing:Process:10",
+          "stage:repeat-2:backbone:Embed:12"
+        ],
+        "audit_file": "submission-error-gpu-image-portrait-fp32-10962fa-first-memory-audit-20261018.json",
+        "audit_sha256": "0afc3b6193a5b2a59c353f71c0049a83b669f316657b8bc53d732fabb051a68a"
+      },
+      "editor": {
+        "startup": {
+          "pid": 97880,
+          "project_info_seconds": {
+            "projectLoad": 15.937136300000002,
+            "projectInit": 14.6882937,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.4265755,
+            "assetDatabaseInit": 5.0458175,
+            "globalIlluminationInit": 0.0041387,
+            "assembliesLoad": 1.1027178,
+            "unityExtensionsInit": 0.0146693,
+            "assetDatabaseRefresh": 6.9606067,
+            "sceneOpening": 0.8862606
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 261,
+              "seconds": 6.96,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 417,
+              "seconds": 2.271,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 509,
+              "seconds": 0.069,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        },
+        "reload_completed": 3,
+        "reload_ms": {
+          "min": 1062,
+          "median": 2166,
+          "max": 5406
+        },
+        "allocation_bytes": null,
+        "index_rebuild_seconds": null
+      },
+      "independent_audits": {
+        "encoder": {
+          "file": "submission-error-gpu-image-portrait-fp32-10962fa-first-audit-20261018.json",
+          "sha256": "3a5a55e47c11ae553c54976a401d6d78344bba5c8a85a0a34b4d7fe38d0069bc"
+        },
+        "stages": {
+          "file": "submission-error-gpu-image-portrait-fp32-10962fa-first-stages-20261018.json",
+          "sha256": "e371d04cfa8dbb812bdc11df0822cad0f3a8133003f77feda082954a11766ef5"
+        },
+        "cpu_wall": {
+          "file": "submission-error-gpu-image-portrait-fp32-10962fa-first-cpu-wall-audit-20261018.json",
+          "sha256": "dbd837690336ca71991c9acb8475345d2d1509dd5d7a1931137b2a5b0725d812"
+        }
+      }
+    },
+    {
+      "module": "image-portrait",
+      "precision": "float16-weights",
+      "input_sha256": "fce3474792c6401c4bae6ac0261a386f400bac0cece977ffda86388ee6682489",
+      "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+      "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "minimum_reference_cosine": 0.9999999999997247,
+      "api_wall_seconds": [
+        6.8295528,
+        4.7712737999999995,
+        4.7207007999999995,
+        4.6599962
+      ],
+      "process_cpu_seconds": [
+        1.28125,
+        0.71875,
+        0.8125,
+        1.125
+      ],
+      "load": {
+        "load_wall_seconds": 33.1642338,
+        "load_process_cpu_seconds": 26.875
+      },
+      "release": {
+        "release_wall_seconds": 0.0186705,
+        "release_process_cpu_seconds": 0.03125
+      },
+      "host_lifetime_peak_bytes": 8394485760,
+      "encoder_gpu_intervals_observed": 1436,
+      "preprocessing_backbone_gpu_scopes": [
+        {
+          "round": "first",
+          "preprocessing_gpu_queue_ns": 3677184,
+          "backbone_gpu_queue_ns": 141177856
+        },
+        {
+          "round": "warm",
+          "preprocessing_gpu_queue_ns": 634880,
+          "backbone_gpu_queue_ns": 100037632
+        },
+        {
+          "round": "repeat-1",
+          "preprocessing_gpu_queue_ns": 676864,
+          "backbone_gpu_queue_ns": 94023680
+        },
+        {
+          "round": "repeat-2",
+          "preprocessing_gpu_queue_ns": 662528,
+          "backbone_gpu_queue_ns": 93020160
+        }
+      ],
+      "gpu_memory": {
+        "process_observation": {
+          "id": "process_observation_window",
+          "begin_utc": "2026-10-17T21:22:08.818982+00:00",
+          "end_utc": "2026-10-17T21:23:34.788745+00:00",
+          "sample_count": 25,
+          "available_sample_count": 23,
+          "available": true,
+          "largest_observed_dedicated_bytes": 5610754048,
+          "largest_observed_shared_bytes": 246370304,
+          "first_paired_sample_utc": "2026-10-17T21:22:18.135237+00:00",
+          "last_paired_sample_utc": "2026-10-17T21:23:31.450903+00:00",
+          "maximum_observed_sample_gap_seconds": 3.455027
+        },
+        "unavailable_intervals": [
+          "release",
+          "stage:first:preprocessing:Process:1",
+          "stage:first:backbone:Embed:3",
+          "stage:warm:preprocessing:Process:4",
+          "stage:warm:backbone:Embed:6",
+          "stage:repeat-1:preprocessing:Process:7",
+          "stage:repeat-1:backbone:Embed:9",
+          "stage:repeat-2:preprocessing:Process:10",
+          "stage:repeat-2:backbone:Embed:12"
+        ],
+        "audit_file": "submission-error-gpu-image-portrait-float16-weights-10962fa-first-memory-audit-20261018.json",
+        "audit_sha256": "a9ec9ee0c1cc1b235d820d87e725e365f78e800da5b8b96a22a585963428e2a9"
+      },
+      "editor": {
+        "startup": {
+          "pid": 137456,
+          "project_info_seconds": {
+            "projectLoad": 16.3903841,
+            "projectInit": 15.0558816,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.5487115,
+            "assetDatabaseInit": 5.4555773,
+            "globalIlluminationInit": 0.0043746,
+            "assembliesLoad": 1.1551019,
+            "unityExtensionsInit": 0.0149607,
+            "assetDatabaseRefresh": 6.7310099,
+            "sceneOpening": 0.8983182
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 261,
+              "seconds": 6.731,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 417,
+              "seconds": 2.236,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 509,
+              "seconds": 0.092,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        },
+        "reload_completed": 3,
+        "reload_ms": {
+          "min": 1121,
+          "median": 2132,
+          "max": 5536
+        },
+        "allocation_bytes": null,
+        "index_rebuild_seconds": null
+      },
+      "independent_audits": {
+        "encoder": {
+          "file": "submission-error-gpu-image-portrait-float16-weights-10962fa-first-audit-20261018.json",
+          "sha256": "d20993da9bf1bbebf2aa0da6b9a996aaf962d47e4c6fad477175dd72d47e4f0d"
+        },
+        "stages": {
+          "file": "submission-error-gpu-image-portrait-float16-weights-10962fa-first-stages-20261018.json",
+          "sha256": "f39b40a42857b78bc98a5155873fa1355b59f220ae201e89982a1fef1480f7d1"
+        },
+        "cpu_wall": {
+          "file": "submission-error-gpu-image-portrait-float16-weights-10962fa-first-cpu-wall-audit-20261018.json",
+          "sha256": "3ae2104ab2f59477c4f2acf149a51c003c10ba589d636d10009caafe25d693b6"
+        }
+      }
+    },
+    {
+      "module": "audio-1119",
+      "precision": "fp32",
+      "input_sha256": "06a56aa96f41a685ae25b4d7d0a55a15717723bb45a88a21a02546b9355e67e5",
+      "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+      "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+      "minimum_reference_cosine": 0.9999999999928919,
+      "api_wall_seconds": [
+        6.741452799999999,
+        5.2376156,
+        5.2348118999999995,
+        5.3068398
+      ],
+      "process_cpu_seconds": [
+        0.75,
+        0.8125,
+        0.984375,
+        1.5
+      ],
+      "load": {
+        "load_wall_seconds": 43.3587159,
+        "load_process_cpu_seconds": 31.921875
+      },
+      "release": {
+        "release_wall_seconds": 0.0169955,
+        "release_process_cpu_seconds": 0.015625
+      },
+      "host_lifetime_peak_bytes": 9504092160,
+      "encoder_gpu_intervals_observed": 2140,
+      "preprocessing_backbone_gpu_scopes": [
+        {
+          "round": "first",
+          "preprocessing_gpu_queue_ns": 11515904,
+          "backbone_gpu_queue_ns": 326619136
+        },
+        {
+          "round": "warm",
+          "preprocessing_gpu_queue_ns": 49813504,
+          "backbone_gpu_queue_ns": 169736192
+        },
+        {
+          "round": "repeat-1",
+          "preprocessing_gpu_queue_ns": 5422080,
+          "backbone_gpu_queue_ns": 193938432
+        },
+        {
+          "round": "repeat-2",
+          "preprocessing_gpu_queue_ns": 3726336,
+          "backbone_gpu_queue_ns": 243693568
+        }
+      ],
+      "gpu_memory": {
+        "process_observation": {
+          "id": "process_observation_window",
+          "begin_utc": "2026-10-17T21:13:40.151053+00:00",
+          "end_utc": "2026-10-17T21:15:13.873887+00:00",
+          "sample_count": 28,
+          "available_sample_count": 26,
+          "available": true,
+          "largest_observed_dedicated_bytes": 9383141376,
+          "largest_observed_shared_bytes": 245952512,
+          "first_paired_sample_utc": "2026-10-17T21:13:49.442456+00:00",
+          "last_paired_sample_utc": "2026-10-17T21:15:12.299342+00:00",
+          "maximum_observed_sample_gap_seconds": 3.396474
+        },
+        "unavailable_intervals": [
+          "release",
+          "stage:first:preprocessing:ProcessAsync:1",
+          "stage:first:backbone:Embed:3",
+          "stage:warm:preprocessing:ProcessAsync:4",
+          "stage:warm:backbone:Embed:6",
+          "stage:repeat-1:preprocessing:ProcessAsync:7",
+          "stage:repeat-1:backbone:Embed:9",
+          "stage:repeat-2:preprocessing:ProcessAsync:10",
+          "stage:repeat-2:backbone:Embed:12"
+        ],
+        "audit_file": "submission-error-gpu-audio-1119-fp32-10962fa-first-memory-audit-20261018.json",
+        "audit_sha256": "3f9d79a968e07301c38a1d61e5aff0ef1075639913610ddbcdf0b0044d0363a3"
+      },
+      "editor": {
+        "startup": {
+          "pid": 57304,
+          "project_info_seconds": {
+            "projectLoad": 15.5156338,
+            "projectInit": 14.2546354,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.4620875,
+            "assetDatabaseInit": 4.9112348,
+            "globalIlluminationInit": 0.0042506,
+            "assembliesLoad": 1.0915811,
+            "unityExtensionsInit": 0.0150467,
+            "assetDatabaseRefresh": 6.7024272,
+            "sceneOpening": 0.9011094
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 261,
+              "seconds": 6.702,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 417,
+              "seconds": 2.164,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 510,
+              "seconds": 0.085,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        },
+        "reload_completed": 3,
+        "reload_ms": {
+          "min": 1055,
+          "median": 2065,
+          "max": 5522
+        },
+        "allocation_bytes": null,
+        "index_rebuild_seconds": null
+      },
+      "independent_audits": {
+        "encoder": {
+          "file": "submission-error-gpu-audio-1119-fp32-10962fa-first-audit-20261018.json",
+          "sha256": "9d0188521f0b396f28ae35ccc5ccb3fe182b4cde112193872d784ca143fe052e"
+        },
+        "stages": {
+          "file": "submission-error-gpu-audio-1119-fp32-10962fa-first-stages-20261018.json",
+          "sha256": "383bf7f062ef4ce1d7258bec3160ec8199acb71d276897ef9f048a4b2155e54b"
+        },
+        "cpu_wall": {
+          "file": "submission-error-gpu-audio-1119-fp32-10962fa-first-cpu-wall-audit-20261018.json",
+          "sha256": "61ae6e480c02d55bdff5464b2ac3c1641aa03c355848efa3dd3af29c2ab2ab01"
+        }
+      }
+    },
+    {
+      "module": "audio-1119",
+      "precision": "float16-weights",
+      "input_sha256": "06a56aa96f41a685ae25b4d7d0a55a15717723bb45a88a21a02546b9355e67e5",
+      "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+      "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+      "minimum_reference_cosine": 0.9999999999907068,
+      "api_wall_seconds": [
+        6.7636835,
+        5.3535778999999994,
+        5.214614399999999,
+        5.233503799999999
+      ],
+      "process_cpu_seconds": [
+        1.609375,
+        2.15625,
+        0.734375,
+        1.328125
+      ],
+      "load": {
+        "load_wall_seconds": 42.900994,
+        "load_process_cpu_seconds": 32.71875
+      },
+      "release": {
+        "release_wall_seconds": 0.016218899999999998,
+        "release_process_cpu_seconds": 0.015625
+      },
+      "host_lifetime_peak_bytes": 8439046144,
+      "encoder_gpu_intervals_observed": 2140,
+      "preprocessing_backbone_gpu_scopes": [
+        {
+          "round": "first",
+          "preprocessing_gpu_queue_ns": 11652864,
+          "backbone_gpu_queue_ns": 280555520
+        },
+        {
+          "round": "warm",
+          "preprocessing_gpu_queue_ns": 19656704,
+          "backbone_gpu_queue_ns": 214234112
+        },
+        {
+          "round": "repeat-1",
+          "preprocessing_gpu_queue_ns": 3532800,
+          "backbone_gpu_queue_ns": 258963456
+        },
+        {
+          "round": "repeat-2",
+          "preprocessing_gpu_queue_ns": 3304448,
+          "backbone_gpu_queue_ns": 200648704
+        }
+      ],
+      "gpu_memory": {
+        "process_observation": {
+          "id": "process_observation_window",
+          "begin_utc": "2026-10-17T21:23:38.702480+00:00",
+          "end_utc": "2026-10-17T21:25:12.645695+00:00",
+          "sample_count": 28,
+          "available_sample_count": 26,
+          "available": true,
+          "largest_observed_dedicated_bytes": 10427289600,
+          "largest_observed_shared_bytes": 480841728,
+          "first_paired_sample_utc": "2026-10-17T21:23:47.823345+00:00",
+          "last_paired_sample_utc": "2026-10-17T21:25:10.470253+00:00",
+          "maximum_observed_sample_gap_seconds": 3.413547
+        },
+        "unavailable_intervals": [
+          "release",
+          "stage:first:preprocessing:ProcessAsync:1",
+          "stage:first:backbone:Embed:3",
+          "stage:warm:preprocessing:ProcessAsync:4",
+          "stage:warm:backbone:Embed:6",
+          "stage:repeat-1:preprocessing:ProcessAsync:7",
+          "stage:repeat-1:backbone:Embed:9",
+          "stage:repeat-2:preprocessing:ProcessAsync:10",
+          "stage:repeat-2:backbone:Embed:12"
+        ],
+        "audit_file": "submission-error-gpu-audio-1119-float16-weights-10962fa-first-memory-audit-20261018.json",
+        "audit_sha256": "370d8e1309a3eef3abed245ac3a3d1cc7104587b5dcb2aded5604031857c8d19"
+      },
+      "editor": {
+        "startup": {
+          "pid": 51324,
+          "project_info_seconds": {
+            "projectLoad": 15.8265384,
+            "projectInit": 14.5446879,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.5893391,
+            "assetDatabaseInit": 5.0606166,
+            "globalIlluminationInit": 0.004629,
+            "assembliesLoad": 1.1323484,
+            "unityExtensionsInit": 0.0145909,
+            "assetDatabaseRefresh": 6.6099956,
+            "sceneOpening": 0.9264888
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 261,
+              "seconds": 6.61,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 417,
+              "seconds": 2.378,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 509,
+              "seconds": 0.079,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        },
+        "reload_completed": 3,
+        "reload_ms": {
+          "min": 1093,
+          "median": 2267,
+          "max": 5416
+        },
+        "allocation_bytes": null,
+        "index_rebuild_seconds": null
+      },
+      "independent_audits": {
+        "encoder": {
+          "file": "submission-error-gpu-audio-1119-float16-weights-10962fa-first-audit-20261018.json",
+          "sha256": "67d50df67ef46bbbc6df26bbc308e81e23c9853af4a7a94f4974d1e7349c5542"
+        },
+        "stages": {
+          "file": "submission-error-gpu-audio-1119-float16-weights-10962fa-first-stages-20261018.json",
+          "sha256": "a9633b5bdc3228a63e14ba4b00ec9b2756a6fb464e362cb94c6672bbc2b3b3b3"
+        },
+        "cpu_wall": {
+          "file": "submission-error-gpu-audio-1119-float16-weights-10962fa-first-cpu-wall-audit-20261018.json",
+          "sha256": "5b7532156d124e7b5fdbae5341df53e7f7bf2b5032c82cf07852c048ce414792"
+        }
+      }
+    },
+    {
+      "module": "audio-839",
+      "precision": "fp32",
+      "input_sha256": "01da15bbe3d53bcd41cfff6c265b53cda8222567fe760bfff96442266557c761",
+      "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+      "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+      "minimum_reference_cosine": 0.9999999999981802,
+      "api_wall_seconds": [
+        7.7710136,
+        5.2343936,
+        5.390584,
+        5.540442199999999
+      ],
+      "process_cpu_seconds": [
+        1.28125,
+        0.875,
+        0.96875,
+        1.46875
+      ],
+      "load": {
+        "load_wall_seconds": 46.470360899999996,
+        "load_process_cpu_seconds": 33.578125
+      },
+      "release": {
+        "release_wall_seconds": 0.015343599999999999,
+        "release_process_cpu_seconds": 0.015625
+      },
+      "host_lifetime_peak_bytes": 9491034112,
+      "encoder_gpu_intervals_observed": 2140,
+      "preprocessing_backbone_gpu_scopes": [
+        {
+          "round": "first",
+          "preprocessing_gpu_queue_ns": 15612672,
+          "backbone_gpu_queue_ns": 418500608
+        },
+        {
+          "round": "warm",
+          "preprocessing_gpu_queue_ns": 54061056,
+          "backbone_gpu_queue_ns": 171453440
+        },
+        {
+          "round": "repeat-1",
+          "preprocessing_gpu_queue_ns": 3394560,
+          "backbone_gpu_queue_ns": 207508480
+        },
+        {
+          "round": "repeat-2",
+          "preprocessing_gpu_queue_ns": 8628224,
+          "backbone_gpu_queue_ns": 288405504
+        }
+      ],
+      "gpu_memory": {
+        "process_observation": {
+          "id": "process_observation_window",
+          "begin_utc": "2026-10-17T21:25:14.575319+00:00",
+          "end_utc": "2026-10-17T21:26:53.741979+00:00",
+          "sample_count": 29,
+          "available_sample_count": 27,
+          "available": true,
+          "largest_observed_dedicated_bytes": 9890406400,
+          "largest_observed_shared_bytes": 480702464,
+          "first_paired_sample_utc": "2026-10-17T21:25:23.679472+00:00",
+          "last_paired_sample_utc": "2026-10-17T21:26:51.039216+00:00",
+          "maximum_observed_sample_gap_seconds": 3.652857
+        },
+        "unavailable_intervals": [
+          "release",
+          "stage:first:preprocessing:ProcessAsync:1",
+          "stage:first:backbone:Embed:3",
+          "stage:warm:preprocessing:ProcessAsync:4",
+          "stage:warm:backbone:Embed:6",
+          "stage:repeat-1:preprocessing:ProcessAsync:7",
+          "stage:repeat-1:backbone:Embed:9",
+          "stage:repeat-2:preprocessing:ProcessAsync:10",
+          "stage:repeat-2:backbone:Embed:12"
+        ],
+        "audit_file": "submission-error-gpu-audio-839-fp32-10962fa-first-memory-audit-20261018.json",
+        "audit_sha256": "1c26e0f79fc1fb24cbca18cbba457700bfc7ac8b7745e58a178d7696eb3ccb6c"
+      },
+      "editor": {
+        "startup": {
+          "pid": 161108,
+          "project_info_seconds": {
+            "projectLoad": 15.5256396,
+            "projectInit": 14.2895855,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.4873657,
+            "assetDatabaseInit": 4.9769965,
+            "globalIlluminationInit": 0.0034805,
+            "assembliesLoad": 1.003017,
+            "unityExtensionsInit": 0.014063,
+            "assetDatabaseRefresh": 6.6973988,
+            "sceneOpening": 0.8728523
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 261,
+              "seconds": 6.697,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 417,
+              "seconds": 2.369,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 509,
+              "seconds": 0.082,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        },
+        "reload_completed": 3,
+        "reload_ms": {
+          "min": 963,
+          "median": 2253,
+          "max": 5412
+        },
+        "allocation_bytes": null,
+        "index_rebuild_seconds": null
+      },
+      "independent_audits": {
+        "encoder": {
+          "file": "submission-error-gpu-audio-839-fp32-10962fa-first-audit-20261018.json",
+          "sha256": "419c52513cbd2bf74ac192f236e3090a417742566a462bbc4fab4187ced05e07"
+        },
+        "stages": {
+          "file": "submission-error-gpu-audio-839-fp32-10962fa-first-stages-20261018.json",
+          "sha256": "a8229b002892a92f32606fd1b2c1c2cd1bcc789ab44c3a857c0046aff5edc5fe"
+        },
+        "cpu_wall": {
+          "file": "submission-error-gpu-audio-839-fp32-10962fa-first-cpu-wall-audit-20261018.json",
+          "sha256": "516e626ff63c155fbfef84bfe6b39e42fe3dedcd93b7cc46cbb045064e13ba13"
+        }
+      }
+    },
+    {
+      "module": "audio-839",
+      "precision": "float16-weights",
+      "input_sha256": "01da15bbe3d53bcd41cfff6c265b53cda8222567fe760bfff96442266557c761",
+      "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+      "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+      "minimum_reference_cosine": 0.9999984475675926,
+      "api_wall_seconds": [
+        6.8844471,
+        5.431698,
+        5.4488666,
+        5.1795826
+      ],
+      "process_cpu_seconds": [
+        1.78125,
+        1.234375,
+        0.9375,
+        1.40625
+      ],
+      "load": {
+        "load_wall_seconds": 43.259896999999995,
+        "load_process_cpu_seconds": 32.8125
+      },
+      "release": {
+        "release_wall_seconds": 0.0159491,
+        "release_process_cpu_seconds": 0.015625
+      },
+      "host_lifetime_peak_bytes": 8431747072,
+      "encoder_gpu_intervals_observed": 2140,
+      "preprocessing_backbone_gpu_scopes": [
+        {
+          "round": "first",
+          "preprocessing_gpu_queue_ns": 12976640,
+          "backbone_gpu_queue_ns": 239645696
+        },
+        {
+          "round": "warm",
+          "preprocessing_gpu_queue_ns": 20512768,
+          "backbone_gpu_queue_ns": 202189824
+        },
+        {
+          "round": "repeat-1",
+          "preprocessing_gpu_queue_ns": 3313664,
+          "backbone_gpu_queue_ns": 285726720
+        },
+        {
+          "round": "repeat-2",
+          "preprocessing_gpu_queue_ns": 3393536,
+          "backbone_gpu_queue_ns": 227675136
+        }
+      ],
+      "gpu_memory": {
+        "process_observation": {
+          "id": "process_observation_window",
+          "begin_utc": "2026-10-17T21:26:58.068150+00:00",
+          "end_utc": "2026-10-17T21:28:32.869823+00:00",
+          "sample_count": 28,
+          "available_sample_count": 26,
+          "available": true,
+          "largest_observed_dedicated_bytes": 10527621120,
+          "largest_observed_shared_bytes": 480841728,
+          "first_paired_sample_utc": "2026-10-17T21:27:07.143689+00:00",
+          "last_paired_sample_utc": "2026-10-17T21:28:30.464684+00:00",
+          "maximum_observed_sample_gap_seconds": 3.429061
+        },
+        "unavailable_intervals": [
+          "release",
+          "stage:first:preprocessing:ProcessAsync:1",
+          "stage:first:backbone:Embed:3",
+          "stage:warm:preprocessing:ProcessAsync:4",
+          "stage:warm:backbone:Embed:6",
+          "stage:repeat-1:preprocessing:ProcessAsync:7",
+          "stage:repeat-1:backbone:Embed:9",
+          "stage:repeat-2:preprocessing:ProcessAsync:10",
+          "stage:repeat-2:backbone:Embed:12"
+        ],
+        "audit_file": "submission-error-gpu-audio-839-float16-weights-10962fa-first-memory-audit-20261018.json",
+        "audit_sha256": "0aab1ae72541d0d086f29cd790b94e38c251f8652ff36a654a9e71dec9ddd2ec"
+      },
+      "editor": {
+        "startup": {
+          "pid": 189208,
+          "project_info_seconds": {
+            "projectLoad": 15.488178699999999,
+            "projectInit": 14.1321293,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.3883056,
+            "assetDatabaseInit": 5.0309853,
+            "globalIlluminationInit": 0.0040213,
+            "assembliesLoad": 1.0088025,
+            "unityExtensionsInit": 0.013402,
+            "assetDatabaseRefresh": 6.5790535,
+            "sceneOpening": 0.8807188
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 261,
+              "seconds": 6.579,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 417,
+              "seconds": 2.318,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 509,
+              "seconds": 0.081,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        },
+        "reload_completed": 3,
+        "reload_ms": {
+          "min": 971,
+          "median": 2200,
+          "max": 5355
+        },
+        "allocation_bytes": null,
+        "index_rebuild_seconds": null
+      },
+      "independent_audits": {
+        "encoder": {
+          "file": "submission-error-gpu-audio-839-float16-weights-10962fa-first-audit-20261018.json",
+          "sha256": "3d2c00fe454448d72e866fc31039b4c5a3f402e332aac5d265548edaf0fe8130"
+        },
+        "stages": {
+          "file": "submission-error-gpu-audio-839-float16-weights-10962fa-first-stages-20261018.json",
+          "sha256": "bff10232f8d0b3abb249d3dca57bcf79231d7fabb1f366d0db962d26ff3c6888"
+        },
+        "cpu_wall": {
+          "file": "submission-error-gpu-audio-839-float16-weights-10962fa-first-cpu-wall-audit-20261018.json",
+          "sha256": "9dd2724607c37850e947cc1cc2a6b8b8505ef5ecb8856d0c7008983701ba158e"
+        }
+      }
+    }
+  ],
+  "limits": [
+    "Instrumented original SDK calls, new process/session per condition, existing project Library and shared OS/shader caches. No empty OS/cache guarantee.",
+    "Same-candidate observations, not a matched ordinary-API before/after speedup or precision speed comparison.",
+    "CPU process time, submission wall, GPU queue scope intervals, startup/reload/refresh overlap; never add/subtract them into a kernel time.",
+    "GPU queue intervals include submitted copies/queue bubbles. Sampling and marker/report overhead affect observed API wall.",
+    "Exact-PID timestamped memory counters are observed allocations, not minimum VRAM or guaranteed peaks. Missing intervals remain unavailable.",
+    "GPU load/release duration, async managed allocation and explicit Editor index rebuild are not inferred from these timings. Per-reload nested stage rows remain in the hashed raw logs; this compact aggregate exports counts/ranges.",
+    "No microphone/public acquisition/native final-candidate interaction is qualified here."
+  ],
+  "evidence_sha256": {
+    "submission-error-gpu-image-square-fp32-10962fa-first-audit-20261018.json": "5004c7448aa67ee8e65ca6f5e8e9ec6743c2632c4b4667d5627022fd6d37230b",
+    "submission-error-gpu-image-square-fp32-10962fa-first-stages-20261018.json": "1d2ef948c7dff85c36ab1eb684b22e6e078c7af9210d0a85dd53d2ec060b3ad2",
+    "submission-error-gpu-image-square-fp32-10962fa-first-cpu-wall-audit-20261018.json": "e0982b4d92f67af9a32839add462fa0cacce94c5389bc11251981dbcabb5bcbe",
+    "submission-error-gpu-image-square-float16-weights-10962fa-first-audit-20261018.json": "9c67d0356e9128a0ee0760f2178ae96447c05f346adc3139a1967afeba09b522",
+    "submission-error-gpu-image-square-float16-weights-10962fa-first-stages-20261018.json": "182e20b55a92fc56d94cd1a22c6af6f85e9ae4e69e286c8e7bb4579e03543888",
+    "submission-error-gpu-image-square-float16-weights-10962fa-first-cpu-wall-audit-20261018.json": "4702ec9d4a69bda8b1d23a347b428b0359ce8921998b56dbf347f9d96fca6be5",
+    "submission-error-gpu-image-square-float16-weights-10962fa-first-memory-audit-20261018.json": "d29fe670c25749cce5090fa2bc1245c09a6317f9bda0efa91777ee7cf29234cd",
+    "submission-error-gpu-image-landscape-fp32-10962fa-first-audit-20261018.json": "1e0fa5ee6aa64c3ba7acc17c5e0011bd35421125fbf70e1c46f256bf1ca28ebe",
+    "submission-error-gpu-image-landscape-fp32-10962fa-first-stages-20261018.json": "28f4424c8095569edda07f56a09c1a05b649dc78493d416524213a6be99435d3",
+    "submission-error-gpu-image-landscape-fp32-10962fa-first-cpu-wall-audit-20261018.json": "1b34ebaec6560e3d65321e13ecef629bcb1960d946f0d6848467287903b7c94d",
+    "submission-error-gpu-image-landscape-fp32-10962fa-first-memory-audit-20261018.json": "ea9263c3f9fb7fcf44415130f57f613e349c0ab6584a27bdbc5cce22e749193f",
+    "submission-error-gpu-image-landscape-float16-weights-10962fa-first-audit-20261018.json": "96ed844c018039e69c8f627b5379168b66573cb09e40bb30040d85b5a68dd91f",
+    "submission-error-gpu-image-landscape-float16-weights-10962fa-first-stages-20261018.json": "91fe4a3efe3eed7b9ace7b970f276e56a46ad2204a8767279921b5e995b36178",
+    "submission-error-gpu-image-landscape-float16-weights-10962fa-first-cpu-wall-audit-20261018.json": "d57dc11daa583ba08aca5986f051b5b11075e88724c28647fe1aed3bd56f1f9d",
+    "submission-error-gpu-image-landscape-float16-weights-10962fa-first-memory-audit-20261018.json": "4eea90f4acdd0d4caa22859f50d50cb49fd419b50a20d9c6ccf84c8ce581d3a6",
+    "submission-error-gpu-image-portrait-fp32-10962fa-first-audit-20261018.json": "3a5a55e47c11ae553c54976a401d6d78344bba5c8a85a0a34b4d7fe38d0069bc",
+    "submission-error-gpu-image-portrait-fp32-10962fa-first-stages-20261018.json": "e371d04cfa8dbb812bdc11df0822cad0f3a8133003f77feda082954a11766ef5",
+    "submission-error-gpu-image-portrait-fp32-10962fa-first-cpu-wall-audit-20261018.json": "dbd837690336ca71991c9acb8475345d2d1509dd5d7a1931137b2a5b0725d812",
+    "submission-error-gpu-image-portrait-fp32-10962fa-first-memory-audit-20261018.json": "0afc3b6193a5b2a59c353f71c0049a83b669f316657b8bc53d732fabb051a68a",
+    "submission-error-gpu-image-portrait-float16-weights-10962fa-first-audit-20261018.json": "d20993da9bf1bbebf2aa0da6b9a996aaf962d47e4c6fad477175dd72d47e4f0d",
+    "submission-error-gpu-image-portrait-float16-weights-10962fa-first-stages-20261018.json": "f39b40a42857b78bc98a5155873fa1355b59f220ae201e89982a1fef1480f7d1",
+    "submission-error-gpu-image-portrait-float16-weights-10962fa-first-cpu-wall-audit-20261018.json": "3ae2104ab2f59477c4f2acf149a51c003c10ba589d636d10009caafe25d693b6",
+    "submission-error-gpu-image-portrait-float16-weights-10962fa-first-memory-audit-20261018.json": "a9ec9ee0c1cc1b235d820d87e725e365f78e800da5b8b96a22a585963428e2a9",
+    "submission-error-gpu-audio-1119-fp32-10962fa-first-audit-20261018.json": "9d0188521f0b396f28ae35ccc5ccb3fe182b4cde112193872d784ca143fe052e",
+    "submission-error-gpu-audio-1119-fp32-10962fa-first-stages-20261018.json": "383bf7f062ef4ce1d7258bec3160ec8199acb71d276897ef9f048a4b2155e54b",
+    "submission-error-gpu-audio-1119-fp32-10962fa-first-cpu-wall-audit-20261018.json": "61ae6e480c02d55bdff5464b2ac3c1641aa03c355848efa3dd3af29c2ab2ab01",
+    "submission-error-gpu-audio-1119-fp32-10962fa-first-memory-audit-20261018.json": "3f9d79a968e07301c38a1d61e5aff0ef1075639913610ddbcdf0b0044d0363a3",
+    "submission-error-gpu-audio-1119-float16-weights-10962fa-first-audit-20261018.json": "67d50df67ef46bbbc6df26bbc308e81e23c9853af4a7a94f4974d1e7349c5542",
+    "submission-error-gpu-audio-1119-float16-weights-10962fa-first-stages-20261018.json": "a9633b5bdc3228a63e14ba4b00ec9b2756a6fb464e362cb94c6672bbc2b3b3b3",
+    "submission-error-gpu-audio-1119-float16-weights-10962fa-first-cpu-wall-audit-20261018.json": "5b7532156d124e7b5fdbae5341df53e7f7bf2b5032c82cf07852c048ce414792",
+    "submission-error-gpu-audio-1119-float16-weights-10962fa-first-memory-audit-20261018.json": "370d8e1309a3eef3abed245ac3a3d1cc7104587b5dcb2aded5604031857c8d19",
+    "submission-error-gpu-audio-839-fp32-10962fa-first-audit-20261018.json": "419c52513cbd2bf74ac192f236e3090a417742566a462bbc4fab4187ced05e07",
+    "submission-error-gpu-audio-839-fp32-10962fa-first-stages-20261018.json": "a8229b002892a92f32606fd1b2c1c2cd1bcc789ab44c3a857c0046aff5edc5fe",
+    "submission-error-gpu-audio-839-fp32-10962fa-first-cpu-wall-audit-20261018.json": "516e626ff63c155fbfef84bfe6b39e42fe3dedcd93b7cc46cbb045064e13ba13",
+    "submission-error-gpu-audio-839-fp32-10962fa-first-memory-audit-20261018.json": "1c26e0f79fc1fb24cbca18cbba457700bfc7ac8b7745e58a178d7696eb3ccb6c",
+    "submission-error-gpu-audio-839-float16-weights-10962fa-first-audit-20261018.json": "3d2c00fe454448d72e866fc31039b4c5a3f402e332aac5d265548edaf0fe8130",
+    "submission-error-gpu-audio-839-float16-weights-10962fa-first-stages-20261018.json": "bff10232f8d0b3abb249d3dca57bcf79231d7fabb1f366d0db962d26ff3c6888",
+    "submission-error-gpu-audio-839-float16-weights-10962fa-first-cpu-wall-audit-20261018.json": "9dd2724607c37850e947cc1cc2a6b8b8505ef5ecb8856d0c7008983701ba158e",
+    "submission-error-gpu-audio-839-float16-weights-10962fa-first-memory-audit-20261018.json": "0aab1ae72541d0d086f29cd790b94e38c251f8652ff36a654a9e71dec9ddd2ec"
+  },
+  "controller_sha256": "be0388c24958b206b7f55f24d97caf8724ca595a4ddee1a1047f00f0c8cb1acb"
+}

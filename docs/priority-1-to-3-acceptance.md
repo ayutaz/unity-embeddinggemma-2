@@ -7,7 +7,7 @@
 | 要件 | 現在の証拠 | 残る作業・完了条件 |
 | --- | --- | --- |
 | 1a: 全6 moduleの公開入力からの新規準備 | PR #86に固定descriptor・object検証を伴う取得ツール。配布候補は既存ローカルbundle | 公開先と固定commitを確定し、空の入力・出力cacheから全6 moduleを取得。producer、revision、descriptorと全objectのhashを照合し、実行receiptを保存する |
-| 1b: 中断・破損・期限切れからの回復 | 取得の小さなfixture契約テストあり | 実配布データで再利用・中断後再試行・同サイズ破損修復を確認。欠落・期限切れ・revision違いを成功にせず、文書のコマンドを再現する |
+| 1b: 中断・破損・期限切れからの回復 | PR #86で41契約+7実HTTPS CLIテストと、[実FP32 bundle・820 objectのローカルHTTPS故障注入](https://github.com/ayutaz/unity-embeddinggemma-2/blob/e02663d50f539b3fb49674442747a46c85f35450/docs/results/real-local-https-media-recovery-f09317e-20261018.json)を確認。切断後の再試行、warm、同サイズ重み破損修復、404時の旧descriptor保持と再試行まで成功 | 公開した固定元でも同手順と文書コマンドを確認する。既存ローカルsourceでの受信・再hashを公開empty-cache取得・GPU合格へ広げない |
 | 2a: 固定Git consumerの操作 | [画像・音声登録、日英検索、キャンセル・再試行・切替・解放](results/fresh-git-native-ui-e28a5fd-20261018.json)と正常終了 | 公開手順で取得したモデルと最終candidateで再確認。非対応入力・モデル欠落・復帰も含め、最新sample修正を過去sourceの操作成功だけで合格にしない |
 | 2b: プレビュー・再生・停止 | 上記の画像プレビューと再生、別のwarm起動での[音声途中停止・解放](results/native-audio-early-stop-e28a5fd-20261018.json) | 最終candidateでの操作と統合。再生位置の進行を聴感品質の評価へ拡張しない |
 | 2c: 実マイク | 明示操作・失敗処理の実装と契約テスト。実録音は未実行 | 録音の明示許可後、開始・停止・中断復帰を実機で確認。権限拒否・deviceなしの扱いも記録。固定PCMやfake deviceを実マイク成功にしない |

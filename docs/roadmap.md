@@ -24,7 +24,7 @@ candidate・入力・model hashを固定し、最初に測定します。遅い�
 
 **完了条件**：load・初回・warm・前処理・encoder・backbone・解放、CPU / GPU時間、ホストメモリ / VRAMを別記すること。Editor import・検索DB・allocation・domain reloadも分離し、前後で精度・順位・正常終了を維持します。
 
-2026-10-18時点で、Float16の全6 module・固定16ケースの単独GPU参照比較は完了しました。FP32連続試験は12GiB guard中断、16GiB別試験の900秒fixture timeoutを保持し、連続実行は未合格です。次は実GPU時間を取得する同一入力の初回・warm・反復測定を行い、load・frame待機・推論・Editor処理の寄与を分けます。同条件のFP32 / Float16、連続順位・解放まで確認してから、必要な改善をTDDで加えます。単独試験の所要時間や保存容量の減少から高速化を推定しません。
+2026-10-18時点で、Float16の全6 module・固定16ケースの単独GPU参照比較は完了しました。FP32の12GiB guard中断と16GiB EditModeの900秒fixture timeoutは保持します。その後の同じSDK・16GiBのPlayModeでは、5媒体と日英4 queryの連続順位・解放、直接テキスト4件、終了code0を確認しました。Float16の同条件対照と、実GPU時間を取得する同一入力の初回・warm・反復測定は残っています。load・frame待機・推論・Editor処理の寄与を分け、必要な改善をTDDで加えます。単独試験の所要時間や保存容量の減少、異なる実行modeから高速化を推定しません。
 
 ### 4. WindowsマルチモーダルPlayer
 

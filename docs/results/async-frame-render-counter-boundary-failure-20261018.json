@@ -1,0 +1,35 @@
+{
+  "accepted": false,
+  "validation_source": "664ab20c59aa7bf8da63cb4d0524eba21c8a5f95",
+  "unity_counts": {
+    "total": 10,
+    "passed": 9,
+    "failed": 1,
+    "skipped": 0
+  },
+  "exit_code": 2,
+  "model_loaded": false,
+  "gpu_execution_validated": false,
+  "observed_payload_bytes": 4194304,
+  "payload_render_frames": [
+    20,
+    21
+  ],
+  "exact_main_thread_marker_bytes": [
+    2097184,
+    2097184
+  ],
+  "frame_counter_bytes": 4266264,
+  "frame_counter_samples": 1,
+  "failure": "The controlled arrays crossed distinct render frames but appeared in one counter sample. The gate requiring two distinct large counter samples failed; the 8MiB case did not run.",
+  "followup_validation_source": "9e791670a04d17d1ba161ff1655e24c25de9c96a",
+  "followup_scope": "Wait for an actual counter sample after the first payload, then emit the second. Keep both payload visibility, the 1MiB background ceiling, exact markers, original SynchronizationContext, overflow/missing-data guards and all reference/GPU conditions.",
+  "followup_unity_execution_verified": false,
+  "evidence_sha256": {
+    "async-frame-calibration-664ab20-first.json": "38f3cd1c86fa7be27a8cb18f17e6739815fa6fd83bfc2a9768a910ecf248e364",
+    "async-frame-calibration-664ab20-first.xml": "66d94de50dfe245b20a6ce6bafd796ffc612a82355e25e5bd8d8703da69532d1",
+    "async-frame-calibration-664ab20-first.log": "ecb4d20bf22aecd3c9d38ac5a79a2575baa25ec1920ae87f546f4da5e4efb14c",
+    "async-frame-calibration-664ab20-first-process.json": "fada416a74a7be7b50c937cf47bdb41c02e382599beeaa3c7f1bdaa01ec5f107",
+    "async-frame-calibration-664ab20-first-source.json": "4790aab6f3815ab866cf23a70d55a88fa8e2e89987defd2253cc94078643cebc"
+  }
+}

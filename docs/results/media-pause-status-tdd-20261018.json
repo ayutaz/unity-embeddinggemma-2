@@ -1,0 +1,92 @@
+{
+  "accepted": true,
+  "parent_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "problem": "OnApplicationPause(true) called CancelRecording even without an active recording, replacing successful search status with discarded-recording text.",
+  "change": "Only active recordings are cancelled on pause. Playback is still stopped on every pause; non-recording status remains unchanged.",
+  "scope": "Local-file-dependency no-model EditMode behavior regression only. Not fresh fixed-Git/GPU/model/microphone acceptance of the new sample source.",
+  "red": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-nographics",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\step3-consumer-53dafe8",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Samples.Tests.MediaUsabilityTests",
+      "-testResults",
+      ".\\artifacts\\usability-state\\pause-status-reflection-red.xml",
+      "-logFile",
+      ".\\artifacts\\usability-state\\pause-status-reflection-red.log"
+    ],
+    "timeout_seconds": 180,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T18:51:06.653338+00:00",
+    "pid": 79416,
+    "exit_code": 2,
+    "unity_results": ".\\artifacts\\usability-state\\pause-status-reflection-red.xml",
+    "unity_counts": {
+      "total": 9,
+      "passed": 8,
+      "failed": 1,
+      "skipped": 0
+    },
+    "elapsed_seconds": 23.160005800018553,
+    "completed_utc": "2026-10-17T18:51:29.813327+00:00"
+  },
+  "green": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-nographics",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\step3-consumer-53dafe8",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Samples.Tests.MediaUsabilityTests",
+      "-testResults",
+      ".\\artifacts\\usability-state\\pause-status-green.xml",
+      "-logFile",
+      ".\\artifacts\\usability-state\\pause-status-green.log"
+    ],
+    "timeout_seconds": 180,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T18:51:39.557910+00:00",
+    "pid": 193336,
+    "exit_code": 0,
+    "unity_results": ".\\artifacts\\usability-state\\pause-status-green.xml",
+    "unity_counts": {
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 23.879050999996252,
+    "completed_utc": "2026-10-17T18:52:03.436956+00:00"
+  },
+  "executed_source_file_sha256": {
+    "MultimodalSearchSample.cs": "46a657156848e3d5e3ccbec6bb6d3c69ca0cacd86933348de6587754b03bde7c",
+    "Tests/Editor/MediaUsabilityTests.cs": "ca7b48f00c16f576c5a20551598da951a574449c7b705194a2b6b8ea2aa00a72"
+  },
+  "earlier_harness_attempt": "pause-status-red had one intended status failure and one unrelated SendMessage lifecycle assertion; preserved, not the clean intended Red receipt.",
+  "evidence_sha256": {
+    "pause-status-reflection-red.xml": "607dcc910e5810e9773772d894bb29fb9b1e978d2d2fe19e3a64f79848694a77",
+    "pause-status-reflection-red.log": "cebf29ff62a1466148a0a37053b69ac2cf57742282e7a2384a644d5af46a964a",
+    "pause-status-reflection-red-process.json": "ba1732b46d3f83f588aee04c4e9a13e3fc03e97996e6a2391a226601a311d446",
+    "pause-status-green.xml": "a4c0cfd74dd871036a3f368075369faa4bffceb0f57634044ba15cb43cdcaf47",
+    "pause-status-green.log": "01626bbc186a810e3bd8cd5e546be6a6c0694845660f8a78014d718b3271b571",
+    "pause-status-green-process.json": "e81bb0f8987ded6e2ffdfee2640f7296f2329cadcb22a1f024f15f9d77d486cb"
+  }
+}

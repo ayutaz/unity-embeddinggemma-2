@@ -134,7 +134,12 @@ namespace EmbeddingGemma.Samples
             try { if (recording.ReachedLimit) StopRecording(); }
             catch (Exception error) { LastError = error.Message; try { CancelRecording(); } catch { /* Retain the first device error. */ } }
         }
-        void OnApplicationPause(bool paused) { if (paused) { CancelRecording(); StopPlayback(); } }
+        void OnApplicationPause(bool paused)
+        {
+            if (!paused) return;
+            if (IsRecording) CancelRecording();
+            StopPlayback();
+        }
         void OnApplicationFocus(bool focused) { if (!focused && IsRecording) CancelRecording(); }
 
         public Task AddAsync(CancellationToken cancellationToken = default) => StartOperation(async token =>

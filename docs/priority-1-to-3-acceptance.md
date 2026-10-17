@@ -11,9 +11,9 @@
 | 2a: 固定Git consumerの操作 | [画像・音声登録、日英検索、キャンセル・再試行・切替・解放](results/fresh-git-native-ui-e28a5fd-20261018.json)と正常終了 | 公開手順で取得したモデルと最終candidateで再確認。非対応入力・モデル欠落・復帰も含め、最新sample修正を過去sourceの操作成功だけで合格にしない |
 | 2b: プレビュー・再生・停止 | 上記の画像プレビューと再生、別のwarm起動での[音声途中停止・解放](results/native-audio-early-stop-e28a5fd-20261018.json) | 最終candidateでの操作と統合。再生位置の進行を聴感品質の評価へ拡張しない |
 | 2c: 実マイク | 明示操作・失敗処理の実装と契約テスト。実録音は未実行 | 録音の明示許可後、開始・停止・中断復帰を実機で確認。権限拒否・deviceなしの扱いも記録。固定PCMやfake deviceを実マイク成功にしない |
-| 3a: 初回・warm・反復とstage別CPU/GPU時間 | 同じ固定入力のテキストGPU区間とCPU割り当て、画像3・音声2 profile×両形式・全40回の同一入力CPU/wall・参照一致・解放・exit0を確認 | 集約済みのload・前処理・encoder・backbone・releaseを基準に、stage別GPU時間の測定と解釈を確認し、待機・readbackをkernel稼働時間にしない |
-| 3a: ホスト・VRAM・Editor負荷 | ホストピーク、timestamp付きGPU memory allocation、reloadとstartup/importの個別観測、別consumerの既定index初期化・package検索4回とexit0。[測定の範囲](media-repeat-measurements.md) | 欠測区間を埋めるか測定不能を明記し、受け入れ不足を保持。index単独・再構築時間、Editor/非同期allocation、cold/warm条件の受け入れを確認。プロセス全体・stage・寿命ピークと、重なるEditor時間を加算しない |
-| 3b: FP32/Float16と原因別改善 | [出力確保の新SDK候補](gpu-write-only-output-allocation.md)はTDD・GPU演算等120件、両形式の固定画像各4回byte一致と計測付きwarm反復の改善、[全6 module×両形式の単独参照32ケース](results/gpu-output-d7b2233-all-module-isolated-reference-20261018.json)、両形式の混在全順位・再試行・解放・exit0を確認 | 新SDKの通常APIの対応条件・メモリと残る性能項目を受け入れる。元の精度・全順位・GPU要件・正常終了を維持し、旧sourceの成功や保存容量の減少を新SDK全体の合格・高速化にしない |
+| 3a: 初回・warm・反復とstage別CPU/GPU時間 | 新SDK `d7b2233` の画像3・音声2 profile×両形式・40回で同一入力CPU/wall・独立参照・解放・exit0、encoder 17,176と前処理/backbone 80のGPU区間を確認。[同じsourceの集約](media-gpu-submission-observations.md)。旧SDKのtext GPU/割り当て記録は別に保持 | 同SDKのtext指標の対応、load/releaseのGPU時間の有無と測定範囲、非同期allocationを確認する。CPU wallとGPU queue区間を加減してkernel時間にしない |
+| 3a: ホスト・VRAM・Editor負荷 | 新SDKの9プロセスでtimestamp付きGPU memoryを確認し、残る1プロセスと短区間の欠測を明記。モデルなしEditorの[校正済み検索割り当て・空/再利用Libraryのimport/startup](editor-search-allocation-observations.md)は各10 pass / skip0 / exit0 | 明示的なindex再構築・背景index・非同期allocationと測定不能の根拠を確認し、受け入れ不足を保持。プロセス全体・stage・寿命ピークと、重なるEditor時間を加算しない |
+| 3b: FP32/Float16と原因別改善 | [出力確保の新SDK候補](gpu-write-only-output-allocation.md)はTDD・GPU演算等120件、両形式の固定画像各4回byte一致と計測付きwarm反復の改善、[全6 module×両形式の単独参照32ケース](results/gpu-output-d7b2233-all-module-isolated-reference-20261018.json)、両形式の混在全順位・再試行・解放・exit0を確認 | 新SDKの40回の同一入力・CPU/wall/GPU・メモリ観測を基準に残る性能項目を受け入れる。元の精度・全順位・GPU要件・正常終了を維持し、旧sourceの成功や保存容量の減少を新SDK全体の合格・高速化にしない |
 | delivery: PRと最終監査 | PR #85 UX、#86取得、#87性能・Float16が未統合。#87は#85に依存 | 最新headのRequired CI、差分・依存を確認し、依頼範囲内で統合。最終sourceとmodel hashへ全記録を対応させ、上記全行の証拠を揃えてから優先1〜3を完了とする |
 
 ## そのまま維持する失敗と境界

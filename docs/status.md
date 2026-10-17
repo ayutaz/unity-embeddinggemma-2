@@ -78,12 +78,18 @@ SDK `e28a5fd` と計測 `7ecec1f` をGitから固定書き出しした別consume
 
 固定sourceの追加試行では、両形式で250msの送信前CPU待機をGPU Recorder区間に含まず、2 dispatchが単発値より長い対照結果を得ました。[追加の制御実験](results/frozen-source-gpu-dispatch-scope-calibration-20261018.json)。上記の別試行で対照条件が不成立だった事実は保持します。待機なし・各1 dispatchの初回 / warm / 2反復も、両形式で4 vectorの参照一致・解放・1 pass / fail0 / skip0 / exit0を確認し、実行後の534 sourceファイルを再照合しました。[通常dispatchの観測](results/frozen-source-text-gpu-dispatch-observations-20261018.json)。入力転送・tokenizerは測定外で、CPU完了時間にはcommand構築・GPU fenceのframe待ち・最終readbackを含みます。SDK API全体の遅延、純粋なkernel稼働時間、平均速度や形式間の高速化は主張しません。Profiler履歴の別値は未確定のままです。
 
+### 新SDKのGPU区間とEditor割り当て
+
+SDK `d7b2233` / 計測 `10962fa` の[全5 profile・両形式の40反復](media-gpu-submission-observations.md)では、元参照・解放・正常終了と、encoder 17,176区間、前処理/backbone 80区間すべてを確認しました。CPU/wall・ロード/解放・ホストメモリを別記し、9プロセスで実際のcounter採取時刻によるGPU memoryも照合しました。FP32 squareのcounter traceと短い区間の欠測は保持します。計測付きAPI・共有cacheを残した固定入力の観測で、通常APIの平均速度・形式間の高速化・最低VRAMではありません。
+
+別のモデルなしconsumerでは、[Editor検索の校正済み割り当てと空/再利用Library](editor-search-allocation-observations.md)を確認しました。noop / 64KiB / 128KiBは両実行で0 / 65,568 / 131,104 bytes、既知SDKファイルの検索4回、各10 pass / fail0 / skip0 / exit0、終了後558 sourceファイル一致です。main-thread marker内のmanaged bytesであり、背景index・native/GPUメモリ・非同期完了の割り当てではありません。検証専用consumerの空Library起動は実import 2658件、再利用起動は0件で、起動/import/reloadの時間は重なるため加算しません。
+
 ### 残る受け入れ
 
 - 空のcheckoutから画像・音声bundleを準備する公開手順と配布経路。
 - 最終統合candidateを新しいconsumerへ導入し、全モダリティを手動で一通り操作する最終受け入れ。
 - 結果画像プレビュー・音声再生・明示的なマイク操作のPR統合と実操作の受け入れ。
-- 同一candidateでの初回 / warm反復、VRAM・ホストメモリ・ロード・Editor負荷の系統的な測定。
+- 同じSDKのtext計測との対応、load/release GPU区間の扱い、非同期allocation、明示的index再構築・背景処理。
 - 画像・音声検索のWindows Player、macOS Editor、iOS / Android実機での精度・操作・cache・正常終了。Androidの過去のAPK build成功は実機GPU合格ではありません。
 - 全モダリティの採用Float16形式・明示CPU経路の環境別受け入れ、最終candidate / tag固定導入、正式Release。
 

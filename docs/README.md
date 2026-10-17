@@ -19,7 +19,7 @@
 
 | 文書 | 内容 |
 | --- | --- |
-| [検証状況](status.md) | 2026-10-17時点の統合済み機能・確認済み環境・未達条件 |
+| [検証状況](status.md) | 2026-10-18時点の統合済み機能・確認済み環境・未達条件 |
 | [ロードマップ](roadmap.md) | 次のPR単位、依存関係、受け入れと正式公開の条件 |
 | [プロジェクトのゴール](goal.md) | GPU要件、精度・対応環境、対象外 |
 | [CI](ci.md) / [自動操作](automation.md) | 開発環境・workflow・実行と結果の扱い |
@@ -31,6 +31,9 @@
 | 分野 | 入口 |
 | --- | --- |
 | 最新サンプルの実GPU・メモリ・画面・回帰 | [画像・音声サンプル検証](multimodal-search-sample.md) |
+| GPU出力確保の改善と新SDKの精度・順位 | [CPU storageの省略](gpu-write-only-output-allocation.md) |
+| 新SDKの全画像・音声profileのGPU/CPU/wall・メモリ | [同じsourceの40反復](media-gpu-submission-observations.md) |
+| Editor検索の校正済み割り当て・空/再利用Library | [Editorの別測定](editor-search-allocation-observations.md) |
 | Windows IL2CPP Playerの固定source受け入れ | [Player結果JSON](results/m2-current-main-player-acceptance-20261017.json) |
 | 元画像・音声encoderと全role API | [GPU/API完了監査](results/goal4-current-completion-audit-20261016.json) / [GPU診断](gpu-execution-and-silu-validation.md) |
 | テキストM1の保存・量子化・測定 | [M1完了検証](m1-completion-validation.md) |

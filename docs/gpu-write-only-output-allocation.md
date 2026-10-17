@@ -27,6 +27,6 @@
 
 ## 残る受け入れ
 
-通常APIの対応する入力と条件での計測、host / GPU memory、残るstage GPU時間・非同期割り当て・Editor測定も必要である。旧SDKの全40回や操作成功を、新SDKの性能・手動操作の合格へ流用しない。
+新SDKでも[全5 profile・両形式の同一入力40反復とstage GPU/CPU/wall・メモリ](media-gpu-submission-observations.md)、[Editorの校正済み検索割り当て・空/再利用Library](editor-search-allocation-observations.md)を記録した。同じSDKのtext指標の対応、load/release GPU時間の扱い、非同期allocation・明示的index再構築は残る。旧SDKの計測や操作成功を、新SDK全体の性能・手動操作の合格へ流用しない。
 
 PR #87はDraftを維持し、最新headのCIも別に確認する。公開empty-cache取得・許可後の実マイク・最終candidate操作を含む優先1〜3全体は未完了である。

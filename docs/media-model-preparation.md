@@ -46,3 +46,25 @@ HTTP 404・期限切れ・認証不足は取得失敗です。ハッシュ検証
 ## 残る受け入れ
 
 公開配布後、既存model cacheを使わない取得で全6 moduleの出力を照合し、warm再利用・中断からの再試行・破損修復を実データでも確認します。そのモデルを固定Git consumerに導入し、対応する実GPU・数値・検索順位・正常終了を別記録で検証してから、この手順を利用者向け完成手順に更新します。取得契約テストは41件です。追加の必須recipe検証は16件の意図した失敗から修正後41件成功を確認し、実FP32 / Float16重みの各820 objectを宣言したdescriptorのmetadata読み取りも確認しました。[修正と確認範囲](results/media-setup-required-recipe-guard-20261018.json)。小さな不透明fixtureと既存descriptorの読み取りは、実objectの再取得・再hash・GPU実行や公開empty-cache受け入れを代替しません。
+
+## 実objectによるローカルHTTPSの検証
+
+2026-10-18。CLIの取得実装はrecipe guard修正時と同じGit blobで、test source `f09317e` のfixtureを使った。[実データの監査](results/real-local-https-media-recovery-f09317e-20261018.json)は、既存FP32 bundleの全6 module・820 object・8,583,084,520 bytesを、127.0.0.1だけで待ち受けるHTTPSから空の出力cacheへ転送した記録である。取得元は既存ローカルbundleであり、公開元からの新規利用者の取得は未確認のままとする。
+
+| 確認した条件 | 結果 |
+| --- | --- |
+| 未信頼の一時TLS証明書 | CLI exit1、object request0、出力cache未生成 |
+| descriptorの404 / 410、pin違い、model revision違い | 各exit1、object request0 |
+| 空cacheで3番目のHTTP responseを途中切断 | exit1、完成した2 objectを保持、一時ファイルなし、bundle未公開 |
+| 同じcacheへの再試行 | exit0、2 object再利用・818 object受信、全6 module完成 |
+| warm再利用 | exit0、820 objectをhash照合して再利用、object request0 |
+| 1,572,864 bytesの実FP32重みを同サイズで破損 | exit0、対象1件だけ再受信・819件再利用 |
+| 同じ重みの404から再試行 | 失敗時は旧descriptorを保持してexit1、再試行は1件修復・819件再利用でexit0 |
+
+最後に元と出力の各820ファイル、計1,640ファイルをサイズ・SHA256で独立に再照合し、sourceとdestinationが同一file / hardlinkでないことも確認した。元descriptorとproducer / revision、元のuser変更4ファイルも保持した。入力descriptorのpinと、出力descriptorのJSON内容の一致は分けて記録している。
+
+TLSの信頼は検証用child processの `SSL_CERT_FILE` だけに指定し、OSの信頼storeは変更していない。証明書やモデルを外部へ公開していない。検証した中断はHTTP responseの途中切断であり、Ctrl+C・強制終了・OS停止の実証にはしない。取得receiptのinference / GPU flagはfalseで、GPU数値合格や転送速度の保証へ広げない。
+
+既存41件に、実CLI・HTTPSを通る7件を加えた48件が成功した。最初の7件のsetup errorは未実装のHTTPSテストfixtureによるもので、実装後は証明書拒否・転送・中断・修復を確認した。HTTPS fixtureは既存のOpenSSLから一時証明書を生成する。モデル・証明書・秘密鍵・生の転送logはGitに追加しない。
+
+この観測で、実objectと通常のCLIを使うローカル転送・故障注入・修復は確認できた。公開した固定URLからのempty-cache取得、その出力での固定Git consumer・GPU・操作受け入れは引き続き必要である。

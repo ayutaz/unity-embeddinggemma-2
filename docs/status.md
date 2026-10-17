@@ -74,9 +74,9 @@ SDK `e28a5fd` と計測 `7ecec1f` をGitから固定書き出しした別consume
 
 固定FP32の旧計測では、Profiler履歴のms→ns変換から負のlong値も検出しました。元のfloat値は未保存で原因未確定です。非数・非正値・long範囲外・丸め後0を履歴の有効時間にしないguardを2件Red→関連10件Greenで追加しました。[変換のTDD](results/gpu-history-value-bounds-tdd-20261018.json)。これはモデルなしのguard検証であり、GPU履歴の解釈やstage別性能の合格には数えません。旧snapshotの不正な履歴値は未利用可能の観測として保持します。
 
-### 残る受け入れ
-
 固定sourceの追加試行では、両形式で250msの送信前CPU待機をGPU Recorder区間に含まず、2 dispatchが単発値より長い対照結果を得ました。[追加の制御実験](results/frozen-source-gpu-dispatch-scope-calibration-20261018.json)。上記の別試行で対照条件が不成立だった事実は保持します。待機なし・各1 dispatchの初回 / warm / 2反復も、両形式で4 vectorの参照一致・解放・1 pass / fail0 / skip0 / exit0を確認し、実行後の534 sourceファイルを再照合しました。[通常dispatchの観測](results/frozen-source-text-gpu-dispatch-observations-20261018.json)。入力転送・tokenizerは測定外で、CPU完了時間にはcommand構築・GPU fenceのframe待ち・最終readbackを含みます。SDK API全体の遅延、純粋なkernel稼働時間、平均速度や形式間の高速化は主張しません。Profiler履歴の別値は未確定のままです。
+
+### 残る受け入れ
 
 - 空のcheckoutから画像・音声bundleを準備する公開手順と配布経路。
 - 最終統合candidateを新しいconsumerへ導入し、全モダリティを手動で一通り操作する最終受け入れ。

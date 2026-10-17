@@ -24,6 +24,7 @@ namespace EmbeddingGemma
         public const int EmbeddingDimension = 768;
         readonly TextTokenizer tokenizer;
         Worker worker;
+        GpuConstantWorker workerOwner;
         public BackendType Backend { get; }
 
         public TextEmbedder(Model model, string tokenizerJson, BackendType backend)
@@ -40,7 +41,8 @@ namespace EmbeddingGemma
                     input.shape.IsStatic() && input.shape.ToTensorShape() == new TensorShape(1, SequenceLength))))
                 throw new ArgumentException("Expected two int32 [1,128] inputs and one embedding output.", nameof(model));
             tokenizer = new TextTokenizer(tokenizerJson);
-            worker = new Worker(model, backend);
+            workerOwner = new GpuConstantWorker(model, backend);
+            worker = workerOwner.Worker;
             Backend = backend;
             if (worker.backendType != backend)
             {
@@ -81,7 +83,8 @@ namespace EmbeddingGemma
 
         public void Dispose()
         {
-            worker?.Dispose();
+            workerOwner?.Dispose();
+            workerOwner = null;
             worker = null;
         }
     }

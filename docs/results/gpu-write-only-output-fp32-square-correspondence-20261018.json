@@ -1,0 +1,149 @@
+{
+  "accepted_matched_input_source_scope_observation": true,
+  "general_speedup_claimed": false,
+  "complete_performance_accepted": false,
+  "before_runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "after_runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "c2f766e4e05f5378eba15b6552e4a244ebeebfa9",
+  "precision": "fp32",
+  "module": "image-square",
+  "input_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+  "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+  "unity": "6000.3.21f1",
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "rounds": [
+    {
+      "round": "first",
+      "before_wall_seconds": 64.5707984,
+      "after_wall_seconds": 34.9515757,
+      "before_process_cpu_seconds": 25.765625,
+      "after_process_cpu_seconds": 0.640625,
+      "exact_output_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f"
+    },
+    {
+      "round": "warm",
+      "before_wall_seconds": 19.6892764,
+      "after_wall_seconds": 5.2142814,
+      "before_process_cpu_seconds": 11.359375,
+      "after_process_cpu_seconds": 0.734375,
+      "exact_output_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f"
+    },
+    {
+      "round": "repeat-1",
+      "before_wall_seconds": 19.2994038,
+      "after_wall_seconds": 4.8320395,
+      "before_process_cpu_seconds": 11.53125,
+      "after_process_cpu_seconds": 0.8125,
+      "exact_output_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f"
+    },
+    {
+      "round": "repeat-2",
+      "before_wall_seconds": 29.388729899999998,
+      "after_wall_seconds": 5.481497999999999,
+      "before_process_cpu_seconds": 20.1875,
+      "after_process_cpu_seconds": 0.921875,
+      "exact_output_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f"
+    }
+  ],
+  "encoder_intervals": [
+    {
+      "round": "first",
+      "kind": "model-segment-and-output-copy",
+      "count": 180,
+      "before_cpu_submission_wall_ns": 1746778900,
+      "after_cpu_submission_wall_ns": 1406948500,
+      "before_gpu_queue_ns": 900091904,
+      "after_gpu_queue_ns": 340050944
+    },
+    {
+      "round": "first",
+      "kind": "projection-operation",
+      "count": 179,
+      "before_cpu_submission_wall_ns": 28254299700,
+      "after_cpu_submission_wall_ns": 485791100,
+      "before_gpu_queue_ns": 3329771520,
+      "after_gpu_queue_ns": 1185812480
+    },
+    {
+      "round": "warm",
+      "kind": "model-segment-and-output-copy",
+      "count": 180,
+      "before_cpu_submission_wall_ns": 1246596300,
+      "after_cpu_submission_wall_ns": 1478073700,
+      "before_gpu_queue_ns": 493132800,
+      "after_gpu_queue_ns": 205071872
+    },
+    {
+      "round": "warm",
+      "kind": "projection-operation",
+      "count": 179,
+      "before_cpu_submission_wall_ns": 13349741200,
+      "after_cpu_submission_wall_ns": 375445700,
+      "before_gpu_queue_ns": 2384781312,
+      "after_gpu_queue_ns": 1046282240
+    },
+    {
+      "round": "repeat-1",
+      "kind": "model-segment-and-output-copy",
+      "count": 180,
+      "before_cpu_submission_wall_ns": 1226002700,
+      "after_cpu_submission_wall_ns": 1357029000,
+      "before_gpu_queue_ns": 512965120,
+      "after_gpu_queue_ns": 200296192
+    },
+    {
+      "round": "repeat-1",
+      "kind": "projection-operation",
+      "count": 179,
+      "before_cpu_submission_wall_ns": 13138763900,
+      "after_cpu_submission_wall_ns": 358766500,
+      "before_gpu_queue_ns": 2397443072,
+      "after_gpu_queue_ns": 1031628800
+    },
+    {
+      "round": "repeat-2",
+      "kind": "model-segment-and-output-copy",
+      "count": 180,
+      "before_cpu_submission_wall_ns": 1413534900,
+      "after_cpu_submission_wall_ns": 1901421300,
+      "before_gpu_queue_ns": 687121920,
+      "after_gpu_queue_ns": 201306880
+    },
+    {
+      "round": "repeat-2",
+      "kind": "projection-operation",
+      "count": 179,
+      "before_cpu_submission_wall_ns": 22227659400,
+      "after_cpu_submission_wall_ns": 438725300,
+      "before_gpu_queue_ns": 2811919360,
+      "after_gpu_queue_ns": 1042443264
+    }
+  ],
+  "host_lifetime_peak_bytes": {
+    "before": 10801438720,
+    "after": 9874149376
+  },
+  "matched_conditions": [
+    "Same pinned image, descriptor, reference, precision, validation source and camera/FPS setup",
+    "Same Unity, GPU/API, worker count and 16GiB host guard",
+    "Model 180 and operation 179 marker scopes per call, both recorded with no missing intervals",
+    "All four 768-float outputs byte-identical; both normal exits and inspected release"
+  ],
+  "limits": [
+    "Separate project Libraries and launch times; OS/shader caches, clocks and background load not controlled. No representative mean, universal ratio or minimum-RAM claim.",
+    "Profiler, marker setup and sampling perturb instrumented wall time. CPU wall differs from process CPU and GPU queue duration differs from pure kernel active time.",
+    "This compares square-0 only. Other cases/profiles, text/audio, mixed ranks, native UI and public preparation remain separate new-source gates."
+  ],
+  "evidence_sha256": {
+    "encoder-gpu-dispatch-image-square-fp32-c2f766e-first.json": "3b46ddb20c5d25c71b5f88d405b525bd0eef7e853eee53a081aa1655523105c4",
+    "encoder-gpu-dispatch-image-square-fp32-c2f766e-first-source.json": "024a57937b50882c78624df70f8cf3aa69896e86be8dbed4885938b74be7fb98",
+    "encoder-gpu-dispatch-image-square-fp32-c2f766e-first-process.json": "60aa2b6e3a9f268d84a1bd1711df1e8a1bf483759150cf118c8f6f3afbf86283",
+    "encoder-gpu-dispatch-image-square-fp32-c2f766e-first.xml": "9016e2be529aad7013eedfcda206ecdd2d98e0018c18de7656e998988d5c0152",
+    "gpu-output-dispatch-image-square-fp32-d7b2233-first.json": "4432a2054770af7e58809d3e50456dd0f4389eab519e4a6d2266e82a5f800517",
+    "gpu-output-dispatch-image-square-fp32-d7b2233-first-source.json": "7736c42a14f162266ee794cdab61b8e49e7a8b2b721786fbd187e58303dd489a",
+    "gpu-output-dispatch-image-square-fp32-d7b2233-first-process.json": "14bb627a46028dbde57b544087744d22cea65f12c4c0ddfa60aa3e5d69c8beed",
+    "gpu-output-dispatch-image-square-fp32-d7b2233-first.xml": "f3dfd8f916abce1091914ba081f054fa77698b95723876b065f389ee226afd71"
+  },
+  "after_independent_audit_sha256": "a008773e06468302f866530af62054653d1e7b904ed031502236da38886e4e88"
+}

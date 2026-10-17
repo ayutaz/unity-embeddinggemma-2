@@ -51,6 +51,7 @@ def run_bounded(command, output, *, timeout=300, env=None, unity_results=None):
     def save():
         write_json_atomic(output, report)
     save()
+    process = None
     try:
         process = subprocess.Popen(command, env=env, shell=False)
         report["pid"] = process.pid
@@ -72,13 +73,24 @@ def run_bounded(command, output, *, timeout=300, env=None, unity_results=None):
             except ValueError as error:
                 report['success'] = False
                 report['unity_evidence_error'] = str(error)
-    except Exception as error:
+    except BaseException as error:
         report["error"] = f"{type(error).__name__}: {error}"
         raise
     finally:
-        report.update(elapsed_seconds=time.monotonic() - started,
-                      completed_utc=datetime.now(timezone.utc).isoformat())
-        save()
+        try:
+            if process is not None:
+                if process.poll() is None:
+                    # Receipt errors and interruption must not leave this exact child alive.
+                    # Reaping this child does not make a supervision failure pass.
+                    report["success"] = False
+                    process.kill()
+                    process.wait(timeout=30)
+                    report["supervisor_terminated_child"] = True
+                report.update(terminal=process.poll() is not None, exit_code=process.returncode)
+        finally:
+            report.update(elapsed_seconds=time.monotonic() - started,
+                          completed_utc=datetime.now(timezone.utc).isoformat())
+            save()
     return report
 
 

@@ -1,0 +1,138 @@
+{
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "precision": "fp32",
+  "combined_acceptance": false,
+  "scope": "Failed EditMode full-chain fixture with cold prepared-module cache; completed media and following text vectors independently verified. Not a completed rank/release or performance comparison.",
+  "receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\step3-consumer-53dafe8",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.PreparedTextQueryReferenceTests.ActualGpuTextModuleMatchesAllPinnedQueryVectorsAndReleasesWorkers;EmbeddingGemma.Validation.Tests.MultimodalSearchSampleGpuTests.ActualImportedSampleRegistersMediaSearchesPinnedQueriesAndClosesItsCacheLease",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testResults",
+      ".\\artifacts\\usability-state\\text-and-integration-e28a5fd-fp32-16gib.xml",
+      "-logFile",
+      ".\\artifacts\\usability-state\\text-and-integration-e28a5fd-fp32-16gib.log"
+    ],
+    "timeout_seconds": 1200,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T17:32:39.452397+00:00",
+    "pid": 30808,
+    "exit_code": 2,
+    "unity_results": ".\\artifacts\\usability-state\\text-and-integration-e28a5fd-fp32-16gib.xml",
+    "unity_counts": {
+      "total": 2,
+      "passed": 1,
+      "failed": 1,
+      "skipped": 0
+    },
+    "elapsed_seconds": 1141.3366402999964,
+    "completed_utc": "2026-10-17T17:51:40.789010+00:00"
+  },
+  "failed_fixture": "EmbeddingGemma.Validation.Tests.MultimodalSearchSampleGpuTests.ActualImportedSampleRegistersMediaSearchesPinnedQueriesAndClosesItsCacheLease",
+  "failure_message": "Timeout value of 900000 ms was exceeded. If this is intended, increase the timeout value using a TimeoutAttribute.",
+  "fixture_elapsed_seconds": 926.664109,
+  "completed_media": [
+    {
+      "id": "square-0",
+      "cosine": 0.9999999999997135,
+      "norm_squared": 0.9999998644722635
+    },
+    {
+      "id": "landscape-0",
+      "cosine": 0.9999999999989977,
+      "norm_squared": 1.0000000234680548
+    },
+    {
+      "id": "portrait-0",
+      "cosine": 0.9999999999997848,
+      "norm_squared": 1.0000000495263595
+    },
+    {
+      "id": "silence",
+      "cosine": 0.9999999999928917,
+      "norm_squared": 1.0000000994303668
+    }
+  ],
+  "following_text": [
+    {
+      "id": "query-cat-ja",
+      "cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355
+    },
+    {
+      "id": "query-space-en",
+      "cosine": 0.9999999999998965,
+      "norm_squared": 1.000000046468943
+    },
+    {
+      "id": "query-recipe-ja",
+      "cosine": 0.9999999999998783,
+      "norm_squared": 0.9999999230032577
+    },
+    {
+      "id": "query-cat-en",
+      "cosine": 0.9999999999998915,
+      "norm_squared": 0.9999998392781916
+    }
+  ],
+  "completed_queries": 0,
+  "last_integration_phase": "register_padded_noise",
+  "cancel_retry_observed": true,
+  "integration_release_verified": false,
+  "following_text_release_verified": true,
+  "continuation_error": "UnityEngine.MissingReferenceException: The object of type 'UnityEngine.ComputeShader' has been destroyed but you are still trying to access it.\nYour script should either check if it is null or you should not destroy the object. Parameter name: computeShader\r\n  at UnityEngine.Object+MarshalledUnityObject.TryThrowEditorNullExceptionObject (UnityEngine.Object unityObj, System.String parameterName) [0x0006a] in <048e1259bbea40078e5d4fad1c7a86a5>:0 \r\n  at UnityEngine.Bindings.ThrowHelper.ThrowArgumentNullException (System.Object obj, System.String parameterName) [0x00010] in <048e1259bbea40078e5d4fad1c7a86a5>:0 \r\n  at UnityEngine.Rendering.CommandBuffer.SetComputeIntParam (UnityEngine.ComputeShader computeShader, System.Int32 nameID, System.Int32 val) [0x00025] in <048e1259bbea40078e5d4fad1c7a86a5>:0 \r\n  at UnityEngine.Rendering.CommandBuffer.SetComputeIntParam (UnityEngine.ComputeShader computeShader, System.String name, System.Int32 val) [0x00009] in <048e1259bbea40078e5d4fad1c7a86a5>:0 \r\n  at EmbeddingGemma.GpuSoftmax.Execute (Unity.InferenceEngine.Tensor`1[T] input) [0x00256] in .\\artifacts\\media-performance-work\\Packages\\com.ayutaz.embeddinggemma\\Runtime\\GpuSoftmax.cs:62 \r\n  at EmbeddingGemma.GpuProjectionPipeline+Call.RunStage (System.Int32 stage) [0x00256] in .\\artifacts\\media-performance-work\\Packages\\com.ayutaz.embeddinggemma\\Runtime\\GpuProjectionPipeline.cs:238 \r\n  at EmbeddingGemma.GpuProjectionPipeline.ExecuteAsync (Unity.InferenceEngine.Tensor`1[T] input, System.Threading.CancellationToken cancellationToken) [0x0009b] in .\\artifacts\\media-performance-work\\Packages\\com.ayutaz.embeddinggemma\\Runtime\\GpuProjectionPipeline.cs:171 \r\n  at EmbeddingGemma.PartitionedAudioFeatureEncoder.EncodeAsync (EmbeddingGemma.AudioPreprocessingResult input, System.Threading.CancellationToken cancellationToken) [0x00048] in .\\artifacts\\media-performance-work\\Packages\\com.ayutaz.embeddinggemma\\Runtime\\PartitionedAudioFeatureEncoder.cs:66 \r\n  at EmbeddingGemma.AudioEmbedder.EmbedAsync (EmbeddingGemma.AudioPcmInput input, EmbeddingGemma.TextRole role, System.String title, System.Threading.CancellationToken cancellationToken) [0x0020a] in .\\artifacts\\media-performance-work\\Packages\\com.ayutaz.embeddinggemma\\Runtime\\AudioEmbedder.cs:114 \r\n  at EmbeddingGemma.GpuMediaSession.Execute (System.Func`2[T,TResult] call, System.Threading.CancellationToken token) [0x0005d] in .\\artifacts\\media-performance-work\\Packages\\com.ayutaz.embeddinggemma\\Runtime\\GpuMediaSession.cs:70 \r\n  at EmbeddingGemma.Samples.MultimodalSearchSample.<AddAsync>b__79_0 (System.Threading.CancellationToken token) [0x003ac] in .\\artifacts\\step3-consumer-53dafe8\\Assets\\EmbeddingGemmaMultimodalSearch\\MultimodalSearchSample.cs:165 \r\n  at EmbeddingGemma.Samples.MultimodalSearchSample.Execute (System.Func`2[T,TResult] operation, System.Threading.CancellationTokenSource cancellation) [0x00159] in .\\artifacts\\step3-consumer-53dafe8\\Assets\\EmbeddingGemmaMultimodalSearch\\MultimodalSearchSample.cs:198 \r\n  at EmbeddingGemma.Validation.Tests.MultimodalSearchSampleGpuTests.Run (System.Threading.CancellationToken cancellation) [0x00e17] in .\\artifacts\\media-performance-work\\validation\\com.ayutaz.embeddinggemma.validation\\Tests\\Editor\\MultimodalSearchSampleGpuTests.cs:175 ",
+  "continuation_error_interpretation": "Destroyed ComputeShader observed after the fixture timeout; a product memory leak or independent GPU arithmetic failure is not established.",
+  "host_native_lifetime_peak_bytes": 13500108800,
+  "host_allowance_bytes": 17179869184,
+  "editor_observation": {
+    "reused_project": true,
+    "initial_refresh_seconds": 81.042,
+    "actual_imports": 0,
+    "nested_compile_seconds": 51.352,
+    "nested_domain_reload_seconds": 3.217,
+    "scopes": "Nested Editor durations overlap; do not add to refresh or infer GPU duration.",
+    "search_database_seconds": null
+  },
+  "windows_gpu_observation": {
+    "samples": 244,
+    "first_utc": "2026-10-17T17:32:56.3249646Z",
+    "last_utc": "2026-10-17T17:51:37.1380929Z",
+    "sampled_peak_allocations": [
+      {
+        "instance": "pid_30808_luid_0x00000000_0x00012525_phys_0",
+        "counter": "dedicated usage",
+        "bytes": 10370490368.0
+      },
+      {
+        "instance": "pid_30808_luid_0x00000000_0x00012525_phys_0",
+        "counter": "shared usage",
+        "bytes": 1183367168.0
+      }
+    ],
+    "scope": "Sampled per-instance WDDM dedicated/shared allocations, not physical residency, unsampled peak or minimum VRAM."
+  },
+  "native_unreleased_allocation_warning_count": 28,
+  "gpu_execution_time_measured": false,
+  "performance_improvement_claimed": false,
+  "next": "Same five media/four queries plus release/render verification in existing PlayMode fixture; numerical and GPU gates unchanged. Compare both precisions under that explicitly different mode.",
+  "evidence_sha256": {
+    "text-and-integration-e28a5fd-fp32-16gib-process.json": "b87aecd2157a07b3cb65f45aa1057d11bcf451285c8cbfca57e1d2b1f10b862a",
+    "text-and-integration-e28a5fd-fp32-16gib.xml": "52abffad2e36ff8c9a8391ef88c421ff1b33bb17704f73d36b96d747df4efc75",
+    "text-and-integration-e28a5fd-fp32-16gib.log": "14cff2194a910eb0a5ef922452d48e5b76d7a6e5e744ab5b03125129acfa70b2",
+    "text-and-integration-e28a5fd-fp32-16gib-integration.json": "8fa08c5ac3e0388d3cb5a91b9b846108fb5730f24b4072b9068a8c81ef7c8cc0",
+    "text-and-integration-e28a5fd-fp32-16gib-text.json": "c2e2a9b59008be6fa9dfe7becf5ce3abc9e7491c1745f8560cb6cbc626b823b4",
+    "text-and-integration-e28a5fd-fp32-16gib-gpu-memory.jsonl": "8a261b984c2640b50d84904f7435b205de24f389ebf4571a2e3618b9386a537c"
+  }
+}

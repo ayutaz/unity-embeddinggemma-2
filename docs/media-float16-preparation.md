@@ -54,3 +54,11 @@ SDK `e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4`、固定した派生bundle、Wind
 | 音声 / 839 valid frames | 1 | [実GPU結果](results/audio-839-float16-weights-e28a5fd-20261018.json) |
 
 全6モジュール・固定16参照ケースの集約は[単独GPU検証監査](results/all-six-module-float16-e28a5fd-acceptance-20261018.json)を参照してください。各モジュールは独立Editorプロセスで実行しました。同一プロセスでの連続利用・順位、同一入力の繰り返し性能、新規Git consumerでの実操作は未完了です。stage観測のwall時間はGPU待機・Editorのフレーム待ちを含み、process CPU時間は他のEditor threadも含みます。GPU実行時間は未取得であり、0秒や高速化として報告しません。
+
+## FP32の空cache・EditMode連続検証
+
+同じSDKで16GiBのホスト割り当てを明示し、空のモデルcacheから画像3種類・音声2種類・日英4検索を行うfixtureと、直接テキスト4件のfixtureを連続実行しました。サンプルfixtureは900,000msの上限で失敗し、画像3件・音声1件の登録だけが完了しました。検索は未実行です。続くテキスト4件は合格し、プロセス全体は1 pass / 1 fail / skip0 / exit2でした。参照値との独立照合に通った途中結果を、連続検証全体の合格へ数えません。[失敗と部分結果の監査](results/fp32-e28a5fd-cold-editmode-timeout-20261018.json)を参照してください。
+
+この起動の初期Refreshは81.042秒、実importは0件で、再利用projectの観測です。内包するcompile時間51.352秒・domain reload時間3.217秒を合計へ加算せず、GPU推論時間にも置き換えません。Windowsのプロセス別GPU allocationは244サンプルを記録しました。dedicated/shared allocationと実常駐VRAM、未観測のピーク、最低VRAMは区別します。
+
+fixtureの時間超過後に、継続した処理から破棄済みComputeShaderへのアクセスも記録されました。これだけで製品のmemory leakやGPU演算の失敗原因は確定しません。続く確認には、同じ5媒体・4検索・数値／順位／解放条件を持つ既存PlayMode描画fixtureを使います。このfixtureの実行上限もEditModeと同じ900,000msとし、Unity Test Frameworkの既定180,000msとの違いを明示します。Editorの更新待ちが寄与する程度は未測定であり、PlayModeで実行するだけで高速化を主張しません。

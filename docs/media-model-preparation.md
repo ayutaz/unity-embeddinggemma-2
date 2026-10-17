@@ -49,6 +49,8 @@ HTTP 404・期限切れ・認証不足は取得失敗です。ハッシュ検証
 
 ## 実objectによるローカルHTTPSの検証
 
+[統合sourceの照合](results/real-local-https-integration-source-20261018.json)で、実行したCLI・HTTPS fixture・選択test sourceのGit blobがPRのコードと同じことも確認した。公開取得とGPUの未確認は維持する。
+
 2026-10-18。CLIの取得実装はrecipe guard修正時と同じGit blobで、test source `f09317e` のfixtureを使った。[実データの監査](results/real-local-https-media-recovery-f09317e-20261018.json)は、既存FP32 bundleの全6 module・820 object・8,583,084,520 bytesを、127.0.0.1だけで待ち受けるHTTPSから空の出力cacheへ転送した記録である。取得元は既存ローカルbundleであり、公開元からの新規利用者の取得は未確認のままとする。
 
 | 確認した条件 | 結果 |

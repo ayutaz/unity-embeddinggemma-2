@@ -82,6 +82,12 @@ class LocalBundleServer:
                                 block = source.read(min(1024*1024, limit-row['bytes_sent']))
                                 if not block: break
                                 self.wfile.write(block); row['bytes_sent'] += len(block)
+                                if (name == fault.get('pause_object') and not row.get('paused')
+                                        and row['bytes_sent'] >= fault.get('pause_after_bytes', 2*1024*1024)):
+                                    row['paused'] = True
+                                    self.wfile.flush()
+                                    if not fault['resume_event'].wait(timeout=20):
+                                        raise TimeoutError('Owned HTTPS test pause was not released')
                     self.wfile.flush()
                     if truncated:
                         try: self.connection.shutdown(socket.SHUT_RDWR)

@@ -210,3 +210,36 @@ def test_incomplete_media_recipe_is_rejected_before_fetch(tmp_path, change):
         prepare_bundle(raw, tmp_path, source_url=BASE, descriptor_sha256=digest(raw),
                        fetch=lambda _: pytest.fail('invalid recipe must fail before fetching any object'))
     assert not list(tmp_path.iterdir())
+
+
+def test_retry_removes_only_owned_stale_partial_files(tmp_path):
+    data, payloads = fixture()
+    name = next(iter(payloads)).removeprefix('objects/')
+    objects = tmp_path/'objects'; objects.mkdir()
+    stale = [objects/('.'+name+'.'+'a'*32+'.pending'),
+             tmp_path/('.bundle.json.'+'b'*32+'.pending'),
+             tmp_path/('.preparation.json.'+'c'*32+'.pending')]
+    unrelated = [objects/'notes.pending', tmp_path/'.bundle.json.not-a-uuid.pending']
+    for path in stale + unrelated: path.write_bytes(b'partial owned copy or user note')
+    receipt, _ = prepare(tmp_path, data, payloads)
+    assert all(not path.exists() for path in stale)
+    assert all(path.read_bytes() == b'partial owned copy or user note' for path in unrelated)
+    assert receipt['stale_pending_files_removed'] == 3
+
+
+def test_second_preparer_cannot_fetch_or_replace_owner_receipt(tmp_path):
+    data, payloads = fixture(); raw = json.dumps(data).encode()
+    previous = b'{"previous_receipt":"retain until owner completes"}'
+    (tmp_path/'preparation.json').write_bytes(previous)
+    attempted = False
+    def fetch(url):
+        nonlocal attempted
+        if not attempted:
+            attempted = True
+            with pytest.raises(BlockingIOError):
+                prepare_bundle(raw, tmp_path, source_url=BASE, descriptor_sha256=digest(raw),
+                    fetch=lambda _: pytest.fail('The competing preparer must not fetch an object'))
+            assert (tmp_path/'preparation.json').read_bytes() == previous
+        return io.BytesIO(payloads[url.removeprefix(BASE.removesuffix('bundle.json'))])
+    receipt = prepare_bundle(raw, tmp_path, source_url=BASE, descriptor_sha256=digest(raw), fetch=fetch)
+    assert attempted and receipt['success'] and receipt['downloaded_files'] == len(payloads)

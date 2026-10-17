@@ -5,6 +5,8 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import threading
+import time
 
 import pytest
 
@@ -104,3 +106,50 @@ def test_cli_rejects_https_source_failure_before_object_requests(https, tmp_path
     result = cli(server, output, pin)
     assert result.returncode == 1 and not output.exists()
     assert server.object_requests == []
+
+
+def test_retry_after_forced_cli_termination_releases_lease_and_removes_partial(https, tmp_path):
+    server, _, data, payloads = https
+    old_model = data['modules']['text']['model']
+    payload = b'synthetic transfer fixture, not a real model\n' * 100000
+    assert len(payload) > 4*1024*1024
+    new_model = 'objects/'+digest(payload)+'.sentis'
+    def replace(value):
+        if isinstance(value, dict): return {key: replace(item) for key, item in value.items()}
+        if isinstance(value, list): return [replace(item) for item in value]
+        return new_model if value == old_model else value
+    data = replace(data); data['files'].pop(old_model)
+    data['files'][new_model] = dict(bytes=len(payload), sha256=digest(payload))
+    (server.root/new_model).write_bytes(payload)
+    descriptor = json.dumps(data).encode(); output = tmp_path/'output'
+    resume = threading.Event()
+    server.reset(descriptor_body=descriptor, pause_object=new_model, resume_event=resume)
+    env = dict(os.environ, NO_PROXY='127.0.0.1,localhost', SSL_CERT_FILE=str(server.certificate))
+    command = [sys.executable, '-m', 'embeddinggemma_tools.media_setup', '--descriptor-url', server.url,
+               '--descriptor-sha256', digest(descriptor), '--output', str(output)]
+    process = subprocess.Popen(command, cwd=TOOLS, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0)
+    try:
+        deadline = time.monotonic()+10
+        pending = []
+        while time.monotonic() < deadline and process.poll() is None:
+            pending = [path for path in (output/'objects').glob('*.pending') if path.stat().st_size >= 1024*1024]
+            if pending: break
+            time.sleep(.02)
+        assert process.poll() is None and pending, 'The child must be alive with an actual received partial file before kill.'
+        process.kill(); process.communicate(timeout=10)
+        assert process.returncode != 0 and any(path.exists() for path in pending)
+    finally:
+        if process.poll() is None: process.kill(); process.communicate(timeout=10)
+        resume.set()
+    deadline = time.monotonic()+5
+    while not any(row.get('paused') for row in server.requests) and time.monotonic() < deadline:
+        time.sleep(.02)
+    assert any(row.get('paused') for row in server.requests)
+    server.reset(descriptor_body=descriptor)
+    retried = cli(server, output, digest(descriptor))
+    assert retried.returncode == 0, retried.stderr
+    assert not list(output.rglob('*.pending'))
+    receipt = json.loads(retried.stdout)
+    assert receipt['stale_pending_files_removed'] >= 1
+    assert (output/new_model).read_bytes() == payload

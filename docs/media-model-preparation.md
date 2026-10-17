@@ -34,6 +34,7 @@ uv run --no-project --python 3.13 python -m embeddinggemma_tools.media_setup `
 
 - 正常完了は終了code0。`bundle.json` と `preparation.json` を出力します。`preparation.json` の `success`、`producer`、`model_revision`、`descriptor_sha256`、選択module、取得・再利用件数とbytesを確認します。
 - 各objectをサイズ・SHA256まで検証してから確定し、最後にbundle descriptorを公開します。取得途中のbundleを利用側へ渡しません。
+- tokenizer、text model、media backbone・tokenizer config、音声preprocessorの必須参照を取得前に検証します。model参照は`.sentis`、module backendはGPUCompute、model segment数はoperation数+1を要求します。欠落したrecipeを準備成功にしません。この確認はUnityのrecipe全体・graphの実行可能性の検証を代替しません。
 - 同じコマンドの再実行でも、既存objectを全体ハッシュで検証します。正常objectは再利用し、サイズが同じ破損も検出して再取得します。
 - 中断・転送失敗では未完了objectの一時ファイルを片付け、完了済みobjectを残します。同じ出力先と固定参照で再試行してください。転送処理に入った後の失敗は `preparation.json` に失敗として記録します。以前の公開済みdescriptorは成功するまで置き換えません。
 - descriptorのURL・SHA256・revision自体の検証に失敗した場合は、転送準備に入る前に終了するため、出力receiptがない場合があります。終了codeと標準エラーも保存してください。
@@ -44,4 +45,4 @@ HTTP 404・期限切れ・認証不足は取得失敗です。ハッシュ検証
 
 ## 残る受け入れ
 
-公開配布後、既存model cacheを使わない取得で全6 moduleの出力を照合し、warm再利用・中断からの再試行・破損修復を実データでも確認します。そのモデルを固定Git consumerに導入し、対応する実GPU・数値・検索順位・正常終了を別記録で検証してから、この手順を利用者向け完成手順に更新します。現在の25件の取得契約テストは小さな不透明fixtureを使うもので、この受け入れを代替しません。
+公開配布後、既存model cacheを使わない取得で全6 moduleの出力を照合し、warm再利用・中断からの再試行・破損修復を実データでも確認します。そのモデルを固定Git consumerに導入し、対応する実GPU・数値・検索順位・正常終了を別記録で検証してから、この手順を利用者向け完成手順に更新します。取得契約テストは41件です。追加の必須recipe検証は16件の意図した失敗から修正後41件成功を確認し、実FP32 / Float16重みの各820 objectを宣言したdescriptorのmetadata読み取りも確認しました。[修正と確認範囲](results/media-setup-required-recipe-guard-20261018.json)。小さな不透明fixtureと既存descriptorの読み取りは、実objectの再取得・再hash・GPU実行や公開empty-cache受け入れを代替しません。

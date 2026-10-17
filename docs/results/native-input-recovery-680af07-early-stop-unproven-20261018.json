@@ -1,0 +1,111 @@
+{
+  "early_stop_probe_accepted": false,
+  "full_priorities_1_to_3_accepted": false,
+  "sdk_source": "680af07c0ecad524accec00797c645b8528e6bf5",
+  "precision": "float16-weights",
+  "scope": "Warm reused fixed-Git consumer. Actual native wrong input-kind rejection, corrected module retry, GPU registration, playback and release/normal exit. The strict early-stop gate failed and stays unaccepted.",
+  "unsupported_input_rejection_and_recovery_accepted": true,
+  "input_rejection": {
+    "utc": "2026-10-17T22:03:46.2576307Z",
+    "module": "image-square",
+    "error": "PNG / JPEG画像を読み込めません。",
+    "documents": 0
+  },
+  "corrected_registration": {
+    "utc": "2026-10-17T22:04:45.3509687Z",
+    "module": "audio-1119",
+    "cosine": 0.9999999905661618,
+    "norm_squared": 1.0000001206795803
+  },
+  "playback": {
+    "first_utc": "2026-10-17T22:05:38.6297078Z",
+    "last_utc": "2026-10-17T22:05:49.4647606Z",
+    "stopped_utc": "2026-10-17T22:05:49.7163720Z",
+    "last_samples": 176469,
+    "last_position_seconds": 11.0293125,
+    "clip_seconds": 11.2,
+    "observed_playing_to_stopped_seconds": 11.086665,
+    "early_stop_proven": false,
+    "native_stop_button_clicked": true
+  },
+  "failed_auditor": {
+    "script": "audit_680_early_stop.py",
+    "exit_code": 1,
+    "condition": "0 < first_samples < last_samples < 179200 - 16000",
+    "result": "AssertionError",
+    "explanation": "The last observed playing position leaves less than one second. The Stop action cannot be distinguished from natural clip completion by this record; do not relax the gate."
+  },
+  "microphone_started": false,
+  "release_observed": true,
+  "terminal_receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\usability-consumer-680af07",
+      "-executeMethod",
+      "UsabilityUiBootstrap.Open",
+      "-logFile",
+      ".\\artifacts\\usability-state\\native-ui-680af07-warm-early-stop.log"
+    ],
+    "timeout_seconds": 900,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T22:02:02.196142+00:00",
+    "pid": 162380,
+    "exit_code": 0,
+    "elapsed_seconds": 350.04320170002757,
+    "completed_utc": "2026-10-17T22:07:52.239350+00:00"
+  },
+  "source_audit": {
+    "success": true,
+    "project": ".\\artifacts\\usability-consumer-680af07",
+    "requested_revision": "680af07c0ecad524accec00797c645b8528e6bf5",
+    "resolved_revision": "680af07c0ecad524accec00797c645b8528e6bf5",
+    "unity_executed": false,
+    "errors": [],
+    "package_tracked_files_verified": 315,
+    "samples_blob_verified": {
+      "TextSearch": 52,
+      "MultimodalSearch": 34
+    },
+    "protected_root_files_verified": 4,
+    "observer_sha256": "2071ff28763a50d1203e2129ad8198ac9699335f8b7cb6afc442599319bc60bd",
+    "terminal_receipt": {
+      "command": [
+        ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+        "-force-d3d12",
+        "-job-worker-count",
+        "4",
+        "-projectPath",
+        ".\\artifacts\\usability-consumer-680af07",
+        "-executeMethod",
+        "UsabilityUiBootstrap.Open",
+        "-logFile",
+        ".\\artifacts\\usability-state\\native-ui-680af07-warm-early-stop.log"
+      ],
+      "timeout_seconds": 900,
+      "success": true,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-17T22:02:02.196142+00:00",
+      "pid": 162380,
+      "exit_code": 0,
+      "elapsed_seconds": 350.04320170002757,
+      "completed_utc": "2026-10-17T22:07:52.239350+00:00"
+    },
+    "warm_reused_consumer": true,
+    "scope": "Source identity after normally closed native warm UI; action acceptance is audited separately."
+  },
+  "query_ranking_independently_audited_in_this_followup": false,
+  "evidence_sha256": {
+    "native-ui-680af07-warm-early-stop-process.json": "4611851b4b95916bd6a268baa661400710f172db4aeb645c8d3d1e26b153a4fb",
+    "consumer-680af07-post-early-stop-source-audit.json": "91f03f7c35cb50791bf865e05d62f0e9f3cccf6902d612cf7a39005f68456dd2",
+    "native-ui-680af07-warm-early-stop.json.events.jsonl": "98e6364c48af42b4b210ff9108e8d420af470375060b310196620ef843e85551",
+    "native-ui-680af07-warm-early-stop.log": "b83d1741496dbe4cf9d0fac32885303491c8ee0a9e4170ac87ee0d9647d30abc"
+  },
+  "audited_utc": "2026-10-17T22:08:58.950650+00:00"
+}

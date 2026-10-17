@@ -1,0 +1,68 @@
+{
+  "runtime_candidate": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "problem": "Shape-only float output tensors allocate and zero CPU storage, then GPU pinning converts/uploads values that the shader overwrites.",
+  "behavior": "Storage-free float output descriptors are pinned to fresh GPU storage before each existing fully-writing operation. Coefficient/PCM uploads, shaders, accumulation order and precision gates unchanged.",
+  "changed_operations": [
+    "GpuBatchedMatmul",
+    "GpuBlockedMatmul",
+    "GpuGelu",
+    "GpuGlu",
+    "GpuScalarDivide",
+    "GpuSequentialScale",
+    "GpuSilu",
+    "GpuSoftmax",
+    "GpuTanh"
+  ],
+  "tdd": {
+    "red_counts": {
+      "total": 3,
+      "passed": 1,
+      "failed": 2,
+      "skipped": 0
+    },
+    "red_exit_code": 2,
+    "expected_failures": [
+      "  Expected: null\n  But was:  <(CPU burst: [6], uploaded: 6)>\n",
+      "  The GPU pin must allocate fresh GPU storage, not convert a zero-filled CPU output.\n  Expected: null\n  But was:  <(CPU burst: [4096], uploaded: 4096)>\n"
+    ],
+    "green_counts": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0
+    },
+    "green_exit_code": 0
+  },
+  "gpu_operation_regression": {
+    "counts": {
+      "total": 120,
+      "passed": 120,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exit_code": 0,
+    "graphics_api": "Direct3D12",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "scope": "Existing package GPU operation/ownership/tiny graph tests plus allocation tests; not full real-model qualification."
+  },
+  "unchanged_shader_git_tree": "365b1cc6eded420c0c3246db2132170e383981ba",
+  "real_model_all_module_accepted": false,
+  "performance_improvement_accepted": false,
+  "full_priorities_1_to_3_accepted": false,
+  "remaining": [
+    "Same-input real-model before/after measurements",
+    "New-runtime all-module and mixed-rank GPU reference regression",
+    "Final candidate/public acquisition/native UI/microphone and remaining Editor measurements"
+  ],
+  "evidence_sha256": {
+    "gpu-output-allocation-red.xml": "f2264a746305a748b895f79017de7dc8e4144e0a3f5cec42c2d0de5087af7ddb",
+    "gpu-output-allocation-red-process.json": "272e3b57e4cb2675754c275c5376f1a368de7f35bd22c84da4f7d939b9c150f9",
+    "gpu-output-allocation-red-source.json": "1801c544b251ce1fa4d17d69058dffcf9d5da8cab2efb6f4b60002851b59d0e8",
+    "gpu-output-allocation-green.xml": "5e6134218cc036822d725d58b2329620f28d888f84730d8a91969abd815c941c",
+    "gpu-output-allocation-green-process.json": "a1d4f77a829728d2f794ba95704db9cb2e4911465e87c6094d697aa02fbfc5ff",
+    "gpu-output-allocation-green-source.json": "9a7d6d9cbf278505e349ce59b58f1352f63185a9532fda7c39b9be90e9ca2755",
+    "gpu-output-allocation-gpu-regression.xml": "4bbc396c0f07f443fe11757527eab0263f76f18e941242e8e8d8b6883c508241",
+    "gpu-output-allocation-gpu-regression-process.json": "b5e948bbea225dc38295cfd13e422dc496bf8de9e364798f9b56f9d87ba53804",
+    "gpu-output-allocation-gpu-regression-source.json": "c6b7271ba7ef2c097c5495f99e712df511faf046742aa115058613cd28d29d46"
+  }
+}

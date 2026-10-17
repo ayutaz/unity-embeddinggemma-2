@@ -63,8 +63,8 @@ namespace EmbeddingGemma.Validation.Tests
                 var candidates=ProfilerDriver.GetAvailableProfilers().Where(id=>ProfilerDriver.GetConnectionIdentifier(id).IndexOf("Editor",StringComparison.OrdinalIgnoreCase)>=0 && (bool)isLocal.Invoke(null,new object[] {id})).ToArray();
                 Assert.That(candidates.Contains(previousTarget) || candidates.Length==1,Is.True,"Local Editor profiler target must be unambiguous.");
                 ProfilerDriver.connectedProfiler=candidates.Contains(previousTarget)?previousTarget:candidates[0];
-                ProfilerDriver.enabled=true; ProfilerDriver.profileEditor=true; Profiler.enabled=true; Profiler.SetAreaEnabled(ProfilerArea.GPU,true);
-                for(var frame=0;frame<5;frame++) yield return null;
+                // Loading is timed separately, without retaining its unrelated Editor history.
+                ProfilerDriver.enabled=false; Profiler.enabled=false;
                 report["phase"]="load"; report["load_begin_utc"]=DateTime.UtcNow.ToString("O"); Save();
                 var loadAllocated=GC.GetAllocatedBytesForCurrentThread(); var loadCpu=Cpu(); var load=Stopwatch.StartNew();
                 var loading=GpuMediaBundle.Open(directory).LoadAsync("text",cancellation.Token);
@@ -77,8 +77,12 @@ namespace EmbeddingGemma.Validation.Tests
                 report["load_main_thread_managed_allocated_bytes"]=GC.GetAllocatedBytesForCurrentThread()-loadAllocated;
                 report["load_end_utc"]=DateTime.UtcNow.ToString("O");
                 report["load_gpu_elapsed_ns"]=null; report["load_host_lifetime_peak_bytes"]=MediaExecutionMemory.Peak(); Save();
+                ProfilerDriver.profileEditor=true; ProfilerDriver.enabled=true; Profiler.enabled=true; Profiler.SetAreaEnabled(ProfilerArea.GPU,true);
+                report["gpu_history_scope"]="Owned Editor history is enabled after load and cleared before each measured call; earlier rounds are saved as JSON before clearing.";
+                for(var frame=0;frame<5;frame++) yield return null;
                 foreach(var name in new[] {"first","warm","repeat-1","repeat-2"})
                 {
+                    ProfilerDriver.ClearAllFrames();
                     report["phase"]=name; Save(); var beginUtc=DateTime.UtcNow;
                     var sampler=CustomSampler.Create("EmbeddingGemma.TextBenchmark."+name,true);
                     var recorder=sampler.GetRecorder(); recorder.enabled=true; recorders.Add(recorder);
@@ -116,6 +120,7 @@ namespace EmbeddingGemma.Validation.Tests
                     Assert.That(row.Value<long>("gpu_elapsed_ns"),Is.GreaterThan(0),"Absent GPU timing is a failure, never zero-time success.");
                     Assert.That(history.Count,Is.GreaterThan(0),"The local Editor GPU history must independently contain this exact marker.");
                     Assert.That(MediaExecutionMemory.Peak(),Is.LessThanOrEqualTo(GpuMediaExecutionPolicy.CurrentMemoryLimitBytes));
+                    recorder.enabled=false;
                 }
                 report["phase"]="release"; report["release_begin_utc"]=DateTime.UtcNow.ToString("O"); Save();
                 var closeAllocated=GC.GetAllocatedBytesForCurrentThread(); var closeCpu=Cpu(); var close=Stopwatch.StartNew(); var closing=session.CloseAsync(); while(!closing.IsCompleted) yield return null;

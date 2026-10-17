@@ -57,6 +57,22 @@ namespace EmbeddingGemma.Samples.Tests
             input.PermissionGranted = true; sample.StartRecording(); Assert.That(sample.IsRecording, Is.True); Assert.That(sample.LastError, Is.Null);
         }
 
+        [Test] public void PauseWithoutRecordingPreservesStatusAndDoesNotClaimDiscardedAudio()
+        {
+            var status = sample.Status;
+            typeof(MultimodalSearchSample).GetMethod("OnApplicationPause", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(sample, new object[] { true });
+            Assert.That(sample.Status, Is.EqualTo(status));
+            Assert.That(input.Starts, Is.Zero); Assert.That(input.Cancels, Is.Zero);
+        }
+
+        [Test] public void PauseDuringRecordingCancelsTheActiveDeviceAndClearsItsOwnedCapture()
+        {
+            sample.StartRecording();
+            typeof(MultimodalSearchSample).GetMethod("OnApplicationPause", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(sample, new object[] { true });
+            Assert.That(sample.IsRecording, Is.False); Assert.That(input.Cancels, Is.EqualTo(1));
+            Assert.That(sample.CapturedPcm, Is.Null); Assert.That(sample.RecordingClip == null, Is.True);
+        }
+
         [UnityTest] public IEnumerator EarlyStopKeepsActualDurationAndUnsupportedProfileFailsBeforeCacheOrModelWork()
         {
             input.CapturedSamples = 3200; sample.StartRecording(); sample.StopRecording();

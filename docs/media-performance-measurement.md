@@ -35,6 +35,10 @@ SDK / validationのcommit、Unity・Sentis・driver・graphics API・device、mo
 
 `Recorder.gpuElapsedNanoseconds` はframe単位で遅れて到着するため、GPU sample数とともに排出期間を記録します。正のGPU時間が来ない場合は計時不能です。fence通過やCPU submission時間をGPU計時の成功に置き換えません。
 
+GPUの内訳を読む場合は `-history.json` も出力します。Recorderの有効化だけではEditorの履歴は作られないため、このEditor自身のlocal targetを確認してProfilerDriverの収集も有効にします。EditMode test coroutineはPlayModeへ入った後もEditorLoopから送信するため、履歴収集ではEditorLoopも含めます。終了時には接続先と設定を戻します。
+
+`GpuProfilerHistory` は最近25 frameから指定markerだけを探し、全threadを調べてGPU列を読みます。CPU列へ代替せず、正のGPU時間を持つ直下の子markerも区別して記録します。値はProfilerの浮動小数点msからnsへの単位変換であり、ns単位の精度を保証しません。親と子は時間が重なるため加算できず、この限定windowを長いモデル実行全体の測定として使うこともできません。
+
 `GpuOperationTrace` は明示した診断observerへ、演算番号・種類・tensor shape/backend・CPU submission区間・例外型を送るための補助です。値・画像・波形・embeddingは読み出しません。元の演算とtensorの所有権を変えず、`submitted` はGPU完了を意味しません。実モデルへ接続した診断は、最後にGPU fenceを通過した区間と、最後に送信した演算を区別して記録します。
 
 ## 残る受け入れ

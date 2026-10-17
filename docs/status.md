@@ -60,6 +60,8 @@ SDK `e28a5fd`のFP32連続試験は、12GiB guardでの中断を保持してい�
 
 同一テキストの初回・warm・反復は、両形式で各4回の実GPU実行・参照一致・解放・exit0を確認しました。[観測結果と限界](results/text-fp32-float16-e28a5fd-measurements-20261018.json)。ただしRecorderとProfiler履歴のGPU値には大きな差があり、割り当てAPIの全0も既知の割り当てで校正していません。GPU動作・呼び出し全体の時間と、未検証のGPU時間の解釈を分け、割り当ての0を「割り当てなし」と扱いません。短い各呼び出し内のGPUメモリ観測も欠測であり、性能全体の合格ではありません。次は明示的なGPU command-buffer区間とカウンターの校正、画像・音声のstage別測定、Editor負荷の測定です。
 
+追加のcommand-buffer区間の実測は、4回目のGPU履歴走査で観測上限200,000 nodeに達し、NUnit 0 pass / 1 fail / skip0 / exit2でした。出力4 vectorの独立参照一致は確認しましたが、解放・性能全体の合格には数えません。既知の65,536 bytes確保に対して割り当てカウンターの生値が0だったため、この環境ではそのカウンターを未利用可能として扱います。[失敗監査](results/text-command-buffer-failure-review-20261018.json)。次は履歴を関連するmarkerのデータに限定し、上限と欠測時の失敗を保ったまま再検証します。
+
 ### 残る受け入れ
 
 - 空のcheckoutから画像・音声bundleを準備する公開手順と配布経路。

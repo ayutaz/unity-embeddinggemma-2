@@ -57,6 +57,8 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.That(peak,Is.GreaterThan(0).And.LessThanOrEqualTo(GpuMediaExecutionPolicy.CurrentMemoryLimitBytes));
                 var output=Environment.GetEnvironmentVariable("EG_MEDIA_EXECUTION_REPORT");
                 var report=JObject.Parse(File.ReadAllText(output));report["host_native_peak_bytes"]=peak;File.WriteAllText(output,report.ToString());
+                if(Environment.GetEnvironmentVariable("EG_ASYNC_FRAME_ALLOCATION")=="1")
+                    Assert.That(report["frame_managed_allocation_window"],Is.Not.Null,"Requested async frame allocation window must be recorded; missing is not zero.");
                 if(gpu!=null)
                 {
                     report["encoder_gpu_dispatch_intervals"]=gpu.Snapshot();

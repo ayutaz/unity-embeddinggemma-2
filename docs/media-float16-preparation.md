@@ -38,7 +38,7 @@ CPU専用プロセスは1346.59秒でexit0、ホスト生涯ピークは9,460,59
 
 固定ハッシュ・既定FP32の基準・不明形式の拒否・guardの上限を確認する新規17件は、未実装Redから17 Green、skip0、exit0でした。これも実モデルのGPU合格とは別の契約検証です。
 
-## 適用範囲と途中のGPU検証結果
+## 適用範囲と単独GPU検証結果
 
 [モジュール別の変換範囲](results/float16-module-coverage-20261018.json)では、テキスト1モデル、画像各181モデル中1モデル、音声各270モデル中15モデルでShort定数が増えました。各モジュールには共有オブジェクトがあるため、件数・容量を合算しません。外部のFP32係数は変わらず、Float16化したbundleであっても全モデル・全演算が半精度になったわけではありません。
 
@@ -50,5 +50,7 @@ SDK `e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4`、固定した派生bundle、Wind
 | 正方形画像 | 2 | [実GPU結果](results/image-square-float16-weights-e28a5fd-20261018.json) |
 | 横長画像 | 2 | [実GPU結果](results/image-landscape-float16-weights-e28a5fd-20261018.json) |
 | 縦長画像 | 2 | [実GPU結果](results/image-portrait-float16-weights-e28a5fd-20261018.json) |
+| 音声 / 1119 valid frames | 5 | [実GPU結果](results/audio-1119-float16-weights-e28a5fd-20261018.json) |
+| 音声 / 839 valid frames | 1 | [実GPU結果](results/audio-839-float16-weights-e28a5fd-20261018.json) |
 
-音声2モジュール、同一プロセスでの連続利用・順位、同一入力の繰り返し性能、新規Git consumerでの実操作は未完了です。stage観測のwall時間はGPU待機・Editorのフレーム待ちを含み、process CPU時間は他のEditor threadも含みます。GPU実行時間は未取得であり、0秒や高速化として報告しません。
+全6モジュール・固定16参照ケースの集約は[単独GPU検証監査](results/all-six-module-float16-e28a5fd-acceptance-20261018.json)を参照してください。各モジュールは独立Editorプロセスで実行しました。同一プロセスでの連続利用・順位、同一入力の繰り返し性能、新規Git consumerでの実操作は未完了です。stage観測のwall時間はGPU待機・Editorのフレーム待ちを含み、process CPU時間は他のEditor threadも含みます。GPU実行時間は未取得であり、0秒や高速化として報告しません。

@@ -274,6 +274,8 @@ def main(argv=None):
                                 descriptor_sha256=args.descriptor_sha256, modules=args.modules)
         print(json.dumps(report))
         return 0
+    except KeyboardInterrupt:
+        parser.exit(130, 'Model preparation cancelled; retry reuses complete hash-audited objects.\n')
     except (OSError, ValueError) as error:
         parser.exit(1, f'Model preparation failed ({type(error).__name__}): {error}\n')
 

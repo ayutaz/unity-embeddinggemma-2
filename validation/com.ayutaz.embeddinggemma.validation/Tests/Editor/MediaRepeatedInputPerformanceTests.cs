@@ -11,6 +11,8 @@ using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
+using UnityEditorInternal;
+using UnityEngine.Profiling;
 
 namespace EmbeddingGemma.Validation.Tests
 {
@@ -30,29 +32,49 @@ namespace EmbeddingGemma.Validation.Tests
             var host=new GameObject("Owned media measurement camera");var target=new RenderTexture(16,16,0);
             var camera=host.AddComponent<Camera>();camera.targetTexture=target;camera.clearFlags=CameraClearFlags.SolidColor;camera.cullingMask=0;
             using var cancellation=new CancellationTokenSource();
+            var gpuRequested=Environment.GetEnvironmentVariable("EG_ENCODER_GPU_DISPATCH_TRACE")=="1";
+            using var gpu=gpuRequested?new EncoderGpuDispatchTrace():null;
+            var oldProfiler=Profiler.enabled;var oldDriver=ProfilerDriver.enabled;var oldEditor=ProfilerDriver.profileEditor;
+            var oldGpuArea=Profiler.GetAreaEnabled(ProfilerArea.GPU);
             try
             {
-                var task=Run(cancellation.Token);long peak=0;
+                if(gpuRequested){ProfilerDriver.profileEditor=true;ProfilerDriver.enabled=true;Profiler.enabled=true;Profiler.SetAreaEnabled(ProfilerArea.GPU,true);}
+                var task=Run(cancellation.Token,gpu);long peak=0;
                 while(!task.IsCompleted)
                 {
+                    gpu?.Capture();
                     peak=Math.Max(peak,MediaExecutionMemory.Peak());
                     if(peak>GpuMediaExecutionPolicy.CurrentMemoryLimitBytes)cancellation.Cancel();
                     EditorApplication.QueuePlayerLoopUpdate();yield return null;
                 }
                 task.GetAwaiter().GetResult();
+                if(gpu!=null)
+                {
+                    var until=Time.frameCount+6;var drain=Stopwatch.StartNew();
+                    while(Time.frameCount<until && drain.Elapsed.TotalSeconds<15){gpu.Capture();EditorApplication.QueuePlayerLoopUpdate();yield return null;}
+                    gpu.Capture();Assert.That(Time.frameCount,Is.GreaterThanOrEqualTo(until),"GPU observation requires actual rendered frames.");
+                }
                 Assert.That(peak,Is.GreaterThan(0).And.LessThanOrEqualTo(GpuMediaExecutionPolicy.CurrentMemoryLimitBytes));
                 var output=Environment.GetEnvironmentVariable("EG_MEDIA_EXECUTION_REPORT");
                 var report=JObject.Parse(File.ReadAllText(output));report["host_native_peak_bytes"]=peak;File.WriteAllText(output,report.ToString());
+                if(gpu!=null)
+                {
+                    report["encoder_gpu_dispatch_intervals"]=gpu.Snapshot();
+                    report["encoder_gpu_dispatch_scope"]="Optional instrumented call; model segments and projections exclude inter-stage fence waits and cache cleanup. Includes commanded copies/queue effects; not pure kernel time. Missing intervals stay null, never zero.";
+                    File.WriteAllText(output,report.ToString());
+                    Assert.That(gpu.Snapshot().Any(row=>row["gpu_ns"].Type!=JTokenType.Null),Is.True,"No GPU interval was observed; this is not a GPU timing pass.");
+                }
             }
             finally
             {
                 camera.targetTexture=null;UnityEngine.Object.DestroyImmediate(host);target.Release();UnityEngine.Object.DestroyImmediate(target);
                 Application.runInBackground=previous;Application.targetFrameRate=fps;QualitySettings.vSyncCount=vsync;
+                if(gpuRequested){Profiler.SetAreaEnabled(ProfilerArea.GPU,oldGpuArea);ProfilerDriver.profileEditor=oldEditor;ProfilerDriver.enabled=oldDriver;Profiler.enabled=oldProfiler;}
             }
             yield return new ExitPlayMode();
         }
 
-        static async Task Run(CancellationToken token)
+        static async Task Run(CancellationToken token,EncoderGpuDispatchTrace gpu)
         {
             var directory=Environment.GetEnvironmentVariable("EG_MEDIA_BUNDLE_OUTPUT");
             var module=Environment.GetEnvironmentVariable("EG_MEDIA_BUNDLE_MODULE");
@@ -123,7 +145,14 @@ namespace EmbeddingGemma.Validation.Tests
                 report["load_wall_seconds"]=load.Elapsed.TotalSeconds;report["load_process_cpu_seconds"]=(Cpu()-loadCpu).TotalSeconds;
                 report["load_end_utc"]=DateTime.UtcNow.ToString("O");report["actual_backend"]=session.Backend.ToString();
                 Assert.That(session.Backend,Is.EqualTo(Unity.InferenceEngine.BackendType.GPUCompute));Save();
-                using var timing=MediaStageTiming.Attach(session,e=>{e["round"]=report["phase"]?.DeepClone();((JArray)report["stage_measurements"]).Add(e);Save();});
+                gpu?.Attach(session);
+                using var timing=MediaStageTiming.Attach(session,e=>
+                {
+                    var encoder=(string)e["stage"]=="encoder";var begin=(string)e["event"]=="begin";
+                    if(encoder&&!begin)gpu?.EndCall();
+                    e["round"]=report["phase"]?.DeepClone();((JArray)report["stage_measurements"]).Add(e);Save();
+                    if(encoder&&begin)gpu?.BeginCall((string)report["phase"]);
+                });
                 foreach(var round in new[]{"first","warm","repeat-1","repeat-2"})
                 {
                     token.ThrowIfCancellationRequested();report["phase"]=round;Save();var cpu=Cpu();var watch=Stopwatch.StartNew();

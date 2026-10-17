@@ -20,6 +20,8 @@ namespace EmbeddingGemma.Validation.Tests
         }
         static int nextOperation = 1000000;
         readonly List<Entry> entries = new List<Entry>();
+        readonly Dictionary<string, Entry> submissions = new Dictionary<string, Entry>();
+        string round;
         readonly string id = Guid.NewGuid().ToString("N");
         GpuProjectionPipeline pipeline;
         IGpuTensorOperation[] operations, originalOperations, replacements;
@@ -87,6 +89,37 @@ namespace EmbeddingGemma.Validation.Tests
             }
             catch { EndCall(); throw; }
         }
+        public void SetRound(string value)
+        {
+            if(callbacks!=null || submissions.Count!=0)throw new InvalidOperationException("Finish previous GPU scopes before changing round.");
+            round=value ?? throw new ArgumentNullException(nameof(value));
+        }
+        public bool ObserveSubmission(JObject row)
+        {
+            var eventName=(string)row["event"];
+            if(eventName!="submitting" && eventName!="submitted")return false;
+            var stage=(string)row["stage"];
+            if(stage=="encoder")return true; // Its original individual model/operation markers are more precise.
+            if(stage!="preprocessing" && stage!="backbone")throw new NotSupportedException("Unexpected GPU stage.");
+            if(eventName=="submitting")
+            {
+                if(round==null || submissions.ContainsKey(stage))throw new InvalidOperationException("GPU submissions must be serial within a fixed round.");
+                var entry=Create(round,stage=="preprocessing"?"preprocessing-initial-synchronous-submission":"backbone-synchronous-submission",0,
+                    "EmbeddingGemma.MediaSubmission."+id+"."+round+"."+stage);
+                entry.Row["method"]=row["method"]?.DeepClone();entry.Row["asynchronous"]=row["asynchronous"]?.DeepClone();
+                entry.Row["submission_contract"]="Pinned SDK implementation submits these GPU commands before invocation returns; async completion, fence wait and post-await cleanup are excluded. Queue time is not pure kernel time.";
+                submissions.Add(stage,entry);entry.Cpu=Stopwatch.StartNew();entry.Sampler.Begin();
+            }
+            else
+            {
+                if(!submissions.TryGetValue(stage,out var entry))throw new InvalidOperationException("GPU submission end has no matching start.");
+                entry.Sampler.End();entry.Cpu.Stop();entry.Closed=true;
+                entry.Row["aborted"]=row["error_type"]?.Type!=JTokenType.Null;
+                entry.Row["cpu_submission_wall_ns"]=(long)(entry.Cpu.ElapsedTicks*(1000000000.0/Stopwatch.Frequency));
+                submissions.Remove(stage);
+            }
+            return true;
+        }
         public void EndCall()
         {
             try { callbacks?.EndCall(); }
@@ -118,16 +151,28 @@ namespace EmbeddingGemma.Validation.Tests
                 entry.Row["gpu_statistics_availability"] = availability;
             }
         }
-        public JArray Snapshot()
+        public JArray Snapshot(bool submissionScopes = false)
         {
             var result = new JArray();
-            foreach (var entry in entries) result.Add(entry.Row.DeepClone());
+            foreach (var entry in entries)
+            {
+                var kind=(string)entry.Row["kind"];
+                var submission=kind=="preprocessing-initial-synchronous-submission" || kind=="backbone-synchronous-submission";
+                if(submission==submissionScopes)result.Add(entry.Row.DeepClone());
+            }
             return result;
         }
         public void Dispose()
         {
             try { EndCall(); }
-            finally { foreach (var entry in entries) entry.Recorder.enabled = false; pipeline = null; }
+            finally
+            {
+                foreach(var entry in submissions.Values)
+                {
+                    if(!entry.Closed){entry.Sampler.End();entry.Cpu?.Stop();entry.Closed=true;entry.Row["aborted"]=true;}
+                }
+                submissions.Clear();foreach (var entry in entries) entry.Recorder.enabled = false; pipeline = null;
+            }
         }
     }
 }

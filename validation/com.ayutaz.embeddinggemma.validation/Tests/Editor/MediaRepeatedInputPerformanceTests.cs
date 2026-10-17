@@ -60,9 +60,12 @@ namespace EmbeddingGemma.Validation.Tests
                 if(gpu!=null)
                 {
                     report["encoder_gpu_dispatch_intervals"]=gpu.Snapshot();
+                    report["media_gpu_submission_intervals"]=gpu.Snapshot(true);
                     report["encoder_gpu_dispatch_scope"]="Optional instrumented call; model segments and projections exclude inter-stage fence waits and cache cleanup. Includes commanded copies/queue effects; not pure kernel time. Missing intervals stay null, never zero.";
                     File.WriteAllText(output,report.ToString());
                     Assert.That(gpu.Snapshot().Any(row=>row["gpu_ns"].Type!=JTokenType.Null),Is.True,"No GPU interval was observed; this is not a GPU timing pass.");
+                    Assert.That(gpu.Snapshot(true).Count,Is.EqualTo(8),"Each of four calls needs preprocessor and backbone scopes.");
+                    Assert.That(gpu.Snapshot(true).All(row=>row["gpu_ns"].Type!=JTokenType.Null && (long)row["gpu_ns"]>0 && !(bool)row["aborted"]),Is.True,"Unavailable GPU submission scopes cannot pass the new measurement gate.");
                 }
             }
             finally
@@ -148,13 +151,15 @@ namespace EmbeddingGemma.Validation.Tests
                 gpu?.Attach(session);
                 using var timing=MediaStageTiming.Attach(session,e=>
                 {
+                    if(gpu?.ObserveSubmission(e)==true)return;
                     var encoder=(string)e["stage"]=="encoder";var begin=(string)e["event"]=="begin";
                     if(encoder&&!begin)gpu?.EndCall();
                     e["round"]=report["phase"]?.DeepClone();((JArray)report["stage_measurements"]).Add(e);Save();
                     if(encoder&&begin)gpu?.BeginCall((string)report["phase"]);
-                });
+                },gpu!=null);
                 foreach(var round in new[]{"first","warm","repeat-1","repeat-2"})
                 {
+                    gpu?.SetRound(round);
                     token.ThrowIfCancellationRequested();report["phase"]=round;Save();var cpu=Cpu();var watch=Stopwatch.StartNew();
                     var actual=image?await session.EmbedImageAsync(texture,cancellationToken:token):await session.EmbedAudioAsync(pcm,cancellationToken:token);
                     watch.Stop();var cpuSeconds=(Cpu()-cpu).TotalSeconds;

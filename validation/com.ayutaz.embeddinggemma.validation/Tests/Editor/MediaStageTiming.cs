@@ -12,7 +12,7 @@ namespace EmbeddingGemma.Validation.Tests
     /// <summary>Editor-only decorators; borrow all stage inputs/results and never read tensor values.</summary>
     public static class MediaStageTiming
     {
-        public static T Wrap<T>(T stage, string name, Action<JObject> observe) where T : class
+        public static T Wrap<T>(T stage, string name, Action<JObject> observe, bool observeSubmissions = false) where T : class
         {
             if (stage == null) throw new ArgumentNullException(nameof(stage));
             if (!typeof(T).IsInterface) throw new ArgumentException("A stage interface is required.");
@@ -20,10 +20,10 @@ namespace EmbeddingGemma.Validation.Tests
             if (observe == null) throw new ArgumentNullException(nameof(observe));
             var result = DispatchProxy.Create<T, TimingProxy>();
             var proxy = (TimingProxy)(object)result;
-            proxy.Stage = stage; proxy.Name = name; proxy.Observe = observe;
+            proxy.Stage = stage; proxy.Name = name; proxy.Observe = observe; proxy.ObserveSubmissions = observeSubmissions;
             return result;
         }
-        public static IDisposable Attach(object facade, Action<JObject> observe)
+        public static IDisposable Attach(object facade, Action<JObject> observe, bool observeSubmissions = false)
         {
             if (facade is GpuMediaSession session)
                 facade = Field(session, "image").GetValue(session) ?? Field(session, "audio").GetValue(session);
@@ -39,18 +39,18 @@ namespace EmbeddingGemma.Validation.Tests
                     throw new InvalidOperationException("Detach existing stage timing before attaching again.");
                 if (facade is ImageEmbedder)
                 {
-                    scope.Set("preprocessor", Wrap((IImagePreprocessor)pre, "preprocessing", observe));
+                    scope.Set("preprocessor", Wrap((IImagePreprocessor)pre, "preprocessing", observe, observeSubmissions));
                     scope.Set("encoder", enc is IAsyncImageFeatureEncoder asyncEncoder
-                        ? (object)Wrap(asyncEncoder, "encoder", observe) : Wrap((IImageFeatureEncoder)enc, "encoder", observe));
+                        ? (object)Wrap(asyncEncoder, "encoder", observe, observeSubmissions) : Wrap((IImageFeatureEncoder)enc, "encoder", observe, observeSubmissions));
                 }
                 else
                 {
                     scope.Set("preprocessor", pre is IAsyncAudioPreprocessor asyncPre
-                        ? (object)Wrap(asyncPre, "preprocessing", observe) : Wrap((IAudioPreprocessor)pre, "preprocessing", observe));
+                        ? (object)Wrap(asyncPre, "preprocessing", observe, observeSubmissions) : Wrap((IAudioPreprocessor)pre, "preprocessing", observe, observeSubmissions));
                     scope.Set("encoder", enc is IAsyncAudioFeatureEncoder asyncEncoder
-                        ? (object)Wrap(asyncEncoder, "encoder", observe) : Wrap((IAudioFeatureEncoder)enc, "encoder", observe));
+                        ? (object)Wrap(asyncEncoder, "encoder", observe, observeSubmissions) : Wrap((IAudioFeatureEncoder)enc, "encoder", observe, observeSubmissions));
                 }
-                scope.Set("backbone", Wrap((IMultimodalBackbone)back, "backbone", observe));
+                scope.Set("backbone", Wrap((IMultimodalBackbone)back, "backbone", observe, observeSubmissions));
                 return scope;
             }
             catch { scope.Dispose(); throw; }
@@ -78,7 +78,7 @@ namespace EmbeddingGemma.Validation.Tests
         }
         public class TimingProxy : DispatchProxy
         {
-            internal object Stage; internal string Name; internal Action<JObject> Observe;
+            internal object Stage; internal string Name; internal Action<JObject> Observe; internal bool ObserveSubmissions;
             static long nextId;
             object Original(MethodInfo method, object[] args)
             {
@@ -92,7 +92,10 @@ namespace EmbeddingGemma.Validation.Tests
                 var call = new Call(Name, method.Name, Observe, Interlocked.Increment(ref nextId), typeof(Task).IsAssignableFrom(method.ReturnType));
                 try
                 {
-                    var result = Original(method, args);
+                    var result = ObserveSubmissions
+                        ? SynchronousSubmissionTrace.Invoke(() => Original(method, args),
+                            () => call.Submission("submitting", null), error => call.Submission("submitted", error))
+                        : Original(method, args);
                     if (result is Task task)
                     {
                         if (method.ReturnType == typeof(Task)) return AwaitVoid(task, call);
@@ -148,6 +151,13 @@ namespace EmbeddingGemma.Validation.Tests
                     }
                     catch when (error != null) { /* A measurement failure must not replace the original stage failure. */ }
                     finally { process.Dispose(); }
+                }
+                public void Submission(string eventName, Exception error)
+                {
+                    var row = (JObject)header.DeepClone(); row["event"] = eventName;
+                    row["utc"] = DateTime.UtcNow.ToString("O"); row["error_type"] = error?.GetType().FullName;
+                    row["submission_scope"] = "Synchronous invocation through return, including a pending Task; not async completion or measured GPU time.";
+                    observe(row);
                 }
             }
         }

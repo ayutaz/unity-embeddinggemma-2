@@ -53,6 +53,17 @@ namespace EmbeddingGemma.Validation.Tests
             Assert.That(rows, Has.Count.EqualTo(2)); Assert.That((bool)rows[1]["asynchronous"], Is.True);
             Assert.That(rows[1]["gpu_elapsed_ns"].Type, Is.EqualTo(JTokenType.Null));
         }
+        [Test] public async Task OptInSubmissionEndsBeforePendingAsyncCompletionAndKeepsExistingCompletionEvents()
+        {
+            var rows = new List<JObject>(); var original = new Stage();
+            var wrapped = MediaStageTiming.Wrap<ITimingFixture>(original, "preprocessing", rows.Add, true);
+            var input = new object(); var task = wrapped.ExecuteAsync(input, default);
+            Assert.That(task.IsCompleted, Is.False);
+            Assert.That(rows.ConvertAll(row => (string)row["event"]), Is.EqualTo(new[] { "begin", "submitting", "submitted" }));
+            Assert.That(rows[2]["gpu_elapsed_ns"].Type, Is.EqualTo(JTokenType.Null));
+            original.Pending.SetResult(input); Assert.That(await task, Is.SameAs(input));
+            Assert.That((string)rows[3]["event"], Is.EqualTo("completed"));
+        }
         [Test] public void SynchronousFailureKeepsOriginalExceptionAndRecordsFailure()
         {
             var rows = new List<JObject>(); var error = new InvalidOperationException("controlled fixture failure");

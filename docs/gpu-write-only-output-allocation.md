@@ -19,8 +19,14 @@
 
 別のproject/processで順に実行し、OS・shader cacheや他アプリの負荷は制御していない。Profiler/markerの影響があり、CPU送信区間の経過時間とGPU queue区間は重なり得るため、両者を足したり差し引いたりしない。
 
+## 新SDKの混在検索と描画
+
+新SDKの混在PlayModeも[FP32](results/gpu-output-mixed-playmode-fp32-d7b2233-20261018.json) / [Float16重み](results/gpu-output-mixed-playmode-float16-weights-d7b2233-20261018.json)の両方が合格した。各実行で画像3件・音声2件のDocument登録、日英4 queryの全5順位とscore、実GPU処理中のキャンセル→再試行、module切替、Worker・kernel・tensor・cache leaseの解放、続く直接text Query 4件を確認した。各2 pass / fail0 / skip0 / exit0、終了後636 sourceファイルも照合した。最大score誤差はFP32が0.000000240、Float16重みが0.000111928で、元の0.001許容差を維持している。ホスト生涯ピークはそれぞれ14,059,487,232 / 10,745,999,360 bytesで、16GiB guard内だった。形式間の必要RAM差や速度改善をこの別プロセスの観測から保証しない。
+
+4画面ずつを実際に開き、score付き結果、3 profileの画像プレビュー、日本語の音声再生ボタンを確認した。[FP32の目視](results/gpu-output-mixed-fp32-d7b2233-rendered-visual-inspection-20261018.json) / [Float16重みの目視](results/gpu-output-mixed-float16-weights-d7b2233-rendered-visual-inspection-20261018.json)。一部の下位行はviewport外であり、全順位は別の数値監査で確認する。準備済みcacheによるlocal-file consumerの自動操作であり、公開cold取得、固定Gitの手動操作、実際の再生・マイク入力の合格ではない。
+
 ## 残る受け入れ
 
-新SDKの混在検索の全順位・score・キャンセル再試行・解放を確認する。通常APIの対応する入力と条件での計測、host / GPU memory、残るstage GPU時間・非同期割り当て・Editor測定も必要である。旧SDKの全40回やFloat16全6 moduleの合格を、新SDKの合格へ流用しない。
+通常APIの対応する入力と条件での計測、host / GPU memory、残るstage GPU時間・非同期割り当て・Editor測定も必要である。旧SDKの全40回や操作成功を、新SDKの性能・手動操作の合格へ流用しない。
 
 PR #87はDraftを維持し、最新headのCIも別に確認する。公開empty-cache取得・許可後の実マイク・最終candidate操作を含む優先1〜3全体は未完了である。

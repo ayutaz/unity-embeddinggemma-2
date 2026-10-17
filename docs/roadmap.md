@@ -32,7 +32,7 @@ candidate・入力・model hashを固定し、最初に測定します。遅い�
 
 3の追加checkpointとして、固定source consumerでFP32 / Float16の送信前CPU待機とGPU仕事量の対照、および待機なしの同一入力・各1 dispatchを4回ずつ実行しました。[通常dispatchの観測](results/frozen-source-text-gpu-dispatch-observations-20261018.json)は参照一致・解放・exit0まで確認済みです。Recorder区間とProfiler履歴の解釈は分け、少数観測を形式間の速度改善へ拡張しません。3全体の完了条件と、画像・音声のstage別GPU時間・Editor測定の残件は維持します。
 
-[encoder区間の追加観測](encoder-gpu-dispatch-observations.md)では、旧SDKのFP32画像・音声とFloat16画像で12 vector・全5012区間を確認しました。画像の大きなGPU出力に不要なCPU storageを作っていたため、[出力確保の候補](gpu-write-only-output-allocation.md)をTDDとGPU演算等120件で検証しました。新SDKのFP32固定画像4回は旧出力とbyte一致し、同じ計測付きwarm反復が19.3–29.4秒から4.8–5.5秒になりました。次は新SDKの全module / precision・混在順位・通常APIの対応条件・メモリを確認します。旧SDKの受け入れを新SDKの完了に数えません。
+[encoder区間の追加観測](encoder-gpu-dispatch-observations.md)では、旧SDKのFP32画像・音声とFloat16画像で12 vector・全5012区間を確認しました。画像の大きなGPU出力に不要なCPU storageを作っていたため、[出力確保の候補](gpu-write-only-output-allocation.md)をTDDとGPU演算等120件で検証しました。新SDKの固定画像は両形式とも各4出力が旧出力とbyte一致し、同じ計測付きwarm反復で改善を観測しました。新SDKの全6 module×両形式・単独参照32ケースと、両形式の混在検索の全順位・再試行・解放・正常終了も確認済みです。次は通常APIの対応条件・メモリ、残るstage GPU時間・非同期割り当て・Editor測定を確認します。旧SDKの受け入れを新SDKの完了に数えません。
 
 ### 4. WindowsマルチモーダルPlayer
 

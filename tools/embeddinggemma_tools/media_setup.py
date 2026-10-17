@@ -63,8 +63,9 @@ def _read_descriptor(raw, expected):
             if (not match or not isinstance(value, dict) or type(value.get('bytes')) is not int
                     or value['bytes'] <= 0 or value.get('sha256') != match[1]):
                 raise ValueError('Invalid content-addressed object metadata')
-        def reference(name):
-            if not isinstance(name, str) or name not in data['files']:
+        def reference(name, *, model=False):
+            if (not isinstance(name, str) or name not in data['files']
+                    or model and not name.endswith('.sentis')):
                 raise ValueError('Undefined module file reference')
         def walk(value):
             if isinstance(value, dict):
@@ -84,6 +85,22 @@ def _read_descriptor(raw, expected):
         for name, module in data['modules'].items():
             if not isinstance(module, dict) or module.get('kind') != name.split('-')[0]:
                 raise ValueError('Module kind differs from its name')
+            if module.get('backend', 'GPUCompute') != 'GPUCompute':
+                raise ValueError('Every module must use GPUCompute')
+            reference(module.get('tokenizer'))
+            if module['kind'] == 'text':
+                reference(module.get('model'), model=True)
+            else:
+                reference(module.get('tokenizer_config'))
+                reference(module.get('backbone'), model=True)
+                if module['kind'] == 'audio':
+                    reference(module.get('preprocessor'), model=True)
+                models, operations = module.get('models'), module.get('operations')
+                if (not isinstance(models, list) or not models or not isinstance(operations, list)
+                        or len(models) != len(operations) + 1):
+                    raise ValueError('Every operation must connect two declared model segments')
+                for model in models:
+                    reference(model, model=True)
             walk(module)
         return data
     except (KeyError, TypeError, json.JSONDecodeError, UnicodeDecodeError) as error:

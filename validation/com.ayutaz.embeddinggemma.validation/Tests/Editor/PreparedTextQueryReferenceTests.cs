@@ -24,11 +24,11 @@ namespace EmbeddingGemma.Validation.Tests
             using var cancellation = new CancellationTokenSource(); var task = Run(cancellation.Token); long peak = 0;
             while (!task.IsCompleted)
             {
-                peak = Math.Max(peak, MediaExecutionMemory.Peak()); if (peak > 12L * 1024 * 1024 * 1024) cancellation.Cancel();
+                peak = Math.Max(peak, MediaExecutionMemory.Peak()); if (peak > GpuMediaExecutionPolicy.CurrentMemoryLimitBytes) cancellation.Cancel();
                 UnityEditor.EditorApplication.QueuePlayerLoopUpdate(); yield return null;
             }
             task.GetAwaiter().GetResult();
-            Assert.That(peak, Is.GreaterThan(0).And.LessThanOrEqualTo(12L * 1024 * 1024 * 1024));
+            Assert.That(peak, Is.GreaterThan(0).And.LessThanOrEqualTo(GpuMediaExecutionPolicy.CurrentMemoryLimitBytes));
         }
         static async Task Run(CancellationToken token)
         {
@@ -37,11 +37,12 @@ namespace EmbeddingGemma.Validation.Tests
             Assert.That(directory, Is.Not.Null.And.Not.Empty); Assert.That(output, Is.Not.Null.And.Not.Empty);
             Assert.That(File.Exists(output), Is.False);
             var descriptor = Path.Combine(directory, "bundle.json");
-            Assert.That(Hash(descriptor), Is.EqualTo("8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955"));
+            GpuMediaExecutionPolicy.VerifyCurrent(directory);
             var referencePath = Path.GetFullPath(Path.Combine(Application.dataPath, "../../player-bundle/windows-unity21-20261012/search-reference.json"));
             Assert.That(Hash(referencePath), Is.EqualTo("f316d5199c920431c7f721d43b2cedbe4a6384fb0e0664511b75bc2e98fe80fe"));
             var queries = JObject.Parse(File.ReadAllText(referencePath))["queries"];
             var report = new JObject { ["success"] = false, ["module"] = "text", ["actual_backend"] = "GPUCompute",
+                ["precision"] = GpuMediaExecutionPolicy.CurrentPrecision, ["host_memory_limit_bytes"] = GpuMediaExecutionPolicy.CurrentMemoryLimitBytes,
                 ["execution_source"] = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE"), ["reference_sha256"] = Hash(referencePath),
                 ["bundle_descriptor_sha256"] = Hash(descriptor), ["cases"] = new JArray(), ["stage_measurements"] = new JArray(),
                 ["phase"] = "load", ["gpu_time_measured"] = false };
@@ -57,7 +58,7 @@ namespace EmbeddingGemma.Validation.Tests
                     var actual = measured.EmbedQuery((string)query["text"]); var expected = query["embedding"].Values<float>().ToArray();
                     Assert.That(actual.Length, Is.EqualTo(768)); Assert.That(actual.All(v => !float.IsNaN(v) && !float.IsInfinity(v)), Is.True);
                     var cosine = TextSearchIndex.Cosine(actual, expected); var norm = actual.Sum(v => (double)v * v);
-                    Assert.That(cosine, Is.GreaterThanOrEqualTo(.999)); Assert.That(Math.Abs(norm - 1), Is.LessThanOrEqualTo(.002));
+                    Assert.That(cosine, Is.GreaterThanOrEqualTo(GpuMediaExecutionPolicy.CurrentMinimumCosine)); Assert.That(Math.Abs(norm - 1), Is.LessThanOrEqualTo(.002));
                     var capture = Path.ChangeExtension(output, null) + "-" + id + ".bin"; Assert.That(File.Exists(capture), Is.False);
                     var bytes = new byte[actual.Length * 4]; Buffer.BlockCopy(actual, 0, bytes, 0, bytes.Length); File.WriteAllBytes(capture, bytes);
                     ((JArray)report["cases"]).Add(new JObject { ["id"] = id, ["cosine"] = cosine, ["norm_squared"] = norm,

@@ -73,13 +73,13 @@ namespace EmbeddingGemma.Validation.Tests
             while (!task.IsCompleted)
             {
                 peak = Math.Max(peak, MediaExecutionMemory.Peak());
-                if (peak > 12L * 1024 * 1024 * 1024) cancellation.Cancel();
+                if (peak > GpuMediaExecutionPolicy.CurrentMemoryLimitBytes) cancellation.Cancel();
                 UnityEditor.EditorApplication.QueuePlayerLoopUpdate(); yield return null;
             }
             var output = Environment.GetEnvironmentVariable("EG_MEDIA_SAMPLE_REPORT");
             if (!string.IsNullOrEmpty(output) && File.Exists(output))
             { var report = JObject.Parse(File.ReadAllText(output)); report["host_native_peak_bytes"] = peak; File.WriteAllText(output, report.ToString()); }
-            task.GetAwaiter().GetResult(); Assert.That(peak, Is.GreaterThan(0).And.LessThanOrEqualTo(12L * 1024 * 1024 * 1024));
+            task.GetAwaiter().GetResult(); Assert.That(peak, Is.GreaterThan(0).And.LessThanOrEqualTo(GpuMediaExecutionPolicy.CurrentMemoryLimitBytes));
         }
 
         [UnityTest] public IEnumerator ImportedSampleRendersItsRealSearchResultsInPlayMode()
@@ -91,12 +91,12 @@ namespace EmbeddingGemma.Validation.Tests
             using var cancellation = new CancellationTokenSource(); var task = Run(cancellation.Token); long peak = 0;
             while (!task.IsCompleted)
             {
-                peak = Math.Max(peak, MediaExecutionMemory.Peak()); if (peak > 12L * 1024 * 1024 * 1024) cancellation.Cancel();
+                peak = Math.Max(peak, MediaExecutionMemory.Peak()); if (peak > GpuMediaExecutionPolicy.CurrentMemoryLimitBytes) cancellation.Cancel();
                 yield return null;
             }
             var path = Environment.GetEnvironmentVariable("EG_MEDIA_SAMPLE_REPORT"); var report = JObject.Parse(File.ReadAllText(path));
             report["host_native_peak_bytes"] = peak; report["play_mode_execution"] = true; File.WriteAllText(path, report.ToString());
-            task.GetAwaiter().GetResult(); Assert.That(peak, Is.GreaterThan(0).And.LessThanOrEqualTo(12L * 1024 * 1024 * 1024));
+            task.GetAwaiter().GetResult(); Assert.That(peak, Is.GreaterThan(0).And.LessThanOrEqualTo(GpuMediaExecutionPolicy.CurrentMemoryLimitBytes));
             yield return new ExitPlayMode();
         }
 
@@ -108,6 +108,7 @@ namespace EmbeddingGemma.Validation.Tests
             var selections = (Environment.GetEnvironmentVariable("EG_MEDIA_SAMPLE_CASES") ?? "image-square:square-0,image-square:square-1").Split(',');
             var expectedWarm = Environment.GetEnvironmentVariable("EG_MEDIA_SAMPLE_WARM") == "1";
             Assert.That(bundlePath, Is.Not.Null.And.Not.Empty); Assert.That(cachePath, Is.Not.Null.And.Not.Empty); Assert.That(output, Is.Not.Null.And.Not.Empty);
+            GpuMediaExecutionPolicy.VerifyCurrent(bundlePath);
             // Validate every original audio input before paying for any GPU model load.
             foreach (var selection in selections.Where(value => value.StartsWith("audio-", StringComparison.Ordinal)))
             {
@@ -122,6 +123,7 @@ namespace EmbeddingGemma.Validation.Tests
                 }
             }
             Assert.That(File.Exists(output), Is.False); var report = new JObject { ["success"] = false, ["scope"] = "actual_imported_sample_real_media_fixed_queries",
+                ["precision"] = GpuMediaExecutionPolicy.CurrentPrecision, ["host_memory_limit_bytes"] = GpuMediaExecutionPolicy.CurrentMemoryLimitBytes,
                 ["runtime_source"] = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE"), ["cache_expected_warm"] = expectedWarm,
                 ["unity"] = Application.unityVersion, ["gpu"] = SystemInfo.graphicsDeviceName, ["graphics_api"] = SystemInfo.graphicsDeviceType.ToString(),
                 ["bundle_descriptor_sha256"] = Hash(Path.Combine(bundlePath, "bundle.json")), ["registrations"] = new JArray(), ["queries"] = new JArray() };
@@ -175,7 +177,7 @@ namespace EmbeddingGemma.Validation.Tests
                     var current = (GpuMediaSession)sample.GetType().GetField("session", Private).GetValue(sample);
                     if (previous != null && !ReferenceEquals(previous, current)) AssertReleased(previous); previous = current;
                     var vectors = (List<float[]>)sample.GetType().GetField("vectors", Private).GetValue(sample); var vector = vectors.Last();
-                    var cosine = TextSearchIndex.Cosine(vector, expected); Assert.That(cosine, Is.GreaterThanOrEqualTo(.999)); expectedVectors.Add(expected);
+                    var cosine = TextSearchIndex.Cosine(vector, expected); Assert.That(cosine, Is.GreaterThanOrEqualTo(GpuMediaExecutionPolicy.CurrentMinimumCosine)); expectedVectors.Add(expected);
                     var capture = Path.ChangeExtension(output, null) + "-" + id + "-vector.bin"; var bytes = new byte[vector.Length * 4]; Buffer.BlockCopy(vector, 0, bytes, 0, bytes.Length); File.WriteAllBytes(capture, bytes);
                     var transferred = Property<int>(sample, "LastTransferredFiles"); if (expectedWarm) Assert.That(transferred, Is.EqualTo(1));
                     ((JArray)report["registrations"]).Add(new JObject { ["id"] = id, ["module"] = module, ["cosine_to_pinned_document"] = cosine,
@@ -196,7 +198,7 @@ namespace EmbeddingGemma.Validation.Tests
                     var rows = new JArray();
                     for (var index = 0; index < hits.Length; index++)
                     {
-                        // Qualified document vectors use cosine >= .999; report scores against the immutable Python vectors separately.
+                        // Compare fixed Python scores separately; precision selection never changes rank or score gates.
                         var difference = Math.Abs(hits[index].Score - expectedHits[index].Score);
                         Assert.That(difference, Is.LessThanOrEqualTo(.001));
                         rows.Add(new JObject { ["id"] = hits[index].Document.Id, ["score"] = hits[index].Score, ["pinned_score"] = expectedHits[index].Score, ["absolute_error"] = difference });

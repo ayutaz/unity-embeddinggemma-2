@@ -21,6 +21,29 @@ namespace EmbeddingGemma.Validation.Tests
         { if (Application.isPlaying) yield return new ExitPlayMode(); }
 
         [UnityTest]
+        public IEnumerator RecordedGpuHierarchyExposesActualMarkerTimeWithoutChangingTheWorker()
+        {
+            yield return new EnterPlayMode();
+            var report = new JObject { ["success"] = false, ["real_model_qualified"] = false, ["history_requested"] = true };
+            var output = Output("history"); Assert.That(File.Exists(output), Is.False);
+            try
+            {
+                yield return GpuTimerProbe.Run(report);
+                Assert.That(report.Value<bool>("available"), Is.True);
+                var rows = (JArray)report["gpu_history"];
+                Assert.That(rows.Count, Is.GreaterThan(0), "GPU hierarchy measurements are missing; CPU sample times are not a substitute.");
+                foreach (var row in rows)
+                {
+                    Assert.That(row.Value<string>("marker"), Is.EqualTo("EmbeddingGemma.TimerCalibration"));
+                    Assert.That(row.Value<long>("gpu_ns"), Is.GreaterThan(0));
+                }
+                Assert.That(rows[0]["gpu_children"].HasValues, Is.True, "Expected recorded GPU kernel children, not CPU-only samples.");
+                report["success"] = true;
+            }
+            finally { File.WriteAllText(output, report.ToString()); }
+        }
+
+        [UnityTest]
         public IEnumerator OpaqueGpuCallCanBeTimedByGpuEnabledSamplerWithoutChangingItsCommandBuffer()
         {
             yield return new EnterPlayMode();

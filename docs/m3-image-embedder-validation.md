@@ -1,6 +1,6 @@
 # 最終画像embedding APIの合成受け入れ
 
-> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+> 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 
 2026-10-14 JST。`IImagePreprocessor` / `IImageFeatureEncoder`と、画像専用`ImageEmbedder` / `IImageEmbedder`を追加した。音声API PR #62の`IMultimodalBackbone`を共通契約として利用する。画像encoder単独のPR #64を含む後続branchであり、main未統合。正式Releaseは作成しない。
 

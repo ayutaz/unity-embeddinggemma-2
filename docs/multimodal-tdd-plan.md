@@ -1,5 +1,12 @@
 # M2・M3・M4から正式リリースまでのTDD計画
 
+
+> **2026-10-17：この文書は実装時のTDD分割・設計・実行履歴です。現在の作業順は[ロードマップ](roadmap.md)、確認済み結果は[検証状況](status.md)を基準にしてください。**
+>
+> PR #79・#31・#83は統合済みです。元の画像・音声GPU gate、全role API、Windows text Player、画像・音声検索sample・cache・505件回帰は固定sourceで確認済み。本文中の「PR #31がDraft」「sample未実装」「CI失敗中」等は当時のcheckpointで、現在の残件ではありません。最終candidate、モデルの新規準備、UX・収録 / 再生、性能、画像音声Player・必須他環境、正式公開はロードマップに残します。
+
+## 記録当時の設計とcheckpoint
+
 ## 現在の実行位置（2026-10-16）
 
 [現在の状態](status.md)と[手順4の完了監査](results/goal4-current-completion-audit-20261016.json)を現行の判定とします。元encoderの実GPU gate、実Texture / PCM→最終768 APIの全role・profile / mask・境界・所有権 / 解放・例外後再利用・text回帰、固定参照の必須CIが合格し、元計画の手順3・4は完了しました。CIはaccepted source be21d0c / merge実行1058dbeで、4環境各1,433 pass / skip0、元音声824,320値の許容差超過0です。GPU結果は各receiptの実行source・Windows Editor / RTX4070 Ti SUPER / D3D12の範囲に限定します。
@@ -20,7 +27,7 @@ mainの旧計画更新2件は、[2026-10-14の固定snapshot](https://github.com
 
 2026-10-16音声の更新: [実PCM→採用GPU encoder→元Document最終768 API](results/m4-real-pcm-document-final-api-gpu-20261016.json)は元6信号 / 両profileで6 pass・skip0。CPU fallback / 中間readback0、最小cosine 0.9999998052055729、per-call Tensor解放と不正入力後の復帰を確認。nyquistの追加要素診断439超過は保持する。次は[固定原本encoder出力からのrole参照生成](results/m4-frozen-audio-role-reference-tdd-20261016.json)をActionsで実行し、元Document全6参照への一致を確認してから、実PCM Query / RawのGPU最終APIへ進む。新経路の関連32 Greenは実モデル合格とは扱わない。通常のnative / ONNX gateを維持し、CIのsilence ONNX差とPersistent allocation警告は未解決として残す。工程4は未完了。
 
-> 文書整合確認: 2026-10-15。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。冒頭の現在方針が、下の旧checkpointの着手順より優先する。
+> 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 
 ## 2026-10-15の実行方針と再開順
 

@@ -1,93 +1,48 @@
 # プロジェクトのゴール
 
-> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。実モデル実行は停止中。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
+更新: 2026-10-17。目標と達成基準を定義する文書です。実際の対応範囲は[検証状況](status.md)、作業順と残件は[ロードマップ](roadmap.md)を参照してください。
 
-- 設定日: 2026-10-07
-- 更新日: 2026-10-14
-- 背景: [新規性調査](embeddinggemma-2-unity-novelty.md)
+## 目指すもの
 
-リポジトリはpublicのOSSとして開発中。**正式リリースはM3画像・M4音声を含む全対応と必須検証の完了後に行う**。[全体TDD計画](multimodal-tdd-plan.md) / [M3](m3-plan.md) / [M4](m4-plan.md)を現在の実行順とする。Windowsの既存実測は[現在の状態](status.md)と[M2基盤計画](m2-release-plan.md)を参照する。標準環境の再現、必須他環境、残る安定性、最終候補 / tag導入・正式Releaseは未完了。
-以下の導入時の基準はPR #12時点の履歴として保持する。確認基準main `4ee0cbb`にはPR #1〜#4・#6・#8〜#12を統合済み。
-保存・Float16重み量子化・両backend精度・性能 / メモリ測定までWindows EditorのM1受け入れ条件が合格した。
-確認基準mainの [CI run 37975720534](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975720534)は全8 job成功。Python4環境・実モデルPython照合・lint・パッケージ監査を確認。Sentisの実測はWindowsの検証記録を参照する。
-PR #6のCI整備・UPM移行はmainへ反映済み、GitHub側のmain保護も設定・再確認済み。
-文書のみのPR #7も全8 jobが成功し、未マージで閉じた。PR #5の文書変更はPR #6へ含め、#5は閉じた。
-検索サンプルとモデル準備手順はWindows consumer再現を含め確認し、PR #11で統合済み。再開順は[全体計画R0〜R5](multimodal-tdd-plan.md)のGPU / 負荷、数値gate、最終API、必須環境・最終consumer、配布準備とする。M2全体の受け入れは未完了。
-最新のmain / PRの区別は [現在の状態](status.md)、導入と回帰の証拠は [パッケージ検証](m2-package-validation.md)を参照。
-M1の証拠は [M1計画](m1-plan.md)、[完了検証記録](m1-completion-validation.md)を参照。
-リポジトリの公開と、全モダリティ対応後のUPMパッケージ / サンプルの正式リリースは別の段階として扱う。
+**Unity Sentisで、テキスト・画像・音声の埋め込みをGPU上で作り、モダリティをまたいだ検索を利用できるようにする。**
 
-## ゴール
+1. **Sentisで推論する**：追加のllama.cpp・ONNX Runtime・LiteRT等のネイティブ推論プラグインを使わない。Runtimeの直接依存を明示する。
+2. **3種類の入力を同じ空間へ変換する**：画像・音声encoderの特徴量を共通backboneへ渡し、正規化された768次元vectorを返す。text→text / image / audioの検索と混在索引を提供する。
+3. **GPU上で前処理と推論をつなぐ**：Texture / RenderTextureの画像変換、PCMからの音声特徴量生成、encoder・backboneをGPUで実行する。中間tensorのCPU readback・計算fallbackを禁止する。
 
-**Unity の Sentis だけで、EmbeddingGemma 2 のテキスト・画像・音声の埋め込みを GPU 上で作れるようにする。**
+テキストtokenize、ファイルdecode・音声取得 / uploadはCPU側の入力境界、最終768次元配列のCPU取得は出力境界として認め、転送を記録します。GPU非対応をCPUで代替して合格にはしません。
 
-次の 3 つをすべて満たすことをゴールとする。
-
-1. **Sentis だけで動かす**
-   - llama.cpp・ONNX Runtime・LiteRT などのネイティブプラグインを使わない。
-   - 推論はSentis(`com.unity.ai.inference`)を使う。現行RuntimeはUnity提供のNewtonsoft JSONも使用する。配布時に直接依存を明示する。
-2. **テキスト・画像・音声の 3 つに対応する**
-   - テキスト用の本体(270M)、画像エンコーダ(170M)、音声エンコーダ(300M)を Sentis で動かす。
-   - 画像 / 音声エンコーダの特徴量は共通のテキスト本体へ渡し、768 次元の埋め込みを得る。モダリティをまたいだ検索(例: テキストで画像を探す)ができる。
-3. **入力を GPU 上で処理する**
-   - 画像: `Texture` / `RenderTexture` を CPU に読み戻さず、GPU 上でリサイズ・正規化してモデルに渡す。
-   - 音声: 波形からメルスペクトログラムへの変換を、Sentis の演算子(STFT など)で GPU 上で行う。
-   - テキスト: トークナイズは CPU で行ってよい。それ以降は GPU で処理する。
-
-## 達成の基準
+## 達成基準
 
 | 項目 | 基準 |
 | --- | --- |
-| 正しさ(fp32) | 同じ入力に対し、Python の参照実装の埋め込みとのコサイン類似度が 0.999 以上 |
-| 正しさ(量子化版) | 同じくコサイン類似度が 0.99 以上 |
-| モダリティ横断 | 固定のテストセットで、テキスト→画像、テキスト→音声の検索順位が参照実装と一致する |
-| GPU 処理 | 前処理・encoder・共通backboneをGPUComputeで実行し、中間CPU readback・計算fallbackを禁止。GPU非対応をCPU推論で代替しない。入力upload・tokenizeと最終768次元のCPU取得は境界として記録 |
-| ネイティブ依存 | パッケージにネイティブプラグインが含まれない |
-| 動作環境(必須) | Unity Editor(macOS / Windows)、iOS、Android |
-| 動作環境(できれば) | Web(WebGPU) |
+| FP32最終vector | 有限768次元・単位長、固定Python参照とのcosine >= 0.999 |
+| 採用Float16重み形式 | 同じ条件でcosine >= 0.99。全演算FP16化や高速化を自動的に保証しない |
+| encoder・中間値 | 固定参照と元の要素別許容差で照合。後から期待値・許容差を失敗へ合わせない |
+| 横断検索 | 固定queryと文書・画像・音声の全順位・score、混在索引・同点処理を照合 |
+| GPU | actual backendとfallback・readbackを実GPUで監査。skip・tiny graph・import成功・Python CIだけでは合格にしない |
+| 導入・運用 | 空consumerの固定Git導入、モデル準備、sample操作、切替・キャンセル・解放・回復を再現 |
+| 必須環境 | Windows Editor / Player、macOS Editor、iOS / Android Player実機。各環境のCPU比較と実GPU受け入れを分離 |
+| 性能 | 同一source・モデル・仕事量で初回 / warm・各stage・メモリ・正常終了を測定。最低要件は実測から決める |
 
-参照実装は transformers / sentence-transformers を使う。プロンプト、本体内部の 512→768 projection、
-プロンプトを含む mean pooling、L2 正規化、Matryoshka による次元の切り詰めの扱いを揃える。
-独立した sentence-transformers Dense モジュールがないことを、projection 不要と解釈しない。
+参照は固定revisionのtransformers / sentence-transformers実装に合わせます。prompt、512→768 projection、pooling、L2正規化、次元・mask・feature配置を揃えます。固定入力の一致と任意入力の意味検索品質は別の評価です。
 
-## 成果物
+## 成果物と到達点
 
-- Unity パッケージ(UPM 形式): モデルの読み込み、前処理、推論、後処理の API
-- モデルを変換する Python スクリプト(Sentis で読める形式への書き出し)
-- サンプルシーン: テキスト検索、画像検索、音声検索
-- 各プラットフォームでの速度とメモリの測定結果
+| マイルストーン | 現在の到達点 | 続く条件 |
+| --- | --- | --- |
+| M1 テキスト本体 | Windows Editorで推論・保存・量子化・固定入力を受け入れ済み | 環境・profile変更時の再照合 |
+| M2 UPM・検索・検証基盤 | UPM、text sample、固定Git consumer、Windows text Playerは検証済み | 最終candidate・系統的性能測定・必須他環境 |
+| M3 画像 | GPU前処理・元encoder・全role最終APIと画像音声検索sampleは固定sourceで合格 | 利用者向け準備・UX・画像Player・必須他環境・測定 |
+| M4 音声 | 元encoder・実PCMの全role最終API、async前処理、cache・混在検索sampleは固定sourceで合格 | 音声再生・明示収録・準備・音声Player・必須他環境・測定 |
+| 正式公開 | 未実施 | 全必須条件→最終candidate / tag導入→Release |
 
-モデルファイルはリポジトリにコミットしない(Git LFS は使わない)。Hugging Face などから取得する手順やスクリプトを用意する。
-
-## マイルストーン
-
-| # | 内容 | 完了の条件 | 状態 |
-| --- | --- | --- | --- |
-| M1 | テキスト用モデルを Sentis で動かす | Windows Editor の CPU / GPUCompute で全 15 ケースの token ID / mask が完全一致、fp32 cosine >= 0.999。`.sentis` 保存・再読み込み、fp16 量子化版 cosine >= 0.99、時間・メモリ測定 | Windows Editor受け入れ検証完了 |
-| M2 | テキストUPM・サンプル・検証基盤を安定化する | 標準consumer / 固定Git導入、API・検索・Player・解放、macOS / Windows / iOS / Androidの精度・速度 / メモリ。正式公開は最終段階へ移す | Windows実測あり。標準21f1再現・新candidate・性能・他環境は未完了 |
-| M3 | 画像用モデルに対応する | [画像TDD計画](m3-plan.md)。GPU前処理 / encoder / 共通本体、実モデル精度、テキスト→画像順位、sample・Player | 画像encoder Python合格。PR #41のSentis Float16 CPU / GPU全6条件合格、FP32全6条件は要素単位許容差不合格。GPU前処理はmain、APIはDraft実装・合成契約合格、Python3 role / 18件合格。Unity実全chain・sample・元FP32 gateは未達 |
-| M4 | 音声用モデルに対応する | [音声TDD計画](m4-plan.md)。GPU前処理 / encoder / 共通本体、実モデル精度、テキスト→音声順位、sample・収録 / 再生・Player | 音声前処理Python合格・統合済み。音声encoderはPR #40に実装済みだが保存graphの実モデル照合不合格・未統合。PCM / GPU前処理はmain、APIはDraft実装・合成契約合格。SiLU ONNX修正は実モデル未検証、encoder gate・実全chain・sampleは未達 |
-| 最終公開 | 全対応後の正式リリース | M2〜M4と全必須環境、混在検索、最終candidate / tag固定導入、文書・ライセンス・GitHub Release | 未着手 |
-
-M2の再現可能な開発基盤 → 共通特徴量 / 長さ拡張 → M3 → M4 → 全必須環境の統合検証 → 正式公開の順とする。環境確保と実行可能な他OS検証は並行し、M2の全OS完了やtext-only ReleaseをM3・M4の着手条件にしない。必須macOS / Windows / iOS / Androidは維持し、Windows M1合格で他環境を成功扱いにしない。
-
-## 開発と受け入れの規則
-
-- 全実装を TDD で進める。テストを書き、意図した失敗を確認してから実装・合格確認を行う。
-- Python は `tools/` の uv に統一する。
-- モデル取得、変換、Unity 実行、測定は GitHub Actions を優先し、ローカル実行は小さい必要最小限の確認に限る。
-- main への直接 push は禁止。作業ブランチと PR を使い、merge は依頼があるまで行わない。
-- 小さいモデルのテスト合格、CI の静的検査、GPU テストの skip は実モデルの Sentis / GPU 合格に含めない。
+UPMコード、モデル変換用Python、検索サンプル、環境別の速度・メモリ結果を提供します。モデル重み・生成model・大きい検証artifactはGit / LFSに含めず、取得・変換手順を提供します。リポジトリのpublic公開と正式リリースを区別します。
 
 ## 対象外
 
-- 動画の埋め込み(画像の対応後に、余力があれば検討する)
-- llama.cpp・ONNX Runtime などを使う方式
-- モデルの追加学習(ファインチューニング)
-- 本格的なベクトルデータベース(サンプルでは単純な全件比較による検索にとどめる)
+- 動画の埋め込み、モデル学習・fine-tuning、本格的なベクトルDB。
+- ネイティブ推論プラグインを使った代替実装。
+- Web / WebGPUの正式公開必須条件への追加（余力があれば別途検討）。
 
-## 確認が必要なこと
-
-- tokenizerとCore ATen `.pt2` importはWindows M1の固定15件で合格。モデル・条件・プラットフォームを変える際は再照合する
-- モバイルで動かせるメモリ量に収まるか。重みの概算だけで判断せず、埋め込み表、実行時テンソル、backend を含めて測る
-- 話し言葉の音声が、テキストと同じ意味の空間に入るか
+開発は[AGENTS.md](../AGENTS.md)に従い、TDD・uv・PR運用を維持します。文書や小さいテストの成功を実モデル・実機の成功として扱いません。

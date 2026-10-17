@@ -1,8 +1,8 @@
 # 工程1〜3の作業基準と受け入れ
 
-> 現行依頼の区別（2026-10-17）: 今回の「3まで進める」は、PR #31のmain追従・Windows Player再検証・画像音声検索サンプルの3手順です。前2手順は完了し、サンプルの実GPU検証を進めています。[現行の受け入れと固定証拠](multimodal-search-sample.md)。以下は2026-10-15以前の元計画・診断履歴であり、その時点の未達を現在の未達へ置き換えないでください。
+> **2026-10-17 完了**：PR #31のmain追従・Windows text Player再検証・画像音声検索sampleの3手順は、PR #31 / #83のマージ、最終CI15 job、実GPU・PlayMode・505件回帰で完了しました。[検証状況](status.md) / [固定証拠](multimodal-search-sample.md)。以下は元計画の診断履歴です。元計画の工程番号と、今回完了した3手順を混同しないでください。
 
-> 文書整合確認: 2026-10-15。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。ユーザー指定の実行計画3・4は継続中、未完了。直近の所有Unity processは終了済み。CPUを含む旧実測・コマンドはGPU専用の現行受け入れ結果とは区別する。
+> 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 
 2026-10-15最新: 固定native投影を5 Red→関連20 Greenで追加し、独立attention scopeは1 Red→関連21 Green。full CPU subsample replayの失敗は別記録のまま保持し、attention scopeは元layer終端と既存12 partのhashを厳密一致させた。`1008d6a`のGPU観測では初期5境界に加えQ / K / V / relative-Kも元Clip境界で全bit一致。最初の差はself_attn201,927値、後の残差と畳み込みにもbit差があるが局所許容差内。全encoder203要素不合格は維持する。[固定観測・基準・失敗](results/m4-first-attention-projections-bit-exact-20261015.json)。内部演算capture4 Red→関連24 Greenの独立Actions38661214188は成功し、次はscaled Q/K・bmm・tanh / softmaxを直接照合する。工程3・4の全条件は未達。以下は前回checkpoint。
 

@@ -1,9 +1,9 @@
 # Text Search
 
-> 2026-10-14: 開発branchのTextSearchSampleはGPUComputeが既定で、CPUもUI選択肢に残ります。現在の要件ではGPUを使い、GPU未対応をCPU成功で代替しません。旧Windows実測は固定sourceの結果で、最新candidateの空consumer / 必須他環境は未検証です。
+> GPUComputeが既定です。CPUを明示選択することもできますが、自動切り替えはしません。基準EditorはUnity6000.3.21f1。[現在の検証範囲](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)と、固定sourceの過去実測を区別してください。
 
 別途用意したEmbeddingGemma 2のSentisモデルで、日本語 / 英語の固定6文書を検索するサンプルです。
-モデル・tokenizerは含まれず、自動ダウンロードしません。Unity 6000.3.16f1 / Sentis 2.6.1を対象にしています。
+モデル・tokenizerは含まれず、自動ダウンロードしません。Unity 6000.3.21f1 / Sentis 2.6.1を基準にしています。
 
 1. 成功したActionsの固定参照を`stage --search`で監査・配置する。
 2. Editorの**Tools → EmbeddingGemma → Prepare Text Search Models**でfp32 / Float16重みの`.sentis`とtokenizerを用意する。

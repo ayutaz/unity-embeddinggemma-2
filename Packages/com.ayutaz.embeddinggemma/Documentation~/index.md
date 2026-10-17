@@ -1,140 +1,81 @@
 # 導入とRuntime API
 
-> 2026-10-16: マルチモーダルRuntimeはPR #79、固定参照の保存対策はPR #82でmainへ統合済みです。main `012f3cc` の必須CIは合格しました。PR #31は最新mainへの追従、新しい空Git consumer、Windows PlayerのGPU検索・正常終了を再検証中です。source別GPU結果と未達条件は[現在の状態](../../../docs/status.md)を参照してください。正式リリースは未実施です。
+テキスト・画像・音声の埋め込みと検索をUnityへ組み込むための入口です。開発版 `0.1.0-pre.1`、正式リリース前です。Windowsの固定sourceで検証済みの範囲と他環境の未達条件は[検証状況](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)を参照してください。
 
-既存テキスト導入の記録（2026-10-10時点）:
-更新日: 2026-10-10。開発版 `0.1.0-pre.1` は [PR #6](https://github.com/ayutaz/unity-embeddinggemma-2/pull/6)でmainへ統合済み、未リリースです。
-Windowsの新しい空のUnityプロジェクトで固定commit `fc66af7`のGit URL導入・compile・UPM 38 / sample EditMode 66 / PlayMode 2件、実モデル4条件・全順位 / scoreと日英画面 / cacheを確認しました。後続のEditor測定fixture 2ファイル修正ではsample EditMode 67件が合格し、PR #30で統合済み。[実測条件と結果](https://github.com/ayutaz/unity-embeddinggemma-2/blob/6f55a8574df1bc75d51fb5992fd70dc7d0512fb9/docs/m2-font-git-consumer-validation.md)。Androidは実APK build・payload監査まで、macOS / iOS / Android実機、正式候補と公開tagは未検証です。通常表示sample PlayerはGUI / GPU検索成功後に終了クラッシュが残り、[PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)はdraftです。
+## 1. パッケージを追加する
 
-## 導入
-
-Unity 6000.3.16f1で、Package Managerの「Add package from disk」からこのパッケージの `package.json` を指定します。
-Git URLの指定形式は [Unity公式手順](https://docs.unity3d.com/6000.3/Documentation/Manual/upm-git.html)に沿っています。
-`<commit-sha>` はパッケージを含む40桁commitに置き換えます。WindowsでGit解決と実動作を確認したcommitは `fc66af7bc9150ddcf759917a5e9c92b2c5afa991`（PR #29統合後）です。下のURLはその実測SHAへ固定しています。このSHAには後続のEditor測定fixture修正2ファイルを含みません。以降の文書変更、正式候補やtagの実測を代用する結果ではありません。
-公開tagはまだありません。
+基準はUnity **6000.3.21f1** / Sentis **2.6.1**です。Package Managerの **Add package from git URL** へ次を入力します。PR #83統合時点に固定した開発版で、公開tagではありません。
 
 ```text
-https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/com.ayutaz.embeddinggemma#fc66af7bc9150ddcf759917a5e9c92b2c5afa991
+https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/com.ayutaz.embeddinggemma#a965c098aba824b47f9762cae16b3af9656a3508
 ```
 
-SentisとNewtonsoft JSONはpackage manifestから解決します。URP・uloopは利用側に不要です。
-Editor契約テストを実行する場合は、利用側のmanifestへ `com.unity.test-framework` 1.6.0と
-`"testables": ["com.ayutaz.embeddinggemma"]` を追加し、`EmbeddingGemma.Package.Editor.Tests` を実行します。
-テストframeworkは配布Runtimeの必須依存ではありません。
+clone済みなら **Add package from disk** でこのパッケージの`package.json`を指定することもできます。Package Managerの表示名は現在 **EmbeddingGemma Text** です。SentisとNewtonsoft JSONは依存から解決されます。URP・uloop・Pythonは利用側のRuntimeには不要です。
 
-## モデル準備
+最終統合版全体の空consumer受け入れは後続のgateです。過去sourceの固定Git導入・compileと、最新bundleの実GPU数値検証は別の記録として扱います。
 
-モデルファイルは同梱しません。[リポジトリのモデル変換・監査手順](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/automation.md)で、
-同一revisionから生成したモデルと `tokenizer.json` を準備してください。
-対象は `google/embeddinggemma-2` revision `914f7f89142e33e77833254d9c9b90c3cef7303b`、
-batch 1 / sequence 128、int32の `input_ids` / `attention_mask`、L2正規化済みfloat `[1,768]` 出力です。
-生成artifactのsource・hashを監査し、モデルとtokenizerを別revisionで混在させないでください。
+## 2. モデルを用意する
 
-## 推論
+**UPMにモデルは含まれません。** [モデル準備](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/model-preparation.md)に従って取得・監査・変換してください。
+
+- テキスト：`.sentis`と`tokenizer.json`。batch1 / sequence128、int32 `input_ids` / `attention_mask`、float `[1,768]`出力。
+- 画像・音声：固定profileのモデル・係数・tokenizerと`bundle.json` / `objects/`。新規環境向け一括生成・配布手順は未整備です。
+- モデルは`google/embeddinggemma-2` revision `914f7f89142e33e77833254d9c9b90c3cef7303b`へ固定しています。producer・graph・ファイルhashを確認し、異なるrevisionを混ぜないでください。
+
+## 3. サンプルから試す
+
+Package ManagerのSamplesからImportします。
+
+| サンプル | 入口・条件 |
+| --- | --- |
+| [Text Search](../Samples~/TextSearch/README.md) | `TextSearch.unity`。準備済みmodel / tokenizerで固定6文書を検索 |
+| [Image and Audio Search](../Samples~/MultimodalSearch/README.md) | `MultimodalSearch.unity`。準備済みbundle、対応する画像 / mono PCMのprofileが必要 |
+
+## テキストAPI
+
+次はUnityメインスレッドから呼ぶ例です。`modelAsset`は準備したSentis `ModelAsset`、`tokenizerJson`は同じrevisionのtokenizer JSON文字列です。
 
 ```csharp
 using EmbeddingGemma;
 using Unity.InferenceEngine;
 
-var model = ModelLoader.Load(modelAsset); // Sentis ModelAsset
+var model = ModelLoader.Load(modelAsset);
 using var embedder = new TextEmbedder(model, tokenizerJson, BackendType.GPUCompute);
 float[] query = embedder.EmbedQuery("猫はどこで眠っていますか？");
 float[] document = embedder.EmbedDocument("猫が窓辺で眠っています。", "猫の様子");
 float[] raw = embedder.EmbedRaw("前置きなしの入力");
 ```
 
-メインスレッドで同期的に使用します。同時呼び出しは扱いません。Workerを再利用し、Disposeで解放します。
-戻り値は独立した `float[768]`。GPU指定でも最終ベクトルはCPUへ取得します。
-GPU非対応時のCPUへの自動切り替えはありません。
-空文字は有効、null textは拒否。documentのnullタイトルだけ `none` とし、空タイトル・空白・Unicodeは保持します。
-不適合なモデル入出力、非有限・非単位長の結果は例外とし、APIで補正しません。
+同期処理なので、毎フレームmodel / Workerを作らず再利用します。同時呼び出しは扱いません。戻り値は独立したCPU `float[768]`です。`TextSearchIndex`は文書を先に埋め込み、検索時にqueryだけを推論します。借用したembedderは呼び出し側で解放します。`TextSearchSession`は内部embedderを所有・解放します。
 
-## 保存
+空文字の埋め込みは有効ですが、検索sampleは空queryを拒否します。null textや非有限・非単位長の結果は拒否し、暗黙に補正しません。
+
+## 画像・音声API
+
+`ImageEmbedder.EmbedAsync`と`AudioEmbedder.EmbedAsync`は、対応profile・監査済みstageを使い、前処理→encoder→共通backboneをGPUで実行します。画像はTexture / RenderTexture、音声は`AudioPcmInput`（16kHz mono）を受け取ります。最終768次元のみCPUへ取得します。
+
+高水準の利用例は[Image and Audio Search](../Samples~/MultimodalSearch/README.md)、stageの組み立ては[API詳細](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/runtime-api.md)、[音声embedder](audio-embedder.md)と[音声encoder](audio-feature-encoder.md)を参照してください。
+
+- 非同期呼び出しもUnityメインスレッドから行い、`Task.Run`へ移しません。
+- 借用Texture・model・stage・中間tensorは、そのGPU処理とtaskの完了まで生存させます。
+- `AudioPreprocessor.ProcessAsync`はGPU fence後に完了したcacheを解放します。反復処理には`AudioEmbedder.EmbedAsync`を使用してください。
+- `GpuMediaSession`は選択moduleを所有し、切替・`CloseAsync`で処理完了と解放を待ちます。最終vectorを混在索引へ保持できます。
+- GPU非対応時にCPUへ自動切り替えしません。固定profileを外れる長さ・shape・形式は拒否します。
+
+## モデルの保存
 
 ```csharp
-TextModelFile.Save(model, writablePath); // .sentis拡張子
+TextModelFile.Save(model, writablePath); // .sentis
 TextModelFile.Save(model, writableFloat16Path, float16: true);
 var restored = TextModelFile.Load(writableFloat16Path);
 ```
 
-Float16重み保存は元のModelを変えません。保存と量子化は大きいメモリ・I/Oを使用するため、毎推論時に呼びません。
-Windows Editorではfp32 / Float16重みの保存・ロードと両backend各15件を検証済みです。UPM移行後の全保存・量子化ベンチマークは再実行していません。
-読み取り専用の配置先へ保存しないでください。Player・macOS / iOS / Androidの保存API互換性は後続検証の対象です。
-Float16重みは全演算のfp16化や速度改善を保証しません。
+保存・量子化は大きいメモリとI/Oを使う準備処理です。毎推論時に実行せず、書き込み可能な場所を指定してください。Float16重み保存は元modelを変更せず、演算全体のFP16化・高速化を保証しません。保存APIの過去Windows実測を、他OS・全Playerへ一般化しません。
 
-## テキスト検索サンプル
+## テスト・問題の切り分け
 
-パッケージには[Text Search](../Samples~/TextSearch/README.md)を含みます（PR #11でmainへ統合済み）。Package Managerでインポートし、モデルを明示的に準備してから`TextSearch.unity`を開きます。文書を事前埋め込みし、queryとのcosine順に表示します。同点は文書IDのordinal順です。
+Runtime利用だけならTest Frameworkは不要です。package契約テストを実行するときは、consumerに公式 `com.unity.test-framework` **1.6.0**と`"testables": ["com.ayutaz.embeddinggemma"]`を設定します。対象assemblyは`EmbeddingGemma.Package.Editor.Tests`です。
 
-`TextSearchIndex`は文書を一度だけ埋め込み、検索のたびにqueryを埋め込みます。空のqueryは拒否します。渡した`ITextEmbedder`は呼び出し側が所有します。`TextSearchSession`を使う場合はsessionが推論器を所有し、再準備やDisposeで解放します。
+Unity6000.3.21f1のテスト環境構成は[公式frameworkの導入記録](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/m2-embedded-framework-validation.md)を参照してください。vendorのPackageCacheを手で書き換えることを導入手順にしません。
 
-Windowsの元プロジェクトと新規consumerでfp32 / Float16重み × CPU / GPUComputeの固定6文書 / 4queryの全順位が参照と一致し、CLI完了応答・日英検索・空入力・解放も確認しました。任意入力の品質や他環境の受け入れは別の検証対象です。
-
-## 共通本体API（開発中）
-
-画像・音声の最終APIは開発中です。各前処理の出力はencoder入力で、最終768次元embeddingとは異なります。
-
-`MultimodalBackboneProfile`と`MultimodalBackbone`は、encoder / projectorが生成した512幅のsoft-token Tensorを共通本体へ渡すAPIです。画像Texture・音声PCMからの前処理やprompt生成を含みません。実モデルの最終embedding、zero-feature profile、Player / 他OSは検証中です。
-
-profileの長さ・placeholder ID・feature数・vocabulary / pad IDは、監査済みモデルと公式processorの参照から設定します。対応する保存graphは4入力の名前・型・static shapeが一致する必要があります。
-
-```csharp
-using var backbone = new MultimodalBackbone(model, profile, BackendType.GPUCompute);
-float[] embedding = backbone.Embed(inputIds, attentionMask, imageFeatures, audioFeatures);
-```
-
-`model`・feature Tensorは呼び出し側が所有します。GPUComputeでは非空featureを既にGPUへ置いてください。backboneはfeatureをCPUへdownload・Disposeせず、最終768次元だけを独立したCPU配列へコピーします。featureの全値に対するCPU検査は行わないため、入力側でもfinite条件を保証してください。長さ / mask / slot数・feature shape・dataの生存・backendの不一致は拒否します。backboneをDisposeした後も、借用Tensorの解放は呼び出し側が行います。
-
-### 公式promptの構築
-
-`MultimodalPromptBuilder`は固定revisionのtokenizer JSON・tokenizer設定とbackbone profileを使い、単一画像 / 単一音声または両方のpromptを作ります。画像feature数は実encoder profileの値（square 256、landscape / portrait 252等）を渡します。音声は前処理のbinary feature maskを2段stride-2で縮約し、有効なsoft token数を求めます。開始 / 終了marker、token ID、feature数は設定・profileに一致する必要があります。
-
-```csharp
-var prompts = new MultimodalPromptBuilder(tokenizerJson, tokenizerConfigurationJson, profile);
-var prompt = prompts.Build("<|image|>", imageFeatureCount: 256, role: TextRole.Document);
-// 対応するencoder / backbone graphとGPU Tensorを準備してから渡します。
-float[] embedding = backbone.Embed(prompt.InputIds, prompt.AttentionMask, imageFeatures, audioFeatures);
-```
-
-これはAPIの接続例です。実encoderから最終embeddingまでの受け入れは開発中です。音声なら`Build("<|audio|>", audioFeatureMask: mask)`、両方ならtemplate内に各placeholderを1つずつ置きます。query / document prefixとtitleは`TextPrompts`の契約を維持します。入力templateに開始 / 終了markerを事前展開しないでください。結果のIDs / maskは独立した配列copyです。
-
-text用tokenizerの既存truncation / paddingを解除し、完全なtoken化の後にprofile長へ右paddingします。上限超過は例外となり、切り捨てません。固定profileごとにbuilderを作って再利用してください。promptはCPU側の入力境界で、GPU featureの読み出しやencoder実行は行いません。zero-featureのbackbone graphや全end-to-endの検証は別です。
-
-## 画像前処理Runtime（開発中）
-
-```csharp
-using var preprocessor = new ImagePreprocessor();
-using var prepared = preprocessor.Process(texture);
-// prepared.Pixels: GPUCompute float [1,2520,768]、画像encoderへの借用入力。
-// prepared.Positions: row-majorの(x,y)、末尾[-1,-1]のreadonly metadata。
-// prepared.ResizedWidth / ResizedHeight / SoftTokenCount: 公式profileの形状。
-```
-
-batch 1、8bit RGB / RGBAのTexture2D・作成済みsingle-sample 2D RenderTextureに対応します。各辺1〜8192px、sRGB / linearの保存値をRGB入力として扱い、alphaを無視します。浮動小数・HDR・圧縮formatは明示拒否します。公式bicubic antialiasのresize・丸め、16px patch・最大2520 patchesへのzero paddingをGPUで実行し、中間pixelをCPUへdownloadしません。
-
-入力Textureはcallerが所有します。結果は出力・作業Tensor / 補間bufferを所有し、processorの再利用・Dispose後も独立して生存します。次段GPU処理が完了するまで結果を保持し、その後Disposeしてください。Unity main threadのみ。画像encoder / 最終embedding API、Playerと全必須環境の受け入れは開発中です。
-
-## PCM入力境界（開発中）
-
-`AudioPcmInput`は固定16kHz mono PCMの入力準備です。対応長は161〜179200 samples、振幅はfiniteな[-1,1]。対応外入力はArgumentException（nullはArgumentNullException）で拒否します。
-
-```csharp
-var input = new AudioPcmInput(pcm, samplingRate: 16000, channels: 1);
-// Waveform / SampleMask: owned dataを参照するReadOnlySpan、各179200要素。
-// SourceSampleCount / ValidFrameCount: 実入力長と公式semicausal maskの有効frame数。
-```
-
-callerのPCM配列から独立したsnapshotを作り、右側zero paddingとprefix maskを保持します。caller配列や公開コピーを変更しても準備済み入力は変わりません。これはCPU入力境界のAPIであり、前処理Workerは次のAPIへ渡します。音声encoder・最終embedding推論は開発中です。
-
-## PCM前処理Runtime（開発中）
-
-`AudioPreprocessor`は監査済みの固定前処理Modelを借用し、Workerと入力upload Tensorを所有します。対応graphはfloat `waveform` / int `sample_mask`の[1,179200]入力と、順序付き2出力（float特徴量[1,1119,128]、int frame mask[1,1119]）です。backendはCPUまたはGPUComputeを明示し、対応外backendや固定shape / type不一致は拒否します。
-
-```csharp
-using var preprocessor = new AudioPreprocessor(preprocessingModel, BackendType.GPUCompute);
-using var prepared = preprocessor.Process(new AudioPcmInput(pcm));
-// prepared.Features / prepared.FrameMaskを後続Workerへ直接渡します。
-// prepared.ValidFrameCountは入力prefixから決めた有効frame数です。
-```
-
-`AudioPreprocessingResult`は両出力Tensorを所有します。GPUではdevice copyで保持し、中間downloadを行いません。Workerの再実行 / Dispose後も結果は独立して生存し、結果をDisposeすると両Tensorを解放します。後続推論への貸し出しが終わるまで結果を保持してください。同期APIはUnity main threadで呼びます。最終音声embedding APIとは別で、音声encoderと共通本体への接続は開発中です。
+モデル欠落・hash不一致・対応外GPU・入力profile不一致は、それぞれエラーとして確認します。小さい契約テストやPython CIの成功は実モデルGPUの合格と分けます。[現状](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md) / [ロードマップ](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/roadmap.md)。

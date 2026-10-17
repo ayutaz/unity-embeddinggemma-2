@@ -1,6 +1,6 @@
 # 最終音声APIのTDDと合成検証
 
-> 文書整合確認: 2026-10-14。[現在の状態](status.md) / [GPUを主経路とする再開計画](multimodal-tdd-plan.md)。本文の数値・source・実行中／次の作業は記載当時の記録。現在headの実行結果として扱わない。
+> 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 
 2026-10-13。`AudioEmbedder` / `IAudioEmbedder`と`MultimodalPromptBuilder.BuildAudio`を実装した。公式audio marker / prefix → PCM前処理 → encoder / projector → audio-only共通backboneを合成し、独立した768次元配列を返す。[使用例](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-embedder.md)、[固定sourceのreceipt](results/m4-audio-embedder-composition-windows-20261013.json)。これは実モデル精度の完了ではない。
 

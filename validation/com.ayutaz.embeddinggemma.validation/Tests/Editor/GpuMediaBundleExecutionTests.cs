@@ -38,7 +38,7 @@ namespace EmbeddingGemma.Validation.Tests
             while (!task.IsCompleted)
             {
                 peak = Math.Max(peak, MediaExecutionMemory.Peak());
-                if (peak > 12L * 1024 * 1024 * 1024) cancellation.Cancel();
+                if (peak > GpuMediaExecutionPolicy.CurrentMemoryLimitBytes) cancellation.Cancel();
                 UnityEditor.EditorApplication.QueuePlayerLoopUpdate(); yield return null;
             }
             var output = Environment.GetEnvironmentVariable("EG_MEDIA_EXECUTION_REPORT");
@@ -47,7 +47,7 @@ namespace EmbeddingGemma.Validation.Tests
                 var report = JObject.Parse(File.ReadAllText(output)); report["host_native_peak_bytes"] = peak;
                 File.WriteAllText(output, report.ToString());
             }
-            task.GetAwaiter().GetResult(); Assert.That(peak, Is.GreaterThan(0).And.LessThanOrEqualTo(12L * 1024 * 1024 * 1024));
+            task.GetAwaiter().GetResult(); Assert.That(peak, Is.GreaterThan(0).And.LessThanOrEqualTo(GpuMediaExecutionPolicy.CurrentMemoryLimitBytes));
         }
         static async Task RunImage(CancellationToken token)
         {
@@ -56,9 +56,11 @@ namespace EmbeddingGemma.Validation.Tests
             var output = Environment.GetEnvironmentVariable("EG_MEDIA_EXECUTION_REPORT");
             Assert.That(directory, Is.Not.Null.And.Not.Empty); Assert.That(output, Is.Not.Null.And.Not.Empty);
             Assert.That(File.Exists(output), Is.False, "Preserve previous execution evidence.");
+            GpuMediaExecutionPolicy.VerifyCurrent(directory);
             var bundle = GpuMediaBundle.Open(directory); var metadata = bundle.Module(module);
             Assert.That((string)metadata["kind"], Is.EqualTo("image"));
             var report = new JObject { ["success"] = false, ["module"] = module,
+                ["precision"] = GpuMediaExecutionPolicy.CurrentPrecision, ["host_memory_limit_bytes"] = GpuMediaExecutionPolicy.CurrentMemoryLimitBytes,
                 ["execution_source"] = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE"),
                 ["bundle_descriptor_sha256"] = Hash(Path.Combine(directory, "bundle.json")),
                 ["bundle_producer_source"] = JObject.Parse(File.ReadAllText(Path.Combine(directory, "bundle.json")))["source_commit"],
@@ -93,8 +95,8 @@ namespace EmbeddingGemma.Validation.Tests
                         var bytes = new byte[actual.Length * 4]; Buffer.BlockCopy(actual, 0, bytes, 0, bytes.Length); File.WriteAllBytes(capture, bytes);
                         ((JArray)report["cases"]).Add(new JObject { ["id"] = id, ["cosine"] = cosine, ["norm_squared"] = norm,
                             ["capture"] = Path.GetFileName(capture), ["capture_sha256"] = Hash(capture), ["input_png_sha256"] = Hash(imagePath),
-                            ["reference_sha256"] = Hash(referencePath), ["acceptance_cosine_minimum"] = .999 }); Save();
-                        Assert.That(cosine, Is.GreaterThanOrEqualTo(.999)); Assert.That(Math.Abs(norm - 1), Is.LessThanOrEqualTo(.002));
+                            ["reference_sha256"] = Hash(referencePath), ["acceptance_cosine_minimum"] = GpuMediaExecutionPolicy.CurrentMinimumCosine }); Save();
+                        Assert.That(cosine, Is.GreaterThanOrEqualTo(GpuMediaExecutionPolicy.CurrentMinimumCosine)); Assert.That(Math.Abs(norm - 1), Is.LessThanOrEqualTo(.002));
                     }
                     finally { UnityEngine.Object.DestroyImmediate(texture); }
                 }
@@ -111,13 +113,13 @@ namespace EmbeddingGemma.Validation.Tests
             using var cancellation = new CancellationTokenSource(); var task = RunAudio(cancellation.Token); long peak = 0;
             while (!task.IsCompleted)
             {
-                peak = Math.Max(peak, MediaExecutionMemory.Peak()); if (peak > 12L * 1024 * 1024 * 1024) cancellation.Cancel();
+                peak = Math.Max(peak, MediaExecutionMemory.Peak()); if (peak > GpuMediaExecutionPolicy.CurrentMemoryLimitBytes) cancellation.Cancel();
                 UnityEditor.EditorApplication.QueuePlayerLoopUpdate(); yield return null;
             }
             var output = Environment.GetEnvironmentVariable("EG_MEDIA_EXECUTION_REPORT");
             if (!string.IsNullOrEmpty(output) && File.Exists(output))
             { var report = JObject.Parse(File.ReadAllText(output)); report["host_native_peak_bytes"] = peak; File.WriteAllText(output, report.ToString()); }
-            task.GetAwaiter().GetResult(); Assert.That(peak, Is.GreaterThan(0).And.LessThanOrEqualTo(12L * 1024 * 1024 * 1024));
+            task.GetAwaiter().GetResult(); Assert.That(peak, Is.GreaterThan(0).And.LessThanOrEqualTo(GpuMediaExecutionPolicy.CurrentMemoryLimitBytes));
         }
         static async Task RunAudio(CancellationToken token)
         {
@@ -125,6 +127,7 @@ namespace EmbeddingGemma.Validation.Tests
             var module = Environment.GetEnvironmentVariable("EG_MEDIA_BUNDLE_MODULE");
             var output = Environment.GetEnvironmentVariable("EG_MEDIA_EXECUTION_REPORT");
             Assert.That(directory, Is.Not.Null.And.Not.Empty); Assert.That(output, Is.Not.Null.And.Not.Empty); Assert.That(File.Exists(output), Is.False);
+            GpuMediaExecutionPolicy.VerifyCurrent(directory);
             var bundle = GpuMediaBundle.Open(directory); var metadata = bundle.Module(module); Assert.That((string)metadata["kind"], Is.EqualTo("audio"));
             var validFrames = (int)metadata["valid_audio_frames"];
             var referencePath = Cache("k/artifacts/audio-final-backbone/audio-embedding-reference.json");
@@ -141,9 +144,10 @@ namespace EmbeddingGemma.Validation.Tests
                     Assert.That(Hash(Path.Combine(pcmRoot, name)), Is.EqualTo((string)audit["files"][name]["sha256"]));
                 }
             var report = new JObject { ["success"] = false, ["scope"] = "prepared_audio_module_original_pcm_final_document_768",
+                ["precision"] = GpuMediaExecutionPolicy.CurrentPrecision, ["host_memory_limit_bytes"] = GpuMediaExecutionPolicy.CurrentMemoryLimitBytes,
                 ["module"] = module, ["execution_source"] = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE"), ["reference_sha256"] = Hash(referencePath),
                 ["bundle_descriptor_sha256"] = Hash(Path.Combine(directory, "bundle.json")), ["actual_backend"] = "GPUCompute", ["cases"] = new JArray(),
-                ["encoder_full_reference_comparison"] = false, ["fixed_document_cosine_minimum"] = .999 };
+                ["encoder_full_reference_comparison"] = false, ["fixed_document_cosine_minimum"] = GpuMediaExecutionPolicy.CurrentMinimumCosine };
             void Save() => File.WriteAllText(output, report.ToString()); GpuMediaSession session = null;
             try
             {
@@ -164,7 +168,7 @@ namespace EmbeddingGemma.Validation.Tests
                     var bytes = new byte[actual.Length * 4]; Buffer.BlockCopy(actual, 0, bytes, 0, bytes.Length); File.WriteAllBytes(capture, bytes);
                     ((JArray)report["cases"]).Add(new JObject { ["id"] = id, ["cosine"] = cosine, ["norm_squared"] = norm, ["valid_audio_frames"] = validFrames,
                         ["capture"] = Path.GetFileName(capture), ["capture_sha256"] = Hash(capture), ["original_pcm_sha256"] = Hash(Path.Combine(pcmRoot, id + "-pcm-fp32.bin")) }); Save();
-                    Assert.That(cosine, Is.GreaterThanOrEqualTo(.999)); Assert.That(Math.Abs(norm - 1), Is.LessThanOrEqualTo(.002));
+                    Assert.That(cosine, Is.GreaterThanOrEqualTo(GpuMediaExecutionPolicy.CurrentMinimumCosine)); Assert.That(Math.Abs(norm - 1), Is.LessThanOrEqualTo(.002));
                 }
                 report["phase"] = "close"; Save(); await session.CloseAsync(); MultimodalSearchSampleGpuTests.AssertReleased(session);
                 report["closed_worker_kernel_and_tensor_fields_inspected"] = true; report["session_closed"] = true; report["success"] = true;

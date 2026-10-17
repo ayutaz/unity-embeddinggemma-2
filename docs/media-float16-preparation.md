@@ -21,3 +21,19 @@ $env:EG_FLOAT16_OUTPUT = '<入力と重ならない新しい出力先>'
 `float16-preparation.json`に、入力descriptor・producer、各入力モデルと派生モデルのSHA256、Short定数数、処理したモデル・module数、最終descriptor SHA256を記録します。中断時は元のproducer・入力を維持して再実行します。既存オブジェクトもハッシュを再検証し、異なるmodule内容で公開済みdescriptorを上書きしません。
 
 新規9件は未実装RedからGreenとなりました。既存Writer契約も含め、正式validation assemblyは15件、legacy Writer assemblyは6件、プロセス全体は21件pass、fail0、skip0、exit0です。これは小さなモデルでの準備処理の検証です。実モデルの生成、GPU実行、数値・順位・速度・連続実行の合格とは区別します。
+
+## 実モデルの準備結果
+
+producer `752a2acd2e517e17501b506df540eeab9d8dac1f`で553モデルを処理し、対応する定数1,110個を半精度化しました。元・派生とも820オブジェクトのサイズとSHA256を独立に照合し、元の全ファイル、モデル以外のファイル、6モジュールの定義が保持されていることを確認しました。保存ファイル合計は8,583,084,520 bytesから5,873,729,560 bytesになりました。
+
+派生descriptor SHA256は`1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292`、準備report SHA256は`68d631e308e0faa8aec0a74e5bc8a38353a0a2c225de04add1123dcc9dea4828`です。この生成済みbundleを再利用し、検証コードを更新しただけでは変換を繰り返しません。
+
+CPU専用プロセスは1346.59秒でexit0、ホスト生涯ピークは9,460,596,736 bytesでした。これはEditor起動・準備を含む観測で、推論時間や最低RAM、GPUメモリではありません。詳細は[実モデル準備監査](results/float16-real-preparation-20261018.json)を参照してください。GPU実行、参照精度、順位、連続実行、性能は別途受け入れます。
+
+## 実GPU検証の条件
+
+検証fixtureの`EG_MEDIA_PRECISION`は未指定または`fp32`で元descriptorとcosine >=0.999を維持します。`float16-weights`を明示した場合だけ、上記の派生descriptor・準備reportとcosine >=0.99を使います。形式が不明な場合やハッシュが違う場合は失敗します。有限768次元、norm squaredの許容差0.002、検索の全順位一致・score許容差0.001、実GPUと正常終了の条件は維持します。
+
+ホスト生涯ピークのguardは既定12GiBです。`EG_MEDIA_HOST_LIMIT_GIB`で12〜16GiBの範囲を明示できます。16GiBで測定する場合は、起動前に空き物理メモリが20GiB以上あることを確認・記録します。これは実行時の資源割り当てで、最低RAMの保証や数値基準の変更ではありません。既存12GiB条件での連続実行の中断は、そのまま失敗記録として保持します。
+
+固定ハッシュ・既定FP32の基準・不明形式の拒否・guardの上限を確認する新規17件は、未実装Redから17 Green、skip0、exit0でした。これも実モデルのGPU合格とは別の契約検証です。

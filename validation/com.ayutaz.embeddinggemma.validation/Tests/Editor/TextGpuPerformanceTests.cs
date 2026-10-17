@@ -26,9 +26,10 @@ namespace EmbeddingGemma.Validation.Tests
         static TimeSpan Cpu() { using var process=Process.GetCurrentProcess(); return process.TotalProcessorTime; }
         [UnityTest, Timeout(900000)] public IEnumerator FixedTextFirstWarmRepeatedCallsHaveActualGpuTimingsAndPinnedVectors()
         {
+            // EnterPlayMode reloads the domain; initialize captured locals afterwards.
+            yield return new EnterPlayMode();
             var output=Environment.GetEnvironmentVariable("EG_TEXT_PERFORMANCE_REPORT");
             Assert.That(output,Is.Not.Null.And.Not.Empty); Assert.That(File.Exists(output),Is.False);
-            yield return new EnterPlayMode();
             Assert.That(SystemInfo.supportsComputeShaders && SystemInfo.supportsGpuRecorder,Is.True,"Actual GPU timing required; no skip.");
             var directory=Environment.GetEnvironmentVariable("EG_MEDIA_BUNDLE_OUTPUT");
             GpuMediaExecutionPolicy.VerifyCurrent(directory);

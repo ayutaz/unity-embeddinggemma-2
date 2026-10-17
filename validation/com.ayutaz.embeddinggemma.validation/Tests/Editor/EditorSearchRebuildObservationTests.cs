@@ -8,7 +8,9 @@ using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEditor.Search;
+using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.Profiling;
 using UnityEngine.TestTools;
 
 namespace EmbeddingGemma.Validation.Tests
@@ -62,8 +64,16 @@ namespace EmbeddingGemma.Validation.Tests
                 ["model_loaded"] = false, ["gpu_execution_validated"] = false,
                 ["scope"] = "Explicit Build() on the default Assets Search database after readiness, twice in one Editor. Existing asset/index artifacts can be reused. Direct SearchIndexer queries exclude file-path provider fallback. CPU is process-wide including background work; not exclusive indexing CPU or cold artifact regeneration.",
                 ["fixture"] = Fixture, ["query"] = Query, ["required_sample_scenes"] = new JArray(sampleScenes), ["rounds"] = new JArray() };
+            var captureFrames = Environment.GetEnvironmentVariable("EG_EDITOR_REBUILD_FRAME_ALLOCATION") == "1";
+            var enabled = Profiler.enabled; var driver = ProfilerDriver.enabled;
+            var editor = ProfilerDriver.profileEditor; var memory = Profiler.GetAreaEnabled(ProfilerArea.Memory);
             try
             {
+                if (captureFrames)
+                {
+                    ProfilerDriver.profileEditor = true; ProfilerDriver.enabled = true;
+                    Profiler.enabled = true; Profiler.SetAreaEnabled(ProfilerArea.Memory, true);
+                }
                 Directory.CreateDirectory(Folder);
                 File.WriteAllText(Fixture, "EmbeddingGemma explicit default index rebuild fixture\n");
                 AssetDatabase.ImportAsset(Fixture, ImportAssetOptions.ForceSynchronousImport);
@@ -92,9 +102,15 @@ namespace EmbeddingGemma.Validation.Tests
                 report["initial_fixture_found"] = FindsFixture(database, guid);
                 foreach (var round in new[] { "first-explicit-rebuild", "repeat-explicit-rebuild" })
                 {
+                    FrameManagedAllocationCapture allocation = null;
+                    try
+                    {
                     using var process = Process.GetCurrentProcess(); process.Refresh();
                     var begin = DateTime.UtcNow; var cpu = process.TotalProcessorTime;
-                    var workingSet = process.WorkingSet64; var timer = Stopwatch.StartNew();
+                    var workingSet = process.WorkingSet64;
+                    if (captureFrames) GpuExecutionProfiler.ReadProcessMemory(process, out workingSet, out _);
+                    if (captureFrames) allocation = new FrameManagedAllocationCapture("EditorIndexRebuild." + round);
+                    var timer = Stopwatch.StartNew();
                     EditorIndexRebuild.Begin(database);
                     var afterSubmission = Snapshot(database); var submissionSeconds = timer.Elapsed.TotalSeconds;
                     Assert.That(afterSubmission.Value<bool>("ready"), Is.False, "A ready snapshot alone cannot prove a rebuild started.");
@@ -103,6 +119,15 @@ namespace EmbeddingGemma.Validation.Tests
                     { polls++; EditorApplication.QueuePlayerLoopUpdate(); yield return null; }
                     timer.Stop(); process.Refresh();
                     var end = DateTime.UtcNow; var processCpu = (process.TotalProcessorTime - cpu).TotalSeconds;
+                    var endWorkingSet = process.WorkingSet64; var lifetimePeak = process.PeakWorkingSet64;
+                    if (captureFrames) GpuExecutionProfiler.ReadProcessMemory(process, out endWorkingSet, out lifetimePeak);
+                    if (allocation != null)
+                    {
+                        allocation.Complete(); var wait = Stopwatch.StartNew(); var closed = false;
+                        while (!(closed = allocation.TryClose()) && wait.Elapsed.TotalSeconds < 15)
+                        { EditorApplication.QueuePlayerLoopUpdate(); yield return null; }
+                        Assert.That(closed, Is.True, "A post-rebuild counter sample is required; missing allocation is not zero.");
+                    }
                     var completed = Snapshot(database); var found = FindsFixture(database, guid);
                     var index = Index(database);
                     var scenesFound = new JArray(sampleScenes.Select(path =>
@@ -120,23 +145,33 @@ namespace EmbeddingGemma.Validation.Tests
                         ["process_cpu_seconds"] = processCpu, ["polls"] = polls,
                         ["after_submission"] = afterSubmission, ["after_completion"] = completed, ["direct_index_fixture_found"] = found,
                         ["required_sample_scenes"] = scenesFound,
-                        ["begin_process_working_set_bytes"] = workingSet, ["end_process_working_set_bytes"] = process.WorkingSet64,
-                        ["process_lifetime_peak_working_set_bytes"] = process.PeakWorkingSet64,
+                        ["begin_process_working_set_bytes"] = workingSet, ["end_process_working_set_bytes"] = endWorkingSet,
+                        ["process_lifetime_peak_working_set_bytes"] = lifetimePeak,
+                        ["process_memory_counter"] = captureFrames ? "Native Windows fallback where required; managed Process elsewhere" : "Managed Process; raw zero can be unavailable",
+                        ["frame_managed_allocation"] = allocation?.Snapshot(),
                         ["exclusive_background_allocation_bytes"] = null,
                         ["allocation_scope"] = "Not measured: synchronous main-thread marker bytes cannot describe background rebuild allocation. No zero/all-thread attribution inferred." };
                     ((JArray)report["rounds"]).Add(row); File.WriteAllText(output, report.ToString());
-                    if (Environment.GetEnvironmentVariable("EG_EDITOR_REBUILD_FRAME_ALLOCATION") == "1")
-                        Assert.That(row["frame_managed_allocation"], Is.Not.Null,
+                    if (captureFrames)
+                        Assert.That(row["frame_managed_allocation"], Is.TypeOf<JObject>(),
                             "An explicit rebuild allocation observation must not inherit the synchronous search marker's pass.");
                     Assert.That(polls, Is.GreaterThan(0)); Assert.That(Settled(database), Is.True);
                     Assert.That(found, Is.True); Assert.That(timer.Elapsed.TotalSeconds, Is.GreaterThan(0));
                     Assert.That(scenesFound.All(scene => scene.Value<bool>("found")), Is.True,
                         "Explicit rebuild must include both imported sample scenes in the actual index.");
+                    }
+                    finally { allocation?.Dispose(); }
                 }
                 report["success"] = true;
             }
             finally
             {
+                if (captureFrames)
+                {
+                    ProfilerDriver.enabled = false; Profiler.enabled = false;
+                    ProfilerDriver.profileEditor = editor; Profiler.SetAreaEnabled(ProfilerArea.Memory, memory);
+                    Profiler.enabled = enabled; ProfilerDriver.enabled = driver;
+                }
                 if (Directory.Exists(Folder)) report["owned_fixture_removed"] = AssetDatabase.DeleteAsset(Folder);
                 File.WriteAllText(output, report.ToString());
             }

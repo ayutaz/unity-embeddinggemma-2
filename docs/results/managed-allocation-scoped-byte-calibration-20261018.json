@@ -1,0 +1,154 @@
+{
+  "accepted": true,
+  "scope": "Known main-thread inclusive managed byte calibration only. Not model allocation measurements, other threads/native bytes, GPU timing, public setup, mic or complete priorities1..3.",
+  "measurement_api": "UnityEditor.Profiling.HierarchyFrameDataView.columnGcMemory",
+  "calibration": {
+    "red": {
+      "receipt": {
+        "command": [
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+          "-batchmode",
+          "-nographics",
+          "-job-worker-count",
+          "4",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-consumer-e28a5fd",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "OwnedAllocation.Tests.ManagedAllocationCalibrationTests.KnownByteArrayAllocationsHaveDistinctScopedByteTotals",
+          "-assemblyNames",
+          "OwnedAllocation.Tests",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\allocation-byte-counter-red.xml",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\allocation-byte-counter-red.log"
+        ],
+        "timeout_seconds": 180,
+        "success": false,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-17T19:00:01.250168+00:00",
+        "pid": 192492,
+        "exit_code": 2,
+        "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\allocation-byte-counter-red.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "skipped": 0
+        },
+        "elapsed_seconds": 51.157208500022534,
+        "completed_utc": "2026-10-17T19:00:52.407373+00:00"
+      },
+      "report": {
+        "success": false,
+        "unity": "6000.3.21f1",
+        "model_loaded": false,
+        "scope": "Known main-thread managed allocations only; no model/GPU qualification.",
+        "measurement_api": "GC.GetAllocatedBytesForCurrentThread",
+        "noop_bytes": 0,
+        "small_bytes": 0,
+        "large_bytes": 0
+      }
+    },
+    "green": {
+      "receipt": {
+        "command": [
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+          "-force-d3d12",
+          "-job-worker-count",
+          "4",
+          "-projectPath",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-consumer-e28a5fd",
+          "-runTests",
+          "-testPlatform",
+          "EditMode",
+          "-testFilter",
+          "OwnedAllocation.Tests.ManagedAllocationCalibrationTests.KnownByteArrayAllocationsHaveDistinctScopedByteTotals",
+          "-assemblyNames",
+          "OwnedAllocation.Tests",
+          "-testResults",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\allocation-scoped-history-interactive.xml",
+          "-logFile",
+          "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\allocation-scoped-history-interactive.log"
+        ],
+        "timeout_seconds": 180,
+        "success": true,
+        "terminal": true,
+        "timed_out": false,
+        "started_utc": "2026-10-17T19:03:08.597093+00:00",
+        "pid": 123428,
+        "exit_code": 0,
+        "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\allocation-scoped-history-interactive.xml",
+        "unity_counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "elapsed_seconds": 30.688890199991874,
+        "completed_utc": "2026-10-17T19:03:39.285981+00:00"
+      },
+      "report": {
+        "success": true,
+        "unity": "6000.3.21f1",
+        "model_loaded": false,
+        "scope": "Stopped CPU profiler history: inclusive managed bytes within three exact main-thread markers. Excludes other threads, allocations outside markers and native memory.",
+        "action_frame": 13,
+        "after_action_frame": 18,
+        "first_frame": 0,
+        "last_frame": 6,
+        "measurement_api": "HierarchyFrameDataView.columnGcMemory",
+        "column": 4,
+        "marker_rows": [
+          {
+            "marker": "OwnedAllocation.noop",
+            "frame": 3,
+            "thread": "Main Thread",
+            "bytes": 0
+          },
+          {
+            "marker": "OwnedAllocation.small",
+            "frame": 3,
+            "thread": "Main Thread",
+            "bytes": 65568
+          },
+          {
+            "marker": "OwnedAllocation.large",
+            "frame": 3,
+            "thread": "Main Thread",
+            "bytes": 131104
+          }
+        ],
+        "noop_bytes": 0,
+        "small_bytes": 65568,
+        "large_bytes": 131104,
+        "nodes_examined": 7688
+      }
+    }
+  },
+  "executed_source_sha256": "936ab99572ea8c715499e269e8455e9d3e55359990531b8da5ca0e4fdc443bff",
+  "required_environment": "Actual interactive Editor recording CPU/Memory areas and stopped history. Batch/nographics returned no frames, which is unavailable, not zero allocation.",
+  "failures_preserved": [
+    "allocation-counter-contract-red: duplicate assembly references; no tests, not intended Red",
+    "allocation-counter-measurement-red: Newtonsoft assembly missing; no tests, not intended Red",
+    "allocation-scoped-history-green: no marker history; failed, not Green",
+    "allocation-scoped-history-frame-calibration: first/last frame -1; failed, not zero allocation"
+  ],
+  "production_sdk_changed": false,
+  "performance_improvement_claimed": false,
+  "evidence_sha256": {
+    "allocation-byte-counter-red.xml": "326947fbc1b8d70fe5618ada8308f8afff6a0dc2f34a59766d63235f59f95cee",
+    "allocation-byte-counter-red.json": "40dc7c8d2ce5728fd8756f84e8d42be5ba48ab491b55608e27a6eb58e78a2383",
+    "allocation-byte-counter-red-source.json": "b5bdea0adec2054c63f33a4996dbf86fbe1941d507a06e92bfe0077fde5ee983",
+    "allocation-byte-counter-red.log": "4b4c9edf4bef97fda4ee145d0a623a64321f1166aaea1a8bb31b9d1876389a06",
+    "allocation-byte-counter-red-process.json": "b866f50555d9ed91edcd41741761ee6b295ef1615fbcf7205933a3b8b4629cdc",
+    "allocation-scoped-history-interactive.xml": "78756c35e674326750828a855a322dde352ffb050918427ce1170281eea6170f",
+    "allocation-scoped-history-interactive.json": "c2530b8296055df6b5c6c7bd709fe801c051a05f1fd323465593d4eb5b7e6baf",
+    "allocation-scoped-history-interactive-source.json": "674d3303cab662d54848b395824bd080927c805bc78ed226544cbc1e358ba973",
+    "allocation-scoped-history-interactive.log": "6dd75933e6440eab930f1f3ff0b22e5fc49d59b5af7ba90bc67f5b1f8ba6b85c",
+    "allocation-scoped-history-interactive-process.json": "279104793247db944107eee33003b52405d97eceafe42e864ba6daa48df7a949"
+  }
+}

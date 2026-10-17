@@ -55,8 +55,13 @@ namespace EmbeddingGemma.Validation.Tests
                             if (childMs > 0 && !float.IsNaN(childMs) && !float.IsInfinity(childMs))
                                 descendants.Add(new JObject { ["marker"] = view.GetItemName(child), ["gpu_ns"] = (long)Math.Round(childMs * 1000000.0) });
                         }
+                        var managedBytes = view.GetItemColumnDataAsSingle(id, HierarchyFrameDataView.columnGcMemory);
+                        if (float.IsNaN(managedBytes) || float.IsInfinity(managedBytes) || managedBytes < 0)
+                            throw new InvalidOperationException("Managed allocation data is unavailable for this exact CPU marker.");
                         rows.Add(new JObject { ["frame"] = frame, ["thread_index"] = thread, ["thread_name"] = view.threadName,
                             ["marker"] = name, ["gpu_ns"] = (long)Math.Round(ms * 1000000.0), ["gpu_children"] = descendants,
+                            ["cpu_gc_allocated_bytes"] = (long)Math.Round(managedBytes),
+                            ["cpu_gc_scope"] = "Inclusive managed bytes within this CPU marker on the named thread; not GPU or native memory.",
                             ["cpu_total_ns"] = (long)Math.Round(view.GetItemColumnDataAsSingle(id, HierarchyFrameDataView.columnTotalTime) * 1000000.0),
                             ["cpu_gc_allocated_bytes"] = (long)Math.Round(view.GetItemColumnDataAsDouble(id, HierarchyFrameDataView.columnGcMemory)),
                             ["marker_flags"] = (int)view.GetItemMarkerFlags(id),

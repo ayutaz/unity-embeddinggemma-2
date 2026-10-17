@@ -14,6 +14,24 @@ CPU値はEditorプロセス全体のCPU時間、wall値は待機を含む経過�
 
 正方形画像のwarm反復ではencoder区間が支配的だった。FP32とFloat16の実行順やcache条件は一致しないため、両者の差を形式による高速化と主張しない。CPU fallbackの証拠とも扱わない。
 
+## 全5 profile・両形式の結果
+
+全10プロセス・計40回で、同じ入力の4反復、独立Python参照との一致、解放、各1 pass / fail0 / skip0 / exit0を確認した。実行後の固定source 538ファイルも再照合した。[集約監査](results/all-media-identical-input-cpu-wall-memory-0911348-20261018.json)から個別のCPU・wall・メモリ監査へたどれる。環境はWindows / Unity6000.3.21f1 / RTX4070 Ti SUPER / D3D12。
+
+下表は初回後3回の観測範囲（秒）。平均性能や形式間の高速化ではなく、ロード済みsessionの同一入力に限る経過時間である。
+
+| profile | FP32 warm・反復 | Float16重み warm・反復 |
+| --- | ---: | ---: |
+| image-square | 19.035–31.843 | 14.513–19.755 |
+| image-landscape | 14.321–14.601 | 13.840–14.167 |
+| image-portrait | 13.067–13.215 | 14.209–14.901 |
+| audio-1119 / silence | 5.206–5.343 | 5.226–5.856 |
+| audio-839 / padded_noise | 5.307–5.397 | 5.646–5.751 |
+
+ロードは画像32.35–40.44秒、音声60.04–79.55秒だった。GPUの使用と低遅延は別の条件であり、速度改善は未確認である。CPU・wallの差から純粋なGPU稼働時間を逆算しない。GPU memory counterの観測最大値はprecision間で単調には減っておらず、Float16の保存容量減少をVRAM削減の保証へ拡張しない。
+
+同じログからEditor startup telemetryとreload / refreshを別記した。startup / reload / refreshは重なり、これらを合計して起動時間や推論時間にしない。startup集計は10件Red→関連26件Green / skip0。[TDD記録](results/editor-startup-observation-tdd-20261018.json)。既存Libraryを使った反復起動のimport観測と、空LibraryやSearch DBの再構築時間は区別する。
+
 ## 次の測定と完了条件
 
-音声audio-1119 / audio-839、画像landscape / portraitを両precisionで同じ手順で測定する。対象Unityを1つずつ実行し、各回のsource / model / input hashと実行後のsource一致を監査する。GPU stage時間の校正、非同期処理の割り当て、Editor import / search DB / domain reloadは別の残件である。優先度1の公開empty-cache取得、優先度2の実マイク・最終candidate操作も、これらの測定では完了にならない。
+GPU stage時間の校正、非同期処理の割り当て、Editor search DBとcold import / allocationの受け入れが残る。Search DBの列挙と固定SDK asset検索はモデルなしの別consumerで測定する。初回probeはindex未準備・結果0のため1 fail / skip0 / exit2であり、[失敗記録](results/editor-search-first-not-ready-20261018.json)を保持する。準備完了待ち、Packages指定、検索結果のasset解決を含むprobeは別sourceとして再検証する。明示的なCreateIndex / rebuildを呼ばなくても、Search APIが既定のLibrary indexを初期化する場合があるため、純粋な読み取りやindex再構築の測定と主張しない。優先度1の公開empty-cache取得、優先度2の実マイク・最終candidate操作も、これらの測定では完了にならない。

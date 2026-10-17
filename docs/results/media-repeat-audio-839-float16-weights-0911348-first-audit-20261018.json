@@ -1,0 +1,216 @@
+{
+  "accepted_cpu_wall_and_numerical_repeat": true,
+  "complete_performance_accepted": false,
+  "scope": "Same fixed real input, first/warm/two repeats in an actual GPU session. Stage wall and whole-process CPU only; GPU timestamps/VRAM/GC and Editor metrics are separate, not inferred from wall.",
+  "module": "audio-839",
+  "precision": "float16-weights",
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+  "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+  "reference_case_id": "padded_noise",
+  "rounds": [
+    {
+      "round": "first",
+      "wall_seconds": 8.3680203,
+      "process_cpu_seconds": 2.0625,
+      "independent_cosine": 0.9999984475675923,
+      "norm_squared": 0.99999999512408,
+      "input_sha256": "01da15bbe3d53bcd41cfff6c265b53cda8222567fe760bfff96442266557c761",
+      "stages": [
+        {
+          "stage": "preprocessing",
+          "method": "ProcessAsync",
+          "wall_seconds": 1.0081077,
+          "process_cpu_seconds": 0.40625,
+          "host_working_set_bytes": 4755337216,
+          "host_lifetime_peak_bytes": 4756996096
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "wall_seconds": 6.5111684,
+          "process_cpu_seconds": 1.5,
+          "host_working_set_bytes": 4540678144,
+          "host_lifetime_peak_bytes": 4795359232
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "wall_seconds": 0.7701385,
+          "process_cpu_seconds": 0.078125,
+          "host_working_set_bytes": 4920348672,
+          "host_lifetime_peak_bytes": 4920348672
+        }
+      ]
+    },
+    {
+      "round": "warm",
+      "wall_seconds": 5.7274515,
+      "process_cpu_seconds": 0.796875,
+      "independent_cosine": 0.9999984475675923,
+      "norm_squared": 0.99999999512408,
+      "input_sha256": "01da15bbe3d53bcd41cfff6c265b53cda8222567fe760bfff96442266557c761",
+      "stages": [
+        {
+          "stage": "preprocessing",
+          "method": "ProcessAsync",
+          "wall_seconds": 0.0759017,
+          "process_cpu_seconds": 0.0,
+          "host_working_set_bytes": 4923801600,
+          "host_lifetime_peak_bytes": 4923801600
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "wall_seconds": 5.2932935,
+          "process_cpu_seconds": 0.734375,
+          "host_working_set_bytes": 4808069120,
+          "host_lifetime_peak_bytes": 4930392064
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "wall_seconds": 0.3451456,
+          "process_cpu_seconds": 0.046875,
+          "host_working_set_bytes": 4808073216,
+          "host_lifetime_peak_bytes": 4930392064
+        }
+      ]
+    },
+    {
+      "round": "repeat-1",
+      "wall_seconds": 5.6457561,
+      "process_cpu_seconds": 0.765625,
+      "independent_cosine": 0.9999984475675923,
+      "norm_squared": 0.99999999512408,
+      "input_sha256": "01da15bbe3d53bcd41cfff6c265b53cda8222567fe760bfff96442266557c761",
+      "stages": [
+        {
+          "stage": "preprocessing",
+          "method": "ProcessAsync",
+          "wall_seconds": 0.0188958,
+          "process_cpu_seconds": 0.015625,
+          "host_working_set_bytes": 4808073216,
+          "host_lifetime_peak_bytes": 4930392064
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "wall_seconds": 5.2308237,
+          "process_cpu_seconds": 0.640625,
+          "host_working_set_bytes": 4575158272,
+          "host_lifetime_peak_bytes": 4930392064
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "wall_seconds": 0.3758703,
+          "process_cpu_seconds": 0.09375,
+          "host_working_set_bytes": 4575232000,
+          "host_lifetime_peak_bytes": 4930392064
+        }
+      ]
+    },
+    {
+      "round": "repeat-2",
+      "wall_seconds": 5.750501,
+      "process_cpu_seconds": 1.046875,
+      "independent_cosine": 0.9999984475675923,
+      "norm_squared": 0.99999999512408,
+      "input_sha256": "01da15bbe3d53bcd41cfff6c265b53cda8222567fe760bfff96442266557c761",
+      "stages": [
+        {
+          "stage": "preprocessing",
+          "method": "ProcessAsync",
+          "wall_seconds": 0.0243477,
+          "process_cpu_seconds": 0.046875,
+          "host_working_set_bytes": 4575232000,
+          "host_lifetime_peak_bytes": 4930392064
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "wall_seconds": 5.3347275,
+          "process_cpu_seconds": 0.921875,
+          "host_working_set_bytes": 4575461376,
+          "host_lifetime_peak_bytes": 4930392064
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "wall_seconds": 0.3708066,
+          "process_cpu_seconds": 0.078125,
+          "host_working_set_bytes": 4575465472,
+          "host_lifetime_peak_bytes": 4930392064
+        }
+      ]
+    }
+  ],
+  "load": {
+    "load_wall_seconds": 60.037721299999994,
+    "load_process_cpu_seconds": 45.25
+  },
+  "release": {
+    "release_wall_seconds": 0.027787799999999998,
+    "release_process_cpu_seconds": 0.015625
+  },
+  "host_native_peak_bytes": 4930392064,
+  "terminal_receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\media-repeat-consumer-0911348",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.MediaRepeatedInputPerformanceTests.FixedMediaInputFirstWarmRepeatedCallsKeepReferenceAndMeasureStages",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testResults",
+      ".\\artifacts\\usability-state\\media-repeat-audio-839-float16-weights-0911348-first.xml",
+      "-logFile",
+      ".\\artifacts\\usability-state\\media-repeat-audio-839-float16-weights-0911348-first.log"
+    ],
+    "timeout_seconds": 1260,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T19:52:34.188333+00:00",
+    "pid": 184736,
+    "exit_code": 0,
+    "unity_results": ".\\artifacts\\usability-state\\media-repeat-audio-839-float16-weights-0911348-first.xml",
+    "unity_counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 120.16966770001454,
+    "completed_utc": "2026-10-17T19:54:34.358001+00:00"
+  },
+  "source": {
+    "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+    "validation_source": "0911348aa4fe92ee5a4e850378a740962d1040f5",
+    "precision": "float16-weights",
+    "module": "audio-839",
+    "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+    "host_limit_bytes": 17179869184,
+    "physical_available_before_bytes": 38658125824,
+    "project": ".\\artifacts\\media-repeat-consumer-0911348",
+    "snapshot_receipt_sha256": "7c7a199f815236102098610beb0216fe45af9e8c3e6c006949daa381e5b44d24",
+    "source_files": 538,
+    "scope": "Four identical-input realGPU calls, CPU/wall stage measurements. Not GPU time/VRAM/GC/full performance acceptance."
+  },
+  "performance_improvement_claimed": false,
+  "evidence_sha256": {
+    "media-repeat-audio-839-float16-weights-0911348-first.json": "16f5464fe0ff9e31f6a3aa81bf0a4154ef1bd3c44b3e4fdef2b730f58de2cd52",
+    "media-repeat-audio-839-float16-weights-0911348-first.xml": "25e6cb33ae320c525af7b4156c1928b725155445a2aa3c45af418ba852170a93",
+    "media-repeat-audio-839-float16-weights-0911348-first-process.json": "8e87b8fac2b5ec9748bbc5b62a2b60210bb45384f76a0c0b7bcfac27ddd7a557",
+    "media-repeat-audio-839-float16-weights-0911348-first-source.json": "153c7f2fbd5e2733d406c15510abcd376974fc919bb86881f882a231a4e7d74d",
+    "media-repeat-audio-839-float16-weights-0911348-first.log": "4ddf2f6b7301f73fc57d3403733f75b49c12da566b05355e34ee7c15cfe97085"
+  }
+}

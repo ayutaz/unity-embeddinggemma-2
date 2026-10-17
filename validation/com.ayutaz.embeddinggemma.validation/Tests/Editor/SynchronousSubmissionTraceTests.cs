@@ -2,11 +2,43 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using Newtonsoft.Json.Linq;
 namespace EmbeddingGemma.Validation.Tests
 {
     // Pure callback semantics; no Unity/GPU timing acceptance.
     public sealed class SynchronousSubmissionTraceTests
     {
+        [Test] public void TypedNullExceptionNameDoesNotAbortSuccessfulSubmission()
+        {
+            Exception error=null;var row=new JObject();row["error_type"]=error?.GetType().FullName;
+            Assert.That(SynchronousSubmissionTrace.HasError(row),Is.False);
+            Assert.That(SynchronousSubmissionTrace.HasError(JObject.Parse(row.ToString())),Is.False);
+        }
+        [Test] public void ExplicitJsonNullDoesNotAbortSuccessfulSubmission()
+        {
+            Assert.That(SynchronousSubmissionTrace.HasError(new JObject { ["error_type"]=JValue.CreateNull() }),Is.False);
+        }
+        [Test] public void ActualExceptionNameAbortsSubmissionBeforeAndAfterJsonRoundTrip()
+        {
+            var row=new JObject { ["error_type"]=typeof(InvalidOperationException).FullName };
+            Assert.That(SynchronousSubmissionTrace.HasError(row),Is.True);
+            Assert.That(SynchronousSubmissionTrace.HasError(JObject.Parse(row.ToString())),Is.True);
+        }
+        [Test] public void MissingErrorFieldCannotMasqueradeAsSuccessfulSubmission()
+        {
+            Assert.Throws<ArgumentNullException>(()=>SynchronousSubmissionTrace.HasError(null));
+            Assert.Throws<ArgumentException>(()=>SynchronousSubmissionTrace.HasError(new JObject()));
+        }
+        [Test] public void MalformedErrorFieldIsNotAcceptedAsSuccessOrAnOrdinaryStageFailure()
+        {
+            foreach(var value in new JToken[]{new JValue(false),new JValue(0),new JObject(),new JArray()})
+                Assert.Throws<ArgumentException>(()=>SynchronousSubmissionTrace.HasError(new JObject { ["error_type"]=value }));
+        }
+        [Test] public void EmptyExceptionNameIsMalformedRatherThanASuccess()
+        {
+            foreach(var value in new[]{""," "})
+                Assert.Throws<ArgumentException>(()=>SynchronousSubmissionTrace.HasError(new JObject { ["error_type"]=value }));
+        }
         [Test] public void SynchronousResultAndScopeOrderArePreserved()
         {
             var result=new object();var events=new List<string>();

@@ -114,7 +114,7 @@ namespace EmbeddingGemma.Validation.Tests
             {
                 if(!submissions.TryGetValue(stage,out var entry))throw new InvalidOperationException("GPU submission end has no matching start.");
                 entry.Sampler.End();entry.Cpu.Stop();entry.Closed=true;
-                entry.Row["aborted"]=row["error_type"]?.Type!=JTokenType.Null;
+                entry.Row["aborted"]=SynchronousSubmissionTrace.HasError(row);
                 entry.Row["cpu_submission_wall_ns"]=(long)(entry.Cpu.ElapsedTicks*(1000000000.0/Stopwatch.Frequency));
                 submissions.Remove(stage);
             }

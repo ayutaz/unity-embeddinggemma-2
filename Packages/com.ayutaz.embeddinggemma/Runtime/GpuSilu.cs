@@ -33,7 +33,7 @@ namespace EmbeddingGemma
             if(input.dataOnBackend==null)throw new ObjectDisposedException(nameof(input));
             if(input.backendType!=BackendType.GPUCompute || !(input.dataOnBackend is ComputeTensorData) || input.shape.length==0)
                 throw new ArgumentException("Expected a nonempty tensor already on GPUCompute; no implicit transfer.",nameof(input));
-            var output=new Tensor<float>(input.shape);
+            var output=GpuOutputTensor.Allocate(input.shape);
             try
             {
                 var source=(ComputeTensorData)input.dataOnBackend;var destination=ComputeTensorData.Pin(output);

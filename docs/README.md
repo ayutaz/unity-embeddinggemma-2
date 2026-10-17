@@ -34,6 +34,7 @@
 | GPU出力確保の改善と新SDKの精度・順位 | [CPU storageの省略](gpu-write-only-output-allocation.md) |
 | 新SDKの全画像・音声profileのGPU/CPU/wall・メモリ | [同じsourceの40反復](media-gpu-submission-observations.md) |
 | 同じSDKのtextのGPU/CPU/wall・メモリ | [両形式・固定queryの4反復](text-current-sdk-observations.md) |
+| ロード・解放の仕事とGPU時間の欠測 | [12実行と固定sourceの範囲監査](load-release-measurement-scope.md) |
 | Editor検索の校正済み割り当て・空/再利用Library | [Editorの別測定](editor-search-allocation-observations.md) |
 | awaitをまたぐフレーム全体のGC counter | [既知payloadのcontrolと代表実音声の検証区間](async-frame-allocation-observations.md) |
 | Windows IL2CPP Playerの固定source受け入れ | [Player結果JSON](results/m2-current-main-player-acceptance-20261017.json) |

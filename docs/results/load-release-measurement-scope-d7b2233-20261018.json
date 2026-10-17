@@ -1,0 +1,369 @@
+{
+  "scope_audit_completed": true,
+  "gpu_load_release_timing_accepted": false,
+  "complete_performance_accepted": false,
+  "full_priorities_1_to_3_accepted": false,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "10962faf0924bb1c5070ad2d3875fc06fd24bbe2",
+  "source_files_verified_after": 554,
+  "actual_gpu_processes_with_cpu_wall_load_and_release": 12,
+  "records": [
+    {
+      "module": "image-square",
+      "precision": "fp32",
+      "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+      "load_wall_seconds": 34.2411586,
+      "load_process_cpu_seconds": 25.640625,
+      "release_wall_seconds": 0.0138806,
+      "release_process_cpu_seconds": 0.015625,
+      "load_gpu_elapsed_ns": null,
+      "release_gpu_elapsed_ns": null,
+      "gpu_time_status": "Not captured: media GPU observers attach after LoadAsync and measure inference submissions only.",
+      "receipt_pid": 163516,
+      "evidence": {
+        "file": "submission-error-gpu-image-square-fp32-10962fa-first-cpu-wall-audit-20261018.json",
+        "sha256": "e0982b4d92f67af9a32839add462fa0cacce94c5389bc11251981dbcabb5bcbe"
+      }
+    },
+    {
+      "module": "image-square",
+      "precision": "float16-weights",
+      "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+      "load_wall_seconds": 32.8963902,
+      "load_process_cpu_seconds": 24.859375,
+      "release_wall_seconds": 0.0216967,
+      "release_process_cpu_seconds": 0.015625,
+      "load_gpu_elapsed_ns": null,
+      "release_gpu_elapsed_ns": null,
+      "gpu_time_status": "Not captured: media GPU observers attach after LoadAsync and measure inference submissions only.",
+      "receipt_pid": 96200,
+      "evidence": {
+        "file": "submission-error-gpu-image-square-float16-weights-10962fa-first-cpu-wall-audit-20261018.json",
+        "sha256": "4702ec9d4a69bda8b1d23a347b428b0359ce8921998b56dbf347f9d96fca6be5"
+      }
+    },
+    {
+      "module": "image-landscape",
+      "precision": "fp32",
+      "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+      "load_wall_seconds": 36.1180107,
+      "load_process_cpu_seconds": 27.34375,
+      "release_wall_seconds": 0.028501,
+      "release_process_cpu_seconds": 0.03125,
+      "load_gpu_elapsed_ns": null,
+      "release_gpu_elapsed_ns": null,
+      "gpu_time_status": "Not captured: media GPU observers attach after LoadAsync and measure inference submissions only.",
+      "receipt_pid": 111316,
+      "evidence": {
+        "file": "submission-error-gpu-image-landscape-fp32-10962fa-first-cpu-wall-audit-20261018.json",
+        "sha256": "1b34ebaec6560e3d65321e13ecef629bcb1960d946f0d6848467287903b7c94d"
+      }
+    },
+    {
+      "module": "image-landscape",
+      "precision": "float16-weights",
+      "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+      "load_wall_seconds": 33.6141396,
+      "load_process_cpu_seconds": 25.171875,
+      "release_wall_seconds": 0.0179572,
+      "release_process_cpu_seconds": 0.015625,
+      "load_gpu_elapsed_ns": null,
+      "release_gpu_elapsed_ns": null,
+      "gpu_time_status": "Not captured: media GPU observers attach after LoadAsync and measure inference submissions only.",
+      "receipt_pid": 179760,
+      "evidence": {
+        "file": "submission-error-gpu-image-landscape-float16-weights-10962fa-first-cpu-wall-audit-20261018.json",
+        "sha256": "d57dc11daa583ba08aca5986f051b5b11075e88724c28647fe1aed3bd56f1f9d"
+      }
+    },
+    {
+      "module": "image-portrait",
+      "precision": "fp32",
+      "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+      "load_wall_seconds": 34.6521344,
+      "load_process_cpu_seconds": 26.796875,
+      "release_wall_seconds": 0.0156313,
+      "release_process_cpu_seconds": 0.0,
+      "load_gpu_elapsed_ns": null,
+      "release_gpu_elapsed_ns": null,
+      "gpu_time_status": "Not captured: media GPU observers attach after LoadAsync and measure inference submissions only.",
+      "receipt_pid": 97880,
+      "evidence": {
+        "file": "submission-error-gpu-image-portrait-fp32-10962fa-first-cpu-wall-audit-20261018.json",
+        "sha256": "dbd837690336ca71991c9acb8475345d2d1509dd5d7a1931137b2a5b0725d812"
+      }
+    },
+    {
+      "module": "image-portrait",
+      "precision": "float16-weights",
+      "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+      "load_wall_seconds": 33.1642338,
+      "load_process_cpu_seconds": 26.875,
+      "release_wall_seconds": 0.0186705,
+      "release_process_cpu_seconds": 0.03125,
+      "load_gpu_elapsed_ns": null,
+      "release_gpu_elapsed_ns": null,
+      "gpu_time_status": "Not captured: media GPU observers attach after LoadAsync and measure inference submissions only.",
+      "receipt_pid": 137456,
+      "evidence": {
+        "file": "submission-error-gpu-image-portrait-float16-weights-10962fa-first-cpu-wall-audit-20261018.json",
+        "sha256": "3ae2104ab2f59477c4f2acf149a51c003c10ba589d636d10009caafe25d693b6"
+      }
+    },
+    {
+      "module": "audio-1119",
+      "precision": "fp32",
+      "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+      "load_wall_seconds": 43.3587159,
+      "load_process_cpu_seconds": 31.921875,
+      "release_wall_seconds": 0.0169955,
+      "release_process_cpu_seconds": 0.015625,
+      "load_gpu_elapsed_ns": null,
+      "release_gpu_elapsed_ns": null,
+      "gpu_time_status": "Not captured: media GPU observers attach after LoadAsync and measure inference submissions only.",
+      "receipt_pid": 57304,
+      "evidence": {
+        "file": "submission-error-gpu-audio-1119-fp32-10962fa-first-cpu-wall-audit-20261018.json",
+        "sha256": "61ae6e480c02d55bdff5464b2ac3c1641aa03c355848efa3dd3af29c2ab2ab01"
+      }
+    },
+    {
+      "module": "audio-1119",
+      "precision": "float16-weights",
+      "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+      "load_wall_seconds": 42.900994,
+      "load_process_cpu_seconds": 32.71875,
+      "release_wall_seconds": 0.016218899999999998,
+      "release_process_cpu_seconds": 0.015625,
+      "load_gpu_elapsed_ns": null,
+      "release_gpu_elapsed_ns": null,
+      "gpu_time_status": "Not captured: media GPU observers attach after LoadAsync and measure inference submissions only.",
+      "receipt_pid": 51324,
+      "evidence": {
+        "file": "submission-error-gpu-audio-1119-float16-weights-10962fa-first-cpu-wall-audit-20261018.json",
+        "sha256": "5b7532156d124e7b5fdbae5341df53e7f7bf2b5032c82cf07852c048ce414792"
+      }
+    },
+    {
+      "module": "audio-839",
+      "precision": "fp32",
+      "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+      "load_wall_seconds": 46.470360899999996,
+      "load_process_cpu_seconds": 33.578125,
+      "release_wall_seconds": 0.015343599999999999,
+      "release_process_cpu_seconds": 0.015625,
+      "load_gpu_elapsed_ns": null,
+      "release_gpu_elapsed_ns": null,
+      "gpu_time_status": "Not captured: media GPU observers attach after LoadAsync and measure inference submissions only.",
+      "receipt_pid": 161108,
+      "evidence": {
+        "file": "submission-error-gpu-audio-839-fp32-10962fa-first-cpu-wall-audit-20261018.json",
+        "sha256": "516e626ff63c155fbfef84bfe6b39e42fe3dedcd93b7cc46cbb045064e13ba13"
+      }
+    },
+    {
+      "module": "audio-839",
+      "precision": "float16-weights",
+      "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+      "load_wall_seconds": 43.259896999999995,
+      "load_process_cpu_seconds": 32.8125,
+      "release_wall_seconds": 0.0159491,
+      "release_process_cpu_seconds": 0.015625,
+      "load_gpu_elapsed_ns": null,
+      "release_gpu_elapsed_ns": null,
+      "gpu_time_status": "Not captured: media GPU observers attach after LoadAsync and measure inference submissions only.",
+      "receipt_pid": 189208,
+      "evidence": {
+        "file": "submission-error-gpu-audio-839-float16-weights-10962fa-first-cpu-wall-audit-20261018.json",
+        "sha256": "9dd2724607c37850e947cc1cc2a6b8b8505ef5ecb8856d0c7008983701ba158e"
+      }
+    },
+    {
+      "module": "text",
+      "precision": "fp32",
+      "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+      "load_wall_seconds": 12.8504325,
+      "load_process_cpu_seconds": 12.15625,
+      "release_wall_seconds": 0.0112965,
+      "release_process_cpu_seconds": 0.015625,
+      "load_gpu_elapsed_ns": null,
+      "release_gpu_elapsed_ns": null,
+      "gpu_time_status": "Not captured: text profiler disabled during load and after each query snapshot; no load/release GPU marker.",
+      "receipt_pid": 188508,
+      "evidence": {
+        "file": "text-current-fp32-d7b2233-first-20261018.json",
+        "sha256": "c671110989380dbcfd7f382d44b353b196f40dce0b60f740b01324533518e2e6"
+      }
+    },
+    {
+      "module": "text",
+      "precision": "float16-weights",
+      "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+      "load_wall_seconds": 11.1524646,
+      "load_process_cpu_seconds": 9.21875,
+      "release_wall_seconds": 0.008362399999999999,
+      "release_process_cpu_seconds": 0.0,
+      "load_gpu_elapsed_ns": null,
+      "release_gpu_elapsed_ns": null,
+      "gpu_time_status": "Not captured: text profiler disabled during load and after each query snapshot; no load/release GPU marker.",
+      "receipt_pid": 175692,
+      "evidence": {
+        "file": "text-current-float16-weights-d7b2233-first-20261018.json",
+        "sha256": "78eba78082c1af19abab8e800167ab0c76a7c245d14265e5d83d47bbed02f9d2"
+      }
+    }
+  ],
+  "sdk_source_evidence": [
+    {
+      "path": "Packages/com.ayutaz.embeddinggemma/Runtime/GpuMediaBundleLoading.cs",
+      "git_blob_sha256": "f08f125c6c689252994bf48a8bf5f621b0166a9631ea235c1311cb601362dac7",
+      "anchors": [
+        {
+          "expression": "await Task.Yield();",
+          "lines": [
+            45,
+            62,
+            67,
+            77
+          ]
+        },
+        {
+          "expression": "VerifyFile(file)",
+          "lines": [
+            45
+          ]
+        },
+        {
+          "expression": "new TextEmbedder",
+          "lines": [
+            55
+          ]
+        },
+        {
+          "expression": "CreateOperation(operation, paths)",
+          "lines": [
+            68
+          ]
+        },
+        {
+          "expression": "new MultimodalBackbone",
+          "lines": [
+            74,
+            79
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Packages/com.ayutaz.embeddinggemma/Runtime/GpuConstantWorker.cs",
+      "git_blob_sha256": "7550f2dbd95c27cb243834237bbaa0f0472c83e71872d5787dd16534713684aa",
+      "anchors": [
+        {
+          "expression": "destination = new ComputeTensorData(tensor.count, false);",
+          "lines": [
+            81
+          ]
+        },
+        {
+          "expression": "destination.buffer.SetData(words, offset, offset, count);",
+          "lines": [
+            86
+          ]
+        },
+        {
+          "expression": "worker?.Dispose()",
+          "lines": [
+            98
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Packages/com.ayutaz.embeddinggemma/Runtime/GpuFixedLeftMatmul.cs",
+      "git_blob_sha256": "69ca415b3fafe718e2b71223e5e61b8c9af10eab5e65c8804c390f2afe65b2c0",
+      "anchors": [
+        {
+          "expression": "ComputeTensorData.Pin(coefficients)",
+          "lines": [
+            31
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Packages/com.ayutaz.embeddinggemma/Runtime/GpuBlockedMatmul.cs",
+      "git_blob_sha256": "720ed0e6522b9c4b1f55806abd8ccdf78a04c078a03ab83595f1f6a3dbd1d890",
+      "anchors": [
+        {
+          "expression": "weights.SetData(coefficients);",
+          "lines": [
+            44
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Packages/com.ayutaz.embeddinggemma/Runtime/GpuSequentialScale.cs",
+      "git_blob_sha256": "ce1f1e9a734f66ff213d89c56000feee4388a7c5a693a3c4024f457c37c26e37",
+      "anchors": [
+        {
+          "expression": "coefficients.SetData(secondScale);",
+          "lines": [
+            29
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Packages/com.ayutaz.embeddinggemma/Runtime/GpuProjectionPipeline.cs",
+      "git_blob_sha256": "e5b742ec00a9c3e49b13b81215679a588319f6973ccadc6cd59bb61710856a37",
+      "anchors": [
+        {
+          "expression": "new GpuConstantWorker(models[i],BackendType.GPUCompute)",
+          "lines": [
+            75
+          ]
+        }
+      ]
+    },
+    {
+      "path": "Packages/com.ayutaz.embeddinggemma/Runtime/GpuMediaSession.cs",
+      "git_blob_sha256": "edc46f817c4292520c711d6391e456ba40b6d6dbac2c16c1841f1faef8970411",
+      "anchors": [
+        {
+          "expression": "if (executing)",
+          "lines": [
+            48
+          ]
+        },
+        {
+          "expression": "await call;",
+          "lines": [
+            90
+          ]
+        },
+        {
+          "expression": "resources[index]?.Dispose();",
+          "lines": [
+            100
+          ]
+        }
+      ]
+    }
+  ],
+  "conclusions": [
+    "Load includes file verification, CPU parsing and allocations, yielded Editor waits, and GPU buffer allocations/uploads. It is not a CPU-only model inference path.",
+    "Large constants use bounded GPU SetData before scheduling; smaller constants may be uploaded lazily. Load CPU/wall must not be described as all-weight GPU readiness.",
+    "CloseAsync may await a pending canceled call; these receipts close after four completed calls. Their short release times do not qualify busy-session cancellation latency.",
+    "Resource disposal has been asserted by the original tests, but return from CloseAsync does not measure when the graphics driver returns memory or finishes all GPU queues.",
+    "Existing load/release GPU timings were not captured. Null is missing evidence, not zero GPU work, and cannot be reconstructed from CPU/wall or GPU-memory samples.",
+    "A future load/release GPU probe must capture and calibrate the actual upload/resource-retirement scope without enclosing Task.Yield across frames in one synchronous marker or changing SDK scheduling."
+  ],
+  "dependency_sha256": {
+    "all-media-d7b2233-stage-gpu-cpu-wall-memory-10962fa-20261018.json": "2775afafb8d0d197bf80e14fc5a1395324e14eda6e35fc827e6d4046000b9c02",
+    "text-current-fp32-d7b2233-first-20261018.json": "c671110989380dbcfd7f382d44b353b196f40dce0b60f740b01324533518e2e6",
+    "text-current-float16-weights-d7b2233-first-20261018.json": "78eba78082c1af19abab8e800167ab0c76a7c245d14265e5d83d47bbed02f9d2"
+  },
+  "no_new_model_execution": true,
+  "no_performance_improvement_claimed": true
+}

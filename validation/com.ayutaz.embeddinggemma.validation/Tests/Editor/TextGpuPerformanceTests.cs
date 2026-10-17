@@ -151,15 +151,21 @@ namespace EmbeddingGemma.Validation.Tests
                         ["managed_heap_bytes"]=GC.GetTotalMemory(false),["cosine"]=cosine,["norm_squared"]=norm,
                         ["capture"]=Path.GetFileName(capture),["capture_sha256"]=Hash(capture),["observations"]=new JArray() };
                     ((JArray)report["rounds"]).Add(row); Save();
-                    var positiveAt=-1;
-                    for(var attempt=0;attempt<60;attempt++)
+                    var positiveFrame=-1; var lastObservedFrame=-1; var draining=Stopwatch.StartNew();
+                    for(var attempt=0;attempt<6000 && draining.Elapsed.TotalSeconds<15;attempt++)
                     {
                         EditorApplication.QueuePlayerLoopUpdate(); yield return null;
-                        ((JArray)row["observations"]).Add(new JObject { ["frame"]=Time.frameCount,["gpu_ns"]=recorder.gpuElapsedNanoseconds,["gpu_blocks"]=recorder.gpuSampleBlockCount });
-                        if(recorder.gpuElapsedNanoseconds>0 && recorder.gpuSampleBlockCount>0)
-                        { if(positiveAt<0) {positiveAt=attempt;row["gpu_elapsed_ns"]=recorder.gpuElapsedNanoseconds;row["gpu_sample_blocks"]=recorder.gpuSampleBlockCount;} }
-                        if(positiveAt>=0 && attempt-positiveAt>=12) break;
+                        if(lastObservedFrame!=Time.frameCount)
+                        {
+                            lastObservedFrame=Time.frameCount;
+                            ((JArray)row["observations"]).Add(new JObject { ["frame"]=Time.frameCount,["history_last_frame"]=ProfilerDriver.lastFrameIndex,["gpu_ns"]=recorder.gpuElapsedNanoseconds,["gpu_blocks"]=recorder.gpuSampleBlockCount });
+                            if(positiveFrame<0 && recorder.gpuElapsedNanoseconds>0 && recorder.gpuSampleBlockCount>0)
+                            { positiveFrame=Time.frameCount;row["gpu_elapsed_ns"]=recorder.gpuElapsedNanoseconds;row["gpu_sample_blocks"]=recorder.gpuSampleBlockCount; }
+                        }
+                        if(positiveFrame>=0 && Time.frameCount-positiveFrame>=6) break;
                     }
+                    row["render_frames_after_first_gpu_value"]=positiveFrame<0?0:Time.frameCount-positiveFrame;
+                    Assert.That(row.Value<int>("render_frames_after_first_gpu_value"),Is.GreaterThanOrEqualTo(6),"Actual render frames must advance; repeated Editor coroutine steps are not GPU frame completion.");
                     // Read a stopped snapshot, not a tree that can profile its own traversal.
                     ProfilerDriver.enabled=false; Profiler.enabled=false;
                     var diagnostics=new JObject(); row["gpu_history_diagnostics"]=diagnostics;

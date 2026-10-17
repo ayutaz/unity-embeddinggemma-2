@@ -17,7 +17,7 @@ namespace EmbeddingGemma.Validation.Tests
             var column = (int)field.GetRawConstantValue(); var rows = new JArray(); var visited = 0;
             var last = ProfilerDriver.lastFrameIndex;
             var first = Math.Max(ProfilerDriver.firstFrameIndex, last - 24);
-            var views = 0; var matches = 0;
+            var views = 0; var matches = 0; var gpuUnavailableFrames = 0;
             if (diagnostics != null)
             {
                 diagnostics["first_frame"] = ProfilerDriver.firstFrameIndex; diagnostics["last_frame"] = last;
@@ -27,6 +27,9 @@ namespace EmbeddingGemma.Validation.Tests
             using var iterator = new ProfilerFrameDataIterator();
             for (var frame = first; frame <= last; frame++)
             {
+                var availability = ProfilerDriver.GetGpuStatisticsAvailabilityState(frame);
+                const GpuProfilingStatisticsAvailabilityStates required = GpuProfilingStatisticsAvailabilityStates.Enabled | GpuProfilingStatisticsAvailabilityStates.Gathered;
+                if ((availability & required) != required) { gpuUnavailableFrames++; continue; }
                 var threads = iterator.GetThreadCount(frame);
                 for (var thread = 0; thread < threads; thread++)
                 {
@@ -57,11 +60,12 @@ namespace EmbeddingGemma.Validation.Tests
                             ["cpu_total_ns"] = (long)Math.Round(view.GetItemColumnDataAsSingle(id, HierarchyFrameDataView.columnTotalTime) * 1000000.0),
                             ["cpu_gc_allocated_bytes"] = (long)Math.Round(view.GetItemColumnDataAsDouble(id, HierarchyFrameDataView.columnGcMemory)),
                             ["marker_flags"] = (int)view.GetItemMarkerFlags(id),
+                            ["gpu_statistics_availability"] = (int)availability,
                             ["scope"] = "GPU hierarchy inclusive duration; parent and child durations overlap" });
                     }
                 }
             }
-            if (diagnostics != null) { diagnostics["views_examined"] = views; diagnostics["nodes_examined"] = visited; diagnostics["matching_marker_count"] = matches; }
+            if (diagnostics != null) { diagnostics["views_examined"] = views; diagnostics["nodes_examined"] = visited; diagnostics["matching_marker_count"] = matches; diagnostics["gpu_unavailable_frames_skipped"] = gpuUnavailableFrames; }
             return rows;
         }
     }

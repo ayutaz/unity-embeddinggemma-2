@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "scope": "Injected native microphone boundary and generated AudioClips; no real microphone recording, real-model inference or final fresh-Git acceptance",
+  "actual_microphone_started": false,
+  "audio_saved": false,
+  "audio_transmitted": false,
+  "unity": "6000.3.21f1",
+  "change": "Detect stopped/regressing capture and two-second position stalls; permit initial startup gap; release failed starts and default-device capture; allow explicit retry",
+  "silence": "Progress is measured by native sample position, never PCM amplitude",
+  "model_or_tolerance_change": false,
+  "sources_sha256": {
+    "UnityMediaCaptureDevice.cs": "96b5e008257c0dc4eab573c12c79d3da988c290fadce2a7d9df929956a59b855",
+    "Tests/Editor/NativeMediaCaptureDeviceTests.cs": "6d475699ed319964e9f3dc09f2cf6f848a5e6c74af86e1926a0880e42d07380c"
+  },
+  "red": {
+    "label": "native-mic-health-red",
+    "counts": {
+      "total": 10,
+      "passed": 2,
+      "failed": 8,
+      "skipped": 0
+    },
+    "exit_code": 2,
+    "elapsed_seconds": 49.65754519996699,
+    "completed_utc": "2026-10-17T12:35:48.013454+00:00",
+    "failures": [
+      "DefaultDeviceNameStillEndsCaptureAndReleasesClipExactlyOnce",
+      "FailedNativeFormatIsReleasedAndCanBeRetriedDirectly",
+      "MissingStartupProgressHasABoundedFailureEvenIfNativeReportsRecording(False)",
+      "MissingStartupProgressHasABoundedFailureEvenIfNativeReportsRecording(True)",
+      "NativeStoppedStateCannotReturnStaleRecordedCount",
+      "NonLoopingPositionRegressionIsAnInterruption",
+      "SampleInterruptionReleasesBufferAndAllowsExplicitRetryWithoutInference",
+      "StalledPositionAfterProgressFailsWithoutPaddingOrReturningAudio"
+    ],
+    "evidence_sha256": {
+      "native-mic-health-red-process.json": "7be8224a6b102d0676aae03e20559acd8ad1273dbb87cc214787a4398eaa1396",
+      "native-mic-health-red.xml": "1536e910faf309ab5dc5d33ca81b763b9eb0af7ee040a4b0f53785e64ff83a08",
+      "native-mic-health-red.log": "8f3f4fa975023cf76db6ef74188802ad4a053fa683dff5c3d79ca629836410e8"
+    }
+  },
+  "green": {
+    "label": "native-mic-health-green",
+    "counts": {
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exit_code": 0,
+    "elapsed_seconds": 44.73269470001105,
+    "completed_utc": "2026-10-17T12:38:14.223253+00:00",
+    "failures": [],
+    "evidence_sha256": {
+      "native-mic-health-green-process.json": "0f207dfb23b1283f420e607552b15483e9f53cba165bdbb8fc48b8d4bafe47f7",
+      "native-mic-health-green.xml": "e6210daf87f11beaf928e8a152e5dd6a18476bdfe556e99d8ad93236711825c3",
+      "native-mic-health-green.log": "f146814bd7c13cc884977a1eed549d66ebb9a085afcc2a6b8d44aca879353dc7"
+    }
+  },
+  "regression": {
+    "label": "native-mic-health-sample-regression",
+    "counts": {
+      "total": 120,
+      "passed": 120,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exit_code": 0,
+    "elapsed_seconds": 65.11950660002185,
+    "completed_utc": "2026-10-17T12:39:40.815164+00:00",
+    "failures": [],
+    "evidence_sha256": {
+      "native-mic-health-sample-regression-process.json": "69a3a72bcf206334cbf6228b9cf7aa16185c584649d1425604a58817db11f8b6",
+      "native-mic-health-sample-regression.xml": "36347068cc941e6ce074a7162b4668af6503e92efe7d0a0e51525ec1ce0f8baa",
+      "native-mic-health-sample-regression.log": "e17a96336e1bfb9b575c281a262715ceeb316dfaf2fe754a3f438248e0c6483f"
+    }
+  },
+  "remaining": [
+    "Actual device permission/start/stop/disconnection/recovery",
+    "Final fixed-Git consumer acceptance",
+    "Real-model GPU device error and full performance acceptance"
+  ]
+}

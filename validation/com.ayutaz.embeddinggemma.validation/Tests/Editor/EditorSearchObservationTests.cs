@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -7,14 +8,15 @@ using NUnit.Framework;
 using UnityEditor;
 using UnityEditor.Search;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace EmbeddingGemma.Validation.Tests
 {
-    /// <summary>Read-only Editor Search observations; never model or GPU qualification.</summary>
+    /// <summary>Default Editor Search observations; never model or GPU qualification.</summary>
     public sealed class EditorSearchObservationTests
     {
-        [Test, Timeout(120000)]
-        public void ExistingSearchDatabasesEnumerateAndFixedPackageAssetRemainsSearchable()
+        [UnityTest, Timeout(120000)]
+        public IEnumerator ExistingSearchDatabasesEnumerateAndFixedPackageAssetRemainsSearchable()
         {
             var output = Environment.GetEnvironmentVariable("EG_EDITOR_SEARCH_REPORT");
             Assert.That(output, Is.Not.Null.And.Not.Empty);
@@ -26,12 +28,36 @@ namespace EmbeddingGemma.Validation.Tests
             {
                 ["success"] = false, ["unity"] = Application.unityVersion,
                 ["model_loaded"] = false, ["gpu_execution_validated"] = false,
-                ["scope"] = "Read-only existing Search database enumeration and synchronous fixed SDK asset lookup. No index creation/rebuild, no model inference, no clean-cache claim.",
+                ["scope"] = "Default Search database initialization/readiness, enumeration and fixed SDK asset lookup. Search APIs can initialize their default Library index. No explicit CreateIndex/rebuild, model inference or clean-cache claim. Round first is after readiness, not cold index creation.",
                 ["expected_asset"] = expected, ["expected_guid"] = expectedGuid,
                 ["rounds"] = new JArray()
             };
             try
             {
+                using var initializationProcess = Process.GetCurrentProcess();
+                var initializationCpu = initializationProcess.TotalProcessorTime;
+                var initialization = Stopwatch.StartNew();
+                var initialDatabases = SearchService.EnumerateDatabases().ToArray();
+                initialization.Stop(); initializationProcess.Refresh();
+                report["initial_enumeration_wall_seconds"] = initialization.Elapsed.TotalSeconds;
+                report["initial_enumeration_process_cpu_seconds"] = (initializationProcess.TotalProcessorTime - initializationCpu).TotalSeconds;
+                Assert.That(initialDatabases.Length, Is.GreaterThan(0), "Empty database list cannot establish readiness.");
+                report["initial_databases"] = new JArray(initialDatabases.Select(db => new JObject
+                { ["name"] = db.name, ["ready"] = SearchService.IsIndexReady(db.name) }));
+                File.WriteAllText(output, report.ToString());
+                initializationCpu = initializationProcess.TotalProcessorTime; initialization.Restart();
+                var polls = 0;
+                while (!SearchService.IsIndexReady(null) && initialization.Elapsed.TotalSeconds < 90)
+                {
+                    polls++; EditorApplication.QueuePlayerLoopUpdate(); yield return null;
+                }
+                initialization.Stop(); initializationProcess.Refresh();
+                report["index_readiness_wait_wall_seconds"] = initialization.Elapsed.TotalSeconds;
+                report["index_readiness_wait_process_cpu_seconds"] = (initializationProcess.TotalProcessorTime - initializationCpu).TotalSeconds;
+                report["index_readiness_poll_count"] = polls;
+                report["index_ready_before_rounds"] = SearchService.IsIndexReady(null);
+                File.WriteAllText(output, report.ToString());
+                Assert.That(report.Value<bool>("index_ready_before_rounds"), Is.True, "Not-ready index is unavailable, never zero-time success.");
                 foreach (var round in new[] { "first", "warm", "repeat-1", "repeat-2" })
                 {
                     using var process = Process.GetCurrentProcess();
@@ -41,16 +67,18 @@ namespace EmbeddingGemma.Validation.Tests
                     timer.Stop(); process.Refresh();
                     var enumerationWall = timer.Elapsed.TotalSeconds;
                     var enumerationCpu = (process.TotalProcessorTime - cpu).TotalSeconds;
-                    // Readiness is an observation, not an instruction to build or change an index.
+                    // Keep readiness outside the enumeration/search timing windows.
                     var readiness = new JArray(databases.Select(db => new JObject
                     {
                         ["name"] = db.name, ["ready"] = SearchService.IsIndexReady(db.name)
                     }));
                     cpu = process.TotalProcessorTime; timer.Restart();
-                    using var context = SearchService.CreateContext("asset", "a:packages TextEmbedder", SearchFlags.Synchronous);
-                    var items = SearchService.GetItems(context, SearchFlags.Synchronous).ToArray();
+                    const SearchFlags flags = SearchFlags.Synchronous | SearchFlags.Packages;
+                    using var context = SearchService.CreateContext("asset", "a:packages TextEmbedder", flags);
+                    var items = SearchService.GetItems(context, flags).ToArray();
                     timer.Stop(); process.Refresh();
-                    var found = items.Any(item => item.id == expected || item.id == expectedGuid);
+                    var found = items.Any(item => item.id == expected || item.id == expectedGuid
+                        || AssetDatabase.GetAssetPath(item.ToObject()) == expected);
                     ((JArray)report["rounds"]).Add(new JObject
                     {
                         ["round"] = round, ["begin_utc"] = begin.ToString("O"),

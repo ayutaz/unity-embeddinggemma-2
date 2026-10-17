@@ -1,0 +1,77 @@
+{
+  "scope": "Serialized-weight quantization coverage only; shared objects overlap module totals. No inference/GPU/VRAM/speed claim.",
+  "producer": "752a2acd2e517e17501b506df540eeab9d8dac1f",
+  "source_descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+  "derived_descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+  "external_coefficients": "bit-identical FP32",
+  "modules": [
+    {
+      "module": "audio-1119",
+      "source_referenced_objects": 419,
+      "derived_referenced_objects": 419,
+      "models_processed": 270,
+      "models_with_added_half_constants": 15,
+      "models_without_added_half_constants": 255,
+      "half_constants_added": 233,
+      "source_referenced_bytes": 2460878745,
+      "derived_referenced_bytes": 1918856025
+    },
+    {
+      "module": "audio-839",
+      "source_referenced_objects": 419,
+      "derived_referenced_objects": 419,
+      "models_processed": 270,
+      "models_with_added_half_constants": 15,
+      "models_without_added_half_constants": 255,
+      "half_constants_added": 233,
+      "source_referenced_bytes": 2460878745,
+      "derived_referenced_bytes": 1918856025
+    },
+    {
+      "module": "image-landscape",
+      "source_referenced_objects": 298,
+      "derived_referenced_objects": 298,
+      "models_processed": 181,
+      "models_with_added_half_constants": 1,
+      "models_without_added_half_constants": 180,
+      "half_constants_added": 219,
+      "source_referenced_bytes": 2204673165,
+      "derived_referenced_bytes": 1662823785
+    },
+    {
+      "module": "image-portrait",
+      "source_referenced_objects": 298,
+      "derived_referenced_objects": 298,
+      "models_processed": 181,
+      "models_with_added_half_constants": 1,
+      "models_without_added_half_constants": 180,
+      "half_constants_added": 219,
+      "source_referenced_bytes": 2204673165,
+      "derived_referenced_bytes": 1662823785
+    },
+    {
+      "module": "image-square",
+      "source_referenced_objects": 298,
+      "derived_referenced_objects": 298,
+      "models_processed": 181,
+      "models_with_added_half_constants": 1,
+      "models_without_added_half_constants": 180,
+      "half_constants_added": 219,
+      "source_referenced_bytes": 2204715345,
+      "derived_referenced_bytes": 1662865973
+    },
+    {
+      "module": "text",
+      "source_referenced_objects": 2,
+      "derived_referenced_objects": 2,
+      "models_processed": 1,
+      "models_with_added_half_constants": 1,
+      "models_without_added_half_constants": 0,
+      "half_constants_added": 219,
+      "source_referenced_bytes": 1127768819,
+      "derived_referenced_bytes": 585946275
+    }
+  ],
+  "unique_models_processed": 553,
+  "unique_half_constants_added": 1110
+}

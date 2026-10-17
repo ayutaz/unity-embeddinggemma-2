@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "module": "text",
+  "module_document_reference_acceptance": true,
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "scope": "Actual prepared text GPU module, four pinned JA/EN query vectors, final768/norm/cosine, inspected Worker release and exit0; not manual UI or all-format performance",
+  "reference_sha256": "f316d5199c920431c7f721d43b2cedbe4a6384fb0e0664511b75bc2e98fe80fe",
+  "bundle_descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+  "cases": [
+    {
+      "id": "query-cat-ja",
+      "cosine": 0.9999999999998801,
+      "norm_squared": 1.000000096566735,
+      "capture": "text-bounded-text-e28a5fd-assembly-isolated-query-cat-ja.bin",
+      "capture_sha256": "b5753c87e65e30ad849feca34c1678bd9a6a3d8be3a0b658b0545e98dd11413a",
+      "independent_python_cosine": 0.999999999999879
+    },
+    {
+      "id": "query-space-en",
+      "cosine": 0.9999999999998976,
+      "norm_squared": 1.0000000464689416,
+      "capture": "text-bounded-text-e28a5fd-assembly-isolated-query-space-en.bin",
+      "capture_sha256": "636ae5f8fd17054b7670078e2632dced4d342e8de1e50537770cfe89ba193c32",
+      "independent_python_cosine": 0.9999999999998965
+    },
+    {
+      "id": "query-recipe-ja",
+      "cosine": 0.9999999999998792,
+      "norm_squared": 0.9999999230032561,
+      "capture": "text-bounded-text-e28a5fd-assembly-isolated-query-recipe-ja.bin",
+      "capture_sha256": "bacc7ebad94743edfa2109bbaf3f86ca71c876c0b39311591d8694d876fb5dd1",
+      "independent_python_cosine": 0.9999999999998783
+    },
+    {
+      "id": "query-cat-en",
+      "cosine": 0.9999999999998933,
+      "norm_squared": 0.99999983927819,
+      "capture": "text-bounded-text-e28a5fd-assembly-isolated-query-cat-en.bin",
+      "capture_sha256": "51f439391d7eed9c110a6be7512c62d5affd0669d9a03445afa2769371189fd7",
+      "independent_python_cosine": 0.9999999999998915
+    }
+  ],
+  "source": {
+    "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+    "validation_parent": "8489240b31e0ee19addeaebdbcca7f6131704d24",
+    "scope": "Existing real pinned final-reference fixture, local-file dependencies, instrumented CPU stage intervals; no live microphone",
+    "validation_files_sha256": {
+      "GpuMediaBundleExecutionTests.cs": "c5286755c16978b2265662d06ba5f929613560ce32445bf6e328cfa6a9092e9a",
+      "MediaStageTiming.cs": "8e15fdd4ef806356912f92d50e6cf8daf08684b34ae96344d2efd213ddfaaff8",
+      "PreparedTextQueryReferenceTests.cs": "14d776e0f02386dc3688c29adfdf8e2638098478fd87eda1bd8e31c0a95ca821"
+    }
+  },
+  "resources": {
+    "snapshot": "NVIDIA GeForce RTX 4070 Ti SUPER, 610.88, 1698 MiB, 14366 MiB, 16376 MiB",
+    "scope": "Global device snapshot before launch; not per-process allocation or minimumVRAM"
+  },
+  "stage_observations": [
+    {
+      "stage": "text_query",
+      "method": "EmbedQuery",
+      "call_id": 1,
+      "asynchronous": false,
+      "event": "begin",
+      "utc": "2026-10-17T16:10:31.3250128Z",
+      "cpu_scope": "whole process during stage interval, includes other Editor threads",
+      "wall_scope": "call through completion, including GPU waits and async frame scheduling",
+      "host_peak_scope": "process lifetime, not this stage peak",
+      "gpu_elapsed_ns": null
+    },
+    {
+      "stage": "text_query",
+      "method": "EmbedQuery",
+      "call_id": 1,
+      "asynchronous": false,
+      "event": "completed",
+      "utc": "2026-10-17T16:10:34.6019062Z",
+      "cpu_scope": "whole process during stage interval, includes other Editor threads",
+      "wall_scope": "call through completion, including GPU waits and async frame scheduling",
+      "host_peak_scope": "process lifetime, not this stage peak",
+      "gpu_elapsed_ns": null,
+      "wall_seconds": 3.2731368,
+      "process_cpu_seconds": 0.265625,
+      "host_working_set_bytes": 5397598208,
+      "host_lifetime_peak_bytes": 5397598208,
+      "unity_allocated_bytes": 270686876,
+      "error_type": null
+    },
+    {
+      "stage": "text_query",
+      "method": "EmbedQuery",
+      "call_id": 2,
+      "asynchronous": false,
+      "event": "begin",
+      "utc": "2026-10-17T16:10:34.6202391Z",
+      "cpu_scope": "whole process during stage interval, includes other Editor threads",
+      "wall_scope": "call through completion, including GPU waits and async frame scheduling",
+      "host_peak_scope": "process lifetime, not this stage peak",
+      "gpu_elapsed_ns": null
+    },
+    {
+      "stage": "text_query",
+      "method": "EmbedQuery",
+      "call_id": 2,
+      "asynchronous": false,
+      "event": "completed",
+      "utc": "2026-10-17T16:10:34.8724300Z",
+      "cpu_scope": "whole process during stage interval, includes other Editor threads",
+      "wall_scope": "call through completion, including GPU waits and async frame scheduling",
+      "host_peak_scope": "process lifetime, not this stage peak",
+      "gpu_elapsed_ns": null,
+      "wall_seconds": 0.25096229999999997,
+      "process_cpu_seconds": 0.0625,
+      "host_working_set_bytes": 4837294080,
+      "host_lifetime_peak_bytes": 5401952256,
+      "unity_allocated_bytes": 270704348,
+      "error_type": null
+    },
+    {
+      "stage": "text_query",
+      "method": "EmbedQuery",
+      "call_id": 3,
+      "asynchronous": false,
+      "event": "begin",
+      "utc": "2026-10-17T16:10:34.8946930Z",
+      "cpu_scope": "whole process during stage interval, includes other Editor threads",
+      "wall_scope": "call through completion, including GPU waits and async frame scheduling",
+      "host_peak_scope": "process lifetime, not this stage peak",
+      "gpu_elapsed_ns": null
+    },
+    {
+      "stage": "text_query",
+      "method": "EmbedQuery",
+      "call_id": 3,
+      "asynchronous": false,
+      "event": "completed",
+      "utc": "2026-10-17T16:10:34.9835267Z",
+      "cpu_scope": "whole process during stage interval, includes other Editor threads",
+      "wall_scope": "call through completion, including GPU waits and async frame scheduling",
+      "host_peak_scope": "process lifetime, not this stage peak",
+      "gpu_elapsed_ns": null,
+      "wall_seconds": 0.0868893,
+      "process_cpu_seconds": 0.0625,
+      "host_working_set_bytes": 4837433344,
+      "host_lifetime_peak_bytes": 5401952256,
+      "unity_allocated_bytes": 270674503,
+      "error_type": null
+    },
+    {
+      "stage": "text_query",
+      "method": "EmbedQuery",
+      "call_id": 4,
+      "asynchronous": false,
+      "event": "begin",
+      "utc": "2026-10-17T16:10:34.9920773Z",
+      "cpu_scope": "whole process during stage interval, includes other Editor threads",
+      "wall_scope": "call through completion, including GPU waits and async frame scheduling",
+      "host_peak_scope": "process lifetime, not this stage peak",
+      "gpu_elapsed_ns": null
+    },
+    {
+      "stage": "text_query",
+      "method": "EmbedQuery",
+      "call_id": 4,
+      "asynchronous": false,
+      "event": "completed",
+      "utc": "2026-10-17T16:10:35.0771796Z",
+      "cpu_scope": "whole process during stage interval, includes other Editor threads",
+      "wall_scope": "call through completion, including GPU waits and async frame scheduling",
+      "host_peak_scope": "process lifetime, not this stage peak",
+      "gpu_elapsed_ns": null,
+      "wall_seconds": 0.0834221,
+      "process_cpu_seconds": 0.03125,
+      "host_working_set_bytes": 4837457920,
+      "host_lifetime_peak_bytes": 5401952256,
+      "unity_allocated_bytes": 270682455,
+      "error_type": null
+    }
+  ],
+  "gpu_execution_time_measured": false,
+  "session_closed": true,
+  "counts": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "exit_code": 0,
+  "elapsed_seconds": 72.83902369998395,
+  "host_native_lifetime_peak_bytes": 5401952256,
+  "artifacts_sha256": {
+    "text-bounded-text-e28a5fd-assembly-isolated-process.json": "bb0b0256b70d64c1776f57bd50e581b8e45c9f0d7769ecf9b25140f946ef045e",
+    "text-bounded-text-e28a5fd-assembly-isolated.json": "4827dff9194104907debcbbef60643e8f4ed2e1c4fcc5db98cd254bf9bb624f7",
+    "text-bounded-text-e28a5fd-assembly-isolated.xml": "1f25e62f9414d6327f408a1b4ebe362f0406fac28d8359e9e0fefb493f63f4c6",
+    "text-bounded-text-e28a5fd-assembly-isolated.log": "61652e346ba82c21ec4722bd07b76926a1a2c10080e90c40cfe96d8b874fdbd4"
+  }
+}

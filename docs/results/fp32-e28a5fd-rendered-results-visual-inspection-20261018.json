@@ -1,0 +1,22 @@
+{
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "precision": "fp32",
+  "evidence_index": "combined-fp32-e28a5fd-16gib-playmode-20261018.json",
+  "visual_inspection_completed": true,
+  "method": "Viewed all four original 1280x800 PNG screenshots listed and hashed by the combined acceptance audit.",
+  "queries_inspected": ["query-cat-ja", "query-space-en", "query-recipe-ja", "query-cat-en"],
+  "observations": [
+    "Each results view displays registration count 5 and result scores; order differs with the query, consistent with the independently audited fixed rankings.",
+    "Square, landscape and portrait synthetic fixture previews are visible with different aspect ratios across the screenshots.",
+    "Japanese registration-count text and audio replay buttons render legibly without replacement glyphs.",
+    "The screenshots show a scrolled results pane; query input controls are outside the captured viewport.",
+    "The fifth recipe result extends below the viewport. These screenshots do not prove every result is fully visible simultaneously.",
+    "Generated fixture filenames and long local paths dominate result titles. These fixed synthetic fixtures do not establish real-content relevance or a polished user workflow."
+  ],
+  "native_mouse_keyboard_operation_verified": false,
+  "audio_playback_or_stop_verified": false,
+  "microphone_started": false,
+  "fresh_fixed_git_consumer_verified": false,
+  "overall_ux_acceptance": false,
+  "scope": "Visual inspection of programmatically driven real-GPU PlayMode results only; not manual operation, audio listening, live microphone, semantic quality or complete priorities 1-3 acceptance."
+}

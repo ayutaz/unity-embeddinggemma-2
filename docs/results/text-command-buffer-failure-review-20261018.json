@@ -1,0 +1,137 @@
+{
+  "accepted": false,
+  "scope": "Failed measurement collection, preserving four numerical vectors and raw intervals only. Direct Worker schedule excludes tokenizer/upload and is not SDK query API latency.",
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "dispatch_mode": "direct_worker_command_buffer",
+  "terminal_receipt": {
+    "command": [
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\step3-consumer-53dafe8",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.TextGpuPerformanceTests.FixedTextFirstWarmRepeatedCallsHaveActualGpuTimingsAndPinnedVectors",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testResults",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-performance-fp32-e28a5fd-command-buffer.xml",
+      "-logFile",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-performance-fp32-e28a5fd-command-buffer.log"
+    ],
+    "timeout_seconds": 1200,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T18:53:20.585619+00:00",
+    "pid": 112124,
+    "exit_code": 2,
+    "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-performance-fp32-e28a5fd-command-buffer.xml",
+    "unity_counts": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "elapsed_seconds": 52.987939700018615,
+    "completed_utc": "2026-10-17T18:54:13.573554+00:00"
+  },
+  "failure": "System.InvalidOperationException : GPU history traversal exceeded its bounded observation budget.",
+  "independent_numerical_rows": [
+    {
+      "round": "first",
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355,
+      "wall_seconds": 1.1023425,
+      "process_cpu_seconds": 0.203125,
+      "raw_recorder_gpu_elapsed_ns": 54395136,
+      "raw_gpu_history": [
+        {
+          "frame": 0,
+          "thread_index": 0,
+          "thread_name": "Main Thread",
+          "marker": "EmbeddingGemma.TextBenchmark.first",
+          "gpu_ns": 1032113037,
+          "scope": "GPU hierarchy inclusive duration; parent and child durations overlap",
+          "child_marker_count": 2580
+        }
+      ],
+      "managed_allocation_bytes": null,
+      "gpu_timing_interpretation_validated": false
+    },
+    {
+      "round": "warm",
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355,
+      "wall_seconds": 0.0929333,
+      "process_cpu_seconds": 0.03125,
+      "raw_recorder_gpu_elapsed_ns": 53938176,
+      "raw_gpu_history": [
+        {
+          "frame": 2,
+          "thread_index": 0,
+          "thread_name": "Main Thread",
+          "marker": "EmbeddingGemma.TextBenchmark.warm",
+          "gpu_ns": 333596008,
+          "scope": "GPU hierarchy inclusive duration; parent and child durations overlap",
+          "child_marker_count": 2580
+        }
+      ],
+      "managed_allocation_bytes": null,
+      "gpu_timing_interpretation_validated": false
+    },
+    {
+      "round": "repeat-1",
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355,
+      "wall_seconds": 0.09352809999999999,
+      "process_cpu_seconds": 0.046875,
+      "raw_recorder_gpu_elapsed_ns": 53209088,
+      "raw_gpu_history": [
+        {
+          "frame": 2,
+          "thread_index": 0,
+          "thread_name": "Main Thread",
+          "marker": "EmbeddingGemma.TextBenchmark.repeat-1",
+          "gpu_ns": 421191010,
+          "scope": "GPU hierarchy inclusive duration; parent and child durations overlap",
+          "child_marker_count": 2580
+        }
+      ],
+      "managed_allocation_bytes": null,
+      "gpu_timing_interpretation_validated": false
+    },
+    {
+      "round": "repeat-2",
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355,
+      "wall_seconds": 0.09150019999999999,
+      "process_cpu_seconds": 0.03125,
+      "raw_recorder_gpu_elapsed_ns": 51933184,
+      "raw_gpu_history": null,
+      "managed_allocation_bytes": null,
+      "gpu_timing_interpretation_validated": false
+    }
+  ],
+  "allocation_calibration": {
+    "expected_minimum_bytes": 65536,
+    "observed_raw_delta_bytes": 0,
+    "available": false,
+    "interpretation": "Unavailable counter, never zero allocation."
+  },
+  "clean_release_proven": false,
+  "performance_improvement_claimed": false,
+  "next_action": "Constrain exact-marker history collection to relevant data rather than traversing all Editor samples; preserve bounded observation and missing-data failures. Re-run same fixed inputs after verification. Use another calibrated allocation metric.",
+  "evidence_sha256": {
+    "text-performance-fp32-e28a5fd-command-buffer-process.json": "33cc14589dce346a13706ab28471ab631b1dc8d3558a5d408a9fbeab6720d0f5",
+    "text-performance-fp32-e28a5fd-command-buffer.xml": "c998d626cb1265d41ee57e523ae69c693f2705271390cf803c7ea5b5601852a2",
+    "text-performance-fp32-e28a5fd-command-buffer.json": "f78871f8b1ed2e55efe9756ec79803639c5af85cd8706b7a0cfe4c885263f94c",
+    "text-performance-fp32-e28a5fd-command-buffer.log": "d60ad0914686864b4abb4b5f8554e4b0b81e26bd4e27c6a8d28d623eb424faef",
+    "text-performance-fp32-e28a5fd-command-buffer-source.json": "39cdd7ccdf91ab91e53a98395b5b59a74eda1cbcf35d6f3f806f212828b20295"
+  },
+  "raw_history_storage": "Full child-marker trees remain in ignored raw .json bound by evidence_sha256. Tracked report retains exact-marker totals and child counts only."
+}

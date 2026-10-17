@@ -1,6 +1,6 @@
 # ロードマップ
 
-更新: **2026-10-17**。main `a965c09`（PR #83統合後）を起点とする現在の作業計画です。確認済みの事実は[検証状況](status.md)、変更しない目標は[プロジェクトのゴール](goal.md)を参照してください。
+更新: **2026-10-18**。main `35d18f8`を統合済み基準とする現在の作業計画です。未統合PRの追加検証はSDK `e28a5fd`に対応します。確認済みの事実は[検証状況](status.md)、変更しない目標は[プロジェクトのゴール](goal.md)を参照してください。
 
 テキスト・画像・音声のGPU API、Windows text Player、画像・音声検索サンプルとcacheは統合済みです。次は、他の利用者が準備・操作を再現できる状態を作り、そのcandidateで性能と対象環境を検証します。正式リリースは全必須条件の後に行います。
 
@@ -16,6 +16,8 @@
 
 1の手順で用意したモデルと固定Git版を空consumerへ導入し、手動で登録→検索→キャンセル→再登録→切替→解放を確認します。既存bundleでの操作確認は先行できます。結果画像プレビュー・音声再生、マイクの明示開始 / 停止は機能ごとに別PRで実装します。
 
+2026-10-18の固定Git `e28a5fd` 新規consumerでは、既存ローカルFloat16 bundleによる画像・音声の実画面GPU登録、日英検索の参照順位・score、画像プレビュー、音声再生位置の進行、エラー復帰・キャンセル再試行・切替・解放・正常終了code0を確認しました。[操作監査](results/fresh-git-native-ui-e28a5fd-20261018.json)。別のwarm起動では11.2秒音声を7.232秒の位置で停止し、解放と正常終了code0も確認しました。[途中停止監査](results/native-audio-early-stop-e28a5fd-20261018.json)。実マイクと公開入力からの空cache取得は別の未完了項目として維持します。非録音時のpauseで録音破棄のstatusが出る問題、Editor終了時のJobTempAlloc警告は別に扱います。
+
 **完了条件**：日英入力・対応外入力・モデル欠落・権限拒否・deviceなし・中断・復帰を確認すること。固定PCMの数値検証と実マイクの動作検証を分け、無断の保存・送信・収集はしません。
 
 ### 3. 性能・安定性の測定と改善
@@ -23,6 +25,8 @@
 candidate・入力・model hashを固定し、最初に測定します。遅い区間・資源残留の原因を絞って修正し、Float16 / GPU単独と連続実行も区別します。測定設計は2の完了を待たず進められます。
 
 **完了条件**：load・初回・warm・前処理・encoder・backbone・解放、CPU / GPU時間、ホストメモリ / VRAMを別記すること。Editor import・検索DB・allocation・domain reloadも分離し、前後で精度・順位・正常終了を維持します。
+
+2026-10-18時点で、Float16の全6 module・固定16ケースの単独GPU参照比較は完了しました。FP32の12GiB guard中断と16GiB EditModeの900秒fixture timeoutは保持します。同じSDK・16GiBの混在PlayModeでは、FP32 / Float16とも5媒体と日英4 queryの連続順位・解放、直接テキスト4件、終了code0を確認しました。初期のGPU Recorderと履歴の値の差、割り当てAPIの全0は過去の欠測として保持します。その後、停止したCPU履歴のmarker内bytesをnoop / 64KiB / 128KiBで校正し、実GPUの同期テキストAPIでも両形式各4回の割り当て量・参照一致・解放・exit0を確認しました。[校正記録](results/managed-allocation-scoped-byte-calibration-20261018.json)と[検証状況](status.md)。次はGPU区間とframe対応の校正、画像・音声の同一入力反復とstage別CPU/GPU時間、Editor import/searchDB/reload/allocationです。load・frame待機・推論・Editor処理を分け、必要な改善をTDDで加えます。性能全体は未合格であり、保存容量や異なる実行条件から高速化を推定しません。
 
 ### 4. WindowsマルチモーダルPlayer
 

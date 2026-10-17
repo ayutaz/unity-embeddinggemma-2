@@ -9,6 +9,21 @@ import time
 import xml.etree.ElementTree as ET
 
 
+def write_json_atomic(output, report):
+    """Keep atomic receipts while tolerating brief Windows sharing conflicts."""
+    output = Path(output)
+    pending = output.with_suffix(output.suffix + ".pending")
+    pending.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    for attempt in range(10):
+        try:
+            pending.replace(output)
+            return
+        except PermissionError as error:
+            if getattr(error, "winerror", None) not in {5, 32, 33} or attempt == 9:
+                raise
+            time.sleep(0.05)
+
+
 def read_unity_execution_counts(path):
     """Reject empty/skipped Unity runs independently of the process exit code."""
     try:
@@ -34,10 +49,9 @@ def run_bounded(command, output, *, timeout=300, env=None, unity_results=None):
     report = dict(command=command, timeout_seconds=timeout, success=False,
                   terminal=False, timed_out=False, started_utc=datetime.now(timezone.utc).isoformat())
     def save():
-        pending = output.with_suffix(output.suffix + ".pending")
-        pending.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-        pending.replace(output)
+        write_json_atomic(output, report)
     save()
+    process = None
     try:
         process = subprocess.Popen(command, env=env, shell=False)
         report["pid"] = process.pid
@@ -59,13 +73,24 @@ def run_bounded(command, output, *, timeout=300, env=None, unity_results=None):
             except ValueError as error:
                 report['success'] = False
                 report['unity_evidence_error'] = str(error)
-    except Exception as error:
+    except BaseException as error:
         report["error"] = f"{type(error).__name__}: {error}"
         raise
     finally:
-        report.update(elapsed_seconds=time.monotonic() - started,
-                      completed_utc=datetime.now(timezone.utc).isoformat())
-        save()
+        try:
+            if process is not None:
+                if process.poll() is None:
+                    # Receipt errors and interruption must not leave this exact child alive.
+                    # Reaping this child does not make a supervision failure pass.
+                    report["success"] = False
+                    process.kill()
+                    process.wait(timeout=30)
+                    report["supervisor_terminated_child"] = True
+                report.update(terminal=process.poll() is not None, exit_code=process.returncode)
+        finally:
+            report.update(elapsed_seconds=time.monotonic() - started,
+                          completed_utc=datetime.now(timezone.utc).isoformat())
+            save()
     return report
 
 

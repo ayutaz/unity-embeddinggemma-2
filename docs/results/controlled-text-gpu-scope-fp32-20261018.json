@@ -1,0 +1,116 @@
+{
+  "accepted": true,
+  "scope": "Controlled real text Worker experiment. Observed GPU Recorder intervals respond to added GPU work and exclude the inserted pre-submission CPU sleep. Not complete stage timing, pure active-kernel time, SDK API latency or overall performance acceptance.",
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "precision": "fp32",
+  "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+  "rows": [
+    {
+      "round": "first",
+      "dispatches": 1,
+      "cpu_gap_before_submission_ms": 0,
+      "call_wall_ms": 764.4698,
+      "process_cpu_ms": 109.375,
+      "recorder_gpu_interval_ms": 13.683456,
+      "unqualified_history_intervals_ms": [
+        698.674988
+      ],
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355
+    },
+    {
+      "round": "warm",
+      "dispatches": 1,
+      "cpu_gap_before_submission_ms": 250,
+      "call_wall_ms": 303.20559999999995,
+      "process_cpu_ms": 15.625,
+      "recorder_gpu_interval_ms": 14.225408,
+      "unqualified_history_intervals_ms": [
+        307.945984
+      ],
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355
+    },
+    {
+      "round": "repeat-1",
+      "dispatches": 2,
+      "cpu_gap_before_submission_ms": 0,
+      "call_wall_ms": 122.2868,
+      "process_cpu_ms": 62.5,
+      "recorder_gpu_interval_ms": 41.849856,
+      "unqualified_history_intervals_ms": [
+        334.544983
+      ],
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355
+    },
+    {
+      "round": "repeat-2",
+      "dispatches": 1,
+      "cpu_gap_before_submission_ms": 250,
+      "call_wall_ms": 314.82859999999994,
+      "process_cpu_ms": 15.625,
+      "recorder_gpu_interval_ms": 23.614464,
+      "unqualified_history_intervals_ms": [
+        559.91095
+      ],
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355
+    }
+  ],
+  "terminal_receipt": {
+    "command": [
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\step3-consumer-53dafe8",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.TextGpuPerformanceTests.FixedTextFirstWarmRepeatedCallsHaveActualGpuTimingsAndPinnedVectors",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testResults",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-performance-fp32-e28a5fd-controlled-gpu-scope.xml",
+      "-logFile",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-performance-fp32-e28a5fd-controlled-gpu-scope.log"
+    ],
+    "timeout_seconds": 1200,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T19:10:33.137573+00:00",
+    "pid": 162636,
+    "exit_code": 0,
+    "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-performance-fp32-e28a5fd-controlled-gpu-scope.xml",
+    "unity_counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 42.10658279998461,
+    "completed_utc": "2026-10-17T19:11:15.244152+00:00"
+  },
+  "control_observations": {
+    "delayed_intervals_less_than_the_added_cpu_gap": true,
+    "two_dispatch_interval_exceeds_each_single_interval": true
+  },
+  "profiler_history_interpretation_qualified": false,
+  "scope_limits": [
+    "Only4 observations on this GPU/driver; not an averaged latency or throughput estimate.",
+    "First call includes shader/setup effects. Single dispatch intervals can vary with GPU clocks.",
+    "Direct Worker uses pre-pinned inputs and omits tokenization/upload; GPU interval can include queue gaps within marker.",
+    "History intervals remain different and cannot substitute for Recorder intervals."
+  ],
+  "evidence_sha256": {
+    "text-performance-fp32-e28a5fd-controlled-gpu-scope.json": "1270e04608c6f5712669ed7534d603e8589daffab6c9f7023865a8d0dc5a1ec8",
+    "text-performance-fp32-e28a5fd-controlled-gpu-scope.xml": "807583c0c0743255f6463e4065813032677a3dc94cb7d9d6ec41fd10179b0398",
+    "text-performance-fp32-e28a5fd-controlled-gpu-scope-process.json": "f062dd53338a8395fd8b525fbf1bc8b3e6165dea3b7c6614b58b49063a4b7181",
+    "text-performance-fp32-e28a5fd-controlled-gpu-scope-source.json": "65570d94c71a44ce84f43f8f778c082fe351a1308b0b6d4fc208585fb8b47257",
+    "text-performance-fp32-e28a5fd-controlled-gpu-scope.log": "35ce43a02678f2d83f9f39979eb19c3213b064fb818be88962cf7e1a36447203"
+  }
+}

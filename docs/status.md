@@ -66,6 +66,8 @@ SDK `e28a5fd`のFP32連続試験は、12GiB guardでの中断を保持してい�
 
 Float16重みの同じSDK APIでも、初回610,830 bytes、warm26,100 bytes、続く2回各26,036 bytesを観測し、4 vectorの独立参照一致・解放・exit0を確認しました。[Float16 APIの割り当て監査](results/text-performance-float16-weights-e28a5fd-calibrated-cpu-allocation-allocation-audit-20261018.json)。これは個々の固定呼び出しの観測であり、初回条件の違いから精度形式による速度・割り当て改善を推定しません。GPU時間の校正と画像・音声のstage別測定、Editor import/searchDB/reload/allocationは残っています。
 
+FP32のGPU区間の対照実験では、送信前の250ms CPU待機を加えた1回のdispatchでもRecorderは14.225 / 23.614msで、2回のdispatchでは41.850msでした。4回とも参照一致・解放・exit0を確認しました。[対照実験の固定記録](results/controlled-text-gpu-scope-fp32-20261018.json)。送信前のCPU待機とGPU仕事量への応答を区別できた観測ですが、事前転送済みWorkerの4観測に限ります。SDK API全体の遅延、純粋なkernel稼働時間、平均性能や他stageの校正へ拡張せず、異なる値を示すProfiler履歴の解釈も未確定のままです。
+
 ### 残る受け入れ
 
 - 空のcheckoutから画像・音声bundleを準備する公開手順と配布経路。

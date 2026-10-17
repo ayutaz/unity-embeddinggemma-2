@@ -1,0 +1,52 @@
+{
+  "scope": "Bounded text constant transfer integration, generated models on actual Editor D3D12. Not real-model, fresh-Git, native UI, throughput or Float16 acceptance.",
+  "problem": "Native d1548ac UI registration succeeded, but search hit its whole-session time bound during initial text load; D3D12 reported large upload requests. TextEmbedder constructed a plain Worker.",
+  "change": "TextEmbedder owns the existing GpuConstantWorker, retaining Worker lookup and backend, borrowed model, tokenizer, output, and disposal behavior. Large GPU-used constants are transferred in <=8MiB calls before scheduling.",
+  "behavioral_red": {
+    "counts": {
+      "total": 2,
+      "passed": 1,
+      "failed": 1,
+      "skipped": 0
+    },
+    "message": "  Large text weights must be resident before lazy scheduling can request one oversized upload.\n  Expected: GPUCompute\n  But was:  CPU\n",
+    "exit_code": 2
+  },
+  "green": {
+    "counts": {
+      "total": 26,
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exit_code": 0,
+    "elapsed_seconds": 201.73031459999038
+  },
+  "generated_model_contract": "Real >8MiB constant; pre-schedule backend residency, repeated CPU/GPU vectors, normalization, unchanged model, idempotent disposal and borrowed model reuse.",
+  "source_sha256": {
+    "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs": "872717d30ed40a7da616dae5fc95c2e93b1141af7d0e69b5efbcc75e368c98da",
+    "Packages/com.ayutaz.embeddinggemma/Tests/Editor/GpuConstantWorkerTests.cs": "3d8e57e0ad1b08eb575e250bf8330342faa5f8bccc9c78721c1d3a5760e6a83d"
+  },
+  "evidence_sha256": {
+    "text-bounded-upload-red-600-process.json": "fcffec1072025c5a805f2f6d01b67df48d19338772ce364e462100071a871618",
+    "text-bounded-upload-red-600.xml": "588002f44bd63681cd5a7bd22e19dff367ea8428b8d49ef7a10954fccd883877",
+    "text-bounded-upload-red-600.log": "3d5b06478ff8d7cbe3dc375bb247543f9e3ddba8cebba107d9e6927f4fabc7ca",
+    "text-bounded-upload-green-600-process.json": "57f365c219335d0d26fbb650091afe5da7f1e98da9dacd6d43fd240a00ab320d",
+    "text-bounded-upload-green-600.xml": "d55f316fd81213c2a88470c306df886c5e0ced8a3d65214325ef82da6a30febe",
+    "text-bounded-upload-green-600.log": "9f10cfed7186c522c03b06c6c857809d8b3e581c8bea1cef52bc2c99a8e789a0"
+  },
+  "excluded_trial": {
+    "label": "text-bounded-upload-red",
+    "classification": "180sec compilation timeout; XML absent, not a behavioral Red"
+  },
+  "cpu_fallback_added": false,
+  "reference_or_tolerance_changed": false,
+  "performance_improvement_claimed": false,
+  "remaining": [
+    "Real pinned text references on this source",
+    "Native JA/EN search and preview/playback/release",
+    "Same-candidate performance and Float16",
+    "All6 public cold acquisition",
+    "Authorized live microphone"
+  ]
+}

@@ -12,6 +12,46 @@ namespace EmbeddingGemma.Tests
 {
     public sealed class GpuConstantWorkerTests
     {
+        [TestCase(BackendType.CPU)] [TestCase(BackendType.GPUCompute)]
+        public void TextLargeConstantsAreResidentBeforeSchedulingAndRepeatedInferenceKeepsItsModel(BackendType backend)
+        {
+            if (backend == BackendType.GPUCompute) Assert.That(SystemInfo.supportsComputeShaders, Is.True, "Actual GPU required; never skip.");
+            var graph = new FunctionalGraph();
+            var ids = graph.AddInput<int>(new TensorShape(1, 128), "input_ids");
+            var mask = graph.AddInput<int>(new TensorShape(1, 128), "attention_mask");
+            const int count = 2097153;
+            var weights = Enumerable.Range(0, count).Select(index => .25f + ((uint)index * 1664525u + 1013904223u) % 65536 / 65536f).ToArray();
+            var source = Functional.ReduceSum((ids + mask).Float(), new[] {0, 1}, true);
+            var seed = Functional.ReduceSum(source * Functional.Constant(new TensorShape(1, count), weights), 1, true) / count;
+            var first = new float[768]; first[0] = 1;
+            var second = new float[768]; second[1] = 1;
+            var vector = seed * Functional.Constant(new TensorShape(1, 768), first) + Functional.Constant(new TensorShape(1, 768), second);
+            var model = graph.Compile(vector / Functional.Sqrt(Functional.ReduceSumSquare(vector, 1, true)));
+            var large = model.constants.Where(value => value.lengthBytes > GpuConstantWorker.DefaultChunkBytes).ToArray();
+            Assert.That(large.Length, Is.EqualTo(1), "Exercise an actual production-budget crossing.");
+            var layers = model.layers.ToArray(); var constants = model.constants.ToArray();
+            const BindingFlags fields = BindingFlags.Instance | BindingFlags.NonPublic;
+            var tokenizer = (string)typeof(TextEmbedderTests).GetField("TokenizerJson", BindingFlags.Static | BindingFlags.NonPublic).GetRawConstantValue();
+            using var embedder = new TextEmbedder(model, tokenizer, backend);
+            var worker = (Worker)typeof(TextEmbedder).GetField("worker", fields).GetValue(embedder);
+            var storage = typeof(Worker).GetField("m_Storage", fields).GetValue(worker);
+            var get = storage.GetType().GetMethod("GetTensor", new[] {typeof(int)});
+            foreach (var constant in large)
+                Assert.That(((Tensor)get.Invoke(storage, new object[] {constant.index})).backendType, Is.EqualTo(backend),
+                    "Large text weights must be resident before lazy scheduling can request one oversized upload.");
+            using var baseline = new TextEmbedder(model, tokenizer, BackendType.CPU);
+            var expected = baseline.EmbedRaw("hello");
+            for (var repeat = 0; repeat < 2; repeat++)
+            {
+                var actual = embedder.EmbedRaw("hello");
+                Assert.That(actual, Is.EqualTo(expected).Within(1e-5));
+                Assert.That(actual.Sum(value => (double)value * value), Is.EqualTo(1).Within(.002));
+            }
+            Assert.That(model.layers, Is.EqualTo(layers)); Assert.That(model.constants, Is.EqualTo(constants));
+            embedder.Dispose(); Assert.DoesNotThrow(embedder.Dispose);
+            Assert.Throws<ObjectDisposedException>(() => embedder.EmbedRaw("hello"));
+            Assert.That(baseline.EmbedRaw("hello"), Is.EqualTo(expected));
+        }
         static Type Api()
         {var type=typeof(MultimodalBackbone).Assembly.GetType("EmbeddingGemma.GpuConstantWorker");Assert.That(type,Is.Not.Null,"Bounded constant upload is missing.");return type;}
         static IDisposable Create(Model model,BackendType backend=BackendType.GPUCompute,int bytes=8)

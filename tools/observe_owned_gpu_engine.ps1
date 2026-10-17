@@ -24,7 +24,9 @@ while([DateTime]::UtcNow -lt $deadline){
         $samples=@($set.CounterSamples|Where-Object{$_.InstanceName -like "pid_${ownedPid}_luid_*"})
         $observation.rows=@($samples|ForEach-Object{[ordered]@{name=$_.InstanceName;counter='utilization percentage';
             counter_type=$_.CounterType.ToString();time_base=$_.TimeBase;raw_value=$_.RawValue;
-            timestamp_100ns=$_.Timestamp100NSec;status=$_.Status}})
+            timestamp_100ns=$_.Timestamp.ToUniversalTime().ToFileTimeUtc();
+            raw_provider_timestamp_100ns=$_.Timestamp100NSec;
+            timestamp_kind=$_.Timestamp.Kind.ToString();status=$_.Status}})
         $after=Get-CimInstance Win32_Process -Filter "ProcessId = $ownedPid"
         if(-not $after -or $after.CreationDate.ToUniversalTime().ToString('o') -ne $created){
             $observation.timestamp_source='invalid_process_identity';$observation.error='Process exited or identity changed during counter query; do not attribute samples.'

@@ -202,6 +202,15 @@
     "GpuOperationTraceTests.cs": "ceca946b323b29c1948d85730adea13a3fcdebd76d8e7449f8cd0bc77cbf125a",
     "PreparedImageOperationTraceTests.cs": "758838f9a94422a7387eb831f2f50fad00490a80b2610b4a758339eca9bc2372"
   },
+  "diagnostic_source_hash_scope": "Exact local working-tree bytes used for tests; Git may normalize CRLF. Canonical committed source hashes are recorded separately.",
+  "diagnostic_source_commit": "f6a084e93251027b0c4b9e750b8dc3bbc4273652",
+  "canonical_git_source_sha256": {
+    "GpuTimerProbe.cs": "05c106754b73f6b000afb278eff8b22b6c798e1e8db7d2e653a9337a663d4eb9",
+    "GpuTimerProbeTests.cs": "cb8ca68b732b630b42598ba4bd3e54b456907fc4801f4de795d6165e4169a650",
+    "GpuOperationTrace.cs": "ef2f47f3ce18af777f7c05c89a2eee0aefce4f2c8f5834b7eca18bf93eee7274",
+    "GpuOperationTraceTests.cs": "ceca946b323b29c1948d85730adea13a3fcdebd76d8e7449f8cd0bc77cbf125a",
+    "PreparedImageOperationTraceTests.cs": "758838f9a94422a7387eb831f2f50fad00490a80b2610b4a758339eca9bc2372"
+  },
   "raw_evidence_sha256": {
     "gpu-calibration-suite-green-command-buffer.json": "73e2c7c322a20fd62fe76fb1ec48826871a4a0a81a2bfc9e3c1c946a91df877c",
     "gpu-calibration-suite-green-opaque.json": "af17aba8e4a5be3880d962e7216c75c3a33b4adf4cf8e07199d40604b7e2409a",

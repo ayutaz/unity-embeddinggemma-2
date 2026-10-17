@@ -41,6 +41,16 @@ GPUの内訳を読む場合は `-history.json` も出力します。Recorderの�
 
 `GpuOperationTrace` は明示した診断observerへ、演算番号・種類・tensor shape/backend・CPU submission区間・例外型を送るための補助です。値・画像・波形・embeddingは読み出しません。元の演算とtensorの所有権を変えず、`submitted` はGPU完了を意味しません。実モデルへ接続した診断は、最後にGPU fenceを通過した区間と、最後に送信した演算を区別して記録します。
 
+## 前処理・encoder・backboneのCPU観測
+
+`GpuMediaBundleExecutionTests` の画像・音声検証に `EG_MEDIA_STAGE_TIMING=1` を指定すると、既存の最終vector・数値比較を維持して、reportの `stage_measurements` に各段階のbeginとcompleted/failed/cancelledを追記します。固定fixtureとmoduleを選ぶ既存の環境変数を併用します。対象は既にloadしたsessionの前処理・encoder・backboneで、モデルload・text・解放の内訳はまだ対象外です。
+
+`MediaStageTiming` はvalidation側だけでstage interfaceを装飾します。非同期encoderは返されたTaskの完了まで待ち、同じ入力・token・結果を引き渡します。元の例外とキャンセルを維持し、stageやtensorを所有・破棄せず、tensor値の追加readbackもしません。測定終了時に元のstage参照へ戻し、既に閉じたfacadeの参照は復活させません。
+
+`wall_seconds` はGPU待ち・frame待ちを含む区間です。`process_cpu_seconds` はその区間のEditor全体のCPU時間で、当該stageだけのCPU時間ではありません。ホストのworking setは終了時の値、peakはprocess生涯の値、Unity allocatedは現在量です。allocation rateやstage別peakへ読み替えません。`gpu_elapsed_ns` はnullのまま保持し、GPU時間は別のProfiler計測を使います。計測・report保存の負荷を含む実行なので、計測なしの性能値と混在させません。
+
+生成fixtureによる8件の契約テストでは、同期待機・非同期待機・例外・キャンセル・呼び出しの分離と、実ImageEmbedder/AudioEmbedder facadeへの接続・復元を確認しました。実モデルでこの経路を実行した結果はまだなく、数値・GPU・性能の受け入れには数えません。
+
 ## 残る受け入れ
 
 まず既存の実モデルGPU障害を区間単位で特定・修正します。その後、同一candidateで全6 module、採用するFloat16形式、GPU単独と連続実行を測定し、上表のload・初回・反復・各stage・解放・Editor負荷を埋めます。未採用・未検証のFloat16形式は未実行として残し、FP32の結果で代替しません。

@@ -16,6 +16,17 @@ namespace EmbeddingGemma.Validation.Tests
     /// <summary>Opt-in real prepared-module execution; missing artifacts fail rather than skip.</summary>
     public sealed class GpuMediaBundleExecutionTests
     {
+        static IDisposable OptionalStageTiming(GpuMediaSession session, JObject report, Action save)
+        {
+            if (Environment.GetEnvironmentVariable("EG_MEDIA_STAGE_TIMING") != "1") return null;
+            var rows = new JArray(); report["stage_measurements"] = rows;
+            report["stage_measurement_scope"] = "Instrumented call intervals; process CPU includes other Editor threads; GPU timing is separate and unavailable here";
+            return MediaStageTiming.Attach(session, row =>
+            {
+                row["module"] = session.ModuleName; row["case_phase"] = report["phase"]?.DeepClone();
+                rows.Add(row); save();
+            });
+        }
         static string Cache(string path) => Path.GetFullPath(Path.Combine(Application.dataPath, "../../", path));
         static string Hash(string path)
         { using var stream = File.OpenRead(path); using var hash = SHA256.Create(); return BitConverter.ToString(hash.ComputeHash(stream)).Replace("-", "").ToLowerInvariant(); }
@@ -57,6 +68,7 @@ namespace EmbeddingGemma.Validation.Tests
             try
             {
                 report["phase"] = "load_verified_prepared_module"; Save(); session = await bundle.LoadAsync(module, token);
+                using var stageTiming = OptionalStageTiming(session, report, Save);
                 var referencePath = Cache("numerical-acceptance-state/image-role-reference-real/image-role-reference/document/image-embedding-reference.json");
                 Assert.That(Hash(referencePath), Is.EqualTo("90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac"));
                 var reference = JObject.Parse(File.ReadAllText(referencePath));
@@ -136,6 +148,7 @@ namespace EmbeddingGemma.Validation.Tests
             try
             {
                 report["phase"] = "load_verified_prepared_module"; Save(); session = await bundle.LoadAsync(module, token);
+                using var stageTiming = OptionalStageTiming(session, report, Save);
                 foreach (var row in rows)
                 {
                     token.ThrowIfCancellationRequested(); var id = (string)row["id"];

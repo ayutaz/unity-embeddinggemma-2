@@ -2,6 +2,8 @@
 
 2026-10-18。SDK `d7b2233`、validation `99bd89c`、Windows / Unity6000.3.21f1の専用consumer。モデルを読み込まず、batchmode / nographicsのEditModeで実行した。GPU推論・利用者project全体の性能の合格には数えない。
 
+[統合sourceとの対応](results/editor-index-rebuild-integration-source-20261018.json)では、実行した3つのprobe / testとmeta、assembly定義が統合ブランチと同じGit blobで、SDK Runtime treeも同じことを確認した。全validation sourceの一致や最新head全体の再実行を意味しない。
+
 ## 固定fixtureでの再構築
 
 [固定記録](results/editor-explicit-index-rebuild-99bd89c-20261018.json)は6 pass / fail0 / skip0 / exit0。5件は呼び出し・例外の契約テストで、1件の実Editorテストが既定Assets databaseの `Build()` を2回実行した。どちらも直後の `ready=false / Loading`、その後の `ready=true / Complete` と更新終了、直接インデックス検索でのfixture保持を確認した。SearchServiceのasset providerやfile-path候補へのfallbackは使わない。

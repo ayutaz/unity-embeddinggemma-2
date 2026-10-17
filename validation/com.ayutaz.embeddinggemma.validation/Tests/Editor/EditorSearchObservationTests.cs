@@ -96,7 +96,6 @@ namespace EmbeddingGemma.Validation.Tests
                 }
                 report["success"] = true;
             }
-            catch (Exception error) { report["error"] = error.ToString(); throw; }
             finally { File.WriteAllText(output, report.ToString()); }
         }
     }

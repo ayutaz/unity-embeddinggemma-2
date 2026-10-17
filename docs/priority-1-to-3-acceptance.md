@@ -1,0 +1,30 @@
+# 優先1〜3の残タスクと完了条件
+
+更新: 2026-10-18 04:54 JST。依頼「3まで進めてください」の範囲は、[ロードマップ](roadmap.md)のモデル準備・利用者操作・性能改善です。測定項目だけを終えて全体を完了にはしません。以下は固定された検証記録の監査であり、進行中のプロセスの成功を先取りしません。
+
+## 残タスク
+
+| 要件 | 現在の証拠 | 残る作業・完了条件 |
+| --- | --- | --- |
+| 1a: 全6 moduleの公開入力からの新規準備 | PR #86に固定descriptor・object検証を伴う取得ツール。配布候補は既存ローカルbundle | 公開先と固定commitを確定し、空の入力・出力cacheから全6 moduleを取得。producer、revision、descriptorと全objectのhashを照合し、実行receiptを保存する |
+| 1b: 中断・破損・期限切れからの回復 | 取得の小さなfixture契約テストあり | 実配布データで再利用・中断後再試行・同サイズ破損修復を確認。欠落・期限切れ・revision違いを成功にせず、文書のコマンドを再現する |
+| 2a: 固定Git consumerの操作 | [画像・音声登録、日英検索、キャンセル・再試行・切替・解放](results/fresh-git-native-ui-e28a5fd-20261018.json)と正常終了 | 公開手順で取得したモデルと最終candidateで再確認。非対応入力・モデル欠落・復帰も含め、最新sample修正を過去sourceの操作成功だけで合格にしない |
+| 2b: プレビュー・再生・停止 | 上記の画像プレビューと再生、別のwarm起動での[音声途中停止・解放](results/native-audio-early-stop-e28a5fd-20261018.json) | 最終candidateでの操作と統合。再生位置の進行を聴感品質の評価へ拡張しない |
+| 2c: 実マイク | 明示操作・失敗処理の実装と契約テスト。実録音は未実行 | 録音の明示許可後、開始・停止・中断復帰を実機で確認。権限拒否・deviceなしの扱いも記録。固定PCMやfake deviceを実マイク成功にしない |
+| 3a: 初回・warm・反復とstage別CPU/GPU時間 | 同じ固定入力のテキストGPU区間とCPU割り当て、画像square・音声1119の両形式のCPU/wall観測が存在 | 全image/audio profileの記録を集約し、load・前処理・encoder・backbone・releaseを分離。stage別GPU時間の測定と解釈を確認し、待機・readbackをkernel稼働時間にしない |
+| 3a: ホスト・VRAM・Editor負荷 | ホストピーク、timestamp付きGPU memory allocation、reloadとstartup/importの個別観測 | 欠測区間を埋めるか測定不能を明記し、受け入れ不足を保持。Editor search DBの時間、allocation、cold/warm条件を確認。プロセス全体・stage・寿命ピークと、重なるEditor時間を加算しない |
+| 3b: FP32/Float16と原因別改善 | [全6 moduleのFloat16単独GPU参照比較](results/all-six-module-float16-e28a5fd-acceptance-20261018.json)、[両形式の混在連続順位・解放・正常終了](results/fp32-float16-e28a5fd-playmode-correspondence-20261018.json) | 重い区間の原因を絞り、必要な修正をTDDで実装。同一入力・対応する条件で前後比較し、元の精度・全順位・GPU要件・正常終了を維持。保存容量の減少を推論高速化にしない |
+| delivery: PRと最終監査 | PR #85 UX、#86取得、#87性能・Float16が未統合。#87は#85に依存 | 最新headのRequired CI、差分・依存を確認し、依頼範囲内で統合。最終sourceとmodel hashへ全記録を対応させ、上記全行の証拠を揃えてから優先1〜3を完了とする |
+
+## そのまま維持する失敗と境界
+
+- FP32の12GiB guard中断、16GiB EditModeでの900秒fixture timeoutを保持する。別のPlayMode成功で過去の失敗を消さない。
+- GPU RecorderとProfiler履歴の値の差、既知配列を検出できなかった割り当てAPI、短い呼び出しのVRAM欠測を保持する。未知を0や合格へ置き換えない。
+- SDK `e28a5fd`、UX修正 `99cc826`、この監査前の性能branch `10a3ed5` の `Packages/com.ayutaz.embeddinggemma/Runtime` Git treeは全て `4e59c35842ef153f8ab65e46fa848c380d3c5844`。これはruntime sourceの同一性だけを示し、sample・計測コード・consumer・実行条件の同一性や最新版の操作合格は示さない。
+- モデル公開と実マイクの許可待ちの間も、独立して進められる測定・文書・回帰を進める。公開先へのuploadや録音を許可済みと推定しない。
+
+## 作業順と後続範囲
+
+実GPUの残る計測を1本ずつ進め、Editor負荷と分離して原因を特定する。並行して公開手順と最終candidateの受け入れ準備を整え、許可された公開取得・マイク確認を実施する。最後に最新CI・source対応と全行の監査を閉じる。
+
+Windows画像・音声Player、macOS/iOS/Androidの最終受け入れ、版更新・正式Releaseはロードマップの4〜7であり、今回の1〜3の完了条件に置き換えたり、黙って完了扱いしたりしない。

@@ -6,6 +6,8 @@
 
 ## 直近の作業順
 
+依頼された優先1〜3の要件ごとの現状・残作業・完了条件は[残タスク監査](priority-1-to-3-acceptance.md)を参照してください。固定sourceの数値成功、最新sampleの操作、公開元からの取得と性能全体の受け入れをそれぞれ確認します。
+
 ### 1. 新規利用者のモデル準備
 
 固定参照・現行bundle形式を使い、空checkoutからtext / image / audioの参照・qualified graph取得、変換、bundle生成を再現可能にします。期限切れartifact、欠落・破損・revision違いからの回復も文書化します。

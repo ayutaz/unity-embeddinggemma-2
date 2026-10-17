@@ -1,0 +1,12 @@
+{
+  "scope": "Initial isolated project setup failure; no tests/model/GPU acceptance",
+  "accepted": false,
+  "process_exit_code": 0,
+  "success": false,
+  "unity_evidence_error": "Unity execution XML is missing or invalid",
+  "compiler_error": "Library\\PackageCache\\com.unity.test-framework@bd7f943e9647\\UnityEngine.TestRunner\\NUnitExtensions\\Runner\\TestCommandBuilder.cs(116,31): error CS0246: The type or namespace name 'EnumerableApplyChangesToContextCommand' could not be found (are you missing a using directive or an assembly reference?)",
+  "resolution": "Embedded the Editor-bundled Test Framework 1.6.0; every original file compared byte-for-byte, with only Unity-generated meta additions. Source/model snapshots unchanged.",
+  "subsequent_acceptance": "frozen-source-gpu-dispatch-scope-calibration-20261018.json",
+  "source_receipt_sha256": "184e6eab65bcec096746157534c03c4631d4f4752a5bbf3b18b7514561d6d45d",
+  "log_sha256": "1806dbbb752e238ea2ddfca8be8a0aa64754c92d4e9b6aa0bedefac0cef1e6ae"
+}

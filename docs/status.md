@@ -1,6 +1,6 @@
 # 現在の対応範囲と検証状況
 
-更新: **2026-10-17**。コード基準はPR #83統合後のmain `a965c098aba824b47f9762cae16b3af9656a3508`。開発版 `0.1.0-pre.1`、公開tag・正式Releaseはありません。
+更新: **2026-10-18**。統合済み基準はmain `35d18f8`、下記の追加検証は未統合SDK `e28a5fd`に対応します。開発版 `0.1.0-pre.1`、公開tag・正式Releaseはありません。
 
 [導入](../README.md) / [ドキュメント一覧](README.md) / [今後の計画](roadmap.md)
 
@@ -42,9 +42,21 @@ PR #31と#83はマージ済みです。#83の検証head `613ada824bd13a297660d8c
 
 ## 未完了・未検証
 
+### 進行中PRの確認済み範囲
+
+- [#85](https://github.com/ayutaz/unity-embeddinggemma-2/pull/85): 画像プレビュー・音声再生・明示的なマイク操作の実装。最新固定Git consumerでの一連の手動操作と、許可を得た実マイク確認は未完了です。
+- [#86](https://github.com/ayutaz/unity-embeddinggemma-2/pull/86): 固定bundleの取得・監査・再試行・修復。公開取得元から全6 moduleを空cacheへ取得する実行証拠は未完了です。
+- [#87](https://github.com/ayutaz/unity-embeddinggemma-2/pull/87): Float16重みの全6 module・固定16ケースは、単独Editorの実GPUで参照比較・正常終了を確認しました。[固定結果](results/all-six-module-float16-e28a5fd-acceptance-20261018.json)。同一プロセスの連続実行、検索順位、性能、実UIの合格を含みません。
+
+SDK `e28a5fd`のFP32連続試験は、12GiB guardでの中断を保持しています。16GiBの明示割り当てによる別試験も、画像3件と音声1件の登録後、2種類目の音声処理中に既存900秒のfixture上限を超えました。後続テキストfixtureは合格しましたが、全体は1 pass / 1 fail / skip0 / exit2です。[失敗記録](results/combined-fp32-e28a5fd-16gib-timeout-20261018.json)。上限変更や過去sourceの成功をもって、安定性の改善とは扱いません。
+
+同一テキストの初回・warm・反復について、CPU時間、実GPUタイムスタンプ、Profiler履歴、load・解放・メモリを記録する受け入れfixtureを追加しました。実行結果はまだありません。画像・音声のstage別測定とEditor負荷の測定も残っています。
+
+### 残る受け入れ
+
 - 空のcheckoutから画像・音声bundleを準備する公開手順と配布経路。
 - 最終統合candidateを新しいconsumerへ導入し、全モダリティを手動で一通り操作する最終受け入れ。
-- 結果画像のプレビュー、結果音声の再生、明示的なマイク収録・停止・権限失敗の処理。
+- 結果画像プレビュー・音声再生・明示的なマイク操作のPR統合と実操作の受け入れ。
 - 同一candidateでの初回 / warm反復、VRAM・ホストメモリ・ロード・Editor負荷の系統的な測定。
 - 画像・音声検索のWindows Player、macOS Editor、iOS / Android実機での精度・操作・cache・正常終了。Androidの過去のAPK build成功は実機GPU合格ではありません。
 - 全モダリティの採用Float16形式・明示CPU経路の環境別受け入れ、最終candidate / tag固定導入、正式Release。

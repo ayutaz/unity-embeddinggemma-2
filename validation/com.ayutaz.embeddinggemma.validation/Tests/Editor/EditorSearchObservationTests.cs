@@ -30,6 +30,8 @@ namespace EmbeddingGemma.Validation.Tests
                 ["model_loaded"] = false, ["gpu_execution_validated"] = false,
                 ["scope"] = "Default Search database initialization/readiness, enumeration and fixed SDK asset lookup. Search APIs can initialize their default Library index. No explicit CreateIndex/rebuild, model inference or clean-cache claim. Round first is after readiness, not cold index creation.",
                 ["expected_asset"] = expected, ["expected_guid"] = expectedGuid,
+                ["search_query"] = "TextEmbedder",
+                ["search_route"] = "asset provider with Packages and WantsMore; file-path results plus default index, not isolated index-only latency",
                 ["rounds"] = new JArray()
             };
             try
@@ -73,8 +75,8 @@ namespace EmbeddingGemma.Validation.Tests
                         ["name"] = db.name, ["ready"] = SearchService.IsIndexReady(db.name)
                     }));
                     cpu = process.TotalProcessorTime; timer.Restart();
-                    const SearchFlags flags = SearchFlags.Synchronous | SearchFlags.Packages;
-                    using var context = SearchService.CreateContext("asset", "a:packages TextEmbedder", flags);
+                    const SearchFlags flags = SearchFlags.Synchronous | SearchFlags.Packages | SearchFlags.WantsMore;
+                    using var context = SearchService.CreateContext("asset", "TextEmbedder", flags);
                     var items = SearchService.GetItems(context, flags).ToArray();
                     timer.Stop(); process.Refresh();
                     var found = items.Any(item => item.id == expected || item.id == expectedGuid

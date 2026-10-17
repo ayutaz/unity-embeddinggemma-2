@@ -18,14 +18,18 @@ namespace EmbeddingGemma.Validation.Tests
     public sealed class AsyncFrameAllocationCalibrationTests
     {
         [UnityTearDown] public IEnumerator Exit(){if(Application.isPlaying)yield return new ExitPlayMode();}
-        static async Task AllocateAcrossFrames(int bytes,CustomSampler before,CustomSampler after,SynchronizationContext context,JObject row)
+        static async Task AllocateAcrossFrames(int bytes,CustomSampler before,CustomSampler after,SynchronizationContext context,JObject row,FrameManagedAllocationCapture capture)
         {
             Assert.That(SynchronizationContext.Current,Is.SameAs(context));
             byte[] first=null,second=null;row["payload_before_render_frame"]=Time.frameCount;
+            var samplesBefore=capture.CollectedSamples;row["counter_samples_before_first_payload"]=samplesBefore;
             before.Begin();try{if(bytes>0){first=new byte[bytes/2];first[0]=1;}}finally{before.End();}
-            var frame=Time.frameCount;do{await Task.Yield();}while(Time.frameCount<=frame);
+            // Game render frames and Editor counter finalization are different boundaries.
+            // The controlled fixture must observe the first payload before emitting the second.
+            var frame=Time.frameCount;do{await Task.Yield();}while(Time.frameCount<=frame||capture.CollectedSamples<=samplesBefore);
             Assert.That(SynchronizationContext.Current,Is.SameAs(context));
             row["payload_after_render_frame"]=Time.frameCount;
+            row["counter_samples_before_second_payload"]=capture.CollectedSamples;
             after.Begin();try{if(bytes>0){second=new byte[bytes/2];second[0]=1;}}finally{after.End();}
             GC.KeepAlive(first);GC.KeepAlive(second);
         }
@@ -58,7 +62,7 @@ namespace EmbeddingGemma.Validation.Tests
                     var row=new JObject { ["payload_bytes"]=bytes };((JArray)report["cases"]).Add(row);
                     using(var capture=new FrameManagedAllocationCapture(name))
                     {
-                        var task=AllocateAcrossFrames(bytes,before,after,context,row);var wait=Stopwatch.StartNew();
+                        var task=AllocateAcrossFrames(bytes,before,after,context,row,capture);var wait=Stopwatch.StartNew();
                         while(!task.IsCompleted&&wait.Elapsed.TotalSeconds<15){EditorApplication.QueuePlayerLoopUpdate();yield return null;}
                         Assert.That(task.IsCompleted,Is.True,"The controlled Task must cross actual render frames.");task.GetAwaiter().GetResult();capture.Complete();
                         wait.Restart();while(!capture.TryClose()&&wait.Elapsed.TotalSeconds<15){EditorApplication.QueuePlayerLoopUpdate();yield return null;}

@@ -35,6 +35,7 @@ namespace EmbeddingGemma.Validation.Tests
             if(disposed)throw new ObjectDisposedException(nameof(FrameManagedAllocationCapture));
             if(Thread.CurrentThread.ManagedThreadId!=owner)throw new InvalidOperationException("Read the frame counter on its creating thread.");
         }
+        public int CollectedSamples { get { CheckOwner();return recorder.Count; } }
         public void Complete()
         {
             CheckOwner();if(completed)throw new InvalidOperationException("Complete the operation window exactly once.");

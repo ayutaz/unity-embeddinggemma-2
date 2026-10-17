@@ -1,0 +1,41 @@
+{
+  "isolated_original_reference_gpu_accepted": true,
+  "all_modules_accepted": false,
+  "mixed_search_accepted": false,
+  "complete_performance_accepted": false,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "c2f766e4e05f5378eba15b6552e4a244ebeebfa9",
+  "module": "image-landscape",
+  "precision": "fp32",
+  "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+  "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+  "independent_cases": [
+    {
+      "id": "landscape-0",
+      "independent_cosine": 0.9999999999989977,
+      "norm_squared": 1.0000000234680546,
+      "capture_sha256": "48532cc0c6ed58fb27df7619c524a5037b26c598d88e56b0ed1184f6e97f0ee8"
+    },
+    {
+      "id": "landscape-1",
+      "independent_cosine": 0.9999999999996282,
+      "norm_squared": 1.0000000078186857,
+      "capture_sha256": "ed12dbaf9c20fd054ae8c2b0c88e1d4b96cd11fc8d1d01117bf15d52d8a5a119"
+    }
+  ],
+  "exit_code": 0,
+  "unity_counts": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "scope": "Actual isolated GPU fixture plus independent binary-vector reference audit; no public acquisition/native UI/microphone or timing qualification.",
+  "evidence_sha256": {
+    "gpu-output-isolated-image-landscape-fp32-d7b2233.json": "2c492ff231ce0f031b2fd94a7b1c8ca4fa064b69b89f14eaa0ba93e0cfdc108e",
+    "gpu-output-isolated-image-landscape-fp32-d7b2233.xml": "241e708e51ab8afb5c6850a1f67f2ee34623288f6011e8c44f9167620c1934ac",
+    "gpu-output-isolated-image-landscape-fp32-d7b2233.log": "b8f1d169882d4e6d738e514d9cebd7c8d8d1cf410acab32cd8c983b50cda4067",
+    "gpu-output-isolated-image-landscape-fp32-d7b2233-source.json": "d256b8de51348a971c82b42d9787ad957af3710405ab4266e66e10c0bd6c1c61",
+    "gpu-output-isolated-image-landscape-fp32-d7b2233-process.json": "af01dc47768a8bdecf82aeb98ca480c97a2fb9c9517df4873533bae38aebf0bd"
+  }
+}

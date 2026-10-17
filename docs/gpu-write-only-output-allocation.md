@@ -15,11 +15,12 @@
 - 初回後3回の計測付きAPI経過時間は、修正前19.689 / 19.299 / 29.389秒、修正後5.214 / 4.832 / 5.481秒だった。これはこの固定画像の観測であり、通常API・他profile・平均性能・一般的な改善率を保証しない。
 - [Float16重みの独立比較](results/gpu-output-square-float16-weights-matched-comparison-20261018.json)も同じsquare-0・計測・GPUで各4回の参照一致・解放・exit0と全4出力の前後byte一致を確認した。初回後3回は修正前34.048 / 32.479 / 30.204秒、修正後5.067 / 5.009 / 4.603秒。こちらも計測付き固定入力の観測であり、形式間の速度比較や通常APIの保証ではない。
 - shader ResourcesのGit treeは旧SDKと一致する。重み・graphを再生成していない。
+- 新SDKの[全6 module・両精度の単独参照照合](results/gpu-output-d7b2233-all-module-isolated-reference-20261018.json)は12実行・32 vectorで完了した。各実行は元のPython参照との独立したバイナリ再計算、有限768次元・単位長、FP32 >= 0.999 / Float16 >= 0.99、skip0・正常終了を確認した。個別監査のhashも照合して保持する。単独受け入れを混在検索や手動UIの代用にはしない。
 
 別のproject/processで順に実行し、OS・shader cacheや他アプリの負荷は制御していない。Profiler/markerの影響があり、CPU送信区間の経過時間とGPU queue区間は重なり得るため、両者を足したり差し引いたりしない。
 
 ## 残る受け入れ
 
-新SDKの他画像profile・音声・テキストの元参照、混在検索の全順位・score・キャンセル再試行・解放を確認する。通常APIの対応する入力と条件での計測、host / GPU memory、残るstage GPU時間・非同期割り当て・Editor測定も必要である。旧SDKの全40回やFloat16全6 moduleの合格を、新SDKの合格へ流用しない。
+新SDKの混在検索の全順位・score・キャンセル再試行・解放を確認する。通常APIの対応する入力と条件での計測、host / GPU memory、残るstage GPU時間・非同期割り当て・Editor測定も必要である。旧SDKの全40回やFloat16全6 moduleの合格を、新SDKの合格へ流用しない。
 
 PR #87はDraftを維持し、最新headのCIも別に確認する。公開empty-cache取得・許可後の実マイク・最終candidate操作を含む優先1〜3全体は未完了である。

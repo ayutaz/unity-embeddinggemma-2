@@ -1,0 +1,41 @@
+{
+  "isolated_original_reference_gpu_accepted": true,
+  "all_modules_accepted": false,
+  "mixed_search_accepted": false,
+  "complete_performance_accepted": false,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "c2f766e4e05f5378eba15b6552e4a244ebeebfa9",
+  "module": "image-landscape",
+  "precision": "float16-weights",
+  "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+  "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+  "independent_cases": [
+    {
+      "id": "landscape-0",
+      "independent_cosine": 0.9999999999990703,
+      "norm_squared": 1.0000001457386818,
+      "capture_sha256": "d87604e842924ab3c24e49889f70f05504e9329195667b13249a394c36ec7822"
+    },
+    {
+      "id": "landscape-1",
+      "independent_cosine": 0.9999999999995466,
+      "norm_squared": 1.0000000931336894,
+      "capture_sha256": "3863c8cd12259349570966a576b0d84e965557d07fa5b72ae5153c12862d0c92"
+    }
+  ],
+  "exit_code": 0,
+  "unity_counts": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "scope": "Actual isolated GPU fixture plus independent binary-vector reference audit; no public acquisition/native UI/microphone or timing qualification.",
+  "evidence_sha256": {
+    "gpu-output-isolated-image-landscape-float16-weights-d7b2233.json": "8f9c45bac619b07d14e57912a617f09095b52aee6ed2e027fb9d5281e9fe3bbf",
+    "gpu-output-isolated-image-landscape-float16-weights-d7b2233.xml": "6aef9ffe69f541e31487d7508bdc6a63975bcdf793455b7d979eba90c843a5c0",
+    "gpu-output-isolated-image-landscape-float16-weights-d7b2233.log": "98b37103988363961b232cc7378a30cbb22744ffa2cfb2f95ad9f693bee20d4b",
+    "gpu-output-isolated-image-landscape-float16-weights-d7b2233-source.json": "3aadae09dc4c9668cabeac05c8e15abea2b04607e0a63056bb012437b27a1688",
+    "gpu-output-isolated-image-landscape-float16-weights-d7b2233-process.json": "e7609f69d77312e0279e41d8e8cf279a68628697dcf415f78b97d33b0595e060"
+  }
+}

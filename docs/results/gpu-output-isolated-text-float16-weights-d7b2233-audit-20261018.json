@@ -1,0 +1,53 @@
+{
+  "isolated_original_reference_gpu_accepted": true,
+  "all_modules_accepted": false,
+  "mixed_search_accepted": false,
+  "complete_performance_accepted": false,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "c2f766e4e05f5378eba15b6552e4a244ebeebfa9",
+  "module": "text",
+  "precision": "float16-weights",
+  "reference_sha256": "f316d5199c920431c7f721d43b2cedbe4a6384fb0e0664511b75bc2e98fe80fe",
+  "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+  "independent_cases": [
+    {
+      "id": "query-cat-ja",
+      "independent_cosine": 0.9999999999998965,
+      "norm_squared": 1.0000001871676685,
+      "capture_sha256": "18bc4e6695da7e6cedd3bdb2116ced4a44bf731052312935d0bb7b04938b1971"
+    },
+    {
+      "id": "query-space-en",
+      "independent_cosine": 0.9999999999998785,
+      "norm_squared": 0.999999925911046,
+      "capture_sha256": "88825fc9926de9b4df461c177fcf059232fafba4b86afebeb537c390944b6b59"
+    },
+    {
+      "id": "query-recipe-ja",
+      "independent_cosine": 0.9999999999998921,
+      "norm_squared": 1.0000000350165683,
+      "capture_sha256": "934e79f78bc1fb3a79097e99b34ec0ec09ec13acf275fc30b4b66b73692a4afe"
+    },
+    {
+      "id": "query-cat-en",
+      "independent_cosine": 0.9999999999998684,
+      "norm_squared": 0.9999999974054655,
+      "capture_sha256": "e3c7049c30e38d3af2150c1f07b0474b2f7f04a0cf73ea738b0f8d3e7e2d0272"
+    }
+  ],
+  "exit_code": 0,
+  "unity_counts": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "scope": "Actual isolated GPU fixture plus independent binary-vector reference audit; no public acquisition/native UI/microphone or timing qualification.",
+  "evidence_sha256": {
+    "gpu-output-isolated-text-float16-weights-d7b2233.json": "09b7f0291a1c56558c0de6d53a5c9dd30d2023eb9fdfe2aca52f56f45e679a04",
+    "gpu-output-isolated-text-float16-weights-d7b2233.xml": "117a9f152b9a2e3707127ea2b47366196f72bf0363677c70bf36561481637544",
+    "gpu-output-isolated-text-float16-weights-d7b2233.log": "c0344657af4ef29bdee4440eac91487c893b4a2bc4fc85c9406d44948f480329",
+    "gpu-output-isolated-text-float16-weights-d7b2233-source.json": "bfa689c445f37fad6bf32024707ef46dbd84c65ca5c5f24db1799ae108228f9d",
+    "gpu-output-isolated-text-float16-weights-d7b2233-process.json": "774538792e481638dd4c9d42e583fa498c4e02cc241f134c3158a932d43eb8de"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "native_session_accepted": false,
+  "full_priorities_1_to_3_accepted": false,
+  "reason": "The exact owned Editor reached its 900-second controller deadline; exit1 is not normal closure.",
+  "sdk_source": "680af07c0ecad524accec00797c645b8528e6bf5",
+  "precision": "float16-weights",
+  "terminal_receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\usability-consumer-680af07",
+      "-executeMethod",
+      "UsabilityUiBootstrap.Open",
+      "-logFile",
+      ".\\artifacts\\usability-state\\native-ui-680af07-fresh.log"
+    ],
+    "timeout_seconds": 900,
+    "success": false,
+    "terminal": true,
+    "timed_out": true,
+    "started_utc": "2026-10-17T21:31:11.611438+00:00",
+    "pid": 9844,
+    "exit_code": 1,
+    "elapsed_seconds": 900.8197206999757,
+    "completed_utc": "2026-10-17T21:46:12.431167+00:00"
+  },
+  "scope": "Partial actual mouse/keyboard evidence in a fresh fixed-Git consumer using an already prepared local bundle. Numerical observations do not accept the whole timed-out session.",
+  "independently_verified_vectors": [
+    {
+      "id": "media-0",
+      "reference_case": "square-0",
+      "cosine": 0.9999999999997693,
+      "norm_squared": 0.9999999833173898
+    },
+    {
+      "id": "media-1",
+      "reference_case": "sine",
+      "cosine": 0.9999999905661618,
+      "norm_squared": 1.0000001206795803
+    }
+  ],
+  "independently_verified_queries": [
+    {
+      "text": "猫を健康に育てるには",
+      "utc": "2026-10-17T21:43:36.6652618Z",
+      "hits": [
+        {
+          "id": "media-0",
+          "title": "square-0.png",
+          "score": 0.5495174788166498
+        },
+        {
+          "id": "media-1",
+          "title": "sine.f32",
+          "score": 0.5408631086157262
+        }
+      ],
+      "maximum_score_error": 2.6369377859047916e-06
+    },
+    {
+      "text": "How should I care for a pet cat?",
+      "utc": "2026-10-17T21:44:39.9358889Z",
+      "hits": [
+        {
+          "id": "media-0",
+          "title": "square-0.png",
+          "score": 0.5749439903276136
+        },
+        {
+          "id": "media-1",
+          "title": "sine.f32",
+          "score": 0.5607329762591644
+        }
+      ],
+      "maximum_score_error": 1.8078760516404557e-06
+    }
+  ],
+  "cache_preparation_cancel_and_retry_observed": true,
+  "cancellation_scope": "Cache/preparation only. An earlier click arrived after registration; no native GPU-stage cancellation claim.",
+  "missing_bundle_error_and_recovery_observed": true,
+  "image_preview_visually_inspected": true,
+  "audio_playback_observed": false,
+  "early_playback_stop_proven": false,
+  "native_release_observed": false,
+  "normal_editor_exit_verified": false,
+  "microphone_started": false,
+  "protected_root_files_verified": 4,
+  "unverified": [
+    "Playback and early stop on this SDK",
+    "Release and normal Editor exit on this SDK",
+    "Empty-query/unsupported-input recovery on this SDK",
+    "Public empty-cache acquisition",
+    "Authorized real microphone"
+  ],
+  "evidence_sha256": {
+    "native-ui-680af07-fresh-process.json": "588acfecaffeb581b47484efb0062a08c8fb309faae8376016f188aae65bf4a3",
+    "native-ui-680af07-fresh.json.events.jsonl": "7cc4f5b636e4a78245eadd7d67f217fa48485501965df2f3b6cb0748e3c4801e",
+    "fresh-consumer-680af07-source-audit.json": "26d656cede35a46fb6cd414f418f4b462c5533b6e0cecfa8dfb9718b9dd1bd16",
+    "native-ui-680af07-fresh.log": "a9ba17ee0dca4d2c46da1e395b8c0a9e2892c374018e777dbcdf1c89ae0e88db"
+  },
+  "audited_utc": "2026-10-17T21:49:38.975178+00:00"
+}

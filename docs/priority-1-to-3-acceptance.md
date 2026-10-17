@@ -18,6 +18,7 @@
 
 ## そのまま維持する失敗と境界
 
+- 最新sampleを含む固定Git `680af07` の新規consumerでは、実マウス・キーボードで画像と音声を登録し、日英2 queryの順位・scoreと768次元vectorを独立参照へ照合した。ただし所有Editorは900秒の上限でexit1となったため、[部分実行の監査](results/fresh-git-native-ui-680af07-partial-timeout-20261018.json)は操作全体を不合格とする。cache準備中のキャンセルと再試行、モデル欠落からの復帰、画像表示は観測済み。音声再生・途中停止・解放・正常終了、空query・非対応入力、実マイクの成功はこの実行で証明していない。
 - FP32の12GiB guard中断、16GiB EditModeでの900秒fixture timeoutを保持する。別のPlayMode成功で過去の失敗を消さない。
 - GPU RecorderとProfiler履歴の値の差、既知配列を検出できなかった割り当てAPI、短い呼び出しのVRAM欠測を保持する。未知を0や合格へ置き換えない。
 - SDK `e28a5fd`、UX修正 `99cc826`、この監査前の性能branch `10a3ed5` の `Packages/com.ayutaz.embeddinggemma/Runtime` Git treeは全て `4e59c35842ef153f8ab65e46fa848c380d3c5844`。これはruntime sourceの同一性だけを示し、sample・計測コード・consumer・実行条件の同一性や最新版の操作合格は示さない。

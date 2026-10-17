@@ -31,6 +31,7 @@ def test_owned_runner_audits_unity_xml_even_when_process_exits_zero(tmp_path,mon
         pid=123
         returncode=0
         def wait(self,timeout): return 0
+        def poll(self): return self.returncode
     monkeypatch.setattr(bounded_process.subprocess,'Popen',lambda *args,**kwargs:Process())
     xml=tmp_path/'unity.xml'
     xml.write_text(f'<test-run total="{total}" passed="{passed}" failed="{failed}" skipped="0"/>')

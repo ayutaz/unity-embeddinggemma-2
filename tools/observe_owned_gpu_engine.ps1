@@ -14,10 +14,13 @@ while([DateTime]::UtcNow -lt $deadline){
     if(-not $process -or $process.Name -ne 'Unity.exe' -or $process.CommandLine -notlike '*unity-embeddinggemma-2*'){break}
     $created=$process.CreationDate.ToUniversalTime().ToString('o')
     $observation=[ordered]@{pid=$ownedPid;process_created_utc=$created;request_begin_utc=[DateTime]::UtcNow.ToString('o');
-        timestamp_source=$null;timestamp_100ns=$null;utc=$null;rows=@();error=$null;
+        timestamp_source=$null;timestamp_100ns=$null;utc=$null;rows=@();error=$null;provider_errors=@();
         scope='Raw Timer100Ns numerator per exact process/adapter/engine. Not exclusive SDK time, not a sum of overlapping engines.'}
     try{
-        $set=Get-Counter -Counter '\GPU Engine(*)\Utilization Percentage' -ErrorAction Stop
+        $providerErrors=@()
+        $set=Get-Counter -Counter '\GPU Engine(*)\Utilization Percentage' -ErrorAction SilentlyContinue -ErrorVariable providerErrors
+        $observation.provider_errors=@($providerErrors|ForEach-Object{$_.Exception.Message})
+        if(-not $set){throw 'The provider returned no counter sample set.'}
         $observation.timestamp_100ns=$set.Timestamp.ToUniversalTime().ToFileTimeUtc()
         $observation.utc=$set.Timestamp.ToUniversalTime().ToString('o')
         $observation.timestamp_source='counter_sample_set'
@@ -29,7 +32,7 @@ while([DateTime]::UtcNow -lt $deadline){
             timestamp_kind=$_.Timestamp.Kind.ToString();status=$_.Status}})
         $after=Get-CimInstance Win32_Process -Filter "ProcessId = $ownedPid"
         if(-not $after -or $after.CreationDate.ToUniversalTime().ToString('o') -ne $created){
-            $observation.timestamp_source='invalid_process_identity';$observation.error='Process exited or identity changed during counter query; do not attribute samples.'
+            $observation.error='Process exited or identity changed during counter query; do not attribute samples.'
         }
     }catch{
         $observation.error=$_.Exception.Message

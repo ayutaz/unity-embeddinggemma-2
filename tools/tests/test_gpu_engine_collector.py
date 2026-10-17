@@ -24,12 +24,12 @@ def collect(tmp_path, scenario):
 $fixtureReceipt = RECEIPT
 $fixtureOutput = OUTPUT
 $scenario = SCENARIO
-$created = [DateTime]::UtcNow
+$fixtureCreated = [DateTime]::UtcNow
 $script:queryFinished = $false
 function Get-CimInstance {
     param($ClassName, $Filter)
     if($script:queryFinished -and $scenario -eq 'identity'){return $null}
-    [pscustomobject]@{Name='Unity.exe';CommandLine='Unity.exe -projectPath C:/unity-embeddinggemma-2/test';CreationDate=$created}
+    [pscustomobject]@{Name='Unity.exe';CommandLine='Unity.exe -projectPath C:/unity-embeddinggemma-2/test';CreationDate=$fixtureCreated}
 }
 function Get-Counter {
     [CmdletBinding()]param([string[]]$Counter)

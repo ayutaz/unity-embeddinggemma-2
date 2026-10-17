@@ -40,6 +40,8 @@ namespace EmbeddingGemma.Validation.Tests
             var query=JObject.Parse(File.ReadAllText(referencePath))["queries"].First();
             var expected=query["embedding"].Values<float>().ToArray();
             var directCommandsRequested=Environment.GetEnvironmentVariable("EG_TEXT_GPU_COMMAND_BUFFER")=="1";
+            var scopeCalibration=Environment.GetEnvironmentVariable("EG_GPU_SCOPE_CALIBRATION")=="1";
+            Assert.That(!scopeCalibration || directCommandsRequested,Is.True);
             var allocationBeforeProbe=GC.GetAllocatedBytesForCurrentThread();
             var knownAllocation=new byte[65536]; knownAllocation[knownAllocation.Length-1]=1;
             var allocationProbeDelta=GC.GetAllocatedBytesForCurrentThread()-allocationBeforeProbe; GC.KeepAlive(knownAllocation);
@@ -54,6 +56,7 @@ namespace EmbeddingGemma.Validation.Tests
                 ["allocation_scope"]="GC cumulative bytes allocated on this main thread during each interval, including measurement wrapper allocations. Async load/release intervals include unrelated Editor callbacks; excludes other threads and native allocations.",
                 ["throughput_measured"]=false,["microphone_started"]=false };
             report["dispatch_mode"]=directCommandsRequested?"direct_worker_command_buffer":"sdk_query_api";
+            report["controlled_scope_calibration"]=scopeCalibration;
             report["managed_allocation_counter_available"]=allocationCounterAvailable;
             report["allocation_probe_expected_minimum_bytes"]=65536; report["allocation_probe_raw_delta_bytes"]=allocationProbeDelta;
             report["gpu_timing_interpretation_validated"]=false;
@@ -116,12 +119,16 @@ namespace EmbeddingGemma.Validation.Tests
                     var sampler=CustomSampler.Create("EmbeddingGemma.TextBenchmark."+name,true);
                     var recorder=sampler.GetRecorder(); recorder.enabled=true; recorders.Add(recorder);
                     Assert.That(recorder.isValid,Is.True);
+                    var dispatchCount=scopeCalibration && name=="repeat-1"?2:1;
+                    var cpuGapMs=scopeCalibration && (name=="warm" || name=="repeat-2")?250:0;
                     var allocatedBefore=GC.GetAllocatedBytesForCurrentThread(); var cpu=Cpu(); var watch=Stopwatch.StartNew(); float[] actual;
                     if(directCommandsRequested)
                     {
                         directCommands.Clear(); directCommands.BeginSample(sampler);
-                        directCommands.ScheduleWorker(directWorker); directCommands.EndSample(sampler);
+                        for(var dispatch=0;dispatch<dispatchCount;dispatch++) directCommands.ScheduleWorker(directWorker);
+                        directCommands.EndSample(sampler);
                         var fence=directCommands.CreateGraphicsFence(GraphicsFenceType.AsyncQueueSynchronisation,SynchronisationStageFlags.AllGPUOperations);
+                        if(cpuGapMs>0) Thread.Sleep(cpuGapMs); // Outside the GPU marker: no commands submitted yet.
                         Graphics.ExecuteCommandBuffer(directCommands);
                         while(!fence.passed) { EditorApplication.QueuePlayerLoopUpdate(); yield return null; }
                         var result=(Tensor<float>)directWorker.PeekOutput();
@@ -144,6 +151,7 @@ namespace EmbeddingGemma.Validation.Tests
                     var capture=Path.ChangeExtension(output,null)+"-"+name+".bin"; Assert.That(File.Exists(capture),Is.False);
                     var bytes=new byte[actual.Length*4]; Buffer.BlockCopy(actual,0,bytes,0,bytes.Length); File.WriteAllBytes(capture,bytes);
                     var row=new JObject { ["round"]=name,["wall_seconds"]=watch.Elapsed.TotalSeconds,["process_cpu_seconds"]=cpuSeconds,
+                        ["model_dispatch_count"]=dispatchCount,["cpu_gap_before_gpu_submission_ms"]=cpuGapMs,
                         ["begin_utc"]=beginUtc.ToString("O"),["end_utc"]=endUtc.ToString("O"),
                         ["main_thread_managed_allocated_bytes"]=allocationCounterAvailable?new JValue(allocatedBytes):JValue.CreateNull(),
                         ["main_thread_managed_allocated_bytes_per_second"]=allocationCounterAvailable?new JValue(allocatedBytes/watch.Elapsed.TotalSeconds):JValue.CreateNull(),

@@ -16,4 +16,12 @@ windowはoperation完了時点のsample数を記録し、その後最初の新�
 
 最初のcontrol `664ab20` は描画frameだけの進行を待ったため、4MiBの2回の確保が1個のcounter sampleへ集まり、9 pass / 1 fail / skip0 / exit2だった。[元の失敗](results/async-frame-render-counter-boundary-failure-20261018.json)を保持する。修正は、校正用の2回目の確保を実際のcounter更新後まで待つもの。2個の大きなsample・元の上限・同じSynchronizationContextの条件は緩めていない。
 
-これはcounterと集計方法のcontrolで、実モデルの非同期allocationやGPU互換性の合格ではない。次に既存の音声GPU検証へopt-inで接続し、元の参照値・解放・正常終了を維持した実行記録を確認する。検証全体のwindowには入力準備・参照照合・JSON出力も含まれるため、個々のSDK stageのexclusive bytesとは扱わない。
+このcontrol自体は実モデルやGPU互換性の代用ではない。
+
+## 代表実音声の検証区間へ接続
+
+既存の実音声検証に `EG_ASYNC_FRAME_ALLOCATION=1` のopt-inを追加した。最初に必要な記録の存在を要求し、SDK `d7b2233` / validation `d1df229` のFP32 / audio-1119で4 vectorの参照一致と解放の後、記録欠落による0 pass / 1 fail / skip0 / exit2を観測した。実装後の `9bed619` は同じ元の入力・参照・GPU・メモリ上限・終了条件で1 pass / fail0 / skip0 / exit0だった。[独立したRed/Green監査](results/async-real-audio-frame-allocation-9bed619-20261018.json)。両試行の計8 vectorを独立に再計算し、終了後570 sourceファイルも照合した。
+
+Greenのwindowはcounter sample 2052個、managed bytes合計6,984,175,075、ホスト生涯ピーク9,465,491,456 bytesだった。累積割り当てとピークを混同しない。SDKへの元のasync呼び出しを含む `Run` 本体はRed/Greenで同一で、追加したcaptureは検証driverの外側に置いた。SDKの演算・await・GPU fence・cache解放は変更していない。
+
+windowには入力準備・ロード・4回のGPU呼び出し・既存のstage observer・参照照合・JSON/binary I/O・解放・含まれるframeのEditor処理が入る。個々のSDK stageのexclusive bytesや全profile・全precisionの割り当て量ではない。モデルなしcontrolと、代表実モデルの広い区間の結果を分け、測定範囲を最終監査で保持する。

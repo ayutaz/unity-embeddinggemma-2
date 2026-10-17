@@ -1,0 +1,119 @@
+{
+  "real_gpu_media_run_with_frame_wide_gc_window_accepted": true,
+  "exclusive_sdk_allocation_measured": false,
+  "complete_performance_accepted": false,
+  "full_priorities_1_to_3_accepted": false,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "9bed619f00ab74a826b620344d5d77f2bbd19f4c",
+  "module": "audio-1119",
+  "precision": "fp32",
+  "frame_window": {
+    "name": "media-validation-run-including-input-load-query-release-and-io",
+    "begin_utc": "2026-10-17T22:11:36.4838966Z",
+    "begin_render_frame": 10,
+    "scope": "GC Allocated In Frame counter samples collected through the first new sample after completion. Includes containing frames, observation overhead and unrelated Editor work. Overlapping windows must not be summed; not exclusive SDK allocation.",
+    "counter": "GC Allocated In Frame",
+    "unit": "Bytes",
+    "data_type": "Int64",
+    "capacity": 65536,
+    "completed_utc": "2026-10-17T22:12:50.1036900Z",
+    "completed_render_frame": 2062,
+    "samples_at_completion": 2051,
+    "closed_utc": "2026-10-17T22:12:50.1228386Z",
+    "closed_render_frame": 2063,
+    "included_samples": 2052,
+    "discarded_tail_samples": 1,
+    "managed_bytes_in_recorded_frames": 6984175075,
+    "wrapped": false
+  },
+  "host_lifetime_peak_bytes": 9465491456,
+  "green_counts": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "green_exit_code": 0,
+  "red_counts": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0
+  },
+  "red_exit_code": 2,
+  "red_failure_was_missing_required_allocation_record": true,
+  "independent_vectors": [
+    {
+      "phase": "red",
+      "round": "first",
+      "independent_cosine": 0.9999999999928917,
+      "norm_squared": 1.0000000994303668,
+      "capture_sha256": "e8059c050b7f8204cd7ad54d034111b3c6aa9d74199412be6d7d85322be7b5c9"
+    },
+    {
+      "phase": "red",
+      "round": "warm",
+      "independent_cosine": 0.9999999999928917,
+      "norm_squared": 1.0000000994303668,
+      "capture_sha256": "e8059c050b7f8204cd7ad54d034111b3c6aa9d74199412be6d7d85322be7b5c9"
+    },
+    {
+      "phase": "red",
+      "round": "repeat-1",
+      "independent_cosine": 0.9999999999928917,
+      "norm_squared": 1.0000000994303668,
+      "capture_sha256": "e8059c050b7f8204cd7ad54d034111b3c6aa9d74199412be6d7d85322be7b5c9"
+    },
+    {
+      "phase": "red",
+      "round": "repeat-2",
+      "independent_cosine": 0.9999999999928917,
+      "norm_squared": 1.0000000994303668,
+      "capture_sha256": "e8059c050b7f8204cd7ad54d034111b3c6aa9d74199412be6d7d85322be7b5c9"
+    },
+    {
+      "phase": "green",
+      "round": "first",
+      "independent_cosine": 0.9999999999928917,
+      "norm_squared": 1.0000000994303668,
+      "capture_sha256": "e8059c050b7f8204cd7ad54d034111b3c6aa9d74199412be6d7d85322be7b5c9"
+    },
+    {
+      "phase": "green",
+      "round": "warm",
+      "independent_cosine": 0.9999999999928917,
+      "norm_squared": 1.0000000994303668,
+      "capture_sha256": "e8059c050b7f8204cd7ad54d034111b3c6aa9d74199412be6d7d85322be7b5c9"
+    },
+    {
+      "phase": "green",
+      "round": "repeat-1",
+      "independent_cosine": 0.9999999999928917,
+      "norm_squared": 1.0000000994303668,
+      "capture_sha256": "e8059c050b7f8204cd7ad54d034111b3c6aa9d74199412be6d7d85322be7b5c9"
+    },
+    {
+      "phase": "green",
+      "round": "repeat-2",
+      "independent_cosine": 0.9999999999928917,
+      "norm_squared": 1.0000000994303668,
+      "capture_sha256": "e8059c050b7f8204cd7ad54d034111b3c6aa9d74199412be6d7d85322be7b5c9"
+    }
+  ],
+  "source_files_verified": 570,
+  "calibration_audit_file": "async-frame-counter-aligned-calibration-9e79167-20261018.json",
+  "calibration_audit_sha256": "2c9c8f98b31d46528d9695141d0c7f6ba1175fa5c391f1ea824cda68eec5d091",
+  "scope": "Whole original async validation invocation: input/reference setup, loading, four GPU calls, original stage observers and JSON/binary I/O, release, unrelated Editor activity and containing counter frames. Not individual SDK stages or exclusive SDK bytes; no speed comparison.",
+  "evidence_sha256": {
+    "async-media-allocation-audio-1119-fp32-d1df229-red.json": "c21a2550ae1b5037fe8f59a1618347e9b776a5b639834c33398cd157be98daf1",
+    "async-media-allocation-audio-1119-fp32-d1df229-red.xml": "8e3c082ce7ab958dd43be19713aa230e913d375f48aab0624048cbb5d25444de",
+    "async-media-allocation-audio-1119-fp32-d1df229-red.log": "1048f1f8968933f0ba09b1469c54083b47fd286921388f70fe3a3cd42c766b3c",
+    "async-media-allocation-audio-1119-fp32-d1df229-red-process.json": "3db722eee6b105b69527d5fffc77ca706c3966d986aa1bb6012184648f355398",
+    "async-media-allocation-audio-1119-fp32-d1df229-red-source.json": "49769ffae8b5d5a09f8ab0a22df12692cc4b20975866c7c134ef1bdc4e9801f6",
+    "async-media-allocation-audio-1119-fp32-9bed619-green.json": "0b97835b764091e4d7570d8601452c8745e7a7a5fe02933fd880ac57ee8b7da1",
+    "async-media-allocation-audio-1119-fp32-9bed619-green.xml": "ad2b3291ea84897b54ed62a17baa6a8e837c4eee0dddc0e398e2e5f3ca144bab",
+    "async-media-allocation-audio-1119-fp32-9bed619-green.log": "68448a57874e1cc33635a7cffdfe1e0c442838a751a3732d6a96477886a203e4",
+    "async-media-allocation-audio-1119-fp32-9bed619-green-process.json": "addadeb07043687613bfb47834a867b08dbd7220adc10db43b667096393b53bc",
+    "async-media-allocation-audio-1119-fp32-9bed619-green-source.json": "c9534a859947ccf6ced47d43a3ed250d0c672c1f598c73605f16a8804619dffb"
+  }
+}

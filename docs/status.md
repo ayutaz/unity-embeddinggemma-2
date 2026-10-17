@@ -44,7 +44,9 @@ PR #31と#83はマージ済みです。#83の検証head `613ada824bd13a297660d8c
 
 ### 進行中PRの確認済み範囲
 
-- [#85](https://github.com/ayutaz/unity-embeddinggemma-2/pull/85): 画像プレビュー・音声再生・明示的なマイク操作の実装。最新固定Git consumerでの一連の手動操作と、許可を得た実マイク確認は未完了です。
+- [#85](https://github.com/ayutaz/unity-embeddinggemma-2/pull/85): 画像プレビュー・音声再生・明示的なマイク操作の実装。固定Git consumerで画像・音声登録、日英検索、エラー復帰・キャンセル再試行・切替・解放と正常終了を実際のマウス・キーボードで確認しました。実マイクと、自然終了に先行する音声停止の追加確認は残っています。
+
+固定Git `e28a5fd` を新規consumerへ解決し、SDK311ファイルとsample86ファイルを照合した実画面操作では、Float16重みの画像1件・合成音声1件をGPU登録し、日英2 queryの順位とscoreを独立Python基準へ照合しました。プレビューを目視し、AudioSourceの再生位置の進行、登録・プレビュー・モデルの解放、PlayMode終了とEditor正常終了code0を確認しました。[固定操作監査](results/fresh-git-native-ui-e28a5fd-20261018.json)。既存のローカル準備済みbundleを使用しており、公開入力からの空cache取得や実マイクの証拠ではありません。再生停止操作は自然終了付近だったため早期停止の証明を残しません。また、非録音時のpauseによる誤解を招くstatus上書きとEditor終了時のJobTempAlloc警告を保持し、正常終了だけで警告の解消とは扱いません。
 - [#86](https://github.com/ayutaz/unity-embeddinggemma-2/pull/86): 固定bundleの取得・監査・再試行・修復。公開取得元から全6 moduleを空cacheへ取得する実行証拠は未完了です。
 - [#87](https://github.com/ayutaz/unity-embeddinggemma-2/pull/87): Float16重みの全6 module・固定16ケースは、単独Editorの実GPUで参照比較・正常終了を確認しました。[固定結果](results/all-six-module-float16-e28a5fd-acceptance-20261018.json)。同一プロセスの連続実行、検索順位、性能、実UIの合格を含みません。
 

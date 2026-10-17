@@ -73,6 +73,8 @@ TLSの信頼は検証用child processの `SSL_CERT_FILE` だけに指定し、OS
 
 ## 強制終了後の回収と同時実行
 
+[強制終了復旧の統合source照合](results/media-crash-recovery-integration-source-20261018.json)で、実行したCLI・HTTPS fixture・選択test moduleの一致も確認した。
+
 後続のsource `85a2d71` は、[実CLIを強制終了した復旧監査](results/real-media-crash-recovery-85a2d71-20261018.json)に対応する。修正前は、再試行が成功しても前のプロセスの一時ファイルが残り、同じ出力先への二重実行も拒否しなかった。所有形式の一時ファイル・二重writer・実HTTPS受信中の強制終了の3件で意図したRedを確認し、修正後の関連51件は成功した。
 
 同じ出力先ではOSの排他ロックを取得した1つの準備だけが動く。2つ目はobjectを取得したりownerのreceiptを書き換えたりせず、終了code1となる。ロックは通常終了・プロセス終了でOSが解放する。空の `.preparation.lock` は出力先に保持する。実装はWindowsの[msvcrt.locking](https://docs.python.org/3.13/library/msvcrt.html#msvcrt.locking)とUnixの[fcntl.flock](https://docs.python.org/3.13/library/fcntl.html#fcntl.flock)を使い、このcheckpointの実機結果はWindowsである。

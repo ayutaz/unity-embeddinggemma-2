@@ -1,0 +1,32 @@
+{
+  "integration_head": "04fdc544790e6a54bb08bb7ca3a06b6ca7cf130c",
+  "executed_source": "85a2d71f273ae11e8460465d01389425fc5cd097",
+  "selected_source_files_identical": true,
+  "files": [
+    {
+      "path": "tools/embeddinggemma_tools/__init__.py",
+      "git_blob": "e3f6f8f8d9e6f09b2892eacfe5f3f17a3ba2d2db"
+    },
+    {
+      "path": "tools/embeddinggemma_tools/media_setup.py",
+      "git_blob": "82c0ae27cafd924e822958a6d10997f761fe002d"
+    },
+    {
+      "path": "tools/tests/media_setup_https_harness.py",
+      "git_blob": "d9f0212dcb1fb0a62dec2fdb6e47fe410cfd8344"
+    },
+    {
+      "path": "tools/tests/test_media_setup.py",
+      "git_blob": "55983f8620c9dd7ba616c86dd0e5dc8564be0b6f"
+    },
+    {
+      "path": "tools/tests/test_media_setup_https.py",
+      "git_blob": "d49d3dcc63c14cc09d794a93504f8b44c86ae32a"
+    }
+  ],
+  "public_acquisition_accepted": false,
+  "gpu_validated": false,
+  "full_priorities_1_to_3_accepted": false,
+  "scope": "Production CLI/initializer, HTTPS fixture and two selected test modules match the measured Windows termination/retry source. No whole latest-head/Linux/public/GPU qualification claim.",
+  "audited_utc": "2026-10-17T23:17:26.8876424Z"
+}

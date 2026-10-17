@@ -1,0 +1,90 @@
+{
+  "accepted": true,
+  "scope": "One fixed text query through synchronous SDK API on GPUCompute. Calibrated inclusive main-thread managed bytes within exact CPU markers; excludes other threads/native memory and async stages. Not full performance acceptance.",
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+  "precision": "float16-weights",
+  "calibration_sha256": "f86c63c7e8d43b27436ad62da89b838fbec0262aae79bdde8fab43d072aa26a6",
+  "rows": [
+    {
+      "round": "first",
+      "main_thread_inclusive_managed_bytes": 610830,
+      "call_wall_seconds": 0.9524710999999999,
+      "process_cpu_seconds": 0.140625,
+      "independent_cosine": 0.9999999999998961,
+      "norm_squared": 1.0000001871676687,
+      "bytes_per_call_wall_second": 641310.7967265359
+    },
+    {
+      "round": "warm",
+      "main_thread_inclusive_managed_bytes": 26100,
+      "call_wall_seconds": 0.0565428,
+      "process_cpu_seconds": 0.046875,
+      "independent_cosine": 0.9999999999998961,
+      "norm_squared": 1.0000001871676687,
+      "bytes_per_call_wall_second": 461597.2325388909
+    },
+    {
+      "round": "repeat-1",
+      "main_thread_inclusive_managed_bytes": 26036,
+      "call_wall_seconds": 0.057026799999999996,
+      "process_cpu_seconds": 0.03125,
+      "independent_cosine": 0.9999999999998961,
+      "norm_squared": 1.0000001871676687,
+      "bytes_per_call_wall_second": 456557.26781092404
+    },
+    {
+      "round": "repeat-2",
+      "main_thread_inclusive_managed_bytes": 26036,
+      "call_wall_seconds": 0.058224099999999994,
+      "process_cpu_seconds": 0.03125,
+      "independent_cosine": 0.9999999999998961,
+      "norm_squared": 1.0000001871676687,
+      "bytes_per_call_wall_second": 447168.78406020877
+    }
+  ],
+  "terminal_receipt": {
+    "command": [
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\step3-consumer-53dafe8",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.TextGpuPerformanceTests.FixedTextFirstWarmRepeatedCallsHaveActualGpuTimingsAndPinnedVectors",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testResults",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-performance-float16-weights-e28a5fd-calibrated-cpu-allocation.xml",
+      "-logFile",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-performance-float16-weights-e28a5fd-calibrated-cpu-allocation.log"
+    ],
+    "timeout_seconds": 1200,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T19:07:33.642363+00:00",
+    "pid": 100140,
+    "exit_code": 0,
+    "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-performance-float16-weights-e28a5fd-calibrated-cpu-allocation.xml",
+    "unity_counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 41.545951700012665,
+    "completed_utc": "2026-10-17T19:08:15.188311+00:00"
+  },
+  "gpu_timing_interpretation_accepted": false,
+  "evidence_sha256": {
+    "text-performance-float16-weights-e28a5fd-calibrated-cpu-allocation.json": "41a4a8a65221e8c2d9c4eeaba57410567f32352d62edb4239b089c4fc5b32edb",
+    "text-performance-float16-weights-e28a5fd-calibrated-cpu-allocation.xml": "9f75c9efabb9253a8d5a06c00f4373bbae600f4c40ad0908110b80daeb9a1519",
+    "text-performance-float16-weights-e28a5fd-calibrated-cpu-allocation-process.json": "05b63b8228e58d45c84ceea8f0ccd5c2fd60ebf9e86d9e99a69eba3f1c7ecdd8",
+    "text-performance-float16-weights-e28a5fd-calibrated-cpu-allocation-source.json": "727157da1a3367423fa2fbda1d22e042d9aab57822d8f38966820bf8f67adecd"
+  }
+}

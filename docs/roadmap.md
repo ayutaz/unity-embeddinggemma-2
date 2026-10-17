@@ -26,7 +26,7 @@ candidate・入力・model hashを固定し、最初に測定します。遅い�
 
 **完了条件**：load・初回・warm・前処理・encoder・backbone・解放、CPU / GPU時間、ホストメモリ / VRAMを別記すること。Editor import・検索DB・allocation・domain reloadも分離し、前後で精度・順位・正常終了を維持します。
 
-2026-10-18時点で、Float16の全6 module・固定16ケースの単独GPU参照比較は完了しました。FP32の12GiB guard中断と16GiB EditModeの900秒fixture timeoutは保持します。その後の同じSDK・16GiBのPlayModeでは、FP32 / Float16とも5媒体と日英4 queryの連続順位・解放、直接テキスト4件、終了code0を確認しました。同一テキストの初回・warm・反復も各形式4回実行しましたが、GPU Recorderと履歴の値の差、および未校正の割り当てAPIの全0を検出したため、性能全体は未合格です。次は明示的なcommand-buffer区間でGPU時間とframe対応を校正し、既知の割り当てでカウンターを検証します。画像・音声の同一入力の反復とstage別CPU/GPU時間、Editor import/searchDB/reload/allocationも残っています。load・frame待機・推論・Editor処理を分け、必要な改善をTDDで加えます。保存容量や異なる実行条件から高速化を推定しません。
+2026-10-18時点で、Float16の全6 module・固定16ケースの単独GPU参照比較は完了しました。FP32の12GiB guard中断と16GiB EditModeの900秒fixture timeoutは保持します。同じSDK・16GiBの混在PlayModeでは、FP32 / Float16とも5媒体と日英4 queryの連続順位・解放、直接テキスト4件、終了code0を確認しました。初期のGPU Recorderと履歴の値の差、割り当てAPIの全0は過去の欠測として保持します。その後、停止したCPU履歴のmarker内bytesをnoop / 64KiB / 128KiBで校正し、実GPUの同期テキストAPIでも両形式各4回の割り当て量・参照一致・解放・exit0を確認しました。[校正記録](results/managed-allocation-scoped-byte-calibration-20261018.json)と[検証状況](status.md)。次はGPU区間とframe対応の校正、画像・音声の同一入力反復とstage別CPU/GPU時間、Editor import/searchDB/reload/allocationです。load・frame待機・推論・Editor処理を分け、必要な改善をTDDで加えます。性能全体は未合格であり、保存容量や異なる実行条件から高速化を推定しません。
 
 ### 4. WindowsマルチモーダルPlayer
 

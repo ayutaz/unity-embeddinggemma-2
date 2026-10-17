@@ -30,6 +30,8 @@ candidate・入力・model hashを固定し、最初に測定します。遅い�
 
 ### 4. WindowsマルチモーダルPlayer
 
+3の追加checkpointとして、固定source consumerでFP32 / Float16の送信前CPU待機とGPU仕事量の対照、および待機なしの同一入力・各1 dispatchを4回ずつ実行しました。[通常dispatchの観測](results/frozen-source-text-gpu-dispatch-observations-20261018.json)は参照一致・解放・exit0まで確認済みです。Recorder区間とProfiler履歴の解釈は分け、少数観測を形式間の速度改善へ拡張しません。3全体の完了条件と、画像・音声のstage別GPU時間・Editor測定の残件は維持します。
+
 1〜3で安定したcandidateを使い、画像・音声sampleの配置・cache・切替・失敗回復をPlayerへ接続します。
 
 **完了条件**：IL2CPP / Release / High stripping、実モデルと全モダリティの固定順位・score、実GPU、独立cold / warmの終了code0を記録すること。旧text Playerの証拠を流用しません。

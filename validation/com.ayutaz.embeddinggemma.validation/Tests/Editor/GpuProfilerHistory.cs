@@ -15,15 +15,17 @@ namespace EmbeddingGemma.Validation.Tests
             var field = typeof(HierarchyFrameDataView).GetField("columnTotalGpuTime", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
             if (field == null || !field.IsLiteral) throw new NotSupportedException("Pinned Unity GPU column metadata is unavailable.");
             var column = (int)field.GetRawConstantValue(); var rows = new JArray(); var visited = 0;
-            var first = Math.Max(ProfilerDriver.firstFrameIndex, ProfilerDriver.lastFrameIndex - 24);
+            var last = ProfilerDriver.lastFrameIndex;
+            var first = Math.Max(ProfilerDriver.firstFrameIndex, last - 24);
             var views = 0; var matches = 0;
             if (diagnostics != null)
             {
-                diagnostics["first_frame"] = ProfilerDriver.firstFrameIndex; diagnostics["last_frame"] = ProfilerDriver.lastFrameIndex;
+                diagnostics["first_frame"] = ProfilerDriver.firstFrameIndex; diagnostics["last_frame"] = last;
+                diagnostics["collection_stopped"] = !ProfilerDriver.enabled && !UnityEngine.Profiling.Profiler.enabled;
                 diagnostics["gpu_column"] = column;
             }
             using var iterator = new ProfilerFrameDataIterator();
-            for (var frame = first; frame <= ProfilerDriver.lastFrameIndex; frame++)
+            for (var frame = first; frame <= last; frame++)
             {
                 var threads = iterator.GetThreadCount(frame);
                 for (var thread = 0; thread < threads; thread++)
@@ -52,6 +54,9 @@ namespace EmbeddingGemma.Validation.Tests
                         }
                         rows.Add(new JObject { ["frame"] = frame, ["thread_index"] = thread, ["thread_name"] = view.threadName,
                             ["marker"] = name, ["gpu_ns"] = (long)Math.Round(ms * 1000000.0), ["gpu_children"] = descendants,
+                            ["cpu_total_ns"] = (long)Math.Round(view.GetItemColumnDataAsSingle(id, HierarchyFrameDataView.columnTotalTime) * 1000000.0),
+                            ["cpu_gc_allocated_bytes"] = (long)Math.Round(view.GetItemColumnDataAsDouble(id, HierarchyFrameDataView.columnGcMemory)),
+                            ["marker_flags"] = (int)view.GetItemMarkerFlags(id),
                             ["scope"] = "GPU hierarchy inclusive duration; parent and child durations overlap" });
                     }
                 }

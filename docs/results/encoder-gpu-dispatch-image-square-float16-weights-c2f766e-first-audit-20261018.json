@@ -1,0 +1,157 @@
+{
+  "actual_gpu_reference_and_normal_exit_accepted": true,
+  "complete_performance_accepted": false,
+  "full_priorities_1_to_3_accepted": false,
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "validation_source": "c2f766e4e05f5378eba15b6552e4a244ebeebfa9",
+  "module": "image-square",
+  "precision": "float16-weights",
+  "input_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+  "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+  "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+  "independent_vectors": [
+    {
+      "round": "first",
+      "independent_cosine": 0.9999999999997702,
+      "norm_squared": 0.9999999783486196,
+      "capture_sha256": "2c1874e8651586df93fc8878f8120a7d61164f26c0bd55f3cc7e8a1eba65aea0"
+    },
+    {
+      "round": "warm",
+      "independent_cosine": 0.9999999999997702,
+      "norm_squared": 0.9999999783486196,
+      "capture_sha256": "2c1874e8651586df93fc8878f8120a7d61164f26c0bd55f3cc7e8a1eba65aea0"
+    },
+    {
+      "round": "repeat-1",
+      "independent_cosine": 0.9999999999997702,
+      "norm_squared": 0.9999999783486196,
+      "capture_sha256": "2c1874e8651586df93fc8878f8120a7d61164f26c0bd55f3cc7e8a1eba65aea0"
+    },
+    {
+      "round": "repeat-2",
+      "independent_cosine": 0.9999999999997702,
+      "norm_squared": 0.9999999783486196,
+      "capture_sha256": "2c1874e8651586df93fc8878f8120a7d61164f26c0bd55f3cc7e8a1eba65aea0"
+    }
+  ],
+  "unity": "6000.3.21f1",
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "host_lifetime_peak_bytes": 9408884736,
+  "terminal": {
+    "exit_code": 0,
+    "counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "intervals": [
+    {
+      "round": "first",
+      "kind": "model-segment-and-output-copy",
+      "total_intervals": 180,
+      "observed_intervals": 180,
+      "unavailable_stage_indices": [],
+      "observed_queue_interval_ns_min": 4096,
+      "observed_queue_interval_ns_max": 54564864,
+      "observed_queue_interval_ns_sum": 923191040,
+      "cpu_submission_wall_ns_sum": 1527948000
+    },
+    {
+      "round": "first",
+      "kind": "projection-operation",
+      "total_intervals": 179,
+      "observed_intervals": 179,
+      "unavailable_stage_indices": [],
+      "observed_queue_interval_ns_min": 325632,
+      "observed_queue_interval_ns_max": 138543104,
+      "observed_queue_interval_ns_sum": 3110253568,
+      "cpu_submission_wall_ns_sum": 24333571300
+    },
+    {
+      "round": "warm",
+      "kind": "model-segment-and-output-copy",
+      "total_intervals": 180,
+      "observed_intervals": 180,
+      "unavailable_stage_indices": [],
+      "observed_queue_interval_ns_min": 5888,
+      "observed_queue_interval_ns_max": 50247680,
+      "observed_queue_interval_ns_sum": 698087168,
+      "cpu_submission_wall_ns_sum": 1445521500
+    },
+    {
+      "round": "warm",
+      "kind": "projection-operation",
+      "total_intervals": 179,
+      "observed_intervals": 179,
+      "unavailable_stage_indices": [],
+      "observed_queue_interval_ns_min": 323584,
+      "observed_queue_interval_ns_max": 103813120,
+      "observed_queue_interval_ns_sum": 2895917056,
+      "cpu_submission_wall_ns_sum": 26583465300
+    },
+    {
+      "round": "repeat-1",
+      "kind": "model-segment-and-output-copy",
+      "total_intervals": 180,
+      "observed_intervals": 180,
+      "unavailable_stage_indices": [],
+      "observed_queue_interval_ns_min": 5120,
+      "observed_queue_interval_ns_max": 51811328,
+      "observed_queue_interval_ns_sum": 765282048,
+      "cpu_submission_wall_ns_sum": 1419772800
+    },
+    {
+      "round": "repeat-1",
+      "kind": "projection-operation",
+      "total_intervals": 179,
+      "observed_intervals": 179,
+      "unavailable_stage_indices": [],
+      "observed_queue_interval_ns_min": 440320,
+      "observed_queue_interval_ns_max": 119565312,
+      "observed_queue_interval_ns_sum": 2967003136,
+      "cpu_submission_wall_ns_sum": 25022069400
+    },
+    {
+      "round": "repeat-2",
+      "kind": "model-segment-and-output-copy",
+      "total_intervals": 180,
+      "observed_intervals": 180,
+      "unavailable_stage_indices": [],
+      "observed_queue_interval_ns_min": 4096,
+      "observed_queue_interval_ns_max": 50752512,
+      "observed_queue_interval_ns_sum": 659184896,
+      "cpu_submission_wall_ns_sum": 1412435100
+    },
+    {
+      "round": "repeat-2",
+      "kind": "projection-operation",
+      "total_intervals": 179,
+      "observed_intervals": 179,
+      "unavailable_stage_indices": [],
+      "observed_queue_interval_ns_min": 325632,
+      "observed_queue_interval_ns_max": 109339648,
+      "observed_queue_interval_ns_sum": 2858424320,
+      "cpu_submission_wall_ns_sum": 22938178500
+    }
+  ],
+  "scope": "Validation-only markers around original encoder model dispatch/output copies and original GPU operations. Same SDK scheduling/fences/cache cleanup; borrowed callbacks and operations restored. Does not measure preprocessing/backbone GPU time.",
+  "limits": [
+    "GPU queue elapsed can include queue bubbles and command/copy effects; not pure kernel active time.",
+    "Marker setup, sampling and profiling perturb the instrumented API wall time; no latency or speedup comparison is made.",
+    "Unavailable short/empty intervals remain null; one positive interval is not full encoder timing acceptance.",
+    "No CPU fallback or GPU skip is promoted to an actual GPU pass; old failed trials remain separate."
+  ],
+  "evidence_sha256": {
+    "encoder-gpu-dispatch-image-square-float16-weights-c2f766e-first.json": "4ea081ef8d0322907415c93ca8f79d3f8002efdc001c93b58eff89bfe6fc62f1",
+    "encoder-gpu-dispatch-image-square-float16-weights-c2f766e-first.xml": "63dfa3531ad7c89d71e6ff44359e2cc1b80cfa526ac41b0c7f60351d3073fb3b",
+    "encoder-gpu-dispatch-image-square-float16-weights-c2f766e-first-process.json": "e3ec81b9aa7f11fd56f0c79ef2e854cdab9d2f0223e93abf830ad5752d75f676",
+    "encoder-gpu-dispatch-image-square-float16-weights-c2f766e-first-source.json": "4ae64818362d1a5c83ddc1feb182bd2fc9a01639021a68099da969950a99262e",
+    "encoder-gpu-dispatch-image-square-float16-weights-c2f766e-first.log": "aee01cd6328f21b46ac18b6a4d4b23a70b31367957ed34748486e712b3246809"
+  },
+  "source_snapshot_sha256": "eccbe91c9130d18aee211ce1a326d7db11207e4a285e443e05f9da91217e5211",
+  "source_files_verified": 546
+}

@@ -27,6 +27,8 @@ GPU演算のCPU側経過時間ではBatchedMatmulの32回が6.603秒、Softmax�
 
 ## 次に検証する改善
 
+Float16重みのsquare-0でも同じ計測を4回実行し、全1436区間と4 vectorの参照一致・解放・1 pass / fail0 / skip0 / exit0を確認した。[Float16画像の監査](results/encoder-gpu-dispatch-image-square-float16-weights-c2f766e-first-audit-20261018.json)。同じ入力・計測方法での修正前baselineとして保持し、FP32との速度差や改善は主張しない。上記のFP32画像・音声と合わせた[3 sessionの監査](results/encoder-three-session-reference-queue-coverage-20261018.json)では、12 vector・全5012区間を確認した。
+
 現行の `GpuBatchedMatmul` / `GpuSoftmax` などは、書き込み先を `new Tensor<float>(shape)` で作った後に `ComputeTensorData.Pin(output)` へ渡しています。固定Sentis 2.6.1のshape-only constructorはCPU tensor dataを既定でゼロ初期化し、Pinは既存storageをGPU側へ変換します。全要素をGPU演算で書く出力では、CPU storageを作らずにGPU storageを割り当てる経路を候補として検証します。
 
 まず書き込み専用出力の初期CPU storageを不要にする契約をRed→Greenで確認し、同じ入力・GPU marker条件で前後比較します。実GPUの演算テスト、全moduleの元参照と検索順位・解放・正常終了を新しいSDK sourceで確認するまで、高速化や数値互換を達成したとは扱いません。重みやgraphは再生成しません。
@@ -35,5 +37,5 @@ GPU演算のCPU側経過時間ではBatchedMatmulの32回が6.603秒、Softmax�
 
 - GPU値はqueue上のmarker区間であり、command/copy・queue bubbleの影響を含み得ます。純粋なkernel稼働時間とはしません。
 - profiler・marker作成・samplingにより呼び出しの経過時間は変わります。この実行を通常APIの遅延・平均性能・精度形式間の速度差へ拡張しません。
-- この追加観測はFP32・square-0 / audio-1119 silenceのencoderです。他profile、Float16、前処理・backboneのGPU区間はこの記録では未検証です。
+- この追加観測はFP32のsquare-0 / audio-1119 silenceとFloat16重みのsquare-0のencoderです。他profile、Float16音声、前処理・backboneのGPU区間はこの記録では未検証です。
 - 元の12GiB停止やEditMode timeout、過去のGPU時間・割り当て欠測は保持します。優先1〜3全体も未完了です。

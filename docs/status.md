@@ -50,9 +50,9 @@ PR #31と#83はマージ済みです。#83の検証head `613ada824bd13a297660d8c
 
 SDK `e28a5fd`のFP32連続試験は、12GiB guardでの中断を保持しています。16GiBの明示割り当てによる別試験も、画像3件と音声1件の登録後、2種類目の音声処理中に既存900秒のfixture上限を超えました。後続テキストfixtureは合格しましたが、全体は1 pass / 1 fail / skip0 / exit2です。[失敗記録](results/combined-fp32-e28a5fd-16gib-timeout-20261018.json)。上限変更や過去sourceの成功をもって、安定性の改善とは扱いません。
 
-同じSDK・16GiB割り当てのPlayMode試験では、画像・音声5件の登録、日英4 queryの全順位・score、GPU-stageでのキャンセルと再試行、Worker・kernel・tensor・cache leaseの解放、続く直接テキスト4件を確認しました。2 pass / fail0 / skip0 / exit0、ホスト生涯ピーク最大14,559,334,400 bytesです。[独立照合](results/combined-fp32-e28a5fd-16gib-playmode-20261018.json)。これはlocal-file consumerを自動操作した結果で、固定Gitの手動操作や速度改善の証拠ではありません。[4画面の目視確認](results/fp32-e28a5fd-rendered-results-visual-inspection-20261018.json)でも、実際の音声再生とマイク確認は未実行です。Float16の同条件対照、系統的なCPU/GPU時間・資源測定は残っています。
+同じSDK・16GiB割り当てのPlayMode試験では、FP32とFloat16重みの両方で、画像・音声5件の登録、日英4 queryの全順位・score、GPU-stageでのキャンセルと再試行、Worker・kernel・tensor・cache leaseの解放、続く直接テキスト4件を確認しました。各2 pass / fail0 / skip0 / exit0で、ホスト生涯ピーク最大はFP32が14,559,334,400、Float16が11,157,610,496 bytesです。[対応する入力・順位・sourceの照合](results/fp32-float16-e28a5fd-playmode-correspondence-20261018.json)。これはlocal-file consumerを自動操作した結果で、固定Gitの手動操作や速度改善、最低RAMの証拠ではありません。[4画面の目視確認](results/fp32-e28a5fd-rendered-results-visual-inspection-20261018.json)でも、実際の音声再生とマイク確認は未実行です。
 
-同一テキストの初回・warm・反復について、CPU時間、実GPUタイムスタンプ、Profiler履歴、load・解放・メモリを記録する受け入れfixtureを追加しました。実行結果はまだありません。画像・音声のstage別測定とEditor負荷の測定も残っています。
+同一テキストの初回・warm・反復は、両形式で各4回の実GPU実行・参照一致・解放・exit0を確認しました。[観測結果と限界](results/text-fp32-float16-e28a5fd-measurements-20261018.json)。ただしRecorderとProfiler履歴のGPU値には大きな差があり、割り当てAPIの全0も既知の割り当てで校正していません。GPU動作・呼び出し全体の時間と、未検証のGPU時間の解釈を分け、割り当ての0を「割り当てなし」と扱いません。短い各呼び出し内のGPUメモリ観測も欠測であり、性能全体の合格ではありません。次は明示的なGPU command-buffer区間とカウンターの校正、画像・音声のstage別測定、Editor負荷の測定です。
 
 ### 残る受け入れ
 

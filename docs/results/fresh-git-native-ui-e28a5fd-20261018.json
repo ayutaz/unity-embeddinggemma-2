@@ -1,0 +1,443 @@
+{
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "precision": "float16-weights",
+  "scope": "Actual native mouse/keyboard on fresh fixed-Git Editor consumer using an already prepared local bundle. Two synthetic registrations and two JA/EN queries; not public cold acquisition, actual microphone or performance acceptance.",
+  "native_registration_search_preview_release_and_exit_accepted": true,
+  "full_priorities_1_to_3_accepted": false,
+  "source_audit": {
+    "success": true,
+    "project": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-consumer-e28a5fd",
+    "requested_revision": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+    "resolved_revision": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+    "unity_executed": true,
+    "errors": [],
+    "live_pid": 80820,
+    "resolved_source_only": true,
+    "package_tracked_files_verified": 311,
+    "package_manifest_metadata": {
+      "comparison": "Exact JSON values excluding UPM-added _fingerprint and formatting",
+      "upm_fingerprint": "da438371d974325ef2f90aae98947ff98ce3d728"
+    },
+    "samples_byte_verified": {
+      "TextSearch": 52,
+      "MultimodalSearch": 34
+    },
+    "protected_root_files_verified": 4,
+    "sdk_source_overlay": false,
+    "Library_copied": false,
+    "model_files_copied": false,
+    "observer_sha256": "2071ff28763a50d1203e2129ad8198ac9699335f8b7cb6afc442599319bc60bd",
+    "scope": "Actual live fresh Git consumer SDK resolution and sample source audit. Does not prove manual UI actions, models, microphone, or full performance."
+  },
+  "terminal_receipt": {
+    "command": [
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-consumer-e28a5fd",
+      "-executeMethod",
+      "UsabilityUiBootstrap.Open",
+      "-logFile",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\native-ui-e28a5fd-fresh.log"
+    ],
+    "started_utc": "2026-10-17T18:30:49.412418+00:00",
+    "terminal": true,
+    "success": true,
+    "timeout_seconds": 900,
+    "memory_limit_bytes": 17179869184,
+    "peak_host_bytes": 7768072192,
+    "actions_via_windows_ui": true,
+    "pid": 80820,
+    "current_host_bytes": 3502858240,
+    "elapsed_seconds": 830.6317574999994,
+    "exit_code": 0,
+    "completed_utc": "2026-10-17T18:44:40.044178+00:00"
+  },
+  "independently_verified_vectors": [
+    {
+      "id": "media-0",
+      "reference_case": "square-0",
+      "cosine": 0.9999999999997693,
+      "norm_squared": 0.9999999833173898
+    },
+    {
+      "id": "media-1",
+      "reference_case": "sine",
+      "cosine": 0.9999999905661618,
+      "norm_squared": 1.0000001206795803
+    }
+  ],
+  "independently_verified_queries": [
+    {
+      "text": "猫を健康に育てるには",
+      "utc": "2026-10-17T18:43:04.4836526Z",
+      "hits": [
+        {
+          "id": "media-0",
+          "title": "square-0.png",
+          "score": 0.5495174788166498
+        },
+        {
+          "id": "media-1",
+          "title": "sine.f32",
+          "score": 0.5408631086157262
+        }
+      ],
+      "maximum_score_error": 2.6369377859047916e-06
+    },
+    {
+      "text": "How should I care for a pet cat?",
+      "utc": "2026-10-17T18:43:30.7655507Z",
+      "hits": [
+        {
+          "id": "media-0",
+          "title": "square-0.png",
+          "score": 0.5749439903276136
+        },
+        {
+          "id": "media-1",
+          "title": "sine.f32",
+          "score": 0.5607329762591644
+        }
+      ],
+      "maximum_score_error": 1.8078760516404557e-06
+    }
+  ],
+  "image_preview_visually_inspected": true,
+  "playback": {
+    "actual_audio_source_progress_observed": true,
+    "first_utc": "2026-10-17T18:43:45.5340633Z",
+    "last_utc": "2026-10-17T18:43:56.3753908Z",
+    "first_samples": 2389,
+    "last_samples": 175786,
+    "stop_button_clicked": true,
+    "early_stop_causality_proven": false,
+    "scope": "AudioSource scheduling and sample progress only; no listening-quality claim. End of playback was near natural clip end, so early stop needs a separate run."
+  },
+  "microphone_started": false,
+  "protected_root_files_verified": 4,
+  "warnings": [
+    "[UnityCliLoop] Skipped 1 unreadable source(s) while snapshotting EmbeddingGemma.TextSearch.Sample.PlayMode.Tests: Assets/EmbeddingGemmaTextSearch/Tests/PlayMode/TextSearchLifecycleTests.cs",
+    "[UnityCliLoop] Skipped 1 unreadable source(s) while snapshotting EmbeddingGemma.TextSearch.Sample.PlayMode.Tests: Assets/EmbeddingGemmaTextSearch/Tests/PlayMode/TextSearchLifecycleTests.cs",
+    "d3d12: upload buffer was too small for the requested resource! Size: 16777216. Requested: 304819200.",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "Attempting to get `timeSamples` on an audio source that has a resource assigned that is not a clip is ignored!",
+    "[UnityCliLoop] Skipped 1 unreadable source(s) while snapshotting EmbeddingGemma.TextSearch.Sample.PlayMode.Tests: Assets/EmbeddingGemmaTextSearch/Tests/PlayMode/TextSearchLifecycleTests.cs",
+    "Internal: There are remaining Allocations on the JobTempAlloc. This is a leak, and will impact performance",
+    "Internal: There are remaining Allocations on the JobTempAlloc. This is a leak, and will impact performance"
+  ],
+  "timeline": [
+    {
+      "utc": "2026-10-17T18:32:24.8853632Z",
+      "playing": false,
+      "busy": false,
+      "documents": 0,
+      "status": "モデルの準備先と入力ファイルを指定してください。",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:34:50.5041935Z",
+      "playing": true,
+      "busy": false,
+      "documents": 0,
+      "status": "モデルの準備先と入力ファイルを指定してください。",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:35:49.7032711Z",
+      "playing": true,
+      "busy": false,
+      "documents": 0,
+      "status": "処理に失敗しました。入力を確認して再実行してください。",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:36:58.3169322Z",
+      "playing": true,
+      "busy": true,
+      "documents": 0,
+      "status": "モデルのキャッシュを照合しています…",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:37:06.8804326Z",
+      "playing": true,
+      "busy": true,
+      "documents": 0,
+      "status": "モデルをGPUへ読み込んでいます…",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:37:08.2670293Z",
+      "playing": true,
+      "busy": false,
+      "documents": 0,
+      "status": "キャンセルしました。再実行できます。",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:37:34.4851928Z",
+      "playing": true,
+      "busy": true,
+      "documents": 0,
+      "status": "モデルのキャッシュを照合しています…",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:37:37.4678004Z",
+      "playing": true,
+      "busy": true,
+      "documents": 0,
+      "status": "モデルをGPUへ読み込んでいます…",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:38:35.6031789Z",
+      "playing": true,
+      "busy": true,
+      "documents": 0,
+      "status": "画像をGPUで登録しています…",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "image-square",
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:38:59.9535246Z",
+      "playing": true,
+      "busy": false,
+      "documents": 1,
+      "status": "1件を登録しました。テキストで検索できます。",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "image-square",
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:41:28.6766453Z",
+      "playing": true,
+      "busy": true,
+      "documents": 1,
+      "status": "モデルのキャッシュを照合しています…",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:41:41.4341596Z",
+      "playing": true,
+      "busy": true,
+      "documents": 1,
+      "status": "モデルをGPUへ読み込んでいます…",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:42:17.1200891Z",
+      "playing": true,
+      "busy": true,
+      "documents": 1,
+      "status": "音声をGPUで登録しています…",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "audio-1119",
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:42:20.6788020Z",
+      "playing": true,
+      "busy": false,
+      "documents": 2,
+      "status": "2件を登録しました。テキストで検索できます。",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "audio-1119",
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:42:50.4039904Z",
+      "playing": true,
+      "busy": true,
+      "documents": 2,
+      "status": "モデルのキャッシュを照合しています…",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:42:52.2001805Z",
+      "playing": true,
+      "busy": true,
+      "documents": 2,
+      "status": "モデルをGPUへ読み込んでいます…",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:43:04.4836526Z",
+      "playing": true,
+      "busy": false,
+      "documents": 2,
+      "status": "2件の検索結果",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "text",
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:43:33.8232456Z",
+      "playing": true,
+      "busy": false,
+      "documents": 2,
+      "status": "録音を破棄しました。音声の保存・送信は行っていません。",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "text",
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:43:45.5340633Z",
+      "playing": true,
+      "busy": false,
+      "documents": 2,
+      "status": "録音を破棄しました。音声の保存・送信は行っていません。",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "text",
+      "audio_playing": true
+    },
+    {
+      "utc": "2026-10-17T18:43:56.6259427Z",
+      "playing": true,
+      "busy": false,
+      "documents": 2,
+      "status": "録音を破棄しました。音声の保存・送信は行っていません。",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "text",
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:44:04.4327917Z",
+      "playing": true,
+      "busy": false,
+      "documents": 0,
+      "status": "登録とモデルを解放しました。もう一度準備できます。",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-17T18:44:16.5633400Z",
+      "playing": false,
+      "busy": false,
+      "documents": 0,
+      "status": "モデルの準備先と入力ファイルを指定してください。",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    }
+  ],
+  "known_issues": [
+    "OnApplicationPause(true) overwrites search status with recording-discarded text even without recording; no microphone data observed.",
+    "JobTempAlloc warnings remain at Editor shutdown; cause not isolated to SDK. Normal exit0 does not clear this warning.",
+    "Observer queried timeSamples after StopPlayback cleared clip and emitted an AudioSource warning; observer should guard clip presence."
+  ],
+  "remaining": [
+    "Native early playback stop proof",
+    "Public empty-cache acquisition/recovery",
+    "Authorized actual microphone",
+    "Calibrated same-input per-stage CPU/GPU/allocation/VRAM measurements"
+  ],
+  "evidence_sha256": {
+    "native-ui-e28a5fd-fresh.json.events.jsonl": "ed30067c6f8f0640c2ca4d947203b5fd5c71e562b3e6864b18443a5ff79f55a0",
+    "fresh-consumer-e28a5fd-source-audit.json": "acccfd3a56e637c3eca15ca445ea0c0708ff39e3e5f6fc3685ac8656c66ed17d",
+    "native-ui-e28a5fd-fresh.log": "228eff2dbc4b213325625ac8ba20190d17528778d0a53720f73782ff882ecfd7",
+    "native-ui-e28a5fd-fresh-process.json": "a53f0548a15a59c2d40f42b7f85c8b590bb27b7813a74f4fad330bb2400307ce"
+  },
+  "audited_utc": "2026-10-17T18:45:51.847855+00:00"
+}

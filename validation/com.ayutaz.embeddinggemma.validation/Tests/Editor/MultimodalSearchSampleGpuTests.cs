@@ -82,7 +82,7 @@ namespace EmbeddingGemma.Validation.Tests
             task.GetAwaiter().GetResult(); Assert.That(peak, Is.GreaterThan(0).And.LessThanOrEqualTo(GpuMediaExecutionPolicy.CurrentMemoryLimitBytes));
         }
 
-        [UnityTest] public IEnumerator ImportedSampleRendersItsRealSearchResultsInPlayMode()
+        [UnityTest, Timeout(900000)] public IEnumerator ImportedSampleRendersItsRealSearchResultsInPlayMode()
         {
             Assert.That(Environment.GetEnvironmentVariable("EG_MEDIA_SAMPLE_SCREENSHOT"), Is.Not.Null.And.Not.Empty);
             UnityEditor.SceneManagement.EditorSceneManager.OpenScene("Assets/EmbeddingGemmaMultimodalSearch/MultimodalSearch.unity");

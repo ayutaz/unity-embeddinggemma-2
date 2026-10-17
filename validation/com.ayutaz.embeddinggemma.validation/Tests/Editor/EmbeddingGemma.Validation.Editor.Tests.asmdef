@@ -1,6 +1,6 @@
 {
   "name": "EmbeddingGemma.Validation.Editor.Tests",
-  "references": ["EmbeddingGemma.Runtime", "EmbeddingGemma.Package.Editor.Tests", "Unity.InferenceEngine", "Unity.Newtonsoft.Json"],
+  "references": ["EmbeddingGemma.Runtime", "EmbeddingGemma.Package.Editor.Tests", "Unity.InferenceEngine", "Unity.InferenceEngine.Tokenization", "Unity.Newtonsoft.Json"],
   "includePlatforms": ["Editor"],
   "optionalUnityReferences": ["TestAssemblies"],
   "overrideReferences": true,

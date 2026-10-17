@@ -9,10 +9,12 @@ using System.Security.Cryptography;
 using System.Threading;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using Unity.InferenceEngine;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Profiling;
+using UnityEngine.Rendering;
 using UnityEngine.TestTools;
 
 namespace EmbeddingGemma.Validation.Tests
@@ -37,6 +39,11 @@ namespace EmbeddingGemma.Validation.Tests
             Assert.That(Hash(referencePath),Is.EqualTo("f316d5199c920431c7f721d43b2cedbe4a6384fb0e0664511b75bc2e98fe80fe"));
             var query=JObject.Parse(File.ReadAllText(referencePath))["queries"].First();
             var expected=query["embedding"].Values<float>().ToArray();
+            var directCommandsRequested=Environment.GetEnvironmentVariable("EG_TEXT_GPU_COMMAND_BUFFER")=="1";
+            var allocationBeforeProbe=GC.GetAllocatedBytesForCurrentThread();
+            var knownAllocation=new byte[65536]; knownAllocation[knownAllocation.Length-1]=1;
+            var allocationProbeDelta=GC.GetAllocatedBytesForCurrentThread()-allocationBeforeProbe; GC.KeepAlive(knownAllocation);
+            var allocationCounterAvailable=allocationProbeDelta>=65536;
             var report=new JObject { ["success"]=false,["runtime_source"]=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE"),
                 ["precision"]=GpuMediaExecutionPolicy.CurrentPrecision,["descriptor_sha256"]=Hash(Path.Combine(directory,"bundle.json")),
                 ["query_id"]=query["id"],["query_text"]=query["text"],["reference_sha256"]=Hash(referencePath),
@@ -46,6 +53,11 @@ namespace EmbeddingGemma.Validation.Tests
                 ["timing_scope"]="Profiled synchronous API calls. GPU inclusive timestamp intervals can include queue/idle gaps. GPU parent and child timings overlap; never add them.",
                 ["allocation_scope"]="GC cumulative bytes allocated on this main thread during each interval, including measurement wrapper allocations. Async load/release intervals include unrelated Editor callbacks; excludes other threads and native allocations.",
                 ["throughput_measured"]=false,["microphone_started"]=false };
+            report["dispatch_mode"]=directCommandsRequested?"direct_worker_command_buffer":"sdk_query_api";
+            report["managed_allocation_counter_available"]=allocationCounterAvailable;
+            report["allocation_probe_expected_minimum_bytes"]=65536; report["allocation_probe_raw_delta_bytes"]=allocationProbeDelta;
+            report["gpu_timing_interpretation_validated"]=false;
+            if(directCommandsRequested) report["timing_scope"]="Explicit GPU command-buffer marker around the same text Worker schedule; pre-pinned inputs exclude tokenizer/upload. Wall/CPU span command construction, submission, fence frame-waits and final readback; this is not the public query API latency.";
             void Save()=>File.WriteAllText(output,report.ToString()); Save();
             var previousEnabled=Profiler.enabled; var previousGpu=Profiler.GetAreaEnabled(ProfilerArea.GPU);
             var previousDriver=ProfilerDriver.enabled; var previousEditor=ProfilerDriver.profileEditor; var previousTarget=ProfilerDriver.connectedProfiler;
@@ -54,6 +66,7 @@ namespace EmbeddingGemma.Validation.Tests
             var target=new RenderTexture(16,16,0); var camera=host.AddComponent<Camera>(); camera.targetTexture=target;
             camera.clearFlags=CameraClearFlags.SolidColor; camera.cullingMask=0;
             GpuMediaSession session=null; using var cancellation=new CancellationTokenSource();
+            CommandBuffer directCommands=null; Tensor<int> directIds=null,directMask=null; Worker directWorker=null;
             try
             {
                 Application.runInBackground=true; Application.targetFrameRate=60; QualitySettings.vSyncCount=0;
@@ -74,9 +87,24 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.That(session.Backend,Is.EqualTo(Unity.InferenceEngine.BackendType.GPUCompute));
                 report["actual_backend"]=session.Backend.ToString();
                 report["load_wall_seconds"]=load.Elapsed.TotalSeconds; report["load_process_cpu_seconds"]=(Cpu()-loadCpu).TotalSeconds;
-                report["load_main_thread_managed_allocated_bytes"]=GC.GetAllocatedBytesForCurrentThread()-loadAllocated;
+                report["load_main_thread_managed_allocated_bytes"]=allocationCounterAvailable?new JValue(GC.GetAllocatedBytesForCurrentThread()-loadAllocated):JValue.CreateNull();
                 report["load_end_utc"]=DateTime.UtcNow.ToString("O");
                 report["load_gpu_elapsed_ns"]=null; report["load_host_lifetime_peak_bytes"]=MediaExecutionMemory.Peak(); Save();
+                if(directCommandsRequested)
+                {
+                    const BindingFlags flags=BindingFlags.Instance|BindingFlags.NonPublic;
+                    var text=(TextEmbedder)typeof(GpuMediaSession).GetField("query",flags).GetValue(session);
+                    directWorker=(Worker)typeof(TextEmbedder).GetField("worker",flags).GetValue(text);
+                    var tokenizer=(TextTokenizer)typeof(TextEmbedder).GetField("tokenizer",flags).GetValue(text);
+                    var encoded=tokenizer.Encode(TextPrompts.Format((string)query["text"],TextRole.Query));
+                    var ids=encoded.GetIds().ToArray(); var mask=encoded.GetAttentionMask().ToArray();
+                    Assert.That(ids.Length,Is.EqualTo(128)); Assert.That(mask.Length,Is.EqualTo(128));
+                    directIds=new Tensor<int>(new TensorShape(1,128),ids); directMask=new Tensor<int>(new TensorShape(1,128),mask);
+                    ComputeTensorData.Pin(directIds); ComputeTensorData.Pin(directMask);
+                    directWorker.SetInput("input_ids",directIds); directWorker.SetInput("attention_mask",directMask);
+                    directCommands=new CommandBuffer {name="Owned text model timing"};
+                    report["input_ids"]=JArray.FromObject(ids); report["attention_mask"]=JArray.FromObject(mask);
+                }
                 ProfilerDriver.profileEditor=true; ProfilerDriver.enabled=true; Profiler.enabled=true; Profiler.SetAreaEnabled(ProfilerArea.GPU,true);
                 report["gpu_history_scope"]="Owned Editor history is enabled after load and cleared before each measured call; earlier rounds are saved as JSON before clearing.";
                 for(var frame=0;frame<5;frame++) yield return null;
@@ -88,9 +116,23 @@ namespace EmbeddingGemma.Validation.Tests
                     var recorder=sampler.GetRecorder(); recorder.enabled=true; recorders.Add(recorder);
                     Assert.That(recorder.isValid,Is.True);
                     var allocatedBefore=GC.GetAllocatedBytesForCurrentThread(); var cpu=Cpu(); var watch=Stopwatch.StartNew(); float[] actual;
-                    sampler.Begin();
-                    try { actual=session.EmbedQuery((string)query["text"]); }
-                    finally { sampler.End(); watch.Stop(); }
+                    if(directCommandsRequested)
+                    {
+                        directCommands.Clear(); directCommands.BeginSample(sampler);
+                        directCommands.ScheduleWorker(directWorker); directCommands.EndSample(sampler);
+                        var fence=directCommands.CreateGraphicsFence(GraphicsFenceType.AsyncQueueSynchronisation,SynchronisationStageFlags.AllGPUOperations);
+                        Graphics.ExecuteCommandBuffer(directCommands);
+                        while(!fence.passed) { EditorApplication.QueuePlayerLoopUpdate(); yield return null; }
+                        var result=(Tensor<float>)directWorker.PeekOutput();
+                        Assert.That(result.backendType,Is.EqualTo(BackendType.GPUCompute));
+                        Assert.That(result.shape,Is.EqualTo(new TensorShape(1,768))); actual=result.DownloadToArray(); watch.Stop();
+                    }
+                    else
+                    {
+                        sampler.Begin();
+                        try { actual=session.EmbedQuery((string)query["text"]); }
+                        finally { sampler.End(); watch.Stop(); }
+                    }
                     var endUtc=DateTime.UtcNow;
                     var allocatedBytes=GC.GetAllocatedBytesForCurrentThread()-allocatedBefore;
                     var cpuSeconds=(Cpu()-cpu).TotalSeconds;
@@ -102,19 +144,21 @@ namespace EmbeddingGemma.Validation.Tests
                     var bytes=new byte[actual.Length*4]; Buffer.BlockCopy(actual,0,bytes,0,bytes.Length); File.WriteAllBytes(capture,bytes);
                     var row=new JObject { ["round"]=name,["wall_seconds"]=watch.Elapsed.TotalSeconds,["process_cpu_seconds"]=cpuSeconds,
                         ["begin_utc"]=beginUtc.ToString("O"),["end_utc"]=endUtc.ToString("O"),
-                        ["main_thread_managed_allocated_bytes"]=allocatedBytes,["main_thread_managed_allocated_bytes_per_second"]=allocatedBytes/watch.Elapsed.TotalSeconds,
+                        ["main_thread_managed_allocated_bytes"]=allocationCounterAvailable?new JValue(allocatedBytes):JValue.CreateNull(),
+                        ["main_thread_managed_allocated_bytes_per_second"]=allocationCounterAvailable?new JValue(allocatedBytes/watch.Elapsed.TotalSeconds):JValue.CreateNull(),
                         ["host_lifetime_peak_bytes"]=MediaExecutionMemory.Peak(),["unity_allocated_bytes"]=Profiler.GetTotalAllocatedMemoryLong(),
                         ["managed_heap_bytes"]=GC.GetTotalMemory(false),["cosine"]=cosine,["norm_squared"]=norm,
                         ["capture"]=Path.GetFileName(capture),["capture_sha256"]=Hash(capture),["observations"]=new JArray() };
                     ((JArray)report["rounds"]).Add(row); Save();
+                    var positiveAt=-1;
                     for(var attempt=0;attempt<60;attempt++)
                     {
                         EditorApplication.QueuePlayerLoopUpdate(); yield return null;
                         ((JArray)row["observations"]).Add(new JObject { ["frame"]=Time.frameCount,["gpu_ns"]=recorder.gpuElapsedNanoseconds,["gpu_blocks"]=recorder.gpuSampleBlockCount });
                         if(recorder.gpuElapsedNanoseconds>0 && recorder.gpuSampleBlockCount>0)
-                        { row["gpu_elapsed_ns"]=recorder.gpuElapsedNanoseconds; row["gpu_sample_blocks"]=recorder.gpuSampleBlockCount; break; }
+                        { if(positiveAt<0) {positiveAt=attempt;row["gpu_elapsed_ns"]=recorder.gpuElapsedNanoseconds;row["gpu_sample_blocks"]=recorder.gpuSampleBlockCount;} }
+                        if(positiveAt>=0 && attempt-positiveAt>=12) break;
                     }
-                    for(var drain=0;drain<12;drain++) yield return null;
                     var diagnostics=new JObject(); row["gpu_history_diagnostics"]=diagnostics;
                     var history=GpuProfilerHistory.ReadExactMarker(sampler.name,diagnostics); row["gpu_history"]=history; Save();
                     Assert.That(row.Value<long>("gpu_elapsed_ns"),Is.GreaterThan(0),"Absent GPU timing is a failure, never zero-time success.");
@@ -126,13 +170,13 @@ namespace EmbeddingGemma.Validation.Tests
                 var closeAllocated=GC.GetAllocatedBytesForCurrentThread(); var closeCpu=Cpu(); var close=Stopwatch.StartNew(); var closing=session.CloseAsync(); while(!closing.IsCompleted) yield return null;
                 closing.GetAwaiter().GetResult(); close.Stop(); MultimodalSearchSampleGpuTests.AssertReleased(session);
                 report["release_wall_seconds"]=close.Elapsed.TotalSeconds; report["release_process_cpu_seconds"]=(Cpu()-closeCpu).TotalSeconds;
-                report["release_main_thread_managed_allocated_bytes"]=GC.GetAllocatedBytesForCurrentThread()-closeAllocated;
+                report["release_main_thread_managed_allocated_bytes"]=allocationCounterAvailable?new JValue(GC.GetAllocatedBytesForCurrentThread()-closeAllocated):JValue.CreateNull();
                 report["release_end_utc"]=DateTime.UtcNow.ToString("O"); report["phase"]="closed";
                 report["release_host_lifetime_peak_bytes"]=MediaExecutionMemory.Peak(); report["session_closed"]=true; report["success"]=true;
             }
             finally
             {
-                session?.Dispose(); foreach(var recorder in recorders)recorder.enabled=false;
+                session?.Dispose(); directCommands?.Dispose(); directIds?.Dispose(); directMask?.Dispose(); foreach(var recorder in recorders)recorder.enabled=false;
                 ProfilerDriver.enabled=false; ProfilerDriver.connectedProfiler=previousTarget; ProfilerDriver.enabled=previousDriver;
                 Profiler.SetAreaEnabled(ProfilerArea.GPU,previousGpu); Profiler.enabled=previousEnabled; ProfilerDriver.profileEditor=previousEditor;
                 Application.runInBackground=previousBackground; Application.targetFrameRate=previousFrameRate; QualitySettings.vSyncCount=previousVsync;

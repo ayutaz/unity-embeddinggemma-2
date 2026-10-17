@@ -23,4 +23,4 @@ Search indexの準備完了を待った後、既定databaseの列挙と、Packag
 
 ## 残る受け入れ
 
-この観測で、同期Editor検索のmain-thread割り当て、既知サイズによる校正、空Libraryと再利用Libraryのimport/startupを記録できた。明示的なindex再構築・背景index処理・非同期推論の割り当ては別途必要である。公開empty-cache取得、実マイク、最終candidateの手動操作・最新head CIを含む優先1〜3全体は未完了である。
+この観測で、同期Editor検索のmain-thread割り当て、既知サイズによる校正、空Libraryと再利用Libraryのimport/startupを記録できた。明示的なindex再構築は[追加の観測](editor-index-rebuild-observations.md)で、両sample導入後の40文書・固定fixtureと両sceneの直接検索保持を確認した。背景index専有allocation・非同期推論の割り当ては別途監査が必要である。公開empty-cache取得、実マイク、最終candidateの手動操作・最新head CIを含む優先1〜3全体は未完了である。

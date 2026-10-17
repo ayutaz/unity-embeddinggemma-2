@@ -36,6 +36,8 @@ candidate・入力・model hashを固定し、最初に測定します。遅い�
 
 直近の3のcheckpointでは、新SDKの[全5 profile×両形式・40反復](media-gpu-submission-observations.md)の元参照・解放・exit0、encoder 17,176区間と前処理/backbone 80区間、CPU/wall・9プロセスのGPU memoryを確認しました。[Editorの別測定](editor-search-allocation-observations.md)も、同一capture内の校正と検索4回、空/再利用Library、各10 pass / skip0 / exit0を記録しています。同SDKの[text両形式4反復](text-current-sdk-observations.md)と[frame GC control](async-frame-allocation-observations.md)も確認しました。次はload/release GPU区間の扱い、代表実音声の非同期allocation区間と個別stageの測定範囲の最終監査・明示的index再構築です。公開取得・実マイク・最終candidate操作を含む1〜3全体の条件は維持します。
 
+Editor負荷の追加checkpointとして、[両sampleを導入した既存Libraryの明示的再構築](editor-index-rebuild-observations.md)を2回確認した。初期readyだけでは新規assetの索引反映を保証しないため、再構築後の40文書と固定fixture・両sceneの直接検索を完了条件にした。6 pass / skip0 / exit0で、最初の再構築と反復、import / 起動、背景専有allocationの欠測を分けて記録した。公開取得・実マイク・最終candidate操作、load/release GPU時間の扱いと非同期allocationの最終監査は引き続き残る。
+
 ### 4. WindowsマルチモーダルPlayer
 
 1〜3で安定したcandidateを使い、画像・音声sampleの配置・cache・切替・失敗回復をPlayerへ接続します。

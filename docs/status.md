@@ -42,6 +42,8 @@ PR #31と#83はマージ済みです。#83の検証head `613ada824bd13a297660d8c
 
 全profile検証の最大ホストピークは12,090,900,480 bytes（約11.26 GiB）。これらは実測であり、VRAM必要量・全端末の最低メモリ・長期安定性・速度の保証ではありません。Float16重み保存も高速化の保証にはしません。
 
+既定Assets indexの[明示的な再構築](editor-index-rebuild-observations.md)では、SDK `d7b2233` / validation `9b6f28e` の両sample 86ファイルを導入した既存consumerで、readyでも0文書だったcacheを40文書へ構築し、固定fixture・両sceneの直接検索を2回確認した。6 pass / skip0 / exit0。最初の再構築9.146613秒、同Editorの反復0.0232275秒で、平均性能・推論時間・cold importの値にはしない。失敗した前のprobe、managed Process memoryのraw 0を利用不能とした記録、背景専有allocationの欠測も保持する。
+
 ## 未完了・未検証
 
 ロード・解放は[同じSDKの12実行と固定sourceを照合](load-release-measurement-scope.md)しました。ロード中に大きな定数・独自operationのGPU転送があるためCPUだけの仕事とは扱わず、未取得のGPU時間はnullを維持します。4回の推論完了後のcloseは、処理中キャンセルやdriverのVRAM返却完了の時間を示しません。この範囲監査でGPU時間の取得を完了扱いにはしません。
@@ -101,7 +103,7 @@ SDK `d7b2233` / 計測 `10962fa` の[全5 profile・両形式の40反復](media-
 - 空のcheckoutから画像・音声bundleを準備する公開手順と配布経路。
 - 最終統合candidateを新しいconsumerへ導入し、全モダリティを手動で一通り操作する最終受け入れ。
 - 結果画像プレビュー・音声再生・明示的なマイク操作のPR統合と実操作の受け入れ。
-- load/release GPU区間の扱い、代表的な非同期割り当て区間と個別stageの測定範囲・欠測の最終監査、明示的index再構築・背景処理。
+- load/release GPU区間の扱い、代表的な非同期割り当て区間と個別stageの測定範囲・欠測の最終監査、明示的index再構築時の専有allocation・背景処理。
 - 画像・音声検索のWindows Player、macOS Editor、iOS / Android実機での精度・操作・cache・正常終了。Androidの過去のAPK build成功は実機GPU合格ではありません。
 - 全モダリティの採用Float16形式・明示CPU経路の環境別受け入れ、最終candidate / tag固定導入、正式Release。
 

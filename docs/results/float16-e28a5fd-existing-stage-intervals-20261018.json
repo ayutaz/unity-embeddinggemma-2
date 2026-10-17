@@ -1,0 +1,329 @@
+{
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "precision": "float16-weights",
+  "modules": [
+    {
+      "module": "image-square",
+      "reference_cases": 2,
+      "process_wall_seconds": 331.9610373000032,
+      "instrumented_nonoverlapping_stage_wall_seconds": 124.79747789999999,
+      "wall_outside_instrumented_stages_seconds": 207.16355940000324,
+      "first_stage_begin_after_process_start_seconds": 195.210904,
+      "intervals": [
+        {
+          "stage": "preprocessing",
+          "method": "Process",
+          "case_phase": "encode_square-0",
+          "wall_seconds": 0.559936,
+          "process_cpu_seconds": 0.453125
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "case_phase": "encode_square-0",
+          "wall_seconds": 60.052767499999995,
+          "process_cpu_seconds": 37.5625
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "case_phase": "encode_square-0",
+          "wall_seconds": 2.932706,
+          "process_cpu_seconds": 0.8125
+        },
+        {
+          "stage": "preprocessing",
+          "method": "Process",
+          "case_phase": "encode_square-1",
+          "wall_seconds": 0.031503699999999996,
+          "process_cpu_seconds": 0.0
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "case_phase": "encode_square-1",
+          "wall_seconds": 60.855127599999996,
+          "process_cpu_seconds": 25.796875
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "case_phase": "encode_square-1",
+          "wall_seconds": 0.36543709999999996,
+          "process_cpu_seconds": 0.078125
+        }
+      ],
+      "audit_file": "image-square-float16-weights-e28a5fd-20261018.json",
+      "audit_sha256": "ef96f8561efbb0b7859f46393bccfc2eb5cd435a24d4c607da58339f168f6c40",
+      "raw_report_sha256": "95c502ada5d100978c57fd701cab6458c4a264c01557919be88212dfff707f33"
+    },
+    {
+      "module": "image-landscape",
+      "reference_cases": 2,
+      "process_wall_seconds": 323.2441771000158,
+      "instrumented_nonoverlapping_stage_wall_seconds": 124.26551339999999,
+      "wall_outside_instrumented_stages_seconds": 198.97866370001583,
+      "first_stage_begin_after_process_start_seconds": 186.634642,
+      "intervals": [
+        {
+          "stage": "preprocessing",
+          "method": "Process",
+          "case_phase": "encode_landscape-0",
+          "wall_seconds": 0.4771002,
+          "process_cpu_seconds": 0.484375
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "case_phase": "encode_landscape-0",
+          "wall_seconds": 55.827784599999994,
+          "process_cpu_seconds": 38.40625
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "case_phase": "encode_landscape-0",
+          "wall_seconds": 3.1766525999999997,
+          "process_cpu_seconds": 1.90625
+        },
+        {
+          "stage": "preprocessing",
+          "method": "Process",
+          "case_phase": "encode_landscape-1",
+          "wall_seconds": 0.028603399999999998,
+          "process_cpu_seconds": 0.0
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "case_phase": "encode_landscape-1",
+          "wall_seconds": 64.32789439999999,
+          "process_cpu_seconds": 41.703125
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "case_phase": "encode_landscape-1",
+          "wall_seconds": 0.4274782,
+          "process_cpu_seconds": 0.0625
+        }
+      ],
+      "audit_file": "image-landscape-float16-weights-e28a5fd-20261018.json",
+      "audit_sha256": "6e57fb9a01f36c96986e44ca40026f394e40130377e2522abf99aa9ec87313da",
+      "raw_report_sha256": "61b4f3168f5ea86b1dd017980713013093958c1ddf1321ff95d8e9b4b474f782"
+    },
+    {
+      "module": "image-portrait",
+      "reference_cases": 2,
+      "process_wall_seconds": 332.6445330000133,
+      "instrumented_nonoverlapping_stage_wall_seconds": 129.4939181,
+      "wall_outside_instrumented_stages_seconds": 203.15061490001332,
+      "first_stage_begin_after_process_start_seconds": 191.664756,
+      "intervals": [
+        {
+          "stage": "preprocessing",
+          "method": "Process",
+          "case_phase": "encode_portrait-0",
+          "wall_seconds": 0.6574622,
+          "process_cpu_seconds": 0.640625
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "case_phase": "encode_portrait-0",
+          "wall_seconds": 63.6825352,
+          "process_cpu_seconds": 37.875
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "case_phase": "encode_portrait-0",
+          "wall_seconds": 3.0771281999999998,
+          "process_cpu_seconds": 0.984375
+        },
+        {
+          "stage": "preprocessing",
+          "method": "Process",
+          "case_phase": "encode_portrait-1",
+          "wall_seconds": 0.0436712,
+          "process_cpu_seconds": 0.015625
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "case_phase": "encode_portrait-1",
+          "wall_seconds": 61.772053799999995,
+          "process_cpu_seconds": 32.375
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "case_phase": "encode_portrait-1",
+          "wall_seconds": 0.2610675,
+          "process_cpu_seconds": 0.140625
+        }
+      ],
+      "audit_file": "image-portrait-float16-weights-e28a5fd-20261018.json",
+      "audit_sha256": "e9cf273b252e12135336425688d03828df834c10d0865a150e091472be60a068",
+      "raw_report_sha256": "01b2e2a43a757ba6aa11d480a3390a3a27aa90d479a8c159815addf06ff1fe8d"
+    },
+    {
+      "module": "audio-1119",
+      "reference_cases": 5,
+      "process_wall_seconds": 283.888806700008,
+      "instrumented_nonoverlapping_stage_wall_seconds": 56.514737999999994,
+      "wall_outside_instrumented_stages_seconds": 227.374068700008,
+      "first_stage_begin_after_process_start_seconds": 212.489777,
+      "intervals": [
+        {
+          "stage": "preprocessing",
+          "method": "ProcessAsync",
+          "case_phase": "encode_silence",
+          "wall_seconds": 1.5442437999999998,
+          "process_cpu_seconds": 0.859375
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "case_phase": "encode_silence",
+          "wall_seconds": 12.284005899999999,
+          "process_cpu_seconds": 6.453125
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "case_phase": "encode_silence",
+          "wall_seconds": 2.253856,
+          "process_cpu_seconds": 0.59375
+        },
+        {
+          "stage": "preprocessing",
+          "method": "ProcessAsync",
+          "case_phase": "encode_impulse",
+          "wall_seconds": 0.1575772,
+          "process_cpu_seconds": 0.0
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "case_phase": "encode_impulse",
+          "wall_seconds": 9.367084199999999,
+          "process_cpu_seconds": 4.953125
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "case_phase": "encode_impulse",
+          "wall_seconds": 0.40758049999999996,
+          "process_cpu_seconds": 0.140625
+        },
+        {
+          "stage": "preprocessing",
+          "method": "ProcessAsync",
+          "case_phase": "encode_sine",
+          "wall_seconds": 0.025028699999999997,
+          "process_cpu_seconds": 0.015625
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "case_phase": "encode_sine",
+          "wall_seconds": 9.706207899999999,
+          "process_cpu_seconds": 4.640625
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "case_phase": "encode_sine",
+          "wall_seconds": 0.49341749999999995,
+          "process_cpu_seconds": 0.09375
+        },
+        {
+          "stage": "preprocessing",
+          "method": "ProcessAsync",
+          "case_phase": "encode_nyquist",
+          "wall_seconds": 0.06293259999999999,
+          "process_cpu_seconds": 0.046875
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "case_phase": "encode_nyquist",
+          "wall_seconds": 9.700953199999999,
+          "process_cpu_seconds": 4.96875
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "case_phase": "encode_nyquist",
+          "wall_seconds": 0.5068669,
+          "process_cpu_seconds": 0.0625
+        },
+        {
+          "stage": "preprocessing",
+          "method": "ProcessAsync",
+          "case_phase": "encode_noise",
+          "wall_seconds": 0.0269259,
+          "process_cpu_seconds": 0.015625
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "case_phase": "encode_noise",
+          "wall_seconds": 9.5500484,
+          "process_cpu_seconds": 4.421875
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "case_phase": "encode_noise",
+          "wall_seconds": 0.4280093,
+          "process_cpu_seconds": 0.125
+        }
+      ],
+      "audit_file": "audio-1119-float16-weights-e28a5fd-20261018.json",
+      "audit_sha256": "e8147a5392a67651fe8eb1914b23f1a2958c8ceb6cb1c8da8c330f8b906028af",
+      "raw_report_sha256": "f175169394757be2ee14358d7bb890332297368fae54354d82b8acefb83b13fd"
+    },
+    {
+      "module": "audio-839",
+      "reference_cases": 1,
+      "process_wall_seconds": 224.76342279999517,
+      "instrumented_nonoverlapping_stage_wall_seconds": 12.1640429,
+      "wall_outside_instrumented_stages_seconds": 212.59937989999517,
+      "first_stage_begin_after_process_start_seconds": 200.736806,
+      "intervals": [
+        {
+          "stage": "preprocessing",
+          "method": "ProcessAsync",
+          "case_phase": "encode_padded_noise",
+          "wall_seconds": 1.4897219,
+          "process_cpu_seconds": 1.109375
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "case_phase": "encode_padded_noise",
+          "wall_seconds": 9.326798,
+          "process_cpu_seconds": 7.03125
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "case_phase": "encode_padded_noise",
+          "wall_seconds": 1.347523,
+          "process_cpu_seconds": 0.75
+        }
+      ],
+      "audit_file": "audio-839-float16-weights-e28a5fd-20261018.json",
+      "audit_sha256": "aaefbf3e3ad061832c78ab3d71ff9f5b1ac4e7c1077f7a6e883848d4f09fe015",
+      "raw_report_sha256": "5f73e91c47e61c4490c7354b153ac84640196d993d2900d4b324dba06281334b"
+    }
+  ],
+  "scope": "Existing isolated numerical-acceptance trials with different fixed inputs. Stage wall/whole-process CPU intervals only; not an identical-input benchmark, GPU execution time, load-only timer or throughput comparison.",
+  "interpretation": "Time outside instrumented calls includes Editor startup, module validation/load, input setup, instrumentation and shutdown. First-stage delay is not a load-only measurement. CPU intervals include other Editor threads and do not establish CPU model fallback.",
+  "gpu_execution_time_measured": false,
+  "cpu_fallback_inferred": false,
+  "performance_improvement_claimed": false,
+  "remaining": "Identical-input first/warm/repeat CPU/GPU intervals; explicit load/release timers, per-process host/VRAM and Editor import/searchDB/reload/allocation."
+}

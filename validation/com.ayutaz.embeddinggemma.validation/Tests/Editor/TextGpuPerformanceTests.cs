@@ -1,0 +1,122 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Security.Cryptography;
+using System.Threading;
+using Newtonsoft.Json.Linq;
+using NUnit.Framework;
+using UnityEditor;
+using UnityEditorInternal;
+using UnityEngine;
+using UnityEngine.Profiling;
+using UnityEngine.TestTools;
+
+namespace EmbeddingGemma.Validation.Tests
+{
+    /// <summary>Existing synchronous text API, fixed same-input rounds, actual GPU timestamps; no throughput claim.</summary>
+    public sealed class TextGpuPerformanceTests
+    {
+        static string Hash(string path)
+        { using var stream=File.OpenRead(path); using var hash=SHA256.Create(); return BitConverter.ToString(hash.ComputeHash(stream)).Replace("-","").ToLowerInvariant(); }
+        static TimeSpan Cpu() { using var process=Process.GetCurrentProcess(); return process.TotalProcessorTime; }
+        [UnityTest, Timeout(900000)] public IEnumerator FixedTextFirstWarmRepeatedCallsHaveActualGpuTimingsAndPinnedVectors()
+        {
+            var output=Environment.GetEnvironmentVariable("EG_TEXT_PERFORMANCE_REPORT");
+            Assert.That(output,Is.Not.Null.And.Not.Empty); Assert.That(File.Exists(output),Is.False);
+            yield return new EnterPlayMode();
+            Assert.That(SystemInfo.supportsComputeShaders && SystemInfo.supportsGpuRecorder,Is.True,"Actual GPU timing required; no skip.");
+            var directory=Environment.GetEnvironmentVariable("EG_MEDIA_BUNDLE_OUTPUT");
+            GpuMediaExecutionPolicy.VerifyCurrent(directory);
+            var referencePath=Path.GetFullPath(Path.Combine(Application.dataPath,"../../player-bundle/windows-unity21-20261012/search-reference.json"));
+            Assert.That(Hash(referencePath),Is.EqualTo("f316d5199c920431c7f721d43b2cedbe4a6384fb0e0664511b75bc2e98fe80fe"));
+            var query=JObject.Parse(File.ReadAllText(referencePath))["queries"].First();
+            var expected=query["embedding"].Values<float>().ToArray();
+            var report=new JObject { ["success"]=false,["runtime_source"]=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE"),
+                ["precision"]=GpuMediaExecutionPolicy.CurrentPrecision,["descriptor_sha256"]=Hash(Path.Combine(directory,"bundle.json")),
+                ["query_id"]=query["id"],["query_text"]=query["text"],["reference_sha256"]=Hash(referencePath),
+                ["unity"]=Application.unityVersion,["gpu"]=SystemInfo.graphicsDeviceName,["graphics_api"]=SystemInfo.graphicsDeviceType.ToString(),
+                ["host_memory_limit_bytes"]=GpuMediaExecutionPolicy.CurrentMemoryLimitBytes,["rounds"]=new JArray(),
+                ["cold_definition"]="New process/session and first inference after load. OS file/shader caches are not purged.",
+                ["timing_scope"]="Profiled synchronous API calls. GPU inclusive timestamp intervals can include queue/idle gaps. GPU parent and child timings overlap; never add them.",
+                ["throughput_measured"]=false,["microphone_started"]=false };
+            void Save()=>File.WriteAllText(output,report.ToString()); Save();
+            var previousEnabled=Profiler.enabled; var previousGpu=Profiler.GetAreaEnabled(ProfilerArea.GPU);
+            var previousDriver=ProfilerDriver.enabled; var previousEditor=ProfilerDriver.profileEditor; var previousTarget=ProfilerDriver.connectedProfiler;
+            var previousBackground=Application.runInBackground; var previousFrameRate=Application.targetFrameRate; var previousVsync=QualitySettings.vSyncCount;
+            var recorders=new List<Recorder>(); var host=new GameObject("Owned text benchmark camera");
+            var target=new RenderTexture(16,16,0); var camera=host.AddComponent<Camera>(); camera.targetTexture=target;
+            camera.clearFlags=CameraClearFlags.SolidColor; camera.cullingMask=0;
+            GpuMediaSession session=null; using var cancellation=new CancellationTokenSource();
+            try
+            {
+                Application.runInBackground=true; Application.targetFrameRate=60; QualitySettings.vSyncCount=0;
+                report["run_in_background"]=Application.runInBackground; report["target_frame_rate"]=Application.targetFrameRate; report["vsync_count"]=QualitySettings.vSyncCount;
+                var isLocal=typeof(ProfilerDriver).GetMethod("IsIdentifierOnLocalhost",BindingFlags.Static|BindingFlags.NonPublic);
+                Assert.That(isLocal,Is.Not.Null);
+                var candidates=ProfilerDriver.GetAvailableProfilers().Where(id=>ProfilerDriver.GetConnectionIdentifier(id).IndexOf("Editor",StringComparison.OrdinalIgnoreCase)>=0 && (bool)isLocal.Invoke(null,new object[] {id})).ToArray();
+                Assert.That(candidates.Contains(previousTarget) || candidates.Length==1,Is.True,"Local Editor profiler target must be unambiguous.");
+                ProfilerDriver.connectedProfiler=candidates.Contains(previousTarget)?previousTarget:candidates[0];
+                ProfilerDriver.enabled=true; ProfilerDriver.profileEditor=true; Profiler.enabled=true; Profiler.SetAreaEnabled(ProfilerArea.GPU,true);
+                for(var frame=0;frame<5;frame++) yield return null;
+                var loadCpu=Cpu(); var load=Stopwatch.StartNew();
+                var loading=GpuMediaBundle.Open(directory).LoadAsync("text",cancellation.Token);
+                while(!loading.IsCompleted)
+                { if(MediaExecutionMemory.Peak()>GpuMediaExecutionPolicy.CurrentMemoryLimitBytes)cancellation.Cancel(); EditorApplication.QueuePlayerLoopUpdate(); yield return null; }
+                session=loading.GetAwaiter().GetResult(); load.Stop();
+                report["load_wall_seconds"]=load.Elapsed.TotalSeconds; report["load_process_cpu_seconds"]=(Cpu()-loadCpu).TotalSeconds;
+                report["load_gpu_elapsed_ns"]=null; report["load_host_lifetime_peak_bytes"]=MediaExecutionMemory.Peak(); Save();
+                foreach(var name in new[] {"first","warm","repeat-1","repeat-2"})
+                {
+                    var sampler=CustomSampler.Create("EmbeddingGemma.TextBenchmark."+name,true);
+                    var recorder=sampler.GetRecorder(); recorder.enabled=true; recorders.Add(recorder);
+                    Assert.That(recorder.isValid,Is.True);
+                    var cpu=Cpu(); var watch=Stopwatch.StartNew(); float[] actual;
+                    sampler.Begin();
+                    try { actual=session.EmbedQuery((string)query["text"]); }
+                    finally { sampler.End(); watch.Stop(); }
+                    var cpuSeconds=(Cpu()-cpu).TotalSeconds;
+                    var cosine=TextSearchIndex.Cosine(actual,expected); var norm=actual.Sum(value=>(double)value*value);
+                    Assert.That(actual.Length,Is.EqualTo(768)); Assert.That(cosine,Is.GreaterThanOrEqualTo(GpuMediaExecutionPolicy.CurrentMinimumCosine));
+                    Assert.That(actual.All(value=>!float.IsNaN(value)&&!float.IsInfinity(value)),Is.True);
+                    Assert.That(Math.Abs(norm-1),Is.LessThanOrEqualTo(.002));
+                    var capture=Path.ChangeExtension(output,null)+"-"+name+".bin"; Assert.That(File.Exists(capture),Is.False);
+                    var bytes=new byte[actual.Length*4]; Buffer.BlockCopy(actual,0,bytes,0,bytes.Length); File.WriteAllBytes(capture,bytes);
+                    var row=new JObject { ["round"]=name,["wall_seconds"]=watch.Elapsed.TotalSeconds,["process_cpu_seconds"]=cpuSeconds,
+                        ["host_lifetime_peak_bytes"]=MediaExecutionMemory.Peak(),["unity_allocated_bytes"]=Profiler.GetTotalAllocatedMemoryLong(),
+                        ["managed_heap_bytes"]=GC.GetTotalMemory(false),["cosine"]=cosine,["norm_squared"]=norm,
+                        ["capture"]=Path.GetFileName(capture),["capture_sha256"]=Hash(capture),["observations"]=new JArray() };
+                    ((JArray)report["rounds"]).Add(row); Save();
+                    for(var attempt=0;attempt<60;attempt++)
+                    {
+                        EditorApplication.QueuePlayerLoopUpdate(); yield return null;
+                        ((JArray)row["observations"]).Add(new JObject { ["frame"]=Time.frameCount,["gpu_ns"]=recorder.gpuElapsedNanoseconds,["gpu_blocks"]=recorder.gpuSampleBlockCount });
+                        if(recorder.gpuElapsedNanoseconds>0 && recorder.gpuSampleBlockCount>0)
+                        { row["gpu_elapsed_ns"]=recorder.gpuElapsedNanoseconds; row["gpu_sample_blocks"]=recorder.gpuSampleBlockCount; break; }
+                    }
+                    for(var drain=0;drain<12;drain++) yield return null;
+                    var diagnostics=new JObject(); row["gpu_history_diagnostics"]=diagnostics;
+                    var history=GpuProfilerHistory.ReadExactMarker(sampler.name,diagnostics); row["gpu_history"]=history; Save();
+                    Assert.That(row.Value<long>("gpu_elapsed_ns"),Is.GreaterThan(0),"Absent GPU timing is a failure, never zero-time success.");
+                    Assert.That(history.Count,Is.GreaterThan(0),"The local Editor GPU history must independently contain this exact marker.");
+                    Assert.That(MediaExecutionMemory.Peak(),Is.LessThanOrEqualTo(GpuMediaExecutionPolicy.CurrentMemoryLimitBytes));
+                }
+                var close=Stopwatch.StartNew(); var closing=session.CloseAsync(); while(!closing.IsCompleted) yield return null;
+                closing.GetAwaiter().GetResult(); close.Stop(); MultimodalSearchSampleGpuTests.AssertReleased(session);
+                report["release_wall_seconds"]=close.Elapsed.TotalSeconds; report["session_closed"]=true; report["success"]=true;
+            }
+            finally
+            {
+                session?.Dispose(); foreach(var recorder in recorders)recorder.enabled=false;
+                ProfilerDriver.enabled=false; ProfilerDriver.connectedProfiler=previousTarget; ProfilerDriver.enabled=previousDriver;
+                Profiler.SetAreaEnabled(ProfilerArea.GPU,previousGpu); Profiler.enabled=previousEnabled; ProfilerDriver.profileEditor=previousEditor;
+                Application.runInBackground=previousBackground; Application.targetFrameRate=previousFrameRate; QualitySettings.vSyncCount=previousVsync;
+                camera.targetTexture=null; UnityEngine.Object.DestroyImmediate(host); target.Release(); UnityEngine.Object.DestroyImmediate(target); Save();
+            }
+            yield return new ExitPlayMode();
+        }
+    }
+}

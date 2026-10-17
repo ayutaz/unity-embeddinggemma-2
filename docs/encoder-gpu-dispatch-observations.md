@@ -17,6 +17,14 @@ warmの区間別合計は次のとおりです。同一実行の観測であり�
 
 GPU演算のCPU側経過時間ではBatchedMatmulの32回が6.603秒、Softmaxの16回が5.446秒でした。これらはmain threadの経過時間であり、CPUの実稼働時間ではありません。割り当て、転送、driver待ち等の内訳は未分離です。
 
+## 固定音声による別の観測
+
+同じSDK・計測source・FP32 bundleで、audio-1119の固定silence入力を4回実行した。[音声の監査](results/encoder-gpu-dispatch-audio-1119-fp32-c2f766e-first-audit-20261018.json)。各回モデル268区間・演算267区間、合計2140区間がすべて観測できた。4 vectorの独立参照cosine最小は0.9999999999928919で、解放・1 pass / fail0 / skip0 / exit0と実行後546 sourceファイル一致を確認した。
+
+[画像・音声の演算別集計](results/encoder-image-audio-operation-observations-20261018.json)では、bundle記載の全stageが各回1回ずつ対応し、両入力合計3576区間で中断なし・GPU statistics Enabled/Gathered・正の値があることを検査した。これはこの2入力のencoder送信区間の観測であり、前処理・backbone・他profile・Float16のGPU時間の受け入れではない。
+
+音声warmでの送信区間の経過時間は、BatchedMatmul 36回が0.011150秒、Softmax 12回が0.002844秒だった。異なる仕事量のため、画像との数値差をモダリティ間の速度比較や改善率と解釈しない。画像で観測した長い送信区間を、音声全体の遅さの原因へ一般化する証拠は得られていない。画像の大きな出力確保を改善候補としつつ、音声はmodel送信・frame待機・cache処理なども別に追う。
+
 ## 次に検証する改善
 
 現行の `GpuBatchedMatmul` / `GpuSoftmax` などは、書き込み先を `new Tensor<float>(shape)` で作った後に `ComputeTensorData.Pin(output)` へ渡しています。固定Sentis 2.6.1のshape-only constructorはCPU tensor dataを既定でゼロ初期化し、Pinは既存storageをGPU側へ変換します。全要素をGPU演算で書く出力では、CPU storageを作らずにGPU storageを割り当てる経路を候補として検証します。
@@ -27,5 +35,5 @@ GPU演算のCPU側経過時間ではBatchedMatmulの32回が6.603秒、Softmax�
 
 - GPU値はqueue上のmarker区間であり、command/copy・queue bubbleの影響を含み得ます。純粋なkernel稼働時間とはしません。
 - profiler・marker作成・samplingにより呼び出しの経過時間は変わります。この実行を通常APIの遅延・平均性能・精度形式間の速度差へ拡張しません。
-- この追加観測はFP32・square-0のencoderです。他profile、Float16、前処理・backboneのGPU区間はこの記録では未検証です。
+- この追加観測はFP32・square-0 / audio-1119 silenceのencoderです。他profile、Float16、前処理・backboneのGPU区間はこの記録では未検証です。
 - 元の12GiB停止やEditMode timeout、過去のGPU時間・割り当て欠測は保持します。優先1〜3全体も未完了です。

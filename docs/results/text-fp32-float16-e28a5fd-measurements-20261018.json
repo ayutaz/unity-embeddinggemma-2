@@ -1,0 +1,207 @@
+{
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "accepted": false,
+  "query_id": "query-cat-ja",
+  "scope": "Successful fixed-query collection and numerical/release checks. GPU timing interpretation and allocation calibration are unresolved; complete performance acceptance is false.",
+  "observations": [
+    {
+      "precision": "fp32",
+      "load_wall_seconds": 26.4111041,
+      "load_process_cpu_seconds": 21.03125,
+      "load_gpu_elapsed_ns": null,
+      "release_wall_seconds": 0.0098909,
+      "release_process_cpu_seconds": 0.0,
+      "release_host_lifetime_peak_bytes": 5127753728,
+      "rounds": [
+        {
+          "round": "first",
+          "call_wall_ms": 1585.9093,
+          "process_cpu_ms": 515.625,
+          "profiler_history_gpu_ns": [
+            1583725098
+          ],
+          "main_thread_managed_allocated_bytes": null,
+          "main_thread_managed_bytes_per_second": null,
+          "host_lifetime_peak_bytes": 5042233344,
+          "gpu_memory_samples_during_call": 0,
+          "dedicated_largest_observed_during_call_bytes": null,
+          "raw_recorder_gpu_frame_ms": 91.685888,
+          "raw_uncalibrated_main_thread_counter_delta": 0,
+          "gpu_timing_interpretation_validated": false
+        },
+        {
+          "round": "warm",
+          "call_wall_ms": 65.9549,
+          "process_cpu_ms": 62.5,
+          "profiler_history_gpu_ns": [
+            14316000
+          ],
+          "main_thread_managed_allocated_bytes": null,
+          "main_thread_managed_bytes_per_second": null,
+          "host_lifetime_peak_bytes": 5064519680,
+          "gpu_memory_samples_during_call": 0,
+          "dedicated_largest_observed_during_call_bytes": null,
+          "raw_recorder_gpu_frame_ms": 26.20928,
+          "raw_uncalibrated_main_thread_counter_delta": 0,
+          "gpu_timing_interpretation_validated": false
+        },
+        {
+          "round": "repeat-1",
+          "call_wall_ms": 66.71470000000001,
+          "process_cpu_ms": 15.625,
+          "profiler_history_gpu_ns": [
+            13869000
+          ],
+          "main_thread_managed_allocated_bytes": null,
+          "main_thread_managed_bytes_per_second": null,
+          "host_lifetime_peak_bytes": 5086056448,
+          "gpu_memory_samples_during_call": 0,
+          "dedicated_largest_observed_during_call_bytes": null,
+          "raw_recorder_gpu_frame_ms": 23.845888,
+          "raw_uncalibrated_main_thread_counter_delta": 0,
+          "gpu_timing_interpretation_validated": false
+        },
+        {
+          "round": "repeat-2",
+          "call_wall_ms": 66.798,
+          "process_cpu_ms": 31.25,
+          "profiler_history_gpu_ns": [
+            409081970
+          ],
+          "main_thread_managed_allocated_bytes": null,
+          "main_thread_managed_bytes_per_second": null,
+          "host_lifetime_peak_bytes": 5106282496,
+          "gpu_memory_samples_during_call": 0,
+          "dedicated_largest_observed_during_call_bytes": null,
+          "raw_recorder_gpu_frame_ms": 23.805952,
+          "raw_uncalibrated_main_thread_counter_delta": 0,
+          "gpu_timing_interpretation_validated": false
+        }
+      ],
+      "gpu_memory": {
+        "samples": 15,
+        "available_samples": 15,
+        "unavailable_samples": 0,
+        "largest_observed_dedicated_bytes": 1516879872,
+        "largest_observed_shared_bytes": 789245952,
+        "maximum_observed_sample_gap_seconds": 5.143601,
+        "scope": "Sampled owned-process allocations, not guaranteed peaks or minimum VRAM. Short calls can contain no samples; null is unavailable, never zero."
+      },
+      "source_evidence": {
+        "audit": "text-performance-fp32-e28a5fd-scoped-history-20261018.json",
+        "audit_sha256": "79b865f9220d6867a52f49e9e028bf0ae2c5246903e3d5d066e9621ed4d7076a",
+        "memory_trace_sha256": "85f91bde1eba25ffb4b6327efe8017706ae2bccf537f94cd6546c7bdd9cb136a"
+      }
+    },
+    {
+      "precision": "float16-weights",
+      "load_wall_seconds": 15.624706499999998,
+      "load_process_cpu_seconds": 13.59375,
+      "load_gpu_elapsed_ns": null,
+      "release_wall_seconds": 0.011971599999999999,
+      "release_process_cpu_seconds": 0.015625,
+      "release_host_lifetime_peak_bytes": 3665661952,
+      "rounds": [
+        {
+          "round": "first",
+          "call_wall_ms": 1251.6941,
+          "process_cpu_ms": 171.875,
+          "profiler_history_gpu_ns": [
+            278171997
+          ],
+          "main_thread_managed_allocated_bytes": null,
+          "main_thread_managed_bytes_per_second": null,
+          "host_lifetime_peak_bytes": 3579572224,
+          "gpu_memory_samples_during_call": 0,
+          "dedicated_largest_observed_during_call_bytes": null,
+          "raw_recorder_gpu_frame_ms": 304.508928,
+          "raw_uncalibrated_main_thread_counter_delta": 0,
+          "gpu_timing_interpretation_validated": false
+        },
+        {
+          "round": "warm",
+          "call_wall_ms": 100.44369999999999,
+          "process_cpu_ms": 62.5,
+          "profiler_history_gpu_ns": [
+            17559000
+          ],
+          "main_thread_managed_allocated_bytes": null,
+          "main_thread_managed_bytes_per_second": null,
+          "host_lifetime_peak_bytes": 3601276928,
+          "gpu_memory_samples_during_call": 0,
+          "dedicated_largest_observed_during_call_bytes": null,
+          "raw_recorder_gpu_frame_ms": 29.902848,
+          "raw_uncalibrated_main_thread_counter_delta": 0,
+          "gpu_timing_interpretation_validated": false
+        },
+        {
+          "round": "repeat-1",
+          "call_wall_ms": 81.60139999999998,
+          "process_cpu_ms": 31.25,
+          "profiler_history_gpu_ns": [
+            17559999
+          ],
+          "main_thread_managed_allocated_bytes": null,
+          "main_thread_managed_bytes_per_second": null,
+          "host_lifetime_peak_bytes": 3623948288,
+          "gpu_memory_samples_during_call": 0,
+          "dedicated_largest_observed_during_call_bytes": null,
+          "raw_recorder_gpu_frame_ms": 28.40064,
+          "raw_uncalibrated_main_thread_counter_delta": 0,
+          "gpu_timing_interpretation_validated": false
+        },
+        {
+          "round": "repeat-2",
+          "call_wall_ms": 72.35029999999999,
+          "process_cpu_ms": 62.5,
+          "profiler_history_gpu_ns": [
+            388591003
+          ],
+          "main_thread_managed_allocated_bytes": null,
+          "main_thread_managed_bytes_per_second": null,
+          "host_lifetime_peak_bytes": 3644555264,
+          "gpu_memory_samples_during_call": 0,
+          "dedicated_largest_observed_during_call_bytes": null,
+          "raw_recorder_gpu_frame_ms": 26.198016,
+          "raw_uncalibrated_main_thread_counter_delta": 0,
+          "gpu_timing_interpretation_validated": false
+        }
+      ],
+      "gpu_memory": {
+        "samples": 16,
+        "available_samples": 16,
+        "unavailable_samples": 0,
+        "largest_observed_dedicated_bytes": 1136443392,
+        "largest_observed_shared_bytes": 482906112,
+        "maximum_observed_sample_gap_seconds": 4.73731,
+        "scope": "Sampled owned-process allocations, not guaranteed peaks or minimum VRAM. Short calls can contain no samples; null is unavailable, never zero."
+      },
+      "source_evidence": {
+        "audit": "text-performance-float16-weights-e28a5fd-scoped-history-20261018.json",
+        "audit_sha256": "a7e03f70fe930c73718d660d0c05ef73f8e6200f9c525ed45565ec42adb40c9c",
+        "memory_trace_sha256": "5f4d5cc6b0e2fd2069f926ff2b00aa5d9986e5fe3718000aa8b87e1b9b95bdf5"
+      }
+    }
+  ],
+  "performance_improvement_claimed": false,
+  "limitations": [
+    "Each format has one process and four calls; OS file/shader caches are not purged and GPU clocks/background conditions are uncontrolled.",
+    "GPU timestamp intervals are inclusive and may include queue/idle gaps; they are not a sum of active kernel time.",
+    "CPU times cover the whole Editor process. Managed allocation counters cover this main thread; async load/release include other callbacks.",
+    "Load GPU time is unavailable. Sampled allocation traces can miss transient and short-call peaks.",
+    "Recorder and hierarchy values disagree materially; no value is promoted to a validated GPU inference duration.",
+    "Allocation API deltas were uncalibrated zeros. Summary allocation metrics are null, retaining raw readings separately."
+  ],
+  "remaining": [
+    "Calibrate real-model GPU marker boundaries/frame attribution and known-allocation counters",
+    "Image/audio same-input first/warm/repeat stage CPU/GPU measurements",
+    "Explicit media load/release and host/VRAM observations",
+    "Editor import/searchDB/reload/allocation",
+    "Fresh fixed-Git native UI",
+    "Public empty-cache acquisition",
+    "Authorized actual microphone"
+  ],
+  "collection_fixtures_passed": true,
+  "gpu_timing_cross_method_interpretation_validated": false,
+  "managed_allocation_counter_calibrated": false
+}

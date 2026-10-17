@@ -33,7 +33,9 @@
 | 最新サンプルの実GPU・メモリ・画面・回帰 | [画像・音声サンプル検証](multimodal-search-sample.md) |
 | GPU出力確保の改善と新SDKの精度・順位 | [CPU storageの省略](gpu-write-only-output-allocation.md) |
 | 新SDKの全画像・音声profileのGPU/CPU/wall・メモリ | [同じsourceの40反復](media-gpu-submission-observations.md) |
+| 同じSDKのtextのGPU/CPU/wall・メモリ | [両形式・固定queryの4反復](text-current-sdk-observations.md) |
 | Editor検索の校正済み割り当て・空/再利用Library | [Editorの別測定](editor-search-allocation-observations.md) |
+| awaitをまたぐフレーム全体のGC counter校正 | [既知payloadのcontrol・実モデル未適用](async-frame-allocation-observations.md) |
 | Windows IL2CPP Playerの固定source受け入れ | [Player結果JSON](results/m2-current-main-player-acceptance-20261017.json) |
 | 元画像・音声encoderと全role API | [GPU/API完了監査](results/goal4-current-completion-audit-20261016.json) / [GPU診断](gpu-execution-and-silu-validation.md) |
 | テキストM1の保存・量子化・測定 | [M1完了検証](m1-completion-validation.md) |

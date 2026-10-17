@@ -1,6 +1,6 @@
 # ロードマップ
 
-更新: **2026-10-18**。main `35d18f8`を統合済み基準とする現在の作業計画です。未統合PRの追加検証はSDK `e28a5fd`に対応します。確認済みの事実は[検証状況](status.md)、変更しない目標は[プロジェクトのゴール](goal.md)を参照してください。
+更新: **2026-10-18**。main `35d18f8`を統合済み基準とする現在の作業計画です。未統合PRでは基準SDK `e28a5fd` と出力確保の候補 `d7b2233` を区別し、各実行のsourceを記録します。確認済みの事実は[検証状況](status.md)、変更しない目標は[プロジェクトのゴール](goal.md)を参照してください。
 
 テキスト・画像・音声のGPU API、Windows text Player、画像・音声検索サンプルとcacheは統合済みです。次は、他の利用者が準備・操作を再現できる状態を作り、そのcandidateで性能と対象環境を検証します。正式リリースは全必須条件の後に行います。
 
@@ -31,6 +31,8 @@ candidate・入力・model hashを固定し、最初に測定します。遅い�
 2026-10-18時点で、Float16の全6 module・固定16ケースの単独GPU参照比較は完了しました。FP32の12GiB guard中断と16GiB EditModeの900秒fixture timeoutは保持します。同じSDK・16GiBの混在PlayModeでは、FP32 / Float16とも5媒体と日英4 queryの連続順位・解放、直接テキスト4件、終了code0を確認しました。初期のGPU Recorderと履歴の値の差、割り当てAPIの全0は過去の欠測として保持します。その後、停止したCPU履歴のmarker内bytesをnoop / 64KiB / 128KiBで校正し、実GPUの同期テキストAPIでも両形式各4回の割り当て量・参照一致・解放・exit0を確認しました。[校正記録](results/managed-allocation-scoped-byte-calibration-20261018.json)と[検証状況](status.md)。画像3・音声2 profile×両形式の同一入力反復は、全10プロセス・計40回で参照一致・解放・exit0とstage別CPU/wallを確認しました。[反復測定とSearchの観測](media-repeat-measurements.md)。モデルなしの別consumerでも既定Search indexの初期化・準備待ちとpackage検索4回・exit0を確認しました。次はstage別GPU時間の校正、非同期割り当て、必要なEditor index再構築・cold import / allocationの受け入れです。load・frame待機・推論・Editor処理を分け、必要な改善をTDDで加えます。性能全体は未合格であり、保存容量や異なる実行条件から高速化を推定しません。
 
 3の追加checkpointとして、固定source consumerでFP32 / Float16の送信前CPU待機とGPU仕事量の対照、および待機なしの同一入力・各1 dispatchを4回ずつ実行しました。[通常dispatchの観測](results/frozen-source-text-gpu-dispatch-observations-20261018.json)は参照一致・解放・exit0まで確認済みです。Recorder区間とProfiler履歴の解釈は分け、少数観測を形式間の速度改善へ拡張しません。3全体の完了条件と、画像・音声のstage別GPU時間・Editor測定の残件は維持します。
+
+[encoder区間の追加観測](encoder-gpu-dispatch-observations.md)では、旧SDKのFP32画像・音声とFloat16画像で12 vector・全5012区間を確認しました。画像の大きなGPU出力に不要なCPU storageを作っていたため、[出力確保の候補](gpu-write-only-output-allocation.md)をTDDとGPU演算等120件で検証しました。新SDKのFP32固定画像4回は旧出力とbyte一致し、同じ計測付きwarm反復が19.3–29.4秒から4.8–5.5秒になりました。次は新SDKの全module / precision・混在順位・通常APIの対応条件・メモリを確認します。旧SDKの受け入れを新SDKの完了に数えません。
 
 ### 4. WindowsマルチモーダルPlayer
 

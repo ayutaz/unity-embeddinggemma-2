@@ -13,7 +13,7 @@
 | 2c: 実マイク | 明示操作・失敗処理の実装と契約テスト。実録音は未実行 | 録音の明示許可後、開始・停止・中断復帰を実機で確認。権限拒否・deviceなしの扱いも記録。固定PCMやfake deviceを実マイク成功にしない |
 | 3a: 初回・warm・反復とstage別CPU/GPU時間 | 同じ固定入力のテキストGPU区間とCPU割り当て、画像3・音声2 profile×両形式・全40回の同一入力CPU/wall・参照一致・解放・exit0を確認 | 集約済みのload・前処理・encoder・backbone・releaseを基準に、stage別GPU時間の測定と解釈を確認し、待機・readbackをkernel稼働時間にしない |
 | 3a: ホスト・VRAM・Editor負荷 | ホストピーク、timestamp付きGPU memory allocation、reloadとstartup/importの個別観測、別consumerの既定index初期化・package検索4回とexit0。[測定の範囲](media-repeat-measurements.md) | 欠測区間を埋めるか測定不能を明記し、受け入れ不足を保持。index単独・再構築時間、Editor/非同期allocation、cold/warm条件の受け入れを確認。プロセス全体・stage・寿命ピークと、重なるEditor時間を加算しない |
-| 3b: FP32/Float16と原因別改善 | [全6 moduleのFloat16単独GPU参照比較](results/all-six-module-float16-e28a5fd-acceptance-20261018.json)、[両形式の混在連続順位・解放・正常終了](results/fp32-float16-e28a5fd-playmode-correspondence-20261018.json) | 重い区間の原因を絞り、必要な修正をTDDで実装。同一入力・対応する条件で前後比較し、元の精度・全順位・GPU要件・正常終了を維持。保存容量の減少を推論高速化にしない |
+| 3b: FP32/Float16と原因別改善 | 旧SDKの[全6 module Float16](results/all-six-module-float16-e28a5fd-acceptance-20261018.json)と[両形式の混在順位・解放](results/fp32-float16-e28a5fd-playmode-correspondence-20261018.json)。[出力確保の新SDK候補](gpu-write-only-output-allocation.md)はTDD・GPU演算等120件・FP32固定画像4回byte一致、同じ計測付きwarm反復の改善を確認 | 新SDKの全module・precision・混在順位と通常APIの対応条件・メモリを受け入れる。元の精度・全順位・GPU要件・正常終了を維持し、旧sourceの成功や保存容量の減少を新SDK全体の合格・高速化にしない |
 | delivery: PRと最終監査 | PR #85 UX、#86取得、#87性能・Float16が未統合。#87は#85に依存 | 最新headのRequired CI、差分・依存を確認し、依頼範囲内で統合。最終sourceとmodel hashへ全記録を対応させ、上記全行の証拠を揃えてから優先1〜3を完了とする |
 
 ## そのまま維持する失敗と境界

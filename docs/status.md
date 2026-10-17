@@ -52,6 +52,8 @@ PR #31と#83はマージ済みです。#83の検証head `613ada824bd13a297660d8c
 
 [Windowsのraw Timer100Nsによる別観測](windows-gpu-engine-observations.md)も追加しました。収集protocolを含む21件が成功し、実textを2プロセス・計8 vectorの参照一致と正常終了へ対応付けています。修正後のload内3観測点・14 engineで観測点間の差分0を確認しましたが、load全体の境界は覆えておらず、約10msのreleaseには観測点がありません。SDK専有のGPU時間とは扱わず、欠測は維持します。
 
+[Editor再構築のframe全体GC](editor-frame-allocation-observations.md)は、EditModeの既知8MiB校正と実indexの2反復を7 pass / skip0 / exit0まで確認しました。40文書と両sample sceneを保持し、累積24,371,666 / 274,417 bytesとnative processメモリを記録しています。index専有bytesやGPU/実モデルの合格ではなく、Profiler不整合・compile未実行等の先行失敗も保持します。
+
 ### 進行中PRの確認済み範囲
 
 - [#85](https://github.com/ayutaz/unity-embeddinggemma-2/pull/85): 画像プレビュー・音声再生・明示的なマイク操作の実装。固定Git consumerで画像・音声登録、日英検索、エラー復帰・キャンセル再試行・切替・解放と正常終了を実際のマウス・キーボードで確認しました。実マイクは未実行です。

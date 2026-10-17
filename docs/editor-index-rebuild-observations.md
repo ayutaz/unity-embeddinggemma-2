@@ -43,3 +43,5 @@ CPU差分は背景・Editor・計測のpoll処理を含み、短い反復のraw 
 一つ前の同条件probeは5 pass / 1 fail / exit2。再構築前からfixtureが索引にあることを要求してしまい、readyでも空のcacheで停止した。次のprobeは初期内容を記録し、実際の再構築後にfixtureと両sceneが必要という条件にした。準備完了だけで新しいassetが索引に含まれるとは判断しない。失敗は監査に保持している。前のlauncherには実行後のfixture変数を上書きするKeyErrorもあり、後の独立監査で86ファイルのsource / destination hashを再照合した。API調査中の `GetDocuments` コンパイル失敗も保持し、固定Editorに公開されている `Search` / `GetDocument` へ修正して警告・エラー0を確認した。
 
 終了後は新旧の576 sourceファイル、導入した86ファイル、manifestの切替前後、元のuser変更4ファイルを照合した。managed Processのmemory値はこの条件でもraw 0だったため利用不能とし、背景index専有allocationはnullのままである。
+
+別の[EditMode counter校正・frame全体GCとnativeメモリ観測](editor-frame-allocation-observations.md)では、全体Profiler記録を無効にしたRecorder単独の条件で7 pass / skip0 / exit0を確認した。実再構築2回の40文書・両scene保持、counter全体の24,371,666 / 274,417 bytes、native processメモリを記録した。背景threadの専有allocationや、以前の試行との速度改善を示すものではなく、先行のProfiler不整合・compile未実行・所有fixture guardの失敗も保持する。

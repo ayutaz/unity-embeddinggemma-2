@@ -37,6 +37,7 @@
 | ロード・解放の仕事とGPU時間の欠測 | [12実行と固定sourceの範囲監査](load-release-measurement-scope.md) |
 | Windowsのprocess/engine別GPU活動量と短区間の欠測 | [Timer100Nsの単位・時計・実text APIとの照合](windows-gpu-engine-observations.md) |
 | Editor検索の校正済み割り当て・空/再利用Library | [Editorの別測定](editor-search-allocation-observations.md) |
+| Editor再構築中のcounter全体GCとnativeメモリ | [EditMode校正と実index2反復](editor-frame-allocation-observations.md) |
 | awaitをまたぐフレーム全体のGC counter | [既知payloadのcontrolと代表実音声の検証区間](async-frame-allocation-observations.md) |
 | Windows IL2CPP Playerの固定source受け入れ | [Player結果JSON](results/m2-current-main-player-acceptance-20261017.json) |
 | 元画像・音声encoderと全role API | [GPU/API完了監査](results/goal4-current-completion-audit-20261016.json) / [GPU診断](gpu-execution-and-silu-validation.md) |

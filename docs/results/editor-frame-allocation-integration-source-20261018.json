@@ -1,0 +1,10 @@
+{
+  "source_correspondence_accepted": true,
+  "tested_validation_source": "e0350226fcf14dbfcbee6ebb7403a40ed8b69847",
+  "validation_git_tree": "5e3c0db45da8a4a19d8267cec39212d90cf72393",
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "runtime_git_tree": "7d6e4314552b221d06db881405e7ccff3f449a77",
+  "integrated_head": "5a1f753f33d6e10cafda2aba548d12a40ade1c5b",
+  "model_or_gpu_qualification_claimed": false,
+  "scope": "Whole validation tree and core SDK Runtime tree equal tested sources. Frozen consumer samples and SDK package bytes were separately verified; no new native UI/public acquisition or real-model acceptance."
+}

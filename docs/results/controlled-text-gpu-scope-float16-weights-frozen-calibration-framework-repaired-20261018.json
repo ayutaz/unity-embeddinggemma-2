@@ -1,0 +1,118 @@
+{
+  "accepted": true,
+  "scope": "Controlled real text Worker collection, reference-vector and release acceptance. Evaluate control_observations before interpreting GPU intervals. Not complete stage timing, pure active-kernel time, SDK API latency or overall performance acceptance.",
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "precision": "float16-weights",
+  "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+  "rows": [
+    {
+      "round": "first",
+      "dispatches": 1,
+      "cpu_gap_before_submission_ms": 0,
+      "call_wall_ms": 1296.0289,
+      "process_cpu_ms": 265.625,
+      "recorder_gpu_interval_ms": 142.796032,
+      "unqualified_history_intervals_ms": [
+        249.462006
+      ],
+      "independent_cosine": 0.9999999999998961,
+      "norm_squared": 1.0000001871676687
+    },
+    {
+      "round": "warm",
+      "dispatches": 1,
+      "cpu_gap_before_submission_ms": 250,
+      "call_wall_ms": 311.474,
+      "process_cpu_ms": 31.25,
+      "recorder_gpu_interval_ms": 17.325056,
+      "unqualified_history_intervals_ms": [
+        558.817017
+      ],
+      "independent_cosine": 0.9999999999998961,
+      "norm_squared": 1.0000001871676687
+    },
+    {
+      "round": "repeat-1",
+      "dispatches": 2,
+      "cpu_gap_before_submission_ms": 0,
+      "call_wall_ms": 118.5615,
+      "process_cpu_ms": 46.875,
+      "recorder_gpu_interval_ms": 34.494464,
+      "unqualified_history_intervals_ms": [
+        328.761993
+      ],
+      "independent_cosine": 0.9999999999998961,
+      "norm_squared": 1.0000001871676687
+    },
+    {
+      "round": "repeat-2",
+      "dispatches": 1,
+      "cpu_gap_before_submission_ms": 250,
+      "call_wall_ms": 320.8701,
+      "process_cpu_ms": 15.625,
+      "recorder_gpu_interval_ms": 28.2624,
+      "unqualified_history_intervals_ms": [
+        638.137024
+      ],
+      "independent_cosine": 0.9999999999998961,
+      "norm_squared": 1.0000001871676687
+    }
+  ],
+  "terminal_receipt": {
+    "command": [
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\gpu-clock-consumer-7ecec1f",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.TextGpuPerformanceTests.FixedTextFirstWarmRepeatedCallsHaveActualGpuTimingsAndPinnedVectors",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testResults",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-performance-float16-weights-e28a5fd-frozen-calibration-framework-repaired.xml",
+      "-logFile",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-performance-float16-weights-e28a5fd-frozen-calibration-framework-repaired.log"
+    ],
+    "timeout_seconds": 1200,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T19:18:26.184413+00:00",
+    "pid": 127720,
+    "exit_code": 0,
+    "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-performance-float16-weights-e28a5fd-frozen-calibration-framework-repaired.xml",
+    "unity_counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 48.656584300042596,
+    "completed_utc": "2026-10-17T19:19:14.840992+00:00"
+  },
+  "control_observations": {
+    "delayed_intervals_less_than_the_added_cpu_gap": true,
+    "two_dispatch_interval_exceeds_each_single_interval": false
+  },
+  "profiler_history_interpretation_qualified": false,
+  "scope_limits": [
+    "Only4 observations on this GPU/driver; not an averaged latency or throughput estimate.",
+    "First call includes shader/setup effects. Single dispatch intervals can vary with GPU clocks.",
+    "Direct Worker uses pre-pinned inputs and omits tokenization/upload; GPU interval can include queue gaps within marker.",
+    "History intervals remain different and cannot substitute for Recorder intervals."
+  ],
+  "evidence_sha256": {
+    "text-performance-float16-weights-e28a5fd-frozen-calibration-framework-repaired.json": "554de6cfffd220c5a12245366c893ad3b9d985cad47143d2ee7590d927cb7e29",
+    "text-performance-float16-weights-e28a5fd-frozen-calibration-framework-repaired.xml": "ee5e73a7833044b6c56cca5d52e0caed4048fad3f02fe7ded3b16950caf03efc",
+    "text-performance-float16-weights-e28a5fd-frozen-calibration-framework-repaired-process.json": "fdf20443b4ea1af6cdc0561bc98bf2055879f55d7d85b8c6d345fdeb1139c2f7",
+    "text-performance-float16-weights-e28a5fd-frozen-calibration-framework-repaired-source.json": "cc2a6ef5e9b5021d0658ccaa5426c1be46c3c264a43e69be409d5c9faf20956d",
+    "text-performance-float16-weights-e28a5fd-frozen-calibration-framework-repaired.log": "8bb736bba62a622104cde8f2f4eff7bf2830da7dc0933e4da94c330ec81ad215"
+  },
+  "frozen_source_files_reverified_after_run": 534,
+  "environment_repair_receipt_sha256": "8f7e16e55d390820dec2550a647f54b8e0d2ba6aaac81b79a569b17d48d99abd"
+}

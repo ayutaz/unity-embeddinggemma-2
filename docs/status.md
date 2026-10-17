@@ -68,6 +68,12 @@ Float16重みの同じSDK APIでも、初回610,830 bytes、warm26,100 bytes、�
 
 FP32のGPU区間の対照実験では、送信前の250ms CPU待機を加えた1回のdispatchでもRecorderは14.225 / 23.614msで、2回のdispatchでは41.850msでした。4回とも参照一致・解放・exit0を確認しました。[対照実験の固定記録](results/controlled-text-gpu-scope-fp32-20261018.json)。送信前のCPU待機とGPU仕事量への応答を区別できた観測ですが、事前転送済みWorkerの4観測に限ります。SDK API全体の遅延、純粋なkernel稼働時間、平均性能や他stageの校正へ拡張せず、異なる値を示すProfiler履歴の解釈も未確定のままです。
 
+SDK `e28a5fd` と計測 `7ecec1f` をGitから固定書き出しした別consumerでも、実行後に534 sourceファイルを再照合しました。[FP32対照実験](results/controlled-text-gpu-scope-fp32-frozen-calibration-framework-repaired-20261018.json) / [Float16対照実験](results/controlled-text-gpu-scope-float16-weights-frozen-calibration-framework-repaired-20261018.json)は各4 vector・解放・1 pass / skip0 / exit0です。両形式で送信前250msの待機よりRecorderの区間が短い観測を得ましたが、Float16の初回単発値は2 dispatchの値より大きく、「2回がすべての単発より長い」という対照条件は不成立のまま保持します。少数の初回・warmを混ぜて平均性能や速度改善を主張しません。
+
+この固定consumerの最初の起動はTest Frameworkの型解決エラーでsafe modeに入り、テスト未実行でした。正常終了code0だけを合格にせず、公式1.6.0の1168ファイルをbyte照合してembedded packageにした後、両形式が実行できました。検証用projectだけAcceleratorを無効化し、既存のuser設定は保持しています。[環境復旧と重なりのあるimport / reload観測](results/frozen-measurement-environment-recovery-20261018.json)。search DBの所要時間は未測定です。
+
+固定FP32の旧計測では、Profiler履歴のms→ns変換から負のlong値も検出しました。元のfloat値は未保存で原因未確定です。非数・非正値・long範囲外・丸め後0を履歴の有効時間にしないguardを2件Red→関連10件Greenで追加しました。[変換のTDD](results/gpu-history-value-bounds-tdd-20261018.json)。これはモデルなしのguard検証であり、GPU履歴の解釈やstage別性能の合格には数えません。旧snapshotの不正な履歴値は未利用可能の観測として保持します。
+
 ### 残る受け入れ
 
 - 空のcheckoutから画像・音声bundleを準備する公開手順と配布経路。

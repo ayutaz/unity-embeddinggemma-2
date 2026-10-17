@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "goal_priorities_1_to_3_completed": false,
+  "real_model_benchmark_completed": false,
+  "scope": "GPU timer calibration and diagnostic contracts only; not real-model GPU, final consumer, numeric/rank or performance acceptance",
+  "runtime_unchanged_from": "f1cdb301975e8837cd093c6c2b1174a8e9122a9c",
+  "runtime_scope": "Only validation/tests/docs changed from f1cdb30; earlier realimage device887a0006 remains unresolved",
+  "environment": {
+    "unity": "6000.3.21f1",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "batch_mode": false,
+    "play_mode": true,
+    "profiler_enabled": true,
+    "gpu_area_enabled": true,
+    "marker_flags": "Script, AvailabilityNonDevelopment, SampleGPU"
+  },
+  "gpu_calibration": {
+    "command_buffer": {
+      "gpu_elapsed_ns": 19456,
+      "gpu_sample_blocks": 1,
+      "submission_wall_ns": 658300,
+      "output": [
+        2.0,
+        3.0
+      ]
+    },
+    "opaque_call": {
+      "command_marker_gpu_ns": 17408,
+      "enclosing_gpu_timestamp_interval_ns": 6876160,
+      "submission_wall_ns": 2649300,
+      "output": [
+        2.0,
+        3.0
+      ]
+    },
+    "scope": "Command marker bounds tiny scheduled work; enclosing marker may include queue gaps or other GPU work. CPU submission wall is not GPU time or process active CPU time. Input pin precedes marker; lazy tiny constants may still be included. No model speed claim."
+  },
+  "tests": {
+    "initial_calibration_red": {
+      "success": false,
+      "terminal": true,
+      "exit_code": 2,
+      "elapsed_seconds": 57.46694040001603,
+      "unity_counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      }
+    },
+    "batch_attempt": {
+      "success": false,
+      "terminal": true,
+      "exit_code": 2,
+      "elapsed_seconds": 60.613569299981464,
+      "unity_counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      }
+    },
+    "batch_playmode_attempt": {
+      "success": false,
+      "terminal": true,
+      "exit_code": 2,
+      "elapsed_seconds": 48.282485700037796,
+      "unity_counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      }
+    },
+    "incompatible_api_compile_failure": {
+      "success": false,
+      "terminal": true,
+      "exit_code": 3,
+      "elapsed_seconds": 31.492449400015175,
+      "unity_evidence_error": "Unity execution XML is missing or invalid"
+    },
+    "rendered_pinned_api_green": {
+      "success": true,
+      "terminal": true,
+      "exit_code": 0,
+      "elapsed_seconds": 54.40712719998555,
+      "unity_counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "opaque_behavior_red": {
+      "success": false,
+      "terminal": true,
+      "exit_code": 2,
+      "elapsed_seconds": 62.963898200017866,
+      "unity_counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      }
+    },
+    "opaque_green": {
+      "success": true,
+      "terminal": true,
+      "exit_code": 0,
+      "elapsed_seconds": 46.98560800001724,
+      "unity_counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "invalid_meta_zero_tests_not_red_or_green": [
+      {
+        "success": false,
+        "terminal": true,
+        "exit_code": 0,
+        "elapsed_seconds": 38.36912899999879,
+        "unity_evidence_error": "Unity tests did not execute completely without skips"
+      },
+      {
+        "success": false,
+        "terminal": true,
+        "exit_code": 0,
+        "elapsed_seconds": 35.88918619998731,
+        "unity_evidence_error": "Unity tests did not execute completely without skips"
+      }
+    ],
+    "trace_behavior_red": {
+      "success": false,
+      "terminal": true,
+      "exit_code": 2,
+      "elapsed_seconds": 36.879586399998516,
+      "unity_counts": {
+        "total": 5,
+        "passed": 0,
+        "failed": 5,
+        "skipped": 0
+      }
+    },
+    "stale_compilation_not_green": {
+      "success": false,
+      "terminal": true,
+      "exit_code": 2,
+      "elapsed_seconds": 33.29167279996909,
+      "unity_counts": {
+        "total": 5,
+        "passed": 0,
+        "failed": 5,
+        "skipped": 0
+      }
+    },
+    "trace_behavior_green": {
+      "success": true,
+      "terminal": true,
+      "exit_code": 0,
+      "elapsed_seconds": 38.561661200015806,
+      "unity_counts": {
+        "total": 5,
+        "passed": 5,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "calibration_output_collision_red": {
+      "success": false,
+      "terminal": true,
+      "exit_code": 2,
+      "elapsed_seconds": 49.442064800008666,
+      "unity_counts": {
+        "total": 2,
+        "passed": 1,
+        "failed": 1,
+        "skipped": 0
+      }
+    },
+    "final_combined_green": {
+      "success": true,
+      "terminal": true,
+      "exit_code": 0,
+      "elapsed_seconds": 54.56330879998859,
+      "unity_counts": {
+        "total": 7,
+        "passed": 7,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "combined_scope": "2 tiny realGPU timer tests plus5 fake-operation diagnostic contracts; no real model loaded",
+    "real_image_prefix_diagnostic": "compiled but not executed; waiting for adequate GPU memory conditions"
+  },
+  "diagnostic_source_sha256": {
+    "GpuTimerProbe.cs": "5c98fbe4f2c19c1f0a26fa33aaa62e6d8c8c6736ec52f6d8cbc03ba7a0f5e36a",
+    "GpuTimerProbeTests.cs": "7b17fac4360331de923ea9c5e0336a28a892ba1e3a3af35fb1b33ed5d9319383",
+    "GpuOperationTrace.cs": "abe44c9bd23e48447ac8b29e6f490d4f58d16ff41153d0b7f2c4855ea9da159a",
+    "GpuOperationTraceTests.cs": "ceca946b323b29c1948d85730adea13a3fcdebd76d8e7449f8cd0bc77cbf125a",
+    "PreparedImageOperationTraceTests.cs": "758838f9a94422a7387eb831f2f50fad00490a80b2610b4a758339eca9bc2372"
+  },
+  "raw_evidence_sha256": {
+    "gpu-calibration-suite-green-command-buffer.json": "73e2c7c322a20fd62fe76fb1ec48826871a4a0a81a2bfc9e3c1c946a91df877c",
+    "gpu-calibration-suite-green-opaque.json": "af17aba8e4a5be3880d962e7216c75c3a33b4adf4cf8e07199d40604b7e2409a",
+    "gpu-calibration-and-trace-suite-green.xml": "6b23565e3d581c3e39110f9c292a7be914a7281eabbb6557d84eea95ed0986a2",
+    "gpu-operation-trace-behavior-red.xml": "73e003a18b280646bc8c47668873fefd88f0005530a2431739e5d47ab1b2892f",
+    "gpu-operation-trace-refreshed-green.xml": "edef696f5c2f715da1c90ac8822c840ec942056b2a5788e005ad0e088dd11688"
+  },
+  "external_gpu_allocation_observation": {
+    "utc": "2026-10-17T10:59:12.9961143Z",
+    "unity_running": false,
+    "largest_other_allocation_bytes": 12640989184,
+    "causal_link_to_device_failure_verified": false,
+    "source": "Local Windows performance counter snapshot; not a model VRAM requirement"
+  },
+  "remaining": [
+    "Resolve realmodel device error with staged prefix evidence",
+    "Same candidate cold/warm/repeat/load/stages/release CPU+GPU timings and host/VRAM",
+    "Editor search database duration and allocation rate; saved log summaries alone are insufficient",
+    "Float16 isolated/consecutive acceptance and benchmark",
+    "Final realGPU numerical/rank/ownership/normal-exit regressions and fixedGit manual UI",
+    "Public bundle hosting approval and actual empty-cache all6 acquisition",
+    "Microphone approval and actual operation"
+  ]
+}

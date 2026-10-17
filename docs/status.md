@@ -44,7 +44,11 @@ PR #31と#83はマージ済みです。#83の検証head `613ada824bd13a297660d8c
 
 ### 進行中PRの確認済み範囲
 
-- [#85](https://github.com/ayutaz/unity-embeddinggemma-2/pull/85): 画像プレビュー・音声再生・明示的なマイク操作の実装。固定Git consumerで画像・音声登録、日英検索、エラー復帰・キャンセル再試行・切替・解放と正常終了を実際のマウス・キーボードで確認しました。実マイクと、自然終了に先行する音声停止の追加確認は残っています。
+- [#85](https://github.com/ayutaz/unity-embeddinggemma-2/pull/85): 画像プレビュー・音声再生・明示的なマイク操作の実装。固定Git consumerで画像・音声登録、日英検索、エラー復帰・キャンセル再試行・切替・解放と正常終了を実際のマウス・キーボードで確認しました。実マイクは未実行です。
+
+途中停止の追加操作では、既存consumerのwarm起動から固定11.2秒の合成音声をGPU登録して再生し、7.232秒の位置から停止状態へ移行しました。登録内容の解放とEditor正常終了code0も確認しました。[途中停止監査](results/native-audio-early-stop-e28a5fd-20261018.json)。新しい空consumerの再検証や聴感品質の評価には数えません。
+
+非録音時のpauseによるstatus上書きは、PR #85の追加差分 `99cc826` で修正しました。録音中のキャンセルとpause時の再生停止は維持し、意図したstatus不一致1件のRedから関連9件Green・skip0・exit0を確認しました。これはモデルを使わないlocal-file consumerの回帰であり、新sourceの実GPU・固定Git操作再検証とは別です。
 
 固定Git `e28a5fd` を新規consumerへ解決し、SDK311ファイルとsample86ファイルを照合した実画面操作では、Float16重みの画像1件・合成音声1件をGPU登録し、日英2 queryの順位とscoreを独立Python基準へ照合しました。プレビューを目視し、AudioSourceの再生位置の進行、登録・プレビュー・モデルの解放、PlayMode終了とEditor正常終了code0を確認しました。[固定操作監査](results/fresh-git-native-ui-e28a5fd-20261018.json)。既存のローカル準備済みbundleを使用しており、公開入力からの空cache取得や実マイクの証拠ではありません。再生停止操作は自然終了付近だったため早期停止の証明を残しません。また、非録音時のpauseによる誤解を招くstatus上書きとEditor終了時のJobTempAlloc警告を保持し、正常終了だけで警告の解消とは扱いません。
 - [#86](https://github.com/ayutaz/unity-embeddinggemma-2/pull/86): 固定bundleの取得・監査・再試行・修復。公開取得元から全6 moduleを空cacheへ取得する実行証拠は未完了です。

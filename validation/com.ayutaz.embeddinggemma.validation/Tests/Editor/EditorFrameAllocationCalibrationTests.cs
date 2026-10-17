@@ -41,10 +41,11 @@ namespace EmbeddingGemma.Validation.Tests
             report["background_and_observer_ceiling_bytes"] = 1024 * 1024;
             var enabled = Profiler.enabled; var driver = ProfilerDriver.enabled;
             var editor = ProfilerDriver.profileEditor; var memory = Profiler.GetAreaEnabled(ProfilerArea.Memory);
+            var cpu = Profiler.GetAreaEnabled(ProfilerArea.CPU);
             try
             {
-                ProfilerDriver.profileEditor = true; ProfilerDriver.enabled = true;
-                Profiler.enabled = true; Profiler.SetAreaEnabled(ProfilerArea.Memory, true);
+                Profiler.SetAreaEnabled(ProfilerArea.CPU, false); Profiler.SetAreaEnabled(ProfilerArea.Memory, true);
+                ProfilerDriver.profileEditor = true; ProfilerDriver.enabled = true; Profiler.enabled = true;
                 for (var i = 0; i < 4; i++) { EditorApplication.QueuePlayerLoopUpdate(); yield return null; }
                 foreach (var bytes in new[] {0, 8 * 1024 * 1024})
                 {
@@ -80,6 +81,7 @@ namespace EmbeddingGemma.Validation.Tests
             {
                 ProfilerDriver.enabled = false; Profiler.enabled = false;
                 ProfilerDriver.profileEditor = editor; Profiler.SetAreaEnabled(ProfilerArea.Memory, memory);
+                Profiler.SetAreaEnabled(ProfilerArea.CPU, cpu);
                 Profiler.enabled = enabled; ProfilerDriver.enabled = driver;
             }
         }

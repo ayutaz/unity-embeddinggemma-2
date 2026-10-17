@@ -67,12 +67,13 @@ namespace EmbeddingGemma.Validation.Tests
             var captureFrames = Environment.GetEnvironmentVariable("EG_EDITOR_REBUILD_FRAME_ALLOCATION") == "1";
             var enabled = Profiler.enabled; var driver = ProfilerDriver.enabled;
             var editor = ProfilerDriver.profileEditor; var memory = Profiler.GetAreaEnabled(ProfilerArea.Memory);
+            var cpu = Profiler.GetAreaEnabled(ProfilerArea.CPU);
             try
             {
                 if (captureFrames)
                 {
-                    ProfilerDriver.profileEditor = true; ProfilerDriver.enabled = true;
-                    Profiler.enabled = true; Profiler.SetAreaEnabled(ProfilerArea.Memory, true);
+                    Profiler.SetAreaEnabled(ProfilerArea.CPU, false); Profiler.SetAreaEnabled(ProfilerArea.Memory, true);
+                    ProfilerDriver.profileEditor = true; ProfilerDriver.enabled = true; Profiler.enabled = true;
                 }
                 Directory.CreateDirectory(Folder);
                 File.WriteAllText(Fixture, "EmbeddingGemma explicit default index rebuild fixture\n");
@@ -170,6 +171,7 @@ namespace EmbeddingGemma.Validation.Tests
                 {
                     ProfilerDriver.enabled = false; Profiler.enabled = false;
                     ProfilerDriver.profileEditor = editor; Profiler.SetAreaEnabled(ProfilerArea.Memory, memory);
+                    Profiler.SetAreaEnabled(ProfilerArea.CPU, cpu);
                     Profiler.enabled = enabled; ProfilerDriver.enabled = driver;
                 }
                 if (Directory.Exists(Folder)) report["owned_fixture_removed"] = AssetDatabase.DeleteAsset(Folder);

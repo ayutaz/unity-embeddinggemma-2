@@ -110,6 +110,7 @@ namespace EmbeddingGemma.Validation.Tests
                 for(var frame=0;frame<5;frame++) yield return null;
                 foreach(var name in new[] {"first","warm","repeat-1","repeat-2"})
                 {
+                    ProfilerDriver.enabled=true; Profiler.enabled=true;
                     ProfilerDriver.ClearAllFrames();
                     report["phase"]=name; Save(); var beginUtc=DateTime.UtcNow;
                     var sampler=CustomSampler.Create("EmbeddingGemma.TextBenchmark."+name,true);
@@ -159,6 +160,8 @@ namespace EmbeddingGemma.Validation.Tests
                         { if(positiveAt<0) {positiveAt=attempt;row["gpu_elapsed_ns"]=recorder.gpuElapsedNanoseconds;row["gpu_sample_blocks"]=recorder.gpuSampleBlockCount;} }
                         if(positiveAt>=0 && attempt-positiveAt>=12) break;
                     }
+                    // Read a stopped snapshot, not a tree that can profile its own traversal.
+                    ProfilerDriver.enabled=false; Profiler.enabled=false;
                     var diagnostics=new JObject(); row["gpu_history_diagnostics"]=diagnostics;
                     var history=GpuProfilerHistory.ReadExactMarker(sampler.name,diagnostics); row["gpu_history"]=history; Save();
                     Assert.That(row.Value<long>("gpu_elapsed_ns"),Is.GreaterThan(0),"Absent GPU timing is a failure, never zero-time success.");

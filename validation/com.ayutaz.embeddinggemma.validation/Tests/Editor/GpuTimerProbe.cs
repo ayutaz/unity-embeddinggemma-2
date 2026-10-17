@@ -31,6 +31,7 @@ namespace EmbeddingGemma.Validation.Tests
             var camera = cameraHost.AddComponent<Camera>(); camera.targetTexture = target;
             camera.clearFlags = CameraClearFlags.SolidColor; camera.cullingMask = 0;
             Recorder recorder = null;
+            Recorder opaqueRecorder = null;
             try
             {
                 ProfilerDriver.profileEditor = false;
@@ -38,6 +39,8 @@ namespace EmbeddingGemma.Validation.Tests
                 for (var warm = 0; warm < 5; warm++) yield return null;
                 var sampler = CustomSampler.Create("EmbeddingGemma.TimerCalibration", true);
                 recorder = sampler.GetRecorder(); recorder.enabled = true;
+                var opaque = report.Value<bool>("opaque_timing_requested") ? CustomSampler.Create("EmbeddingGemma.TimerOpaqueCall", true) : null;
+                if (opaque != null) { opaqueRecorder = opaque.GetRecorder(); opaqueRecorder.enabled = true; }
                 report["recorder_valid"] = recorder.isValid;
                 report["batch_mode"] = Application.isBatchMode;
                 report["play_mode"] = Application.isPlaying;
@@ -57,7 +60,10 @@ namespace EmbeddingGemma.Validation.Tests
                 using var commands = new CommandBuffer { name = "EmbeddingGemma GPU timer calibration" };
                 commands.BeginSample(sampler); commands.ScheduleWorker(worker, input); commands.EndSample(sampler);
                 var fence = commands.CreateGraphicsFence(GraphicsFenceType.AsyncQueueSynchronisation, SynchronisationStageFlags.AllGPUOperations);
-                var watch = Stopwatch.StartNew(); Graphics.ExecuteCommandBuffer(commands); watch.Stop();
+                opaque?.Begin();
+                var watch = Stopwatch.StartNew();
+                try { Graphics.ExecuteCommandBuffer(commands); }
+                finally { watch.Stop(); opaque?.End(); }
                 report["submission_wall_ns"] = (long)(watch.ElapsedTicks * (1000000000.0 / Stopwatch.Frequency));
                 report["actual_backend"] = ((Tensor<float>)worker.PeekOutput()).backendType.ToString();
                 var frames = new JArray(); report["observations"] = frames;
@@ -69,12 +75,18 @@ namespace EmbeddingGemma.Validation.Tests
                     var ns = recorder.gpuElapsedNanoseconds; var blocks = recorder.gpuSampleBlockCount;
                     frames.Add(new JObject { ["attempt"] = attempt, ["frame"] = Time.frameCount,
                         ["gpu_ns"] = ns, ["gpu_blocks"] = blocks, ["fence_passed"] = fence.passed,
-                        ["cpu_marker_ns"] = recorder.elapsedNanoseconds, ["cpu_marker_blocks"] = recorder.sampleBlockCount });
+                        ["cpu_marker_ns"] = recorder.elapsedNanoseconds, ["cpu_marker_blocks"] = recorder.sampleBlockCount,
+                        ["opaque_gpu_ns"] = opaqueRecorder?.gpuElapsedNanoseconds ?? 0,
+                        ["opaque_gpu_blocks"] = opaqueRecorder?.gpuSampleBlockCount ?? 0,
+                        ["opaque_cpu_ns"] = opaqueRecorder?.elapsedNanoseconds ?? 0 });
                     if (ns > 0 && blocks > 0)
                     {
                         report["gpu_elapsed_ns"] = ns; report["gpu_sample_blocks"] = blocks;
-                        report["available"] = true; break;
+                        report["available"] = true;
                     }
+                    if (opaqueRecorder != null && opaqueRecorder.gpuElapsedNanoseconds > 0 && opaqueRecorder.gpuSampleBlockCount > 0)
+                        report["opaque_gpu_elapsed_ns"] = opaqueRecorder.gpuElapsedNanoseconds;
+                    if (report.Value<bool>("available") && (opaqueRecorder == null || report.Value<long>("opaque_gpu_elapsed_ns") > 0)) break;
                 }
                 while (!fence.passed) { EditorApplication.QueuePlayerLoopUpdate(); yield return null; }
                 report["output"] = JArray.FromObject(((Tensor<float>)worker.PeekOutput()).DownloadToArray());
@@ -82,6 +94,7 @@ namespace EmbeddingGemma.Validation.Tests
             finally
             {
                 if (recorder != null) recorder.enabled = false;
+                if (opaqueRecorder != null) opaqueRecorder.enabled = false;
                 Profiler.SetAreaEnabled(ProfilerArea.GPU, previousGpu); Profiler.enabled = previousEnabled;
                 ProfilerDriver.profileEditor = previousEditor;
                 camera.targetTexture = null; UnityEngine.Object.DestroyImmediate(cameraHost);

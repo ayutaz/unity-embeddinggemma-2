@@ -58,9 +58,13 @@ SDK `e28a5fd`のFP32連続試験は、12GiB guardでの中断を保持してい�
 
 同じSDK・16GiB割り当てのPlayMode試験では、FP32とFloat16重みの両方で、画像・音声5件の登録、日英4 queryの全順位・score、GPU-stageでのキャンセルと再試行、Worker・kernel・tensor・cache leaseの解放、続く直接テキスト4件を確認しました。各2 pass / fail0 / skip0 / exit0で、ホスト生涯ピーク最大はFP32が14,559,334,400、Float16が11,157,610,496 bytesです。[対応する入力・順位・sourceの照合](results/fp32-float16-e28a5fd-playmode-correspondence-20261018.json)。これはlocal-file consumerを自動操作した結果で、固定Gitの手動操作や速度改善、最低RAMの証拠ではありません。[4画面の目視確認](results/fp32-e28a5fd-rendered-results-visual-inspection-20261018.json)でも、実際の音声再生とマイク確認は未実行です。
 
-同一テキストの初回・warm・反復は、両形式で各4回の実GPU実行・参照一致・解放・exit0を確認しました。[観測結果と限界](results/text-fp32-float16-e28a5fd-measurements-20261018.json)。ただしRecorderとProfiler履歴のGPU値には大きな差があり、割り当てAPIの全0も既知の割り当てで校正していません。GPU動作・呼び出し全体の時間と、未検証のGPU時間の解釈を分け、割り当ての0を「割り当てなし」と扱いません。短い各呼び出し内のGPUメモリ観測も欠測であり、性能全体の合格ではありません。次は明示的なGPU command-buffer区間とカウンターの校正、画像・音声のstage別測定、Editor負荷の測定です。
+同一テキストの初期観測では、両形式で各4回の実GPU実行・参照一致・解放・exit0を確認しました。[初期観測と限界](results/text-fp32-float16-e28a5fd-measurements-20261018.json)。RecorderとProfiler履歴のGPU値の差、および割り当てAPIの全0を保持します。短い各呼び出し内のGPUメモリ観測も欠測であり、性能全体の合格ではありません。後述する校正結果を、この古い実行の割り当て量へ遡って代入しません。
 
-追加のcommand-buffer区間の実測は、4回目のGPU履歴走査で観測上限200,000 nodeに達し、NUnit 0 pass / 1 fail / skip0 / exit2でした。出力4 vectorの独立参照一致は確認しましたが、解放・性能全体の合格には数えません。既知の65,536 bytes確保に対して割り当てカウンターの生値が0だったため、この環境ではそのカウンターを未利用可能として扱います。[失敗監査](results/text-command-buffer-failure-review-20261018.json)。次は履歴を関連するmarkerのデータに限定し、上限と欠測時の失敗を保ったまま再検証します。
+初回command-buffer区間の実測は、4回目のGPU履歴走査で観測上限200,000 nodeに達し、NUnit 0 pass / 1 fail / skip0 / exit2でした。[失敗監査](results/text-command-buffer-failure-review-20261018.json)。その後、停止した履歴を読む方式では4回の参照一致・解放・exit0まで完走しました。GPU時間の解釈は別途校正中です。
+
+管理メモリの割り当ては、既知の64KiB / 128KiB配列を検出できなかった `GC.GetAllocatedBytesForCurrentThread` を利用不能とし、停止したCPU履歴の `columnGcMemory` で別途校正しました。noop / 64KiB / 128KiBは0 / 65,568 / 131,104 bytes、差分は65,536 bytesで、1 pass / fail0 / skip0 / exit0です。[校正と失敗の区別](results/managed-allocation-scoped-byte-calibration-20261018.json)。FP32の実GPU SDK APIを同一入力で4回測定し、初回547,694 bytes、warm27,224 bytes、続く2回各26,036 bytesを記録しました。4 vectorの独立参照一致・解放・exit0も確認しています。[FP32 APIの割り当て監査](results/text-performance-fp32-e28a5fd-calibrated-cpu-allocation-allocation-audit-20261018.json)。この値は正確なCPU marker内のメインスレッド管理メモリであり、他スレッド・native / GPUメモリ・非同期stage全体の値ではありません。
+
+Float16重みの同じSDK APIでも、初回610,830 bytes、warm26,100 bytes、続く2回各26,036 bytesを観測し、4 vectorの独立参照一致・解放・exit0を確認しました。[Float16 APIの割り当て監査](results/text-performance-float16-weights-e28a5fd-calibrated-cpu-allocation-allocation-audit-20261018.json)。これは個々の固定呼び出しの観測であり、初回条件の違いから精度形式による速度・割り当て改善を推定しません。GPU時間の校正と画像・音声のstage別測定、Editor import/searchDB/reload/allocationは残っています。
 
 ### 残る受け入れ
 

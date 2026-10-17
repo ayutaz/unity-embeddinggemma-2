@@ -1,0 +1,90 @@
+{
+  "accepted": true,
+  "scope": "One fixed text query through synchronous SDK API on GPUCompute. Calibrated inclusive main-thread managed bytes within exact CPU markers; excludes other threads/native memory and async stages. Not full performance acceptance.",
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+  "precision": "fp32",
+  "calibration_sha256": "f86c63c7e8d43b27436ad62da89b838fbec0262aae79bdde8fab43d072aa26a6",
+  "rows": [
+    {
+      "round": "first",
+      "main_thread_inclusive_managed_bytes": 547694,
+      "call_wall_seconds": 0.7699170999999999,
+      "process_cpu_seconds": 0.125,
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355,
+      "bytes_per_call_wall_second": 711367.4965785278
+    },
+    {
+      "round": "warm",
+      "main_thread_inclusive_managed_bytes": 27224,
+      "call_wall_seconds": 0.0546189,
+      "process_cpu_seconds": 0.03125,
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355,
+      "bytes_per_call_wall_second": 498435.5232346312
+    },
+    {
+      "round": "repeat-1",
+      "main_thread_inclusive_managed_bytes": 26036,
+      "call_wall_seconds": 0.050660199999999996,
+      "process_cpu_seconds": 0.03125,
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355,
+      "bytes_per_call_wall_second": 513934.0152624743
+    },
+    {
+      "round": "repeat-2",
+      "main_thread_inclusive_managed_bytes": 26036,
+      "call_wall_seconds": 0.055417799999999996,
+      "process_cpu_seconds": 0.03125,
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355,
+      "bytes_per_call_wall_second": 469812.9481863228
+    }
+  ],
+  "terminal_receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\step3-consumer-53dafe8",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.TextGpuPerformanceTests.FixedTextFirstWarmRepeatedCallsHaveActualGpuTimingsAndPinnedVectors",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testResults",
+      ".\\artifacts\\usability-state\\text-performance-fp32-e28a5fd-calibrated-cpu-allocation.xml",
+      "-logFile",
+      ".\\artifacts\\usability-state\\text-performance-fp32-e28a5fd-calibrated-cpu-allocation.log"
+    ],
+    "timeout_seconds": 1200,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T19:06:14.197146+00:00",
+    "pid": 175668,
+    "exit_code": 0,
+    "unity_results": ".\\artifacts\\usability-state\\text-performance-fp32-e28a5fd-calibrated-cpu-allocation.xml",
+    "unity_counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 42.629411899950355,
+    "completed_utc": "2026-10-17T19:06:56.826555+00:00"
+  },
+  "gpu_timing_interpretation_accepted": false,
+  "evidence_sha256": {
+    "text-performance-fp32-e28a5fd-calibrated-cpu-allocation.json": "60ae25de8be2d53bdc9739c8edd0beeeb4279d6261d3b9f9b42b3d59f2b07707",
+    "text-performance-fp32-e28a5fd-calibrated-cpu-allocation.xml": "402f9ec8c6361c8c7bb66ac70c78bc08f024f8d7548def452c4100038b989644",
+    "text-performance-fp32-e28a5fd-calibrated-cpu-allocation-process.json": "6072c6967aff8d051487a81b1f2f4021fad22427e2a71cd012266585eb8393ad",
+    "text-performance-fp32-e28a5fd-calibrated-cpu-allocation-source.json": "c760de4342874df4f1abcd7a86dcde989ea86fa1d14d335fc229de9c0820caeb"
+  }
+}

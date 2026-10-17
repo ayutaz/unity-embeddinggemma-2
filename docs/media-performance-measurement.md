@@ -1,6 +1,6 @@
 # モデル性能・GPU障害の測定手順（作業中）
 
-この工程は未完了です。実モデルの画像登録でD3D12 device error `887a0006` が再現しており、性能合格・改善効果・最低VRAMを確定していません。CPU fallbackで成功扱いにはしません。
+この工程は未完了です。旧コードで再現したD3D12 device error `887a0006` に対し、d1548acの正方形画像2件はGPUComputeで固定参照の数値基準・解放・終了code0まで確認しました。他profile・音声・テキスト、性能合格・速度改善・最低VRAMは未確定です。CPU fallbackで成功扱いにはしません。
 
 ## 現在取得できた観測
 
@@ -51,8 +51,18 @@ GPUの内訳を読む場合は `-history.json` も出力します。Recorderの�
 
 生成fixtureによる8件の契約テストでは、同期待機・非同期待機・例外・キャンセル・呼び出しの分離と、実ImageEmbedder/AudioEmbedder facadeへの接続・復元を確認しました。実モデルでこの経路を実行した結果はまだなく、数値・GPU・性能の受け入れには数えません。
 
+## 実モデルの停止区間と行単位dispatch
+
+旧SDK ca7fd23ではbackboneを省いた実画像の区間診断でも、stage4のGPU fence通過後、stage5のモデル・出力コピー・softmaxを含む区間でD3D12 `887a0006` が再現しました。入力は `(1,12,2520,2520)`、約7,620万要素です。元のworker/backend cache解放を適用しても再現し、旧full実行と同時刻のWindows Display event4101も保存しました。特定のshaderだけが原因、またはメモリ不足が唯一の原因とは断定しません。
+
+SDK d1548acではsoftmaxを最大1024行ずつに分割します。既存の8/16レーンkernelと指数関数は維持し、新kernelの各行の算術は整数の行offset以外同一です。小さな実GPUテストは5件のAPI/bound未実装Redから、従来契約を含む9件Green。旧kernelとの出力bit一致、最終の端数tile、反復・入力所有権を確認しました。
+
+同じ実画像の先頭8段は修正後にGPUComputeで完了し、終了code0を確認しました。初回の修正後試行はstage5 GPU完了後に診断用4GiB host guardでキャンセルされ、合格に数えません。空き物理RAM約28GiBを確認して診断上限8GiBとした試行のhost lifetime peakは4,549,300,224 bytesでした。これは全モデルの最低RAMやGPU VRAMではありません。元のパイプライン全体や全6 moduleの合格へ流用しません。
+
+監査は [区間診断](results/isolated-original-gpu-prefix-20261017.json) と、依存PR #85の [dispatch修正](results/bounded-gpu-softmax-dispatch-20261017.json) に記録します。再利用projectの旧同名fixtureの二重実行と3分timeoutは失敗として保持しました。その後、公式Test Frameworkの `-assemblyNames EmbeddingGemma.Validation.Editor.Tests` と8分のfixture timeoutを明示し、正方形画像2件の最終768次元・cosine >=0.999・正規化・session解放を確認しました。NUnit1 pass / fail0 / skip0、process exit0、全体349.26秒、host lifetime peak11,757,166,592 bytesです。保存したfloat32 vectorは小さなPython検証でも独立に再比較しています。[正方形画像の全体検証](results/image-square-bounded-softmax-acceptance-20261017.json)を参照してください。これは同じ入力の反復や全6 moduleの性能合格ではありません。
+
 ## 残る受け入れ
 
-まず既存の実モデルGPU障害を区間単位で特定・修正します。その後、同一candidateで全6 module、採用するFloat16形式、GPU単独と連続実行を測定し、上表のload・初回・反復・各stage・解放・Editor負荷を埋めます。未採用・未検証のFloat16形式は未実行として残し、FP32の結果で代替しません。
+正方形画像の全体実行・終了確認から他のprofileと音声・テキストへ広げ、同一candidateで全6 module、採用するFloat16形式、GPU単独と連続実行を測定し、上表のload・初回・反復・各stage・解放・Editor負荷を埋めます。未採用・未検証のFloat16形式は未実行として残し、FP32の結果で代替しません。
 
 FP32の有限768次元・単位長・参照cosine >= 0.999、採用するFloat16の >= 0.99、固定横断検索の全順位一致と元score許容差を維持します。GPU実行・操作・メモリ・終了の結果と、CPU比較・CI・小さなfixtureの結果を別々に判定します。

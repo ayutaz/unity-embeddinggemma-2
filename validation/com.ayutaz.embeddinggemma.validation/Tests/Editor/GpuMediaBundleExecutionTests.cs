@@ -31,7 +31,7 @@ namespace EmbeddingGemma.Validation.Tests
         static string Hash(string path)
         { using var stream = File.OpenRead(path); using var hash = SHA256.Create(); return BitConverter.ToString(hash.ComputeHash(stream)).Replace("-", "").ToLowerInvariant(); }
 
-        [UnityTest] public IEnumerator PreparedImageModuleUsesOriginalPngAndPinnedFinalDocumentReference()
+        [UnityTest, Timeout(480000)] public IEnumerator PreparedImageModuleUsesOriginalPngAndPinnedFinalDocumentReference()
         {
             using var cancellation = new CancellationTokenSource();
             var task = RunImage(cancellation.Token); long peak = 0;

@@ -1,0 +1,48 @@
+{
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "c2f766e4e05f5378eba15b6552e4a244ebeebfa9",
+  "precision": "fp32",
+  "rendered_results_visually_inspected": true,
+  "observed": [
+    "Four actual PlayMode result views display distinct query score/order rows.",
+    "Square/landscape/portrait synthetic image previews are visible with differing aspect ratios.",
+    "Audio rows show Japanese playback controls; this visual check does not activate them.",
+    "Results pane is scrolled, with form header outside the capture and some lower rows clipped by the viewport; horizontal scroll is visible for long source paths."
+  ],
+  "native_mouse_keyboard_interaction_verified": false,
+  "audio_playback_or_listening_verified": false,
+  "microphone_executed": false,
+  "real_world_retrieval_quality_verified": false,
+  "full_priorities_1_to_3_accepted": false,
+  "scope": "Direct visual inspection of the four saved real Game View PNGs. Synthetic pinned fixtures, programmatic test actions, not manual operation or playback/recording evidence.",
+  "files": [
+    {
+      "query": "query-cat-ja",
+      "file": "gpu-output-mixed-playmode-fp32-d7b2233-warm-cache-rendered-query-cat-ja.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "44cf08d2fd89acccdd6c49a3c508beb710e000267dfb14c66b3c3a1a0ec2c664"
+    },
+    {
+      "query": "query-space-en",
+      "file": "gpu-output-mixed-playmode-fp32-d7b2233-warm-cache-rendered-query-space-en.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "08c6106f6bd06bcd5bc2975aec5dfba48f92bd23de3be89760f0689068962578"
+    },
+    {
+      "query": "query-recipe-ja",
+      "file": "gpu-output-mixed-playmode-fp32-d7b2233-warm-cache-rendered-query-recipe-ja.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "42f30dedb65fd257e364ceace7d6cd492087c011a6aeaa397e84e71ffe64a190"
+    },
+    {
+      "query": "query-cat-en",
+      "file": "gpu-output-mixed-playmode-fp32-d7b2233-warm-cache-rendered-query-cat-en.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "0d3015bd427f1713e072bc59cf9fe22e7baf8d48e70b3af6e3d99deee7572dbb"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "measurement_accepted": false,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "5a907a2a0d0dd3694030723b451ab4563bf61924",
+  "result": "One measurement test failed its unchanged positive-GPU-scope gate; not a model/GPU-numerical pass for the whole test.",
+  "terminal_counts": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0
+  },
+  "exit_code": 2,
+  "numerical_subresults": [
+    {
+      "round": "first",
+      "independent_cosine": 0.9999999999997138,
+      "norm_squared": 0.9999998644722634
+    },
+    {
+      "round": "warm",
+      "independent_cosine": 0.9999999999997138,
+      "norm_squared": 0.9999998644722634
+    },
+    {
+      "round": "repeat-1",
+      "independent_cosine": 0.9999999999997138,
+      "norm_squared": 0.9999998644722634
+    },
+    {
+      "round": "repeat-2",
+      "independent_cosine": 0.9999999999997138,
+      "norm_squared": 0.9999998644722634
+    }
+  ],
+  "inspected_release_completed": true,
+  "unavailable_preprocessor_backbone_scopes": 8,
+  "encoder_positive_intervals": 1436,
+  "cause": "Error classification checked token kind only. A typed string null emitted for no exception was marked aborted, causing Capture to skip successful submission scopes. Corrected/classifier-specific tests and a separate new-source GPU execution are required; old missing GPU values cannot be filled retrospectively.",
+  "assertion_message": "  Unavailable GPU submission scopes cannot pass the new measurement gate.\n  Expected: True\n  But was:  False\n",
+  "complete_performance_accepted": false,
+  "full_priorities_1_to_3_accepted": false,
+  "evidence_sha256": {
+    "media-gpu-submission-image-square-fp32-5a907a2-first.json": "f756b1daf1a1b35bd2c13f49b9aa6c5ef6d37a8711e4874ad609838db8c94f77",
+    "media-gpu-submission-image-square-fp32-5a907a2-first.xml": "b57bdf6224580e6a7a60c51bf3724963ae4fbf0e60cc33a95893cd94ef5d4870",
+    "media-gpu-submission-image-square-fp32-5a907a2-first-process.json": "5659ce67e608f8666452d7a606561c580cbcc5b16476e192c7cac769e44a4991",
+    "media-gpu-submission-image-square-fp32-5a907a2-first-source.json": "f43559ed3c126a077a9ca70301ab26229085d88ad9bac05863c91c39d0003084",
+    "media-gpu-submission-image-square-fp32-5a907a2-first.log": "fd649cbc3b13c34f6536535c65a4b93730a94c63c2f0de451ba05621dc1f1294"
+  }
+}

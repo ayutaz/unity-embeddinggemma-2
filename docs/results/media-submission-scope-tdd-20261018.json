@@ -1,0 +1,31 @@
+{
+  "scope": "Synchronous invocation/Task-return observer semantics, existing whole-stage async completion, marker callback order/ownership. Fake controlled callbacks, no real-model or GPU timing qualification.",
+  "validation_source": "5a907a2a0d0dd3694030723b451ab4563bf61924",
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "tdd": {
+    "standalone_red": 6,
+    "standalone_green": 6,
+    "standalone_runner": "Direct invocation of six NUnit methods on .NET 10, not Unity or GPU execution"
+  },
+  "unity_counts": {
+    "total": 21,
+    "passed": 21,
+    "failed": 0,
+    "skipped": 0
+  },
+  "exit_code": 0,
+  "gpu_timing_accepted": false,
+  "invariants": [
+    "Pending Task is returned by identity and submission scope ends before Task completion.",
+    "Original error is preserved even if end observer also fails; end failure after success is not hidden.",
+    "Failed begin does not invoke stage or end an unstarted scope; invalid arguments have no side effects.",
+    "Opt-in proxy emits submitting/submitted before async completed; default existing event semantics retained.",
+    "Borrowed stage/callback ownership and restore behavior remains covered by existing tests."
+  ],
+  "evidence_sha256": {
+    "artifacts/submission-unit/red.txt": "81a7a8b0391a4f4cbbf1eadf08aaf44025e97bee7650a18ea08c79fda945d8d8",
+    "artifacts/submission-unit/green.txt": "af3ee7906cc16c345285b68f1687813f6272246be1c9bb8b6bc28961dc3165ea",
+    "artifacts/usability-state/media-submission-contracts-5a907a2-first.xml": "5d359ec8abe3cd65d512dfcd0293adb98a1e205dcc5be984cd507e5a72d5a8ec",
+    "artifacts/usability-state/media-submission-contracts-5a907a2-first-process.json": "bafbc96d8c3c90833ab20191d4fd25d61aa516aa5867584a7d2dca49ec213846"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "accepted": true,
+  "scope": "Both precision formats in corresponding cold prepared-cache PlayMode acceptance trials. Same SDK and three core fixture sources, five media inputs, four fixed queries, exact cross-media ranks, GPU cancellation/retry and release; not manual UI or a controlled benchmark.",
+  "audits": [
+    {
+      "file": "combined-fp32-e28a5fd-16gib-playmode-20261018.json",
+      "sha256": "6942f54682831e20e4c255e0fcb3de959d888091aa13c5fdac63cbe6fbab5b43"
+    },
+    {
+      "file": "combined-float16-weights-e28a5fd-16gib-playmode-20261018.json",
+      "sha256": "f6892f47448fbf62ff427f2eec1796e487099f851773658a48327c36cec5e1b4"
+    }
+  ],
+  "module_cases": 5,
+  "query_cases": 4,
+  "direct_text_cases": 4,
+  "rank_agreement": true,
+  "precision_observations": [
+    {
+      "precision": "fp32",
+      "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+      "host_native_lifetime_peak_bytes": 14559334400,
+      "editor_start_to_exit_seconds": 836.6434409000212,
+      "host_allowance_bytes": 17179869184,
+      "resource_condition": {
+        "snapshot": "NVIDIA GeForce RTX 4070 Ti SUPER, 610.88, 2315 MiB, 13749 MiB, 16376 MiB",
+        "scope": "Global snapshot before launch; not per-process allocation or minimum VRAM"
+      },
+      "receipt_exit_code": 0
+    },
+    {
+      "precision": "float16-weights",
+      "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+      "host_native_lifetime_peak_bytes": 11157610496,
+      "editor_start_to_exit_seconds": 583.0095797000104,
+      "host_allowance_bytes": 17179869184,
+      "resource_condition": {
+        "snapshot": "NVIDIA GeForce RTX 4070 Ti SUPER, 610.88, 2594 MiB, 13470 MiB, 16376 MiB",
+        "scope": "Global snapshot before launch; not per-process allocation or minimum VRAM"
+      },
+      "receipt_exit_code": 0
+    }
+  ],
+  "limits": [
+    "OS file/shader caches were not purged; available resources and Editor startup are observational conditions.",
+    "Process wall duration includes Editor startup, copying, loading, cancellation, numerical checks, rendering and shutdown, not GPU inference time.",
+    "Native working-set lifetime peaks are observed process peaks, not minimum RAM/VRAM or proof that a leak was fixed.",
+    "FP32 and Float16 retain their established numerical cosine criteria; both retain finite 768 values, norm, exact ranks and score tolerance."
+  ],
+  "gpu_execution_time_measured": false,
+  "performance_improvement_claimed": false,
+  "memory_leak_fixed_claimed": false
+}

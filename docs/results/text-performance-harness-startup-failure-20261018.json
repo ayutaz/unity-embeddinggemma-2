@@ -1,0 +1,19 @@
+{
+  "scope": "Measurement harness failure before model execution; not a numerical, GPU or performance acceptance",
+  "attempt": "text-performance-fp32-e28a5fd-first",
+  "passed": false,
+  "counts": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0
+  },
+  "exit_code": 2,
+  "message": "System.ArgumentNullException : Value cannot be null.\nParameter name: path",
+  "cause": "Output path read before EnterPlayMode was lost across the domain reload",
+  "fix_commit": "fcff48a",
+  "fix": "Read and assert the output path after EnterPlayMode",
+  "process_receipt_sha256": "c2ae822f239f64ea4f666d89b18bb11e7d934e3dcd81126feb5f71baa533531e",
+  "xml_sha256": "a983cd713b35e82d15436817b1b1210537557d6061d8b2aefd1721f7388e4f66",
+  "original_failure_preserved": true
+}

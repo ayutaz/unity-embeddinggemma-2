@@ -34,4 +34,6 @@ Sentis 2.6.1の `new Tensor<float>(shape)` は `CPUTensorData` を既定でゼ�
 
 正方形画像以外の固定入力でも新candidateの実GPU区間と参照vectorを確認します。環境・cache・profilerの影響と、kernel稼働時間／GPU queue時間／CPU側経過時間の違いを保持します。
 
-続いて新しいSDK sourceで全6 moduleの元参照・採用Float16形式・混在検索の全順位・キャンセル／切替／解放・正常終了を確認します。最終candidateの導入・UI・公開取得・実マイクも別の残件です。現時点では高速化の達成、全実モデル互換、優先1〜3の完了は宣言しません。
+新しいSDK sourceの[全6 module・両精度の単独参照照合](results/all-six-both-precisions-d7b2233-isolated-20261018.json)は12実行・32 vectorで完了しました。すべて独立したバイナリ再計算、有限768次元・単位長、元のcosine基準、skip0・正常終了を確認しています。これは混在検索や手動UIの代替にはしません。
+
+混在検索の全順位・キャンセル／切替／解放、最終candidateの導入・UI・公開取得・実マイクと、残る性能指標をそれぞれ確認します。優先1〜3全体や一般的な高速化率の達成は宣言しません。

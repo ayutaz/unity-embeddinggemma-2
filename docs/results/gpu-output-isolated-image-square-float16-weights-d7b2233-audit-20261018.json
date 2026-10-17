@@ -1,0 +1,41 @@
+{
+  "isolated_original_reference_gpu_accepted": true,
+  "all_modules_accepted": false,
+  "mixed_search_accepted": false,
+  "complete_performance_accepted": false,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "c2f766e4e05f5378eba15b6552e4a244ebeebfa9",
+  "module": "image-square",
+  "precision": "float16-weights",
+  "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+  "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+  "independent_cases": [
+    {
+      "id": "square-0",
+      "independent_cosine": 0.9999999999997702,
+      "norm_squared": 0.9999999783486196,
+      "capture_sha256": "2c1874e8651586df93fc8878f8120a7d61164f26c0bd55f3cc7e8a1eba65aea0"
+    },
+    {
+      "id": "square-1",
+      "independent_cosine": 0.9999999999996099,
+      "norm_squared": 0.9999999696950859,
+      "capture_sha256": "83c15f036acba55ae597e584ed9025c8745420bc16906dd6319713b9425777ed"
+    }
+  ],
+  "exit_code": 0,
+  "unity_counts": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "scope": "Actual isolated GPU fixture plus independent binary-vector reference audit; no public acquisition/native UI/microphone or timing qualification.",
+  "evidence_sha256": {
+    "gpu-output-isolated-image-square-float16-weights-d7b2233.json": "94fd193670a9264725d08b9f4020c8041828d04647c552d937e91f65b353e891",
+    "gpu-output-isolated-image-square-float16-weights-d7b2233.xml": "a51762ffe77fd988ffbaf995d8abb928634f34d77f6b9b8b8fe954be714fd0f9",
+    "gpu-output-isolated-image-square-float16-weights-d7b2233.log": "e3c4259e0be015109a91cf6b0235c56796270fd74c26a4d45815adfdeb3ad4cd",
+    "gpu-output-isolated-image-square-float16-weights-d7b2233-source.json": "cbfebd8c33e0b2e97e57337ce2d84e0b28326bd68be7858148facd5402aa3f2d",
+    "gpu-output-isolated-image-square-float16-weights-d7b2233-process.json": "06be2b3eb982fd1bb85add92955b45ca02f829b69bf62bd44e9ad33b6f071ae8"
+  }
+}

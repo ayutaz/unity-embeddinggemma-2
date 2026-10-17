@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "runtime_source": "d1548acbe7bf6cb838da60fab66dc7a374909b8a",
+  "full_model_acceptance": false,
+  "scope": "GPU row-dispatch contracts and an isolated original image prefix; not complete image/audio/text numerical or search acceptance",
+  "default_maximum_rows_per_dispatch": 1024,
+  "compute_backend": "GPUCompute",
+  "cpu_fallback_added": false,
+  "intermediate_readback_added": false,
+  "original_exp_and_legacy_row_bodies_unchanged": true,
+  "tiled_row_arithmetic_equal_except_integer_row_index": true,
+  "coefficients_or_references_or_tolerances_changed": false,
+  "gpu_execution_time_measured": false,
+  "performance_improvement_claimed": false,
+  "red": {
+    "label": "gpu-softmax-dispatch-red",
+    "success": false,
+    "counts": {
+      "total": 5,
+      "passed": 0,
+      "failed": 5,
+      "skipped": 0
+    },
+    "exit_code": 2,
+    "timed_out": false,
+    "completed_utc": "2026-10-17T13:43:05.939824+00:00",
+    "hashes": {
+      "gpu-softmax-dispatch-red-process.json": "3ad6da5cf068f08402b2e22aed835f8658303887832e9156730145550cea11cb",
+      "gpu-softmax-dispatch-red.xml": "6f6ed776e552c190a18adf7d31d3c354a16aac22f34e9347f55bd3796e5c6da6",
+      "gpu-softmax-dispatch-red.log": "e64242a7b1391b8f43c9acb302e1df52235fad9ada1e1359d3f9e94170ba2622"
+    }
+  },
+  "red_scope": "Missing row-bound overload/default metadata; invalid-budget cases hit missing API before argument-guard behavior",
+  "green": {
+    "label": "gpu-softmax-dispatch-green",
+    "success": true,
+    "counts": {
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exit_code": 0,
+    "timed_out": false,
+    "completed_utc": "2026-10-17T13:46:29.770589+00:00",
+    "hashes": {
+      "gpu-softmax-dispatch-green-process.json": "629209d885507bc72b19f2746a1244e980acee3a2557cabf577b2bc8ca772257",
+      "gpu-softmax-dispatch-green.xml": "15701b986be38499e1ff9ef1da0e45bb9f08a3420f5a2d9352ffbf581cec36bf",
+      "gpu-softmax-dispatch-green.log": "f09210218c3b92f73d2f63cb9acc9e80e53044e186046e1488969a0c3b5b4ab2"
+    }
+  },
+  "numerical_contract": "Both8/16 lanes: tiled vs legacy single-dispatch outputs bit-identical on controlled five-row width2520 data; original small-input tests retained",
+  "real_prefix_trials": [
+    {
+      "label": "isolated-image-prefix-0-7-15772f9-retired",
+      "success": false,
+      "counts": null,
+      "exit_code": 1,
+      "timed_out": true,
+      "completed_utc": "2026-10-17T13:38:51.379001+00:00",
+      "hashes": {
+        "isolated-image-prefix-0-7-15772f9-retired-process.json": "261942be835aaecbc533ce0de5bfb899f64eff8df1696423e4e34473e79e9756",
+        "isolated-image-prefix-0-7-15772f9-retired.log": "4745432eafc1ce4369425440758cf32ae2d77b874213d7e3685ecfe33b142df5"
+      },
+      "runtime_source": "ca7fd23535d634676a898255d25c8163684117d1",
+      "prefix_complete": false,
+      "completed_stages": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "last_event": {
+        "event": "dead_boundaries_retired",
+        "stage": 5,
+        "utc": "2026-10-17T13:37:22.1258819Z",
+        "backend": null,
+        "shape": null,
+        "full_model_qualified": false,
+        "intermediate_readback": false,
+        "retired_count": 4
+      },
+      "error_type": null,
+      "host_guard_limit_bytes": null,
+      "host_guard_tripped": null,
+      "host_lifetime_peak_bytes": null,
+      "runtime_assembly_sha256": "c630397369b763e4ff5c135baf1689fc637b766a83621782e0d8294a21d7e3e5",
+      "validation_assembly_sha256": "c58fbff8f3e1c208c123d68f0533fd002a23f72b069278d6bd4e357894547082"
+    },
+    {
+      "label": "isolated-image-prefix-0-7-softmax-tiled-d1548ac",
+      "success": false,
+      "counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      },
+      "exit_code": 2,
+      "timed_out": false,
+      "completed_utc": "2026-10-17T13:50:02.836317+00:00",
+      "hashes": {
+        "isolated-image-prefix-0-7-softmax-tiled-d1548ac-process.json": "7f6f114553e569313e71c19aa4c5a65d645c9a4074013ae1209a54e4dcb57d21",
+        "isolated-image-prefix-0-7-softmax-tiled-d1548ac.xml": "753664b54c2ed50b419eb2f5fd5e308f485518e1bd8a77711466a51f7058bdbe",
+        "isolated-image-prefix-0-7-softmax-tiled-d1548ac.log": "9721b072ad4e9cbfb7f0ddebf901e707b00d32e15d77766c2dba10ea60c10142"
+      },
+      "runtime_source": "d1548acbe7bf6cb838da60fab66dc7a374909b8a",
+      "prefix_complete": false,
+      "completed_stages": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "last_event": {
+        "event": "original_backend_cache_retired",
+        "stage": 5,
+        "utc": "2026-10-17T13:49:55.1527263Z",
+        "backend": null,
+        "shape": null,
+        "full_model_qualified": false,
+        "intermediate_readback": false,
+        "retired_count": null
+      },
+      "error_type": "System.OperationCanceledException",
+      "host_guard_limit_bytes": null,
+      "host_guard_tripped": null,
+      "host_lifetime_peak_bytes": null,
+      "runtime_assembly_sha256": "1c4acd1b711eefcf828f53a2824e60e133b29ba6bf33281e89a6f7857f2687d9",
+      "validation_assembly_sha256": "bda3949546ce7cf6669727a5331982bec69f020eff66afff19735e038b0b8c7d"
+    },
+    {
+      "label": "isolated-image-prefix-0-7-softmax-tiled-d1548ac-host8gb",
+      "success": true,
+      "counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "exit_code": 0,
+      "timed_out": false,
+      "completed_utc": "2026-10-17T13:53:54.452757+00:00",
+      "hashes": {
+        "isolated-image-prefix-0-7-softmax-tiled-d1548ac-host8gb-process.json": "40b919d156f57cc15ebda280b0d3271bdccbf91999ef1eaf9f31aed34a7f1f75",
+        "isolated-image-prefix-0-7-softmax-tiled-d1548ac-host8gb.xml": "2665c3e4bdd8e39d26ce370ffa47832a9c247117faed0d33869da5cca5dd2b48",
+        "isolated-image-prefix-0-7-softmax-tiled-d1548ac-host8gb.log": "9c3ebcef455667d16b7d2fcf49af1e0a760c780ae18a3fb7e5711db3aab55e2b"
+      },
+      "runtime_source": "d1548acbe7bf6cb838da60fab66dc7a374909b8a",
+      "prefix_complete": true,
+      "completed_stages": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "last_event": {
+        "event": "original_backend_cache_retired",
+        "stage": 7,
+        "utc": "2026-10-17T13:53:41.1409421Z",
+        "backend": null,
+        "shape": null,
+        "full_model_qualified": false,
+        "intermediate_readback": false,
+        "retired_count": null
+      },
+      "error_type": null,
+      "host_guard_limit_bytes": 8589934592,
+      "host_guard_tripped": false,
+      "host_lifetime_peak_bytes": 4549300224,
+      "runtime_assembly_sha256": "1c4acd1b711eefcf828f53a2824e60e133b29ba6bf33281e89a6f7857f2687d9",
+      "validation_assembly_sha256": "c15bacb013d4bec6654ee5996a521787f270d33171771b1cc43dad8a6b40cded"
+    }
+  ],
+  "caveat": "A native failure span includes original segment5, its output copies and softmax. Successful bounded prefix does not prove the complete session or a unique root cause.",
+  "first_tiled_guard_failure": "Stage5 GPU fence returned, then original4GiB diagnostic host-peak guard cancelled. No GPU device error; not a completed prefix pass. Free physicalRAM~28GiB verified before raising diagnostic-only guard8GiB.",
+  "source_hashes": {
+    "Packages/com.ayutaz.embeddinggemma/Runtime/Resources/EmbeddingGemmaNativeSoftmax.compute": "ef2208801af47698b871c023004a59ca1bb1d289ca0a01c73f43cfc05810f1d4",
+    "Packages/com.ayutaz.embeddinggemma/Runtime/GpuSoftmax.cs": "0b6d7cf7725c3a81a1be587bfeeac6393ba810e803bb9e640a980f220fada123",
+    "Packages/com.ayutaz.embeddinggemma/Tests/Editor/GpuSoftmaxDispatchTests.cs": "17f1a45bc1dad47cec9c555abdac2ab701c4497581691147455f55f58dae3c7a"
+  }
+}

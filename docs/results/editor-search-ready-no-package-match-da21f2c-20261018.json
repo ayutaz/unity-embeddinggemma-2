@@ -1,0 +1,90 @@
+{
+  "accepted": false,
+  "model_inference_failure": false,
+  "model_loaded": false,
+  "gpu_execution_validated": false,
+  "terminal_receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-nographics",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\editor-search-consumer-da21f2c",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.EditorSearchObservationTests.ExistingSearchDatabasesEnumerateAndFixedPackageAssetRemainsSearchable",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testResults",
+      ".\\artifacts\\usability-state\\editor-search-da21f2c-first.xml",
+      "-logFile",
+      ".\\artifacts\\usability-state\\editor-search-da21f2c-first.log"
+    ],
+    "timeout_seconds": 420,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T20:10:29.979495+00:00",
+    "pid": 111568,
+    "exit_code": 2,
+    "unity_results": ".\\artifacts\\usability-state\\editor-search-da21f2c-first.xml",
+    "unity_counts": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "elapsed_seconds": 66.85637280001538,
+    "completed_utc": "2026-10-17T20:11:36.835863+00:00"
+  },
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "validation_source": "da21f2c565e66b64bafcf7fa453e8fcc44f37355",
+  "first_observation": {
+    "round": "first",
+    "begin_utc": "2026-10-17T20:11:34.7121137Z",
+    "enumeration_wall_seconds": 1.89e-05,
+    "enumeration_process_cpu_seconds": 0.0,
+    "databases": [
+      {
+        "name": "Assets",
+        "ready": true
+      }
+    ],
+    "search_wall_seconds": 0.0918446,
+    "search_process_cpu_seconds": 0.109375,
+    "result_count": 0,
+    "expected_asset_found": false,
+    "allocation_bytes": null,
+    "allocation_scope": "Unavailable in this probe; never inferred from managed heap size or reported as zero."
+  },
+  "failure_message": "  A completed search without the known asset is not accepted.\n  Expected: True\n  But was:  False\n",
+  "classification": "Index ready and Packages flag requested, but the known SDK asset still absent. Not a model/GPU failure, successful Search lookup or accepted performance result.",
+  "scope_correction": "Initial probe described enumeration as read-only. Unity Search APIs may initialize their default Library index; no explicit CreateIndex/rebuild was invoked.",
+  "next_validation": "Await default index readiness with Editor updates; request package path matches with Packages and WantsMore; resolve asset identity and require the same pinned SDK file in all four rounds. Do not label combined file-path/index search latency as isolated index-only time.",
+  "index_initialization": {
+    "initial_enumeration_wall_seconds": 0.17310019999999998,
+    "initial_enumeration_process_cpu_seconds": 0.15625,
+    "initial_databases": [
+      {
+        "name": "Assets",
+        "ready": false
+      }
+    ],
+    "index_readiness_wait_wall_seconds": 0.0125651,
+    "index_readiness_wait_process_cpu_seconds": 0.0,
+    "index_readiness_poll_count": 18,
+    "index_ready_before_rounds": true
+  },
+  "source_files_verified_after": 540,
+  "evidence_sha256": {
+    "editor-search-da21f2c-first.json": "146fd8e0a66a9e4ba400030297623055bf4c8140453fbe57438aa27185580303",
+    "editor-search-da21f2c-first.xml": "ebeea0b5f68adf6805585e21294cfbf74f84afde48ad2c10a3c438fbf0b70860",
+    "editor-search-da21f2c-first.log": "e4d540417b3a3d48bfde25d2cd53072b5a746a9a1e08e55a28f9425190e583b5",
+    "editor-search-da21f2c-first-source.json": "aff4875a7ccf9fe292fbc0966ecda8d88e3b58311f80bcec9c4819a1a29d2564",
+    "editor-search-da21f2c-first-process.json": "28b5fa4aa20b60d129c6821e8831cd48bfad3d8c2f65d016db8a20a3f2e70f6f"
+  }
+}

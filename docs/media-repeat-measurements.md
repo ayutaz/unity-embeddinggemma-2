@@ -32,6 +32,12 @@ CPU値はEditorプロセス全体のCPU時間、wall値は待機を含む経過�
 
 同じログからEditor startup telemetryとreload / refreshを別記した。startup / reload / refreshは重なり、これらを合計して起動時間や推論時間にしない。startup集計は10件Red→関連26件Green / skip0。[TDD記録](results/editor-startup-observation-tdd-20261018.json)。既存Libraryを使った反復起動のimport観測と、空LibraryやSearch DBの再構築時間は区別する。
 
+## Editor Searchの別測定
+
+モデルなし・nographicsの新規measurement projectで、既定indexの初期化・準備完了待ちと、Packages / WantsMoreを指定したasset provider検索を分けた。[監査](results/editor-search-a62b1a1-observation-20261018.json)。固定SDKファイルを4回とも取得し、1 pass / fail0 / skip0 / exit0、実行後540 sourceファイル一致を確認した。初期列挙0.208070秒、追加の準備待ち0.016279秒、準備後の検索0.230232 / 0.035131 / 0.009126 / 0.007996秒だった。
+
+検索にはファイルパス候補と既定indexの経路が含まれる。これはindex単独の検索時間、明示的なindex再構築時間、モデル推論、GPU、GC allocationの受け入れではない。先行の[未準備probe](results/editor-search-first-not-ready-20261018.json)と、[準備完了後もパッケージ候補0だったprobe](results/editor-search-ready-no-package-match-da21f2c-20261018.json)は各1 fail / skip0 / exit2のまま保持する。既知ファイルの取得条件は緩めていない。
+
 ## 次の測定と完了条件
 
-GPU stage時間の校正、非同期処理の割り当て、Editor search DBとcold import / allocationの受け入れが残る。Search DBの列挙と固定SDK asset検索はモデルなしの別consumerで測定する。初回probeはindex未準備・結果0のため1 fail / skip0 / exit2であり、[失敗記録](results/editor-search-first-not-ready-20261018.json)を保持する。準備完了待ち、Packages指定、検索結果のasset解決を含むprobeは別sourceとして再検証する。明示的なCreateIndex / rebuildを呼ばなくても、Search APIが既定のLibrary indexを初期化する場合があるため、純粋な読み取りやindex再構築の測定と主張しない。優先度1の公開empty-cache取得、優先度2の実マイク・最終candidate操作も、これらの測定では完了にならない。
+GPU stage時間の校正、非同期処理の割り当て、必要なEditor index再構築・cold import / allocationの受け入れが残る。明示的なCreateIndex / rebuildを呼ばなくても、Search APIが既定のLibrary indexを初期化する場合があるため、純粋な読み取りと主張しない。優先度1の公開empty-cache取得、優先度2の実マイク・最終candidate操作も、これらの測定では完了にならない。

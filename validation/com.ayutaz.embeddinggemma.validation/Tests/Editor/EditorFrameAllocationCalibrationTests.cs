@@ -41,11 +41,13 @@ namespace EmbeddingGemma.Validation.Tests
             report["background_and_observer_ceiling_bytes"] = 1024 * 1024;
             var enabled = Profiler.enabled; var driver = ProfilerDriver.enabled;
             var editor = ProfilerDriver.profileEditor; var memory = Profiler.GetAreaEnabled(ProfilerArea.Memory);
-            var cpuAreaEnabled = Profiler.GetAreaEnabled(ProfilerArea.CPU);
             try
             {
-                Profiler.SetAreaEnabled(ProfilerArea.CPU, false); Profiler.SetAreaEnabled(ProfilerArea.Memory, true);
-                ProfilerDriver.profileEditor = true; ProfilerDriver.enabled = true; Profiler.enabled = true;
+                // ProfilerRecorder owns this metric capture. Full Editor profiling
+                // is unnecessary and can interfere with SearchImporter's scopes.
+                ProfilerDriver.enabled = false; Profiler.enabled = false;
+                Profiler.SetAreaEnabled(ProfilerArea.Memory, true);
+                report["full_profiler_recording_during_capture"] = Profiler.enabled;
                 for (var i = 0; i < 4; i++) { EditorApplication.QueuePlayerLoopUpdate(); yield return null; }
                 foreach (var bytes in new[] {0, 8 * 1024 * 1024})
                 {
@@ -81,7 +83,6 @@ namespace EmbeddingGemma.Validation.Tests
             {
                 ProfilerDriver.enabled = false; Profiler.enabled = false;
                 ProfilerDriver.profileEditor = editor; Profiler.SetAreaEnabled(ProfilerArea.Memory, memory);
-                Profiler.SetAreaEnabled(ProfilerArea.CPU, cpuAreaEnabled);
                 Profiler.enabled = enabled; ProfilerDriver.enabled = driver;
             }
         }

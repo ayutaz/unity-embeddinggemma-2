@@ -10,6 +10,12 @@ namespace EmbeddingGemma.Validation.Tests
 {
     public sealed class GpuTimerProbeTests
     {
+        static string Output(string kind)
+        {
+            var prefix = Environment.GetEnvironmentVariable("EG_GPU_TIMER_REPORT");
+            Assert.That(prefix, Is.Not.Null.And.Not.Empty);
+            return Path.Combine(Path.GetDirectoryName(prefix), Path.GetFileNameWithoutExtension(prefix) + "-" + kind + ".json");
+        }
         [UnityTearDown]
         public IEnumerator ReturnToEditMode()
         { if (Application.isPlaying) yield return new ExitPlayMode(); }
@@ -19,7 +25,7 @@ namespace EmbeddingGemma.Validation.Tests
         {
             yield return new EnterPlayMode();
             var report = new JObject { ["success"] = false, ["real_model_qualified"] = false, ["opaque_timing_requested"] = true };
-            var output = Environment.GetEnvironmentVariable("EG_GPU_TIMER_REPORT");
+            var output = Output("opaque");
             Assert.That(output, Is.Not.Null.And.Not.Empty); Assert.That(File.Exists(output), Is.False);
             try
             {
@@ -38,7 +44,7 @@ namespace EmbeddingGemma.Validation.Tests
         {
             yield return new EnterPlayMode();
             var report = new JObject { ["success"] = false, ["real_model_qualified"] = false };
-            var output = Environment.GetEnvironmentVariable("EG_GPU_TIMER_REPORT");
+            var output = Output("command-buffer");
             Assert.That(output, Is.Not.Null.And.Not.Empty);
             Assert.That(File.Exists(output), Is.False, "Preserve earlier calibration evidence.");
             try

@@ -9,6 +9,17 @@ namespace EmbeddingGemma.Validation.Tests
     /// <summary>Read GPU columns from recorded history. Never substitute CPU columns or export unrelated samples.</summary>
     public static class GpuProfilerHistory
     {
+        public static bool TryGpuMillisecondsToNanoseconds(float milliseconds, out long nanoseconds)
+        {
+            nanoseconds = 0;
+            if (!(milliseconds > 0) || float.IsNaN(milliseconds) || float.IsInfinity(milliseconds)) return false;
+            var rounded = Math.Round(milliseconds * 1000000.0);
+            // Native history can expose an unavailable float.MaxValue sentinel.
+            // Reject it before an unchecked cast could turn it into a negative time.
+            if (rounded < 1 || rounded >= 9223372036854775808.0) return false;
+            nanoseconds = (long)rounded;
+            return true;
+        }
         public static JArray ReadExactMarker(string name, JObject diagnostics = null)
         {
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("An exact benchmark marker is required.", nameof(name));
@@ -47,19 +58,19 @@ namespace EmbeddingGemma.Validation.Tests
                         if (view.GetItemName(id) != name) continue;
                         matches++;
                         var ms = view.GetItemColumnDataAsSingle(id, column);
-                        if (!(ms > 0) || float.IsNaN(ms) || float.IsInfinity(ms)) continue;
+                        if (!TryGpuMillisecondsToNanoseconds(ms, out var gpuNanoseconds)) continue;
                         var descendants = new JArray();
                         foreach (var child in children)
                         {
                             var childMs = view.GetItemColumnDataAsSingle(child, column);
-                            if (childMs > 0 && !float.IsNaN(childMs) && !float.IsInfinity(childMs))
-                                descendants.Add(new JObject { ["marker"] = view.GetItemName(child), ["gpu_ns"] = (long)Math.Round(childMs * 1000000.0) });
+                            if (TryGpuMillisecondsToNanoseconds(childMs, out var childNanoseconds))
+                                descendants.Add(new JObject { ["marker"] = view.GetItemName(child), ["gpu_ns"] = childNanoseconds });
                         }
                         var managedBytes = view.GetItemColumnDataAsSingle(id, HierarchyFrameDataView.columnGcMemory);
                         if (float.IsNaN(managedBytes) || float.IsInfinity(managedBytes) || managedBytes < 0)
                             throw new InvalidOperationException("Managed allocation data is unavailable for this exact CPU marker.");
                         rows.Add(new JObject { ["frame"] = frame, ["thread_index"] = thread, ["thread_name"] = view.threadName,
-                            ["marker"] = name, ["gpu_ns"] = (long)Math.Round(ms * 1000000.0), ["gpu_children"] = descendants,
+                            ["marker"] = name, ["gpu_ns"] = gpuNanoseconds, ["gpu_children"] = descendants,
                             ["cpu_gc_allocated_bytes"] = (long)Math.Round(managedBytes),
                             ["cpu_gc_scope"] = "Inclusive managed bytes within this CPU marker on the named thread; not GPU or native memory.",
                             ["cpu_total_ns"] = (long)Math.Round(view.GetItemColumnDataAsSingle(id, HierarchyFrameDataView.columnTotalTime) * 1000000.0),

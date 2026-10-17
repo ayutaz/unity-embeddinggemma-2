@@ -1,0 +1,118 @@
+{
+  "accepted": true,
+  "scope": "Controlled real text Worker collection, reference-vector and release acceptance. Evaluate control_observations before interpreting GPU intervals. Not complete stage timing, pure active-kernel time, SDK API latency or overall performance acceptance.",
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "precision": "fp32",
+  "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+  "rows": [
+    {
+      "round": "first",
+      "dispatches": 1,
+      "cpu_gap_before_submission_ms": 0,
+      "call_wall_ms": 28818.025899999997,
+      "process_cpu_ms": 234.375,
+      "recorder_gpu_interval_ms": 13.946112,
+      "unqualified_history_intervals_ms": [
+        -9223372036854.775
+      ],
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355
+    },
+    {
+      "round": "warm",
+      "dispatches": 1,
+      "cpu_gap_before_submission_ms": 250,
+      "call_wall_ms": 303.9928,
+      "process_cpu_ms": 31.25,
+      "recorder_gpu_interval_ms": 14.256128,
+      "unqualified_history_intervals_ms": [
+        312.80603
+      ],
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355
+    },
+    {
+      "round": "repeat-1",
+      "dispatches": 2,
+      "cpu_gap_before_submission_ms": 0,
+      "call_wall_ms": 113.3198,
+      "process_cpu_ms": 46.875,
+      "recorder_gpu_interval_ms": 30.828544,
+      "unqualified_history_intervals_ms": [
+        380.882996
+      ],
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355
+    },
+    {
+      "round": "repeat-2",
+      "dispatches": 1,
+      "cpu_gap_before_submission_ms": 250,
+      "call_wall_ms": 311.7199,
+      "process_cpu_ms": 31.25,
+      "recorder_gpu_interval_ms": 21.79584,
+      "unqualified_history_intervals_ms": [
+        624.929993
+      ],
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355
+    }
+  ],
+  "terminal_receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\gpu-clock-consumer-7ecec1f",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.TextGpuPerformanceTests.FixedTextFirstWarmRepeatedCallsHaveActualGpuTimingsAndPinnedVectors",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testResults",
+      ".\\artifacts\\usability-state\\text-performance-fp32-e28a5fd-frozen-calibration-framework-repaired.xml",
+      "-logFile",
+      ".\\artifacts\\usability-state\\text-performance-fp32-e28a5fd-frozen-calibration-framework-repaired.log"
+    ],
+    "timeout_seconds": 1200,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T19:16:17.734130+00:00",
+    "pid": 156012,
+    "exit_code": 0,
+    "unity_results": ".\\artifacts\\usability-state\\text-performance-fp32-e28a5fd-frozen-calibration-framework-repaired.xml",
+    "unity_counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 100.84542920003878,
+    "completed_utc": "2026-10-17T19:17:58.579555+00:00"
+  },
+  "control_observations": {
+    "delayed_intervals_less_than_the_added_cpu_gap": true,
+    "two_dispatch_interval_exceeds_each_single_interval": true
+  },
+  "profiler_history_interpretation_qualified": false,
+  "scope_limits": [
+    "Only4 observations on this GPU/driver; not an averaged latency or throughput estimate.",
+    "First call includes shader/setup effects. Single dispatch intervals can vary with GPU clocks.",
+    "Direct Worker uses pre-pinned inputs and omits tokenization/upload; GPU interval can include queue gaps within marker.",
+    "History intervals remain different and cannot substitute for Recorder intervals."
+  ],
+  "evidence_sha256": {
+    "text-performance-fp32-e28a5fd-frozen-calibration-framework-repaired.json": "bd33e4fe1b01f1e1570ff4ad770662e8480cff5c231812bd06f5ea9f25370a36",
+    "text-performance-fp32-e28a5fd-frozen-calibration-framework-repaired.xml": "f5d403b58ac14292344a6c3ecdf0a025f4f47e75dccce0188ffe489ed0b95299",
+    "text-performance-fp32-e28a5fd-frozen-calibration-framework-repaired-process.json": "fe81920fb635f8b54e2b711947498ae38598fa6e675f139d81f5b4ae9193d9ba",
+    "text-performance-fp32-e28a5fd-frozen-calibration-framework-repaired-source.json": "2ace4caf4b345f98c9c265f3717313da71b0a68c7ff7e38b740b2af2f61aea2c",
+    "text-performance-fp32-e28a5fd-frozen-calibration-framework-repaired.log": "737532b5cb9b4e0b09289083d82c80ac19e534a0ddc557f8e56782f374a4fab7"
+  },
+  "frozen_source_files_reverified_after_run": 534,
+  "environment_repair_receipt_sha256": "8f7e16e55d390820dec2550a647f54b8e0d2ba6aaac81b79a569b17d48d99abd"
+}

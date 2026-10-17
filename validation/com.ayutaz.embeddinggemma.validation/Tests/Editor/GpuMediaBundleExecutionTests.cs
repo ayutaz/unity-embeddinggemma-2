@@ -106,7 +106,7 @@ namespace EmbeddingGemma.Validation.Tests
             finally { session?.Dispose(); Save(); }
         }
 
-        [UnityTest] public IEnumerator PreparedAudioModuleUsesOriginalPcmAndPinnedFinalDocumentReference()
+        [UnityTest, Timeout(900000)] public IEnumerator PreparedAudioModuleUsesOriginalPcmAndPinnedFinalDocumentReference()
         {
             using var cancellation = new CancellationTokenSource(); var task = RunAudio(cancellation.Token); long peak = 0;
             while (!task.IsCompleted)

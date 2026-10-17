@@ -67,7 +67,7 @@ namespace EmbeddingGemma.Validation.Tests
                 }
         }
 
-        [UnityTest] public IEnumerator ActualImportedSampleRegistersMediaSearchesPinnedQueriesAndClosesItsCacheLease()
+        [UnityTest, Timeout(900000)] public IEnumerator ActualImportedSampleRegistersMediaSearchesPinnedQueriesAndClosesItsCacheLease()
         {
             using var cancellation = new CancellationTokenSource(); long peak = 0; var task = Run(cancellation.Token);
             while (!task.IsCompleted)

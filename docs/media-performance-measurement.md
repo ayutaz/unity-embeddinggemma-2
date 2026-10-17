@@ -1,6 +1,8 @@
 # モデル性能・GPU障害の測定手順（作業中）
 
-この工程は未完了です。旧コードで再現したD3D12 device error `887a0006` に対し、d1548acの正方形画像2件はGPUComputeで固定参照の数値基準・解放・終了code0まで確認しました。他profile・音声・テキスト、性能合格・速度改善・最低VRAMは未確定です。CPU fallbackで成功扱いにはしません。
+この工程は未完了です。SDK d1548acの全6 moduleで、画像6件・音声6件・テキスト4件の実GPU最終vectorを固定参照と比較し、数値基準・解放・終了code0を確認しました。インポート済みサンプルの登録5件・日英検索4件の固定順位とscore許容差、GPU段階でのキャンセル・再試行・切替・解放も通過しました。新規Git環境の実操作、公開取得、Float16、性能合格・速度改善・最低VRAMは未確定です。
+
+[全6 moduleの検証一覧](results/all-six-module-d1548ac-acceptance-20261018.json)と[実サンプルの統合検証](results/multimodal-sample-d1548ac-20261018.json)にscope・固定参照・失敗記録を分けています。横長画像の初回はsupervisor/Unityが途中終了しXMLなしとなったため合格に含めません。その後、既存WindowsTerminal PID7788の終了と別PIDでの起動、GPU空き約14GiBを観測して再実行しました。他アプリをagentが終了した事実はなく、終了原因は断定しません。正方形画像の約2GiB空き条件と後続の約14GiB空き条件を、同一条件の性能baselineへ合算しません。
 
 ## 現在取得できた観測
 

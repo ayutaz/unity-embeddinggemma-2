@@ -1,0 +1,234 @@
+{
+  "schema_version": 1,
+  "programmatic_imported_sample_acceptance": true,
+  "manual_mouse_keyboard_acceptance": false,
+  "fresh_git_acceptance": false,
+  "actual_microphone_started": false,
+  "all6_modules_executed": true,
+  "scope": "Five media modules and text query module through actual imported sample API; immutable cross-modal ranks/scores, GPU-stage cancellation/retry, module switching and resource/cache release. Not a manual UI or performance pass.",
+  "runtime_source": "d1548acbe7bf6cb838da60fab66dc7a374909b8a",
+  "bundle_descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+  "source": {
+    "runtime_source": "d1548acbe7bf6cb838da60fab66dc7a374909b8a",
+    "fixture_sha256": "21924dd7eae485acff6b9e3cac0c09b665d91857629696221862e665056b0152",
+    "cache_existed": false,
+    "scope": "Actual imported sample via programmatic API; not mouse/keyboard or microphone acceptance"
+  },
+  "resources": {
+    "snapshot": "NVIDIA GeForce RTX 4070 Ti SUPER, 610.88, 1376 MiB, 14688 MiB, 16376 MiB",
+    "scope": "Global device snapshot, not PID allocation or causal proof"
+  },
+  "registrations": [
+    {
+      "id": "square-0",
+      "module": "image-square",
+      "cosine_to_pinned_document": 0.9999999999997138,
+      "transferred_files_for_active_module": 299,
+      "reused_objects": 0,
+      "capture": "multimodal-integration-d1548ac-resources-freed-square-0-vector.bin",
+      "capture_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f",
+      "input_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399"
+    },
+    {
+      "id": "landscape-0",
+      "module": "image-landscape",
+      "cosine_to_pinned_document": 0.9999999999989995,
+      "transferred_files_for_active_module": 55,
+      "reused_objects": 244,
+      "capture": "multimodal-integration-d1548ac-resources-freed-landscape-0-vector.bin",
+      "capture_sha256": "48532cc0c6ed58fb27df7619c524a5037b26c598d88e56b0ed1184f6e97f0ee8",
+      "input_sha256": "f2b3f32a22e6282b9876b98c4c5a7bbf75e7469dff933128e17d6503dd6d6e55"
+    },
+    {
+      "id": "portrait-0",
+      "module": "image-portrait",
+      "cosine_to_pinned_document": 0.999999999999786,
+      "transferred_files_for_active_module": 35,
+      "reused_objects": 264,
+      "capture": "multimodal-integration-d1548ac-resources-freed-portrait-0-vector.bin",
+      "capture_sha256": "32e654f9670aa0c38152de46e20b5b15c6d5df04048df41c3d52186d2aa881d3",
+      "input_sha256": "fce3474792c6401c4bae6ac0261a386f400bac0cece977ffda86388ee6682489"
+    },
+    {
+      "id": "silence",
+      "module": "audio-1119",
+      "cosine_to_pinned_document": 0.9999999999928917,
+      "transferred_files_for_active_module": 418,
+      "reused_objects": 2,
+      "capture": "multimodal-integration-d1548ac-resources-freed-silence-vector.bin",
+      "capture_sha256": "e8059c050b7f8204cd7ad54d034111b3c6aa9d74199412be6d7d85322be7b5c9",
+      "input_sha256": "c9c9803e19adb2d139ad00b54f4af71f80c2b2530b10828a913b5b82c18559b8"
+    },
+    {
+      "id": "padded_noise",
+      "module": "audio-839",
+      "cosine_to_pinned_document": 0.9999999999981806,
+      "transferred_files_for_active_module": 16,
+      "reused_objects": 404,
+      "capture": "multimodal-integration-d1548ac-resources-freed-padded_noise-vector.bin",
+      "capture_sha256": "e91325ca017b7bd00f0da47b601cd689e3fc289c0692c2387fa27e4888670336",
+      "input_sha256": "a78defcfa0d000eecf8f5eca429135170bb9568f8f4b68d8e14e2e36fae62949"
+    }
+  ],
+  "queries": [
+    {
+      "id": "query-cat-ja",
+      "hits": [
+        {
+          "id": "media-3",
+          "score": 0.6038981654276722,
+          "pinned_score": 0.6038983445623349,
+          "absolute_error": 1.7913466276997525e-07
+        },
+        {
+          "id": "media-0",
+          "score": 0.5495174561530112,
+          "pinned_score": 0.5495174471862349,
+          "absolute_error": 8.966776321450709e-09
+        },
+        {
+          "id": "media-1",
+          "score": 0.5392552940185241,
+          "pinned_score": 0.5392552246764645,
+          "absolute_error": 6.934205964981288e-08
+        },
+        {
+          "id": "media-2",
+          "score": 0.5392284901293575,
+          "pinned_score": 0.5392284882604436,
+          "absolute_error": 1.8689139125172005e-09
+        },
+        {
+          "id": "media-4",
+          "score": 0.5337736904337128,
+          "pinned_score": 0.5337736280723573,
+          "absolute_error": 6.236135552395439e-08
+        }
+      ]
+    },
+    {
+      "id": "query-space-en",
+      "hits": [
+        {
+          "id": "media-4",
+          "score": 0.6093982654782663,
+          "pinned_score": 0.6093982450003881,
+          "absolute_error": 2.0477878170943598e-08
+        },
+        {
+          "id": "media-0",
+          "score": 0.609301195433225,
+          "pinned_score": 0.6093011214584629,
+          "absolute_error": 7.397476209369813e-08
+        },
+        {
+          "id": "media-1",
+          "score": 0.6015192097646644,
+          "pinned_score": 0.6015189701874364,
+          "absolute_error": 2.3957722805612036e-07
+        },
+        {
+          "id": "media-3",
+          "score": 0.6000153912252945,
+          "pinned_score": 0.6000154153330864,
+          "absolute_error": 2.4107791984917526e-08
+        },
+        {
+          "id": "media-2",
+          "score": 0.5957696043034991,
+          "pinned_score": 0.5957695449835936,
+          "absolute_error": 5.9319905543198104e-08
+        }
+      ]
+    },
+    {
+      "id": "query-recipe-ja",
+      "hits": [
+        {
+          "id": "media-3",
+          "score": 0.6433420728279191,
+          "pinned_score": 0.6433420467298827,
+          "absolute_error": 2.6098036398636282e-08
+        },
+        {
+          "id": "media-4",
+          "score": 0.5825186859851117,
+          "pinned_score": 0.5825185679135302,
+          "absolute_error": 1.1807158151189157e-07
+        },
+        {
+          "id": "media-1",
+          "score": 0.5644421876967364,
+          "pinned_score": 0.5644420277631118,
+          "absolute_error": 1.5993362456612203e-07
+        },
+        {
+          "id": "media-0",
+          "score": 0.5637307377449966,
+          "pinned_score": 0.5637307126906395,
+          "absolute_error": 2.505435714450499e-08
+        },
+        {
+          "id": "media-2",
+          "score": 0.5588695824299197,
+          "pinned_score": 0.5588695247993491,
+          "absolute_error": 5.763057053798093e-08
+        }
+      ]
+    },
+    {
+      "id": "query-cat-en",
+      "hits": [
+        {
+          "id": "media-3",
+          "score": 0.6290703621788148,
+          "pinned_score": 0.6290704920130885,
+          "absolute_error": 1.2983427366553002e-07
+        },
+        {
+          "id": "media-0",
+          "score": 0.574944014913911,
+          "pinned_score": 0.5749439130813981,
+          "absolute_error": 1.0183251286655093e-07
+        },
+        {
+          "id": "media-2",
+          "score": 0.564306759464931,
+          "pinned_score": 0.5643066731291929,
+          "absolute_error": 8.633573811422934e-08
+        },
+        {
+          "id": "media-1",
+          "score": 0.5630132464646208,
+          "pinned_score": 0.5630131202331593,
+          "absolute_error": 1.2623146150581022e-07
+        },
+        {
+          "id": "media-4",
+          "score": 0.5493773435502262,
+          "pinned_score": 0.5493772694973276,
+          "absolute_error": 7.405289859097053e-08
+        }
+      ]
+    }
+  ],
+  "cancellation_verified": true,
+  "release_verified": true,
+  "independent_reference_verification": true,
+  "gpu_time_measured": false,
+  "counts": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "exit_code": 0,
+  "elapsed_seconds": 339.8278087999788,
+  "host_native_lifetime_peak_bytes": 12136325120,
+  "artifacts_sha256": {
+    "multimodal-integration-d1548ac-resources-freed-process.json": "f2da9a39203ca20515003e8de6efe03669c1c4a139fc27366119ca153db34a1d",
+    "multimodal-integration-d1548ac-resources-freed.json": "2fc3b5aa1779f9a2ee0711526eea6d524f5dc8751c2e7cb0a35ce217ac40c916",
+    "multimodal-integration-d1548ac-resources-freed.xml": "ef5130d06e6c055c4eb4872f3c19d4b14c4026c62d9b437dcf8ede7613d8ebd9",
+    "multimodal-integration-d1548ac-resources-freed.log": "a9aa0fccc58338f6b3cbff5e330284b9319fad441ba2f88fa28a551d99bfaeaa"
+  }
+}

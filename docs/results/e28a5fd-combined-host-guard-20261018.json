@@ -1,0 +1,87 @@
+{
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "acceptance_passed": false,
+  "scope": "Failed combined process: five registered media vectors and three complete query rankings independently verified, but no full four-query or normal-release acceptance.",
+  "terminal_receipt": {
+    "command": [
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\step3-consumer-53dafe8",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.PreparedTextQueryReferenceTests.ActualGpuTextModuleMatchesAllPinnedQueryVectorsAndReleasesWorkers;EmbeddingGemma.Validation.Tests.MultimodalSearchSampleGpuTests.ActualImportedSampleRegistersMediaSearchesPinnedQueriesAndClosesItsCacheLease",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testResults",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-and-integration-e28a5fd.xml",
+      "-logFile",
+      "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-and-integration-e28a5fd.log"
+    ],
+    "timeout_seconds": 1200,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T16:00:05.415458+00:00",
+    "pid": 65824,
+    "exit_code": 2,
+    "unity_results": "C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\usability-state\\text-and-integration-e28a5fd.xml",
+    "unity_counts": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "skipped": 0
+    },
+    "elapsed_seconds": 350.0900944999885,
+    "completed_utc": "2026-10-17T16:05:55.505538+00:00"
+  },
+  "host_native_lifetime_peak_bytes": 14411358208,
+  "host_guard_bytes": 12884901888,
+  "registrations": [
+    {
+      "id": "square-0",
+      "cosine": 0.9999999999997135,
+      "norm_squared": 0.9999998644722635
+    },
+    {
+      "id": "landscape-0",
+      "cosine": 0.9999999999989977,
+      "norm_squared": 1.0000000234680548
+    },
+    {
+      "id": "portrait-0",
+      "cosine": 0.9999999999997848,
+      "norm_squared": 1.0000000495263595
+    },
+    {
+      "id": "silence",
+      "cosine": 0.9999999999928917,
+      "norm_squared": 1.0000000994303668
+    },
+    {
+      "id": "padded_noise",
+      "cosine": 0.9999999999981798,
+      "norm_squared": 0.9999999922162043
+    }
+  ],
+  "completed_queries": [
+    "query-cat-ja",
+    "query-space-en",
+    "query-recipe-ja"
+  ],
+  "integration_error": "System.OperationCanceledException: The operation was canceled.\r\n  at System.Threading.CancellationToken.ThrowOperationCanceledException () [0x00010] in <41d29b352f6a475ab1bf7c6628b82790>:0 \r\n  at System.Threading.CancellationToken.ThrowIfCancellationRequested () [0x00008] in <41d29b352f6a475ab1bf7c6628b82790>:0 \r\n  at EmbeddingGemma.Validation.Tests.MultimodalSearchSampleGpuTests.Run (System.Threading.CancellationToken cancellation) [0x0125c] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\media-performance-work\\validation\\com.ayutaz.embeddinggemma.validation\\Tests\\Editor\\MultimodalSearchSampleGpuTests.cs:190 ",
+  "following_text_test_error": "System.OperationCanceledException: The operation was canceled.\r\n  at System.Threading.CancellationToken.ThrowOperationCanceledException () [0x00010] in <41d29b352f6a475ab1bf7c6628b82790>:0 \r\n  at System.Threading.CancellationToken.ThrowIfCancellationRequested () [0x00008] in <41d29b352f6a475ab1bf7c6628b82790>:0 \r\n  at EmbeddingGemma.GpuMediaBundle.LoadAsync (System.String name, System.Threading.CancellationToken cancellationToken) [0x0010f] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\media-performance-work\\Packages\\com.ayutaz.embeddinggemma\\Runtime\\GpuMediaBundleLoading.cs:45 \r\n  at EmbeddingGemma.Validation.Tests.PreparedTextQueryReferenceTests.Run (System.Threading.CancellationToken token) [0x00280] in C:\\Users\\yuta\\Desktop\\Private\\unity-embeddinggemma-2\\artifacts\\media-performance-work\\validation\\com.ayutaz.embeddinggemma.validation\\Tests\\Editor\\PreparedTextQueryReferenceTests.cs:51 ",
+  "interpretation": "The shared process lifetime peak crossed the fixed 12GiB guard. The following text fixture inherited that lifetime peak. Underlying allocation cause and release behavior remain unproved; guard/tolerances unchanged.",
+  "next": "Run pinned text in an independent process; investigate repeated module load/release allocation rather than count this cancelled process as pass.",
+  "evidence_sha256": {
+    "text-and-integration-e28a5fd-process.json": "109a0c1bdf7f0141484ef3e624d33ea8e10ac08499c38b342ceda0f049ed4a4d",
+    "text-and-integration-e28a5fd.xml": "7ab911564f3c47b1445a9ec0c41d5657e3dadaf17e7849e7b7fa51f5baf4032a",
+    "text-and-integration-e28a5fd.log": "773f823a3c29e0af64d4492f4d31142e10af363db1c6348a2d99f5335c646460",
+    "text-and-integration-e28a5fd-integration.json": "ecee3f2cc3483ea01b8b4593af3dc87f0a64ae2001466ad7e8184e96b649bbea",
+    "text-and-integration-e28a5fd-text.json": "7aae54ecd78ae408bf13a3ab894620fd6c071441671375a9613443e2cc2b7dfc"
+  }
+}

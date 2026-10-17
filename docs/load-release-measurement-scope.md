@@ -19,3 +19,22 @@
 mediaのGPU observerはロード後にattachし、推論の送信区間を測る。textはロード中と各queryの履歴保存後にprofilerを無効化している。どちらもロード・解放を囲むGPU markerを取得していないため、12件すべてのload/release GPU時間をnullにした。GPU仕事が0だったという意味ではなく、CPU/wall・VRAM採取点から時間を推定しない。
 
 次のGPU測定には、実際のuploadとresource退役の区間を識別する校正が必要である。`Task.Yield` をまたぐ全ロードを単一の同期markerで囲んだり、測定の都合でSDKのawait・fence・呼び出し順を変えたりして同じ動作の計測とはしない。この監査で範囲と欠測理由は確定したが、load/release GPU時間および性能全体の受け入れは未完了である。
+
+## 小規模な転送・解放markerの対照実験
+
+SDKを変更せず、validation `2d221e6` の `GpuTransferTimingProbeTests` で独立したbufferを用意し、同期 `SetData` / `Dispose` をGPU有効なCustomSamplerで囲んだ。[3回の実行と固定sourceの監査](results/gpu-transfer-retirement-timing-probe-2d221e6-20261018.json)。実モデルは読み込んでいない。
+
+| 観測区間 | GPU Recorder | CPU呼び出しwall |
+| --- | ---: | ---: |
+| 8MiBを1回SetData | 3.785728ms | 6.4593ms |
+| 別々のbufferへ8MiBを2回SetData | 5.668608ms | 12.6443ms |
+| markerの前に250msのCPU待機、その後8MiBを1回SetData | 2.546944ms | 3.0990ms |
+| 計16MiBのbufferを2個Dispose | null | 0.0490ms |
+
+GPU演算の独立controlはGPUCompute・期待値一致・18,432nsだった。各bufferの全要素を測定markerの外で照合した。Disposeでは711個の異なる描画frameを観測してもGPU値を取得できなかった。CPU上でDisposeが戻った時間を、driverの解放完了やGPU仕事0へ置き換えない。
+
+テスト全体は0 pass / 1 fail / skip0 / exit2で、元のGPU正数条件を維持した。実行ラベルの `green` は実装後の試行名であり、成功ではない。転送3件の正数・データ一致だけで、解放計時・copy engineへの時間帰属・実モデルのload/releaseを合格にしない。表は各1観測で、平均帯域やCPU待機を引いたkernel時間でもない。
+
+先行 `88b6536` はPlayMode domain reload前に初期化した保存先が失われ、ArgumentNullExceptionで失敗した。記録の初期化を切替後へ移した `c95e620` ではGPU controlを確認した後、独立した転送・解放の記録欠落で意図したRedを確認した。この2件も各exit2で保持する。新しいmarkerの欠測を解消するために既存の成功したdispatch計時を代入しない。
+
+Windowsには `GPU Engine / Running Time` counterも存在したが、ここでは実モデルの値は取得していない。別方式を用いる場合は、PID・adapter/engine・counter時刻・単位を校正し、複数engineの重なりとEditor自身のGPU仕事を区別する必要がある。

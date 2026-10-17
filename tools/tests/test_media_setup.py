@@ -243,3 +243,19 @@ def test_second_preparer_cannot_fetch_or_replace_owner_receipt(tmp_path):
         return io.BytesIO(payloads[url.removeprefix(BASE.removesuffix('bundle.json'))])
     receipt = prepare_bundle(raw, tmp_path, source_url=BASE, descriptor_sha256=digest(raw), fetch=fetch)
     assert attempted and receipt['success'] and receipt['downloaded_files'] == len(payloads)
+
+
+def test_cli_descriptor_interrupt_has_cancelled_exit_without_traceback(monkeypatch, tmp_path, capsys):
+    from embeddinggemma_tools import media_setup
+    def interrupted(_):
+        raise KeyboardInterrupt
+    monkeypatch.setattr(media_setup, '_download', interrupted)
+    try:
+        with pytest.raises(SystemExit) as exit:
+            media_setup.main(['--descriptor-url', BASE, '--descriptor-sha256', '0'*64,
+                              '--output', str(tmp_path/'output')])
+    except KeyboardInterrupt:
+        pytest.fail('CLI must turn the interrupt into a cancelled exit130, without exposing KeyboardInterrupt.')
+    assert exit.value.code == 130
+    assert 'cancelled' in capsys.readouterr().err.lower()
+    assert not (tmp_path/'output').exists()

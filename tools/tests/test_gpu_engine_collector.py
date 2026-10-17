@@ -1,5 +1,6 @@
 """Mock provider errors and PID lifetime without launching Unity or a GPU."""
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 import shutil
 import subprocess
@@ -50,6 +51,11 @@ function Get-Counter {
     subprocess.run([PWSH, '-NoProfile', '-File', str(script)], capture_output=True, text=True, check=True, timeout=25)
     rows = [json.loads(line) for line in output.read_text(encoding='utf-8-sig').splitlines()]
     assert len(rows) == 1
+    if rows[0]['timestamp_source'] == 'counter_sample_set':
+        instant = datetime.fromisoformat(rows[0]['utc'].replace('Z', '+00:00'))
+        elapsed = instant - datetime(1601, 1, 1, tzinfo=timezone.utc)
+        ticks = (elapsed.days * 86400 + elapsed.seconds) * 10_000_000 + elapsed.microseconds * 10
+        assert 0 <= rows[0]['timestamp_100ns'] - ticks <= 9
     return rows[0]
 
 

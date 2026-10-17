@@ -6,6 +6,8 @@
 
 後続の[取得修正・操作追試のcheckpoint](results/priority-1-to-3-followup-0658004-20261018.json)では、取得PR `ce7e136` と性能PR `19d1edc` のローカルpreview `0658004` のツール関連72件、同一package treeの固定Git `680af07` での実音声途中停止を対応付けた。前の69件監査・途中停止未達の記録は変更していない。この追加監査も、公開取得・実マイク・性能全体・最終統合の完了にはしない。
 
+さらに[PR #86のCtrl+C追試](https://github.com/ayutaz/unity-embeddinggemma-2/blob/678eb504ea0a7817ea34ae67b4cc8bb485fdf06a/docs/results/real-media-ctrl-c-2b6f45d-20261018.json)で、CLIのキャンセル表示・exit130を2 Red→関連53 Greenで確認した。Windowsの実Ctrl+Cイベントと9MiB実重みで、強制killなしの後始末・失敗receipt・旧descriptor保持、再試行1件受信/819件再利用、warm820件再利用まで成功した。これは前の72件を更新した統合実行ではなく、別sourceの取得処理の追加証拠である。SSL受信のpauseはイベント送信後に解除しており、停止した通信の即時中断時間は保証しない。公開取得と他OSの最新CIは別に残す。
+
 ## 残タスク
 
 | 要件 | 現在の証拠 | 残る作業・完了条件 |

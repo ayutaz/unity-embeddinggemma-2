@@ -16,7 +16,7 @@
 
 モデル取得の追加checkpointとして、PR #86で実FP32 bundle全6 module・820 object・8,583,084,520 bytesの[ローカルHTTPS転送と修復](https://github.com/ayutaz/unity-embeddinggemma-2/blob/e02663d50f539b3fb49674442747a46c85f35450/docs/results/real-local-https-media-recovery-f09317e-20261018.json)を確認した。切断後の818件受信・2件再利用、warmの820件再利用、同サイズ重み破損1件だけの修復、404時の旧descriptor保持と再試行を含む。元と出力の計1,640ファイルを独立に再hashした。sourceは既存ローカルbundleで、公開配布元のempty-cache取得と最終consumerのGPU・操作受け入れは未完了のまま維持する。
 
-取得処理の後続では、[PR #86の排他・強制終了後回収](https://github.com/ayutaz/unity-embeddinggemma-2/blob/ce7e13689f42950937671e0e8436deca61b7d363/docs/results/real-media-crash-recovery-85a2d71-20261018.json)を確認した。実9MiB重みの受信中に所有CLIを終了し、競合拒否、残った一時ファイル回収、1件受信・819件再利用とwarm全820件再利用を確認している。関連51件はWindowsで成功。これを含むローカル統合previewの関連72件とsource対応は[後続checkpoint](results/priority-1-to-3-followup-0658004-20261018.json)に分ける。公開固定元からの取得とCtrl+Cは別の残件である。
+取得処理の後続では、[PR #86の排他・強制終了後回収](https://github.com/ayutaz/unity-embeddinggemma-2/blob/ce7e13689f42950937671e0e8436deca61b7d363/docs/results/real-media-crash-recovery-85a2d71-20261018.json)を確認した。実9MiB重みの受信中に所有CLIを終了し、競合拒否、残った一時ファイル回収、1件受信・819件再利用とwarm全820件再利用を確認している。関連51件はWindowsで成功。これを含むローカル統合previewの関連72件とsource対応は[後続checkpoint](results/priority-1-to-3-followup-0658004-20261018.json)に分ける。さらに[別sourceの実Ctrl+C追試](https://github.com/ayutaz/unity-embeddinggemma-2/blob/678eb504ea0a7817ea34ae67b4cc8bb485fdf06a/docs/results/real-media-ctrl-c-2b6f45d-20261018.json)は、2 Red→関連53 Green、実9MiB重みの受信中のexit130・後始末・再試行・warm・820件のhash照合まで確認した。実行結果はWindowsであり、通信停止中の即時キャンセル時間・他OS・公開固定元からの取得は別に確認する。
 
 ### 2. 利用者操作とサンプルUX
 

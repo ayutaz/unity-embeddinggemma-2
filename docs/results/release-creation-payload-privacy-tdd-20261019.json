@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "scope": "Release creation and upload actual-file privacy checks",
+  "base_commit": "186ffc1b330c0b609fef66cf4abfaeed5011fcbc",
+  "behavior_tests": 23,
+  "final_related_tests": 86,
+  "final_failures": 0,
+  "final_skips": 0,
+  "checkpoints": [
+    {
+      "phase": "intended-red",
+      "tests": 19,
+      "failures": 15,
+      "errors": 0,
+      "skipped": 0,
+      "private_XML_sha256": "218f4f0d1f5188a375750433d0f3cfaa4c41cf54b6f7afaacf5b28e8b56c9f29"
+    },
+    {
+      "phase": "intended-red",
+      "tests": 3,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0,
+      "private_XML_sha256": "d12b77eef4bd4d6d109fee758dbe54f539d48790138014de4e487b430ed2415f"
+    },
+    {
+      "phase": "intended-red",
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "private_XML_sha256": "acbf77b0b9c92a6df96c48be348a020779b2403bb7fc6250d067d661c683562c"
+    },
+    {
+      "phase": "green",
+      "tests": 86,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "private_XML_sha256": "901f2da7ea7131c44ee9b112595320fd1455648fc7c6090229d10e8d3ea6bb8e"
+    }
+  ],
+  "initial_test_environment_missing_torch": true,
+  "initial_environment_error_counted_as_behavior_red": false,
+  "existing_uv_environment_reused": true,
+  "model_gate_remains_committed_HEAD_hash_and_producer_review": true,
+  "release_notes_cannot_use_model_asset_approval": true,
+  "SDK_or_numerical_reference_changed": false,
+  "images_recordings_models_published": false,
+  "real_GPU_or_release_acceptance": false,
+  "complete_shell_or_other_publication_route_coverage": false
+}

@@ -6,12 +6,14 @@
 
 [再生成候補の通常経路の比較](results/audio-regeneration-numerical-baseline-summary-20261018.json)では、nativeで2,884要素、未分割ONNXで5,230要素が元の許容差を超え、ONNXの6信号すべてが不合格でした。候補は未採用です。元の参照値を維持し、[別世代候補の5分割数値検証](audio-candidate-qualification.md)を追加しました。関連105テストとworkflow lintは合格しましたが、この小規模確認を実モデル・実GPUの合格には数えません。
 
+[候補の全6信号数値検証](results/audio-candidate-six-case-numerical-audit-20261018.json)が成功し、824,320値で元許容差超過0でした。[全出力・carryの独立再監査](results/audio-candidate-six-case-readback-20261018.json)も一致しました。次は採用前のGPUモデル・consumer・Playerの対応確認です。通常Required CIの原本archive条件は維持しており、元モデルの復旧・新世代採用・GPU合格とは別に記録します。
+
 ## 現在の停止条件と次の作業
 
 | 項目 | 確認済みの状態 | 次の完了条件 |
 | --- | --- | --- |
 | hook | CP932入力の問題を修正し、実行中のhookにも反映。利用者の指示に従い、account `ayutaz` の公開表示名 `yousan` を完全一致で認めるprofile guardを検証。関連51件合格、live profile検査も合格 | 表示名は維持する。個人用path・メール・認証情報、source commit identity、旧providerコピーは引き続き別に検査する |
-| CI | 最新公開head `317bae3` の[CIは終了](results/privacy-guard-ci-317bae3-20261018.json)。package・workflow lint・model referenceとPython全4環境が成功。元音声モデル取得6信号・集計は失敗し、全体は不合格。元数値参照だけを保存する別の手動CIは成功 | 原本モデル取得か、別世代の完全な再受け入れが必要。数値参照CIだけをRequired CI全体の成功に数えない |
+| CI | 過去に確認した公開head `317bae3` の[CIは終了](results/privacy-guard-ci-317bae3-20261018.json)。package・workflow lint・model referenceとPython全4環境が成功。元音声モデル取得6信号・集計は失敗し、全体は不合格。元数値参照だけを保存する別の手動CIは成功 | 原本モデル取得か、別世代の完全な再受け入れが必要。数値参照CIだけをRequired CI全体の成功に数えない |
 | 固定音声参照 | 元の参照JSON（25,186,055 bytes）と監査JSONを[手動CIで元SHA256のまま保存](results/original-audio-golden-ci-readback-20261018.json)。実アップロードZIPの配信元SHA256・CRC、2ファイルの元SHA256と私的2コピーを確認。元モデルの探索・再生成は不一致で、グラフ2件は未復旧 | 原本モデルの回収はSupportへ照会中。別世代を検証する場合も元の数値基準を維持する。数値参照の復旧とモデル・GPUの受け入れを区別する |
 | GitHub側の個人情報 | writable branchの履歴修正済み。旧PR/cache除去と成果物復旧をSupportへ依頼済み。受付情報は私的記録に保管 | 対応結果を照合し、旧PR refs・キャッシュ・残るActionsメタデータを再監査 |
 | PR整理 | #89（privacy）、#86（取得）、#87（性能）はDraft。全体Required CIの成功・全機能完了は主張できない | #89、#86、#87を各受け入れ条件と最新headのCIに基づき順に判定 |

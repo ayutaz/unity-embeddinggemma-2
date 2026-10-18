@@ -30,7 +30,7 @@
 
 [再生成候補の通常経路の比較](results/audio-regeneration-numerical-baseline-summary-20261018.json)では、nativeで2,884要素、未分割ONNXで5,230要素が元の許容差を超え、ONNXの6信号すべてが不合格でした。候補は未採用です。元の参照値を維持し、[別世代候補の5分割数値検証](audio-candidate-qualification.md)を追加しました。関連105テストとworkflow lintは合格しましたが、この小規模確認を実モデル・実GPUの合格には数えません。
 
-[別世代候補のnoise信号](results/audio-candidate-noise-readback-20261018.json)は、既存5分割方式の実行後に実アップロードZIP・全capture・carryを独立に再監査し、143,360値で元許容差超過0を確認しました。元native出力の再現性、native full/cutのbit一致、候補ONNXの精度は分けて記録します。他5信号と6件集計の結果は未確定で、世代採用・GPU・正式Releaseの合格には数えません。
+[全6信号の数値CI](results/audio-candidate-six-case-numerical-audit-20261018.json)は成功しました。両profile・824,320値で元の許容差超過0、全capture/carryとnative full/cutのbit一致を確認し、[実アップロード全体の独立再監査](results/audio-candidate-six-case-readback-20261018.json)もCI集計と一致しました。新規モデル世代の採用・GPU・consumer・Playerの合格は未実施です。新世代を採用する前のGPU・consumer・Player検証を未統合のcandidateで先行し、その証拠をそろえてから取得経路・最新Required CIを復旧し、PRを順に統合します。元のグラフのbyte同一性やfresh nativeの元参照bit一致を復旧したという扱いにはしません。
 
 ## 直近の作業順
 

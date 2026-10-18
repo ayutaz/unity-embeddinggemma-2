@@ -214,6 +214,24 @@ gh workflow run audio-runtime-reference.yml --ref fix/privacy-guard \
 This diagnostic does not change the required original graph gate, numerical
 tolerances or any GPU/model-adoption flag.
 
+The [actual two-profile diagnostic and independent archive readback](results/audio-candidate-native-onnx-identity-readback-20261018.json)
+completed at source `ef066bb` in run `39111610873`. Both jobs failed their whole
+identity comparison, and both reports completed: each candidate has 587 dense
+initializers rather than 586, and the 36 old `Swish` nodes are represented by
+36 `Neg` / `Exp` / added `Add` / added `Div` chains. Model headers match; whole
+graphs and initializer signatures do not. Both actual candidate file hashes
+match the [previous division-SiLU export](results/m4-division-silu-real-onnx-failed-20261014.json),
+which remained a failed unsplit numerical baseline. This is an identified
+historical export change, not evidence of native identity or GPU acceptance.
+
+The full-profile [retained GPU-preparation initializer comparison](results/audio-candidate-gpu-preparation-initializers-20261018.json)
+also found the same multiset of all 587 typed initializer values in the candidate
+and retained Welford8 model; named-value signatures differ. The later scalar-mean
+GPU input contains additional transformation initializers. Neither the value
+multiset nor historical file hashes prove complete preparation correspondence.
+Trace the transformations and perform actual GPU/consumer/Player tests before
+using either finding for generation adoption.
+
 ## Remaining release conditions
 
 Even a successful numerical audit leaves `generation_qualified=false` and

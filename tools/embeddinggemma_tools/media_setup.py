@@ -122,6 +122,16 @@ def _atomic_json(path, value):
         pending.unlink(missing_ok=True)
 
 
+def _atomic_bytes(path, raw):
+    pending = path.with_name('.' + path.name + '.' + uuid.uuid4().hex + '.pending')
+    try:
+        with pending.open('xb') as stream:
+            stream.write(raw)
+        os.replace(pending, path)
+    finally:
+        pending.unlink(missing_ok=True)
+
+
 def _download(url):
     return urlopen(url, timeout=60)
 
@@ -203,17 +213,18 @@ def prepare_bundle(descriptor, output, *, source_url, descriptor_sha256, modules
         removed = _remove_stale_pending(root)
         return _prepare_objects(data, root, names, source_url=source_url,
             descriptor_sha256=descriptor_sha256, modules=modules, fetch=fetch,
-            cancelled=cancelled, stale_pending_files_removed=removed)
+            cancelled=cancelled, stale_pending_files_removed=removed, raw_descriptor=descriptor)
 
 
 def _prepare_objects(data, root, names, *, source_url, descriptor_sha256, modules,
-                     fetch, cancelled, stale_pending_files_removed):
+                     fetch, cancelled, stale_pending_files_removed, raw_descriptor):
     fetch, cancelled = fetch or _download, cancelled or (lambda: False)
     report = dict(success=False, model_revision=REVISION, producer=data['source_commit'],
                   descriptor_sha256=descriptor_sha256, source_url=source_url, modules=list(modules),
                   object_layout=data.get('object_layout', 'nested'),
                   downloaded_files=0, reused_files=0, downloaded_bytes=0, reused_bytes=0,
                   stale_pending_files_removed=stale_pending_files_removed,
+                  source_descriptor_bytes_preserved=False,
                   inference_executed=False, gpu_validated=False)
     def check_cancelled():
         if cancelled():
@@ -255,7 +266,16 @@ def _prepare_objects(data, root, names, *, source_url, descriptor_sha256, module
         check_cancelled()
         published = dict(data, files={name: data['files'][name] for name in sorted(names)},
                          modules={name: data['modules'][name] for name in modules})
-        _atomic_json(root / 'bundle.json', published)
+        # Re-serialization changes a raw SHA pin across OS newline conventions,
+        # whitespace, key order or escaping. Preserve the independently pinned
+        # bytes only when every declared module and object was actually prepared.
+        preserve = set(modules) == set(data['modules']) and names == set(data['files'])
+        if preserve:
+            _atomic_bytes(root / 'bundle.json', raw_descriptor)
+        else:
+            _atomic_json(root / 'bundle.json', published)
+        report['source_descriptor_bytes_preserved'] = preserve
+        report['prepared_descriptor_sha256'] = _sha(root / 'bundle.json')
         report['success'] = True
         return report
     except BaseException as error:

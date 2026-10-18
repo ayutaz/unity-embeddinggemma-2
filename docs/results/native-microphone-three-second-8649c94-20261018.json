@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "scope": "Explicitly authorized memory-only Windows native microphone start, stop, rejection of short GPU registration and discard",
+  "sdk_source": "8649c9435f502738bc9c89a27c9a09483a7719eb",
+  "additional_local_validation_harness": true,
+  "success": true,
+  "maximum_authorized_samples": 48000,
+  "sampling_rate": 16000,
+  "audio_saved": false,
+  "audio_transmitted": false,
+  "gpu_recording_accepted": false,
+  "manual_ui_accepted": false,
+  "available_device_count": 2,
+  "captured_samples": 43360,
+  "captured_seconds": 2.71,
+  "nonzero_signal_present": true,
+  "native_start_and_stop_accepted": true,
+  "unsupported_short_gpu_registration_rejected": true,
+  "recording_preview_and_pcm_discarded": true,
+  "process_exit_code": 0,
+  "unity_counts": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "preceding_harness_failures": [
+    {
+      "attempt": 1,
+      "stage": "compile",
+      "rule": "CS0246",
+      "native_capture_started": false
+    },
+    {
+      "attempt": 2,
+      "stage": "PlayMode report state",
+      "rule": "ArgumentNullException",
+      "native_capture_started": false
+    }
+  ],
+  "supported_duration_live_gpu_recording_accepted": false,
+  "all_platforms_accepted": false,
+  "release_ready": false
+}

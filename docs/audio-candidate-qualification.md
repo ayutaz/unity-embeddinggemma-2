@@ -98,6 +98,13 @@ privacy checks. It did not independently download and hash the entire uploaded
 2.45 GB archive; that limit remains explicit in the receipt. No GPU acceptance
 is inferred from native CPU comparisons.
 
+The subsequent [full uploaded-archive readback](results/audio-candidate-distribution-full-readback-20261018.json)
+completed independently. Its complete ZIP SHA256, every ZIP member CRC and both
+uploaded model SHA256 values matched, with two exact private archive copies.
+Both distribution graph hashes also match local derivations from the preserved
+producer source graphs. The earlier metadata-only receipt retains its original
+scope; it was not rewritten into a full-archive verification claim.
+
 Large local transfers encountered HTTP 403 after the signed redirect's lifetime.
 The artifact reader can now renew that same fixed artifact's redirect and retry
 only the failed byte range. Renewal is bounded to one retry per range, concurrent
@@ -154,6 +161,27 @@ The committed loader at `0d13a3d` also completed an
 from the new pinned artifact. All eight output hashes matched, without any model
 download or model execution. This verifies numerical-input acquisition only;
 the complete six-module fresh consumer remains a separate release requirement.
+
+## Relating the GPU preparation to retained original ONNX
+
+Both original native ONNX files remain available with their original audit hashes
+(`7770a8af...` and `af2e97b7...`); this does not recover the missing original PT2
+files. Their [computation-identity baseline](results/original-native-onnx-computation-identity-20261018.json)
+binds every embedded tensor, operator, edge, shape, type, IR version and opset,
+excluding only `doc_string` and `metadata_props` throughout nested protobuf
+messages. External tensor references are rejected. Source bytes remain private
+and unchanged. The helper source hash and library versions are recorded.
+
+Ten tests verified metadata-only identity, changed weights/operators/edges/shapes/
+opsets/IR rejection, nested graphs, source-hash checks and external-data rejection.
+The baseline was then computed on both exact original ONNX files. Comparing new
+candidate exports to it and performing real GPU acceptance remain unexecuted.
+A matching metadata-normalized identity would support reuse of preparation
+arithmetic; it would not replace actual numeric/GPU or fresh-consumer tests.
+The candidate producer audit declares different unsplit ONNX hashes
+(`288adeda...` and `db9904af...`). Those declarations do not prove the exact
+uploaded model contents or a metadata-only difference. Compare the actual
+candidate computation before reusing any preparation on that basis.
 
 ## Remaining release conditions
 

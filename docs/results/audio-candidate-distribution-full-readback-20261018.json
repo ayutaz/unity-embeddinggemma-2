@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "run_id": 39109531607,
+  "artifact_id": 12129783259,
+  "archive_sha256": "c1430a9062b86fa7fafcad3f649d9b22670602323b3cd501a73b5c6870f03a65",
+  "archive_bytes": 2454655323,
+  "full_archive_sha_independently_verified": true,
+  "zip_crc_all_members_verified": true,
+  "uploaded_graph_hashes_independently_verified": true,
+  "exact_private_archive_copies_verified": 2,
+  "graphs": {
+    "frames-1119-valid-1119/audio.pt2": {
+      "bytes": 1227324645,
+      "sha256": "e4e9699657fd0c9e88d872bad6adbaddc3d43cee2e13711b10f7901cb8483165"
+    },
+    "frames-1119-valid-839/audio.pt2": {
+      "bytes": 1227325734,
+      "sha256": "aa43ba4948c879f0fcc31222dbc05cbd333c70beda2dae04da420e9e284343da"
+    }
+  },
+  "gpu_validated": false,
+  "generation_qualified": false
+}

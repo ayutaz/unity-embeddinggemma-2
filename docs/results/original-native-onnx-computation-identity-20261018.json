@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "scope": "retained_original_native_onnx_computation_identity_baseline_only",
+  "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "helper_source_sha256_lf": "5f88261a270b77dc1a39526f1023d17704404d2b27081fbe900856d5f4a119cd",
+  "versions": {
+    "onnx": "1.23.2",
+    "protobuf": "7.36.2"
+  },
+  "profiles": {
+    "frames-1119-valid-1119": {
+      "schema": 1,
+      "scope": "embedded_onnx_computation_identity_excluding_optional_debug_metadata_only",
+      "source_sha256": "7770a8af258f2de32c5587497b820596ea4e1ed7ec5382c3ee90eada2bec7e4a",
+      "computation_sha256": "7770a8af258f2de32c5587497b820596ea4e1ed7ec5382c3ee90eada2bec7e4a",
+      "ignored_metadata_fields": [
+        "doc_string",
+        "metadata_props"
+      ],
+      "metadata_fields_removed": 0,
+      "node_count": 5639,
+      "tensor_count": 2796,
+      "model_executed": false,
+      "gpu_validated": false,
+      "generation_qualified": false
+    },
+    "frames-1119-valid-839": {
+      "schema": 1,
+      "scope": "embedded_onnx_computation_identity_excluding_optional_debug_metadata_only",
+      "source_sha256": "af2e97b777349fa2e5f74790d24bb4b2d899c6a8438f372253737bc5940944c7",
+      "computation_sha256": "af2e97b777349fa2e5f74790d24bb4b2d899c6a8438f372253737bc5940944c7",
+      "ignored_metadata_fields": [
+        "doc_string",
+        "metadata_props"
+      ],
+      "metadata_fields_removed": 0,
+      "node_count": 5639,
+      "tensor_count": 2796,
+      "model_executed": false,
+      "gpu_validated": false,
+      "generation_qualified": false
+    }
+  },
+  "candidate_export_compared": false,
+  "model_executed": false,
+  "gpu_validated": false,
+  "generation_qualified": false
+}

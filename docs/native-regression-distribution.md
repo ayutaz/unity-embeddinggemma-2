@@ -71,6 +71,34 @@ between routes. A failed fetch cannot overwrite evidence. Candidate and original
 output directories must be disjoint. Downloads use anonymous HTTPS, exact size
 and hash checks, bounded temporary files and checked redirects.
 
+## Explicit manual numerical audit
+
+The manual `qualify_candidate_generation` workflow also uses the pinned public
+distribution. Its independent entry points are `native_regression_distribution
+fetch`, `fetch-original` and `audit`; they do not load or adopt the selected
+generation manifest. Numerical transport never grants generation or GPU
+qualification. The mandatory selected-generation workflow remains separate.
+
+The manual matrix still executes all six original signals, both profiles and
+five actual connected ONNX parts with native full/cut controls and the unchanged
+elementwise tolerances. It uses `--candidate-distribution-directory`, preserving
+the distinction between raw-source and actual executed graph hashes. The audit
+requires all six reports and one execution source, refuses to overwrite evidence,
+and returns a failing exit code for a failed numerical result.
+
+[The manual-route checkpoint](results/manual-native-distribution-cli-tdd-20261019.json)
+records nine intended failures followed by 96 related passing checks and
+actionlint. The actual new CLI re-audited the seven retained archives from run
+`39155770986`: all six case details matched the prior independent audit,
+824,320 values had zero tolerance violations, and generation/GPU qualification
+remained false. This is a new auditor invocation over preserved execution data,
+not a new model execution or complete CI acceptance of this source.
+
+This removes the manual qualification matrix's dependency on the old raw model
+artifact. Legacy preservation/diagnostic commands still require their own
+dependency inventory and complete backups before any provider artifact is
+deleted. No artifact is deleted by this change.
+
 ## Checkpoint and remaining work
 
 The [implementation/TDD checkpoint](results/native-regression-durable-route-tdd-20261019.json)

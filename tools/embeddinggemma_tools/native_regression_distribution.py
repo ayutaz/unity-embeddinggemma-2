@@ -1,5 +1,6 @@
 """Pinned public native-regression transport; numerical qualification is separate."""
 from contextlib import closing
+import argparse
 import hashlib
 import json
 from pathlib import Path, PurePosixPath
@@ -220,3 +221,36 @@ def audit_distribution_reports(paths, original, *, source):
                   graph_transport=TRANSPORT,graph_transport_contract_sha256=CONFIG_SHA,
                   graph_distribution_inventory_sha256=config['inventory_sha256'])
     return result
+
+
+def main(argv=None):
+    """Explicit manual transport/audit without selecting or adopting a generation."""
+    parser=argparse.ArgumentParser(description=__doc__)
+    commands=parser.add_subparsers(dest='command',required=True)
+    fetch=commands.add_parser('fetch');fetch.add_argument('--output',type=Path,required=True)
+    fetch.add_argument('--original',type=Path,required=True)
+    fetch.add_argument('--case',choices=sorted(SIGNALS),required=True)
+    original=commands.add_parser('fetch-original');original.add_argument('--output',type=Path,required=True)
+    audit=commands.add_parser('audit');audit.add_argument('--reports',type=Path,required=True)
+    audit.add_argument('--original',type=Path,required=True);audit.add_argument('--source',required=True)
+    audit.add_argument('--output',type=Path,required=True)
+    args=parser.parse_args(argv)
+    result=dict(success=True,generation_qualified=False,gpu_validated=False)
+    if args.command=='fetch':
+        fetch_candidate(args.output,args.original,case_id=args.case)
+    elif args.command=='fetch-original':
+        fetch_original(args.output)
+    else:
+        if args.output.exists():raise ValueError('Never overwrite a distribution audit result')
+        report=audit_distribution_reports(sorted(args.reports.rglob('frozen-audio-chained-onnx.json')),args.original,source=args.source)
+        if any(report.get(field) is not False for field in ('generation_qualified','gpu_validated')):
+            raise ValueError('Manual distribution audit cannot grant model or GPU qualification')
+        args.output.parent.mkdir(parents=True,exist_ok=True)
+        with args.output.open('x',encoding='utf-8') as stream:
+            stream.write(json.dumps(report,indent=2,allow_nan=False)+'\n')
+        result.update(success=report['success'],values_compared=report['values_compared'],candidate_tolerance_failures=report['candidate_tolerance_failures'])
+    print(json.dumps(result))
+    return 0 if result['success'] else 1
+
+
+if __name__=='__main__':raise SystemExit(main())

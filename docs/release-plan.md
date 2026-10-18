@@ -21,6 +21,8 @@
 
 全6 moduleの[実配布候補の組み立て](results/media-distribution-composition-567befb-20261018.json)はFP32 / Float16とも成功しました。各820 object・553モデルの元bytes・module対応・個人情報metadataを独立照合し、合計1,640ファイルの[実公開payload checker](results/model-publication-payload-guard-392ced7-20261018.json)も成功しました。flat HTTPS取得・回復とcompositionの関連77件が合格しています。モデルは未公開で、公開元からの空cache取得・取得後の最終consumer合格は未達です。
 
+新配布候補の[サンプル検証入口](candidate-media-sample-validation.md)も準備しました。旧bundle用のpinと数値gateを維持し、新しいFP32 / Float16 descriptorと画像3・音声2 profileを別に検査します。未実装10件・cohort不足7件のRedから、旧policyを含む34件Green・skip0・Unity exit0と新fixtureのcompileを確認しました。これはlocal-file / no-graphicsの小規模検査で、実モデルのサンプル・PlayMode実行は未完了です。
+
 ## 優先順位と完了条件
 
 | 順序 | 実施すること | 完了条件・成果物 |
@@ -42,7 +44,7 @@
 - #87: 採用Float16モデルの対応と性能測定を最終候補へ結び付け、必要な回帰後に統合します。
 - #90: baseの#89統合後に差分を再確認し、Player監査の根拠とともに統合します。
 
-想定順は #89 → #86 → #87 → #90。依存差分を再確認して必要なrebaseを行います。ユーザーの既存マージ指示の範囲内で、各PRの最新headが必須CIとprivacy条件を満たした時点で進めます。失敗中のCIを迂回せず、mainへ直接pushしません。新規tag / Releaseは工程6の完了後に扱います。
+まず #89 の最新Required CI・差分・privacyを確認して統合します。その後、#86・#87・#90の必要な変更を1つの統合候補へまとめ、mainを取り込んだ最新headで全必須CIと実モデルの必要な検証を行います。統合後に元の3 PRを「内容を統合済み」として整理し、個別PRをmergeした事実とは区別して記録します。ユーザーの既存マージ指示の範囲内で進めます。失敗中のCIを迂回せず、mainへ直接pushしません。正式SDK tag / Releaseは工程6の完了後に扱います。
 
 ## 実行環境・日程・報告
 

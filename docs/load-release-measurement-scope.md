@@ -54,3 +54,11 @@ PDHと別の経路として、[ETWの開始権限とMicrosoft製decoderの対照
 これはSDK load/release、driver退役・VRAM返却、専有allocationの証拠ではない。破棄callbackをGPU解放完了と同一視しない。次は対象PIDのイベントだけを出力する上限付きconsumerを用意し、raw clock・単位・loss・終了を校正したうえで、同じSDK/model/inputのstageと元参照・正常終了へ対応付ける。非管理者であることだけを理由にETWを不可能と扱わず、既存PDHの欠測と別に進める。
 
 別の[upstream Perfetto policy単体9件](results/dxg-perfetto-policy-72bd2b1-20261018.json)もfail0 / skip0 / exit0だった。ただしsample writerの `ToPft` は最初のイベントを取得時点のPerfetto SDK clockへ置き直すため、出力時刻を既存UTC/QPC stageへそのまま照合しない。libraryの `GpuEngineActivity` はdriverへのsubmitからcompleteまでの上限区間であり、GPU実行だけの時間でもない。次のconsumerでは元のepochを保持した `OnGpuWork` の区間、queue待ちを含むpacket区間、resource破棄イベントを分け、clock anchor・帰属・loss・終了を確認する。9件の成功はwriter policyの確認で、追加の実GPU captureやSDK計測ではない。
+
+## 元のQPC時刻を保持するobserver
+
+[実装と独立した小規模GPU対照](results/native-dxg-raw-observer-control-20261018.json)では、`tools/native/dxg-observer` に対象PIDだけを出力する上限付きCLIを追加した。記録・callback・所有sessionの終了は、21件のscaffold Red、callback8 Red、ownership6 Red、packet情報1 Redを経て最終40 pass / fail0 / skip0。CLIも9 Red→9 Greenで、既存outputの保持、欠落PIDの拒否、raw QPC/UTC anchor・target生成FILETIME・loss・closureを確認した。初期のリンク設定・entrypoint・構文のbuild失敗は、挙動のRedと別に保持している。
+
+Microsoftの未変更256-byte D3D12 workloadを所有handleでsuspend起動し、collectorのready後にresumeした。所有PIDの `OnGpuWork` 1区間は736nsの正数で、実行前に決めた外部QPC窓±5msに収まった。256-byte resource2個の作成・解放とpacket envelope9件を別記し、target/collectorはexit0、loss・diagnostics・decode error・残留sessionは0だった。この窓は精度保証ではなく、小規模な時計epoch・帰属・終了の対照である。default adapterの対照をRTX/Sentis互換性や実モデル受け入れにはしない。
+
+手順・上限・JSONの範囲は[observer README](../tools/native/dxg-observer/README.md)を参照。新しいWindows Actionsは40 native unit＋GPU収集なしの8 CLI preflightを実行する構成で、追加時点では未確認。localの実GPU対照と混同しない。SDK・validation・モデルは変更していない。次は同じSDK/model/inputの実測をこのobserverへ接続し、stageごとのclock対応、元参照vector・解放・正常終了を照合する。load/release GPU時間・driver退役・SDK専有allocationは引き続き未完了。

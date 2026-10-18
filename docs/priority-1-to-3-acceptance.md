@@ -39,6 +39,8 @@
 
 ## 作業順と後続範囲
 
+続く[raw observerの実装・小規模GPU対照](results/native-dxg-raw-observer-control-20261018.json)で、時刻をrebasingしない対象PID collector、記録上限・欠測・所有session終了をTDDで実装した。最終40 native unitと9 CLIはfail0 / skip0、独立した所有256-byte D3D12 workloadでは `OnGpuWork` 1区間736nsが事前設定の外部QPC窓内に入り、resource2個の作成・解放・loss0・両process exit0を確認した。実モデルは動かしていない。次は固定SDK/model/inputの実測へ接続し、stage対応・元参照・解放・正常終了を確認する。専用CIのnative40件＋GPU収集なしCLI8件は未確認で、GPU/モデルの合格にも数えない。
+
 PDHに代わる[ETW経路の対照確認](results/dxg-method-controls-72bd2b1-20261018.json)では、現在のtokenでDxgKrnlの有効化・停止がreturn0、未変更のMicrosoft decoder `72bd2b1` の単体130件と実D3D12対照2件がfail0 / skip0 / exit0だった。コピーpacketのPID帰属・時刻順序とresource破棄イベントの時刻窓は検査済みで、終了後の所有ETW session残留はない。権限変更・Unity・モデル実行は行っていない。実SDK stageのGPU時間・driver退役・専有allocationは未取得であり、この小規模な対照を全体合格にしない。次は上限付きの対象PID consumerとraw clock/lossの校正を用意し、固定SDK/model/inputの元参照・正常終了へ対応付ける。
 
 3aの後続では、[native PDHと同SDK text4 vector](results/native-pdh-text-stage-observation-f604baf-20261018.json)を実行し、参照・解放・exit0、終了後554 source一致と、所有process handleの生存を検査した8,783点を照合した。取得間隔中央値4.6489msでload内2,687点に正数を観測したが、queryの3Dは隣接差分が経過時間を超え、releaseは1点だけでpair不足だった。26件の新しいRedと既存を含む43件のGreen、clockとengine別の棄却を保持する。SDK専有load/releaseの合格にはせず、このPDH方式を繰り返すだけでは解消しない帰属・provider更新の制約として次の測定方式を判断する。

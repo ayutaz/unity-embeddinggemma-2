@@ -1,0 +1,12 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(DxTimingCaptureLibraryRoot)\Directory.Build.props" />
+  <PropertyGroup Label="Globals"><ProjectGuid>{843AF1CE-F61D-4EC8-A314-1823FC24A90B}</ProjectGuid></PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration"><ConfigurationType>Application</ConfigurationType><PlatformToolset>v143</PlatformToolset><UseDebugLibraries>false</UseDebugLibraries></PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup><OutDir>$(NativeDxgBuildRoot)\capture\</OutDir><IntDir>$(NativeDxgBuildRoot)\capture-obj\</IntDir><TargetName>NativeDxgObserver</TargetName></PropertyGroup>
+  <ItemDefinitionGroup><ClCompile><ExceptionHandling>Sync</ExceptionHandling><RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary><AdditionalIncludeDirectories>$(DxTimingCaptureLibraryRoot)\third_party\PixEventDecoder\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories><AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions></ClCompile><Link><SubSystem>Console</SubSystem><EntryPointSymbol>wmainCRTStartup</EntryPointSymbol><AdditionalDependencies>advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies></Link></ItemDefinitionGroup>
+  <ItemGroup><ClCompile Include="main.cpp" /><ClInclude Include="OwnedGpuRecords.h" /><ClInclude Include="NativeCallbacks.h" /></ItemGroup>
+  <ItemGroup><ProjectReference Include="$(DxTimingCaptureLibraryRoot)\lib\DxTimingCaptureLibrary.lib.vcxproj"><Project>{bd5d2df6-a412-48d8-a0c9-d220dccb92d3}</Project></ProjectReference></ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

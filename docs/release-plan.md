@@ -12,15 +12,18 @@
 - 先行する15条件まとめ実行は既定180秒を超えて失敗しました。この失敗を保持した上で、上限を変えず1信号3条件ずつに分割して上記の合格を確認しています。
 - source `39be89d` で保存bundleを生成。434ファイル・285個の固有Sentisモデルのhash、operation / coefficient対応、私的な2コピーを検査しました。モデル記述内の文字列とtokenizer JSONも監査しました。
 - 保存bundleのEditor GPU照合はDocumentの全6信号で成功。元参照を独立再計算し、最小cosineは0.9999998052055729、破損control6件を拒否しました。このgateだけでは保存bundleの全roleやPlayer合格を意味しません。
-- 新bundleのWindows IL2CPP / Release / High stripping Playerは、両音声profileのcontrollerが成功終了を記録しています。実build sourceは `89b1ab9`、bundle生成sourceは `39be89d`。Runtime Git tree一致により既存binaryを再使用しており、新buildとは扱いません。capture・元参照・全Worker監査を含む独立再監査は残件です。
+- 新FP32 bundleのWindows IL2CPP / Release / High stripping Playerは、両音声profileで実行と独立再監査が成功。通常18件・in-process warm18件を元参照から再計算し、前後の全270 Worker監査、キャンセル復帰、解放・exit0と24件の破損control拒否を確認しました。実build sourceは `89b1ab9`、bundle生成sourceは `39be89d`。Runtime Git tree一致により既存binaryを再使用しており、新buildとは扱いません。
+- source `c18b4e5` の新規固定Git consumerで、新候補285モデルのFloat16重み派生を生成しました。全434ファイルとFP32係数の不変、module対応、文字列privacy、私的な2コピーを独立確認。保存サイズは3,657,076,501から2,573,229,069 bytesです。この派生bundleも、両profileの実Release Playerと独立再監査で通常18件・warm18件、24破損control拒否、全GPU監査・exit0が成功しました。全演算FP16化・速度改善・独立warm起動の合格には読み替えません。
 - 既存bundleではsource `89b1ab9` の実Playerで画像3・音声2×FP32 / Float16重みの10条件が合格しています。新候補や最終統合版へそのまま付け替えません。
 - #89 head `39be89d` の[通常CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39123968041)は確認時点で進行中ですが、固定音声6信号と集計の失敗が既にあります。必須CIの合格は未達です。旧native PT2の同一bytes復旧も未達であり、新候補の成功とは区別します。
+
+7種類の証拠をcanonical JSON SHA256とSDK Runtime treeへ固定し、採用候補を使う必須数値回帰の取得経路を `58f48ac` で実装しました。27件の未実装失敗とworkflowの1件の失敗から、関連95件・actionlint成功を確認。元の全6信号・5区間・824,320値の実実行条件は維持しています。[最新CI 39126214004](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39126214004)は実行中で、必須CI復旧の完了はまだ数えません。
 
 ## 優先順位と完了条件
 
 | 順序 | 実施すること | 完了条件・成果物 |
 | --- | --- | --- |
-| 1 | 新しい音声候補の採用条件と取得pinを確定し、必須CIを復旧 | 新保存bundleのPlayer独立監査、実際にFloat16変換したbundleの対応・GPU照合、固定元参照との一致、配布モデルのprivacy確認、再現可能な取得・生成をそろえる。元参照・許容差を変更せず、最新headの必須CIが全成功 |
+| 1 | 新しい音声候補の採用条件と取得pinを確定し、必須CIを復旧 | 新保存FP32 / Float16 bundleの対応・GPU Player独立監査まで成功。候補選択・元参照維持・必須取得経路の修正を最新CIで受け入れる。元参照・許容差を変更せず、最新headの必須CIが全成功 |
 | 2 | 空checkout・空cacheから利用者向けの準備を再現 | 公開手順だけでtext・画像3・音声2の全6 moduleが準備でき、source / model hash一致。欠落・破損・中断・期限切れから回復 |
 | 3 | 最終候補のsample操作と性能を確認 | 日英検索・横断検索、画像、音声再生 / 停止、実マイク、キャンセル・再試行・解放が成功。権限拒否・deviceなしも確認。初回 / warm、CPU / GPU時間、RAM / VRAMを実測し最低要件を決定 |
 | 4 | 最終統合版のWindows Playerを受け入れ | IL2CPP / Release / High strippingで3入力・全必要role・横断検索のvector / 順位 / scoreが元参照と一致。実GPU・fallback / readback・独立cold / warm起動・解放・正常終了を確認 |
@@ -43,6 +46,6 @@
 
 - macOS / iOS / Androidの端末・署名・build環境は、工程1と並行して先に確保します。直近の環境確認は接続Android端末0、self-hosted runner0、Mac / iOS未確定です。実行開始時に再確認します。
 - 重い取得・変換・build・回帰はGitHub Actionsを優先します。ローカルのUnity / GPU実行は必要な確認に絞り、1processずつ動かします。
-- 次のcheckpointは「新保存bundleのPlayer独立監査・Float16確認」「必須CI全成功とPR整理」「空cache導入」の順です。各報告に合格・失敗・未実行、source / model、残件を記録します。
+- 次のcheckpointは「最新headの必須CI全成功とPR整理」「全6 moduleの公開配布・空cache導入」「最終統合版の操作・計測」の順です。各報告に合格・失敗・未実行、source / model、残件を記録します。
 - リリース日は未確定です。工程1のCI復旧と工程5の実行環境の見通しが立った時点で、実測から日程を見積もります。端末が未確保のまま完了日を約束しません。
 - 公開表示名 `yousan` は維持します。公開文書には相対 / 環境変数のパスだけを使い、元画像・元数値証拠は非公開で保持します。証拠画像を加工・再生成して漏えいや失敗を隠しません。

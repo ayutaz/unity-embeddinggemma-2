@@ -2,12 +2,14 @@
 
 確認日: 2026-10-19。対象はテキスト・画像・音声のGPU推論と横断検索です。[ゴール](goal.md)の必須環境・精度条件を維持します。
 
-直近の到達点は **#98の統合と#95・#96の整理、公開経路の実数値回帰、画像のGPU反復測定と画像・音声のCPU診断** です。main `dbe39f5` は#98 head `869cadd`と同treeで、全15 CI job・公開履歴・公開identity・provider署名を照合しました。元の特徴量に対するCPU診断は画像3・音声2条件とも中間値に不一致が残ります。両精度の公開取得、実マイクGPU登録、実画面、Windows混在Player全4起動とテキストの別Player 2起動の既存合格を保持し、残る操作・性能・必須実機と公開前監査を進めます。
+直近の到達点は **#99までの統合と#95・#96の整理、公開経路の実数値回帰、画像のGPU反復測定と画像・音声のCPU診断** です。main `c6dcde4` は#99 head `cc92d4b`と同treeで、全15 CI job・公開履歴・公開identity・provider署名を照合しました。元の特徴量に対するCPU診断は画像3・音声2条件とも中間値に不一致が残ります。両精度の公開取得、実マイクGPU登録、実画面、Windows混在Player全4起動とテキストの別Player 2起動の既存合格を保持し、残る操作・性能・必須実機と公開前監査を進めます。
 
 ## 現在地
 
 正式SDK tag・Releaseは未作成です。Sentisモデル配布用のpreview 2件とnative回帰データ用のpreview 1件を公開済みで、正式SDK公開とは区別します。以下は同日の実データ・GitHub照合に基づくcheckpointであり、正式候補全体の合格ではありません。
 
+- [#99の受け入れ](results/manual-native-distribution-integration-cc92d4b-20261019.json)：run `39163550227` は全15 job成功・skip0。7成果物の実digest・CRC・私的2コピーと、元参照824,320値の超過0・集計一致を確認しました。main `c6dcde4` の同tree・公開著者・provider署名・全履歴も照合。手動回帰の期限付きraw artifact依存を固定公開配布へ移し、元の数値gateを維持しました。SDK package / Runtimeは不変で、新しいGPU受け入れやmain push CIの別実行成功とは区別します。
+- [iOS設定のTDD](results/ios-build-profile-tdd-20261019.json)：19件Redから19件Green、Windows / Androidを含む関連40件が成功・skip0。Release / IL2CPP / Metal・Device SDKと設定復元を確認し、署名・provisioning値は変更・掲載しません。実export・署名・端末GPUは未実行です。[端末用入口・fixture配置を含む残件](device-validation.md)を維持します。
 - [#98の受け入れ](results/candidate-performance-integration-869cadd-20261019.json)：run `39159816416` は全15 job成功・skip0。7成果物の実digest・CRC・私的2コピーと、元参照824,320値の超過0・集計一致を確認しました。main `dbe39f5` の同tree・公開著者・provider署名・全履歴も照合。SDK package / Runtimeは不変で、新しいGPU受け入れやmain push CIの別実行成功とは区別します。
 - [旧providerコピーの確認](results/provider-cleanup-status-20261019.json)：既知の書換前commit APIに非公開メールmetadataが残存。Support案件はOpenで、削除完了は未確認です。元の値やpayloadは非公開に保持し、現行sourceの履歴・payload監査と分けて追跡します。正式公開のprivacy条件は未達です。
 - [#97の受け入れ](results/native-distribution-integration-344f07a-20261019.json)：run `39155770986` は全15 job成功。実アップロード7 ZIPのdigest・CRC・私的2コピー、元参照824,320値の許容差超過0と集計一致を独立確認しました。公開main `4d66d92` のtree・公開著者・provider署名・履歴も確認。#95・#96のexact headは取り込み済みで、統合先を本文へ記録してcloseしました。新しいGPU検証とは区別します。
@@ -52,7 +54,7 @@
 
 | 順序 | 実施すること | 完了条件・成果物 |
 | --- | --- | --- |
-| 1 | 基盤復旧と既存PRの整理 | #98まで統合、旧PRの取り込みとcloseが完了。各headの必須CI・数値成果物の独立照合、mergeの同treeと公開identityを確認 |
+| 1 | 基盤復旧と既存PRの整理 | #99まで統合、旧PRの取り込みとcloseが完了。各headの必須CI・数値成果物の独立照合、mergeの同treeと公開identityを確認 |
 | 2 | 空checkout・空cacheから利用者向けの準備を再現 | 公開手順だけでtext・画像3・音声2の全6 moduleが準備でき、source / model hash一致。欠落・破損・中断・期限切れから回復 |
 | 3 | 最終候補のsample操作と性能を確認 | 日英検索・横断検索、画像、音声再生 / 停止、実マイク、キャンセル・再試行・解放が成功。権限拒否・deviceなしも確認。初回 / warm、CPU / GPU時間、RAM / VRAMを実測し最低要件を決定 |
 | 4 | 最終統合版のWindows Playerを受け入れ | 機能側はsource 3a02fc0で全4混在起動・別text 2起動が合格。IL2CPP / Release / High、全media role・18文書の検索・text 15 case、GPU監査・独立cold/warm・解放・exit0を記録。性能・最低要件の未達は工程3と合わせて追跡 |
@@ -60,7 +62,7 @@
 | 6 | 最終配布候補を固定し、公開前監査 | 必須回帰全成功。README / API / sample / CHANGELOG / 利用条件 / 最低要件を整備。履歴・commit identity・実公開payload・画像の目視 / OCR / hashを確認。旧PR / cacheのprivacy対応も追跡 |
 | 7 | 正式公開と公開後の導入確認 | version・tag・GitHub Releaseを一致させ、公開物を読み戻す。公開tagを新規consumerへ導入し直し、モデル準備とsample smokeが成功 |
 
-工程1は#98までの統合と既存PR整理が完了しました。GitHubがsquash著者へ使用する公開名と指定noreplyは[限定的な履歴分類](results/provider-public-author-tdd-20261018.json)で扱い、実際のmerge・CI実行commitでも公開identityとprovider署名を確認しています。ローカルcommit identityや他の個人情報検査は維持します。工程2の公開取得と工程4のWindows機能側は上記の実績があり、残る工程3の操作/性能・工程5〜7の条件は未完了です。
+工程1は#99までの統合と既存PR整理が完了しました。GitHubがsquash著者へ使用する公開名と指定noreplyは[限定的な履歴分類](results/provider-public-author-tdd-20261018.json)で扱い、実際のmerge・CI実行commitでも公開identityとprovider署名を確認しています。ローカルcommit identityや他の個人情報検査は維持します。工程2の公開取得と工程4のWindows機能側は上記の実績があり、残る工程3の操作/性能・工程5〜7の条件は未完了です。
 
 工程2のモデル配布は正式SDK Releaseと分け、ライセンス・変更点・全ファイルhashを添えたpreviewの公開と公開URLからの取得確認まで完了しました。モデルはGit / LFSへ含めません。数値回帰データも別previewへ保存し、元参照の同一bytesと、任意stack traceだけを除いた配布graphの計算内容・全非modelメンバーの一致を確認しました。元graphと実行graphのhashを区別する取得処理と全6信号CI・独立監査は成功しました。旧成果物の退避・依存棚卸しは維持し、原本が失われたものを再生成品で原本扱いしません。
 
@@ -76,6 +78,7 @@
 - #95・#96: exact headを#97へ取り込み、統合先を記録してclose済み。個別mergeはしていません。
 - #97: head `344f07a` の全15 CI job・7成果物の独立数値監査・privacy確認後、main `4d66d92`へ統合済み。
 - #98: head `869cadd` の全15 CI job・7成果物の独立数値監査・privacy確認後、main `dbe39f5`へ統合済み。
+- #99: head `cc92d4b` の全15 CI job・7成果物の独立数値監査・privacy確認後、main `c6dcde4`へ統合済み。
 
 #89の後、#86・#87・#90の変更を#91へまとめ、全必須CI・新規consumerと両精度の実sampleを確認して統合しました。3 PRのexact headが統合候補の祖先に含まれることを検査し、本文へ統合先を記録してcloseしています。個別PRのmergeとは区別します。今後の取得・操作・環境別修正もtask branch / PRを使い、最新headのCI・差分・privacyを確認して統合します。正式SDK tag / Releaseは工程6の完了後です。
 

@@ -44,7 +44,7 @@ UPMの宣言上の最小版は6000.3.16f1です。これは対応する全Unity�
 3. モデルを準備します。**パッケージを追加しただけでは推論できません。** [テキストモデルの取得・変換手順](docs/model-preparation.md)に沿って`.sentis`とtokenizerを用意してください。
 4. Package ManagerのSamplesから目的のサンプルをImportします。
 
-Package Managerでは現在 **EmbeddingGemma Text** と表示されます。このパッケージにテキスト・画像・音声のAPIと両サンプルを含みます。
+Package Managerでは現在 **EmbeddingGemma** と表示されます。このパッケージにテキスト・画像・音声のAPIと両サンプルを含みます。
 
 | サンプル | 始め方 |
 | --- | --- |

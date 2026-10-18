@@ -44,7 +44,7 @@ def test_coverage_and_capture_paths_fail_closed(tmp_path):
 
 def test_manual_golden_preservation_never_claims_original_models():
     root=Path(__file__).resolve().parents[2]
-    workflow=yaml.load((root/'.github/workflows/audio-runtime-reference.yml').read_text(),Loader=yaml.BaseLoader)
+    workflow=yaml.load((root/'.github/workflows/audio-runtime-reference.yml').read_text(encoding='utf-8'),Loader=yaml.BaseLoader)
     assert workflow['on']['workflow_dispatch']['inputs']['recover_golden_only']['default']=='false'
     job=workflow['jobs']['recover-golden']
     assert job['permissions']=={'contents':'read','actions':'read'}
@@ -56,3 +56,20 @@ def test_manual_golden_preservation_never_claims_original_models():
     upload=next(s for s in steps if s.get('uses','').startswith('actions/upload-artifact@'))
     assert upload['with']['name'].startswith('pinned-audio-golden-')
     assert "outcome == 'success'" in upload['if']
+
+
+def test_native_diagnostics_use_recovered_immutable_golden_without_missing_models():
+    root=Path(__file__).resolve().parents[2]
+    workflow=yaml.load((root/'.github/workflows/audio-runtime-reference.yml').read_text(encoding='utf-8'),Loader=yaml.BaseLoader)
+    steps=workflow['jobs']['native-reference']['steps']
+    fetch=next(s['run'] for s in steps if 'embeddinggemma_tools.artifact_zip' in s.get('run',''))
+    assert '--artifact-id 12127104206' in fetch
+    assert '--member audio-encoder-reference.json' in fetch
+    assert '--member audio-encoder-validation.json' in fetch
+    assert 'ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9  ../artifacts/pinned-audio/audio-encoder-reference.json' in fetch
+    assert '68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1  ../artifacts/pinned-audio/audio-encoder-validation.json' in fetch
+    assert 'audio.pt2' not in fetch and '11814567883' not in fetch
+    # Restoring the independent golden must never replace the required model gate.
+    required=yaml.load((root/'.github/workflows/model-reference.yml').read_text(encoding='utf-8'),Loader=yaml.BaseLoader)
+    assert required['jobs']['pinned-audio']['uses']=='./.github/workflows/pinned-audio-acceptance.yml'
+    assert not required['jobs']['pinned-audio'].get('continue-on-error')

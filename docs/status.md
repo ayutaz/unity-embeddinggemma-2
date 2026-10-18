@@ -2,6 +2,8 @@
 
 更新: **2026-10-18**。公開履歴整理後のmainは `4b5bf72`。開発版 `0.1.0-pre.1`、公開tag・正式Releaseはありません。現在は個人情報対策の回帰修正、固定音声参照データの復旧、GitHub側の残存個人情報の除去を優先します。
 
+元の数値参照JSONと監査JSONは[CI保存・独立readback](results/original-audio-golden-ci-readback-20261018.json)が完了しました。最新head `317bae3` の[CI終端](results/privacy-guard-ci-317bae3-20261018.json)ではPython全4環境等が成功し、元音声モデルの欠落で全体が失敗しました。次は復旧した数値原本を使う限定診断です。
+
 ## 現在の停止条件と次の作業
 
 | 項目 | 確認済みの状態 | 次の完了条件 |

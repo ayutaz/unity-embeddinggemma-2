@@ -205,29 +205,26 @@ def fetch_original(output):
     (output/'original-range-receipt.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
 
 
-def fetch_candidate(output,original,*,case_id):
-    from .artifact_zip import github_artifact_reader,extract_members
+def fetch_candidate(output,original,*,case_id,source_archive=None):
+    from .artifact_zip import verified_local_artifact_reader,extract_members
     if case_id not in ('silence','impulse','sine','nyquist','noise','padded_noise'):
         raise ValueError('One of the six original input cases is required')
     output=Path(output)
     if output.exists() and any(output.iterdir()):
         raise ValueError('Candidate download output must be empty')
-    contract=candidate_contract();fetch_original(original)
+    contract=candidate_contract()
+    reader,source_proof=verified_local_artifact_reader(source_archive,contract['artifact_sha256'])
     profile='frames-1119-valid-'+('839' if case_id=='padded_noise' else '1119')
     members=['audio-runtime-reference/'+name for name in ('audio-encoder-reference.json','audio-encoder-validation.json',
              profile+'/audio.pt2',profile+'/'+case_id+'-features-fp32.bin')]
-    reader,metadata=github_artifact_reader('ayutaz/unity-embeddinggemma-2',contract['artifact_id'])
     with reader:
-        run=metadata.get('workflow_run',{})
-        if (metadata.get('id')!=contract['artifact_id'] or metadata.get('digest')!='sha256:'+contract['artifact_sha256']
-                or run.get('id')!=contract['producer_run'] or run.get('head_sha')!=contract['producer_source']
-                or type(run.get('repository_id')) is not int or run['repository_id']<=0
-                or run.get('head_repository_id')!=run['repository_id']):
-            raise ValueError('Candidate artifact source, run or archive digest differs')
+        original_reference(original)
         report=extract_members(reader,output,members,max_entry_bytes=2*1024*1024*1024)
     _candidate_input_files(output/'audio-runtime-reference',original,case_id=case_id)
     report.update(model_generation=contract['generation'],candidate_contract_sha256=CONTRACT_SHA,
-                  artifact_id=contract['artifact_id'],graph_producer=contract['producer_source'],generation_qualified=False)
+                  artifact_id=contract['artifact_id'],graph_producer=contract['producer_source'],generation_qualified=False,
+                  source_archive_transport=source_proof['transport'],source_archive_sha256=source_proof['archive_sha256'],
+                  provider_metadata_revalidated=False)
     (output/'candidate-range-receipt.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     return report
 
@@ -237,6 +234,7 @@ def main(argv=None):
     fetch=commands.add_parser('fetch');fetch.add_argument('--output',type=Path,required=True)
     fetch.add_argument('--original',type=Path,required=True)
     fetch.add_argument('--case',required=True,choices=('silence','impulse','sine','nyquist','noise','padded_noise'))
+    fetch.add_argument('--source-archive',type=Path,required=True)
     golden=commands.add_parser('fetch-original');golden.add_argument('--output',type=Path,required=True)
     audit=commands.add_parser('audit');audit.add_argument('--reports',type=Path,required=True)
     audit.add_argument('--original',type=Path,required=True);audit.add_argument('--source',required=True)
@@ -245,7 +243,7 @@ def main(argv=None):
     if args.command=='fetch-original':
         fetch_original(args.output);result={'success':True,'scope':'original_golden_only','generation_qualified':False}
     elif args.command=='fetch':
-        report=fetch_candidate(args.output,args.original,case_id=args.case)
+        report=fetch_candidate(args.output,args.original,case_id=args.case,source_archive=args.source_archive)
         result={'success':True,'scope':'fixed_candidate_input_bytes_only','model_generation':report['model_generation'],'generation_qualified':False}
     else:
         if args.output.exists():raise ValueError('Never overwrite a candidate audit result')

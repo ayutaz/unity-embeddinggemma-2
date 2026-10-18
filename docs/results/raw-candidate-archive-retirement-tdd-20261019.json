@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "scope": "Historical raw source transport retirement and complete local archive verification; no model inference or new numerical/GPU acceptance",
+  "base_source": "7171a2006e336cfcfa28c8e3ddb933e7d4d2ab2f",
+  "source_hash_scope": "Final source bytes normalized only from CRLF to LF, captured after the owned execution; implementation was unchanged during execution",
+  "source_sha256": {
+    ".github/workflows/audio-runtime-reference.yml": "fcea7588538fbbb9d1c822c5431a49b83b5c6ec128bf907b3425ae1ed361f8ff",
+    "tools/embeddinggemma_tools/artifact_zip.py": "830bfb5df2651d529785dba636fca01131cea2daaf0a4e5bbdb453927f3c3a75",
+    "tools/embeddinggemma_tools/audio_generation_candidate.py": "e79a7324ad7fd5f4ba0d75c303a2ee4b2a043636eb1d502b905d6d55c0175e91",
+    "tools/embeddinggemma_tools/audio_candidate_distribution.py": "6ad9ab8c0e1247f7cb9b9a4b6b5b54d11d5f7fb3f6a071b1e878f50ff881d8e4",
+    "tools/embeddinggemma_tools/audio_candidate_onnx_identity.py": "f1b5889c35d9299d4f4950177b0b49109b89729473d5a6394ccd6063cf4e0a8e",
+    "tools/embeddinggemma_tools/selected_audio_generation.py": "90ee3efc99852b01019877f7145f73f1b2a12f16cc1e6c1ebeddf9521bad7c6c",
+    "tools/tests/test_raw_candidate_archive_retirement.py": "ec751683fbcab4addf1cf861b6d15045e439ca327e5f257942b0f80195959b9a"
+  },
+  "TDD": {
+    "initial_red": {
+      "tests": 13,
+      "failures": 13,
+      "errors": 0,
+      "skipped": 0
+    },
+    "initial_green": {
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "prepared_local_goldens_red": {
+      "tests": 15,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0
+    },
+    "related_green": {
+      "tests": 170,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "actionlint_passed": true,
+  "real_archive_verification": {
+    "success": true,
+    "exit_code": 0,
+    "archive_sha256": "a456ce247b3615a70ab01834500d7de02ab51361adefe26de7de0d860bfa24a5",
+    "archive_bytes": 4938559326,
+    "complete_private_copies": 2,
+    "all_archive_CRCs_verified": true,
+    "hosted_origin_metadata_checked_separately": true,
+    "all_raw_fetches_offline": true,
+    "single_profile_route_verified": true,
+    "six_original_case_sources_verified": 6,
+    "raw_graph_profiles": 2,
+    "native_ONNX_profiles": 2,
+    "no_provider_metadata_fabricated": true
+  },
+  "initial_child_import_attempt": {
+    "success": false,
+    "stage": "Before archive I/O",
+    "error_class": "ModuleNotFoundError",
+    "private_evidence_retained": true
+  },
+  "original_evidence_and_second_verified_copy_retained": true,
+  "selection_manifest_sha256": "6b1e84c4f9eb0bbbde77ff18f2b1532a4806a8bab42c1ab664beb2f891dc9067",
+  "selection_and_its_pinned_proofs_unchanged": true,
+  "original_reference_or_tolerance_changed": false,
+  "raw_loaders_accept_clean_distribution_graphs": false,
+  "normal_public_distribution_regression_maintained": true,
+  "original_input_only_preservation_maintained": true,
+  "hosted_raw_modes_fail_before_checkout_download_or_upload": true,
+  "SDK_runtime_changed": false,
+  "model_executed": false,
+  "new_numerical_execution_accepted": false,
+  "GPU_validated": false,
+  "generation_qualified": false,
+  "hosted_artifact_deleted": false,
+  "source_required_CI_accepted": false,
+  "formal_release_ready": false
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "scope": "Windows Editor pinned local fixture materialization and unchanged original loader integration; no Android jar or device GPU acceptance",
+  "base_source": "7171a2006e336cfcfa28c8e3ddb933e7d4d2ab2f",
+  "unity_version": "6000.3.21f1",
+  "source_hash_scope": "C# source bytes with only CRLF normalized to LF, matching build provenance hashing",
+  "source_sha256": {
+    "Assets/Validation/Runtime/PlayerFixtureStager.cs": "f33cf86bef18445ec8ae84c4227a3bc1ec998aa0a2e786bdfacab73801049f35",
+    "Assets/Validation/Tests/Editor/PlayerFixtureStagerTests.cs": "817ae48c9e2c69671f8c484d3034f1c5af624a7e0fc6fe01bd5d58ad4dd0658b",
+    "Assets/Validation/Runtime/PlayerMediaFixture.cs": "afdc2694bc55e80eaf290f77f130adfbef8b69a603286db47e6ae555bd0f95fb",
+    "Assets/Validation/Runtime/PlayerMixedSearchFixture.cs": "bbbecaf3cd01c36ec5c8bfaeeeb6d9d3ee633aae6de5f3f83a62e10835d0685a"
+  },
+  "TDD": {
+    "red": {
+      "total": 29,
+      "passed": 0,
+      "failed": 29,
+      "skipped": 0,
+      "exit_code": 2
+    },
+    "green": {
+      "total": 29,
+      "passed": 29,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    }
+  },
+  "original_fixture_integration": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "transport": "UnityWebRequest.DownloadHandlerFile",
+    "manifest_sha256": "524ddbfceb05fc0d799e0b26a253f4755b82bfa304839e22bc6402d5724b295a",
+    "files": 28,
+    "bytes": 34474958,
+    "all_original_sizes_and_hashes_recomputed": true,
+    "all_staged_sizes_and_hashes_independently_recomputed": true,
+    "unchanged_fixture_loaders_accepted": true,
+    "all_role_media_fixture_cases": 36,
+    "text_documents": 6,
+    "text_queries": 4
+  },
+  "original_private_evidence_and_second_complete_copy_verified": true,
+  "existing_outputs_preserved": true,
+  "corruption_and_cancellation_controls_passed": true,
+  "error_messages_excluded_from_stage_report": true,
+  "original_reference_or_tolerance_changed": false,
+  "original_fixture_acceptance_is_separate_from_stage_success": true,
+  "SDK_package_tree": "6c8fa26c54268bca1b256173e93855617610865c",
+  "SDK_runtime_tree": "7d6e4314552b221d06db881405e7ccff3f449a77",
+  "SDK_runtime_changed": false,
+  "model_inference_executed": false,
+  "actual_Android_jar_transport": false,
+  "actual_iOS_device_execution": false,
+  "actual_Android_device_execution": false,
+  "actual_device_GPU_acceptance": false,
+  "device_runner_integration_complete": false,
+  "source_required_CI_accepted": false,
+  "formal_release_ready": false
+}

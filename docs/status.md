@@ -1,8 +1,12 @@
 # 現在の対応範囲と検証状況
 
-最新checkpoint（2026-10-19）: **main `c6dcde4`、PR #99まで統合済み**。[#99の実受け入れ](results/manual-native-distribution-integration-cc92d4b-20261019.json)ではhead `cc92d4b`の全15 CI job・skip0、7成果物のdigest / CRC・私的2コピー、元参照824,320値の超過0と集計一致を確認しました。実mainの同tree・公開identity・provider署名・全履歴も照合済みです。手動音声回帰も固定公開配布を使用します。SDK package・Runtimeは既存Windows Player受け入れから不変です。#95・#96は#97へ取り込んでcloseしました。以下の固定sourceの実績と、残る環境・性能・provider privacy条件を区別します。
+最新checkpoint（2026-10-19）: **main `2a17421`、PR #100まで統合済み**。[#100の実受け入れ](results/ios-profile-integration-7171a20-20261019.json)ではhead `7171a20`の全15 CI job・skip0、7成果物のdigest / CRC・私的2コピー、元参照824,320値の超過0と集計一致を確認しました。実mainの同tree・公開identity・provider署名・全履歴も照合済みです。iOS設定の23 / 関連44契約テストと、実iOS export・実機GPUの未実行を分けています。手動音声回帰の固定公開配布は[#99](results/manual-native-distribution-integration-cc92d4b-20261019.json)で統合済み。SDK package・Runtimeは既存Windows Player受け入れから不変です。#95・#96は#97へ取り込んでcloseしました。以下の固定sourceの実績と、残る環境・性能・provider privacy条件を区別します。
 
-[iOS build profileの準備](device-validation.md)は[初回の19件Red→19件Green](results/ios-build-profile-tdd-20261019.json)後、Xcodeの構成もReleaseへ固定・復元しました。[追加の8件Red / 15件pass→最終23件Green](results/ios-xcode-scheme-tdd-20261019.json)と、Windows / Android設定を含む関連44件が失敗・skipなしで成功しています。Windows Editorによる設定・復元・上書き拒否・署名情報の非掲載の確認であり、実iOS export・署名・実機GPUは未実行です。既存の画像・音声 / 混在Player入口はWindows限定のままで、端末用入口・fixture配置と全必須実機の受け入れは残ります。
+[iOS build profile](device-validation.md)は#100で統合済みです。[初回の19件Red→19件Green](results/ios-build-profile-tdd-20261019.json)後、Xcodeの構成もReleaseへ固定・復元しました。[追加の8件Red / 15件pass→最終23件Green](results/ios-xcode-scheme-tdd-20261019.json)と、Windows / Android設定を含む関連44件が失敗・skipなしで成功しています。Windows Editorによる設定・復元・上書き拒否・署名情報の非掲載の確認であり、実iOS export・署名・実機GPUは未実行です。既存の画像・音声 / 混在Player入口はWindows限定のままで、端末用入口・fixture配置と全必須実機の受け入れは残ります。
+
+[歴史的raw取得のローカル化](raw-candidate-archive.md)は、全ZIPの固定SHA256と準備済み元goldenを必須にし、古いhosted raw取得へfallbackしません。[関連170件Green・実archive確認](results/raw-candidate-archive-retirement-tdd-20261019.json)では、完全2コピー・全CRCと6 case / 2 raw graph / 2 ONNX profileを照合しました。通常の公開数値回帰と元入力だけの保存は維持し、source全Required CI・main統合・旧artifact削除は未実施です。モデル推論や新たなGPU受け入れには数えません。
+
+[固定入力のlocal staging](results/device-fixture-materialization-tdd-20261019.json)は29件Red→29件Green、元28ファイル・34,474,958 bytesの実file URI転送と全hashの独立再計算、変更していないloaderによる全role 36ケース・text 6文書 / 4 queryの確認が成功しました。転送段階は元fixtureやGPUの合格を付与せず、既存の独立した元hash・数値gateを維持します。Windows Editorの1統合テスト・skip0であり、Android jar・実機・モデル推論は未実行です。端末用runnerへの接続も残ります。
 
 [モデルpreview](results/model-preview-publication-567befb-20261018.json)は両精度825 assetずつ公開し、全実payloadとremote digestを照合済みです。[匿名の空cache取得・中断復帰](results/public-model-consumer-8649c94-20261018.json)は両精度で成功し、warmで820再利用・転送0、1 object破損修復と全hash、公開取得モデルの5 media profile・4 query GPU実行と独立監査まで確認しました。
 

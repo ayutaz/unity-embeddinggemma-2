@@ -61,6 +61,53 @@ class RangeReader(io.RawIOBase):
         super().close()
 
 
+class _VerifiedLocalReader(io.RawIOBase):
+    def __init__(self, stream, size):
+        self.stream, self.size = stream, size
+        self.range_bytes = self.range_requests = 0
+
+    def readable(self): return True
+    def seekable(self): return True
+    def tell(self): return self.stream.tell()
+
+    def seek(self, offset, whence=io.SEEK_SET):
+        origins = {io.SEEK_SET: 0, io.SEEK_CUR: self.tell(), io.SEEK_END: self.size}
+        if whence not in origins or not 0 <= origins[whence] + offset <= self.size:
+            raise ValueError('local archive seek is outside the verified bytes')
+        return self.stream.seek(origins[whence] + offset)
+
+    def read(self, count=-1):
+        raw = self.stream.read(count)
+        self.range_bytes += len(raw); self.range_requests += 1
+        return raw
+
+    def close(self):
+        self.stream.close()
+        super().close()
+
+
+def verified_local_artifact_reader(path, expected_sha256):
+    """Verify the entire preserved archive; never invent fresh provider provenance."""
+    if path is None:
+        raise ValueError('An explicit verified local archive is required for retired raw sources')
+    if not isinstance(expected_sha256, str) or re.fullmatch('[0-9a-f]{64}', expected_sha256) is None:
+        raise ValueError('The local archive requires an immutable complete SHA256 pin')
+    try:
+        stream = Path(path).open('rb')
+    except (OSError, TypeError, ValueError):
+        raise ValueError('The local archive could not be opened') from None
+    try:
+        size = stream.seek(0, io.SEEK_END); stream.seek(0)
+        if size <= 0 or hashlib.file_digest(stream, 'sha256').hexdigest() != expected_sha256:
+            raise ValueError('The complete local archive bytes differ from the immutable pin')
+        stream.seek(0)
+        return _VerifiedLocalReader(stream, size), dict(transport='verified_local_archive', archive_sha256=expected_sha256,
+            archive_bytes=size, provider_metadata_revalidated=False)
+    except BaseException:
+        stream.close()
+        raise
+
+
 def extract_members(reader, destination, names, *, max_entry_bytes=64 * 1024 * 1024):
     destination = Path(destination).resolve()
     paths = {}

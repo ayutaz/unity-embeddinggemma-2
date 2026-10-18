@@ -21,28 +21,22 @@ CASES = ('silence', 'impulse', 'sine', 'nyquist', 'noise', 'padded_noise')
 CONTROLS = dict(OMP_NUM_THREADS='4', MKL_NUM_THREADS='4', MKL_CBWR='COMPATIBLE', MKL_DYNAMIC='FALSE')
 
 
-def fetch_inputs(output, original):
-    from .artifact_zip import github_artifact_reader, extract_members
+def fetch_inputs(output, original, *, source_archive=None):
+    from .artifact_zip import verified_local_artifact_reader, extract_members
     output = Path(output)
     if output.exists() and any(output.iterdir()):
         raise ValueError('Candidate download output must be empty')
     contract = candidate.candidate_contract()
-    candidate.fetch_original(original)
-    reference, _ = candidate.original_reference(original)
-    members = ['audio-encoder-reference.json', 'audio-encoder-validation.json', *contract['graphs']]
-    members += [row['input_features'] for row in reference['cases'] if row['id'] in CASES]
-    reader, metadata = github_artifact_reader('ayutaz/unity-embeddinggemma-2', contract['artifact_id'])
+    reader, source_proof = verified_local_artifact_reader(source_archive, contract['artifact_sha256'])
     with reader:
-        run = metadata.get('workflow_run', {})
-        if (metadata.get('digest') != 'sha256:'+contract['artifact_sha256']
-                or run.get('id') != contract['producer_run'] or run.get('head_sha') != contract['producer_source']
-                or type(run.get('repository_id')) is not int or run['repository_id'] <= 0
-                or run.get('head_repository_id') != run['repository_id']):
-            raise ValueError('Candidate preservation artifact identity differs')
+        reference, _ = candidate.original_reference(original)
+        members = ['audio-encoder-reference.json', 'audio-encoder-validation.json', *contract['graphs']]
+        members += [row['input_features'] for row in reference['cases'] if row['id'] in CASES]
         extract_members(reader, output, ['audio-runtime-reference/'+name for name in members],
                         max_entry_bytes=2*1024*1024*1024)
     for name in CASES:
         candidate._candidate_input_files(output/'audio-runtime-reference', original, case_id=name)
+    return source_proof
 
 
 def native_outputs(paths, cases):
@@ -125,9 +119,10 @@ def main(argv=None):
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--source', required=True)
     parser.add_argument('--fetch', action='store_true')
+    parser.add_argument('--source-archive', type=Path)
     args = parser.parse_args(argv)
     try:
-        if args.fetch: fetch_inputs(args.candidate, args.original)
+        if args.fetch: fetch_inputs(args.candidate, args.original, source_archive=args.source_archive)
         current = args.candidate/'audio-runtime-reference' if args.fetch else args.candidate
         result = prepare(current, args.original, args.output, source=args.source)
         print(json.dumps(dict(case_count=result['case_count'], profile_count=result['profile_count'],

@@ -182,25 +182,23 @@ def test_candidate_summary_requires_the_full_original_matrix(monkeypatch,problem
 
 
 def test_candidate_fetch_selects_one_profile_and_original_bytes_only(monkeypatch,tmp_path):
-    m=module();contract=m.candidate_contract();calls=[]
+    import hashlib,zipfile
+    m=module();contract=m.candidate_contract().copy();calls=[]
     from embeddinggemma_tools import artifact_zip
-    class Reader:
-        def __enter__(self):return self
-        def __exit__(self,*args):pass
-    def reader(repo,artifact):
-        assert repo=='ayutaz/unity-embeddinggemma-2'
-        return Reader(),{'id':artifact,'digest':'sha256:'+contract['artifact_sha256'],
-                         'workflow_run':{'id':contract['producer_run'],'head_sha':contract['producer_source'],
-                                         'repository_id':1,'head_repository_id':1}}
-    monkeypatch.setattr(artifact_zip,'github_artifact_reader',reader)
+    archive=tmp_path/'raw.zip'
+    with zipfile.ZipFile(archive,'w') as stream:stream.writestr('synthetic-input.bin',b'original')
+    contract['artifact_sha256']=hashlib.sha256(archive.read_bytes()).hexdigest()
+    monkeypatch.setattr(m,'candidate_contract',lambda:contract)
+    monkeypatch.setattr(artifact_zip,'github_artifact_reader',lambda *a:pytest.fail('Retired hosted source was used'))
     def extract(reader,out,members,**kwargs):
         out.mkdir(parents=True,exist_ok=True);calls.append(members)
         return {'selected_count':len(members)}
     monkeypatch.setattr(artifact_zip,'extract_members',extract)
-    monkeypatch.setattr(m,'fetch_original',lambda out:calls.append(['original_golden_only']))
+    monkeypatch.setattr(m,'fetch_original',lambda out:pytest.fail('Archived fetch unexpectedly used hosted goldens'))
+    monkeypatch.setattr(m,'original_reference',lambda out:calls.append(['verified_local_golden_only']) or ({},{}))
     monkeypatch.setattr(m,'_candidate_input_files',lambda *args,**kw:None)
-    m.fetch_candidate(tmp_path/'candidate',tmp_path/'original',case_id='padded_noise')
-    assert calls[0]==['original_golden_only']
+    m.fetch_candidate(tmp_path/'candidate',tmp_path/'original',case_id='padded_noise',source_archive=archive)
+    assert calls[0]==['verified_local_golden_only']
     selected=calls[1]
     assert len(selected)==4
     assert 'audio-runtime-reference/frames-1119-valid-839/audio.pt2' in selected
@@ -208,24 +206,23 @@ def test_candidate_fetch_selects_one_profile_and_original_bytes_only(monkeypatch
     assert not any('1119-valid-1119' in item or item.endswith('.onnx') for item in selected)
 
 
-@pytest.mark.parametrize('problem',['digest','run','source','fork'])
-def test_candidate_fetch_rejects_wrong_remote_provenance(monkeypatch,tmp_path,problem):
-    m=module();contract=m.candidate_contract()
+@pytest.mark.parametrize('problem',['digest','missing','empty','changed'])
+def test_candidate_fetch_rejects_unverified_archive_before_original_fetch(monkeypatch,tmp_path,problem):
+    import hashlib,zipfile
+    m=module();contract=m.candidate_contract().copy()
     from embeddinggemma_tools import artifact_zip
-    class Reader:
-        def __enter__(self):return self
-        def __exit__(self,*args):pass
-    metadata={'id':contract['artifact_id'],'digest':'sha256:'+contract['artifact_sha256'],
-              'workflow_run':{'id':contract['producer_run'],'head_sha':contract['producer_source'],
-                              'repository_id':1,'head_repository_id':1}}
-    if problem=='digest':metadata['digest']='sha256:'+'0'*64
-    if problem=='run':metadata['workflow_run']['id']+=1
-    if problem=='source':metadata['workflow_run']['head_sha']='0'*40
-    if problem=='fork':metadata['workflow_run']['head_repository_id']=2
-    monkeypatch.setattr(artifact_zip,'github_artifact_reader',lambda *a:(Reader(),metadata))
+    archive=tmp_path/'raw.zip'
+    with zipfile.ZipFile(archive,'w') as stream:stream.writestr('synthetic-input.bin',b'original')
+    contract['artifact_sha256']=hashlib.sha256(archive.read_bytes()).hexdigest()
+    if problem=='digest':contract['artifact_sha256']='0'*64
+    if problem=='missing':archive.unlink()
+    if problem=='empty':archive.write_bytes(b'')
+    if problem=='changed':archive.write_bytes(archive.read_bytes()+b'changed')
+    monkeypatch.setattr(m,'candidate_contract',lambda:contract)
+    monkeypatch.setattr(artifact_zip,'github_artifact_reader',lambda *a:pytest.fail('Retired hosted source was used'))
     monkeypatch.setattr(artifact_zip,'extract_members',lambda *a,**kw:pytest.fail('untrusted artifact was extracted'))
-    monkeypatch.setattr(m,'fetch_original',lambda out:None)
-    with pytest.raises(ValueError):m.fetch_candidate(tmp_path/'candidate',tmp_path/'original',case_id='silence')
+    monkeypatch.setattr(m,'fetch_original',lambda out:pytest.fail('Archive must be verified before fetching goldens'))
+    with pytest.raises(ValueError):m.fetch_candidate(tmp_path/'candidate',tmp_path/'original',case_id='silence',source_archive=archive)
 
 
 @pytest.mark.parametrize('problem',[None,'digest','run','source','fork'])

@@ -12,6 +12,16 @@ profileはIL2CPP / High stripping / Release compiler、Device SDK、iPhone / iPa
 
 `WithIOSProfile(Action)` は同じ設定を一時適用し、callback成功・例外の両方で変更した設定を復元します。自動signing、Team ID、provisioning値は読み取ったり変更したりせず、receiptには明示した設定項目だけを含めます。署名は実行者の私的なXcode環境で設定し、export・project settings・raw logは公開payloadとして扱いません。公開する結果は必ず別にprivacy検査します。
 
+## 固定入力の端末内配置
+
+`PlayerFixtureStager.Stage(sourceUri, newDirectory, manifestBytes, manifestSha256, report)` は、明示したlocal StreamingAssetsの入力を、新しい専用directoryへ取り出します。呼び出し側が渡すmanifestの元bytesとSHA256を先に照合します。schema 1の`files`配列には、各fixtureの`path`・`bytes`・`sha256`を含めます。相対pathの曖昧さ・重複・fileとdirectoryの衝突を拒否し、JSON / BIN / PNGだけを対象にします。上限は512ファイル、各64 MiB、合計512 MiBです。
+
+転送はfile URI、Androidではjar:file URIを指定する前提です。Internetや共有サーバーからのモデル取得はこの処理の対象にしません。各`.part`のサイズ・SHA256を検証してから元の相対名へ移し、既存の出力先は使用しません。中断・転送失敗では処理中のpartialを除き、既に検証した入力と失敗記録を保持します。転送中のreportには例外型だけを記録し、元の例外messageや絶対pathを含めません。
+
+stageの`success`は転送内容の照合だけを表します。`original_fixture_validated`・`gpu_verified`はfalseのままです。続いて既存の`PlayerMediaFixture.Load` / `PlayerMixedSearchFixture.LoadText`が独立した元hashを照合し、その後にモデル実行とGPU監査を行います。manifestの値を元の数値参照や許容差の代わりにしません。
+
+[TDDと元入力の統合確認](results/device-fixture-materialization-tdd-20261019.json)は29件Red→29件Green、元28ファイル・34,474,958 bytesの実file URI転送と独立した全hash再計算が成功しました。変更していないloaderが画像・音声の全role 36ケースとtext 6文書・4 queryを受け入れ、元証拠と私的な完全2コピーを保持しています。Windows Editorでの転送・loader確認であり、Android jar転送・実機起動・CPU/GPU推論は未実行です。端末用runnerへの接続も残ります。
+
 ## 実機検証へ進むために残る作業
 
 | 項目 | 現状 | 必要な証拠 |
@@ -19,7 +29,7 @@ profileはIL2CPP / High stripping / Release compiler、Device SDK、iPhone / iPa
 | iOS build profile | 設定・復元・上書き拒否のEditor契約を追加 | Macの固定Editor / Xcodeによる実export・署名・端末起動 |
 | Android build profile | 既存のARM64 / IL2CPP / High / Release設定 | moduleを導入した実build、端末起動、実際に選択されたgraphics API |
 | 画像・音声 / 混在Player入口 | 既存runnerはWindows Player限定。制限を緩めて実機合格にはしない | 明示的な端末用設定入力、保存先、platform別scopeと同じ数値gate |
-| 固定fixtureの配置 | 既存loaderは通常のfile pathを要求 | AndroidのStreamingAssetsから端末専用領域へ取り出し、元hashを照合 |
+| 固定fixtureの配置 | pinned stagingと元28ファイルのfile URI / loader統合を確認。Android jarは未実行 | 端末用runnerへ接続し、Android StreamingAssetsからの実転送と元hash照合を確認 |
 | macOS / iOS / Android GPU | 未実行 | 全3入力・全role・混在索引、actual GPU / fallback / readback、独立CPU比較 |
 | 端末の操作・寿命 | 未実行 | 権限許可 / 拒否、deviceなし、suspend / 復帰、解放、正常終了とメモリ |
 

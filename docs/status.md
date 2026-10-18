@@ -6,6 +6,8 @@
 
 [歴史的raw取得のローカル化](raw-candidate-archive.md)は、全ZIPの固定SHA256と準備済み元goldenを必須にし、古いhosted raw取得へfallbackしません。[関連170件Green・実archive確認](results/raw-candidate-archive-retirement-tdd-20261019.json)では、完全2コピー・全CRCと6 case / 2 raw graph / 2 ONNX profileを照合しました。通常の公開数値回帰と元入力だけの保存は維持し、source全Required CI・main統合・旧artifact削除は未実施です。モデル推論や新たなGPU受け入れには数えません。
 
+[固定入力のlocal staging](results/device-fixture-materialization-tdd-20261019.json)は29件Red→29件Green、元28ファイル・34,474,958 bytesの実file URI転送と全hashの独立再計算、変更していないloaderによる全role 36ケース・text 6文書 / 4 queryの確認が成功しました。転送段階は元fixtureやGPUの合格を付与せず、既存の独立した元hash・数値gateを維持します。Windows Editorの1統合テスト・skip0であり、Android jar・実機・モデル推論は未実行です。端末用runnerへの接続も残ります。
+
 [モデルpreview](results/model-preview-publication-567befb-20261018.json)は両精度825 assetずつ公開し、全実payloadとremote digestを照合済みです。[匿名の空cache取得・中断復帰](results/public-model-consumer-8649c94-20261018.json)は両精度で成功し、warmで820再利用・転送0、1 object破損修復と全hash、公開取得モデルの5 media profile・4 query GPU実行と独立監査まで確認しました。
 
 [許可された8.4秒の実マイク](results/native-microphone-gpu-8649c94-20261018.json)はWindows Editorで取得・自動停止・GPU登録・テキスト検索・解放・破棄まで成功しました。音声270 Workerとtext 1 Workerの計算CPU fallback・中間flushは0。録音の保存・外部送信はなく、音声・embeddingも公開しません。source `8649c94`の追加ローカルharnessによる結果で、任意音声の意味精度・手動録音UI・全環境の合格ではありません。

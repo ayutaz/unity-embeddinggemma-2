@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "scope": "local_file_candidate_provenance_guard_tdd_and_gpu_fixture_compilation_only",
+  "success": true,
+  "preparation_source": "b6ede71cbf4170ae10a61344455dbab56a8231cf",
+  "unity": "6000.3.21f1",
+  "sentis": "2.6.1",
+  "red": {
+    "total": 13,
+    "passed": 0,
+    "failed": 13,
+    "skipped": 0
+  },
+  "red_exit_code": 2,
+  "red_reason": "Missing candidate provenance guard asserted by every test",
+  "green": {
+    "total": 13,
+    "passed": 13,
+    "failed": 0,
+    "skipped": 0
+  },
+  "green_exit_code": 0,
+  "final_gpu_fixture_compiled": true,
+  "prior_failures": [
+    {
+      "scope": "Unity startup",
+      "attempts": 2,
+      "exit_code": 1,
+      "cause": "Missing child ALLUSERSPROFILE"
+    },
+    {
+      "scope": "Unmodified builtin Test Framework compile",
+      "attempts": 1,
+      "exit_code": 1,
+      "cause": "Two missing official script metadata files"
+    },
+    {
+      "scope": "New GPU fixture first compile",
+      "attempts": 1,
+      "exit_code": 1,
+      "cause": "Missing existing CompensatedModel namespace import"
+    }
+  ],
+  "official_framework": {
+    "version": "1.6.0",
+    "original_source_files_verified": 1168,
+    "original_file_hash_mismatches": 0,
+    "missing_script_metadata_generated_by_Unity": 2,
+    "source_cs_changed": false,
+    "editor_package_cache_changed": false
+  },
+  "source_file_sha256": {
+    "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/CandidateAudioPlanGuard.cs": "6cf733a06709a2f98cac65ad474244b91b6aa391a544df60b1f98cdfc326b77a",
+    "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/CandidateAudioPlanGuardTests.cs": "f34d9df58cb8b21cee55bbb62c292a957ef3a2d963c32c36e50c4933efd9bca7",
+    "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/CandidateAudioGpuReferenceTests.cs": "ee67995d3c7bdf85cccc00ad1c269155b9b127c627537910d0c3ef7f302ea809"
+  },
+  "no_graphics": true,
+  "model_files_loaded": false,
+  "model_executed": false,
+  "gpu_validated": false,
+  "generation_qualified": false,
+  "fixed_git_consumer_validated": false,
+  "original_golden_changed": false
+}

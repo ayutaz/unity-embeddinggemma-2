@@ -1,0 +1,129 @@
+{
+  "schema": 1,
+  "success": true,
+  "scope": "New candidate audio bundle serialization, complete private readback, saved Editor Document GPU and all-role Windows Release Player only",
+  "bundle": {
+    "runtime_source": "39be89d28ed90c324e67b5b4c89033b6c1c4be68",
+    "partition_preparation_source": "b6ede71cbf4170ae10a61344455dbab56a8231cf",
+    "descriptor_sha256": "264652e72f7e35fe15f7d0f461c7be521d6a2a0be59802b5a9115ff7dc40d2d7",
+    "preparation_receipt_sha256": "1c22920068daa87a83379df36cca532646f724d1c8813e4810f15aa1490bc22c",
+    "file_count": 434,
+    "total_bytes": 3657076501,
+    "sentis_files": 285,
+    "second_private_copy_verified": true,
+    "all_descriptor_object_hashes_verified": true,
+    "original_operation_and_coefficient_bindings_verified": true,
+    "model_description_string_privacy_audited": true,
+    "tokenizer_json_privacy_audited": true
+  },
+  "editor": {
+    "runtime_source": "39be89d28ed90c324e67b5b4c89033b6c1c4be68",
+    "descriptor_sha256": "264652e72f7e35fe15f7d0f461c7be521d6a2a0be59802b5a9115ff7dc40d2d7",
+    "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+    "vectors": 6,
+    "minimum_cosine": 0.9999998052055729,
+    "minimum_cosine_gate": 0.999,
+    "maximum_norm_squared_deviation": 0.002,
+    "corrupted_cosine_controls_rejected": 6,
+    "scope": "Saved bundle original Document vectors only",
+    "profiles": [
+      {
+        "valid_frames": 1119,
+        "process_exit_code": 0,
+        "nunit": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "raw_gpu_receipt_sha256": "caf9d643c91c59ccfeb5aae18b447d7b4898c5269a8387fe956d5bb556cc4758",
+        "host_native_peak_bytes": 6785679360
+      },
+      {
+        "valid_frames": 839,
+        "process_exit_code": 0,
+        "nunit": {
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "raw_gpu_receipt_sha256": "8e73d94a61801404ce2e106213ddd094f7a96bbde7e88fe638b4a6b7eeb33c55",
+        "host_native_peak_bytes": 5946138624
+      }
+    ]
+  },
+  "player": {
+    "build_source": "89b1ab9084cea9379ad6936d3075066fa8ba8f7a",
+    "bundle_producer_source": "39be89d28ed90c324e67b5b4c89033b6c1c4be68",
+    "rebuild_performed": false,
+    "runtime_tree_sha": "7d6e4314552b221d06db881405e7ccff3f449a77",
+    "executable_sha256": "303b9b322f8be40b4273014b21932b9fd3b1e1ddc08877bcb9008af9f9330559",
+    "descriptor_sha256": "264652e72f7e35fe15f7d0f461c7be521d6a2a0be59802b5a9115ff7dc40d2d7",
+    "results": [
+      {
+        "module": "audio-1119",
+        "precision": "fp32",
+        "base_vectors": 15,
+        "warm_vectors": 9,
+        "minimum_recomputed_cosine": 0.999999709769265,
+        "success": true
+      },
+      {
+        "module": "audio-839",
+        "precision": "fp32",
+        "base_vectors": 3,
+        "warm_vectors": 9,
+        "minimum_recomputed_cosine": 0.9999999999942939,
+        "success": true
+      }
+    ],
+    "base_vectors": 18,
+    "warm_vectors": 18,
+    "negative_controls_rejected": 24,
+    "evidence": [
+      {
+        "module": "audio-1119",
+        "report_sha256": "089e84364f7b2846005d0903e134c8c96c960df6a8a5552d756f82a161e07099",
+        "process_sha256": "65a8ca205686d83157e8bf81248b0d3e317156a0da6fa10e8080b5569fc39b56",
+        "run_id": "422aa6fa437341eca9030b4f9dbca6a9",
+        "elapsed_seconds": 46.6782406999846
+      },
+      {
+        "module": "audio-839",
+        "report_sha256": "b7ea7f83e6f822ef9ebaa791f95006749d7b2f9449494aa0dea1e30fcc39318c",
+        "process_sha256": "b4808e35126e8ece5197ee50ff68f995133e64d97dc4bc871383631c0e8683ae",
+        "run_id": "cce43a7a64b14b7593a0f2d5734c03c1",
+        "elapsed_seconds": 33.69816329999594
+      }
+    ],
+    "precision": "fp32",
+    "graphics_api": "Direct3D12",
+    "unity": "6000.3.21f1",
+    "scripting_backend": "IL2CPP",
+    "compiler": "Release",
+    "stripping": "High",
+    "workers_per_profile": 270,
+    "gpu_audits_before_and_after": true,
+    "no_cpu_computation_or_intermediate_flush": true,
+    "pre_cancel_verified": true,
+    "pending_call_cancel_verified": true,
+    "session_released": true,
+    "cancellation_scope": "Pre-cancel and pending call at first yield; not cancellation of an in-flight GPU kernel"
+  },
+  "original_golden_changed": false,
+  "float16_validated": false,
+  "model_generation_qualified": false,
+  "full_multimodal_acceptance": false,
+  "evidence_sha256": {
+    "bundle_readback": "11479c51fcd205061278c34b15f089e5315dffe1e185fb991c31e2f40f4e8be0",
+    "editor_audit": "6593589d4ee4f0f1e8e1205aef37b79d766c327bb55bc013db58dd8ffd85497f",
+    "player_audit": "65e6df394325a4aa863ad0a2cfc6dd111579925dd8e84f1ad371c1aad405d840"
+  },
+  "remaining": [
+    "Actual new-candidate Float16 derivation and Player GPU acceptance",
+    "Generation adoption and Required CI recovery",
+    "Empty-cache public acquisition",
+    "Final integrated text, cross-modal, UI, microphone and resource measurement",
+    "macOS, iOS and Android actual device gates",
+    "Final distribution privacy, release and public-tag installation"
+  ]
+}

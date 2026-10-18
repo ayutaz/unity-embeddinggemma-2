@@ -4,6 +4,7 @@ from pathlib import Path
 import pytest
 import torch
 import yaml
+from workflow_privacy_assertions import assert_privacy_gated_upload
 
 
 def module():
@@ -88,4 +89,5 @@ def test_workflow_is_explicit_single_native_job_with_original_six_inputs_and_num
     execute = next(s['run'] for s in job['steps'] if 'audio_native_context' in s.get('run',''))
     assert 'embeddinggemma_tools.audio_native_context' in execute
     upload = next(s for s in job['steps'] if s.get('uses','').startswith('actions/upload-artifact'))
-    assert upload['if'] == 'always()' and '.pt2' not in upload['with']['path']
+    assert_privacy_gated_upload(upload)
+    assert '.pt2' not in upload['with']['path']

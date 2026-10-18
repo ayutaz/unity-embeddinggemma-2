@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "run_id": 39110353490,
+  "source": "2971d748fe824ea4bcc580a2ec583f2f734b7420",
+  "artifact_id": 12130281114,
+  "archive_sha256": "3b61c62e3b3686aeb4615eb4b733f068f303dddfb3f23a084ebc5b04a854f603",
+  "archive_bytes": 8021764,
+  "expires_at": "2027-01-16T08:09:23Z",
+  "entire_uploaded_archive_sha_verified": true,
+  "all_zip_member_crcs_verified": true,
+  "all_original_json_and_raw_input_hashes_verified": true,
+  "exact_private_archive_copies_verified": 2,
+  "actual_manifest": {
+    "schema": 1,
+    "scope": "exact_original_numerical_reference_and_six_raw_inputs_only",
+    "source": "2971d748fe824ea4bcc580a2ec583f2f734b7420",
+    "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "original_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+    "original_audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+    "case_count": 6,
+    "profile_count": 2,
+    "case_ids": [
+      "silence",
+      "impulse",
+      "sine",
+      "nyquist",
+      "noise",
+      "padded_noise"
+    ],
+    "files": {
+      "audio-encoder-reference.json": {
+        "bytes": 25186055,
+        "sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9"
+      },
+      "audio-encoder-validation.json": {
+        "bytes": 3735,
+        "sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1"
+      },
+      "frames-1119-valid-1119/silence-features-fp32.bin": {
+        "bytes": 572928,
+        "sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24"
+      },
+      "frames-1119-valid-1119/impulse-features-fp32.bin": {
+        "bytes": 572928,
+        "sha256": "2202541551e06a429b222d31f3d495a2b051fca70191287c82c7f6a6d8803c82"
+      },
+      "frames-1119-valid-1119/sine-features-fp32.bin": {
+        "bytes": 572928,
+        "sha256": "dcc0ed05018d225a140916249cb3a3ab948c4cc50e5f457abac24e909e9c64c5"
+      },
+      "frames-1119-valid-1119/nyquist-features-fp32.bin": {
+        "bytes": 572928,
+        "sha256": "eaaa9e11f4d282294a9c57d4eddd392d2a257ea1f342d0452d99984602ff1e96"
+      },
+      "frames-1119-valid-1119/noise-features-fp32.bin": {
+        "bytes": 572928,
+        "sha256": "b26f15554a3123e12cb39949709ea94588c27a5324f4cadefc701fba124c5c42"
+      },
+      "frames-1119-valid-839/padded_noise-features-fp32.bin": {
+        "bytes": 572928,
+        "sha256": "6065504b6b2d244526df3a79cb5b88e9463e8e576ff877b5b8fa90b9bf18b1b0"
+      }
+    },
+    "original_numerical_goldens_unchanged": true,
+    "raw_inputs_regenerated": false,
+    "models_included": false,
+    "model_executed": false,
+    "gpu_validated": false,
+    "generation_qualified": false
+  },
+  "gpu_validated": false,
+  "generation_qualified": false
+}

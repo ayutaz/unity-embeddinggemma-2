@@ -49,8 +49,17 @@ jobs:
           --source-sha256 7770a8af258f2de32c5587497b820596ea4e1ed7ec5382c3ee90eada2bec7e4a
           --target-sha256 af2e97b777349fa2e5f74790d24bb4b2d899c6a8438f372253737bc5940944c7
           --output ../artifacts/audio-original-profile-delta.json
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_1
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/audio-original-profile-delta.json
+            artifacts/original-profiles/range-receipt.json
+            artifacts/original-profiles/producer-source.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_1.outcome == 'success' }}
         with:
           name: audio-original-profile-delta
           path: |

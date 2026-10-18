@@ -100,8 +100,14 @@ jobs:
           if not report['original_full_output_bit_exact'] or not report['observed_final_matches_normal_bits'] or mode.replacements!=32:
               raise SystemExit('Ordered diagnostic full output does not reproduce original bits; not an accepted original context')
           PY
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_1
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/vision-ordered-context/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_1.outcome == 'success' }}
         with:
           name: original-vision-ordered-${{ github.sha }}
           path: artifacts/vision-ordered-context/

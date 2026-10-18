@@ -2,6 +2,16 @@ name: Frozen audio native normalization replay
 
 on:
   workflow_dispatch:
+    inputs:
+      prepare_gpu_candidate:
+        description: Derive both unqualified GPU-preparation seeds directly from the pinned saved candidate
+        type: boolean
+        default: false
+      preparation_stage:
+        description: Select the unqualified preparation stage when prepare_gpu_candidate is enabled
+        type: choice
+        default: seed
+        options: [seed, refined-partitions]
   pull_request:
     types: [opened, synchronize, labeled]
 
@@ -16,7 +26,7 @@ concurrency:
 jobs:
   probe:
     if: >-
-      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_dispatch' && !inputs.prepare_gpu_candidate) ||
       (github.event.pull_request.head.repo.full_name == github.repository &&
        contains(github.event.pull_request.labels.*.name, 'audio-native-norm-replay'))
     runs-on: ubuntu-latest
@@ -57,8 +67,17 @@ jobs:
           uv run --locked python -m embeddinggemma_tools.audio_native_norm_replay
           --input ../artifacts/audio-native-input/audio-runtime-reference
           --output ../artifacts/audio-native-norm-replay
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_1
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/audio-native-norm-replay/*.json
+            artifacts/audio-native-norm-replay/*-fp32.bin
+            artifacts/audio-native-input/range-receipt.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_1.outcome == 'success' }}
         with:
           name: audio-native-norm-replay-${{ github.sha }}
           path: |
@@ -66,4 +85,133 @@ jobs:
             artifacts/audio-native-norm-replay/*-fp32.bin
             artifacts/audio-native-input/range-receipt.json
           retention-days: 7
+          if-no-files-found: warn
+
+  candidate-gpu-seed:
+    if: github.event_name == 'workflow_dispatch' && inputs.prepare_gpu_candidate && inputs.preparation_stage == 'seed'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        case: [silence, padded_noise]
+    defaults:
+      run:
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+      OPENBLAS_NUM_THREADS: '4'
+      MKL_CBWR: COMPATIBLE
+      MKL_DYNAMIC: 'FALSE'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - name: Fetch fixed candidate and derive its weight-preserving ONNX preparation seed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.audio_candidate_gpu_seed
+          --fetch --input ../artifacts/candidate-input --original ../artifacts/original-input
+          --case ${{ matrix.case }} --source "$GITHUB_SHA"
+          --output ../artifacts/candidate-gpu-seed
+      - name: Check the exact successful seed publication payload
+        id: privacy_gpu_seed
+        if: success()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/candidate-gpu-seed/audio.onnx
+            artifacts/candidate-gpu-seed/audio-gpu-seed.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ success() && steps.privacy_gpu_seed.outcome == 'success' }}
+        with:
+          name: audio-candidate-gpu-seed-${{ matrix.case }}-${{ github.sha }}
+          path: |
+            artifacts/candidate-gpu-seed/audio.onnx
+            artifacts/candidate-gpu-seed/audio-gpu-seed.json
+          retention-days: 90
+          if-no-files-found: error
+
+  candidate-gpu-refinement:
+    if: github.event_name == 'workflow_dispatch' && inputs.prepare_gpu_candidate && inputs.preparation_stage == 'refined-partitions'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        case: [silence, padded_noise]
+    defaults:
+      run:
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+      OPENBLAS_NUM_THREADS: '4'
+      MKL_CBWR: COMPATIBLE
+      MKL_DYNAMIC: 'FALSE'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - name: Fetch verified seed and prepare coefficient-preserving GPU partitions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.audio_gpu_refinement
+          --fetch --input ../artifacts/candidate-input
+          --case ${{ matrix.case }} --source "$GITHUB_SHA"
+          --output ../artifacts/candidate-gpu-refinement
+      - name: Check the exact successful partition publication payload
+        id: privacy_gpu_partitions
+        if: success()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/candidate-gpu-refinement/segment-*.onnx
+            artifacts/candidate-gpu-refinement/weight-*.bin
+            artifacts/candidate-gpu-refinement/query-scale-*.bin
+            artifacts/candidate-gpu-refinement/partition-plan.json
+            artifacts/candidate-gpu-refinement/audio-gpu-refinement.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ success() && steps.privacy_gpu_partitions.outcome == 'success' }}
+        with:
+          name: audio-candidate-gpu-partitions-${{ matrix.case }}-${{ github.sha }}
+          path: |
+            artifacts/candidate-gpu-refinement/segment-*.onnx
+            artifacts/candidate-gpu-refinement/weight-*.bin
+            artifacts/candidate-gpu-refinement/query-scale-*.bin
+            artifacts/candidate-gpu-refinement/partition-plan.json
+            artifacts/candidate-gpu-refinement/audio-gpu-refinement.json
+          retention-days: 90
+          if-no-files-found: error
+      - name: Check only the safe preparation status receipt on failure too
+        id: privacy_gpu_refinement_status
+        if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/candidate-gpu-refinement/audio-gpu-refinement.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ always() && steps.privacy_gpu_refinement_status.outcome == 'success' }}
+        with:
+          name: audio-candidate-gpu-refinement-status-${{ matrix.case }}-${{ github.sha }}
+          path: artifacts/candidate-gpu-refinement/audio-gpu-refinement.json
+          retention-days: 90
           if-no-files-found: warn

@@ -7,12 +7,63 @@ from pathlib import Path
 import re
 import subprocess
 import sys
-from urllib.parse import unquote
+from urllib.parse import unquote, urlsplit
 
 HOME = re.compile(r"(?i)(?:\b[a-z]:[/\\]+(?:Users|Documents and Settings)[/\\]+[^/\\\s\"'<>]+|(?<![\w])/(?:Users|home)/[^/\s\"'<>]+)")
-EMAIL = re.compile(r'(?i)(?<![a-z0-9._%+\-])[a-z0-9._%+\-]+@(?:gmail|googlemail|yahoo|hotmail|outlook|live|icloud|protonmail|proton)\.[a-z.]{2,}')
-SECRET = re.compile(r'\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{25,}|hf_[A-Za-z0-9]{20,}|sk-(?:proj-)?[A-Za-z0-9_-]{25,})\b')
+EMAIL = re.compile(r'(?i)(?<![a-z0-9._%+\-])[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}')
+SECRET = re.compile(r'\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{25,}|hf_[A-Za-z0-9]{20,}|sk-(?:proj-)?[A-Za-z0-9_-]{25,}|AKIA[A-Z0-9]{16})\b|-----BEGIN (?:[A-Z0-9]+ )?PRIVATE KEY-----')
 IMAGES = {'.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.tif', '.tiff'}
+
+# Explicitly selected public profile names, scoped to the owning GitHub login.
+# This grants no exception for source commit identities, private paths or emails.
+PUBLIC_GITHUB_DISPLAY_NAMES = {'ayutaz': frozenset({'yousan'})}
+
+def public_email(value):
+    domain=value.rsplit('@',1)[-1].lower()
+    return (value.lower()=='noreply@github.com' or domain=='users.noreply.github.com'
+            or domain in {'example.com','example.org','example.net'} or domain.endswith(('.invalid','.test','.example')))
+
+
+def private_email_in_text(text):
+    for match in EMAIL.finditer(text):
+        if public_email(match.group()):
+            continue
+        # GitHub's fixed SSH service user is a URI component, not a mailbox.
+        # A standalone address, another user or another host is still rejected.
+        if (match.group().lower()=='git'+'@github.com'
+                and re.match(r'[:/][A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+',text[match.end():])):
+            continue
+        return True
+    return False
+
+
+def github_profile_findings(remote_url=None, *, fetch_profile=None):
+    """Provider-generated PR commits can use the account name, bypassing Git hooks.
+
+    This only reads the authenticated profile. It never changes account settings
+    or prints names, email addresses, tokens, API bodies or remote credentials.
+    """
+    try:
+        if remote_url is not None:
+            github = (urlsplit(remote_url).hostname == 'github.com'
+                      or re.match(r'(?i)^[^/@]+@github\.com:', remote_url) is not None)
+            if not github:
+                return []
+        if fetch_profile is None:
+            profile=json.loads(subprocess.check_output(
+                ['gh','api','--hostname','github.com','user'],stderr=subprocess.PIPE,timeout=15))
+        else:
+            profile=fetch_profile()
+        if (not isinstance(profile,dict) or not isinstance(profile.get('login'),str)
+                or re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]*(?:\[bot\])?',profile['login']) is None
+                or profile.get('name') is not None and not isinstance(profile['name'],str)):
+            raise ValueError('Malformed account profile')
+        if (profile.get('name') not in (None,'',profile['login'])
+                and profile.get('name') not in PUBLIC_GITHUB_DISPLAY_NAMES.get(profile['login'], ())):
+            return [dict(path='<github-profile>',line=1,rule='noncanonical-github-display-name')]
+        return []
+    except Exception:
+        return [dict(path='<github-profile>',line=1,rule='github-profile-unavailable')]
 
 def normalize(text):
     for _ in range(3):
@@ -23,6 +74,14 @@ def normalize(text):
     return text
 
 def scan_bytes(data, path='<input>', reviewed=None):
+    normalized_path=normalize(path)
+    if (HOME.search(normalized_path) or SECRET.search(normalized_path)
+            or any(not public_email(m.group()) for m in EMAIL.finditer(normalized_path))):
+        return [dict(path='<private-filename>',line=1,rule='private-filename')]
+    filename=Path(path).name.lower()
+    if ((filename.startswith('.env') and filename not in {'.env.example','.env.sample','.env.template'})
+            or filename in {'.npmrc','.pypirc','id_rsa','id_ed25519'} or Path(path).suffix.lower() in {'.pem','.key','.pfx','.p12'}):
+        return [dict(path=path,line=1,rule='private-config')]
     review = (reviewed or {}).get(path, {})
     image = Path(path).suffix.lower() in IMAGES
     if image:
@@ -43,7 +102,7 @@ def scan_bytes(data, path='<input>', reviewed=None):
     findings = []
     for number, line in enumerate(normalize(text).splitlines(), 1):
         for name, pattern in (('home-path', HOME), ('personal-email', EMAIL), ('credential', SECRET)):
-            if pattern.search(line):
+            if (private_email_in_text(line) if name=='personal-email' else pattern.search(line)):
                 findings.append(dict(path=path, line=number, rule=name))
     return findings
 
@@ -117,13 +176,19 @@ def scan_staged(root):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('mode', choices=['staged', 'history', 'tree', 'pre-push', 'commit-message'])
+    parser.add_argument('mode', choices=['staged', 'history', 'tree', 'pre-push', 'commit-message', 'github-profile'])
     parser.add_argument('--root', type=Path, default=Path.cwd())
     parser.add_argument('--message-file', type=Path)
+    parser.add_argument('--remote-url',help='Push destination; local and non-GitHub remotes need no GitHub profile lookup')
+    parser.add_argument('--revision',help='Full source commit SHA; includes all its ancestors')
     args = parser.parse_args(argv)
+    if args.revision and (args.mode!='history' or re.fullmatch(r'[0-9a-f]{40}',args.revision) is None):
+        parser.error('--revision requires history mode and a full lowercase commit SHA')
     root = args.root.resolve()
     try:
-        if args.mode == 'staged':
+        if args.mode == 'github-profile':
+            findings = github_profile_findings(args.remote_url)
+        elif args.mode == 'staged':
             findings = scan_staged(root)
         elif args.mode == 'commit-message':
             findings = scan_bytes(args.message_file.read_bytes(), '<commit-message>')
@@ -136,8 +201,10 @@ def main(argv=None):
                 if set(fields[1]) != {'0'}:
                     revisions.append(fields[1])
             findings = scan_objects(root, revisions, reviews(root)) if revisions else []
+            if revisions:
+                findings.extend(github_profile_findings(args.remote_url))
         elif args.mode == 'history':
-            findings = scan_objects(root, ['--all'], reviews(root))
+            findings = scan_objects(root, [args.revision] if args.revision else ['--all'], reviews(root))
         else:
             findings = []
             reviewed = reviews(root)

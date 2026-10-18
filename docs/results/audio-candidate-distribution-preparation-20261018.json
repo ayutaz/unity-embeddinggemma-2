@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "date": "2026-10-18",
+  "scope": "distribution_preparation_contracts_and_one_real_archive_audit_only",
+  "tests": {
+    "implementation_missing_red": 22,
+    "selected_distribution_and_original_audit_green": 66,
+    "workflow_and_recovery_green": 31,
+    "actionlint_passed": true,
+    "tiny_torch_output_bits_identical": true
+  },
+  "actual_full_profile_archive": {
+    "schema": 1,
+    "scope": "optional_node_debug_metadata_removal_only",
+    "source_sha256": "406db281f6ac81a591c30e723c22e08856b8b7c302302ae54d4bee595252b887",
+    "distribution_sha256": "e4e9699657fd0c9e88d872bad6adbaddc3d43cee2e13711b10f7901cb8483165",
+    "semantic_model_sha256": "1325c27b9a73de3145182a129bc4020d1efc06194b7edcbedadcd20057596b49",
+    "removed_stack_trace_fields": 2472,
+    "unchanged_members_verified": 799,
+    "computational_structure_unchanged": true,
+    "text_metadata_privacy_checked": true,
+    "opaque_tensor_contents_privacy_certified": false,
+    "original_graph_bytes": false,
+    "model_executed": false,
+    "gpu_validated": false,
+    "generation_qualified": false
+  },
+  "actual_two_profile_six_case_native_comparison": "not_executed",
+  "actual_distribution_upload": "not_executed",
+  "gpu_validated": false,
+  "generation_qualified": false,
+  "images_added": false,
+  "original_goldens_replaced": false
+}

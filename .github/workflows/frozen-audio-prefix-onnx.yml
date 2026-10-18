@@ -105,7 +105,14 @@ jobs:
           uv run --no-project --python 3.13 python -m embeddinggemma_tools.pinned_reference_archive verify
           --input ../artifacts/original-reference/audio-runtime-reference
           --output ../artifacts/original-reference/preservation-verification.json
+      - name: Check artifact publication privacy
+        id: privacy_upload_1
+        if: success()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/original-reference/
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (success()) && steps.privacy_upload_1.outcome == 'success' }}
         with:
           name: pinned-audio-original-4edbe17a8105233c5aaa1514faa2862b08a4f7e0
           path: artifacts/original-reference/
@@ -282,8 +289,18 @@ jobs:
             --input ../artifacts/frozen-prefix-input/audio-runtime-reference \
             --output ../artifacts/frozen-audio-prefix-onnx \
             --stage "$PROBE_STAGE" --variant "$PROBE_VARIANT" --case "$PROBE_CASE" "${reference_args[@]}"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_2
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/frozen-audio-prefix-onnx/*.json
+            artifacts/frozen-audio-prefix-onnx/*.bin
+            artifacts/frozen-prefix-input/range-receipt.json
+            artifacts/frozen-stage-reference/range-receipt.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_2.outcome == 'success' }}
         with:
           name: frozen-audio-prefix-onnx-${{ github.sha }}${{ matrix.case_id != 'silence' && format('-{0}', matrix.case_id) || '' }}
           path: |
@@ -296,8 +313,14 @@ jobs:
 
       # Publish small numeric evidence first. Large optional graphs must not
       # prevent capture recovery when the bounded diagnostic reaches its limit.
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_3
         if: always() && env.CHAINED_PROBE != 'true'
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/frozen-audio-prefix-onnx/*.onnx
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always() && env.CHAINED_PROBE != 'true') && steps.privacy_upload_3.outcome == 'success' }}
         with:
           name: frozen-audio-prefix-onnx-models-${{ github.sha }}${{ matrix.case_id != 'silence' && format('-{0}', matrix.case_id) || '' }}
           path: artifacts/frozen-audio-prefix-onnx/*.onnx
@@ -354,8 +377,17 @@ jobs:
           --input ../artifacts/raw-noise-original/audio-runtime-reference
           --predecessor ../artifacts/raw-noise-predecessor/frozen-audio-prefix-onnx
           --output ../artifacts/raw-noise-resume
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_4
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/raw-noise-resume/*.json
+            artifacts/raw-noise-resume/*.bin
+            artifacts/raw-noise-original/range-receipt.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_4.outcome == 'success' }}
         with:
           name: raw-noise-resume-${{ github.sha }}
           path: |
@@ -416,8 +448,17 @@ jobs:
           uv run --locked python -m embeddinggemma_tools.audio_native_context
           --input ../artifacts/audio-native-context-input/audio-runtime-reference
           --output ../artifacts/audio-native-context
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_5
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/audio-native-context/*.json
+            artifacts/audio-native-context/*-fp32.bin
+            artifacts/audio-native-context-input/range-receipt.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_5.outcome == 'success' }}
         with:
           name: audio-native-context-${{ github.sha }}-${{ runner.os }}
           path: |
@@ -477,8 +518,16 @@ jobs:
           uv run --locked python -m embeddinggemma_tools.frozen_matmul_native_context
           --input ../artifacts/frozen-matmul-input/frozen-audio-prefix-onnx
           --output ../artifacts/frozen-matmul-probe/native-contexts
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_6
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/frozen-matmul-probe/
+            artifacts/frozen-matmul-input/range-receipt.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_6.outcome == 'success' }}
         with:
           name: frozen-matmul-probe-${{ github.sha }}${{ runner.os != 'Linux' && format('-{0}', runner.os) || '' }}
           path: |

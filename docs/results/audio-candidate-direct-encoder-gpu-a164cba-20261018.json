@@ -1,0 +1,223 @@
+{
+  "schema": 1,
+  "scope": "direct_saved_candidate_encoder_original_reference_actual_gpu_gate_only",
+  "success": true,
+  "runtime_source": "a164cba0f494a67f88db7e066a7c82cd009e8d1b",
+  "preparation_source": "b6ede71cbf4170ae10a61344455dbab56a8231cf",
+  "preparation_run": 39120142716,
+  "seed_source": "0cee4c7b77c89410895d52e4420816a5e66a8845",
+  "seed_run": 39117103059,
+  "original_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+  "original_audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+  "values": 824320,
+  "signal_count": 6,
+  "profile_count": 2,
+  "mismatched_elements": 0,
+  "corrupted_output_controls_rejected": 6,
+  "encoder_atol": 1e-05,
+  "encoder_rtol": 0.0001,
+  "unity": "6000.3.21f1",
+  "sentis": "2.6.1",
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "fresh_fixed_git_consumer": true,
+  "first_profile_library_reused": false,
+  "second_profile_same_consumer": true,
+  "SDK_source_overlay": false,
+  "official_embedded_test_framework": true,
+  "independent_source_readback": [
+    {
+      "name": "com.ayutaz.embeddinggemma",
+      "source": "git",
+      "resolved_sha": "a164cba0f494a67f88db7e066a7c82cd009e8d1b",
+      "file_count": 316,
+      "csharp_file_count": 118,
+      "byte_bound_file_count": 315,
+      "source_hash_mismatches": 0,
+      "derived_package_metadata": [
+        {
+          "file": "package.json",
+          "only_upm_fingerprint_added": true,
+          "original_fields_unchanged": true,
+          "source_sha256": "8f1e16ec90dbf6684bb9236aa59134d8b2d383217f98b0ea1cd1013ba019af57",
+          "installed_sha256": "1c89fe179577bfdaabe7a8bcaddec8fc2044272cd0f2683021b0d417cd21e1ba"
+        }
+      ],
+      "unexpected_csharp_files": 0,
+      "relative_file_hash_table_sha256": "82e855b3ed477b8d0c076cf295701efe6a1e4204f345e6b250757ff60528bc9b",
+      "text_comparison": "CRLF normalized to LF; non-text bytes compared exactly"
+    },
+    {
+      "name": "com.ayutaz.embeddinggemma.validation",
+      "source": "git",
+      "resolved_sha": "a164cba0f494a67f88db7e066a7c82cd009e8d1b",
+      "file_count": 194,
+      "csharp_file_count": 93,
+      "byte_bound_file_count": 193,
+      "source_hash_mismatches": 0,
+      "derived_package_metadata": [
+        {
+          "file": "package.json",
+          "only_upm_fingerprint_added": true,
+          "original_fields_unchanged": true,
+          "source_sha256": "938373df35111b9976b11e9b1ede8120421e83f3812bc9bd0c848e52d647d949",
+          "installed_sha256": "4b498d33e2965908a6fa004b8e0893341ec62717c82304b09ddd4214bd93c11e"
+        }
+      ],
+      "unexpected_csharp_files": 0,
+      "relative_file_hash_table_sha256": "b07134d5ef0f33341d5f7c910312a978eeb0690084e46072b8b71c533c6ee0da",
+      "text_comparison": "CRLF normalized to LF; non-text bytes compared exactly"
+    }
+  ],
+  "source_readback_initial_checks_retained": {
+    "git_pathspec_scope_error": true,
+    "xml_crlf_normalization_required": true,
+    "installed_package_json_only_upm_fingerprint_added": true
+  },
+  "profile_results": [
+    {
+      "schema": 1,
+      "scope": "independent_saved_candidate_encoder_gpu_capture_comparison_only",
+      "success": true,
+      "runtime_source": "a164cba0f494a67f88db7e066a7c82cd009e8d1b",
+      "preparation_producer": "b6ede71cbf4170ae10a61344455dbab56a8231cf",
+      "profile": "frames-1119-valid-1119",
+      "unity": "6000.3.21f1",
+      "sentis": "2.6.1",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_api": "Direct3D12",
+      "original_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+      "raw_gpu_receipt_sha256": "a4f45da3a901292e1ceee24ca21259be1f099d48cf53d2fd6251dbdd238d2248",
+      "plan_sha256": "d8440b4ffc7f8b37e11bee1da1da0b7cadb44e708a1790aab247e1fca40577f9",
+      "preparation_receipt_sha256": "bc0ce35dff656413d710c282d3b12bf893aa97721adb33de2000c44b2e6e58ac",
+      "encoder_atol": 1e-05,
+      "encoder_rtol": 0.0001,
+      "process_exit_code": 0,
+      "nunit": {
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "operation_count": 267,
+      "segment_count": 268,
+      "cases": [
+        {
+          "id": "silence",
+          "values": 143360,
+          "mismatched_elements": 0,
+          "bit_differences": 96638,
+          "maximum_absolute_error": 1.430511474609375e-06,
+          "maximum_tolerance_ratio": 0.037593715994207695,
+          "capture_sha256": "a60d82cfeb2725b71760b05c34e4fb0371f2b0d213f042c3bf83aa91679316c2",
+          "corrupted_output_control_rejected": true
+        },
+        {
+          "id": "impulse",
+          "values": 143360,
+          "mismatched_elements": 0,
+          "bit_differences": 96272,
+          "maximum_absolute_error": 1.9073486328125e-06,
+          "maximum_tolerance_ratio": 0.04657292832930413,
+          "capture_sha256": "daf0761248a3a0207eff5f901ba2c76b2c7b2c76214ccf87c7bf906c1f426a6a",
+          "corrupted_output_control_rejected": true
+        },
+        {
+          "id": "sine",
+          "values": 143360,
+          "mismatched_elements": 0,
+          "bit_differences": 88046,
+          "maximum_absolute_error": 1.430511474609375e-06,
+          "maximum_tolerance_ratio": 0.04120452465855162,
+          "capture_sha256": "2a6fcc15c5b6d3b0030f022987556fc5d7004748208136d8908ebc87e9e88691",
+          "corrupted_output_control_rejected": true
+        },
+        {
+          "id": "nyquist",
+          "values": 143360,
+          "mismatched_elements": 0,
+          "bit_differences": 96635,
+          "maximum_absolute_error": 1.430511474609375e-06,
+          "maximum_tolerance_ratio": 0.04383387842410816,
+          "capture_sha256": "1d90e3824b86c8820808035f3a2e9e840fb5500b84cbefc6b3513139df562ed0",
+          "corrupted_output_control_rejected": true
+        },
+        {
+          "id": "noise",
+          "values": 143360,
+          "mismatched_elements": 0,
+          "bit_differences": 88821,
+          "maximum_absolute_error": 1.9073486328125e-06,
+          "maximum_tolerance_ratio": 0.042264721566013186,
+          "capture_sha256": "ca207421213fd547d9914d3d1e6e703062444bd5ea34ff1ab140f1b3d1beeee7",
+          "corrupted_output_control_rejected": true
+        }
+      ],
+      "cpu_computation_or_input_count": 0,
+      "intermediate_readback_count": 0,
+      "readback_flush_count": 0,
+      "generation_qualified": false,
+      "final_roles_validated": false,
+      "consumer_player_validated": false,
+      "original_golden_changed": false,
+      "values": 716800
+    },
+    {
+      "schema": 1,
+      "scope": "independent_saved_candidate_encoder_gpu_capture_comparison_only",
+      "success": true,
+      "runtime_source": "a164cba0f494a67f88db7e066a7c82cd009e8d1b",
+      "preparation_producer": "b6ede71cbf4170ae10a61344455dbab56a8231cf",
+      "profile": "frames-1119-valid-839",
+      "unity": "6000.3.21f1",
+      "sentis": "2.6.1",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_api": "Direct3D12",
+      "original_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+      "raw_gpu_receipt_sha256": "3c69e72c14d6a562bb0e60bb79d9ca674dbc551599dd62450b0cb56ebd667eea",
+      "plan_sha256": "4f4a571a74489602e97913f326aafef4b72db15202b41c6fd1e7b21dcfb80c70",
+      "preparation_receipt_sha256": "6456e11b14da939eb1515af122f1b18ade0f69e854963428214da7482eccf8ca",
+      "encoder_atol": 1e-05,
+      "encoder_rtol": 0.0001,
+      "process_exit_code": 0,
+      "nunit": {
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "operation_count": 267,
+      "segment_count": 268,
+      "cases": [
+        {
+          "id": "padded_noise",
+          "values": 107520,
+          "mismatched_elements": 0,
+          "bit_differences": 66816,
+          "maximum_absolute_error": 1.430511474609375e-06,
+          "maximum_tolerance_ratio": 0.042264721566013186,
+          "capture_sha256": "8009bdd056d76e13ab2b911639e05c3b300ff4864804fc411cf82695165c1b7a",
+          "corrupted_output_control_rejected": true
+        }
+      ],
+      "cpu_computation_or_input_count": 0,
+      "intermediate_readback_count": 0,
+      "readback_flush_count": 0,
+      "generation_qualified": false,
+      "final_roles_validated": false,
+      "consumer_player_validated": false,
+      "original_golden_changed": false,
+      "values": 107520
+    }
+  ],
+  "cpu_computation_or_input_count": 0,
+  "intermediate_readback_count": 0,
+  "readback_flush_count": 0,
+  "numeric_encoder_acceptance": true,
+  "encoder_gpu_validated": true,
+  "original_native_pt2_recovered": false,
+  "generation_qualified": false,
+  "final_roles_validated": false,
+  "consumer_player_validated": false,
+  "required_ci_restored": false,
+  "other_platforms_validated": false,
+  "original_golden_changed": false
+}

@@ -1,0 +1,642 @@
+{
+  "schema": 1,
+  "scope": "direct_saved_candidate_real_pcm_original_all_six_signals_all_three_roles_actual_gpu_only",
+  "success": true,
+  "runtime_source": "c1e9aa8fc2235b85b3013a6bba217dcf8f231c76",
+  "preparation_source": "b6ede71cbf4170ae10a61344455dbab56a8231cf",
+  "preparation_run": 39120142716,
+  "encoder_gpu_runtime_source": "a164cba0f494a67f88db7e066a7c82cd009e8d1b",
+  "unity": "6000.3.21f1",
+  "sentis": "2.6.1",
+  "graphics_api": "Direct3D12",
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "signal_count": 6,
+  "profile_count": 2,
+  "roles": [
+    "query",
+    "document",
+    "raw"
+  ],
+  "final_vector_count": 18,
+  "embedding_dimension": 768,
+  "minimum_cosine": 0.9999997097692651,
+  "original_minimum_cosine_gate": 0.999,
+  "original_maximum_norm_squared_deviation": 0.002,
+  "corrupted_cosine_controls_rejected": 18,
+  "source_readback": [
+    {
+      "name": "com.ayutaz.embeddinggemma",
+      "source": "git",
+      "resolved_sha": "c1e9aa8fc2235b85b3013a6bba217dcf8f231c76",
+      "file_count": 316,
+      "csharp_file_count": 118,
+      "byte_bound_file_count": 315,
+      "source_hash_mismatches": 0,
+      "derived_package_metadata": [
+        {
+          "file": "package.json",
+          "only_upm_fingerprint_added": true,
+          "original_fields_unchanged": true,
+          "source_sha256": "8f1e16ec90dbf6684bb9236aa59134d8b2d383217f98b0ea1cd1013ba019af57",
+          "installed_sha256": "c2b339db68fe79bdbccbadd7ded86ce8ac1768a85f59cd419327ccab9ba26319"
+        }
+      ],
+      "unexpected_csharp_files": 0,
+      "relative_file_hash_table_sha256": "82e855b3ed477b8d0c076cf295701efe6a1e4204f345e6b250757ff60528bc9b",
+      "text_comparison": "CRLF normalized to LF; non-text bytes compared exactly"
+    },
+    {
+      "name": "com.ayutaz.embeddinggemma.validation",
+      "source": "git",
+      "resolved_sha": "c1e9aa8fc2235b85b3013a6bba217dcf8f231c76",
+      "file_count": 194,
+      "csharp_file_count": 93,
+      "byte_bound_file_count": 193,
+      "source_hash_mismatches": 0,
+      "derived_package_metadata": [
+        {
+          "file": "package.json",
+          "only_upm_fingerprint_added": true,
+          "original_fields_unchanged": true,
+          "source_sha256": "938373df35111b9976b11e9b1ede8120421e83f3812bc9bd0c848e52d647d949",
+          "installed_sha256": "ea79b41bb032dac20d829a2d3095a365d44c3bca00b5ad31016696a0dfe621d5"
+        }
+      ],
+      "unexpected_csharp_files": 0,
+      "relative_file_hash_table_sha256": "58164e59a6f12fcc5016bf488c0a400273ffa3ff913908239dcdb19df791a0fc",
+      "text_comparison": "CRLF normalized to LF; non-text bytes compared exactly"
+    }
+  ],
+  "same_consumer_updated_from_a164cba_to_fixed_git_c1e9aa8": true,
+  "Library_reused": true,
+  "SDK_source_overlay": false,
+  "process_results": [
+    {
+      "signal": "impulse",
+      "success": true,
+      "exit_code": 0,
+      "elapsed_seconds": 187.13395539997146,
+      "original_unity_test_timeout_ms": 180000
+    },
+    {
+      "signal": "silence",
+      "success": true,
+      "exit_code": 0,
+      "elapsed_seconds": 120.86580470000627,
+      "original_unity_test_timeout_ms": 180000
+    },
+    {
+      "signal": "sine",
+      "success": true,
+      "exit_code": 0,
+      "elapsed_seconds": 120.25183520000428,
+      "original_unity_test_timeout_ms": 180000
+    },
+    {
+      "signal": "nyquist",
+      "success": true,
+      "exit_code": 0,
+      "elapsed_seconds": 123.42416470003081,
+      "original_unity_test_timeout_ms": 180000
+    },
+    {
+      "signal": "noise",
+      "success": true,
+      "exit_code": 0,
+      "elapsed_seconds": 120.6130916000111,
+      "original_unity_test_timeout_ms": 180000
+    },
+    {
+      "signal": "padded_noise",
+      "success": true,
+      "exit_code": 0,
+      "elapsed_seconds": 131.82720689999405,
+      "original_unity_test_timeout_ms": 180000
+    }
+  ],
+  "signal_results": [
+    {
+      "schema": 1,
+      "scope": "independent_saved_candidate_real_pcm_original_final_role_gpu_captures_only",
+      "success": true,
+      "runtime_source": "c1e9aa8fc2235b85b3013a6bba217dcf8f231c76",
+      "preparation_producer": "b6ede71cbf4170ae10a61344455dbab56a8231cf",
+      "profile": "frames-1119-valid-1119",
+      "unity": "6000.3.21f1",
+      "sentis": "2.6.1",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_api": "Direct3D12",
+      "plan_sha256": "d8440b4ffc7f8b37e11bee1da1da0b7cadb44e708a1790aab247e1fca40577f9",
+      "preparation_receipt_sha256": "bc0ce35dff656413d710c282d3b12bf893aa97721adb33de2000c44b2e6e58ac",
+      "raw_parent_receipt_sha256": "bef1b5b2956a32459f955f986f129e4c13e03d3d6907d248778cc3d18d01822c",
+      "reference_sha256": {
+        "document": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+        "query": "515a32124c94437b372f81b3be4eb605717b1c4ae9293bf2c3b851450f35565b",
+        "raw": "ea4298313a536aa3b0c1f5eac7934240abaf3cb68170be36deb64c214fbb92a9"
+      },
+      "minimum_cosine_gate": 0.999,
+      "maximum_norm_squared_deviation": 0.002,
+      "process_exit_code": 0,
+      "nunit": {
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "signal": "silence",
+          "role": "query",
+          "dimension": 768,
+          "cosine": 0.9999999999990559,
+          "norm_squared": 1.0000002067937004,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 1.668231561779976e-07,
+          "reference_sha256": "515a32124c94437b372f81b3be4eb605717b1c4ae9293bf2c3b851450f35565b",
+          "capture_sha256": "dc06035f605eea16f27bd1232bd15b6176044adf692ebffbdaf6243a0dcba5a5",
+          "corrupted_cosine_control_rejected": true
+        },
+        {
+          "signal": "silence",
+          "role": "document",
+          "dimension": 768,
+          "cosine": 0.9999999999928917,
+          "norm_squared": 1.0000000994303666,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 4.6193599700927734e-07,
+          "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+          "capture_sha256": "e8059c050b7f8204cd7ad54d034111b3c6aa9d74199412be6d7d85322be7b5c9",
+          "corrupted_cosine_control_rejected": true
+        },
+        {
+          "signal": "silence",
+          "role": "raw",
+          "dimension": 768,
+          "cosine": 0.9999999999977789,
+          "norm_squared": 1.0000001441824862,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 2.654269337654114e-07,
+          "reference_sha256": "ea4298313a536aa3b0c1f5eac7934240abaf3cb68170be36deb64c214fbb92a9",
+          "capture_sha256": "928b7ad38a61bd3bea3fafd8d70b4f7a16c1418b1fe1f8ad14b3d525fd3bd9ad",
+          "corrupted_cosine_control_rejected": true
+        }
+      ],
+      "signal_controls": [
+        {
+          "signal": "silence",
+          "api_dispose_rejected_reuse": true,
+          "owned_intermediates_disposed": true,
+          "child_receipt_sha256": "a053b0af9cdcbe62cda901f66738b2b44622c10b524982304ef160d5df89eabb"
+        }
+      ],
+      "actual_pcm_preprocessing_validated": true,
+      "cpu_computation_or_input_count": 0,
+      "intermediate_readback_count": 0,
+      "readback_flush_count": 0,
+      "generation_qualified": false,
+      "consumer_player_validated": false,
+      "original_golden_changed": false,
+      "vectors": 3,
+      "minimum_cosine": 0.9999999999928917
+    },
+    {
+      "schema": 1,
+      "scope": "independent_saved_candidate_real_pcm_original_final_role_gpu_captures_only",
+      "success": true,
+      "runtime_source": "c1e9aa8fc2235b85b3013a6bba217dcf8f231c76",
+      "preparation_producer": "b6ede71cbf4170ae10a61344455dbab56a8231cf",
+      "profile": "frames-1119-valid-1119",
+      "unity": "6000.3.21f1",
+      "sentis": "2.6.1",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_api": "Direct3D12",
+      "plan_sha256": "d8440b4ffc7f8b37e11bee1da1da0b7cadb44e708a1790aab247e1fca40577f9",
+      "preparation_receipt_sha256": "bc0ce35dff656413d710c282d3b12bf893aa97721adb33de2000c44b2e6e58ac",
+      "raw_parent_receipt_sha256": "a47a917f85bb0af48336df434fe5a3ba6c36602753535c9075bc07b00d4dacfc",
+      "reference_sha256": {
+        "document": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+        "query": "515a32124c94437b372f81b3be4eb605717b1c4ae9293bf2c3b851450f35565b",
+        "raw": "ea4298313a536aa3b0c1f5eac7934240abaf3cb68170be36deb64c214fbb92a9"
+      },
+      "minimum_cosine_gate": 0.999,
+      "maximum_norm_squared_deviation": 0.002,
+      "process_exit_code": 0,
+      "nunit": {
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "signal": "impulse",
+          "role": "query",
+          "dimension": 768,
+          "cosine": 0.9999999999814261,
+          "norm_squared": 0.9999999344097978,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 6.493937689810991e-07,
+          "reference_sha256": "515a32124c94437b372f81b3be4eb605717b1c4ae9293bf2c3b851450f35565b",
+          "capture_sha256": "4fab9c39b4922af352f38e24c8287a3c5607c1b5075db78c8c9c40375fd1e2c4",
+          "corrupted_cosine_control_rejected": true
+        },
+        {
+          "signal": "impulse",
+          "role": "document",
+          "dimension": 768,
+          "cosine": 0.9999999999817597,
+          "norm_squared": 1.000000144399269,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 7.525086402893066e-07,
+          "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+          "capture_sha256": "1397842b3c3bd7607d5c349f67048b5ed66736ef7ed29743b58a7165cf97acfa",
+          "corrupted_cosine_control_rejected": true
+        },
+        {
+          "signal": "impulse",
+          "role": "raw",
+          "dimension": 768,
+          "cosine": 0.9999999999848832,
+          "norm_squared": 1.000000035268972,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 7.725320756435394e-07,
+          "reference_sha256": "ea4298313a536aa3b0c1f5eac7934240abaf3cb68170be36deb64c214fbb92a9",
+          "capture_sha256": "5619335ba5ae93a770682ff7b036db972bda9eaa86e4ec98c61c3d809db4b546",
+          "corrupted_cosine_control_rejected": true
+        }
+      ],
+      "signal_controls": [
+        {
+          "signal": "impulse",
+          "api_dispose_rejected_reuse": true,
+          "owned_intermediates_disposed": true,
+          "child_receipt_sha256": "d12d865551778eddf0c6152df199c6498a2bf4a1314d3e0750a083b07fb2de87",
+          "invalid_input_controls": [
+            "actual_reserved_audio_marker_in_title",
+            "different_fixed_profile",
+            "invalid_role",
+            "null_pcm"
+          ],
+          "real_stage_failure_owned_intermediates_disposed": true,
+          "borrowed_stages_reused_after_api_dispose": true
+        }
+      ],
+      "actual_pcm_preprocessing_validated": true,
+      "cpu_computation_or_input_count": 0,
+      "intermediate_readback_count": 0,
+      "readback_flush_count": 0,
+      "generation_qualified": false,
+      "consumer_player_validated": false,
+      "original_golden_changed": false,
+      "vectors": 3,
+      "minimum_cosine": 0.9999999999814261
+    },
+    {
+      "schema": 1,
+      "scope": "independent_saved_candidate_real_pcm_original_final_role_gpu_captures_only",
+      "success": true,
+      "runtime_source": "c1e9aa8fc2235b85b3013a6bba217dcf8f231c76",
+      "preparation_producer": "b6ede71cbf4170ae10a61344455dbab56a8231cf",
+      "profile": "frames-1119-valid-1119",
+      "unity": "6000.3.21f1",
+      "sentis": "2.6.1",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_api": "Direct3D12",
+      "plan_sha256": "d8440b4ffc7f8b37e11bee1da1da0b7cadb44e708a1790aab247e1fca40577f9",
+      "preparation_receipt_sha256": "bc0ce35dff656413d710c282d3b12bf893aa97721adb33de2000c44b2e6e58ac",
+      "raw_parent_receipt_sha256": "7a12c11b0f18bd1c4785102e9fa15ef3bd72bd96ab69b388232f234346b6dd04",
+      "reference_sha256": {
+        "document": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+        "query": "515a32124c94437b372f81b3be4eb605717b1c4ae9293bf2c3b851450f35565b",
+        "raw": "ea4298313a536aa3b0c1f5eac7934240abaf3cb68170be36deb64c214fbb92a9"
+      },
+      "minimum_cosine_gate": 0.999,
+      "maximum_norm_squared_deviation": 0.002,
+      "process_exit_code": 0,
+      "nunit": {
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "signal": "sine",
+          "role": "query",
+          "dimension": 768,
+          "cosine": 0.999999998038981,
+          "norm_squared": 0.9999999499862473,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 7.08969309926033e-06,
+          "reference_sha256": "515a32124c94437b372f81b3be4eb605717b1c4ae9293bf2c3b851450f35565b",
+          "capture_sha256": "193ba56749b5e8b0f4b4f3c71fdb9e136aec18c0b2301b39497dba5e8a682f1b",
+          "corrupted_cosine_control_rejected": true
+        },
+        {
+          "signal": "sine",
+          "role": "document",
+          "dimension": 768,
+          "cosine": 0.9999999949105726,
+          "norm_squared": 1.000000026135829,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 1.2665987014770508e-05,
+          "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+          "capture_sha256": "cc443509db4a8930df5723d966dc748ac629e01663f2111051a9be0987423caf",
+          "corrupted_cosine_control_rejected": true
+        },
+        {
+          "signal": "sine",
+          "role": "raw",
+          "dimension": 768,
+          "cosine": 0.9999999946791471,
+          "norm_squared": 1.000000035055653,
+          "elementwise_diagnostic_mismatches": 1,
+          "maximum_absolute_error": 1.1567026376724243e-05,
+          "reference_sha256": "ea4298313a536aa3b0c1f5eac7934240abaf3cb68170be36deb64c214fbb92a9",
+          "capture_sha256": "eef45bf67670040e550fc739f661eab1a07f793b1af6af4d1d290b487be2ad94",
+          "corrupted_cosine_control_rejected": true
+        }
+      ],
+      "signal_controls": [
+        {
+          "signal": "sine",
+          "api_dispose_rejected_reuse": true,
+          "owned_intermediates_disposed": true,
+          "child_receipt_sha256": "0a707eaffb4196fe4e43000c0ecfdecbe377a7bbc55c4c6406dea631114986a8"
+        }
+      ],
+      "actual_pcm_preprocessing_validated": true,
+      "cpu_computation_or_input_count": 0,
+      "intermediate_readback_count": 0,
+      "readback_flush_count": 0,
+      "generation_qualified": false,
+      "consumer_player_validated": false,
+      "original_golden_changed": false,
+      "vectors": 3,
+      "minimum_cosine": 0.9999999946791471
+    },
+    {
+      "schema": 1,
+      "scope": "independent_saved_candidate_real_pcm_original_final_role_gpu_captures_only",
+      "success": true,
+      "runtime_source": "c1e9aa8fc2235b85b3013a6bba217dcf8f231c76",
+      "preparation_producer": "b6ede71cbf4170ae10a61344455dbab56a8231cf",
+      "profile": "frames-1119-valid-1119",
+      "unity": "6000.3.21f1",
+      "sentis": "2.6.1",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_api": "Direct3D12",
+      "plan_sha256": "d8440b4ffc7f8b37e11bee1da1da0b7cadb44e708a1790aab247e1fca40577f9",
+      "preparation_receipt_sha256": "bc0ce35dff656413d710c282d3b12bf893aa97721adb33de2000c44b2e6e58ac",
+      "raw_parent_receipt_sha256": "d7549f74381bc408a205442e8ac9154c46792d6c4aeb5a4c0ffbad6c55aac090",
+      "reference_sha256": {
+        "document": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+        "query": "515a32124c94437b372f81b3be4eb605717b1c4ae9293bf2c3b851450f35565b",
+        "raw": "ea4298313a536aa3b0c1f5eac7934240abaf3cb68170be36deb64c214fbb92a9"
+      },
+      "minimum_cosine_gate": 0.999,
+      "maximum_norm_squared_deviation": 0.002,
+      "process_exit_code": 0,
+      "nunit": {
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "signal": "nyquist",
+          "role": "query",
+          "dimension": 768,
+          "cosine": 0.9999999261337852,
+          "norm_squared": 1.00000020439137,
+          "elementwise_diagnostic_mismatches": 278,
+          "maximum_absolute_error": 5.337584298104048e-05,
+          "reference_sha256": "515a32124c94437b372f81b3be4eb605717b1c4ae9293bf2c3b851450f35565b",
+          "capture_sha256": "f2cd0884751700e1fd2daabcaabe96ca271478fdce0ada2d67ac1040db5f8c8a",
+          "corrupted_cosine_control_rejected": true
+        },
+        {
+          "signal": "nyquist",
+          "role": "document",
+          "dimension": 768,
+          "cosine": 0.9999998052055729,
+          "norm_squared": 1.0000001196205504,
+          "elementwise_diagnostic_mismatches": 439,
+          "maximum_absolute_error": 7.664132863283157e-05,
+          "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+          "capture_sha256": "3a5e0ef483aa257bbb5fee905ee8f432f4676c4a7603892e64f9e5358dad6dae",
+          "corrupted_cosine_control_rejected": true
+        },
+        {
+          "signal": "nyquist",
+          "role": "raw",
+          "dimension": 768,
+          "cosine": 0.9999997097692651,
+          "norm_squared": 0.9999998971895117,
+          "elementwise_diagnostic_mismatches": 495,
+          "maximum_absolute_error": 8.37491825222969e-05,
+          "reference_sha256": "ea4298313a536aa3b0c1f5eac7934240abaf3cb68170be36deb64c214fbb92a9",
+          "capture_sha256": "d3a8ee54705a8c88c89a1230c6e81346a927a2217fb9c7fb8f62cf89841207b0",
+          "corrupted_cosine_control_rejected": true
+        }
+      ],
+      "signal_controls": [
+        {
+          "signal": "nyquist",
+          "api_dispose_rejected_reuse": true,
+          "owned_intermediates_disposed": true,
+          "child_receipt_sha256": "c9339bb458e609cad31fb808d4cd1dadd770b1c81b4362ee1b46383b83452ff9"
+        }
+      ],
+      "actual_pcm_preprocessing_validated": true,
+      "cpu_computation_or_input_count": 0,
+      "intermediate_readback_count": 0,
+      "readback_flush_count": 0,
+      "generation_qualified": false,
+      "consumer_player_validated": false,
+      "original_golden_changed": false,
+      "vectors": 3,
+      "minimum_cosine": 0.9999997097692651
+    },
+    {
+      "schema": 1,
+      "scope": "independent_saved_candidate_real_pcm_original_final_role_gpu_captures_only",
+      "success": true,
+      "runtime_source": "c1e9aa8fc2235b85b3013a6bba217dcf8f231c76",
+      "preparation_producer": "b6ede71cbf4170ae10a61344455dbab56a8231cf",
+      "profile": "frames-1119-valid-1119",
+      "unity": "6000.3.21f1",
+      "sentis": "2.6.1",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_api": "Direct3D12",
+      "plan_sha256": "d8440b4ffc7f8b37e11bee1da1da0b7cadb44e708a1790aab247e1fca40577f9",
+      "preparation_receipt_sha256": "bc0ce35dff656413d710c282d3b12bf893aa97721adb33de2000c44b2e6e58ac",
+      "raw_parent_receipt_sha256": "8e895716575d12536aa7fd2599e8b752930b773b947acc750d62bdfbca75b18e",
+      "reference_sha256": {
+        "document": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+        "query": "515a32124c94437b372f81b3be4eb605717b1c4ae9293bf2c3b851450f35565b",
+        "raw": "ea4298313a536aa3b0c1f5eac7934240abaf3cb68170be36deb64c214fbb92a9"
+      },
+      "minimum_cosine_gate": 0.999,
+      "maximum_norm_squared_deviation": 0.002,
+      "process_exit_code": 0,
+      "nunit": {
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "signal": "noise",
+          "role": "query",
+          "dimension": 768,
+          "cosine": 0.9999999999992353,
+          "norm_squared": 1.0000000351402942,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 1.6868580132722855e-07,
+          "reference_sha256": "515a32124c94437b372f81b3be4eb605717b1c4ae9293bf2c3b851450f35565b",
+          "capture_sha256": "822da5555dbcee222948165c91340473ca0cc1d052b6ea92be38820a1c551b6b",
+          "corrupted_cosine_control_rejected": true
+        },
+        {
+          "signal": "noise",
+          "role": "document",
+          "dimension": 768,
+          "cosine": 0.9999999999986038,
+          "norm_squared": 1.000000122246399,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 2.1979212760925293e-07,
+          "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+          "capture_sha256": "6e9108707faa6274197d010f747aac458c9e2169416ed432f6ab812479cf8a56",
+          "corrupted_cosine_control_rejected": true
+        },
+        {
+          "signal": "noise",
+          "role": "raw",
+          "dimension": 768,
+          "cosine": 0.9999999999969671,
+          "norm_squared": 1.0000000756578997,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 2.8312206268310547e-07,
+          "reference_sha256": "ea4298313a536aa3b0c1f5eac7934240abaf3cb68170be36deb64c214fbb92a9",
+          "capture_sha256": "e75127a3b3e7914572e381f2858613dac26b6e8a032bb5e39785122e7798dc37",
+          "corrupted_cosine_control_rejected": true
+        }
+      ],
+      "signal_controls": [
+        {
+          "signal": "noise",
+          "api_dispose_rejected_reuse": true,
+          "owned_intermediates_disposed": true,
+          "child_receipt_sha256": "8fcd869ba95c6655ed7ad6426128dcad785065326769efcf3050f8c7b93972e2"
+        }
+      ],
+      "actual_pcm_preprocessing_validated": true,
+      "cpu_computation_or_input_count": 0,
+      "intermediate_readback_count": 0,
+      "readback_flush_count": 0,
+      "generation_qualified": false,
+      "consumer_player_validated": false,
+      "original_golden_changed": false,
+      "vectors": 3,
+      "minimum_cosine": 0.9999999999969671
+    },
+    {
+      "schema": 1,
+      "scope": "independent_saved_candidate_real_pcm_original_final_role_gpu_captures_only",
+      "success": true,
+      "runtime_source": "c1e9aa8fc2235b85b3013a6bba217dcf8f231c76",
+      "preparation_producer": "b6ede71cbf4170ae10a61344455dbab56a8231cf",
+      "profile": "frames-1119-valid-839",
+      "unity": "6000.3.21f1",
+      "sentis": "2.6.1",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_api": "Direct3D12",
+      "plan_sha256": "4f4a571a74489602e97913f326aafef4b72db15202b41c6fd1e7b21dcfb80c70",
+      "preparation_receipt_sha256": "6456e11b14da939eb1515af122f1b18ade0f69e854963428214da7482eccf8ca",
+      "raw_parent_receipt_sha256": "9bf14bdca70f037fc91416b95fdce1af08ffd5afc98d540099d875d4e6f2e7ed",
+      "reference_sha256": {
+        "document": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+        "query": "515a32124c94437b372f81b3be4eb605717b1c4ae9293bf2c3b851450f35565b",
+        "raw": "ea4298313a536aa3b0c1f5eac7934240abaf3cb68170be36deb64c214fbb92a9"
+      },
+      "minimum_cosine_gate": 0.999,
+      "maximum_norm_squared_deviation": 0.002,
+      "process_exit_code": 0,
+      "nunit": {
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "signal": "padded_noise",
+          "role": "query",
+          "dimension": 768,
+          "cosine": 0.9999999999991931,
+          "norm_squared": 1.0000001080492669,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 1.7136335372924805e-07,
+          "reference_sha256": "515a32124c94437b372f81b3be4eb605717b1c4ae9293bf2c3b851450f35565b",
+          "capture_sha256": "91ed8ce5d7bcf49115dd214d18392a60967f531311ed224aadb1d09d8f43d618",
+          "corrupted_cosine_control_rejected": true
+        },
+        {
+          "signal": "padded_noise",
+          "role": "document",
+          "dimension": 768,
+          "cosine": 0.9999999999980715,
+          "norm_squared": 0.9999999317787003,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 2.682209014892578e-07,
+          "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+          "capture_sha256": "9b3811050bcf76a4fd272943c8b6506b395d3cb8012175f0f9c59294eaf4fcde",
+          "corrupted_cosine_control_rejected": true
+        },
+        {
+          "signal": "padded_noise",
+          "role": "raw",
+          "dimension": 768,
+          "cosine": 0.9999999999942941,
+          "norm_squared": 1.0000000030591563,
+          "elementwise_diagnostic_mismatches": 0,
+          "maximum_absolute_error": 4.2142346501350403e-07,
+          "reference_sha256": "ea4298313a536aa3b0c1f5eac7934240abaf3cb68170be36deb64c214fbb92a9",
+          "capture_sha256": "e84174800dda925bc790062b3d2b70060c791952472b829922b8ea562daaad30",
+          "corrupted_cosine_control_rejected": true
+        }
+      ],
+      "signal_controls": [
+        {
+          "signal": "padded_noise",
+          "api_dispose_rejected_reuse": true,
+          "owned_intermediates_disposed": true,
+          "child_receipt_sha256": "a939ae523ee0e95d01ea86054e3bda76d59da12d27d71291dc4b657e9bd4e3c2"
+        }
+      ],
+      "actual_pcm_preprocessing_validated": true,
+      "cpu_computation_or_input_count": 0,
+      "intermediate_readback_count": 0,
+      "readback_flush_count": 0,
+      "generation_qualified": false,
+      "consumer_player_validated": false,
+      "original_golden_changed": false,
+      "vectors": 3,
+      "minimum_cosine": 0.9999999999942941
+    }
+  ],
+  "original_capture_and_receipt_backup_files": 62,
+  "backup_bytes_verified": true,
+  "earlier_grouped_five_signal_timeout_remains_failed": true,
+  "default_unity_test_timeout_ms": 180000,
+  "default_test_timeout_increased": false,
+  "actual_pcm_preprocessing_validated": true,
+  "audio_final_roles_gpu_validated": true,
+  "cpu_model_computation_fallback_count": 0,
+  "intermediate_readback_count": 0,
+  "readback_flush_count": 0,
+  "generation_qualified": false,
+  "new_bundle_and_player_validated": false,
+  "real_microphone_validated": false,
+  "other_platforms_validated": false,
+  "required_ci_restored": false,
+  "original_native_pt2_recovered": false,
+  "original_golden_changed": false
+}

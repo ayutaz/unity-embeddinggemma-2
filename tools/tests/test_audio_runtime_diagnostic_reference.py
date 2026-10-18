@@ -3,6 +3,8 @@ import json
 import onnx
 import pytest
 import torch
+import yaml
+from workflow_privacy_assertions import assert_privacy_gated_upload
 
 from embeddinggemma_tools import prepare, __main__ as cli
 from test_audio_encoder_prepare import fixture
@@ -82,7 +84,6 @@ def test_cli_collect_is_explicit_and_ci_separates_original_gate_from_cpu_diagnos
               "--output", str(tmp_path / "default"), "--native-silu"])
     assert calls[1]["collect_onnx_failures"] is False
     from pathlib import Path
-    import yaml
     path = Path(__file__).resolve().parents[2] / ".github/workflows/model-reference.yml"
     workflow = yaml.safe_load(path.read_text(encoding="utf-8"))
     diagnostic = next(s for s in workflow['jobs']['reference']['steps']
@@ -111,4 +112,6 @@ def test_runtime_diagnostic_workflow_is_opt_in_read_only_and_retains_failure():
     assert len(generation) == 1
     assert "continue-on-error" not in generation[0], "Numeric failure must leave the workflow failed"
     artifacts = [step for step in job["steps"] if "upload-artifact" in step.get("uses", "")]
-    assert artifacts and all(step["if"] == "always()" for step in artifacts)
+    assert artifacts
+    for step in artifacts:
+        assert_privacy_gated_upload(step)

@@ -80,8 +80,14 @@ jobs:
               native_patch_matches_original=True,reference_scope='Native GEMM shape/layout only; deterministic synthetic inputs, not a new original encoder golden')
           (output/'matmul-reference.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8');print(json.dumps(report))
           PY
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_1
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/vision-matmul-context/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_1.outcome == 'success' }}
         with:
           name: original-vision-matmul-${{ github.sha }}
           path: artifacts/vision-matmul-context/

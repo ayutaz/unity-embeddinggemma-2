@@ -24,6 +24,19 @@ def test_personal_email_and_token_are_rejected_without_echoing_them():
         findings = scan_bytes(content.encode(), 'notes.md')
         assert findings
         assert content not in json.dumps(findings)
+    assert scan_bytes(('person'+'@'+'private-domain.dev').encode(), 'notes.md')
+    assert scan_bytes(('-----BEGIN '+'PRIVATE KEY-----').encode(), 'notes.txt')
+
+def test_private_config_filename_is_blocked_even_without_known_token_format():
+    assert scan_bytes(b'CUSTOM_VALUE=unrecognized', '.env')
+    assert scan_bytes(b'placeholder only', '.env.example') == []
+
+
+def test_private_filenames_are_rejected_without_echoing_the_name():
+    private='fixture'+'@'+'private-domain.dev'
+    findings=scan_bytes(b'safe content','docs/'+private+'.txt')
+    assert findings and findings[0]['rule']=='private-filename'
+    assert private not in str(findings)
 
 def test_public_noreply_and_relative_or_environment_paths_are_allowed():
     text = 'models/bundle.json ${USER_HOME}/models $env:USERPROFILE 123+fixture@users.noreply.github.com'
@@ -65,3 +78,10 @@ def test_reviewed_numeric_fixture_is_preserved_but_arbitrary_binary_is_not():
     assert scan_bytes(data, path, review) == []
     assert scan_bytes(data+b'changed', path, review)
     assert scan_bytes(data, 'capture.bin', {'capture.bin': review[path]})
+
+
+def test_github_ssh_service_uri_is_not_a_personal_mailbox_exception():
+    assert scan_bytes(b'git@github.com:fixture/project.git','docs/setup.md')==[]
+    assert scan_bytes(b'ssh://git@github.com/fixture/project.git','docs/setup.md')==[]
+    for address in ('git'+'@github.com','person'+'@github.com:fixture/project.git','git'+'@github.com.evil.dev:fixture/project.git'):
+        assert any(f['rule']=='personal-email' for f in scan_bytes(address.encode(),'docs/setup.md'))

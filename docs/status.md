@@ -1,6 +1,26 @@
 # 現在の対応範囲と検証状況
 
-更新: **2026-10-18**。main `35d18f8`を基準に、GPU出力確保・定数転送・softmax dispatchの負荷軽減を追加しています。Runtime Git treeは `7d6e4314552b221d06db881405e7ccff3f449a77`。開発版 `0.1.0-pre.1`、公開tag・正式Releaseはありません。
+更新: **2026-10-18**。公開履歴整理後のmainは `4b5bf72`。開発版 `0.1.0-pre.1`、公開tag・正式Releaseはありません。現在は個人情報対策の回帰修正、固定音声参照データの復旧、GitHub側の残存個人情報の除去を優先します。
+
+元の数値参照JSONと監査JSONは[CI保存・独立readback](results/original-audio-golden-ci-readback-20261018.json)が完了しました。最新head `317bae3` の[CI終端](results/privacy-guard-ci-317bae3-20261018.json)ではPython全4環境等が成功し、元音声モデルの欠落で全体が失敗しました。次は復旧した数値原本を使う限定診断です。
+
+[再生成候補の通常経路の比較](results/audio-regeneration-numerical-baseline-summary-20261018.json)では、nativeで2,884要素、未分割ONNXで5,230要素が元の許容差を超え、ONNXの6信号すべてが不合格でした。候補は未採用です。元の参照値を維持し、[別世代候補の5分割数値検証](audio-candidate-qualification.md)を追加しました。関連105テストとworkflow lintは合格しましたが、この小規模確認を実モデル・実GPUの合格には数えません。
+
+## 現在の停止条件と次の作業
+
+| 項目 | 確認済みの状態 | 次の完了条件 |
+| --- | --- | --- |
+| hook | CP932入力の問題を修正し、実行中のhookにも反映。利用者の指示に従い、account `ayutaz` の公開表示名 `yousan` を完全一致で認めるprofile guardを検証。関連51件合格、live profile検査も合格 | 表示名は維持する。個人用path・メール・認証情報、source commit identity、旧providerコピーは引き続き別に検査する |
+| CI | 最新公開head `317bae3` の[CIは終了](results/privacy-guard-ci-317bae3-20261018.json)。package・workflow lint・model referenceとPython全4環境が成功。元音声モデル取得6信号・集計は失敗し、全体は不合格。元数値参照だけを保存する別の手動CIは成功 | 原本モデル取得か、別世代の完全な再受け入れが必要。数値参照CIだけをRequired CI全体の成功に数えない |
+| 固定音声参照 | 元の参照JSON（25,186,055 bytes）と監査JSONを[手動CIで元SHA256のまま保存](results/original-audio-golden-ci-readback-20261018.json)。実アップロードZIPの配信元SHA256・CRC、2ファイルの元SHA256と私的2コピーを確認。元モデルの探索・再生成は不一致で、グラフ2件は未復旧 | 原本モデルの回収はSupportへ照会中。別世代を検証する場合も元の数値基準を維持する。数値参照の復旧とモデル・GPUの受け入れを区別する |
+| GitHub側の個人情報 | writable branchの履歴修正済み。旧PR/cache除去と成果物復旧をSupportへ依頼済み。受付情報は私的記録に保管 | 対応結果を照合し、旧PR refs・キャッシュ・残るActionsメタデータを再監査 |
+| PR整理 | #89（privacy）、#86（取得）、#87（性能）はDraft。全体Required CIの成功・全機能完了は主張できない | #89、#86、#87を各受け入れ条件と最新headのCIに基づき順に判定 |
+
+追加の大量削除は停止しています。固定artifact IDの棚卸しで残存を確認した参照成果物2件は、私的バックアップの配信元SHA256とZIP整合性を確認しました。消失したモデル2件の復旧は別に未完了です。メタデータ保存だけを成果物の退避とみなしません。復旧不能の場合は新しい参照世代の計画と差分を別に示し、原本と同一の実績には置き換えません。
+
+## これまでの機能・GPU検証記録
+
+以下は各固定sourceの従来の実測です。履歴整理後の最新headで全条件を再実行した証拠や、元成果物を現在も取得できる保証にはなりません。従来の負荷軽減監査のRuntime Git treeは `7d6e4314552b221d06db881405e7ccff3f449a77` でした。
 
 [ランタイム修正の統合監査](results/runtime-ready-integration-2a29c68-20261018.json)では、単独の統合候補 `2a29c68` でpackageとmainの既存2サンプルのEditMode回帰517件（GPU演算等120件を含む）がpass、fail0 / skip0 / exit0でした。Runtimeとpackage依存は、全6 module×FP32 / Float16重みの実GPU参照32 vectorを確認した固定source `d7b2233` と一致します。これはsource一致に基づく既存の実モデル証拠と、新しい小規模GPU・既存sample回帰を組み合わせた監査であり、今回の32 vector再実行や最新UXの操作合格ではありません。
 

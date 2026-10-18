@@ -203,6 +203,8 @@ def main(argv=None):
     parser.add_argument('--input', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--frozen-stage-source', type=Path)
+    parser.add_argument('--candidate-directory', type=Path,
+                        help='Opt-in fixed unqualified generation; original reference values stay unchanged')
     parser.add_argument('--raw-input', action='store_true')
     parser.add_argument('--variant', choices=('native', 'ordered_static_linear_all_bmm', PRECISE, PRECISE_POSITIONS, PRECISE_TANH, PRECISE_MIDPOINT), default='ordered_static_linear_all_bmm')
     parser.add_argument('--case', choices=('silence', 'impulse', 'sine', 'nyquist', 'noise', 'padded_noise'), default='silence')
@@ -212,8 +214,14 @@ def main(argv=None):
         raise ValueError('Chained diagnosis requires immutable job provenance')
     if not args.raw_input and args.frozen_stage_source is None:
         raise ValueError('Frozen chain requires an audited stage source')
+    if args.candidate_directory is not None and not args.raw_input:
+        raise ValueError('Candidate generation requires original raw input mode')
     case_options = {'case_id': args.case} if args.case != 'silence' else {}
-    program, values, expected, provenance = load_frozen_input(args.input, **case_options)
+    if args.candidate_directory is None:
+        program, values, expected, provenance = load_frozen_input(args.input, **case_options)
+    else:
+        from .audio_generation_candidate import load_candidate_input
+        program, values, expected, provenance = load_candidate_input(args.candidate_directory, args.input, case_id=args.case)
     stages = ('subsample', 'layer_2', 'layer_5', 'layer_8', 'projected_features')
     profile = provenance.get('profile', 'frames-1119-valid-1119')
     boundary_options = {'profile': profile} if profile != 'frames-1119-valid-1119' else {}

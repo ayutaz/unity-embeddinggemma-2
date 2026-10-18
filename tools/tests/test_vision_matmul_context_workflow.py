@@ -1,5 +1,6 @@
 from pathlib import Path
 import yaml
+from workflow_privacy_assertions import assert_privacy_gated_upload
 
 
 def test_static_matmul_workflow_checks_cpu_and_original_patch_before_partial_native_probe():
@@ -16,7 +17,8 @@ def test_static_matmul_workflow_checks_cpu_and_original_patch_before_partial_nat
     assert 'rows=2520' in commands and 'prefix_rows=16' in commands
     assert 'replay_saved_reference_context' not in commands and 'snapshot_download' not in commands
     upload=next(s for s in steps if 'actions/upload-artifact@' in s.get('uses',''))
-    assert '.pt2' not in upload['with']['path'] and upload['if']=='always()'
+    assert_privacy_gated_upload(upload)
+    assert '.pt2' not in upload['with']['path']
 
 
 def test_matmul_probe_is_reachable_through_existing_registered_dispatch_without_main_changes():

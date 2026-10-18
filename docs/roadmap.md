@@ -1,12 +1,55 @@
 # ロードマップ
 
-更新: **2026-10-17**。main `a965c09`（PR #83統合後）を起点とする現在の作業計画です。確認済みの事実は[検証状況](status.md)、変更しない目標は[プロジェクトのゴール](goal.md)を参照してください。
+更新: **2026-10-18**。公開履歴整理後のmain `4b5bf72` を起点とする現在の作業計画です。確認済みの事実は[検証状況](status.md)、変更しない目標は[プロジェクトのゴール](goal.md)を参照してください。
 
-テキスト・画像・音声のGPU API、Windows text Player、画像・音声検索サンプルとcacheは統合済みです。次は、他の利用者が準備・操作を再現できる状態を作り、そのcandidateで性能と対象環境を検証します。正式リリースは全必須条件の後に行います。
+テキスト・画像・音声のGPU API、Windows text Player、画像・音声検索サンプルとcacheは統合済みです。現在はprivacy対応と固定参照の復旧が先です。その後、他の利用者が準備・操作を再現できる状態を作り、そのcandidateで性能と対象環境を検証します。正式リリースは全必須条件の後に行います。
+
+## リリースまでの実行計画
+
+正式リリースの対象は、Sentisによるtext・image・audioのGPU推論と横断検索です。必須環境はWindows Editor / Player、macOS Editor、iOS / Android Player実機です。[ゴール](goal.md)にあるこの範囲を維持し、各工程の未実行・失敗を残件として管理します。現行版は `0.1.0-pre.1`、正式Releaseは未作成です。
+
+| 工程 | 実施内容 | 次へ進む完了条件 |
+| --- | --- | --- |
+| 1. 基盤復旧・PR整理 | #89の最新CI確認、元の数値参照のCI保存、音声モデルの復旧または別世代としての完全な再検証。#89 → #86 → #87を順に統合 | 必須の参照・モデル取得が再現可能で、各PRの最新Required CI成功と差分監査が完了。新しいモデルは元の数値・GPU条件をすべて満たす |
+| 2. 新規利用者の導入再現 | 空checkout / 空cacheから、公開手順でtext・画像3・音声2の全6 moduleを用意。固定Git版を新規consumerへ導入 | 開発者のローカルモデルやLibraryを渡さずに準備・推論できる。切断、破損、期限切れ、revision不一致から復帰し、source / model hashが一致する |
+| 3. 実操作・性能・安定性 | 画像プレビュー、音声再生・途中停止、実マイクの明示開始/停止、日英検索、キャンセル・復帰、切替・解放を最終candidateで確認。遅延と資源残留を計測して必要な修正を行う | 正常系に加え権限拒否、deviceなし、欠落、対応外入力、中断・復帰を確認。初回/warm、load・各stage・release、CPU時間・GPU時間・RAM/VRAMを範囲を明示して記録し、必須の欠測・帰属不明を解消する |
+| 4. WindowsマルチモーダルPlayer | IL2CPP / Release / High strippingでbuildし、text・image・audio、全必要role、横断検索と操作を実GPUで実行 | 元参照のvector・順位・scoreと一致し、fallback/readback監査、独立cold/warm起動、キャンセル・回復・解放、メモリ測定と正常終了がそろう。契約テストだけでは完了にしない |
+| 5. 必須他環境の受け入れ | macOS Editor、iOS / Android実機で3モダリティ・検索・操作・メモリを確認。OS固有の配置、cache、権限、suspend/復帰を修正 | 各端末・OS・graphics API・source / model / 精度を固定した実GPU結果がある。CPU比較を分け、未実行・skip・CPU fallbackをGPU合格に数えない |
+| 6. リリース候補と配布監査 | candidateのsource・モデル・依存を固定。packageの表示名・説明・keywordsを3入力対応の実態に整え、README、API/sample手順、CHANGELOG、利用条件、最低要件、既知の制限を更新。全体回帰と公開内容のprivacy監査 | 空consumerの固定版導入が再現でき、全必須環境の証拠がcandidateに対応する。旧PR/cacheの個人情報対応も結果を再監査。モデルとコードを分離し、画像は元bytesの目視/OCR・hash確認を終える |
+| 7. 正式Releaseと公開後確認 | レビュー可能なRelease本文・版・tag・配布物一覧を準備し、公開依頼に基づきGitHub Releaseを作成。公開された固定tagから導入する | package version、CHANGELOG、tag、Releaseが一致し、公開物の読み戻しと新規consumerでの導入・sampleのsmoke確認が成功する |
+
+**並行して先に行うこと**：Mac・iPhone/iPad・Android端末、Unityのbuild module、Xcode/署名、実GPU・マイクと実操作の検証手段を確認し、担当と実行条件を確定します。端末準備をWindows完了後まで先送りしません。旧PR refs・cacheの削除と元モデル回収に関するSupport対応も追跡します。 現在のWindows環境ではADBは利用可能ですが、接続端末は0台です。repositoryの登録済みself-hosted runnerも0台で、Mac・iOSの利用環境は未確定です。端末の接続・署名・実GPU検証手段の確保を工程5の開始条件として明示します。
+
+**維持する精度と実行条件**：有限・単位長の768次元vector、FP32 cosine >= 0.999、採用Float16形式 >= 0.99、元のencoder要素別許容差、必要なQuery / Document / Raw、固定検索の全順位とscoreを確認します。モデル再検証ではnative full/cutのbit一致と全6信号も維持します。GPU前処理からencoder・backboneをつなぎ、中間CPU計算・readbackで成功扱いにはしません。tokenize・decode・音声取得等の入力境界と最終vector取得は別に記録します。
+
+**時間と実行管理**：固定リリース日は、音声モデル方針と必須端末・署名環境の見通しが立ち、基盤復旧の実測時間を確認した時点で設定します。現時点で日数を確約しません。重い取得・変換・回帰・buildはGitHub Actionsを優先し、実GPU・実機・UIの確認は確保した環境で行います。ローカルUnityを重複起動せず、試行ごとに時間・メモリ上限を定め、同じ巨大モデルの探索・生成を根拠なく繰り返しません。
+
+**実行範囲と条件**：利用者から工程7までの実行依頼を受けています。公開表示名は `yousan` の維持で確定しています。音声モデルは元の数値参照・許容差を保って再検証を進めます。別世代の採用には識別可能な世代名と全受け入れ条件の合格を必要とし、必須条件の省略や原本と異なるモデルの原本扱いは行いません。正式Releaseは工程1〜6の完了後に実施します。
+
+各工程の詳細と既存checkpointは以下に保持します。工程ごとにsource・モデル・精度・環境、合格・失敗・未実行、残件を記録し、最終candidateでの証拠をそろえてから次の完了判定を行います。
+
+[再生成候補の通常経路の比較](results/audio-regeneration-numerical-baseline-summary-20261018.json)では、nativeで2,884要素、未分割ONNXで5,230要素が元の許容差を超え、ONNXの6信号すべてが不合格でした。候補は未採用です。元の参照値を維持し、[別世代候補の5分割数値検証](audio-candidate-qualification.md)を追加しました。関連105テストとworkflow lintは合格しましたが、この小規模確認を実モデル・実GPUの合格には数えません。
 
 ## 直近の作業順
 
-実GPU検証済みのランタイム負荷軽減は、公開取得・実マイクなどの受け入れが残るUX/取得/測定のDraft PRから分け、先に統合できる単位にする。[単独候補の監査](results/runtime-ready-integration-2a29c68-20261018.json)は、既存TDD、固定Runtimeの実モデル参照32 vectorとのsource一致、新しいpackage＋main既存sample回帰517 pass / skip0 / exit0を記録している。最新Required CIと差分の確認後にこのランタイム修正を統合し、優先1〜3全体の公開取得・実マイク・最終操作・測定欠測はそのまま残す。
+### 元の数値参照の復旧と次の数値比較（2026-10-18）
+
+#89の公開head `317bae3` の[CIは終了](results/privacy-guard-ci-317bae3-20261018.json)し、Python全4環境・package・workflow lint・model referenceが成功しました。元音声モデル取得の6信号と集計は失敗し、Required CI全体は不合格です。#89・#86・#87は未マージです。
+
+[元の数値参照だけを保存したCI](results/original-audio-golden-ci-readback-20261018.json)は成功しました。実際にアップロードされたZIPのSHA256・CRCと元JSON2件のSHA256を読み戻し、私的な2コピーも照合しました。元モデル2件とGPUの復旧・合格ではありません。
+
+診断workflowの消失した参照取得先を復旧済みの数値原本へ接続し直しました。元JSONのhashと元の許容差を維持し、新たな収集で保存するnative・ONNX出力を元の数値と比較します。前回のbyte復旧runは比較用出力を保持していなかったため、1回の限定実行で必要な証拠を取得します。Required CIの原本モデル条件は変更しません。新たな出力のsource・実行環境・model hashは原本と分け、比較失敗・未実行を合格扱いにしません。
+
+
+### 0. CI・個人情報対応・モデルの再受け入れ
+
+表示名とJUnit出力の修正は公開済みで、`317bae3` のPython全4環境は合格しました。元数値参照のCI保存も完了しています。残る順序は、元の数値参照を使うモデル比較、モデル取得経路の復旧、各PRの最新Required CI、#89 → #86 → #87の統合です。
+
+元モデル2件のbyte復旧は、私的・公開成果物の探索と元のPython tree・依存lockでの再生成とも不成功でした。原本回収はSupportへ照会中です。別世代を検証する場合も元の数値参照・許容差、native full/cutのbit一致、全6信号・全carryのONNX検証と実GPU・consumer・Playerの条件を維持し、合格前に必須条件を置き換えません。
+
+旧PR refs・cache・残るActionsメタデータの個人情報対応は、モデルの数値比較とは別にSupportの結果と照合します。固定参照・モデルは完全なbytesとhashを私的に退避し、元の検証画像を加工・再生成して証拠に置き換えません。大量削除は再開しません。
+
+以降の最終受け入れでは、新規consumerの3入力・検索・操作・速度とメモリ、Windows Release Player、必須他環境を確認します。旧sourceの合格・skip・CPU fallback・契約テストだけで最終実GPU合格にはしません。[過去の統合監査](results/runtime-ready-integration-2a29c68-20261018.json)は当時のcheckpointとして保持します。
 
 ### 1. 新規利用者のモデル準備
 
@@ -46,7 +89,7 @@ macOS Editor、iOS / Android実機を環境ごとのPRで進めます。環境�
 
 ### 7. 正式公開
 
-6が完了し、公開の明示依頼を受けてから、承認されたcandidateをtag固定で導入確認し、GitHub Releaseを作成します。
+工程7までの実行依頼に基づき、6の必須条件がすべて合格したcandidateをtag固定で導入確認し、GitHub Releaseを作成します。
 
 **完了条件**：tag / version / Releaseの一致と読み戻し。画像・音声を含む必須検証を省いてtext-onlyの正式版を先行公開しません。
 

@@ -14,6 +14,11 @@ def load(name):
                      Loader=yaml.BaseLoader)
 
 
+def guarded_even_on_failure(step):
+    return ('always()' in step.get('if','')
+            and "outcome == 'success'" in step.get('if',''))
+
+
 def test_audio_encoder_only_dispatch_preserves_all_signals_without_extra_chain_exports():
     workflow = load("audio-runtime-reference.yml")
     option = workflow["on"]["workflow_dispatch"]["inputs"]["encoder_only"]
@@ -51,13 +56,13 @@ def test_audio_candidate_dispatch_keeps_original_pinned_golden_and_all_six_outpu
     assert workflow['permissions']['actions']=='read'
     steps=workflow['jobs']['native-reference']['steps']
     commands='\n'.join(s.get('run','') for s in steps)
-    assert '11814567883' in commands and 'ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9' in commands
+    assert '12130281114' in commands and 'ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9' in commands
     validation=next(s for s in steps if 'embeddinggemma_tools.pinned_audio_onnx' in s.get('run',''))
     assert 'always()' in validation['if']
-    assert '--pinned ../artifacts/pinned-audio/audio-runtime-reference' in validation['run']
+    assert '--pinned ../artifacts/pinned-audio' in validation['run']
     assert '--output ../artifacts/audio-pinned-onnx.json' in validation['run']
     assert not validation.get('continue-on-error')
-    assert any(s.get('with',{}).get('path')=='artifacts/audio-pinned-onnx.json' and s.get('if')=='always()' for s in steps)
+    assert any(s.get('with',{}).get('path')=='artifacts/audio-pinned-onnx.json' and guarded_even_on_failure(s) for s in steps)
 
 
 def test_audio_projection_candidate_is_explicit_and_preserves_default_math():
@@ -76,7 +81,7 @@ def test_required_reference_job_validates_long_multimodal_backbone_and_retains_s
     assert "uv run --locked python -m embeddinggemma_tools prepare-backbone" in run[0]["run"]
     artifact = [step for step in steps if step.get("with", {}).get("name", "").startswith("multimodal-backbone-")]
     assert len(artifact) == 1
-    assert artifact[0]["if"] == "always()"
+    assert guarded_even_on_failure(artifact[0])
     assert artifact[0]["with"]["path"] == "artifacts/multimodal-backbone/"
     assert artifact[0]["with"]["retention-days"] == "3"
 
@@ -88,7 +93,7 @@ def test_required_reference_job_validates_real_vision_and_preserves_partial_fail
     assert "uv run --locked python -m embeddinggemma_tools prepare-vision" in run[0]["run"]
     artifact = [step for step in steps if step.get("with", {}).get("name", "").startswith("vision-encoder-")]
     assert len(artifact) == 1
-    assert artifact[0]["if"] == "always()"
+    assert guarded_even_on_failure(artifact[0])
     assert artifact[0]["with"]["path"] == "artifacts/vision-encoder/"
     assert artifact[0]["with"]["retention-days"] == "3"
 
@@ -100,7 +105,7 @@ def test_required_reference_job_validates_fixed_audio_preprocessing_and_retains_
     assert "uv run --locked python -m embeddinggemma_tools.audio" in run[0]["run"]
     artifact = [step for step in steps if step.get("with", {}).get("name", "").startswith("audio-preprocessing-")]
     assert len(artifact) == 1
-    assert artifact[0]["if"] == "always()"
+    assert guarded_even_on_failure(artifact[0])
     assert artifact[0]["with"]["path"] == "artifacts/audio-preprocessing/"
     assert artifact[0]["with"]["retention-days"] == "3"
 

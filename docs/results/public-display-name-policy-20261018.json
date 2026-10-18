@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "scope": "user_selected_public_github_profile_name",
+  "account": "ayutaz",
+  "public_display_name": "yousan",
+  "user_instruction": "Retain this display name.",
+  "github_account_settings_changed": false,
+  "profile_pair_scope": "Exact account and exact display name only.",
+  "tdd": {
+    "red": {
+      "passed": 7,
+      "failed": 1,
+      "expected_failure": "test_user_selected_public_display_name_is_bound_to_its_account"
+    },
+    "green": {
+      "passed": 51,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "live_read_only_profile_check": {
+    "success": true,
+    "findings": 0
+  },
+  "source_commit_identity_rules_changed": false,
+  "private_paths_email_credentials_checks_changed": false,
+  "image_bytes_added": 0,
+  "alternate_model_generation_authorized": false
+}

@@ -149,6 +149,12 @@ selected distribution/input/loader tests and 25 workflow/golden checks with
 actionlint. The required original native-graph gate remains independent and is
 not made passing by saving numerical inputs.
 
+The committed loader at `0d13a3d` also completed an
+[actual acquisition of both original JSON files and all six raw inputs](results/original-audio-preserved-acquisition-0d13a3d-20261018.json)
+from the new pinned artifact. All eight output hashes matched, without any model
+download or model execution. This verifies numerical-input acquisition only;
+the complete six-module fresh consumer remains a separate release requirement.
+
 ## Remaining release conditions
 
 Even a successful numerical audit leaves `generation_qualified=false` and

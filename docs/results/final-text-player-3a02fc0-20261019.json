@@ -1,0 +1,300 @@
+{
+  "schema": 1,
+  "scope": "Existing complete text validation protocol in two actual Windows Release Players, both saved weight formats and CPU/GPU conditions",
+  "source_commit": "3a02fc081f8504f6a458694f4df2df5a39d47e93",
+  "integrated_main": "186ffc1b330c0b609fef66cf4abfaeed5011fcbc",
+  "merged_tree_matches_tested_source": true,
+  "sdk_runtime_tree": "7d6e4314552b221d06db881405e7ccff3f449a77",
+  "actual_processes": 2,
+  "total_precision_backend_conditions": 8,
+  "CPU_conditions": 4,
+  "GPU_conditions": 4,
+  "fixed_text_cases_per_condition": 15,
+  "documents_per_condition": 6,
+  "queries_per_condition": 4,
+  "token_rows_per_process": 25,
+  "runtime_case_vector_checks": {
+    "CPU": 60,
+    "GPU": 60
+  },
+  "saved_rank_and_score_pairs_independently_checked": {
+    "CPU": 96,
+    "GPU": 96
+  },
+  "negative_report_controls_rejected": 34,
+  "actual_backends_match_requested": true,
+  "all_workers_runtime_reported_released": true,
+  "all_processes_exit_zero": true,
+  "retained_models_and_tokenizer_byte_identical_to_public_preview_objects": true,
+  "public_text_model_sha256": {
+    "fp32": "8488d70f2d636a34bfe2a64c1d7b9d3eb3fce70c4fb9e27d32b698090c8fb373",
+    "float16": "df428383e90c02723189c3fe631dba338ee0fde4ae77b461297095b6e2e90819"
+  },
+  "original_reference_sha256": "deb9b3ed00e49c29b18c1a747307a318900d5e993fb3d9208f4d37e8a73cf2f6",
+  "original_search_reference_sha256": "f316d5199c920431c7f721d43b2cedbe4a6384fb0e0664511b75bc2e98fe80fe",
+  "build": {
+    "configuration": "Windows IL2CPP Release High",
+    "injected": false,
+    "elapsed_seconds": 36.82662079995498,
+    "compiled_runtime_and_link_hashes_verified": 67,
+    "package_files_checked": 600,
+    "sample_files_checked": 86,
+    "official_framework_files_checked": 1168,
+    "warnings": 485,
+    "complete_binary_files_rechecked_after_execution": true,
+    "binary_file_manifest_sha256": "8605e7a7ef9044302622b084c7431fb77e6833645f9cd836ad739015be54c616",
+    "background_validation_setting": true,
+    "additional_private_Editor_invocation": true
+  },
+  "prebuild_driver_newline_assertion_failure_retained": true,
+  "prebuild_failure_scope": "Private LF/CRLF invocation-source check failed before Unity launch. Versioned sources and original helper bytes were preserved; normalization was made explicit.",
+  "launches": [
+    {
+      "launch": "first",
+      "run_id": "0bffb3a7f28243e9bba1339d16509439",
+      "elapsed_seconds": 103.42170740000438,
+      "exit_code": 0,
+      "host_native_peak_working_set_bytes": 7261364224,
+      "token_rows_runtime_verified": 25,
+      "conditions": [
+        {
+          "precision": "fp32",
+          "requested_backend": "CPU",
+          "actual_backend": "CPU",
+          "cases": 15,
+          "documents": 6,
+          "queries": 4,
+          "rank_and_score_pairs": 24,
+          "minimum_runtime_checked_cosine": 0.9999999999981735,
+          "maximum_original_ranking_score_error": 2.421338294311681e-07,
+          "first_inference_milliseconds": 1118.5532,
+          "warm_inference_milliseconds": [
+            607.4490000000001,
+            553.6766,
+            569.6995000000001
+          ],
+          "model_load_milliseconds": 2146.5095,
+          "worker_creation_milliseconds": 4895.2943000000005,
+          "release_milliseconds": 0.7088,
+          "worker_released": true
+        },
+        {
+          "precision": "fp32",
+          "requested_backend": "GPUCompute",
+          "actual_backend": "GPUCompute",
+          "cases": 15,
+          "documents": 6,
+          "queries": 4,
+          "rank_and_score_pairs": 24,
+          "minimum_runtime_checked_cosine": 0.999999999999512,
+          "maximum_original_ranking_score_error": 9.186151772588858e-08,
+          "first_inference_milliseconds": 2493.9212,
+          "warm_inference_milliseconds": [
+            29.8308,
+            29.7783,
+            36.825
+          ],
+          "model_load_milliseconds": 1443.6036000000001,
+          "worker_creation_milliseconds": 4603.5665,
+          "release_milliseconds": 0.7507,
+          "worker_released": true
+        },
+        {
+          "precision": "float16",
+          "requested_backend": "CPU",
+          "actual_backend": "CPU",
+          "cases": 15,
+          "documents": 6,
+          "queries": 4,
+          "rank_and_score_pairs": 24,
+          "minimum_runtime_checked_cosine": 0.9999999999982625,
+          "maximum_original_ranking_score_error": 2.1364036523197072e-07,
+          "first_inference_milliseconds": 3018.1604,
+          "warm_inference_milliseconds": [
+            839.6229000000001,
+            1136.3502,
+            1115.7128
+          ],
+          "model_load_milliseconds": 417.11350000000004,
+          "worker_creation_milliseconds": 4029.7000000000003,
+          "release_milliseconds": 72.06530000000001,
+          "worker_released": true
+        },
+        {
+          "precision": "float16",
+          "requested_backend": "GPUCompute",
+          "actual_backend": "GPUCompute",
+          "cases": 15,
+          "documents": 6,
+          "queries": 4,
+          "rank_and_score_pairs": 24,
+          "minimum_runtime_checked_cosine": 0.9999999999994984,
+          "maximum_original_ranking_score_error": 1.0256953308918071e-07,
+          "first_inference_milliseconds": 497.0017,
+          "warm_inference_milliseconds": [
+            53.0506,
+            47.1297,
+            44.037800000000004
+          ],
+          "model_load_milliseconds": 483.40360000000004,
+          "worker_creation_milliseconds": 4359.5035,
+          "release_milliseconds": 0.9373,
+          "worker_released": true
+        }
+      ],
+      "negative_controls_rejected": 17,
+      "private_report_sha256": "10c6263eb3ba1ef67af05c8a9db54b67d310052d2154df36e5f5cad694257b7f",
+      "private_process_sha256": "6a4b7a656925754c7623e6ebf3b14f5e1e49f8e9cb3a44b97fa0a7cd8b1b4a11",
+      "private_report_audit_sha256": "11475c2437b9210761a82deaf7800ba7cddd215d5a5c34c02d5cf0577ce92bf1"
+    },
+    {
+      "launch": "repeat",
+      "run_id": "993edb35ccbd4d6681faaf7dffa08181",
+      "elapsed_seconds": 78.73466699995333,
+      "exit_code": 0,
+      "host_native_peak_working_set_bytes": 7640412160,
+      "token_rows_runtime_verified": 25,
+      "conditions": [
+        {
+          "precision": "fp32",
+          "requested_backend": "CPU",
+          "actual_backend": "CPU",
+          "cases": 15,
+          "documents": 6,
+          "queries": 4,
+          "rank_and_score_pairs": 24,
+          "minimum_runtime_checked_cosine": 0.9999999999981735,
+          "maximum_original_ranking_score_error": 2.421338294311681e-07,
+          "first_inference_milliseconds": 492.0946,
+          "warm_inference_milliseconds": [
+            458.9495,
+            451.4551,
+            452.73220000000003
+          ],
+          "model_load_milliseconds": 991.7773000000001,
+          "worker_creation_milliseconds": 3224.7282,
+          "release_milliseconds": 0.8662000000000001,
+          "worker_released": true
+        },
+        {
+          "precision": "fp32",
+          "requested_backend": "GPUCompute",
+          "actual_backend": "GPUCompute",
+          "cases": 15,
+          "documents": 6,
+          "queries": 4,
+          "rank_and_score_pairs": 24,
+          "minimum_runtime_checked_cosine": 0.999999999999512,
+          "maximum_original_ranking_score_error": 9.186151772588858e-08,
+          "first_inference_milliseconds": 1348.1427,
+          "warm_inference_milliseconds": [
+            31.2806,
+            31.164800000000003,
+            29.9174
+          ],
+          "model_load_milliseconds": 1004.4226000000001,
+          "worker_creation_milliseconds": 3791.8012000000003,
+          "release_milliseconds": 0.6425000000000001,
+          "worker_released": true
+        },
+        {
+          "precision": "float16",
+          "requested_backend": "CPU",
+          "actual_backend": "CPU",
+          "cases": 15,
+          "documents": 6,
+          "queries": 4,
+          "rank_and_score_pairs": 24,
+          "minimum_runtime_checked_cosine": 0.9999999999982625,
+          "maximum_original_ranking_score_error": 2.1364036523197072e-07,
+          "first_inference_milliseconds": 950.2287,
+          "warm_inference_milliseconds": [
+            802.2688,
+            1047.5961,
+            1103.5132
+          ],
+          "model_load_milliseconds": 377.6607,
+          "worker_creation_milliseconds": 3135.1057,
+          "release_milliseconds": 61.260200000000005,
+          "worker_released": true
+        },
+        {
+          "precision": "float16",
+          "requested_backend": "GPUCompute",
+          "actual_backend": "GPUCompute",
+          "cases": 15,
+          "documents": 6,
+          "queries": 4,
+          "rank_and_score_pairs": 24,
+          "minimum_runtime_checked_cosine": 0.9999999999994984,
+          "maximum_original_ranking_score_error": 1.0256953308918071e-07,
+          "first_inference_milliseconds": 490.46750000000003,
+          "warm_inference_milliseconds": [
+            36.61,
+            35.696200000000005,
+            36.4373
+          ],
+          "model_load_milliseconds": 612.4782,
+          "worker_creation_milliseconds": 3229.3987,
+          "release_milliseconds": 0.7883,
+          "worker_released": true
+        }
+      ],
+      "negative_controls_rejected": 17,
+      "private_report_sha256": "7befb171937f04cfa67641e66efd6c4a8b88f90dcb3b72f5977f747bd400debf",
+      "private_process_sha256": "ff9d1c8c6648d6340ae623c578ffbedcf0fb2636d4c6547ea9045af02abefbf3",
+      "private_report_audit_sha256": "6e2b433e9518ddc0eed3dbe5c93c5faf821de65c402cf8f327f2593fa1b05d98"
+    }
+  ],
+  "matched_warm_query_timings": [
+    {
+      "precision": "float16",
+      "backend": "CPU",
+      "samples": 6,
+      "minimum_ms": 802.2688,
+      "median_ms": 1075.55465,
+      "maximum_ms": 1136.3502
+    },
+    {
+      "precision": "float16",
+      "backend": "GPUCompute",
+      "samples": 6,
+      "minimum_ms": 35.696200000000005,
+      "median_ms": 40.3239,
+      "maximum_ms": 53.0506
+    },
+    {
+      "precision": "fp32",
+      "backend": "CPU",
+      "samples": 6,
+      "minimum_ms": 451.4551,
+      "median_ms": 506.31305,
+      "maximum_ms": 607.4490000000001
+    },
+    {
+      "precision": "fp32",
+      "backend": "GPUCompute",
+      "samples": 6,
+      "minimum_ms": 29.7783,
+      "median_ms": 30.5411,
+      "maximum_ms": 36.825
+    }
+  ],
+  "warm_query_id": "query-cat-ja",
+  "cpu_job_workers": 4,
+  "timing_scope": "Six repetitions per precision/backend of the same fixed query across two processes, includes tokenization, scheduling/fences and final vector readback. First-case timing uses a potentially different input and is not a matched first/warm comparison. Not pure GPU time or a general-input latency guarantee.",
+  "memory_scope": "Maximum observed native cumulative peak working-set counter while each Player was alive; whole application, not SDK-exclusive memory or VRAM. Explicit 16 GiB bound after a 20 GiB available physical-memory preflight; default 12 GiB unchanged.",
+  "vectors_checked_inside_actual_runtime": true,
+  "raw_vectors_independently_recomputed": false,
+  "saved_query_ranks_and_scores_independently_checked": true,
+  "direct_Worker_assignment_inspection_in_this_text_matrix": false,
+  "matching_text_model_Worker_assignments_audited_in_mixed_matrix": true,
+  "cache_cold_or_zero_transfer_claimed": false,
+  "second_private_evidence_copy_verified": true,
+  "final_performance_accepted": false,
+  "minimum_hardware_requirements_established": false,
+  "all_platforms_accepted": false,
+  "formal_SDK_Release_created": false,
+  "raw_paths_vectors_recordings_or_models_published": false,
+  "release_ready": false
+}

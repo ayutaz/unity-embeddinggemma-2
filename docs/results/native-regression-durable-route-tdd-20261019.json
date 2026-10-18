@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "scope": "Explicit pinned public acquisition and current-source audit path; complete new real-model CI remains pending",
+  "parent_commit": "728a3d004caab0afb51009009e801d932fedb64b",
+  "checkpoints": [
+    {
+      "phase": "intended-red",
+      "tests": 14,
+      "failures": 14,
+      "errors": 0,
+      "skipped": 0,
+      "private_XML_sha256": "d87d13d7b2421c4cf6fef207a133a7aada5d6af39619169fde2c7bcbc1f99dd3"
+    },
+    {
+      "phase": "intended-red",
+      "tests": 11,
+      "failures": 10,
+      "errors": 0,
+      "skipped": 0,
+      "private_XML_sha256": "c0af21bf66959afed273e099bc76300572b62cc0f51862eabc35da7319ec2d54"
+    },
+    {
+      "phase": "intended-red",
+      "tests": 17,
+      "failures": 16,
+      "errors": 0,
+      "skipped": 0,
+      "private_XML_sha256": "e9f0a68edd09a78ff346f45894299124c0abb0a4ee698f08b638887c3b5aec55"
+    },
+    {
+      "phase": "intended-red",
+      "tests": 45,
+      "failures": 16,
+      "errors": 0,
+      "skipped": 0,
+      "private_XML_sha256": "4bdc903b6a066f55d2d9bdc47fa20d90811498c472807206fcd575c5174ef66c"
+    },
+    {
+      "phase": "intended-red",
+      "tests": 3,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0,
+      "private_XML_sha256": "12be623c92f5a81af8568de4fc5e9df6d791afac481e5ba0c33f34a03d2aaf91"
+    },
+    {
+      "phase": "green",
+      "tests": 284,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "private_XML_sha256": "1cc084680afeb2d316e83f0e9e4ea47c1cccf1fca827437d57af09bb44381ffb"
+    }
+  ],
+  "initial_missing_module_fixture_errors_retained": true,
+  "fixture_errors_counted_as_intended_behavior_red": false,
+  "precommit_selection_checkout_newline_comparison_failure_retained": true,
+  "final_related_passes": 284,
+  "final_failures": 0,
+  "final_skips": 0,
+  "actionlint_passed": true,
+  "working_execution_source_SHA256_normalized_LF": {
+    "tools/embeddinggemma_tools/native_regression_distribution.py": "4e64466aa736680f3ad45a89d28b4877e7ec04271224f7dc76cb45caafc63449",
+    "tools/embeddinggemma_tools/audio_generation_candidate.py": "0dda50b3e67f73e4f3926a19cfe0d92e705fb934ffa1b28cf51fd58be6271e3b",
+    "tools/embeddinggemma_tools/audit_audio_raw_chain.py": "013873e4f2e8cae899ea04d007f8860bdef41fd2d10c65a931893bf1218cad12",
+    "tools/embeddinggemma_tools/frozen_audio_chained_onnx.py": "0767e84377644cdb909e6cec86ac0b6e1432678d7acbc22e14d7ab318e15a36e",
+    "tools/embeddinggemma_tools/selected_audio_generation.py": "68af98e72a0c871a3412efef1b8d25a7db34b23651bc5dae5f451bb9474e2fa3",
+    ".github/workflows/pinned-audio-acceptance.yml": "c1af0f92ddd844e001d32afe77a3c5e82bca474d8f6ba63c4afdf16e4ee672cb"
+  },
+  "transport_contract_sha256": "947430cb584490077a900afed6d1fcc1415c08493ee7efea3e2727fa46fd6fb8",
+  "inventory_sha256": "e4da37c53cc9b97d421b17caf56eacb6003fdca9160ac6e8f6a86a5314299d5e",
+  "all_16_public_asset_sizes_digests_notes_and_tag_verified": true,
+  "anonymous_precommit_original_HTTP_boundary": {
+    "exact_files": 6,
+    "working_loader_sha256": "d97e86736e8605455b074ce940918557a4fff640dd53f3a5580baf955261500f",
+    "all_sizes_hashes_verified": true,
+    "fresh_fixed_Git_consumer_accepted": false
+  },
+  "candidate_contract_exact_bytes_and_selection_canonical_bytes_unchanged": true,
+  "selection_and_seven_proof_Git_blobs_unchanged": true,
+  "SDK_Runtime_unchanged": true,
+  "numerical_goldens_or_tolerances_changed": false,
+  "old_raw_mode_silently_accepts_clean_bytes": false,
+  "old_raw_audit_accepts_distribution_reports": false,
+  "new_six_signal_real_model_numeric_gate_passed": false,
+  "new_GPU_or_device_acceptance": false,
+  "formal_SDK_release": false,
+  "release_ready": false
+}

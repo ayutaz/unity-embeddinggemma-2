@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "inventories": {
+    "e4da37c53cc9b97d421b17caf56eacb6003fdca9160ac6e8f6a86a5314299d5e": {
+      "review_path": "docs/results/native-regression-exact-asset-review-20261019.json",
+      "review_canonical_sha256": "c78a5e78723597b9d83f211f46596cc5a65c5f25f97dc375d3574a8e5ebb9258"
+    }
+  }
+}

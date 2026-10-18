@@ -2,11 +2,11 @@
 
 確認日: 2026-10-19。対象はテキスト・画像・音声のGPU推論と横断検索です。[ゴール](goal.md)の必須環境・精度条件を維持します。
 
-直近の到達点は **#89・#91・#92・#93のマージ、両精度の匿名公開取得、対応長の実マイクGPU登録とパス表示修正後の実画面確認** です。main `3a2cf5c` は#93 head `7754ce4`と同treeで、全15 CI job・公開履歴・公開identity・provider署名を照合しました。#86・#87・#90は#91へ取り込み、元PRは個別mergeせずcloseしています。最終Windows Playerの混在検索入口は契約・回帰112件が合格し、実buildと独立cold / warmへ進めます。
+直近の到達点は **#94までの統合、両精度の公開取得、実マイクGPU登録、修正後の実画面とWindows混在Player全4起動の合格** です。main `186ffc1` は#94 head `3a02fc0`と同treeで、全15 CI job・公開履歴・公開identity・provider署名を照合しました。#86・#87・#90は#91へ取り込み、元PRは個別mergeせずcloseしています。同じsourceのテキスト15ケース・CPU/GPU比較も、別の実Release Player 2起動・8条件で合格しました。次は残る操作・性能・必須実機・恒久参照経路と公開前監査です。
 
 ## 現在地
 
-正式SDK tag・Releaseは未作成です。モデル配布用の実験previewは2件公開済みで、正式SDK公開とは区別します。以下は同日の実データ・GitHub照合に基づくcheckpointであり、正式候補全体の合格ではありません。
+正式SDK tag・Releaseは未作成です。Sentisモデル配布用のpreview 2件とnative回帰データ用のpreview 1件を公開済みで、正式SDK公開とは区別します。以下は同日の実データ・GitHub照合に基づくcheckpointであり、正式候補全体の合格ではありません。
 
 - [最新統合の受け入れ](results/release-integration-8649c94-acceptance-20261018.json)：head `8649c94` のRequired CIを含む15 jobと別のnative-dxgが成功。実行treeはheadと一致し、数値7 ZIPの全hash・CRC・2コピーと元参照824,320値の許容差超過0を独立確認しました。
 - 同じheadの空Git consumerでpackage 600ファイル・sample 86ファイル・公式framework 1,168ファイルを照合し、policy 34件が合格。FP32 / Float16重みの画像3・音声2と固定4 queryの実GPU PlayMode実行、各34破損controlの独立監査・正常終了が成功しました。ホストピークは14,669,389,824 / 10,761,338,880 bytesで、物理RAM確認後の明示16 GiB allowance下の結果です。既定12 GiB、SDK専有VRAM、latency、手動UI・全role・全環境の合格へは読み替えません。
@@ -14,8 +14,14 @@
 - [許可された実マイクGPU登録](results/native-microphone-gpu-8649c94-20261018.json)：追加で許可された8.4秒・134,400 sampleを取得し、自動停止・audio-839 GPU登録・text検索・解放・破棄が成功。実audio 270 Workerとtext 1 Workerの計算CPU fallback・中間flushは0、有限unit 768次元vectorを確認しました。1 pass・skip0・exit0です。音声は保存・外部送信せず、音声・embeddingも公開しません。source `8649c94`の追加harnessの結果であり、手動録音UI・任意音声の意味精度・他端末への読み替えはしません。
 - [descriptor bytesの保持](results/media-descriptor-byte-preservation-tdd-20261018.json)：10件Redから関連87件Green、#92最新headの必須CI・公開履歴・merge treeを確認して統合済みです。全宣言を準備した場合だけ元bytesを保持し、subsetは未取得objectを公開しません。
 - [修正後の実画面とGPU](results/native-ui-7754ce4-20261019.json)：固定Git `7754ce4`の新規consumerでpolicy等84件が合格。実マウス・キーボードによる画像・合成音声登録と全4検索を操作し、2 media vector・8順位/score・16破損control拒否を独立監査しました。GPU Workerは181 / 270 / 1、計算CPU fallback・中間flushは0、正常終了です。observer警告は保持し、全手動項目・性能全体の合格へは広げません。
-- [最終混在Playerの契約](results/final-mixed-player-contracts-20261019.json)：21・43・22件の未実装失敗から関連86件Green、既存回帰・元text bytesの実読み込み込みで112件Green。SDK Runtime・元参照・精度gateを維持し、36 base・45 warm・18文書・4検索・72順位/scoreを要求します。実Playerのbuild / GPU / 独立cold / warmは未実行です。
-- [cache接続の修正](results/final-mixed-player-cache-integration-20261019.json)：実tiny cache取得を加え、7件Redから関連119件Green。毎回のdescriptor読み込みとモデル転送を分け、cache所有layoutとcold記録を分離しました。先行source `8e6dd2c`は実Release build・67 source hash照合に成功（379.27秒、486 warning保持）。修正版のbuildと実GPU / 独立cold / warmは次の実行です。
+- [追加の途中停止](results/native-playback-stop-7754ce4-20261019.json)：同じSDK bytesで固定合成音声を実UIから再生し、残り3.349375秒の観測から0.251744秒後に明示停止しました。登録・preview・session保持後の全解放、PlayMode停止・Editor exit0、元証拠不変と2コピーを確認。追加録音はなく、性能測定や全操作合格とは区別します。
+- [混在Playerの契約](results/final-mixed-player-contracts-20261019.json)と[cache接続](results/final-mixed-player-cache-integration-20261019.json)：21・43・22件の未実装失敗から86件Green、既存回帰込み112件、実tiny cacheの7件Redから関連119件Green。元の失敗・不変の参照/gateと、契約段階の実行範囲を保存しました。
+- [最終混在Player](results/final-mixed-player-3a02fc0-20261019.json)：公開取得済みFP32 / Float16重みを新cacheと独立warm processで実行し、全4起動が正常終了。全roleの144 base・180 warm、18文書×4 query×4起動の288順位/score、88破損control拒否を独立確認しました。各warmはモデル転送0、各coldは820、descriptor読み込みは別に6件です。最大観測native working setはFP32 8,676,872,192 / Float16 6,024,720,384 bytes。source `3a02fc0`のGPU Worker・fallback/flush・解放とcompiled hash67件を確認しました。SDK専有VRAM・最小hardware・全環境の合格ではありません。
+- [既存テキスト全ケース](results/final-text-player-3a02fc0-20261019.json)：同sourceのRelease Player 2起動で各25行のtoken照合、両精度×CPU/GPU計8条件の15 case・6文書・4 queryが合格。CPUとGPUを別集計し、192順位/score・34破損report controlを確認しました。raw vectorはruntime内の照合で、保存値からの独立vector再計算ではありません。固定queryのwarm各6回のCPU/GPU時間を記録し、一般入力のlatency・GPU専有時間・最小要件へは広げません。
+- [数値回帰データの公開と取得実装](native-regression-distribution.md)：16 assetの実サイズ・hash、本文・tagを読み戻し、元参照/metadata 6ファイルを匿名HTTPで照合。明示input/audit・privacyの関連284件とactionlintが合格しました。元のgolden・許容差・採用根拠7記録は維持しています。新経路の全6信号・824,320値の実回帰は#97のCIで別に判定します。
+- [CIの旧コマンド名検査を修正](results/native-distribution-workflow-assertion-repair-20261019.json)：run `39150835197` のPython全4環境は同じテスト1件で失敗しました。明示的な公開配布経路を検査するよう更新し、1件のRedから関連293件Green・skip0を確認。実数値jobの結果とCI全体の不合格を区別し、修正後headの必須CIを再確認してから統合します。参照・許容差・6信号の必須条件は変更しません。
+- [公開経路の実数値回帰](results/native-distribution-real-numeric-73fa675-20261019.json)：同runの6信号と集計は成功。実アップロード7 ZIPのhash / CRC・私的2コピーを確認し、元参照824,320値の許容差超過0と集計JSONの一致を独立監査しました。通常CIの不合格を全体成功へ読み替えません。
+- [モデル内部メタデータの検査を修正](model-artifact-metadata.md)：新たなCIモデル内にビルド環境の絶対パスが残る境界を確認し、後続run `39153769849` は停止しました。PT2 / ONNXの文字列検査と新規PT2保存前の任意trace除去を追加。最終関連117件と、実raw PT2 2件の拒否・配布PT2 2件と元ONNX 2件の合格を確認しています。原本の書換え・数値基準の変更はなく、修正sourceの全CI・旧provider成果物の整理は別に残ります。
 
 ### 音声候補の採用経緯と固定sourceの保存記録
 
@@ -34,23 +40,23 @@
 
 全6 moduleの[実配布候補の組み立て](results/media-distribution-composition-567befb-20261018.json)はFP32 / Float16とも成功しました。各820 object・553モデルの元bytes・module対応・個人情報metadataを独立照合し、合計1,640ファイルの[実公開payload checker](results/model-publication-payload-guard-392ced7-20261018.json)も成功しました。flat HTTPS取得・回復とcompositionの関連77件が合格しています。その後のpreview公開・匿名の空cache取得結果は現在地の記録を参照してください。
 
-新配布候補の[サンプル検証入口](candidate-media-sample-validation.md)も準備しました。旧bundle用のpinと数値gateを維持し、新しいFP32 / Float16 descriptorと画像3・音声2 profileを別に検査します。未実装10件・cohort不足7件のRedから、旧policyを含む34件Green・skip0・Unity exit0と新fixtureのcompileを確認しました。これはlocal-file / no-graphicsの小規模検査で、実モデルのサンプル・PlayMode実行は未完了です。
+新配布候補の[サンプル検証入口](candidate-media-sample-validation.md)も準備しました。旧bundle用のpinと数値gateを維持し、新しいFP32 / Float16 descriptorと画像3・音声2 profileを別に検査します。未実装10件・cohort不足7件のRedから、旧policyを含む34件Green・skip0・Unity exit0と新fixtureのcompileを確認しました。この契約検査自体はlocal-file / no-graphicsの小規模確認です。後続の実モデル・PlayMode・Playerの結果は、現在地の各固定sourceの記録で区別しています。
 
 ## 優先順位と完了条件
 
 | 順序 | 実施すること | 完了条件・成果物 |
 | --- | --- | --- |
-| 1 | 基盤復旧と既存PRの整理 | #89・#91統合、残る3 PRの内容取り込みとcloseまで完了。固定参照・許容差を維持し、head 8649c94の全必須CI・新規consumer・両精度のsample GPUを確認 |
+| 1 | 基盤復旧と既存PRの整理 | #94まで統合、旧3 PRの内容取り込みとcloseまで完了。固定参照・許容差を維持し、各headの必須CI・新規consumer・実GPUを確認 |
 | 2 | 空checkout・空cacheから利用者向けの準備を再現 | 公開手順だけでtext・画像3・音声2の全6 moduleが準備でき、source / model hash一致。欠落・破損・中断・期限切れから回復 |
 | 3 | 最終候補のsample操作と性能を確認 | 日英検索・横断検索、画像、音声再生 / 停止、実マイク、キャンセル・再試行・解放が成功。権限拒否・deviceなしも確認。初回 / warm、CPU / GPU時間、RAM / VRAMを実測し最低要件を決定 |
-| 4 | 最終統合版のWindows Playerを受け入れ | IL2CPP / Release / High strippingで3入力・全必要role・横断検索のvector / 順位 / scoreが元参照と一致。実GPU・fallback / readback・独立cold / warm起動・解放・正常終了を確認 |
+| 4 | 最終統合版のWindows Playerを受け入れ | 機能側はsource 3a02fc0で全4混在起動・別text 2起動が合格。IL2CPP / Release / High、全media role・18文書の検索・text 15 case、GPU監査・独立cold/warm・解放・exit0を記録。性能・最低要件の未達は工程3と合わせて追跡 |
 | 5 | macOS Editor・iOS / Android実機を受け入れ | 端末・OS・graphics APIを記録し、3入力の実GPU・権限・suspend / 復帰・メモリを確認。skip・未実行・CPU fallbackをGPU合格に数えない |
 | 6 | 最終配布候補を固定し、公開前監査 | 必須回帰全成功。README / API / sample / CHANGELOG / 利用条件 / 最低要件を整備。履歴・commit identity・実公開payload・画像の目視 / OCR / hashを確認。旧PR / cacheのprivacy対応も追跡 |
 | 7 | 正式公開と公開後の導入確認 | version・tag・GitHub Releaseを一致させ、公開物を読み戻す。公開tagを新規consumerへ導入し直し、モデル準備とsample smokeが成功 |
 
-工程1はmain df66a6dへの統合と既存PRの整理まで完了しました。GitHubがsquash著者へ使用する公開名と指定noreplyは[限定的な履歴分類](results/provider-public-author-tdd-20261018.json)で扱い、実際のmerge・CI実行commitでも公開identityとprovider署名を確認しています。ローカルcommit identityや他の個人情報検査は維持します。工程2〜4は進行中、工程5〜7は未完了です。
+工程1は#94までの統合と既存PR整理が完了しました。GitHubがsquash著者へ使用する公開名と指定noreplyは[限定的な履歴分類](results/provider-public-author-tdd-20261018.json)で扱い、実際のmerge・CI実行commitでも公開identityとprovider署名を確認しています。ローカルcommit identityや他の個人情報検査は維持します。工程2の公開取得と工程4のWindows機能側は上記の実績があり、残る工程3の操作/性能・工程5〜7の条件は未完了です。
 
-工程2のモデル配布は正式SDK Releaseと分け、ライセンス・変更点・全ファイルhashを添えたモデル配布用previewを用意して、公開URLから実際に取得し直します。モデルはGit / LFSへ含めません。期限付きActions artifactだけに依存する数値回帰の取得経路も、同一bytesと来歴を検査して継続可能な保存先へ移します。原本が失われたものを再生成品で原本扱いしません。
+工程2のモデル配布は正式SDK Releaseと分け、ライセンス・変更点・全ファイルhashを添えたpreviewの公開と公開URLからの取得確認まで完了しました。モデルはGit / LFSへ含めません。数値回帰データも別previewへ保存し、元参照の同一bytesと、任意stack traceだけを除いた配布graphの計算内容・全非modelメンバーの一致を確認しました。元graphと実行graphのhashを区別する取得処理は実装済みで、次は最新候補の全6信号CIです。旧成果物の退避・依存棚卸しは維持し、原本が失われたものを再生成品で原本扱いしません。
 
 ## PRの整理
 
@@ -58,6 +64,11 @@
 - #86: 取得・回復の変更を#91へ取り込み済み。元PRはcloseしました。
 - #87: Float16・sample gate・測定の変更を#91へ取り込み済み。元PRはcloseしました。
 - #90: Player監査とrelease payloadの変更を#91へ取り込み済み。元PRはcloseしました。
+- #91・#92: 統合候補とdescriptor bytes保持をマージ済みです。
+- #93: 実画面のパス表示修正をマージ済みです。
+- #94: 最終混在Playerの検証経路を、全必須CIと実Player監査後にマージ済みです。
+- #95・#96: Windows記録とrelease添付検査のexact headを#97へ取り込み済み。#97の受け入れ後に統合先を記録してcloseします。
+- #97: 上記と数値回帰の公開データ・明示取得/監査をまとめた候補。最新headの全必須CIとprivacy確認後に統合します。
 
 #89の後、#86・#87・#90の変更を#91へまとめ、全必須CI・新規consumerと両精度の実sampleを確認して統合しました。3 PRのexact headが統合候補の祖先に含まれることを検査し、本文へ統合先を記録してcloseしています。個別PRのmergeとは区別します。今後の取得・操作・環境別修正もtask branch / PRを使い、最新headのCI・差分・privacyを確認して統合します。正式SDK tag / Releaseは工程6の完了後です。
 
@@ -65,7 +76,7 @@
 
 - macOS / iOS / Androidの端末・署名・build環境は、工程1と並行して先に確保します。直近の環境確認は接続Android端末0、self-hosted runner0、Mac / iOS未確定です。実行開始時に再確認します。
 - 重い取得・変換・build・回帰はGitHub Actionsを優先します。ローカルのUnity / GPU実行は必要な確認に絞り、1processずつ動かします。
-- 公開モデル取得・復帰、#93までの統合、許可された対応長の実マイクGPU登録、表示修正後の画面再確認は成功しました。次は「最終混在Windows Playerの実build・独立cold / warm」「残る実操作・性能計測」です。数値参照の恒久取得経路と必須端末の確保も残っています。合格・失敗・未実行とsource / modelを分けて記録します。
-- リリース日は未確定です。統合とローカルモデルでの新規consumer受け入れは成功しました。次に公開モデルからの導入を受け入れ、工程5の端末・署名・実行担当を確定した時点で、測定・修正・環境別検証の日程を見積もります。端末が未確保のまま完了日を約束しません。
-- 次の報告は「最終混在Windows Playerのbuildと実行」「独立cold / warmの元参照監査」「性能と必要端末の未達条件」の単位で行います。新しい不具合がない同一モデルの重い変換は繰り返さず、CI終了待ちと実作業時間を分けて示します。
+- #94までの統合、公開モデル取得・復帰、実マイク、表示修正後の画面、最終混在Playerの独立cold / warmとtext全ケースは成功しました。次は「残る実操作・各stage性能とCPU比較」「数値参照の恒久取得・privacy対応」「必須実機」です。正式SDK公開は全条件の完了後に行います。合格・失敗・未実行とsource / modelを分けて記録します。
+- リリース日は未確定です。統合、公開モデルからの新規consumer導入、Windows機能側の受け入れは成功しました。工程5の端末・署名・実行担当を確定した時点で、残る測定・修正・環境別検証の日程を見積もります。端末が未確保のまま完了日を約束しません。
+- 次の報告は「残る操作・性能」「恒久参照とprivacy対応」「必須端末の実行可否」の単位で行います。新しい不具合がない同一モデルの重い変換は繰り返さず、CI終了待ちと実作業時間を分けて示します。
 - 公開表示名 `yousan` は維持します。公開文書には相対 / 環境変数のパスだけを使い、元画像・元数値証拠は非公開で保持します。証拠画像を加工・再生成して漏えいや失敗を隠しません。

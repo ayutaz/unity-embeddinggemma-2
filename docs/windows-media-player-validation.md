@@ -1,5 +1,20 @@
 # Windows image/audio Player validation
 
+The [actual final mixed Player](results/final-mixed-player-3a02fc0-20261019.json)
+at `3a02fc0` passed four Windows D3D12 IL2CPP / Release / High processes:
+FP32 and Float16 weights, each with independent cold/warm launches. Every process
+passed all 36 base media-role vectors, 45 warm captures and 72 mixed ranks/scores.
+Independent audits rejected 88 corrupt controls, verified live GPU Worker
+assignments, release and normal exit, and bound warm transfer counts to zero model
+objects. All 15 CI jobs passed; PR #94 merged with the same tree as the tested head.
+
+The [existing full text protocol](results/final-text-player-3a02fc0-20261019.json)
+also passed two actual Release Player processes, each with FP32 / Float16 weights
+and separate CPU / GPU conditions, 25 token rows and all 15 text cases. Its saved
+ranks/scores were independently checked; raw vectors are checked inside that
+runtime protocol and are not saved for independent recomputation. These results
+retain the broader performance, platform and formal Release gates as incomplete.
+
 ## Complete mixed-suite extension
 
 The [2026-10-19 contract checkpoint](results/final-mixed-player-contracts-20261019.json)
@@ -67,7 +82,10 @@ this is not a warning-free build claim. The corrected source requires a new buil
 
 ## Individual-module baseline
 
-Status: implementation candidate under review. Editor contract tests and original-fixture loading are separate from an actual Release Player build or real-model GPU acceptance. Neither a new model generation nor the final multimodal product is qualified by this harness alone.
+This section preserves the individual-module implementation baseline. Editor
+contract tests and original-fixture loading are separate from actual Release
+execution. The final mixed execution above uses the public-acquired candidate;
+the retained-bundle results below keep their original source/model scope.
 
 `ValidationPlayerBuild.BuildWindowsMedia(outputExe, sourceCommit)` prepares a Windows x64 IL2CPP / Release / High-stripping build. It uses an empty generated scene and the unique `EmbeddingGemmaMediaValidationBuild` resource marker. Existing text validation and ordinary Players do not receive this marker. Build settings and scenes are restored on success and failure, and an injected build cannot produce a successful build receipt.
 

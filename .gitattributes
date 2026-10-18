@@ -1,4 +1,6 @@
 .githooks/* text eol=lf
 tools/references/original-audio-validation.json -text
 tools/references/audio-candidate-e9de158.json -text
+tools/references/native-regression-release.json -text
+tools/references/native-regression-distribution.json -text
 docs/results/audio-candidate-six-case-numerical-audit-20261018.json -text

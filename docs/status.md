@@ -1,6 +1,6 @@
 # 現在の対応範囲と検証状況
 
-最新checkpoint（2026-10-19）: **main `3a2cf5c`、PR #89・#91・#92・#93マージ済み**。#93は全15 CI job成功、実画面と数値の独立監査、merge後の同tree・公開identity・provider署名・全履歴検査を確認しました。#86・#87・#90は内容を#91へ取り込み、元PRをcloseしています。各固定sourceの証拠は以下で区別します。
+最新checkpoint（2026-10-19）: **main `186ffc1`、PR #89・#91・#92・#93・#94マージ済み**。#94はhead `3a02fc0`の全15 CI job、実Windows Player 4起動の独立監査、merge後の同tree・公開identity・provider署名・全履歴検査を確認して統合しました。#86・#87・#90は内容を#91へ取り込み、元PRをcloseしています。READMEの導入pinもこの確認済みmainへ更新しました。
 
 [モデルpreview](results/model-preview-publication-567befb-20261018.json)は両精度825 assetずつ公開し、全実payloadとremote digestを照合済みです。[匿名の空cache取得・中断復帰](results/public-model-consumer-8649c94-20261018.json)は両精度で成功し、warmで820再利用・転送0、1 object破損修復と全hash、公開取得モデルの5 media profile・4 query GPU実行と独立監査まで確認しました。
 
@@ -8,9 +8,17 @@
 
 実画面操作で検出した絶対パス表示は[8件Redから関連50件Green](results/sample-display-privacy-tdd-20261018.json)へ修正し、#93で統合しました。[修正source `7754ce4`の実画面再確認](results/native-ui-7754ce4-20261019.json)では画像・合成音声のGPU登録、日英4検索・8順位/score、preview、エラー復帰、loading cancel・retry、再生、reset・解放・正常終了が成功しました。元の漏えい記録は非公開で保持しています。observer由来のtimeSamples警告も保持し、無警告や再生中断時間の合格は主張しません。
 
-最終Windows Player向けに[混在検索の契約・回帰112件](results/final-mixed-player-contracts-20261019.json)が合格しました。全roleのmedia 36件・warm45件と18文書×4検索を要求する入口を実装しています。実Playerのbuild・独立cold / warmは次の検証であり、この契約テストの成功には含みません。手動UI残項目、SDK専有のGPU時間・allocation、macOS / iOS / Android実機、provider privacy対応、正式SDK tag / Releaseも未完了です。[リリース計画](release-plan.md)で追跡します。
+同じSDK bytesの[追加の途中停止確認](results/native-playback-stop-7754ce4-20261019.json)では、11.2秒の固定合成音声を実UIから再生し、残り3.349375秒の観測から0.251744秒後に明示停止を確認しました。clipの切り離し後も登録・preview・sessionを保持し、その後のresetで全解放、PlayMode停止・Editor exit0まで成功しました。文書vectorの元参照cosineは0.9999999905661618、音声270・text 1 WorkerのCPU fallback・中間flushは0です。元の警告・証拠は置き換えず、追加録音はありません。全手動項目・性能全体の合格には広げません。
 
-続く[cache接続の確認](results/final-mixed-player-cache-integration-20261019.json)では7件Redから関連119件Green。descriptor読み込みとモデル転送を分け、SDK所有cacheを`prepared`子directory、cold記録を親へ分離しました。旧入口source `8e6dd2c`の実Release buildは379.27秒・exit0・source hash67件一致ですが、cache修正前のbinaryなので受け入れ実行には使いません。486 warningも保持し、修正版のbuild・実GPU起動を次に行います。
+[公開取得モデルの最終混在Player](results/final-mixed-player-3a02fc0-20261019.json)は、Windows D3D12 / IL2CPP / Release / High strippingでFP32・Float16重みの独立cold / warm全4起動が合格しました。各起動でmedia全3roleの36 base・45 warmと18文書×4検索を元参照から独立照合し、合計288順位/score・88破損control拒否、GPU Worker監査、解放・exit0を確認しました。coldは各820 object転送、warmは0で、descriptor読み込み6件とは分けています。SDK Runtime・元参照・許容差は維持しています。
+
+別の[既存テキスト全ケース](results/final-text-player-3a02fc0-20261019.json)も、同じsourceのRelease Player 2 processでFP32 / Float16重み×CPU / GPUの計8条件が合格しました。各条件で15 case・6文書・4 query、各processで25行のtoken照合を実行しています。GPU条件とCPU条件は別に数え、保存された192順位/scoreと34破損report controlを独立確認しました。この旧text protocolはraw vectorを保存しないため、vectorはruntime内の照合であり、混在Playerの独立vector再計算とは区別します。
+
+[契約112件](results/final-mixed-player-contracts-20261019.json)と[cache接続7件Red→関連119件Green](results/final-mixed-player-cache-integration-20261019.json)、初期の失敗記録は保持しています。実行に使った修正版sourceは`3a02fc0`で、compiled Runtime/link hash67件とpackage 600・sample 86・公式framework 1,168ファイルを確認しました。修正版のbuild warning485件も保持し、無警告とは扱いません。
+
+手動UI残項目、SDK専有のGPU時間・allocation、画像/音声のCPU比較、最低要件、macOS / iOS / Android実機、provider privacy対応、恒久的な数値参照取得経路、正式SDK tag / Releaseは未完了です。[リリース計画](release-plan.md)で追跡します。今回のWindows機能検証を全環境・性能全体・正式公開の合格には広げません。
+
+数値回帰の[データpreview](results/native-regression-preview-publication-20261019.json)も公開し、全16 assetの実サイズ・hash、本文とtagを照合しました。[明示的な恒久取得経路](native-regression-distribution.md)は284件・actionlintと匿名HTTPによる元参照/metadata 6ファイル照合が成功。元の数値基準・採用根拠7記録を維持し、実行したclean graphのhashと保存元graphのhashを分けています。新経路の全6信号・824,320値の実回帰は最新候補のCIで確認する段階です。#95 head `0c3891d`と#96 head `677b851`は#97へ取り込み、重いCIの重複を整理して最新候補を検査します。元2 PRの個別merge完了とは扱わず、#97の受け入れ後に統合先を記録して整理します。
 
 ## 統合前checkpointと固定sourceの検証記録
 

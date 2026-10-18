@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "repository": "ayutaz/unity-embeddinggemma-2",
+  "tag": "native-regression-preview-e9de158",
+  "release_id": 416593281,
+  "publication_target": "728a3d004caab0afb51009009e801d932fedb64b",
+  "inventory_sha256": "e4da37c53cc9b97d421b17caf56eacb6003fdca9160ac6e8f6a86a5314299d5e",
+  "assets": {
+    "LICENSE.txt": {
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "asset_id": 654042403
+    },
+    "MODIFICATIONS.txt": {
+      "bytes": 1095,
+      "sha256": "5f2e5e4d1ff75a04fa7f5209853b090d7c783abe41e3741edafa136d03d35b61",
+      "asset_id": 654042398
+    },
+    "NOTICE.txt": {
+      "bytes": 958,
+      "sha256": "90e417ec7aa5bbe9d3e1bf84eeaae96b106cf41279081c00565c85dbbd4e05b3",
+      "asset_id": 654042399
+    },
+    "candidate-1119.pt2": {
+      "bytes": 1227324645,
+      "sha256": "e4e9699657fd0c9e88d872bad6adbaddc3d43cee2e13711b10f7901cb8483165",
+      "asset_id": 654042401
+    },
+    "candidate-839.pt2": {
+      "bytes": 1227325734,
+      "sha256": "aa43ba4948c879f0fcc31222dbc05cbd333c70beda2dae04da420e9e284343da",
+      "asset_id": 654042400
+    },
+    "candidate-audit.json": {
+      "bytes": 4933,
+      "sha256": "027d7106d7db7c09caa8f3cea9616575f9c93511ec6d0c4bc70774e37d072898",
+      "asset_id": 654042432
+    },
+    "candidate-reference.json": {
+      "bytes": 25195392,
+      "sha256": "aa327a3c2bbcaea9a00c82012ed89d7b4a3ea786a20eba806c5977de0dfe441e",
+      "asset_id": 654042430
+    },
+    "input-impulse.bin": {
+      "bytes": 572928,
+      "sha256": "2202541551e06a429b222d31f3d495a2b051fca70191287c82c7f6a6d8803c82",
+      "asset_id": 654042433
+    },
+    "input-noise.bin": {
+      "bytes": 572928,
+      "sha256": "b26f15554a3123e12cb39949709ea94588c27a5324f4cadefc701fba124c5c42",
+      "asset_id": 654042443
+    },
+    "input-nyquist.bin": {
+      "bytes": 572928,
+      "sha256": "eaaa9e11f4d282294a9c57d4eddd392d2a257ea1f342d0452d99984602ff1e96",
+      "asset_id": 654042465
+    },
+    "input-padded_noise.bin": {
+      "bytes": 572928,
+      "sha256": "6065504b6b2d244526df3a79cb5b88e9463e8e576ff877b5b8fa90b9bf18b1b0",
+      "asset_id": 654042469
+    },
+    "input-silence.bin": {
+      "bytes": 572928,
+      "sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+      "asset_id": 654042479
+    },
+    "input-sine.bin": {
+      "bytes": 572928,
+      "sha256": "dcc0ed05018d225a140916249cb3a3ab948c4cc50e5f457abac24e909e9c64c5",
+      "asset_id": 654042489
+    },
+    "native-regression-assets.json": {
+      "bytes": 3526,
+      "sha256": "e4da37c53cc9b97d421b17caf56eacb6003fdca9160ac6e8f6a86a5314299d5e",
+      "asset_id": 654042496
+    },
+    "original-audit.json": {
+      "bytes": 3735,
+      "sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+      "asset_id": 654042498
+    },
+    "original-reference.json": {
+      "bytes": 25186055,
+      "sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+      "asset_id": 654042502
+    }
+  }
+}

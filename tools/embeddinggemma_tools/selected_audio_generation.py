@@ -130,6 +130,10 @@ def checked_selection(root=None):
 def validate_current_reports(paths, original, *, source):
     selected = checked_selection()
     result = candidate.audit_candidate_reports(paths, original, source=source)
+    return _accept_current_result(result,selected,source=source)
+
+
+def _accept_current_result(result,selected,*,source):
     require(result['success'] is True and result['source'] == source
             and result['model_generation'] == selected['model_generation']
             and result['candidate_contract_sha256'] == selected['candidate_contract_sha256']
@@ -141,24 +145,45 @@ def validate_current_reports(paths, original, *, source):
     return result
 
 
+def validate_current_distribution_reports(paths, original, *, source):
+    from . import native_regression_distribution as distribution
+    selected = checked_selection()
+    result = distribution.audit_distribution_reports(paths,original,source=source)
+    config, _ = distribution.configuration()
+    require(result.get('graph_transport') == distribution.TRANSPORT
+            and result.get('graph_transport_contract_sha256') == distribution.CONFIG_SHA
+            and result.get('graph_distribution_inventory_sha256') == config['inventory_sha256'])
+    return _accept_current_result(result,selected,source=source)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest='command', required=True)
-    fetch = commands.add_parser('fetch'); fetch.add_argument('--output', type=Path, required=True)
-    fetch.add_argument('--original', type=Path, required=True); fetch.add_argument('--case', choices=sorted(SIGNALS), required=True)
-    golden = commands.add_parser('fetch-original'); golden.add_argument('--output', type=Path, required=True)
-    audit = commands.add_parser('audit'); audit.add_argument('--reports', type=Path, required=True)
-    audit.add_argument('--original', type=Path, required=True); audit.add_argument('--source', required=True)
-    audit.add_argument('--output', type=Path, required=True)
+    for name in ('fetch','fetch-distribution'):
+        fetch = commands.add_parser(name); fetch.add_argument('--output', type=Path, required=True)
+        fetch.add_argument('--original', type=Path, required=True); fetch.add_argument('--case', choices=sorted(SIGNALS), required=True)
+    for name in ('fetch-original','fetch-original-distribution'):
+        golden = commands.add_parser(name); golden.add_argument('--output', type=Path, required=True)
+    for name in ('audit','audit-distribution'):
+        audit = commands.add_parser(name); audit.add_argument('--reports', type=Path, required=True)
+        audit.add_argument('--original', type=Path, required=True); audit.add_argument('--source', required=True)
+        audit.add_argument('--output', type=Path, required=True)
     args = parser.parse_args(argv)
     checked_selection()
     if args.command == 'fetch':
         candidate.fetch_candidate(args.output, args.original, case_id=args.case)
+    elif args.command == 'fetch-distribution':
+        from .native_regression_distribution import fetch_candidate
+        fetch_candidate(args.output,args.original,case_id=args.case)
     elif args.command == 'fetch-original':
         candidate.fetch_original(args.output)
+    elif args.command == 'fetch-original-distribution':
+        from .native_regression_distribution import fetch_original
+        fetch_original(args.output)
     else:
         if args.output.exists(): raise ValueError('Never overwrite an original-regression audit result')
-        result = validate_current_reports(sorted(args.reports.rglob('frozen-audio-chained-onnx.json')), args.original, source=args.source)
+        validate = validate_current_distribution_reports if args.command=='audit-distribution' else validate_current_reports
+        result = validate(sorted(args.reports.rglob('frozen-audio-chained-onnx.json')), args.original, source=args.source)
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(result, indent=2, allow_nan=False)+'\n', encoding='utf-8')
     print(json.dumps(dict(success=True, selection_canonical_sha256=SELECTION_SHA,

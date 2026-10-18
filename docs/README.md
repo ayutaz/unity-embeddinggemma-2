@@ -14,12 +14,13 @@
 | [低レベルのマルチモーダルAPI](../Packages/com.ayutaz.embeddinggemma/Documentation~/multimodal-api.md) | prompt・GPU特徴量・前処理の入力と所有権 |
 | [音声API](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-embedder.md) | 非同期呼び出し・stageの所有権 |
 | [モデルのライセンス](model-license.md) | コードとモデルの利用条件・配布境界 |
+| [モデル成果物の個人情報検査](model-artifact-metadata.md) | PT2 / ONNX内部の文字列検査、原本保持とCI再開条件 |
 
 ## 現状と開発計画
 
 | 文書 | 内容 |
 | --- | --- |
-| [検証状況](status.md) | 2026-10-18時点の統合済み機能・確認済み環境・未達条件 |
+| [検証状況](status.md) | 2026-10-19時点の統合済み機能・確認済み環境・未達条件 |
 | [ロードマップ](roadmap.md) | 次のPR単位、依存関係、受け入れと正式公開の条件 |
 | [プロジェクトのゴール](goal.md) | GPU要件、精度・対応環境、対象外 |
 | [CI](ci.md) / [自動操作](automation.md) | 開発環境・workflow・実行と結果の扱い |
@@ -30,6 +31,10 @@
 
 | 分野 | 入口 |
 | --- | --- |
+| Windows Releaseの公開モデル・全media role・混在検索 | [独立cold/warm全4起動](results/final-mixed-player-3a02fc0-20261019.json) |
+| 同sourceの既存text全ケースとCPU/GPU比較 | [実Player 2起動・8条件](results/final-text-player-3a02fc0-20261019.json) |
+| 修正後の実UIによる音声の途中停止と解放 | [固定合成音声・追加録音なし](results/native-playback-stop-7754ce4-20261019.json) |
+| 元の数値基準を維持する公開データと取得経路 | [native回帰データのpreview・明示input/audit](native-regression-distribution.md) |
 | 最新サンプルの実GPU・メモリ・画面・回帰 | [画像・音声サンプル検証](multimodal-search-sample.md) |
 | GPU出力確保の改善と新SDKの精度・順位 | [CPU storageの省略](gpu-write-only-output-allocation.md) |
 | 新SDKの全画像・音声profileのGPU/CPU/wall・メモリ | [同じsourceの40反復](media-gpu-submission-observations.md) |

@@ -83,7 +83,7 @@ def original_reference(directory):
     return reference,audit
 
 
-def _candidate_input_files(directory,original,*,case_id):
+def _candidate_metadata(directory,original,*,case_id):
     contract=candidate_contract();reference,audit=original_reference(original)
     root=Path(directory).resolve()
     for name,expected in [('audio-encoder-reference.json',contract['reference_sha256']),
@@ -111,12 +111,17 @@ def _candidate_input_files(directory,original,*,case_id):
             or current['files'].get(input_name)!=audit['files'][input_name]):
         raise ValueError('Candidate graph or original input descriptor differs')
     raw=checked_file(root,input_name,audit['files'][input_name])
-    program_path=checked_file(root,graph_name,graph)
     provenance=dict(reference_source=PRODUCER,model_revision=REVISION,
         case_id=case_id,profile=row['profile'],reference_sha256=REFERENCE_SHA,audit_sha256=AUDIT_SHA,
         graph_sha256=graph['sha256'],input_sha256=audit['files'][input_name]['sha256'],
         model_generation=contract['generation'],candidate_contract_sha256=CONTRACT_SHA,
         graph_producer=contract['producer_source'],original_graph_bytes=False)
+    return root,raw,spec,row,graph,provenance
+
+
+def _candidate_input_files(directory,original,*,case_id):
+    root,raw,spec,row,graph,provenance=_candidate_metadata(directory,original,case_id=case_id)
+    program_path=checked_file(root,spec['native_graph'],graph)
     return program_path,raw,spec,row,provenance
 
 
@@ -131,9 +136,14 @@ def load_candidate_input(directory,original,*,case_id):
 
 
 def audit_candidate_report(path,original):
+    return _audit_candidate_report(path,original)
+
+
+def _audit_candidate_report(path,original,*,execution_graph=None):
     from .audit_audio_raw_chain import _audit_report
     contract=candidate_contract()
-    result=_audit_report(path,original,expected_variant='ordered_original_midpoint_bmm',generation=contract)
+    options={} if execution_graph is None else {'execution_graph':execution_graph}
+    result=_audit_report(path,original,expected_variant='ordered_original_midpoint_bmm',generation=contract,**options)
     path=Path(path).resolve();report=json.loads(path.read_text(encoding='utf-8'))
     controls=report.get('native_control_context',{})
     if (controls.get('mkl_cbwr')!='COMPATIBLE' or controls.get('mkl_dynamic')!='FALSE'
@@ -149,11 +159,15 @@ def audit_candidate_report(path,original):
 
 
 def audit_candidate_reports(paths,original,*,source):
+    return _aggregate_candidate_reports(paths,original,source=source,audit_one=audit_candidate_report)
+
+
+def _aggregate_candidate_reports(paths,original,*,source,audit_one):
     from .audit_audio_raw_chain import _aggregate_reports
     if re.fullmatch('[0-9a-f]{40}',source or '') is None:
         raise ValueError('Immutable candidate execution source required')
     contract=candidate_contract()
-    rows=[audit_candidate_report(path,original) for path in paths]
+    rows=[audit_one(path,original) for path in paths]
     if any(row['model_generation']!=contract['generation'] or row['candidate_contract_sha256']!=CONTRACT_SHA for row in rows):
         raise ValueError('All candidate reports must use the same fixed generation')
     result=_aggregate_reports(rows,'ordered_original_midpoint_bmm')

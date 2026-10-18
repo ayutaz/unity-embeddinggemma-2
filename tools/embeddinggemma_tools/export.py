@@ -875,5 +875,15 @@ def _save_program(wrapper, inputs, destination, *, decompositions=None):
             program.graph.erase_node(node)
     program.graph.lint()
     program.graph_module.recompile()
+    save_program_without_debug_traces(program,destination)
+
+
+def save_program_without_debug_traces(program,destination):
+    """Keep graph operations/weights while omitting optional export-host traces."""
+    # Optional export-host traces are metadata, not graph operations or weights.
+    # Remove them before the first serialization; retained source files stay intact.
+    for node in program.graph.nodes:
+        node.meta.pop('stack_trace',None)
+    destination=Path(destination)
     destination.parent.mkdir(parents=True, exist_ok=True)
     torch.export.save(program, destination)

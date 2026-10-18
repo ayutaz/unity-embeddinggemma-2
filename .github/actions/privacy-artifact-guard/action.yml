@@ -1,5 +1,5 @@
 name: Artifact privacy guard
-description: Stop text, filename and unreviewed-image leaks before artifact publication
+description: Stop text, filename, model-metadata and unreviewed-image leaks before artifact publication
 inputs:
   paths:
     description: Exact newline-separated upload-artifact paths
@@ -14,4 +14,4 @@ runs:
       working-directory: tools
       env:
         PRIVACY_ARTIFACT_PATHS: ${{ inputs.paths }}
-      run: uv run --no-project --python 3.13 python -m embeddinggemma_tools.privacy_artifacts --root .. --paths "$PRIVACY_ARTIFACT_PATHS"
+      run: uv run --no-project --python 3.13 --with onnx==1.23.2 python -m embeddinggemma_tools.privacy_artifacts --root .. --paths "$PRIVACY_ARTIFACT_PATHS"

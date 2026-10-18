@@ -37,7 +37,7 @@ def audit_report(report_path, original, *, expected_variant='ordered_original_ta
     return _audit_report(report_path,original,expected_variant=expected_variant)
 
 
-def _audit_report(report_path, original, *, expected_variant, generation=None):
+def _audit_report(report_path, original, *, expected_variant, generation=None, execution_graph=None):
     if expected_variant not in ('ordered_original_tanh','ordered_original_midpoint_bmm'):
         raise ValueError('Unregistered expected raw candidate')
     original = Path(original).resolve()
@@ -68,6 +68,17 @@ def _audit_report(report_path, original, *, expected_variant, generation=None):
     graph_sha=manifest['files'][spec['native_graph']]['sha256']
     if generation is not None:
         graph_sha=generation['graphs'][spec['native_graph']]['sha256']
+    execution_fields = {}
+    if execution_graph is not None:
+        if generation is None or execution_graph['source_graph_sha256'] != graph_sha:
+            raise ValueError('Distribution graph source differs from the selected generation')
+        execution_fields = dict(source_graph_sha256=graph_sha,
+            graph_sha256=execution_graph['sha256'], executed_graph_sha256=execution_graph['sha256'],
+            graph_transport=execution_graph['transport'],
+            graph_transport_contract_sha256=execution_graph['transport_contract_sha256'],
+            graph_distribution_inventory_sha256=execution_graph['inventory_sha256'],
+            graph_distribution_producer=execution_graph['distribution_producer'])
+        graph_sha=execution_graph['sha256']
     for p in (provenance, report['input_provenance'], report['target_provenance']):
         if (p['reference_source'] != PRODUCER or p['model_revision'] != REVISION
                 or p['reference_sha256'] != REFERENCE_SHA or p['audit_sha256'] != AUDIT_SHA
@@ -75,6 +86,12 @@ def _audit_report(report_path, original, *, expected_variant, generation=None):
                 or p['input_sha256'] != manifest['files'][row['input_features']]['sha256']
                 or p['graph_sha256'] != graph_sha):
             raise ValueError('Original raw input/graph provenance differs')
+        if execution_graph is None:
+            if any(key in p for key in ('source_graph_sha256','executed_graph_sha256','graph_transport',
+                    'graph_transport_contract_sha256','graph_distribution_inventory_sha256','graph_distribution_producer')):
+                raise ValueError('Distribution graph provenance requires its explicit audit route')
+        elif any(p.get(key) != value for key,value in execution_fields.items()):
+            raise ValueError('Actual executed distribution graph provenance differs')
         if generation is None:
             if any(key in p for key in ('model_generation','candidate_contract_sha256','graph_producer','original_graph_bytes')):
                 raise ValueError('Candidate generations cannot enter the original graph gate')
@@ -146,7 +163,8 @@ def _audit_report(report_path, original, *, expected_variant, generation=None):
         candidate_vs_current_native=candidate['vs_current_native'],minimum_cosine=candidate['minimum_cosine'],
         original_tolerance_passed=candidate['metrics']['mismatched_elements']==0 and candidate['minimum_cosine']>=0.999999,
         values_compared=expected.size,all_capture_and_carry_hashes_verified=True,cases=audited,
-        graphs_independently_rehashed=False,gpu_validated=False,default_export_promoted=False)
+        graphs_independently_rehashed=False,gpu_validated=False,default_export_promoted=False,
+        **execution_fields)
 
 
 def audit_reports(paths, original, *, expected_variant='ordered_original_tanh'):

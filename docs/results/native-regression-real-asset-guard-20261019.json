@@ -1,0 +1,60 @@
+{
+  "success": true,
+  "source": "e05951364b212999269e7af1ec72ff2670e53d36",
+  "actual_assets_checked": [
+    {
+      "name": "candidate-1119.pt2",
+      "passed": true
+    },
+    {
+      "name": "candidate-839.pt2",
+      "passed": true
+    },
+    {
+      "name": "candidate-audit.json",
+      "passed": true
+    },
+    {
+      "name": "candidate-reference.json",
+      "passed": true
+    },
+    {
+      "name": "input-impulse.bin",
+      "passed": true
+    },
+    {
+      "name": "input-noise.bin",
+      "passed": true
+    },
+    {
+      "name": "input-nyquist.bin",
+      "passed": true
+    },
+    {
+      "name": "input-padded_noise.bin",
+      "passed": true
+    },
+    {
+      "name": "input-silence.bin",
+      "passed": true
+    },
+    {
+      "name": "input-sine.bin",
+      "passed": true
+    },
+    {
+      "name": "original-audit.json",
+      "passed": true
+    },
+    {
+      "name": "original-reference.json",
+      "passed": true
+    }
+  ],
+  "committed_HEAD_policy_used": true,
+  "no_review_monkeypatch": true,
+  "elapsed_seconds": 9.307358599966392,
+  "SDK_Runtime_unchanged": true,
+  "files_uploaded": false,
+  "all_platforms_or_release_accepted": false
+}

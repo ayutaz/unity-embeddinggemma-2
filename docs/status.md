@@ -4,6 +4,8 @@
 
 [iOS build profileの準備](device-validation.md)は[初回の19件Red→19件Green](results/ios-build-profile-tdd-20261019.json)後、Xcodeの構成もReleaseへ固定・復元しました。[追加の8件Red / 15件pass→最終23件Green](results/ios-xcode-scheme-tdd-20261019.json)と、Windows / Android設定を含む関連44件が失敗・skipなしで成功しています。Windows Editorによる設定・復元・上書き拒否・署名情報の非掲載の確認であり、実iOS export・署名・実機GPUは未実行です。既存の画像・音声 / 混在Player入口はWindows限定のままで、端末用入口・fixture配置と全必須実機の受け入れは残ります。
 
+[固定入力のlocal staging](results/device-fixture-materialization-tdd-20261019.json)は29件Red→29件Green、元28ファイル・34,474,958 bytesの実file URI転送と全hashの独立再計算、変更していないloaderによる全role 36ケース・text 6文書 / 4 queryの確認が成功しました。転送段階は元fixtureやGPUの合格を付与せず、既存の独立した元hash・数値gateを維持します。Windows Editorの1統合テスト・skip0であり、Android jar・実機・モデル推論は未実行です。端末用runnerへの接続も残ります。
+
 [モデルpreview](results/model-preview-publication-567befb-20261018.json)は両精度825 assetずつ公開し、全実payloadとremote digestを照合済みです。[匿名の空cache取得・中断復帰](results/public-model-consumer-8649c94-20261018.json)は両精度で成功し、warmで820再利用・転送0、1 object破損修復と全hash、公開取得モデルの5 media profile・4 query GPU実行と独立監査まで確認しました。
 
 [許可された8.4秒の実マイク](results/native-microphone-gpu-8649c94-20261018.json)はWindows Editorで取得・自動停止・GPU登録・テキスト検索・解放・破棄まで成功しました。音声270 Workerとtext 1 Workerの計算CPU fallback・中間flushは0。録音の保存・外部送信はなく、音声・embeddingも公開しません。source `8649c94`の追加ローカルharnessによる結果で、任意音声の意味精度・手動録音UI・全環境の合格ではありません。

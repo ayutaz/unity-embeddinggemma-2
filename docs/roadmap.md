@@ -6,6 +6,8 @@
 
 ## 直近の作業順
 
+Runtime負荷軽減は[PR #88](https://github.com/ayutaz/unity-embeddinggemma-2/pull/88)へ分離した。[単独候補](results/runtime-ready-integration-2a29c68-20261018.json)の517 pass / skip0 / exit0と既存実モデル参照sourceの一致を確認し、CI後の先行統合を設定している。統合後に#85 / #87から重複Runtime差分を整理する。優先1〜3全体の公開取得・実マイク・最終操作・性能欠測は、この先行統合によって完了扱いにしない。
+
 依頼された優先1〜3の要件ごとの現状・残作業・完了条件は[残タスク監査](priority-1-to-3-acceptance.md)を参照してください。固定sourceの数値成功、最新sampleの操作、公開元からの取得と性能全体の受け入れをそれぞれ確認します。
 
 ### 1. 新規利用者のモデル準備

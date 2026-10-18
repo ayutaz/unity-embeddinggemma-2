@@ -6,6 +6,8 @@
 
 [導入](../README.md) / [ドキュメント一覧](README.md) / [今後の計画](roadmap.md)
 
+Runtime負荷軽減は[PR #88](https://github.com/ayutaz/unity-embeddinggemma-2/pull/88)へ切り出し、main既存サンプルを保った[単独候補の回帰517 pass / skip0 / exit0](results/runtime-ready-integration-2a29c68-20261018.json)を確認した。同候補と本branchのRuntime treeは `7d6e4314552b221d06db881405e7ccff3f449a77` で一致する。#88はCI成功後の先行統合を設定済みであり、公開取得・実マイク・最終操作と性能全体の受け入れは別に残す。
+
 ## 統合済みの機能
 
 | 項目 | 現状 | 主な根拠 |

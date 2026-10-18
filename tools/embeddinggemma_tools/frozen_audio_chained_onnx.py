@@ -203,8 +203,11 @@ def main(argv=None):
     parser.add_argument('--input', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--frozen-stage-source', type=Path)
-    parser.add_argument('--candidate-directory', type=Path,
+    candidate_modes = parser.add_mutually_exclusive_group()
+    candidate_modes.add_argument('--candidate-directory', type=Path,
                         help='Opt-in fixed unqualified generation; original reference values stay unchanged')
+    candidate_modes.add_argument('--candidate-distribution-directory', type=Path,
+                        help='Explicit pinned metadata-clean distribution; records actual executed graph hash')
     parser.add_argument('--raw-input', action='store_true')
     parser.add_argument('--variant', choices=('native', 'ordered_static_linear_all_bmm', PRECISE, PRECISE_POSITIONS, PRECISE_TANH, PRECISE_MIDPOINT), default='ordered_static_linear_all_bmm')
     parser.add_argument('--case', choices=('silence', 'impulse', 'sine', 'nyquist', 'noise', 'padded_noise'), default='silence')
@@ -214,10 +217,13 @@ def main(argv=None):
         raise ValueError('Chained diagnosis requires immutable job provenance')
     if not args.raw_input and args.frozen_stage_source is None:
         raise ValueError('Frozen chain requires an audited stage source')
-    if args.candidate_directory is not None and not args.raw_input:
+    if (args.candidate_directory is not None or args.candidate_distribution_directory is not None) and not args.raw_input:
         raise ValueError('Candidate generation requires original raw input mode')
     case_options = {'case_id': args.case} if args.case != 'silence' else {}
-    if args.candidate_directory is None:
+    if args.candidate_distribution_directory is not None:
+        from .native_regression_distribution import load_distribution_input
+        program, values, expected, provenance = load_distribution_input(args.candidate_distribution_directory,args.input,case_id=args.case)
+    elif args.candidate_directory is None:
         program, values, expected, provenance = load_frozen_input(args.input, **case_options)
     else:
         from .audio_generation_candidate import load_candidate_input

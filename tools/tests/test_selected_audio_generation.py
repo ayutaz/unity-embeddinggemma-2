@@ -130,13 +130,16 @@ def test_required_workflow_selects_reviewed_generation_and_still_executes_every_
     assert execute['strategy']['matrix']['case_id'] == ['silence','impulse','sine','nyquist','noise','padded_noise']
     assert execute['strategy']['fail-fast'] == 'false' and not execute.get('continue-on-error')
     commands = '\n'.join(step.get('run','') for step in execute['steps'])
-    assert 'embeddinggemma_tools.selected_audio_generation fetch' in commands
-    assert '--candidate-directory ../artifacts/candidate/audio-runtime-reference' in commands
+    assert 'embeddinggemma_tools.selected_audio_generation fetch-distribution' in commands
+    assert '--candidate-distribution-directory ../artifacts/candidate/audio-runtime-reference' in commands
+    assert '--candidate-directory ' not in commands
     assert '--raw-input --variant ordered_original_midpoint_bmm' in commands
     assert 'pinned_reference_archive resolve' not in commands
     assert not any(step.get('continue-on-error') for step in execute['steps'])
     assert audit['needs'] == ['execute'] and not audit.get('continue-on-error')
-    assert 'embeddinggemma_tools.selected_audio_generation audit' in '\n'.join(step.get('run','') for step in audit['steps'])
+    audit_commands='\n'.join(step.get('run','') for step in audit['steps'])
+    assert 'embeddinggemma_tools.selected_audio_generation audit-distribution' in audit_commands
+    assert 'embeddinggemma_tools.selected_audio_generation fetch-original-distribution' in audit_commands
     for job in (execute, audit):
         for index, step in enumerate(job['steps']):
             if 'actions/upload-artifact@' in step.get('uses',''):

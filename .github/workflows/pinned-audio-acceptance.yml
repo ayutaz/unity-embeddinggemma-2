@@ -40,16 +40,16 @@ jobs:
           enable-cache: true
           cache-dependency-glob: tools/uv.lock
       - run: uv sync --locked
-      - name: Verify reviewed selection and fetch exact graph with original golden
+      - name: Verify reviewed selection and fetch pinned public distribution with original golden
         run: >-
-          uv run --locked python -m embeddinggemma_tools.selected_audio_generation fetch
+          uv run --locked python -m embeddinggemma_tools.selected_audio_generation fetch-distribution
           --output ../artifacts/candidate --original ../artifacts/original --case "$CASE_ID"
       - name: Execute original raw features through all five actual ONNX parts
         run: |
           mkdir -p ../artifacts/pinned-audio
           lscpu --json > ../artifacts/pinned-audio/cpu-host.json
           uv run --locked python -m embeddinggemma_tools.frozen_audio_chained_onnx \
-            --input ../artifacts/original --candidate-directory ../artifacts/candidate/audio-runtime-reference \
+            --input ../artifacts/original --candidate-distribution-directory ../artifacts/candidate/audio-runtime-reference \
             --output ../artifacts/pinned-audio \
             --raw-input --variant ordered_original_midpoint_bmm --case "$CASE_ID"
       - name: Check artifact publication privacy
@@ -99,13 +99,13 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: >-
-          uv run --locked python -m embeddinggemma_tools.selected_audio_generation fetch-original
+          uv run --locked python -m embeddinggemma_tools.selected_audio_generation fetch-original-distribution
           --output ../artifacts/original
       - name: Require six complete actual carries at this execution source
         env:
           EXECUTION_SOURCE: ${{ github.sha }}
         run: >-
-          uv run --locked python -m embeddinggemma_tools.selected_audio_generation audit
+          uv run --locked python -m embeddinggemma_tools.selected_audio_generation audit-distribution
           --original ../artifacts/original
           --reports ../artifacts/pinned-audio-cases --source "$EXECUTION_SOURCE"
           --output ../artifacts/pinned-audio-acceptance.json

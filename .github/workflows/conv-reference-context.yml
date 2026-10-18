@@ -106,8 +106,14 @@ jobs:
             --weight-sha256 68309f01ea3e738fccb24a0db5db608841a3a8e59b0a4fa5d0fb521ed60bf43c \
             --output "../artifacts/conv-context/conv-${CONV_PROBE_CONTEXT}.json" \
             2>&1 | tee "../artifacts/conv-context/onednn-${CONV_PROBE_CONTEXT}.log"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_1
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/conv-context/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_1.outcome == 'success' }}
         with:
           name: conv-context-${{ matrix.context }}-${{ github.sha }}
           path: artifacts/conv-context/

@@ -140,8 +140,16 @@ jobs:
         if: always()
         run: |
           echo 'Saved-graph CPU context diagnostics only; the original encoder and full-chain gates remain separate.' >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_1
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/context-results/*.json
+            artifacts/context-input/range-receipt.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_1.outcome == 'success' }}
         with:
           name: native-context-${{ matrix.modality }}-${{ matrix.context }}-${{ github.sha }}
           path: |
@@ -314,8 +322,17 @@ jobs:
         if: always()
         run: |
           echo 'Original saved-graph CPU reference replay only; not GPU or full-chain acceptance.' >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_2
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/original-context-results/*.json
+            artifacts/original-context-results/captures/*.bin
+            artifacts/original-context-input/range-receipt.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_2.outcome == 'success' }}
         with:
           name: original-vision-context-${{ matrix.context }}-${{ github.sha }}
           path: |
@@ -399,8 +416,14 @@ jobs:
           (output/'rotary-reference.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8');print(json.dumps(report))
           if profile=='square' and not square_match:raise SystemExit('Original square rotary bits were not reproduced')
           PY
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_3
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/original-rotary-results/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_3.outcome == 'success' }}
         with:
           name: original-rotary-${{ matrix.profile }}-${{ github.sha }}
           path: artifacts/original-rotary-results/

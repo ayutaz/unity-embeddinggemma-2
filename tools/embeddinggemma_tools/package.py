@@ -12,10 +12,15 @@ ROOT = Path(__file__).resolve().parents[2]
 DEPENDENCIES = {"com.unity.ai.inference": "2.6.1", "com.unity.nuget.newtonsoft-json": "3.2.2"}
 
 
+def public_path(path,label):
+    resolved=Path(path).resolve()
+    return resolved.relative_to(ROOT).as_posix() if resolved.is_relative_to(ROOT) else '<'+label+'>'
+
+
 def audit_git_consumer(project, revision):
     """Audit the requested URL and UPM lock; this is not Editor execution evidence."""
     project = Path(project)
-    report = {"success": False, "project": str(project.resolve()), "requested_revision": revision,
+    report = {"success": False, "project": public_path(project,'CONSUMER_PROJECT'), "requested_revision": revision,
               "resolved_revision": None, "unity_executed": False, "errors": []}
     errors = report["errors"]
     if not isinstance(revision, str) or not re.fullmatch(r"[0-9a-f]{40}", revision):
@@ -30,7 +35,7 @@ def audit_git_consumer(project, revision):
                 raise ValueError("expected an object with dependencies")
             return data["dependencies"]
         except (OSError, ValueError) as exc:
-            errors.append(f"{name}: {exc}")
+            errors.append(f"{name}: {type(exc).__name__}")
             return {}
 
     requested = dependencies("manifest.json")
@@ -65,7 +70,7 @@ def audit_package(package):
                 raise ValueError("expected object")
             return value
         except (OSError, ValueError) as exc:
-            errors.append(f"{name}: {exc}")
+            errors.append(f"{name}: {type(exc).__name__}")
             return {}
 
     manifest = read_json("package.json")
@@ -212,7 +217,7 @@ def main(argv=None):
         try:
             create_consumer(args.consumer, args.package, git_revision=args.git_revision, automation=args.automation,
                             sample=args.sample, media_sample=args.media_sample, test_framework_source=args.test_framework_source)
-            report["consumer"] = str(args.consumer.resolve())
+            report["consumer"] = public_path(args.consumer,'CONSUMER_PROJECT')
         except (OSError, ValueError) as exc:
             report["success"] = False
             report["errors"].append(str(exc))

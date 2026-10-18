@@ -126,15 +126,32 @@ jobs:
               echo 'Native reference collection did not finish.'
             fi
           } >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_1
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/audio-pinned-onnx.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_1.outcome == 'success' }}
         with:
           name: audio-pinned-onnx-${{ github.sha }}
           path: artifacts/audio-pinned-onnx.json
           retention-days: 7
           if-no-files-found: warn
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_2
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/audio-runtime-reference/
+            artifacts/audio-runtime-stages/
+            artifacts/audio-runtime-preprocessing/audio-validation.json
+            artifacts/audio-host.json
+            artifacts/pinned-audio/range-receipt.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_2.outcome == 'success' }}
         with:
           name: audio-runtime-native-${{ github.sha }}
           path: |
@@ -146,8 +163,14 @@ jobs:
           compression-level: 0
           retention-days: 3
           if-no-files-found: warn
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_3
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/audio-final-reference/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_3.outcome == 'success' }}
         with:
           name: audio-final-reference-${{ github.sha }}
           path: artifacts/audio-final-reference/

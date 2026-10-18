@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "scope": "saved_candidate_five_signal_grouped_pcm_role_gpu_attempt",
+  "success": false,
+  "runtime_source": "b4fbf2e82e0c0a492c2f32d342dddf78f50d58b5",
+  "preparation_source": "b6ede71cbf4170ae10a61344455dbab56a8231cf",
+  "profile": "frames-1119-valid-1119",
+  "requested_role_conditions": 15,
+  "nunit": {"passed": 0, "failed": 1, "skipped": 0},
+  "process_exit_code": 2,
+  "primary_nunit_failure": "Default Unity test timeout of 180000 ms exceeded",
+  "later_parent_report_error_type": "MissingReferenceException",
+  "exception_causality_proven": false,
+  "completed_signals": ["silence"],
+  "captured_role_vectors": 3,
+  "interrupted_signal": "impulse",
+  "completed_silence_role_execute_and_final_download_ms": {
+    "query": 28465.756400000002,
+    "document": 16279.960000000001,
+    "raw": 21008.466500000002
+  },
+  "impulse_stage_failure_disposal_control_completed": true,
+  "all_role_acceptance": false,
+  "encoder_six_signal_gpu_result_invalidated": false,
+  "next_protocol": "One original signal and all three roles per Unity test; six tests and all 18 role conditions remain required",
+  "default_unity_test_timeout_increased": false,
+  "generation_qualified": false,
+  "original_golden_changed": false
+}

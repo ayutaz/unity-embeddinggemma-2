@@ -1,4 +1,6 @@
 from pathlib import Path
+import hashlib
+import json
 
 import pytest
 import yaml
@@ -32,6 +34,34 @@ def test_numeric_model_bytes_are_separate_from_metadata_review(tmp_path):
     assert audit(tmp_path,['.'])==[]
     (tmp_path/'capture.png').write_bytes(b'not-reviewed')
     assert any(f['rule']=='unreviewed-image' for f in audit(tmp_path,['.']))
+
+
+def test_reviewed_image_requires_exact_path_hash_visual_and_ocr(tmp_path):
+    image=tmp_path/'fixture.png'
+    image.write_bytes(b'synthetic image bytes')
+    review={'sha256':hashlib.sha256(image.read_bytes()).hexdigest(),
+            'review':'visual+ocr','contains_personal_data':False}
+    policy=tmp_path/'.privacy-reviewed-assets.json'
+    def save(value):
+        policy.write_text(json.dumps({'schema':1,'assets':{'fixture.png':value}}))
+    save(review)
+    assert audit(tmp_path,['fixture.png'])==[]
+    save(dict(review,review='visual'))
+    assert any(f['rule']=='unreviewed-image' for f in audit(tmp_path,['fixture.png']))
+    save(dict(review,contains_personal_data=True))
+    assert audit(tmp_path,['fixture.png'])
+    save(review)
+    image.write_bytes(b'changed bytes')
+    assert audit(tmp_path,['fixture.png'])
+    image.write_bytes(b'synthetic image bytes')
+    image.rename(tmp_path/'other.png')
+    assert audit(tmp_path,['other.png'])
+
+
+def test_invalid_image_review_policy_fails_closed(tmp_path):
+    (tmp_path/'.privacy-reviewed-assets.json').write_text('{"schema":2,"assets":{}}')
+    with pytest.raises(ValueError):
+        audit(tmp_path,['missing/'])
 
 
 def test_every_workflow_upload_requires_matching_successful_privacy_guard():

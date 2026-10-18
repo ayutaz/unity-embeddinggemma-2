@@ -12,6 +12,13 @@ GENERATED_NUMERIC={'.onnx','.pt2','.data','.bin','.npy','.npz','.safetensors'}
 
 def audit(root,patterns):
     root=Path(root).resolve()
+    policy_path=root/'.privacy-reviewed-assets.json'
+    reviewed={}
+    if policy_path.exists():
+        policy=json.loads(policy_path.read_text(encoding='utf-8-sig'))
+        if policy.get('schema')!=1 or not isinstance(policy.get('assets'),dict):
+            raise ValueError('Invalid artifact image-review policy')
+        reviewed=policy['assets']
     def checked(path):
         path=Path(path)
         resolved=path.resolve()
@@ -33,12 +40,12 @@ def audit(root,patterns):
         relative=path.relative_to(root).as_posix()
         # Diagnostics omit member names, which may themselves be private.
         findings.extend(scan_bytes(relative.encode(),'<artifact-name>'))
-        findings.extend(dict(f,path='<artifact-name>') for f in scan_bytes(b'',relative))
         suffix=path.suffix.lower()
-        if suffix in GENERATED_NUMERIC:
-            continue
         if suffix in IMAGES:
-            findings.append(dict(path='<artifact-image>',line=1,rule='unreviewed-image'))
+            findings.extend(dict(f,path='<artifact-image>') for f in scan_bytes(path.read_bytes(),relative,reviewed))
+            continue
+        findings.extend(dict(f,path='<artifact-name>') for f in scan_bytes(b'',relative))
+        if suffix in GENERATED_NUMERIC:
             continue
         with path.open('rb') as stream:
             overlap=b''

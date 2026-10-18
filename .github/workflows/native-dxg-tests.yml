@@ -78,8 +78,14 @@ jobs:
           $cases = @($cli.testsuites.testsuite)
           if (($cases | Measure-Object -Property tests -Sum).Sum -ne 8 -or ($cases | Measure-Object -Property failures -Sum).Sum -ne 0 -or ($cases | Measure-Object -Property errors -Sum).Sum -ne 0 -or ($cases | Measure-Object -Property skipped -Sum).Sum -ne 0) { throw 'CLI preflight tests missing, failed, or skipped' }
           @{ source = (git rev-parse HEAD); upstream = '72bd2b18553493aa9850e434caf71bfa18952aac'; native_unit_passed = 48; cli_preflight_passed = 8; live_capture_executed = $false; gpu_validated = $false; real_model_executed = $false } | ConvertTo-Json | Set-Content artifacts/native-dxg-ci/receipt.json -Encoding utf8
+      - name: Check native diagnostic artifact privacy
+        id: privacy_native_dxg
+        if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/native-dxg-ci/
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        if: ${{ always() }}
+        if: ${{ always() && steps.privacy_native_dxg.outcome == 'success' }}
         with:
           name: native-dxg-tests
           path: artifacts/native-dxg-ci/

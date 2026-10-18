@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "scope": "Exact native-regression asset publication review; no acquisition-route migration yet",
+  "base_commit": "677b8518a1177dd94b9bac868d22e1490598ea76",
+  "checkpoints": [
+    {
+      "phase": "intended-red",
+      "tests": 31,
+      "failures": 31,
+      "errors": 0,
+      "skipped": 0,
+      "private_xml_sha256": "133df93a67b0edca76270964884971eb1d40e5f4b8e527177cb38d949bae3916"
+    },
+    {
+      "phase": "intended-red",
+      "tests": 2,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0,
+      "private_xml_sha256": "7db7ef383ff738ab7bc4260f1b984481fe0fbc30c200d9b0928eebd62c3475a6"
+    },
+    {
+      "phase": "green",
+      "tests": 136,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "private_xml_sha256": "78a25d02facb130bb4e6bd30acf475104d7b7348f404d0de9dabc96bd3a401e5"
+    }
+  ],
+  "behavior_tests": 36,
+  "final_related_passes": 136,
+  "synthetic_fixture_mapping_failure_retained": true,
+  "fixture_correction": "Map each synthetic signal to its own canonical input name; strict production mapping was unchanged.",
+  "private_archive_source_mismatch_retained": true,
+  "archive_correction": "Distinguish the earlier golden-only archive from the later required input archive; both exact source digests and private copies were verified.",
+  "real_asset_count": 12,
+  "real_asset_review": "docs/results/native-regression-exact-asset-review-20261019.json",
+  "actual_publication_approved": false,
+  "real_GPU_or_release_acceptance": false,
+  "numerical_goldens_tolerances_or_SDK_Runtime_changed": false
+}

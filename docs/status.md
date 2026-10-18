@@ -18,6 +18,8 @@
 
 手動UI残項目、SDK専有のGPU時間・allocation、画像/音声のCPU比較、最低要件、macOS / iOS / Android実機、provider privacy対応、恒久的な数値参照取得経路、正式SDK tag / Releaseは未完了です。[リリース計画](release-plan.md)で追跡します。今回のWindows機能検証を全環境・性能全体・正式公開の合格には広げません。
 
+数値回帰の[データpreview](results/native-regression-preview-publication-20261019.json)も公開し、全16 assetの実サイズ・hash、本文とtagを照合しました。[明示的な恒久取得経路](native-regression-distribution.md)は284件・actionlintと匿名HTTPによる元参照/metadata 6ファイル照合が成功。元の数値基準・採用根拠7記録を維持し、実行したclean graphのhashと保存元graphのhashを分けています。新経路の全6信号・824,320値の実回帰は最新候補のCIで確認する段階です。#95 head `0c3891d`と#96 head `677b851`は#97へ取り込み、重いCIの重複を整理して最新候補を検査します。元2 PRの個別merge完了とは扱わず、#97の受け入れ後に統合先を記録して整理します。
+
 ## 統合前checkpointと固定sourceの検証記録
 
 更新: **2026-10-18**。公開履歴整理後のmainは `4b5bf72`。開発版 `0.1.0-pre.1`、公開tag・正式Releaseはありません。現在は個人情報対策の回帰修正、固定音声参照データの復旧、GitHub側の残存個人情報の除去を優先します。

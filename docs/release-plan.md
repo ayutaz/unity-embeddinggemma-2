@@ -6,7 +6,7 @@
 
 ## 現在地
 
-正式SDK tag・Releaseは未作成です。モデル配布用の実験previewは2件公開済みで、正式SDK公開とは区別します。以下は同日の実データ・GitHub照合に基づくcheckpointであり、正式候補全体の合格ではありません。
+正式SDK tag・Releaseは未作成です。Sentisモデル配布用のpreview 2件とnative回帰データ用のpreview 1件を公開済みで、正式SDK公開とは区別します。以下は同日の実データ・GitHub照合に基づくcheckpointであり、正式候補全体の合格ではありません。
 
 - [最新統合の受け入れ](results/release-integration-8649c94-acceptance-20261018.json)：head `8649c94` のRequired CIを含む15 jobと別のnative-dxgが成功。実行treeはheadと一致し、数値7 ZIPの全hash・CRC・2コピーと元参照824,320値の許容差超過0を独立確認しました。
 - 同じheadの空Git consumerでpackage 600ファイル・sample 86ファイル・公式framework 1,168ファイルを照合し、policy 34件が合格。FP32 / Float16重みの画像3・音声2と固定4 queryの実GPU PlayMode実行、各34破損controlの独立監査・正常終了が成功しました。ホストピークは14,669,389,824 / 10,761,338,880 bytesで、物理RAM確認後の明示16 GiB allowance下の結果です。既定12 GiB、SDK専有VRAM、latency、手動UI・全role・全環境の合格へは読み替えません。
@@ -18,6 +18,7 @@
 - [混在Playerの契約](results/final-mixed-player-contracts-20261019.json)と[cache接続](results/final-mixed-player-cache-integration-20261019.json)：21・43・22件の未実装失敗から86件Green、既存回帰込み112件、実tiny cacheの7件Redから関連119件Green。元の失敗・不変の参照/gateと、契約段階の実行範囲を保存しました。
 - [最終混在Player](results/final-mixed-player-3a02fc0-20261019.json)：公開取得済みFP32 / Float16重みを新cacheと独立warm processで実行し、全4起動が正常終了。全roleの144 base・180 warm、18文書×4 query×4起動の288順位/score、88破損control拒否を独立確認しました。各warmはモデル転送0、各coldは820、descriptor読み込みは別に6件です。最大観測native working setはFP32 8,676,872,192 / Float16 6,024,720,384 bytes。source `3a02fc0`のGPU Worker・fallback/flush・解放とcompiled hash67件を確認しました。SDK専有VRAM・最小hardware・全環境の合格ではありません。
 - [既存テキスト全ケース](results/final-text-player-3a02fc0-20261019.json)：同sourceのRelease Player 2起動で各25行のtoken照合、両精度×CPU/GPU計8条件の15 case・6文書・4 queryが合格。CPUとGPUを別集計し、192順位/score・34破損report controlを確認しました。raw vectorはruntime内の照合で、保存値からの独立vector再計算ではありません。固定queryのwarm各6回のCPU/GPU時間を記録し、一般入力のlatency・GPU専有時間・最小要件へは広げません。
+- [数値回帰データの公開と取得実装](native-regression-distribution.md)：16 assetの実サイズ・hash、本文・tagを読み戻し、元参照/metadata 6ファイルを匿名HTTPで照合。明示input/audit・privacyの関連284件とactionlintが合格しました。元のgolden・許容差・採用根拠7記録は維持しています。新経路の全6信号・824,320値の実回帰は#97最新候補のCI待ちです。
 
 ### 音声候補の採用経緯と固定sourceの保存記録
 
@@ -52,7 +53,7 @@
 
 工程1は#94までの統合と既存PR整理が完了しました。GitHubがsquash著者へ使用する公開名と指定noreplyは[限定的な履歴分類](results/provider-public-author-tdd-20261018.json)で扱い、実際のmerge・CI実行commitでも公開identityとprovider署名を確認しています。ローカルcommit identityや他の個人情報検査は維持します。工程2の公開取得と工程4のWindows機能側は上記の実績があり、残る工程3の操作/性能・工程5〜7の条件は未完了です。
 
-工程2のモデル配布は正式SDK Releaseと分け、ライセンス・変更点・全ファイルhashを添えたpreviewの公開と公開URLからの取得確認まで完了しました。モデルはGit / LFSへ含めません。次は期限付きActions artifactだけに依存する数値回帰の取得経路を、同一bytesと来歴を検査して継続可能な保存先へ移します。原本が失われたものを再生成品で原本扱いしません。
+工程2のモデル配布は正式SDK Releaseと分け、ライセンス・変更点・全ファイルhashを添えたpreviewの公開と公開URLからの取得確認まで完了しました。モデルはGit / LFSへ含めません。数値回帰データも別previewへ保存し、元参照の同一bytesと、任意stack traceだけを除いた配布graphの計算内容・全非modelメンバーの一致を確認しました。元graphと実行graphのhashを区別する取得処理は実装済みで、次は最新候補の全6信号CIです。旧成果物の退避・依存棚卸しは維持し、原本が失われたものを再生成品で原本扱いしません。
 
 ## PRの整理
 
@@ -63,6 +64,8 @@
 - #91・#92: 統合候補とdescriptor bytes保持をマージ済みです。
 - #93: 実画面のパス表示修正をマージ済みです。
 - #94: 最終混在Playerの検証経路を、全必須CIと実Player監査後にマージ済みです。
+- #95・#96: Windows記録とrelease添付検査のexact headを#97へ取り込み済み。#97の受け入れ後に統合先を記録してcloseします。
+- #97: 上記と数値回帰の公開データ・明示取得/監査をまとめた候補。最新headの全必須CIとprivacy確認後に統合します。
 
 #89の後、#86・#87・#90の変更を#91へまとめ、全必須CI・新規consumerと両精度の実sampleを確認して統合しました。3 PRのexact headが統合候補の祖先に含まれることを検査し、本文へ統合先を記録してcloseしています。個別PRのmergeとは区別します。今後の取得・操作・環境別修正もtask branch / PRを使い、最新headのCI・差分・privacyを確認して統合します。正式SDK tag / Releaseは工程6の完了後です。
 

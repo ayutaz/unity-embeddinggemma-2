@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 import yaml
+from workflow_privacy_assertions import assert_privacy_gated_upload
 
 from embeddinggemma_tools import pinned_reference_archive as archive
 
@@ -129,6 +130,7 @@ def test_preservation_workflow_uploads_only_after_original_hash_verification():
     verify=next(i for i,s in enumerate(steps) if 'pinned_reference_archive verify' in s.get('run',''))
     upload=next(i for i,s in enumerate(steps) if 'actions/upload-artifact@' in s.get('uses',''))
     assert verify<upload and steps[upload]['with']['retention-days']=='90'
-    assert not steps[upload].get('if') and not job.get('continue-on-error')
+    assert_privacy_gated_upload(steps[upload], base='success()')
+    assert not job.get('continue-on-error')
     for name in ('probe','resume_noise','native_context_probe','matrix_probe'):
         assert '!inputs.preserve_original' in w['jobs'][name]['if']

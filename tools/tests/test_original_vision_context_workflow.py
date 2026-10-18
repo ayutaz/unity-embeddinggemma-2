@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import yaml
+from workflow_privacy_assertions import assert_privacy_gated_upload
 import json
 import sys
 import types
@@ -45,7 +46,8 @@ def test_original_vision_probe_fetches_exact_old_graph_and_never_changes_golden(
     assert 'snapshot_download' not in commands and 'prepare_vision' not in commands
     assert 'lscpu --json' in commands
     upload = next(step for step in steps if 'actions/upload-artifact@' in step.get('uses', ''))
-    assert upload['if'] == 'always()' and '.pt2' not in upload['with']['path']
+    assert_privacy_gated_upload(upload)
+    assert '.pt2' not in upload['with']['path']
 
 
 def test_original_probe_observes_nodes_on_native_host_and_uploads_only_selected_captures():

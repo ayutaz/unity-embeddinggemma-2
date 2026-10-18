@@ -3,6 +3,10 @@ name: Audio native reference for runtime diagnostics
 on:
   workflow_dispatch:
     inputs:
+      recover_original_bytes:
+        description: Attempt exact original graph-byte recovery using the original Python code and lock; this does not qualify GPU or ONNX
+        type: boolean
+        default: false
       encoder_only:
         description: Validate all six encoder signals and both profiles without exporting unrelated chain stages
         type: boolean
@@ -29,13 +33,128 @@ permissions:
   actions: read
 
 concurrency:
-  group: audio-runtime-reference-${{ github.ref }}
-  cancel-in-progress: true
+  group: audio-runtime-reference-${{ github.ref }}-${{ inputs.recover_original_bytes && 'recovery' || 'diagnostic' }}
+  cancel-in-progress: ${{ !inputs.recover_original_bytes }}
 
 jobs:
+  recover:
+    if: github.event_name == 'workflow_dispatch' && inputs.recover_original_bytes
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    env:
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+      RECOVERY_CONTROLLER_SHA: ${{ github.sha }}
+      ORIGINAL_PRODUCER: 4edbe17a8105233c5aaa1514faa2862b08a4f7e0
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Retain the reviewed recovery controller separately from original code
+        run: |
+          controller="$RUNNER_TEMP/audio-recovery-controller"
+          mkdir -p "$controller/tools/embeddinggemma_tools" "$controller/tools/references" "$controller/action"
+          cp tools/embeddinggemma_tools/original_audio_recovery.py "$controller/tools/embeddinggemma_tools/"
+          cp tools/embeddinggemma_tools/privacy.py tools/embeddinggemma_tools/privacy_artifacts.py "$controller/tools/embeddinggemma_tools/"
+          cp tools/references/original-audio-validation.json "$controller/tools/references/"
+          cp .github/actions/privacy-artifact-guard/action.yml "$controller/action/"
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: d2ad81dfdf42d057fb4b7f30dd59d557f8a6dd75
+      - name: Verify original runtime and dependency bytes before adding privacy utilities
+        run: |
+          test "$(git rev-parse HEAD:tools/embeddinggemma_tools)" = 1abe24067230501283fe73e1f20e4edd5eb9f830
+          test "$(git rev-parse HEAD:tools/uv.lock)" = 5a7f116f5ffdcc40ea8d2ed520cfede028a49fe0
+          test "$(git rev-parse HEAD:tools/pyproject.toml)" = b8500dcec074a5d802f751c212081a5c25f8216c
+          test ! -e tools/embeddinggemma_tools/privacy.py
+          test ! -e tools/embeddinggemma_tools/privacy_artifacts.py
+          cp "$RUNNER_TEMP/audio-recovery-controller/tools/embeddinggemma_tools/"privacy*.py tools/embeddinggemma_tools/
+          mkdir -p .github/actions/privacy-artifact-guard
+          cp "$RUNNER_TEMP/audio-recovery-controller/action/action.yml" .github/actions/privacy-artifact-guard/
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+        working-directory: tools
+      - name: Recreate original procedural inputs with original provenance metadata
+        working-directory: tools
+        run: >-
+          GITHUB_SHA="$ORIGINAL_PRODUCER" uv run --locked python -m embeddinggemma_tools.audio
+          --output ../artifacts/audio-runtime-preprocessing
+      - name: Collect original graph bytes and preserve numerical failure status
+        id: collect
+        continue-on-error: true
+        working-directory: tools
+        run: >-
+          GITHUB_SHA="$ORIGINAL_PRODUCER" uv run --locked python -m embeddinggemma_tools prepare-audio-encoder
+          --preprocessing ../artifacts/audio-runtime-preprocessing
+          --output ../artifacts/audio-runtime-reference --native-silu --collect-onnx-failures
+      - name: Verify immutable byte contracts; never accept approximate replacement graphs
+        id: verify
+        if: always()
+        run: >-
+          uv run --no-project --python 3.13 python
+          "$RUNNER_TEMP/audio-recovery-controller/tools/embeddinggemma_tools/original_audio_recovery.py"
+          --input artifacts/audio-runtime-reference
+          --output artifacts/original-audio-byte-recovery.json
+          --collection-outcome "${{ steps.collect.outcome || 'skipped' }}"
+      - name: Check byte-recovery report privacy
+        id: privacy_recovery_report
+        if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/original-audio-byte-recovery.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ always() && steps.privacy_recovery_report.outcome == 'success' }}
+        with:
+          name: original-audio-byte-recovery-${{ github.sha }}
+          path: artifacts/original-audio-byte-recovery.json
+          retention-days: 30
+          if-no-files-found: error
+      - name: Stage only exact graph bytes without replacing original reference values
+        if: steps.verify.outputs.graphs_match == 'true'
+        run: |
+          mkdir -p artifacts/recovered-graphs/audio-runtime-reference
+          cd artifacts/audio-runtime-reference
+          cp --parents --link frames-1119-valid-1119/audio.pt2 frames-1119-valid-839/audio.pt2 ../recovered-graphs/audio-runtime-reference/
+      - name: Check recovered graph selection privacy
+        id: privacy_recovery_graphs
+        if: steps.verify.outputs.graphs_match == 'true'
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/recovered-graphs/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ steps.verify.outputs.graphs_match == 'true' && steps.privacy_recovery_graphs.outcome == 'success' }}
+        with:
+          name: recovered-original-audio-graphs-${{ github.sha }}
+          path: artifacts/recovered-graphs/
+          compression-level: 0
+          retention-days: 90
+          if-no-files-found: error
+      - name: Stage a complete original archive only when every original byte matches
+        if: steps.verify.outputs.complete_match == 'true'
+        run: |
+          mkdir -p artifacts/recovered-complete
+          cp --archive --link artifacts/audio-runtime-reference artifacts/recovered-complete/
+      - name: Check complete original archive privacy
+        id: privacy_recovery_complete
+        if: steps.verify.outputs.complete_match == 'true'
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/recovered-complete/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ steps.verify.outputs.complete_match == 'true' && steps.privacy_recovery_complete.outcome == 'success' }}
+        with:
+          name: pinned-audio-original-4edbe17a8105233c5aaa1514faa2862b08a4f7e0
+          path: artifacts/recovered-complete/
+          compression-level: 0
+          retention-days: 90
+          if-no-files-found: error
   native-reference:
     if: >-
-      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_dispatch' && !inputs.recover_original_bytes) ||
       (github.event.pull_request.head.repo.full_name == github.repository &&
        contains(github.event.pull_request.labels.*.name, 'audio-runtime-diagnostics'))
     runs-on: ubuntu-latest
@@ -126,15 +245,32 @@ jobs:
               echo 'Native reference collection did not finish.'
             fi
           } >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_1
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/audio-pinned-onnx.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_1.outcome == 'success' }}
         with:
           name: audio-pinned-onnx-${{ github.sha }}
           path: artifacts/audio-pinned-onnx.json
           retention-days: 7
           if-no-files-found: warn
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_2
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/audio-runtime-reference/
+            artifacts/audio-runtime-stages/
+            artifacts/audio-runtime-preprocessing/audio-validation.json
+            artifacts/audio-host.json
+            artifacts/pinned-audio/range-receipt.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_2.outcome == 'success' }}
         with:
           name: audio-runtime-native-${{ github.sha }}
           path: |
@@ -146,8 +282,14 @@ jobs:
           compression-level: 0
           retention-days: 3
           if-no-files-found: warn
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_3
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/audio-final-reference/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_3.outcome == 'success' }}
         with:
           name: audio-final-reference-${{ github.sha }}
           path: artifacts/audio-final-reference/

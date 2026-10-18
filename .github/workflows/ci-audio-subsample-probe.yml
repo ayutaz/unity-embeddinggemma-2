@@ -53,8 +53,17 @@ jobs:
           uv run --locked python -m embeddinggemma_tools.ci_audio_subsample_probe
           --input ../artifacts/fixed-subsample/frames-1119-valid-1119
           --output ../artifacts/subsample-probe
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_1
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/subsample-probe/subsample-probe.json
+            artifacts/subsample-probe/*-fp32.bin
+            artifacts/fixed-subsample/range-receipt.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_1.outcome == 'success' }}
         with:
           name: ci-audio-subsample-probe-${{ github.sha }}
           path: |

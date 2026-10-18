@@ -1,0 +1,177 @@
+{
+  "schema": 1,
+  "assets": {
+    "tools/tests/fixtures/native_tanh/tanh-dense32771-input-fp32.bin": {
+      "sha256": "5566e15821fa8741ee5c9032e98ec8db66803c044659c84ee5c4a77cce572409",
+      "review": "numeric-source-verified"
+    },
+    "tools/tests/fixtures/native_tanh/tanh-dense32771-native-fp32.bin": {
+      "sha256": "04c9f7965bcd4aa607098405b9d85488bef86e19d2b33c5ed5e2083e55bb5b27",
+      "review": "numeric-source-verified"
+    },
+    "tools/tests/fixtures/native_tanh/tanh-random514-input-fp32.bin": {
+      "sha256": "d84caa8f88e0a842c2784bc0734b07aa43e75d1788f44df3d4d04866c1e5d794",
+      "review": "numeric-source-verified"
+    },
+    "tools/tests/fixtures/native_tanh/tanh-random514-native-fp32.bin": {
+      "sha256": "1ed666420d33124caefc53c1808fb2bd658a269375410a91b3ca59c87b8c8016",
+      "review": "numeric-source-verified"
+    },
+    "tools/embeddinggemma_tools/fixtures/vision/square/0.png": {
+      "sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+      "review": "visual+ocr",
+      "contains_personal_data": false,
+      "provenance": "Existing procedural RGB input fixture; no screenshots or user image content",
+      "ocr_engine": "Windows.Media.Ocr",
+      "ocr_languages": [
+        "en-US",
+        "ja-JP"
+      ],
+      "ocr_text_empty": true,
+      "reviewed_on": "2026-10-18"
+    },
+    "artifacts/vision-encoder/square/0.png": {
+      "sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+      "review": "visual+ocr",
+      "contains_personal_data": false,
+      "provenance": "Existing procedural RGB input fixture; no screenshots or user image content",
+      "ocr_engine": "Windows.Media.Ocr",
+      "ocr_languages": [
+        "en-US",
+        "ja-JP"
+      ],
+      "ocr_text_empty": true,
+      "reviewed_on": "2026-10-18"
+    },
+    "tools/embeddinggemma_tools/fixtures/vision/square/1.png": {
+      "sha256": "7bed25de317aa5f636332a45e68256ab6ab1d4f64ee0694bd3215b9e1afff8b0",
+      "review": "visual+ocr",
+      "contains_personal_data": false,
+      "provenance": "Existing procedural RGB input fixture; no screenshots or user image content",
+      "ocr_engine": "Windows.Media.Ocr",
+      "ocr_languages": [
+        "en-US",
+        "ja-JP"
+      ],
+      "ocr_text_empty": true,
+      "reviewed_on": "2026-10-18"
+    },
+    "artifacts/vision-encoder/square/1.png": {
+      "sha256": "7bed25de317aa5f636332a45e68256ab6ab1d4f64ee0694bd3215b9e1afff8b0",
+      "review": "visual+ocr",
+      "contains_personal_data": false,
+      "provenance": "Existing procedural RGB input fixture; no screenshots or user image content",
+      "ocr_engine": "Windows.Media.Ocr",
+      "ocr_languages": [
+        "en-US",
+        "ja-JP"
+      ],
+      "ocr_text_empty": true,
+      "reviewed_on": "2026-10-18"
+    },
+    "tools/embeddinggemma_tools/fixtures/vision/landscape/0.png": {
+      "sha256": "f2b3f32a22e6282b9876b98c4c5a7bbf75e7469dff933128e17d6503dd6d6e55",
+      "review": "visual+ocr",
+      "contains_personal_data": false,
+      "provenance": "Existing procedural RGB input fixture; no screenshots or user image content",
+      "ocr_engine": "Windows.Media.Ocr",
+      "ocr_languages": [
+        "en-US",
+        "ja-JP"
+      ],
+      "ocr_text_empty": true,
+      "reviewed_on": "2026-10-18"
+    },
+    "artifacts/vision-encoder/landscape/0.png": {
+      "sha256": "f2b3f32a22e6282b9876b98c4c5a7bbf75e7469dff933128e17d6503dd6d6e55",
+      "review": "visual+ocr",
+      "contains_personal_data": false,
+      "provenance": "Existing procedural RGB input fixture; no screenshots or user image content",
+      "ocr_engine": "Windows.Media.Ocr",
+      "ocr_languages": [
+        "en-US",
+        "ja-JP"
+      ],
+      "ocr_text_empty": true,
+      "reviewed_on": "2026-10-18"
+    },
+    "tools/embeddinggemma_tools/fixtures/vision/landscape/1.png": {
+      "sha256": "85c40b63e819734b0d0ba3dd5fe121f976ee6fdb0446922c97446f4f2d046265",
+      "review": "visual+ocr",
+      "contains_personal_data": false,
+      "provenance": "Existing procedural RGB input fixture; no screenshots or user image content",
+      "ocr_engine": "Windows.Media.Ocr",
+      "ocr_languages": [
+        "en-US",
+        "ja-JP"
+      ],
+      "ocr_text_empty": true,
+      "reviewed_on": "2026-10-18"
+    },
+    "artifacts/vision-encoder/landscape/1.png": {
+      "sha256": "85c40b63e819734b0d0ba3dd5fe121f976ee6fdb0446922c97446f4f2d046265",
+      "review": "visual+ocr",
+      "contains_personal_data": false,
+      "provenance": "Existing procedural RGB input fixture; no screenshots or user image content",
+      "ocr_engine": "Windows.Media.Ocr",
+      "ocr_languages": [
+        "en-US",
+        "ja-JP"
+      ],
+      "ocr_text_empty": true,
+      "reviewed_on": "2026-10-18"
+    },
+    "tools/embeddinggemma_tools/fixtures/vision/portrait/0.png": {
+      "sha256": "fce3474792c6401c4bae6ac0261a386f400bac0cece977ffda86388ee6682489",
+      "review": "visual+ocr",
+      "contains_personal_data": false,
+      "provenance": "Existing procedural RGB input fixture; no screenshots or user image content",
+      "ocr_engine": "Windows.Media.Ocr",
+      "ocr_languages": [
+        "en-US",
+        "ja-JP"
+      ],
+      "ocr_text_empty": true,
+      "reviewed_on": "2026-10-18"
+    },
+    "artifacts/vision-encoder/portrait/0.png": {
+      "sha256": "fce3474792c6401c4bae6ac0261a386f400bac0cece977ffda86388ee6682489",
+      "review": "visual+ocr",
+      "contains_personal_data": false,
+      "provenance": "Existing procedural RGB input fixture; no screenshots or user image content",
+      "ocr_engine": "Windows.Media.Ocr",
+      "ocr_languages": [
+        "en-US",
+        "ja-JP"
+      ],
+      "ocr_text_empty": true,
+      "reviewed_on": "2026-10-18"
+    },
+    "tools/embeddinggemma_tools/fixtures/vision/portrait/1.png": {
+      "sha256": "3dd041969e5bc1380e200099532e74be14331e89f9beffe1038d579ae5dc3c08",
+      "review": "visual+ocr",
+      "contains_personal_data": false,
+      "provenance": "Existing procedural RGB input fixture; no screenshots or user image content",
+      "ocr_engine": "Windows.Media.Ocr",
+      "ocr_languages": [
+        "en-US",
+        "ja-JP"
+      ],
+      "ocr_text_empty": true,
+      "reviewed_on": "2026-10-18"
+    },
+    "artifacts/vision-encoder/portrait/1.png": {
+      "sha256": "3dd041969e5bc1380e200099532e74be14331e89f9beffe1038d579ae5dc3c08",
+      "review": "visual+ocr",
+      "contains_personal_data": false,
+      "provenance": "Existing procedural RGB input fixture; no screenshots or user image content",
+      "ocr_engine": "Windows.Media.Ocr",
+      "ocr_languages": [
+        "en-US",
+        "ja-JP"
+      ],
+      "ocr_text_empty": true,
+      "reviewed_on": "2026-10-18"
+    }
+  }
+}

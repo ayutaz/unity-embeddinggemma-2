@@ -1,5 +1,6 @@
 from pathlib import Path
 import yaml
+from workflow_privacy_assertions import assert_privacy_gated_upload
 
 
 def test_ordered_context_is_a_separate_registered_opt_in_and_preserves_native_probe_modes():
@@ -32,4 +33,5 @@ def test_ordered_context_guards_original_host_patch_and_first_layer_before_full_
     assert 'maximum_absolute_error' in commands and 'observed_final_matches_normal_bits' in commands
     assert 'ATEN_CPU_CAPABILITY=' not in commands and 'MKL_CBWR=' not in commands
     upload=next(s for s in steps if 'actions/upload-artifact@' in s.get('uses',''))
-    assert upload['if']=='always()' and '.pt2' not in upload['with']['path']
+    assert_privacy_gated_upload(upload)
+    assert '.pt2' not in upload['with']['path']

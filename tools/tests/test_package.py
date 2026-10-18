@@ -57,6 +57,17 @@ def test_media_consumer_cli_forwards_the_sample_selection(tmp_path, package):
     assert (target / "Assets/EmbeddingGemmaMultimodalSearch/MultimodalSearch.unity").is_file()
 
 
+def test_consumer_reports_never_publish_absolute_local_paths(tmp_path,package,capsys):
+    from embeddinggemma_tools.package import main, audit_git_consumer
+    from embeddinggemma_tools.privacy import scan_bytes
+    target=tmp_path/'private-consumer'
+    assert main(['--package',str(package),'--consumer',str(target)])==0
+    report=capsys.readouterr().out
+    assert str(tmp_path) not in report
+    assert scan_bytes(report.encode())==[]
+    assert str(tmp_path) not in json.dumps(audit_git_consumer(target,'a'*40))
+
+
 @pytest.fixture
 def package(tmp_path):
     root = tmp_path / "package"

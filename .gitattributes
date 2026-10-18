@@ -1,0 +1,2 @@
+.githooks/* text eol=lf
+tools/references/original-audio-validation.json -text

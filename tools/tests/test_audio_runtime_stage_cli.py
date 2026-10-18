@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 import yaml
+from workflow_privacy_assertions import assert_privacy_gated_upload
 
 from embeddinggemma_tools import __main__ as cli
 from embeddinggemma_tools.prepare import MODEL_REVISION
@@ -48,6 +49,6 @@ def test_opt_in_workflow_produces_stages_after_failed_native_collection_without_
                and row.get("with", {}).get("name", "").startswith("audio-runtime-native-")]
     assert len(uploads) == 1, "Native stage evidence needs one dedicated artifact"
     upload = uploads[0]
-    assert upload["if"] == "always()", "Retain native stage evidence after numeric failure"
+    assert_privacy_gated_upload(upload)
     assert "artifacts/audio-runtime-reference/" in upload["with"]["path"]
     assert "artifacts/audio-runtime-stages/" in upload["with"]["path"]

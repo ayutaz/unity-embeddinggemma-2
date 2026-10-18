@@ -74,7 +74,8 @@ def package(tmp_path):
     root.mkdir()
     (root / "package.json").write_text(json.dumps({
         "name": PACKAGE_NAME, "version": "0.1.0-pre.1", "unity": "6000.3", "unityRelease": "16f1",
-        "dependencies": {"com.unity.ai.inference": "2.6.1", "com.unity.nuget.newtonsoft-json": "3.2.2"},
+        "dependencies": {"com.unity.ai.inference": "2.6.1", "com.unity.nuget.newtonsoft-json": "3.2.2",
+                         "com.unity.modules.unitywebrequest": "1.0.0"},
     }))
     for name in ("README.md", "CHANGELOG.md", "LICENSE.md", "Documentation~/index.md", "Samples~/README.md"):
         path = root / name
@@ -256,6 +257,16 @@ def test_repository_package_can_be_consumed_without_asset_runtime():
     assert PACKAGE_NAME in manifest["testables"]
     package = json.loads((ROOT / "Packages" / PACKAGE_NAME / "package.json").read_text())
     assert manifest["dependencies"][PACKAGE_NAME] == package["version"]
+
+
+def test_missing_builtin_networking_dependency_is_rejected_before_consumer_creation(package,tmp_path):
+    path=package/'package.json';data=json.loads(path.read_text())
+    data['dependencies'].pop('com.unity.modules.unitywebrequest',None)
+    path.write_text(json.dumps(data))
+    assert audit_package(package)['success'] is False
+    consumer=tmp_path/'consumer'
+    with pytest.raises(ValueError,match='package audit failed'):create_consumer(consumer,package)
+    assert not consumer.exists()
 
 
 def test_repository_sample_is_registered_and_can_be_imported_into_empty_consumer(tmp_path):

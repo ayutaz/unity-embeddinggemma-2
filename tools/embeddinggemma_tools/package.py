@@ -9,7 +9,8 @@ import shutil
 
 PACKAGE_NAME = "com.ayutaz.embeddinggemma"
 ROOT = Path(__file__).resolve().parents[2]
-DEPENDENCIES = {"com.unity.ai.inference": "2.6.1", "com.unity.nuget.newtonsoft-json": "3.2.2"}
+DEPENDENCIES = {"com.unity.ai.inference": "2.6.1", "com.unity.nuget.newtonsoft-json": "3.2.2",
+                "com.unity.modules.unitywebrequest": "1.0.0"}
 
 
 def public_path(path,label):
@@ -53,8 +54,9 @@ def audit_git_consumer(project, revision):
             errors.append("packages-lock.json: package direct dependencies changed")
     for name, version in DEPENDENCIES.items():
         dependency = locked.get(name)
-        if not isinstance(dependency, dict) or dependency.get("version") != version or dependency.get("source") != "registry":
-            errors.append(f"packages-lock.json: expected registry dependency {name}@{version}")
+        expected_source = "builtin" if name.startswith("com.unity.modules.") else "registry"
+        if not isinstance(dependency, dict) or dependency.get("version") != version or dependency.get("source") != expected_source:
+            errors.append(f"packages-lock.json: expected {expected_source} dependency {name}@{version}")
     report["success"] = not errors
     return report
 

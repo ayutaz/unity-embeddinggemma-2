@@ -6,6 +6,16 @@ Status: private implementation candidate. Editor contract tests and original-fix
 
 ## Inputs and invocation
 
+The SDK declares `com.unity.modules.unitywebrequest@1.0.0` as a direct Runtime
+dependency because media-cache loading uses `UnityEngine.Networking`. Its UPM
+source is `builtin`; Sentis and Newtonsoft remain pinned registry dependencies.
+Installing the SDK without samples must resolve that module transitively.
+The [minimal fixed-Git build attempt](results/media-player-minimal-network-dependency-20261018.json)
+at `3dc2737` resolved the requested SDK but failed compilation with CS0103/CS1069
+before Player building because this declaration was missing. Two regression
+tests failed before the fix, then 53 package/consumer tests passed. Actual
+compilation and Release Player execution after the fix remain to be recorded.
+
 Use an empty output directory, a full reviewed source commit, the resolved SDK, and the repository's validation assemblies. Keep the prepared model bundle and original inputs outside Git. Build receipts and model-generation qualification must identify the same source/model candidate before a run can contribute to final acceptance.
 
 The fixture root contains these original files:

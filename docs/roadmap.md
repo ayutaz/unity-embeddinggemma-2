@@ -38,7 +38,7 @@
 
 ### 候補モデルの保存（2026-10-18）
 
-[配布用コピーの保存CI](results/audio-candidate-distribution-ci-readback-20261018.json)は成功しました。optional debug stack traceの除去前後で両profile・全6信号のnative出力がbit一致し、metadata以外のarchive memberも検証しています。保存artifactは90日、元の候補graph・raw入力・JSON計10ファイルはhashを維持した私的な2コピーを確認済みです。公開ZIPの全bytes読み戻しは進行中で、metadata読み戻しと区別します。元の数値参照とraw入力の取得期限、GPU用モデル準備・受け入れ、必須CIの復旧が残ります。新世代の採用やGPU合格は未実施です。
+[配布用コピーの保存CI](results/audio-candidate-distribution-ci-readback-20261018.json)は成功しました。optional debug stack traceの除去前後で両profile・全6信号のnative出力がbit一致し、metadata以外のarchive memberも検証しています。保存artifactは90日、元の候補graph・raw入力・JSON計10ファイルはhashを維持した私的な2コピーを確認済みです。[公開ZIP全体の読み戻し](results/audio-candidate-distribution-full-readback-20261018.json)も完了し、ZIP全体・両モデルのSHA256、全CRCと2コピーが一致しました。[元JSON2件とraw入力6件の別保存](results/original-audio-input-preservation-readback-20261018.json)と[新pinからの実取得](results/original-audio-preserved-acquisition-0d13a3d-20261018.json)も成功しています。次は保持できている旧native ONNXの[演算・重みの基準](results/original-native-onnx-computation-identity-20261018.json)と候補の実bytesを比較し、GPU用変換との対応を確認します。必須CI、新世代の採用、最終候補のGPU・consumer・Playerの合格は未実施です。
 
 ### 元の数値参照の復旧と次の数値比較（2026-10-18）
 

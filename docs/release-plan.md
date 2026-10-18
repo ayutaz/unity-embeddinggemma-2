@@ -6,17 +6,19 @@
 
 - 正式Releaseは未作成。PR #86・#87・#89・#90はすべてDraft・未マージです。
 - 音声の別世代候補は[全6信号の数値CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39106618371)が成功。2 profile・824,320値で元の許容差超過は0、取得した実データの独立再監査も一致しました。
-- この結果は候補の実GPU・consumer・Playerの合格を意味しません。元の音声モデル2件のbyte同一復旧は未達で、#89のRequired CIは失敗しています。
-- #90のPlayer検証基盤はEditor契約・元fixture読み込み79件が成功。実モデルを使うWindows Release Player検証は残っています。#90のCIは確認時点で進行中ですが、固定元モデル取得の6件と集計はすでに失敗しています。
+- この結果は候補の実GPU・consumer・Playerの合格を意味しません。旧世代のnative PT2モデル2件のbyte同一復旧と、必須CIの復旧は未達です。
+- #90のPlayer検証基盤はEditor契約・元fixture読み込み79件が成功。実モデルを使うWindows Release Player検証は残っています。CI 39108408310は終了し、Python全4環境・package・lint・通常referenceは成功、固定元モデル取得の6件・集計・Required CIは失敗しました。
 - 以前のsource・既存bundleでのGPU動作実績は保持し、最終候補に対応する確認と区別します。
 
 ### 音声候補の保存checkpoint
 
-[保存CI 39109531607](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39109531607)が成功しました。デバッグ情報だけを除いた配布用コピーについて、両profile・全6信号のnative出力が除去前後でbit一致しています。配布artifact `12129783259` は `2027-01-16T07:56:21Z` まで保存されます。[読み戻し記録](results/audio-candidate-distribution-ci-readback-20261018.json)は公開manifestのCRCと両モデル内のmetadataを独立確認しています。アップロードされたZIP全体のSHA確認は別の実行中の取得で行い、この記録では未完了です。
+[保存CI 39109531607](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39109531607)が成功しました。デバッグ情報だけを除いた配布用コピーについて、両profile・全6信号のnative出力が除去前後でbit一致しています。配布artifact `12129783259` は `2027-01-16T07:56:21Z` まで保存されます。[全体読み戻し](results/audio-candidate-distribution-full-readback-20261018.json)で、約2.45 GBのZIP全体・両モデルのSHA256、全CRCと私的な2コピーを確認しました。両配布モデルのhashは元の候補からのローカル導出とも一致しました。
 
-候補producerの元graph2件・raw入力6件・JSON2件の計10ファイルは、元のhashで私的な2コピーを確認しました。消失した旧世代graphの復旧とは区別します。公開branchは `5a064be`、保存実行sourceは `6bfc223`、統合候補のRuntimeは未変更です。必須CI・実GPU・consumer・Playerの合格には読み替えません。
+候補producerの元graph2件・raw入力6件・JSON2件の計10ファイルは、元のhashで私的な2コピーを確認しました。消失した旧世代PT2の復旧とは区別します。公開branchは `f453032`、保存実行sourceは `6bfc223`、統合候補のRuntimeは未変更です。必須CI・実GPU・consumer・Playerの合格には読み替えません。
 
-次は取得中のZIP全体の照合、元の数値参照とraw入力も短期artifactに依存せず取得できる経路、配布用graphからのGPUモデル準備を進めます。モデル2件を保存しただけでは、全6 moduleの公開準備手順は完了しません。
+[元の数値参照とraw入力の保存CI](results/original-audio-input-preservation-readback-20261018.json)も成功しました。artifact `12130281114` は90日保存され、ZIP全体のSHA256・CRC、元JSON2件とraw入力6件のhash、私的な2コピーを確認済みです。取得先を固定した `0d13a3d` の[実取得](results/original-audio-preserved-acquisition-0d13a3d-20261018.json)も8ファイルすべて一致しました。モデルの実行・生成は伴っていません。
+
+旧native ONNXは両profileとも元auditのhashで保持されており、別の私的コピーも検証しました。[演算構造と重みの基準](results/original-native-onnx-computation-identity-20261018.json)を固定しましたが、候補ONNXのproducer申告hashは異なります。次は候補の実bytesとの比較で差を特定し、GPU用変換と対応付けた後に実GPU検証を行います。全6 moduleの公開準備手順・fresh consumerの完了ではありません。
 
 ## 実行順と完了条件
 

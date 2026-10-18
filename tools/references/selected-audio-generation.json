@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "scope": "windows_gpu_audio_selection_for_required_original_numeric_regression_only",
+  "model_generation": "audio-e9de158-20261018",
+  "candidate_contract_sha256": "df73e109fc6dd62e8b1fff409930042b63e6c63548865b074b593dcc70c40deb",
+  "original_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+  "sdk_runtime_tree": "7d6e4314552b221d06db881405e7ccff3f449a77",
+  "original_golden_changed": false,
+  "original_native_pt2_recovered": false,
+  "full_multimodal_acceptance": false,
+  "release_ready": false,
+  "proofs": {
+    "numeric": {
+      "path": "docs/results/audio-candidate-numeric-ci-ff2eaca-readback-20261018.json",
+      "canonical_json_sha256": "0d5d3e638ba9f86163e270746dbc8216ad1133fa10c81571b22465258fc4b418"
+    },
+    "seed": {
+      "path": "docs/results/audio-candidate-gpu-seed-readback-0cee4c7-20261018.json",
+      "canonical_json_sha256": "1c52672dfdfe69234af5126798a2cd13550517cdbb9d1b0f55f4aca27509f31d"
+    },
+    "partitions": {
+      "path": "docs/results/audio-candidate-gpu-partitions-readback-b6ede71-20261018.json",
+      "canonical_json_sha256": "be2bc50b688f88a5592963dd3b2d18c61f43d0dd8afe949f2cc437ad18b109c6"
+    },
+    "encoder": {
+      "path": "docs/results/audio-candidate-direct-encoder-gpu-a164cba-20261018.json",
+      "canonical_json_sha256": "d1c98b88375af59da044e50e941c324931e7bda745bb29233792013b0f1dc907"
+    },
+    "roles": {
+      "path": "docs/results/audio-candidate-real-pcm-all-roles-gpu-c1e9aa8-20261018.json",
+      "canonical_json_sha256": "6e37807bbaa95479e4096148272bf584b0043bf8b226d0f9ef37cf3b688b8668"
+    },
+    "saved_fp32": {
+      "path": "docs/results/audio-candidate-saved-bundle-and-player-39be89d-20261018.json",
+      "canonical_json_sha256": "c771531eca945d3188f7209dfda2025f02ec2cd66bc7ac07d2dc331cc9279e8e"
+    },
+    "saved_float16": {
+      "path": "docs/results/audio-candidate-float16-bundle-player-c18b4e5-20261018.json",
+      "canonical_json_sha256": "3b6550cdc92a6558bbf9886096bee9f0bb8a76fae64dea972119518e055a36ad"
+    }
+  }
+}

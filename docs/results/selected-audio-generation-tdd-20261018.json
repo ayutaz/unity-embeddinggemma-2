@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "scope": "Reviewed Windows audio generation selection, current-source original numerical gate and workflow contracts only",
+  "red": [
+    {
+      "phase": "missing_selection_module",
+      "failed": 27
+    },
+    {
+      "phase": "required_workflow_still_used_lost_original_graph",
+      "failed": 1,
+      "passed": 29
+    }
+  ],
+  "intermediate_failed_check": {
+    "failed": 2,
+    "reason": "An added expectation required intermediate ONNX graph files not published by the existing capture protocol. The protocol explicitly reports graphs_independently_rehashed=false; the selection preserves this limitation and the original capture checks."
+  },
+  "green": {
+    "passed": 95,
+    "failed": 0,
+    "skipped": 0
+  },
+  "actionlint_passed": true,
+  "actual_retained_capture_cli_reaudit": {
+    "source": "ff2eaca09027005159215f9b4cf7f2f3f1078a46",
+    "values_compared": 824320,
+    "original_tolerance_failures": 0,
+    "current_head_execution": false
+  },
+  "selection_canonical_json_sha256": "6b1e84c4f9eb0bbbde77ff18f2b1532a4806a8bab42c1ab664beb2f891dc9067",
+  "gpu_executed_in_this_test": false,
+  "current_head_ci_validated": false,
+  "original_native_pt2_recovered": false,
+  "original_golden_changed": false,
+  "full_multimodal_acceptance": false,
+  "evidence_sha256": {
+    "selected-audio-generation-red-private.log": "09740746cc8f6cbffda917999dde30962efa7ce77787dd8f757d69813d09102f",
+    "selected-audio-generation-green-private.log": "349f62d3a734a58b3a4a3525978aa2a2aae592b354550ce8a1dad54794dd0b70",
+    "selected-audio-workflow-red-private.log": "2c8021de8142ee45493e0418d2f6067a3a3feef2a04972f0a0894836b92d508c",
+    "selected-audio-generation-workflow-green-private.log": "fe3ca14f0f480976e96e5840cda7d3b2be935ffdde23dfc90e46db4d687cee66",
+    "selected-generation-original-capture-readback-private.json": "dccf995347d3c971cc82b5699b3e663c7506dcd99c06e528857cfca16745b88a"
+  }
+}

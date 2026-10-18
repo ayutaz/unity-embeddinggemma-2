@@ -1,0 +1,151 @@
+{
+  "schema": 1,
+  "success": true,
+  "scope": "New candidate audio Float16 weight derivation and actual Windows Release Player original all-role GPU acceptance only",
+  "preparation": {
+    "producer_source": "c18b4e518eb88968ece326b6b42ca60d281965b5",
+    "fp32_bundle_producer": "39be89d28ed90c324e67b5b4c89033b6c1c4be68",
+    "source_descriptor_sha256": "264652e72f7e35fe15f7d0f461c7be521d6a2a0be59802b5a9115ff7dc40d2d7",
+    "descriptor_sha256": "aaabc35d9ceeb0c0a38e80a439730766468b1391f6991b07f8c1c8a44ec741ea",
+    "preparation_report_sha256": "a399270d9570d2ad6e631911a830837858cec175f546e60e5e12943ed9a4c543",
+    "models_bound": 285,
+    "module_coverage": [
+      {
+        "module": "audio-1119",
+        "referenced_models": 270,
+        "short_constants_added": 233
+      },
+      {
+        "module": "audio-839",
+        "referenced_models": 270,
+        "short_constants_added": 233
+      }
+    ],
+    "source_objects": 434,
+    "derived_objects": 434,
+    "source_bytes": 3657076501,
+    "derived_bytes": 2573229069,
+    "all_original_and_derived_hashes_verified": true,
+    "non_model_bytes_identical": true,
+    "module_rewrite_exact": true,
+    "source_unchanged": true,
+    "model_description_and_json_privacy_checked": true,
+    "second_private_copy_verified": true
+  },
+  "source_readback": [
+    {
+      "name": "com.ayutaz.embeddinggemma",
+      "source": "git",
+      "resolved_sha": "c18b4e518eb88968ece326b6b42ca60d281965b5",
+      "file_count": 316,
+      "csharp_file_count": 118,
+      "byte_bound_file_count": 315,
+      "source_hash_mismatches": 0,
+      "derived_package_metadata": [
+        {
+          "file": "package.json",
+          "only_upm_fingerprint_added": true,
+          "original_fields_unchanged": true,
+          "source_sha256": "8f1e16ec90dbf6684bb9236aa59134d8b2d383217f98b0ea1cd1013ba019af57",
+          "installed_sha256": "46fbd71298e988a9fd5e593e7c6354f02a119c5843a75d0342b13e4bbfcee7aa"
+        }
+      ],
+      "unexpected_csharp_files": 0,
+      "relative_file_hash_table_sha256": "82e855b3ed477b8d0c076cf295701efe6a1e4204f345e6b250757ff60528bc9b",
+      "text_comparison": "CRLF normalized to LF; non-text bytes compared exactly"
+    },
+    {
+      "name": "com.ayutaz.embeddinggemma.validation",
+      "source": "git",
+      "resolved_sha": "c18b4e518eb88968ece326b6b42ca60d281965b5",
+      "file_count": 268,
+      "csharp_file_count": 130,
+      "byte_bound_file_count": 267,
+      "source_hash_mismatches": 0,
+      "derived_package_metadata": [
+        {
+          "file": "package.json",
+          "only_upm_fingerprint_added": true,
+          "original_fields_unchanged": true,
+          "source_sha256": "938373df35111b9976b11e9b1ede8120421e83f3812bc9bd0c848e52d647d949",
+          "installed_sha256": "343ec8a6ef6d8eb3aece4d2e4532ce3a86cf86d5bdd49f123e0536f7ca0883ee"
+        }
+      ],
+      "unexpected_csharp_files": 0,
+      "relative_file_hash_table_sha256": "77bbffdf47e8ead8c1bbe6536e963e1d144a5cabbf0688c49bb6242e7542408f",
+      "text_comparison": "CRLF normalized to LF; non-text bytes compared exactly"
+    }
+  ],
+  "player": {
+    "build_source": "89b1ab9084cea9379ad6936d3075066fa8ba8f7a",
+    "bundle_producer_source": "c18b4e518eb88968ece326b6b42ca60d281965b5",
+    "rebuild_performed": false,
+    "runtime_tree_sha": "7d6e4314552b221d06db881405e7ccff3f449a77",
+    "executable_sha256": "303b9b322f8be40b4273014b21932b9fd3b1e1ddc08877bcb9008af9f9330559",
+    "descriptor_sha256": "aaabc35d9ceeb0c0a38e80a439730766468b1391f6991b07f8c1c8a44ec741ea",
+    "results": [
+      {
+        "module": "audio-1119",
+        "precision": "float16",
+        "base_vectors": 15,
+        "warm_vectors": 9,
+        "minimum_recomputed_cosine": 0.9999962394134758,
+        "success": true
+      },
+      {
+        "module": "audio-839",
+        "precision": "float16",
+        "base_vectors": 3,
+        "warm_vectors": 9,
+        "minimum_recomputed_cosine": 0.9999899845312745,
+        "success": true
+      }
+    ],
+    "base_vectors": 18,
+    "warm_vectors": 18,
+    "negative_controls_rejected": 24,
+    "evidence": [
+      {
+        "module": "audio-1119",
+        "report_sha256": "a30832251fd00c1500dacac4652554678347b7e7d4a4a690c0c6071d9e2408fe",
+        "process_sha256": "8a0c1f22dfa898bf023732eca5212412a00ec2e79eda472b874489c448f31124",
+        "run_id": "cdf620620f7546549ff5ade7047b91b3",
+        "elapsed_seconds": 49.61485439998796
+      },
+      {
+        "module": "audio-839",
+        "report_sha256": "d57a54e35d1dab3b45cb5e2d1c92e81c7dcb72d305d5b69c76e166222e5e5678",
+        "process_sha256": "d1cdb58198846d25ed2d868092cd18f552564fff956e561fe50f8968c53dac96",
+        "run_id": "1731e8aff3c543c283db1054e78c3307",
+        "elapsed_seconds": 35.42544209997868
+      }
+    ]
+  },
+  "unity": "6000.3.21f1",
+  "sentis": "2.6.1",
+  "graphics_api": "Direct3D12",
+  "scripting_backend": "IL2CPP",
+  "compiler": "Release",
+  "stripping": "High",
+  "original_minimum_cosine_gate": 0.99,
+  "maximum_norm_squared_deviation": 0.002,
+  "workers_per_profile": 270,
+  "gpu_audits_before_and_after": true,
+  "no_cpu_computation_or_intermediate_flush": true,
+  "session_released": true,
+  "pre_cancel_verified": true,
+  "pending_call_cancel_verified": true,
+  "warm_scope": "Three in-process repeats per role and module; not independent warm launches",
+  "cancellation_scope": "Pre-cancel and pending call at first yield; not in-flight GPU kernel cancellation",
+  "inference_precision": "Float16 eligible saved weights; external coefficients remain FP32; not all-half arithmetic",
+  "performance_improvement_claimed": false,
+  "original_golden_changed": false,
+  "model_generation_qualified": false,
+  "full_multimodal_acceptance": false,
+  "evidence_sha256": {
+    "candidate-audio-bundle-float16-c18b4e5-readback-private.json": "bab283906dc39e8961140213a6f6929fe54741373af28401b9fd261808da13b9",
+    "candidate-audio-float16-player-89b-c18b4e5-independent-audit-private.json": "3de90328b7e8db8c5d4ab02edd75d82045a79a2a10cb7ef8554b7133397d0b26",
+    "candidate-float16-fixed-consumer-c18b4e5-source-readback-v6-private.json": "191c37c316be9b6d0c71e8185cf3afacb6838c024191ef80fb03917e0d7c9aa9"
+  },
+  "audit_protocol_failure_preserved": "First private auditor invocation could not import the package; corrected invocation retained original data and passed."
+}

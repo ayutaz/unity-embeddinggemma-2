@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "distributions": {
+    "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647": {
+      "inventory_sha256": "957567a7928016b866b4471a893c5ce953e5b7f6bfab750a2f91adda109470e5",
+      "review_path": "docs/results/six-module-fp32-model-distribution-privacy-20261018.json",
+      "review_canonical_sha256": "a00962348a47231b10f350000ac57e704d6f203c3226de48e6f8741b3bd88595",
+      "producer": "567befbd64287a706edaac59c978927e0277188a"
+    },
+    "8a6a90c5f656a00b024553a0412e5c4d32b4d2c9c7c5b3a0c2c146f557b4e27e": {
+      "inventory_sha256": "7b559b4cb4e95a82e9b73dfdc051dd15ef703b569e6efb7dc6a9d939595db44f",
+      "review_path": "docs/results/six-module-float16-model-distribution-privacy-20261018.json",
+      "review_canonical_sha256": "c5067a5836e54ec0033849cb35ea5e573ec714a1cd2d9b4fa9a0b789288c394d",
+      "producer": "567befbd64287a706edaac59c978927e0277188a"
+    }
+  }
+}

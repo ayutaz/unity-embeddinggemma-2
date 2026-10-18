@@ -16,7 +16,8 @@ def publication_files_safe(command, cwd):
             files.append(token.split('=',1)[1])
         elif '=@' in token:
             files.append(token.split('=@',1)[1])
-    if 'release' in tokens and 'upload' in tokens:
+    release_upload = 'release' in tokens and 'upload' in tokens
+    if release_upload:
         index=tokens.index('upload')
         for token in tokens[index+2:]:
             if token in ('--clobber',):
@@ -28,7 +29,13 @@ def publication_files_safe(command, cwd):
         if name=='-' or '$' in name or '`' in name:
             return False
         path=Path(cwd)/name
-        if not path.is_file() or path.stat().st_size>16*1024**2:
+        if not path.is_file():
+            return False
+        if release_upload:
+            from .model_release_privacy import reviewed_model_asset_safe
+            if reviewed_model_asset_safe(path, cwd):
+                continue
+        if path.stat().st_size>16*1024**2:
             return False
         if scan_bytes(path.read_bytes(), path.name):
             return False

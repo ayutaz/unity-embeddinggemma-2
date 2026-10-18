@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "scope": "Exact reviewed model release assets and committed HEAD review authority; no general binary or Git-model exception",
+  "red": {
+    "missing_validator_failures": 15,
+    "missing_release_hook_failures": 2
+  },
+  "green": {
+    "passed": 44,
+    "failed": 0,
+    "skipped": 0
+  },
+  "actual_git_head_authority_test": true,
+  "large_synthetic_model_above_16_mib_checked": true,
+  "registered_private_description_controls_rejected": true,
+  "unreviewed_images_and_archives_rejected": true,
+  "model_execution_validated": false,
+  "public_upload_executed": false,
+  "evidence_sha256": {
+    "model-release-privacy-red-private.log": "73d756b96a3b607c505a5c1fb8561b8a11ee13904b1734bb5ec2176fc2254890",
+    "model-release-hook-red-private.log": "e75c5164b2c1676c636c50afda70d4525d936340379c9a61598460e198c6878f",
+    "model-release-hook-head-authority-green-private.log": "b8cfd34562750979002e0acaa7cb69c4a62664dfb9175c8bf03712b6bf5ca286"
+  }
+}

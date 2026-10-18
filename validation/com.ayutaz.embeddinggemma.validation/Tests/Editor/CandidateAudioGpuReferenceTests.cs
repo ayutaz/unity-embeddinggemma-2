@@ -23,12 +23,24 @@ namespace EmbeddingGemma.Validation.Tests
         [UnityTest]
         public IEnumerator PaddedProfileMustMatchOriginalSignalOnGpu()
             =>Wait(Run("frames-1119-valid-839"));
-        [UnityTest]
-        public IEnumerator FullProfilePcmMustMatchAllOriginalRolesOnGpu()
-            =>Wait(Run("frames-1119-valid-1119",allRoles:true));
-        [UnityTest]
-        public IEnumerator PaddedProfilePcmMustMatchAllOriginalRolesOnGpu()
-            =>Wait(Run("frames-1119-valid-839",allRoles:true));
+        [UnityTest,Order(1)]
+        public IEnumerator PcmFullSilenceMustMatchAllOriginalRolesOnGpu()
+            =>Wait(Run("frames-1119-valid-1119",allRoles:true,requestedSignal:"silence"));
+        [UnityTest,Order(2)]
+        public IEnumerator PcmFullImpulseMustMatchAllOriginalRolesOnGpu()
+            =>Wait(Run("frames-1119-valid-1119",allRoles:true,requestedSignal:"impulse"));
+        [UnityTest,Order(3)]
+        public IEnumerator PcmFullSineMustMatchAllOriginalRolesOnGpu()
+            =>Wait(Run("frames-1119-valid-1119",allRoles:true,requestedSignal:"sine"));
+        [UnityTest,Order(4)]
+        public IEnumerator PcmFullNyquistMustMatchAllOriginalRolesOnGpu()
+            =>Wait(Run("frames-1119-valid-1119",allRoles:true,requestedSignal:"nyquist"));
+        [UnityTest,Order(5)]
+        public IEnumerator PcmFullNoiseMustMatchAllOriginalRolesOnGpu()
+            =>Wait(Run("frames-1119-valid-1119",allRoles:true,requestedSignal:"noise"));
+        [UnityTest,Order(6)]
+        public IEnumerator PcmPaddedNoiseMustMatchAllOriginalRolesOnGpu()
+            =>Wait(Run("frames-1119-valid-839",allRoles:true,requestedSignal:"padded_noise"));
         static IEnumerator Wait(Task task)
         {
             while(!task.IsCompleted)yield return null;
@@ -70,13 +82,18 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.That(locked["dependencies"][name].Value<string>("hash"),Is.EqualTo(source));
             }
         }
-        static async Task Run(string profile,bool allRoles=false)
+        static async Task Run(string profile,bool allRoles=false,string requestedSignal=null)
         {
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var original=Environment.GetEnvironmentVariable("EG_ORIGINAL_AUDIO_ROOT");
             var output=Environment.GetEnvironmentVariable("EG_CANDIDATE_GPU_REPORT");
             var scope=allRoles?"saved_candidate_real_pcm_original_all_roles_gpu_gate_only":"saved_candidate_encoder_original_reference_gpu_gate_only";
             Assert.That(output,Is.Not.Null.And.Not.Empty);Assert.That(original,Is.Not.Null.And.Not.Empty);
+            if(allRoles)
+            {
+                Assert.That(requestedSignal,Does.Match("^(silence|impulse|sine|nyquist|noise|padded_noise)$"));
+                output=Path.Combine(Path.GetDirectoryName(Path.GetFullPath(output)),Path.GetFileNameWithoutExtension(output)+"-"+requestedSignal+".json");
+            }
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject
             {
@@ -133,8 +150,10 @@ namespace EmbeddingGemma.Validation.Tests
                     if(!allRoles)await QualifiedStagedAudioEncoderGate.Run(encoder,original,reference,audit,report,output,Save);
                     else
                     {
-                        var signals=((JArray)reference["cases"]).Where(row=>row.Value<string>("profile")==profile).Select(row=>row.Value<string>("id")).ToArray();
-                        Assert.That(signals.Length,Is.EqualTo(frames==839?1:5));
+                        var allSignals=((JArray)reference["cases"]).Where(row=>row.Value<string>("profile")==profile).Select(row=>row.Value<string>("id")).ToArray();
+                        Assert.That(allSignals.Length,Is.EqualTo(frames==839?1:5));
+                        var signals=allSignals.Where(value=>value==requestedSignal).ToArray();Assert.That(signals.Length,Is.EqualTo(1));
+                        report["requested_signal"]=requestedSignal;report["original_profile_signal_count"]=allSignals.Length;
                         var results=new JArray();report["signals"]=results;
                         foreach(var signal in signals)
                         {

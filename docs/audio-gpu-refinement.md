@@ -99,11 +99,21 @@ This local-file/no-graphics test loaded no model; it proves neither a fixed Git
 consumer nor GPU arithmetic. Startup, framework and initial fixture compile
 failures are retained separately.
 
-The additional `FullProfilePcmMustMatchAllOriginalRolesOnGpu` and
-`PaddedProfilePcmMustMatchAllOriginalRolesOnGpu` fixtures reuse the original PCM,
-preprocessor, backbone, tokenizer and Query/Document/Raw reference hashes. Each
-signal gets its own report and three unique captures; all signals must finish
-before the profile's final-role flag can pass. They also retain the existing
-invalid-input, real-stage-failure and disposal/reuse controls. Their
+The five additional `PcmFull*MustMatchAllOriginalRolesOnGpu` tests
+and `PcmPaddedNoiseMustMatchAllOriginalRolesOnGpu` fixtures reuse the original
+PCM, preprocessor, backbone, tokenizer and Query/Document/Raw reference hashes.
+Run each signal's three roles in its own process; all six signal results and 18
+vectors remain required. Set `EG_CANDIDATE_GPU_REPORT` to a new private base file;
+the fixture adds the selected signal to its parent filename and gives its child
+report and three captures unique names. The signal must finish before its final
+role flag can pass. Existing invalid-input, real-stage-failure and disposal/reuse
+controls remain required. Their initial
 [compile checkpoint](results/candidate-audio-role-fixture-compile-20261018.json)
 passed the 13 provenance controls; actual role execution is a separate gate.
+
+The initial [five-signal grouped role attempt](results/candidate-audio-grouped-role-timeout-b4fbf2e-20261018.json)
+failed the default 180000 ms Unity test limit after one signal's three vectors.
+The parent later recorded a MissingReferenceException; its causal relation is
+not proven. This is a failed overall attempt, not a role acceptance or a runtime
+stability improvement. The revised per-signal protocol preserves the default
+test timeout, all original reference thresholds and the full 18-condition scope.

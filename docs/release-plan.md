@@ -2,11 +2,11 @@
 
 確認日: 2026-10-18。対象はテキスト・画像・音声のGPU推論と横断検索です。[ゴール](goal.md)の必須環境・精度条件を維持します。
 
-直近の到達点は **#89の最新Required CI全成功** です。まだDraft・未マージで、正式リリースも未実施です。次は差分と公開履歴を確認して#89を統合し、残る3 PRの内容を1つの候補へ整理します。Windowsでの過去の成功だけで、最終候補や他OSの受け入れを完了にはしません。
+直近の到達点は **#89の最新Required CI全成功とマージ完了** です。main `ca2ff1a` のtreeは確認したhead `392ced7` と一致しました。正式リリースは未実施です。#86・#87・#90の変更と公開名の履歴誤検知修正を1つの統合候補へまとめました。最新候補の全必須CIと実モデル・consumerの必要な確認を続けます。
 
 ## 現在地
 
-正式tag・GitHub Releaseは各0件。PR #86・#87・#89・#90はDraft・未マージです。以下は同日の実データ・GitHub照合に基づくcheckpointであり、正式候補全体の合格ではありません。
+正式tag・GitHub Releaseは各0件。PR #89はマージ済み、#86・#87・#90はDraft・未マージです。以下は同日の実データ・GitHub照合に基づくcheckpointであり、正式候補全体の合格ではありません。
 
 - 新しい音声候補は、source `b6ede71` の[変換CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39120142716)で両profileの生成に成功。保存ZIP全体のCRC・hashと私的な2コピーを確認しました。
 - 固定Git consumerのsource `a164cba` で、全6信号・824,320値を実GPU照合し、元の要素別許容差超過は0でした。
@@ -19,7 +19,7 @@
 - 既存bundleではsource `89b1ab9` の実Playerで画像3・音声2×FP32 / Float16重みの10条件が合格しています。新候補や最終統合版へそのまま付け替えません。
 - #89旧head `39be89d` の[通常CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39123968041)には、固定音声6信号と集計の失敗があります。最新headの合格と区別して保持します。旧native PT2の同一bytes復旧も未達であり、新候補の成功を原本の復旧とは扱いません。
 
-7種類の証拠をcanonical JSON SHA256とSDK Runtime treeへ固定し、採用候補を使う必須数値回帰の取得経路を `58f48ac` で実装しました。27件の未実装失敗とworkflowの1件の失敗から、関連95件・actionlint成功を確認。元の全6信号・5区間・824,320値の実実行条件は維持しています。[初回選択CI 39126214004](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39126214004)は音声6信号・集計が成功し、全7 archiveの独立読み戻しでも824,320値の許容差超過0でした。ただし旧取得経路を前提とするテスト1件が各Python環境で失敗し、CI全体は不合格です。1件のローカルRedから関連111件Greenへ修正後、source `392ced7816ff5c724ccd902b0dcbf488b79cee18` の[最新CI 39127876689](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39127876689)は全15 job成功しました。Pythonの4環境、package、actionlint、通常reference、音声6信号と集計、Required CIを含みます。#89はDraft・MERGEABLE・CLEANですが未マージです。これは最新CIの成功であり、新しいGPU実行や工程1全体の完了ではありません。
+7種類の証拠をcanonical JSON SHA256とSDK Runtime treeへ固定し、採用候補を使う必須数値回帰の取得経路を `58f48ac` で実装しました。27件の未実装失敗とworkflowの1件の失敗から、関連95件・actionlint成功を確認。元の全6信号・5区間・824,320値の実実行条件は維持しています。[初回選択CI 39126214004](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39126214004)は音声6信号・集計が成功し、全7 archiveの独立読み戻しでも824,320値の許容差超過0でした。ただし旧取得経路を前提とするテスト1件が各Python環境で失敗し、CI全体は不合格です。1件のローカルRedから関連111件Greenへ修正後、source `392ced7816ff5c724ccd902b0dcbf488b79cee18` の[最新CI 39127876689](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39127876689)は全15 job成功しました。Pythonの4環境、package、actionlint、通常reference、音声6信号と集計、Required CIを含みます。#89はそのheadでmain ca2ff1aへマージ済みです。これは最新CIの成功であり、新しいGPU実行や工程1全体の完了ではありません。
 
 全6 moduleの[実配布候補の組み立て](results/media-distribution-composition-567befb-20261018.json)はFP32 / Float16とも成功しました。各820 object・553モデルの元bytes・module対応・個人情報metadataを独立照合し、合計1,640ファイルの[実公開payload checker](results/model-publication-payload-guard-392ced7-20261018.json)も成功しました。flat HTTPS取得・回復とcompositionの関連77件が合格しています。モデルは未公開で、公開元からの空cache取得・取得後の最終consumer合格は未達です。
 
@@ -37,13 +37,13 @@
 | 6 | 最終配布候補を固定し、公開前監査 | 必須回帰全成功。README / API / sample / CHANGELOG / 利用条件 / 最低要件を整備。履歴・commit identity・実公開payload・画像の目視 / OCR / hashを確認。旧PR / cacheのprivacy対応も追跡 |
 | 7 | 正式公開と公開後の導入確認 | version・tag・GitHub Releaseを一致させ、公開物を読み戻す。公開tagを新規consumerへ導入し直し、モデル準備とsample smokeが成功 |
 
-工程1は最新CIが成功し、差分・公開履歴の監査と統合を残しています。工程2〜4には既存sourceでの部分的な実績がありますが、最終候補としての完了判定は残っています。工程5〜7は未完了です。
+工程1は#89の最新CI・差分・公開履歴の監査と統合が完了し、残る変更の最新統合候補の受け入れを進めています。GitHubがsquash著者へ使用した公開名と指定noreplyは[限定的な履歴分類の修正](results/provider-public-author-tdd-20261018.json)で確認しました。ローカルcommit identityや他の個人情報検査は維持します。工程2〜4には既存sourceでの部分的な実績がありますが、最終候補としての完了判定は残っています。工程5〜7は未完了です。
 
 工程2のモデル配布は正式SDK Releaseと分け、ライセンス・変更点・全ファイルhashを添えたモデル配布用previewを用意して、公開URLから実際に取得し直します。モデルはGit / LFSへ含めません。期限付きActions artifactだけに依存する数値回帰の取得経路も、同一bytesと来歴を検査して継続可能な保存先へ移します。原本が失われたものを再生成品で原本扱いしません。
 
 ## PRの整理
 
-- #89: 最新CI成功を確認済み。差分・privacy監査後に先に統合します。
+- #89: 最新CI成功・差分・privacy監査を経てmain `ca2ff1a` へマージ済みです。
 - #86: 固定取得先・空cache取得・破損回復の変更を統合候補へ取り込みます。
 - #87: 採用Float16モデル・sample gate・性能測定の変更を同じ統合候補へ取り込みます。
 - #90: #89をbaseとする差分とPlayer監査の根拠を確認して、同じ統合候補へ取り込みます。

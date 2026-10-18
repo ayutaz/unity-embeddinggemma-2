@@ -1,0 +1,448 @@
+{
+  "observed_load_process_engine_delta": false,
+  "sdk_load_release_gpu_timing_accepted": false,
+  "complete_performance_accepted": false,
+  "full_priorities_1_to_3_accepted": false,
+  "numerical_vectors_verified": 4,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "10962faf0924bb1c5070ad2d3875fc06fd24bbe2",
+  "collector_source": "966be0564dd0e619de287cdb4b4cf6eb57eb93f7",
+  "collector_git_blob_sha256": "d156f336a5b2ea7110cf0e06a314ca372bfb437956ce8e23c83e368e72676073",
+  "parser_source": "4e5b1968c2dd8c5d653e6571233f7d75a31b7478",
+  "source_files_verified_after": 554,
+  "numerical_audit_file": "text-current-fp32-d7b2233-gpu-engine-first-20261018.json",
+  "numerical_audit_sha256": "0e804d208d4ba9a581f2774b695660488ca82e6522393f9b5de3c9e9df4392fd",
+  "summary": {
+    "pid": 115428,
+    "process_created_utc": "2026-10-17T22:41:18.5763430Z",
+    "intervals": [
+      {
+        "id": "process",
+        "begin_utc": "2026-10-17T22:41:18.574556+00:00",
+        "end_utc": "2026-10-17T22:42:03.392046+00:00",
+        "sample_count": 7,
+        "engines": [
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_0_engtype_3d",
+            "available": false,
+            "sample_count": 6,
+            "first_counter_sample_utc": "2026-10-17T22:41:33.4381949Z",
+            "last_counter_sample_utc": "2026-10-17T22:42:01.4277500Z",
+            "covered_elapsed_seconds": 27.9895551,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine",
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_10_engtype_copy",
+            "available": false,
+            "sample_count": 6,
+            "first_counter_sample_utc": "2026-10-17T22:41:33.4381949Z",
+            "last_counter_sample_utc": "2026-10-17T22:42:01.4277500Z",
+            "covered_elapsed_seconds": 27.9895551,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine",
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_11_engtype_copy",
+            "available": false,
+            "sample_count": 6,
+            "first_counter_sample_utc": "2026-10-17T22:41:33.4381949Z",
+            "last_counter_sample_utc": "2026-10-17T22:42:01.4277500Z",
+            "covered_elapsed_seconds": 27.9895551,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine",
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_12_engtype_copy",
+            "available": false,
+            "sample_count": 6,
+            "first_counter_sample_utc": "2026-10-17T22:41:33.4381949Z",
+            "last_counter_sample_utc": "2026-10-17T22:42:01.4277500Z",
+            "covered_elapsed_seconds": 27.9895551,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine",
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_13_engtype_copy",
+            "available": false,
+            "sample_count": 6,
+            "first_counter_sample_utc": "2026-10-17T22:41:33.4381949Z",
+            "last_counter_sample_utc": "2026-10-17T22:42:01.4277500Z",
+            "covered_elapsed_seconds": 27.9895551,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine",
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_1_engtype_legacyoverlay",
+            "available": false,
+            "sample_count": 6,
+            "first_counter_sample_utc": "2026-10-17T22:41:33.4381949Z",
+            "last_counter_sample_utc": "2026-10-17T22:42:01.4277500Z",
+            "covered_elapsed_seconds": 27.9895551,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine",
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_2_engtype_videodecode",
+            "available": false,
+            "sample_count": 6,
+            "first_counter_sample_utc": "2026-10-17T22:41:33.4381949Z",
+            "last_counter_sample_utc": "2026-10-17T22:42:01.4277500Z",
+            "covered_elapsed_seconds": 27.9895551,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine",
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_3_engtype_copy",
+            "available": false,
+            "sample_count": 6,
+            "first_counter_sample_utc": "2026-10-17T22:41:33.4381949Z",
+            "last_counter_sample_utc": "2026-10-17T22:42:01.4277500Z",
+            "covered_elapsed_seconds": 27.9895551,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine",
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_4_engtype_copy",
+            "available": false,
+            "sample_count": 6,
+            "first_counter_sample_utc": "2026-10-17T22:41:33.4381949Z",
+            "last_counter_sample_utc": "2026-10-17T22:42:01.4277500Z",
+            "covered_elapsed_seconds": 27.9895551,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine",
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_5_engtype_security",
+            "available": false,
+            "sample_count": 6,
+            "first_counter_sample_utc": "2026-10-17T22:41:33.4381949Z",
+            "last_counter_sample_utc": "2026-10-17T22:42:01.4277500Z",
+            "covered_elapsed_seconds": 27.9895551,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine",
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_6_engtype_videoencode",
+            "available": false,
+            "sample_count": 6,
+            "first_counter_sample_utc": "2026-10-17T22:41:33.4381949Z",
+            "last_counter_sample_utc": "2026-10-17T22:42:01.4277500Z",
+            "covered_elapsed_seconds": 27.9895551,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine",
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_7_engtype_videoencode",
+            "available": false,
+            "sample_count": 6,
+            "first_counter_sample_utc": "2026-10-17T22:41:33.4381949Z",
+            "last_counter_sample_utc": "2026-10-17T22:42:01.4277500Z",
+            "covered_elapsed_seconds": 27.9895551,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine",
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_8_engtype_ofa_0",
+            "available": false,
+            "sample_count": 6,
+            "first_counter_sample_utc": "2026-10-17T22:41:33.4381949Z",
+            "last_counter_sample_utc": "2026-10-17T22:42:01.4277500Z",
+            "covered_elapsed_seconds": 27.9895551,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine",
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_9_engtype_vr",
+            "available": false,
+            "sample_count": 6,
+            "first_counter_sample_utc": "2026-10-17T22:41:33.4381949Z",
+            "last_counter_sample_utc": "2026-10-17T22:42:01.4277500Z",
+            "covered_elapsed_seconds": 27.9895551,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine",
+              "untrusted_timestamp_observation"
+            ]
+          }
+        ],
+        "boundary_coverage_complete": false
+      },
+      {
+        "id": "load",
+        "begin_utc": "2026-10-17T22:41:44.1672392Z",
+        "end_utc": "2026-10-17T22:41:57.1557362Z",
+        "sample_count": 3,
+        "engines": [
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_0_engtype_3d",
+            "available": false,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:41:49.2145634Z",
+            "last_counter_sample_utc": "2026-10-17T22:41:56.7432530Z",
+            "covered_elapsed_seconds": 7.5286896,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_10_engtype_copy",
+            "available": false,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:41:49.2145634Z",
+            "last_counter_sample_utc": "2026-10-17T22:41:56.7432530Z",
+            "covered_elapsed_seconds": 7.5286896,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_11_engtype_copy",
+            "available": false,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:41:49.2145634Z",
+            "last_counter_sample_utc": "2026-10-17T22:41:56.7432530Z",
+            "covered_elapsed_seconds": 7.5286896,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_12_engtype_copy",
+            "available": false,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:41:49.2145634Z",
+            "last_counter_sample_utc": "2026-10-17T22:41:56.7432530Z",
+            "covered_elapsed_seconds": 7.5286896,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_13_engtype_copy",
+            "available": false,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:41:49.2145634Z",
+            "last_counter_sample_utc": "2026-10-17T22:41:56.7432530Z",
+            "covered_elapsed_seconds": 7.5286896,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_1_engtype_legacyoverlay",
+            "available": false,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:41:49.2145634Z",
+            "last_counter_sample_utc": "2026-10-17T22:41:56.7432530Z",
+            "covered_elapsed_seconds": 7.5286896,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_2_engtype_videodecode",
+            "available": false,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:41:49.2145634Z",
+            "last_counter_sample_utc": "2026-10-17T22:41:56.7432530Z",
+            "covered_elapsed_seconds": 7.5286896,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_3_engtype_copy",
+            "available": false,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:41:49.2145634Z",
+            "last_counter_sample_utc": "2026-10-17T22:41:56.7432530Z",
+            "covered_elapsed_seconds": 7.5286896,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_4_engtype_copy",
+            "available": false,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:41:49.2145634Z",
+            "last_counter_sample_utc": "2026-10-17T22:41:56.7432530Z",
+            "covered_elapsed_seconds": 7.5286896,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_5_engtype_security",
+            "available": false,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:41:49.2145634Z",
+            "last_counter_sample_utc": "2026-10-17T22:41:56.7432530Z",
+            "covered_elapsed_seconds": 7.5286896,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_6_engtype_videoencode",
+            "available": false,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:41:49.2145634Z",
+            "last_counter_sample_utc": "2026-10-17T22:41:56.7432530Z",
+            "covered_elapsed_seconds": 7.5286896,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_7_engtype_videoencode",
+            "available": false,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:41:49.2145634Z",
+            "last_counter_sample_utc": "2026-10-17T22:41:56.7432530Z",
+            "covered_elapsed_seconds": 7.5286896,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_8_engtype_ofa_0",
+            "available": false,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:41:49.2145634Z",
+            "last_counter_sample_utc": "2026-10-17T22:41:56.7432530Z",
+            "covered_elapsed_seconds": 7.5286896,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "untrusted_timestamp_observation"
+            ]
+          },
+          {
+            "name": "pid_115428_luid_0x00000000_0x00012525_phys_0_eng_9_engtype_vr",
+            "available": false,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:41:49.2145634Z",
+            "last_counter_sample_utc": "2026-10-17T22:41:56.7432530Z",
+            "covered_elapsed_seconds": 7.5286896,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "untrusted_timestamp_observation"
+            ]
+          }
+        ],
+        "boundary_coverage_complete": false
+      },
+      {
+        "id": "release",
+        "begin_utc": "2026-10-17T22:42:00.1387993Z",
+        "end_utc": "2026-10-17T22:42:00.1523858Z",
+        "sample_count": 0,
+        "engines": [],
+        "boundary_coverage_complete": false
+      },
+      {
+        "id": "query:first",
+        "begin_utc": "2026-10-17T22:41:57.4290386Z",
+        "end_utc": "2026-10-17T22:41:58.4330835Z",
+        "sample_count": 0,
+        "engines": [],
+        "boundary_coverage_complete": false
+      },
+      {
+        "id": "query:warm",
+        "begin_utc": "2026-10-17T22:41:58.8446124Z",
+        "end_utc": "2026-10-17T22:41:58.9012341Z",
+        "sample_count": 0,
+        "engines": [],
+        "boundary_coverage_complete": false
+      },
+      {
+        "id": "query:repeat-1",
+        "begin_utc": "2026-10-17T22:41:59.3314320Z",
+        "end_utc": "2026-10-17T22:41:59.3940088Z",
+        "sample_count": 0,
+        "engines": [],
+        "boundary_coverage_complete": false
+      },
+      {
+        "id": "query:repeat-2",
+        "begin_utc": "2026-10-17T22:41:59.7498561Z",
+        "end_utc": "2026-10-17T22:41:59.8122024Z",
+        "sample_count": 0,
+        "engines": [],
+        "boundary_coverage_complete": false
+      }
+    ],
+    "rejected_observations": 2,
+    "exclusive_sdk_stage_time_measured": false,
+    "gpu_execution_validated": false,
+    "scope": "Per-process, per-engine raw Timer100Ns deltas between counter samples inside each interval. Engines may overlap and are never summed; no boundary interpolation or SDK-exclusive time."
+  },
+  "observations": 9,
+  "provider_diagnostic_observations": 0,
+  "evidence_sha256": {
+    "text-current-fp32-d7b2233-gpu-engine-first-gpu-engine.jsonl": "103e75f1c8442d1f03e4c619238efc81c931761fc12e88702db6b67b4dac6d46",
+    "text-current-fp32-d7b2233-gpu-engine-first.json": "c9c34e7b82a5b15ac305bbe4cc0378deb07f64325ea471c31148ee8f2a1c14a3",
+    "text-current-fp32-d7b2233-gpu-engine-first-process.json": "f52a12e97d1d52c7fc71874002b5bc30d6013c5d525ffbb4becfd9de2240b097"
+  },
+  "scope": "Observed process/engine Timer100Ns deltas between captured endpoints strictly inside each stage. Includes unrelated Editor GPU work, does not cover unsampled stage boundaries, and does not measure SDK-exclusive load or driver retirement.",
+  "limitations": [
+    "Actual counters and reference-checked GPU text execution are separate evidence; neither converts missing short intervals into zero.",
+    "No sum across engines and no subtraction from CPU wall or Recorder timestamps.",
+    "Initial collector lost whole sample sets on provider errors. Fixed collector preserves provider diagnostics and checks only owned row validity; both traces are retained.",
+    "Source of absolute stage alignment is normalized counter DateTime UTC. Raw provider Timestamp100NSec on this host encoded local wall time and is retained only as a diagnostic.",
+    "No real model conversion, public acquisition, native UI or microphone acceptance is claimed."
+  ]
+}

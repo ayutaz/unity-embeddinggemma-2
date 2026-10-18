@@ -1,0 +1,218 @@
+{
+  "runtime_source": "d1548acbe7bf6cb838da60fab66dc7a374909b8a",
+  "full_ui_acceptance": false,
+  "scope": "Fresh fixed-Git consumer, native mouse/keyboard image registration and loading cancellation/retry. Partial UI evidence only.",
+  "source_audit": {
+    "success": true,
+    "project": ".\\artifacts\\usability-consumer-d1548ac",
+    "requested_revision": "d1548acbe7bf6cb838da60fab66dc7a374909b8a",
+    "resolved_revision": "d1548acbe7bf6cb838da60fab66dc7a374909b8a",
+    "unity_executed": false,
+    "errors": [],
+    "tracked_files_verified": 311,
+    "manifest_metadata": {
+      "comparison": "Exact JSON values excluding UPM-added _fingerprint and formatting",
+      "upm_fingerprint": "042e3b4a0a33fd20ba784ac25024d0f68be680ff"
+    },
+    "samples_byte_verified": {
+      "TextSearch": 52,
+      "MultimodalSearch": 34
+    },
+    "scope": "Fresh Git resolved source audit only; UI and real model execution not yet verified"
+  },
+  "terminal_receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\usability-consumer-d1548ac",
+      "-executeMethod",
+      "UsabilityUiBootstrap.Open",
+      "-logFile",
+      ".\\artifacts\\usability-state\\native-ui-d1548ac-fresh.log"
+    ],
+    "started_utc": "2026-10-17T15:25:59.756358+00:00",
+    "terminal": true,
+    "success": false,
+    "timeout_seconds": 900,
+    "memory_limit_bytes": 12884901888,
+    "peak_host_bytes": 5247864832,
+    "actions_via_windows_ui": true,
+    "pid": 97128,
+    "current_host_bytes": 4264239104,
+    "elapsed_seconds": 900.254715499992,
+    "stop_reason": "timeout",
+    "exit_code": 1,
+    "completed_utc": "2026-10-17T15:41:00.011065+00:00"
+  },
+  "image_reference_case": "square-0",
+  "independently_verified_image": {
+    "utc": "2026-10-17T15:39:18.3941774Z",
+    "id": "media-0",
+    "cosine": 0.9999999999997121,
+    "norm_squared": 0.9999998800493916
+  },
+  "registered_images": 1,
+  "cancellation_observed": true,
+  "actual_gpu_registration": true,
+  "search_results_observed": false,
+  "live_microphone_started": false,
+  "redacted_unintended_input_rows": 1,
+  "protected_root_files_verified": 4,
+  "timeline": [
+    {
+      "utc": "2026-10-17T15:32:26.4224549Z",
+      "busy": false,
+      "status": "モデルの準備先と入力ファイルを指定してください。",
+      "documents": 0,
+      "active_gpu_module": null,
+      "actual_backend": null,
+      "previews": 0
+    },
+    {
+      "utc": "2026-10-17T15:33:33.5943176Z",
+      "busy": false,
+      "status": "モデルの準備先と入力ファイルを指定してください。",
+      "documents": 0,
+      "active_gpu_module": null,
+      "actual_backend": null,
+      "previews": 0
+    },
+    {
+      "utc": "2026-10-17T15:33:36.1723546Z",
+      "busy": false,
+      "status": "録音を破棄しました。音声の保存・送信は行っていません。",
+      "documents": 0,
+      "active_gpu_module": null,
+      "actual_backend": null,
+      "previews": 0
+    },
+    {
+      "utc": "2026-10-17T15:34:11.0874699Z",
+      "busy": false,
+      "status": "録音を破棄しました。音声の保存・送信は行っていません。",
+      "documents": 0,
+      "active_gpu_module": null,
+      "actual_backend": null,
+      "previews": 0
+    },
+    {
+      "utc": "2026-10-17T15:34:14.2639335Z",
+      "busy": false,
+      "status": "録音を破棄しました。音声の保存・送信は行っていません。",
+      "documents": 0,
+      "active_gpu_module": null,
+      "actual_backend": null,
+      "previews": 0
+    },
+    {
+      "utc": "2026-10-17T15:34:46.4877352Z",
+      "busy": false,
+      "status": "録音を破棄しました。音声の保存・送信は行っていません。",
+      "documents": 0,
+      "active_gpu_module": null,
+      "actual_backend": null,
+      "previews": 0
+    },
+    {
+      "utc": "2026-10-17T15:35:10.7638460Z",
+      "busy": false,
+      "status": "録音を破棄しました。音声の保存・送信は行っていません。",
+      "documents": 0,
+      "active_gpu_module": null,
+      "actual_backend": null,
+      "previews": 0
+    },
+    {
+      "utc": "2026-10-17T15:35:19.5562344Z",
+      "busy": true,
+      "status": "モデルのキャッシュを照合しています…",
+      "documents": 0,
+      "active_gpu_module": null,
+      "actual_backend": null,
+      "previews": 0
+    },
+    {
+      "utc": "2026-10-17T15:35:32.6843701Z",
+      "busy": false,
+      "status": "キャンセルしました。再実行できます。",
+      "documents": 0,
+      "active_gpu_module": null,
+      "actual_backend": null,
+      "previews": 0
+    },
+    {
+      "utc": "2026-10-17T15:35:43.4401481Z",
+      "busy": true,
+      "status": "モデルのキャッシュを照合しています…",
+      "documents": 0,
+      "active_gpu_module": null,
+      "actual_backend": null,
+      "previews": 0
+    },
+    {
+      "utc": "2026-10-17T15:36:01.2468065Z",
+      "busy": true,
+      "status": "モデルをGPUへ読み込んでいます…",
+      "documents": 0,
+      "active_gpu_module": null,
+      "actual_backend": null,
+      "previews": 0
+    },
+    {
+      "utc": "2026-10-17T15:38:34.4221496Z",
+      "busy": true,
+      "status": "画像をGPUで登録しています…",
+      "documents": 0,
+      "active_gpu_module": "image-square",
+      "actual_backend": "GPUCompute",
+      "previews": 0
+    },
+    {
+      "utc": "2026-10-17T15:39:18.3941774Z",
+      "busy": false,
+      "status": "1件を登録しました。テキストで検索できます。",
+      "documents": 1,
+      "active_gpu_module": "image-square",
+      "actual_backend": "GPUCompute",
+      "previews": 1
+    },
+    {
+      "utc": "2026-10-17T15:39:37.3821213Z",
+      "busy": true,
+      "status": "モデルのキャッシュを照合しています…",
+      "documents": 1,
+      "active_gpu_module": null,
+      "actual_backend": null,
+      "previews": 1
+    },
+    {
+      "utc": "2026-10-17T15:39:45.7659905Z",
+      "busy": true,
+      "status": "モデルをGPUへ読み込んでいます…",
+      "documents": 1,
+      "active_gpu_module": null,
+      "actual_backend": null,
+      "previews": 1
+    }
+  ],
+  "gpu_execution_time_measured": false,
+  "performance_improvement_claimed": false,
+  "initial_editor_refresh_seconds": 350.895,
+  "native_upload_warnings": [
+    "d3d12: upload buffer was too small for the requested resource! Size: 16777216. Requested: 304819200.",
+    "d3d12: upload buffer was too small for the requested resource! Size: 305135616. Requested: 536870912."
+  ],
+  "followup": "TextEmbedder still constructs a plain Worker; test bounded text constant residency before scheduling, then revalidate real text and native interaction. Oversized warnings do not alone establish the complete cause of latency.",
+  "remaining": [
+    "JA/EN native search results and rendered previews",
+    "Native audio registration/playback/stop",
+    "Invalid input recovery and clean release/normal exit",
+    "All6 public cold acquisition",
+    "Authorized live microphone",
+    "Same-input CPU/GPU benchmarks and Float16"
+  ],
+  "audited_utc": "2026-10-17T15:44:35.223378+00:00"
+}

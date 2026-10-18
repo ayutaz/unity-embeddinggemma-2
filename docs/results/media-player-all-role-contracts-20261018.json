@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "scope": "Editor_contracts_and_original_fixture_loading_only",
+  "parent_source": "ab1b31c",
+  "source_hash_representation": "UTF-8 source normalized to LF",
+  "source_files_sha256": {
+    "Assets/Validation/Runtime/PlayerMediaFixture.cs": "afdc2694bc55e80eaf290f77f130adfbef8b69a603286db47e6ae555bd0f95fb",
+    "Assets/Validation/Runtime/PlayerMediaProtocol.cs": "7ffd568ac0b9262baf07e7b039f8ac41ffe31e2cb276ea8153ec9e74f442dc44",
+    "Assets/Validation/Runtime/PlayerPreparedMediaModule.cs": "9cac1f20c0d6d1a92778ae45eb5da3d6a372551d46d972b8d11656f826b8c59a",
+    "Assets/Validation/Tests/Editor/PlayerMediaFixtureTests.cs": "f9b4e867696b4beef12de16398b27e755cd3ad58856caac3c72e1c89147c2f4d",
+    "Assets/Validation/Tests/Editor/PlayerMediaProtocolTests.cs": "3e9de40ce4f42f8534760a9a8652ca551c1bd43039912c50fb59b68d41c340a9",
+    "Assets/Validation/Tests/Editor/PlayerPreparedMediaModuleTests.cs": "33e64428229af57aa833540813ccdbd441040e72d3c4ff2952d278c67444976d"
+  },
+  "phases": [
+    {
+      "phase": "all-roles-red-1",
+      "passed": 65,
+      "failed": 8,
+      "skipped": 0,
+      "exit_code": null,
+      "xml_sha256": "bf9eb5b5221af401c31dcd95856da9147bf7b655fed04846b40f91cb4f4f5e9d",
+      "raw_log_sha256": "e02ae2987d8593df30f8cce0d93048ffc587fe6ce398996dcb964342d89839b8"
+    },
+    {
+      "phase": "all-roles-red-2",
+      "passed": 60,
+      "failed": 19,
+      "skipped": 0,
+      "exit_code": 2,
+      "xml_sha256": "c8005cf23bbb3ac16174af0d507c14c5fe7f295a4828a2323b799888085af06b",
+      "raw_log_sha256": "acb546d496c266418f8c2c56666b171f4832b3cc2443ac21578bf122cd6a19d3"
+    },
+    {
+      "phase": "all-roles-green-1",
+      "passed": 77,
+      "failed": 2,
+      "skipped": 0,
+      "exit_code": 2,
+      "xml_sha256": "bf3999a62637beaec018f7b122f0aa22dcefe8dbd4837ca0d93f532027b087a1",
+      "raw_log_sha256": "7426ed6bff97e97ba03701ee2a06d5aa14c7f357b4cf228aae872aa004a9c584"
+    },
+    {
+      "phase": "all-roles-green-2",
+      "passed": 79,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "xml_sha256": "9495da4b73a0a26921fa7c3d6f03c1faf3bd1ce6a2ae22ff899660a4462e2845",
+      "raw_log_sha256": "84e6b3836b517872e15912e26faa3cb3faa7260db26f40f835e5b6d6b7c80230"
+    }
+  ],
+  "versioned_tests_passed": 74,
+  "private_original_fixture_checks_passed": 5,
+  "original_input_role_vectors_loaded": 36,
+  "validation_csharp_files_byte_identical_to_tested_consumer": 45,
+  "sdk_runtime_csharp_files_lf_normalized_match": 41,
+  "original_references": {
+    "audio-embedding-reference.json": {
+      "bytes": 302101,
+      "sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+      "roles": [
+        "document"
+      ],
+      "case_count": 6
+    },
+    "image-embedding-reference.json": {
+      "bytes": 301132,
+      "sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "roles": [
+        "document"
+      ],
+      "case_count": 6
+    },
+    "roles/image/query/image-embedding-reference.json": {
+      "bytes": 301228,
+      "sha256": "dc4ad0a8e43e391a251e7ff3fb4f569b6bddb7442852f8721b1b7657ea91f82d",
+      "roles": [
+        "query"
+      ],
+      "case_count": 6
+    },
+    "roles/image/raw/image-embedding-reference.json": {
+      "bytes": 301027,
+      "sha256": "120faf6aea190466b625f7c606a4c14e38315101a265c7dd457af13694512e9c",
+      "roles": [
+        "raw"
+      ],
+      "case_count": 6
+    },
+    "roles/audio/query/audio-embedding-reference.json": {
+      "bytes": 302827,
+      "sha256": "515a32124c94437b372f81b3be4eb605717b1c4ae9293bf2c3b851450f35565b",
+      "roles": [
+        "query"
+      ],
+      "case_count": 6
+    },
+    "roles/audio/raw/audio-embedding-reference.json": {
+      "bytes": 302177,
+      "sha256": "ea4298313a536aa3b0c1f5eac7934240abaf3cb68170be36deb64c214fbb92a9",
+      "roles": [
+        "raw"
+      ],
+      "case_count": 6
+    }
+  },
+  "expected_values_regenerated": false,
+  "new_images": 0,
+  "actual_player_build_performed": false,
+  "real_model_gpu_validation_performed": false,
+  "full_multimodal_acceptance": false,
+  "generation_qualified": false
+}

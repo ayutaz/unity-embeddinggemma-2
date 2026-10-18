@@ -1,0 +1,212 @@
+{
+  "full_priorities_1_to_3_accepted": false,
+  "goal_complete": false,
+  "original_requirements_preserved": true,
+  "requirement_source_sha256": "7cbd000a636ce597b138c114cc7eaed91f34b374a37efa8ab4b5923db5c2d185",
+  "scope_origin": "2026-10-17 response table priorities0..3 and docs/roadmap.md at35d18f8",
+  "requirements": [
+    {
+      "id": "0",
+      "original_requirement": "Merge docs PR84 after exact-head required CI, review and mergeability; preserve four root user files",
+      "state": "verified",
+      "assessment": "PR84 merged and root user file hashes unchanged."
+    },
+    {
+      "id": "1a",
+      "original_requirement": "New user without existing cache can acquire and prepare all6 text/image/audio modules from pinned public inputs; no legacy workspace paths or downloaded model commits",
+      "state": "incomplete",
+      "assessment": "Prepared model publication remains unperformed; public immutable empty-source/empty-output acquisition is not verified."
+    },
+    {
+      "id": "1b",
+      "original_requirement": "Expired/missing artifacts, corruption, wrong revision, interrupted preparation, retry/reuse have explicit reproducible handling",
+      "state": "partial",
+      "assessment": "All-six real loopback HTTPS recovery is verified; public-source reproduction is missing. Network truncation does not prove forced-process interruption handling."
+    },
+    {
+      "id": "2a",
+      "original_requirement": "New fixed-Git consumer real user interaction: registration, JA/EN search, cancel, retry, switching, release; invalid inputs and missing model recover",
+      "state": "partial",
+      "assessment": "Native fixed-Git evidence exists, including recovery; fresh attempt timed out and final publicly acquired combined candidate has not completed all operations."
+    },
+    {
+      "id": "2b",
+      "original_requirement": "Result image previews and audio playback with stop/release; usable per-media result controls",
+      "state": "partial",
+      "assessment": "Preview/playback/release evidence exists; current-source early-stop gate remains failed, distinct from natural completion."
+    },
+    {
+      "id": "2c",
+      "original_requirement": "Explicit microphone start/stop, permission/device failure, interruption/recovery; no implicit save/send/collection",
+      "state": "unexecuted",
+      "assessment": "Real microphone permission/start/stop/interruption/device behavior remains unverified; recording authorization is pending."
+    },
+    {
+      "id": "3a",
+      "original_requirement": "Same-candidate baseline measurements: cold/warm/repeated load, preprocessing, encoder, backbone, release; CPU/GPU timing and host/VRAM separately; Editor import/search DB/allocation/domain reload separately",
+      "state": "scoped_observations_with_gaps",
+      "assessment": "Stage timing, host/VRAM and Editor observations exist. Whole-load/release GPU attribution, short sample gaps and exclusive background/async allocation remain unmeasured; scope and nulls are preserved."
+    },
+    {
+      "id": "3b",
+      "original_requirement": "Measure Float16/GPU isolated versus consecutive runs; identify causes and implement necessary improvements without changing reference/tolerances or weakening GPU requirement",
+      "state": "verified_for_pinned_cases",
+      "assessment": "Cause-specific output allocation fix has Red/Green, matched fixed-input byte-identical comparison, isolated both-precision references and mixed rank/retry/release regressions. No general performance guarantee."
+    },
+    {
+      "id": "delivery",
+      "original_requirement": "Reviewable task PRs, required checks, docs/current roadmap and final requirement-by-requirement audit",
+      "state": "partial",
+      "assessment": "Three reviewable Draft PRs and a local combined-source preview exist; exact-head CI and final acceptance/integration remain incomplete."
+    }
+  ],
+  "exclusions": [
+    "Windows multimodal Player acceptance priority4",
+    "macOS/iOS/Android qualification priority5",
+    "final release priority6..7"
+  ],
+  "integration_preview": {
+    "head": "adf7c24de899fa8814a050a7866d865e23d418be",
+    "tree": "f4ab8863c285bd615ae201bb7629100bff312aa7",
+    "component_pr_heads": {
+      "85": "99cc8263541334ac5ad31ce4da87b8b2974ce6a7",
+      "86": "e02663d50f539b3fb49674442747a46c85f35450",
+      "87": "5b902c890b777abb90ee79b5634c0a6cb2246587"
+    },
+    "local_only": true,
+    "current_main": "35d18f8dcaea30c5728e9a1a889963792df25f41",
+    "combined_tools_tests_passed": 69,
+    "test_command": "uv run --locked python -m pytest tests/test_media_setup.py tests/test_media_setup_https.py tests/test_windows_gpu_engine.py tests/test_gpu_engine_collector.py -q",
+    "new_model_or_unity_execution_in_this_integration_check": false,
+    "source_runtime_tree": "7d6e4314552b221d06db881405e7ccff3f449a77",
+    "package_and_validation_unchanged_from_tested_components": true
+  },
+  "required_ci_snapshot": [
+    {
+      "baseRefName": "main",
+      "headRefOid": "99cc8263541334ac5ad31ce4da87b8b2974ce6a7",
+      "isDraft": true,
+      "mergeable": "MERGEABLE",
+      "number": 85,
+      "state": "OPEN",
+      "required_ci": [
+        {
+          "name": "Required CI",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39060051340/job/117482901184"
+        }
+      ]
+    },
+    {
+      "baseRefName": "main",
+      "headRefOid": "e02663d50f539b3fb49674442747a46c85f35450",
+      "isDraft": true,
+      "mergeable": "MERGEABLE",
+      "number": 86,
+      "state": "OPEN",
+      "required_ci": []
+    },
+    {
+      "baseRefName": "feat/media-search-ux",
+      "headRefOid": "5b902c890b777abb90ee79b5634c0a6cb2246587",
+      "isDraft": true,
+      "mergeable": "MERGEABLE",
+      "number": 87,
+      "state": "OPEN",
+      "required_ci": []
+    }
+  ],
+  "preserved_boundaries": [
+    "Pinned Windows/RTX4070TiSUPER/D3D12 only; supported fixed profiles/inputs and tested roles only.",
+    "Reference/cosine/norm/rank/GPU/normal-exit gates are unchanged. No skipped GPU test is counted as a pass.",
+    "CPU tokenizer/input staging/final vector readback are boundaries, not intermediate CPU model fallback.",
+    "No new models, weights, LFS, microphone recording or external publication in this audit.",
+    "69 integration tests are tool/protocol contracts, not real-model/GPU/native UI/public acquisition acceptance.",
+    "No same-head CI success inferred from previous heads, missing Required CI or optional diagnostic skips."
+  ],
+  "evidence": {
+    "real-local-https-media-recovery-f09317e-20261018.json": {
+      "sha256": "02285d0eae07217ccefb778bf5127d51d6481961004dfe30398de85117946e2e",
+      "source_pr": 86
+    },
+    "native-audio-warm-completion-680af07-20261018.json": {
+      "sha256": "5e87690f08938d66051b8702706d787a1a4951cf9df01d4cd5162ce2015f11b8",
+      "source_pr": 87
+    },
+    "native-input-recovery-680af07-early-stop-unproven-20261018.json": {
+      "sha256": "c42dcb8ac7f3b7953d763a927291e77a0a81fa469f54ac9e807c7cbef996db98",
+      "source_pr": 87
+    },
+    "fresh-git-native-ui-680af07-partial-timeout-20261018.json": {
+      "sha256": "4779d98b79f0392353f714a48f7784358e4e1f493535b9204456ae58a2adadc9",
+      "source_pr": 87
+    },
+    "gpu-output-d7b2233-all-module-isolated-reference-20261018.json": {
+      "sha256": "23dc5a81c1eda6b052d304bfa84880be4763ab9ed99a23c6a06751b5a78e5b7b",
+      "source_pr": 87
+    },
+    "gpu-output-mixed-playmode-fp32-d7b2233-20261018.json": {
+      "sha256": "d11ee82e0356cf87a4c1cc81676c22db22b1d8c0b45756837628fadff77a2520",
+      "source_pr": 87
+    },
+    "gpu-output-square-fp32-matched-comparison-20261018.json": {
+      "sha256": "2192d33a464a5462b70d3345a725aae41efb3155d0495a966a21d6a2c9930c6f",
+      "source_pr": 87
+    },
+    "gpu-output-mixed-playmode-float16-weights-d7b2233-20261018.json": {
+      "sha256": "b65d8807064d3a0bcb29bc523827eafd39059375cdcb7113eafae4ae84b5e8ff",
+      "source_pr": 87
+    },
+    "gpu-output-square-float16-weights-matched-comparison-20261018.json": {
+      "sha256": "bb56d6d09d0ec1786f36d7f06f320a8e17d2e0eca0437298e37f2629b35f1bc7",
+      "source_pr": 87
+    },
+    "gpu-write-only-output-allocation-tdd-20261018.json": {
+      "sha256": "0fd01d9f22e5ac9916b11db9041b27290b8273f3322cd3ef9fd0782e34974c4a",
+      "source_pr": 87
+    },
+    "all-media-d7b2233-stage-gpu-cpu-wall-memory-10962fa-20261018.json": {
+      "sha256": "2775afafb8d0d197bf80e14fc5a1395324e14eda6e35fc827e6d4046000b9c02",
+      "source_pr": 87
+    },
+    "text-current-fp32-d7b2233-first-20261018.json": {
+      "sha256": "c671110989380dbcfd7f382d44b353b196f40dce0b60f740b01324533518e2e6",
+      "source_pr": 87
+    },
+    "text-current-float16-weights-d7b2233-first-20261018.json": {
+      "sha256": "78eba78082c1af19abab8e800167ab0c76a7c245d14265e5d83d47bbed02f9d2",
+      "source_pr": 87
+    },
+    "load-release-measurement-scope-d7b2233-20261018.json": {
+      "sha256": "ca52fba6ff27e9ea3e6ea6d03dc7f1aca8451dc103d857ab91b40b39e7ee02e5",
+      "source_pr": 87
+    },
+    "text-current-fp32-d7b2233-gpu-engine-provider-fixed-engine-observation-20261018.json": {
+      "sha256": "f97460537ef2927d25ea9fd24001a8ba972198ce179d7269099d3dd75a7a7f61",
+      "source_pr": 87
+    },
+    "editor-search-calibrated-allocation-93faef7-20261018.json": {
+      "sha256": "726c92afb51463585a6c412d1aa6400240bbd59cb091f90e9659ec1dc61175c3",
+      "source_pr": 87
+    },
+    "editor-search-calibrated-allocation-93faef7-warm-20261018.json": {
+      "sha256": "3469cf31b092a400fddf89ce2fbadd4cb5e9e653a039693b7a542e91edb9afb9",
+      "source_pr": 87
+    },
+    "editor-rebuild-frame-allocation-e035022-20261018.json": {
+      "sha256": "333c0279db12ffc0a25efdc0374ca41a962ac6b3dc2603c495410d5d4619d28a",
+      "source_pr": 87
+    },
+    "async-real-audio-frame-allocation-9bed619-20261018.json": {
+      "sha256": "b380234f4bd3c79e87746c57215ed03b7c7803fca58c25c561720fd9f1609aff",
+      "source_pr": 87
+    }
+  },
+  "local_evidence_sha256": {
+    "requirements.json": "7cbd000a636ce597b138c114cc7eaed91f34b374a37efa8ab4b5923db5c2d185",
+    "priority-candidate-state-adf7c24.json": "22885fd70fadb0d86e06be2b4b1384df40d590f17195da7bc6b5dd53c1a6fc31",
+    "publication-review.json": "a5737042f313a897832b2b20ba67e627520050813121252ef8f0b818a0a95d0f",
+    "priority-1-to-3-integrated-tools-tests.txt": "a557eeebb8685731f69d75a300c8c996a0700a261da95b539604a60bbb188d2d"
+  }
+}

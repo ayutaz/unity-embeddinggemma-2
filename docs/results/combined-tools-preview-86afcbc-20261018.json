@@ -1,0 +1,45 @@
+{
+  "combined_tool_test_log_and_source_audited": true,
+  "full_priorities_1_to_3_accepted": false,
+  "combined_preview_source": "86afcbc3ef9f9cad792bd266659f698e557c0a91",
+  "acquisition_source": "678eb504ea0a7817ea34ae67b4cc8bb485fdf06a",
+  "performance_source": "34afe64e513a0151dc5a85bdc57c30cb7be830f2",
+  "focused_runtime_source": "57d2cdb3ddef16da32588dc8af523c940dac3d3b",
+  "package_git_tree": "b5195f3578974568e7ac8c51b8fcaee1fd94945b",
+  "validation_git_tree": "2de39222971512736c32c5e488e00ea2fa0417b4",
+  "pytest_passed": 132,
+  "pytest_failed": 0,
+  "pytest_skipped": 0,
+  "pytest_log_sha256": "df89b502db6bb2eaa889770d18db239734d8b7cbe1f1651b6d5c50ba8158b140",
+  "suites": [
+    "test_media_setup.py",
+    "test_media_setup_https.py",
+    "test_native_pdh.py",
+    "test_native_pdh_intervals.py",
+    "test_windows_gpu_engine.py",
+    "test_gpu_engine_collector.py",
+    "test_package.py"
+  ],
+  "platform": "Windows",
+  "owned_fixture_ctrl_c_receipt": {
+    "relay_pid": 90192,
+    "signal_sent": true,
+    "forced_cleanup": false,
+    "child_pid": 86804,
+    "console_process_count": 2,
+    "console_processes": [
+      86804,
+      90192
+    ],
+    "signal_kind": "GenerateConsoleCtrlEvent(CTRL_C_EVENT,0) in isolated owned console",
+    "exit_code": 130,
+    "terminal": true
+  },
+  "fixture_receipt_sha256": "a7bdc9ff426beda8564d24b4f03d79c4aeb48d84a3bff9c93f5bf8e543b708e1",
+  "small_opaque_fixture_not_real_model": true,
+  "new_real_model_or_gpu_execution": false,
+  "public_acquisition_accepted": false,
+  "microphone_started": false,
+  "scope": "Latest acquisition CLI and native PDH/package contracts exercised together in a local preview. Prior 69/72 checkpoints remain unchanged. No claim of final native UI, public acquisition, microphone, or complete performance acceptance.",
+  "audited_utc": "2026-10-18T00:56:53.087713+00:00"
+}

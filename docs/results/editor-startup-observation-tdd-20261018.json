@@ -1,0 +1,31 @@
+{
+  "scope": "Model-free parser of saved Editor startup telemetry and refresh import counts.",
+  "intended_red": {
+    "tests": 10,
+    "failed": 10,
+    "skipped": 0,
+    "reason": "New startup aggregation API absent; imports succeeded"
+  },
+  "green": {
+    "tests": 26,
+    "failed": 0,
+    "skipped": 0
+  },
+  "contracts": [
+    "Exact PID",
+    "Only known metric names exported",
+    "Invalid/non-finite metrics unavailable",
+    "Missing and reported zero distinct",
+    "Adjacent refresh summary only",
+    "Overlapping startup and reload metrics not summed",
+    "Search DB and model durations remain unmeasured"
+  ],
+  "evidence_sha256": {
+    "editor-startup-red.xml": "94f9bb60d5aa7bad3b979eef9c8fdd1e142bc72c6dbabede7cdc919566fbc011",
+    "editor-startup-green.xml": "1b5fb4c36cfb0dd407750cbf4da40d44adf4b63350e68951518bb4fbf1dc4da4",
+    "editor_profile.py": "6561e90bced1825f0fee5464f5cad632930c1ec15417ebf73d14b5dab5c7961f",
+    "test_editor_startup.py": "0f1ec903d15081196c0c4c4a42e536779f7eeb4cb3704885210ec8d789213c33"
+  },
+  "unity_execution_performed": false,
+  "performance_improvement_verified": false
+}

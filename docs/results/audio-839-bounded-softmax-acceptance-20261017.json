@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "module": "audio-839",
+  "module_document_reference_acceptance": true,
+  "all6_module_acceptance": false,
+  "scope": "Actual Windows Editor D3D12 prepared audio-839 module; pinned PCM -> final GPU-computed768 vectors against pinned Python reference, session close and exit0. Local-file dependency, not fresh Git or manual UI acceptance. No live microphone.",
+  "runtime_source": "d1548acbe7bf6cb838da60fab66dc7a374909b8a",
+  "runtime_package_tree": "9ec4267b4cc208c1a8b2ab72d70506b3ee1d2d15",
+  "source_contract": {
+    "runtime_source": "d1548acbe7bf6cb838da60fab66dc7a374909b8a",
+    "validation_parent": "97ef0d6c1f539e6abf2966347bd9e04b580da2bc",
+    "scope": "Existing real pinned final-reference fixture, local-file dependencies, instrumented CPU stage intervals; no live microphone",
+    "validation_files_sha256": {
+      "GpuMediaBundleExecutionTests.cs": "c5286755c16978b2265662d06ba5f929613560ce32445bf6e328cfa6a9092e9a",
+      "MediaStageTiming.cs": "8e15fdd4ef806356912f92d50e6cf8daf08684b34ae96344d2efd213ddfaaff8"
+    }
+  },
+  "backend": "GPUCompute",
+  "backend_proof": "Prepared loader audits Worker CPU-data/input fallback sets; every encoder boundary and custom operation requires GPUCompute. Final vector readback only.",
+  "bundle_descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+  "bundle_producer": "5d1a66fa3dbf4f76223e248378a146cfb9f15d86",
+  "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+  "cases": [
+    {
+      "id": "padded_noise",
+      "cosine": 0.9999999999981806,
+      "norm_squared": 0.9999999922162033,
+      "valid_audio_frames": 839,
+      "capture": "audio-839-softmax-tiled-d1548ac-assembly-resources-freed-padded_noise.bin",
+      "capture_sha256": "e91325ca017b7bd00f0da47b601cd689e3fc289c0692c2387fa27e4888670336",
+      "original_pcm_sha256": "ca189983f2a78b942e20d70ddaf77b71aade9eb75ccc7c6b645f764427cc0e91",
+      "independent_python_cosine": 0.9999999999981798,
+      "independent_norm_squared": 0.9999999922162043
+    }
+  ],
+  "session_closed": true,
+  "counts": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "exit_code": 0,
+  "elapsed_seconds": 70.14220190001652,
+  "completed_utc": "2026-10-17T14:55:00.404594+00:00",
+  "host_native_lifetime_peak_bytes": 6237646848,
+  "stage_observations": [
+    {
+      "stage": "preprocessing",
+      "method": "ProcessAsync",
+      "call_id": 1,
+      "asynchronous": true,
+      "event": "completed",
+      "utc": "2026-10-17T14:54:54.1838876Z",
+      "cpu_scope": "whole process during stage interval, includes other Editor threads",
+      "wall_scope": "call through completion, including GPU waits and async frame scheduling",
+      "host_peak_scope": "process lifetime, not this stage peak",
+      "gpu_elapsed_ns": null,
+      "wall_seconds": 0.5245156,
+      "process_cpu_seconds": 0.15625,
+      "host_working_set_bytes": 6223126528,
+      "host_lifetime_peak_bytes": 6224637952,
+      "unity_allocated_bytes": 292812928,
+      "error_type": null,
+      "module": "audio-839",
+      "case_phase": "encode_padded_noise"
+    },
+    {
+      "stage": "encoder",
+      "method": "EncodeAsync",
+      "call_id": 2,
+      "asynchronous": true,
+      "event": "completed",
+      "utc": "2026-10-17T14:54:57.050385Z",
+      "cpu_scope": "whole process during stage interval, includes other Editor threads",
+      "wall_scope": "call through completion, including GPU waits and async frame scheduling",
+      "host_peak_scope": "process lifetime, not this stage peak",
+      "gpu_elapsed_ns": null,
+      "wall_seconds": 2.8641449,
+      "process_cpu_seconds": 0.046875,
+      "host_working_set_bytes": 5694271488,
+      "host_lifetime_peak_bytes": 6237646848,
+      "unity_allocated_bytes": 305125907,
+      "error_type": null,
+      "module": "audio-839",
+      "case_phase": "encode_padded_noise"
+    },
+    {
+      "stage": "backbone",
+      "method": "Embed",
+      "call_id": 3,
+      "asynchronous": false,
+      "event": "completed",
+      "utc": "2026-10-17T14:54:57.4907986Z",
+      "cpu_scope": "whole process during stage interval, includes other Editor threads",
+      "wall_scope": "call through completion, including GPU waits and async frame scheduling",
+      "host_peak_scope": "process lifetime, not this stage peak",
+      "gpu_elapsed_ns": null,
+      "wall_seconds": 0.43799289999999996,
+      "process_cpu_seconds": 0.0,
+      "host_working_set_bytes": 6432792576,
+      "host_lifetime_peak_bytes": 6432792576,
+      "unity_allocated_bytes": 307302623,
+      "error_type": null,
+      "module": "audio-839",
+      "case_phase": "encode_padded_noise"
+    }
+  ],
+  "gpu_execution_time_measured": false,
+  "performance_improvement_claimed": false,
+  "observation_scope": "Wall intervals include GPU/frame waits; CPU time is whole Editor process. Host current is snapshot, peak is process lifetime. Different PNGs are not repeated-input warm benchmarks.",
+  "resource_condition": {
+    "snapshot": "NVIDIA GeForce RTX 4070 Ti SUPER, 610.88, 1424 MiB, 14640 MiB, 16376 MiB",
+    "scope": "Global device snapshot before launch; not per-process allocation or minimumVRAM"
+  },
+  "excluded_trials": [],
+  "artifacts_sha256": {
+    "audio-839-softmax-tiled-d1548ac-assembly-resources-freed-process.json": "2302958bac448cad799d697eb9341f370fd642842c45d184699e0940ddbdc647",
+    "audio-839-softmax-tiled-d1548ac-assembly-resources-freed.json": "cf9e458c33baf5267857c6b61869dd470d01b55ac9cc4abd22f27214f1b3864f",
+    "audio-839-softmax-tiled-d1548ac-assembly-resources-freed.xml": "5cdbb8670a05e9f42e316a545fa8227b1027156a94245cffd2978c8739171999",
+    "audio-839-softmax-tiled-d1548ac-assembly-resources-freed.log": "8a0a90cc06959bf8e756b559492a0db1276a0fc57dc4a9d4e1eb460bdbec07fb"
+  },
+  "remaining": [
+    "Fresh fixed-Git consumer",
+    "Landscape/portrait/audio/text and fixed cross-modal ranks",
+    "Actual manual UI and authorized microphone",
+    "All6 public cold preparation",
+    "Same-input repeats/actual GPU timings/VRAM/Float16/Editor allocation"
+  ]
+}

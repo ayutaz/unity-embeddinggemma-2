@@ -1,0 +1,202 @@
+{
+  "frame_wide_counter_control_calibration_accepted": true,
+  "real_model_allocation_measured": false,
+  "exclusive_sdk_allocation_measured": false,
+  "complete_performance_accepted": false,
+  "full_priorities_1_to_3_accepted": false,
+  "model_loaded": false,
+  "gpu_execution_validated": false,
+  "validation_source": "9e791670a04d17d1ba161ff1655e24c25de9c96a",
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "source_files_verified": 570,
+  "unity_counts": {
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "skipped": 0
+  },
+  "exit_code": 0,
+  "standalone_tdd": {
+    "total": 9,
+    "red_failed": 9,
+    "green_failed": 0
+  },
+  "cases": [
+    {
+      "payload_bytes": 0,
+      "payload_before_render_frame": 13,
+      "counter_samples_before_first_payload": 0,
+      "payload_after_render_frame": 15,
+      "counter_samples_before_second_payload": 1,
+      "counter": {
+        "name": "FrameAllocation.Control.8ffc057347174c26ad87bc24b1fae5fd",
+        "begin_utc": "2026-10-17T21:59:13.0195244Z",
+        "begin_render_frame": 13,
+        "scope": "GC Allocated In Frame counter samples collected through the first new sample after completion. Includes containing frames, observation overhead and unrelated Editor work. Overlapping windows must not be summed; not exclusive SDK allocation.",
+        "counter": "GC Allocated In Frame",
+        "unit": "Bytes",
+        "data_type": "Int64",
+        "capacity": 65536,
+        "completed_utc": "2026-10-17T21:59:13.0489993Z",
+        "completed_render_frame": 15,
+        "samples_at_completion": 1,
+        "closed_utc": "2026-10-17T21:59:13.0651262Z",
+        "closed_render_frame": 15,
+        "included_samples": 2,
+        "discarded_tail_samples": 1,
+        "managed_bytes_in_recorded_frames": 83845,
+        "samples": [
+          20617,
+          63228
+        ],
+        "wrapped": false
+      },
+      "history": {
+        "first_frame": 0,
+        "last_frame": 5,
+        "collection_stopped": true,
+        "measurement_api": "HierarchyFrameDataView.columnGcMemory / GetItemColumnDataAsDouble",
+        "marker_rows": [
+          {
+            "marker": "FrameAllocation.Control.8ffc057347174c26ad87bc24b1fae5fd.before",
+            "frame": 2,
+            "thread": "Main Thread",
+            "raw_managed_bytes": 0.0
+          },
+          {
+            "marker": "FrameAllocation.Control.8ffc057347174c26ad87bc24b1fae5fd.after",
+            "frame": 3,
+            "thread": "Main Thread",
+            "raw_managed_bytes": 0.0
+          }
+        ],
+        "nodes_examined": 14341
+      },
+      "before_marker_managed_bytes": 0,
+      "after_marker_managed_bytes": 0
+    },
+    {
+      "payload_bytes": 4194304,
+      "payload_before_render_frame": 20,
+      "counter_samples_before_first_payload": 0,
+      "payload_after_render_frame": 21,
+      "counter_samples_before_second_payload": 1,
+      "counter": {
+        "name": "FrameAllocation.Control.e72622e77509414284274dae66e93f4e",
+        "begin_utc": "2026-10-17T21:59:13.4687153Z",
+        "begin_render_frame": 20,
+        "scope": "GC Allocated In Frame counter samples collected through the first new sample after completion. Includes containing frames, observation overhead and unrelated Editor work. Overlapping windows must not be summed; not exclusive SDK allocation.",
+        "counter": "GC Allocated In Frame",
+        "unit": "Bytes",
+        "data_type": "Int64",
+        "capacity": 65536,
+        "completed_utc": "2026-10-17T21:59:13.4778230Z",
+        "completed_render_frame": 21,
+        "samples_at_completion": 1,
+        "closed_utc": "2026-10-17T21:59:13.4924680Z",
+        "closed_render_frame": 21,
+        "included_samples": 2,
+        "discarded_tail_samples": 1,
+        "managed_bytes_in_recorded_frames": 4264309,
+        "samples": [
+          2129401,
+          2134908
+        ],
+        "wrapped": false
+      },
+      "history": {
+        "first_frame": 0,
+        "last_frame": 5,
+        "collection_stopped": true,
+        "measurement_api": "HierarchyFrameDataView.columnGcMemory / GetItemColumnDataAsDouble",
+        "marker_rows": [
+          {
+            "marker": "FrameAllocation.Control.e72622e77509414284274dae66e93f4e.before",
+            "frame": 3,
+            "thread": "Main Thread",
+            "raw_managed_bytes": 2097184.0
+          },
+          {
+            "marker": "FrameAllocation.Control.e72622e77509414284274dae66e93f4e.after",
+            "frame": 4,
+            "thread": "Main Thread",
+            "raw_managed_bytes": 2097184.0
+          }
+        ],
+        "nodes_examined": 11249
+      },
+      "before_marker_managed_bytes": 2097184,
+      "after_marker_managed_bytes": 2097184
+    },
+    {
+      "payload_bytes": 8388608,
+      "payload_before_render_frame": 25,
+      "counter_samples_before_first_payload": 0,
+      "payload_after_render_frame": 26,
+      "counter_samples_before_second_payload": 1,
+      "counter": {
+        "name": "FrameAllocation.Control.b118e091c6c048dba5f70dd69399ac92",
+        "begin_utc": "2026-10-17T21:59:13.6904086Z",
+        "begin_render_frame": 25,
+        "scope": "GC Allocated In Frame counter samples collected through the first new sample after completion. Includes containing frames, observation overhead and unrelated Editor work. Overlapping windows must not be summed; not exclusive SDK allocation.",
+        "counter": "GC Allocated In Frame",
+        "unit": "Bytes",
+        "data_type": "Int64",
+        "capacity": 65536,
+        "completed_utc": "2026-10-17T21:59:13.7081538Z",
+        "completed_render_frame": 26,
+        "samples_at_completion": 1,
+        "closed_utc": "2026-10-17T21:59:13.7161944Z",
+        "closed_render_frame": 26,
+        "included_samples": 2,
+        "discarded_tail_samples": 1,
+        "managed_bytes_in_recorded_frames": 8459089,
+        "samples": [
+          4235877,
+          4223212
+        ],
+        "wrapped": false
+      },
+      "history": {
+        "first_frame": 0,
+        "last_frame": 5,
+        "collection_stopped": true,
+        "measurement_api": "HierarchyFrameDataView.columnGcMemory / GetItemColumnDataAsDouble",
+        "marker_rows": [
+          {
+            "marker": "FrameAllocation.Control.b118e091c6c048dba5f70dd69399ac92.before",
+            "frame": 3,
+            "thread": "Main Thread",
+            "raw_managed_bytes": 4194336.0
+          },
+          {
+            "marker": "FrameAllocation.Control.b118e091c6c048dba5f70dd69399ac92.after",
+            "frame": 4,
+            "thread": "Main Thread",
+            "raw_managed_bytes": 4194336.0
+          }
+        ],
+        "nodes_examined": 12020
+      },
+      "before_marker_managed_bytes": 4194336,
+      "after_marker_managed_bytes": 4194336
+    }
+  ],
+  "measured_8m_minus_4m_bytes": 4194780,
+  "original_synchronization_context_preserved": true,
+  "previous_failed_trial": "async-frame-render-counter-boundary-failure-20261018.json",
+  "scope": "Whole counter-finalized GC frames through the first sample after completion. Controlled payloads wait for a real counter sample between allocations; render frames are not assumed to map one-to-one. Includes unrelated Editor activity and observer overhead; never summed across overlapping operation windows.",
+  "api_references": [
+    "https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Unity.Profiling.ProfilerRecorder.LastValue.html",
+    "https://docs.unity3d.com/6000.3/Documentation/Manual/ProfilerMemory.html"
+  ],
+  "evidence_sha256": {
+    "async-frame-calibration-9e79167-first.json": "06ae002a3b427b8ba085116d046cf47bbad5d7af9f40192737ad80fa9f3c90dc",
+    "async-frame-calibration-9e79167-first.xml": "3d823596b2bac004675ad3ab594945ca91b855598aa8316a044b5febc953a41c",
+    "async-frame-calibration-9e79167-first.log": "d187c91e23c71bd6b25fe6e59f08900a624877f1a279488f99b5e78550d0cf05",
+    "async-frame-calibration-9e79167-first-process.json": "d2818ca6234eb992a6b5c4d1b5985b7cb19c80239d5bd1a8ea19b5bbbdeb291b",
+    "async-frame-calibration-9e79167-first-source.json": "26d2442c60eb19156dd16dea2e9f57824bcc8511526683b2b9b835f5168f8b98",
+    "red.txt": "518a91b256ac66f5be2282fd8e26445c091039ce37e88b9167cb251ebcf21269",
+    "green-counter-aligned.txt": "43b9ba64eeb6cd5b2ac4123ff2943a6ecdffa0d90f7cad4a8a0b24c99c099dc9"
+  }
+}

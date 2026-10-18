@@ -1,0 +1,33 @@
+{
+  "integration_head": "21e27c5d6f712f0d015075e0d02087a28377dbf8",
+  "executed_source": "f09317e6577c5d7a9b937878e34b45666d407565",
+  "selected_source_files_identical": true,
+  "files": [
+    {
+      "path": "tools/embeddinggemma_tools/__init__.py",
+      "git_blob": "e3f6f8f8d9e6f09b2892eacfe5f3f17a3ba2d2db"
+    },
+    {
+      "path": "tools/embeddinggemma_tools/media_setup.py",
+      "git_blob": "3bc62971b8d649fd3f7ab8b74e41d0a1b9f7fc00"
+    },
+    {
+      "path": "tools/tests/media_setup_https_harness.py",
+      "git_blob": "7441229f832dc1dee4334c708c3cfebf4ef90d1c"
+    },
+    {
+      "path": "tools/tests/test_media_setup_https.py",
+      "git_blob": "0af15317f7f4b5b94b5bd922dcdc4f4913612ca6"
+    },
+    {
+      "path": "tools/tests/test_media_setup.py",
+      "git_blob": "a3c875e30526101d64cb66458700b387bfe7e133"
+    }
+  ],
+  "comparison": "Git blobs using repository path filters; raw archived source SHA256 are retained in the execution summary",
+  "public_acquisition_accepted": false,
+  "gpu_validated": false,
+  "full_priorities_1_to_3_accepted": false,
+  "scope": "Production CLI, initializer, HTTPS fixture and both selected test modules match the measured source. No latest-head full-suite or public-source/GPU acceptance claim.",
+  "audited_utc": "2026-10-17T22:54:07.2359016Z"
+}

@@ -1,0 +1,29 @@
+{
+  "scope": "Exact owner-selected public provider author metadata; no general identity exception",
+  "original_failure": {
+    "source": "ca2ff1a567825cd9be6986e10ec727b1908a8430",
+    "rule": "private-identity",
+    "findings": 1,
+    "public_author_name_matches_owner_selection": true,
+    "author_noreply_matches_reviewed_account": true,
+    "provider_api_signature_verified": true,
+    "merged_tree_matches_reviewed_pr89_head": true
+  },
+  "tdd": {
+    "missing_function_failures": 13,
+    "related_tests_passed": 42,
+    "failed": 0,
+    "skipped": 0,
+    "process_exit_code": 0
+  },
+  "readback": {
+    "main_source": "ca2ff1a567825cd9be6986e10ec727b1908a8430",
+    "all_ancestors_and_objects_scanned": true,
+    "findings_after_fix": 0
+  },
+  "local_identity_still_requires_handle": true,
+  "other_accounts_ids_names_private_emails_and_taggers_rejected": true,
+  "offline_signature_authentication_claimed": false,
+  "gpu_execution_claimed": false,
+  "release_ready": false
+}

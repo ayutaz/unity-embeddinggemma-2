@@ -1,0 +1,158 @@
+{
+  "accepted": true,
+  "scope": "One fixed text query, first/warm/two repeats in one actual GPU Editor. Timing markers are inclusive GPU timestamp intervals; process CPU includes other Editor work. Not throughput, media-stage, UI or overall priorities 1-3 acceptance.",
+  "complete_performance_acceptance": false,
+  "gpu_timing_cross_method_interpretation_validated": false,
+  "managed_allocation_counter_calibrated": true,
+  "managed_allocation_counter_available": false,
+  "report": {
+    "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+    "precision": "float16-weights",
+    "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+    "query_id": "query-cat-ja",
+    "reference_sha256": "f316d5199c920431c7f721d43b2cedbe4a6384fb0e0664511b75bc2e98fe80fe",
+    "unity": "6000.3.21f1",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "actual_backend": "GPUCompute",
+    "rounds": [
+      {
+        "round": "first",
+        "wall_seconds": 0.9960983,
+        "process_cpu_seconds": 0.09375,
+        "recorder_gpu_ns": 295592960,
+        "recorder_gpu_blocks": 1,
+        "main_thread_marker_managed_bytes": 610830,
+        "history_gpu_ns": [
+          968806030
+        ],
+        "independent_cosine": 0.9999999999998961,
+        "norm_squared": 1.0000001871676687,
+        "begin_utc": "2026-10-17T21:48:53.4645386Z",
+        "end_utc": "2026-10-17T21:48:54.4621449Z",
+        "capture_sha256": "18bc4e6695da7e6cedd3bdb2116ced4a44bf731052312935d0bb7b04938b1971"
+      },
+      {
+        "round": "warm",
+        "wall_seconds": 0.056598699999999995,
+        "process_cpu_seconds": 0.03125,
+        "recorder_gpu_ns": 22524928,
+        "recorder_gpu_blocks": 1,
+        "main_thread_marker_managed_bytes": 26100,
+        "history_gpu_ns": [
+          233548996
+        ],
+        "independent_cosine": 0.9999999999998961,
+        "norm_squared": 1.0000001871676687,
+        "begin_utc": "2026-10-17T21:48:54.8137424Z",
+        "end_utc": "2026-10-17T21:48:54.8703577Z",
+        "capture_sha256": "18bc4e6695da7e6cedd3bdb2116ced4a44bf731052312935d0bb7b04938b1971"
+      },
+      {
+        "round": "repeat-1",
+        "wall_seconds": 0.060707899999999995,
+        "process_cpu_seconds": 0.03125,
+        "recorder_gpu_ns": 23194624,
+        "recorder_gpu_blocks": 1,
+        "main_thread_marker_managed_bytes": 26036,
+        "history_gpu_ns": [
+          228972992
+        ],
+        "independent_cosine": 0.9999999999998961,
+        "norm_squared": 1.0000001871676687,
+        "begin_utc": "2026-10-17T21:48:55.1766101Z",
+        "end_utc": "2026-10-17T21:48:55.2374037Z",
+        "capture_sha256": "18bc4e6695da7e6cedd3bdb2116ced4a44bf731052312935d0bb7b04938b1971"
+      },
+      {
+        "round": "repeat-2",
+        "wall_seconds": 0.0598191,
+        "process_cpu_seconds": 0.03125,
+        "recorder_gpu_ns": 22992896,
+        "recorder_gpu_blocks": 1,
+        "main_thread_marker_managed_bytes": 26036,
+        "history_gpu_ns": [
+          226449997
+        ],
+        "independent_cosine": 0.9999999999998961,
+        "norm_squared": 1.0000001871676687,
+        "begin_utc": "2026-10-17T21:48:55.5440655Z",
+        "end_utc": "2026-10-17T21:48:55.6048287Z",
+        "capture_sha256": "18bc4e6695da7e6cedd3bdb2116ced4a44bf731052312935d0bb7b04938b1971"
+      }
+    ],
+    "load_wall_seconds": 11.1524646,
+    "load_process_cpu_seconds": 9.21875,
+    "release_wall_seconds": 0.008362399999999999,
+    "release_process_cpu_seconds": 0.0,
+    "load_host_lifetime_peak_bytes": 3313549312,
+    "release_host_lifetime_peak_bytes": 3580997632,
+    "load_gpu_elapsed_ns": null,
+    "mono_allocated_counter_available": false,
+    "mono_allocation_probe_raw_delta_bytes": 0,
+    "scope": "Synchronous SDK query API. Inclusive CPU marker managed bytes use stopped history. Recorder and hierarchy GPU timestamps are kept separate; not pure kernel time. Async load/release managed allocations remain unavailable."
+  },
+  "source": {
+    "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+    "validation_source": "10962faf0924bb1c5070ad2d3875fc06fd24bbe2",
+    "snapshot_receipt_sha256": "302e1f86976ad232410da86723d4c9d24025b594f4f45ec229f18e652fd85774",
+    "unit_only": false,
+    "precision": "float16-weights",
+    "module": "text",
+    "physical_available_before_bytes": 43851476992,
+    "host_limit_bytes": 17179869184,
+    "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292"
+  },
+  "receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\submission-error-consumer-10962fa",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.TextGpuPerformanceTests.FixedTextFirstWarmRepeatedCallsHaveActualGpuTimingsAndPinnedVectors",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testResults",
+      ".\\artifacts\\usability-state\\text-current-float16-weights-d7b2233-first.xml",
+      "-logFile",
+      ".\\artifacts\\usability-state\\text-current-float16-weights-d7b2233-first.log"
+    ],
+    "timeout_seconds": 1260,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T21:48:18.656549+00:00",
+    "pid": 175692,
+    "exit_code": 0,
+    "unity_results": ".\\artifacts\\usability-state\\text-current-float16-weights-d7b2233-first.xml",
+    "unity_counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 39.98944540001685,
+    "completed_utc": "2026-10-17T21:48:58.645991+00:00"
+  },
+  "evidence_sha256": {
+    "text-current-float16-weights-d7b2233-first-process.json": "a8cb64cf17bbc0892a017b3ad89aaa9d1ff571f8d6506c7694f814de86230847",
+    "text-current-float16-weights-d7b2233-first.xml": "dda307b8088c142b1f32bec9e8a65c65e4da2ab4be48933fd8fbeb1c1d49ed1b",
+    "text-current-float16-weights-d7b2233-first.log": "12cd67a31a72d0da3106dea909df396e2376db18e3e8548ae60f6e5817f6a793",
+    "text-current-float16-weights-d7b2233-first.json": "1c660386faf621b7fb5fdbcd954d8fa26363dba321fdcced06383d25b00c77f2",
+    "text-current-float16-weights-d7b2233-first-source.json": "2c029186f85d264a4f0d28c1b26f63cc9e905c48e270795a65e3af7182e5b1b7",
+    "text-current-float16-weights-d7b2233-first-first.bin": "18bc4e6695da7e6cedd3bdb2116ced4a44bf731052312935d0bb7b04938b1971",
+    "text-current-float16-weights-d7b2233-first-warm.bin": "18bc4e6695da7e6cedd3bdb2116ced4a44bf731052312935d0bb7b04938b1971",
+    "text-current-float16-weights-d7b2233-first-repeat-1.bin": "18bc4e6695da7e6cedd3bdb2116ced4a44bf731052312935d0bb7b04938b1971",
+    "text-current-float16-weights-d7b2233-first-repeat-2.bin": "18bc4e6695da7e6cedd3bdb2116ced4a44bf731052312935d0bb7b04938b1971"
+  },
+  "operating_system_and_shader_caches_purged": false,
+  "performance_improvement_claimed": false,
+  "per_process_gpu_memory": "Separate counter trace required; these timings do not measure VRAM",
+  "source_files_verified_after": 554
+}

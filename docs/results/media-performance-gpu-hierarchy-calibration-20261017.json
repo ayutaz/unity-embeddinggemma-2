@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "real_model_qualified": false,
+  "goal_priorities_1_to_3_completed": false,
+  "scope": "Recent-frame GPU hierarchy calibration only, no real model loaded or benchmark completed",
+  "code_source_commit": "2c5ccad5eab36cc877eea2bb83de61cd36a5c9f0",
+  "runtime_unchanged_from": "f1cdb301975e8837cd093c6c2b1174a8e9122a9c",
+  "environment": {
+    "unity": "6000.3.21f1",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "batch_mode": false,
+    "play_mode": true,
+    "history_local_editor_selected": true,
+    "history_driver_enabled": true
+  },
+  "history_diagnostics": {
+    "first_frame": 0,
+    "last_frame": 15,
+    "gpu_column": 8,
+    "views_examined": 1888,
+    "nodes_examined": 54771,
+    "matching_marker_count": 1
+  },
+  "gpu_history": [
+    {
+      "frame": 4,
+      "thread_index": 0,
+      "thread_name": "Main Thread",
+      "marker": "EmbeddingGemma.TimerCalibration",
+      "gpu_ns": 24000,
+      "gpu_children": [
+        {
+          "marker": "ScalarMadFloat",
+          "gpu_ns": 24000
+        }
+      ],
+      "scope": "GPU hierarchy inclusive duration; parent and child durations overlap"
+    }
+  ],
+  "units": "GPU hierarchy float milliseconds converted to integer ns; no ns resolution claim. Parent and child overlap and must not be added.",
+  "bounded_scope": "Exact benchmark marker, all threads, last25frames and max200000nodes; not a full long model trace",
+  "failures": {
+    "gpu-history-red": {
+      "success": false,
+      "terminal": true,
+      "exit_code": 2,
+      "elapsed_seconds": 49.98189580003964,
+      "unity_counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      }
+    },
+    "gpu-history-attempt1": {
+      "success": false,
+      "terminal": true,
+      "exit_code": 2,
+      "elapsed_seconds": 46.646899299987126,
+      "unity_counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      }
+    },
+    "gpu-history-live-drain": {
+      "success": false,
+      "terminal": true,
+      "exit_code": 2,
+      "elapsed_seconds": 46.56353029998718,
+      "unity_counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      }
+    },
+    "gpu-history-local-driver": {
+      "success": false,
+      "terminal": true,
+      "exit_code": 2,
+      "elapsed_seconds": 49.242138499976136,
+      "unity_counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      }
+    },
+    "gpu-history-audited-local": {
+      "success": false,
+      "terminal": true,
+      "exit_code": 2,
+      "elapsed_seconds": 48.29105400003027,
+      "unity_counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      }
+    },
+    "gpu-history-local-id": {
+      "success": false,
+      "terminal": true,
+      "exit_code": 2,
+      "elapsed_seconds": 45.81104400003096,
+      "unity_counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      }
+    }
+  },
+  "failure_explanations": [
+    "Initial missing collector produced intended assertion failure",
+    "Recorder did not populate Editor history; first and last frame were-1",
+    "Local Editor targets use decorated labels and may have negative IDs; neither raw equality nor nonnegative sentinel is valid",
+    "EditorLoop omission removed submitted markers from the captured CPU tree despite a positive GPU Recorder"
+  ],
+  "successful_hierarchy_probe": {
+    "success": true,
+    "terminal": true,
+    "exit_code": 0,
+    "elapsed_seconds": 44.447055399999954,
+    "unity_counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "final_combined": {
+    "success": true,
+    "terminal": true,
+    "exit_code": 0,
+    "elapsed_seconds": 54.785878300026525,
+    "unity_counts": {
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "final_combined_scope": "3 small realGPU timing/history cases plus5 fake operation contracts,0skip,exit0",
+  "tested_worktree_source_sha256": {
+    "GpuProfilerHistory.cs": "00dbdbfbc8beffd70b82c70b0a2293f8bda7f24e37e834139fe07115fc4e389a",
+    "GpuTimerProbe.cs": "c1ee18697f5f3866039aa211d67e88778497030dbcd2ec60147b39c3c0954539",
+    "GpuTimerProbeTests.cs": "f1bcaaa2b567fb53d100904c0e5f954c55e61b359fdb702d228578d9f60f47bd",
+    "GpuOperationTrace.cs": "abe44c9bd23e48447ac8b29e6f490d4f58d16ff41153d0b7f2c4855ea9da159a",
+    "GpuOperationTraceTests.cs": "ceca946b323b29c1948d85730adea13a3fcdebd76d8e7449f8cd0bc77cbf125a"
+  },
+  "canonical_git_source_sha256": {
+    "GpuProfilerHistory.cs": "00dbdbfbc8beffd70b82c70b0a2293f8bda7f24e37e834139fe07115fc4e389a",
+    "GpuTimerProbe.cs": "dbc949af3484f6de459a5b45c017d57daa5f4b10444db6235427e5f03cbf05f5",
+    "GpuTimerProbeTests.cs": "120fa3bb5e178c944f62f057ec925e29e0085bf05e2d99e5fe4826059a3dccd8",
+    "GpuOperationTrace.cs": "ef2f47f3ce18af777f7c05c89a2eee0aefce4f2c8f5834b7eca18bf93eee7274",
+    "GpuOperationTraceTests.cs": "ceca946b323b29c1948d85730adea13a3fcdebd76d8e7449f8cd0bc77cbf125a"
+  },
+  "source_hash_scope": "Working-tree and Git-normalized hashes are both recorded because CRLF may differ.",
+  "evidence_sha256": {
+    "gpu-history-full-suite-history.json": "71f8e6fb9bcbe639f0c1a86d33b2181904c0917442ff5ebca7abe8310dad2760",
+    "gpu-history-and-trace-full-suite.xml": "076daf7417fb3e54d5c89286343c94862f5621c000fdd789554c9718537dc0f2",
+    "gpu-history-and-trace-full-suite-process.json": "5be90479a1d7d45b20f1fec4fc6006328ec1233274b052ad0cd11beae285bd4a",
+    "gpu-history-red.xml": "7dcd90266cf890b534e9d203bb0e4f29c3af459c9d554de355dd5c6347fc38be"
+  },
+  "remaining": [
+    "Realmodel encoder device887a0006 diagnosis",
+    "Full same-candidate cold/warm/repeated/stages CPU+GPU/host+VRAM/Editor/Float16 measurements",
+    "Actual all6 new-user setup",
+    "FinalfixedGit manualUI, microphone approval/operation, numerical/rank/normal-exit acceptance"
+  ]
+}

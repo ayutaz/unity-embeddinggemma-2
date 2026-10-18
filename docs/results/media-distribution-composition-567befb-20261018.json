@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "success": true,
+  "scope": "Actual private six-module FP32 and Float16 distribution composition and independent byte/source/metadata audits only",
+  "producer": "567befbd64287a706edaac59c978927e0277188a",
+  "cli_shell_exit_code": 0,
+  "profiles": [
+    {
+      "precision": "fp32",
+      "producer": "567befbd64287a706edaac59c978927e0277188a",
+      "descriptor_sha256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "inventory_sha256": "957567a7928016b866b4471a893c5ce953e5b7f6bfab750a2f91adda109470e5",
+      "modules": [
+        "audio-1119",
+        "audio-839",
+        "image-landscape",
+        "image-portrait",
+        "image-square",
+        "text"
+      ],
+      "object_count": 820,
+      "total_bytes": 8584030668,
+      "sentis_models": 553,
+      "source_objects_independently_verified": 822,
+      "no_hardlinks": true,
+      "all_module_and_object_bindings_unchanged": true
+    },
+    {
+      "precision": "float16",
+      "producer": "567befbd64287a706edaac59c978927e0277188a",
+      "descriptor_sha256": "8a6a90c5f656a00b024553a0412e5c4d32b4d2c9c7c5b3a0c2c146f557b4e27e",
+      "inventory_sha256": "7b559b4cb4e95a82e9b73dfdc051dd15ef703b569e6efb7dc6a9d939595db44f",
+      "modules": [
+        "audio-1119",
+        "audio-839",
+        "image-landscape",
+        "image-portrait",
+        "image-square",
+        "text"
+      ],
+      "object_count": 820,
+      "total_bytes": 5874675948,
+      "sentis_models": 553,
+      "source_objects_independently_verified": 822,
+      "no_hardlinks": true,
+      "all_module_and_object_bindings_unchanged": true
+    }
+  ],
+  "actual_publication_payload_guard_passed": true,
+  "inference_executed": false,
+  "public_upload_executed": false,
+  "public_acquisition_validated": false,
+  "full_release_ready": false
+}

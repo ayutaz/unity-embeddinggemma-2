@@ -1,0 +1,32 @@
+# GPU出力tensorの不要なCPU確保・転送を省く
+
+2026-10-18。候補SDK `d7b2233` を性能branchへ `1397a88` として取り込んだ。[source対応](results/gpu-output-integration-source-correspondence-20261018.json)でSDK packageのGit treeが実行済みsnapshotと一致することを確認している。最終candidate全体の合格ではない。
+
+## 変更と根拠
+
+9種類のGPU演算で、shaderが全要素を書く出力を、CPU storageを持たないfloat tensorとして作る。既存の `ComputeTensorData.Pin` が新しいGPU storageを確保し、その後は同じshader・dispatch・GPU fence・cache解放を使う。入力PCMや係数の明示的な転送は従来どおりで、演算順序・許容差・GPU要件は変えていない。
+
+固定Sentis 2.6.1では、shape-only constructorの既定動作はCPU storageの確保とゼロ初期化であり、Pinはその内容をGPUへ変換・転送する。全要素を上書きする出力に、このCPU準備は不要である。部分書き込みや未初期化の値を入力として使うtensorへ一般化しない。
+
+## 検証済みの範囲
+
+- [TDDとGPU演算回帰](results/gpu-write-only-output-allocation-tdd-20261018.json)：CPU storageが残るscaffoldで3件中2件Red→3件Green。実GPUで既存の演算・所有権・tiny graph等の回帰120 pass / fail0 / skip0 / exit0。実モデル全体の代用にはしない。
+- [同一FP32画像の独立比較](results/gpu-output-square-fp32-matched-comparison-20261018.json)：旧SDK `e28a5fd` と候補 `d7b2233`、同じ計測 `c2f766e`、square-0・model descriptor・GPUを固定。各4回が元のPython参照・解放・正常終了を満たし、全4出力のbyte hashが前後で一致した。各回モデル180区間・演算179区間のGPU値も欠測なし。
+- 初回後3回の計測付きAPI経過時間は、修正前19.689 / 19.299 / 29.389秒、修正後5.214 / 4.832 / 5.481秒だった。これはこの固定画像の観測であり、通常API・他profile・平均性能・一般的な改善率を保証しない。
+- [Float16重みの独立比較](results/gpu-output-square-float16-weights-matched-comparison-20261018.json)も同じsquare-0・計測・GPUで各4回の参照一致・解放・exit0と全4出力の前後byte一致を確認した。初回後3回は修正前34.048 / 32.479 / 30.204秒、修正後5.067 / 5.009 / 4.603秒。こちらも計測付き固定入力の観測であり、形式間の速度比較や通常APIの保証ではない。
+- shader ResourcesのGit treeは旧SDKと一致する。重み・graphを再生成していない。
+- 新SDKの[全6 module・両精度の単独参照照合](results/gpu-output-d7b2233-all-module-isolated-reference-20261018.json)は12実行・32 vectorで完了した。各実行は元のPython参照との独立したバイナリ再計算、有限768次元・単位長、FP32 >= 0.999 / Float16 >= 0.99、skip0・正常終了を確認した。個別監査のhashも照合して保持する。単独受け入れを混在検索や手動UIの代用にはしない。
+
+別のproject/processで順に実行し、OS・shader cacheや他アプリの負荷は制御していない。Profiler/markerの影響があり、CPU送信区間の経過時間とGPU queue区間は重なり得るため、両者を足したり差し引いたりしない。
+
+## 新SDKの混在検索と描画
+
+新SDKの混在PlayModeも[FP32](results/gpu-output-mixed-playmode-fp32-d7b2233-20261018.json) / [Float16重み](results/gpu-output-mixed-playmode-float16-weights-d7b2233-20261018.json)の両方が合格した。各実行で画像3件・音声2件のDocument登録、日英4 queryの全5順位とscore、実GPU処理中のキャンセル→再試行、module切替、Worker・kernel・tensor・cache leaseの解放、続く直接text Query 4件を確認した。各2 pass / fail0 / skip0 / exit0、終了後636 sourceファイルも照合した。最大score誤差はFP32が0.000000240、Float16重みが0.000111928で、元の0.001許容差を維持している。ホスト生涯ピークはそれぞれ14,059,487,232 / 10,745,999,360 bytesで、16GiB guard内だった。形式間の必要RAM差や速度改善をこの別プロセスの観測から保証しない。
+
+4画面ずつを実際に開き、score付き結果、3 profileの画像プレビュー、日本語の音声再生ボタンを確認した。[FP32の目視](results/gpu-output-mixed-fp32-d7b2233-rendered-visual-inspection-20261018.json) / [Float16重みの目視](results/gpu-output-mixed-float16-weights-d7b2233-rendered-visual-inspection-20261018.json)。一部の下位行はviewport外であり、全順位は別の数値監査で確認する。準備済みcacheによるlocal-file consumerの自動操作であり、公開cold取得、固定Gitの手動操作、実際の再生・マイク入力の合格ではない。
+
+## 残る受け入れ
+
+新SDKでも[全5 profile・両形式の同一入力40反復とstage GPU/CPU/wall・メモリ](media-gpu-submission-observations.md)、[Editorの校正済み検索割り当て・空/再利用Library](editor-search-allocation-observations.md)を記録した。同じSDKのtext指標の対応、load/release GPU時間の扱い、非同期allocation・明示的index再構築は残る。旧SDKの計測や操作成功を、新SDK全体の性能・手動操作の合格へ流用しない。
+
+PR #87はDraftを維持し、最新headのCIも別に確認する。公開empty-cache取得・許可後の実マイク・最終candidate操作を含む優先1〜3全体は未完了である。

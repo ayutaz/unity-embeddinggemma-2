@@ -1,0 +1,1863 @@
+{
+  "accepted_identical_input_cpu_wall_reference_and_release": true,
+  "complete_performance_accepted": false,
+  "full_priorities_1_to_3_accepted": false,
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "validation_source": "0911348aa4fe92ee5a4e850378a740962d1040f5",
+  "unity": "6000.3.21f1",
+  "profiles": 5,
+  "precisions": 2,
+  "real_gpu_calls": 40,
+  "scope": "Separate serial Editor processes. Four identical-input calls in each session; new process first call, OS/shader/Library caches not purged. Whole-Editor CPU and elapsed wall, sampled exact-PID GPU allocations only. No precision speedup claim.",
+  "records": [
+    {
+      "module": "image-square",
+      "precision": "fp32",
+      "input_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+      "minimum_reference_cosine": 0.9999999999997135,
+      "load": {
+        "load_wall_seconds": 34.9839244,
+        "load_process_cpu_seconds": 23.234375
+      },
+      "release": {
+        "release_wall_seconds": 0.0155409,
+        "release_process_cpu_seconds": 0.015625
+      },
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 62.1705251,
+          "process_cpu_seconds": 23.984375
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 31.8430453,
+          "process_cpu_seconds": 20.640625
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 19.0350561,
+          "process_cpu_seconds": 10.203125
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 23.9906759,
+          "process_cpu_seconds": 14.203125
+        }
+      ],
+      "stage_intervals_in_round_order": [
+        {
+          "stage": "preprocessing",
+          "wall_seconds": [
+            24.4040017,
+            0.0134945,
+            0.0035998,
+            0.004255
+          ],
+          "process_cpu_seconds": [
+            0.046875,
+            0.015625,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "stage": "encoder",
+          "wall_seconds": [
+            36.6140008,
+            31.622568599999997,
+            18.9327118,
+            23.8916543
+          ],
+          "process_cpu_seconds": [
+            23.828125,
+            20.59375,
+            10.171875,
+            14.171875
+          ]
+        },
+        {
+          "stage": "backbone",
+          "wall_seconds": [
+            1.1128148,
+            0.19881459999999998,
+            0.0899387,
+            0.0848961
+          ],
+          "process_cpu_seconds": [
+            0.0625,
+            0.03125,
+            0.015625,
+            0.03125
+          ]
+        }
+      ],
+      "host_lifetime_peak_bytes": 7669460992,
+      "process_memory_observation": {
+        "id": "process_observation_window",
+        "begin_utc": "2026-10-17T19:33:05.831859+00:00",
+        "end_utc": "2026-10-17T19:37:14.464500+00:00",
+        "sample_count": 28,
+        "available_sample_count": 28,
+        "available": true,
+        "largest_observed_dedicated_bytes": 4649742336,
+        "largest_observed_shared_bytes": 558686208,
+        "first_paired_sample_utc": "2026-10-17T19:35:38.408360+00:00",
+        "last_paired_sample_utc": "2026-10-17T19:37:10.698253+00:00",
+        "maximum_observed_sample_gap_seconds": 3.557204
+      },
+      "intervals_without_paired_memory_samples": [
+        "load",
+        "release",
+        "stage:first:preprocessing:Process:1",
+        "stage:first:backbone:Embed:3",
+        "stage:warm:preprocessing:Process:4",
+        "stage:warm:backbone:Embed:6",
+        "stage:repeat-1:preprocessing:Process:7",
+        "stage:repeat-1:backbone:Embed:9",
+        "stage:repeat-2:preprocessing:Process:10",
+        "stage:repeat-2:backbone:Embed:12"
+      ],
+      "editor": {
+        "completed_reload_ms": [
+          1076,
+          6720,
+          2330,
+          2769
+        ],
+        "reload_profiles_complete": true,
+        "asset_refresh_seconds": {
+          "count": 4,
+          "min": 0.074,
+          "median": 2.654,
+          "max": 48.568
+        },
+        "search_database_enumeration_exception_count": 0,
+        "search_database_duration_seconds": null,
+        "allocation_rate_bytes_per_second": null,
+        "scope": "Saved log reload/refresh observations; overlap and must not be summed. Not a clean-cache import, search DB timing or GC allocation measurement.",
+        "startup": {
+          "pid": 196112,
+          "project_info_seconds": {
+            "projectLoad": 57.259249100000005,
+            "projectInit": 56.2259706,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.4130556,
+            "assetDatabaseInit": 5.2085084,
+            "globalIlluminationInit": 0.0037543,
+            "assembliesLoad": 1.108269,
+            "unityExtensionsInit": 0.0042713,
+            "assetDatabaseRefresh": 48.5682394,
+            "sceneOpening": 0.6677572
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 3685,
+              "seconds": 48.568,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 2658,
+                "actual": 2658,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 3860,
+              "seconds": 2.436,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 3996,
+              "seconds": 2.872,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 4052,
+              "seconds": 0.074,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        }
+      },
+      "baseline_file": "media-repeat-image-square-fp32-0911348-first-audit-20261018.json",
+      "memory_file": "media-repeat-image-square-fp32-0911348-first-memory-audit-20261018.json",
+      "evidence_sha256": {
+        "media-repeat-image-square-fp32-0911348-first-audit-20261018.json": "1dac402a2a19783d8eacf279ec9cdd8016904ca1a2ee97c2e375c789b472a100",
+        "media-repeat-image-square-fp32-0911348-first-memory-audit-20261018.json": "a7531d6b1e4f2fb1903e500d34e3f581818daa03e49237585f88753b0ad914c2"
+      }
+    },
+    {
+      "module": "image-square",
+      "precision": "float16-weights",
+      "input_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+      "minimum_reference_cosine": 0.99999999999977,
+      "load": {
+        "load_wall_seconds": 33.2701451,
+        "load_process_cpu_seconds": 25.734375
+      },
+      "release": {
+        "release_wall_seconds": 0.015257799999999998,
+        "release_process_cpu_seconds": 0.015625
+      },
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 25.4472991,
+          "process_cpu_seconds": 15.078125
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 19.7551261,
+          "process_cpu_seconds": 11.625
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 16.279722,
+          "process_cpu_seconds": 8.96875
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 14.512738299999999,
+          "process_cpu_seconds": 7.203125
+        }
+      ],
+      "stage_intervals_in_round_order": [
+        {
+          "stage": "preprocessing",
+          "wall_seconds": [
+            0.3320866,
+            0.0038667,
+            0.0046868,
+            0.0037698
+          ],
+          "process_cpu_seconds": [
+            0.0625,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "stage": "encoder",
+          "wall_seconds": [
+            24.5464423,
+            19.6287116,
+            16.1714154,
+            14.4058517
+          ],
+          "process_cpu_seconds": [
+            14.921875,
+            11.578125,
+            8.921875,
+            7.171875
+          ]
+        },
+        {
+          "stage": "backbone",
+          "wall_seconds": [
+            0.5167264,
+            0.1145321,
+            0.0945155,
+            0.093862
+          ],
+          "process_cpu_seconds": [
+            0.046875,
+            0.046875,
+            0.03125,
+            0.03125
+          ]
+        }
+      ],
+      "host_lifetime_peak_bytes": 6215688192,
+      "process_memory_observation": {
+        "id": "process_observation_window",
+        "begin_utc": "2026-10-17T19:38:44.199310+00:00",
+        "end_utc": "2026-10-17T19:41:08.194153+00:00",
+        "sample_count": 39,
+        "available_sample_count": 39,
+        "available": true,
+        "largest_observed_dedicated_bytes": 5049675776,
+        "largest_observed_shared_bytes": 785768448,
+        "first_paired_sample_utc": "2026-10-17T19:38:56.360105+00:00",
+        "last_paired_sample_utc": "2026-10-17T19:41:04.915568+00:00",
+        "maximum_observed_sample_gap_seconds": 3.518975
+      },
+      "intervals_without_paired_memory_samples": [
+        "release",
+        "stage:first:preprocessing:Process:1",
+        "stage:first:backbone:Embed:3",
+        "stage:warm:preprocessing:Process:4",
+        "stage:repeat-1:preprocessing:Process:7",
+        "stage:repeat-1:backbone:Embed:9",
+        "stage:repeat-2:preprocessing:Process:10"
+      ],
+      "editor": {
+        "completed_reload_ms": [
+          1030,
+          5504,
+          3036
+        ],
+        "reload_profiles_complete": true,
+        "asset_refresh_seconds": {
+          "count": 3,
+          "min": 0.1,
+          "median": 3.198,
+          "max": 6.977
+        },
+        "search_database_enumeration_exception_count": 0,
+        "search_database_duration_seconds": null,
+        "allocation_rate_bytes_per_second": null,
+        "scope": "Saved log reload/refresh observations; overlap and must not be summed. Not a clean-cache import, search DB timing or GC allocation measurement.",
+        "startup": {
+          "pid": 11716,
+          "project_info_seconds": {
+            "projectLoad": 16.0753813,
+            "projectInit": 14.8409939,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.5129263,
+            "assetDatabaseInit": 5.1886297,
+            "globalIlluminationInit": 0.0037524,
+            "assembliesLoad": 1.0670051,
+            "unityExtensionsInit": 0.0148572,
+            "assetDatabaseRefresh": 6.9774253,
+            "sceneOpening": 0.8845492
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 261,
+              "seconds": 6.977,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 875,
+              "seconds": 3.198,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 968,
+              "seconds": 0.1,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        }
+      },
+      "baseline_file": "media-repeat-image-square-float16-weights-0911348-first-audit-20261018.json",
+      "memory_file": "media-repeat-image-square-float16-weights-0911348-first-memory-audit-20261018.json",
+      "evidence_sha256": {
+        "media-repeat-image-square-float16-weights-0911348-first-audit-20261018.json": "a24e85e1f9cd39e6a20f739aa03dd5ac50f6d3b1ed32c70b70e9d05d8fcaf217",
+        "media-repeat-image-square-float16-weights-0911348-first-memory-audit-20261018.json": "c46d15f9ad8b316fe1ed124c88012e377a2873a5c6a4ee0ac6d3b462a249f41f"
+      }
+    },
+    {
+      "module": "image-landscape",
+      "precision": "fp32",
+      "input_sha256": "f2b3f32a22e6282b9876b98c4c5a7bbf75e7469dff933128e17d6503dd6d6e55",
+      "minimum_reference_cosine": 0.9999999999989977,
+      "load": {
+        "load_wall_seconds": 40.435013,
+        "load_process_cpu_seconds": 30.90625
+      },
+      "release": {
+        "release_wall_seconds": 0.0241818,
+        "release_process_cpu_seconds": 0.03125
+      },
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 19.225433499999998,
+          "process_cpu_seconds": 8.890625
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 14.320813699999999,
+          "process_cpu_seconds": 6.734375
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 14.377512999999999,
+          "process_cpu_seconds": 6.921875
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 14.6010285,
+          "process_cpu_seconds": 6.953125
+        }
+      ],
+      "stage_intervals_in_round_order": [
+        {
+          "stage": "preprocessing",
+          "wall_seconds": [
+            0.6511693,
+            0.007029,
+            0.0127687,
+            0.0044321
+          ],
+          "process_cpu_seconds": [
+            0.1875,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "stage": "encoder",
+          "wall_seconds": [
+            17.9011285,
+            14.1970561,
+            14.2355234,
+            14.4959137
+          ],
+          "process_cpu_seconds": [
+            8.609375,
+            6.6875,
+            6.859375,
+            6.921875
+          ]
+        },
+        {
+          "stage": "backbone",
+          "wall_seconds": [
+            0.5718839,
+            0.1059933,
+            0.1147305,
+            0.08636669999999999
+          ],
+          "process_cpu_seconds": [
+            0.0625,
+            0.046875,
+            0.046875,
+            0.03125
+          ]
+        }
+      ],
+      "host_lifetime_peak_bytes": 7316697088,
+      "process_memory_observation": {
+        "id": "process_observation_window",
+        "begin_utc": "2026-10-17T19:54:36.746013+00:00",
+        "end_utc": "2026-10-17T19:57:14.167572+00:00",
+        "sample_count": 41,
+        "available_sample_count": 39,
+        "available": true,
+        "largest_observed_dedicated_bytes": 4645535744,
+        "largest_observed_shared_bytes": 791998464,
+        "first_paired_sample_utc": "2026-10-17T19:54:51.499915+00:00",
+        "last_paired_sample_utc": "2026-10-17T19:57:10.684082+00:00",
+        "maximum_observed_sample_gap_seconds": 7.225082
+      },
+      "intervals_without_paired_memory_samples": [
+        "release",
+        "stage:first:preprocessing:Process:1",
+        "stage:first:backbone:Embed:3",
+        "stage:warm:preprocessing:Process:4",
+        "stage:warm:backbone:Embed:6",
+        "stage:repeat-1:preprocessing:Process:7",
+        "stage:repeat-1:backbone:Embed:9",
+        "stage:repeat-2:preprocessing:Process:10",
+        "stage:repeat-2:backbone:Embed:12"
+      ],
+      "editor": {
+        "completed_reload_ms": [
+          1955,
+          11978,
+          3987
+        ],
+        "reload_profiles_complete": true,
+        "asset_refresh_seconds": {
+          "count": 3,
+          "min": 0.096,
+          "median": 4.187,
+          "max": 15.051
+        },
+        "search_database_enumeration_exception_count": 0,
+        "search_database_duration_seconds": null,
+        "allocation_rate_bytes_per_second": null,
+        "scope": "Saved log reload/refresh observations; overlap and must not be summed. Not a clean-cache import, search DB timing or GC allocation measurement.",
+        "startup": {
+          "pid": 112548,
+          "project_info_seconds": {
+            "projectLoad": 31.767242399999997,
+            "projectInit": 28.9575282,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.9045521,
+            "assetDatabaseInit": 9.1317187,
+            "globalIlluminationInit": 0.0052921,
+            "assembliesLoad": 2.031524,
+            "unityExtensionsInit": 0.0368768,
+            "assetDatabaseRefresh": 15.0510862,
+            "sceneOpening": 1.8630366
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 261,
+              "seconds": 15.051,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 417,
+              "seconds": 4.187,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 509,
+              "seconds": 0.096,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        }
+      },
+      "baseline_file": "media-repeat-image-landscape-fp32-0911348-first-audit-20261018.json",
+      "memory_file": "media-repeat-image-landscape-fp32-0911348-first-memory-audit-20261018.json",
+      "evidence_sha256": {
+        "media-repeat-image-landscape-fp32-0911348-first-audit-20261018.json": "4fd58c70e489fb31f989e87d12aa093aca6e1f7145eaf5edafba3d89874ee6b6",
+        "media-repeat-image-landscape-fp32-0911348-first-memory-audit-20261018.json": "b9f4465c387fbeb491c557c00b332a4448ab3352931135d6aa1dd7769fa5866d"
+      }
+    },
+    {
+      "module": "image-landscape",
+      "precision": "float16-weights",
+      "input_sha256": "f2b3f32a22e6282b9876b98c4c5a7bbf75e7469dff933128e17d6503dd6d6e55",
+      "minimum_reference_cosine": 0.9999999999990701,
+      "load": {
+        "load_wall_seconds": 32.3500825,
+        "load_process_cpu_seconds": 24.65625
+      },
+      "release": {
+        "release_wall_seconds": 0.0163074,
+        "release_process_cpu_seconds": 0.015625
+      },
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 15.682747299999999,
+          "process_cpu_seconds": 6.734375
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 14.1666467,
+          "process_cpu_seconds": 6.65625
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 14.005949699999999,
+          "process_cpu_seconds": 6.859375
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 13.8398559,
+          "process_cpu_seconds": 7.171875
+        }
+      ],
+      "stage_intervals_in_round_order": [
+        {
+          "stage": "preprocessing",
+          "wall_seconds": [
+            0.23689739999999998,
+            0.005225,
+            0.0040141,
+            0.004007
+          ],
+          "process_cpu_seconds": [
+            0.046875,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "stage": "encoder",
+          "wall_seconds": [
+            14.7584603,
+            14.0579618,
+            13.899994399999999,
+            13.7152648
+          ],
+          "process_cpu_seconds": [
+            6.625,
+            6.609375,
+            6.828125,
+            7.125
+          ]
+        },
+        {
+          "stage": "backbone",
+          "wall_seconds": [
+            0.6439167,
+            0.0951147,
+            0.09302719999999999,
+            0.1099747
+          ],
+          "process_cpu_seconds": [
+            0.03125,
+            0.046875,
+            0.03125,
+            0.03125
+          ]
+        }
+      ],
+      "host_lifetime_peak_bytes": 6150852608,
+      "process_memory_observation": {
+        "id": "process_observation_window",
+        "begin_utc": "2026-10-17T19:57:16.944751+00:00",
+        "end_utc": "2026-10-17T19:59:19.968528+00:00",
+        "sample_count": 36,
+        "available_sample_count": 34,
+        "available": true,
+        "largest_observed_dedicated_bytes": 5183451136,
+        "largest_observed_shared_bytes": 793174016,
+        "first_paired_sample_utc": "2026-10-17T19:57:25.949866+00:00",
+        "last_paired_sample_utc": "2026-10-17T19:59:16.669658+00:00",
+        "maximum_observed_sample_gap_seconds": 3.467911
+      },
+      "intervals_without_paired_memory_samples": [
+        "release",
+        "stage:first:preprocessing:Process:1",
+        "stage:first:backbone:Embed:3",
+        "stage:warm:preprocessing:Process:4",
+        "stage:warm:backbone:Embed:6",
+        "stage:repeat-1:preprocessing:Process:7",
+        "stage:repeat-1:backbone:Embed:9",
+        "stage:repeat-2:preprocessing:Process:10",
+        "stage:repeat-2:backbone:Embed:12"
+      ],
+      "editor": {
+        "completed_reload_ms": [
+          1170,
+          6269,
+          2347
+        ],
+        "reload_profiles_complete": true,
+        "asset_refresh_seconds": {
+          "count": 3,
+          "min": 0.096,
+          "median": 2.47,
+          "max": 8.238
+        },
+        "search_database_enumeration_exception_count": 0,
+        "search_database_duration_seconds": null,
+        "allocation_rate_bytes_per_second": null,
+        "scope": "Saved log reload/refresh observations; overlap and must not be summed. Not a clean-cache import, search DB timing or GC allocation measurement.",
+        "startup": {
+          "pid": 178120,
+          "project_info_seconds": {
+            "projectLoad": 18.1125533,
+            "projectInit": 16.729571,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.5712982,
+            "assetDatabaseInit": 5.5223102,
+            "globalIlluminationInit": 0.0044848,
+            "assembliesLoad": 1.2119426,
+            "unityExtensionsInit": 0.014918,
+            "assetDatabaseRefresh": 8.2381545,
+            "sceneOpening": 0.9820752
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 261,
+              "seconds": 8.238,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 417,
+              "seconds": 2.47,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 509,
+              "seconds": 0.096,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        }
+      },
+      "baseline_file": "media-repeat-image-landscape-float16-weights-0911348-first-audit-20261018.json",
+      "memory_file": "media-repeat-image-landscape-float16-weights-0911348-first-memory-audit-20261018.json",
+      "evidence_sha256": {
+        "media-repeat-image-landscape-float16-weights-0911348-first-audit-20261018.json": "39fa584bc3d1f66756187f94fd90c52244982c623482887f7b94e8701cca0b57",
+        "media-repeat-image-landscape-float16-weights-0911348-first-memory-audit-20261018.json": "87f07d67c5cd322605c0ce12a77080d782c48cfa26ceebe709a39536e81f6f87"
+      }
+    },
+    {
+      "module": "image-portrait",
+      "precision": "fp32",
+      "input_sha256": "fce3474792c6401c4bae6ac0261a386f400bac0cece977ffda86388ee6682489",
+      "minimum_reference_cosine": 0.9999999999997848,
+      "load": {
+        "load_wall_seconds": 32.54844,
+        "load_process_cpu_seconds": 25.0625
+      },
+      "release": {
+        "release_wall_seconds": 0.014855,
+        "release_process_cpu_seconds": 0.015625
+      },
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 14.6633923,
+          "process_cpu_seconds": 6.109375
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 13.214793199999999,
+          "process_cpu_seconds": 6.25
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 13.1016693,
+          "process_cpu_seconds": 6.40625
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 13.0673344,
+          "process_cpu_seconds": 6.359375
+        }
+      ],
+      "stage_intervals_in_round_order": [
+        {
+          "stage": "preprocessing",
+          "wall_seconds": [
+            0.2439912,
+            0.0065848999999999994,
+            0.0036674,
+            0.0038896
+          ],
+          "process_cpu_seconds": [
+            0.046875,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "stage": "encoder",
+          "wall_seconds": [
+            13.791613199999999,
+            13.101863499999999,
+            13.003211,
+            12.9653273
+          ],
+          "process_cpu_seconds": [
+            5.953125,
+            6.203125,
+            6.359375,
+            6.3125
+          ]
+        },
+        {
+          "stage": "backbone",
+          "wall_seconds": [
+            0.5851596,
+            0.0985337,
+            0.0861961,
+            0.0888268
+          ],
+          "process_cpu_seconds": [
+            0.078125,
+            0.046875,
+            0.03125,
+            0.03125
+          ]
+        }
+      ],
+      "host_lifetime_peak_bytes": 7499423744,
+      "process_memory_observation": {
+        "id": "process_observation_window",
+        "begin_utc": "2026-10-17T19:59:22.956015+00:00",
+        "end_utc": "2026-10-17T20:01:20.774873+00:00",
+        "sample_count": 35,
+        "available_sample_count": 33,
+        "available": true,
+        "largest_observed_dedicated_bytes": 4578873344,
+        "largest_observed_shared_bytes": 785506304,
+        "first_paired_sample_utc": "2026-10-17T19:59:31.969756+00:00",
+        "last_paired_sample_utc": "2026-10-17T20:01:19.503218+00:00",
+        "maximum_observed_sample_gap_seconds": 3.480675
+      },
+      "intervals_without_paired_memory_samples": [
+        "release",
+        "stage:first:preprocessing:Process:1",
+        "stage:first:backbone:Embed:3",
+        "stage:warm:preprocessing:Process:4",
+        "stage:warm:backbone:Embed:6",
+        "stage:repeat-1:preprocessing:Process:7",
+        "stage:repeat-1:backbone:Embed:9",
+        "stage:repeat-2:preprocessing:Process:10",
+        "stage:repeat-2:backbone:Embed:12"
+      ],
+      "editor": {
+        "completed_reload_ms": [
+          1089,
+          5871,
+          2278
+        ],
+        "reload_profiles_complete": true,
+        "asset_refresh_seconds": {
+          "count": 3,
+          "min": 0.08,
+          "median": 2.387,
+          "max": 7.324
+        },
+        "search_database_enumeration_exception_count": 0,
+        "search_database_duration_seconds": null,
+        "allocation_rate_bytes_per_second": null,
+        "scope": "Saved log reload/refresh observations; overlap and must not be summed. Not a clean-cache import, search DB timing or GC allocation measurement.",
+        "startup": {
+          "pid": 157376,
+          "project_info_seconds": {
+            "projectLoad": 16.849676000000002,
+            "projectInit": 15.4473674,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.5678732,
+            "assetDatabaseInit": 5.2550711,
+            "globalIlluminationInit": 0.004124,
+            "assembliesLoad": 1.1317155,
+            "unityExtensionsInit": 0.0162693,
+            "assetDatabaseRefresh": 7.3240817,
+            "sceneOpening": 0.9695915
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 261,
+              "seconds": 7.324,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 417,
+              "seconds": 2.387,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 509,
+              "seconds": 0.08,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        }
+      },
+      "baseline_file": "media-repeat-image-portrait-fp32-0911348-first-audit-20261018.json",
+      "memory_file": "media-repeat-image-portrait-fp32-0911348-first-memory-audit-20261018.json",
+      "evidence_sha256": {
+        "media-repeat-image-portrait-fp32-0911348-first-audit-20261018.json": "211c7f86d123a1520335e3d89e0c88cea2384bb8146e62960befcc033b34a628",
+        "media-repeat-image-portrait-fp32-0911348-first-memory-audit-20261018.json": "8565825b77343807116cfe871dc254d8b77a3fe065e1e0bba227de469de9bfd5"
+      }
+    },
+    {
+      "module": "image-portrait",
+      "precision": "float16-weights",
+      "input_sha256": "fce3474792c6401c4bae6ac0261a386f400bac0cece977ffda86388ee6682489",
+      "minimum_reference_cosine": 0.9999999999997247,
+      "load": {
+        "load_wall_seconds": 32.348507999999995,
+        "load_process_cpu_seconds": 25.28125
+      },
+      "release": {
+        "release_wall_seconds": 0.017888499999999998,
+        "release_process_cpu_seconds": 0.015625
+      },
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 15.376424,
+          "process_cpu_seconds": 7.015625
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 14.2347232,
+          "process_cpu_seconds": 7.15625
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 14.9007495,
+          "process_cpu_seconds": 7.453125
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 14.2086133,
+          "process_cpu_seconds": 7.296875
+        }
+      ],
+      "stage_intervals_in_round_order": [
+        {
+          "stage": "preprocessing",
+          "wall_seconds": [
+            0.23771689999999998,
+            0.0051845,
+            0.0042943,
+            0.0035735
+          ],
+          "process_cpu_seconds": [
+            0.046875,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "stage": "encoder",
+          "wall_seconds": [
+            14.5504877,
+            14.128634499999999,
+            14.7975134,
+            14.0885011
+          ],
+          "process_cpu_seconds": [
+            6.890625,
+            7.125,
+            7.421875,
+            7.25
+          ]
+        },
+        {
+          "stage": "backbone",
+          "wall_seconds": [
+            0.5428143,
+            0.0927276,
+            0.0903462,
+            0.1071642
+          ],
+          "process_cpu_seconds": [
+            0.046875,
+            0.03125,
+            0.03125,
+            0.046875
+          ]
+        }
+      ],
+      "host_lifetime_peak_bytes": 5883699200,
+      "process_memory_observation": {
+        "id": "process_observation_window",
+        "begin_utc": "2026-10-17T20:01:22.328512+00:00",
+        "end_utc": "2026-10-17T20:03:25.556600+00:00",
+        "sample_count": 37,
+        "available_sample_count": 35,
+        "available": true,
+        "largest_observed_dedicated_bytes": 5049229312,
+        "largest_observed_shared_bytes": 785375232,
+        "first_paired_sample_utc": "2026-10-17T20:01:31.259923+00:00",
+        "last_paired_sample_utc": "2026-10-17T20:03:25.187636+00:00",
+        "maximum_observed_sample_gap_seconds": 3.520743
+      },
+      "intervals_without_paired_memory_samples": [
+        "release",
+        "stage:first:backbone:Embed:3",
+        "stage:warm:preprocessing:Process:4",
+        "stage:warm:backbone:Embed:6",
+        "stage:repeat-1:preprocessing:Process:7",
+        "stage:repeat-1:backbone:Embed:9",
+        "stage:repeat-2:preprocessing:Process:10",
+        "stage:repeat-2:backbone:Embed:12"
+      ],
+      "editor": {
+        "completed_reload_ms": [
+          1081,
+          5735,
+          2298
+        ],
+        "reload_profiles_complete": true,
+        "asset_refresh_seconds": {
+          "count": 3,
+          "min": 0.082,
+          "median": 2.414,
+          "max": 8.895
+        },
+        "search_database_enumeration_exception_count": 0,
+        "search_database_duration_seconds": null,
+        "allocation_rate_bytes_per_second": null,
+        "scope": "Saved log reload/refresh observations; overlap and must not be summed. Not a clean-cache import, search DB timing or GC allocation measurement.",
+        "startup": {
+          "pid": 102244,
+          "project_info_seconds": {
+            "projectLoad": 17.9845632,
+            "projectInit": 16.7714257,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.557122,
+            "assetDatabaseInit": 5.0544326,
+            "globalIlluminationInit": 0.0045755,
+            "assembliesLoad": 1.1158569,
+            "unityExtensionsInit": 0.0262633,
+            "assetDatabaseRefresh": 8.8952138,
+            "sceneOpening": 0.8055079
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 261,
+              "seconds": 8.895,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 417,
+              "seconds": 2.414,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 509,
+              "seconds": 0.082,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        }
+      },
+      "baseline_file": "media-repeat-image-portrait-float16-weights-0911348-first-audit-20261018.json",
+      "memory_file": "media-repeat-image-portrait-float16-weights-0911348-first-memory-audit-20261018.json",
+      "evidence_sha256": {
+        "media-repeat-image-portrait-float16-weights-0911348-first-audit-20261018.json": "e47aa507bf8577472d04bbc22eb3b0e8475323ae5d62d1a22154a174e6ee6b88",
+        "media-repeat-image-portrait-float16-weights-0911348-first-memory-audit-20261018.json": "e30f495c35f8c081dc445cdb0288d566323af7361444bde24eb954898fa19b84"
+      }
+    },
+    {
+      "module": "audio-1119",
+      "precision": "fp32",
+      "input_sha256": "06a56aa96f41a685ae25b4d7d0a55a15717723bb45a88a21a02546b9355e67e5",
+      "minimum_reference_cosine": 0.9999999999928917,
+      "load": {
+        "load_wall_seconds": 71.0007258,
+        "load_process_cpu_seconds": 53.65625
+      },
+      "release": {
+        "release_wall_seconds": 0.0180309,
+        "release_process_cpu_seconds": 0.015625
+      },
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 7.831417999999999,
+          "process_cpu_seconds": 1.09375
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 5.252981999999999,
+          "process_cpu_seconds": 1.234375
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 5.3433204,
+          "process_cpu_seconds": 1.640625
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 5.2057939,
+          "process_cpu_seconds": 1.328125
+        }
+      ],
+      "stage_intervals_in_round_order": [
+        {
+          "stage": "preprocessing",
+          "wall_seconds": [
+            1.0238277,
+            0.0624141,
+            0.0110495,
+            0.0110492
+          ],
+          "process_cpu_seconds": [
+            0.34375,
+            0.015625,
+            0.015625,
+            0.0
+          ]
+        },
+        {
+          "stage": "encoder",
+          "wall_seconds": [
+            5.9065862,
+            4.9871795,
+            5.1078779999999995,
+            4.9787251
+          ],
+          "process_cpu_seconds": [
+            0.65625,
+            1.171875,
+            1.578125,
+            1.28125
+          ]
+        },
+        {
+          "stage": "backbone",
+          "wall_seconds": [
+            0.8416336,
+            0.19424709999999998,
+            0.214331,
+            0.2031584
+          ],
+          "process_cpu_seconds": [
+            0.03125,
+            0.046875,
+            0.046875,
+            0.046875
+          ]
+        }
+      ],
+      "host_lifetime_peak_bytes": 6402707456,
+      "process_memory_observation": {
+        "id": "process_observation_window",
+        "begin_utc": "2026-10-17T19:45:03.928409+00:00",
+        "end_utc": "2026-10-17T19:47:21.622329+00:00",
+        "sample_count": 33,
+        "available_sample_count": 33,
+        "available": true,
+        "largest_observed_dedicated_bytes": 5204885504,
+        "largest_observed_shared_bytes": 963690496,
+        "first_paired_sample_utc": "2026-10-17T19:45:21.066736+00:00",
+        "last_paired_sample_utc": "2026-10-17T19:47:19.157468+00:00",
+        "maximum_observed_sample_gap_seconds": 4.043021
+      },
+      "intervals_without_paired_memory_samples": [
+        "release",
+        "stage:warm:preprocessing:ProcessAsync:4",
+        "stage:warm:backbone:Embed:6",
+        "stage:repeat-1:preprocessing:ProcessAsync:7",
+        "stage:repeat-1:backbone:Embed:9",
+        "stage:repeat-2:preprocessing:ProcessAsync:10",
+        "stage:repeat-2:backbone:Embed:12"
+      ],
+      "editor": {
+        "completed_reload_ms": [
+          2054,
+          10707,
+          3881
+        ],
+        "reload_profiles_complete": true,
+        "asset_refresh_seconds": {
+          "count": 3,
+          "min": 0.088,
+          "median": 4.074,
+          "max": 14.944
+        },
+        "search_database_enumeration_exception_count": 0,
+        "search_database_duration_seconds": null,
+        "allocation_rate_bytes_per_second": null,
+        "scope": "Saved log reload/refresh observations; overlap and must not be summed. Not a clean-cache import, search DB timing or GC allocation measurement.",
+        "startup": {
+          "pid": 71116,
+          "project_info_seconds": {
+            "projectLoad": 23.537236399999998,
+            "projectInit": 21.3401414,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.7394696,
+            "assetDatabaseInit": 2.0175769,
+            "globalIlluminationInit": 0.0171077,
+            "assembliesLoad": 2.1167127,
+            "unityExtensionsInit": 0.0286952,
+            "assetDatabaseRefresh": 14.9440273,
+            "sceneOpening": 1.6634886
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 261,
+              "seconds": 14.944,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 417,
+              "seconds": 4.074,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 510,
+              "seconds": 0.088,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        }
+      },
+      "baseline_file": "media-repeat-audio-1119-fp32-0911348-first-audit-20261018.json",
+      "memory_file": "media-repeat-audio-1119-fp32-0911348-first-memory-audit-20261018.json",
+      "evidence_sha256": {
+        "media-repeat-audio-1119-fp32-0911348-first-audit-20261018.json": "19b90867b9bcabf00ffa0f7ec121e2df95e45a729e7186e0a5ad53cf0dc71b54",
+        "media-repeat-audio-1119-fp32-0911348-first-memory-audit-20261018.json": "16b302136f7d60d9f74a1ef3806ba5f7cf20a90ad75c1b867d8f565e21f9f438"
+      }
+    },
+    {
+      "module": "audio-1119",
+      "precision": "float16-weights",
+      "input_sha256": "06a56aa96f41a685ae25b4d7d0a55a15717723bb45a88a21a02546b9355e67e5",
+      "minimum_reference_cosine": 0.999999999990707,
+      "load": {
+        "load_wall_seconds": 61.4554221,
+        "load_process_cpu_seconds": 46.578125
+      },
+      "release": {
+        "release_wall_seconds": 0.024720699999999998,
+        "release_process_cpu_seconds": 0.03125
+      },
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 6.8281348,
+          "process_cpu_seconds": 1.203125
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 5.855872199999999,
+          "process_cpu_seconds": 0.921875
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 5.2260617,
+          "process_cpu_seconds": 1.5625
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 5.5902173,
+          "process_cpu_seconds": 1.40625
+        }
+      ],
+      "stage_intervals_in_round_order": [
+        {
+          "stage": "preprocessing",
+          "wall_seconds": [
+            0.5791491,
+            0.051577399999999995,
+            0.0151489,
+            0.0176465
+          ],
+          "process_cpu_seconds": [
+            0.15625,
+            0.015625,
+            0.015625,
+            0.015625
+          ]
+        },
+        {
+          "stage": "encoder",
+          "wall_seconds": [
+            5.6321889999999994,
+            5.4320198,
+            4.9823376,
+            5.2215393
+          ],
+          "process_cpu_seconds": [
+            0.984375,
+            0.828125,
+            1.484375,
+            1.328125
+          ]
+        },
+        {
+          "stage": "backbone",
+          "wall_seconds": [
+            0.5667026,
+            0.35629099999999997,
+            0.2148406,
+            0.33348049999999996
+          ],
+          "process_cpu_seconds": [
+            0.015625,
+            0.0625,
+            0.046875,
+            0.0625
+          ]
+        }
+      ],
+      "host_lifetime_peak_bytes": 4955488256,
+      "process_memory_observation": {
+        "id": "process_observation_window",
+        "begin_utc": "2026-10-17T19:47:43.433139+00:00",
+        "end_utc": "2026-10-17T19:50:01.834751+00:00",
+        "sample_count": 36,
+        "available_sample_count": 33,
+        "available": true,
+        "largest_observed_dedicated_bytes": 10539819008,
+        "largest_observed_shared_bytes": 480161792,
+        "first_paired_sample_utc": "2026-10-17T19:47:57.838113+00:00",
+        "last_paired_sample_utc": "2026-10-17T19:49:59.964411+00:00",
+        "maximum_observed_sample_gap_seconds": 6.956704
+      },
+      "intervals_without_paired_memory_samples": [
+        "release",
+        "stage:first:preprocessing:ProcessAsync:1",
+        "stage:first:backbone:Embed:3",
+        "stage:warm:preprocessing:ProcessAsync:4",
+        "stage:warm:backbone:Embed:6",
+        "stage:repeat-1:preprocessing:ProcessAsync:7",
+        "stage:repeat-1:backbone:Embed:9",
+        "stage:repeat-2:preprocessing:ProcessAsync:10",
+        "stage:repeat-2:backbone:Embed:12"
+      ],
+      "editor": {
+        "completed_reload_ms": [
+          1833,
+          11226,
+          4514
+        ],
+        "reload_profiles_complete": true,
+        "asset_refresh_seconds": {
+          "count": 3,
+          "min": 0.135,
+          "median": 4.725,
+          "max": 13.936
+        },
+        "search_database_enumeration_exception_count": 0,
+        "search_database_duration_seconds": null,
+        "allocation_rate_bytes_per_second": null,
+        "scope": "Saved log reload/refresh observations; overlap and must not be summed. Not a clean-cache import, search DB timing or GC allocation measurement.",
+        "startup": {
+          "pid": 134424,
+          "project_info_seconds": {
+            "projectLoad": 30.8580807,
+            "projectInit": 27.773988,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.8517339,
+            "assetDatabaseInit": 9.4463754,
+            "globalIlluminationInit": 0.0048882,
+            "assembliesLoad": 1.9079768,
+            "unityExtensionsInit": 0.0287663,
+            "assetDatabaseRefresh": 13.9365802,
+            "sceneOpening": 2.1581884
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 261,
+              "seconds": 13.936,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 417,
+              "seconds": 4.725,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 509,
+              "seconds": 0.135,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        }
+      },
+      "baseline_file": "media-repeat-audio-1119-float16-weights-0911348-first-audit-20261018.json",
+      "memory_file": "media-repeat-audio-1119-float16-weights-0911348-first-memory-audit-20261018.json",
+      "evidence_sha256": {
+        "media-repeat-audio-1119-float16-weights-0911348-first-audit-20261018.json": "ef8191a51f2d99872fa09b8ce4b6b1b7b053a20fe0012c248c8864e62a5401ac",
+        "media-repeat-audio-1119-float16-weights-0911348-first-memory-audit-20261018.json": "1d3cd3fe40b3f2ad968313c62345ae7bfe7773ef68250ebc13529dbfb7185751"
+      }
+    },
+    {
+      "module": "audio-839",
+      "precision": "fp32",
+      "input_sha256": "01da15bbe3d53bcd41cfff6c265b53cda8222567fe760bfff96442266557c761",
+      "minimum_reference_cosine": 0.9999999999981798,
+      "load": {
+        "load_wall_seconds": 79.55194689999999,
+        "load_process_cpu_seconds": 63.46875
+      },
+      "release": {
+        "release_wall_seconds": 0.0181984,
+        "release_process_cpu_seconds": 0.015625
+      },
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 7.7941006999999995,
+          "process_cpu_seconds": 1.125
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 5.3974113,
+          "process_cpu_seconds": 0.359375
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 5.307214399999999,
+          "process_cpu_seconds": 1.03125
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 5.339498799999999,
+          "process_cpu_seconds": 0.546875
+        }
+      ],
+      "stage_intervals_in_round_order": [
+        {
+          "stage": "preprocessing",
+          "wall_seconds": [
+            1.1562469,
+            0.0870782,
+            0.009887499999999999,
+            0.0118849
+          ],
+          "process_cpu_seconds": [
+            0.28125,
+            0.0,
+            0.0,
+            0.015625
+          ]
+        },
+        {
+          "stage": "encoder",
+          "wall_seconds": [
+            5.5591541,
+            5.0933095999999995,
+            5.0742661,
+            5.0316184999999995
+          ],
+          "process_cpu_seconds": [
+            0.703125,
+            0.296875,
+            0.984375,
+            0.484375
+          ]
+        },
+        {
+          "stage": "backbone",
+          "wall_seconds": [
+            0.9876501,
+            0.2069441,
+            0.21374469999999998,
+            0.2851163
+          ],
+          "process_cpu_seconds": [
+            0.03125,
+            0.0625,
+            0.046875,
+            0.046875
+          ]
+        }
+      ],
+      "host_lifetime_peak_bytes": 6404993024,
+      "process_memory_observation": {
+        "id": "process_observation_window",
+        "begin_utc": "2026-10-17T19:50:03.358808+00:00",
+        "end_utc": "2026-10-17T19:52:32.816417+00:00",
+        "sample_count": 40,
+        "available_sample_count": 37,
+        "available": true,
+        "largest_observed_dedicated_bytes": 10253582336,
+        "largest_observed_shared_bytes": 480161792,
+        "first_paired_sample_utc": "2026-10-17T19:50:16.584707+00:00",
+        "last_paired_sample_utc": "2026-10-17T19:52:30.904491+00:00",
+        "maximum_observed_sample_gap_seconds": 4.147025
+      },
+      "intervals_without_paired_memory_samples": [
+        "release",
+        "stage:first:backbone:Embed:3",
+        "stage:warm:preprocessing:ProcessAsync:4",
+        "stage:warm:backbone:Embed:6",
+        "stage:repeat-1:preprocessing:ProcessAsync:7",
+        "stage:repeat-1:backbone:Embed:9",
+        "stage:repeat-2:preprocessing:ProcessAsync:10",
+        "stage:repeat-2:backbone:Embed:12"
+      ],
+      "editor": {
+        "completed_reload_ms": [
+          1279,
+          11111,
+          4479
+        ],
+        "reload_profiles_complete": true,
+        "asset_refresh_seconds": {
+          "count": 3,
+          "min": 0.093,
+          "median": 4.676,
+          "max": 13.003
+        },
+        "search_database_enumeration_exception_count": 0,
+        "search_database_duration_seconds": null,
+        "allocation_rate_bytes_per_second": null,
+        "scope": "Saved log reload/refresh observations; overlap and must not be summed. Not a clean-cache import, search DB timing or GC allocation measurement.",
+        "startup": {
+          "pid": 57764,
+          "project_info_seconds": {
+            "projectLoad": 25.8083207,
+            "projectInit": 23.4821629,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.7809216,
+            "assetDatabaseInit": 6.9785461,
+            "globalIlluminationInit": 0.0043384,
+            "assembliesLoad": 1.3226502,
+            "unityExtensionsInit": 0.0331697,
+            "assetDatabaseRefresh": 13.0028719,
+            "sceneOpening": 1.6645161
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 261,
+              "seconds": 13.003,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 417,
+              "seconds": 4.676,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 509,
+              "seconds": 0.093,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        }
+      },
+      "baseline_file": "media-repeat-audio-839-fp32-0911348-first-audit-20261018.json",
+      "memory_file": "media-repeat-audio-839-fp32-0911348-first-memory-audit-20261018.json",
+      "evidence_sha256": {
+        "media-repeat-audio-839-fp32-0911348-first-audit-20261018.json": "8ea1405a99ca995e94283f1fad997592b54b2b45e29d513433a991fd075ddf09",
+        "media-repeat-audio-839-fp32-0911348-first-memory-audit-20261018.json": "dbaa7e78b7e6012ca079a724968e3fcd414f226ca0e830483e8a09e63e3ebcc2"
+      }
+    },
+    {
+      "module": "audio-839",
+      "precision": "float16-weights",
+      "input_sha256": "01da15bbe3d53bcd41cfff6c265b53cda8222567fe760bfff96442266557c761",
+      "minimum_reference_cosine": 0.9999984475675923,
+      "load": {
+        "load_wall_seconds": 60.037721299999994,
+        "load_process_cpu_seconds": 45.25
+      },
+      "release": {
+        "release_wall_seconds": 0.027787799999999998,
+        "release_process_cpu_seconds": 0.015625
+      },
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 8.3680203,
+          "process_cpu_seconds": 2.0625
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 5.7274515,
+          "process_cpu_seconds": 0.796875
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 5.6457561,
+          "process_cpu_seconds": 0.765625
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 5.750501,
+          "process_cpu_seconds": 1.046875
+        }
+      ],
+      "stage_intervals_in_round_order": [
+        {
+          "stage": "preprocessing",
+          "wall_seconds": [
+            1.0081077,
+            0.0759017,
+            0.0188958,
+            0.0243477
+          ],
+          "process_cpu_seconds": [
+            0.40625,
+            0.0,
+            0.015625,
+            0.046875
+          ]
+        },
+        {
+          "stage": "encoder",
+          "wall_seconds": [
+            6.5111684,
+            5.2932935,
+            5.2308237,
+            5.3347275
+          ],
+          "process_cpu_seconds": [
+            1.5,
+            0.734375,
+            0.640625,
+            0.921875
+          ]
+        },
+        {
+          "stage": "backbone",
+          "wall_seconds": [
+            0.7701385,
+            0.3451456,
+            0.3758703,
+            0.3708066
+          ],
+          "process_cpu_seconds": [
+            0.078125,
+            0.046875,
+            0.09375,
+            0.078125
+          ]
+        }
+      ],
+      "host_lifetime_peak_bytes": 4930392064,
+      "process_memory_observation": {
+        "id": "process_observation_window",
+        "begin_utc": "2026-10-17T19:52:34.188333+00:00",
+        "end_utc": "2026-10-17T19:54:34.358001+00:00",
+        "sample_count": 33,
+        "available_sample_count": 30,
+        "available": true,
+        "largest_observed_dedicated_bytes": 9868746752,
+        "largest_observed_shared_bytes": 484618240,
+        "first_paired_sample_utc": "2026-10-17T19:52:47.074271+00:00",
+        "last_paired_sample_utc": "2026-10-17T19:54:31.951698+00:00",
+        "maximum_observed_sample_gap_seconds": 4.029277
+      },
+      "intervals_without_paired_memory_samples": [
+        "release",
+        "stage:first:preprocessing:ProcessAsync:1",
+        "stage:first:backbone:Embed:3",
+        "stage:warm:preprocessing:ProcessAsync:4",
+        "stage:warm:backbone:Embed:6",
+        "stage:repeat-1:preprocessing:ProcessAsync:7",
+        "stage:repeat-1:backbone:Embed:9",
+        "stage:repeat-2:preprocessing:ProcessAsync:10",
+        "stage:repeat-2:backbone:Embed:12"
+      ],
+      "editor": {
+        "completed_reload_ms": [
+          1237,
+          6107,
+          2364
+        ],
+        "reload_profiles_complete": true,
+        "asset_refresh_seconds": {
+          "count": 3,
+          "min": 0.146,
+          "median": 2.475,
+          "max": 8.4
+        },
+        "search_database_enumeration_exception_count": 0,
+        "search_database_duration_seconds": null,
+        "allocation_rate_bytes_per_second": null,
+        "scope": "Saved log reload/refresh observations; overlap and must not be summed. Not a clean-cache import, search DB timing or GC allocation measurement.",
+        "startup": {
+          "pid": 184736,
+          "project_info_seconds": {
+            "projectLoad": 19.497005299999998,
+            "projectInit": 17.9534377,
+            "templateInit": 0.0,
+            "packageManagerInit": 0.8742816,
+            "assetDatabaseInit": 6.153989,
+            "globalIlluminationInit": 0.0048023,
+            "assembliesLoad": 1.2805684,
+            "unityExtensionsInit": 0.0151808,
+            "assetDatabaseRefresh": 8.3997276,
+            "sceneOpening": 1.0134991
+          },
+          "project_info_available": true,
+          "malformed_telemetry_count": 0,
+          "asset_refreshes": [
+            {
+              "line": 261,
+              "seconds": 8.4,
+              "initiator": "InitialRefreshV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 417,
+              "seconds": 2.475,
+              "initiator": "StopAssetImportingV2",
+              "imports": {
+                "total": 0,
+                "actual": 0,
+                "local_cache": 0,
+                "cache_server": 0
+              }
+            },
+            {
+              "line": 509,
+              "seconds": 0.146,
+              "initiator": "StopAssetImportingV2",
+              "imports": null
+            }
+          ],
+          "timings_additive": false,
+          "search_database_duration_seconds": null,
+          "model_load_seconds": null,
+          "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+        }
+      },
+      "baseline_file": "media-repeat-audio-839-float16-weights-0911348-first-audit-20261018.json",
+      "memory_file": "media-repeat-audio-839-float16-weights-0911348-first-memory-audit-20261018.json",
+      "evidence_sha256": {
+        "media-repeat-audio-839-float16-weights-0911348-first-audit-20261018.json": "b819909539a68d24f7a7f22c5d0c0632030ce28c447cbaa35782a8b7c71579a6",
+        "media-repeat-audio-839-float16-weights-0911348-first-memory-audit-20261018.json": "ae7ad618560aef89b51abcc81c96237c1b623b1d4956e544aff6fd6bc4fc1f6f"
+      }
+    }
+  ],
+  "remaining": [
+    "Qualified async stage GPU timestamps",
+    "Async stage GC allocation measurement",
+    "Editor search DB timing",
+    "Controlled cold import and Editor allocations",
+    "Measured causal optimization where necessary",
+    "Public empty-cache acquisition",
+    "Authorized actual microphone and final candidate native interaction"
+  ],
+  "gpu_stage_time_measured": false,
+  "guaranteed_vram_peak_measured": false,
+  "precision_speedup_claimed": false
+}

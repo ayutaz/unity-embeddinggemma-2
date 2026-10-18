@@ -1,0 +1,33 @@
+{
+  "source_correspondence_accepted": true,
+  "measured_source": "2b6f45d33714728d5a023578b6e95c5313fe1705",
+  "integrated_parent_head": "ef4da2d7903dfe6dc4b684a7fc10663b8a7c2ea5",
+  "files": [
+    {
+      "path": "tools/embeddinggemma_tools/__init__.py",
+      "git_blob": "e3f6f8f8d9e6f09b2892eacfe5f3f17a3ba2d2db"
+    },
+    {
+      "path": "tools/embeddinggemma_tools/media_setup.py",
+      "git_blob": "43f31fb6200cf254ed2a4b50d9e87a6697fcc1e5"
+    },
+    {
+      "path": "tools/tests/test_media_setup.py",
+      "git_blob": "1fa857a179e584d95df6ab871176b96932c4644d"
+    },
+    {
+      "path": "tools/tests/test_media_setup_https.py",
+      "git_blob": "f4398c893aeff0a0309eb8dacdbc92be451b840e"
+    },
+    {
+      "path": "tools/tests/media_setup_https_harness.py",
+      "git_blob": "d9f0212dcb1fb0a62dec2fdb6e47fe410cfd8344"
+    },
+    {
+      "path": "tools/tests/media_setup_interrupt_harness.py",
+      "git_blob": "b302187e804470b2f62ce4b0bb701b58241b6fbc"
+    }
+  ],
+  "evidence_sha256": "0e82d075b94c39a3eca3500724d690cad5bfd4af34d4b82791eade8863edb602",
+  "scope": "Same six tool/test blobs after cherry-pick. Windows53 tests and real Ctrl+C evidence apply to these sources; not a new Linux/Unity/public acquisition execution."
+}

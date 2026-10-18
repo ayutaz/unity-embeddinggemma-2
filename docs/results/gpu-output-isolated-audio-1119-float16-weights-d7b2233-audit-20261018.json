@@ -1,0 +1,59 @@
+{
+  "isolated_original_reference_gpu_accepted": true,
+  "all_modules_accepted": false,
+  "mixed_search_accepted": false,
+  "complete_performance_accepted": false,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "c2f766e4e05f5378eba15b6552e4a244ebeebfa9",
+  "module": "audio-1119",
+  "precision": "float16-weights",
+  "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+  "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+  "independent_cases": [
+    {
+      "id": "silence",
+      "independent_cosine": 0.9999999999907068,
+      "norm_squared": 1.00000006446793,
+      "capture_sha256": "d83dd9e73a4266e0338c1bf3634ba84139321a42f5c3b81139332b5ab3b49ddc"
+    },
+    {
+      "id": "impulse",
+      "independent_cosine": 0.9999999997672168,
+      "norm_squared": 0.9999999586698923,
+      "capture_sha256": "40869f2dab6c11e3b7eecc8e9e366c48f8687afee535e4e98f0ea09b605fb43f"
+    },
+    {
+      "id": "sine",
+      "independent_cosine": 0.9999999905661521,
+      "norm_squared": 1.000000109056281,
+      "capture_sha256": "be5dfd6d2d6aff414158d092fc7ae73abd23002fa812b6979f274950810d7094"
+    },
+    {
+      "id": "nyquist",
+      "independent_cosine": 0.9999998172437603,
+      "norm_squared": 1.0000001605432824,
+      "capture_sha256": "89d268f2cecfc1c009bd6f3f4346285f854f27cb2f0d3b3f6072a0f0d1d360ee"
+    },
+    {
+      "id": "noise",
+      "independent_cosine": 0.9999990101338176,
+      "norm_squared": 1.0000001299508938,
+      "capture_sha256": "a351e1c4039c2efecf479659ebba63143a1f888df1901fb7a61824a166ac7fb2"
+    }
+  ],
+  "exit_code": 0,
+  "unity_counts": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "scope": "Actual isolated GPU fixture plus independent binary-vector reference audit; no public acquisition/native UI/microphone or timing qualification.",
+  "evidence_sha256": {
+    "gpu-output-isolated-audio-1119-float16-weights-d7b2233.json": "98571a4ed5cbb31316d7b633dc8b559f1d8fdcdf3b59a874bdc3785b3b2b53c4",
+    "gpu-output-isolated-audio-1119-float16-weights-d7b2233.xml": "2277f6e8928adec50771be51cca5b033bb7b9cca8a2c0390b5fc3a97f4f85eb3",
+    "gpu-output-isolated-audio-1119-float16-weights-d7b2233.log": "0f58c94e5d0f0c49a055c06b6ddfec1eaa8d55e6f273ee38ee3636d7d459f68c",
+    "gpu-output-isolated-audio-1119-float16-weights-d7b2233-source.json": "cef49ef709d2e8a6cb164a1976cce5923ee08bdcd4787b586fbe29172eb87276",
+    "gpu-output-isolated-audio-1119-float16-weights-d7b2233-process.json": "01f1c73ac2ef9e5649a89661bb21f4fe23079c431a3ad01f37d4aaa6d9447e3d"
+  }
+}

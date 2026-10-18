@@ -1,0 +1,53 @@
+{
+  "isolated_original_reference_gpu_accepted": true,
+  "all_modules_accepted": false,
+  "mixed_search_accepted": false,
+  "complete_performance_accepted": false,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "c2f766e4e05f5378eba15b6552e4a244ebeebfa9",
+  "module": "text",
+  "precision": "fp32",
+  "reference_sha256": "f316d5199c920431c7f721d43b2cedbe4a6384fb0e0664511b75bc2e98fe80fe",
+  "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+  "independent_cases": [
+    {
+      "id": "query-cat-ja",
+      "independent_cosine": 0.9999999999998792,
+      "norm_squared": 1.0000000965667353,
+      "capture_sha256": "b5753c87e65e30ad849feca34c1678bd9a6a3d8be3a0b658b0545e98dd11413a"
+    },
+    {
+      "id": "query-space-en",
+      "independent_cosine": 0.9999999999998967,
+      "norm_squared": 1.0000000464689427,
+      "capture_sha256": "636ae5f8fd17054b7670078e2632dced4d342e8de1e50537770cfe89ba193c32"
+    },
+    {
+      "id": "query-recipe-ja",
+      "independent_cosine": 0.9999999999998785,
+      "norm_squared": 0.9999999230032575,
+      "capture_sha256": "bacc7ebad94743edfa2109bbaf3f86ca71c876c0b39311591d8694d876fb5dd1"
+    },
+    {
+      "id": "query-cat-en",
+      "independent_cosine": 0.9999999999998919,
+      "norm_squared": 0.9999998392781914,
+      "capture_sha256": "51f439391d7eed9c110a6be7512c62d5affd0669d9a03445afa2769371189fd7"
+    }
+  ],
+  "exit_code": 0,
+  "unity_counts": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "scope": "Actual isolated GPU fixture plus independent binary-vector reference audit; no public acquisition/native UI/microphone or timing qualification.",
+  "evidence_sha256": {
+    "gpu-output-isolated-text-fp32-d7b2233.json": "709ae743603e8beb8a8e601bc774af4114a8d778163d9e3e0615713bba165991",
+    "gpu-output-isolated-text-fp32-d7b2233.xml": "17f3706af532ec8a6d2b26266ad5655618734e24894af74f17159f2ee723c280",
+    "gpu-output-isolated-text-fp32-d7b2233.log": "c6e3ee7fda940c34909ccb0ed3c96ebfa508a844f7896d3b5f7b99e5b9ed93c9",
+    "gpu-output-isolated-text-fp32-d7b2233-source.json": "18eb8337c7a76b4f8ad3e88490d30f39644fac8a8336f091e27d8f32a467fe72",
+    "gpu-output-isolated-text-fp32-d7b2233-process.json": "08f6ddc9180fa42fbc575aea47a6c9eeab1dc25ccab9c2b0f2a144ce82bf20c0"
+  }
+}

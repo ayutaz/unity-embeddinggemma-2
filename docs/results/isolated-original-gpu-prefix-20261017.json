@@ -1,0 +1,2695 @@
+{
+  "schema_version": 1,
+  "full_model_acceptance": false,
+  "real_final_vector_computed": false,
+  "actual_gpu_prefix_executed": true,
+  "actual_microphone_started": false,
+  "gpu_time_measured": false,
+  "scope": "Original selected model/weight files and GPU operations, isolated prefix only, no backbone or unused later segments",
+  "runtime_sources": [
+    "ca7fd23535d634676a898255d25c8163684117d1",
+    "d1548acbe7bf6cb838da60fab66dc7a374909b8a"
+  ],
+  "source_files_sha256": {
+    "IsolatedGpuPrefix.cs": "acc8ed1075eba0b477d559e9207e2505772192a615400e8158bf9c55b7f40539",
+    "IsolatedGpuPrefixTests.cs": "ecd90b4f57989031afa80f96f3d4a0871165def7b33216b529f6bb80d9da5270",
+    "IsolatedPreparedImagePrefixTests.cs": "832b74e4d768894108938308b8035289c9538c9ae80a0534e4cc0eb6d4756c6d"
+  },
+  "scheduling_difference": "Initial executor retains all prefix intermediates; final variant optionally calls pinned original worker/backend cache retirement and drops prefix-dead copies. Neither runs the full session/backbone; prefix liveness horizon differs. Cannot prove original full scheduling or release behavior.",
+  "source_difference": "0..2 used four-pair limit; failed0..7 used eight-pair limit; subsequent0..7 enables cache retirement; final0..7 uses tiled softmax runtime d1548ac. Assembly hashes recorded per run; do not combine as one performance baseline.",
+  "windows_failure_evidence": {
+    "source": "f1cdb301975e8837cd093c6c2b1174a8e9122a9c",
+    "device_error": "887a0006",
+    "local_memory_current_usage_bytes": 2472534016,
+    "nonlocal_memory_current_usage_bytes": 525996032,
+    "unity_out_of_local_memory_reported": false,
+    "unity_out_of_nonlocal_memory_reported": false,
+    "driver_events": [
+      {
+        "utc": "2026-10-17T10:44:31.0695574Z",
+        "provider": "Display",
+        "id": 4101,
+        "record_id": 449694,
+        "message": "ディスプレイ ドライバー nvlddmkm が応答を停止しましたが、正常に回復しました。",
+        "properties": [
+          "nvlddmkm",
+          ""
+        ]
+      },
+      {
+        "utc": "2026-10-17T10:44:17.7111672Z",
+        "provider": "nvlddmkm",
+        "id": 153,
+        "record_id": 449693,
+        "message": null,
+        "properties": [
+          "\\Device\\Video3",
+          "Error occurred on GPUID: 900",
+          "0 0 0 0 2 0 48 0 0 0 0 0 153 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"
+        ]
+      }
+    ],
+    "driver_events_sha256": "f2d6f8023a6b33f11cbaddd9f9820635d928b4754a84673940430c02f619ca27",
+    "inference": "Driver stopped/responded recovery is time-correlated with the earlier crash; failing shader, memory-pressure causation, and root cause remain unproved"
+  },
+  "red": {
+    "label": "isolated-prefix-red",
+    "success": false,
+    "counts": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "skipped": 0
+    },
+    "timed_out": false,
+    "missing_xml": false,
+    "exit_code": 2,
+    "elapsed_seconds": 50.97770589997526,
+    "completed_utc": "2026-10-17T13:16:17.525922+00:00",
+    "evidence_sha256": {
+      "isolated-prefix-red-process.json": "19d9f61f3b5ee3dccb489b267940ae701a6c8cd6318718b4bf96bb20dc9bd054",
+      "isolated-prefix-red.xml": "42e8756973a4e5e05b58b83673e4def9e8bfa5f9ce51eb1af602e0b4ba07d8e2",
+      "isolated-prefix-red.log": "478b8d380b6548c15fe583b279465ba39b74fa72ae2f9fe9a52c3391a9416cc8"
+    }
+  },
+  "green": {
+    "label": "isolated-prefix-green",
+    "success": true,
+    "counts": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    "timed_out": false,
+    "missing_xml": false,
+    "exit_code": 0,
+    "elapsed_seconds": 49.60378710000077,
+    "completed_utc": "2026-10-17T13:18:43.843649+00:00",
+    "evidence_sha256": {
+      "isolated-prefix-green-process.json": "6e162c4d0ac906be3e5ffba8566bdcd9ca7dc358af0c85f93d65d09633883697",
+      "isolated-prefix-green.xml": "8ef03739716843872de53291d52e9e4593ba2235ed2a5f11f68d555ebdcd42b2",
+      "isolated-prefix-green.log": "9e8a5e11efe015e5efb00c4cb07c1c9fc93dffe5d7f9d96195031fe1939fe235"
+    }
+  },
+  "eight_red": {
+    "label": "isolated-prefix-eight-red",
+    "success": false,
+    "counts": {
+      "total": 3,
+      "passed": 2,
+      "failed": 1,
+      "skipped": 0
+    },
+    "timed_out": false,
+    "missing_xml": false,
+    "exit_code": 2,
+    "elapsed_seconds": 58.003151800017804,
+    "completed_utc": "2026-10-17T13:22:47.680193+00:00",
+    "evidence_sha256": {
+      "isolated-prefix-eight-red-process.json": "fa0a76f185ff04bbbbbdf662f4c7e825084471f317471ed97b2e59958cb6f79c",
+      "isolated-prefix-eight-red.xml": "1c57d85083e2d15f5c6417db455133de884e64c01f9866061926fba5cfe0d572",
+      "isolated-prefix-eight-red.log": "3a2ba0fd35b28ff3ec0452c56b37e3a4c72df0d8f8c45c1eb54ddf22018a09b1"
+    }
+  },
+  "eight_green": {
+    "label": "isolated-prefix-eight-green",
+    "success": true,
+    "counts": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0
+    },
+    "timed_out": false,
+    "missing_xml": false,
+    "exit_code": 0,
+    "elapsed_seconds": 56.098994400002994,
+    "completed_utc": "2026-10-17T13:24:26.149691+00:00",
+    "evidence_sha256": {
+      "isolated-prefix-eight-green-process.json": "ab63a178e67484029c0b8cb71ea634ce64f834d3afb17a7c5a1628a5b3dd32e4",
+      "isolated-prefix-eight-green.xml": "ef5439fd293c84bf7ad9b9b40c4a36b78d9c5f5c49f29aaf928c2b18215334e6",
+      "isolated-prefix-eight-green.log": "3cfa9adaefdb197912fdfaab4b2169a4855a0a85b0add9ab314b4cdba2def14b"
+    }
+  },
+  "retire_red": {
+    "label": "isolated-prefix-retirement-red",
+    "success": false,
+    "counts": {
+      "total": 4,
+      "passed": 3,
+      "failed": 1,
+      "skipped": 0
+    },
+    "timed_out": false,
+    "missing_xml": false,
+    "exit_code": 2,
+    "elapsed_seconds": 87.78740530001232,
+    "completed_utc": "2026-10-17T13:32:04.019114+00:00",
+    "evidence_sha256": {
+      "isolated-prefix-retirement-red-process.json": "d321971bce8c268e161ffddb734cf38b1ab2092ac7e0b3c4c16245420f8057be",
+      "isolated-prefix-retirement-red.xml": "a030ac2d10bd716bcc4f3e6fd1fa7407771b2f6314cca385f1e986f0e333d25d",
+      "isolated-prefix-retirement-red.log": "4f847f57a62d7fc5dc96e7d3d9ac44a818ce2842a51203944084e57880075e34"
+    }
+  },
+  "retire_green": {
+    "label": "isolated-prefix-retirement-green",
+    "success": true,
+    "counts": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0
+    },
+    "timed_out": false,
+    "missing_xml": false,
+    "exit_code": 0,
+    "elapsed_seconds": 72.81754739995813,
+    "completed_utc": "2026-10-17T13:34:45.615418+00:00",
+    "evidence_sha256": {
+      "isolated-prefix-retirement-green-process.json": "cacba4bde61343c4dadf8b363933845598e86c684edd505b6dbe02dd5f214643",
+      "isolated-prefix-retirement-green.xml": "1b4d9f0782c3f99288172281b55a5c7884329848e85c0cc16de2f7cb9ad8ce87",
+      "isolated-prefix-retirement-green.log": "fba4860db461de63966a516d306f1274c6c0e7542df95087bf94c48cb67bf8c6"
+    }
+  },
+  "real_prefixes": [
+    {
+      "label": "isolated-image-prefix-0-2-15772f9",
+      "success": true,
+      "counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "timed_out": false,
+      "missing_xml": false,
+      "exit_code": 0,
+      "elapsed_seconds": 63.453320000029635,
+      "completed_utc": "2026-10-17T13:20:26.855961+00:00",
+      "evidence_sha256": {
+        "isolated-image-prefix-0-2-15772f9-process.json": "08f08714f895a22557fac82a0b2f49f25484b120badf0c9aae8730b8954d3452",
+        "isolated-image-prefix-0-2-15772f9.xml": "7625411e19aa3b22e14a0102d1cf989357b65dfc346807da598bbdf2161660f5",
+        "isolated-image-prefix-0-2-15772f9.log": "3f136d21895e82b11e6579c4279b76668d8174db822e7acbc9f908fc93d692ff"
+      },
+      "gpu_complete_stages": [
+        0,
+        1,
+        2
+      ],
+      "result": {
+        "diagnostic_success": true,
+        "full_model_qualified": false,
+        "scope": "isolated original image prefix; original GPU operations with all prefix intermediates retained; not full session scheduling or final vector",
+        "backbone_loaded": false,
+        "through_operation": 2,
+        "selected_file_bytes": 22697192,
+        "declared_runtime_source": "ca7fd23535d634676a898255d25c8163684117d1",
+        "runtime_assembly_sha256": "c630397369b763e4ff5c135baf1689fc637b766a83621782e0d8294a21d7e3e5",
+        "validation_assembly_sha256": "0db3f51aa29720318953269ca1e2e897b9bda83336d74d336020b8322125322e",
+        "bundle_descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+        "image_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+        "unity": "6000.3.21f1",
+        "graphics_api": "Direct3D12",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "files": [
+          {
+            "file": "objects/f3c94ba26416ab78bf6013b3f735b80a447535b8e3f93d0df485747082af149b.sentis",
+            "sha256": "f3c94ba26416ab78bf6013b3f735b80a447535b8e3f93d0df485747082af149b"
+          },
+          {
+            "file": "objects/2d7bfdb5cce32e3d0737a9f512c2f83396979095b40d10e7dfe8324da66454a3.sentis",
+            "sha256": "2d7bfdb5cce32e3d0737a9f512c2f83396979095b40d10e7dfe8324da66454a3"
+          },
+          {
+            "file": "objects/917741d3098169b6c751f93ab96bbdb20a1e48c4ac9f5ff66eef30674e8145ac.sentis",
+            "sha256": "917741d3098169b6c751f93ab96bbdb20a1e48c4ac9f5ff66eef30674e8145ac"
+          },
+          {
+            "file": "objects/696c2e091ed4ad117c10faa6bf9707eb808649fb09c84fee457d2327408acc90.f32",
+            "sha256": "696c2e091ed4ad117c10faa6bf9707eb808649fb09c84fee457d2327408acc90"
+          },
+          {
+            "file": "objects/3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48.f32",
+            "sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48"
+          },
+          {
+            "file": "objects/3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe.f32",
+            "sha256": "3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe"
+          }
+        ],
+        "phase": "complete",
+        "last_event": {
+          "event": "fence_passed",
+          "stage": 2,
+          "utc": "2026-10-17T13:20:21.0600408Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        "result_shape": "(2520, 768)",
+        "result_backend": "GPUCompute",
+        "host_native_lifetime_peak_bytes": 2047807488,
+        "intermediate_readback": false
+      },
+      "events": [
+        {
+          "event": "stage_begin",
+          "stage": 0,
+          "utc": "2026-10-17T13:20:20.3387207Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "model_submitted",
+          "stage": 0,
+          "utc": "2026-10-17T13:20:20.3598847Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "operation_begin",
+          "stage": 0,
+          "utc": "2026-10-17T13:20:20.3634018Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 0,
+          "utc": "2026-10-17T13:20:20.3804880Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "fence_passed",
+          "stage": 0,
+          "utc": "2026-10-17T13:20:20.3949511Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "stage_begin",
+          "stage": 1,
+          "utc": "2026-10-17T13:20:20.3974842Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "model_submitted",
+          "stage": 1,
+          "utc": "2026-10-17T13:20:20.6718661Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "operation_begin",
+          "stage": 1,
+          "utc": "2026-10-17T13:20:20.6750910Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 1,
+          "utc": "2026-10-17T13:20:20.7036091Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "fence_passed",
+          "stage": 1,
+          "utc": "2026-10-17T13:20:20.7915782Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "stage_begin",
+          "stage": 2,
+          "utc": "2026-10-17T13:20:20.7936931Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "model_submitted",
+          "stage": 2,
+          "utc": "2026-10-17T13:20:20.8232934Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "operation_begin",
+          "stage": 2,
+          "utc": "2026-10-17T13:20:20.8268246Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 2,
+          "utc": "2026-10-17T13:20:21.0217958Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "fence_passed",
+          "stage": 2,
+          "utc": "2026-10-17T13:20:21.0600408Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        }
+      ],
+      "evidence_report_sha256": "7092a889866e8150caf72de97951c3d06662d266822b760ec2d435b7b56a6b7f",
+      "events_sha256": "8e6c8571ad940e997152393c9806d47fd41807342ef876f0aaf1438daf47ea2a"
+    },
+    {
+      "label": "isolated-image-prefix-0-7-15772f9",
+      "success": false,
+      "counts": null,
+      "timed_out": false,
+      "missing_xml": true,
+      "exit_code": 1073741845,
+      "elapsed_seconds": 136.6573051000014,
+      "completed_utc": "2026-10-17T13:27:34.402800+00:00",
+      "evidence_sha256": {
+        "isolated-image-prefix-0-7-15772f9-process.json": "8a728de2e23ee1155943776bbd2a2cc386807b54e113c47862d1513f34a01f21",
+        "isolated-image-prefix-0-7-15772f9.log": "c052d62f88ea23858817e97a267dcdde1062263767a5bf452303870bb6c80ca7"
+      },
+      "gpu_complete_stages": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "result": {
+        "diagnostic_success": false,
+        "full_model_qualified": false,
+        "scope": "isolated original image prefix; original GPU operations with all prefix intermediates retained; not full session scheduling or final vector",
+        "backbone_loaded": false,
+        "through_operation": 7,
+        "selected_file_bytes": 39424720,
+        "declared_runtime_source": "ca7fd23535d634676a898255d25c8163684117d1",
+        "runtime_assembly_sha256": "c630397369b763e4ff5c135baf1689fc637b766a83621782e0d8294a21d7e3e5",
+        "validation_assembly_sha256": "04035bbdcf15580d87dcb087c12e8b4dd3805645020425b2d0c9928c844d3f92",
+        "bundle_descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+        "image_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+        "unity": "6000.3.21f1",
+        "graphics_api": "Direct3D12",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "files": [
+          {
+            "file": "objects/f3c94ba26416ab78bf6013b3f735b80a447535b8e3f93d0df485747082af149b.sentis",
+            "sha256": "f3c94ba26416ab78bf6013b3f735b80a447535b8e3f93d0df485747082af149b"
+          },
+          {
+            "file": "objects/2d7bfdb5cce32e3d0737a9f512c2f83396979095b40d10e7dfe8324da66454a3.sentis",
+            "sha256": "2d7bfdb5cce32e3d0737a9f512c2f83396979095b40d10e7dfe8324da66454a3"
+          },
+          {
+            "file": "objects/917741d3098169b6c751f93ab96bbdb20a1e48c4ac9f5ff66eef30674e8145ac.sentis",
+            "sha256": "917741d3098169b6c751f93ab96bbdb20a1e48c4ac9f5ff66eef30674e8145ac"
+          },
+          {
+            "file": "objects/cb33e2a86e8d5d8ca382980d5479023e2ce5c2561efccbf754824342976ef753.sentis",
+            "sha256": "cb33e2a86e8d5d8ca382980d5479023e2ce5c2561efccbf754824342976ef753"
+          },
+          {
+            "file": "objects/332deaa774aad0e48f3f24866a73bfefd91e5e5a3a9939909104f383b694a953.sentis",
+            "sha256": "332deaa774aad0e48f3f24866a73bfefd91e5e5a3a9939909104f383b694a953"
+          },
+          {
+            "file": "objects/cbd405a3171332ded7c85c542b6f5188aeb7d5aad64e114016aff7eb635a4b3a.sentis",
+            "sha256": "cbd405a3171332ded7c85c542b6f5188aeb7d5aad64e114016aff7eb635a4b3a"
+          },
+          {
+            "file": "objects/cc4fdd5be062d9d4d9ffea14a7cebe4975af8a70bf8d596e56588c14e93dd78e.sentis",
+            "sha256": "cc4fdd5be062d9d4d9ffea14a7cebe4975af8a70bf8d596e56588c14e93dd78e"
+          },
+          {
+            "file": "objects/49624e7c14c3447fdf1c012db4641718ac97cd8f7a73735a8acdc32463066e8f.sentis",
+            "sha256": "49624e7c14c3447fdf1c012db4641718ac97cd8f7a73735a8acdc32463066e8f"
+          },
+          {
+            "file": "objects/696c2e091ed4ad117c10faa6bf9707eb808649fb09c84fee457d2327408acc90.f32",
+            "sha256": "696c2e091ed4ad117c10faa6bf9707eb808649fb09c84fee457d2327408acc90"
+          },
+          {
+            "file": "objects/3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48.f32",
+            "sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48"
+          },
+          {
+            "file": "objects/3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe.f32",
+            "sha256": "3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe"
+          },
+          {
+            "file": "objects/63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b.f32",
+            "sha256": "63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b"
+          },
+          {
+            "file": "objects/b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5.f32",
+            "sha256": "b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5"
+          }
+        ],
+        "phase": "isolated_original_prefix",
+        "last_event": {
+          "event": "operation_submitted",
+          "stage": 5,
+          "utc": "2026-10-17T13:26:21.3149872Z",
+          "backend": "GPUCompute",
+          "shape": "(1, 12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        }
+      },
+      "events": [
+        {
+          "event": "stage_begin",
+          "stage": 0,
+          "utc": "2026-10-17T13:26:13.5558148Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "model_submitted",
+          "stage": 0,
+          "utc": "2026-10-17T13:26:13.5734521Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "operation_begin",
+          "stage": 0,
+          "utc": "2026-10-17T13:26:13.5759841Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 0,
+          "utc": "2026-10-17T13:26:13.6141184Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "fence_passed",
+          "stage": 0,
+          "utc": "2026-10-17T13:26:13.6521682Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "stage_begin",
+          "stage": 1,
+          "utc": "2026-10-17T13:26:13.6531808Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "model_submitted",
+          "stage": 1,
+          "utc": "2026-10-17T13:26:13.7337402Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "operation_begin",
+          "stage": 1,
+          "utc": "2026-10-17T13:26:13.7362555Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 1,
+          "utc": "2026-10-17T13:26:13.7763171Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "fence_passed",
+          "stage": 1,
+          "utc": "2026-10-17T13:26:13.8176688Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "stage_begin",
+          "stage": 2,
+          "utc": "2026-10-17T13:26:13.8191870Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "model_submitted",
+          "stage": 2,
+          "utc": "2026-10-17T13:26:14.0970581Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "operation_begin",
+          "stage": 2,
+          "utc": "2026-10-17T13:26:14.0990329Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 2,
+          "utc": "2026-10-17T13:26:14.3192263Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "fence_passed",
+          "stage": 2,
+          "utc": "2026-10-17T13:26:14.3693649Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "stage_begin",
+          "stage": 3,
+          "utc": "2026-10-17T13:26:14.3718830Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "model_submitted",
+          "stage": 3,
+          "utc": "2026-10-17T13:26:14.3804556Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "operation_begin",
+          "stage": 3,
+          "utc": "2026-10-17T13:26:14.6110269Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 3,
+          "utc": "2026-10-17T13:26:14.6175736Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "fence_passed",
+          "stage": 3,
+          "utc": "2026-10-17T13:26:14.6618506Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "stage_begin",
+          "stage": 4,
+          "utc": "2026-10-17T13:26:14.6638584Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "model_submitted",
+          "stage": 4,
+          "utc": "2026-10-17T13:26:14.7727138Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "operation_begin",
+          "stage": 4,
+          "utc": "2026-10-17T13:26:14.7752340Z",
+          "backend": "GPUCompute",
+          "shape": "(12, 2520, 64)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 4,
+          "utc": "2026-10-17T13:26:16.8362028Z",
+          "backend": "GPUCompute",
+          "shape": "(12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "fence_passed",
+          "stage": 4,
+          "utc": "2026-10-17T13:26:17.0189817Z",
+          "backend": "GPUCompute",
+          "shape": "(12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "stage_begin",
+          "stage": 5,
+          "utc": "2026-10-17T13:26:17.0210155Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "model_submitted",
+          "stage": 5,
+          "utc": "2026-10-17T13:26:18.1693373Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "operation_begin",
+          "stage": 5,
+          "utc": "2026-10-17T13:26:19.1801955Z",
+          "backend": "GPUCompute",
+          "shape": "(1, 12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 5,
+          "utc": "2026-10-17T13:26:21.3149872Z",
+          "backend": "GPUCompute",
+          "shape": "(1, 12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false
+        }
+      ],
+      "evidence_report_sha256": "e2e7e51a7300bf8ad33acdeb3079457a6aa5b79a1db0e416ce2b090d0d7e0be1",
+      "events_sha256": "cdc594ee06179e01b50a9f8954406343e1404baa95e6e4ea34cfd112d3a87b93"
+    },
+    {
+      "label": "isolated-image-prefix-0-7-15772f9-retired",
+      "success": false,
+      "counts": null,
+      "timed_out": true,
+      "missing_xml": true,
+      "exit_code": 1,
+      "elapsed_seconds": 184.23042849998455,
+      "completed_utc": "2026-10-17T13:38:51.379001+00:00",
+      "evidence_sha256": {
+        "isolated-image-prefix-0-7-15772f9-retired-process.json": "261942be835aaecbc533ce0de5bfb899f64eff8df1696423e4e34473e79e9756",
+        "isolated-image-prefix-0-7-15772f9-retired.log": "4745432eafc1ce4369425440758cf32ae2d77b874213d7e3685ecfe33b142df5"
+      },
+      "gpu_complete_stages": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "result": {
+        "diagnostic_success": false,
+        "full_model_qualified": false,
+        "scope": "isolated original image prefix; original GPU operations with all prefix intermediates retained; not full session scheduling or final vector",
+        "backbone_loaded": false,
+        "through_operation": 7,
+        "selected_file_bytes": 39424720,
+        "original_cache_retirement": true,
+        "declared_runtime_source": "ca7fd23535d634676a898255d25c8163684117d1",
+        "runtime_assembly_sha256": "c630397369b763e4ff5c135baf1689fc637b766a83621782e0d8294a21d7e3e5",
+        "validation_assembly_sha256": "c58fbff8f3e1c208c123d68f0533fd002a23f72b069278d6bd4e357894547082",
+        "bundle_descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+        "image_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+        "unity": "6000.3.21f1",
+        "graphics_api": "Direct3D12",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "files": [
+          {
+            "file": "objects/f3c94ba26416ab78bf6013b3f735b80a447535b8e3f93d0df485747082af149b.sentis",
+            "sha256": "f3c94ba26416ab78bf6013b3f735b80a447535b8e3f93d0df485747082af149b"
+          },
+          {
+            "file": "objects/2d7bfdb5cce32e3d0737a9f512c2f83396979095b40d10e7dfe8324da66454a3.sentis",
+            "sha256": "2d7bfdb5cce32e3d0737a9f512c2f83396979095b40d10e7dfe8324da66454a3"
+          },
+          {
+            "file": "objects/917741d3098169b6c751f93ab96bbdb20a1e48c4ac9f5ff66eef30674e8145ac.sentis",
+            "sha256": "917741d3098169b6c751f93ab96bbdb20a1e48c4ac9f5ff66eef30674e8145ac"
+          },
+          {
+            "file": "objects/cb33e2a86e8d5d8ca382980d5479023e2ce5c2561efccbf754824342976ef753.sentis",
+            "sha256": "cb33e2a86e8d5d8ca382980d5479023e2ce5c2561efccbf754824342976ef753"
+          },
+          {
+            "file": "objects/332deaa774aad0e48f3f24866a73bfefd91e5e5a3a9939909104f383b694a953.sentis",
+            "sha256": "332deaa774aad0e48f3f24866a73bfefd91e5e5a3a9939909104f383b694a953"
+          },
+          {
+            "file": "objects/cbd405a3171332ded7c85c542b6f5188aeb7d5aad64e114016aff7eb635a4b3a.sentis",
+            "sha256": "cbd405a3171332ded7c85c542b6f5188aeb7d5aad64e114016aff7eb635a4b3a"
+          },
+          {
+            "file": "objects/cc4fdd5be062d9d4d9ffea14a7cebe4975af8a70bf8d596e56588c14e93dd78e.sentis",
+            "sha256": "cc4fdd5be062d9d4d9ffea14a7cebe4975af8a70bf8d596e56588c14e93dd78e"
+          },
+          {
+            "file": "objects/49624e7c14c3447fdf1c012db4641718ac97cd8f7a73735a8acdc32463066e8f.sentis",
+            "sha256": "49624e7c14c3447fdf1c012db4641718ac97cd8f7a73735a8acdc32463066e8f"
+          },
+          {
+            "file": "objects/696c2e091ed4ad117c10faa6bf9707eb808649fb09c84fee457d2327408acc90.f32",
+            "sha256": "696c2e091ed4ad117c10faa6bf9707eb808649fb09c84fee457d2327408acc90"
+          },
+          {
+            "file": "objects/3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48.f32",
+            "sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48"
+          },
+          {
+            "file": "objects/3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe.f32",
+            "sha256": "3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe"
+          },
+          {
+            "file": "objects/63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b.f32",
+            "sha256": "63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b"
+          },
+          {
+            "file": "objects/b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5.f32",
+            "sha256": "b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5"
+          }
+        ],
+        "phase": "isolated_original_prefix",
+        "last_event": {
+          "event": "dead_boundaries_retired",
+          "stage": 5,
+          "utc": "2026-10-17T13:37:22.1258819Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 4
+        }
+      },
+      "events": [
+        {
+          "event": "stage_begin",
+          "stage": 0,
+          "utc": "2026-10-17T13:37:16.5283177Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 0,
+          "utc": "2026-10-17T13:37:16.5482939Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 0,
+          "utc": "2026-10-17T13:37:16.5559387Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 0,
+          "utc": "2026-10-17T13:37:16.5594492Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 0,
+          "utc": "2026-10-17T13:37:16.5748649Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 0,
+          "utc": "2026-10-17T13:37:16.5768649Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 1
+        },
+        {
+          "event": "fence_passed",
+          "stage": 0,
+          "utc": "2026-10-17T13:37:16.6164108Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_backend_cache_retired",
+          "stage": 0,
+          "utc": "2026-10-17T13:37:16.6179219Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "stage_begin",
+          "stage": 1,
+          "utc": "2026-10-17T13:37:16.6199802Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 1,
+          "utc": "2026-10-17T13:37:16.7113084Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 1,
+          "utc": "2026-10-17T13:37:16.7143963Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 1,
+          "utc": "2026-10-17T13:37:16.7154024Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 1,
+          "utc": "2026-10-17T13:37:16.7272501Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 1,
+          "utc": "2026-10-17T13:37:16.7297650Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 1
+        },
+        {
+          "event": "fence_passed",
+          "stage": 1,
+          "utc": "2026-10-17T13:37:16.7749012Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_backend_cache_retired",
+          "stage": 1,
+          "utc": "2026-10-17T13:37:16.7769081Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "stage_begin",
+          "stage": 2,
+          "utc": "2026-10-17T13:37:16.7789264Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 2,
+          "utc": "2026-10-17T13:37:16.8458571Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 2,
+          "utc": "2026-10-17T13:37:16.8483624Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 2,
+          "utc": "2026-10-17T13:37:16.8488671Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 2,
+          "utc": "2026-10-17T13:37:16.9037694Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 2,
+          "utc": "2026-10-17T13:37:16.9057714Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 3
+        },
+        {
+          "event": "fence_passed",
+          "stage": 2,
+          "utc": "2026-10-17T13:37:17.0271122Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_backend_cache_retired",
+          "stage": 2,
+          "utc": "2026-10-17T13:37:17.0298791Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "stage_begin",
+          "stage": 3,
+          "utc": "2026-10-17T13:37:17.0324367Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 3,
+          "utc": "2026-10-17T13:37:17.0410604Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 3,
+          "utc": "2026-10-17T13:37:17.0446086Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 3,
+          "utc": "2026-10-17T13:37:17.0466146Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 3,
+          "utc": "2026-10-17T13:37:17.0542149Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 3,
+          "utc": "2026-10-17T13:37:17.0572723Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 5
+        },
+        {
+          "event": "fence_passed",
+          "stage": 3,
+          "utc": "2026-10-17T13:37:17.1024065Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_backend_cache_retired",
+          "stage": 3,
+          "utc": "2026-10-17T13:37:17.1044342Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "stage_begin",
+          "stage": 4,
+          "utc": "2026-10-17T13:37:17.1059408Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 4,
+          "utc": "2026-10-17T13:37:17.1160755Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 4,
+          "utc": "2026-10-17T13:37:17.1181029Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 4,
+          "utc": "2026-10-17T13:37:17.1205592Z",
+          "backend": "GPUCompute",
+          "shape": "(12, 2520, 64)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 4,
+          "utc": "2026-10-17T13:37:17.6373076Z",
+          "backend": "GPUCompute",
+          "shape": "(12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 4,
+          "utc": "2026-10-17T13:37:17.6395287Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 6
+        },
+        {
+          "event": "fence_passed",
+          "stage": 4,
+          "utc": "2026-10-17T13:37:17.8902840Z",
+          "backend": "GPUCompute",
+          "shape": "(12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_backend_cache_retired",
+          "stage": 4,
+          "utc": "2026-10-17T13:37:17.8928188Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "stage_begin",
+          "stage": 5,
+          "utc": "2026-10-17T13:37:17.8953482Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 5,
+          "utc": "2026-10-17T13:37:19.1979768Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 5,
+          "utc": "2026-10-17T13:37:20.0671430Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 5,
+          "utc": "2026-10-17T13:37:20.0701821Z",
+          "backend": "GPUCompute",
+          "shape": "(1, 12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 5,
+          "utc": "2026-10-17T13:37:22.1238705Z",
+          "backend": "GPUCompute",
+          "shape": "(1, 12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 5,
+          "utc": "2026-10-17T13:37:22.1258819Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 4
+        }
+      ],
+      "evidence_report_sha256": "925f509ec612ed5c4eac99d13b96f186cfd04dcbfd485d6bf08bbce9c759286a",
+      "events_sha256": "3f047e9412850c6736b9a5999f11e3d273b87b88501b97c0c65796687a88f53c"
+    },
+    {
+      "label": "isolated-image-prefix-0-7-softmax-tiled-d1548ac",
+      "success": false,
+      "counts": {
+        "total": 1,
+        "passed": 0,
+        "failed": 1,
+        "skipped": 0
+      },
+      "timed_out": false,
+      "missing_xml": false,
+      "exit_code": 2,
+      "elapsed_seconds": 145.51673769997433,
+      "completed_utc": "2026-10-17T13:50:02.836317+00:00",
+      "evidence_sha256": {
+        "isolated-image-prefix-0-7-softmax-tiled-d1548ac-process.json": "7f6f114553e569313e71c19aa4c5a65d645c9a4074013ae1209a54e4dcb57d21",
+        "isolated-image-prefix-0-7-softmax-tiled-d1548ac.xml": "753664b54c2ed50b419eb2f5fd5e308f485518e1bd8a77711466a51f7058bdbe",
+        "isolated-image-prefix-0-7-softmax-tiled-d1548ac.log": "9721b072ad4e9cbfb7f0ddebf901e707b00d32e15d77766c2dba10ea60c10142"
+      },
+      "gpu_complete_stages": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "result": {
+        "diagnostic_success": false,
+        "full_model_qualified": false,
+        "scope": "isolated original image prefix; original GPU operations with all prefix intermediates retained; not full session scheduling or final vector",
+        "backbone_loaded": false,
+        "through_operation": 7,
+        "selected_file_bytes": 39424720,
+        "original_cache_retirement": true,
+        "declared_runtime_source": "d1548acbe7bf6cb838da60fab66dc7a374909b8a",
+        "runtime_assembly_sha256": "1c4acd1b711eefcf828f53a2824e60e133b29ba6bf33281e89a6f7857f2687d9",
+        "validation_assembly_sha256": "bda3949546ce7cf6669727a5331982bec69f020eff66afff19735e038b0b8c7d",
+        "bundle_descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+        "image_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+        "unity": "6000.3.21f1",
+        "graphics_api": "Direct3D12",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "files": [
+          {
+            "file": "objects/f3c94ba26416ab78bf6013b3f735b80a447535b8e3f93d0df485747082af149b.sentis",
+            "sha256": "f3c94ba26416ab78bf6013b3f735b80a447535b8e3f93d0df485747082af149b"
+          },
+          {
+            "file": "objects/2d7bfdb5cce32e3d0737a9f512c2f83396979095b40d10e7dfe8324da66454a3.sentis",
+            "sha256": "2d7bfdb5cce32e3d0737a9f512c2f83396979095b40d10e7dfe8324da66454a3"
+          },
+          {
+            "file": "objects/917741d3098169b6c751f93ab96bbdb20a1e48c4ac9f5ff66eef30674e8145ac.sentis",
+            "sha256": "917741d3098169b6c751f93ab96bbdb20a1e48c4ac9f5ff66eef30674e8145ac"
+          },
+          {
+            "file": "objects/cb33e2a86e8d5d8ca382980d5479023e2ce5c2561efccbf754824342976ef753.sentis",
+            "sha256": "cb33e2a86e8d5d8ca382980d5479023e2ce5c2561efccbf754824342976ef753"
+          },
+          {
+            "file": "objects/332deaa774aad0e48f3f24866a73bfefd91e5e5a3a9939909104f383b694a953.sentis",
+            "sha256": "332deaa774aad0e48f3f24866a73bfefd91e5e5a3a9939909104f383b694a953"
+          },
+          {
+            "file": "objects/cbd405a3171332ded7c85c542b6f5188aeb7d5aad64e114016aff7eb635a4b3a.sentis",
+            "sha256": "cbd405a3171332ded7c85c542b6f5188aeb7d5aad64e114016aff7eb635a4b3a"
+          },
+          {
+            "file": "objects/cc4fdd5be062d9d4d9ffea14a7cebe4975af8a70bf8d596e56588c14e93dd78e.sentis",
+            "sha256": "cc4fdd5be062d9d4d9ffea14a7cebe4975af8a70bf8d596e56588c14e93dd78e"
+          },
+          {
+            "file": "objects/49624e7c14c3447fdf1c012db4641718ac97cd8f7a73735a8acdc32463066e8f.sentis",
+            "sha256": "49624e7c14c3447fdf1c012db4641718ac97cd8f7a73735a8acdc32463066e8f"
+          },
+          {
+            "file": "objects/696c2e091ed4ad117c10faa6bf9707eb808649fb09c84fee457d2327408acc90.f32",
+            "sha256": "696c2e091ed4ad117c10faa6bf9707eb808649fb09c84fee457d2327408acc90"
+          },
+          {
+            "file": "objects/3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48.f32",
+            "sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48"
+          },
+          {
+            "file": "objects/3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe.f32",
+            "sha256": "3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe"
+          },
+          {
+            "file": "objects/63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b.f32",
+            "sha256": "63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b"
+          },
+          {
+            "file": "objects/b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5.f32",
+            "sha256": "b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5"
+          }
+        ],
+        "phase": "isolated_original_prefix",
+        "last_event": {
+          "event": "original_backend_cache_retired",
+          "stage": 5,
+          "utc": "2026-10-17T13:49:55.1527263Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        "error_type": "System.OperationCanceledException",
+        "error": "System.OperationCanceledException: The operation was canceled.\r\n  at System.Threading.CancellationToken.ThrowOperationCanceledException () [0x00010] in <41d29b352f6a475ab1bf7c6628b82790>:0 \r\n  at System.Threading.CancellationToken.ThrowIfCancellationRequested () [0x00008] in <41d29b352f6a475ab1bf7c6628b82790>:0 \r\n  at EmbeddingGemma.Validation.Tests.IsolatedGpuPrefix.ExecuteAsync (Unity.InferenceEngine.Model[] models, System.String[][] inputs, System.String[] outputs, EmbeddingGemma.IGpuTensorOperation[] operations, Unity.InferenceEngine.Tensor`1[T] input, System.Action`1[T] observe, System.Threading.CancellationToken token, System.Boolean retireCompletedCache) [0x00ea0] in .\\artifacts\\media-performance-work\\validation\\com.ayutaz.embeddinggemma.validation\\Tests\\Editor\\IsolatedGpuPrefix.cs:107 \r\n  at EmbeddingGemma.Validation.Tests.IsolatedGpuPrefix.ExecuteAsync (Unity.InferenceEngine.Model[] models, System.String[][] inputs, System.String[] outputs, EmbeddingGemma.IGpuTensorOperation[] operations, Unity.InferenceEngine.Tensor`1[T] input, System.Action`1[T] observe, System.Threading.CancellationToken token, System.Boolean retireCompletedCache) [0x01107] in .\\artifacts\\media-performance-work\\validation\\com.ayutaz.embeddinggemma.validation\\Tests\\Editor\\IsolatedGpuPrefix.cs:126 \r\n  at EmbeddingGemma.Validation.Tests.IsolatedPreparedImagePrefixTests.Run (System.Threading.CancellationToken token) [0x008bf] in .\\artifacts\\media-performance-work\\validation\\com.ayutaz.embeddinggemma.validation\\Tests\\Editor\\IsolatedPreparedImagePrefixTests.cs:89 "
+      },
+      "events": [
+        {
+          "event": "stage_begin",
+          "stage": 0,
+          "utc": "2026-10-17T13:49:46.4780348Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 0,
+          "utc": "2026-10-17T13:49:46.5533511Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 0,
+          "utc": "2026-10-17T13:49:46.5722027Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 0,
+          "utc": "2026-10-17T13:49:46.5752733Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 0,
+          "utc": "2026-10-17T13:49:46.6044219Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 0,
+          "utc": "2026-10-17T13:49:46.6089906Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 1
+        },
+        {
+          "event": "fence_passed",
+          "stage": 0,
+          "utc": "2026-10-17T13:49:46.6881102Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_backend_cache_retired",
+          "stage": 0,
+          "utc": "2026-10-17T13:49:46.6951451Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "stage_begin",
+          "stage": 1,
+          "utc": "2026-10-17T13:49:46.6982277Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 1,
+          "utc": "2026-10-17T13:49:46.8767101Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 1,
+          "utc": "2026-10-17T13:49:46.8802227Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 1,
+          "utc": "2026-10-17T13:49:46.8819016Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 1,
+          "utc": "2026-10-17T13:49:46.9152110Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 1,
+          "utc": "2026-10-17T13:49:46.9201185Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 1
+        },
+        {
+          "event": "fence_passed",
+          "stage": 1,
+          "utc": "2026-10-17T13:49:47.0137136Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_backend_cache_retired",
+          "stage": 1,
+          "utc": "2026-10-17T13:49:47.0178073Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "stage_begin",
+          "stage": 2,
+          "utc": "2026-10-17T13:49:47.0208368Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 2,
+          "utc": "2026-10-17T13:49:47.1464841Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 2,
+          "utc": "2026-10-17T13:49:47.1520652Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 2,
+          "utc": "2026-10-17T13:49:47.1535871Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 2,
+          "utc": "2026-10-17T13:49:47.2657684Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 2,
+          "utc": "2026-10-17T13:49:47.2773724Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 3
+        },
+        {
+          "event": "fence_passed",
+          "stage": 2,
+          "utc": "2026-10-17T13:49:47.3501467Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_backend_cache_retired",
+          "stage": 2,
+          "utc": "2026-10-17T13:49:47.3539120Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "stage_begin",
+          "stage": 3,
+          "utc": "2026-10-17T13:49:47.3560964Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 3,
+          "utc": "2026-10-17T13:49:47.3733072Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 3,
+          "utc": "2026-10-17T13:49:47.3779023Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 3,
+          "utc": "2026-10-17T13:49:47.3799099Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 3,
+          "utc": "2026-10-17T13:49:47.3894762Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 3,
+          "utc": "2026-10-17T13:49:47.3922310Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 5
+        },
+        {
+          "event": "fence_passed",
+          "stage": 3,
+          "utc": "2026-10-17T13:49:47.4330561Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_backend_cache_retired",
+          "stage": 3,
+          "utc": "2026-10-17T13:49:47.4378266Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "stage_begin",
+          "stage": 4,
+          "utc": "2026-10-17T13:49:47.4399282Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 4,
+          "utc": "2026-10-17T13:49:47.4634289Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 4,
+          "utc": "2026-10-17T13:49:47.4695213Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 4,
+          "utc": "2026-10-17T13:49:47.4735457Z",
+          "backend": "GPUCompute",
+          "shape": "(12, 2520, 64)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 4,
+          "utc": "2026-10-17T13:49:48.9054080Z",
+          "backend": "GPUCompute",
+          "shape": "(12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 4,
+          "utc": "2026-10-17T13:49:48.9084174Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 6
+        },
+        {
+          "event": "fence_passed",
+          "stage": 4,
+          "utc": "2026-10-17T13:49:49.1083278Z",
+          "backend": "GPUCompute",
+          "shape": "(12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_backend_cache_retired",
+          "stage": 4,
+          "utc": "2026-10-17T13:49:49.1124035Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "stage_begin",
+          "stage": 5,
+          "utc": "2026-10-17T13:49:49.1154789Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 5,
+          "utc": "2026-10-17T13:49:49.4929567Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 5,
+          "utc": "2026-10-17T13:49:49.5725089Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 5,
+          "utc": "2026-10-17T13:49:49.5745064Z",
+          "backend": "GPUCompute",
+          "shape": "(1, 12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 5,
+          "utc": "2026-10-17T13:49:51.7378609Z",
+          "backend": "GPUCompute",
+          "shape": "(1, 12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 5,
+          "utc": "2026-10-17T13:49:51.7408959Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 4
+        },
+        {
+          "event": "fence_passed",
+          "stage": 5,
+          "utc": "2026-10-17T13:49:55.1497196Z",
+          "backend": "GPUCompute",
+          "shape": "(1, 12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_backend_cache_retired",
+          "stage": 5,
+          "utc": "2026-10-17T13:49:55.1527263Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        }
+      ],
+      "evidence_report_sha256": "b9ce0a3b68354da5cb0471469f3b2b981fa3db4749fb4dca5940570a0fe8a46e",
+      "events_sha256": "2254227707137dde09d8ca36960ad886b5c3a78ab5ce788e8d6eb81a74c45d28"
+    },
+    {
+      "label": "isolated-image-prefix-0-7-softmax-tiled-d1548ac-host8gb",
+      "success": true,
+      "counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "timed_out": false,
+      "missing_xml": false,
+      "exit_code": 0,
+      "elapsed_seconds": 79.05126979999477,
+      "completed_utc": "2026-10-17T13:53:54.452757+00:00",
+      "evidence_sha256": {
+        "isolated-image-prefix-0-7-softmax-tiled-d1548ac-host8gb-process.json": "40b919d156f57cc15ebda280b0d3271bdccbf91999ef1eaf9f31aed34a7f1f75",
+        "isolated-image-prefix-0-7-softmax-tiled-d1548ac-host8gb.xml": "2665c3e4bdd8e39d26ce370ffa47832a9c247117faed0d33869da5cca5dd2b48",
+        "isolated-image-prefix-0-7-softmax-tiled-d1548ac-host8gb.log": "9c3ebcef455667d16b7d2fcf49af1e0a760c780ae18a3fb7e5711db3aab55e2b"
+      },
+      "gpu_complete_stages": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "result": {
+        "diagnostic_success": true,
+        "full_model_qualified": false,
+        "scope": "isolated original prefix with pinned cache retirement and prefix liveness; no full session/backbone/final vector",
+        "backbone_loaded": false,
+        "through_operation": 7,
+        "selected_file_bytes": 39424720,
+        "original_cache_retirement": true,
+        "declared_runtime_source": "d1548acbe7bf6cb838da60fab66dc7a374909b8a",
+        "runtime_assembly_sha256": "1c4acd1b711eefcf828f53a2824e60e133b29ba6bf33281e89a6f7857f2687d9",
+        "validation_assembly_sha256": "c15bacb013d4bec6654ee5996a521787f270d33171771b1cc43dad8a6b40cded",
+        "bundle_descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+        "image_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+        "unity": "6000.3.21f1",
+        "graphics_api": "Direct3D12",
+        "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "files": [
+          {
+            "file": "objects/f3c94ba26416ab78bf6013b3f735b80a447535b8e3f93d0df485747082af149b.sentis",
+            "sha256": "f3c94ba26416ab78bf6013b3f735b80a447535b8e3f93d0df485747082af149b"
+          },
+          {
+            "file": "objects/2d7bfdb5cce32e3d0737a9f512c2f83396979095b40d10e7dfe8324da66454a3.sentis",
+            "sha256": "2d7bfdb5cce32e3d0737a9f512c2f83396979095b40d10e7dfe8324da66454a3"
+          },
+          {
+            "file": "objects/917741d3098169b6c751f93ab96bbdb20a1e48c4ac9f5ff66eef30674e8145ac.sentis",
+            "sha256": "917741d3098169b6c751f93ab96bbdb20a1e48c4ac9f5ff66eef30674e8145ac"
+          },
+          {
+            "file": "objects/cb33e2a86e8d5d8ca382980d5479023e2ce5c2561efccbf754824342976ef753.sentis",
+            "sha256": "cb33e2a86e8d5d8ca382980d5479023e2ce5c2561efccbf754824342976ef753"
+          },
+          {
+            "file": "objects/332deaa774aad0e48f3f24866a73bfefd91e5e5a3a9939909104f383b694a953.sentis",
+            "sha256": "332deaa774aad0e48f3f24866a73bfefd91e5e5a3a9939909104f383b694a953"
+          },
+          {
+            "file": "objects/cbd405a3171332ded7c85c542b6f5188aeb7d5aad64e114016aff7eb635a4b3a.sentis",
+            "sha256": "cbd405a3171332ded7c85c542b6f5188aeb7d5aad64e114016aff7eb635a4b3a"
+          },
+          {
+            "file": "objects/cc4fdd5be062d9d4d9ffea14a7cebe4975af8a70bf8d596e56588c14e93dd78e.sentis",
+            "sha256": "cc4fdd5be062d9d4d9ffea14a7cebe4975af8a70bf8d596e56588c14e93dd78e"
+          },
+          {
+            "file": "objects/49624e7c14c3447fdf1c012db4641718ac97cd8f7a73735a8acdc32463066e8f.sentis",
+            "sha256": "49624e7c14c3447fdf1c012db4641718ac97cd8f7a73735a8acdc32463066e8f"
+          },
+          {
+            "file": "objects/696c2e091ed4ad117c10faa6bf9707eb808649fb09c84fee457d2327408acc90.f32",
+            "sha256": "696c2e091ed4ad117c10faa6bf9707eb808649fb09c84fee457d2327408acc90"
+          },
+          {
+            "file": "objects/3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48.f32",
+            "sha256": "3550b6d917d9774e6a38cbee36ad33534b5f599521ca76b60fd4792a10708b48"
+          },
+          {
+            "file": "objects/3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe.f32",
+            "sha256": "3096706c216f19ead8582b1591e2b8099b84209f9623183ea4a55feaddc97cbe"
+          },
+          {
+            "file": "objects/63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b.f32",
+            "sha256": "63bc39ea5afa8a2afdb670a15282be41d7179975accd52f285aab1903e994e7b"
+          },
+          {
+            "file": "objects/b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5.f32",
+            "sha256": "b04dea2260ee7f34e13d545001bce6976c644eab6ccb25ee22d111daa5af88b5"
+          }
+        ],
+        "phase": "complete",
+        "last_event": {
+          "event": "original_backend_cache_retired",
+          "stage": 7,
+          "utc": "2026-10-17T13:53:41.1409421Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        "result_shape": "(2520, 768)",
+        "result_backend": "GPUCompute",
+        "host_native_lifetime_peak_bytes": 4549300224,
+        "intermediate_readback": false,
+        "host_guard_limit_bytes": 8589934592,
+        "host_guard_tripped": false
+      },
+      "events": [
+        {
+          "event": "stage_begin",
+          "stage": 0,
+          "utc": "2026-10-17T13:53:34.7861972Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 0,
+          "utc": "2026-10-17T13:53:34.8084269Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 0,
+          "utc": "2026-10-17T13:53:34.8190455Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 0,
+          "utc": "2026-10-17T13:53:34.8210764Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 0,
+          "utc": "2026-10-17T13:53:34.8321484Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 0,
+          "utc": "2026-10-17T13:53:34.8336768Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 1
+        },
+        {
+          "event": "fence_passed",
+          "stage": 0,
+          "utc": "2026-10-17T13:53:34.8515817Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_backend_cache_retired",
+          "stage": 0,
+          "utc": "2026-10-17T13:53:34.8540988Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "stage_begin",
+          "stage": 1,
+          "utc": "2026-10-17T13:53:34.8561473Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 1,
+          "utc": "2026-10-17T13:53:34.9081175Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 1,
+          "utc": "2026-10-17T13:53:34.9101273Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 1,
+          "utc": "2026-10-17T13:53:34.9121266Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 1,
+          "utc": "2026-10-17T13:53:34.9218842Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 1,
+          "utc": "2026-10-17T13:53:34.9233927Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 1
+        },
+        {
+          "event": "fence_passed",
+          "stage": 1,
+          "utc": "2026-10-17T13:53:34.9667602Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_backend_cache_retired",
+          "stage": 1,
+          "utc": "2026-10-17T13:53:34.9691673Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "stage_begin",
+          "stage": 2,
+          "utc": "2026-10-17T13:53:34.9701679Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 2,
+          "utc": "2026-10-17T13:53:34.9977682Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 2,
+          "utc": "2026-10-17T13:53:35.0002963Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 2,
+          "utc": "2026-10-17T13:53:35.0018239Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 2,
+          "utc": "2026-10-17T13:53:35.0172554Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 2,
+          "utc": "2026-10-17T13:53:35.0202821Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 3
+        },
+        {
+          "event": "fence_passed",
+          "stage": 2,
+          "utc": "2026-10-17T13:53:35.0613476Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_backend_cache_retired",
+          "stage": 2,
+          "utc": "2026-10-17T13:53:35.0628663Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "stage_begin",
+          "stage": 3,
+          "utc": "2026-10-17T13:53:35.0638766Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 3,
+          "utc": "2026-10-17T13:53:35.0709071Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 3,
+          "utc": "2026-10-17T13:53:35.0724151Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 3,
+          "utc": "2026-10-17T13:53:35.0744233Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 3,
+          "utc": "2026-10-17T13:53:35.0820408Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 3,
+          "utc": "2026-10-17T13:53:35.0835565Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 5
+        },
+        {
+          "event": "fence_passed",
+          "stage": 3,
+          "utc": "2026-10-17T13:53:35.1069509Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_backend_cache_retired",
+          "stage": 3,
+          "utc": "2026-10-17T13:53:35.1094597Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "stage_begin",
+          "stage": 4,
+          "utc": "2026-10-17T13:53:35.1104678Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 4,
+          "utc": "2026-10-17T13:53:35.1173850Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 4,
+          "utc": "2026-10-17T13:53:35.1199003Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 4,
+          "utc": "2026-10-17T13:53:35.1214071Z",
+          "backend": "GPUCompute",
+          "shape": "(12, 2520, 64)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 4,
+          "utc": "2026-10-17T13:53:35.5561823Z",
+          "backend": "GPUCompute",
+          "shape": "(12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 4,
+          "utc": "2026-10-17T13:53:35.5586982Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 6
+        },
+        {
+          "event": "fence_passed",
+          "stage": 4,
+          "utc": "2026-10-17T13:53:35.7578639Z",
+          "backend": "GPUCompute",
+          "shape": "(12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_backend_cache_retired",
+          "stage": 4,
+          "utc": "2026-10-17T13:53:35.7619164Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "stage_begin",
+          "stage": 5,
+          "utc": "2026-10-17T13:53:35.7697624Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 5,
+          "utc": "2026-10-17T13:53:35.9526638Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 5,
+          "utc": "2026-10-17T13:53:36.0284062Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 5,
+          "utc": "2026-10-17T13:53:36.0299161Z",
+          "backend": "GPUCompute",
+          "shape": "(1, 12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 5,
+          "utc": "2026-10-17T13:53:36.4535530Z",
+          "backend": "GPUCompute",
+          "shape": "(1, 12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 5,
+          "utc": "2026-10-17T13:53:36.4560872Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 4
+        },
+        {
+          "event": "fence_passed",
+          "stage": 5,
+          "utc": "2026-10-17T13:53:40.1014572Z",
+          "backend": "GPUCompute",
+          "shape": "(1, 12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_backend_cache_retired",
+          "stage": 5,
+          "utc": "2026-10-17T13:53:40.1024673Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "stage_begin",
+          "stage": 6,
+          "utc": "2026-10-17T13:53:40.1050092Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 6,
+          "utc": "2026-10-17T13:53:40.1609051Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 6,
+          "utc": "2026-10-17T13:53:40.3999615Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 6,
+          "utc": "2026-10-17T13:53:40.4021875Z",
+          "backend": "GPUCompute",
+          "shape": "(12, 2520, 2520)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 6,
+          "utc": "2026-10-17T13:53:40.4164291Z",
+          "backend": "GPUCompute",
+          "shape": "(12, 2520, 64)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 6,
+          "utc": "2026-10-17T13:53:40.4184477Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 5
+        },
+        {
+          "event": "fence_passed",
+          "stage": 6,
+          "utc": "2026-10-17T13:53:40.9394155Z",
+          "backend": "GPUCompute",
+          "shape": "(12, 2520, 64)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_backend_cache_retired",
+          "stage": 6,
+          "utc": "2026-10-17T13:53:40.9419201Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "stage_begin",
+          "stage": 7,
+          "utc": "2026-10-17T13:53:40.9444385Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "model_submitted",
+          "stage": 7,
+          "utc": "2026-10-17T13:53:40.9464379Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_worker_cache_retired",
+          "stage": 7,
+          "utc": "2026-10-17T13:53:40.9504603Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_begin",
+          "stage": 7,
+          "utc": "2026-10-17T13:53:40.9519649Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "operation_submitted",
+          "stage": 7,
+          "utc": "2026-10-17T13:53:40.9766061Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "dead_boundaries_retired",
+          "stage": 7,
+          "utc": "2026-10-17T13:53:40.9788603Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": 4
+        },
+        {
+          "event": "fence_passed",
+          "stage": 7,
+          "utc": "2026-10-17T13:53:41.1378999Z",
+          "backend": "GPUCompute",
+          "shape": "(2520, 768)",
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        },
+        {
+          "event": "original_backend_cache_retired",
+          "stage": 7,
+          "utc": "2026-10-17T13:53:41.1409421Z",
+          "backend": null,
+          "shape": null,
+          "full_model_qualified": false,
+          "intermediate_readback": false,
+          "retired_count": null
+        }
+      ],
+      "evidence_report_sha256": "9df382eba6567c37e151b77836f9408abeadeac24d9543abcbf00513d365c267",
+      "events_sha256": "fcc43964fb96fe178be013809c7e8f2ee41e151d08bb42a1121cc18e92891829"
+    }
+  ],
+  "remaining": [
+    "Locate failure after the isolated prefix or under original full scheduling",
+    "Correct and revalidate complete image/audio/text GPU paths",
+    "All6 cold acquisition",
+    "Manual UI and authorized microphone acceptance",
+    "Same-candidate full performance/Float16/Editor measurements"
+  ]
+}

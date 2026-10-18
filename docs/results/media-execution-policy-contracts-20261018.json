@@ -1,0 +1,37 @@
+{
+  "scope": "Fixed precision pins and explicit 12..16GiB host allowance; generated fixtures only, not real GPU acceptance",
+  "red": {
+    "total": 17,
+    "passed": 0,
+    "failed": 17,
+    "skipped": 0
+  },
+  "green": {
+    "total": 17,
+    "passed": 17,
+    "failed": 0,
+    "skipped": 0
+  },
+  "exit_code": 0,
+  "fp32_cosine": 0.999,
+  "float16_cosine": 0.99,
+  "norm_squared_tolerance": 0.002,
+  "rank_score_tolerance": 0.001,
+  "default_host_limit_gib": 12,
+  "maximum_host_limit_gib": 16,
+  "source_sha256": {
+    "GpuMediaExecutionPolicy.cs": "63aef2015bc9c6a4db8b87729c7f79906b27d9dd64d59fbaa7b58fdd0ed6577a",
+    "GpuMediaExecutionPolicyTests.cs": "44707e28655aafba52e665eee54dfb8d0d29ce34aeb21eab87882903f52431a3",
+    "GpuMediaBundleExecutionTests.cs": "5b5c683602911d4a498d519269f480f3adf8b09dd6c514114a9b54a4957e6fd0",
+    "PreparedTextQueryReferenceTests.cs": "eb8d5f8192f988a31b43ef1c11d33cf79ba5204c0546d0fee63e50cd0309a2d8",
+    "MultimodalSearchSampleGpuTests.cs": "65836ad330322fbc5ed9b921aa74593e4cb867019284935412a522c39f9a47e1"
+  },
+  "evidence_sha256": {
+    "media-execution-policy-red-process.json": "2728ef721f5d5be76d7e3f7962a6a045bafb91c1b410425123841461f005b3df",
+    "media-execution-policy-red.xml": "ecebbb990357fe5a26f1d315af3180439c29d79b81da1b82edfcae0a2320eb0d",
+    "media-execution-policy-red.log": "b7232f52f592d4bff6e41c7760339aae0fa3b68eb2656c2249d029d2d6b53d2c",
+    "media-execution-policy-green-process.json": "1a65d121a85694b1d6347bf4401972235d1495b4cecf7bf94e69854461f52447",
+    "media-execution-policy-green.xml": "9747b0a184dd1be2ebb25cb3ada6958ba75da4fd2a464617508293946fb1d4e2",
+    "media-execution-policy-green.log": "c0bf0b41167a80598c1e41bcfcd5e9ddde0d8dd848120f7b514143a80080895a"
+  }
+}

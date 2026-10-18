@@ -1,0 +1,69 @@
+{
+  "original_unity_measurement_accepted": false,
+  "gpu_timing_accepted": false,
+  "original_label": "media-gpu-submission-image-square-fp32-5a907a2-first",
+  "original_counts": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0
+  },
+  "original_exit_code": 2,
+  "failure": "Unavailable GPU submission scopes cannot pass the new measurement gate.\n  Expected: True\n  But was:  False",
+  "original_prediction_vectors_verified": [
+    {
+      "round": "first",
+      "independent_cosine": 0.9999999999997135,
+      "norm_squared": 0.9999998644722635,
+      "capture_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f"
+    },
+    {
+      "round": "warm",
+      "independent_cosine": 0.9999999999997135,
+      "norm_squared": 0.9999998644722635,
+      "capture_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f"
+    },
+    {
+      "round": "repeat-1",
+      "independent_cosine": 0.9999999999997135,
+      "norm_squared": 0.9999998644722635,
+      "capture_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f"
+    },
+    {
+      "round": "repeat-2",
+      "independent_cosine": 0.9999999999997135,
+      "norm_squared": 0.9999998644722635,
+      "capture_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f"
+    }
+  ],
+  "unavailable_submission_scopes": 8,
+  "original_report_success_does_not_override_failed_nunit_exit": true,
+  "root_cause": "Newtonsoft implicit conversion from null string preserves JTokenType.String while serializing null. The old token-type comparison marked all eight successful submissions aborted, so GPU intervals remained null.",
+  "validation_source": "10962faf0924bb1c5070ad2d3875fc06fd24bbe2",
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "standalone_tdd": {
+    "total": 12,
+    "red_failed": 4,
+    "green_failed": 0
+  },
+  "unity_contracts": {
+    "total": 27,
+    "passed": 27,
+    "failed": 0,
+    "skipped": 0
+  },
+  "unity_exit_code": 0,
+  "source_files_verified": 554,
+  "scope": "Measurement classification only. Explicit/typed null is successful; actual exception names fail; missing/malformed error fields reject. No SDK arithmetic or marker/precision gate changes. This contract run does not prove actual GPU interval capture after the fix.",
+  "evidence_sha256": {
+    "media-gpu-submission-image-square-fp32-5a907a2-first.json": "f756b1daf1a1b35bd2c13f49b9aa6c5ef6d37a8711e4874ad609838db8c94f77",
+    "media-gpu-submission-image-square-fp32-5a907a2-first.xml": "b57bdf6224580e6a7a60c51bf3724963ae4fbf0e60cc33a95893cd94ef5d4870",
+    "media-gpu-submission-image-square-fp32-5a907a2-first-process.json": "5659ce67e608f8666452d7a606561c580cbcc5b16476e192c7cac769e44a4991",
+    "media-gpu-submission-image-square-fp32-5a907a2-first-source.json": "f43559ed3c126a077a9ca70301ab26229085d88ad9bac05863c91c39d0003084",
+    "media-gpu-submission-image-square-fp32-5a907a2-first.log": "fd649cbc3b13c34f6536535c65a4b93730a94c63c2f0de451ba05621dc1f1294",
+    "submission-error-contracts-10962fa-first.xml": "0c7c3c7e26905afe52a734b4ecaabfd63a7a8272f30331c7a6f2a094550f5da0",
+    "submission-error-contracts-10962fa-first-process.json": "cedb4d0bd3b7068d443866d503f71bd9d55f71bb891ab649f471eb018fe83369",
+    "submission-error-contracts-10962fa-first-source.json": "7bd178c6b076c3adf82e2643b31597f7c69a69df999ab3789437a41f81aeefbd",
+    "submission-error-contracts-10962fa-first.log": "d3cf9bb3d93a1a96be7e4876419737fb367f5287bff49e3e83e613268df1e053"
+  }
+}

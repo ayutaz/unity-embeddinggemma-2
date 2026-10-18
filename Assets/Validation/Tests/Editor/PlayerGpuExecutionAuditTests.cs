@@ -2,11 +2,49 @@ using System;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using Unity.InferenceEngine;
 
 namespace EmbeddingGemma.Validation.Tests
 {
     public sealed class PlayerGpuExecutionAuditTests
     {
+        static JObject EvaluateModel(Model model, string backend = "GPUCompute", int[] cpu = null, int[] flush = null)
+        {
+            var method = Required().GetMethod("EvaluateModel");
+            Assert.That(method, Is.Not.Null, "Audit graph routing before distinguishing an empty alias from missing computation.");
+            return (JObject)method.Invoke(null, new object[] { model, backend, cpu ?? Array.Empty<int>(), flush ?? Array.Empty<int>() });
+        }
+        static Model Alias()
+        {
+            var model = new Model();
+            model.inputs.Add(new Model.Input { index = 0, name = "residual" });
+            model.inputs.Add(new Model.Input { index = 1, name = "projected" });
+            model.outputs.Add(new Model.Output { index = 1, name = "output" });
+            return model;
+        }
+        [Test] public void EmptySegmentMustProveOutputAliasesAnInputWithoutCpuWork()
+        {
+            var result = EvaluateModel(Alias());
+            Assert.That((bool)result["success"], Is.True);
+            Assert.That((string)result["execution_kind"], Is.EqualTo("input_alias"));
+            Assert.That((int)result["computed_layer_output_count"], Is.Zero);
+            Assert.That((int)result["input_alias_output_indices"][0], Is.EqualTo(1));
+            Assert.That((bool)result["tensor_values_downloaded_by_auditor"], Is.False);
+        }
+        [TestCase("no_outputs")] [TestCase("unknown_output")] [TestCase("duplicate_input")]
+        [TestCase("duplicate_output")] [TestCase("cpu_worker")] [TestCase("cpu_alias")] [TestCase("flush")]
+        public void EmptyGraphIsNotAnAliasWithoutCompleteRoutingAndGpuOwnership(string problem)
+        {
+            var model = Alias();
+            if (problem == "no_outputs") model.outputs.Clear();
+            if (problem == "unknown_output") model.outputs[0] = new Model.Output { index = 5, name = "missing" };
+            if (problem == "duplicate_input") model.inputs.Add(model.inputs[0]);
+            if (problem == "duplicate_output") model.outputs.Add(model.outputs[0]);
+            var error = Assert.Throws<TargetInvocationException>(() => EvaluateModel(model,
+                problem == "cpu_worker" ? "CPU" : "GPUCompute", problem == "cpu_alias" ? new[] { 1 } : null,
+                problem == "flush" ? new[] { 1 } : null));
+            Assert.That(error.InnerException, Is.InstanceOf<InvalidOperationException>());
+        }
         static Type Required()
         {
             var type = typeof(PlayerBuildInfo).Assembly.GetType("EmbeddingGemma.Validation.PlayerGpuExecutionAudit");

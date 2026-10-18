@@ -1,0 +1,49 @@
+{
+  "accepted": true,
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "scope": "Native mouse/keyboard early playback stop on the already imported/cached consumer; not another fresh consumer, microphone, listening quality or performance test.",
+  "clip_samples": 179200,
+  "frequency": 16000,
+  "clip_seconds": 11.2,
+  "first_playing_utc": "2026-10-17T18:49:27.4583610Z",
+  "last_playing_utc": "2026-10-17T18:49:34.5104203Z",
+  "last_playing_samples": 115712,
+  "last_playing_position_seconds": 7.232,
+  "stopped_utc": "2026-10-17T18:49:34.7638181Z",
+  "observed_playing_to_stopped_seconds": 7.305457,
+  "early_stop_causality": "Native Stop button click followed by stopped state before the fixed clip could naturally end; previous playing position retains more than one second of remaining data.",
+  "stopped_kept_registered_document": true,
+  "reset_cleared_documents_previews_and_session": true,
+  "microphone_started": false,
+  "terminal_receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\usability-consumer-e28a5fd",
+      "-executeMethod",
+      "UsabilityUiBootstrap.Open",
+      "-logFile",
+      ".\\artifacts\\usability-state\\native-ui-e28a5fd-warm-early-stop.log"
+    ],
+    "started_utc": "2026-10-17T18:46:10.969194+00:00",
+    "terminal": true,
+    "success": true,
+    "timeout_seconds": 900,
+    "memory_limit_bytes": 17179869184,
+    "peak_host_bytes": 6031589376,
+    "actions_via_windows_ui": true,
+    "pid": 94616,
+    "current_host_bytes": 5138997248,
+    "elapsed_seconds": 232.6910690999939,
+    "exit_code": 0,
+    "completed_utc": "2026-10-17T18:50:03.660265+00:00"
+  },
+  "evidence_sha256": {
+    "native-ui-e28a5fd-warm-early-stop.json.events.jsonl": "83696e035225558edc9b0735ed432c592edb0f313f39730e42909370eaef47fd",
+    "native-ui-e28a5fd-warm-early-stop-process.json": "c492c8aa4a341f16b00a3b3001ae410513a2ff32f11fd4830f1bc8829b269d12",
+    "native-ui-e28a5fd-warm-early-stop.log": "01bc5742f86b0ef4cb48069eb7c113e6ccaeaa01a8ef653c32ac2f1e14a01aaa"
+  }
+}

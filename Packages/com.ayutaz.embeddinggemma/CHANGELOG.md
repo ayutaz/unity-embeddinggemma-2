@@ -2,6 +2,8 @@
 
 ## 0.1.0-pre.1 — Unreleased
 
+- Align Package Manager display name, description and keywords with the implemented text, image and audio APIs. Package ID, development version and validation scope are unchanged.
+
 - Integrated PR #31: fresh fixed-Git consumer and Windows text-search IL2CPP Release / High-stripping Player acceptance, independent cold / warm FP32 GPU runs and normal exits.
 - Integrated PR #83: importable Image and Audio Search sample, audited six-module preparation and cache, GPU cancellation / retry / switching / disposal, async audio-preprocessing cache retirement.
 - Actual Windows media validation: six image and six audio cases across five profiles, mixed text-query search, rendered PlayMode UI, and 505 canonical EditMode tests. These source-qualified results do not qualify other devices or multimodal Players.

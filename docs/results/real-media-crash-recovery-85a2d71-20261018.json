@@ -1,0 +1,147 @@
+{
+  "actual_windows_process_death_recovery_and_contention_accepted": true,
+  "public_acquisition_accepted": false,
+  "gpu_validated": false,
+  "inference_executed": false,
+  "full_priorities_1_to_3_accepted": false,
+  "red_source": "7f68d3921ae72fed6f9f770a1f7558b66171e17a",
+  "green_source": "85a2d71f273ae11e8460465d01389425fc5cd097",
+  "red": 3,
+  "green": 51,
+  "red_scope": "Owned stale files remained after retry, a second writer reached fetch, and an actual force-killed CLI left its received partial after a successful retry.",
+  "scope": "Real 9MiB FP32 weight and reused 820-object copied cache over verified loopback HTTPS. Only the owned Popen child was force-terminated. Actual Windows result; other OS qualification is separate. No public acquisition/new conversion/model inference/GPU/numerical acceptance claim.",
+  "source_descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+  "producer": "5d1a66fa3dbf4f76223e248378a146cfb9f15d86",
+  "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+  "modules": [
+    "audio-1119",
+    "audio-839",
+    "image-landscape",
+    "image-portrait",
+    "image-square",
+    "text"
+  ],
+  "objects": 820,
+  "bytes": 8583084520,
+  "selected_weight": "objects/e0f98883c238d21192d6e086f0205f07c428847307a94817d34f3adf20e7338f.f32",
+  "selected_weight_bytes": 9437184,
+  "orphan_after_forced_termination": {
+    "path": ".\\artifacts\\real-media-https-recovery-f09317e\\prepared\\objects\\.e0f98883c238d21192d6e086f0205f07c428847307a94817d34f3adf20e7338f.f32.10c9299bd4cc4325b29d0192b3fc54e2.pending",
+    "bytes": 2097152,
+    "owner_pid": 166728,
+    "force_terminated_for_validation": true,
+    "descriptor_retained": true
+  },
+  "phases": [
+    {
+      "phase": "competing-preparer",
+      "pid": 96392,
+      "exit_code": 1,
+      "force_terminated_for_validation": false,
+      "report": null
+    },
+    {
+      "phase": "force-terminated-owner",
+      "pid": 166728,
+      "exit_code": 1,
+      "force_terminated_for_validation": true,
+      "report": null
+    },
+    {
+      "phase": "retry-after-process-death",
+      "pid": 167280,
+      "exit_code": 0,
+      "force_terminated_for_validation": false,
+      "report": {
+        "success": true,
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "producer": "5d1a66fa3dbf4f76223e248378a146cfb9f15d86",
+        "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+        "source_url": "https://127.0.0.1:63666/bundle.json",
+        "modules": [
+          "text",
+          "image-square",
+          "image-landscape",
+          "image-portrait",
+          "audio-1119",
+          "audio-839"
+        ],
+        "downloaded_files": 1,
+        "reused_files": 819,
+        "downloaded_bytes": 9437184,
+        "reused_bytes": 8573647336,
+        "stale_pending_files_removed": 1,
+        "inference_executed": false,
+        "gpu_validated": false
+      }
+    },
+    {
+      "phase": "warm-all-six",
+      "pid": 192564,
+      "exit_code": 0,
+      "force_terminated_for_validation": false,
+      "report": {
+        "success": true,
+        "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+        "producer": "5d1a66fa3dbf4f76223e248378a146cfb9f15d86",
+        "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+        "source_url": "https://127.0.0.1:63666/bundle.json",
+        "modules": [
+          "text",
+          "image-square",
+          "image-landscape",
+          "image-portrait",
+          "audio-1119",
+          "audio-839"
+        ],
+        "downloaded_files": 0,
+        "reused_files": 820,
+        "downloaded_bytes": 0,
+        "reused_bytes": 8583084520,
+        "stale_pending_files_removed": 0,
+        "inference_executed": false,
+        "gpu_validated": false
+      }
+    }
+  ],
+  "retry_reclaimed_owned_partial": true,
+  "competing_writer_rejected_before_object_fetch_and_receipt_write": true,
+  "contention_proof": "Passing captured execution asserts no additional object request, live owner/partial retention, and unchanged previous receipt/descriptor before killing the owner. Tiny HTTPS integration also executes both competing CLI processes.",
+  "final_output_objects_independently_rehashed": 820,
+  "source_and_destination_hardlinked": false,
+  "protected_root_files_verified": 4,
+  "lock_file_remains_by_design": true,
+  "old_https_recovery_evidence_preserved": true,
+  "missing": [
+    "Public immutable-source empty-cache acquisition",
+    "Ctrl+C signal behavior distinct from forced termination",
+    "Linux qualification of the new file lock",
+    "Overall priorities 1-3 acceptance"
+  ],
+  "primary_references": [
+    "https://docs.python.org/3.13/library/msvcrt.html#msvcrt.locking",
+    "https://docs.python.org/3.13/library/fcntl.html#fcntl.flock"
+  ],
+  "evidence_sha256": {
+    "summary.json": "14c5c862ae6a84f31a7e3e51db468acea9803e6b3ba989530fc9da9e44d6472e",
+    "real-media-crash-recovery-controller.json": "95ad66d933dd153b15aad07018d7f6351b8d5c1310d82cbda2871e56c1c03f7d",
+    "before-preparation.json": "f989b7498661a489042bffe041b18b504f647c270f8375898fee98f83c4b4a72",
+    "orphan-after-owned-process-termination.json": "798b1e31f458361252f06840f86e0a39bc1796645257d2b1b69f4aaf465cacf9",
+    "competing-preparer-process.json": "ac473986a8dca1deed5d64669657fbefe71023a74523ed6f425c5b86bcab1898",
+    "competing-preparer.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "competing-preparer.stderr.txt": "988e5cc73bb23eba66e8055ca14a069767e82122f21e9f1da655efdc21087e80",
+    "force-terminated-owner-process.json": "ce0b9fc56f4413b247898cae0464f4b9b9e8323f7579bf2be66cf1b0625c244c",
+    "force-terminated-owner.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "force-terminated-owner.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "retry-after-process-death-process.json": "1bc4f65f04950e2f5cdf4e7d97c1fb225574a6060f54319109b4587941130b9b",
+    "retry-after-process-death.stdout.txt": "a5c458276f845c3a998dc5bc7e2e338662cb50cf3e7ade063af883b398b97493",
+    "retry-after-process-death.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "warm-all-six-process.json": "8eaa3bcb67fc2998270d697fb7fc16e52b2d786c7faf43664344cb26e2fe4b91",
+    "warm-all-six.stdout.txt": "31128e686f6d64d6696e84ca106e465f650dea66f2485b1ce58c019ff371697d",
+    "warm-all-six.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "media-crash-recovery-red.txt": "8f2947e279ab7375e652a82eb44c68122a5bd2d755a01d15862e2ad35ca4087d",
+    "media-crash-recovery-green-process-contention.txt": "3582b540fa58395c2cc2962a37a027d92b758c0be5d42014a8a2d3029b1ff9c1",
+    "media-crash-recovery-red-source.py": "5a7c7ac1a83ea34e7bb360c2fe4f4864cfbd5b7d627722c159ed2a3f5a6aef5b"
+  },
+  "audited_utc": "2026-10-17T23:13:15.317442+00:00"
+}

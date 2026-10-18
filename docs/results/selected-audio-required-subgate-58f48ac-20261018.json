@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "success": true,
+  "scope": "Selected audio required numerical subgate only; overall CI failed",
+  "run": 39126214004,
+  "head_source": "58f48ac444cc07785da7b576514e8c810af0ce67",
+  "execution_source": "fbbae1ce840db7f249d257b44ec55d8c209e31ea",
+  "execution_tree_equals_head": true,
+  "overall_ci_conclusion": "failure",
+  "overall_ci_accepted": false,
+  "required_numeric_gate_passed": true,
+  "case_count": 6,
+  "profile_count": 2,
+  "values_compared": 824320,
+  "candidate_tolerance_failures": 0,
+  "selection_canonical_sha256": "6b1e84c4f9eb0bbbde77ff18f2b1532a4806a8bab42c1ab664beb2f891dc9067",
+  "gpu_validated": false,
+  "generation_qualified": false,
+  "artifacts": [
+    {
+      "case": "noise",
+      "artifact_id": 12137065655,
+      "archive_sha256": "ade93f7c981fb5f2dcbaf1cc1c6f90e2daea649266278a7d3e7c104258e2cf24",
+      "archive_bytes": 21366958,
+      "expires_at": "2026-10-25T12:31:08Z",
+      "all_crc_verified": true,
+      "second_private_archive_verified": true
+    },
+    {
+      "case": "silence",
+      "artifact_id": 12136980425,
+      "archive_sha256": "2fe9d903ea35804baed9d4b69daaf5c7151823d976f658b9334d24e137e8513f",
+      "archive_bytes": 9418072,
+      "expires_at": "2026-10-25T12:26:58Z",
+      "all_crc_verified": true,
+      "second_private_archive_verified": true
+    },
+    {
+      "case": "summary",
+      "artifact_id": 12136542074,
+      "archive_sha256": "a84790067db16545d0d438b43ea183fefc1bdd041051b2d6c3222c69b0cf36cd",
+      "archive_bytes": 4402,
+      "expires_at": "2026-10-25T12:32:03Z",
+      "all_crc_verified": true,
+      "second_private_archive_verified": true
+    },
+    {
+      "case": "sine",
+      "artifact_id": 12136412784,
+      "archive_sha256": "2e2234b66263631e800d8e4ecf93a38a9be44117499d3084dd1020ef89bb799c",
+      "archive_bytes": 21211484,
+      "expires_at": "2026-10-25T12:28:42Z",
+      "all_crc_verified": true,
+      "second_private_archive_verified": true
+    },
+    {
+      "case": "padded_noise",
+      "artifact_id": 12136387449,
+      "archive_sha256": "8f84d5ed05bbd63e8066777c63fda42cba7964680789f1e7c20b96d690a0e883",
+      "archive_bytes": 19080979,
+      "expires_at": "2026-10-25T12:23:58Z",
+      "all_crc_verified": true,
+      "second_private_archive_verified": true
+    },
+    {
+      "case": "impulse",
+      "artifact_id": 12136289362,
+      "archive_sha256": "1d48a6021935446928920f7a4c84c3bf992336e08bd26ef1d5c77b8caaedd426",
+      "archive_bytes": 9481631,
+      "expires_at": "2026-10-25T12:28:13Z",
+      "all_crc_verified": true,
+      "second_private_archive_verified": true
+    },
+    {
+      "case": "nyquist",
+      "artifact_id": 12135999902,
+      "archive_sha256": "da4e6a1df5ade5a6e196ba8b0aae7b753c851210042b1050dfabce41ce079417",
+      "archive_bytes": 9227561,
+      "expires_at": "2026-10-25T12:24:29Z",
+      "all_crc_verified": true,
+      "second_private_archive_verified": true
+    }
+  ],
+  "independent_audit_sha256": "6059dea270dcfe4ab34b62dab0a9371709d7b182244f87ce73b8a4418b8da75c",
+  "reason_overall_ci_failed": "One stale original-acquisition workflow consumer test failed in each Python platform/version; corrected and awaiting fresh full CI."
+}

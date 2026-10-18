@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "scope": "Editor-only stage CPU/wall instrumentation; generated fixtures and controlled asynchronous tasks",
+  "real_model_executed": false,
+  "real_microphone_started": false,
+  "gpu_execution_measured": false,
+  "performance_acceptance": false,
+  "unity": "6000.3.21f1",
+  "gpu_time_representation": "null; never substituted by CPU wall time",
+  "process_cpu_scope": "whole Editor process during stage interval; includes other threads",
+  "host_current_scope": "end-of-stage native working set snapshot",
+  "host_peak_scope": "process lifetime, not stage peak",
+  "unity_allocated_scope": "current allocated bytes, not allocation rate",
+  "ownership": "borrowed stages/tensors; no additional tensor readback; same input/token/result and original exceptions/cancellation",
+  "sources_sha256": {
+    "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/MediaStageTiming.cs": "8e15fdd4ef806356912f92d50e6cf8daf08684b34ae96344d2efd213ddfaaff8",
+    "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/MediaStageTimingTests.cs": "400cf51ce20e4167aff44616ae4bca24f56878dc75d5b0f912270c37c56647a2",
+    "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/GpuMediaBundleExecutionTests.cs": "676e9c9081f0ae07449c19585780933a52de43c6868c7f07fc0bf77753dc6303"
+  },
+  "red": {
+    "label": "media-stage-timing-facades-red",
+    "counts": {
+      "total": 8,
+      "passed": 0,
+      "failed": 8,
+      "skipped": 0
+    },
+    "exit_code": 2,
+    "failed_tests": [
+      "ActualFacadeFieldsAreDecoratedAndRestoredWithoutOpeningADeviceOrChangingOwnership(EmbeddingGemma.Tests.AsyncImageEmbedderTests)",
+      "ActualFacadeFieldsAreDecoratedAndRestoredWithoutOpeningADeviceOrChangingOwnership(EmbeddingGemma.Tests.AsyncAudioEmbedderTests)",
+      "AsynchronousFailureKeepsOriginalExceptionAndRecordsFailure",
+      "CancellationIsRecordedWithoutChangingCancellationIntoSuccess",
+      "ConsecutiveCallsRemainSeparateAndPropertyInspectionAddsNoSamples",
+      "PendingAsyncCallDoesNotReportCompletionEarlyOrReplaceResultOrToken",
+      "SynchronousCallPreservesBorrowedIdentityAndReportsSeparateMetrics",
+      "SynchronousFailureKeepsOriginalExceptionAndRecordsFailure"
+    ],
+    "evidence_sha256": {
+      "media-stage-timing-facades-red-process.json": "971aee03410d32965162b12250f8714dff27316d18584853ae81bf82d4e3c7c1",
+      "media-stage-timing-facades-red.xml": "bddccc6f0172b5ad7f188d0a90b3eae8ba86e726fc49e140eb5ae79e39aac7cd",
+      "media-stage-timing-facades-red.log": "d85a9536c98f03c19300044403394f4607f20b79419cca929fd68425196b773f"
+    }
+  },
+  "green": {
+    "label": "media-stage-timing-green",
+    "counts": {
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exit_code": 0,
+    "failed_tests": [],
+    "evidence_sha256": {
+      "media-stage-timing-green-process.json": "120ddd38ece6de5b34f9e6fdd5b71c9c51f2e927fa5356ba5e31a97bcc7c33f5",
+      "media-stage-timing-green.xml": "89ac9e21c8bba3791a1eaff1065e82eaf020eaa65ab64ba2a6598b4f17f2d272",
+      "media-stage-timing-green.log": "dcd209dffc19f32042e5b87979e266b0513146e72afa63fb93151f75abfb7fa4"
+    }
+  },
+  "combined": {
+    "label": "media-stage-and-trace-contracts",
+    "counts": {
+      "total": 13,
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exit_code": 0,
+    "failed_tests": [],
+    "evidence_sha256": {
+      "media-stage-and-trace-contracts-process.json": "3ed04d21220b8abf0d7833cb850034c23e5a9fbb5760ea7083545b822b61abd2",
+      "media-stage-and-trace-contracts.xml": "f60d2aa1c8fb6d14db4de6cc9fb96fddf2dd0134b299ff786588c55b5718219f",
+      "media-stage-and-trace-contracts.log": "5bbd19d3683130fbae958a463ba8868c9bec56c76db380fdbc8b88aeaf628ba2"
+    }
+  },
+  "excluded_runs": [
+    {
+      "label": "media-stage-timing-red",
+      "reason": "Compilation failed because reused consumer retained newer microphone test while SDK sample was older. No XML; not valid Red. Synced dependency before rerun."
+    },
+    {
+      "reason": "Initial helper launch from worktree root could not import embeddinggemma_tools. No Unity execution; not valid Red."
+    }
+  ],
+  "remaining": [
+    "Actual full-model stage measurements and matching GPU data",
+    "Load/text/release breakdown",
+    "Cold/warm/repeated all6 modules",
+    "Float16 isolated/consecutive",
+    "Editor allocation and search database measurements",
+    "Existing real GPU device failure"
+  ]
+}

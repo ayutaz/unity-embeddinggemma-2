@@ -4,6 +4,26 @@
   <assembly fullname="EmbeddingGemma.Runtime">
     <type fullname="EmbeddingGemma.TextEmbedder" preserve="fields" />
     <type fullname="EmbeddingGemma.TextSearchSession" preserve="fields" />
+    <type fullname="EmbeddingGemma.GpuMediaSession" preserve="fields" />
+    <type fullname="EmbeddingGemma.GpuProjectionPipeline" preserve="fields" />
+    <type fullname="EmbeddingGemma.PartitionedImageFeatureEncoder" preserve="fields" />
+    <type fullname="EmbeddingGemma.PartitionedAudioFeatureEncoder" preserve="fields" />
+    <type fullname="EmbeddingGemma.MultimodalBackbone" preserve="fields" />
+    <type fullname="EmbeddingGemma.AudioPreprocessor" preserve="fields" />
+    <type fullname="EmbeddingGemma.ImagePreprocessor" preserve="fields" />
+    <type fullname="EmbeddingGemma.ImageEmbedder" preserve="fields" />
+    <type fullname="EmbeddingGemma.AudioEmbedder" preserve="fields" />
+    <type fullname="EmbeddingGemma.GpuBlockedMatmul" preserve="fields" />
+    <type fullname="EmbeddingGemma.GpuFixedLeftMatmul" preserve="fields" />
+    <type fullname="EmbeddingGemma.GpuBatchedMatmul" preserve="fields" />
+    <type fullname="EmbeddingGemma.GpuGelu" preserve="fields" />
+    <type fullname="EmbeddingGemma.GpuSoftmax" preserve="fields" />
+    <type fullname="EmbeddingGemma.GpuSilu" preserve="fields" />
+    <type fullname="EmbeddingGemma.GpuTanh" preserve="fields" />
+    <type fullname="EmbeddingGemma.GpuScalarDivide" preserve="fields" />
+    <type fullname="EmbeddingGemma.GpuGlu" preserve="fields" />
+    <type fullname="EmbeddingGemma.GpuSequentialScale" preserve="fields" />
+    <type fullname="EmbeddingGemma.GpuConstantWorker" preserve="fields" />
   </assembly>
   <assembly fullname="Unity.InferenceEngine">
     <type fullname="Unity.InferenceEngine.Worker" preserve="fields" />

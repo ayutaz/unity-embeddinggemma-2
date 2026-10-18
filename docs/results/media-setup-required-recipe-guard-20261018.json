@@ -1,0 +1,65 @@
+{
+  "guard_contracts_accepted": true,
+  "public_acquisition_accepted": false,
+  "gpu_validated": false,
+  "red_source": "00feebeff2729514627cdf751d4f6b6622655f65",
+  "green_source": "f6061b773d8e50fd7e71da5ea68be10a9afb0aac",
+  "red": {
+    "failed": 16,
+    "passed": 25,
+    "intended_failure": "Missing or incompatible recipe metadata reached fetch before rejection."
+  },
+  "green": {
+    "passed": 41,
+    "failed": 0
+  },
+  "descriptor_compatibility": [
+    {
+      "name": "step3-media-bundle-5d1a66f",
+      "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+      "producer": "5d1a66fa3dbf4f76223e248378a146cfb9f15d86",
+      "modules": [
+        "text",
+        "image-square",
+        "audio-1119",
+        "audio-839",
+        "image-landscape",
+        "image-portrait"
+      ],
+      "declared_objects": 820,
+      "declared_bytes": 8583084520,
+      "scope": "Existing real descriptor metadata only; objects not downloaded, rehashed or executed here."
+    },
+    {
+      "name": "media-bundle-float16-752a2ac",
+      "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+      "producer": "752a2acd2e517e17501b506df540eeab9d8dac1f",
+      "modules": [
+        "audio-1119",
+        "audio-839",
+        "image-landscape",
+        "image-portrait",
+        "image-square",
+        "text"
+      ],
+      "declared_objects": 820,
+      "declared_bytes": 5873729560,
+      "scope": "Existing real descriptor metadata only; objects not downloaded, rehashed or executed here."
+    }
+  ],
+  "source_sha256": {
+    "tools/embeddinggemma_tools/media_setup.py": "2d4c2218673368afc5c266c47bb5e056a96924426385209bcc5d3cbc3c844adb",
+    "tools/tests/test_media_setup.py": "d5eb1a0a10b38b28049a9c6bff1d777cba65d21f5cd355973231ad9ec67ae6e3"
+  },
+  "evidence_sha256": {
+    "media-setup-required-recipe-red.txt": "345840f9950dde7a3042e1f071805a4ddd86cedb53060ab68a1859428f33ebd6",
+    "media-setup-required-recipe-green.txt": "42ecc058db442875576c9eaf955c6a053487797d8709dd1705d08a1be2c15ed9",
+    "media-setup-required-recipe-cli-help.txt": "e47fc8304592cf82669f8eec09a01a36699fd9c93376357e19f78355ac183c7f"
+  },
+  "limitations": [
+    "Tiny opaque test objects do not qualify model graphs or numerical inference.",
+    "Required file references, model suffix, GPU backend and segment connectivity are checked; this is not complete Unity runtime recipe validation.",
+    "Initial CLI invocation from repository root failed module resolution; the documented tools working directory passed --help. No transfer started in either invocation.",
+    "All-six public empty-cache acquisition, real transfer recovery and fixed-Git GPU acceptance remain incomplete."
+  ]
+}

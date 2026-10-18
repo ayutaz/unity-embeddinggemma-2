@@ -1,0 +1,459 @@
+{
+  "native_fresh_registration_search_preview_early_stop_release_and_exit_accepted": true,
+  "full_priorities_1_to_3_accepted": false,
+  "sdk_revision": "1d8d868e43c75e830dc306906df482e43aafb275",
+  "package_git_tree": "b5195f3578974568e7ac8c51b8fcaee1fd94945b",
+  "runtime_git_tree": "7d6e4314552b221d06db881405e7ccff3f449a77",
+  "scope": "Fresh fixed-Git/no-automation-plugin consumer; actual native mouse/keyboard, qualified existing local Float16 models. Not public empty-cache acquisition, microphone, listening quality, or general performance acceptance.",
+  "model_source": "Qualified existing local Float16 producer752a2ac",
+  "actual_backend": "GPUCompute",
+  "independently_verified_vectors": [
+    {
+      "id": "media-0",
+      "case": "sine",
+      "cosine": 0.9999999905661618,
+      "norm_squared": 1.0000001206795803
+    },
+    {
+      "id": "media-1",
+      "case": "square-0",
+      "cosine": 0.9999999999997693,
+      "norm_squared": 0.9999999833173898
+    }
+  ],
+  "independently_verified_queries": [
+    {
+      "text": "猫を健康に育てるには",
+      "utc": "2026-10-18T01:16:02.4288009Z",
+      "hits": [
+        {
+          "id": "media-1",
+          "title": "square-0.png",
+          "score": 0.5495174788166498
+        },
+        {
+          "id": "media-0",
+          "title": "sine.f32",
+          "score": 0.5408631086157262
+        }
+      ],
+      "maximum_score_error": 2.6369377859047916e-06
+    },
+    {
+      "text": "How should I care for a pet cat?",
+      "utc": "2026-10-18T01:17:09.8560755Z",
+      "hits": [
+        {
+          "id": "media-1",
+          "title": "square-0.png",
+          "score": 0.5749439903276136
+        },
+        {
+          "id": "media-0",
+          "title": "sine.f32",
+          "score": 0.5607329762591644
+        }
+      ],
+      "maximum_score_error": 1.8078760516404557e-06
+    }
+  ],
+  "image_preview_visually_inspected": true,
+  "cache_preparation_cancel_and_retry": true,
+  "missing_model_and_unsupported_input_and_empty_query_recovery": true,
+  "cancellation_scope": "Cache preparation only; no native GPU-stage cancellation claim.",
+  "playback": {
+    "first_utc": "2026-10-18T01:13:14.3037340Z",
+    "last_utc": "2026-10-18T01:13:22.6102215Z",
+    "stopped_utc": "2026-10-18T01:13:22.8612169Z",
+    "last_playing_samples": 136192,
+    "remaining_seconds": 2.688,
+    "first_playing_to_stop_seconds": 8.557482,
+    "early_stop_proven": true,
+    "unchanged_gate": "last playing sample below159200; first-playing to stopped elapsed below10s"
+  },
+  "all_playback_attempts": [
+    {
+      "first_utc": "2026-10-18T01:12:21.9247559Z",
+      "last_utc": "2026-10-18T01:12:32.9926569Z",
+      "stopped_utc": "2026-10-18T01:12:33.2444151Z",
+      "last_playing_samples": 178858,
+      "remaining_seconds": 0.021375,
+      "first_playing_to_stop_seconds": 11.31966,
+      "early_stop_proven": false,
+      "unchanged_gate": "last playing sample below159200; first-playing to stopped elapsed below10s"
+    },
+    {
+      "first_utc": "2026-10-18T01:13:14.3037340Z",
+      "last_utc": "2026-10-18T01:13:22.6102215Z",
+      "stopped_utc": "2026-10-18T01:13:22.8612169Z",
+      "last_playing_samples": 136192,
+      "remaining_seconds": 2.688,
+      "first_playing_to_stop_seconds": 8.557482,
+      "early_stop_proven": true,
+      "unchanged_gate": "last playing sample below159200; first-playing to stopped elapsed below10s"
+    }
+  ],
+  "first_playback_early_stop_proven": false,
+  "playback_scope": "First stop was near natural end and failed the unchanged gate. A separate explicit replay/Stop passed. No first-play stop or first-play latency claim.",
+  "terminal_receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\usability-consumer-1d8d868-fresh-full",
+      "-executeMethod",
+      "UsabilityUiBootstrap.Open",
+      "-logFile",
+      ".\\artifacts\\usability-state\\native-ui-1d8d868-fresh-full.log"
+    ],
+    "timeout_seconds": 1800,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-18T01:04:58.167028+00:00",
+    "pid": 79180,
+    "exit_code": 0,
+    "elapsed_seconds": 803.890085299965,
+    "completed_utc": "2026-10-18T01:18:24.588064+00:00"
+  },
+  "source_audit": {
+    "success": true,
+    "project": ".\\artifacts\\usability-consumer-1d8d868-fresh-full",
+    "requested_revision": "1d8d868e43c75e830dc306906df482e43aafb275",
+    "resolved_revision": "1d8d868e43c75e830dc306906df482e43aafb275",
+    "unity_executed": false,
+    "errors": [],
+    "package_tracked_files_verified": 315,
+    "samples_blob_verified": {
+      "TextSearch": 52,
+      "MultimodalSearch": 34
+    },
+    "protected_root_files_verified": 4,
+    "observer_sha256": "2071ff28763a50d1203e2129ad8198ac9699335f8b7cb6afc442599319bc60bd",
+    "terminal_receipt": {
+      "command": [
+        ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+        "-force-d3d12",
+        "-job-worker-count",
+        "4",
+        "-projectPath",
+        ".\\artifacts\\usability-consumer-1d8d868-fresh-full",
+        "-executeMethod",
+        "UsabilityUiBootstrap.Open",
+        "-logFile",
+        ".\\artifacts\\usability-state\\native-ui-1d8d868-fresh-full.log"
+      ],
+      "timeout_seconds": 1800,
+      "success": true,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-18T01:04:58.167028+00:00",
+      "pid": 79180,
+      "exit_code": 0,
+      "elapsed_seconds": 803.890085299965,
+      "completed_utc": "2026-10-18T01:18:24.588064+00:00"
+    },
+    "warm_reused_consumer": false,
+    "scope": "Source identity after normally closed native fresh UI; action acceptance is audited separately."
+  },
+  "timeline": [
+    {
+      "utc": "2026-10-18T01:05:59.7546053Z",
+      "playing": false,
+      "busy": false,
+      "documents": 0,
+      "status": "モデルの準備先と入力ファイルを指定してください。",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:07:06.0925122Z",
+      "playing": true,
+      "busy": false,
+      "documents": 0,
+      "status": "モデルの準備先と入力ファイルを指定してください。",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:08:00.5104686Z",
+      "playing": true,
+      "busy": false,
+      "documents": 0,
+      "status": "処理に失敗しました。入力を確認して再実行してください。",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:08:42.3280772Z",
+      "playing": true,
+      "busy": true,
+      "documents": 0,
+      "status": "モデルのキャッシュを照合しています…",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:08:53.5657157Z",
+      "playing": true,
+      "busy": true,
+      "documents": 0,
+      "status": "モデルをGPUへ読み込んでいます…",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:08:54.3221650Z",
+      "playing": true,
+      "busy": false,
+      "documents": 0,
+      "status": "キャンセルしました。再実行できます。",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:09:04.1375875Z",
+      "playing": true,
+      "busy": true,
+      "documents": 0,
+      "status": "モデルのキャッシュを照合しています…",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:09:07.7209670Z",
+      "playing": true,
+      "busy": true,
+      "documents": 0,
+      "status": "モデルをGPUへ読み込んでいます…",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:10:04.6736656Z",
+      "playing": true,
+      "busy": true,
+      "documents": 0,
+      "status": "音声をGPUで登録しています…",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "audio-1119",
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:10:07.6809909Z",
+      "playing": true,
+      "busy": false,
+      "documents": 1,
+      "status": "1件を登録しました。テキストで検索できます。",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "audio-1119",
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:11:10.1356171Z",
+      "playing": true,
+      "busy": false,
+      "documents": 1,
+      "status": "処理に失敗しました。入力を確認して再実行してください。",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "audio-1119",
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:11:34.6674916Z",
+      "playing": true,
+      "busy": true,
+      "documents": 1,
+      "status": "モデルのキャッシュを照合しています…",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:11:36.2408794Z",
+      "playing": true,
+      "busy": true,
+      "documents": 1,
+      "status": "モデルをGPUへ読み込んでいます…",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:11:47.9666930Z",
+      "playing": true,
+      "busy": false,
+      "documents": 1,
+      "status": "1件の検索結果",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "text",
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:12:21.9247559Z",
+      "playing": true,
+      "busy": false,
+      "documents": 1,
+      "status": "1件の検索結果",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "text",
+      "audio_playing": true
+    },
+    {
+      "utc": "2026-10-18T01:12:33.2444151Z",
+      "playing": true,
+      "busy": false,
+      "documents": 1,
+      "status": "1件の検索結果",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "text",
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:13:14.3037340Z",
+      "playing": true,
+      "busy": false,
+      "documents": 1,
+      "status": "1件の検索結果",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "text",
+      "audio_playing": true
+    },
+    {
+      "utc": "2026-10-18T01:13:22.8612169Z",
+      "playing": true,
+      "busy": false,
+      "documents": 1,
+      "status": "1件の検索結果",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "text",
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:14:04.2740431Z",
+      "playing": true,
+      "busy": false,
+      "documents": 1,
+      "status": "処理に失敗しました。入力を確認して再実行してください。",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "text",
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:14:21.2200408Z",
+      "playing": true,
+      "busy": true,
+      "documents": 1,
+      "status": "モデルのキャッシュを照合しています…",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:14:28.4729143Z",
+      "playing": true,
+      "busy": true,
+      "documents": 1,
+      "status": "モデルをGPUへ読み込んでいます…",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:14:56.6639200Z",
+      "playing": true,
+      "busy": true,
+      "documents": 1,
+      "status": "画像をGPUで登録しています…",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "image-square",
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:15:01.4089303Z",
+      "playing": true,
+      "busy": false,
+      "documents": 2,
+      "status": "2件を登録しました。テキストで検索できます。",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "image-square",
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:15:49.7923906Z",
+      "playing": true,
+      "busy": true,
+      "documents": 2,
+      "status": "モデルのキャッシュを照合しています…",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:16:02.4288009Z",
+      "playing": true,
+      "busy": false,
+      "documents": 2,
+      "status": "2件の検索結果",
+      "actual_backend": "GPUCompute",
+      "active_gpu_module": "text",
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:17:21.4468353Z",
+      "playing": true,
+      "busy": false,
+      "documents": 0,
+      "status": "登録とモデルを解放しました。もう一度準備できます。",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    },
+    {
+      "utc": "2026-10-18T01:17:35.0809762Z",
+      "playing": false,
+      "busy": false,
+      "documents": 0,
+      "status": "モデルの準備先と入力ファイルを指定してください。",
+      "actual_backend": null,
+      "active_gpu_module": null,
+      "audio_playing": false
+    }
+  ],
+  "interactive_budget_seconds": 1800,
+  "prior_900_second_failures_preserved": true,
+  "wall_scope": "Controller wall includes import, native operations, tool and idle time; not inference latency or plugin comparison.",
+  "log_diagnostics": {
+    "timeSamples": 2068,
+    "JobTempAlloc": 0,
+    "UnityCliLoop": 0,
+    "MissingAssembly": 0
+  },
+  "microphone_started": false,
+  "publication_performed": false,
+  "remaining": [
+    "Pinned public empty-cache acquisition/recovery",
+    "Authorized actual microphone and device/permission/interruption recovery",
+    "Performance missing scopes and final source/delivery audit"
+  ],
+  "evidence_sha256": {
+    "native-ui-1d8d868-fresh-full-process.json": "b304c591cee1c2a11220137ac433dda70dc986f76cd0192f49e06afe40388d86",
+    "native-ui-1d8d868-fresh-full.json.events.jsonl": "b2f6634b6f8a27e698fbbef15b4911e680a3c77d0738427f5d85a8f4af8798ee",
+    "consumer-1d8d868-post-full-source-audit.json": "d79c1790bcbe0d57b29fa5a5ec33b52c8cb5e5154d8166be92fd02a6071b4ea5",
+    "fresh-consumer-1d8d868-created.json": "41fe84707f2c0b2550c6f92e0f4bb2d220afe3e5bae0e2d4a379e0a7d21f3725",
+    "native-ui-1d8d868-fresh-full.log": "acd8b10aa7d147837b93306232d8d04f645b991db580e0dc452d5cb24ceb43f2",
+    "sine.f32": "086b7b0033dbb8e73a33cfdf72717e24e527909b6b4c9051f6a260218762d0d2",
+    "audit_full_native_1d8d868.py": "d8aff1d6a77ba65b1a030f9f1e7ba39ca14f6716fabaf41604f00ee47b80f667"
+  },
+  "audited_utc": "2026-10-18T01:18:57.504291+00:00"
+}

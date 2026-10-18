@@ -10,7 +10,7 @@
 https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/com.ayutaz.embeddinggemma#a965c098aba824b47f9762cae16b3af9656a3508
 ```
 
-clone済みなら **Add package from disk** でこのパッケージの`package.json`を指定することもできます。Package Managerの表示名は現在 **EmbeddingGemma Text** です。SentisとNewtonsoft JSONは依存から解決されます。URP・uloop・Pythonは利用側のRuntimeには不要です。
+clone済みなら **Add package from disk** でこのパッケージの`package.json`を指定することもできます。Package Managerの表示名は現在 **EmbeddingGemma** です。SentisとNewtonsoft JSONは依存から解決されます。URP・uloop・Pythonは利用側のRuntimeには不要です。
 
 最終統合版全体の空consumer受け入れは後続のgateです。過去sourceの固定Git導入・compileと、最新bundleの実GPU数値検証は別の記録として扱います。
 

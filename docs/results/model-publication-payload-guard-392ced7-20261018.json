@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "success": true,
+  "scope": "Actual exact model release payload guard readback only; no publication",
+  "registry_head": "392ced7816ff5c724ccd902b0dcbf488b79cee18",
+  "payload_count": 1640,
+  "precisions": [
+    {
+      "precision": "fp32",
+      "object_count": 820,
+      "all_actual_payloads_passed": true,
+      "largest_asset_command_payload_check_passed": true
+    },
+    {
+      "precision": "float16",
+      "object_count": 820,
+      "all_actual_payloads_passed": true,
+      "largest_asset_command_payload_check_passed": true
+    }
+  ],
+  "independent_private_report_sha256": "a7ed40fe48e7601c435b47039ca5d16d4569d623e8c9ddf9beb06a64b6927c49",
+  "upload_executed": false,
+  "public_acquisition_validated": false,
+  "gpu_executed": false,
+  "formal_release_ready": false
+}

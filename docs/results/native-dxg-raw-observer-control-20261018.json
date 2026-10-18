@@ -1,0 +1,251 @@
+{
+  "raw_observer_tdd_and_small_gpu_control_accepted": true,
+  "sdk_load_release_gpu_timing_accepted": false,
+  "sdk_exclusive_allocation_accepted": false,
+  "driver_retirement_or_vram_return_verified": false,
+  "full_priorities_1_to_3_accepted": false,
+  "source_base": "09619a95d423248365c080ee0c3f655a90b4dc78",
+  "native_source_sha256": {
+    "tools/native/dxg-observer/main.cpp": "6c136c783bfa2187469b88d731ea2b05752f48228eb08831e6de62121058e43e",
+    "tools/native/dxg-observer/NativeCallbacks.h": "fd63bf3afa55623c508ad45c775665d584f2cea20b13c5918bc886ce9b96baae",
+    "tools/native/dxg-observer/NativeCallbacksTests.cpp": "8b055f19ddbe66def21316d1185c12d20c1e83c8dee6c3afa47cfa2da18d3d76",
+    "tools/native/dxg-observer/NativeDxgObserver.vcxproj": "63a034fd27cd113a2417ee4fbd3797ddcd43102d463124bd0acf01f0799e43b6",
+    "tools/native/dxg-observer/OwnedGpuRecords.h": "bae338848bbbd1cb74cda0ea8f323d115f4c34fe57f1c01d829d3b0778d0822b",
+    "tools/native/dxg-observer/OwnedGpuRecordsTests.cpp": "b4db931def4b57d73970d4c34be134e4f0bb195bc91e28feff78bfdac050cc44",
+    "tools/native/dxg-observer/OwnedGpuRecordsTests.vcxproj": "887314517e754abee8faac25bf2c57c1d5239a09466dcec10431db04c2b5ad24",
+    "tools/native/dxg-observer/OwnedTraceLease.h": "f0df8553ed9553d1145a0590f413b6f925f09c2bf1207dbe50ed4731889017af",
+    "tools/native/dxg-observer/OwnedTraceLeaseTests.cpp": "68d0595080c3640740389316a04ce15fc32c78939d27548e725b5280a79f7598"
+  },
+  "cli_test_source_sha256": "cdf1dea321bd060e59fe856140e6bd9bb2fa106c0b167137dcea238eda5658d1",
+  "upstream_source": "72bd2b18553493aa9850e434caf71bfa18952aac",
+  "tdd": {
+    "records_initial_red": {
+      "total": 18,
+      "passed": 1,
+      "failed": 17,
+      "skipped": 0,
+      "sha256": "7dc00c1a6326817659d452144f0fa9d3fecc837fd253f30af24394837b561ec3"
+    },
+    "records_bounded_red": {
+      "total": 22,
+      "passed": 1,
+      "failed": 21,
+      "skipped": 0,
+      "sha256": "8309c7db3918f3902763e2820edfc7629826784090567b75d6e90d1eb003d7aa"
+    },
+    "records_green": {
+      "total": 22,
+      "passed": 22,
+      "failed": 0,
+      "skipped": 0,
+      "sha256": "f1df858a8a68e7a8601c5591493597e299c22c9df533096126874b6bc307594f"
+    },
+    "callbacks_red": {
+      "total": 30,
+      "passed": 24,
+      "failed": 6,
+      "skipped": 0,
+      "sha256": "81dfb3d88cbfe3dcf0e59b8c9242e9e6ce8aafa2512f202dc0c8141b8211bbd2"
+    },
+    "callbacks_diagnostics_red": {
+      "total": 32,
+      "passed": 24,
+      "failed": 8,
+      "skipped": 0,
+      "sha256": "be857ead0a64337afeb2fa26a22fbce08988214b6252963d64a55feacacdd034"
+    },
+    "callbacks_green": {
+      "total": 32,
+      "passed": 32,
+      "failed": 0,
+      "skipped": 0,
+      "sha256": "aa3257412d78b5bdc33e57965bb9666b072518918477cc98f7cb28536fbbbcbe"
+    },
+    "ownership_red": {
+      "total": 39,
+      "passed": 33,
+      "failed": 6,
+      "skipped": 0,
+      "sha256": "cd08782cd8b8acef16b56a8cc423ec94fa991b7dca68950e1e5983fbeedd6fff"
+    },
+    "ownership_green": {
+      "total": 39,
+      "passed": 39,
+      "failed": 0,
+      "skipped": 0,
+      "sha256": "1ea1e9d6a63d5fbb9aab978b8a4ded85cd56307777ae3ea4b0f005a6e8fbedf1"
+    },
+    "packet_metadata_red": {
+      "total": 40,
+      "passed": 39,
+      "failed": 1,
+      "skipped": 0,
+      "sha256": "f51fceca8db447d92f54a31add6bd6c89c8b40af9fab591e8d3bec08eb78b553"
+    },
+    "native_final_green": {
+      "total": 40,
+      "passed": 40,
+      "failed": 0,
+      "skipped": 0,
+      "sha256": "35392a17cf3e500b99b59b2e532faff905b7058eeefcdc6b47c2c5552abe4e3a"
+    },
+    "cli_red": {
+      "total": 9,
+      "passed": 0,
+      "failed": 9,
+      "skipped": 0,
+      "sha256": "514c32005fcab6fda1593683769ef887a1a9a7bd4c3c6464d57c55585cb41e08"
+    },
+    "cli_green": {
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0,
+      "sha256": "dca5a01851815be3e662c8a18b73c459fddb4c29f3849f1fcbeceb4abb17b7ca"
+    },
+    "existing_workflow_contracts": {
+      "total": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "sha256": "79e182ca17b3b02185381e7842befc340c5f0f30a2a483c9ee12cfafd19b019f"
+    }
+  },
+  "raw_gpu_control": {
+    "started_utc": "2026-10-18T02:03:24.064276+00:00",
+    "qpc_frequency": 10000000,
+    "external_envelope_margin_ns": 5000000,
+    "margin_declared_before_capture": true,
+    "control": "Unmodified Microsoft256-byte D3D12 copy and fence; default adapter, no WARP switch.",
+    "binary_sha256": "994348383d49e5331fb76a7688d5a0971ac14bf988c40a36fe77aa998726a9b8",
+    "workload_binary_sha256": "98c9a10b534698cb14dd9968f91ef56358d2d2df9d24362db9b0301ed5f6e8e1",
+    "sdk_gpu_load_release_accepted": false,
+    "model_executed": false,
+    "unity_started": false,
+    "source_sha256": "279fd19aabf969a9597d923b81eddcfc07356c4a15c2d72440b3b6d56ce8b01b",
+    "normal_target_exit": true,
+    "normal_collector_exit": true,
+    "target_pid": 160332,
+    "target_thread_id": 192820,
+    "created_suspended": true,
+    "collector_pid": 74496,
+    "ready": {
+      "capture_ready": true,
+      "pid": 160332,
+      "session_name": "EmbeddingGemmaNativeDxgCapture"
+    },
+    "resume_qpc_before": 3525984238386,
+    "target_exit_qpc_after": 3525987359920,
+    "target_exit_code": 0,
+    "collector_exit_code": 0,
+    "collector_stdout": "{\"capture_ready\":true,\"pid\":160332,\"session_name\":\"EmbeddingGemmaNativeDxgCapture\"}\n",
+    "collector_stderr": "",
+    "header": {
+      "kind": "capture_begin",
+      "schema": 1,
+      "pid": 160332,
+      "target_creation_filetime": 134367626040720406,
+      "timestamp_unit": "qpc_epoch_ns",
+      "session_name": "EmbeddingGemmaNativeDxgCapture",
+      "qpc_before": 3525983464017,
+      "qpc_after": 3525983464020,
+      "filetime_utc_100ns": 134367626041023823,
+      "qpc_frequency": 10000000
+    },
+    "footer": {
+      "kind": "capture_end",
+      "schema": 1,
+      "pid": 160332,
+      "timestamp_unit": "qpc_epoch_ns",
+      "session_name": "EmbeddingGemmaNativeDxgCapture",
+      "qpc_before": 3525992420968,
+      "qpc_after": 3525992420972,
+      "filetime_utc_100ns": 134367626049980775,
+      "qpc_frequency": 10000000,
+      "session_stopped": true,
+      "start_status": 0,
+      "d3d_enable_status": 0,
+      "dxg_enable_status": 0,
+      "d3d_rundown_status": 0,
+      "dxg_rundown_status": 0,
+      "stop_status": 0,
+      "stop_had_failure": false,
+      "process_trace_status": 0,
+      "close_trace_status": 0,
+      "decode_failures": 0,
+      "events_lost": 0,
+      "buffers_lost": 0,
+      "invalid_records": 0,
+      "dropped_records": 0,
+      "diagnostics": 0,
+      "open_owned_executions": 0,
+      "open_resources": 0,
+      "record_count": 16,
+      "target_exited": true,
+      "capture_valid": true,
+      "real_model_validated": false,
+      "gpu_control_validated": false,
+      "diagnostic_codes": []
+    },
+    "event_counts": {
+      "packet_envelope": 9,
+      "resource_created": 2,
+      "resource_destroyed": 2,
+      "execution_begin": 1,
+      "gpu_work": 1,
+      "execution_complete": 1
+    },
+    "raw_owned_gpu_and_resource_control_accepted": true,
+    "gpu_work_intervals": [
+      {
+        "kind": "gpu_work",
+        "pid": 160332,
+        "execution": 1,
+        "api_queue": 43,
+        "hardware_queue": 29,
+        "object": 0,
+        "command_list_index": 1,
+        "api_marker": 2,
+        "begin_ns": 352598693387340,
+        "end_ns": 352598693388076,
+        "bytes": null,
+        "engine_affinity": 0,
+        "hardware_scheduled": null
+      }
+    ],
+    "resource_objects": [
+      6,
+      7
+    ],
+    "external_envelope_ns": [
+      352598418838600,
+      352598740992000
+    ],
+    "scope": "Positive owned OnGpuWork intervals within a predeclared5ms external QPC envelope and256-byte resource lifetimes. Not pure kernel time, quantitative clock accuracy, SDK loading/release, driver retirement, or real-model acceptance.",
+    "completed_utc": "2026-10-18T02:03:25.744976+00:00",
+    "events_sha256": "2ff14c8d9e9dc44033d713528b455dda699e0b2c76b99a45c750ee4ad6c3eff0"
+  },
+  "raw_gpu_interval_ns": 736,
+  "scope": "Native diagnostic recorder/callback bridge/session ownership and CLI tests, plus one independent default-adapter synthetic D3D12 control. No SDK, Unity, model, publication, or microphone execution.",
+  "ci_scope": "New optional Windows workflow builds the decoder and observer, runs40 native unit tests and8 no-capture CLI preflight cases. Its result is pending, not a GPU pass. Local live CLI protocol case is separate.",
+  "preserved_pretest_build_failures": [
+    "First standalone test project incorrectly referenced a separate googletest.lib; upstream supplies gtest-all inside googletest_main.lib.",
+    "After correcting the library reference, a local main entrypoint was still missing; added before the intended scaffold Red.",
+    "An unnamed optional<bool> default parameter initially tokenized as >=; syntax failure retained separately from the packet-metadata Red."
+  ],
+  "limits": [
+    "The5ms envelope was declared before this control; it is not an accuracy guarantee.",
+    "Default-adapter control without a WARP switch is not a qualification of the SDK/device/backend.",
+    "Packet envelopes include queue wait. OnGpuWork spans can overlap; no sum across engines or markers.",
+    "Resource bytes mean logical buffer Width, not physical heap/VRAM bytes. Destruction is not driver retirement.",
+    "Actual unchanged SDK/model/input stage mapping and reference/normal-exit regression remain required."
+  ],
+  "protected_root_files_verified": 4,
+  "evidence_sha256": {
+    "audit.json": "8050b8014e757cc5382a25d3b151f4bc73fc14c1f2aa7a3fcf14a60a4c24d2d5",
+    "events.jsonl": "2ff14c8d9e9dc44033d713528b455dda699e0b2c76b99a45c750ee4ad6c3eff0",
+    "NativeDxgObserver.exe": "994348383d49e5331fb76a7688d5a0971ac14bf988c40a36fe77aa998726a9b8",
+    "audit_raw_dxg_observer.py": "ff4e4d44fc37cccaa465f37171f109cf7a54dd167edaf6b0d327dc19132aed83"
+  },
+  "audited_utc": "2026-10-18T02:16:35.680208+00:00"
+}

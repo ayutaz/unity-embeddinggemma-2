@@ -1,0 +1,95 @@
+{
+  "native_early_stop_followup_accepted": true,
+  "full_priorities_1_to_3_accepted": false,
+  "sdk_revision": "680af07c0ecad524accec00797c645b8528e6bf5",
+  "runtime_git_tree": "7d6e4314552b221d06db881405e7ccff3f449a77",
+  "package_git_tree": "b5195f3578974568e7ac8c51b8fcaee1fd94945b",
+  "scope": "Actual native mouse/keyboard synthetic audio registration, Japanese search, one playback/early Stop, reset/release, PlayMode stop and normal Editor closure in a warm fixed-Git consumer. Not fresh/public acquisition, actual microphone, listening-quality or general performance acceptance.",
+  "model_source": "Existing qualified local Float16 bundle, producer752a2ac",
+  "actual_backend": "GPUCompute",
+  "reference": {
+    "vector_dimension": 768,
+    "cosine": 0.9999999905661618,
+    "norm_squared": 1.0000001206795803,
+    "query": "猫を健康に育てるには",
+    "rank_ids": [
+      "media-0"
+    ],
+    "score_error": 2.6369377859047916e-06
+  },
+  "playback": {
+    "first_utc": "2026-10-17T23:32:24.5319495Z",
+    "last_playing_utc": "2026-10-17T23:32:33.6055056Z",
+    "stopped_utc": "2026-10-17T23:32:33.8582979Z",
+    "first_samples": 1024,
+    "last_playing_samples": 146090,
+    "last_playing_seconds": 9.130625,
+    "clip_seconds": 11.2,
+    "remaining_seconds_at_last_playing": 2.069375,
+    "observed_playing_to_stop_seconds": 9.326348,
+    "early_stop_proven": true,
+    "native_stop_button_clicked": true,
+    "unchanged_gate": "last playing sample below159200 and first-playing to stopped elapsed below10s"
+  },
+  "release": {
+    "documents": 0,
+    "previews": 0,
+    "hits": 0,
+    "active_gpu_module": null,
+    "playback": false
+  },
+  "source_audit": {
+    "package_files": 315,
+    "samples": {
+      "TextSearch": 52,
+      "MultimodalSearch": 34
+    },
+    "protected_root_files": 4,
+    "observer_sha256": "2071ff28763a50d1203e2129ad8198ac9699335f8b7cb6afc442599319bc60bd"
+  },
+  "terminal_receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\usability-consumer-680af07",
+      "-executeMethod",
+      "UsabilityUiBootstrap.Open",
+      "-logFile",
+      ".\\artifacts\\usability-state\\native-ui-680af07-warm-early-stop-followup.log"
+    ],
+    "timeout_seconds": 600,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T23:28:41.551388+00:00",
+    "pid": 4944,
+    "exit_code": 0,
+    "elapsed_seconds": 280.0551181000192,
+    "completed_utc": "2026-10-17T23:33:21.606511+00:00"
+  },
+  "microphone_started": false,
+  "publication_performed": false,
+  "preserved_prior_failed_early_stop_audit": "native-input-recovery-680af07-early-stop-unproven-20261018.json",
+  "prelaunch_failure": "First Python launcher cwd selected a module without write_json_atomic; import failed before any Unity process. Re-executed from the existing performance tools checkout; no production code changed.",
+  "log_diagnostics": {
+    "timeSamples": 252,
+    "JobTempAlloc": 0,
+    "UnityCliLoop": 1,
+    "MissingAssembly": 0
+  },
+  "evidence_sha256": {
+    "native-ui-680af07-warm-early-stop-followup-process.json": "0f7399a24b06d2e20662f8a6637cd651c793c857a5f8817237b302841ff12b23",
+    "native-ui-680af07-warm-early-stop-followup.json.events.jsonl": "3fa73521988815c2c627f6a1ae24b3b0d0e11d9ffc1704c3dfd42d137d394c4b",
+    "consumer-680af07-post-early-stop-followup-source-audit.json": "c8207d0207e23e434219d6bdb8946bce9b71f9b56204b78544d7e7499ef25748",
+    "audit_680_source_after_early_stop.py": "f9d2dde1212d94ebd7699eb7f10a4722fe0dd568b5f71c3edaaff809a18b8ed3",
+    "sine.f32": "086b7b0033dbb8e73a33cfdf72717e24e527909b6b4c9051f6a260218762d0d2",
+    "audio-embedding-reference.json": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+    "search-reference.json": "f316d5199c920431c7f721d43b2cedbe4a6384fb0e0664511b75bc2e98fe80fe",
+    "native-ui-680af07-warm-early-stop-followup.log": "3904f952fd9e7e685bcfe889b9373840990a0b05fceb5e3d12597852e4be8f0b",
+    "audit_680_early_stop_followup.py": "173eab0f72f77d188bac598157830804a5fe323fae26a58c17f93bc5837c98b5"
+  },
+  "audited_utc": "2026-10-17T23:34:01.666694+00:00"
+}

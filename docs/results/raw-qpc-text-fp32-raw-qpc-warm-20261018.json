@@ -1,0 +1,340 @@
+{
+  "raw_native_qpc_stage_correlation_accepted": true,
+  "full_priorities_1_to_3_accepted": false,
+  "exclusive_sdk_gpu_time_measured": false,
+  "exclusive_allocation_measured": false,
+  "driver_retirement_or_vram_return_verified": false,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "baseline_validation_source": "10962faf0924bb1c5070ad2d3875fc06fd24bbe2",
+  "validation_scope": "Native-QPC measurement changes only; local source manifest, not a committed release candidate.",
+  "precision": "fp32",
+  "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+  "reference_sha256": "f316d5199c920431c7f721d43b2cedbe4a6384fb0e0664511b75bc2e98fe80fe",
+  "actual_backend": "GPUCompute",
+  "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_api": "Direct3D12",
+  "unity": "6000.3.21f1",
+  "source_files_verified_after": 584,
+  "sdk_files_unchanged": 316,
+  "protected_root_files_verified": 4,
+  "unity_counts": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "unity_exit_code": 0,
+  "collector_exit_code": 0,
+  "collection": {
+    "pid": 97272,
+    "records": 42602,
+    "events_lost": 0,
+    "event_counts": {
+      "packet_envelope": 1115,
+      "resource_created": 1919,
+      "execution_begin": 202,
+      "gpu_work": 37248,
+      "execution_complete": 202,
+      "resource_destroyed": 1916
+    },
+    "open_resources": 3
+  },
+  "bridge_observations": [
+    {
+      "validated": true,
+      "native_qpc_before": 3562367540135,
+      "counter_ticks": 3562367541931,
+      "native_qpc_after": 3562367541981,
+      "frequency_hz": 10000000,
+      "native_frequency_hz": 10000000,
+      "counter_frequency_hz": 10000000,
+      "high_resolution": true,
+      "clock_source": "QueryPerformanceCounter",
+      "runtime_stopwatch_ticks": 375336239,
+      "runtime_stopwatch_frequency_hz": 10000000
+    },
+    {
+      "validated": true,
+      "native_qpc_before": 3563360761903,
+      "counter_ticks": 3563360761906,
+      "native_qpc_after": 3563360761907,
+      "frequency_hz": 10000000,
+      "native_frequency_hz": 10000000,
+      "counter_frequency_hz": 10000000,
+      "high_resolution": true,
+      "clock_source": "QueryPerformanceCounter",
+      "runtime_stopwatch_ticks": 1368552985,
+      "runtime_stopwatch_frequency_hz": 10000000
+    }
+  ],
+  "stage_correlation": {
+    "raw_stage_correlation_accepted": true,
+    "exclusive_sdk_gpu_time_measured": false,
+    "scope": "Target-process OnGpuWork intervals clipped to raw QPC API windows; per-queue unions, no engine sum or pure-kernel attribution.",
+    "pid": 97272,
+    "frequency_hz": 10000000,
+    "stages": [
+      {
+        "id": "load",
+        "begin_ns": 356236809641700,
+        "end_ns": 356266566211200,
+        "gpu_work_records": 101,
+        "boundary_crossing_records": 1,
+        "queues": [
+          {
+            "hardware_queue": 29,
+            "observed_union_ns": 9715676
+          }
+        ]
+      },
+      {
+        "id": "first",
+        "begin_ns": 356266850092100,
+        "end_ns": 356332993740500,
+        "gpu_work_records": 8146,
+        "boundary_crossing_records": 0,
+        "queues": [
+          {
+            "hardware_queue": 29,
+            "observed_union_ns": 144290676
+          }
+        ]
+      },
+      {
+        "id": "warm",
+        "begin_ns": 356333861426500,
+        "end_ns": 356334045281400,
+        "gpu_work_records": 7365,
+        "boundary_crossing_records": 0,
+        "queues": [
+          {
+            "hardware_queue": 29,
+            "observed_union_ns": 54235648
+          }
+        ]
+      },
+      {
+        "id": "repeat-1",
+        "begin_ns": 356334600506700,
+        "end_ns": 356334753518000,
+        "gpu_work_records": 7365,
+        "boundary_crossing_records": 0,
+        "queues": [
+          {
+            "hardware_queue": 29,
+            "observed_union_ns": 58979232
+          }
+        ]
+      },
+      {
+        "id": "repeat-2",
+        "begin_ns": 356335303374700,
+        "end_ns": 356335507585000,
+        "gpu_work_records": 7365,
+        "boundary_crossing_records": 0,
+        "queues": [
+          {
+            "hardware_queue": 29,
+            "observed_union_ns": 105531452
+          }
+        ]
+      },
+      {
+        "id": "release",
+        "begin_ns": 356336058844300,
+        "end_ns": 356336074872300,
+        "gpu_work_records": 0,
+        "boundary_crossing_records": 0,
+        "queues": []
+      }
+    ]
+  },
+  "rounds": [
+    {
+      "round": "first",
+      "wall_seconds": 66.143653,
+      "process_cpu_seconds": 1.71875,
+      "native_qpc_window": {
+        "timestamp_unit": "qpc_ticks",
+        "clock_source": "QueryPerformanceCounter",
+        "frequency_hz": 10000000,
+        "begin_ticks": 3562668500921,
+        "end_ticks": 3563329937405
+      },
+      "native_qpc_duration_seconds": 66.1436484,
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355,
+      "unity_recorder_gpu_ns": 185104384,
+      "unity_history_gpu_ns": [
+        144084991
+      ],
+      "capture_sha256": "b5753c87e65e30ad849feca34c1678bd9a6a3d8be3a0b658b0545e98dd11413a"
+    },
+    {
+      "round": "warm",
+      "wall_seconds": 0.1838515,
+      "process_cpu_seconds": 0.15625,
+      "native_qpc_window": {
+        "timestamp_unit": "qpc_ticks",
+        "clock_source": "QueryPerformanceCounter",
+        "frequency_hz": 10000000,
+        "begin_ticks": 3563338614265,
+        "end_ticks": 3563340452814
+      },
+      "native_qpc_duration_seconds": 0.1838549,
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355,
+      "unity_recorder_gpu_ns": 68170752,
+      "unity_history_gpu_ns": [
+        781395020
+      ],
+      "capture_sha256": "b5753c87e65e30ad849feca34c1678bd9a6a3d8be3a0b658b0545e98dd11413a"
+    },
+    {
+      "round": "repeat-1",
+      "wall_seconds": 0.15301209999999998,
+      "process_cpu_seconds": 0.0625,
+      "native_qpc_window": {
+        "timestamp_unit": "qpc_ticks",
+        "clock_source": "QueryPerformanceCounter",
+        "frequency_hz": 10000000,
+        "begin_ticks": 3563346005067,
+        "end_ticks": 3563347535180
+      },
+      "native_qpc_duration_seconds": 0.1530113,
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355,
+      "unity_recorder_gpu_ns": 87988224,
+      "unity_history_gpu_ns": [
+        156518005
+      ],
+      "capture_sha256": "b5753c87e65e30ad849feca34c1678bd9a6a3d8be3a0b658b0545e98dd11413a"
+    },
+    {
+      "round": "repeat-2",
+      "wall_seconds": 0.2042118,
+      "process_cpu_seconds": 0.09375,
+      "native_qpc_window": {
+        "timestamp_unit": "qpc_ticks",
+        "clock_source": "QueryPerformanceCounter",
+        "frequency_hz": 10000000,
+        "begin_ticks": 3563353033747,
+        "end_ticks": 3563355075850
+      },
+      "native_qpc_duration_seconds": 0.2042103,
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355,
+      "unity_recorder_gpu_ns": 123270144,
+      "unity_history_gpu_ns": [
+        601084045
+      ],
+      "capture_sha256": "b5753c87e65e30ad849feca34c1678bd9a6a3d8be3a0b658b0545e98dd11413a"
+    }
+  ],
+  "cpu_wall": {
+    "load_wall_seconds": 29.757289699999998,
+    "load_process_cpu_seconds": 29.5,
+    "release_wall_seconds": 0.0160492,
+    "release_process_cpu_seconds": 0.0
+  },
+  "load_qpc_window": {
+    "timestamp_unit": "qpc_ticks",
+    "clock_source": "QueryPerformanceCounter",
+    "frequency_hz": 10000000,
+    "begin_ticks": 3562368096417,
+    "end_ticks": 3562665662112
+  },
+  "release_qpc_window": {
+    "timestamp_unit": "qpc_ticks",
+    "clock_source": "QueryPerformanceCounter",
+    "frequency_hz": 10000000,
+    "begin_ticks": 3563360588443,
+    "end_ticks": 3563360748723
+  },
+  "tdd": {
+    "clock_red": {
+      "total": 20,
+      "passed": 1,
+      "failed": 19,
+      "skipped": 0,
+      "sha256": "cf180a79e9af64b0ffc61e8a03a07d673926bf039beacebc369418920aa030cc"
+    },
+    "clock_stopwatch_bridge_failure": {
+      "total": 20,
+      "passed": 19,
+      "failed": 1,
+      "skipped": 0,
+      "sha256": "d5002c9475f7d1bb417a768efe3e5a9c4eea116a9f04336c5b71c668913a7cbb"
+    },
+    "clock_native_green": {
+      "total": 20,
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0,
+      "sha256": "24fb1f061304d191c47c19181827c8d63fe133f8c8b0e7bbb593bb39dc1bda0d"
+    },
+    "aggregation_red": {
+      "total": 31,
+      "failed": 31,
+      "passed": 0,
+      "skipped": 0,
+      "sha256": "cd4130c6e573edfa75284389a394e0ff03ee6f8b81c5f44774a6034f0001c58d"
+    },
+    "aggregation_green": {
+      "total": 31,
+      "failed": 0,
+      "passed": 31,
+      "skipped": 0,
+      "sha256": "e428696357d5bb3a68763ee06de625723889b4bd2212fe1d52dd0d8573ea302f"
+    },
+    "native_schema_red": {
+      "total": 33,
+      "failed": 3,
+      "passed": 30,
+      "skipped": 0,
+      "sha256": "2e32fe956d1d5816e29257e7ee5b64e8f37c0773eed905976d3829dc36e70566"
+    },
+    "native_schema_green": {
+      "total": 33,
+      "failed": 0,
+      "passed": 33,
+      "skipped": 0,
+      "sha256": "f7336ea43662c833c34d929e11b98d828aa48c08ea208453f3b583538b35e99c"
+    }
+  },
+  "managed_allocation_counter_available": false,
+  "observer_effect": "Adds native counter reads and external ETW observation; no speedup or latency comparison is claimed.",
+  "no_sdk_model_or_tolerance_change": true,
+  "no_library_or_model_copy": true,
+  "no_publication": true,
+  "no_microphone": true,
+  "scope": "One fixed text input, initial/warm/two repeat queries; GPU work attributed to target process within native-QPC API windows. Includes overlapping Editor GPU work and boundary-crossing spans, retained per queue without engine sums. API resource destruction is not driver retirement.",
+  "evidence_sha256": {
+    "text-current-fp32-d7b2233-raw-qpc-warm-numeric-audit.json": "e30b0ff2673bbc708e1dcf8a94ef903720793e8aa47581d9591db055ebce92b0",
+    "text-current-fp32-d7b2233-raw-qpc-warm-observer.json": "787dfcaf68d6c89b036a1fd2c2f7106f4a9fb8c8fc38c2f59872db14ec26f5c0",
+    "text-current-fp32-d7b2233-raw-qpc-warm-events.jsonl": "7f0ba15a027ceeea97726efbd09d738357d1cd9ef2063e083bd01d0079b54d6f",
+    "raw-qpc-project-source-measured.json": "8ed2da2ef4939e7409229ea51dd1bdd09798135c7d8afcd043802ddfd8723a4f",
+    "NativeDxgObserver.exe": "d8378d52202ac565c704acddf2dac1bad4e6f58c200db227c34788d397b4afd2",
+    "audit_raw_qpc_text.py": "4bca20751185a0b3f567964d2c5a2ed35ec8836330d67c5fcbb8edd202d62053",
+    "raw_gpu_stages.py": "61b32f1a85b09ea7f2740047d2014e0b37a5de1eafb94323130a4c1ed525b2f3",
+    "test_raw_gpu_stages.py": "bfbf7887fff5005028211654f85bf1fb2853138a66ccd365f70da2af15967bd8"
+  },
+  "validation_changed_files_sha256": {
+    "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/RawQpcStageClock.cs": "8bd84ea113bccf1e7843011a7485f82a54ca96208dbd72f63375f1388a0ebaa2",
+    "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/RawQpcStageClockTests.cs": "b912066e4c868b0aeea6e48cce878c5d22862051b2efc30a2b695abb974bcf12",
+    "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/TextGpuPerformanceTests.cs": "214e6a0afa5487693f83fc038c729a600961cc4e548ea7002485ecd577a73b4b"
+  },
+  "initial_graphical_startup_timeout": {
+    "accepted": false,
+    "timeout_seconds": 180,
+    "unity_exit_code": 1,
+    "timed_out": true,
+    "model_execution_report_missing": true,
+    "process_receipt_sha256": "173c6b933b48cec01f886741fed49922d476489085ba69742965f894eaefb86a"
+  },
+  "editor_library_reused_for_followup": true,
+  "audited_utc": "2026-10-18T03:06:31.029424+00:00",
+  "publication_path_fields_redacted": true,
+  "raw_evidence_hashes_refer_to_private_originals": true,
+  "historical_source_ids_are_not_post_cleanup_installation_pins": true
+}

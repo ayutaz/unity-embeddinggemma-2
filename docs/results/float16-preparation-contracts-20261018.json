@@ -1,0 +1,68 @@
+{
+  "scope": "CPU preparation contracts with tiny models; not real-model generation or GPU/numerical/performance acceptance",
+  "behavioral_red": {
+    "total": 9,
+    "passed": 0,
+    "failed": 9,
+    "skipped": 0
+  },
+  "green": {
+    "total": 21,
+    "passed": 21,
+    "failed": 0,
+    "skipped": 0
+  },
+  "assemblies": [
+    {
+      "type": "Assembly",
+      "id": "2585",
+      "name": "EmbeddingGemma.Validation.Editor.Tests.dll",
+      "fullname": "./artifacts/step3-consumer-53dafe8/Library/ScriptAssemblies/EmbeddingGemma.Validation.Editor.Tests.dll",
+      "runstate": "Runnable",
+      "testcasecount": "505",
+      "result": "Passed",
+      "start-time": "2026-10-17 16:17:27Z",
+      "end-time": "2026-10-17 16:17:31Z",
+      "duration": "4.323282",
+      "total": "15",
+      "passed": "15",
+      "failed": "0",
+      "inconclusive": "0",
+      "skipped": "0",
+      "asserts": "0"
+    },
+    {
+      "type": "Assembly",
+      "id": "2728",
+      "name": "Step3WriterContracts.dll",
+      "fullname": "./artifacts/step3-consumer-53dafe8/Library/ScriptAssemblies/Step3WriterContracts.dll",
+      "runstate": "Runnable",
+      "testcasecount": "6",
+      "result": "Passed",
+      "start-time": "2026-10-17 16:17:31Z",
+      "end-time": "2026-10-17 16:17:32Z",
+      "duration": "0.370232",
+      "total": "6",
+      "passed": "6",
+      "failed": "0",
+      "inconclusive": "0",
+      "skipped": "0",
+      "asserts": "0"
+    }
+  ],
+  "exit_code": 0,
+  "source_sha256": {
+    "GpuMediaFloat16Preparation.cs": "a000998d8a9eff3cc50ae95d9cff1d3f07e563a71e4c1a1755064a02690af89e",
+    "GpuMediaFloat16PreparationTests.cs": "bb994843fa803f3a6faa5cfd9f30f05ec1decf8394445e5acf9eb49d3a90a6e1"
+  },
+  "evidence_sha256": {
+    "float16-preparation-red-process.json": "2e98339f8e729b861748adf145e45680a1a41d7f86748d43655191ac4b574b2c",
+    "float16-preparation-red.xml": "cc9c0dc8132dfee1b036294bbb68758df5f0f58d5dc6ad7b5c00e98c024fdf54",
+    "float16-preparation-red.log": "a3a005a2796bedd2001700b6c4e339aac2cd1b0474e308f581cefa4b2a721653",
+    "float16-preparation-green-process.json": "2bd58e5b399ec225d4c284aee8f4cbd982e83c2892065e02a2b0fa4895e83a43",
+    "float16-preparation-green.xml": "7ef527a6d2b5e1b0a83787f45ebd8e1fb6d621b9e4cb517d386946785fec3597",
+    "float16-preparation-green.log": "3c898086629554270e63164e0016a5ff045f3b71f424ecd1e11adc90ba5e3e7e"
+  },
+  "external_coefficients_changed": false,
+  "inference_executed": false
+}

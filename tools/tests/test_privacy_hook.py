@@ -82,3 +82,19 @@ def test_release_upload_checks_actual_file(tmp_path):
     (tmp_path/'receipt.txt').write_text('fixture'+'@'+'private-domain.dev')
     request=event('gh release upload v1 receipt.txt'); request['cwd']=str(tmp_path)
     assert denied(decide(request,lambda:True))
+
+
+def test_release_creation_checks_both_notes_file_argument_forms(tmp_path):
+    path=tmp_path/'notes.md'
+    for argument in ('--notes-file notes.md','--notes-file=notes.md'):
+        request=event('gh release create models-preview '+argument);request['cwd']=str(tmp_path)
+        path.write_text('fixture'+'@'+'private-domain.dev')
+        assert denied(decide(request,lambda:True))
+        path.write_text('Public model preview notes')
+        assert not denied(decide(request,lambda:True))
+
+
+def test_missing_or_dynamic_release_notes_files_fail_closed(tmp_path):
+    for name in ('missing.md','$notesFile','-'):
+        request=event('gh release create models-preview --notes-file '+name);request['cwd']=str(tmp_path)
+        assert denied(decide(request,lambda:True))

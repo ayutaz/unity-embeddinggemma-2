@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "scope": "Flat HTTPS download and immutable six-module distribution composition contracts only",
+  "flat_red": {
+    "failed": 8,
+    "passed": 2
+  },
+  "flat_https_fixture_red": {
+    "errors": 2,
+    "passed": 10
+  },
+  "composition_red": {
+    "failed": 12
+  },
+  "green": {
+    "passed": 77,
+    "failed": 0,
+    "skipped": 0
+  },
+  "actual_local_https_executed": true,
+  "real_model_composition_executed": false,
+  "public_acquisition_validated": false,
+  "gpu_validated": false,
+  "model_binary_privacy_review_completed": false,
+  "initial_environment_failure_preserved": "First standalone stdlib-only interpreter had no pytest; tests were rerun through the existing uv project environment.",
+  "evidence_sha256": {
+    "media-flat-assets-red-v2-private.log": "37c7cf0b95ca424cc41771ed232bb6d46a8b2a324aceb87c0a26df56dad5f0a2",
+    "media-flat-https-red-private.log": "30f0708400feb706bafb111eb534406b2c24be594cf0ba455988cff02fe7dcc4",
+    "media-release-assets-red-private.log": "5369efe9fa857d9e73726f970de1b0657f85d0aec08e2a3382691aa9708e3654",
+    "media-flat-and-composition-final-green-private.log": "562182cb73fa64f90f6b7326b5e9e6aa7527cd47237db6a1f9473bc65c26b916"
+  }
+}

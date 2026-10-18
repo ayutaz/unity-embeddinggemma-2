@@ -1,0 +1,75 @@
+{
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "visual_inspection_completed": true,
+  "method": "All eight saved PNGs were directly inspected with view_image by this executor; hashes rechecked after inspection.",
+  "scope": "Programmatic sample search-result rendering, fixed synthetic image/audio fixtures. Not native keyboard/mouse or playback/microphone acceptance.",
+  "files": [
+    {
+      "precision": "fp32",
+      "file": "text-and-playmode-e28a5fd-fp32-16gib-rendered-query-cat-ja.png",
+      "sha256": "a632aa22c87139528f45d5cd58813c3ef0eac605faec37156ee6d70bfed8df79",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "precision": "fp32",
+      "file": "text-and-playmode-e28a5fd-fp32-16gib-rendered-query-space-en.png",
+      "sha256": "a4abd1371aef3aae6a8434b57b9c4cfb742a20f3ec14eb799afea3e3773459b5",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "precision": "fp32",
+      "file": "text-and-playmode-e28a5fd-fp32-16gib-rendered-query-recipe-ja.png",
+      "sha256": "2fbbe4539383b40774d87ce554503c8c41def797f2547e229343f975f8179262",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "precision": "fp32",
+      "file": "text-and-playmode-e28a5fd-fp32-16gib-rendered-query-cat-en.png",
+      "sha256": "528b957590a5e70f09c62f5e58782c550a1ee7232d4c8154dd6d2a0f2ef5d4c2",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "precision": "float16-weights",
+      "file": "text-and-playmode-e28a5fd-float16-weights-16gib-rendered-query-cat-ja.png",
+      "sha256": "790e532740dc81ca7da59348f021abe499f255fc1801de61e475b30f67251587",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "precision": "float16-weights",
+      "file": "text-and-playmode-e28a5fd-float16-weights-16gib-rendered-query-space-en.png",
+      "sha256": "e13a75e09200d90cab02410ce59fb794c67d3b0dcea36ad8854b5423e568858d",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "precision": "float16-weights",
+      "file": "text-and-playmode-e28a5fd-float16-weights-16gib-rendered-query-recipe-ja.png",
+      "sha256": "c2228a6534d10839918fa857b2de77dd2c3b24762e8c6e3bc7c898438f60faaf",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "precision": "float16-weights",
+      "file": "text-and-playmode-e28a5fd-float16-weights-16gib-rendered-query-cat-en.png",
+      "sha256": "a3ef0f22426abe8b5685a5711c398bf4e5a1625258f4232b2da628cb973f674b",
+      "width": 1280,
+      "height": 800
+    }
+  ],
+  "observations": [
+    "Three image geometries display their synthetic thumbnails",
+    "Ranked score rows and Japanese audio playback labels are legible",
+    "Rounded displayed score ties are distinguished by the independently audited full-precision rankings"
+  ],
+  "limitations": [
+    "Recipe query includes a partially visible final row in the scroll viewport; native scrolling still required",
+    "Playback buttons are rendered, but playback/stop were not performed by this fixture",
+    "These synthetic inputs do not establish arbitrary real-world retrieval quality"
+  ],
+  "numerical_audit_visual_flag_note": "Numerical audits may be regenerated and reset their visual-inspection flag; this separate receipt binds the actual inspected PNG hashes."
+}

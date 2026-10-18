@@ -1,0 +1,82 @@
+{
+  "native_session_accepted": false,
+  "full_priorities_1_to_3_accepted": false,
+  "sdk_source": "680af07c0ecad524accec00797c645b8528e6bf5",
+  "package_git_tree": "b5195f3578974568e7ac8c51b8fcaee1fd94945b",
+  "precision": "float16-weights",
+  "fresh_consumer_without_automation_plugin": true,
+  "terminal_receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\usability-consumer-b519-fresh-no-uloop",
+      "-executeMethod",
+      "UsabilityUiBootstrap.Open",
+      "-logFile",
+      ".\\artifacts\\usability-state\\native-ui-b519-fresh-no-uloop.log"
+    ],
+    "timeout_seconds": 900,
+    "success": false,
+    "terminal": true,
+    "timed_out": true,
+    "started_utc": "2026-10-18T00:39:42.757574+00:00",
+    "pid": 193780,
+    "exit_code": 1,
+    "elapsed_seconds": 900.8556688000099,
+    "completed_utc": "2026-10-18T00:54:43.613252+00:00"
+  },
+  "independently_verified_image": {
+    "case": "square-0",
+    "dimension": 768,
+    "cosine": 0.9999999999997693,
+    "norm_squared": 0.9999999833173898
+  },
+  "cache_preparation_cancel_and_retry_observed": true,
+  "missing_bundle_error_and_recovery_observed": true,
+  "image_preview_visually_inspected": true,
+  "source_audit": {
+    "success": true,
+    "project": ".\\artifacts\\usability-consumer-b519-fresh-no-uloop",
+    "requested_revision": "680af07c0ecad524accec00797c645b8528e6bf5",
+    "resolved_revision": "680af07c0ecad524accec00797c645b8528e6bf5",
+    "unity_executed": false,
+    "errors": [],
+    "package_tracked_files_verified": 315,
+    "samples_blob_verified": {
+      "TextSearch": 52,
+      "MultimodalSearch": 34
+    },
+    "observer_sha256": "2071ff28763a50d1203e2129ad8198ac9699335f8b7cb6afc442599319bc60bd",
+    "protected_root_files_verified": 4,
+    "scope": "Source identity after a timed-out fresh native attempt; not normal closure or complete UI acceptance."
+  },
+  "audio_registration_observed": false,
+  "search_observed": false,
+  "audio_playback_observed": false,
+  "early_playback_stop_proven": false,
+  "native_release_observed": false,
+  "normal_editor_exit_verified": false,
+  "microphone_started": false,
+  "public_acquisition_accepted": false,
+  "reason": "The owned Editor hit its 900-second controller limit and exited1. Image-only evidence does not accept the session.",
+  "elapsed_scope": "Controller wall includes fresh import, human/native interaction, tools, and idle time. It is not inference latency or a plugin-removal benchmark.",
+  "outstanding": [
+    "Audio registration and JA/EN search",
+    "Unsupported/empty-input recovery",
+    "Playback/early stop/release/normal exit",
+    "Public empty-cache acquisition",
+    "Authorized real microphone",
+    "Final same-candidate acceptance"
+  ],
+  "evidence_sha256": {
+    "native-ui-b519-fresh-no-uloop-process.json": "6a9c590933ccb59c1b885e6e8a15390b13d3e61cd84043ec1a729f47518ce6d1",
+    "fresh-consumer-b519-no-uloop-created.json": "d1b86f872b0bde3e0afe566051f41ae43f04e1522b0ecc4a541cc6d22307befd",
+    "native-ui-b519-fresh-no-uloop.json.events.jsonl": "8d18d260882579a3726e8e2c226972c93dfd15ce610d24087b83ac80bf44ff9b",
+    "consumer-b519-no-uloop-post-timeout-source-audit.json": "ffec2812e4656bc38d1d82a95b9cb6d83d3c740feb3e4ddfc4c5ef82cf413acb",
+    "native-ui-b519-fresh-no-uloop.log": "3af4d5d0bc5a8468d548cf6b921a9d668e25df9f9da40afbe321c74c4a620e08"
+  },
+  "audited_utc": "2026-10-18T00:56:52.585517+00:00"
+}

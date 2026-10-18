@@ -1,0 +1,400 @@
+{
+  "accepted_full_submitted_encoder_interval_coverage": true,
+  "complete_performance_accepted": false,
+  "causal_performance_fix_verified": false,
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "validation_source": "c2f766e4e05f5378eba15b6552e4a244ebeebfa9",
+  "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+  "records": [
+    {
+      "module": "image-square",
+      "precision": "fp32",
+      "input_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+      "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "expected_intervals_per_round": {
+        "model-segment-and-output-copy": 180,
+        "projection-operation": 179
+      },
+      "all_submitted_intervals_observed": true,
+      "total_observed_intervals": 1436,
+      "minimum_reference_cosine": 0.9999999999997138,
+      "rounds": [
+        {
+          "round": "first",
+          "operations": [
+            {
+              "operation": "EmbeddingGemma.GpuBatchedMatmul",
+              "count": 32,
+              "cpu_submission_wall_ns_sum": 13699914600,
+              "gpu_queue_interval_ns_sum": 1005273088
+            },
+            {
+              "operation": "EmbeddingGemma.GpuBlockedMatmul",
+              "count": 114,
+              "cpu_submission_wall_ns_sum": 1428206900,
+              "gpu_queue_interval_ns_sum": 846093312
+            },
+            {
+              "operation": "EmbeddingGemma.GpuFixedLeftMatmul",
+              "count": 1,
+              "cpu_submission_wall_ns_sum": 1479300,
+              "gpu_queue_interval_ns_sum": 723968
+            },
+            {
+              "operation": "EmbeddingGemma.GpuGelu",
+              "count": 16,
+              "cpu_submission_wall_ns_sum": 533715200,
+              "gpu_queue_interval_ns_sum": 46302208
+            },
+            {
+              "operation": "EmbeddingGemma.GpuSoftmax",
+              "count": 16,
+              "cpu_submission_wall_ns_sum": 12590983700,
+              "gpu_queue_interval_ns_sum": 1431378944
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "operations": [
+            {
+              "operation": "EmbeddingGemma.GpuBatchedMatmul",
+              "count": 32,
+              "cpu_submission_wall_ns_sum": 6603204800,
+              "gpu_queue_interval_ns_sum": 733966336
+            },
+            {
+              "operation": "EmbeddingGemma.GpuBlockedMatmul",
+              "count": 114,
+              "cpu_submission_wall_ns_sum": 942085600,
+              "gpu_queue_interval_ns_sum": 697761792
+            },
+            {
+              "operation": "EmbeddingGemma.GpuFixedLeftMatmul",
+              "count": 1,
+              "cpu_submission_wall_ns_sum": 263900,
+              "gpu_queue_interval_ns_sum": 933888
+            },
+            {
+              "operation": "EmbeddingGemma.GpuGelu",
+              "count": 16,
+              "cpu_submission_wall_ns_sum": 358177800,
+              "gpu_queue_interval_ns_sum": 40002560
+            },
+            {
+              "operation": "EmbeddingGemma.GpuSoftmax",
+              "count": 16,
+              "cpu_submission_wall_ns_sum": 5446009100,
+              "gpu_queue_interval_ns_sum": 912116736
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "operations": [
+            {
+              "operation": "EmbeddingGemma.GpuBatchedMatmul",
+              "count": 32,
+              "cpu_submission_wall_ns_sum": 5967564100,
+              "gpu_queue_interval_ns_sum": 726580224
+            },
+            {
+              "operation": "EmbeddingGemma.GpuBlockedMatmul",
+              "count": 114,
+              "cpu_submission_wall_ns_sum": 945572100,
+              "gpu_queue_interval_ns_sum": 677588992
+            },
+            {
+              "operation": "EmbeddingGemma.GpuFixedLeftMatmul",
+              "count": 1,
+              "cpu_submission_wall_ns_sum": 255400,
+              "gpu_queue_interval_ns_sum": 700416
+            },
+            {
+              "operation": "EmbeddingGemma.GpuGelu",
+              "count": 16,
+              "cpu_submission_wall_ns_sum": 357530200,
+              "gpu_queue_interval_ns_sum": 38016000
+            },
+            {
+              "operation": "EmbeddingGemma.GpuSoftmax",
+              "count": 16,
+              "cpu_submission_wall_ns_sum": 5867842100,
+              "gpu_queue_interval_ns_sum": 954557440
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "operations": [
+            {
+              "operation": "EmbeddingGemma.GpuBatchedMatmul",
+              "count": 32,
+              "cpu_submission_wall_ns_sum": 13199827800,
+              "gpu_queue_interval_ns_sum": 840780800
+            },
+            {
+              "operation": "EmbeddingGemma.GpuBlockedMatmul",
+              "count": 114,
+              "cpu_submission_wall_ns_sum": 1127964200,
+              "gpu_queue_interval_ns_sum": 775100416
+            },
+            {
+              "operation": "EmbeddingGemma.GpuFixedLeftMatmul",
+              "count": 1,
+              "cpu_submission_wall_ns_sum": 431800,
+              "gpu_queue_interval_ns_sum": 1356800
+            },
+            {
+              "operation": "EmbeddingGemma.GpuGelu",
+              "count": 16,
+              "cpu_submission_wall_ns_sum": 411385300,
+              "gpu_queue_interval_ns_sum": 46360576
+            },
+            {
+              "operation": "EmbeddingGemma.GpuSoftmax",
+              "count": 16,
+              "cpu_submission_wall_ns_sum": 7488050300,
+              "gpu_queue_interval_ns_sum": 1148320768
+            }
+          ]
+        }
+      ],
+      "audit": "encoder-gpu-dispatch-image-square-fp32-c2f766e-first-audit-20261018.json",
+      "audit_sha256": "30bff1ffd5d82662f2dbcad8e3543f36192dc8e586a4b05d82c4d8e2580627cb",
+      "raw_sha256": "3b46ddb20c5d25c71b5f88d405b525bd0eef7e853eee53a081aa1655523105c4"
+    },
+    {
+      "module": "audio-1119",
+      "precision": "fp32",
+      "input_sha256": "06a56aa96f41a685ae25b4d7d0a55a15717723bb45a88a21a02546b9355e67e5",
+      "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+      "expected_intervals_per_round": {
+        "model-segment-and-output-copy": 268,
+        "projection-operation": 267
+      },
+      "all_submitted_intervals_observed": true,
+      "total_observed_intervals": 2140,
+      "minimum_reference_cosine": 0.9999999999928919,
+      "rounds": [
+        {
+          "round": "first",
+          "operations": [
+            {
+              "operation": "EmbeddingGemma.GpuBatchedMatmul",
+              "count": 36,
+              "cpu_submission_wall_ns_sum": 49377300,
+              "gpu_queue_interval_ns_sum": 3056640
+            },
+            {
+              "operation": "EmbeddingGemma.GpuBlockedMatmul",
+              "count": 135,
+              "cpu_submission_wall_ns_sum": 294558800,
+              "gpu_queue_interval_ns_sum": 310861824
+            },
+            {
+              "operation": "EmbeddingGemma.GpuGlu",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 36557900,
+              "gpu_queue_interval_ns_sum": 1488896
+            },
+            {
+              "operation": "EmbeddingGemma.GpuScalarDivide",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 32240800,
+              "gpu_queue_interval_ns_sum": 322560
+            },
+            {
+              "operation": "EmbeddingGemma.GpuSequentialScale",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 32910800,
+              "gpu_queue_interval_ns_sum": 1265664
+            },
+            {
+              "operation": "EmbeddingGemma.GpuSilu",
+              "count": 36,
+              "cpu_submission_wall_ns_sum": 132933400,
+              "gpu_queue_interval_ns_sum": 11588608
+            },
+            {
+              "operation": "EmbeddingGemma.GpuSoftmax",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 40034600,
+              "gpu_queue_interval_ns_sum": 762880
+            },
+            {
+              "operation": "EmbeddingGemma.GpuTanh",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 39764400,
+              "gpu_queue_interval_ns_sum": 370688
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "operations": [
+            {
+              "operation": "EmbeddingGemma.GpuBatchedMatmul",
+              "count": 36,
+              "cpu_submission_wall_ns_sum": 11149700,
+              "gpu_queue_interval_ns_sum": 2701312
+            },
+            {
+              "operation": "EmbeddingGemma.GpuBlockedMatmul",
+              "count": 135,
+              "cpu_submission_wall_ns_sum": 104779300,
+              "gpu_queue_interval_ns_sum": 277944320
+            },
+            {
+              "operation": "EmbeddingGemma.GpuGlu",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 5269500,
+              "gpu_queue_interval_ns_sum": 1266688
+            },
+            {
+              "operation": "EmbeddingGemma.GpuScalarDivide",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 2492600,
+              "gpu_queue_interval_ns_sum": 332800
+            },
+            {
+              "operation": "EmbeddingGemma.GpuSequentialScale",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 5131600,
+              "gpu_queue_interval_ns_sum": 1178624
+            },
+            {
+              "operation": "EmbeddingGemma.GpuSilu",
+              "count": 36,
+              "cpu_submission_wall_ns_sum": 59734400,
+              "gpu_queue_interval_ns_sum": 11055104
+            },
+            {
+              "operation": "EmbeddingGemma.GpuSoftmax",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 2843500,
+              "gpu_queue_interval_ns_sum": 660480
+            },
+            {
+              "operation": "EmbeddingGemma.GpuTanh",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 2756200,
+              "gpu_queue_interval_ns_sum": 337920
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "operations": [
+            {
+              "operation": "EmbeddingGemma.GpuBatchedMatmul",
+              "count": 36,
+              "cpu_submission_wall_ns_sum": 12126000,
+              "gpu_queue_interval_ns_sum": 2707456
+            },
+            {
+              "operation": "EmbeddingGemma.GpuBlockedMatmul",
+              "count": 135,
+              "cpu_submission_wall_ns_sum": 110378600,
+              "gpu_queue_interval_ns_sum": 282593280
+            },
+            {
+              "operation": "EmbeddingGemma.GpuGlu",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 5881800,
+              "gpu_queue_interval_ns_sum": 1262592
+            },
+            {
+              "operation": "EmbeddingGemma.GpuScalarDivide",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 2956100,
+              "gpu_queue_interval_ns_sum": 313344
+            },
+            {
+              "operation": "EmbeddingGemma.GpuSequentialScale",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 5474400,
+              "gpu_queue_interval_ns_sum": 1208320
+            },
+            {
+              "operation": "EmbeddingGemma.GpuSilu",
+              "count": 36,
+              "cpu_submission_wall_ns_sum": 62480700,
+              "gpu_queue_interval_ns_sum": 10923008
+            },
+            {
+              "operation": "EmbeddingGemma.GpuSoftmax",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 2804600,
+              "gpu_queue_interval_ns_sum": 673792
+            },
+            {
+              "operation": "EmbeddingGemma.GpuTanh",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 2777200,
+              "gpu_queue_interval_ns_sum": 333824
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "operations": [
+            {
+              "operation": "EmbeddingGemma.GpuBatchedMatmul",
+              "count": 36,
+              "cpu_submission_wall_ns_sum": 10943700,
+              "gpu_queue_interval_ns_sum": 2789376
+            },
+            {
+              "operation": "EmbeddingGemma.GpuBlockedMatmul",
+              "count": 135,
+              "cpu_submission_wall_ns_sum": 109678500,
+              "gpu_queue_interval_ns_sum": 238984192
+            },
+            {
+              "operation": "EmbeddingGemma.GpuGlu",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 5115300,
+              "gpu_queue_interval_ns_sum": 1318912
+            },
+            {
+              "operation": "EmbeddingGemma.GpuScalarDivide",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 2126900,
+              "gpu_queue_interval_ns_sum": 315392
+            },
+            {
+              "operation": "EmbeddingGemma.GpuSequentialScale",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 5482100,
+              "gpu_queue_interval_ns_sum": 1537024
+            },
+            {
+              "operation": "EmbeddingGemma.GpuSilu",
+              "count": 36,
+              "cpu_submission_wall_ns_sum": 66315300,
+              "gpu_queue_interval_ns_sum": 12400640
+            },
+            {
+              "operation": "EmbeddingGemma.GpuSoftmax",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 2160900,
+              "gpu_queue_interval_ns_sum": 623616
+            },
+            {
+              "operation": "EmbeddingGemma.GpuTanh",
+              "count": 12,
+              "cpu_submission_wall_ns_sum": 2194000,
+              "gpu_queue_interval_ns_sum": 344064
+            }
+          ]
+        }
+      ],
+      "audit": "encoder-gpu-dispatch-audio-1119-fp32-c2f766e-first-audit-20261018.json",
+      "audit_sha256": "b1babbfe6f16287a426c6d01de4b0226ab3ac17a8111af4f09bb8a54b0fdab83",
+      "raw_sha256": "12e823659aedaf0ee1b3711bfc65410711b0f115077a59410db0f865c99b225f"
+    }
+  ],
+  "scope": "Four fixed-input instrumented calls per module, separate processes. Different input workloads; not modality throughput, matched speedup, pure GPU kernel activity or CPU busy time. Submission wall and GPU queue intervals can overlap and must not be added or subtracted.",
+  "next_action": "Test write-only GPU output allocation as a candidate for large image operations. Audio observations do not support attributing all latency to those same operations. Keep preprocessing/backbone GPU timing, async allocations and numeric/rank/release regression requirements."
+}

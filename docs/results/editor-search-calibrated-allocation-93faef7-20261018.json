@@ -1,0 +1,324 @@
+{
+  "calibrated_editor_search_allocation_accepted": true,
+  "complete_performance_accepted": false,
+  "full_priorities_1_to_3_accepted": false,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "93faef78d6f94463c5199f3729f5d388974bd163",
+  "unity": "6000.3.21f1",
+  "standalone_tdd": {
+    "total": 9,
+    "red_failed": 9,
+    "green_failed": 0
+  },
+  "unity_counts": {
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "skipped": 0
+  },
+  "exit_code": 0,
+  "model_loaded": false,
+  "gpu_execution_validated": false,
+  "source_files_verified": 558,
+  "official_framework_files_verified": 1168,
+  "scope": "Main-thread inclusive managed bytes in exact synchronous Editor Search enumeration/query markers. Calibration and searches share one stopped CPU capture. Other threads, background index jobs, native memory and async completion are excluded.",
+  "search_route": "Synchronous asset provider with Packages and WantsMore; includes path candidates, not isolated index latency or explicit rebuild.",
+  "calibration": {
+    "noop_bytes": 0,
+    "small_bytes": 65568,
+    "large_bytes": 131104
+  },
+  "rounds": [
+    {
+      "round": "first",
+      "enumeration_marker": "EmbeddingGemma.EditorAllocation.37c02935f5224d8289c958a4a2e107c3.first.enumeration",
+      "search_marker": "EmbeddingGemma.EditorAllocation.37c02935f5224d8289c958a4a2e107c3.first.search",
+      "enumeration_wall_seconds": 0.0003297,
+      "enumeration_process_cpu_seconds": 0.0,
+      "search_wall_seconds": 0.2105031,
+      "search_process_cpu_seconds": 0.171875,
+      "database_count": 1,
+      "result_count": 2,
+      "expected_asset_found": true,
+      "enumeration_main_thread_managed_bytes": 392,
+      "search_main_thread_managed_bytes": 1145332
+    },
+    {
+      "round": "warm",
+      "enumeration_marker": "EmbeddingGemma.EditorAllocation.37c02935f5224d8289c958a4a2e107c3.warm.enumeration",
+      "search_marker": "EmbeddingGemma.EditorAllocation.37c02935f5224d8289c958a4a2e107c3.warm.search",
+      "enumeration_wall_seconds": 1.03e-05,
+      "enumeration_process_cpu_seconds": 0.0,
+      "search_wall_seconds": 0.0099492,
+      "search_process_cpu_seconds": 0.0,
+      "database_count": 1,
+      "result_count": 2,
+      "expected_asset_found": true,
+      "enumeration_main_thread_managed_bytes": 216,
+      "search_main_thread_managed_bytes": 38638
+    },
+    {
+      "round": "repeat-1",
+      "enumeration_marker": "EmbeddingGemma.EditorAllocation.37c02935f5224d8289c958a4a2e107c3.repeat-1.enumeration",
+      "search_marker": "EmbeddingGemma.EditorAllocation.37c02935f5224d8289c958a4a2e107c3.repeat-1.search",
+      "enumeration_wall_seconds": 6.2e-06,
+      "enumeration_process_cpu_seconds": 0.0,
+      "search_wall_seconds": 0.008450599999999999,
+      "search_process_cpu_seconds": 0.0,
+      "database_count": 1,
+      "result_count": 2,
+      "expected_asset_found": true,
+      "enumeration_main_thread_managed_bytes": 216,
+      "search_main_thread_managed_bytes": 35198
+    },
+    {
+      "round": "repeat-2",
+      "enumeration_marker": "EmbeddingGemma.EditorAllocation.37c02935f5224d8289c958a4a2e107c3.repeat-2.enumeration",
+      "search_marker": "EmbeddingGemma.EditorAllocation.37c02935f5224d8289c958a4a2e107c3.repeat-2.search",
+      "enumeration_wall_seconds": 6.4e-06,
+      "enumeration_process_cpu_seconds": 0.0,
+      "search_wall_seconds": 0.0082642,
+      "search_process_cpu_seconds": 0.0,
+      "database_count": 1,
+      "result_count": 2,
+      "expected_asset_found": true,
+      "enumeration_main_thread_managed_bytes": 216,
+      "search_main_thread_managed_bytes": 34766
+    }
+  ],
+  "history": {
+    "first_frame": 0,
+    "last_frame": 5,
+    "collection_stopped": true,
+    "measurement_api": "HierarchyFrameDataView.columnGcMemory / GetItemColumnDataAsDouble",
+    "marker_rows": [
+      {
+        "marker": "EmbeddingGemma.EditorAllocation.37c02935f5224d8289c958a4a2e107c3.noop",
+        "frame": 3,
+        "thread": "Main Thread",
+        "raw_managed_bytes": 0.0
+      },
+      {
+        "marker": "EmbeddingGemma.EditorAllocation.37c02935f5224d8289c958a4a2e107c3.warm.enumeration",
+        "frame": 3,
+        "thread": "Main Thread",
+        "raw_managed_bytes": 216.0
+      },
+      {
+        "marker": "EmbeddingGemma.EditorAllocation.37c02935f5224d8289c958a4a2e107c3.repeat-1.enumeration",
+        "frame": 3,
+        "thread": "Main Thread",
+        "raw_managed_bytes": 216.0
+      },
+      {
+        "marker": "EmbeddingGemma.EditorAllocation.37c02935f5224d8289c958a4a2e107c3.repeat-2.enumeration",
+        "frame": 3,
+        "thread": "Main Thread",
+        "raw_managed_bytes": 216.0
+      },
+      {
+        "marker": "EmbeddingGemma.EditorAllocation.37c02935f5224d8289c958a4a2e107c3.first.enumeration",
+        "frame": 3,
+        "thread": "Main Thread",
+        "raw_managed_bytes": 392.0
+      },
+      {
+        "marker": "EmbeddingGemma.EditorAllocation.37c02935f5224d8289c958a4a2e107c3.repeat-2.search",
+        "frame": 3,
+        "thread": "Main Thread",
+        "raw_managed_bytes": 34766.0
+      },
+      {
+        "marker": "EmbeddingGemma.EditorAllocation.37c02935f5224d8289c958a4a2e107c3.repeat-1.search",
+        "frame": 3,
+        "thread": "Main Thread",
+        "raw_managed_bytes": 35198.0
+      },
+      {
+        "marker": "EmbeddingGemma.EditorAllocation.37c02935f5224d8289c958a4a2e107c3.warm.search",
+        "frame": 3,
+        "thread": "Main Thread",
+        "raw_managed_bytes": 38638.0
+      },
+      {
+        "marker": "EmbeddingGemma.EditorAllocation.37c02935f5224d8289c958a4a2e107c3.small",
+        "frame": 3,
+        "thread": "Main Thread",
+        "raw_managed_bytes": 65568.0
+      },
+      {
+        "marker": "EmbeddingGemma.EditorAllocation.37c02935f5224d8289c958a4a2e107c3.large",
+        "frame": 3,
+        "thread": "Main Thread",
+        "raw_managed_bytes": 131104.0
+      },
+      {
+        "marker": "EmbeddingGemma.EditorAllocation.37c02935f5224d8289c958a4a2e107c3.first.search",
+        "frame": 3,
+        "thread": "Main Thread",
+        "raw_managed_bytes": 1145332.0
+      }
+    ],
+    "nodes_examined": 30800
+  },
+  "empty_Library_before": true,
+  "os_and_global_cache_purged": false,
+  "startup": {
+    "pid": 149204,
+    "project_info_seconds": {
+      "projectLoad": 55.1219542,
+      "projectInit": 54.5927803,
+      "templateInit": 0.0,
+      "packageManagerInit": 0.4388204,
+      "assetDatabaseInit": 5.2744478,
+      "globalIlluminationInit": 0.0043195,
+      "assembliesLoad": 1.2820387,
+      "unityExtensionsInit": 0.0047265,
+      "assetDatabaseRefresh": 47.3431493,
+      "sceneOpening": 0.1592032
+    },
+    "project_info_available": true,
+    "malformed_telemetry_count": 0,
+    "asset_refreshes": [
+      {
+        "line": 3683,
+        "seconds": 47.343,
+        "initiator": "InitialRefreshV2",
+        "imports": {
+          "total": 2658,
+          "actual": 2658,
+          "local_cache": 0,
+          "cache_server": 0
+        }
+      },
+      {
+        "line": 3834,
+        "seconds": 0.037,
+        "initiator": "StopAssetImportingV2",
+        "imports": null
+      }
+    ],
+    "timings_additive": false,
+    "search_database_duration_seconds": null,
+    "model_load_seconds": null,
+    "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+  },
+  "reload": {
+    "schema_version": 1,
+    "completed_reload_count": 2,
+    "incomplete_reload_count": 0,
+    "unpaired_profile_count": 0,
+    "observation_complete": true,
+    "completed_reload_ms": {
+      "min": 1240,
+      "median": 3860.5,
+      "max": 6481
+    },
+    "profiles": [
+      {
+        "begin_line": 138,
+        "profile_line": 148,
+        "total_ms": 1240,
+        "stages_ms": {
+          "BeginReloadAssembly": 210,
+          "ExecutionOrderSort": 0,
+          "DisableScriptedObjects": 0,
+          "BackupInstance": 0,
+          "ReleaseScriptingObjects": 0,
+          "CreateAndSetChildDomain": 13,
+          "RebuildCommonClasses": 57,
+          "RebuildNativeTypeToScriptingClass": 21,
+          "initialDomainReloadingComplete": 77,
+          "LoadAllAssembliesAndSetupDomain": 240,
+          "LoadAssemblies": 192,
+          "RebuildTransferFunctionScriptingTraits": 0,
+          "AnalyzeDomain": 235,
+          "TypeCache.Refresh": 233,
+          "TypeCache.ScanAssembly": 213,
+          "BuildScriptInfoCaches": 0,
+          "ResolveRequiredComponents": 1,
+          "FinalizeReload": 635,
+          "ReleaseScriptCaches": 0,
+          "RebuildScriptCaches": 0,
+          "SetupLoadedEditorAssemblies": 583,
+          "LogAssemblyErrors": 0,
+          "InitializePlatformSupportModulesInManaged": 66,
+          "SetLoadedEditorAssemblies": 8,
+          "BeforeProcessingInitializeOnLoad": 139,
+          "ProcessInitializeOnLoadAttributes": 240,
+          "ProcessInitializeOnLoadMethodAttributes": 130,
+          "AfterProcessingInitializeOnLoad": 0,
+          "EditorAssembliesLoaded": 0,
+          "ExecutionOrderSort2": 0,
+          "AwakeInstancesAfterBackupRestoration": 0
+        }
+      },
+      {
+        "begin_line": 972,
+        "profile_line": 1391,
+        "total_ms": 6481,
+        "stages_ms": {
+          "BeginReloadAssembly": 400,
+          "ExecutionOrderSort": 0,
+          "DisableScriptedObjects": 38,
+          "BackupInstance": 0,
+          "ReleaseScriptingObjects": 0,
+          "CreateAndSetChildDomain": 165,
+          "RebuildCommonClasses": 45,
+          "RebuildNativeTypeToScriptingClass": 15,
+          "initialDomainReloadingComplete": 43,
+          "LoadAllAssembliesAndSetupDomain": 360,
+          "LoadAssemblies": 385,
+          "RebuildTransferFunctionScriptingTraits": 0,
+          "AnalyzeDomain": 109,
+          "TypeCache.Refresh": 85,
+          "TypeCache.ScanAssembly": 74,
+          "BuildScriptInfoCaches": 21,
+          "ResolveRequiredComponents": 1,
+          "FinalizeReload": 5619,
+          "ReleaseScriptCaches": 0,
+          "RebuildScriptCaches": 0,
+          "SetupLoadedEditorAssemblies": 5393,
+          "LogAssemblyErrors": 0,
+          "InitializePlatformSupportModulesInManaged": 24,
+          "SetLoadedEditorAssemblies": 6,
+          "BeforeProcessingInitializeOnLoad": 238,
+          "ProcessInitializeOnLoadAttributes": 4915,
+          "ProcessInitializeOnLoadMethodAttributes": 156,
+          "AfterProcessingInitializeOnLoad": 39,
+          "EditorAssembliesLoaded": 15,
+          "ExecutionOrderSort2": 0,
+          "AwakeInstancesAfterBackupRestoration": 66
+        }
+      }
+    ],
+    "asset_refresh_seconds": {
+      "count": 2,
+      "min": 0.037,
+      "median": 23.69,
+      "max": 47.343
+    },
+    "search_database_enumeration_exception_count": 0,
+    "persistent_allocation_diagnostic_count": 0,
+    "unity_execution_performed": false,
+    "performance_improvement_verified": false,
+    "m2_release_verified": false,
+    "scope": "Historical log markers only. Nested stage timings overlap and are not additive. An incomplete reload has no duration estimate and does not prove a live hang. A complete log observation does not establish error-free Unity, runtime acceptance, improved performance, or the cause of earlier hangs."
+  },
+  "limits": [
+    "Exact main-thread inclusive managed bytes only, not native/GPU memory or other threads.",
+    "Index readiness occurs before the capture. Background index allocations/explicit index rebuild are not measured.",
+    "CreateContext/GetItems/ToArray/context disposal are inside each synchronous query marker. Result validation and JSON serialization are outside it.",
+    "Profiler affects this observation. No normal-API speedup, model throughput or arbitrary Editor allocation claim.",
+    "Library absence/presence is recorded before this launch; shared OS/registry/compiler caches are retained. Nested startup/import/reload values overlap, never summed."
+  ],
+  "evidence_sha256": {
+    "editor-allocation-93faef7-first.json": "d36632f768dfe26b5af6bcf239bf16a5bd74d63d171115b3d4c9c050dc1bab7b",
+    "editor-allocation-93faef7-first.xml": "c582f4948b61d631cd7b654362506376fa515fa7c174a7ae91a34d433a6126b5",
+    "editor-allocation-93faef7-first-process.json": "a8f3e6007e5e31938233d74f003d692c0ec83117f276d00d5f4cab70620833cd",
+    "editor-allocation-93faef7-first-source.json": "a0fa9a2bfcb5a42bd1503ef03b96e46f215a5c6d44b8b06e162709c4849ac47a",
+    "editor-allocation-93faef7-first.log": "a03d876eeaed01214a90276eff7db4890f1fb355f289d9658e69001245c81725",
+    "red.txt": "60a916286b22a7a01a32874bf21dcc81510da9ac37c6c73f24b633eb576139ea",
+    "green.txt": "5411483b34ecfafcc54a051952bf6a3ae0ad340b79114ab655f7ad9d7ba1fe83"
+  }
+}

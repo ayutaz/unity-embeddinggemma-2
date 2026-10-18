@@ -1,0 +1,260 @@
+{
+  "accepted_representative_sample_index_rebuild": true,
+  "full_priorities_1_to_3_accepted": false,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "9b6f28e3c6a37fa2ed9c6c6608018711a1e9efa3",
+  "scope": "Both complete SDK samples, 86 files, in an existing dedicated consumer/Library. Explicit default Assets rebuild brings a ready-but-empty cached index to 40 documents and retains fixture/both scenes on two direct index searches. No fresh-Library, full user project, model/GPU or average-performance claim.",
+  "report": {
+    "success": true,
+    "unity": "6000.3.21f1",
+    "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+    "validation_source": "9b6f28e3c6a37fa2ed9c6c6608018711a1e9efa3",
+    "model_loaded": false,
+    "gpu_execution_validated": false,
+    "scope": "Explicit Build() on the default Assets Search database after readiness, twice in one Editor. Existing asset/index artifacts can be reused. Direct SearchIndexer queries exclude file-path provider fallback. CPU is process-wide including background work; not exclusive indexing CPU or cold artifact regeneration.",
+    "fixture": "Assets/EmbeddingGemmaIndexRebuildProbe/EmbeddingGemmaProbe.txt",
+    "query": "embeddinggemmaprobe",
+    "required_sample_scenes": [
+      "Assets/EmbeddingGemmaTextSearch/TextSearch.unity",
+      "Assets/EmbeddingGemmaMultimodalSearch/MultimodalSearch.unity"
+    ],
+    "rounds": [
+      {
+        "round": "first-explicit-rebuild",
+        "begin_utc": "2026-10-17T22:31:22.3150359Z",
+        "end_utc": "2026-10-17T22:31:31.4630498Z",
+        "submission_wall_seconds": 0.0009693,
+        "completion_wall_seconds": 9.146613,
+        "process_cpu_seconds": 2.34375,
+        "polls": 55492,
+        "after_submission": {
+          "ready": false,
+          "updating": true,
+          "needs_update": false,
+          "loaded": true,
+          "loading_state": "Loading",
+          "document_count": 0
+        },
+        "after_completion": {
+          "ready": true,
+          "updating": false,
+          "needs_update": false,
+          "loaded": true,
+          "loading_state": "Complete",
+          "document_count": 40
+        },
+        "direct_index_fixture_found": true,
+        "required_sample_scenes": [
+          {
+            "path": "Assets/EmbeddingGemmaTextSearch/TextSearch.unity",
+            "query": "textsearch",
+            "found": true
+          },
+          {
+            "path": "Assets/EmbeddingGemmaMultimodalSearch/MultimodalSearch.unity",
+            "query": "multimodalsearch",
+            "found": true
+          }
+        ],
+        "begin_process_working_set_bytes": 0,
+        "end_process_working_set_bytes": 0,
+        "process_lifetime_peak_working_set_bytes": 0,
+        "exclusive_background_allocation_bytes": null,
+        "allocation_scope": "Not measured: synchronous main-thread marker bytes cannot describe background rebuild allocation. No zero/all-thread attribution inferred."
+      },
+      {
+        "round": "repeat-explicit-rebuild",
+        "begin_utc": "2026-10-17T22:31:31.4809063Z",
+        "end_utc": "2026-10-17T22:31:31.5047876Z",
+        "submission_wall_seconds": 0.00042459999999999997,
+        "completion_wall_seconds": 0.023227499999999998,
+        "process_cpu_seconds": 0.0,
+        "polls": 115,
+        "after_submission": {
+          "ready": false,
+          "updating": true,
+          "needs_update": false,
+          "loaded": true,
+          "loading_state": "Loading",
+          "document_count": 40
+        },
+        "after_completion": {
+          "ready": true,
+          "updating": false,
+          "needs_update": false,
+          "loaded": true,
+          "loading_state": "Complete",
+          "document_count": 40
+        },
+        "direct_index_fixture_found": true,
+        "required_sample_scenes": [
+          {
+            "path": "Assets/EmbeddingGemmaTextSearch/TextSearch.unity",
+            "query": "textsearch",
+            "found": true
+          },
+          {
+            "path": "Assets/EmbeddingGemmaMultimodalSearch/MultimodalSearch.unity",
+            "query": "multimodalsearch",
+            "found": true
+          }
+        ],
+        "begin_process_working_set_bytes": 0,
+        "end_process_working_set_bytes": 0,
+        "process_lifetime_peak_working_set_bytes": 0,
+        "exclusive_background_allocation_bytes": null,
+        "allocation_scope": "Not measured: synchronous main-thread marker bytes cannot describe background rebuild allocation. No zero/all-thread attribution inferred."
+      }
+    ],
+    "fixture_guid": "bb57e83ff4ea2ed4b913edf6c00efa28",
+    "database_name": "Assets",
+    "database_type": "UnityEditor.Search.SearchDatabase",
+    "initial_fixture_readiness_seconds": 0.009785499999999999,
+    "initial_direct_index_results": [],
+    "before_rebuild": {
+      "ready": true,
+      "updating": false,
+      "needs_update": false,
+      "loaded": true,
+      "loading_state": "Complete",
+      "document_count": 0
+    },
+    "initial_fixture_found": false,
+    "owned_fixture_removed": true
+  },
+  "terminal_receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-nographics",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\editor-index-rebuild-consumer-99bd89c",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.EditorIndexRebuildTests;EmbeddingGemma.Validation.Tests.EditorSearchRebuildObservationTests",
+      "-testResults",
+      ".\\artifacts\\usability-state\\editor-index-rebuild-9b6f28e-samples-warm.xml",
+      "-logFile",
+      ".\\artifacts\\usability-state\\editor-index-rebuild-9b6f28e-samples-warm.log"
+    ],
+    "timeout_seconds": 420,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T22:31:01.198780+00:00",
+    "pid": 113584,
+    "exit_code": 0,
+    "unity_results": ".\\artifacts\\usability-state\\editor-index-rebuild-9b6f28e-samples-warm.xml",
+    "unity_counts": {
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 32.83097699994687,
+    "completed_utc": "2026-10-17T22:31:34.029748+00:00"
+  },
+  "Library_reused": true,
+  "source_files_reverified": 576,
+  "imported_sample_files_reverified": 86,
+  "protected_root_files_verified": 4,
+  "preserved_failure": {
+    "receipt": {
+      "command": [
+        ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-nographics",
+        "-job-worker-count",
+        "4",
+        "-projectPath",
+        ".\\artifacts\\editor-index-rebuild-consumer-99bd89c",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-assemblyNames",
+        "EmbeddingGemma.Validation.Editor.Tests",
+        "-testFilter",
+        "EmbeddingGemma.Validation.Tests.EditorIndexRebuildTests;EmbeddingGemma.Validation.Tests.EditorSearchRebuildObservationTests",
+        "-testResults",
+        ".\\artifacts\\usability-state\\editor-index-rebuild-99bd89c-samples-warm.xml",
+        "-logFile",
+        ".\\artifacts\\usability-state\\editor-index-rebuild-99bd89c-samples-warm.log"
+      ],
+      "timeout_seconds": 420,
+      "success": false,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-17T22:22:41.268356+00:00",
+      "pid": 127964,
+      "exit_code": 2,
+      "unity_results": ".\\artifacts\\usability-state\\editor-index-rebuild-99bd89c-samples-warm.xml",
+      "unity_counts": {
+        "total": 6,
+        "passed": 5,
+        "failed": 1,
+        "skipped": 0
+      },
+      "elapsed_seconds": 88.51384070003405,
+      "completed_utc": "2026-10-17T22:24:09.782193+00:00"
+    },
+    "report": {
+      "success": false,
+      "unity": "6000.3.21f1",
+      "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+      "validation_source": "99bd89c376b40ff8961a4c89e2540c86d392fc49",
+      "model_loaded": false,
+      "gpu_execution_validated": false,
+      "scope": "Explicit Build() on the default Assets Search database after readiness, twice in one Editor. Existing asset/index artifacts can be reused. Direct SearchIndexer queries exclude file-path provider fallback. CPU is process-wide including background work; not exclusive indexing CPU or cold artifact regeneration.",
+      "fixture": "Assets/EmbeddingGemmaIndexRebuildProbe/EmbeddingGemmaProbe.txt",
+      "query": "embeddinggemmaprobe",
+      "rounds": [],
+      "fixture_guid": "dba161ff711d7954e91b1a6fc1d920a4",
+      "database_name": "Assets",
+      "database_type": "UnityEditor.Search.SearchDatabase",
+      "initial_fixture_readiness_seconds": 60.0001507,
+      "initial_direct_index_results": [],
+      "before_rebuild": {
+        "ready": true,
+        "updating": false,
+        "needs_update": false,
+        "loaded": true,
+        "loading_state": "Complete",
+        "document_count": 0
+      },
+      "owned_fixture_removed": true
+    },
+    "explanation": "The old probe required the newly imported fixture before explicit Build. A loaded cache was ready but empty, so its initial gate failed and neither rebuild executed. The next probe records initial contents and requires fixture plus both sample scenes after each actual Build; those completion gates were not relaxed.",
+    "launcher_postcheck_error": "The old wrapper also shadowed its sample fixture variable during exec and raised KeyError after the failed Editor test. All 86 source/destination hashes were independently verified before retargeting and after this successful run. The launcher failure is not counted as success."
+  },
+  "metric_interpretation": {
+    "managed_process_memory_available": false,
+    "managed_process_memory_bytes": null,
+    "reason": "The managed Process API returned raw zeros for all working-set fields; these are unavailable observations, not zero-byte memory use.",
+    "cpu_scope": "Process-wide CPU includes background/Editor/probe polling. The short repeat returned raw delta0; do not claim zero CPU work or exclusive index CPU.",
+    "probe_polling_overhead_included": true,
+    "exclusive_background_allocation_bytes": null
+  },
+  "fixture_snapshot_before_retarget_sha256": "8bd727071444555d01acedd4271144f3ff67553190cbb699871c7970b3f004ff",
+  "evidence_sha256": {
+    "editor-index-rebuild-99bd89c-samples-warm-process.json": "ee46575b65b556324c675d00bcf267a36237a43b75dd23535587e8e6d921eff9",
+    "editor-index-rebuild-99bd89c-samples-warm.json": "6e36b506c2477e82326ad11fc35f10afffcace1b97327aebac2eb9a760664062",
+    "editor-index-rebuild-99bd89c-samples-warm.xml": "42f7c6e1f07a93f9df65ee2477c280d9bd87c5a7900ed0c08c767979764ae7ab",
+    "editor-index-rebuild-99bd89c-samples-warm.log": "b170fc334294b6b287c2827d839fe784ec463cfe85438cb3da1fcd65fae01191",
+    "editor-index-rebuild-99bd89c-samples-warm-source.json": "a959ed2bd361b79ecfca23bb517303f75d66e3cdc88414554c623d732832f7e9",
+    "editor-index-rebuild-9b6f28e-samples-warm-process.json": "c24efb3613ea25da609b5e33c58f218ad89579063d80284a644ee554d05d7460",
+    "editor-index-rebuild-9b6f28e-samples-warm.json": "12b9657cb24a378cfe1510f57ed071991dd5e3b63a564fbd987bb2e93a6db77f",
+    "editor-index-rebuild-9b6f28e-samples-warm.xml": "3a96e0693a7e5cc100a5ae349662a225ae49a1d199ee5efd11323c31fedefe1c",
+    "editor-index-rebuild-9b6f28e-samples-warm.log": "1aeb93bf1439ba82086173d9fe8d770af9d3c0fa45d28390ba7aa8b9ac60adcb",
+    "editor-index-rebuild-9b6f28e-samples-warm-source.json": "141db332856897cedd91ac3ab80c1f0e8d84550e63eed58f6568ff1712dde432",
+    "editor-index-rebuild-project-source-9b6f28e.json": "b4692ba8bb9f56fab9b68645a1ab1b46a5e85757a98de757641fcf4498552542",
+    "editor-index-before-stale-cache-probe-manifest.json": "8bd727071444555d01acedd4271144f3ff67553190cbb699871c7970b3f004ff",
+    "editor-index-representative-assets-99bd89c.json": "35aed5dbbaec227099dba852290bbadfdb07236ffee38d10e5f574773955910b"
+  },
+  "audited_utc": "2026-10-17T22:33:04.181468+00:00"
+}

@@ -15,9 +15,11 @@ def consumer(tmp_path):
     (packages / "manifest.json").write_text(json.dumps({"dependencies": {PACKAGE_NAME: URL}}))
     (packages / "packages-lock.json").write_text(json.dumps({"dependencies": {
         PACKAGE_NAME: {"version": URL, "source": "git", "depth": 0, "hash": REVISION,
-                       "dependencies": {"com.unity.ai.inference": "2.6.1", "com.unity.nuget.newtonsoft-json": "3.2.2"}},
+                       "dependencies": {"com.unity.ai.inference": "2.6.1", "com.unity.nuget.newtonsoft-json": "3.2.2",
+                                        "com.unity.modules.unitywebrequest": "1.0.0"}},
         "com.unity.ai.inference": {"version": "2.6.1", "source": "registry"},
         "com.unity.nuget.newtonsoft-json": {"version": "3.2.2", "source": "registry"},
+        "com.unity.modules.unitywebrequest": {"version": "1.0.0", "source": "builtin"},
     }}))
     return tmp_path
 
@@ -28,6 +30,17 @@ def test_pinned_git_resolution_is_distinct_from_unity_execution(consumer):
     assert result["resolved_revision"] == REVISION
     assert result["unity_executed"] is False
     assert result["errors"] == []
+
+
+def test_sdk_networking_resolves_as_a_builtin_module_without_root_sample_dependencies(consumer):
+    path=consumer/'Packages/packages-lock.json';data=json.loads(path.read_text())
+    data['dependencies'][PACKAGE_NAME]['dependencies']['com.unity.modules.unitywebrequest']='1.0.0'
+    data['dependencies']['com.unity.modules.unitywebrequest']=dict(version='1.0.0',source='builtin')
+    path.write_text(json.dumps(data))
+    assert audit_git_consumer(consumer,REVISION)['success'] is True
+    data['dependencies']['com.unity.modules.unitywebrequest']['source']='registry'
+    path.write_text(json.dumps(data))
+    assert audit_git_consumer(consumer,REVISION)['success'] is False
 
 
 @pytest.mark.parametrize("mutation", ["missing_lock", "bad_json", "non_object", "missing_package", "local_source",

@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 import re
 from statistics import median
@@ -28,6 +29,54 @@ STAGES = frozenset({
 
 def _stats(values):
     return {'min': min(values), 'median': median(values), 'max': max(values)} if values else None
+
+
+def summarize_editor_startup(text, pid):
+    """Keep startup telemetry and adjacent import counts separate from inference."""
+    if type(pid) is not int or pid <= 0:
+        raise ValueError('A positive exact process ID is required')
+    metrics = ('projectLoad', 'projectInit', 'templateInit', 'packageManagerInit',
+               'assetDatabaseInit', 'globalIlluminationInit', 'assembliesLoad',
+               'unityExtensionsInit', 'assetDatabaseRefresh', 'sceneOpening')
+    project = None
+    malformed = 0
+    refreshes = []
+    lines = text.splitlines()
+    for index, line in enumerate(lines):
+        if line.startswith('##utp:'):
+            try:
+                value = json.loads(line[6:])
+            except json.JSONDecodeError:
+                malformed += 1
+                continue
+            if (isinstance(value, dict) and value.get('type') == 'ProjectInfo'
+                    and type(value.get('processId')) is int and value['processId'] == pid):
+                if project is not None:
+                    raise ValueError('Duplicate matching ProjectInfo records')
+                project = {}
+                for name in metrics:
+                    seconds = value.get(name)
+                    project[name] = seconds if (type(seconds) in (int, float)
+                        and math.isfinite(seconds) and seconds >= 0) else None
+        match = re.fullmatch(r'Asset Pipeline Refresh .*?: Total: (\d+(?:\.\d+)?) seconds - Initiated by (.*)', line)
+        if not match:
+            continue
+        initiator = re.match(r'(InitialRefreshV2|RefreshV2|StopAssetImportingV2)\(', match[2])
+        imports = None
+        if index + 2 < len(lines) and lines[index + 1].strip() == 'Summary:':
+            counts = re.fullmatch(r'\s+Imports: total=(\d+) \(actual=(\d+), local cache=(\d+), cache server=(\d+)\)', lines[index + 2])
+            if counts:
+                imports = dict(zip(('total', 'actual', 'local_cache', 'cache_server'), map(int, counts.groups())))
+        seconds = float(match[1])
+        refreshes.append(dict(line=index + 1, seconds=seconds if math.isfinite(seconds) else None,
+                              initiator=initiator[1] if initiator else None, imports=imports))
+    return dict(pid=pid, project_info_seconds=project,
+        project_info_available=project is not None and all(v is not None for v in project.values()),
+        malformed_telemetry_count=malformed, asset_refreshes=refreshes,
+        timings_additive=False, search_database_duration_seconds=None, model_load_seconds=None,
+        scope='Exact-PID Editor startup telemetry and adjacent refresh import counts. '
+              'Nested startup, refresh and reload durations overlap; do not sum them. '
+              'Not model inference, clean-cache import qualification or search database timing.')
 
 
 def summarize_editor_log(text):

@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "date": "2026-10-18",
+  "scope": "Direct saved-candidate preparation implementation and small-model tests only",
+  "candidate_generation": "audio-e9de158-20261018",
+  "candidate_contract_sha256": "df73e109fc6dd62e8b1fff409930042b63e6c63548865b074b593dcc70c40deb",
+  "transformation": {
+    "copied_graph_with_original_tensor_objects": true,
+    "changed_native_normalization_widths": [32, 128],
+    "arithmetic": "existing FP32 Welford8 implementation",
+    "bias": false,
+    "epsilon": 0.000001,
+    "live_statistics_rejected": true,
+    "original_tensor_hashes_checked_after_export": true,
+    "new_checkpoint_download_required": false,
+    "new_learned_parameters": 0,
+    "original_golden_changed": false
+  },
+  "tdd": {
+    "core_red_failures": 8,
+    "workflow_red_failures": 3,
+    "additional_cli_receipt_red_failures": 2,
+    "related_green_passes": 40,
+    "green_failures": 0,
+    "actionlint_passed": true,
+    "scope": "tiny saved graphs, standard ONNX export/evaluation, source preservation, invalid graph/routing rejection, privacy and workflow contracts"
+  },
+  "publication": {
+    "mode": "explicit manual prepare_gpu_candidate=true",
+    "profiles": ["frames-1119-valid-1119", "frames-1119-valid-839"],
+    "upload_only_successful_seed_and_receipt": true,
+    "matching_artifact_privacy_guard_required": true,
+    "textual_onnx_metadata_audited": true,
+    "only_optional_metadata_removed": true,
+    "all_other_protobuf_fields_compared": true,
+    "source_models_raw_inputs_and_references_uploaded": false,
+    "retention_days": 90
+  },
+  "real_model_ci_executed": false,
+  "numeric_acceptance": false,
+  "gpu_validated": false,
+  "generation_qualified": false
+}

@@ -1,6 +1,6 @@
 # 画像・音声・テキストモデルの準備
 
-変換済みの全6 moduleは、正式SDK Releaseとは別の実験用モデルpreviewとして公開しました。全assetの実payload guardとremote size/digest、本文、producer tagを[照合済み](results/model-preview-publication-567befb-20261018.json)です。匿名の空cache取得・中断復帰・最終consumer受け入れは進行中で、第三者導入の完了とはまだ扱いません。
+変換済みの全6 moduleは、正式SDK Releaseとは別の実験用モデルpreviewとして公開しました。全assetの実payload guardとremote size/digest、本文、producer tagを[照合済み](results/model-preview-publication-567befb-20261018.json)です。[source 8649c94の匿名空cache取得](results/public-model-consumer-8649c94-20261018.json)は両精度の実中断・再開・全hash・warm・破損修復と公開取得モデルのGPU実行まで成功しました。最終sourceの全操作・Player・実機・正式SDK受け入れは別に残っています。
 
 | 形式 | 配布元 | bundle.jsonの独立SHA256 | object合計bytes |
 | --- | --- | --- | --- |

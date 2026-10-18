@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "base_source": "c8519b51d7dbd82040ec59880c0a07e6a3928522",
+  "scope": "Sample result names and recovery messages omit automatically expanded source paths and raw diagnostics",
+  "host": "Windows Editor",
+  "red": {
+    "failed": 8,
+    "reason": "Missing result and error display contracts; all intended failures"
+  },
+  "green": {
+    "passed": 50,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0
+  },
+  "local_TDD_sample_overlay": true,
+  "real_model_execution_added": false,
+  "gpu_acceptance_added": false,
+  "original_native_UI_run": "8649c9435f502738bc9c89a27c9a09483a7719eb",
+  "original_UI_issue": "Result metadata expanded a relative input into an absolute source path",
+  "original_UI_evidence_retained_privately": true,
+  "original_UI_evidence_modified": false,
+  "images_published": false,
+  "raw_input_metadata_and_diagnostics_retained_for_local_callers": true,
+  "fixed_source_actual_UI_acceptance": false,
+  "release_ready": false
+}

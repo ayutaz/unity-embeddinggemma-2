@@ -6,6 +6,35 @@ namespace EmbeddingGemma.Samples.Tests
 {
     public sealed class MediaPresentationTests
     {
+        [TestCase("image.png", "image.png")]
+        [TestCase("R:/fixtures/image.png", "image.png")]
+        [TestCase(@"R:\fixtures\sound.wav", "sound.wav")]
+        [TestCase("/fixtures/画像.png", "画像.png")]
+        [TestCase("録音 1", "録音 1")]
+        public void ResultLabelShowsScoreAndNameWithoutSourceDirectories(string title, string name)
+        {
+            var method = typeof(MultimodalSearchSample).GetMethod("ResultLabel");
+            Assert.That(method, Is.Not.Null, "The displayed result must exclude source directory metadata.");
+            var document = new SearchDocument("fixture", "R:/fixtures/source-only/input.png", title);
+            var label = (string)method.Invoke(null, new object[] { document, .625 });
+            Assert.That(label, Is.EqualTo(.625.ToString("F4") + "  " + name));
+            Assert.That(document.Text, Is.EqualTo("R:/fixtures/source-only/input.png"), "Display privacy must not mutate input provenance.");
+        }
+
+        [TestCase(null)] [TestCase("")] [TestCase("Cannot read R:/fixtures/source-only/input.png")]
+        public void ErrorLabelDoesNotExposeRawDiagnosticPaths(string diagnostic)
+        {
+            var method = typeof(MultimodalSearchSample).GetMethod("ErrorLabel");
+            Assert.That(method, Is.Not.Null, "Raw exception messages must not be rendered in the sample UI.");
+            var label = (string)method.Invoke(null, new object[] { diagnostic });
+            if (string.IsNullOrEmpty(diagnostic)) Assert.That(label, Is.Null);
+            else
+            {
+                Assert.That(label, Is.Not.Null.And.Not.Empty);
+                Assert.That(label, Does.Contain("設定").And.Not.Contain("R:").And.Not.Contain("source-only"));
+            }
+        }
+
         sealed class Capture : IMediaCaptureDevice
         {
             public bool PermissionGranted { get; set; } = true;

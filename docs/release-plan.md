@@ -2,7 +2,7 @@
 
 確認日: 2026-10-18。対象はテキスト・画像・音声のGPU推論と横断検索です。[ゴール](goal.md)の必須環境・精度条件を維持します。
 
-直近の到達点は **#89・#91のマージ完了** です。main `df66a6d` のtreeは確認したhead `8649c94` と一致します。#86・#87・#90の変更は#91へ取り込み、元PRは個別mergeせずcloseしました。両精度の新規consumer・実GPU PlayMode検索とモデルpreview公開まで進み、公開取得・最終操作・Player・実機・正式SDK Releaseの残件を続けます。
+直近の到達点は **#89・#91・#92のマージ、両精度の匿名公開取得と対応長の実マイクGPU登録** です。main `c8519b5` は確認した#92 head `1d8a3a8` と同treeです。#86・#87・#90は#91へ取り込み、元PRは個別mergeせずcloseしました。実画面操作で発見したsampleのパス表示を修正し、最終操作・Player・実機・正式SDK Releaseの残件を続けます。
 
 ## 現在地
 
@@ -10,9 +10,9 @@
 
 - [最新統合の受け入れ](results/release-integration-8649c94-acceptance-20261018.json)：head `8649c94` のRequired CIを含む15 jobと別のnative-dxgが成功。実行treeはheadと一致し、数値7 ZIPの全hash・CRC・2コピーと元参照824,320値の許容差超過0を独立確認しました。
 - 同じheadの空Git consumerでpackage 600ファイル・sample 86ファイル・公式framework 1,168ファイルを照合し、policy 34件が合格。FP32 / Float16重みの画像3・音声2と固定4 queryの実GPU PlayMode実行、各34破損controlの独立監査・正常終了が成功しました。ホストピークは14,669,389,824 / 10,761,338,880 bytesで、物理RAM確認後の明示16 GiB allowance下の結果です。既定12 GiB、SDK専有VRAM、latency、手動UI・全role・全環境の合格へは読み替えません。
-- [モデルpreview公開](results/model-preview-publication-567befb-20261018.json)：FP32 / Float16とも825 assetの実payload guardとremote size/digest、本文、producer tagを照合して公開しました。元モデルはGit / LFS外です。匿名の空cache取得・中断・再開は実行中で、まだ導入受け入れの完了ではありません。
-- [許可された実マイク](results/native-microphone-three-second-8649c94-20261018.json)：2.71秒をメモリ内で取得し、停止・短い入力のGPU登録拒否・破棄を確認。音声の保存・送信はありません。8.4秒の対応profileでの録音→GPU登録には追加許可と実行を残しています。
-- [descriptor bytesの保持](results/media-descriptor-byte-preservation-tdd-20261018.json)：取得時のJSON再保存でOSの改行等により固定SHAが変わる問題を、10件Redから関連87件Greenへ修正中です。全宣言を準備した場合だけ元bytesを保持し、subsetは未取得objectを公開しません。この修正の最新CIと統合は次の工程です。
+- [モデルpreview公開](results/model-preview-publication-567befb-20261018.json)：FP32 / Float16とも825 assetの実payload guardとremote size/digest、本文、producer tagを照合して公開しました。元モデルはGit / LFS外です。[匿名の空cache取得](results/public-model-consumer-8649c94-20261018.json)も両精度で実中断・再開・820 object照合・warm転送0・1 object破損修復まで成功し、公開取得モデルの5 media profile・4 query GPU PlayModeを独立監査しました。新しいsource全体の受け入れは別に追跡します。
+- [許可された実マイクGPU登録](results/native-microphone-gpu-8649c94-20261018.json)：追加で許可された8.4秒・134,400 sampleを取得し、自動停止・audio-839 GPU登録・text検索・解放・破棄が成功。実audio 270 Workerとtext 1 Workerの計算CPU fallback・中間flushは0、有限unit 768次元vectorを確認しました。1 pass・skip0・exit0です。音声は保存・外部送信せず、音声・embeddingも公開しません。source `8649c94`の追加harnessの結果であり、手動録音UI・任意音声の意味精度・他端末への読み替えはしません。
+- [descriptor bytesの保持](results/media-descriptor-byte-preservation-tdd-20261018.json)：10件Redから関連87件Green、#92最新headの必須CI・公開履歴・merge treeを確認して統合済みです。全宣言を準備した場合だけ元bytesを保持し、subsetは未取得objectを公開しません。
 
 ### 音声候補の採用経緯と固定sourceの保存記録
 
@@ -62,7 +62,7 @@
 
 - macOS / iOS / Androidの端末・署名・build環境は、工程1と並行して先に確保します。直近の環境確認は接続Android端末0、self-hosted runner0、Mac / iOS未確定です。実行開始時に再確認します。
 - 重い取得・変換・build・回帰はGitHub Actionsを優先します。ローカルのUnity / GPU実行は必要な確認に絞り、1processずつ動かします。
-- 次のcheckpointは「両精度の公開モデルからの空cache取得・復帰」「descriptor bytes保持修正の最新CIと統合」「最終候補の実操作・対応長の実マイク・計測」の順です。各報告に合格・失敗・未実行、source / model、残件を記録します。
+- 公開モデル取得・復帰と#92統合、許可された対応長の実マイクGPU登録は成功しました。次は「sampleの結果・エラー表示修正と画面再確認」「残る実操作・性能計測」「最終Windows Playerの独立cold / warm」です。並行して数値参照の恒久取得経路と必須端末の確保を進めます。合格・失敗・未実行とsource / modelを分けて記録します。
 - リリース日は未確定です。統合とローカルモデルでの新規consumer受け入れは成功しました。次に公開モデルからの導入を受け入れ、工程5の端末・署名・実行担当を確定した時点で、測定・修正・環境別検証の日程を見積もります。端末が未確保のまま完了日を約束しません。
 - 次の報告は「#89の統合結果と残るPRの整理」「公開モデルからの空cache取得結果」「最終候補の操作・測定結果」の単位で行います。新しい不具合がない同一モデルの重い変換は繰り返さず、CI終了待ちと実作業時間を分けて示します。
 - 公開表示名 `yousan` は維持します。公開文書には相対 / 環境変数のパスだけを使い、元画像・元数値証拠は非公開で保持します。証拠画像を加工・再生成して漏えいや失敗を隠しません。

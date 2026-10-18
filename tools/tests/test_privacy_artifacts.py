@@ -28,8 +28,8 @@ def test_missing_paths_match_optional_upload_but_escape_and_symlink_fail(tmp_pat
     with pytest.raises(ValueError):audit(tmp_path,['../outside'])
 
 
-def test_numeric_model_bytes_are_separate_from_metadata_review(tmp_path):
-    (tmp_path/'model.onnx').write_bytes(b'\x00\x01\x02')
+def test_numeric_buffer_bytes_are_separate_from_metadata_review(tmp_path):
+    (tmp_path/'capture.bin').write_bytes(b'\x00\x01\x02')
     (tmp_path/'receipt.json').write_text('{"verified":true}')
     assert audit(tmp_path,['.'])==[]
     (tmp_path/'capture.png').write_bytes(b'not-reviewed')

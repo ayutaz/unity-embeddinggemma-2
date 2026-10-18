@@ -20,6 +20,8 @@
 - [既存テキスト全ケース](results/final-text-player-3a02fc0-20261019.json)：同sourceのRelease Player 2起動で各25行のtoken照合、両精度×CPU/GPU計8条件の15 case・6文書・4 queryが合格。CPUとGPUを別集計し、192順位/score・34破損report controlを確認しました。raw vectorはruntime内の照合で、保存値からの独立vector再計算ではありません。固定queryのwarm各6回のCPU/GPU時間を記録し、一般入力のlatency・GPU専有時間・最小要件へは広げません。
 - [数値回帰データの公開と取得実装](native-regression-distribution.md)：16 assetの実サイズ・hash、本文・tagを読み戻し、元参照/metadata 6ファイルを匿名HTTPで照合。明示input/audit・privacyの関連284件とactionlintが合格しました。元のgolden・許容差・採用根拠7記録は維持しています。新経路の全6信号・824,320値の実回帰は#97のCIで別に判定します。
 - [CIの旧コマンド名検査を修正](results/native-distribution-workflow-assertion-repair-20261019.json)：run `39150835197` のPython全4環境は同じテスト1件で失敗しました。明示的な公開配布経路を検査するよう更新し、1件のRedから関連293件Green・skip0を確認。実数値jobの結果とCI全体の不合格を区別し、修正後headの必須CIを再確認してから統合します。参照・許容差・6信号の必須条件は変更しません。
+- [公開経路の実数値回帰](results/native-distribution-real-numeric-73fa675-20261019.json)：同runの6信号と集計は成功。実アップロード7 ZIPのhash / CRC・私的2コピーを確認し、元参照824,320値の許容差超過0と集計JSONの一致を独立監査しました。通常CIの不合格を全体成功へ読み替えません。
+- [モデル内部メタデータの検査を修正](model-artifact-metadata.md)：新たなCIモデル内にビルド環境の絶対パスが残る境界を確認し、後続run `39153769849` は停止しました。PT2 / ONNXの文字列検査と新規PT2保存前の任意trace除去を追加。最終関連117件と、実raw PT2 2件の拒否・配布PT2 2件と元ONNX 2件の合格を確認しています。原本の書換え・数値基準の変更はなく、修正sourceの全CI・旧provider成果物の整理は別に残ります。
 
 ### 音声候補の採用経緯と固定sourceの保存記録
 

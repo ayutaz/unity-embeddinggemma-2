@@ -8,6 +8,7 @@ import re
 import onnx
 from onnx import helper, TensorProto
 import torch
+from .export import save_program_without_debug_traces
 
 
 class NativeSiLU(torch.nn.Module):
@@ -31,7 +32,7 @@ def prepare_silu_probe(destination, *, source_commit):
             program=torch.export.export(NativeSiLU().eval(),(values,))
         native_path=destination/f"native-{index}.pt2"
         # No decomposition: the reference must retain the actual aten.silu kernel.
-        torch.export.save(program,native_path)
+        save_program_without_debug_traces(program,native_path)
         saved=torch.export.load(native_path).module()(values)
         if not torch.equal(saved,native):raise ValueError("Native SiLU saved graph changed the kernel")
         onnx_path=destination/f"swish-{index}.onnx"

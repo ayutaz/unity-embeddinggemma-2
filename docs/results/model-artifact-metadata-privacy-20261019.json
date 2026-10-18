@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "scope": "PT2/ONNX textual artifact metadata checks and tiny producer regression only",
+  "base_source": "5f14d3a8159778387ad198dd1bec20224a655970",
+  "actual_CI_metadata_inspected": true,
+  "actual_graph_metadata_sections": 2,
+  "actual_graph_metadata_CRC_verified": true,
+  "actual_home_path_occurrences": [
+    {
+      "windows_home": 0,
+      "posix_home": 6756,
+      "private_email_or_secret": 0
+    },
+    {
+      "windows_home": 0,
+      "posix_home": 6757,
+      "private_email_or_secret": 0
+    }
+  ],
+  "private_values_published": false,
+  "opaque_tensor_privacy_certified": false,
+  "actual_inspection_whole_archive_digest_verified": false,
+  "phases": {
+    "model_metadata_red": {
+      "tests": 15,
+      "failures": 14,
+      "errors": 0,
+      "skipped": 0,
+      "private_XML_sha256": "ad3d8a595468433185939f4c3c29d58457aa36284c4a0a34632c8757aef2eb62"
+    },
+    "parser_dependency_red": {
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "private_XML_sha256": "a63b40495bbf2f964d4507868a156c6fe946b391baad32d0949257665a8c2eb7"
+    },
+    "additional_native_producer_red": {
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0,
+      "private_XML_sha256": "72e2d043d902c40616dd8e76ee967ff57da0132e32f33024327319ce0822008e"
+    },
+    "initial_green": {
+      "tests": 23,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "private_XML_sha256": "554549274f90e2b43d910b8affe60a72df145c7c57c9913bb9ea35f8a06588a8"
+    },
+    "related_green": {
+      "tests": 111,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "private_XML_sha256": "558d98ff0bd47150038f9ae286f9665cf03cdf5f1c960b7f775be7fbbf35bb6e"
+    },
+    "final_related_green": {
+      "tests": 117,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "private_XML_sha256": "10fca8fcc39e699efa0957713da27338ba7fa540cee0ee34740be04d50fe5422"
+    }
+  },
+  "Action_equivalent_actual_file_boundary": {
+    "original_raw_PT2_rejected": 2,
+    "reviewed_distribution_PT2_passed": 2,
+    "original_file_size_and_mtime_unchanged": true,
+    "pinned_parser": "onnx==1.23.2"
+  },
+  "actual_original_ONNX": {
+    "files": 2,
+    "metadata_findings": 0,
+    "source_audit_hashes_and_CRC_verified": true,
+    "model_executed": false
+  },
+  "new_PT2_producers_remove_only_optional_node_stack_traces_before_first_serialization": true,
+  "existing_originals_sanitized_in_place": false,
+  "tiny_exact_numerical_roundtrip_checked": true,
+  "real_model_numerical_or_GPU_acceptance_claimed": false,
+  "selected_original_generation_backup": {
+    "bytes": 4938559326,
+    "sha256": "a456ce247b3615a70ab01834500d7de02ab51361adefe26de7de0d860bfa24a5",
+    "private_copies_verified": 2,
+    "all_archive_CRC_verified": true,
+    "all_10_required_members_source_hashes_verified": true,
+    "other_generation_backups_claimed": false
+  },
+  "cancelled_CI_run": 39153769849,
+  "cancelled_CI_counted_as_pass": false,
+  "hosted_artifacts_or_runs_deleted": false,
+  "source_fingerprints_normalized_LF": {
+    "tools/embeddinggemma_tools/model_metadata_privacy.py": "89bcccd154a99c1cd6a68d64e6baac787063d11702d5040029970cbe422c5ce2",
+    "tools/embeddinggemma_tools/privacy_artifacts.py": "c915bd413c0cf952f237a6253374d37526de273d6364970ea73575ace41babbd",
+    "tools/embeddinggemma_tools/export.py": "d1216b11fc6590a92f29d39b371ac58332eacb2bed0f9227a2186d9eb51f32de",
+    "tools/embeddinggemma_tools/native_silu_probe.py": "616e0e07666f12abc8a448302711b91d9a5e1e1ae51b3090c60f7ff09a2be500",
+    ".github/actions/privacy-artifact-guard/action.yml": "2f5ec1d7c816eb40e3804f7d29823edb628bb7c99a462e7dfd6345e47be7fe76",
+    "tools/tests/test_model_metadata_privacy.py": "cc1b666c6eec66bdbb53ca8336c80922c0ff7b6426e5b358110501f9e9540744",
+    "tools/tests/test_privacy_artifacts.py": "e0739588318099850a876b5bd14f81cde099d2db12b8e1b869739e083e133fa8"
+  },
+  "complete_repaired_source_CI_accepted": false,
+  "older_provider_artifact_cleanup_complete": false,
+  "formal_release_ready": false
+}

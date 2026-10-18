@@ -21,3 +21,10 @@ Read `docs/privacy.md` and run the privacy checker from `tools/` with uv. Keep r
 - Before deleting hosted workflow runs or artifacts, map all pinned artifact IDs and verify private backups of every required immutable byte, including model graphs. A metadata-only snapshot is not a model/reference backup. Run deletion also removes artifacts and can break acceptance CI. If exact backup verification fails, stop deletion and prepare a provider-support request; never substitute a regenerated model and call it the original.
 
 Git hooks and CI are the enforcement layers. The skill and Codex tool hook supplement them; do not claim hooks are active before installation/runtime verification.
+
+Generated models are not blanket binary exemptions in Actions. The artifact guard
+must inspect PT2 archive/member names and textual metadata, and ONNX protobuf
+strings with the pinned parser. Missing parsers, unsupported models and private
+metadata fail closed. Opaque numerical tensor buffers are not text-privacy
+certified. New PT2 producers remove only optional node stack traces before first
+serialization; keep original evidence unchanged and audit retained files read-only.

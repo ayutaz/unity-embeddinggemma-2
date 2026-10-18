@@ -14,6 +14,7 @@
 | [低レベルのマルチモーダルAPI](../Packages/com.ayutaz.embeddinggemma/Documentation~/multimodal-api.md) | prompt・GPU特徴量・前処理の入力と所有権 |
 | [音声API](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-embedder.md) | 非同期呼び出し・stageの所有権 |
 | [モデルのライセンス](model-license.md) | コードとモデルの利用条件・配布境界 |
+| [モデル成果物の個人情報検査](model-artifact-metadata.md) | PT2 / ONNX内部の文字列検査、原本保持とCI再開条件 |
 
 ## 現状と開発計画
 

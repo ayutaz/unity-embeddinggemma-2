@@ -1,4 +1,4 @@
-"""Audit artifact selection before upload; numerical/model payloads are separate."""
+"""Audit artifact selection and model metadata before upload."""
 import argparse
 import glob
 import json
@@ -6,6 +6,7 @@ from pathlib import Path
 import sys
 
 from .privacy import IMAGES, scan_bytes
+from .model_metadata_privacy import audit_model_metadata
 
 GENERATED_NUMERIC={'.onnx','.pt2','.data','.bin','.npy','.npz','.safetensors'}
 
@@ -45,6 +46,9 @@ def audit(root,patterns):
             findings.extend(dict(f,path='<artifact-image>') for f in scan_bytes(path.read_bytes(),relative,reviewed))
             continue
         findings.extend(dict(f,path='<artifact-name>') for f in scan_bytes(b'',relative))
+        if suffix in {'.onnx','.pt2'}:
+            findings.extend(audit_model_metadata(path))
+            continue
         if suffix in GENERATED_NUMERIC:
             continue
         with path.open('rb') as stream:
@@ -64,7 +68,7 @@ def main():
     try:
         findings=audit(args.root,[line.strip() for line in args.paths.splitlines() if line.strip()])
         print(json.dumps({'success':not findings,'count':len(findings),'findings':findings,
-            'scope':'Selected filenames, text and images. Generated numerical/model binary contents require their separate producer validation.'}))
+            'scope':'Selected filenames, text, images and PT2/ONNX textual metadata. Opaque numerical tensor buffers remain separate.'}))
         return int(bool(findings))
     except Exception:
         print('Artifact privacy validation failed; no content or private path was printed.',file=sys.stderr)

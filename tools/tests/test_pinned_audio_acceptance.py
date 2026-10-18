@@ -60,9 +60,12 @@ def test_required_ci_has_real_pinned_six_case_execution_and_fresh_cpu_is_diagnos
     assert cases['strategy']['fail-fast']=='false'
     commands='\n'.join(s.get('run','') for s in cases['steps'])
     assert '--raw-input --variant ordered_original_midpoint_bmm' in commands
-    assert 'selected_audio_generation fetch' in commands
-    assert '--candidate-directory ../artifacts/candidate/audio-runtime-reference' in commands
+    assert 'selected_audio_generation fetch-distribution' in commands
+    assert '--candidate-distribution-directory ../artifacts/candidate/audio-runtime-reference' in commands
+    assert '--candidate-directory ' not in commands
     assert 'frozen-stage-source' not in commands
     audit=workflow['jobs']['audit']
     assert audit['needs']==['execute'] and not audit.get('continue-on-error')
-    assert 'embeddinggemma_tools.selected_audio_generation audit' in '\n'.join(s.get('run','') for s in audit['steps'])
+    audit_commands='\n'.join(s.get('run','') for s in audit['steps'])
+    assert 'embeddinggemma_tools.selected_audio_generation audit-distribution' in audit_commands
+    assert 'embeddinggemma_tools.selected_audio_generation fetch-original-distribution' in audit_commands

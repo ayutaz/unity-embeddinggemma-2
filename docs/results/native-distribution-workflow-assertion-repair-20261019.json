@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "scope": "Repair a stale workflow-command assertion; actual native numerical CI remains separate",
+  "base_source": "73fa675f0cbef5fdde71fe4d79f0a40f450abf85",
+  "CI_run": 39150835197,
+  "CI_overall_passed": false,
+  "failed_python_environments": [
+    "linux313",
+    "linux314",
+    "windows313",
+    "windows314"
+  ],
+  "failed_test": "test_required_ci_has_real_pinned_six_case_execution_and_fresh_cpu_is_diagnostic",
+  "cause": "The assertion expected the retained raw-artifact option after the workflow switched to the explicit pinned public-distribution option",
+  "intended_red": {
+    "tests": 1,
+    "failed": 1,
+    "passed": 0,
+    "skipped": 0,
+    "private_XML_sha256": "a7d36eca1c08625ce12f9482b5f4c7a826f237867de124ae55e2b1124926222e"
+  },
+  "related_green": {
+    "tests": 293,
+    "failed": 0,
+    "passed": 293,
+    "skipped": 0,
+    "private_XML_sha256": "85d9a20f5dff443e3432fd76c9e697e79f4962db6bd4cbe3edca398c200771e1"
+  },
+  "mandatory_six_case_matrix_changed": false,
+  "numeric_reference_or_tolerance_changed": false,
+  "raw_loader_reused_for_clean_graph": false,
+  "real_model_or_GPU_execution_claimed_by_unit_tests": false,
+  "latest_head_full_CI_required": true,
+  "formal_release_ready": false
+}

@@ -18,7 +18,8 @@
 - [混在Playerの契約](results/final-mixed-player-contracts-20261019.json)と[cache接続](results/final-mixed-player-cache-integration-20261019.json)：21・43・22件の未実装失敗から86件Green、既存回帰込み112件、実tiny cacheの7件Redから関連119件Green。元の失敗・不変の参照/gateと、契約段階の実行範囲を保存しました。
 - [最終混在Player](results/final-mixed-player-3a02fc0-20261019.json)：公開取得済みFP32 / Float16重みを新cacheと独立warm processで実行し、全4起動が正常終了。全roleの144 base・180 warm、18文書×4 query×4起動の288順位/score、88破損control拒否を独立確認しました。各warmはモデル転送0、各coldは820、descriptor読み込みは別に6件です。最大観測native working setはFP32 8,676,872,192 / Float16 6,024,720,384 bytes。source `3a02fc0`のGPU Worker・fallback/flush・解放とcompiled hash67件を確認しました。SDK専有VRAM・最小hardware・全環境の合格ではありません。
 - [既存テキスト全ケース](results/final-text-player-3a02fc0-20261019.json)：同sourceのRelease Player 2起動で各25行のtoken照合、両精度×CPU/GPU計8条件の15 case・6文書・4 queryが合格。CPUとGPUを別集計し、192順位/score・34破損report controlを確認しました。raw vectorはruntime内の照合で、保存値からの独立vector再計算ではありません。固定queryのwarm各6回のCPU/GPU時間を記録し、一般入力のlatency・GPU専有時間・最小要件へは広げません。
-- [数値回帰データの公開と取得実装](native-regression-distribution.md)：16 assetの実サイズ・hash、本文・tagを読み戻し、元参照/metadata 6ファイルを匿名HTTPで照合。明示input/audit・privacyの関連284件とactionlintが合格しました。元のgolden・許容差・採用根拠7記録は維持しています。新経路の全6信号・824,320値の実回帰は#97最新候補のCI待ちです。
+- [数値回帰データの公開と取得実装](native-regression-distribution.md)：16 assetの実サイズ・hash、本文・tagを読み戻し、元参照/metadata 6ファイルを匿名HTTPで照合。明示input/audit・privacyの関連284件とactionlintが合格しました。元のgolden・許容差・採用根拠7記録は維持しています。新経路の全6信号・824,320値の実回帰は#97のCIで別に判定します。
+- [CIの旧コマンド名検査を修正](results/native-distribution-workflow-assertion-repair-20261019.json)：run `39150835197` のPython全4環境は同じテスト1件で失敗しました。明示的な公開配布経路を検査するよう更新し、1件のRedから関連293件Green・skip0を確認。実数値jobの結果とCI全体の不合格を区別し、修正後headの必須CIを再確認してから統合します。参照・許容差・6信号の必須条件は変更しません。
 
 ### 音声候補の採用経緯と固定sourceの保存記録
 

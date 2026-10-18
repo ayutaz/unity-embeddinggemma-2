@@ -1,5 +1,72 @@
 # Windows image/audio Player validation
 
+## Complete mixed-suite extension
+
+The [2026-10-19 contract checkpoint](results/final-mixed-player-contracts-20261019.json)
+adds an explicit mixed-suite route to the same `BuildWindowsMedia` build. It
+requires all five media modules and the public `TextEmbedder`, then searches one
+index of six text, six image and six audio documents with four fixed queries.
+All 72 ranks/scores must match the original references with the unchanged
+precision/cosine and 0.001 absolute-score gates. Every media input retains
+Document / Query / Raw coverage: 36 base vectors and 45 in-process warm captures.
+These contract tests do not constitute an actual new Player build or GPU run.
+
+The fixture root additionally requires original `search-reference.json` bytes,
+SHA256 `f316d5199c920431c7f721d43b2cedbe4a6384fb0e0664511b75bc2e98fe80fe`.
+Use eight explicit arguments; do not combine mixed and individual-module options:
+
+```powershell
+& $env:EG_MEDIA_PLAYER_EXE -force-d3d12 `
+  --embeddinggemma-mixed-bundle $env:EG_MEDIA_BUNDLE `
+  --embeddinggemma-mixed-fixtures $env:EG_MEDIA_FIXTURES `
+  --embeddinggemma-mixed-cache $env:EG_MEDIA_CACHE `
+  --embeddinggemma-mixed-output $env:EG_MEDIA_RESULT `
+  --embeddinggemma-mixed-run-id $env:EG_MEDIA_RUN_ID `
+  --embeddinggemma-mixed-phase cold `
+  --embeddinggemma-mixed-precision fp32 `
+  --embeddinggemma-mixed-descriptor $env:EG_MEDIA_DESCRIPTOR_SHA256
+```
+
+`cold` requires a nonexistent cache directory. Only successful execution writes
+`mixed-cold-complete.json`, linking the exact final report hash, source, model pin,
+precision and cohort counts. The SDK owns the `prepared` child directory;
+qualification stays in the parent run-cache root. Run `warm` in a separate bounded
+process with that cache, a distinct run ID and a new output file; every acquisition
+must transfer zero model objects. The SDK reads the descriptor on each acquisition
+and counts it as one transferred file, recorded separately from object transfers.
+The external auditor must join both owned process receipts, build
+sources, original references and report/qualification hashes. JSON flags or a
+matching cache file alone cannot certify GPU execution or independent processes.
+
+The independent descriptor pins are FP32
+`40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647`
+and Float16 weights
+`8a6a90c5f656a00b024553a0412e5c4d32b4d2c9c7c5b3a0c2c146f557b4e27e`.
+Actual execution requires Windows Player / IL2CPP / Release / High stripping and
+live Worker audits for all media modules and text. Injected numeric and cache
+contracts keep their GPU flags false. The outer runner retains broader product,
+independent-process, platform and performance acceptance flags as false until
+independent evidence is available. Existing individual-module invocation below
+remains available.
+
+No-graphics tests observed 21, 43 and 22 intended failures before implementation.
+Combined tests reached 86 passes, then 112 with legacy protocol/build/GPU-audit
+contracts and actual pinned text-file loading. The initial combined attempt had
+12 exception-family failures; those original results remain recorded. Tests and
+rejection gates were unchanged by the exception classification correction.
+The SDK Runtime, original references and numerical thresholds are unchanged.
+
+[Actual tiny-cache integration](results/final-mixed-player-cache-integration-20261019.json)
+then exposed the descriptor accounting and strict cache-owner layout at the mixed
+entry boundary. Seven added failures preceded the correction; all 119 combined
+checks passed afterward. The original contracts were unchanged. Source `8e6dd2c`
+built successfully in 379.27 seconds with 67 compiled source hashes verified,
+but that binary predates this cache correction and was not run for acceptance.
+Its 486 build warnings are retained, including 485 shader-warning log lines;
+this is not a warning-free build claim. The corrected source requires a new build.
+
+## Individual-module baseline
+
 Status: implementation candidate under review. Editor contract tests and original-fixture loading are separate from an actual Release Player build or real-model GPU acceptance. Neither a new model generation nor the final multimodal product is qualified by this harness alone.
 
 `ValidationPlayerBuild.BuildWindowsMedia(outputExe, sourceCommit)` prepares a Windows x64 IL2CPP / Release / High-stripping build. It uses an empty generated scene and the unique `EmbeddingGemmaMediaValidationBuild` resource marker. Existing text validation and ordinary Players do not receive this marker. Build settings and scenes are restored on success and failure, and an injected build cannot produce a successful build receipt.

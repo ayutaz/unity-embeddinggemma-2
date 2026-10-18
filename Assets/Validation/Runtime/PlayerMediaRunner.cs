@@ -33,7 +33,9 @@ namespace EmbeddingGemma.Validation
         }
         async Task<bool> Execute()
         {
-            var config = PlayerMediaConfiguration.Parse(Environment.GetCommandLineArgs());
+            var args = Environment.GetCommandLineArgs();
+            if (PlayerMixedExecution.IsRequested(args)) return await PlayerMixedExecution.Run(build, args);
+            var config = PlayerMediaConfiguration.Parse(args);
             Directory.CreateDirectory(Path.GetDirectoryName(config.Output));
             // Hold an exclusive new handle for the whole run. Never truncate an earlier process's evidence.
             using var output = new FileStream(config.Output, FileMode.CreateNew, FileAccess.Write, FileShare.Read);

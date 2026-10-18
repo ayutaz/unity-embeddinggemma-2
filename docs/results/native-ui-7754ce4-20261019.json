@@ -1,0 +1,65 @@
+{
+  "success": true,
+  "sdk_source": "7754ce4eb9e07e8b81865487b175c63dd6e93097",
+  "host": "Windows Editor D3D12",
+  "precision": "float16-weights",
+  "model_acquisition_source": "8649c9435f502738bc9c89a27c9a09483a7719eb",
+  "actual_native_UI_operated": true,
+  "observer_invokes_sample_actions": false,
+  "media_vectors": 2,
+  "media_cases": [
+    "square-0",
+    "sine"
+  ],
+  "queries": [
+    {
+      "id": "query-cat-ja",
+      "hits": 2
+    },
+    {
+      "id": "query-space-en",
+      "hits": 2
+    },
+    {
+      "id": "query-recipe-ja",
+      "hits": 2
+    },
+    {
+      "id": "query-cat-en",
+      "hits": 2
+    }
+  ],
+  "rank_and_score_pairs": 8,
+  "minimum_independent_cosine": 0.9999999905661618,
+  "maximum_independent_score_error": 2.6369377859047916e-06,
+  "original_cosine_gate": 0.99,
+  "original_score_absolute_error_gate": 0.001,
+  "negative_controls_rejected": 16,
+  "actual_GPU_worker_counts": [
+    181,
+    270,
+    1
+  ],
+  "computed_CPU_fallbacks": 0,
+  "intermediate_flushes": 0,
+  "empty_input_error_and_recovery_observed": true,
+  "loading_cancel_and_retry_observed": true,
+  "synthetic_audio_playback_progress_observed": true,
+  "reset_cleared_documents_previews_and_active_session": true,
+  "process_exit_code": 0,
+  "second_private_evidence_copy_verified": true,
+  "original_old_UI_evidence_replaced": false,
+  "new_screenshots_publication_approved": false,
+  "additional_microphone_recording": false,
+  "old_source_microphone_result_reassigned": false,
+  "independent_Player_cold_warm_accepted": false,
+  "final_performance_or_hardware_requirements_established": false,
+  "all_platforms_accepted": false,
+  "release_ready": false,
+  "original_events_sha256": "d4ff9a16f7fa3b7b4a482f53620f3b3224a8469e3460d3ebfba89444176d0926",
+  "process_receipt_sha256": "c34a5df3699b8a14d5b3f81cab69c9df195961319f26a72fd5f3a5b6d48cd454",
+  "observer_warning_retained": "Passive observer read AudioSource.timeSamples after clip removal. Console warning is preserved; no clean-console claim.",
+  "play_and_stop_controls_operated": true,
+  "measured_interruption_during_active_playback_claimed": false,
+  "audit_record_date": "2026-10-19"
+}

@@ -9,7 +9,8 @@ from embeddinggemma_tools.privacy import reviews, scan_objects, scan_staged
 from embeddinggemma_tools.privacy_hook import decide
 
 try:
-    event = json.load(sys.stdin)
+    # Hook JSON is UTF-8 even when Windows text pipes default to a legacy codec.
+    event = json.load(sys.stdin.buffer)
     if event.get('hook_event_name') == 'SessionStart':
         print(json.dumps({'hookSpecificOutput':{'hookEventName':'SessionStart','additionalContext':
             'Before publishing, use the project-privacy skill, check Git hook installation, scan outgoing history and actual payloads, and visually/OCR-review image bytes. Never bypass privacy checks or echo private values.'}}))

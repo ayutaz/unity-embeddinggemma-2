@@ -1,0 +1,73 @@
+{
+  "review_completed": true,
+  "scope": "Six exact procedural input PNG files only; no validation screenshots",
+  "decoded_pixels_match_current_generator": true,
+  "images": [
+    {
+      "source": "tools/embeddinggemma_tools/fixtures/vision/square/0.png",
+      "artifact_path": "artifacts/vision-encoder/square/0.png",
+      "sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+      "visual_review": "Synthetic colour gradients/checker patterns; no personal content",
+      "ocr_languages": [
+        "en-US",
+        "ja-JP"
+      ],
+      "ocr_characters": 0
+    },
+    {
+      "source": "tools/embeddinggemma_tools/fixtures/vision/square/1.png",
+      "artifact_path": "artifacts/vision-encoder/square/1.png",
+      "sha256": "7bed25de317aa5f636332a45e68256ab6ab1d4f64ee0694bd3215b9e1afff8b0",
+      "visual_review": "Synthetic colour gradients/checker patterns; no personal content",
+      "ocr_languages": [
+        "en-US",
+        "ja-JP"
+      ],
+      "ocr_characters": 0
+    },
+    {
+      "source": "tools/embeddinggemma_tools/fixtures/vision/landscape/0.png",
+      "artifact_path": "artifacts/vision-encoder/landscape/0.png",
+      "sha256": "f2b3f32a22e6282b9876b98c4c5a7bbf75e7469dff933128e17d6503dd6d6e55",
+      "visual_review": "Synthetic colour gradients/checker patterns; no personal content",
+      "ocr_languages": [
+        "en-US",
+        "ja-JP"
+      ],
+      "ocr_characters": 0
+    },
+    {
+      "source": "tools/embeddinggemma_tools/fixtures/vision/landscape/1.png",
+      "artifact_path": "artifacts/vision-encoder/landscape/1.png",
+      "sha256": "85c40b63e819734b0d0ba3dd5fe121f976ee6fdb0446922c97446f4f2d046265",
+      "visual_review": "Synthetic colour gradients/checker patterns; no personal content",
+      "ocr_languages": [
+        "en-US",
+        "ja-JP"
+      ],
+      "ocr_characters": 0
+    },
+    {
+      "source": "tools/embeddinggemma_tools/fixtures/vision/portrait/0.png",
+      "artifact_path": "artifacts/vision-encoder/portrait/0.png",
+      "sha256": "fce3474792c6401c4bae6ac0261a386f400bac0cece977ffda86388ee6682489",
+      "visual_review": "Synthetic colour gradients/checker patterns; no personal content",
+      "ocr_languages": [
+        "en-US",
+        "ja-JP"
+      ],
+      "ocr_characters": 0
+    },
+    {
+      "source": "tools/embeddinggemma_tools/fixtures/vision/portrait/1.png",
+      "artifact_path": "artifacts/vision-encoder/portrait/1.png",
+      "sha256": "3dd041969e5bc1380e200099532e74be14331e89f9beffe1038d579ae5dc3c08",
+      "visual_review": "Synthetic colour gradients/checker patterns; no personal content",
+      "ocr_languages": [
+        "en-US",
+        "ja-JP"
+      ],
+      "ocr_characters": 0
+    }
+  ]
+}

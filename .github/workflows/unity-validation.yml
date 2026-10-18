@@ -64,8 +64,16 @@ jobs:
           coverageEnabled: false
           artifactsPath: artifacts/unity-linux-CPU
           githubToken: ''
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_1
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/unity-linux-CPU/
+            Packages/packages-lock.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_1.outcome == 'success' }}
         with:
           name: unity-linux-CPU-${{ github.sha }}
           path: |

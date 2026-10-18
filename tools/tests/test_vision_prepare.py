@@ -72,6 +72,20 @@ def test_failure_removes_stale_vision_success(tmp_path, monkeypatch):
     assert not (output / "vision-validation.json").exists()
 
 
+def test_default_generated_images_pass_only_the_exact_reviewed_publication_policy(tmp_path, monkeypatch):
+    from pathlib import Path
+    from embeddinggemma_tools.privacy_artifacts import audit
+    module=preparation_module()
+    snapshot=fake_snapshot(tmp_path/'snapshot')
+    monkeypatch.setattr(module,'load_vision_models',lambda _:vision_models())
+    monkeypatch.setattr(module,'load_image_processor',lambda _:TinyProcessor())
+    policy=Path(__file__).parents[2]/'.privacy-reviewed-assets.json'
+    (tmp_path/'.privacy-reviewed-assets.json').write_bytes(policy.read_bytes())
+    result=module.prepare_vision(snapshot,tmp_path/'artifacts/vision-encoder',source_commit='b'*40)
+    assert result['success'] and result['case_count']==6
+    assert not audit(tmp_path,['artifacts/vision-encoder/'])
+
+
 def test_wrong_saved_vision_output_is_rejected_without_success_receipt(tmp_path, monkeypatch):
     module = preparation_module()
     snapshot = fake_snapshot(tmp_path / "snapshot")

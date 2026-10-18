@@ -1,5 +1,6 @@
 from pathlib import Path
 import yaml
+from workflow_privacy_assertions import assert_privacy_gated_upload
 
 
 def test_saved_conv_workflow_is_opt_in_pinned_and_retains_numeric_failure():
@@ -19,7 +20,8 @@ def test_saved_conv_workflow_is_opt_in_pinned_and_retains_numeric_failure():
     probe=next(step for step in steps if 'embeddinggemma_tools.conv_reference_context' in step.get('run',''))
     assert not probe.get('continue-on-error') and 'set -o pipefail' in probe['run']
     upload=next(step for step in steps if 'actions/upload-artifact' in step.get('uses',''))
-    assert upload['if']=='always()' and upload['with']['path']=='artifacts/conv-context/'
+    assert_privacy_gated_upload(upload)
+    assert upload['with']['path']=='artifacts/conv-context/'
 
 
 def test_native_host_is_checked_before_any_large_reference_download():

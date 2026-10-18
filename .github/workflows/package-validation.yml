@@ -21,7 +21,9 @@ jobs:
           python-version: '3.13'
       - name: Reject private data in reachable history
         working-directory: tools
-        run: uv run --no-project --python 3.13 python -m embeddinggemma_tools.privacy history --root ..
+        run: uv run --no-project --python 3.13 python -m embeddinggemma_tools.privacy history --root .. --revision "$PRIVACY_SOURCE_SHA"
+        env:
+          PRIVACY_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Audit distribution and prepare a separate consumer manifest
         shell: bash
         working-directory: tools
@@ -32,8 +34,14 @@ jobs:
             | tee ../artifacts/package-validation/audit.json
         env:
           SOURCE_SHA: ${{ github.sha }}
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_1
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/package-validation/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_1.outcome == 'success' }}
         with:
           name: package-validation-${{ github.sha }}
           path: artifacts/package-validation/

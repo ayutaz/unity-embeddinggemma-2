@@ -38,7 +38,14 @@ jobs:
       - run: uv sync --locked
       - name: Generate weights-free native SiLU and ONNX Swish probes
         run: uv run --locked python -m embeddinggemma_tools prepare-silu-probe --output ../artifacts/native-silu
+      - name: Check artifact publication privacy
+        id: privacy_upload_1
+        if: success()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/native-silu/
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (success()) && steps.privacy_upload_1.outcome == 'success' }}
         with:
           name: native-silu-${{ github.sha }}
           path: artifacts/native-silu/
@@ -46,7 +53,14 @@ jobs:
           if-no-files-found: error
       - name: Generate weights-free official multimodal prompt references
         run: uv run --locked python -m embeddinggemma_tools prepare-prompts --output ../artifacts/multimodal-prompts
+      - name: Check artifact publication privacy
+        id: privacy_upload_2
+        if: success()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/multimodal-prompts/
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (success()) && steps.privacy_upload_2.outcome == 'success' }}
         with:
           name: multimodal-prompts-${{ github.sha }}
           path: artifacts/multimodal-prompts/
@@ -73,7 +87,16 @@ jobs:
               echo 'Reference/export did not complete. This is not an M1 pass.'
             fi
           } >> "$GITHUB_STEP_SUMMARY"
+      - name: Check artifact publication privacy
+        id: privacy_upload_3
+        if: success()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/m1/search-reference.json
+            artifacts/m1/export-validation.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (success()) && steps.privacy_upload_3.outcome == 'success' }}
         with:
           name: search-reference-${{ github.sha }}
           path: |
@@ -81,8 +104,14 @@ jobs:
             artifacts/m1/export-validation.json
           retention-days: 3
           if-no-files-found: error
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_4
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/m1/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_4.outcome == 'success' }}
         with:
           name: m1-reference-${{ github.sha }}
           path: artifacts/m1/
@@ -99,8 +128,14 @@ jobs:
         env:
           OMP_NUM_THREADS: '4'
           MKL_NUM_THREADS: '4'
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_5
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/image-embeddings/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_5.outcome == 'success' }}
         with:
           name: image-embeddings-${{ github.sha }}
           path: artifacts/image-embeddings/
@@ -110,7 +145,14 @@ jobs:
       - name: Generate weights-free official image preprocessing fixtures
         run: |
           uv run --locked python -c 'import os; from embeddinggemma_tools.image_preprocessing import prepare_reference; prepare_reference("../artifacts/vision-encoder/processor_config.json", "../artifacts/image-preprocessing", revision="914f7f89142e33e77833254d9c9b90c3cef7303b", source_commit=os.environ["GITHUB_SHA"])'
+      - name: Check artifact publication privacy
+        id: privacy_upload_6
+        if: success()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/image-preprocessing/
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (success()) && steps.privacy_upload_6.outcome == 'success' }}
         with:
           name: image-preprocessing-${{ github.sha }}
           path: artifacts/image-preprocessing/
@@ -132,8 +174,14 @@ jobs:
               echo 'Vision export validation did not complete. Sentis and end-to-end image embeddings remain unverified.'
             fi
           } >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_7
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/vision-encoder/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_7.outcome == 'success' }}
         with:
           name: vision-encoder-${{ github.sha }}
           path: artifacts/vision-encoder/
@@ -160,8 +208,14 @@ jobs:
               echo 'Backbone validation did not complete. Image/audio encoders and Sentis remain unverified.'
             fi
           } >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_8
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/multimodal-backbone/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_8.outcome == 'success' }}
         with:
           name: multimodal-backbone-${{ github.sha }}
           path: artifacts/multimodal-backbone/
@@ -188,8 +242,14 @@ jobs:
               echo 'Audio preprocessing validation did not complete. Audio encoder and Sentis remain unverified.'
             fi
           } >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_9
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/audio-preprocessing/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_9.outcome == 'success' }}
         with:
           name: audio-preprocessing-${{ github.sha }}
           path: artifacts/audio-preprocessing/
@@ -221,8 +281,14 @@ jobs:
               echo 'Audio encoder validation did not complete. Sentis and final audio embeddings remain unverified.'
             fi
           } >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_10
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/audio-encoder/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_10.outcome == 'success' }}
         with:
           name: audio-encoder-${{ github.sha }}
           path: artifacts/audio-encoder/

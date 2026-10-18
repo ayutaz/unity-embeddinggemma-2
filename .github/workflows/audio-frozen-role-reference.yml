@@ -92,8 +92,19 @@ jobs:
             echo 'Every original Document vector must pass unchanged before new roles are accepted. CPU encoder context failures, ONNX failures and actual GPU PCM chains remain separate.'
             echo 'Only completed validation JSON establishes a role reference result.'
           } >> "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_1
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/audio-frozen-role-reference/**/*.json
+            artifacts/audio-frozen-role-reference/**/*-features-fp32.bin
+            artifacts/audio-frozen-role-reference/**/*-actual-fp32.bin
+            artifacts/fixed-audio-native/range-receipt.json
+            artifacts/fixed-document-backbone/range-receipt.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_1.outcome == 'success' }}
         with:
           name: audio-frozen-role-reference-${{ github.sha }}
           path: |

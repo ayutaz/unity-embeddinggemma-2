@@ -33,6 +33,8 @@
 
 ## 作業順と後続範囲
 
+3aの後続では、[native PDHと同SDK text4 vector](results/native-pdh-text-stage-observation-f604baf-20261018.json)を実行し、参照・解放・exit0、終了後554 source一致と、所有process handleの生存を検査した8,783点を照合した。取得間隔中央値4.6489msでload内2,687点に正数を観測したが、queryの3Dは隣接差分が経過時間を超え、releaseは1点だけでpair不足だった。26件の新しいRedと既存を含む43件のGreen、clockとengine別の棄却を保持する。SDK専有load/releaseの合格にはせず、このPDH方式を繰り返すだけでは解消しない帰属・provider更新の制約として次の測定方式を判断する。
+
 実GPUの残る計測を1本ずつ進め、Editor負荷と分離して原因を特定する。並行して公開手順と最終candidateの受け入れ準備を整え、許可された公開取得・マイク確認を実施する。最後に最新CI・source対応と全行の監査を閉じる。
 
 Windows画像・音声Player、macOS/iOS/Androidの最終受け入れ、版更新・正式Releaseはロードマップの4〜7であり、今回の1〜3の完了条件に置き換えたり、黙って完了扱いしたりしない。

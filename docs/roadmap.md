@@ -44,6 +44,8 @@ Editorでは[検索割り当て・空/再利用Library](editor-search-allocation
 
 次は、これらの測定範囲・失敗・欠測を最終candidateへ対応付け、最新Required CIと要件別の監査を閉じます。性能全体は未合格です。過去の12GiB guard中断・16GiB EditMode900秒timeout・Profiler不整合・テスト未実行も[検証状況](status.md)と各記録に保持します。公開取得・実マイク・最終candidateの実操作を含む1〜3全体の条件を維持し、異なる実行条件から速度改善率や最低RAM / VRAMを推定しません。
 
+粗いOS counterの後続として[native PDH追試](results/native-pdh-text-stage-observation-f604baf-20261018.json)を追加した。同じFP32 text4 vectorの元参照・解放・exit0を維持し、8,783点、取得間隔中央値4.6489msとclockを検査した。load内の正数はprocess活動量として保持し、queryの3Dで経過時間を超える差分と、releaseのpair不足はnullとした。26件の新しいRed→関連43 Greenはツールの検証であり、性能全体・SDK専有load/release時間の合格ではない。同方式の単純な再実行で未取得を埋めず、帰属と更新の制約を次の方式の選択へ反映する。
+
 ### 4. WindowsマルチモーダルPlayer
 
 1〜3で安定したcandidateを使い、画像・音声sampleの配置・cache・切替・失敗回復をPlayerへ接続します。

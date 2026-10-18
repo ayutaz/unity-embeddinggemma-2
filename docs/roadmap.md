@@ -157,3 +157,5 @@ Web / WebGPU・動画・学習・本格的なベクトルDBは必須公開範囲
 - 実GPUの実行条件と数値結果、Python CIの成功、UI操作、公開操作を別々に判定します。最新headで未実行の条件を過去の成功で埋めません。
 
 実装時のC1〜C7・I1〜I6・A1〜A7の詳細は[全体TDD設計](multimodal-tdd-plan.md)・[画像設計](m3-plan.md)・[音声設計](m4-plan.md)に保持します。そこにある過去checkpointの「次の作業」より、本ページの現在の順序を優先してください。
+
+性能・実操作の未達条件は[優先1〜3の残タスク監査](priority-1-to-3-acceptance.md)も参照してください。最終candidateでの確認は[正式リリース計画](release-plan.md)に従います。

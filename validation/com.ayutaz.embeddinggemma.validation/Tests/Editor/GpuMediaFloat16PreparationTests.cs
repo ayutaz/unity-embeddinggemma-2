@@ -83,5 +83,51 @@ namespace EmbeddingGemma.Validation.Tests
             Prepare(); var bundle = GpuMediaBundle.Open(destination);
             Assert.That(File.Exists(bundle.VerifyFile((string)bundle.Module("text")["model"])), Is.True);
         }
+
+        void PreparePinnedEnvironment(string expected, string producer = Producer)
+        {
+            var names = new[] { "EG_FLOAT16_SOURCE", "EG_FLOAT16_OUTPUT", "EG_ACCEPTANCE_SOURCE", "EG_FLOAT16_DESCRIPTOR_SHA256" };
+            var previous = names.Select(Environment.GetEnvironmentVariable).ToArray();
+            var values = new[] { source, destination, producer, expected };
+            try
+            {
+                for (var i = 0; i < names.Length; i++) Environment.SetEnvironmentVariable(names[i], values[i]);
+                var method = typeof(GpuMediaFloat16Preparation).GetMethod("PreparePinnedFromEnvironment");
+                Assert.That(method, Is.Not.Null, "A new bundle must require an explicit descriptor pin.");
+                try { method.Invoke(null, null); }
+                catch (TargetInvocationException error) { ExceptionDispatchInfo.Capture(error.InnerException).Throw(); throw; }
+            }
+            finally { for (var i = 0; i < names.Length; i++) Environment.SetEnvironmentVariable(names[i], previous[i]); }
+        }
+
+        [Test] public void PinnedEnvironmentDerivesTheExplicitBundleAndRecordsItsIdentity()
+        {
+            PreparePinnedEnvironment(sourceHash);
+            var report = JObject.Parse(File.ReadAllText(Path.Combine(destination, "float16-preparation.json")));
+            Assert.That((string)report["source_descriptor_sha256"], Is.EqualTo(sourceHash));
+            Assert.That((string)report["producer_source"], Is.EqualTo(Producer));
+            Assert.That((bool)report["success"], Is.True);
+            Assert.That((bool)report["inference_executed"], Is.False);
+        }
+
+        [TestCase(null)] [TestCase("")] [TestCase("short")] [TestCase("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG")]
+        public void PinnedEnvironmentRejectsMissingOrMalformedDescriptorBeforeCreatingOutput(string expected)
+        {
+            Assert.Throws<ArgumentException>(() => PreparePinnedEnvironment(expected));
+            Assert.That(Directory.Exists(destination), Is.False);
+        }
+
+        [TestCase(null)] [TestCase("")] [TestCase("short")] [TestCase("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG")]
+        public void PinnedEnvironmentRejectsMissingOrMalformedProducerBeforeCreatingOutput(string producer)
+        {
+            Assert.Throws<ArgumentException>(() => PreparePinnedEnvironment(sourceHash, producer));
+            Assert.That(Directory.Exists(destination), Is.False);
+        }
+
+        [Test] public void PinnedEnvironmentRejectsAValidButWrongDescriptorWithoutOutput()
+        {
+            Assert.Throws<InvalidDataException>(() => PreparePinnedEnvironment(new string('0', 64)));
+            Assert.That(Directory.Exists(destination), Is.False);
+        }
     }
 }

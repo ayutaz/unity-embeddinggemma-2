@@ -8,7 +8,7 @@
 
 `ValidationPlayerBuild.BuildIOS(output, sourceCommit)` は、iOSをactive targetにしたEditorで使用します。Play Mode・未保存scene・既存の一時検証assetがある場合は開始しません。既存の共通build経路がsource hash、実build結果、正常終了と設定復元を記録します。注入したbuild callbackは実export成功として記録されません。
 
-profileはIL2CPP / High stripping / Release compiler、Device SDK、iPhone / iPad、Metalを指定します。deployment targetの`15.0`は検証用buildの設定であり、実測済みの最低OS・端末要件ではありません。[Unity 6.3のiOS設定API](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/PlayerSettings.iOS.html)と、固定Editorでの設定テストを基準にしています。
+profileはIL2CPP / High stripping / Release compiler、Device SDK、iPhone / iPad、Metalを指定します。[Xcodeの構成](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/EditorUserBuildSettings-iOSXcodeBuildConfig.html)も明示的にReleaseへ設定し、元のDebug / Releaseのどちらにも復元します。deployment targetの`15.0`は検証用buildの設定であり、実測済みの最低OS・端末要件ではありません。[Unity 6.3のiOS設定API](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/PlayerSettings.iOS.html)と、固定Editorでの設定テストを基準にしています。
 
 `WithIOSProfile(Action)` は同じ設定を一時適用し、callback成功・例外の両方で変更した設定を復元します。自動signing、Team ID、provisioning値は読み取ったり変更したりせず、receiptには明示した設定項目だけを含めます。署名は実行者の私的なXcode環境で設定し、export・project settings・raw logは公開payloadとして扱いません。公開する結果は必ず別にprivacy検査します。
 

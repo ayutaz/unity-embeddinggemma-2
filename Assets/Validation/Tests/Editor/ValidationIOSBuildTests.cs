@@ -94,7 +94,7 @@ namespace EmbeddingGemma.Validation.Tests
                     Assert.That(PlayerSettings.iOS.iOSManualProvisioningProfileID == provisioning, Is.True);
                     Assert.That(PlayerSettings.iOS.iOSManualProvisioningProfileType == profileType, Is.True);
                     var receipt = (JObject)Call("IOSProfileSettings");
-                    Assert.That(receipt.Properties().Select(p => p.Name), Is.EquivalentTo(new[] { "application_identifier", "sdk", "device_family", "deployment_target", "automatic_graphics_api", "graphics_apis", "signing_scope" }));
+                    Assert.That(receipt.Properties().Select(p => p.Name), Is.EquivalentTo(new[] { "application_identifier", "sdk", "device_family", "deployment_target", "automatic_graphics_api", "graphics_apis", "signing_scope", "xcode_configuration" }));
                     Assert.That((string)receipt["sdk"], Is.EqualTo("DeviceSDK"));
                     Assert.That((string)receipt["signing_scope"], Is.EqualTo("Private Xcode signing; identities and provisioning values omitted"));
                     Assert.That(receipt["graphics_apis"].ToObject<string[]>(), Is.EqualTo(new[] { "Metal" }));
@@ -120,6 +120,26 @@ namespace EmbeddingGemma.Validation.Tests
                 PlayerSettings.iOS.sdkVersion = sdk; PlayerSettings.iOS.targetDevice = device; PlayerSettings.iOS.targetOSVersionString = minimum;
                 PlayerSettings.SetGraphicsAPIs(BuildTarget.iOS, apis); PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.iOS, automatic);
             }
+        }
+        [TestCase(false, false)] [TestCase(true, false)] [TestCase(false, true)] [TestCase(true, true)]
+        public void SelectsXcodeReleaseAndRestoresOriginalScheme(bool fail, bool releaseBefore)
+        {
+            var previous = EditorUserBuildSettings.iOSXcodeBuildConfig;
+            var before = releaseBefore ? XcodeBuildConfig.Release : XcodeBuildConfig.Debug;
+            try
+            {
+                EditorUserBuildSettings.iOSXcodeBuildConfig = before;
+                Action execute = () =>
+                {
+                    Assert.That(EditorUserBuildSettings.iOSXcodeBuildConfig, Is.EqualTo(XcodeBuildConfig.Release));
+                    Assert.That((string)((JObject)Call("IOSProfileSettings"))["xcode_configuration"], Is.EqualTo("Release"));
+                    if (fail) throw new InvalidOperationException("injected Xcode scheme failure");
+                };
+                if (fail) Assert.That(Assert.Throws<InvalidOperationException>(() => Profile(execute)).Message, Is.EqualTo("injected Xcode scheme failure"));
+                else Profile(execute);
+                Assert.That(EditorUserBuildSettings.iOSXcodeBuildConfig, Is.EqualTo(before));
+            }
+            finally { EditorUserBuildSettings.iOSXcodeBuildConfig = previous; }
         }
         [Test] public void WrongActiveTargetDoesNotCreateBuildOrTouchSigning()
         {

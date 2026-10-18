@@ -51,6 +51,7 @@ namespace EmbeddingGemma.Validation.Editor
             ["application_identifier"] = PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.iOS),
             ["sdk"] = PlayerSettings.iOS.sdkVersion.ToString(), ["device_family"] = PlayerSettings.iOS.targetDevice.ToString(),
             ["deployment_target"] = PlayerSettings.iOS.targetOSVersionString,
+            ["xcode_configuration"] = EditorUserBuildSettings.iOSXcodeBuildConfig.ToString(),
             ["automatic_graphics_api"] = PlayerSettings.GetUseDefaultGraphicsAPIs(BuildTarget.iOS),
             ["graphics_apis"] = new JArray(PlayerSettings.GetGraphicsAPIs(BuildTarget.iOS).Select(api => api.ToString())),
             ["signing_scope"] = "Private Xcode signing; identities and provisioning values omitted"
@@ -65,6 +66,7 @@ namespace EmbeddingGemma.Validation.Editor
                 var backend = PlayerSettings.GetScriptingBackend(target); var stripping = PlayerSettings.GetManagedStrippingLevel(target);
                 var compiler = PlayerSettings.GetIl2CppCompilerConfiguration(target); var identifier = PlayerSettings.GetApplicationIdentifier(target);
                 var sdk = PlayerSettings.iOS.sdkVersion; var device = PlayerSettings.iOS.targetDevice; var minimum = PlayerSettings.iOS.targetOSVersionString;
+                var xcode = EditorUserBuildSettings.iOSXcodeBuildConfig;
                 var automatic = PlayerSettings.GetUseDefaultGraphicsAPIs(BuildTarget.iOS);
                 GraphicsDeviceType[] apis;
                 try { PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.iOS, false); apis = PlayerSettings.GetGraphicsAPIs(BuildTarget.iOS); }
@@ -74,6 +76,7 @@ namespace EmbeddingGemma.Validation.Editor
                     PlayerSettings.SetScriptingBackend(target, backend); PlayerSettings.SetManagedStrippingLevel(target, stripping);
                     PlayerSettings.SetIl2CppCompilerConfiguration(target, compiler); PlayerSettings.SetApplicationIdentifier(target, identifier);
                     PlayerSettings.iOS.sdkVersion = sdk; PlayerSettings.iOS.targetDevice = device; PlayerSettings.iOS.targetOSVersionString = minimum;
+                    EditorUserBuildSettings.iOSXcodeBuildConfig = xcode;
                     PlayerSettings.SetGraphicsAPIs(BuildTarget.iOS, apis); PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.iOS, automatic);
                 };
             }
@@ -84,6 +87,7 @@ namespace EmbeddingGemma.Validation.Editor
                 PlayerSettings.SetIl2CppCompilerConfiguration(target, Il2CppCompilerConfiguration.Release);
                 PlayerSettings.SetApplicationIdentifier(target, "com.ayutaz.embeddinggemma.validation");
                 PlayerSettings.iOS.sdkVersion = iOSSdkVersion.DeviceSDK; PlayerSettings.iOS.targetDevice = iOSTargetDevice.iPhoneAndiPad;
+                EditorUserBuildSettings.iOSXcodeBuildConfig = XcodeBuildConfig.Release;
                 // Probe build configuration, not a measured minimum supported OS/device claim.
                 PlayerSettings.iOS.targetOSVersionString = "15.0";
                 PlayerSettings.SetUseDefaultGraphicsAPIs(BuildTarget.iOS, false);

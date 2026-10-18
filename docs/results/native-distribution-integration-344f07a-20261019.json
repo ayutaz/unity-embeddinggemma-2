@@ -1,0 +1,30 @@
+{
+  "success": true,
+  "PR": 97,
+  "merge": "4d66d92f0d9b79afd46dc41df3929f5ef1ad5115",
+  "source": "344f07a8ab8f0100ecc75728ae5bfdf1792b29b3",
+  "actual_main_tree_matches_tested_source": true,
+  "public_author_verified": true,
+  "provider_signature_verified": true,
+  "outgoing_history_scanned": true,
+  "source_PR_exact_heads_included": [
+    95,
+    96
+  ],
+  "formal_SDK_release_created": false,
+  "schema": 1,
+  "run": 39155770986,
+  "overall_ci_conclusion": "success",
+  "jobs_passed": 15,
+  "independent_archives": 7,
+  "values_compared": 824320,
+  "tolerance_failures": 0,
+  "all_archive_digests_and_CRCs_verified": true,
+  "two_private_archive_copies_verified": true,
+  "actual_uploaded_audit_matches_independent_recomputation": true,
+  "GPU_validation_claimed": false,
+  "source_PRs_closed_without_individual_merge": [
+    95,
+    96
+  ]
+}

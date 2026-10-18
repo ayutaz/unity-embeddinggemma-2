@@ -117,11 +117,15 @@ tolerance violations. Execution `54570784` and PR head `73fa675` have the same
 tree. The uploaded summary exactly matched the independent result. That run
 failed overall because four Python environments expected an obsolete workflow
 option; the assertion repair has one intended Red and 293 related passing tests.
-The repaired head `5f14d3a` requires its own complete CI acceptance.
+Follow-up run `39153769849` was cancelled after a model-metadata finding and is
+not a pass. [Repaired head `344f07a`](results/native-distribution-integration-344f07a-20261019.json)
+passed all fifteen CI jobs. Independent readback verified all seven archives,
+824,320 original-reference values with zero tolerance violations, and the exact
+uploaded summary. PR #97 was integrated as `4d66d92` with the same tested tree.
 
 The capture protocol still does not preserve intermediate ONNX graphs for the
 independent auditor; `graphs_independently_rehashed=false` remains visible. No
-CPU reference execution is counted as a Unity GPU pass. Fresh complete CI,
-remaining performance/devices, provider cleanup and the formal SDK Release stay
+CPU reference execution is counted as a Unity GPU pass. Remaining
+performance/devices, provider cleanup and the formal SDK Release stay
 separate gates. Before retiring an older hosted artifact, inventory every pinned
 dependency and verify exact private backups of all required original bytes.

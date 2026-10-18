@@ -26,6 +26,8 @@ must fail; reviewed distribution files must pass. Neither result certifies opaqu
 tensor data through text scanning or proves a model's numerical correctness.
 
 The previous candidate CI was cancelled after the metadata finding and is not a
-pass. Complete CI must accept the repaired source before integration. Older
+pass. [Repaired-source acceptance](results/native-distribution-integration-344f07a-20261019.json)
+passed all fifteen jobs and independently audited all seven numerical archives
+before PR #97 was integrated. Older
 hosted artifacts and provider copies remain a separate cleanup task: inventory
 all dependencies and verify complete immutable private backups before deletion.

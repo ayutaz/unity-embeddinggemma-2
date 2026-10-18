@@ -35,10 +35,10 @@ UPMの宣言上の最小版は6000.3.16f1です。これは対応する全Unity�
 ## 導入
 
 1. Unityの **Window → Package Manager** を開き、**Add package from git URL** を選びます。
-2. 次のURLを入力します。PR #83統合時点の開発版へ固定しています。
+2. 次のURLを入力します。PR #94統合後、Windowsの実行検証を確認した開発版へ固定しています。
 
    ```text
-   https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/com.ayutaz.embeddinggemma#a965c098aba824b47f9762cae16b3af9656a3508
+   https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/com.ayutaz.embeddinggemma#186ffc1b330c0b609fef66cf4abfaeed5011fcbc
    ```
 
 3. モデルを準備します。**パッケージを追加しただけでは推論できません。** [テキストモデルの取得・変換手順](docs/model-preparation.md)に沿って`.sentis`とtokenizerを用意してください。

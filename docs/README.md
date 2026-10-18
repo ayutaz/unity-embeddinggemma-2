@@ -19,7 +19,7 @@
 
 | 文書 | 内容 |
 | --- | --- |
-| [検証状況](status.md) | 2026-10-18時点の統合済み機能・確認済み環境・未達条件 |
+| [検証状況](status.md) | 2026-10-19時点の統合済み機能・確認済み環境・未達条件 |
 | [ロードマップ](roadmap.md) | 次のPR単位、依存関係、受け入れと正式公開の条件 |
 | [プロジェクトのゴール](goal.md) | GPU要件、精度・対応環境、対象外 |
 | [CI](ci.md) / [自動操作](automation.md) | 開発環境・workflow・実行と結果の扱い |
@@ -30,6 +30,9 @@
 
 | 分野 | 入口 |
 | --- | --- |
+| Windows Releaseの公開モデル・全media role・混在検索 | [独立cold/warm全4起動](results/final-mixed-player-3a02fc0-20261019.json) |
+| 同sourceの既存text全ケースとCPU/GPU比較 | [実Player 2起動・8条件](results/final-text-player-3a02fc0-20261019.json) |
+| 修正後の実UIによる音声の途中停止と解放 | [固定合成音声・追加録音なし](results/native-playback-stop-7754ce4-20261019.json) |
 | 最新サンプルの実GPU・メモリ・画面・回帰 | [画像・音声サンプル検証](multimodal-search-sample.md) |
 | GPU出力確保の改善と新SDKの精度・順位 | [CPU storageの省略](gpu-write-only-output-allocation.md) |
 | 新SDKの全画像・音声profileのGPU/CPU/wall・メモリ | [同じsourceの40反復](media-gpu-submission-observations.md) |

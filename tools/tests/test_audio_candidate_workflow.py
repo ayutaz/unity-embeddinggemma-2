@@ -87,3 +87,26 @@ def test_candidate_preservation_is_manual_exclusive_and_uploads_only_verified_di
     assert upload['with']['if-no-files-found']=='error'
     assert 'success()' in upload['if'] and "outcome == 'success'" in upload['if']
     assert not any(step.get('continue-on-error') for step in job['steps'])
+
+
+def test_original_input_preservation_is_exclusive_and_does_not_download_or_execute_graphs():
+    w=workflow();option=w['on']['workflow_dispatch']['inputs']['preserve_original_inputs']
+    assert option['type']=='boolean' and option['default']=='false'
+    for name in ('preserve-candidate','candidate-execute','candidate-audit','recover-golden','recover','native-reference'):
+        assert '!inputs.preserve_original_inputs' in w['jobs'][name]['if']
+    job=w['jobs']['preserve-inputs']
+    assert "github.event_name == 'workflow_dispatch'" in job['if']
+    assert 'inputs.preserve_original_inputs' in job['if']
+    for name in ('preserve_candidate_distribution','qualify_candidate_generation','recover_golden_only','recover_original_bytes'):
+        assert '!inputs.'+name in job['if']
+    assert job['permissions']=={'contents':'read','actions':'read'}
+    assert job['timeout-minutes']=='10'
+    commands='\n'.join(step.get('run','') for step in job['steps'])
+    assert 'embeddinggemma_tools.original_audio_input_preservation' in commands and '--fetch' in commands
+    assert 'audio_candidate_distribution' not in commands and 'frozen_audio_chained_onnx' not in commands
+    guard,upload=job['steps'][-2:]
+    assert guard['uses']=='./.github/actions/privacy-artifact-guard'
+    assert guard['with']['paths']==upload['with']['path']=='artifacts/original-audio-inputs/**'
+    assert upload['with']['retention-days']=='90' and upload['with']['if-no-files-found']=='error'
+    assert 'success()' in upload['if'] and "outcome == 'success'" in upload['if']
+    assert not job.get('continue-on-error') and not any(s.get('continue-on-error') for s in job['steps'])

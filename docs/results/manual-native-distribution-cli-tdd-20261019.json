@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "scope": "Standalone unqualified public-distribution CLI and manual workflow migration; no model execution or provider deletion",
+  "base_source": "4d66d92f0d9b79afd46dc41df3929f5ef1ad5115",
+  "intended_red": {
+    "tests": 13,
+    "failures": 9,
+    "errors": 0,
+    "skipped": 0
+  },
+  "related_green": {
+    "tests": 96,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "actionlint_passed": true,
+  "source_sha256_normalized_LF": {
+    "tools/embeddinggemma_tools/native_regression_distribution.py": "9c66b902e9c6e1257afe5e2066a0521414bc2d3948c93795bbb2075be8b1243a",
+    "tools/tests/test_native_regression_distribution_cli.py": "0f7d0d3652f8b1c1145b3fbc3bfcb1ac861b077d9ea254d9e43fe105d9e2e3cb",
+    "tools/tests/test_audio_candidate_workflow.py": "4dbb8fb13ddc15069f1ff5f736b60402041a3ba119f1dbf93e2c4efcce9ced60",
+    ".github/workflows/audio-runtime-reference.yml": "b3c4297ebdd798e9156e1482a01eefc2bd7437c1dfc63fb03ccba625b3bc884e"
+  },
+  "private_red_XML_sha256": "3dfde16e1d4d897b8990bd74149a0161c4103a3936dc8e5c58b99a3c5785c83f",
+  "private_green_XML_sha256": "e667ee253381c73aa4bc01055bbf4d0fc3833c2666934531003fbc1b39a8a685",
+  "actual_new_CLI_original_capture_audit": {
+    "execution_run": 39155770986,
+    "execution_source": "7855ee2d3d7158ae1f6be7b5e7b726726affa32a",
+    "execution_head": "344f07a8ab8f0100ecc75728ae5bfdf1792b29b3",
+    "case_count": 6,
+    "profile_count": 2,
+    "values_compared": 824320,
+    "tolerance_failures": 0,
+    "all_case_details_match_prior_independent_readback": true,
+    "private_output_sha256": "077d6b56ea7aa077805aded1fc76f5178d4b911515ea2f9a3e6b4739c6a00019"
+  },
+  "original_golden_or_tolerances_changed": false,
+  "all_six_signals_required": true,
+  "all_five_actual_parts_and_native_full_cut_controls_required": true,
+  "selected_generation_manifest_dependency_added": false,
+  "generation_qualified": false,
+  "gpu_validated": false,
+  "fresh_model_execution_claimed": false,
+  "complete_source_CI_accepted": false,
+  "provider_artifacts_deleted": 0,
+  "formal_release_created": false
+}

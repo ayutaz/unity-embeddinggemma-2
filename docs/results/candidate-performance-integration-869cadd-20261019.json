@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "success": true,
+  "PR": 98,
+  "merge": "dbe39f54ea80ceaceb906f0afaa927ea1533d3d3",
+  "source": "869cadd815d76080114cf1c4f4dda93c97cb5909",
+  "actual_main_tree_matches_tested_source": true,
+  "public_author_verified": true,
+  "provider_signature_verified": true,
+  "outgoing_history_scanned": true,
+  "SDK_package_tree": "6c8fa26c54268bca1b256173e93855617610865c",
+  "Runtime_tree": "7d6e4314552b221d06db881405e7ccff3f449a77",
+  "SDK_unchanged": true,
+  "CI_run": 39159816416,
+  "all_15_source_CI_jobs_successful": true,
+  "independent_archives": 7,
+  "values_compared": 824320,
+  "tolerance_failures": 0,
+  "actual_uploaded_audit_matches": true,
+  "main_push_CI_conclusion_not_claimed": true,
+  "formal_SDK_release_created": false
+}

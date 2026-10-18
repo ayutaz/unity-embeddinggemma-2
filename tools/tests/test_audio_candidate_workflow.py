@@ -23,8 +23,10 @@ def test_candidate_qualification_is_explicit_manual_and_keeps_original_modes_sep
     assert job['env']['MKL_CBWR']=='COMPATIBLE' and job['env']['MKL_DYNAMIC']=='FALSE'
     assert job['env']['OMP_NUM_THREADS']==job['env']['MKL_NUM_THREADS']=='4'
     commands='\n'.join(step.get('run','') for step in job['steps'])
-    assert 'embeddinggemma_tools.audio_generation_candidate fetch' in commands
-    assert '--candidate-directory ../artifacts/candidate/audio-runtime-reference' in commands
+    assert 'embeddinggemma_tools.native_regression_distribution fetch' in commands
+    assert '--candidate-distribution-directory ../artifacts/candidate/audio-runtime-reference' in commands
+    assert 'embeddinggemma_tools.audio_generation_candidate fetch' not in commands
+    assert '--candidate-directory ' not in commands
     assert '--raw-input --variant ordered_original_midpoint_bmm' in commands
     assert '--case "$CASE_ID"' in commands
     assert not job.get('continue-on-error')
@@ -36,8 +38,9 @@ def test_candidate_audit_requires_all_actual_captures_without_promoting_required
     assert job['needs']==['candidate-execute']
     assert 'always()' in job['if'] and 'inputs.qualify_candidate_generation' in job['if']
     commands='\n'.join(step.get('run','') for step in job['steps'])
-    assert 'embeddinggemma_tools.audio_generation_candidate fetch-original' in commands
-    assert 'embeddinggemma_tools.audio_generation_candidate audit' in commands
+    assert 'embeddinggemma_tools.native_regression_distribution fetch-original' in commands
+    assert 'embeddinggemma_tools.native_regression_distribution audit' in commands
+    assert 'embeddinggemma_tools.audio_generation_candidate' not in commands
     assert '--source "$EXECUTION_SOURCE"' in commands
     assert '--reports ../artifacts/candidate-cases' in commands
     for name in ('candidate-execute','candidate-audit'):

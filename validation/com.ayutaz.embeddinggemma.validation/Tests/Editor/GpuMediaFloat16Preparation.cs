@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 using Unity.InferenceEngine;
 
@@ -79,6 +80,16 @@ namespace EmbeddingGemma.Validation.Tests
         {
             Prepare(Environment.GetEnvironmentVariable("EG_FLOAT16_SOURCE"), Environment.GetEnvironmentVariable("EG_FLOAT16_OUTPUT"),
                 Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE"), OriginalDescriptorSha256);
+        }
+
+        public static void PreparePinnedFromEnvironment()
+        {
+            var expected = Environment.GetEnvironmentVariable("EG_FLOAT16_DESCRIPTOR_SHA256");
+            var producer = Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
+            if (!Regex.IsMatch(expected ?? "", "\\A[0-9a-f]{64}\\z") || !Regex.IsMatch(producer ?? "", "\\A[0-9a-f]{40}\\z"))
+                throw new ArgumentException("An explicit lowercase descriptor hash and producer commit are required.");
+            Prepare(Environment.GetEnvironmentVariable("EG_FLOAT16_SOURCE"), Environment.GetEnvironmentVariable("EG_FLOAT16_OUTPUT"),
+                producer, expected);
         }
     }
 }

@@ -117,3 +117,31 @@ The parent later recorded a MissingReferenceException; its causal relation is
 not proven. This is a failed overall attempt, not a role acceptance or a runtime
 stability improvement. The revised per-signal protocol preserves the default
 test timeout, all original reference thresholds and the full 18-condition scope.
+
+The subsequent [per-signal actual PCM role gate](results/audio-candidate-real-pcm-all-roles-gpu-c1e9aa8-20261018.json)
+at fixed Git source `c1e9aa8` passed all six signals and all 18 original role
+vectors. All six owned processes exited 0; no test skipped. Independent capture
+comparison found a minimum cosine of `0.9999997097692651`, against the unchanged
+FP32 gate of `0.999`, and rejected 18 corrupted-cosine controls. The impulse
+invalid-input, actual stage-failure disposal and borrowed-stage reuse controls
+also passed. Original captures and receipts were copied and hash-verified in a
+separate private backup. This audio API result leaves bundle serialization,
+Player, actual microphone, other platforms and required CI acceptance open.
+
+## Candidate bundle serialization
+
+`CandidateAudioBundlePreparation.Run` serializes both pinned audio profiles
+using the same segment transforms, aliases and operation coefficients as the
+GPU gate. It reuses the original hash-checked preprocessor, backbone and
+tokenizer. Both SDK and validation packages must resolve from the fixed
+`EG_ACCEPTANCE_SOURCE`; set `EG_CANDIDATE_BUNDLE_OUTPUT` to a new directory.
+Run the entry point with Unity batch mode and `-nographics` after the verified
+models have been imported. It performs no model inference. The safe phase
+receipt is `candidate-audio-preparation.json`; existing output is rejected.
+
+The [preparation TDD](results/candidate-audio-bundle-preparation-tdd-20261018.json)
+observed three intended missing-implementation failures, then passed 22
+destination, provenance and writer checks with no skips and process exit 0.
+This proves preflight/serialization controls, not a real candidate bundle pass.
+Generated bundle bytes require independent readback, privacy validation and
+actual saved-bundle GPU/Player checks before adoption.

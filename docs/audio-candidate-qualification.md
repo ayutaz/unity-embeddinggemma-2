@@ -108,9 +108,7 @@ existing artifact reader checks passed 26 tests, including a parallel expiry
 case and an end-to-end mocked redirect/auth separation check. This is distinct
 from the preservation run, which used the earlier reader implementation.
 
-## Remaining release conditions
-
-### Preserve the original reference and raw inputs separately
+## Preserve the original reference and raw inputs separately
 
 The metadata-clean graph artifact intentionally contains no numerical goldens or
 raw feature inputs. Their earlier artifacts have independent short retention.
@@ -135,6 +133,21 @@ and distribution tests passed 32 checks; workflow/recovery checks passed 32 and
 actionlint passed. These small checks do not claim an actual preservation upload
 or GPU execution. Fixed acquisition pins must be updated only after the new
 artifact's exact bytes and provenance have been independently read back.
+
+[Input preservation run 39110353490](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39110353490)
+succeeded at source `2971d748fe824ea4bcc580a2ec583f2f734b7420`. Artifact
+`12130281114` expires at `2027-01-16T08:09:23Z`. Its
+[independent full readback](results/original-audio-input-preservation-readback-20261018.json)
+verified the entire uploaded ZIP SHA256 and every CRC, both original JSON hashes,
+all six raw input hashes and two exact private ZIP copies. No model was executed.
+
+The golden loader and input-only acquisition now pin that artifact's exact digest,
+run and source rather than the earlier short-retention copies. Original JSON
+bytes, source producer and tolerances remain unchanged. Native diagnostics retain
+the same explicit original JSON SHA checks. The acquisition change passed 67
+selected distribution/input/loader tests and 25 workflow/golden checks with
+actionlint. The required original native-graph gate remains independent and is
+not made passing by saving numerical inputs.
 
 ## Remaining release conditions
 

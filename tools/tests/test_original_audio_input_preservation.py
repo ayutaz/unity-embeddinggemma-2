@@ -63,13 +63,14 @@ def test_fetch_selects_only_six_original_raw_inputs_and_checks_artifact_identity
     buffer=io.BytesIO()
     with zipfile.ZipFile(buffer,'w') as archive:
         for row in reference['cases']:
-            archive.writestr('audio-runtime-reference/'+row['input_features'],(current/row['input_features']).read_bytes())
-        archive.writestr('audio-runtime-reference/audio.pt2',b'unrequested-model')
+            archive.writestr(row['input_features'],(current/row['input_features']).read_bytes())
+        archive.writestr('audio.pt2',b'unrequested-model')
     data=buffer.getvalue();selected=[]
     def reader(repo,artifact_id):
-        assert repo=='ayutaz/unity-embeddinggemma-2' and artifact_id==1
+        assert repo=='ayutaz/unity-embeddinggemma-2' and artifact_id==12130281114
         return artifact_zip.RangeReader(len(data),lambda start,stop:data[start:stop]),dict(
-            digest='sha256:'+'e'*64,workflow_run=dict(id=1,head_sha='a'*40,repository_id=7,head_repository_id=7))
+            id=12130281114,digest='sha256:3b61c62e3b3686aeb4615eb4b733f068f303dddfb3f23a084ebc5b04a854f603',
+            workflow_run=dict(id=39110353490,head_sha='2971d748fe824ea4bcc580a2ec583f2f734b7420',repository_id=7,head_repository_id=7))
     real=artifact_zip.extract_members
     def extract(reader,output,names,**kwargs):
         selected.extend(names);return real(reader,output,names,**kwargs)

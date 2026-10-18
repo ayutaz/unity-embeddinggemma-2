@@ -447,7 +447,7 @@ jobs:
           mkdir -p ../artifacts
           lscpu --json > ../artifacts/audio-host.json
           uv run --locked python -m embeddinggemma_tools.artifact_zip \
-            --repo ayutaz/unity-embeddinggemma-2 --artifact-id 12127104206 \
+            --repo ayutaz/unity-embeddinggemma-2 --artifact-id 12130281114 \
             --output ../artifacts/pinned-audio \
             --member audio-encoder-reference.json \
             --member audio-encoder-validation.json

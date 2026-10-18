@@ -63,7 +63,7 @@ def test_native_diagnostics_use_recovered_immutable_golden_without_missing_model
     workflow=yaml.load((root/'.github/workflows/audio-runtime-reference.yml').read_text(encoding='utf-8'),Loader=yaml.BaseLoader)
     steps=workflow['jobs']['native-reference']['steps']
     fetch=next(s['run'] for s in steps if 'embeddinggemma_tools.artifact_zip' in s.get('run',''))
-    assert '--artifact-id 12127104206' in fetch
+    assert '--artifact-id 12130281114' in fetch
     assert '--member audio-encoder-reference.json' in fetch
     assert '--member audio-encoder-validation.json' in fetch
     assert 'ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9  ../artifacts/pinned-audio/audio-encoder-reference.json' in fetch

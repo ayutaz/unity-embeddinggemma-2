@@ -56,7 +56,7 @@ def test_audio_candidate_dispatch_keeps_original_pinned_golden_and_all_six_outpu
     assert workflow['permissions']['actions']=='read'
     steps=workflow['jobs']['native-reference']['steps']
     commands='\n'.join(s.get('run','') for s in steps)
-    assert '12127104206' in commands and 'ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9' in commands
+    assert '12130281114' in commands and 'ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9' in commands
     validation=next(s for s in steps if 'embeddinggemma_tools.pinned_audio_onnx' in s.get('run',''))
     assert 'always()' in validation['if']
     assert '--pinned ../artifacts/pinned-audio' in validation['run']

@@ -16,6 +16,10 @@ from .audio_native_norm_replay import AUDIT_SHA, PRODUCER, REFERENCE_SHA, REVISI
 
 CONTRACT_PATH = Path(__file__).parents[1]/'references/audio-candidate-e9de158.json'
 CONTRACT_SHA = 'df73e109fc6dd62e8b1fff409930042b63e6c63548865b074b593dcc70c40deb'
+ORIGINAL_INPUT_ARTIFACT = 12130281114
+ORIGINAL_INPUT_ARCHIVE_SHA = '3b61c62e3b3686aeb4615eb4b733f068f303dddfb3f23a084ebc5b04a854f603'
+ORIGINAL_INPUT_RUN = 39110353490
+ORIGINAL_INPUT_SOURCE = '2971d748fe824ea4bcc580a2ec583f2f734b7420'
 
 
 def _digest(path):
@@ -161,17 +165,29 @@ def audit_candidate_reports(paths,original,*,source):
     return result
 
 
+def preserved_original_reader():
+    from .artifact_zip import github_artifact_reader
+    reader, metadata = github_artifact_reader('ayutaz/unity-embeddinggemma-2', ORIGINAL_INPUT_ARTIFACT)
+    run = metadata.get('workflow_run', {})
+    if (metadata.get('id') != ORIGINAL_INPUT_ARTIFACT or metadata.get('digest') != 'sha256:'+ORIGINAL_INPUT_ARCHIVE_SHA
+            or run.get('id') != ORIGINAL_INPUT_RUN or run.get('head_sha') != ORIGINAL_INPUT_SOURCE
+            or type(run.get('repository_id')) is not int or run['repository_id'] <= 0
+            or run.get('head_repository_id') != run['repository_id']):
+        reader.close()
+        raise ValueError('Preserved original artifact source or digest differs')
+    return reader, metadata
+
+
 def fetch_original(output):
-    from .artifact_zip import github_artifact_reader,extract_members
+    from .artifact_zip import extract_members
     output=Path(output)
     if output.exists() and any(output.iterdir()):
         raise ValueError('Original download output must be empty')
-    reader,metadata=github_artifact_reader('ayutaz/unity-embeddinggemma-2',12127104206)
+    reader,metadata=preserved_original_reader()
     with reader:
-        if metadata.get('digest')!='sha256:e72efd0cd5a97d69d9de87928dcd65ed155f53f006db402a8448a181d7e5a31b':
-            raise ValueError('Recovered original golden artifact differs')
         report=extract_members(reader,output,['audio-encoder-reference.json','audio-encoder-validation.json'],max_entry_bytes=32*1024*1024)
     original_reference(output)
+    report.update(artifact_id=metadata['id'],preservation_run=ORIGINAL_INPUT_RUN,preservation_source=ORIGINAL_INPUT_SOURCE)
     (output/'original-range-receipt.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
 
 

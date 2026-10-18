@@ -13,6 +13,8 @@
 #include <thread>
 #include "NativeCallbacks.h"
 #include "OwnedTraceLease.h"
+#include "CaptureKeywords.h"
+#include "CaptureConfiguration.h"
 
 using namespace DirectX::Etw;
 using namespace embeddinggemma::diagnostics;
@@ -30,7 +32,9 @@ struct TraceProperties {
     TraceProperties() {
         value.Wnode.BufferSize=sizeof(*this); value.Wnode.Flags=WNODE_FLAG_TRACED_GUID; value.Wnode.ClientContext=1;
         value.LogFileMode=EVENT_TRACE_REAL_TIME_MODE|EVENT_TRACE_NO_PER_PROCESSOR_BUFFERING;
-        value.BufferSize=64;value.MinimumBuffers=4;value.MaximumBuffers=256;
+        value.BufferSize=CaptureConfiguration::BufferSizeKiB;
+        value.MinimumBuffers=CaptureConfiguration::MinimumBuffers;
+        value.MaximumBuffers=CaptureConfiguration::MaximumBuffers;
         value.LoggerNameOffset=offsetof(TraceProperties,name);
     }
 };
@@ -99,7 +103,7 @@ ULONG Rundown(TRACEHANDLE handle,const GUID& provider) {
 int wmain(int argc,wchar_t** argv) {
     if(argc==2 && std::wstring(argv[1])==L"--help") {
         std::cout<<"NativeDxgObserver PID seconds output.jsonl\nPID must be alive. Duration1..900 seconds. Output must not exist.\n"
-            <<"At most200000 rows,4096 active executions/resources,16MiB requested ETW buffers. No model/GPU acceptance from exit alone.\n";
+            <<"At most200000 rows,4096 active executions/resources,64MiB requested ETW buffers. No model/GPU acceptance from exit alone.\n";
         return 0;
     }
     uint64_t pid=0,seconds=0;
@@ -132,9 +136,7 @@ int wmain(int argc,wchar_t** argv) {
         handler=DxTimingCaptureEventHandler::Create(static_cast<DWORD>(pid),options,callbacks);
         startStatus=StartTraceW(&traceHandle,SessionName,&properties.value);lease.Started(startStatus,traceHandle);
         if(startStatus!=ERROR_SUCCESS)throw std::runtime_error("StartTraceW failed");
-        const ULONGLONG d3dKeywords=D3D12_ETW_LOG_FLAGS_RENDER_OPERATION_MARKERS|D3D12_ETW_LOG_FLAGS_DRIVER_CUSTOM_MARKERS|
-            D3D12_ETW_LOG_FLAGS_BUNDLE_MARKERS|D3D12_ETW_LOG_FLAGS_NAMES|D3D12_ETW_LOG_FLAGS_DEVICES|
-            D3D12_ETW_LOG_FLAGS_OBJECT_LIFETIME|D3D12_ETW_LOG_FLAGS_RESOURCES|D3D12_ETW_LOG_APIS;
+        const ULONGLONG d3dKeywords=D3D12CaptureKeywords();
         const ULONGLONG dxgKeywords=DXGK_KEYWORD_LOG_FLAGS_LONG_HAUL|DXGK_KEYWORD_LOG_FLAGS_BASE|
             DXGK_KEYWORD_LOG_FLAGS_PROFILER|DXGK_KEYWORD_LOG_FLAGS_HISTORY_BUFFER|DXGK_KEYWORD_LOG_FLAGS_RESOURCE|
             DXGK_KEYWORD_LOG_FLAGS_ALLOCATIONS_REFERENCES;
@@ -170,6 +172,10 @@ int wmain(int argc,wchar_t** argv) {
             <<",\"timestamp_unit\":\"qpc_epoch_ns\",\"session_name\":\"EmbeddingGemmaNativeDxgCapture\","
             <<Anchor()<<",\"session_stopped\":"<<(lease.stopped?"true":"false")
             <<",\"start_status\":"<<startStatus<<",\"d3d_enable_status\":"<<d3dStatus<<",\"dxg_enable_status\":"<<dxgStatus
+            <<",\"d3d_keywords\":"<<D3D12CaptureKeywords()<<",\"shader_compilation_statistics_collected\":false"
+            <<",\"requested_buffer_size_kib\":"<<CaptureConfiguration::BufferSizeKiB
+            <<",\"requested_minimum_buffers\":"<<CaptureConfiguration::MinimumBuffers
+            <<",\"requested_maximum_buffers\":"<<CaptureConfiguration::MaximumBuffers
             <<",\"d3d_rundown_status\":"<<d3dRundown<<",\"dxg_rundown_status\":"<<dxgRundown<<",\"stop_status\":"<<lease.lastStopStatus
             <<",\"stop_had_failure\":"<<(lease.hadStopFailure?"true":"false")
             <<",\"process_trace_status\":"<<(consumer?consumer->processStatus:ERROR_NOT_READY)

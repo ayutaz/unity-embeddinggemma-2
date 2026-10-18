@@ -1,5 +1,15 @@
 # ロード・解放時間の測定範囲
 
+## Native QPCによるstage対応の追加確認
+
+[FP32 textの固定入力4回](results/raw-qpc-text-fp32-raw-qpc-warm-20261018.json)では、検証コードだけにWindows QPCの開始・終了値を追加し、同じSDK/model/inputの元参照・解放・exit0を維持した。Unity側20契約とPython集計33契約はRed→Greenを確認した。Mono Stopwatchのepochを生QPCと同じとする初期案は実機で失敗したため採用せず、Native QPCを直接記録する。最初の描画あり起動は180秒でPlay Mode再読み込み中にtimeoutし、モデルreportも欠落した失敗として保持する。別の同じ上限・再利用Libraryの起動では全4 vectorとcollectorが正常終了し、loss0でload・first/warm/repeat・releaseの6区間へ対応付けた。
+
+loadの対象processのGPU workは101件、同一queue内の重複を除いた観測区間は9,715,676nsだった。release窓内に該当GPU workは観測されなかった。これはSDK専有load/release時間や物理VRAM返却を表すものではない。各queryのGPU区間もqueue別のunionとして保持し、engineを加算しない。CPU/wall・Unity Recorder/履歴・host peakは元の別項目を維持する。公開版のpath欄は伏せ、raw evidenceのhashは非公開の原本を指す。固定Git導入pinは履歴整理後のsourceで再確認する。
+
+続く[Float16重みのtext4回](results/raw-qpc-text-float16-weights-raw-qpc-20261018.json)も同じSDK・計測コード、元参照・同じ許容差、GPUCompute、解放・exit0、collector loss0で6区間の照合に成功した。load内91件の同queue unionは5,565,136ns、release内GPU workは0件だった。両形式とも初回と3回の後続queryは正数のGPU workを観測している。別processでの観測値であり、precision間の速度比較や全演算FP16の証明にはしない。
+
+後続の[実text・raw DirectX観測](results/raw-dxg-real-text-observer-fixes-20261018.json)では、SDK `d7b2233` / validation `10962fa`を変えず、初回・warm・反復の4 vectorと正常終了を独立確認した。最終collectorは39,362件の`OnGpuWork`を含む45,085行、loss0・診断0・不正/破棄記録0で終了した。初回の依存decoderのPSO統計assert、次の12件lossは失敗のまま保持し、不要な統計keywordとbuffer設定をTDDで修正した。48 native unit・9 CLIが成功し、upstreamは未変更。外部QPC/precise UTCの観測はあるが、既存Mono `DateTime.UtcNow`のstage境界の誤差は校正していないため、load/releaseのGPU時間はまだ確定しない。次はvalidation側だけにraw QPCのstage境界を追加し、元参照・SDK・model/inputを維持して対応付ける。resource破棄がない3件も保持し、driver退役・VRAM返却を証明しない。
+
 2026-10-18。SDK `d7b2233` / validation `10962fa` の既存実GPU記録を再監査した。[画像・音声10プロセス](media-gpu-submission-observations.md)と[text両形式2プロセス](text-current-sdk-observations.md)は、ロード・解放のCPU process時間とwallを保存している。[対応監査](results/load-release-measurement-scope-d7b2233-20261018.json)では12件の元receipt・raw evidenceのSHA256、終了code0・NUnit各1 pass / fail0 / skip0、固定554 sourceファイルを照合した。新しいモデル実行やGPU時間の取得ではない。
 
 ## ロードに含まれる仕事

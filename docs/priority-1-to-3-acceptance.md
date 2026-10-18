@@ -39,6 +39,12 @@
 
 ## 作業順と後続範囲
 
+同じ計測コードの[Float16 text追試](results/raw-qpc-text-float16-weights-raw-qpc-20261018.json)も元4 vector・GPUCompute・6区間のnative QPC対応・解放・両process exit0・loss0を確認した。FP32/Float16のtextは対応付け済みで、画像/音声の同じ計測sourceでの受け入れと、専有範囲・公開取得・実マイク・最終統合は残る。
+
+最新の[Native QPC stage対応](results/raw-qpc-text-fp32-raw-qpc-warm-20261018.json)では、Windows QPCを検証用コードから直接読み、FP32 textのload・4 query・releaseをloss0の対象PID GPU記録へ対応付けた。SDK・model/input・許容差は変えず、元4 vector・解放・正常終了を維持した。Clockの20件と集計33件は成功。Mono Stopwatchのepochを仮定した初期案の失敗と、初回描画あり起動の180秒timeoutを保持し、再利用Libraryでの後続成功をfresh全体に読み替えない。GPUのprocess帰属は確認済みだが、SDK専有時間、専有allocation、driver退役・VRAM返却は未確認。次はFloat16 textと画像・音声へ同じ測定条件を対応付ける。公開取得・実マイク・最終統合の要件も維持する。
+
+最新の[実textへのraw observer接続](results/raw-dxg-real-text-observer-fixes-20261018.json)は、固定SDK/model/inputの4 vector・解放・exit0、終了後554 sourceとroot user4ファイル一致、39,362件の`OnGpuWork`を含む45,085行・loss0・collector exit0まで確認した。先行2試行のdecoder PSO統計assertと12件lossは保持し、未使用統計keywordとbufferをTDDで修正。最新48 native unit・9 CLIが成功した。head `a6d6628`の専用CI40+8は成功・artifact照合済みだが、同headのRequired CIはcancelled前提jobと音声audit失敗を含み未合格。最新修正のCIは提出後に別途確認する。既存UTC stageをraw GPUへ対応付ける精度は未確認で、次はvalidation側だけのraw QPC stage境界を用意する。load/release GPU時間、専有allocation、driver退役、公開取得・実マイク・全体完了は引き続き未達である。
+
 続く[raw observerの実装・小規模GPU対照](results/native-dxg-raw-observer-control-20261018.json)で、時刻をrebasingしない対象PID collector、記録上限・欠測・所有session終了をTDDで実装した。最終40 native unitと9 CLIはfail0 / skip0、独立した所有256-byte D3D12 workloadでは `OnGpuWork` 1区間736nsが事前設定の外部QPC窓内に入り、resource2個の作成・解放・loss0・両process exit0を確認した。実モデルは動かしていない。次は固定SDK/model/inputの実測へ接続し、stage対応・元参照・解放・正常終了を確認する。専用CIのnative40件＋GPU収集なしCLI8件は未確認で、GPU/モデルの合格にも数えない。
 
 PDHに代わる[ETW経路の対照確認](results/dxg-method-controls-72bd2b1-20261018.json)では、現在のtokenでDxgKrnlの有効化・停止がreturn0、未変更のMicrosoft decoder `72bd2b1` の単体130件と実D3D12対照2件がfail0 / skip0 / exit0だった。コピーpacketのPID帰属・時刻順序とresource破棄イベントの時刻窓は検査済みで、終了後の所有ETW session残留はない。権限変更・Unity・モデル実行は行っていない。実SDK stageのGPU時間・driver退役・専有allocationは未取得であり、この小規模な対照を全体合格にしない。次は上限付きの対象PID consumerとraw clock/lossの校正を用意し、固定SDK/model/inputの元参照・正常終了へ対応付ける。

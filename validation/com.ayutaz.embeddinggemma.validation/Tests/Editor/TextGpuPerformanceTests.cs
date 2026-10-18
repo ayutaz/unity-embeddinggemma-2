@@ -60,6 +60,8 @@ namespace EmbeddingGemma.Validation.Tests
             report["managed_allocation_counter_available"]=allocationCounterAvailable;
             report["allocation_probe_expected_minimum_bytes"]=65536; report["allocation_probe_raw_delta_bytes"]=allocationProbeDelta;
             report["gpu_timing_interpretation_validated"]=false;
+            report["raw_qpc_clock_bridge_before"]=RawQpcStageClock.CaptureBridge();
+            report["raw_qpc_scope"]="Native Windows QPC endpoints around the existing API calls, including frame waits and measurement wrappers. Target-process GPU events may include other Editor work; not exclusive SDK or kernel time.";
             if(directCommandsRequested) report["timing_scope"]="Explicit GPU command-buffer marker around the same text Worker schedule; pre-pinned inputs exclude tokenizer/upload. Wall/CPU span command construction, submission, fence frame-waits and final readback; this is not the public query API latency.";
             void Save()=>File.WriteAllText(output,report.ToString()); Save();
             var previousEnabled=Profiler.enabled; var previousGpu=Profiler.GetAreaEnabled(ProfilerArea.GPU);
@@ -83,10 +85,12 @@ namespace EmbeddingGemma.Validation.Tests
                 ProfilerDriver.enabled=false; Profiler.enabled=false;
                 report["phase"]="load"; report["load_begin_utc"]=DateTime.UtcNow.ToString("O"); Save();
                 var loadAllocated=GC.GetAllocatedBytesForCurrentThread(); var loadCpu=Cpu(); var load=Stopwatch.StartNew();
+                var loadQpc=RawQpcStageWindow.Start();
                 var loading=GpuMediaBundle.Open(directory).LoadAsync("text",cancellation.Token);
                 while(!loading.IsCompleted)
                 { if(MediaExecutionMemory.Peak()>GpuMediaExecutionPolicy.CurrentMemoryLimitBytes)cancellation.Cancel(); EditorApplication.QueuePlayerLoopUpdate(); yield return null; }
-                session=loading.GetAwaiter().GetResult(); load.Stop();
+                session=loading.GetAwaiter().GetResult(); loadQpc.Finish(); load.Stop();
+                report["load_qpc_window"]=loadQpc.ToJson();
                 Assert.That(session.Backend,Is.EqualTo(Unity.InferenceEngine.BackendType.GPUCompute));
                 report["actual_backend"]=session.Backend.ToString();
                 report["load_wall_seconds"]=load.Elapsed.TotalSeconds; report["load_process_cpu_seconds"]=(Cpu()-loadCpu).TotalSeconds;
@@ -122,6 +126,7 @@ namespace EmbeddingGemma.Validation.Tests
                     var dispatchCount=scopeCalibration && name=="repeat-1"?2:1;
                     var cpuGapMs=scopeCalibration && (name=="warm" || name=="repeat-2")?250:0;
                     var allocatedBefore=GC.GetAllocatedBytesForCurrentThread(); var cpu=Cpu(); var watch=Stopwatch.StartNew(); float[] actual;
+                    var queryQpc=RawQpcStageWindow.Start();
                     if(directCommandsRequested)
                     {
                         directCommands.Clear(); directCommands.BeginSample(sampler);
@@ -141,7 +146,7 @@ namespace EmbeddingGemma.Validation.Tests
                         try { actual=session.EmbedQuery((string)query["text"]); }
                         finally { sampler.End(); watch.Stop(); }
                     }
-                    var endUtc=DateTime.UtcNow;
+                    queryQpc.Finish();var endUtc=DateTime.UtcNow;
                     var allocatedBytes=GC.GetAllocatedBytesForCurrentThread()-allocatedBefore;
                     var cpuSeconds=(Cpu()-cpu).TotalSeconds;
                     var cosine=TextSearchIndex.Cosine(actual,expected); var norm=actual.Sum(value=>(double)value*value);
@@ -153,6 +158,7 @@ namespace EmbeddingGemma.Validation.Tests
                     var row=new JObject { ["round"]=name,["wall_seconds"]=watch.Elapsed.TotalSeconds,["process_cpu_seconds"]=cpuSeconds,
                         ["model_dispatch_count"]=dispatchCount,["cpu_gap_before_gpu_submission_ms"]=cpuGapMs,
                         ["begin_utc"]=beginUtc.ToString("O"),["end_utc"]=endUtc.ToString("O"),
+                        ["qpc_window"]=queryQpc.ToJson(),
                         ["main_thread_managed_allocated_bytes"]=allocationCounterAvailable?new JValue(allocatedBytes):JValue.CreateNull(),
                         ["main_thread_managed_allocated_bytes_per_second"]=allocationCounterAvailable?new JValue(allocatedBytes/watch.Elapsed.TotalSeconds):JValue.CreateNull(),
                         ["host_lifetime_peak_bytes"]=MediaExecutionMemory.Peak(),["unity_allocated_bytes"]=Profiler.GetTotalAllocatedMemoryLong(),
@@ -184,8 +190,11 @@ namespace EmbeddingGemma.Validation.Tests
                     recorder.enabled=false;
                 }
                 report["phase"]="release"; report["release_begin_utc"]=DateTime.UtcNow.ToString("O"); Save();
-                var closeAllocated=GC.GetAllocatedBytesForCurrentThread(); var closeCpu=Cpu(); var close=Stopwatch.StartNew(); var closing=session.CloseAsync(); while(!closing.IsCompleted) yield return null;
-                closing.GetAwaiter().GetResult(); close.Stop(); MultimodalSearchSampleGpuTests.AssertReleased(session);
+                var closeAllocated=GC.GetAllocatedBytesForCurrentThread(); var closeCpu=Cpu(); var close=Stopwatch.StartNew();
+                var releaseQpc=RawQpcStageWindow.Start();var closing=session.CloseAsync(); while(!closing.IsCompleted) yield return null;
+                closing.GetAwaiter().GetResult(); releaseQpc.Finish(); close.Stop(); MultimodalSearchSampleGpuTests.AssertReleased(session);
+                report["release_qpc_window"]=releaseQpc.ToJson();
+                report["raw_qpc_clock_bridge_after"]=RawQpcStageClock.CaptureBridge();
                 report["release_wall_seconds"]=close.Elapsed.TotalSeconds; report["release_process_cpu_seconds"]=(Cpu()-closeCpu).TotalSeconds;
                 report["release_main_thread_managed_allocated_bytes"]=allocationCounterAvailable?new JValue(GC.GetAllocatedBytesForCurrentThread()-closeAllocated):JValue.CreateNull();
                 report["release_end_utc"]=DateTime.UtcNow.ToString("O"); report["phase"]="closed";

@@ -56,6 +56,11 @@ def test_owned_empty_target_has_clock_identity_loss_and_closure_receipts(observe
     assert footer['session_stopped'] and footer['events_lost']==footer['buffers_lost']==0
     assert not footer['real_model_validated'] and not footer['gpu_control_validated']
     assert footer['invalid_records']==footer['dropped_records']==0
+    assert footer['d3d_keywords'] & 0x400 == 0
+    assert footer['shader_compilation_statistics_collected'] is False
+    assert footer['requested_buffer_size_kib'] >= 256
+    assert footer['requested_buffer_size_kib'] * footer['requested_minimum_buffers'] * 1024 >= 4*1024**2
+    assert footer['requested_buffer_size_kib'] * footer['requested_maximum_buffers'] * 1024 <= 64*1024**2
     assert all(row.get('pid')==os.getpid() for row in rows[1:-1])
     # The session is named in its receipt so normal closure can be checked independently.
     sessions=subprocess.run(['logman','query','-ets'],capture_output=True,text=True,timeout=10)

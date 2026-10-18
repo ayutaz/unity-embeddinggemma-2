@@ -1,5 +1,9 @@
 # Windowsのプロセス別GPU engineを観測する
 
+[後続のnative QPC stage照合](results/raw-qpc-text-fp32-raw-qpc-warm-20261018.json)で、既存UTC変換の制約を避け、検証用のAPI窓とraw GPUイベントを同じWindows QPC epochで照合した。Mono Stopwatchが同じepochという案は実機テストで失敗したため使用しない。対象PID・Native bridge・全interval・欠測/終了statusを33契約で検査し、queue内の重複を除く。異なるqueue/engineの加算、SDK専有・pure kernel時間への読み替えは行わない。
+
+後続の[実text・raw DirectX観測とcollector修正](results/raw-dxg-real-text-observer-fixes-20261018.json)では、固定SDK/model/inputの4 vector・正常終了と、39,362件の`OnGpuWork`、resource API寿命、45,085行・loss0を照合した。未使用PSO統計でのassertと小bufferでの12件lossは別の失敗として保持し、descriptor契約とbuffer設定のRed→48 Green、CLI9 Green後に同じfixtureで確認した。要求ETW bufferは初期4MiB・上限64MiBで、process全体memoryの保証ではない。raw GPU時刻は保持できたが、既存UTC stageの誤差校正・SDK専有stage帰属・物理VRAM返却は未確認である。
+
 2026-10-18。Windows / Unity6000.3.21f1 / Sentis2.6.1 / RTX4070 Ti SUPER / D3D12。ロード・解放のGPU時間をCPU wallから推定せず、OSのカウンターを別に観測した。結論は、今回のサンプル間隔では実モデルのload/release全体のGPU時間を確定できない、というもの。既存のGPU時間nullを0へ変更しない。
 
 ## 単位・時計・集計

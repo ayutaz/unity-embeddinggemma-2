@@ -15,7 +15,7 @@ Build the dependency's `third_party/googletest/googletest_main.vcxproj` and then
 `/p:NativeDxgBuildRoot=<ignored output directory>`. Both directories must be absolute.
 Run `tests/OwnedGpuRecordsTests.exe` from the build output to verify the recorder,
 callback bridge, and owned-session cleanup policy. The dedicated Actions workflow
-builds this fixed source and runs40 native unit cases and8 preflight CLI cases.
+builds this fixed source and runs48 native unit cases and8 preflight CLI cases.
 Those jobs do not collect GPU events; their success is not a GPU pass.
 
 ```text
@@ -36,10 +36,22 @@ is never stopped by this invocation. Use an external bounded supervisor for proc
 timeouts, inspect the footer/start status before any owned-session cleanup, and keep
 failed or incomplete receipts. A killed observer with no footer is not a success.
 
-Requested ETW buffering is4..256 buffers of64KiB, at most16MiB. Record storage is capped
+Requested ETW buffering is16..256 buffers of256KiB, at most64MiB. The initial request
+is4MiB. The earlier4x64KiB minimum lost events in a real Unity observation and also
+in an empty-target protocol trial; both failures remain recorded. Larger buffers
+provide room for large history events and startup bursts, but do not guarantee zero
+loss: every capture must still pass the unchanged loss checks. Record storage is capped
 at200000 rows and4096 concurrent execution/resource entries, with64 stored diagnostic
 codes plus the full diagnostic count. Reaching a cap invalidates the capture. Windows
 and the decoder's own allocations are separate from these configured caps.
+
+The provider mask requests GPU submission/history and API-object/resource lifetime
+events. PSO compilation timing/cache-statistics events (`D3D12_ETW_LOG_APIS`) are
+outside this observer's data products and are not enabled. The pinned decoder aborted
+in compilation-statistics processing during the first Unity observation; that failed
+capture is preserved. Descriptor-based tests verify that the configured mask retains
+the GPU/resource event families. No upstream assertions are disabled or patched.
+The footer records the exact mask and explicitly marks compilation statistics absent.
 
 Kernel events must be processed to resolve their ownership. Only records attributed to
 the chosen PID are exported. Other process payloads, object names and diagnostic message

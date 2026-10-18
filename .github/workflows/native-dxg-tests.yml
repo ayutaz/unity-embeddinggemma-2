@@ -73,11 +73,11 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw 'CLI preflight tests failed' }
           } finally { Pop-Location }
           [xml]$native = Get-Content artifacts/native-dxg-ci/native-unit.xml -Raw
-          if ([int]$native.testsuites.tests -ne 40 -or [int]$native.testsuites.failures -ne 0 -or [int]$native.testsuites.disabled -ne 0 -or [int]$native.testsuites.errors -ne 0 -or $native.SelectNodes("//testcase[skipped or @result='skipped']").Count -ne 0) { throw 'Native tests missing, failed, or skipped' }
+          if ([int]$native.testsuites.tests -ne 48 -or [int]$native.testsuites.failures -ne 0 -or [int]$native.testsuites.disabled -ne 0 -or [int]$native.testsuites.errors -ne 0 -or $native.SelectNodes("//testcase[skipped or @result='skipped']").Count -ne 0) { throw 'Native tests missing, failed, or skipped' }
           [xml]$cli = Get-Content artifacts/native-dxg-ci/cli.xml -Raw
           $cases = @($cli.testsuites.testsuite)
           if (($cases | Measure-Object -Property tests -Sum).Sum -ne 8 -or ($cases | Measure-Object -Property failures -Sum).Sum -ne 0 -or ($cases | Measure-Object -Property errors -Sum).Sum -ne 0 -or ($cases | Measure-Object -Property skipped -Sum).Sum -ne 0) { throw 'CLI preflight tests missing, failed, or skipped' }
-          @{ source = (git rev-parse HEAD); upstream = '72bd2b18553493aa9850e434caf71bfa18952aac'; native_unit_passed = 40; cli_preflight_passed = 8; live_capture_executed = $false; gpu_validated = $false; real_model_executed = $false } | ConvertTo-Json | Set-Content artifacts/native-dxg-ci/receipt.json -Encoding utf8
+          @{ source = (git rev-parse HEAD); upstream = '72bd2b18553493aa9850e434caf71bfa18952aac'; native_unit_passed = 48; cli_preflight_passed = 8; live_capture_executed = $false; gpu_validated = $false; real_model_executed = $false } | ConvertTo-Json | Set-Content artifacts/native-dxg-ci/receipt.json -Encoding utf8
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: ${{ always() }}
         with:

@@ -1,6 +1,6 @@
 # ロードマップ
 
-更新: **2026-10-18**。main `d9ae07b`（PR #88）を統合済み基準とする現在の作業計画です。過去の基準SDK `e28a5fd` と統合済みRuntimeに対応する `d7b2233` を区別し、各実行のsourceを記録します。確認済みの事実は[検証状況](status.md)、変更しない目標は[プロジェクトのゴール](goal.md)を参照してください。
+更新: **2026-10-18**。履歴整理後のmain `4b5bf72`（PR #85、Runtime改善#88とprivacy guardを含む）を基準とする現在の作業計画です。本文の過去の実行SHAは原本の識別子で、履歴整理後の導入pinとして使わず、sourceとmodel hashを個別に照合します。確認済みの事実は[検証状況](status.md)、変更しない目標は[プロジェクトのゴール](goal.md)を参照してください。
 
 テキスト・画像・音声のGPU API、Windows text Player、画像・音声検索サンプルとcacheは統合済みです。次は、他の利用者が準備・操作を再現できる状態を作り、そのcandidateで性能と対象環境を検証します。正式リリースは全必須条件の後に行います。
 
@@ -10,13 +10,15 @@
 
 | 順序 | 残タスク | 完了条件・依存 |
 | --- | --- | --- |
-| 1 | GPU計測ツールの未コミット変更をレビューし、PR #87へ反映 | 生成物を除外してソース・テスト・記録を提出し、追加する専用CIを確認。ローカルのnative40件・CLI9件と小規模D3D12対照は実モデルの計測成功に数えない |
-| 2 | 固定SDK・実モデルでload/release等の残りのGPU計測 | 同じmodel/inputの初回・warm・反復とstageを対応付け、CPU・GPU・host/VRAM・Editor負荷の測定範囲と欠測を確定。参照一致・解放・正常終了を維持 |
+| 1 | GPU計測ツール修正をPR #87へ反映し、最新CIを確認 | 元のcollectorは提出済み・専用CI40+8成功。実textでのassert/lossを修正した最新版はnative48・CLI9と実モデルのloss0を確認。最新CIは別途確認する |
+| 2 | 固定SDK・実モデルでload/release等の残りのGPU計測 | FP32/Float16 textの各6窓はNative QPCでloss0のGPU記録へ対応付け、各4 vector・正常終了を確認。次は画像/音声へ対応付ける。専有allocation・VRAM返却・SDK専有時間の不足は別に維持 |
 | 3 | 公開元から空cacheで全6 moduleを取得し、修復・再試行を確認 | 約8.6GBのモデル公開について明示許可後に公開先とrevisionを固定。ローカルHTTPSの成功とは分けて全object hashとreceiptを保存 |
 | 4 | 実マイクの開始・停止・中断復帰、権限/device失敗を確認 | 周辺音声の取得について明示許可後に実行。固定音声ファイルの成功で代替しない |
-| 5 | 最終candidateで受け入れ、PR統合と要件監査 | 公開取得モデルと最終sourceを操作・精度・性能記録へ対応付ける。#86と#85は独立、#87は#85に依存するため#85を先に統合。各PRの必要条件・最新CI・差分を確認 |
+| 5 | 最終candidateで受け入れ、PR統合と要件監査 | 公開取得モデルと最終sourceを操作・精度・性能記録へ対応付ける。#85は統合済み、#87のbaseはmainへ更新済み。未統合#86/#87の必要条件・最新CI・差分を確認 |
 
-公開と録音の許可待ちの間は1〜2と統合準備を進める。公開済みheadのRequired CIは#85 `1d8d868`、#86 `678eb50`、#87 `09619a9`で成功を確認した。3件ともDraftであり、未コミットの計測ツールはこのCIに含まれない。Runtime改善#88は統合済み。Windows画像/音声Player・他OS・正式Releaseは後続4〜7として今回の残作業と分ける。
+公開と録音の許可待ちの間は1〜2と統合準備を進める。#85は2026-10-18T02:26:19Zに統合され、mainのpackage treeは検証済み `b5195f3`と一致し、固定Git `1d8d868`との差分もない。#86 `678eb50`のRequired CIは成功。#87の旧head `09619a9`は成功、後続`a6d6628`は専用CI成功だがRequired CI未合格で、最新修正のCIは別途確認する。#86/#87はDraft。Runtime改善#88は統合済み。Windows画像/音声Player・他OS・正式Releaseは後続4〜7として今回の残作業と分ける。
+
+元repositoryの停止hookは維持した。整理済みのremote履歴から独立cloneを作成し、mainのprivacy guardを取り込み、versioned hookを導入した。検証済みコードはbyte一致で移し、公開reportのpath欄と原本のhashの意味を区別する。staged内容・公開identity・outgoing全祖先を検査して提出し、最新headのCIを確認する。
 
 Runtime負荷軽減の[PR #88](https://github.com/ayutaz/unity-embeddinggemma-2/pull/88)はRequired CI成功後にmain `d9ae07b`へ統合済み。[単独候補](results/runtime-ready-integration-2a29c68-20261018.json)の517 pass / skip0 / exit0、既存実モデル参照sourceとのRuntime一致、統合treeとCI候補の一致を確認し、#85 / #87へ実mainの祖先を取り込んで重複Runtime差分を整理した。優先1〜3全体の公開取得・実マイク・最終操作・性能欠測は、この先行統合によって完了扱いにしない。
 

@@ -81,6 +81,16 @@ original JSON files and four metadata files passed exact-size/hash checks.
 That precommit HTTP boundary check is not a fresh fixed-Git consumer or the
 complete real-model regression.
 
+The [real numerical checkpoint](results/native-distribution-real-numeric-73fa675-20261019.json)
+records run `39150835197`: all six actual cases and their audit passed. Independent
+readback verified the digests and CRCs of all seven uploaded archives, retained
+two private copies, and recomputed 824,320 original-reference values with zero
+tolerance violations. Execution `54570784` and PR head `73fa675` have the same
+tree. The uploaded summary exactly matched the independent result. That run
+failed overall because four Python environments expected an obsolete workflow
+option; the assertion repair has one intended Red and 293 related passing tests.
+The repaired head `5f14d3a` requires its own complete CI acceptance.
+
 The capture protocol still does not preserve intermediate ONNX graphs for the
 independent auditor; `graphs_independently_rehashed=false` remains visible. No
 CPU reference execution is counted as a Unity GPU pass. Fresh complete CI,

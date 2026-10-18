@@ -1,0 +1,146 @@
+{
+  "schema": 1,
+  "scope": "Real pinned-public native regression and independent uploaded-byte readback only",
+  "run": 39150835197,
+  "PR_head_source": "73fa675f0cbef5fdde71fe4d79f0a40f450abf85",
+  "actual_execution_source": "54570784d237668c7c0a4ac0074e64ea7f140c0a",
+  "execution_tree_matches_PR_head": true,
+  "overall_CI_conclusion": "failure",
+  "overall_CI_accepted": false,
+  "required_numeric_gate_passed": true,
+  "cases": 6,
+  "profiles": 2,
+  "values_compared": 824320,
+  "candidate_tolerance_failures": 0,
+  "all_capture_and_carry_hashes_verified": true,
+  "native_full_and_cut_controls_independently_verified": true,
+  "uploaded_audit_exactly_matches_independent_recomputation": true,
+  "graph_transport": "github-release-native-regression-v1",
+  "graph_transport_contract_sha256": "947430cb584490077a900afed6d1fcc1415c08493ee7efea3e2727fa46fd6fb8",
+  "graph_distribution_inventory_sha256": "e4da37c53cc9b97d421b17caf56eacb6003fdca9160ac6e8f6a86a5314299d5e",
+  "original_goldens_and_tolerances_changed": false,
+  "graphs_independently_rehashed": false,
+  "gpu_validated": false,
+  "generation_qualified": false,
+  "latest_required_CI_run": 39153769849,
+  "latest_required_CI_head": "5f14d3a8159778387ad198dd1bec20224a655970",
+  "latest_required_CI_accepted": false,
+  "original_failure": "Same obsolete workflow-option assertion in all four Python environments; separate one-test Red and 293-test Green repair",
+  "private_readback_sha256": "baaae8f77b792b1cb55ab161bf7bb367597ea46c8793f72df004b6a0b1b0d091",
+  "archives": [
+    {
+      "case": "sine",
+      "artifact_id": 12146061492,
+      "archive_sha256": "c1e35def86622baae4d18635c2ac2a8b083b269afd3293961fbfc353f6033dd9",
+      "archive_bytes": 21211569,
+      "all_crc_verified": true,
+      "second_private_archive_verified": true
+    },
+    {
+      "case": "padded_noise",
+      "artifact_id": 12146001041,
+      "archive_sha256": "3ef8c61c294e2752560429e5bfc5a08ad8aecceb08d28a5b2079b2d3149ac52f",
+      "archive_bytes": 19149989,
+      "all_crc_verified": true,
+      "second_private_archive_verified": true
+    },
+    {
+      "case": "summary",
+      "artifact_id": 12145908227,
+      "archive_sha256": "2977defe7fb8116c716a8ce934f3c93976bfb60f03a5ef96a7c6d08438080c8c",
+      "archive_bytes": 4875,
+      "all_crc_verified": true,
+      "second_private_archive_verified": true
+    },
+    {
+      "case": "nyquist",
+      "artifact_id": 12145737080,
+      "archive_sha256": "05ed95067c28a0e57ec6df4e0df7c2dc34bb2c20bf1afd7109c1f27cd9d665cc",
+      "archive_bytes": 9391277,
+      "all_crc_verified": true,
+      "second_private_archive_verified": true
+    },
+    {
+      "case": "impulse",
+      "artifact_id": 12145671880,
+      "archive_sha256": "c9c561a7615f3d590f7f44f250d900f2b6674ed152c0abf4379b85bcf689a208",
+      "archive_bytes": 9313586,
+      "all_crc_verified": true,
+      "second_private_archive_verified": true
+    },
+    {
+      "case": "noise",
+      "artifact_id": 12145589448,
+      "archive_sha256": "d879669c2d7675dc656a0c679d164a278b5b52ce8c5658413ff0775ae0f90a01",
+      "archive_bytes": 21367720,
+      "all_crc_verified": true,
+      "second_private_archive_verified": true
+    },
+    {
+      "case": "silence",
+      "artifact_id": 12145488544,
+      "archive_sha256": "9deb7725e3429e174e2e0093dcd066fb4cee3a04dac4bc74da32904e022e4916",
+      "archive_bytes": 9248698,
+      "all_crc_verified": true,
+      "second_private_archive_verified": true
+    }
+  ],
+  "executed_graphs": [
+    {
+      "case_id": "impulse",
+      "profile": "frames-1119-valid-1119",
+      "source_graph_sha256": "406db281f6ac81a591c30e723c22e08856b8b7c302302ae54d4bee595252b887",
+      "executed_graph_sha256": "e4e9699657fd0c9e88d872bad6adbaddc3d43cee2e13711b10f7901cb8483165",
+      "values_compared": 143360,
+      "all_capture_and_carry_hashes_verified": true,
+      "native_chain_control_independently_verified": true
+    },
+    {
+      "case_id": "noise",
+      "profile": "frames-1119-valid-1119",
+      "source_graph_sha256": "406db281f6ac81a591c30e723c22e08856b8b7c302302ae54d4bee595252b887",
+      "executed_graph_sha256": "e4e9699657fd0c9e88d872bad6adbaddc3d43cee2e13711b10f7901cb8483165",
+      "values_compared": 143360,
+      "all_capture_and_carry_hashes_verified": true,
+      "native_chain_control_independently_verified": true
+    },
+    {
+      "case_id": "nyquist",
+      "profile": "frames-1119-valid-1119",
+      "source_graph_sha256": "406db281f6ac81a591c30e723c22e08856b8b7c302302ae54d4bee595252b887",
+      "executed_graph_sha256": "e4e9699657fd0c9e88d872bad6adbaddc3d43cee2e13711b10f7901cb8483165",
+      "values_compared": 143360,
+      "all_capture_and_carry_hashes_verified": true,
+      "native_chain_control_independently_verified": true
+    },
+    {
+      "case_id": "padded_noise",
+      "profile": "frames-1119-valid-839",
+      "source_graph_sha256": "ca12d55e4dc221d589fa075f22ba1a80b0c8e5f4d1c8794f55a9f6cb1cebcc34",
+      "executed_graph_sha256": "aa43ba4948c879f0fcc31222dbc05cbd333c70beda2dae04da420e9e284343da",
+      "values_compared": 107520,
+      "all_capture_and_carry_hashes_verified": true,
+      "native_chain_control_independently_verified": true
+    },
+    {
+      "case_id": "silence",
+      "profile": "frames-1119-valid-1119",
+      "source_graph_sha256": "406db281f6ac81a591c30e723c22e08856b8b7c302302ae54d4bee595252b887",
+      "executed_graph_sha256": "e4e9699657fd0c9e88d872bad6adbaddc3d43cee2e13711b10f7901cb8483165",
+      "values_compared": 143360,
+      "all_capture_and_carry_hashes_verified": true,
+      "native_chain_control_independently_verified": true
+    },
+    {
+      "case_id": "sine",
+      "profile": "frames-1119-valid-1119",
+      "source_graph_sha256": "406db281f6ac81a591c30e723c22e08856b8b7c302302ae54d4bee595252b887",
+      "executed_graph_sha256": "e4e9699657fd0c9e88d872bad6adbaddc3d43cee2e13711b10f7901cb8483165",
+      "values_compared": 143360,
+      "all_capture_and_carry_hashes_verified": true,
+      "native_chain_control_independently_verified": true
+    }
+  ],
+  "formal_release_ready": false,
+  "latest_required_CI_conclusion": "cancelled after generated-model metadata finding"
+}

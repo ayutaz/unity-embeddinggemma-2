@@ -16,6 +16,14 @@ GitHub-generated PR test-merge commits can copy the account's display name even 
 
 Images are blocked until visual and OCR review are recorded in `.privacy-reviewed-assets.json`, bound to the exact SHA256. A changed image requires a new review. The checker cannot infer private names from pixels: the absence of text findings does not replace visual/OCR review. Existing reviewed numerical `.bin` fixtures are narrowly hash-bound; arbitrary binaries remain blocked.
 
+Actions also inspect PT2 archive/member names and textual metadata, plus ONNX
+protobuf strings with the pinned parser. Models are not blanket binary exemptions:
+unparseable files, missing parsers and private metadata fail closed. Tensor buffers
+remain opaque and require their separate source/numerical validation. New PT2
+exports omit optional node stack traces before first serialization; retained
+original evidence is not rewritten. See the
+[model artifact metadata checks](model-artifact-metadata.md).
+
 Relative input fields alone do not make a sample screenshot safe: result metadata and exception messages can expand them to absolute paths. The media sample renders result scores/names and a general recovery message instead of full source paths or raw diagnostics. Full input metadata and `LastError` remain local diagnostic data and require a separate publication review. Inspect results and error states, preserve any failing original privately, and record later fixed-source execution as new evidence.
 
 GitHub squash authors also use the account display name. After #89, the actual public main commit `ca2ff1a567825cd9be6986e10ec727b1908a8430` has the owner-selected public name `yousan` and the explicitly supplied `41669061+ayutaz@users.noreply.github.com` address; GitHub's API reports its signature verified. History classification recognizes only this exact public name/address pair as an author in commit objects with the GitHub/noreply committer and PGP signature header format. The offline checker does not authenticate that signature or trust code because of it. Other names, account IDs, private email, taggers, committers, unsigned metadata and locally configured identities retain the strict handle rule. Every reachable object, message and path is still scanned. This corrects a false positive for an explicitly public alias; it does not approve private identities or provider cache copies. See the [TDD/readback checkpoint](results/provider-public-author-tdd-20261018.json).

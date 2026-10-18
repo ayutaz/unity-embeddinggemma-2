@@ -1,0 +1,285 @@
+{
+  "accepted_existing_database_enumeration_and_fixed_asset_search": true,
+  "complete_performance_accepted": false,
+  "gpu_execution_validated": false,
+  "scope": "Model-free nographics Editor measurement. Default Search initialization/readiness, enumeration and synchronous package asset search only; default APIs can initialize a Library index, no explicit CreateIndex/rebuild or async model allocation qualification. Fresh measurement project Library; source/model-free setup is not public model acquisition.",
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "validation_source": "a62b1a1b37d448376f49d972ef8aebdf8d554052",
+  "expected_asset": "Packages/com.ayutaz.embeddinggemma/Runtime/TextEmbedder.cs",
+  "expected_guid": "5825c5b1ef1d52f4db07af4cc2ce3be7",
+  "rounds": [
+    {
+      "round": "first",
+      "begin_utc": "2026-10-17T20:13:33.3016838Z",
+      "enumeration_wall_seconds": 4.27e-05,
+      "enumeration_process_cpu_seconds": 0.0,
+      "databases": [
+        {
+          "name": "Assets",
+          "ready": true
+        }
+      ],
+      "search_wall_seconds": 0.2302319,
+      "search_process_cpu_seconds": 0.109375,
+      "result_count": 2,
+      "expected_asset_found": true,
+      "allocation_bytes": null,
+      "allocation_scope": "Unavailable in this probe; never inferred from managed heap size or reported as zero."
+    },
+    {
+      "round": "warm",
+      "begin_utc": "2026-10-17T20:13:33.5375220Z",
+      "enumeration_wall_seconds": 8.8e-06,
+      "enumeration_process_cpu_seconds": 0.0,
+      "databases": [
+        {
+          "name": "Assets",
+          "ready": true
+        }
+      ],
+      "search_wall_seconds": 0.0351312,
+      "search_process_cpu_seconds": 0.015625,
+      "result_count": 2,
+      "expected_asset_found": true,
+      "allocation_bytes": null,
+      "allocation_scope": "Unavailable in this probe; never inferred from managed heap size or reported as zero."
+    },
+    {
+      "round": "repeat-1",
+      "begin_utc": "2026-10-17T20:13:33.5731525Z",
+      "enumeration_wall_seconds": 9.2e-06,
+      "enumeration_process_cpu_seconds": 0.0,
+      "databases": [
+        {
+          "name": "Assets",
+          "ready": true
+        }
+      ],
+      "search_wall_seconds": 0.0091256,
+      "search_process_cpu_seconds": 0.0,
+      "result_count": 2,
+      "expected_asset_found": true,
+      "allocation_bytes": null,
+      "allocation_scope": "Unavailable in this probe; never inferred from managed heap size or reported as zero."
+    },
+    {
+      "round": "repeat-2",
+      "begin_utc": "2026-10-17T20:13:33.5842214Z",
+      "enumeration_wall_seconds": 6.799999999999999e-06,
+      "enumeration_process_cpu_seconds": 0.0,
+      "databases": [
+        {
+          "name": "Assets",
+          "ready": true
+        }
+      ],
+      "search_wall_seconds": 0.007995799999999999,
+      "search_process_cpu_seconds": 0.015625,
+      "result_count": 2,
+      "expected_asset_found": true,
+      "allocation_bytes": null,
+      "allocation_scope": "Unavailable in this probe; never inferred from managed heap size or reported as zero."
+    }
+  ],
+  "search_query": "TextEmbedder",
+  "search_route": "asset provider with Packages and WantsMore; file-path results plus default index, not isolated index-only latency",
+  "index_initialization": {
+    "initial_enumeration_wall_seconds": 0.2080697,
+    "initial_enumeration_process_cpu_seconds": 0.1875,
+    "initial_databases": [
+      {
+        "name": "Assets",
+        "ready": false
+      }
+    ],
+    "index_readiness_wait_wall_seconds": 0.016279099999999998,
+    "index_readiness_wait_process_cpu_seconds": 0.0,
+    "index_readiness_poll_count": 19,
+    "index_ready_before_rounds": true
+  },
+  "startup": {
+    "pid": 120368,
+    "project_info_seconds": {
+      "projectLoad": 55.1821734,
+      "projectInit": 54.6517897,
+      "templateInit": 0.0,
+      "packageManagerInit": 0.5847053,
+      "assetDatabaseInit": 5.3176478,
+      "globalIlluminationInit": 0.0043459,
+      "assembliesLoad": 1.3907846,
+      "unityExtensionsInit": 0.0048852,
+      "assetDatabaseRefresh": 47.0778141,
+      "sceneOpening": 0.1649411
+    },
+    "project_info_available": true,
+    "malformed_telemetry_count": 0,
+    "asset_refreshes": [
+      {
+        "line": 3683,
+        "seconds": 47.078,
+        "initiator": "InitialRefreshV2",
+        "imports": {
+          "total": 2658,
+          "actual": 2658,
+          "local_cache": 0,
+          "cache_server": 0
+        }
+      }
+    ],
+    "timings_additive": false,
+    "search_database_duration_seconds": null,
+    "model_load_seconds": null,
+    "scope": "Exact-PID Editor startup telemetry and adjacent refresh import counts. Nested startup, refresh and reload durations overlap; do not sum them. Not model inference, clean-cache import qualification or search database timing."
+  },
+  "reload_observations": {
+    "schema_version": 1,
+    "completed_reload_count": 2,
+    "incomplete_reload_count": 0,
+    "unpaired_profile_count": 0,
+    "observation_complete": true,
+    "completed_reload_ms": {
+      "min": 1348,
+      "median": 3957.5,
+      "max": 6567
+    },
+    "profiles": [
+      {
+        "begin_line": 138,
+        "profile_line": 148,
+        "total_ms": 1348,
+        "stages_ms": {
+          "BeginReloadAssembly": 220,
+          "ExecutionOrderSort": 0,
+          "DisableScriptedObjects": 0,
+          "BackupInstance": 0,
+          "ReleaseScriptingObjects": 0,
+          "CreateAndSetChildDomain": 5,
+          "RebuildCommonClasses": 55,
+          "RebuildNativeTypeToScriptingClass": 20,
+          "initialDomainReloadingComplete": 68,
+          "LoadAllAssembliesAndSetupDomain": 250,
+          "LoadAssemblies": 209,
+          "RebuildTransferFunctionScriptingTraits": 0,
+          "AnalyzeDomain": 246,
+          "TypeCache.Refresh": 243,
+          "TypeCache.ScanAssembly": 223,
+          "BuildScriptInfoCaches": 0,
+          "ResolveRequiredComponents": 1,
+          "FinalizeReload": 734,
+          "ReleaseScriptCaches": 0,
+          "RebuildScriptCaches": 0,
+          "SetupLoadedEditorAssemblies": 669,
+          "LogAssemblyErrors": 0,
+          "InitializePlatformSupportModulesInManaged": 71,
+          "SetLoadedEditorAssemblies": 8,
+          "BeforeProcessingInitializeOnLoad": 143,
+          "ProcessInitializeOnLoadAttributes": 255,
+          "ProcessInitializeOnLoadMethodAttributes": 191,
+          "AfterProcessingInitializeOnLoad": 0,
+          "EditorAssembliesLoaded": 0,
+          "ExecutionOrderSort2": 0,
+          "AwakeInstancesAfterBackupRestoration": 0
+        }
+      },
+      {
+        "begin_line": 972,
+        "profile_line": 1391,
+        "total_ms": 6567,
+        "stages_ms": {
+          "BeginReloadAssembly": 389,
+          "ExecutionOrderSort": 0,
+          "DisableScriptedObjects": 31,
+          "BackupInstance": 0,
+          "ReleaseScriptingObjects": 0,
+          "CreateAndSetChildDomain": 162,
+          "RebuildCommonClasses": 46,
+          "RebuildNativeTypeToScriptingClass": 14,
+          "initialDomainReloadingComplete": 34,
+          "LoadAllAssembliesAndSetupDomain": 354,
+          "LoadAssemblies": 377,
+          "RebuildTransferFunctionScriptingTraits": 0,
+          "AnalyzeDomain": 123,
+          "TypeCache.Refresh": 98,
+          "TypeCache.ScanAssembly": 86,
+          "BuildScriptInfoCaches": 23,
+          "ResolveRequiredComponents": 1,
+          "FinalizeReload": 5729,
+          "ReleaseScriptCaches": 0,
+          "RebuildScriptCaches": 0,
+          "SetupLoadedEditorAssemblies": 5571,
+          "LogAssemblyErrors": 0,
+          "InitializePlatformSupportModulesInManaged": 27,
+          "SetLoadedEditorAssemblies": 6,
+          "BeforeProcessingInitializeOnLoad": 238,
+          "ProcessInitializeOnLoadAttributes": 5083,
+          "ProcessInitializeOnLoadMethodAttributes": 206,
+          "AfterProcessingInitializeOnLoad": 9,
+          "EditorAssembliesLoaded": 0,
+          "ExecutionOrderSort2": 0,
+          "AwakeInstancesAfterBackupRestoration": 33
+        }
+      }
+    ],
+    "asset_refresh_seconds": {
+      "count": 1,
+      "min": 47.078,
+      "median": 47.078,
+      "max": 47.078
+    },
+    "search_database_enumeration_exception_count": 0,
+    "persistent_allocation_diagnostic_count": 0,
+    "unity_execution_performed": false,
+    "performance_improvement_verified": false,
+    "m2_release_verified": false,
+    "scope": "Historical log markers only. Nested stage timings overlap and are not additive. An incomplete reload has no duration estimate and does not prove a live hang. A complete log observation does not establish error-free Unity, runtime acceptance, improved performance, or the cause of earlier hangs."
+  },
+  "terminal_receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-nographics",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\editor-search-consumer-a62b1a1",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.EditorSearchObservationTests.ExistingSearchDatabasesEnumerateAndFixedPackageAssetRemainsSearchable",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testResults",
+      ".\\artifacts\\usability-state\\editor-search-a62b1a1-first.xml",
+      "-logFile",
+      ".\\artifacts\\usability-state\\editor-search-a62b1a1-first.log"
+    ],
+    "timeout_seconds": 420,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T20:12:35.371027+00:00",
+    "pid": 120368,
+    "exit_code": 0,
+    "unity_results": ".\\artifacts\\usability-state\\editor-search-a62b1a1-first.xml",
+    "unity_counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 60.369385899975896,
+    "completed_utc": "2026-10-17T20:13:35.740413+00:00"
+  },
+  "source_files_verified_after": 540,
+  "evidence_sha256": {
+    "editor-search-a62b1a1-first.json": "7c513f4c9f546f11cba9a49fcc544bd783143c4e5a5f6148761a3517b06a9c29",
+    "editor-search-a62b1a1-first.xml": "954dd345a61832fa58e1623983404532999ecd956e1d6230af27eb9dbf164399",
+    "editor-search-a62b1a1-first.log": "3029f86706b545db860388aaa5270876327843d5732a529bed69afeb473f2111",
+    "editor-search-a62b1a1-first-source.json": "32a848b280b8bf3892753fd0b952f3e3e4146e4064fda6692302014eb9e2fa07",
+    "editor-search-a62b1a1-first-process.json": "02f945dd3daebe15c9d3b59335d96a9700256de7743c8aff81eb2211bc9be5ba"
+  },
+  "performance_improvement_verified": false,
+  "model_loaded": false,
+  "index_rebuild_duration_seconds": null
+}

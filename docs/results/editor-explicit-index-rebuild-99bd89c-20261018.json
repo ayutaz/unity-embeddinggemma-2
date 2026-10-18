@@ -1,0 +1,247 @@
+{
+  "accepted_explicit_default_index_rebuild_observations": true,
+  "full_priorities_1_to_3_accepted": false,
+  "model_loaded": false,
+  "gpu_execution_validated": false,
+  "scope": "Explicit Build() on the default Assets Search database after readiness, twice in one Editor. Existing asset/index artifacts can be reused. Direct SearchIndexer queries exclude file-path provider fallback. CPU is process-wide including background work; not exclusive indexing CPU or cold artifact regeneration.",
+  "report": {
+    "success": true,
+    "unity": "6000.3.21f1",
+    "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+    "validation_source": "99bd89c376b40ff8961a4c89e2540c86d392fc49",
+    "model_loaded": false,
+    "gpu_execution_validated": false,
+    "scope": "Explicit Build() on the default Assets Search database after readiness, twice in one Editor. Existing asset/index artifacts can be reused. Direct SearchIndexer queries exclude file-path provider fallback. CPU is process-wide including background work; not exclusive indexing CPU or cold artifact regeneration.",
+    "fixture": "Assets/EmbeddingGemmaIndexRebuildProbe/EmbeddingGemmaProbe.txt",
+    "query": "embeddinggemmaprobe",
+    "rounds": [
+      {
+        "round": "first-explicit-rebuild",
+        "begin_utc": "2026-10-17T22:20:43.9002835Z",
+        "end_utc": "2026-10-17T22:20:43.9051728Z",
+        "submission_wall_seconds": 0.0005697,
+        "completion_wall_seconds": 0.0036148,
+        "process_cpu_seconds": 0.0,
+        "polls": 7,
+        "after_submission": {
+          "ready": false,
+          "updating": true,
+          "needs_update": false,
+          "loaded": true,
+          "loading_state": "Loading",
+          "document_count": 1
+        },
+        "after_completion": {
+          "ready": true,
+          "updating": false,
+          "needs_update": false,
+          "loaded": true,
+          "loading_state": "Complete",
+          "document_count": 1
+        },
+        "direct_index_fixture_found": true,
+        "begin_process_working_set_bytes": 0,
+        "end_process_working_set_bytes": 0,
+        "process_lifetime_peak_working_set_bytes": 0,
+        "exclusive_background_allocation_bytes": null,
+        "allocation_scope": "Not measured: synchronous main-thread marker bytes cannot describe background rebuild allocation. No zero/all-thread attribution inferred."
+      },
+      {
+        "round": "repeat-explicit-rebuild",
+        "begin_utc": "2026-10-17T22:20:43.9087264Z",
+        "end_utc": "2026-10-17T22:20:43.9122539Z",
+        "submission_wall_seconds": 0.0003788,
+        "completion_wall_seconds": 0.0026828,
+        "process_cpu_seconds": 0.0,
+        "polls": 10,
+        "after_submission": {
+          "ready": false,
+          "updating": true,
+          "needs_update": false,
+          "loaded": true,
+          "loading_state": "Loading",
+          "document_count": 1
+        },
+        "after_completion": {
+          "ready": true,
+          "updating": false,
+          "needs_update": false,
+          "loaded": true,
+          "loading_state": "Complete",
+          "document_count": 1
+        },
+        "direct_index_fixture_found": true,
+        "begin_process_working_set_bytes": 0,
+        "end_process_working_set_bytes": 0,
+        "process_lifetime_peak_working_set_bytes": 0,
+        "exclusive_background_allocation_bytes": null,
+        "allocation_scope": "Not measured: synchronous main-thread marker bytes cannot describe background rebuild allocation. No zero/all-thread attribution inferred."
+      }
+    ],
+    "fixture_guid": "1357dc867005b3740aa8956661e48410",
+    "database_name": "Assets",
+    "database_type": "UnityEditor.Search.SearchDatabase",
+    "initial_fixture_readiness_seconds": 8.0858955,
+    "initial_direct_index_results": [
+      {
+        "result_id": "GlobalObjectId_V1-1-1357dc867005b3740aa8956661e48410-4900000-0",
+        "document_index": 0,
+        "document_id": "GlobalObjectId_V1-1-1357dc867005b3740aa8956661e48410-4900000-0",
+        "document_source": "Assets/EmbeddingGemmaIndexRebuildProbe/EmbeddingGemmaProbe.txt",
+        "document_valid": true
+      }
+    ],
+    "before_rebuild": {
+      "ready": true,
+      "updating": false,
+      "needs_update": false,
+      "loaded": true,
+      "loading_state": "Complete",
+      "document_count": 1
+    },
+    "owned_fixture_removed": true
+  },
+  "terminal_receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-nographics",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\editor-index-rebuild-consumer-99bd89c",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.EditorIndexRebuildTests;EmbeddingGemma.Validation.Tests.EditorSearchRebuildObservationTests",
+      "-testResults",
+      ".\\artifacts\\usability-state\\editor-index-rebuild-99bd89c-first.xml",
+      "-logFile",
+      ".\\artifacts\\usability-state\\editor-index-rebuild-99bd89c-first.log"
+    ],
+    "timeout_seconds": 420,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T22:19:43.018736+00:00",
+    "pid": 30532,
+    "exit_code": 0,
+    "unity_results": ".\\artifacts\\usability-state\\editor-index-rebuild-99bd89c-first.xml",
+    "unity_counts": {
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 63.39813630003482,
+    "completed_utc": "2026-10-17T22:20:46.416868+00:00"
+  },
+  "preserved_failure": {
+    "source": "03b63ab17cfddcb04319e56b74d464965d6a9032",
+    "receipt": {
+      "command": [
+        ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+        "-batchmode",
+        "-nographics",
+        "-job-worker-count",
+        "4",
+        "-projectPath",
+        ".\\artifacts\\editor-index-rebuild-consumer-03b63ab",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-assemblyNames",
+        "EmbeddingGemma.Validation.Editor.Tests",
+        "-testFilter",
+        "EmbeddingGemma.Validation.Tests.EditorIndexRebuildTests;EmbeddingGemma.Validation.Tests.EditorSearchRebuildObservationTests",
+        "-testResults",
+        ".\\artifacts\\usability-state\\editor-index-rebuild-03b63ab-first.xml",
+        "-logFile",
+        ".\\artifacts\\usability-state\\editor-index-rebuild-03b63ab-first.log"
+      ],
+      "timeout_seconds": 420,
+      "success": false,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-17T22:16:25.652438+00:00",
+      "pid": 182028,
+      "exit_code": 2,
+      "unity_results": ".\\artifacts\\usability-state\\editor-index-rebuild-03b63ab-first.xml",
+      "unity_counts": {
+        "total": 6,
+        "passed": 5,
+        "failed": 1,
+        "skipped": 0
+      },
+      "elapsed_seconds": 114.03903670003638,
+      "completed_utc": "2026-10-17T22:18:19.691468+00:00"
+    },
+    "report": {
+      "success": false,
+      "unity": "6000.3.21f1",
+      "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+      "validation_source": "03b63ab17cfddcb04319e56b74d464965d6a9032",
+      "model_loaded": false,
+      "gpu_execution_validated": false,
+      "scope": "Explicit Build() on the default Assets Search database after readiness, twice in one Editor. Existing asset/index artifacts can be reused. Direct SearchIndexer queries exclude file-path provider fallback. CPU is process-wide including background work; not exclusive indexing CPU or cold artifact regeneration.",
+      "fixture": "Assets/EmbeddingGemmaIndexRebuildProbe/EmbeddingGemmaProbe.txt",
+      "query": "embeddinggemmaprobe",
+      "rounds": [],
+      "fixture_guid": "8f1f34b2346c42b4d8b8a80dac517b98",
+      "database_name": "Assets",
+      "database_type": "UnityEditor.Search.SearchDatabase",
+      "initial_fixture_readiness_seconds": 60.000015899999994,
+      "before_rebuild": {
+        "ready": true,
+        "updating": false,
+        "needs_update": false,
+        "loaded": true,
+        "loading_state": "Complete",
+        "document_count": 1
+      },
+      "owned_fixture_removed": true
+    },
+    "explanation": "The initial fixture gate compared SearchResult.id directly. The fixed probe resolves SearchResult.index through SearchIndexer.GetDocument and verifies the stored document. The earlier failed run did not execute either rebuild."
+  },
+  "standalone_tdd": {
+    "red": 5,
+    "green": 5,
+    "unity_executed": false,
+    "gpu_executed": false
+  },
+  "source_files_reverified_per_snapshot": 576,
+  "protected_root_files_verified": 4,
+  "metric_interpretation": {
+    "process_working_set_counter_available": false,
+    "process_working_set_bytes": null,
+    "reason": "All three managed Process working-set fields returned zero for a live Editor. Preserve raw zeros as unavailable API observations; do not claim zero memory.",
+    "exclusive_background_cpu_seconds": null,
+    "cpu_scope": "Raw process CPU delta reported zero for 2.7-3.6 millisecond intervals. This is not proof of zero CPU work; process-wide CPU is not exclusive background indexing CPU."
+  },
+  "missing": [
+    "Exclusive background index allocation",
+    "GPU load/release timing",
+    "Overall priorities 1-3 acceptance"
+  ],
+  "primary_reference": "https://github.com/Unity-Technologies/UnityCsReference/blob/6000.3/Modules/QuickSearch/Editor/Indexing/SearchDatabase.cs",
+  "installed_search_assembly_sha256": "2d1022a1a9641e03def4ffc15e8be544ba1904d5f5b7ebad0c41ba4fe533c8c9",
+  "evidence_sha256": {
+    "editor-index-rebuild-03b63ab-first-process.json": "632acf281d7ea6ed57a1d1f716fe97d110219a6643e6644141a1858b9e9a35ea",
+    "editor-index-rebuild-03b63ab-first.json": "8b6ff200182ecd73b2c968376ea06d24e2b5bfdedf3aab651013103e760a19bf",
+    "editor-index-rebuild-03b63ab-first.xml": "fb869d17698a8e5a9ebf475aa581ba130d12604fa6600aa22a825498fb64c384",
+    "editor-index-rebuild-03b63ab-first.log": "008db17ece7660a258b3d0ad7c7f504d582046cadfe35e3a5ef4de145846d132",
+    "editor-index-rebuild-99bd89c-first-process.json": "ff323b8c3bcb35f709f734d7e39aa656a0383e661f96b637ff85600d94e95b21",
+    "editor-index-rebuild-99bd89c-first.json": "ec8fef8f3d34eaffb32f074140a53738223032958a25fe6b30cab9fc874e7b58",
+    "editor-index-rebuild-99bd89c-first.xml": "6c4b48e29cb1b694a735e2027bc56b0d73f33cecd613ae6c4177257ed53625e9",
+    "editor-index-rebuild-99bd89c-first.log": "1143adec21f40e7691a5745f71c81556cec5a5a6dba63993259b0cd3b130e215",
+    "editor-index-rebuild-99bd89c-first-source.json": "0dac05fa194774f73c1661adc9f3708dff9dd686d309a986987bf261219d3242",
+    "red-source.cs": "0eb30fe2a1ee9291273587227793e280c447d5a503eb8438331cbd28fcf2f1a1",
+    "red.txt": "5ecf1e62df9301b7661657ae90fe55da38ee0060b45df2f6e3f8169f76c9b4da",
+    "green.txt": "cb2a7233d5871c093f8ffa16c995cbd3c795a09a30c410116f2ad1f7652a5af5",
+    "compile-document-resolution.txt": "5026c64a1e9e230c0b9e710378b9987521553aca5fa4bb6b1423e93365378783"
+  },
+  "audited_utc": "2026-10-17T22:21:35.829223+00:00"
+}

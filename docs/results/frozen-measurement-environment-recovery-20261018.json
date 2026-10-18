@@ -1,0 +1,196 @@
+{
+  "accepted_environment_recovery": true,
+  "scope": "Owned measurement consumer bootstrap repair only; not an SDK fix, public acquisition or complete performance acceptance.",
+  "failed_run": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\gpu-clock-consumer-7ecec1f",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.TextGpuPerformanceTests.FixedTextFirstWarmRepeatedCallsHaveActualGpuTimingsAndPinnedVectors",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testResults",
+      ".\\artifacts\\usability-state\\text-performance-fp32-e28a5fd-frozen-calibration.xml",
+      "-logFile",
+      ".\\artifacts\\usability-state\\text-performance-fp32-e28a5fd-frozen-calibration.log"
+    ],
+    "timeout_seconds": 1200,
+    "success": false,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T19:12:13.372593+00:00",
+    "pid": 92736,
+    "exit_code": 0,
+    "unity_results": ".\\artifacts\\usability-state\\text-performance-fp32-e28a5fd-frozen-calibration.xml",
+    "unity_evidence_error": "Unity execution XML is missing or invalid",
+    "elapsed_seconds": 175.83815510000568,
+    "completed_utc": "2026-10-17T19:15:09.210747+00:00"
+  },
+  "prior_compile_failure": "Test Framework1.6.0 could not resolve EnumerableApplyChangesToContextCommand; Editor entered safe mode before test execution.",
+  "root_cause_of_registry_cache_inconsistency_proven": false,
+  "repair": "Embed all1168 byte-verified official Test Framework1.6.0 files. Disable Accelerator only in this owned project; no global preferences changed.",
+  "cached_cs_present_but_meta_absent_observed": true,
+  "verified_official_files_after_both_runs": 1168,
+  "repaired_receipts": [
+    {
+      "command": [
+        ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+        "-force-d3d12",
+        "-job-worker-count",
+        "4",
+        "-projectPath",
+        ".\\artifacts\\gpu-clock-consumer-7ecec1f",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "EmbeddingGemma.Validation.Tests.TextGpuPerformanceTests.FixedTextFirstWarmRepeatedCallsHaveActualGpuTimingsAndPinnedVectors",
+        "-assemblyNames",
+        "EmbeddingGemma.Validation.Editor.Tests",
+        "-testResults",
+        ".\\artifacts\\usability-state\\text-performance-fp32-e28a5fd-frozen-calibration-framework-repaired.xml",
+        "-logFile",
+        ".\\artifacts\\usability-state\\text-performance-fp32-e28a5fd-frozen-calibration-framework-repaired.log"
+      ],
+      "timeout_seconds": 1200,
+      "success": true,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-17T19:16:17.734130+00:00",
+      "pid": 156012,
+      "exit_code": 0,
+      "unity_results": ".\\artifacts\\usability-state\\text-performance-fp32-e28a5fd-frozen-calibration-framework-repaired.xml",
+      "unity_counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 100.84542920003878,
+      "completed_utc": "2026-10-17T19:17:58.579555+00:00"
+    },
+    {
+      "command": [
+        ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+        "-force-d3d12",
+        "-job-worker-count",
+        "4",
+        "-projectPath",
+        ".\\artifacts\\gpu-clock-consumer-7ecec1f",
+        "-runTests",
+        "-testPlatform",
+        "EditMode",
+        "-testFilter",
+        "EmbeddingGemma.Validation.Tests.TextGpuPerformanceTests.FixedTextFirstWarmRepeatedCallsHaveActualGpuTimingsAndPinnedVectors",
+        "-assemblyNames",
+        "EmbeddingGemma.Validation.Editor.Tests",
+        "-testResults",
+        ".\\artifacts\\usability-state\\text-performance-float16-weights-e28a5fd-frozen-calibration-framework-repaired.xml",
+        "-logFile",
+        ".\\artifacts\\usability-state\\text-performance-float16-weights-e28a5fd-frozen-calibration-framework-repaired.log"
+      ],
+      "timeout_seconds": 1200,
+      "success": true,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-17T19:18:26.184413+00:00",
+      "pid": 127720,
+      "exit_code": 0,
+      "unity_results": ".\\artifacts\\usability-state\\text-performance-float16-weights-e28a5fd-frozen-calibration-framework-repaired.xml",
+      "unity_counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "elapsed_seconds": 48.656584300042596,
+      "completed_utc": "2026-10-17T19:19:14.840992+00:00"
+    }
+  ],
+  "editor_log_observations": [
+    {
+      "precision": "fp32",
+      "log_sha256": "737532b5cb9b4e0b09289083d82c80ac19e534a0ddc557f8e56782f374a4fab7",
+      "refresh_seconds": [
+        32.174,
+        2.408,
+        2.809,
+        0.071
+      ],
+      "domain_reload_ms": [
+        1034,
+        5977,
+        2306,
+        2705
+      ],
+      "imports": [
+        {
+          "total": 2248,
+          "actual": 2248,
+          "local_cache": 0,
+          "cache_server": 0
+        },
+        {
+          "total": 0,
+          "actual": 0,
+          "local_cache": 0,
+          "cache_server": 0
+        },
+        {
+          "total": 0,
+          "actual": 0,
+          "local_cache": 0,
+          "cache_server": 0
+        }
+      ],
+      "cache_connection_timeout_count": 0,
+      "search_database_time_seconds": null,
+      "scope": "Nested/overlapping log intervals; never sum domain reload with enclosing refresh or infer a paired speed improvement. Search database duration is not measured."
+    },
+    {
+      "precision": "float16-weights",
+      "log_sha256": "8bb736bba62a622104cde8f2f4eff7bf2830da7dc0933e4da94c330ec81ad215",
+      "refresh_seconds": [
+        7.349,
+        3.065,
+        0.108
+      ],
+      "domain_reload_ms": [
+        1087,
+        5625,
+        2912
+      ],
+      "imports": [
+        {
+          "total": 0,
+          "actual": 0,
+          "local_cache": 0,
+          "cache_server": 0
+        },
+        {
+          "total": 0,
+          "actual": 0,
+          "local_cache": 0,
+          "cache_server": 0
+        }
+      ],
+      "cache_connection_timeout_count": 0,
+      "search_database_time_seconds": null,
+      "scope": "Nested/overlapping log intervals; never sum domain reload with enclosing refresh or infer a paired speed improvement. Search database duration is not measured."
+    }
+  ],
+  "protected_root_files_verified": 4,
+  "performance_improvement_claimed": false,
+  "evidence_sha256": {
+    "text-performance-fp32-e28a5fd-frozen-calibration.log": "1806dbbb752e238ea2ddfca8be8a0aa64754c92d4e9b6aa0bedefac0cef1e6ae",
+    "frozen-gpu-clock-framework-repair.json": "8f7e16e55d390820dec2550a647f54b8e0d2ba6aaac81b79a569b17d48d99abd",
+    "EmbeddingGemmaTestFramework.json": "0897f3debd0c2677413ba94b2697a3a3fb0fe7bf7e7469523b1da14a17001bb0"
+  }
+}

@@ -1,0 +1,216 @@
+{
+  "accepted_cpu_wall_and_numerical_repeat": true,
+  "complete_performance_accepted": false,
+  "scope": "Same fixed real input, first/warm/two repeats in an actual GPU session. Stage wall and whole-process CPU only; GPU timestamps/VRAM/GC and Editor metrics are separate, not inferred from wall.",
+  "module": "audio-1119",
+  "precision": "float16-weights",
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+  "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+  "reference_case_id": "silence",
+  "rounds": [
+    {
+      "round": "first",
+      "wall_seconds": 6.8281348,
+      "process_cpu_seconds": 1.203125,
+      "independent_cosine": 0.999999999990707,
+      "norm_squared": 1.00000006446793,
+      "input_sha256": "06a56aa96f41a685ae25b4d7d0a55a15717723bb45a88a21a02546b9355e67e5",
+      "stages": [
+        {
+          "stage": "preprocessing",
+          "method": "ProcessAsync",
+          "wall_seconds": 0.5791491,
+          "process_cpu_seconds": 0.15625,
+          "host_working_set_bytes": 4788854784,
+          "host_lifetime_peak_bytes": 4789518336
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "wall_seconds": 5.6321889999999994,
+          "process_cpu_seconds": 0.984375,
+          "host_working_set_bytes": 4563632128,
+          "host_lifetime_peak_bytes": 4807024640
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "wall_seconds": 0.5667026,
+          "process_cpu_seconds": 0.015625,
+          "host_working_set_bytes": 4948815872,
+          "host_lifetime_peak_bytes": 4948815872
+        }
+      ]
+    },
+    {
+      "round": "warm",
+      "wall_seconds": 5.855872199999999,
+      "process_cpu_seconds": 0.921875,
+      "independent_cosine": 0.999999999990707,
+      "norm_squared": 1.00000006446793,
+      "input_sha256": "06a56aa96f41a685ae25b4d7d0a55a15717723bb45a88a21a02546b9355e67e5",
+      "stages": [
+        {
+          "stage": "preprocessing",
+          "method": "ProcessAsync",
+          "wall_seconds": 0.051577399999999995,
+          "process_cpu_seconds": 0.015625,
+          "host_working_set_bytes": 4949319680,
+          "host_lifetime_peak_bytes": 4949319680
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "wall_seconds": 5.4320198,
+          "process_cpu_seconds": 0.828125,
+          "host_working_set_bytes": 4830429184,
+          "host_lifetime_peak_bytes": 4955488256
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "wall_seconds": 0.35629099999999997,
+          "process_cpu_seconds": 0.0625,
+          "host_working_set_bytes": 4830437376,
+          "host_lifetime_peak_bytes": 4955488256
+        }
+      ]
+    },
+    {
+      "round": "repeat-1",
+      "wall_seconds": 5.2260617,
+      "process_cpu_seconds": 1.5625,
+      "independent_cosine": 0.999999999990707,
+      "norm_squared": 1.00000006446793,
+      "input_sha256": "06a56aa96f41a685ae25b4d7d0a55a15717723bb45a88a21a02546b9355e67e5",
+      "stages": [
+        {
+          "stage": "preprocessing",
+          "method": "ProcessAsync",
+          "wall_seconds": 0.0151489,
+          "process_cpu_seconds": 0.015625,
+          "host_working_set_bytes": 4830437376,
+          "host_lifetime_peak_bytes": 4955488256
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "wall_seconds": 4.9823376,
+          "process_cpu_seconds": 1.484375,
+          "host_working_set_bytes": 4596166656,
+          "host_lifetime_peak_bytes": 4955488256
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "wall_seconds": 0.2148406,
+          "process_cpu_seconds": 0.046875,
+          "host_working_set_bytes": 4596170752,
+          "host_lifetime_peak_bytes": 4955488256
+        }
+      ]
+    },
+    {
+      "round": "repeat-2",
+      "wall_seconds": 5.5902173,
+      "process_cpu_seconds": 1.40625,
+      "independent_cosine": 0.999999999990707,
+      "norm_squared": 1.00000006446793,
+      "input_sha256": "06a56aa96f41a685ae25b4d7d0a55a15717723bb45a88a21a02546b9355e67e5",
+      "stages": [
+        {
+          "stage": "preprocessing",
+          "method": "ProcessAsync",
+          "wall_seconds": 0.0176465,
+          "process_cpu_seconds": 0.015625,
+          "host_working_set_bytes": 4596170752,
+          "host_lifetime_peak_bytes": 4955488256
+        },
+        {
+          "stage": "encoder",
+          "method": "EncodeAsync",
+          "wall_seconds": 5.2215393,
+          "process_cpu_seconds": 1.328125,
+          "host_working_set_bytes": 4597723136,
+          "host_lifetime_peak_bytes": 4955488256
+        },
+        {
+          "stage": "backbone",
+          "method": "Embed",
+          "wall_seconds": 0.33348049999999996,
+          "process_cpu_seconds": 0.0625,
+          "host_working_set_bytes": 4597727232,
+          "host_lifetime_peak_bytes": 4955488256
+        }
+      ]
+    }
+  ],
+  "load": {
+    "load_wall_seconds": 61.4554221,
+    "load_process_cpu_seconds": 46.578125
+  },
+  "release": {
+    "release_wall_seconds": 0.024720699999999998,
+    "release_process_cpu_seconds": 0.03125
+  },
+  "host_native_peak_bytes": 4955488256,
+  "terminal_receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\media-repeat-consumer-0911348",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.MediaRepeatedInputPerformanceTests.FixedMediaInputFirstWarmRepeatedCallsKeepReferenceAndMeasureStages",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testResults",
+      ".\\artifacts\\usability-state\\media-repeat-audio-1119-float16-weights-0911348-first.xml",
+      "-logFile",
+      ".\\artifacts\\usability-state\\media-repeat-audio-1119-float16-weights-0911348-first.log"
+    ],
+    "timeout_seconds": 1260,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T19:47:43.433139+00:00",
+    "pid": 134424,
+    "exit_code": 0,
+    "unity_results": ".\\artifacts\\usability-state\\media-repeat-audio-1119-float16-weights-0911348-first.xml",
+    "unity_counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 138.40161770000122,
+    "completed_utc": "2026-10-17T19:50:01.834751+00:00"
+  },
+  "source": {
+    "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+    "validation_source": "0911348aa4fe92ee5a4e850378a740962d1040f5",
+    "precision": "float16-weights",
+    "module": "audio-1119",
+    "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+    "host_limit_bytes": 17179869184,
+    "physical_available_before_bytes": 33371373568,
+    "project": ".\\artifacts\\media-repeat-consumer-0911348",
+    "snapshot_receipt_sha256": "7c7a199f815236102098610beb0216fe45af9e8c3e6c006949daa381e5b44d24",
+    "source_files": 538,
+    "scope": "Four identical-input realGPU calls, CPU/wall stage measurements. Not GPU time/VRAM/GC/full performance acceptance."
+  },
+  "performance_improvement_claimed": false,
+  "evidence_sha256": {
+    "media-repeat-audio-1119-float16-weights-0911348-first.json": "50a934d688f49cc882647fc6c9ea142b8624105a99318bdf8ac3df9151bb269e",
+    "media-repeat-audio-1119-float16-weights-0911348-first.xml": "1c014b666547a9f56f01be462fbbbc778f8c688b4a823d12b125422ab04ee29e",
+    "media-repeat-audio-1119-float16-weights-0911348-first-process.json": "a7aa56fd8b2c7100efedc29432d01b84ac7abe6b47465f81015acd52e58253e1",
+    "media-repeat-audio-1119-float16-weights-0911348-first-source.json": "95348f86c344127b3df1ff9b6635742fdbd0321c75af145e87d6377cd320d1c1",
+    "media-repeat-audio-1119-float16-weights-0911348-first.log": "1f52bc92e116110334f43d39a87d714643c469d35fd522db7924d5472bd49dd1"
+  }
+}

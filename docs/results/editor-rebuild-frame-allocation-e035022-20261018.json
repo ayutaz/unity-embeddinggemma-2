@@ -1,0 +1,326 @@
+{
+  "editor_frame_control_and_rebuild_observations_accepted": true,
+  "exclusive_background_allocation_measured": false,
+  "real_model_or_gpu_qualification_claimed": false,
+  "full_priorities_1_to_3_accepted": false,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "e0350226fcf14dbfcbee6ebb7403a40ed8b69847",
+  "unity": "6000.3.21f1",
+  "batchmode": true,
+  "nographics": true,
+  "Library_reused": true,
+  "official_framework_files_verified": 1168,
+  "source_files_verified_after": 580,
+  "sample_files_verified_after": 86,
+  "control_cases": [
+    {
+      "payload_bytes": 0,
+      "counter": {
+        "name": "EditorAllocation.Control.0",
+        "begin_utc": "2026-10-17T23:01:36.9465027Z",
+        "begin_render_frame": 8,
+        "scope": "GC Allocated In Frame counter samples collected through the first new sample after completion. Includes containing frames, observation overhead and unrelated Editor work. Overlapping windows must not be summed; not exclusive SDK allocation.",
+        "counter": "GC Allocated In Frame",
+        "unit": "Bytes",
+        "data_type": "Int64",
+        "capacity": 65536,
+        "completed_utc": "2026-10-17T23:01:36.9515265Z",
+        "completed_render_frame": 9,
+        "samples_at_completion": 1,
+        "closed_utc": "2026-10-17T23:01:36.9535261Z",
+        "closed_render_frame": 10,
+        "included_samples": 2,
+        "discarded_tail_samples": 1,
+        "managed_bytes_in_recorded_frames": 9646,
+        "wrapped": false
+      }
+    },
+    {
+      "payload_bytes": 8388608,
+      "counter": {
+        "name": "EditorAllocation.Control.8388608",
+        "begin_utc": "2026-10-17T23:01:37.0091967Z",
+        "begin_render_frame": 10,
+        "scope": "GC Allocated In Frame counter samples collected through the first new sample after completion. Includes containing frames, observation overhead and unrelated Editor work. Overlapping windows must not be summed; not exclusive SDK allocation.",
+        "counter": "GC Allocated In Frame",
+        "unit": "Bytes",
+        "data_type": "Int64",
+        "capacity": 65536,
+        "completed_utc": "2026-10-17T23:01:37.0122182Z",
+        "completed_render_frame": 11,
+        "samples_at_completion": 1,
+        "closed_utc": "2026-10-17T23:01:37.0122182Z",
+        "closed_render_frame": 12,
+        "included_samples": 2,
+        "discarded_tail_samples": 1,
+        "managed_bytes_in_recorded_frames": 8392345,
+        "wrapped": false
+      }
+    }
+  ],
+  "observed_payload_delta_bytes": 8382699,
+  "rebuild_rounds": [
+    {
+      "round": "first-explicit-rebuild",
+      "begin_utc": "2026-10-17T23:01:37.3154269Z",
+      "end_utc": "2026-10-17T23:01:45.3718456Z",
+      "submission_wall_seconds": 0.0007926999999999999,
+      "completion_wall_seconds": 8.0537238,
+      "process_cpu_seconds": 3.234375,
+      "polls": 56517,
+      "after_submission": {
+        "ready": false,
+        "updating": true,
+        "needs_update": false,
+        "loaded": true,
+        "loading_state": "Loading",
+        "document_count": 39
+      },
+      "after_completion": {
+        "ready": true,
+        "updating": false,
+        "needs_update": false,
+        "loaded": true,
+        "loading_state": "Complete",
+        "document_count": 40
+      },
+      "direct_index_fixture_found": true,
+      "required_sample_scenes": [
+        {
+          "path": "Assets/EmbeddingGemmaTextSearch/TextSearch.unity",
+          "query": "textsearch",
+          "found": true
+        },
+        {
+          "path": "Assets/EmbeddingGemmaMultimodalSearch/MultimodalSearch.unity",
+          "query": "multimodalsearch",
+          "found": true
+        }
+      ],
+      "begin_process_working_set_bytes": 1341722624,
+      "end_process_working_set_bytes": 1347969024,
+      "process_lifetime_peak_working_set_bytes": 1348427776,
+      "process_memory_counter": "Native Windows fallback where required; managed Process elsewhere",
+      "frame_managed_allocation": {
+        "name": "EditorIndexRebuild.first-explicit-rebuild",
+        "begin_utc": "2026-10-17T23:01:37.3182259Z",
+        "begin_render_frame": 36,
+        "scope": "GC Allocated In Frame counter samples collected through the first new sample after completion. Includes containing frames, observation overhead and unrelated Editor work. Overlapping windows must not be summed; not exclusive SDK allocation.",
+        "counter": "GC Allocated In Frame",
+        "unit": "Bytes",
+        "data_type": "Int64",
+        "capacity": 65536,
+        "completed_utc": "2026-10-17T23:01:45.3728444Z",
+        "completed_render_frame": 56553,
+        "samples_at_completion": 56517,
+        "closed_utc": "2026-10-17T23:01:45.3743504Z",
+        "closed_render_frame": 56554,
+        "included_samples": 56518,
+        "discarded_tail_samples": 1,
+        "managed_bytes_in_recorded_frames": 24371666,
+        "wrapped": false
+      },
+      "exclusive_background_allocation_bytes": null,
+      "allocation_scope": "Not measured: synchronous main-thread marker bytes cannot describe background rebuild allocation. No zero/all-thread attribution inferred."
+    },
+    {
+      "round": "repeat-explicit-rebuild",
+      "begin_utc": "2026-10-17T23:01:45.4812918Z",
+      "end_utc": "2026-10-17T23:01:45.5524673Z",
+      "submission_wall_seconds": 0.0006085999999999999,
+      "completion_wall_seconds": 0.0707391,
+      "process_cpu_seconds": 0.0,
+      "polls": 123,
+      "after_submission": {
+        "ready": false,
+        "updating": true,
+        "needs_update": false,
+        "loaded": true,
+        "loading_state": "Loading",
+        "document_count": 40
+      },
+      "after_completion": {
+        "ready": true,
+        "updating": false,
+        "needs_update": false,
+        "loaded": true,
+        "loading_state": "Complete",
+        "document_count": 40
+      },
+      "direct_index_fixture_found": true,
+      "required_sample_scenes": [
+        {
+          "path": "Assets/EmbeddingGemmaTextSearch/TextSearch.unity",
+          "query": "textsearch",
+          "found": true
+        },
+        {
+          "path": "Assets/EmbeddingGemmaMultimodalSearch/MultimodalSearch.unity",
+          "query": "multimodalsearch",
+          "found": true
+        }
+      ],
+      "begin_process_working_set_bytes": 1353711616,
+      "end_process_working_set_bytes": 1354018816,
+      "process_lifetime_peak_working_set_bytes": 1354088448,
+      "process_memory_counter": "Native Windows fallback where required; managed Process elsewhere",
+      "frame_managed_allocation": {
+        "name": "EditorIndexRebuild.repeat-explicit-rebuild",
+        "begin_utc": "2026-10-17T23:01:45.4812918Z",
+        "begin_render_frame": 56554,
+        "scope": "GC Allocated In Frame counter samples collected through the first new sample after completion. Includes containing frames, observation overhead and unrelated Editor work. Overlapping windows must not be summed; not exclusive SDK allocation.",
+        "counter": "GC Allocated In Frame",
+        "unit": "Bytes",
+        "data_type": "Int64",
+        "capacity": 65536,
+        "completed_utc": "2026-10-17T23:01:45.5524673Z",
+        "completed_render_frame": 56677,
+        "samples_at_completion": 123,
+        "closed_utc": "2026-10-17T23:01:45.5534751Z",
+        "closed_render_frame": 56678,
+        "included_samples": 124,
+        "discarded_tail_samples": 1,
+        "managed_bytes_in_recorded_frames": 274417,
+        "wrapped": false
+      },
+      "exclusive_background_allocation_bytes": null,
+      "allocation_scope": "Not measured: synchronous main-thread marker bytes cannot describe background rebuild allocation. No zero/all-thread attribution inferred."
+    }
+  ],
+  "run_history": [
+    {
+      "label": "editor-frame-642dd24-red",
+      "validation_source": "642dd24f028098cdef65b9827d0ae2a07ee5a0f7",
+      "pid": 93508,
+      "exit_code": 2,
+      "counts": {
+        "total": 7,
+        "passed": 5,
+        "failed": 2,
+        "skipped": 0
+      },
+      "failures": [
+        "EditMode requires its own known-payload frame counter calibration.\n  Expected: True\n  But was:  False",
+        "An explicit rebuild allocation observation must not inherit the synchronous search marker's pass.\n  Expected: not null\n  But was:  null"
+      ],
+      "source_files_verified_after": 580
+    },
+    {
+      "label": "editor-frame-01534eb-green",
+      "validation_source": "01534eb41924f30bb14b5aedbdbd114d9336e5e3",
+      "pid": 169312,
+      "exit_code": 2,
+      "counts": {
+        "total": 7,
+        "passed": 6,
+        "failed": 1,
+        "skipped": 0
+      },
+      "failures": [
+        "Unhandled log message: '[Error] Non-matching Profiler.EndSample (Every EndSample call must have a preceding BeginSample call within the same frame): SearchImporter.IndexingRequest\nPrevious 5 samples:\n\tGC.Alloc\n\tMono.JIT\n\tGC.Alloc\n\tMono.JIT\n\tGC.Alloc\nIn the scope:\n\tUnityEditor.CoreModule.dll!UnityEditor::EditorApplication.Internal_InvokeTickEvents() [Invoke]\n\tApplication.TickGlobalCallbacks\n\tApplication.Tick\n\tEditorLoop\n\tMain Thread'. Use UnityEngine.TestTools.LogAssert.Expect"
+      ],
+      "source_files_verified_after": 580
+    },
+    {
+      "label": "editor-frame-12f2e87-green",
+      "validation_source": "12f2e87c13b38a686a51de26a96334309192590f",
+      "pid": 79792,
+      "exit_code": 1,
+      "counts": null,
+      "failures": [
+        "Unexecuted: newly added profiler CPU flag collided with existing process CPU variable; compile stopped."
+      ],
+      "source_files_verified_after": 580
+    },
+    {
+      "label": "editor-frame-fe62878-green",
+      "validation_source": "fe62878fdd71d90faceec440d676a24e4cc0d255",
+      "pid": 117148,
+      "exit_code": 2,
+      "counts": {
+        "total": 7,
+        "passed": 6,
+        "failed": 1,
+        "skipped": 0
+      },
+      "failures": [
+        "Only this fresh consumer's owned fixture may be created/deleted.\n  Expected: False\n  But was:  True"
+      ],
+      "source_files_verified_after": 580
+    },
+    {
+      "label": "editor-frame-fe62878-green-clean-fixture",
+      "validation_source": "fe62878fdd71d90faceec440d676a24e4cc0d255",
+      "pid": 87628,
+      "exit_code": 2,
+      "counts": {
+        "total": 7,
+        "passed": 6,
+        "failed": 1,
+        "skipped": 0
+      },
+      "failures": [
+        "Unhandled log message: '[Error] Non-matching Profiler.EndSample (Every EndSample call must have a preceding BeginSample call within the same frame): SearchImporter.IndexingRequest\nPrevious 5 samples:\n\tGC.Alloc\n\tMono.JIT\n\tGC.Alloc\n\tMono.JIT\n\tGC.Alloc\nIn the scope:\n\tUnityEditor.CoreModule.dll!UnityEditor::EditorApplication.Internal_InvokeTickEvents() [Invoke]\n\tApplication.TickGlobalCallbacks\n\tApplication.Tick\n\tEditorLoop\n\tMain Thread'. Use UnityEngine.TestTools.LogAssert.Expect"
+      ],
+      "source_files_verified_after": 580
+    },
+    {
+      "label": "editor-frame-e035022-green",
+      "validation_source": "e0350226fcf14dbfcbee6ebb7403a40ed8b69847",
+      "pid": 92436,
+      "exit_code": 0,
+      "counts": {
+        "total": 7,
+        "passed": 7,
+        "failed": 0,
+        "skipped": 0
+      },
+      "failures": [],
+      "source_files_verified_after": 580
+    }
+  ],
+  "profiler_recording_policy": "ProfilerRecorder captures Memory counter directly with full Profiler/driver recording disabled. Does not suppress SearchImporter errors or change index Build/scheduling.",
+  "scope": "Containing Editor counter frames across actual Build completion plus first new sample. Includes polling, observers and unrelated Editor work. Cumulative bytes are not live heap or index-exclusive allocations; native process lifetime peaks are separate and not summed.",
+  "evidence_sha256": {
+    "editor-frame-642dd24-red.xml": "a567e84f26196e03d880dedcc7693ec005055aed643a7f62f0edb3177ba6993c",
+    "editor-frame-642dd24-red-calibration.json": "7ec400ec9aadbf6cb47ee3a4bc025e44b449a95481f1a27caac967eeff71fcff",
+    "editor-frame-642dd24-red-index.json": "3668ec6eec61ea2e806a3379722bf71f2030b6384445aeacf6b7cd6cd9711de9",
+    "editor-frame-642dd24-red-source.json": "7be5481200f6df6879016915742f1170d7cb1fc14c14ae283126d210c157e36c",
+    "editor-frame-642dd24-red-process.json": "ec6ec405f30a80eb1c72fe1edf01063ec8c1e7a44bed5ca35911753d12207262",
+    "editor-frame-642dd24-red.log": "396ebbba8393b2b76d898a05f584f8b3f791355df18058599cd722620def134e",
+    "editor-frame-project-source-642dd24.json": "169ba460ec94b298fd965b82f6caf09cac373723707b89282c38d0176ede1dd2",
+    "editor-frame-01534eb-green.xml": "2c36d14d4de83714f206dec676ec0b9001a679e8234236650afa857bd93732b8",
+    "editor-frame-01534eb-green-calibration.json": "1ee9159a3154f45940182473747fe66d57de4975eff775d5d31bf32314cc3233",
+    "editor-frame-01534eb-green-index.json": "6e7a7c660eade4f51f55f323f5f4c6d487244b28980db7d60df2db4c2f060a9b",
+    "editor-frame-01534eb-green-source.json": "ec84b789110f227f88e7e91942861cf741f242baa4b9c7d4ef516f9b20bfa76e",
+    "editor-frame-01534eb-green-process.json": "37d3507a4f38add3e349e4147085d8eafefc0b690d877fc3309f98853386b43e",
+    "editor-frame-01534eb-green.log": "1465195011b1106cffd9f9ae3172a766f95c21d190d5d55d3fc5d8933e920a0b",
+    "editor-frame-project-source-01534eb.json": "038de131248b08cb096b11ff186c630a3e8fd7318f7701c4d9069108dfcacafa",
+    "editor-frame-12f2e87-green-source.json": "38c54ddf90c7697a86a7d5d165663d579f092d3ddefd0b11d022abbed1caf971",
+    "editor-frame-12f2e87-green-process.json": "53eb2ecd8f165574b3eb1e5894c28f5f867f9ed2417405fa985b376b7f749afd",
+    "editor-frame-12f2e87-green.log": "f113ae812b8c0334a8ae05bbbdf2f3db72688af70a85d4c3760e26bb1aa8465d",
+    "editor-frame-project-source-12f2e87.json": "28da9c1afb2c0769c8a5925cd8640f13cd4eb8e5287b1a0cabdf4508f3e42fb5",
+    "editor-frame-fe62878-green.xml": "228472e4d7558342e09ea692db85a79f7f52056cf30e7c2f699e32b088e4019f",
+    "editor-frame-fe62878-green-calibration.json": "afe99c48b00f33828011f64992376216ea12ab176d27e430e57ec97de9247427",
+    "editor-frame-fe62878-green-source.json": "22ce51a3d6fe92ed0f2463cc505bb811a71173c33bb419c1c2fb97e18c3405fc",
+    "editor-frame-fe62878-green-process.json": "289f1db9a56b41dfde954193937f2c26d28fca67375d4ff18dadb87b9ee11231",
+    "editor-frame-fe62878-green.log": "2dc8fd74a279c9bc54827290b34e4ebbc62345e5725e27804ab4384a38195724",
+    "editor-frame-project-source-fe62878.json": "7875dabdf5e3c05703beffa5ff8aa102171eb8496dfda58bc42c3c84cf261021",
+    "editor-frame-fe62878-green-clean-fixture.xml": "3cb06130954743d6dd6f3c997754059154fd7db0cf0c055287a9af4663d1bcb5",
+    "editor-frame-fe62878-green-clean-fixture-calibration.json": "3ca90c7821f3038415d102b917b33c06959771866146602e26475d5e7dbbfbd7",
+    "editor-frame-fe62878-green-clean-fixture-index.json": "3d9f6c7053b402864802f22bcff058da0f7942b4dfe698bc908e19b22babe104",
+    "editor-frame-fe62878-green-clean-fixture-source.json": "22ce51a3d6fe92ed0f2463cc505bb811a71173c33bb419c1c2fb97e18c3405fc",
+    "editor-frame-fe62878-green-clean-fixture-process.json": "908588660ad961ecb42f2116ec117f2a501ee74cfa0f7e112435610d3e6b1640",
+    "editor-frame-fe62878-green-clean-fixture.log": "029ba71a844276e9929fff95c359dcb04e60995f03c8033691795072949e4081",
+    "editor-frame-e035022-green.xml": "642b2ffb74a2556574cf1130ef92d67aaab9374e60a679f2ba0c3c53523e8602",
+    "editor-frame-e035022-green-calibration.json": "e02364ca82c5e6f9f0fd62fe4a5dd8de9a1fca7ba691c6f5ba018643a46dbe0b",
+    "editor-frame-e035022-green-index.json": "18f0084807e45ff944942829ecefde40af59e33697ec1a9c3aa64ae9121b368c",
+    "editor-frame-e035022-green-source.json": "39f2e2d29004b804a686858c1508f9b65afa7d42ffaca750ba2214e88bf067da",
+    "editor-frame-e035022-green-process.json": "fa05e343ab3a594d8b0e00aa36e5570a529fa129ab440bf76d4cb92890165e65",
+    "editor-frame-e035022-green.log": "013fc63cbd447afca66e0c495a956fc5a119bbffb2fd0484242deec964e3b411",
+    "editor-frame-project-source-e035022.json": "7d948bbdc876640018d0f69c06e9c0ff3db24d0e8db657be2fd8f6b1a4cc5eb7",
+    "editor-index-representative-assets-99bd89c.json": "35aed5dbbaec227099dba852290bbadfdb07236ffee38d10e5f574773955910b",
+    "editor-frame-leftover-01534eb/receipt.json": "5596656543f94c47b5e60a6ec943da6d363b626d3dcecafa4eee3747a493a4bb",
+    "editor-frame-leftover-fe62878-clean/receipt.json": "29e3d3fb55ace01b40d9692a377dfe112fa98c14a7d7986f1d5d85b0f49f748d"
+  }
+}

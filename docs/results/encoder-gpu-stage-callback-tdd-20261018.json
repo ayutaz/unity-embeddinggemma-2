@@ -1,0 +1,40 @@
+{
+  "scope": "Validation-only diagnostic callback ordering and ownership. Fake Actions, no models, tensor access or GPU performance acceptance.",
+  "tdd": {
+    "red": "Six assertions failed against the empty callback scaffold: no markers, no ordering checks or restoration.",
+    "green": "Same six tests passed after wrapping borrowed callbacks, closing aborted scopes and conditionally restoring originals.",
+    "standalone": "Direct invocation of NUnit test methods under .NET 10; separate from the Unity Test Runner."
+  },
+  "validation_source": "c2f766e4e05f5378eba15b6552e4a244ebeebfa9",
+  "unity": "6000.3.21f1",
+  "unity_counts": {
+    "total": 6,
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0
+  },
+  "unity_exit_code": 0,
+  "tests": [
+    "EmbeddingGemma.Validation.Tests.GpuPipelineStageCallbacksTests.CallsMustBeSerialAndStageOrderMustMatch",
+    "EmbeddingGemma.Validation.Tests.GpuPipelineStageCallbacksTests.CancellationBetweenStagesClosesUnsubmittedMarkerAsAborted",
+    "EmbeddingGemma.Validation.Tests.GpuPipelineStageCallbacksTests.DisposeDoesNotOverwriteAnotherOwnersReplacementAndIsIdempotent",
+    "EmbeddingGemma.Validation.Tests.GpuPipelineStageCallbacksTests.EndsModelMarkerBeforeCacheReleaseAndStartsNextOnlyAfterCompletedCleanup",
+    "EmbeddingGemma.Validation.Tests.GpuPipelineStageCallbacksTests.InvalidArgumentsDoNotPartiallyReplaceCallbacks",
+    "EmbeddingGemma.Validation.Tests.GpuPipelineStageCallbacksTests.OriginalCleanupExceptionPropagatesWithoutStartingAnotherMarker"
+  ],
+  "gpu_execution_accepted": false,
+  "complete_performance_accepted": false,
+  "invariants": [
+    "Model marker ends before original unused-cache callback.",
+    "Next marker begins after original completed-backend cleanup; original exception preserved.",
+    "Cancellation closes an unsubmitted next-stage marker as aborted, not measured GPU work.",
+    "Borrowed arrays/resources remain owned by the SDK; disposal restores only this tracer's replacements.",
+    "Calls are serial and stage order is checked; invalid construction does not partially replace callbacks."
+  ],
+  "evidence_sha256": {
+    "artifacts/stage-callback-unit/red.txt": "d2c402f5a4af88900a305cad4a4d5059676f1be33da54e54816cd472315e7c93",
+    "artifacts/stage-callback-unit/green.txt": "8f7b5db5886515ba4c035042a8bde113218f9cf09cef3677882a3fadcbeb0457",
+    "artifacts/usability-state/encoder-callback-unit-c2f766e-first.xml": "16e3e14eebaf8ee64b131bc08cec0452468cfc3a16df6cfdbf7fecbd20707505",
+    "artifacts/usability-state/encoder-callback-unit-c2f766e-first-process.json": "27db8ca17029388c7b4f79ca9095a9a21951e6c6499c710924e472ccf4967be3"
+  }
+}

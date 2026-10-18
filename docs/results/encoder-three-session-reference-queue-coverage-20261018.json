@@ -1,0 +1,345 @@
+{
+  "accepted_full_submitted_encoder_interval_coverage": true,
+  "complete_performance_accepted": false,
+  "full_priorities_1_to_3_accepted": false,
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "validation_source": "c2f766e4e05f5378eba15b6552e4a244ebeebfa9",
+  "sessions": 3,
+  "reference_vectors": 12,
+  "observed_encoder_intervals": 5012,
+  "records": [
+    {
+      "module": "image-square",
+      "precision": "fp32",
+      "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+      "input_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+      "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "minimum_reference_cosine": 0.9999999999997138,
+      "observed_intervals": 1436,
+      "intervals": [
+        {
+          "round": "first",
+          "kind": "model-segment-and-output-copy",
+          "total_intervals": 180,
+          "observed_intervals": 180,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 4096,
+          "observed_queue_interval_ns_max": 52089856,
+          "observed_queue_interval_ns_sum": 900091904,
+          "cpu_submission_wall_ns_sum": 1746778900
+        },
+        {
+          "round": "first",
+          "kind": "projection-operation",
+          "total_intervals": 179,
+          "observed_intervals": 179,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 328704,
+          "observed_queue_interval_ns_max": 155618304,
+          "observed_queue_interval_ns_sum": 3329771520,
+          "cpu_submission_wall_ns_sum": 28254299700
+        },
+        {
+          "round": "warm",
+          "kind": "model-segment-and-output-copy",
+          "total_intervals": 180,
+          "observed_intervals": 180,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 4096,
+          "observed_queue_interval_ns_max": 50185216,
+          "observed_queue_interval_ns_sum": 493132800,
+          "cpu_submission_wall_ns_sum": 1246596300
+        },
+        {
+          "round": "warm",
+          "kind": "projection-operation",
+          "total_intervals": 179,
+          "observed_intervals": 179,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 444416,
+          "observed_queue_interval_ns_max": 98113536,
+          "observed_queue_interval_ns_sum": 2384781312,
+          "cpu_submission_wall_ns_sum": 13349741200
+        },
+        {
+          "round": "repeat-1",
+          "kind": "model-segment-and-output-copy",
+          "total_intervals": 180,
+          "observed_intervals": 180,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 4096,
+          "observed_queue_interval_ns_max": 49907712,
+          "observed_queue_interval_ns_sum": 512965120,
+          "cpu_submission_wall_ns_sum": 1226002700
+        },
+        {
+          "round": "repeat-1",
+          "kind": "projection-operation",
+          "total_intervals": 179,
+          "observed_intervals": 179,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 319488,
+          "observed_queue_interval_ns_max": 86266880,
+          "observed_queue_interval_ns_sum": 2397443072,
+          "cpu_submission_wall_ns_sum": 13138763900
+        },
+        {
+          "round": "repeat-2",
+          "kind": "model-segment-and-output-copy",
+          "total_intervals": 180,
+          "observed_intervals": 180,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 6144,
+          "observed_queue_interval_ns_max": 50190336,
+          "observed_queue_interval_ns_sum": 687121920,
+          "cpu_submission_wall_ns_sum": 1413534900
+        },
+        {
+          "round": "repeat-2",
+          "kind": "projection-operation",
+          "total_intervals": 179,
+          "observed_intervals": 179,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 1247232,
+          "observed_queue_interval_ns_max": 109568000,
+          "observed_queue_interval_ns_sum": 2811919360,
+          "cpu_submission_wall_ns_sum": 22227659400
+        }
+      ],
+      "terminal": {
+        "exit_code": 0,
+        "counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "audit_file": "encoder-gpu-dispatch-image-square-fp32-c2f766e-first-audit-20261018.json",
+      "audit_sha256": "30bff1ffd5d82662f2dbcad8e3543f36192dc8e586a4b05d82c4d8e2580627cb"
+    },
+    {
+      "module": "audio-1119",
+      "precision": "fp32",
+      "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+      "input_sha256": "06a56aa96f41a685ae25b4d7d0a55a15717723bb45a88a21a02546b9355e67e5",
+      "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+      "minimum_reference_cosine": 0.9999999999928919,
+      "observed_intervals": 2140,
+      "intervals": [
+        {
+          "round": "first",
+          "kind": "model-segment-and-output-copy",
+          "total_intervals": 268,
+          "observed_intervals": 268,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 15360,
+          "observed_queue_interval_ns_max": 366208000,
+          "observed_queue_interval_ns_sum": 455252736,
+          "cpu_submission_wall_ns_sum": 1648714600
+        },
+        {
+          "round": "first",
+          "kind": "projection-operation",
+          "total_intervals": 267,
+          "observed_intervals": 267,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 21504,
+          "observed_queue_interval_ns_max": 7719936,
+          "observed_queue_interval_ns_sum": 329717760,
+          "cpu_submission_wall_ns_sum": 658378000
+        },
+        {
+          "round": "warm",
+          "kind": "model-segment-and-output-copy",
+          "total_intervals": 268,
+          "observed_intervals": 268,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 11264,
+          "observed_queue_interval_ns_max": 95738880,
+          "observed_queue_interval_ns_sum": 172522752,
+          "cpu_submission_wall_ns_sum": 821057500
+        },
+        {
+          "round": "warm",
+          "kind": "projection-operation",
+          "total_intervals": 267,
+          "observed_intervals": 267,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 20480,
+          "observed_queue_interval_ns_max": 10351616,
+          "observed_queue_interval_ns_sum": 295477248,
+          "cpu_submission_wall_ns_sum": 194156800
+        },
+        {
+          "round": "repeat-1",
+          "kind": "model-segment-and-output-copy",
+          "total_intervals": 268,
+          "observed_intervals": 268,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 12288,
+          "observed_queue_interval_ns_max": 98188288,
+          "observed_queue_interval_ns_sum": 176838144,
+          "cpu_submission_wall_ns_sum": 974144400
+        },
+        {
+          "round": "repeat-1",
+          "kind": "projection-operation",
+          "total_intervals": 267,
+          "observed_intervals": 267,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 21504,
+          "observed_queue_interval_ns_max": 10793984,
+          "observed_queue_interval_ns_sum": 300015616,
+          "cpu_submission_wall_ns_sum": 204879400
+        },
+        {
+          "round": "repeat-2",
+          "kind": "model-segment-and-output-copy",
+          "total_intervals": 268,
+          "observed_intervals": 268,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 13312,
+          "observed_queue_interval_ns_max": 305082368,
+          "observed_queue_interval_ns_sum": 376987392,
+          "cpu_submission_wall_ns_sum": 991502600
+        },
+        {
+          "round": "repeat-2",
+          "kind": "projection-operation",
+          "total_intervals": 267,
+          "observed_intervals": 267,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 21504,
+          "observed_queue_interval_ns_max": 5402624,
+          "observed_queue_interval_ns_sum": 258313216,
+          "cpu_submission_wall_ns_sum": 204016700
+        }
+      ],
+      "terminal": {
+        "exit_code": 0,
+        "counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "audit_file": "encoder-gpu-dispatch-audio-1119-fp32-c2f766e-first-audit-20261018.json",
+      "audit_sha256": "b1babbfe6f16287a426c6d01de4b0226ab3ac17a8111af4f09bb8a54b0fdab83"
+    },
+    {
+      "module": "image-square",
+      "precision": "float16-weights",
+      "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+      "input_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+      "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "minimum_reference_cosine": 0.9999999999997702,
+      "observed_intervals": 1436,
+      "intervals": [
+        {
+          "round": "first",
+          "kind": "model-segment-and-output-copy",
+          "total_intervals": 180,
+          "observed_intervals": 180,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 4096,
+          "observed_queue_interval_ns_max": 54564864,
+          "observed_queue_interval_ns_sum": 923191040,
+          "cpu_submission_wall_ns_sum": 1527948000
+        },
+        {
+          "round": "first",
+          "kind": "projection-operation",
+          "total_intervals": 179,
+          "observed_intervals": 179,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 325632,
+          "observed_queue_interval_ns_max": 138543104,
+          "observed_queue_interval_ns_sum": 3110253568,
+          "cpu_submission_wall_ns_sum": 24333571300
+        },
+        {
+          "round": "warm",
+          "kind": "model-segment-and-output-copy",
+          "total_intervals": 180,
+          "observed_intervals": 180,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 5888,
+          "observed_queue_interval_ns_max": 50247680,
+          "observed_queue_interval_ns_sum": 698087168,
+          "cpu_submission_wall_ns_sum": 1445521500
+        },
+        {
+          "round": "warm",
+          "kind": "projection-operation",
+          "total_intervals": 179,
+          "observed_intervals": 179,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 323584,
+          "observed_queue_interval_ns_max": 103813120,
+          "observed_queue_interval_ns_sum": 2895917056,
+          "cpu_submission_wall_ns_sum": 26583465300
+        },
+        {
+          "round": "repeat-1",
+          "kind": "model-segment-and-output-copy",
+          "total_intervals": 180,
+          "observed_intervals": 180,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 5120,
+          "observed_queue_interval_ns_max": 51811328,
+          "observed_queue_interval_ns_sum": 765282048,
+          "cpu_submission_wall_ns_sum": 1419772800
+        },
+        {
+          "round": "repeat-1",
+          "kind": "projection-operation",
+          "total_intervals": 179,
+          "observed_intervals": 179,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 440320,
+          "observed_queue_interval_ns_max": 119565312,
+          "observed_queue_interval_ns_sum": 2967003136,
+          "cpu_submission_wall_ns_sum": 25022069400
+        },
+        {
+          "round": "repeat-2",
+          "kind": "model-segment-and-output-copy",
+          "total_intervals": 180,
+          "observed_intervals": 180,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 4096,
+          "observed_queue_interval_ns_max": 50752512,
+          "observed_queue_interval_ns_sum": 659184896,
+          "cpu_submission_wall_ns_sum": 1412435100
+        },
+        {
+          "round": "repeat-2",
+          "kind": "projection-operation",
+          "total_intervals": 179,
+          "observed_intervals": 179,
+          "unavailable_stage_indices": [],
+          "observed_queue_interval_ns_min": 325632,
+          "observed_queue_interval_ns_max": 109339648,
+          "observed_queue_interval_ns_sum": 2858424320,
+          "cpu_submission_wall_ns_sum": 22938178500
+        }
+      ],
+      "terminal": {
+        "exit_code": 0,
+        "counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "audit_file": "encoder-gpu-dispatch-image-square-float16-weights-c2f766e-first-audit-20261018.json",
+      "audit_sha256": "f12bdfbf3df55620ae2f78ff57681c857c4400bbd5bd69b0650bd04dbd0c7fac"
+    }
+  ],
+  "source_files_verified_per_run": 546,
+  "scope": "Pinned pre-optimization encoder baselines only. Queue marker intervals include command/copy/bubble effects, not pure GPU active time; CPU submission intervals are wall, not busy time. Separate process/cache conditions; no precision speedup claim. No preprocessing/backbone GPU intervals or all-profile acceptance.",
+  "optimization_verified": false
+}

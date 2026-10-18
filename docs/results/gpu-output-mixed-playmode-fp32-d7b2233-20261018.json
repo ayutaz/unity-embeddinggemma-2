@@ -1,0 +1,204 @@
+{
+  "accepted_new_runtime_text_and_mixed_gpu_reference_ranks_release": true,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "c2f766e4e05f5378eba15b6552e4a244ebeebfa9",
+  "precision": "fp32",
+  "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+  "registrations": [
+    {
+      "id": "square-0",
+      "independent_cosine": 0.9999999999997135,
+      "norm_squared": 0.9999998644722635,
+      "capture_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f",
+      "input_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399"
+    },
+    {
+      "id": "landscape-0",
+      "independent_cosine": 0.9999999999989977,
+      "norm_squared": 1.0000000234680548,
+      "capture_sha256": "48532cc0c6ed58fb27df7619c524a5037b26c598d88e56b0ed1184f6e97f0ee8",
+      "input_sha256": "f2b3f32a22e6282b9876b98c4c5a7bbf75e7469dff933128e17d6503dd6d6e55"
+    },
+    {
+      "id": "portrait-0",
+      "independent_cosine": 0.9999999999997848,
+      "norm_squared": 1.0000000495263595,
+      "capture_sha256": "32e654f9670aa0c38152de46e20b5b15c6d5df04048df41c3d52186d2aa881d3",
+      "input_sha256": "fce3474792c6401c4bae6ac0261a386f400bac0cece977ffda86388ee6682489"
+    },
+    {
+      "id": "silence",
+      "independent_cosine": 0.9999999999928917,
+      "norm_squared": 1.0000000994303668,
+      "capture_sha256": "e8059c050b7f8204cd7ad54d034111b3c6aa9d74199412be6d7d85322be7b5c9",
+      "input_sha256": "c9c9803e19adb2d139ad00b54f4af71f80c2b2530b10828a913b5b82c18559b8"
+    },
+    {
+      "id": "padded_noise",
+      "independent_cosine": 0.9999999999981798,
+      "norm_squared": 0.9999999922162043,
+      "capture_sha256": "e91325ca017b7bd00f0da47b601cd689e3fc289c0692c2387fa27e4888670336",
+      "input_sha256": "a78defcfa0d000eecf8f5eca429135170bb9568f8f4b68d8e14e2e36fae62949"
+    }
+  ],
+  "direct_text_queries": [
+    {
+      "id": "query-cat-ja",
+      "independent_cosine": 0.999999999999879,
+      "norm_squared": 1.0000000965667355,
+      "capture_sha256": "b5753c87e65e30ad849feca34c1678bd9a6a3d8be3a0b658b0545e98dd11413a",
+      "input_sha256": null
+    },
+    {
+      "id": "query-space-en",
+      "independent_cosine": 0.9999999999998965,
+      "norm_squared": 1.000000046468943,
+      "capture_sha256": "636ae5f8fd17054b7670078e2632dced4d342e8de1e50537770cfe89ba193c32",
+      "input_sha256": null
+    },
+    {
+      "id": "query-recipe-ja",
+      "independent_cosine": 0.9999999999998783,
+      "norm_squared": 0.9999999230032577,
+      "capture_sha256": "bacc7ebad94743edfa2109bbaf3f86ca71c876c0b39311591d8694d876fb5dd1",
+      "input_sha256": null
+    },
+    {
+      "id": "query-cat-en",
+      "independent_cosine": 0.9999999999998915,
+      "norm_squared": 0.9999998392781916,
+      "capture_sha256": "51f439391d7eed9c110a6be7512c62d5affd0669d9a03445afa2769371189fd7",
+      "input_sha256": null
+    }
+  ],
+  "full_query_rankings": [
+    {
+      "id": "query-cat-ja",
+      "rank": [
+        "media-3",
+        "media-0",
+        "media-1",
+        "media-2",
+        "media-4"
+      ],
+      "maximum_score_error": 1.7913466188179683e-07
+    },
+    {
+      "id": "query-space-en",
+      "rank": [
+        "media-4",
+        "media-0",
+        "media-1",
+        "media-3",
+        "media-2"
+      ],
+      "maximum_score_error": 2.3957722850020957e-07
+    },
+    {
+      "id": "query-recipe-ja",
+      "rank": [
+        "media-3",
+        "media-4",
+        "media-1",
+        "media-0",
+        "media-2"
+      ],
+      "maximum_score_error": 1.5993362545430045e-07
+    },
+    {
+      "id": "query-cat-en",
+      "rank": [
+        "media-3",
+        "media-0",
+        "media-2",
+        "media-1",
+        "media-4"
+      ],
+      "maximum_score_error": 1.2983427366553002e-07
+    }
+  ],
+  "actual_gpu_cancel_retry": true,
+  "worker_kernel_tensor_cache_lease_release": true,
+  "receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-force-d3d12",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\gpu-output-mixed-consumer-d7b2233-c2f766e",
+      "-runTests",
+      "-testPlatform",
+      "EditMode",
+      "-testFilter",
+      "EmbeddingGemma.Validation.Tests.PreparedTextQueryReferenceTests.ActualGpuTextModuleMatchesAllPinnedQueryVectorsAndReleasesWorkers;EmbeddingGemma.Validation.Tests.MultimodalSearchSampleGpuTests.ImportedSampleRendersItsRealSearchResultsInPlayMode",
+      "-assemblyNames",
+      "EmbeddingGemma.Validation.Editor.Tests",
+      "-testResults",
+      ".\\artifacts\\usability-state\\gpu-output-mixed-playmode-fp32-d7b2233-warm-cache.xml",
+      "-logFile",
+      ".\\artifacts\\usability-state\\gpu-output-mixed-playmode-fp32-d7b2233-warm-cache.log"
+    ],
+    "timeout_seconds": 1200,
+    "success": true,
+    "terminal": true,
+    "timed_out": false,
+    "started_utc": "2026-10-17T20:52:44.620190+00:00",
+    "pid": 51636,
+    "exit_code": 0,
+    "unity_results": ".\\artifacts\\usability-state\\gpu-output-mixed-playmode-fp32-d7b2233-warm-cache.xml",
+    "unity_counts": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 356.078260099981,
+    "completed_utc": "2026-10-17T20:58:40.698445+00:00"
+  },
+  "host_lifetime_peaks_bytes": [
+    14052876288,
+    14059487232
+  ],
+  "source_files_verified_after": 636,
+  "prepared_cache_reused": true,
+  "text_module_descriptor_transferred_files": 1,
+  "screenshots": [
+    {
+      "file": "gpu-output-mixed-playmode-fp32-d7b2233-warm-cache-rendered-query-cat-ja.png",
+      "sha256": "44cf08d2fd89acccdd6c49a3c508beb710e000267dfb14c66b3c3a1a0ec2c664",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "gpu-output-mixed-playmode-fp32-d7b2233-warm-cache-rendered-query-space-en.png",
+      "sha256": "08c6106f6bd06bcd5bc2975aec5dfba48f92bd23de3be89760f0689068962578",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "gpu-output-mixed-playmode-fp32-d7b2233-warm-cache-rendered-query-recipe-ja.png",
+      "sha256": "42f30dedb65fd257e364ceace7d6cd492087c011a6aeaa397e84e71ffe64a190",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "file": "gpu-output-mixed-playmode-fp32-d7b2233-warm-cache-rendered-query-cat-en.png",
+      "sha256": "0d3015bd427f1713e072bc59cf9fe22e7baf8d48e70b3af6e3d99deee7572dbb",
+      "width": 1280,
+      "height": 800
+    }
+  ],
+  "visual_inspection_completed": false,
+  "scope": "Unchanged canonical text/mixed/render fixtures on fixed source and existing prepared cache. Programmatic controls and actual PlayMode; not native mouse/keyboard, microphone, public cold setup, performance timings, index cache preparation from zero or all-role quality.",
+  "complete_performance_accepted": false,
+  "full_priorities_1_to_3_accepted": false,
+  "evidence_sha256": {
+    "gpu-output-mixed-playmode-fp32-d7b2233-warm-cache.xml": "6cc96fdafc3fff98b25e3e2f6063f87c344ba1f7578d2d29d5f2ea751144be0e",
+    "gpu-output-mixed-playmode-fp32-d7b2233-warm-cache.log": "10dd483800281b35b32c4a41ecea74cc2357b6edc76ab11755cc2069bda148b7",
+    "gpu-output-mixed-playmode-fp32-d7b2233-warm-cache-process.json": "979a940256e745f55e7927a38b02a8477020900648cbf1d3284493fd96e620fd",
+    "gpu-output-mixed-playmode-fp32-d7b2233-warm-cache-source.json": "7b6d4ac49743699dbba36cb99a5b8189d37000a55019d4818eee259d0b4a5196",
+    "gpu-output-mixed-playmode-fp32-d7b2233-warm-cache-text.json": "db91007f28484d5c41daca1364d8a65997c642908dbbe0c8c7f3ce9fbbe25bbb",
+    "gpu-output-mixed-playmode-fp32-d7b2233-warm-cache-integration.json": "729e54ec064c1057aaf701a7233694e254072ada49d366244dc3b3d0541705bf"
+  }
+}

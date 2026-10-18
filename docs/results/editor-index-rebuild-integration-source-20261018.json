@@ -1,0 +1,46 @@
+{
+  "integration_head": "eca126cfe44fc1505782dc2a7f546692edb8ad84",
+  "observed_validation_source": "9b6f28e3c6a37fa2ed9c6c6608018711a1e9efa3",
+  "observed_runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "runtime_tree_identical": true,
+  "runtime_git_tree": "7d6e4314552b221d06db881405e7ccff3f449a77",
+  "selected_probe_and_assembly_source_identical": true,
+  "selected_files": [
+    {
+      "path": "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/EditorIndexRebuild.cs",
+      "git_blob": "b7307e3073f5306e312911807271f7669a3c1034"
+    },
+    {
+      "path": "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/EditorIndexRebuild.cs.meta",
+      "git_blob": "330bb2ed897dd783458e5d1d4eef585f6ede94bd"
+    },
+    {
+      "path": "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/EditorIndexRebuildTests.cs",
+      "git_blob": "5c58d46725d4d74379380e40b7cd2a7b237d6c80"
+    },
+    {
+      "path": "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/EditorIndexRebuildTests.cs.meta",
+      "git_blob": "e8a988488355c2460ec71acac3c89eb0f8c09124"
+    },
+    {
+      "path": "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/EditorSearchRebuildObservationTests.cs",
+      "git_blob": "0eae35dbe7db9d41d5836e38c72130acfefbf78a"
+    },
+    {
+      "path": "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/EditorSearchRebuildObservationTests.cs.meta",
+      "git_blob": "837b411f16664cc90539b2a676812885d4bb215f"
+    },
+    {
+      "path": "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/EmbeddingGemma.Validation.Editor.Tests.asmdef",
+      "git_blob": "a35a2082ef332b7fe68d0ced76f7df6a6b5d703f"
+    }
+  ],
+  "source_files_per_snapshot_reverified": 576,
+  "snapshots_reverified": 3,
+  "protected_root_files_verified": 4,
+  "entire_validation_tree_identical": false,
+  "full_priorities_1_to_3_accepted": false,
+  "scope": "Runtime tree, selected executed Editor index probe/tests/meta and assembly definition are identical to the measured snapshots. Other validation types can differ. Source correspondence is not a full latest-head test run, UI/public acquisition/GPU acceptance or complete performance claim.",
+  "measured_audit_sha256": "9f1715b30e08eec3304ae6424599fb5fde10e6dcee476da8b531717daf2b3d58",
+  "audited_utc": "2026-10-17T22:36:21.480202+00:00"
+}

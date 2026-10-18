@@ -1,0 +1,95 @@
+{
+  "pinned_gpu_submission_scopes_observed": true,
+  "complete_performance_accepted": false,
+  "full_priorities_1_to_3_accepted": false,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "10962faf0924bb1c5070ad2d3875fc06fd24bbe2",
+  "module": "image-landscape",
+  "precision": "fp32",
+  "independent_vector_minimum_cosine": 0.9999999999989977,
+  "scopes": [
+    {
+      "round": "first",
+      "kind": "preprocessing-initial-synchronous-submission",
+      "method": "Process",
+      "asynchronous": false,
+      "gpu_queue_ns": 747264,
+      "cpu_submission_wall_ns": 269569100,
+      "observed_render_frame": 670
+    },
+    {
+      "round": "first",
+      "kind": "backbone-synchronous-submission",
+      "method": "Embed",
+      "asynchronous": false,
+      "gpu_queue_ns": 162755584,
+      "cpu_submission_wall_ns": 1594697000,
+      "observed_render_frame": 898
+    },
+    {
+      "round": "warm",
+      "kind": "preprocessing-initial-synchronous-submission",
+      "method": "Process",
+      "asynchronous": false,
+      "gpu_queue_ns": 723968,
+      "cpu_submission_wall_ns": 32347600,
+      "observed_render_frame": 898
+    },
+    {
+      "round": "warm",
+      "kind": "backbone-synchronous-submission",
+      "method": "Embed",
+      "asynchronous": false,
+      "gpu_queue_ns": 125534208,
+      "cpu_submission_wall_ns": 125070800,
+      "observed_render_frame": 1129
+    },
+    {
+      "round": "repeat-1",
+      "kind": "preprocessing-initial-synchronous-submission",
+      "method": "Process",
+      "asynchronous": false,
+      "gpu_queue_ns": 1130496,
+      "cpu_submission_wall_ns": 11235800,
+      "observed_render_frame": 1129
+    },
+    {
+      "round": "repeat-1",
+      "kind": "backbone-synchronous-submission",
+      "method": "Embed",
+      "asynchronous": false,
+      "gpu_queue_ns": 141275136,
+      "cpu_submission_wall_ns": 102783800,
+      "observed_render_frame": 1335
+    },
+    {
+      "round": "repeat-2",
+      "kind": "preprocessing-initial-synchronous-submission",
+      "method": "Process",
+      "asynchronous": false,
+      "gpu_queue_ns": 756736,
+      "cpu_submission_wall_ns": 10127700,
+      "observed_render_frame": 1335
+    },
+    {
+      "round": "repeat-2",
+      "kind": "backbone-synchronous-submission",
+      "method": "Embed",
+      "asynchronous": false,
+      "gpu_queue_ns": 111271936,
+      "cpu_submission_wall_ns": 115159500,
+      "observed_render_frame": 1555
+    }
+  ],
+  "scope": "Original SDK calls, d7b2233 runtime. Preprocessor initial synchronous invocation through Task return, and synchronous backbone invocation. All encoder segments/operations independently audited. No additional awaits, schedules, tensor readback or cache policy changes.",
+  "limits": [
+    "For the pinned AudioPreprocessor.ProcessAsync implementation all preprocessor GPU commands are submitted before its first await; this is not a generic guarantee for arbitrary async methods.",
+    "GPU queue intervals include commanded copies/queue effects and can include bubbles. Not pure kernel active time.",
+    "Preprocessor async completion/fence wait/post-await cleanup excluded from submission scope; measured separately by existing CPU/wall stage timers.",
+    "Profiler and observers perturb the instrumented call. No source-mismatched latency comparison or general speedup claim.",
+    "Load/release GPU duration and unrelated Editor work are not inferred from these scope timings."
+  ],
+  "encoder_independent_audit": "submission-error-gpu-image-landscape-fp32-10962fa-first-audit-20261018.json",
+  "encoder_independent_audit_sha256": "1e0fa5ee6aa64c3ba7acc17c5e0011bd35421125fbf70e1c46f256bf1ca28ebe",
+  "report_sha256": "007ea551890fbdce8b6e2e4cc310a32d9347f5f572fcc4a59553e0917890b3d0"
+}

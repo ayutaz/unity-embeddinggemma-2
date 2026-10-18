@@ -1,0 +1,54 @@
+{
+  "full_priorities_1_to_3_accepted": false,
+  "original_requirements_preserved": true,
+  "prior_requirement_audit": "priority-1-to-3-requirement-audit-adf7c24-20261018.json",
+  "changes": {
+    "crash_recovery": "Windows actual process death, competing CLI rejection, orphan cleanup, retry and warm reuse verified; public source and Ctrl+C remain separate.",
+    "playback": "Strict early-stop gate passed on warm fixed-Git680af07; final public-acquisition candidate and fresh full-operation completion remain separate."
+  },
+  "integration_preview": {
+    "captured_utc": "2026-10-17T23:23:17.7626183Z",
+    "preview_head": "0658004281a277801b4050926be3f42db3fae13a",
+    "preview_tree": "8141b5f4e39287501e7002f00f0da594108b9c95",
+    "performance_head": "19d1edc7bad4bb5412b5e1475867016c409eaaeb",
+    "acquisition_head": "ce7e13689f42950937671e0e8436deca61b7d363",
+    "runtime_git_tree": "7d6e4314552b221d06db881405e7ccff3f449a77",
+    "validation_git_tree": "5e3c0db45da8a4a19d8267cec39212d90cf72393",
+    "production_cli_git_blob": "82c0ae27cafd924e822958a6d10997f761fe002d",
+    "tool_protocol_tests_passed": 72,
+    "test_log_sha256": "0fb2cc1a05449902686ee16e02c5c50d7941808a690f5141c59a65f5b3e879ce",
+    "model_or_gpu_execution_in_this_check": false,
+    "native_ui_microphone_public_acquisition_qualified": false,
+    "root_user_files_unchanged": true,
+    "full_priorities_1_to_3_accepted": false,
+    "scope": "Local-only assembly of current PR sources, no main merge or publication. Additional tool/protocol evidence; does not overwrite the earlier 69-test fixed snapshot or infer CI success."
+  },
+  "test_scope": "72 small acquisition/HTTPS/Windows-engine protocol tests from combined source, already executed once. This audit verifies their saved log and source correspondence; no repeated model/Unity execution.",
+  "actual_native_ui": {
+    "source": "680af07c0ecad524accec00797c645b8528e6bf5",
+    "package_git_tree": "b5195f3578974568e7ac8c51b8fcaee1fd94945b",
+    "runtime_git_tree": "7d6e4314552b221d06db881405e7ccff3f449a77",
+    "model_descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+    "native_early_stop": true,
+    "last_playing_seconds": 9.130625,
+    "remaining_seconds": 2.069375,
+    "normal_exit_code": 0,
+    "reference_cosine": 0.9999999905661618,
+    "score_error": 2.6369377859047916e-06
+  },
+  "root_user_files_unchanged": true,
+  "still_incomplete": [
+    "Public pinned empty-cache acquisition and recovery",
+    "Final combined publicly acquired fresh-consumer full native operations",
+    "Authorized real microphone start/stop/recovery/device behavior",
+    "Whole-load/release GPU timing and exclusive allocation gaps",
+    "Latest Required CI and final PR integration/audit"
+  ],
+  "evidence_sha256": {
+    "priority-integration-0658004.json": "41d721e5cca573b0537f7ac46dce4cc40096df975400a59e9b04db5284d41764",
+    "priority-1-to-3-integrated-current-tools-tests-ce7e136.txt": "0fb2cc1a05449902686ee16e02c5c50d7941808a690f5141c59a65f5b3e879ce",
+    "native-audio-early-stop-680af07-followup-20261018.json": "973f434cadcf4de395472de9b4118fa0ac3eeeac1ac9736b9018922c618961ed",
+    "real-media-crash-recovery-85a2d71-20261018.json": "ea50874aa84a4f38f89fe80c2d236a6a25be9e527ff7513a4982092f9ed14baf"
+  },
+  "audited_utc": "2026-10-17T23:37:29.106813+00:00"
+}

@@ -1,0 +1,29 @@
+{
+  "source_binding_accepted": true,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "runtime_git_tree": "7d6e4314552b221d06db881405e7ccff3f449a77",
+  "measurement_source": "10962faf0924bb1c5070ad2d3875fc06fd24bbe2",
+  "text_measurement_git_blob": "b5b049f7a4d0fe39507900a4d9c1ccb3af5a7d10",
+  "utility_source": "70be4119611d26466dbcbc9995192de8e3fe65ee",
+  "integrated_head": "dcabb641a6fa4373a69d21485f2f802848e4c3c8",
+  "files": [
+    {
+      "path": "tools/embeddinggemma_tools/windows_gpu_engine.py",
+      "git_blob": "2a4a5cb4a7941c73ee877f07cff77bb5d649eedb"
+    },
+    {
+      "path": "tools/observe_owned_gpu_engine.ps1",
+      "git_blob": "74ac992ea7549711f0c345a2a1bbcb4063904b3a"
+    },
+    {
+      "path": "tools/tests/test_windows_gpu_engine.py",
+      "git_blob": "921dd8e45d710f41a6a5394e37f4278857741b00"
+    },
+    {
+      "path": "tools/tests/test_gpu_engine_collector.py",
+      "git_blob": "1e196bf41feb216d4b104329fba9afd4bdbc2a00"
+    }
+  ],
+  "gpu_load_release_timing_accepted": false,
+  "scope": "Exact Git tree/blob correspondence only; separate frozen consumer execution and missing observation intervals retain their original scope."
+}

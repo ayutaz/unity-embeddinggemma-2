@@ -1,0 +1,34 @@
+{
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "precision": "fp32",
+  "actual_image_review": true,
+  "screenshots": [
+    {
+      "file": "gpu-output-mixed-playmode-fp32-d7b2233-warm-cache-rendered-query-cat-ja.png",
+      "sha256": "44cf08d2fd89acccdd6c49a3c508beb710e000267dfb14c66b3c3a1a0ec2c664",
+      "visually_inspected": true,
+      "visible_findings": "Rendered scored media result cards, square/landscape/portrait image previews and Japanese audio playback buttons. Some lower rows extend below the viewport; full ranks are independently audited from captured vectors."
+    },
+    {
+      "file": "gpu-output-mixed-playmode-fp32-d7b2233-warm-cache-rendered-query-space-en.png",
+      "sha256": "08c6106f6bd06bcd5bc2975aec5dfba48f92bd23de3be89760f0689068962578",
+      "visually_inspected": true,
+      "visible_findings": "Rendered scored media result cards, square/landscape/portrait image previews and Japanese audio playback buttons. Some lower rows extend below the viewport; full ranks are independently audited from captured vectors."
+    },
+    {
+      "file": "gpu-output-mixed-playmode-fp32-d7b2233-warm-cache-rendered-query-recipe-ja.png",
+      "sha256": "42f30dedb65fd257e364ceace7d6cd492087c011a6aeaa397e84e71ffe64a190",
+      "visually_inspected": true,
+      "visible_findings": "Rendered scored media result cards, square/landscape/portrait image previews and Japanese audio playback buttons. Some lower rows extend below the viewport; full ranks are independently audited from captured vectors."
+    },
+    {
+      "file": "gpu-output-mixed-playmode-fp32-d7b2233-warm-cache-rendered-query-cat-en.png",
+      "sha256": "0d3015bd427f1713e072bc59cf9fe22e7baf8d48e70b3af6e3d99deee7572dbb",
+      "visually_inspected": true,
+      "visible_findings": "Rendered scored media result cards, square/landscape/portrait image previews and Japanese audio playback buttons. Some lower rows extend below the viewport; full ranks are independently audited from captured vectors."
+    }
+  ],
+  "independent_numeric_audit": "gpu-output-mixed-playmode-fp32-d7b2233-20261018.json",
+  "independent_numeric_audit_sha256": "d11ee82e0356cf87a4c1cc81676c22db22b1d8c0b45756837628fadff77a2520",
+  "scope": "Image inspection of four programmatically rendered PlayMode search result screenshots. Query/header controls are outside these captured result viewports. No claim of native interaction, audible playback, microphone, semantic relevance of synthetic media or all rows simultaneously visible."
+}

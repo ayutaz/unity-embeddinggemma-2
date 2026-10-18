@@ -1,0 +1,81 @@
+{
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "precision": "float16-weights",
+  "descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+  "actual_gpu_all_six_isolated_acceptance": true,
+  "total_reference_cases": 16,
+  "scope": "Six isolated Editor/GPUCompute processes, fixed final document/query references. Not same-process consecutive, native UI, arbitrary input quality, public cold setup, actual microphone or complete performance acceptance.",
+  "modules": [
+    {
+      "module": "text",
+      "audit": "text-float16-weights-e28a5fd-20261018.json",
+      "sha256": "9a7ad0aa880b608585b5d5cc9496d88ce7ab77e1d8b444690fca74745b694a20",
+      "reference_cases": 4,
+      "minimum_cosine": 0.9999999999998682,
+      "host_native_lifetime_peak_bytes": 4104572928,
+      "editor_process_wall_seconds": 152.61038909998024,
+      "exit_code": 0
+    },
+    {
+      "module": "image-square",
+      "audit": "image-square-float16-weights-e28a5fd-20261018.json",
+      "sha256": "ef96f8561efbb0b7859f46393bccfc2eb5cd435a24d4c607da58339f168f6c40",
+      "reference_cases": 2,
+      "minimum_cosine": 0.9999999999996099,
+      "host_native_lifetime_peak_bytes": 6480916480,
+      "editor_process_wall_seconds": 331.9610373000032,
+      "exit_code": 0
+    },
+    {
+      "module": "image-landscape",
+      "audit": "image-landscape-float16-weights-e28a5fd-20261018.json",
+      "sha256": "6e57fb9a01f36c96986e44ca40026f394e40130377e2522abf99aa9ec87313da",
+      "reference_cases": 2,
+      "minimum_cosine": 0.9999999999990701,
+      "host_native_lifetime_peak_bytes": 6227365888,
+      "editor_process_wall_seconds": 323.2441771000158,
+      "exit_code": 0
+    },
+    {
+      "module": "image-portrait",
+      "audit": "image-portrait-float16-weights-e28a5fd-20261018.json",
+      "sha256": "e9cf273b252e12135336425688d03828df834c10d0865a150e091472be60a068",
+      "reference_cases": 2,
+      "minimum_cosine": 0.9999999999979087,
+      "host_native_lifetime_peak_bytes": 6482767872,
+      "editor_process_wall_seconds": 332.6445330000133,
+      "exit_code": 0
+    },
+    {
+      "module": "audio-1119",
+      "audit": "audio-1119-float16-weights-e28a5fd-20261018.json",
+      "sha256": "e8147a5392a67651fe8eb1914b23f1a2958c8ceb6cb1c8da8c330f8b906028af",
+      "reference_cases": 5,
+      "minimum_cosine": 0.9999990101338172,
+      "host_native_lifetime_peak_bytes": 5230329856,
+      "editor_process_wall_seconds": 283.888806700008,
+      "exit_code": 0
+    },
+    {
+      "module": "audio-839",
+      "audit": "audio-839-float16-weights-e28a5fd-20261018.json",
+      "sha256": "aaefbf3e3ad061832c78ab3d71ff9f5b1ac4e7c1077f7a6e883848d4f09fe015",
+      "reference_cases": 1,
+      "minimum_cosine": 0.9999984475675923,
+      "host_native_lifetime_peak_bytes": 4861960192,
+      "editor_process_wall_seconds": 224.76342279999517,
+      "exit_code": 0
+    }
+  ],
+  "serial_controller_sha256": "3dce6751489b3cc19249fdaea3aff3cb64e9298c1b1c1eed7b2274cf316f030a",
+  "gpu_execution_time_measured": false,
+  "performance_improvement_claimed": false,
+  "remaining": [
+    "Same-candidate FP32/Float16 combined rank/release comparison",
+    "Identical-input cold/warm/repeat load/stage/release CPU/GPU time and host/VRAM",
+    "Editor import/searchDB/allocation/reload",
+    "Fresh fixed-Git native JA/EN UI/previews/playback/release",
+    "Public empty-cache acquisition",
+    "Authorized real microphone"
+  ]
+}

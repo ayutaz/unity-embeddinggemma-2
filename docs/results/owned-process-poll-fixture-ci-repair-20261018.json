@@ -1,0 +1,32 @@
+{
+  "scope": "Test-double repair only; production Popen cleanup and Unity execution guards unchanged.",
+  "ci_run": 39065938537,
+  "ci_head": "b86e4b971d28d7319197cb8c69e01a22e8f88f16",
+  "failed_job": 117493810619,
+  "job_url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39065938537/job/117493810619",
+  "observed_ci_counts": {
+    "passed": 1554,
+    "failed": 3
+  },
+  "intended_local_red": {
+    "passed": 5,
+    "failed": 3,
+    "skipped": 0
+  },
+  "local_green": {
+    "passed": 19,
+    "failed": 0,
+    "skipped": 0
+  },
+  "cause": "The fake completed process implemented wait/returncode but lacked Popen.poll used by the owned-child finally cleanup.",
+  "correction": "Fake poll returns its existing terminal returncode. Zero-test/failed XML and real child cleanup tests remain enforced.",
+  "real_model_qualification": false,
+  "ci_latest_head_accepted": false,
+  "evidence_sha256": {
+    "unity-evidence-fixture-poll-red.xml": "8484b094073c756fc1265b371f039550a80799f24421fb1326d67779e1a90a87",
+    "unity-evidence-fixture-poll-green.xml": "05692cc42d1b4b5370d44bffb50633be1ce0877c617a35bc4de398c1afdd2d0c",
+    "ci-b86-ubuntu313-failure.log": "6eac4b58a70c0f95cf3eddfa92aa7b379b4b85f821b797679308326f7baa7153",
+    "test_unity_execution_evidence.py": "220fd5f7d223f59f528eaede0a0caf4423473c732507a519c703ac1446cd209d",
+    "bounded_process.py": "e0ed4ea03b37bba33b1daf9b79fbf4d4113579ec0672619f1ed529a8fa84e3b0"
+  }
+}

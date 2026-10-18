@@ -1,0 +1,87 @@
+name: Native DirectX diagnostic tests
+
+on:
+  pull_request:
+    paths:
+      - 'tools/native/dxg-observer/**'
+      - 'tools/tests/test_native_dxg_cli.py'
+      - '.github/workflows/native-dxg-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: native-dxg-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native-dxg:
+    runs-on: windows-2025
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+      - name: Prepare pinned Microsoft decoder source and compiler
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $upstream = '72bd2b18553493aa9850e434caf71bfa18952aac'
+          $libraryRoot = Join-Path $env:RUNNER_TEMP 'DxTimingCaptureLibrary'
+          if (Test-Path -LiteralPath $libraryRoot) { throw 'Preserve existing dependency directory' }
+          git init $libraryRoot
+          if ($LASTEXITCODE -ne 0) { throw 'git init failed' }
+          git -C $libraryRoot remote add origin https://github.com/microsoft/DxTimingCaptureLibrary.git
+          if ($LASTEXITCODE -ne 0) { throw 'remote setup failed' }
+          git -C $libraryRoot fetch --depth 1 origin $upstream
+          if ($LASTEXITCODE -ne 0) { throw 'pinned fetch failed' }
+          git -C $libraryRoot checkout --detach FETCH_HEAD
+          if ($LASTEXITCODE -ne 0 -or (git -C $libraryRoot rev-parse HEAD) -ne $upstream) { throw 'Dependency source mismatch' }
+          $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio/Installer/vswhere.exe'
+          $msbuild = & $vswhere -latest -products '*' -requires Microsoft.Component.MSBuild -find 'MSBuild\**\Bin\MSBuild.exe' | Select-Object -First 1
+          if (-not $msbuild) { throw 'MSBuild not found' }
+          "DXG_LIBRARY_ROOT=$libraryRoot" >> $env:GITHUB_ENV
+          "DXG_MSBUILD=$msbuild" >> $env:GITHUB_ENV
+          "DXG_BUILD_ROOT=$(Join-Path $env:RUNNER_TEMP 'native-dxg-build')" >> $env:GITHUB_ENV
+          New-Item -ItemType Directory -Path artifacts/native-dxg-ci -ErrorAction Stop | Out-Null
+      - name: Build dependency, native records tests, and collector
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & $env:DXG_MSBUILD "$env:DXG_LIBRARY_ROOT/third_party/googletest/googletest_main.vcxproj" /restore /m:2 /p:Configuration=Release /p:Platform=x64 /nologo /v:minimal *> artifacts/native-dxg-ci/dependency-build.log
+          if ($LASTEXITCODE -ne 0) { Get-Content artifacts/native-dxg-ci/dependency-build.log -Tail 30; throw 'Dependency build failed' }
+          foreach ($project in @('OwnedGpuRecordsTests', 'NativeDxgObserver')) {
+            & $env:DXG_MSBUILD "tools/native/dxg-observer/$project.vcxproj" /restore /m:2 /p:Configuration=Release /p:Platform=x64 "/p:DxTimingCaptureLibraryRoot=$env:DXG_LIBRARY_ROOT" "/p:NativeDxgBuildRoot=$env:DXG_BUILD_ROOT" /nologo /v:minimal *> "artifacts/native-dxg-ci/$project-build.log"
+            if ($LASTEXITCODE -ne 0) { Get-Content "artifacts/native-dxg-ci/$project-build.log" -Tail 30; throw "$project build failed" }
+          }
+      - name: Run native unit and preflight CLI tests without GPU capture
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          & "$env:DXG_BUILD_ROOT/tests/OwnedGpuRecordsTests.exe" --gtest_color=no --gtest_output=xml:artifacts/native-dxg-ci/native-unit.xml
+          if ($LASTEXITCODE -ne 0) { throw 'Native unit tests failed' }
+          $env:EG_NATIVE_DXG_OBSERVER_EXE = "$env:DXG_BUILD_ROOT/capture/NativeDxgObserver.exe"
+          Push-Location tools
+          try {
+            uv run --no-project --python 3.13 --with pytest==9.1.1 pytest --noconftest tests/test_native_dxg_cli.py -q -k 'not owned_empty_target' --junitxml=../artifacts/native-dxg-ci/cli.xml
+            if ($LASTEXITCODE -ne 0) { throw 'CLI preflight tests failed' }
+          } finally { Pop-Location }
+          [xml]$native = Get-Content artifacts/native-dxg-ci/native-unit.xml -Raw
+          if ([int]$native.testsuites.tests -ne 48 -or [int]$native.testsuites.failures -ne 0 -or [int]$native.testsuites.disabled -ne 0 -or [int]$native.testsuites.errors -ne 0 -or $native.SelectNodes("//testcase[skipped or @result='skipped']").Count -ne 0) { throw 'Native tests missing, failed, or skipped' }
+          [xml]$cli = Get-Content artifacts/native-dxg-ci/cli.xml -Raw
+          $cases = @($cli.testsuites.testsuite)
+          if (($cases | Measure-Object -Property tests -Sum).Sum -ne 8 -or ($cases | Measure-Object -Property failures -Sum).Sum -ne 0 -or ($cases | Measure-Object -Property errors -Sum).Sum -ne 0 -or ($cases | Measure-Object -Property skipped -Sum).Sum -ne 0) { throw 'CLI preflight tests missing, failed, or skipped' }
+          @{ source = (git rev-parse HEAD); upstream = '72bd2b18553493aa9850e434caf71bfa18952aac'; native_unit_passed = 48; cli_preflight_passed = 8; live_capture_executed = $false; gpu_validated = $false; real_model_executed = $false } | ConvertTo-Json | Set-Content artifacts/native-dxg-ci/receipt.json -Encoding utf8
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ always() }}
+        with:
+          name: native-dxg-tests
+          path: artifacts/native-dxg-ci/
+          retention-days: 7
+          if-no-files-found: error

@@ -1,0 +1,245 @@
+{
+  "accepted_matched_instrumented_square_reference_release_and_exit": true,
+  "observed_warm_calls_separated": true,
+  "all_four_outputs_byte_identical": true,
+  "complete_performance_accepted": false,
+  "all_module_new_runtime_accepted": false,
+  "records": [
+    {
+      "phase": "before",
+      "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+      "validation_source": "c2f766e4e05f5378eba15b6552e4a244ebeebfa9",
+      "unity": "6000.3.21f1",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_api": "Direct3D12",
+      "rounds": [
+        {
+          "round": "first",
+          "api_wall_seconds": 64.5707984,
+          "whole_editor_process_cpu_seconds": 25.765625,
+          "independent_cosine": 0.9999999999997135,
+          "norm_squared": 0.9999998644722635,
+          "capture_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f",
+          "encoder_intervals": [
+            {
+              "kind": "model-segment-and-output-copy",
+              "count": 180,
+              "cpu_submission_wall_ns_sum": 1746778900,
+              "gpu_queue_interval_ns_sum": 900091904
+            },
+            {
+              "kind": "projection-operation",
+              "count": 179,
+              "cpu_submission_wall_ns_sum": 28254299700,
+              "gpu_queue_interval_ns_sum": 3329771520
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "api_wall_seconds": 19.6892764,
+          "whole_editor_process_cpu_seconds": 11.359375,
+          "independent_cosine": 0.9999999999997135,
+          "norm_squared": 0.9999998644722635,
+          "capture_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f",
+          "encoder_intervals": [
+            {
+              "kind": "model-segment-and-output-copy",
+              "count": 180,
+              "cpu_submission_wall_ns_sum": 1246596300,
+              "gpu_queue_interval_ns_sum": 493132800
+            },
+            {
+              "kind": "projection-operation",
+              "count": 179,
+              "cpu_submission_wall_ns_sum": 13349741200,
+              "gpu_queue_interval_ns_sum": 2384781312
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "api_wall_seconds": 19.2994038,
+          "whole_editor_process_cpu_seconds": 11.53125,
+          "independent_cosine": 0.9999999999997135,
+          "norm_squared": 0.9999998644722635,
+          "capture_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f",
+          "encoder_intervals": [
+            {
+              "kind": "model-segment-and-output-copy",
+              "count": 180,
+              "cpu_submission_wall_ns_sum": 1226002700,
+              "gpu_queue_interval_ns_sum": 512965120
+            },
+            {
+              "kind": "projection-operation",
+              "count": 179,
+              "cpu_submission_wall_ns_sum": 13138763900,
+              "gpu_queue_interval_ns_sum": 2397443072
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "api_wall_seconds": 29.388729899999998,
+          "whole_editor_process_cpu_seconds": 20.1875,
+          "independent_cosine": 0.9999999999997135,
+          "norm_squared": 0.9999998644722635,
+          "capture_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f",
+          "encoder_intervals": [
+            {
+              "kind": "model-segment-and-output-copy",
+              "count": 180,
+              "cpu_submission_wall_ns_sum": 1413534900,
+              "gpu_queue_interval_ns_sum": 687121920
+            },
+            {
+              "kind": "projection-operation",
+              "count": 179,
+              "cpu_submission_wall_ns_sum": 22227659400,
+              "gpu_queue_interval_ns_sum": 2811919360
+            }
+          ]
+        }
+      ],
+      "host_lifetime_peak_bytes": 10801438720,
+      "source_files_verified": 546,
+      "evidence_sha256": {
+        "encoder-gpu-dispatch-image-square-fp32-c2f766e-first.json": "3b46ddb20c5d25c71b5f88d405b525bd0eef7e853eee53a081aa1655523105c4",
+        "encoder-gpu-dispatch-image-square-fp32-c2f766e-first.xml": "9016e2be529aad7013eedfcda206ecdd2d98e0018c18de7656e998988d5c0152",
+        "encoder-gpu-dispatch-image-square-fp32-c2f766e-first-source.json": "024a57937b50882c78624df70f8cf3aa69896e86be8dbed4885938b74be7fb98",
+        "encoder-gpu-dispatch-image-square-fp32-c2f766e-first-process.json": "60aa2b6e3a9f268d84a1bd1711df1e8a1bf483759150cf118c8f6f3afbf86283",
+        "encoder-gpu-dispatch-image-square-fp32-c2f766e-first.log": "d0ddd9421d83cdf494aa6fd01ed09a5422fafbfb983c368f1e70b9a0cc4370fc"
+      }
+    },
+    {
+      "phase": "after",
+      "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+      "validation_source": "c2f766e4e05f5378eba15b6552e4a244ebeebfa9",
+      "unity": "6000.3.21f1",
+      "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_api": "Direct3D12",
+      "rounds": [
+        {
+          "round": "first",
+          "api_wall_seconds": 34.9515757,
+          "whole_editor_process_cpu_seconds": 0.640625,
+          "independent_cosine": 0.9999999999997135,
+          "norm_squared": 0.9999998644722635,
+          "capture_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f",
+          "encoder_intervals": [
+            {
+              "kind": "model-segment-and-output-copy",
+              "count": 180,
+              "cpu_submission_wall_ns_sum": 1406948500,
+              "gpu_queue_interval_ns_sum": 340050944
+            },
+            {
+              "kind": "projection-operation",
+              "count": 179,
+              "cpu_submission_wall_ns_sum": 485791100,
+              "gpu_queue_interval_ns_sum": 1185812480
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "api_wall_seconds": 5.2142814,
+          "whole_editor_process_cpu_seconds": 0.734375,
+          "independent_cosine": 0.9999999999997135,
+          "norm_squared": 0.9999998644722635,
+          "capture_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f",
+          "encoder_intervals": [
+            {
+              "kind": "model-segment-and-output-copy",
+              "count": 180,
+              "cpu_submission_wall_ns_sum": 1478073700,
+              "gpu_queue_interval_ns_sum": 205071872
+            },
+            {
+              "kind": "projection-operation",
+              "count": 179,
+              "cpu_submission_wall_ns_sum": 375445700,
+              "gpu_queue_interval_ns_sum": 1046282240
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "api_wall_seconds": 4.8320395,
+          "whole_editor_process_cpu_seconds": 0.8125,
+          "independent_cosine": 0.9999999999997135,
+          "norm_squared": 0.9999998644722635,
+          "capture_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f",
+          "encoder_intervals": [
+            {
+              "kind": "model-segment-and-output-copy",
+              "count": 180,
+              "cpu_submission_wall_ns_sum": 1357029000,
+              "gpu_queue_interval_ns_sum": 200296192
+            },
+            {
+              "kind": "projection-operation",
+              "count": 179,
+              "cpu_submission_wall_ns_sum": 358766500,
+              "gpu_queue_interval_ns_sum": 1031628800
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "api_wall_seconds": 5.481497999999999,
+          "whole_editor_process_cpu_seconds": 0.921875,
+          "independent_cosine": 0.9999999999997135,
+          "norm_squared": 0.9999998644722635,
+          "capture_sha256": "58d29212ec6bedb1eb2295a1ee932485189f1c82c8a51d4efb1b5032dec8877f",
+          "encoder_intervals": [
+            {
+              "kind": "model-segment-and-output-copy",
+              "count": 180,
+              "cpu_submission_wall_ns_sum": 1901421300,
+              "gpu_queue_interval_ns_sum": 201306880
+            },
+            {
+              "kind": "projection-operation",
+              "count": 179,
+              "cpu_submission_wall_ns_sum": 438725300,
+              "gpu_queue_interval_ns_sum": 1042443264
+            }
+          ]
+        }
+      ],
+      "host_lifetime_peak_bytes": 9874149376,
+      "source_files_verified": 550,
+      "evidence_sha256": {
+        "gpu-output-dispatch-image-square-fp32-d7b2233-first.json": "4432a2054770af7e58809d3e50456dd0f4389eab519e4a6d2266e82a5f800517",
+        "gpu-output-dispatch-image-square-fp32-d7b2233-first.xml": "f3dfd8f916abce1091914ba081f054fa77698b95723876b065f389ee226afd71",
+        "gpu-output-dispatch-image-square-fp32-d7b2233-first-source.json": "7736c42a14f162266ee794cdab61b8e49e7a8b2b721786fbd187e58303dd489a",
+        "gpu-output-dispatch-image-square-fp32-d7b2233-first-process.json": "14bb627a46028dbde57b544087744d22cea65f12c4c0ddfa60aa3e5d69c8beed",
+        "gpu-output-dispatch-image-square-fp32-d7b2233-first.log": "1561aed3423665f5984094f6da90201799379042bd97961eaa103178cc4a23e7"
+      }
+    }
+  ],
+  "observed_warm_wall_seconds": {
+    "before": [
+      19.6892764,
+      19.2994038,
+      29.388729899999998
+    ],
+    "after": [
+      5.2142814,
+      4.8320395,
+      5.481497999999999
+    ],
+    "before_median": 19.6892764,
+    "after_median": 5.2142814
+  },
+  "unchanged_shader_tree": "365b1cc6eded420c0c3246db2132170e383981ba",
+  "scope": "Same fixed image, model descriptor, validation and GPU; separate processes/projects and sequential runs. OS/shader caches and foreground/background workload were not controlled. Observed instrumented-call improvement only; not uninstrumented API, general throughput, minimum memory, pure kernel activity, other modules or release acceptance.",
+  "remaining": [
+    "New-runtime all-module/precision/reference and mixed-rank release regression",
+    "Uninstrumented matching workloads and memory",
+    "Remaining stage GPU/async allocation/Editor acceptance",
+    "Public empty-cache acquisition, authorized microphone and final candidate native interactions"
+  ]
+}

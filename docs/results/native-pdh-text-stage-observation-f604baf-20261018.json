@@ -1,0 +1,1057 @@
+{
+  "native_pdh_collection_and_clock_scope_audited": true,
+  "full_priorities_1_to_3_accepted": false,
+  "sdk_load_release_gpu_timing_accepted": false,
+  "gpu_native_provider_activity_is_not_sdk_exclusive": true,
+  "collection_source": "9a16b17c078d6aa293b824842a03b0517e28449a",
+  "aggregation_source": "f604baf871271cc9ad1910d7a2a7f7c5c806763c",
+  "collector_ast_and_constants_unchanged": true,
+  "collector_nodes_compared": [
+    "PdhGpuQuery",
+    "_NativePdh",
+    "_FileTime",
+    "_RawCounter",
+    "_RawItem",
+    "_natural"
+  ],
+  "tdd": {
+    "query_protocol_red": 13,
+    "interval_red": 13,
+    "combined_related_green": 43
+  },
+  "actual_gpu_text": {
+    "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+    "validation_source": "10962faf0924bb1c5070ad2d3875fc06fd24bbe2",
+    "precision": "fp32",
+    "actual_backend": "GPUCompute",
+    "reference_rounds": 4,
+    "unity_counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exit_code": 0,
+    "source_files_verified_after": 554,
+    "minimum_independent_cosine": 0.999999999999879
+  },
+  "pid": 180088,
+  "samples": 8783,
+  "samples_after_process_exit": 1,
+  "acquisition_wall_ms": {
+    "min": 1.5315,
+    "median": 2.0903,
+    "max": 8.6521
+  },
+  "query_sample_spacing_ms": {
+    "min": 3.8552,
+    "median": 4.648899999999999,
+    "max": 11.5542
+  },
+  "clock": {
+    "samples": 8783,
+    "offset_minutes": [
+      540
+    ],
+    "owned_row_counts": [
+      0,
+      14
+    ],
+    "query_time_minus_request_begin_ms": {
+      "min": -0.5929,
+      "max": 0.0297,
+      "median": -0.0256
+    },
+    "query_time_minus_request_end_ms": {
+      "min": -8.8041,
+      "max": -1.5589,
+      "median": -2.1277
+    },
+    "row_query_clock_delta_max_ticks": 505,
+    "query_timestamp_increment_ms": {
+      "min": 3.8552,
+      "max": 11.5542,
+      "median": 4.648899999999999
+    },
+    "collect_wall_ms": {
+      "min": 1.5315,
+      "max": 8.6521,
+      "median": 2.0903
+    },
+    "alive_after_false": 1
+  },
+  "engine_intervals": {
+    "pid": 180088,
+    "process_created_utc_filetime": 134367551874759483,
+    "utc_offset_minutes": 540,
+    "clock_tolerance_ticks": 10000,
+    "clock_consistency_checked": true,
+    "intervals": [
+      {
+        "id": "load",
+        "begin_utc": "2026-10-18T00:00:10.6526246Z",
+        "end_utc": "2026-10-18T00:00:23.9056479Z",
+        "sample_count": 2687,
+        "engines": [
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_0_engtype_3D",
+            "available": true,
+            "sample_count": 2687,
+            "first_counter_sample_utc": "2026-10-18T00:00:10.6571572Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:23.9005935Z",
+            "covered_elapsed_seconds": 13.2434363,
+            "active_seconds": 0.001489,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_10_engtype_Copy",
+            "available": true,
+            "sample_count": 2687,
+            "first_counter_sample_utc": "2026-10-18T00:00:10.6571572Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:23.9005935Z",
+            "covered_elapsed_seconds": 13.2434363,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_11_engtype_Copy",
+            "available": true,
+            "sample_count": 2687,
+            "first_counter_sample_utc": "2026-10-18T00:00:10.6571572Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:23.9005935Z",
+            "covered_elapsed_seconds": 13.2434363,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_12_engtype_Copy",
+            "available": true,
+            "sample_count": 2687,
+            "first_counter_sample_utc": "2026-10-18T00:00:10.6571572Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:23.9005935Z",
+            "covered_elapsed_seconds": 13.2434363,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_13_engtype_Copy",
+            "available": true,
+            "sample_count": 2687,
+            "first_counter_sample_utc": "2026-10-18T00:00:10.6571572Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:23.9005935Z",
+            "covered_elapsed_seconds": 13.2434363,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_1_engtype_LegacyOverlay",
+            "available": true,
+            "sample_count": 2687,
+            "first_counter_sample_utc": "2026-10-18T00:00:10.6571572Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:23.9005935Z",
+            "covered_elapsed_seconds": 13.2434363,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_2_engtype_VideoDecode",
+            "available": true,
+            "sample_count": 2687,
+            "first_counter_sample_utc": "2026-10-18T00:00:10.6571572Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:23.9005935Z",
+            "covered_elapsed_seconds": 13.2434363,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_3_engtype_Copy",
+            "available": true,
+            "sample_count": 2687,
+            "first_counter_sample_utc": "2026-10-18T00:00:10.6571572Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:23.9005935Z",
+            "covered_elapsed_seconds": 13.2434363,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_4_engtype_Copy",
+            "available": true,
+            "sample_count": 2687,
+            "first_counter_sample_utc": "2026-10-18T00:00:10.6571572Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:23.9005935Z",
+            "covered_elapsed_seconds": 13.2434363,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_5_engtype_Security",
+            "available": true,
+            "sample_count": 2687,
+            "first_counter_sample_utc": "2026-10-18T00:00:10.6571572Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:23.9005935Z",
+            "covered_elapsed_seconds": 13.2434363,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_6_engtype_VideoEncode",
+            "available": true,
+            "sample_count": 2687,
+            "first_counter_sample_utc": "2026-10-18T00:00:10.6571572Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:23.9005935Z",
+            "covered_elapsed_seconds": 13.2434363,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_7_engtype_VideoEncode",
+            "available": true,
+            "sample_count": 2687,
+            "first_counter_sample_utc": "2026-10-18T00:00:10.6571572Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:23.9005935Z",
+            "covered_elapsed_seconds": 13.2434363,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_8_engtype_OFA_0",
+            "available": true,
+            "sample_count": 2687,
+            "first_counter_sample_utc": "2026-10-18T00:00:10.6571572Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:23.9005935Z",
+            "covered_elapsed_seconds": 13.2434363,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_9_engtype_VR",
+            "available": true,
+            "sample_count": 2687,
+            "first_counter_sample_utc": "2026-10-18T00:00:10.6571572Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:23.9005935Z",
+            "covered_elapsed_seconds": 13.2434363,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          }
+        ],
+        "boundary_coverage_complete": false
+      },
+      {
+        "id": "first",
+        "begin_utc": "2026-10-18T00:00:24.1591933Z",
+        "end_utc": "2026-10-18T00:00:26.0380542Z",
+        "sample_count": 326,
+        "engines": [
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_0_engtype_3D",
+            "available": false,
+            "sample_count": 326,
+            "first_counter_sample_utc": "2026-10-18T00:00:24.1623196Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.0304927Z",
+            "covered_elapsed_seconds": 1.8681731,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "active_time_exceeds_elapsed"
+            ]
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_10_engtype_Copy",
+            "available": true,
+            "sample_count": 326,
+            "first_counter_sample_utc": "2026-10-18T00:00:24.1623196Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.0304927Z",
+            "covered_elapsed_seconds": 1.8681731,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_11_engtype_Copy",
+            "available": true,
+            "sample_count": 326,
+            "first_counter_sample_utc": "2026-10-18T00:00:24.1623196Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.0304927Z",
+            "covered_elapsed_seconds": 1.8681731,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_12_engtype_Copy",
+            "available": true,
+            "sample_count": 326,
+            "first_counter_sample_utc": "2026-10-18T00:00:24.1623196Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.0304927Z",
+            "covered_elapsed_seconds": 1.8681731,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_13_engtype_Copy",
+            "available": true,
+            "sample_count": 326,
+            "first_counter_sample_utc": "2026-10-18T00:00:24.1623196Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.0304927Z",
+            "covered_elapsed_seconds": 1.8681731,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_1_engtype_LegacyOverlay",
+            "available": true,
+            "sample_count": 326,
+            "first_counter_sample_utc": "2026-10-18T00:00:24.1623196Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.0304927Z",
+            "covered_elapsed_seconds": 1.8681731,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_2_engtype_VideoDecode",
+            "available": true,
+            "sample_count": 326,
+            "first_counter_sample_utc": "2026-10-18T00:00:24.1623196Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.0304927Z",
+            "covered_elapsed_seconds": 1.8681731,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_3_engtype_Copy",
+            "available": true,
+            "sample_count": 326,
+            "first_counter_sample_utc": "2026-10-18T00:00:24.1623196Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.0304927Z",
+            "covered_elapsed_seconds": 1.8681731,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_4_engtype_Copy",
+            "available": true,
+            "sample_count": 326,
+            "first_counter_sample_utc": "2026-10-18T00:00:24.1623196Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.0304927Z",
+            "covered_elapsed_seconds": 1.8681731,
+            "active_seconds": 0.0025074,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_5_engtype_Security",
+            "available": true,
+            "sample_count": 326,
+            "first_counter_sample_utc": "2026-10-18T00:00:24.1623196Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.0304927Z",
+            "covered_elapsed_seconds": 1.8681731,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_6_engtype_VideoEncode",
+            "available": true,
+            "sample_count": 326,
+            "first_counter_sample_utc": "2026-10-18T00:00:24.1623196Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.0304927Z",
+            "covered_elapsed_seconds": 1.8681731,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_7_engtype_VideoEncode",
+            "available": true,
+            "sample_count": 326,
+            "first_counter_sample_utc": "2026-10-18T00:00:24.1623196Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.0304927Z",
+            "covered_elapsed_seconds": 1.8681731,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_8_engtype_OFA_0",
+            "available": true,
+            "sample_count": 326,
+            "first_counter_sample_utc": "2026-10-18T00:00:24.1623196Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.0304927Z",
+            "covered_elapsed_seconds": 1.8681731,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_9_engtype_VR",
+            "available": true,
+            "sample_count": 326,
+            "first_counter_sample_utc": "2026-10-18T00:00:24.1623196Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.0304927Z",
+            "covered_elapsed_seconds": 1.8681731,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          }
+        ],
+        "boundary_coverage_complete": false
+      },
+      {
+        "id": "warm",
+        "begin_utc": "2026-10-18T00:00:26.4189684Z",
+        "end_utc": "2026-10-18T00:00:26.5044846Z",
+        "sample_count": 18,
+        "engines": [
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_0_engtype_3D",
+            "available": false,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.4237618Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.5014706Z",
+            "covered_elapsed_seconds": 0.0777088,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "active_time_exceeds_elapsed"
+            ]
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_10_engtype_Copy",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.4237618Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.5014706Z",
+            "covered_elapsed_seconds": 0.0777088,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_11_engtype_Copy",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.4237618Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.5014706Z",
+            "covered_elapsed_seconds": 0.0777088,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_12_engtype_Copy",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.4237618Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.5014706Z",
+            "covered_elapsed_seconds": 0.0777088,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_13_engtype_Copy",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.4237618Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.5014706Z",
+            "covered_elapsed_seconds": 0.0777088,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_1_engtype_LegacyOverlay",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.4237618Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.5014706Z",
+            "covered_elapsed_seconds": 0.0777088,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_2_engtype_VideoDecode",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.4237618Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.5014706Z",
+            "covered_elapsed_seconds": 0.0777088,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_3_engtype_Copy",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.4237618Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.5014706Z",
+            "covered_elapsed_seconds": 0.0777088,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_4_engtype_Copy",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.4237618Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.5014706Z",
+            "covered_elapsed_seconds": 0.0777088,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_5_engtype_Security",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.4237618Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.5014706Z",
+            "covered_elapsed_seconds": 0.0777088,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_6_engtype_VideoEncode",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.4237618Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.5014706Z",
+            "covered_elapsed_seconds": 0.0777088,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_7_engtype_VideoEncode",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.4237618Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.5014706Z",
+            "covered_elapsed_seconds": 0.0777088,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_8_engtype_OFA_0",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.4237618Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.5014706Z",
+            "covered_elapsed_seconds": 0.0777088,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_9_engtype_VR",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.4237618Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.5014706Z",
+            "covered_elapsed_seconds": 0.0777088,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          }
+        ],
+        "boundary_coverage_complete": false
+      },
+      {
+        "id": "repeat-1",
+        "begin_utc": "2026-10-18T00:00:26.7979407Z",
+        "end_utc": "2026-10-18T00:00:26.8830516Z",
+        "sample_count": 18,
+        "engines": [
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_0_engtype_3D",
+            "available": false,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.7994449Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.8763127Z",
+            "covered_elapsed_seconds": 0.0768678,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "active_time_exceeds_elapsed"
+            ]
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_10_engtype_Copy",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.7994449Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.8763127Z",
+            "covered_elapsed_seconds": 0.0768678,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_11_engtype_Copy",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.7994449Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.8763127Z",
+            "covered_elapsed_seconds": 0.0768678,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_12_engtype_Copy",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.7994449Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.8763127Z",
+            "covered_elapsed_seconds": 0.0768678,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_13_engtype_Copy",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.7994449Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.8763127Z",
+            "covered_elapsed_seconds": 0.0768678,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_1_engtype_LegacyOverlay",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.7994449Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.8763127Z",
+            "covered_elapsed_seconds": 0.0768678,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_2_engtype_VideoDecode",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.7994449Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.8763127Z",
+            "covered_elapsed_seconds": 0.0768678,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_3_engtype_Copy",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.7994449Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.8763127Z",
+            "covered_elapsed_seconds": 0.0768678,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_4_engtype_Copy",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.7994449Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.8763127Z",
+            "covered_elapsed_seconds": 0.0768678,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_5_engtype_Security",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.7994449Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.8763127Z",
+            "covered_elapsed_seconds": 0.0768678,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_6_engtype_VideoEncode",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.7994449Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.8763127Z",
+            "covered_elapsed_seconds": 0.0768678,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_7_engtype_VideoEncode",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.7994449Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.8763127Z",
+            "covered_elapsed_seconds": 0.0768678,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_8_engtype_OFA_0",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.7994449Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.8763127Z",
+            "covered_elapsed_seconds": 0.0768678,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_9_engtype_VR",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:26.7994449Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:26.8763127Z",
+            "covered_elapsed_seconds": 0.0768678,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          }
+        ],
+        "boundary_coverage_complete": false
+      },
+      {
+        "id": "repeat-2",
+        "begin_utc": "2026-10-18T00:00:27.1814656Z",
+        "end_utc": "2026-10-18T00:00:27.2686672Z",
+        "sample_count": 18,
+        "engines": [
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_0_engtype_3D",
+            "available": false,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.1824646Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.2621384Z",
+            "covered_elapsed_seconds": 0.0796738,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "active_time_exceeds_elapsed"
+            ]
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_10_engtype_Copy",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.1824646Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.2621384Z",
+            "covered_elapsed_seconds": 0.0796738,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_11_engtype_Copy",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.1824646Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.2621384Z",
+            "covered_elapsed_seconds": 0.0796738,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_12_engtype_Copy",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.1824646Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.2621384Z",
+            "covered_elapsed_seconds": 0.0796738,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_13_engtype_Copy",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.1824646Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.2621384Z",
+            "covered_elapsed_seconds": 0.0796738,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_1_engtype_LegacyOverlay",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.1824646Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.2621384Z",
+            "covered_elapsed_seconds": 0.0796738,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_2_engtype_VideoDecode",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.1824646Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.2621384Z",
+            "covered_elapsed_seconds": 0.0796738,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_3_engtype_Copy",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.1824646Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.2621384Z",
+            "covered_elapsed_seconds": 0.0796738,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_4_engtype_Copy",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.1824646Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.2621384Z",
+            "covered_elapsed_seconds": 0.0796738,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_5_engtype_Security",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.1824646Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.2621384Z",
+            "covered_elapsed_seconds": 0.0796738,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_6_engtype_VideoEncode",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.1824646Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.2621384Z",
+            "covered_elapsed_seconds": 0.0796738,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_7_engtype_VideoEncode",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.1824646Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.2621384Z",
+            "covered_elapsed_seconds": 0.0796738,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_8_engtype_OFA_0",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.1824646Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.2621384Z",
+            "covered_elapsed_seconds": 0.0796738,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_9_engtype_VR",
+            "available": true,
+            "sample_count": 18,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.1824646Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.2621384Z",
+            "covered_elapsed_seconds": 0.0796738,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          }
+        ],
+        "boundary_coverage_complete": false
+      },
+      {
+        "id": "release",
+        "begin_utc": "2026-10-18T00:00:27.5779062Z",
+        "end_utc": "2026-10-18T00:00:27.5880469Z",
+        "sample_count": 1,
+        "engines": [
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_0_engtype_3D",
+            "available": false,
+            "sample_count": 1,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "covered_elapsed_seconds": null,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "insufficient_samples"
+            ]
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_10_engtype_Copy",
+            "available": false,
+            "sample_count": 1,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "covered_elapsed_seconds": null,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "insufficient_samples"
+            ]
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_11_engtype_Copy",
+            "available": false,
+            "sample_count": 1,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "covered_elapsed_seconds": null,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "insufficient_samples"
+            ]
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_12_engtype_Copy",
+            "available": false,
+            "sample_count": 1,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "covered_elapsed_seconds": null,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "insufficient_samples"
+            ]
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_13_engtype_Copy",
+            "available": false,
+            "sample_count": 1,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "covered_elapsed_seconds": null,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "insufficient_samples"
+            ]
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_1_engtype_LegacyOverlay",
+            "available": false,
+            "sample_count": 1,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "covered_elapsed_seconds": null,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "insufficient_samples"
+            ]
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_2_engtype_VideoDecode",
+            "available": false,
+            "sample_count": 1,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "covered_elapsed_seconds": null,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "insufficient_samples"
+            ]
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_3_engtype_Copy",
+            "available": false,
+            "sample_count": 1,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "covered_elapsed_seconds": null,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "insufficient_samples"
+            ]
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_4_engtype_Copy",
+            "available": false,
+            "sample_count": 1,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "covered_elapsed_seconds": null,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "insufficient_samples"
+            ]
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_5_engtype_Security",
+            "available": false,
+            "sample_count": 1,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "covered_elapsed_seconds": null,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "insufficient_samples"
+            ]
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_6_engtype_VideoEncode",
+            "available": false,
+            "sample_count": 1,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "covered_elapsed_seconds": null,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "insufficient_samples"
+            ]
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_7_engtype_VideoEncode",
+            "available": false,
+            "sample_count": 1,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "covered_elapsed_seconds": null,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "insufficient_samples"
+            ]
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_8_engtype_OFA_0",
+            "available": false,
+            "sample_count": 1,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "covered_elapsed_seconds": null,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "insufficient_samples"
+            ]
+          },
+          {
+            "name": "pid_180088_luid_0x00000000_0x00012525_phys_0_eng_9_engtype_VR",
+            "available": false,
+            "sample_count": 1,
+            "first_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "last_counter_sample_utc": "2026-10-18T00:00:27.5809441Z",
+            "covered_elapsed_seconds": null,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "insufficient_samples"
+            ]
+          }
+        ],
+        "boundary_coverage_complete": false
+      }
+    ],
+    "full_stage_gpu_time_measured": false,
+    "exclusive_sdk_stage_time_measured": false,
+    "gpu_execution_validated": false,
+    "scope": "Per-engine activity only between conservative interior native samples. One-ms call-envelope margin; no boundary interpolation, overlapping-engine sum or SDK-exclusive time."
+  },
+  "preserved_missing": {
+    "original_sdk_load_gpu_elapsed_ns": null,
+    "release_counter_pairs_available": false,
+    "exact_stage_endpoint_coverage": false,
+    "exclusive_sdk_allocation": false,
+    "driver_memory_retirement": false
+  },
+  "scope": "One unchanged pinned FP32 GPU text fixture and owned-process handle-lifetime-checked observer. Native raw clocks converted using observed+540min offset, per-item times kept distinct, one-ms call-envelope margin fixed before aggregation. Counter activity includes other Unity work; no engine sum, endpoint interpolation, pure kernel or whole SDK load/release timing.",
+  "observer_effect": "Collection wall is measured per call. Per-call observer process CPU includes other threads in its parent process; it is not exclusive API CPU cost. No API latency/speedup comparison is claimed.",
+  "model_or_library_copied": false,
+  "microphone_started": false,
+  "publication_performed": false,
+  "primary_references": [
+    "https://learn.microsoft.com/en-us/windows/win32/api/pdh/nf-pdh-pdhcollectquerydatawithtime",
+    "https://learn.microsoft.com/en-us/windows/win32/api/pdh/ns-pdh-pdh_raw_counter",
+    "https://learn.microsoft.com/en-us/windows/win32/api/pdh/nf-pdh-pdhgetrawcounterarrayw"
+  ],
+  "evidence_sha256": {
+    "text-current-fp32-d7b2233-native-pdh-native-pdh-observer.json": "ed89cf304988b3affe3aaec32a184e5747dc83fc396768fea386b7c6d38e6c4e",
+    "text-current-fp32-d7b2233-native-pdh-native-pdh.jsonl": "21d1407372479e8c5f868b2c2f32f9daae8dbc4879d71ff7d04456dbe1535f41",
+    "text-current-fp32-d7b2233-native-pdh.json": "08dcb155cb95965fddf534bc888931b99ae5c3edbf83d1a20ddae7a318e4ebd5",
+    "text-current-fp32-d7b2233-native-pdh-20261018.json": "5931993539e8770b76297b0a39da2a95615edeae0610f6b421c7c27592473776",
+    "native-pdh-clock-inspection.json": "54f421087eeebd62cd204195701a8108949847e0518afe136104848a1a4d3e86",
+    "native-pdh-contract-red.txt": "80ed179ae227e5e51c16186b90eabca947a803644d5011a2885c9532f68c16de",
+    "native-pdh-interval-red.txt": "b7e498c2f9e4361f61a27fe6bae17afe814bd6bb30dcaa4265bd27242e518890",
+    "native-pdh-all-contract-green.txt": "b6d0deec3e7a682265e71945cf4bd38c443a9886a58cae99b04ec754b9df3235",
+    "native-pdh-self-probe.json": "a4efca05e7d2d4ebe327ab9e40637879b614c1279953e4ec2d25aa8fed396938",
+    "run_text_with_native_pdh.py": "db003e0a0ee6bd1e0d34dfd990ffc3caba5e72c096af917145446ec004371856",
+    "audit_native_pdh_text.py": "7d07b931844ecfd376e5146314b2a2f75d3ce092d4744776f46bd628fba3b356"
+  },
+  "audited_utc": "2026-10-18T00:04:16.082881+00:00"
+}

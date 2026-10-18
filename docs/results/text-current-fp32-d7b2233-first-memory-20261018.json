@@ -1,0 +1,115 @@
+{
+  "accepted_observed_process_allocations": true,
+  "complete_performance_accepted": false,
+  "precision": "fp32",
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "10962faf0924bb1c5070ad2d3875fc06fd24bbe2",
+  "summary": {
+    "pid": 188508,
+    "intervals": [
+      {
+        "id": "process_observation_window",
+        "begin_utc": "2026-10-17T21:47:33.366945+00:00",
+        "end_utc": "2026-10-17T21:48:15.537153+00:00",
+        "sample_count": 12,
+        "available_sample_count": 10,
+        "available": true,
+        "largest_observed_dedicated_bytes": 1489281024,
+        "largest_observed_shared_bytes": 478826496,
+        "first_paired_sample_utc": "2026-10-17T21:47:42.432696+00:00",
+        "last_paired_sample_utc": "2026-10-17T21:48:12.226611+00:00",
+        "maximum_observed_sample_gap_seconds": 3.358397
+      },
+      {
+        "id": "load",
+        "begin_utc": "2026-10-17T21:47:56.808911+00:00",
+        "end_utc": "2026-10-17T21:48:09.665771+00:00",
+        "sample_count": 4,
+        "available_sample_count": 4,
+        "available": true,
+        "largest_observed_dedicated_bytes": 289820672,
+        "largest_observed_shared_bytes": 225505280,
+        "first_paired_sample_utc": "2026-10-17T21:47:59.022733+00:00",
+        "last_paired_sample_utc": "2026-10-17T21:48:08.868214+00:00",
+        "maximum_observed_sample_gap_seconds": 3.339863
+      },
+      {
+        "id": "release",
+        "begin_utc": "2026-10-17T21:48:12.655901+00:00",
+        "end_utc": "2026-10-17T21:48:12.668963+00:00",
+        "sample_count": 0,
+        "available_sample_count": 0,
+        "available": false,
+        "largest_observed_dedicated_bytes": null,
+        "largest_observed_shared_bytes": null,
+        "first_paired_sample_utc": null,
+        "last_paired_sample_utc": null,
+        "maximum_observed_sample_gap_seconds": null
+      },
+      {
+        "id": "query:first",
+        "begin_utc": "2026-10-17T21:48:09.925645+00:00",
+        "end_utc": "2026-10-17T21:48:11.138492+00:00",
+        "sample_count": 0,
+        "available_sample_count": 0,
+        "available": false,
+        "largest_observed_dedicated_bytes": null,
+        "largest_observed_shared_bytes": null,
+        "first_paired_sample_utc": null,
+        "last_paired_sample_utc": null,
+        "maximum_observed_sample_gap_seconds": null
+      },
+      {
+        "id": "query:warm",
+        "begin_utc": "2026-10-17T21:48:11.546591+00:00",
+        "end_utc": "2026-10-17T21:48:11.599155+00:00",
+        "sample_count": 0,
+        "available_sample_count": 0,
+        "available": false,
+        "largest_observed_dedicated_bytes": null,
+        "largest_observed_shared_bytes": null,
+        "first_paired_sample_utc": null,
+        "last_paired_sample_utc": null,
+        "maximum_observed_sample_gap_seconds": null
+      },
+      {
+        "id": "query:repeat-1",
+        "begin_utc": "2026-10-17T21:48:11.928258+00:00",
+        "end_utc": "2026-10-17T21:48:11.982708+00:00",
+        "sample_count": 0,
+        "available_sample_count": 0,
+        "available": false,
+        "largest_observed_dedicated_bytes": null,
+        "largest_observed_shared_bytes": null,
+        "first_paired_sample_utc": null,
+        "last_paired_sample_utc": null,
+        "maximum_observed_sample_gap_seconds": null
+      },
+      {
+        "id": "query:repeat-2",
+        "begin_utc": "2026-10-17T21:48:12.286908+00:00",
+        "end_utc": "2026-10-17T21:48:12.343724+00:00",
+        "sample_count": 0,
+        "available_sample_count": 0,
+        "available": false,
+        "largest_observed_dedicated_bytes": null,
+        "largest_observed_shared_bytes": null,
+        "first_paired_sample_utc": null,
+        "last_paired_sample_utc": null,
+        "maximum_observed_sample_gap_seconds": null
+      }
+    ],
+    "rejected_timestamp_observations": 1,
+    "guaranteed_peak_measured": false,
+    "gpu_execution_validated": false,
+    "scope": "counter_sample_timestamp_correlated_process_allocations_not_capacity_or_guaranteed_peak_or_gpu_time"
+  },
+  "scope": "Exact-PID timestamped Windows GPU dedicated/shared allocation samples. Short query intervals may have no samples. No minimum VRAM, guaranteed peak or GPU timing is inferred.",
+  "numerical_audit_file": "text-current-fp32-d7b2233-first-20261018.json",
+  "numerical_audit_sha256": "c671110989380dbcfd7f382d44b353b196f40dce0b60f740b01324533518e2e6",
+  "evidence_sha256": {
+    "text-current-fp32-d7b2233-first-timestamped-gpu-memory.jsonl": "f1811b51d3b28f1938bd456eb25051e30a3fb4f131234553690e2742146b98d7",
+    "text-current-fp32-d7b2233-first.json": "8980c4ef9eed9bb9fbf6fa54ccc7446b6b1b61d2ae71bad4199726595bf26b50",
+    "text-current-fp32-d7b2233-first-process.json": "cf636e1f7e7039fd833f422e0a3f23dfb564fc24bec570cdef3cbcc92558bb67"
+  }
+}

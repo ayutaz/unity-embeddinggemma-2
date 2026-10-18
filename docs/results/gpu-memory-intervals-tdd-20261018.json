@@ -1,0 +1,32 @@
+{
+  "scope": "Model-free Windows counter interval aggregation; not GPU model execution or performance acceptance.",
+  "intended_red": {
+    "tests": 11,
+    "failed": 11,
+    "skipped": 0,
+    "reason": "New interval aggregation API missing; imports succeeded"
+  },
+  "green": {
+    "tests": 23,
+    "failed": 0,
+    "skipped": 0
+  },
+  "contracts": [
+    "Exact PID",
+    "Aware timestamps normalized to UTC",
+    "Half-open stage bounds",
+    "Counter sample timestamp required",
+    "Missing remains null and real zero remains zero",
+    "Invalid status not a partial total",
+    "Duplicates rejected",
+    "Observed maxima and sampling gaps"
+  ],
+  "evidence_sha256": {
+    "gpu-memory-intervals-red.xml": "08a61ce52da04af3eddd3d1027f88cca3623c6e4ccb02d2f929f460304b2016b",
+    "gpu-memory-intervals-green.xml": "9e06d0d9137fad0d534a0895077e322172b0df62ac419d0c5f7804ecd9597ab5",
+    "windows_gpu_memory.py": "55a6f57345d899d1a1339e15068f86254fa0fe444227cc1f53e6e6496c70988e",
+    "test_gpu_memory_intervals.py": "4c3d92b21bf7b479740a2b0a0dbd78c2beb240678bd5a2a43c4c325a72ab6a09"
+  },
+  "gpu_execution_validated": false,
+  "guaranteed_peak_measured": false
+}

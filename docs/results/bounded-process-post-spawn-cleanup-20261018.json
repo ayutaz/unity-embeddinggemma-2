@@ -1,0 +1,27 @@
+{
+  "scope": "Python supervisor lifecycle only; tiny owned Python children, no Unity/model inference or GPU acceptance.",
+  "problem": "Post-spawn receipt errors or interruption could leave the supervisor's root child running.",
+  "red": {
+    "total": 3,
+    "failed": 3,
+    "errors": 0,
+    "skipped": 0
+  },
+  "green": {
+    "total": 11,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "injected_failures": [
+    "PermissionError",
+    "RuntimeError",
+    "KeyboardInterrupt"
+  ],
+  "verification": "The exact Popen handle is reaped before final receipt persistence. Original supervision failures remain failures, including KeyboardInterrupt; timeout and natural-exit contracts still pass.",
+  "limits": "This does not terminate an arbitrary descendant process tree and does not guarantee receipt persistence when the filesystem remains unavailable.",
+  "evidence_sha256": {
+    "bounded-post-spawn-red.xml": "25a5ddbe09ebf64e17bdf3b0cc1df7facebd36822a9ca9be52f60dd67981a2f6",
+    "bounded-post-spawn-green.xml": "975b40c69c43ebc24e0caebf2e34baebeb7c26b475e1f9231a90ae355aec9382"
+  }
+}

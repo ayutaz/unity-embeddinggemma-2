@@ -1,0 +1,16 @@
+{
+  "integration_commit": "1397a88937751be1d2205b85f83f40550049c2f2",
+  "tested_runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "package_git_tree": "4e715be53c8dd3481a121903b44784f0d4ad20f8",
+  "runtime_git_tree": "7d6e4314552b221d06db881405e7ccff3f449a77",
+  "resources_git_tree": "365b1cc6eded420c0c3246db2132170e383981ba",
+  "integration_package_identical_to_tested_snapshot": true,
+  "scope": "SDK package Git tree identity after cherry-pick only; does not turn pending new-runtime modules, native UI or CI into passes.",
+  "tdd_audit": "gpu-write-only-output-allocation-tdd-20261018.json",
+  "tdd_audit_sha256": "0fd01d9f22e5ac9916b11db9041b27290b8273f3322cd3ef9fd0782e34974c4a",
+  "fp32_square_comparison": "gpu-output-square-fp32-matched-comparison-20261018.json",
+  "fp32_square_comparison_sha256": "2192d33a464a5462b70d3345a725aae41efb3155d0495a966a21d6a2c9930c6f",
+  "new_runtime_all_modules_accepted": false,
+  "final_candidate_accepted": false,
+  "full_priorities_1_to_3_accepted": false
+}

@@ -1,0 +1,406 @@
+{
+  "observed_load_process_engine_delta": true,
+  "sdk_load_release_gpu_timing_accepted": false,
+  "complete_performance_accepted": false,
+  "full_priorities_1_to_3_accepted": false,
+  "numerical_vectors_verified": 4,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "10962faf0924bb1c5070ad2d3875fc06fd24bbe2",
+  "collector_source": "d2e17b5d8a38428cd17d74cf38ba47410eec0b5b",
+  "collector_git_blob_sha256": "ac262312ec81e131290ef5ed0e66778a052f9a1fdb61a3f66d39f6440ba6dccb",
+  "parser_source": "4e5b1968c2dd8c5d653e6571233f7d75a31b7478",
+  "source_files_verified_after": 554,
+  "numerical_audit_file": "text-current-fp32-d7b2233-gpu-engine-provider-fixed-20261018.json",
+  "numerical_audit_sha256": "fe0b3c8716be8cc495f9d6a00705d9f84c7320525405e43a7eb97835c48ccbbe",
+  "summary": {
+    "pid": 198204,
+    "process_created_utc": "2026-10-17T22:45:35.4880330Z",
+    "intervals": [
+      {
+        "id": "process",
+        "begin_utc": "2026-10-17T22:45:35.486228+00:00",
+        "end_utc": "2026-10-17T22:46:27.201597+00:00",
+        "sample_count": 8,
+        "engines": [
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_0_engtype_3d",
+            "available": false,
+            "sample_count": 7,
+            "first_counter_sample_utc": "2026-10-17T22:45:49.8772638Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:22.0266553Z",
+            "covered_elapsed_seconds": 32.1493915,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine"
+            ]
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_10_engtype_copy",
+            "available": false,
+            "sample_count": 7,
+            "first_counter_sample_utc": "2026-10-17T22:45:49.8772638Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:22.0266553Z",
+            "covered_elapsed_seconds": 32.1493915,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine"
+            ]
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_11_engtype_copy",
+            "available": false,
+            "sample_count": 7,
+            "first_counter_sample_utc": "2026-10-17T22:45:49.8772638Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:22.0266553Z",
+            "covered_elapsed_seconds": 32.1493915,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine"
+            ]
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_12_engtype_copy",
+            "available": false,
+            "sample_count": 7,
+            "first_counter_sample_utc": "2026-10-17T22:45:49.8772638Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:22.0266553Z",
+            "covered_elapsed_seconds": 32.1493915,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine"
+            ]
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_13_engtype_copy",
+            "available": false,
+            "sample_count": 7,
+            "first_counter_sample_utc": "2026-10-17T22:45:49.8772638Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:22.0266553Z",
+            "covered_elapsed_seconds": 32.1493915,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine"
+            ]
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_1_engtype_legacyoverlay",
+            "available": false,
+            "sample_count": 7,
+            "first_counter_sample_utc": "2026-10-17T22:45:49.8772638Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:22.0266553Z",
+            "covered_elapsed_seconds": 32.1493915,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine"
+            ]
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_2_engtype_videodecode",
+            "available": false,
+            "sample_count": 7,
+            "first_counter_sample_utc": "2026-10-17T22:45:49.8772638Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:22.0266553Z",
+            "covered_elapsed_seconds": 32.1493915,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine"
+            ]
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_3_engtype_copy",
+            "available": false,
+            "sample_count": 7,
+            "first_counter_sample_utc": "2026-10-17T22:45:49.8772638Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:22.0266553Z",
+            "covered_elapsed_seconds": 32.1493915,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine"
+            ]
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_4_engtype_copy",
+            "available": false,
+            "sample_count": 7,
+            "first_counter_sample_utc": "2026-10-17T22:45:49.8772638Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:22.0266553Z",
+            "covered_elapsed_seconds": 32.1493915,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine"
+            ]
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_5_engtype_security",
+            "available": false,
+            "sample_count": 7,
+            "first_counter_sample_utc": "2026-10-17T22:45:49.8772638Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:22.0266553Z",
+            "covered_elapsed_seconds": 32.1493915,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine"
+            ]
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_6_engtype_videoencode",
+            "available": false,
+            "sample_count": 7,
+            "first_counter_sample_utc": "2026-10-17T22:45:49.8772638Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:22.0266553Z",
+            "covered_elapsed_seconds": 32.1493915,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine"
+            ]
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_7_engtype_videoencode",
+            "available": false,
+            "sample_count": 7,
+            "first_counter_sample_utc": "2026-10-17T22:45:49.8772638Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:22.0266553Z",
+            "covered_elapsed_seconds": 32.1493915,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine"
+            ]
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_8_engtype_ofa_0",
+            "available": false,
+            "sample_count": 7,
+            "first_counter_sample_utc": "2026-10-17T22:45:49.8772638Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:22.0266553Z",
+            "covered_elapsed_seconds": 32.1493915,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine"
+            ]
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_9_engtype_vr",
+            "available": false,
+            "sample_count": 7,
+            "first_counter_sample_utc": "2026-10-17T22:45:49.8772638Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:22.0266553Z",
+            "covered_elapsed_seconds": 32.1493915,
+            "active_seconds": null,
+            "rejection_reasons": [
+              "missing_engine"
+            ]
+          }
+        ],
+        "boundary_coverage_complete": false
+      },
+      {
+        "id": "load",
+        "begin_utc": "2026-10-17T22:46:00.2922483Z",
+        "end_utc": "2026-10-17T22:46:16.6007890Z",
+        "sample_count": 3,
+        "engines": [
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_0_engtype_3d",
+            "available": true,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:46:05.2585404Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:15.8791398Z",
+            "covered_elapsed_seconds": 10.6205994,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_10_engtype_copy",
+            "available": true,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:46:05.2585404Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:15.8791398Z",
+            "covered_elapsed_seconds": 10.6205994,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_11_engtype_copy",
+            "available": true,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:46:05.2585404Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:15.8791398Z",
+            "covered_elapsed_seconds": 10.6205994,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_12_engtype_copy",
+            "available": true,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:46:05.2585404Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:15.8791398Z",
+            "covered_elapsed_seconds": 10.6205994,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_13_engtype_copy",
+            "available": true,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:46:05.2585404Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:15.8791398Z",
+            "covered_elapsed_seconds": 10.6205994,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_1_engtype_legacyoverlay",
+            "available": true,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:46:05.2585404Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:15.8791398Z",
+            "covered_elapsed_seconds": 10.6205994,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_2_engtype_videodecode",
+            "available": true,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:46:05.2585404Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:15.8791398Z",
+            "covered_elapsed_seconds": 10.6205994,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_3_engtype_copy",
+            "available": true,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:46:05.2585404Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:15.8791398Z",
+            "covered_elapsed_seconds": 10.6205994,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_4_engtype_copy",
+            "available": true,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:46:05.2585404Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:15.8791398Z",
+            "covered_elapsed_seconds": 10.6205994,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_5_engtype_security",
+            "available": true,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:46:05.2585404Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:15.8791398Z",
+            "covered_elapsed_seconds": 10.6205994,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_6_engtype_videoencode",
+            "available": true,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:46:05.2585404Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:15.8791398Z",
+            "covered_elapsed_seconds": 10.6205994,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_7_engtype_videoencode",
+            "available": true,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:46:05.2585404Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:15.8791398Z",
+            "covered_elapsed_seconds": 10.6205994,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_8_engtype_ofa_0",
+            "available": true,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:46:05.2585404Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:15.8791398Z",
+            "covered_elapsed_seconds": 10.6205994,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          },
+          {
+            "name": "pid_198204_luid_0x00000000_0x00012525_phys_0_eng_9_engtype_vr",
+            "available": true,
+            "sample_count": 3,
+            "first_counter_sample_utc": "2026-10-17T22:46:05.2585404Z",
+            "last_counter_sample_utc": "2026-10-17T22:46:15.8791398Z",
+            "covered_elapsed_seconds": 10.6205994,
+            "active_seconds": 0.0,
+            "rejection_reasons": []
+          }
+        ],
+        "boundary_coverage_complete": false
+      },
+      {
+        "id": "release",
+        "begin_utc": "2026-10-17T22:46:21.2554685Z",
+        "end_utc": "2026-10-17T22:46:21.2656232Z",
+        "sample_count": 0,
+        "engines": [],
+        "boundary_coverage_complete": false
+      },
+      {
+        "id": "query:first",
+        "begin_utc": "2026-10-17T22:46:16.9289238Z",
+        "end_utc": "2026-10-17T22:46:19.6726512Z",
+        "sample_count": 0,
+        "engines": [],
+        "boundary_coverage_complete": false
+      },
+      {
+        "id": "query:warm",
+        "begin_utc": "2026-10-17T22:46:20.0998111Z",
+        "end_utc": "2026-10-17T22:46:20.1671141Z",
+        "sample_count": 0,
+        "engines": [],
+        "boundary_coverage_complete": false
+      },
+      {
+        "id": "query:repeat-1",
+        "begin_utc": "2026-10-17T22:46:20.5060780Z",
+        "end_utc": "2026-10-17T22:46:20.5682885Z",
+        "sample_count": 0,
+        "engines": [],
+        "boundary_coverage_complete": false
+      },
+      {
+        "id": "query:repeat-2",
+        "begin_utc": "2026-10-17T22:46:20.9041402Z",
+        "end_utc": "2026-10-17T22:46:20.9618108Z",
+        "sample_count": 0,
+        "engines": [],
+        "boundary_coverage_complete": false
+      }
+    ],
+    "rejected_observations": 0,
+    "exclusive_sdk_stage_time_measured": false,
+    "gpu_execution_validated": false,
+    "scope": "Per-process, per-engine raw Timer100Ns deltas between counter samples inside each interval. Engines may overlap and are never summed; no boundary interpolation or SDK-exclusive time."
+  },
+  "observations": 9,
+  "provider_diagnostic_observations": 1,
+  "evidence_sha256": {
+    "text-current-fp32-d7b2233-gpu-engine-provider-fixed-gpu-engine.jsonl": "4fc0699fbf2fde5816a77e1d2ef111f65e93907c86a6bc410aa26d7b07f3fe1f",
+    "text-current-fp32-d7b2233-gpu-engine-provider-fixed.json": "0304850e8d1eb2dd536b551e7b1974ba595915a19830747326c1ec510939f53b",
+    "text-current-fp32-d7b2233-gpu-engine-provider-fixed-process.json": "a256f2c8e2ac9a135fea4cc8cc5c7a299d3b42997ae17f4245eb4a04a28acd64"
+  },
+  "scope": "Observed process/engine Timer100Ns deltas between captured endpoints strictly inside each stage. Includes unrelated Editor GPU work, does not cover unsampled stage boundaries, and does not measure SDK-exclusive load or driver retirement.",
+  "limitations": [
+    "Actual counters and reference-checked GPU text execution are separate evidence; neither converts missing short intervals into zero.",
+    "No sum across engines and no subtraction from CPU wall or Recorder timestamps.",
+    "Initial collector lost whole sample sets on provider errors. Fixed collector preserves provider diagnostics and checks only owned row validity; both traces are retained.",
+    "Source of absolute stage alignment is normalized counter DateTime UTC. Raw provider Timestamp100NSec on this host encoded local wall time and is retained only as a diagnostic.",
+    "No real model conversion, public acquisition, native UI or microphone acceptance is claimed."
+  ]
+}

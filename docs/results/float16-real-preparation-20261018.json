@@ -1,0 +1,83 @@
+{
+  "scope": "Actual CPU preparation of all six module definitions; all original/derived object hashes independently verified. No GPU, numerical, rank or performance acceptance.",
+  "producer_source": "752a2acd2e517e17501b506df540eeab9d8dac1f",
+  "runtime_sdk": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "precision": "float16-weights",
+  "original_descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+  "derived_descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+  "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+  "modules": [
+    "audio-1119",
+    "audio-839",
+    "image-landscape",
+    "image-portrait",
+    "image-square",
+    "text"
+  ],
+  "models_processed": 553,
+  "short_constants_added": 1110,
+  "source_objects_verified": 820,
+  "derived_objects_verified": 820,
+  "source_bytes": 8583084520,
+  "derived_bytes": 5873729560,
+  "non_model_files_bit_identical": true,
+  "source_files_unchanged": true,
+  "protected_root_files_verified": 4,
+  "receipt": {
+    "command": [
+      ".\\artifacts\\unity-editor\\6000.3.21f1\\Editor\\Unity.exe",
+      "-batchmode",
+      "-nographics",
+      "-job-worker-count",
+      "4",
+      "-projectPath",
+      ".\\artifacts\\step3-consumer-53dafe8",
+      "-executeMethod",
+      "EmbeddingGemma.Validation.Tests.GpuMediaFloat16Preparation.PrepareFromEnvironment",
+      "-quit",
+      "-logFile",
+      ".\\artifacts\\usability-state\\float16-preparation-752a2ac.log"
+    ],
+    "producer": "752a2acd2e517e17501b506df540eeab9d8dac1f",
+    "output": ".\\artifacts\\media-bundle-float16-752a2ac",
+    "started_utc": "2026-10-17T16:27:38.134413+00:00",
+    "terminal": true,
+    "success": true,
+    "inference_executed": false,
+    "scope": "CPU-only weight preparation; no GPU execution/acceptance",
+    "timeout_seconds": 1800,
+    "memory_limit_bytes": 17179869184,
+    "physical_total_before_bytes": 68628013056,
+    "physical_available_before_bytes": 24485736448,
+    "memory_limit_scope": "Sampled current native working set; process lifetime peak reported separately",
+    "peak_host_bytes": 9460596736,
+    "pid": 127712,
+    "current_host_bytes": 5287456768,
+    "elapsed_seconds": 1346.5902337000007,
+    "exit_code": 0,
+    "completed_utc": "2026-10-17T16:50:04.728254+00:00",
+    "bundle_descriptor_sha256": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292"
+  },
+  "gpu_executed": false,
+  "numerical_acceptance": false,
+  "performance_improvement_claimed": false,
+  "excluded_trial": {
+    "label": "float16-preparation-e4f9c4b",
+    "terminal": true,
+    "exit_code": 1,
+    "scope": "Monitor JSON replacement PermissionError before conversion; no output created, not a model conversion failure."
+  },
+  "evidence_sha256": {
+    "preparation_report": "68d631e308e0faa8aec0a74e5bc8a38353a0a2c225de04add1123dcc9dea4828",
+    "process_receipt": "dbe4ddca92071d9294fe07472b061aad098f2517c5c996668b78a38ea81c81a1",
+    "log": "4b57b617189d19ae9dd28951b7df339b3a8da18d7392d9f009d3abe337f69b1b"
+  },
+  "remaining": [
+    "Pinned-reference GPU isolated/consecutive Float16 runs and ranks",
+    "Same-candidate CPU/GPU timing and host/VRAM",
+    "FP32 combined host guard diagnosis",
+    "Native JA/EN UI, previews/playback/release",
+    "Public cold acquisition",
+    "Authorized microphone"
+  ]
+}

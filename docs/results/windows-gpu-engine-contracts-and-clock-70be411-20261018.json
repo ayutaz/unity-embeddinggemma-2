@@ -1,0 +1,52 @@
+{
+  "contracts_accepted": true,
+  "actual_gpu_or_model_qualification_claimed": false,
+  "source": "70be4119611d26466dbcbc9995192de8e3fe65ee",
+  "parser_contract": {
+    "red_failed": 17,
+    "green_passed": 17,
+    "red_source_committed": false,
+    "red_scope": "Observed uncommitted NotImplementedError scaffold before implementation; test output preserved. First attempted Red commit had a wrong tools-relative git path and did not create a commit."
+  },
+  "collector_contract": {
+    "red_source": "eb05941",
+    "red_failed": 3,
+    "red_passed": 1,
+    "final_passed": 21,
+    "original_errors": "Global nonterminating provider errors discarded valid owned rows, and process identity failure overwrote valid counter-clock provenance.",
+    "intermediate_failed": 2,
+    "intermediate_passed": 19,
+    "intermediate_reason": "Dot-sourced mock reused the collector variable name created; its second CIM mock returned a string instead of DateTime. Renamed only the mock fixture variable; original metadata gates maintained."
+  },
+  "clock_probe": {
+    "utc_now": "2026-10-17T22:40:28.8594453Z",
+    "local_now": "2026-10-18T07:40:28.8639090+09:00",
+    "set_timestamp": "2026-10-18T07:40:28.8155811+09:00",
+    "set_kind": "Local",
+    "row_timestamp": "2026-10-18T07:40:28.8155811+09:00",
+    "row_kind": "Local",
+    "raw_file_time": 134367828288155811,
+    "raw_as_utc": "2026-10-18T07:40:28.8155811Z",
+    "set_as_utc": "2026-10-17T22:40:28.8155811Z",
+    "counter_type": "Timer100Ns"
+  },
+  "absolute_counter_timestamp_source": "Counter DateTime normalized to UTC, never raw local-wall Timestamp100NSec interpreted as UTC.",
+  "counter_units_source": "https://learn.microsoft.com/en-us/windows/win32/wmisdk/timer-algorithm-counter-types",
+  "timer_formula_source": "https://learn.microsoft.com/en-us/windows/win32/perfctrs/calculating-counter-values",
+  "scope": "Raw Timer100Ns numerator per process and engine. Exact process creation identity, seven-digit UTC boundaries, missing samples, bad status, resets, overlap and provider errors are checked. No summed GPU duration or exclusive SDK attribution.",
+  "source_sha256": {
+    "tools/embeddinggemma_tools/windows_gpu_engine.py": "7702b8f864f009d3e92bcffee9e42cd816d472f7e321596f0c2e4b8161f749db",
+    "tools/observe_owned_gpu_engine.ps1": "ac262312ec81e131290ef5ed0e66778a052f9a1fdb61a3f66d39f6440ba6dccb",
+    "tools/tests/test_windows_gpu_engine.py": "50244c352904d8e554364863e1fc075d3443489603748ef85a84ff8366bcdfd8",
+    "tools/tests/test_gpu_engine_collector.py": "c472b52ab17562747f401934bdcff029cfcdc1735aa6812c2a122b71a4904241"
+  },
+  "evidence_sha256": {
+    "windows-gpu-engine-contract-red-pinned.txt": "d4f87662d477acf45f95751ec8b8f75bc09f4b437487156bf722a66328314039",
+    "windows-gpu-engine-contract-green.txt": "955abf52073d5e66f096d6712b656d2e7cd7a0c8b4c2f2069ecb17d8d18dc017",
+    "windows-gpu-engine-provider-red.txt": "59da07df108715134a2b79ca8ab234e113b63aea21ee882a98d1be5018cb03ac",
+    "windows-gpu-engine-provider-green.txt": "265f28ebadb086c4d9dd1b468e3cc22db0ae0f282dbf348a80da0476ae3633db",
+    "windows-gpu-engine-provider-green-fixed-fixture.txt": "8869e93a1ff884f74884119f9c801a4ea5d4eb3c4905df240611eabd143e9186",
+    "windows-gpu-engine-provider-green-utc-assertion.txt": "78cecf0a68aebc23dd33f21475965c3c7d9e22d9e3f1af00e0a313e2d84c537a",
+    "gpu-engine-counter-clock-domain-probe.json": "82b8212d63c69f282a38a2e4b07d4e15d64288990edeeff25a13554a74cb29bd"
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "upstream_perfetto_policy_unit_tests_accepted": true,
+  "upstream_source": "72bd2b18553493aa9850e434caf71bfa18952aac",
+  "upstream_unmodified": true,
+  "counts": {
+    "total": 9,
+    "passed": 9,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0
+  },
+  "test_names": [
+    "ProcessesSharingAnEngineGetTheirOwnTracks",
+    "EveryProcessIsDetailedWithoutATargetProcess",
+    "OnlyTheTargetProcessIsDetailed",
+    "ADetailedProcessIsNotAlsoDrawnAsEngineActivity",
+    "TheTargetProcessIsClaimedBeforeItsFirstGpuWork",
+    "QueuesWithinAProcessGetTheirOwnTracks",
+    "GpuWorkWithoutItsExecutionIsDropped",
+    "EngineActivityNamesTheProcessThatRanIt",
+    "UnattributedEngineActivityIsLabelledAsSuch"
+  ],
+  "build_receipt": {
+    "source": "72bd2b18553493aa9850e434caf71bfa18952aac",
+    "project": "samples/perfetto/test.unit",
+    "exit_code": 0,
+    "started_at": "2026-10-18T10:34:25.4439260+09:00",
+    "completed_at": "2026-10-18T10:35:08.3677526+09:00",
+    "elapsed_seconds": 42.9239804
+  },
+  "test_receipt": {
+    "source": "72bd2b18553493aa9850e434caf71bfa18952aac",
+    "exit_code": 0,
+    "started_at": "2026-10-18T10:35:46.1335434+09:00",
+    "completed_at": "2026-10-18T10:35:46.3590204+09:00",
+    "elapsed_seconds": 0.2256075
+  },
+  "previous_control_audit": {
+    "file": "dxg-method-controls-72bd2b1-20261018.json",
+    "sha256": "ae9a6adf30f9c22889d5062acecf52ddb3f1afa5acae9371c98dacb1b5aeb7ba"
+  },
+  "actual_new_gpu_capture": false,
+  "actual_sdk_or_unity_execution": false,
+  "sdk_load_release_gpu_timing_accepted": false,
+  "external_stage_clock_mapping_verified": false,
+  "pure_kernel_time_verified": false,
+  "scope": "Separate upstream target-process attribution and Perfetto writer policy unit tests. Prior130 unit and2 live D3D12 controls are unchanged. No new live sample capture.",
+  "source_review": [
+    {
+      "file": "samples/perfetto/PerfettoTraceWriter.cpp",
+      "sha256": "8fa5b5fb8523889f236ba8e196d750f011cd62b823eed45420c2e2ceaecfc08c",
+      "finding": "ToPft anchors the first event to the current Perfetto SDK boot clock and preserves relative event distances. Raw ETW timestamps cannot be joined directly to existing UTC/QPC stage receipts without a separately verified mapping."
+    },
+    {
+      "file": "include/DxTimingCaptureLibrary/EtwCallbacks.h",
+      "sha256": "6847f9f4543ca81f0fc1e06618094513f3ff4f8d4255777dca1d42545031b4c9",
+      "finding": "GpuEngineActivity callbacks cover driver submission through completion, explicitly an upper bound on engine time. They are not pure GPU execution or SDK-exclusive kernel time. Raw OnGpuWork data and ownership/clock/loss validation are separate requirements."
+    }
+  ],
+  "next_requirement": "Use a bounded owned-target raw callback consumer preserving original timestamp epoch and explicit QPC-to-stage anchors, diagnostics/loss and normal closure; retain queue envelope and GPU work spans separately.",
+  "evidence_sha256": {
+    "dx-perfetto-policy-unit.xml": "63bb8f6df27ae69597c0a244235f217b97df2a95eb69b2b5d153c225942455ce",
+    "dx-perfetto-policy-unit.json": "3d5d06e402977b1d3fd673c6a081e82fae309d584a54849ccf0fd53aa0288294",
+    "dx-perfetto-unit-build.json": "6d01d18e384eec60ee658e42554beaef4d015db8062c1e0b0d351b09b62a7437",
+    "audit_dx_perfetto_policy.py": "7e30f2a923f00249d5b2c592b728871a24ff0aa0ae9661357993dee719b727b6"
+  },
+  "audited_utc": "2026-10-18T01:36:16.292868+00:00"
+}

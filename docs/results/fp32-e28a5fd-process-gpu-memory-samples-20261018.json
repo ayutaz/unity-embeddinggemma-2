@@ -1,0 +1,29 @@
+{
+  "runtime_source": "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+  "precision": "fp32",
+  "pid": 30808,
+  "scope": "Windows GPU Process Memory counter samples for one failed combined Editor trial. Dedicated/shared allocations are separate; not GPU execution time, total device usage, minimum VRAM or a guaranteed lifetime peak.",
+  "combined_acceptance": false,
+  "fixture_result": {
+    "total": 2,
+    "passed": 1,
+    "failed": 1,
+    "skipped": 0
+  },
+  "sample_count": 244,
+  "available_samples": 242,
+  "unavailable_samples": 2,
+  "first_sample_utc": "2026-10-17T17:32:56.3249646Z",
+  "last_sample_utc": "2026-10-17T17:51:37.1380929Z",
+  "maximum_observed_sample_gap_seconds": 6.845047,
+  "dedicated_largest_observed_bytes": 10370490368,
+  "dedicated_largest_observed_utc": "2026-10-17T17:51:20.9491807Z",
+  "shared_largest_observed_bytes": 1183367168,
+  "shared_largest_observed_utc": "2026-10-17T17:51:20.9491807Z",
+  "dedicated_and_shared_maxima_may_be_at_different_times": true,
+  "source_sha256": {
+    "text-and-integration-e28a5fd-fp32-16gib-gpu-memory.jsonl": "8a261b984c2640b50d84904f7435b205de24f389ebf4571a2e3618b9386a537c",
+    "text-and-integration-e28a5fd-fp32-16gib-process.json": "b87aecd2157a07b3cb65f45aa1057d11bcf451285c8cbfca57e1d2b1f10b862a"
+  },
+  "performance_improvement_claimed": false
+}

@@ -1,0 +1,35 @@
+{
+  "isolated_original_reference_gpu_accepted": true,
+  "all_modules_accepted": false,
+  "mixed_search_accepted": false,
+  "complete_performance_accepted": false,
+  "runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "validation_source": "c2f766e4e05f5378eba15b6552e4a244ebeebfa9",
+  "module": "audio-839",
+  "precision": "fp32",
+  "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+  "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+  "independent_cases": [
+    {
+      "id": "padded_noise",
+      "independent_cosine": 0.9999999999981802,
+      "norm_squared": 0.9999999922162041,
+      "capture_sha256": "e91325ca017b7bd00f0da47b601cd689e3fc289c0692c2387fa27e4888670336"
+    }
+  ],
+  "exit_code": 0,
+  "unity_counts": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "scope": "Actual isolated GPU fixture plus independent binary-vector reference audit; no public acquisition/native UI/microphone or timing qualification.",
+  "evidence_sha256": {
+    "gpu-output-isolated-audio-839-fp32-d7b2233.json": "b896f4011e3e13a7c2ad5beeae481dacb4c14aeebc1438e17d412e2ec34890b8",
+    "gpu-output-isolated-audio-839-fp32-d7b2233.xml": "7716f50af8593e5779dfa3a3e75e0a364b303e50050b8c9924b90a3c2c5f12d6",
+    "gpu-output-isolated-audio-839-fp32-d7b2233.log": "a64e1c926acf4fb83c0b2cd7c0926276ce1f332df727dc1821ce9725b483edf5",
+    "gpu-output-isolated-audio-839-fp32-d7b2233-source.json": "c94c7a1c4e783c200dc230a49b8bfef8b61995727004d046b54cb5ca49f9ab9b",
+    "gpu-output-isolated-audio-839-fp32-d7b2233-process.json": "e1aef1578022de6d5fff0399f55b24505efdc62032b098b34a010b0e1afe1d18"
+  }
+}

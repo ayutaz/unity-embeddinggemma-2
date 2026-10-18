@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "scope": "complete_uploaded_candidate_gpu_partition_readback_and_two_private_archive_copies",
+  "success": true,
+  "source": "b6ede71cbf4170ae10a61344455dbab56a8231cf",
+  "run": 39120142716,
+  "profiles": [
+    {
+      "case_id": "silence",
+      "profile": "frames-1119-valid-1119",
+      "artifact_id": 12133024968,
+      "expires_at": "2027-01-16T10:39:58Z",
+      "archive_bytes": 321517549,
+      "archive_sha256": "165282cc088de41804fe78957e5f77ee33b4d47bba0b5f8d6cf93a5372abeb95",
+      "plan_sha256": "d8440b4ffc7f8b37e11bee1da1da0b7cadb44e708a1790aab247e1fca40577f9",
+      "receipt_sha256": "bc0ce35dff656413d710c282d3b12bf893aa97721adb33de2000c44b2e6e58ac",
+      "member_count": 417,
+      "all_member_crc_verified": true,
+      "all_plan_file_hashes_verified": true,
+      "independent_private_archive_copies": 2,
+      "operation_count": 267,
+      "segment_count": 268,
+      "original_initializer_count": 587,
+      "original_initializer_sha256": "75548dc4efe0daf8943fa79413c13c9aa7eca4bb62ed0ddf00766e88a17108aa",
+      "source_initializer_sha256": "af871236b809744d73334a0d1d6917d6e0df99165112fe5f942b293183722eeb",
+      "source_onnx_sha256": "525871a8dbccbbd75b5c521ab959588323938e58fac361d69035eb80a61d2095"
+    },
+    {
+      "case_id": "padded_noise",
+      "profile": "frames-1119-valid-839",
+      "artifact_id": 12133668990,
+      "expires_at": "2027-01-16T10:39:58Z",
+      "archive_bytes": 321517844,
+      "archive_sha256": "a4e1ce77d026a74a71730ec5569d6517d7f9198d335d7e1bc7c69b5e4e6c8691",
+      "plan_sha256": "4f4a571a74489602e97913f326aafef4b72db15202b41c6fd1e7b21dcfb80c70",
+      "receipt_sha256": "6456e11b14da939eb1515af122f1b18ade0f69e854963428214da7482eccf8ca",
+      "member_count": 417,
+      "all_member_crc_verified": true,
+      "all_plan_file_hashes_verified": true,
+      "independent_private_archive_copies": 2,
+      "operation_count": 267,
+      "segment_count": 268,
+      "original_initializer_count": 587,
+      "original_initializer_sha256": "7a522412f6dcb6d227918f3623fba1ab480ed3d40dc9a0515cd2f5096459eb7b",
+      "source_initializer_sha256": "03a232cf91a43cc9f9f8ee5e5cea8fddc2422352c1b08b1786bb6bf75f81f25f",
+      "source_onnx_sha256": "87a2a058da07b0ce4338769723d0dbb572a3048ae782a8db79a37e952319ee99"
+    }
+  ],
+  "numeric_acceptance": false,
+  "gpu_validated": false,
+  "generation_qualified": false,
+  "original_golden_changed": false
+}

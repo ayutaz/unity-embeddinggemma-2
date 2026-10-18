@@ -46,6 +46,19 @@ further GPU refinements, original encoder tolerances, all six signals, real GPU
 execution and final consumer/Player acceptance remain required. A seed export
 alone never sets numerical, GPU or generation qualification to true.
 
+The first actual two-profile run at `410c9e5`,
+[39116468876](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39116468876),
+failed both exports with `UnsupportedOperatorError`; neither model was uploaded.
+The saved graph contains an explicit `aten::_to_copy` which the ordinary module
+trace did not expose in the earlier tests. A saved-copy export reproducer and
+four dtype/storage checks failed before a narrow export bridge was added. The
+bridge uses `Tensor.to(copy=True)` with the same dtype/device semantics, keeping
+values and distinct storage while exposing a supported legacy ONNX spelling.
+The source graph is unchanged; this equivalent copy is recorded separately from
+the two normalization arithmetic changes. The related 45 tests then passed.
+The [failed-run checkpoint](results/audio-candidate-gpu-seed-export-failed-410c9e5-20261018.json)
+does not claim that a subsequent actual export or any GPU acceptance succeeded.
+
 ## Independent inputs and provenance
 
 - The [candidate contract](../tools/references/audio-candidate-e9de158.json)

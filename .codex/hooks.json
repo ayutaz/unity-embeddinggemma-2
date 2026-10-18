@@ -1,0 +1,7 @@
+{
+  "description": "Protect public repository content and publication payloads without echoing private values.",
+  "hooks": {
+    "SessionStart": [{"matcher": "startup|resume|compact", "hooks": [{"type": "command", "command": "uv run --no-project --python 3.13 python -c \"import pathlib,runpy,subprocess;root=pathlib.Path(subprocess.check_output(['git','rev-parse','--show-toplevel'],text=True).strip());runpy.run_path(str(root/'tools/privacy_hook.py'),run_name='__main__')\"", "timeout": 30}]}],
+    "PreToolUse": [{"matcher": "Bash|apply_patch|Edit|Write|mcp__.*", "hooks": [{"type": "command", "command": "uv run --no-project --python 3.13 python -c \"import pathlib,runpy,subprocess;root=pathlib.Path(subprocess.check_output(['git','rev-parse','--show-toplevel'],text=True).strip());runpy.run_path(str(root/'tools/privacy_hook.py'),run_name='__main__')\"", "timeout": 120, "statusMessage": "Checking publication privacy"}]}]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "assets": {
+    "tools/tests/fixtures/native_tanh/tanh-dense32771-input-fp32.bin": {
+      "sha256": "5566e15821fa8741ee5c9032e98ec8db66803c044659c84ee5c4a77cce572409",
+      "review": "numeric-source-verified"
+    },
+    "tools/tests/fixtures/native_tanh/tanh-dense32771-native-fp32.bin": {
+      "sha256": "04c9f7965bcd4aa607098405b9d85488bef86e19d2b33c5ed5e2083e55bb5b27",
+      "review": "numeric-source-verified"
+    },
+    "tools/tests/fixtures/native_tanh/tanh-random514-input-fp32.bin": {
+      "sha256": "d84caa8f88e0a842c2784bc0734b07aa43e75d1788f44df3d4d04866c1e5d794",
+      "review": "numeric-source-verified"
+    },
+    "tools/tests/fixtures/native_tanh/tanh-random514-native-fp32.bin": {
+      "sha256": "1ed666420d33124caefc53c1808fb2bd658a269375410a91b3ca59c87b8c8016",
+      "review": "numeric-source-verified"
+    }
+  }
+}

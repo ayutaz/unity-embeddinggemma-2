@@ -1,0 +1,58 @@
+"""Real local Git operations; no network or personal input is used."""
+from pathlib import Path
+import os
+import shutil
+import subprocess
+
+SOURCE = Path(__file__).resolve().parents[2]
+
+def git(root, *args, check=True):
+    return subprocess.run(['git', *args], cwd=root, text=True, capture_output=True, check=check)
+
+def fixture_repo(tmp_path, private_ancestor=False):
+    root = tmp_path/'repository'; root.mkdir()
+    git(root, 'init', '-b', 'main')
+    git(root, 'config', 'user.name', 'fixture')
+    git(root, 'config', 'user.email', ('private'+'@'+'gmail.com') if private_ancestor else '123+fixture@users.noreply.github.com')
+    (root/'safe.txt').write_text('safe fixture\n')
+    git(root, 'add', 'safe.txt'); git(root, 'commit', '-m', 'initial fixture')
+    git(root, 'config', 'user.email', '123+fixture@users.noreply.github.com')
+    (root/'tools/embeddinggemma_tools').mkdir(parents=True)
+    shutil.copyfile(SOURCE/'tools/embeddinggemma_tools/privacy.py', root/'tools/embeddinggemma_tools/privacy.py')
+    (root/'tools/embeddinggemma_tools/__init__.py').write_text('')
+    shutil.copytree(SOURCE/'.githooks', root/'.githooks')
+    git(root, 'add', '.githooks', 'tools'); git(root, 'commit', '-m', 'install public checker')
+    git(root, 'config', 'core.hooksPath', str(root/'.githooks'))
+    return root
+
+def test_real_commit_reads_staged_blob_even_if_worktree_was_overwritten(tmp_path):
+    root=fixture_repo(tmp_path)
+    value='C:'+'\\'+'Users'+'\\'+'fixture-user'+'\\data'
+    (root/'receipt.txt').write_text(value)
+    git(root,'add','receipt.txt')
+    (root/'receipt.txt').write_text('safe working copy')
+    result=git(root,'commit','-m','must reject staged private data',check=False)
+    assert result.returncode != 0
+    assert 'fixture-user' not in result.stdout+result.stderr
+    assert 'home-path' in result.stdout+result.stderr
+
+def test_real_commit_message_trailer_is_rejected(tmp_path):
+    root=fixture_repo(tmp_path)
+    result=git(root,'commit','--allow-empty','-m','contact '+'fixture'+'@'+'gmail.com',check=False)
+    assert result.returncode != 0
+    assert 'personal-email' in result.stdout+result.stderr
+
+def test_real_pre_push_rejects_private_ancestor_even_with_clean_head(tmp_path):
+    root=fixture_repo(tmp_path,private_ancestor=True)
+    sink=tmp_path/'sink.git'; git(tmp_path,'init','--bare',str(sink))
+    result=git(root,'push',str(sink),'HEAD:refs/heads/main',check=False)
+    assert result.returncode != 0
+    assert 'private-identity' in result.stdout+result.stderr
+    assert not git(tmp_path,'--git-dir='+str(sink),'for-each-ref','--format=%(refname)').stdout.strip()
+
+def test_real_clean_commit_and_local_push_are_allowed(tmp_path):
+    root=fixture_repo(tmp_path)
+    git(root,'commit','--allow-empty','-m','public identity and safe content')
+    sink=tmp_path/'sink.git'; git(tmp_path,'init','--bare',str(sink))
+    git(root,'push',str(sink),'HEAD:refs/heads/main')
+    assert git(tmp_path,'--git-dir='+str(sink),'show-ref','--verify','refs/heads/main').returncode==0

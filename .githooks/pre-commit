@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+root=$(git rev-parse --show-toplevel)
+cd "$root/tools"
+exec uv run --no-project --python 3.13 python -m embeddinggemma_tools.privacy staged --root "$root"

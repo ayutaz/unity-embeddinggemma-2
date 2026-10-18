@@ -2,5 +2,6 @@
 set -eu
 root=$(git rev-parse --show-toplevel)
 message=$(realpath "$1")
-cd "$root/tools"
+validator=$(CDPATH= cd -- "$(dirname -- "$0")/../tools" && pwd)
+cd "$validator"
 exec uv run --no-project --python 3.13 python -m embeddinggemma_tools.privacy commit-message --root "$root" --message-file "$message"

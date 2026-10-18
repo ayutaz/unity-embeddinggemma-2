@@ -3,6 +3,10 @@ name: Audio native reference for runtime diagnostics
 on:
   workflow_dispatch:
     inputs:
+      recover_golden_only:
+        description: Reconstruct exact original reference JSON from retained original captures; does not recover model graphs
+        type: boolean
+        default: false
       recover_original_bytes:
         description: Attempt exact original graph-byte recovery using the original Python code and lock; this does not qualify GPU or ONNX
         type: boolean
@@ -33,12 +37,47 @@ permissions:
   actions: read
 
 concurrency:
-  group: audio-runtime-reference-${{ github.ref }}-${{ inputs.recover_original_bytes && 'recovery' || 'diagnostic' }}
-  cancel-in-progress: ${{ !inputs.recover_original_bytes }}
+  group: audio-runtime-reference-${{ github.ref }}-${{ inputs.recover_golden_only && 'golden' || inputs.recover_original_bytes && 'recovery' || 'diagnostic' }}
+  cancel-in-progress: ${{ !inputs.recover_original_bytes && !inputs.recover_golden_only }}
 
 jobs:
+  recover-golden:
+    if: github.event_name == 'workflow_dispatch' && inputs.recover_golden_only
+    permissions:
+      contents: read
+      actions: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Reject simultaneous recovery modes
+        run: test "${{ inputs.recover_original_bytes }}" != true
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+      - name: Reconstruct exact original golden bytes without loading models
+        working-directory: tools
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          uv run --no-project --python 3.13 python -m embeddinggemma_tools.original_audio_golden
+          --captures ../artifacts/original-golden-captures
+          --output ../artifacts/original-audio-golden --download
+      - name: Check original golden JSON publication privacy
+        id: privacy_golden
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/original-audio-golden/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ success() && steps.privacy_golden.outcome == 'success' }}
+        with:
+          name: pinned-audio-golden-ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9
+          path: artifacts/original-audio-golden/
+          retention-days: 90
+          if-no-files-found: error
   recover:
-    if: github.event_name == 'workflow_dispatch' && inputs.recover_original_bytes
+    if: github.event_name == 'workflow_dispatch' && inputs.recover_original_bytes && !inputs.recover_golden_only
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -154,7 +193,7 @@ jobs:
           if-no-files-found: error
   native-reference:
     if: >-
-      (github.event_name == 'workflow_dispatch' && !inputs.recover_original_bytes) ||
+      (github.event_name == 'workflow_dispatch' && !inputs.recover_original_bytes && !inputs.recover_golden_only) ||
       (github.event.pull_request.head.repo.full_name == github.repository &&
        contains(github.event.pull_request.labels.*.name, 'audio-runtime-diagnostics'))
     runs-on: ubuntu-latest

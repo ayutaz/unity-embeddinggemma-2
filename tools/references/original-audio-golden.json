@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+  "producer_run_id": 39091708547,
+  "template": {
+    "metadata": {
+      "model_id": "google/embeddinggemma-2",
+      "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+      "source_commit": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+      "stage": "audio_encoder_projector_only",
+      "dtype": "float32",
+      "batch_size": 1,
+      "attention_implementation": "sdpa",
+      "minimum_cosine": 0.999999,
+      "feature_rtol": 0.0001,
+      "feature_atol": 1e-05,
+      "preprocessing_reference_sha256": "1209e2f95df2d0527db23d9185e01c38289b365c46e623e03d3e9ce26f8dfcf8",
+      "fixture_provenance": "procedurally_generated_pcm_no_user_audio",
+      "input_sha256": {
+        "config.json": "b8f1e9931b57fbc054acdb445c41765d55b0074c58d145fa82839941ad1b5bb3",
+        "processor_config.json": "168f6a08522f3ce5dea596d94d003af2fd691742d4f41fe1f9d8cce76bfbf69c",
+        "model.safetensors": "197a32965d4b1105faf060417baa899e193fb73cd401f42ec9295234d5553d79"
+      },
+      "versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0"
+      }
+    },
+    "profiles": {
+      "frames-1119-valid-1119": {
+        "feature_shape": [
+          1,
+          1119,
+          128
+        ],
+        "feature_count": 280,
+        "feature_width": 512,
+        "frame_mask_shape": [
+          1,
+          1119
+        ],
+        "frame_mask": "frames-1119-valid-1119/frame-mask-int32.bin",
+        "graph": "frames-1119-valid-1119/audio.onnx",
+        "native_graph": "frames-1119-valid-1119/audio.pt2",
+        "import_format": "onnx"
+      },
+      "frames-1119-valid-839": {
+        "feature_shape": [
+          1,
+          1119,
+          128
+        ],
+        "feature_count": 210,
+        "feature_width": 512,
+        "frame_mask_shape": [
+          1,
+          1119
+        ],
+        "frame_mask": "frames-1119-valid-839/frame-mask-int32.bin",
+        "graph": "frames-1119-valid-839/audio.onnx",
+        "native_graph": "frames-1119-valid-839/audio.pt2",
+        "import_format": "onnx"
+      }
+    },
+    "cases": [
+      {
+        "id": "silence",
+        "profile": "frames-1119-valid-1119",
+        "input_features": "frames-1119-valid-1119/silence-features-fp32.bin",
+        "features": null,
+        "onnx_success": false
+      },
+      {
+        "id": "impulse",
+        "profile": "frames-1119-valid-1119",
+        "input_features": "frames-1119-valid-1119/impulse-features-fp32.bin",
+        "features": null,
+        "onnx_success": false
+      },
+      {
+        "id": "sine",
+        "profile": "frames-1119-valid-1119",
+        "input_features": "frames-1119-valid-1119/sine-features-fp32.bin",
+        "features": null,
+        "onnx_success": false
+      },
+      {
+        "id": "nyquist",
+        "profile": "frames-1119-valid-1119",
+        "input_features": "frames-1119-valid-1119/nyquist-features-fp32.bin",
+        "features": null,
+        "onnx_success": false
+      },
+      {
+        "id": "noise",
+        "profile": "frames-1119-valid-1119",
+        "input_features": "frames-1119-valid-1119/noise-features-fp32.bin",
+        "features": null,
+        "onnx_success": false
+      },
+      {
+        "id": "padded_noise",
+        "profile": "frames-1119-valid-839",
+        "input_features": "frames-1119-valid-839/padded_noise-features-fp32.bin",
+        "features": null,
+        "onnx_success": false
+      }
+    ]
+  },
+  "captures": [
+    {
+      "case": "silence",
+      "artifact_id": 12123174381,
+      "member": "pinned-audio/reference-output-fp32.bin",
+      "bytes": 573440,
+      "sha256": "e9ac5425c93912ac7e4983ed98e80b4020e1f8f2d81c2950adfd31b1022441ad",
+      "rows": 280,
+      "columns": 512
+    },
+    {
+      "case": "impulse",
+      "artifact_id": 12124251338,
+      "member": "pinned-audio/reference-output-fp32.bin",
+      "bytes": 573440,
+      "sha256": "aa001f3740387ac8ea629948e725609a68f9397c868f84abe3575b396b580bdd",
+      "rows": 280,
+      "columns": 512
+    },
+    {
+      "case": "sine",
+      "artifact_id": 12123154980,
+      "member": "pinned-audio/reference-output-fp32.bin",
+      "bytes": 573440,
+      "sha256": "80a5d8c1f8505edab44be1dbbcb0cc77287477b71e0dca4175a6196751a19d73",
+      "rows": 280,
+      "columns": 512
+    },
+    {
+      "case": "nyquist",
+      "artifact_id": 12123447035,
+      "member": "pinned-audio/reference-output-fp32.bin",
+      "bytes": 573440,
+      "sha256": "48b9bdc5dbafdea1eb6c00aa90b4036e143117a4e8058099c9438f6d23cfd713",
+      "rows": 280,
+      "columns": 512
+    },
+    {
+      "case": "noise",
+      "artifact_id": 12124301224,
+      "member": "pinned-audio/reference-output-fp32.bin",
+      "bytes": 573440,
+      "sha256": "6855e48273f6ef856edf2befd4474363fe3dcc75b8cc4e9e02a17ac6e3b376ad",
+      "rows": 280,
+      "columns": 512
+    },
+    {
+      "case": "padded_noise",
+      "artifact_id": 12123432060,
+      "member": "pinned-audio/reference-output-fp32.bin",
+      "bytes": 430080,
+      "sha256": "ba570bbb9a403e529a5843eaa16cab9f694791b7d0f1ad9bbedee33b14fe3966",
+      "rows": 210,
+      "columns": 512
+    }
+  ]
+}

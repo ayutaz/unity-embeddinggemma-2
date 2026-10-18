@@ -10,6 +10,7 @@
 - #90の固定Git版 `6350aa6` を新規consumerへ導入し、Libraryを再利用せず、Windows IL2CPP / Release / High strippingの実buildに成功しました。最小consumerのコンパイルで見つかったUnityWebRequest依存の不足も修正済みです。
 - 同Player・既存FP32 bundle・Direct3D12で、音声2 profileは成功・GPU確認あり・process exit0です。通常18件・warm18件を元のhash固定参照から独立再計算し、最小cosine `0.999999709769265`、全Worker監査・run identity・正常終了を確認しました。8件の意図的な破損controlも拒否しました。画像squareの先行試行は推論前のGPU監査で失敗し、後続2 profileは未実行です。Float16、最終モデル候補との対応付けは残っています。Direct3D11での先行音声試行の失敗も保持します。
 - 画像失敗の原因は、入力をそのまま出力へ渡す17区間を空graphとして一律拒否した監査でした。全181 Workerのmetadata調査と実保存モデルの入出力を確認し、CPU計算・中間flushは0でした。出力が入力を参照すること、定数なし、GPU所有、CPU割り当てなしを検証する修正を #90 の `89b1ab9` に反映しました。8 Redの後、関連30 Green・skip0・Editor exit0です。修正版の実Player検証は別gateとして残します。[checkpoint](results/media-player-input-alias-audit-20261018.json)
+- その後、固定Git `89b1ab9` の新規consumerで実build・exit0とコンパイル対象62ファイルのhashを確認しました。[修正版Playerの実行](results/media-player-retained-bundles-gpu-89b1ab9-20261018.json)は、既存FP32 / Float16重みbundleの画像3・音声2、全10条件でGPU監査・キャンセル回復・解放・exit0を確認しました。通常72件・warm90件の独立再監査と40件の破損control拒否も成功しました。Float16変換記録と553モデルの対応も両descriptorへ照合済みです。新世代モデルの採用、text・横断検索、実操作、独立warm起動、資源計測、他端末、必須CIは未完了です。
 - #89の最新head `3949d1a` の[CI 39112717115](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39112717115)は、Python全4環境・package・lint・通常referenceが成功、固定元モデルの6信号・集計・Required CIは失敗しました。#90のhead `6350aa6` の[CI 39112580190](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39112580190)も不合格です。
 - 以前のsource・既存bundleでのGPU動作実績は保持し、最終候補に対応する確認と区別します。
 
@@ -25,8 +26,8 @@
 
 ## 直近の優先作業
 
-1. 原因を特定し修正した画像監査を、新規consumerの実IL2CPP / Release / High stripping Playerで確認します。元画像・同bundle・Direct3D12を固定し、square・landscape・portraitを別のbounded processで順に実行します。metadata調査と契約テストだけではGPU数値検証の完了にしません。
-2. 既存bundleのPlayer実績と、新しい音声モデル候補の採用検証を分けます。候補からGPU用モデルを作る再現手順を固定し、元参照を変更せずFP32・Float16の全必要roleを確認します。音声の成功receiptもvector・GPU監査・正常終了を独立再監査します。
+1. 新しい音声モデル候補からGPU用モデルを作る再現手順と重みの対応を固定します。既存bundleの全10条件成功を、そのまま新世代の採用判定には使いません。元のencoder要素別許容差と全6信号、全必要roleを維持して検証します。
+2. 同じ最終候補へtext・横断検索・sample操作と計測を対応付け、Playerの残件を閉じます。独立warm起動、実マイク、process RAM / VRAMと実GPU時間は、今回の内部warm反復・managed heap・wall時間から推定しません。
 3. 取得pinと必須CIを復旧し、PRを整理します。CIが失敗したままの統合や、旧モデルの同一bytesを復旧した扱いは行いません。
 4. 同時にMac・iOS・Androidの実行環境を確保します。端末待ちをWindows完了後に発見しないよう、必要環境と担当を工程5の前に確定します。
 

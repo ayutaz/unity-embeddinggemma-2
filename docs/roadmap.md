@@ -105,7 +105,7 @@ Editorでは[検索割り当て・空/再利用Library](editor-search-allocation
 
 ### 4. WindowsマルチモーダルPlayer
 
-[全roleの検証基盤](results/media-player-all-role-contracts-20261018.json)は、Query / Document / Rawの各元参照を固定し、画像18・音声18条件を扱います。79件の契約・元入力読み込みが合格、Editor exit0でした。実モデルを使うRelease Playerの全role・検索・GPU・独立cold/warm等は引き続き未実行です。
+[全roleの検証基盤](results/media-player-all-role-contracts-20261018.json)は、Query / Document / Rawの各元参照を固定し、画像18・音声18条件を扱います。79件の契約・元入力読み込みが合格、Editor exit0でした。その後、`89b1ab9` の新規Git consumerで実IL2CPP / Release / High stripping buildに成功しました。[実Playerの全10条件](results/media-player-retained-bundles-gpu-89b1ab9-20261018.json)では、保持しているFP32 / Float16重みbundleで画像3・音声2の全role、通常72件・warm90件、GPU Worker監査、キャンセル回復・解放・正常終了を確認しました。元参照からの独立再計算、40件の破損control拒否と62ファイルのsource hashも確認済みです。新世代モデルの採用、text・横断検索、sample実操作、独立warm起動、process / VRAM計測、必須CIを含む工程全体は未完了です。
 
 1〜3で安定したcandidateを使い、画像・音声sampleの配置・cache・切替・失敗回復をPlayerへ接続します。
 

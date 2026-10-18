@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "scope": "Additional Xcode scheme TDD and final Windows Editor iOS build-profile regression; no actual Xcode export or device execution",
+  "source_before_fix": "51f3b949cb352080acd3814f48ce3f0b5f81e5d6",
+  "unity_version": "6000.3.21f1",
+  "source_sha256": {
+    "Assets/Validation/Editor/ValidationPlayerBuild.IOS.cs": "fba8071fc87bd396890992c5e0316c8035b86045d8829fbbc3f9b16a7e03016a",
+    "Assets/Validation/Tests/Editor/ValidationIOSBuildTests.cs": "096080db84d97fac3d2ece4d038bac3bc27f1a06e7a96d627da2a6139396b6e7"
+  },
+  "initial_TDD_checkpoint": "ios-build-profile-tdd-20261019.json",
+  "TDD": {
+    "red": {
+      "total": 23,
+      "passed": 15,
+      "failed": 8,
+      "skipped": 0,
+      "exit_code": 2,
+      "failures": "Xcode Release selection and receipt key coverage"
+    },
+    "green": {
+      "total": 23,
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    "related_regression": {
+      "total": 44,
+      "passed": 44,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    }
+  },
+  "actual_editor_setting_APIs_exercised": true,
+  "Xcode_Release_explicitly_selected": true,
+  "Debug_and_Release_scheme_restored_after_success_and_exception": true,
+  "IL2CPP_High_Release_Metal_and_DeviceSDK_preserved": true,
+  "signing_and_provisioning_settings_untouched": true,
+  "profile_receipt_exact_key_allowlist_verified": true,
+  "original_private_evidence_and_second_copy_verified": true,
+  "SDK_package_tree": "6c8fa26c54268bca1b256173e93855617610865c",
+  "SDK_runtime_tree": "7d6e4314552b221d06db881405e7ccff3f449a77",
+  "SDK_runtime_changed": false,
+  "actual_iOS_export": false,
+  "actual_iOS_signed_build": false,
+  "actual_iOS_device_execution": false,
+  "actual_iOS_GPU_acceptance": false,
+  "Android_active_target_build_contract_executed": false,
+  "source_required_CI_accepted": false,
+  "formal_release_ready": false
+}

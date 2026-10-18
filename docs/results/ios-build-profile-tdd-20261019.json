@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "scope": "Windows Editor iOS build-profile contracts and related desktop/Android setting regression; no actual iOS export or device execution",
+  "base_source_commit": "c6dcde4e59d890946614a807333d376daa679f3f",
+  "unity_version": "6000.3.21f1",
+  "source_sha256": {
+    "Assets/Validation/Editor/ValidationPlayerBuild.IOS.cs": "67603f175799a2309205e828263995f9d235d45a71e18e66b01d4e8c01ddbd16",
+    "Assets/Validation/Tests/Editor/ValidationIOSBuildTests.cs": "966e77fe5951386f573bfeef4ffcb238e36a74e07f73d781fba3ef127c4ebf59"
+  },
+  "TDD": {
+    "red": {
+      "total": 19,
+      "passed": 0,
+      "failed": 19,
+      "skipped": 0,
+      "exit_code": 2,
+      "all_failures_require_missing_explicit_iOS_profile": true
+    },
+    "green": {
+      "total": 19,
+      "passed": 19,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    "related_regression": {
+      "total": 40,
+      "passed": 40,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    }
+  },
+  "actual_editor_setting_APIs_exercised": true,
+  "IL2CPP_High_Release_and_Metal_selected": true,
+  "device_SDK_and_iPhone_iPad_selected": true,
+  "probe_deployment_target": "15.0",
+  "probe_target_is_measured_minimum_requirement": false,
+  "setting_restore_after_success_and_exception_verified": true,
+  "existing_exports_and_sibling_receipts_preserved": true,
+  "signing_and_provisioning_settings_untouched": true,
+  "profile_receipt_exact_key_allowlist_verified": true,
+  "wrong_active_target_rejected_before_output_or_scene_creation": true,
+  "original_private_evidence_and_second_copy_verified": true,
+  "SDK_package_tree": "6c8fa26c54268bca1b256173e93855617610865c",
+  "SDK_runtime_tree": "7d6e4314552b221d06db881405e7ccff3f449a77",
+  "SDK_runtime_changed": false,
+  "actual_iOS_export": false,
+  "actual_iOS_signed_build": false,
+  "actual_iOS_device_execution": false,
+  "actual_iOS_GPU_acceptance": false,
+  "Android_active_target_build_contract_executed": false,
+  "source_required_CI_accepted": false,
+  "formal_release_ready": false
+}

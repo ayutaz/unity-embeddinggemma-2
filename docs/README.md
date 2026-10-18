@@ -79,6 +79,7 @@
 ### M2 導入・cache・Player
 
 - [Android検証APKのbuild・監査と実機gate](m2-android-validation.md)
+- [必須端末の準備・iOS Release設定と未実行の条件](device-validation.md)
 - [Player bundleのcache再利用と完全SHA-256高速化](m2-bundle-cache-validation.md)
 - [Windows Editorのsample font寿命の修正](m2-editor-font-lifetime-validation.md)
 - [Editor待ち時間の切り分け: 2026-10-12](m2-editor-profile-validation.md)

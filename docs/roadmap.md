@@ -71,7 +71,11 @@ candidate・入力・model hashを固定し、最初に測定します。遅い�
 
 ### 4. WindowsマルチモーダルPlayer
 
+[全roleの検証基盤](results/media-player-all-role-contracts-20261018.json)は、Query / Document / Rawの各元参照を固定し、画像18・音声18条件を扱います。79件の契約・元入力読み込みが合格、Editor exit0でした。実モデルを使うRelease Playerの全role・検索・GPU・独立cold/warm等は引き続き未実行です。
+
 1〜3で安定したcandidateを使い、画像・音声sampleの配置・cache・切替・失敗回復をPlayerへ接続します。
+
+先行作業として[画像・音声の固定入力Player検証基盤](windows-media-player-validation.md)を私的なbranchで準備しています。元の参照・入力hash、5 profile、全最終vector、GPU Worker割当、キャンセル後の復帰と解放を記録します。契約テスト・元入力の読み込みと、実際のRelease build・GPU実行は別に判定し、この基盤だけで全体合格にはしません。
 
 **完了条件**：IL2CPP / Release / High stripping、実モデルと全モダリティの固定順位・score、実GPU、独立cold / warmの終了code0を記録すること。旧text Playerの証拠を流用しません。
 

@@ -37,11 +37,11 @@ namespace EmbeddingGemma.Validation.Editor
             if (EditorApplication.isPlaying || EditorUserBuildSettings.activeBuildTarget != target)
                 throw new InvalidOperationException("Stop Play Mode and select " + target + " before building.");
             for (var i = 0; i < SceneManager.sceneCount; i++) if (SceneManager.GetSceneAt(i).isDirty) throw new InvalidOperationException("Save scene edits before building.");
-            if (File.Exists(ScenePath) || File.Exists(MarkerPath) || File.Exists(SampleMarkerPath)) throw new IOException("Temporary validation assets already exist; inspect them before building.");
+            if (File.Exists(ScenePath) || File.Exists(MarkerPath) || File.Exists(SampleMarkerPath) || File.Exists(MediaMarkerPath)) throw new IOException("Temporary validation assets already exist; inspect them before building.");
         }
 
         static PlayerBuildInfo BuildTargetPlayer(BuildPlayerOptions options, string codeCommit, NamedBuildTarget target,
-            Action<BuildPlayerOptions> execute, bool releaseIl2Cpp = false, Action configure = null, Action restore = null, Func<JObject> details = null, bool sampleScene = false)
+            Action<BuildPlayerOptions> execute, bool releaseIl2Cpp = false, Action configure = null, Action restore = null, Func<JObject> details = null, bool sampleScene = false, string markerOverride = null)
         {
             EnsureBuildState(options.target);
             var previous = EditorSceneManager.GetSceneManagerSetup();
@@ -49,7 +49,7 @@ namespace EmbeddingGemma.Validation.Editor
             var previousStripping = PlayerSettings.GetManagedStrippingLevel(target);
             var previousCompiler = PlayerSettings.GetIl2CppCompilerConfiguration(target);
             var directory = Path.GetDirectoryName(options.locationPathName);
-            var markerPath = sampleScene ? SampleMarkerPath : MarkerPath;
+            var markerPath = markerOverride ?? (sampleScene ? SampleMarkerPath : MarkerPath);
             Directory.CreateDirectory(directory);
             var receipt = new JObject { ["success"] = false, ["injected_build"] = execute != null, ["source_commit"] = codeCommit, ["started_utc"] = DateTime.UtcNow.ToString("O") };
             var receiptPath = Path.Combine(directory, "build.json");

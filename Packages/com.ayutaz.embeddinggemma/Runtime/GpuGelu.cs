@@ -83,7 +83,7 @@ namespace EmbeddingGemma
             if(input.dataOnBackend==null)throw new ObjectDisposedException(nameof(input));
             if(input.shape!=fixedShape||input.backendType!=BackendType.GPUCompute||!(input.dataOnBackend is ComputeTensorData))
                 throw new ArgumentException("Expected the fixed tensor shape already on GPUCompute; no implicit transfer.");
-            var output=new Tensor<float>(input.shape);
+            var output=GpuOutputTensor.Allocate(input.shape);
             try
             {
                 var destination=ComputeTensorData.Pin(output);var groups=(input.shape.length+63L)/64;var groupsX=(int)Math.Min(65535,groups);var groupsY=(int)((groups+groupsX-1)/groupsX);

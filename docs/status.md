@@ -1,6 +1,10 @@
 # 現在の対応範囲と検証状況
 
-更新: **2026-10-17**。コード基準はPR #83統合後のmain `a965c098aba824b47f9762cae16b3af9656a3508`。開発版 `0.1.0-pre.1`、公開tag・正式Releaseはありません。
+更新: **2026-10-18**。main `35d18f8`を基準に、GPU出力確保・定数転送・softmax dispatchの負荷軽減を追加しています。Runtime Git treeは `7d6e4314552b221d06db881405e7ccff3f449a77`。開発版 `0.1.0-pre.1`、公開tag・正式Releaseはありません。
+
+[ランタイム修正の統合監査](results/runtime-ready-integration-2a29c68-20261018.json)では、単独の統合候補 `2a29c68` でpackageとmainの既存2サンプルのEditMode回帰517件（GPU演算等120件を含む）がpass、fail0 / skip0 / exit0でした。Runtimeとpackage依存は、全6 module×FP32 / Float16重みの実GPU参照32 vectorを確認した固定source `d7b2233` と一致します。これはsource一致に基づく既存の実モデル証拠と、新しい小規模GPU・既存sample回帰を組み合わせた監査であり、今回の32 vector再実行や最新UXの操作合格ではありません。
+
+9演算のwrite-only出力で不要なCPU storageの確保・ゼロ初期化・転送を省き、画像segmentとtextの大きな定数を8MiB単位でGPUへ転送し、softmaxの行ごとのdispatchを制限します。元の係数・参照・許容差・GPU経路と演算順序は維持します。公開モデルのempty-cache取得、実マイク、最終candidateの全操作、SDK専有load/release GPU時間・allocation、他環境・正式Releaseは未完了です。これらをランタイム修正の先行統合で完了扱いにはしません。
 
 [導入](../README.md) / [ドキュメント一覧](README.md) / [今後の計画](roadmap.md)
 
@@ -13,7 +17,7 @@
 | 画像・音声検索サンプル | Package ManagerからImport可能。実ファイル登録、混在検索、module切替、キャンセル・復帰・解放 | [PR #83](https://github.com/ayutaz/unity-embeddinggemma-2/pull/83)、[サンプル検証](multimodal-search-sample.md) |
 | モデルbundle・cache | 6 moduleの準備処理、サイズ・SHA256照合、選択moduleだけのcache・破損修復・排他lease | [サンプル検証](multimodal-search-sample.md)。空checkoutからの利用者向け自動準備は未整備 |
 
-PR #31と#83はマージ済みです。#83の検証head `613ada824bd13a297660d8c4de4c2c14b4e317e8` は[CI 38939320058](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38939320058)の15 jobすべて成功。統合後mainと同じtreeです。これはコード統合の確認であり、正式リリースの完了ではありません。
+PR #31と#83はマージ済みです。#83の検証head `613ada824bd13a297660d8c4de4c2c14b4e317e8` は[CI 38939320058](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38939320058)の15 jobすべて成功。当時の統合直後mainと同じtreeです。これはコード統合の確認であり、正式リリースの完了ではありません。
 
 ## 確認済みの範囲
 

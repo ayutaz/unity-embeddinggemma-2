@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "scope": "Candidate composed-bundle precision/cohort policy contracts and GPU fixture compilation only",
+  "parent_source": "8348bde",
+  "red": [
+    {
+      "phase": "missing_policy",
+      "failed": 10,
+      "passed": 0,
+      "skipped": 0,
+      "process_exit_code": 2
+    },
+    {
+      "phase": "missing_complete_cohort_guard",
+      "failed": 7,
+      "passed": 10,
+      "skipped": 0,
+      "process_exit_code": 2
+    }
+  ],
+  "green": {
+    "total": 34,
+    "passed": 34,
+    "failed": 0,
+    "skipped": 0,
+    "process_exit_code": 0
+  },
+  "consumer_source": "local-file",
+  "official_embedded_framework": "1.6.0",
+  "legacy_descriptor_pins_and_numeric_gates_unchanged": true,
+  "legacy_default_host_guard_gib": 12,
+  "complete_required_media_profiles": 5,
+  "real_model_executed": false,
+  "gpu_validated": false,
+  "play_mode_rendered": false,
+  "fixed_git_consumer_validated": false,
+  "evidence_sha256": {
+    "candidate-composed-policy-red-8348bde-private.xml": "7dbd8f9363eb0f142d9d0b26c5fe7679b064af38243c44abb5b2f07eb11a05fa",
+    "candidate-composed-cohort-red-8348bde-private.xml": "9c7c778dacc5a8ab7b15f65c2662f85619656b1f435aac2b0689edd200d8f350",
+    "candidate-composed-cohort-green-8348bde-private.xml": "fd05d2f455a5a0c30fcc27c4d00ac9b9ce92a6c68bc1431245e20a2fd66caa82",
+    "candidate-composed-cohort-green-8348bde-process-private.json": "1ea314ac9d9d9113ae51cbc5b4f54d6e5e875d29ec8b50c84fb6aa07f469512b"
+  }
+}

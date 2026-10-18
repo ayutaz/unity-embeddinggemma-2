@@ -100,7 +100,9 @@ namespace EmbeddingGemma.Validation.Tests
             yield return new ExitPlayMode();
         }
 
-        static async Task Run(CancellationToken cancellation)
+        static Task Run(CancellationToken cancellation) => RunWithPolicy(cancellation, GpuMediaExecutionPolicy.VerifyCurrent);
+
+        internal static async Task RunWithPolicy(CancellationToken cancellation, Action<string> verify)
         {
             var bundlePath = Environment.GetEnvironmentVariable("EG_MEDIA_BUNDLE_OUTPUT");
             var cachePath = Environment.GetEnvironmentVariable("EG_MEDIA_SAMPLE_CACHE");
@@ -108,7 +110,8 @@ namespace EmbeddingGemma.Validation.Tests
             var selections = (Environment.GetEnvironmentVariable("EG_MEDIA_SAMPLE_CASES") ?? "image-square:square-0,image-square:square-1").Split(',');
             var expectedWarm = Environment.GetEnvironmentVariable("EG_MEDIA_SAMPLE_WARM") == "1";
             Assert.That(bundlePath, Is.Not.Null.And.Not.Empty); Assert.That(cachePath, Is.Not.Null.And.Not.Empty); Assert.That(output, Is.Not.Null.And.Not.Empty);
-            GpuMediaExecutionPolicy.VerifyCurrent(bundlePath);
+            if (verify == null) throw new ArgumentNullException(nameof(verify));
+            verify(bundlePath);
             // Validate every original audio input before paying for any GPU model load.
             foreach (var selection in selections.Where(value => value.StartsWith("audio-", StringComparison.Ordinal)))
             {

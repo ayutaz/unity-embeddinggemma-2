@@ -110,6 +110,34 @@ from the preservation run, which used the earlier reader implementation.
 
 ## Remaining release conditions
 
+### Preserve the original reference and raw inputs separately
+
+The metadata-clean graph artifact intentionally contains no numerical goldens or
+raw feature inputs. Their earlier artifacts have independent short retention.
+The manual input-preservation mode copies the exact original reference/audit JSON
+and all six raw feature files into a separate, 90-day artifact. No model graph is
+downloaded or deserialized, and neither references nor input features are
+regenerated. Each selected input must match the unchanged original audit SHA256;
+changed references, missing/changed inputs, wrong artifact provenance and an
+occupied destination fail before a publishable manifest is completed.
+
+```sh
+gh workflow run audio-runtime-reference.yml --ref fix/privacy-guard \
+  -f preserve_original_inputs=true \
+  -f preserve_candidate_distribution=false -f qualify_candidate_generation=false \
+  -f recover_golden_only=false -f recover_original_bytes=false
+```
+
+The mode is exclusive of model preservation, numerical qualification and
+recovery jobs. A matching artifact privacy guard and successful execution are
+required before uploading exactly `artifacts/original-audio-inputs/**`. The input
+and distribution tests passed 32 checks; workflow/recovery checks passed 32 and
+actionlint passed. These small checks do not claim an actual preservation upload
+or GPU execution. Fixed acquisition pins must be updated only after the new
+artifact's exact bytes and provenance have been independently read back.
+
+## Remaining release conditions
+
 Even a successful numerical audit leaves `generation_qualified=false` and
 `gpu_validated=false`. Before adoption, the affected artifacts need actual
 Sentis GPU encoder and final-vector verification, all required roles, mixed

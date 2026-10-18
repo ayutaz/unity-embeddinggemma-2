@@ -3,6 +3,10 @@ name: Audio native reference for runtime diagnostics
 on:
   workflow_dispatch:
     inputs:
+      preserve_original_inputs:
+        description: Preserve exact original numerical JSON and six raw feature inputs without downloading or executing models
+        type: boolean
+        default: false
       preserve_candidate_distribution:
         description: Preserve metadata-clean copies of both pinned candidate graphs after six-case native bit comparison; does not adopt a generation or qualify GPU
         type: boolean
@@ -45,14 +49,59 @@ permissions:
   actions: read
 
 concurrency:
-  group: audio-runtime-reference-${{ github.ref }}-${{ inputs.preserve_candidate_distribution && 'preservation' || inputs.qualify_candidate_generation && 'candidate' || inputs.recover_golden_only && 'golden' || inputs.recover_original_bytes && 'recovery' || 'diagnostic' }}
-  cancel-in-progress: ${{ !inputs.recover_original_bytes && !inputs.recover_golden_only && !inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution }}
+  group: audio-runtime-reference-${{ github.ref }}-${{ inputs.preserve_original_inputs && 'inputs' || inputs.preserve_candidate_distribution && 'preservation' || inputs.qualify_candidate_generation && 'candidate' || inputs.recover_golden_only && 'golden' || inputs.recover_original_bytes && 'recovery' || 'diagnostic' }}
+  cancel-in-progress: ${{ !inputs.recover_original_bytes && !inputs.recover_golden_only && !inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution && !inputs.preserve_original_inputs }}
 
 jobs:
+  preserve-inputs:
+    if: >-
+      github.event_name == 'workflow_dispatch' && inputs.preserve_original_inputs &&
+      !inputs.preserve_candidate_distribution && !inputs.qualify_candidate_generation &&
+      !inputs.recover_golden_only && !inputs.recover_original_bytes
+    permissions:
+      contents: read
+      actions: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: tools
+        shell: bash
+    env:
+      EXECUTION_SOURCE: ${{ github.sha }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - name: Copy only independently pinned original reference and input bytes
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.original_audio_input_preservation
+          --fetch --current ../artifacts/raw-input-private --original ../artifacts/original-private
+          --output ../artifacts/original-audio-inputs --source "$EXECUTION_SOURCE"
+      - name: Check exact original-input publication paths
+        id: privacy_original_inputs
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/original-audio-inputs/**
+      - name: Preserve verified numerical inputs without models or raw diagnostics
+        if: ${{ success() && steps.privacy_original_inputs.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: original-audio-inputs-${{ github.sha }}
+          path: artifacts/original-audio-inputs/**
+          retention-days: 90
+          if-no-files-found: error
+
   preserve-candidate:
     if: >-
       github.event_name == 'workflow_dispatch' && inputs.preserve_candidate_distribution &&
-      !inputs.qualify_candidate_generation && !inputs.recover_golden_only && !inputs.recover_original_bytes
+      !inputs.qualify_candidate_generation && !inputs.recover_golden_only && !inputs.recover_original_bytes && !inputs.preserve_original_inputs
     permissions:
       contents: read
       actions: read
@@ -100,7 +149,7 @@ jobs:
           if-no-files-found: error
 
   candidate-execute:
-    if: github.event_name == 'workflow_dispatch' && inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution
+    if: github.event_name == 'workflow_dispatch' && inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution && !inputs.preserve_original_inputs
     permissions:
       contents: read
       actions: read
@@ -171,7 +220,7 @@ jobs:
           if-no-files-found: warn
   candidate-audit:
     needs: [candidate-execute]
-    if: ${{ always() && github.event_name == 'workflow_dispatch' && inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution }}
+    if: ${{ always() && github.event_name == 'workflow_dispatch' && inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution && !inputs.preserve_original_inputs }}
     permissions:
       contents: read
       actions: read
@@ -220,7 +269,7 @@ jobs:
           retention-days: 30
           if-no-files-found: warn
   recover-golden:
-    if: github.event_name == 'workflow_dispatch' && inputs.recover_golden_only && !inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution
+    if: github.event_name == 'workflow_dispatch' && inputs.recover_golden_only && !inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution && !inputs.preserve_original_inputs
     permissions:
       contents: read
       actions: read
@@ -255,7 +304,7 @@ jobs:
           retention-days: 90
           if-no-files-found: error
   recover:
-    if: github.event_name == 'workflow_dispatch' && inputs.recover_original_bytes && !inputs.recover_golden_only && !inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution
+    if: github.event_name == 'workflow_dispatch' && inputs.recover_original_bytes && !inputs.recover_golden_only && !inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution && !inputs.preserve_original_inputs
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -371,7 +420,7 @@ jobs:
           if-no-files-found: error
   native-reference:
     if: >-
-      (github.event_name == 'workflow_dispatch' && !inputs.recover_original_bytes && !inputs.recover_golden_only && !inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution) ||
+      (github.event_name == 'workflow_dispatch' && !inputs.recover_original_bytes && !inputs.recover_golden_only && !inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution && !inputs.preserve_original_inputs) ||
       (github.event.pull_request.head.repo.full_name == github.repository &&
        contains(github.event.pull_request.labels.*.name, 'audio-runtime-diagnostics'))
     runs-on: ubuntu-latest

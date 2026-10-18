@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "date": "2026-10-18",
+  "source": "bb72c3088235e41a0fb47d4dabfab6c1b02eac87",
+  "run_id": 39116795317,
+  "run_url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39116795317",
+  "conclusion": "failure",
+  "scope": "Actual direct saved-candidate export after the equivalent Tensor copy bridge",
+  "profiles": [
+    { "case": "silence", "job_id": 117644118333, "conclusion": "failure", "error_type": "UnsupportedOperatorError", "model_uploaded": false },
+    { "case": "padded_noise", "job_id": 117644118167, "conclusion": "failure", "error_type": "UnsupportedOperatorError", "model_uploaded": false }
+  ],
+  "diagnosis": {
+    "failed_graph_contains_saved_to_copy": false,
+    "failed_graph_contains_internal_softmax": true,
+    "installed_opset20_registry_missing_internal_softmax": true,
+    "raw_graph_dump_republished": false
+  },
+  "softmax_bridge_regression": {
+    "red_failures": 4,
+    "red_existing_passes": 16,
+    "equivalent_export_spelling": "torch.softmax on original FP32 values without half promotion",
+    "bit_identical_axes": [-1, 0, 1],
+    "source_graph_unchanged": true,
+    "related_green_passes": 49,
+    "green_failures": 0
+  },
+  "corrected_actual_seed_export_executed": false,
+  "original_golden_changed": false,
+  "numeric_acceptance": false,
+  "gpu_validated": false,
+  "generation_qualified": false
+}

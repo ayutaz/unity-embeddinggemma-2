@@ -59,6 +59,17 @@ the two normalization arithmetic changes. The related 45 tests then passed.
 The [failed-run checkpoint](results/audio-candidate-gpu-seed-export-failed-410c9e5-20261018.json)
 does not claim that a subsequent actual export or any GPU acceptance succeeded.
 
+The copy-corrected actual run at `bb72c30`,
+[39116795317](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39116795317),
+also failed both exports before upload. The failed graph dump no longer contains
+the unsupported saved-copy operation; the installed opset-20 exporter registry
+identifies the remaining internal `aten::_softmax` spelling as unsupported.
+A saved internal-Softmax export test and three axis-specific bit controls failed
+before an FP32 `torch.softmax` bridge was added. It rejects half promotion and
+records this equivalent export spelling separately from normalization changes.
+The related 49 checks passed. Both failed actual runs remain failures; successful
+seed generation and subsequent numeric/GPU acceptance must still be observed.
+
 ## Independent inputs and provenance
 
 - The [candidate contract](../tools/references/audio-candidate-e9de158.json)

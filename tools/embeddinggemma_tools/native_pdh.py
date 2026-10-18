@@ -19,9 +19,10 @@ MAX_BUFFER = 16*1024*1024
 def summarize_pdh_intervals(pid, created_filetime, samples, intervals, *, utc_offset_minutes):
     """Map local FILETIME with a declared observed offset; keep all engine gaps.
 
-    A one-ms consistency tolerance is fixed before reading real results. The
-    entire collection call plus that margin must fit inside a stage. These
-    partial counter pairs never prove whole-stage or SDK-exclusive GPU time.
+    The one-ms consistency envelope is calibrated against call-clock diagnostics
+    before stage aggregation; it is not a timestamp-accuracy guarantee. The
+    entire call plus that margin must fit inside a stage. These partial pairs
+    never prove whole-stage or SDK-exclusive GPU time.
     """
     if type(pid) is not int or pid <= 0 or not _natural(created_filetime):
         raise ValueError('A verified process ID and creation FILETIME are required')

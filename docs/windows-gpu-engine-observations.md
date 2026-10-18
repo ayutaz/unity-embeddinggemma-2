@@ -30,3 +30,24 @@ releaseは10.1547msで、区間内の観測点は0個だった。4回の個別qu
 `tools/observe_owned_gpu_engine.ps1` は `-Receipt` に既存の所有process receipt、`-Output` に新しいJSONL名を取り、実processのidentityを確認して観測する。対象Unityの起動・終了やモデル取得は行わない。Python集計は `embeddinggemma_tools.windows_gpu_engine.summarize_engine_intervals`、単位・境界・失敗条件のテストは `tools/tests/test_windows_gpu_engine.py`、収集protocolは `tools/tests/test_gpu_engine_collector.py`。
 
 この方法で分かった範囲と欠測を[ロード・解放の範囲監査](load-release-measurement-scope.md)に加える。解放の約10msを数秒間隔のcounterから再構成したり、推論のGPU値・CPU wallを代入したりしない。優先1〜3全体の受け入れは未完了である。
+
+## Native PDHで取得間隔を短くした追試
+
+後続の取得処理は、`embeddinggemma_tools.native_pdh.PdhGpuQuery` で1つのPDH queryを保持し、shellやCIMの再起動を挟まず生counterを取得する。[native取得・clock・stageの監査](results/native-pdh-text-stage-observation-f604baf-20261018.json)。新しい取得protocol13件と区間集計13件のscaffold Redを確認し、修正後は既存17件を含む43件が成功した。mockのprotocol成功をGPU合格にはしない。
+
+Windowsの実providerでは、先に所有Python PIDで32回だけ取得した。初期化823.2363ms、以後の取得1.556〜2.9568ms、対象engineなしだった。engineなしをGPU時間0とせず、モデル・Unity・GPU controlを動かした結果にも数えない。その後、同じSDK `d7b2233` / validation `10962fa` の固定FP32 text APIを1回実行し、[4 vectorの元参照・解放・正常終了](results/text-current-fp32-d7b2233-native-pdh-20261018.json)、1 pass / fail0 / skip0 / exit0、終了後554 sourceファイル一致を確認した。モデル・LibraryのコピーやSDK変更はない。
+
+所有receiptのPIDだけでなく、読み取り専用process handle・実行file・生成FILETIMEを照合し、各取得の前後で同じhandleが生存しているか確認した。8,783件を保存し、終了直後の1件は死亡後のデータとしてstageへ採用していない。取得wall中央値2.0903ms、最大8.6521ms、query timestamp間隔の中央値4.6489msだった。観測のsleepは2msで、固定間隔や通常APIの速度改善を保証しない。取得中の親process CPU値には別threadの処理も含まれ、PDH専有CPU costとは扱わない。
+
+`PdhCollectQueryDataWithTime` と [PDH_RAW_COUNTER](https://learn.microsoft.com/en-us/windows/win32/api/pdh/ns-pdh-pdh_raw_counter)の生FILETIMEを保持した。取得時に観測したUTC+540分を明示して変換すると、query時刻はrequest beginの−0.5929〜+0.0297msにあり、itemとqueryの生時刻にも最大505 tick（50.5µs）の差があった。同じ時刻に書き換えず、各itemの時刻で差分を計算する。1msの整合性幅はこのclock診断を踏まえてstage集計前に設定したもので、provider時刻の精度保証ではない。取得call全体に前後1msを加えた範囲がstage内に入る点だけを使い、端への補間はしない。
+
+| 区間 | 採用した取得点 | 有効なengine / 全14 | 観測した正の活動量・棄却 |
+| --- | ---: | ---: | --- |
+| load | 2,687 | 14 | 3D engineに1.489ms、観測点間13.2434363秒。SDK専有ではない |
+| first query | 326 | 13 | Copy engineに2.5074ms、観測点間1.8681731秒。3Dは隣接counter差分が経過時間を超えたためnull |
+| warm / repeat-1 / repeat-2 | 各18 | 各13 | 3Dは同じ理由でnull。その他の有効な差分0を、GPU推論時間0へ広げない |
+| release | 1 | 0 | 全engineでpair不足。解放GPU時間はnullのまま |
+
+この追試で、粗い取得間隔だけが制約だったのではないことが分かった。細かく取得しても3Dの一部差分は隣接観測の経過時間より大きく、既存の棄却条件を維持した。providerの更新や帰属の遅れが原因かは未確定である。元のUnity GPU Recorderが正数だった4 queryと、このOS counterのnullは区別する。
+
+loadの正数を通常SDKのGPUロード時間へ代入せず、複数engineも加算しない。短いreleaseのpair不足・実区間端の未観測・driver退役・SDK専有allocationは残っている。同じPDH取得をさらに反復しただけでこれらを合格にはせず、元の精度・順位・GPU要件・正常終了と、優先1〜3全体の未完了を維持する。

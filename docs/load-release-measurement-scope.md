@@ -40,3 +40,7 @@ GPU演算の独立controlはGPUCompute・期待値一致・18,432nsだった。�
 Windowsには `GPU Engine / Running Time` counterも存在したが、ここでは実モデルの値は取得していない。別方式を用いる場合は、PID・adapter/engine・counter時刻・単位を校正し、複数engineの重なりとEditor自身のGPU仕事を区別する必要がある。
 
 その後の[Windows raw Timer100Nsの別観測](windows-gpu-engine-observations.md)では、同じSDKの実text4反復を2回、元参照・解放・正常終了と対応付けた。修正後のload内3観測点・14 engineの差分は、load全体16.308541秒のうち観測点間10.620599秒で0だった。境界のGPU転送や、観測点のない10.1547msのreleaseへ拡張しない。OSのprocess/engine活動量であってSDK専有のload/release GPU時間ではなく、欠測と元のproviderエラーを保持する。
+
+後続の[native PDH追試](results/native-pdh-text-stage-observation-f604baf-20261018.json)は、同じSDK/validationのFP32 text4 vector、参照・解放・1 pass / skip0 / exit0と、8,783回の所有process counterを対応付けた。取得間隔の中央値4.6489msで、load内に2,687点、各query内に326 / 18 / 18 / 18点、release内に1点を採用した。loadの3Dに1.489ms、firstのCopyに2.5074msという内側区間の正数があったが、queryの3Dは隣接差分が経過時間を超え、releaseはpair不足でnullだった。1msのclock整合性幅を含むcall全体が区間内に収まる点だけを用い、itemの実時刻をquery時刻へ置換していない。
+
+これはSDK専有load/release時間の取得にはならない。細かいsampleを増やすだけでは解決しないprovider側の値と帰属の制約を保持し、同じPDH手法の反復で全体合格に置き換えない。clock診断・TDD・CPU観測・source対応と、未確定の原因は[Windows観測](windows-gpu-engine-observations.md)へ分けて記録する。

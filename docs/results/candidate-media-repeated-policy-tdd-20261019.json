@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "scope": "Editor repeated-input source/precision policy and fixture wiring contracts only",
+  "validation_base_source": "73fa675f0cbef5fdde71fe4d79f0a40f450abf85",
+  "SDK_fixed_Git": "7754ce4eb9e07e8b81865487b175c63dd6e93097",
+  "SDK_package_tree": "6c8fa26c54268bca1b256173e93855617610865c",
+  "SDK_source_overlay": false,
+  "validation_working_source_overlay": true,
+  "Library_copied": false,
+  "existing_owned_Library_reused": true,
+  "intended_red": {
+    "tests": 34,
+    "passed": 0,
+    "failed": 34,
+    "skipped": 0
+  },
+  "green": {
+    "tests": 68,
+    "passed": 68,
+    "failed": 0,
+    "skipped": 0,
+    "Editor_exit_code": 0
+  },
+  "test_bytes_unchanged_between_intended_red_and_green": true,
+  "initial_unsupported_test_attribute_compile_failure_retained": true,
+  "implementation_missing_NUnit_import_compile_failure_retained": true,
+  "compile_failures_counted_as_behavior_Red": false,
+  "candidate_all_five_profiles_and_both_precision_contracts": true,
+  "legacy_descriptor_and_numeric_thresholds_preserved": true,
+  "original_four_rounds_and_same_input_checks_preserved": true,
+  "default_host_memory_allowance_raised": false,
+  "source_sha256": {
+    "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/MediaRepeatedInputPolicy.cs": "8a482f3e5f7341300036f34469574c3768daa14b9e06e89e8f9e6b4b7b70b480",
+    "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/MediaRepeatedInputPerformanceTests.cs": "91bcc4574ceef3773a79f2f653a50182ade2bf542cd0f06ca35a082e82e0fde1",
+    "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/CandidateMediaRepeatedInputPerformanceTests.cs": "30726acf8bd54f61c296e8080065df8ebacee9e87ab383de480604b26bd6f710",
+    "validation/com.ayutaz.embeddinggemma.validation/Tests/Editor/MediaRepeatedInputPolicyTests.cs": "37f3674e8235cc90e92f94cfbc3ad4825a256266e8a335ac8dbc4bd43c9b7662"
+  },
+  "private_XML_sha256": {
+    "final-media-policy-red-v2": "97762f3336b0c18df7d866de641073d4e36736e3e092cdefa94588b63f990b9d",
+    "final-media-policy-green-v2": "8c1c94a37aaaa0651ddce2ceb8a9e7a4903ab2b55dd9b32e1897b11ccb79e00f"
+  },
+  "real_model_or_GPU_executed": false,
+  "CPU_backend_comparison_accepted": false,
+  "final_performance_or_devices_accepted": false,
+  "formal_release_ready": false
+}

@@ -1,0 +1,1702 @@
+{
+  "schema": 1,
+  "scope": "Six image/profile precision conditions, four identical-input GPU calls each; instrumented process CPU/wall and GPU queue intervals only",
+  "SDK_source": "7754ce4eb9e07e8b81865487b175c63dd6e93097",
+  "SDK_package_tree": "6c8fa26c54268bca1b256173e93855617610865c",
+  "validation_source": "2cc7d94198f413dfe81e24bab7c999607375ce9e",
+  "SDK_source_overlay": false,
+  "validation_immutable_local_Git_archive": true,
+  "fresh_fixed_Git_consumer_claimed": false,
+  "existing_owned_Library_reused": true,
+  "Library_copied": false,
+  "SDK_files_verified": 316,
+  "validation_snapshot_files_verified": 290,
+  "sample_files_verified": 86,
+  "official_framework_files_verified": 1168,
+  "Unity": "6000.3.21f1",
+  "GPU": "NVIDIA GeForce RTX 4070 Ti SUPER",
+  "graphics_API": "Direct3D12",
+  "actual_backend": "GPUCompute",
+  "image_conditions": 6,
+  "accepted_repeated_calls": 24,
+  "tests": {
+    "total": 6,
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0
+  },
+  "CPU_scope": "Whole Editor process threads, not CPU-backend inference",
+  "GPU_scope": "Submission/encoder marker intervals include queue and commanded copies; not pure kernel or SDK-exclusive load/release time",
+  "first_definition": "New process/session first inference; OS/shader caches and the existing owned Library were not purged",
+  "warm_definition": "Three following calls in the same session with exactly the same input",
+  "memory_scope": "Observed host process peak and sampled per-process dedicated/shared allocations; missing samples stay null",
+  "default_host_allowance_raised": false,
+  "explicit_host_allowance_GiB": 16,
+  "CPU_backend_comparison_accepted": false,
+  "pure_kernel_or_exclusive_load_release_GPU_time_accepted": false,
+  "guaranteed_VRAM_peak_or_minimum_hardware_accepted": false,
+  "complete_performance_accepted": false,
+  "raw_vectors_images_or_recordings_published": false,
+  "audio_conditions_deferred": [
+    {
+      "module": "audio-839",
+      "precision": "float16-weights",
+      "available_free_MiB": 10309,
+      "conservative_launch_free_MiB": 14336,
+      "minimum_hardware_claimed": false,
+      "reason": "Conservative launch VRAM allowance not met; no other applications closed"
+    },
+    {
+      "module": "audio-1119",
+      "precision": "float16-weights",
+      "available_free_MiB": 10309,
+      "conservative_launch_free_MiB": 14336,
+      "minimum_hardware_claimed": false,
+      "reason": "Conservative launch VRAM allowance not met; no other applications closed"
+    },
+    {
+      "module": "audio-839",
+      "precision": "fp32",
+      "available_free_MiB": 10309,
+      "conservative_launch_free_MiB": 14336,
+      "minimum_hardware_claimed": false,
+      "reason": "Conservative launch VRAM allowance not met; no other applications closed"
+    },
+    {
+      "module": "audio-1119",
+      "precision": "fp32",
+      "available_free_MiB": 10309,
+      "conservative_launch_free_MiB": 14336,
+      "minimum_hardware_claimed": false,
+      "reason": "Conservative launch VRAM allowance not met; no other applications closed"
+    }
+  ],
+  "conditions": [
+    {
+      "module": "image-square",
+      "precision": "float16-weights",
+      "descriptor_sha256": "8a6a90c5f656a00b024553a0412e5c4d32b4d2c9c7c5b3a0c2c146f557b4e27e",
+      "input_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+      "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "reference_case_id": "square-0",
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 46.161499199999994,
+          "process_CPU_seconds": 2.171875,
+          "independent_cosine": 0.99999999999977,
+          "norm_squared": 0.9999999783486199,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 37.5832632,
+              "process_cpu_seconds": 0.390625
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.3396748999999994,
+              "process_cpu_seconds": 1.59375
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.1492232,
+              "process_cpu_seconds": 0.109375
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 4442368,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 275070976,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 3072,
+            "maximum_observed_interval_ns": 49171456,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 5.214910499999999,
+          "process_CPU_seconds": 1.078125,
+          "independent_cosine": 0.99999999999977,
+          "norm_squared": 0.9999999783486199,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.031834999999999995,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 5.0198244,
+              "process_cpu_seconds": 0.953125
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.1181932,
+              "process_cpu_seconds": 0.0625
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 894976,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 104060928,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 4096,
+            "maximum_observed_interval_ns": 20871168,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 4.9876569,
+          "process_CPU_seconds": 1.375,
+          "independent_cosine": 0.99999999999977,
+          "norm_squared": 0.9999999783486199,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0170366,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.827797599999999,
+              "process_cpu_seconds": 1.3125
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.1097857,
+              "process_cpu_seconds": 0.046875
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 897024,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 108969984,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 5120,
+            "maximum_observed_interval_ns": 19569664,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 5.1594687,
+          "process_CPU_seconds": 1.5,
+          "independent_cosine": 0.99999999999977,
+          "norm_squared": 0.9999999783486199,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.011988799999999999,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.9994041,
+              "process_cpu_seconds": 1.421875
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.1075218,
+              "process_cpu_seconds": 0.046875
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 743424,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 111118336,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 5120,
+            "maximum_observed_interval_ns": 19898368,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        }
+      ],
+      "load_wall_seconds": 46.342169,
+      "load_process_CPU_seconds": 39.78125,
+      "release_wall_seconds": 0.025154199999999998,
+      "release_process_CPU_seconds": 0.03125,
+      "host_native_peak_bytes": 8213827584,
+      "explicit_host_limit_bytes": 17179869184,
+      "sampled_process_memory_intervals": [
+        {
+          "id": "load",
+          "available": true,
+          "sample_count": 11,
+          "available_sample_count": 11,
+          "largest_observed_dedicated_bytes": 913244160,
+          "largest_observed_shared_bytes": 228872192,
+          "maximum_observed_sample_gap_seconds": 4.547977
+        },
+        {
+          "id": "release",
+          "available": false,
+          "sample_count": 0,
+          "available_sample_count": 0,
+          "largest_observed_dedicated_bytes": null,
+          "largest_observed_shared_bytes": null,
+          "maximum_observed_sample_gap_seconds": null
+        },
+        {
+          "id": "first/stage-span",
+          "available": true,
+          "sample_count": 11,
+          "available_sample_count": 11,
+          "largest_observed_dedicated_bytes": 2701565952,
+          "largest_observed_shared_bytes": 505696256,
+          "maximum_observed_sample_gap_seconds": 4.284944
+        },
+        {
+          "id": "warm/stage-span",
+          "available": true,
+          "sample_count": 2,
+          "available_sample_count": 2,
+          "largest_observed_dedicated_bytes": 3982778368,
+          "largest_observed_shared_bytes": 481054720,
+          "maximum_observed_sample_gap_seconds": 4.082425
+        },
+        {
+          "id": "repeat-1/stage-span",
+          "available": true,
+          "sample_count": 1,
+          "available_sample_count": 1,
+          "largest_observed_dedicated_bytes": 4592541696,
+          "largest_observed_shared_bytes": 246173696,
+          "maximum_observed_sample_gap_seconds": null
+        },
+        {
+          "id": "repeat-2/stage-span",
+          "available": true,
+          "sample_count": 1,
+          "available_sample_count": 1,
+          "largest_observed_dedicated_bytes": 3677896704,
+          "largest_observed_shared_bytes": 246173696,
+          "maximum_observed_sample_gap_seconds": null
+        }
+      ],
+      "maximum_observed_dedicated_bytes": 4592541696,
+      "GPU_before": {
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_MiB": 16376,
+        "free_MiB": 10354,
+        "utilization_percent": 12
+      },
+      "memory_observation_count": 38,
+      "all_18_memory_intervals_observed": false,
+      "session_and_resources_closed": true,
+      "process_exit_code": 0,
+      "tests": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "private_independent_audit_sha256": "91776316cfa04066e094d7a19bd9839821ec6e3138f758b3b45fccae6b62a77a",
+      "private_memory_audit_sha256": "8c02e1ec3de1e1c66723f1952138623dd7f2ecd38f3f2640fc58f34260dc68ae"
+    },
+    {
+      "module": "image-landscape",
+      "precision": "float16-weights",
+      "descriptor_sha256": "8a6a90c5f656a00b024553a0412e5c4d32b4d2c9c7c5b3a0c2c146f557b4e27e",
+      "input_sha256": "f2b3f32a22e6282b9876b98c4c5a7bbf75e7469dff933128e17d6503dd6d6e55",
+      "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "reference_case_id": "landscape-0",
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 7.0440914999999995,
+          "process_CPU_seconds": 1.234375,
+          "independent_cosine": 0.9999999999990701,
+          "norm_squared": 1.000000145738682,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.4183242,
+              "process_cpu_seconds": 0.046875
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 5.4795772,
+              "process_cpu_seconds": 1.015625
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 1.079105,
+              "process_cpu_seconds": 0.109375
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 4056320,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 157954048,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 4096,
+            "maximum_observed_interval_ns": 56797184,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 4.9644685,
+          "process_CPU_seconds": 1.0625,
+          "independent_cosine": 0.9999999999990701,
+          "norm_squared": 1.000000145738682,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0240171,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.7906341,
+              "process_cpu_seconds": 0.953125
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.10697849999999999,
+              "process_cpu_seconds": 0.0625
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 943104,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 97604608,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 4096,
+            "maximum_observed_interval_ns": 19717120,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 4.7455631,
+          "process_CPU_seconds": 0.59375,
+          "independent_cosine": 0.9999999999990701,
+          "norm_squared": 1.000000145738682,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.004742,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.6002716999999995,
+              "process_cpu_seconds": 0.515625
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.1035666,
+              "process_cpu_seconds": 0.046875
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 902144,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 126428160,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 4096,
+            "maximum_observed_interval_ns": 19336192,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 4.735896599999999,
+          "process_CPU_seconds": 0.890625,
+          "independent_cosine": 0.9999999999990701,
+          "norm_squared": 1.000000145738682,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0148919,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.5612359,
+              "process_cpu_seconds": 0.796875
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.10564019999999999,
+              "process_cpu_seconds": 0.046875
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 992256,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 91357184,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 4096,
+            "maximum_observed_interval_ns": 19674112,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        }
+      ],
+      "load_wall_seconds": 42.672034599999996,
+      "load_process_CPU_seconds": 34.984375,
+      "release_wall_seconds": 0.0176919,
+      "release_process_CPU_seconds": 0.015625,
+      "host_native_peak_bytes": 8322183168,
+      "explicit_host_limit_bytes": 17179869184,
+      "sampled_process_memory_intervals": [
+        {
+          "id": "load",
+          "available": true,
+          "sample_count": 11,
+          "available_sample_count": 11,
+          "largest_observed_dedicated_bytes": 913244160,
+          "largest_observed_shared_bytes": 239620096,
+          "maximum_observed_sample_gap_seconds": 4.028703
+        },
+        {
+          "id": "release",
+          "available": false,
+          "sample_count": 0,
+          "available_sample_count": 0,
+          "largest_observed_dedicated_bytes": null,
+          "largest_observed_shared_bytes": null,
+          "maximum_observed_sample_gap_seconds": null
+        },
+        {
+          "id": "first/stage-span",
+          "available": true,
+          "sample_count": 2,
+          "available_sample_count": 2,
+          "largest_observed_dedicated_bytes": 2768609280,
+          "largest_observed_shared_bytes": 232869888,
+          "maximum_observed_sample_gap_seconds": 3.968564
+        },
+        {
+          "id": "warm/stage-span",
+          "available": true,
+          "sample_count": 1,
+          "available_sample_count": 1,
+          "largest_observed_dedicated_bytes": 4458328064,
+          "largest_observed_shared_bytes": 246042624,
+          "maximum_observed_sample_gap_seconds": null
+        },
+        {
+          "id": "repeat-1/stage-span",
+          "available": true,
+          "sample_count": 1,
+          "available_sample_count": 1,
+          "largest_observed_dedicated_bytes": 5068087296,
+          "largest_observed_shared_bytes": 246042624,
+          "maximum_observed_sample_gap_seconds": null
+        },
+        {
+          "id": "repeat-2/stage-span",
+          "available": true,
+          "sample_count": 2,
+          "available_sample_count": 2,
+          "largest_observed_dedicated_bytes": 4458328064,
+          "largest_observed_shared_bytes": 246042624,
+          "maximum_observed_sample_gap_seconds": 4.074247
+        }
+      ],
+      "maximum_observed_dedicated_bytes": 5068087296,
+      "GPU_before": {
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_MiB": 16376,
+        "free_MiB": 10341,
+        "utilization_percent": 12
+      },
+      "memory_observation_count": 27,
+      "all_18_memory_intervals_observed": false,
+      "session_and_resources_closed": true,
+      "process_exit_code": 0,
+      "tests": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "private_independent_audit_sha256": "353e00140f52c71642e99152deead8c8586a03f96b5ae2353955dbe4b279d8fb",
+      "private_memory_audit_sha256": "0ef009fdfbeb7f1d671a4be8d7a838bd6922752329ac35d8f51a5fc6b2d9442a"
+    },
+    {
+      "module": "image-portrait",
+      "precision": "float16-weights",
+      "descriptor_sha256": "8a6a90c5f656a00b024553a0412e5c4d32b4d2c9c7c5b3a0c2c146f557b4e27e",
+      "input_sha256": "fce3474792c6401c4bae6ac0261a386f400bac0cece977ffda86388ee6682489",
+      "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "reference_case_id": "portrait-0",
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 7.0125174999999995,
+          "process_CPU_seconds": 1.5,
+          "independent_cosine": 0.9999999999997247,
+          "norm_squared": 0.9999999824864825,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.2858211,
+              "process_cpu_seconds": 0.0625
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 5.8354256,
+              "process_cpu_seconds": 1.1875
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.822799,
+              "process_cpu_seconds": 0.1875
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 3700736,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 159203328,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 4096,
+            "maximum_observed_interval_ns": 46715904,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 4.87277,
+          "process_CPU_seconds": 1.015625,
+          "independent_cosine": 0.9999999999997247,
+          "norm_squared": 0.9999999824864825,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0297728,
+              "process_cpu_seconds": 0.015625
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.7107174999999994,
+              "process_cpu_seconds": 0.90625
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.098647,
+              "process_cpu_seconds": 0.03125
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 788480,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 94592000,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 4096,
+            "maximum_observed_interval_ns": 19207168,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 4.7897034,
+          "process_CPU_seconds": 1.015625,
+          "independent_cosine": 0.9999999999997247,
+          "norm_squared": 0.9999999824864825,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.004719999999999999,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.652276,
+              "process_cpu_seconds": 0.953125
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.09851789999999999,
+              "process_cpu_seconds": 0.03125
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 889856,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 100343808,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 4096,
+            "maximum_observed_interval_ns": 19369984,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 4.7073201,
+          "process_CPU_seconds": 1.03125,
+          "independent_cosine": 0.9999999999997247,
+          "norm_squared": 0.9999999824864825,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.004293,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.558999099999999,
+              "process_cpu_seconds": 0.9375
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.10245259999999999,
+              "process_cpu_seconds": 0.046875
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 867328,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 93338624,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 5120,
+            "maximum_observed_interval_ns": 19492864,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        }
+      ],
+      "load_wall_seconds": 37.3978691,
+      "load_process_CPU_seconds": 29.328125,
+      "release_wall_seconds": 0.0183266,
+      "release_process_CPU_seconds": 0.015625,
+      "host_native_peak_bytes": 8306634752,
+      "explicit_host_limit_bytes": 17179869184,
+      "sampled_process_memory_intervals": [
+        {
+          "id": "load",
+          "available": true,
+          "sample_count": 9,
+          "available_sample_count": 9,
+          "largest_observed_dedicated_bytes": 913260544,
+          "largest_observed_shared_bytes": 231493632,
+          "maximum_observed_sample_gap_seconds": 4.201106
+        },
+        {
+          "id": "release",
+          "available": false,
+          "sample_count": 0,
+          "available_sample_count": 0,
+          "largest_observed_dedicated_bytes": null,
+          "largest_observed_shared_bytes": null,
+          "maximum_observed_sample_gap_seconds": null
+        },
+        {
+          "id": "first/stage-span",
+          "available": true,
+          "sample_count": 2,
+          "available_sample_count": 2,
+          "largest_observed_dedicated_bytes": 2835795968,
+          "largest_observed_shared_bytes": 232935424,
+          "maximum_observed_sample_gap_seconds": 4.269673
+        },
+        {
+          "id": "warm/stage-span",
+          "available": true,
+          "sample_count": 1,
+          "available_sample_count": 1,
+          "largest_observed_dedicated_bytes": 3610812416,
+          "largest_observed_shared_bytes": 246304768,
+          "maximum_observed_sample_gap_seconds": null
+        },
+        {
+          "id": "repeat-1/stage-span",
+          "available": true,
+          "sample_count": 1,
+          "available_sample_count": 1,
+          "largest_observed_dedicated_bytes": 4525453312,
+          "largest_observed_shared_bytes": 246304768,
+          "maximum_observed_sample_gap_seconds": null
+        },
+        {
+          "id": "repeat-2/stage-span",
+          "available": true,
+          "sample_count": 1,
+          "available_sample_count": 1,
+          "largest_observed_dedicated_bytes": 5135212544,
+          "largest_observed_shared_bytes": 246501376,
+          "maximum_observed_sample_gap_seconds": null
+        }
+      ],
+      "maximum_observed_dedicated_bytes": 5135212544,
+      "GPU_before": {
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_MiB": 16376,
+        "free_MiB": 10341,
+        "utilization_percent": 12
+      },
+      "memory_observation_count": 24,
+      "all_18_memory_intervals_observed": false,
+      "session_and_resources_closed": true,
+      "process_exit_code": 0,
+      "tests": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "private_independent_audit_sha256": "f996b14d788bfb124d8650fd63be63d9c5b6cddd86b8a70bbde9930a16b8cec1",
+      "private_memory_audit_sha256": "bfe91e64755531fd236208c0091d6fad63e0698c496b196f82922dd57b95f243"
+    },
+    {
+      "module": "image-square",
+      "precision": "fp32",
+      "descriptor_sha256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "input_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+      "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "reference_case_id": "square-0",
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 9.535511999999999,
+          "process_CPU_seconds": 1.796875,
+          "independent_cosine": 0.9999999999997135,
+          "norm_squared": 0.9999998644722635,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.29443769999999997,
+              "process_cpu_seconds": 0.03125
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.5683972,
+              "process_cpu_seconds": 1.453125
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.6071214,
+              "process_cpu_seconds": 0.265625
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 726784,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 305337344,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 4096,
+            "maximum_observed_interval_ns": 21182464,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 5.227486,
+          "process_CPU_seconds": 0.953125,
+          "independent_cosine": 0.9999999999997135,
+          "norm_squared": 0.9999998644722635,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.049133199999999995,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 5.0263485,
+              "process_cpu_seconds": 0.875
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.1219889,
+              "process_cpu_seconds": 0.0625
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 653312,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 116225024,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 4096,
+            "maximum_observed_interval_ns": 20483072,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 5.0975926,
+          "process_CPU_seconds": 1.328125,
+          "independent_cosine": 0.9999999999997135,
+          "norm_squared": 0.9999998644722635,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.007358,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.937869,
+              "process_cpu_seconds": 1.25
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.09869549999999999,
+              "process_cpu_seconds": 0.046875
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 738304,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 100927488,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 4096,
+            "maximum_observed_interval_ns": 19606528,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 4.7191012,
+          "process_CPU_seconds": 1.203125,
+          "independent_cosine": 0.9999999999997135,
+          "norm_squared": 0.9999998644722635,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0048175,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.577971499999999,
+              "process_cpu_seconds": 1.125
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.0932392,
+              "process_cpu_seconds": 0.046875
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 783360,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 95240192,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 6144,
+            "maximum_observed_interval_ns": 19448832,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        }
+      ],
+      "load_wall_seconds": 40.7551334,
+      "load_process_CPU_seconds": 32.890625,
+      "release_wall_seconds": 0.0215394,
+      "release_process_CPU_seconds": 0.015625,
+      "host_native_peak_bytes": 9541156864,
+      "explicit_host_limit_bytes": 17179869184,
+      "sampled_process_memory_intervals": [
+        {
+          "id": "load",
+          "available": true,
+          "sample_count": 10,
+          "available_sample_count": 10,
+          "largest_observed_dedicated_bytes": 913260544,
+          "largest_observed_shared_bytes": 241324032,
+          "maximum_observed_sample_gap_seconds": 3.929671
+        },
+        {
+          "id": "release",
+          "available": false,
+          "sample_count": 0,
+          "available_sample_count": 0,
+          "largest_observed_dedicated_bytes": null,
+          "largest_observed_shared_bytes": null,
+          "maximum_observed_sample_gap_seconds": null
+        },
+        {
+          "id": "first/stage-span",
+          "available": true,
+          "sample_count": 3,
+          "available_sample_count": 3,
+          "largest_observed_dedicated_bytes": 2660364288,
+          "largest_observed_shared_bytes": 897732608,
+          "maximum_observed_sample_gap_seconds": 4.347247
+        },
+        {
+          "id": "warm/stage-span",
+          "available": true,
+          "sample_count": 1,
+          "available_sample_count": 1,
+          "largest_observed_dedicated_bytes": 3378831360,
+          "largest_observed_shared_bytes": 246435840,
+          "maximum_observed_sample_gap_seconds": null
+        },
+        {
+          "id": "repeat-1/stage-span",
+          "available": true,
+          "sample_count": 1,
+          "available_sample_count": 1,
+          "largest_observed_dedicated_bytes": 3208167424,
+          "largest_observed_shared_bytes": 246435840,
+          "maximum_observed_sample_gap_seconds": null
+        },
+        {
+          "id": "repeat-2/stage-span",
+          "available": true,
+          "sample_count": 1,
+          "available_sample_count": 1,
+          "largest_observed_dedicated_bytes": 3513049088,
+          "largest_observed_shared_bytes": 246435840,
+          "maximum_observed_sample_gap_seconds": null
+        }
+      ],
+      "maximum_observed_dedicated_bytes": 3513049088,
+      "GPU_before": {
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_MiB": 16376,
+        "free_MiB": 10341,
+        "utilization_percent": 11
+      },
+      "memory_observation_count": 26,
+      "all_18_memory_intervals_observed": false,
+      "session_and_resources_closed": true,
+      "process_exit_code": 0,
+      "tests": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "private_independent_audit_sha256": "b8ab231426b137fde0c45f0723c418e14b6cc32ed8e35db2481e384e65f946f5",
+      "private_memory_audit_sha256": "16de96e9daa841bd7156d54fe0fe632e3cb845395160e209b7f9e4772559af14"
+    },
+    {
+      "module": "image-landscape",
+      "precision": "fp32",
+      "descriptor_sha256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "input_sha256": "f2b3f32a22e6282b9876b98c4c5a7bbf75e7469dff933128e17d6503dd6d6e55",
+      "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "reference_case_id": "landscape-0",
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 7.019770599999999,
+          "process_CPU_seconds": 1.03125,
+          "independent_cosine": 0.9999999999989977,
+          "norm_squared": 1.0000000234680548,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.30017689999999997,
+              "process_cpu_seconds": 0.046875
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 5.7244774,
+              "process_cpu_seconds": 0.859375
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.9152443,
+              "process_cpu_seconds": 0.046875
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 1341440,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 163778560,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 4096,
+            "maximum_observed_interval_ns": 20946944,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 4.9409468,
+          "process_CPU_seconds": 1.203125,
+          "independent_cosine": 0.9999999999989977,
+          "norm_squared": 1.0000000234680548,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.016016199999999998,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.791592,
+              "process_cpu_seconds": 1.140625
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.0994967,
+              "process_cpu_seconds": 0.03125
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 803840,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 99880960,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 4864,
+            "maximum_observed_interval_ns": 19590144,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 4.9109256,
+          "process_CPU_seconds": 1.140625,
+          "independent_cosine": 0.9999999999989977,
+          "norm_squared": 1.0000000234680548,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0053146999999999995,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.7707632,
+              "process_cpu_seconds": 1.0625
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.0943251,
+              "process_cpu_seconds": 0.03125
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 837632,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 100048896,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 4096,
+            "maximum_observed_interval_ns": 19584000,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 4.6731875,
+          "process_CPU_seconds": 0.546875,
+          "independent_cosine": 0.9999999999989977,
+          "norm_squared": 1.0000000234680548,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0044274,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.5301241,
+              "process_cpu_seconds": 0.46875
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.0959245,
+              "process_cpu_seconds": 0.046875
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 782336,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 97716224,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 4096,
+            "maximum_observed_interval_ns": 19542016,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        }
+      ],
+      "load_wall_seconds": 38.222898,
+      "load_process_CPU_seconds": 30.984375,
+      "release_wall_seconds": 0.0207608,
+      "release_process_CPU_seconds": 0.015625,
+      "host_native_peak_bytes": 9646604288,
+      "explicit_host_limit_bytes": 17179869184,
+      "sampled_process_memory_intervals": [
+        {
+          "id": "load",
+          "available": true,
+          "sample_count": 10,
+          "available_sample_count": 10,
+          "largest_observed_dedicated_bytes": 913256448,
+          "largest_observed_shared_bytes": 231886848,
+          "maximum_observed_sample_gap_seconds": 3.98277
+        },
+        {
+          "id": "release",
+          "available": false,
+          "sample_count": 0,
+          "available_sample_count": 0,
+          "largest_observed_dedicated_bytes": null,
+          "largest_observed_shared_bytes": null,
+          "maximum_observed_sample_gap_seconds": null
+        },
+        {
+          "id": "first/stage-span",
+          "available": true,
+          "sample_count": 2,
+          "available_sample_count": 2,
+          "largest_observed_dedicated_bytes": 2360246272,
+          "largest_observed_shared_bytes": 232280064,
+          "maximum_observed_sample_gap_seconds": 4.187529
+        },
+        {
+          "id": "warm/stage-span",
+          "available": true,
+          "sample_count": 1,
+          "available_sample_count": 1,
+          "largest_observed_dedicated_bytes": 4055699456,
+          "largest_observed_shared_bytes": 246829056,
+          "maximum_observed_sample_gap_seconds": null
+        },
+        {
+          "id": "repeat-1/stage-span",
+          "available": true,
+          "sample_count": 1,
+          "available_sample_count": 1,
+          "largest_observed_dedicated_bytes": 4122808320,
+          "largest_observed_shared_bytes": 246829056,
+          "maximum_observed_sample_gap_seconds": null
+        },
+        {
+          "id": "repeat-2/stage-span",
+          "available": true,
+          "sample_count": 2,
+          "available_sample_count": 2,
+          "largest_observed_dedicated_bytes": 3817926656,
+          "largest_observed_shared_bytes": 246829056,
+          "maximum_observed_sample_gap_seconds": 3.911336
+        }
+      ],
+      "maximum_observed_dedicated_bytes": 4122808320,
+      "GPU_before": {
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_MiB": 16376,
+        "free_MiB": 10326,
+        "utilization_percent": 12
+      },
+      "memory_observation_count": 25,
+      "all_18_memory_intervals_observed": false,
+      "session_and_resources_closed": true,
+      "process_exit_code": 0,
+      "tests": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "private_independent_audit_sha256": "651dba56850dc2f52ff1995f466a30bbdae71b3342a84ed5d5269b3b019a5c33",
+      "private_memory_audit_sha256": "67a1d910bad436494ea97d4f75c53aec1cd88edf46da0d2fb421eb9748afbcbb"
+    },
+    {
+      "module": "image-portrait",
+      "precision": "fp32",
+      "descriptor_sha256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "input_sha256": "fce3474792c6401c4bae6ac0261a386f400bac0cece977ffda86388ee6682489",
+      "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "reference_case_id": "portrait-0",
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 6.1914729,
+          "process_CPU_seconds": 1.375,
+          "independent_cosine": 0.9999999999997848,
+          "norm_squared": 1.0000000495263595,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.2473848,
+              "process_cpu_seconds": 0.046875
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 5.2844717,
+              "process_cpu_seconds": 1.109375
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.5987385,
+              "process_cpu_seconds": 0.171875
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 5383936,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 142194688,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 4096,
+            "maximum_observed_interval_ns": 23812096,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 4.8612364,
+          "process_CPU_seconds": 0.609375,
+          "independent_cosine": 0.9999999999997848,
+          "norm_squared": 1.0000000495263595,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0121502,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.7182335,
+              "process_cpu_seconds": 0.53125
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.1018215,
+              "process_cpu_seconds": 0.046875
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 800768,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 87973888,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 5120,
+            "maximum_observed_interval_ns": 19193856,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 4.7629525,
+          "process_CPU_seconds": 0.359375,
+          "independent_cosine": 0.9999999999997848,
+          "norm_squared": 1.0000000495263595,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.004200199999999999,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.6350885,
+              "process_cpu_seconds": 0.296875
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.0914521,
+              "process_cpu_seconds": 0.046875
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 608256,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 103815168,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 4096,
+            "maximum_observed_interval_ns": 21110784,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 4.5954296999999995,
+          "process_CPU_seconds": 0.546875,
+          "independent_cosine": 0.9999999999997848,
+          "norm_squared": 1.0000000495263595,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0054380999999999995,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.4560368,
+              "process_cpu_seconds": 0.484375
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.0897707,
+              "process_cpu_seconds": 0.03125
+            }
+          ],
+          "submission_intervals": [
+            {
+              "kind": "preprocessing-initial-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 1081344,
+              "aborted": false
+            },
+            {
+              "kind": "backbone-synchronous-submission",
+              "stage": 0,
+              "gpu_ns": 83717120,
+              "aborted": false
+            }
+          ],
+          "encoder_intervals": {
+            "positive": 359,
+            "missing_timestamps": 0,
+            "minimum_observed_interval_ns": 4096,
+            "maximum_observed_interval_ns": 19430400,
+            "intervals_not_summed_as_pure_kernel_time": true
+          }
+        }
+      ],
+      "load_wall_seconds": 36.488433799999996,
+      "load_process_CPU_seconds": 29.265625,
+      "release_wall_seconds": 0.0149603,
+      "release_process_CPU_seconds": 0.015625,
+      "host_native_peak_bytes": 9362518016,
+      "explicit_host_limit_bytes": 17179869184,
+      "sampled_process_memory_intervals": [
+        {
+          "id": "load",
+          "available": true,
+          "sample_count": 10,
+          "available_sample_count": 10,
+          "largest_observed_dedicated_bytes": 913256448,
+          "largest_observed_shared_bytes": 241061888,
+          "maximum_observed_sample_gap_seconds": 3.893708
+        },
+        {
+          "id": "release",
+          "available": false,
+          "sample_count": 0,
+          "available_sample_count": 0,
+          "largest_observed_dedicated_bytes": null,
+          "largest_observed_shared_bytes": null,
+          "maximum_observed_sample_gap_seconds": null
+        },
+        {
+          "id": "first/stage-span",
+          "available": true,
+          "sample_count": 2,
+          "available_sample_count": 2,
+          "largest_observed_dedicated_bytes": 2158923776,
+          "largest_observed_shared_bytes": 231755776,
+          "maximum_observed_sample_gap_seconds": 3.809046
+        },
+        {
+          "id": "warm/stage-span",
+          "available": true,
+          "sample_count": 1,
+          "available_sample_count": 1,
+          "largest_observed_dedicated_bytes": 4226359296,
+          "largest_observed_shared_bytes": 246304768,
+          "maximum_observed_sample_gap_seconds": null
+        },
+        {
+          "id": "repeat-1/stage-span",
+          "available": true,
+          "sample_count": 1,
+          "available_sample_count": 1,
+          "largest_observed_dedicated_bytes": 3006836736,
+          "largest_observed_shared_bytes": 246304768,
+          "maximum_observed_sample_gap_seconds": null
+        },
+        {
+          "id": "repeat-2/stage-span",
+          "available": true,
+          "sample_count": 1,
+          "available_sample_count": 1,
+          "largest_observed_dedicated_bytes": 4598345728,
+          "largest_observed_shared_bytes": 246304768,
+          "maximum_observed_sample_gap_seconds": null
+        }
+      ],
+      "maximum_observed_dedicated_bytes": 4598345728,
+      "GPU_before": {
+        "name": "NVIDIA GeForce RTX 4070 Ti SUPER",
+        "total_MiB": 16376,
+        "free_MiB": 10320,
+        "utilization_percent": 12
+      },
+      "memory_observation_count": 25,
+      "all_18_memory_intervals_observed": false,
+      "session_and_resources_closed": true,
+      "process_exit_code": 0,
+      "tests": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "private_independent_audit_sha256": "3dfe370730e2868b3afcfb86a7c7bc0ece9b2275f08e5411231c1575b5109240",
+      "private_memory_audit_sha256": "459303def68f834173e1cf0f5c01a5159c8f5e0389ce679c6e36a021b0df7d05"
+    }
+  ]
+}

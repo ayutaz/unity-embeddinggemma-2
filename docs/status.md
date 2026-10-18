@@ -16,9 +16,11 @@
 
 [契約112件](results/final-mixed-player-contracts-20261019.json)と[cache接続7件Red→関連119件Green](results/final-mixed-player-cache-integration-20261019.json)、初期の失敗記録は保持しています。実行に使った修正版sourceは`3a02fc0`で、compiled Runtime/link hash67件とpackage 600・sample 86・公式framework 1,168ファイルを確認しました。修正版のbuild warning485件も保持し、無警告とは扱いません。
 
-手動UI残項目、SDK専有のGPU時間・allocation、画像/音声のCPU比較、最低要件、macOS / iOS / Android実機、provider privacy対応、恒久的な数値参照取得経路、正式SDK tag / Releaseは未完了です。[リリース計画](release-plan.md)で追跡します。今回のWindows機能検証を全環境・性能全体・正式公開の合格には広げません。
+[#97の最新受け入れ](results/native-distribution-integration-344f07a-20261019.json)は、全15 CI job・実アップロード7 ZIP・元参照824,320値の許容差超過0を確認し、main `4d66d92`へ統合済みです。#95・#96も統合先を記録してcloseしました。公開著者・provider署名・実main treeと履歴を確認しています。
 
-数値回帰の[データpreview](results/native-regression-preview-publication-20261019.json)も公開し、全16 assetの実サイズ・hash、本文とtagを照合しました。[明示的な恒久取得経路](native-regression-distribution.md)は284件・actionlintと匿名HTTPによる元参照/metadata 6ファイル照合が成功。元の数値基準・採用根拠7記録を維持し、実行したclean graphのhashと保存元graphのhashを分けています。新経路の全6信号・824,320値の実回帰は最新候補のCIで確認する段階です。#95 head `0c3891d`と#96 head `677b851`は#97へ取り込み、重いCIの重複を整理して最新候補を検査します。元2 PRの個別merge完了とは扱わず、#97の受け入れ後に統合先を記録して整理します。
+[画像GPUの24反復](candidate-media-performance.md)と[CPUの12回診断](reference-cpu-performance.md)を追加しました。最終vectorは全件一致しましたが、CPU squareは中間encoder値3要素の許容差超過でexit1です。元世代の中間参照も未回収のためCPU比較全体は未合格。手動UI残項目、音声の反復性能・CPU比較、SDK専有GPU時間・allocation、最低要件、macOS / iOS / Android実機、旧provider成果物のprivacy対応、正式SDK tag / Releaseは未完了です。[リリース計画](release-plan.md)で追跡し、Windows機能検証を全環境・性能全体・正式公開の合格には広げません。
+
+数値回帰の[データpreview](results/native-regression-preview-publication-20261019.json)は全16 assetの実サイズ・hash、本文とtagを照合済みです。[明示的な恒久取得経路](native-regression-distribution.md)による全6信号・824,320値の実回帰も上記CIで合格しました。元の数値基準・採用根拠7記録を維持し、実行したclean graphのhashと保存元graphのhashを分けています。旧経路の依存棚卸しとprovider成果物の整理は別に残ります。
 
 ## 統合前checkpointと固定sourceの検証記録
 

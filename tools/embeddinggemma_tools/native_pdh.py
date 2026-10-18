@@ -16,6 +16,10 @@ MORE_DATA = 0x800007D2
 MAX_BUFFER = 16*1024*1024
 
 
+def summarize_pdh_intervals(pid, created_filetime, samples, intervals, *, utc_offset_minutes):
+    raise NotImplementedError('Native item clocks and conservative stage bounds are not yet audited')
+
+
 def _natural(value):
     if type(value) is not int or not 0 <= value <= 2**64-1:
         raise ValueError('Raw counter metadata must be nonnegative integers')

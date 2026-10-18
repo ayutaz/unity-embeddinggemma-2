@@ -28,7 +28,7 @@
 
 各工程の詳細と既存checkpointは以下に保持します。工程ごとにsource・モデル・精度・環境、合格・失敗・未実行、残件を記録し、最終candidateでの証拠をそろえてから次の完了判定を行います。
 
-[再生成候補の数値比較](results/audio-regeneration-numerical-baseline-summary-20261018.json)は完了し、nativeで2,884要素、通常の未分割ONNXで5,230要素が元の許容差を超えました。ONNXは6信号すべて不合格で、この候補は未採用です。元の参照・許容差と必須モデル条件は維持します。次は、取得済み候補を別世代として固定し、元の6入力を使って既存の5分割ONNXの全carry・native full/cut bit一致・数値精度を検証するための取得・監査経路を準備します。今回のrunではこの5分割の受け入れは実行していません。
+[再生成候補の通常経路の比較](results/audio-regeneration-numerical-baseline-summary-20261018.json)では、nativeで2,884要素、未分割ONNXで5,230要素が元の許容差を超え、ONNXの6信号すべてが不合格でした。候補は未採用です。元の参照値を維持し、[別世代候補の5分割数値検証](audio-candidate-qualification.md)を追加しました。関連105テストとworkflow lintは合格しましたが、この小規模確認を実モデル・実GPUの合格には数えません。
 
 ## 直近の作業順
 
@@ -51,7 +51,7 @@
 
 以降の最終受け入れでは、新規consumerの3入力・検索・操作・速度とメモリ、Windows Release Player、必須他環境を確認します。旧sourceの合格・skip・CPU fallback・契約テストだけで最終実GPU合格にはしません。[過去の統合監査](results/runtime-ready-integration-2a29c68-20261018.json)は当時のcheckpointとして保持します。
 
-Windowsの画像・音声Player検証基盤は私的な統合候補に保持しています。[契約テストと元入力の読み込み65件](results/media-player-contracts-20261018.json)は合格しましたが、最終candidateでの実モデルGPU・Release Player実行は未実施です。[選択したPython 133件とworkflow lint](results/private-final-integration-20261018.json)も当時の固定sourceの確認であり、最新headのRequired CIを代替しません。
+Windowsの画像・音声Player検証基盤は私的な統合候補に保持しています。[契約テストと元入力の読み込み65件](results/media-player-contracts-20261018.json)は合格しましたが、最終candidateでの実モデルGPU・Release Player実行は未実施です。[選択したPython 133件とworkflow lint](results/private-final-integration-20261018.json)は当時の固定sourceの確認です。今回の候補モデル用の[105件の契約テスト](results/audio-candidate-contracts-20261018.json)も、実モデルの数値合格や最新headのRequired CIを代替しません。
 
 ### 1. 新規利用者のモデル準備
 

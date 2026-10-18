@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "scope": "candidate_contract_and_synthetic_capture_tests_only",
+  "parent_source": "e9de158a55a72a34cbf9f4752a234892c4ce41d3",
+  "source_hash_representation": "git_index_blob",
+  "source_files_sha256": {
+    ".github/workflows/audio-runtime-reference.yml": "33fffc31313364153cb52d822eb93d2187dadb4d8e9061fc38cd0d708292837e",
+    "tools/embeddinggemma_tools/audio_generation_candidate.py": "5eee56652ba842ec275a68da0f8075f72f846caf0d6c4118c03a321f03846540",
+    "tools/embeddinggemma_tools/audit_audio_raw_chain.py": "39c1095d7ab7abc9a1c95c71a2f94e40270b7dd4f8e14775ea8248d0de8e8ffa",
+    "tools/embeddinggemma_tools/frozen_audio_chained_onnx.py": "e2858b8e272dcaf3b9341782d51d3d4490c88112b410742b7668cfd6f25bcf8b",
+    "tools/references/audio-candidate-e9de158.json": "df73e109fc6dd62e8b1fff409930042b63e6c63548865b074b593dcc70c40deb",
+    "tools/tests/test_audio_generation_candidate.py": "f2d05aef924bf6e358a5687fe2952aad46975d3a8fb63522fd654a84073e1952",
+    "tools/tests/test_audio_candidate_workflow.py": "7bc43eacd357559460e77edc9deb7fd30465ae782f00c857484f6a40a2ac7d80"
+  },
+  "tdd_red": [
+    {
+      "phase": "loader_and_explicit_mode",
+      "failed": 1,
+      "errors": 8
+    },
+    {
+      "phase": "independent_audit",
+      "failed": 16
+    },
+    {
+      "phase": "fetch_provenance",
+      "failed": 5
+    },
+    {
+      "phase": "manual_workflow",
+      "failed": 2
+    }
+  ],
+  "green": {
+    "passed": 105,
+    "failed": 0,
+    "skipped": 0,
+    "warnings": 20
+  },
+  "actionlint_passed": true,
+  "candidate_contract_and_original_golden_locally_rehashed": true,
+  "real_model_numerical_execution_performed": false,
+  "generation_qualified": false,
+  "gpu_validated": false,
+  "required_original_gate_replaced": false,
+  "images_changed": 0
+}

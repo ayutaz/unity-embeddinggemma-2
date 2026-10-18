@@ -4,7 +4,7 @@
 
 元の数値参照JSONと監査JSONは[CI保存・独立readback](results/original-audio-golden-ci-readback-20261018.json)が完了しました。最新head `317bae3` の[CI終端](results/privacy-guard-ci-317bae3-20261018.json)ではPython全4環境等が成功し、元音声モデルの欠落で全体が失敗しました。次は復旧した数値原本を使う限定診断です。
 
-[再生成候補の数値比較](results/audio-regeneration-numerical-baseline-summary-20261018.json)は完了し、nativeで2,884要素、通常の未分割ONNXで5,230要素が元の許容差を超えました。ONNXは6信号すべて不合格で、この候補は未採用です。元の参照・許容差と必須モデル条件は維持します。次は、取得済み候補を別世代として固定し、元の6入力を使って既存の5分割ONNXの全carry・native full/cut bit一致・数値精度を検証するための取得・監査経路を準備します。今回のrunではこの5分割の受け入れは実行していません。
+[再生成候補の通常経路の比較](results/audio-regeneration-numerical-baseline-summary-20261018.json)では、nativeで2,884要素、未分割ONNXで5,230要素が元の許容差を超え、ONNXの6信号すべてが不合格でした。候補は未採用です。元の参照値を維持し、[別世代候補の5分割数値検証](audio-candidate-qualification.md)を追加しました。関連105テストとworkflow lintは合格しましたが、この小規模確認を実モデル・実GPUの合格には数えません。
 
 ## 現在の停止条件と次の作業
 

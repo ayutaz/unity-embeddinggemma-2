@@ -34,6 +34,10 @@ def _cosine(actual, expected):
 
 
 def audit_report(report_path, original, *, expected_variant='ordered_original_tanh'):
+    return _audit_report(report_path,original,expected_variant=expected_variant)
+
+
+def _audit_report(report_path, original, *, expected_variant, generation=None):
     if expected_variant not in ('ordered_original_tanh','ordered_original_midpoint_bmm'):
         raise ValueError('Unregistered expected raw candidate')
     original = Path(original).resolve()
@@ -61,13 +65,24 @@ def audit_report(report_path, original, *, expected_variant='ordered_original_ta
     if len(rows) != 1 or rows[0]['profile'] != profile:
         raise ValueError('Original case/profile differs')
     row = rows[0]; spec = reference['profiles'][profile]
+    graph_sha=manifest['files'][spec['native_graph']]['sha256']
+    if generation is not None:
+        graph_sha=generation['graphs'][spec['native_graph']]['sha256']
     for p in (provenance, report['input_provenance'], report['target_provenance']):
         if (p['reference_source'] != PRODUCER or p['model_revision'] != REVISION
                 or p['reference_sha256'] != REFERENCE_SHA or p['audit_sha256'] != AUDIT_SHA
                 or p['case_id'] != case_id or p['profile'] != profile
                 or p['input_sha256'] != manifest['files'][row['input_features']]['sha256']
-                or p['graph_sha256'] != manifest['files'][spec['native_graph']]['sha256']):
+                or p['graph_sha256'] != graph_sha):
             raise ValueError('Original raw input/graph provenance differs')
+        if generation is None:
+            if any(key in p for key in ('model_generation','candidate_contract_sha256','graph_producer','original_graph_bytes')):
+                raise ValueError('Candidate generations cannot enter the original graph gate')
+        else:
+            from .audio_generation_candidate import CONTRACT_SHA
+            if (p.get('model_generation')!=generation['generation'] or p.get('candidate_contract_sha256')!=CONTRACT_SHA
+                    or p.get('graph_producer')!=generation['producer_source'] or p.get('original_graph_bytes') is not False):
+                raise ValueError('Candidate generation provenance differs')
     if re.fullmatch('[0-9a-f]{40}', provenance.get('job_source','')) is None:
         raise ValueError('Immutable job source required')
     boundaries = ['raw_features','view_2','mul_77','mul_152','mul_227',
@@ -137,6 +152,10 @@ def audit_report(report_path, original, *, expected_variant='ordered_original_ta
 def audit_reports(paths, original, *, expected_variant='ordered_original_tanh'):
     options={} if expected_variant=='ordered_original_tanh' else {'expected_variant':expected_variant}
     rows = [audit_report(path, original, **options) for path in paths]
+    return _aggregate_reports(rows,expected_variant)
+
+
+def _aggregate_reports(rows,expected_variant):
     signals = {'silence','impulse','sine','nyquist','noise','padded_noise'}
     if len(rows)!=6 or {r['case_id'] for r in rows} != signals:
         raise ValueError('Exactly six distinct original cases required')

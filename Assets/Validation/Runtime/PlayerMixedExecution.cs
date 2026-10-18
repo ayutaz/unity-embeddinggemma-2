@@ -13,7 +13,7 @@ using UnityEngine.Profiling;
 
 namespace EmbeddingGemma.Validation
 {
-    /// <summary>Explicit all-role media and mixed text/image/audio Windows Player execution.</summary>
+    /// <summary>Explicit all-role media and mixed text/image/audio Release Player execution.</summary>
     public static class PlayerMixedExecution
     {
         const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
@@ -35,12 +35,14 @@ namespace EmbeddingGemma.Validation
             var config = PlayerMixedConfiguration.Parse(args); Directory.CreateDirectory(Path.GetDirectoryName(config.Output));
             using var output = new FileStream(config.Output, FileMode.CreateNew, FileAccess.Write, FileShare.Read);
             var envelope = new JObject { ["schema_version"] = 1, ["success"] = false, ["gpu_verified"] = false,
-                ["scope"] = "windows_release_il2cpp_high_all_media_roles_and_complete_mixed_index",
+                ["scope"] = build != null && (build.target == "Android" || build.target == "iOS")
+                    ? "device_release_il2cpp_high_all_media_roles_and_complete_mixed_index" : "windows_release_il2cpp_high_all_media_roles_and_complete_mixed_index",
                 ["full_multimodal_acceptance"] = false, ["independent_cold_warm_accepted"] = false, ["all_platforms_accepted"] = false,
                 ["final_performance_accepted"] = false, ["run_id"] = config.RunId, ["process_phase"] = config.Phase,
                 ["precision"] = config.Precision, ["requested_bundle_descriptor_sha256"] = config.DescriptorSha256,
                 ["started_utc"] = DateTime.UtcNow.ToString("O"), ["is_editor"] = Application.isEditor, ["batch_mode"] = Application.isBatchMode,
-                ["unity"] = Application.unityVersion, ["graphics_api"] = SystemInfo.graphicsDeviceType.ToString(), ["gpu"] = SystemInfo.graphicsDeviceName,
+                ["unity"] = Application.unityVersion, ["platform"] = Application.platform.ToString(), ["os"] = SystemInfo.operatingSystem,
+                ["device_model"] = SystemInfo.deviceModel, ["graphics_api"] = SystemInfo.graphicsDeviceType.ToString(), ["gpu"] = SystemInfo.graphicsDeviceName,
                 ["system_memory_mb"] = SystemInfo.systemMemorySize, ["gpu_capacity_mb"] = SystemInfo.graphicsMemorySize,
                 ["build"] = build == null ? null : JObject.FromObject(build), ["modules"] = new JObject(), ["cache_modules"] = new JArray(),
                 ["text_worker_released"] = false, ["memory_scope"] = "Whole application stage samples; not a continuous peak, VRAM or SDK-exclusive allocation",
@@ -60,10 +62,8 @@ namespace EmbeddingGemma.Validation
             try
             {
                 Phase("runtime_preflight");
-                if (Application.isEditor || Application.platform != RuntimePlatform.WindowsPlayer || !SystemInfo.supportsComputeShaders
-                    || build == null || build.target != "StandaloneWindows64" || build.scriptingBackend != "IL2CPP" || build.stripping != "High"
-                    || Debug.isDebugBuild || build.unityVersion != Application.unityVersion)
-                    throw new NotSupportedException("An actual Windows Release IL2CPP High Player and compute GPU are required.");
+                PlayerMixedRuntimePolicy.Validate(build, Application.platform, SystemInfo.graphicsDeviceType,
+                    Application.isEditor, Debug.isDebugBuild, SystemInfo.supportsComputeShaders, Application.unityVersion);
                 build.Validate(); Application.runInBackground = true;
                 envelope["cache_context"] = PlayerMixedCachePolicy.Validate(config, build);
                 var preparedCache = PlayerMixedCachePolicy.PreparedCacheDirectory(config.Cache);

@@ -13,7 +13,7 @@
 
 ### 画像・音声bundleについて
 
-画像・音声のAPI・保存bundleの実GPU検証は完了していますが、新規利用者がモデル一式を準備できる経路の整備は別の残件です。配布済みbundleのdownload URLはありません。Text Searchの準備メニューだけで画像・音声moduleは作れません。
+画像・音声の全6 module bundleは、後続の[公開モデルpreviewと取得手順](media-model-preparation.md)で提供しています。両精度の匿名空cache取得・hash照合・GPU実行の証拠は同手順に記録しています。以下のtext向け準備メニューだけで画像・音声moduleは作れません。正式SDK Release・必須実機・性能全体の受け入れは別の未完了条件です。
 
 既存のqualified graph入力を持つmaintainer向けの生成entry point・環境変数・producer制約は[サンプル検証記録のモデル準備](multimodal-search-sample.md)を参照してください。その手順は既存cacheが前提で、空checkoutからの変換コマンドではありません。準備後はbundleのproducer、全objectのsize・SHA256を照合し、実推論を別途検証します。
 

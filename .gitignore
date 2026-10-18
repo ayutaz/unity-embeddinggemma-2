@@ -92,5 +92,7 @@ __pycache__/
 /Assets/AudioPreprocessingGenerated.meta
 /Assets/StreamingAssets/EmbeddingGemmaTextSearch/
 /Assets/StreamingAssets/EmbeddingGemmaTextSearch.meta
+/Assets/StreamingAssets/EmbeddingGemmaDeviceValidation/
+/Assets/StreamingAssets/EmbeddingGemmaDeviceValidation.meta
 /Assets/Validation/Generated/
 /Assets/Validation/Generated.meta

@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "scope": "Windows Editor contract TDD for Android/iOS mixed-run ingress only; no models or device execution",
+  "base_source": "d52962612ab3e502ad0980c3c066344ead0f7fd2",
+  "unity": "6000.3.21f1",
+  "test_mode": "EditMode",
+  "headless": true,
+  "phases": {
+    "red": {
+      "tests": 39,
+      "passed": 0,
+      "failed": 39,
+      "skipped": 0,
+      "exit_code": 2
+    },
+    "red-v2": {
+      "tests": 48,
+      "passed": 0,
+      "failed": 48,
+      "skipped": 0,
+      "exit_code": 2
+    },
+    "green": {
+      "tests": 48,
+      "passed": 48,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    "first_related_regression": {
+      "tests": 177,
+      "passed": 177,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    "streaming_source_red": {
+      "tests": 13,
+      "passed": 0,
+      "failed": 13,
+      "skipped": 0,
+      "exit_code": 2
+    },
+    "streaming_source_green": {
+      "tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    "final_related_regression": {
+      "tests": 190,
+      "passed": 190,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    }
+  },
+  "source_sha256_canonical_LF": {
+    "Assets/Validation/Runtime/PlayerMixedRuntimePolicy.cs": "38d0628fccb769d48064921c5e4de9e5c0bcf916cacbf17a501135a9500f8035",
+    "Assets/Validation/Runtime/PlayerDeviceMixedConfiguration.cs": "3e32d8ea484702472a28151f90c363f690e85f6332e4ffa82c0e0d2284a09cc9",
+    "Assets/Validation/Runtime/PlayerDeviceMixedRunner.cs": "841cb6b90c58a9ff044cc37b55c196cc307291ba9efb753157e8714dbbceff51",
+    "Assets/Validation/Runtime/PlayerMixedExecution.cs": "0c27ccc95f572de1bd5ac4f96a1f10ba700e228a91a501289f5b7664984e9389",
+    "Assets/Validation/Editor/ValidationPlayerBuild.DeviceMixed.cs": "a44bbd46542e04d000ffa3c7055fba260fb37e2c36da8f36950a6b1184a9e6f2",
+    "Assets/Validation/Editor/ValidationPlayerBuild.cs": "b84e4fbdedd735f1b35fa82fe6a92dd9e811b8f43c9baff5eff9259b8bc80f41",
+    "Assets/Validation/Tests/Editor/PlayerDeviceMixedEntryTests.cs": "4fae9ae6cade83279c6c89e94a91668befce83910c3214b0d834582abf4cac58",
+    "Assets/Validation/Tests/Editor/PlayerDeviceStreamingSourceTests.cs": "2f23b7b0942e8e97b3f8ec020466a10887ada3776b7b3b9b5b162f7c50a0bfea"
+  },
+  "compiled_consumer_source_bytes_matched": true,
+  "original_full_private_test_and_log_backup_verified": true,
+  "feature_test_bytes_unchanged_between_expanded_Red_and_Green": true,
+  "SDK_package_tree": "6c8fa26c54268bca1b256173e93855617610865c",
+  "SDK_runtime_tree": "7d6e4314552b221d06db881405e7ccff3f449a77",
+  "SDK_runtime_changed": false,
+  "models_executed": false,
+  "actual_APK_or_Xcode_export": false,
+  "actual_device_GPU_validated": false,
+  "Android_jar_transport_executed": false,
+  "permissions_or_suspend_resume_accepted": false,
+  "CPU_GPU_performance_accepted": false,
+  "formal_release_created": false,
+  "native_StreamingAssets_path_normalized_to_file_URI": true,
+  "Android_jar_URI_boundary_retained_by_contract_test": true
+}

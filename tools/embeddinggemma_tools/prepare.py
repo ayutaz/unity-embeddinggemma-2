@@ -797,6 +797,7 @@ def prepare_vision(snapshot, destination, *, revision=MODEL_REVISION, source_com
     prove Sentis compatibility, final embeddings or semantic retrieval quality.
     """
     from PIL import Image
+    from .vision_fixture_images import save_vision_fixture
     snapshot, destination = Path(snapshot), Path(destination)
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "vision-validation.json").unlink(missing_ok=True)
@@ -835,7 +836,7 @@ def prepare_vision(snapshot, destination, *, revision=MODEL_REVISION, source_com
                 raise ValueError("official vision reference is not finite")
             case_id = f"{profile}-{index}"
             image_path = directory / f"{index}.png"
-            Image.fromarray(image.permute(1, 2, 0).numpy()).save(image_path)
+            save_vision_fixture(Image.fromarray(image.permute(1, 2, 0).numpy()), image_path)
             pixel_path = directory / f"{index}-pixels-fp32.bin"
             pixels.numpy().astype("<f4").tofile(pixel_path)
             produced.extend((image_path, pixel_path))

@@ -1,0 +1,89 @@
+{
+  "scope": "not_recovered",
+  "graphs_byte_identical": false,
+  "complete_archive_byte_identical": false,
+  "unexpected_file_count": 1,
+  "gpu_validated": false,
+  "numerical_validation_performed": false,
+  "original_producer": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+  "executed_source": "d2ad81dfdf42d057fb4b7f30dd59d557f8a6dd75",
+  "files": {
+    "frames-1119-valid-1119/silence-features-fp32.bin": {
+      "match": true,
+      "bytes": 572928,
+      "sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24"
+    },
+    "frames-1119-valid-1119/impulse-features-fp32.bin": {
+      "match": true,
+      "bytes": 572928,
+      "sha256": "2202541551e06a429b222d31f3d495a2b051fca70191287c82c7f6a6d8803c82"
+    },
+    "frames-1119-valid-1119/sine-features-fp32.bin": {
+      "match": true,
+      "bytes": 572928,
+      "sha256": "dcc0ed05018d225a140916249cb3a3ab948c4cc50e5f457abac24e909e9c64c5"
+    },
+    "frames-1119-valid-1119/nyquist-features-fp32.bin": {
+      "match": true,
+      "bytes": 572928,
+      "sha256": "eaaa9e11f4d282294a9c57d4eddd392d2a257ea1f342d0452d99984602ff1e96"
+    },
+    "frames-1119-valid-1119/noise-features-fp32.bin": {
+      "match": true,
+      "bytes": 572928,
+      "sha256": "b26f15554a3123e12cb39949709ea94588c27a5324f4cadefc701fba124c5c42"
+    },
+    "frames-1119-valid-1119/audio.pt2": {
+      "match": false,
+      "bytes": 1229069701,
+      "sha256": "afe89c42b4c9998665018eddea2ebb8703b5bd2f02f12564ebf590bed802a15c"
+    },
+    "frames-1119-valid-1119/frame-mask-int32.bin": {
+      "match": true,
+      "bytes": 4476,
+      "sha256": "d1d720a6b7013a4b396f2a8595d52f9648132b665f40f899b09bc62918e57c95"
+    },
+    "frames-1119-valid-1119/audio.onnx": {
+      "match": true,
+      "bytes": 1224214325,
+      "sha256": "7770a8af258f2de32c5587497b820596ea4e1ed7ec5382c3ee90eada2bec7e4a"
+    },
+    "frames-1119-valid-839/padded_noise-features-fp32.bin": {
+      "match": true,
+      "bytes": 572928,
+      "sha256": "6065504b6b2d244526df3a79cb5b88e9463e8e576ff877b5b8fa90b9bf18b1b0"
+    },
+    "frames-1119-valid-839/audio.pt2": {
+      "match": false,
+      "bytes": 1229071109,
+      "sha256": "9e697f7684fede7dc0d74f897fdfbb3ca7cd8e1df15d0d1ac6c22ba4a80bc51a"
+    },
+    "frames-1119-valid-839/frame-mask-int32.bin": {
+      "match": true,
+      "bytes": 4476,
+      "sha256": "604c12a03e7bce1f3f9379373dd926eedce33386844fd1f23ec4687834a551ec"
+    },
+    "frames-1119-valid-839/audio.onnx": {
+      "match": true,
+      "bytes": 1224214325,
+      "sha256": "af2e97b777349fa2e5f74790d24bb4b2d899c6a8438f372253737bc5940944c7"
+    },
+    "audio-encoder-reference.json": {
+      "match": false,
+      "bytes": 25194913,
+      "sha256": "89d8a315f2637f42ea01f4e67363529f430422d01cf07acc253ee97e4731db77"
+    },
+    "audio-onnx-diagnostic-failures.json": {
+      "match": false,
+      "bytes": 3583,
+      "sha256": "5fcff36a68d074f65e9562815420716b89ac93e37e2f28ab3d3813f458b41b11"
+    },
+    "audio-encoder-validation.json": {
+      "match": false,
+      "bytes": 3735,
+      "sha256": "931af51f1a26b77604e2554d6a25a94f333d05d72827a32a2e91a359e3c3f341"
+    }
+  },
+  "collection_outcome": "failure",
+  "controller_commit": "d53d8cc436e4f2d22ad143c999fc0c7fd5d565ac"
+}

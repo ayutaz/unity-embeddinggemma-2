@@ -238,6 +238,16 @@ namespace EmbeddingGemma.Samples
         async void GuiAction(Func<Task> action) { try { await action(); } catch (Exception error) { if (!(error is OperationCanceledException)) LastError = error.Message; } }
         void GuiCaptureAction(Action action) { try { action(); } catch (Exception error) { LastError = error.Message; } }
 
+        // Keep full input provenance and diagnostics available to local callers,
+        // but never introduce their directory paths into rendered results/errors.
+        public static string ResultLabel(SearchDocument document, double score)
+        {
+            var title = (document.Title ?? "").Replace('\\', '/');
+            return score.ToString("F4") + "  " + title.Substring(title.LastIndexOf('/') + 1);
+        }
+        public static string ErrorLabel(string diagnostic) => string.IsNullOrEmpty(diagnostic) ? null
+            : "処理を完了できませんでした。入力・モデル・マイクの設定を確認して再実行してください。";
+
         void OnGUI()
         {
             if (font == null) font = MediaSearchGuiFont.Acquire();
@@ -272,12 +282,12 @@ namespace EmbeddingGemma.Samples
             GUI.enabled = enabled && !IsBusy && !IsRecording;
             if (GUILayout.Button("モデル・登録内容を解放して最初から", styles.Button)) GuiAction(ResetAsync);
             GUI.enabled = enabled;
-            GUILayout.Label(Status, styles.Label); if (!string.IsNullOrEmpty(LastError)) GUILayout.Label(LastError, styles.Error);
+            GUILayout.Label(Status, styles.Label); if (!string.IsNullOrEmpty(LastError)) GUILayout.Label(ErrorLabel(LastError), styles.Error);
             GUILayout.Label("登録数: " + documents.Count, styles.Label);
             foreach (var hit in Hits)
             {
                 GUILayout.BeginVertical(GUI.skin.box);
-                GUILayout.Label(hit.Score.ToString("F4") + "  " + hit.Document.Title + "\n" + hit.Document.Text, styles.Label);
+                GUILayout.Label(ResultLabel(hit.Document, hit.Score), styles.Label);
                 var image = previews.Image(hit.Document.Id); if (image != null) GUILayout.Label(image, GUILayout.Width(image.width), GUILayout.Height(image.height));
                 var audio = previews.Audio(hit.Document.Id);
                 GUI.enabled = enabled && !IsRecording;

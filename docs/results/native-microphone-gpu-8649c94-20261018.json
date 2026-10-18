@@ -1,0 +1,56 @@
+{
+  "success": true,
+  "maximum_authorized_samples": 134400,
+  "sampling_rate": 16000,
+  "captured_samples": 134400,
+  "captured_seconds": 8.4,
+  "audio_saved": false,
+  "audio_transmitted": false,
+  "finite_unit_768_vector": true,
+  "recording_discarded": true,
+  "both_sessions_released": true,
+  "gpu_recording_accepted": true,
+  "manual_ui_accepted": false,
+  "arbitrary_audio_accuracy_claimed": false,
+  "host_native_peak_bytes": 5681840128,
+  "schema": 1,
+  "sdk_source": "8649c9435f502738bc9c89a27c9a09483a7719eb",
+  "host": "Windows Editor D3D12",
+  "additional_local_validation_harness": true,
+  "user_authorized_duration_seconds": 8.4,
+  "actual_worker_audits": [
+    {
+      "stage": "audio_gpu_audit_before_execution",
+      "success": true,
+      "actual_worker_count": 270,
+      "computed_cpu_fallback_count": 0,
+      "intermediate_flush_count": 0
+    },
+    {
+      "stage": "audio_gpu_audit_after_execution",
+      "success": true,
+      "actual_worker_count": 270,
+      "computed_cpu_fallback_count": 0,
+      "intermediate_flush_count": 0
+    },
+    {
+      "stage": "text_gpu_audit_after_execution",
+      "success": true,
+      "actual_worker_count": 1,
+      "computed_cpu_fallback_count": 0,
+      "intermediate_flush_count": 0
+    }
+  ],
+  "process_exit_code": 0,
+  "unity_counts": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0
+  },
+  "private_original_report_sha256": "1bdab3ad6a2ef779dc7180d8021981a615f59275133f262bba53757148769dab",
+  "private_process_receipt_sha256": "eda8746fee05e301c5903439750b1ad4ae763be61ccad108c33ca3f5462c9e6f",
+  "waveform_or_embedding_published": false,
+  "all_platforms_accepted": false,
+  "release_ready": false
+}

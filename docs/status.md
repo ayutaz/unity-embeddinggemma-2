@@ -1,8 +1,12 @@
 # 現在の対応範囲と検証状況
 
-最新checkpoint（2026-10-18）: **main `df66a6d`、PR #89・#91マージ済み**。#86・#87・#90は内容を#91へ取り込み、元PRをcloseしました。[統合監査](results/release-integration-8649c94-acceptance-20261018.json)で、同treeのhead `8649c94`の全必須CI、新規固定Git consumer、FP32 / Float16重みの全5 media profile・4 queryの実GPU PlayModeと独立参照監査を確認しました。
+最新checkpoint（2026-10-18）: **main `c8519b5`、PR #89・#91・#92マージ済み**。#86・#87・#90は内容を#91へ取り込み、元PRをcloseしました。[統合監査](results/release-integration-8649c94-acceptance-20261018.json)はsource `8649c94`の結果です。#92のdescriptor bytes保持修正も最新headの必須CI・公開履歴・merge tree一致を確認して統合しました。
 
-[モデルpreview](results/model-preview-publication-567befb-20261018.json)は両精度825 assetずつ公開し、全実payloadとremote digestを照合済みです。匿名の空cache取得・中断復帰は実行中です。[実マイク](results/native-microphone-three-second-8649c94-20261018.json)は許可された2.71秒の取得・停止・破棄まで成功し、対応長でのGPU登録は別の未達条件です。手動UI、最終Playerの独立cold / warm、SDK専有のGPU時間・allocation、macOS / iOS / Android実機、provider privacy対応、正式SDK tag / Releaseは未完了です。現在の順序と完了条件は[リリース計画](release-plan.md)を参照してください。
+[モデルpreview](results/model-preview-publication-567befb-20261018.json)は両精度825 assetずつ公開し、全実payloadとremote digestを照合済みです。[匿名の空cache取得・中断復帰](results/public-model-consumer-8649c94-20261018.json)は両精度で成功し、warmで820再利用・転送0、1 object破損修復と全hash、公開取得モデルの5 media profile・4 query GPU実行と独立監査まで確認しました。
+
+[許可された8.4秒の実マイク](results/native-microphone-gpu-8649c94-20261018.json)はWindows Editorで取得・自動停止・GPU登録・テキスト検索・解放・破棄まで成功しました。音声270 Workerとtext 1 Workerの計算CPU fallback・中間flushは0。録音の保存・外部送信はなく、音声・embeddingも公開しません。source `8649c94`の追加ローカルharnessによる結果で、任意音声の意味精度・手動録音UI・全環境の合格ではありません。
+
+別の実画面操作では画像登録・検索・プレビューに成功しましたが、結果欄の絶対パス表示を検出しました。元の記録は非公開で保持し、sampleの結果・エラー表示を[8件Redから関連50件Green](results/sample-display-privacy-tdd-20261018.json)へ修正しました。修正後の画面確認は別の結果として残っています。手動UI全項目、最終Playerの独立cold / warm、SDK専有のGPU時間・allocation、macOS / iOS / Android実機、provider privacy対応、正式SDK tag / Releaseは未完了です。現在の順序と完了条件は[リリース計画](release-plan.md)を参照してください。
 
 ## 統合前checkpointと固定sourceの検証記録
 

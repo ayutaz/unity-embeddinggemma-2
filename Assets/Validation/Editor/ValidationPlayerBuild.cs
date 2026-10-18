@@ -37,7 +37,7 @@ namespace EmbeddingGemma.Validation.Editor
             if (EditorApplication.isPlaying || EditorUserBuildSettings.activeBuildTarget != target)
                 throw new InvalidOperationException("Stop Play Mode and select " + target + " before building.");
             for (var i = 0; i < SceneManager.sceneCount; i++) if (SceneManager.GetSceneAt(i).isDirty) throw new InvalidOperationException("Save scene edits before building.");
-            if (File.Exists(ScenePath) || File.Exists(MarkerPath) || File.Exists(SampleMarkerPath) || File.Exists(MediaMarkerPath)) throw new IOException("Temporary validation assets already exist; inspect them before building.");
+            if (File.Exists(ScenePath) || File.Exists(MarkerPath) || File.Exists(SampleMarkerPath) || File.Exists(MediaMarkerPath) || File.Exists(DeviceMixedMarkerPath)) throw new IOException("Temporary validation assets already exist; inspect them before building.");
         }
 
         static PlayerBuildInfo BuildTargetPlayer(BuildPlayerOptions options, string codeCommit, NamedBuildTarget target,

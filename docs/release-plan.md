@@ -2,7 +2,7 @@
 
 確認日: 2026-10-19。対象はテキスト・画像・音声のGPU推論と横断検索です。[ゴール](goal.md)の必須環境・精度条件を維持します。
 
-直近の到達点は **#100までの統合と#95・#96の整理、公開経路の実数値回帰、画像のGPU反復測定と画像・音声のCPU診断、iOS設定の準備** です。main `2a17421` は#100 head `7171a20`と同treeで、全15 CI job・公開履歴・公開identity・provider署名を照合しました。元の特徴量に対するCPU診断は画像3・音声2条件とも中間値に不一致が残ります。両精度の公開取得、実マイクGPU登録、実画面、Windows混在Player全4起動とテキストの別Player 2起動の既存合格を保持し、残る操作・性能・必須実機と公開前監査を進めます。
+直近の到達点は **#101までの統合と既存PR整理、旧raw配布物の個別削除、公開経路の実数値回帰、画像GPU測定・CPU診断と端末用入口の準備** です。main `d529626` は#101 head `0f0153e`と同treeで、全15 CI job・公開履歴・公開identity・provider署名を照合しました。元の特徴量に対するCPU診断は画像3・音声2条件とも中間値に不一致が残ります。両精度の公開取得、実マイクGPU登録、実画面、Windows混在Player全4起動とテキストの別Player 2起動の既存合格を保持し、残る操作・性能・必須実機と公開前監査を進めます。
 
 ## 現在地
 
@@ -57,7 +57,7 @@
 
 | 順序 | 実施すること | 完了条件・成果物 |
 | --- | --- | --- |
-| 1 | 基盤復旧と既存PRの整理 | #100まで統合、旧PRの取り込みとcloseが完了。各headの必須CI・数値成果物の独立照合、mergeの同treeと公開identityを確認 |
+| 1 | 基盤復旧と既存PRの整理 | #101まで統合、旧PRの取り込みとcloseが完了。各headの必須CI・数値成果物の独立照合、mergeの同treeと公開identityを確認 |
 | 2 | 空checkout・空cacheから利用者向けの準備を再現 | 公開手順だけでtext・画像3・音声2の全6 moduleが準備でき、source / model hash一致。欠落・破損・中断・期限切れから回復 |
 | 3 | 最終候補のsample操作と性能を確認 | 日英検索・横断検索、画像、音声再生 / 停止、実マイク、キャンセル・再試行・解放が成功。権限拒否・deviceなしも確認。初回 / warm、CPU / GPU時間、RAM / VRAMを実測し最低要件を決定 |
 | 4 | 最終統合版のWindows Playerを受け入れ | 機能側はsource 3a02fc0で全4混在起動・別text 2起動が合格。IL2CPP / Release / High、全media role・18文書の検索・text 15 case、GPU監査・独立cold/warm・解放・exit0を記録。性能・最低要件の未達は工程3と合わせて追跡 |
@@ -65,7 +65,7 @@
 | 6 | 最終配布候補を固定し、公開前監査 | 必須回帰全成功。README / API / sample / CHANGELOG / 利用条件 / 最低要件を整備。履歴・commit identity・実公開payload・画像の目視 / OCR / hashを確認。旧PR / cacheのprivacy対応も追跡 |
 | 7 | 正式公開と公開後の導入確認 | version・tag・GitHub Releaseを一致させ、公開物を読み戻す。公開tagを新規consumerへ導入し直し、モデル準備とsample smokeが成功 |
 
-工程1は#100までの統合と既存PR整理が完了しました。GitHubがsquash著者へ使用する公開名と指定noreplyは[限定的な履歴分類](results/provider-public-author-tdd-20261018.json)で扱い、実際のmerge・CI実行commitでも公開identityとprovider署名を確認しています。ローカルcommit identityや他の個人情報検査は維持します。工程2の公開取得と工程4のWindows機能側は上記の実績があり、残る工程3の操作/性能・工程5〜7の条件は未完了です。
+工程1は#101までの統合と既存PR整理が完了しました。GitHubがsquash著者へ使用する公開名と指定noreplyは[限定的な履歴分類](results/provider-public-author-tdd-20261018.json)で扱い、実際のmerge・CI実行commitでも公開identityとprovider署名を確認しています。ローカルcommit identityや他の個人情報検査は維持します。工程2の公開取得と工程4のWindows機能側は上記の実績があり、残る工程3の操作/性能・工程5〜7の条件は未完了です。
 
 工程2のモデル配布は正式SDK Releaseと分け、ライセンス・変更点・全ファイルhashを添えたpreviewの公開と公開URLからの取得確認まで完了しました。モデルはGit / LFSへ含めません。数値回帰データも別previewへ保存し、元参照の同一bytesと、任意stack traceだけを除いた配布graphの計算内容・全非modelメンバーの一致を確認しました。元graphと実行graphのhashを区別する取得処理と全6信号CI・独立監査は成功しました。旧成果物の退避・依存棚卸しは維持し、原本が失われたものを再生成品で原本扱いしません。
 
@@ -83,6 +83,7 @@
 - #98: head `869cadd` の全15 CI job・7成果物の独立数値監査・privacy確認後、main `dbe39f5`へ統合済み。
 - #99: head `cc92d4b` の全15 CI job・7成果物の独立数値監査・privacy確認後、main `c6dcde4`へ統合済み。
 - #100: head `7171a20` の全15 CI job・7成果物の独立数値監査・privacy確認後、main `2a17421`へ統合済み。
+- #101: head `0f0153e` の全15 CI job・7成果物の独立数値監査・privacy確認後、main `d529626`へ統合済み。元参照824,320値の超過0、同tree・公開identity・署名を照合。旧raw artifact 12128476472だけを完全保存・現行依存確認後に削除し、producer runと他成果物を保持しました。
 
 #89の後、#86・#87・#90の変更を#91へまとめ、全必須CI・新規consumerと両精度の実sampleを確認して統合しました。3 PRのexact headが統合候補の祖先に含まれることを検査し、本文へ統合先を記録してcloseしています。個別PRのmergeとは区別します。今後の取得・操作・環境別修正もtask branch / PRを使い、最新headのCI・差分・privacyを確認して統合します。正式SDK tag / Releaseは工程6の完了後です。
 
@@ -94,3 +95,7 @@
 - リリース日は未確定です。統合、公開モデルからの新規consumer導入、Windows機能側の受け入れは成功しました。工程5の端末・署名・実行担当を確定した時点で、残る測定・修正・環境別検証の日程を見積もります。端末が未確保のまま完了日を約束しません。
 - 次の報告は「残る操作・性能」「恒久参照とprivacy対応」「必須端末の実行可否」の単位で行います。新しい不具合がない同一モデルの重い変換は繰り返さず、CI終了待ちと実作業時間を分けて示します。
 - 公開表示名 `yousan` は維持します。公開文書には相対 / 環境変数のパスだけを使い、元画像・元数値証拠は非公開で保持します。証拠画像を加工・再生成して漏えいや失敗を隠しません。
+
+## 端末用入口の追加checkpoint
+
+[Android / iOS混在入口](device-mixed-runtime.md)は、CLIを使わない端末内設定、固定fixtureのStreamingAssets転送、既存の全role・全module・混在GPU protocolを接続します。専用build markerと可逆profileを使い、Editor・Development・target違い・Android非Vulkan / iOS非Metalを拒否します。48件Red→48件Green、関連190件Green・skip0はEditor契約検査です。実APK / Xcode export・端末へのbundle配置・GPU実行、permissions・suspend / 復帰・性能は未実行で、工程5の完了条件は維持します。

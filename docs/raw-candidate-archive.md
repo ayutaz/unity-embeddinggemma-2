@@ -30,3 +30,7 @@ uv run --locked python -m embeddinggemma_tools.audio_generation_candidate fetch 
 [移行のTDD・実archive確認](results/raw-candidate-archive-retirement-tdd-20261019.json)では、13件Red→13件Greenの後、local golden必須の追加3件Red / 12件passを経て関連170件Green・skip0、actionlintが成功しました。保存ZIP 4,938,559,326 bytesの私的完全2コピー・全CRCと、実際の全6 case・raw graph 2 profile・native ONNX 2 profileのローカル取得を照合しました。新しいモデル推論・数値回帰・GPUの合格ではありません。最初のchild起動はimport前提の不一致でarchive I/O前に失敗し、その記録を保持した上で、明示した同一interpreterによる実確認はexit0でした。source全体のRequired CIとmainへの統合は別に残ります。
 
 コード変更だけでhosted artifactは削除しません。現行mainと実行中のjobに必要な取得依存が残らないこと、完全ZIP・必要graphの私的バックアップ、代替経路の全数値回帰、公開payloadのprivacy確認を先に検証します。削除した場合は実DELETEと後続GETの結果を別に記録し、workflow runや残す数値成果物を一緒に消しません。GitHubの旧PR / cacheに残る個人情報は、別のprovider対応として追跡します。
+
+## 実際のmain統合と個別削除
+
+[#101の実受け入れ](results/device-inputs-privacy-integration-0f0153e-20261019.json)で、head `0f0153e`の全15 CI jobと7数値archiveを独立に照合し、元参照824,320値の超過0、実main `d529626`との同tree・公開identity・署名・履歴を確認しました。その後、現行依存と実行中workflow、完全4,938,559,326-byte ZIPの私的2コピー・全CRCを再確認し、旧raw artifact `12128476472`だけを削除しました。DELETE 204と後続GET 404を確認し、producer run `39105290794`・他の全成果物・元入力だけのartifact `12130281114`は保持しています。GitHub側の旧PR / cache削除、実機・性能・正式SDK Releaseの完了を意味しません。

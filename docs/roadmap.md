@@ -24,6 +24,8 @@ Runtime負荷軽減の[PR #88](https://github.com/ayutaz/unity-embeddinggemma-2/
 
 ### 2. 利用者操作とサンプルUX
 
+更新済み#85の固定Git `1d8d868`による[新規consumerの一連操作](results/fresh-native-ui-1d8d868-full-local-bundle-20261018.json)は、既存ローカルFloat16モデルで確認済み。Library・モデルコピー・SDK overlayなしで画像・音声の実GPU登録、日英2検索と元参照、プレビュー、エラー復帰、cacheキャンセル・再試行・切替、再生と明示途中停止、解放・PlayMode停止・Editor通常終了code0を確認した。最初の再生停止は終端付近で未達、別の再生/Stopのみ残り2.688秒・8.557482秒で元gate合格という両記録を残す。以前のfresh timeoutは保持し、公開手順で取得したモデル・最終統合sourceとの対応付け、実マイク・権限/device・中断復帰を次に確認する。
+
 1の手順で用意したモデルと固定Git版を空consumerへ導入し、手動で登録→検索→キャンセル→再登録→切替→解放を確認します。既存bundleでの操作確認は先行できます。結果画像プレビュー・音声再生、マイクの明示開始 / 停止は機能ごとに別PRで実装します。
 
 2026-10-18の固定Git `e28a5fd` 新規consumerでは、既存ローカルFloat16 bundleによる画像・音声の実画面GPU登録、日英検索の参照順位・score、画像プレビュー、音声再生位置の進行、エラー復帰・キャンセル再試行・切替・解放・正常終了code0を確認しました。[操作監査](results/fresh-git-native-ui-e28a5fd-20261018.json)。別のwarm起動では11.2秒音声を7.232秒の位置で停止し、解放と正常終了code0も確認しました。[途中停止監査](results/native-audio-early-stop-e28a5fd-20261018.json)。実マイクと公開入力からの空cache取得は別の未完了項目として維持します。非録音時のpauseで録音破棄のstatusが出る問題、Editor終了時のJobTempAlloc警告は別に扱います。

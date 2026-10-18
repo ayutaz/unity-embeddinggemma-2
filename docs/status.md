@@ -12,6 +12,8 @@ Runtime負荷軽減の[PR #88](https://github.com/ayutaz/unity-embeddinggemma-2/
 
 後続の[統合ツールpreview132件](results/combined-tools-preview-86afcbc-20261018.json)は、最新取得CLIとnative PDH・packageを同時に確認した。一方、同じpackage treeの[自動化pluginなし新規consumer](results/fresh-git-native-ui-b519-no-uloop-partial-timeout-20261018.json)は画像GPU登録・参照一致までの部分実行で、900秒上限・exit1のため操作全体は不合格。時間にはimport・操作・待機も含まれ、推論latencyやplugin有無の性能差を示さない。公開取得・実マイク・最終candidate全操作・性能欠測は残す。
 
+別の[更新済み#85 `1d8d868`の新規consumer](results/fresh-native-ui-1d8d868-full-local-bundle-20261018.json)では、既存ローカルFloat16 bundleを使い、実マウス・キーボードによる画像・音声GPU登録、日英2検索の元参照vector・全順位・score、プレビュー、エラー復帰、cacheキャンセル・再試行・切替、再生と明示途中停止、解放、PlayMode停止・Editor正常終了code0まで確認した。Library・モデル・SDK overlayのコピーなしで、初回import・操作・ツール・待機を含むwallは803.890085秒。最初の再生/Stopは終端付近で旧gate未達、別の再生は残り2.688秒・8.557482秒で旧gate合格という両記録を保持する。315 package・86 sample・observer・root user4ファイルも終了後に照合済み。timeSamples警告は残っており、無警告・通常API速度・公開取得・実マイクの合格にはしない。
+
 | 項目 | 現状 | 主な根拠 |
 | --- | --- | --- |
 | テキスト推論・検索 | UPM、保存・Float16重み、Text Searchを実装。固定Git consumerとWindows Playerの実モデル検索を確認 | [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)、[Player監査](results/m2-current-main-player-acceptance-20261017.json) |
@@ -32,7 +34,7 @@ PR #31と#83はマージ済みです。#83の検証head `613ada824bd13a297660d8c
 | 元APIの最終vector | 画像・音声それぞれ全6入力×3 role、各18条件合格。画像RenderTexture・復帰も確認 | [画像API](results/m3-final-image-api-all-cases-all-roles-gpu-20261016.json)、[音声API](results/m4-real-pcm-all-roles-staged-gpu-20261016.json)、[RenderTexture](results/m3-rendertexture-recovery-and-text-gpu-regression-20261016.json) |
 | 保存bundleから実画像・PCM | 5 profile・12条件、最終Document vectorの最小cosine 0.9999998052055729。5プロセスすべて正常終了 | [全profile](results/multimodal-prepared-media-all-profiles-gpu-20261017.json) |
 | 混在サンプル | 実音声・画像、固定4 query、GPUキャンセル→再実行→切替→解放・終了。修正後warmのホストピーク約9.49 GiB | [混在実行](results/multimodal-search-mixed-sample-cache-retirement-20261017.json) |
-| 実PlayMode画面 | importしたsceneで登録・検索し、日英表示を目視。手動のマウス・キーボード操作は未検証 | [画面監査](results/multimodal-search-playmode-ui-20261017.json) |
+| 実PlayMode画面 | 固定Git `1d8d868`新規consumerで画像・音声GPU登録、日英検索の元参照、画像表示、再生・明示途中停止、エラー復帰・解放・exit0を実マウス・キーボードで確認。既存ローカルFloat16モデルの範囲 | [新規consumer監査](results/fresh-native-ui-1d8d868-full-local-bundle-20261018.json) |
 | Unity全体回帰 | package + Text Search + Image and Audio Search、505 pass / fail0 / skip0、正常終了 | [全体回帰](results/multimodal-sample-canonical-regression-20261017.json) |
 | Windows text Player | IL2CPP / Release / High stripping、独立cold / warm、4 query×6順位・score、FP32 GPU、正常終了。CPU計算fallback0 | [Player監査](results/m2-current-main-player-acceptance-20261017.json) |
 
@@ -109,7 +111,7 @@ SDK `d7b2233` / 計測 `10962fa` の[全5 profile・両形式の40反復](media-
 ### 残る受け入れ
 
 - 空のcheckoutから画像・音声bundleを準備する公開手順と配布経路。
-- 最終統合candidateを新しいconsumerへ導入し、全モダリティを手動で一通り操作する最終受け入れ。
+- 公開手順で取得したモデルと最終統合candidateを新しいconsumerへ導入する最終受け入れ。既存ローカルFloat16モデルと固定Git `1d8d868`の画像・音声・日英検索・解放・正常終了の一連操作は上記で確認済み。
 - 結果画像プレビュー・音声再生・明示的なマイク操作のPR統合と実操作の受け入れ。
 - load/release GPU区間の扱い、代表的な非同期割り当て区間と個別stageの測定範囲・欠測の最終監査、明示的index再構築時の専有allocation・背景処理。
 - 画像・音声検索のWindows Player、macOS Editor、iOS / Android実機での精度・操作・cache・正常終了。Androidの過去のAPK build成功は実機GPU合格ではありません。

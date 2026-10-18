@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "scope": "Actual experimental model asset publication and complete remote digest readback",
+  "models": [
+    {
+      "precision": "fp32",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/releases/tag/models-preview-567befb-fp32",
+      "tag": "models-preview-567befb-fp32",
+      "producer": "567befbd64287a706edaac59c978927e0277188a",
+      "assets": 825,
+      "model_objects": 820,
+      "sentis_models": 553,
+      "descriptor_sha256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "object_bytes": 8584030668,
+      "actual_payload_guards_passed": true,
+      "all_remote_asset_sizes_and_digests_match": true,
+      "notes_actual_readback_matches": true,
+      "images_published": false,
+      "public_empty_cache_acceptance_completed": false
+    },
+    {
+      "precision": "float16",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/releases/tag/models-preview-567befb-float16",
+      "tag": "models-preview-567befb-float16",
+      "producer": "567befbd64287a706edaac59c978927e0277188a",
+      "assets": 825,
+      "model_objects": 820,
+      "sentis_models": 553,
+      "descriptor_sha256": "8a6a90c5f656a00b024553a0412e5c4d32b4d2c9c7c5b3a0c2c146f557b4e27e",
+      "object_bytes": 5874675948,
+      "actual_payload_guards_passed": true,
+      "all_remote_asset_sizes_and_digests_match": true,
+      "notes_actual_readback_matches": true,
+      "images_published": false,
+      "public_empty_cache_acceptance_completed": false
+    }
+  ],
+  "formal_sdk_release_created": false,
+  "public_acquisition_and_gpu_are_separate_gates": true,
+  "original_native_pt2_recovered": false,
+  "release_ready": false
+}

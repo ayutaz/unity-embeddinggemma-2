@@ -1,5 +1,11 @@
 # 現在の対応範囲と検証状況
 
+最新checkpoint（2026-10-18）: **main `df66a6d`、PR #89・#91マージ済み**。#86・#87・#90は内容を#91へ取り込み、元PRをcloseしました。[統合監査](results/release-integration-8649c94-acceptance-20261018.json)で、同treeのhead `8649c94`の全必須CI、新規固定Git consumer、FP32 / Float16重みの全5 media profile・4 queryの実GPU PlayModeと独立参照監査を確認しました。
+
+[モデルpreview](results/model-preview-publication-567befb-20261018.json)は両精度825 assetずつ公開し、全実payloadとremote digestを照合済みです。匿名の空cache取得・中断復帰は実行中です。[実マイク](results/native-microphone-three-second-8649c94-20261018.json)は許可された2.71秒の取得・停止・破棄まで成功し、対応長でのGPU登録は別の未達条件です。手動UI、最終Playerの独立cold / warm、SDK専有のGPU時間・allocation、macOS / iOS / Android実機、provider privacy対応、正式SDK tag / Releaseは未完了です。現在の順序と完了条件は[リリース計画](release-plan.md)を参照してください。
+
+## 統合前checkpointと固定sourceの検証記録
+
 更新: **2026-10-18**。公開履歴整理後のmainは `4b5bf72`。開発版 `0.1.0-pre.1`、公開tag・正式Releaseはありません。現在は個人情報対策の回帰修正、固定音声参照データの復旧、GitHub側の残存個人情報の除去を優先します。
 
 元の数値参照JSONと監査JSONは[CI保存・独立readback](results/original-audio-golden-ci-readback-20261018.json)が完了しました。最新head `317bae3` の[CI終端](results/privacy-guard-ci-317bae3-20261018.json)ではPython全4環境等が成功し、元音声モデルの欠落で全体が失敗しました。次は復旧した数値原本を使う限定診断です。

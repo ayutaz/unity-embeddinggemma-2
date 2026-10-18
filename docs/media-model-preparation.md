@@ -1,10 +1,17 @@
 # 画像・音声・テキストモデルの準備
 
-この取得ツールは開発中です。変換済みモデルの公開配布先はまだ確定しておらず、第三者が空の環境から全6 moduleを取得する実証も未完了です。以下のURL変数は、公開後に固定commitを含む実URLへ置き換えます。過去の期限付きActions artifactや開発者のローカルcacheを、利用者の取得元として扱いません。
+変換済みの全6 moduleは、正式SDK Releaseとは別の実験用モデルpreviewとして公開しました。全assetの実payload guardとremote size/digest、本文、producer tagを[照合済み](results/model-preview-publication-567befb-20261018.json)です。匿名の空cache取得・中断復帰・最終consumer受け入れは進行中で、第三者導入の完了とはまだ扱いません。
+
+| 形式 | 配布元 | bundle.jsonの独立SHA256 | object合計bytes |
+| --- | --- | --- | --- |
+| FP32 | [モデルpreview](https://github.com/ayutaz/unity-embeddinggemma-2/releases/tag/models-preview-567befb-fp32) | `40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647` | 8,584,030,668 |
+| Float16重み | [モデルpreview](https://github.com/ayutaz/unity-embeddinggemma-2/releases/tag/models-preview-567befb-float16) | `8a6a90c5f656a00b024553a0412e5c4d32b4d2c9c7c5b3a0c2c146f557b4e27e` | 5,874,675,948 |
+
+各配布は820 object・553固有Sentisモデルです。LICENSE.txt、NOTICE.txt、MODIFICATIONS.txtも取得・保持してください。モデルのproducerは固定source `567befbd64287a706edaac59c978927e0277188a`で、SDKの実行sourceとは別に記録します。Float16重みの保存サイズは速度・全演算FP16化・モバイル対応の保証ではありません。
 
 ## Release assets形式の準備
 
-GitHub Release assetsを使う配布候補を準備しています。モデル配布候補と正式SDK Releaseは別の受け入れです。モデル本体の公開前には、全objectの出所・hash・モデル記述内の個人情報を別に監査します。この段階では公開取得の成功を主張しません。
+上表のpreviewはGitHub Release assetsを使います。全objectの出所・hash・モデル記述内の個人情報は別に監査しています。公開した事実と、空cacheからの取得・GPU実行の成功は別々に判定します。
 
 descriptorの `object_layout` は省略時または `nested` では従来の `objects/<sha>.<suffix>` URL、`flat` ではdescriptorと同じURL階層の `<sha>.<suffix>` を使います。ローカルの保存名はどちらも `objects/<sha>.<suffix>` のままです。レイアウト変更もdescriptorのSHA256に含まれ、未知の値や不一致pinはobject転送・出力作成の前に拒否します。別サーバーのobject URLをdescriptorから受け取る機能ではありません。
 
@@ -26,7 +33,7 @@ uv run --no-project --python 3.13 python -m embeddinggemma_tools.media_release_a
 
 ## 取得対象と検証の境界
 
-対象は `text`、`image-square`、`image-landscape`、`image-portrait`、`audio-1119`、`audio-839` です。現在の配布候補はFP32、Sentis 2.6.1、GPUCompute、元モデルrevision `914f7f89142e33e77833254d9c9b90c3cef7303b` に対応します。候補の820 object、8,583,084,520 bytesは開発環境でサイズ・SHA256を照合済みですが、公開先からの取得成功ではありません。
+対象は `text`、`image-square`、`image-landscape`、`image-portrait`、`audio-1119`、`audio-839` です。公開previewはFP32 / Float16重み、Sentis 2.6.1、GPUCompute、元モデルrevision `914f7f89142e33e77833254d9c9b90c3cef7303b` に対応します。公開先からの取得成功と最終環境の受け入れは引き続き別に確認します。
 
 ツールは変換済みgraphを取得します。元checkpointからの変換を実行したという意味ではありません。bundleのproducer commit、元モデルrevision、objectごとのサイズ・SHA256を保持し、GPU実行・数値合格は別に検証します。SDKの実行commitとモデルを生成したcommitも別に記録してください。
 
@@ -38,12 +45,12 @@ uv run --no-project --python 3.13 python -m embeddinggemma_tools.media_release_a
 uv run --no-project --python 3.13 python -m embeddinggemma_tools.media_setup --help
 ```
 
-公開後、配布監査で示された固定URLと、独立に確認したdescriptorのSHA256を指定します。SHA256を同じ未検証サーバーから自動的に信頼する手順にはしません。
+上表の固定URLと、独立に確認したdescriptorのSHA256を指定します。SHA256を同じ未検証サーバーから自動的に信頼する手順にはしません。
 
 ```powershell
-$bundleDescriptorUrl = '公開後の固定commitを含むHTTPS bundle.json URL'
-$bundleDescriptorSha256 = '配布監査で確認した64桁のSHA256'
-$bundleDestination = 'C:\EmbeddingGemmaModels\fp32'
+$bundleDescriptorUrl = 'https://github.com/ayutaz/unity-embeddinggemma-2/releases/download/models-preview-567befb-fp32/bundle.json'
+$bundleDescriptorSha256 = '40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647'
+$bundleDestination = Join-Path $env:LOCALAPPDATA 'EmbeddingGemmaModels/fp32'
 uv run --no-project --python 3.13 python -m embeddinggemma_tools.media_setup `
   --descriptor-url $bundleDescriptorUrl `
   --descriptor-sha256 $bundleDescriptorSha256 `

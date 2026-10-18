@@ -22,22 +22,15 @@ def _cases(original):
 
 
 def fetch_inputs(current, original):
-    from .artifact_zip import github_artifact_reader, extract_members
+    from .artifact_zip import extract_members
     current = Path(current)
     if current.exists() and any(current.iterdir()):
         raise ValueError('Source input download directory must be empty')
     candidate.fetch_original(original)
     reference, _ = _cases(original)
-    contract = candidate.candidate_contract()
-    reader, metadata = github_artifact_reader('ayutaz/unity-embeddinggemma-2', contract['artifact_id'])
+    reader, _ = candidate.preserved_original_reader()
     with reader:
-        run = metadata.get('workflow_run', {})
-        if (metadata.get('digest') != 'sha256:'+contract['artifact_sha256']
-                or run.get('id') != contract['producer_run'] or run.get('head_sha') != contract['producer_source']
-                or type(run.get('repository_id')) is not int or run['repository_id'] <= 0
-                or run.get('head_repository_id') != run['repository_id']):
-            raise ValueError('Pinned raw input artifact source differs')
-        extract_members(reader, current, ['audio-runtime-reference/'+row['input_features'] for row in reference['cases']],
+        extract_members(reader, current/'audio-runtime-reference', [row['input_features'] for row in reference['cases']],
                         max_entry_bytes=2*1024*1024)
 
 

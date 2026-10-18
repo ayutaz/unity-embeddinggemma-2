@@ -226,3 +226,38 @@ def test_candidate_fetch_rejects_wrong_remote_provenance(monkeypatch,tmp_path,pr
     monkeypatch.setattr(artifact_zip,'extract_members',lambda *a,**kw:pytest.fail('untrusted artifact was extracted'))
     monkeypatch.setattr(m,'fetch_original',lambda out:None)
     with pytest.raises(ValueError):m.fetch_candidate(tmp_path/'candidate',tmp_path/'original',case_id='silence')
+
+
+@pytest.mark.parametrize('problem',[None,'digest','run','source','fork'])
+def test_golden_fetch_uses_verified_longer_retention_without_changing_original_bytes(candidate,tmp_path,monkeypatch,problem):
+    import shutil
+    m,_,original,_,_=candidate
+    from embeddinggemma_tools import artifact_zip
+    class Reader:
+        def __enter__(self):return self
+        def __exit__(self,*args):pass
+        def close(self):pass
+    metadata=dict(id=12130281114,digest='sha256:3b61c62e3b3686aeb4615eb4b733f068f303dddfb3f23a084ebc5b04a854f603',
+        workflow_run=dict(id=39110353490,head_sha='2971d748fe824ea4bcc580a2ec583f2f734b7420',repository_id=7,head_repository_id=7))
+    if problem=='digest':metadata['digest']='sha256:'+'0'*64
+    if problem=='run':metadata['workflow_run']['id']+=1
+    if problem=='source':metadata['workflow_run']['head_sha']='0'*40
+    if problem=='fork':metadata['workflow_run']['head_repository_id']=8
+    def reader(repo,artifact_id):
+        assert artifact_id==12130281114
+        return Reader(),metadata
+    def extract(reader,output,names,**kwargs):
+        assert not problem,'Wrong provenance reached extraction'
+        assert names==['audio-encoder-reference.json','audio-encoder-validation.json']
+        output.mkdir()
+        for name in names:shutil.copyfile(original/name,output/name)
+        return dict(selected_count=2)
+    monkeypatch.setattr(artifact_zip,'github_artifact_reader',reader)
+    monkeypatch.setattr(artifact_zip,'extract_members',extract)
+    output=tmp_path/'fetched-golden'
+    if problem:
+        with pytest.raises(ValueError):m.fetch_original(output)
+    else:
+        m.fetch_original(output)
+        for name in ('audio-encoder-reference.json','audio-encoder-validation.json'):
+            assert (output/name).read_bytes()==(original/name).read_bytes()

@@ -6,6 +6,18 @@ import onnx
 from onnx import numpy_helper,helper
 from onnx.utils import Extractor
 from .refine_layernorm_onnx import _initializer_digest
+from .projection_coefficients import resolve_projection
+
+
+def projection_weight_array(model,operation):
+    """Return the exact audited KxN GPU coefficient, including static views."""
+    if operation.get('kind')!='matmul':raise ValueError('An audited matrix projection operation is required')
+    matrix,metadata=resolve_projection(model,operation.get('node'))
+    for key in ('weight','weight_shape','weight_sha256'):
+        if operation.get(key)!=metadata[key]:raise ValueError('Projection coefficient plan differs from its source')
+    if 'source_weight_sha256' in operation and operation['source_weight_sha256']!=metadata['source_weight_sha256']:
+        raise ValueError('Projection source coefficient bytes differ')
+    return matrix
 
 
 def apply_boundary_shape_audit(model,audit,*,expected_graph_sha256):
@@ -339,19 +351,16 @@ def partition_static_projections(model,*,node_names,expected_weight_sha256,silu_
             if len(data_shape) not in (2,3) or data_shape!=output_shape:raise ValueError('SiLU fixed shapes differ')
             selected.append((index,node,dict(kind='silu',node=name,input=node.input[0],output=node.output[0],input_shape=data_shape,output_shape=output_shape)))
             previous=index;continue
-        if index<=previous or node.op_type!='MatMul' or len(node.input)!=2 or len(node.output)!=1:
+        if index<=previous or node.op_type not in ('MatMul','Gemm') or len(node.input)!=2 or len(node.output)!=1:
             raise ValueError('Projection order or operator differs')
-        weight=weights.get(node.input[1])
-        if weight is None or weight.data_type!=onnx.TensorProto.FLOAT or len(weight.dims)!=2:
-            raise ValueError('Projection requires an existing FP32 matrix coefficient')
-        digest=hashlib.sha256(numpy_helper.to_array(weight).astype('<f4').tobytes()).hexdigest()
+        matrix,coefficient=resolve_projection(model,name)
+        digest=coefficient['weight_sha256']
         if digest!=wanted_hash[name]:raise ValueError('Projection coefficient bytes differ')
         data_shape=shape(node.input[0]);output_shape=shape(node.output[0])
-        if len(data_shape) not in (2,3) or data_shape[-1]!=weight.dims[0] or output_shape!=[*data_shape[:-1],weight.dims[1]]:
+        if len(data_shape) not in (2,3) or data_shape[-1]!=matrix.shape[0] or output_shape!=[*data_shape[:-1],matrix.shape[1]]:
             raise ValueError('Projection fixed matrix shapes differ')
         selected.append((index,node,dict(kind='matmul',node=name,input=node.input[0],output=node.output[0],
-            input_shape=data_shape,output_shape=output_shape,weight=node.input[1],
-            weight_shape=list(weight.dims),weight_sha256=digest)))
+            input_shape=data_shape,output_shape=output_shape,**coefficient)))
         previous=index
     # Constant subgraphs are recomputed within each extracted segment, rather
     # than forcing shape/axis constants through intermediate tensor inputs.

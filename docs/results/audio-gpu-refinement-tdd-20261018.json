@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "scope": "saved_candidate_gpu_refinement_preparation_tdd_and_static_source_audit",
+  "success": true,
+  "seed_source": "0cee4c7b77c89410895d52e4420816a5e66a8845",
+  "seed_run": 39117103059,
+  "red": [
+    {"scope": "missing_fetch_and_output_preflight_protocol", "failed": 5, "passed": 9},
+    {"scope": "missing_partition_writer_and_failure_receipt", "failed": 2, "passed": 14},
+    {"scope": "missing_refinement_workflow_mode", "failed": 3, "passed": 0}
+  ],
+  "green": {
+    "refinement_projection_shape_glu_workflow_and_existing_arithmetic_helpers": {"passed": 175, "failed": 0, "skipped": 0},
+    "general_workflow_regression": {"passed": 15, "failed": 0, "skipped": 0},
+    "actionlint": {"exit_code": 0}
+  },
+  "exact_silence_seed_static_audit": {
+    "source_onnx_sha256": "525871a8dbccbbd75b5c521ab959588323938e58fac361d69035eb80a61d2095",
+    "bound_pad_count": 60,
+    "rms_count": 109,
+    "outer_rms_count": 12,
+    "biased_gemm_count": 1,
+    "normalized_glu_count": 12,
+    "static_projection_count": 135,
+    "dynamic_matmul_count": 36,
+    "silu_count": 36,
+    "query_scale_count": 12,
+    "tanh_count": 12,
+    "scalar_divide_count": 12,
+    "softmax_count": 12,
+    "glu_count": 12,
+    "model_executed": false
+  },
+  "actual_refinement_ci_executed": false,
+  "full_candidate_model_executed": false,
+  "numeric_acceptance": false,
+  "gpu_validated": false,
+  "generation_qualified": false,
+  "original_golden_changed": false
+}

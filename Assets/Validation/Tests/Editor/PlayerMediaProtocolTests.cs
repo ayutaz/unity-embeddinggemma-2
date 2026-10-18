@@ -13,6 +13,15 @@ namespace EmbeddingGemma.Validation.Tests
 {
     public sealed class PlayerMediaProtocolTests
     {
+        [UnityTest] public IEnumerator EveryCaseAndWarmCaptureIdentifiesItsDefaultDocumentRole()
+        {
+            var module = new Module();
+            var task = PlayerMediaProtocol.Run(Cases(), "fp32", () => Task.FromResult<IPlayerMediaModule>(module), _ => { });
+            yield return Await(task);
+            foreach (var group in new[] { "cases", "warm" })
+                foreach (var capture in (JArray)task.Result[group])
+                    Assert.That((string)capture["role"], Is.EqualTo("document"));
+        }
         sealed class Module : IPlayerMediaModule
         {
             public readonly List<string> Encoded = new();
@@ -47,8 +56,39 @@ namespace EmbeddingGemma.Validation.Tests
             var vector = new float[768]; vector[0] = 1;
             return new PlayerMediaCase { Id = id, Expected = vector };
         }).ToArray();
+        static PlayerMediaCase WithRole(string id, TextRole role)
+        {
+            var row = Cases()[0]; row.Id = id;
+            var field = typeof(PlayerMediaCase).GetField("Role");
+            Assert.That(field, Is.Not.Null, "A validation case must retain its requested role.");
+            field.SetValue(row, role); return row;
+        }
         static IEnumerator Await(Task task)
         { while (!task.IsCompleted) yield return null; task.GetAwaiter().GetResult(); }
+
+        [UnityTest] public IEnumerator SameInputAcrossAllRolesHasDistinctEvidenceAndWarmRecovery()
+        {
+            var module = new Module();
+            var roles = new[] { TextRole.Document, TextRole.Query, TextRole.Raw };
+            var cases = roles.Select(role => WithRole("shared-input", role)).ToArray();
+            var task = PlayerMediaProtocol.Run(cases, "fp32", () => Task.FromResult<IPlayerMediaModule>(module), _ => { });
+            yield return Await(task);
+            Assert.That((bool)task.Result["success"], Is.True);
+            Assert.That(((JArray)task.Result["cases"]).Count, Is.EqualTo(3));
+            foreach (var role in roles)
+                Assert.That(((JArray)task.Result["warm"]).Count(row => (string)row["role"] == role.ToString().ToLowerInvariant()), Is.EqualTo(3));
+            Assert.That((bool)task.Result["gpu_verified"], Is.False);
+        }
+        [Test] public void DuplicateRoleOrInvalidRoleFailsBeforeLoading()
+        {
+            var loads = 0;
+            Task<IPlayerMediaModule> Load() { loads++; return Task.FromResult<IPlayerMediaModule>(new Module()); }
+            var duplicate = new[] { WithRole("same", TextRole.Document), WithRole("same", TextRole.Document) };
+            var invalid = new[] { WithRole("invalid", (TextRole)123) };
+            Assert.ThrowsAsync<ArgumentException>(async () => await PlayerMediaProtocol.Run(duplicate, "fp32", Load, _ => { }));
+            Assert.ThrowsAsync<ArgumentException>(async () => await PlayerMediaProtocol.Run(invalid, "fp32", Load, _ => { }));
+            Assert.That(loads, Is.Zero);
+        }
 
         [UnityTest] public IEnumerator CancellationRecoveryEveryCaseWarmRepetitionsAndReleaseAreRequired()
         {

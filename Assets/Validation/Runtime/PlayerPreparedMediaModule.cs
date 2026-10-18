@@ -33,8 +33,8 @@ namespace EmbeddingGemma.Validation
             return new PlayerPreparedMediaModule(await bundle.LoadAsync(module), metadata);
         }
         public Task<float[]> EmbedAsync(PlayerMediaCase input, CancellationToken token)
-            => image ? session.EmbedImageAsync((Texture)input.Input, cancellationToken: token)
-                : session.EmbedAudioAsync((AudioPcmInput)input.Input, cancellationToken: token);
+            => image ? session.EmbedImageAsync((Texture)input.Input, input.Role, cancellationToken: token)
+                : session.EmbedAudioAsync((AudioPcmInput)input.Input, input.Role, cancellationToken: token);
         IDisposable[] Resources()
             => typeof(GpuMediaSession).GetField("resources", Private)?.GetValue(session) as IDisposable[]
                 ?? throw new NotSupportedException("Live module ownership metadata is unavailable.");

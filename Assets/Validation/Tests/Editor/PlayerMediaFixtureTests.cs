@@ -19,19 +19,32 @@ namespace EmbeddingGemma.Validation.Tests
             => Assert.Throws<ArgumentException>(() => PlayerMediaFixture.VerifyFile(root, name, 0, EmptySha));
         [TestCase(true)] [TestCase(false)] public void SizeAndDigestMustBothMatch(bool changeSize)
             => Assert.Throws<InvalidDataException>(() => PlayerMediaFixture.VerifyFile(root, "empty.bin", changeSize ? 1 : 0, changeSize ? EmptySha : new string('a', 64)));
-        static JObject Reference(bool audio = false)
+        static JObject Reference(bool audio = false, string role = "document")
         {
             var imageIds = new[] { "square-0", "square-1", "landscape-0", "landscape-1", "portrait-0", "portrait-1" };
             var audioIds = new[] { "silence", "impulse", "sine", "nyquist", "noise", "padded_noise" };
             var vector = new float[768]; vector[0] = 1;
-            return new JObject { ["cases"] = new JArray((audio ? audioIds : imageIds).Select(id => new JObject {
-                ["id"] = id, ["role"] = "document", ["profile"] = audio ? "frames-1119-valid-" + (id == "padded_noise" ? "839" : "1119") : id.Split('-')[0],
+            return new JObject { ["metadata"] = new JObject { ["role"] = role }, ["cases"] = new JArray((audio ? audioIds : imageIds).Select(id => new JObject {
+                ["id"] = id, ["role"] = role, ["profile"] = audio ? "frames-1119-valid-" + (id == "padded_noise" ? "839" : "1119") : id.Split('-')[0],
                 ["embedding"] = new JArray(vector) })) };
         }
         [TestCase("image-square", 2)] [TestCase("image-landscape", 2)] [TestCase("image-portrait", 2)]
         [TestCase("audio-1119", 5)] [TestCase("audio-839", 1)]
         public void EveryFixedProfileSelectsItsCompleteDocumentCases(string module, int count)
             => Assert.That(PlayerMediaFixture.SelectCases(Reference(module.StartsWith("audio")), module).Length, Is.EqualTo(count));
+        [TestCase("query", false, "image-square", 2)] [TestCase("raw", false, "image-landscape", 2)]
+        [TestCase("query", true, "audio-1119", 5)] [TestCase("raw", true, "audio-839", 1)]
+        public void EveryOriginalRoleSelectsItsCompleteCases(string role, bool audio, string module, int count)
+            => Assert.That(PlayerMediaFixture.SelectCases(Reference(audio, role), module).Length, Is.EqualTo(count));
+        [TestCase("missing")] [TestCase("unknown")] [TestCase("mixed")]
+        public void RoleMetadataCannotSilentlyChooseDocument(string problem)
+        {
+            var reference = Reference();
+            if (problem == "missing") reference.Remove("metadata");
+            if (problem == "unknown") reference["metadata"]["role"] = "other";
+            if (problem == "mixed") reference["metadata"]["role"] = "query";
+            Assert.Throws<ArgumentException>(() => PlayerMediaFixture.SelectCases(reference, "image-square"));
+        }
         [TestCase("missing")] [TestCase("duplicate")] [TestCase("role")] [TestCase("vector")]
         public void IncompleteOrChangedReferenceRowsCannotReduceCoverage(string problem)
         {

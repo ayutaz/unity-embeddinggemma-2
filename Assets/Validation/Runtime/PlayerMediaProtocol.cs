@@ -11,6 +11,7 @@ namespace EmbeddingGemma.Validation
     public sealed class PlayerMediaCase
     {
         public string Id;
+        public TextRole Role = TextRole.Document;
         public float[] Expected;
         public object Input;
     }
@@ -23,14 +24,14 @@ namespace EmbeddingGemma.Validation
         bool IsReleased { get; }
     }
 
-    /// <summary>One fixed document module per process; complete multimodal acceptance is a separate gate.</summary>
+    /// <summary>One fixed media module per process; complete multimodal acceptance is a separate gate.</summary>
     public static class PlayerMediaProtocol
     {
         public static Task<JObject> Run(IReadOnlyList<PlayerMediaCase> cases, string precision,
             Func<Task<IPlayerMediaModule>> load, Action<JObject> save)
         {
-            if (cases == null || cases.Count == 0 || cases.Any(row => row == null || string.IsNullOrEmpty(row.Id)) ||
-                cases.Select(row => row.Id).Distinct(StringComparer.Ordinal).Count() != cases.Count ||
+            if (cases == null || cases.Count == 0 || cases.Any(row => row == null || string.IsNullOrEmpty(row.Id) || !Enum.IsDefined(typeof(TextRole), row.Role)) ||
+                cases.Select(row => (row.Id, row.Role)).Distinct().Count() != cases.Count ||
                 precision != "fp32" && precision != "float16" || load == null || save == null)
                 throw new ArgumentException("Unique fixed cases, a known precision and execution callbacks are required.");
             foreach (var row in cases) PlayerValidation.CheckEmbedding(row.Expected, row.Expected, precision);
@@ -41,7 +42,8 @@ namespace EmbeddingGemma.Validation
             Func<Task<IPlayerMediaModule>> load, Action<JObject> save)
         {
             var report = new JObject { ["schema_version"] = 1, ["success"] = false, ["gpu_verified"] = false,
-                ["full_multimodal_acceptance"] = false, ["scope"] = "fixed_document_media_module_player",
+                ["full_multimodal_acceptance"] = false, ["scope"] = "fixed_media_module_player",
+                ["roles"] = new JArray(cases.Select(row => row.Role.ToString().ToLowerInvariant()).Distinct()),
                 ["pre_cancel_verified"] = false, ["pending_call_cancel_verified"] = false, ["session_released"] = false,
                 ["precision"] = precision, ["phase"] = "loading", ["cases"] = new JArray(), ["warm"] = new JArray(),
                 ["timing_scope"] = "Main-thread wall time including preprocessing, scheduling, GPU fences and final vector readback; not GPU-only time",
@@ -54,7 +56,7 @@ namespace EmbeddingGemma.Validation
             async Task Capture(PlayerMediaCase row, JArray group)
             {
                 var timer = Stopwatch.StartNew(); var actual = await module.EmbedAsync(row, CancellationToken.None); timer.Stop();
-                var capture = new JObject { ["id"] = row.Id, ["milliseconds"] = timer.Elapsed.TotalMilliseconds,
+                var capture = new JObject { ["id"] = row.Id, ["role"] = row.Role.ToString().ToLowerInvariant(), ["milliseconds"] = timer.Elapsed.TotalMilliseconds,
                     ["embedding"] = actual == null ? null : new JArray(actual) };
                 group.Add(capture); save(report);
                 capture["cosine"] = PlayerValidation.CheckEmbedding(actual, row.Expected, precision); save(report);
@@ -86,7 +88,8 @@ namespace EmbeddingGemma.Validation
                     if (!(bool)report["pending_call_cancel_verified"]) throw new InvalidOperationException("A genuinely pending inference must cancel.");
                 }
                 for (var repetition = 0; repetition < 3; repetition++)
-                { Phase("warm_" + repetition); await Capture(cases[0], (JArray)report["warm"]); }
+                    foreach (var row in cases.GroupBy(row => row.Role).Select(group => group.First()))
+                    { Phase("warm_" + repetition + "_" + row.Role.ToString().ToLowerInvariant()); await Capture(row, (JArray)report["warm"]); }
                 Phase("gpu_audit_after"); report["gpu_execution_after"] = module.InspectGpuExecution(); completed = true;
             }
             catch (Exception error)

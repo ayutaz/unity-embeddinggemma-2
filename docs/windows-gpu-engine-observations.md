@@ -51,3 +51,9 @@ Windowsの実providerでは、先に所有Python PIDで32回だけ取得した�
 この追試で、粗い取得間隔だけが制約だったのではないことが分かった。細かく取得しても3Dの一部差分は隣接観測の経過時間より大きく、既存の棄却条件を維持した。providerの更新や帰属の遅れが原因かは未確定である。元のUnity GPU Recorderが正数だった4 queryと、このOS counterのnullは区別する。
 
 loadの正数を通常SDKのGPUロード時間へ代入せず、複数engineも加算しない。短いreleaseのpair不足・実区間端の未観測・driver退役・SDK専有allocationは残っている。同じPDH取得をさらに反復しただけでこれらを合格にはせず、元の精度・順位・GPU要件・正常終了と、優先1〜3全体の未完了を維持する。
+
+## ETWの別経路の対照確認
+
+[DxgKrnlとMicrosoft decoderの固定監査](results/dxg-method-controls-72bd2b1-20261018.json)では、現在の権限でStartTraceW / EnableTraceEx2 / disable / stopが全てreturn0だった。権限変更・昇格・全体WPR記録を行わず、小さな空sessionの確認後に、変更していないMicrosoft DxTimingCaptureLibrary `72bd2b1` の単体130件と実D3D12対照2件を確認した。対象PIDの256-byte copyのpacket帰属・順序付き時刻と、resource破棄イベントの時刻窓がfail0 / skip0 / exit0で、所有sessionは終了後に残っていない。SDK・モデル・Unityの追加実行ではなく、providerの利用可否と小規模なイベント検査の証拠である。
+
+ETWの[PID scope filter](https://learn.microsoft.com/en-us/windows/win32/api/evntprov/ns-evntprov-event_filter_descriptor)はkernel-mode providerを有効にしないため、DxgKrnlへ付けて空のtraceをGPU仕事0とは扱わない。今後のconsumerではkernelイベントを処理した後に所有target PIDへ絞り、他processのpayloadを出力せず、QPC・provider loss・decode error・正常closureを別記する。実SDKのstageへ帰属する計時・driver退役・専有allocationは未完了のまま維持する。

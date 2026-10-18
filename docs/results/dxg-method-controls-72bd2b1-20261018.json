@@ -1,0 +1,173 @@
+{
+  "method_availability_and_two_small_controls_verified": true,
+  "sdk_load_release_gpu_timing_accepted": false,
+  "sdk_exclusive_allocation_accepted": false,
+  "driver_retirement_or_vram_return_verified": false,
+  "full_priorities_1_to_3_accepted": false,
+  "upstream": {
+    "repository": "https://github.com/microsoft/DxTimingCaptureLibrary",
+    "commit": "72bd2b18553493aa9850e434caf71bfa18952aac",
+    "license": "MIT",
+    "source_unmodified": true,
+    "tree": "a01da299025f72a242ceff2707a46590320be7ac",
+    "builds": {
+      "unit": {
+        "source": "72bd2b18553493aa9850e434caf71bfa18952aac",
+        "project": "test.unit",
+        "exit_code": 0,
+        "started_at": "2026-10-18T10:27:17.9616436+09:00",
+        "completed_at": "2026-10-18T10:27:50.3583024+09:00",
+        "elapsed_seconds": 32.3968286
+      },
+      "functional": {
+        "source": "72bd2b18553493aa9850e434caf71bfa18952aac",
+        "project": "test.functional",
+        "exit_code": 0,
+        "started_at": "2026-10-18T10:28:14.9982301+09:00",
+        "completed_at": "2026-10-18T10:28:27.9519808+09:00",
+        "elapsed_seconds": 12.9538741
+      }
+    }
+  },
+  "empty_session": {
+    "start_status": 0,
+    "stop_status": 0,
+    "maximum_requested_buffer_bytes": 262144,
+    "providers": []
+  },
+  "provider_probe": {
+    "observed_utc": "2026-10-18T01:26:14.657786+00:00",
+    "session_name": "EmbeddingGemmaGpuCapabilityProbe",
+    "provider": "802ec45a-1e99-4b83-9920-87c98277ba9d",
+    "requested_keyword": "0x8001 (Base and GPUScheduler)",
+    "requested_level": 4,
+    "event_consumer_started": false,
+    "event_records_read": 0,
+    "trace_file_created": false,
+    "maximum_requested_buffer_bytes": 262144,
+    "unity_started": false,
+    "model_executed": false,
+    "elevation_requested": false,
+    "system_permissions_changed": false,
+    "sdk_load_release_gpu_timing_accepted": false,
+    "gpu_load_elapsed_ns": null,
+    "gpu_release_elapsed_ns": null,
+    "scope": "Start/enable/disable/stop capability only. Kernel provider is not PID-filtered; no events are read, exported or decoded, and owned session is immediately stopped.",
+    "prior_empty_session_message_correction": "Numeric statuses were0/success. ctypes.FormatError(0) used the thread last-error text; that text is not the API return status. Original receipt preserved.",
+    "layout_source_sha256": "837f2396472b3dcc87e3621aaafcc407e9a2ba06437f5a0167bb1e2483dc0f37",
+    "start_trace_status": 0,
+    "start_trace_message": "ERROR_SUCCESS",
+    "enable_trace_status": 0,
+    "enable_trace_message": "ERROR_SUCCESS",
+    "provider_enabled": true,
+    "disable_trace_status": 0,
+    "disable_trace_message": "ERROR_SUCCESS",
+    "stop_trace_status": 0,
+    "stop_trace_message": "ERROR_SUCCESS",
+    "owned_session_stopped": true,
+    "reported_buffers": 2,
+    "events_lost": 0,
+    "realtime_buffers_lost": 0,
+    "total_wall_ms": 1.1797999613918364
+  },
+  "unit_counts": {
+    "total": 130,
+    "passed": 130,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0
+  },
+  "d3d12_controls": {
+    "upstream_source": "72bd2b18553493aa9850e434caf71bfa18952aac",
+    "upstream_unmodified": true,
+    "synthetic_d3d12_default_adapter_controls_accepted": true,
+    "sdk_load_release_gpu_timing_accepted": false,
+    "terminal_receipt": {
+      "command": [
+        ".\\artifacts\\dx-timing-capture-library\\test.functional\\x64\\Release\\DxTimingCaptureLibrary.test.functional.exe",
+        "--gtest_filter=GpuEngineActivityTests.GpuWorkFromThisProcessIsAttributedToIt:D3D12ObjectTests.ObjectDestruction",
+        "--gtest_color=no",
+        "--gtest_output=xml:.\\artifacts\\usability-state\\dx-timing-library-functional-controls.xml"
+      ],
+      "timeout_seconds": 120,
+      "success": true,
+      "terminal": true,
+      "timed_out": false,
+      "started_utc": "2026-10-18T01:30:46.178630+00:00",
+      "pid": 169504,
+      "exit_code": 0,
+      "elapsed_seconds": 1.1765313000069,
+      "completed_utc": "2026-10-18T01:30:47.355162+00:00"
+    },
+    "tests": [
+      {
+        "suite": "D3D12ObjectTests",
+        "name": "ObjectDestruction",
+        "skipped": false,
+        "failures": [],
+        "time": "0.371"
+      },
+      {
+        "suite": "GpuEngineActivityTests",
+        "name": "GpuWorkFromThisProcessIsAttributedToIt",
+        "skipped": false,
+        "failures": [],
+        "time": "0.773"
+      }
+    ],
+    "owned_sessions_left_after_process": [],
+    "owned_session_cleanup": [],
+    "owned_sessions_remaining": [],
+    "unity_started": false,
+    "real_model_executed": false,
+    "elevation_requested": false,
+    "system_permissions_changed": false,
+    "scope": "Unmodified Microsoft diagnostic controls: one256-byte D3D12 copy attributed to its own process with ordered packet timestamps, and one resource destruction timestamp bracket. Not SDK load/release or exclusive allocation measurement.",
+    "evidence_sha256": {
+      "dx-timing-library-functional-controls-process.json": "48b17e52fee3461f3e97640744417da4808fc156553ed865e12b6f790c1b3449",
+      "dx-timing-library-functional-controls.xml": "db955402f6e475010ffac244ffe550c0e8a073147f2050678b836cc802f560cd"
+    }
+  },
+  "actual_control_scope": "Upstream default-adapter D3D12 synthetic256-byte copy: nonempty packets attributed to the same PID and ordered submit/complete timestamps; one resource destruction callback inside the CPU Release timestamp bracket.",
+  "limits": [
+    "No Unity or real-model execution",
+    "No SDK stage association or load/release duration",
+    "No proof that destruction callback equals driver retirement or VRAM return",
+    "No quantitative transfer bandwidth or GPU timestamp accuracy calibration",
+    "Upstream controls use64 minimum/1290 maximum1MiB buffers; not the small empty probe buffer setting",
+    "No first-party PIX marker decoding: upstream default build uses its stub decoder",
+    "C4819 build warnings retained; no warning-free claim"
+  ],
+  "next_evidence_needed": [
+    "Bounded consumer exporting only owned target-PID events with complete loss/error/closure receipts",
+    "Known GPU work and lifetime controls with exported raw clocks and unit/epoch checks",
+    "Unchanged SDK/model/input matched execution with stage mapping and independent original-reference/normal-exit checks"
+  ],
+  "sdk_package_git_tree": "b5195f3578974568e7ac8c51b8fcaee1fd94945b",
+  "protected_root_files_verified": 4,
+  "elevation_requested": false,
+  "system_permissions_changed": false,
+  "microphone_started": false,
+  "publication_performed": false,
+  "interpretation_correction": "The empty-session receipt contains a misleading FormatError(0) string; numeric return0 means success. Original receipt is retained. The subsequent probe explicitly labels0 ERROR_SUCCESS.",
+  "primary_sources": [
+    "https://github.com/microsoft/DxTimingCaptureLibrary/blob/72bd2b18553493aa9850e434caf71bfa18952aac/README.md",
+    "https://learn.microsoft.com/en-us/windows/win32/api/evntrace/nf-evntrace-starttracew",
+    "https://learn.microsoft.com/en-us/windows/win32/api/evntrace/nf-evntrace-enabletraceex2",
+    "https://learn.microsoft.com/en-us/windows/win32/api/evntprov/ns-evntprov-event_filter_descriptor"
+  ],
+  "evidence_sha256": {
+    "empty-etw-session-capability-observation.json": "83b29b8f43688c2b91da901ff370b33db407a5fbc98b38c34c2d13b29e99f496",
+    "dxg-provider-enable-capability-observation.json": "da01f1fd322ec8526f3ee92511581ce8e8801bf45f8be9a3dc27cb28cff0bc33",
+    "dx-timing-library-functional-controls-audit.json": "5ad80ee8e8fb99c211b09b92b0c1fe347838817cfbd0507eff95a3dac8f3c835",
+    "dx-timing-library-unit.xml": "6a86586af4b90394c26ea4d678bdbf6e24a42f46e515a38f538aec187f0360ab",
+    "dx-timing-library-unit.json": "f272c9698135b2d90627e337da89641b15ae63af60ac9f462a679d4039c9335c",
+    "dx-timing-library-functional-controls.xml": "db955402f6e475010ffac244ffe550c0e8a073147f2050678b836cc802f560cd",
+    "dx-timing-library-functional-controls-process.json": "48b17e52fee3461f3e97640744417da4808fc156553ed865e12b6f790c1b3449",
+    "probe_empty_etw_session.py": "837f2396472b3dcc87e3621aaafcc407e9a2ba06437f5a0167bb1e2483dc0f37",
+    "probe_dxg_provider_enable.py": "1c3fab33f1955e47f892e124ad02712f227b6c8aac6db9170954f19a62187eb3",
+    "run_dxg_functional_controls.py": "0ebd91195226433de8eb8c049a240675a3ef6bba570a379e143f28da5515c648",
+    "audit_dxg_method_controls.py": "5e7080ff07f4cf28833c585c2bca980b3cf5343f28a810504217714a4d99c91e"
+  },
+  "audited_utc": "2026-10-18T01:31:44.590158+00:00"
+}

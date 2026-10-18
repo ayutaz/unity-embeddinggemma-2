@@ -44,3 +44,13 @@ Windowsには `GPU Engine / Running Time` counterも存在したが、ここで�
 後続の[native PDH追試](results/native-pdh-text-stage-observation-f604baf-20261018.json)は、同じSDK/validationのFP32 text4 vector、参照・解放・1 pass / skip0 / exit0と、8,783回の所有process counterを対応付けた。取得間隔の中央値4.6489msで、load内に2,687点、各query内に326 / 18 / 18 / 18点、release内に1点を採用した。loadの3Dに1.489ms、firstのCopyに2.5074msという内側区間の正数があったが、queryの3Dは隣接差分が経過時間を超え、releaseはpair不足でnullだった。1msのclock整合性幅を含むcall全体が区間内に収まる点だけを用い、itemの実時刻をquery時刻へ置換していない。
 
 これはSDK専有load/release時間の取得にはならない。細かいsampleを増やすだけでは解決しないprovider側の値と帰属の制約を保持し、同じPDH手法の反復で全体合格に置き換えない。clock診断・TDD・CPU観測・source対応と、未確定の原因は[Windows観測](windows-gpu-engine-observations.md)へ分けて記録する。
+
+## DirectXイベントによる次の測定経路
+
+PDHと別の経路として、[ETWの開始権限とMicrosoft製decoderの対照実験](results/dxg-method-controls-72bd2b1-20261018.json)を確認した。現在のtokenで、providerなしの小さな空session、およびDxgKrnlのBase/GPUSchedulerを有効化・無効化するsessionは、全APIがreturn0で開始・停止できた。空sessionは最大256KiBを要求し、各owned handleで直ちに閉じた。イベントconsumer・ファイル・Unity・実モデルは起動しておらず、この結果からGPU時間は得られない。最初の記録のFormatError(0)がthreadの古いエラー文字列を返した点は、後続記録でnumeric return0が成功であると訂正し、元記録も保持した。
+
+[MicrosoftのDxTimingCaptureLibrary固定commit `72bd2b1`](https://github.com/microsoft/DxTimingCaptureLibrary/blob/72bd2b18553493aa9850e434caf71bfa18952aac/README.md)を変更せずにビルドし、upstream単体130件・実D3D12対照2件はfail0 / skip0 / exit0だった。後者はdefault adapterの256-byte copyに対象PIDのpacketと順序付きsubmit/complete時刻が存在すること、および別のresource破棄callbackがCPU Releaseを囲む時刻内に入ることを検査する。終了後、所有test PIDのETW session残留は0だった。upstreamの対照は最低64 / 最大1290個の1MiB buffer設定で、空sessionの256KiB設定とは区別する。C4819警告と標準buildのPIX decoder stubも記録している。
+
+これはSDK load/release、driver退役・VRAM返却、専有allocationの証拠ではない。破棄callbackをGPU解放完了と同一視しない。次は対象PIDのイベントだけを出力する上限付きconsumerを用意し、raw clock・単位・loss・終了を校正したうえで、同じSDK/model/inputのstageと元参照・正常終了へ対応付ける。非管理者であることだけを理由にETWを不可能と扱わず、既存PDHの欠測と別に進める。
+
+別の[upstream Perfetto policy単体9件](results/dxg-perfetto-policy-72bd2b1-20261018.json)もfail0 / skip0 / exit0だった。ただしsample writerの `ToPft` は最初のイベントを取得時点のPerfetto SDK clockへ置き直すため、出力時刻を既存UTC/QPC stageへそのまま照合しない。libraryの `GpuEngineActivity` はdriverへのsubmitからcompleteまでの上限区間であり、GPU実行だけの時間でもない。次のconsumerでは元のepochを保持した `OnGpuWork` の区間、queue待ちを含むpacket区間、resource破棄イベントを分け、clock anchor・帰属・loss・終了を確認する。9件の成功はwriter policyの確認で、追加の実GPU captureやSDK計測ではない。

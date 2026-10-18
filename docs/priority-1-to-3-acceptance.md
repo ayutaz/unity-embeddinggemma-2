@@ -39,6 +39,8 @@
 
 ## 作業順と後続範囲
 
+PDHに代わる[ETW経路の対照確認](results/dxg-method-controls-72bd2b1-20261018.json)では、現在のtokenでDxgKrnlの有効化・停止がreturn0、未変更のMicrosoft decoder `72bd2b1` の単体130件と実D3D12対照2件がfail0 / skip0 / exit0だった。コピーpacketのPID帰属・時刻順序とresource破棄イベントの時刻窓は検査済みで、終了後の所有ETW session残留はない。権限変更・Unity・モデル実行は行っていない。実SDK stageのGPU時間・driver退役・専有allocationは未取得であり、この小規模な対照を全体合格にしない。次は上限付きの対象PID consumerとraw clock/lossの校正を用意し、固定SDK/model/inputの元参照・正常終了へ対応付ける。
+
 3aの後続では、[native PDHと同SDK text4 vector](results/native-pdh-text-stage-observation-f604baf-20261018.json)を実行し、参照・解放・exit0、終了後554 source一致と、所有process handleの生存を検査した8,783点を照合した。取得間隔中央値4.6489msでload内2,687点に正数を観測したが、queryの3Dは隣接差分が経過時間を超え、releaseは1点だけでpair不足だった。26件の新しいRedと既存を含む43件のGreen、clockとengine別の棄却を保持する。SDK専有load/releaseの合格にはせず、このPDH方式を繰り返すだけでは解消しない帰属・provider更新の制約として次の測定方式を判断する。
 
 実GPUの残る計測を1本ずつ進め、Editor負荷と分離して原因を特定する。並行して公開手順と最終candidateの受け入れ準備を整え、許可された公開取得・マイク確認を実施する。最後に最新CI・source対応と全行の監査を閉じる。

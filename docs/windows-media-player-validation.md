@@ -1,6 +1,6 @@
 # Windows image/audio Player validation
 
-Status: private implementation candidate. Editor contract tests and original-fixture loading are separate from an actual Release Player build or real-model GPU acceptance. Neither a new model generation nor the final multimodal product is qualified by this harness alone.
+Status: implementation candidate under review. Editor contract tests and original-fixture loading are separate from an actual Release Player build or real-model GPU acceptance. Neither a new model generation nor the final multimodal product is qualified by this harness alone.
 
 `ValidationPlayerBuild.BuildWindowsMedia(outputExe, sourceCommit)` prepares a Windows x64 IL2CPP / Release / High-stripping build. It uses an empty generated scene and the unique `EmbeddingGemmaMediaValidationBuild` resource marker. Existing text validation and ordinary Players do not receive this marker. Build settings and scenes are restored on success and failure, and an injected build cannot produce a successful build receipt.
 

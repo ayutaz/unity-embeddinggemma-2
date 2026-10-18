@@ -8,11 +8,11 @@ def publication_files_safe(command, cwd):
     tokens=shlex.split(command)
     files=[]
     for index, token in enumerate(tokens):
-        if token in ('--body-file','--input') or (token=='-F' and ' api ' not in command):
+        if token in ('--body-file','--notes-file','--input') or (token=='-F' and ' api ' not in command):
             if index+1>=len(tokens):
                 return False
             files.append(tokens[index+1])
-        elif token.startswith(('--body-file=','--input=')):
+        elif token.startswith(('--body-file=','--notes-file=','--input=')):
             files.append(token.split('=',1)[1])
         elif '=@' in token:
             files.append(token.split('=@',1)[1])

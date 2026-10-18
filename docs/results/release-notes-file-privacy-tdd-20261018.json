@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "scope": "Release creation notes-file payload privacy only",
+  "red": {
+    "failed": 2,
+    "passed": 13
+  },
+  "green": {
+    "passed": 28,
+    "failed": 0,
+    "skipped": 0
+  },
+  "space_and_equals_argument_forms_checked": true,
+  "missing_dynamic_stdin_payloads_rejected": true,
+  "private_notes_rejected": true,
+  "github_publication_executed": false,
+  "evidence_sha256": {
+    "release-notes-file-hook-red-private.log": "46befd32a9ee3052bedd0b02b58d7beb8207a54a43a444626a59a6cb5919be39",
+    "release-notes-file-hook-green-private.log": "871d8b3df7123b156e2ce6363ee7ea3dcda52a154f2e16ab579ab588c89111ac"
+  }
+}

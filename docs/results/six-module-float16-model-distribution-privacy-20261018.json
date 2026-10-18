@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "review": "model-description+source-provenance",
+  "success": true,
+  "precision": "float16",
+  "descriptor_sha256": "8a6a90c5f656a00b024553a0412e5c4d32b4d2c9c7c5b3a0c2c146f557b4e27e",
+  "inventory_sha256": "7b559b4cb4e95a82e9b73dfdc051dd15ef703b569e6efb7dc6a9d939595db44f",
+  "producer": "567befbd64287a706edaac59c978927e0277188a",
+  "object_count": 820,
+  "sentis_models": 553,
+  "total_bytes": 5874675948,
+  "source_objects_independently_verified": 822,
+  "all_source_and_destination_hashes_verified": true,
+  "all_selected_module_bindings_unchanged": true,
+  "contains_private_metadata": false,
+  "images_in_distribution": false,
+  "model_description_text_candidates_checked": 1028845,
+  "tokenizer_json_privacy_checked": true,
+  "numerical_buffers_hashed_not_scanned_as_text": true,
+  "source_descriptor_sha256": {
+    "base": "1000f91d47c7def916ace1c7affb5fd01884aab9f3cf064ea62cc48e4d057292",
+    "audio": "aaabc35d9ceeb0c0a38e80a439730766468b1391f6991b07f8c1c8a44ec741ea"
+  },
+  "source_producers": {
+    "base": "752a2acd2e517e17501b506df540eeab9d8dac1f",
+    "audio": "c18b4e518eb88968ece326b6b42ca60d281965b5"
+  },
+  "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+  "independent_private_audit_sha256": "e2bc3075aa93cd8ad5dd0d3c8ae8628be6fd5bf387cbe86bfa4cf1ec42d4c3f8",
+  "review_scope": "Only these exact copied producer objects and their textual metadata; no general binary exception or GPU/platform/release acceptance.",
+  "public_acquisition_validated": false,
+  "gpu_executed_in_this_audit": false,
+  "formal_release_ready": false
+}

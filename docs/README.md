@@ -34,6 +34,7 @@
 | 同sourceの既存text全ケースとCPU/GPU比較 | [実Player 2起動・8条件](results/final-text-player-3a02fc0-20261019.json) |
 | 修正後の実UIによる音声の途中停止と解放 | [固定合成音声・追加録音なし](results/native-playback-stop-7754ce4-20261019.json) |
 | 元の数値基準を維持する公開データと取得経路 | [native回帰データのpreview・明示input/audit](native-regression-distribution.md) |
+| 最終配布候補の反復計測をつなぐ契約 | [candidateの固定入力・元gate・計測範囲](candidate-media-performance.md) |
 | 最新サンプルの実GPU・メモリ・画面・回帰 | [画像・音声サンプル検証](multimodal-search-sample.md) |
 | GPU出力確保の改善と新SDKの精度・順位 | [CPU storageの省略](gpu-write-only-output-allocation.md) |
 | 新SDKの全画像・音声profileのGPU/CPU/wall・メモリ | [同じsourceの40反復](media-gpu-submission-observations.md) |

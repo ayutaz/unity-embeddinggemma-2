@@ -24,8 +24,14 @@ namespace EmbeddingGemma.Validation.Tests
         static TimeSpan Cpu(){using var p=Process.GetCurrentProcess();return p.TotalProcessorTime;}
         [UnityTearDown] public IEnumerator Exit(){if(Application.isPlaying)yield return new ExitPlayMode();}
 
+        public static MediaRepeatedInputPolicy CreatePolicy()=>MediaRepeatedInputPolicy.CreateRetained(
+            Environment.GetEnvironmentVariable("EG_MEDIA_PRECISION"),Environment.GetEnvironmentVariable("EG_MEDIA_BUNDLE_MODULE"));
         [UnityTest,Timeout(1200000)] public IEnumerator FixedMediaInputFirstWarmRepeatedCallsKeepReferenceAndMeasureStages()
+            =>ExecuteWithPolicy(CreatePolicy());
+
+        public static IEnumerator ExecuteWithPolicy(MediaRepeatedInputPolicy policy)
         {
+            if(policy==null)throw new ArgumentNullException(nameof(policy));
             yield return new EnterPlayMode();
             var previous=Application.runInBackground;var fps=Application.targetFrameRate;var vsync=QualitySettings.vSyncCount;
             Application.runInBackground=true;Application.targetFrameRate=60;QualitySettings.vSyncCount=0;
@@ -48,7 +54,7 @@ namespace EmbeddingGemma.Validation.Tests
                     Profiler.SetAreaEnabled(ProfilerArea.CPU,true);Profiler.SetAreaEnabled(ProfilerArea.Memory,true);
                     allocation=new FrameManagedAllocationCapture("media-validation-run-including-input-load-query-release-and-io");
                 }
-                var task=Run(cancellation.Token,gpu);long peak=0;
+                var task=Run(cancellation.Token,gpu,policy);long peak=0;
                 while(!task.IsCompleted)
                 {
                     gpu?.Capture();
@@ -98,17 +104,19 @@ namespace EmbeddingGemma.Validation.Tests
             yield return new ExitPlayMode();
         }
 
-        static async Task Run(CancellationToken token,EncoderGpuDispatchTrace gpu)
+        static async Task Run(CancellationToken token,EncoderGpuDispatchTrace gpu,MediaRepeatedInputPolicy policy)
         {
             var directory=Environment.GetEnvironmentVariable("EG_MEDIA_BUNDLE_OUTPUT");
-            var module=Environment.GetEnvironmentVariable("EG_MEDIA_BUNDLE_MODULE");
+            var module=policy.Module;
             var output=Environment.GetEnvironmentVariable("EG_MEDIA_EXECUTION_REPORT");
             Assert.That(output,Is.Not.Null.And.Not.Empty);Assert.That(File.Exists(output),Is.False);
-            GpuMediaExecutionPolicy.VerifyCurrent(directory);
+            policy.Verify(directory);
             var image=module.StartsWith("image-",StringComparison.Ordinal);
             Assert.That(image||module.StartsWith("audio-",StringComparison.Ordinal),Is.True);
             var bundle=GpuMediaBundle.Open(directory);var metadata=bundle.Module(module);
-            var report=new JObject{["success"]=false,["module"]=module,["precision"]=GpuMediaExecutionPolicy.CurrentPrecision,
+            var report=new JObject{["success"]=false,["module"]=module,["precision"]=policy.Precision,
+                ["bundle_policy"]=policy.IsCandidate?"reviewed-composed-candidate":"retained-pinned-bundle",
+                ["composed_candidate_distribution"]=policy.IsCandidate,["expected_bundle_descriptor_sha256"]=policy.ExpectedDescriptorSha256,
                 ["execution_source"]=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE"),
                 ["bundle_descriptor_sha256"]=Hash(Path.Combine(directory,"bundle.json")),
                 ["host_memory_limit_bytes"]=GpuMediaExecutionPolicy.CurrentMemoryLimitBytes,
@@ -178,7 +186,7 @@ namespace EmbeddingGemma.Validation.Tests
                     e["round"]=report["phase"]?.DeepClone();((JArray)report["stage_measurements"]).Add(e);Save();
                     if(encoder&&begin)gpu?.BeginCall((string)report["phase"]);
                 },gpu!=null);
-                foreach(var round in new[]{"first","warm","repeat-1","repeat-2"})
+                foreach(var round in policy.Rounds)
                 {
                     gpu?.SetRound(round);
                     token.ThrowIfCancellationRequested();report["phase"]=round;Save();var cpu=Cpu();var watch=Stopwatch.StartNew();
@@ -186,7 +194,7 @@ namespace EmbeddingGemma.Validation.Tests
                     watch.Stop();var cpuSeconds=(Cpu()-cpu).TotalSeconds;
                     Assert.That(actual.Length,Is.EqualTo(768));Assert.That(actual.All(v=>!float.IsNaN(v)&&!float.IsInfinity(v)),Is.True);
                     var norm=actual.Sum(v=>(double)v*v);var cosine=TextSearchIndex.Cosine(actual,expected);
-                    Assert.That(cosine,Is.GreaterThanOrEqualTo(GpuMediaExecutionPolicy.CurrentMinimumCosine));Assert.That(Math.Abs(norm-1),Is.LessThanOrEqualTo(.002));
+                    Assert.That(cosine,Is.GreaterThanOrEqualTo(policy.MinimumCosine));Assert.That(Math.Abs(norm-1),Is.LessThanOrEqualTo(.002));
                     var capture=Path.ChangeExtension(output,null)+"-"+round+".bin";Assert.That(File.Exists(capture),Is.False);
                     var bytes=new byte[768*4];Buffer.BlockCopy(actual,0,bytes,0,bytes.Length);File.WriteAllBytes(capture,bytes);
                     ((JArray)report["cases"]).Add(new JObject{["round"]=round,["id"]=id,["input_sha256"]=inputHash,

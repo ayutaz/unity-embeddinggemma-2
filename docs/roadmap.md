@@ -18,7 +18,7 @@
 | 6. リリース候補と配布監査 | candidateのsource・モデル・依存を固定。packageの表示名・説明・keywordsを3入力対応の実態に整え、README、API/sample手順、CHANGELOG、利用条件、最低要件、既知の制限を更新。全体回帰と公開内容のprivacy監査 | 空consumerの固定版導入が再現でき、全必須環境の証拠がcandidateに対応する。旧PR/cacheの個人情報対応も結果を再監査。モデルとコードを分離し、画像は元bytesの目視/OCR・hash確認を終える |
 | 7. 正式Releaseと公開後確認 | レビュー可能なRelease本文・版・tag・配布物一覧を準備し、公開依頼に基づきGitHub Releaseを作成。公開された固定tagから導入する | package version、CHANGELOG、tag、Releaseが一致し、公開物の読み戻しと新規consumerでの導入・sampleのsmoke確認が成功する |
 
-**並行して先に行うこと**：Mac・iPhone/iPad・Android端末、Unityのbuild module、Xcode/署名、実GPU・マイクと実操作の検証手段を確認し、担当と実行条件を確定します。端末準備をWindows完了後まで先送りしません。旧PR refs・cacheの削除と元モデル回収に関するSupport対応も追跡します。
+**並行して先に行うこと**：Mac・iPhone/iPad・Android端末、Unityのbuild module、Xcode/署名、実GPU・マイクと実操作の検証手段を確認し、担当と実行条件を確定します。端末準備をWindows完了後まで先送りしません。旧PR refs・cacheの削除と元モデル回収に関するSupport対応も追跡します。 現在のWindows環境ではADBは利用可能ですが、接続端末は0台です。repositoryの登録済みself-hosted runnerも0台で、Mac・iOSの利用環境は未確定です。端末の接続・署名・実GPU検証手段の確保を工程5の開始条件として明示します。
 
 **維持する精度と実行条件**：有限・単位長の768次元vector、FP32 cosine >= 0.999、採用Float16形式 >= 0.99、元のencoder要素別許容差、必要なQuery / Document / Raw、固定検索の全順位とscoreを確認します。モデル再検証ではnative full/cutのbit一致と全6信号も維持します。GPU前処理からencoder・backboneをつなぎ、中間CPU計算・readbackで成功扱いにはしません。tokenize・decode・音声取得等の入力境界と最終vector取得は別に記録します。
 
@@ -32,7 +32,7 @@
 
 ### 現在の判断点と再開条件（2026-10-18確認）
 
-#89・#86・#87はすべてDraftで未マージです。#89は公開表示名の決定を反映した `317bae3` のCIを実行中で、package・workflow lintとUbuntuのPython 3.13/3.14が成功、Windowsの2環境は確認中です。#86・#87の従来headはRequired CIが失敗しています。元の音声モデルarchiveの欠落は未解決です。#87のLinux JUnitのskip位置が絶対パスとなる問題には修正を準備し、#89へ公開しました。元の数値参照JSONの完全再構成モードも#89に含まれますが、手動CIでの保存はまだ実行していません。
+#89・#86・#87はすべてDraftで未マージです。#89は公開表示名の決定を反映した `317bae3` のCIを実行中で、package・workflow lint・model referenceとPythonのUbuntu 3.13/3.14・Windows 3.13が成功し、Windows 3.14は実行中です（2026-10-18 06:42 UTC確認）。元音声モデル取得の6信号と集計は失敗しており、Required CI全体の成功ではありません。#86・#87の従来headもRequired CIが失敗しています。#87のLinux JUnitのskip位置が絶対パスとなる問題の修正は#89へ公開済みです。
 
 公開表示名の扱いは利用者の指示で確定しました。音声モデルの再受け入れ方針は、既に提示した確認への回答を待っています。
 
@@ -42,7 +42,7 @@
 ここからは次の順で進めます。
 
 1. **#89の最新CIを確認する。** 実行中のrun `39103907036` を追跡し、4環境Python・privacy・package・workflowの結果を記録します。元音声モデル取得の失敗は、修正済みの表示名やJUnit出力の問題と分けます。
-2. **元の数値参照をCIに保存する。** 公開済みの既定OFFの `recover_golden_only` を使い、保持されている6信号の出力から元のJSONを再構成します。元SHA256・監査JSONを照合し、privacy guardを通ったJSONだけを保存します。元モデルの復旧や別世代の採用とは別の作業です。
+2. **元の数値参照のCI保存は完了。** `recover_golden_only` の[run 39104730468](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39104730468)が成功し、元の参照JSONと監査JSONだけを保存しました。実アップロードZIPのSHA256・CRCと2ファイルの元SHA256を独立に読み戻し、2つの私的コピーを照合しました。[確認記録](results/original-audio-golden-ci-readback-20261018.json)に残します。これは元モデル2件の復旧や新しいGPU合格には数えません。
 3. **音声モデルの受け入れ経路を確定する。** Supportが原本を回収できれば元のモデルhashを検証します。別世代モデルの再検証は利用者の承認後に進め、元の参照値・許容差、native full/cutのbit一致、全6信号のONNX検証と実GPU・consumer・Playerの既存条件を維持します。合格前に必須モデル条件を書き換えません。
 4. **必須CIを通してPRを統合する。** 参照・モデル取得経路を復旧し、最新headのRequired CI成功と差分を確認して#89 → #86 → #87の順で統合します。保護設定を迂回しません。
 5. **最終統合candidateを確認する。** 新規consumerでtext・image・audio、固定検索順位、キャンセル・復帰、切替・解放、cold/warmの時間・メモリとWindows Playerを実GPUで確認します。準備済みのPlayer検証基盤と過去sourceの合格を、最終実行の代わりにはしません。

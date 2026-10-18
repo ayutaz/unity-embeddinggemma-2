@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "generation": "audio-e9de158-20261018",
+  "producer_source": "e9de158a55a72a34cbf9f4752a234892c4ce41d3",
+  "producer_run": 39105290794,
+  "artifact_id": 12128476472,
+  "artifact_sha256": "a456ce247b3615a70ab01834500d7de02ab51361adefe26de7de0d860bfa24a5",
+  "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+  "source_tree": "8cf9893e5e847fd023e837fc58382e0ee96fef83",
+  "dependency_lock_blob": "5a7f116f5ffdcc40ea8d2ed520cfede028a49fe0",
+  "reference_sha256": "aa327a3c2bbcaea9a00c82012ed89d7b4a3ea786a20eba806c5977de0dfe441e",
+  "audit_sha256": "027d7106d7db7c09caa8f3cea9616575f9c93511ec6d0c4bc70774e37d072898",
+  "graphs": {
+    "frames-1119-valid-1119/audio.pt2": {
+      "bytes": 1229069701,
+      "sha256": "406db281f6ac81a591c30e723c22e08856b8b7c302302ae54d4bee595252b887"
+    },
+    "frames-1119-valid-839/audio.pt2": {
+      "bytes": 1229071109,
+      "sha256": "ca12d55e4dc221d589fa075f22ba1a80b0c8e5f4d1c8794f55a9f6cb1cebcc34"
+    }
+  },
+  "qualified": false
+}

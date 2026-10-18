@@ -3,6 +3,10 @@ name: Audio native reference for runtime diagnostics
 on:
   workflow_dispatch:
     inputs:
+      qualify_candidate_generation:
+        description: Validate the fixed unqualified regenerated graphs against unchanged original goldens; does not adopt a generation or qualify GPU
+        type: boolean
+        default: false
       recover_golden_only:
         description: Reconstruct exact original reference JSON from retained original captures; does not recover model graphs
         type: boolean
@@ -37,12 +41,132 @@ permissions:
   actions: read
 
 concurrency:
-  group: audio-runtime-reference-${{ github.ref }}-${{ inputs.recover_golden_only && 'golden' || inputs.recover_original_bytes && 'recovery' || 'diagnostic' }}
-  cancel-in-progress: ${{ !inputs.recover_original_bytes && !inputs.recover_golden_only }}
+  group: audio-runtime-reference-${{ github.ref }}-${{ inputs.qualify_candidate_generation && 'candidate' || inputs.recover_golden_only && 'golden' || inputs.recover_original_bytes && 'recovery' || 'diagnostic' }}
+  cancel-in-progress: ${{ !inputs.recover_original_bytes && !inputs.recover_golden_only && !inputs.qualify_candidate_generation }}
 
 jobs:
+  candidate-execute:
+    if: github.event_name == 'workflow_dispatch' && inputs.qualify_candidate_generation
+    permissions:
+      contents: read
+      actions: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        case_id: [silence, impulse, sine, nyquist, noise, padded_noise]
+    defaults:
+      run:
+        working-directory: tools
+        shell: bash
+    env:
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+      OPENBLAS_NUM_THREADS: '4'
+      MKL_CBWR: COMPATIBLE
+      MKL_DYNAMIC: 'FALSE'
+      CASE_ID: ${{ matrix.case_id }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Reject simultaneous recovery modes
+        run: |
+          test "${{ inputs.recover_golden_only }}" != true
+          test "${{ inputs.recover_original_bytes }}" != true
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - name: Fetch one reviewed candidate profile and immutable original golden
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.audio_generation_candidate fetch
+          --output ../artifacts/candidate --original ../artifacts/original --case "$CASE_ID"
+      - name: Execute every actual carry with native full and cut controls
+        run: |
+          mkdir -p ../artifacts/candidate-output
+          lscpu --json > ../artifacts/candidate-output/cpu-host.json
+          uv run --locked python -m embeddinggemma_tools.frozen_audio_chained_onnx \
+            --input ../artifacts/original --candidate-directory ../artifacts/candidate/audio-runtime-reference \
+            --output ../artifacts/candidate-output \
+            --raw-input --variant ordered_original_midpoint_bmm --case "$CASE_ID"
+      - name: Check candidate numerical artifact publication privacy
+        id: privacy_candidate_output
+        if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/candidate-output/*.json
+            artifacts/candidate-output/*.bin
+            artifacts/candidate/candidate-range-receipt.json
+            artifacts/original/original-range-receipt.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ always() && steps.privacy_candidate_output.outcome == 'success' }}
+        with:
+          name: audio-candidate-${{ github.sha }}-${{ matrix.case_id }}
+          path: |
+            artifacts/candidate-output/*.json
+            artifacts/candidate-output/*.bin
+            artifacts/candidate/candidate-range-receipt.json
+            artifacts/original/original-range-receipt.json
+          retention-days: 30
+          if-no-files-found: warn
+  candidate-audit:
+    needs: [candidate-execute]
+    if: ${{ always() && github.event_name == 'workflow_dispatch' && inputs.qualify_candidate_generation }}
+    permissions:
+      contents: read
+      actions: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: tools
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: audio-candidate-${{ github.sha }}-*
+          path: artifacts/candidate-cases
+      - name: Fetch independent immutable original golden
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.audio_generation_candidate fetch-original
+          --output ../artifacts/original
+      - name: Audit all six raw inputs and every actual carry without promoting the generation
+        env:
+          EXECUTION_SOURCE: ${{ github.sha }}
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.audio_generation_candidate audit
+          --reports ../artifacts/candidate-cases --original ../artifacts/original
+          --source "$EXECUTION_SOURCE" --output ../artifacts/audio-candidate-acceptance.json
+      - name: Check candidate audit publication privacy
+        id: privacy_candidate_audit
+        if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/audio-candidate-acceptance.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ always() && steps.privacy_candidate_audit.outcome == 'success' }}
+        with:
+          name: audio-candidate-acceptance-${{ github.sha }}
+          path: artifacts/audio-candidate-acceptance.json
+          retention-days: 30
+          if-no-files-found: warn
   recover-golden:
-    if: github.event_name == 'workflow_dispatch' && inputs.recover_golden_only
+    if: github.event_name == 'workflow_dispatch' && inputs.recover_golden_only && !inputs.qualify_candidate_generation
     permissions:
       contents: read
       actions: read
@@ -77,7 +201,7 @@ jobs:
           retention-days: 90
           if-no-files-found: error
   recover:
-    if: github.event_name == 'workflow_dispatch' && inputs.recover_original_bytes && !inputs.recover_golden_only
+    if: github.event_name == 'workflow_dispatch' && inputs.recover_original_bytes && !inputs.recover_golden_only && !inputs.qualify_candidate_generation
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -193,7 +317,7 @@ jobs:
           if-no-files-found: error
   native-reference:
     if: >-
-      (github.event_name == 'workflow_dispatch' && !inputs.recover_original_bytes && !inputs.recover_golden_only) ||
+      (github.event_name == 'workflow_dispatch' && !inputs.recover_original_bytes && !inputs.recover_golden_only && !inputs.qualify_candidate_generation) ||
       (github.event.pull_request.head.repo.full_name == github.repository &&
        contains(github.event.pull_request.labels.*.name, 'audio-runtime-diagnostics'))
     runs-on: ubuntu-latest

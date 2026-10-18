@@ -28,6 +28,8 @@
 
 各工程の詳細と既存checkpointは以下に保持します。工程ごとにsource・モデル・精度・環境、合格・失敗・未実行、残件を記録し、最終candidateでの証拠をそろえてから次の完了判定を行います。
 
+[再生成候補の通常経路の比較](results/audio-regeneration-numerical-baseline-summary-20261018.json)では、nativeで2,884要素、未分割ONNXで5,230要素が元の許容差を超え、ONNXの6信号すべてが不合格でした。候補は未採用です。元の参照値を維持し、[別世代候補の5分割数値検証](audio-candidate-qualification.md)を追加しました。関連105テストとworkflow lintは合格しましたが、この小規模確認を実モデル・実GPUの合格には数えません。
+
 ## 直近の作業順
 
 ### 元の数値参照の復旧と次の数値比較（2026-10-18）

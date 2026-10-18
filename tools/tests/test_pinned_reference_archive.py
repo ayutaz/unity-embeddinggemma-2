@@ -101,15 +101,21 @@ def test_audited_paths_cannot_escape_the_original_directory(original,monkeypatch
     with pytest.raises(ValueError,match='escapes'):archive.verify_original(original)
 
 
-def test_required_consumer_resolves_preserved_reference_for_execution_and_audit():
+def test_required_consumer_selects_reviewed_generation_and_preserved_original_golden(monkeypatch, tmp_path):
+    from embeddinggemma_tools import selected_audio_generation as selected
     root=Path(__file__).resolve().parents[2]/'.github/workflows'
     w=yaml.load((root/'pinned-audio-acceptance.yml').read_text(encoding='utf-8'),Loader=yaml.BaseLoader)
-    for name in ('execute','audit'):
-        steps=w['jobs'][name]['steps']
-        resolver=next(i for i,s in enumerate(steps) if 'pinned_reference_archive resolve' in s.get('run',''))
-        fetch=next(i for i,s in enumerate(steps) if 'embeddinggemma_tools.artifact_zip' in s.get('run',''))
-        assert resolver<fetch
-        assert '--artifact-id ${{ steps.original.outputs.artifact-id }}' in steps[fetch]['run']
+    execute='\n'.join(s.get('run','') for s in w['jobs']['execute']['steps'])
+    audit='\n'.join(s.get('run','') for s in w['jobs']['audit']['steps'])
+    assert 'selected_audio_generation fetch' in execute and '--original ../artifacts/original' in execute
+    assert 'selected_audio_generation fetch-original' in audit
+    assert 'selected_audio_generation audit' in audit and '--original ../artifacts/original' in audit
+    calls=[]
+    monkeypatch.setattr(selected,'checked_selection',lambda: calls.append('reviewed-selection'))
+    monkeypatch.setattr(selected.candidate,'fetch_original',lambda directory: calls.append(directory))
+    destination=tmp_path/'original'
+    assert selected.main(['fetch-original','--output',str(destination)])==0
+    assert calls==['reviewed-selection',destination]
 
 
 def test_resolve_cli_records_immutable_id_and_run_for_actions(tmp_path,monkeypatch):

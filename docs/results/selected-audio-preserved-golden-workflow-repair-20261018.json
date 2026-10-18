@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "scope": "Preserved original golden acquisition contract after explicit reviewed generation selection",
+  "ci_source": "58f48ac444cc07785da7b576514e8c810af0ce67",
+  "ci_run": 39126214004,
+  "observed_ci_failures": [
+    {
+      "platform": "ubuntu-latest",
+      "python": "3.13",
+      "failed": 1,
+      "passed": 1802,
+      "job": 117672057397
+    },
+    {
+      "platform": "ubuntu-latest",
+      "python": "3.14",
+      "failed": 1,
+      "passed": 1802,
+      "job": 117672057406
+    }
+  ],
+  "failed_test": "test_required_consumer_resolves_preserved_reference_for_execution_and_audit",
+  "intended_local_red": {
+    "failed": 1,
+    "passed": 15
+  },
+  "green": {
+    "passed": 111,
+    "failed": 0,
+    "skipped": 0
+  },
+  "change": "Keep the original archive/recovery tests; update the consumer contract to verify reviewed selection before fetching the immutable original golden.",
+  "production_gate_or_tolerance_changed": false,
+  "latest_head_ci_passed": false,
+  "gpu_executed": false,
+  "evidence_sha256": {
+    "required-ci-58f48ac-ubuntu313-failed-private.log": "9a0a92d53cfb66a26a2bca321ba0edd07b2d2843b27d1204d295e646ae4ece86",
+    "required-ci-58f48ac-ubuntu314-failed-private.log": "ea5a044bcb7e935a5bd6458ee7c04388ad90a036aaa5a2477e3f1ee5be4d0eba",
+    "selected-audio-preservation-workflow-red-private.log": "8110472db4937f93d2a6b6fd8a679394313b5ad339f8affb6f92992d3c10d8ba",
+    "selected-audio-preservation-workflow-green-private.log": "140b8fdc0606f9aabdb2d2fbe3a2f31d67271e2ac1d2a4707cc12a1e497a9d42"
+  }
+}

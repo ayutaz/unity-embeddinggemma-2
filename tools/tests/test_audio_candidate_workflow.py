@@ -66,36 +66,22 @@ def test_tools_working_directory_is_created_before_any_shell_step_uses_it():
                 assert index>checkout,'A shell step used tools before checkout created it'
 
 
-def test_candidate_preservation_is_manual_exclusive_and_uploads_only_verified_distribution():
+def test_candidate_preservation_is_retired_without_fetch_or_publication():
     w=workflow(); option=w['on']['workflow_dispatch']['inputs']['preserve_candidate_distribution']
-    assert option['type']=='boolean' and option['default']=='false'
+    assert option['type']=='boolean' and option['default']=='false' and 'Retired' in option['description']
     for name in ('candidate-execute','candidate-audit','recover-golden','recover','native-reference'):
         assert '!inputs.preserve_candidate_distribution' in w['jobs'][name]['if']
-    job=w['jobs']['preserve-candidate']
-    assert "github.event_name == 'workflow_dispatch'" in job['if']
-    for flag in ('qualify_candidate_generation','recover_golden_only','recover_original_bytes'):
-        assert '!inputs.'+flag in job['if']
-    assert job['permissions']=={'contents':'read','actions':'read'}
-    assert job['timeout-minutes']=='40' and not job.get('continue-on-error')
-    assert job['env']['MKL_CBWR']=='COMPATIBLE' and job['env']['MKL_DYNAMIC']=='FALSE'
-    assert job['env']['OMP_NUM_THREADS']==job['env']['MKL_NUM_THREADS']=='4'
-    commands='\n'.join(step.get('run','') for step in job['steps'])
-    assert 'embeddinggemma_tools.audio_candidate_distribution' in commands
-    assert '--fetch' in commands and '--source "$EXECUTION_SOURCE"' in commands
-    assert 'frozen_audio_chained_onnx' not in commands
-    upload=job['steps'][-1]; guard=job['steps'][-2]
-    assert guard['uses']=='./.github/actions/privacy-artifact-guard'
-    assert upload['with']['path']==guard['with']['paths']=='artifacts/candidate-distribution/**'
-    assert upload['with']['retention-days']=='90'
-    assert upload['with']['if-no-files-found']=='error'
-    assert 'success()' in upload['if'] and "outcome == 'success'" in upload['if']
-    assert not any(step.get('continue-on-error') for step in job['steps'])
+    job=w['jobs']['retired-raw-source']
+    assert "github.event_name == 'workflow_dispatch'" in job['if'] and 'inputs.preserve_candidate_distribution' in job['if']
+    assert len(job['steps'])==1 and 'exit 1' in job['steps'][0]['run']
+    assert '--source-archive' in job['steps'][0]['run'] and not any('uses' in step for step in job['steps'])
+    assert not job.get('continue-on-error') and 'preserve-candidate' not in w['jobs']
 
 
 def test_original_input_preservation_is_exclusive_and_does_not_download_or_execute_graphs():
     w=workflow();option=w['on']['workflow_dispatch']['inputs']['preserve_original_inputs']
     assert option['type']=='boolean' and option['default']=='false'
-    for name in ('preserve-candidate','candidate-execute','candidate-audit','recover-golden','recover','native-reference'):
+    for name in ('candidate-execute','candidate-audit','recover-golden','recover','native-reference'):
         assert '!inputs.preserve_original_inputs' in w['jobs'][name]['if']
     job=w['jobs']['preserve-inputs']
     assert "github.event_name == 'workflow_dispatch'" in job['if']
@@ -115,25 +101,14 @@ def test_original_input_preservation_is_exclusive_and_does_not_download_or_execu
     assert not job.get('continue-on-error') and not any(s.get('continue-on-error') for s in job['steps'])
 
 
-def test_native_onnx_identity_diagnostic_keeps_mismatches_failed_and_uploads_no_models():
+def test_native_onnx_identity_hosted_route_is_retired_without_model_download_or_upload():
     w=workflow();options=w['on']['workflow_dispatch']['inputs']
     assert len(options)<=10 and options['diagnose_candidate_onnx_identity']['default']=='false'
-    for name in ('preserve-inputs','preserve-candidate','candidate-execute','candidate-audit','recover-golden','recover','native-reference'):
+    assert 'Retired' in options['diagnose_candidate_onnx_identity']['description']
+    for name in ('preserve-inputs','candidate-execute','candidate-audit','recover-golden','recover','native-reference'):
         assert '!inputs.diagnose_candidate_onnx_identity' in w['jobs'][name]['if']
-    job=w['jobs']['candidate-native-identity']
+    job=w['jobs']['retired-raw-source']
     assert "github.event_name == 'workflow_dispatch'" in job['if'] and 'inputs.diagnose_candidate_onnx_identity' in job['if']
-    for name in ('preserve_original_inputs','preserve_candidate_distribution','qualify_candidate_generation','recover_golden_only','recover_original_bytes'):
-        assert '!inputs.'+name in job['if']
-    assert job['strategy']['matrix']['profile']==['frames-1119-valid-1119','frames-1119-valid-839']
-    assert job['strategy']['fail-fast']=='false' and job['strategy']['max-parallel']=='2'
-    assert job['permissions']=={'contents':'read','actions':'read'}
-    assert job['timeout-minutes']=='20' and not job.get('continue-on-error')
-    commands='\n'.join(step.get('run','') for step in job['steps'])
-    assert 'embeddinggemma_tools.audio_candidate_onnx_identity' in commands and '--fetch' in commands
-    assert '--profile "$PROFILE"' in commands and '--source "$EXECUTION_SOURCE"' in commands
-    assert not any(step.get('continue-on-error') for step in job['steps'])
-    guard,upload=job['steps'][-2:]
-    assert guard['uses']=='./.github/actions/privacy-artifact-guard'
-    assert guard['with']['paths']==upload['with']['path']=='artifacts/candidate-native-identity/identity.json'
-    assert 'always()' in upload['if'] and "outcome == 'success'" in upload['if']
-    assert upload['with']['retention-days']=='90' and upload['with']['if-no-files-found']=='error'
+    assert len(job['steps'])==1 and 'exit 1' in job['steps'][0]['run']
+    assert not any('uses' in step or step.get('continue-on-error') for step in job['steps'])
+    assert not job.get('continue-on-error') and 'candidate-native-identity' not in w['jobs']

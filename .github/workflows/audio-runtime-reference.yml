@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       diagnose_candidate_onnx_identity:
-        description: Compare both fixed candidate native ONNX files with retained original computation identities; mismatches fail and never qualify GPU
+        description: Retired hosted raw-model identity check; use the local CLI with --source-archive
         type: boolean
         default: false
       preserve_original_inputs:
@@ -12,7 +12,7 @@ on:
         type: boolean
         default: false
       preserve_candidate_distribution:
-        description: Preserve metadata-clean copies of both pinned candidate graphs after six-case native bit comparison; does not adopt a generation or qualify GPU
+        description: Retired hosted raw-graph preservation; use the local CLI with --source-archive
         type: boolean
         default: false
       qualify_candidate_generation:
@@ -57,57 +57,17 @@ concurrency:
   cancel-in-progress: ${{ !inputs.recover_original_bytes && !inputs.recover_golden_only && !inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution && !inputs.preserve_original_inputs && !inputs.diagnose_candidate_onnx_identity }}
 
 jobs:
-  candidate-native-identity:
+  retired-raw-source:
     if: >-
-      github.event_name == 'workflow_dispatch' && inputs.diagnose_candidate_onnx_identity &&
-      !inputs.preserve_original_inputs && !inputs.preserve_candidate_distribution && !inputs.qualify_candidate_generation &&
-      !inputs.recover_golden_only && !inputs.recover_original_bytes
-    permissions:
-      contents: read
-      actions: read
+      github.event_name == 'workflow_dispatch' &&
+      (inputs.diagnose_candidate_onnx_identity || inputs.preserve_candidate_distribution)
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    strategy:
-      fail-fast: false
-      max-parallel: 2
-      matrix:
-        profile: [frames-1119-valid-1119, frames-1119-valid-839]
-    defaults:
-      run:
-        working-directory: tools
-        shell: bash
-    env:
-      EXECUTION_SOURCE: ${{ github.sha }}
-      PROFILE: ${{ matrix.profile }}
-      GH_TOKEN: ${{ github.token }}
+    timeout-minutes: 1
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
-        with:
-          version: '0.12.20'
-          python-version: '3.13'
-          enable-cache: true
-          cache-dependency-glob: tools/uv.lock
-      - run: uv sync --locked
-      - name: Compare actual candidate ONNX computation; preserve mismatch as a failure
-        run: >-
-          uv run --locked python -m embeddinggemma_tools.audio_candidate_onnx_identity
-          --fetch --input ../artifacts/candidate-native-private --profile "$PROFILE"
-          --source "$EXECUTION_SOURCE" --output ../artifacts/candidate-native-identity/identity.json
-      - name: Check exact diagnostic publication paths
-        if: always()
-        id: privacy_candidate_native_identity
-        uses: ./.github/actions/privacy-artifact-guard
-        with:
-          paths: artifacts/candidate-native-identity/identity.json
-      - name: Preserve actual identity diagnostic without uploading model files or raw logs
-        if: ${{ always() && steps.privacy_candidate_native_identity.outcome == 'success' }}
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: candidate-native-identity-${{ github.sha }}-${{ matrix.profile }}
-          path: artifacts/candidate-native-identity/identity.json
-          retention-days: 90
-          if-no-files-found: error
+      - name: Reject retired hosted raw-model routes before checkout, downloads or uploads
+        run: |
+          echo '::error::Historical raw-model modes require a verified local archive. Use the local CLI with --source-archive; public distribution qualification remains available.'
+          exit 1
 
   preserve-inputs:
     if: >-
@@ -152,56 +112,6 @@ jobs:
           name: original-audio-inputs-${{ github.sha }}
           path: artifacts/original-audio-inputs/**
           retention-days: 90
-          if-no-files-found: error
-
-  preserve-candidate:
-    if: >-
-      github.event_name == 'workflow_dispatch' && inputs.preserve_candidate_distribution &&
-      !inputs.qualify_candidate_generation && !inputs.recover_golden_only && !inputs.recover_original_bytes && !inputs.preserve_original_inputs && !inputs.diagnose_candidate_onnx_identity
-    permissions:
-      contents: read
-      actions: read
-    runs-on: ubuntu-latest
-    timeout-minutes: 40
-    defaults:
-      run:
-        working-directory: tools
-        shell: bash
-    env:
-      OMP_NUM_THREADS: '4'
-      MKL_NUM_THREADS: '4'
-      OPENBLAS_NUM_THREADS: '4'
-      MKL_CBWR: COMPATIBLE
-      MKL_DYNAMIC: 'FALSE'
-      EXECUTION_SOURCE: ${{ github.sha }}
-      GH_TOKEN: ${{ github.token }}
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
-        with:
-          version: '0.12.20'
-          python-version: '3.13'
-          enable-cache: true
-          cache-dependency-glob: tools/uv.lock
-      - run: uv sync --locked
-      - name: Preserve distinct metadata-clean graphs only after all six actual native outputs match bit for bit
-        run: >-
-          uv run --locked python -m embeddinggemma_tools.audio_candidate_distribution
-          --fetch --candidate ../artifacts/candidate-private --original ../artifacts/original-private
-          --output ../artifacts/candidate-distribution --source "$EXECUTION_SOURCE"
-      - name: Check exact distribution publication paths
-        id: privacy_candidate_distribution
-        uses: ./.github/actions/privacy-artifact-guard
-        with:
-          paths: artifacts/candidate-distribution/**
-      - name: Preserve verified distribution without publishing source graphs or raw diagnostics
-        if: ${{ success() && steps.privacy_candidate_distribution.outcome == 'success' }}
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: audio-candidate-distribution-${{ github.sha }}
-          path: artifacts/candidate-distribution/**
-          retention-days: 90
-          compression-level: 0
           if-no-files-found: error
 
   candidate-execute:

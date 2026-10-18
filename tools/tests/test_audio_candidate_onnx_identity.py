@@ -72,7 +72,7 @@ def test_execution_source_is_fixed_before_reading_models(baseline,source):
     with pytest.raises(ValueError,match='source'):m.inspect_native(path,expected_sha256=sha,profile=PROFILE,source=source)
 
 
-@pytest.mark.parametrize('problem',[None,'digest','source','fork','audit','graph'])
+@pytest.mark.parametrize('problem',[None,'digest','source','missing','audit','graph'])
 def test_fetch_binds_actual_graph_to_reviewed_producer_audit(tmp_path,monkeypatch,problem):
     import hashlib,io,zipfile
     from embeddinggemma_tools import artifact_zip
@@ -81,10 +81,7 @@ def test_fetch_binds_actual_graph_to_reviewed_producer_audit(tmp_path,monkeypatc
         files={PROFILE+'/audio.onnx':dict(bytes=len(graph),sha256=sha)})).encode()
     contract=dict(artifact_id=1,artifact_sha256='b'*64,producer_run=2,producer_source='a'*40,
         model_revision='c'*40,audit_sha256=hashlib.sha256(audit).hexdigest())
-    metadata=dict(id=1,digest='sha256:'+'b'*64,workflow_run=dict(id=2,head_sha='a'*40,repository_id=7,head_repository_id=7))
-    if problem=='digest':metadata['digest']='sha256:'+'0'*64
-    if problem=='source':metadata['workflow_run']['head_sha']='0'*40
-    if problem=='fork':metadata['workflow_run']['head_repository_id']=8
+    if problem=='source':contract['producer_source']='0'*40
     if problem=='audit':audit+=b'changed'
     if problem=='graph':graph+=b'changed'
     buffer=io.BytesIO()
@@ -93,15 +90,20 @@ def test_fetch_binds_actual_graph_to_reviewed_producer_audit(tmp_path,monkeypatc
         archive.writestr('audio-runtime-reference/'+PROFILE+'/audio.onnx',graph)
         archive.writestr('audio-runtime-reference/unrequested.pt2',b'not selected')
     data=buffer.getvalue();selected=[];real=artifact_zip.extract_members
+    source=tmp_path/'source.zip';source.write_bytes(data)
+    contract['artifact_sha256']=hashlib.sha256(data).hexdigest()
+    if problem=='digest':contract['artifact_sha256']='0'*64
+    if problem=='missing':source.unlink()
     def extract(reader,output,names,**kwargs):
-        assert problem not in ('digest','source','fork'),'Untrusted provenance reached extraction'
+        assert problem not in ('digest','missing'),'Unverified archive reached extraction'
         selected.extend(names);return real(reader,output,names,**kwargs)
     monkeypatch.setattr(m.candidate,'candidate_contract',lambda:contract)
-    monkeypatch.setattr(artifact_zip,'github_artifact_reader',lambda *a:(artifact_zip.RangeReader(len(data),lambda start,stop:data[start:stop]),metadata))
+    monkeypatch.setattr(artifact_zip,'github_artifact_reader',lambda *a:pytest.fail('Retired hosted source was used'))
     monkeypatch.setattr(artifact_zip,'extract_members',extract)
     if problem:
-        with pytest.raises(ValueError):m.fetch_native(tmp_path/'download',profile=PROFILE)
+        with pytest.raises(ValueError):m.fetch_native(tmp_path/'download',profile=PROFILE,source_archive=source)
     else:
-        result,actual,provenance=m.fetch_native(tmp_path/'download',profile=PROFILE)
+        result,actual,provenance=m.fetch_native(tmp_path/'download',profile=PROFILE,source_archive=source)
         assert result.read_bytes()==graph and actual==sha and provenance['candidate_producer_source']=='a'*40
+        assert provenance['source_archive_transport']=='verified_local_archive' and not provenance['provider_metadata_revalidated']
         assert len(selected)==2 and not any(name.endswith('.pt2') for name in selected)

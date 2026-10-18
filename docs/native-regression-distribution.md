@@ -95,9 +95,13 @@ remained false. This is a new auditor invocation over preserved execution data,
 not a new model execution or complete CI acceptance of this source.
 
 This removes the manual qualification matrix's dependency on the old raw model
-artifact. Legacy preservation/diagnostic commands still require their own
-dependency inventory and complete backups before any provider artifact is
-deleted. No artifact is deleted by this change.
+artifact. [Historical raw preservation/diagnostic commands](raw-candidate-archive.md)
+now require an explicitly supplied complete, hash-verified local archive and
+prepared original goldens; they do not fall back to the old hosted raw ZIP.
+The two historical hosted raw-model modes fail explicitly before any download
+or upload. Original-input-only preservation uses its separate safe input archive
+and remains available. Complete backup and live dependency checks still precede
+any provider artifact deletion. No artifact is deleted by this code change.
 
 ## Checkpoint and remaining work
 

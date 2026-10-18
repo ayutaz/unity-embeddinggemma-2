@@ -36,21 +36,15 @@ def inspect_native(path, *, expected_sha256, profile, source):
         model_executed=False,gpu_validated=False,generation_qualified=False)
 
 
-def fetch_native(output, *, profile):
-    from .artifact_zip import github_artifact_reader,extract_members
+def fetch_native(output, *, profile,source_archive=None):
+    from .artifact_zip import verified_local_artifact_reader,extract_members
     if profile not in PROFILES:raise ValueError('One original profile is required')
     output=Path(output)
     if output.exists() and any(output.iterdir()):raise ValueError('Diagnostic input output must be empty')
     contract=candidate.candidate_contract()
-    reader,metadata=github_artifact_reader('ayutaz/unity-embeddinggemma-2',contract['artifact_id'])
+    reader,source_proof=verified_local_artifact_reader(source_archive,contract['artifact_sha256'])
     graph_name=profile+'/audio.onnx'
     with reader:
-        run=metadata.get('workflow_run',{})
-        if (metadata.get('id')!=contract['artifact_id'] or metadata.get('digest')!='sha256:'+contract['artifact_sha256']
-                or run.get('id')!=contract['producer_run'] or run.get('head_sha')!=contract['producer_source']
-                or type(run.get('repository_id')) is not int or run['repository_id']<=0
-                or run.get('head_repository_id')!=run['repository_id']):
-            raise ValueError('Candidate native ONNX artifact provenance differs')
         extract_members(reader,output,['audio-runtime-reference/audio-encoder-validation.json','audio-runtime-reference/'+graph_name],
                         max_entry_bytes=2*1024*1024*1024)
     root=output/'audio-runtime-reference';audit_path=root/'audio-encoder-validation.json'
@@ -64,7 +58,8 @@ def fetch_native(output, *, profile):
     path=candidate.checked_file(root,graph_name,spec)
     return path,spec['sha256'],dict(candidate_artifact_id=contract['artifact_id'],candidate_producer_run=contract['producer_run'],
         candidate_producer_source=contract['producer_source'],candidate_contract_sha256=candidate.CONTRACT_SHA,
-        candidate_audit_sha256=contract['audit_sha256'])
+        candidate_audit_sha256=contract['audit_sha256'],source_archive_transport=source_proof['transport'],
+        source_archive_sha256=source_proof['archive_sha256'],provider_metadata_revalidated=False)
 
 
 def main(argv=None):
@@ -75,6 +70,7 @@ def main(argv=None):
     parser.add_argument('--source',required=True)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--fetch',action='store_true')
+    parser.add_argument('--source-archive',type=Path)
     args=parser.parse_args(argv)
     if args.output.exists():
         print('Diagnostic output already exists; no file was overwritten.')
@@ -83,7 +79,7 @@ def main(argv=None):
         print('Immutable diagnostic source required.')
         return 1
     try:
-        if args.fetch:path,sha,provenance=fetch_native(args.input,profile=args.profile)
+        if args.fetch:path,sha,provenance=fetch_native(args.input,profile=args.profile,source_archive=args.source_archive)
         else:path,sha,provenance=args.input,args.model_sha256,{}
         report=inspect_native(path,expected_sha256=sha,profile=args.profile,source=args.source)
         report.update(provenance)

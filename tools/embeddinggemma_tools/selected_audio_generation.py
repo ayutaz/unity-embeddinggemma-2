@@ -162,6 +162,7 @@ def main(argv=None):
     for name in ('fetch','fetch-distribution'):
         fetch = commands.add_parser(name); fetch.add_argument('--output', type=Path, required=True)
         fetch.add_argument('--original', type=Path, required=True); fetch.add_argument('--case', choices=sorted(SIGNALS), required=True)
+        if name=='fetch': fetch.add_argument('--source-archive',type=Path,required=True)
     for name in ('fetch-original','fetch-original-distribution'):
         golden = commands.add_parser(name); golden.add_argument('--output', type=Path, required=True)
     for name in ('audit','audit-distribution'):
@@ -171,7 +172,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     checked_selection()
     if args.command == 'fetch':
-        candidate.fetch_candidate(args.output, args.original, case_id=args.case)
+        candidate.fetch_candidate(args.output, args.original, case_id=args.case,source_archive=args.source_archive)
     elif args.command == 'fetch-distribution':
         from .native_regression_distribution import fetch_candidate
         fetch_candidate(args.output,args.original,case_id=args.case)

@@ -103,13 +103,13 @@ def test_cli_checks_selection_before_network_and_never_defaults_to_another_gener
     m = module(); calls = []; manifest, _ = documents()
     monkeypatch.setattr(m, 'checked_selection', lambda root=None: calls.append('selection') or manifest)
     monkeypatch.setattr(m.candidate, 'fetch_candidate', lambda *a, **kw: calls.append(('fetch', kw['case_id'])))
-    assert m.main(['fetch', '--output', str(tmp_path/'candidate'), '--original', str(tmp_path/'original'), '--case', 'noise']) == 0
+    assert m.main(['fetch', '--output', str(tmp_path/'candidate'), '--original', str(tmp_path/'original'), '--case', 'noise', '--source-archive', str(tmp_path/'original.zip')]) == 0
     assert calls == ['selection', ('fetch', 'noise')]
     calls.clear()
     def rejected(root=None): raise ValueError('changed selection')
     monkeypatch.setattr(m, 'checked_selection', rejected)
     with pytest.raises(ValueError):
-        m.main(['fetch', '--output', str(tmp_path/'candidate'), '--original', str(tmp_path/'original'), '--case', 'noise'])
+        m.main(['fetch', '--output', str(tmp_path/'candidate'), '--original', str(tmp_path/'original'), '--case', 'noise', '--source-archive', str(tmp_path/'original.zip')])
     assert calls == []
 
 

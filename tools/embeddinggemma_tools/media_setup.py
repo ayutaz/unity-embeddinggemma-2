@@ -54,6 +54,9 @@ def _read_descriptor(raw, expected):
         raise ValueError('Pinned descriptor size or SHA256 differs')
     try:
         data = json.loads(raw, object_pairs_hook=_pairs)
+        layout = data.get('object_layout', 'nested')
+        if not isinstance(layout, str) or layout not in ('nested', 'flat'):
+            raise ValueError('Object layout must be nested or flat')
         if (data['schema_version'] != 1 or type(data['schema_version']) is not int
                 or data['backend'] != 'GPUCompute' or data['sentis_version'] != '2.6.1'
                 or data['model_revision'] != REVISION
@@ -208,6 +211,7 @@ def _prepare_objects(data, root, names, *, source_url, descriptor_sha256, module
     fetch, cancelled = fetch or _download, cancelled or (lambda: False)
     report = dict(success=False, model_revision=REVISION, producer=data['source_commit'],
                   descriptor_sha256=descriptor_sha256, source_url=source_url, modules=list(modules),
+                  object_layout=data.get('object_layout', 'nested'),
                   downloaded_files=0, reused_files=0, downloaded_bytes=0, reused_bytes=0,
                   stale_pending_files_removed=stale_pending_files_removed,
                   inference_executed=False, gpu_validated=False)
@@ -229,7 +233,8 @@ def _prepare_objects(data, root, names, *, source_url, descriptor_sha256, module
             pending = target.with_name('.' + target.name + '.' + uuid.uuid4().hex + '.pending')
             try:
                 digest, count = hashlib.sha256(), 0
-                with closing(fetch(urljoin(source_url, name))) as stream, pending.open('xb') as destination:
+                remote_name = Path(name).name if data.get('object_layout') == 'flat' else name
+                with closing(fetch(urljoin(source_url, remote_name))) as stream, pending.open('xb') as destination:
                     while True:
                         check_cancelled()
                         chunk = stream.read(CHUNK_BYTES)

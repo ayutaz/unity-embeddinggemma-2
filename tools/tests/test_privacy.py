@@ -31,6 +31,13 @@ def test_private_config_filename_is_blocked_even_without_known_token_format():
     assert scan_bytes(b'CUSTOM_VALUE=unrecognized', '.env')
     assert scan_bytes(b'placeholder only', '.env.example') == []
 
+
+def test_private_filenames_are_rejected_without_echoing_the_name():
+    private='fixture'+'@'+'private-domain.dev'
+    findings=scan_bytes(b'safe content','docs/'+private+'.txt')
+    assert findings and findings[0]['rule']=='private-filename'
+    assert private not in str(findings)
+
 def test_public_noreply_and_relative_or_environment_paths_are_allowed():
     text = 'models/bundle.json ${USER_HOME}/models $env:USERPROFILE 123+fixture@users.noreply.github.com'
     assert scan_bytes(text.encode(), 'README.md') == []

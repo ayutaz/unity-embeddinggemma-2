@@ -21,7 +21,9 @@ jobs:
           python-version: '3.13'
       - name: Reject private data in reachable history
         working-directory: tools
-        run: uv run --no-project --python 3.13 python -m embeddinggemma_tools.privacy history --root ..
+        run: uv run --no-project --python 3.13 python -m embeddinggemma_tools.privacy history --root .. --revision "$PRIVACY_SOURCE_SHA"
+        env:
+          PRIVACY_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Audit distribution and prepare a separate consumer manifest
         shell: bash
         working-directory: tools

@@ -56,3 +56,13 @@ def test_real_clean_commit_and_local_push_are_allowed(tmp_path):
     sink=tmp_path/'sink.git'; git(tmp_path,'init','--bare',str(sink))
     git(root,'push',str(sink),'HEAD:refs/heads/main')
     assert git(tmp_path,'--git-dir='+str(sink),'show-ref','--verify','refs/heads/main').returncode==0
+
+
+def test_explicit_ci_source_revision_still_rejects_private_ancestors(tmp_path):
+    root=fixture_repo(tmp_path,private_ancestor=True)
+    revision=git(root,'rev-parse','HEAD').stdout.strip()
+    import sys
+    result=subprocess.run([sys.executable,'-m','embeddinggemma_tools.privacy','history',
+        '--root',str(root),'--revision',revision],cwd=root/'tools',capture_output=True,text=True)
+    assert result.returncode==1
+    assert 'private-identity' in result.stdout

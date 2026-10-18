@@ -28,6 +28,10 @@ def normalize(text):
     return text
 
 def scan_bytes(data, path='<input>', reviewed=None):
+    normalized_path=normalize(path)
+    if (HOME.search(normalized_path) or SECRET.search(normalized_path)
+            or any(not public_email(m.group()) for m in EMAIL.finditer(normalized_path))):
+        return [dict(path='<private-filename>',line=1,rule='private-filename')]
     filename=Path(path).name.lower()
     if ((filename.startswith('.env') and filename not in {'.env.example','.env.sample','.env.template'})
             or filename in {'.npmrc','.pypirc','id_rsa','id_ed25519'} or Path(path).suffix.lower() in {'.pem','.key','.pfx','.p12'}):
@@ -129,7 +133,10 @@ def main(argv=None):
     parser.add_argument('mode', choices=['staged', 'history', 'tree', 'pre-push', 'commit-message'])
     parser.add_argument('--root', type=Path, default=Path.cwd())
     parser.add_argument('--message-file', type=Path)
+    parser.add_argument('--revision',help='Full source commit SHA; includes all its ancestors')
     args = parser.parse_args(argv)
+    if args.revision and (args.mode!='history' or re.fullmatch(r'[0-9a-f]{40}',args.revision) is None):
+        parser.error('--revision requires history mode and a full lowercase commit SHA')
     root = args.root.resolve()
     try:
         if args.mode == 'staged':
@@ -146,7 +153,7 @@ def main(argv=None):
                     revisions.append(fields[1])
             findings = scan_objects(root, revisions, reviews(root)) if revisions else []
         elif args.mode == 'history':
-            findings = scan_objects(root, ['--all'], reviews(root))
+            findings = scan_objects(root, [args.revision] if args.revision else ['--all'], reviews(root))
         else:
             findings = []
             reviewed = reviews(root)

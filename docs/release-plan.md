@@ -7,18 +7,29 @@
 - 正式Releaseは未作成。PR #86・#87・#89・#90はすべてDraft・未マージです。
 - 音声の別世代候補は[全6信号の数値CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39106618371)が成功。2 profile・824,320値で元の許容差超過は0、取得した実データの独立再監査も一致しました。
 - この結果は候補の実GPU・consumer・Playerの合格を意味しません。旧世代のnative PT2モデル2件のbyte同一復旧と、必須CIの復旧は未達です。
-- #90のPlayer検証基盤はEditor契約・元fixture読み込み79件が成功。実モデルを使うWindows Release Player検証は残っています。CI 39108408310は終了し、Python全4環境・package・lint・通常referenceは成功、固定元モデル取得の6件・集計・Required CIは失敗しました。
+- #90の固定Git版 `6350aa6` を新規consumerへ導入し、Libraryを再利用せず、Windows IL2CPP / Release / High strippingの実buildに成功しました。最小consumerのコンパイルで見つかったUnityWebRequest依存の不足も修正済みです。
+- 同Player・既存FP32 bundle・Direct3D12で、音声2 profileの実行receiptは成功・GPU確認あり・process exit0です。画像squareは推論前のGPU監査で `InvalidOperationException`、exit1となり、後続のlandscape・portraitは未実行です。全vectorの独立再監査、Float16、最終モデル候補との対応付けは残っています。Direct3D11での先行音声試行の失敗も保持します。
+- #89の最新head `3949d1a` の[CI 39112717115](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39112717115)は、Python全4環境・package・lint・通常referenceが成功、固定元モデルの6信号・集計・Required CIは失敗しました。#90のhead `6350aa6` の[CI 39112580190](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39112580190)も不合格です。
 - 以前のsource・既存bundleでのGPU動作実績は保持し、最終候補に対応する確認と区別します。
 
 ### 音声候補の保存checkpoint
 
 [保存CI 39109531607](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39109531607)が成功しました。デバッグ情報だけを除いた配布用コピーについて、両profile・全6信号のnative出力が除去前後でbit一致しています。配布artifact `12129783259` は `2027-01-16T07:56:21Z` まで保存されます。[全体読み戻し](results/audio-candidate-distribution-full-readback-20261018.json)で、約2.45 GBのZIP全体・両モデルのSHA256、全CRCと私的な2コピーを確認しました。両配布モデルのhashは元の候補からのローカル導出とも一致しました。
 
-候補producerの元graph2件・raw入力6件・JSON2件の計10ファイルは、元のhashで私的な2コピーを確認しました。消失した旧世代PT2の復旧とは区別します。公開branchは `f453032`、保存実行sourceは `6bfc223`、統合候補のRuntimeは未変更です。必須CI・実GPU・consumer・Playerの合格には読み替えません。
+候補producerの元graph2件・raw入力6件・JSON2件の計10ファイルは、元のhashで私的な2コピーを確認しました。消失した旧世代PT2の復旧とは区別します。保存実行sourceは `6bfc223` です。必須CI・新世代候補の実GPU・consumer・Playerの合格には読み替えません。
 
 [元の数値参照とraw入力の保存CI](results/original-audio-input-preservation-readback-20261018.json)も成功しました。artifact `12130281114` は90日保存され、ZIP全体のSHA256・CRC、元JSON2件とraw入力6件のhash、私的な2コピーを確認済みです。取得先を固定した `0d13a3d` の[実取得](results/original-audio-preserved-acquisition-0d13a3d-20261018.json)も8ファイルすべて一致しました。モデルの実行・生成は伴っていません。
 
-旧native ONNXは両profileとも元auditのhashで保持されており、別の私的コピーも検証しました。[演算構造と重みの基準](results/original-native-onnx-computation-identity-20261018.json)を固定しましたが、候補ONNXのproducer申告hashは異なります。次は候補の実bytesとの比較で差を特定し、GPU用変換と対応付けた後に実GPU検証を行います。全6 moduleの公開準備手順・fresh consumerの完了ではありません。
+旧native ONNXは両profileとも元auditのhashで保持されており、別の私的コピーも検証しました。[候補の実bytesとの比較](results/audio-candidate-native-onnx-identity-readback-20261018.json)は両profileで演算同一性が不一致でした。候補は過去のdivision-SiLU版と同じhashであり、差をmetadataだけと扱いません。[保持GPU変換モデルとのinitializer比較](results/audio-candidate-gpu-preparation-initializers-20261018.json)はfull profileの型・値multiset一致までで、名前付きの対応や計算経路全体の同一性は未証明です。次は変換手順と重みの対応を固定し、新世代候補として実GPU検証します。
+
+## 直近の優先作業
+
+1. 画像squareのGPU監査失敗を、実行source・bundle・backendの組合せで切り分けます。監査を無効にせず、原因に対する失敗テストから修正し、同じ入力で再確認します。未実行の画像2 profileもその後に実行します。
+2. 既存bundleのPlayer実績と、新しい音声モデル候補の採用検証を分けます。候補からGPU用モデルを作る再現手順を固定し、元参照を変更せずFP32・Float16の全必要roleを確認します。音声の成功receiptもvector・GPU監査・正常終了を独立再監査します。
+3. 取得pinと必須CIを復旧し、PRを整理します。CIが失敗したままの統合や、旧モデルの同一bytesを復旧した扱いは行いません。
+4. 同時にMac・iOS・Androidの実行環境を確保します。端末待ちをWindows完了後に発見しないよう、必要環境と担当を工程5の前に確定します。
+
+この計画は確認済みreceiptとGitHubの状態を整理したものです。計画更新のための重いUnity再実行は行いません。Playerの生ログと元の実行証拠は非公開で保持します。
 
 ## 実行順と完了条件
 

@@ -10,6 +10,8 @@ Runtime負荷軽減は[PR #88](https://github.com/ayutaz/unity-embeddinggemma-2/
 
 ## 統合済みの機能
 
+後続の[統合ツールpreview132件](results/combined-tools-preview-86afcbc-20261018.json)は、最新取得CLIとnative PDH・packageを同時に確認した。一方、同じpackage treeの[自動化pluginなし新規consumer](results/fresh-git-native-ui-b519-no-uloop-partial-timeout-20261018.json)は画像GPU登録・参照一致までの部分実行で、900秒上限・exit1のため操作全体は不合格。時間にはimport・操作・待機も含まれ、推論latencyやplugin有無の性能差を示さない。公開取得・実マイク・最終candidate全操作・性能欠測は残す。
+
 | 項目 | 現状 | 主な根拠 |
 | --- | --- | --- |
 | テキスト推論・検索 | UPM、保存・Float16重み、Text Searchを実装。固定Git consumerとWindows Playerの実モデル検索を確認 | [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)、[Player監査](results/m2-current-main-player-acceptance-20261017.json) |

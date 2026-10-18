@@ -10,6 +10,10 @@
 
 ## 残タスク
 
+最新の[統合ツールpreview `86afcbc`](results/combined-tools-preview-86afcbc-20261018.json)では、取得PR #86 `678eb50` と性能PR #87 `34afe64`、先行Runtime #88を組み合わせ、取得・HTTPS・native PDH・GPU engine collector・packageの関連132件が成功した。SDK package treeとvalidation、取得CLIの5ファイルを固定componentへ照合し、実Ctrl+C fixtureのexit130・強制後始末なしも確認した。これは小さなfixtureのツール検証で、実モデル・実GPU・公開取得の追加合格ではない。以前の69件・72件のcheckpointは変更しない。
+
+同じpackage tree `b5195f3` の[新規consumer・自動化pluginなしの実操作追試](results/fresh-git-native-ui-b519-no-uloop-partial-timeout-20261018.json)も900秒上限で終了code1となった。モデル欠落からの復帰、cache準備のキャンセル・再試行、画像のGPU登録と768次元の元参照一致（cosine 0.9999999999997693）までを部分証拠として保持する。音声登録・日英検索・再生・解放・正常終了はこの試行では未実行で、一連の操作は不合格。controllerの900秒はimport・ネイティブ操作・ツール・待機を含み、推論時間やplugin除去の速度比較にはしない。終了後315 package・86 sample・observer・root user4ファイルを照合した。過去の正常終了したwarm追試も別source/起動条件の記録として保持する。
+
 | 要件 | 現在の証拠 | 残る作業・完了条件 |
 | --- | --- | --- |
 | 1a: 全6 moduleの公開入力からの新規準備 | PR #86に固定descriptor・object検証を伴う取得ツール。配布候補は既存ローカルbundle | 公開先と固定commitを確定し、空の入力・出力cacheから全6 moduleを取得。producer、revision、descriptorと全objectのhashを照合し、実行receiptを保存する |

@@ -12,6 +12,8 @@ Runtime負荷軽減は[PR #88](https://github.com/ayutaz/unity-embeddinggemma-2/
 
 ### 1. 新規利用者のモデル準備
 
+最新componentをまとめた[ツール関連132件のpreview](results/combined-tools-preview-86afcbc-20261018.json)は成功した。これは以前の69/72件とは別の固定sourceで、公開配布元のempty-cache取得・実モデル/GPUの追加合格ではない。[自動化pluginなし新規consumerの実操作](results/fresh-git-native-ui-b519-no-uloop-partial-timeout-20261018.json)は画像登録・参照一致までで900秒上限に達したため、最終の一連操作は未完了のまま維持する。停止済みの同じ試行を成功に読み替えず、公開取得を伴う最終candidateの確認へ対応付ける。
+
 固定参照・現行bundle形式を使い、空checkoutからtext / image / audioの参照・qualified graph取得、変換、bundle生成を再現可能にします。期限切れartifact、欠落・破損・revision違いからの回復も文書化します。
 
 **完了条件**：既存cacheを所有しない第三者が全6 moduleを準備できること。producer / graph / model SHA、全ファイルhash、成功と失敗を記録します。モデルはGit / LFSへ入れません。

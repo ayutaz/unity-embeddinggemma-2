@@ -52,7 +52,7 @@ namespace EmbeddingGemma
                 dimensions[axis]=Math.Max(dimA,dimB);packed[axis]=dimensions[axis];strideA[axis]=dimA==1?0:runningA;strideB[axis]=dimB==1?0:runningB;
                 runningA=checked(runningA*dimA);runningB=checked(runningB*dimB);
             }
-            dimensions[rank-2]=rows;dimensions[rank-1]=columns;var output=new Tensor<float>(new TensorShape(dimensions));
+            dimensions[rank-2]=rows;dimensions[rank-1]=columns;var output=GpuOutputTensor.Allocate(new TensorShape(dimensions));
             try
             {
                 var destination=ComputeTensorData.Pin(output);var groups=(output.shape.length+63L)/64;var groupsX=(int)Math.Min(65535,groups);var groupsY=(int)((groups+groupsX-1)/groupsX);

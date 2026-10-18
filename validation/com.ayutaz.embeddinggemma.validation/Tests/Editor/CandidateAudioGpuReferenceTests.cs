@@ -23,6 +23,12 @@ namespace EmbeddingGemma.Validation.Tests
         [UnityTest]
         public IEnumerator PaddedProfileMustMatchOriginalSignalOnGpu()
             =>Wait(Run("frames-1119-valid-839"));
+        [UnityTest]
+        public IEnumerator FullProfilePcmMustMatchAllOriginalRolesOnGpu()
+            =>Wait(Run("frames-1119-valid-1119",allRoles:true));
+        [UnityTest]
+        public IEnumerator PaddedProfilePcmMustMatchAllOriginalRolesOnGpu()
+            =>Wait(Run("frames-1119-valid-839",allRoles:true));
         static IEnumerator Wait(Task task)
         {
             while(!task.IsCompleted)yield return null;
@@ -64,16 +70,17 @@ namespace EmbeddingGemma.Validation.Tests
                 Assert.That(locked["dependencies"][name].Value<string>("hash"),Is.EqualTo(source));
             }
         }
-        static async Task Run(string profile)
+        static async Task Run(string profile,bool allRoles=false)
         {
             var source=Environment.GetEnvironmentVariable("EG_ACCEPTANCE_SOURCE");
             var original=Environment.GetEnvironmentVariable("EG_ORIGINAL_AUDIO_ROOT");
             var output=Environment.GetEnvironmentVariable("EG_CANDIDATE_GPU_REPORT");
+            var scope=allRoles?"saved_candidate_real_pcm_original_all_roles_gpu_gate_only":"saved_candidate_encoder_original_reference_gpu_gate_only";
             Assert.That(output,Is.Not.Null.And.Not.Empty);Assert.That(original,Is.Not.Null.And.Not.Empty);
             Assert.That(File.Exists(output),Is.False);
             var report=new JObject
             {
-                ["success"]=false,["scope"]="saved_candidate_encoder_original_reference_gpu_gate_only",
+                ["success"]=false,["scope"]=scope,
                 ["runtime_source"]=source,["candidate_producer"]=CandidateAudioPlanGuard.Producer,
                 ["profile"]=profile,["unity"]=Application.unityVersion,["sentis"]="2.6.1",
                 ["gpu"]=SystemInfo.graphicsDeviceName,["graphics_api"]=SystemInfo.graphicsDeviceType.ToString(),
@@ -82,7 +89,7 @@ namespace EmbeddingGemma.Validation.Tests
             };
             void Save()
             {
-                report["scope"]="saved_candidate_encoder_original_reference_gpu_gate_only";
+                report["scope"]=scope;
                 Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(output)));File.WriteAllText(output,report.ToString());
             }
             var operations=new List<IGpuTensorOperation>();Save();
@@ -123,8 +130,33 @@ namespace EmbeddingGemma.Validation.Tests
                     report["phase"]="construct_audited_gpu_pipeline";Save();
                     using var encoder=new PartitionedAudioFeatureEncoder(models.ToArray(),inputs,outputs,operations.ToArray(),new AudioEncoderProfile(frames));
                     report["operation_count"]=operations.Count;report["segment_count"]=models.Count;
-                    await QualifiedStagedAudioEncoderGate.Run(encoder,original,reference,audit,report,output,Save);
-                    report["scope"]="saved_candidate_encoder_original_reference_gpu_gate_only";
+                    if(!allRoles)await QualifiedStagedAudioEncoderGate.Run(encoder,original,reference,audit,report,output,Save);
+                    else
+                    {
+                        var signals=((JArray)reference["cases"]).Where(row=>row.Value<string>("profile")==profile).Select(row=>row.Value<string>("id")).ToArray();
+                        Assert.That(signals.Length,Is.EqualTo(frames==839?1:5));
+                        var results=new JArray();report["signals"]=results;
+                        foreach(var signal in signals)
+                        {
+                            var childPath=Path.Combine(Path.GetDirectoryName(Path.GetFullPath(output)),Path.GetFileNameWithoutExtension(output)+"-"+signal+".json");
+                            Assert.That(File.Exists(childPath),Is.False);
+                            var child=new JObject
+                            {
+                                ["success"]=false,["signal"]=signal,["profile"]=profile,["runtime_source"]=source,
+                                ["candidate_producer"]=CandidateAudioPlanGuard.Producer,["generation_qualified"]=false,
+                                ["original_golden_changed"]=false,["final_roles_validated"]=false
+                            };
+                            results.Add(child);report["phase"]="execute_pcm_all_roles_"+signal;
+                            void SaveChild()
+                            {
+                                child["scope"]="saved_candidate_one_signal_real_pcm_original_all_roles_gpu_gate_only";
+                                File.WriteAllText(childPath,child.ToString());Save();
+                            }
+                            SaveChild();await QualifiedRealAudioApiCase.Run(encoder,signal,child,childPath,SaveChild,allRoles:true);
+                            child["final_roles_validated"]=true;SaveChild();
+                        }
+                        report["final_roles_validated"]=true;
+                    }
                 }
                 finally
                 {

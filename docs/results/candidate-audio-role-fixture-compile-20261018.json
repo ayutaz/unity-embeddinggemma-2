@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "scope": "local_file_candidate_real_pcm_role_fixture_compilation_and_existing_provenance_controls_only",
+  "success": true,
+  "unity": "6000.3.21f1",
+  "sentis": "2.6.1",
+  "existing_provenance_controls": {"passed": 13, "failed": 0, "skipped": 0},
+  "process_exit_code": 0,
+  "official_embedded_test_framework": true,
+  "new_full_and_padded_real_pcm_all_roles_fixtures_compiled": true,
+  "no_graphics": true,
+  "model_executed": false,
+  "actual_role_gpu_execution_performed": false,
+  "generation_qualified": false,
+  "original_golden_changed": false
+}

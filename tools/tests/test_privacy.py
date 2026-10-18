@@ -24,6 +24,12 @@ def test_personal_email_and_token_are_rejected_without_echoing_them():
         findings = scan_bytes(content.encode(), 'notes.md')
         assert findings
         assert content not in json.dumps(findings)
+    assert scan_bytes(('person'+'@'+'private-domain.dev').encode(), 'notes.md')
+    assert scan_bytes(('-----BEGIN '+'PRIVATE KEY-----').encode(), 'notes.txt')
+
+def test_private_config_filename_is_blocked_even_without_known_token_format():
+    assert scan_bytes(b'CUSTOM_VALUE=unrecognized', '.env')
+    assert scan_bytes(b'placeholder only', '.env.example') == []
 
 def test_public_noreply_and_relative_or_environment_paths_are_allowed():
     text = 'models/bundle.json ${USER_HOME}/models $env:USERPROFILE 123+fixture@users.noreply.github.com'

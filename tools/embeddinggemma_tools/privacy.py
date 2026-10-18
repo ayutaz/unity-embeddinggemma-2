@@ -10,9 +10,14 @@ import sys
 from urllib.parse import unquote
 
 HOME = re.compile(r"(?i)(?:\b[a-z]:[/\\]+(?:Users|Documents and Settings)[/\\]+[^/\\\s\"'<>]+|(?<![\w])/(?:Users|home)/[^/\s\"'<>]+)")
-EMAIL = re.compile(r'(?i)(?<![a-z0-9._%+\-])[a-z0-9._%+\-]+@(?:gmail|googlemail|yahoo|hotmail|outlook|live|icloud|protonmail|proton)\.[a-z.]{2,}')
-SECRET = re.compile(r'\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{25,}|hf_[A-Za-z0-9]{20,}|sk-(?:proj-)?[A-Za-z0-9_-]{25,})\b')
+EMAIL = re.compile(r'(?i)(?<![a-z0-9._%+\-])[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}')
+SECRET = re.compile(r'\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{25,}|hf_[A-Za-z0-9]{20,}|sk-(?:proj-)?[A-Za-z0-9_-]{25,}|AKIA[A-Z0-9]{16})\b|-----BEGIN (?:[A-Z0-9]+ )?PRIVATE KEY-----')
 IMAGES = {'.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.tif', '.tiff'}
+
+def public_email(value):
+    domain=value.rsplit('@',1)[-1].lower()
+    return (value.lower()=='noreply@github.com' or domain=='users.noreply.github.com'
+            or domain in {'example.com','example.org','example.net'} or domain.endswith(('.invalid','.test','.example')))
 
 def normalize(text):
     for _ in range(3):
@@ -23,6 +28,10 @@ def normalize(text):
     return text
 
 def scan_bytes(data, path='<input>', reviewed=None):
+    filename=Path(path).name.lower()
+    if ((filename.startswith('.env') and filename not in {'.env.example','.env.sample','.env.template'})
+            or filename in {'.npmrc','.pypirc','id_rsa','id_ed25519'} or Path(path).suffix.lower() in {'.pem','.key','.pfx','.p12'}):
+        return [dict(path=path,line=1,rule='private-config')]
     review = (reviewed or {}).get(path, {})
     image = Path(path).suffix.lower() in IMAGES
     if image:
@@ -43,7 +52,7 @@ def scan_bytes(data, path='<input>', reviewed=None):
     findings = []
     for number, line in enumerate(normalize(text).splitlines(), 1):
         for name, pattern in (('home-path', HOME), ('personal-email', EMAIL), ('credential', SECRET)):
-            if pattern.search(line):
+            if (any(not public_email(m.group()) for m in EMAIL.finditer(line)) if name=='personal-email' else pattern.search(line)):
                 findings.append(dict(path=path, line=number, rule=name))
     return findings
 

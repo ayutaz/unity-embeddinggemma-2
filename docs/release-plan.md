@@ -11,7 +11,7 @@
 - 同Player・既存FP32 bundle・Direct3D12で、音声2 profileは成功・GPU確認あり・process exit0です。通常18件・warm18件を元のhash固定参照から独立再計算し、最小cosine `0.999999709769265`、全Worker監査・run identity・正常終了を確認しました。8件の意図的な破損controlも拒否しました。画像squareの先行試行は推論前のGPU監査で失敗し、後続2 profileは未実行です。Float16、最終モデル候補との対応付けは残っています。Direct3D11での先行音声試行の失敗も保持します。
 - 画像失敗の原因は、入力をそのまま出力へ渡す17区間を空graphとして一律拒否した監査でした。全181 Workerのmetadata調査と実保存モデルの入出力を確認し、CPU計算・中間flushは0でした。出力が入力を参照すること、定数なし、GPU所有、CPU割り当てなしを検証する修正を #90 の `89b1ab9` に反映しました。8 Redの後、関連30 Green・skip0・Editor exit0です。修正版の実Player検証は別gateとして残します。[checkpoint](results/media-player-input-alias-audit-20261018.json)
 - その後、固定Git `89b1ab9` の新規consumerで実build・exit0とコンパイル対象62ファイルのhashを確認しました。[修正版Playerの実行](results/media-player-retained-bundles-gpu-89b1ab9-20261018.json)は、既存FP32 / Float16重みbundleの画像3・音声2、全10条件でGPU監査・キャンセル回復・解放・exit0を確認しました。通常72件・warm90件の独立再監査と40件の破損control拒否も成功しました。Float16変換記録と553モデルの対応も両descriptorへ照合済みです。新世代モデルの採用、text・横断検索、実操作、独立warm起動、資源計測、他端末、必須CIは未完了です。
-- #89の過去head `3949d1a` の[CI 39112717115](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39112717115)は、Python全4環境・package・lint・通常referenceが成功、固定元モデルの6信号・集計・Required CIは失敗しました。#90の過去head `6350aa6` の[CI 39112580190](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39112580190)も不合格です。#89の現head `6052fe4` のCIは起動待ちで、必須CIの復旧は未達です。
+- #89の過去head `3949d1a` の[CI 39112717115](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39112717115)は、Python全4環境・package・lint・通常referenceが成功、固定元モデルの6信号・集計・Required CIは失敗しました。#90の過去head `6350aa6` の[CI 39112580190](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39112580190)も不合格です。#89の現head `6052fe4` の[CI 39117532718](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39117532718)は終了・不合格でした。Python全4環境・package・lint・通常referenceは成功しましたが、音声6信号と集計は固定参照の取得段階で失敗し、Required CIも失敗しています。候補の数値成功とは別に復旧が必要です。
 - 以前のsource・既存bundleでのGPU動作実績は保持し、最終候補に対応する確認と区別します。
 
 ### 音声候補の保存checkpoint
@@ -41,6 +41,8 @@ Playerの生ログと元の実行証拠は非公開で保持します。重い�
 
 ## 実行順と完了条件
 
+工程1を進行中です。工程2〜4には既存bundleでの部分的な成功がありますが、最終候補での完了判定は残っています。工程5の実機確認、工程6の最終配布監査、工程7の正式公開も未完了です。まず工程1の成果物として、両profileの再現可能なGPU変換・分割、全6信号の元参照照合、取得pinと必須CIの復旧をそろえます。変換・静的な形状監査・単体テストの成功だけで工程1を完了にしません。
+
 | 順序 | 実施内容 | 完了の判断 |
 | --- | --- | --- |
 | 1 | 音声候補と参照データの保存・取得経路を確保し、候補の実GPU・consumer・Player検証を未統合branchで実施。配布モデル内の絶対パスを含むデバッグ情報も監査 | 原本の参照値・許容差を維持して必要な検証が成功。配布用にデバッグ情報を除く場合は計算と重みの不変を検証し、変更後のhashを別途固定。必須CIを条件変更で迂回しない |
@@ -58,5 +60,6 @@ Playerの生ログと元の実行証拠は非公開で保持します。重い�
 - macOS・iOS・Androidの実機と署名・build環境を先に確保します。現在記録されているAndroid接続端末とself-hosted runnerは0、Mac・iOS環境は未確定です。実行開始時に再確認します。
 - 重い取得・変換・build・回帰はGitHub Actionsを優先し、ローカルUnityの重複起動を避けます。同じモデル探索や生成を根拠なく繰り返しません。
 - 各checkpointでは「合格・失敗・未実行」「実行source/model」「次の残件」を記録します。テスト数だけでリリース進捗を表しません。
+- 次の進捗報告は、変換CIの終了、元参照に対する実GPU照合の終了、必須CIの復旧を区切りにします。失敗時は原因と次の修正を報告し、同じ未解決条件で重い再実行を繰り返しません。
 - リリース日は未確定です。音声候補のGPU採用条件と必須端末の実行見通しが立った時点で、実測時間に基づき日程を更新します。端末未確保のまま完了日を約束しません。
 - 公開表示名 `yousan` は維持します。元画像や元の数値証拠を加工・再生成して成功の証拠に置き換えません。

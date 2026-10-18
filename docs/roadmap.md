@@ -1,12 +1,12 @@
 # ロードマップ
 
-更新: **2026-10-18**。main `35d18f8`を統合済み基準とする現在の作業計画です。未統合PRでは基準SDK `e28a5fd` と出力確保の候補 `d7b2233` を区別し、各実行のsourceを記録します。確認済みの事実は[検証状況](status.md)、変更しない目標は[プロジェクトのゴール](goal.md)を参照してください。
+更新: **2026-10-18**。main `d9ae07b`（PR #88）を統合済み基準とする現在の作業計画です。過去の基準SDK `e28a5fd` と統合済みRuntimeに対応する `d7b2233` を区別し、各実行のsourceを記録します。確認済みの事実は[検証状況](status.md)、変更しない目標は[プロジェクトのゴール](goal.md)を参照してください。
 
 テキスト・画像・音声のGPU API、Windows text Player、画像・音声検索サンプルとcacheは統合済みです。次は、他の利用者が準備・操作を再現できる状態を作り、そのcandidateで性能と対象環境を検証します。正式リリースは全必須条件の後に行います。
 
 ## 直近の作業順
 
-Runtime負荷軽減は[PR #88](https://github.com/ayutaz/unity-embeddinggemma-2/pull/88)へ分離した。[単独候補](results/runtime-ready-integration-2a29c68-20261018.json)の517 pass / skip0 / exit0と既存実モデル参照sourceの一致を確認し、CI後の先行統合を設定している。統合後に#85 / #87から重複Runtime差分を整理する。優先1〜3全体の公開取得・実マイク・最終操作・性能欠測は、この先行統合によって完了扱いにしない。
+Runtime負荷軽減の[PR #88](https://github.com/ayutaz/unity-embeddinggemma-2/pull/88)はRequired CI成功後にmain `d9ae07b`へ統合済み。[単独候補](results/runtime-ready-integration-2a29c68-20261018.json)の517 pass / skip0 / exit0、既存実モデル参照sourceとのRuntime一致、統合treeとCI候補の一致を確認し、#85 / #87へ実mainの祖先を取り込んで重複Runtime差分を整理した。優先1〜3全体の公開取得・実マイク・最終操作・性能欠測は、この先行統合によって完了扱いにしない。
 
 依頼された優先1〜3の要件ごとの現状・残作業・完了条件は[残タスク監査](priority-1-to-3-acceptance.md)を参照してください。固定sourceの数値成功、最新sampleの操作、公開元からの取得と性能全体の受け入れをそれぞれ確認します。
 

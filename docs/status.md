@@ -1,12 +1,12 @@
 # 現在の対応範囲と検証状況
 
-更新: **2026-10-18**。統合済み基準はmain `35d18f8`。追加検証は記録ごとの固定sourceに対応し、基準SDK `e28a5fd` と出力確保の候補 `d7b2233` を区別します。開発版 `0.1.0-pre.1`、公開tag・正式Releaseはありません。
+更新: **2026-10-18**。統合済み基準はmain `d9ae07b`（PR #88）。追加検証は記録ごとの固定sourceに対応し、過去の基準SDK `e28a5fd` と実GPU参照済みRuntime `d7b2233` を区別します。開発版 `0.1.0-pre.1`、公開tag・正式Releaseはありません。
 
 候補SDKの[GPU出力確保の変更](gpu-write-only-output-allocation.md)では、CPU storageの不要なゼロ初期化・転送を省きました。GPU演算等の回帰120件、全6 module×FP32 / Float16重みの単独実GPU参照32ケース、両形式の混在検索の全順位・再試行・解放・正常終了を新SDKで確認しました。同じ計測付き画像呼び出しのwarm反復はFP32が19.3–29.4秒から4.8–5.5秒、Float16重みが30.2–34.0秒から4.6–5.1秒でした。少数の固定入力観測を通常API全体や形式間の高速化へ拡張しません。性能全体・公開モデル取得・実マイク・最終candidate操作の受け入れは残っています。
 
 [導入](../README.md) / [ドキュメント一覧](README.md) / [今後の計画](roadmap.md)
 
-Runtime負荷軽減は[PR #88](https://github.com/ayutaz/unity-embeddinggemma-2/pull/88)へ切り出し、main既存サンプルを保った[単独候補の回帰517 pass / skip0 / exit0](results/runtime-ready-integration-2a29c68-20261018.json)を確認した。同候補と本branchのRuntime treeは `7d6e4314552b221d06db881405e7ccff3f449a77` で一致する。#88はCI成功後の先行統合を設定済みであり、公開取得・実マイク・最終操作と性能全体の受け入れは別に残す。
+Runtime負荷軽減の[PR #88](https://github.com/ayutaz/unity-embeddinggemma-2/pull/88)はRequired CI成功後、2026-10-18 00:57:10 UTCにmain `d9ae07b`へsquash統合された。main既存サンプルを保った[単独候補の回帰517 pass / skip0 / exit0](results/runtime-ready-integration-2a29c68-20261018.json)と、統合commitのtreeがCI候補 `57d2cdb`に一致することを確認した。同候補と本branchのRuntime treeは `7d6e4314552b221d06db881405e7ccff3f449a77` で一致する。#85 / #87には実mainの祖先を取り込み、重複Runtime差分を整理した。公開取得・実マイク・最終操作と性能全体の受け入れは別に残す。
 
 ## 統合済みの機能
 

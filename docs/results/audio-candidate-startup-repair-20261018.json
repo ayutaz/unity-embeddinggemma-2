@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "failed_run": 39106319185,
+  "failed_source": "7e5b673eb68f335eef23693665d93fa9b3d37104",
+  "observed_failed_job": 117612819035,
+  "failed_step": "Reject simultaneous recovery modes",
+  "cause": "tools working directory was selected before checkout created it",
+  "raw_log_sha256": "8d59460c01d99d833b4c86cf70fb0a83ae19f4b96b0df6e00a216cff1efa04ef",
+  "raw_log_publication": false,
+  "cancellation_requested_due_to_confirmed_startup_bug": true,
+  "repair": "Checkout precedes every shell step that uses the tools working directory",
+  "red": {
+    "failed": 1,
+    "passed": 2
+  },
+  "green_selected_workflow_tests": {
+    "passed": 30,
+    "failed": 0,
+    "skipped": 0
+  },
+  "actionlint_passed": true,
+  "real_model_or_gpu_validation_claimed": false
+}

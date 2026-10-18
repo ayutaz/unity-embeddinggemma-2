@@ -52,3 +52,12 @@ def test_candidate_audit_requires_all_actual_captures_without_promoting_required
     assert required['jobs']['pinned-audio']['uses']=='./.github/workflows/pinned-audio-acceptance.yml'
     assert not required['jobs']['pinned-audio'].get('if')
     assert not required['jobs']['pinned-audio'].get('continue-on-error')
+
+
+def test_tools_working_directory_is_created_before_any_shell_step_uses_it():
+    for job in workflow()['jobs'].values():
+        if job.get('defaults',{}).get('run',{}).get('working-directory')!='tools':continue
+        checkout=next(i for i,step in enumerate(job['steps']) if step.get('uses','').startswith('actions/checkout@'))
+        for index,step in enumerate(job['steps']):
+            if 'run' in step and step.get('working-directory','tools')=='tools':
+                assert index>checkout,'A shell step used tools before checkout created it'

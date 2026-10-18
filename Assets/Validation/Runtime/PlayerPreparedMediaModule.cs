@@ -59,8 +59,12 @@ namespace EmbeddingGemma.Validation
             if (segments == 0 || segments != expectedEncoderSegments || auxiliary != expectedAuxiliaryWorkers ||
                 workers.Count != expectedWorkers || workers.Distinct().Count() != workers.Count)
                 throw new NotSupportedException("Live Worker count differs from the prepared module recipe.");
+            var audits = new JArray(workers.Select(PlayerGpuExecutionAudit.Inspect));
+            if (!audits.Any(audit => (int)audit["computed_layer_output_count"] > 0))
+                throw new InvalidOperationException("A module consisting only of aliases cannot certify GPU computation.");
             return new JObject { ["success"] = true, ["worker_count"] = workers.Count, ["encoder_segment_count"] = segments, ["auxiliary_worker_count"] = auxiliary,
-                ["workers"] = new JArray(workers.Select(PlayerGpuExecutionAudit.Inspect)), ["actual_backend"] = "GPUCompute" };
+                ["input_alias_worker_count"] = audits.Count(audit => (string)audit["execution_kind"] == "input_alias"),
+                ["workers"] = audits, ["actual_backend"] = "GPUCompute" };
         }
         public Task CloseAsync() => session.CloseAsync();
         public bool IsReleased

@@ -5,6 +5,8 @@ them. Operator routing, attributes, tensors, types, shapes, IR and opsets remain
 bound. Metadata identity is separate from real numeric and GPU acceptance.
 """
 import hashlib
+import json
+from collections import Counter
 from pathlib import Path
 import re
 
@@ -35,7 +37,23 @@ def fingerprint(path, *, expected_sha256):
                     visit(value)
     visit(model)
     digest = hashlib.sha256(model.SerializeToString(deterministic=True)).hexdigest()
+    def checksum(value):
+        return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+    entries=[];order=[]
+    for weight in model.graph.initializer:
+        name=weight.name;order.append(name);weight.ClearField('name')
+        value_sha=hashlib.sha256(weight.SerializeToString(deterministic=True)).hexdigest()
+        weight.name=name;entries.append((name,value_sha))
+    operations=dict(Counter((node.domain or 'ai.onnx')+'::'+node.op_type for node in model.graph.node))
+    components=dict(initializer_count=len(entries),initializer_order_sha256=checksum(order),
+        named_initializer_values_sha256=checksum(sorted(entries)),
+        initializer_values_sha256=checksum(sorted(value for _,value in entries)),node_operations=operations)
+    # These extra digests classify differences; they never replace whole identity.
+    del model.graph.initializer[:]
+    components['graph_without_initializers_sha256']=hashlib.sha256(model.graph.SerializeToString(deterministic=True)).hexdigest()
+    model.ClearField('graph')
+    components['model_header_sha256']=hashlib.sha256(model.SerializeToString(deterministic=True)).hexdigest()
     return dict(schema=1, scope='embedded_onnx_computation_identity_excluding_optional_debug_metadata_only',
         source_sha256=actual, computation_sha256=digest,
-        ignored_metadata_fields=['doc_string','metadata_props'], **counts,
+        ignored_metadata_fields=['doc_string','metadata_props'], components=components, **counts,
         model_executed=False, gpu_validated=False, generation_qualified=False)

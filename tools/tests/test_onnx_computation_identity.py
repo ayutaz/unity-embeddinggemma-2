@@ -82,3 +82,27 @@ def test_nested_graph_metadata_is_removed_but_nested_operations_remain_bound(tmp
     value.graph.node[0].attribute[0].g.node[0].op_type='Sub'
     changed=tmp_path/'nested-change.onnx';c=module().fingerprint(changed,expected_sha256=write(changed,value))
     assert a['computation_sha256']!=c['computation_sha256']
+
+
+def test_components_distinguish_weight_names_from_weight_values_and_routing(tmp_path):
+    value=model();left=tmp_path/'left.onnx';a=module().fingerprint(left,expected_sha256=write(left,value))
+    value.graph.initializer[0].name='renamed'
+    value.graph.node[0].input[1]='renamed'
+    right=tmp_path/'renamed.onnx';b=module().fingerprint(right,expected_sha256=write(right,value))
+    assert a['components']['initializer_values_sha256']==b['components']['initializer_values_sha256']
+    assert a['components']['named_initializer_values_sha256']!=b['components']['named_initializer_values_sha256']
+    assert a['components']['graph_without_initializers_sha256']!=b['components']['graph_without_initializers_sha256']
+    value.graph.initializer[0].float_data[0]=0.5
+    changed=tmp_path/'changed.onnx';c=module().fingerprint(changed,expected_sha256=write(changed,value))
+    assert b['components']['initializer_values_sha256']!=c['components']['initializer_values_sha256']
+
+
+def test_component_diagnostics_never_silently_accept_reordered_initializer_bytes(tmp_path):
+    value=model();value.graph.initializer.append(helper.make_tensor('extra',TensorProto.FLOAT,[1],[0.5]))
+    left=tmp_path/'left.onnx';a=module().fingerprint(left,expected_sha256=write(left,value))
+    entries=list(value.graph.initializer);del value.graph.initializer[:];value.graph.initializer.extend(reversed(entries))
+    right=tmp_path/'right.onnx';b=module().fingerprint(right,expected_sha256=write(right,value))
+    for key in ('initializer_values_sha256','named_initializer_values_sha256','graph_without_initializers_sha256'):
+        assert a['components'][key]==b['components'][key]
+    assert a['components']['initializer_order_sha256']!=b['components']['initializer_order_sha256']
+    assert a['computation_sha256']!=b['computation_sha256']

@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "scope": "minimal_fixed_git_consumer_compile_failure_and_dependency_contract_fix_only",
+  "failing_source": "3dc2737b8ea4399aefed24f30dab16dbd6c680b8",
+  "requested_and_resolved_git_match": true,
+  "library_reused": false,
+  "test_framework_embedded_version": "1.6.0",
+  "unity_version": "6000.3.21f1",
+  "actual_compile_attempt": true,
+  "unity_process_exit_code": 1,
+  "unity_process_elapsed_seconds": 37.7361554,
+  "compiler_error_codes": [
+    "CS0103",
+    "CS1069"
+  ],
+  "missing_builtin_module": "com.unity.modules.unitywebrequest",
+  "intended_build": {
+    "target": "StandaloneWindows64",
+    "scripting_backend": "IL2CPP",
+    "configuration": "Release",
+    "stripping": "High"
+  },
+  "build_pipeline_executed": false,
+  "dependency_regression_red": 2,
+  "package_and_consumer_contract_green": 53,
+  "actual_fixed_source_compile": "not_executed",
+  "player_executed": false,
+  "gpu_validated": false,
+  "model_generation_qualified": false
+}

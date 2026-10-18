@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 import os
 import time
 
-from .windows_gpu_engine import INSTANCE
+from .windows_gpu_engine import INSTANCE,_ticks,_iso
 
 TIMER100NS = 0x20510500
 FREQUENCY = 10_000_000
@@ -17,7 +17,77 @@ MAX_BUFFER = 16*1024*1024
 
 
 def summarize_pdh_intervals(pid, created_filetime, samples, intervals, *, utc_offset_minutes):
-    raise NotImplementedError('Native item clocks and conservative stage bounds are not yet audited')
+    """Map local FILETIME with a declared observed offset; keep all engine gaps.
+
+    A one-ms consistency tolerance is fixed before reading real results. The
+    entire collection call plus that margin must fit inside a stage. These
+    partial counter pairs never prove whole-stage or SDK-exclusive GPU time.
+    """
+    if type(pid) is not int or pid <= 0 or not _natural(created_filetime):
+        raise ValueError('A verified process ID and creation FILETIME are required')
+    if type(utc_offset_minutes) is not int or not -840 <= utc_offset_minutes <= 840:
+        raise ValueError('Declare the observed local UTC offset in minutes')
+    tolerance,offset = 10000,utc_offset_minutes*60*FREQUENCY
+    prepared,last = [],None
+    for sample in samples:
+        if type(sample.get('pid')) is not int or sample['pid'] != pid:
+            continue
+        if (sample.get('process_created_utc_filetime') != created_filetime
+                or sample.get('counter_type') != TIMER100NS or sample.get('time_base') != FREQUENCY
+                or sample.get('utc_offset_minutes_at_collection') != utc_offset_minutes):
+            raise ValueError('Process identity, timer type/base and observed UTC offset must remain verified')
+        begin,end = _ticks(sample['request_begin_utc']),_ticks(sample['request_end_utc'])
+        moment = _natural(_natural(sample['query_timestamp_raw_100ns'])-offset)
+        if end < begin or not begin-tolerance <= moment <= end+tolerance:
+            raise ValueError('The query clock is inconsistent with the observed call envelope')
+        if last is not None and moment <= last:
+            raise ValueError('Distinct increasing native query times are required')
+        last = moment
+        rows = {}
+        for row in sample['rows']:
+            name = row['name']
+            match = INSTANCE.fullmatch(name) if isinstance(name,str) else None
+            if match is None or int(match[1]) != pid or name in rows:
+                raise ValueError('Distinct complete owned engine identities are required')
+            tick = _natural(_natural(row['timestamp_raw_100ns'])-offset)
+            if not begin-tolerance <= tick <= end+tolerance:
+                raise ValueError('The raw item clock is inconsistent with the observed call envelope')
+            rows[name] = dict(time=tick,raw=_natural(row['raw_value']),status=_natural(row['status']))
+        alive = sample.get('process_handle_alive_before') is True and sample.get('process_handle_alive_after') is True
+        prepared.append(dict(begin=begin,end=end,rows=rows,alive=alive))
+    result,ids = [],set()
+    for interval in intervals:
+        identity = interval['id']
+        if not isinstance(identity,str) or not identity.strip() or identity in ids:
+            raise ValueError('Distinct nonempty interval IDs are required')
+        ids.add(identity)
+        begin,end = _ticks(interval['begin_utc']),_ticks(interval['end_utc'])
+        if end < begin:
+            raise ValueError('The interval ends before it begins')
+        selected = [s for s in prepared if begin <= s['begin']-tolerance and s['end']+tolerance <= end]
+        engines = []
+        for name in sorted({n for s in selected for n in s['rows']}):
+            reasons = set()
+            pairs = [s['rows'][name] for s in selected if name in s['rows']]
+            if len(pairs) < 2: reasons.add('insufficient_samples')
+            if any(name not in s['rows'] for s in selected): reasons.add('missing_engine')
+            if any(not s['alive'] for s in selected): reasons.add('process_not_alive_through_collection')
+            if any(p['status'] not in (0,1) for p in pairs): reasons.add('invalid_status')
+            for a,b in zip(pairs,pairs[1:]):
+                if b['time'] <= a['time']: reasons.add('nonincreasing_item_clock')
+                if b['raw'] < a['raw']: reasons.add('counter_reset')
+                elif b['raw']-a['raw'] > b['time']-a['time']: reasons.add('active_time_exceeds_elapsed')
+            engines.append(dict(name=name,available=not reasons,sample_count=len(pairs),
+                first_counter_sample_utc=_iso(pairs[0]['time']),last_counter_sample_utc=_iso(pairs[-1]['time']),
+                covered_elapsed_seconds=(pairs[-1]['time']-pairs[0]['time'])/FREQUENCY if len(pairs)>=2 else None,
+                active_seconds=(pairs[-1]['raw']-pairs[0]['raw'])/FREQUENCY if not reasons else None,
+                rejection_reasons=sorted(reasons)))
+        result.append(dict(id=identity,begin_utc=interval['begin_utc'],end_utc=interval['end_utc'],
+                           sample_count=len(selected),engines=engines,boundary_coverage_complete=False))
+    return dict(pid=pid,process_created_utc_filetime=created_filetime,utc_offset_minutes=utc_offset_minutes,
+        clock_tolerance_ticks=tolerance,clock_consistency_checked=True,intervals=result,
+        full_stage_gpu_time_measured=False,exclusive_sdk_stage_time_measured=False,gpu_execution_validated=False,
+        scope='Per-engine activity only between conservative interior native samples. One-ms call-envelope margin; no boundary interpolation, overlapping-engine sum or SDK-exclusive time.')
 
 
 def _natural(value):

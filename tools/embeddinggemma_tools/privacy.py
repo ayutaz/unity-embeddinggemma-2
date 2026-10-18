@@ -14,6 +14,10 @@ EMAIL = re.compile(r'(?i)(?<![a-z0-9._%+\-])[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{
 SECRET = re.compile(r'\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{25,}|hf_[A-Za-z0-9]{20,}|sk-(?:proj-)?[A-Za-z0-9_-]{25,}|AKIA[A-Z0-9]{16})\b|-----BEGIN (?:[A-Z0-9]+ )?PRIVATE KEY-----')
 IMAGES = {'.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.tif', '.tiff'}
 
+# Explicitly selected public profile names, scoped to the owning GitHub login.
+# This grants no exception for source commit identities, private paths or emails.
+PUBLIC_GITHUB_DISPLAY_NAMES = {'ayutaz': frozenset({'yousan'})}
+
 def public_email(value):
     domain=value.rsplit('@',1)[-1].lower()
     return (value.lower()=='noreply@github.com' or domain=='users.noreply.github.com'
@@ -54,7 +58,8 @@ def github_profile_findings(remote_url=None, *, fetch_profile=None):
                 or re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]*(?:\[bot\])?',profile['login']) is None
                 or profile.get('name') is not None and not isinstance(profile['name'],str)):
             raise ValueError('Malformed account profile')
-        if profile.get('name') not in (None,'',profile['login']):
+        if (profile.get('name') not in (None,'',profile['login'])
+                and profile.get('name') not in PUBLIC_GITHUB_DISPLAY_NAMES.get(profile['login'], ())):
             return [dict(path='<github-profile>',line=1,rule='noncanonical-github-display-name')]
         return []
     except Exception:

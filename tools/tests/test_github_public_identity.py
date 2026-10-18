@@ -16,6 +16,19 @@ def test_other_display_name_is_rejected_without_printing_it():
     assert 'Synthetic' not in str(findings)
 
 
+def test_user_selected_public_display_name_is_bound_to_its_account():
+    assert github_profile_findings(fetch_profile=lambda:{'login':'ayutaz','name':'yousan'})==[]
+    for login,name in [('other-account','yousan'),('ayutaz','Synthetic Private Display'),
+                       ('ayutaz','yousan '),('ayutaz','YOUSAN')]:
+        findings=github_profile_findings(fetch_profile=lambda:{'login':login,'name':name})
+        assert findings==[{'path':'<github-profile>','line':1,'rule':'noncanonical-github-display-name'}]
+        assert name not in str(findings)
+
+
+def test_public_profile_alias_does_not_relax_source_commit_checks():
+    assert privacy.scan_identity('yousan','41669061+ayutaz@users.noreply.github.com')
+
+
 def test_profile_lookup_errors_and_malformed_responses_fail_closed():
     def unavailable():
         raise RuntimeError('private details must stay private')

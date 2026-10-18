@@ -1,9 +1,56 @@
 # Regenerated audio candidate qualification
 
-This is an opt-in numerical qualification route for the fixed, **unqualified**
-generation `audio-e9de158-20261018`. It does not change the mandatory original
-graph gate or adopt a new model generation. GPU, consumer, Player and platform
+This records the qualification of generation `audio-e9de158-20261018`.
+The original opt-in numerical route remains diagnostic. The reviewed Windows
+audio selection below now supplies the mandatory original-reference numerical
+regression on this branch. Other-platform and final integrated release
 acceptance remain separate requirements in the [release plan](roadmap.md).
+
+## Reviewed selection for required numerical regression
+
+`selected_audio_generation` pins seven evidence receipts by canonical JSON
+SHA256: [native numerical capture readback](results/audio-candidate-numeric-ci-ff2eaca-readback-20261018.json),
+direct seed and partition preservation, actual GPU encoder, actual PCM roles,
+[FP32 saved bundle/Player](results/audio-candidate-saved-bundle-and-player-39be89d-20261018.json)
+and [Float16 saved bundle/Player](results/audio-candidate-float16-bundle-player-c18b4e5-20261018.json).
+The pinned selection also requires the exact reviewed SDK Runtime Git tree.
+Missing, modified or incomplete evidence blocks acquisition and the gate.
+
+This is explicit selection of a different native graph generation after actual
+Windows audio GPU validation. It is not recovery of the lost original native
+PT2 bytes. The original reference JSON hashes, raw inputs and per-element
+`atol=1e-5`, `rtol=1e-4` remain unchanged. Each current CI source must execute
+all six raw inputs through the actual five-part ONNX chain, verify native
+whole/cut control bits, and independently audit 824,320 captured values and
+every carry. Missing, partial, mixed-source or out-of-tolerance runs fail.
+The old original-graph loader and auditor remain separate and unchanged.
+
+The selection is not an environment override or an automatic fallback after a
+failed original run. Its immutable contract is in
+`tools/references/selected-audio-generation.json`. Canonical JSON hashes make
+the binding independent of CRLF/LF checkout formatting. Changes to a proof,
+generation or SDK Runtime tree require a new reviewed selection.
+
+Both saved-model precisions passed 18 base plus 18 in-process warm vectors
+each, both 270-Worker audits, cancellation recovery, release and process exit 0.
+Each independent Player audit rejected 24 corrupted controls. Float16 means
+eligible saved weights; external coefficients remain FP32 and all-half
+arithmetic or speedup is not claimed. Saved Float16 bytes total 2,573,229,069,
+versus 3,657,076,501 for the source bundle.
+
+Historical evidence does not execute a GPU in Actions. The current CPU gate
+keeps `gpu_validated=false` and `generation_qualified=false`; the selection
+scope is Windows audio compatibility for mandatory numerical regression,
+not full multimodal/platform/release qualification. The numeric capture
+protocol does not upload the intermediate ONNX graphs and explicitly keeps
+`graphs_independently_rehashed=false`; it independently hashes all uploaded
+captures/carries, while the producer verifies the pinned input graph.
+
+The [selection TDD checkpoint](results/selected-audio-generation-tdd-20261018.json)
+records 27 missing-module failures, one subsequent required-workflow failure,
+then 95 related passes and actionlint. Actual current-head Actions acceptance
+must still succeed before merge. Candidate artifacts have finite retention;
+permanent public acquisition and expiry recovery remain release work.
 
 ## Direct saved-candidate GPU preparation seed
 

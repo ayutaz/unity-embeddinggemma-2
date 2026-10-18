@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "scope": "candidate_bundle_destination_protection_tdd_and_existing_writer_provenance_regression_only",
+  "success": true,
+  "unity": "6000.3.21f1",
+  "sentis": "2.6.1",
+  "red": {"passed": 0, "failed": 3, "skipped": 0, "process_exit_code": 2},
+  "red_reason": "Pinned candidate bundle preparation missing",
+  "green": {"passed": 22, "failed": 0, "skipped": 0, "process_exit_code": 0},
+  "coverage": ["existing_directory_evidence_preserved", "existing_file_evidence_preserved", "mutable_source_rejected", "existing_candidate_provenance_controls", "existing_bundle_writer_controls"],
+  "local_file_consumer": true,
+  "official_embedded_test_framework": true,
+  "no_graphics": true,
+  "real_model_executed": false,
+  "actual_candidate_bundle_prepared": false,
+  "gpu_validated": false,
+  "generation_qualified": false,
+  "original_golden_changed": false
+}

@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 import shutil
+import re
 import socket
 import ssl
 import subprocess
@@ -31,10 +32,11 @@ def create_certificate(directory):
 
 
 class LocalBundleServer:
-    def __init__(self, root, certificate, private_key):
+    def __init__(self, root, certificate, private_key, *, flat_assets=False):
         self.root = Path(root).resolve()
         self.certificate = Path(certificate).resolve()
         self.private_key = Path(private_key).resolve()
+        self.flat_assets = flat_assets
         self.lock = threading.Lock()
         self.reset()
         owner = self
@@ -46,7 +48,8 @@ class LocalBundleServer:
             def do_GET(self):
                 name = unquote(urlsplit(self.path).path).lstrip('/')
                 path = (owner.root/name).resolve()
-                if not path.is_relative_to(owner.root) or name != 'bundle.json' and not name.startswith('objects/'):
+                flat_object = owner.flat_assets and re.fullmatch(r'[a-f0-9]{64}\.(sentis|json|f32|bin)', name)
+                if not path.is_relative_to(owner.root) or name != 'bundle.json' and not name.startswith('objects/') and not flat_object:
                     self.send_error(404); return
                 with owner.lock:
                     fault = dict(owner.fault)

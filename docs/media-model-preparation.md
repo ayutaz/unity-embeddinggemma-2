@@ -2,6 +2,26 @@
 
 この取得ツールは開発中です。変換済みモデルの公開配布先はまだ確定しておらず、第三者が空の環境から全6 moduleを取得する実証も未完了です。以下のURL変数は、公開後に固定commitを含む実URLへ置き換えます。過去の期限付きActions artifactや開発者のローカルcacheを、利用者の取得元として扱いません。
 
+## Release assets形式の準備
+
+GitHub Release assetsを使う配布候補を準備しています。モデル配布候補と正式SDK Releaseは別の受け入れです。モデル本体の公開前には、全objectの出所・hash・モデル記述内の個人情報を別に監査します。この段階では公開取得の成功を主張しません。
+
+descriptorの `object_layout` は省略時または `nested` では従来の `objects/<sha>.<suffix>` URL、`flat` ではdescriptorと同じURL階層の `<sha>.<suffix>` を使います。ローカルの保存名はどちらも `objects/<sha>.<suffix>` のままです。レイアウト変更もdescriptorのSHA256に含まれ、未知の値や不一致pinはobject転送・出力作成の前に拒否します。別サーバーのobject URLをdescriptorから受け取る機能ではありません。
+
+maintainer用の `embeddinggemma_tools.media_release_assets` は、hash固定の既存text / image bundleと新audio bundleを入力し、全6 moduleを持つ新しい配布候補を組み立てます。コピー対象の全source objectを照合してから新規出力を作成し、audio moduleだけを置換します。元のmodel・係数・module内容は変更せず、共有objectは重複排除します。producerと両入力descriptorのpin・producerを記録し、コピー先も全hash確認後にdescriptorと `release-assets.json` を出力します。既存出力は上書きしません。
+
+```powershell
+uv run --no-project --python 3.13 python -m embeddinggemma_tools.media_release_assets `
+  --base $reviewedBaseBundle --base-sha256 $reviewedBaseDescriptorSha256 `
+  --audio $reviewedAudioBundle --audio-sha256 $reviewedAudioDescriptorSha256 `
+  --output $newDistributionDirectory --producer $fixedDistributionSource `
+  --precision fp32
+```
+
+これはモデル変換・GPU実行・privacy承認・uploadを行うコマンドではありません。`privacy_review_completed=false` のinventoryをそのまま公開承認として使いません。GitHubの[Release制限](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases)に合わせ、license / notice用の枠を残して1,000 asset以内、各objectは2 GiB未満を要求します。モデルをGit / Git LFSへ追加しません。
+
+[TDD checkpoint](results/media-flat-assets-and-composition-tdd-20261018.json)では、flat取得の8件とcomposition未実装の12件の失敗を確認しました。実HTTPSのfixture拡張前の2 setup errorも区別して保持し、修正後はHTTPS取得・warm再利用・404・同サイズ破損修復を確認しています。小さい不透明fixtureの成功は、実モデルの公開取得・GPU数値合格を証明しません。
+
 ## 取得対象と検証の境界
 
 対象は `text`、`image-square`、`image-landscape`、`image-portrait`、`audio-1119`、`audio-839` です。現在の配布候補はFP32、Sentis 2.6.1、GPUCompute、元モデルrevision `914f7f89142e33e77833254d9c9b90c3cef7303b` に対応します。候補の820 object、8,583,084,520 bytesは開発環境でサイズ・SHA256を照合済みですが、公開先からの取得成功ではありません。

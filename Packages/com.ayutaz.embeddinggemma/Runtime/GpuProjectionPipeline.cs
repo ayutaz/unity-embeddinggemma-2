@@ -25,6 +25,7 @@ namespace EmbeddingGemma
         readonly Action[] releaseCompletedBackendCache;
         readonly int ownerThread=Thread.CurrentThread.ManagedThreadId;
         Worker[] workers;
+        GpuConstantWorker[] workerOwners;
         bool executing,disposeRequested;
 
         public GpuProjectionPipeline(Model[] models,string[] projectionInputs,string[] projectionOutputs,GpuBlockedMatmul[] projections)
@@ -62,12 +63,17 @@ namespace EmbeddingGemma
                 if(stage<projections.Length)live.UnionWith(this.projectionInputs[stage]);
             }
             workers=new Worker[models.Length];
+            workerOwners=new GpuConstantWorker[models.Length];
             if(releaseUnusedGpuCache){releaseGpuCache=new Action[models.Length];releaseCompletedBackendCache=new Action[models.Length];}
             try
             {
                 for(var i=0;i<models.Length;i++)
                 {
-                    workers[i]=new Worker(models[i],BackendType.GPUCompute);
+                    // Segment constants include large attention masks. Upload them in
+                    // bounded raw-word copies before lazy scheduling can exceed the
+                    // graphics driver's per-transfer upload buffer.
+                    workerOwners[i]=new GpuConstantWorker(models[i],BackendType.GPUCompute);
+                    workers[i]=workerOwners[i].Worker;
                     var cpu=(HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallback",BindingFlags.NonPublic|BindingFlags.Instance)?.GetValue(workers[i]);
                     var flush=(HashSet<int>)typeof(Worker).GetField("m_LayerCPUFallbackShouldFlushGPU",BindingFlags.NonPublic|BindingFlags.Instance)?.GetValue(workers[i]);
                     if(cpu==null || flush==null)throw new NotSupportedException("Pinned GPU fallback audit is unavailable.");
@@ -261,7 +267,7 @@ namespace EmbeddingGemma
         }
         void DisposeWorkers()
         {
-            foreach(var worker in workers)worker?.Dispose();workers=null;
+            foreach(var owner in workerOwners)owner?.Dispose();workerOwners=null;workers=null;
         }
     }
 }

@@ -28,7 +28,7 @@ namespace EmbeddingGemma
             if(input.backendType!=BackendType.GPUCompute||!(input.dataOnBackend is ComputeTensorData)||input.shape.length==0||input.shape.rank<1||input.shape[input.shape.rank-1]%2!=0)
                 throw new ArgumentException("Expected a nonempty even last-axis tensor already on GPUCompute; no implicit transfer.");
             var dimensions=new int[input.shape.rank];for(var axis=0;axis<dimensions.Length;axis++)dimensions[axis]=input.shape[axis];dimensions[dimensions.Length-1]/=2;
-            var output=new Tensor<float>(new TensorShape(dimensions));
+            var output=GpuOutputTensor.Allocate(new TensorShape(dimensions));
             try
             {
                 var destination=ComputeTensorData.Pin(output);var groups=(output.shape.length+63L)/64;var groupsX=(int)Math.Min(65535,groups);var groupsY=(int)((groups+groupsX-1)/groupsX);

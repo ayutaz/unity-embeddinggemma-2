@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-18",
+  "source_base": "6350aa6dadfd083854f18ed1db1acd7fb3f74fc9",
+  "scope": "Windows Player baseline and metadata-only Worker audit regression",
+  "baseline_build": {
+    "actual_build": true,
+    "injected_build": false,
+    "success": true,
+    "process_exit_code": 0,
+    "unity": "6000.3.21f1",
+    "target": "Windows x64",
+    "backend": "IL2CPP",
+    "configuration": "Release",
+    "managed_stripping": "High"
+  },
+  "baseline_player": {
+    "precision": "fp32",
+    "graphics_api": "Direct3D12",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "retained_bundle_descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+    "audio_839": {
+      "receipt_success": true,
+      "gpu_verified": true,
+      "process_exit_code": 0
+    },
+    "audio_1119": {
+      "receipt_success": true,
+      "gpu_verified": true,
+      "process_exit_code": 0
+    },
+    "image_square": {
+      "success": false,
+      "failed_phase": "gpu_audit_before",
+      "error_type": "InvalidOperationException",
+      "process_exit_code": 1
+    },
+    "image_landscape": {
+      "executed": false
+    },
+    "image_portrait": {
+      "executed": false
+    },
+    "direct3d11_audio_attempt": {
+      "success": false,
+      "error_type": "NotSupportedException",
+      "process_exit_code": 1,
+      "root_cause_confirmed": false
+    },
+    "independent_vector_reaudit_complete": false
+  },
+  "diagnostic": {
+    "editor_process_exit_code": 0,
+    "test_passed": 1,
+    "worker_count": 181,
+    "workers_with_computation_cpu_fallback": 0,
+    "workers_with_intermediate_flush": 0,
+    "empty_encoder_segment_count": 17,
+    "empty_segments_have_no_constants": true,
+    "empty_segment_outputs_alias_inputs": true,
+    "numerical_inference_executed": false
+  },
+  "tdd": {
+    "red": {
+      "failed": 8,
+      "passed": 6,
+      "process_exit_code": 2
+    },
+    "green": {
+      "failed": 0,
+      "passed": 30,
+      "skipped": 0,
+      "process_exit_code": 0
+    },
+    "green_scope": "29 versioned audit/protocol/adapter checks plus one private exact-saved-model routing probe",
+    "raw_logs_and_test_xml": "retained privately"
+  },
+  "correction": {
+    "empty_graph_alone_accepted": false,
+    "required_alias_proof": "GPUCompute; zero layers and constants; nonempty unique nonnegative inputs; nonempty unique outputs entirely referring to inputs; no CPU assignments or intermediate flush",
+    "ordinary_computation_fallback_still_rejected": true,
+    "empty_unclassified_graph_still_rejected": true,
+    "alias_only_module_certifies_gpu_computation": false,
+    "tensor_values_downloaded_by_auditor": false
+  },
+  "corrected_player_executed": false,
+  "full_multimodal_acceptance": false,
+  "model_generation_qualified": false
+}

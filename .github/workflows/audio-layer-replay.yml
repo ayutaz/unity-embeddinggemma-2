@@ -130,8 +130,19 @@ jobs:
           --case-id "$REPLAY_SIGNAL"
           --subsample-input "../artifacts/frozen-audio-layer/audio-runtime-reference/frames-1119-valid-1119/${REPLAY_SIGNAL}-features-fp32.bin"
           --subsample-input-sha256 "$REPLAY_FEATURE_SHA256"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - name: Check artifact publication privacy
+        id: privacy_upload_1
         if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/audio-layer-replay/
+            artifacts/audio-layer-replay-report.json
+            artifacts/audio-attention-replay/
+            artifacts/audio-attention-replay-report.json
+            artifacts/frozen-audio-layer/range-receipt.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.privacy_upload_1.outcome == 'success' }}
         with:
           name: audio-layer-replay-${{ github.sha }}
           path: |

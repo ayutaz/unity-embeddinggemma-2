@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import yaml
+from workflow_privacy_assertions import assert_privacy_gated_upload
 
 
 def job():
@@ -30,4 +31,5 @@ def test_context_job_uses_only_saved_encoder_and_fixture_with_pinned_manifest_au
     assert "replay_saved_reference_context" in execute
     assert "snapshot_download" not in execute
     upload = next(step for step in steps if "actions/upload-artifact@" in step.get("uses", ""))
-    assert upload["if"] == "always()" and "*.pt2" not in upload["with"]["path"]
+    assert_privacy_gated_upload(upload)
+    assert "*.pt2" not in upload["with"]["path"]

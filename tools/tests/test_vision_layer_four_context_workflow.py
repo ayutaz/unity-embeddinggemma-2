@@ -1,5 +1,6 @@
 from pathlib import Path
 import yaml
+from workflow_privacy_assertions import assert_privacy_gated_upload
 
 
 def test_layer_four_capture_is_separate_opt_in_and_keeps_other_reference_modes_separate():
@@ -23,5 +24,6 @@ def test_layer_four_capture_uses_qualified_fixed_hidden_interval_and_never_rerun
         assert text in commands
     assert 'snapshot_download' not in commands and 'replay_saved_reference_context' not in commands
     upload=next(s for s in value['jobs']['probe']['steps'] if 'actions/upload-artifact@' in s.get('uses',''))
-    assert upload['if']=='always()' and 'row-captures/' in upload['with']['path']
+    assert_privacy_gated_upload(upload)
+    assert 'row-captures/' in upload['with']['path']
     assert 'full-captures/' not in upload['with']['path'] and '.pt2' not in upload['with']['path']

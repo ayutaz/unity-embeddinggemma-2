@@ -3,6 +3,7 @@
 from pathlib import Path
 
 import yaml
+from workflow_privacy_assertions import assert_privacy_gated_upload
 
 
 def test_native_replay_job_pins_old_context_and_never_claims_full_encoder_pass():
@@ -27,7 +28,8 @@ def test_native_replay_job_pins_old_context_and_never_claims_full_encoder_pass()
     assert "--report ../artifacts/audio-layer-replay-report.json" in commands
     assert not any(step.get("continue-on-error") for step in job["steps"])
     uploads = [step for step in job["steps"] if step.get("uses", "").startswith("actions/upload-artifact@")]
-    assert len(uploads) == 1 and uploads[0]["if"] == "always()"
+    assert len(uploads) == 1
+    assert_privacy_gated_upload(uploads[0])
     assert "audio-layer-replay-report.json" in uploads[0]["with"]["path"]
 
 

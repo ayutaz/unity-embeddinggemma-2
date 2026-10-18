@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import yaml
+from workflow_privacy_assertions import assert_privacy_gated_upload
 
 
 def workflow():
@@ -36,6 +37,6 @@ def test_image_role_job_preserves_source_role_and_failed_context_evidence():
     assert "--vision-source-commit c868df5ca67f1ca8a6173a0f8e81f9f0bb7367e1" in run
     assert "--backbone-source ../artifacts/fixed-image-document-backbone" in run
     upload = next(v for v in steps if "actions/upload-artifact@" in v.get("uses", ""))
-    assert upload["if"] == "always()"
+    assert_privacy_gated_upload(upload)
     assert "*-actual-fp32.bin" in upload["with"]["path"]
     assert "*.pt2" not in upload["with"]["path"]

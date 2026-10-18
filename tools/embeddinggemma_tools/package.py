@@ -115,7 +115,7 @@ def audit_package(package):
     return {"success": not errors, "package": manifest.get("name"), "version": manifest.get("version"), "errors": errors}
 
 
-def create_consumer(project, package, *, git_revision=None, automation=False, sample=False, test_framework_source=None):
+def create_consumer(project, package, *, git_revision=None, automation=False, sample=False, media_sample=False, test_framework_source=None):
     project, package = Path(project), Path(package).resolve()
     report = audit_package(package)
     if not report["success"]:
@@ -125,6 +125,9 @@ def create_consumer(project, package, *, git_revision=None, automation=False, sa
     sample_path = package / "Samples~/TextSearch"
     if sample and not (sample_path / "TextSearch.unity").is_file():
         raise ValueError("TextSearch sample must be available before creating its consumer")
+    media_path = package / "Samples~/MultimodalSearch"
+    if media_sample and not (media_path / "MultimodalSearch.unity").is_file():
+        raise ValueError("MultimodalSearch sample must be available before creating its consumer")
     if project.exists() and (not project.is_dir() or any(project.iterdir())):
         raise ValueError("consumer project must be empty; existing projects are never overwritten")
     framework_receipt = None
@@ -152,8 +155,10 @@ def create_consumer(project, package, *, git_revision=None, automation=False, sa
     source = (f"https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/{PACKAGE_NAME}#{git_revision}"
               if git_revision else "file:" + package.as_posix())
     manifest = {"dependencies": {PACKAGE_NAME: source, "com.unity.test-framework": "1.6.0"}, "testables": [PACKAGE_NAME]}
-    if sample:
+    if sample or media_sample:
         manifest["dependencies"]["com.unity.modules.unitywebrequest"] = "1.0.0"
+    if media_sample:
+        manifest["dependencies"]["com.unity.modules.audio"] = "1.0.0"
     if automation:
         manifest["dependencies"]["io.github.hatayama.uloopmcp"] = "3.14.0"
         manifest["scopedRegistries"] = [{"name": "package.openupm.com", "url": "https://package.openupm.com",
@@ -178,6 +183,8 @@ def create_consumer(project, package, *, git_revision=None, automation=False, sa
             "  m_CacheServerEnableUpload: 0\n", encoding="utf-8", newline="\n")
     if sample:
         shutil.copytree(sample_path, project / "Assets/EmbeddingGemmaTextSearch")
+    if media_sample:
+        shutil.copytree(media_path, project / "Assets/EmbeddingGemmaMultimodalSearch")
     return manifest
 
 
@@ -190,6 +197,7 @@ def main(argv=None):
     parser.add_argument("--git-revision")
     parser.add_argument("--automation", action="store_true")
     parser.add_argument("--sample", action="store_true", help="Import TextSearch into a new empty consumer")
+    parser.add_argument("--media-sample", action="store_true", help="Import Image and Audio Search into a new empty consumer")
     parser.add_argument("--test-framework-source", type=Path,
                         help="Embed a local official Test Framework 1.6.0 source in a new consumer; does not patch cache")
     args = parser.parse_args(argv)
@@ -203,7 +211,7 @@ def main(argv=None):
     if report["success"] and args.consumer:
         try:
             create_consumer(args.consumer, args.package, git_revision=args.git_revision, automation=args.automation,
-                            sample=args.sample, test_framework_source=args.test_framework_source)
+                            sample=args.sample, media_sample=args.media_sample, test_framework_source=args.test_framework_source)
             report["consumer"] = str(args.consumer.resolve())
         except (OSError, ValueError) as exc:
             report["success"] = False

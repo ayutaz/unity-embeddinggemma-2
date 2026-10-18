@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "overall_acceptance": false,
+  "before": {
+    "schema_version": 1,
+    "success": false,
+    "source": "c6bf23cf66c676ed5a1ea3e03784b9647a93f56e",
+    "scope": "real mouse/keyboard file registration, cancellation and retry; not completed search or performance acceptance",
+    "unity": "6000.3.21f1",
+    "sentis": "2.6.1",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "actual_backend": "GPUCompute",
+    "registered_documents": 0,
+    "numerical_acceptance": false,
+    "completed_actions": [
+      "source and fixed PNG entered using UI",
+      "registration started",
+      "cancel returned idle",
+      "same registration retried"
+    ],
+    "failure": {
+      "kind": "D3D12 fatal GPU device error",
+      "code": "887a0006",
+      "preceding_upload_buffer_bytes": 16777216,
+      "requested_transfer_bytes": 304819200,
+      "local_oom_reported": false,
+      "nonlocal_oom_reported": false,
+      "inference": "large lazy segment constant upload is a cause candidate; not yet a proven end-to-end fix"
+    },
+    "process": {
+      "terminal": true,
+      "exit_code": 1,
+      "stop_reason": "timeout",
+      "peak_host_bytes": 10862690304,
+      "elapsed_seconds": 900.3265552999801
+    },
+    "gpu_memory": {
+      "api": "Windows GPU Process Memory performance counters",
+      "samples": 253,
+      "available_samples": 253,
+      "sampled_dedicated_peak_bytes": 1198788608,
+      "sampled_shared_peak_bytes": 2311647232,
+      "gpu_execution_time_measured": false,
+      "scope": "sampled per-process allocations; not physical capacity, continuous peak, stage attribution or GPU time"
+    },
+    "actual_microphone": {
+      "executed": false,
+      "reason": "automatic approval review rejected explicit-record action: no user microphone approval",
+      "audio_saved": false,
+      "audio_transmitted": false
+    },
+    "evidence": {
+      "native-ui-c6bf23c-operations.log": "e97dc799d711390d54712d97d7d18e5c3cac274e7c15b60853bd7e281f9ccb5a",
+      "native-ui-c6bf23c-operations-process.json": "90144c7105f6ecb02321cb35168f0d6a7c5a268a586a6f3e1d90a8e2b68cf5b0",
+      "native-ui-c6bf23c-operations.json.events.jsonl": "94548d433e3b2965182841a52ed040fcab2d1412d4d39855ad1a4cd38b37d5f6",
+      "native-ui-c6bf23c-operations-gpu-memory.jsonl": "6ffe081c513cfb55d3ba0741182b8656a57722c957b277994d4176a0c9a2fd35"
+    }
+  },
+  "candidate": {
+    "source": "f1cdb301975e8837cd093c6c2b1174a8e9122a9c",
+    "change": "Use existing bounded8MiB GpuConstantWorker in each GPU encoder segment. Graphs, coefficients, reference tolerances and per-output arithmetic unchanged.",
+    "tests": {
+      "intended_red_failures": 2,
+      "green_passed": 34,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "scope": "Small realD3D12 tests: large-constant residency, numerical repeat, pipeline async/cancellation/cache/ownership, bounded uploader. Not full model acceptance."
+    },
+    "real_model": {
+      "success": false,
+      "actual_backend": "GPUCompute",
+      "module": "image-square",
+      "phase": "encode_square-0",
+      "completed_cases": 0,
+      "descriptor_sha256": "8363f9a63a95b307fbbb835f3551a41f6fa5a1d21aca3017670e6f678647e955",
+      "producer": "5d1a66fa3dbf4f76223e248378a146cfb9f15d86",
+      "gpu_device_error": "887a0006",
+      "upload_buffer_warning_present": false,
+      "terminal": true,
+      "exit_code": 1073741845,
+      "elapsed_seconds": 135.18661989999237,
+      "unity_xml_available": false,
+      "scope": "Pinned validation5d1a/reused project/local-file SDKf1cdb30. Not fresh fixedGit or real manual UI."
+    },
+    "evidence": {
+      "pipeline-constant-upload-red.xml": "c519da3b56d33014cc6a09fecfb09cadc6bd39bdf1d44f969e6d72bdbfe601b4",
+      "pipeline-constant-upload-green.xml": "b55478479c51f232aee30ec0ff2b13dcab8fecd82a5d8518ea21d8929a492011",
+      "pipeline-constant-upload-green-process.json": "81b2dd3d13f7a6ce5e6d098662505aead3f03fcbe68b998dbe0c41b5b4e6db51",
+      "image-square-f1cdb30.json": "eae88cfb9d4fddb0af94176c697e1773cf0a0e9d51b5a332c5589702080a5845",
+      "image-square-f1cdb30-process.json": "a3db0935f9db8d4d227644b663353e59b3de943a76e2d4d54d213e87f6fbbdac",
+      "image-square-f1cdb30.log": "329903b07389d7a4f3f49246e732cc7896ff293deb0ee65d28e65fc192c5e4ea"
+    }
+  },
+  "remaining": [
+    "Realmodel GPU encoder device-error diagnosis and correction",
+    "Final fixedGit consumer manual acceptance",
+    "Microphone explicit user approval and actual operation",
+    "Public model hosting approval and empty-cache all6 acquisition",
+    "Same-candidate real GPU timing/stages/cold/warm/repeat/Float16/VRAM/Editor metrics and correctness/rank/normal-exit validation"
+  ]
+}

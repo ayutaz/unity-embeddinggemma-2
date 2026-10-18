@@ -57,7 +57,7 @@ namespace EmbeddingGemma
             if((rank!=2 && rank!=3) || input.shape[rank-1]!=width || input.shape.length==0)
                 throw new ArgumentException("Expected a nonempty matching fixed-width matrix.",nameof(input));
             var shape=rank==2?new TensorShape(input.shape[0],columns):new TensorShape(input.shape[0],input.shape[1],columns);
-            var output=new Tensor<float>(shape);
+            var output=GpuOutputTensor.Allocate(shape);
             try
             {
                 var source=(ComputeTensorData)input.dataOnBackend;

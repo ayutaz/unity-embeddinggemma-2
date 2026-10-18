@@ -10,6 +10,53 @@ from embeddinggemma_tools.package import PACKAGE_NAME, audit_package, create_con
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def add_media_fixture(package):
+    media = package / "Samples~/MultimodalSearch"
+    media.mkdir(parents=True)
+    (media / "MultimodalSearch.unity").write_text("synthetic consumer-import contract scene")
+    (media / "README.md").write_text("synthetic import fixture, not runtime validation")
+    return media
+
+
+def test_media_consumer_imports_sample_and_explicit_audio_module_with_fixed_git_source(tmp_path, package):
+    source = add_media_fixture(package)
+    target = tmp_path / "media-consumer"
+    revision = "1" * 40
+    manifest = create_consumer(target, package, git_revision=revision, media_sample=True)
+    assert (target / "Assets/EmbeddingGemmaMultimodalSearch/MultimodalSearch.unity").read_bytes() == (source / "MultimodalSearch.unity").read_bytes()
+    assert manifest["dependencies"]["com.unity.modules.audio"] == "1.0.0"
+    assert manifest["dependencies"]["com.unity.modules.unitywebrequest"] == "1.0.0"
+    assert manifest["dependencies"][PACKAGE_NAME].endswith("#" + revision)
+    assert not (target / "Assets/EmbeddingGemmaTextSearch").exists()
+
+
+def test_media_consumer_rejects_missing_sample_before_creating_project(tmp_path, package):
+    target = tmp_path / "missing-sample-consumer"
+    with pytest.raises(ValueError, match="MultimodalSearch"):
+        create_consumer(target, package, media_sample=True)
+    assert not target.exists()
+
+
+def test_media_consumer_can_import_both_samples_without_changing_runtime_dependencies(tmp_path, package):
+    add_media_fixture(package)
+    text = package / "Samples~/TextSearch"
+    text.mkdir()
+    (text / "TextSearch.unity").write_text("synthetic text scene")
+    target = tmp_path / "both-consumer"
+    manifest = create_consumer(target, package, sample=True, media_sample=True)
+    assert (target / "Assets/EmbeddingGemmaTextSearch/TextSearch.unity").is_file()
+    assert (target / "Assets/EmbeddingGemmaMultimodalSearch/MultimodalSearch.unity").is_file()
+    assert manifest["testables"] == [PACKAGE_NAME]
+
+
+def test_media_consumer_cli_forwards_the_sample_selection(tmp_path, package):
+    from embeddinggemma_tools.package import main
+    add_media_fixture(package)
+    target = tmp_path / "cli-media-consumer"
+    assert main(["--package", str(package), "--consumer", str(target), "--media-sample"]) == 0
+    assert (target / "Assets/EmbeddingGemmaMultimodalSearch/MultimodalSearch.unity").is_file()
+
+
 @pytest.fixture
 def package(tmp_path):
     root = tmp_path / "package"

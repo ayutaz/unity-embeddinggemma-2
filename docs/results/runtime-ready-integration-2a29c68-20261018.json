@@ -1,0 +1,203 @@
+{
+  "runtime_only_integration_regression_accepted": true,
+  "full_priorities_1_to_3_accepted": false,
+  "candidate": "2a29c682674d3706689fc3aeda6e6c0e18ee43a3",
+  "base": "35d18f8dcaea30c5728e9a1a889963792df25f41",
+  "original_runtime_commits": [
+    "f1cdb301975e8837cd093c6c2b1174a8e9122a9c",
+    "d1548acbe7bf6cb838da60fab66dc7a374909b8a",
+    "e28a5fde4a1fab246de9cf52ab244b5c6e23d1c4",
+    "1397a88937751be1d2205b85f83f40550049c2f2"
+  ],
+  "runtime_git_tree": "7d6e4314552b221d06db881405e7ccff3f449a77",
+  "real_model_runtime_source": "d7b2233204b60ced8c9b569e4e0c4c2651574c21",
+  "package_manifest_identical": true,
+  "sample_tree_unchanged_from_main": true,
+  "package_test_tree_identical_to_evidence_head": true,
+  "changes": [
+    "8MiB bounded constant uploads for encoder segments and text",
+    "Bounded softmax row submissions retaining original reductions",
+    "No CPU-zero allocation/upload for nine write-only GPU outputs"
+  ],
+  "actual_editor_regression": {
+    "unity": "6000.3.21f1",
+    "gpu": "NVIDIA GeForce RTX 4070 Ti SUPER",
+    "graphics_api": "Direct3D12",
+    "counts": {
+      "total": 517,
+      "passed": 517,
+      "failed": 0,
+      "skipped": 0
+    },
+    "gpu_prefixed_cases": 120,
+    "assemblies": [
+      {
+        "name": "EmbeddingGemma.MultimodalSearch.Sample.Editor.Tests.dll",
+        "total": 10,
+        "passed": 10,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "name": "EmbeddingGemma.Package.Editor.Tests.dll",
+        "total": 440,
+        "passed": 440,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "name": "EmbeddingGemma.TextSearch.Sample.Editor.Tests.dll",
+        "total": 67,
+        "passed": 67,
+        "failed": 0,
+        "skipped": 0
+      }
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 116.89072609995492,
+    "frozen_package_files_verified_after": 302,
+    "Library_copied": false,
+    "models_loaded": false,
+    "scope": "Package and unchanged-main sample EditMode unit/tiny-graph GPU regression. Not real-model execution or native UI."
+  },
+  "same_runtime_prior_real_model_evidence": {
+    "isolated_processes": 12,
+    "reference_vectors": 32,
+    "records": [
+      {
+        "module": "text",
+        "precision": "fp32",
+        "cases": 4,
+        "minimum_cosine": 0.9999999999998783,
+        "exit_code": 0
+      },
+      {
+        "module": "image-square",
+        "precision": "fp32",
+        "cases": 2,
+        "minimum_cosine": 0.9999999999995672,
+        "exit_code": 0
+      },
+      {
+        "module": "image-landscape",
+        "precision": "fp32",
+        "cases": 2,
+        "minimum_cosine": 0.9999999999989977,
+        "exit_code": 0
+      },
+      {
+        "module": "image-portrait",
+        "precision": "fp32",
+        "cases": 2,
+        "minimum_cosine": 0.9999999999976248,
+        "exit_code": 0
+      },
+      {
+        "module": "audio-1119",
+        "precision": "fp32",
+        "cases": 5,
+        "minimum_cosine": 0.9999998052055729,
+        "exit_code": 0
+      },
+      {
+        "module": "audio-839",
+        "precision": "fp32",
+        "cases": 1,
+        "minimum_cosine": 0.9999999999981798,
+        "exit_code": 0
+      },
+      {
+        "module": "text",
+        "precision": "float16-weights",
+        "cases": 4,
+        "minimum_cosine": 0.9999999999998682,
+        "exit_code": 0
+      },
+      {
+        "module": "image-square",
+        "precision": "float16-weights",
+        "cases": 2,
+        "minimum_cosine": 0.9999999999996099,
+        "exit_code": 0
+      },
+      {
+        "module": "image-landscape",
+        "precision": "float16-weights",
+        "cases": 2,
+        "minimum_cosine": 0.9999999999990701,
+        "exit_code": 0
+      },
+      {
+        "module": "image-portrait",
+        "precision": "float16-weights",
+        "cases": 2,
+        "minimum_cosine": 0.9999999999979087,
+        "exit_code": 0
+      },
+      {
+        "module": "audio-1119",
+        "precision": "float16-weights",
+        "cases": 5,
+        "minimum_cosine": 0.9999990101338172,
+        "exit_code": 0
+      },
+      {
+        "module": "audio-839",
+        "precision": "float16-weights",
+        "cases": 1,
+        "minimum_cosine": 0.9999984475675923,
+        "exit_code": 0
+      }
+    ],
+    "scope": "Source-identical Runtime and manifest under pinned Unity/Sentis/Windows GPU. Reuses recorded isolated references; not a fresh model execution, new consumer UX or general/platform performance guarantee."
+  },
+  "original_tdd_preserved": true,
+  "source_evidence": {
+    "gpu-output-d7b2233-all-module-isolated-reference-20261018.json": {
+      "commit": "34afe64e513a0151dc5a85bdc57c30cb7be830f2",
+      "sha256": "0f0eb9547bb4c413cde0607ea6364e42b305fbedb3c88017a9d30da1b8517414",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/blob/34afe64e513a0151dc5a85bdc57c30cb7be830f2/docs/results/gpu-output-d7b2233-all-module-isolated-reference-20261018.json"
+    },
+    "gpu-write-only-output-allocation-tdd-20261018.json": {
+      "commit": "34afe64e513a0151dc5a85bdc57c30cb7be830f2",
+      "sha256": "24b8b688d3325dbcf7b85eb653a00e8e966dcb3ab1c438bb32b08324be5d56bd",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/blob/34afe64e513a0151dc5a85bdc57c30cb7be830f2/docs/results/gpu-write-only-output-allocation-tdd-20261018.json"
+    },
+    "bounded-gpu-softmax-dispatch-20261017.json": {
+      "commit": "34afe64e513a0151dc5a85bdc57c30cb7be830f2",
+      "sha256": "8686ff965fbab9a0f6b1490a5d01509a5fbe223c7ac0c4df142f4cb9f267637e",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/blob/34afe64e513a0151dc5a85bdc57c30cb7be830f2/docs/results/bounded-gpu-softmax-dispatch-20261017.json"
+    },
+    "multimodal-usability-gpu-failure-and-upload-fix-20261017.json": {
+      "commit": "34afe64e513a0151dc5a85bdc57c30cb7be830f2",
+      "sha256": "e2f77b7685bd2472cee361d93d04be325a9d5da564b38e86b71114628117deb9",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/blob/34afe64e513a0151dc5a85bdc57c30cb7be830f2/docs/results/multimodal-usability-gpu-failure-and-upload-fix-20261017.json"
+    },
+    "text-bounded-constant-upload-20261018.json": {
+      "commit": "34afe64e513a0151dc5a85bdc57c30cb7be830f2",
+      "sha256": "0ca1880ccb92b14c8eb60b8ecfbb478b5a465561cad1e44d5a17177df6520542",
+      "url": "https://github.com/ayutaz/unity-embeddinggemma-2/blob/34afe64e513a0151dc5a85bdc57c30cb7be830f2/docs/results/text-bounded-constant-upload-20261018.json"
+    }
+  },
+  "protected_root_files_verified": 4,
+  "auditor_preflight_failures": [
+    "Initial hardware-string parser expected Direct3D12 without whitespace; actual Editor log declares Direct3D 12. Corrected the parser; no Editor test, backend or reference changed."
+  ],
+  "incomplete": [
+    "Public pinned empty-cache model acquisition",
+    "Authorized real microphone",
+    "Final full candidate fresh native operations",
+    "SDK-exclusive load/release GPU timing and allocation gaps",
+    "Latest exact-head Required CI and actual main integration"
+  ],
+  "no_model_weights_or_raw_large_artifacts_committed": true,
+  "evidence_sha256": {
+    "runtime-ready-consumer-2a29c68.json": "0955f05b6558db3d7e1e6e4f14481d93e353f2d2f809d79326eef8908c8aa6b2",
+    "runtime-ready-2a29c68-package-samples-process.json": "2fd14a4c2364ebc7558f52d9360b100359c2c5513fba2d04d7fa2c272c9e103d",
+    "runtime-ready-2a29c68-package-samples.xml": "aa4cc8b84a7f7222af96fd0f21e0b353ddf5fc9acfe66eb783209d1345a93933",
+    "runtime-ready-2a29c68-package-samples.log": "65fa34000aebe562b4307e12f33ef19a43f45007346251ae4678a522dac8c081",
+    "root-user-files-before-final-sync.json": "0d4f3af68e2bd4df5ec358d5531ef2b6679c994fda39a2601ce73eb5ab02218b",
+    "audit_runtime_ready.py": "2d08a21b518823c9f4ef360f7e536b98ec67729b8c340b289248201ff44b9095"
+  },
+  "audited_utc": "2026-10-18T00:24:23.817258+00:00"
+}

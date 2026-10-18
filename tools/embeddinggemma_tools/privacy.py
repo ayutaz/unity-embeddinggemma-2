@@ -9,7 +9,7 @@ import subprocess
 import sys
 from urllib.parse import unquote
 
-HOME = re.compile(r'(?i)(?:\b[a-z]:[/\\]+(?:Users|Documents and Settings)[/\\]+[^/\\\s"<>]+|(?<![\w])/(?:Users|home)/[^/\s"<>]+)')
+HOME = re.compile(r"(?i)(?:\b[a-z]:[/\\]+(?:Users|Documents and Settings)[/\\]+[^/\\\s\"'<>]+|(?<![\w])/(?:Users|home)/[^/\s\"'<>]+)")
 EMAIL = re.compile(r'(?i)(?<![a-z0-9._%+\-])[a-z0-9._%+\-]+@(?:gmail|googlemail|yahoo|hotmail|outlook|live|icloud|protonmail|proton)\.[a-z.]{2,}')
 SECRET = re.compile(r'\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{25,}|hf_[A-Za-z0-9]{20,}|sk-(?:proj-)?[A-Za-z0-9_-]{25,})\b')
 IMAGES = {'.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.tif', '.tiff'}
@@ -50,6 +50,8 @@ def scan_bytes(data, path='<input>', reviewed=None):
 def scan_identity(name, email):
     safe_email = email.endswith('@users.noreply.github.com') or email == 'noreply@github.com'
     safe_name = re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_\-]*(?:\[bot\])?', name) is not None
+    handle = email.split('@', 1)[0].split('+')[-1]
+    safe_name = safe_name and (name == handle or (name == 'GitHub' and email == 'noreply@github.com'))
     return [] if safe_email and safe_name else [dict(path='<commit-identity>', line=1, rule='private-identity')]
 
 def git(*args, root=None):

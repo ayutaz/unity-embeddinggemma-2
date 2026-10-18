@@ -27,6 +27,10 @@ def test_read_only_commands_are_not_blocked_by_existing_history():
 def test_check_bypass_is_rejected_for_publication():
     assert denied(decide(event('git push --no-verify origin main'), lambda: True))
 
+def test_github_merge_must_explicitly_use_public_author_email():
+    assert denied(decide(event('gh pr merge 1 --squash'), lambda: True))
+    assert not denied(decide(event('gh pr merge 1 --squash --author-email 123+fixture@users.noreply.github.com'), lambda: True))
+
 def test_staged_scan_errors_fail_closed():
     def broken():
         raise RuntimeError('private source details must not escape')

@@ -13,4 +13,5 @@
 - Read `.agents/skills/project-privacy/SKILL.md` before publishing code, documentation, screenshots, PR bodies, releases or validation artifacts.
 - Install the versioned Git hooks using `tools/install_privacy_hooks.py` via uv. Do not bypass pre-commit, commit-msg or pre-push privacy checks.
 - Publish only relative/environment-based paths, public GitHub/noreply commit identities, and image bytes reviewed visually and with OCR. Keep original local evidence private; never regenerate an evidence screenshot to hide a leak.
+- Use `gh pr merge --author-email <public-noreply-email>` so squash commits also use the reviewed public identity.
 - A clean HEAD does not make old ancestors safe. Scan outgoing history and publication payloads, not just current source files. Never echo detected private values in reports or comments.

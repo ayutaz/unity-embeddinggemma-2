@@ -34,6 +34,7 @@ def test_public_noreply_and_relative_or_environment_paths_are_allowed():
 def test_commit_metadata_must_use_public_identity():
     assert scan_identity('fixture', 'private' + '@' + 'gmail.com')
     assert scan_identity('Private Real Name', '123+fixture@users.noreply.github.com')
+    assert scan_identity('PrivateName', '123+fixture@users.noreply.github.com')
 
 def test_unreviewed_raster_and_binary_cannot_silently_pass():
     image = b'\x89PNG\r\n\x1a\nnot-ocr-reviewed'
@@ -51,6 +52,7 @@ def test_image_review_is_bound_to_exact_file_hash_and_required_method():
 
 def test_examples_and_public_license_contacts_are_not_private_email():
     assert scan_bytes(b'test@example.com https://github.com/fixture/project', 'LICENSE') == []
+    assert scan_bytes(b"'/home/' + 'synthetic'", 'tests.py') == []
 
 def test_diagnostics_never_include_the_source_line():
     findings = scan_bytes(('source=' + windows_home()).encode(), 'docs/result.json')

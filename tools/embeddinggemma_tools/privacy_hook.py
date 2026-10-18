@@ -21,7 +21,9 @@ def decide(event, checker):
             mcp_write = tool.startswith('mcp__') and re.search(r'(?i)create|update|edit|upload|publish|push|merge|send', tool)
             if git_push or github_write or mcp_write:
                 payload = json.dumps(values) if mcp_write else command
-                if '--no-verify' in command or scan_bytes(payload.encode(), '<publication-input>') or not checker():
+                merge_without_public_author = (re.search(r'\bgh\s+pr\s+merge\b', command)
+                    and not re.search(r'--author-email\s+\S+@users\.noreply\.github\.com\b', command))
+                if '--no-verify' in command or merge_without_public_author or scan_bytes(payload.encode(), '<publication-input>') or not checker():
                     deny()
     except Exception:
         deny()

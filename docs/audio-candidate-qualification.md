@@ -5,6 +5,47 @@ generation `audio-e9de158-20261018`. It does not change the mandatory original
 graph gate or adopt a new model generation. GPU, consumer, Player and platform
 acceptance remain separate requirements in the [release plan](roadmap.md).
 
+## Direct saved-candidate GPU preparation seed
+
+`audio_candidate_gpu_seed` provides a separate preparation route from the exact
+hash-pinned candidate PT2 graph. It copies graph routing while borrowing every
+original tensor attribute at the same binding. It replaces only the two audited
+native LayerNorm calls (widths 32 and 128, no bias, epsilon 1e-6, unused statistics)
+with the existing FP32 Welford8 arithmetic. No checkpoint weights are downloaded
+again, no new learned parameters are created, and the candidate graph and original
+numerical references remain unchanged. Source tensor hashes are checked again
+after ONNX export tracing.
+
+The ordinary derived GraphModule returns the saved program's single feature
+Tensor; the export program's internal one-element output tuple is not treated as
+an additional model output. Live native statistics, different normalization
+contracts, computed scales and changed tensor bindings fail before export.
+
+The existing registered normalization workflow has an explicit, false-by-default
+preparation mode. It covers both profiles independently and retains the original
+normalization replay mode separately:
+
+```sh
+gh workflow run audio-native-norm-replay.yml --ref fix/privacy-guard \
+  -f prepare_gpu_candidate=true
+```
+
+Only a successful producer and the matching privacy guard may upload the seed
+ONNX and its JSON receipt, for 90 days. Source PT2 files, raw inputs and original
+references are excluded. The producer audits all textual protobuf fields, rejects
+external or string tensor payloads, and removes only optional `doc_string` and
+`metadata_props`. It compares every other protobuf field against the pre-removal
+model, preserving tensor bytes and computation. Opaque numerical payloads are
+preserved, not certified as arbitrary-binary privacy-safe data.
+
+The [preparation checkpoint](results/audio-candidate-gpu-seed-preparation-20261018.json)
+records 8 initial failing checks, 3 workflow failures and 2 additional CLI/receipt
+failures before their fixes. The related 40 checks and actionlint then passed.
+This is small-model/export/workflow evidence. An actual real-model CI execution,
+further GPU refinements, original encoder tolerances, all six signals, real GPU
+execution and final consumer/Player acceptance remain required. A seed export
+alone never sets numerical, GPU or generation qualification to true.
+
 ## Independent inputs and provenance
 
 - The [candidate contract](../tools/references/audio-candidate-e9de158.json)

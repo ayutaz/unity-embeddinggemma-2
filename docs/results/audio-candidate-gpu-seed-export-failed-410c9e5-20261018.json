@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "date": "2026-10-18",
+  "source": "410c9e5059640130717d1d169d1a5eed16dbcdbc",
+  "run_id": 39116468876,
+  "run_url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39116468876",
+  "conclusion": "failure",
+  "scope": "First actual direct saved-candidate ONNX seed export attempt",
+  "profiles": [
+    { "case": "silence", "job_id": 117643169817, "conclusion": "failure", "error_type": "UnsupportedOperatorError", "model_uploaded": false },
+    { "case": "padded_noise", "job_id": 117643169565, "conclusion": "failure", "error_type": "UnsupportedOperatorError", "model_uploaded": false }
+  ],
+  "raw_logs": "Preserved privately; no raw exception or graph dump is republished",
+  "copy_bridge_regression": {
+    "saved_graph_operation": "aten::_to_copy",
+    "red_failures": 5,
+    "red_existing_passes": 11,
+    "equivalent_export_spelling": "Tensor.to(copy=True) with the same dtype and CPU device semantics",
+    "checked_dtypes": ["float32", "float64", "int64", "bool"],
+    "values_dtype_and_distinct_storage_preserved": true,
+    "source_graph_unchanged": true,
+    "related_green_passes": 45,
+    "green_failures": 0
+  },
+  "corrected_actual_seed_export_executed": false,
+  "original_golden_changed": false,
+  "numeric_acceptance": false,
+  "gpu_validated": false,
+  "generation_qualified": false
+}

@@ -56,6 +56,21 @@ class _WelfordArguments(torch.nn.Module):
         return TorchWelfordLayerNorm.forward(context, values)
 
 
+def _typed_copy_for_export(value, *, dtype=None, layout=None, device=None, pin_memory=None,
+                           non_blocking=False, memory_format=None):
+    # Legacy ONNX supports Tensor.to(copy=True), not the saved aten::_to_copy
+    # spelling. Keep the actual cast and distinct-storage semantics in tracing.
+    if layout not in (None, torch.strided) or pin_memory not in (None, False):
+        raise ValueError('Seed copy requires ordinary dense storage')
+    if device is not None and torch.device(device).type != 'cpu':
+        raise ValueError('Saved seed copy must retain CPU export tracing')
+    options=dict(copy=True, non_blocking=non_blocking)
+    if dtype is not None: options['dtype']=dtype
+    if device is not None: options['device']=device
+    if memory_format is not None: options['memory_format']=memory_format
+    return value.to(**options)
+
+
 def rewrite_welford_seed(program):
     selected = checked_normalizations(program)
     if sorted(node.args[1][0] for node in selected) != [32, 128]:
@@ -76,6 +91,11 @@ def rewrite_welford_seed(program):
         raise ValueError('Saved audio seed requires one Tensor output')
     graph.output(result[0])
     derived = torch.fx.GraphModule(program, graph)
+    copies=0
+    for node in graph.nodes:
+        if node.op=='call_function' and node.target==torch.ops.aten._to_copy.default:
+            node.target=_typed_copy_for_export
+            copies+=1
     for index, node in enumerate(checked_normalizations(derived)):
         name = '_eg_welford_seed_' + str(index)
         while hasattr(derived, name): name += '_'
@@ -91,6 +111,7 @@ def rewrite_welford_seed(program):
     if set(actual) != set(bindings) or any(actual[name] is not value for name, value in bindings.items()):
         raise ValueError('Derived graph changed an original tensor binding')
     return derived, dict(replaced_normalizations=2, normalization_widths=[32, 128],
+        export_equivalent_copy_count=copies,
         source_parameter_objects_preserved=True, preserved_tensor_bindings=len(bindings),
         source_tensor_binding_sha256=_binding_digest(bindings), new_learned_parameters=0,
         gpu_validated=False, generation_qualified=False)

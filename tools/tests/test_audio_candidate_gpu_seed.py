@@ -33,6 +33,11 @@ class Encoder(torch.nn.Module):
         return (out, a[1]) if self.statistics else out
 
 
+class EncoderWithCopy(Encoder):
+    def forward(self,x):
+        return super().forward(torch.ops.aten._to_copy.default(x,dtype=torch.float32))
+
+
 @pytest.fixture
 def saved():
     torch.manual_seed(71)
@@ -93,6 +98,28 @@ def test_saved_graph_can_export_standard_onnx_without_reloading_official_weights
     actual = ReferenceEvaluator(model).run(None, {'input': values.numpy()})[0]
     with torch.no_grad(): expected = derived(values).numpy()
     np.testing.assert_allclose(actual, expected, rtol=1e-4, atol=1e-5)
+
+
+def test_saved_aten_copy_exports_as_equivalent_typed_copy_without_changing_source(tmp_path):
+    values=torch.randn(1,3,128);encoder=EncoderWithCopy().eval()
+    source=torch.export.export(encoder,(values,)).module();before=str(source.graph)
+    derived,report=module().rewrite_welford_seed(source)
+    path=tmp_path/'copy.onnx';export_audio_native_onnx(derived,values,path)
+    actual=ReferenceEvaluator(onnx.load(path)).run(None,{'input':values.numpy()})[0]
+    with torch.no_grad():expected=derived(values).numpy()
+    np.testing.assert_allclose(actual,expected,rtol=1e-4,atol=1e-5)
+    assert str(source.graph)==before
+    assert report['export_equivalent_copy_count']==1
+
+
+@pytest.mark.parametrize('dtype',[torch.float32,torch.float64,torch.int64,torch.bool])
+def test_legacy_copy_bridge_keeps_cast_values_and_distinct_storage(dtype):
+    values=torch.tensor([0,1,0,1],dtype=dtype)
+    before=values.clone()
+    actual=module()._typed_copy_for_export(values,dtype=torch.float32)
+    expected=torch.ops.aten._to_copy.default(values,dtype=torch.float32)
+    assert torch.equal(actual,expected) and actual.dtype==torch.float32
+    assert actual.data_ptr()!=values.data_ptr() and torch.equal(values,before)
 
 
 def test_privacy_audit_removes_only_optional_metadata_and_rejects_private_node_names():

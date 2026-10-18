@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "run_id": 39105290794,
+  "run_url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39105290794",
+  "source_sha": "e9de158a55a72a34cbf9f4752a234892c4ce41d3",
+  "conclusion": "failure",
+  "comparison_artifact_id": 12128590919,
+  "comparison_sha256": "df726623ffb59a0196d963ba6fc03919a8b2a4fa645c5d0ddd05a32afd1372ea",
+  "case_count": 6,
+  "onnx_baseline_failed_cases": 6,
+  "onnx_baseline_tolerance_failures": 5230,
+  "native_tolerance_failures": 2884,
+  "original_golden_changed": false,
+  "candidate_adopted": false,
+  "required_original_model_gate_changed": false,
+  "gpu_validated": false,
+  "scope": "regenerated native and unsplit baseline ONNX versus immutable original golden; existing five-part ordered ONNX qualification not executed in this run"
+}

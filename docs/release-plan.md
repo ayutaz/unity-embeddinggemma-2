@@ -34,11 +34,15 @@
 
 [変換CI 39120142716](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39120142716)は、source `b6ede71` の両profileで成功しました。両LayerNormの逆数・平均・moment、全109 RMSと12か所のouter layout、第2stem convolutionを監査して調整し、元587 initializerのbytesを保持しました。各profileは267演算・268区間です。[全体読み戻し](results/audio-candidate-gpu-partitions-readback-b6ede71-20261018.json)では、両ZIPのSHA256、全417ファイルのCRC、planに対応する415 payloadのサイズ・hash、私的な2コピーを確認しました。生成・保存の成功であり、GPU数値照合・新世代採用は未完了です。
 
-旧モデルの検証を維持し、新候補用の別GPU gateを `a164cba` に追加しました。[出所の検査13件](results/candidate-audio-plan-guard-tdd-20261018.json)は、意図した未実装失敗から全件成功・skip0・exit0になり、実GPU fixtureもコンパイルを確認しました。これは公式Test Frameworkをembeddedにしたlocal-file/no-graphics consumerでの検証です。実モデル・固定Git・GPUの成功には数えません。次は同じ固定生成物を新規Git consumerに導入し、元の6信号・許容差で実行します。
+旧モデルの検証を維持し、新候補用の別GPU gateを `a164cba` に追加しました。[出所の検査13件](results/candidate-audio-plan-guard-tdd-20261018.json)は、意図した未実装失敗から全件成功・skip0・exit0になり、実GPU fixtureもコンパイルを確認しました。この小規模テストは公式Test Frameworkをembeddedにしたlocal-file/no-graphics consumerの範囲です。
+
+続く[新規固定Git consumerの実GPU実行](results/audio-candidate-direct-encoder-gpu-a164cba-20261018.json)では、両profile・全6信号が成功し、両processもexit0でした。実capture 824,320値の独立再計算で元の要素別許容差超過は0、破損出力control6件は拒否しました。CPU計算fallback・中間readbackは0。package 510ファイルの対応も確認し、2つのpackage manifestだけはUPMによるfingerprint追加と元fieldの不変を区別しました。encoder gateの合格であり、最終role・Player・他環境・新世代採用の完了には数えません。
+
+[実PCMの初回role検証](results/candidate-audio-grouped-role-timeout-b4fbf2e-20261018.json)は、5信号15条件をまとめた1 testがUnity既定180秒を超えて不合格でした。1信号の3 vectorと、次の信号の一部の復帰確認まで記録しています。終了側の参照例外も保持し、因果を断定しません。`c1e9aa8` で1信号3 roleずつ、計6 tests / 18条件に分けました。180秒上限と元の参照・許容差は維持し、修正版はcompileと出所検査13件・skip0・exit0を確認済みです。実role受け入れは継続中です。
 
 ## 直近の優先作業
 
-1. 両profileのGPU用演算精度調整・分割は生成と読み戻しを完了しました。次はその固定生成物を新規Git consumerへ導入し、元のencoder要素別許容差・全6信号・全必要roleで実GPU検証します。既存bundleの全10条件成功や生成だけを、新世代の採用判定には使いません。
+1. 両profileのGPU用演算精度調整・分割と、元のencoder要素別許容差による全6信号の実GPU照合は完了しました。次は実PCMから全18 role条件までを確認します。既存bundleの全10条件成功やencoder単体の成功だけを、新世代全体の採用判定には使いません。
 2. 同じ最終候補へtext・横断検索・sample操作と計測を対応付け、Playerの残件を閉じます。独立warm起動、実マイク、process RAM / VRAMと実GPU時間は、今回の内部warm反復・managed heap・wall時間から推定しません。
 3. 取得pinと必須CIを復旧し、PRを整理します。CIが失敗したままの統合や、旧モデルの同一bytesを復旧した扱いは行いません。
 4. 同時にMac・iOS・Androidの実行環境を確保します。端末待ちをWindows完了後に発見しないよう、必要環境と担当を工程5の前に確定します。

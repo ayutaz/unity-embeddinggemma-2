@@ -13,13 +13,30 @@ namespace EmbeddingGemma.Validation
         public const string QualificationName = "mixed-cold-complete.json";
         static bool Hex(JToken value, int length) => value?.Type == JTokenType.String && Regex.IsMatch((string)value, "\\A[0-9a-f]{" + length + "}\\z");
         static bool True(JToken value) => value?.Type == JTokenType.Boolean && (bool)value;
+        public static string PreparedCacheDirectory(string qualificationRoot)
+        {
+            if (string.IsNullOrWhiteSpace(qualificationRoot)) throw new ArgumentException("An isolated run-cache root is required.");
+            return Path.Combine(Path.GetFullPath(qualificationRoot), "prepared");
+        }
+        public static JObject AcquisitionEvidence(string module, GpuMediaBundleLease lease, bool warm)
+        {
+            if (string.IsNullOrWhiteSpace(module) || lease == null || lease.TransferredFiles < 1 || lease.TransferredBytes <= 0 || lease.ReusedObjects < 0)
+                throw new ArgumentException("Complete acquisition accounting including the descriptor read is required.");
+            var objects = lease.TransferredFiles - 1; // The existing SDK counts one descriptor read on every acquisition.
+            if (warm && objects != 0) throw new InvalidOperationException("Warm execution cannot claim object reuse after repair or transfer.");
+            return new JObject { ["module"] = module, ["transferred_files"] = lease.TransferredFiles,
+                ["descriptor_reads"] = 1, ["transferred_objects"] = objects, ["transferred_bytes"] = lease.TransferredBytes,
+                ["reused_objects"] = lease.ReusedObjects, ["gpu_execution_certified"] = false };
+        }
         public static JObject Validate(PlayerMixedConfiguration config, PlayerBuildInfo build)
         {
             if (config == null || build == null || !Regex.IsMatch(build.codeCommit ?? "", "\\A[0-9a-f]{40}\\z"))
                 throw new ArgumentException("A fixed build and explicit mixed-suite configuration are required.");
             var exists = Directory.Exists(config.Cache) || File.Exists(config.Cache);
             var result = new JObject { ["phase"] = config.Phase, ["cache_existed"] = exists,
-                ["cache_transfers_must_be_zero"] = config.Phase == "warm", ["gpu_execution_certified"] = false };
+                ["cache_transfers_must_be_zero"] = config.Phase == "warm", ["gpu_execution_certified"] = false,
+                ["cache_transfer_scope"] = "Prepared model objects; descriptor reads are recorded separately",
+                ["prepared_cache_layout"] = "prepared child directory; qualification remains in the parent run-cache root" };
             if (config.Phase == "cold")
             {
                 if (exists) throw new InvalidOperationException("Cold execution requires a new model-cache directory.");

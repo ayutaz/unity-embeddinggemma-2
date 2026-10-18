@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "base_source": "8e6dd2cbce8de8cffbcf26e6f68b426b8ddbf1fb",
+  "scope": "Real tiny prepared-cache acquisition integration and contract correction, without model inference",
+  "red": {
+    "total": 7,
+    "passed": 0,
+    "failed": 7,
+    "skipped": 0
+  },
+  "green": {
+    "total": 119,
+    "passed": 119,
+    "failed": 0,
+    "skipped": 0
+  },
+  "green_exit_code": 0,
+  "test_sha256": "2e011de8e9ebb43c8748cbb82ae5bceb9fafe66ae6f33da760d32873b1be0f7f",
+  "implementation_sha256": {
+    "Assets/Validation/Runtime/PlayerMixedCachePolicy.cs": "75afa797b3e533b4d837cfef23bc815d4370a8e724aa272983ca005de3fe12d2",
+    "Assets/Validation/Runtime/PlayerMixedExecution.cs": "64c1abd162e93120356149639a3ca7396a120743ed1fcedec51ae339687a54b9"
+  },
+  "private_red_xml_sha256": "12266d921e045e1d86416905cdf7fc5b3cea6366c9e84af5fe4a4c70fb57f4b7",
+  "private_green_xml_sha256": "37ad2ca5f23033592a473eb05663577e54f47a2e2de53d3f7b200ac79e17d563",
+  "covered": [
+    "Actual SDK warm acquisition reads one descriptor and transfers zero model objects",
+    "Cold transfers and descriptor reads are recorded separately",
+    "Actual one-object corruption repair cannot pass the warm gate",
+    "Qualification in the run-cache parent does not violate ownership of the prepared child",
+    "Invalid acquisition accounting is rejected"
+  ],
+  "SDK_Runtime_changed": false,
+  "numerical_gates_changed": false,
+  "earlier_tests_changed": false,
+  "preceding_source_actual_build": {
+    "source": "8e6dd2cbce8de8cffbcf26e6f68b426b8ddbf1fb",
+    "success": true,
+    "injected_build": false,
+    "configuration": "Windows IL2CPP Release High",
+    "elapsed_seconds": 379.27413800003706,
+    "compiled_source_hashes_verified": 67,
+    "warnings": 486,
+    "shader_warning_log_lines": 485,
+    "scope": "Preceding source builds successfully; corrected source requires a new build"
+  },
+  "corrected_source_Player_built": false,
+  "actual_Player_executed": false,
+  "gpu_acceptance_added": false,
+  "all_platforms_accepted": false,
+  "release_ready": false
+}

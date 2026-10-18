@@ -54,8 +54,7 @@ namespace EmbeddingGemma.Validation
             void Phase(string phase) { envelope["phase"] = phase; Save(); }
             void CacheEvidence(string module, GpuMediaBundleLease lease)
             {
-                ((JArray)envelope["cache_modules"]).Add(new JObject { ["module"] = module, ["transferred_files"] = lease.TransferredFiles, ["reused_objects"] = lease.ReusedObjects });
-                if (config.Phase == "warm" && lease.TransferredFiles != 0) throw new InvalidDataException("Warm execution cannot claim a cache hit after object repair or transfer.");
+                ((JArray)envelope["cache_modules"]).Add(PlayerMixedCachePolicy.AcquisitionEvidence(module, lease, config.Phase == "warm"));
             }
             TextEmbedder text = null; GpuMediaBundleLease textLease = null; var completed = false;
             try
@@ -67,6 +66,7 @@ namespace EmbeddingGemma.Validation
                     throw new NotSupportedException("An actual Windows Release IL2CPP High Player and compute GPU are required.");
                 build.Validate(); Application.runInBackground = true;
                 envelope["cache_context"] = PlayerMixedCachePolicy.Validate(config, build);
+                var preparedCache = PlayerMixedCachePolicy.PreparedCacheDirectory(config.Cache);
                 using (var descriptor = File.OpenRead(Path.Combine(config.Bundle, "bundle.json")))
                 {
                     var digest = PlayerFileHash.Compute(descriptor, out _); envelope["bundle_descriptor_sha256"] = digest;
@@ -80,7 +80,7 @@ namespace EmbeddingGemma.Validation
                 foreach (var name in Modules)
                 {
                     Phase("prepare_" + name);
-                    using var lease = await GpuMediaBundleCache.AcquireAsync(config.Bundle, name, config.Cache);
+                    using var lease = await GpuMediaBundleCache.AcquireAsync(config.Bundle, name, preparedCache);
                     CacheEvidence(name, lease);
                     using var fixture = PlayerMediaFixture.Load(config.Fixtures, name, lease.Bundle.Module(name));
                     ((JObject)envelope["modules"])[name] = new JObject { ["success"] = false };
@@ -97,7 +97,7 @@ namespace EmbeddingGemma.Validation
                 var baseCount = modules.Sum(r => ((JArray)r["cases"]).Count); var warmCount = modules.Sum(r => ((JArray)r["warm"]).Count);
                 if (baseCount != 36 || warmCount != 45) throw new InvalidOperationException("All 36 base and 45 warm media-role vectors are required.");
                 envelope["base_media_vectors"] = baseCount; envelope["warm_media_vectors"] = warmCount;
-                Phase("prepare_text"); textLease = await GpuMediaBundleCache.AcquireAsync(config.Bundle, "text", config.Cache); CacheEvidence("text", textLease);
+                Phase("prepare_text"); textLease = await GpuMediaBundleCache.AcquireAsync(config.Bundle, "text", preparedCache); CacheEvidence("text", textLease);
                 var metadata = textLease.Bundle.Module("text");
                 var model = ModelLoader.Load(textLease.Bundle.VerifyFile((string)metadata["model"]));
                 text = new TextEmbedder(model, File.ReadAllText(textLease.Bundle.VerifyFile((string)metadata["tokenizer"])), BackendType.GPUCompute);

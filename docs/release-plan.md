@@ -15,6 +15,7 @@
 - [descriptor bytesの保持](results/media-descriptor-byte-preservation-tdd-20261018.json)：10件Redから関連87件Green、#92最新headの必須CI・公開履歴・merge treeを確認して統合済みです。全宣言を準備した場合だけ元bytesを保持し、subsetは未取得objectを公開しません。
 - [修正後の実画面とGPU](results/native-ui-7754ce4-20261019.json)：固定Git `7754ce4`の新規consumerでpolicy等84件が合格。実マウス・キーボードによる画像・合成音声登録と全4検索を操作し、2 media vector・8順位/score・16破損control拒否を独立監査しました。GPU Workerは181 / 270 / 1、計算CPU fallback・中間flushは0、正常終了です。observer警告は保持し、全手動項目・性能全体の合格へは広げません。
 - [最終混在Playerの契約](results/final-mixed-player-contracts-20261019.json)：21・43・22件の未実装失敗から関連86件Green、既存回帰・元text bytesの実読み込み込みで112件Green。SDK Runtime・元参照・精度gateを維持し、36 base・45 warm・18文書・4検索・72順位/scoreを要求します。実Playerのbuild / GPU / 独立cold / warmは未実行です。
+- [cache接続の修正](results/final-mixed-player-cache-integration-20261019.json)：実tiny cache取得を加え、7件Redから関連119件Green。毎回のdescriptor読み込みとモデル転送を分け、cache所有layoutとcold記録を分離しました。先行source `8e6dd2c`は実Release build・67 source hash照合に成功（379.27秒、486 warning保持）。修正版のbuildと実GPU / 独立cold / warmは次の実行です。
 
 ### 音声候補の採用経緯と固定sourceの保存記録
 

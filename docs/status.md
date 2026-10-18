@@ -10,6 +10,8 @@
 
 最終Windows Player向けに[混在検索の契約・回帰112件](results/final-mixed-player-contracts-20261019.json)が合格しました。全roleのmedia 36件・warm45件と18文書×4検索を要求する入口を実装しています。実Playerのbuild・独立cold / warmは次の検証であり、この契約テストの成功には含みません。手動UI残項目、SDK専有のGPU時間・allocation、macOS / iOS / Android実機、provider privacy対応、正式SDK tag / Releaseも未完了です。[リリース計画](release-plan.md)で追跡します。
 
+続く[cache接続の確認](results/final-mixed-player-cache-integration-20261019.json)では7件Redから関連119件Green。descriptor読み込みとモデル転送を分け、SDK所有cacheを`prepared`子directory、cold記録を親へ分離しました。旧入口source `8e6dd2c`の実Release buildは379.27秒・exit0・source hash67件一致ですが、cache修正前のbinaryなので受け入れ実行には使いません。486 warningも保持し、修正版のbuild・実GPU起動を次に行います。
+
 ## 統合前checkpointと固定sourceの検証記録
 
 更新: **2026-10-18**。公開履歴整理後のmainは `4b5bf72`。開発版 `0.1.0-pre.1`、公開tag・正式Releaseはありません。現在は個人情報対策の回帰修正、固定音声参照データの復旧、GitHub側の残存個人情報の除去を優先します。

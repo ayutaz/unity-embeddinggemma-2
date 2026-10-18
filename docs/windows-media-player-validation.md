@@ -29,9 +29,12 @@ Use eight explicit arguments; do not combine mixed and individual-module options
 
 `cold` requires a nonexistent cache directory. Only successful execution writes
 `mixed-cold-complete.json`, linking the exact final report hash, source, model pin,
-precision and cohort counts. Run `warm` in a separate bounded process with that
-cache, a distinct run ID and a new output file; every acquisition must transfer
-zero objects. The external auditor must join both owned process receipts, build
+precision and cohort counts. The SDK owns the `prepared` child directory;
+qualification stays in the parent run-cache root. Run `warm` in a separate bounded
+process with that cache, a distinct run ID and a new output file; every acquisition
+must transfer zero model objects. The SDK reads the descriptor on each acquisition
+and counts it as one transferred file, recorded separately from object transfers.
+The external auditor must join both owned process receipts, build
 sources, original references and report/qualification hashes. JSON flags or a
 matching cache file alone cannot certify GPU execution or independent processes.
 
@@ -52,6 +55,15 @@ contracts and actual pinned text-file loading. The initial combined attempt had
 12 exception-family failures; those original results remain recorded. Tests and
 rejection gates were unchanged by the exception classification correction.
 The SDK Runtime, original references and numerical thresholds are unchanged.
+
+[Actual tiny-cache integration](results/final-mixed-player-cache-integration-20261019.json)
+then exposed the descriptor accounting and strict cache-owner layout at the mixed
+entry boundary. Seven added failures preceded the correction; all 119 combined
+checks passed afterward. The original contracts were unchanged. Source `8e6dd2c`
+built successfully in 379.27 seconds with 67 compiled source hashes verified,
+but that binary predates this cache correction and was not run for acceptance.
+Its 486 build warnings are retained, including 485 shader-warning log lines;
+this is not a warning-free build claim. The corrected source requires a new build.
 
 ## Individual-module baseline
 

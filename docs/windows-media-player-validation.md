@@ -89,7 +89,7 @@ requires complete input-alias routing, zero constants and no CPU assignments;
 an arbitrary empty graph still fails, and an alias-only module cannot certify
 GPU computation. Eight regression checks failed before implementation; 30
 audit/protocol/adapter and saved-model checks then passed with Editor exit0.
-An actual corrected Release Player run is still required.
+The [corrected actual Player matrix](results/media-player-retained-bundles-gpu-89b1ab9-20261018.json) at `89b1ab9` passed all five image/audio modules with both FP32 and Float16-weight bundles. All 72 base and 90 warm vectors passed an independent original-reference audit, Worker checks and normal process exit. This remains retained-bundle media evidence; the new model generation and full product gates remain open.
 
 The [2026-10-18 local audit](results/media-player-contracts-20261018.json) records 60 versioned Editor tests and five private checks loading the original fixtures: 65 passed, zero failed, zero skipped. Runtime/build/test source files were compared against the tested consumer snapshot. The initial unimplemented behavior and the receipt-write/auxiliary-Worker regressions were observed failing before their fixes. Raw logs, fixture bytes and NUnit XML remain private.
 

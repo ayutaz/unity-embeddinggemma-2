@@ -8,7 +8,8 @@
 - 音声の別世代候補は[全6信号の数値CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39106618371)が成功。2 profile・824,320値で元の許容差超過は0、取得した実データの独立再監査も一致しました。
 - この結果は候補の実GPU・consumer・Playerの合格を意味しません。旧世代のnative PT2モデル2件のbyte同一復旧と、必須CIの復旧は未達です。
 - #90の固定Git版 `6350aa6` を新規consumerへ導入し、Libraryを再利用せず、Windows IL2CPP / Release / High strippingの実buildに成功しました。最小consumerのコンパイルで見つかったUnityWebRequest依存の不足も修正済みです。
-- 同Player・既存FP32 bundle・Direct3D12で、音声2 profileの実行receiptは成功・GPU確認あり・process exit0です。画像squareは推論前のGPU監査で `InvalidOperationException`、exit1となり、後続のlandscape・portraitは未実行です。全vectorの独立再監査、Float16、最終モデル候補との対応付けは残っています。Direct3D11での先行音声試行の失敗も保持します。
+- 同Player・既存FP32 bundle・Direct3D12で、音声2 profileは成功・GPU確認あり・process exit0です。通常18件・warm18件を元のhash固定参照から独立再計算し、最小cosine `0.999999709769265`、全Worker監査・run identity・正常終了を確認しました。8件の意図的な破損controlも拒否しました。画像squareの先行試行は推論前のGPU監査で失敗し、後続2 profileは未実行です。Float16、最終モデル候補との対応付けは残っています。Direct3D11での先行音声試行の失敗も保持します。
+- 画像失敗の原因は、入力をそのまま出力へ渡す17区間を空graphとして一律拒否した監査でした。全181 Workerのmetadata調査と実保存モデルの入出力を確認し、CPU計算・中間flushは0でした。出力が入力を参照すること、定数なし、GPU所有、CPU割り当てなしを検証する修正を #90 の `89b1ab9` に反映しました。8 Redの後、関連30 Green・skip0・Editor exit0です。修正版の実Player検証は別gateとして残します。[checkpoint](results/media-player-input-alias-audit-20261018.json)
 - #89の最新head `3949d1a` の[CI 39112717115](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39112717115)は、Python全4環境・package・lint・通常referenceが成功、固定元モデルの6信号・集計・Required CIは失敗しました。#90のhead `6350aa6` の[CI 39112580190](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39112580190)も不合格です。
 - 以前のsource・既存bundleでのGPU動作実績は保持し、最終候補に対応する確認と区別します。
 
@@ -24,12 +25,12 @@
 
 ## 直近の優先作業
 
-1. 画像squareのGPU監査失敗を、実行source・bundle・backendの組合せで切り分けます。監査を無効にせず、原因に対する失敗テストから修正し、同じ入力で再確認します。未実行の画像2 profileもその後に実行します。
+1. 原因を特定し修正した画像監査を、新規consumerの実IL2CPP / Release / High stripping Playerで確認します。元画像・同bundle・Direct3D12を固定し、square・landscape・portraitを別のbounded processで順に実行します。metadata調査と契約テストだけではGPU数値検証の完了にしません。
 2. 既存bundleのPlayer実績と、新しい音声モデル候補の採用検証を分けます。候補からGPU用モデルを作る再現手順を固定し、元参照を変更せずFP32・Float16の全必要roleを確認します。音声の成功receiptもvector・GPU監査・正常終了を独立再監査します。
 3. 取得pinと必須CIを復旧し、PRを整理します。CIが失敗したままの統合や、旧モデルの同一bytesを復旧した扱いは行いません。
 4. 同時にMac・iOS・Androidの実行環境を確保します。端末待ちをWindows完了後に発見しないよう、必要環境と担当を工程5の前に確定します。
 
-この計画は確認済みreceiptとGitHubの状態を整理したものです。計画更新のための重いUnity再実行は行いません。Playerの生ログと元の実行証拠は非公開で保持します。
+Playerの生ログと元の実行証拠は非公開で保持します。重い再実行は具体的な修正の検証として行い、source・モデル・終了条件を固定します。
 
 ## 実行順と完了条件
 

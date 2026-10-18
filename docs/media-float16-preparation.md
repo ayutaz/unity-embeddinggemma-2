@@ -80,7 +80,7 @@ SDK `e28a5fd`、同じ固定FP32 bundle、明示した16GiB割り当てで、Pla
 プロセス全体の観測は583.01秒、ホスト生涯ピークは11,157,610,496 bytesでした。初回GPU登録中に前面化しており、FP32実行とは前面化のタイミングやcache条件を統制した速度比較ではありません。これらの値から高速化率、最低RAM、最低VRAMは主張しません。単独・連続の固定数値／順位／解放は両精度で確認できましたが、同一入力のfirst/warm/repeatと各stageのCPU／実GPU時間、新規Git consumerでのnative操作、公開cold取得、許可後の実マイクは残っています。
 
 両精度の計8枚に対する目視確認は、再生成される数値監査と分けて[描画の確認記録](results/playmode-render-visual-review-20261018.json)へ保存しています。確認したPNGのSHA256・サイズと、未実施のnative操作・再生の範囲を記録しています。
-# Explicit descriptor preparation for a new bundle
+## Explicit descriptor preparation for a new bundle
 
 `GpuMediaFloat16Preparation.PreparePinnedFromEnvironment` requires
 `EG_FLOAT16_DESCRIPTOR_SHA256` (the reviewed source bundle's lowercase SHA256)
@@ -96,3 +96,15 @@ observed ten intended missing-entry-point failures with nine existing passes,
 then 19 passes with no skips and process exit 0. This is local-file,
 no-graphics metadata/weight-conversion testing on tiny fixtures. It does not
 establish real-model GPU accuracy, half-precision computation or speedup.
+
+The subsequent [new-candidate real-model checkpoint](results/audio-candidate-float16-bundle-player-c18b4e5-20261018.json)
+at fixed Git source `c18b4e5` prepared all 285 unique audio models. All 434 source
+and derived objects, non-model coefficient bytes, two module rewrites, model
+description strings and a second private copy were independently checked.
+The actual Windows IL2CPP / Release / High stripping Player then passed both
+audio profiles with 18 base and 18 in-process warm vectors, both 270-Worker
+GPU audits, cancellation recovery, release and process exit 0. Independent
+original-reference recalculation rejected 24 corrupted controls. The binary
+was built at `89b1ab9` with the same SDK Runtime Git tree; no rebuild is claimed.
+This is not independent warm-launch, all-half arithmetic, a speedup measurement,
+other-platform acceptance or a formal release.

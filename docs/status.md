@@ -18,7 +18,7 @@
 
 [#97の最新受け入れ](results/native-distribution-integration-344f07a-20261019.json)は、全15 CI job・実アップロード7 ZIP・元参照824,320値の許容差超過0を確認し、main `4d66d92`へ統合済みです。#95・#96も統合先を記録してcloseしました。公開著者・provider署名・実main treeと履歴を確認しています。
 
-[画像GPUの24反復](candidate-media-performance.md)と[CPUの12回診断](reference-cpu-performance.md)を追加しました。最終vectorは全件一致しましたが、CPU squareは中間encoder値3要素の許容差超過でexit1です。元世代の中間参照も未回収のためCPU比較全体は未合格。手動UI残項目、音声の反復性能・CPU比較、SDK専有GPU時間・allocation、最低要件、macOS / iOS / Android実機、旧provider成果物のprivacy対応、正式SDK tag / Releaseは未完了です。[リリース計画](release-plan.md)で追跡し、Windows機能検証を全環境・性能全体・正式公開の合格には広げません。
+[画像GPUの24反復](candidate-media-performance.md)に続き、[元特徴量を使うCPUの20回診断](reference-cpu-diagnostics.md)を追加しました。最終vectorは全件一致しましたが、元の中間encoder値は画像3・音声2条件すべてで許容差超過・exit1です。元Document特徴量6件はhash・CRC・完全な私的2コピーを確認して回収し、元vision JSONは未回収です。CPU比較全体は未合格。手動UI残項目、音声のGPU反復性能、CPU差の原因、SDK専有GPU時間・allocation、最低要件、macOS / iOS / Android実機、旧provider成果物のprivacy対応、正式SDK tag / Releaseは未完了です。[リリース計画](release-plan.md)で追跡し、Windows機能検証を全環境・性能全体・正式公開の合格には広げません。
 
 数値回帰の[データpreview](results/native-regression-preview-publication-20261019.json)は全16 assetの実サイズ・hash、本文とtagを照合済みです。[明示的な恒久取得経路](native-regression-distribution.md)による全6信号・824,320値の実回帰も上記CIで合格しました。元の数値基準・採用根拠7記録を維持し、実行したclean graphのhashと保存元graphのhashを分けています。旧経路の依存棚卸しとprovider成果物の整理は別に残ります。
 

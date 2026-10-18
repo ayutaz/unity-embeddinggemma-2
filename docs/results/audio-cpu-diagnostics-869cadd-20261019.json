@@ -1,0 +1,335 @@
+{
+  "schema": 1,
+  "scope": "Actual exported-preprocessing and reviewed native-encoder CPU diagnostic chain, not a qualified CPU baseline",
+  "source": "869cadd815d76080114cf1c4f4dda93c97cb5909",
+  "conditions_measured": 2,
+  "rounds_measured": 8,
+  "final_vectors_independently_accepted": 8,
+  "intermediate_failed_conditions": 2,
+  "all_conditions_qualified": false,
+  "unchanged_encoder_atol": 1e-05,
+  "unchanged_encoder_rtol": 0.0001,
+  "conditions": [
+    {
+      "module": "audio-1119",
+      "precision": "fp32",
+      "source": "869cadd815d76080114cf1c4f4dda93c97cb5909",
+      "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+      "input_sha256": "06a56aa96f41a685ae25b4d7d0a55a15717723bb45a88a21a02546b9355e67e5",
+      "descriptor_sha256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "reference_case_id": "silence",
+      "original_encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+      "original_encoder_generation_matches_final_reference": true,
+      "executed_encoder_graph_sha256": "e4e9699657fd0c9e88d872bad6adbaddc3d43cee2e13711b10f7901cb8483165",
+      "raw_encoder_generation_graph_sha256": "406db281f6ac81a591c30e723c22e08856b8b7c302302ae54d4bee595252b887",
+      "process_exit_code": 1,
+      "qualification_success": false,
+      "preprocessor_tolerance_failures": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "encoder_tolerance_failures": [
+        240,
+        240,
+        240,
+        240
+      ],
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 3.930496499990113,
+          "process_CPU_seconds": 11.40625,
+          "independent_cosine": 0.9999999999918243,
+          "norm_squared": 1.000000077255989,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.023539300018455833,
+              "process_cpu_seconds": 0.109375,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 0.8696164000430144,
+              "process_cpu_seconds": 2.8125,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 3.037237600015942,
+              "process_cpu_seconds": 8.484375,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 3.48519330000272,
+          "process_CPU_seconds": 9.578125,
+          "independent_cosine": 0.9999999999918243,
+          "norm_squared": 1.000000077255989,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.02631350001320243,
+              "process_cpu_seconds": 0.0625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 0.9551515000057407,
+              "process_cpu_seconds": 2.546875,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.5035991999902762,
+              "process_cpu_seconds": 6.96875,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 3.2400577000225894,
+          "process_CPU_seconds": 9.90625,
+          "independent_cosine": 0.9999999999918243,
+          "norm_squared": 1.000000077255989,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.02363619999960065,
+              "process_cpu_seconds": 0.0625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 0.9152578999637626,
+              "process_cpu_seconds": 2.8125,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.301070499990601,
+              "process_cpu_seconds": 7.03125,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 3.3781020999886096,
+          "process_CPU_seconds": 10.046875,
+          "independent_cosine": 0.9999999999918243,
+          "norm_squared": 1.000000077255989,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.03271970001515001,
+              "process_cpu_seconds": 0.03125,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 0.8731484999880195,
+              "process_cpu_seconds": 2.484375,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.4720512999920174,
+              "process_cpu_seconds": 7.53125,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "load_wall_seconds": 9.178895300021395,
+      "load_process_CPU_seconds": 10.890625,
+      "host_native_peak_bytes": 4480282624,
+      "torch_threads": 4,
+      "torch_interop_threads": 4,
+      "MKL_CBWR": "AUTO",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3"
+      },
+      "private_report_sha256": "f745855eae9fe69bca528b406005c8917626490b99c06dc80b0e1c38d0262532"
+    },
+    {
+      "module": "audio-839",
+      "precision": "fp32",
+      "source": "869cadd815d76080114cf1c4f4dda93c97cb5909",
+      "reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+      "input_sha256": "01da15bbe3d53bcd41cfff6c265b53cda8222567fe760bfff96442266557c761",
+      "descriptor_sha256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "reference_case_id": "padded_noise",
+      "original_encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+      "original_encoder_generation_matches_final_reference": true,
+      "executed_encoder_graph_sha256": "aa43ba4948c879f0fcc31222dbc05cbd333c70beda2dae04da420e9e284343da",
+      "raw_encoder_generation_graph_sha256": "ca12d55e4dc221d589fa075f22ba1a80b0c8e5f4d1c8794f55a9f6cb1cebcc34",
+      "process_exit_code": 1,
+      "qualification_success": false,
+      "preprocessor_tolerance_failures": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "encoder_tolerance_failures": [
+        136,
+        136,
+        136,
+        136
+      ],
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 3.1840619000140578,
+          "process_CPU_seconds": 10.21875,
+          "independent_cosine": 0.9999999999941525,
+          "norm_squared": 1.0000000907594726,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.03144549997523427,
+              "process_cpu_seconds": 0.078125,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 0.870220499986317,
+              "process_cpu_seconds": 2.5625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.2822749000042677,
+              "process_cpu_seconds": 7.578125,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 3.2460760000394657,
+          "process_CPU_seconds": 10.296875,
+          "independent_cosine": 0.9999999999941525,
+          "norm_squared": 1.0000000907594726,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0368843000032939,
+              "process_cpu_seconds": 0.09375,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 0.8371557999635115,
+              "process_cpu_seconds": 2.640625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.3719092000392266,
+              "process_cpu_seconds": 7.5625,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 3.2531183999963105,
+          "process_CPU_seconds": 10.578125,
+          "independent_cosine": 0.9999999999941525,
+          "norm_squared": 1.0000000907594726,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0267580000218004,
+              "process_cpu_seconds": 0.0625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 0.7943396000191569,
+              "process_cpu_seconds": 2.65625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.431926299992483,
+              "process_cpu_seconds": 7.859375,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 3.043628000013996,
+          "process_CPU_seconds": 10.09375,
+          "independent_cosine": 0.9999999999941525,
+          "norm_squared": 1.0000000907594726,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.02564229996642098,
+              "process_cpu_seconds": 0.046875,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 0.8519579999847338,
+              "process_cpu_seconds": 2.59375,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.1659110999898985,
+              "process_cpu_seconds": 7.453125,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "load_wall_seconds": 9.078650199982803,
+      "load_process_CPU_seconds": 10.734375,
+      "host_native_peak_bytes": 4478906368,
+      "torch_threads": 4,
+      "torch_interop_threads": 4,
+      "MKL_CBWR": "AUTO",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3"
+      },
+      "private_report_sha256": "7a477374488b1533d58aed4f31b5705a596484ed9f9976432c78a19dcef2d133"
+    }
+  ],
+  "boundary_diagnostics": [
+    {
+      "MKL_CBWR": "AUTO",
+      "encoder_on_original_features_tolerance_failures": 240,
+      "both_actual_preprocessors_bitwise_match_original": true,
+      "diagnostic_process_exit_code": 0,
+      "model_qualified": false,
+      "scope": "One diagnostic call; exit0 means measurement completed, not numerical acceptance"
+    },
+    {
+      "MKL_CBWR": "COMPATIBLE",
+      "encoder_on_original_features_tolerance_failures": 294,
+      "both_actual_preprocessors_bitwise_match_original": true,
+      "diagnostic_process_exit_code": 0,
+      "model_qualified": false,
+      "scope": "One diagnostic call; exit0 means measurement completed, not numerical acceptance"
+    }
+  ],
+  "CPU_context_difference_cause_resolved": false,
+  "GPU_execution_claimed": false,
+  "Sentis_CPU_execution_claimed": false,
+  "complete_performance_accepted": false,
+  "raw_recordings_or_vectors_published": false
+}

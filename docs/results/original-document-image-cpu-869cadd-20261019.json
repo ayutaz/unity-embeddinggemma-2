@@ -1,0 +1,484 @@
+{
+  "schema": 1,
+  "scope": "Three CPU image diagnostic conditions using recovered original Document intermediate features; previous different-vision-generation failures remain preserved",
+  "source": "869cadd815d76080114cf1c4f4dda93c97cb5909",
+  "CPU": "AMD Ryzen 9 5900X",
+  "physical_RAM_bytes": 68628013056,
+  "torch_threads": 4,
+  "framework": "PyTorch reference",
+  "actual_backend": "CPU",
+  "original_document_feature_files_recovered": 6,
+  "original_vision_reference_JSON_recovered": false,
+  "conditions_measured": 3,
+  "rounds_measured": 12,
+  "final_vectors_independently_accepted": 12,
+  "conditions_passing_recovered_document_intermediate_check": 0,
+  "all_conditions_qualified": false,
+  "conditions": [
+    {
+      "module": "image-square",
+      "precision": "fp32",
+      "reference_case_id": "square-0",
+      "descriptor_sha256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "input_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+      "original_document_feature_sha256": "41c296d96565c9e608f8cb367cb4d5c7d6fd7c9dbf40e39605dfba858cff16f7",
+      "original_document_feature_source_artifact_id": 11893990321,
+      "process_exit_code": 1,
+      "current_intermediate_check_passed": false,
+      "preprocessor_tolerance_failures": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "original_document_encoder_tolerance_failures": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "intermediate_counts_scope": "Source-bound harness report; raw intermediate captures are not retained for this benchmark",
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 14.341643299965654,
+          "process_CPU_seconds": 48.0625,
+          "independent_cosine": 0.9999999999998873,
+          "norm_squared": 0.9999998834512749,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.011138900008518249,
+              "process_cpu_seconds": 0.015625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.231309499999043,
+              "process_cpu_seconds": 41.015625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.09911229996942,
+              "process_cpu_seconds": 7.03125,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 14.143615900014993,
+          "process_CPU_seconds": 46.765625,
+          "independent_cosine": 0.9999999999998873,
+          "norm_squared": 0.9999998834512749,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.008564200019463897,
+              "process_cpu_seconds": 0.0,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 11.60011250001844,
+              "process_cpu_seconds": 39.0,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.5348494999925606,
+              "process_cpu_seconds": 7.765625,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 13.798140400031116,
+          "process_CPU_seconds": 47.03125,
+          "independent_cosine": 0.9999999999998873,
+          "norm_squared": 0.9999998834512749,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.007601900026202202,
+              "process_cpu_seconds": 0.0,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 11.530811800039373,
+              "process_cpu_seconds": 39.4375,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.259624199999962,
+              "process_cpu_seconds": 7.59375,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 14.277231900021434,
+          "process_CPU_seconds": 48.8125,
+          "independent_cosine": 0.9999999999998873,
+          "norm_squared": 0.9999998834512749,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.007518399972468615,
+              "process_cpu_seconds": 0.015625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 11.924440500035416,
+              "process_cpu_seconds": 41.015625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.34520069998689,
+              "process_cpu_seconds": 7.78125,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "load_wall_seconds": 5.512728000001516,
+      "load_process_CPU_seconds": 7.265625,
+      "host_native_peak_bytes": 3406512128,
+      "torch_threads": 4,
+      "torch_interop_threads": 4,
+      "MKL_CBWR": "AUTO",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "private_report_sha256": "0ac1ee395975f79c492a84d80f1b7bdf8689c97b4efd0a0f20425e5c45da3bf4",
+      "GPU_FP32_warm_wall_seconds": [
+        5.227486,
+        5.0975926,
+        4.7191012
+      ]
+    },
+    {
+      "module": "image-landscape",
+      "precision": "fp32",
+      "reference_case_id": "landscape-0",
+      "descriptor_sha256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "input_sha256": "f2b3f32a22e6282b9876b98c4c5a7bbf75e7469dff933128e17d6503dd6d6e55",
+      "original_document_feature_sha256": "8406831d78f530e1864dc3aa657e98bc98d59d5875a3cfc0896e12cdde0bcf7b",
+      "original_document_feature_source_artifact_id": 11893990321,
+      "process_exit_code": 1,
+      "current_intermediate_check_passed": false,
+      "preprocessor_tolerance_failures": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "original_document_encoder_tolerance_failures": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "intermediate_counts_scope": "Source-bound harness report; raw intermediate captures are not retained for this benchmark",
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 14.198235399962869,
+          "process_CPU_seconds": 46.46875,
+          "independent_cosine": 0.9999999999997822,
+          "norm_squared": 1.0000001266092202,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.011591300019063056,
+              "process_cpu_seconds": 0.046875,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.145203099993523,
+              "process_cpu_seconds": 39.71875,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.0413635000004433,
+              "process_cpu_seconds": 6.703125,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 14.687800600018818,
+          "process_CPU_seconds": 46.953125,
+          "independent_cosine": 0.9999999999997822,
+          "norm_squared": 1.0000001266092202,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.00860080000711605,
+              "process_cpu_seconds": 0.03125,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.350671100022737,
+              "process_cpu_seconds": 39.28125,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.328443700040225,
+              "process_cpu_seconds": 7.640625,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 14.510002300026827,
+          "process_CPU_seconds": 47.984375,
+          "independent_cosine": 0.9999999999997822,
+          "norm_squared": 1.0000001266092202,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.008979199978057295,
+              "process_cpu_seconds": 0.046875,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.088149700022768,
+              "process_cpu_seconds": 40.234375,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.41279749997193,
+              "process_cpu_seconds": 7.703125,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 15.011500700027682,
+          "process_CPU_seconds": 49.421875,
+          "independent_cosine": 0.9999999999997822,
+          "norm_squared": 1.0000001266092202,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.00801560003310442,
+              "process_cpu_seconds": 0.0,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.475872600043658,
+              "process_cpu_seconds": 41.421875,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.527538199967239,
+              "process_cpu_seconds": 8.0,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "load_wall_seconds": 5.763597399985883,
+      "load_process_CPU_seconds": 8.765625,
+      "host_native_peak_bytes": 3407843328,
+      "torch_threads": 4,
+      "torch_interop_threads": 4,
+      "MKL_CBWR": "AUTO",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "private_report_sha256": "bc99910e9414f218de07ee8a7c7273680c1963540639ae94bbaa055e13526e12",
+      "GPU_FP32_warm_wall_seconds": [
+        4.9409468,
+        4.9109256,
+        4.6731875
+      ]
+    },
+    {
+      "module": "image-portrait",
+      "precision": "fp32",
+      "reference_case_id": "portrait-0",
+      "descriptor_sha256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "input_sha256": "fce3474792c6401c4bae6ac0261a386f400bac0cece977ffda86388ee6682489",
+      "original_document_feature_sha256": "8fe03fbffabaeb5b69e97864cbfce98f76616355254e2b32d6963067b4a844ab",
+      "original_document_feature_source_artifact_id": 11893990321,
+      "process_exit_code": 1,
+      "current_intermediate_check_passed": false,
+      "preprocessor_tolerance_failures": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "original_document_encoder_tolerance_failures": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "intermediate_counts_scope": "Source-bound harness report; raw intermediate captures are not retained for this benchmark",
+      "rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 14.733840300003067,
+          "process_CPU_seconds": 47.25,
+          "independent_cosine": 0.9999999999998466,
+          "norm_squared": 1.0000001679459074,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.012133699958212674,
+              "process_cpu_seconds": 0.0625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.180849900003523,
+              "process_cpu_seconds": 39.640625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.5407653999864124,
+              "process_cpu_seconds": 7.546875,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 14.76023949997034,
+          "process_CPU_seconds": 47.90625,
+          "independent_cosine": 0.9999999999998466,
+          "norm_squared": 1.0000001679459074,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.010659499967005104,
+              "process_cpu_seconds": 0.046875,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.33985519997077,
+              "process_cpu_seconds": 40.03125,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.4096232999581844,
+              "process_cpu_seconds": 7.828125,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 15.161149699997623,
+          "process_CPU_seconds": 49.40625,
+          "independent_cosine": 0.9999999999998466,
+          "norm_squared": 1.0000001679459074,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.009912699984852225,
+              "process_cpu_seconds": 0.0,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.619395499990787,
+              "process_cpu_seconds": 41.234375,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.531768800050486,
+              "process_cpu_seconds": 8.171875,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 14.867598199984059,
+          "process_CPU_seconds": 48.6875,
+          "independent_cosine": 0.9999999999998466,
+          "norm_squared": 1.0000001679459074,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.008199999982025474,
+              "process_cpu_seconds": 0.046875,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.425398499995936,
+              "process_cpu_seconds": 40.9375,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.433904599980451,
+              "process_cpu_seconds": 7.703125,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "load_wall_seconds": 5.766356899985112,
+      "load_process_CPU_seconds": 7.78125,
+      "host_native_peak_bytes": 3406897152,
+      "torch_threads": 4,
+      "torch_interop_threads": 4,
+      "MKL_CBWR": "AUTO",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "private_report_sha256": "acead6c92f9514704e87f4b672f5186b6ac2fc9d4a1f01e5a3b65cb7f21530f3",
+      "GPU_FP32_warm_wall_seconds": [
+        4.8612364,
+        4.7629525,
+        4.5954296999999995
+      ]
+    }
+  ],
+  "original_vision_encoder_regression_accepted": false,
+  "previous_failures_removed": false,
+  "complete_performance_accepted": false,
+  "GPU_execution_claimed": false,
+  "Sentis_CPU_execution_claimed": false,
+  "minimum_hardware_established": false
+}

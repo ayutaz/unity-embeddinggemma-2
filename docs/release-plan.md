@@ -2,14 +2,15 @@
 
 確認日: 2026-10-19。対象はテキスト・画像・音声のGPU推論と横断検索です。[ゴール](goal.md)の必須環境・精度条件を維持します。
 
-直近の到達点は **#97の統合と#95・#96の整理、公開経路の実数値回帰、画像のGPU反復測定とCPU診断** です。main `4d66d92` は#97 head `344f07a`と同treeで、全15 CI job・公開履歴・公開identity・provider署名を照合しました。画像のCPU診断には中間値の不一致が1条件残ります。両精度の公開取得、実マイクGPU登録、実画面、Windows混在Player全4起動とテキストの別Player 2起動の既存合格を保持し、残る操作・性能・必須実機と公開前監査を進めます。
+直近の到達点は **#97の統合と#95・#96の整理、公開経路の実数値回帰、画像のGPU反復測定と画像・音声のCPU診断** です。main `4d66d92` は#97 head `344f07a`と同treeで、全15 CI job・公開履歴・公開identity・provider署名を照合しました。元の特徴量に対するCPU診断は画像3・音声2条件とも中間値に不一致が残ります。両精度の公開取得、実マイクGPU登録、実画面、Windows混在Player全4起動とテキストの別Player 2起動の既存合格を保持し、残る操作・性能・必須実機と公開前監査を進めます。
 
 ## 現在地
 
 正式SDK tag・Releaseは未作成です。Sentisモデル配布用のpreview 2件とnative回帰データ用のpreview 1件を公開済みで、正式SDK公開とは区別します。以下は同日の実データ・GitHub照合に基づくcheckpointであり、正式候補全体の合格ではありません。
 
 - [#97の受け入れ](results/native-distribution-integration-344f07a-20261019.json)：run `39155770986` は全15 job成功。実アップロード7 ZIPのdigest・CRC・私的2コピー、元参照824,320値の許容差超過0と集計一致を独立確認しました。公開main `4d66d92` のtree・公開著者・provider署名・履歴も確認。#95・#96のexact headは取り込み済みで、統合先を本文へ記録してcloseしました。新しいGPU検証とは区別します。
-- [画像GPUの24反復](candidate-media-performance.md)は3形状×両精度・各4回で参照一致・解放・exit0です。[CPU診断](reference-cpu-performance.md)は同じ入力・FP32最終参照で3形状×4回を測定し、最終12 vectorの独立照合は成功しました。ただしsquareは中間値3要素の許容差超過でexit1、元世代の中間参照も未回収です。CPU比較全体は未合格。音声4条件のGPU測定とCPU基準、専有GPU/VRAM・最低要件も残ります。
+- [画像GPUの24反復](candidate-media-performance.md)は3形状×両精度・各4回で参照一致・解放・exit0です。初回CPU診断と、その後の[元特徴量による画像3・音声2条件の診断](reference-cpu-diagnostics.md)を区別して保存しました。後続の最終20 vectorは元参照へ独立に一致しましたが、中間encoder値は全5条件で許容差超過・exit1です。元Document特徴量6件は回収・全hash/CRCと完全な私的2コピーを確認し、元vision JSONは未回収。CPU差の原因は未確定で、CPU比較全体は未合格です。音声4条件のGPU測定、専有GPU/VRAM・最低要件も残ります。
+- [手動回帰の公開配布経路](results/manual-native-distribution-cli-tdd-20261019.json)：全6信号・full/cutと元数値gateを維持し、9件Redから関連96件Green・actionlint成功。新CLIで既存の実CI capture 824,320値を再監査し、全6 case詳細と超過0が以前の独立監査に一致しました。新しいモデル実行やsource全CIの合格ではなく、旧artifactの削除も行っていません。
 
 - [最新統合の受け入れ](results/release-integration-8649c94-acceptance-20261018.json)：head `8649c94` のRequired CIを含む15 jobと別のnative-dxgが成功。実行treeはheadと一致し、数値7 ZIPの全hash・CRC・2コピーと元参照824,320値の許容差超過0を独立確認しました。
 - 同じheadの空Git consumerでpackage 600ファイル・sample 86ファイル・公式framework 1,168ファイルを照合し、policy 34件が合格。FP32 / Float16重みの画像3・音声2と固定4 queryの実GPU PlayMode実行、各34破損controlの独立監査・正常終了が成功しました。ホストピークは14,669,389,824 / 10,761,338,880 bytesで、物理RAM確認後の明示16 GiB allowance下の結果です。既定12 GiB、SDK専有VRAM、latency、手動UI・全role・全環境の合格へは読み替えません。

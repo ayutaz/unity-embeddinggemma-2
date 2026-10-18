@@ -183,6 +183,37 @@ The candidate producer audit declares different unsplit ONNX hashes
 uploaded model contents or a metadata-only difference. Compare the actual
 candidate computation before reusing any preparation on that basis.
 
+## Actual native ONNX identity diagnostic
+
+The [component baseline](results/original-native-onnx-computation-components-20261018.json)
+adds independent hashes for model headers, the graph without dense initializers,
+initializer values, named values and initializer order, plus operator counts.
+Whole computation identity is still required for a match: equal weight values
+alone, renamed edges or reordered initializer bytes do not silently pass it.
+The component metadata is bound by a canonical JSON hash; original model bytes
+remain unchanged and no model inference was used to compute this baseline.
+
+An explicit manual diagnostic fetches each actual candidate native ONNX file and
+the producer audit, checks fixed artifact provenance and audit/model SHA256,
+then compares whole identity and components for the correct profile. A mismatch
+returns a failing job and preserves an honest completed diagnostic; input or
+parsing failures remain incomplete reports. Only the report JSON is selected
+for the matching privacy guard and 90-day upload. Models and raw logs stay out
+of that publication. Related computation/diagnostic tests passed 27 checks,
+workflow/recovery checks passed 33 and actionlint passed; actual execution is
+pending until its run is recorded separately.
+
+```sh
+gh workflow run audio-runtime-reference.yml --ref fix/privacy-guard \
+  -f diagnose_candidate_onnx_identity=true \
+  -f preserve_original_inputs=false -f preserve_candidate_distribution=false \
+  -f qualify_candidate_generation=false \
+  -f recover_golden_only=false -f recover_original_bytes=false
+```
+
+This diagnostic does not change the required original graph gate, numerical
+tolerances or any GPU/model-adoption flag.
+
 ## Remaining release conditions
 
 Even a successful numerical audit leaves `generation_qualified=false` and

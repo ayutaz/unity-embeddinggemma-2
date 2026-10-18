@@ -3,6 +3,10 @@ name: Audio native reference for runtime diagnostics
 on:
   workflow_dispatch:
     inputs:
+      diagnose_candidate_onnx_identity:
+        description: Compare both fixed candidate native ONNX files with retained original computation identities; mismatches fail and never qualify GPU
+        type: boolean
+        default: false
       preserve_original_inputs:
         description: Preserve exact original numerical JSON and six raw feature inputs without downloading or executing models
         type: boolean
@@ -49,15 +53,67 @@ permissions:
   actions: read
 
 concurrency:
-  group: audio-runtime-reference-${{ github.ref }}-${{ inputs.preserve_original_inputs && 'inputs' || inputs.preserve_candidate_distribution && 'preservation' || inputs.qualify_candidate_generation && 'candidate' || inputs.recover_golden_only && 'golden' || inputs.recover_original_bytes && 'recovery' || 'diagnostic' }}
-  cancel-in-progress: ${{ !inputs.recover_original_bytes && !inputs.recover_golden_only && !inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution && !inputs.preserve_original_inputs }}
+  group: audio-runtime-reference-${{ github.ref }}-${{ inputs.diagnose_candidate_onnx_identity && 'native-identity' || inputs.preserve_original_inputs && 'inputs' || inputs.preserve_candidate_distribution && 'preservation' || inputs.qualify_candidate_generation && 'candidate' || inputs.recover_golden_only && 'golden' || inputs.recover_original_bytes && 'recovery' || 'diagnostic' }}
+  cancel-in-progress: ${{ !inputs.recover_original_bytes && !inputs.recover_golden_only && !inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution && !inputs.preserve_original_inputs && !inputs.diagnose_candidate_onnx_identity }}
 
 jobs:
+  candidate-native-identity:
+    if: >-
+      github.event_name == 'workflow_dispatch' && inputs.diagnose_candidate_onnx_identity &&
+      !inputs.preserve_original_inputs && !inputs.preserve_candidate_distribution && !inputs.qualify_candidate_generation &&
+      !inputs.recover_golden_only && !inputs.recover_original_bytes
+    permissions:
+      contents: read
+      actions: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        profile: [frames-1119-valid-1119, frames-1119-valid-839]
+    defaults:
+      run:
+        working-directory: tools
+        shell: bash
+    env:
+      EXECUTION_SOURCE: ${{ github.sha }}
+      PROFILE: ${{ matrix.profile }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked
+      - name: Compare actual candidate ONNX computation; preserve mismatch as a failure
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.audio_candidate_onnx_identity
+          --fetch --input ../artifacts/candidate-native-private --profile "$PROFILE"
+          --source "$EXECUTION_SOURCE" --output ../artifacts/candidate-native-identity/identity.json
+      - name: Check exact diagnostic publication paths
+        if: always()
+        id: privacy_candidate_native_identity
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/candidate-native-identity/identity.json
+      - name: Preserve actual identity diagnostic without uploading model files or raw logs
+        if: ${{ always() && steps.privacy_candidate_native_identity.outcome == 'success' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: candidate-native-identity-${{ github.sha }}-${{ matrix.profile }}
+          path: artifacts/candidate-native-identity/identity.json
+          retention-days: 90
+          if-no-files-found: error
+
   preserve-inputs:
     if: >-
       github.event_name == 'workflow_dispatch' && inputs.preserve_original_inputs &&
       !inputs.preserve_candidate_distribution && !inputs.qualify_candidate_generation &&
-      !inputs.recover_golden_only && !inputs.recover_original_bytes
+      !inputs.recover_golden_only && !inputs.recover_original_bytes && !inputs.diagnose_candidate_onnx_identity
     permissions:
       contents: read
       actions: read
@@ -101,7 +157,7 @@ jobs:
   preserve-candidate:
     if: >-
       github.event_name == 'workflow_dispatch' && inputs.preserve_candidate_distribution &&
-      !inputs.qualify_candidate_generation && !inputs.recover_golden_only && !inputs.recover_original_bytes && !inputs.preserve_original_inputs
+      !inputs.qualify_candidate_generation && !inputs.recover_golden_only && !inputs.recover_original_bytes && !inputs.preserve_original_inputs && !inputs.diagnose_candidate_onnx_identity
     permissions:
       contents: read
       actions: read
@@ -149,7 +205,7 @@ jobs:
           if-no-files-found: error
 
   candidate-execute:
-    if: github.event_name == 'workflow_dispatch' && inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution && !inputs.preserve_original_inputs
+    if: github.event_name == 'workflow_dispatch' && inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution && !inputs.preserve_original_inputs && !inputs.diagnose_candidate_onnx_identity
     permissions:
       contents: read
       actions: read
@@ -220,7 +276,7 @@ jobs:
           if-no-files-found: warn
   candidate-audit:
     needs: [candidate-execute]
-    if: ${{ always() && github.event_name == 'workflow_dispatch' && inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution && !inputs.preserve_original_inputs }}
+    if: ${{ always() && github.event_name == 'workflow_dispatch' && inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution && !inputs.preserve_original_inputs && !inputs.diagnose_candidate_onnx_identity }}
     permissions:
       contents: read
       actions: read
@@ -269,7 +325,7 @@ jobs:
           retention-days: 30
           if-no-files-found: warn
   recover-golden:
-    if: github.event_name == 'workflow_dispatch' && inputs.recover_golden_only && !inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution && !inputs.preserve_original_inputs
+    if: github.event_name == 'workflow_dispatch' && inputs.recover_golden_only && !inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution && !inputs.preserve_original_inputs && !inputs.diagnose_candidate_onnx_identity
     permissions:
       contents: read
       actions: read
@@ -304,7 +360,7 @@ jobs:
           retention-days: 90
           if-no-files-found: error
   recover:
-    if: github.event_name == 'workflow_dispatch' && inputs.recover_original_bytes && !inputs.recover_golden_only && !inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution && !inputs.preserve_original_inputs
+    if: github.event_name == 'workflow_dispatch' && inputs.recover_original_bytes && !inputs.recover_golden_only && !inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution && !inputs.preserve_original_inputs && !inputs.diagnose_candidate_onnx_identity
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -420,7 +476,7 @@ jobs:
           if-no-files-found: error
   native-reference:
     if: >-
-      (github.event_name == 'workflow_dispatch' && !inputs.recover_original_bytes && !inputs.recover_golden_only && !inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution && !inputs.preserve_original_inputs) ||
+      (github.event_name == 'workflow_dispatch' && !inputs.recover_original_bytes && !inputs.recover_golden_only && !inputs.qualify_candidate_generation && !inputs.preserve_candidate_distribution && !inputs.preserve_original_inputs && !inputs.diagnose_candidate_onnx_identity) ||
       (github.event.pull_request.head.repo.full_name == github.repository &&
        contains(github.event.pull_request.labels.*.name, 'audio-runtime-diagnostics'))
     runs-on: ubuntu-latest

@@ -110,3 +110,27 @@ def test_original_input_preservation_is_exclusive_and_does_not_download_or_execu
     assert upload['with']['retention-days']=='90' and upload['with']['if-no-files-found']=='error'
     assert 'success()' in upload['if'] and "outcome == 'success'" in upload['if']
     assert not job.get('continue-on-error') and not any(s.get('continue-on-error') for s in job['steps'])
+
+
+def test_native_onnx_identity_diagnostic_keeps_mismatches_failed_and_uploads_no_models():
+    w=workflow();options=w['on']['workflow_dispatch']['inputs']
+    assert len(options)<=10 and options['diagnose_candidate_onnx_identity']['default']=='false'
+    for name in ('preserve-inputs','preserve-candidate','candidate-execute','candidate-audit','recover-golden','recover','native-reference'):
+        assert '!inputs.diagnose_candidate_onnx_identity' in w['jobs'][name]['if']
+    job=w['jobs']['candidate-native-identity']
+    assert "github.event_name == 'workflow_dispatch'" in job['if'] and 'inputs.diagnose_candidate_onnx_identity' in job['if']
+    for name in ('preserve_original_inputs','preserve_candidate_distribution','qualify_candidate_generation','recover_golden_only','recover_original_bytes'):
+        assert '!inputs.'+name in job['if']
+    assert job['strategy']['matrix']['profile']==['frames-1119-valid-1119','frames-1119-valid-839']
+    assert job['strategy']['fail-fast']=='false' and job['strategy']['max-parallel']=='2'
+    assert job['permissions']=={'contents':'read','actions':'read'}
+    assert job['timeout-minutes']=='20' and not job.get('continue-on-error')
+    commands='\n'.join(step.get('run','') for step in job['steps'])
+    assert 'embeddinggemma_tools.audio_candidate_onnx_identity' in commands and '--fetch' in commands
+    assert '--profile "$PROFILE"' in commands and '--source "$EXECUTION_SOURCE"' in commands
+    assert not any(step.get('continue-on-error') for step in job['steps'])
+    guard,upload=job['steps'][-2:]
+    assert guard['uses']=='./.github/actions/privacy-artifact-guard'
+    assert guard['with']['paths']==upload['with']['path']=='artifacts/candidate-native-identity/identity.json'
+    assert 'always()' in upload['if'] and "outcome == 'success'" in upload['if']
+    assert upload['with']['retention-days']=='90' and upload['with']['if-no-files-found']=='error'

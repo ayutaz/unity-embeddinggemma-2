@@ -34,7 +34,7 @@ def publication_files_safe(command, cwd):
             return False
     return True
 
-def decide(event, checker):
+def decide(event, checker, profile_checker=None):
     output = {'hookEventName':'PreToolUse', 'permissionDecision':'allow'}
     tool = event.get('tool_name', '')
     values = event.get('tool_input', {})
@@ -60,9 +60,11 @@ def decide(event, checker):
                 payload = json.dumps(values) if mcp_write else command
                 merge_without_public_author = (re.search(r'\bgh\s+pr\s+merge\b', command)
                     and not re.search(r'--author-email\s+\S+@users\.noreply\.github\.com\b', command))
+                creates_provider_commit = re.search(r'\bgh\s+pr\s+(?:create|edit|merge)\b',command)
                 if ('--no-verify' in command or merge_without_public_author
                         or scan_bytes(payload.encode(), '<publication-input>')
-                        or not publication_files_safe(command, event.get('cwd', Path.cwd())) or not checker()):
+                        or not publication_files_safe(command, event.get('cwd', Path.cwd())) or not checker()
+                        or creates_provider_commit and profile_checker is not None and not profile_checker()):
                     deny()
     except Exception:
         deny()

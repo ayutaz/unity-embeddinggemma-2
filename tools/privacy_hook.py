@@ -5,7 +5,7 @@ import subprocess
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from embeddinggemma_tools.privacy import reviews, scan_objects, scan_staged
+from embeddinggemma_tools.privacy import github_profile_findings, reviews, scan_objects, scan_staged
 from embeddinggemma_tools.privacy_hook import decide
 
 try:
@@ -19,7 +19,7 @@ try:
         root = Path(subprocess.check_output(['git','rev-parse','--show-toplevel'],cwd=cwd,text=True).strip())
         def checker():
             return not scan_staged(root) and not scan_objects(root, ['HEAD'], reviews(root))
-        print(json.dumps(decide(event, checker)))
+        print(json.dumps(decide(event, checker, profile_checker=lambda:not github_profile_findings())))
 except Exception:
     print(json.dumps({'hookSpecificOutput':{'hookEventName':'PreToolUse','permissionDecision':'deny',
         'permissionDecisionReason':'Privacy hook could not validate the publication; fix the checker before retrying.'}}))

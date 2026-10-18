@@ -66,3 +66,19 @@ def test_explicit_ci_source_revision_still_rejects_private_ancestors(tmp_path):
         '--root',str(root),'--revision',revision],cwd=root/'tools',capture_output=True,text=True)
     assert result.returncode==1
     assert 'private-identity' in result.stdout
+
+
+def test_linked_checkout_uses_the_installed_validator_for_all_three_hooks(tmp_path):
+    root=fixture_repo(tmp_path)
+    linked=tmp_path/'older-checkout'
+    git(root,'worktree','add','--detach',str(linked))
+    # This checkout's checker is deliberately older/broken and is not staged.
+    # Installed hooks must still audit this checkout's actual index and history.
+    (linked/'tools/embeddinggemma_tools/privacy.py').write_text('raise RuntimeError("older checkout checker")\n')
+    (linked/'safe.txt').write_text('safe linked-worktree change\n')
+    git(linked,'add','safe.txt')
+    committed=git(linked,'commit','-m','public linked checkout',check=False)
+    assert committed.returncode==0,'Installed commit hooks must use their own reviewed validator'
+    sink=tmp_path/'sink.git';git(tmp_path,'init','--bare',str(sink))
+    pushed=git(linked,'push',str(sink),'HEAD:refs/heads/main',check=False)
+    assert pushed.returncode==0,'Installed push hook must use its own reviewed validator'

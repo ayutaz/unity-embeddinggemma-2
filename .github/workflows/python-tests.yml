@@ -34,7 +34,7 @@ jobs:
           cache-dependency-glob: tools/uv.lock
       - run: uv sync --locked
       - name: Offline unit tests
-        run: uv run --locked pytest -q --junitxml=../artifacts/python-tests.xml
+        run: uv run --locked python -m pytest -q -p embeddinggemma_tools.pytest_privacy --junitxml=../artifacts/python-tests.xml
         env:
           HF_HUB_OFFLINE: '1'
           TRANSFORMERS_OFFLINE: '1'

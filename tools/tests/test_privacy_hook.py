@@ -24,6 +24,16 @@ def test_read_only_commands_are_not_blocked_by_existing_history():
     assert not denied(decide(event('git status --short'), lambda: False))
     assert not denied(decide(event('gh api repos/example/repo'), lambda: False))
 
+
+def test_provider_profile_blocks_new_pr_or_merge_even_when_source_is_clean():
+    for command in ('gh pr create --body safe','gh pr edit 1 --base main','gh pr merge 1 --squash --author-email 123+fixture@users.noreply.github.com'):
+        assert denied(decide(event(command),lambda:True,profile_checker=lambda:False))
+        assert not denied(decide(event(command),lambda:True,profile_checker=lambda:True))
+    def unavailable():
+        raise RuntimeError('private provider response')
+    assert denied(decide(event('gh pr create --body safe'),lambda:True,profile_checker=unavailable))
+    assert not denied(decide(event('gh pr view 1'),lambda:True,profile_checker=unavailable))
+
 def test_check_bypass_is_rejected_for_publication():
     assert denied(decide(event('git push --no-verify origin main'), lambda: True))
 

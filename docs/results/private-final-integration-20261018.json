@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "scope": "private_integration_of_prepared_privacy_acquisition_performance_and_media_player_changes",
+  "source_parents": [
+    "67ab1cadd527c3ec295420866decfa674d6d71ef",
+    "152299484c6f909d500adb7d022bb7a351b106ac"
+  ],
+  "selected_python_tests": {
+    "tests": 133,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "junit_plugin": "embeddinggemma_tools.pytest_privacy",
+    "private_junit_sha256": "40887f1a2601f4952806af630ca0220b74b97d0625665aa12be55a690f965087"
+  },
+  "workflow_lint": {
+    "passed": true,
+    "files": [
+      ".github/workflows/audio-runtime-reference.yml",
+      ".github/workflows/python-tests.yml",
+      ".github/workflows/native-dxg-tests.yml"
+    ]
+  },
+  "unity_runtime_package_and_validation_source_unchanged_from": "67ab1cadd527c3ec295420866decfa674d6d71ef",
+  "prior_unchanged_unity_contract_evidence": "media-player-contracts-20261018.json",
+  "unity_reexecution": false,
+  "real_gpu_execution": false,
+  "actual_release_player_execution": false,
+  "required_ci_passed": false,
+  "published": false,
+  "merged_to_main": false,
+  "reference_generation_changed": false,
+  "privacy_provider_profile_preflight": "blocked: noncanonical-github-display-name",
+  "support_ticket": 4871970,
+  "support_status_observed": "Open; only original comment; no staff response",
+  "pending_user_decisions": [
+    "Account-wide GitHub display name change to the public handle.",
+    "Separately identified model generation with unchanged original golden and full qualification gates."
+  ],
+  "scope_limits": [
+    "Selected local tools tests are not the four-environment required CI matrix.",
+    "No exact original model graphs were recovered.",
+    "Unchanged Unity contract tests are not real-model or Player evidence.",
+    "Provider PR/cache cleanup still depends on Support."
+  ]
+}

@@ -78,3 +78,10 @@ def test_reviewed_numeric_fixture_is_preserved_but_arbitrary_binary_is_not():
     assert scan_bytes(data, path, review) == []
     assert scan_bytes(data+b'changed', path, review)
     assert scan_bytes(data, 'capture.bin', {'capture.bin': review[path]})
+
+
+def test_github_ssh_service_uri_is_not_a_personal_mailbox_exception():
+    assert scan_bytes(b'git@github.com:fixture/project.git','docs/setup.md')==[]
+    assert scan_bytes(b'ssh://git@github.com/fixture/project.git','docs/setup.md')==[]
+    for address in ('git'+'@github.com','person'+'@github.com:fixture/project.git','git'+'@github.com.evil.dev:fixture/project.git'):
+        assert any(f['rule']=='personal-email' for f in scan_bytes(address.encode(),'docs/setup.md'))

@@ -36,6 +36,10 @@
 
 ## 直近の作業順
 
+### 候補モデルの保存（2026-10-18）
+
+[配布用コピーの保存CI](results/audio-candidate-distribution-ci-readback-20261018.json)は成功しました。optional debug stack traceの除去前後で両profile・全6信号のnative出力がbit一致し、metadata以外のarchive memberも検証しています。保存artifactは90日、元の候補graph・raw入力・JSON計10ファイルはhashを維持した私的な2コピーを確認済みです。公開ZIPの全bytes読み戻しは進行中で、metadata読み戻しと区別します。元の数値参照とraw入力の取得期限、GPU用モデル準備・受け入れ、必須CIの復旧が残ります。新世代の採用やGPU合格は未実施です。
+
 ### 元の数値参照の復旧と次の数値比較（2026-10-18）
 
 #89の公開head `317bae3` の[CIは終了](results/privacy-guard-ci-317bae3-20261018.json)し、Python全4環境・package・workflow lint・model referenceが成功しました。元音声モデル取得の6信号と集計は失敗し、Required CI全体は不合格です。#89・#86・#87は未マージです。

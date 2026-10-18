@@ -10,6 +10,14 @@
 - #90のPlayer検証基盤はEditor契約・元fixture読み込み79件が成功。実モデルを使うWindows Release Player検証は残っています。#90のCIは確認時点で進行中ですが、固定元モデル取得の6件と集計はすでに失敗しています。
 - 以前のsource・既存bundleでのGPU動作実績は保持し、最終候補に対応する確認と区別します。
 
+### 音声候補の保存checkpoint
+
+[保存CI 39109531607](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39109531607)が成功しました。デバッグ情報だけを除いた配布用コピーについて、両profile・全6信号のnative出力が除去前後でbit一致しています。配布artifact `12129783259` は `2027-01-16T07:56:21Z` まで保存されます。[読み戻し記録](results/audio-candidate-distribution-ci-readback-20261018.json)は公開manifestのCRCと両モデル内のmetadataを独立確認しています。アップロードされたZIP全体のSHA確認は別の実行中の取得で行い、この記録では未完了です。
+
+候補producerの元graph2件・raw入力6件・JSON2件の計10ファイルは、元のhashで私的な2コピーを確認しました。消失した旧世代graphの復旧とは区別します。公開branchは `5a064be`、保存実行sourceは `6bfc223`、統合候補のRuntimeは未変更です。必須CI・実GPU・consumer・Playerの合格には読み替えません。
+
+次は取得中のZIP全体の照合、元の数値参照とraw入力も短期artifactに依存せず取得できる経路、配布用graphからのGPUモデル準備を進めます。モデル2件を保存しただけでは、全6 moduleの公開準備手順は完了しません。
+
 ## 実行順と完了条件
 
 | 順序 | 実施内容 | 完了の判断 |

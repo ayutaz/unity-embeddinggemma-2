@@ -41,7 +41,8 @@ stage boundaries, captures, four repeated calls, numerical checks, cleanup and
 normal-exit requirements are retained. Keep raw reports private because input
 diagnostics can contain local paths; publish only independently checked summaries.
 
-Image runs now have the checkpoint below. Audio runs, matched media CPU comparisons,
+Image runs now have the checkpoint below. The [CPU diagnostic](reference-cpu-performance.md)
+records twelve real chained calls and one failing intermediate condition. Audio runs, qualified media CPU comparisons,
 final exclusive stage/load/release/VRAM evidence, minimum hardware and required
 devices remain pending. Contract tests and historical retained-model observations
 do not complete those release gates.

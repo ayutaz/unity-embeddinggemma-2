@@ -6,6 +6,8 @@
 
 ## 直近の作業順
 
+実GPU検証済みのランタイム負荷軽減は、公開取得・実マイクなどの受け入れが残るUX/取得/測定のDraft PRから分け、先に統合できる単位にする。[単独候補の監査](results/runtime-ready-integration-2a29c68-20261018.json)は、既存TDD、固定Runtimeの実モデル参照32 vectorとのsource一致、新しいpackage＋main既存sample回帰517 pass / skip0 / exit0を記録している。最新Required CIと差分の確認後にこのランタイム修正を統合し、優先1〜3全体の公開取得・実マイク・最終操作・測定欠測はそのまま残す。
+
 ### 1. 新規利用者のモデル準備
 
 固定参照・現行bundle形式を使い、空checkoutからtext / image / audioの参照・qualified graph取得、変換、bundle生成を再現可能にします。期限切れartifact、欠落・破損・revision違いからの回復も文書化します。

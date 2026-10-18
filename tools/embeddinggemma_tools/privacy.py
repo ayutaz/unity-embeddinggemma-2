@@ -15,7 +15,8 @@ SECRET = re.compile(r'\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{25
 IMAGES = {'.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.tif', '.tiff'}
 
 # Explicitly selected public profile names, scoped to the owning GitHub login.
-# This grants no exception for source commit identities, private paths or emails.
+# Local source identities still use the handle. Provider authors are checked
+# separately against the exact public pair explicitly selected by the owner.
 PUBLIC_GITHUB_DISPLAY_NAMES = {'ayutaz': frozenset({'yousan'})}
 
 def public_email(value):
@@ -113,6 +114,35 @@ def scan_identity(name, email):
     safe_name = safe_name and (name == handle or (name == 'GitHub' and email == 'noreply@github.com'))
     return [] if safe_email and safe_name else [dict(path='<commit-identity>', line=1, rule='private-identity')]
 
+
+def scan_metadata_identities(headers, *, kind):
+    """Recognize the owner's public author name in GitHub-generated metadata.
+
+    Signature-header presence describes the provider format; it does not verify
+    cryptographic authenticity. This is a privacy classification of one public
+    name/email pair, never permission to trust code or skip content checks.
+    """
+    identities = {}
+    lines = headers.splitlines()
+    for line in lines:
+        if line.startswith(('author ', 'committer ', 'tagger ')):
+            match = re.fullmatch(r'(author|committer|tagger) (.*?) <([^>]*)> -?\d+ [+-]\d{4}', line)
+            if not match or match[1] in identities:
+                raise ValueError('Malformed commit identity')
+            identities[match[1]] = (match[2], match[3])
+    provider_format = (kind == 'commit'
+                       and identities.get('committer') == ('GitHub', 'noreply@github.com')
+                       and 'gpgsig -----BEGIN PGP SIGNATURE-----' in lines
+                       and ' -----END PGP SIGNATURE-----' in lines)
+    findings = []
+    for role, (name, email) in identities.items():
+        public_provider_author = (provider_format and role == 'author'
+                                  and name in PUBLIC_GITHUB_DISPLAY_NAMES['ayutaz']
+                                  and email == '41669061+ayutaz@users.noreply.github.com')
+        if not public_provider_author:
+            findings.extend(scan_identity(name, email))
+    return findings
+
 def git(*args, root=None):
     return subprocess.check_output(['git', *args], cwd=root)
 
@@ -152,12 +182,7 @@ def scan_objects(root, revisions, reviewed=None):
                 text = data.decode('utf-8', errors='replace')
                 headers, _, message = text.partition('\n\n')
                 findings.extend(scan_bytes(message.encode(), '<commit-message>'))
-                for line in headers.splitlines():
-                    if line.startswith(('author ', 'committer ', 'tagger ')):
-                        match = re.match(r'\w+ (.*?) <([^>]*)>', line)
-                        if not match:
-                            raise ValueError('Malformed commit identity')
-                        findings.extend(scan_identity(*match.groups()))
+                findings.extend(scan_metadata_identities(headers, kind=header[1].decode('ascii')))
     finally:
         metadata.stdin.close(); metadata.stdout.close(); metadata.wait(timeout=30)
     return findings

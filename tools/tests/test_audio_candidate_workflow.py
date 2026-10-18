@@ -61,3 +61,29 @@ def test_tools_working_directory_is_created_before_any_shell_step_uses_it():
         for index,step in enumerate(job['steps']):
             if 'run' in step and step.get('working-directory','tools')=='tools':
                 assert index>checkout,'A shell step used tools before checkout created it'
+
+
+def test_candidate_preservation_is_manual_exclusive_and_uploads_only_verified_distribution():
+    w=workflow(); option=w['on']['workflow_dispatch']['inputs']['preserve_candidate_distribution']
+    assert option['type']=='boolean' and option['default']=='false'
+    for name in ('candidate-execute','candidate-audit','recover-golden','recover','native-reference'):
+        assert '!inputs.preserve_candidate_distribution' in w['jobs'][name]['if']
+    job=w['jobs']['preserve-candidate']
+    assert "github.event_name == 'workflow_dispatch'" in job['if']
+    for flag in ('qualify_candidate_generation','recover_golden_only','recover_original_bytes'):
+        assert '!inputs.'+flag in job['if']
+    assert job['permissions']=={'contents':'read','actions':'read'}
+    assert job['timeout-minutes']=='40' and not job.get('continue-on-error')
+    assert job['env']['MKL_CBWR']=='COMPATIBLE' and job['env']['MKL_DYNAMIC']=='FALSE'
+    assert job['env']['OMP_NUM_THREADS']==job['env']['MKL_NUM_THREADS']=='4'
+    commands='\n'.join(step.get('run','') for step in job['steps'])
+    assert 'embeddinggemma_tools.audio_candidate_distribution' in commands
+    assert '--fetch' in commands and '--source "$EXECUTION_SOURCE"' in commands
+    assert 'frozen_audio_chained_onnx' not in commands
+    upload=job['steps'][-1]; guard=job['steps'][-2]
+    assert guard['uses']=='./.github/actions/privacy-artifact-guard'
+    assert upload['with']['path']==guard['with']['paths']=='artifacts/candidate-distribution/**'
+    assert upload['with']['retention-days']=='90'
+    assert upload['with']['if-no-files-found']=='error'
+    assert 'success()' in upload['if'] and "outcome == 'success'" in upload['if']
+    assert not any(step.get('continue-on-error') for step in job['steps'])

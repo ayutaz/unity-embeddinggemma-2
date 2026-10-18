@@ -30,9 +30,15 @@
 
 [実CI 39117103059](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39117103059)は、source `0cee4c7` の両profileで生成・metadata監査・uploadが成功しました。[全体読み戻し](results/audio-candidate-gpu-seed-readback-0cee4c7-20261018.json)では、実ZIP全体・モデルのSHA256、全CRCと私的な2コピーが一致しています。各profileの元Tensor 1,067件の対応・変換後hash保持と、新しい学習済み重みを追加しないことを記録しました。これは変換起点の生成で、数値・GPU・新世代採用の合格ではありません。
 
+### 直接候補のGPU演算精度調整と分割
+
+[変換CI 39120142716](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39120142716)は、source `b6ede71` の両profileで成功しました。両LayerNormの逆数・平均・moment、全109 RMSと12か所のouter layout、第2stem convolutionを監査して調整し、元587 initializerのbytesを保持しました。各profileは267演算・268区間です。[全体読み戻し](results/audio-candidate-gpu-partitions-readback-b6ede71-20261018.json)では、両ZIPのSHA256、全417ファイルのCRC、planに対応する415 payloadのサイズ・hash、私的な2コピーを確認しました。生成・保存の成功であり、GPU数値照合・新世代採用は未完了です。
+
+旧モデルの検証を維持し、新候補用の別GPU gateを `a164cba` に追加しました。[出所の検査13件](results/candidate-audio-plan-guard-tdd-20261018.json)は、意図した未実装失敗から全件成功・skip0・exit0になり、実GPU fixtureもコンパイルを確認しました。これは公式Test Frameworkをembeddedにしたlocal-file/no-graphics consumerでの検証です。実モデル・固定Git・GPUの成功には数えません。次は同じ固定生成物を新規Git consumerに導入し、元の6信号・許容差で実行します。
+
 ## 直近の優先作業
 
-1. hashを固定し保存できた両profileの変換起点へ、GPU用の演算精度調整・分割を適用します。元Tensor・係数の保持を各段階で確認し、元のencoder要素別許容差・全6信号・全必要roleで実GPU検証します。既存bundleの全10条件成功や起点の生成だけを、新世代の採用判定には使いません。
+1. 両profileのGPU用演算精度調整・分割は生成と読み戻しを完了しました。次はその固定生成物を新規Git consumerへ導入し、元のencoder要素別許容差・全6信号・全必要roleで実GPU検証します。既存bundleの全10条件成功や生成だけを、新世代の採用判定には使いません。
 2. 同じ最終候補へtext・横断検索・sample操作と計測を対応付け、Playerの残件を閉じます。独立warm起動、実マイク、process RAM / VRAMと実GPU時間は、今回の内部warm反復・managed heap・wall時間から推定しません。
 3. 取得pinと必須CIを復旧し、PRを整理します。CIが失敗したままの統合や、旧モデルの同一bytesを復旧した扱いは行いません。
 4. 同時にMac・iOS・Androidの実行環境を確保します。端末待ちをWindows完了後に発見しないよう、必要環境と担当を工程5の前に確定します。

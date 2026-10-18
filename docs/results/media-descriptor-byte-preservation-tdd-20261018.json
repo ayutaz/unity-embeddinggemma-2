@@ -1,0 +1,28 @@
+{
+  "scope": "Preserve the independently pinned full descriptor bytes across host text serialization conventions",
+  "base_source": "8649c9435f502738bc9c89a27c9a09483a7719eb",
+  "red": {
+    "failed": 10,
+    "reason": "Full descriptor is reserialized and preservation/output-pin fields are missing"
+  },
+  "green": {
+    "passed": 87,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0
+  },
+  "covered": [
+    "exact compact, LF, CRLF and non-ASCII UTF-8 descriptor bytes",
+    "nested and flat remote layouts",
+    "complete module selection in either request order",
+    "subset and unreferenced objects never advertised as prepared",
+    "distinct input/output descriptor SHA256 receipts",
+    "existing real HTTPS, reuse, corruption, interruption and exclusion contracts"
+  ],
+  "host": "Windows",
+  "actual_mac_execution": false,
+  "real_model_execution_added": false,
+  "gpu_acceptance_added": false,
+  "existing_precision_or_reference_gates_changed": false,
+  "release_ready": false
+}

@@ -8,6 +8,8 @@ GitHub Release assetsを使う配布候補を準備しています。モデル�
 
 descriptorの `object_layout` は省略時または `nested` では従来の `objects/<sha>.<suffix>` URL、`flat` ではdescriptorと同じURL階層の `<sha>.<suffix>` を使います。ローカルの保存名はどちらも `objects/<sha>.<suffix>` のままです。レイアウト変更もdescriptorのSHA256に含まれ、未知の値や不一致pinはobject転送・出力作成の前に拒否します。別サーバーのobject URLをdescriptorから受け取る機能ではありません。
 
+全module・全宣言objectを準備した場合は、hashを検証した元descriptorのbytesをatomicに保存します。JSONの再整形・改行・キー順・文字escapeで固定SHAを変えません。一部moduleだけを取得した場合や未参照objectを除く場合は、準備していない宣言を含めず新しいdescriptorを作ります。receiptの `source_descriptor_bytes_preserved` と `prepared_descriptor_sha256` で、入力pinと準備後のdescriptorを区別します。[TDD checkpoint](results/media-descriptor-byte-preservation-tdd-20261018.json)は10件のRedから関連87件Greenを確認しました。LF / CRLF等の入力bytesは検査しましたが、Mac実機やGPU実行の合格ではありません。
+
 maintainer用の `embeddinggemma_tools.media_release_assets` は、hash固定の既存text / image bundleと新audio bundleを入力し、全6 moduleを持つ新しい配布候補を組み立てます。コピー対象の全source objectを照合してから新規出力を作成し、audio moduleだけを置換します。元のmodel・係数・module内容は変更せず、共有objectは重複排除します。producerと両入力descriptorのpin・producerを記録し、コピー先も全hash確認後にdescriptorと `release-assets.json` を出力します。既存出力は上書きしません。
 
 ```powershell

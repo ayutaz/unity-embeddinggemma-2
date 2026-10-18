@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "scope": "Windows full mixed Player validation implementation and no-graphics contracts; not actual Player acceptance",
+  "base_source": "7754ce4eb9e07e8b81865487b175c63dd6e93097",
+  "SDK_Runtime_changed": false,
+  "SDK_source_overlay": false,
+  "local_validation_source_overlay": true,
+  "protocol_red": {
+    "counts": {
+      "total": 21,
+      "passed": 0,
+      "failed": 21,
+      "skipped": 0
+    },
+    "process_exit_code": 2,
+    "private_process_sha256": "5ec18740691a59be42194598d70b95c60b58eb6e4ae6698bfd6cc121933146a2",
+    "private_xml_sha256": "f7d8f82a8c94ee9222fd235dd0a4d09eec058389887db2db3c8df90563bbfd52"
+  },
+  "protocol_green": {
+    "counts": {
+      "total": 21,
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0
+    },
+    "process_exit_code": 0,
+    "private_process_sha256": "0ca52e99bc370db07697cdadf3646cee84fe512ee85b68b6c88297bb3838247e",
+    "private_xml_sha256": "beb3a6f1192592f0254c55f4efcb6453ccc1ded5fb51693629081cd135c828d7"
+  },
+  "input_red": {
+    "counts": {
+      "total": 43,
+      "passed": 0,
+      "failed": 43,
+      "skipped": 0
+    },
+    "process_exit_code": 2,
+    "private_process_sha256": "bb6d5cd17e8ff2c79cd44c4d278b66dc21e3180b19b57f7bcaab981879ca8b19",
+    "private_xml_sha256": "a7695c421b94fec754c11e9c2874909bde902d674406b7049c1e51c7c606531b"
+  },
+  "input_green": {
+    "counts": {
+      "total": 64,
+      "passed": 64,
+      "failed": 0,
+      "skipped": 0
+    },
+    "process_exit_code": 0,
+    "private_process_sha256": "196262867b826db2183fbed346b61a87834f7bded4265ca4fd51c8a4bb517513",
+    "private_xml_sha256": "7eed66c69a92d198e760551230cb52eed30d0e55c5eea38c680a418ab0a90867"
+  },
+  "execution_red": {
+    "counts": {
+      "total": 22,
+      "passed": 0,
+      "failed": 22,
+      "skipped": 0
+    },
+    "process_exit_code": 2,
+    "private_process_sha256": "c4d667364c6d9c8e20b406e729260bbe409e822578d3d4705c6e83ea9014679f",
+    "private_xml_sha256": "72c7056f0c6447c6a46d977891584c9883df0cba8101bc9f02ce2f2116e74dec"
+  },
+  "initial_execution_green": {
+    "counts": {
+      "total": 86,
+      "passed": 74,
+      "failed": 12,
+      "skipped": 0
+    },
+    "process_exit_code": 2,
+    "private_process_sha256": "a55ec27b8943a118891d5a3ab6d43949eee62cf2507f512e32cde6ab84a934f6",
+    "private_xml_sha256": "2d13742b98f590c42ccc96a2de3b56d37fbc58391dd9eb949419c207847b5c1c"
+  },
+  "execution_green": {
+    "counts": {
+      "total": 86,
+      "passed": 86,
+      "failed": 0,
+      "skipped": 0
+    },
+    "process_exit_code": 0,
+    "private_process_sha256": "5fd4a110217576a9c1e9bac54fe32bf35d402fccb29545d11042e9dc1469caef",
+    "private_xml_sha256": "cb97883ee3e89409bd69a568cd3cf4b043ee4f8878ed06e7fd6d883aab6ea55a"
+  },
+  "regression_and_original_text_load": {
+    "counts": {
+      "total": 112,
+      "passed": 112,
+      "failed": 0,
+      "skipped": 0
+    },
+    "process_exit_code": 0,
+    "private_process_sha256": "b99f61652caafd200b8e07d20a995b696c2d11e9912f4bace4e161c292311bda",
+    "private_xml_sha256": "512668eb55ad6c1d7de6d3b206b890b7d70c51929b2fbb72066748b1f4c4568a"
+  },
+  "retained_initial_failure": "Cache-state rejection used InvalidDataException outside the accepted contract exception families. State errors now use InvalidOperationException; rejection gates and Red-bound tests unchanged.",
+  "test_sha256": {
+    "PlayerMixedSearchProtocolTests.cs": "259c92548eabce602b60cca4ec33b2bff1413c4fa90009dccf78a6d9d591c2e3",
+    "PlayerMixedConfigurationTests.cs": "4bfea5bc99ec7dd0472511555be2bfcf453211bc53e6efea1d2f402006548f79",
+    "PlayerMixedFixtureTests.cs": "b92ff783034b3e35f5b13f21c18044ed962f435367aa72de0981ca7fb9983028",
+    "PlayerMixedExecutionTests.cs": "bec97ab1c4fbe1b570682ba2e5dae7f2843676c933c33a924f10e9e9a1ebc021",
+    "PlayerMixedCachePolicyTests.cs": "e1150311348063cc7fba271ab952475f4e6b6625c8664394b69ca3146a496424"
+  },
+  "implementation_sha256": {
+    "Assets/Validation/Runtime/PlayerMixedCachePolicy.cs": "9a34e8099414c0fdbaeb6f294af99ce50c4ec966cf31837de702eba9dc3b9421",
+    "Assets/Validation/Runtime/PlayerMixedConfiguration.cs": "e83da9b212f56545750f356b06f13e67c4af86560b7331b316647df7adfae681",
+    "Assets/Validation/Runtime/PlayerMixedExecution.cs": "b84d74fcdcc6fbc332cd218368e877b8a7bec5e20927ed4a19ea51997d696f65",
+    "Assets/Validation/Runtime/PlayerMixedSearchFixture.cs": "bbbecaf3cd01c36ec5c8bfaeeeb6d9d3ee633aae6de5f3f83a62e10835d0685a",
+    "Assets/Validation/Runtime/PlayerMixedSearchProtocol.cs": "137e054bdf9204a4b4aa0476bfd9df2142b7bfc7c96f3a71b31388bcfc5118fb"
+  },
+  "original_text_sha256": "f316d5199c920431c7f721d43b2cedbe4a6384fb0e0664511b75bc2e98fe80fe",
+  "required_base_media_vectors": 36,
+  "required_warm_media_vectors": 45,
+  "required_mixed_documents": 18,
+  "required_queries": 4,
+  "required_rank_and_score_pairs": 72,
+  "real_model_execution_added": false,
+  "actual_Player_built": false,
+  "actual_Player_cold_warm_accepted": false,
+  "gpu_acceptance_added": false,
+  "all_platforms_accepted": false,
+  "release_ready": false
+}

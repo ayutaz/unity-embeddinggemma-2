@@ -1,8 +1,8 @@
 # 正式リリースまでの計画
 
-確認日: 2026-10-18。対象はテキスト・画像・音声のGPU推論と横断検索です。[ゴール](goal.md)の必須環境・精度条件を維持します。
+確認日: 2026-10-19。対象はテキスト・画像・音声のGPU推論と横断検索です。[ゴール](goal.md)の必須環境・精度条件を維持します。
 
-直近の到達点は **#89・#91・#92のマージ、両精度の匿名公開取得と対応長の実マイクGPU登録** です。main `c8519b5` は確認した#92 head `1d8a3a8` と同treeです。#86・#87・#90は#91へ取り込み、元PRは個別mergeせずcloseしました。実画面操作で発見したsampleのパス表示を修正し、最終操作・Player・実機・正式SDK Releaseの残件を続けます。
+直近の到達点は **#89・#91・#92・#93のマージ、両精度の匿名公開取得、対応長の実マイクGPU登録とパス表示修正後の実画面確認** です。main `3a2cf5c` は#93 head `7754ce4`と同treeで、全15 CI job・公開履歴・公開identity・provider署名を照合しました。#86・#87・#90は#91へ取り込み、元PRは個別mergeせずcloseしています。最終Windows Playerの混在検索入口は契約・回帰112件が合格し、実buildと独立cold / warmへ進めます。
 
 ## 現在地
 
@@ -13,6 +13,8 @@
 - [モデルpreview公開](results/model-preview-publication-567befb-20261018.json)：FP32 / Float16とも825 assetの実payload guardとremote size/digest、本文、producer tagを照合して公開しました。元モデルはGit / LFS外です。[匿名の空cache取得](results/public-model-consumer-8649c94-20261018.json)も両精度で実中断・再開・820 object照合・warm転送0・1 object破損修復まで成功し、公開取得モデルの5 media profile・4 query GPU PlayModeを独立監査しました。新しいsource全体の受け入れは別に追跡します。
 - [許可された実マイクGPU登録](results/native-microphone-gpu-8649c94-20261018.json)：追加で許可された8.4秒・134,400 sampleを取得し、自動停止・audio-839 GPU登録・text検索・解放・破棄が成功。実audio 270 Workerとtext 1 Workerの計算CPU fallback・中間flushは0、有限unit 768次元vectorを確認しました。1 pass・skip0・exit0です。音声は保存・外部送信せず、音声・embeddingも公開しません。source `8649c94`の追加harnessの結果であり、手動録音UI・任意音声の意味精度・他端末への読み替えはしません。
 - [descriptor bytesの保持](results/media-descriptor-byte-preservation-tdd-20261018.json)：10件Redから関連87件Green、#92最新headの必須CI・公開履歴・merge treeを確認して統合済みです。全宣言を準備した場合だけ元bytesを保持し、subsetは未取得objectを公開しません。
+- [修正後の実画面とGPU](results/native-ui-7754ce4-20261019.json)：固定Git `7754ce4`の新規consumerでpolicy等84件が合格。実マウス・キーボードによる画像・合成音声登録と全4検索を操作し、2 media vector・8順位/score・16破損control拒否を独立監査しました。GPU Workerは181 / 270 / 1、計算CPU fallback・中間flushは0、正常終了です。observer警告は保持し、全手動項目・性能全体の合格へは広げません。
+- [最終混在Playerの契約](results/final-mixed-player-contracts-20261019.json)：21・43・22件の未実装失敗から関連86件Green、既存回帰・元text bytesの実読み込み込みで112件Green。SDK Runtime・元参照・精度gateを維持し、36 base・45 warm・18文書・4検索・72順位/scoreを要求します。実Playerのbuild / GPU / 独立cold / warmは未実行です。
 
 ### 音声候補の採用経緯と固定sourceの保存記録
 
@@ -29,7 +31,7 @@
 
 7種類の証拠をcanonical JSON SHA256とSDK Runtime treeへ固定し、採用候補を使う必須数値回帰の取得経路を `58f48ac` で実装しました。27件の未実装失敗とworkflowの1件の失敗から、関連95件・actionlint成功を確認。元の全6信号・5区間・824,320値の実実行条件は維持しています。[初回選択CI 39126214004](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39126214004)は音声6信号・集計が成功し、全7 archiveの独立読み戻しでも824,320値の許容差超過0でした。ただし旧取得経路を前提とするテスト1件が各Python環境で失敗し、CI全体は不合格です。1件のローカルRedから関連111件Greenへ修正後、source `392ced7816ff5c724ccd902b0dcbf488b79cee18` の[最新CI 39127876689](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39127876689)は全15 job成功しました。Pythonの4環境、package、actionlint、通常reference、音声6信号と集計、Required CIを含みます。#89はそのheadでmain ca2ff1aへマージ済みです。これは最新CIの成功であり、新しいGPU実行や工程1全体の完了ではありません。
 
-全6 moduleの[実配布候補の組み立て](results/media-distribution-composition-567befb-20261018.json)はFP32 / Float16とも成功しました。各820 object・553モデルの元bytes・module対応・個人情報metadataを独立照合し、合計1,640ファイルの[実公開payload checker](results/model-publication-payload-guard-392ced7-20261018.json)も成功しました。flat HTTPS取得・回復とcompositionの関連77件が合格しています。モデルは未公開で、公開元からの空cache取得・取得後の最終consumer合格は未達です。
+全6 moduleの[実配布候補の組み立て](results/media-distribution-composition-567befb-20261018.json)はFP32 / Float16とも成功しました。各820 object・553モデルの元bytes・module対応・個人情報metadataを独立照合し、合計1,640ファイルの[実公開payload checker](results/model-publication-payload-guard-392ced7-20261018.json)も成功しました。flat HTTPS取得・回復とcompositionの関連77件が合格しています。その後のpreview公開・匿名の空cache取得結果は現在地の記録を参照してください。
 
 新配布候補の[サンプル検証入口](candidate-media-sample-validation.md)も準備しました。旧bundle用のpinと数値gateを維持し、新しいFP32 / Float16 descriptorと画像3・音声2 profileを別に検査します。未実装10件・cohort不足7件のRedから、旧policyを含む34件Green・skip0・Unity exit0と新fixtureのcompileを確認しました。これはlocal-file / no-graphicsの小規模検査で、実モデルのサンプル・PlayMode実行は未完了です。
 
@@ -62,7 +64,7 @@
 
 - macOS / iOS / Androidの端末・署名・build環境は、工程1と並行して先に確保します。直近の環境確認は接続Android端末0、self-hosted runner0、Mac / iOS未確定です。実行開始時に再確認します。
 - 重い取得・変換・build・回帰はGitHub Actionsを優先します。ローカルのUnity / GPU実行は必要な確認に絞り、1processずつ動かします。
-- 公開モデル取得・復帰と#92統合、許可された対応長の実マイクGPU登録は成功しました。次は「sampleの結果・エラー表示修正と画面再確認」「残る実操作・性能計測」「最終Windows Playerの独立cold / warm」です。並行して数値参照の恒久取得経路と必須端末の確保を進めます。合格・失敗・未実行とsource / modelを分けて記録します。
+- 公開モデル取得・復帰、#93までの統合、許可された対応長の実マイクGPU登録、表示修正後の画面再確認は成功しました。次は「最終混在Windows Playerの実build・独立cold / warm」「残る実操作・性能計測」です。数値参照の恒久取得経路と必須端末の確保も残っています。合格・失敗・未実行とsource / modelを分けて記録します。
 - リリース日は未確定です。統合とローカルモデルでの新規consumer受け入れは成功しました。次に公開モデルからの導入を受け入れ、工程5の端末・署名・実行担当を確定した時点で、測定・修正・環境別検証の日程を見積もります。端末が未確保のまま完了日を約束しません。
-- 次の報告は「#89の統合結果と残るPRの整理」「公開モデルからの空cache取得結果」「最終候補の操作・測定結果」の単位で行います。新しい不具合がない同一モデルの重い変換は繰り返さず、CI終了待ちと実作業時間を分けて示します。
+- 次の報告は「最終混在Windows Playerのbuildと実行」「独立cold / warmの元参照監査」「性能と必要端末の未達条件」の単位で行います。新しい不具合がない同一モデルの重い変換は繰り返さず、CI終了待ちと実作業時間を分けて示します。
 - 公開表示名 `yousan` は維持します。公開文書には相対 / 環境変数のパスだけを使い、元画像・元数値証拠は非公開で保持します。証拠画像を加工・再生成して漏えいや失敗を隠しません。

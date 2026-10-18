@@ -15,6 +15,7 @@
 | [音声API](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-embedder.md) | 非同期呼び出し・stageの所有権 |
 | [モデルのライセンス](model-license.md) | コードとモデルの利用条件・配布境界 |
 | [モデル成果物の個人情報検査](model-artifact-metadata.md) | PT2 / ONNX内部の文字列検査、原本保持とCI再開条件 |
+| [CPU参照比較の計測契約](reference-cpu-performance.md) | 固定入力の実3段chain、FP32とframeworkの比較範囲 |
 
 ## 現状と開発計画
 

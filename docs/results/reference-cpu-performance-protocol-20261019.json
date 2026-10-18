@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "scope": "Tiny CPU measurement protocol only; no real model comparison acceptance",
+  "base_source": "38dd6f08413b763b0bcaa069352ef730fc1f6371",
+  "framework": "PyTorch reference",
+  "backend": "CPU",
+  "supported_weight_representation": "fp32 only",
+  "unmatched_float16_whole_model_rounding_used": false,
+  "phases": {
+    "red": {
+      "tests": 26,
+      "failures": 26,
+      "errors": 0,
+      "skipped": 0,
+      "private_XML_sha256": "b7dee17bdbd304e80046bc74e5ba3f9ec4c12fbf350fa0c43f91608eb0764a2c"
+    },
+    "green": {
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "private_XML_sha256": "ea73892dd257940bd08007bcceccc1ac15c7048257093b83811b593c75a7fffe"
+    }
+  },
+  "red_green_test_name_sets_equal": true,
+  "intended_red_cause": "Missing measurement protocol implementation assertions",
+  "actual_three_stage_chain_no_golden_feature_substitution_tested": true,
+  "fixed_input_state_checked_before_and_after_each_round": true,
+  "non_CPU_intermediates_and_non_FP32_floating_tensors_rejected": true,
+  "original_vector_thresholds": {
+    "dimension": 768,
+    "minimum_cosine": 0.999,
+    "norm_squared_error": 0.002
+  },
+  "unparseable_or_wrong_source_profile_rejected": true,
+  "existing_output_and_capture_bytes_preserved": true,
+  "source_fingerprints_normalized_LF": {
+    "tools/embeddinggemma_tools/reference_cpu_performance.py": "df4f9a9028b50b4d4543bc3d6cda41bb1a3933fa218c459352b782688869b685",
+    "tools/tests/test_reference_cpu_performance.py": "f9d538cba2ca0a433a8cd42326ab45b838daffa7cbfbcd64aeca04e796dc4dc5"
+  },
+  "SDK_Runtime_changed": false,
+  "real_model_or_GPU_executed": false,
+  "complete_performance_accepted": false,
+  "formal_release_ready": false
+}

@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "scope": "Read-only recheck of one previously reported pre-rewrite commit and the existing provider support case; not a complete provider audit",
+  "checked_UTC": "2026-10-18T20:27:50.374862+00:00",
+  "old_commit_API_HTTP_status": 200,
+  "nonpublic_commit_email_metadata_still_present": true,
+  "safe_finding_rules": [
+    "personal-email"
+  ],
+  "private_values_or_payloads_published": false,
+  "provider_support_case_open": true,
+  "provider_reply_observed": false,
+  "provider_cleanup_complete": false,
+  "current_rewritten_outgoing_history_audit_kept_separate": true,
+  "formal_release_privacy_gate_complete": false,
+  "additional_external_message_sent": false
+}

@@ -1,6 +1,6 @@
 # 現在の対応範囲と検証状況
 
-最新checkpoint（2026-10-19）: **main `186ffc1`、PR #89・#91・#92・#93・#94マージ済み**。#94はhead `3a02fc0`の全15 CI job、実Windows Player 4起動の独立監査、merge後の同tree・公開identity・provider署名・全履歴検査を確認して統合しました。#86・#87・#90は内容を#91へ取り込み、元PRをcloseしています。READMEの導入pinもこの確認済みmainへ更新しました。
+最新checkpoint（2026-10-19）: **main `dbe39f5`、PR #98まで統合済み**。[#98の実受け入れ](results/candidate-performance-integration-869cadd-20261019.json)ではhead `869cadd`の全15 CI job・skip0、7成果物のdigest / CRC・私的2コピー、元参照824,320値の超過0と集計一致を確認しました。実mainの同tree・公開identity・provider署名・全履歴も照合済みです。SDK package・Runtimeは既存Windows Player受け入れから不変です。#95・#96は#97へ取り込んでcloseしました。以下の固定sourceの実績と、残る環境・性能・provider privacy条件を区別します。
 
 [モデルpreview](results/model-preview-publication-567befb-20261018.json)は両精度825 assetずつ公開し、全実payloadとremote digestを照合済みです。[匿名の空cache取得・中断復帰](results/public-model-consumer-8649c94-20261018.json)は両精度で成功し、warmで820再利用・転送0、1 object破損修復と全hash、公開取得モデルの5 media profile・4 query GPU実行と独立監査まで確認しました。
 
@@ -16,11 +16,13 @@
 
 [契約112件](results/final-mixed-player-contracts-20261019.json)と[cache接続7件Red→関連119件Green](results/final-mixed-player-cache-integration-20261019.json)、初期の失敗記録は保持しています。実行に使った修正版sourceは`3a02fc0`で、compiled Runtime/link hash67件とpackage 600・sample 86・公式framework 1,168ファイルを確認しました。修正版のbuild warning485件も保持し、無警告とは扱いません。
 
-[#97の最新受け入れ](results/native-distribution-integration-344f07a-20261019.json)は、全15 CI job・実アップロード7 ZIP・元参照824,320値の許容差超過0を確認し、main `4d66d92`へ統合済みです。#95・#96も統合先を記録してcloseしました。公開著者・provider署名・実main treeと履歴を確認しています。
+[#97の先行受け入れ](results/native-distribution-integration-344f07a-20261019.json)は、全15 CI job・実アップロード7 ZIP・元参照824,320値の許容差超過0を確認し、main `4d66d92`へ統合済みです。#95・#96も統合先を記録してcloseしました。公開著者・provider署名・実main treeと履歴を確認しています。
 
 [画像GPUの24反復](candidate-media-performance.md)に続き、[元特徴量を使うCPUの20回診断](reference-cpu-diagnostics.md)を追加しました。最終vectorは全件一致しましたが、元の中間encoder値は画像3・音声2条件すべてで許容差超過・exit1です。元Document特徴量6件はhash・CRC・完全な私的2コピーを確認して回収し、元vision JSONは未回収です。CPU比較全体は未合格。手動UI残項目、音声のGPU反復性能、CPU差の原因、SDK専有GPU時間・allocation、最低要件、macOS / iOS / Android実機、旧provider成果物のprivacy対応、正式SDK tag / Releaseは未完了です。[リリース計画](release-plan.md)で追跡し、Windows機能検証を全環境・性能全体・正式公開の合格には広げません。
 
 数値回帰の[データpreview](results/native-regression-preview-publication-20261019.json)は全16 assetの実サイズ・hash、本文とtagを照合済みです。[明示的な恒久取得経路](native-regression-distribution.md)による全6信号・824,320値の実回帰も上記CIで合格しました。元の数値基準・採用根拠7記録を維持し、実行したclean graphのhashと保存元graphのhashを分けています。旧経路の依存棚卸しとprovider成果物の整理は別に残ります。
+
+[provider側の最新確認](results/provider-cleanup-status-20261019.json)では、既知の書換前commitがAPIで取得でき、commit metadataに非公開メールが残っていました。既存Support案件はOpenで、返信・削除完了は未確認です。元の値・payload・Support本文は公開せず、現行の書換済み履歴・実公開payloadの監査と分けて追跡します。正式公開のprivacy条件は未達です。
 
 ## 統合前checkpointと固定sourceの検証記録
 

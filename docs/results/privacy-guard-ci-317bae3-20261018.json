@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "run_id": 39103907036,
+  "run_url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39103907036",
+  "source_sha": "317bae3353b8be99f0bb7bc5c41d9fa14484b838",
+  "status": "completed",
+  "conclusion": "failure",
+  "jobs": [
+    {
+      "name": "workflow-lint / actionlint",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "package / package",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "python / windows-latest / Python 3.14",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "python / ubuntu-latest / Python 3.13",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "model-reference / pinned-audio / execute (sine)",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "python / ubuntu-latest / Python 3.14",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "model-reference / reference",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "model-reference / pinned-audio / execute (padded_noise)",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "python / windows-latest / Python 3.13",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "model-reference / pinned-audio / execute (nyquist)",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "model-reference / pinned-audio / execute (impulse)",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "model-reference / pinned-audio / execute (silence)",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "model-reference / pinned-audio / execute (noise)",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "model-reference / pinned-audio / audit",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "name": "Required CI",
+      "status": "completed",
+      "conclusion": "failure"
+    }
+  ],
+  "missing_original_audio_graphs_resolved": false,
+  "real_model_gpu_validation_performed": false
+}

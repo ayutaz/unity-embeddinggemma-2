@@ -70,6 +70,24 @@ records this equivalent export spelling separately from normalization changes.
 The related 49 checks passed. Both failed actual runs remain failures; successful
 seed generation and subsequent numeric/GPU acceptance must still be observed.
 
+The next actual run at `0cee4c7`,
+[39117103059](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39117103059),
+succeeded for both profiles, including the textual-metadata and artifact privacy
+checks. The [complete uploaded-archive readback](results/audio-candidate-gpu-seed-readback-0cee4c7-20261018.json)
+verified both entire ZIP SHA256 values, every member CRC, both model SHA256 values
+and two exact private archive copies. The normal and padded models are
+1,231,902,161 and 1,231,902,858 bytes. Each retains all 1,067 original used Tensor
+bindings and their post-export hashes, creates no new learned parameters, and
+records two LayerNorm replacements, one equivalent copy and twelve equivalent
+Softmax spellings. There were no optional metadata fields to remove in either
+actual ONNX file; every textual protobuf field passed the producer audit.
+
+The artifacts `12132399063` and `12132404118` expire at
+`2027-01-16T09:53:22Z`. They preserve preparation seeds, not a permanent model
+distribution service. Both earlier failed runs remain failures. GPU refinements,
+partitioning, all-six original encoder tolerances, actual GPU execution, generation
+qualification and final consumer/Player correspondence remain required.
+
 ## Independent inputs and provenance
 
 - The [candidate contract](../tools/references/audio-candidate-e9de158.json)

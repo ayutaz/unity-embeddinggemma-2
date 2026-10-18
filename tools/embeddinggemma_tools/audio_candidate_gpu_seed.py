@@ -1,7 +1,8 @@
 """Derive an unqualified GPU-preparation seed from the exact saved candidate.
 
-Only the two audited native LayerNorm calls change. All other graph operations
-and their original tensor bindings are borrowed, not reloaded from a checkpoint.
+Only the two audited native LayerNorm arithmetic paths change. Saved copy and
+Softmax spellings have equivalent legacy-export bridges; original tensor
+bindings are borrowed, not reloaded from a checkpoint.
 This is preparation, not original-reference or GPU numerical acceptance.
 """
 import argparse

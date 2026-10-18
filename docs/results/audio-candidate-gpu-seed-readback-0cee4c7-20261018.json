@@ -1,0 +1,107 @@
+{
+  "success": true,
+  "source": "0cee4c7b77c89410895d52e4420816a5e66a8845",
+  "run_id": 39117103059,
+  "scope": "Actual direct saved-candidate GPU-preparation seed export and independent complete uploaded-archive readback; no numerical or GPU acceptance",
+  "results": [
+    {
+      "case": "silence",
+      "artifact_id": 12132399063,
+      "archive_sha256": "f1d458f90322972a09adf84da4f2326ae620790853fce8272ad8cb5072550864",
+      "archive_bytes": 166581791,
+      "expires_at": "2027-01-16T09:53:22Z",
+      "report_sha256": "4765d65c23ae380145eb25a13ec662d35b5ee3a0370b54ceaeda16dcd440871e",
+      "onnx_sha256": "525871a8dbccbbd75b5c521ab959588323938e58fac361d69035eb80a61d2095",
+      "onnx_bytes": 1231902161,
+      "all_zip_member_crcs_verified": true,
+      "two_exact_private_archive_copies_verified": true,
+      "native_graph_sha256": "406db281f6ac81a591c30e723c22e08856b8b7c302302ae54d4bee595252b887",
+      "changes": {
+        "replaced_normalizations": 2,
+        "normalization_widths": [
+          32,
+          128
+        ],
+        "export_equivalent_copy_count": 1,
+        "export_equivalent_softmax_count": 12,
+        "source_parameter_objects_preserved": true,
+        "preserved_tensor_bindings": 1067,
+        "source_tensor_binding_sha256": "839a6281910d673bd4d4cd15d18eedeb99b8faa1c735070116576d1af5e4159a",
+        "new_learned_parameters": 0,
+        "gpu_validated": false,
+        "generation_qualified": false
+      },
+      "metadata_audit": {
+        "optional_metadata_fields_removed": 0,
+        "computation_unchanged": true,
+        "textual_metadata_privacy_checked": true,
+        "opaque_numerical_tensor_payloads_preserved": true
+      },
+      "versions": {
+        "torch": "2.14.1+cu130",
+        "onnx": "1.23.2"
+      },
+      "node_count": 7174,
+      "initializer_count": 587
+    },
+    {
+      "case": "padded_noise",
+      "artifact_id": 12132404118,
+      "archive_sha256": "8c7fdb42c84c01d5ec342defa2452391309819aed8fa65941834c64b91139805",
+      "archive_bytes": 166581994,
+      "expires_at": "2027-01-16T09:53:22Z",
+      "report_sha256": "95fb569a029ba2c2a3aa82c95b22e3440bd351f21b68622f7610fdde5217ba49",
+      "onnx_sha256": "87a2a058da07b0ce4338769723d0dbb572a3048ae782a8db79a37e952319ee99",
+      "onnx_bytes": 1231902858,
+      "all_zip_member_crcs_verified": true,
+      "two_exact_private_archive_copies_verified": true,
+      "native_graph_sha256": "ca12d55e4dc221d589fa075f22ba1a80b0c8e5f4d1c8794f55a9f6cb1cebcc34",
+      "changes": {
+        "replaced_normalizations": 2,
+        "normalization_widths": [
+          32,
+          128
+        ],
+        "export_equivalent_copy_count": 1,
+        "export_equivalent_softmax_count": 12,
+        "source_parameter_objects_preserved": true,
+        "preserved_tensor_bindings": 1067,
+        "source_tensor_binding_sha256": "29a9ed263f320bc4b7b4519b5afd0ffd290e14df469faa81b582df5632550227",
+        "new_learned_parameters": 0,
+        "gpu_validated": false,
+        "generation_qualified": false
+      },
+      "metadata_audit": {
+        "optional_metadata_fields_removed": 0,
+        "computation_unchanged": true,
+        "textual_metadata_privacy_checked": true,
+        "opaque_numerical_tensor_payloads_preserved": true
+      },
+      "versions": {
+        "torch": "2.14.1+cu130",
+        "onnx": "1.23.2"
+      },
+      "node_count": 7179,
+      "initializer_count": 587
+    }
+  ],
+  "gpu_validated": false,
+  "numeric_acceptance": false,
+  "generation_qualified": false,
+  "schema": 1,
+  "date": "2026-10-18",
+  "run_url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39117103059",
+  "producer_conclusion": "success",
+  "source_candidate_contract_sha256": "df73e109fc6dd62e8b1fff409930042b63e6c63548865b074b593dcc70c40deb",
+  "original_failures_preserved": [
+    39116468876,
+    39116795317
+  ],
+  "original_golden_changed": false,
+  "remaining": [
+    "Apply and audit GPU-specific refinements and partitioning from these exact seeds",
+    "Compare all original encoder values and all six signals on actual GPU",
+    "Qualify the model generation and consumer/Player correspondence",
+    "Restore required CI without replacing original bytes or weakening numerical gates"
+  ]
+}

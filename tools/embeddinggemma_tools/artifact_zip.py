@@ -10,6 +10,7 @@ import re
 import subprocess
 import zlib
 import uuid
+import threading
 from concurrent.futures import ThreadPoolExecutor
 from urllib.error import HTTPError
 from urllib.request import HTTPRedirectHandler, Request, build_opener, urlopen
@@ -129,6 +130,38 @@ def http_range_fetcher(url, size, *, opener=urlopen):
     return fetch
 
 
+def renewable_http_range_fetcher(url, size, renew, *, opener=urlopen):
+    """Renew an expired artifact redirect once per range, retaining exact ranges.
+
+    Concurrent requests that used the same expired URL share one renewal. Other
+    HTTP failures and repeated forbidden responses remain failures, not retries.
+    GitHub credentials are used only by the fixed artifact redirect callback.
+    """
+    if not url.startswith('https://'):
+        raise ValueError('Artifact redirects require HTTPS')
+    lock = threading.Lock()
+    current = url
+    def fetch(start, stop):
+        nonlocal current
+        with lock:
+            attempted = current
+        try:
+            return http_range_fetcher(attempted, size, opener=opener)(start, stop)
+        except HTTPError as error:
+            if error.code != 403:
+                raise
+            error.close()
+        with lock:
+            if current == attempted:
+                replacement = renew()
+                if not replacement.startswith('https://'):
+                    raise ValueError('Renewed artifact redirect requires HTTPS')
+                current = replacement
+            replacement = current
+        return http_range_fetcher(replacement, size, opener=opener)(start, stop)
+    return fetch
+
+
 def github_artifact_reader(repo, artifact_id):
     if re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repo) is None or type(artifact_id) is not int or artifact_id <= 0:
         raise ValueError("GitHub artifact identity is invalid")
@@ -140,20 +173,23 @@ def github_artifact_reader(repo, artifact_id):
     class NoRedirect(HTTPRedirectHandler):
         def redirect_request(self, request, fp, code, message, headers, new_url):
             return None
-    request = Request(f"https://api.github.com/{endpoint}/zip", headers={
-        "Authorization": f"Bearer {token}", "User-Agent": "embeddinggemma-tools"})
-    try:
-        with build_opener(NoRedirect).open(request, timeout=60):
-            raise ValueError("GitHub artifact did not provide a signed redirect")
-    except HTTPError as error:
-        if error.code != 302:
-            raise
-        signed_url = error.headers.get("Location", "")
-        error.close()
-    if not signed_url.startswith("https://"):
-        raise ValueError("GitHub artifact signed redirect is invalid")
+    def redirect():
+        request = Request(f"https://api.github.com/{endpoint}/zip", headers={
+            "Authorization": f"Bearer {token}", "User-Agent": "embeddinggemma-tools",
+            "Cache-Control": "no-cache"})
+        try:
+            with build_opener(NoRedirect).open(request, timeout=60):
+                raise ValueError("GitHub artifact did not provide a signed redirect")
+        except HTTPError as error:
+            if error.code != 302:
+                raise
+            signed_url = error.headers.get("Location", "")
+            error.close()
+        if not signed_url.startswith("https://"):
+            raise ValueError("GitHub artifact signed redirect is invalid")
+        return signed_url
     size = metadata["size_in_bytes"]
-    return RangeReader(size, http_range_fetcher(signed_url, size)), metadata
+    return RangeReader(size, renewable_http_range_fetcher(redirect(), size, redirect)), metadata
 
 
 def main(argv=None):

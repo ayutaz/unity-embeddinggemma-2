@@ -87,8 +87,26 @@ All generation and GPU qualification flags remain false. The ordinary mandatory
 original-graph workflow and its pinned requirements remain unchanged. The small
 tests and full-profile archive check are recorded in the
 [preparation receipt](results/audio-candidate-distribution-preparation-20261018.json).
-Actual two-profile native preservation execution is still pending in that
-receipt; it is not inferred from the tiny-model test.
+That preparation receipt predates the actual execution. Subsequently,
+[preservation run 39109531607](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39109531607)
+completed successfully: both profiles and all six actual native outputs were bit
+identical before and after the debug-metadata removal. The uploaded artifact is
+`12129783259`, with expiration `2027-01-16T07:56:21Z`.
+[Independent readback](results/audio-candidate-distribution-ci-readback-20261018.json)
+verified the uploaded manifest CRC and both nested model metadata structures and
+privacy checks. It did not independently download and hash the entire uploaded
+2.45 GB archive; that limit remains explicit in the receipt. No GPU acceptance
+is inferred from native CPU comparisons.
+
+Large local transfers encountered HTTP 403 after the signed redirect's lifetime.
+The artifact reader can now renew that same fixed artifact's redirect and retry
+only the failed byte range. Renewal is bounded to one retry per range, concurrent
+requests share an updated URL, and other HTTP failures remain failures. Exact
+206, Content-Range, ZIP CRC and pinned model SHA checks remain in force; GitHub
+credentials never accompany requests to the signed blob URL. The renewal and
+existing artifact reader checks passed 26 tests, including a parallel expiry
+case and an end-to-end mocked redirect/auth separation check. This is distinct
+from the preservation run, which used the earlier reader implementation.
 
 ## Remaining release conditions
 

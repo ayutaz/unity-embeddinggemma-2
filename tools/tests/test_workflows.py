@@ -56,10 +56,10 @@ def test_audio_candidate_dispatch_keeps_original_pinned_golden_and_all_six_outpu
     assert workflow['permissions']['actions']=='read'
     steps=workflow['jobs']['native-reference']['steps']
     commands='\n'.join(s.get('run','') for s in steps)
-    assert '11814567883' in commands and 'ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9' in commands
+    assert '12127104206' in commands and 'ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9' in commands
     validation=next(s for s in steps if 'embeddinggemma_tools.pinned_audio_onnx' in s.get('run',''))
     assert 'always()' in validation['if']
-    assert '--pinned ../artifacts/pinned-audio/audio-runtime-reference' in validation['run']
+    assert '--pinned ../artifacts/pinned-audio' in validation['run']
     assert '--output ../artifacts/audio-pinned-onnx.json' in validation['run']
     assert not validation.get('continue-on-error')
     assert any(s.get('with',{}).get('path')=='artifacts/audio-pinned-onnx.json' and guarded_even_on_failure(s) for s in steps)

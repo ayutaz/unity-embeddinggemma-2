@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "run_id": 39104730468,
+  "source_sha": "317bae3353b8be99f0bb7bc5c41d9fa14484b838",
+  "conclusion": "success",
+  "artifact_id": 12127104206,
+  "archive_bytes": 6664131,
+  "archive_sha256": "e72efd0cd5a97d69d9de87928dcd65ed155f53f006db402a8448a181d7e5a31b",
+  "zip_crc_verified": true,
+  "files": [
+    {
+      "name": "audio-encoder-reference.json",
+      "bytes": 25186055,
+      "sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9"
+    },
+    {
+      "name": "audio-encoder-validation.json",
+      "bytes": 3735,
+      "sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1"
+    }
+  ],
+  "independent_private_copies_verified": 2,
+  "scope": "original_reference_json_and_audit_only",
+  "models_recovered": false,
+  "gpu_validated": false,
+  "run_url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39104730468",
+  "publication_privacy_checked": true,
+  "images_in_payload": 0
+}

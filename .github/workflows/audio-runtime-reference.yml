@@ -220,13 +220,13 @@ jobs:
           mkdir -p ../artifacts
           lscpu --json > ../artifacts/audio-host.json
           uv run --locked python -m embeddinggemma_tools.artifact_zip \
-            --repo ayutaz/unity-embeddinggemma-2 --artifact-id 11814567883 \
+            --repo ayutaz/unity-embeddinggemma-2 --artifact-id 12127104206 \
             --output ../artifacts/pinned-audio \
-            --member audio-runtime-reference/audio-encoder-reference.json \
-            --member audio-runtime-reference/audio-encoder-validation.json
+            --member audio-encoder-reference.json \
+            --member audio-encoder-validation.json
           sha256sum --check <<'EOF'
-          ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9  ../artifacts/pinned-audio/audio-runtime-reference/audio-encoder-reference.json
-          68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1  ../artifacts/pinned-audio/audio-runtime-reference/audio-encoder-validation.json
+          ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9  ../artifacts/pinned-audio/audio-encoder-reference.json
+          68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1  ../artifacts/pinned-audio/audio-encoder-validation.json
           EOF
       - name: Pin procedural PCM features against the official processor
         run: uv run --locked python -m embeddinggemma_tools.audio --output ../artifacts/audio-runtime-preprocessing
@@ -253,7 +253,7 @@ jobs:
         run: >-
           uv run --locked python -m embeddinggemma_tools.pinned_audio_onnx
           --current ../artifacts/audio-runtime-reference
-          --pinned ../artifacts/pinned-audio/audio-runtime-reference
+          --pinned ../artifacts/pinned-audio
           --output ../artifacts/audio-pinned-onnx.json
       - name: Export stages only after native reference completion
         if: ${{ always() && !inputs.encoder_only && hashFiles('artifacts/audio-runtime-reference/audio-encoder-validation.json') != '' }}

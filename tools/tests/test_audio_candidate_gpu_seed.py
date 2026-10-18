@@ -38,6 +38,11 @@ class EncoderWithCopy(Encoder):
         return super().forward(torch.ops.aten._to_copy.default(x,dtype=torch.float32))
 
 
+class EncoderWithInternalSoftmax(EncoderWithCopy):
+    def forward(self,x):
+        return torch.ops.aten._softmax.default(super().forward(x),-1,False)
+
+
 @pytest.fixture
 def saved():
     torch.manual_seed(71)
@@ -120,6 +125,26 @@ def test_legacy_copy_bridge_keeps_cast_values_and_distinct_storage(dtype):
     expected=torch.ops.aten._to_copy.default(values,dtype=torch.float32)
     assert torch.equal(actual,expected) and actual.dtype==torch.float32
     assert actual.data_ptr()!=values.data_ptr() and torch.equal(values,before)
+
+
+def test_saved_internal_softmax_exports_through_equivalent_public_operation(tmp_path):
+    values=torch.randn(1,3,128);encoder=EncoderWithInternalSoftmax().eval()
+    source=torch.export.export(encoder,(values,)).module();before=str(source.graph)
+    derived,report=module().rewrite_welford_seed(source)
+    path=tmp_path/'softmax.onnx';export_audio_native_onnx(derived,values,path)
+    actual=ReferenceEvaluator(onnx.load(path)).run(None,{'input':values.numpy()})[0]
+    with torch.no_grad():expected=derived(values).numpy()
+    np.testing.assert_allclose(actual,expected,rtol=1e-4,atol=1e-5)
+    assert str(source.graph)==before
+    assert report['export_equivalent_softmax_count']==1
+
+
+@pytest.mark.parametrize('axis',[-1,0,1])
+def test_internal_softmax_bridge_is_bit_identical_on_fixed_fp32_inputs(axis):
+    values=torch.tensor([[-10000.,-3.,0.,3.],[2.,1.,0.,-1.]])
+    actual=module()._softmax_for_export(values,axis,False)
+    expected=torch.ops.aten._softmax.default(values,axis,False)
+    assert torch.equal(actual.view(torch.int32),expected.view(torch.int32))
 
 
 def test_privacy_audit_removes_only_optional_metadata_and_rejects_private_node_names():

@@ -71,6 +71,12 @@ def _typed_copy_for_export(value, *, dtype=None, layout=None, device=None, pin_m
     return value.to(**options)
 
 
+def _softmax_for_export(value, dimension, half_to_float):
+    if value.dtype != torch.float32 or half_to_float:
+        raise ValueError('Saved seed Softmax requires original FP32 without half promotion')
+    return torch.softmax(value, dimension)
+
+
 def rewrite_welford_seed(program):
     selected = checked_normalizations(program)
     if sorted(node.args[1][0] for node in selected) != [32, 128]:
@@ -91,11 +97,14 @@ def rewrite_welford_seed(program):
         raise ValueError('Saved audio seed requires one Tensor output')
     graph.output(result[0])
     derived = torch.fx.GraphModule(program, graph)
-    copies=0
+    copies=0; softmaxes=0
     for node in graph.nodes:
         if node.op=='call_function' and node.target==torch.ops.aten._to_copy.default:
             node.target=_typed_copy_for_export
             copies+=1
+        elif node.op=='call_function' and node.target==torch.ops.aten._softmax.default:
+            node.target=_softmax_for_export
+            softmaxes+=1
     for index, node in enumerate(checked_normalizations(derived)):
         name = '_eg_welford_seed_' + str(index)
         while hasattr(derived, name): name += '_'
@@ -112,6 +121,7 @@ def rewrite_welford_seed(program):
         raise ValueError('Derived graph changed an original tensor binding')
     return derived, dict(replaced_normalizations=2, normalization_widths=[32, 128],
         export_equivalent_copy_count=copies,
+        export_equivalent_softmax_count=softmaxes,
         source_parameter_objects_preserved=True, preserved_tensor_bindings=len(bindings),
         source_tensor_binding_sha256=_binding_digest(bindings), new_learned_parameters=0,
         gpu_validated=False, generation_qualified=False)

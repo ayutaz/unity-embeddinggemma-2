@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "scope": "media_player_contracts_and_original_fixture_loading",
+  "unity_version": "6000.3.21f1",
+  "execution_environment": "Isolated Editor consumer, batchmode, nographics",
+  "source_basis": "63ddc134db1fa1c10e2533e7db8303a5dda5eef6",
+  "source_identification": "Exact normalized source hashes below; a base commit alone does not identify these new files.",
+  "source_sha256": {
+    "Assets/Validation/Editor/EmbeddingGemma.Player.Validation.Editor.asmdef": "d6b0ea4bb039766f2f483984bca41801d9f8ee2de1123f77f9e492b0332b5bfd",
+    "Assets/Validation/Editor/GpuConstantProbeBuild.cs": "a902ede5d944f5e1c4d5b27811e48fc8bc271d3f39bf9230d02d46deb5bd3df5",
+    "Assets/Validation/Editor/ValidationPlayerBuild.Android.cs": "98ec13ecd20248e18a5e22f3ffe2a1db811f9aa8c7b4945e67773f756e229c3d",
+    "Assets/Validation/Editor/ValidationPlayerBuild.Media.cs": "d038e00e14a03f212cff398d73e5d33119847788bf7d2f77521c7c072c799bd3",
+    "Assets/Validation/Editor/ValidationPlayerBuild.Sample.cs": "7a5863e5abf94a6f37c937f049d0d7ea117102549ee858adc4017a32fed96333",
+    "Assets/Validation/Editor/ValidationPlayerBuild.cs": "74a38f9b360f8e2aa07d9c61705fbfc34e9b2e8646c3de0cb4d28568bc2f7dc1",
+    "Assets/Validation/Runtime/EmbeddingGemma.Player.Validation.asmdef": "7e8e81ade67492d475bf26436f1696a1f5e32081ec80954bffaf205da7facfb3",
+    "Assets/Validation/Runtime/GpuConstantProbeChecks.cs": "1b48c5bae646c2438726f11b586bd4ea75f1893ddd63418120f830d1828684ff",
+    "Assets/Validation/Runtime/GpuConstantProbeRunner.cs": "73b8b0499d54760b9788a1d3ab8a92dd3234b0b573dc013ff898e6f4ac8589cc",
+    "Assets/Validation/Runtime/PlayerBundleCache.cs": "8e17ce94c049d97d700363cd1446f8348aeaf2f2e0dbcc34c2c84fc349960fc9",
+    "Assets/Validation/Runtime/PlayerBundleLoader.cs": "1b526f7fd4e80f87dcb3ed0a67184cebb16bb4e00b826d4a5fcfd3689d74391d",
+    "Assets/Validation/Runtime/PlayerBundleStager.cs": "b2041d88674d20ae62e272bbaffbee0e24e3d66c8d9e1ad9e110680e590f2940",
+    "Assets/Validation/Runtime/PlayerFileHash.cs": "ecf0d009a00fad2c2234f9bbe7e292ac27e05c279fe96978aae9c748af75cd91",
+    "Assets/Validation/Runtime/PlayerGpuExecutionAudit.cs": "9da459178912cd08ec45a1287bf27883439dd40471160b00c0b7910b2b95a0a5",
+    "Assets/Validation/Runtime/PlayerMediaConfiguration.cs": "c4e556ef555b8c1435a9663f8c5cfdf47ef9ce539cf3b50d45863b47532a53b4",
+    "Assets/Validation/Runtime/PlayerMediaFixture.cs": "83d7a57d762c36dde027d2873329d384e78a25a9553442beece71c287d52bb51",
+    "Assets/Validation/Runtime/PlayerMediaInput.cs": "15cd90c0a46a35c4e6fc40e9db0f04fab4a02e73258085e36b3a4532165bd7e1",
+    "Assets/Validation/Runtime/PlayerMediaProtocol.cs": "7755b5f3000332da44464845f4c4c58a21af43b2e106f306e6f8b6fba62b56f7",
+    "Assets/Validation/Runtime/PlayerMediaRunner.cs": "fecccd75fe997894ab7521e7ad0522e9bc7659d2e8b781e818adde51cb126518",
+    "Assets/Validation/Runtime/PlayerPreparedMediaModule.cs": "d5d0f83e2965d25c9c5d7683a2598e42af8b2f90b2d1f7a6151b63c74fa00756",
+    "Assets/Validation/Runtime/PlayerRunProtocol.cs": "71f5986d434b5799dd52a508fa928ea3918f57e8903d07607136cfe430b138e1",
+    "Assets/Validation/Runtime/PlayerSampleExecution.cs": "74d7c29d0ede628ab8a50da5e4fdf55f112d3059f25c55ed74dcea2d7d51ca51",
+    "Assets/Validation/Runtime/PlayerSampleRunner.cs": "ce4d97887e13ab4a613ee501d72eef56652b0959b589ee0829e753e8d37f741e",
+    "Assets/Validation/Runtime/PlayerSampleView.cs": "feb2c07c6e461c66a01c917842463acf262c4f02b82b242c2f5567318a139670",
+    "Assets/Validation/Runtime/PlayerValidation.cs": "7d07f28c3c7be9696a51e168da4057fa29a2d85ca916ffb615263e52ec4fbc09",
+    "Assets/Validation/Runtime/PlayerValidationExecution.cs": "f219eca5073a12241d90c736d6d1339875792323585a369efade8956830fb7a1",
+    "Assets/Validation/Runtime/PlayerValidationRunner.cs": "8b9e4ee9e1407569f24dae5be70eddf6410a97371af1bc27ab7b1085047a1a4b",
+    "Assets/Validation/Runtime/link.xml": "4dec1f97a8278d5c17b9e7ebe41258c43c1e5ed4721c291b1cc0a5925239a0a3",
+    "Assets/Validation/Tests/Editor/EmbeddingGemma.Player.Validation.Tests.asmdef": "d2de7d8be2b9351885f9079372bfb37b5b26398ddcef7221f79c82a5c9548b6a",
+    "Assets/Validation/Tests/Editor/GpuConstantProbeBuildTests.cs": "7c27fd54fb8cc55fef169f2cbb81f6b25d92fec41482c12c6bedf7ddd6e5b8ef",
+    "Assets/Validation/Tests/Editor/GpuConstantProbeRunnerTests.cs": "446079984d4a75d6e7ea1c2aa218f079b842a3eea0dbf27c45daf46fb8eabe70",
+    "Assets/Validation/Tests/Editor/GpuConstantProbeTests.cs": "8925c6346bdbae687782117a5bb4f75d667c2ea2d8d84e8e253ef48a80131c87",
+    "Assets/Validation/Tests/Editor/PlayerBundleCacheTests.cs": "3659fc8f87e0160860a51fe62df9fd4d47823ea794274e607b18f75f33613363",
+    "Assets/Validation/Tests/Editor/PlayerBundleLoaderTests.cs": "f29bef80e0f7a7f5ef54772524ab5c06b457b5d13306358870451d01b4907937",
+    "Assets/Validation/Tests/Editor/PlayerBundleStagerTests.cs": "27ab9fce0d1d34b6a13cd702af916d78b2ec19e8b30de6ba022c3d0bfe28f0b6",
+    "Assets/Validation/Tests/Editor/PlayerFileHashTests.cs": "43eb68a311c204f8a19723c3655af9eea41e58fbdba38a6d22d8402686586be0",
+    "Assets/Validation/Tests/Editor/PlayerGpuExecutionAuditTests.cs": "8175982d4f8d5a3175616b14e937f4c2d32aae6982af3843bfd232d4083694c4",
+    "Assets/Validation/Tests/Editor/PlayerMediaConfigurationTests.cs": "a485d538f38bccc419b41aa2a9901169f213061a028d81a1a541a3f26a7d4aa9",
+    "Assets/Validation/Tests/Editor/PlayerMediaFixtureTests.cs": "c82ab5ff09e8bd9b3d82a754f1f62282bbcb71ab8fc4d113befb09e8ecad86da",
+    "Assets/Validation/Tests/Editor/PlayerMediaInputTests.cs": "12e48cff4dd69c806fdfb16dc4b970df27ccf6111960dab2e256161011a5f520",
+    "Assets/Validation/Tests/Editor/PlayerMediaProtocolTests.cs": "9208aa931ba3357f2ad02cdfb8986de1456005aebe75a0def59917aa9c6152dc",
+    "Assets/Validation/Tests/Editor/PlayerPreparedMediaModuleTests.cs": "2db599dc4989d3aba0ef559cf15ca396b9f3fe558afa3c8be187886614675409",
+    "Assets/Validation/Tests/Editor/PlayerRunProtocolTests.cs": "74fbbdc53a56e620287274fa599369b665b98f086ad3e74ad059dbb858ed6fbf",
+    "Assets/Validation/Tests/Editor/PlayerSampleExecutionTests.cs": "7d3cf3fd588693fb39745aa35b9e3777b69ddcc1968e12b8e1dbe6326f37ed78",
+    "Assets/Validation/Tests/Editor/PlayerSampleValidationTests.cs": "9cb3faef415b4751744ff56f26a8c1bd036643afb87ab752eeb2ee29cba81c27",
+    "Assets/Validation/Tests/Editor/PlayerValidationTests.cs": "b510492e8313df7a1414f5bc4e5c4e161063e83542185130ad02a0a8e5848cb8",
+    "Assets/Validation/Tests/Editor/ValidationAndroidBuildTests.cs": "d354cfe55617fa0f9fcc01144a698f38be134cf16c302d513a4781a7745c677a",
+    "Assets/Validation/Tests/Editor/ValidationPlayerBuildMediaTests.cs": "1e841a7fb2102aec908873a0d41ae9c37476129d9e38f91409f476bc09d39f04",
+    "Assets/Validation/Tests/Editor/ValidationPlayerBuildTests.cs": "4a95093c2367284c486a945e45b142a8fa061bfda17bd08752ef80be93d4e1ed"
+  },
+  "tests": {
+    "passed": 65,
+    "failed": 0,
+    "skipped": 0,
+    "versioned_tests": 60,
+    "private_original_fixture_checks": 5,
+    "groups": {
+      "EmbeddingGemma.Validation.Tests.PlayerGpuExecutionAuditTests": 5,
+      "EmbeddingGemma.Validation.Tests.PlayerMediaConfigurationTests": 8,
+      "EmbeddingGemma.Validation.Tests.PlayerMediaFixtureLocalSmokeTests": 5,
+      "EmbeddingGemma.Validation.Tests.PlayerMediaFixtureTests": 18,
+      "EmbeddingGemma.Validation.Tests.PlayerMediaInputTests": 10,
+      "EmbeddingGemma.Validation.Tests.PlayerMediaProtocolTests": 7,
+      "EmbeddingGemma.Validation.Tests.PlayerPreparedMediaModuleTests": 2,
+      "EmbeddingGemma.Validation.Tests.ValidationPlayerBuildMediaTests": 2,
+      "EmbeddingGemma.Validation.Tests.ValidationPlayerBuildTests": 8
+    }
+  },
+  "tdd_phases": {
+    "red3": {
+      "passed": 0,
+      "failed": 6,
+      "skipped": 0,
+      "private_xml_sha256": "1e06a4b62bfc0315497008847b5cc92b74fede973749deaabfe4f14eed611914"
+    },
+    "input-red-protocol-green": {
+      "passed": 6,
+      "failed": 10,
+      "skipped": 0,
+      "private_xml_sha256": "7a861fac334b694f72f6b1d67bba34a6751375e3c070663a9d63f723acf1adcc"
+    },
+    "fixture-build-red": {
+      "passed": 29,
+      "failed": 20,
+      "skipped": 0,
+      "private_xml_sha256": "d36bf36b339e66d9aaccc5301246934beba9bc33f8a39dac14e9e84759da3c17"
+    },
+    "config-red-fixture-green": {
+      "passed": 49,
+      "failed": 8,
+      "skipped": 0,
+      "private_xml_sha256": "9f7abd3e7681ed0d225dd8c47b13eddbd73cb287b5fec23535e272bfbcc147bd"
+    },
+    "writer-red-config-green": {
+      "passed": 57,
+      "failed": 1,
+      "skipped": 0,
+      "private_xml_sha256": "1b2658a15a34f35d928aa9af194fdd9ab84a609acdf95feab8071fd90b194b9e"
+    },
+    "all-green": {
+      "passed": 63,
+      "failed": 0,
+      "skipped": 0,
+      "private_xml_sha256": "8196e5110ca1499b4d2ccc74f4df8187549d9552f84c04356202ca5b308ddf0c"
+    },
+    "auxiliary-worker-red": {
+      "passed": 64,
+      "failed": 1,
+      "skipped": 0,
+      "private_xml_sha256": "c48fa3af8522a6761b058f03823feb05c7b2e3a6fe12a8210b14d5f366b1a6ee"
+    },
+    "final-green": {
+      "passed": 65,
+      "failed": 0,
+      "skipped": 0,
+      "private_xml_sha256": "12a761b877a43ef7f5ea2f1ae892141e3aa828d6d26df55ae8f86fa86876e35b"
+    }
+  },
+  "real_model_execution": false,
+  "actual_gpu_execution": false,
+  "actual_player_build": false,
+  "full_multimodal_acceptance": false,
+  "model_generation_qualified": false,
+  "process_terminal": true,
+  "process_exit_code": null,
+  "process_exit_code_note": "The launch receipt retained the PID and NUnit results, not the operating-system exit code.",
+  "private_smoke_source_sha256": "9ff04439823d020b62db624b137653abf50bef06452b280e04b87af5aa83127b",
+  "raw_logs_and_xml": "Retained privately; their hashes do not certify upload safety.",
+  "images_added_for_publication": 0,
+  "remaining": [
+    "Publish only after provider identity recurrence is resolved.",
+    "Qualify the selected model generation and pass Required CI.",
+    "Build and execute real Release IL2CPP High Player against the final candidate.",
+    "Complete roles, search, UI, switching, cancellation during real work, independently bounded cold/warm memory and VRAM acceptance."
+  ]
+}

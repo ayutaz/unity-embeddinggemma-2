@@ -68,6 +68,8 @@ Editorでは[検索割り当て・空/再利用Library](editor-search-allocation
 
 1〜3で安定したcandidateを使い、画像・音声sampleの配置・cache・切替・失敗回復をPlayerへ接続します。
 
+先行作業として[画像・音声の固定入力Player検証基盤](windows-media-player-validation.md)を私的なbranchで準備しています。元の参照・入力hash、5 profile、全最終vector、GPU Worker割当、キャンセル後の復帰と解放を記録します。契約テスト・元入力の読み込みと、実際のRelease build・GPU実行は別に判定し、この基盤だけで全体合格にはしません。
+
 **完了条件**：IL2CPP / Release / High stripping、実モデルと全モダリティの固定順位・score、実GPU、独立cold / warmの終了code0を記録すること。旧text Playerの証拠を流用しません。
 
 ### 5. 必須他環境の受け入れ

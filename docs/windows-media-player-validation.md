@@ -1,0 +1,60 @@
+# Windows image/audio Player validation
+
+Status: private implementation candidate. Editor contract tests and original-fixture loading are separate from an actual Release Player build or real-model GPU acceptance. Neither a new model generation nor the final multimodal product is qualified by this harness alone.
+
+`ValidationPlayerBuild.BuildWindowsMedia(outputExe, sourceCommit)` prepares a Windows x64 IL2CPP / Release / High-stripping build. It uses an empty generated scene and the unique `EmbeddingGemmaMediaValidationBuild` resource marker. Existing text validation and ordinary Players do not receive this marker. Build settings and scenes are restored on success and failure, and an injected build cannot produce a successful build receipt.
+
+## Inputs and invocation
+
+Use an empty output directory, a full reviewed source commit, the resolved SDK, and the repository's validation assemblies. Keep the prepared model bundle and original inputs outside Git. Build receipts and model-generation qualification must identify the same source/model candidate before a run can contribute to final acceptance.
+
+The fixture root contains these original files:
+
+| Relative file | Purpose |
+| --- | --- |
+| `image-embedding-reference.json` | Original final document vectors, pinned SHA256 `90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac` |
+| `vision/vision-reference.json` | Original image reference, hash checked without materializing its large intermediate arrays |
+| `vision/vision-validation.json` | Pinned original image-file hashes and sizes |
+| `vision/{square,landscape,portrait}/{0,1}.png` | Six original input PNGs; bytes are not regenerated |
+| `audio-embedding-reference.json` | Original final document vectors, pinned SHA256 `281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001` |
+| `audio/audio-validation.json` | Pinned original PCM/mask hashes and sizes |
+| `audio/{case}-pcm-fp32.bin`, `audio/{case}-samples-int32.bin` | Complete original 179200-sample arrays for all six audio cases |
+
+Image-source/audit and audio-audit hashes are fixed in `PlayerMediaFixture`. Input paths must be canonical and relative. PCM masks must be a binary real prefix; padding remains exactly zero. Wrong profiles, amplitudes outside the SDK range and nonfinite values are rejected rather than truncated or clipped.
+
+Launch the built executable with a compute graphics device. Do not use `-nographics` for real GPU execution. For example, with environment variables identifying privately retained inputs:
+
+```powershell
+& $env:EG_MEDIA_PLAYER_EXE -force-d3d11 `
+  --embeddinggemma-media-bundle $env:EG_MEDIA_BUNDLE `
+  --embeddinggemma-media-fixtures $env:EG_MEDIA_FIXTURES `
+  --embeddinggemma-media-module image-square `
+  --embeddinggemma-media-precision fp32 `
+  --embeddinggemma-media-descriptor $env:EG_MEDIA_DESCRIPTOR_SHA256 `
+  --embeddinggemma-media-output $env:EG_MEDIA_RESULT `
+  --embeddinggemma-media-run-id $env:EG_MEDIA_RUN_ID
+```
+
+Every argument is explicit. The descriptor digest is 64 lowercase hex digits; the unique run ID is 32. The output must not already exist. `float16` selects the existing 0.99 vector-cosine threshold; `fp32` selects 0.999. An independent qualification receipt must tie this precision to the actual pinned bundle. Supplying a descriptor hash does not qualify a model generation.
+
+Run each fixed module in a separate bounded process:
+
+| Module | Fixed document cases |
+| --- | ---: |
+| `image-square` | 2 |
+| `image-landscape` | 2 |
+| `image-portrait` | 2 |
+| `audio-1119` | 5 |
+| `audio-839` | 1 |
+
+## Evidence and remaining acceptance
+
+The runner checks every input/reference hash before loading models, verifies all live Sentis Worker assignments before and after execution, captures final 768-dimensional vectors, and applies the existing finite/unit-length and cosine gates. It times the first successful inference before cancellation probes, tests a pre-cancelled and a pending API call, then checks three successful warm repetitions and release. Receipt-write failures still attempt session release.
+
+Pending-call cancellation occurs at the first asynchronous yield; it does not certify interruption during a submitted GPU kernel. Timings include preprocessing, scheduling, fences and final vector readback. Managed-heap samples are not process peak or VRAM measurements. Raw exception logs stay private; shareable receipts use exception types and relative fixture names rather than local paths. All outgoing receipts still require the project privacy scan. No screenshot is produced by this runner.
+
+Injected contract execution always has `gpu_verified=false`. Only successful execution through the sealed prepared-module adapter inside the actual Windows Player can set the per-module GPU flag. The receipt always keeps `full_multimodal_acceptance=false` and `model_generation_qualified=false`: final acceptance additionally needs the existing text suite, all required roles, mixed search ranks/scores, sample UI, switching, cancellation during real work, independently bounded cold/warm processes, process/VRAM measurement, source/model audits and successful required CI. Preserve all unsuccessful or missing runs separately.
+
+Actual Release compilation, IL2CPP reflection preservation and real-model execution remain unverified for this candidate until those runs occur. Contract tests, fixture parsing and build-option injection do not prove them.
+
+The [2026-10-18 local audit](results/media-player-contracts-20261018.json) records 60 versioned Editor tests and five private checks loading the original fixtures: 65 passed, zero failed, zero skipped. Runtime/build/test source files were compared against the tested consumer snapshot. The initial unimplemented behavior and the receipt-write/auxiliary-Worker regressions were observed failing before their fixes. Raw logs, fixture bytes and NUnit XML remain private.

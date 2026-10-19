@@ -1,0 +1,77 @@
+{
+  "success": true,
+  "scope": "Pinned original audio CPU input/reference loader, synthetic TDD and actual retained-byte admission only",
+  "original_preprocessing_reference_sha256": "1209e2f95df2d0527db23d9185e01c38289b365c46e623e03d3e9ce26f8dfcf8",
+  "original_encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+  "original_Document_reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+  "source_snapshot_inputs": {
+    "config.json": "b8f1e9931b57fbc054acdb445c41765d55b0074c58d145fa82839941ad1b5bb3",
+    "config_sentence_transformers.json": "031e56a498d33c349ab489a21885bcfe25b4fcba841149dc99e1e90d4a7c28f5",
+    "model.safetensors": "197a32965d4b1105faf060417baa899e193fb73cd401f42ec9295234d5553d79",
+    "processor_config.json": "168f6a08522f3ce5dea596d94d003af2fd691742d4f41fe1f9d8cce76bfbf69c",
+    "tokenizer.json": "4d777ef5bdc1aa36227abdfb77c3e49e7b9c892d16e1b6bda41c393504828be4",
+    "tokenizer_config.json": "17bd5d6e9364ca49a534e1502076593317c298d4a663623091ed45388f004874"
+  },
+  "cases": [
+    {
+      "id": "silence",
+      "profile": "frames-1119-valid-1119",
+      "input_sha256": "06a56aa96f41a685ae25b4d7d0a55a15717723bb45a88a21a02546b9355e67e5",
+      "waveform_values": 179200,
+      "frame_count": 1119,
+      "original_encoder_shape": [
+        280,
+        512
+      ],
+      "raw_PCM_SHA256": "c9c9803e19adb2d139ad00b54f4af71f80c2b2530b10828a913b5b82c18559b8",
+      "sample_mask_SHA256": "566ca677807f155211b10c5da2e5cc4f6b9f0dfd69107d123ef042451d1eac8d"
+    },
+    {
+      "id": "padded_noise",
+      "profile": "frames-1119-valid-839",
+      "input_sha256": "01da15bbe3d53bcd41cfff6c265b53cda8222567fe760bfff96442266557c761",
+      "waveform_values": 179200,
+      "frame_count": 839,
+      "original_encoder_shape": [
+        210,
+        512
+      ],
+      "raw_PCM_SHA256": "ca189983f2a78b942e20d70ddaf77b71aade9eb75ccc7c6b645f764427cc0e91",
+      "sample_mask_SHA256": "61bd8a396bb9df446e6c4c8e8684428147150c79f159a2194469a94b7a3971ce"
+    }
+  ],
+  "model_executed": false,
+  "CPU_reference_comparison_qualified": false,
+  "GPU_validated": false,
+  "complete_performance_accepted": false,
+  "formal_release_created": false,
+  "checked_date_JST": "2026-10-20",
+  "implementation_normalized_LF_SHA256": "59f1ddc3445a187aa1057d80eb67c3a06248f7a2c4035d41e7c0df863b5149f0",
+  "initial_missing_module_red": 19,
+  "initial_green": 19,
+  "snapshot_union_red": {
+    "failed": 1,
+    "passed": 19
+  },
+  "explicit_original_case_role_red": {
+    "failed": 1,
+    "passed": 1,
+    "deselected": 20
+  },
+  "final_related_green": {
+    "passed": 159,
+    "skipped": 0
+  },
+  "original_global_audit_success_not_reinterpreted": true,
+  "original_cases_explicit_document_roles_checked": true,
+  "readonly_arrays_cannot_be_made_writeable": true,
+  "original_raw_inputs_and_reference_bytes_unchanged": true,
+  "model_graph_or_snapshot_weight_bytes_not_read_by_loader": true,
+  "tests": [
+    "tools/tests/test_audio_cpu_cohort.py",
+    "tools/tests/test_audio_cpu_encoder.py",
+    "tools/tests/test_onnx_cpu_comparison.py",
+    "tools/tests/test_reference_cpu_performance.py",
+    "tools/tests/test_image_cpu_reference.py"
+  ]
+}

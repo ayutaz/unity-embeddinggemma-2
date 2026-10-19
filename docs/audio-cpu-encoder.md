@@ -28,7 +28,7 @@ boolean indexの追加1件失敗 / 25件成功から、関連137件成功・skip
 既存の4反復測定へつなぎ、出力の受け渡しと解放を確認しました。
 
 このadapterで実EmbeddingGemmaモデルを動かした証拠ではありません。
-固定snapshotの実モデルによる実測CLIの実行と、CIへの接続が残ります。
+固定snapshotの実モデルによる実測CLIのCI実行と、成果物の独立照合が残ります。
 既存の実encoderだけの120 captureの結果とも分けて扱います。CPU比較全体、
 同じhardwareでのCPU/GPU性能、必須端末と正式公開は未完了です。
 
@@ -78,10 +78,42 @@ uv run --locked --group cpu-comparison python -m embeddinggemma_tools.audio_cpu_
 ```
 
 これは配置済みの元データ・同一sourceのgraph/reportを前提とする入口です。
-元データの公開取得経路・CI接続と実モデル実行は未完了です。旧artifactが取得不能な
-場合に、参照・モデルを再生成して元のものとして置き換えません。
+下記の入力配置と手動CIを実装しましたが、実モデルのCI実行は未完了です。
+旧artifactが取得不能な場合に、参照・モデルを再生成して元のものとして置き換えません。
 
 [測定・capture audit・CLIのTDD](results/audio-cpu-reference-tdd-20261020.json)は、
 未実装8 errors、auditorの10 failures、CLI / admissionの3 failuresを経て、
 新規21件・関連180件成功・skip0です。合成CPU moduleによる検証であり、実モデル
 のPCM→最終vector・同じhardwareのCPU/GPU性能・GPU受け入れの証拠ではありません。
+
+## 元バイト列と一致する手続き入力と手動CI
+
+`tools/references/audio-cpu-original/`の3 JSONは、保持済みの元前処理参照・auditと
+Document最終参照の変更していない309,947 bytesです。完全なhashと全テキストの
+privacy検査を行い、Gitの改行変換も対象3ファイルだけ無効にします。大きいencoder
+JSONと元のfeaturesは既存の固定公開配布から取得し、モデル・PCMをGitへ追加しません。
+
+`audio_cpu_inputs`は無音と固定seed17のpadded_noiseのPCM・sample / frame maskを
+CPUで再現します。これは入力の再構成であり、元artifactの取得と区別します。
+元の演算順とpaddingの負のzero bitsを維持し、6 bufferすべての全size / SHA256が
+元auditと一致することを必須にします。元参照やモデル、期待値は再生成しません。
+参照featuresは固定公開配布の元バイト列を比較用にコピーし、実推論へ代入しません。
+
+```sh
+uv run --locked python -m embeddinggemma_tools.audio_cpu_inputs --encoder-reference ../artifacts/original --output ../artifacts/audio-cpu-inputs --fetch-missing-inputs --source "$GITHUB_SHA"
+```
+
+`--fetch-missing-inputs`は、元encoder参照のmanifestと固定公開配布の両方に対応する
+2つの小さい入力bufferだけを補います。既存の不一致ファイルは上書きせず拒否します。
+配置後に既存のcohort loaderも独立に元hash・shape・case・roleを照合します。
+
+**Frozen native CPU context diagnostics**で`audio_cpu_measurement=true`だけを選ぶと、
+2条件を別々のUbuntu jobで実行します。手続き入力の完全一致を確認してから、同じ
+sourceの実5分割graphを一度だけ生成・元数値条件で検査し、実PCM前処理→encoder→
+backboneの4回測定と保存captureの再監査を実行します。他の診断modeと同時選択すると、
+依存導入やモデル取得の前に失敗します。各jobの上限は90分です。
+
+privacy guardの成功後に数値capture・安全なJSON・取得receiptだけを保存します。
+入力PCM、snapshot、graph、重み、raw logはupload対象にしません。途中失敗は
+失敗のまま保持します。[入力配置とworkflowのTDD](results/audio-cpu-inputs-workflow-tdd-20261020.json)
+は関連213件成功・skip0とactionlint成功です。実モデルの成功や性能全体の合格とは区別します。

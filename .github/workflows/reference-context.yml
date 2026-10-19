@@ -3,6 +3,10 @@ name: Frozen native CPU context diagnostics
 on:
   workflow_dispatch:
     inputs:
+      audio_cpu_measurement:
+        description: Measure original PCM through audited audio ONNX parts and actual backbone on CPU only
+        type: boolean
+        default: false
       image_cpu_host_comparison:
         description: With image CPU measurement, compare all shapes and native/COMPATIBLE math on each of two hosts
         type: boolean
@@ -52,8 +56,99 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  audio_cpu_measurement:
+    if: github.event_name == 'workflow_dispatch' && inputs.audio_cpu_measurement
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        case_id: [silence, padded_noise]
+    defaults:
+      run:
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+      OPENBLAS_NUM_THREADS: '4'
+      MKL_CBWR: COMPATIBLE
+      MKL_DYNAMIC: 'FALSE'
+      HF_HUB_DISABLE_TELEMETRY: '1'
+      TOKENIZERS_PARALLELISM: 'false'
+      CASE_ID: ${{ matrix.case_id }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - name: Reject incompatible audio CPU selections
+        env:
+          LEGACY_SELECTED: ${{ inputs.image_cpu_measurement || inputs.image_cpu_host_comparison || inputs.original_vision || inputs.require_avx512_native || inputs.original_rotary_only || inputs.original_matmul_only || inputs.original_softmax16_replay || inputs.original_layer_four_detail || inputs.original_blas_context != 'native' }}
+        run: uv run --no-project --python 3.13 python -c "import os; assert os.environ['LEGACY_SELECTED'] == 'false', 'Select only the audio CPU measurement mode'"
+      - run: uv sync --locked --group cpu-comparison
+      - name: Fetch reviewed distribution and unchanged original reference data
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.selected_audio_generation fetch-distribution
+          --output ../artifacts/audio-cpu-candidate --original ../artifacts/audio-cpu-original --case "$CASE_ID"
+      - name: Reconstruct procedural input bytes and verify every original hash
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.audio_cpu_inputs
+          --encoder-reference ../artifacts/audio-cpu-original --output ../artifacts/audio-cpu-inputs
+          --fetch-missing-inputs --source "$GITHUB_SHA"
+      - name: Require original numerical gate for all five actual encoder parts
+        run: >-
+          uv run --locked python -m embeddinggemma_tools.frozen_audio_chained_onnx
+          --input ../artifacts/audio-cpu-original
+          --candidate-distribution-directory ../artifacts/audio-cpu-candidate/audio-runtime-reference
+          --output ../artifacts/audio-cpu-pinned
+          --raw-input --variant ordered_original_midpoint_bmm --case "$CASE_ID"
+      - name: Measure actual original PCM preprocessing encoder and backbone
+        run: >-
+          uv run --locked --group cpu-comparison python -m embeddinggemma_tools.audio_cpu_reference measure
+          --preprocessing ../artifacts/audio-cpu-inputs --encoder-reference ../artifacts/audio-cpu-original
+          --document-reference ../artifacts/audio-cpu-inputs/audio-embedding-reference.json
+          --chain-report ../artifacts/audio-cpu-pinned/frozen-audio-chained-onnx.json
+          --case "$CASE_ID" --output ../artifacts/audio-cpu-full --source "$GITHUB_SHA"
+      - name: Recompute all saved actual CPU intermediate and final numerical gates
+        run: >-
+          uv run --locked --group cpu-comparison python -m embeddinggemma_tools.audio_cpu_reference audit
+          --preprocessing ../artifacts/audio-cpu-inputs --encoder-reference ../artifacts/audio-cpu-original
+          --document-reference ../artifacts/audio-cpu-inputs/audio-embedding-reference.json
+          --output ../artifacts/audio-cpu-full --source "$GITHUB_SHA"
+      - name: Check original audio CPU numerical evidence publication privacy
+        id: audio_cpu_privacy
+        if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/audio-cpu-pinned/*.json
+            artifacts/audio-cpu-pinned/*.bin
+            artifacts/audio-cpu-full/*.json
+            artifacts/audio-cpu-full/*.bin
+            artifacts/audio-cpu-inputs/audio-cpu-inputs.json
+            artifacts/audio-cpu-candidate/candidate-range-receipt.json
+            artifacts/audio-cpu-original/original-range-receipt.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.audio_cpu_privacy.outcome == 'success' }}
+        with:
+          name: audio-cpu-full-${{ matrix.case_id }}-${{ github.sha }}
+          path: |
+            artifacts/audio-cpu-pinned/*.json
+            artifacts/audio-cpu-pinned/*.bin
+            artifacts/audio-cpu-full/*.json
+            artifacts/audio-cpu-full/*.bin
+            artifacts/audio-cpu-inputs/audio-cpu-inputs.json
+            artifacts/audio-cpu-candidate/candidate-range-receipt.json
+            artifacts/audio-cpu-original/original-range-receipt.json
+          retention-days: 7
+          if-no-files-found: warn
+          compression-level: 0
   image_cpu_measurement:
-    if: github.event_name == 'workflow_dispatch' && inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison
+    if: github.event_name == 'workflow_dispatch' && inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison && !inputs.audio_cpu_measurement
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -109,7 +204,7 @@ jobs:
           if-no-files-found: warn
           compression-level: 0
   image_cpu_host_comparison:
-    if: github.event_name == 'workflow_dispatch' && inputs.image_cpu_host_comparison
+    if: github.event_name == 'workflow_dispatch' && inputs.image_cpu_host_comparison && !inputs.audio_cpu_measurement
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -191,7 +286,7 @@ jobs:
           compression-level: 0
   probe:
     if: >-
-      (github.event_name == 'workflow_dispatch' && !inputs.original_vision && !inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison) ||
+      (github.event_name == 'workflow_dispatch' && !inputs.original_vision && !inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison && !inputs.audio_cpu_measurement) ||
       (github.event.pull_request.head.repo.full_name == github.repository &&
        contains(github.event.pull_request.labels.*.name, 'reference-context-diagnostics'))
     runs-on: ubuntu-latest
@@ -304,7 +399,7 @@ jobs:
           if-no-files-found: warn
 
   original_vision_probe:
-    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && !inputs.original_rotary_only && !inputs.original_matmul_only && !inputs.original_softmax16_replay && !inputs.original_layer_four_detail && !inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && !inputs.original_rotary_only && !inputs.original_matmul_only && !inputs.original_softmax16_replay && !inputs.original_layer_four_detail && !inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison && !inputs.audio_cpu_measurement
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -488,7 +583,7 @@ jobs:
           if-no-files-found: warn
 
   original_rotary_probe:
-    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_rotary_only && !inputs.original_matmul_only && !inputs.original_softmax16_replay && !inputs.original_layer_four_detail && !inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_rotary_only && !inputs.original_matmul_only && !inputs.original_softmax16_replay && !inputs.original_layer_four_detail && !inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison && !inputs.audio_cpu_measurement
     runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:
@@ -576,13 +671,13 @@ jobs:
           if-no-files-found: warn
 
   original_static_matmul_probe:
-    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_matmul_only && !inputs.original_softmax16_replay && !inputs.original_layer_four_detail && !inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_matmul_only && !inputs.original_softmax16_replay && !inputs.original_layer_four_detail && !inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison && !inputs.audio_cpu_measurement
     uses: ./.github/workflows/vision-matmul-context.yml
 
   original_ordered_context_probe:
-    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_softmax16_replay && !inputs.original_layer_four_detail && !inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_softmax16_replay && !inputs.original_layer_four_detail && !inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison && !inputs.audio_cpu_measurement
     uses: ./.github/workflows/vision-ordered-context.yml
 
   original_layer_four_probe:
-    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_layer_four_detail && !inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_layer_four_detail && !inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison && !inputs.audio_cpu_measurement
     uses: ./.github/workflows/vision-layer-four-context.yml

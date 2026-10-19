@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "checked_date_JST": "2026-10-20",
+  "scope": "Exact procedural input materialization and explicit manual audio CPU workflow TDD only",
+  "input_materializer_red": {
+    "failed": 1,
+    "errors": 14,
+    "intended_missing_module_count": 15
+  },
+  "input_materializer_green": {
+    "passed": 15,
+    "skipped": 0
+  },
+  "workflow_missing_mode_red": 9,
+  "privacy_condition_intermediate_red": {
+    "failed": 1,
+    "passed": 17
+  },
+  "final_related_green": {
+    "passed": 213,
+    "skipped": 0
+  },
+  "actionlint_passed": true,
+  "materializer_normalized_LF_SHA256": "490a9f98df0fa68798afc10608900b7e775e932f8f3793fa8ff06c89b26fd08d",
+  "workflow_normalized_LF_SHA256": "85d890758aa6e116365830fd721d0f852c89dee0c2b688a4f49ded0fe2ddf862",
+  "small_original_JSON_review": [
+    {
+      "file": "tools/references/audio-cpu-original/audio-reference.json",
+      "bytes": 2778,
+      "SHA256": "1209e2f95df2d0527db23d9185e01c38289b365c46e623e03d3e9ce26f8dfcf8",
+      "full_text_privacy_checked": true,
+      "original_bytes_unchanged": true
+    },
+    {
+      "file": "tools/references/audio-cpu-original/audio-validation.json",
+      "bytes": 5068,
+      "SHA256": "4e325f708e8d103a9de358a411380ddbb51cfe953984e9dcb73e291d919630fa",
+      "full_text_privacy_checked": true,
+      "original_bytes_unchanged": true
+    },
+    {
+      "file": "tools/references/audio-cpu-original/audio-embedding-reference.json",
+      "bytes": 302101,
+      "SHA256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+      "full_text_privacy_checked": true,
+      "original_bytes_unchanged": true
+    }
+  ],
+  "small_original_JSON_total_bytes": 309947,
+  "original_JSON_bytes_unchanged": true,
+  "exact_reference_paths_marked_no_text_normalization": true,
+  "committed_PCM_model_graph_or_weight_bytes": false,
+  "reconstructed_PCM_masks_verified_against_external_pinned_original_hash_oracles": true,
+  "signed_zero_bits_preserved": true,
+  "missing_raw_reference_fetch_requires_explicit_selection": true,
+  "existing_bad_reference_inputs_not_overwritten": true,
+  "actual_original_feature_asset_network_fetch_executed_by_tests": false,
+  "manual_mode_case_ids": [
+    "silence",
+    "padded_noise"
+  ],
+  "manual_mode_max_minutes": 90,
+  "manual_dispatch_input_count": 10,
+  "partial_numerical_upload_requires_matching_successful_privacy_guard": true,
+  "PCM_inputs_and_model_weights_excluded_from_upload": true,
+  "actual_real_model_or_CI_execution_accepted": false,
+  "CPU_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "GPU_validated": false,
+  "all_platforms_accepted": false,
+  "formal_release_created": false
+}

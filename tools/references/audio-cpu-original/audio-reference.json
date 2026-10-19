@@ -1,0 +1,91 @@
+{
+  "metadata": {
+    "model_id": "google/embeddinggemma-2",
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "source_commit": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "stage": "audio_preprocessing_only",
+    "num_samples": 179200,
+    "sampling_rate": 16000,
+    "feature_shape": [
+      1,
+      1119,
+      128
+    ],
+    "sample_shape": [
+      1,
+      179200
+    ],
+    "frame_mask_shape": [
+      1,
+      1119
+    ],
+    "processor_sha256": "168f6a08522f3ce5dea596d94d003af2fd691742d4f41fe1f9d8cce76bfbf69c",
+    "feature_rtol": 0.0001,
+    "feature_atol": 0.004,
+    "fixture_provenance": "procedurally_generated_pcm_no_user_audio",
+    "waveform_encoding": "little_endian_float32",
+    "mask_encoding": "little_endian_int32",
+    "reference": "official_Gemma4AudioFeatureExtractor",
+    "versions": {
+      "torch": "2.14.1",
+      "transformers": "5.19.0",
+      "numpy": "2.5.3"
+    }
+  },
+  "cases": [
+    {
+      "id": "silence",
+      "valid_samples": 179200,
+      "maximum_absolute_error": 0.0,
+      "waveform": "silence-pcm-fp32.bin",
+      "sample_mask": "silence-samples-int32.bin",
+      "features": "silence-features-fp32.bin",
+      "frame_mask": "silence-frames-int32.bin"
+    },
+    {
+      "id": "impulse",
+      "valid_samples": 179200,
+      "maximum_absolute_error": 4.76837158203125e-07,
+      "waveform": "impulse-pcm-fp32.bin",
+      "sample_mask": "impulse-samples-int32.bin",
+      "features": "impulse-features-fp32.bin",
+      "frame_mask": "impulse-frames-int32.bin"
+    },
+    {
+      "id": "sine",
+      "valid_samples": 179200,
+      "maximum_absolute_error": 0.0038890838623046875,
+      "waveform": "sine-pcm-fp32.bin",
+      "sample_mask": "sine-samples-int32.bin",
+      "features": "sine-features-fp32.bin",
+      "frame_mask": "sine-frames-int32.bin"
+    },
+    {
+      "id": "nyquist",
+      "valid_samples": 179200,
+      "maximum_absolute_error": 0.0014133453369140625,
+      "waveform": "nyquist-pcm-fp32.bin",
+      "sample_mask": "nyquist-samples-int32.bin",
+      "features": "nyquist-features-fp32.bin",
+      "frame_mask": "nyquist-frames-int32.bin"
+    },
+    {
+      "id": "noise",
+      "valid_samples": 179200,
+      "maximum_absolute_error": 7.867813110351562e-06,
+      "waveform": "noise-pcm-fp32.bin",
+      "sample_mask": "noise-samples-int32.bin",
+      "features": "noise-features-fp32.bin",
+      "frame_mask": "noise-frames-int32.bin"
+    },
+    {
+      "id": "padded_noise",
+      "valid_samples": 134400,
+      "maximum_absolute_error": 6.4373016357421875e-06,
+      "waveform": "padded_noise-pcm-fp32.bin",
+      "sample_mask": "padded_noise-samples-int32.bin",
+      "features": "padded_noise-features-fp32.bin",
+      "frame_mask": "padded_noise-frames-int32.bin"
+    }
+  ]
+}

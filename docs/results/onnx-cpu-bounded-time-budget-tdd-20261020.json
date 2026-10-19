@@ -1,0 +1,151 @@
+{
+  "schema": 1,
+  "scope": "Bounded CPU execution budget derived from incomplete real-model captures; no complete CPU or performance acceptance",
+  "checked_local_date": "2026-10-20",
+  "base_source": "5609fc56c3d2dac43e3e81a5f6a1aacf9acd2b62",
+  "base_execution_source": "be8527cacb678aacdcfdae036aabb8e1bdccf01b",
+  "base_run": 39269268778,
+  "base_CI_conclusion": "failure",
+  "base_CI_successful_jobs": 8,
+  "base_CI_failed_jobs": 7,
+  "CPU_steps_failed": 6,
+  "CPU_time_limit_recorded_in_all_six": true,
+  "runner_shutdown_or_OOM_recorded_in_retrieved_evidence": false,
+  "original_cases": 6,
+  "original_values": 824320,
+  "original_tolerance_failures": 0,
+  "original_archives": 7,
+  "original_uploaded_summary_exact_match": true,
+  "CPU_partial_archives": 6,
+  "CPU_partial_capture_count": 62,
+  "CPU_partial_values_compared": 16414720,
+  "CPU_partial_tolerance_failures": 0,
+  "CPU_partial_case_summaries": [
+    {
+      "case": "impulse",
+      "captures": 11,
+      "complete_chains": 2,
+      "values_compared": 2867200,
+      "tolerance_failures": 0
+    },
+    {
+      "case": "noise",
+      "captures": 13,
+      "complete_chains": 2,
+      "values_compared": 3440640,
+      "tolerance_failures": 0
+    },
+    {
+      "case": "nyquist",
+      "captures": 9,
+      "complete_chains": 1,
+      "values_compared": 2437120,
+      "tolerance_failures": 0
+    },
+    {
+      "case": "padded_noise",
+      "captures": 11,
+      "complete_chains": 2,
+      "values_compared": 2795520,
+      "tolerance_failures": 0
+    },
+    {
+      "case": "silence",
+      "captures": 9,
+      "complete_chains": 1,
+      "values_compared": 2437120,
+      "tolerance_failures": 0
+    },
+    {
+      "case": "sine",
+      "captures": 9,
+      "complete_chains": 1,
+      "values_compared": 2437120,
+      "tolerance_failures": 0
+    }
+  ],
+  "archives_digest_CRC_and_two_private_copies_verified": true,
+  "partial_source_binding": "Exact artifact job/head provenance, source/case journal and original graph/case report hashes",
+  "partial_report_source_fields_not_required_or_claimed_present": true,
+  "graph_binaries_independently_rehashed": false,
+  "projection_scope": "Projection from retained partial calls, not a complete measured runtime or performance acceptance",
+  "projection_cases": [
+    {
+      "case": "sine",
+      "load": 127.25931156900003,
+      "upper_chain": 359.19798765700034,
+      "four_chain_projection": 1564.0512621970015,
+      "with_20_percent_margin": 1876.8615146364018
+    },
+    {
+      "case": "silence",
+      "load": 133.13021121499992,
+      "upper_chain": 351.0780241250002,
+      "four_chain_projection": 1537.4423077150007,
+      "with_20_percent_margin": 1844.9307692580007
+    },
+    {
+      "case": "padded_noise",
+      "load": 128.60923425999988,
+      "upper_chain": 322.8747828959995,
+      "four_chain_projection": 1420.108365843998,
+      "with_20_percent_margin": 1704.1300390127974
+    },
+    {
+      "case": "nyquist",
+      "load": 130.09876913100015,
+      "upper_chain": 331.72357451900007,
+      "four_chain_projection": 1456.9930672070004,
+      "with_20_percent_margin": 1748.3916806484006
+    },
+    {
+      "case": "noise",
+      "load": 87.44987690300002,
+      "upper_chain": 255.7317365859999,
+      "four_chain_projection": 1110.3768232469997,
+      "with_20_percent_margin": 1332.4521878963997
+    },
+    {
+      "case": "impulse",
+      "load": 115.07303940300005,
+      "upper_chain": 315.5277420460003,
+      "four_chain_projection": 1377.1840075870014,
+      "with_20_percent_margin": 1652.6208091044016
+    }
+  ],
+  "maximum_projected_four_chain_seconds": 1564.0512621970015,
+  "maximum_projected_with_20_percent_margin_seconds": 1876.8615146364018,
+  "previous_CPU_step_limit_minutes": 12,
+  "CPU_step_limit_minutes": 35,
+  "previous_job_wall_limit_minutes": 55,
+  "job_wall_limit_minutes": 65,
+  "TDD_red_failed": 1,
+  "TDD_prior_passed": 2,
+  "final_workflow_tests_passed": 3,
+  "final_workflow_tests_failed": 0,
+  "final_workflow_tests_skipped": 0,
+  "separate_test_collection_error_recorded": true,
+  "original_graphs_references_tolerances_ORTruntime_threads_and_execution_order_unchanged": true,
+  "SDK_Runtime_unchanged": true,
+  "CPU_cases_required": 6,
+  "CPU_captures_required": 120,
+  "CPU_values_required": 30822400,
+  "CPU_final_values_directly_original_required": 3297280,
+  "CPU_journal_events_per_case_required": 72,
+  "all15_source_CI_required": true,
+  "new_budget_real_model_executed": false,
+  "CPU_reference_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "GPU_validated": false,
+  "formal_release_created": false,
+  "normalized_LF_code_SHA256": [
+    {
+      "file": ".github/workflows/pinned-audio-acceptance.yml",
+      "sha256": "c12b36f15e1efd1164e5e384b610e78702c22005f20b07e51219596788196d23"
+    },
+    {
+      "file": "tools/tests/test_onnx_cpu_comparison_workflow.py",
+      "sha256": "90a3b9fb2ce9be28150a96e918b34c5f86c28d5827ee81573f0ca33ea71c5ff9"
+    }
+  ]
+}

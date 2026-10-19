@@ -11,7 +11,7 @@ jobs:
   execute:
     runs-on: ubuntu-latest
     # Previous raw noise execution exceeded 20 minutes; all five parts must finish.
-    timeout-minutes: 55
+    timeout-minutes: 65
     strategy:
       fail-fast: false
       max-parallel: 6
@@ -74,7 +74,7 @@ jobs:
           retention-days: 7
           if-no-files-found: error
       - name: Replay each audited encoder through explicit CPU ONNX sessions
-        timeout-minutes: 12
+        timeout-minutes: 35
         run: >-
           uv run --locked --group cpu-comparison python -m embeddinggemma_tools.onnx_cpu_comparison
           --chain-report ../artifacts/pinned-audio/frozen-audio-chained-onnx.json

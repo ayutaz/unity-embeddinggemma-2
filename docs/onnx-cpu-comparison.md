@@ -82,3 +82,15 @@ source `46f972f` のrun `39261263142`では第1区間の4回実行と解放を�
 現在のCIは`--graph-optimizations disabled --execution-schedule chain-major --node-order priority`を全6ケースで実行します。全5 sessionを保持した4本の連続連鎖で、1 caseあたり20出力と72イベント、全6 caseで120出力を要求します。元参照・全graph hashの前後照合・4本の実carry・最終encoder参照の直接比較とhard gateは維持します。全5区間保持の連鎖実行は数値検証の条件であり、既存の整合性チェックを含むstage計時だけで性能全体を合格にはしません。
 
 10件Red（既存52件pass）から関連104件Green・fail0・skip0を確認しました。実設定読み戻し・未登録順序の拒否、FP32依存関係、全5 sessionの同時保持と20実呼出、実プロファイルの順序、6ケースすべてのguard / uploadを含みます。[TDDと小規模対照](results/onnx-cpu-priority-order-tdd-20261019.json)を保持しています。実モデルでの優先順実行・全120出力の数値合格は未確認です。CPU比較全体、PCM前処理 / backbone、画像、性能全体・最低要件・必須実機・正式SDK公開は未完了です。
+
+## 実測に基づく処理時間の上限（2026-10-20）
+
+source `5609fc5`のrun `39269268778`は終了し、15 job中8成功・7失敗でした。追加CPU比較6条件とRequired CIが不合格です。6条件すべてに12分上限の記録があり、回収したjob log / 注釈にはrunner shutdown・OOM・数値超過の記録はありません。先行sourceのrunner停止とは区別します。
+
+元6条件・824,320値は独立照合で超過0、7 ZIPのdigest / CRC・私的2コピーとアップロード集計の完全一致を確認しました。別のCPU成果物6 ZIPもdigest / CRCと私的2コピーを保持しました。途中reportが記録した62 capture・16,414,720値は元の許容差超過0で、最終区間は固定encoder参照へ直接比較しています。ただし全4回・120 captureは揃わず、CPU比較は未合格です。途中reportにsource fieldがないものもあるため、実artifactのjob / head provenance、journalのsource / case、元のgraph hashとcase reportを照合して範囲を限定しています。新しいgraph binaryの独立再hashを意味しません。
+
+noiseでは最初の2本の全5区間が完走しました。6条件の途中実測から、各区間の観測最大wall時間を1本分に加算し、その4倍へload進捗時間を足した推定は最大1,564.051秒です。さらに20%の余裕を加えると1,876.862秒となります。未実行部分やhost差があるため、これは完了時間や性能の実測値ではありません。
+
+この観測を根拠に、CPU stepを35分、元回帰・保存を含むjob全体を65分へ限定して変更します。全6条件・4本の連続chain、全5 sessionの同時保持、120 capture、72イベント / case、元の全graph・入力・参照hash、要素別許容差、privacy guardと必須CIは維持します。SDK / Runtime、モデル、係数、ORT設定、CPU thread数、演算順序はこの上限変更では変えません。
+
+変更前の上限で1件Red（既存2件pass）を確認し、変更後はworkflow契約3件Green・fail0・skip0です。[途中結果・上限の根拠・TDD](results/onnx-cpu-bounded-time-budget-tdd-20261020.json)を保持します。先行sourceの関連104件Greenはそのsourceの記録で、新上限での実モデル成功とは扱いません。新sourceの全15 job・元6条件・CPU全120 captureを独立照合してから統合判断します。性能全体・最低要件・必須実機・provider cleanup・正式SDK公開は残ります。

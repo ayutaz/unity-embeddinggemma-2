@@ -31,8 +31,8 @@ def test_cpu_all_six_replays_use_audited_actual_chains_and_are_hard_gates():
     assert '--graph-optimizations disabled' in cpu['run']
     assert '--execution-schedule chain-major' in cpu['run']
     assert '--node-order priority' in cpu['run']
-    assert 40 <= int(job['timeout-minutes']) <= 55
-    assert int(cpu['timeout-minutes']) == 12
+    assert 40 <= int(job['timeout-minutes']) <= 65
+    assert int(cpu['timeout-minutes']) == 35
     assert '--chain-report ../artifacts/pinned-audio/frozen-audio-chained-onnx.json' in cpu['run']
     assert '--original ../artifacts/original' in cpu['run']
     assert '--source "$GITHUB_SHA"' in cpu['run']

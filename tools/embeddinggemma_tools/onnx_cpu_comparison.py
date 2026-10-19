@@ -10,6 +10,7 @@ import numpy as np
 from .cpu_progress import ProgressJournal, own_process_memory
 
 ROUNDS = ('first', 'warm', 'repeat-1', 'repeat-2')
+GRAPH_OPTIMIZATIONS = ('disabled', 'basic')
 
 
 def _external_tensor(message):
@@ -46,7 +47,9 @@ def _shape(port):
 
 
 class CpuOnnxSession:
-    def __init__(self, graph, expected_sha256, *, progress=None):
+    def __init__(self, graph, expected_sha256, *, progress=None, graph_optimizations='disabled'):
+        if graph_optimizations not in GRAPH_OPTIMIZATIONS:
+            raise ValueError('Only reviewed disabled/basic graph optimization modes are supported')
         import onnx
         import onnxruntime as ort
         self.graph = Path(graph)
@@ -62,7 +65,8 @@ class CpuOnnxSession:
         if progress is not None:
             progress('onnx_parse_end')
         options = ort.SessionOptions()
-        options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_DISABLE_ALL
+        options.graph_optimization_level = (ort.GraphOptimizationLevel.ORT_ENABLE_BASIC
+            if graph_optimizations == 'basic' else ort.GraphOptimizationLevel.ORT_DISABLE_ALL)
         options.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
         options.intra_op_num_threads = 4
         options.inter_op_num_threads = 1
@@ -90,8 +94,11 @@ class CpuOnnxSession:
         if digest(self.graph) != expected_sha256:
             raise ValueError('The ONNX graph hash changed during session creation')
         actual_options = self.session.get_session_options()
+        if actual_options.graph_optimization_level != options.graph_optimization_level:
+            raise ValueError('Actual graph optimization mode differs from the reviewed selection')
         self.configuration = dict(providers=self.session.get_providers(),
-            graph_sha256=expected_sha256, graph_optimizations='disabled',
+            graph_sha256=expected_sha256,
+            graph_optimizations='basic' if actual_options.graph_optimization_level == ort.GraphOptimizationLevel.ORT_ENABLE_BASIC else 'disabled',
             execution_mode='sequential', intra_op_threads=4, inter_op_threads=1,
             fallback_enabled=False, onnxruntime_version=ort.__version__,
             cpu_memory_arena='enabled' if actual_options.enable_cpu_mem_arena else 'disabled',
@@ -170,9 +177,11 @@ def replay_chain(sessions, initial, references, output, *, progress=None):
     return report
 
 
-def replay_distribution(chain_report, original, output, *, source):
+def replay_distribution(chain_report, original, output, *, source, graph_optimizations='disabled'):
     """Require the unchanged original audit before loading any CPU graph."""
     from .native_regression_distribution import audit_distribution_report
+    if graph_optimizations not in GRAPH_OPTIMIZATIONS:
+        raise ValueError('Only reviewed disabled/basic graph optimization modes are supported')
     if re.fullmatch('[a-f0-9]{40}', source or '') is None:
         raise ValueError('Immutable execution source is required')
     output = Path(output)
@@ -190,10 +199,10 @@ def replay_distribution(chain_report, original, output, *, source):
     parts = selected[0]['parts']
     with ProgressJournal(output.with_name(output.stem + '-progress.json'),
             source=source, case_id=audited['case_id']) as journal:
-        return _replay_checked_parts(path, data, parts, audited, output, source, source_sha, journal)
+        return _replay_checked_parts(path, data, parts, audited, output, source, source_sha, journal, graph_optimizations)
 
 
-def _replay_checked_parts(path, data, parts, audited, output, source, source_sha, journal):
+def _replay_checked_parts(path, data, parts, audited, output, source, source_sha, journal, graph_optimizations):
 
     def checked(name, expected_sha):
         if not isinstance(name, str) or '/' in name or '\\' in name or ':' in name or name in ('', '.', '..'):
@@ -211,7 +220,7 @@ def _replay_checked_parts(path, data, parts, audited, output, source, source_sha
         graph = checked(part['graph'], part['graph_sha256'])
         journal.record('load_part_begin', part=index)
         session = CpuOnnxSession(graph, part['graph_sha256'],
-            progress=lambda phase: journal.record(phase, part=index))
+            progress=lambda phase: journal.record(phase, part=index), graph_optimizations=graph_optimizations)
         ref = checked(part['output_capture'], part['output_sha256'])
         array = np.fromfile(ref, dtype='<f4')
         if array.size != int(np.prod(session.output_shape)):
@@ -255,8 +264,10 @@ def main(argv=None):
     parser.add_argument('--original', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--source', required=True)
+    parser.add_argument('--graph-optimizations', choices=GRAPH_OPTIMIZATIONS, default='disabled')
     args = parser.parse_args(argv)
-    result = replay_distribution(args.chain_report, args.original, args.output, source=args.source)
+    result = replay_distribution(args.chain_report, args.original, args.output, source=args.source,
+        graph_optimizations=args.graph_optimizations)
     print(json.dumps(dict(success=result['success'], case_id=result['case_id'],
         encoder_replay_qualified=result['encoder_replay_qualified'],
         CPU_reference_comparison_qualified=False, complete_performance_accepted=False)))

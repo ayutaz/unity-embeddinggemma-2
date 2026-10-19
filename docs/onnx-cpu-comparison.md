@@ -4,7 +4,7 @@
 
 ## 実行条件
 
-`onnx_cpu_comparison`は既存のdistribution監査を先に実行し、元参照に対する合格と同じ40桁のexecution sourceを必須にします。元入力から接続した5分割・各graphの全SHA256・captureを確認し、ONNX RuntimeのCPUExecutionProviderだけを明示して実行します。graph最適化と実行providerのfallbackは無効です。別ファイルの重みはgraph hashだけでは保証できないため拒否します。
+`onnx_cpu_comparison`は既存のdistribution監査を先に実行し、元参照に対する合格と同じ40桁のexecution sourceを必須にします。元入力から接続した5分割・各graphの全SHA256・captureを確認し、ONNX RuntimeのCPUExecutionProviderだけを明示して実行します。実行providerのfallbackは無効です。graph最適化は既定で無効、CIの追加診断は後述の明示Basicモードを使用します。別ファイルの重みはgraph hashだけでは保証できないため拒否します。
 
 各partへ渡すのは直前の実出力です。参照値は比較専用で、途中入力へ代入しません。最終partは元のencoder参照へ直接照合します。FP32の`atol=1e-5 / rtol=1e-4`を維持し、first / warm / repeat-1 / repeat-2のいずれかで超過したら失敗します。元reportとcaptureは上書きせず、新しい実captureと失敗reportを保存します。
 
@@ -46,3 +46,13 @@ flush済みの34件の進捗では、全5 sessionのロード後、第1区間の
 次の実行では、CPU memory arena・memory patternを無効にし、`session.disable_prepacking=1`を指定します。[公式API](https://onnxruntime.ai/docs/api/python/api_summary.html)の先行確保・memory pattern設定と、[公式設定定義](https://github.com/microsoft/onnxruntime/blob/main/include/onnxruntime/core/session/onnxruntime_session_options_config_keys.h)の定数prepacking無効化を使用します。実sessionから読み戻した設定をreportに記録します。推論の全5 sessionを保持し、同じ元入力からfirst / warm / repeat-1 / repeat-2を接続する条件は維持します。途中参照の注入・partごとのcold reload・数値gateの緩和はしません。
 
 この変更のメモリ削減量・実モデル互換性は未検証です。packing設定の変更による結果も、元の要素別許容差と全20実captureで判定します。小規模な実CPU sessionの4件Redから、密行列2段の実carry・4反復・既存privacy hook等を含む関連75件Green / skip0を確認しました。[TDDと失敗の記録](results/onnx-cpu-memory-policy-tdd-20261019.json)を保持しています。SDK / Assets、係数、元参照・許容差、backend / thread / graph最適化の指定は変更しません。実モデルの新source CIを確認してから統合します。
+
+## 明示Basic最適化の追加診断
+
+source `74f5d57` のrun `39251388877`も、最適化なしの第2区間推論開始後にrunner shutdownとなりました。直前residentは8,494,678,016 bytes、観測OS peakは9,982,025,728 bytesです。前sourceよりresidentは低下しましたが、host条件は異なり、原因・OOM・数値合格は未確定です。34件の進捗と原本ログ・注釈の私的2コピーを保持し、同じ設定の再試行は行いません。
+
+元reportのoperator countsでは、第2〜第5区間がそれぞれ数十万演算を含みます。`--graph-optimizations basic`を追加し、定数畳み込みや冗長nodeの除去を許可する限定的な最適化を検証します。[公式の最適化区分](https://onnxruntime.ai/docs/performance/model-optimizations/graph-optimizations.html)に従い、Extended / Layoutは選択できません。既定の`disabled`は対照用に保持し、CIは`basic`を明示します。実sessionの設定読み戻しが選択と異なる場合も失敗します。
+
+全5 sessionを保持し、元入力から全4反復を接続して全20出力を保存する条件、元の要素別許容差、元graph全hashの前後検査は維持します。Basic最適化の数値的な互換性も、実captureから判定します。元参照の変更、参照中間値への差し替え、partごとのcold reloadや最終値だけの合格判定は行いません。SDK / AssetsとUnityのGPU実装は変更しません。
+
+初回9件Red（既存31件pass）と、実設定の不一致拒否の追加2件Redから、最終関連84件Green・fail0・skip0を確認しました。最適化なし / Basicの密行列2段・4反復とFP32の桁落ち対照、CLI・全5 sessionへの選択伝達、元証拠の保護を含みます。[TDDと停止記録](results/onnx-cpu-basic-mode-tdd-20261019.json)を保存しています。実モデルでのメモリ削減・全20出力の合格は未検証で、CPU比較全体・性能全体・最低要件・正式リリースも未完了です。

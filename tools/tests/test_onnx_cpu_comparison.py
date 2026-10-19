@@ -66,7 +66,8 @@ def test_cpu_report_records_actual_memory_configuration(tmp_path):
     assert runner.configuration['constant_prepacking'] == 'disabled'
 
 
-def test_dense_cpu_carries_keep_original_elementwise_gate_in_every_round(tmp_path):
+@pytest.mark.parametrize('optimization', ['disabled', 'basic'])
+def test_dense_cpu_carries_keep_original_elementwise_gate_in_every_round(tmp_path, optimization):
     rng = np.random.default_rng(729)
     initial = rng.uniform(-1, 1, (3, 32)).astype(np.float32)
     actual = initial
@@ -81,7 +82,8 @@ def test_dense_cpu_carries_keep_original_elementwise_gate_in_every_round(tmp_pat
             opset_imports=[helper.make_opsetid('', 24)], ir_version=8)
         path = tmp_path / f'dense{index}.onnx'
         onnx.save(model, path)
-        runners.append(implementation().CpuOnnxSession(path, hashlib.sha256(path.read_bytes()).hexdigest()))
+        runners.append(implementation().CpuOnnxSession(path, hashlib.sha256(path.read_bytes()).hexdigest(),
+            graph_optimizations=optimization))
         actual = actual @ weights
         references.append(actual)
     result = implementation().replay_chain(runners, initial, references, tmp_path / 'dense.json')
@@ -89,6 +91,60 @@ def test_dense_cpu_carries_keep_original_elementwise_gate_in_every_round(tmp_pat
     assert result['original_atol'] == 1e-5 and result['original_rtol'] == 1e-4
     assert all(row['tolerance_failures'] == 0 and len(row['parts']) == 2 for row in result['rounds'])
     assert result['references_used_as_inference_inputs'] is False
+
+
+def test_basic_cpu_optimization_is_explicit_and_keeps_fp32_rounding(tmp_path):
+    import onnxruntime as ort
+    path, sha = graph(tmp_path, operation='rounding')
+    runner = implementation().CpuOnnxSession(path, sha, graph_optimizations='basic')
+    assert runner.session.get_session_options().graph_optimization_level == ort.GraphOptimizationLevel.ORT_ENABLE_BASIC
+    assert runner.configuration['graph_optimizations'] == 'basic'
+    initial = np.ones((2, 3), dtype=np.float32)
+    result = implementation().replay_chain([runner], initial, [np.zeros_like(initial)], tmp_path / 'basic.json')
+    assert result['success'] and len(result['rounds']) == 4
+    assert all(row['tolerance_failures'] == 0 for row in result['rounds'])
+
+
+@pytest.mark.parametrize('optimization', ['disabled', 'basic'])
+def test_actual_unreviewed_optimization_readback_is_rejected(tmp_path, monkeypatch, optimization):
+    import onnxruntime as ort
+    read = ort.InferenceSession.get_session_options
+    def changed(self):
+        actual = read(self)
+        actual.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_EXTENDED
+        return actual
+    monkeypatch.setattr(ort.InferenceSession, 'get_session_options', changed)
+    path, sha = graph(tmp_path)
+    with pytest.raises(ValueError, match='optimization'):
+        implementation().CpuOnnxSession(path, sha, graph_optimizations=optimization)
+
+
+@pytest.mark.parametrize('optimization', ['extended', 'all', 'unknown'])
+def test_unreviewed_cpu_optimization_levels_are_rejected(tmp_path, optimization):
+    path, sha = graph(tmp_path)
+    with pytest.raises(ValueError, match='optimization'):
+        implementation().CpuOnnxSession(path, sha, graph_optimizations=optimization)
+
+
+def test_distribution_basic_choice_reaches_all_five_actual_sessions(tmp_path, audited_chain):
+    source, _, _ = audited_chain
+    result = implementation().replay_distribution(source, tmp_path / 'original', tmp_path / 'basic-distribution.json',
+        source='a' * 40, graph_optimizations='basic')
+    assert result['success'] and len(result['sessions']) == 5 and len(result['rounds']) == 4
+    assert all(row['graph_optimizations'] == 'basic' for row in result['sessions'])
+    assert result['CPU_reference_comparison_qualified'] is False
+
+
+def test_cli_forwards_the_explicit_basic_mode(tmp_path, monkeypatch):
+    module = implementation()
+    seen = {}
+    def execute(chain, original, output, *, source, graph_optimizations):
+        seen.update(source=source, optimization=graph_optimizations)
+        return dict(success=True, case_id='silence', encoder_replay_qualified=True)
+    monkeypatch.setattr(module, 'replay_distribution', execute)
+    assert module.main(['--chain-report', str(tmp_path / 'chain.json'), '--original', str(tmp_path),
+        '--output', str(tmp_path / 'out.json'), '--source', 'a' * 40, '--graph-optimizations', 'basic']) == 0
+    assert seen == dict(source='a' * 40, optimization='basic')
 
 
 def test_modified_graph_hash_is_rejected_before_loading(tmp_path):
@@ -303,7 +359,8 @@ def test_native_session_failure_retains_the_preallocation_journal(tmp_path, audi
     module = implementation()
     output = tmp_path / 'cpu-load.json'
     progress_path = tmp_path / 'cpu-load-progress.json'
-    def failed_constructor(self, path, sha, *, progress=None):
+    def failed_constructor(self, path, sha, *, progress=None, graph_optimizations='disabled'):
+        assert graph_optimizations == 'disabled'
         assert json.loads(progress_path.read_text())['events'][-1]['phase'] == 'load_part_begin'
         progress('session_create_begin')
         raise MemoryError('unpublished-synthetic-detail')

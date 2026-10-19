@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "scope": "Explicit Basic CPU graph optimization diagnostic; not full-model or performance acceptance",
+  "base_source": "74f5d57020dcf4a11b48112e8a0a8225170a0fcb",
+  "base_execution_source": "2c85f50e338c22138e3ce37aa1a117c82a9e2d51",
+  "base_run": 39251388877,
+  "base_run_conclusion": "failure",
+  "base_original_cases": 6,
+  "base_original_values": 824320,
+  "base_original_tolerance_failures": 0,
+  "base_uploaded_summary_equals_independent_audit": true,
+  "base_original_seven_archives_CRC_digest_two_private_copies_verified": true,
+  "base_CPU_step_conclusion": "cancelled",
+  "base_CPU_capture_artifact_available": false,
+  "base_CPU_progress_events": 34,
+  "base_CPU_last_observed_event": {
+    "phase": "inference_part_begin",
+    "part": 1,
+    "round": "first",
+    "elapsed_seconds": 296.35620936099997,
+    "rss_bytes": 8494678016,
+    "peak_rss_bytes": 9982025728
+  },
+  "base_maximum_observed_whole_process_OS_peak_bytes": 9982025728,
+  "base_cause_and_OOM_confirmed": false,
+  "base_ONNX_operator_counts": [
+    {
+      "part": 0,
+      "ONNX_nodes": 13421
+    },
+    {
+      "part": 1,
+      "ONNX_nodes": 270100
+    },
+    {
+      "part": 2,
+      "ONNX_nodes": 270094
+    },
+    {
+      "part": 3,
+      "ONNX_nodes": 270099
+    },
+    {
+      "part": 4,
+      "ONNX_nodes": 281973
+    }
+  ],
+  "TDD_initial_failed": 9,
+  "TDD_prior_passed": 31,
+  "TDD_actual_option_rejection_additional_failed": 2,
+  "interim_related_failed": 1,
+  "interim_related_passed": 81,
+  "interim_failure": "Test-double constructor signature did not accept new explicit mode; signature updated while retaining original MemoryError, preallocation and privacy assertions",
+  "final_related_passed": 84,
+  "final_related_failed": 0,
+  "final_related_skipped": 0,
+  "default_graph_optimizations": "disabled",
+  "CI_explicit_graph_optimizations": "basic",
+  "extended_and_layout_modes_rejected": true,
+  "actual_session_options_read_back_and_mismatch_rejected": true,
+  "all_five_sessions_remain_resident": true,
+  "actual_first_warm_repeat_carries": 4,
+  "required_real_output_captures": 20,
+  "original_reference_injection": false,
+  "original_graph_hash_checks_and_elementwise_gates_retained": true,
+  "original_reference_tolerances_or_coefficients_modified": false,
+  "SDK_and_Assets_unchanged": true,
+  "new_actual_full_model_executed": false,
+  "memory_reduction_proven": false,
+  "CPU_reference_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "GPU_validated": false,
+  "formal_release_created": false,
+  "normalized_LF_code_SHA256": [
+    {
+      "file": ".github/workflows/pinned-audio-acceptance.yml",
+      "sha256": "d32b6b5d1ae195d0962f127b89d278d0e4dbcb2ce4ae0f70d01a76b18a81aac0"
+    },
+    {
+      "file": "tools/embeddinggemma_tools/onnx_cpu_comparison.py",
+      "sha256": "1f2700683473cc9265a421d089e6de6fc0ac112adcd3ccc7a771e7ddccef1fb6"
+    },
+    {
+      "file": "tools/tests/test_onnx_cpu_comparison.py",
+      "sha256": "30383547902ffcf424944e0567c5fdc1af6a3ee1c1f09d36dddb08dcf69acc14"
+    },
+    {
+      "file": "tools/tests/test_onnx_cpu_comparison_workflow.py",
+      "sha256": "e655fe1c0b69f871710cadd9e6cee6fea7e6c4e737ef740fa70d4f2935418450"
+    }
+  ]
+}

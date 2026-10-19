@@ -1,0 +1,160 @@
+name: Windows audio CPU reference
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/audio-cpu-windows.yml
+      - .github/actions/privacy-artifact-guard/**
+      - tools/embeddinggemma_tools/audio_cpu_*.py
+      - tools/embeddinggemma_tools/cpu_*.py
+      - tools/embeddinggemma_tools/reference_cpu_performance.py
+      - tools/embeddinggemma_tools/onnx_cpu_comparison.py
+      - tools/embeddinggemma_tools/image_cpu_reference.py
+      - tools/embeddinggemma_tools/audio.py
+      - tools/embeddinggemma_tools/model.py
+      - tools/embeddinggemma_tools/export.py
+      - tools/embeddinggemma_tools/text.py
+      - tools/embeddinggemma_tools/native_regression_distribution.py
+      - tools/embeddinggemma_tools/audio_generation_candidate.py
+      - tools/embeddinggemma_tools/audio_native_norm_replay.py
+      - tools/embeddinggemma_tools/audit_audio_raw_chain.py
+      - tools/embeddinggemma_tools/selected_audio_generation.py
+      - tools/references/**
+      - tools/pyproject.toml
+      - tools/uv.lock
+      - tools/tests/test_audio_cpu_windows_workflow.py
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: windows-audio-cpu-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  audio_cpu_windows:
+    runs-on: windows-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        case_id: [silence, padded_noise]
+    defaults:
+      run:
+        shell: bash
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+      OPENBLAS_NUM_THREADS: '4'
+      MKL_CBWR: COMPATIBLE
+      MKL_DYNAMIC: 'FALSE'
+      HF_HUB_DISABLE_TELEMETRY: '1'
+      TOKENIZERS_PARALLELISM: 'false'
+      CASE_ID: ${{ matrix.case_id }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - run: uv sync --locked --group cpu-comparison
+      - name: Fetch reviewed distribution and unchanged original reference data
+        run: |
+          mkdir -p ../artifacts/private-audio-cpu-logs
+          if uv run --locked python -m embeddinggemma_tools.selected_audio_generation fetch-distribution \
+              --output ../artifacts/audio-cpu-candidate --original ../artifacts/audio-cpu-original --case "$CASE_ID" \
+              > ../artifacts/private-audio-cpu-logs/fetch.log 2>&1; then
+            echo '{"phase":"reference_fetch","success":true}'
+          else
+            command_status=$?
+            echo '{"phase":"reference_fetch","success":false}'
+            exit "$command_status"
+          fi
+      - name: Reconstruct procedural input bytes and verify every original hash
+        run: |
+          if uv run --locked python -m embeddinggemma_tools.audio_cpu_inputs \
+              --encoder-reference ../artifacts/audio-cpu-original --output ../artifacts/audio-cpu-inputs \
+              --fetch-missing-inputs --source "$GITHUB_SHA" \
+              > ../artifacts/private-audio-cpu-logs/materialize.log 2>&1; then
+            echo '{"phase":"input_materialization","success":true}'
+          else
+            command_status=$?
+            echo '{"phase":"input_materialization","success":false}'
+            exit "$command_status"
+          fi
+      - name: Require original numerical gate for all five actual encoder parts
+        run: |
+          if uv run --locked python -m embeddinggemma_tools.frozen_audio_chained_onnx \
+              --input ../artifacts/audio-cpu-original \
+              --candidate-distribution-directory ../artifacts/audio-cpu-candidate/audio-runtime-reference \
+              --output ../artifacts/audio-cpu-pinned \
+              --raw-input --variant ordered_original_midpoint_bmm --case "$CASE_ID" \
+              > ../artifacts/private-audio-cpu-logs/encoder-gate.log 2>&1; then
+            echo '{"phase":"original_encoder_gate","success":true}'
+          else
+            command_status=$?
+            echo '{"phase":"original_encoder_gate","success":false}'
+            exit "$command_status"
+          fi
+      - name: Measure actual original PCM preprocessing encoder and backbone
+        run: |
+          if uv run --locked --group cpu-comparison python -m embeddinggemma_tools.audio_cpu_reference measure \
+              --preprocessing ../artifacts/audio-cpu-inputs --encoder-reference ../artifacts/audio-cpu-original \
+              --document-reference ../artifacts/audio-cpu-inputs/audio-embedding-reference.json \
+              --chain-report ../artifacts/audio-cpu-pinned/frozen-audio-chained-onnx.json \
+              --case "$CASE_ID" --output ../artifacts/audio-cpu-full --source "$GITHUB_SHA" \
+              > ../artifacts/private-audio-cpu-logs/measure.log 2>&1; then
+            echo '{"phase":"PCM_to_vector_measurement","success":true}'
+          else
+            command_status=$?
+            echo '{"phase":"PCM_to_vector_measurement","success":false}'
+            exit "$command_status"
+          fi
+      - name: Recompute all saved actual CPU intermediate and final numerical gates
+        run: |
+          if uv run --locked --group cpu-comparison python -m embeddinggemma_tools.audio_cpu_reference audit \
+              --preprocessing ../artifacts/audio-cpu-inputs --encoder-reference ../artifacts/audio-cpu-original \
+              --document-reference ../artifacts/audio-cpu-inputs/audio-embedding-reference.json \
+              --output ../artifacts/audio-cpu-full --source "$GITHUB_SHA" \
+              > ../artifacts/private-audio-cpu-logs/audit.log 2>&1; then
+            echo '{"phase":"saved_capture_audit","success":true}'
+          else
+            command_status=$?
+            echo '{"phase":"saved_capture_audit","success":false}'
+            exit "$command_status"
+          fi
+      - name: Check original audio CPU numerical evidence publication privacy
+        id: audio_cpu_privacy
+        if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/audio-cpu-pinned/*.json
+            artifacts/audio-cpu-pinned/*.bin
+            artifacts/audio-cpu-full/*.json
+            artifacts/audio-cpu-full/*.bin
+            artifacts/audio-cpu-inputs/audio-cpu-inputs.json
+            artifacts/audio-cpu-candidate/candidate-range-receipt.json
+            artifacts/audio-cpu-original/original-range-receipt.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.audio_cpu_privacy.outcome == 'success' }}
+        with:
+          name: audio-cpu-windows-full-${{ matrix.case_id }}-${{ github.sha }}
+          path: |
+            artifacts/audio-cpu-pinned/*.json
+            artifacts/audio-cpu-pinned/*.bin
+            artifacts/audio-cpu-full/*.json
+            artifacts/audio-cpu-full/*.bin
+            artifacts/audio-cpu-inputs/audio-cpu-inputs.json
+            artifacts/audio-cpu-candidate/candidate-range-receipt.json
+            artifacts/audio-cpu-original/original-range-receipt.json
+          retention-days: 7
+          if-no-files-found: warn
+          compression-level: 0

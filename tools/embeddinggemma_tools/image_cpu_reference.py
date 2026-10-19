@@ -101,6 +101,11 @@ def _load_pipeline(snapshot, metadata, profile):
 
 
 def _peak_rss_bytes():
+    """Whole-process Linux RSS peak or Windows OS peak working-set bytes."""
+    if sys.platform == 'win32':
+        from .cpu_progress import own_process_memory
+        observed = own_process_memory()['peak_rss_bytes']
+        return observed if type(observed) is int and observed > 0 else None
     if sys.platform != 'linux':
         return None
     import resource

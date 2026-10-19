@@ -52,6 +52,14 @@ jobs:
             --input ../artifacts/original --candidate-distribution-directory ../artifacts/candidate/audio-runtime-reference \
             --output ../artifacts/pinned-audio \
             --raw-input --variant ordered_original_midpoint_bmm --case "$CASE_ID"
+      - name: Replay the audited silence encoder through explicit CPU ONNX sessions
+        if: matrix.case_id == 'silence'
+        timeout-minutes: 12
+        run: >-
+          uv run --locked --group cpu-comparison python -m embeddinggemma_tools.onnx_cpu_comparison
+          --chain-report ../artifacts/pinned-audio/frozen-audio-chained-onnx.json
+          --original ../artifacts/original --source "$GITHUB_SHA"
+          --output ../artifacts/pinned-audio/cpu-onnx-replay.json
       - name: Check artifact publication privacy
         id: privacy_upload_1
         if: always()

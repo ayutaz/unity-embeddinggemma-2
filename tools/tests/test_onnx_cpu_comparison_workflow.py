@@ -1,0 +1,40 @@
+from pathlib import Path
+import tomllib
+
+import yaml
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def workflow(name):
+    return yaml.load((ROOT / '.github/workflows' / name).read_text(encoding='utf-8'),
+                     Loader=yaml.BaseLoader)
+
+
+def test_python_ci_installs_and_uses_the_optional_cpu_group_in_every_environment():
+    steps = workflow('python-tests.yml')['jobs']['unit']['steps']
+    sync = next(s['run'] for s in steps if s.get('run', '').startswith('uv sync'))
+    tests = next(s['run'] for s in steps if 'python -m pytest' in s.get('run', ''))
+    assert '--group cpu-comparison' in sync and '--group cpu-comparison' in tests
+    project = tomllib.loads((ROOT / 'tools/pyproject.toml').read_text(encoding='utf-8'))
+    assert any(d.startswith('onnxruntime') for d in project['dependency-groups']['cpu-comparison'])
+    assert not any(d.startswith('onnxruntime') for d in project['project']['dependencies'])
+
+
+def test_cpu_silence_replay_uses_the_audited_actual_chain_and_is_a_hard_gate():
+    job = workflow('pinned-audio-acceptance.yml')['jobs']['execute']
+    steps = job['steps']
+    cpu = next(s for s in steps if 'embeddinggemma_tools.onnx_cpu_comparison' in s.get('run', ''))
+    assert cpu['if'] == "matrix.case_id == 'silence'"
+    assert cpu.get('continue-on-error', 'false') == 'false'
+    assert '--group cpu-comparison' in cpu['run']
+    assert '--chain-report ../artifacts/pinned-audio/frozen-audio-chained-onnx.json' in cpu['run']
+    assert '--original ../artifacts/original' in cpu['run']
+    assert '--source "$GITHUB_SHA"' in cpu['run']
+    assert '--output ../artifacts/pinned-audio/cpu-onnx-replay.json' in cpu['run']
+    numerical = next(s for s in steps if 'embeddinggemma_tools.frozen_audio_chained_onnx' in s.get('run', ''))
+    guard = next(s for s in steps if s.get('uses') == './.github/actions/privacy-artifact-guard')
+    assert steps.index(numerical) < steps.index(cpu) < steps.index(guard)
+    assert 'artifacts/pinned-audio/*.json' in guard['with']['paths']
+    assert 'artifacts/pinned-audio/*.bin' in guard['with']['paths']
+    assert job['strategy']['matrix']['case_id'] == ['silence', 'impulse', 'sine', 'nyquist', 'noise', 'padded_noise']

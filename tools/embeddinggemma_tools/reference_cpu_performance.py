@@ -28,6 +28,7 @@ class CpuReferenceCase:
     encoder:Callable
     backbone:Callable
     active_modules:tuple
+    after_stage:Callable | None = None
 
 
 def _tensor(value):
@@ -58,6 +59,8 @@ def _vector(value):
 
 
 def _validate(case):
+    if case.after_stage is not None and not callable(case.after_stage):
+        raise ValueError('The optional stage observer must be callable')
     if case.module not in CASES or case.reference_case_id!=CASES[case.module]:
         raise ValueError('Choose the same fixed input case as the reviewed GPU measurement')
     expected=IMAGE_REFERENCE if case.module.startswith('image-') else AUDIO_REFERENCE
@@ -81,6 +84,8 @@ def measure_reference_pipeline(case,output):
     if re.fullmatch('[a-f0-9]{64}',signature or '') is None:raise ValueError('Input state requires a SHA256 signature')
     output.parent.mkdir(parents=True,exist_ok=True)
     report=dict(schema=1,success=False,phase='starting',scope='Reference CPU chained numerical repeats and process timings only',framework='PyTorch reference',actual_backend='CPU',module=case.module,precision=case.precision,descriptor_sha256=case.descriptor_sha256,reference_sha256=case.reference_sha256,input_sha256=case.input_sha256,reference_case_id=case.reference_case_id,source=case.source,input_state_sha256=signature,rounds=[],CPU_scope='Whole reference process CPU threads; not Sentis/Editor CPU time',GPU_execution_claimed=False,complete_performance_accepted=False,model_generation_qualified=False,stage_scope='Actual callback only; protocol validation/report writes are excluded',case_scope='Three actual stages plus protocol observers; input signatures and vector checks outside the interval')
+    report.update(stage_observer_present=case.after_stage is not None, stage_observer_time_excluded=True)
+    report['case_scope']='Three actual stages plus protocol checks; input signatures, vector checks and optional stage snapshot observer are outside the interval'
     with output.open('x',encoding='utf-8') as f:json.dump(report,f,indent=2)
     def save():output.write_text(json.dumps(report,indent=2,allow_nan=False)+'\n',encoding='utf-8')
     try:
@@ -88,23 +93,33 @@ def measure_reference_pipeline(case,output):
             for round_name in ROUNDS:
                 if case.input_signature()!=signature:raise ValueError('The repeated input state changed')
                 report['phase']=round_name;save();stages=[];wall=time.perf_counter();cpu=time.process_time()
+                observer_wall=0.;observer_cpu=0.
                 def execute(name,function,*args):
+                    nonlocal observer_wall,observer_cpu
                     begin=time.perf_counter();begin_cpu=time.process_time();value=function(*args)
                     elapsed=time.perf_counter()-begin;used=time.process_time()-begin_cpu
                     _tree(value)
+                    if case.after_stage is not None:
+                        observed_at=time.perf_counter();observed_cpu=time.process_time()
+                        case.after_stage(name,value)
+                        observer_wall+=time.perf_counter()-observed_at
+                        observer_cpu+=time.process_time()-observed_cpu
                     stages.append(dict(stage=name,wall_seconds=elapsed,process_cpu_seconds=used,gpu_elapsed_ns=None))
                     return value
                 preprocessed=execute('preprocessing',case.preprocess)
                 encoded=execute('encoder',case.encoder,preprocessed)
                 actual=execute('backbone',case.backbone,encoded)
-                elapsed=time.perf_counter()-wall;used=time.process_time()-cpu
+                elapsed=max(0.,time.perf_counter()-wall-observer_wall);used=max(0.,time.process_time()-cpu-observer_cpu)
                 if case.input_signature()!=signature:raise ValueError('A stage mutated the repeated input state')
                 values,norm=_vector(actual)
                 cosine=math.fsum(x*y for x,y in zip(values,expected,strict=True))/math.sqrt(norm*expected_norm)
                 if not math.isfinite(cosine) or cosine<.999:raise ValueError('Actual CPU output differs from the original reference')
                 capture=captures[round_name];raw=actual.detach().reshape(768).contiguous().numpy().astype('<f4',copy=False).tobytes()
                 with capture.open('xb') as f:f.write(raw)
-                report['rounds'].append(dict(round=round_name,wall_seconds=elapsed,process_cpu_seconds=used,stages=stages,cosine=cosine,norm_squared=norm,input_state_sha256=signature,capture=capture.name,capture_sha256=hashlib.sha256(raw).hexdigest()));save()
+                report['rounds'].append(dict(round=round_name,wall_seconds=elapsed,process_cpu_seconds=used,
+                    stage_observer_wall_seconds=observer_wall,stage_observer_process_cpu_seconds=observer_cpu,
+                    stages=stages,cosine=cosine,norm_squared=norm,input_state_sha256=signature,
+                    capture=capture.name,capture_sha256=hashlib.sha256(raw).hexdigest()));save()
         report.update(success=True,phase='complete',input_signatures_checked_before_and_after_each_round=True);save();return report
     except BaseException as error:
         report.update(success=False,phase='failed',error_class=type(error).__name__);save();raise

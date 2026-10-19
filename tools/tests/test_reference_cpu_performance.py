@@ -105,3 +105,41 @@ def test_wrong_expected_reference_is_rejected_without_normalizing_it_away(tmp_pa
     module,case,_,calls=fixture()
     with pytest.raises(ValueError):module.measure_reference_pipeline(replace(case,expected=case.expected*2),tmp_path/'result.json')
     assert not calls
+
+
+def test_stage_snapshot_observer_runs_before_consumption_without_replacing_actual_values(tmp_path):
+    module, case, _, calls = fixture()
+    observed = []
+    def observer(name, value):
+        observed.append((name, value.detach().clone()))
+        return torch.tensor([999.])
+    result = module.measure_reference_pipeline(replace(case, after_stage=observer), tmp_path / 'result.json')
+    assert result['success'] and calls == ['preprocessing', 'encoder', 'backbone'] * 4
+    assert [name for name, _ in observed] == ['preprocessing', 'encoder', 'backbone'] * 4
+    assert observed[0][1].item() == 1 and observed[1][1].item() == 2
+
+
+def test_stage_snapshot_time_is_separate_from_stage_and_chain_measurements(tmp_path, monkeypatch):
+    module, case, _, _ = fixture()
+    clock = {'wall': 0., 'cpu': 0.}
+    monkeypatch.setattr(module.time, 'perf_counter', lambda: clock['wall'])
+    monkeypatch.setattr(module.time, 'process_time', lambda: clock['cpu'])
+    def timed(function):
+        def run(*args):
+            result = function(*args)
+            clock['wall'] += .1
+            clock['cpu'] += .05
+            return result
+        return run
+    def observer(name, value):
+        clock['wall'] += 1
+        clock['cpu'] += .4
+    actual = replace(case, preprocess=timed(case.preprocess), encoder=timed(case.encoder),
+                     backbone=timed(case.backbone), after_stage=observer)
+    result = module.measure_reference_pipeline(actual, tmp_path / 'result.json')
+    for row in result['rounds']:
+        assert row['wall_seconds'] == pytest.approx(.3)
+        assert row['process_cpu_seconds'] == pytest.approx(.15)
+        assert row['stage_observer_wall_seconds'] == pytest.approx(3)
+        assert row['stage_observer_process_cpu_seconds'] == pytest.approx(1.2)
+        assert all(stage['wall_seconds'] == pytest.approx(.1) for stage in row['stages'])

@@ -2,6 +2,10 @@
 
 ## 2026-10-20の参照対応付け
 
+[完全な画像CPU比較の実行入口](image-cpu-reference.md)は、実前処理→encoder→
+backboneを4回接続し、各段のsnapshotを残して別processで照合します。
+小規模TDDと実モデルCI・独立成果物監査の結果は分けて記録します。
+
 GPU fixtureが固定するencoder参照 `3dfccd1a…`、そのaudit `ab1aa775…` と、
 元Document最終参照 `90692ad3…` を、`image_reference_cohort` で対応付けます。
 Documentが記録するencoder生成元は `7c183c52…` です。この元JSONも後から回収し、

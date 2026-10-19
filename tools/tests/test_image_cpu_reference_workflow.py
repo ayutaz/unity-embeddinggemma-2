@@ -19,7 +19,7 @@ def test_new_image_CPU_measurement_is_explicit_manual_and_legacy_modes_are_exclu
     assert "github.event_name == 'workflow_dispatch'" in job['if']
     assert 'inputs.image_cpu_measurement' in job['if']
     for name, legacy in value['jobs'].items():
-        if name not in {'image_cpu_measurement', 'image_cpu_host_comparison'}:
+        if name not in {'image_cpu_measurement', 'image_cpu_host_comparison', 'audio_cpu_measurement'}:
             assert '!inputs.image_cpu_measurement' in legacy['if']
 
 
@@ -60,7 +60,7 @@ def test_same_host_comparison_retains_partial_evidence_under_exact_privacy_guard
 def test_host_only_selection_reaches_admission_and_cannot_fall_through_to_legacy_models():
     value = workflow()
     for name, job in value['jobs'].items():
-        if name not in {'image_cpu_measurement', 'image_cpu_host_comparison'}:
+        if name not in {'image_cpu_measurement', 'image_cpu_host_comparison', 'audio_cpu_measurement'}:
             assert '!inputs.image_cpu_host_comparison' in job['if']
     paired = value['jobs']['image_cpu_host_comparison']
     assert '&& inputs.image_cpu_measurement &&' not in paired['if']

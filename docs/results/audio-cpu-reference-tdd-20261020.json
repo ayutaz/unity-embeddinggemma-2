@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "checked_date_JST": "2026-10-20",
+  "scope": "Synthetic staged audio CPU measurement, saved-capture auditor and CLI TDD only",
+  "measurement_red_missing_module": 8,
+  "measurement_green": 8,
+  "capture_auditor_red": {
+    "failed": 10,
+    "passed": 8
+  },
+  "capture_auditor_green": 18,
+  "CLI_and_pre_model_admission_red": {
+    "failed": 3,
+    "passed": 18
+  },
+  "CLI_green": 21,
+  "final_related_green": {
+    "passed": 180,
+    "skipped": 0
+  },
+  "implementation_normalized_LF_SHA256": "22db2714e8c389ba8ef3e1f7ceeaea6428c4583d01ffc7a8ef80776c32c4d32f",
+  "original_case_metadata_and_input_loader_exercised": true,
+  "model_modules_replaced_with_explicit_synthetic_CPU_modules_in_tests": true,
+  "real_model_weight_or_ONNX_part_loading_exercised_by_measurement_tests": false,
+  "four_actual_synthetic_stage_carries_checked": true,
+  "final_vector_match_cannot_hide_intermediate_failure": true,
+  "partial_preprocessing_and_downstream_failures_preserved": true,
+  "capture_audit_rejects_changed_bytes_with_updated_hashes": true,
+  "context_source_provider_and_journal_mismatches_rejected": true,
+  "CLI_output_omits_supplied_local_paths": true,
+  "existing_reports_and_audits_not_overwritten": true,
+  "original_reference_or_tolerance_changed": false,
+  "real_original_PCM_to_EmbeddingGemma_vector_executed": false,
+  "CPU_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "GPU_validated": false,
+  "required_platforms_accepted": false,
+  "formal_release_created": false
+}

@@ -1,0 +1,151 @@
+{
+  "success": true,
+  "stage": "audio_preprocessing_only",
+  "case_count": 6,
+  "unity_validated": false,
+  "encoders_validated": false,
+  "maximum_absolute_error": 0.0038890838623046875,
+  "metadata": {
+    "model_id": "google/embeddinggemma-2",
+    "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+    "source_commit": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+    "stage": "audio_preprocessing_only",
+    "num_samples": 179200,
+    "sampling_rate": 16000,
+    "feature_shape": [
+      1,
+      1119,
+      128
+    ],
+    "sample_shape": [
+      1,
+      179200
+    ],
+    "frame_mask_shape": [
+      1,
+      1119
+    ],
+    "processor_sha256": "168f6a08522f3ce5dea596d94d003af2fd691742d4f41fe1f9d8cce76bfbf69c",
+    "feature_rtol": 0.0001,
+    "feature_atol": 0.004,
+    "fixture_provenance": "procedurally_generated_pcm_no_user_audio",
+    "waveform_encoding": "little_endian_float32",
+    "mask_encoding": "little_endian_int32",
+    "reference": "official_Gemma4AudioFeatureExtractor",
+    "versions": {
+      "torch": "2.14.1",
+      "transformers": "5.19.0",
+      "numpy": "2.5.3"
+    }
+  },
+  "files": {
+    "audio-preprocessor.pt2": {
+      "bytes": 6898310,
+      "sha256": "fc78992de7a167cc207c7c33e47f52be5004323417f9c46eeabea6a0477235ab"
+    },
+    "silence-pcm-fp32.bin": {
+      "bytes": 716800,
+      "sha256": "c9c9803e19adb2d139ad00b54f4af71f80c2b2530b10828a913b5b82c18559b8"
+    },
+    "silence-samples-int32.bin": {
+      "bytes": 716800,
+      "sha256": "566ca677807f155211b10c5da2e5cc4f6b9f0dfd69107d123ef042451d1eac8d"
+    },
+    "silence-features-fp32.bin": {
+      "bytes": 572928,
+      "sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24"
+    },
+    "silence-frames-int32.bin": {
+      "bytes": 4476,
+      "sha256": "d1d720a6b7013a4b396f2a8595d52f9648132b665f40f899b09bc62918e57c95"
+    },
+    "impulse-pcm-fp32.bin": {
+      "bytes": 716800,
+      "sha256": "f63b23440fec4277e71da24be5412671c11051256fe6354ecbd0da5436b40f1d"
+    },
+    "impulse-samples-int32.bin": {
+      "bytes": 716800,
+      "sha256": "566ca677807f155211b10c5da2e5cc4f6b9f0dfd69107d123ef042451d1eac8d"
+    },
+    "impulse-features-fp32.bin": {
+      "bytes": 572928,
+      "sha256": "2202541551e06a429b222d31f3d495a2b051fca70191287c82c7f6a6d8803c82"
+    },
+    "impulse-frames-int32.bin": {
+      "bytes": 4476,
+      "sha256": "d1d720a6b7013a4b396f2a8595d52f9648132b665f40f899b09bc62918e57c95"
+    },
+    "sine-pcm-fp32.bin": {
+      "bytes": 716800,
+      "sha256": "086b7b0033dbb8e73a33cfdf72717e24e527909b6b4c9051f6a260218762d0d2"
+    },
+    "sine-samples-int32.bin": {
+      "bytes": 716800,
+      "sha256": "566ca677807f155211b10c5da2e5cc4f6b9f0dfd69107d123ef042451d1eac8d"
+    },
+    "sine-features-fp32.bin": {
+      "bytes": 572928,
+      "sha256": "dcc0ed05018d225a140916249cb3a3ab948c4cc50e5f457abac24e909e9c64c5"
+    },
+    "sine-frames-int32.bin": {
+      "bytes": 4476,
+      "sha256": "d1d720a6b7013a4b396f2a8595d52f9648132b665f40f899b09bc62918e57c95"
+    },
+    "nyquist-pcm-fp32.bin": {
+      "bytes": 716800,
+      "sha256": "e4e9bcbac1eb9086949cccb4fb354be91e8064772acaf97200dfc4c59360da49"
+    },
+    "nyquist-samples-int32.bin": {
+      "bytes": 716800,
+      "sha256": "566ca677807f155211b10c5da2e5cc4f6b9f0dfd69107d123ef042451d1eac8d"
+    },
+    "nyquist-features-fp32.bin": {
+      "bytes": 572928,
+      "sha256": "eaaa9e11f4d282294a9c57d4eddd392d2a257ea1f342d0452d99984602ff1e96"
+    },
+    "nyquist-frames-int32.bin": {
+      "bytes": 4476,
+      "sha256": "d1d720a6b7013a4b396f2a8595d52f9648132b665f40f899b09bc62918e57c95"
+    },
+    "noise-pcm-fp32.bin": {
+      "bytes": 716800,
+      "sha256": "7bb6279a9712e9ccda41f4ff1edd826c45c30a1d9cfee822977009457b50063d"
+    },
+    "noise-samples-int32.bin": {
+      "bytes": 716800,
+      "sha256": "566ca677807f155211b10c5da2e5cc4f6b9f0dfd69107d123ef042451d1eac8d"
+    },
+    "noise-features-fp32.bin": {
+      "bytes": 572928,
+      "sha256": "b26f15554a3123e12cb39949709ea94588c27a5324f4cadefc701fba124c5c42"
+    },
+    "noise-frames-int32.bin": {
+      "bytes": 4476,
+      "sha256": "d1d720a6b7013a4b396f2a8595d52f9648132b665f40f899b09bc62918e57c95"
+    },
+    "padded_noise-pcm-fp32.bin": {
+      "bytes": 716800,
+      "sha256": "ca189983f2a78b942e20d70ddaf77b71aade9eb75ccc7c6b645f764427cc0e91"
+    },
+    "padded_noise-samples-int32.bin": {
+      "bytes": 716800,
+      "sha256": "61bd8a396bb9df446e6c4c8e8684428147150c79f159a2194469a94b7a3971ce"
+    },
+    "padded_noise-features-fp32.bin": {
+      "bytes": 572928,
+      "sha256": "6065504b6b2d244526df3a79cb5b88e9463e8e576ff877b5b8fa90b9bf18b1b0"
+    },
+    "padded_noise-frames-int32.bin": {
+      "bytes": 4476,
+      "sha256": "604c12a03e7bce1f3f9379373dd926eedce33386844fd1f23ec4687834a551ec"
+    },
+    "audio-reference.json": {
+      "bytes": 2778,
+      "sha256": "1209e2f95df2d0527db23d9185e01c38289b365c46e623e03d3e9ce26f8dfcf8"
+    },
+    "processor_config.json": {
+      "bytes": 1788,
+      "sha256": "168f6a08522f3ce5dea596d94d003af2fd691742d4f41fe1f9d8cce76bfbf69c"
+    }
+  }
+}

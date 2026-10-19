@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "checked_date_JST": "2026-10-20",
+  "scope": "Official CPU preprocessing, actual loader and implementation provenance TDD only",
+  "original_failed_run_preserved": 39318048407,
+  "original_failed_source": "9bd7a26b7f6a431d70be554076c5347a7d1b9ce8",
+  "initial_red": {
+    "failed": 20,
+    "missing_class": 19,
+    "actual_loader_original_noise_feature_hash_mismatch": 1
+  },
+  "initial_green": {
+    "passed": 20,
+    "skipped": 0
+  },
+  "implementation_provenance_red": {
+    "failed": 3,
+    "deselected": 21
+  },
+  "final_related_green": {
+    "passed": 205,
+    "skipped": 0,
+    "warnings": 20
+  },
+  "actionlint_passed": true,
+  "source_fingerprints_normalized_LF": {
+    "tools/embeddinggemma_tools/audio_cpu_reference.py": "680162923084422adfbc906834ac5725d20f5b85b7fc608a99bf914e14e40239",
+    "tools/tests/test_audio_cpu_official_preprocessing.py": "84f1ba8e73be2ccdb8c3d4c2edfc54e2b912da2c1520ba705b96b4fa5f06cc2a",
+    "tools/tests/test_audio_cpu_reference.py": "e5fbe66225ac0dca24a6fa2b38a4caeb966c5358c023ea00ce86ae072929fff3"
+  },
+  "actual_local_PCM_preprocessing_without_models": [
+    {
+      "case": "silence",
+      "comparisons": [
+        {
+          "implementation": "official_default_extractor",
+          "values": 143232,
+          "bitwise_equal_original": true,
+          "numerically_unequal_values": 0,
+          "maximum_absolute_error": 0.0,
+          "original_tolerance_failures": 0,
+          "output_SHA256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24"
+        },
+        {
+          "implementation": "actual_export_wrapper",
+          "values": 143232,
+          "bitwise_equal_original": true,
+          "numerically_unequal_values": 0,
+          "maximum_absolute_error": 0.0,
+          "original_tolerance_failures": 0,
+          "output_SHA256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24"
+        }
+      ],
+      "official_frame_mask_exact": true,
+      "exported_frame_mask_exact": true
+    },
+    {
+      "case": "padded_noise",
+      "comparisons": [
+        {
+          "implementation": "official_default_extractor",
+          "values": 143232,
+          "bitwise_equal_original": true,
+          "numerically_unequal_values": 0,
+          "maximum_absolute_error": 0.0,
+          "original_tolerance_failures": 0,
+          "output_SHA256": "6065504b6b2d244526df3a79cb5b88e9463e8e576ff877b5b8fa90b9bf18b1b0"
+        },
+        {
+          "implementation": "actual_export_wrapper",
+          "values": 143232,
+          "bitwise_equal_original": false,
+          "numerically_unequal_values": 52161,
+          "maximum_absolute_error": 6.4373016357421875e-06,
+          "original_tolerance_failures": 0,
+          "output_SHA256": "64cf5a2f606739c8632d762c53c0dc6439a53890f578bdd816495834c579d453"
+        }
+      ],
+      "official_frame_mask_exact": true,
+      "exported_frame_mask_exact": true
+    }
+  ],
+  "golden_feature_buffers_not_used_as_execution_inputs": true,
+  "official_reference_algorithm_computes_from_PCM": true,
+  "SDK_GPU_preprocessor_unchanged": true,
+  "original_reference_or_tolerances_changed": false,
+  "new_official_frontend_full_model_execution_accepted": false,
+  "complete_CPU_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "GPU_validated": false,
+  "all_platforms_accepted": false,
+  "formal_release_created": false
+}

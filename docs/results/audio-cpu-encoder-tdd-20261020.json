@@ -1,0 +1,36 @@
+{
+  "schema": 1,
+  "checked_date_JST": "2026-10-20",
+  "scope": "Audited five-part CPU reference encoder adapter and small graph integration with the existing reference protocol",
+  "initial_red": {
+    "failed": 24,
+    "intended_cause": "missing embeddinggemma_tools.audio_cpu_encoder module",
+    "all24_intended_missing_module_errors_independently_counted": true
+  },
+  "initial_green": { "passed": 24, "skipped": 0 },
+  "strict_integer_admission_red": {
+    "failed": 1,
+    "passed": 25,
+    "cause": "boolean part index was incorrectly accepted as integer index"
+  },
+  "final_related_green": { "passed": 137, "skipped": 0 },
+  "test_files": [
+    "tools/tests/test_audio_cpu_encoder.py",
+    "tools/tests/test_onnx_cpu_comparison.py",
+    "tools/tests/test_reference_cpu_performance.py",
+    "tools/tests/test_image_cpu_reference.py"
+  ],
+  "actual_small_ONNX_CPU_sessions_executed": true,
+  "full_and_padded_static_shape_contracts_checked": true,
+  "synthetic_preprocessing_encoder_backbone_four_chain_protocol_checked": true,
+  "original_auditor_mocked_for_synthetic_graph_admission_tests": true,
+  "real_EmbeddingGemma_model_executed_by_new_adapter": false,
+  "real_PCM_to_original_final_vector_measurement_completed": false,
+  "original_reference_or_tolerance_changed": false,
+  "Unity_runtime_or_package_dependency_changed": false,
+  "CPU_reference_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "GPU_validated": false,
+  "all_platforms_accepted": false,
+  "formal_release_created": false
+}

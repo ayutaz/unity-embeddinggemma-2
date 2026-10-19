@@ -117,3 +117,20 @@ privacy guardの成功後に数値capture・安全なJSON・取得receiptだけ�
 入力PCM、snapshot、graph、重み、raw logはupload対象にしません。途中失敗は
 失敗のまま保持します。[入力配置とworkflowのTDD](results/audio-cpu-inputs-workflow-tdd-20261020.json)
 は関連213件成功・skip0とactionlint成功です。実モデルの成功や性能全体の合格とは区別します。
+
+### 診断ログと実入力の追加確認
+
+5つのモデル関連commandの標準出力・標準エラーはrunner内の非公開scratchへ保存し、
+公開logにはphaseと成功・失敗だけを出します。実commandの終了codeは保持します。
+実際のBashで正常終了 / exit 7の両方を検査し、修正前の10失敗からworkflowの
+19件成功・skip0、adapter・cohort・測定・既存画像/音声protocolを含む関連182件
+成功・skip0を確認しました。scratch logはartifactに含めません。この確認は実モデル
+推論の代わりではありません。
+
+source `4bb9575` では2つの元featuresを匿名の固定公開URLから実取得し、手続き入力
+6つと合わせた8 bufferすべてを保持済み原本とbyte比較しました。encoder JSONは
+保持済み原本を配置したため、全入力を新規公開取得したconsumerの証拠ではありません。
+3 JSONのGit blob・作業file・配置結果も元hashと一致しました。モデル実行はしていません。
+
+[追加確認の記録](results/audio-cpu-private-logs-and-inputs-20261020.json)では、元の
+入力・数値条件、公開取得と保持済み原本の区別、実モデル未実行の状態を保持します。

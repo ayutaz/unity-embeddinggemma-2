@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "checked_date_JST": "2026-10-20",
+  "scope": "Actual CI Bash log isolation and exact original input bytes; no real-model inference",
+  "raw_diagnostic_red": {
+    "failed": 10,
+    "deselected": 9,
+    "intended_failure": "Raw synthetic diagnostic reached stdout"
+  },
+  "actual_Bash_green": {
+    "passed": 19,
+    "skipped": 0,
+    "command_statuses_tested": [
+      0,
+      7
+    ],
+    "heavy_commands_tested": 5
+  },
+  "related_green": {
+    "passed": 182,
+    "skipped": 0,
+    "test_files": [
+      "test_audio_cpu_encoder.py",
+      "test_audio_cpu_cohort.py",
+      "test_audio_cpu_reference.py",
+      "test_audio_cpu_inputs.py",
+      "test_audio_cpu_workflow.py",
+      "test_reference_cpu_performance.py",
+      "test_cpu_execution_context.py",
+      "test_image_cpu_reference.py",
+      "test_image_cpu_reference_workflow.py",
+      "test_reference_context_workflow.py",
+      "test_frozen_audio_chained_onnx.py"
+    ]
+  },
+  "actionlint_passed": true,
+  "workflow_normalized_LF_SHA256": "4300423740e8ce3439b6e90a9beea690ad956ed6c3b2ea98ee8e99b74122fcd5",
+  "model_related_stdout_stderr_kept_in_ephemeral_private_scratch": true,
+  "original_command_exit_status_preserved": true,
+  "raw_logs_uploaded": false,
+  "input_only_actual_check": {
+    "source": "4bb9575e62d28eef581fe9939b95605bf6409bcb",
+    "public_feature_assets_fetched": 2,
+    "procedural_buffers_byte_equal_original": 6,
+    "all8_output_buffers_byte_equal_retained_originals": true,
+    "encoder_JSON_seeded_from_retained_original": true,
+    "full_fresh_public_consumer_claimed": false,
+    "original_JSON_Git_worktree_output_hashes": [
+      {
+        "file": "tools/references/audio-cpu-original/audio-reference.json",
+        "SHA256": "1209e2f95df2d0527db23d9185e01c38289b365c46e623e03d3e9ce26f8dfcf8",
+        "Git_worktree_output_original_bytes_equal": true
+      },
+      {
+        "file": "tools/references/audio-cpu-original/audio-validation.json",
+        "SHA256": "4e325f708e8d103a9de358a411380ddbb51cfe953984e9dcb73e291d919630fa",
+        "Git_worktree_output_original_bytes_equal": true
+      },
+      {
+        "file": "tools/references/audio-cpu-original/audio-embedding-reference.json",
+        "SHA256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+        "Git_worktree_output_original_bytes_equal": true
+      }
+    ],
+    "model_executed": false
+  },
+  "CPU_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "GPU_validated": false,
+  "all_platforms_accepted": false,
+  "formal_release_created": false
+}

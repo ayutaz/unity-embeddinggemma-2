@@ -91,34 +91,70 @@ jobs:
         run: uv run --no-project --python 3.13 python -c "import os; assert os.environ['LEGACY_SELECTED'] == 'false', 'Select only the audio CPU measurement mode'"
       - run: uv sync --locked --group cpu-comparison
       - name: Fetch reviewed distribution and unchanged original reference data
-        run: >-
-          uv run --locked python -m embeddinggemma_tools.selected_audio_generation fetch-distribution
-          --output ../artifacts/audio-cpu-candidate --original ../artifacts/audio-cpu-original --case "$CASE_ID"
+        run: |
+          mkdir -p ../artifacts/private-audio-cpu-logs
+          if uv run --locked python -m embeddinggemma_tools.selected_audio_generation fetch-distribution \
+              --output ../artifacts/audio-cpu-candidate --original ../artifacts/audio-cpu-original --case "$CASE_ID" \
+              > ../artifacts/private-audio-cpu-logs/fetch.log 2>&1; then
+            echo '{"phase":"reference_fetch","success":true}'
+          else
+            command_status=$?
+            echo '{"phase":"reference_fetch","success":false}'
+            exit "$command_status"
+          fi
       - name: Reconstruct procedural input bytes and verify every original hash
-        run: >-
-          uv run --locked python -m embeddinggemma_tools.audio_cpu_inputs
-          --encoder-reference ../artifacts/audio-cpu-original --output ../artifacts/audio-cpu-inputs
-          --fetch-missing-inputs --source "$GITHUB_SHA"
+        run: |
+          if uv run --locked python -m embeddinggemma_tools.audio_cpu_inputs \
+              --encoder-reference ../artifacts/audio-cpu-original --output ../artifacts/audio-cpu-inputs \
+              --fetch-missing-inputs --source "$GITHUB_SHA" \
+              > ../artifacts/private-audio-cpu-logs/materialize.log 2>&1; then
+            echo '{"phase":"input_materialization","success":true}'
+          else
+            command_status=$?
+            echo '{"phase":"input_materialization","success":false}'
+            exit "$command_status"
+          fi
       - name: Require original numerical gate for all five actual encoder parts
-        run: >-
-          uv run --locked python -m embeddinggemma_tools.frozen_audio_chained_onnx
-          --input ../artifacts/audio-cpu-original
-          --candidate-distribution-directory ../artifacts/audio-cpu-candidate/audio-runtime-reference
-          --output ../artifacts/audio-cpu-pinned
-          --raw-input --variant ordered_original_midpoint_bmm --case "$CASE_ID"
+        run: |
+          if uv run --locked python -m embeddinggemma_tools.frozen_audio_chained_onnx \
+              --input ../artifacts/audio-cpu-original \
+              --candidate-distribution-directory ../artifacts/audio-cpu-candidate/audio-runtime-reference \
+              --output ../artifacts/audio-cpu-pinned \
+              --raw-input --variant ordered_original_midpoint_bmm --case "$CASE_ID" \
+              > ../artifacts/private-audio-cpu-logs/encoder-gate.log 2>&1; then
+            echo '{"phase":"original_encoder_gate","success":true}'
+          else
+            command_status=$?
+            echo '{"phase":"original_encoder_gate","success":false}'
+            exit "$command_status"
+          fi
       - name: Measure actual original PCM preprocessing encoder and backbone
-        run: >-
-          uv run --locked --group cpu-comparison python -m embeddinggemma_tools.audio_cpu_reference measure
-          --preprocessing ../artifacts/audio-cpu-inputs --encoder-reference ../artifacts/audio-cpu-original
-          --document-reference ../artifacts/audio-cpu-inputs/audio-embedding-reference.json
-          --chain-report ../artifacts/audio-cpu-pinned/frozen-audio-chained-onnx.json
-          --case "$CASE_ID" --output ../artifacts/audio-cpu-full --source "$GITHUB_SHA"
+        run: |
+          if uv run --locked --group cpu-comparison python -m embeddinggemma_tools.audio_cpu_reference measure \
+              --preprocessing ../artifacts/audio-cpu-inputs --encoder-reference ../artifacts/audio-cpu-original \
+              --document-reference ../artifacts/audio-cpu-inputs/audio-embedding-reference.json \
+              --chain-report ../artifacts/audio-cpu-pinned/frozen-audio-chained-onnx.json \
+              --case "$CASE_ID" --output ../artifacts/audio-cpu-full --source "$GITHUB_SHA" \
+              > ../artifacts/private-audio-cpu-logs/measure.log 2>&1; then
+            echo '{"phase":"PCM_to_vector_measurement","success":true}'
+          else
+            command_status=$?
+            echo '{"phase":"PCM_to_vector_measurement","success":false}'
+            exit "$command_status"
+          fi
       - name: Recompute all saved actual CPU intermediate and final numerical gates
-        run: >-
-          uv run --locked --group cpu-comparison python -m embeddinggemma_tools.audio_cpu_reference audit
-          --preprocessing ../artifacts/audio-cpu-inputs --encoder-reference ../artifacts/audio-cpu-original
-          --document-reference ../artifacts/audio-cpu-inputs/audio-embedding-reference.json
-          --output ../artifacts/audio-cpu-full --source "$GITHUB_SHA"
+        run: |
+          if uv run --locked --group cpu-comparison python -m embeddinggemma_tools.audio_cpu_reference audit \
+              --preprocessing ../artifacts/audio-cpu-inputs --encoder-reference ../artifacts/audio-cpu-original \
+              --document-reference ../artifacts/audio-cpu-inputs/audio-embedding-reference.json \
+              --output ../artifacts/audio-cpu-full --source "$GITHUB_SHA" \
+              > ../artifacts/private-audio-cpu-logs/audit.log 2>&1; then
+            echo '{"phase":"saved_capture_audit","success":true}'
+          else
+            command_status=$?
+            echo '{"phase":"saved_capture_audit","success":false}'
+            exit "$command_status"
+          fi
       - name: Check original audio CPU numerical evidence publication privacy
         id: audio_cpu_privacy
         if: always()

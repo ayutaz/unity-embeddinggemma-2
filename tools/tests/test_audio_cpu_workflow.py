@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 import shlex
+import shutil
 import subprocess
 import sys
 
@@ -86,3 +87,33 @@ def test_complete_or_partial_numerical_evidence_has_exact_guard_without_PCM_or_w
     assert 'artifacts/audio-cpu-inputs/audio-cpu-inputs.json' in paths
     assert 'artifacts/audio-cpu-inputs/*' not in paths
     assert not any(v in paths for v in ('snapshot','*.onnx','*.pt2','*.safetensors','*.log'))
+
+
+@pytest.mark.parametrize('marker',[
+    'selected_audio_generation fetch-distribution',
+    'embeddinggemma_tools.audio_cpu_inputs',
+    'embeddinggemma_tools.frozen_audio_chained_onnx',
+    'embeddinggemma_tools.audio_cpu_reference measure',
+    'embeddinggemma_tools.audio_cpu_reference audit'])
+@pytest.mark.parametrize('command_status',[0,7])
+def test_actual_shell_preserves_command_status_without_echoing_raw_diagnostics(tmp_path,marker,command_status):
+    if os.name=='nt':
+        executable=shutil.which('git')
+        bash=Path(executable).resolve().parents[1]/'bin/bash.exe' if executable else None
+    else:
+        executable=shutil.which('bash')
+        bash=Path(executable) if executable else None
+    if bash is None or not bash.is_file():pytest.skip('Bash unavailable; actual CI shell handling is not verified')
+    command=next(v['run'] for v in audio_job()['steps'] if marker in v.get('run',''))
+    working=tmp_path/'tools'
+    working.mkdir()
+    log_root=tmp_path/'artifacts/private-audio-cpu-logs'
+    log_root.mkdir(parents=True)
+    diagnostic='synthetic-private-diagnostic'
+    script="uv() { printf '%s\\n' '"+diagnostic+"'; return "+str(command_status)+"; }\n"+command
+    result=subprocess.run([str(bash),'--noprofile','--norc','-e','-o','pipefail','-c',script],cwd=working,
+        env={**os.environ,'CASE_ID':'silence','GITHUB_SHA':'a'*40},capture_output=True,
+        creationflags=subprocess.CREATE_NO_WINDOW if os.name=='nt' else 0)
+    assert result.returncode==command_status
+    assert diagnostic.encode() not in result.stdout+result.stderr
+    assert any(diagnostic in v.read_text(encoding='utf-8') for v in log_root.glob('*.log'))

@@ -7,6 +7,8 @@ import time
 
 import numpy as np
 
+from .cpu_progress import ProgressJournal, own_process_memory
+
 ROUNDS = ('first', 'warm', 'repeat-1', 'repeat-2')
 
 
@@ -44,25 +46,33 @@ def _shape(port):
 
 
 class CpuOnnxSession:
-    def __init__(self, graph, expected_sha256):
+    def __init__(self, graph, expected_sha256, *, progress=None):
         import onnx
         import onnxruntime as ort
         self.graph = Path(graph)
         if (re.fullmatch('[a-f0-9]{64}', expected_sha256 or '') is None
                 or digest(self.graph) != expected_sha256):
             raise ValueError('The actual ONNX graph hash differs')
+        if progress is not None:
+            progress('onnx_parse_begin')
         model = onnx.load_model(self.graph, load_external_data=False)
         if _external_tensor(model):
             raise ValueError('Only inline weights bound by the complete graph hash are supported; external data is rejected')
         del model
+        if progress is not None:
+            progress('onnx_parse_end')
         options = ort.SessionOptions()
         options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_DISABLE_ALL
         options.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
         options.intra_op_num_threads = 4
         options.inter_op_num_threads = 1
         options.log_severity_level = 3
+        if progress is not None:
+            progress('session_create_begin')
         self.session = ort.InferenceSession(str(self.graph), sess_options=options,
                                            providers=['CPUExecutionProvider'])
+        if progress is not None:
+            progress('session_create_end')
         self.session.disable_fallback()
         if self.session.get_providers() != ['CPUExecutionProvider']:
             raise ValueError('Exactly the explicit CPU execution provider is required')
@@ -87,7 +97,7 @@ class CpuOnnxSession:
         return _array(result, self.output_shape)
 
 
-def replay_chain(sessions, initial, references, output):
+def replay_chain(sessions, initial, references, output, *, progress=None):
     """Run four actual carries. References are compared only after computation."""
     if (not sessions or len(sessions) != len(references)
             or not all(isinstance(s, CpuOnnxSession) for s in sessions)):
@@ -125,9 +135,13 @@ def replay_chain(sessions, initial, references, output):
         report['rounds'].append(row)
         actual = initial
         for index, (session, expected) in enumerate(zip(sessions, references, strict=True)):
+            if progress is not None:
+                progress.record('inference_part_begin', part=index, round_name=round_name)
             wall, cpu = time.perf_counter(), time.process_time()
             actual = session.run(actual)
             elapsed, used = time.perf_counter() - wall, time.process_time() - cpu
+            if progress is not None:
+                progress.record('inference_part_end', part=index, round_name=round_name)
             capture = captures[(round_name, index)]
             with capture.open('xb') as stream:
                 stream.write(actual.astype('<f4', copy=False).tobytes())
@@ -164,6 +178,12 @@ def replay_distribution(chain_report, original, output, *, source):
     if len(selected) != 1 or len(selected[0]['parts']) != 5:
         raise ValueError('Exactly five audited ordered ONNX parts are required')
     parts = selected[0]['parts']
+    with ProgressJournal(output.with_name(output.stem + '-progress.json'),
+            source=source, case_id=audited['case_id']) as journal:
+        return _replay_checked_parts(path, data, parts, audited, output, source, source_sha, journal)
+
+
+def _replay_checked_parts(path, data, parts, audited, output, source, source_sha, journal):
 
     def checked(name, expected_sha):
         if not isinstance(name, str) or '/' in name or '\\' in name or ':' in name or name in ('', '.', '..'):
@@ -179,20 +199,23 @@ def replay_distribution(chain_report, original, output, *, source):
         if part['index'] != index:
             raise ValueError('The five original graph parts must retain their order')
         graph = checked(part['graph'], part['graph_sha256'])
-        session = CpuOnnxSession(graph, part['graph_sha256'])
+        journal.record('load_part_begin', part=index)
+        session = CpuOnnxSession(graph, part['graph_sha256'],
+            progress=lambda phase: journal.record(phase, part=index))
         ref = checked(part['output_capture'], part['output_sha256'])
         array = np.fromfile(ref, dtype='<f4')
         if array.size != int(np.prod(session.output_shape)):
             raise ValueError('An actual reference capture shape differs')
         references.append(array.reshape(session.output_shape))
         sessions.append(session)
+        journal.record('load_part_end', part=index)
     initial_path = checked('raw-input-fp32.bin', data['input_sha256'])
     final_path = checked('reference-output-fp32.bin', data['reference_sha256'])
     initial = np.fromfile(initial_path, dtype='<f4').reshape(sessions[0].input_shape)
     references[-1] = np.fromfile(final_path, dtype='<f4').reshape(sessions[-1].output_shape)
     load_seconds, load_used = time.perf_counter() - load_wall, time.process_time() - load_cpu
     try:
-        result = replay_chain(sessions, initial, references, output)
+        result = replay_chain(sessions, initial, references, output, progress=journal)
         if digest(path) != source_sha or any(digest(s.graph) != s.configuration['graph_sha256'] for s in sessions):
             raise ValueError('Original chain/graph hashes changed during CPU replay')
     except FileExistsError:

@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "scope": "Progress and memory observations plus original-evidence publication ordering; no actual model acceptance",
+  "base_source": "fc732f871e9fdc811de7ce9989cf17d7e3c803c5",
+  "TDD_red_failed": 9,
+  "TDD_prior_passed": 1,
+  "final_related_passed": 92,
+  "final_related_failed": 0,
+  "final_related_skipped": 0,
+  "actual_Git_hook_tests_included": 6,
+  "previous_CPU_steps_attempted": 2,
+  "previous_CPU_step_results": "runner shutdown; cancelled; no CPU capture artifact",
+  "previous_runner_shutdown_cause_confirmed": false,
+  "previous_memory_exhaustion_confirmed": false,
+  "previous_numerical_mismatch_confirmed": false,
+  "previous_CPU_numeric_accepted": false,
+  "previous_five_original_case_source": "fc732f871e9fdc811de7ce9989cf17d7e3c803c5",
+  "previous_five_original_execution_source": "e474a4448db107523f8d9189e00f5906d2ef54ce",
+  "previous_five_original_values": 680960,
+  "previous_five_tolerance_failures": 0,
+  "previous_complete_six_case_acceptance": false,
+  "original_evidence_upload_precedes_CPU_step": true,
+  "separate_CPU_artifact_privacy_guard": true,
+  "CPU_failure_hard_gate_retained": true,
+  "CPU_backend_math_and_allocator_options_changed": false,
+  "original_references_tolerances_coefficients_unchanged": true,
+  "source_paths_and_exception_details_in_journal": false,
+  "memory_scope": "Whole owned CPU process resident and OS peak, not SDK-exclusive allocation",
+  "unknown_memory_values_are_null": true,
+  "inference_progress_IO_outside_timing_verified": true,
+  "loading_time_includes_progress_IO": true,
+  "new_actual_original_model_executed": false,
+  "real_CPU_encoder_accepted": false,
+  "CPU_reference_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "GPU_validation_claimed": false,
+  "formal_release_created": false,
+  "new_images_or_recordings": false,
+  "normalized_LF_code_SHA256": [
+    {
+      "file": ".github/workflows/pinned-audio-acceptance.yml",
+      "sha256": "5878c2c243c01c5e814936fdd7da3b9efb4c6ee3d98c92688d6190c1bf885db7"
+    },
+    {
+      "file": "tools/embeddinggemma_tools/cpu_progress.py",
+      "sha256": "0e9334497eca0484102b13b52eaa85d4c8b310dd28d4097c6cb943d928a6e109"
+    },
+    {
+      "file": "tools/embeddinggemma_tools/onnx_cpu_comparison.py",
+      "sha256": "5d99dd57b63de22ca56f47e9628afd6bfba3e4e2a683b9c26545e0f2a8149e18"
+    },
+    {
+      "file": "tools/tests/test_onnx_cpu_progress.py",
+      "sha256": "7ba11a9524ef89fd093fe80823ceb97c1c0c0ab79b4e06206f86737092e410d2"
+    },
+    {
+      "file": "tools/tests/test_onnx_cpu_comparison.py",
+      "sha256": "6e018df5c0dff6871b700c590bb8b3a1c84ea64186db6cafd0f63cc70df370ca"
+    },
+    {
+      "file": "tools/tests/test_onnx_cpu_comparison_workflow.py",
+      "sha256": "a4ef31cd3eb382f0c177d2679f329ce4cf9f73ee829567b13a2a20f3ea3921ed"
+    }
+  ]
+}

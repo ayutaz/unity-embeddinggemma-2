@@ -253,3 +253,42 @@ def test_provider_readback_must_be_cpu_only(tmp_path, monkeypatch):
     path, sha = graph(tmp_path)
     with pytest.raises(ValueError, match='CPU execution provider'):
         implementation().CpuOnnxSession(path, sha)
+
+
+def test_native_session_failure_retains_the_preallocation_journal(tmp_path, audited_chain, monkeypatch, capsys):
+    source, _, _ = audited_chain
+    module = implementation()
+    output = tmp_path / 'cpu-load.json'
+    progress_path = tmp_path / 'cpu-load-progress.json'
+    def failed_constructor(self, path, sha, *, progress=None):
+        assert json.loads(progress_path.read_text())['events'][-1]['phase'] == 'load_part_begin'
+        progress('session_create_begin')
+        raise MemoryError('unpublished-synthetic-detail')
+    monkeypatch.setattr(module.CpuOnnxSession, '__init__', failed_constructor)
+    with pytest.raises(MemoryError):
+        module.replay_distribution(source, tmp_path / 'original', output, source='a' * 40)
+    journal = json.loads(progress_path.read_text())
+    assert journal['terminal'] and not journal['success'] and journal['error_class'] == 'MemoryError'
+    assert journal['events'][-2]['phase'] == 'session_create_begin'
+    assert journal['events'][-2]['part'] == 0
+    assert not output.exists()
+    assert 'unpublished-synthetic-detail' not in progress_path.read_text() + capsys.readouterr().out
+
+
+def test_progress_io_is_outside_the_actual_inference_timing(tmp_path, monkeypatch):
+    module = implementation()
+    runner = session(tmp_path)
+    value = np.zeros((2, 3), dtype=np.float32)
+    clock = [0.0]
+    execute = runner.run
+    def actual_call(array):
+        result = execute(array)
+        clock[0] += 1
+        return result
+    class SlowJournal:
+        def record(self, *args, **kwargs):
+            clock[0] += 1000
+    monkeypatch.setattr(runner, 'run', actual_call)
+    monkeypatch.setattr(module.time, 'perf_counter', lambda: clock[0])
+    result = module.replay_chain([runner], value, [value], tmp_path / 'timed.json', progress=SlowJournal())
+    assert all(row['parts'][0]['wall_seconds'] == 1 for row in result['rounds'])

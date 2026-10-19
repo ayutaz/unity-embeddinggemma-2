@@ -24,3 +24,15 @@ uv --directory tools run --locked --group cpu-comparison python -m pytest tests/
 計時はencoderの実CPU session呼び出しと入力・出力整合性チェックの区間です。参照比較・captureとreport書き込みを含めず、loadは別に記録します。GPU kernel時間やSDK専有allocationとの比較値にはしません。
 
 reportの`encoder_replay_qualified`はこの1ケースのencoderに限ります。PCM前処理・backbone・最終768次元の連鎖、画像3形状、音声の他条件、全環境のCPU比較・性能全体・最低要件は別に残り、`CPU_reference_comparison_qualified`と`complete_performance_accepted`はfalseを維持します。
+
+## Runner停止後の証拠保持
+
+最初のCIと単一ジョブの再試行では、元参照回帰の実行後、追加CPU step中にrunnerの停止信号が記録されました。数値不一致やメモリ不足を確定できるログはなく、CPU captureも未回収です。同じsourceでの再試行は1回で止め、どちらの原本ログ・注釈も私的2コピーとhashで保持しています。元参照5ケースの680,960値は別に独立照合済み・超過0ですが、silenceを含む全6ケースやCPU全体の合格には数えません。
+
+元の回帰成果物をCPU stepの前にprivacy guard経由で保存するよう順序を変更します。追加CPUのreport・captureは別artifactとして、専用のprivacy guard後に保存します。CPU失敗のhard gate、元6ケース・数値基準・入力・model係数は維持します。
+
+CPU処理にはsource・case・part・roundと、全processのresident / peak memoryを記録するprogress journalを追加します。ONNXのparseとCPU session作成の前後、各実推論の前後を原子的に保存し、同じ許可済みfieldだけを直ちにstdoutへflushします。未知のmemory値はnullで、0や測定成功にはしません。path・例外本文はjournalへ記録しません。host全体が失われた場合、CPU artifactは依然として未回収になる可能性があるため、先に保存した元成果物とflush済みlogを使います。
+
+journalのmemoryはSDK専有allocationや最低要件の証明ではありません。推論partの計時区間からjournal I/Oを除きますが、load区間は記録処理を含みます。数値合格・性能全体の未確認flagsは維持し、allocatorや演算順序をこの修正で変更しません。
+
+この証拠保持の修正は[9件Red→関連92件Green](results/onnx-cpu-progress-preservation-tdd-20261019.json)で確認しました。実session作成失敗の直前journal、例外本文の非掲載、未知memoryのnull、原本の保護、推論計時からのjournal I/O除外を含みます。新sourceの実モデル結果は別途確認します。

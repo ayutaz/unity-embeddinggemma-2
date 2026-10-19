@@ -31,10 +31,23 @@ def test_cpu_silence_replay_uses_the_audited_actual_chain_and_is_a_hard_gate():
     assert '--chain-report ../artifacts/pinned-audio/frozen-audio-chained-onnx.json' in cpu['run']
     assert '--original ../artifacts/original' in cpu['run']
     assert '--source "$GITHUB_SHA"' in cpu['run']
-    assert '--output ../artifacts/pinned-audio/cpu-onnx-replay.json' in cpu['run']
+    assert '--output ../artifacts/pinned-cpu-onnx/cpu-onnx-replay.json' in cpu['run']
     numerical = next(s for s in steps if 'embeddinggemma_tools.frozen_audio_chained_onnx' in s.get('run', ''))
     guard = next(s for s in steps if s.get('uses') == './.github/actions/privacy-artifact-guard')
-    assert steps.index(numerical) < steps.index(cpu) < steps.index(guard)
+    original_upload = next(s for s in steps if s.get('with', {}).get('name', '').startswith('pinned-audio-'))
+    assert steps.index(numerical) < steps.index(guard) < steps.index(original_upload) < steps.index(cpu)
     assert 'artifacts/pinned-audio/*.json' in guard['with']['paths']
     assert 'artifacts/pinned-audio/*.bin' in guard['with']['paths']
     assert job['strategy']['matrix']['case_id'] == ['silence', 'impulse', 'sine', 'nyquist', 'noise', 'padded_noise']
+
+
+def test_cpu_diagnostics_have_their_own_guarded_upload_after_failure():
+    steps = workflow('pinned-audio-acceptance.yml')['jobs']['execute']['steps']
+    guard = next(s for s in steps if s.get('id') == 'privacy_cpu_upload')
+    assert 'always()' in guard['if'] and "matrix.case_id == 'silence'" in guard['if']
+    assert 'artifacts/pinned-cpu-onnx/*.json' in guard['with']['paths']
+    assert 'artifacts/pinned-cpu-onnx/*.bin' in guard['with']['paths']
+    upload = next(s for s in steps if s.get('with', {}).get('name', '').startswith('cpu-onnx-replay-'))
+    assert "steps.privacy_cpu_upload.outcome == 'success'" in upload['if']
+    assert 'always()' in upload['if']
+    assert steps.index(guard) < steps.index(upload)

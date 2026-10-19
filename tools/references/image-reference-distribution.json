@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "repository": "ayutaz/unity-embeddinggemma-2",
+  "tag": "image-reference-preview-6644eea",
+  "review_sha256": "6644eeabc7ac9721f241d381139148b412e73f4c145601560559d98cfec21864",
+  "assets": {
+    "vision-reference.json": {
+      "bytes": 23780437,
+      "sha256": "3dfccd1a487ce04df3f8d640483ca045f7a7a56231bc1096ad0f845c923a29c6"
+    },
+    "vision-validation.json": {
+      "bytes": 4082,
+      "sha256": "ab1aa775b553f33a5e2892abed2cdcef7768e35fbad6fa5af9ec3286a7ba90ba"
+    },
+    "image-embedding-reference.json": {
+      "bytes": 301132,
+      "sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac"
+    },
+    "LICENSE.txt": {
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    "NOTICE.txt": {
+      "bytes": 992,
+      "sha256": "6bbf9c11b65e6c752922e4f84aead2f6053819238ce8b5c201c35000ad738bc6"
+    },
+    "MODIFICATIONS.txt": {
+      "bytes": 589,
+      "sha256": "4769c9d99cb2f890822c0dbd57580ae4f8db0eafb3fea67bbfb3c617e5da3079"
+    }
+  }
+}

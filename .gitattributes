@@ -3,4 +3,6 @@ tools/references/original-audio-validation.json -text
 tools/references/audio-candidate-e9de158.json -text
 tools/references/native-regression-release.json -text
 tools/references/native-regression-distribution.json -text
+tools/references/image-reference-release-review.json -text
+tools/references/image-reference-distribution.json -text
 docs/results/audio-candidate-six-case-numerical-audit-20261018.json -text

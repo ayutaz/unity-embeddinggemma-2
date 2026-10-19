@@ -11,7 +11,7 @@ jobs:
   execute:
     runs-on: ubuntu-latest
     # Previous raw noise execution exceeded 20 minutes; all five parts must finish.
-    timeout-minutes: 40
+    timeout-minutes: 65
     strategy:
       fail-fast: false
       max-parallel: 6
@@ -73,6 +73,31 @@ jobs:
             artifacts/original/original-range-receipt.json
           retention-days: 7
           if-no-files-found: error
+      - name: Replay each audited encoder through explicit CPU ONNX sessions
+        timeout-minutes: 35
+        run: >-
+          uv run --locked --group cpu-comparison python -m embeddinggemma_tools.onnx_cpu_comparison
+          --chain-report ../artifacts/pinned-audio/frozen-audio-chained-onnx.json
+          --original ../artifacts/original --source "$GITHUB_SHA"
+          --graph-optimizations disabled --execution-schedule chain-major --node-order priority
+          --output ../artifacts/pinned-cpu-onnx/cpu-onnx-replay.json
+      - name: Check CPU diagnostic publication privacy
+        id: privacy_cpu_upload
+        if: ${{ always() }}
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: |
+            artifacts/pinned-cpu-onnx/*.json
+            artifacts/pinned-cpu-onnx/*.bin
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ always() && steps.privacy_cpu_upload.outcome == 'success' }}
+        with:
+          name: cpu-onnx-replay-${{ github.sha }}-${{ matrix.case_id }}
+          path: |
+            artifacts/pinned-cpu-onnx/*.json
+            artifacts/pinned-cpu-onnx/*.bin
+          retention-days: 7
+          if-no-files-found: warn
 
   audit:
     needs: [execute]

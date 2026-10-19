@@ -1,0 +1,409 @@
+"""Optional CPU-only ONNX replay; never a Sentis runtime or release acceptance."""
+import hashlib
+import json
+from pathlib import Path
+import re
+import time
+
+import numpy as np
+
+from .cpu_progress import ProgressJournal, own_process_memory
+
+ROUNDS = ('first', 'warm', 'repeat-1', 'repeat-2')
+GRAPH_OPTIMIZATIONS = ('disabled', 'basic')
+EXECUTION_SCHEDULES = ('chain-major', 'partition-major')
+NODE_ORDERS = ('default', 'priority')
+
+
+def _external_tensor(message):
+    if message.DESCRIPTOR.full_name == 'onnx.TensorProto':
+        return bool(message.external_data) or message.data_location == 1
+    for field, value in message.ListFields():
+        if field.message_type is not None:
+            children = value if field.is_repeated else (value,)
+            if any(_external_tensor(child) for child in children):
+                return True
+    return False
+
+
+def digest(path):
+    with Path(path).open('rb') as stream:
+        return hashlib.file_digest(stream, 'sha256').hexdigest()
+
+
+def _array(value, shape):
+    if not isinstance(value, np.ndarray) or value.dtype != np.float32:
+        raise ValueError('A real FP32 CPU array is required')
+    if tuple(value.shape) != tuple(shape):
+        raise ValueError('CPU tensor shape differs from the static graph')
+    if not np.isfinite(value).all():
+        raise ValueError('CPU tensor values must be finite')
+    return value
+
+
+def _shape(port):
+    if (port.type != 'tensor(float)' or not port.shape
+            or any(type(n) is not int or n < 1 for n in port.shape)):
+        raise ValueError('Only a positive static FP32 shape is supported')
+    return tuple(port.shape)
+
+
+class CpuOnnxSession:
+    def __init__(self, graph, expected_sha256, *, progress=None, graph_optimizations='disabled', node_order='default'):
+        if node_order not in NODE_ORDERS:
+            raise ValueError('Only reviewed default/priority node orders are supported')
+        if graph_optimizations not in GRAPH_OPTIMIZATIONS:
+            raise ValueError('Only reviewed disabled/basic graph optimization modes are supported')
+        import onnx
+        import onnxruntime as ort
+        self.graph = Path(graph)
+        if (re.fullmatch('[a-f0-9]{64}', expected_sha256 or '') is None
+                or digest(self.graph) != expected_sha256):
+            raise ValueError('The actual ONNX graph hash differs')
+        if progress is not None:
+            progress('onnx_parse_begin')
+        model = onnx.load_model(self.graph, load_external_data=False)
+        if _external_tensor(model):
+            raise ValueError('Only inline weights bound by the complete graph hash are supported; external data is rejected')
+        del model
+        if progress is not None:
+            progress('onnx_parse_end')
+        options = ort.SessionOptions()
+        options.graph_optimization_level = (ort.GraphOptimizationLevel.ORT_ENABLE_BASIC
+            if graph_optimizations == 'basic' else ort.GraphOptimizationLevel.ORT_DISABLE_ALL)
+        options.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
+        options.execution_order = (ort.ExecutionOrder.PRIORITY_BASED
+            if node_order == 'priority' else ort.ExecutionOrder.DEFAULT)
+        options.intra_op_num_threads = 4
+        options.inter_op_num_threads = 1
+        options.log_severity_level = 3
+        # Avoid speculative arenas/patterns and additional packed constants.
+        # Native session lifetimes are controlled by the selected schedule.
+        # The unchanged numerical gate still decides actual compatibility.
+        options.enable_cpu_mem_arena = False
+        options.enable_mem_pattern = False
+        options.add_session_config_entry('session.disable_prepacking', '1')
+        if progress is not None:
+            progress('session_create_begin')
+        self.session = ort.InferenceSession(str(self.graph), sess_options=options,
+                                           providers=['CPUExecutionProvider'])
+        if progress is not None:
+            progress('session_create_end')
+        self.session.disable_fallback()
+        if self.session.get_providers() != ['CPUExecutionProvider']:
+            raise ValueError('Exactly the explicit CPU execution provider is required')
+        inputs, outputs = self.session.get_inputs(), self.session.get_outputs()
+        if len(inputs) != 1 or len(outputs) != 1:
+            raise ValueError('Exactly one input and output are required')
+        self.input_shape, self.output_shape = _shape(inputs[0]), _shape(outputs[0])
+        self.input_name, self.output_name = inputs[0].name, outputs[0].name
+        if digest(self.graph) != expected_sha256:
+            raise ValueError('The ONNX graph hash changed during session creation')
+        actual_options = self.session.get_session_options()
+        if actual_options.graph_optimization_level != options.graph_optimization_level:
+            raise ValueError('Actual graph optimization mode differs from the reviewed selection')
+        if actual_options.execution_order != options.execution_order:
+            raise ValueError('Actual node order differs from the reviewed selection')
+        self.configuration = dict(providers=self.session.get_providers(),
+            graph_sha256=expected_sha256,
+            node_execution_order=actual_options.execution_order.name,
+            graph_optimizations='basic' if actual_options.graph_optimization_level == ort.GraphOptimizationLevel.ORT_ENABLE_BASIC else 'disabled',
+            execution_mode='sequential', intra_op_threads=4, inter_op_threads=1,
+            fallback_enabled=False, onnxruntime_version=ort.__version__,
+            cpu_memory_arena='enabled' if actual_options.enable_cpu_mem_arena else 'disabled',
+            memory_pattern='enabled' if actual_options.enable_mem_pattern else 'disabled',
+            constant_prepacking='disabled' if actual_options.get_session_config_entry('session.disable_prepacking') == '1' else 'enabled')
+
+    def run(self, value):
+        if self.session is None:
+            raise ValueError('The CPU session is closed')
+        _array(value, self.input_shape)
+        before = hashlib.sha256(value.tobytes()).digest()
+        result = self.session.run([self.output_name], {self.input_name: value})[0]
+        if hashlib.sha256(value.tobytes()).digest() != before:
+            raise ValueError('An actual CPU execution mutated its input')
+        return _array(result, self.output_shape)
+
+    def close(self):
+        """Release this native session owner; OS heap return is not guaranteed."""
+        self.session = None
+
+
+def replay_chain(sessions, initial, references, output, *, progress=None):
+    """Run four actual carries. References are compared only after computation."""
+    if (not sessions or len(sessions) != len(references)
+            or not all(isinstance(s, CpuOnnxSession) for s in sessions)):
+        raise ValueError('Actual CPU sessions and matching reference parts are required')
+    _array(initial, sessions[0].input_shape)
+    for index, (session, expected) in enumerate(zip(sessions, references, strict=True)):
+        try:
+            _array(expected, session.output_shape)
+        except ValueError as error:
+            raise ValueError('A reference shape/dtype/finite contract differs') from error
+        if index and session.input_shape != sessions[index - 1].output_shape:
+            raise ValueError('Adjacent CPU graph shapes do not connect')
+    output = Path(output)
+    captures = {(r, i): output.with_name(f'{output.stem}-{r}-part{i}.bin')
+                for r in ROUNDS for i in range(len(sessions))}
+    if output.exists() or any(p.exists() for p in captures.values()):
+        raise FileExistsError('Preserve all existing CPU reports and captures')
+    output.parent.mkdir(parents=True, exist_ok=True)
+    report = dict(schema=1, success=False, phase='starting',
+        scope='Explicit CPU ONNX encoder carry diagnostic only',
+        execution_schedule='chain-major', maximum_resident_sessions=len(sessions),
+        resident_session_scope='Owned native session handles; OS heap return is observed separately',
+        end_to_end_warm_timing_qualified=False,
+        actual_backend='CPUExecutionProvider', sessions=[s.configuration for s in sessions],
+        original_atol=1e-5, original_rtol=1e-4, rounds=[],
+        GPU_validated=False, CPU_reference_comparison_qualified=False,
+        complete_performance_accepted=False, references_used_as_inference_inputs=False,
+        timing_scope='CPU session including input/output integrity checks; excludes reference comparison, capture and report writes')
+
+    def save():
+        output.write_text(json.dumps(report, indent=2, allow_nan=False) + '\n', encoding='utf-8')
+
+    with output.open('x', encoding='utf-8') as stream:
+        json.dump(report, stream, indent=2, allow_nan=False)
+        stream.write('\n')
+    for round_name in ROUNDS:
+        row = dict(round=round_name, parts=[], tolerance_failures=0)
+        report['rounds'].append(row)
+        actual = initial
+        for index, (session, expected) in enumerate(zip(sessions, references, strict=True)):
+            if progress is not None:
+                progress.record('inference_part_begin', part=index, round_name=round_name)
+            wall, cpu = time.perf_counter(), time.process_time()
+            actual = session.run(actual)
+            elapsed, used = time.perf_counter() - wall, time.process_time() - cpu
+            if progress is not None:
+                progress.record('inference_part_end', part=index, round_name=round_name)
+            capture = captures[(round_name, index)]
+            with capture.open('xb') as stream:
+                stream.write(actual.astype('<f4', copy=False).tobytes())
+            difference = np.abs(actual - expected)
+            failures = int(np.count_nonzero(difference > np.float32(1e-5) + np.float32(1e-4) * np.abs(expected)))
+            row['parts'].append(dict(index=index, wall_seconds=elapsed, process_cpu_seconds=used,
+                capture=capture.name, sha256=digest(capture), shape=list(actual.shape),
+                tolerance_failures=failures, maximum_absolute_error=float(difference.max())))
+            row['tolerance_failures'] += failures
+            report['phase'] = 'numerical_failure' if failures else round_name
+            save()
+            if failures:
+                raise ValueError('Actual CPU output exceeds the original tolerance')
+    report.update(success=True, phase='complete')
+    save()
+    return report
+
+
+def replay_distribution(chain_report, original, output, *, source, graph_optimizations='disabled', execution_schedule='chain-major', node_order='default'):
+    """Require the unchanged original audit before loading any CPU graph."""
+    from .native_regression_distribution import audit_distribution_report
+    if node_order not in NODE_ORDERS:
+        raise ValueError('Only reviewed default/priority node orders are supported')
+    if execution_schedule not in EXECUTION_SCHEDULES:
+        raise ValueError('Only registered CPU execution schedules are supported')
+    if graph_optimizations not in GRAPH_OPTIMIZATIONS:
+        raise ValueError('Only reviewed disabled/basic graph optimization modes are supported')
+    if re.fullmatch('[a-f0-9]{40}', source or '') is None:
+        raise ValueError('Immutable execution source is required')
+    output = Path(output)
+    if output.exists():
+        raise FileExistsError('Preserve the existing CPU replay report')
+    audited = audit_distribution_report(chain_report, original)
+    if audited['original_tolerance_passed'] is not True or audited['source'] != source:
+        raise ValueError('The original reference gate and exact execution source must match')
+    path = Path(chain_report)
+    source_sha = digest(path)
+    data = json.loads(path.read_text(encoding='utf-8'))
+    selected = [row for row in data['cases'] if row['variant'] == 'ordered_original_midpoint_bmm']
+    if len(selected) != 1 or len(selected[0]['parts']) != 5:
+        raise ValueError('Exactly five audited ordered ONNX parts are required')
+    parts = selected[0]['parts']
+    with ProgressJournal(output.with_name(output.stem + '-progress.json'),
+            source=source, case_id=audited['case_id']) as journal:
+        return _replay_checked_parts(path, data, parts, audited, output, source, source_sha, journal, graph_optimizations, execution_schedule, node_order)
+
+
+def _replay_checked_parts(path, data, parts, audited, output, source, source_sha, journal, graph_optimizations, execution_schedule, node_order):
+
+    def checked(name, expected_sha):
+        if not isinstance(name, str) or '/' in name or '\\' in name or ':' in name or name in ('', '.', '..'):
+            raise ValueError('Only a relative capture/graph basename is supported')
+        target = path.parent / name
+        if not target.is_file() or target.is_symlink() or digest(target) != expected_sha:
+            raise ValueError('An actual graph/capture hash differs')
+        return target
+
+    if execution_schedule == 'partition-major':
+        return _replay_partition_major(path, data, parts, audited, output, source, source_sha,
+            journal, graph_optimizations, checked, node_order)
+
+    load_wall, load_cpu = time.perf_counter(), time.process_time()
+    sessions, references = [], []
+    for index, part in enumerate(parts):
+        if part['index'] != index:
+            raise ValueError('The five original graph parts must retain their order')
+        graph = checked(part['graph'], part['graph_sha256'])
+        journal.record('load_part_begin', part=index)
+        session = CpuOnnxSession(graph, part['graph_sha256'],
+            progress=lambda phase: journal.record(phase, part=index), graph_optimizations=graph_optimizations, node_order=node_order)
+        ref = checked(part['output_capture'], part['output_sha256'])
+        array = np.fromfile(ref, dtype='<f4')
+        if array.size != int(np.prod(session.output_shape)):
+            raise ValueError('An actual reference capture shape differs')
+        references.append(array.reshape(session.output_shape))
+        sessions.append(session)
+        journal.record('load_part_end', part=index)
+    initial_path = checked('raw-input-fp32.bin', data['input_sha256'])
+    final_path = checked('reference-output-fp32.bin', data['reference_sha256'])
+    initial = np.fromfile(initial_path, dtype='<f4').reshape(sessions[0].input_shape)
+    references[-1] = np.fromfile(final_path, dtype='<f4').reshape(sessions[-1].output_shape)
+    load_seconds, load_used = time.perf_counter() - load_wall, time.process_time() - load_cpu
+    try:
+        result = replay_chain(sessions, initial, references, output, progress=journal)
+        if digest(path) != source_sha or any(digest(s.graph) != s.configuration['graph_sha256'] for s in sessions):
+            raise ValueError('Original chain/graph hashes changed during CPU replay')
+    except FileExistsError:
+        raise
+    except Exception as error:
+        if output.is_file():
+            failed = json.loads(output.read_text(encoding='utf-8'))
+            failed.update(success=False, encoder_replay_qualified=False, source=source,
+                case_id=audited['case_id'], profile=audited['profile'],
+                original_chain_report_sha256=source_sha, original_reference_audit_passed=True,
+                phase='numerical_failure' if failed['phase'] == 'numerical_failure' else 'failed_cpu_replay',
+                error_class=type(error).__name__)
+            output.write_text(json.dumps(failed, indent=2, allow_nan=False) + '\n', encoding='utf-8')
+        raise
+    result.update(source=source, case_id=audited['case_id'], profile=audited['profile'],
+        original_chain_report_sha256=source_sha, original_reference_audit_passed=True,
+        encoder_replay_qualified=True, load_wall_seconds=load_seconds,
+        load_process_cpu_seconds=load_used)
+    output.write_text(json.dumps(result, indent=2, allow_nan=False) + '\n', encoding='utf-8')
+    return result
+
+
+def _replay_partition_major(path, data, parts, audited, output, source, source_sha, journal, graph_optimizations, checked, node_order):
+    """Interleave four real carries, keeping one native partition session owned."""
+    captures = {(r, i): output.with_name(f'{output.stem}-{r}-part{i}.bin')
+                for r in ROUNDS for i in range(5)}
+    if output.exists() or any(p.exists() for p in captures.values()):
+        raise FileExistsError('Preserve all existing CPU reports and captures')
+    graphs = []
+    for index, part in enumerate(parts):
+        if part['index'] != index:
+            raise ValueError('The five original graph parts must retain their order')
+        graphs.append(checked(part['graph'], part['graph_sha256']))
+        checked(part['output_capture'], part['output_sha256'])
+    checked('raw-input-fp32.bin', data['input_sha256'])
+    checked('reference-output-fp32.bin', data['reference_sha256'])
+    report = dict(schema=1, success=False, phase='starting',
+        scope='Four actual CPU encoder carries with partition-major numerical scheduling only',
+        execution_schedule='partition-major', maximum_resident_sessions=1,
+        resident_session_scope='Owned native session handles; OS heap return is observed separately',
+        actual_backend='CPUExecutionProvider', sessions=[],
+        original_atol=1e-5, original_rtol=1e-4,
+        rounds=[dict(round=r, parts=[], tolerance_failures=0) for r in ROUNDS],
+        GPU_validated=False, CPU_reference_comparison_qualified=False,
+        complete_performance_accepted=False, references_used_as_inference_inputs=False,
+        end_to_end_warm_timing_qualified=False,
+        timing_scope='Individual partition session calls, including input/output checks; four calls per loaded partition; not contiguous end-to-end warm timing',
+        load_timing_scope='Sum of five per-part setup intervals, not a contiguous whole-chain load',
+        source=source, case_id=audited['case_id'], profile=audited['profile'],
+        original_chain_report_sha256=source_sha, original_reference_audit_passed=True,
+        encoder_replay_qualified=False, load_wall_seconds=0.0, load_process_cpu_seconds=0.0)
+    def save():
+        output.write_text(json.dumps(report, indent=2, allow_nan=False) + '\n', encoding='utf-8')
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with output.open('x', encoding='utf-8') as stream:
+        json.dump(report, stream, indent=2, allow_nan=False)
+    values = None
+    try:
+        for index, (part, graph) in enumerate(zip(parts, graphs, strict=True)):
+            runner = None
+            wall, cpu = time.perf_counter(), time.process_time()
+            journal.record('load_part_begin', part=index)
+            try:
+                runner = CpuOnnxSession(graph, part['graph_sha256'],
+                    progress=lambda phase: journal.record(phase, part=index), graph_optimizations=graph_optimizations, node_order=node_order)
+                report['sessions'].append(dict(runner.configuration))
+                reference_path = (checked('reference-output-fp32.bin', data['reference_sha256'])
+                    if index == 4 else checked(part['output_capture'], part['output_sha256']))
+                flat = np.fromfile(reference_path, dtype='<f4')
+                if flat.size != int(np.prod(runner.output_shape)):
+                    raise ValueError('An actual reference capture shape differs')
+                expected = _array(flat.reshape(runner.output_shape), runner.output_shape)
+                if values is None:
+                    initial_path = checked('raw-input-fp32.bin', data['input_sha256'])
+                    initial = np.fromfile(initial_path, dtype='<f4').reshape(runner.input_shape)
+                    values = [initial.copy() for _ in ROUNDS]
+                for actual in values:
+                    _array(actual, runner.input_shape)
+                journal.record('load_part_end', part=index)
+                report['load_wall_seconds'] += time.perf_counter() - wall
+                report['load_process_cpu_seconds'] += time.process_time() - cpu
+                for stream_index, row in enumerate(report['rounds']):
+                    round_name = row['round']
+                    journal.record('inference_part_begin', part=index, round_name=round_name)
+                    wall, cpu = time.perf_counter(), time.process_time()
+                    actual = runner.run(values[stream_index])
+                    elapsed, used = time.perf_counter() - wall, time.process_time() - cpu
+                    journal.record('inference_part_end', part=index, round_name=round_name)
+                    capture = captures[(round_name, index)]
+                    with capture.open('xb') as stream:
+                        stream.write(actual.astype('<f4', copy=False).tobytes())
+                    difference = np.abs(actual - expected)
+                    failures = int(np.count_nonzero(difference > np.float32(1e-5) + np.float32(1e-4) * np.abs(expected)))
+                    row['parts'].append(dict(index=index, wall_seconds=elapsed, process_cpu_seconds=used,
+                        capture=capture.name, sha256=digest(capture), shape=list(actual.shape),
+                        tolerance_failures=failures, maximum_absolute_error=float(difference.max())))
+                    row['tolerance_failures'] += failures
+                    values[stream_index] = actual
+                    report['phase'] = 'numerical_failure' if failures else round_name
+                    save()
+                    if failures:
+                        raise ValueError('Actual CPU output exceeds the original tolerance')
+                if digest(graph) != part['graph_sha256']:
+                    raise ValueError('An original graph hash changed during CPU replay')
+            finally:
+                if runner is not None:
+                    try:
+                        journal.record('release_part_begin', part=index)
+                    finally:
+                        try:
+                            runner.close()
+                        finally:
+                            journal.record('release_part_end', part=index)
+        if digest(path) != source_sha or any(digest(g) != p['graph_sha256'] for g, p in zip(graphs, parts, strict=True)):
+            raise ValueError('Original chain/graph hashes changed during CPU replay')
+        report.update(success=True, phase='complete', encoder_replay_qualified=True)
+        save()
+        return report
+    except Exception as error:
+        report.update(success=False, encoder_replay_qualified=False, error_class=type(error).__name__,
+            phase='numerical_failure' if report['phase'] == 'numerical_failure' else 'failed_cpu_replay')
+        save()
+        raise
+
+
+def main(argv=None):
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--chain-report', type=Path, required=True)
+    parser.add_argument('--original', type=Path, required=True)
+    parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--source', required=True)
+    parser.add_argument('--graph-optimizations', choices=GRAPH_OPTIMIZATIONS, default='disabled')
+    parser.add_argument('--execution-schedule', choices=EXECUTION_SCHEDULES, default='chain-major')
+    parser.add_argument('--node-order', choices=NODE_ORDERS, default='default')
+    args = parser.parse_args(argv)
+    result = replay_distribution(args.chain_report, args.original, args.output, source=args.source,
+        graph_optimizations=args.graph_optimizations, execution_schedule=args.execution_schedule, node_order=args.node_order)
+    print(json.dumps(dict(success=result['success'], case_id=result['case_id'],
+        encoder_replay_qualified=result['encoder_replay_qualified'],
+        CPU_reference_comparison_qualified=False, complete_performance_accepted=False)))
+    return 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

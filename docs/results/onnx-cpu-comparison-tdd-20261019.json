@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "scope": "CPU ONNX comparison preparation and real tiny-graph tests only",
+  "base": "48f060ef2d66a860cb511c8b084bf17c0af8b821",
+  "TDD": [
+    {
+      "stage": "CPU sessions and actual carry",
+      "red_failed": 12
+    },
+    {
+      "stage": "Audited original ingress and external weight rejection",
+      "red_failed": 8,
+      "prior_passed": 12
+    },
+    {
+      "stage": "Workflow group and original graph/source binding",
+      "red_failed": 2
+    },
+    {
+      "stage": "Existing report preservation and post-load graph mutation",
+      "red_failed": 2,
+      "prior_passed": 21
+    }
+  ],
+  "final_related_passed": 82,
+  "final_related_failed": 0,
+  "final_related_skipped": 0,
+  "actual_installed_Git_hook_tests_included": 6,
+  "actual_optional_CPU_backend_tiny_graph_tests": 23,
+  "actual_original_model_executed": false,
+  "real_silence_ORT_encoder_accepted": false,
+  "CPU_reference_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "GPU_validation_claimed": false,
+  "original_tolerances_unchanged": true,
+  "original_references_unchanged": true,
+  "SDK_or_model_coefficients_changed": false,
+  "all_preexisting_locked_versions_unchanged": true,
+  "added_locked_packages": [
+    "flatbuffers",
+    "onnxruntime"
+  ],
+  "actual_new_images_or_recordings": false,
+  "code_and_workflow_SHA256_normalized_LF": [
+    {
+      "file": ".github/workflows/pinned-audio-acceptance.yml",
+      "sha256": "dd735bbfdb0a20e678289e4708ceee7e7f5ffc4ea4277560387131d8c0e7ca31"
+    },
+    {
+      "file": ".github/workflows/python-tests.yml",
+      "sha256": "e8dcfc36d8ce07170dfb9362e7f296f9fec0981c0f0dbeeb237d7ecbe4af1eca"
+    },
+    {
+      "file": "tools/embeddinggemma_tools/onnx_cpu_comparison.py",
+      "sha256": "cf67254becd822ad38100f76cd4ea71ebfad130e76f268d85c9a031a09aeffeb"
+    },
+    {
+      "file": "tools/tests/test_onnx_cpu_comparison.py",
+      "sha256": "9fe3231024c063576f9b4bf28dbb1bb105edde8f3ea97a8b736fe04a218bef61"
+    },
+    {
+      "file": "tools/tests/test_onnx_cpu_comparison_workflow.py",
+      "sha256": "0669c3a844812f3a3de4aebf0a349a8f6973293c20ac445be7c0820739c9da93"
+    },
+    {
+      "file": "tools/pyproject.toml",
+      "sha256": "dc207e60e2a9de763f18f1df0beba58f59afe356187e22cf61730c0305ca9f99"
+    },
+    {
+      "file": "tools/uv.lock",
+      "sha256": "b94442fcddd738c9581159bec4038960a47425b10bc3662d58c59e06e353e610"
+    }
+  ],
+  "real_model_next_gate": "CI silence actual five-graph CPU carry, all four rounds, unchanged originals and elementwise tolerances; six-signal original acceptance retained"
+}

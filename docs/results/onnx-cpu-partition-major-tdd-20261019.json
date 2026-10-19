@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "scope": "Partition-major four-stream CPU encoder numerical diagnostic; full-chain warm performance not accepted",
+  "base_source": "493f335a905fc470243c2b1626068aa86401b440",
+  "base_execution_source": "c49076855e4690141911af147a187197f5902324",
+  "base_run": 39255714739,
+  "base_run_conclusion": "failure",
+  "base_original_cases": 6,
+  "base_original_values": 824320,
+  "base_original_tolerance_failures": 0,
+  "base_original_uploaded_summary_exact_match": true,
+  "base_seven_original_archives_CRC_digest_and_two_private_copies_verified": true,
+  "base_CPU_step_conclusion": "cancelled",
+  "base_CPU_capture_artifact_available": false,
+  "base_CPU_progress_events": 34,
+  "base_CPU_last_observed_event": {
+    "phase": "inference_part_begin",
+    "part": 1,
+    "round": "first",
+    "elapsed_seconds": 448.81792391400006,
+    "rss_bytes": 14337609728,
+    "peak_rss_bytes": 14999564288
+  },
+  "base_maximum_observed_whole_process_OS_peak_bytes": 14999564288,
+  "base_cause_or_OOM_confirmed": false,
+  "TDD_core_failed": 7,
+  "TDD_wiring_failed": 2,
+  "TDD_wiring_prior_passed": 8,
+  "TDD_deferred_input_hash_rejection_failed": 2,
+  "final_related_passed": 96,
+  "final_related_failed": 0,
+  "final_related_skipped": 0,
+  "default_execution_schedule": "chain-major",
+  "CI_execution_schedule": "partition-major",
+  "CI_graph_optimizations": "disabled",
+  "legacy_all_resident_schedule_retained": true,
+  "required_actual_carries": 4,
+  "required_partitions_per_carry": 5,
+  "required_output_captures": 20,
+  "required_success_progress_events": 82,
+  "maximum_owned_native_sessions_tested": 1,
+  "native_session_ownership_is_not_OS_heap_release_guarantee": true,
+  "each_partition_loaded_once_then_four_calls": true,
+  "four_distinct_actual_carries_tested_through_final_partition": true,
+  "reference_injection_rejected_by_amplifying_test": true,
+  "deferred_input_and_final_reference_hash_rechecks_tested": true,
+  "close_on_native_and_numerical_failure_tested": true,
+  "original_graph_post_hash_checks_retained": true,
+  "original_files_and_all_capture_names_protected": true,
+  "inference_progress_IO_excluded": true,
+  "load_timing_scope": "Sum of per-part setup intervals, not contiguous whole-chain loading",
+  "end_to_end_warm_timing_qualified": false,
+  "original_reference_tolerances_or_coefficients_modified": false,
+  "SDK_and_Assets_unchanged": true,
+  "new_actual_full_model_executed": false,
+  "memory_reduction_proven": false,
+  "CPU_reference_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "GPU_validated": false,
+  "formal_release_created": false,
+  "normalized_LF_code_SHA256": [
+    {
+      "file": ".github/workflows/pinned-audio-acceptance.yml",
+      "sha256": "adb3b05ec3375e1295be9cacd31674c7ae5498d5ca858f7c3629264e9fb94ad4"
+    },
+    {
+      "file": "tools/embeddinggemma_tools/onnx_cpu_comparison.py",
+      "sha256": "47a909f091ceaa793f6ed2e4c609853bc6df097366faef78d58ab0f4ebf7925c"
+    },
+    {
+      "file": "tools/embeddinggemma_tools/cpu_progress.py",
+      "sha256": "4be7bb157dc68d171f38e8300006b0ce3a7554f82860cbd22760aaead02626b5"
+    },
+    {
+      "file": "tools/tests/test_onnx_cpu_comparison.py",
+      "sha256": "00a59d430e33e202365265094bbff9d08b9c80c66b1cfcbb672e2c833372af39"
+    },
+    {
+      "file": "tools/tests/test_onnx_cpu_comparison_workflow.py",
+      "sha256": "1c9f2d261438107750a420b9531a891e0497bda6430031c41c0e2deabf4288d7"
+    }
+  ]
+}

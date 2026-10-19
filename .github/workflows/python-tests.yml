@@ -32,9 +32,9 @@ jobs:
           python-version: ${{ matrix.python }}
           enable-cache: true
           cache-dependency-glob: tools/uv.lock
-      - run: uv sync --locked
+      - run: uv sync --locked --group cpu-comparison
       - name: Offline unit tests
-        run: uv run --locked python -m pytest -q -p embeddinggemma_tools.pytest_privacy --junitxml=../artifacts/python-tests.xml
+        run: uv run --locked --group cpu-comparison python -m pytest -q -p embeddinggemma_tools.pytest_privacy --junitxml=../artifacts/python-tests.xml
         env:
           HF_HUB_OFFLINE: '1'
           TRANSFORMERS_OFFLINE: '1'

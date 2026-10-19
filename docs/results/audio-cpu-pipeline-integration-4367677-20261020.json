@@ -1,0 +1,205 @@
+{
+  "schema": 1,
+  "checked_date_JST": "2026-10-20",
+  "PR": 109,
+  "PR_url": "https://github.com/ayutaz/unity-embeddinggemma-2/pull/109",
+  "actual_main": "811c0d2da93328a429ee54466f8b0e1eba7909d9",
+  "tested_head": "43676776755e1d02d7ebb43272ffd476260d3034",
+  "actual_CI_execution_source": "1c883273825a811c1ecddbb1b5fc4e4d312c1c40",
+  "exact_full_tree_matches": true,
+  "public_identity_and_provider_signature_verified": true,
+  "all_ancestor_history_postmerge_verified": true,
+  "actual_published_files_checked": 28,
+  "source_commits_checked": 19,
+  "required_CI_run": 39327624725,
+  "required_CI_conclusion": "success",
+  "all15_jobs_success": true,
+  "skipped_jobs": 0,
+  "original_gate_cases": 6,
+  "original_values": 824320,
+  "CPU_captures": 120,
+  "CPU_values_including_accepted_stage_references": 30822400,
+  "CPU_final_encoder_values_directly_original": 3297280,
+  "tolerance_failures": 0,
+  "numerical_archives": [
+    {
+      "case": "summary",
+      "artifact_id": 12224889462,
+      "bytes": 4691,
+      "SHA256": "eafe028963c8920abb48fddec4ed5c36f353510a62374f82bd35fb7980954321",
+      "all_CRCs_verified": true,
+      "two_complete_private_copies": true
+    },
+    {
+      "case": "impulse",
+      "artifact_id": 12224655171,
+      "bytes": 9482406,
+      "SHA256": "a43565b342a6b8b39dcc3e309886bf6dbe8f858f3a64cc96d117bb9fb6f30fa3",
+      "all_CRCs_verified": true,
+      "two_complete_private_copies": true
+    },
+    {
+      "case": "sine",
+      "artifact_id": 12224630911,
+      "bytes": 21211568,
+      "SHA256": "24cfecf349590a037888c93c2b95ab0887ac2ca0c8a01efc94e94b0aee566712",
+      "all_CRCs_verified": true,
+      "two_complete_private_copies": true
+    },
+    {
+      "case": "noise",
+      "artifact_id": 12223508977,
+      "bytes": 21368045,
+      "SHA256": "1f2a91368597c5fd8e64e0f8823bf95479251b6908e01452fee84f3f91ba819e",
+      "all_CRCs_verified": true,
+      "two_complete_private_copies": true
+    },
+    {
+      "case": "nyquist",
+      "artifact_id": 12223302323,
+      "bytes": 9228335,
+      "SHA256": "24e2679744b3a61533a759be0383bf04c056f9c0a4e0badba19afdaa32e7bc4c",
+      "all_CRCs_verified": true,
+      "two_complete_private_copies": true
+    },
+    {
+      "case": "padded_noise",
+      "artifact_id": 12223294107,
+      "bytes": 19149987,
+      "SHA256": "b222dbcb30baf3e3c88a0a3996dd8aaa03ca9493612dfffeeb4f7cb849cb8704",
+      "all_CRCs_verified": true,
+      "two_complete_private_copies": true
+    },
+    {
+      "case": "silence",
+      "artifact_id": 12223188213,
+      "bytes": 9418851,
+      "SHA256": "4c7cd7d6dec46c0d31365e0635edce511780d5e18bb253b510b801521a233471",
+      "all_CRCs_verified": true,
+      "two_complete_private_copies": true
+    },
+    {
+      "case": "cpu-sine",
+      "artifact_id": 12226190472,
+      "bytes": 19272193,
+      "SHA256": "8071c89e9c2857ea37e9d1cdc257dd0c4575b5aacb194a321c94372c4585e9ec",
+      "all_CRCs_verified": true,
+      "two_complete_private_copies": true
+    },
+    {
+      "case": "cpu-impulse",
+      "artifact_id": 12225985059,
+      "bytes": 6435164,
+      "SHA256": "d90cf2c305421c2457c6bf5484df5d4f2295574bcf3dc23c9f6a23b0ba2b762a",
+      "all_CRCs_verified": true,
+      "two_complete_private_copies": true
+    },
+    {
+      "case": "cpu-noise",
+      "artifact_id": 12224977294,
+      "bytes": 19267928,
+      "SHA256": "7f1f530b8286ce11f057cd0bb9e88bf98365c18bd2ad2d5ed3db1d055b5b50a3",
+      "all_CRCs_verified": true,
+      "two_complete_private_copies": true
+    },
+    {
+      "case": "cpu-nyquist",
+      "artifact_id": 12224892453,
+      "bytes": 6242910,
+      "SHA256": "88e3bfbba70f863593772da54f743875af40f1d1119aafbf596981ee6cc9b268",
+      "all_CRCs_verified": true,
+      "two_complete_private_copies": true
+    },
+    {
+      "case": "cpu-silence",
+      "artifact_id": 12223829722,
+      "bytes": 6359030,
+      "SHA256": "98130591f6064f4540481851b801e4551889126173b5076869fc99a9cd56073a",
+      "all_CRCs_verified": true,
+      "two_complete_private_copies": true
+    },
+    {
+      "case": "cpu-padded_noise",
+      "artifact_id": 12223634773,
+      "bytes": 17495575,
+      "SHA256": "8e599d65ada3a11e43aeeb5a8aaf698d2b0f2cb865b74ae114905589467f356c",
+      "all_CRCs_verified": true,
+      "two_complete_private_copies": true
+    }
+  ],
+  "each_CPU_journal_events_checked": 72,
+  "graph_binaries_independently_rehashed": false,
+  "duplicate_main_CI": {
+    "run": 39333958610,
+    "status": "completed",
+    "conclusion": "cancelled",
+    "deliberately_cancelled_duplicate_not_a_pass": true,
+    "jobs": [
+      {
+        "name": "package / package",
+        "conclusion": "success"
+      },
+      {
+        "name": "python / ubuntu-latest / Python 3.13",
+        "conclusion": "cancelled"
+      },
+      {
+        "name": "model-reference / pinned-audio / execute (nyquist)",
+        "conclusion": "cancelled"
+      },
+      {
+        "name": "model-reference / pinned-audio / execute (sine)",
+        "conclusion": "cancelled"
+      },
+      {
+        "name": "model-reference / pinned-audio / execute (impulse)",
+        "conclusion": "cancelled"
+      },
+      {
+        "name": "model-reference / pinned-audio / execute (noise)",
+        "conclusion": "cancelled"
+      },
+      {
+        "name": "model-reference / pinned-audio / execute (silence)",
+        "conclusion": "cancelled"
+      },
+      {
+        "name": "workflow-lint / actionlint",
+        "conclusion": "success"
+      },
+      {
+        "name": "model-reference / pinned-audio / execute (padded_noise)",
+        "conclusion": "cancelled"
+      },
+      {
+        "name": "model-reference / reference",
+        "conclusion": "cancelled"
+      },
+      {
+        "name": "python / ubuntu-latest / Python 3.14",
+        "conclusion": "cancelled"
+      },
+      {
+        "name": "python / windows-latest / Python 3.13",
+        "conclusion": "cancelled"
+      },
+      {
+        "name": "python / windows-latest / Python 3.14",
+        "conclusion": "cancelled"
+      },
+      {
+        "name": "model-reference / pinned-audio / audit",
+        "conclusion": "failure"
+      },
+      {
+        "name": "Required CI",
+        "conclusion": "failure"
+      }
+    ]
+  },
+  "SDK_package_byte_equal_accepted_Windows_source": "f0fc2a73274c745d387e9e051cf2f8d9313f848d",
+  "new_GPU_execution": false,
+  "complete_performance_accepted": false,
+  "all_platforms_accepted": false,
+  "formal_release_created": false
+}

@@ -156,3 +156,43 @@ CPU参照側を`OfficialAudioCpuPreprocessor`へ変更し、元producerと同じ
 [TDD記録](results/audio-cpu-official-preprocessing-tdd-20261020.json)に保存しました。
 前処理単体の元hash一致と、修正後の実モデルによる全captureの合格は別の条件です。
 修正sourceの実モデルCIと成果物の独立照合で後者を判定します。
+
+
+## 修正後のLinux実モデルとmain統合
+
+source `4367677`の[実モデル再検証](results/audio-cpu-official-preprocessing-4367677-actual-20261020.json)
+は無音 / padded_noiseとも成功しました。実2 archiveの実行元・digest / size・全CRCと
+完全な私的2コピーを確認し、8回の全32 captureを独立照合しました。
+前処理・mask・encoderの元許容差超過は0で、全8最終vectorも元条件に合格しました。
+各stageのwall / process CPU時間、load、whole-process peak RSSを保存しています。
+異なるhardwareのGPU結果との速度比較、SDK専有メモリ、最低要件の合格にはしません。
+
+[#109の統合](results/audio-cpu-pipeline-integration-4367677-20261020.json)では、同じheadの
+必須CI全15 jobと13数値archive、元6入力824,320値、CPU encoderの120 capture・
+30,822,400値を照合しました。実main `811c0d2`の同tree・公開identity・署名・全祖先を
+確認し、main側の重複CIはcancelledとして保持します。SDK packageは受け入れ済みWindows
+sourceから不変で、新しいGPU実行の証拠とは区別します。
+
+## Windowsの比較用CPU検証
+
+`audio-cpu-windows.yml`は無音 / padded_noiseを別のWindows jobで実行します。
+対象となるCPU比較コードのPRで通常CIと並列に起動し、統合後は手動実行も可能です。
+新しい手動workflowはdefault branchに必要なため、このPR実行も用意しています
+（[GitHubの仕様](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow?tool=cli)）。
+Windowsでも明示したBashで5つの重いコマンドのstdout / stderrをprivate scratch logへ
+保存し、公開ログはphaseと成否だけにします。失敗exit codeを保持し、失敗・途中の数値
+成果物もprivacy guard成功後だけWindows専用名で保存します。PCM・重み・graph・生ログは
+artifactへ含めません。元数値gate失敗後に測定へ進めず、元参照・許容差も維持します。
+
+WindowsのCPU型番はレジストリのprocessor名・vendor・family / model / steppingだけから
+取得します。機器名・serial・ユーザー情報は読みません。指定した別のCPU情報fileが欠けても
+別の情報源へ置き換えず、取得できない値はunknownのまま保持します。
+`host_peak_rss_bytes`のWindows値はOSのpeak working set、Linux値はpeak RSSです。
+どちらもprocess全体であり、SDK専有メモリ・VRAM・最低要件の測定ではありません。
+
+[TDD記録](results/audio-cpu-windows-workflow-tdd-20261020.json)はworkflowの22件Red→Green、
+メモリの2件Red / 5件pass→7件Green、CPU型番の6件Red / 1件pass→7件Green、
+関連144件Green・skip0とactionlintを記録します。ローカルWindowsで、編集したmoduleを
+使ったCPU型番と正数のnative peak取得も確認しました。これは小さいmetadata確認で、
+Windowsの実EmbeddingGemmaモデル、同一hardwareのCPU/GPU性能、全必須端末、正式SDK
+Releaseの合格ではありません。実モデルのWindows結果は別に確認します。

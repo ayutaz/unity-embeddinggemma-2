@@ -1,5 +1,50 @@
 # 実CPU比較と元画像特徴量の回収
 
+## 2026-10-20の参照対応付け
+
+GPU fixtureが固定するencoder参照 `3dfccd1a…`、そのaudit `ab1aa775…` と、
+元Document最終参照 `90692ad3…` を、`image_reference_cohort` で対応付けます。
+Documentが記録するencoder生成元は `7c183c52…` です。この元JSONも後から回収し、
+Documentの特徴量6件と一致することを確認しました。GPU用encoder参照と同じ
+世代ではなく、どちらも変更・再生成していません。
+
+このloaderは3ファイルの実bytesを固定SHA256で照合し、model snapshot、全6 case、
+profile・shape・入力hash、Document role、token長、有限unit vectorを検査します。
+エラーにはローカルパスを出さず、返す参照配列は読み取り専用です。呼出側で
+実モデル出力を照合するための準備であり、推論・速度測定は実行しません。
+
+```python
+from pathlib import Path
+from embeddinggemma_tools.image_reference_cohort import load_image_reference_cohort
+
+# 取得済みの元ファイルを環境に応じて指定する。再生成したJSONは受け付けない。
+encoder = Path("artifacts/original-vision")
+document = Path("artifacts/original-document")
+cohort = load_image_reference_cohort(
+    encoder / "vision-reference.json",
+    encoder / "vision-validation.json",
+    document / "image-embedding-reference.json",
+)
+case = cohort.case("square-0")
+# case.encoder_features: GPU fixtureと同じencoder参照
+# case.embedding: 元Document最終参照
+# cohort.document_encoder_source_sha256: 別世代の生成元を保持
+```
+
+上記は入力ファイル配置の例で、公開取得を再現するコマンドではありません。
+loaderはmanifestの宣言を検査するだけで、graph・PNG・pixelsの実bytesを
+開きません。実行前には呼出側でこれらの実hashも照合する必要があります。
+元JSONの利用可能性とCPU実行環境を確保し、同じ入力を実際に前処理→encoder→
+backboneへ接続する完全な測定を次に進めます。正解特徴量を入力に代入しません。
+
+今回CIのencoder出力はGPU用固定参照に全6件でbitwise一致しましたが、旧Document
+生成世代との比較は26値で元許容差を超過しました。先行するローカルAVX2の失敗も
+未解決です。比較先を変更して過去の失敗を成功に読み替えず、各境界の結果を
+別記します。[参照対応付けのTDDと実データ読込](results/image-reference-cohort-20261020.json)
+はモデル実行・CPU比較・性能全体の合格を示しません。
+
+## 先行するCPU実測（source固定）
+
 source `869cadd` の比較用CPU処理を記録します。Unityの製品側GPU経路と分け、
 画像は公式processor・vision model・projector・backbone、音声は実export前処理・
 選択済みnative encoder graph・backboneを順につないでいます。正解特徴量は

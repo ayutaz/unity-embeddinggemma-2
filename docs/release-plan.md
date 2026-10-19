@@ -4,7 +4,7 @@
 
 ## 最新の状況と次の作業
 
-[PR #105](https://github.com/ayutaz/unity-embeddinggemma-2/pull/105)・[#106](https://github.com/ayutaz/unity-embeddinggemma-2/pull/106)を統合し、このcheckpointのmainは `fbb18dc3b23b09b93c93cbcc24f5e59d3e0087b3` です。両sourceのCIは全15 job成功、各13 archiveのdigest / CRC・完全な私的2コピーと元数値を独立照合しました。mainと採用head `d9cc337` の同tree、公開identity・署名・全祖先も確認。後続の実測sourceは別に検査して統合します。main pushの重複CIはキャンセルし、成功件数に含めません。
+[PR #105](https://github.com/ayutaz/unity-embeddinggemma-2/pull/105)・[#106](https://github.com/ayutaz/unity-embeddinggemma-2/pull/106)に続き、[#107](https://github.com/ayutaz/unity-embeddinggemma-2/pull/107)を統合しました。このcheckpointのmainは `5ec70e2fe7457c2a7ae5b0a4f1efa7bba5ffef98` です。[#107の統合記録](results/image-cpu-measurement-integration-802ab62-20261020.json)では最新head `802ab62` のCI全15 job成功・skip0、実13 archiveのdigest / CRC・完全な私的2コピーと元数値を独立照合しました。実mainと採用headの同tree、公開identity・署名・全祖先も確認。後続sourceは別に検査して統合します。main pushの重複CIはキャンセルし、成功件数に含めません。
 
 音声encoderのCPU比較は全6入力・120 capture・30,822,400値で元の許容差超過0です。これはencoder区間の結果であり、PCM前処理から最終vectorまでのCPU/GPU性能比較や、全環境の受け入れ完了ではありません。SDKの推論要件はGPUのままです。
 
@@ -14,7 +14,7 @@ GPU検証で固定したencoder参照と、Document最終参照のencoder生成�
 
 | 工程 | ここからの作業 | 完了条件 |
 | --- | --- | --- |
-| 1 統合 | #106までの採用sourceとmain、既存Windows機能検証の適用範囲を固定 | 基盤は統合済み。後続変更はtask branch・PR・必須CIと成果物で個別に検証する |
+| 1 統合 | #107までの採用sourceとmain、既存Windows機能検証の適用範囲を固定 | 基盤は統合済み。後続変更はtask branch・PR・必須CIと成果物で個別に検証する |
 | 2 数値比較と性能 | 合格したnative条件を固定し、未合格環境の数値差を追跡する。同じhardware・入力・モデル・仕事量のCPU/GPU、音声の未測定条件、初回 / warm、stage時間、RAM / VRAMを埋める | 元の数値条件を満たす完全な比較記録、正常終了と解放、実測に基づく最低要件。未合格・未実行を別記 |
 | 3 必須環境 | macOS Editor、iOS / Android実機で全入力・role・混在検索を確認し、権限拒否、キャンセル、suspend / 復帰も検証 | 各環境で実GPU・fallback / readback・数値・操作・解放の証拠。設定テストやWindows成功では代用しない |
 | 4 公開前整理 | 古いprovider側コピーの削除確認、最終source・全祖先・公開payload・導入文書を監査 | 現行履歴とprovider側残存を別々に解決。画像は実bytesの目視 / OCR確認。公開名 `yousan` を維持 |
@@ -25,7 +25,7 @@ GPU検証で固定したencoder参照と、Document最終参照のencoder生成�
 ### 直近の実行順（2026-10-20確認）
 
 1. **照合済みの比較結果を適用範囲ごとに記録する。** [#108](https://github.com/ayutaz/unity-embeddinggemma-2/pull/108)の実行source `1789f0c` に対する同一host比較は回収・独立照合済みです。nativeの24回合格とCOMPATIBLEの24回不合格を両方残し、旧600値の原因を推定で断定しません。MKL設定値を実operator dispatchの証拠にも使いません。
-2. **必要なPRを順に統合する。** [#107](https://github.com/ayutaz/unity-embeddinggemma-2/pull/107)の元source `8c60111` は必須CI全15 job成功・skip 0で、実13 archiveの独立照合も完了しました。文書1か所の競合を解消したhead `802ab62` は同じ全treeで、[新headのCI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39305545855)と最終公開前監査を確認します。#108は#107をbaseとするDraftで、先行統合と文書更新も含めて最終headを検査します。旧headの成功を新headの実行成功には数えません。
+2. **必要なPRを順に統合する。** #107の最新head `802ab62` は全15 CI job・実13 archiveと公開内容を確認してマージ済みです。#108のbaseはmainへ切り替わりました。先行スカッシュ統合による5ファイルの履歴競合を解消し、全treeが既存のレビュー済みhead `1f06b36` と同じであることを確認しました。統合記録と計画の文書更新も含めて最終headのCI・成果物を個別に検査します。旧headの成功・実行中・キャンセルを新headの実行成功へ置き換えません。以降は先行mainを取り込んでから検証を開始し、同じ内容に対する履歴更新による再実行を減らします。
 3. **同じ実行環境の比較と性能表を完成する。** 今回合格したLinux native条件、旧square600値、Windows CPUの先行不合格を区別し、未合格環境の数値差と完全な音声CPU接続を残件として追跡します。同じ入力・モデル・仕事量・hardwareのCPU/GPU時間、音声を含む初回 / warm、RAM / VRAMと解放を測定します。必要な修正はTDDで実装し、元参照・許容差は維持します。製品のGPU推論要件も維持します。
 4. **必須端末とprivacyの残件を並行して完了する。** macOS Editor・iOS / Android実機で全入力、検索、権限・復帰・解放を確認します。provider側の古いコピー除去を別途確認し、最終source・履歴・公開payloadを監査します。
 5. **全条件の達成後に正式公開する。** SDK版・tag・Releaseを作り、空consumerへのそのtagの導入からモデル取得、全入力・検索・終了まで確認します。preview公開を正式SDK公開の完了として数えません。

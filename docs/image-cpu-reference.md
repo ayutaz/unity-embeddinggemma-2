@@ -5,6 +5,22 @@ projector and actual language backbone for four calls per fixed image profile.
 It is a Python comparison process. Unity SDK inference continues to use Sentis
 GPU workers; this adds no product CPU backend or automatic fallback.
 
+## First real-model result
+
+[Source 8c60111 / run 39297313285](results/image-cpu-reference-8c60111-actual-20261020.json)
+completed all three four-round measurements. Landscape and portrait passed;
+square failed with 600 original encoder tolerance violations in each round.
+All 12 final vectors and original pixels / positions matched. Three complete
+archives, all CRCs and two private copies were verified; all 48 captures were
+independently rechecked. Original FP32 pointwise and producer nominal FP64
+comparison counts agreed on these actual captures.
+
+Square and landscape both reported AVX512, while portrait reported AVX2. The
+physical CPU model and complete math context were not captured in this first
+source. ISA labels alone do not explain the difference. The cause remains
+unproven and the whole CPU comparison remains unqualified. This result is kept
+under its original source, not relabeled as a later-source execution.
+
 ## Inputs and source
 
 Use the [unchanged original image data](image-reference-distribution.md). The
@@ -56,7 +72,66 @@ Linux peak RSS is recorded for the whole process under an explicit 16 GiB
 ceiling; other hosts report that metric unavailable. This is not SDK-exclusive
 memory, VRAM or a validated minimum hardware requirement.
 
+## Recorded CPU context and controlled comparison
+
+The context-aware report format is schema 2. Before model loading and after
+execution it records selected CPU model/vendor fields, the full Torch runtime
+version, selected math-library version lines, matmul precision, MKL / oneDNN
+availability and selected numerical environment variables. Changes during a
+measurement fail qualification. The independent auditor binds both snapshots to
+the source journal. Older schema-1 evidence remains under its original source.
+It does not acquire fields that were never observed.
+
+Only selected hardware fields are returned; machine names, serials, user fields
+and file paths are excluded. Selected values still undergo text privacy checks.
+Missing hardware data and unobserved denormal state remain unknown. Library
+availability and requested environment values do not prove a particular operator
+dispatch or executed instruction set.
+
+For a controlled comparison, select both `image_cpu_measurement=true` and
+`image_cpu_host_comparison=true`. Each of two hosts runs all three shapes in
+separate processes, first with `MKL_CBWR` unset, then with `MKL_CBWR=COMPATIBLE`.
+The same fixed model, inputs, four actual carries and original gates apply.
+Every result is retained. Any failed measurement or audit makes the job fail;
+the next case is still attempted so a negative baseline does not hide a later
+comparison. Models and snapshots stay outside the upload directory.
+
+This is an experiment, not an assumed repair. Intel documents conditional
+reproducibility controls and limits non-Intel processors to `AUTO` / `COMPATIBLE`
+choices; this does not promise equivalence to these original goldens.
+[Intel oneMKL CNR](https://www.intel.com/content/www/us/en/docs/onemkl/developer-reference-c/2026-0/getting-started-with-conditional-numerical.html).
+PyTorch likewise does not guarantee bitwise identity across platforms, so all
+original numerical gates are still applied to actual captures.
+[PyTorch numerical accuracy](https://docs.pytorch.org/docs/main/notes/numerical_accuracy.html).
+
 ## CI execution
+
+The [paired-host actual result](results/image-cpu-paired-hosts-1789f0c-actual-20261020.json)
+records run `39304317802` at source `1789f0c`. Both host samples reported AMD
+EPYC 9V45, Torch `2.14.1+cu130`, oneMKL 2024.2 / MKL-DNN 3.12.0, `highest`
+matmul precision and four intra-op / two inter-op threads. Context snapshots
+were stable within each host; only the requested `MKL_CBWR` setting changed.
+
+| Math context | Square violations per round | Landscape | Portrait | Actual chains |
+| --- | ---: | ---: | ---: | ---: |
+| Native, both host samples | 0 | 0 | 0 | 24 passing |
+| COMPATIBLE, both host samples | 361 | 95 | 128 | 24 failing |
+
+The complete two ZIPs, provider digests, CRCs and two private copies were
+verified. Independent recomputation covered all 192 tensor captures. All 48
+final vectors and every pixels / positions capture matched their original
+gates. Native encoder values were bitwise equal to the pinned original; the
+COMPATIBLE intermediate failures remain failures. The workflow and both jobs
+therefore concluded `failure` and are never counted as passing executions.
+
+Native chain wall time ranged from 9.065 to 9.691 seconds on first execution
+and 8.832 to 9.641 seconds over subsequent executions. Whole-process peak RSS
+was 3,629,277,184 to 3,854,102,528 bytes. These values exclude loading and
+observer copies and do not establish SDK-exclusive memory, minimum hardware
+or a speedup against a different GPU host. The older square result with 600
+violations lacks the physical CPU context; its cause remains unproven.
+This result establishes only the recorded native CPU reference cases, not
+arbitrary CPU compatibility, Windows CPU comparison or complete performance.
 
 Use the existing **Frozen native CPU context diagnostics** workflow with only
 `image_cpu_measurement=true`. Legacy selections must retain their defaults.

@@ -3,6 +3,10 @@ name: Frozen native CPU context diagnostics
 on:
   workflow_dispatch:
     inputs:
+      image_cpu_host_comparison:
+        description: With image CPU measurement, compare all shapes and native/COMPATIBLE math on each of two hosts
+        type: boolean
+        default: false
       image_cpu_measurement:
         description: Measure four actual image CPU chains against the pinned GPU encoder and original Document final
         type: boolean
@@ -49,7 +53,7 @@ concurrency:
 
 jobs:
   image_cpu_measurement:
-    if: github.event_name == 'workflow_dispatch' && inputs.image_cpu_measurement
+    if: github.event_name == 'workflow_dispatch' && inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -104,9 +108,90 @@ jobs:
           retention-days: 7
           if-no-files-found: warn
           compression-level: 0
+  image_cpu_host_comparison:
+    if: github.event_name == 'workflow_dispatch' && inputs.image_cpu_host_comparison
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        host_sample: [1, 2]
+    defaults:
+      run:
+        working-directory: tools
+    env:
+      OMP_NUM_THREADS: '4'
+      MKL_NUM_THREADS: '4'
+      HF_HUB_DISABLE_TELEMETRY: '1'
+      TOKENIZERS_PARALLELISM: 'false'
+      HOST_SAMPLE: ${{ matrix.host_sample }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+          enable-cache: true
+          cache-dependency-glob: tools/uv.lock
+      - name: Reject incompatible legacy selections
+        env:
+          LEGACY_SELECTED: ${{ inputs.original_vision || inputs.require_avx512_native || inputs.original_rotary_only || inputs.original_matmul_only || inputs.original_softmax16_replay || inputs.original_layer_four_detail || inputs.original_blas_context != 'native' }}
+          MEASUREMENT_SELECTED: ${{ inputs.image_cpu_measurement }}
+        run: uv run --no-project --python 3.13 python -c "import os; assert os.environ['MEASUREMENT_SELECTED'] == 'true' and os.environ['LEGACY_SELECTED'] == 'false', 'Select the image CPU measurement and host comparison modes only'"
+      - run: uv sync --locked
+      - name: Fetch unchanged original image reference data and attribution
+        run: uv run --locked python -m embeddinggemma_tools.image_reference_distribution --output ../artifacts/original-image-references
+      - name: Compare all shapes under native and compatible math on this host
+        run: |
+          status=0
+          output_root="../artifacts/image-cpu-host-${HOST_SAMPLE}"
+          measure_context() {
+            local context_name="$1"
+            local profile_name="$2"
+            local output_dir="$3"
+            if [ "$context_name" = native ]; then
+              env -u MKL_CBWR uv run --locked python -m embeddinggemma_tools.image_cpu_reference measure \
+                --references ../artifacts/original-image-references --profile "$profile_name" \
+                --output "$output_dir" --source "$GITHUB_SHA"
+            else
+              env MKL_CBWR=COMPATIBLE uv run --locked python -m embeddinggemma_tools.image_cpu_reference measure \
+                --references ../artifacts/original-image-references --profile "$profile_name" \
+                --output "$output_dir" --source "$GITHUB_SHA"
+            fi
+          }
+          for context in native compatible; do
+            for profile in square landscape portrait; do
+              output="${output_root}/${context}/${profile}"
+              if measure_context "$context" "$profile" "$output"; then
+                if uv run --locked python -m embeddinggemma_tools.image_cpu_reference audit \
+                    --references ../artifacts/original-image-references --output "$output" --source "$GITHUB_SHA"; then
+                  echo "Completed ${context} ${profile}"
+                else
+                  status=1
+                fi
+              else
+                status=1
+              fi
+            done
+          done
+          exit "$status"
+      - name: Check paired-host CPU numerical evidence publication privacy
+        id: host_cpu_privacy
+        if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/image-cpu-host-${{ matrix.host_sample }}/
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ (always()) && steps.host_cpu_privacy.outcome == 'success' }}
+        with:
+          name: image-cpu-host-${{ matrix.host_sample }}-${{ github.sha }}
+          path: artifacts/image-cpu-host-${{ matrix.host_sample }}/
+          retention-days: 7
+          if-no-files-found: warn
+          compression-level: 0
   probe:
     if: >-
-      (github.event_name == 'workflow_dispatch' && !inputs.original_vision && !inputs.image_cpu_measurement) ||
+      (github.event_name == 'workflow_dispatch' && !inputs.original_vision && !inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison) ||
       (github.event.pull_request.head.repo.full_name == github.repository &&
        contains(github.event.pull_request.labels.*.name, 'reference-context-diagnostics'))
     runs-on: ubuntu-latest
@@ -219,7 +304,7 @@ jobs:
           if-no-files-found: warn
 
   original_vision_probe:
-    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && !inputs.original_rotary_only && !inputs.original_matmul_only && !inputs.original_softmax16_replay && !inputs.original_layer_four_detail && !inputs.image_cpu_measurement
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && !inputs.original_rotary_only && !inputs.original_matmul_only && !inputs.original_softmax16_replay && !inputs.original_layer_four_detail && !inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -403,7 +488,7 @@ jobs:
           if-no-files-found: warn
 
   original_rotary_probe:
-    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_rotary_only && !inputs.original_matmul_only && !inputs.original_softmax16_replay && !inputs.original_layer_four_detail && !inputs.image_cpu_measurement
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_rotary_only && !inputs.original_matmul_only && !inputs.original_softmax16_replay && !inputs.original_layer_four_detail && !inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison
     runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:
@@ -491,13 +576,13 @@ jobs:
           if-no-files-found: warn
 
   original_static_matmul_probe:
-    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_matmul_only && !inputs.original_softmax16_replay && !inputs.original_layer_four_detail && !inputs.image_cpu_measurement
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_matmul_only && !inputs.original_softmax16_replay && !inputs.original_layer_four_detail && !inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison
     uses: ./.github/workflows/vision-matmul-context.yml
 
   original_ordered_context_probe:
-    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_softmax16_replay && !inputs.original_layer_four_detail && !inputs.image_cpu_measurement
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_softmax16_replay && !inputs.original_layer_four_detail && !inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison
     uses: ./.github/workflows/vision-ordered-context.yml
 
   original_layer_four_probe:
-    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_layer_four_detail && !inputs.image_cpu_measurement
+    if: github.event_name == 'workflow_dispatch' && inputs.original_vision && inputs.original_layer_four_detail && !inputs.image_cpu_measurement && !inputs.image_cpu_host_comparison
     uses: ./.github/workflows/vision-layer-four-context.yml

@@ -20,6 +20,7 @@ import torch
 
 from . import image_reference_cohort as references
 from . import reference_cpu_performance as protocol
+from .cpu_execution_context import cpu_execution_context
 from .native_regression_distribution import _empty
 
 
@@ -65,7 +66,7 @@ def _validate_execution_source(source):
     _require(isinstance(source, str) and re.fullmatch('[0-9a-f]{40}', source) is not None)
     actual = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, stderr=subprocess.PIPE).decode().strip()
     _require(source == actual)
-    names = ('image_cpu_reference.py', 'image_reference_cohort.py', 'reference_cpu_performance.py',
+    names = ('image_cpu_reference.py', 'cpu_execution_context.py', 'image_reference_cohort.py', 'reference_cpu_performance.py',
              'model.py', 'prepare.py', 'export.py')
     paths = ['tools/embeddinggemma_tools/' + name for name in names] + ['tools/uv.lock', 'tools/pyproject.toml']
     fingerprints = {}
@@ -185,9 +186,11 @@ def measure_image_cpu_reference(snapshot, reference_directory, profile, output, 
         ids = torch.tensor([case.input_ids], dtype=torch.int64)
         mask = torch.tensor([case.attention_mask], dtype=torch.int64)
         empty = torch.empty(0, 512)
+        context_before = cpu_execution_context()
         output.mkdir(parents=True, exist_ok=True)
-        admission = dict(schema=1, source=source, profile=profile, phase='loading',
+        admission = dict(schema=2, source=source, profile=profile, phase='loading',
             model_execution_complete=False, error_class=None,
+            execution_context_before_load=context_before,
             source_fingerprints_normalized_LF=fingerprints,
             model_revision=references.MODEL_REVISION, snapshot_input_sha256=metadata['input_sha256'],
             encoder_reference_sha256=cohort.encoder_reference_sha256,
@@ -265,10 +268,12 @@ def measure_image_cpu_reference(snapshot, reference_directory, profile, output, 
         except ValueError:
             error_class = error_class or 'ValueError'
         peak = _peak_rss_bytes()
+        context_after = cpu_execution_context()
         success = bool(pipeline['success'] and len(inspections) == 4 and
                        all(row['success'] for row in inspections) and not torch.cuda.is_initialized()
+                       and context_before == context_after
                        and (peak is None or 0 < peak <= 16 * 1024**3))
-        result = dict(schema=1, success=success, source=source, profile=profile, case=case.id,
+        result = dict(schema=2, success=success, source=source, profile=profile, case=case.id,
             scope='Four actual FP32 PyTorch CPU image chains against existing GPU encoder and original Document final',
             actual_backend='CPU', framework='PyTorch reference', precision='fp32',
             descriptor_sha256=protocol.DESCRIPTOR, encoder_reference_sha256=cohort.encoder_reference_sha256,
@@ -282,10 +287,13 @@ def measure_image_cpu_reference(snapshot, reference_directory, profile, output, 
             torch_interop_threads=torch.get_num_interop_threads(), CPU_capability=torch.backends.cpu.get_cpu_capability(),
             runtime_versions={name: importlib.metadata.version(name) for name in ('torch', 'transformers', 'numpy', 'pillow')},
             source_fingerprints_normalized_LF=fingerprints, CUDA_context_initialized=torch.cuda.is_initialized(),
+            execution_context_before_load=context_before, execution_context_after_execution=context_after,
+            execution_context_stable=context_before == context_after,
             original_golden_changed=False, CPU_comparison_qualified=False, complete_performance_accepted=False)
         _write(output / 'image-cpu-reference.json', result)
         admission.update(phase='complete' if success else 'failed_chain',
-            model_execution_complete=len(pipeline.get('rounds', [])) == 4, error_class=error_class)
+            model_execution_complete=len(pipeline.get('rounds', [])) == 4, error_class=error_class,
+            execution_context_after_execution=context_after)
         source_path.write_text(json.dumps(admission, indent=2, allow_nan=False) + '\n', encoding='utf-8')
         _require(success)
         return result
@@ -300,6 +308,7 @@ def audit_image_cpu_reference(output, reference_directory, *, source):
         cohort, profiles, files, final_metadata, _ = _metadata(reference_directory)
         report, pipeline = _json(output / 'image-cpu-reference.json'), _json(output / 'pipeline.json')
         admission = _json(output / 'image-cpu-source.json')
+        _require(report['schema'] == admission['schema'] == 2)
         _require(isinstance(source, str) and re.fullmatch('[0-9a-f]{40}', source) is not None)
         _require(report['success'] is True and pipeline['success'] is True and
                  report['source'] == pipeline['source'] == source and report['actual_backend'] == pipeline['actual_backend'] == 'CPU')
@@ -324,6 +333,9 @@ def audit_image_cpu_reference(output, reference_directory, *, source):
                  admission['source_fingerprints_normalized_LF'] == report['source_fingerprints_normalized_LF'] and
                  admission['encoder_reference_sha256'] == cohort.encoder_reference_sha256 and
                  admission['document_reference_sha256'] == cohort.document_reference_sha256)
+        _require(report['execution_context_stable'] is True and
+                 report['execution_context_before_load'] == report['execution_context_after_execution'] ==
+                 admission['execution_context_before_load'] == admission['execution_context_after_execution'])
         rows = _audit_rounds(output, report['rounds'], case, profiles[profile], files)
         _require(all(row['success'] for row in rows) and len(pipeline['rounds']) == 4)
         finals = []

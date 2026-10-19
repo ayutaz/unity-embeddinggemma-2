@@ -206,3 +206,36 @@ def test_later_inplace_operations_cannot_hide_the_original_stage_output(pipeline
     state['pixel_delta' if stage == 'pixels' else 'encoder_delta'] = 1
     state['mutate_' + stage] = True
     with pytest.raises(ValueError): run(pipeline, tmp_path / 'output')
+
+
+def test_cpu_context_is_recorded_before_loading_and_bound_to_the_completed_report(pipeline, tmp_path):
+    _, _, _, _, _ = pipeline
+    output = tmp_path / 'output'
+    result = run(pipeline, output)
+    before = result['execution_context_before_load']
+    assert before == result['execution_context_after_execution']
+    journal = json.loads((output / 'image-cpu-source.json').read_text())
+    assert journal['execution_context_before_load'] == journal['execution_context_after_execution'] == before
+    assert result['execution_context_stable'] is True
+
+
+def test_changed_reported_math_context_cannot_be_accepted_by_independent_audit(pipeline, tmp_path):
+    module, _, _, refs, _ = pipeline
+    output = tmp_path / 'output'
+    run(pipeline, output)
+    path = output / 'image-cpu-reference.json'
+    result = json.loads(path.read_text())
+    result['execution_context_after_execution'] = {'float32_matmul_precision': 'changed'}
+    path.write_text(json.dumps(result), encoding='utf-8')
+    with pytest.raises(ValueError): module.audit_image_cpu_reference(output, refs, source='a' * 40)
+
+
+def test_actual_math_context_change_during_execution_is_a_failed_measurement(pipeline, tmp_path, monkeypatch):
+    module, _, _, _, _ = pipeline
+    context = importlib.import_module('embeddinggemma_tools.cpu_execution_context').cpu_execution_context()
+    values = iter([context, {**context, 'float32_matmul_precision': 'changed'}])
+    monkeypatch.setattr(module, 'cpu_execution_context', lambda: next(values), raising=False)
+    output = tmp_path / 'unstable'
+    with pytest.raises(ValueError): run(pipeline, output)
+    result = json.loads((output / 'image-cpu-reference.json').read_text())
+    assert result['execution_context_stable'] is False and result['success'] is False

@@ -1,0 +1,2160 @@
+{
+  "schema": 1,
+  "scope": "Two CI host samples, all three image shapes and four actual CPU chains per math context; not full performance acceptance",
+  "checked_date_JST": "2026-10-20",
+  "run": 39304317802,
+  "source": "1789f0cbc3ce6f640689821d74c8e2a3e8db82b5",
+  "run_url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39304317802",
+  "actual_workflow_conclusion": "failure",
+  "workflow_failure_preserved": true,
+  "independent_original_archives": [
+    {
+      "profile": "1",
+      "artifact_id": 12213316147,
+      "archive_bytes": 198946684,
+      "archive_sha256": "b21a9de010b0c33052bdc09c8281378f5ddc8ca1945eccf87c5cad9db99bd715",
+      "all_CRCs_verified": true,
+      "two_complete_private_copies_verified": true
+    },
+    {
+      "profile": "2",
+      "artifact_id": 12212498651,
+      "archive_bytes": 198946649,
+      "archive_sha256": "1d11667b88a40534feec4379160a228388cb7167a5d8133384232ae1a870e533",
+      "all_CRCs_verified": true,
+      "two_complete_private_copies_verified": true
+    }
+  ],
+  "complete_private_backup_copies": 2,
+  "independent_tensor_captures": 192,
+  "actual_chains": 48,
+  "original_FP32_and_FP64_violation_counts_identical": true,
+  "native_samples": 6,
+  "native_actual_chains": 24,
+  "native_all_original_numerical_gates_passed": true,
+  "native_encoder_outputs_bitwise_equal_original": true,
+  "native_scope": "AMD EPYC 9V45 samples with the recorded native math context only",
+  "compatible_samples": 6,
+  "compatible_actual_chains": 24,
+  "compatible_all_original_encoder_gates_failed": true,
+  "selected_contexts_stable_within_host": true,
+  "original_encoder_reference_sha256": "3dfccd1a487ce04df3f8d640483ca045f7a7a56231bc1096ad0f845c923a29c6",
+  "original_Document_final_reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+  "original_golden_changed": false,
+  "original_atol": 1e-05,
+  "original_rtol": 0.0001,
+  "prior_8c60111_square_600_failures_preserved": true,
+  "prior_8c60111_CPU_model_unknown": true,
+  "cause_of_prior_8c60111_square_difference_proven": false,
+  "actual_library_kernel_dispatch_proven": false,
+  "arbitrary_CPU_hardware_qualified": false,
+  "same_hardware_CPU_GPU_speedup_accepted": false,
+  "CPU_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "GPU_validated": false,
+  "minimum_hardware_accepted": false,
+  "all_platforms_accepted": false,
+  "formal_release_created": false,
+  "profiles": [
+    {
+      "host_sample": "1",
+      "math_context": "native",
+      "execution_context": {
+        "cpu_model": {
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "26",
+          "model": "2",
+          "model name": "AMD EPYC 9V45 96-Core Processor",
+          "stepping": "1"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX512",
+        "torch_runtime_version": "2.14.1+cu130",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": null,
+          "MKL_DYNAMIC": null,
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "profile": "square",
+      "actual_numerical_success": true,
+      "reported_success": true,
+      "CPU_capability": "AVX512",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "peak_process_RSS_bytes": 3794657280,
+      "load_wall_seconds": 8.913790382000002,
+      "rounds": [
+        {
+          "round": "first",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999998528,
+          "original_final_norm_squared": 0.9999999403789697,
+          "reported_wall_seconds": 9.690769341999953,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.00744548499997677,
+              "process_cpu_seconds": 0.019010152999999974,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 7.366998797000008,
+              "process_cpu_seconds": 24.683914658,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.316210576000003,
+              "process_cpu_seconds": 8.901351380000001,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999998528,
+          "original_final_norm_squared": 0.9999999403789697,
+          "reported_wall_seconds": 8.832439069000003,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.005182907999994768,
+              "process_cpu_seconds": 0.02004540800000143,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.63444566199999,
+              "process_cpu_seconds": 22.665226292000007,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.1927014729999996,
+              "process_cpu_seconds": 8.437863867000004,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999998528,
+          "original_final_norm_squared": 0.9999999403789697,
+          "reported_wall_seconds": 9.008928073999982,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.004090898999976389,
+              "process_cpu_seconds": 0.016048111999992898,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.667505726000002,
+              "process_cpu_seconds": 22.822347280000002,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.337206189999989,
+              "process_cpu_seconds": 8.937785117000004,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999998528,
+          "original_final_norm_squared": 0.9999999403789697,
+          "reported_wall_seconds": 9.029658950000027,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.005186514000001807,
+              "process_cpu_seconds": 0.020053659000012658,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.771824792000018,
+              "process_cpu_seconds": 23.187332620000007,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.2525355949999835,
+              "process_cpu_seconds": 8.643025354000002,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "original_FP32_and_FP64_check_counts_identical": true
+    },
+    {
+      "host_sample": "1",
+      "math_context": "native",
+      "execution_context": {
+        "cpu_model": {
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "26",
+          "model": "2",
+          "model name": "AMD EPYC 9V45 96-Core Processor",
+          "stepping": "1"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX512",
+        "torch_runtime_version": "2.14.1+cu130",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": null,
+          "MKL_DYNAMIC": null,
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "profile": "landscape",
+      "actual_numerical_success": true,
+      "reported_success": true,
+      "CPU_capability": "AVX512",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "peak_process_RSS_bytes": 3634786304,
+      "load_wall_seconds": 4.8965470779999976,
+      "rounds": [
+        {
+          "round": "first",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999992306,
+          "original_final_norm_squared": 0.9999999806727443,
+          "reported_wall_seconds": 9.193325213000008,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.00679135800001518,
+              "process_cpu_seconds": 0.018321480999999196,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.903604873000006,
+              "process_cpu_seconds": 23.660611012999997,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.2828186640000183,
+              "process_cpu_seconds": 8.788519262000001,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999992306,
+          "original_final_norm_squared": 0.9999999806727443,
+          "reported_wall_seconds": 8.971417204999995,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.004237711000001809,
+              "process_cpu_seconds": 0.015991120000002468,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.762851107000017,
+              "process_cpu_seconds": 23.208352726,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.204218800999996,
+              "process_cpu_seconds": 8.478339696999996,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999992306,
+          "original_final_norm_squared": 0.9999999806727443,
+          "reported_wall_seconds": 9.129668062999968,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.004067213000013226,
+              "process_cpu_seconds": 0.016030994999994164,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.744639578000005,
+              "process_cpu_seconds": 23.088930344999994,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.3808538799999894,
+              "process_cpu_seconds": 9.128392605000002,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999992306,
+          "original_final_norm_squared": 0.9999999806727443,
+          "reported_wall_seconds": 9.025833743000021,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.004220253999989154,
+              "process_cpu_seconds": 0.016196347999994032,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.753256848999996,
+              "process_cpu_seconds": 23.17552316300001,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.2682479950000243,
+              "process_cpu_seconds": 8.72375816500002,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "original_FP32_and_FP64_check_counts_identical": true
+    },
+    {
+      "host_sample": "1",
+      "math_context": "native",
+      "execution_context": {
+        "cpu_model": {
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "26",
+          "model": "2",
+          "model name": "AMD EPYC 9V45 96-Core Processor",
+          "stepping": "1"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX512",
+        "torch_runtime_version": "2.14.1+cu130",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": null,
+          "MKL_DYNAMIC": null,
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "profile": "portrait",
+      "actual_numerical_success": true,
+      "reported_success": true,
+      "CPU_capability": "AVX512",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "peak_process_RSS_bytes": 3634380800,
+      "load_wall_seconds": 4.882813115000033,
+      "rounds": [
+        {
+          "round": "first",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999998535,
+          "original_final_norm_squared": 1.0000000124964816,
+          "reported_wall_seconds": 9.065135897999994,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.006648379000012028,
+              "process_cpu_seconds": 0.021778486999998847,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.667844266000031,
+              "process_cpu_seconds": 22.800266364000002,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.3905359120000185,
+              "process_cpu_seconds": 9.177465798,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999998535,
+          "original_final_norm_squared": 1.0000000124964816,
+          "reported_wall_seconds": 9.10660451199999,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.003973080999969625,
+              "process_cpu_seconds": 0.015936300999996433,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.801608971000007,
+              "process_cpu_seconds": 23.296957658000004,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.300917382000023,
+              "process_cpu_seconds": 8.864326054000003,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999998535,
+          "original_final_norm_squared": 1.0000000124964816,
+          "reported_wall_seconds": 9.017876486000091,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.003941472999997586,
+              "process_cpu_seconds": 0.015907726999998317,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.747826828000029,
+              "process_cpu_seconds": 23.138449855000005,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.266006462000007,
+              "process_cpu_seconds": 8.72307129699999,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999998535,
+          "original_final_norm_squared": 1.0000000124964816,
+          "reported_wall_seconds": 8.853390509000008,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.005324180999991768,
+              "process_cpu_seconds": 0.023261407000006784,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.668688940999971,
+              "process_cpu_seconds": 22.820593599999995,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.1792772059999947,
+              "process_cpu_seconds": 8.37783243700001,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "original_FP32_and_FP64_check_counts_identical": true
+    },
+    {
+      "host_sample": "1",
+      "math_context": "compatible",
+      "execution_context": {
+        "cpu_model": {
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "26",
+          "model": "2",
+          "model name": "AMD EPYC 9V45 96-Core Processor",
+          "stepping": "1"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX512",
+        "torch_runtime_version": "2.14.1+cu130",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": "COMPATIBLE",
+          "MKL_DYNAMIC": null,
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "profile": "square",
+      "actual_numerical_success": false,
+      "reported_success": false,
+      "CPU_capability": "AVX512",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "peak_process_RSS_bytes": 3634376704,
+      "load_wall_seconds": 4.625630988999944,
+      "rounds": [
+        {
+          "round": "first",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 361,
+          "maximum_encoder_absolute_error": 0.00016707181930541992,
+          "minimum_encoder_cosine": 0.9999999993787497,
+          "original_final_cosine": 0.9999999999989062,
+          "original_final_norm_squared": 0.9999999649384042,
+          "reported_wall_seconds": 16.78988621100001,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.006945710000024974,
+              "process_cpu_seconds": 0.01817178900000016,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.402471343999991,
+              "process_cpu_seconds": 48.822365489999996,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.380337779999991,
+              "process_cpu_seconds": 17.324402748000004,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 361,
+          "maximum_encoder_absolute_error": 0.00016707181930541992,
+          "minimum_encoder_cosine": 0.9999999993787497,
+          "original_final_cosine": 0.9999999999989062,
+          "original_final_norm_squared": 0.9999999649384042,
+          "reported_wall_seconds": 16.586669387000086,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0050489260000290415,
+              "process_cpu_seconds": 0.020018218999993564,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.228672675000041,
+              "process_cpu_seconds": 48.667457127000006,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.352846374000023,
+              "process_cpu_seconds": 17.36624361700001,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 361,
+          "maximum_encoder_absolute_error": 0.00016707181930541992,
+          "minimum_encoder_cosine": 0.9999999993787497,
+          "original_final_cosine": 0.9999999999989062,
+          "original_final_norm_squared": 0.9999999649384042,
+          "reported_wall_seconds": 16.600104809000015,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0035645929999645887,
+              "process_cpu_seconds": 0.015193729999992911,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.341270650000013,
+              "process_cpu_seconds": 49.187699138,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.255178338000007,
+              "process_cpu_seconds": 16.977962072999986,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 361,
+          "maximum_encoder_absolute_error": 0.00016707181930541992,
+          "minimum_encoder_cosine": 0.9999999993787497,
+          "original_final_cosine": 0.9999999999989062,
+          "original_final_norm_squared": 0.9999999649384042,
+          "reported_wall_seconds": 16.712907459000007,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0044510330000093745,
+              "process_cpu_seconds": 0.019415528999985554,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.363992263,
+              "process_cpu_seconds": 49.225323102000004,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.344365744000015,
+              "process_cpu_seconds": 17.222250568999982,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "original_FP32_and_FP64_check_counts_identical": true
+    },
+    {
+      "host_sample": "1",
+      "math_context": "compatible",
+      "execution_context": {
+        "cpu_model": {
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "26",
+          "model": "2",
+          "model name": "AMD EPYC 9V45 96-Core Processor",
+          "stepping": "1"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX512",
+        "torch_runtime_version": "2.14.1+cu130",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": "COMPATIBLE",
+          "MKL_DYNAMIC": null,
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "profile": "landscape",
+      "actual_numerical_success": false,
+      "reported_success": false,
+      "CPU_capability": "AVX512",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "peak_process_RSS_bytes": 3634446336,
+      "load_wall_seconds": 4.761178599000004,
+      "rounds": [
+        {
+          "round": "first",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 95,
+          "maximum_encoder_absolute_error": 6.175041198730469e-05,
+          "minimum_encoder_cosine": 0.9999999998975803,
+          "original_final_cosine": 0.9999999999987086,
+          "original_final_norm_squared": 1.0000001112061743,
+          "reported_wall_seconds": 16.41591086899996,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.006537573000002794,
+              "process_cpu_seconds": 0.018838590999999738,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.151257965000013,
+              "process_cpu_seconds": 48.386117204,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.258010873999979,
+              "process_cpu_seconds": 16.984924262999996,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 95,
+          "maximum_encoder_absolute_error": 6.175041198730469e-05,
+          "minimum_encoder_cosine": 0.9999999998975803,
+          "original_final_cosine": 0.9999999999987086,
+          "original_final_norm_squared": 1.0000001112061743,
+          "reported_wall_seconds": 16.464017515999956,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.004416841000022487,
+              "process_cpu_seconds": 0.01919097799999747,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.127677880999954,
+              "process_cpu_seconds": 48.32906870400001,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.331806609000012,
+              "process_cpu_seconds": 17.27122630400001,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 95,
+          "maximum_encoder_absolute_error": 6.175041198730469e-05,
+          "minimum_encoder_cosine": 0.9999999998975803,
+          "original_final_cosine": 0.9999999999987086,
+          "original_final_norm_squared": 1.0000001112061743,
+          "reported_wall_seconds": 16.191725324999993,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.004730043999984446,
+              "process_cpu_seconds": 0.019617097999997668,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.05032664800001,
+              "process_cpu_seconds": 48.017226107,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.136566641000002,
+              "process_cpu_seconds": 16.502176703000003,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 95,
+          "maximum_encoder_absolute_error": 6.175041198730469e-05,
+          "minimum_encoder_cosine": 0.9999999998975803,
+          "original_final_cosine": 0.9999999999987086,
+          "original_final_norm_squared": 1.0000001112061743,
+          "reported_wall_seconds": 16.146940713000106,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.005784086000005573,
+              "process_cpu_seconds": 0.015419170000001259,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.012217937000003,
+              "process_cpu_seconds": 47.86981451600002,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.1288383090000025,
+              "process_cpu_seconds": 16.47425348500002,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "original_FP32_and_FP64_check_counts_identical": true
+    },
+    {
+      "host_sample": "1",
+      "math_context": "compatible",
+      "execution_context": {
+        "cpu_model": {
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "26",
+          "model": "2",
+          "model name": "AMD EPYC 9V45 96-Core Processor",
+          "stepping": "1"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX512",
+        "torch_runtime_version": "2.14.1+cu130",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": "COMPATIBLE",
+          "MKL_DYNAMIC": null,
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "profile": "portrait",
+      "actual_numerical_success": false,
+      "reported_success": false,
+      "CPU_capability": "AVX512",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "peak_process_RSS_bytes": 3629355008,
+      "load_wall_seconds": 4.6301657380000165,
+      "rounds": [
+        {
+          "round": "first",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 128,
+          "maximum_encoder_absolute_error": 6.186962127685547e-05,
+          "minimum_encoder_cosine": 0.99999999990696,
+          "original_final_cosine": 0.9999999999994096,
+          "original_final_norm_squared": 0.9999999511970253,
+          "reported_wall_seconds": 16.405496531999916,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.007257481000010557,
+              "process_cpu_seconds": 0.02125290700000093,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.165828739000005,
+              "process_cpu_seconds": 48.292269749,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.232303180999963,
+              "process_cpu_seconds": 16.822883883000003,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 128,
+          "maximum_encoder_absolute_error": 6.186962127685547e-05,
+          "minimum_encoder_cosine": 0.99999999990696,
+          "original_final_cosine": 0.9999999999994096,
+          "original_final_norm_squared": 0.9999999511970253,
+          "reported_wall_seconds": 16.208777374999954,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.007356461000028958,
+              "process_cpu_seconds": 0.02831565599998953,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.093925144999957,
+              "process_cpu_seconds": 48.168096519,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.107388487000037,
+              "process_cpu_seconds": 16.389512046999997,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 128,
+          "maximum_encoder_absolute_error": 6.186962127685547e-05,
+          "minimum_encoder_cosine": 0.99999999990696,
+          "original_final_cosine": 0.9999999999994096,
+          "original_final_norm_squared": 0.9999999511970253,
+          "reported_wall_seconds": 15.636703803000046,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.004064468000024135,
+              "process_cpu_seconds": 0.015746635999988712,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 11.683716409999988,
+              "process_cpu_seconds": 46.579894932,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 3.948831145999975,
+              "process_cpu_seconds": 15.762308467999986,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 128,
+          "maximum_encoder_absolute_error": 6.186962127685547e-05,
+          "minimum_encoder_cosine": 0.99999999990696,
+          "original_final_cosine": 0.9999999999994096,
+          "original_final_norm_squared": 0.9999999511970253,
+          "reported_wall_seconds": 16.14623761199988,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.005536371000005147,
+              "process_cpu_seconds": 0.023473651000017526,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 11.918302120999954,
+              "process_cpu_seconds": 47.493024964,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.222305227999982,
+              "process_cpu_seconds": 16.84255553,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "original_FP32_and_FP64_check_counts_identical": true
+    },
+    {
+      "host_sample": "2",
+      "math_context": "native",
+      "execution_context": {
+        "cpu_model": {
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "26",
+          "model": "2",
+          "model name": "AMD EPYC 9V45 96-Core Processor",
+          "stepping": "1"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX512",
+        "torch_runtime_version": "2.14.1+cu130",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": null,
+          "MKL_DYNAMIC": null,
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "profile": "square",
+      "actual_numerical_success": true,
+      "reported_success": true,
+      "CPU_capability": "AVX512",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "peak_process_RSS_bytes": 3854102528,
+      "load_wall_seconds": 9.834795326000005,
+      "rounds": [
+        {
+          "round": "first",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999998528,
+          "original_final_norm_squared": 0.9999999403789697,
+          "reported_wall_seconds": 9.449267746000004,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.007831292999995298,
+              "process_cpu_seconds": 0.020038260999999835,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 7.035035781999994,
+              "process_cpu_seconds": 24.113401111,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.406274461999999,
+              "process_cpu_seconds": 9.231021409999997,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999998528,
+          "original_final_norm_squared": 0.9999999403789697,
+          "reported_wall_seconds": 9.316928658999998,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.006412706999995521,
+              "process_cpu_seconds": 0.027097947000001454,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 7.01306167700001,
+              "process_cpu_seconds": 24.031883062,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.2973297489999993,
+              "process_cpu_seconds": 8.784355594000004,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999998528,
+          "original_final_norm_squared": 0.9999999403789697,
+          "reported_wall_seconds": 9.081862777000012,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.004110738000008496,
+              "process_cpu_seconds": 0.016032097000007184,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.857466328000001,
+              "process_cpu_seconds": 23.47330281699999,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.220172192000007,
+              "process_cpu_seconds": 8.534237998999998,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999998528,
+          "original_final_norm_squared": 0.9999999403789697,
+          "reported_wall_seconds": 8.992180269000002,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.005382505000000037,
+              "process_cpu_seconds": 0.020336525000004713,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.727430065000007,
+              "process_cpu_seconds": 22.990091862,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.2592546310000188,
+              "process_cpu_seconds": 8.68522851900002,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "original_FP32_and_FP64_check_counts_identical": true
+    },
+    {
+      "host_sample": "2",
+      "math_context": "native",
+      "execution_context": {
+        "cpu_model": {
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "26",
+          "model": "2",
+          "model name": "AMD EPYC 9V45 96-Core Processor",
+          "stepping": "1"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX512",
+        "torch_runtime_version": "2.14.1+cu130",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": null,
+          "MKL_DYNAMIC": null,
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "profile": "landscape",
+      "actual_numerical_success": true,
+      "reported_success": true,
+      "CPU_capability": "AVX512",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "peak_process_RSS_bytes": 3629277184,
+      "load_wall_seconds": 4.921280762999999,
+      "rounds": [
+        {
+          "round": "first",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999992306,
+          "original_final_norm_squared": 0.9999999806727443,
+          "reported_wall_seconds": 9.329980651,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.007594744000016362,
+              "process_cpu_seconds": 0.021985968000000966,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 7.005637714000017,
+              "process_cpu_seconds": 23.994796954999998,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.316637278999991,
+              "process_cpu_seconds": 8.918651488999998,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999992306,
+          "original_final_norm_squared": 0.9999999806727443,
+          "reported_wall_seconds": 9.224460618000023,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.004055547999996634,
+              "process_cpu_seconds": 0.01601844999999713,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.9157562590000055,
+              "process_cpu_seconds": 23.696079783000002,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.304539067999997,
+              "process_cpu_seconds": 8.872535955000004,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999992306,
+          "original_final_norm_squared": 0.9999999806727443,
+          "reported_wall_seconds": 9.296998671000011,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.004438498000013169,
+              "process_cpu_seconds": 0.016418087000005244,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.93273572999999,
+              "process_cpu_seconds": 23.77584186,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.3597122780000177,
+              "process_cpu_seconds": 9.089324678000011,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999992306,
+          "original_final_norm_squared": 0.9999999806727443,
+          "reported_wall_seconds": 9.384517581000011,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.005127313000002687,
+              "process_cpu_seconds": 0.019994694000004642,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.953312000000011,
+              "process_cpu_seconds": 23.794945870999996,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.425968906999998,
+              "process_cpu_seconds": 9.308201644999997,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "original_FP32_and_FP64_check_counts_identical": true
+    },
+    {
+      "host_sample": "2",
+      "math_context": "native",
+      "execution_context": {
+        "cpu_model": {
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "26",
+          "model": "2",
+          "model name": "AMD EPYC 9V45 96-Core Processor",
+          "stepping": "1"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX512",
+        "torch_runtime_version": "2.14.1+cu130",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": null,
+          "MKL_DYNAMIC": null,
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "profile": "portrait",
+      "actual_numerical_success": true,
+      "reported_success": true,
+      "CPU_capability": "AVX512",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "peak_process_RSS_bytes": 3634241536,
+      "load_wall_seconds": 4.948302534999982,
+      "rounds": [
+        {
+          "round": "first",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999998535,
+          "original_final_norm_squared": 1.0000000124964816,
+          "reported_wall_seconds": 9.268816471000008,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0067952369999773055,
+              "process_cpu_seconds": 0.022522304999998966,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.930806477999994,
+              "process_cpu_seconds": 23.671342836,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.3311050940000086,
+              "process_cpu_seconds": 8.979377785000004,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999998535,
+          "original_final_norm_squared": 1.0000000124964816,
+          "reported_wall_seconds": 9.640545795999998,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.004434742999990249,
+              "process_cpu_seconds": 0.01640664600000008,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 7.1358243319999985,
+              "process_cpu_seconds": 24.420196302000008,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.500173411999981,
+              "process_cpu_seconds": 9.590404833999997,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999998535,
+          "original_final_norm_squared": 1.0000000124964816,
+          "reported_wall_seconds": 9.636039701000016,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.005049396999993405,
+              "process_cpu_seconds": 0.019947206000011874,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 7.205672768999989,
+              "process_cpu_seconds": 24.789000179999988,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.4252005399999916,
+              "process_cpu_seconds": 9.325206296000005,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999999,
+          "original_final_cosine": 0.9999999999998535,
+          "original_final_norm_squared": 1.0000000124964816,
+          "reported_wall_seconds": 9.355401648000026,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.005066134000003331,
+              "process_cpu_seconds": 0.0200574490000065,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.971172301999985,
+              "process_cpu_seconds": 23.932970009,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.3790463769999803,
+              "process_cpu_seconds": 9.119301572000012,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "original_FP32_and_FP64_check_counts_identical": true
+    },
+    {
+      "host_sample": "2",
+      "math_context": "compatible",
+      "execution_context": {
+        "cpu_model": {
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "26",
+          "model": "2",
+          "model name": "AMD EPYC 9V45 96-Core Processor",
+          "stepping": "1"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX512",
+        "torch_runtime_version": "2.14.1+cu130",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": "COMPATIBLE",
+          "MKL_DYNAMIC": null,
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "profile": "square",
+      "actual_numerical_success": false,
+      "reported_success": false,
+      "CPU_capability": "AVX512",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "peak_process_RSS_bytes": 3629572096,
+      "load_wall_seconds": 5.126275410000005,
+      "rounds": [
+        {
+          "round": "first",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 361,
+          "maximum_encoder_absolute_error": 0.00016707181930541992,
+          "minimum_encoder_cosine": 0.9999999993787497,
+          "original_final_cosine": 0.9999999999989062,
+          "original_final_norm_squared": 0.9999999649384042,
+          "reported_wall_seconds": 17.2843417,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.007632053999998334,
+              "process_cpu_seconds": 0.021469922999999724,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.720093218000017,
+              "process_cpu_seconds": 50.566432391,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.556491030000018,
+              "process_cpu_seconds": 18.133387298999992,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 361,
+          "maximum_encoder_absolute_error": 0.00016707181930541992,
+          "minimum_encoder_cosine": 0.9999999993787497,
+          "original_final_cosine": 0.9999999999989062,
+          "original_final_norm_squared": 0.9999999649384042,
+          "reported_wall_seconds": 17.220632154000043,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.00615337199999999,
+              "process_cpu_seconds": 0.023955725999996957,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.681190415999964,
+              "process_cpu_seconds": 50.466969822999985,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.533167204999984,
+              "process_cpu_seconds": 18.074786337999996,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 361,
+          "maximum_encoder_absolute_error": 0.00016707181930541992,
+          "minimum_encoder_cosine": 0.9999999993787497,
+          "original_final_cosine": 0.9999999999989062,
+          "original_final_norm_squared": 0.9999999649384042,
+          "reported_wall_seconds": 17.142347265000012,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.004603586000030191,
+              "process_cpu_seconds": 0.019238458000018,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.636462588000029,
+              "process_cpu_seconds": 50.27909477200001,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.50117142900001,
+              "process_cpu_seconds": 17.945751262999977,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 361,
+          "maximum_encoder_absolute_error": 0.00016707181930541992,
+          "minimum_encoder_cosine": 0.9999999993787497,
+          "original_final_cosine": 0.9999999999989062,
+          "original_final_norm_squared": 0.9999999649384042,
+          "reported_wall_seconds": 16.999382090999916,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.00583287800003518,
+              "process_cpu_seconds": 0.023768428000011,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.56754155699997,
+              "process_cpu_seconds": 50.03870221,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.425892976,
+              "process_cpu_seconds": 17.647893574999955,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "original_FP32_and_FP64_check_counts_identical": true
+    },
+    {
+      "host_sample": "2",
+      "math_context": "compatible",
+      "execution_context": {
+        "cpu_model": {
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "26",
+          "model": "2",
+          "model name": "AMD EPYC 9V45 96-Core Processor",
+          "stepping": "1"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX512",
+        "torch_runtime_version": "2.14.1+cu130",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": "COMPATIBLE",
+          "MKL_DYNAMIC": null,
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "profile": "landscape",
+      "actual_numerical_success": false,
+      "reported_success": false,
+      "CPU_capability": "AVX512",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "peak_process_RSS_bytes": 3634421760,
+      "load_wall_seconds": 5.272779737999997,
+      "rounds": [
+        {
+          "round": "first",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 95,
+          "maximum_encoder_absolute_error": 6.175041198730469e-05,
+          "minimum_encoder_cosine": 0.9999999998975803,
+          "original_final_cosine": 0.9999999999987086,
+          "original_final_norm_squared": 1.0000001112061743,
+          "reported_wall_seconds": 17.75080018999995,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.008134423000001334,
+              "process_cpu_seconds": 0.024226548999999764,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 13.135547132,
+              "process_cpu_seconds": 51.828055165,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.6069961329999956,
+              "process_cpu_seconds": 18.368587893999994,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 95,
+          "maximum_encoder_absolute_error": 6.175041198730469e-05,
+          "minimum_encoder_cosine": 0.9999999998975803,
+          "original_final_cosine": 0.9999999999987086,
+          "original_final_norm_squared": 1.0000001112061743,
+          "reported_wall_seconds": 17.747183723000035,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.006071591000022636,
+              "process_cpu_seconds": 0.02362329700000032,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 13.040742759000011,
+              "process_cpu_seconds": 51.83291770000001,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.700250889000017,
+              "process_cpu_seconds": 18.732502038000007,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 95,
+          "maximum_encoder_absolute_error": 6.175041198730469e-05,
+          "minimum_encoder_cosine": 0.9999999998975803,
+          "original_final_cosine": 0.9999999999987086,
+          "original_final_norm_squared": 1.0000001112061743,
+          "reported_wall_seconds": 17.414244291999978,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0048087470000268695,
+              "process_cpu_seconds": 0.019752614999987372,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.87401162399999,
+              "process_cpu_seconds": 51.171241914999996,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.535296421999988,
+              "process_cpu_seconds": 18.08617541000001,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 95,
+          "maximum_encoder_absolute_error": 6.175041198730469e-05,
+          "minimum_encoder_cosine": 0.9999999998975803,
+          "original_final_cosine": 0.9999999999987086,
+          "original_final_norm_squared": 1.0000001112061743,
+          "reported_wall_seconds": 16.747122450000006,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.004477556000040295,
+              "process_cpu_seconds": 0.016430487999997467,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.395773463000012,
+              "process_cpu_seconds": 49.37047491000001,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.346761870000023,
+              "process_cpu_seconds": 17.294791939999982,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "original_FP32_and_FP64_check_counts_identical": true
+    },
+    {
+      "host_sample": "2",
+      "math_context": "compatible",
+      "execution_context": {
+        "cpu_model": {
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "26",
+          "model": "2",
+          "model name": "AMD EPYC 9V45 96-Core Processor",
+          "stepping": "1"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX512",
+        "torch_runtime_version": "2.14.1+cu130",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": "COMPATIBLE",
+          "MKL_DYNAMIC": null,
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "profile": "portrait",
+      "actual_numerical_success": false,
+      "reported_success": false,
+      "CPU_capability": "AVX512",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "peak_process_RSS_bytes": 3629268992,
+      "load_wall_seconds": 4.792070329000012,
+      "rounds": [
+        {
+          "round": "first",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 128,
+          "maximum_encoder_absolute_error": 6.186962127685547e-05,
+          "minimum_encoder_cosine": 0.99999999990696,
+          "original_final_cosine": 0.9999999999994096,
+          "original_final_norm_squared": 0.9999999511970253,
+          "reported_wall_seconds": 16.58414678600002,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.006751731999997901,
+              "process_cpu_seconds": 0.021654361999999594,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.261960039999963,
+              "process_cpu_seconds": 48.785845314,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.3153227509999965,
+              "process_cpu_seconds": 17.210608785000005,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 128,
+          "maximum_encoder_absolute_error": 6.186962127685547e-05,
+          "minimum_encoder_cosine": 0.99999999990696,
+          "original_final_cosine": 0.9999999999994096,
+          "original_final_norm_squared": 0.9999999511970253,
+          "reported_wall_seconds": 16.606077889000005,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.003680379999991601,
+              "process_cpu_seconds": 0.01265300600000785,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.251221553999983,
+              "process_cpu_seconds": 48.818012377,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.35106224499998,
+              "process_cpu_seconds": 17.356344729,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 128,
+          "maximum_encoder_absolute_error": 6.186962127685547e-05,
+          "minimum_encoder_cosine": 0.99999999990696,
+          "original_final_cosine": 0.9999999999994096,
+          "original_final_norm_squared": 0.9999999511970253,
+          "reported_wall_seconds": 16.579726526,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.004281943999956184,
+              "process_cpu_seconds": 0.018676609999999982,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.256692201000021,
+              "process_cpu_seconds": 48.84627736099998,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.318652623000048,
+              "process_cpu_seconds": 17.231252313,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 128,
+          "maximum_encoder_absolute_error": 6.186962127685547e-05,
+          "minimum_encoder_cosine": 0.99999999990696,
+          "original_final_cosine": 0.9999999999994096,
+          "original_final_norm_squared": 0.9999999511970253,
+          "reported_wall_seconds": 16.83232202800002,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0037956759999815404,
+              "process_cpu_seconds": 0.015740453999995907,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.422588711000003,
+              "process_cpu_seconds": 49.491619454000016,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 4.405834004999974,
+              "process_cpu_seconds": 17.577125604000003,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "original_FP32_and_FP64_check_counts_identical": true
+    }
+  ]
+}

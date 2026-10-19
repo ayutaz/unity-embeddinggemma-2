@@ -28,7 +28,8 @@ def test_cpu_silence_replay_uses_the_audited_actual_chain_and_is_a_hard_gate():
     assert cpu['if'] == "matrix.case_id == 'silence'"
     assert cpu.get('continue-on-error', 'false') == 'false'
     assert '--group cpu-comparison' in cpu['run']
-    assert '--graph-optimizations basic' in cpu['run']
+    assert '--graph-optimizations disabled' in cpu['run']
+    assert '--execution-schedule partition-major' in cpu['run']
     assert '--chain-report ../artifacts/pinned-audio/frozen-audio-chained-onnx.json' in cpu['run']
     assert '--original ../artifacts/original' in cpu['run']
     assert '--source "$GITHUB_SHA"' in cpu['run']

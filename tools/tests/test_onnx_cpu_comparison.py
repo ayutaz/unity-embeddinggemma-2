@@ -138,13 +138,27 @@ def test_distribution_basic_choice_reaches_all_five_actual_sessions(tmp_path, au
 def test_cli_forwards_the_explicit_basic_mode(tmp_path, monkeypatch):
     module = implementation()
     seen = {}
-    def execute(chain, original, output, *, source, graph_optimizations):
+    def execute(chain, original, output, *, source, graph_optimizations, execution_schedule='chain-major'):
+        assert execution_schedule == 'chain-major'
         seen.update(source=source, optimization=graph_optimizations)
         return dict(success=True, case_id='silence', encoder_replay_qualified=True)
     monkeypatch.setattr(module, 'replay_distribution', execute)
     assert module.main(['--chain-report', str(tmp_path / 'chain.json'), '--original', str(tmp_path),
         '--output', str(tmp_path / 'out.json'), '--source', 'a' * 40, '--graph-optimizations', 'basic']) == 0
     assert seen == dict(source='a' * 40, optimization='basic')
+
+
+def test_cli_forwards_the_partition_major_numerical_schedule(tmp_path, monkeypatch):
+    module = implementation()
+    seen = {}
+    def execute(chain, original, output, *, source, graph_optimizations, execution_schedule):
+        seen.update(optimization=graph_optimizations, schedule=execution_schedule)
+        return dict(success=True, case_id='silence', encoder_replay_qualified=True)
+    monkeypatch.setattr(module, 'replay_distribution', execute)
+    assert module.main(['--chain-report', str(tmp_path / 'chain.json'), '--original', str(tmp_path),
+        '--output', str(tmp_path / 'out.json'), '--source', 'a' * 40,
+        '--execution-schedule', 'partition-major']) == 0
+    assert seen == dict(optimization='disabled', schedule='partition-major')
 
 
 def test_modified_graph_hash_is_rejected_before_loading(tmp_path):
@@ -281,6 +295,222 @@ def test_distribution_entry_requires_audited_originals_and_binds_source(tmp_path
     assert result['encoder_replay_qualified'] is True
     assert result['CPU_reference_comparison_qualified'] is False
     assert len(result['sessions']) == 5 and len(result['rounds']) == 4
+
+
+def test_cpu_session_close_releases_native_owner_and_rejects_further_calls(tmp_path):
+    runner = session(tmp_path)
+    runner.close()
+    runner.close()
+    assert runner.session is None
+    with pytest.raises(ValueError, match='closed'):
+        runner.run(np.zeros((2, 3), dtype=np.float32))
+
+
+def test_partition_major_keeps_only_one_session_and_all_twenty_actual_captures(tmp_path, audited_chain, monkeypatch):
+    source, _, _ = audited_chain
+    module = implementation()
+    create, close = module.CpuOnnxSession.__init__, module.CpuOnnxSession.close
+    live = [0]
+    order = []
+    def owned_create(self, *args, **kwargs):
+        assert live[0] == 0
+        create(self, *args, **kwargs)
+        live[0] += 1
+        order.append('load')
+    def owned_close(self):
+        close(self)
+        live[0] -= 1
+        order.append('close')
+    monkeypatch.setattr(module.CpuOnnxSession, '__init__', owned_create)
+    monkeypatch.setattr(module.CpuOnnxSession, 'close', owned_close)
+    output = tmp_path / 'partitioned.json'
+    result = module.replay_distribution(source, tmp_path / 'original', output, source='a' * 40,
+        execution_schedule='partition-major')
+    assert live[0] == 0 and order == ['load', 'close'] * 5
+    assert result['success'] and result['encoder_replay_qualified']
+    assert result['execution_schedule'] == 'partition-major'
+    assert result['maximum_resident_sessions'] == 1
+    assert result['end_to_end_warm_timing_qualified'] is False
+    assert result['complete_performance_accepted'] is False
+    assert result['references_used_as_inference_inputs'] is False
+    assert len(result['sessions']) == 5 and len(result['rounds']) == 4
+    assert sum(len(r['parts']) for r in result['rounds']) == 20
+    assert all(r['tolerance_failures'] == 0 for r in result['rounds'])
+    for row in result['rounds']:
+        for part in row['parts']:
+            path = output.parent / part['capture']
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == part['sha256']
+    journal = json.loads(output.with_name('partitioned-progress.json').read_text())
+    assert journal['success'] and journal['terminal']
+    assert len(journal['events']) == 82
+    for index in range(5):
+        events = [e for e in journal['events'] if e['part'] == index]
+        assert [e['phase'] for e in events] == [
+            'load_part_begin', 'onnx_parse_begin', 'onnx_parse_end',
+            'session_create_begin', 'session_create_end', 'load_part_end',
+            *['inference_part_begin', 'inference_part_end'] * 4,
+            'release_part_begin', 'release_part_end']
+    assert [e['part'] for e in journal['events'] if e['phase'] == 'release_part_end'] == list(range(5))
+
+
+def test_partition_major_uses_actual_carries_not_the_accepted_reference(tmp_path, audited_chain):
+    source, _, _ = audited_chain
+    report = json.loads(source.read_text())
+    accepted_first = np.full((2, 3), 5e-6, dtype='<f4')
+    accepted_first.tofile(tmp_path / 'reference0.bin')
+    report['cases'][1]['parts'][0]['output_sha256'] = hashlib.sha256(accepted_first.tobytes()).hexdigest()
+    path, sha = graph(tmp_path, name='amplification', operation='Mul')
+    report['cases'][1]['parts'][1].update(graph=path.name, graph_sha256=sha)
+    source.write_text(json.dumps(report))
+    result = implementation().replay_distribution(source, tmp_path / 'original', tmp_path / 'actual.json',
+        source='a' * 40, execution_schedule='partition-major')
+    assert result['success'] and all(r['tolerance_failures'] == 0 for r in result['rounds'])
+    for row in result['rounds']:
+        actual = np.fromfile(tmp_path / row['parts'][1]['capture'], dtype='<f4')
+        np.testing.assert_array_equal(actual, np.zeros(6, dtype=np.float32))
+
+
+def test_partition_major_preserves_each_rounds_distinct_actual_carry(tmp_path, audited_chain, monkeypatch):
+    source, _, _ = audited_chain
+    module = implementation()
+    report = json.loads(source.read_text())
+    path, sha = graph(tmp_path, name='multiply-two', operation='Mul', factor=2)
+    report['cases'][1]['parts'][1].update(graph=path.name, graph_sha256=sha)
+    source.write_text(json.dumps(report))
+    execute = module.CpuOnnxSession.run
+    first_calls = [0]
+    def distinguish(self, value):
+        actual = execute(self, value)
+        if self.graph.name == 'part0.onnx':
+            first_calls[0] += 1
+            actual = actual + np.float32(first_calls[0]) * np.float32(1e-6)
+        return actual
+    monkeypatch.setattr(module.CpuOnnxSession, 'run', distinguish)
+    result = module.replay_distribution(source, tmp_path / 'original', tmp_path / 'streams.json',
+        source='a' * 40, execution_schedule='partition-major')
+    assert result['success'] and first_calls[0] == 4
+    for index, row in enumerate(result['rounds']):
+        expected = np.float32(index + 1) * np.float32(1e-6) * np.float32(2)
+        for part_index, sign in ((1, 1), (4, -1)):
+            actual = np.fromfile(tmp_path / row['parts'][part_index]['capture'], dtype='<f4')
+            np.testing.assert_array_equal(actual, np.full(6, expected * sign, dtype=np.float32))
+
+
+@pytest.mark.parametrize('changed', ['initial-during-load', 'final-during-inference'])
+def test_partition_major_rechecks_deferred_input_and_final_reference_hash(tmp_path, audited_chain, monkeypatch, changed):
+    source, _, _ = audited_chain
+    module = implementation()
+    create, execute = module.CpuOnnxSession.__init__, module.CpuOnnxSession.run
+    def replace(name):
+        np.full((2, 3), 5e-6, dtype='<f4').tofile(tmp_path / name)
+    def mutated_create(self, *args, **kwargs):
+        create(self, *args, **kwargs)
+        if changed == 'initial-during-load' and self.graph.name == 'part0.onnx':
+            replace('raw-input-fp32.bin')
+    def mutated_run(self, value):
+        actual = execute(self, value)
+        if changed == 'final-during-inference' and self.graph.name == 'part0.onnx':
+            replace('reference-output-fp32.bin')
+        return actual
+    monkeypatch.setattr(module.CpuOnnxSession, '__init__', mutated_create)
+    monkeypatch.setattr(module.CpuOnnxSession, 'run', mutated_run)
+    output = tmp_path / 'deferred.json'
+    with pytest.raises(ValueError, match='hash'):
+        module.replay_distribution(source, tmp_path / 'original', output, source='a' * 40,
+            execution_schedule='partition-major')
+    report = json.loads(output.read_text())
+    assert not report['success'] and not report['encoder_replay_qualified']
+
+
+def test_partition_major_excludes_progress_io_from_inference_timing(tmp_path, audited_chain, monkeypatch):
+    source, _, _ = audited_chain
+    module = implementation()
+    execute, record = module.CpuOnnxSession.run, module.ProgressJournal.record
+    clock = [0.0]
+    def timed_call(self, value):
+        actual = execute(self, value)
+        clock[0] += 1
+        return actual
+    def costly_record(self, *args, **kwargs):
+        clock[0] += 1000
+        return record(self, *args, **kwargs)
+    monkeypatch.setattr(module.CpuOnnxSession, 'run', timed_call)
+    monkeypatch.setattr(module.ProgressJournal, 'record', costly_record)
+    monkeypatch.setattr(module.time, 'perf_counter', lambda: clock[0])
+    result = module.replay_distribution(source, tmp_path / 'original', tmp_path / 'timing.json',
+        source='a' * 40, execution_schedule='partition-major')
+    assert all(part['wall_seconds'] == 1 for row in result['rounds'] for part in row['parts'])
+    assert not result['end_to_end_warm_timing_qualified']
+
+
+@pytest.mark.parametrize('failure', ['numerical', 'native'])
+def test_partition_major_failure_releases_session_and_preserves_partial_evidence(tmp_path, audited_chain, monkeypatch, failure):
+    source, _, _ = audited_chain
+    module = implementation()
+    close, execute = module.CpuOnnxSession.close, module.CpuOnnxSession.run
+    released = []
+    def counted_close(self):
+        close(self)
+        released.append(self.session)
+    monkeypatch.setattr(module.CpuOnnxSession, 'close', counted_close)
+    if failure == 'numerical':
+        report = json.loads(source.read_text())
+        wrong = np.ones((2, 3), dtype='<f4')
+        wrong.tofile(tmp_path / 'reference0.bin')
+        report['cases'][1]['parts'][0]['output_sha256'] = hashlib.sha256(wrong.tobytes()).hexdigest()
+        source.write_text(json.dumps(report))
+        expected_error = ValueError
+    else:
+        def failed_run(self, value):
+            execute(self, value)
+            raise RuntimeError('unpublished-synthetic-detail')
+        monkeypatch.setattr(module.CpuOnnxSession, 'run', failed_run)
+        expected_error = RuntimeError
+    output = tmp_path / 'failed-partitioned.json'
+    with pytest.raises(expected_error):
+        module.replay_distribution(source, tmp_path / 'original', output, source='a' * 40,
+            execution_schedule='partition-major')
+    assert released == [None]
+    actual = json.loads(output.read_text())
+    assert not actual['success'] and not actual['encoder_replay_qualified']
+    assert actual['original_reference_audit_passed']
+    assert 'unpublished-synthetic-detail' not in output.read_text()
+    if failure == 'numerical':
+        assert actual['phase'] == 'numerical_failure'
+        assert actual['rounds'][0]['parts'][0]['tolerance_failures'] == 6
+        assert (tmp_path / actual['rounds'][0]['parts'][0]['capture']).is_file()
+
+
+def test_partition_major_never_overwrites_a_later_round_capture(tmp_path, audited_chain):
+    source, _, _ = audited_chain
+    output = tmp_path / 'preserved-partitioned.json'
+    capture = tmp_path / 'preserved-partitioned-repeat-2-part4.bin'
+    capture.write_bytes(b'preserved')
+    with pytest.raises(FileExistsError):
+        implementation().replay_distribution(source, tmp_path / 'original', output, source='a' * 40,
+            execution_schedule='partition-major')
+    assert capture.read_bytes() == b'preserved' and not output.exists()
+
+
+def test_partition_major_checks_graph_hashes_again_after_later_parts(tmp_path, audited_chain, monkeypatch):
+    source, _, _ = audited_chain
+    module = implementation()
+    execute = module.CpuOnnxSession.run
+    calls = [0]
+    def mutate_previous(self, value):
+        actual = execute(self, value)
+        calls[0] += 1
+        if calls[0] == 5:
+            path = tmp_path / 'part0.onnx'
+            path.write_bytes(path.read_bytes() + b'changed')
+        return actual
+    monkeypatch.setattr(module.CpuOnnxSession, 'run', mutate_previous)
+    output = tmp_path / 'changed-partitioned.json'
+    with pytest.raises(ValueError, match='hash'):
+        module.replay_distribution(source, tmp_path / 'original', output, source='a' * 40,
+            execution_schedule='partition-major')
+    result = json.loads(output.read_text())
+    assert not result['success'] and not result['encoder_replay_qualified']
 
 
 @pytest.mark.parametrize('change', ['failed-original-gate', 'different-source', 'invalid-source'])

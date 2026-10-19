@@ -11,7 +11,7 @@ from .bounded_process import write_json_atomic
 
 PHASES = {'starting', 'load_part_begin', 'onnx_parse_begin', 'onnx_parse_end',
           'session_create_begin', 'session_create_end', 'load_part_end',
-          'inference_part_begin', 'inference_part_end', 'complete', 'failed'}
+          'inference_part_begin', 'inference_part_end', 'release_part_begin', 'release_part_end', 'complete', 'failed'}
 CASES = {'silence', 'impulse', 'sine', 'nyquist', 'noise', 'padded_noise'}
 
 

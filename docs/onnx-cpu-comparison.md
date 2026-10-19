@@ -4,7 +4,7 @@
 
 ## 実行条件
 
-`onnx_cpu_comparison`は既存のdistribution監査を先に実行し、元参照に対する合格と同じ40桁のexecution sourceを必須にします。元入力から接続した5分割・各graphの全SHA256・captureを確認し、ONNX RuntimeのCPUExecutionProviderだけを明示して実行します。実行providerのfallbackは無効です。graph最適化は既定で無効、CIの追加診断は後述の明示Basicモードを使用します。別ファイルの重みはgraph hashだけでは保証できないため拒否します。
+`onnx_cpu_comparison`は既存のdistribution監査を先に実行し、元参照に対する合格と同じ40桁のexecution sourceを必須にします。元入力から接続した5分割・各graphの全SHA256・captureを確認し、ONNX RuntimeのCPUExecutionProviderだけを明示して実行します。実行providerのfallbackは無効です。graph最適化は既定で無効です。CIの追加診断は、後述の区間単位の保持と最適化なしを明示して使用します。別ファイルの重みはgraph hashだけでは保証できないため拒否します。
 
 各partへ渡すのは直前の実出力です。参照値は比較専用で、途中入力へ代入しません。最終partは元のencoder参照へ直接照合します。FP32の`atol=1e-5 / rtol=1e-4`を維持し、first / warm / repeat-1 / repeat-2のいずれかで超過したら失敗します。元reportとcaptureは上書きせず、新しい実captureと失敗reportを保存します。
 
@@ -51,8 +51,20 @@ flush済みの34件の進捗では、全5 sessionのロード後、第1区間の
 
 source `74f5d57` のrun `39251388877`も、最適化なしの第2区間推論開始後にrunner shutdownとなりました。直前residentは8,494,678,016 bytes、観測OS peakは9,982,025,728 bytesです。前sourceよりresidentは低下しましたが、host条件は異なり、原因・OOM・数値合格は未確定です。34件の進捗と原本ログ・注釈の私的2コピーを保持し、同じ設定の再試行は行いません。
 
-元reportのoperator countsでは、第2〜第5区間がそれぞれ数十万演算を含みます。`--graph-optimizations basic`を追加し、定数畳み込みや冗長nodeの除去を許可する限定的な最適化を検証します。[公式の最適化区分](https://onnxruntime.ai/docs/performance/model-optimizations/graph-optimizations.html)に従い、Extended / Layoutは選択できません。既定の`disabled`は対照用に保持し、CIは`basic`を明示します。実sessionの設定読み戻しが選択と異なる場合も失敗します。
+元reportのoperator countsでは、第2〜第5区間がそれぞれ数十万演算を含みます。`--graph-optimizations basic`を追加し、定数畳み込みや冗長nodeの除去を許可する限定的な最適化を検証しました。[公式の最適化区分](https://onnxruntime.ai/docs/performance/model-optimizations/graph-optimizations.html)に従い、Extended / Layoutは選択できません。既定の`disabled`は保持し、source `493f335`のCIは`basic`を明示しました。実sessionの設定読み戻しが選択と異なる場合も失敗します。
 
 全5 sessionを保持し、元入力から全4反復を接続して全20出力を保存する条件、元の要素別許容差、元graph全hashの前後検査は維持します。Basic最適化の数値的な互換性も、実captureから判定します。元参照の変更、参照中間値への差し替え、partごとのcold reloadや最終値だけの合格判定は行いません。SDK / AssetsとUnityのGPU実装は変更しません。
 
 初回9件Red（既存31件pass）と、実設定の不一致拒否の追加2件Redから、最終関連84件Green・fail0・skip0を確認しました。最適化なし / Basicの密行列2段・4反復とFP32の桁落ち対照、CLI・全5 sessionへの選択伝達、元証拠の保護を含みます。[TDDと停止記録](results/onnx-cpu-basic-mode-tdd-20261019.json)を保存しています。実モデルでのメモリ削減・全20出力の合格は未検証で、CPU比較全体・性能全体・最低要件・正式リリースも未完了です。
+
+## 数値診断で保持するsessionを1区間へ制限
+
+source `493f335` のrun `39255714739`は、Basicでも全5 sessionロード後、第2区間の推論開始を最後にrunner shutdownとなりました。34件の進捗の直前residentは14,337,609,728 bytes、観測OS peakは14,999,564,288 bytesで、数値capture artifactは未回収です。原因・OOMは未確定ですが、Basicによるメモリ改善は確認できませんでした。元の全6ケース・824,320値の超過0、7 ZIPのdigest / CRC・私的2コピーと集計JSONの一致は別に確認済みです。CI全体は不合格で保持しています。
+
+`--execution-schedule partition-major`は、1区間をロードして4回実行し、native sessionの所有を解放してから次の区間へ進みます。4本それぞれの直前の実出力を別々に保持し、次区間へ渡します。元入力・graph・参照の全hashと元の要素別gate、実20 capture、最終区間の元参照への直接比較は維持します。遅れて読み込む元入力と最終参照も、使用直前にhashを再検査します。途中参照を入力へ代入せず、各区間は1回だけロードします。
+
+既定の`chain-major`は、全5 sessionを保持して4本の連鎖を順に実行する従来方式です。CIの数値pilotは`--graph-optimizations disabled --execution-schedule partition-major`を明示します。どちらも全5区間・4本の実計算を維持します。新方式のfirst / warm / repeatは各ロード済み区間内の呼出順で、連鎖全体の連続warm時間ではありません。load時間も5回の区間setupの合計です。`end_to_end_warm_timing_qualified`・`CPU_reference_comparison_qualified`・`complete_performance_accepted`はfalseを維持します。連鎖全体の性能比較は別に残ります。
+
+journalは区間ごとにロード、4回の推論、解放の順を記録します。成功時は82イベントです。native sessionの所有は最大1つですが、OS allocatorのメモリ返却は保証せず、解放前後のresident / peakを観測します。例外・数値超過時も所有sessionを解放し、原本・部分captureを保持して失敗します。
+
+初回7件Red、CLI / CI接続の2件Red（先行8件pass）、遅延読込hash再検査の追加2件Redから、関連96件Green・fail0・skip0を確認しました。4本の異なる実carryが最終区間へ届くこと、微小な参照差を次区間で増幅する対照、失敗時の解放・原本保持、元graphの事後hash、82イベントの順序、推論計時からのjournal I/O除外を含みます。[TDDと停止記録](results/onnx-cpu-partition-major-tdd-20261019.json)を保持しています。これは小規模な実CPU / lifecycle検査で、実モデルでの新方式の数値合格・メモリ改善・正式公開は未確認です。

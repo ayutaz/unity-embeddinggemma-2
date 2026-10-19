@@ -138,8 +138,9 @@ def test_distribution_basic_choice_reaches_all_five_actual_sessions(tmp_path, au
 def test_cli_forwards_the_explicit_basic_mode(tmp_path, monkeypatch):
     module = implementation()
     seen = {}
-    def execute(chain, original, output, *, source, graph_optimizations, execution_schedule='chain-major'):
+    def execute(chain, original, output, *, source, graph_optimizations, execution_schedule='chain-major', node_order='default'):
         assert execution_schedule == 'chain-major'
+        assert node_order == 'default'
         seen.update(source=source, optimization=graph_optimizations)
         return dict(success=True, case_id='silence', encoder_replay_qualified=True)
     monkeypatch.setattr(module, 'replay_distribution', execute)
@@ -151,7 +152,8 @@ def test_cli_forwards_the_explicit_basic_mode(tmp_path, monkeypatch):
 def test_cli_forwards_the_partition_major_numerical_schedule(tmp_path, monkeypatch):
     module = implementation()
     seen = {}
-    def execute(chain, original, output, *, source, graph_optimizations, execution_schedule):
+    def execute(chain, original, output, *, source, graph_optimizations, execution_schedule, node_order='default'):
+        assert node_order == 'default'
         seen.update(optimization=graph_optimizations, schedule=execution_schedule)
         return dict(success=True, case_id='silence', encoder_replay_qualified=True)
     monkeypatch.setattr(module, 'replay_distribution', execute)
@@ -159,6 +161,115 @@ def test_cli_forwards_the_partition_major_numerical_schedule(tmp_path, monkeypat
         '--output', str(tmp_path / 'out.json'), '--source', 'a' * 40,
         '--execution-schedule', 'partition-major']) == 0
     assert seen == dict(optimization='disabled', schedule='partition-major')
+
+
+def test_cli_forwards_priority_node_order_with_full_chain_schedule(tmp_path, monkeypatch):
+    module = implementation()
+    seen = {}
+    def execute(chain, original, output, *, source, graph_optimizations, execution_schedule, node_order):
+        seen.update(optimization=graph_optimizations, schedule=execution_schedule, order=node_order)
+        return dict(success=True, case_id='silence', encoder_replay_qualified=True)
+    monkeypatch.setattr(module, 'replay_distribution', execute)
+    assert module.main(['--chain-report', str(tmp_path / 'chain.json'), '--original', str(tmp_path),
+        '--output', str(tmp_path / 'out.json'), '--source', 'a' * 40,
+        '--node-order', 'priority', '--execution-schedule', 'chain-major']) == 0
+    assert seen == dict(optimization='disabled', schedule='chain-major', order='priority')
+
+
+def test_priority_node_order_is_actual_and_preserves_fp32_dependencies(tmp_path):
+    import onnxruntime as ort
+    path, sha = graph(tmp_path, operation='rounding')
+    runner = implementation().CpuOnnxSession(path, sha, node_order='priority')
+    assert runner.session.get_session_options().execution_order == ort.ExecutionOrder.PRIORITY_BASED
+    assert runner.configuration['node_execution_order'] == 'PRIORITY_BASED'
+    actual = runner.run(np.ones((2, 3), dtype=np.float32))
+    np.testing.assert_array_equal(actual, np.zeros((2, 3), dtype=np.float32))
+
+
+@pytest.mark.parametrize('node_order', ['unknown', 'memory-efficient'])
+def test_unreviewed_node_orders_are_rejected(tmp_path, node_order):
+    path, sha = graph(tmp_path)
+    with pytest.raises(ValueError, match='node order'):
+        implementation().CpuOnnxSession(path, sha, node_order=node_order)
+
+
+@pytest.mark.parametrize('node_order', ['default', 'priority'])
+def test_actual_node_order_readback_mismatch_is_rejected(tmp_path, monkeypatch, node_order):
+    import onnxruntime as ort
+    read = ort.InferenceSession.get_session_options
+    def mismatch(self):
+        options = read(self)
+        options.execution_order = ort.ExecutionOrder.DEFAULT if node_order == 'priority' else ort.ExecutionOrder.PRIORITY_BASED
+        return options
+    monkeypatch.setattr(ort.InferenceSession, 'get_session_options', mismatch)
+    path, sha = graph(tmp_path)
+    with pytest.raises(ValueError, match='node order'):
+        implementation().CpuOnnxSession(path, sha, node_order=node_order)
+
+
+def test_priority_distribution_runs_twenty_calls_with_all_five_sessions_owned(tmp_path, audited_chain, monkeypatch):
+    import weakref
+    source, _, _ = audited_chain
+    module = implementation()
+    create, execute = module.CpuOnnxSession.__init__, module.CpuOnnxSession.run
+    owners, calls = [], []
+    def count_create(self, *args, **kwargs):
+        create(self, *args, **kwargs)
+        owners.append(weakref.ref(self))
+    def observed_run(self, value):
+        assert len(owners) == 5 and all(owner() is not None and owner().session is not None for owner in owners)
+        calls.append(self.graph.name)
+        return execute(self, value)
+    monkeypatch.setattr(module.CpuOnnxSession, '__init__', count_create)
+    monkeypatch.setattr(module.CpuOnnxSession, 'run', observed_run)
+    result = module.replay_distribution(source, tmp_path / 'original', tmp_path / 'priority-chain.json',
+        source='a' * 40, node_order='priority', execution_schedule='chain-major')
+    assert result['success'] and result['execution_schedule'] == 'chain-major'
+    assert result['maximum_resident_sessions'] == 5
+    assert result['end_to_end_warm_timing_qualified'] is False
+    assert calls == [f'part{i}.onnx' for i in range(5)] * 4
+    assert all(row['node_execution_order'] == 'PRIORITY_BASED' for row in result['sessions'])
+
+
+def test_priority_profile_finishes_shared_tensor_consumers_before_next_branch(tmp_path, monkeypatch):
+    import onnxruntime as ort
+    nodes, constants, sums, maxima = [], [], [], []
+    for i in range(4):
+        nodes.extend((helper.make_node('Mul', ['input', f'factor{i}'], [f'large{i}'], name=f'large{i}'),
+            helper.make_node('ReduceSum', [f'large{i}'], [f'sum{i}'], name=f'sum{i}', keepdims=1),
+            helper.make_node('ReduceMax', [f'large{i}'], [f'max{i}'], name=f'max{i}', keepdims=1)))
+        constants.append(numpy_helper.from_array(np.asarray(i + 1, dtype=np.float32), f'factor{i}'))
+        sums.append(f'sum{i}'); maxima.append(f'max{i}')
+    nodes.extend((helper.make_node('Concat', sums, ['sums'], name='sums', axis=0),
+        helper.make_node('Concat', maxima, ['maxima'], name='maxima', axis=0),
+        helper.make_node('Concat', ['sums', 'maxima'], ['output'], name='output', axis=0)))
+    model = helper.make_model(helper.make_graph(nodes, 'shared-branch',
+        [helper.make_tensor_value_info('input', TensorProto.FLOAT, (2, 3))],
+        [helper.make_tensor_value_info('output', TensorProto.FLOAT, (8, 1))], constants),
+        opset_imports=[helper.make_opsetid('', 24)], ir_version=8)
+    path = tmp_path / 'shared.onnx'; onnx.save(model, path)
+    create = ort.InferenceSession
+    def profiled(*args, sess_options, **kwargs):
+        sess_options.enable_profiling = True
+        sess_options.profile_file_prefix = str(tmp_path / 'node-profile')
+        return create(*args, sess_options=sess_options, **kwargs)
+    monkeypatch.setattr(ort, 'InferenceSession', profiled)
+    runner = implementation().CpuOnnxSession(path, hashlib.sha256(path.read_bytes()).hexdigest(), node_order='priority')
+    try:
+        value = np.full((2, 3), np.float32(2**-20), dtype=np.float32)
+        actual = runner.run(value)
+        expected = np.concatenate((np.arange(1, 5, dtype=np.float32) * np.float32(6 * 2**-20),
+            np.arange(1, 5, dtype=np.float32) * np.float32(2**-20))).reshape(8, 1)
+        np.testing.assert_array_equal(actual, expected)
+        from pathlib import Path
+        events = json.loads(Path(runner.session.end_profiling()).read_text())
+        order = [e['name'].removesuffix('_kernel_time') for e in events
+                 if e.get('cat') == 'Node' and e.get('name', '').endswith('_kernel_time')]
+        assert len(order) == 15
+        for i in range(3):
+            assert order.index(f'max{i}') < order.index(f'large{i+1}')
+    finally:
+        runner.close()
 
 
 def test_modified_graph_hash_is_rejected_before_loading(tmp_path):
@@ -589,8 +700,9 @@ def test_native_session_failure_retains_the_preallocation_journal(tmp_path, audi
     module = implementation()
     output = tmp_path / 'cpu-load.json'
     progress_path = tmp_path / 'cpu-load-progress.json'
-    def failed_constructor(self, path, sha, *, progress=None, graph_optimizations='disabled'):
+    def failed_constructor(self, path, sha, *, progress=None, graph_optimizations='disabled', node_order='default'):
         assert graph_optimizations == 'disabled'
+        assert node_order == 'default'
         assert json.loads(progress_path.read_text())['events'][-1]['phase'] == 'load_part_begin'
         progress('session_create_begin')
         raise MemoryError('unpublished-synthetic-detail')

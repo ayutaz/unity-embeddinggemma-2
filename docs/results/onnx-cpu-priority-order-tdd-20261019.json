@@ -1,0 +1,124 @@
+{
+  "schema": 1,
+  "scope": "Priority CPU node-order control and six-case full-chain numerical protocol; no new real-model or performance acceptance",
+  "base_source": "46f972f65313118794ebc9ecb1520eccaecbe615",
+  "base_execution_source": "930eecf0f046170f000e2e6b98985f36235fecbe",
+  "base_run": 39261263142,
+  "base_CPU_job_conclusion": "failure",
+  "base_CPU_step_conclusion": "cancelled",
+  "base_CPU_capture_artifact_available": false,
+  "base_CPU_progress_events": 24,
+  "base_CPU_last_observed_event": {
+    "phase": "inference_part_begin",
+    "part": 1,
+    "round": "first",
+    "elapsed_seconds": 102.03918990800003,
+    "rss_bytes": 3539980288,
+    "peak_rss_bytes": 3539980288
+  },
+  "base_cause_or_OOM_confirmed": false,
+  "base_original_cases": 6,
+  "base_original_values": 824320,
+  "base_original_tolerance_failures": 0,
+  "base_six_case_archives_digest_CRC_and_two_private_copies_verified": true,
+  "base_run_status_at_original_audit": "completed",
+  "base_run_conclusion_at_original_audit": "failure",
+  "base_uploaded_summary_available": true,
+  "base_uploaded_summary_exact_match": true,
+  "synthetic_control": {
+    "branches": 24,
+    "input_shape": [
+      1024,
+      1024
+    ],
+    "input_fill_value": 9.5367431640625e-07,
+    "node_count": 75,
+    "graph_sha256": "125f07aaf196208598376049536ef1219aed5237ec8f44864b44c5276cc1c55c",
+    "outputs_exactly_equal": true,
+    "results": [
+      {
+        "mode": "default",
+        "actual_execution_order": "DEFAULT",
+        "logical_peak_live_tensor_bytes": 104857692,
+        "whole_process_before": {
+          "rss_bytes": 70406144,
+          "peak_rss_bytes": 70406144
+        },
+        "whole_process_after": {
+          "rss_bytes": 74969088,
+          "peak_rss_bytes": 175640576
+        },
+        "output_sha256": "fb40c7877a664c4a23ce9a58e37abdf98ab00264072dea58f7c0e0bec54ae2e3",
+        "exact_expected_output": true,
+        "actual_node_order_trace_sha256": "368486247f6be40b1f8477be6daa76c5d1d72fe48f6fced6e808639ea96f332d"
+      },
+      {
+        "mode": "priority",
+        "actual_execution_order": "PRIORITY_BASED",
+        "logical_peak_live_tensor_bytes": 8388792,
+        "whole_process_before": {
+          "rss_bytes": 70774784,
+          "peak_rss_bytes": 70774784
+        },
+        "whole_process_after": {
+          "rss_bytes": 75395072,
+          "peak_rss_bytes": 79507456
+        },
+        "output_sha256": "fb40c7877a664c4a23ce9a58e37abdf98ab00264072dea58f7c0e0bec54ae2e3",
+        "exact_expected_output": true,
+        "actual_node_order_trace_sha256": "df4478f0118bc621b2b89691512c59db30ef8fd0e46c59ef55e4c3ff0662d1cd"
+      }
+    ],
+    "memory_scope": "Whole synthetic process observed OS peak and profile-derived logical live tensors; not SDK-exclusive allocation or real-model memory",
+    "full_model_or_GPU_accepted": false
+  },
+  "TDD_red_failed": 10,
+  "TDD_prior_passed": 52,
+  "final_related_passed": 104,
+  "final_related_failed": 0,
+  "final_related_skipped": 0,
+  "default_node_order": "DEFAULT",
+  "CI_node_order": "PRIORITY_BASED",
+  "actual_node_order_readback_and_mismatch_rejection_tested": true,
+  "CI_graph_optimizations": "disabled",
+  "CI_execution_schedule": "chain-major",
+  "all_five_sessions_retained_during_all_twenty_calls_tested": true,
+  "CPU_cases_required": 6,
+  "CPU_capture_artifacts_required": 6,
+  "CPU_output_captures_required": 120,
+  "CPU_values_including_accepted_ONNX_stage_references_required": 30822400,
+  "CPU_final_encoder_values_directly_original_required": 3297280,
+  "CPU_original_graph_parts_per_case": 5,
+  "CPU_actual_carries_per_case": 4,
+  "CPU_success_journal_events_per_case": 72,
+  "job_wall_limit_minutes": 55,
+  "CPU_step_limit_minutes": 12,
+  "original_references_or_tolerances_or_graph_coefficients_modified": false,
+  "original_graph_hash_checks_retained": true,
+  "SDK_and_Assets_unchanged": true,
+  "new_priority_real_model_executed": false,
+  "real_model_memory_improvement_proven": false,
+  "end_to_end_warm_timing_qualified": false,
+  "CPU_reference_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "GPU_validated": false,
+  "formal_release_created": false,
+  "normalized_LF_code_SHA256": [
+    {
+      "file": ".github/workflows/pinned-audio-acceptance.yml",
+      "sha256": "1b9ae735e6386d63c95064101fabd3dfcc80e8fc6c6084601f42346597b2c42d"
+    },
+    {
+      "file": "tools/embeddinggemma_tools/onnx_cpu_comparison.py",
+      "sha256": "05bd2deb1f24ce984bd604dc79100b66f0d0f28e0ebae3b5b8d85192bfeb8419"
+    },
+    {
+      "file": "tools/tests/test_onnx_cpu_comparison.py",
+      "sha256": "99824ae058f5e66e0cb755633329043293681a35de550ac5f72ebb4b80bf346a"
+    },
+    {
+      "file": "tools/tests/test_onnx_cpu_comparison_workflow.py",
+      "sha256": "697ce136556d92fe9a4ac17c2169ce93f08547a2ed9dad7ad7922443e4bbb1e8"
+    }
+  ]
+}

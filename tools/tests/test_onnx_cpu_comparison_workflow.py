@@ -21,15 +21,18 @@ def test_python_ci_installs_and_uses_the_optional_cpu_group_in_every_environment
     assert not any(d.startswith('onnxruntime') for d in project['project']['dependencies'])
 
 
-def test_cpu_silence_replay_uses_the_audited_actual_chain_and_is_a_hard_gate():
+def test_cpu_all_six_replays_use_audited_actual_chains_and_are_hard_gates():
     job = workflow('pinned-audio-acceptance.yml')['jobs']['execute']
     steps = job['steps']
     cpu = next(s for s in steps if 'embeddinggemma_tools.onnx_cpu_comparison' in s.get('run', ''))
-    assert cpu['if'] == "matrix.case_id == 'silence'"
+    assert cpu.get('if', 'success()') == 'success()'
     assert cpu.get('continue-on-error', 'false') == 'false'
     assert '--group cpu-comparison' in cpu['run']
     assert '--graph-optimizations disabled' in cpu['run']
-    assert '--execution-schedule partition-major' in cpu['run']
+    assert '--execution-schedule chain-major' in cpu['run']
+    assert '--node-order priority' in cpu['run']
+    assert 40 <= int(job['timeout-minutes']) <= 55
+    assert int(cpu['timeout-minutes']) == 12
     assert '--chain-report ../artifacts/pinned-audio/frozen-audio-chained-onnx.json' in cpu['run']
     assert '--original ../artifacts/original' in cpu['run']
     assert '--source "$GITHUB_SHA"' in cpu['run']
@@ -46,10 +49,12 @@ def test_cpu_silence_replay_uses_the_audited_actual_chain_and_is_a_hard_gate():
 def test_cpu_diagnostics_have_their_own_guarded_upload_after_failure():
     steps = workflow('pinned-audio-acceptance.yml')['jobs']['execute']['steps']
     guard = next(s for s in steps if s.get('id') == 'privacy_cpu_upload')
-    assert 'always()' in guard['if'] and "matrix.case_id == 'silence'" in guard['if']
+    assert 'always()' in guard['if'] and 'matrix.case_id' not in guard['if']
     assert 'artifacts/pinned-cpu-onnx/*.json' in guard['with']['paths']
     assert 'artifacts/pinned-cpu-onnx/*.bin' in guard['with']['paths']
     upload = next(s for s in steps if s.get('with', {}).get('name', '').startswith('cpu-onnx-replay-'))
     assert "steps.privacy_cpu_upload.outcome == 'success'" in upload['if']
     assert 'always()' in upload['if']
+    assert 'matrix.case_id' not in upload['if']
+    assert upload['with']['name'] == 'cpu-onnx-replay-${{ github.sha }}-${{ matrix.case_id }}'
     assert steps.index(guard) < steps.index(upload)

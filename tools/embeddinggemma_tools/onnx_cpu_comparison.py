@@ -12,6 +12,7 @@ from .cpu_progress import ProgressJournal, own_process_memory
 ROUNDS = ('first', 'warm', 'repeat-1', 'repeat-2')
 GRAPH_OPTIMIZATIONS = ('disabled', 'basic')
 EXECUTION_SCHEDULES = ('chain-major', 'partition-major')
+NODE_ORDERS = ('default', 'priority')
 
 
 def _external_tensor(message):
@@ -48,7 +49,9 @@ def _shape(port):
 
 
 class CpuOnnxSession:
-    def __init__(self, graph, expected_sha256, *, progress=None, graph_optimizations='disabled'):
+    def __init__(self, graph, expected_sha256, *, progress=None, graph_optimizations='disabled', node_order='default'):
+        if node_order not in NODE_ORDERS:
+            raise ValueError('Only reviewed default/priority node orders are supported')
         if graph_optimizations not in GRAPH_OPTIMIZATIONS:
             raise ValueError('Only reviewed disabled/basic graph optimization modes are supported')
         import onnx
@@ -69,6 +72,8 @@ class CpuOnnxSession:
         options.graph_optimization_level = (ort.GraphOptimizationLevel.ORT_ENABLE_BASIC
             if graph_optimizations == 'basic' else ort.GraphOptimizationLevel.ORT_DISABLE_ALL)
         options.execution_mode = ort.ExecutionMode.ORT_SEQUENTIAL
+        options.execution_order = (ort.ExecutionOrder.PRIORITY_BASED
+            if node_order == 'priority' else ort.ExecutionOrder.DEFAULT)
         options.intra_op_num_threads = 4
         options.inter_op_num_threads = 1
         options.log_severity_level = 3
@@ -97,8 +102,11 @@ class CpuOnnxSession:
         actual_options = self.session.get_session_options()
         if actual_options.graph_optimization_level != options.graph_optimization_level:
             raise ValueError('Actual graph optimization mode differs from the reviewed selection')
+        if actual_options.execution_order != options.execution_order:
+            raise ValueError('Actual node order differs from the reviewed selection')
         self.configuration = dict(providers=self.session.get_providers(),
             graph_sha256=expected_sha256,
+            node_execution_order=actual_options.execution_order.name,
             graph_optimizations='basic' if actual_options.graph_optimization_level == ort.GraphOptimizationLevel.ORT_ENABLE_BASIC else 'disabled',
             execution_mode='sequential', intra_op_threads=4, inter_op_threads=1,
             fallback_enabled=False, onnxruntime_version=ort.__version__,
@@ -142,6 +150,9 @@ def replay_chain(sessions, initial, references, output, *, progress=None):
     output.parent.mkdir(parents=True, exist_ok=True)
     report = dict(schema=1, success=False, phase='starting',
         scope='Explicit CPU ONNX encoder carry diagnostic only',
+        execution_schedule='chain-major', maximum_resident_sessions=len(sessions),
+        resident_session_scope='Owned native session handles; OS heap return is observed separately',
+        end_to_end_warm_timing_qualified=False,
         actual_backend='CPUExecutionProvider', sessions=[s.configuration for s in sessions],
         original_atol=1e-5, original_rtol=1e-4, rounds=[],
         GPU_validated=False, CPU_reference_comparison_qualified=False,
@@ -184,9 +195,11 @@ def replay_chain(sessions, initial, references, output, *, progress=None):
     return report
 
 
-def replay_distribution(chain_report, original, output, *, source, graph_optimizations='disabled', execution_schedule='chain-major'):
+def replay_distribution(chain_report, original, output, *, source, graph_optimizations='disabled', execution_schedule='chain-major', node_order='default'):
     """Require the unchanged original audit before loading any CPU graph."""
     from .native_regression_distribution import audit_distribution_report
+    if node_order not in NODE_ORDERS:
+        raise ValueError('Only reviewed default/priority node orders are supported')
     if execution_schedule not in EXECUTION_SCHEDULES:
         raise ValueError('Only registered CPU execution schedules are supported')
     if graph_optimizations not in GRAPH_OPTIMIZATIONS:
@@ -208,10 +221,10 @@ def replay_distribution(chain_report, original, output, *, source, graph_optimiz
     parts = selected[0]['parts']
     with ProgressJournal(output.with_name(output.stem + '-progress.json'),
             source=source, case_id=audited['case_id']) as journal:
-        return _replay_checked_parts(path, data, parts, audited, output, source, source_sha, journal, graph_optimizations, execution_schedule)
+        return _replay_checked_parts(path, data, parts, audited, output, source, source_sha, journal, graph_optimizations, execution_schedule, node_order)
 
 
-def _replay_checked_parts(path, data, parts, audited, output, source, source_sha, journal, graph_optimizations, execution_schedule):
+def _replay_checked_parts(path, data, parts, audited, output, source, source_sha, journal, graph_optimizations, execution_schedule, node_order):
 
     def checked(name, expected_sha):
         if not isinstance(name, str) or '/' in name or '\\' in name or ':' in name or name in ('', '.', '..'):
@@ -223,7 +236,7 @@ def _replay_checked_parts(path, data, parts, audited, output, source, source_sha
 
     if execution_schedule == 'partition-major':
         return _replay_partition_major(path, data, parts, audited, output, source, source_sha,
-            journal, graph_optimizations, checked)
+            journal, graph_optimizations, checked, node_order)
 
     load_wall, load_cpu = time.perf_counter(), time.process_time()
     sessions, references = [], []
@@ -233,7 +246,7 @@ def _replay_checked_parts(path, data, parts, audited, output, source, source_sha
         graph = checked(part['graph'], part['graph_sha256'])
         journal.record('load_part_begin', part=index)
         session = CpuOnnxSession(graph, part['graph_sha256'],
-            progress=lambda phase: journal.record(phase, part=index), graph_optimizations=graph_optimizations)
+            progress=lambda phase: journal.record(phase, part=index), graph_optimizations=graph_optimizations, node_order=node_order)
         ref = checked(part['output_capture'], part['output_sha256'])
         array = np.fromfile(ref, dtype='<f4')
         if array.size != int(np.prod(session.output_shape)):
@@ -270,7 +283,7 @@ def _replay_checked_parts(path, data, parts, audited, output, source, source_sha
     return result
 
 
-def _replay_partition_major(path, data, parts, audited, output, source, source_sha, journal, graph_optimizations, checked):
+def _replay_partition_major(path, data, parts, audited, output, source, source_sha, journal, graph_optimizations, checked, node_order):
     """Interleave four real carries, keeping one native partition session owned."""
     captures = {(r, i): output.with_name(f'{output.stem}-{r}-part{i}.bin')
                 for r in ROUNDS for i in range(5)}
@@ -312,7 +325,7 @@ def _replay_partition_major(path, data, parts, audited, output, source, source_s
             journal.record('load_part_begin', part=index)
             try:
                 runner = CpuOnnxSession(graph, part['graph_sha256'],
-                    progress=lambda phase: journal.record(phase, part=index), graph_optimizations=graph_optimizations)
+                    progress=lambda phase: journal.record(phase, part=index), graph_optimizations=graph_optimizations, node_order=node_order)
                 report['sessions'].append(dict(runner.configuration))
                 reference_path = (checked('reference-output-fp32.bin', data['reference_sha256'])
                     if index == 4 else checked(part['output_capture'], part['output_sha256']))
@@ -382,9 +395,10 @@ def main(argv=None):
     parser.add_argument('--source', required=True)
     parser.add_argument('--graph-optimizations', choices=GRAPH_OPTIMIZATIONS, default='disabled')
     parser.add_argument('--execution-schedule', choices=EXECUTION_SCHEDULES, default='chain-major')
+    parser.add_argument('--node-order', choices=NODE_ORDERS, default='default')
     args = parser.parse_args(argv)
     result = replay_distribution(args.chain_report, args.original, args.output, source=args.source,
-        graph_optimizations=args.graph_optimizations, execution_schedule=args.execution_schedule)
+        graph_optimizations=args.graph_optimizations, execution_schedule=args.execution_schedule, node_order=args.node_order)
     print(json.dumps(dict(success=result['success'], case_id=result['case_id'],
         encoder_replay_qualified=result['encoder_replay_qualified'],
         CPU_reference_comparison_qualified=False, complete_performance_accepted=False)))

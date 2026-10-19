@@ -4,7 +4,7 @@
 
 ## 実行条件
 
-`onnx_cpu_comparison`は既存のdistribution監査を先に実行し、元参照に対する合格と同じ40桁のexecution sourceを必須にします。元入力から接続した5分割・各graphの全SHA256・captureを確認し、ONNX RuntimeのCPUExecutionProviderだけを明示して実行します。実行providerのfallbackは無効です。graph最適化は既定で無効です。CIの追加診断は、後述の区間単位の保持と最適化なしを明示して使用します。別ファイルの重みはgraph hashだけでは保証できないため拒否します。
+`onnx_cpu_comparison`は既存のdistribution監査を先に実行し、元参照に対する合格と同じ40桁のexecution sourceを必須にします。元入力から接続した5分割・各graphの全SHA256・captureを確認し、ONNX RuntimeのCPUExecutionProviderだけを明示して実行します。実行providerのfallbackは無効です。graph最適化は既定で無効です。現在のCIは全6信号に対し、後述の全区間保持・優先順実行を明示します。別ファイルの重みはgraph hashだけでは保証できないため拒否します。
 
 各partへ渡すのは直前の実出力です。参照値は比較専用で、途中入力へ代入しません。最終partは元のencoder参照へ直接照合します。FP32の`atol=1e-5 / rtol=1e-4`を維持し、first / warm / repeat-1 / repeat-2のいずれかで超過したら失敗します。元reportとcaptureは上書きせず、新しい実captureと失敗reportを保存します。
 
@@ -15,7 +15,7 @@ uv --directory tools sync --locked --group cpu-comparison
 uv --directory tools run --locked --group cpu-comparison python -m pytest tests/test_onnx_cpu_comparison.py tests/test_onnx_cpu_comparison_workflow.py -q
 ```
 
-実モデルの最初の対象はCIのsilence 1ケースです。既存の全6信号・824,320値の元監査は維持し、そのsilence jobで元監査を通った実5 graphを追加実行します。追加stepは12分上限で、失敗を成功へ読み替えません。他5信号で追加CPU stepがskipされることも、CPU数値合格には数えません。新しいreportとcaptureも既存artifact privacy guardの対象です。graphや重みはuploadしません。
+実モデルの初回対象はCIのsilence 1ケースでした。現在は既存の全6信号・824,320値の元監査を維持し、各jobで元監査を通った実5 graphを追加CPU実行します。各CPU stepは12分上限です。元回帰・CPU診断・保存を含むjob全体は55分上限とし、長い元回帰の後にも同じCPU検査を完了できる時間枠を確保します。各caseのreport・captureは専用privacy guardを通して個別artifactへ保存します。失敗・未実行・skipは合格に数えません。graphや重みはuploadしません。
 
 ## 結果の範囲
 
@@ -63,8 +63,22 @@ source `493f335` のrun `39255714739`は、Basicでも全5 sessionロード後�
 
 `--execution-schedule partition-major`は、1区間をロードして4回実行し、native sessionの所有を解放してから次の区間へ進みます。4本それぞれの直前の実出力を別々に保持し、次区間へ渡します。元入力・graph・参照の全hashと元の要素別gate、実20 capture、最終区間の元参照への直接比較は維持します。遅れて読み込む元入力と最終参照も、使用直前にhashを再検査します。途中参照を入力へ代入せず、各区間は1回だけロードします。
 
-既定の`chain-major`は、全5 sessionを保持して4本の連鎖を順に実行する従来方式です。CIの数値pilotは`--graph-optimizations disabled --execution-schedule partition-major`を明示します。どちらも全5区間・4本の実計算を維持します。新方式のfirst / warm / repeatは各ロード済み区間内の呼出順で、連鎖全体の連続warm時間ではありません。load時間も5回の区間setupの合計です。`end_to_end_warm_timing_qualified`・`CPU_reference_comparison_qualified`・`complete_performance_accepted`はfalseを維持します。連鎖全体の性能比較は別に残ります。
+既定の`chain-major`は、全5 sessionを保持して4本の連鎖を順に実行する従来方式です。source `46f972f`のCIは`--graph-optimizations disabled --execution-schedule partition-major`を明示しました。どちらも全5区間・4本の実計算を維持します。区間単位方式のfirst / warm / repeatは各ロード済み区間内の呼出順で、連鎖全体の連続warm時間ではありません。load時間も5回の区間setupの合計です。`end_to_end_warm_timing_qualified`・`CPU_reference_comparison_qualified`・`complete_performance_accepted`はfalseを維持します。連鎖全体の性能比較は別に残ります。
 
 journalは区間ごとにロード、4回の推論、解放の順を記録します。成功時は82イベントです。native sessionの所有は最大1つですが、OS allocatorのメモリ返却は保証せず、解放前後のresident / peakを観測します。例外・数値超過時も所有sessionを解放し、原本・部分captureを保持して失敗します。
 
 初回7件Red、CLI / CI接続の2件Red（先行8件pass）、遅延読込hash再検査の追加2件Redから、関連96件Green・fail0・skip0を確認しました。4本の異なる実carryが最終区間へ届くこと、微小な参照差を次区間で増幅する対照、失敗時の解放・原本保持、元graphの事後hash、82イベントの順序、推論計時からのjournal I/O除外を含みます。[TDDと停止記録](results/onnx-cpu-partition-major-tdd-20261019.json)を保持しています。これは小規模な実CPU / lifecycle検査で、実モデルでの新方式の数値合格・メモリ改善・正式公開は未確認です。
+
+## 優先順実行と全6ケースのCPU数値検証
+
+source `46f972f` のrun `39261263142`では第1区間の4回実行と解放を記録しましたが、第2区間の推論開始後にrunner shutdownとなりました。24イベントの最後のresident / OS peakはともに3,539,980,288 bytesです。CPU capture artifactは未回収で、原因・OOM・数値合格は未確定です。元6ケースの824,320値は独立監査で超過0、case ZIPのdigest / CRC・私的2コピーを確認しました。最終的に集計jobは成功し、アップロード集計JSONも独立監査と完全一致しました。全15 job中13成功ですが、CPU比較を含むsilence jobとRequired CIは失敗しており、CI全体は不合格です。
+
+上流の[GraphViewer実装](https://github.com/microsoft/onnxruntime/blob/main/onnxruntime/core/graph/graph_viewer.cc)では、既定順は出力側からのDFS、`PRIORITY_BASED`はShape / Sizeとnode番号を使う優先順です。独立した演算の実行順が変わると、共有tensorが最後の利用まで保持される期間も変わります。これは実モデルの停止原因についての仮説であり、確定診断ではありません。
+
+24個の共有分岐・1024×1024 FP32入力・75 nodeの小規模対照を、同じORT 1.31.0 / CPU provider / 最適化なし / 4 threadの別processで各1回実行しました。実プロファイル順とtensor依存関係から計算した最大live bytesは既定104,857,692、優先順8,388,792。全processの観測OS peakは175,640,576 / 79,507,456 bytesで、出力hashは完全一致しました。これは合成graphの観測で、実モデルのメモリ改善・SDK専有allocation・最低要件の証明ではありません。
+
+`--node-order priority`を追加し、実sessionの`PRIORITY_BASED`設定読み戻しを必須にします。既定`default`は対照用に保持します。graph bytes・係数・演算の依存関係・元の許容差は維持し、最適化・fusionは有効にしません。小さい実プロファイルでも共有tensorを使い終えてから次分岐へ進む順を確認しました。
+
+現在のCIは`--graph-optimizations disabled --execution-schedule chain-major --node-order priority`を全6ケースで実行します。全5 sessionを保持した4本の連続連鎖で、1 caseあたり20出力と72イベント、全6 caseで120出力を要求します。元参照・全graph hashの前後照合・4本の実carry・最終encoder参照の直接比較とhard gateは維持します。全5区間保持の連鎖実行は数値検証の条件であり、既存の整合性チェックを含むstage計時だけで性能全体を合格にはしません。
+
+10件Red（既存52件pass）から関連104件Green・fail0・skip0を確認しました。実設定読み戻し・未登録順序の拒否、FP32依存関係、全5 sessionの同時保持と20実呼出、実プロファイルの順序、6ケースすべてのguard / uploadを含みます。[TDDと小規模対照](results/onnx-cpu-priority-order-tdd-20261019.json)を保持しています。実モデルでの優先順実行・全120出力の数値合格は未確認です。CPU比較全体、PCM前処理 / backbone、画像、性能全体・最低要件・必須実機・正式SDK公開は未完了です。

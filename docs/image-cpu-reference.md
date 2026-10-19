@@ -5,6 +5,22 @@ projector and actual language backbone for four calls per fixed image profile.
 It is a Python comparison process. Unity SDK inference continues to use Sentis
 GPU workers; this adds no product CPU backend or automatic fallback.
 
+## First real-model result
+
+[Source 8c60111 / run 39297313285](results/image-cpu-reference-8c60111-actual-20261020.json)
+completed all three four-round measurements. Landscape and portrait passed;
+square failed with 600 original encoder tolerance violations in each round.
+All 12 final vectors and original pixels / positions matched. Three complete
+archives, all CRCs and two private copies were verified; all 48 captures were
+independently rechecked. Original FP32 pointwise and producer nominal FP64
+comparison counts agreed on these actual captures.
+
+Square and landscape both reported AVX512, while portrait reported AVX2. The
+physical CPU model and complete math context were not captured in this first
+source. ISA labels alone do not explain the difference. The cause remains
+unproven and the whole CPU comparison remains unqualified. This result is kept
+under its original source, not relabeled as a later-source execution.
+
 ## Inputs and source
 
 Use the [unchanged original image data](image-reference-distribution.md). The
@@ -55,6 +71,38 @@ Output must be empty; an old report or failed attempt is never overwritten.
 Linux peak RSS is recorded for the whole process under an explicit 16 GiB
 ceiling; other hosts report that metric unavailable. This is not SDK-exclusive
 memory, VRAM or a validated minimum hardware requirement.
+
+## Recorded CPU context and controlled comparison
+
+The context-aware report format is schema 2. Before model loading and after
+execution it records selected CPU model/vendor fields, the full Torch runtime
+version, selected math-library version lines, matmul precision, MKL / oneDNN
+availability and selected numerical environment variables. Changes during a
+measurement fail qualification. The independent auditor binds both snapshots to
+the source journal. Older schema-1 evidence remains under its original source.
+It does not acquire fields that were never observed.
+
+Only selected hardware fields are returned; machine names, serials, user fields
+and file paths are excluded. Selected values still undergo text privacy checks.
+Missing hardware data and unobserved denormal state remain unknown. Library
+availability and requested environment values do not prove a particular operator
+dispatch or executed instruction set.
+
+For a controlled comparison, select both `image_cpu_measurement=true` and
+`image_cpu_host_comparison=true`. Each of two hosts runs all three shapes in
+separate processes, first with `MKL_CBWR` unset, then with `MKL_CBWR=COMPATIBLE`.
+The same fixed model, inputs, four actual carries and original gates apply.
+Every result is retained. Any failed measurement or audit makes the job fail;
+the next case is still attempted so a negative baseline does not hide a later
+comparison. Models and snapshots stay outside the upload directory.
+
+This is an experiment, not an assumed repair. Intel documents conditional
+reproducibility controls and limits non-Intel processors to `AUTO` / `COMPATIBLE`
+choices; this does not promise equivalence to these original goldens.
+[Intel oneMKL CNR](https://www.intel.com/content/www/us/en/docs/onemkl/developer-reference-c/2026-0/getting-started-with-conditional-numerical.html).
+PyTorch likewise does not guarantee bitwise identity across platforms, so all
+original numerical gates are still applied to actual captures.
+[PyTorch numerical accuracy](https://docs.pytorch.org/docs/main/notes/numerical_accuracy.html).
 
 ## CI execution
 

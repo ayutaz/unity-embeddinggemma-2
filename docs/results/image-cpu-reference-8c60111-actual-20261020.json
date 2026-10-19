@@ -1,0 +1,462 @@
+{
+  "schema": 1,
+  "run": 39297313285,
+  "source": "8c601112b3ec25b626c9f2e1cb044ef20464693a",
+  "run_status_observed": "completed",
+  "run_conclusion_observed": "failure",
+  "archives": [
+    {
+      "profile": "landscape",
+      "artifact_id": 12209766937,
+      "archive_bytes": 33142576,
+      "archive_sha256": "b29285245df248dae3364a0fb32433b42ae4628173428c23167277375bcb3d4c",
+      "all_CRCs_verified": true,
+      "two_complete_private_copies_verified": true
+    },
+    {
+      "profile": "portrait",
+      "artifact_id": 12209182428,
+      "archive_bytes": 33142581,
+      "archive_sha256": "a3ad7254fe86a295dc62c6ee550c0d7e4f59ba2507dc37202e92105fe6a83c39",
+      "all_CRCs_verified": true,
+      "two_complete_private_copies_verified": true
+    },
+    {
+      "profile": "square",
+      "artifact_id": 12207794718,
+      "archive_bytes": 33173548,
+      "archive_sha256": "cfbb134a65c9b0ebe19599edadb405452b6dc844376d724aacac5c4e05bf81e4",
+      "all_CRCs_verified": true,
+      "two_complete_private_copies_verified": true
+    }
+  ],
+  "profiles": [
+    {
+      "profile": "landscape",
+      "actual_numerical_success": true,
+      "reported_success": true,
+      "CPU_capability": "AVX512",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "peak_process_RSS_bytes": 4442521600,
+      "load_wall_seconds": 10.64194247799999,
+      "rounds": [
+        {
+          "round": "first",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "original_final_cosine": 0.9999999999992306,
+          "original_final_norm_squared": 0.9999999806727443,
+          "reported_wall_seconds": 13.557358144000005,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.00753133300000286,
+              "process_cpu_seconds": 0.01910125800000273,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 10.667863234999999,
+              "process_cpu_seconds": 35.752037708,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.8818598390000005,
+              "process_cpu_seconds": 11.034516990000007,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "original_final_cosine": 0.9999999999992306,
+          "original_final_norm_squared": 0.9999999806727443,
+          "reported_wall_seconds": 13.582513569999975,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0064303679999966334,
+              "process_cpu_seconds": 0.027414723000006802,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 10.82866121699999,
+              "process_cpu_seconds": 35.992652249,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.7473192999999867,
+              "process_cpu_seconds": 10.470121027000005,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "original_final_cosine": 0.9999999999992306,
+          "original_final_norm_squared": 0.9999999806727443,
+          "reported_wall_seconds": 13.625626924999978,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0038073130000100264,
+              "process_cpu_seconds": 0.015797738999992816,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 10.766304049000013,
+              "process_cpu_seconds": 35.969568403,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.8554276990000176,
+              "process_cpu_seconds": 10.902254412000019,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "original_final_cosine": 0.9999999999992306,
+          "original_final_norm_squared": 0.9999999806727443,
+          "reported_wall_seconds": 13.565271843999994,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.006451303999995162,
+              "process_cpu_seconds": 0.027423204000001533,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 10.753553346000018,
+              "process_cpu_seconds": 35.919114992999994,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.8051702079999927,
+              "process_cpu_seconds": 10.724777171,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "original_FP32_and_FP64_check_counts_identical": true
+    },
+    {
+      "profile": "portrait",
+      "actual_numerical_success": true,
+      "reported_success": true,
+      "CPU_capability": "AVX2",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "peak_process_RSS_bytes": 3793219584,
+      "load_wall_seconds": 12.594181692999996,
+      "rounds": [
+        {
+          "round": "first",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 2.364814281463623e-05,
+          "original_final_cosine": 1.0,
+          "original_final_norm_squared": 1.0000001283090323,
+          "reported_wall_seconds": 12.230172848999999,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.00990777299999479,
+              "process_cpu_seconds": 0.025997151999998636,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 9.043579363999996,
+              "process_cpu_seconds": 30.812430512000002,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 3.176580083999994,
+              "process_cpu_seconds": 12.090642607,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 2.364814281463623e-05,
+          "original_final_cosine": 1.0,
+          "original_final_norm_squared": 1.0000001283090323,
+          "reported_wall_seconds": 12.153322143999986,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.007120951999993963,
+              "process_cpu_seconds": 0.02792095200000233,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 8.995827665999997,
+              "process_cpu_seconds": 30.523589122999994,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 3.1502675469999986,
+              "process_cpu_seconds": 11.882556610000009,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 2.364814281463623e-05,
+          "original_final_cosine": 1.0,
+          "original_final_norm_squared": 1.0000001283090323,
+          "reported_wall_seconds": 12.216019935000006,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.005042317000004459,
+              "process_cpu_seconds": 0.020027910999999676,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 8.996735080000008,
+              "process_cpu_seconds": 30.665332006,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 3.2141347150000144,
+              "process_cpu_seconds": 12.200300360000028,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 2.364814281463623e-05,
+          "original_final_cosine": 1.0,
+          "original_final_norm_squared": 1.0000001283090323,
+          "reported_wall_seconds": 12.175648550000005,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.007712093999998615,
+              "process_cpu_seconds": 0.031650796000008086,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 9.012698473,
+              "process_cpu_seconds": 30.60231188999998,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 3.155145420999986,
+              "process_cpu_seconds": 11.991649077999995,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "original_FP32_and_FP64_check_counts_identical": true
+    },
+    {
+      "profile": "square",
+      "actual_numerical_success": false,
+      "reported_success": false,
+      "CPU_capability": "AVX512",
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "peak_process_RSS_bytes": 4082929664,
+      "load_wall_seconds": 11.189255748000008,
+      "rounds": [
+        {
+          "round": "first",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 600,
+          "maximum_encoder_absolute_error": 0.00015985965728759766,
+          "original_final_cosine": 0.9999999999991871,
+          "original_final_norm_squared": 1.0000000890883218,
+          "reported_wall_seconds": 8.86669520000001,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.009163412999996012,
+              "process_cpu_seconds": 0.024263287000000133,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 7.2886616669999995,
+              "process_cpu_seconds": 27.729138726,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 1.568771692999988,
+              "process_cpu_seconds": 6.247919849999995,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 600,
+          "maximum_encoder_absolute_error": 0.00015985965728759766,
+          "original_final_cosine": 0.9999999999991871,
+          "original_final_norm_squared": 1.0000000890883218,
+          "reported_wall_seconds": 9.038933483999998,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0050699729999905685,
+              "process_cpu_seconds": 0.02004523699999794,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 7.308931199999989,
+              "process_cpu_seconds": 27.740380739000003,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 1.7248239579999733,
+              "process_cpu_seconds": 6.868125481000007,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 600,
+          "maximum_encoder_absolute_error": 0.00015985965728759766,
+          "original_final_cosine": 0.9999999999991871,
+          "original_final_norm_squared": 1.0000000890883218,
+          "reported_wall_seconds": 8.977263042999994,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0059478039999874,
+              "process_cpu_seconds": 0.023460047000000372,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 7.314605116000024,
+              "process_cpu_seconds": 27.727246209,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 1.6566130840000142,
+              "process_cpu_seconds": 6.588376394999997,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "encoder_tolerance_failures": 600,
+          "maximum_encoder_absolute_error": 0.00015985965728759766,
+          "original_final_cosine": 0.9999999999991871,
+          "original_final_norm_squared": 1.0000000890883218,
+          "reported_wall_seconds": 9.03516496100002,
+          "reported_stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.005334236000010151,
+              "process_cpu_seconds": 0.020317765000001486,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 7.335200154000006,
+              "process_cpu_seconds": 27.815180830999992,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 1.6945387749999838,
+              "process_cpu_seconds": 6.764039970999988,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "original_FP32_and_FP64_check_counts_identical": true
+    }
+  ],
+  "original_encoder_reference_sha256": "3dfccd1a487ce04df3f8d640483ca045f7a7a56231bc1096ad0f845c923a29c6",
+  "original_Document_final_reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+  "original_golden_changed": false,
+  "CPU_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "date": "2026-10-20",
+  "scope": "Three real four-round image CPU reference measurements and independent raw-capture audit",
+  "actual_model_jobs": 3,
+  "numerically_passing_profiles": 2,
+  "numerically_failing_profiles": 1,
+  "all12_final_vectors_match_original": true,
+  "all12_pixels_and_positions_match_original_hashes": true,
+  "physical_CPU_model_and_complete_math_context_recorded": false,
+  "new_model_execution_to_create_this_summary": false,
+  "GPU_validated": false,
+  "formal_release_ready": false
+}

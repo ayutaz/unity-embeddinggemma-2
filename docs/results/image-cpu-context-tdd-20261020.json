@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "date": "2026-10-20",
+  "base_source": "8c601112b3ec25b626c9f2e1cb044ef20464693a",
+  "scope": "Selected CPU context and same-host native/COMPATIBLE controlled measurement implementation",
+  "TDD": [
+    {
+      "stage": "selected_CPU_context_privacy_and_unknown_fields",
+      "red_failed": 4,
+      "green_passed": 4
+    },
+    {
+      "stage": "source_report_context_binding_and_stability",
+      "red_failed": 3,
+      "prior_passed": 21,
+      "green_with_context_tests": 28
+    },
+    {
+      "stage": "same_host_all_shapes_failure_propagation_and_privacy",
+      "red_failed": 3,
+      "prior_passed": 4
+    },
+    {
+      "stage": "host_only_selection_admission",
+      "red_failed": 2,
+      "prior_passed": 7
+    },
+    {
+      "stage": "actual_Torch_thread_context",
+      "red_failed": 1,
+      "prior_passed": 3
+    }
+  ],
+  "related_green": {
+    "passed": 80,
+    "skipped": 0
+  },
+  "actionlint": "passed",
+  "planned_hosts": 2,
+  "profiles_per_context_per_host": 3,
+  "contexts": [
+    "native",
+    "COMPATIBLE"
+  ],
+  "actual_carries_per_case": 4,
+  "old_source_real_model_results_preserved": true,
+  "original_references_or_tolerances_changed": false,
+  "real_model_run_for_this_context_source_completed_at_checkpoint": false,
+  "requested_CNR_setting_proves_actual_operator_dispatch": false,
+  "CPU_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "formal_release_ready": false
+}

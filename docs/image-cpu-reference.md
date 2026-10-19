@@ -106,6 +106,33 @@ original numerical gates are still applied to actual captures.
 
 ## CI execution
 
+The [paired-host actual result](results/image-cpu-paired-hosts-1789f0c-actual-20261020.json)
+records run `39304317802` at source `1789f0c`. Both host samples reported AMD
+EPYC 9V45, Torch `2.14.1+cu130`, oneMKL 2024.2 / MKL-DNN 3.12.0, `highest`
+matmul precision and four intra-op / two inter-op threads. Context snapshots
+were stable within each host; only the requested `MKL_CBWR` setting changed.
+
+| Math context | Square violations per round | Landscape | Portrait | Actual chains |
+| --- | ---: | ---: | ---: | ---: |
+| Native, both host samples | 0 | 0 | 0 | 24 passing |
+| COMPATIBLE, both host samples | 361 | 95 | 128 | 24 failing |
+
+The complete two ZIPs, provider digests, CRCs and two private copies were
+verified. Independent recomputation covered all 192 tensor captures. All 48
+final vectors and every pixels / positions capture matched their original
+gates. Native encoder values were bitwise equal to the pinned original; the
+COMPATIBLE intermediate failures remain failures. The workflow and both jobs
+therefore concluded `failure` and are never counted as passing executions.
+
+Native chain wall time ranged from 9.065 to 9.691 seconds on first execution
+and 8.832 to 9.641 seconds over subsequent executions. Whole-process peak RSS
+was 3,629,277,184 to 3,854,102,528 bytes. These values exclude loading and
+observer copies and do not establish SDK-exclusive memory, minimum hardware
+or a speedup against a different GPU host. The older square result with 600
+violations lacks the physical CPU context; its cause remains unproven.
+This result establishes only the recorded native CPU reference cases, not
+arbitrary CPU compatibility, Windows CPU comparison or complete performance.
+
 Use the existing **Frozen native CPU context diagnostics** workflow with only
 `image_cpu_measurement=true`. Legacy selections must retain their defaults.
 Three independent Ubuntu jobs use FP32, four intra-op threads and two inter-op

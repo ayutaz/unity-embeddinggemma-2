@@ -8,34 +8,34 @@
 
 音声encoderのCPU比較は全6入力・120 capture・30,822,400値で元の許容差超過0です。これはencoder区間の結果であり、PCM前処理から最終vectorまでのCPU/GPU性能比較や、全環境の受け入れ完了ではありません。SDKの推論要件はGPUのままです。
 
-画像の[実CPU測定](results/image-cpu-reference-8c60111-actual-20261020.json)は、3形状×4回の実前処理→encoder→backboneを実行しました。landscape / portraitは合格、squareはencoder各回600値の元許容差超過で不合格です。全12最終vectorとpixels / positionsは一致し、全48 capture・3 archiveを独立照合しました。square / landscapeともAVX512表示ですが、物理CPU型番等は未記録で原因は未確定です。[同一hostでの比較](image-cpu-reference.md)ではCPU型番・数値library・設定を記録し、3形状をnative / COMPATIBLEで実測します。設定が元参照に合うと仮定しません。
+画像の先行する[実CPU測定](results/image-cpu-reference-8c60111-actual-20261020.json)は、landscape / portrait合格・square各回600値の元許容差超過で不合格でした。全12最終vectorとpixels / positionsは一致し、全48 capture・3 archiveを独立照合しました。CPU型番等は未記録で原因は未確定です。追加の[同一host比較](results/image-cpu-paired-hosts-1789f0c-actual-20261020.json)ではEPYC 9V45の2 host・3形状・各4回のnative実測は全24回合格し、encoderは元参照とbitwise一致しました。COMPATIBLE設定は全24回不合格（square / landscape / portraitで各回361 / 95 / 128値の超過）です。全192 capture・2 archiveと完全な私的2コピーを独立照合し、run全体のfailureと旧600値の失敗を保持します。記録したnative条件の結果であり、任意CPUやWindowsの比較・性能全体の完了ではありません。
 
 GPU検証で固定したencoder参照と、Document最終参照のencoder生成世代は区別して保持します。先行CIの固定GPU参照への6件bitwise一致と、旧Document生成世代への26値の超過、ローカルAVX2の失敗も保存します。これらを新しい実測の600値と混同せず、元参照・許容差を変えません。CPU比較・性能全体は未合格です。
 
 | 工程 | ここからの作業 | 完了条件 |
 | --- | --- | --- |
 | 1 統合 | #106までの採用sourceとmain、既存Windows機能検証の適用範囲を固定 | 基盤は統合済み。後続変更はtask branch・PR・必須CIと成果物で個別に検証する |
-| 2 数値比較と性能 | 固定参照の対応付け・取得経路を使い、同一host比較でsquareの数値差を調べる。CPU/GPUの同じ入力・モデル・仕事量、音声の未測定条件、初回 / warm、stage時間、RAM / VRAMを埋める | 元の数値条件を満たす完全な比較記録、正常終了と解放、実測に基づく最低要件。未合格・未実行を別記 |
+| 2 数値比較と性能 | 合格したnative条件を固定し、未合格環境の数値差を追跡する。同じhardware・入力・モデル・仕事量のCPU/GPU、音声の未測定条件、初回 / warm、stage時間、RAM / VRAMを埋める | 元の数値条件を満たす完全な比較記録、正常終了と解放、実測に基づく最低要件。未合格・未実行を別記 |
 | 3 必須環境 | macOS Editor、iOS / Android実機で全入力・role・混在検索を確認し、権限拒否、キャンセル、suspend / 復帰も検証 | 各環境で実GPU・fallback / readback・数値・操作・解放の証拠。設定テストやWindows成功では代用しない |
 | 4 公開前整理 | 古いprovider側コピーの削除確認、最終source・全祖先・公開payload・導入文書を監査 | 現行履歴とprovider側残存を別々に解決。画像は実bytesの目視 / OCR確認。公開名 `yousan` を維持 |
 | 5 正式公開 | 1〜4の完了後にSDK版・tag・Releaseを作り、そのtagを空consumerへ導入する | モデル取得から全入力・検索・終了まで再現し、公開版のsource / model hashと結果が一致 |
 
-今すぐ進められるのは工程2の同一host比較と、工程4の文書・公開payload監査です。端末準備とprovider対応は並行して進めます。重いモデル変換・Unity実行はCIを優先し、同じsourceの成功済み処理を無条件に再実行しません。
+今すぐ進められるのはPRの統合準備、工程2の残る比較・測定準備と、工程4の文書・公開payload監査です。端末準備とprovider対応は並行して進めます。重いモデル変換・Unity実行はCIを優先し、同じsourceの成功済み処理を無条件に再実行しません。
 
 ### 直近の実行順（2026-10-20確認）
 
-1. **進行中の比較結果を回収する。** [#108](https://github.com/ayutaz/unity-embeddinggemma-2/pull/108)のsource `1789f0c` に対する[同一host比較](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39304317802)は2 hostとも実行中です。同じhostで3形状をnative / COMPATIBLE条件で実測し、実CPU情報・元参照との中間値・最終値を照合します。比較設定の変更を解決済みとは扱いません。
-2. **必要なPRを順に統合する。** [#107](https://github.com/ayutaz/unity-embeddinggemma-2/pull/107)はmain向けDraftで、[必須CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39297469394)は全15 job成功・skip 0です。アップロードされた13 archiveの独立照合と公開前監査を完了してから統合を判断します。#108は#107をbaseとするDraftです。各PRのCI成功と、画像実測の不合格は別々に記録します。
-3. **数値差を解決し、性能表を完成する。** squareの各回600値の超過について、比較結果で原因候補を絞り、必要な修正をTDDで実装します。元参照・許容差は維持します。続いて同じ入力・モデル・仕事量のCPU/GPU時間、音声を含む初回 / warm、RAM / VRAMと解放を測定します。CPU測定は比較用であり、製品のGPU推論要件を維持します。
+1. **照合済みの比較結果を適用範囲ごとに記録する。** [#108](https://github.com/ayutaz/unity-embeddinggemma-2/pull/108)の実行source `1789f0c` に対する同一host比較は回収・独立照合済みです。nativeの24回合格とCOMPATIBLEの24回不合格を両方残し、旧600値の原因を推定で断定しません。MKL設定値を実operator dispatchの証拠にも使いません。
+2. **必要なPRを順に統合する。** [#107](https://github.com/ayutaz/unity-embeddinggemma-2/pull/107)の元source `8c60111` は必須CI全15 job成功・skip 0で、実13 archiveの独立照合も完了しました。文書1か所の競合を解消したhead `802ab62` は同じ全treeで、[新headのCI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39305545855)と最終公開前監査を確認します。#108は#107をbaseとするDraftで、先行統合と文書更新も含めて最終headを検査します。旧headの成功を新headの実行成功には数えません。
+3. **同じ実行環境の比較と性能表を完成する。** 今回合格したLinux native条件、旧square600値、Windows CPUの先行不合格を区別し、未合格環境の数値差と完全な音声CPU接続を残件として追跡します。同じ入力・モデル・仕事量・hardwareのCPU/GPU時間、音声を含む初回 / warm、RAM / VRAMと解放を測定します。必要な修正はTDDで実装し、元参照・許容差は維持します。製品のGPU推論要件も維持します。
 4. **必須端末とprivacyの残件を並行して完了する。** macOS Editor・iOS / Android実機で全入力、検索、権限・復帰・解放を確認します。provider側の古いコピー除去を別途確認し、最終source・履歴・公開payloadを監査します。
 5. **全条件の達成後に正式公開する。** SDK版・tag・Releaseを作り、空consumerへのそのtagの導入からモデル取得、全入力・検索・終了まで確認します。preview公開を正式SDK公開の完了として数えません。
 
-次の判断点は、現在の比較runの終了と成果物の独立照合です。そこまでは同じ比較を再起動しません。差が残る場合は再測定を繰り返す前に、失敗箇所・仮説・次の一手を記録します。端末・GPU資源・provider対応の準備は、この数値調査の完了を待たずに進めます。
+次の判断点は、競合解消後のPRのCI完了と公開内容の最終照合です。同じ比較を無条件に再起動せず、未合格環境の失敗箇所・仮説・次の一手を記録します。端末・GPU資源・provider対応の準備は、この数値調査の完了を待たずに進めます。
 
 ### 実行の開始条件と時間の見積り
 
 - 音声GPU性能測定の既存開始条件は空きVRAM 14 GiB以上です。前回の観測は約5 GiBで未開始です。開始前に空きを再確認します。他アプリの終了や追加録音を自動では行いません。この条件はSDKの最低VRAM要件を示す値ではありません。
-- Mac / iOS / Androidの利用可能な実機と実行環境は確認待ちです。未接続・未実行を成功として扱いません。
+- Mac / iOS / Androidの利用可能な実機と実行環境は確認待ちです。今回のローカルADB検出は接続端末0件でした。他の接続方法の不存在や実機検証の成功を意味しません。未接続・未実行を成功として扱いません。
 - provider側の古いコピー削除完了も未確認です。最終確認記録とSupportの状態を更新してから工程4を判定します。
 - GPU資源、必須端末、provider対応が未確定のため、現時点で正式リリース日を確約できません。工程2の比較契約を整えた時点、性能測定終了時、必須実機検証終了時に残件と所要時間を更新します。
 

@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "date": "2026-10-20",
+  "base_source": "bcb67e8b039b2c47a1bfe4ed473ee379af50e272",
+  "scope": "Pinned image reference metadata binding only",
+  "tdd": {
+    "red": {"failed": 1, "errors": 16, "cause": "ModuleNotFoundError"},
+    "green": {"passed": 17, "skipped": 0},
+    "related_green": {"passed": 49, "skipped": 0}
+  },
+  "actual_original_metadata_load": {
+    "success": true,
+    "cases": 6,
+    "encoder_reference_sha256": "3dfccd1a487ce04df3f8d640483ca045f7a7a56231bc1096ad0f845c923a29c6",
+    "encoder_audit_sha256": "ab1aa775b553f33a5e2892abed2cdcef7768e35fbad6fa5af9ec3286a7ba90ba",
+    "document_reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+    "document_encoder_generation_sha256": "7c183c5217e13c28205c2a804c04ff93c68642b40a948f1cfb3c55d7f3852a98",
+    "distinct_encoder_generations_preserved": true,
+    "original_references_or_tolerances_changed": false
+  },
+  "graph_or_input_bytes_verified_by_loader": false,
+  "model_executed_in_this_check": false,
+  "CPU_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "GPU_compatibility_proven_by_this_check": false,
+  "formal_release_ready": false,
+  "prior_numerical_failures_preserved": true
+}

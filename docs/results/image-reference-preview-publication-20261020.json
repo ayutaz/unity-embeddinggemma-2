@@ -1,0 +1,59 @@
+{
+  "success": true,
+  "release_id": 417552429,
+  "tag": "image-reference-preview-6644eea",
+  "publication_target": "19fa109ad171b50a27530b299c961578a9792e69",
+  "assets": [
+    {
+      "name": "vision-reference.json",
+      "asset_id": 656921254,
+      "bytes": 23780437,
+      "sha256": "3dfccd1a487ce04df3f8d640483ca045f7a7a56231bc1096ad0f845c923a29c6"
+    },
+    {
+      "name": "vision-validation.json",
+      "asset_id": 656921255,
+      "bytes": 4082,
+      "sha256": "ab1aa775b553f33a5e2892abed2cdcef7768e35fbad6fa5af9ec3286a7ba90ba"
+    },
+    {
+      "name": "image-embedding-reference.json",
+      "asset_id": 656921258,
+      "bytes": 301132,
+      "sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac"
+    },
+    {
+      "name": "LICENSE.txt",
+      "asset_id": 656921253,
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "name": "NOTICE.txt",
+      "asset_id": 656921257,
+      "bytes": 992,
+      "sha256": "6bbf9c11b65e6c752922e4f84aead2f6053819238ce8b5c201c35000ad738bc6"
+    },
+    {
+      "name": "MODIFICATIONS.txt",
+      "asset_id": 656921293,
+      "bytes": 589,
+      "sha256": "4769c9d99cb2f890822c0dbd57580ae4f8db0eafb3fea67bbfb3c617e5da3079"
+    }
+  ],
+  "remote_sizes_and_digests_exact": true,
+  "notes_exact": true,
+  "prerelease": true,
+  "formal_SDK_release": false,
+  "checked_utc": "2026-10-19T17:23:45.272017+00:00",
+  "actual_anonymous_download_verified": true,
+  "anonymous_download_files": 6,
+  "download_bytes": 24098590,
+  "all_download_bytes_equal_two_reviewed_private_copies": true,
+  "strict_original_metadata_cases": 6,
+  "original_golden_changed": false,
+  "model_executed": false,
+  "CPU_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "formal_release_ready": false
+}

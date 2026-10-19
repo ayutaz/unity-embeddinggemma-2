@@ -5,9 +5,13 @@ GPU fixture, plus the original Document final baseline. Regenerating JSON with
 equal current outputs would change the source identity. This route transports
 the original files without relying on an Actions retention period.
 
-The intended data preview tag is `image-reference-preview-6644eea`. At this
-implementation checkpoint it has not been published or anonymously downloaded.
-This document does not certify its availability or a new model execution.
+The [data preview](https://github.com/ayutaz/unity-embeddinggemma-2/releases/tag/image-reference-preview-6644eea)
+was published from `19fa109ad171b50a27530b299c961578a9792e69`.
+[Remote readback and anonymous acquisition](results/image-reference-preview-publication-20261020.json)
+verified all six assets, exact sizes/digests, notes and the target commit. Every
+downloaded byte equals both reviewed private copies. The strict loader read
+the six original cases. This is data availability, not new model execution or
+the formal SDK Release.
 
 ## Exact data and attribution
 
@@ -43,7 +47,7 @@ three attribution files retain ordinary text checks.
 
 ## Consumer command
 
-After publication and independent readback have been verified, run from `tools/`:
+Run from `tools/` using the source that includes this acquisition module:
 
 ```sh
 uv run --locked python -m embeddinggemma_tools.image_reference_distribution --output ../artifacts/original-image-references

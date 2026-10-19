@@ -28,7 +28,7 @@ boolean indexの追加1件失敗 / 25件成功から、関連137件成功・skip
 既存の4反復測定へつなぎ、出力の受け渡しと解放を確認しました。
 
 このadapterで実EmbeddingGemmaモデルを動かした証拠ではありません。
-固定snapshotの実モデル読込、各段のcapture・独立数値照合、実測CLIとCIへの接続が残ります。
+固定snapshotの実モデルによる実測CLIの実行と、CIへの接続が残ります。
 既存の実encoderだけの120 captureの結果とも分けて扱います。CPU比較全体、
 同じhardwareでのCPU/GPU性能、必須端末と正式公開は未完了です。
 
@@ -52,3 +52,36 @@ writeabilityを再設定できません。snapshotの宣言はencoder / backbone
 2条件・snapshot宣言6ファイルの対応を確認しました。モデルgraph・重みの読込、
 推論、CPU/GPU性能比較はこのloaderで行っていません。元入力の照合成功を
 実モデルの数値合格へ置き換えません。
+
+## PCMから最終vectorまでの測定入口
+
+`audio_cpu_reference`の`measure`は、固定sourceの実行ファイル18件、元データ、
+元数値gateを通った同じsourceのchain-reportを確認してからsnapshotを取得します。
+宣言された全snapshot hashを照合し、実AudioPreprocessorExport、上記の5 session、
+実MultimodalEmbeddingExportを読み込みます。モデル読込と4回の推論は分けて記録します。
+CLIはTorch 4 intra-op / 2 inter-op thread、ONNX sessionは4 / 1を使用します。
+
+実PCM前処理のfeaturesとframe maskを次のconsumer前にsnapshotし、実encoderの
+出力をbackbone前にsnapshotします。コピーの時間は測定区間から除外します。
+ONNX wrapperの入力検査・hash検査とTensor / NumPy境界はencoder callbackの
+時間に含まれ、検査なしのCPU kernel時間として扱いません。途中失敗では取得済み
+captureを保持し、最終vectorだけ一致する場合も中間gateの失敗を維持します。
+
+`audit`はモデルを読み込まず、元データを再照合し、保存した全4回のfeatures・mask・
+encoder・最終vectorのhash / shape / 元数値条件を再計算します。source journal、
+CPU設定、実行source、前後のcontextを照合します。モデルgraphはaudit成果物に
+含めないため、保存captureのauditorがgraph binaryを独立に再hashしたとは記録しません。
+
+```sh
+uv run --locked --group cpu-comparison python -m embeddinggemma_tools.audio_cpu_reference measure --preprocessing ../artifacts/original-preprocessing --encoder-reference ../artifacts/original/audio-runtime-reference --document-reference ../artifacts/original-document/audio-embedding-reference.json --chain-report ../artifacts/pinned-audio/frozen-audio-chained-onnx.json --case silence --output ../artifacts/audio-cpu-silence --source "$GITHUB_SHA"
+uv run --locked --group cpu-comparison python -m embeddinggemma_tools.audio_cpu_reference audit --preprocessing ../artifacts/original-preprocessing --encoder-reference ../artifacts/original/audio-runtime-reference --document-reference ../artifacts/original-document/audio-embedding-reference.json --output ../artifacts/audio-cpu-silence --source "$GITHUB_SHA"
+```
+
+これは配置済みの元データ・同一sourceのgraph/reportを前提とする入口です。
+元データの公開取得経路・CI接続と実モデル実行は未完了です。旧artifactが取得不能な
+場合に、参照・モデルを再生成して元のものとして置き換えません。
+
+[測定・capture audit・CLIのTDD](results/audio-cpu-reference-tdd-20261020.json)は、
+未実装8 errors、auditorの10 failures、CLI / admissionの3 failuresを経て、
+新規21件・関連180件成功・skip0です。合成CPU moduleによる検証であり、実モデル
+のPCM→最終vector・同じhardwareのCPU/GPU性能・GPU受け入れの証拠ではありません。

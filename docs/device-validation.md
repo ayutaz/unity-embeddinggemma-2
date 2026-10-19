@@ -20,7 +20,7 @@ profileはIL2CPP / High stripping / Release compiler、Device SDK、iPhone / iPa
 
 stageの`success`は転送内容の照合だけを表します。`original_fixture_validated`・`gpu_verified`はfalseのままです。続いて既存の`PlayerMediaFixture.Load` / `PlayerMixedSearchFixture.LoadText`が独立した元hashを照合し、その後にモデル実行とGPU監査を行います。manifestの値を元の数値参照や許容差の代わりにしません。
 
-[TDDと元入力の統合確認](results/device-fixture-materialization-tdd-20261019.json)は29件Red→29件Green、元28ファイル・34,474,958 bytesの実file URI転送と独立した全hash再計算が成功しました。変更していないloaderが画像・音声の全role 36ケースとtext 6文書・4 queryを受け入れ、元証拠と私的な完全2コピーを保持しています。Windows Editorでの転送・loader確認であり、Android jar転送・実機起動・CPU/GPU推論は未実行です。端末用runnerへの接続も残ります。
+[TDDと元入力の統合確認](results/device-fixture-materialization-tdd-20261019.json)は29件Red→29件Green、元28ファイル・34,474,958 bytesの実file URI転送と独立した全hash再計算が成功しました。変更していないloaderが画像・音声の全role 36ケースとtext 6文書・4 queryを受け入れ、元証拠と私的な完全2コピーを保持しています。Windows Editorでの転送・loader確認であり、Android jar転送・実機起動・CPU/GPU推論は未実行です。後続の[端末用runner](device-mixed-runtime.md)への接続とEditor契約検査は追加済みですが、実機による転送・起動の受け入れは残ります。
 
 ## 実機検証へ進むために残る作業
 
@@ -28,8 +28,8 @@ stageの`success`は転送内容の照合だけを表します。`original_fixtu
 | --- | --- | --- |
 | iOS build profile | 設定・復元・上書き拒否のEditor契約を追加 | Macの固定Editor / Xcodeによる実export・署名・端末起動 |
 | Android build profile | 既存のARM64 / IL2CPP / High / Release設定 | moduleを導入した実build、端末起動、実際に選択されたgraphics API |
-| 画像・音声 / 混在Player入口 | 既存runnerはWindows Player限定。制限を緩めて実機合格にはしない | 明示的な端末用設定入力、保存先、platform別scopeと同じ数値gate |
-| 固定fixtureの配置 | pinned stagingと元28ファイルのfile URI / loader統合を確認。Android jarは未実行 | 端末用runnerへ接続し、Android StreamingAssetsからの実転送と元hash照合を確認 |
+| 画像・音声 / 混在Player入口 | Windows用単体入口の制限を維持し、別のAndroid / iOS混在入口を追加。関連190件のEditor契約検査が成功 | 実build・端末内設定入力・保存先・platform scopeを確認し、元数値gateを実機で実行 |
+| 固定fixtureの配置 | pinned stagingと元28ファイルのfile URI / loader統合、端末用runnerへの接続を確認。Android jarは未実行 | Android StreamingAssetsからの実転送と元hash照合を実機で確認 |
 | macOS / iOS / Android GPU | 未実行 | 全3入力・全role・混在索引、actual GPU / fallback / readback、独立CPU比較 |
 | 端末の操作・寿命 | 未実行 | 権限許可 / 拒否、deviceなし、suspend / 復帰、解放、正常終了とメモリ |
 

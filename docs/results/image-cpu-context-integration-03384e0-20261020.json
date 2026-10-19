@@ -25,8 +25,8 @@
   "all_ancestor_history_postmerge_verified": true,
   "duplicate_main_CI": {
     "run": 39319693589,
-    "status": "in_progress",
-    "conclusion": null,
+    "status": "completed",
+    "conclusion": "cancelled",
     "cancellation_requested": true,
     "counted_as_pass": false
   },

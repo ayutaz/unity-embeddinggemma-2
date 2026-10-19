@@ -1,6 +1,10 @@
 # 現在の対応範囲と検証状況
 
-最新checkpoint（2026-10-19）: **main `f9b22ce`、PR #102まで統合済み**。[#102の統合と最新Windows検証](results/device-runtime-integration-f0fc2a7-20261019.json)ではhead `f0fc2a7`の全15 CI job、7成果物のdigest / CRC・私的2コピー、元参照824,320値の超過0と集計一致を確認しました。実mainの同tree・公開identity・provider署名・全履歴も照合済みです。同じsourceのWindows D3D12 / Release IL2CPP / HighでFP32・Float16の独立cold / warm全4起動が成功し、144 base・180 warm media vector、288順位/score、88破損control拒否、計算CPU fallback・中間flush 0、解放・exit0を独立確認しました。最大観測native working setは11,161,444,352 bytesで、専有VRAM・最小hardware・性能全体の証明ではありません。SDK package・Runtimeは不変です。必須Mac / iOS / Android実機、性能、旧PR / cacheのprovider対応、正式SDK Releaseは未完了です。
+確認checkpoint（2026-10-20）: **main `cc6ba9f`、PR #108まで統合済み**。[#108の統合記録](results/image-cpu-context-integration-03384e0-20261020.json)ではhead `03384e0`の必須CI全15 job・実13数値archiveを照合し、元824,320値とCPU encoderの120 capture・30,822,400値の許容差超過0、実mainとの同tree・公開identity・署名・全祖先を確認しました。これはencoderの数値回帰と画像CPU比較の統合であり、性能全体の合格ではありません。SDK packageは下記Windows検証source `f0fc2a7` から全bytesが不変ですが、新mainでGPUを再実行した証拠には置き換えません。
+
+[音声の完全なCPU測定入口](audio-cpu-encoder.md)を追加し、実モデルCIの2条件を実行中です。画像CPU比較の成功・失敗と残件は[リリース計画](release-plan.md)を参照してください。CPU比較は検証用Pythonの処理で、Unity SDKのGPU推論要件を維持します。必須Mac / iOS / Android実機、同一hardwareのCPU/GPU性能・最低要件、provider側の古いコピー削除、正式SDK公開と新tag consumerは未完了です。公開済み4件はいずれもモデル / 数値参照のpreviewで、SDK版は`0.1.0-pre.1`です。
+
+Windows機能検証の保存checkpoint（2026-10-19）: **main `f9b22ce`、PR #102のsource**。[#102の統合とWindows検証](results/device-runtime-integration-f0fc2a7-20261019.json)ではhead `f0fc2a7`の全15 CI job、7成果物のdigest / CRC・私的2コピー、元参照824,320値の超過0と集計一致を確認しました。実mainの同tree・公開identity・provider署名・全履歴も照合済みです。同じsourceのWindows D3D12 / Release IL2CPP / HighでFP32・Float16の独立cold / warm全4起動が成功し、144 base・180 warm media vector、288順位/score、88破損control拒否、計算CPU fallback・中間flush 0、解放・exit0を独立確認しました。最大観測native working setは11,161,444,352 bytesで、専有VRAM・最小hardware・性能全体の証明ではありません。SDK package・Runtimeは不変です。必須Mac / iOS / Android実機、性能、旧PR / cacheのprovider対応、正式SDK Releaseは未完了です。
 
 [iOS build profile](device-validation.md)は#100で統合済みです。[初回の19件Red→19件Green](results/ios-build-profile-tdd-20261019.json)後、Xcodeの構成もReleaseへ固定・復元しました。[追加の8件Red / 15件pass→最終23件Green](results/ios-xcode-scheme-tdd-20261019.json)と、Windows / Android設定を含む関連44件が失敗・skipなしで成功しています。Windows Editorによる設定・復元・上書き拒否・署名情報の非掲載の確認であり、実iOS export・署名・実機GPUは未実行です。旧media単体入口はWindows専用です。後続の[Android / iOS混在入口](device-mixed-runtime.md)を追加し、関連190件のEditor契約検査を確認しました。実APK / Xcode export・端末配置・GPU・全必須実機の受け入れは残ります。
 
@@ -77,7 +81,7 @@ Runtime負荷軽減の[PR #88](https://github.com/ayutaz/unity-embeddinggemma-2/
 | テキスト推論・検索 | UPM、保存・Float16重み、Text Searchを実装。固定Git consumerとWindows Playerの実モデル検索を確認 | [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)、[Player監査](results/m2-current-main-player-acceptance-20261017.json) |
 | 画像・音声API | 実Texture / PCMからGPU前処理→encoder→共通backbone→正規化768次元。Query / Document / Rawを固定入力で検証 | [PR #79](https://github.com/ayutaz/unity-embeddinggemma-2/pull/79)、[元API完了監査](results/goal4-current-completion-audit-20261016.json) |
 | 画像・音声検索サンプル | Package ManagerからImport可能。実ファイル登録、混在検索、module切替、キャンセル・復帰・解放 | [PR #83](https://github.com/ayutaz/unity-embeddinggemma-2/pull/83)、[サンプル検証](multimodal-search-sample.md) |
-| モデルbundle・cache | 6 moduleの準備処理、サイズ・SHA256照合、選択moduleだけのcache・破損修復・排他lease | [サンプル検証](multimodal-search-sample.md)。空checkoutからの利用者向け自動準備は未整備 |
+| モデルbundle・cache | FP32 / Float16の公開previewから6 moduleを準備。サイズ・SHA256照合、選択moduleのcache・破損修復・排他lease | [空cacheからの匿名取得・復帰](results/public-model-consumer-8649c94-20261018.json)を確認。正式SDK tagの新規consumer導入は未実行 |
 
 PR #31と#83はマージ済みです。#83の検証head `613ada824bd13a297660d8c4de4c2c14b4e317e8` は[CI 38939320058](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38939320058)の15 jobすべて成功。統合後mainと同じtreeです。これはコード統合の確認であり、正式リリースの完了ではありません。
 

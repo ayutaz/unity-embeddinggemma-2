@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "scope": "CPU-only diagnostic session memory policy; no new full-model acceptance",
+  "base_source": "4ae201b00c680360f4395933b1d3b0cbc64919b1",
+  "base_run": 39245552651,
+  "base_execution_source": "837dfddc729f1343454ecf6bc8099be04f809c4d",
+  "base_run_conclusion": "failure",
+  "base_original_cases": 6,
+  "base_original_values": 824320,
+  "base_original_tolerance_failures": 0,
+  "base_seven_archives_digests_CRC_and_two_private_copies_verified": true,
+  "base_uploaded_summary_equals_independent_audit": true,
+  "base_CPU_step_conclusion": "cancelled",
+  "base_CPU_capture_artifact_available": false,
+  "base_CPU_progress_events": 34,
+  "base_CPU_last_observed_event": {
+    "phase": "inference_part_begin",
+    "part": 1,
+    "round": "first",
+    "elapsed_seconds": 355.94515625500003,
+    "rss_bytes": 10075226112,
+    "peak_rss_bytes": 10141454336
+  },
+  "base_maximum_observed_whole_process_OS_peak_bytes": 10141454336,
+  "base_runner_shutdown_cause_confirmed": false,
+  "base_OOM_confirmed": false,
+  "base_raw_job_log_sha256": "b549cb747da60f0a201a262bffa178149e823f0e4b06319b42563a59c1e00bd6",
+  "TDD_red_failed": 4,
+  "TDD_prior_numerical_passed": 1,
+  "final_related_passed": 75,
+  "final_related_failed": 0,
+  "final_related_skipped": 0,
+  "CPU_memory_arena": "disabled",
+  "memory_pattern": "disabled",
+  "constant_prepacking": "disabled",
+  "actual_session_options_read_back": true,
+  "all_five_sessions_remain_resident": true,
+  "first_warm_repeat_carries_retained": true,
+  "original_reference_injection": false,
+  "graph_hashes_original_references_tolerances_coefficients_unchanged": true,
+  "SDK_and_Assets_unchanged": true,
+  "new_full_model_executed": false,
+  "memory_reduction_proven": false,
+  "CPU_reference_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "GPU_validated": false,
+  "formal_release_created": false,
+  "normalized_LF_code_SHA256": [
+    {
+      "file": "tools/embeddinggemma_tools/onnx_cpu_comparison.py",
+      "sha256": "e556c64d7d2ee2984bfb748ef309cbb65b8c6364c4286fc7ba3d3551e4fcb3fb"
+    },
+    {
+      "file": "tools/tests/test_onnx_cpu_comparison.py",
+      "sha256": "f0ef316294b1a200953a94e9774c7818a03c1517f9f3c163900bafc3378db60c"
+    }
+  ]
+}

@@ -36,3 +36,13 @@ CPU処理にはsource・case・part・roundと、全processのresident / peak me
 journalのmemoryはSDK専有allocationや最低要件の証明ではありません。推論partの計時区間からjournal I/Oを除きますが、load区間は記録処理を含みます。数値合格・性能全体の未確認flagsは維持し、allocatorや演算順序をこの修正で変更しません。
 
 この証拠保持の修正は[9件Red→関連92件Green](results/onnx-cpu-progress-preservation-tdd-20261019.json)で確認しました。実session作成失敗の直前journal、例外本文の非掲載、未知memoryのnull、原本の保護、推論計時からのjournal I/O除外を含みます。新sourceの実モデル結果は別途確認します。
+
+## 実進捗に基づくメモリ保持設定の変更
+
+source `4ae201b` のCI `39245552651`では、元の全6ケース・824,320値を独立に再照合し、許容差超過0を確認しました。先に保存した7 ZIPのdigest / CRC・私的2コピーと集計JSONの一致を確認しています。ただし追加CPU stepはrunner shutdownで中断し、Required CIを含むCI全体は不合格です。CPU artifactは未回収で、CPU数値合格とは扱いません。
+
+flush済みの34件の進捗では、全5 sessionのロード後、第1区間の推論終了と第2区間の推論開始までを確認できました。その直前のresident memoryは10,075,226,112 bytes、観測OS peakは10,141,454,336 bytesです。以後のcaptureはなく、停止原因・OOMは未確定です。原本ログ・注釈はhashと私的2コピーを保持します。
+
+次の実行では、CPU memory arena・memory patternを無効にし、`session.disable_prepacking=1`を指定します。[公式API](https://onnxruntime.ai/docs/api/python/api_summary.html)の先行確保・memory pattern設定と、[公式設定定義](https://github.com/microsoft/onnxruntime/blob/main/include/onnxruntime/core/session/onnxruntime_session_options_config_keys.h)の定数prepacking無効化を使用します。実sessionから読み戻した設定をreportに記録します。推論の全5 sessionを保持し、同じ元入力からfirst / warm / repeat-1 / repeat-2を接続する条件は維持します。途中参照の注入・partごとのcold reload・数値gateの緩和はしません。
+
+この変更のメモリ削減量・実モデル互換性は未検証です。packing設定の変更による結果も、元の要素別許容差と全20実captureで判定します。小規模な実CPU sessionの4件Redから、密行列2段の実carry・4反復・既存privacy hook等を含む関連75件Green / skip0を確認しました。[TDDと失敗の記録](results/onnx-cpu-memory-policy-tdd-20261019.json)を保持しています。SDK / Assets、係数、元参照・許容差、backend / thread / graph最適化の指定は変更しません。実モデルの新source CIを確認してから統合します。

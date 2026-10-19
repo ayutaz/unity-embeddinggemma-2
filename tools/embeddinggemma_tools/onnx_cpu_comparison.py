@@ -67,6 +67,12 @@ class CpuOnnxSession:
         options.intra_op_num_threads = 4
         options.inter_op_num_threads = 1
         options.log_severity_level = 3
+        # Keep all five sessions and actual first/warm carries, while avoiding
+        # speculative arenas/patterns and additional packed constant weights.
+        # The unchanged numerical gate still decides actual compatibility.
+        options.enable_cpu_mem_arena = False
+        options.enable_mem_pattern = False
+        options.add_session_config_entry('session.disable_prepacking', '1')
         if progress is not None:
             progress('session_create_begin')
         self.session = ort.InferenceSession(str(self.graph), sess_options=options,
@@ -83,10 +89,14 @@ class CpuOnnxSession:
         self.input_name, self.output_name = inputs[0].name, outputs[0].name
         if digest(self.graph) != expected_sha256:
             raise ValueError('The ONNX graph hash changed during session creation')
+        actual_options = self.session.get_session_options()
         self.configuration = dict(providers=self.session.get_providers(),
             graph_sha256=expected_sha256, graph_optimizations='disabled',
             execution_mode='sequential', intra_op_threads=4, inter_op_threads=1,
-            fallback_enabled=False, onnxruntime_version=ort.__version__)
+            fallback_enabled=False, onnxruntime_version=ort.__version__,
+            cpu_memory_arena='enabled' if actual_options.enable_cpu_mem_arena else 'disabled',
+            memory_pattern='enabled' if actual_options.enable_mem_pattern else 'disabled',
+            constant_prepacking='disabled' if actual_options.get_session_config_entry('session.disable_prepacking') == '1' else 'enabled')
 
     def run(self, value):
         _array(value, self.input_shape)

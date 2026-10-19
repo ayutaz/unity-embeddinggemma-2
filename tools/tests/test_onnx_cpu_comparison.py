@@ -48,6 +48,49 @@ def test_explicit_cpu_session_preserves_rounding_and_input_bytes(tmp_path):
     assert runner.configuration['graph_optimizations'] == 'disabled'
 
 
+@pytest.mark.parametrize('field', ['enable_cpu_mem_arena', 'enable_mem_pattern'])
+def test_actual_cpu_session_disables_speculative_memory_retention(tmp_path, field):
+    runner = session(tmp_path)
+    assert getattr(runner.session.get_session_options(), field) is False
+
+
+def test_actual_cpu_session_disables_extra_constant_weight_prepacking(tmp_path):
+    runner = session(tmp_path)
+    assert runner.session.get_session_options().get_session_config_entry('session.disable_prepacking') == '1'
+
+
+def test_cpu_report_records_actual_memory_configuration(tmp_path):
+    runner = session(tmp_path)
+    assert runner.configuration['cpu_memory_arena'] == 'disabled'
+    assert runner.configuration['memory_pattern'] == 'disabled'
+    assert runner.configuration['constant_prepacking'] == 'disabled'
+
+
+def test_dense_cpu_carries_keep_original_elementwise_gate_in_every_round(tmp_path):
+    rng = np.random.default_rng(729)
+    initial = rng.uniform(-1, 1, (3, 32)).astype(np.float32)
+    actual = initial
+    runners, references = [], []
+    for index, columns in enumerate((17, 7)):
+        weights = rng.uniform(-1, 1, (actual.shape[1], columns)).astype(np.float32)
+        model = helper.make_model(helper.make_graph(
+            [helper.make_node('MatMul', ['input', 'weights'], ['output'])], f'dense{index}',
+            [helper.make_tensor_value_info('input', TensorProto.FLOAT, actual.shape)],
+            [helper.make_tensor_value_info('output', TensorProto.FLOAT, (3, columns))],
+            [numpy_helper.from_array(weights, 'weights')]),
+            opset_imports=[helper.make_opsetid('', 24)], ir_version=8)
+        path = tmp_path / f'dense{index}.onnx'
+        onnx.save(model, path)
+        runners.append(implementation().CpuOnnxSession(path, hashlib.sha256(path.read_bytes()).hexdigest()))
+        actual = actual @ weights
+        references.append(actual)
+    result = implementation().replay_chain(runners, initial, references, tmp_path / 'dense.json')
+    assert result['success'] and len(result['rounds']) == 4
+    assert result['original_atol'] == 1e-5 and result['original_rtol'] == 1e-4
+    assert all(row['tolerance_failures'] == 0 and len(row['parts']) == 2 for row in result['rounds'])
+    assert result['references_used_as_inference_inputs'] is False
+
+
 def test_modified_graph_hash_is_rejected_before_loading(tmp_path):
     path, _ = graph(tmp_path)
     with pytest.raises(ValueError, match='hash'):

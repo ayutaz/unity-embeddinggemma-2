@@ -38,6 +38,16 @@ Codex configuration is in `.codex/hooks.json`; its publication checks and the `p
 
 Publication checks read untracked PR/API body files and release upload files too. File writes/edits inspect the actual new content. A missing, dynamic or unreadable publication input is rejected. The shell hook supplements the Git checks; arbitrary scripts and external clients cannot be guaranteed to pass through a tool-name matcher.
 
+The [original image reference route](image-reference-distribution.md) has a narrow
+JSON-only release guard for three immutable synthetic reference/audit files.
+`image_reference_release_privacy` reads the exact hash-bound review from committed
+HEAD and rechecks the complete proposed bytes, full text privacy and producer /
+model revision. Its bounded 32 MiB handling covers the original 23,780,437-byte
+encoder JSON; it does not raise the ordinary 16 MiB limit, approve large notes,
+allow arbitrary numerical/binary data or replace image visual/OCR checks.
+Untracked/staged reviews, changed files and private text fail closed. These
+metadata assets carry no graph, model execution or CPU/GPU qualification.
+
 Every workflow artifact upload requires the adjacent artifact privacy guard to succeed for the same selected paths. It checks filenames, text, private configuration and unreviewed images without modifying evidence. Missing optional artifacts remain optional. Generated numerical/model payloads (`.onnx`, `.pt2`, `.data`, `.bin`, `.npy`, `.npz`, `.safetensors`) have separate producer validation: this text guard does not certify their internal bytes. Git commits and release uploads still reject arbitrary unreviewed binary content. Package consumer reports publish repository-relative paths or a generic placeholder instead of a developer's home directory.
 
 Python CI loads `embeddinggemma_tools.pytest_privacy` so JUnit skip locations use repository-relative paths, or an explicit external-location placeholder. Test outcomes, skip counts, line numbers and reasons remain unchanged; personal data inside a skip reason still blocks publication. This reporting change never turns a missing device, model or GPU run into a pass.

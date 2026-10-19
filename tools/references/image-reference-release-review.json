@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "scope": "three-original-image-reference-JSON-only",
+  "review_date": "2026-10-20",
+  "review_source": "bcb67e8b039b2c47a1bfe4ed473ee379af50e272",
+  "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+  "full_text_privacy_findings": 0,
+  "original_bytes_preserved": true,
+  "two_private_copies_verified": true,
+  "strict_cohort_metadata_loaded_cases": 6,
+  "includes_graphs_images_weights_or_recordings": false,
+  "numerical_or_GPU_qualification_granted": false,
+  "assets": {
+    "vision-reference.json": {
+      "bytes": 23780437,
+      "sha256": "3dfccd1a487ce04df3f8d640483ca045f7a7a56231bc1096ad0f845c923a29c6",
+      "producer_source": "e2a6dc01fbca8c9be1f3bbe875325ad338de0ca0"
+    },
+    "vision-validation.json": {
+      "bytes": 4082,
+      "sha256": "ab1aa775b553f33a5e2892abed2cdcef7768e35fbad6fa5af9ec3286a7ba90ba",
+      "producer_source": "e2a6dc01fbca8c9be1f3bbe875325ad338de0ca0"
+    },
+    "image-embedding-reference.json": {
+      "bytes": 301132,
+      "sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "producer_source": "891ce9004deecc262437e56b2fd9a2eaf1054632"
+    }
+  }
+}

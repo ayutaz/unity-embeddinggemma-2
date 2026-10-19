@@ -98,6 +98,9 @@ def publication_files_safe(command, cwd):
             from .native_regression_release_privacy import reviewed_native_asset_safe
             if reviewed_native_asset_safe(path, cwd):
                 continue
+            from .image_reference_release_privacy import reviewed_image_reference_asset_safe
+            if reviewed_image_reference_asset_safe(path, cwd):
+                continue
         if path.stat().st_size>16*1024**2:
             return False
         if scan_bytes(path.read_bytes(), path.name):

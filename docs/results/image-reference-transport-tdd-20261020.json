@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "date": "2026-10-20",
+  "base_source": "4c0a465937a39e4003e99325b0b1e41c1060943d",
+  "scope": "Exact original image JSON publication guard and anonymous acquisition implementation",
+  "publication_guard_TDD": {
+    "red": {"failed": 1, "errors": 12, "cause": "ModuleNotFoundError"},
+    "green": {"passed": 13, "skipped": 0}
+  },
+  "transport_TDD": {
+    "red": {"errors": 8, "cause": "ModuleNotFoundError"},
+    "green": {"passed": 8, "skipped": 0}
+  },
+  "related_green": {"passed": 130, "skipped": 0},
+  "actual_payload_preparation": {
+    "files": 6,
+    "bytes": 24098590,
+    "original_JSON_files": 3,
+    "original_JSON_bytes": 24085651,
+    "full_text_privacy_findings": 0,
+    "two_private_complete_copies_verified": true,
+    "strict_original_cohort_load_cases": 6,
+    "actual_uncommitted_review_rejected": true,
+    "committed_review_publication_check_run_at_this_checkpoint": false
+  },
+  "review_sha256": "6644eeabc7ac9721f241d381139148b412e73f4c145601560559d98cfec21864",
+  "transport_configuration_sha256": "4d9acf6cf78d36e7667fb291829c12c4fa84140b82e443c58cd210cfa3143b37",
+  "published_at_this_checkpoint": false,
+  "actual_anonymous_acquisition_run_at_this_checkpoint": false,
+  "original_references_or_tolerances_changed": false,
+  "model_executed": false,
+  "CPU_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "formal_release_ready": false
+}

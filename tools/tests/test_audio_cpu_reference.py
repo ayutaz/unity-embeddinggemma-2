@@ -241,3 +241,24 @@ def test_cli_invalid_original_reference_fails_before_any_snapshot_download(prepa
     del args[snapshot_flag:snapshot_flag+2]
     assert driver.main(args)==1
     assert str(snapshot.parent) not in capsys.readouterr().out
+
+
+def test_preprocessing_contract_is_explicit_in_actual_report_and_source_journal(prepared):
+    driver,_,output,run,_=prepared
+    report=run()
+    journal=driver._json(output/'audio-cpu-source.json')
+    assert report['preprocessing_implementation']==journal['preprocessing_implementation']=='official_Gemma4AudioFeatureExtractor_from_actual_PCM'
+
+
+@pytest.mark.parametrize('target',['report','journal'])
+def test_preprocessing_contract_tampering_is_rejected_by_capture_audit(prepared,target):
+    import json
+    driver,_,output,run,snapshot=prepared
+    run()
+    path=output/('audio-cpu-reference.json' if target=='report' else 'audio-cpu-source.json')
+    value=driver._json(path)
+    value['preprocessing_implementation']='export_lowering'
+    path.write_text(json.dumps(value),encoding='utf-8')
+    base=snapshot.parent
+    with pytest.raises(ValueError):
+        driver.audit_audio_cpu_reference(output,base/'pre',base/'encoder',base/'document.json',source=SOURCE)

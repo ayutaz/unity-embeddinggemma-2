@@ -8,7 +8,7 @@
 
 音声encoderのCPU比較は全6入力・120 capture・30,822,400値で元の許容差超過0です。これはencoder区間の結果であり、PCM前処理から最終vectorまでのCPU/GPU性能比較や、全環境の受け入れ完了ではありません。SDKの推論要件はGPUのままです。
 
-音声のPCM前処理→元数値gateを通った5つのONNX CPU session→共通backboneを4回測定する[比較用入口](audio-cpu-encoder.md)を実装しました。関連182テスト・skip0とactionlint成功、元入力8 bufferの全bytes一致を確認しました。source `9bd7a26` の[実モデルCI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39318048407)はsilence / padded_noiseの2条件で実行中で、結果の読み戻し・独立照合は未完了です。実入力の照合、旧encoder区間の成功、今回の完全な実モデル測定を別々に扱います。
+音声のPCM前処理→元数値gateを通った5つのONNX CPU session→共通backboneを4回測定する[比較用入口](audio-cpu-encoder.md)を実装しました。source `9bd7a26` の[初回実モデル結果](results/audio-cpu-export-preprocessing-9bd7a26-actual-20261020.json)では全32 capture・実2 ZIPを独立照合し、無音は全段階合格、padded_noiseはencoder各回33値の超過で不合格でした。全8最終vectorの合格だけで中間の失敗を隠しません。CPU参照側の前処理を、元PCMから元hashを再計算できる公式実装へ修正しました。新規20件と種類の記録・監査3件のRedを経て関連205テスト・skip0とactionlintが成功しましたが、修正後の実モデル全体は別に再検証します。元参照・許容差とSDKのGPU処理は維持します。
 
 画像の先行する[実CPU測定](results/image-cpu-reference-8c60111-actual-20261020.json)は、landscape / portrait合格・square各回600値の元許容差超過で不合格でした。全12最終vectorとpixels / positionsは一致し、全48 capture・3 archiveを独立照合しました。CPU型番等は未記録で原因は未確定です。追加の[同一host比較](results/image-cpu-paired-hosts-1789f0c-actual-20261020.json)ではEPYC 9V45の2 host・3形状・各4回のnative実測は全24回合格し、encoderは元参照とbitwise一致しました。COMPATIBLE設定は全24回不合格（square / landscape / portraitで各回361 / 95 / 128値の超過）です。全192 capture・2 archiveと完全な私的2コピーを独立照合し、run全体のfailureと旧600値の失敗を保持します。記録したnative条件の結果であり、任意CPUやWindowsの比較・性能全体の完了ではありません。
 
@@ -27,12 +27,12 @@ GPU検証で固定したencoder参照と、Document最終参照のencoder生成�
 ### 直近の実行順（2026-10-20確認）
 
 1. **照合済みの比較結果を適用範囲ごとに記録する。** [#108](https://github.com/ayutaz/unity-embeddinggemma-2/pull/108)の実行source `1789f0c` に対する同一host比較は回収・独立照合済みです。nativeの24回合格とCOMPATIBLEの24回不合格を両方残し、旧600値の原因を推定で断定しません。MKL設定値を実operator dispatchの証拠にも使いません。
-2. **後続変更をまとめ、先行mainを取り込んでからPRの必須CIを開始する。** #108は最新headの全15 CI job・実13 archive・実公開内容を確認してマージ済みです。音声比較ブランチにもmain `cc6ba9f` を取り込み、workflow・tools・SDKの全bytesが実行中のsource `9bd7a26` と同じことを確認しました。実モデル診断の結果と必要な修正をまとめてから次のPRを作り、履歴・文書更新のたびに重い必須CIを再実行しないようにします。診断の旧sourceを新headの実行成功へ置き換えません。
+2. **後続変更をまとめ、先行mainを取り込んでからPRの必須CIを開始する。** #108は最新headの全15 CI job・実13 archive・実公開内容を確認してマージ済みです。音声比較ブランチにもmain `cc6ba9f` を取り込み済みです。旧source `9bd7a26` の不合格を保存し、公式CPU前処理への修正は新sourceとして別に検証します。実モデル診断の結果と必要な修正をまとめてから次のPRを作り、履歴・文書更新のたびに重い必須CIを再実行しないようにします。診断の旧sourceを新headの実行成功へ置き換えません。
 3. **同じ実行環境の比較と性能表を完成する。** 今回合格したLinux native条件、旧square600値、Windows CPUの先行不合格を区別し、未合格環境の数値差と完全な音声CPU接続を残件として追跡します。同じ入力・モデル・仕事量・hardwareのCPU/GPU時間、音声を含む初回 / warm、RAM / VRAMと解放を測定します。必要な修正はTDDで実装し、元参照・許容差は維持します。製品のGPU推論要件も維持します。
 4. **必須端末とprivacyの残件を並行して完了する。** macOS Editor・iOS / Android実機で全入力、検索、権限・復帰・解放を確認します。provider側の古いコピー除去を別途確認し、最終source・履歴・公開payloadを監査します。
 5. **全条件の達成後に正式公開する。** SDK版・tag・Releaseを作り、空consumerへのそのtagの導入からモデル取得、全入力・検索・終了まで確認します。preview公開を正式SDK公開の完了として数えません。
 
-次の判断点は、音声の実モデルCI完了と実captureの独立照合です。同じ比較を無条件に再起動せず、未合格環境の失敗箇所・仮説・次の一手を記録します。端末・GPU資源・provider対応の準備は、この数値調査の完了を待たずに進めます。
+次の判断点は、公式CPU前処理に修正した音声の実モデルCIと実captureの独立照合です。同じ比較を無条件に再起動せず、未合格環境の失敗箇所・仮説・次の一手を記録します。端末・GPU資源・provider対応の準備は、この数値調査の完了を待たずに進めます。
 
 ### 実行の開始条件と時間の見積り
 

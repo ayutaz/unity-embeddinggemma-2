@@ -1,0 +1,683 @@
+{
+  "schema": 1,
+  "checked_date_JST": "2026-10-20",
+  "source": "9bd7a26b7f6a431d70be554076c5347a7d1b9ce8",
+  "run": 39318048407,
+  "scope": "Original actual exported-preprocessor CPU diagnostic; one passing and one failing case",
+  "actual_run_conclusion": "failure",
+  "preprocessing_implementation": "AudioPreprocessorExport",
+  "actual_complete_chains": 8,
+  "actual_captures": 32,
+  "original_archives": [
+    {
+      "case": "silence",
+      "artifact_id": 12221527020,
+      "bytes": 27839800,
+      "SHA256": "2826073cfe122e64333e01758125c13fbc3513fadaf1ec1585a37bdfe1a166a4",
+      "provider_digest_size_provenance_verified": true,
+      "all_CRCs_verified": true,
+      "two_complete_private_archive_copies": true
+    },
+    {
+      "case": "padded_noise",
+      "artifact_id": 12221351358,
+      "bytes": 26547513,
+      "SHA256": "b04d430ac59cce42b9cb3ecbd2c794183b5ebeb11f38890503747dc350db03ae",
+      "provider_digest_size_provenance_verified": true,
+      "all_CRCs_verified": true,
+      "two_complete_private_archive_copies": true
+    }
+  ],
+  "cases": [
+    {
+      "case": "silence",
+      "success": true,
+      "model_execution_complete": true,
+      "raw_report_SHA256": "929ed5639af747310bdec7cab1808a53394ff2e566637932b28e0f31c2b6c594",
+      "captures": 16,
+      "intermediate_inspections": [
+        {
+          "round": "first",
+          "comparisons": [
+            {
+              "stage": "features",
+              "values": 143232,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 0.0,
+              "minimum_cosine": null,
+              "passed": true
+            },
+            {
+              "stage": "frame_mask",
+              "values": 1119,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 0.0,
+              "minimum_cosine": null,
+              "passed": true
+            },
+            {
+              "stage": "encoder",
+              "values": 143360,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 0.0,
+              "minimum_cosine": 0.9999999999999998,
+              "passed": true
+            },
+            {
+              "stage": "final",
+              "values": 768,
+              "cosine": 0.999999999997309,
+              "norm_squared": 1.0000000938381506,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "comparisons": [
+            {
+              "stage": "features",
+              "values": 143232,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 0.0,
+              "minimum_cosine": null,
+              "passed": true
+            },
+            {
+              "stage": "frame_mask",
+              "values": 1119,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 0.0,
+              "minimum_cosine": null,
+              "passed": true
+            },
+            {
+              "stage": "encoder",
+              "values": 143360,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 0.0,
+              "minimum_cosine": 0.9999999999999998,
+              "passed": true
+            },
+            {
+              "stage": "final",
+              "values": 768,
+              "cosine": 0.999999999997309,
+              "norm_squared": 1.0000000938381506,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "comparisons": [
+            {
+              "stage": "features",
+              "values": 143232,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 0.0,
+              "minimum_cosine": null,
+              "passed": true
+            },
+            {
+              "stage": "frame_mask",
+              "values": 1119,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 0.0,
+              "minimum_cosine": null,
+              "passed": true
+            },
+            {
+              "stage": "encoder",
+              "values": 143360,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 0.0,
+              "minimum_cosine": 0.9999999999999998,
+              "passed": true
+            },
+            {
+              "stage": "final",
+              "values": 768,
+              "cosine": 0.999999999997309,
+              "norm_squared": 1.0000000938381506,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "comparisons": [
+            {
+              "stage": "features",
+              "values": 143232,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 0.0,
+              "minimum_cosine": null,
+              "passed": true
+            },
+            {
+              "stage": "frame_mask",
+              "values": 1119,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 0.0,
+              "minimum_cosine": null,
+              "passed": true
+            },
+            {
+              "stage": "encoder",
+              "values": 143360,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 0.0,
+              "minimum_cosine": 0.9999999999999998,
+              "passed": true
+            },
+            {
+              "stage": "final",
+              "values": 768,
+              "cosine": 0.999999999997309,
+              "norm_squared": 1.0000000938381506,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "all4_final_vectors_passed": true,
+      "load_wall_seconds": 145.92020717000003,
+      "load_process_cpu_seconds": 137.947446154,
+      "host_peak_rss_bytes": 11189993472,
+      "execution_context": {
+        "cpu_model": {
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "25",
+          "model": "1",
+          "model name": "AMD EPYC 7763 64-Core Processor",
+          "stepping": "1"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX2",
+        "torch_runtime_version": "2.14.1+cu130",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": "COMPATIBLE",
+          "MKL_DYNAMIC": "FALSE",
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "execution_context_stable": true,
+      "stage_times": [
+        {
+          "round": "first",
+          "wall_seconds": 341.97332035999966,
+          "process_cpu_seconds": 1317.4802438370002,
+          "stage_observer_wall_seconds": 0.0025615780002681277,
+          "stage_observer_process_cpu_seconds": 0.011196155999954271,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.09564749000014672,
+              "process_cpu_seconds": 0.16584791299999324,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 334.598496821,
+              "process_cpu_seconds": 1288.30602645,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 7.278786361999892,
+              "process_cpu_seconds": 29.005202333999932,
+              "gpu_elapsed_ns": null
+            }
+          ],
+          "cosine": 0.9999999999973088,
+          "norm_squared": 1.0000000938381508,
+          "input_state_sha256": "8b1122d429782b13d6da3682611a7205b198abe07d52be9a2c62df528601394a",
+          "capture": "pipeline-first.bin",
+          "capture_sha256": "ee18eda4cb2837c4a1ab69da9178654984ec498656f01dfda51223a0de26d70a"
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 310.1645072589997,
+          "process_cpu_seconds": 1230.5501684459998,
+          "stage_observer_wall_seconds": 0.004765165000208071,
+          "stage_observer_process_cpu_seconds": 0.018631799000104365,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.019345443000020168,
+              "process_cpu_seconds": 0.076086425000085,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 302.8433522749999,
+              "process_cpu_seconds": 1201.410390552,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 7.301687184000002,
+              "process_cpu_seconds": 29.06357813700015,
+              "gpu_elapsed_ns": null
+            }
+          ],
+          "cosine": 0.9999999999973088,
+          "norm_squared": 1.0000000938381508,
+          "input_state_sha256": "8b1122d429782b13d6da3682611a7205b198abe07d52be9a2c62df528601394a",
+          "capture": "pipeline-warm.bin",
+          "capture_sha256": "ee18eda4cb2837c4a1ab69da9178654984ec498656f01dfda51223a0de26d70a"
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 310.1721932079995,
+          "process_cpu_seconds": 1230.356422322,
+          "stage_observer_wall_seconds": 0.004496294000546186,
+          "stage_observer_process_cpu_seconds": 0.01949311099951956,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.01825461999987965,
+              "process_cpu_seconds": 0.07482597299986082,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 302.9132233800001,
+              "process_cpu_seconds": 1201.403062579,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 7.24060432000033,
+              "process_cpu_seconds": 28.878431158999774,
+              "gpu_elapsed_ns": null
+            }
+          ],
+          "cosine": 0.9999999999973088,
+          "norm_squared": 1.0000000938381508,
+          "input_state_sha256": "8b1122d429782b13d6da3682611a7205b198abe07d52be9a2c62df528601394a",
+          "capture": "pipeline-repeat-1.bin",
+          "capture_sha256": "ee18eda4cb2837c4a1ab69da9178654984ec498656f01dfda51223a0de26d70a"
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 325.90797018099965,
+          "process_cpu_seconds": 1293.4423182749988,
+          "stage_observer_wall_seconds": 0.0031222390002767497,
+          "stage_observer_process_cpu_seconds": 0.01512821500091377,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.01877912399959314,
+              "process_cpu_seconds": 0.07571465000000899,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 318.58014586399986,
+              "process_cpu_seconds": 1264.333585719,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 7.308930749999945,
+              "process_cpu_seconds": 29.032911547000367,
+              "gpu_elapsed_ns": null
+            }
+          ],
+          "cosine": 0.9999999999973088,
+          "norm_squared": 1.0000000938381508,
+          "input_state_sha256": "8b1122d429782b13d6da3682611a7205b198abe07d52be9a2c62df528601394a",
+          "capture": "pipeline-repeat-2.bin",
+          "capture_sha256": "ee18eda4cb2837c4a1ab69da9178654984ec498656f01dfda51223a0de26d70a"
+        }
+      ]
+    },
+    {
+      "case": "padded_noise",
+      "success": false,
+      "model_execution_complete": true,
+      "raw_report_SHA256": "e7cd0cb94fc4ad3099f208cc083c7105e9b0214d744fed5d743c270d1bc112a7",
+      "captures": 16,
+      "intermediate_inspections": [
+        {
+          "round": "first",
+          "comparisons": [
+            {
+              "stage": "features",
+              "values": 143232,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 6.4373016357421875e-06,
+              "minimum_cosine": null,
+              "passed": true
+            },
+            {
+              "stage": "frame_mask",
+              "values": 1119,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 0.0,
+              "minimum_cosine": null,
+              "passed": true
+            },
+            {
+              "stage": "encoder",
+              "values": 107520,
+              "tolerance_failures": 33,
+              "maximum_absolute_error": 4.330277442932129e-05,
+              "minimum_cosine": 0.9999999999636076,
+              "passed": false
+            },
+            {
+              "stage": "final",
+              "values": 768,
+              "cosine": 0.9999999999991274,
+              "norm_squared": 1.0000000146155168,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "comparisons": [
+            {
+              "stage": "features",
+              "values": 143232,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 6.4373016357421875e-06,
+              "minimum_cosine": null,
+              "passed": true
+            },
+            {
+              "stage": "frame_mask",
+              "values": 1119,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 0.0,
+              "minimum_cosine": null,
+              "passed": true
+            },
+            {
+              "stage": "encoder",
+              "values": 107520,
+              "tolerance_failures": 33,
+              "maximum_absolute_error": 4.330277442932129e-05,
+              "minimum_cosine": 0.9999999999636076,
+              "passed": false
+            },
+            {
+              "stage": "final",
+              "values": 768,
+              "cosine": 0.9999999999991274,
+              "norm_squared": 1.0000000146155168,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "comparisons": [
+            {
+              "stage": "features",
+              "values": 143232,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 6.4373016357421875e-06,
+              "minimum_cosine": null,
+              "passed": true
+            },
+            {
+              "stage": "frame_mask",
+              "values": 1119,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 0.0,
+              "minimum_cosine": null,
+              "passed": true
+            },
+            {
+              "stage": "encoder",
+              "values": 107520,
+              "tolerance_failures": 33,
+              "maximum_absolute_error": 4.330277442932129e-05,
+              "minimum_cosine": 0.9999999999636076,
+              "passed": false
+            },
+            {
+              "stage": "final",
+              "values": 768,
+              "cosine": 0.9999999999991274,
+              "norm_squared": 1.0000000146155168,
+              "passed": true
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "comparisons": [
+            {
+              "stage": "features",
+              "values": 143232,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 6.4373016357421875e-06,
+              "minimum_cosine": null,
+              "passed": true
+            },
+            {
+              "stage": "frame_mask",
+              "values": 1119,
+              "tolerance_failures": 0,
+              "maximum_absolute_error": 0.0,
+              "minimum_cosine": null,
+              "passed": true
+            },
+            {
+              "stage": "encoder",
+              "values": 107520,
+              "tolerance_failures": 33,
+              "maximum_absolute_error": 4.330277442932129e-05,
+              "minimum_cosine": 0.9999999999636076,
+              "passed": false
+            },
+            {
+              "stage": "final",
+              "values": 768,
+              "cosine": 0.9999999999991274,
+              "norm_squared": 1.0000000146155168,
+              "passed": true
+            }
+          ]
+        }
+      ],
+      "all4_final_vectors_passed": true,
+      "load_wall_seconds": 136.68537475800008,
+      "load_process_cpu_seconds": 116.637676808,
+      "host_peak_rss_bytes": 10831675392,
+      "execution_context": {
+        "cpu_model": {
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "25",
+          "model": "17",
+          "model name": "AMD EPYC 9V74 80-Core Processor",
+          "stepping": "1"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX512",
+        "torch_runtime_version": "2.14.1+cu130",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2024.2-Product Build 20240605 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": "COMPATIBLE",
+          "MKL_DYNAMIC": "FALSE",
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "execution_context_stable": true,
+      "stage_times": [
+        {
+          "round": "first",
+          "wall_seconds": 405.18372857600025,
+          "process_cpu_seconds": 1347.4314538400001,
+          "stage_observer_wall_seconds": 0.003872685999795067,
+          "stage_observer_process_cpu_seconds": 0.011324264000037942,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.23052190999987943,
+              "process_cpu_seconds": 0.22825804900000435,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 398.79685677299994,
+              "process_cpu_seconds": 1323.8048634939998,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 6.155813551999927,
+              "process_cpu_seconds": 23.398154143999818,
+              "gpu_elapsed_ns": null
+            }
+          ],
+          "cosine": 0.9999999999991271,
+          "norm_squared": 1.0000000146155168,
+          "input_state_sha256": "71f7a0117c6da7fb7a9d4c7c102a9551adfb31351300ff1d31b24af8e7d6f8c0",
+          "capture": "pipeline-first.bin",
+          "capture_sha256": "5f662361d66053bb77045cb6bce7ecd2d81701d0b20cb3f24dc8d65e1f7a6b1a"
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 290.34895889899985,
+          "process_cpu_seconds": 1152.5031988659996,
+          "stage_observer_wall_seconds": 0.003388206000181526,
+          "stage_observer_process_cpu_seconds": 0.015395138000258157,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.011797970000088753,
+              "process_cpu_seconds": 0.04691529699994135,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 284.645521681,
+              "process_cpu_seconds": 1129.7634916770003,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 5.691496456000095,
+              "process_cpu_seconds": 22.692662230000224,
+              "gpu_elapsed_ns": null
+            }
+          ],
+          "cosine": 0.9999999999991271,
+          "norm_squared": 1.0000000146155168,
+          "input_state_sha256": "71f7a0117c6da7fb7a9d4c7c102a9551adfb31351300ff1d31b24af8e7d6f8c0",
+          "capture": "pipeline-warm.bin",
+          "capture_sha256": "5f662361d66053bb77045cb6bce7ecd2d81701d0b20cb3f24dc8d65e1f7a6b1a"
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 292.39810838699964,
+          "process_cpu_seconds": 1160.4945752169997,
+          "stage_observer_wall_seconds": 0.0035860950001733727,
+          "stage_observer_process_cpu_seconds": 0.015569408999908774,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.012385767000068881,
+              "process_cpu_seconds": 0.05064971699994203,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 286.61498716899996,
+              "process_cpu_seconds": 1137.4319076460001,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 5.770605368999895,
+              "process_cpu_seconds": 23.011899370000265,
+              "gpu_elapsed_ns": null
+            }
+          ],
+          "cosine": 0.9999999999991271,
+          "norm_squared": 1.0000000146155168,
+          "input_state_sha256": "71f7a0117c6da7fb7a9d4c7c102a9551adfb31351300ff1d31b24af8e7d6f8c0",
+          "capture": "pipeline-repeat-1.bin",
+          "capture_sha256": "5f662361d66053bb77045cb6bce7ecd2d81701d0b20cb3f24dc8d65e1f7a6b1a"
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 293.1472567110004,
+          "process_cpu_seconds": 1164.0901038309999,
+          "stage_observer_wall_seconds": 0.003117074999408942,
+          "stage_observer_process_cpu_seconds": 0.015044888999909745,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.011738871000034123,
+              "process_cpu_seconds": 0.047718518000237964,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 287.4385477830001,
+              "process_cpu_seconds": 1141.3122744540005,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 5.696829919000265,
+              "process_cpu_seconds": 22.729988277999837,
+              "gpu_elapsed_ns": null
+            }
+          ],
+          "cosine": 0.9999999999991271,
+          "norm_squared": 1.0000000146155168,
+          "input_state_sha256": "71f7a0117c6da7fb7a9d4c7c102a9551adfb31351300ff1d31b24af8e7d6f8c0",
+          "capture": "pipeline-repeat-2.bin",
+          "capture_sha256": "5f662361d66053bb77045cb6bce7ecd2d81701d0b20cb3f24dc8d65e1f7a6b1a"
+        }
+      ]
+    }
+  ],
+  "preprocessing_original_tolerance_failures": 0,
+  "encoder_original_tolerance_failures": 132,
+  "final_vectors_passed": 8,
+  "reference_or_tolerances_changed": false,
+  "graph_binaries_independently_rehashed": false,
+  "complete_CPU_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "GPU_validated": false,
+  "all_platforms_accepted": false,
+  "formal_release_created": false
+}

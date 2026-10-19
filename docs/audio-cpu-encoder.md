@@ -27,8 +27,8 @@ boolean indexの追加1件失敗 / 25件成功から、関連137件成功・skip
 実CPUExecutionProviderを使う小さい5 graphと、合成の前処理・backboneを
 既存の4反復測定へつなぎ、出力の受け渡しと解放を確認しました。
 
-このadapterで実EmbeddingGemmaモデルを動かした証拠ではありません。
-固定snapshotの実モデルによる実測CLIのCI実行と、成果物の独立照合が残ります。
+上記の合成moduleによるTDDは、実EmbeddingGemmaモデルの実行証拠と区別します。
+初回の実モデルCIの結果と独立照合は末尾に記録し、公式CPU前処理への修正後の実測を残します。
 既存の実encoderだけの120 captureの結果とも分けて扱います。CPU比較全体、
 同じhardwareでのCPU/GPU性能、必須端末と正式公開は未完了です。
 
@@ -57,7 +57,7 @@ writeabilityを再設定できません。snapshotの宣言はencoder / backbone
 
 `audio_cpu_reference`の`measure`は、固定sourceの実行ファイル18件、元データ、
 元数値gateを通った同じsourceのchain-reportを確認してからsnapshotを取得します。
-宣言された全snapshot hashを照合し、実AudioPreprocessorExport、上記の5 session、
+宣言された全snapshot hashを照合し、公式CPU前処理、上記の5 session、
 実MultimodalEmbeddingExportを読み込みます。モデル読込と4回の推論は分けて記録します。
 CLIはTorch 4 intra-op / 2 inter-op thread、ONNX sessionは4 / 1を使用します。
 
@@ -78,7 +78,7 @@ uv run --locked --group cpu-comparison python -m embeddinggemma_tools.audio_cpu_
 ```
 
 これは配置済みの元データ・同一sourceのgraph/reportを前提とする入口です。
-下記の入力配置と手動CIを実装しましたが、実モデルのCI実行は未完了です。
+下記の入力配置と手動CIを実装し、初回の実モデルCIは末尾の成功・失敗を記録しました。
 旧artifactが取得不能な場合に、参照・モデルを再生成して元のものとして置き換えません。
 
 [測定・capture audit・CLIのTDD](results/audio-cpu-reference-tdd-20261020.json)は、
@@ -134,3 +134,25 @@ source `4bb9575` では2つの元featuresを匿名の固定公開URLから実取
 
 [追加確認の記録](results/audio-cpu-private-logs-and-inputs-20261020.json)では、元の
 入力・数値条件、公開取得と保持済み原本の区別、実モデル未実行の状態を保持します。
+
+## 初回実モデルの結果と公式CPU参照への修正
+
+source `9bd7a26` の[初回実モデル結果](results/audio-cpu-export-preprocessing-9bd7a26-actual-20261020.json)
+は、2条件・各4回・全32 captureと実2 ZIPのdigest / CRC・私的な完全2コピーを
+独立照合しました。無音は全段階で合格し、padded_noiseは前処理の元許容差内でも
+encoderが各回33値・計132値の超過で不合格です。全8最終vectorは合格しましたが、
+中間gateの失敗とrun全体のfailureを保持します。whole-process peak RSSは約10.8〜11.2 GBで、
+SDK専有メモリや最低要件の測定ではありません。
+
+初回はGPU向けの変換用`AudioPreprocessorExport`をCPU比較にも使っていました。
+同じ元PCMによる小さい確認では、公式`Gemma4AudioFeatureExtractor`は2条件とも
+元featuresの全bytesと一致し、変換用前処理はノイズで最大約6.44e-6の差がありました。
+CPU参照側を`OfficialAudioCpuPreprocessor`へ変更し、元producerと同じ公式処理を
+実PCMから再計算します。既存の入力検査を共有し、FP32 cast・mask乗算と負のzeroを
+維持します。参照featuresの代入や、元参照・許容差・SDKのGPU前処理の変更は行いません。
+
+実ローダーの選択を含む20件のRed→20件Green、前処理の種類をreportとsource journalに
+明記して改変を拒否する追加3件のRed→関連205件Green・skip0を
+[TDD記録](results/audio-cpu-official-preprocessing-tdd-20261020.json)に保存しました。
+前処理単体の元hash一致と、修正後の実モデルによる全captureの合格は別の条件です。
+修正sourceの実モデルCIと成果物の独立照合で後者を判定します。

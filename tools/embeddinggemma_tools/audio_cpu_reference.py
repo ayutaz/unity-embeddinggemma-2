@@ -21,9 +21,39 @@ from .image_cpu_reference import (_capture, _encoder_result, _json, _peak_rss_by
 from .native_regression_distribution import _empty
 
 
+PREPROCESSING_IMPLEMENTATION='official_Gemma4AudioFeatureExtractor_from_actual_PCM'
+
+
 def _require(condition):
     if not condition:
         raise ValueError('Audio CPU reference contract differs')
+
+
+class OfficialAudioCpuPreprocessor(torch.nn.Module):
+    """Recompute the pinned official CPU reference directly from actual PCM."""
+
+    def __init__(self,extractor):
+        super().__init__()
+        from transformers import Gemma4AudioFeatureExtractor
+        from .audio import AudioPreprocessorExport
+        _require(isinstance(extractor,Gemma4AudioFeatureExtractor))
+        self._input_guard=AudioPreprocessorExport(179200,extractor).eval()
+        self._extractor=extractor
+
+    def forward(self,waveform,sample_mask):
+        _require(isinstance(waveform,torch.Tensor) and isinstance(sample_mask,torch.Tensor)
+                 and waveform.device.type==sample_mask.device.type=='cpu')
+        self._input_guard.validate_inputs(waveform,sample_mask)
+        raw,frames=self._extractor._extract_spectrogram(
+            waveform.detach().numpy()[0],sample_mask.detach().numpy()[0])
+        _require(isinstance(raw,np.ndarray) and isinstance(frames,np.ndarray)
+                 and raw.shape==(1119,128) and frames.shape==(1119,))
+        valid_frames=(int(sample_mask.sum())-161)//160+1
+        _require(bool(np.isfinite(raw).all()) and np.array_equal(frames,np.arange(1119)<valid_frames))
+        # Preserve the official producer's FP32 cast, mask multiplication and signed zero bits.
+        features=(raw.astype(np.float32)*frames[:,None])[None]
+        return (torch.from_numpy(np.array(features,dtype=np.float32,copy=True,order='C')),
+                torch.from_numpy(np.array(frames[None],dtype=np.int32,copy=True,order='C')))
 
 
 def _validate_execution_source(source):
@@ -65,13 +95,12 @@ def _download_snapshot(cohort):
 
 def _load_modules(snapshot,encoder_root,chain_report,source,case,final_metadata,final_profile):
     from transformers import Gemma4AudioFeatureExtractor
-    from .audio import AudioPreprocessorExport
     from .export import MultimodalEmbeddingExport
     from .model import load_text_model
     settings=_json(Path(snapshot)/'processor_config.json')['feature_extractor']
     extractor=Gemma4AudioFeatureExtractor(**{name:value for name,value in settings.items()
         if name not in ('feature_extractor_type','frame_length','hop_length','fft_length')})
-    preprocessor=AudioPreprocessorExport(179200,extractor).eval()
+    preprocessor=OfficialAudioCpuPreprocessor(extractor).eval()
     encoder=AuditedAudioCpuEncoder(chain_report,encoder_root,source=source)
     try:
         _require(encoder.configuration['case_id']==case.id and encoder.configuration['profile']==case.profile)
@@ -122,6 +151,7 @@ def measure_audio_cpu_reference(snapshot,preprocessing,encoder_directory,documen
         before=cpu_execution_context()
         output.mkdir(parents=True,exist_ok=True)
         journal=dict(schema=1,source=source,case=case_id,profile=case.profile,phase='loading',
+            preprocessing_implementation=PREPROCESSING_IMPLEMENTATION,
             model_execution_complete=False,error_class=None,model_revision=references.MODEL_REVISION,
             source_fingerprints_normalized_LF=fingerprints,
             snapshot_input_sha256=dict(cohort.snapshot_input_sha256),
@@ -198,6 +228,7 @@ def measure_audio_cpu_reference(snapshot,preprocessing,encoder_directory,documen
         success=bool(pipeline['success'] and complete and len(inspections)==4 and all(v['success'] for v in inspections)
             and before==after and not torch.cuda.is_initialized() and (peak is None or 0<peak<=16*1024**3))
         result=dict(schema=1,success=success,phase='complete' if success else 'failed_chain',
+            preprocessing_implementation=PREPROCESSING_IMPLEMENTATION,
             scope='Four actual FP32 PCM preprocessing, audited ONNX encoder and PyTorch backbone CPU carries only',
             source=source,case=case_id,profile=case.profile,actual_backend='CPU',precision='fp32',
             model_revision=references.MODEL_REVISION,model_execution_complete=complete,error_class=error_class,
@@ -240,6 +271,7 @@ def audit_audio_cpu_reference(output,preprocessing,encoder_directory,document_re
         _require(report['model_execution_complete'] is journal['model_execution_complete'] is True)
         _require(report['error_class'] is journal['error_class'] is None)
         _require(report['actual_backend']==pipeline['actual_backend']=='CPU' and report['precision']==pipeline['precision']=='fp32')
+        _require(report['preprocessing_implementation']==journal['preprocessing_implementation']==PREPROCESSING_IMPLEMENTATION)
         _require(report['CUDA_context_initialized'] is False and report['original_golden_changed'] is False)
         _require(report['CPU_comparison_qualified'] is report['complete_performance_accepted'] is False)
         _require(report['descriptor_sha256']==pipeline['descriptor_sha256']==protocol.DESCRIPTOR)

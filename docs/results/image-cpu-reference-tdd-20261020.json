@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "date": "2026-10-20",
+  "base_source": "d9cc33705a22be0417125f53644bea0ec8c0be2c",
+  "scope": "Synthetic contracts for actual image CPU reference execution, capture audit and opt-in CI",
+  "TDD": [
+    {"stage": "runner_and_independent_capture_audit", "red_errors": 10, "green_passed": 10},
+    {"stage": "safe_loading_failure_and_download_admission", "red_failed": 3, "prior_passed": 10, "green_passed": 13},
+    {"stage": "source_capture_fidelity_and_position_range", "red_failed": 6, "prior_passed": 13, "green_passed": 19},
+    {"stage": "manual_CI_matrix_and_privacy", "red_failed": 4, "green_passed": 4},
+    {"stage": "snapshot_before_mutation_and_excluded_observer_timing", "red_failed": 4, "prior_passed": 45}
+  ],
+  "related_green": {"passed": 68, "skipped": 0},
+  "actionlint": "passed",
+  "actual_original_references_or_tolerances_changed": false,
+  "real_model_executed_at_this_checkpoint": false,
+  "GPU_execution_claimed": false,
+  "CPU_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "formal_release_ready": false
+}

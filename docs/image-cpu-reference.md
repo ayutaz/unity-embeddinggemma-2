@@ -1,0 +1,83 @@
+# Complete image CPU reference measurement
+
+This harness connects the official CPU image processor, actual vision encoder /
+projector and actual language backbone for four calls per fixed image profile.
+It is a Python comparison process. Unity SDK inference continues to use Sentis
+GPU workers; this adds no product CPU backend or automatic fallback.
+
+## Inputs and source
+
+Use the [unchanged original image data](image-reference-distribution.md). The
+encoder target is the existing GPU fixture pin `3dfccd1a…`; the Document final
+target remains `90692ad3…`. The distinct historical Document encoder generation
+`7c183c52…` is recorded separately. Prior AVX2 and cross-generation failures are
+preserved and do not become passes by running this harness.
+
+Before loading weights, the harness verifies source HEAD and the executed Python
+files / lockfile against Git, all six original snapshot file hashes, and the
+reviewed procedural PNG's original size/hash. Model acquisition uses the fixed
+model revision. The three measured inputs are `square-0`, `landscape-0` and
+`portrait-0`, matching the fixed GPU performance inputs. This is not an arbitrary
+image or all-environment compatibility claim.
+
+## Four actual carries and retained evidence
+
+Each first / warm / repeat-1 / repeat-2 call executes preprocessing → encoder →
+backbone. Actual processor positions and pixels go to the encoder, then its
+actual features go to the backbone. Expected intermediate features are used only
+for inspection. Original input state is checked before and after each call.
+
+The optional `CpuReferenceCase.after_stage` observer snapshots actual output
+tensors after each stage timer stops and before the next consumer can mutate
+them. Its return value never replaces the actual downstream input. Snapshot wall
+and process CPU times are recorded separately and excluded from reported stage /
+chain intervals. Other protocol checks remain in the chain interval; loading,
+input signatures, vector inspection, capture disk writes and artifact handling
+are outside it. Peak memory includes instrumentation.
+
+Each profile retains four pixels, four positions, four encoder outputs and four
+final vectors, plus source, timing and audit JSON. Int64 positions must fit Int32
+losslessly before encoding the original `<i4` representation. Floating captures
+retain actual FP32 bytes. Intermediate inspection checks original shapes and
+pixel/position SHA256, encoder `atol=1e-5 / rtol=1e-4` and minimum row cosine
+0.999999. Pixel/position hash checks are stricter than an element tolerance.
+Final vectors keep the original finite 768-value, squared unit norm tolerance
+0.002 and cosine 0.999 gates. No expectation is normalized or regenerated.
+
+The separate auditor recomputes these gates from raw captures, rechecks their
+hashes and fixed filenames, and binds the source journal, case, module, original
+references and timing-stage sequence. A reported success, updated capture hash
+or final-vector match cannot conceal an invalid intermediate.
+
+Model loading / capture failures preserve safe phase and error-class records.
+Numerical failures retain their captures and return a failing process exit.
+Output must be empty; an old report or failed attempt is never overwritten.
+Linux peak RSS is recorded for the whole process under an explicit 16 GiB
+ceiling; other hosts report that metric unavailable. This is not SDK-exclusive
+memory, VRAM or a validated minimum hardware requirement.
+
+## CI execution
+
+Use the existing **Frozen native CPU context diagnostics** workflow with only
+`image_cpu_measurement=true`. Legacy selections must retain their defaults.
+Three independent Ubuntu jobs use FP32, four intra-op threads and two inter-op
+threads. They fetch original data, download / verify the pinned snapshot, measure,
+then independently audit. Failures remain failures. A matching artifact privacy
+guard precedes upload of only numerical output and reports, including safe
+partial evidence; model weights and snapshots are excluded.
+
+From `tools/`, equivalent explicit entries are:
+
+```sh
+uv run --locked python -m embeddinggemma_tools.image_reference_distribution --output ../artifacts/original-image-references
+uv run --locked python -m embeddinggemma_tools.image_cpu_reference measure --references ../artifacts/original-image-references --profile square --output ../artifacts/image-cpu-square --source "$GITHUB_SHA"
+uv run --locked python -m embeddinggemma_tools.image_cpu_reference audit --references ../artifacts/original-image-references --output ../artifacts/image-cpu-square --source "$GITHUB_SHA"
+```
+
+`GITHUB_SHA` must be the actual checked-out source commit. Prefer CI for real
+weights and measurement. [TDD evidence](results/image-cpu-reference-tdd-20261020.json)
+is small synthetic validation, not real-model acceptance. Real execution and
+independent artifact readback must be recorded separately. All reports retain
+`CPU_comparison_qualified=false` and `complete_performance_accepted=false`;
+required environments, matching GPU measurements and remaining release gates
+still need their own evidence.

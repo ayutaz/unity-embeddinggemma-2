@@ -1,0 +1,65 @@
+name: Platform contracts and builds
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/platform-validation.yml'
+      - 'tools/embeddinggemma_tools/platform_ci.py'
+      - 'tools/tests/test_platform_ci.py'
+      - 'Assets/Validation/**'
+      - 'Packages/com.ayutaz.embeddinggemma/**'
+      - 'ProjectSettings/ProjectVersion.txt'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: platform-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  platform:
+    # Credentials and native execution are restricted to owner-triggered, same-repository code.
+    if: >-
+      github.actor == github.repository_owner &&
+      (github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: macos-15-intel
+    timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos, android, ios]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.12.20'
+          python-version: '3.13'
+      - name: Check environment and run native platform validation
+        working-directory: tools
+        env:
+          EG_PLATFORM: ${{ matrix.platform }}
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        run: >-
+          uv run --no-project --python 3.13 python -m embeddinggemma_tools.platform_ci
+          --project .. --platform "$EG_PLATFORM" --source "$GITHUB_SHA"
+          --output ../artifacts/platform-ci --execute
+      - name: Check only the public receipt
+        id: privacy_upload_platform
+        if: always()
+        uses: ./.github/actions/privacy-artifact-guard
+        with:
+          paths: artifacts/platform-ci/public/result.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: ${{ always() && steps.privacy_upload_platform.outcome == 'success' }}
+        with:
+          name: platform-${{ matrix.platform }}-${{ github.sha }}
+          path: artifacts/platform-ci/public/result.json
+          if-no-files-found: error
+          retention-days: 14

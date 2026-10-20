@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "scope": "PR112 CI/native-build foundation integration only; not complete platform, GPU, performance or release acceptance",
+  "PR": 112,
+  "base": "de56db8c84984dc84fc2597f60cc1c6fbd3bf456",
+  "tested_head": "874c1c89f06162fb74086cb24ba13686b2f6981d",
+  "actual_execution_source": "dd414b7b01b14cfce56abdbede58600334877738",
+  "actual_main": "e72b5cbb0962fb66001fb4227cb249ebe9a178c2",
+  "full_main_tree_matches_tested_head": true,
+  "provider_signature_and_public_identity_verified": true,
+  "full_source_and_actual_main_history_privacy_verified": true,
+  "Required_CI": {
+    "run": 39358511727,
+    "conclusion": "success",
+    "successful_jobs": 15,
+    "numerical_archives": 13,
+    "all_archive_provider_hashes_sizes_and_CRC_verified": true,
+    "two_complete_private_archive_copies_verified": true,
+    "original_values_compared": 824320,
+    "CPU_encoder_captures": 120,
+    "CPU_values_compared": 30822400,
+    "CPU_final_values_directly_original": 3297280,
+    "tolerance_failures": 0,
+    "graph_binaries_independently_rehashed": false
+  },
+  "Python_environments": [
+    {
+      "platform": "windows-latest",
+      "python": "3.13",
+      "tests": 2621,
+      "executed_passes": 2612,
+      "failures": 0,
+      "errors": 0,
+      "GPU_related_skips_not_counted_as_passes": 9,
+      "formerly_failing_CLI_cases_executed_and_passed": 2
+    },
+    {
+      "platform": "windows-latest",
+      "python": "3.14",
+      "tests": 2621,
+      "executed_passes": 2612,
+      "failures": 0,
+      "errors": 0,
+      "GPU_related_skips_not_counted_as_passes": 9,
+      "formerly_failing_CLI_cases_executed_and_passed": 2
+    },
+    {
+      "platform": "ubuntu-latest",
+      "python": "3.13",
+      "tests": 2621,
+      "executed_passes": 2612,
+      "failures": 0,
+      "errors": 0,
+      "GPU_related_skips_not_counted_as_passes": 9,
+      "formerly_failing_CLI_cases_executed_and_passed": 2
+    },
+    {
+      "platform": "ubuntu-latest",
+      "python": "3.14",
+      "tests": 2621,
+      "executed_passes": 2612,
+      "failures": 0,
+      "errors": 0,
+      "GPU_related_skips_not_counted_as_passes": 9,
+      "formerly_failing_CLI_cases_executed_and_passed": 2
+    }
+  ],
+  "native_platform_CI": {
+    "run": 39358511760,
+    "conclusion": "failure",
+    "platforms": [
+      "macos",
+      "android",
+      "ios"
+    ],
+    "blocker": "unity_license_missing",
+    "actual_Unity_install_build_or_model_execution": false,
+    "independently_verified_preflight_archives": 3,
+    "small_Metal_probe": {
+      "available": true,
+      "compared": 16,
+      "compute_passed": true,
+      "max_buffer_bytes": 1073741824,
+      "mismatches": 0,
+      "recommended_working_set_bytes": 1073741824,
+      "schema": 1,
+      "source_sha256": "7d32d426860dba8fce07e87c2bd2489b01493273c995721b37ae62ddc1f31327"
+    },
+    "actual_Sentis_model_GPU_accepted": false,
+    "actual_device_accepted": false
+  },
+  "duplicate_main_CI": {
+    "run": 39366401412,
+    "status": "completed",
+    "conclusion": "cancelled",
+    "all_jobs_terminal": true,
+    "same_tree_verified_before_cancel": true,
+    "counted_as_pass": false,
+    "artifacts_or_runs_deleted": false
+  },
+  "source_changes": {
+    "SDK_package_Assets_ProjectSettings_and_hooks_changed": false,
+    "original_numerical_reference_or_tolerance_changed": false
+  },
+  "complete_CPU_GPU_performance_accepted": false,
+  "minimum_hardware_accepted": false,
+  "all_mandatory_platforms_accepted": false,
+  "formal_SDK_release_created": false,
+  "numerical_archive_inventory": [
+    {
+      "case": "summary",
+      "artifact_id": 12239840673,
+      "bytes": 4942,
+      "sha256": "1e0eb0037138d68afd90ae869633d1739b1c4eaabb18655f27e70debdd31af96"
+    },
+    {
+      "case": "noise",
+      "artifact_id": 12238087870,
+      "bytes": 21367729,
+      "sha256": "51e4dc35b3498f0dde41d5b5d2c39a87d7918fb7593216e918c157cfa68d0036"
+    },
+    {
+      "case": "sine",
+      "artifact_id": 12237311861,
+      "bytes": 21212260,
+      "sha256": "bf040e8c703864413365de02302241245915310c783a98074a0842851fd1d9dc"
+    },
+    {
+      "case": "nyquist",
+      "artifact_id": 12237193297,
+      "bytes": 9391279,
+      "sha256": "84deff87d7c23c2ccb6c517e5679b801a7759421360ad581762ced2730929fb1"
+    },
+    {
+      "case": "impulse",
+      "artifact_id": 12236948438,
+      "bytes": 9202172,
+      "sha256": "30e87e1afd7b55d9ccccefc1fc8e679820a55d4efecf7d7a020e1588955ea226"
+    },
+    {
+      "case": "silence",
+      "artifact_id": 12236834118,
+      "bytes": 9248705,
+      "sha256": "311d80d234247e36ba6e98185429f063c9a212340ad582ab4bd6870c9786cc87"
+    },
+    {
+      "case": "padded_noise",
+      "artifact_id": 12236748860,
+      "bytes": 19149989,
+      "sha256": "965e0946b2007f3a4e37e51808f92bd5884ffc7931ccffb607982adc7bb3ed41"
+    },
+    {
+      "case": "cpu-noise",
+      "artifact_id": 12239960283,
+      "bytes": 19267964,
+      "sha256": "f83568c3e7b47c4846b482b87b9c48c65cd22936941286a994d509de5a38a56b"
+    },
+    {
+      "case": "cpu-sine",
+      "artifact_id": 12238785063,
+      "bytes": 19272131,
+      "sha256": "ea4a59fe6107d5a6b1919c839954d2e6c583c71bdb8b17735d8778fe61c52ac8"
+    },
+    {
+      "case": "cpu-padded_noise",
+      "artifact_id": 12238014944,
+      "bytes": 17495544,
+      "sha256": "66840c2abd8e02032803b9963d9ed2368b1588bb74654d52d0fb9111ddc01960"
+    },
+    {
+      "case": "cpu-nyquist",
+      "artifact_id": 12237869680,
+      "bytes": 6242989,
+      "sha256": "848e07fa242c8aa4ffad0cfe2f3ae122d2ecf376ad4fba1faa4092ac909da028"
+    },
+    {
+      "case": "cpu-silence",
+      "artifact_id": 12237673082,
+      "bytes": 6359067,
+      "sha256": "20ec7793c4feedf01c8feee96d8ad67bf8a13c69efb633f481ecbc4360deac2d"
+    },
+    {
+      "case": "cpu-impulse",
+      "artifact_id": 12237364069,
+      "bytes": 6435075,
+      "sha256": "a77a65ab1e03b033372659b09b1c343f8e3aa7f0b2470624b791836b80e48da7"
+    }
+  ]
+}

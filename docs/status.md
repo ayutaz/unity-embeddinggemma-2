@@ -2,7 +2,17 @@
 
 2026-10-20にユーザーの方針で**Windows Editor / Player先行の正式リリース**へ変更しました。[実行計画](next-release-plan.md)を現在の順序・公開条件として使用してください。macOS / iOS / Androidは今後の対応で、未実行・失敗の記録を保持します。以下の旧記録にある「全必須環境」「必須実機」は当時の条件で、Windows公開の待ち条件にはしません。検証結果そのものは変更しません。
 
-最新checkpoint（2026-10-20）: **main `e72b5cb`、PR #112まで統合済み**。採用head `874c1c8` の必須CI全15 job成功と実13数値archiveを独立照合し、元824,320値・CPU encoder 120 capture / 30,822,400値の許容差超過0を確認しました。実mainの同tree・署名・公開identity・全祖先も確認済みです。[統合記録](results/platform-ci-integration-874c1c8-20261020.json)は、native workflowの全3ライセンスfailureと、Metal 16整数probeだけの成功を区別します。Unity build・実モデルMetal・実機GPUの成功ではありません。
+## Windows候補の工程1〜3（2026-10-20）
+
+**main `1a036fb`、PR #113まで統合済み。工程1〜3のWindows機能検証は完了**しました。候補 `e5b6bd9` は実行記録の `9967516` と全treeが一致します。[確認記録](results/windows-first-stages-1-to-3-20261020.json)にsource・モデル・数値gate・失敗履歴・適用範囲をまとめています。
+
+実Windows Editor / D3D12で、両重み形式の全画像・音声role、反復・キャンセル回復・解放、混在索引と順位 / scoreを照合しました。別の実Editorプロセスでテキスト全roleの30ベクトルとRenderTextureの12ベクトルを照合し、受け入れた計3プロセスは正常終了しています。computation CPU fallback・中間readbackは0です。Playerは同一SDK実装の既存IL2CPP / Release / High結果を独立再照合して適用し、新candidate SHAでの再実行とは数えません。
+
+package / sample契約は現Editorで560件合格・失敗 / skip0。native UIと実マイクの既存結果には元sourceを保持しています。追加Editor試験のcompile errorと16 GiB total commit上限到達後のD3D12 failureを保存し、受け入れ実行ではresident / job commitの監視を分けています。これらの上限は最低hardware要件ではありません。**性能・最低要件・旧providerコピー除去・新tag consumer・正式Releaseは未完了**です。
+
+## source別の過去の記録
+
+以前のcheckpoint（#112統合時）: **main `e72b5cb`、PR #112まで統合済み**。採用head `874c1c8` の必須CI全15 job成功と実13数値archiveを独立照合し、元824,320値・CPU encoder 120 capture / 30,822,400値の許容差超過0を確認しました。実mainの同tree・署名・公開identity・全祖先も確認済みです。[統合記録](results/platform-ci-integration-874c1c8-20261020.json)は、native workflowの全3ライセンスfailureと、Metal 16整数probeだけの成功を区別します。Unity build・実モデルMetal・実機GPUの成功ではありません。
 
 後続の[固定入力配置](device-mixed-runtime.md#build前の固定入力配置)は関連128件合格・skip0、元28ファイルの実配置と全hashを確認済みですが、本変更の全必須CIは未受け入れです。SDK実行コード・元数値参照・許容差は維持しています。対応CIライセンス、原モデル / 端末配置、必須実機・性能・最低要件、旧providerコピー除去、正式SDK tag / Release・新tag consumerは未完了です。
 

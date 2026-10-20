@@ -8,6 +8,8 @@ Unity Sentisで、テキスト・画像・音声を共通の768次元ベクト�
 
 [導入・API](Packages/com.ayutaz.embeddinggemma/Documentation~/index.md) · [モデル準備](docs/model-preparation.md) · [現在の対応範囲](docs/status.md) · [ロードマップ](docs/roadmap.md) · [ドキュメント一覧](docs/README.md)
 
+Windows候補の機能検証（工程1〜3）は完了しました。Editorの実モデルと、同一SDK実装の既存Player結果で、全入力・全role・横断検索のGPU動作を確認しています。[確認記録と適用範囲](docs/results/windows-first-stages-1-to-3-20261020.json)を参照してください。性能・最低要件・新tagからの新規導入と正式公開は残っています。
+
 ## できること
 
 | 入力 | API・サンプル | 主な用途 |

@@ -32,14 +32,16 @@
 | マイルストーン | 現在の到達点 | 続く条件 |
 | --- | --- | --- |
 | M1 テキスト本体 | Windows Editorで推論・保存・量子化・固定入力を受け入れ済み | 環境・profile変更時の再照合 |
-| M2 UPM・検索・検証基盤 | UPM、text sample、固定Git consumer、Windows text Playerは検証済み | 最終Windows candidate・系統的性能測定・新規導入 |
-| M3 画像 | GPU前処理・元encoder・全role最終APIと画像音声検索sampleは固定sourceで合格 | 最終Windows candidateの利用者向け準備・UX・Player・測定 |
-| M4 音声 | 元encoder・実PCMの全role最終API、async前処理、cache・混在検索sampleは固定sourceで合格 | 最終Windows candidateの音声再生・明示収録・準備・Player・測定 |
+| M2 UPM・検索・検証基盤 | UPM、text sample、固定Git consumer、Windows候補のEditor / Player機能検証はsource別に受け入れ済み | 系統的性能測定・最低要件・新tagの新規導入 |
+| M3 画像 | GPU前処理・元encoder・全role最終API、Texture / RenderTexture・横断検索はWindows候補で受け入れ済み | 性能・最低要件・新tagの導入・正式公開 |
+| M4 音声 | 元encoder・実PCMの全role最終API、async前処理、cache・混在検索・回復をWindows候補で確認。実収録は元source付きで適用 | 性能・最低要件・新tagの導入・正式公開 |
 | 正式公開 | 未実施 | 全必須条件→最終candidate / tag導入→Release |
 
 UPMコード、モデル変換用Python、検索サンプル、環境別の速度・メモリ結果を提供します。モデル重み・生成model・大きい検証artifactはGit / LFSに含めず、取得・変換手順を提供します。リポジトリのpublic公開と正式リリースを区別します。
 
 Windowsの正式公開後にmacOS / iOS / Androidのbuild・実モデルGPU・実機受け入れを進めます。他環境のライセンス・署名・端末不足はWindows先行公開の条件に含めず、対応環境としても表示しません。
+
+2026-10-20の[工程1〜3の確認記録](results/windows-first-stages-1-to-3-20261020.json)は、実Editorと、SDK実行コード一致を確認した既存Playerの結果を区別します。元参照・許容差は維持しています。機能検証の受け入れを、性能・最低要件・新tag導入・正式公開の合格へ読み替えません。
 
 ## 対象外
 

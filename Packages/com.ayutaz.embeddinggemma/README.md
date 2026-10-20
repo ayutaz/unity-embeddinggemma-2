@@ -6,7 +6,7 @@ Unity Sentisでテキスト・画像・音声を共通の正規化768次元ベ�
 
 ## 必要な環境
 
-最初の正式リリースはWindows Editor / Playerを対象に準備しています。macOS / iOS / Androidは今後の対応で、現時点の正式対応環境には含めません。Windowsについても最終候補の検証・新規導入・正式公開は未完了です。
+最初の正式リリースはWindows Editor / Playerを対象に準備しています。Windows候補の機能検証は、Editorの実モデルと同一SDK実装の既存Player結果で完了しました。性能・最低要件・新tagからの新規導入・正式公開は残っています。macOS / iOS / Androidは今後の対応で、現時点の正式対応環境には含めません。
 
 - 基準Unity **6000.3.21f1**、Sentis **2.6.1**。UPMの最小宣言は6000.3.16f1。
 - Runtime依存：`com.unity.ai.inference`、`com.unity.nuget.newtonsoft-json` **3.2.2**（自動解決）。

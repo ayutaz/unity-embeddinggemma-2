@@ -1,6 +1,6 @@
 # ロードマップ
 
-更新: **2026-10-20**。ユーザーの方針により、最初の正式リリースはWindows Editor / Playerを対象にします。現在の順序は **#113統合 → Windows最終candidate固定・build → 全入力・横断検索のGPU受け入れ → 性能・privacy → 新tagの空consumer導入・正式公開** です。[実行計画](next-release-plan.md)を現在の計画として使用してください。macOS / iOS / AndroidはWindows公開後の対応で、未検証です。
+更新: **2026-10-20**。最初の正式リリースはWindows Editor / Playerを対象にします。**#113統合・Windows候補の固定とbuild確認・全入力と横断検索のGPU受け入れ（工程1〜3）は完了**しました。[確認記録](results/windows-first-stages-1-to-3-20261020.json)と[実行計画](next-release-plan.md)を現在の基準として使用してください。次は工程4の性能・最低要件・privacy、その後に工程5の新tag導入・正式公開です。macOS / iOS / AndroidはWindows公開後の対応で、未検証です。
 
 ## 以前の計画とsource別の記録
 

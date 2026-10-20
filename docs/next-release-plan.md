@@ -6,7 +6,9 @@
 
 ## 現在地
 
-公開mainは `1a036fb`（[#113](https://github.com/ayutaz/unity-embeddinggemma-2/pull/113)まで統合済み）。head `c980027` の必須CI全15 job、実13数値archive、元824,320値とCPU encoder 120 capture / 30,822,400値の独立照合、実mainの同tree・署名・公開identity・全祖先を確認しました。許容差超過は0件です。初回upload timeoutとその失敗記録を保持し、同sourceの限定再試行を受け入れています。
+公開mainは `3e78a27`（[#114](https://github.com/ayutaz/unity-embeddinggemma-2/pull/114)まで統合済み）。#114の必須CI全15 jobは成功し、実mainの同tree・署名・公開identity・全祖先を確認しました。同treeに対する重複main CIは中止し、成功には数えません。現時点のopen PRは0件です。以下の追加作業はtask branch上で準備中で、mainへの統合・正式公開は未完了です。
+
+#113のhead `c980027` では実13数値archive、元824,320値とCPU encoder 120 capture / 30,822,400値を独立照合済みです。許容差超過は0件です。初回upload timeoutとその失敗記録を保持し、同sourceの限定再試行を受け入れています。
 
 Windowsの固定候補は `e5b6bd9`。実行記録のcandidate `9967516` とリポジトリ全treeが一致することを確認して、統合済みmain上へ文書branchの履歴を整理しました。SDK実行コード・依存・設定・モデルの同一性を照合し、実Editor検証と既存Playerの結果を次の範囲で適用します。
 
@@ -35,16 +37,27 @@ CPUのPython参照・比較は検証用です。製品の画像 / PCM前処理�
 
 追加Editor試験の初回は検証コードのNUnit記法がcompile errorとなり、モデル実行前に停止しました。次の実行は検証用16 GiB total commit上限に達した後、D3D12 device errorで終了しました。両方を失敗として保存しています。GPU復帰後の560契約試験を確認し、受け入れた3プロセスではowned Editorのresident上限16 GiBと、GPU driver予約等を含むowned jobのcommit上限32 GiBを分けて監視しました。この監視設定はSDKの最低RAM / VRAM要件ではありません。
 
-元の最終vector・中間値の参照と許容差は変更していません。既存の音声GPU4条件16回の[測定](results/audio-gpu-repeat-four-conditions-20261020.json)は保持しますが、同条件CPU比較・全区間のメモリ観測・最低要件は未完了です。今回の機能検証のprocess時間を推論速度やGPU専有時間として扱いません。新tag consumer、正式版・正式Release、他hardware / platformの合格も未完了です。
+元の最終vector・中間値の参照と許容差は変更していません。既存の音声GPU4条件16回の[測定](results/audio-gpu-repeat-four-conditions-20261020.json)は保持します。追加の画像・音声GPU計測は10条件・実40回を完了し、各条件18区間、計180区間でメモリsampleを取得しました。区間には重なる範囲を含み、sample上の最大値は真のpeakや専有量の保証ではありません。元source・raw bytes・独立auditを結び付けた公開用集計は残作業です。同条件CPU比較・最低要件も未完了です。機能検証のprocess時間を推論速度やGPU専有時間として扱いません。新tag consumer、正式版・正式Release、他hardware / platformの合格も未完了です。
 
 ## 次の進め方
 
-工程4の開始点は、同一host音声CPU基準の[準備停止（source `8f1bb97`、exit124）](results/windows-cpu-baseline-preparation-stop-20261020.json)です。非terminalのまま残った親receiptと、実processのterminal記録を区別し、この比較を実行中・合格とは扱いません。
+工程4では次の状態まで進みました。実行済みの検証と、まだ実モデルへ適用していない実装を区別します。
 
-1. 元ログ・source・既存成果物・上限を一度診断し、再利用できるbytesと不足する処理を確定します。参照や許容差を変更せず、新しい根拠のない同じ準備を繰り返しません。
-2. 数値gateと正常終了を満たした条件だけで、同一入力・profile・仕事量のCPU / GPU、初回 / warm・各stageを比較します。別hostのCI数値合格と、このhostの性能は別の欄に記録します。
-3. RAM / VRAMの観測範囲、実測した対応構成と余裕を明記して要件を定義します。未測定peakや低い構成の成功を推測せず、追加機材の購入・他端末の確保をWindows先行計画の前提にはしません。
-4. 現行履歴・実公開payloadのprivacyと旧providerコピーの除去確認をそれぞれ閉じ、工程5へ進めます。旧provider対応は返答・状態変更時と公開判定前に確認します。
+- テキストは既存の同一Windows PlayerのCPU / GPU各4条件を再照合し、[sourceを明記した比較](text-paired-performance.md)を記録しました。新しい推論実行ではありません。
+- 画像CPUは横長・縦長が各4回とcapture auditを通過しました。正方形は4回を完了したものの、中間値gateが不合格で、全画像CPU比較の完了には数えません。
+- 音声CPUは既存5区間のgraph bytesを再利用できましたが、実測の20分上限と単一区間の5分診断上限で停止しました。最終数値が出ていない試行を数値不一致や合格とは扱いません。元の[準備停止](results/windows-cpu-baseline-preparation-stop-20261020.json)も保持します。
+- CPU参照専用の、演算順を維持するFMA実装は小規模17テストに合格しました。実モデルでの数値gate・速度は未確認です。Unity SDKのGPU実装や元の許容差は変更していません。
+
+残作業は次の順序と完了条件で進めます。下記の4項目は、この文書の工程4〜5を完了するための手順です。
+
+| 優先順 | 作業 | 完了条件と次への移行 |
+| --- | --- | --- |
+| 1 | 不足するCPU比較を閉じる | CPU参照FMAを明示的な検証経路としてTDDで接続し、正方形画像と音声の元入力・全中間値・最終vector・正常終了を確認。数値gateを通る条件だけCPU / GPU比較に採用する。小規模テストだけで実モデル合格を宣言しない。変換・重い再試行は新しい根拠がある不足条件に限定する |
+| 2 | 性能記録と動作要件を確定する | GPU10条件の元receipt・sample・40出力を公開用集計へ結び付け、合格したCPU比較、初回 / warm、stage、RAM / VRAM、解放を分離して記録。確認した構成と未確認の最低構成を区別し、未測定peak・低い構成の成功を推測しない |
+| 3 | 公開前確認と変更の統合 | 実装・記録を一つのtask PRにまとめ、必要CI、全祖先、実payload、公開identity、必要な画像目視 / OCRを確認して、許可済みのmergeを行う。旧providerコピーの個人情報削除は別条件として確認する。新規公開物はprivacy gateを満たして進める |
+| 4 | Windows正式SDKを公開する | 版・CHANGELOG・license・取得手順を確定し、固定tagを空consumerへ導入。公開モデルの取得→テキスト / 画像 / 音声・RenderTexture→横断検索→解放・正常終了を確認してReleaseを公開。公開後のtag・asset・手順を読み戻して照合する |
+
+旧providerコピーの除去は未確認です。既存GitHub Support案件の読み取りは、このセッションの自動承認レビューで個別許可が必要として拒否されたため、許可待ちです。読み取り経路を変更して回避せず、新規メッセージも送信しません。provider対応は返答・状態変更時と公開判定前に確認します。外部対応待ちの間も、CPU比較・性能集計・公開物の準備を進めます。
 
 - 工程4は不足する比較と公開前確認に絞ります。成功済みの同条件の変換・GPU機能試験は繰り返しません。旧providerコピーは現在の履歴の安全性と別に除去を確認します。
 - 重い処理は対応するCI経路が使える範囲で優先します。Unity CIライセンス未設定の同じpreflightを繰り返さず、Personal entitlementをCIへ流用しません。

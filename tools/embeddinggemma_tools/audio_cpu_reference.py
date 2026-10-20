@@ -14,7 +14,7 @@ import torch
 
 from . import audio_cpu_cohort as references
 from . import reference_cpu_performance as protocol
-from .audio_cpu_encoder import AuditedAudioCpuEncoder
+from .audio_cpu_encoder import AuditedAudioCpuEncoder, _qualify_retained_graph_producer
 from .cpu_execution_context import cpu_execution_context
 from .image_cpu_reference import (_capture, _encoder_result, _json, _peak_rss_bytes,
                                   _read_capture, _write)
@@ -80,11 +80,14 @@ def _validate_snapshot(snapshot,cohort):
             _require(hashlib.file_digest(stream,'sha256').hexdigest()==expected)
 
 
-def _admit_chain(chain_report,encoder_directory,source,case):
+def _admit_chain(chain_report,encoder_directory,source,case,*,retained_producer_source=None):
     from .native_regression_distribution import audit_distribution_report
     audited=audit_distribution_report(chain_report,encoder_directory)
-    _require(audited['original_tolerance_passed'] is True and audited['source']==source
+    producer=source if retained_producer_source is None else retained_producer_source
+    _require(audited['original_tolerance_passed'] is True and audited['source']==producer
         and audited['case_id']==case.id and audited['profile']==case.profile)
+    if retained_producer_source is not None:
+        _qualify_retained_graph_producer(retained_producer_source,source)
 
 
 def _download_snapshot(cohort):
@@ -93,7 +96,7 @@ def _download_snapshot(cohort):
         allow_patterns=[name for name,_ in cohort.snapshot_input_sha256]))
 
 
-def _load_modules(snapshot,encoder_root,chain_report,source,case,final_metadata,final_profile):
+def _load_modules(snapshot,encoder_root,chain_report,source,case,final_metadata,final_profile,*,retained_producer_source=None):
     from transformers import Gemma4AudioFeatureExtractor
     from .export import MultimodalEmbeddingExport
     from .model import load_text_model
@@ -101,7 +104,8 @@ def _load_modules(snapshot,encoder_root,chain_report,source,case,final_metadata,
     extractor=Gemma4AudioFeatureExtractor(**{name:value for name,value in settings.items()
         if name not in ('feature_extractor_type','frame_length','hop_length','fft_length')})
     preprocessor=OfficialAudioCpuPreprocessor(extractor).eval()
-    encoder=AuditedAudioCpuEncoder(chain_report,encoder_root,source=source)
+    options={} if retained_producer_source is None else dict(retained_producer_source=retained_producer_source)
+    encoder=AuditedAudioCpuEncoder(chain_report,encoder_root,source=source,**options)
     try:
         _require(encoder.configuration['case_id']==case.id and encoder.configuration['profile']==case.profile)
         backbone=MultimodalEmbeddingExport(load_text_model(Path(snapshot)),final_profile['sequence_length'],
@@ -135,7 +139,7 @@ def _inspections(output,rows,case):
 
 
 def measure_audio_cpu_reference(snapshot,preprocessing,encoder_directory,document_reference,
-                                chain_report,output,*,source,case_id):
+                                chain_report,output,*,source,case_id,retained_producer_source=None):
     """Measure actual stages; observers snapshot outputs before each consumer."""
     owner=None
     try:
@@ -145,7 +149,8 @@ def measure_audio_cpu_reference(snapshot,preprocessing,encoder_directory,documen
         fingerprints=_validate_execution_source(source)
         cohort=references.load_audio_cpu_reference_cohort(preprocessing,encoder_directory,document_reference)
         case=cohort.case(case_id)
-        _admit_chain(chain_report,encoder_directory,source,case)
+        options={} if retained_producer_source is None else dict(retained_producer_source=retained_producer_source)
+        _admit_chain(chain_report,encoder_directory,source,case,**options)
         _validate_snapshot(snapshot,cohort)
         document=_json(document_reference,cohort.document_reference_sha256)
         before=cpu_execution_context()
@@ -156,6 +161,8 @@ def measure_audio_cpu_reference(snapshot,preprocessing,encoder_directory,documen
             source_fingerprints_normalized_LF=fingerprints,
             snapshot_input_sha256=dict(cohort.snapshot_input_sha256),
             execution_context_before_load=before,CPU_comparison_qualified=False,complete_performance_accepted=False)
+        if retained_producer_source is not None:
+            journal['retained_chain_producer_source']=retained_producer_source
         source_path=output/'audio-cpu-source.json'
         _write(source_path,journal)
         def progress(**values):
@@ -164,7 +171,7 @@ def measure_audio_cpu_reference(snapshot,preprocessing,encoder_directory,documen
         start,start_cpu=time.perf_counter(),time.process_time()
         try:
             preprocessor,owner,backbone=_load_modules(snapshot,encoder_directory,chain_report,source,
-                case,document['metadata'],document['profiles'][case.profile])
+                case,document['metadata'],document['profiles'][case.profile],**options)
         except Exception as error:
             progress(phase='failed_loading',error_class=type(error).__name__)
             raise ValueError('Audio CPU model loading failed') from None
@@ -251,6 +258,8 @@ def measure_audio_cpu_reference(snapshot,preprocessing,encoder_directory,documen
             final_vector_gate_passed=bool(pipeline['success']),CUDA_context_initialized=torch.cuda.is_initialized(),
             runtime_versions={name:importlib.metadata.version(name) for name in ('torch','transformers','numpy','onnxruntime')},
             original_golden_changed=False,CPU_comparison_qualified=False,complete_performance_accepted=False)
+        if retained_producer_source is not None:
+            result['retained_chain_producer_source']=retained_producer_source
         _write(output/'audio-cpu-reference.json',result)
         progress(phase=result['phase'],model_execution_complete=complete,error_class=error_class,
             execution_context_after_execution=after)
@@ -275,6 +284,13 @@ def audit_audio_cpu_reference(output,preprocessing,encoder_directory,document_re
         _require(report['schema']==journal['schema']==1 and report['success'] is True and pipeline['success'] is True)
         _require(report['phase']==pipeline['phase']==journal['phase']=='complete')
         _require(report['source']==pipeline['source']==journal['source']==source)
+        retained=report.get('retained_chain_producer_source')
+        _require(journal.get('retained_chain_producer_source')==retained)
+        qualification=report['encoder_configuration'].get('retained_graph_producer_qualification')
+        if retained is not None:
+            _require(qualification==_qualify_retained_graph_producer(retained,source))
+        else:
+            _require(qualification is None)
         _require(report['profile']==journal['profile']==case.profile and journal['case']==case.id)
         _require(report['model_revision']==journal['model_revision']==references.MODEL_REVISION)
         _require(report['model_execution_complete'] is journal['model_execution_complete'] is True)
@@ -347,9 +363,11 @@ def main(argv=None):
     parser.add_argument('--snapshot',type=Path)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--source',default=os.environ.get('GITHUB_SHA'))
+    parser.add_argument('--retained-chain-source',help='Explicit retained export producer; require identical generator inputs')
     try:
         args=parser.parse_args(argv)
         if args.command=='audit':
+            _require(args.retained_chain_source is None)
             result=audit_audio_cpu_reference(args.output,args.preprocessing,args.encoder_reference,
                 args.document_reference,source=args.source)
             _write(args.output/'independent-audio-CPU-audit.json',result)
@@ -359,12 +377,13 @@ def main(argv=None):
             _empty(args.output)
             _validate_execution_source(args.source)
             cohort=references.load_audio_cpu_reference_cohort(args.preprocessing,args.encoder_reference,args.document_reference)
-            _admit_chain(args.chain_report,args.encoder_reference,args.source,cohort.case(args.case))
+            options={} if args.retained_chain_source is None else dict(retained_producer_source=args.retained_chain_source)
+            _admit_chain(args.chain_report,args.encoder_reference,args.source,cohort.case(args.case),**options)
             torch.set_num_threads(4)
             torch.set_num_interop_threads(2)
             snapshot=args.snapshot if args.snapshot is not None else _download_snapshot(cohort)
             measure_audio_cpu_reference(snapshot,args.preprocessing,args.encoder_reference,args.document_reference,
-                args.chain_report,args.output,source=args.source,case_id=args.case)
+                args.chain_report,args.output,source=args.source,case_id=args.case,**options)
     except Exception as error:
         print(json.dumps(dict(success=False,error_class=type(error).__name__)))
         return 1

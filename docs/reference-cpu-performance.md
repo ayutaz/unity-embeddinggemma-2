@@ -28,6 +28,12 @@ mask・prompt・profile・仕事量をGPU側と揃えて固定sourceへ結び付
 
 ## 音声比較の途中capture保持
 
+旧source `8f1bb97`では、停止した変換が残した全5 ONNXの実hashを、独立監査済み
+CIの元reportへ照合して再利用しました。変換を繰り返さず実PCMからのCPU比較へ
+進みましたが、1,200秒上限でexit124となり、最初の1回も完了していません。
+数値比較・CPU速度・最低要件の合格ではありません。元の変換停止receiptと
+非terminalの親記録を上書きせず、各processの実終了を別に保存しています。
+
 音声CPUの測定入口は、完了した前処理・encoderの実出力をstage observerから
 直ちに保存し、`partial-audio-CPU-captures.json` を一時fileの置換で更新します。
 推論timerから除外したobserver区間で行い、次のstageには保存fileや参照値ではなく
@@ -38,6 +44,25 @@ mask・prompt・profile・仕事量をGPU側と揃えて固定sourceへ結び付
 全4回の元中間値・最終vector・正常終了と独立監査が、引き続き受け入れ条件です。
 前処理後 / encoder後の中断について2件Redから関連54件Greenを確認しました。
 実行中の旧sourceや元の失敗記録は書き換えず、新実装の実モデル実行は別途記録します。
+
+## 既存exportのsourceを保った再利用
+
+既定では、chain reportとCPU実行sourceの一致を引き続き必須にします。
+測定の `--retained-chain-source` を明示した場合だけ、元exportのproducerと
+現在の実行sourceを分けて記録します。実際のclean HEADを検査し、generatorの
+全module・参照・依存入力のGit blobとmodeを比較します。CPU消費側の
+`audio_cpu_reference.py` / `audio_cpu_encoder.py` と独立した
+`native_gpu_memory.py` 以外に変更があれば拒否します。
+
+元reportのproducerを現在のsourceへ書き換えません。元の数値監査、5実graphの
+読み込み時の完全hash、CPU provider、4本の実carry、前処理・中間・最終値の
+元gateは維持します。captureの別process監査でも保存したproducer資格を再検査し、
+audit commandからのproducer上書きは拒否します。source再利用だけでは新しい
+export実行・CPU比較・性能全体・GPU・正式公開を合格にしません。
+
+[source再利用のTDD](results/retained-audio-graph-source-tdd-20261020.json)は、
+generator・参照・依存の変更、dirty executor、誤ったproducer、保存した資格の
+改変を拒否する小規模確認です。実モデルと性能の結果は別に記録します。
 
 ## 実画像のCPU診断
 

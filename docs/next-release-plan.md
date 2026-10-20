@@ -45,6 +45,8 @@ CPUのPython参照・比較は検証用です。製品の画像 / PCM前処理�
 
 ### 最新のチェックポイント
 
+2026-10-21の追加CIで、画像CPU参照のIntel host依存の中間値不一致を確認しました。AVX2固定とMKL COMPATIBLEの2試行は採用せず、元のworkflowへ戻します。[33ファイルのsource照合](results/windows-CPU-CI-source-qualification-20261021.json)で、数値実装・依存・workflowが、実音声8 / 画像12回を独立監査したbaselineと一致することを確認しました。baselineの実行sourceとhostの範囲を維持し、Intel CPUの新たな合格や全CPU共通再現性は主張しません。未完了・失敗したCIも保持します。残る正式公開の判定は、最終sourceのRequired CI、公開tagを空consumerへ導入したWindows GPU Editor / IL2CPP Player、Releaseの公開・読み戻しです。対応する入力・role・参照・許容差・検証済みGPU構成は変更しません。
+
 PR #115のhead `53c58cd`では、Windows音声2・画像3 jobが成功し、全20 captureを元のgateで独立照合しました。Required CIは未完了です。Windows Python 3.14は2,740成功・9 skipの後、20分のjob上限で中断しました。失敗したassertionは観測していませんが、完走した合格とは数えません。このmatrix要素だけ上限を30分へ変更し、他要素は20分を維持します。テスト選択・数値基準・失敗判定・元の音声6条件は変更しません。actionlintとYAMLの意味比較で、変更が上限だけであることを確認しました。修正後の新CI成功をmerge条件とします。
 
 2026-10-20にGitHubを再確認しました。#114はマージ済み、公開mainは `3e78a27`、open PRは0件です。#114のRequired CIは成功していますが、macOS / iOS / Androidの別workflowは失敗を保持しており、全platformの合格ではありません。追加の実装・計測記録はtask branchにあり、まだ公開mainへ統合していません。

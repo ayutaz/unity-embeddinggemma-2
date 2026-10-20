@@ -35,21 +35,21 @@ PR時と手動実行の既定は`native-fp32`で、元PCM→前処理→5区間e
 固定元参照を取得し、画像→前処理→encoder→backboneの各4回と、別commandのcapture監査を
 実行します。失敗後の自動設定変更はありません。全profile共通設定や他hostでの合格を推測しません。
 
-hosted runnerのCPU命令選択は実行前にAVX2へ固定します。ATen、MKL、oneDNNにそれぞれ
-`ATEN_CPU_CAPABILITY=avx2`、`MKL_ENABLE_INSTRUCTIONS=AVX2`、`DNNL_MAX_CPU_ISA=AVX2`
-を設定します。これは既定のCPU選択に依存する実行との差を明示するためで、golden・許容差・
-条件別statistics設定は変更しません。MKLの設定は[公式のdispatch制御](https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2023-2/instruction-set-specific-dispatch-on-intel-archs.html)、
-ATenの設定は[公式sourceの説明](https://github.com/pytorch/pytorch/blob/main/aten/src/ATen/native/cpu/README.md)に基づきます。
-oneDNNの設定も[公式service APIの説明](https://uxlfoundation.github.io/oneDNN/group_dnnl_api_service.html)に従います。
-追加のIntel Xeon 6973P-C runnerではAVX2固定後もlandscapeの中間値6要素が全4回で超過しました。
-命令選択の上限だけを固定しても、この比較の再現性は保証されません。MKLにはさらに
-`MKL_CBWR=COMPATIBLE`を実行前から指定します。これはIntel / 非Intel間の命令差も考慮する
-[公式CNR設定](https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-windows/2023-0/get-started-with-conditional-num-reproducibility.html)です。
-この設定でTorch全体や元GPUとの一致を保証するとはせず、元captureの全gateを改めて確認します。
-既定AVX512のIntel Xeon runnerではportrait中間値が184要素超過した4回を保持しており、
-最終vector成功のみを中間値の合格へ読み替えません。AVX2固定後の実CI結果は別に確認します。
-[失敗の独立再計算とTDD記録](results/windows-image-CPU-dispatch-20261021.json)では、CPU選択差は
-原因候補として扱い、単独原因の証明や修正後の実モデル成功とはしていません。
+CPU命令選択を共通化する追加試行は採用しません。既定AVX512のIntel Xeonではportraitが184要素、
+AVX2固定後の別Intel Xeonではlandscapeが6要素、元の中間値gateを全4回で超過しました。
+さらにMKLのCOMPATIBLE設定は、成功済みと同型のAMD EPYC hostでもsquare / landscape / portraitが
+各336 / 85 / 140要素超過しました。全captureを保存し、元gateで独立再計算しています。
+最終vectorのみの成功を中間値成功へ変えず、許容差やgoldenも変更しません。
+
+採用設定は成功済みsource `4d646d1`の元のworkflowと同じです。
+[source照合](results/windows-CPU-CI-source-qualification-20261021.json)では、数値実装・依存固定・workflow等
+33ファイルの一致と、baselineで独立監査済みの音声8 / 画像12回への対応を確認しました。
+これはbaselineの実行sourceを新sourceへ読み替えた新規実行ではありません。
+CPU比較は記録されたhostと設定の範囲に限定し、Intel hosted CPUでの一致や、全CPU共通の数値再現性を
+資格付けしません。新しいCIでも不一致は失敗のまま残し、同じ条件の再実行で成功を探しません。
+[実験のTDDと失敗記録](results/windows-image-CPU-dispatch-20261021.json)は保持します。
+SDKの初回対応は[検証済みWindows GPU構成](windows-supported-configuration.md)であり、
+最終sourceのRequired CI、新tagでの実Editor / IL2CPP Player受け入れを別途必要とします。
 全形状をsixteen-laneにした際のlandscape不合格は、
 [元の条件別記録](image-CPU-fixed-conditions.md)に保持しています。
 

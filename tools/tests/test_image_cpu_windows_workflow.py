@@ -4,8 +4,6 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
-import sys
-import json
 
 import pytest
 import yaml
@@ -19,19 +17,6 @@ def workflow():
 
 def image_job():
     return workflow()['jobs']['image_cpu_windows']
-
-
-def test_ci_limits_all_cpu_dispatchers_before_importing_torch():
-    selected={'ATEN_CPU_CAPABILITY':'avx2','MKL_ENABLE_INSTRUCTIONS':'AVX2','DNNL_MAX_CPU_ISA':'AVX2','MKL_CBWR':'COMPATIBLE'}
-    environment=image_job()['env']
-    assert {key:environment.get(key) for key in selected}==selected
-    result=subprocess.run([sys.executable,'-P','-c',
-        'import json; from embeddinggemma_tools.cpu_execution_context import cpu_execution_context; print(json.dumps(cpu_execution_context()))'],
-        env={**os.environ,**selected,'PYTHONPATH':str(Path(__file__).parents[1])+os.pathsep+os.environ.get('PYTHONPATH','')},
-        capture_output=True,text=True,check=True)
-    context=json.loads(result.stdout)
-    assert context['CPU_capability']=='AVX2'
-    assert {key:context['math_environment'][key] for key in selected}==selected
 
 
 def test_profiles_and_statistics_are_fixed_before_execution_without_fallback():
@@ -50,7 +35,7 @@ def test_profiles_and_statistics_are_fixed_before_execution_without_fallback():
     assert not any('|| true' in run or 'frozen_audio' in run or 'prepare-vision' in run for run in runs)
     measure=next(run for run in runs if 'image_cpu_reference measure' in run)
     assert '--statistics-reference "$STATISTICS_REFERENCE"' in measure
-    assert 'env MKL_CBWR=COMPATIBLE' in measure and 'env -u MKL_CBWR' not in measure
+    assert 'env -u MKL_CBWR' in measure
 
 
 @pytest.mark.parametrize('name',['tools/embeddinggemma_tools/image_cpu_reference.py',

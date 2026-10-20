@@ -52,10 +52,6 @@ jobs:
       OMP_NUM_THREADS: '4'
       MKL_NUM_THREADS: '4'
       MKL_DYNAMIC: 'FALSE'
-      MKL_CBWR: COMPATIBLE
-      ATEN_CPU_CAPABILITY: avx2
-      MKL_ENABLE_INSTRUCTIONS: AVX2
-      DNNL_MAX_CPU_ISA: AVX2
       HF_HUB_DISABLE_TELEMETRY: '1'
       TOKENIZERS_PARALLELISM: 'false'
       PROFILE: ${{ matrix.profile }}
@@ -83,7 +79,7 @@ jobs:
           fi
       - name: Measure original image chain with the declared statistics policy
         run: |
-          if env MKL_CBWR=COMPATIBLE uv run --locked python -m embeddinggemma_tools.image_cpu_reference measure \
+          if env -u MKL_CBWR uv run --locked python -m embeddinggemma_tools.image_cpu_reference measure \
               --references ../artifacts/original-image-references --profile "$PROFILE" \
               --statistics-reference "$STATISTICS_REFERENCE" \
               --output "../artifacts/image-cpu-${PROFILE}" --source "$GITHUB_SHA" \

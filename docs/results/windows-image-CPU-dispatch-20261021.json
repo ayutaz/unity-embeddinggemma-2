@@ -24,7 +24,7 @@
   "new_declared_environment": {"ATEN_CPU_CAPABILITY": "avx2", "MKL_ENABLE_INSTRUCTIONS": "AVX2", "DNNL_MAX_CPU_ISA": "AVX2"},
   "test_evidence": {"intended_red": "1 failed, 12 passed", "related_green": "17 passed", "fresh_child_torch_dispatch_and_selected_environment": "AVX2 verified", "actionlint": "passed"},
   "unchanged": ["original golden bytes", "original tolerances", "original intermediate and final audits", "three profile statistics policies", "SDK GPU implementation"],
-  "fixed_dispatch_actual_model_CI": "pending",
+  "fixed_dispatch_actual_model_CI": "Completed with a landscape failure on another Intel CPU; see followup",
   "GPU_qualification_added": false,
   "fixed_AVX2_followup_failure": {
     "source_head": "e62eb7b004fad665d61ce92cd38e338bec7ac8b4",
@@ -47,7 +47,18 @@
     "rationale": "Declare MKL compatible CNR branch before execution; retain all original gates",
     "intended_red": "2 failed, 11 passed",
     "related_green": "17 passed",
-    "actual_model_CI": "pending",
+    "actual_model_CI": "All three profiles failed intermediate gates; final vector gates passed",
     "whole_Torch_pipeline_reproducibility_guaranteed": false
+  },
+  "adoption": {
+    "AVX2_only_experiment_adopted": false,
+    "MKL_COMPATIBLE_experiment_adopted": false,
+    "adopted_configuration": "Restore original workflow and test bytes from source 53c58cd; preserve its source-qualified five-job acceptance",
+    "CNR_run": 39448079384,
+    "CNR_failures_per_round": {"square": 336, "landscape": 85, "portrait": 140},
+    "CNR_rounds_per_profile": 4,
+    "all_CNR_intermediate_captures_independently_recomputed": true,
+    "Intel_CPU_reference_qualified": false,
+    "original_tolerances_changed": false
   }
 }

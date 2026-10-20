@@ -1,0 +1,598 @@
+{
+  "schema": 1,
+  "scope": "Four original-input Windows Sentis GPU repeat conditions only",
+  "rechecked_UTC": "2026-10-20T04:38:59.089818+00:00",
+  "SDK_source": "7754ce4eb9e07e8b81865487b175c63dd6e93097",
+  "validation_source": "2cc7d94198f413dfe81e24bab7c999607375ce9e",
+  "original_reference_SHA256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+  "conditions": [
+    {
+      "module": "audio-839",
+      "precision": "fp32",
+      "case": "padded_noise",
+      "input_SHA256": "01da15bbe3d53bcd41cfff6c265b53cda8222567fe760bfff96442266557c761",
+      "descriptor_SHA256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "GPU": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_API": "Direct3D12",
+      "Unity": "6000.3.21f1",
+      "actual_backend": "GPUCompute",
+      "executed_calls": 4,
+      "tests": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "first_call_wall_seconds": 8.5307471,
+      "warm_three_call_median_wall_seconds": 5.397541299999999,
+      "calls": [
+        {
+          "round": "first",
+          "wall_seconds": 8.5307471,
+          "process_CPU_seconds": 1.546875,
+          "final_cosine": 0.9999999999980715,
+          "norm_squared": 0.9999999317787004,
+          "final_capture_SHA256": "9b3811050bcf76a4fd272943c8b6506b395d3cb8012175f0f9c59294eaf4fcde",
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.5394369999999999,
+              "process_cpu_seconds": 0.140625
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 6.097451599999999,
+              "process_cpu_seconds": 1.296875
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 1.8255327,
+              "process_cpu_seconds": 0.046875
+            }
+          ],
+          "media_GPU_submission_intervals": 2,
+          "positive_encoder_GPU_intervals": 535,
+          "missing_encoder_GPU_timestamps": 0
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 5.3620532999999995,
+          "process_CPU_seconds": 1.359375,
+          "final_cosine": 0.9999999999980715,
+          "norm_squared": 0.9999999317787004,
+          "final_capture_SHA256": "9b3811050bcf76a4fd272943c8b6506b395d3cb8012175f0f9c59294eaf4fcde",
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.074114,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.9724502,
+              "process_cpu_seconds": 1.25
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.27096719999999996,
+              "process_cpu_seconds": 0.0625
+            }
+          ],
+          "media_GPU_submission_intervals": 2,
+          "positive_encoder_GPU_intervals": 535,
+          "missing_encoder_GPU_timestamps": 0
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 5.7791464,
+          "process_CPU_seconds": 1.453125,
+          "final_cosine": 0.9999999999980715,
+          "norm_squared": 0.9999999317787004,
+          "final_capture_SHA256": "9b3811050bcf76a4fd272943c8b6506b395d3cb8012175f0f9c59294eaf4fcde",
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.020056499999999998,
+              "process_cpu_seconds": 0.015625
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 5.318215299999999,
+              "process_cpu_seconds": 1.265625
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.3346034,
+              "process_cpu_seconds": 0.078125
+            }
+          ],
+          "media_GPU_submission_intervals": 2,
+          "positive_encoder_GPU_intervals": 535,
+          "missing_encoder_GPU_timestamps": 0
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 5.397541299999999,
+          "process_CPU_seconds": 1.671875,
+          "final_cosine": 0.9999999999980715,
+          "norm_squared": 0.9999999317787004,
+          "final_capture_SHA256": "9b3811050bcf76a4fd272943c8b6506b395d3cb8012175f0f9c59294eaf4fcde",
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.021959,
+              "process_cpu_seconds": 0.015625
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 5.0105419,
+              "process_cpu_seconds": 1.484375
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.25174979999999997,
+              "process_cpu_seconds": 0.046875
+            }
+          ],
+          "media_GPU_submission_intervals": 2,
+          "positive_encoder_GPU_intervals": 535,
+          "missing_encoder_GPU_timestamps": 0
+        }
+      ],
+      "load_wall_seconds": 55.9294771,
+      "release_wall_seconds": 0.0168121,
+      "host_native_peak_bytes": 9542160384,
+      "original_independent_audit_SHA256": "4338879a03ccbdcee059d1cc233821af4796db1082708115b6032350aeed574c",
+      "original_memory_audit_SHA256": "2429f5cc2261b400eb66ca66b0cb48f1332af3d70fc10f5a9888c64e7a54b729",
+      "two_complete_private_sealed_evidence_copies_rehashed": true,
+      "memory_intervals_total": 18,
+      "memory_intervals_with_samples": 10,
+      "all_memory_intervals_observed": false,
+      "guaranteed_peak_memory_accepted": false
+    },
+    {
+      "module": "audio-1119",
+      "precision": "fp32",
+      "case": "silence",
+      "input_SHA256": "06a56aa96f41a685ae25b4d7d0a55a15717723bb45a88a21a02546b9355e67e5",
+      "descriptor_SHA256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "GPU": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_API": "Direct3D12",
+      "Unity": "6000.3.21f1",
+      "actual_backend": "GPUCompute",
+      "executed_calls": 4,
+      "tests": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "first_call_wall_seconds": 6.934356299999999,
+      "warm_three_call_median_wall_seconds": 5.2475442999999995,
+      "calls": [
+        {
+          "round": "first",
+          "wall_seconds": 6.934356299999999,
+          "process_CPU_seconds": 1.6875,
+          "final_cosine": 0.9999999999928917,
+          "norm_squared": 1.0000000994303668,
+          "final_capture_SHA256": "e8059c050b7f8204cd7ad54d034111b3c6aa9d74199412be6d7d85322be7b5c9",
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.5004464,
+              "process_cpu_seconds": 0.125
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 5.4934669,
+              "process_cpu_seconds": 1.421875
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.8684883,
+              "process_cpu_seconds": 0.0625
+            }
+          ],
+          "media_GPU_submission_intervals": 2,
+          "positive_encoder_GPU_intervals": 535,
+          "missing_encoder_GPU_timestamps": 0
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 5.3628542,
+          "process_CPU_seconds": 1.703125,
+          "final_cosine": 0.9999999999928917,
+          "norm_squared": 1.0000000994303668,
+          "final_capture_SHA256": "e8059c050b7f8204cd7ad54d034111b3c6aa9d74199412be6d7d85322be7b5c9",
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0676787,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.9736088,
+              "process_cpu_seconds": 1.625
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.2747512,
+              "process_cpu_seconds": 0.03125
+            }
+          ],
+          "media_GPU_submission_intervals": 2,
+          "positive_encoder_GPU_intervals": 535,
+          "missing_encoder_GPU_timestamps": 0
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 5.2064536,
+          "process_CPU_seconds": 1.234375,
+          "final_cosine": 0.9999999999928917,
+          "norm_squared": 1.0000000994303668,
+          "final_capture_SHA256": "e8059c050b7f8204cd7ad54d034111b3c6aa9d74199412be6d7d85322be7b5c9",
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0114989,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.9165703,
+              "process_cpu_seconds": 1.15625
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.2247942,
+              "process_cpu_seconds": 0.03125
+            }
+          ],
+          "media_GPU_submission_intervals": 2,
+          "positive_encoder_GPU_intervals": 535,
+          "missing_encoder_GPU_timestamps": 0
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 5.2475442999999995,
+          "process_CPU_seconds": 0.859375,
+          "final_cosine": 0.9999999999928917,
+          "norm_squared": 1.0000000994303668,
+          "final_capture_SHA256": "e8059c050b7f8204cd7ad54d034111b3c6aa9d74199412be6d7d85322be7b5c9",
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0133931,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.919717299999999,
+              "process_cpu_seconds": 0.75
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.2447005,
+              "process_cpu_seconds": 0.046875
+            }
+          ],
+          "media_GPU_submission_intervals": 2,
+          "positive_encoder_GPU_intervals": 535,
+          "missing_encoder_GPU_timestamps": 0
+        }
+      ],
+      "load_wall_seconds": 44.9738969,
+      "release_wall_seconds": 0.016653499999999998,
+      "host_native_peak_bytes": 9560858624,
+      "original_independent_audit_SHA256": "0c9f80c70d759bd16f0eb51f6030734ec5fb8b494b20f64919a4629bb37074c5",
+      "original_memory_audit_SHA256": "d2c651808c502151868e24ddf972fe576b79039d18548c8684b2e05ab2300e8c",
+      "two_complete_private_sealed_evidence_copies_rehashed": true,
+      "memory_intervals_total": 18,
+      "memory_intervals_with_samples": 11,
+      "all_memory_intervals_observed": false,
+      "guaranteed_peak_memory_accepted": false
+    },
+    {
+      "module": "audio-839",
+      "precision": "float16-weights",
+      "case": "padded_noise",
+      "input_SHA256": "01da15bbe3d53bcd41cfff6c265b53cda8222567fe760bfff96442266557c761",
+      "descriptor_SHA256": "8a6a90c5f656a00b024553a0412e5c4d32b4d2c9c7c5b3a0c2c146f557b4e27e",
+      "GPU": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_API": "Direct3D12",
+      "Unity": "6000.3.21f1",
+      "actual_backend": "GPUCompute",
+      "executed_calls": 4,
+      "tests": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "first_call_wall_seconds": 7.1034305,
+      "warm_three_call_median_wall_seconds": 5.3329647,
+      "calls": [
+        {
+          "round": "first",
+          "wall_seconds": 7.1034305,
+          "process_CPU_seconds": 1.3125,
+          "final_cosine": 0.9999984475675923,
+          "norm_squared": 0.99999999512408,
+          "final_capture_SHA256": "1a169130e04e154965e827d4840d9718a2625480a969c74a29452aadf02625eb",
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.8334961,
+              "process_cpu_seconds": 0.203125
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 5.622357099999999,
+              "process_cpu_seconds": 1.046875
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.5813517,
+              "process_cpu_seconds": 0.0
+            }
+          ],
+          "media_GPU_submission_intervals": 2,
+          "positive_encoder_GPU_intervals": 535,
+          "missing_encoder_GPU_timestamps": 0
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 5.2834050999999995,
+          "process_CPU_seconds": 1.046875,
+          "final_cosine": 0.9999984475675923,
+          "norm_squared": 0.99999999512408,
+          "final_capture_SHA256": "1a169130e04e154965e827d4840d9718a2625480a969c74a29452aadf02625eb",
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.042217899999999996,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.9815572999999995,
+              "process_cpu_seconds": 0.984375
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.2214775,
+              "process_cpu_seconds": 0.046875
+            }
+          ],
+          "media_GPU_submission_intervals": 2,
+          "positive_encoder_GPU_intervals": 535,
+          "missing_encoder_GPU_timestamps": 0
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 5.3521095999999995,
+          "process_CPU_seconds": 1.53125,
+          "final_cosine": 0.9999984475675923,
+          "norm_squared": 0.99999999512408,
+          "final_capture_SHA256": "1a169130e04e154965e827d4840d9718a2625480a969c74a29452aadf02625eb",
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0108612,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 5.080841599999999,
+              "process_cpu_seconds": 1.453125
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.21617789999999998,
+              "process_cpu_seconds": 0.046875
+            }
+          ],
+          "media_GPU_submission_intervals": 2,
+          "positive_encoder_GPU_intervals": 535,
+          "missing_encoder_GPU_timestamps": 0
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 5.3329647,
+          "process_CPU_seconds": 1.546875,
+          "final_cosine": 0.9999984475675923,
+          "norm_squared": 0.99999999512408,
+          "final_capture_SHA256": "1a169130e04e154965e827d4840d9718a2625480a969c74a29452aadf02625eb",
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.012971199999999999,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 5.0310937,
+              "process_cpu_seconds": 1.46875
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.23203769999999999,
+              "process_cpu_seconds": 0.046875
+            }
+          ],
+          "media_GPU_submission_intervals": 2,
+          "positive_encoder_GPU_intervals": 535,
+          "missing_encoder_GPU_timestamps": 0
+        }
+      ],
+      "load_wall_seconds": 42.398626,
+      "release_wall_seconds": 0.0173577,
+      "host_native_peak_bytes": 8462725120,
+      "original_independent_audit_SHA256": "2072b56342f730b90ecb6b4ec52f88b8573bfcc4ff3feaa97e6f37a39f50b039",
+      "original_memory_audit_SHA256": "5292b0e39d418a71d29f81e96450064bc3acb5ea0c6cfaba6949bc3fc33a57b5",
+      "two_complete_private_sealed_evidence_copies_rehashed": true,
+      "memory_intervals_total": 18,
+      "memory_intervals_with_samples": 11,
+      "all_memory_intervals_observed": false,
+      "guaranteed_peak_memory_accepted": false
+    },
+    {
+      "module": "audio-1119",
+      "precision": "float16-weights",
+      "case": "silence",
+      "input_SHA256": "06a56aa96f41a685ae25b4d7d0a55a15717723bb45a88a21a02546b9355e67e5",
+      "descriptor_SHA256": "8a6a90c5f656a00b024553a0412e5c4d32b4d2c9c7c5b3a0c2c146f557b4e27e",
+      "GPU": "NVIDIA GeForce RTX 4070 Ti SUPER",
+      "graphics_API": "Direct3D12",
+      "Unity": "6000.3.21f1",
+      "actual_backend": "GPUCompute",
+      "executed_calls": 4,
+      "tests": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "first_call_wall_seconds": 6.773170599999999,
+      "warm_three_call_median_wall_seconds": 5.2521454,
+      "calls": [
+        {
+          "round": "first",
+          "wall_seconds": 6.773170599999999,
+          "process_CPU_seconds": 1.40625,
+          "final_cosine": 0.999999999990707,
+          "norm_squared": 1.00000006446793,
+          "final_capture_SHA256": "d83dd9e73a4266e0338c1bf3634ba84139321a42f5c3b81139332b5ab3b49ddc",
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.4188618,
+              "process_cpu_seconds": 0.15625
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 5.6906339,
+              "process_cpu_seconds": 1.1875
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.5993398999999999,
+              "process_cpu_seconds": 0.0
+            }
+          ],
+          "media_GPU_submission_intervals": 2,
+          "positive_encoder_GPU_intervals": 535,
+          "missing_encoder_GPU_timestamps": 0
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 5.2521454,
+          "process_CPU_seconds": 1.0625,
+          "final_cosine": 0.999999999990707,
+          "norm_squared": 1.00000006446793,
+          "final_capture_SHA256": "d83dd9e73a4266e0338c1bf3634ba84139321a42f5c3b81139332b5ab3b49ddc",
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0260759,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.9782592,
+              "process_cpu_seconds": 0.96875
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.20941469999999998,
+              "process_cpu_seconds": 0.046875
+            }
+          ],
+          "media_GPU_submission_intervals": 2,
+          "positive_encoder_GPU_intervals": 535,
+          "missing_encoder_GPU_timestamps": 0
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 5.3238429,
+          "process_CPU_seconds": 1.1875,
+          "final_cosine": 0.999999999990707,
+          "norm_squared": 1.00000006446793,
+          "final_capture_SHA256": "d83dd9e73a4266e0338c1bf3634ba84139321a42f5c3b81139332b5ab3b49ddc",
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0113207,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 5.0345977,
+              "process_cpu_seconds": 1.09375
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.2308719,
+              "process_cpu_seconds": 0.0625
+            }
+          ],
+          "media_GPU_submission_intervals": 2,
+          "positive_encoder_GPU_intervals": 535,
+          "missing_encoder_GPU_timestamps": 0
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 5.2049923,
+          "process_CPU_seconds": 0.53125,
+          "final_cosine": 0.999999999990707,
+          "norm_squared": 1.00000006446793,
+          "final_capture_SHA256": "d83dd9e73a4266e0338c1bf3634ba84139321a42f5c3b81139332b5ab3b49ddc",
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.0120691,
+              "process_cpu_seconds": 0.0
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 4.8704814999999995,
+              "process_cpu_seconds": 0.453125
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 0.26520299999999997,
+              "process_cpu_seconds": 0.03125
+            }
+          ],
+          "media_GPU_submission_intervals": 2,
+          "positive_encoder_GPU_intervals": 535,
+          "missing_encoder_GPU_timestamps": 0
+        }
+      ],
+      "load_wall_seconds": 41.965258899999995,
+      "release_wall_seconds": 0.0175465,
+      "host_native_peak_bytes": 8502517760,
+      "original_independent_audit_SHA256": "4f5cbbe146d2ada6007cf25bcb6474f3f5835ced09c668f88432659947d6f231",
+      "original_memory_audit_SHA256": "7903f3872fc278f624cbb600f3231777515d3a794bf1e3c9549baf03456643d4",
+      "two_complete_private_sealed_evidence_copies_rehashed": true,
+      "memory_intervals_total": 18,
+      "memory_intervals_with_samples": 9,
+      "all_memory_intervals_observed": false,
+      "guaranteed_peak_memory_accepted": false
+    }
+  ],
+  "executed_calls": 16,
+  "existing_consumer_and_Library_reused": true,
+  "fresh_final_tag_consumer_accepted": false,
+  "first_definition": "First call after model load in an existing consumer; excludes load",
+  "timing_scope": "Actual call and CPU wall observations; GPU intervals are partial submission intervals",
+  "pure_or_exclusive_GPU_kernel_time_accepted": false,
+  "GPU_memory_scope": "Partial passive samples; some intervals have no observations. No guaranteed peak or SDK-exclusive allocation",
+  "same_host_CPU_comparison_accepted": false,
+  "speedup_established": false,
+  "minimum_hardware_accepted": false,
+  "all_platforms_accepted": false,
+  "formal_release_ready": false
+}

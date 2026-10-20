@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "date": "2026-10-20",
+  "baseline_plan_commit": "c30d469d63de90f0ed4050aaabe8d4bc1c75d7db",
+  "scope": "Small Python orchestration contracts and workflow configuration, not actual hosted Unity execution",
+  "initial_red": {"failed": 31, "reason": "Platform module and workflow absent"},
+  "initial_green": {"passed": 31},
+  "configuration_privacy_red": {"failed": 1, "reason": "Broken project CLI exposed a traceback and local path"},
+  "final_green": {"platform_contracts": 43, "related_total_passed": 80, "failed": 0, "skipped": 0},
+  "related_suites": [
+    "tools/tests/test_platform_ci.py",
+    "tools/tests/test_workflows.py",
+    "tools/tests/test_unity_execution_evidence.py",
+    "tools/tests/test_ci.py"
+  ],
+  "actionlint": {"version": "1.7.12", "success": true},
+  "coverage": [
+    "License absence, supported modes and safe public receipts",
+    "Fixed source, project Editor revision, host and disk admission",
+    "Nonempty executed NUnit classes with no failures or skips",
+    "Real build receipts, profile and output existence",
+    "Rejected injected builds, wrong sources and exit-zero missing output",
+    "Bounded private child diagnostics and serial license return",
+    "Owner-triggered same-repository workflow and privacy-gated JSON upload"
+  ],
+  "hosted_Unity_execution": false,
+  "actual_device_build_verified": false,
+  "real_model_GPU_verified": false,
+  "formal_release_ready": false,
+  "new_images": 0
+}

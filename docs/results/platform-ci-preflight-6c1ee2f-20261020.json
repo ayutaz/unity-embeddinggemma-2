@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "date": "2026-10-20",
+  "run": 39355560302,
+  "run_url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39355560302",
+  "head": "6c1ee2f12f9d5fddda5c3f468b4966ef22cde0f6",
+  "actual_execution_source": "e7c115698ea42256ea1055f65f3e163d7e4d0c89",
+  "scope": "Independent readback of three failed hosted preflights at the initial PR112 head",
+  "workflow_conclusion": "failure",
+  "receipts": [
+    {
+      "platform": "android",
+      "artifact_id": 12235610334,
+      "archive_bytes": 492,
+      "archive_SHA256": "aeaa06432c4bddc870cc519f476492376010a4a0f0f3f8ed17283f5631c9949f",
+      "receipt_SHA256": "2ba8ae14099da3b7f203042ec72c97e279e9a13a053e8296e1d602aec3bc3b07",
+      "blockers": [
+        "unity_license_missing"
+      ],
+      "free_disk_bytes": 115646046208,
+      "two_complete_private_copies_verified": true,
+      "CRC_verified": true,
+      "publication_privacy_verified": true,
+      "no_Unity_install_build_or_model_execution": true
+    },
+    {
+      "platform": "macos",
+      "artifact_id": 12235340961,
+      "archive_bytes": 490,
+      "archive_SHA256": "7e5b7fac7c1c7b28627d487b2a4e2c2b09c2cd43af7daac479774bd80c48d874",
+      "receipt_SHA256": "af8a28f33e7a9e04b845f0bdfcbdea41ff4a3e5edcf539a08f82913ac51db43c",
+      "blockers": [
+        "unity_license_missing"
+      ],
+      "free_disk_bytes": 114564571136,
+      "two_complete_private_copies_verified": true,
+      "CRC_verified": true,
+      "publication_privacy_verified": true,
+      "no_Unity_install_build_or_model_execution": true
+    },
+    {
+      "platform": "ios",
+      "artifact_id": 12235191139,
+      "archive_bytes": 489,
+      "archive_SHA256": "39597eae8ef4e7abbbc3a60317f47bceab9a231385323b681514f004713db34d",
+      "receipt_SHA256": "d4a0d01f75c572f31474b07f3f40039891916054ced404a8caf6e8e68ce9f27f",
+      "blockers": [
+        "unity_license_missing"
+      ],
+      "free_disk_bytes": 115570073600,
+      "two_complete_private_copies_verified": true,
+      "CRC_verified": true,
+      "publication_privacy_verified": true,
+      "no_Unity_install_build_or_model_execution": true
+    }
+  ],
+  "actual_Unity_build_pass": false,
+  "actual_GPU_pass": false,
+  "formal_release_ready": false,
+  "later_source_execution_not_implied": true
+}

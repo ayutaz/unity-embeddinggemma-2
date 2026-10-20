@@ -25,5 +25,29 @@
   "test_evidence": {"intended_red": "1 failed, 12 passed", "related_green": "17 passed", "fresh_child_torch_dispatch_and_selected_environment": "AVX2 verified", "actionlint": "passed"},
   "unchanged": ["original golden bytes", "original tolerances", "original intermediate and final audits", "three profile statistics policies", "SDK GPU implementation"],
   "fixed_dispatch_actual_model_CI": "pending",
-  "GPU_qualification_added": false
+  "GPU_qualification_added": false,
+  "fixed_AVX2_followup_failure": {
+    "source_head": "e62eb7b004fad665d61ce92cd38e338bec7ac8b4",
+    "execution_source": "e5806607fd00cffdf3928f393a1bb82c0c98eb34",
+    "run": 39446919963,
+    "job": 118711176469,
+    "artifact": 12277516106,
+    "artifact_sha256": "31f5478f6aece293c6490ee02241343252bf1aa149c006d3dea651a5b9aafe04",
+    "profile": "landscape",
+    "CPU": "Intel Xeon 6973P-C",
+    "ATen_dispatch": "AVX2",
+    "intermediate_tolerance_failures_each_round": 6,
+    "maximum_absolute_error": 0.000024139881134033203,
+    "rounds": 4,
+    "accepted": false,
+    "implication": "AVX2 instruction limits alone do not establish cross-CPU agreement"
+  },
+  "bounded_CNR_followup": {
+    "additional_environment": {"MKL_CBWR": "COMPATIBLE"},
+    "rationale": "Declare MKL compatible CNR branch before execution; retain all original gates",
+    "intended_red": "2 failed, 11 passed",
+    "related_green": "17 passed",
+    "actual_model_CI": "pending",
+    "whole_Torch_pipeline_reproducibility_guaranteed": false
+  }
 }

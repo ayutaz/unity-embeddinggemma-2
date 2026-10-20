@@ -41,6 +41,11 @@ hosted runnerのCPU命令選択は実行前にAVX2へ固定します。ATen、MK
 条件別statistics設定は変更しません。MKLの設定は[公式のdispatch制御](https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2023-2/instruction-set-specific-dispatch-on-intel-archs.html)、
 ATenの設定は[公式sourceの説明](https://github.com/pytorch/pytorch/blob/main/aten/src/ATen/native/cpu/README.md)に基づきます。
 oneDNNの設定も[公式service APIの説明](https://uxlfoundation.github.io/oneDNN/group_dnnl_api_service.html)に従います。
+追加のIntel Xeon 6973P-C runnerではAVX2固定後もlandscapeの中間値6要素が全4回で超過しました。
+命令選択の上限だけを固定しても、この比較の再現性は保証されません。MKLにはさらに
+`MKL_CBWR=COMPATIBLE`を実行前から指定します。これはIntel / 非Intel間の命令差も考慮する
+[公式CNR設定](https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-windows/2023-0/get-started-with-conditional-num-reproducibility.html)です。
+この設定でTorch全体や元GPUとの一致を保証するとはせず、元captureの全gateを改めて確認します。
 既定AVX512のIntel Xeon runnerではportrait中間値が184要素超過した4回を保持しており、
 最終vector成功のみを中間値の合格へ読み替えません。AVX2固定後の実CI結果は別に確認します。
 [失敗の独立再計算とTDD記録](results/windows-image-CPU-dispatch-20261021.json)では、CPU選択差は

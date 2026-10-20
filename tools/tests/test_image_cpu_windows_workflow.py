@@ -22,7 +22,7 @@ def image_job():
 
 
 def test_ci_limits_all_cpu_dispatchers_before_importing_torch():
-    selected={'ATEN_CPU_CAPABILITY':'avx2','MKL_ENABLE_INSTRUCTIONS':'AVX2','DNNL_MAX_CPU_ISA':'AVX2'}
+    selected={'ATEN_CPU_CAPABILITY':'avx2','MKL_ENABLE_INSTRUCTIONS':'AVX2','DNNL_MAX_CPU_ISA':'AVX2','MKL_CBWR':'COMPATIBLE'}
     environment=image_job()['env']
     assert {key:environment.get(key) for key in selected}==selected
     result=subprocess.run([sys.executable,'-P','-c',
@@ -50,7 +50,7 @@ def test_profiles_and_statistics_are_fixed_before_execution_without_fallback():
     assert not any('|| true' in run or 'frozen_audio' in run or 'prepare-vision' in run for run in runs)
     measure=next(run for run in runs if 'image_cpu_reference measure' in run)
     assert '--statistics-reference "$STATISTICS_REFERENCE"' in measure
-    assert 'env -u MKL_CBWR' in measure
+    assert 'env MKL_CBWR=COMPATIBLE' in measure and 'env -u MKL_CBWR' not in measure
 
 
 @pytest.mark.parametrize('name',['tools/embeddinggemma_tools/image_cpu_reference.py',

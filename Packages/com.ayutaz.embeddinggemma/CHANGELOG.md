@@ -2,6 +2,13 @@
 
 ## 0.1.0-pre.1 — Unreleased
 
+### Current checkpoint (2026-10-20)
+
+- Document the published FP32 / Float16-weight six-module model previews and the explicit, hash-pinned acquisition path. Fixed-source Windows verification covers anonymous empty-cache acquisition, interruption / recovery, warm reuse, corrupt-object repair and GPU execution. Keep model LICENSE / NOTICE / MODIFICATIONS with the separately obtained bundle. Acquisition is distinct from regenerating models from the upstream checkpoint.
+- Fixed source `f0fc2a7` has Windows D3D12 / IL2CPP Release / High-stripping mixed Player acceptance in both weight formats across four independent cold / warm processes. Later Linux and Windows audio CPU reference chains retain their own execution sources and unchanged original numerical conditions. This documentation update changes no executable package files and does not establish new GPU execution, matched CPU/GPU performance, minimum hardware or required macOS / iOS / Android acceptance. Formal SDK version / tag / Release and fresh-tag consumer remain incomplete.
+
+### Earlier implementation checkpoints
+
 - Align Package Manager display name, description and keywords with the implemented text, image and audio APIs. Package ID, development version and validation scope are unchanged.
 
 - Integrated PR #31: fresh fixed-Git consumer and Windows text-search IL2CPP Release / High-stripping Player acceptance, independent cold / warm FP32 GPU runs and normal exits.

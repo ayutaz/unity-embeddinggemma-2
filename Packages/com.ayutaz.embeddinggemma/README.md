@@ -2,7 +2,7 @@
 
 Unity Sentisでテキスト・画像・音声を共通の正規化768次元ベクトルへ変換するUPMパッケージです。テキストによる文書・画像・音声の意味検索に使えます。
 
-**開発版 `0.1.0-pre.1`。正式リリースは未実施です。** モデルは同梱・自動ダウンロードしません。画像・音声用bundleの新規利用者向け準備手順は整備中です。
+**開発版 `0.1.0-pre.1`。正式リリースは未実施です。** モデルは同梱せず、パッケージ導入だけでは取得しません。画像・音声・テキストを含む全6 moduleは[実験用モデルpreviewの取得手順](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/media-model-preparation.md)からFP32 / Float16重みの変換済みbundleを明示取得できます。descriptor・全objectのhashを照合し、LICENSE・NOTICE・MODIFICATIONSを保持してください。previewの公開・取得成功は、全環境・性能・正式SDK公開の合格とは別です。
 
 ## 必要な環境
 

@@ -1,15 +1,15 @@
 # 検索サンプル用モデルの取得・変換・配置・更新
 
-更新: 2026-10-17。[検証状況](status.md) / [ロードマップ](roadmap.md)。テキストの準備手順と、画像・音声bundleの未整備の範囲を分けて説明します。
+更新: 2026-10-20。[検証状況](status.md) / [ロードマップ](roadmap.md)。テキスト単体の変換手順と、変換済み全6 moduleの公開preview取得を分けて説明します。
 
-## 何を準備できるか（2026-10-17）
+## 何を準備できるか（2026-10-20）
 
 | 利用する機能 | 必要なもの | 準備経路 |
 | --- | --- | --- |
 | Text Search / TextEmbedder | `.sentis`、tokenizer、監査receipt | 下記1〜4のActions取得→監査→Editor変換 |
-| Image and Audio Search | `bundle.json`と`objects/`。textと登録対象のimage / audio module | 既存のqualified graph入力cacheを持つ開発・検証環境で生成。空checkoutからの利用者向け一括手順・配布は未整備 |
+| Image and Audio Search | `bundle.json`と`objects/`。textと登録対象のimage / audio module | [モデルpreview](media-model-preparation.md)からFP32 / Float16重みの変換済み全6 moduleを明示取得し、固定descriptorと全objectのhashを照合 |
 
-モデルはUPM・Git・LFSへ含めず、自動ダウンロードもしません。対象revisionは `914f7f89142e33e77833254d9c9b90c3cef7303b`。基準EditorはUnity6000.3.21f1 / Sentis2.6.1です。下のテキスト手順の旧16f1実測と、後続の21f1検証を区別します。
+モデルはUPM・Git・LFSへ含めません。パッケージ導入だけでは取得せず、利用者がモデル取得コマンドを明示実行します。対象revisionは `914f7f89142e33e77833254d9c9b90c3cef7303b`。基準EditorはUnity6000.3.21f1 / Sentis2.6.1です。下のテキスト手順の旧16f1実測と、後続の21f1検証を区別します。
 
 ### 画像・音声bundleについて
 
@@ -17,7 +17,7 @@
 
 既存のqualified graph入力を持つmaintainer向けの生成entry point・環境変数・producer制約は[サンプル検証記録のモデル準備](multimodal-search-sample.md)を参照してください。その手順は既存cacheが前提で、空checkoutからの変換コマンドではありません。準備後はbundleのproducer、全objectのsize・SHA256を照合し、実推論を別途検証します。
 
-準備済みのbundleがある場合は、[サンプル手順](../Packages/com.ayutaz.embeddinggemma/Samples~/MultimodalSearch/README.md)へ進めます。固定profileに対応した入力が必要です。新規準備・期限切れartifactからの回復を含む整備は[ロードマップの優先1](roadmap.md)です。
+previewの取得・hash照合を終えたら、[サンプル手順](../Packages/com.ayutaz.embeddinggemma/Samples~/MultimodalSearch/README.md)へ進めます。固定profileに対応した入力が必要です。previewを取得する経路と、元checkpointから同じモデルを再変換する経路は別です。最終candidate・性能・必須実機・正式公開の残件は[リリース計画](release-plan.md)を参照してください。
 
 ### テキストモデルの準備
 

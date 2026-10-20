@@ -2,11 +2,11 @@
 
 Unity Sentisでテキスト・画像・音声を共通の正規化768次元ベクトルへ変換するUPMパッケージです。テキストによる文書・画像・音声の意味検索に使えます。
 
-**開発版 `0.1.0-pre.1`。正式リリースは未実施です。** モデルは同梱せず、パッケージ導入だけでは取得しません。画像・音声・テキストを含む全6 moduleは[実験用モデルpreviewの取得手順](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/media-model-preparation.md)からFP32 / Float16重みの変換済みbundleを明示取得できます。descriptor・全objectのhashを照合し、LICENSE・NOTICE・MODIFICATIONSを保持してください。previewの公開・取得成功は、全環境・性能・正式SDK公開の合格とは別です。
+**Windows向け `0.1.0`。** 公開状況は[GitHub Releases](https://github.com/ayutaz/unity-embeddinggemma-2/releases)を参照してください。モデルは同梱せず、パッケージ導入だけでは取得しません。画像・音声・テキストを含む全6 moduleは[実験用モデルpreviewの取得手順](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/media-model-preparation.md)からFP32 / Float16重みの変換済みbundleを明示取得できます。descriptor・全objectのhashを照合し、LICENSE・NOTICE・MODIFICATIONSを保持してください。previewの公開・取得成功は、全環境・性能・正式SDK公開の合格とは別です。
 
 ## 必要な環境
 
-最初の正式リリースはWindows Editor / Playerを対象に準備しています。Windows候補の機能検証は、Editorの実モデルと同一SDK実装の既存Player結果で完了しました。性能・最低要件・新tagからの新規導入・正式公開は残っています。macOS / iOS / Androidは今後の対応で、現時点の正式対応環境には含めません。
+初回の対応範囲はWindows Editor / Playerです。source別の機能検証、条件別の性能と初回対応構成はリポジトリの記録を参照してください。正式tagからの新規導入・Editor / Player実行・正式公開の最終結果は、該当するGitHub Release notesで確認してください。macOS / iOS / Androidは今後の対応で、正式対応環境には含めません。
 
 - 基準Unity **6000.3.21f1**、Sentis **2.6.1**。UPMの最小宣言は6000.3.16f1。
 - Runtime依存：`com.unity.ai.inference`、`com.unity.nuget.newtonsoft-json` **3.2.2**（自動解決）。

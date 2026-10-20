@@ -3,6 +3,7 @@
 This is a comparison harness, not a CPU backend or fallback for the GPU SDK.
 """
 import argparse
+import gc
 import hashlib
 import importlib.metadata
 import json
@@ -67,7 +68,7 @@ def _validate_execution_source(source):
     actual = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, stderr=subprocess.PIPE).decode().strip()
     _require(source == actual)
     names = ('image_cpu_reference.py', 'cpu_execution_context.py', 'image_reference_cohort.py', 'reference_cpu_performance.py',
-             'model.py', 'prepare.py', 'export.py')
+             'model.py', 'prepare.py', 'export.py', 'vision_cpu_simd_reference.py')
     paths = ['tools/embeddinggemma_tools/' + name for name in names] + ['tools/uv.lock', 'tools/pyproject.toml']
     fingerprints = {}
     for name in paths:
@@ -78,7 +79,7 @@ def _validate_execution_source(source):
     return fingerprints
 
 
-def _load_pipeline(snapshot, metadata, profile):
+def _load_pipeline(snapshot, metadata, profile, *, statistics_reference='native'):
     from .model import load_image_embedding_model
     from .prepare import load_image_processor
     from .export import MultimodalEmbeddingExport
@@ -97,7 +98,26 @@ def _load_pipeline(snapshot, metadata, profile):
     backbone = MultimodalEmbeddingExport(core.language_model, profile['sequence_length'],
         image_token_id=metadata['image_token_id'], audio_token_id=metadata['audio_token_id'],
         image_feature_count=profile['image_feature_count'], audio_feature_count=0)
-    return load_image_processor(snapshot), Encoder().eval(), backbone.eval()
+    encoder=Encoder().eval()
+    encoder.statistics_reference_configuration=dict(policy='native',selected_norms=0,replacements=[])
+    if statistics_reference=='sixteen-lane':
+        from .vision_cpu_simd_reference import apply_vision_statistics_reference
+        encoder.statistics_reference_configuration=apply_vision_statistics_reference(encoder)
+    elif statistics_reference!='native':raise ValueError('Unknown CPU image statistics reference')
+    return load_image_processor(snapshot), encoder, backbone.eval()
+
+
+def _validate_statistics_configuration(mode,configuration):
+    _require(mode in ('native','sixteen-lane'))
+    _require(configuration['policy']==('native' if mode=='native' else 'sixteen-lane-vision'))
+    _require(configuration['selected_norms']==len(configuration['replacements']))
+    if mode=='native':_require(configuration['selected_norms']==0)
+    else:
+        _require(configuration['selected_norms']>0)
+        _require(len({row['name'] for row in configuration['replacements']})==configuration['selected_norms'])
+        for row in configuration['replacements']:
+            _require(row['name'].startswith('vision.') and row['width'] in (64,768))
+            _require(type(row['scaled']) is bool and row['scale_borrowed'] is row['scaled'])
 
 
 def _peak_rss_bytes():
@@ -169,9 +189,10 @@ def _audit_rounds(output, rows, case, spec, files):
     return result
 
 
-def measure_image_cpu_reference(snapshot, reference_directory, profile, output, *, source, fixture_root=None):
+def measure_image_cpu_reference(snapshot, reference_directory, profile, output, *, source, fixture_root=None,statistics_reference='native'):
     """Measure four actual carries; validate and persist intermediates afterwards."""
     try:
+        _require(statistics_reference in ('native','sixteen-lane'))
         output = _empty(output)
         _require(profile in references.PROFILES and not torch.cuda.is_initialized())
         fingerprints = _validate_execution_source(source)
@@ -193,7 +214,7 @@ def measure_image_cpu_reference(snapshot, reference_directory, profile, output, 
         empty = torch.empty(0, 512)
         context_before = cpu_execution_context()
         output.mkdir(parents=True, exist_ok=True)
-        admission = dict(schema=2, source=source, profile=profile, phase='loading',
+        admission = dict(schema=2, source=source, profile=profile, phase='loading',statistics_reference=statistics_reference,
             model_execution_complete=False, error_class=None,
             execution_context_before_load=context_before,
             source_fingerprints_normalized_LF=fingerprints,
@@ -205,13 +226,16 @@ def measure_image_cpu_reference(snapshot, reference_directory, profile, output, 
         _write(source_path, admission)
         start, start_cpu = time.perf_counter(), time.process_time()
         try:
-            processor, encoder, backbone = _load_pipeline(snapshot, metadata, final_profiles[profile])
+            options={} if statistics_reference=='native' else dict(statistics_reference=statistics_reference)
+            processor, encoder, backbone = _load_pipeline(snapshot, metadata, final_profiles[profile],**options)
         except Exception as error:
             admission.update(phase='failed_loading', error_class=type(error).__name__)
             source_path.write_text(json.dumps(admission, indent=2, allow_nan=False) + '\n', encoding='utf-8')
             raise ValueError('Image CPU model loading failed') from None
         load_wall, load_cpu = time.perf_counter() - start, time.process_time() - start_cpu
-        admission.update(phase='measuring')
+        configuration=getattr(encoder,'statistics_reference_configuration',dict(policy='native',selected_norms=0,replacements=[]))
+        _validate_statistics_configuration(statistics_reference,configuration)
+        admission.update(phase='measuring',statistics_reference_configuration=configuration)
         source_path.write_text(json.dumps(admission, indent=2, allow_nan=False) + '\n', encoding='utf-8')
         trace = dict(pixels=[], positions=[], encoder=[])
 
@@ -274,11 +298,16 @@ def measure_image_cpu_reference(snapshot, reference_directory, profile, output, 
             error_class = error_class or 'ValueError'
         peak = _peak_rss_bytes()
         context_after = cpu_execution_context()
+        release_started,release_cpu_started=time.perf_counter(),time.process_time()
+        processor=encoder=backbone=measured=None
+        gc.collect()
+        release_wall,release_cpu=time.perf_counter()-release_started,time.process_time()-release_cpu_started
         success = bool(pipeline['success'] and len(inspections) == 4 and
                        all(row['success'] for row in inspections) and not torch.cuda.is_initialized()
                        and context_before == context_after
                        and (peak is None or 0 < peak <= 16 * 1024**3))
         result = dict(schema=2, success=success, source=source, profile=profile, case=case.id,
+            statistics_reference=statistics_reference,statistics_reference_configuration=configuration,
             scope='Four actual FP32 PyTorch CPU image chains against existing GPU encoder and original Document final',
             actual_backend='CPU', framework='PyTorch reference', precision='fp32',
             descriptor_sha256=protocol.DESCRIPTOR, encoder_reference_sha256=cohort.encoder_reference_sha256,
@@ -287,7 +316,9 @@ def measure_image_cpu_reference(snapshot, reference_directory, profile, output, 
             input_sha256=_sha(raw), rounds=rows, intermediate_inspections=inspections,
             final_vector_gate_passed=bool(pipeline['success']), error_class=error_class,
             load_wall_seconds=load_wall, load_process_cpu_seconds=load_cpu,
-            host_peak_rss_bytes=peak, host_peak_scope='Linux process peak RSS only; unavailable on other hosts',
+            release_wall_seconds=release_wall,release_process_cpu_seconds=release_cpu,release_completed=True,
+            release_scope='Drop owning model references and collect Python cycles; not allocator zero-byte proof',
+            host_peak_rss_bytes=peak, host_peak_scope='Whole process lifetime peak RSS on Linux or peak working set on Windows; unavailable on unsupported hosts',
             explicit_host_limit_bytes=16 * 1024**3, torch_threads=torch.get_num_threads(),
             torch_interop_threads=torch.get_num_interop_threads(), CPU_capability=torch.backends.cpu.get_cpu_capability(),
             runtime_versions={name: importlib.metadata.version(name) for name in ('torch', 'transformers', 'numpy', 'pillow')},
@@ -314,6 +345,11 @@ def audit_image_cpu_reference(output, reference_directory, *, source):
         report, pipeline = _json(output / 'image-cpu-reference.json'), _json(output / 'pipeline.json')
         admission = _json(output / 'image-cpu-source.json')
         _require(report['schema'] == admission['schema'] == 2)
+        if 'statistics_reference' in report:
+            mode=report['statistics_reference'];configuration=report['statistics_reference_configuration']
+            _validate_statistics_configuration(mode,configuration)
+            _require(admission['statistics_reference']==mode and admission['statistics_reference_configuration']==configuration)
+            _require(report['release_completed'] is True and all(math.isfinite(report[key]) and report[key]>=0 for key in ('load_wall_seconds','load_process_cpu_seconds','release_wall_seconds','release_process_cpu_seconds')))
         _require(isinstance(source, str) and re.fullmatch('[0-9a-f]{40}', source) is not None)
         _require(report['success'] is True and pipeline['success'] is True and
                  report['source'] == pipeline['source'] == source and report['actual_backend'] == pipeline['actual_backend'] == 'CPU')
@@ -374,9 +410,11 @@ def main(argv=None):
     parser.add_argument('--source', default=os.environ.get('GITHUB_SHA'))
     parser.add_argument('--profile', choices=references.PROFILES)
     parser.add_argument('--snapshot', type=Path)
+    parser.add_argument('--statistics-reference',choices=('native','sixteen-lane'))
     args = parser.parse_args(argv)
     try:
         if args.command == 'audit':
+            _require(args.statistics_reference is None)
             result = audit_image_cpu_reference(args.output, args.references, source=args.source)
             _write(args.output / 'independent-image-CPU-audit.json', result)
         else:
@@ -392,7 +430,7 @@ def main(argv=None):
                 snapshot = Path(snapshot_download('google/embeddinggemma-2', revision=references.MODEL_REVISION,
                     allow_patterns=['config.json', 'processor_config.json', 'model.safetensors', 'tokenizer.json',
                                     'tokenizer_config.json', 'config_sentence_transformers.json']))
-            measure_image_cpu_reference(snapshot, args.references, args.profile, args.output, source=args.source)
+            measure_image_cpu_reference(snapshot, args.references, args.profile, args.output, source=args.source,statistics_reference=args.statistics_reference or 'native')
     except Exception as error:
         print(json.dumps(dict(success=False, error_class=type(error).__name__)))
         return 1

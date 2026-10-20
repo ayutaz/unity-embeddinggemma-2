@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "scope": "Persistent native Windows GPU allocation collector contracts and own CPU-only process probe; no model or GPU acceptance",
+  "intended_red": [
+    "new collector module missing",
+    "one adapter-pairing rejection failed while 19 existing tests passed"
+  ],
+  "unrelated_command_path_error_retained_privately_not_counted_as_TDD": true,
+  "new_contract_cases": 20,
+  "related_tests_passed": 69,
+  "failed": 0,
+  "skipped": 0,
+  "reviewed_source_sha256": {
+    "tools/embeddinggemma_tools/native_gpu_memory.py": "1bce54db60996e8905a5e3e9e5934fb67c5b8853732ffa1ceeadd5e7e4a913bc",
+    "tools/tests/test_native_gpu_memory.py": "bdbd5255323533c6a4b2461ec04bcb6c096f0f24e9e4954185fdcb2d4fb2ea83"
+  },
+  "live_Windows_probe": {
+    "samples": 20,
+    "available_GPU_allocation_samples": 0,
+    "missing_allocation_values_preserved_as_unknown": true,
+    "clock_envelopes_verified": true,
+    "maximum_collection_wall_ms": 2.9882,
+    "total_collection_process_cpu_ms": 0.0,
+    "whole_collector_CPU_resolution_limit_preserved": true
+  },
+  "configured_versioned_hook_bytes_verified": true,
+  "SDK_Runtime_changed": false,
+  "model_execution": false,
+  "GPU_execution_validated": false,
+  "historical_sampling_gaps_filled": false,
+  "guaranteed_peak_measured": false,
+  "minimum_hardware_accepted": false,
+  "complete_performance_accepted": false,
+  "formal_release_ready": false,
+  "new_images": 0,
+  "raw_private_evidence_published": false
+}

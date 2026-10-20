@@ -87,6 +87,31 @@ def test_original_audit_admission_fails_before_any_session(tmp_path, monkeypatch
     with pytest.raises(ValueError):
         impl.AuditedAudioCpuEncoder(report, tmp_path, source=SOURCE)
 
+def test_explicit_retained_producer_keeps_both_sources_and_actual_graph_hash_checks(tmp_path,monkeypatch):
+    impl,audited,report,_=cohort(tmp_path,monkeypatch)
+    current='b'*40;calls=[]
+    proof=dict(producer_source=SOURCE,execution_source=current,producer_inputs_identical=True,
+        producer_inputs_sha256='c'*64,graph_producer_reused=True,new_export_or_full_performance_accepted=False)
+    def qualify(old,new):calls.append((old,new));return proof
+    monkeypatch.setattr(impl,'_qualify_retained_graph_producer',qualify)
+    with impl.AuditedAudioCpuEncoder(report,tmp_path,source=current,retained_producer_source=SOURCE) as encoder:
+        result=encoder(torch.ones((1,1119,128)))
+        assert torch.equal(result,-torch.ones_like(result))
+        assert encoder.configuration['source']==current
+        assert encoder.configuration['retained_graph_producer_qualification']==proof
+        assert encoder.configuration['complete_graph_hashes_checked_at_load']
+    assert calls==[(SOURCE,current)]
+
+@pytest.mark.parametrize('fault',['wrong_declared_producer','qualification_failed'])
+def test_retained_source_mismatch_or_failed_qualification_never_opens_a_session(tmp_path,monkeypatch,fault):
+    impl,_,report,_=cohort(tmp_path,monkeypatch)
+    def fail(*_):raise ValueError('synthetic producer mismatch')
+    monkeypatch.setattr(impl,'_qualify_retained_graph_producer',fail)
+    monkeypatch.setattr(impl,'CpuOnnxSession',lambda *_a,**_k:pytest.fail('session opened before retained-source admission'))
+    with pytest.raises(ValueError):
+        impl.AuditedAudioCpuEncoder(report,tmp_path,source='b'*40,
+            retained_producer_source='c'*40 if fault=='wrong_declared_producer' else SOURCE)
+
 
 @pytest.mark.parametrize('source', [None, '', 'main', 'A'*40, 'a'*39])
 def test_immutable_source_is_checked_before_audit(tmp_path, monkeypatch, source):

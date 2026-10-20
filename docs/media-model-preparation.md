@@ -71,6 +71,14 @@ uv run --no-project --python 3.13 python -m embeddinggemma_tools.media_setup `
 
 HTTP 404・期限切れ・認証不足は取得失敗です。ハッシュ検証を無効にしたり、似た名前のモデルへ置き換えたりせず、公開配布側の固定参照を確認してください。別revisionを使う場合は、producer・graphと数値参照を改めて監査します。
 
+HTTP 5xxの応答には、同じHTTPS origin・asset pathへqueryを変えて1回だけ再要求します。
+サイズ・SHA256・TLS証明書の検査は維持し、2回目も失敗した場合は取得失敗です。
+認証失敗・404・証明書エラーや転送途中の失敗をこの再要求で成功へ置き換えません。
+取得済みの正常objectは、次の明示的な再実行でもhashを確認して再利用します。
+[HTTP 5xx回復のTDD記録](results/model-acquisition-server-retry-tdd-20261020.json)は、
+実ローカルHTTPSの500→200・持続500・再要求後の不正bytes拒否を含む関連68件の成功です。
+実公開objectの追加probeはHTTP200・38,840 bytes・元SHA一致であり、そこで5xx再要求を観測したとは扱いません。
+
 取得receiptの `inference_executed` と `gpu_validated` は常に `false` です。取得成功を、Unityの実モデル推論・CPU fallbackなし・検索順位・GPU互換性の合格として数えません。
 
 ## 残る受け入れ

@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "scope": "Small synthetic interruption and existing CPU protocol contracts; not real-model acceptance",
+  "intended_red_cases": 2,
+  "red_reason": "Completed preprocessing or encoder capture journal missing after controller interruption",
+  "related_tests_passed": 54,
+  "failed": 0,
+  "skipped": 0,
+  "completed_stage_captures_written_before_downstream_execution": true,
+  "capture_hashes_recomputed_by_tests": true,
+  "partial_journal_replaced_atomically": true,
+  "partial_journal_is_liveness_or_acceptance_evidence": false,
+  "observer_IO_excluded_from_stage_and_chain_timings": true,
+  "original_numerical_tolerances_changed": false,
+  "default_time_or_memory_limits_changed": false,
+  "existing_running_source_modified": false,
+  "SDK_Runtime_changed": false,
+  "real_model_execution": false,
+  "CPU_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "formal_release_ready": false
+}

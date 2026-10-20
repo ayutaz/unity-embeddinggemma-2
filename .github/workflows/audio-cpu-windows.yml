@@ -2,6 +2,12 @@ name: Windows audio CPU reference
 
 on:
   workflow_dispatch:
+    inputs:
+      reference_executor:
+        description: Explicit CPU reference executor; legacy ONNX remains a separate diagnostic
+        type: choice
+        default: native-fp32
+        options: [native-fp32, onnx-cpu]
   pull_request:
     branches: [main]
     paths:
@@ -12,6 +18,9 @@ on:
       - tools/embeddinggemma_tools/reference_cpu_performance.py
       - tools/embeddinggemma_tools/onnx_cpu_comparison.py
       - tools/embeddinggemma_tools/image_cpu_reference.py
+      - tools/embeddinggemma_tools/native_audio_cpu_encoder.py
+      - tools/embeddinggemma_tools/vision_cpu_simd_reference.py
+      - tools/native_reference/**
       - tools/embeddinggemma_tools/audio.py
       - tools/embeddinggemma_tools/model.py
       - tools/embeddinggemma_tools/export.py
@@ -25,6 +34,7 @@ on:
       - tools/pyproject.toml
       - tools/uv.lock
       - tools/tests/test_audio_cpu_windows_workflow.py
+      - tools/tests/test_audio_cpu_windows_native_workflow.py
 
 permissions:
   contents: read
@@ -90,6 +100,7 @@ jobs:
             exit "$command_status"
           fi
       - name: Require original numerical gate for all five actual encoder parts
+        if: github.event_name == 'workflow_dispatch' && inputs.reference_executor == 'onnx-cpu'
         run: |
           if uv run --locked python -m embeddinggemma_tools.frozen_audio_chained_onnx \
               --input ../artifacts/audio-cpu-original \
@@ -104,6 +115,7 @@ jobs:
             exit "$command_status"
           fi
       - name: Measure actual original PCM preprocessing encoder and backbone
+        if: github.event_name == 'workflow_dispatch' && inputs.reference_executor == 'onnx-cpu'
         run: |
           if uv run --locked --group cpu-comparison python -m embeddinggemma_tools.audio_cpu_reference measure \
               --preprocessing ../artifacts/audio-cpu-inputs --encoder-reference ../artifacts/audio-cpu-original \
@@ -115,6 +127,42 @@ jobs:
           else
             command_status=$?
             echo '{"phase":"PCM_to_vector_measurement","success":false}'
+            exit "$command_status"
+          fi
+      - name: Fetch pinned original model inputs for the explicit native CPU reference
+        if: github.event_name != 'workflow_dispatch' || inputs.reference_executor == 'native-fp32'
+        run: |
+          if uv run --locked --group cpu-comparison python - > ../artifacts/private-audio-cpu-logs/snapshot.log 2>&1 <<'PY'
+          from huggingface_hub import snapshot_download
+          from embeddinggemma_tools.audio_cpu_cohort import MODEL_REVISION, load_audio_cpu_reference_cohort
+          cohort = load_audio_cpu_reference_cohort(
+              "../artifacts/audio-cpu-inputs", "../artifacts/audio-cpu-original",
+              "../artifacts/audio-cpu-inputs/audio-embedding-reference.json")
+          snapshot_download("google/embeddinggemma-2", revision=MODEL_REVISION,
+              local_dir="../artifacts/audio-cpu-snapshot",
+              allow_patterns=[name for name, _ in cohort.snapshot_input_sha256])
+          PY
+          then
+            echo '{"phase":"pinned_native_snapshot","success":true}'
+          else
+            command_status=$?
+            echo '{"phase":"pinned_native_snapshot","success":false}'
+            exit "$command_status"
+          fi
+      - name: Measure original PCM through explicit native encoder and original backbone
+        if: github.event_name != 'workflow_dispatch' || inputs.reference_executor == 'native-fp32'
+        run: |
+          if uv run --locked --group cpu-comparison python -m embeddinggemma_tools.audio_cpu_reference measure \
+              --preprocessing ../artifacts/audio-cpu-inputs --encoder-reference ../artifacts/audio-cpu-original \
+              --document-reference ../artifacts/audio-cpu-inputs/audio-embedding-reference.json \
+              --native-candidate ../artifacts/audio-cpu-candidate/audio-runtime-reference \
+              --native-build ../artifacts/private-native-build --snapshot ../artifacts/audio-cpu-snapshot \
+              --case "$CASE_ID" --output ../artifacts/audio-cpu-full --source "$GITHUB_SHA" \
+              > ../artifacts/private-audio-cpu-logs/native-measure.log 2>&1; then
+            echo '{"phase":"native_PCM_to_vector_measurement","success":true}'
+          else
+            command_status=$?
+            echo '{"phase":"native_PCM_to_vector_measurement","success":false}'
             exit "$command_status"
           fi
       - name: Recompute all saved actual CPU intermediate and final numerical gates

@@ -1,0 +1,953 @@
+{
+  "schema": 1,
+  "scope": "Explicit public-CLI native CPU audio: two profiles, eight actual original-gate-passing carries, load/verification/release and separate capture audits; comparison to source-qualified Sentis GPU timings",
+  "actual_CLI_source": "fd7f375d49c3cb70a16659ead0d81d1a4b954b34",
+  "CLI_function": "embeddinggemma_tools.audio_cpu_reference",
+  "actual_CPU_calls": 8,
+  "original_encoder_outputs_bit_exact": 8,
+  "actual_final_vectors_independently_recomputed": 8,
+  "all_processes_normal_exit": true,
+  "new_model_download_or_export": false,
+  "native_helper_build_is_outside_model_load_timer": true,
+  "coefficient_verification_is_separate_from_inference_and_release": true,
+  "stage_capture_observer_excluded_from_measured_wall": true,
+  "CPU_is_separate_reference_not_Unity_SDK_backend": true,
+  "same_physical_Windows_host": true,
+  "different_frameworks_and_processes": true,
+  "general_kernel_speedup_claimed": false,
+  "allocator_zero_bytes_or_guaranteed_peak_claimed": false,
+  "minimum_hardware_accepted": false,
+  "complete_performance_accepted": false,
+  "fresh_tag_consumer_accepted": false,
+  "formal_release_ready": false,
+  "conditions": [
+    {
+      "case": "silence",
+      "module": "audio-1119",
+      "CPU_executor": "native-fp32-reference",
+      "actual_CPU_source": "fd7f375d49c3cb70a16659ead0d81d1a4b954b34",
+      "actual_GPU_SDK_source": "7754ce4eb9e07e8b81865487b175c63dd6e93097",
+      "actual_GPU_validation_source": "2cc7d94198f413dfe81e24bab7c999607375ce9e",
+      "precision": "fp32",
+      "input_sha256": "06a56aa96f41a685ae25b4d7d0a55a15717723bb45a88a21a02546b9355e67e5",
+      "descriptor_sha256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "document_reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+      "preprocessing_reference_sha256": "1209e2f95df2d0527db23d9185e01c38289b365c46e623e03d3e9ce26f8dfcf8",
+      "encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+      "independently_recomputed_intermediates": [
+        {
+          "round": "first",
+          "preprocessing_tolerance_failures": 0,
+          "maximum_preprocessing_absolute_error": 0.0,
+          "frame_mask_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999998,
+          "success": true
+        },
+        {
+          "round": "warm",
+          "preprocessing_tolerance_failures": 0,
+          "maximum_preprocessing_absolute_error": 0.0,
+          "frame_mask_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999998,
+          "success": true
+        },
+        {
+          "round": "repeat-1",
+          "preprocessing_tolerance_failures": 0,
+          "maximum_preprocessing_absolute_error": 0.0,
+          "frame_mask_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999998,
+          "success": true
+        },
+        {
+          "round": "repeat-2",
+          "preprocessing_tolerance_failures": 0,
+          "maximum_preprocessing_absolute_error": 0.0,
+          "frame_mask_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999998,
+          "success": true
+        }
+      ],
+      "independently_recomputed_finals": [
+        {
+          "round": "first",
+          "cosine": 0.9999999999971907,
+          "norm_squared": 1.00000011221473
+        },
+        {
+          "round": "warm",
+          "cosine": 0.9999999999971907,
+          "norm_squared": 1.00000011221473
+        },
+        {
+          "round": "repeat-1",
+          "cosine": 0.9999999999971907,
+          "norm_squared": 1.00000011221473
+        },
+        {
+          "round": "repeat-2",
+          "cosine": 0.9999999999971907,
+          "norm_squared": 1.00000011221473
+        }
+      ],
+      "CPU_load_wall_seconds": 25.970247899997048,
+      "CPU_load_process_cpu_seconds": 24.25,
+      "CPU_load_scope": "Preprocessor, encoder coefficient model and backbone construction; explicit native helper compilation and admission snapshot hashing excluded",
+      "CPU_release_wall_seconds": 0.45938030001707375,
+      "CPU_release_process_cpu_seconds": 0.4375,
+      "CPU_release_scope": "Encoder close, dropping owning model references and Python garbage collection; not allocator zero-byte proof",
+      "CPU_coefficient_verification_wall_seconds": 1.369651300017722,
+      "CPU_coefficient_verification_process_cpu_seconds": 1.515625,
+      "CPU_model_release_completed": true,
+      "CPU_encoder_closed_flag_checked": true,
+      "CPU_host_lifetime_peak_working_set_bytes": 4450570240,
+      "CPU_native_job_commit_allowance_bytes": 25769803776,
+      "allowance_is_minimum_hardware_claim": false,
+      "CPU_context": {
+        "cpu_model": {
+          "model name": "AMD Ryzen 9 5900X 12-Core Processor",
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "25",
+          "model": "33",
+          "stepping": "0"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX2",
+        "torch_runtime_version": "2.14.1+cpu",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2026.1-Product Build 20260612 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": null,
+          "MKL_DYNAMIC": "FALSE",
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "CPU_runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "onnxruntime": "1.31.0"
+      },
+      "CPU_encoder_configuration": {
+        "executor": "native-fp32-reference",
+        "source": "fd7f375d49c3cb70a16659ead0d81d1a4b954b34",
+        "case_id": "silence",
+        "profile": "frames-1119-valid-1119",
+        "coefficient_graph_provenance": {
+          "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+          "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+          "case_id": "silence",
+          "profile": "frames-1119-valid-1119",
+          "reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+          "audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+          "graph_sha256": "e4e9699657fd0c9e88d872bad6adbaddc3d43cee2e13711b10f7901cb8483165",
+          "input_sha256": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+          "model_generation": "audio-e9de158-20261018",
+          "candidate_contract_sha256": "df73e109fc6dd62e8b1fff409930042b63e6c63548865b074b593dcc70c40deb",
+          "graph_producer": "e9de158a55a72a34cbf9f4752a234892c4ce41d3",
+          "original_graph_bytes": false,
+          "source_graph_sha256": "406db281f6ac81a591c30e723c22e08856b8b7c302302ae54d4bee595252b887",
+          "executed_graph_sha256": "e4e9699657fd0c9e88d872bad6adbaddc3d43cee2e13711b10f7901cb8483165",
+          "graph_transport": "github-release-native-regression-v1",
+          "graph_transport_contract_sha256": "947430cb584490077a900afed6d1fcc1415c08493ee7efea3e2727fa46fd6fb8",
+          "graph_distribution_inventory_sha256": "e4da37c53cc9b97d421b17caf56eacb6003fdca9160ac6e8f6a86a5314299d5e",
+          "graph_distribution_producer": "6bfc2232412f88a78dc23227b5d57ee5a3c7c05c"
+        },
+        "native_reference": {
+          "source_sha256": "a21882fe0a7c9a836c8938d10850b2c239fb96115a53fa9e38a409463c27f130",
+          "compiler_binary_sha256": "b0a1818ebae6da7f18230a84e76ce839212584ac4c2ab55b97a0d5268085da57",
+          "compiler_kind": "msvc",
+          "compiler_flags": [
+            "/nologo",
+            "/LD",
+            "/O2",
+            "/MD",
+            "/EHsc",
+            "/std:c++17",
+            "/fp:strict",
+            "/arch:AVX2"
+          ],
+          "native_library_sha256": "5c88e2f09f4d5b7ae3dcf224a59907db8a06ce12cd3fad77a18894fde0470257",
+          "AVX2_FMA_and_OS_vector_state_verified": true,
+          "native_threads": 4,
+          "executor": "strict-native-block192-fma-reference-only",
+          "model_weights_changed": false,
+          "GPU_execution_validated": false,
+          "CPU_comparison_qualified": false,
+          "complete_performance_accepted": false
+        },
+        "maximum_owned_parts": 5,
+        "execution_schedule": "chain-major",
+        "references_used_as_inference_inputs": false,
+        "original_ONNX_bytes_executed": false,
+        "hardware_FMA_may_differ_from_bounded_Dekker_graph": true,
+        "original_coefficients_verified_unchanged": true,
+        "CPU_reference_comparison_qualified": false,
+        "GPU_validated": false,
+        "complete_performance_accepted": false,
+        "closed": true,
+        "native_actual_calls": {
+          "linear": 0,
+          "matmul": 684,
+          "fma": 4800,
+          "stem_convolution": 8
+        }
+      },
+      "CPU_rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 25.325443399953656,
+          "process_cpu_seconds": 78.25,
+          "stage_observer_wall_seconds": 0.009149700053967535,
+          "stage_observer_process_cpu_seconds": 0.046875,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.029517399962060153,
+              "process_cpu_seconds": 0.046875,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 22.135658900020644,
+              "process_cpu_seconds": 69.890625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 3.160133700002916,
+              "process_cpu_seconds": 8.3125,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 26.532383699901402,
+          "process_cpu_seconds": 81.21875,
+          "stage_observer_wall_seconds": 0.01091820013243705,
+          "stage_observer_process_cpu_seconds": 0.015625,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.015581100014969707,
+              "process_cpu_seconds": 0.015625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 22.981844499940053,
+              "process_cpu_seconds": 72.140625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 3.534808099968359,
+              "process_cpu_seconds": 9.0625,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 26.49101559992414,
+          "process_cpu_seconds": 82.046875,
+          "stage_observer_wall_seconds": 0.011025000014342368,
+          "stage_observer_process_cpu_seconds": 0.03125,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.012308800010941923,
+              "process_cpu_seconds": 0.015625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 23.096080100047402,
+              "process_cpu_seconds": 72.46875,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 3.3824801000300795,
+              "process_cpu_seconds": 9.5625,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 22.96440490009263,
+          "process_cpu_seconds": 74.5625,
+          "stage_observer_wall_seconds": 0.011999399866908789,
+          "stage_observer_process_cpu_seconds": 0.03125,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.013297799974679947,
+              "process_cpu_seconds": 0.0,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 20.051059999968857,
+              "process_cpu_seconds": 66.515625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.899897599942051,
+              "process_cpu_seconds": 8.046875,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "GPU_rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 8.407002799999999,
+          "process_cpu_seconds": 1.421875,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "ProcessAsync",
+              "wall_seconds": 1.5875336,
+              "process_cpu_seconds": 0.375,
+              "host_working_set_bytes": 8743251968,
+              "host_lifetime_peak_bytes": 9012097024
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 5.866194,
+              "process_cpu_seconds": 0.890625,
+              "host_working_set_bytes": 8731496448,
+              "host_lifetime_peak_bytes": 9012097024
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 0.8517515999999999,
+              "process_cpu_seconds": 0.0625,
+              "host_working_set_bytes": 9474363392,
+              "host_lifetime_peak_bytes": 9474363392
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 5.4576289,
+          "process_cpu_seconds": 1.03125,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "ProcessAsync",
+              "wall_seconds": 0.0773512,
+              "process_cpu_seconds": 0.015625,
+              "host_working_set_bytes": 9478930432,
+              "host_lifetime_peak_bytes": 9478930432
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 5.0491132,
+              "process_cpu_seconds": 0.921875,
+              "host_working_set_bytes": 9234202624,
+              "host_lifetime_peak_bytes": 9489989632
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 0.28673529999999997,
+              "process_cpu_seconds": 0.0625,
+              "host_working_set_bytes": 9235005440,
+              "host_lifetime_peak_bytes": 9489989632
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 6.107301,
+          "process_cpu_seconds": 1.15625,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "ProcessAsync",
+              "wall_seconds": 0.0165553,
+              "process_cpu_seconds": 0.015625,
+              "host_working_set_bytes": 9236041728,
+              "host_lifetime_peak_bytes": 9489989632
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 5.7175609,
+              "process_cpu_seconds": 1.078125,
+              "host_working_set_bytes": 9228812288,
+              "host_lifetime_peak_bytes": 9489989632
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 0.302571,
+              "process_cpu_seconds": 0.03125,
+              "host_working_set_bytes": 9229635584,
+              "host_lifetime_peak_bytes": 9489989632
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 6.788638199999999,
+          "process_cpu_seconds": 1.484375,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "ProcessAsync",
+              "wall_seconds": 0.0437549,
+              "process_cpu_seconds": 0.046875,
+              "host_working_set_bytes": 9230540800,
+              "host_lifetime_peak_bytes": 9489989632
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 6.3605437,
+              "process_cpu_seconds": 1.359375,
+              "host_working_set_bytes": 9431994368,
+              "host_lifetime_peak_bytes": 9489989632
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 0.30363599999999996,
+              "process_cpu_seconds": 0.03125,
+              "host_working_set_bytes": 9432010752,
+              "host_lifetime_peak_bytes": 9489989632
+            }
+          ]
+        }
+      ],
+      "GPU_load_wall_seconds": 54.1642225,
+      "GPU_release_wall_seconds": 0.032861299999999996,
+      "actual_CPU_process_exit_code": 0,
+      "actual_GPU_process_exit_code": 0,
+      "original_coefficient_graph_independently_rehashed": true,
+      "model_capture_auditor_rehashed_graph": false,
+      "original_golden_or_tolerance_changed": false,
+      "two_complete_original_evidence_copies_rehashed": true,
+      "evidence_sha256": {
+        "measurement/audio-cpu-reference.json": "2b691e94944c10aa2467c7d2f14c01a47ab6859675449c1eda3d72ca8199e101",
+        "measurement/audio-cpu-source.json": "cf3163e87613d3939727e9dfabea7c53566a2b5c04b332b89ef9dede5727494b",
+        "measurement/first-encoder.bin": "e9ac5425c93912ac7e4983ed98e80b4020e1f8f2d81c2950adfd31b1022441ad",
+        "measurement/first-features.bin": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+        "measurement/first-frame_mask.bin": "d1d720a6b7013a4b396f2a8595d52f9648132b665f40f899b09bc62918e57c95",
+        "measurement/independent-audio-CPU-audit.json": "5b6c780693de239584c3b4679de00990f62c9d62f247822fcd527406712f4292",
+        "measurement/partial-audio-CPU-captures.json": "6c721025ed85e4b04ba016a65235cce855ce4570519bc848bfab9ac1f57b4e45",
+        "measurement/pipeline-first.bin": "67cc3e19dab34c45fd647f5e7881e2982f3b85873bbf5eb516abb794c92621fb",
+        "measurement/pipeline-repeat-1.bin": "67cc3e19dab34c45fd647f5e7881e2982f3b85873bbf5eb516abb794c92621fb",
+        "measurement/pipeline-repeat-2.bin": "67cc3e19dab34c45fd647f5e7881e2982f3b85873bbf5eb516abb794c92621fb",
+        "measurement/pipeline-warm.bin": "67cc3e19dab34c45fd647f5e7881e2982f3b85873bbf5eb516abb794c92621fb",
+        "measurement/pipeline.json": "99c312f60e5f16f9bb3ef9583a141fe575637d4e59612add533e0faae591770c",
+        "measurement/repeat-1-encoder.bin": "e9ac5425c93912ac7e4983ed98e80b4020e1f8f2d81c2950adfd31b1022441ad",
+        "measurement/repeat-1-features.bin": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+        "measurement/repeat-1-frame_mask.bin": "d1d720a6b7013a4b396f2a8595d52f9648132b665f40f899b09bc62918e57c95",
+        "measurement/repeat-2-encoder.bin": "e9ac5425c93912ac7e4983ed98e80b4020e1f8f2d81c2950adfd31b1022441ad",
+        "measurement/repeat-2-features.bin": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+        "measurement/repeat-2-frame_mask.bin": "d1d720a6b7013a4b396f2a8595d52f9648132b665f40f899b09bc62918e57c95",
+        "measurement/warm-encoder.bin": "e9ac5425c93912ac7e4983ed98e80b4020e1f8f2d81c2950adfd31b1022441ad",
+        "measurement/warm-features.bin": "366de71cb4e45e4feda58a605babe4ea9d8693a7e37e84eac0735a7c42d0ad24",
+        "measurement/warm-frame_mask.bin": "d1d720a6b7013a4b396f2a8595d52f9648132b665f40f899b09bc62918e57c95",
+        "actual-worker-private.json": "fdbbb2f740e104b90c813e4d7e66cd3ecd86fc6569b0a8d95553f780f1005589",
+        "original-process-private.log": "69e838778c92d3ae66d4d083ef0060e5cdb2f8d2cddfa04d0e7d7c7b6d95c4db",
+        "audit-process-private.log": "69e838778c92d3ae66d4d083ef0060e5cdb2f8d2cddfa04d0e7d7c7b6d95c4db"
+      }
+    },
+    {
+      "case": "padded_noise",
+      "module": "audio-839",
+      "CPU_executor": "native-fp32-reference",
+      "actual_CPU_source": "fd7f375d49c3cb70a16659ead0d81d1a4b954b34",
+      "actual_GPU_SDK_source": "7754ce4eb9e07e8b81865487b175c63dd6e93097",
+      "actual_GPU_validation_source": "2cc7d94198f413dfe81e24bab7c999607375ce9e",
+      "precision": "fp32",
+      "input_sha256": "01da15bbe3d53bcd41cfff6c265b53cda8222567fe760bfff96442266557c761",
+      "descriptor_sha256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "document_reference_sha256": "281d12573b431667e8841033db1c6a10dce4382ef98c9a5345c18044a1194001",
+      "preprocessing_reference_sha256": "1209e2f95df2d0527db23d9185e01c38289b365c46e623e03d3e9ce26f8dfcf8",
+      "encoder_reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+      "independently_recomputed_intermediates": [
+        {
+          "round": "first",
+          "preprocessing_tolerance_failures": 0,
+          "maximum_preprocessing_absolute_error": 0.0,
+          "frame_mask_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999998,
+          "success": true
+        },
+        {
+          "round": "warm",
+          "preprocessing_tolerance_failures": 0,
+          "maximum_preprocessing_absolute_error": 0.0,
+          "frame_mask_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999998,
+          "success": true
+        },
+        {
+          "round": "repeat-1",
+          "preprocessing_tolerance_failures": 0,
+          "maximum_preprocessing_absolute_error": 0.0,
+          "frame_mask_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999998,
+          "success": true
+        },
+        {
+          "round": "repeat-2",
+          "preprocessing_tolerance_failures": 0,
+          "maximum_preprocessing_absolute_error": 0.0,
+          "frame_mask_exact": true,
+          "encoder_tolerance_failures": 0,
+          "maximum_encoder_absolute_error": 0.0,
+          "minimum_encoder_cosine": 0.9999999999999998,
+          "success": true
+        }
+      ],
+      "independently_recomputed_finals": [
+        {
+          "round": "first",
+          "cosine": 0.9999999999998546,
+          "norm_squared": 0.9999998715731245
+        },
+        {
+          "round": "warm",
+          "cosine": 0.9999999999998546,
+          "norm_squared": 0.9999998715731245
+        },
+        {
+          "round": "repeat-1",
+          "cosine": 0.9999999999998546,
+          "norm_squared": 0.9999998715731245
+        },
+        {
+          "round": "repeat-2",
+          "cosine": 0.9999999999998546,
+          "norm_squared": 0.9999998715731245
+        }
+      ],
+      "CPU_load_wall_seconds": 24.340888799983077,
+      "CPU_load_process_cpu_seconds": 23.40625,
+      "CPU_load_scope": "Preprocessor, encoder coefficient model and backbone construction; explicit native helper compilation and admission snapshot hashing excluded",
+      "CPU_release_wall_seconds": 0.36486520001199096,
+      "CPU_release_process_cpu_seconds": 0.34375,
+      "CPU_release_scope": "Encoder close, dropping owning model references and Python garbage collection; not allocator zero-byte proof",
+      "CPU_coefficient_verification_wall_seconds": 1.348723000031896,
+      "CPU_coefficient_verification_process_cpu_seconds": 1.4375,
+      "CPU_model_release_completed": true,
+      "CPU_encoder_closed_flag_checked": true,
+      "CPU_host_lifetime_peak_working_set_bytes": 4447096832,
+      "CPU_native_job_commit_allowance_bytes": 25769803776,
+      "allowance_is_minimum_hardware_claim": false,
+      "CPU_context": {
+        "cpu_model": {
+          "model name": "AMD Ryzen 9 5900X 12-Core Processor",
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "25",
+          "model": "33",
+          "stepping": "0"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX2",
+        "torch_runtime_version": "2.14.1+cpu",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2026.1-Product Build 20260612 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": null,
+          "MKL_DYNAMIC": "FALSE",
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "CPU_runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "onnxruntime": "1.31.0"
+      },
+      "CPU_encoder_configuration": {
+        "executor": "native-fp32-reference",
+        "source": "fd7f375d49c3cb70a16659ead0d81d1a4b954b34",
+        "case_id": "padded_noise",
+        "profile": "frames-1119-valid-839",
+        "coefficient_graph_provenance": {
+          "reference_source": "4edbe17a8105233c5aaa1514faa2862b08a4f7e0",
+          "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+          "case_id": "padded_noise",
+          "profile": "frames-1119-valid-839",
+          "reference_sha256": "ac23f39904b8149dd5ccb6485afcc93d96047f0977b5faf1d640c8bd018c13c9",
+          "audit_sha256": "68d29c96012ef0a44114f2d3edbbff8d14e116ac697abee1a36d0b212155cfa1",
+          "graph_sha256": "aa43ba4948c879f0fcc31222dbc05cbd333c70beda2dae04da420e9e284343da",
+          "input_sha256": "6065504b6b2d244526df3a79cb5b88e9463e8e576ff877b5b8fa90b9bf18b1b0",
+          "model_generation": "audio-e9de158-20261018",
+          "candidate_contract_sha256": "df73e109fc6dd62e8b1fff409930042b63e6c63548865b074b593dcc70c40deb",
+          "graph_producer": "e9de158a55a72a34cbf9f4752a234892c4ce41d3",
+          "original_graph_bytes": false,
+          "source_graph_sha256": "ca12d55e4dc221d589fa075f22ba1a80b0c8e5f4d1c8794f55a9f6cb1cebcc34",
+          "executed_graph_sha256": "aa43ba4948c879f0fcc31222dbc05cbd333c70beda2dae04da420e9e284343da",
+          "graph_transport": "github-release-native-regression-v1",
+          "graph_transport_contract_sha256": "947430cb584490077a900afed6d1fcc1415c08493ee7efea3e2727fa46fd6fb8",
+          "graph_distribution_inventory_sha256": "e4da37c53cc9b97d421b17caf56eacb6003fdca9160ac6e8f6a86a5314299d5e",
+          "graph_distribution_producer": "6bfc2232412f88a78dc23227b5d57ee5a3c7c05c"
+        },
+        "native_reference": {
+          "source_sha256": "a21882fe0a7c9a836c8938d10850b2c239fb96115a53fa9e38a409463c27f130",
+          "compiler_binary_sha256": "b0a1818ebae6da7f18230a84e76ce839212584ac4c2ab55b97a0d5268085da57",
+          "compiler_kind": "msvc",
+          "compiler_flags": [
+            "/nologo",
+            "/LD",
+            "/O2",
+            "/MD",
+            "/EHsc",
+            "/std:c++17",
+            "/fp:strict",
+            "/arch:AVX2"
+          ],
+          "native_library_sha256": "5c88e2f09f4d5b7ae3dcf224a59907db8a06ce12cd3fad77a18894fde0470257",
+          "AVX2_FMA_and_OS_vector_state_verified": true,
+          "native_threads": 4,
+          "executor": "strict-native-block192-fma-reference-only",
+          "model_weights_changed": false,
+          "GPU_execution_validated": false,
+          "CPU_comparison_qualified": false,
+          "complete_performance_accepted": false
+        },
+        "maximum_owned_parts": 5,
+        "execution_schedule": "chain-major",
+        "references_used_as_inference_inputs": false,
+        "original_ONNX_bytes_executed": false,
+        "hardware_FMA_may_differ_from_bounded_Dekker_graph": true,
+        "original_coefficients_verified_unchanged": true,
+        "CPU_reference_comparison_qualified": false,
+        "GPU_validated": false,
+        "complete_performance_accepted": false,
+        "closed": true,
+        "native_actual_calls": {
+          "linear": 0,
+          "matmul": 684,
+          "fma": 4800,
+          "stem_convolution": 8
+        }
+      },
+      "CPU_rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 24.65653289994225,
+          "process_cpu_seconds": 78.40625,
+          "stage_observer_wall_seconds": 0.010588800068944693,
+          "stage_observer_process_cpu_seconds": 0.015625,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.018775400007143617,
+              "process_cpu_seconds": 0.046875,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 21.4599912998965,
+              "process_cpu_seconds": 69.34375,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 3.177641800022684,
+              "process_cpu_seconds": 9.015625,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 25.228783699916676,
+          "process_cpu_seconds": 77.4375,
+          "stage_observer_wall_seconds": 0.01126190007198602,
+          "stage_observer_process_cpu_seconds": 0.046875,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.013197100022807717,
+              "process_cpu_seconds": 0.0,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 21.995462599908933,
+              "process_cpu_seconds": 69.28125,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 3.2199536999687552,
+              "process_cpu_seconds": 8.15625,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 26.197823100024834,
+          "process_cpu_seconds": 81.3125,
+          "stage_observer_wall_seconds": 0.010311499936506152,
+          "stage_observer_process_cpu_seconds": 0.015625,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.012567900004796684,
+              "process_cpu_seconds": 0.03125,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 22.315866800025105,
+              "process_cpu_seconds": 72.21875,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 3.86925730004441,
+              "process_cpu_seconds": 9.0625,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 27.607166899950244,
+          "process_cpu_seconds": 85.78125,
+          "stage_observer_wall_seconds": 0.011276400065980852,
+          "stage_observer_process_cpu_seconds": 0.0,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.018067299970425665,
+              "process_cpu_seconds": 0.0,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 24.099241300020367,
+              "process_cpu_seconds": 76.734375,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 3.4897251999937,
+              "process_cpu_seconds": 9.046875,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "GPU_rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 8.2981942,
+          "process_cpu_seconds": 1.046875,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "ProcessAsync",
+              "wall_seconds": 0.7822329,
+              "process_cpu_seconds": 0.234375,
+              "host_working_set_bytes": 8731033600,
+              "host_lifetime_peak_bytes": 8999772160
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 5.6340701,
+              "process_cpu_seconds": 0.703125,
+              "host_working_set_bytes": 8716320768,
+              "host_lifetime_peak_bytes": 8999772160
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 1.7932422,
+              "process_cpu_seconds": 0.03125,
+              "host_working_set_bytes": 9458798592,
+              "host_lifetime_peak_bytes": 9458798592
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 5.7576149999999995,
+          "process_cpu_seconds": 0.96875,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "ProcessAsync",
+              "wall_seconds": 0.0784087,
+              "process_cpu_seconds": 0.0,
+              "host_working_set_bytes": 9463398400,
+              "host_lifetime_peak_bytes": 9463398400
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 5.3241665,
+              "process_cpu_seconds": 0.8125,
+              "host_working_set_bytes": 9216163840,
+              "host_lifetime_peak_bytes": 9474342912
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 0.3045884,
+              "process_cpu_seconds": 0.109375,
+              "host_working_set_bytes": 9217560576,
+              "host_lifetime_peak_bytes": 9474342912
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 5.2316191,
+          "process_cpu_seconds": 0.5625,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "ProcessAsync",
+              "wall_seconds": 0.0273471,
+              "process_cpu_seconds": 0.03125,
+              "host_working_set_bytes": 9219010560,
+              "host_lifetime_peak_bytes": 9474342912
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 4.9200091,
+              "process_cpu_seconds": 0.421875,
+              "host_working_set_bytes": 9220640768,
+              "host_lifetime_peak_bytes": 9474342912
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 0.1941356,
+              "process_cpu_seconds": 0.046875,
+              "host_working_set_bytes": 9221857280,
+              "host_lifetime_peak_bytes": 9474342912
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 5.835229699999999,
+          "process_cpu_seconds": 0.90625,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "ProcessAsync",
+              "wall_seconds": 0.014362999999999999,
+              "process_cpu_seconds": 0.015625,
+              "host_working_set_bytes": 9222868992,
+              "host_lifetime_peak_bytes": 9474342912
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 5.500865999999999,
+              "process_cpu_seconds": 0.8125,
+              "host_working_set_bytes": 9429258240,
+              "host_lifetime_peak_bytes": 9474342912
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 0.2552161,
+              "process_cpu_seconds": 0.03125,
+              "host_working_set_bytes": 9429274624,
+              "host_lifetime_peak_bytes": 9474342912
+            }
+          ]
+        }
+      ],
+      "GPU_load_wall_seconds": 57.2380727,
+      "GPU_release_wall_seconds": 0.029346399999999998,
+      "actual_CPU_process_exit_code": 0,
+      "actual_GPU_process_exit_code": 0,
+      "original_coefficient_graph_independently_rehashed": true,
+      "model_capture_auditor_rehashed_graph": false,
+      "original_golden_or_tolerance_changed": false,
+      "two_complete_original_evidence_copies_rehashed": true,
+      "evidence_sha256": {
+        "measurement/audio-cpu-reference.json": "00295fbab8bad23f0e714ad4ca2d6a8f616e4fbb7be3456c71fed9fdcaa72e62",
+        "measurement/audio-cpu-source.json": "3f5b481abb1e141367c12008b3418f0e5c79b957f7f10fb431fd0b0ff0090f56",
+        "measurement/first-encoder.bin": "ba570bbb9a403e529a5843eaa16cab9f694791b7d0f1ad9bbedee33b14fe3966",
+        "measurement/first-features.bin": "6065504b6b2d244526df3a79cb5b88e9463e8e576ff877b5b8fa90b9bf18b1b0",
+        "measurement/first-frame_mask.bin": "604c12a03e7bce1f3f9379373dd926eedce33386844fd1f23ec4687834a551ec",
+        "measurement/independent-audio-CPU-audit.json": "66c97dccb77aa1f0c99c8e28a01bd30baf8c310c68ddb6329fb93bee45c4f961",
+        "measurement/partial-audio-CPU-captures.json": "7c2bd4d956cf5f7cfc27f4fefe73fe72ccd0628589c29ca76f1b672590011549",
+        "measurement/pipeline-first.bin": "b948267635fba40f680172d89309593a4f48e82090c3f178b37525747335bbd4",
+        "measurement/pipeline-repeat-1.bin": "b948267635fba40f680172d89309593a4f48e82090c3f178b37525747335bbd4",
+        "measurement/pipeline-repeat-2.bin": "b948267635fba40f680172d89309593a4f48e82090c3f178b37525747335bbd4",
+        "measurement/pipeline-warm.bin": "b948267635fba40f680172d89309593a4f48e82090c3f178b37525747335bbd4",
+        "measurement/pipeline.json": "d3ae8eacd15d54ac555e0059be8603eb57396d48041a3ba4b946b0efa0fd25ad",
+        "measurement/repeat-1-encoder.bin": "ba570bbb9a403e529a5843eaa16cab9f694791b7d0f1ad9bbedee33b14fe3966",
+        "measurement/repeat-1-features.bin": "6065504b6b2d244526df3a79cb5b88e9463e8e576ff877b5b8fa90b9bf18b1b0",
+        "measurement/repeat-1-frame_mask.bin": "604c12a03e7bce1f3f9379373dd926eedce33386844fd1f23ec4687834a551ec",
+        "measurement/repeat-2-encoder.bin": "ba570bbb9a403e529a5843eaa16cab9f694791b7d0f1ad9bbedee33b14fe3966",
+        "measurement/repeat-2-features.bin": "6065504b6b2d244526df3a79cb5b88e9463e8e576ff877b5b8fa90b9bf18b1b0",
+        "measurement/repeat-2-frame_mask.bin": "604c12a03e7bce1f3f9379373dd926eedce33386844fd1f23ec4687834a551ec",
+        "measurement/warm-encoder.bin": "ba570bbb9a403e529a5843eaa16cab9f694791b7d0f1ad9bbedee33b14fe3966",
+        "measurement/warm-features.bin": "6065504b6b2d244526df3a79cb5b88e9463e8e576ff877b5b8fa90b9bf18b1b0",
+        "measurement/warm-frame_mask.bin": "604c12a03e7bce1f3f9379373dd926eedce33386844fd1f23ec4687834a551ec",
+        "actual-worker-private.json": "c524e396be723f22b8b592323b965bb5ef031d434e5d164b5c7672525635c95a",
+        "original-process-private.log": "69e838778c92d3ae66d4d083ef0060e5cdb2f8d2cddfa04d0e7d7c7b6d95c4db",
+        "audit-process-private.log": "69e838778c92d3ae66d4d083ef0060e5cdb2f8d2cddfa04d0e7d7c7b6d95c4db"
+      }
+    }
+  ]
+}

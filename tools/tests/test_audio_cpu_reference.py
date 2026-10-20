@@ -100,6 +100,32 @@ def test_actual_stage_values_are_carried_four_times_and_saved_after_stage_timers
     assert pipeline['stage_observer_present'] and pipeline['stage_observer_time_excluded']
     assert all(v['stage_observer_wall_seconds']>=0 for v in pipeline['rounds'])
 
+@pytest.mark.parametrize('last_stage',['preprocessing','encoder'])
+def test_completed_stage_captures_survive_controller_interruption_without_a_pass(prepared,monkeypatch,last_stage):
+    driver,state,output,run,_=prepared
+    def interrupted(case,destination):
+        value=case.preprocess()
+        case.after_stage('preprocessing',value)
+        if last_stage=='encoder':
+            value=case.encoder(value)
+            case.after_stage('encoder',value)
+        raise KeyboardInterrupt('synthetic controller interruption')
+    monkeypatch.setattr(driver.protocol,'measure_reference_pipeline',interrupted)
+    with pytest.raises(KeyboardInterrupt):run()
+    journal=driver._json(output/'partial-audio-CPU-captures.json')
+    assert journal['source']==SOURCE and journal['case']=='silence'
+    assert journal['last_completed_stage']==last_stage
+    assert journal['model_execution_complete'] is False and journal['CPU_comparison_qualified'] is False
+    assert len(journal['rounds'])==1 and journal['rounds'][0]['round']=='first'
+    wanted={'features','frame_mask'}|({'encoder'} if last_stage=='encoder' else set())
+    captures=journal['rounds'][0]['captures']
+    assert set(captures)==wanted
+    for entry in captures.values():
+        raw=(output/entry['file']).read_bytes()
+        assert hashlib.sha256(raw).hexdigest()==entry['sha256']
+    assert not (output/'audio-cpu-reference.json').exists()
+    assert not (output/'pipeline-first.bin').exists() and state['closes']==1
+
 
 def test_final_vector_agreement_does_not_hide_invalid_actual_intermediates(prepared):
     driver,state,output,run,_=prepared
@@ -221,6 +247,52 @@ def test_cli_measure_then_separate_audit_has_path_free_output_and_no_overwrite(p
     assert path.read_bytes()==original
     text=capsys.readouterr().out
     assert str(snapshot.parent) not in text
+
+def test_explicit_retained_producer_is_forwarded_by_CLI_before_any_model_load(prepared,monkeypatch):
+    driver,state,output,_,snapshot=prepared
+    monkeypatch.setattr(driver.torch,'set_num_interop_threads',lambda _:None)
+    seen=[]
+    def rejected(chain,original,source,case,*,retained_producer_source=None):
+        seen.append(retained_producer_source)
+        raise ValueError('synthetic producer qualification refusal')
+    monkeypatch.setattr(driver,'_admit_chain',rejected)
+    assert driver.main(cli_arguments(snapshot,output)+['--retained-chain-source','b'*40])==1
+    assert seen==['b'*40] and state['pre_calls']==state['encoder_calls']==0
+
+def test_audit_does_not_silently_ignore_an_explicit_producer_override(prepared,monkeypatch):
+    driver,_,output,run,snapshot=prepared
+    run()
+    assert driver.main(cli_arguments(snapshot,output,'audit')+['--retained-chain-source','b'*40])==1
+
+def test_retained_producer_is_preserved_and_rechecked_in_saved_capture_audit(prepared,monkeypatch):
+    import json
+    driver,_,output,_,snapshot=prepared
+    retained='b'*40
+    proof=dict(producer_source=retained,execution_source=SOURCE,producer_inputs_identical=True,
+        producer_inputs_sha256='c'*64,graph_producer_reused=True,new_export_or_full_performance_accepted=False)
+    original=driver._load_modules
+    def modules(*args,retained_producer_source=None):
+        assert retained_producer_source==retained
+        pre,encoder,backbone=original(*args)
+        encoder.configuration['retained_graph_producer_qualification']=proof
+        return pre,encoder,backbone
+    def admitted(*args,retained_producer_source=None):assert retained_producer_source==retained
+    def qualify(old,current):
+        assert old==retained and current==SOURCE
+        return proof
+    monkeypatch.setattr(driver,'_load_modules',modules)
+    monkeypatch.setattr(driver,'_admit_chain',admitted)
+    monkeypatch.setattr(driver,'_qualify_retained_graph_producer',qualify)
+    monkeypatch.setattr(driver.torch,'set_num_interop_threads',lambda _:None)
+    assert driver.main(cli_arguments(snapshot,output)+['--retained-chain-source',retained])==0
+    assert driver.main(cli_arguments(snapshot,output,'audit'))==0
+    report=driver._json(output/'audio-cpu-reference.json')
+    assert report['source']==SOURCE and report['retained_chain_producer_source']==retained
+    assert report['encoder_configuration']['retained_graph_producer_qualification']==proof
+    report['encoder_configuration']['retained_graph_producer_qualification']['producer_inputs_sha256']='d'*64
+    (output/'audio-cpu-reference.json').write_text(json.dumps(report),encoding='utf-8')
+    base=snapshot.parent
+    with pytest.raises(ValueError):driver.audit_audio_cpu_reference(output,base/'pre',base/'encoder',base/'document.json',source=SOURCE)
 
 
 def test_original_chain_failure_prevents_model_execution(prepared,monkeypatch):

@@ -4,6 +4,8 @@
 
 ## Windows候補の工程1〜3（2026-10-20）
 
+後続のtask branchでは`0.1.0`候補の版・CHANGELOGを準備し、[画像 / 音声GPU40回](windows-media-memory-results.md)、[画像CPU12回](image-CPU-fixed-conditions.md)、[音声CPU8回](native-audio-CPU-results.md)と[初回対応構成](windows-supported-configuration.md)を整理しました。[Windows CPU CI](windows-CPU-CI.md)はPR #115の初回head `7a33083`で音声2・画像3 jobが成功し、全20回の実captureを元数値gateで独立に再照合しました。新規取得のHTTP 500に対応する[再要求修正](results/model-acquisition-server-retry-tdd-20261020.json)は関連68テスト合格で、変更後の必要CIを別途確認します。公開mainは#114統合済み`3e78a27`、追加branchは未統合で、正式tag・Releaseはありません。2026-10-20のユーザー指示で旧providerコピー除去は後回しとし、今回の待ち条件から外しました。新規送信のprivacy検査は維持します。[最終確認項目](windows-release-checklist.md)を満たしてから正式公開します。以下の数値・source別結果は元の適用範囲を保ちます。
+
 **main `1a036fb`、PR #113まで統合済み。工程1〜3のWindows機能検証は完了**しました。候補 `e5b6bd9` は実行記録の `9967516` と全treeが一致します。[確認記録](results/windows-first-stages-1-to-3-20261020.json)にsource・モデル・数値gate・失敗履歴・適用範囲をまとめています。
 
 実Windows Editor / D3D12で、両重み形式の全画像・音声role、反復・キャンセル回復・解放、混在索引と順位 / scoreを照合しました。別の実Editorプロセスでテキスト全roleの30ベクトルとRenderTextureの12ベクトルを照合し、受け入れた計3プロセスは正常終了しています。computation CPU fallback・中間readbackは0です。Playerは同一SDK実装の既存IL2CPP / Release / High結果を独立再照合して適用し、新candidate SHAでの再実行とは数えません。

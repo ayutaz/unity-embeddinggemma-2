@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "scope": "Local Windows workflow contracts, real tiny native relative-path build/load and related regressions; not hosted CI or real-model execution",
+  "base_commit_before_changes": "ce1b0133b69105fb8f17a4cf3855a52d524a278b",
+  "implementation_fingerprints_normalized_LF": {
+    ".github/workflows/audio-cpu-windows.yml": "3d3d3fd8448699631c92556031c3382ddb6e5c9b64261fc37187f5f436419fc8",
+    ".github/workflows/image-cpu-windows.yml": "e9ae1333714dd0724ddc58c44efd4f18a694d5cf6eab56c1d91483ad484dcf54",
+    "tools/embeddinggemma_tools/cpu_fp32_reference.py": "4d5a1f4d91abbdbf1de88598516954251db844700cb6b38cb602bcc13f0580e4",
+    "tools/tests/test_audio_cpu_windows_native_workflow.py": "2347a398814f313c2bba5f68acc5bb1605e8f756ab50629c39689c3ebecbc5b5",
+    "tools/tests/test_image_cpu_windows_workflow.py": "8d5d958ac665b43cd41e58e3a470e7334b5d245e9f917fffd68b78e9b118845e",
+    "tools/tests/test_cpu_fp32_reference.py": "66734e78d291d7c4aa0fab7b00cc752eb4286f98abff47369e3efcbb03472737"
+  },
+  "validation": [
+    {
+      "private_log_sha256": "4c5d4c643dbf3e065e01aac00b61424e67fe16ddfc4cf03d3644b6fa4093b323",
+      "expected_terminal_summary": "10 failed, 1 passed, 35 deselected",
+      "expected_test_success": false
+    },
+    {
+      "private_log_sha256": "2af304741cdcdf9064dbcfc48f37fa00e255afe48be4c3836879b7c3283ec444",
+      "expected_terminal_summary": "68 passed",
+      "expected_test_success": true
+    },
+    {
+      "private_log_sha256": "3869a50d9c4d9708ace508c880bc93f925d08fdb01f4a9d3c1a2a69a2a047f4e",
+      "expected_terminal_summary": "12 failed",
+      "expected_test_success": false
+    },
+    {
+      "private_log_sha256": "dd38cfe6a8581655a0b99fb2d8e82b8b9fa97eee387be10c4a364998e816b87a",
+      "expected_terminal_summary": "12 passed",
+      "expected_test_success": true
+    },
+    {
+      "private_log_sha256": "79415b48ef8e8acec45de01c2ceadcf686778a497d500944cabb94d27c3eee70",
+      "expected_terminal_summary": "134 passed",
+      "expected_test_success": true
+    }
+  ],
+  "related_tests_passed": 134,
+  "related_tests_failed": 0,
+  "related_tests_skipped": 0,
+  "actionlint_version": "1.7.12",
+  "actionlint_exit_code": 0,
+  "actionlint_diagnostics_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "earlier_test_encoding_error_corrected": true,
+  "original_numerical_gates_changed": false,
+  "required_model_reference_workflows_changed": false,
+  "Unity_SDK_GPU_runtime_changed": false,
+  "new_images_or_models_added": false,
+  "hosted_workflows_executed": false,
+  "hosted_real_model_accepted": false,
+  "formal_release_complete": false
+}

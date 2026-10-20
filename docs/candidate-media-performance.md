@@ -2,6 +2,18 @@
 
 Current checkpoint (2026-10-20): Windows functional stages 1–3 are accepted within the [source-qualified record](results/windows-first-stages-1-to-3-20261020.json). Performance remains stage 4 of the [current release plan](next-release-plan.md). The [four-condition audio GPU result](results/audio-gpu-repeat-four-conditions-20261020.json) covers 16 calls; its partial memory sampling does not establish a guaranteed peak, matched CPU speedup or minimum hardware. The contract and earlier execution notes below retain their own sources and scopes.
 
+The [persistent Windows allocation observer](windows-gpu-memory-observation.md)
+adds a read-only native PDH query with process-lifetime and clock checks. Its
+small contract and CPU-only collector probe do not fill historical sampling
+gaps or qualify real-model memory, performance or minimum hardware. New model
+observations must retain their own numerical gates, actual intervals and gaps.
+
+The later [ten-condition native allocation readback](windows-media-memory-results.md)
+rechecks 40 actual GPU calls and samples in all 180 measured intervals, including
+release. It records 12 query errors and unavailable samples separately. These new
+observations retain their own sources; they do not repair historical gaps or
+establish guaranteed peaks, matched CPU speedup or minimum hardware.
+
 The candidate fixture uses the published FP32 / Float16-weight descriptors while
 the existing retained-bundle fixture keeps its original pins. Both execute the
 same four rounds: `first`, `warm`, `repeat-1`, `repeat-2`, with one identical
@@ -43,11 +55,15 @@ stage boundaries, captures, four repeated calls, numerical checks, cleanup and
 normal-exit requirements are retained. Keep raw reports private because input
 diagnostics can contain local paths; publish only independently checked summaries.
 
-Image runs now have the checkpoint below. The [CPU diagnostic](reference-cpu-performance.md)
-records twelve real chained calls and one failing intermediate condition. Audio runs, qualified media CPU comparisons,
-final exclusive stage/load/release/VRAM evidence, minimum hardware and required
-devices remain pending. Contract tests and historical retained-model observations
-do not complete those release gates.
+The earlier image checkpoint below retains its own source and sampling gaps.
+The [later GPU media readback](windows-media-memory-results.md) covers both audio
+profiles and all image profiles. The [native CPU audio readback](native-audio-CPU-results.md)
+adds eight original-gate-passing actual CPU carries for the same audio inputs.
+The [explicit image CPU conditions](image-CPU-fixed-conditions.md) add twelve
+original-gate-passing calls with per-condition statistics, load/release and
+capture audits. A uniform sixteen-lane landscape failure remains recorded.
+CI integration, minimum hardware, privacy cleanup and new-tag installation remain pending. Other platforms follow
+the Windows-first plan. Contract tests alone do not complete those release gates.
 
 
 ## 実画像の反復測定
@@ -65,4 +81,4 @@ do not complete those release gates.
 
 CPU値はEditor全体のCPU時間で、CPU backendとの比較ではありません。GPU値はqueueや転送を含むmarker区間で、kernel専有時間ではありません。GPUメモリは観測最大値で、保証されたpeakや最低要件ではなく、短いrelease区間などの欠測はnullです。各起動で明示16 GiB host allowanceを使用し、SDKの既定12 GiBは変更していません。
 
-他のdesktop GPU processが動作する条件で、起動前のGPU空き容量を記録しています。音声4条件は空き約10 GiBに対する保守的な14 GiB起動基準を満たさず未実行です。この基準は最低hardware要件ではありません。音声・CPU比較・専有GPU/VRAM・最低要件・必須端末を完了扱いにしません。
+この旧checkpointでは、他のdesktop GPU processが動作する条件で起動前のGPU空き容量を記録し、音声4条件は空き約10 GiBに対する保守的な14 GiB起動基準を満たさず未実行でした。後続の音声実行は上記の別記録に保持します。この起動基準は最低hardware要件ではありません。専有GPU/VRAM・最低要件・他環境の必須端末を完了扱いにしません。

@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.0 — Windows
+
+- Prepare the first Windows Editor / Player release: Sentis GPU text, Texture / RenderTexture and mono PCM embeddings, normalized 768-dimensional vectors, and cross-modal search. Keep the existing source-qualified FP32 / Float16-weight numerical results and the Runtime implementation unchanged.
+- Record matched Windows CPU reference audio eight times and image twelve times under explicitly declared per-profile settings, alongside forty GPU media runs and sampled memory observations. Preserve failed configurations, missing samples and measurement limits. CPU references are validation tools and do not add a CPU fallback to the SDK.
+- Select the tested Windows / D3D12 / RTX 4070 Ti SUPER, 64 GB RAM / 16 GB VRAM class as the initial support baseline. This does not establish a physical memory minimum or qualify other GPUs or platforms.
+- Add explicit Windows audio and image CPU CI routes and a relative native-build-path fix. Source-qualified real Windows CI passes both audio and all three declared image conditions; independently re-audit their twenty actual captures. The owner deferred removal of old provider-side commit copies; current outgoing history and payload privacy checks remain required.
+- Keep Apache-2.0 code licensing and separately obtained, hash-pinned models with their own LICENSE / NOTICE / MODIFICATIONS. Models and validation Player builds are not part of this UPM distribution.
+
+- Retry an HTTP 5xx response once at the same HTTPS origin and asset path with a fresh query. Keep descriptor/object size and SHA checks, certificate verification and failure status. Persistent server errors, authentication failures and 404s remain failures.
+
+See GitHub Releases for publication and fresh-tag acceptance, and `docs/windows-release-checklist.md` / `docs/next-release-plan.md` in the repository for source-specific release gates. macOS / iOS / Android remain future qualification work.
+
 ## 0.1.0-pre.1 — Unreleased
 
 ### Current checkpoint (2026-10-20)

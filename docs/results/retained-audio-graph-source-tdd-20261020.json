@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "scope": "Small source-provenance, actual tiny CPU sessions, CLI and capture-audit contracts only",
+  "intended_red": [
+    "Retained producer qualification implementation missing",
+    "Four explicit producer / CLI admission cases failed",
+    "Audit silently accepted an explicit producer override"
+  ],
+  "source_qualification_cases": 14,
+  "related_tests_passed": 100,
+  "failed": 0,
+  "skipped": 0,
+  "default_requires_same_source": true,
+  "retained_source_requires_explicit_measurement_option": true,
+  "producer_input_changes_and_dirty_executor_rejected": true,
+  "original_producer_and_actual_execution_sources_recorded_separately": true,
+  "actual_graph_hashes_and_CPU_provider_checks_preserved": true,
+  "saved_qualification_rechecked_in_independent_capture_audit": true,
+  "original_numerical_gates_changed": false,
+  "SDK_Runtime_changed": false,
+  "real_model_execution": false,
+  "CPU_comparison_qualified": false,
+  "complete_performance_accepted": false,
+  "formal_release_ready": false
+}

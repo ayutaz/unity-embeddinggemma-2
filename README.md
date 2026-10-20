@@ -8,7 +8,7 @@ Unity Sentisで、テキスト・画像・音声を共通の768次元ベクト�
 
 [導入・API](Packages/com.ayutaz.embeddinggemma/Documentation~/index.md) · [モデル準備](docs/model-preparation.md) · [現在の対応範囲](docs/status.md) · [ロードマップ](docs/roadmap.md) · [ドキュメント一覧](docs/README.md)
 
-Windows候補の機能検証（工程1〜3）は完了しました。Editorの実モデルと、同一SDK実装の既存Player結果で、全入力・全role・横断検索のGPU動作を確認しています。[確認記録と適用範囲](docs/results/windows-first-stages-1-to-3-20261020.json)を参照してください。追加の[GPU計測](docs/windows-media-memory-results.md)・[画像CPU比較](docs/image-CPU-fixed-conditions.md)・[音声CPU比較](docs/native-audio-CPU-results.md)と[初回対応構成](docs/windows-supported-configuration.md)は整理済みです。新CI、新tag導入、正式公開は残っています。
+Windows候補の機能検証（工程1〜3）の[2026-10-20時点の確認記録と適用範囲](docs/results/windows-first-stages-1-to-3-20261020.json)では、Editorの実モデルと、同一SDK実装の既存Player結果をsource別に確認しています。[GPU計測](docs/windows-media-memory-results.md)・[画像CPU比較](docs/image-CPU-fixed-conditions.md)・[音声CPU比較](docs/native-audio-CPU-results.md)と[初回対応構成](docs/windows-supported-configuration.md)も参照してください。正式tagでの導入・Editor / Player実行と公開の最終結果は、該当するGitHub Release notesで確認してください。
 
 ## できること
 
@@ -37,10 +37,10 @@ UPMの宣言上の最小版は6000.3.16f1です。これは対応する全Unity�
 ## 導入
 
 1. Unityの **Window → Package Manager** を開き、**Add package from git URL** を選びます。
-2. 次のURLを入力します。PR #94統合後、Windowsの実行検証を確認した開発版へ固定しています。
+2. 正式tag `v0.1.0`の公開後、次のURLを入力します。公開前は導入pinとして使わず、GitHub Releasesで正式公開を確認してください。
 
    ```text
-   https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/com.ayutaz.embeddinggemma#186ffc1b330c0b609fef66cf4abfaeed5011fcbc
+   https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/com.ayutaz.embeddinggemma#v0.1.0
    ```
 
 3. モデルを準備します。**パッケージを追加しただけでは推論できません。** Text Searchは[テキストモデルの取得・変換手順](docs/model-preparation.md)を、Image and Audio Searchは[全6 moduleのモデルpreview取得手順](docs/media-model-preparation.md)を使います。

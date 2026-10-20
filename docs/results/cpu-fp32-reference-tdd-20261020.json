@@ -7,6 +7,10 @@
   "torch_adapter_green": {"passed": 27, "failed": 0, "skipped": 0},
   "stem_red": {"failed": 6, "passed": 27, "reason": "stem_convolution method absent"},
   "final_green": {"passed": 33, "failed": 0, "skipped": 0},
+  "related_regression_green": {
+    "passed": 163, "failed": 0, "skipped": 0,
+    "scope": "Native CPU arithmetic, reference performance protocol, audio driver and encoder, image driver, native GPU memory collector"
+  },
   "native_oracle": "Independent scalar C99 fmaf; array outputs compared as uint32 bits",
   "native_widths_tested": [1, 7, 191, 192, 193, 385],
   "coverage": [

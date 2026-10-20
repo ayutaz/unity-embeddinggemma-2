@@ -55,11 +55,13 @@ stage boundaries, captures, four repeated calls, numerical checks, cleanup and
 normal-exit requirements are retained. Keep raw reports private because input
 diagnostics can contain local paths; publish only independently checked summaries.
 
-Image runs now have the checkpoint below. The [CPU diagnostic](reference-cpu-performance.md)
-records twelve real chained calls and one failing intermediate condition. Audio runs, qualified media CPU comparisons,
-final exclusive stage/load/release/VRAM evidence, minimum hardware and required
-devices remain pending. Contract tests and historical retained-model observations
-do not complete those release gates.
+The earlier image checkpoint below retains its own source and sampling gaps.
+The [later GPU media readback](windows-media-memory-results.md) covers both audio
+profiles and all image profiles. The [native CPU audio readback](native-audio-CPU-results.md)
+adds eight original-gate-passing actual CPU carries for the same audio inputs.
+Image square CPU acceptance, complete load/release performance, minimum hardware,
+privacy cleanup and new-tag installation remain pending. Other platforms follow
+the Windows-first plan. Contract tests alone do not complete those release gates.
 
 
 ## 実画像の反復測定
@@ -77,4 +79,4 @@ do not complete those release gates.
 
 CPU値はEditor全体のCPU時間で、CPU backendとの比較ではありません。GPU値はqueueや転送を含むmarker区間で、kernel専有時間ではありません。GPUメモリは観測最大値で、保証されたpeakや最低要件ではなく、短いrelease区間などの欠測はnullです。各起動で明示16 GiB host allowanceを使用し、SDKの既定12 GiBは変更していません。
 
-他のdesktop GPU processが動作する条件で、起動前のGPU空き容量を記録しています。音声4条件は空き約10 GiBに対する保守的な14 GiB起動基準を満たさず未実行です。この基準は最低hardware要件ではありません。音声・CPU比較・専有GPU/VRAM・最低要件・必須端末を完了扱いにしません。
+この旧checkpointでは、他のdesktop GPU processが動作する条件で起動前のGPU空き容量を記録し、音声4条件は空き約10 GiBに対する保守的な14 GiB起動基準を満たさず未実行でした。後続の音声実行は上記の別記録に保持します。この起動基準は最低hardware要件ではありません。専有GPU/VRAM・最低要件・他環境の必須端末を完了扱いにしません。

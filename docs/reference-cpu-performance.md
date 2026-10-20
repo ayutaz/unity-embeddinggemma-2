@@ -41,6 +41,11 @@ mask・prompt・profile・仕事量をGPU側と揃えて固定sourceへ結び付
 
 ## 音声比較の途中capture保持
 
+後続の[明示的native CPU経路](native-audio-CPU-results.md)ではsource `c458937` で
+音声2profileを各4回実PCMから計算し、全8回の元中間値・最終vectorと正常終了を確認しました。
+encoderは全8回bit単位で元参照に一致し、GPU側との同じ入力・profile・descriptor・最終参照も照合しています。
+これは下記の停止したONNX経路と別のexecutorです。CPUの独立load / release計時と公開CLIの統合は残っています。
+
 旧source `8f1bb97`では、停止した変換が残した全5 ONNXの実hashを、独立監査済み
 CIの元reportへ照合して再利用しました。変換を繰り返さず実PCMからのCPU比較へ
 進みましたが、1,200秒上限でexit124となり、最初の1回も完了していません。

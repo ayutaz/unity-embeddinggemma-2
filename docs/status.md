@@ -1,6 +1,6 @@
 # 現在の対応範囲と検証状況
 
-2026-10-20の優先順とPR #112の確認結果は[正式リリースまでの実行計画](next-release-plan.md)を参照してください。以下のsource別検証記録は保持します。
+2026-10-20にユーザーの方針で**Windows Editor / Player先行の正式リリース**へ変更しました。[実行計画](next-release-plan.md)を現在の順序・公開条件として使用してください。macOS / iOS / Androidは今後の対応で、未実行・失敗の記録を保持します。以下の旧記録にある「全必須環境」「必須実機」は当時の条件で、Windows公開の待ち条件にはしません。検証結果そのものは変更しません。
 
 最新checkpoint（2026-10-20）: **main `e72b5cb`、PR #112まで統合済み**。採用head `874c1c8` の必須CI全15 job成功と実13数値archiveを独立照合し、元824,320値・CPU encoder 120 capture / 30,822,400値の許容差超過0を確認しました。実mainの同tree・署名・公開identity・全祖先も確認済みです。[統合記録](results/platform-ci-integration-874c1c8-20261020.json)は、native workflowの全3ライセンスfailureと、Metal 16整数probeだけの成功を区別します。Unity build・実モデルMetal・実機GPUの成功ではありません。
 

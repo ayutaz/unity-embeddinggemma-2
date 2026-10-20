@@ -30,6 +30,12 @@ def test_documentation_and_separate_observers_do_not_require_reexport(repository
     assert result['graph_producer_reused'] is True and len(result['producer_inputs_sha256'])==64
     assert result['new_export_or_full_performance_accepted'] is False
 
+@pytest.mark.parametrize('name',['cpu_fp32_reference.py','native_audio_cpu_encoder.py'])
+def test_explicit_native_CPU_consumers_are_not_graph_generator_inputs(repository,name):
+    root,git,producer,change=repository
+    current=change('tools/embeddinggemma_tools/'+name,'separate explicit CPU consumer\n')
+    assert _qualify_retained_graph_producer(producer,current,root=root)['producer_inputs_identical'] is True
+
 @pytest.mark.parametrize('path',['tools/embeddinggemma_tools/frozen_audio_chained_onnx.py','tools/references/fixed.json','tools/uv.lock','tools/pyproject.toml','tools/embeddinggemma_tools/new_producer.py'])
 def test_any_changed_or_added_producer_input_is_rejected(repository,path):
     root,git,producer,change=repository

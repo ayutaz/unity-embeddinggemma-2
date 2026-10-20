@@ -21,7 +21,7 @@ def _qualify_retained_graph_producer(producer_source, execution_source, *, root=
     """Qualify reuse of unchanged exports; preserve their actual producer source.
 
     Compare every tracked generator module, reference and dependency input.
-    The two CPU consumers and independent allocation observer are excluded:
+    Explicit CPU-only consumers and the independent allocation observer are excluded:
     none is imported by the raw graph producer. This is not an assertion that
     the consumer or the GPU SDK has been rerun at the newer execution source.
     """
@@ -37,7 +37,8 @@ def _qualify_retained_graph_producer(producer_source, execution_source, *, root=
             raise ValueError('The executor must be clean and fixed at its actual source')
         paths=('tools/embeddinggemma_tools','tools/references','tools/pyproject.toml','tools/uv.lock')
         consumers={'tools/embeddinggemma_tools/'+name for name in
-            ('audio_cpu_reference.py','audio_cpu_encoder.py','native_gpu_memory.py')}
+            ('audio_cpu_reference.py','audio_cpu_encoder.py','native_gpu_memory.py',
+             'cpu_fp32_reference.py','native_audio_cpu_encoder.py')}
         def inventory(source):
             raw=git('ls-tree','-r','--format=%(objectmode) %(objectname) %(path)',source,'--',*paths)
             rows={}

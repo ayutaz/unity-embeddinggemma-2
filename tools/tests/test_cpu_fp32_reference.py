@@ -199,3 +199,30 @@ def test_stem_reference_rejects_unaudited_convolution_contracts(native,fault):
     elif fault=='kernel':weight=weight[:,:,:2,:2]
     else:values=values[0]
     with torch.no_grad(),pytest.raises(ValueError):TorchFp32Reference(native).stem_convolution(values,weight)
+
+
+def test_four_dimensional_attention_heads_match_independent_FMA_oracle(native,scalar):
+    import torch
+    from embeddinggemma_tools.cpu_fp32_reference import TorchFp32Reference
+    rng=np.random.default_rng(44)
+    a=rng.normal(size=(1,2,3,7)).astype(np.float32);b=rng.normal(size=(1,2,7,5)).astype(np.float32)
+    wanted=oracle(a.reshape(2,3,7),b.reshape(2,7,5),None,scalar).reshape(1,2,3,5)
+    engine=TorchFp32Reference(native)
+    with torch.no_grad():actual=engine.head_matmul(torch.from_numpy(a),torch.from_numpy(b))
+    np.testing.assert_array_equal(actual.numpy().view('u4'),wanted.view('u4'))
+    assert engine.calls['head_matmul']==1
+
+
+def test_head_matmul_scope_selects_only_rank4_and_restores_original(native):
+    import torch
+    from embeddinggemma_tools.cpu_fp32_reference import TorchFp32Reference
+    original=torch.matmul;engine=TorchFp32Reference(native)
+    with pytest.raises(RuntimeError,match='downstream'):
+        with torch.no_grad(),engine.head_matmul_scope():
+            assert torch.matmul(torch.ones(1,2,3,4),torch.ones(1,2,4,5)).shape==(1,2,3,5)
+            assert torch.matmul(torch.ones(2,3),torch.ones(3,4)).shape==(2,4)
+            assert engine.calls['head_matmul']==1
+            with pytest.raises(ValueError):
+                with engine.head_matmul_scope():pass
+            raise RuntimeError('downstream')
+    assert torch.matmul is original

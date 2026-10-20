@@ -71,6 +71,8 @@ CIの元reportへ照合して再利用しました。変換を繰り返さず実
 全module・参照・依存入力のGit blobとmodeを比較します。CPU消費側の
 `audio_cpu_reference.py` / `audio_cpu_encoder.py` と独立した
 `native_gpu_memory.py` 以外に変更があれば拒否します。
+後続の明示的CPU経路では、producerからimportされない `cpu_fp32_reference.py` と
+`native_audio_cpu_encoder.py` も消費側として列挙しています。generator・参照・依存の変更は引き続き拒否します。
 
 元reportのproducerを現在のsourceへ書き換えません。元の数値監査、5実graphの
 読み込み時の完全hash、CPU provider、4本の実carry、前処理・中間・最終値の
@@ -81,6 +83,31 @@ export実行・CPU比較・性能全体・GPU・正式公開を合格にしま�
 [source再利用のTDD](results/retained-audio-graph-source-tdd-20261020.json)は、
 generator・参照・依存の変更、dirty executor、誤ったproducer、保存した資格の
 改変を拒否する小規模確認です。実モデルと性能の結果は別に記録します。
+
+## 明示的native音声CPU測定入口
+
+[音声の8実行](native-audio-CPU-results.md)で使用した数値経路を、task branchの
+`audio_cpu_reference` の明示的optionへ統合しました。[TDD](results/native-audio-CPU-lifecycle-tdd-20261020.json)は
+実入力のcarry、例外時の復帰、元係数の検査、load / releaseとcapture監査の契約を確認しています。
+統合後のsourceでの実モデル確認は、以前の非公開orchestrationとは分けて記録します。
+
+`--native-candidate` と `--native-build` を同時に指定し、取得済みの `--snapshot` を明示します。
+この経路では `--chain-report` / `--retained-chain-source` を混在させません。
+native helperのbuildはmodel-load timerの外です。loadはprocessor / coefficient graph / backbone構築、
+元係数の変更検査は別区間、releaseはencoderを閉じて所有model参照を捨てた後のGCまでです。
+release完了をallocatorの0 byte保証や最低RAM要件には読み替えません。
+
+```sh
+uv run --group cpu-comparison python -m embeddinggemma_tools.audio_cpu_reference measure \
+  --preprocessing "$EG_CPU_PREPROCESSING" --encoder-reference "$EG_CPU_ORIGINAL_ENCODER" \
+  --document-reference "$EG_CPU_DOCUMENT_REFERENCE" --snapshot "$EG_CPU_SNAPSHOT" \
+  --native-candidate "$EG_CPU_CANDIDATE" --native-build "$EG_CPU_NATIVE_BUILD" \
+  --case silence --source "$EG_CPU_SOURCE" --output "$EG_CPU_OUTPUT"
+```
+
+実行後は同じ固定source・元参照で `audit` を別processから実行します。
+auditへのnative選択optionの指定は拒否し、保存されたexecutorと元の配布inventoryを照合します。
+最終vectorだけでなく全4回の元中間値を照合し、失敗・欠測と成功を分離します。
 
 ## 実画像のCPU診断
 

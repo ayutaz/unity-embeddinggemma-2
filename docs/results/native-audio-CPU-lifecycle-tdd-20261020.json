@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "scope": "Explicit native audio CPU executor and load/verification/release measurement contracts; not real-model acceptance at this source",
+  "executor_initial_red": {"errors": 12, "reason": "native audio CPU module absent"},
+  "executor_green": {"passed": 12, "failed": 0, "skipped": 0},
+  "driver_fixture_setup_error": {"errors": 11, "reason": "cohort fixture import missing; corrected before intended red"},
+  "driver_intended_red": {"failed": 11, "reason": "explicit native options absent"},
+  "provenance_red": {"failed": 2, "passed": 11, "reason": "capture auditor did not yet bind graph hash and producer to the pinned inventory"},
+  "retained_consumer_red": {"failed": 2, "passed": 14, "reason": "explicit CPU-only consumers incorrectly treated as graph generator inputs"},
+  "attention_rank4_red": {"failed": 2, "passed": 33, "reason": "explicit head matmul and scoped selection absent"},
+  "related_green": {"passed": 206, "failed": 0, "skipped": 0},
+  "coverage": [
+    "actual values carried through five parts; original reference inputs discarded",
+    "CPU FP32 shape/finite/source guards; explicit release and closed-owner rejection",
+    "original coefficient mutation detected outside inference timers",
+    "shared arithmetic restored after exceptions; nested scopes rejected",
+    "actual native primitive callbacks selected for all five partitions",
+    "four-call measurement, independent capture audit and lifecycle fields",
+    "explicit native/ONNX option separation; audit override rejection",
+    "exact registered coefficient graph and producer binding in saved-capture audit",
+    "retained graph generator input guard preserved with narrowly enumerated CPU consumers",
+    "rank4 attention matmul compared bitwise with independent scalar C99 fmaf"
+  ],
+  "Unity_runtime_changed": false,
+  "golden_weights_or_tolerance_changed": false,
+  "current_CLI_real_model_executed": false,
+  "previous_private_native_real_model_record": "native-audio-two-profile-CPU-readback-20261020.json",
+  "complete_performance_accepted": false,
+  "formal_release_ready": false
+}

@@ -20,6 +20,11 @@ functional.linearを一時的に差し替え、正常終了・例外の両方で
 同時・入れ子のscopeは拒否します。元の関数へ黙ってfallbackしません。
 matmul / FMAも明示的な呼出しで、実呼出し件数を記録します。
 
+rank4 attentionの `head_matmul` は同じbatch / headの2行列だけを受け入れます。
+`head_matmul_scope` は隔離した診断でrank4 `torch.matmul`だけを選び、その他のrankは元の関数へ渡します。
+対象rank4のbroadcast・output buffer・非CPU / 非FP32を黙って代替実行しません。
+例外時の復帰とscalar C99 FMAへのbit単位一致を小規模テストで確認し、実画像の合格とは分けます。
+
 音声stemの明示的な診断は3×3、stride2、padding1、入力1 channelまたは16 channel単位に限定します。
 Unfoldで元画素を選び、kernel位置→channelの順にpartialを作り、channel blockのpartialを別々に加算します。
 元ONNX exporterのeager conv2d passthroughを実行証拠には使いません。scalar C99 FMAで独立照合しています。

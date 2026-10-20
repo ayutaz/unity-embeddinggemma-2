@@ -115,6 +115,7 @@ class NativeFp32Reference:
 
 
 _LINEAR_SCOPE=threading.Lock()
+_HEAD_SCOPE=threading.Lock()
 
 
 class TorchFp32Reference:
@@ -160,6 +161,17 @@ class TorchFp32Reference:
         self.calls['fma']+=1
         return torch.from_numpy(result)
 
+    def head_matmul(self,value,weight):
+        """Explicit rank4 attention batches; no broadcast or native fallback."""
+        import torch
+        a,b=self._tensor(value),self._tensor(weight)
+        if a.ndim!=4 or b.ndim!=4 or a.shape[:2]!=b.shape[:2] or a.shape[-1]!=b.shape[-2]:
+            raise ValueError('Matching CPU attention batch/head dimensions are required')
+        batch=a.shape[0]*a.shape[1]
+        result=self.native.matmul(a.reshape(batch,*a.shape[-2:]),b.reshape(batch,*b.shape[-2:]))
+        self.calls['head_matmul']=self.calls.get('head_matmul',0)+1
+        return torch.from_numpy(result.reshape(*a.shape[:3],b.shape[-1]))
+
     def stem_convolution(self,value,weight):
         """The audited audio stem: 3x3, stride2, pad1, Cin1 or16 blocks.
 
@@ -196,3 +208,21 @@ class TorchFp32Reference:
         finally:
             functional.linear=original
             _LINEAR_SCOPE.release()
+
+    @contextmanager
+    def head_matmul_scope(self):
+        """Select rank4 torch.matmul only; keep other operations unchanged."""
+        import torch
+        if not _HEAD_SCOPE.acquire(blocking=False):raise ValueError('An attention reference scope is already active')
+        original=torch.matmul
+        def selected(a,b,*,out=None):
+            if (isinstance(a,torch.Tensor) and a.ndim==4) or (isinstance(b,torch.Tensor) and b.ndim==4):
+                if out is not None:raise ValueError('Attention reference output buffers are unsupported')
+                return self.head_matmul(a,b)
+            return original(a,b) if out is None else original(a,b,out=out)
+        try:
+            torch.matmul=selected
+            yield self
+        finally:
+            torch.matmul=original
+            _HEAD_SCOPE.release()

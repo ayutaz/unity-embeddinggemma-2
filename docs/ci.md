@@ -22,6 +22,10 @@ iOSは実Xcode exportの照合後に、Device SDK / Releaseで署名なしの `x
 
 Xcode export / compile / 署名 / 実機起動、Android build / エミュレータ / 実機GPU、macOS compile / CPU / Metalを別結果にします。実GPUは実行環境の能力を確認してから元数値gateで検証します。端末接続hostの利用時はtrusted sourceだけを隔離された環境で実行し、外部PRのコードに端末・署名・認証情報を渡しません。成果物は実bytesとprivacy検査の成功後に公開します。既存Required CIやGPU要件は変更しません。
 
+head `08d7e33` の[hosted実行](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39356590582)ではSwift compileと16整数のMetal computeが成功し、不一致0でした。実3 archiveのdigest / CRCと完全な私的2コピーを独立照合しました。報告されたmax bufferとrecommended working setは各1 GiBで、実モデルの常駐可能性やSDK最低要件を示しません。Unityの全3 preflightはライセンス未登録でfailureのままです。実Sentisモデル・Unity build・iOS compile・実機は実行していません。
+
+同じheadの[Required CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39356590707)ではLinux Python 3.13 / 3.14の新規CLIテスト各2件が失敗しました。[実XMLの独立照合と修正記録](results/platform-cli-source-selection-20261020.json)を保持します。`python -P`で起動する子プロセスが、pytest内のpath設定を継承せず、ローカルの既存 `PYTHONPATH` に依存していました。環境変数なしで2件の失敗を再現後、子プロセスへそのcheckoutの `tools/` を明示しました。異なるpackageが環境に存在する場合も検証対象を選び、CIと同じprivacy pluginを使った関連105件が失敗・skipなしで合格しました。SDK・元数値参照・許容差は変更せず、この局所確認を全Required CIやモデルGPUの合格には数えません。
+
 更新: 2026-10-17。PR #31・#83はマージ済みです。#83の最終head `613ada8` の[CI38939320058](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38939320058)は全15 job成功し、統合main `a965c09`と同じtreeです。[現在の対応範囲](status.md) / [ロードマップ](roadmap.md)。以下の過去runは当時の証拠です。
 
 ## 現行の必須CI

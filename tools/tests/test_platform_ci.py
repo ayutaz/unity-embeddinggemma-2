@@ -14,6 +14,14 @@ ROOT = Path(__file__).resolve().parents[2]
 SOURCE = 'a' * 40
 
 
+def cli_environment():
+    environment = {key: value for key, value in os.environ.items() if not key.startswith('UNITY_')}
+    # -P removes cwd from sys.path. Bind the spawned CLI to this checkout even
+    # when pytest's own pythonpath setting or another worktree supplied imports.
+    environment['PYTHONPATH'] = str(ROOT / 'tools')
+    return environment
+
+
 def api():
     return importlib.import_module('embeddinggemma_tools.platform_ci')
 
@@ -252,10 +260,15 @@ def test_serial_license_is_returned_even_when_activation_fails(tmp_path, monkeyp
     assert calls == ['activation', 'license-return']
 
 
-def test_public_cli_fails_closed_before_install_without_dumping_environment(tmp_path):
+def test_public_cli_fails_closed_before_install_without_dumping_environment(tmp_path, monkeypatch):
     root = project(tmp_path)
+    foreign = tmp_path / 'foreign/embeddinggemma_tools'
+    foreign.mkdir(parents=True)
+    (foreign / '__init__.py').write_text('')
+    (foreign / 'platform_ci.py').write_text('raise SystemExit(9)\n')
+    monkeypatch.setenv('PYTHONPATH', str(foreign.parent))
     output = tmp_path / 'evidence'
-    environment = {k: v for k, v in os.environ.items() if not k.startswith('UNITY_')}
+    environment = cli_environment()
     result = subprocess.run([sys.executable, '-P', '-m', 'embeddinggemma_tools.platform_ci', '--project', str(root),
                              '--platform', 'ios', '--source', SOURCE, '--output', str(output)],
                             env=environment, capture_output=True, text=True)
@@ -270,7 +283,7 @@ def test_broken_project_never_leaks_a_traceback_or_path_from_cli(tmp_path):
     output = tmp_path / 'evidence'
     result = subprocess.run([sys.executable, '-P', '-m', 'embeddinggemma_tools.platform_ci',
                              '--project', str(tmp_path), '--platform', 'ios', '--source', SOURCE,
-                             '--output', str(output)], capture_output=True, text=True)
+                             '--output', str(output)], env=cli_environment(), capture_output=True, text=True)
     assert result.returncode == 1
     assert str(tmp_path) not in result.stdout + result.stderr
     assert 'Traceback' not in result.stderr

@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "date": "2026-10-20",
+  "baseline_head": "08d7e337284de7f426f540b8e3c574fc312af5b6",
+  "actual_execution_source": "d6e941c7ff3bd2e5a8bf8ede1c6cc72a63e0ab48",
+  "failing_CI_run": 39356590707,
+  "scope": "CLI test subprocess source selection; no SDK runtime, numerical reference or tolerance change",
+  "observed_failing_artifacts": [
+    {
+      "artifact_id": 12236290420,
+      "name": "python-ubuntu-latest-3.13",
+      "digest": "sha256:3d102b72b75040cfce9a893e2c502d8f9be06f0fbb521c9f6aa75289ba146bfa",
+      "bytes": 48956,
+      "failures": 2,
+      "all_CRC_and_two_complete_copies_verified": true
+    },
+    {
+      "artifact_id": 12236241608,
+      "name": "python-ubuntu-latest-3.14",
+      "digest": "sha256:61ccd5693e106f4c8755f3b3393912cb1120eb8a9c2eeb3a60026a4f0f969d8f",
+      "bytes": 49010,
+      "failures": 2,
+      "all_CRC_and_two_complete_copies_verified": true
+    }
+  ],
+  "intended_reproduction": {
+    "failed": 2,
+    "deselected": 41,
+    "parent_PYTHONPATH": "unset"
+  },
+  "corrected_source_selection": "Each safe-path subprocess explicitly imports tools from its test checkout",
+  "foreign_ambient_package_rejected": true,
+  "local_verification": {
+    "tests": 105,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "privacy_pytest_plugin_enabled": true,
+    "parent_PYTHONPATH": "unset"
+  },
+  "original_CI_failure_retained": true,
+  "full_CI_accepted": false,
+  "model_numerical_regression_judgment": null,
+  "actual_SDK_GPU_acceptance": false,
+  "formal_release_ready": false
+}

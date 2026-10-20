@@ -18,6 +18,8 @@
 
 工程1〜2を先行し、工程3の端末・署名準備、工程4のGPU資源確保とprovider対応を並行させます。ローカルAndroid moduleのUAC待ちはhosted CIのAPK buildを止める理由にしません。実装は関連workflowと契約テストをまとめたtask branch / PRで行い、既存Required CIは維持します。計画変更だけでモデル変換・実機検証を開始したとは扱いません。
 
+直近のsource別結果: `08d7e33`のhosted MacではSwift compile・Metalの16整数照合が成功し、不一致0です。Unity licensingは未設定で、全3 preflightのfailureとbuild未開始を保持します。同sourceのRequired CIでLinuxのCLIテスト各2件が失敗したため、[子プロセスのsource選択](results/platform-cli-source-selection-20261020.json)を修正しました。親の `PYTHONPATH` に依存しない関連105件が合格しましたが、修正sourceのRequired CI・成果物照合を完了してから統合を判断します。次の実行条件はCIライセンスの準備で、small Metalの成功を実Sentisモデル合格にしません。
+
 ### 実行上の判断点と所要時間
 
 - 最初の成果物は3platformのpreflightと、実行できるplatformのbuild / test結果一覧です。Unityライセンスの登録方法は選んだrunner・ライセンス種別で確認し、Secretsの値をチャット・ソース・公開ログへ出しません。利用者側に残るのは必要なライセンス / iOS署名設定と実機の提供・接続です。通常のworkflow実装は開発側で進めます。

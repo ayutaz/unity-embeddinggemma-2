@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "scope": "Initial Windows support policy selected from measured configuration; not a true physical-minimum experiment or release acceptance",
+  "initial_support_memory_floor_policy": {"installed_RAM_class_GB": 64, "GPU_VRAM_class_GB": 16},
+  "actual_observed_configuration": {
+    "OS": "Windows 11 Education x64", "OS_version": "10.0.22631", "OS_build": "22631",
+    "CPU": "AMD Ryzen 9 5900X 12-Core Processor", "cores": 12, "logical_processors": 24,
+    "physical_memory_bytes": 68628013056,
+    "GPU": "NVIDIA GeForce RTX 4070 Ti SUPER", "GPU_reported_memory_MiB": 16376,
+    "Unity_log_driver_version": "32.0.16.1088", "nvidia_smi_driver_version": "610.88",
+    "Unity": "6000.3.21f1", "Sentis": "2.6.1", "graphics_api": "Direct3D12"
+  },
+  "source_bound_evidence": [
+    "windows-first-stages-1-to-3-20261020.json",
+    "native-GPU-media-memory-readback-20261020.json",
+    "native-audio-CLI-lifecycle-fd7f375-20261020.json",
+    "image-CLI-fixed-conditions-fe1cb9e-20261020.json"
+  ],
+  "new_hardware_purchase_or_outsourcing_required": false,
+  "actual_AVX2_host_accepted": true,
+  "AVX512_required_for_Unity_SDK": false,
+  "validation_native_helper_is_Unity_plugin": false,
+  "lower_capacity_hardware_validated": false,
+  "other_GPU_or_driver_validated_by_this_policy": false,
+  "true_physical_minimum_proven": false,
+  "process_allowance_is_hardware_requirement": false,
+  "sampled_memory_is_guaranteed_peak": false,
+  "fresh_release_tag_consumer_accepted": false,
+  "formal_release_ready": false
+}

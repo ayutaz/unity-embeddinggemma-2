@@ -55,7 +55,7 @@ CPUのPython参照・比較は検証用です。製品の画像 / PCM前処理�
 | 優先順 | 作業 | 完了条件と次への移行 |
 | --- | --- | --- |
 | 1 | CPU比較のCI経路を整える | 音声native CLIと画像の明示設定をCIへ統合する。条件別の元gate・capture監査・load / releaseを維持し、旧ONNX数値検証と過去の失敗を省略した成功にはしない。ローカルの合格設定を変換・重い再試行で繰り返さない |
-| 2 | 性能記録と動作要件を確定する | GPU10条件の元receipt・sample・40出力を公開用集計へ結び付け、合格したCPU比較、初回 / warm、stage、RAM / VRAM、解放を分離して記録。確認した構成と未確認の最低構成を区別し、未測定peak・低い構成の成功を推測しない |
+| 2 | 性能記録と動作要件を確定する | GPU10条件の元receipt・sample・40出力、条件別の画像CPU12 / 音声CPU8回、load / releaseは集計済み。[初回対応構成](windows-supported-configuration.md)をRAM64 GB / VRAM16 GBクラスの実測構成に固定する。これは保守的なサポート下限で、真の物理下限・他GPU・低容量構成の成功は主張しない。CIと新tag consumerの結果を最後に対応付ける |
 | 3 | 公開前確認と変更の統合 | 実装・記録を一つのtask PRにまとめ、必要CI、全祖先、実payload、公開identity、必要な画像目視 / OCRを確認して、許可済みのmergeを行う。旧providerコピーの個人情報削除は別条件として確認する。新規公開物はprivacy gateを満たして進める |
 | 4 | Windows正式SDKを公開する | 版・CHANGELOG・license・取得手順を確定し、固定tagを空consumerへ導入。公開モデルの取得→テキスト / 画像 / 音声・RenderTexture→横断検索→解放・正常終了を確認してReleaseを公開。公開後のtag・asset・手順を読み戻して照合する |
 

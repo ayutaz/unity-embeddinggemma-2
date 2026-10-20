@@ -1,6 +1,10 @@
 # Unity のローカル自動操作
 
-更新: 2026-10-17。PR #31 / #83のWindows consumer・text Player・画像音声sample検証は完了しています。[現在の対応範囲](status.md) / [ロードマップ](roadmap.md)。以下のcheckpointは当時の実行記録です。新しい実行では固定source・実GPU・PID・上限・終了を対象ごとに記録します。
+更新: 2026-10-20。Windows先行の工程1〜3は[確認記録](results/windows-first-stages-1-to-3-20261020.json)の範囲で完了しました。次の作業は[現在の実行計画](next-release-plan.md)の工程4〜5です。文書更新だけで成功済みの変換・Unity機能試験を再実行しません。
+
+新しい実行ではsource・モデル・入力・実GPU・所有PID・時間 / メモリ上限・終了を実行前に固定します。観測timeoutを再起動理由にせず、同じhandleの生存を確認します。停止対象はその実行が所有するprocessだけとし、元の失敗・capture・ログを上書きしません。resident RAM、job commit、VRAMの範囲を分け、運用上の開始条件・上限をSDKの最低要件として表示しません。
+
+以下のcheckpoint、5分等の上限、launcherへの注意は記載当時のsource別記録です。新しい全条件の実行枠や、現在の未完了項目へそのまま適用しません。[検証状況](status.md)と実行対象ごとの契約を基準にします。
 
 > 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 

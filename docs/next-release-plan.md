@@ -1,50 +1,54 @@
-# 正式リリースまでの実行計画
+# Windows先行リリースまでの実行計画
 
-確認日: 2026-10-20（JST）。[ゴール](goal.md)のテキスト・画像・音声、横断検索、Sentis GPU、Windows / macOS / iOS / Androidの必須条件を維持します。過去の検証記録は[検証状況](status.md)、従来の計画は[release-plan](release-plan.md)に残します。
+更新: 2026-10-20。ユーザーの方針により、最初の正式リリースはWindows Editor / Playerを対象にします。macOS / iOS / Androidは今後の対応です。[ゴール](goal.md)のテキスト・画像・音声、横断検索、FP32 / 採用Float16重み、Sentis GPU、数値・運用・性能・privacy・新規導入の条件は維持します。
+
+**工程1〜3のWindows機能検証は完了しました。** [確認記録](results/windows-first-stages-1-to-3-20261020.json)に実行sourceと適用範囲を記録しています。残る工程は4「性能・最低要件・公開前整理」と5「新tag導入・正式公開」です。正式リリース完了の報告ではありません。
 
 ## 現在地
 
-公開mainは `e72b5cb`（[#112](https://github.com/ayutaz/unity-embeddinggemma-2/pull/112)まで統合済み）。採用head `874c1c8` の全必須CIと実13数値archiveを独立照合し、実mainの同tree・署名・公開identity・全祖先も確認しました。[統合記録](results/platform-ci-integration-874c1c8-20261020.json)を基準に、後続sourceの結果は別に判定します。
+公開mainは `1a036fb`（[#113](https://github.com/ayutaz/unity-embeddinggemma-2/pull/113)まで統合済み）。head `c980027` の必須CI全15 job、実13数値archive、元824,320値とCPU encoder 120 capture / 30,822,400値の独立照合、実mainの同tree・署名・公開identity・全祖先を確認しました。許容差超過は0件です。初回upload timeoutとその失敗記録を保持し、同sourceの限定再試行を受け入れています。
 
-| 項目 | 確認した結果 | 残る条件 |
+Windowsの固定候補は `e5b6bd9`。実行記録のcandidate `9967516` とリポジトリ全treeが一致することを確認して、統合済みmain上へ文書branchの履歴を整理しました。SDK実行コード・依存・設定・モデルの同一性を照合し、実Editor検証と既存Playerの結果を次の範囲で適用します。
+
+| 対象 | 確認した結果 | 適用範囲 |
 | --- | --- | --- |
-| WindowsのSDK GPU動作 | 固定sourceの実モデル検証結果あり。現mainのSDK実行コードはその検証sourceから不変 | 全必須環境、最終candidateの導入・性能・運用検証。package内文書は変更済みで、package全bytesの一致は主張しない |
-| #112のPythonテスト | Windows / Ubuntu × Python 3.13 / 3.14の4環境で各2,612件実行合格、失敗・error 0。実XMLを独立照合。修正対象CLI 2件も各環境で実行合格 | 各環境のGPU関連skip 9件はGPU合格に数えない |
-| #112の必須CI | [全15 job成功](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39358511727)。実13数値archive、元824,320値、CPU encoder 120 capture / 30,822,400値を独立照合し許容差超過0 | このsourceの数値検証。全体性能・実GPU・正式公開の合格とは分ける |
-| build前の固定入力配置 | 後続変更で既存native build CLIへ接続。関連128件合格・skip0、元28ファイル34,474,958 bytesの実配置と全hash・私的2コピーを照合 | 本変更の必須CI、原モデル取得、端末persistent data配置、実build・実機GPUは未完了 |
-| macOS / Android / iOS CI | [全3 preflightがfailure](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39358511760)。理由は `unity_license_missing`。Editor導入・Unity build・Xcode compile・実モデル実行は未開始 | 対応するUnity CIライセンス経路の確立。repo Secrets 0、self-hosted runner 0を確認 |
-| hosted Mac GPU | Swift compileとMetalの16整数照合は成功、不一致0。実3 archiveを独立照合 | 小さい能力probeの結果。実Sentisモデル・必要メモリ・性能は未合格 |
-| 正式公開 | 公開済み4件はいずれもpreview | 正式SDK tag / Releaseと、そのtagを使う新規consumerは未完了 |
+| Windows Editorの実モデル | FP32 / Float16重みの各1プロセスで、全画像・音声profile / roleの基本36＋反復45ベクトル、18文書 × 4クエリの順位・scoreを照合。追加1プロセスでテキスト全roleの30ベクトルとRenderTexture全roleの12ベクトルを照合 | Unity 6000.3.21f1 / Sentis 2.6.1 / RTX 4070 Ti SUPER / D3D12。3プロセスとも正常終了。元数値条件を維持し、computation CPU fallback・中間readbackは0 |
+| Windows Player | media source `f0fc2a7` の実Win64 IL2CPP / Release / High build、4 cold / warmプロセスの元結果を再照合。実行ソース71件・build全552ファイルと証拠2コピーを再確認。text source `3a02fc0` の全15ケース × GPU4条件も再照合 | 候補とのSDKコード一致を確認した既存実行の適用。新candidate SHAでの再build・再実行としては数えない。textのCPU4条件をGPU合格に数えない |
+| モデル準備 | 既存の公開cold取得・中断 / 再開・破損回復の証拠を保持。現行コードで両形式の全1,640ファイルをwarm再利用し、raw descriptor保持と全hashを確認。転送・検証・再開loopのコード一致と変更箇所を照合 | 追加downloadは0。変更されたdescriptor保存処理は現行の実warm結果と、4 CI環境で各63件（うちdescriptor10件）の実XMLで確認。新しいcold公開取得とは区別 |
+| 操作・回復 | 同一SDK実装のnative UI元イベントを再照合。loading cancel / retry、空入力からの回復、再生・停止、resetを確認。現Editorでpackage / sampleの560件合格、失敗・skip0（GPU名の小規模契約124件を含む） | 権限拒否・pause / disable・再開はfake device契約を実Unityで確認。OS権限設定を変更した実拒否試験ではない。native UIの既知のobserver warningを保持 |
+| 明示収録 | source `8649c94` の実マイク8.4秒、GPU270 worker、有限・単位長768次元と解放の結果を保持。現候補と音声Runtime・capture実装の一致を確認 | 元sourceを付けた適用。新規収録は行わず、音声の保存・送信なし。任意音声の意味検索品質の保証にはしない |
+| 他環境 | macOS / iOS / Android CIの `unity_license_missing` failure、Metal 16整数probeのみの成功を保持 | 実Sentisモデル・実機GPUは未合格。Windows公開後の別工程 |
 
-CPUのPython参照・比較は検証用です。製品の画像 / PCM前処理、encoder、backboneはGPUで接続し、中間CPU readback・計算fallbackを禁止する要件を維持します。
+CPUのPython参照・比較は検証用です。製品の画像 / PCM前処理、encoder、backboneはGPUで接続し、中間CPU readback・計算fallbackを禁止します。入力decode・tokenize・PCM取得と最終768次元配列の取得は入出力境界として記録します。
 
-## 優先順と完了条件
+## 工程と完了条件
 
-| 順序 | 実施内容 | 完了条件・次工程への移行 |
+| 工程 | 状態 | 確認内容・残る条件 |
 | --- | --- | --- |
-| 1 基盤の統合・整理 | #112は全15 job・実13数値archive・privacyを確認して統合済み。固定入力配置と計画更新を後続の1 PRへまとめ、実mainをbaseに検証する | #112の実main tree・署名・公開identity・全祖先は確認済み。後続変更の必須CIは別途必要。別workflowのライセンスfailureを未解決として保持 |
-| 2 CIで各platformをbuild | Unityライセンスの対応経路を1つ確定し、安全に設定。既存入口でmacOS Editorテスト、Android ARM64 / IL2CPP / High / Release APK、iOS exportと署名なしXcode compileを並列実行。原モデル / fixtureのhash検証付き取得を接続 | 各platformで実Editor・build・正常終了・成果物hashを確認。iOS export / compile / 署名 / 実機起動は別判定。buildだけでモデル実行を合格にしない |
-| 3 実GPUと実機を検証 | macOS Metal、iOS / Android実機で全入力・全role・混在検索、元数値gate、actual backend、fallback / readbackを監査。権限拒否、キャンセル、中断 / 復帰、切替、解放・正常終了も確認 | Windowsを含む全必須環境の結果表に成功・失敗・未実行を記録。実機・実モデルの証拠が揃って通過。tiny probe、エミュレータ、skipは代用しない |
-| 4 性能と公開前整理 | 同一hardware・source・モデル・入力・仕事量でCPU/GPU、初回 / warm、各stage、RAM / VRAM、解放を測定。画像CPUの未合格条件を元許容差で追跡。最終公開物・履歴・実payloadを監査し、旧providerコピーの除去も確認 | 数値gateに通る比較表と実測に基づく最低要件。既知の失敗を保持し、現行履歴とprovider側残存の確認を分けて完了 |
-| 5 正式SDK公開 | 版・CHANGELOG・license・取得手順を確定し、固定tagを空consumerへ導入。モデル取得→全入力→検索→解放・終了を通して正式Releaseを公開 | 工程2〜4の必須条件を満たし、公開source / model hashと新規導入結果が一致。previewを正式SDK Releaseに数えない |
+| 1 #113の検証と統合 | 完了 | 必須CI・全13数値archive・元参照・公開identity・履歴・payloadを確認して統合。実mainのtree・署名・全祖先も確認済み |
+| 2 Windows候補の固定とbuild | 完了 | SDK・依存・設定・両モデルdescriptorと全object hashを固定。実buildと候補の入力一致、取得・回復・切替・解放を上記source別の証拠で確認 |
+| 3 Windowsの全機能を受け入れ | 完了 | Editorの実モデル・全role・RenderTexture・混在索引・横断検索と、同一SDKの既存Player結果を照合。actual backend、fallback / readback、キャンセル後の回復・解放・正常終了を確認 |
+| 4 性能と公開前整理 | 未完了 | 同じhardware・source・モデル・入力・仕事量のCPU比較で不足分だけ測定。初回 / warm・各stage・RAM / VRAM・解放を分離。元数値gateを通る比較表と実測から最低要件を決め、公開物・全履歴・実payload・旧providerコピーを確認 |
+| 5 Windows正式SDK公開 | 未完了 | 版・CHANGELOG・license・取得手順を確定。固定tagを空consumerへ導入し、モデル取得→全入力→検索→解放・終了を通して正式Releaseを公開。工程4と新tagの実導入を満たして判定 |
 
-工程1の基盤統合は完了しました。後続変更の検証と並行して工程2のライセンス経路、工程3の端末・署名、工程4のGPU資源・provider対応を準備します。工程2〜3は準備できたplatformから進め、未準備platformを理由に全体を止めません。ライセンス未設定のまま同じpreflightを再実行しても前進しないため、環境変更後に再開します。
+## 保持する失敗と限界
 
-## 環境依存と担当
+追加Editor試験の初回は検証コードのNUnit記法がcompile errorとなり、モデル実行前に停止しました。次の実行は検証用16 GiB total commit上限に達した後、D3D12 device errorで終了しました。両方を失敗として保存しています。GPU復帰後の560契約試験を確認し、受け入れた3プロセスではowned Editorのresident上限16 GiBと、GPU driver予約等を含むowned jobのcommit上限32 GiBを分けて監視しました。この監視設定はSDKの最低RAM / VRAM要件ではありません。
 
-| 条件 | 次の具体的な対応 | 担当・再開条件 |
-| --- | --- | --- |
-| Unity CIライセンス | 利用可能なライセンス種別とrunnerに対応する認証経路を確定。値をchat・Git・公開ログへ出さず設定する。ローカルPersonalのentitlement XMLをCIへ流用しない | 開発側が手順を準備。アカウント管理者による必要設定後、実preflightがreadyになれば工程2へ |
-| Mac / iOS / Android | 利用可能なhost・端末・接続、iOS署名を確定。hosted Macの小さいprobeだけでモデル容量が足りると仮定せず、モデル配置前に容量を判定 | 開発側がbuild / 検証を実装。端末・必要署名が利用可能になれば工程3へ。ローカルAndroid moduleのUAC待ちはhosted APK buildと分離 |
-| GPU性能測定 | 開始前に空きVRAMを再確認。音声測定の既存開始条件は14 GiBで、SDK最低要件ではない。必要な資源が足りない場合は利用可能な既存環境へ切替 | 資源確保後に工程4の実測へ。他アプリ終了・有料環境利用は既存の許可範囲を確認 |
-| 旧providerコピー | 既存Support依頼の進展と匿名取得の可否を、providerの返答・変更時や最終公開判定前に確認 | provider対応後に除去を再検証。問い合わせの追加送信や同じ状態の頻繁な再照会を作業成果に数えない |
+元の最終vector・中間値の参照と許容差は変更していません。既存の音声GPU4条件16回の[測定](results/audio-gpu-repeat-four-conditions-20261020.json)は保持しますが、同条件CPU比較・全区間のメモリ観測・最低要件は未完了です。今回の機能検証のprocess時間を推論速度やGPU専有時間として扱いません。新tag consumer、正式版・正式Release、他hardware / platformの合格も未完了です。
 
-現在の正式公開日は未確定です。工程1の基盤統合後の残件は表のとおりです。対応ライセンス・必須端末を確保した時点と最初の実build完了時に所要時間を見積り直します。CIの経過時間を端末確保・署名・provider対応の日数の見積りへ流用しません。
+## 次の進め方
 
-## 長期化を防ぐ進め方
+工程4の開始点は、同一host音声CPU基準の[準備停止（source `8f1bb97`、exit124）](results/windows-cpu-baseline-preparation-stop-20261020.json)です。非terminalのまま残った親receiptと、実processのterminal記録を区別し、この比較を実行中・合格とは扱いません。
 
-- 重い処理はGitHub Actionsを優先。成功済みの同source・同モデルの変換や検証を無条件に繰り返さず、変更と結果の適用範囲で再実行を判断します。
-- #112は検証対象headを維持して統合しました。計画だけで重いCIやPRを増やさず、固定入力配置の実装と本計画を後続の1 PRへまとめます。
-- 実装はTDDで変更をまとめ、task branch / PRで進めます。mainへの直接push、失敗に合わせた元参照・許容差の変更は行いません。
-- 各工程の報告は「実行source・実行範囲・成功 / 失敗 / 未実行・次の開始条件」に統一。外部条件待ちは何を待っているかを明示し、同じ調査や監視を無期限に繰り返しません。
-- 公開前にはproject-privacy skill、versioned Git hooks、全祖先と実payloadを確認。画像を公開する場合は実bytesの目視とOCRを行います。公開名 `yousan` は維持します。
+1. 元ログ・source・既存成果物・上限を一度診断し、再利用できるbytesと不足する処理を確定します。参照や許容差を変更せず、新しい根拠のない同じ準備を繰り返しません。
+2. 数値gateと正常終了を満たした条件だけで、同一入力・profile・仕事量のCPU / GPU、初回 / warm・各stageを比較します。別hostのCI数値合格と、このhostの性能は別の欄に記録します。
+3. RAM / VRAMの観測範囲、実測した対応構成と余裕を明記して要件を定義します。未測定peakや低い構成の成功を推測せず、追加機材の購入・他端末の確保をWindows先行計画の前提にはしません。
+4. 現行履歴・実公開payloadのprivacyと旧providerコピーの除去確認をそれぞれ閉じ、工程5へ進めます。旧provider対応は返答・状態変更時と公開判定前に確認します。
+
+- 工程4は不足する比較と公開前確認に絞ります。成功済みの同条件の変換・GPU機能試験は繰り返しません。旧providerコピーは現在の履歴の安全性と別に除去を確認します。
+- 重い処理は対応するCI経路が使える範囲で優先します。Unity CIライセンス未設定の同じpreflightを繰り返さず、Personal entitlementをCIへ流用しません。
+- macOS / iOS / AndroidはWindows公開後にライセンス・host・端末・署名を確保し、buildと実モデルGPUを別々に受け入れます。端末不足をWindows公開の待ち条件にはしません。
+- 実装はTDD・uv・task branch / PRで進めます。公開前にはproject-privacy、versioned Git hooks、全祖先・実payloadを確認し、新規・変更画像は目視とOCRで実bytesを確認します。公開名 `yousan` は維持します。
+
+正式公開日は未確定です。次の見積り更新点は「同条件性能比較・最低要件の確定」「公開前整理の完了」「新tag consumerの完了」です。開発作業とprovider対応の待ち時間を分けて報告します。過去のsource別記録は[検証状況](status.md)と[従来の計画](release-plan.md)に保持します。

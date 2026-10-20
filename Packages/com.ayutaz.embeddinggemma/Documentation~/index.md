@@ -1,25 +1,25 @@
 # 導入とRuntime API
 
-テキスト・画像・音声の埋め込みと検索をUnityへ組み込むための入口です。開発版 `0.1.0-pre.1`、正式リリース前です。Windowsの固定sourceで検証済みの範囲と他環境の未達条件は[検証状況](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)を参照してください。
+テキスト・画像・音声の埋め込みと検索をUnityへ組み込むための入口です。開発版 `0.1.0-pre.1`、正式リリース前です。Windows先行の工程1〜3はsource別に受け入れ済みです。性能・最低要件・新tagからの導入・正式公開の残件と、他環境の未検証範囲は[検証状況](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)を参照してください。
 
 ## 1. パッケージを追加する
 
-基準はUnity **6000.3.21f1** / Sentis **2.6.1**です。Package Managerの **Add package from git URL** へ次を入力します。PR #83統合時点に固定した開発版で、公開tagではありません。
+基準はUnity **6000.3.21f1** / Sentis **2.6.1**です。Package Managerの **Add package from git URL** へ次を入力します。2026-10-20に確認したPR #113統合済みmainの固定commitです。開発版の導入pinで、正式tagではありません。
 
 ```text
-https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/com.ayutaz.embeddinggemma#a965c098aba824b47f9762cae16b3af9656a3508
+https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/com.ayutaz.embeddinggemma#1a036fb2faf334d58f1b59de824b96b238f0275d
 ```
 
 clone済みなら **Add package from disk** でこのパッケージの`package.json`を指定することもできます。Package Managerの表示名は現在 **EmbeddingGemma** です。SentisとNewtonsoft JSONは依存から解決されます。URP・uloop・Pythonは利用側のRuntimeには不要です。
 
-最終統合版全体の空consumer受け入れは後続のgateです。過去sourceの固定Git導入・compileと、最新bundleの実GPU数値検証は別の記録として扱います。
+このpinと受け入れ済みSDKの実行コード一致を確認しています。最終tagを空consumerへ導入する受け入れは工程5です。固定sourceの導入、同一SDKの既存Player結果の適用、今回の実Editor実行は別の記録として扱います。
 
 ## 2. モデルを用意する
 
 **UPMにモデルは含まれません。** [モデル準備](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/model-preparation.md)に従って取得・監査・変換してください。
 
 - テキスト：`.sentis`と`tokenizer.json`。batch1 / sequence128、int32 `input_ids` / `attention_mask`、float `[1,768]`出力。
-- 画像・音声：固定profileのモデル・係数・tokenizerと`bundle.json` / `objects/`。新規環境向け一括生成・配布手順は未整備です。
+- 画像・音声：固定profileのモデル・係数・tokenizerと`bundle.json` / `objects/`。全6 moduleのFP32 / Float16重みは[公開モデルpreviewの取得手順](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/media-model-preparation.md)から明示取得できます。元checkpointからの再生成と、変換済みモデルの取得は別の経路です。
 - モデルは`google/embeddinggemma-2` revision `914f7f89142e33e77833254d9c9b90c3cef7303b`へ固定しています。producer・graph・ファイルhashを確認し、異なるrevisionを混ぜないでください。
 
 ## 3. サンプルから試す

@@ -13,11 +13,11 @@
 
 ### 画像・音声bundleについて
 
-画像・音声の全6 module bundleは、後続の[公開モデルpreviewと取得手順](media-model-preparation.md)で提供しています。両精度の匿名空cache取得・hash照合・GPU実行の証拠は同手順に記録しています。以下のtext向け準備メニューだけで画像・音声moduleは作れません。正式SDK Release・必須実機・性能全体の受け入れは別の未完了条件です。
+画像・音声の全6 module bundleは、[公開モデルpreviewと取得手順](media-model-preparation.md)で提供しています。両精度の匿名空cache取得・hash照合・GPU実行の証拠は同手順に記録しています。以下のtext向け準備メニューだけで画像・音声moduleは作れません。Windows機能検証の工程1〜3は完了し、性能・最低要件・新tag導入・正式SDK Releaseは別の未完了条件です。他環境の実機受け入れはWindows公開後に分けます。
 
 既存のqualified graph入力を持つmaintainer向けの生成entry point・環境変数・producer制約は[サンプル検証記録のモデル準備](multimodal-search-sample.md)を参照してください。その手順は既存cacheが前提で、空checkoutからの変換コマンドではありません。準備後はbundleのproducer、全objectのsize・SHA256を照合し、実推論を別途検証します。
 
-previewの取得・hash照合を終えたら、[サンプル手順](../Packages/com.ayutaz.embeddinggemma/Samples~/MultimodalSearch/README.md)へ進めます。固定profileに対応した入力が必要です。previewを取得する経路と、元checkpointから同じモデルを再変換する経路は別です。最終candidate・性能・必須実機・正式公開の残件は[リリース計画](release-plan.md)を参照してください。
+previewの取得・hash照合を終えたら、[サンプル手順](../Packages/com.ayutaz.embeddinggemma/Samples~/MultimodalSearch/README.md)へ進めます。固定profileに対応した入力が必要です。previewを取得する経路と、元checkpointから同じモデルを再変換する経路は別です。性能・最低要件・新tag導入・正式公開の残件は[現在の実行計画](next-release-plan.md)を参照してください。
 
 ### テキストモデルの準備
 

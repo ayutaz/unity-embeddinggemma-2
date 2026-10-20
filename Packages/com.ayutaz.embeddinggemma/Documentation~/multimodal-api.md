@@ -44,7 +44,7 @@ using var prepared = preprocessor.Process(texture);
 
 batch 1、8bit RGB / RGBAのTexture2D・作成済みsingle-sample 2D RenderTextureに対応します。各辺1〜8192px、sRGB / linearの保存値をRGB入力として扱い、alphaを無視します。浮動小数・HDR・圧縮formatは明示拒否します。公式bicubic antialiasのresize・丸め、16px patch・最大2520 patchesへのzero paddingをGPUで実行し、中間pixelをCPUへdownloadしません。
 
-入力Textureはcallerが所有します。結果は出力・作業Tensor / 補間bufferを所有し、processorの再利用・Dispose後も独立して生存します。次段GPU処理が完了するまで結果を保持し、その後Disposeしてください。Unity main threadのみ。画像encoder / 最終embedding APIはWindowsの固定sourceでGPU検証済みです。Playerと全必須環境の受け入れは残っています。
+入力Textureはcallerが所有します。結果は出力・作業Tensor / 補間bufferを所有し、processorの再利用・Dispose後も独立して生存します。次段GPU処理が完了するまで結果を保持し、その後Disposeしてください。Unity main threadのみ。Windows候補ではTexture / RenderTextureの全roleを両重み形式で実Editor検証し、同一SDK実装の既存Player結果を照合しています。性能・最低要件・新tag導入・正式公開と他環境の受け入れは[検証状況](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)に分けて記録しています。
 
 ## PCM入力境界
 

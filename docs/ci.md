@@ -1,8 +1,16 @@
 # CI と開発手順
 
-後続の[device fixture配置](device-mixed-runtime.md#build前の固定入力配置)は、明示した元manifest pinとローカル入力を検査してから既存native buildへ接続します。hosted workflowの自動取得、ライセンス・build・実機GPUの成功を示す変更ではありません。[元28ファイルと関連128テストの記録](results/device-fixture-build-staging-tdd-20261020.json)を参照してください。
+## 現在の基準（2026-10-20）
 
-## PR #112の統合結果
+main `1a036fb`（PR #113）は採用head `c980027` と同treeです。[必須CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39366996882)の15 jobと実13数値archiveを独立照合し、元824,320値・CPU encoder 120 capture / 30,822,400値の許容差超過0を確認しました。初回upload timeoutを保存し、同sourceの限定再試行を受け入れています。再試行一覧には成功済み12 jobの再掲も含まれ、元の時刻・全stepの一致を確認しています。再掲を新しい実行として数えません。
+
+Windows候補の実GPUはCIのCPU数値検証と分け、[工程1〜3の確認記録](results/windows-first-stages-1-to-3-20261020.json)に記載しています。macOS / iOS / Androidのライセンスfailureは未合格のまま保持し、Windows先行公開後の対応とします。[現在の実行計画](next-release-plan.md)が公開対象と順序の基準です。
+
+PR #113で統合した[device fixture配置](device-mixed-runtime.md#build前の固定入力配置)は、明示した元manifest pinとローカル入力を検査してから既存native buildへ接続します。hosted workflowの自動取得、ライセンス・build・実機GPUの成功を示す変更ではありません。[元28ファイルと関連128テストの記録](results/device-fixture-build-staging-tdd-20261020.json)を参照してください。
+
+現在のRequired CIは文書のみのPRでもPython・workflow lint・package・model-referenceを実行します。CIの未完了・失敗・skipと、既存sourceの合格を区別し、文書変更を新しいGPU実行の証拠にはしません。
+
+## PR #112の統合結果（過去の基準）
 
 main `e72b5cb` へ採用head `874c1c8` と同treeで統合済みです。必須CI全15 job成功・実13数値archive・元824,320値とCPU encoder 120 captureの独立照合を確認しました。[統合記録](results/platform-ci-integration-874c1c8-20261020.json)では、macOS / Android / iOSの全3 preflight failure（`unity_license_missing`）、小さいMetal probeの成功、実Unity build・モデル・実機の未実行を分けています。必須CIの成功を全platform合格には数えません。
 

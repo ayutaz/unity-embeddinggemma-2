@@ -1,139 +1,57 @@
 # ドキュメント
 
-初めて利用する場合は[リポジトリのREADME](../README.md)から始めてください。現在の事実は[検証状況](status.md)、これからの作業は[ロードマップ](roadmap.md)を基準にします。
-
-更新: **2026-10-20**。Windows先行の工程1〜3は完了しました。[確認記録](results/windows-first-stages-1-to-3-20261020.json)と[現在の実行計画](next-release-plan.md)を参照してください。残る工程は性能・最低要件・公開前整理と、新tag導入・正式公開です。macOS / iOS / Androidは今後の対応で、Windows公開の実機待ち条件には含めません。
+更新: **2026-10-21**。Windows版 **[v0.1.0は正式公開済み](https://github.com/ayutaz/unity-embeddinggemma-2/releases/tag/v0.1.0)** です。
+初めて使う場合は[READMEの導入手順](../README.md#導入)から始めてください。
+現状は[検証状況](status.md)、これからの作業は[ロードマップ](roadmap.md)へ集約しています。
 
 ## 利用する
 
 | 文書 | 内容 |
 | --- | --- |
 | [導入・Runtime API](../Packages/com.ayutaz.embeddinggemma/Documentation~/index.md) | UPM導入、C#の使用例、所有権と破棄 |
-| [モデル準備](model-preparation.md) | テキストモデルの取得・変換、画像・音声bundleの制約 |
-| [Text Search](../Packages/com.ayutaz.embeddinggemma/Samples~/TextSearch/README.md) | テキスト検索サンプルの操作 |
-| [Image and Audio Search](../Packages/com.ayutaz.embeddinggemma/Samples~/MultimodalSearch/README.md) | 画像・音声の登録、入力profile、検索・キャンセル |
-| [API詳細](runtime-api.md) | GPU設定、前処理、encoder・backbone、保存API |
-| [低レベルのマルチモーダルAPI](../Packages/com.ayutaz.embeddinggemma/Documentation~/multimodal-api.md) | prompt・GPU特徴量・前処理の入力と所有権 |
-| [音声API](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-embedder.md) | 非同期呼び出し・stageの所有権 |
-| [モデルのライセンス](model-license.md) | コードとモデルの利用条件・配布境界 |
-| [モデル成果物の個人情報検査](model-artifact-metadata.md) | PT2 / ONNX内部の文字列検査、原本保持とCI再開条件 |
-| [CPU参照比較の計測契約](reference-cpu-performance.md) | 固定入力の実3段chain、FP32とframeworkの比較範囲 |
-| [Windows CPU参照のCI経路](windows-CPU-CI.md) | 実Windows CIの音声2・画像3条件、全20回captureの独立照合 |
-| [CPU実測と元画像特徴量の回収](reference-cpu-diagnostics.md) | 画像3・音声2条件の最終vector 20回照合、中間値の失敗と非公開原本保持 |
+| [モデル準備](model-preparation.md) / [公開モデルpreview](media-model-preparation.md) | text単体の変換と、変換済み全6 moduleの明示取得・hash照合 |
+| [Text Search](../Packages/com.ayutaz.embeddinggemma/Samples~/TextSearch/README.md) | テキスト検索sample |
+| [Image and Audio Search](../Packages/com.ayutaz.embeddinggemma/Samples~/MultimodalSearch/README.md) | 画像・音声、入力profile、検索、cancel / recovery |
+| [API詳細](runtime-api.md) / [マルチモーダルAPI](../Packages/com.ayutaz.embeddinggemma/Documentation~/multimodal-api.md) | GPU設定、前処理・encoder・backboneと寿命 |
+| [音声API](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-embedder.md) | 非同期呼び出しとstageの所有権 |
+| [ライセンス](model-license.md) | SDKと別取得モデルの利用条件 |
 
-## 現状と開発計画
+## 現状・計画・開発
 
 | 文書 | 内容 |
 | --- | --- |
-| [検証状況](status.md) | 2026-10-20時点のWindows候補の受け入れと、source別の確認・未達条件 |
-| [現在の実行計画](next-release-plan.md) | 工程1〜3の完了、工程4〜5の残件と移行条件 |
-| [Windows 0.1.0公開候補の最終確認](windows-release-checklist.md) | 未公開の版準備から新tagのEditor / Player・正式Releaseまでの判定項目 |
-| [ロードマップ](roadmap.md) | 現在の優先順と以前の計画への入口 |
-| [プロジェクトのゴール](goal.md) | GPU要件、精度・対応環境、対象外 |
-| [CI](ci.md) / [自動操作](automation.md) | 開発環境・workflow・実行と結果の扱い |
+| [検証状況](status.md) / [正式版の確認記録](results/windows-v010-release-20261021.json) | 公開tag、実Editor / Player、数値、既知の限界 |
+| [対応構成](windows-supported-configuration.md) | 検証したWindows・GPU・メモリと非保証範囲 |
+| [ロードマップ](roadmap.md) / [ゴール](goal.md) | 次の優先順・開始条件と維持するGPU / 精度要件 |
+| [CI](ci.md) / [Unity自動操作](automation.md) | 開発手順、workflow、実行監督と結果の判定 |
+| [privacy](privacy.md) / [モデルmetadata検査](model-artifact-metadata.md) | Git hooks、履歴・payload・画像・モデル内部文字列の検査 |
+| [端末検証](device-validation.md) / [混在Playerの端末経路](device-mixed-runtime.md) | 将来のmacOS / Android / iOS受け入れ条件 |
 
-## 検証記録と設計資料
+## 性能・参照・配布
 
-以下は固定source・記載当時の実行条件に対応する資料です。本文中の「現在」「次に実行」「未統合」「失敗中」はその時点の記録であり、現在の対応表や作業キューには使いません。失敗と未実行の証拠も保持しています。
+- [Windows画像・音声のGPU性能とメモリ](windows-media-memory-results.md)
+- [テキストのCPU / GPU比較](text-paired-performance.md)
+- [CPU参照の測定契約](reference-cpu-performance.md)、[画像の固定条件](image-CPU-fixed-conditions.md)、[音声CPU結果](native-audio-CPU-results.md)
+- [Windows CPU CIとhost差](windows-CPU-CI.md)、[旧CPU診断](reference-cpu-diagnostics.md)、[ONNX CPU比較](onnx-cpu-comparison.md)
+- [native回帰データ](native-regression-distribution.md)、[元画像参照JSON](image-reference-distribution.md)、[旧raw候補の扱い](raw-candidate-archive.md)
+
+各結果のsource・入力・機器・計測範囲を維持します。異なるhostの時間を同じ機器の速度比較へ合算しません。
+
+## 固定sourceの検証記録
+
+以下は記載当時の成功・失敗・未実行の記録です。本文の「現在」「次の作業」「未統合」は当時の状態を指し、現在の作業キューには使いません。
 
 | 分野 | 入口 |
 | --- | --- |
-| Windows先行の工程1〜3 | [現Editorの実GPUとsourceを照合した既存Playerの確認記録](results/windows-first-stages-1-to-3-20261020.json) |
-| 音声GPUの4条件・16呼び出し | [元参照を維持した反復とメモリ観測範囲](results/audio-gpu-repeat-four-conditions-20261020.json) |
-| 同一host CPU基準の最新停止 | [外側準備枠・実processのexit124・未合格](results/windows-cpu-baseline-preparation-stop-20261020.json) |
-| Windows Releaseの公開モデル・全media role・混在検索 | [独立cold/warm全4起動](results/final-mixed-player-3a02fc0-20261019.json) |
-| 同sourceの既存text全ケースとCPU/GPU比較 | [実Player 2起動・8条件](results/final-text-player-3a02fc0-20261019.json) |
-| 修正後の実UIによる音声の途中停止と解放 | [固定合成音声・追加録音なし](results/native-playback-stop-7754ce4-20261019.json) |
-| 元の数値基準を維持する公開データと取得経路 | [native回帰データのpreview・明示input/audit](native-regression-distribution.md) |
-| 保存済み再生成raw候補の歴史的診断 | [完全なローカルZIPの照合とhosted経路の廃止](raw-candidate-archive.md) |
-| 最終配布候補の反復計測をつなぐ契約 | [candidateの固定入力・元gate・計測範囲](candidate-media-performance.md) |
-| 最新サンプルの実GPU・メモリ・画面・回帰 | [画像・音声サンプル検証](multimodal-search-sample.md) |
-| GPU出力確保の改善と新SDKの精度・順位 | [CPU storageの省略](gpu-write-only-output-allocation.md) |
-| 新SDKの全画像・音声profileのGPU/CPU/wall・メモリ | [同じsourceの40反復](media-gpu-submission-observations.md) |
-| 同じSDKのtextのGPU/CPU/wall・メモリ | [両形式・固定queryの4反復](text-current-sdk-observations.md) |
-| ロード・解放の仕事とGPU時間の欠測 | [12実行と固定sourceの範囲監査](load-release-measurement-scope.md) |
-| Windowsのprocess/engine別GPU活動量と短区間の欠測 | [Timer100Nsの単位・時計・実text APIとの照合](windows-gpu-engine-observations.md) |
-| Editor検索の校正済み割り当て・空/再利用Library | [Editorの別測定](editor-search-allocation-observations.md) |
-| Editor再構築中のcounter全体GCとnativeメモリ | [EditMode校正と実index2反復](editor-frame-allocation-observations.md) |
-| awaitをまたぐフレーム全体のGC counter | [既知payloadのcontrolと代表実音声の検証区間](async-frame-allocation-observations.md) |
-| Windows IL2CPP Playerの固定source受け入れ | [Player結果JSON](results/m2-current-main-player-acceptance-20261017.json) |
-| 元画像・音声encoderと全role API | [GPU/API完了監査](results/goal4-current-completion-audit-20261016.json) / [GPU診断](gpu-execution-and-silu-validation.md) |
-| テキストM1の保存・量子化・測定 | [M1完了検証](m1-completion-validation.md) |
-| 過去の固定Git consumerと検索 | [Git consumer](m2-latest-git-consumer-validation.md) / [検索検証](m2-search-validation.md) |
-| 実装時のTDD分割・checkpoint | [全体TDD設計](multimodal-tdd-plan.md) / [M2](m2-plan.md) / [M3](m3-plan.md) / [M4](m4-plan.md) |
-| 正式公開の詳細チェック | [公開準備の設計](m2-release-plan.md) |
-| 調査・モデル構造 | [技術方針](technical-approach.md) / [新規性調査](embeddinggemma-2-unity-novelty.md) |
+| 正式公開前のWindows候補 | [工程1〜3の記録](results/windows-first-stages-1-to-3-20261020.json)、[従来の混在Player](results/final-mixed-player-3a02fc0-20261019.json)、[従来text Player](results/final-text-player-3a02fc0-20261019.json) |
+| サンプルと実操作 | [画像・音声sample](multimodal-search-sample.md)、[音声の途中停止](results/native-playback-stop-7754ce4-20261019.json) |
+| 共通Runtime | [backbone](multimodal-backbone-validation.md)、[prompt](multimodal-prompt-validation.md)、[GPU constant / IL2CPP](gpu-constant-il2cpp-validation.md)、[GPU出力確保](gpu-write-only-output-allocation.md) |
+| テキスト | [M1完了](m1-completion-validation.md)、[Runtime](m1-runtime-validation.md)、[基盤](m1-validation.md) |
+| UPM・consumer・Player | [package](m2-package-validation.md)、[固定Git consumer](m2-latest-git-consumer-validation.md)、[検索](m2-search-validation.md)、[IL2CPP Player](m2-player-il2cpp-validation.md)、[sample Player](m2-player-sample-validation.md) |
+| 画像 | [前処理](m3-image-preprocessing-validation.md)、[encoder](m3-image-feature-encoder-validation.md)、[最終API](m3-image-embedder-validation.md)、[元参照](m3-image-embedding-reference-validation.md) |
+| 音声 | [前処理](m4-audio-preprocessing-sentis-validation.md)、[encoder](m4-audio-encoder-runtime-validation.md)、[最終API](m4-audio-embedder-validation.md)、[元参照](m4-audio-final-reference-validation.md)、[旧診断ledger](steps-1-3-acceptance.md) |
+| 計測手法 | [GPU submission](media-gpu-submission-observations.md)、[load / release](load-release-measurement-scope.md)、[GPU memory](windows-gpu-memory-observation.md)、[GPU engine](windows-gpu-engine-observations.md)、[async frame GC](async-frame-allocation-observations.md) |
+| 調査・設計 | [技術調査](technical-approach.md)、[新規性調査](embeddinggemma-2-unity-novelty.md) |
 
-`results/`のJSONには実行source・参照・数値・失敗・測定条件を記録しています。モデル重み・大きい中間テンソルは含みません。CIの成功だけでSentis実GPUや全端末の合格を示すことはできません。
-
-<details>
-<summary>検証記録の全一覧（分野別）</summary>
-
-### 共通基盤・GPU
-
-- [GPU constantのIL2CPP保持・実行検証](gpu-constant-il2cpp-validation.md)
-- [大きいGPU constantの分割転送](gpu-constant-upload-validation.md)
-- [GPU負荷計測とSiLU修正後の実モデル照合](gpu-execution-and-silu-validation.md)
-- [共通マルチモーダルbackboneの準備と検証](multimodal-backbone-validation.md)
-- [公式マルチモーダルpromptのRuntime契約](multimodal-prompt-validation.md)
-- [共通マルチモーダル本体のRuntime契約](multimodal-runtime-validation.md)
-- [Player / 他環境の検証準備](player-validation.md)
-
-### M1 テキスト
-
-- [M1 保存・量子化・測定の検証記録](m1-completion-validation.md)
-- [実モデル検証・ランタイム API の実行記録](m1-runtime-validation.md)
-- [M1 検証記録](m1-validation.md)
-
-### M2 導入・cache・Player
-
-- [Android検証APKのbuild・監査と実機gate](m2-android-validation.md)
-- [必須端末の準備・iOS Release設定と未実行の条件](device-validation.md)
-- [Player bundleのcache再利用と完全SHA-256高速化](m2-bundle-cache-validation.md)
-- [Windows Editorのsample font寿命の修正](m2-editor-font-lifetime-validation.md)
-- [Editor待ち時間の切り分け: 2026-10-12](m2-editor-profile-validation.md)
-- [Unity21の空Git consumerとembedded Test Framework検証](m2-embedded-framework-validation.md)
-- [font修正後の固定Git導入と測定fixtureの寿命](m2-font-git-consumer-validation.md)
-- [commit固定Git URL consumerの実動作確認](m2-git-consumer-runtime-validation.md)
-- [最新sampleを含む固定Git consumerの検証](m2-latest-git-consumer-validation.md)
-- [CI・main保護・UPM移行の検証](m2-package-validation.md)
-- [Windows IL2CPP release Playerの検証](m2-player-il2cpp-validation.md)
-- [Windows sample Player の検証](m2-player-sample-validation.md)
-- [TextSearch sample: 選択モデルの配置・cache検証](m2-sample-cache-validation.md)
-- [検索サンプル実装の検証記録](m2-search-validation.md)
-- [Windows Editorの起動環境とモデルなし安定性の切り分け](m2-stability-environment-validation.md)
-- [テキスト検索サンプルの文字欠け修正](m2-ui-font-validation.md)
-- [Unity 6000.3.21f1更新と終了比較](m2-unity-21-upgrade-validation.md)
-
-### M3 画像
-
-- [CPU画像前処理と実測・未達条件](m3-image-cpu-preprocessing-validation.md)
-- [最終画像embedding APIの合成受け入れ](m3-image-embedder-validation.md)
-- [M3: 実画像から最終embeddingへのPython参照](m3-image-embedding-reference-validation.md)
-- [固定画像profileのencoder Runtime API](m3-image-feature-encoder-validation.md)
-- [M3: GPU画像前処理のTDDとWindows検証](m3-image-preprocessing-validation.md)
-- [M3画像encoder / projectorの固定profile export](m3-vision-export-validation.md)
-
-### M4 音声
-
-- [最終音声APIのTDDと合成検証](m4-audio-embedder-validation.md)
-- [音声encoder Runtime接続のTDD](m4-audio-encoder-runtime-validation.md)
-- [M4音声encoder / projectorの固定profile export](m4-audio-encoder-validation.md)
-- [独立した最終音声Python参照](m4-audio-final-reference-validation.md)
-- [M4: native音声参照と標準ONNX Swish候補](m4-audio-native-onnx-validation.md)
-- [M4: PCM前処理RuntimeとGPU出力所有権](m4-audio-preprocessing-runtime-validation.md)
-- [M4音声前処理のSentis CPU / GPU受け入れ](m4-audio-preprocessing-sentis-validation.md)
-- [M4音声前処理の固定profile exportと参照](m4-audio-preprocessing-validation.md)
-- [実PCMから最終音声APIへの候補chain検証](m4-audio-real-chain-validation.md)
-- [現在の保存encoderの層別数値差](m4-current-coefficient-bound-layer-validation.md)
-- [現在の音声encoder数値gateと保存モデルの途中観測](m4-current-encoder-observation-validation.md)
-- [layer 0 feed_forward1の保存モデル数値照合](m4-feed-forward-stage-observation-validation.md)
-- [固定native入力によるFP64 projection比較](m4-fp64-projection-oracle-validation.md)
-- [音声layer 0内部正規化の固定参照照合](m4-layer-zero-norm-observation-validation.md)
-- [固定native layer 0のfeed_forward1内部参照](m4-native-feed-forward-reference-validation.md)
-- [固定入力による音声layer 0内部参照](m4-native-layer-replay-validation.md)
-- [M4: native SiLU保持と標準ONNX Swishの小さい比較](m4-native-silu-swish-probe-validation.md)
-- [M4: 固定PCM入力境界のTDD検証](m4-pcm-input-validation.md)
-- [固定native入力によるpost norm単独検証](m4-post-norm-isolation-validation.md)
-
-</details>
+`results/`のJSONと、関連する固定sourceの検証・設計・計測資料は保持しています。古い未実行手順を重ねた計画書は削除し、
+今後の実行順は[ロードマップ](roadmap.md)だけを更新します。重み・生log・個人の録音・大きい生成artifactはGitへ含めません。

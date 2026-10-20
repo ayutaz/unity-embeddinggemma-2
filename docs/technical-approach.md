@@ -2,9 +2,9 @@
 
 > 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 
-## 現在の実装と未達
+## 調査時点の実装と未達（2026-10-14）
 
-2026-10-14のコード基準 `a237dee2874cdb0fbcdf4fe333aebae7193ad390` では、GPU画像前処理・PCM / GPU音声前処理・公式prompt・共通backboneがmainにあり、最終画像 / 音声APIはDraft実装・合成契約合格。画像Python3 roleは18件合格、実encoder数値gateとUnity全chainは未達。[最新状態](status.md)と[全体計画](multimodal-tdd-plan.md)を実行順の基準にする。
+2026-10-14のコード基準 `a237dee2874cdb0fbcdf4fe333aebae7193ad390` では、GPU画像前処理・PCM / GPU音声前処理・公式prompt・共通backboneがmainにあり、最終画像 / 音声APIはDraft実装・合成契約合格。画像Python3 roleは18件合格、実encoder数値gateとUnity全chainは未達。[最新状態](status.md)と[全体計画](roadmap.md)を実行順の基準にする。
 
 音声native ONNX候補は標準Swish一個から `Neg→Exp→Add→Div` へ変更し、小さいFP32除算順序の反例を修正した。実モデルの修正後gateは未検証。数値補償graphはEditor / test候補であり、画像25265層・音声45623層への展開をRuntime採用や高速化の証拠としない。GPU推論とCPU側の変換・準備負荷を別々に計測する。
 
@@ -18,7 +18,7 @@
 > 最終PR #4のPython参照生成 / 保存済みexport全15件照合も成功（run `37801226486`、最小cosine 0.9999998808）。
 > Windows Editorで`.sentis`保存・再読み込み、Float16重み量子化、CPU / GPUCompute精度と測定までM1完了。[M1完了検証](m1-completion-validation.md)を参照。
 > CI・UPM・検索基盤とサンプル / モデル準備をPR #6・#10・#11で統合済み。PR #12統合後の確認基準main `4ee0cbb`はCI全8 job成功。元プロジェクトと新規consumerでWindows Sentisの検索4条件・画面操作を確認。[現在の状態](status.md) / [検索検証](m2-search-validation.md)を参照。
-> 現在は[M2基盤安定化](m2-release-plan.md) → 共通特徴量 / 長さ拡張 → [M3画像](m3-plan.md) → [M4音声](m4-plan.md) → 全必須環境の検証 → 正式公開。[全体TDD計画](multimodal-tdd-plan.md)を参照。外部仕様は2026-10-07の調査を基礎とし、2026-10-09に採用版の公式export / 量子化 / UPM手順とインストール済み2.6.1の実装を再確認した。今回の更新は計画の反映で、画像・音声の外部仕様再調査 / 実装 / 実測ではない。以下の前処理定数はM3 / M4の固定processor確認で再検証してから採用する。
+> 当時はUPM基盤・画像・音声・他環境・正式公開の順に計画しました。現在のWindows版は公開済みです。[今後の計画](roadmap.md)を参照。外部仕様は2026-10-07の調査を基礎とし、2026-10-09に採用版の公式export / 量子化 / UPM手順とインストール済み2.6.1の実装を再確認した。今回の更新は計画の反映で、画像・音声の外部仕様再調査 / 実装 / 実測ではない。以下の前処理定数はM3 / M4の固定processor確認で再検証してから採用する。
 
 ## 要約
 
@@ -192,7 +192,7 @@ Uint8、int4、画像 / 音声の量子化、埋め込み表を別管理する�
 
 ## 6. 進め方(M1: テキスト用モデルを動かすまで)
 
-以下は完了したM1の実施順序と合格条件。各段階はWindows Editorで完了し、実測は [M1詳細計画](m1-plan.md) / [完了検証](m1-completion-validation.md)に記録した。今後の作業順序は [M2計画](m2-plan.md)を基準とする。
+以下は完了したM1の実施順序と合格条件。各段階はWindows Editorで完了し、実測は [M1詳細計画](m1-completion-validation.md) / [完了検証](m1-completion-validation.md)に記録した。今後の作業順序は [今後の計画](roadmap.md)を基準とする。
 
 | # | 作業 | 完了の条件 |
 | --- | --- | --- |

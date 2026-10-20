@@ -32,4 +32,4 @@ sampleを最小consumerへ導入する場合は、manifestのdependenciesに`"co
 
 WindowsのRuntime hashはOSのCNGを使い、利用できない場合・他OSは完全.NET SHA-256へ戻ります。追加のネイティブDLLを配布しません。通信はcoroutineですが、hash・モデルdeserialize・文書埋め込みは同期処理です。全準備をフレーム予算内で処理する実装やbyte-range転送再開の保証ではありません。
 
-Windows Editorのfile URL転送・実モデルGPU準備・検索・cache再利用を確認しました。[Editor実測](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/m2-sample-cache-validation.md)。Androidは実APK build・署名 / payload監査まで成功、実機のjar経路・CPU / GPUは未実行です。通常表示のWindows sample Playerでは日英GUI・Float16 GPU検索・解放が成功しましたが、終了時クラッシュが残り、[検証PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)はdraft / 未統合です。独立2起動・macOS / iOS / Android実機の合格前に全端末対応済みとは扱いません。
+Windows版v0.1.0では、公開tagからの新規導入と、実Editor / Windows IL2CPP Playerでのテキスト検索・解放・正常終了を確認しました。[現在の検証状況](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)を参照してください。以前のcache実装の測定は[過去のEditor実測](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/m2-sample-cache-validation.md)に残しています。Androidの実機jar経路・CPU / GPUと、macOS / iOSは未検証です。

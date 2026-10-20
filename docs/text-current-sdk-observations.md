@@ -18,4 +18,4 @@ GPU RecorderとProfiler履歴の値は一致していない。例えばFP32 warm
 
 [FP32のGPUメモリ](results/text-current-fp32-d7b2233-first-memory-20261018.json) / [Float16重みのGPUメモリ](results/text-current-float16-weights-d7b2233-first-memory-20261018.json)は正確なPIDと実counter採取時刻でload/query/releaseへ対応付けた。短いqueryに採取点がなければnullを保持し、観測最大値を保証されたpeak・必要VRAMにしない。GPU load/release時間も未測定のままである。
 
-起動補助スクリプトの最初の試行は、置換件数の事前checkで停止し、Unity/modelは未実行だった。元のcontroller記録を保持し、修正後の別controllerで上記2形式を実行した。実モデルの失敗やGPU passに数えない。画像・音声の対応する記録は[同じsourceのstage測定](media-gpu-submission-observations.md)、残作業は[優先1〜3の監査](priority-1-to-3-acceptance.md)を参照する。
+起動補助スクリプトの最初の試行は、置換件数の事前checkで停止し、Unity/modelは未実行だった。元のcontroller記録を保持し、修正後の別controllerで上記2形式を実行した。実モデルの失敗やGPU passに数えない。画像・音声の対応する記録は[同じsourceのstage測定](media-gpu-submission-observations.md)、残作業は[優先1〜3の監査](status.md)を参照する。

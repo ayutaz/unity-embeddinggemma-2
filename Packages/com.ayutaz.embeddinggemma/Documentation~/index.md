@@ -4,7 +4,7 @@
 
 ## 1. パッケージを追加する
 
-基準はUnity **6000.3.21f1** / Sentis **2.6.1**です。正式tag公開後は、Package Managerの **Add package from git URL** へ次を入力します。公開・導入の確認結果はGitHub Releasesで確認してください。
+基準はUnity **6000.3.21f1** / Sentis **2.6.1**です。Package Managerの **Add package from git URL** へ、公開済み正式tag `v0.1.0`のURLを入力します。公開・導入の結果は[Release notes](https://github.com/ayutaz/unity-embeddinggemma-2/releases/tag/v0.1.0)を参照してください。
 
 ```text
 https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/com.ayutaz.embeddinggemma#v0.1.0

@@ -1,8 +1,8 @@
 # 音声専用の埋め込みAPI
 
-2026-10-20の現在地: Windows先行の工程1〜3は、Unity6000.3.21f1 / Sentis2.6.1で両重み形式の全PCM role・混在検索・回復と解放を確認し、同一SDKの既存Player結果を照合して受け入れています。性能・最低要件・新tag導入・正式公開は未完了です。[最新の確認記録](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/results/windows-first-stages-1-to-3-20261020.json)を参照してください。以下の16f1の数値は元sourceの履歴として保持します。
+更新: 2026-10-21。Windows版[v0.1.0は正式公開済み](https://github.com/ayutaz/unity-embeddinggemma-2/releases/tag/v0.1.0)です。公開tagの空consumerで、Unity6000.3.21f1 / Sentis2.6.1、FP32 / Float16、全PCM profile・roleと混在検索・回復・解放を実Editor / Windows IL2CPP Playerで確認しました。[正式版の確認記録](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/results/windows-v010-release-20261021.json)を参照してください。
 
-2026-10-17：main統合済みのAPIです。実PCM → GPU前処理 → 分割音声encoder → 共通backbone → 正規化済み768次元の全6信号・Query / Document / Raw、18条件は固定sourceのWindows Editor / Unity6000.3.16f1 / Sentis2.6.1 / RTX4070 Ti SUPER / D3D12で合格しました。後続の21f1サンプルと非同期前処理の検証、必須CIも成功しています。正式リリースは未実施です。[対応範囲とsource別証拠](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)。
+16f1での元API検証・18条件の履歴は[従来の確認記録](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/results/goal4-current-completion-audit-20261016.json)に保持しています。以下の古いsourceの数値は、新tagの実行へ読み替えません。
 
 実モデルの検証済み経路は`PartitionedAudioFeatureEncoder`と`AudioEmbedder.EmbedAsync`です。`AudioEmbedder`は`IAsyncAudioEmbedder`を実装します。同期`Embed`もありますが、連続同期実行ではGPUキャッシュ保持により12 GiBのホストメモリ上限を超えた失敗があり、同じ受け入れ結果として扱えません。
 

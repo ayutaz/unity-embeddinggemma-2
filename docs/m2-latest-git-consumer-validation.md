@@ -52,6 +52,6 @@ Game Viewへmouse / keyboardイベントを送り、Float16 file URLとactual Te
 
 Play停止後のConsoleはError 0 / Warning 0、Persistent allocation Log 1件、stackなしだった。font WarningはこのUI sessionでは出なかったが、過去に発生した警告の原因特定や解消の証拠にはしない。allocationログの原因は未確定。
 
-固定mainの新規Git導入というgateは今回のWindows条件で確認できた。正式tag固定導入、macOS Editor / iOS / Androidの実モデルCPU / GPU、実APK、sample Player画面、任意consumerのstrippingと残る安定性は未完了。[4段階の計画](m2-release-plan.md)に従って進め、Windows合格だけでM2全体や正式Releaseを完了とはしない。
+固定mainの新規Git導入というgateは今回のWindows条件で確認できた。正式tag固定導入、macOS Editor / iOS / Androidの実モデルCPU / GPU、実APK、sample Player画面、任意consumerのstrippingと残る安定性は未完了。[4段階の計画](roadmap.md)に従って進め、Windows合格だけでM2全体や正式Releaseを完了とはしない。
 
 モデル・cache・Library・binaryはGit管理外。小さい結果JSONと画面画像のみをコミットした。

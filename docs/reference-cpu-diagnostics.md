@@ -1,6 +1,6 @@
 # 実CPU比較と元画像特徴量の回収
 
-現在の計画（2026-10-20）: [Windowsの工程1〜3](results/windows-first-stages-1-to-3-20261020.json)は機能検証の受け入れです。この文書のCPU成功・失敗・中間値診断はsource別の証拠で、同条件CPU/GPUの性能比較全体は未完了です。次の作業と完了条件は[工程4](next-release-plan.md)を基準にします。
+現在の計画（2026-10-20）: [Windowsの工程1〜3](results/windows-first-stages-1-to-3-20261020.json)は機能検証の受け入れです。この文書のCPU成功・失敗・中間値診断はsource別の証拠で、同条件CPU/GPUの性能比較全体は未完了です。次の作業と完了条件は[工程4](roadmap.md)を基準にします。
 
 ## 同一host音声CPU基準の準備停止（2026-10-20）
 

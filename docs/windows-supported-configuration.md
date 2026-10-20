@@ -4,12 +4,12 @@
 RAMは64 GB搭載クラス、GPUは16 GB VRAMクラスを保守的なサポート下限として選びます。
 これは実測に基づく初回の対応範囲の決定で、より小さい構成が動かないと証明した物理的最小値ではありません。
 他GPU・低容量構成の成功を推測して対応表へ追加せず、後続の実測で範囲を広げます。
-正式Releaseと新tag consumerの完了判定は別に残っています。
+[v0.1.0の正式公開と新tag consumerの実行](results/windows-v010-release-20261021.json)は完了しています。
 
 | 項目 | 初回の検証構成 |
 | --- | --- |
 | OS | Windows 11 x64。実測機はEducation、10.0.22631 / build 22631 |
-| Unity | 6000.3.21f1。Windows Playerは既存のWin64 IL2CPP / Release / Highのsource別検証を適用 |
+| Unity | 6000.3.21f1。公開tagの新規consumerからWin64 IL2CPP / Release / Highをbuildし実行 |
 | Sentis | 2.6.1、GPUCompute、Direct3D12 |
 | GPU | NVIDIA GeForce RTX 4070 Ti SUPER、16 GB VRAMクラス。driver報告の容量は16,376 MiB |
 | Driver | Unity実行logは32.0.16.1088、今回のnvidia-smi readbackは610.88 |
@@ -23,7 +23,7 @@ Python / C++ compiler・比較用CPU helperは開発検証用で、Unity SDKへn
 
 ## 選択の根拠
 
-- [Windows機能検証](results/windows-first-stages-1-to-3-20261020.json)は実Editorと、同じSDK実行コードの既存Playerをsource別に確認しています。新tagを新規導入した証拠とは分けます。
+- [正式版の確認記録](results/windows-v010-release-20261021.json)は公開tagの空consumer、実Editor、8実Player processと公開後の読み戻しです。従来の[工程1〜3](results/windows-first-stages-1-to-3-20261020.json)とはsourceを分けます。
 - [画像・音声GPU10条件](windows-media-memory-results.md)は40実行と全180区間のallocation sample、正常終了を確認しています。process全体の観測で、保証されたpeak・SDK専有量ではありません。12 query errorと利用不可sampleも保持しています。
 - [画像CPU12回](image-CPU-fixed-conditions.md)と[音声CPU8回](native-audio-CPU-results.md)は、元の全数値gate、同じ入力との比較、load / release、正常終了を確認しています。条件別の設定・別frameworkを明示し、これらのCPU process RAMをSDKの最低RAMには換算しません。
 

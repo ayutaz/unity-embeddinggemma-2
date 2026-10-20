@@ -35,6 +35,6 @@ stageの`success`は転送内容の照合だけを表します。`original_fixtu
 
 AndroidのStreamingAssetsはfile APIで直接読めない場合があり、[Unityの公式手順](https://docs.unity.com/en-us/engine/6000.3/manual/building-and-publishing/streaming-assets)に従ってUnityWebRequest等で取り出す必要があります。転送完了だけを元fixtureのhash一致やGPU推論成功に数えません。
 
-実機・署名・build環境が確保できるまで正式リリース条件は未達です。Windows向けの既存証拠は保持し、未実行・失敗・skipを実機合格へ置き換えません。
+実機・署名・build環境が確保できるまで、このplatformの受け入れは未達です。Windows版v0.1.0の正式公開は完了しており、この不足をWindowsの公開待ち条件へ戻しません。未実行・失敗・skipを実機合格へ置き換えません。
 
 [Android / iOSの混在runtime入口](device-mixed-runtime.md)を追加しました。専用marker・端末内run設定・固定fixture転送・既存の全roleと混在GPU検査を接続し、関連190件のEditor検査が合格しました。実build・端末配置・GPUの受け入れは未実行です。

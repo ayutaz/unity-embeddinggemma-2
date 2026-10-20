@@ -1,46 +1,8 @@
-# CI と開発手順
+# CIと検証の実行方針
 
-## 現在の基準（2026-10-20）
+更新: **2026-10-21**。Windows版[v0.1.0の公開](https://github.com/ayutaz/unity-embeddinggemma-2/releases/tag/v0.1.0)と実GPU受け入れは完了しています。必要CIは全15 job成功・13 archiveの独立照合で確認しました。[現状](status.md) / [正式版の記録](results/windows-v010-release-20261021.json) / [今後の計画](roadmap.md)。
 
-main `1a036fb`（PR #113）は採用head `c980027` と同treeです。[必須CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39366996882)の15 jobと実13数値archiveを独立照合し、元824,320値・CPU encoder 120 capture / 30,822,400値の許容差超過0を確認しました。初回upload timeoutを保存し、同sourceの限定再試行を受け入れています。再試行一覧には成功済み12 jobの再掲も含まれ、元の時刻・全stepの一致を確認しています。再掲を新しい実行として数えません。
-
-Windows候補の実GPUはCIのCPU数値検証と分け、[工程1〜3の確認記録](results/windows-first-stages-1-to-3-20261020.json)に記載しています。macOS / iOS / Androidのライセンスfailureは未合格のまま保持し、Windows先行公開後の対応とします。[現在の実行計画](next-release-plan.md)が公開対象と順序の基準です。
-
-PR #113で統合した[device fixture配置](device-mixed-runtime.md#build前の固定入力配置)は、明示した元manifest pinとローカル入力を検査してから既存native buildへ接続します。hosted workflowの自動取得、ライセンス・build・実機GPUの成功を示す変更ではありません。[元28ファイルと関連128テストの記録](results/device-fixture-build-staging-tdd-20261020.json)を参照してください。
-
-現在のRequired CIは文書のみのPRでもPython・workflow lint・package・model-referenceを実行します。CIの未完了・失敗・skipと、既存sourceの合格を区別し、文書変更を新しいGPU実行の証拠にはしません。
-
-## PR #112の統合結果（過去の基準）
-
-main `e72b5cb` へ採用head `874c1c8` と同treeで統合済みです。必須CI全15 job成功・実13数値archive・元824,320値とCPU encoder 120 captureの独立照合を確認しました。[統合記録](results/platform-ci-integration-874c1c8-20261020.json)では、macOS / Android / iOSの全3 preflight failure（`unity_license_missing`）、小さいMetal probeの成功、実Unity build・モデル・実機の未実行を分けています。必須CIの成功を全platform合格には数えません。
-
-## 2026-10-20のCI拡張（実装時の履歴）
-
-基準mainは `de56db8`です。本branchに `.github/workflows/platform-validation.yml` と `tools/embeddinggemma_tools/platform_ci.py` を追加しました。固定Unity 6000.3.21f1 / revision c02631ffc030でmacOS Editor契約テスト、Android APK build、iOS Xcode exportを別jobとして実行します。Repository Secretsとself-hosted runnerは実装前のAPI確認で0件です。workflowの追加や単体テスト合格は、実Editor・build・GPU合格の証拠ではありません。
-
-ownerが起動した同一repositoryのPR、またはownerによる手動実行だけを対象にします。3 jobはそれぞれmacOS Intel runnerでpreflightを実行し、ライセンス不足・異なるproject revision・容量不足なら非ゼロ終了します。24 GiBはインストール前の運用上の容量条件で、SDKの最低要件ではありません。条件が揃ったjobだけがHub経由でEditor / moduleを導入し、ライセンスを有効化します。既存のEditorがある場合も必要moduleの存在を検査します。Serial経路は成功・失敗の両方で返却を試み、返却失敗も成功にはしません。
-
-必要なActions Secretsは、file経路では `UNITY_LICENSE`、serial経路では `UNITY_SERIAL` / `UNITY_EMAIL` / `UNITY_PASSWORD` です。fileは有効化済みの内容が必要で、変数が存在するだけでは有効性を証明しません。ライセンス種別・契約と[公式activation手順](https://game.ci/docs/github/activation/)を確認して設定します。値をチャットやコードに書かず、[repository設定](https://github.com/ayutaz/unity-embeddinggemma-2/settings/secrets/actions)から登録します。
-
-macOSは `ValidationIOSBuildTests` / `ValidationAndroidBuildTests` / `PlayerDeviceMixedEntryTests` の実NUnit結果を要求し、失敗・skip・空実行・class欠落を拒否します。これはCPU上のbuild / runtime契約検査で、実モデルMetal検証ではありません。Android / iOSは生成した薄い呼出しコードから既存の `BuildAndroidMixed` / `BuildIOSMixed` を実callbackなしで呼び、Release / IL2CPP / High・source・Unity / Sentis版・実build成功を検査します。APKまたはXcode projectの実在とhashも確認します。
-
-公開artifactは `artifacts/platform-ci/public/result.json` だけで、直前のprivacy guardを必須にします。元のEditorログ・NUnit XML・build receipt・APK / Xcode出力はrunner内のprivate directoryに置き、自動公開しません。これらの生データはrunner破棄後も保存されるバックアップではありません。端末配置・独立監査へ進む際には、機密設定や絶対pathを含むbuild出力を公開する前に、安全な転送・保存経路を別途整備します。今のpublic receiptはhashと許可した状態・件数だけを残す記録です。
-
-初回head `6c1ee2f`では原モデル・fixtureの取得や配置、Xcode native compile / 署名、Metal能力probe、実モデルGPU・端末操作は未実装でした。[初回小規模TDD](results/platform-ci-contracts-tdd-20261020.json)は31件Red→31件Green、設定エラーのpath非表示1件Red→43件Green、関連回帰を含め80件Greenです。後続のprobe / compile接続は下記で区別します。原モデル・fixture配置、署名、実モデルGPU・端末操作は引き続き未実装で、buildだけでは `gpu_verified` / `device_verified` / `model_execution_performed` はfalseのままです。
-
-初回head `6c1ee2f`の[実preflight](results/platform-ci-preflight-6c1ee2f-20261020.json)は全3 jobがライセンス未登録でfailureでした。実3 archiveのサイズ・配信元digest・全CRC・完全な私的2コピーと公開JSONを独立照合しました。Editor導入・build・モデル推論は開始されていません。これは停止理由の確認であって、platform CIの成功や後続sourceの実行結果ではありません。
-
-本branchの追加では `--probe-metal` を接続し、macOS jobはUnityライセンスの有無と独立に、Swift / Metalで16個の整数を実計算・照合します。GPU deviceなしや実行失敗も固定理由で記録します。[Appleのcompute手順](https://developer.apple.com/documentation/metal/performing-calculations-on-a-gpu)に沿った小さい能力probeで、実モデル・Sentis・SDKのGPU合格ではありません。公開結果の `gpu_verified` / `device_verified` はfalseを維持し、GPU名・host名・生エラーは含めません。実runnerでのこのprobeは未確認です。
-
-iOSは実Xcode exportの照合後に、Device SDK / Releaseで署名なしの `xcodebuild` を実行する経路を追加しました。exit0だけで成功にせず、実 `.app` のInfo.plistとarm64 Mach-O実行ファイルを確認してhashを記録します。export成功と `xcode_compile_passed` は別結果です。このcompileも実runnerでは未確認で、署名・端末配置・実GPUは未実行です。追加TDDは新規20件Red、schemaと既存licenseファイル保護2件Red、CLI終了監督2件Redを経て、platform関連68件・関連回帰計105件Greenです。[追加の検証記録](results/platform-native-contracts-tdd-20261020.json)を参照してください。
-
-Xcode export / compile / 署名 / 実機起動、Android build / エミュレータ / 実機GPU、macOS compile / CPU / Metalを別結果にします。実GPUは実行環境の能力を確認してから元数値gateで検証します。端末接続hostの利用時はtrusted sourceだけを隔離された環境で実行し、外部PRのコードに端末・署名・認証情報を渡しません。成果物は実bytesとprivacy検査の成功後に公開します。既存Required CIやGPU要件は変更しません。
-
-head `08d7e33` の[hosted実行](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39356590582)ではSwift compileと16整数のMetal computeが成功し、不一致0でした。実3 archiveのdigest / CRCと完全な私的2コピーを独立照合しました。報告されたmax bufferとrecommended working setは各1 GiBで、実モデルの常駐可能性やSDK最低要件を示しません。Unityの全3 preflightはライセンス未登録でfailureのままです。実Sentisモデル・Unity build・iOS compile・実機は実行していません。
-
-同じheadの[Required CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39356590707)ではLinux Python 3.13 / 3.14の新規CLIテスト各2件が失敗しました。[実XMLの独立照合と修正記録](results/platform-cli-source-selection-20261020.json)を保持します。`python -P`で起動する子プロセスが、pytest内のpath設定を継承せず、ローカルの既存 `PYTHONPATH` に依存していました。環境変数なしで2件の失敗を再現後、子プロセスへそのcheckoutの `tools/` を明示しました。異なるpackageが環境に存在する場合も検証対象を選び、CIと同じprivacy pluginを使った関連105件が失敗・skipなしで合格しました。SDK・元数値参照・許容差は変更せず、この局所確認を全Required CIやモデルGPUの合格には数えません。
-
-更新: 2026-10-17。PR #31・#83はマージ済みです。#83の最終head `613ada8` の[CI38939320058](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38939320058)は全15 job成功し、統合main `a965c09`と同じtreeです。[現在の対応範囲](status.md) / [ロードマップ](roadmap.md)。以下の過去runは当時の証拠です。
+以下のworkflow契約と過去runはそれぞれのsourceに対応します。CPU参照、Unity build、実モデルGPU、端末の実行を分け、skip・未実行・cancelを合格へ数えません。
 
 ## 現行の必須CI
 
@@ -48,25 +10,19 @@ head `08d7e33` の[hosted実行](https://github.com/ayutaz/unity-embeddinggemma-
 
 通常CIは文書だけの変更でも実モデルのCPU参照生成・比較を含みます。これはUnity RuntimeをCPUで推論する設定ではありません。Unity実GPU・UI・Player・実機の受け入れは別に実施します。GPUテストのskipをGPU成功にせず、CI成功だけで正式公開条件を満たしたとしません。
 
-## 固定音声参照の保存と更新（2026-10-16）
+## 固定参照の取得と保持
 
-main統合PR #79の必須CI38883782797は全15job成功です。元artifact `11814567883` は2026-10-16 12:44:58 UTCで期限切れになるため、[保存run38886883870](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38886883870)で監査対象14ファイルのsize/SHA256を照合し、全体をartifact `12039809670` へ90日保存しました。新しい期限は **2027-01-14 10:23:16 UTC** です。[保存証拠](results/pinned-audio-reference-preservation-20261016.json)。モデル実行・GPU検証は行っていません。
+現行のモデル回帰は[明示的な配布入力とaudit](native-regression-distribution.md)を使用します。
+元のartifact ID・期限と後続の配布bytesを同一扱いにせず、workflowが選択したproducer / source / size / SHA256を記録します。
+古い保存artifactは期限だけで存在を推測せず、必要な原本の全bytes・hashを確認します。
+新規実行の前に、実行するworkflowと入力契約を確認してください。参照原本・許容差の変更や、配布provenanceを旧raw loaderへ混ぜることはしません。
 
-必須音声CIのexecute/auditは `pinned_reference_archive resolve` で同じrepositoryの有効な保存コピーを優先し、選択したartifact IDを記録します。コピーがなければ有効な元artifactへfallbackし、両方がなければ失敗します。元reference/auditの固定SHA256、元6信号・2 profile、実ONNXのcapture/carry監査、824,320値の許容差gateは維持します。
-
-期限前に以下を実行し、保存jobの成功、14ファイル照合、新artifactの期限を確認してください。既存コピーからも再保存できます。定期実行は設定していません。
-
-```powershell
-gh workflow run frozen-audio-prefix-onnx.yml --ref main -f preserve_original=true
-```
-
-> 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 
 ## 2026-10-14時点のCIとGPU受け入れの区別
 
 2026-10-14、PR #81のコード基準 `a237dee2874cdb0fbcdf4fe333aebae7193ad390` のCI `38571522044` と前headの `38569646238` は停止指示によりcancelled。最新headのRequired CI合格を主張しない。画像role参照のActions `38562190876` はPython18件合格、CPU文脈matrix `38563722587` は診断実行完了で、Unity / GPU全chainの合格ではない。
 
-通常CIの `model-reference` は実重み生成を含むため、文書だけのpushでも自動開始し得る。実モデル検証停止中は不要な重いrunを識別してcancelし、cancelを成功へ読み替えず記録する。workflowとRequired CI規則は今回変更しない。GPU runner / ライセンスの実行条件を再確認してから[全体計画R0〜R5](multimodal-tdd-plan.md)へ進む。CPU Pythonの参照生成は独立期待値用で、Unityモデル推論をCPUへ切り替える許可ではない。
+通常CIの `model-reference` は実重み生成を含むため、文書だけのpushでも自動開始し得る。実モデル検証停止中は不要な重いrunを識別してcancelし、cancelを成功へ読み替えず記録する。workflowとRequired CI規則は今回変更しない。新しいGPU検証が必要な場合に限り、runner / ライセンスと[今後の計画](roadmap.md)の開始条件を再確認する。CPU Pythonの参照生成は独立期待値用で、Unityモデル推論をCPUへ切り替える許可ではない。
 
 更新日: 2026-10-10。確認基準main: `4ee0cbb`（PR #12統合後）。
 CI・UPM監査・検索基盤・サンプル・準備最適化はmain統合済み。[CI run 37975720534](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/37975720534)の全8 job成功を確認した。
@@ -147,25 +103,20 @@ Windows / GPUの合格には数えず、設定の存在を実行実績として�
 クラウド実行を利用する場合は [GameCI公式手順](https://game.ci/docs/github/test-runner/)に沿ってUnityライセンスを準備する。
 Secret値はソース・チャット・ログへ書かない。
 
-### Unity Secretsを準備する
+### Unity CIの開始条件
 
-本リポジトリの [Actions Secrets設定](https://github.com/ayutaz/unity-embeddinggemma-2/settings/secrets/actions) で、現在の手動workflowに必要な値を登録する。
-[GameCI公式のactivation手順](https://game.ci/docs/github/activation/)ではPersonalはHubで有効化した `.ulf` の内容とアカウント情報、Pro等はserialとアカウント情報を使用する。自分のライセンス種別に対応する手順を選ぶ。
+最新の保存preflightではmacOS / Android / iOSのUnity CIライセンスが未設定でfailureです。
+小さいMetal probeや過去のAPK buildを、その後のUnity実行・実モデルGPUの合格に数えません。
+利用可能なCIライセンスと対象module・hostが揃うまで、同じ失敗を再実行しません。
 
-| Secret | 値 |
-| --- | --- |
-| `UNITY_EMAIL` | CIで使うUnityアカウントのメールアドレス |
-| `UNITY_PASSWORD` | 同じアカウントのパスワード |
-| `UNITY_LICENSE` | Personal経路の `.ulf` ファイル全文。Windowsの公式掲載先は `C:\ProgramData\Unity\Unity_lic.ulf` |
-| `UNITY_SERIAL` | Professional経路のserial。現在のpreflightではLICENSEかSERIALのどちらかが必要 |
+現行workflowは`UNITY_EMAIL` / `UNITY_PASSWORD`と、`UNITY_LICENSE`または`UNITY_SERIAL`を検査します。
+これはworkflowの入力契約であり、ローカルPersonal entitlementをCIへ流用できるという説明ではありません。
+ライセンス種別に対応した有効なCI利用・activation手段を確認した上で、承認された設定だけをSecretsへ登録します。
+値をソース・チャット・artifactへ出さず、登録確認はSecret名だけで行います。
 
-登録後は値ではなくSecret名だけを `gh secret list` で確認し、手動 `Unity CPU validation (manual)` を検証対象refで実行する。license preflight成功、Editor開始、NUnit実行・必要件数の合格、artifact回収を順に確認する。Secretが存在するだけではUnity実行成功ではない。
-このworkflowはLinux CPU補助検証であり、macOS MetalやiOS / Android実機のGPU合格には数えない。実機runner・端末・署名条件は [詳細実行計画](m2-release-plan.md) で別途確保する。
-
-必要なWindows GPUと新規プロジェクトへのUPM導入は、ローカル6000.3.16f1とuloopで検証する。
-[自動操作とハーネス](automation.md)を使い、未保存Scene / Prefabは自動保存・破棄しない。
-CPU / GPUCompute、実モデル / 小さい契約モデル、compile / 数値一致を別々に記録する。skipをGPU合格にしない。
-macOS / iOS / Androidのbuild・実機・測定は [M2計画](m2-plan.md)の後続段階。
+実行時はpreflight、Editor開始、build / NUnit、正常終了、元sourceに結び付くartifact回収を別々に判定します。
+Windowsの新tag実GPU受け入れは[正式版の記録](results/windows-v010-release-20261021.json)、
+他platformの開始条件は[ロードマップ](roadmap.md)を参照してください。
 
 ## 実行履歴
 

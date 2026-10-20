@@ -1,6 +1,6 @@
-# Unity のローカル自動操作
+# Unityのローカル自動操作
 
-更新: 2026-10-20。Windows先行の工程1〜3は[確認記録](results/windows-first-stages-1-to-3-20261020.json)の範囲で完了しました。次の作業は[現在の実行計画](next-release-plan.md)の工程4〜5です。文書更新だけで成功済みの変換・Unity機能試験を再実行しません。
+更新: **2026-10-21**。Windows正式版の[公開tagと実Editor / Playerの受け入れ](status.md)は完了しています。次の作業は[ロードマップ](roadmap.md)へ集約します。文書整理だけで成功済みの変換・Unity実行を繰り返しません。
 
 新しい実行ではsource・モデル・入力・実GPU・所有PID・時間 / メモリ上限・終了を実行前に固定します。観測timeoutを再起動理由にせず、同じhandleの生存を確認します。停止対象はその実行が所有するprocessだけとし、元の失敗・capture・ログを上書きしません。resident RAM、job commit、VRAMの範囲を分け、運用上の開始条件・上限をSDKの最低要件として表示しません。
 
@@ -18,7 +18,7 @@ GPU専用へ変更した対象は別validation packageの `EmbeddingGemma.Valida
 
 `GpuExecutionProfileTests` だけをbatchmodeで指定し、固定Git Runtime / validationのSHA一致、tinyと実square 1件の2 pass・skip0・exit0を確認した。[今回の負荷・失敗結果](gpu-execution-and-silu-validation.md)。下の古いlauncher / suiteの注意は引き続き適用する。
 
-再開時は[全体計画R0〜R5](multimodal-tdd-plan.md)の一つのGPU入力を選び、実GPU / graphics API、actual backend、fallback / flush 0を保存する。GPUモデルでもload / graph変換・shape解析 / Worker準備 / hash / uploadはCPU負荷を伴うため、各段階を計測する。ローカルは外部5分上限を設定・確認し、期限時に対象PIDのidentityを確認して停止、部分結果とexitを別scopeで保存する。既存ignored launcherは長いWaitForExitを使うため、この上限が実装済みとは扱わない。新しいlauncher自動化を追加する場合はTDDでtimeout・子process終了を検証する。
+当時の再開手順では一つのGPU入力を選び、実GPU / graphics API、actual backend、fallback / flush 0を保存する。GPUモデルでもload / graph変換・shape解析 / Worker準備 / hash / uploadはCPU負荷を伴うため、各段階を計測する。ローカルは外部5分上限を設定・確認し、期限時に対象PIDのidentityを確認して停止、部分結果とexitを別scopeで保存する。既存ignored launcherは長いWaitForExitを使うため、この上限が実装済みとは扱わない。新しいlauncher自動化を追加する場合はTDDでtimeout・子process終了を検証する。
 
 観測timeoutだけで新しいEditorを起動しない。同operation / PIDを追跡し、GPU未対応・未実行・中断・数値不合格を区別する。重い全条件の実行はGPU runner / ライセンスを確保したActionsを優先し、CPU runnerの結果を実GPU合格に数えない。
 

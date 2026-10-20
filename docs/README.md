@@ -27,6 +27,7 @@
 | --- | --- |
 | [検証状況](status.md) | 2026-10-20時点のWindows候補の受け入れと、source別の確認・未達条件 |
 | [現在の実行計画](next-release-plan.md) | 工程1〜3の完了、工程4〜5の残件と移行条件 |
+| [Windows 0.1.0公開候補の最終確認](windows-release-checklist.md) | 未公開の版準備から新tagのEditor / Player・正式Releaseまでの判定項目 |
 | [ロードマップ](roadmap.md) | 現在の優先順と以前の計画への入口 |
 | [プロジェクトのゴール](goal.md) | GPU要件、精度・対応環境、対象外 |
 | [CI](ci.md) / [自動操作](automation.md) | 開発環境・workflow・実行と結果の扱い |

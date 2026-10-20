@@ -4,11 +4,11 @@ Unity Sentisで、テキスト・画像・音声を共通の768次元ベクト�
 
 モデル推論にはSentisを使い、追加のネイティブ推論プラグインは不要です。画像・音声はGPUで前処理から推論まで実行します。トークナイズ・ファイルの読み込みとデコード・PCMの取得はCPU側で行い、最終ベクトルはCPU配列として返します。
 
-**開発版 `0.1.0-pre.1`。最初の正式リリースはWindows Editor / Playerを対象に準備しています。正式リリースはまだありません。** モデルは別途準備が必要です。macOS・iOS・Androidは今後の対応で、未検証です。[残る検証と公開条件](docs/next-release-plan.md)を参照してください。
+**Windows版 `0.1.0` の公開候補を準備中です。正式tag・Releaseはまだありません。** モデルは別途準備が必要です。macOS・iOS・Androidは今後の対応で、未検証です。[残る検証と公開条件](docs/next-release-plan.md)を参照してください。公開済みの開発pinと、task branchの版準備は別です。
 
 [導入・API](Packages/com.ayutaz.embeddinggemma/Documentation~/index.md) · [モデル準備](docs/model-preparation.md) · [現在の対応範囲](docs/status.md) · [ロードマップ](docs/roadmap.md) · [ドキュメント一覧](docs/README.md)
 
-Windows候補の機能検証（工程1〜3）は完了しました。Editorの実モデルと、同一SDK実装の既存Player結果で、全入力・全role・横断検索のGPU動作を確認しています。[確認記録と適用範囲](docs/results/windows-first-stages-1-to-3-20261020.json)を参照してください。性能・最低要件・新tagからの新規導入と正式公開は残っています。
+Windows候補の機能検証（工程1〜3）は完了しました。Editorの実モデルと、同一SDK実装の既存Player結果で、全入力・全role・横断検索のGPU動作を確認しています。[確認記録と適用範囲](docs/results/windows-first-stages-1-to-3-20261020.json)を参照してください。追加の[GPU計測](docs/windows-media-memory-results.md)・[画像CPU比較](docs/image-CPU-fixed-conditions.md)・[音声CPU比較](docs/native-audio-CPU-results.md)と[初回対応構成](docs/windows-supported-configuration.md)は整理済みです。新CI、個人情報除去、新tag導入、正式公開は残っています。
 
 ## できること
 

@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "scope": "Local 0.1.0 package version, documentation, code license and empty local-file consumer preparation only",
+  "base_commit_before_preparation": "0881cdcab9e810bc2c7624301733360f35974359",
+  "package_version": "0.1.0",
+  "package_and_validation_project_versions_match": true,
+  "Runtime_tree": "7d6e4314552b221d06db881405e7ccff3f449a77",
+  "Runtime_unchanged": true,
+  "direct_Runtime_dependencies_unchanged": true,
+  "implementation_fingerprints_normalized_LF": {
+    "README.md": "e117c332d916a040e42651b095c1556b4baf0e664d3e15a8c1ce1da0cef52b3e",
+    "Packages/com.ayutaz.embeddinggemma/package.json": "ad825423bcd4c17c3bcf58c7de1613b14e88527cd6be51d326044bf5dbb74f61",
+    "Packages/manifest.json": "f900fe1ad061b8c2d37f90388355bdf067ac58e4cbe695139ca1469181031978",
+    "Packages/com.ayutaz.embeddinggemma/README.md": "35e088f9e8233f56748d186ae3155509eac7a4d6711d50b88d405e023445ca9e",
+    "Packages/com.ayutaz.embeddinggemma/CHANGELOG.md": "7ad750338a8badd69e51e95aabc2a3c157b4bf75dd29b4ea66da9be5cb0385de",
+    "Packages/com.ayutaz.embeddinggemma/Documentation~/index.md": "eb24b7c1253d6be59159acf02efd9b0cdf392a70c04eeb0a2ad8da8ba92b7317",
+    "docs/windows-release-checklist.md": "f491341e45fe9a5206d1ba298e4a2cd5dbf3e4e7a7f2cfffa18f4bf4fcdd5b41"
+  },
+  "code_license_files": [
+    {
+      "file": "LICENSE",
+      "sha256": "3ddf9be5c28fe27dad143a5dc76eea25222ad1dd68934a047064e56ed2fa40c5"
+    },
+    {
+      "file": "Packages/com.ayutaz.embeddinggemma/LICENSE.md",
+      "sha256": "3ddf9be5c28fe27dad143a5dc76eea25222ad1dd68934a047064e56ed2fa40c5"
+    }
+  ],
+  "package_tests_passed": 34,
+  "package_tests_failed": 0,
+  "package_tests_skipped": 0,
+  "package_test_private_log_sha256": "53f91ba5575df87f37a1c25c17065122b1d6201133bb4f131f71985373b2d8ab",
+  "earlier_version_mismatch_regression_preserved": true,
+  "local_consumer_preparation_audit_sha256": "2454660c7185831bb7f2b5baf8b9a8e839c5d700eb01581e89abffead61aff8c",
+  "imported_sample_byte_checks": [
+    {
+      "sample": "TextSearch",
+      "file_count": 52,
+      "all_imported_bytes_match": true
+    },
+    {
+      "sample": "MultimodalSearch",
+      "file_count": 34,
+      "all_imported_bytes_match": true
+    }
+  ],
+  "local_file_dependency_only": true,
+  "public_tag_created": false,
+  "public_tag_consumed": false,
+  "Unity_executed": false,
+  "GPU_validation_executed": false,
+  "formal_Release_created": false,
+  "old_provider_cleanup_completed": false,
+  "all_release_gates_complete": false
+}

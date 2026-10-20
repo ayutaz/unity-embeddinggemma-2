@@ -1,6 +1,6 @@
 {
   "name": "com.ayutaz.embeddinggemma",
-  "version": "0.1.0-pre.1",
+  "version": "0.1.0",
   "displayName": "EmbeddingGemma",
   "description": "Text, image and audio embeddings on GPU with Unity Sentis. Model weights are obtained separately; see the repository for validated environments and limitations.",
   "unity": "6000.3",

@@ -58,6 +58,8 @@ CPU比較の[Windows CI経路](windows-CPU-CI.md)は実装し、関連134テス�
 
 公開停止条件は、既知の旧providerコピーの個人情報除去が未確認である点です。Support案件の読み取りは個別許可待ちで、新しい送信は行いません。ローカルでのCI実装・公開物準備は進められます。正式公開日はこの外部対応と新tag consumerの完了前には確約しません。
 
+版・CHANGELOG・導入文書は`0.1.0`候補として準備しました。[ローカルの配布監査](results/windows-v010-local-preparation-20261020.json)は34テストと両sampleの86ファイル一致を確認済みで、Runtimeは不変です。[最終確認項目](windows-release-checklist.md)に新tagのEditor / Player・モデル取得・全入力・検索・解放・正式Releaseの未完了条件を残しています。公開mainの版更新・tag作成・Unity実行・正式公開は今回行っていません。
+
 工程4では次の状態まで進みました。実行済みの検証と、まだ実モデルへ適用していない実装を区別します。
 
 - テキストは既存の同一Windows PlayerのCPU / GPU各4条件を再照合し、[sourceを明記した比較](text-paired-performance.md)を記録しました。新しい推論実行ではありません。

@@ -1,10 +1,10 @@
 # 導入とRuntime API
 
-テキスト・画像・音声の埋め込みと検索をUnityへ組み込むための入口です。開発版 `0.1.0-pre.1`、正式リリース前です。Windows先行の工程1〜3はsource別に受け入れ済みです。性能・最低要件・新tagからの導入・正式公開の残件と、他環境の未検証範囲は[検証状況](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)を参照してください。
+テキスト・画像・音声の埋め込みと検索をUnityへ組み込むための入口です。`0.1.0` の公開候補を準備しており、正式tag・Releaseはまだありません。Windows先行の工程1〜3はsource別に受け入れ済みです。新CI・個人情報除去・新tagからの導入・正式公開の残件と、他環境の未検証範囲は[検証状況](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)を参照してください。
 
 ## 1. パッケージを追加する
 
-基準はUnity **6000.3.21f1** / Sentis **2.6.1**です。Package Managerの **Add package from git URL** へ次を入力します。2026-10-20に確認したPR #113統合済みmainの固定commitです。開発版の導入pinで、正式tagではありません。
+基準はUnity **6000.3.21f1** / Sentis **2.6.1**です。Package Managerの **Add package from git URL** へ次を入力します。2026-10-20に確認したPR #113統合済みmainの固定commitです。公開済み開発版`0.1.0-pre.1`の導入pinで、task branchの`0.1.0`候補・正式tagとは別です。
 
 ```text
 https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/com.ayutaz.embeddinggemma#1a036fb2faf334d58f1b59de824b96b238f0275d

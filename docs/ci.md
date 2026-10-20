@@ -1,5 +1,11 @@
 # CI と開発手順
 
+## 2026-10-20のCI拡張計画
+
+main `de56db8`まで統合済みです。[最新リリース計画](release-plan.md)では、固定Unity 6000.3.21f1でmacOS compile / Editorテスト、Android APK build、iOS Xcode exportをhosted CIへ追加する順序を定めています。これは計画であり、現在これらのworkflow・実行結果はありません。既存の手動Unity workflowはLinux CPU補助検証です。Repository Secretsとself-hosted runnerは今回のAPI確認で0件で、CIライセンス、module、容量のpreflightから開始します。
+
+Xcode export / compile / 署名 / 実機起動、Android build / エミュレータ / 実機GPU、macOS compile / CPU / Metalを別結果にします。実GPUは実行環境の能力を確認してから元数値gateで検証します。端末接続hostの利用時はtrusted sourceだけを隔離された環境で実行し、外部PRのコードに端末・署名・認証情報を渡しません。成果物は実bytesとprivacy検査の成功後に公開します。計画の追加で既存Required CIやGPU要件を変更しません。
+
 更新: 2026-10-17。PR #31・#83はマージ済みです。#83の最終head `613ada8` の[CI38939320058](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38939320058)は全15 job成功し、統合main `a965c09`と同じtreeです。[現在の対応範囲](status.md) / [ロードマップ](roadmap.md)。以下の過去runは当時の証拠です。
 
 ## 現行の必須CI

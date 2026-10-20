@@ -1,5 +1,13 @@
 # 現在の対応範囲と検証状況
 
+最新checkpoint（2026-10-20）: **main `de56db8`、PR #111まで統合済み**。採用head `1280948` の[必須CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39347537063)は全15 job成功。実13数値archive、元824,320値、CPU encoder 120 capture / 30,822,400値を独立照合し、元許容差超過0です。SDK実行コードは既存Windows GPU検証source `f0fc2a7`から不変ですが、package README / CHANGELOGは変更されており、package全bytesの一致や新mainのGPU再実行は主張しません。
+
+次は[CIを先行するリリース計画](release-plan.md)に従い、macOSテスト・Android APK・iOS Xcode出力のpreflightとworkflowを整備します。現行Unity workflowはLinux CPU補助検証のみで、Repository Secrets・self-hosted runnerは今回のAPI確認で0件です。新platformのCIは未実装・未実行です。実GPU・実機、性能・最低要件、旧providerコピーの削除、正式SDK tag / Release・新tag consumerは引き続き未完了です。
+
+## PR #110時点のcheckpoint（履歴）
+
+以下のpackage一致や待機条件は#110時点の状態です。現在の適用範囲と実行順は上記を使います。
+
 最新checkpoint（2026-10-20）: **main `1109698`、PR #110まで統合済み**。[必須CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39336685624)は全15 job成功、実13 archiveと元参照824,320値・CPU encoder 120 capture / 30,822,400値の独立照合で元許容差超過0です。[Windows音声CPU比較](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39336685770)も2条件×4回・全32 captureを独立照合して合格しました。採用headは`810d49a`、実行sourceは同treeのtest-merge `82506a6`です。実mainの同tree・署名・公開identity・全祖先を確認しました。重複main CIはcancelledとして記録し、成功には数えません。
 
 Unity SDKのGPU推論要件は維持し、package全bytesは既存Windows GPU検証source `f0fc2a7`と一致します。今回のCPU比較は新mainのGPU再実行や同一hardwareのCPU/GPU性能合格ではありません。画像CPUの未解決条件、性能・最低要件、macOS / iOS / Android実機、provider側の古いコピー削除、正式SDK Release・新tag consumerは未完了です。現在はGPU容量・必須端末・Android導入時のUAC対応・provider対応待ちで、再開順と完了条件は[リリース計画](release-plan.md)にまとめています。

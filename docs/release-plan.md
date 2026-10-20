@@ -2,7 +2,35 @@
 
 確認日: 2026-10-20（JST）。対象はテキスト・画像・音声のGPU推論と横断検索です。[ゴール](goal.md)の必須環境・精度条件を維持します。
 
-## 最新の計画（PR #110統合後）
+## 最新の計画（CIを先行、PR #111統合後）
+
+基準mainは `de56db8c84984dc84fc2597f60cc1c6fbd3bf456`、PR #111まで統合済みです。採用head `1280948` の[必須CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39347537063)は全15 job成功。実13 archiveを独立照合し、元824,320値・CPU encoder 120 capture / 30,822,400値の許容差超過0を確認しました。SDK実行コードはWindows GPU検証source `f0fc2a7`から不変ですが、package内READMEとCHANGELOGは変更されています。package全bytesの一致や、新mainでのGPU再実行は主張しません。
+
+**次は、実機待ちと分離してmacOSテスト・Android APK・iOS Xcode出力のCIを整備します。** 現在のUnity workflowは手動Linux CPU補助検証のみです。2026-10-20のAPI確認ではRepository Secretsとself-hosted runnerはいずれも0件でした。以下はこれからの実装計画であり、CI実行・build・実機合格の実績ではありません。
+
+| 順序 | 作業 | 開始条件と完了条件 |
+| --- | --- | --- |
+| 1 CIの入口と環境確認 | 固定Unity 6000.3.21f1、macOS / Android / iOSのmodule・license・空き容量・実行時間を検査。source / model / fixture hashを固定 | 設定不足も明示的に記録するpreflightをTDDで追加。認証値をログや成果物に含めず、未設定を成功にしない。環境不足があるplatformだけを保留し、他platformの準備を継続 |
+| 2 hosted CIでbuildとテスト | macOSのcompile / Editorテスト、Android ARM64 / IL2CPP / High / Release APK、iOS Device / Metal / IL2CPP / Release Xcode出力を並列化 | 有効なUnity CIライセンスと対応module、十分な容量が必要。実Editor実行・build結果・正常終了・成果物hashを回収して完了。Androidエミュレータは補助検証。iOSのXcode compileはexportと別結果とし、実機用署名・配置とも分ける |
+| 3 実GPUと実機の受け入れ | macOS Metal、iOS / Android実機で全入力・全role・混在検索、数値、fallback / readback、権限、キャンセル、suspend / 復帰、解放を検証 | hosted MacはまずMetal / compute能力と容量を小さいprobeで確認。不足時は利用可能なMacへ切替。端末は接続hostまたは検証可能な実機サービスが必要。実機CIはtrusted source限定の隔離された実行環境で動かし、エミュレータを実機合格に数えない |
+| 4 性能と公開前整理 | 同一hardware・source・モデル・入力・仕事量でCPU/GPU、cold / warm、stage時間・RAM / VRAM・解放を測定。公開source・全祖先・実payloadと旧providerコピーを確認 | 画像CPUの未合格条件と過去の失敗を保持。元数値gateを満たす実測と最低要件を記録。現行履歴の合格とprovider側削除確認を分け、画像は実bytesの目視 / OCRを実施 |
+| 5 正式SDK公開 | 版・CHANGELOG・license・固定tag・Release、新規consumerへのそのtagの導入 | 2〜4の必須条件が完了後に実施。モデル取得から全入力・検索・解放・終了まで再現。previewを正式SDK Releaseに数えない |
+
+工程1〜2を先行し、工程3の端末・署名準備、工程4のGPU資源確保とprovider対応を並行させます。ローカルAndroid moduleのUAC待ちはhosted CIのAPK buildを止める理由にしません。実装は関連workflowと契約テストをまとめたtask branch / PRで行い、既存Required CIは維持します。計画変更だけでモデル変換・実機検証を開始したとは扱いません。
+
+### 実行上の判断点と所要時間
+
+- 最初の成果物は3platformのpreflightと、実行できるplatformのbuild / test結果一覧です。Unityライセンスの登録方法は選んだrunner・ライセンス種別で確認し、Secretsの値をチャット・ソース・公開ログへ出しません。利用者側に残るのは必要なライセンス / iOS署名設定と実機の提供・接続です。通常のworkflow実装は開発側で進めます。
+- hosted runnerのOS提供だけでは実GPU対応や大きいモデルの実行容量を保証しません。GitHubの[runner仕様](https://docs.github.com/en/actions/reference/runners/github-hosted-runners)と実probeを併用します。モデルは必要moduleだけをhash検証して取得し、機密設定・生ログを含むartifactを無条件に公開しません。
+- GPU性能測定の既存開始条件は音声で空きVRAM 14 GiBです。これはSDK最低要件ではなく、実行前に再確認します。他アプリの終了や新しい録音は自動では行いません。異なるCI host間の時間を同一hardwareのCPU/GPU比較に合算しません。
+- Unityの[iOS build手順](https://docs.unity.com/en-us/engine/6000.3/manual/platform-specific/iphone/ios-building-and-delivering/build-process)に従い、Xcode export、compile、署名、実機起動をそれぞれ判定します。build成功だけで端末の実GPU・権限・復帰を合格にしません。
+- 標準hosted runnerを優先します。有料runner・実機サービス・追加購入をこの計画だけで開始しません。利用可能な無料枠・既存環境で不足する場合は、具体的な不足と代替案を提示します。
+- preflightが失敗したら原因を特定して修正し、環境変化や修正なしの同じ失敗を再実行しません。重いモデル検証は変更をまとめたsourceで行い、数値原本・許容差・失敗記録を維持します。公開前にはhook、履歴、実payload、公開identityを検査します。
+- 期間の見積りは最初のpreflightでlicense・module・容量を確認した時点と、最初のbuild完了時に更新します。現状では実機確保・署名・provider対応の所要日数が不明なため正式公開日は未確定です。各報告で実行source、実行した範囲、成功 / 失敗 / 未実行、次の開始条件を示します。
+
+## PR #110統合後のcheckpoint（履歴）
+
+以下はCI先行計画へ変更する前の記録です。「外部条件待ち」やローカルUAC待ちを全工程へ適用せず、現在の実行順は上の計画を使います。
 
 計画の基準はmain `110969884d1da0c24aea7677cb6d5d694bd7a607`です。[PR #110](https://github.com/ayutaz/unity-embeddinggemma-2/pull/110)まで統合済みです。head `810d49a`の[必須CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39336685624)は全15 job成功、実13 archiveと元6入力824,320値・CPU encoder 120 captureの独立照合も合格しました。[Windows音声CPU比較](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39336685770)は2条件×4回・全32 captureで元数値条件に合格しました。実行sourceは同treeのtest-merge `82506a6`です。実mainの署名・公開identity・全祖先も確認済みです。重複main CIのcancelledを成功には数えません。
 

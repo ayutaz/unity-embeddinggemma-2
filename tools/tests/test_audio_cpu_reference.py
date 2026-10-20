@@ -100,6 +100,32 @@ def test_actual_stage_values_are_carried_four_times_and_saved_after_stage_timers
     assert pipeline['stage_observer_present'] and pipeline['stage_observer_time_excluded']
     assert all(v['stage_observer_wall_seconds']>=0 for v in pipeline['rounds'])
 
+@pytest.mark.parametrize('last_stage',['preprocessing','encoder'])
+def test_completed_stage_captures_survive_controller_interruption_without_a_pass(prepared,monkeypatch,last_stage):
+    driver,state,output,run,_=prepared
+    def interrupted(case,destination):
+        value=case.preprocess()
+        case.after_stage('preprocessing',value)
+        if last_stage=='encoder':
+            value=case.encoder(value)
+            case.after_stage('encoder',value)
+        raise KeyboardInterrupt('synthetic controller interruption')
+    monkeypatch.setattr(driver.protocol,'measure_reference_pipeline',interrupted)
+    with pytest.raises(KeyboardInterrupt):run()
+    journal=driver._json(output/'partial-audio-CPU-captures.json')
+    assert journal['source']==SOURCE and journal['case']=='silence'
+    assert journal['last_completed_stage']==last_stage
+    assert journal['model_execution_complete'] is False and journal['CPU_comparison_qualified'] is False
+    assert len(journal['rounds'])==1 and journal['rounds'][0]['round']=='first'
+    wanted={'features','frame_mask'}|({'encoder'} if last_stage=='encoder' else set())
+    captures=journal['rounds'][0]['captures']
+    assert set(captures)==wanted
+    for entry in captures.values():
+        raw=(output/entry['file']).read_bytes()
+        assert hashlib.sha256(raw).hexdigest()==entry['sha256']
+    assert not (output/'audio-cpu-reference.json').exists()
+    assert not (output/'pipeline-first.bin').exists() and state['closes']==1
+
 
 def test_final_vector_agreement_does_not_hide_invalid_actual_intermediates(prepared):
     driver,state,output,run,_=prepared

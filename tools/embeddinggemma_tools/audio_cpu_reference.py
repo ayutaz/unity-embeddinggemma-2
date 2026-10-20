@@ -177,7 +177,14 @@ def measure_audio_cpu_reference(snapshot,preprocessing,encoder_directory,documen
         mask=torch.tensor([case.attention_mask],dtype=torch.int64)
         empty=torch.empty(0,512)
         wanted_mask=torch.from_numpy(case.frame_mask.copy())
-        trace=dict(features=[],frame_mask=[],encoder=[])
+        rows=[]
+        completed_stages=0
+        partial=dict(schema=1,source=source,case=case_id,profile=case.profile,
+            last_completed_stage=None,rounds=rows,model_execution_complete=False,
+            CPU_comparison_qualified=False,complete_performance_accepted=False,
+            scope='Completed stage snapshots only; not a complete round, numerical pass or process liveness record')
+        partial_path=output/'partial-audio-CPU-captures.json'
+        _write(partial_path,partial)
         def preprocess():
             return preprocessor(wave,samples)
         def encode(value):
@@ -187,11 +194,22 @@ def measure_audio_cpu_reference(snapshot,preprocessing,encoder_directory,documen
         def finish(value):
             return backbone(ids,mask,empty,value)
         def observe(stage,value):
+            nonlocal completed_stages
+            _require(stage==('preprocessing','encoder','backbone')[completed_stages%3])
+            index=completed_stages//3
+            _require(index<len(protocol.ROUNDS))
+            name=protocol.ROUNDS[index]
             if stage=='preprocessing':
-                trace['features'].append(value[0].detach().clone())
-                trace['frame_mask'].append(value[1].detach().clone())
+                captures={key:_capture(output,name+'-'+key+'.bin',tensor,dtype)
+                    for key,tensor,dtype in (('features',value[0],'<f4'),('frame_mask',value[1],'<i4'))}
+                rows.append(dict(round=name,captures=captures))
             elif stage=='encoder':
-                trace['encoder'].append(value.detach().clone())
+                rows[index]['captures']['encoder']=_capture(output,name+'-encoder.bin',value,'<f4')
+            completed_stages+=1
+            partial.update(last_completed_stage=stage,last_completed_round=name)
+            temporary=partial_path.with_suffix('.tmp')
+            _write(temporary,partial)
+            temporary.replace(partial_path)
         def signature():
             digest=hashlib.sha256()
             for tensor in (wave,samples,ids,mask):digest.update(tensor.contiguous().numpy().tobytes())
@@ -208,16 +226,7 @@ def measure_audio_cpu_reference(snapshot,preprocessing,encoder_directory,documen
         except Exception as error:
             error_class=type(error).__name__
             pipeline=_json(output/'pipeline.json') if (output/'pipeline.json').is_file() else dict(success=False,rounds=[])
-        rows=[]
-        progress(phase='persisting_captures')
-        try:
-            for index,name in enumerate(protocol.ROUNDS):
-                captures={key:_capture(output,name+'-'+key+'.bin',values[index],'<i4' if key=='frame_mask' else '<f4')
-                    for key,values in trace.items() if index<len(values)}
-                if captures:rows.append(dict(round=name,captures=captures))
-        except Exception as error:
-            progress(phase='failed_capture',error_class=type(error).__name__)
-            raise ValueError('Actual audio CPU captures could not be preserved') from None
+        progress(phase='inspecting_completed_stage_captures')
         inspections=[]
         if len(rows)==4 and all(len(v['captures'])==3 for v in rows):
             try:inspections=_inspections(output,rows,case)

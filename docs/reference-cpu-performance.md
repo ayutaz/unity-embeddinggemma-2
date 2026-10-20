@@ -26,6 +26,19 @@ mask・prompt・profile・仕事量をGPU側と揃えて固定sourceへ結び付
 専有GPU / VRAM・最低要件・将来の他環境受け入れを、この小規模テストで完了扱いに
 しません。
 
+## 音声比較の途中capture保持
+
+音声CPUの測定入口は、完了した前処理・encoderの実出力をstage observerから
+直ちに保存し、`partial-audio-CPU-captures.json` を一時fileの置換で更新します。
+推論timerから除外したobserver区間で行い、次のstageには保存fileや参照値ではなく
+直前の実tensorを渡します。全4回を待つ前に中断しても、完了済みstageの
+元byte数・hash・shapeを後から確認できます。
+
+この途中journalは合格・process生存・途中からの再実行許可を示しません。
+全4回の元中間値・最終vector・正常終了と独立監査が、引き続き受け入れ条件です。
+前処理後 / encoder後の中断について2件Redから関連54件Greenを確認しました。
+実行中の旧sourceや元の失敗記録は書き換えず、新実装の実モデル実行は別途記録します。
+
 ## 実画像のCPU診断
 
 [source `3cc930a` の独立監査](results/image-cpu-diagnostics-3cc930a-20261019.json)では、

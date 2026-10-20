@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "scope": "Windows Python 3.14 CI job time budget only",
+  "observed_source_head": "53c58cd7a4158ff647c723d819038a27cf276c9a",
+  "observed_run": 39439172841,
+  "observed_job": 118685524926,
+  "observed_conclusion": "cancelled",
+  "reason": "20-minute job timeout during progressing offline tests",
+  "partial_results": {"passed": 2740, "skipped": 9, "complete_suite_pass": false},
+  "new_timeout_minutes": {"windows-latest Python 3.14": 30, "other_matrix_cells": 20},
+  "validation": {"actionlint": "passed", "semantic_yaml_comparison": "only job timeout changed"},
+  "unchanged": ["matrix", "test commands", "test selection", "numerical gates", "failure handling", "original six-condition audio acceptance"],
+  "new_ci_result": "pending",
+  "gpu_qualification": false
+}

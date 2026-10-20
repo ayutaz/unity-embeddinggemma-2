@@ -15,7 +15,7 @@ jobs:
   unit:
     name: ${{ matrix.os }} / Python ${{ matrix.python }}
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
+    timeout-minutes: ${{ matrix.os == 'windows-latest' && matrix.python == '3.14' && 30 || 20 }}
     strategy:
       fail-fast: false
       matrix:

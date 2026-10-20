@@ -2,6 +2,8 @@
 
 初めて利用する場合は[リポジトリのREADME](../README.md)から始めてください。現在の事実は[検証状況](status.md)、これからの作業は[ロードマップ](roadmap.md)を基準にします。
 
+更新: **2026-10-20**。Windows先行の工程1〜3は完了しました。[確認記録](results/windows-first-stages-1-to-3-20261020.json)と[現在の実行計画](next-release-plan.md)を参照してください。残る工程は性能・最低要件・公開前整理と、新tag導入・正式公開です。macOS / iOS / Androidは今後の対応で、Windows公開の実機待ち条件には含めません。
+
 ## 利用する
 
 | 文書 | 内容 |
@@ -22,8 +24,9 @@
 
 | 文書 | 内容 |
 | --- | --- |
-| [検証状況](status.md) | 2026-10-19時点の統合済み機能・確認済み環境・未達条件 |
-| [ロードマップ](roadmap.md) | 次のPR単位、依存関係、受け入れと正式公開の条件 |
+| [検証状況](status.md) | 2026-10-20時点のWindows候補の受け入れと、source別の確認・未達条件 |
+| [現在の実行計画](next-release-plan.md) | 工程1〜3の完了、工程4〜5の残件と移行条件 |
+| [ロードマップ](roadmap.md) | 現在の優先順と以前の計画への入口 |
 | [プロジェクトのゴール](goal.md) | GPU要件、精度・対応環境、対象外 |
 | [CI](ci.md) / [自動操作](automation.md) | 開発環境・workflow・実行と結果の扱い |
 
@@ -33,6 +36,9 @@
 
 | 分野 | 入口 |
 | --- | --- |
+| Windows先行の工程1〜3 | [現Editorの実GPUとsourceを照合した既存Playerの確認記録](results/windows-first-stages-1-to-3-20261020.json) |
+| 音声GPUの4条件・16呼び出し | [元参照を維持した反復とメモリ観測範囲](results/audio-gpu-repeat-four-conditions-20261020.json) |
+| 同一host CPU基準の最新停止 | [外側準備枠・実processのexit124・未合格](results/windows-cpu-baseline-preparation-stop-20261020.json) |
 | Windows Releaseの公開モデル・全media role・混在検索 | [独立cold/warm全4起動](results/final-mixed-player-3a02fc0-20261019.json) |
 | 同sourceの既存text全ケースとCPU/GPU比較 | [実Player 2起動・8条件](results/final-text-player-3a02fc0-20261019.json) |
 | 修正後の実UIによる音声の途中停止と解放 | [固定合成音声・追加録音なし](results/native-playback-stop-7754ce4-20261019.json) |

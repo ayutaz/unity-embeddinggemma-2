@@ -39,6 +39,13 @@ CPUのPython参照・比較は検証用です。製品の画像 / PCM前処理�
 
 ## 次の進め方
 
+工程4の開始点は、同一host音声CPU基準の[準備停止（source `8f1bb97`、exit124）](results/windows-cpu-baseline-preparation-stop-20261020.json)です。非terminalのまま残った親receiptと、実processのterminal記録を区別し、この比較を実行中・合格とは扱いません。
+
+1. 元ログ・source・既存成果物・上限を一度診断し、再利用できるbytesと不足する処理を確定します。参照や許容差を変更せず、新しい根拠のない同じ準備を繰り返しません。
+2. 数値gateと正常終了を満たした条件だけで、同一入力・profile・仕事量のCPU / GPU、初回 / warm・各stageを比較します。別hostのCI数値合格と、このhostの性能は別の欄に記録します。
+3. RAM / VRAMの観測範囲、実測した対応構成と余裕を明記して要件を定義します。未測定peakや低い構成の成功を推測せず、追加機材の購入・他端末の確保をWindows先行計画の前提にはしません。
+4. 現行履歴・実公開payloadのprivacyと旧providerコピーの除去確認をそれぞれ閉じ、工程5へ進めます。旧provider対応は返答・状態変更時と公開判定前に確認します。
+
 - 工程4は不足する比較と公開前確認に絞ります。成功済みの同条件の変換・GPU機能試験は繰り返しません。旧providerコピーは現在の履歴の安全性と別に除去を確認します。
 - 重い処理は対応するCI経路が使える範囲で優先します。Unity CIライセンス未設定の同じpreflightを繰り返さず、Personal entitlementをCIへ流用しません。
 - macOS / iOS / AndroidはWindows公開後にライセンス・host・端末・署名を確保し、buildと実モデルGPUを別々に受け入れます。端末不足をWindows公開の待ち条件にはしません。

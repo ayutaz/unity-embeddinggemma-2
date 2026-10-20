@@ -5,7 +5,7 @@ Package Manager の EmbeddingGemma の Samples から **Image and Audio Search**
 1. 監査済みの `bundle.json` と `objects/` を含む準備済みモデルフォルダーを指定します。画像・音声の登録用moduleと、検索用の `text` moduleが必要です。
 2. PNG / JPEG画像、またはmono 16 kHz音声ファイルの絶対パスを指定します。WAVはPCM16 / IEEE float32、`.f32`はlittle-endian float32に対応します。
 3. 対応する固定profileを選び、**画像・音声を登録**を押します。別のファイルを続けて登録できます。
-4. 検索文を入力し、**検索**を押します。画像・音声を一緒に順位付けし、score・ファイル名・パスを表示します。
+4. 検索文を入力し、**検索**を押します。画像・音声を一緒に順位付けし、scoreとファイル名を表示します。結果欄にはdirectory pathや入力全文を展開しません。
 
 結果画像はGPUで作成した最大160pxのプレビューを表示します。音声結果は **この音声を再生**、録音プレビューは **録音を再生** から明示的に再生し、**再生を停止** で停止します。自動再生は行いません。
 
@@ -29,6 +29,6 @@ Package Manager の EmbeddingGemma の Samples から **Image and Audio Search**
 
 **キャンセル**は読み込み中、またはencoderのGPU処理境界で反映されます。失敗・キャンセル後は同じ画面から再実行できます。GPUComputeに非対応の環境やCPUへの計算fallbackが必要なモデルは拒否します。
 
-このサンプルはWindows Editor向けです。他OS・モバイル・WebGLの動作確認は別途必要です。準備処理の正常終了と、実GPUでの数値検証は別の結果として扱います。モデル準備の固定source・元参照・実行条件はrepositoryの検証記録を参照してください。
+このサンプルの操作対象はWindows Editorです。Windows先行の機能検証は実Editorと、同一SDK実装の既存Player結果を分けて受け入れています。他OS・モバイル・WebGLの動作確認は別途必要です。準備処理の正常終了と、実GPUでの数値検証は別の結果として扱い、[対応範囲とsource別記録](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)を参照してください。
 
-**新規利用者向けの制約**：モデルbundleの公開配布と、空のcheckoutからの一括生成手順は未整備です。開発環境に存在するローカルフォルダーはパッケージには含まれません。[準備経路と未整備の範囲](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/model-preparation.md)を確認してください。モデル・係数・tokenizerはGitへ含めません。
+**モデルの準備**：全6 moduleのFP32 / Float16重みは[公開モデルpreviewと取得手順](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/media-model-preparation.md)から明示取得できます。モデル・係数・tokenizerはUPMやGitには含みません。descriptorと全objectのhashを検査し、LICENSE / NOTICE / MODIFICATIONSを保持してください。元checkpointから同じモデルを再生成する経路、新tagの空consumer導入、正式SDK公開は別の条件です。

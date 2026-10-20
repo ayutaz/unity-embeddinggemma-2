@@ -1,5 +1,7 @@
 # CPU参照比較の計測契約
 
+更新: 2026-10-20。[Windows機能検証の工程1〜3](results/windows-first-stages-1-to-3-20261020.json)は完了しました。同条件CPU比較・性能・最低要件は[実行計画](next-release-plan.md)の工程4で、機能検証とは別の未完了項目です。他環境の実機受け入れはWindows公開後に分けます。以下の契約・失敗診断は元sourceの範囲で保持します。
+
 画像・音声のGPU実行中に観測したprocess CPU時間とは別に、同じ固定入力と
 元のFP32参照を使うPyTorch CPU基準を測ります。SentisのCPU API対応を追加する
 変更ではなく、SDK Runtimeは維持します。frameworkの違いを記録し、CPU時間と
@@ -21,7 +23,7 @@ mask・prompt・profile・仕事量をGPU側と揃えて固定sourceへ結び付
 処理は、SentisのFloat16重み派生と同じ対象だけを丸める保証にならないため、
 比較対象として受け入れません。GPUの両精度測定と、CPUの表現・frameworkの
 範囲は別に示します。実モデルの照合・正常終了・独立監査、音声のGPU追加測定、
-専有GPU / VRAM・最低要件・必須実機の残条件を、この小規模テストで完了扱いに
+専有GPU / VRAM・最低要件・将来の他環境受け入れを、この小規模テストで完了扱いに
 しません。
 
 ## 実画像のCPU診断

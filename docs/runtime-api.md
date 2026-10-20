@@ -1,6 +1,6 @@
 # 推論API
 
-> 更新: 2026-10-17。画像・音声API、非同期音声前処理、bundle・検索sampleはPR #79 / #83でmainへ統合済みです。[導入の入口](../Packages/com.ayutaz.embeddinggemma/Documentation~/index.md) / [検証状況](status.md) / [ロードマップ](roadmap.md)。
+> 更新: 2026-10-20。Windows候補の全入力・全role・横断検索は、[実Editorと同一SDKの既存Player結果](results/windows-first-stages-1-to-3-20261020.json)で工程1〜3を受け入れました。性能・最低要件・新tag導入・正式公開は未完了です。[導入の入口](../Packages/com.ayutaz.embeddinggemma/Documentation~/index.md) / [検証状況](status.md) / [現在の実行計画](next-release-plan.md)。
 
 ## マルチモーダルAPIとGPU設定
 

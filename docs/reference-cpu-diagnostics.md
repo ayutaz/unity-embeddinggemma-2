@@ -1,5 +1,13 @@
 # 実CPU比較と元画像特徴量の回収
 
+現在の計画（2026-10-20）: [Windowsの工程1〜3](results/windows-first-stages-1-to-3-20261020.json)は機能検証の受け入れです。この文書のCPU成功・失敗・中間値診断はsource別の証拠で、同条件CPU/GPUの性能比較全体は未完了です。次の作業と完了条件は[工程4](next-release-plan.md)を基準にします。
+
+## 同一host音声CPU基準の準備停止（2026-10-20）
+
+source `8f1bb97` のsilence準備は、[実processの終了記録](results/windows-cpu-baseline-preparation-stop-20261020.json)でexit124・未合格を確認しました。管理processの中断後、既存generatorを再起動せず監視へ引き継いだ実行です。外側の準備枠は2,100秒で、CPU参照replay・同条件性能比較の受け入れには到達していません。元の親receiptは書き換えず、その非terminal表示を現在の生存証拠には使いません。
+
+これは比較用CPU基準の準備結果で、製品のSentis GPU経路をCPUへ切り替えた結果ではありません。工程4では同じsourceの停止箇所・既存成果物の再利用条件を一度診断し、必要な実行を限定します。部分成果や別hostのCPU数値合格を、このhostの速度比較へ読み替えません。
+
 ## 2026-10-20の参照対応付け
 
 [完全な画像CPU比較の実行入口](image-cpu-reference.md)は、実前処理→encoder→

@@ -6,7 +6,7 @@
 
 基準mainは `de56db8c84984dc84fc2597f60cc1c6fbd3bf456`、PR #111まで統合済みです。採用head `1280948` の[必須CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39347537063)は全15 job成功。実13 archiveを独立照合し、元824,320値・CPU encoder 120 capture / 30,822,400値の許容差超過0を確認しました。SDK実行コードはWindows GPU検証source `f0fc2a7`から不変ですが、package内READMEとCHANGELOGは変更されています。package全bytesの一致や、新mainでのGPU再実行は主張しません。
 
-**実機待ちと分離してmacOSテスト・Android APK・iOS Xcode出力のCIを先行します。** 本branchには3platformのpreflightと実Editor / build呼出しを行う[初回CI入口](ci.md)を追加しました。小規模TDDは初回31件Red→31件Green、設定エラー非表示1件Red→最終43件Green、関連回帰を含め80件Greenです。実装前のAPI確認ではRepository Secretsとself-hosted runnerはいずれも0件でした。実runnerのpreflight・buildは未確認です。モデル / fixture配置、Metal probe、Xcode compile / 署名・実機操作は残ります。以下は全工程の計画であり、入口の単体テスト合格を実Editor・build・実機合格には数えません。
+**実機待ちと分離してmacOSテスト・Android APK・iOS Xcode出力のCIを先行します。** PR #112の初回head `6c1ee2f`の[実preflight](results/platform-ci-preflight-6c1ee2f-20261020.json)は全3 jobがライセンス未登録でfailureでした。実3 archiveを独立照合し、Editor導入・build・モデル推論未開始を確認しました。本branchにはさらにMetalの16整数compute probeと、iOS export後の署名なしXcode compile・実arm64 app照合を接続しました。追加したnative処理の実runner結果は未確認です。[追加TDD](results/platform-native-contracts-tdd-20261020.json)は新規20件Redと保護・終了監督計4件Redを経て、platform関連68件・関連回帰計105件Greenです。原モデル / fixture配置、署名・端末操作、実モデルGPU・全実機は残ります。以下は全工程の計画であり、入口の単体テスト合格を実Editor・build・実機合格には数えません。
 
 | 順序 | 作業 | 開始条件と完了条件 |
 | --- | --- | --- |

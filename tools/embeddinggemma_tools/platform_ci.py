@@ -6,10 +6,12 @@ import json
 import os
 from pathlib import Path
 import platform
+import plistlib
 import re
 import shutil
 import signal
 import subprocess
+import struct
 import xml.etree.ElementTree as ET
 
 from .bounded_process import read_unity_execution_counts, write_json_atomic
@@ -21,6 +23,77 @@ TEST_CLASSES = tuple('EmbeddingGemma.Validation.Tests.' + name for name in (
     'ValidationIOSBuildTests', 'ValidationAndroidBuildTests', 'PlayerDeviceMixedEntryTests'))
 HUB = Path('/Applications/Unity Hub.app/Contents/MacOS/Unity Hub')
 EDITOR = Path('/Applications/Unity/Hub/Editor') / VERSION / 'Unity.app/Contents/MacOS/Unity'
+METAL_SOURCE = Path(__file__).with_name('platform_metal_probe.swift')
+
+
+def audit_metal_result(raw):
+    """Admit only fixed fields from a sixteen-integer compute capability probe."""
+    value = json.loads(raw)
+    base = {'schema', 'available', 'compute_passed'}
+    if (not isinstance(value, dict) or type(value.get('schema')) is not int or value.get('schema') != 1
+            or type(value.get('available')) is not bool or type(value.get('compute_passed')) is not bool):
+        raise ValueError('invalid_metal_probe')
+    if value['compute_passed']:
+        keys = base | {'compared', 'mismatches', 'max_buffer_bytes', 'recommended_working_set_bytes'}
+        if (set(value) != keys or value['available'] is not True
+                or any(type(value[key]) is not int for key in keys - base)
+                or value['compared'] != 16 or value['mismatches'] != 0
+                or value['max_buffer_bytes'] <= 0 or value['recommended_working_set_bytes'] <= 0):
+            raise ValueError('invalid_metal_compute_result')
+    elif set(value) != base | {'reason'} or value['reason'] not in {
+            'no_metal_device', 'probe_setup_failed', 'gpu_command_failed', 'compute_mismatch'}:
+        raise ValueError('invalid_metal_probe_failure')
+    return value
+
+
+def probe_metal(private, environment, *, command=None):
+    command = private_command if command is None else command
+    private = Path(private)
+    private.mkdir(parents=True, exist_ok=True)
+    clean = {key: value for key, value in environment.items() if not key.startswith('UNITY_')}
+    result = dict(schema=1, available=False, compute_passed=False, reason='probe_execution_failed')
+    try:
+        command(['xcrun', 'swiftc', str(METAL_SOURCE), '-o', str(private / 'metal-probe')],
+                private, 'metal-compile', clean, 120)
+        command([str(private / 'metal-probe'), str(private / 'metal-result.json')],
+                private, 'metal-execute', clean, 60)
+        result = audit_metal_result((private / 'metal-result.json').read_bytes())
+    except (OSError, ValueError, RuntimeError):
+        pass
+    result['source_sha256'] = hashlib.sha256(METAL_SOURCE.read_bytes()).hexdigest()
+    return result
+
+
+def audit_ios_product(derived):
+    """Require an actual arm64 device executable independently of xcodebuild's exit."""
+    products = list((Path(derived) / 'Build/Products/Release-iphoneos').glob('*.app'))
+    if len(products) != 1 or products[0].is_symlink():
+        raise ValueError('device_app_missing_or_ambiguous')
+    app = products[0]
+    try:
+        info = plistlib.loads((app / 'Info.plist').read_bytes())
+        name = info['CFBundleExecutable']
+        if (not isinstance(name, str) or not re.fullmatch('[A-Za-z0-9_.-]+', name)
+                or name in {'.', '..'} or info.get('CFBundleSupportedPlatforms') != ['iPhoneOS']):
+            raise ValueError('device_app_metadata_invalid')
+        executable = app / name
+        if executable.is_symlink() or not executable.is_file():
+            raise ValueError('device_app_executable_invalid')
+        with executable.open('rb') as stream:
+            header = stream.read(32)
+            if len(header) != 32:
+                raise ValueError('device_app_header_missing')
+            magic, cpu, _, kind, commands, command_bytes, _, _ = struct.unpack('<IiiIIIII', header)
+            if (magic != 0xfeedfacf or cpu != 0x0100000c or kind != 2 or commands < 1
+                    or command_bytes < 8 or executable.stat().st_size < 32 + command_bytes):
+                raise ValueError('arm64_device_executable_required')
+            stream.seek(0)
+            digest = hashlib.file_digest(stream, 'sha256').hexdigest()
+    except (OSError, KeyError, plistlib.InvalidFileException) as error:
+        raise ValueError('device_app_product_invalid') from error
+    return dict(executable_sha256=digest, executable_bytes=executable.stat().st_size,
+                info_plist_sha256=hashlib.sha256((app / 'Info.plist').read_bytes()).hexdigest(),
+                architecture='arm64', platform='iPhoneOS')
 
 
 def preflight(project, target, source, environment, *, system=None, free_bytes=None):
@@ -107,11 +180,12 @@ def _build_wiring(target):
 def execute(project, target, source, output, environment, report, *, command=private_command):
     project, output = Path(project).resolve(), Path(output).resolve()
     private = output / 'private'
-    private.mkdir()
+    private.mkdir(exist_ok=True)
     public = output / 'public/result.json'
     # Licensing credentials are supplied only to activation/return; no command line is published.
     clean_env = {key: value for key, value in environment.items() if not key.startswith('UNITY_')}
     license_file = private / 'license.ulf'
+    license_file_created = False
     serial_attempted = False
     wiring = project / 'Assets/Validation/Editor/PlatformCIBuildInvocation.cs'
 
@@ -153,6 +227,7 @@ def execute(project, target, source, output, environment, report, *, command=pri
         if report['license_mode'] == 'license_file':
             # File contents, path and raw Editor responses are excluded from the public receipt.
             with license_file.open('x', encoding='utf-8') as stream:
+                license_file_created = True
                 stream.write(environment['UNITY_LICENSE'])
             license_file.chmod(0o600)
             activation += ['-manualLicenseFile', license_file]
@@ -191,6 +266,15 @@ def execute(project, target, source, output, environment, report, *, command=pri
             report['build_receipt_sha256'] = hashlib.sha256(receipt.read_bytes()).hexdigest()
             report['build_output_sha256'] = hashlib.sha256(required.read_bytes()).hexdigest()
             report['build_output_bytes'] = required.stat().st_size
+            if target == 'ios':
+                phase('xcode_native_compile')
+                derived = private / 'xcode-derived'
+                run(['xcodebuild', '-project', destination / 'Unity-iPhone.xcodeproj',
+                     '-scheme', 'Unity-iPhone', '-configuration', 'Release', '-sdk', 'iphoneos',
+                     '-destination', 'generic/platform=iOS', '-derivedDataPath', derived,
+                     'CODE_SIGNING_ALLOWED=NO', 'CODE_SIGNING_REQUIRED=NO', 'build'], 'xcode-compile', 1800)
+                report['ios_native_product'] = audit_ios_product(derived)
+                report['xcode_compile_passed'] = True
         report['success'] = True
         phase('complete')
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError):
@@ -207,7 +291,7 @@ def execute(project, target, source, output, environment, report, *, command=pri
             except (OSError, RuntimeError):
                 report['success'] = False
                 report['blockers'].append('serial_license_return_failed')
-        if license_file.exists():
+        if license_file_created and license_file.exists():
             license_file.unlink()
         # Wiring is created exclusively by this invocation; preserve unrelated files on collision.
         if 'build_wiring_sha256' in report:
@@ -225,6 +309,7 @@ def main(argv=None):
     parser.add_argument('--source', required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--execute', action='store_true')
+    parser.add_argument('--probe-metal', action='store_true')
     args = parser.parse_args(argv)
     try:
         args.output.mkdir(parents=True, exist_ok=False)
@@ -241,9 +326,16 @@ def main(argv=None):
     ready = report['success']
     report['success'] = False
     report['preflight_ready'] = ready
+    if args.probe_metal and args.platform == 'macos' and platform.system() == 'Darwin':
+        report['metal_capability_probe'] = probe_metal(args.output / 'private', os.environ)
     write_json_atomic(args.output / 'public/result.json', report)
     if ready and args.execute:
-        execute(args.project, args.platform, args.source, args.output, os.environ, report)
+        try:
+            execute(args.project, args.platform, args.source, args.output, os.environ, report)
+        except (OSError, ValueError, RuntimeError, subprocess.SubprocessError):
+            report['success'] = False
+            report['blockers'].append('execution_supervision_failed')
+            write_json_atomic(args.output / 'public/result.json', report)
     print(json.dumps(dict(success=report['success'], phase=report['phase'], blockers=report['blockers'])))
     return 0 if report['success'] else 1
 

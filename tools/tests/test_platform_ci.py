@@ -2,6 +2,8 @@ import importlib
 import json
 import os
 from pathlib import Path
+import plistlib
+import struct
 import subprocess
 import sys
 
@@ -153,6 +155,14 @@ def native_setup(tmp_path, monkeypatch, target):
     return module, root, output, report
 
 
+def make_app(directory, *, platform='iPhoneOS', cpu=0x0100000c):
+    product = directory / 'Build/Products/Release-iphoneos/Validation.app'
+    product.mkdir(parents=True)
+    (product / 'Info.plist').write_bytes(plistlib.dumps(dict(CFBundleExecutable='Validation', CFBundleSupportedPlatforms=[platform])))
+    (product / 'Validation').write_bytes(struct.pack('<IiiIIIII', 0xfeedfacf, cpu, 0, 2, 1, 8, 0, 0) + b'\0'*8)
+    return product
+
+
 @pytest.mark.parametrize('target', ['macos', 'android', 'ios'])
 def test_actual_runner_wires_real_entry_and_requires_actual_output(tmp_path, monkeypatch, target):
     module, root, output, report = native_setup(tmp_path, monkeypatch, target)
@@ -161,6 +171,8 @@ def test_actual_runner_wires_real_entry_and_requires_actual_output(tmp_path, mon
     def command(args, private, stage, env, timeout):
         calls.append((args, stage))
         assert not any(key.startswith('UNITY_') for key in env)
+        if stage == 'xcode-compile':
+            make_app(Path(args[args.index('-derivedDataPath') + 1]))
         if stage == 'editor-tests':
             xml(private).rename(private / 'accepted.xml')
             (private / 'accepted.xml').rename(private / 'tests.xml')

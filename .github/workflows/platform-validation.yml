@@ -5,7 +5,9 @@ on:
     paths:
       - '.github/workflows/platform-validation.yml'
       - 'tools/embeddinggemma_tools/platform_ci.py'
+      - 'tools/embeddinggemma_tools/platform_metal_probe.swift'
       - 'tools/tests/test_platform_ci.py'
+      - 'tools/tests/test_platform_native.py'
       - 'Assets/Validation/**'
       - 'Packages/com.ayutaz.embeddinggemma/**'
       - 'ProjectSettings/ProjectVersion.txt'
@@ -49,7 +51,7 @@ jobs:
         run: >-
           uv run --no-project --python 3.13 python -m embeddinggemma_tools.platform_ci
           --project .. --platform "$EG_PLATFORM" --source "$GITHUB_SHA"
-          --output ../artifacts/platform-ci --execute
+          --output ../artifacts/platform-ci --execute --probe-metal
       - name: Check only the public receipt
         id: privacy_upload_platform
         if: always()

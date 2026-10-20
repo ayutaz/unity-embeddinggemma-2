@@ -12,9 +12,15 @@ macOSは `ValidationIOSBuildTests` / `ValidationAndroidBuildTests` / `PlayerDevi
 
 公開artifactは `artifacts/platform-ci/public/result.json` だけで、直前のprivacy guardを必須にします。元のEditorログ・NUnit XML・build receipt・APK / Xcode出力はrunner内のprivate directoryに置き、自動公開しません。これらの生データはrunner破棄後も保存されるバックアップではありません。端末配置・独立監査へ進む際には、機密設定や絶対pathを含むbuild出力を公開する前に、安全な転送・保存経路を別途整備します。今のpublic receiptはhashと許可した状態・件数だけを残す記録です。
 
-原モデル・fixtureの取得や配置、Xcode native compile / 署名、Metal能力probe、実モデルGPU・端末操作はこの初回入口では未実装です。buildが成功しても `gpu_verified` / `device_verified` / `model_execution_performed` はfalseのままです。[小規模TDD](results/platform-ci-contracts-tdd-20261020.json)は初回31件Red→31件Green、設定エラーのpath非表示1件Red→最終43件Green、関連回帰を含め80件Greenです。実runnerでの結果は実行source・runと別途記録します。
+初回head `6c1ee2f`では原モデル・fixtureの取得や配置、Xcode native compile / 署名、Metal能力probe、実モデルGPU・端末操作は未実装でした。[初回小規模TDD](results/platform-ci-contracts-tdd-20261020.json)は31件Red→31件Green、設定エラーのpath非表示1件Red→43件Green、関連回帰を含め80件Greenです。後続のprobe / compile接続は下記で区別します。原モデル・fixture配置、署名、実モデルGPU・端末操作は引き続き未実装で、buildだけでは `gpu_verified` / `device_verified` / `model_execution_performed` はfalseのままです。
 
-Xcode export / compile / 署名 / 実機起動、Android build / エミュレータ / 実機GPU、macOS compile / CPU / Metalを別結果にします。実GPUは実行環境の能力を確認してから元数値gateで検証します。端末接続hostの利用時はtrusted sourceだけを隔離された環境で実行し、外部PRのコードに端末・署名・認証情報を渡しません。成果物は実bytesとprivacy検査の成功後に公開します。計画の追加で既存Required CIやGPU要件を変更しません。
+初回head `6c1ee2f`の[実preflight](results/platform-ci-preflight-6c1ee2f-20261020.json)は全3 jobがライセンス未登録でfailureでした。実3 archiveのサイズ・配信元digest・全CRC・完全な私的2コピーと公開JSONを独立照合しました。Editor導入・build・モデル推論は開始されていません。これは停止理由の確認であって、platform CIの成功や後続sourceの実行結果ではありません。
+
+本branchの追加では `--probe-metal` を接続し、macOS jobはUnityライセンスの有無と独立に、Swift / Metalで16個の整数を実計算・照合します。GPU deviceなしや実行失敗も固定理由で記録します。[Appleのcompute手順](https://developer.apple.com/documentation/metal/performing-calculations-on-a-gpu)に沿った小さい能力probeで、実モデル・Sentis・SDKのGPU合格ではありません。公開結果の `gpu_verified` / `device_verified` はfalseを維持し、GPU名・host名・生エラーは含めません。実runnerでのこのprobeは未確認です。
+
+iOSは実Xcode exportの照合後に、Device SDK / Releaseで署名なしの `xcodebuild` を実行する経路を追加しました。exit0だけで成功にせず、実 `.app` のInfo.plistとarm64 Mach-O実行ファイルを確認してhashを記録します。export成功と `xcode_compile_passed` は別結果です。このcompileも実runnerでは未確認で、署名・端末配置・実GPUは未実行です。追加TDDは新規20件Red、schemaと既存licenseファイル保護2件Red、CLI終了監督2件Redを経て、platform関連68件・関連回帰計105件Greenです。[追加の検証記録](results/platform-native-contracts-tdd-20261020.json)を参照してください。
+
+Xcode export / compile / 署名 / 実機起動、Android build / エミュレータ / 実機GPU、macOS compile / CPU / Metalを別結果にします。実GPUは実行環境の能力を確認してから元数値gateで検証します。端末接続hostの利用時はtrusted sourceだけを隔離された環境で実行し、外部PRのコードに端末・署名・認証情報を渡しません。成果物は実bytesとprivacy検査の成功後に公開します。既存Required CIやGPU要件は変更しません。
 
 更新: 2026-10-17。PR #31・#83はマージ済みです。#83の最終head `613ada8` の[CI38939320058](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38939320058)は全15 job成功し、統合main `a965c09`と同じtreeです。[現在の対応範囲](status.md) / [ロードマップ](roadmap.md)。以下の過去runは当時の証拠です。
 

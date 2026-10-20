@@ -10,7 +10,8 @@
 
 ## 公開前
 
-- [ ] 旧providerコピーの個人情報除去を別途確認する。現在の安全な履歴だけで完了とはしない。
+旧providerコピーの除去は2026-10-20のユーザー指示で後回しとし、今回の公開待ち条件から外しました。除去完了とは扱いません。現在の送信履歴・新しいpayloadのprivacy gateは下記のとおり維持します。
+
 - [ ] 一つのtask PRに実装・元source付き記録・文書をまとめ、Required CIと新しいWindows音声 / 画像CPU CIの実結果を確認する。skip・timeout・別sourceを成功にしない。
 - [ ] `project-privacy`、versioned Git hooks、全送信祖先、PR本文・Release本文・添付物の実bytes、公開identityを確認する。変更画像があれば同じbytesを目視 / OCRで確認する。
 - [ ] 必須結果を満たしたPRを明示的noreply authorでマージし、実mainのtree・CI source・署名・identityを読み戻す。mainへ直接pushしない。

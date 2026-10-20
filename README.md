@@ -8,7 +8,7 @@ Unity Sentisで、テキスト・画像・音声を共通の768次元ベクト�
 
 [導入・API](Packages/com.ayutaz.embeddinggemma/Documentation~/index.md) · [モデル準備](docs/model-preparation.md) · [現在の対応範囲](docs/status.md) · [ロードマップ](docs/roadmap.md) · [ドキュメント一覧](docs/README.md)
 
-Windows候補の機能検証（工程1〜3）は完了しました。Editorの実モデルと、同一SDK実装の既存Player結果で、全入力・全role・横断検索のGPU動作を確認しています。[確認記録と適用範囲](docs/results/windows-first-stages-1-to-3-20261020.json)を参照してください。追加の[GPU計測](docs/windows-media-memory-results.md)・[画像CPU比較](docs/image-CPU-fixed-conditions.md)・[音声CPU比較](docs/native-audio-CPU-results.md)と[初回対応構成](docs/windows-supported-configuration.md)は整理済みです。新CI、個人情報除去、新tag導入、正式公開は残っています。
+Windows候補の機能検証（工程1〜3）は完了しました。Editorの実モデルと、同一SDK実装の既存Player結果で、全入力・全role・横断検索のGPU動作を確認しています。[確認記録と適用範囲](docs/results/windows-first-stages-1-to-3-20261020.json)を参照してください。追加の[GPU計測](docs/windows-media-memory-results.md)・[画像CPU比較](docs/image-CPU-fixed-conditions.md)・[音声CPU比較](docs/native-audio-CPU-results.md)と[初回対応構成](docs/windows-supported-configuration.md)は整理済みです。新CI、新tag導入、正式公開は残っています。
 
 ## できること
 

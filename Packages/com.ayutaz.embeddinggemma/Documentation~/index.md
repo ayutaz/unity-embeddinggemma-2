@@ -1,6 +1,6 @@
 # 導入とRuntime API
 
-テキスト・画像・音声の埋め込みと検索をUnityへ組み込むための入口です。`0.1.0` の公開候補を準備しており、正式tag・Releaseはまだありません。Windows先行の工程1〜3はsource別に受け入れ済みです。新CI・個人情報除去・新tagからの導入・正式公開の残件と、他環境の未検証範囲は[検証状況](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)を参照してください。
+テキスト・画像・音声の埋め込みと検索をUnityへ組み込むための入口です。`0.1.0` の公開候補を準備しており、正式tag・Releaseはまだありません。Windows先行の工程1〜3はsource別に受け入れ済みです。新CI・新tagからの導入・正式公開の残件と、他環境の未検証範囲は[検証状況](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)を参照してください。
 
 ## 1. パッケージを追加する
 

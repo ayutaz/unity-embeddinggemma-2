@@ -4,7 +4,7 @@
 
 ## Windows候補の工程1〜3（2026-10-20）
 
-後続のtask branchでは`0.1.0`候補の版・CHANGELOGを準備し、[画像 / 音声GPU40回](windows-media-memory-results.md)、[画像CPU12回](image-CPU-fixed-conditions.md)、[音声CPU8回](native-audio-CPU-results.md)と[初回対応構成](windows-supported-configuration.md)を整理しました。[Windows CPU CI](windows-CPU-CI.md)はローカル関連134テスト・actionlint合格、hosted実行は未完了です。公開mainは#114統合済み`3e78a27`、追加branchは未統合で、正式tag・Releaseはありません。[最終確認項目](windows-release-checklist.md)を満たしてから正式公開します。以下の数値・source別結果は元の適用範囲を保ちます。
+後続のtask branchでは`0.1.0`候補の版・CHANGELOGを準備し、[画像 / 音声GPU40回](windows-media-memory-results.md)、[画像CPU12回](image-CPU-fixed-conditions.md)、[音声CPU8回](native-audio-CPU-results.md)と[初回対応構成](windows-supported-configuration.md)を整理しました。[Windows CPU CI](windows-CPU-CI.md)はローカル関連134テスト・actionlint合格、hosted実行は未完了です。公開mainは#114統合済み`3e78a27`、追加branchは未統合で、正式tag・Releaseはありません。2026-10-20のユーザー指示で旧providerコピー除去は後回しとし、今回の待ち条件から外しました。新規送信のprivacy検査は維持します。[最終確認項目](windows-release-checklist.md)を満たしてから正式公開します。以下の数値・source別結果は元の適用範囲を保ちます。
 
 **main `1a036fb`、PR #113まで統合済み。工程1〜3のWindows機能検証は完了**しました。候補 `e5b6bd9` は実行記録の `9967516` と全treeが一致します。[確認記録](results/windows-first-stages-1-to-3-20261020.json)にsource・モデル・数値gate・失敗履歴・適用範囲をまとめています。
 

@@ -1,5 +1,7 @@
 # 現在の対応範囲と検証状況
 
+2026-10-20の優先順とPR #112の確認結果は[正式リリースまでの実行計画](next-release-plan.md)を参照してください。以下のsource別検証記録は保持します。
+
 最新checkpoint（2026-10-20）: **main `de56db8`、PR #111まで統合済み**。採用head `1280948` の[必須CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39347537063)は全15 job成功。実13数値archive、元824,320値、CPU encoder 120 capture / 30,822,400値を独立照合し、元許容差超過0です。SDK実行コードは既存Windows GPU検証source `f0fc2a7`から不変ですが、package README / CHANGELOGは変更されており、package全bytesの一致や新mainのGPU再実行は主張しません。
 
 PR #112の初回head `6c1ee2f`で[platform CIの入口](ci.md)を追加し、[実preflightの全3 job](results/platform-ci-preflight-6c1ee2f-20261020.json)はライセンス未登録でfailureでした。実3 archiveのdigest / CRC・完全な私的2コピーとJSONを独立照合し、Editor導入・build・モデル推論未開始を確認しました。後続sourceの実行成功ではありません。本branchには追加でMetalの16整数compute probeと、iOS export後の署名なしXcode compile・実arm64 app照合を接続しました。[追加TDD](results/platform-native-contracts-tdd-20261020.json)は新規20件Red、保護・終了監督の計4件Red→platform関連68件・関連回帰計105件Greenです。当該TDD時点では追加native処理の実runner結果は未確認でした。後続sourceの実結果は次段落に記録します。原モデル / fixture取得、署名・端末操作、実モデルGPU・全実機、性能・最低要件、旧providerコピー削除、正式SDK tag / Release・新tag consumerは未完了です。

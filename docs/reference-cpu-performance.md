@@ -6,6 +6,15 @@
 
 更新: 2026-10-20。[Windows機能検証の工程1〜3](results/windows-first-stages-1-to-3-20261020.json)は完了しました。同条件CPU比較・性能・最低要件は[実行計画](next-release-plan.md)の工程4で、機能検証とは別の未完了項目です。他環境の実機受け入れはWindows公開後に分けます。以下の契約・失敗診断は元sourceの範囲で保持します。
 
+後続の[Windows CPU原本再照合](results/windows-image-CPU-and-bounded-diagnostics-20261020.json)では、
+source `7d22168` の画像3形状・各4回について全12最終vectorを独立再計算しました。
+横長・縦長は中間captureも合格、正方形は各回3要素が超過してexit1です。
+source `4e235b6` の正方形1回ずつの診断では、hardware FMA linear・固定profile pooling・
+明示的RMS参照式の実captureが全てbit単位で同じで、超過を解消しませんでした。
+入力・元参照・許容差は維持し、これらの同じ変更での重い再試行は行いません。
+小規模の[明示的CPU参照](cpu-fp32-reference.md)は音声の次の診断にも使用できますが、
+画像・音声の数値合格や性能改善を自動的には示しません。
+
 画像・音声のGPU実行中に観測したprocess CPU時間とは別に、同じ固定入力と
 元のFP32参照を使うPyTorch CPU基準を測ります。SentisのCPU API対応を追加する
 変更ではなく、SDK Runtimeは維持します。frameworkの違いを記録し、CPU時間と

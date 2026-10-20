@@ -160,3 +160,42 @@ def test_torch_matmul_and_broadcast_fma_call_explicit_native_operations(native,s
     np.testing.assert_array_equal(actual.numpy(),oracle(a.numpy(),b.numpy(),None,scalar))
     assert residue.item()==-2.**-46
     assert engine.calls=={'linear':0,'matmul':1,'fma':1}
+
+
+@pytest.mark.parametrize('channels',[1,16,32])
+def test_stem_convolution_follows_kernel_then_channel_then_separate_block_order(native,scalar,channels):
+    import torch
+    from embeddinggemma_tools.cpu_fp32_reference import TorchFp32Reference
+    rng=np.random.default_rng(channels)
+    values=rng.normal(size=(1,channels,3,5)).astype(np.float32)
+    weight=rng.normal(size=(3,channels,3,3)).astype(np.float32)
+    wanted=np.empty((1,3,2,3),np.float32);chunk=1 if channels==1 else 16
+    for out in range(3):
+        for row in range(2):
+            for col in range(3):
+                total=None
+                for start in range(0,channels,chunk):
+                    partial=np.float32(0)
+                    for kr in range(3):
+                        for kc in range(3):
+                            y,x=row*2+kr-1,col*2+kc-1
+                            for c in range(start,start+chunk):
+                                value=float(values[0,c,y,x]) if 0<=y<3 and 0<=x<5 else 0.
+                                partial=np.float32(scalar(value,float(weight[out,c,kr,kc]),float(partial)))
+                    total=partial if total is None else np.float32(total+partial)
+                wanted[0,out,row,col]=total
+    engine=TorchFp32Reference(native)
+    with torch.no_grad():actual=engine.stem_convolution(torch.from_numpy(values),torch.from_numpy(weight))
+    np.testing.assert_array_equal(actual.numpy().view('u4'),wanted.view('u4'))
+    assert engine.calls['stem_convolution']==1
+
+
+@pytest.mark.parametrize('fault',['channels','kernel','rank'])
+def test_stem_reference_rejects_unaudited_convolution_contracts(native,fault):
+    import torch
+    from embeddinggemma_tools.cpu_fp32_reference import TorchFp32Reference
+    values=torch.ones(1,16,3,5);weight=torch.ones(3,16,3,3)
+    if fault=='channels':values=values[:,:3];weight=weight[:,:3]
+    elif fault=='kernel':weight=weight[:,:,:2,:2]
+    else:values=values[0]
+    with torch.no_grad(),pytest.raises(ValueError):TorchFp32Reference(native).stem_convolution(values,weight)

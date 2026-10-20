@@ -160,6 +160,31 @@ class TorchFp32Reference:
         self.calls['fma']+=1
         return torch.from_numpy(result)
 
+    def stem_convolution(self,value,weight):
+        """The audited audio stem: 3x3, stride2, pad1, Cin1 or16 blocks.
+
+        Unfold selects original pixels only. Each partial traverses kernel
+        positions before its channel block; block partials are added separately.
+        This is an actual native execution, not the ONNX export's passthrough.
+        """
+        import torch
+        self._tensor(value);self._tensor(weight)
+        if (value.ndim!=4 or weight.ndim!=4 or tuple(weight.shape[2:])!=(3,3)
+                or value.shape[1]!=weight.shape[1] or (value.shape[1]!=1 and value.shape[1]%16)):
+            raise ValueError('Only the audited audio stem convolution is supported')
+        batch,channels,height,width=value.shape;outputs=weight.shape[0]
+        chunk=1 if channels==1 else 16;blocks=channels//chunk
+        out_height,out_width=(height+1)//2,(width+1)//2;locations=out_height*out_width
+        patches=torch.nn.functional.unfold(value,kernel_size=3,padding=1,stride=2)
+        left=patches.reshape(batch,blocks,chunk,9,locations).permute(0,1,4,3,2).reshape(batch*blocks,locations,9*chunk)
+        right=weight.reshape(outputs,blocks,chunk,9).permute(1,3,2,0)
+        right=right.unsqueeze(0).expand(batch,blocks,9,chunk,outputs).reshape(batch*blocks,9*chunk,outputs)
+        partials=self.native.matmul(self._tensor(left),self._tensor(right)).reshape(batch,blocks,locations,outputs)
+        total=partials[:,0]
+        for index in range(1,blocks):total=total+partials[:,index]
+        self.calls['stem_convolution']=self.calls.get('stem_convolution',0)+1
+        return torch.from_numpy(np.ascontiguousarray(total.reshape(batch,out_height,out_width,outputs).transpose(0,3,1,2)))
+
     @contextmanager
     def linear_scope(self):
         import torch.nn.functional as functional

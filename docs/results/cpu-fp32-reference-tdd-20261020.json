@@ -4,7 +4,9 @@
   "initial_red": {"exit_code": 2, "reason": "native CPU reference module absent"},
   "initial_green": {"passed": 17, "failed": 0, "skipped": 0},
   "torch_adapter_red": {"failed": 9, "passed": 18, "reason": "TorchFp32Reference absent"},
-  "final_green": {"passed": 27, "failed": 0, "skipped": 0},
+  "torch_adapter_green": {"passed": 27, "failed": 0, "skipped": 0},
+  "stem_red": {"failed": 6, "passed": 27, "reason": "stem_convolution method absent"},
+  "final_green": {"passed": 33, "failed": 0, "skipped": 0},
   "native_oracle": "Independent scalar C99 fmaf; array outputs compared as uint32 bits",
   "native_widths_tested": [1, 7, 191, 192, 193, 385],
   "coverage": [
@@ -16,7 +18,9 @@
     "hash-bound source, compiler flags and library; changed cache rejected without overwrite",
     "Torch vector, matrix and multidimensional linear rank preservation",
     "explicit no-grad CPU FP32 only; actual native call counters",
-    "scope restored after downstream exception; nested scope rejected"
+    "scope restored after downstream exception; nested scope rejected",
+    "stem convolution kernel/channel/block order against scalar C99 fmaf; 1,16,32 input channels",
+    "unaudited stem channel, kernel and rank rejection"
   ],
   "actual_validation_host": "Windows x64; installed MSVC toolchain; reusable Python 3.13 environment",
   "test_file": "tools/tests/test_cpu_fp32_reference.py",

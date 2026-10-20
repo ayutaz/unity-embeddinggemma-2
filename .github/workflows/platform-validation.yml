@@ -5,9 +5,11 @@ on:
     paths:
       - '.github/workflows/platform-validation.yml'
       - 'tools/embeddinggemma_tools/platform_ci.py'
+      - 'tools/embeddinggemma_tools/device_fixture_build.py'
       - 'tools/embeddinggemma_tools/platform_metal_probe.swift'
       - 'tools/tests/test_platform_ci.py'
       - 'tools/tests/test_platform_native.py'
+      - 'tools/tests/test_device_fixture_build.py'
       - 'Assets/Validation/**'
       - 'Packages/com.ayutaz.embeddinggemma/**'
       - 'ProjectSettings/ProjectVersion.txt'

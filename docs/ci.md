@@ -1,5 +1,7 @@
 # CI と開発手順
 
+後続の[device fixture配置](device-mixed-runtime.md#build前の固定入力配置)は、明示した元manifest pinとローカル入力を検査してから既存native buildへ接続します。hosted workflowの自動取得、ライセンス・build・実機GPUの成功を示す変更ではありません。[元28ファイルと関連128テストの記録](results/device-fixture-build-staging-tdd-20261020.json)を参照してください。
+
 ## 2026-10-20のCI拡張
 
 基準mainは `de56db8`です。本branchに `.github/workflows/platform-validation.yml` と `tools/embeddinggemma_tools/platform_ci.py` を追加しました。固定Unity 6000.3.21f1 / revision c02631ffc030でmacOS Editor契約テスト、Android APK build、iOS Xcode exportを別jobとして実行します。Repository Secretsとself-hosted runnerは実装前のAPI確認で0件です。workflowの追加や単体テスト合格は、実Editor・build・GPU合格の証拠ではありません。

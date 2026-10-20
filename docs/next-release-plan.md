@@ -45,6 +45,7 @@ CPUのPython参照・比較は検証用です。製品の画像 / PCM前処理�
 
 - テキストは既存の同一Windows PlayerのCPU / GPU各4条件を再照合し、[sourceを明記した比較](text-paired-performance.md)を記録しました。新しい推論実行ではありません。
 - 画像CPUは横長・縦長が各4回とcapture auditを通過しました。正方形は4回を完了したものの、中間値gateが不合格で、全画像CPU比較の完了には数えません。
+- 後続の[画像CLI固定条件](image-CPU-fixed-conditions.md)はsource `fe1cb9e` で正方形を16 lane、横長・縦長をnativeに明示して各4回実行し、元中間値・最終vector・正常終了・load / releaseを確認しました。全形状に16 laneを適用した合格ではなく、横長の同設定での4要素超過・exit1は別記録で保持しています。
 - 音声CPUは既存5区間のgraph bytesを再利用できましたが、実測の20分上限と単一区間の5分診断上限で停止しました。最終数値が出ていない試行を数値不一致や合格とは扱いません。元の[準備停止](results/windows-cpu-baseline-preparation-stop-20261020.json)も保持します。
 - CPU参照専用のFMA / stem実装は小規模33テストに合格しました。画像の3種類の診断は同じ3要素の中間不一致を解消しませんでした。同じ変更での再試行は止めます。
 - [音声の明示的CPU経路](native-audio-CPU-results.md)は共有用CLIへ統合し、source `fd7f375` でも2profile・各4回で元の全中間gate・最終vector・正常終了を確認しました。encoderは全8回bit単位で一致し、同じ入力のGPU比較と、CPUの独立load / 係数照合 / releaseも記録しました。CI経路の統合は残っています。Unity SDKのGPU実装や元の許容差は変更していません。
@@ -53,7 +54,7 @@ CPUのPython参照・比較は検証用です。製品の画像 / PCM前処理�
 
 | 優先順 | 作業 | 完了条件と次への移行 |
 | --- | --- | --- |
-| 1 | 不足するCPU比較を閉じる | 音声の合格したnative CLI経路をCIへ統合する。画像squareはlinear・pooling・RMS8 lane・attention matmulの同じ置換を繰り返さず、元参照に一致するCIのAVX512とローカルAVX2の違いを根拠に、明示した16 laneの集計順を小規模TDD後に実モデルで確認する。命令幅だけで原因を断定せず、元参照や許容差は変えない |
+| 1 | CPU比較のCI経路を整える | 音声native CLIと画像の明示設定をCIへ統合する。条件別の元gate・capture監査・load / releaseを維持し、旧ONNX数値検証と過去の失敗を省略した成功にはしない。ローカルの合格設定を変換・重い再試行で繰り返さない |
 | 2 | 性能記録と動作要件を確定する | GPU10条件の元receipt・sample・40出力を公開用集計へ結び付け、合格したCPU比較、初回 / warm、stage、RAM / VRAM、解放を分離して記録。確認した構成と未確認の最低構成を区別し、未測定peak・低い構成の成功を推測しない |
 | 3 | 公開前確認と変更の統合 | 実装・記録を一つのtask PRにまとめ、必要CI、全祖先、実payload、公開identity、必要な画像目視 / OCRを確認して、許可済みのmergeを行う。旧providerコピーの個人情報削除は別条件として確認する。新規公開物はprivacy gateを満たして進める |
 | 4 | Windows正式SDKを公開する | 版・CHANGELOG・license・取得手順を確定し、固定tagを空consumerへ導入。公開モデルの取得→テキスト / 画像 / 音声・RenderTexture→横断検索→解放・正常終了を確認してReleaseを公開。公開後のtag・asset・手順を読み戻して照合する |

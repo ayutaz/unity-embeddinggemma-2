@@ -1,0 +1,1907 @@
+{
+  "schema": 1,
+  "scope": "Three explicit fixed-input CPU image conditions versus source-qualified Sentis GPU FP32; per-condition arithmetic is declared and no uniform-policy/general-input success is claimed",
+  "actual_CPU_calls": 12,
+  "independently_recomputed_final_vectors": 12,
+  "all_accepted_conditions_original_intermediate_and_final_gates_passed": true,
+  "CPU_statistics_policies": {
+    "square": "sixteen-lane",
+    "landscape": "native",
+    "portrait": "native"
+  },
+  "common_statistics_mode_across_profiles": false,
+  "settings_explicit_before_each_measurement": true,
+  "automatic_post_failure_fallback": false,
+  "original_weights_reference_or_tolerance_changed": false,
+  "same_physical_Windows_host": true,
+  "different_frameworks_and_processes": true,
+  "CPU_is_reference_only_not_Unity_SDK_backend": true,
+  "minimum_hardware_accepted": false,
+  "complete_performance_accepted": false,
+  "general_kernel_speedup_claimed": false,
+  "formal_release_ready": false,
+  "rejected_uniform_sixteen_lane_landscape": {
+    "actual_source": "fe1cb9e843356e284eae240af285742d1f9810a3",
+    "CPU_process_exit_code": 1,
+    "actual_calls": 4,
+    "independent_intermediate_inspections": [
+      {
+        "round": "first",
+        "pixels_exact": true,
+        "positions_exact": true,
+        "tolerance_failures": 4,
+        "maximum_absolute_error": 1.7404556274414062e-05,
+        "minimum_cosine": 0.9999999999916822,
+        "success": false
+      },
+      {
+        "round": "warm",
+        "pixels_exact": true,
+        "positions_exact": true,
+        "tolerance_failures": 4,
+        "maximum_absolute_error": 1.7404556274414062e-05,
+        "minimum_cosine": 0.9999999999916822,
+        "success": false
+      },
+      {
+        "round": "repeat-1",
+        "pixels_exact": true,
+        "positions_exact": true,
+        "tolerance_failures": 4,
+        "maximum_absolute_error": 1.7404556274414062e-05,
+        "minimum_cosine": 0.9999999999916822,
+        "success": false
+      },
+      {
+        "round": "repeat-2",
+        "pixels_exact": true,
+        "positions_exact": true,
+        "tolerance_failures": 4,
+        "maximum_absolute_error": 1.7404556274414062e-05,
+        "minimum_cosine": 0.9999999999916822,
+        "success": false
+      }
+    ],
+    "original_final_vector_gate_passed": true,
+    "raw_report_sha256": "d379708849e2062d676e5ca952385d5e0df0f8aaafa57c37c2c965e0aad8ef6b",
+    "raw_pipeline_sha256": "5704c497f76cfebda2aff54ac2aa6859869444a3e528b3992b0565ba0150d8c0",
+    "actual_worker_receipt_sha256": "642457a96f6af415f52d9915c7da18e39d282e3483656f275cfe977f30f3d301",
+    "portrait_with_this_uniform_mode_not_executed": true
+  },
+  "conditions": [
+    {
+      "profile": "square",
+      "module": "image-square",
+      "CPU_statistics_reference": "sixteen-lane",
+      "actual_CPU_source": "fe1cb9e843356e284eae240af285742d1f9810a3",
+      "actual_GPU_SDK_source": "7754ce4eb9e07e8b81865487b175c63dd6e93097",
+      "actual_GPU_validation_source": "2cc7d94198f413dfe81e24bab7c999607375ce9e",
+      "precision": "fp32",
+      "input_sha256": "c2a1900a1656ce2d843e9d06801c62f927b98a51e9b95ae1159bb2c7515fa399",
+      "descriptor_sha256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "encoder_reference_sha256": "3dfccd1a487ce04df3f8d640483ca045f7a7a56231bc1096ad0f845c923a29c6",
+      "document_reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "original_intermediate_inspections": [
+        {
+          "round": "first",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "tolerance_failures": 0,
+          "maximum_absolute_error": 2.1398067474365234e-05,
+          "minimum_cosine": 0.9999999999879917,
+          "success": true
+        },
+        {
+          "round": "warm",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "tolerance_failures": 0,
+          "maximum_absolute_error": 2.1398067474365234e-05,
+          "minimum_cosine": 0.9999999999879917,
+          "success": true
+        },
+        {
+          "round": "repeat-1",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "tolerance_failures": 0,
+          "maximum_absolute_error": 2.1398067474365234e-05,
+          "minimum_cosine": 0.9999999999879917,
+          "success": true
+        },
+        {
+          "round": "repeat-2",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "tolerance_failures": 0,
+          "maximum_absolute_error": 2.1398067474365234e-05,
+          "minimum_cosine": 0.9999999999879917,
+          "success": true
+        }
+      ],
+      "independent_final_inspections": [
+        {
+          "round": "first",
+          "cosine": 0.9999999999998739,
+          "norm_squared": 0.9999999714420544
+        },
+        {
+          "round": "warm",
+          "cosine": 0.9999999999998739,
+          "norm_squared": 0.9999999714420544
+        },
+        {
+          "round": "repeat-1",
+          "cosine": 0.9999999999998739,
+          "norm_squared": 0.9999999714420544
+        },
+        {
+          "round": "repeat-2",
+          "cosine": 0.9999999999998739,
+          "norm_squared": 0.9999999714420544
+        }
+      ],
+      "CPU_load_wall_seconds": 17.32168380008079,
+      "CPU_load_process_cpu_seconds": 14.609375,
+      "CPU_release_wall_seconds": 0.23993589996825904,
+      "CPU_release_process_cpu_seconds": 0.265625,
+      "CPU_release_scope": "Drop owning model references and collect Python cycles; not allocator zero-byte proof",
+      "CPU_release_completed": true,
+      "CPU_host_lifetime_peak_rss_or_working_set_bytes": 3351449600,
+      "CPU_context": {
+        "cpu_model": {
+          "model name": "AMD Ryzen 9 5900X 12-Core Processor",
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "25",
+          "model": "33",
+          "stepping": "0"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX2",
+        "torch_runtime_version": "2.14.1+cpu",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2026.1-Product Build 20260612 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": null,
+          "MKL_DYNAMIC": "FALSE",
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "CPU_runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "CPU_statistics_reference_configuration": {
+        "policy": "sixteen-lane-vision",
+        "selected_norms": 112,
+        "replacements": [
+          {
+            "name": "vision.encoder.layers.0.self_attn.q_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.0.self_attn.k_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.0.self_attn.v_norm",
+            "width": 64,
+            "scaled": false,
+            "scale_borrowed": false
+          },
+          {
+            "name": "vision.encoder.layers.0.input_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.0.post_attention_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.0.pre_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.0.post_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.1.self_attn.q_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.1.self_attn.k_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.1.self_attn.v_norm",
+            "width": 64,
+            "scaled": false,
+            "scale_borrowed": false
+          },
+          {
+            "name": "vision.encoder.layers.1.input_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.1.post_attention_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.1.pre_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.1.post_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.2.self_attn.q_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.2.self_attn.k_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.2.self_attn.v_norm",
+            "width": 64,
+            "scaled": false,
+            "scale_borrowed": false
+          },
+          {
+            "name": "vision.encoder.layers.2.input_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.2.post_attention_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.2.pre_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.2.post_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.3.self_attn.q_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.3.self_attn.k_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.3.self_attn.v_norm",
+            "width": 64,
+            "scaled": false,
+            "scale_borrowed": false
+          },
+          {
+            "name": "vision.encoder.layers.3.input_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.3.post_attention_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.3.pre_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.3.post_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.4.self_attn.q_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.4.self_attn.k_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.4.self_attn.v_norm",
+            "width": 64,
+            "scaled": false,
+            "scale_borrowed": false
+          },
+          {
+            "name": "vision.encoder.layers.4.input_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.4.post_attention_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.4.pre_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.4.post_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.5.self_attn.q_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.5.self_attn.k_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.5.self_attn.v_norm",
+            "width": 64,
+            "scaled": false,
+            "scale_borrowed": false
+          },
+          {
+            "name": "vision.encoder.layers.5.input_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.5.post_attention_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.5.pre_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.5.post_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.6.self_attn.q_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.6.self_attn.k_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.6.self_attn.v_norm",
+            "width": 64,
+            "scaled": false,
+            "scale_borrowed": false
+          },
+          {
+            "name": "vision.encoder.layers.6.input_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.6.post_attention_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.6.pre_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.6.post_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.7.self_attn.q_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.7.self_attn.k_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.7.self_attn.v_norm",
+            "width": 64,
+            "scaled": false,
+            "scale_borrowed": false
+          },
+          {
+            "name": "vision.encoder.layers.7.input_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.7.post_attention_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.7.pre_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.7.post_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.8.self_attn.q_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.8.self_attn.k_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.8.self_attn.v_norm",
+            "width": 64,
+            "scaled": false,
+            "scale_borrowed": false
+          },
+          {
+            "name": "vision.encoder.layers.8.input_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.8.post_attention_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.8.pre_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.8.post_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.9.self_attn.q_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.9.self_attn.k_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.9.self_attn.v_norm",
+            "width": 64,
+            "scaled": false,
+            "scale_borrowed": false
+          },
+          {
+            "name": "vision.encoder.layers.9.input_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.9.post_attention_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.9.pre_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.9.post_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.10.self_attn.q_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.10.self_attn.k_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.10.self_attn.v_norm",
+            "width": 64,
+            "scaled": false,
+            "scale_borrowed": false
+          },
+          {
+            "name": "vision.encoder.layers.10.input_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.10.post_attention_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.10.pre_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.10.post_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.11.self_attn.q_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.11.self_attn.k_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.11.self_attn.v_norm",
+            "width": 64,
+            "scaled": false,
+            "scale_borrowed": false
+          },
+          {
+            "name": "vision.encoder.layers.11.input_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.11.post_attention_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.11.pre_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.11.post_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.12.self_attn.q_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.12.self_attn.k_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.12.self_attn.v_norm",
+            "width": 64,
+            "scaled": false,
+            "scale_borrowed": false
+          },
+          {
+            "name": "vision.encoder.layers.12.input_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.12.post_attention_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.12.pre_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.12.post_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.13.self_attn.q_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.13.self_attn.k_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.13.self_attn.v_norm",
+            "width": 64,
+            "scaled": false,
+            "scale_borrowed": false
+          },
+          {
+            "name": "vision.encoder.layers.13.input_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.13.post_attention_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.13.pre_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.13.post_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.14.self_attn.q_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.14.self_attn.k_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.14.self_attn.v_norm",
+            "width": 64,
+            "scaled": false,
+            "scale_borrowed": false
+          },
+          {
+            "name": "vision.encoder.layers.14.input_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.14.post_attention_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.14.pre_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.14.post_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.15.self_attn.q_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.15.self_attn.k_norm",
+            "width": 64,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.15.self_attn.v_norm",
+            "width": 64,
+            "scaled": false,
+            "scale_borrowed": false
+          },
+          {
+            "name": "vision.encoder.layers.15.input_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.15.post_attention_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.15.pre_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          },
+          {
+            "name": "vision.encoder.layers.15.post_feedforward_layernorm",
+            "width": 768,
+            "scaled": true,
+            "scale_borrowed": true
+          }
+        ]
+      },
+      "CPU_rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 20.442727400106378,
+          "process_cpu_seconds": 54.8125,
+          "stage_observer_wall_seconds": 0.00082949991337955,
+          "stage_observer_process_cpu_seconds": 0.0,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.021559600019827485,
+              "process_cpu_seconds": 0.046875,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 17.34432359994389,
+              "process_cpu_seconds": 46.109375,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 3.076712299953215,
+              "process_cpu_seconds": 8.65625,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 18.752937299897894,
+          "process_cpu_seconds": 52.671875,
+          "stage_observer_wall_seconds": 0.00032870005816221237,
+          "stage_observer_process_cpu_seconds": 0.0,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.010825400007888675,
+              "process_cpu_seconds": 0.015625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 15.569400500040501,
+              "process_cpu_seconds": 44.140625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 3.1724372999742627,
+              "process_cpu_seconds": 8.515625,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 19.59344740002416,
+          "process_cpu_seconds": 53.84375,
+          "stage_observer_wall_seconds": 0.0021087999921292067,
+          "stage_observer_process_cpu_seconds": 0.015625,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.01186159998178482,
+              "process_cpu_seconds": 0.0,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 16.545928000006825,
+              "process_cpu_seconds": 45.828125,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 3.035537900053896,
+              "process_cpu_seconds": 8.015625,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 19.319130399962887,
+          "process_cpu_seconds": 53.15625,
+          "stage_observer_wall_seconds": 0.0004646000452339649,
+          "stage_observer_process_cpu_seconds": 0.0,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.019528700038790703,
+              "process_cpu_seconds": 0.03125,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 16.11394269997254,
+              "process_cpu_seconds": 45.078125,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 3.183927300036885,
+              "process_cpu_seconds": 8.046875,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "GPU_rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 6.239236,
+          "process_cpu_seconds": 0.875,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "Process",
+              "wall_seconds": 0.15261909999999998,
+              "process_cpu_seconds": 0.078125,
+              "host_working_set_bytes": 8919678976,
+              "host_lifetime_peak_bytes": 8919683072
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 5.306231899999999,
+              "process_cpu_seconds": 0.65625,
+              "host_working_set_bytes": 8580833280,
+              "host_lifetime_peak_bytes": 8923152384
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 0.7152107999999999,
+              "process_cpu_seconds": 0.078125,
+              "host_working_set_bytes": 9469333504,
+              "host_lifetime_peak_bytes": 9469333504
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 4.9491609,
+          "process_cpu_seconds": 0.65625,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "Process",
+              "wall_seconds": 0.0124957,
+              "process_cpu_seconds": 0.015625,
+              "host_working_set_bytes": 9486331904,
+              "host_lifetime_peak_bytes": 9486331904
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 4.804547299999999,
+              "process_cpu_seconds": 0.578125,
+              "host_working_set_bytes": 8962007040,
+              "host_lifetime_peak_bytes": 9495961600
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 0.10295159999999999,
+              "process_cpu_seconds": 0.046875,
+              "host_working_set_bytes": 8962854912,
+              "host_lifetime_peak_bytes": 9495961600
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 4.6791,
+          "process_cpu_seconds": 0.25,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "Process",
+              "wall_seconds": 0.0104356,
+              "process_cpu_seconds": 0.0,
+              "host_working_set_bytes": 8970784768,
+              "host_lifetime_peak_bytes": 9495961600
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 4.5357031,
+              "process_cpu_seconds": 0.1875,
+              "host_working_set_bytes": 9166278656,
+              "host_lifetime_peak_bytes": 9495961600
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 0.0972494,
+              "process_cpu_seconds": 0.046875,
+              "host_working_set_bytes": 9167163392,
+              "host_lifetime_peak_bytes": 9495961600
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 4.6234322,
+          "process_cpu_seconds": 0.375,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "Process",
+              "wall_seconds": 0.0084479,
+              "process_cpu_seconds": 0.0,
+              "host_working_set_bytes": 9175035904,
+              "host_lifetime_peak_bytes": 9495961600
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 4.4850673,
+              "process_cpu_seconds": 0.3125,
+              "host_working_set_bytes": 9371381760,
+              "host_lifetime_peak_bytes": 9495961600
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 0.091233,
+              "process_cpu_seconds": 0.03125,
+              "host_working_set_bytes": 9372278784,
+              "host_lifetime_peak_bytes": 9495961600
+            }
+          ]
+        }
+      ],
+      "CPU_process_exit_code": 0,
+      "GPU_process_exit_code": 0,
+      "two_complete_original_evidence_copies_rehashed": true,
+      "evidence_sha256": {
+        "measurement/first-encoder.bin": "d83970b82cd25d9be66dbf37c075d9c2884944c4376156bc3cc3a3603135b75f",
+        "measurement/first-pixels.bin": "d25852af1b53b8f4ed484b760280b1859b8a3b63e3456f7cbb378f33877761b7",
+        "measurement/first-positions.bin": "5f7469b3979829112a7ef472dbd57554fa67011cc03a3d1d3168601859e75e4b",
+        "measurement/image-cpu-reference.json": "5427c32c385f9acb31b4702d427ff6613963c0e24411e48632ac78783a659333",
+        "measurement/image-cpu-source.json": "aa08f2cafb9f1d0211a6e47fc55147b1d2eb8fc3157390f72c15235df3be5fd2",
+        "measurement/independent-image-CPU-audit.json": "4a9614ed72220b697daa807d04dc1269fb58e7b6798b95dbbdd4790f864727cc",
+        "measurement/pipeline-first.bin": "668f69a8f7bed37e77aa0c9c3aaf6775ceb531f8e5611b2729e33dabeb045ad5",
+        "measurement/pipeline-repeat-1.bin": "668f69a8f7bed37e77aa0c9c3aaf6775ceb531f8e5611b2729e33dabeb045ad5",
+        "measurement/pipeline-repeat-2.bin": "668f69a8f7bed37e77aa0c9c3aaf6775ceb531f8e5611b2729e33dabeb045ad5",
+        "measurement/pipeline-warm.bin": "668f69a8f7bed37e77aa0c9c3aaf6775ceb531f8e5611b2729e33dabeb045ad5",
+        "measurement/pipeline.json": "a1ae0868df3766ecbf754b4df6fcce128399de55a1a8444e0fa62e29ac42147d",
+        "measurement/repeat-1-encoder.bin": "d83970b82cd25d9be66dbf37c075d9c2884944c4376156bc3cc3a3603135b75f",
+        "measurement/repeat-1-pixels.bin": "d25852af1b53b8f4ed484b760280b1859b8a3b63e3456f7cbb378f33877761b7",
+        "measurement/repeat-1-positions.bin": "5f7469b3979829112a7ef472dbd57554fa67011cc03a3d1d3168601859e75e4b",
+        "measurement/repeat-2-encoder.bin": "d83970b82cd25d9be66dbf37c075d9c2884944c4376156bc3cc3a3603135b75f",
+        "measurement/repeat-2-pixels.bin": "d25852af1b53b8f4ed484b760280b1859b8a3b63e3456f7cbb378f33877761b7",
+        "measurement/repeat-2-positions.bin": "5f7469b3979829112a7ef472dbd57554fa67011cc03a3d1d3168601859e75e4b",
+        "measurement/warm-encoder.bin": "d83970b82cd25d9be66dbf37c075d9c2884944c4376156bc3cc3a3603135b75f",
+        "measurement/warm-pixels.bin": "d25852af1b53b8f4ed484b760280b1859b8a3b63e3456f7cbb378f33877761b7",
+        "measurement/warm-positions.bin": "5f7469b3979829112a7ef472dbd57554fa67011cc03a3d1d3168601859e75e4b",
+        "actual-worker-private.json": "cb711450608140adcb39adff1fe631c0bafd39b2ebd5f9468e59aa756b1f916d",
+        "original-process-private.log": "f8c404457b4e0c653ff5a70306212ad7edc8ce4be3bcac8126d0ea75ad60813f",
+        "audit-process-private.log": "4cea7f9e280c92863670b715a46b1b584a74156c47e2c513d2867069d39ce9ab"
+      }
+    },
+    {
+      "profile": "landscape",
+      "module": "image-landscape",
+      "CPU_statistics_reference": "native",
+      "actual_CPU_source": "fe1cb9e843356e284eae240af285742d1f9810a3",
+      "actual_GPU_SDK_source": "7754ce4eb9e07e8b81865487b175c63dd6e93097",
+      "actual_GPU_validation_source": "2cc7d94198f413dfe81e24bab7c999607375ce9e",
+      "precision": "fp32",
+      "input_sha256": "f2b3f32a22e6282b9876b98c4c5a7bbf75e7469dff933128e17d6503dd6d6e55",
+      "descriptor_sha256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "encoder_reference_sha256": "3dfccd1a487ce04df3f8d640483ca045f7a7a56231bc1096ad0f845c923a29c6",
+      "document_reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "original_intermediate_inspections": [
+        {
+          "round": "first",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "tolerance_failures": 0,
+          "maximum_absolute_error": 1.996755599975586e-05,
+          "minimum_cosine": 0.9999999999922446,
+          "success": true
+        },
+        {
+          "round": "warm",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "tolerance_failures": 0,
+          "maximum_absolute_error": 1.996755599975586e-05,
+          "minimum_cosine": 0.9999999999922446,
+          "success": true
+        },
+        {
+          "round": "repeat-1",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "tolerance_failures": 0,
+          "maximum_absolute_error": 1.996755599975586e-05,
+          "minimum_cosine": 0.9999999999922446,
+          "success": true
+        },
+        {
+          "round": "repeat-2",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "tolerance_failures": 0,
+          "maximum_absolute_error": 1.996755599975586e-05,
+          "minimum_cosine": 0.9999999999922446,
+          "success": true
+        }
+      ],
+      "independent_final_inspections": [
+        {
+          "round": "first",
+          "cosine": 0.9999999999997822,
+          "norm_squared": 1.00000012660922
+        },
+        {
+          "round": "warm",
+          "cosine": 0.9999999999997822,
+          "norm_squared": 1.00000012660922
+        },
+        {
+          "round": "repeat-1",
+          "cosine": 0.9999999999997822,
+          "norm_squared": 1.00000012660922
+        },
+        {
+          "round": "repeat-2",
+          "cosine": 0.9999999999997822,
+          "norm_squared": 1.00000012660922
+        }
+      ],
+      "CPU_load_wall_seconds": 14.330283600022085,
+      "CPU_load_process_cpu_seconds": 15.1875,
+      "CPU_release_wall_seconds": 0.1973353000357747,
+      "CPU_release_process_cpu_seconds": 0.234375,
+      "CPU_release_scope": "Drop owning model references and collect Python cycles; not allocator zero-byte proof",
+      "CPU_release_completed": true,
+      "CPU_host_lifetime_peak_rss_or_working_set_bytes": 3351416832,
+      "CPU_context": {
+        "cpu_model": {
+          "model name": "AMD Ryzen 9 5900X 12-Core Processor",
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "25",
+          "model": "33",
+          "stepping": "0"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX2",
+        "torch_runtime_version": "2.14.1+cpu",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2026.1-Product Build 20260612 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": null,
+          "MKL_DYNAMIC": "FALSE",
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "CPU_runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "CPU_statistics_reference_configuration": {
+        "policy": "native",
+        "selected_norms": 0,
+        "replacements": []
+      },
+      "CPU_rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 15.717329200007953,
+          "process_cpu_seconds": 48.9375,
+          "stage_observer_wall_seconds": 0.0006164000369608402,
+          "stage_observer_process_cpu_seconds": 0.0,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.01365460001397878,
+              "process_cpu_seconds": 0.03125,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.57945750001818,
+              "process_cpu_seconds": 40.171875,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 3.1241046000504866,
+              "process_cpu_seconds": 8.734375,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 15.381464299862273,
+          "process_cpu_seconds": 49.609375,
+          "stage_observer_wall_seconds": 0.0005561000434681773,
+          "stage_observer_process_cpu_seconds": 0.0,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.009603500016964972,
+              "process_cpu_seconds": 0.015625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 12.753587400075048,
+              "process_cpu_seconds": 41.359375,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.6181012999732047,
+              "process_cpu_seconds": 8.234375,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 16.382912899833173,
+          "process_cpu_seconds": 50.109375,
+          "stage_observer_wall_seconds": 0.0005614000838249922,
+          "stage_observer_process_cpu_seconds": 0.0,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.009285600041039288,
+              "process_cpu_seconds": 0.046875,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 13.492598399985582,
+              "process_cpu_seconds": 41.78125,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.880843000020832,
+              "process_cpu_seconds": 8.28125,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 16.2645235999953,
+          "process_cpu_seconds": 50.484375,
+          "stage_observer_wall_seconds": 0.00044760003220289946,
+          "stage_observer_process_cpu_seconds": 0.0,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.010777799994684756,
+              "process_cpu_seconds": 0.0625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 13.62340659997426,
+              "process_cpu_seconds": 42.578125,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.630148500087671,
+              "process_cpu_seconds": 7.84375,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "GPU_rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 8.934903799999999,
+          "process_cpu_seconds": 2.5625,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "Process",
+              "wall_seconds": 0.17425069999999998,
+              "process_cpu_seconds": 0.046875,
+              "host_working_set_bytes": 8943083520,
+              "host_lifetime_peak_bytes": 8943087616
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 6.2458051,
+              "process_cpu_seconds": 2.046875,
+              "host_working_set_bytes": 8602710016,
+              "host_lifetime_peak_bytes": 8947437568
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 2.4523675,
+              "process_cpu_seconds": 0.421875,
+              "host_working_set_bytes": 9491857408,
+              "host_lifetime_peak_bytes": 9491857408
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 5.3492171,
+          "process_cpu_seconds": 0.640625,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "Process",
+              "wall_seconds": 0.028822999999999998,
+              "process_cpu_seconds": 0.0,
+              "host_working_set_bytes": 9510453248,
+              "host_lifetime_peak_bytes": 9510453248
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 5.1313224,
+              "process_cpu_seconds": 0.546875,
+              "host_working_set_bytes": 8988921856,
+              "host_lifetime_peak_bytes": 9522741248
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 0.15289729999999999,
+              "process_cpu_seconds": 0.078125,
+              "host_working_set_bytes": 8990105600,
+              "host_lifetime_peak_bytes": 9522741248
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 5.3747929999999995,
+          "process_cpu_seconds": 0.734375,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "Process",
+              "wall_seconds": 0.0149459,
+              "process_cpu_seconds": 0.0,
+              "host_working_set_bytes": 8998563840,
+              "host_lifetime_peak_bytes": 9522741248
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 5.1777397999999994,
+              "process_cpu_seconds": 0.625,
+              "host_working_set_bytes": 9179930624,
+              "host_lifetime_peak_bytes": 9522741248
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 0.107676,
+              "process_cpu_seconds": 0.046875,
+              "host_working_set_bytes": 9181204480,
+              "host_lifetime_peak_bytes": 9522741248
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 5.2527466,
+          "process_cpu_seconds": 0.546875,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "Process",
+              "wall_seconds": 0.009105799999999999,
+              "process_cpu_seconds": 0.0,
+              "host_working_set_bytes": 9189789696,
+              "host_lifetime_peak_bytes": 9522741248
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 5.0876130999999996,
+              "process_cpu_seconds": 0.4375,
+              "host_working_set_bytes": 9369939968,
+              "host_lifetime_peak_bytes": 9522741248
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 0.09831609999999999,
+              "process_cpu_seconds": 0.046875,
+              "host_working_set_bytes": 9371045888,
+              "host_lifetime_peak_bytes": 9522741248
+            }
+          ]
+        }
+      ],
+      "CPU_process_exit_code": 0,
+      "GPU_process_exit_code": 0,
+      "two_complete_original_evidence_copies_rehashed": true,
+      "evidence_sha256": {
+        "measurement/first-encoder.bin": "8b62c9d65232e671723968e2948960c036ed73918f4fe9331f04c7bcbde0eb3c",
+        "measurement/first-pixels.bin": "8d2aaef875da794c8b3f1d83853ff717feb3f8d655ec847fd5fd8879a7a2388b",
+        "measurement/first-positions.bin": "f5617e2c18ab8885d0479e922d71be124e3a41ccf6e2bd02c08677b0d61876b3",
+        "measurement/image-cpu-reference.json": "e2fd101f0e4917bb2e77435a7d8632dc31a1459b78e605f6decd7ad979842245",
+        "measurement/image-cpu-source.json": "5d969eea2e90373fccbbe3fc6794cadbeaade9f041722779f2d75c6a12e23747",
+        "measurement/independent-image-CPU-audit.json": "53121370ddff1659b7fdd0e2b44cbc44e3ca2a6790a9b188e560a70f92f665bc",
+        "measurement/pipeline-first.bin": "fc3063b183f2eba5a85d3037665c8d00fc66143fefbff0c38021ee18d1547c49",
+        "measurement/pipeline-repeat-1.bin": "fc3063b183f2eba5a85d3037665c8d00fc66143fefbff0c38021ee18d1547c49",
+        "measurement/pipeline-repeat-2.bin": "fc3063b183f2eba5a85d3037665c8d00fc66143fefbff0c38021ee18d1547c49",
+        "measurement/pipeline-warm.bin": "fc3063b183f2eba5a85d3037665c8d00fc66143fefbff0c38021ee18d1547c49",
+        "measurement/pipeline.json": "925f2e8f48fc9c2c900d1e0a67365cff2723b89d8ff8467d7eeec05f99102e9f",
+        "measurement/repeat-1-encoder.bin": "8b62c9d65232e671723968e2948960c036ed73918f4fe9331f04c7bcbde0eb3c",
+        "measurement/repeat-1-pixels.bin": "8d2aaef875da794c8b3f1d83853ff717feb3f8d655ec847fd5fd8879a7a2388b",
+        "measurement/repeat-1-positions.bin": "f5617e2c18ab8885d0479e922d71be124e3a41ccf6e2bd02c08677b0d61876b3",
+        "measurement/repeat-2-encoder.bin": "8b62c9d65232e671723968e2948960c036ed73918f4fe9331f04c7bcbde0eb3c",
+        "measurement/repeat-2-pixels.bin": "8d2aaef875da794c8b3f1d83853ff717feb3f8d655ec847fd5fd8879a7a2388b",
+        "measurement/repeat-2-positions.bin": "f5617e2c18ab8885d0479e922d71be124e3a41ccf6e2bd02c08677b0d61876b3",
+        "measurement/warm-encoder.bin": "8b62c9d65232e671723968e2948960c036ed73918f4fe9331f04c7bcbde0eb3c",
+        "measurement/warm-pixels.bin": "8d2aaef875da794c8b3f1d83853ff717feb3f8d655ec847fd5fd8879a7a2388b",
+        "measurement/warm-positions.bin": "f5617e2c18ab8885d0479e922d71be124e3a41ccf6e2bd02c08677b0d61876b3",
+        "actual-worker-private.json": "3775825e16bc8b5570f7306bf5dfc49829e7f3cfdeb97ac83f62f5eabe8993c3",
+        "original-process-private.log": "09991c6f611659db1c9cca870287001aa95f6391b4730a3b218932855318b843",
+        "audit-process-private.log": "4cea7f9e280c92863670b715a46b1b584a74156c47e2c513d2867069d39ce9ab"
+      }
+    },
+    {
+      "profile": "portrait",
+      "module": "image-portrait",
+      "CPU_statistics_reference": "native",
+      "actual_CPU_source": "fe1cb9e843356e284eae240af285742d1f9810a3",
+      "actual_GPU_SDK_source": "7754ce4eb9e07e8b81865487b175c63dd6e93097",
+      "actual_GPU_validation_source": "2cc7d94198f413dfe81e24bab7c999607375ce9e",
+      "precision": "fp32",
+      "input_sha256": "fce3474792c6401c4bae6ac0261a386f400bac0cece977ffda86388ee6682489",
+      "descriptor_sha256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "encoder_reference_sha256": "3dfccd1a487ce04df3f8d640483ca045f7a7a56231bc1096ad0f845c923a29c6",
+      "document_reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "original_intermediate_inspections": [
+        {
+          "round": "first",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "tolerance_failures": 0,
+          "maximum_absolute_error": 1.8477439880371094e-05,
+          "minimum_cosine": 0.9999999999886544,
+          "success": true
+        },
+        {
+          "round": "warm",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "tolerance_failures": 0,
+          "maximum_absolute_error": 1.8477439880371094e-05,
+          "minimum_cosine": 0.9999999999886544,
+          "success": true
+        },
+        {
+          "round": "repeat-1",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "tolerance_failures": 0,
+          "maximum_absolute_error": 1.8477439880371094e-05,
+          "minimum_cosine": 0.9999999999886544,
+          "success": true
+        },
+        {
+          "round": "repeat-2",
+          "pixels_exact": true,
+          "positions_exact": true,
+          "tolerance_failures": 0,
+          "maximum_absolute_error": 1.8477439880371094e-05,
+          "minimum_cosine": 0.9999999999886544,
+          "success": true
+        }
+      ],
+      "independent_final_inspections": [
+        {
+          "round": "first",
+          "cosine": 0.9999999999998466,
+          "norm_squared": 1.0000001679459074
+        },
+        {
+          "round": "warm",
+          "cosine": 0.9999999999998466,
+          "norm_squared": 1.0000001679459074
+        },
+        {
+          "round": "repeat-1",
+          "cosine": 0.9999999999998466,
+          "norm_squared": 1.0000001679459074
+        },
+        {
+          "round": "repeat-2",
+          "cosine": 0.9999999999998466,
+          "norm_squared": 1.0000001679459074
+        }
+      ],
+      "CPU_load_wall_seconds": 13.29601749998983,
+      "CPU_load_process_cpu_seconds": 15.75,
+      "CPU_release_wall_seconds": 0.22578520001843572,
+      "CPU_release_process_cpu_seconds": 0.28125,
+      "CPU_release_scope": "Drop owning model references and collect Python cycles; not allocator zero-byte proof",
+      "CPU_release_completed": true,
+      "CPU_host_lifetime_peak_rss_or_working_set_bytes": 3351498752,
+      "CPU_context": {
+        "cpu_model": {
+          "model name": "AMD Ryzen 9 5900X 12-Core Processor",
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "25",
+          "model": "33",
+          "stepping": "0"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX2",
+        "torch_runtime_version": "2.14.1+cpu",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2026.1-Product Build 20260612 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": null,
+          "MKL_DYNAMIC": "FALSE",
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "CPU_runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "CPU_statistics_reference_configuration": {
+        "policy": "native",
+        "selected_norms": 0,
+        "replacements": []
+      },
+      "CPU_rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 17.914915699861012,
+          "process_cpu_seconds": 53.5625,
+          "stage_observer_wall_seconds": 0.0013113000895828009,
+          "stage_observer_process_cpu_seconds": 0.0,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.01777040003798902,
+              "process_cpu_seconds": 0.03125,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 14.97509620001074,
+              "process_cpu_seconds": 44.734375,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.921904999995604,
+              "process_cpu_seconds": 8.796875,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 15.915273599908687,
+          "process_cpu_seconds": 50.453125,
+          "stage_observer_wall_seconds": 0.0007134000770747662,
+          "stage_observer_process_cpu_seconds": 0.0,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.017383300000801682,
+              "process_cpu_seconds": 0.046875,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 13.222804100019857,
+              "process_cpu_seconds": 41.71875,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.6748878000071272,
+              "process_cpu_seconds": 8.6875,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 16.063596099847928,
+          "process_cpu_seconds": 52.125,
+          "stage_observer_wall_seconds": 0.0006444001337513328,
+          "stage_observer_process_cpu_seconds": 0.0,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.012898899964056909,
+              "process_cpu_seconds": 0.046875,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 13.13550629990641,
+              "process_cpu_seconds": 43.328125,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 2.915008799987845,
+              "process_cpu_seconds": 8.75,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 17.893531099893153,
+          "process_cpu_seconds": 55.546875,
+          "stage_observer_wall_seconds": 0.00033430010080337524,
+          "stage_observer_process_cpu_seconds": 0.0,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "wall_seconds": 0.009543700027279556,
+              "process_cpu_seconds": 0.015625,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "encoder",
+              "wall_seconds": 14.712455500033684,
+              "process_cpu_seconds": 46.125,
+              "gpu_elapsed_ns": null
+            },
+            {
+              "stage": "backbone",
+              "wall_seconds": 3.1713335999520496,
+              "process_cpu_seconds": 9.40625,
+              "gpu_elapsed_ns": null
+            }
+          ]
+        }
+      ],
+      "GPU_rounds": [
+        {
+          "round": "first",
+          "wall_seconds": 6.967352399999999,
+          "process_cpu_seconds": 0.734375,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "Process",
+              "wall_seconds": 0.24166849999999998,
+              "process_cpu_seconds": 0.046875,
+              "host_working_set_bytes": 8906629120,
+              "host_lifetime_peak_bytes": 8906629120
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 5.7193537,
+              "process_cpu_seconds": 0.546875,
+              "host_working_set_bytes": 8564006912,
+              "host_lifetime_peak_bytes": 8909774848
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 0.9232963,
+              "process_cpu_seconds": 0.09375,
+              "host_working_set_bytes": 9454342144,
+              "host_lifetime_peak_bytes": 9454342144
+            }
+          ]
+        },
+        {
+          "round": "warm",
+          "wall_seconds": 5.0983781,
+          "process_cpu_seconds": 0.609375,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "Process",
+              "wall_seconds": 0.0383055,
+              "process_cpu_seconds": 0.03125,
+              "host_working_set_bytes": 9472323584,
+              "host_lifetime_peak_bytes": 9472323584
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 4.9131507,
+              "process_cpu_seconds": 0.515625,
+              "host_working_set_bytes": 8949403648,
+              "host_lifetime_peak_bytes": 9481093120
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 0.10675839999999999,
+              "process_cpu_seconds": 0.046875,
+              "host_working_set_bytes": 8950734848,
+              "host_lifetime_peak_bytes": 9481093120
+            }
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "wall_seconds": 5.304506099999999,
+          "process_cpu_seconds": 0.65625,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "Process",
+              "wall_seconds": 0.0063199,
+              "process_cpu_seconds": 0.0,
+              "host_working_set_bytes": 8959266816,
+              "host_lifetime_peak_bytes": 9481093120
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 5.1060456,
+              "process_cpu_seconds": 0.578125,
+              "host_working_set_bytes": 9137524736,
+              "host_lifetime_peak_bytes": 9481093120
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 0.1447689,
+              "process_cpu_seconds": 0.046875,
+              "host_working_set_bytes": 9138397184,
+              "host_lifetime_peak_bytes": 9481093120
+            }
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "wall_seconds": 5.2865223,
+          "process_cpu_seconds": 0.796875,
+          "stages": [
+            {
+              "stage": "preprocessing",
+              "method": "Process",
+              "wall_seconds": 0.0129016,
+              "process_cpu_seconds": 0.0,
+              "host_working_set_bytes": 9146331136,
+              "host_lifetime_peak_bytes": 9481093120
+            },
+            {
+              "stage": "encoder",
+              "method": "EncodeAsync",
+              "wall_seconds": 5.060642,
+              "process_cpu_seconds": 0.671875,
+              "host_working_set_bytes": 9322221568,
+              "host_lifetime_peak_bytes": 9481093120
+            },
+            {
+              "stage": "backbone",
+              "method": "Embed",
+              "wall_seconds": 0.1140109,
+              "process_cpu_seconds": 0.046875,
+              "host_working_set_bytes": 9323130880,
+              "host_lifetime_peak_bytes": 9481093120
+            }
+          ]
+        }
+      ],
+      "CPU_process_exit_code": 0,
+      "GPU_process_exit_code": 0,
+      "two_complete_original_evidence_copies_rehashed": true,
+      "evidence_sha256": {
+        "measurement/first-encoder.bin": "b180c8e79da6bff0fa77df2bb590a22db93232eed2e57f5e85955f22aac120e5",
+        "measurement/first-pixels.bin": "c092255aa8e553fa0e859f9a8f8325dc20a758b51119ecdaedf097d3b86f600e",
+        "measurement/first-positions.bin": "89259c32b2d592b9dfd5915f4bf739e8b06dde1f0e61d4a1a69a7c475175e85f",
+        "measurement/image-cpu-reference.json": "38a8761471b837809ddc2e760a715806070d84fe51fe17f1c58064238554f75e",
+        "measurement/image-cpu-source.json": "0381c1690a08312a768dca6422d1b44587f3df4e5c18e02902485cabd8a660d2",
+        "measurement/independent-image-CPU-audit.json": "d97e2eb4e466d2826479958ae7ec030d2f53b80cc1d3f60dc1298affd4f006bc",
+        "measurement/pipeline-first.bin": "45232cde1cbbe14e247eabf4d367cc0965365e4f3a3cbf23e9888484dd0279ab",
+        "measurement/pipeline-repeat-1.bin": "45232cde1cbbe14e247eabf4d367cc0965365e4f3a3cbf23e9888484dd0279ab",
+        "measurement/pipeline-repeat-2.bin": "45232cde1cbbe14e247eabf4d367cc0965365e4f3a3cbf23e9888484dd0279ab",
+        "measurement/pipeline-warm.bin": "45232cde1cbbe14e247eabf4d367cc0965365e4f3a3cbf23e9888484dd0279ab",
+        "measurement/pipeline.json": "3cccafa902d9f5a06bd1967e689ef1d57dcc515d07f27763dc31347905b07826",
+        "measurement/repeat-1-encoder.bin": "b180c8e79da6bff0fa77df2bb590a22db93232eed2e57f5e85955f22aac120e5",
+        "measurement/repeat-1-pixels.bin": "c092255aa8e553fa0e859f9a8f8325dc20a758b51119ecdaedf097d3b86f600e",
+        "measurement/repeat-1-positions.bin": "89259c32b2d592b9dfd5915f4bf739e8b06dde1f0e61d4a1a69a7c475175e85f",
+        "measurement/repeat-2-encoder.bin": "b180c8e79da6bff0fa77df2bb590a22db93232eed2e57f5e85955f22aac120e5",
+        "measurement/repeat-2-pixels.bin": "c092255aa8e553fa0e859f9a8f8325dc20a758b51119ecdaedf097d3b86f600e",
+        "measurement/repeat-2-positions.bin": "89259c32b2d592b9dfd5915f4bf739e8b06dde1f0e61d4a1a69a7c475175e85f",
+        "measurement/warm-encoder.bin": "b180c8e79da6bff0fa77df2bb590a22db93232eed2e57f5e85955f22aac120e5",
+        "measurement/warm-pixels.bin": "c092255aa8e553fa0e859f9a8f8325dc20a758b51119ecdaedf097d3b86f600e",
+        "measurement/warm-positions.bin": "89259c32b2d592b9dfd5915f4bf739e8b06dde1f0e61d4a1a69a7c475175e85f",
+        "actual-worker-private.json": "623d088ea6d9260764da30cb8c774969c222e7be8eadb6dbb18c302602d65a2e",
+        "original-process-private.log": "91af720abd5c5eecfc3c8a223ba43c4f7f5cc412bcf52d29a59b9a7067f54d12",
+        "audit-process-private.log": "4cea7f9e280c92863670b715a46b1b584a74156c47e2c513d2867069d39ce9ab"
+      }
+    }
+  ]
+}

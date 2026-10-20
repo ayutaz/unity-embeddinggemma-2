@@ -59,8 +59,10 @@ The earlier image checkpoint below retains its own source and sampling gaps.
 The [later GPU media readback](windows-media-memory-results.md) covers both audio
 profiles and all image profiles. The [native CPU audio readback](native-audio-CPU-results.md)
 adds eight original-gate-passing actual CPU carries for the same audio inputs.
-Image square CPU acceptance, complete load/release performance, minimum hardware,
-privacy cleanup and new-tag installation remain pending. Other platforms follow
+The [explicit image CPU conditions](image-CPU-fixed-conditions.md) add twelve
+original-gate-passing calls with per-condition statistics, load/release and
+capture audits. A uniform sixteen-lane landscape failure remains recorded.
+CI integration, minimum hardware, privacy cleanup and new-tag installation remain pending. Other platforms follow
 the Windows-first plan. Contract tests alone do not complete those release gates.
 
 

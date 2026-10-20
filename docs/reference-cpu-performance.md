@@ -127,7 +127,10 @@ projector / backbone・元参照・許容差は変えません。hardwareを見�
 共有用の入口は[小規模TDD](results/vision-sixteen-lane-reference-tdd-20261020.json)で、
 全置換の事前検査・元scaleのidentity・projectorの保持・mode記録とaudit時の上書き拒否を確認しました。
 loadとreleaseも別計時し、releaseはmodel所有参照の破棄とGCまでの範囲です。
-統合sourceでの3形状・各4回と、別processでのraw capture照合を次に受け入れます。
+統合source `fe1cb9e` の[3条件・各4回とlifecycle](image-CPU-fixed-conditions.md)は、
+正方形が `sixteen-lane`、横長・縦長が `native` の明示した設定で元gateと別process監査に合格しました。
+16 laneを全形状へ適用した成功ではありません。横長の同設定での4要素超過・exit1を保持し、
+設定・source・個別の比較範囲を表に明記しています。
 
 ## 実画像のCPU診断
 

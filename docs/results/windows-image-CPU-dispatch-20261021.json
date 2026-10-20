@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "scope": "Explicit CPU instruction selection for Windows image reference CI; no SDK inference change",
+  "original_failure": {
+    "source_head": "625686847835b62b9e366d826a5d547d3ea67aac",
+    "execution_source": "41d235c5f752f71e80728d823b152583c7a97260",
+    "run": 39444874489,
+    "job": 118704014827,
+    "artifact": 12276165564,
+    "artifact_sha256": "7b75e44d8e9f58ce1f897f40bfe94a0cce9de1539b084181d244835c030e2cb6",
+    "profile": "portrait",
+    "statistics_reference": "native",
+    "CPU": "Intel Xeon Platinum 8573C",
+    "ATen_dispatch": "AVX512",
+    "rounds": 4,
+    "intermediate_tolerance_failures_each_round": 184,
+    "maximum_absolute_error": 0.0000985860824584961,
+    "final_vector_gate_passed": true,
+    "release_completed": true,
+    "independent_original_capture_gate_recomputed": true,
+    "accepted": false
+  },
+  "hypothesis": "The varying hosted CPU dispatch contributes to intermediate rounding differences; not isolated as a proven root cause",
+  "new_declared_environment": {"ATEN_CPU_CAPABILITY": "avx2", "MKL_ENABLE_INSTRUCTIONS": "AVX2", "DNNL_MAX_CPU_ISA": "AVX2"},
+  "test_evidence": {"intended_red": "1 failed, 12 passed", "related_green": "17 passed", "fresh_child_torch_dispatch_and_selected_environment": "AVX2 verified", "actionlint": "passed"},
+  "unchanged": ["original golden bytes", "original tolerances", "original intermediate and final audits", "three profile statistics policies", "SDK GPU implementation"],
+  "fixed_dispatch_actual_model_CI": "pending",
+  "GPU_qualification_added": false
+}

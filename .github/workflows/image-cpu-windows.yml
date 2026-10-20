@@ -52,6 +52,9 @@ jobs:
       OMP_NUM_THREADS: '4'
       MKL_NUM_THREADS: '4'
       MKL_DYNAMIC: 'FALSE'
+      ATEN_CPU_CAPABILITY: avx2
+      MKL_ENABLE_INSTRUCTIONS: AVX2
+      DNNL_MAX_CPU_ISA: AVX2
       HF_HUB_DISABLE_TELEMETRY: '1'
       TOKENIZERS_PARALLELISM: 'false'
       PROFILE: ${{ matrix.profile }}

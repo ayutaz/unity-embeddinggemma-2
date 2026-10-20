@@ -4,6 +4,8 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+import sys
+import json
 
 import pytest
 import yaml
@@ -17,6 +19,19 @@ def workflow():
 
 def image_job():
     return workflow()['jobs']['image_cpu_windows']
+
+
+def test_ci_limits_all_cpu_dispatchers_before_importing_torch():
+    selected={'ATEN_CPU_CAPABILITY':'avx2','MKL_ENABLE_INSTRUCTIONS':'AVX2','DNNL_MAX_CPU_ISA':'AVX2'}
+    environment=image_job()['env']
+    assert {key:environment.get(key) for key in selected}==selected
+    result=subprocess.run([sys.executable,'-P','-c',
+        'import json; from embeddinggemma_tools.cpu_execution_context import cpu_execution_context; print(json.dumps(cpu_execution_context()))'],
+        env={**os.environ,**selected,'PYTHONPATH':str(Path(__file__).parents[1])+os.pathsep+os.environ.get('PYTHONPATH','')},
+        capture_output=True,text=True,check=True)
+    context=json.loads(result.stdout)
+    assert context['CPU_capability']=='AVX2'
+    assert {key:context['math_environment'][key] for key in selected}==selected
 
 
 def test_profiles_and_statistics_are_fixed_before_execution_without_fallback():

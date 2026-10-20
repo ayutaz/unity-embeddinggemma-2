@@ -34,6 +34,17 @@ PR時と手動実行の既定は`native-fp32`で、元PCM→前処理→5区間e
 
 固定元参照を取得し、画像→前処理→encoder→backboneの各4回と、別commandのcapture監査を
 実行します。失敗後の自動設定変更はありません。全profile共通設定や他hostでの合格を推測しません。
+
+hosted runnerのCPU命令選択は実行前にAVX2へ固定します。ATen、MKL、oneDNNにそれぞれ
+`ATEN_CPU_CAPABILITY=avx2`、`MKL_ENABLE_INSTRUCTIONS=AVX2`、`DNNL_MAX_CPU_ISA=AVX2`
+を設定します。これは既定のCPU選択に依存する実行との差を明示するためで、golden・許容差・
+条件別statistics設定は変更しません。MKLの設定は[公式のdispatch制御](https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-linux/2023-2/instruction-set-specific-dispatch-on-intel-archs.html)、
+ATenの設定は[公式sourceの説明](https://github.com/pytorch/pytorch/blob/main/aten/src/ATen/native/cpu/README.md)に基づきます。
+oneDNNの設定も[公式service APIの説明](https://uxlfoundation.github.io/oneDNN/group_dnnl_api_service.html)に従います。
+既定AVX512のIntel Xeon runnerではportrait中間値が184要素超過した4回を保持しており、
+最終vector成功のみを中間値の合格へ読み替えません。AVX2固定後の実CI結果は別に確認します。
+[失敗の独立再計算とTDD記録](results/windows-image-CPU-dispatch-20261021.json)では、CPU選択差は
+原因候補として扱い、単独原因の証明や修正後の実モデル成功とはしていません。
 全形状をsixteen-laneにした際のlandscape不合格は、
 [元の条件別記録](image-CPU-fixed-conditions.md)に保持しています。
 

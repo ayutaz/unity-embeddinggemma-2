@@ -2,7 +2,34 @@
 
 確認日: 2026-10-20（JST）。対象はテキスト・画像・音声のGPU推論と横断検索です。[ゴール](goal.md)の必須環境・精度条件を維持します。
 
-## 最新の状況と次の作業
+## 最新の計画（PR #110統合後）
+
+計画の基準はmain `110969884d1da0c24aea7677cb6d5d694bd7a607`です。[PR #110](https://github.com/ayutaz/unity-embeddinggemma-2/pull/110)まで統合済みです。head `810d49a`の[必須CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39336685624)は全15 job成功、実13 archiveと元6入力824,320値・CPU encoder 120 captureの独立照合も合格しました。[Windows音声CPU比較](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39336685770)は2条件×4回・全32 captureで元数値条件に合格しました。実行sourceは同treeのtest-merge `82506a6`です。実mainの署名・公開identity・全祖先も確認済みです。重複main CIのcancelledを成功には数えません。
+
+**次の優先作業は、同じhardwareでのCPU/GPU性能測定と必須実機の検証です。** Windowsの音声CPU比較を再び未着手扱いにしません。一方、画像CPUの過去の数値差、全体性能、最低要件、必須他環境、provider側コピー、正式SDK公開は未完了です。SDK packageは既存Windows GPU検証source `f0fc2a7`と全bytesが一致しますが、新mainでのGPU再実行を示す結果ではありません。
+
+| 順序 | 作業と担当 | 開始条件 | 完了条件 |
+| --- | --- | --- | --- |
+| 1 統合・基準固定 | 開発側：#110の採用source・元参照・許容差・モデルhashを測定の基準として固定 | 基盤の統合とWindows音声CPU照合は完了 | 後続変更はtask branch / PRで検証し、実行sourceを混同しない |
+| 2 数値差と性能 | 開発側：未合格CPU条件を追跡し、同じhardware・入力・モデル・仕事量でtext / image / audioのCPU/GPU、初回 / warm、各stage、RAM / VRAM、解放を測定 | 測定用GPU容量の確保と、元数値gateに合格するCPU比較条件 | 元の数値条件と正常終了を満たす比較表、実測に基づく最低要件。失敗・未実行は別記 |
+| 3 必須実機 | 利用者側：利用可能なMac / iOS / Android環境と署名環境を確保。開発側：build・実行・独立監査 | Mac / iOS / Android環境、Android module導入時のUAC対応 | 全入力・全role・混在検索、実GPU、権限拒否、キャンセル、suspend / 復帰、解放を各必須環境で確認 |
+| 4 公開前整理 | 開発側：最終source・全祖先・実payload・導入文書を監査。provider：古いコピーの削除対応 | 現行監査は継続可能。provider側削除は外部対応待ち | 現行公開物と古いコピーを別々に確認。画像は実bytesの目視 / OCR、hookを維持。公開名 `yousan`は維持 |
+| 5 正式公開 | 開発側：SDK版・CHANGELOG・license・固定tagを準備し、空consumerでそのtagを導入して正式Releaseを公開 | 2〜4の必須条件が完了 | 新規導入からモデル取得・全入力・検索・解放・終了まで再現し、公開source / model hashと一致 |
+
+工程2と3は環境確保後に並行し、工程4のprovider対応も並行して追跡します。重い処理はCIを優先し、同じsourceで成功済みのモデル変換・検証を無条件に繰り返しません。
+
+### 次に必要な環境と判断点
+
+- GPU空き容量は計画作成時に3,866 MiBでした。音声GPU性能測定の既存開始条件14 GiBを下回るため、開始前に再確認します。14 GiBはSDKの最低VRAM要件ではありません。他アプリの終了は自動で行いません。
+- 直近の監査ではAndroid接続端末0、Mac / iOS環境は未確認です。Androidの取得済みtoolsとprivate consumerを使い、UAC対応の明示的な回答後にmodule導入、実build、端末配置へ進みます。設定テストやtool展開だけを実機合格にしません。
+- provider側の古いcommitコピーは直近の匿名API再確認でも取得可能でした。削除完了は未確認です。個人情報の値や元応答は公開しません。
+- 現在は上記の外部条件待ちです。GPU容量の確保、端末・UAC対応、provider対応の変化があれば該当工程を再開します。SDKは`0.1.0-pre.1`で、公開済みpreviewを正式SDK Releaseには数えません。
+
+GPU・必須端末・provider対応の日程が未確定のため、正式公開日はまだ確定しません。次の見積り更新は、環境確保時、性能測定終了時、必須実機検証終了時に行います。
+
+## PR #109時点のcheckpoint（履歴）
+
+以下の未着手・次の作業・環境値は#109時点の記録です。現在の優先順は上の計画を使います。元の失敗・未実行・数値基準を維持します。
 
 [#105](https://github.com/ayutaz/unity-embeddinggemma-2/pull/105)〜[#108](https://github.com/ayutaz/unity-embeddinggemma-2/pull/108)に続き、[#109](https://github.com/ayutaz/unity-embeddinggemma-2/pull/109)を統合しました。このcheckpointのmainは`811c0d2da93328a429ee54466f8b0e1eba7909d9`です。[#109の統合記録](results/audio-cpu-pipeline-integration-4367677-20261020.json)ではhead `4367677`のCI全15 job成功・skip0、実13 archiveのdigest / size / 全CRC・完全な私的2コピーと元数値を独立照合しました。実mainと採用headの同tree、公開identity・署名・全祖先も確認しました。重複main CIはcompleted / cancelledで、成功として数えません。後続sourceは別に検査して統合します。
 

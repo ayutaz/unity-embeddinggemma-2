@@ -8,6 +8,12 @@ small contract and CPU-only collector probe do not fill historical sampling
 gaps or qualify real-model memory, performance or minimum hardware. New model
 observations must retain their own numerical gates, actual intervals and gaps.
 
+The later [ten-condition native allocation readback](windows-media-memory-results.md)
+rechecks 40 actual GPU calls and samples in all 180 measured intervals, including
+release. It records 12 query errors and unavailable samples separately. These new
+observations retain their own sources; they do not repair historical gaps or
+establish guaranteed peaks, matched CPU speedup or minimum hardware.
+
 The candidate fixture uses the published FP32 / Float16-weight descriptors while
 the existing retained-bundle fixture keeps its original pins. Both execute the
 same four rounds: `first`, `warm`, `repeat-1`, `repeat-2`, with one identical

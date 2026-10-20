@@ -4,7 +4,8 @@ Windows先行リリースの性能確認では、短い前処理・解放区間�
 Python toolsの `native_gpu_memory.PdhGpuMemoryQuery` で同じPDH queryを再利用します。
 SDK RuntimeやSentisの推論backendは変更しません。重い実モデル試験の前に、
 [小規模TDDと実Windows入口](results/native-gpu-memory-collector-tdd-20261020.json)を確認しました。
-モデルを実行したメモリ測定、最低要件、正式公開の合格は別に残っています。
+後続の[実モデル10条件の再照合](windows-media-memory-results.md)では、40出力・正常終了と
+全180区間のsampleを確認しました。最低要件・正式公開の合格は別に残っています。
 
 対象は明示したPIDのprocess lifetimeだけです。読み取り専用handleを保持し、
 作成時刻と収集前後の生存を確認するため、PIDの再利用を別processの結果として

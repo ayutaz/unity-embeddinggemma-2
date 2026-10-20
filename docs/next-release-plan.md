@@ -37,7 +37,7 @@ CPUのPython参照・比較は検証用です。製品の画像 / PCM前処理�
 
 追加Editor試験の初回は検証コードのNUnit記法がcompile errorとなり、モデル実行前に停止しました。次の実行は検証用16 GiB total commit上限に達した後、D3D12 device errorで終了しました。両方を失敗として保存しています。GPU復帰後の560契約試験を確認し、受け入れた3プロセスではowned Editorのresident上限16 GiBと、GPU driver予約等を含むowned jobのcommit上限32 GiBを分けて監視しました。この監視設定はSDKの最低RAM / VRAM要件ではありません。
 
-元の最終vector・中間値の参照と許容差は変更していません。既存の音声GPU4条件16回の[測定](results/audio-gpu-repeat-four-conditions-20261020.json)は保持します。追加の画像・音声GPU計測は10条件・実40回を完了し、各条件18区間、計180区間でメモリsampleを取得しました。区間には重なる範囲を含み、sample上の最大値は真のpeakや専有量の保証ではありません。元source・raw bytes・独立auditを結び付けた公開用集計は残作業です。同条件CPU比較・最低要件も未完了です。機能検証のprocess時間を推論速度やGPU専有時間として扱いません。新tag consumer、正式版・正式Release、他hardware / platformの合格も未完了です。
+元の最終vector・中間値の参照と許容差は変更していません。既存の音声GPU4条件16回の[測定](results/audio-gpu-repeat-four-conditions-20261020.json)は保持します。追加の画像・音声GPU計測は10条件・実40回を完了し、各条件18区間、計180区間でメモリsampleを取得しました。[公開用集計](windows-media-memory-results.md)は元source・raw bytes・40出力の独立照合と保管2コピーを確認済みです。12 query errorと利用不可sampleは欠測のまま記録しています。区間には重なる範囲を含み、sample上の最大値は真のpeakや専有量の保証ではありません。同条件CPU比較・最低要件は未完了です。機能検証のprocess時間を推論速度やGPU専有時間として扱いません。新tag consumer、正式版・正式Release、他hardware / platformの合格も未完了です。
 
 ## 次の進め方
 

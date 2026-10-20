@@ -1,5 +1,21 @@
 # 音声2profileのCPU参照とSentis GPU比較
 
+後続の[CLIとlifecycle実測](results/native-audio-CLI-lifecycle-fd7f375-20261020.json)では、
+task branchの固定source `fd7f375` から同じ2profile・各4回を実行しました。
+元の全中間値と最終vector、別processでのcapture audit、releaseと正常終了が合格し、
+encoderは全8回bit単位で元参照に一致しました。新しいdownload・exportは0です。
+旧source `2111f01` の初回loading failureも保持しています。
+
+| module | CPU load 秒 | CPU first 秒 | CPU warm 3回 秒 | 係数照合 秒 | CPU release 秒 | process peak RSS GiB |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| audio-1119 | 25.970 | 25.325 | 22.964–26.532 | 1.370 | 0.459 | 4.145 |
+| audio-839 | 24.341 | 24.657 | 25.229–27.607 | 1.349 | 0.365 | 4.142 |
+
+helper compileとsnapshot hash照合はloadの外、元係数の変更検査も推論・releaseと分離しています。
+releaseはencoderを閉じてmodelの所有参照を捨てた後のGCまでです。closed flagとprocess正常終了を確認し、
+allocatorの0 byte・保証されたpeak・最低hardwareや正式公開の合格は主張しません。
+以下の非公開orchestrationのcheckpointは、その元sourceと適用範囲を保持します。
+
 2026-10-20の[原本再照合](results/native-audio-two-profile-CPU-readback-20261020.json)で、
 無音のaudio-1119とpadded_noiseのaudio-839を、実PCMから各4回接続しました。
 公式CPU前処理→固定係数のencoder→元backboneの順に実値を渡し、正解特徴量を入力へ代入していません。
@@ -50,7 +66,7 @@ GPUメモリは前掲のPDH観測で、CPUのRSSと加算する値ではあり�
 原本を維持し、既存入口と同じint64変換を明示した後に、新しい試行として実行しました。
 入力guardの停止はencoder数値の不一致とは扱いません。
 
-CPUの独立したload / release計時は今回の記録にはありません。
-公開可能な測定入口のTDD・CI統合、画像squareの中間不一致、動作要件の確定、
+この先行checkpointにはCPUの独立したload / release計時はありません。後続CLIの実測は冒頭の別記録です。
+共有用測定入口のTDDと実モデル確認は完了し、CI経路の統合、画像squareの中間不一致、動作要件の確定、
 旧providerコピーの個人情報削除確認、新tag consumer、正式SDK Releaseは残っています。
 音声2profileの数値とwall比較の成立を、性能全体・任意音声の品質・正式公開の完了には数えません。

@@ -38,7 +38,7 @@ def _qualify_retained_graph_producer(producer_source, execution_source, *, root=
         paths=('tools/embeddinggemma_tools','tools/references','tools/pyproject.toml','tools/uv.lock')
         consumers={'tools/embeddinggemma_tools/'+name for name in
             ('audio_cpu_reference.py','audio_cpu_encoder.py','native_gpu_memory.py',
-             'cpu_fp32_reference.py','native_audio_cpu_encoder.py')}
+             'cpu_fp32_reference.py','native_audio_cpu_encoder.py','vision_cpu_simd_reference.py')}
         def inventory(source):
             raw=git('ls-tree','-r','--format=%(objectmode) %(objectname) %(path)',source,'--',*paths)
             rows={}

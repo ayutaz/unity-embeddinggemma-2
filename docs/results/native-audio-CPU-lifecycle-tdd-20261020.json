@@ -33,6 +33,7 @@
   "Unity_runtime_changed": false,
   "golden_weights_or_tolerance_changed": false,
   "current_CLI_real_model_executed": false,
+  "later_fixed_source_real_model_record": "native-audio-CLI-lifecycle-fd7f375-20261020.json",
   "previous_private_native_real_model_record": "native-audio-two-profile-CPU-readback-20261020.json",
   "complete_performance_accepted": false,
   "formal_release_ready": false

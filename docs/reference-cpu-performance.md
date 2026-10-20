@@ -71,8 +71,9 @@ CIの元reportへ照合して再利用しました。変換を繰り返さず実
 全module・参照・依存入力のGit blobとmodeを比較します。CPU消費側の
 `audio_cpu_reference.py` / `audio_cpu_encoder.py` と独立した
 `native_gpu_memory.py` 以外に変更があれば拒否します。
-後続の明示的CPU経路では、producerからimportされない `cpu_fp32_reference.py` と
-`native_audio_cpu_encoder.py` も消費側として列挙しています。generator・参照・依存の変更は引き続き拒否します。
+後続の明示的CPU経路では、producerからimportされない `cpu_fp32_reference.py`、
+`native_audio_cpu_encoder.py`、`vision_cpu_simd_reference.py` も消費側として列挙しています。
+generator・参照・依存の変更は引き続き拒否します。
 
 元reportのproducerを現在のsourceへ書き換えません。元の数値監査、5実graphの
 読み込み時の完全hash、CPU provider、4本の実carry、前処理・中間・最終値の
@@ -89,7 +90,8 @@ generator・参照・依存の変更、dirty executor、誤ったproducer、保�
 [音声の8実行](native-audio-CPU-results.md)で使用した数値経路を、task branchの
 `audio_cpu_reference` の明示的optionへ統合しました。[TDD](results/native-audio-CPU-lifecycle-tdd-20261020.json)は
 実入力のcarry、例外時の復帰、元係数の検査、load / releaseとcapture監査の契約を確認しています。
-統合後のsourceでの実モデル確認は、以前の非公開orchestrationとは分けて記録します。
+統合後source `fd7f375` の[実モデル8回とlifecycle](results/native-audio-CLI-lifecycle-fd7f375-20261020.json)は、
+別processの元capture再照合まで合格しました。以前の非公開orchestrationとは分けて記録します。
 
 `--native-candidate` と `--native-build` を同時に指定し、取得済みの `--snapshot` を明示します。
 この経路では `--chain-report` / `--retained-chain-source` を混在させません。

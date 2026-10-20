@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "scope": "Portable explicit sixteen-lane image RMS sum order; arithmetic contract only",
+  "initial_red": {"failed": 12, "reason": "vision SIMD reference module absent"},
+  "consumer_source_guard_red": {"failed": 1, "passed": 28, "reason": "separate image CPU consumer incorrectly classified as graph producer input"},
+  "related_green": {"passed": 29, "failed": 0, "skipped": 0},
+  "oracle": "Independent scalar NumPy FP32 implementation of pinned four-accumulator/sixteen-lane row order",
+  "widths": [64, 768],
+  "coverage": ["mean output bits", "batch dimensions", "original scale identity and unchanged bytes", "scaled and unscaled RMS", "invalid width/dtype/finite/rank"],
+  "observed_matching_CI_capability": "AVX512",
+  "observed_local_capability": "AVX2",
+  "capability_difference_proves_root_cause": false,
+  "requires_AVX512_instructions": false,
+  "automatically_selected_by_hardware": false,
+  "original_weights_or_tolerance_changed": false,
+  "Unity_runtime_changed": false,
+  "actual_image_gate_passed_at_this_checkpoint": false,
+  "complete_performance_accepted": false,
+  "formal_release_ready": false
+}

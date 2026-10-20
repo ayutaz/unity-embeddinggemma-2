@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "scope": "Pinned upstream license declarations and six current preview legal text payloads only",
+  "checked_utc": "2026-10-20T00:20:34.767879+00:00",
+  "upstream_checked_utc": "2026-10-20T00:15:16.194712+00:00",
+  "model_revision": "914f7f89142e33e77833254d9c9b90c3cef7303b",
+  "declared_model_license": "apache-2.0",
+  "upstream_observations": [
+    {
+      "source": "metadata",
+      "URL": "https://huggingface.co/api/models/google/embeddinggemma-2/revision/914f7f89142e33e77833254d9c9b90c3cef7303b",
+      "http_status": 200,
+      "bytes": 4225,
+      "SHA256": "aee37e7ca5e161ee21ca69294309aa71a486a0ed2cefe47f91bffa2b0a1d1812",
+      "declared_license_matches": true,
+      "two_complete_private_copies_verified": true,
+      "revision_matches": true
+    },
+    {
+      "source": "model_card",
+      "URL": "https://huggingface.co/google/embeddinggemma-2/raw/914f7f89142e33e77833254d9c9b90c3cef7303b/README.md",
+      "http_status": 200,
+      "bytes": 21730,
+      "SHA256": "b677a0ee2818c36f091b65fd3d9b4baea9f04d53b02b49cae916c74bf9682037",
+      "declared_license_matches": true,
+      "two_complete_private_copies_verified": true
+    }
+  ],
+  "current_preview_observations": [
+    {
+      "tag": "models-preview-567befb-fp32",
+      "producer": "567befbd64287a706edaac59c978927e0277188a",
+      "actual_release_asset_count": 825,
+      "legal_texts": [
+        {
+          "file": "LICENSE.txt",
+          "asset_id": 653553401,
+          "bytes": 11358,
+          "SHA256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+          "current_provider_size_and_digest_match": true,
+          "two_complete_private_copies_verified": true,
+          "privacy_findings": 0,
+          "apache_2_declaration_present": true
+        },
+        {
+          "file": "MODIFICATIONS.txt",
+          "asset_id": 653553404,
+          "bytes": 509,
+          "SHA256": "ccf33e65671c6633cad5ff44fdcd2585be5d25ab0ab50f34127bde8a7fc7fd79",
+          "current_provider_size_and_digest_match": true,
+          "two_complete_private_copies_verified": true,
+          "privacy_findings": 0
+        },
+        {
+          "file": "NOTICE.txt",
+          "asset_id": 653553402,
+          "bytes": 988,
+          "SHA256": "e288fe05219a8c3b496c1d1d06ae418d3e82f5790a3b5d5fdce353a7ac00db24",
+          "current_provider_size_and_digest_match": true,
+          "two_complete_private_copies_verified": true,
+          "privacy_findings": 0
+        }
+      ]
+    },
+    {
+      "tag": "models-preview-567befb-float16",
+      "producer": "567befbd64287a706edaac59c978927e0277188a",
+      "actual_release_asset_count": 825,
+      "legal_texts": [
+        {
+          "file": "LICENSE.txt",
+          "asset_id": 653571762,
+          "bytes": 11358,
+          "SHA256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+          "current_provider_size_and_digest_match": true,
+          "two_complete_private_copies_verified": true,
+          "privacy_findings": 0,
+          "apache_2_declaration_present": true
+        },
+        {
+          "file": "MODIFICATIONS.txt",
+          "asset_id": 653571761,
+          "bytes": 583,
+          "SHA256": "c4e8a7e825bcfd2540709f30f54053ff75df145ff53c1046e61467d46b0960e4",
+          "current_provider_size_and_digest_match": true,
+          "two_complete_private_copies_verified": true,
+          "privacy_findings": 0
+        },
+        {
+          "file": "NOTICE.txt",
+          "asset_id": 653571760,
+          "bytes": 988,
+          "SHA256": "e288fe05219a8c3b496c1d1d06ae418d3e82f5790a3b5d5fdce353a7ac00db24",
+          "current_provider_size_and_digest_match": true,
+          "two_complete_private_copies_verified": true,
+          "privacy_findings": 0
+        }
+      ]
+    }
+  ],
+  "legal_texts_verified": 6,
+  "model_objects_downloaded": 0,
+  "all_model_objects_reaudited": false,
+  "new_GPU_execution": false,
+  "legal_compliance_or_formal_release_accepted": false
+}

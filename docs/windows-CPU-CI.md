@@ -1,9 +1,12 @@
 # Windows CPU参照のCI経路
 
 音声・画像のCPU参照をWindows hosted runnerで実行するworkflowを用意しました。
-製品のSentis GPU実装とは別の比較経路です。今回の確認はローカルの関連134テストと
-actionlint 1.7.12による構文検査で、GitHub上の実モデル実行はまだ行っていません。
-[検査記録](results/windows-CPU-CI-TDD-20261020.json)と
+製品のSentis GPU実装とは別の比較経路です。ローカルの関連134テストとactionlint 1.7.12に加え、
+PR #115の実Windows CIで音声2・画像3条件が成功しました。全5 archiveのdigest・CRCと実captureを
+独立に照合し、音声8回・画像12回の元中間値・最終vector・load / releaseを確認しました。
+実行sourceは`0104401`、PR headは`7a33083`で、全tree一致を確認しています。
+[実CIの照合記録](results/windows-CPU-CI-real-readback-20261020.json)、
+[初期TDD記録](results/windows-CPU-CI-TDD-20261020.json)と
 [実行計画](next-release-plan.md)を参照してください。
 
 ## 音声
@@ -44,4 +47,4 @@ upload対象へ含めません。画像の入力bytesは既存のhash固定・�
 ローカルの実測値は[音声8回](native-audio-CPU-results.md)・
 [画像12回](image-CPU-fixed-conditions.md)に実行sourceを付けて記録済みです。
 hosted runnerは別hardwareであり、その時間を同一実機のCPU / GPU比較へ混ぜません。
-CIの実行、必要checkの判定、公開・mergeは別の未完了条件です。
+上記sourceのCPU CI成功と、追加変更の必要check・merge・新tag導入・正式公開は別に判定します。

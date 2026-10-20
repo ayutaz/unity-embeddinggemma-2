@@ -18,7 +18,7 @@
 | [モデルのライセンス](model-license.md) | コードとモデルの利用条件・配布境界 |
 | [モデル成果物の個人情報検査](model-artifact-metadata.md) | PT2 / ONNX内部の文字列検査、原本保持とCI再開条件 |
 | [CPU参照比較の計測契約](reference-cpu-performance.md) | 固定入力の実3段chain、FP32とframeworkの比較範囲 |
-| [Windows CPU参照のCI経路](windows-CPU-CI.md) | 音声native・画像条件別の実装、ローカル134テスト、hosted実行は未完了 |
+| [Windows CPU参照のCI経路](windows-CPU-CI.md) | 実Windows CIの音声2・画像3条件、全20回captureの独立照合 |
 | [CPU実測と元画像特徴量の回収](reference-cpu-diagnostics.md) | 画像3・音声2条件の最終vector 20回照合、中間値の失敗と非公開原本保持 |
 
 ## 現状と開発計画

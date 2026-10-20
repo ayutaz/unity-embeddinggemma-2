@@ -4,7 +4,7 @@ Unity Sentisで、テキスト・画像・音声を共通の768次元ベクト�
 
 モデル推論にはSentisを使い、追加のネイティブ推論プラグインは不要です。画像・音声はGPUで前処理から推論まで実行します。トークナイズ・ファイルの読み込みとデコード・PCMの取得はCPU側で行い、最終ベクトルはCPU配列として返します。
 
-**Windows版 `0.1.0` の公開候補を準備中です。正式tag・Releaseはまだありません。** モデルは別途準備が必要です。macOS・iOS・Androidは今後の対応で、未検証です。[残る検証と公開条件](docs/next-release-plan.md)を参照してください。公開済みの開発pinと、task branchの版準備は別です。
+**Windows向け `0.1.0`。** モデルは別途準備が必要です。公開状況は[GitHub Releases](https://github.com/ayutaz/unity-embeddinggemma-2/releases)、source別の受け入れと公開条件は[実行計画](docs/next-release-plan.md)を参照してください。macOS・iOS・Androidは今後の対応で、未検証です。
 
 [導入・API](Packages/com.ayutaz.embeddinggemma/Documentation~/index.md) · [モデル準備](docs/model-preparation.md) · [現在の対応範囲](docs/status.md) · [ロードマップ](docs/roadmap.md) · [ドキュメント一覧](docs/README.md)
 

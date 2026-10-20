@@ -40,6 +40,30 @@ def https(tmp_path):
         yield server, raw, data, payloads
 
 
+@pytest.mark.parametrize('mode',['recover','persistent','changed-bytes'])
+def test_cli_cached_server_error_keeps_hash_gates_and_bounded_requests(https,tmp_path,mode):
+    server,raw,data,payloads=https
+    name=sorted(payloads)[0]
+    server.reset(server_error_object=name,server_error_persistent=mode=='persistent')
+    if mode=='changed-bytes':
+        payload=payloads[name]
+        (server.root/name).write_bytes(bytes([payload[0]^1])+payload[1:])
+    output=tmp_path/'cached-server-output'
+    result=cli(server,output,digest(raw))
+    attempts=[row for row in server.requests if row['path']==name]
+    assert len(attempts)==2
+    assert [row['query_present'] for row in attempts]==[False,True]
+    assert attempts[0]['status']==500
+    if mode=='recover':
+        assert result.returncode==0 and attempts[1]['status']==200
+        assert (output/name).read_bytes()==payloads[name]
+        assert json.loads((output/'bundle.json').read_bytes())==data
+    else:
+        assert result.returncode==1 and not (output/'bundle.json').exists()
+        assert not json.loads((output/'preparation.json').read_bytes())['success']
+        assert not list(output.rglob('*.pending'))
+
+
 def test_cli_requires_verified_certificate_and_acquires_over_actual_https(https, tmp_path):
     server, raw, data, payloads = https
     bad = cli(server, tmp_path/'untrusted', digest(raw), trust=False)

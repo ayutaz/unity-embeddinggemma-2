@@ -1,18 +1,18 @@
 # 導入とRuntime API
 
-テキスト・画像・音声の埋め込みと検索をUnityへ組み込むための入口です。`0.1.0` の公開候補を準備しており、正式tag・Releaseはまだありません。Windows先行の工程1〜3はsource別に受け入れ済みです。新CI・新tagからの導入・正式公開の残件と、他環境の未検証範囲は[検証状況](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)を参照してください。
+テキスト・画像・音声の埋め込みと検索をUnityへ組み込むWindows向け`0.1.0`の入口です。公開状況は[GitHub Releases](https://github.com/ayutaz/unity-embeddinggemma-2/releases)、source別の受け入れと他環境の未検証範囲は[検証状況](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)を参照してください。
 
 ## 1. パッケージを追加する
 
-基準はUnity **6000.3.21f1** / Sentis **2.6.1**です。Package Managerの **Add package from git URL** へ次を入力します。2026-10-20に確認したPR #113統合済みmainの固定commitです。公開済み開発版`0.1.0-pre.1`の導入pinで、task branchの`0.1.0`候補・正式tagとは別です。
+基準はUnity **6000.3.21f1** / Sentis **2.6.1**です。正式tag公開後は、Package Managerの **Add package from git URL** へ次を入力します。公開・導入の確認結果はGitHub Releasesで確認してください。
 
 ```text
-https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/com.ayutaz.embeddinggemma#1a036fb2faf334d58f1b59de824b96b238f0275d
+https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/com.ayutaz.embeddinggemma#v0.1.0
 ```
 
 clone済みなら **Add package from disk** でこのパッケージの`package.json`を指定することもできます。Package Managerの表示名は現在 **EmbeddingGemma** です。SentisとNewtonsoft JSONは依存から解決されます。URP・uloop・Pythonは利用側のRuntimeには不要です。
 
-このpinと受け入れ済みSDKの実行コード一致を確認しています。最終tagを空consumerへ導入する受け入れは工程5です。固定sourceの導入、同一SDKの既存Player結果の適用、今回の実Editor実行は別の記録として扱います。
+固定tagのURLと実際のresolved SHAを照合してください。固定sourceの導入、同一SDKの既存Player結果の適用、新tagでのEditor / Player実行は、それぞれsourceを付けた別の記録として扱います。
 
 ## 2. モデルを用意する
 

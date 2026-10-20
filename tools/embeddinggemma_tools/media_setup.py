@@ -11,8 +11,9 @@ import json
 import os
 from pathlib import Path
 import re
-from urllib.parse import urljoin, urlsplit
-from urllib.request import urlopen
+from urllib.error import HTTPError
+from urllib.parse import urljoin, urlsplit, urlunsplit
+from urllib.request import Request, urlopen
 import uuid
 
 MODULES = ('text', 'image-square', 'image-landscape', 'image-portrait', 'audio-1119', 'audio-839')
@@ -133,7 +134,18 @@ def _atomic_bytes(path, raw):
 
 
 def _download(url):
-    return urlopen(url, timeout=60)
+    try:
+        return urlopen(url, timeout=60)
+    except HTTPError as error:
+        if not 500 <= error.code < 600:
+            raise
+        error.close()
+    # A cached 5xx can survive repeated requests to the same release-asset URL.
+    # Keep the HTTPS origin/path and all downstream size/SHA gates unchanged.
+    parsed = urlsplit(url)
+    query = (parsed.query + '&' if parsed.query else '') + 'eg_retry=' + uuid.uuid4().hex
+    fresh = urlunsplit(parsed._replace(query=query))
+    return urlopen(Request(fresh, headers={'Cache-Control': 'no-cache'}), timeout=60)
 
 
 @contextmanager

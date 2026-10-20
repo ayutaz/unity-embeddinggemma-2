@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "scope": "Bounded HTTP5xx fresh-query retry; source bytes, TLS, descriptor and object SHA gates retained",
+  "base_source_before_changes": "7a33083ab21f82eb4b123e3335b065fbc371a6ce",
+  "source_fingerprints_normalized_LF": {
+    "tools/embeddinggemma_tools/media_setup.py": "9542568cc2d87e53345b263fc1530c301fd2c4d14573a1ebad39a0ec501883b5",
+    "tools/tests/test_media_setup_server_retry.py": "d2f1dda995a5f505752bbd67ec37c662655ea2258aded1e24210481f5c9eb042",
+    "tools/tests/test_media_setup_https.py": "8a1c3447fadd6a3056e235da9fd4025e85a92edc17876c332366c5ad882984d2",
+    "tools/tests/media_setup_https_harness.py": "8a7b3b0a11c47b1d904724b24dfd96ef6b37133b57019828a42f6dfce8a83288"
+  },
+  "TDD": [
+    {
+      "private_log_sha256": "7be7b2b603096376e439fa0eefdb9c333d6564fe66e4e848a74587b90895fcd6",
+      "expected_terminal_summary": "5 failed, 7 passed"
+    },
+    {
+      "private_log_sha256": "fac11f51b8f9bb3f62b4d55b299679640adfa852882c8c0f06a6b4c5f780ae48",
+      "expected_terminal_summary": "3 failed, 9 deselected"
+    },
+    {
+      "private_log_sha256": "c10e7bae7c62475ff06268baad373e5cfd89dcf226b0fbc2a9704d559ca4158e",
+      "expected_terminal_summary": "68 passed"
+    }
+  ],
+  "related_tests_passed": 68,
+  "related_tests_failed": 0,
+  "related_tests_skipped": 0,
+  "owned_HTTPS_test_cases": [
+    "cached_500_then_200_with_exact_bytes",
+    "persistent_500_fails_after_two_requests",
+    "changed_bytes_after_retry_rejected"
+  ],
+  "actual_public_object_probe": {
+    "success": true,
+    "actual_request_sequence": [
+      {
+        "query_present": false,
+        "timeout": 60,
+        "TLS_context_overridden": false,
+        "http_status": 200
+      }
+    ],
+    "bytes": 38840,
+    "sha256": "1a6682afe5a940b7891206a7eb8dd68702bf1619a643f94c21fca58c1d7d6938",
+    "implementation_sha256": "9542568cc2d87e53345b263fc1530c301fd2c4d14573a1ebad39a0ec501883b5",
+    "original_expected_bytes_and_hash_unchanged": true,
+    "model_execution": false,
+    "source_clean_commit_qualification_pending": true
+  },
+  "live_probe_observed_5xx_retry": false,
+  "full_new_client_cold_model_acquisition_accepted": false,
+  "Unity_GPU_execution": false
+}

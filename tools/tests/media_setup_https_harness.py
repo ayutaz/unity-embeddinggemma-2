@@ -56,11 +56,15 @@ class LocalBundleServer:
                     if name != 'bundle.json':
                         owner._object_requests.append(name)
                     ordinal = len(owner._object_requests)
-                row = dict(utc=datetime.now(timezone.utc).isoformat(), path=name, bytes_sent=0)
+                row = dict(utc=datetime.now(timezone.utc).isoformat(), path=name, bytes_sent=0,
+                           query_present=bool(urlsplit(self.path).query))
                 if name == 'bundle.json':
                     status = fault.get('descriptor_status', 200)
                 else:
                     status = 404 if name == fault.get('missing_object') else 200
+                    if name == fault.get('server_error_object') and (
+                            fault.get('server_error_persistent') or not row['query_present']):
+                        status = 500
                 if not path.is_file(): status = 404
                 row['status'] = status
                 if status != 200:

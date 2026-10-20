@@ -57,3 +57,27 @@ def test_unqualified_statistics_are_rejected(fault):
     elif fault=='nan':values[0,0]=float('nan')
     else:values=values[0]
     with pytest.raises(ValueError):module.mean16(values)
+
+
+def test_factory_selects_vision_norms_only_and_borrows_actual_scales():
+    from transformers.models.gemma4.modeling_gemma4 import Gemma4RMSNorm
+    module=importlib.import_module('embeddinggemma_tools.vision_cpu_simd_reference')
+    encoder=torch.nn.Module();encoder.vision=torch.nn.Module();encoder.vision.hidden=Gemma4RMSNorm(768)
+    encoder.vision.attn=torch.nn.Module();encoder.vision.attn.head_dim=64
+    encoder.vision.attn.v_norm=Gemma4RMSNorm(64,with_scale=False)
+    encoder.projection=Gemma4RMSNorm(768,with_scale=False)
+    scale=encoder.vision.hidden.weight;projector=encoder.projection
+    result=module.apply_vision_statistics_reference(encoder)
+    assert result['policy']=='sixteen-lane-vision' and result['selected_norms']==len(result['replacements'])==2
+    assert encoder.vision.hidden.scale is scale and encoder.projection is projector
+    with torch.no_grad():assert encoder.vision.attn.v_norm(torch.ones(1,2,64)).shape==(1,2,64)
+
+
+def test_factory_rejects_an_unknown_width_without_partial_model_mutation():
+    from transformers.models.gemma4.modeling_gemma4 import Gemma4RMSNorm
+    module=importlib.import_module('embeddinggemma_tools.vision_cpu_simd_reference')
+    encoder=torch.nn.Module();encoder.vision=torch.nn.Module()
+    encoder.vision.valid=Gemma4RMSNorm(768);encoder.vision.invalid=Gemma4RMSNorm(32)
+    valid=encoder.vision.valid
+    with pytest.raises(ValueError):module.apply_vision_statistics_reference(encoder)
+    assert encoder.vision.valid is valid

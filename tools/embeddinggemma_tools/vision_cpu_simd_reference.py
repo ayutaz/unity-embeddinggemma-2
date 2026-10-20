@@ -40,3 +40,26 @@ class VisionCpuSimdRms(torch.nn.Module):
         statistic=mean16(values.square())+self.epsilon
         result=values*torch.pow(statistic,-.5)
         return result if self.scale is None else result*self.scale
+
+
+def apply_vision_statistics_reference(encoder):
+    """Select original Gemma4 vision norms only; leave projector/backbone alone."""
+    from transformers.models.gemma4.modeling_gemma4 import Gemma4RMSNorm
+    planned=[];ledger=[]
+    for name,module in list(encoder.named_modules()):
+        if not name.startswith('vision.') or type(module) is not Gemma4RMSNorm:continue
+        parent_name,_,attribute=name.rpartition('.');parent=encoder.get_submodule(parent_name)
+        if module.with_scale:
+            width=module.weight.numel();scale=module.weight
+        else:
+            if attribute!='v_norm' or getattr(parent,'head_dim',None)!=64:
+                raise ValueError('Unknown unscaled vision normalization contract')
+            width=64;scale=None
+        candidate=VisionCpuSimdRms(width,scale,module.eps)
+        if candidate.scale is not scale:raise ValueError('An original vision scale was not preserved')
+        planned.append((parent,attribute,candidate))
+        ledger.append(dict(name=name,width=width,scaled=bool(module.with_scale),scale_borrowed=bool(module.with_scale)))
+    if not planned:raise ValueError('No original vision normalization was selected')
+    # Validate every replacement before changing any module.
+    for parent,attribute,candidate in planned:setattr(parent,attribute,candidate)
+    return dict(policy='sixteen-lane-vision',selected_norms=len(ledger),replacements=ledger)

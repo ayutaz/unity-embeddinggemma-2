@@ -4,6 +4,8 @@
   "initial_red": {"failed": 12, "reason": "vision SIMD reference module absent"},
   "consumer_source_guard_red": {"failed": 1, "passed": 28, "reason": "separate image CPU consumer incorrectly classified as graph producer input"},
   "related_green": {"passed": 29, "failed": 0, "skipped": 0},
+  "factory_driver_and_consumer_red": {"failed": 9, "passed": 29, "reason": "explicit vision factory, driver mode and consumer classification absent"},
+  "factory_driver_and_shared_helpers_green": {"passed": 104, "failed": 0, "skipped": 0},
   "oracle": "Independent scalar NumPy FP32 implementation of pinned four-accumulator/sixteen-lane row order",
   "widths": [64, 768],
   "coverage": ["mean output bits", "batch dimensions", "original scale identity and unchanged bytes", "scaled and unscaled RMS", "invalid width/dtype/finite/rank"],
@@ -15,6 +17,8 @@
   "original_weights_or_tolerance_changed": false,
   "Unity_runtime_changed": false,
   "actual_image_gate_passed_at_this_checkpoint": false,
+  "later_single_chain_diagnostic": {"source": "fb097a5c499b66e5c9664cf445d032b8a4dec479", "original_encoder_tolerance_failures": 0, "final_vector_passed": true, "actual_calls": 1},
+  "integrated_three_profile_four_round_execution_accepted": false,
   "complete_performance_accepted": false,
   "formal_release_ready": false
 }

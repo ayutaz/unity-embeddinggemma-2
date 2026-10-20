@@ -72,7 +72,7 @@ CIの元reportへ照合して再利用しました。変換を繰り返さず実
 `audio_cpu_reference.py` / `audio_cpu_encoder.py` と独立した
 `native_gpu_memory.py` 以外に変更があれば拒否します。
 後続の明示的CPU経路では、producerからimportされない `cpu_fp32_reference.py`、
-`native_audio_cpu_encoder.py`、`vision_cpu_simd_reference.py` も消費側として列挙しています。
+`native_audio_cpu_encoder.py`、`vision_cpu_simd_reference.py`、`image_cpu_reference.py` も消費側として列挙しています。
 generator・参照・依存の変更は引き続き拒否します。
 
 元reportのproducerを現在のsourceへ書き換えません。元の数値監査、5実graphの
@@ -110,6 +110,24 @@ uv run --group cpu-comparison python -m embeddinggemma_tools.audio_cpu_reference
 実行後は同じ固定source・元参照で `audit` を別processから実行します。
 auditへのnative選択optionの指定は拒否し、保存されたexecutorと元の配布inventoryを照合します。
 最終vectorだけでなく全4回の元中間値を照合し、失敗・欠測と成功を分離します。
+
+## 画像の明示的な集計順
+
+`image_cpu_reference measure --statistics-reference sixteen-lane` は、vision towerの
+元のGemma4 RMSだけを16 laneのFP32集計順へ置き換えます。scaleとepsilonは借用し、
+projector / backbone・元参照・許容差は変えません。hardwareを見た自動選択は行わず、
+既定の `native` 経路と過去の失敗を保持します。新たなモデルの重みは生成しません。
+
+元参照に一致した2つのCI記録はAVX512、ローカルはAVX2でした。モデル読込・encoderのASTと
+依存versionも照合しました。命令セットだけで原因を断定せず、
+[PyTorchの集計実装](https://github.com/pytorch/pytorch/blob/5c4886908584029761b579af026dcfb627c84070/aten/src/ATen/native/cpu/SumKernel.cpp)を
+独立scalar oracleと照合してから、source `fb097a5` の正方形1回で元の中間値・最終vectorを確認しました。
+この1回を全形状・4反復・性能全体の完了には数えません。
+
+共有用の入口は[小規模TDD](results/vision-sixteen-lane-reference-tdd-20261020.json)で、
+全置換の事前検査・元scaleのidentity・projectorの保持・mode記録とaudit時の上書き拒否を確認しました。
+loadとreleaseも別計時し、releaseはmodel所有参照の破棄とGCまでの範囲です。
+統合sourceでの3形状・各4回と、別processでのraw capture照合を次に受け入れます。
 
 ## 実画像のCPU診断
 

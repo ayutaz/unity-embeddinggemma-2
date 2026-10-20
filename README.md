@@ -41,7 +41,7 @@ UPMの宣言上の最小版は6000.3.16f1です。これは対応する全Unity�
    https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/com.ayutaz.embeddinggemma#186ffc1b330c0b609fef66cf4abfaeed5011fcbc
    ```
 
-3. モデルを準備します。**パッケージを追加しただけでは推論できません。** [テキストモデルの取得・変換手順](docs/model-preparation.md)に沿って`.sentis`とtokenizerを用意してください。
+3. モデルを準備します。**パッケージを追加しただけでは推論できません。** Text Searchは[テキストモデルの取得・変換手順](docs/model-preparation.md)を、Image and Audio Searchは[全6 moduleのモデルpreview取得手順](docs/media-model-preparation.md)を使います。
 4. Package ManagerのSamplesから目的のサンプルをImportします。
 
 Package Managerでは現在 **EmbeddingGemma** と表示されます。このパッケージにテキスト・画像・音声のAPIと両サンプルを含みます。
@@ -51,7 +51,7 @@ Package Managerでは現在 **EmbeddingGemma** と表示されます。このパ
 | **Text Search** | [手順](Packages/com.ayutaz.embeddinggemma/Samples~/TextSearch/README.md)に従い、モデルとtokenizerを指定して`TextSearch.unity`を再生します。まずこちらから試してください。 |
 | **Image and Audio Search** | [手順](Packages/com.ayutaz.embeddinggemma/Samples~/MultimodalSearch/README.md)に従い、監査済みのモデルbundleを指定して`MultimodalSearch.unity`を再生します。 |
 
-画像・音声用bundleは、現時点では開発・検証環境で準備したものを必要とします。**空のcheckoutから一括生成する利用者向け手順と配布は未整備**です。[準備できる範囲と制約](docs/model-preparation.md)を確認してください。
+画像・音声・テキストを含む全6 moduleの変換済みbundleは、FP32 / Float16重みの[実験用モデルpreview](docs/media-model-preparation.md)から取得できます。固定descriptorのSHA256と全objectのhashを照合し、LICENSE・NOTICE・MODIFICATIONSも保持してください。空cacheからの匿名取得・中断復帰・破損修復とWindows GPU実行は[固定sourceで確認済み](docs/results/public-model-consumer-8649c94-20261018.json)です。元checkpointからの再変換、全環境の受け入れ、正式SDK Releaseとは別の経路・条件です。
 
 既存プロジェクトにAPIを組み込む場合は、[C#の使用例とリソース管理](Packages/com.ayutaz.embeddinggemma/Documentation~/index.md)を参照してください。
 
@@ -61,7 +61,7 @@ Package Managerでは現在 **EmbeddingGemma** と表示されます。このパ
 - GPU非対応時にCPUへ自動切り替えはしません。テキストAPIには明示的なCPU選択肢もありますが、画像・音声サンプルはGPU専用です。
 - Unityのメインスレッドから使用します。非同期APIでもすべてのロード・処理が別スレッドになるわけではありません。
 - モデルは大きく、メモリと初回ロードの負荷があります。固定検証のホストメモリ測定は[検証状況](docs/status.md)に記載しています。VRAMの必要量や他端末の最低要件は未確定です。
-- マイク収録・結果音声の再生、画像・音声検索のPlayer実行、モバイル実機対応は後続作業です。
+- Windowsでは固定sourceで実マイク取得・GPU検索、音声再生 / 停止、画像・音声の混在Playerを検証しています。手動操作全体・権限拒否・他OS・モバイル実機は未完了です。実行sourceと確認範囲は[検証状況](docs/status.md)を参照してください。
 
 確認済みの結果と未検証の範囲は[検証状況](docs/status.md)、残作業の順序と完了条件は[ロードマップ](docs/roadmap.md)へまとめています。
 

@@ -1,5 +1,13 @@
 # 現在の対応範囲と検証状況
 
+最新checkpoint（2026-10-20）: **main `1109698`、PR #110まで統合済み**。[必須CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39336685624)は全15 job成功、実13 archiveと元参照824,320値・CPU encoder 120 capture / 30,822,400値の独立照合で元許容差超過0です。[Windows音声CPU比較](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39336685770)も2条件×4回・全32 captureを独立照合して合格しました。採用headは`810d49a`、実行sourceは同treeのtest-merge `82506a6`です。実mainの同tree・署名・公開identity・全祖先を確認しました。重複main CIはcancelledとして記録し、成功には数えません。
+
+Unity SDKのGPU推論要件は維持し、package全bytesは既存Windows GPU検証source `f0fc2a7`と一致します。今回のCPU比較は新mainのGPU再実行や同一hardwareのCPU/GPU性能合格ではありません。画像CPUの未解決条件、性能・最低要件、macOS / iOS / Android実機、provider側の古いコピー削除、正式SDK Release・新tag consumerは未完了です。現在はGPU容量・必須端末・Android導入時のUAC対応・provider対応待ちで、再開順と完了条件は[リリース計画](release-plan.md)にまとめています。
+
+## PR #109時点のcheckpoint（履歴）
+
+以下は#109時点の記録です。Windows音声CPU比較の「未合格」や「次の実行」は当時の状態で、現在の結果は上記#110を使います。過去の失敗や適用範囲は保持します。
+
 確認checkpoint（2026-10-20）: **main `811c0d2`、PR #109まで統合済み**。[#109の統合記録](results/audio-cpu-pipeline-integration-4367677-20261020.json)ではhead `4367677`の必須CI全15 job・実13数値archiveを照合し、元824,320値とCPU encoderの120 capture・30,822,400値の許容差超過0、実mainとの同tree・公開identity・署名・全祖先を確認しました。重複main CIはcompleted / cancelledで、成功には数えません。SDK packageは下記Windows検証source `f0fc2a7`から全bytesが不変ですが、新mainでGPUを再実行した証拠には置き換えません。
 
 [音声の完全なCPU測定入口](audio-cpu-encoder.md)の初回source `9bd7a26`は、無音合格・padded_noiseのencoder各回33値の超過により全体不合格でした。旧32 captureと失敗を保持し、公式CPU前処理へ修正したsource `4367677`の[再検証](results/audio-cpu-official-preprocessing-4367677-actual-20261020.json)では、Linuxの2条件・各4回・全32 captureを独立照合して元数値条件へ合格しました。比較用CPU経路のWindows実モデル検証を別workflowで準備し、メモリ・CPU型番の取得と失敗ログ保護を含む[関連144テスト](results/audio-cpu-windows-workflow-tdd-20261020.json)を確認しました。Windowsの実モデル合格は未確認です。画像CPU比較の成功・失敗と残件は[リリース計画](release-plan.md)を参照してください。Unity SDKのGPU推論要件は維持します。同一hardwareのCPU/GPU性能・最低要件、必須Mac / iOS / Android実機、provider側の古いコピー削除、正式SDK公開と新tag consumerは未完了です。公開済み4件はいずれもモデル / 数値参照のpreviewで、SDK版は`0.1.0-pre.1`です。

@@ -2,7 +2,7 @@
 
 > 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 
-更新日: 2026-10-13。[M3計画](m3-image-embedder-validation.md)のI1 / I2を進める。画像end-to-end API / sample / GPU前処理・Sentis実モデルは未完了。**この段階の出力は共通本体へ渡す512次元のsoft tokenであり、最終768次元embeddingではない**。
+更新日: 2026-10-13。当時のI1 / I2（画像export）の実装を進める。画像end-to-end API / sample / GPU前処理・Sentis実モデルは未完了。**この段階の出力は共通本体へ渡す512次元のsoft tokenであり、最終768次元embeddingではない**。
 
 ## 実装とTDD
 

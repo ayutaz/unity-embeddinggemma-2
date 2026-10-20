@@ -142,11 +142,11 @@ artifact の保持期間は3日。失効した場合は CI で再生成する。
 `--suite m1` は3件すべて、`--suite runtime` は両backendの2件すべて合格した。skip / failed / inconclusiveは0。
 各backendの全15ケースでfp32一致を確認し、C#単体契約24件も合格。詳細は [ランタイム検証記録](m1-runtime-validation.md)。
 続くPR #4では `--suite completion` の1件でfp32 / Float16重み・CPU / GPUCompute全60比較と180定常測定値が合格し、C#単体契約は30件合格した。
-M1完了時はPR #1〜#4をmain `8146107`へ統合し、当時のmain CI（run `37801650704`）は4環境各64件合格。現在のmainはPR #30後の `6f55a85`、[CI run 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)の全8 job成功。CIのPython照合とローカルSentis実測は区別する。
+M1完了時はPR #1〜#4をmain `8146107`へ統合し、当時のmain CI（run `37801650704`）は4環境各64件合格。当時のmainはPR #30後の `6f55a85`、[CI run 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)の全8 job成功。CIのPython照合とローカルSentis実測は区別する。
 保存・量子化・測定とソース対応は [M1完了検証](m1-completion-validation.md)を参照。
 PR #6でUPM移行の導入・compile・契約29件と元プロジェクトの実モデルM1 3件 / API 2件が合格した。全保存・量子化・測定を移行後に再実行した結果ではない。
-検索サンプルは元プロジェクトと後続の固定Git consumerで実モデル4条件・画面 / cacheを確認済み。[当時のGit導入](m2-font-git-consumer-validation.md)。通常表示sample Playerの過去の異常終了は[sample検証と終了監査](m2-player-sample-validation.md)に保持し、その後PR #31の固定sourceで独立2起動の正常終了を確認した。[Player受け入れ](results/m2-current-main-player-acceptance-20261017.json)。他環境・最終candidate・正式公開の残件は[ロードマップ](roadmap.md)を参照。
-クラウドUnity workflowはSecretsが必要なLinux CPUの手動補助検証のみ。M1のWindows CPU/GPUCompute合格はこのローカルハーネスで確認する。
+検索サンプルは元プロジェクトと後続の固定Git consumerで実モデル4条件・画面 / cacheを確認済み。[当時のGit導入](m2-font-git-consumer-validation.md)。通常表示sample Playerの過去の異常終了は[sample検証と終了監査](m2-player-sample-validation.md)に保持し、その後PR #31の固定sourceで独立2起動の正常終了を確認した。[Player受け入れ](results/m2-current-main-player-acceptance-20261017.json)。Windows正式版の後続結果は[検証状況](status.md)、他環境など今後の作業は[ロードマップ](roadmap.md)を参照。
+当時のクラウドUnity workflowはSecretsが必要なLinux CPUの手動補助検証だった。現在のplatform別workflow・開始条件は[CI](ci.md)を参照。M1のWindows CPU/GPUComputeの元結果はローカルハーネスの実測として保持する。
 詳細な履歴は [検証記録](m1-validation.md)を参照。
 
 ## UPM移行後の契約テスト

@@ -7,7 +7,7 @@
 
 ## 最新の確認結果
 
-**Windows EditorのM1受け入れ検証は完了。** 保存・量子化・測定までの最新結果は [M1完了検証](m1-completion-validation.md)、進捗の基準は [M1計画](m1-completion-validation.md)。以下は基盤実装時点の履歴として残す。
+**Windows EditorのM1受け入れ検証は完了。** 保存・量子化・測定までの最新結果は [M1完了検証](m1-completion-validation.md)、進捗の基準は [M1完了記録](m1-completion-validation.md)。以下は基盤実装時点の履歴として残す。
 基盤統合当時のPython全体は47件（既存33件 + ハーネス14件）。M1統合main `8146107` は各64件、PR #6の確認済みhead `8a585bc` と現在のmain `c7d1189` は各102件が4環境すべて合格している。PR #6 / #8は統合済みで、main保護はサーバー設定・再確認済み。
 後半の31件・33件の結果や draft PR の記録は修正過程の履歴として保持する。
 

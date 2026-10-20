@@ -192,7 +192,7 @@ Uint8、int4、画像 / 音声の量子化、埋め込み表を別管理する�
 
 ## 6. 進め方(M1: テキスト用モデルを動かすまで)
 
-以下は完了したM1の実施順序と合格条件。各段階はWindows Editorで完了し、実測は [M1詳細計画](m1-completion-validation.md) / [完了検証](m1-completion-validation.md)に記録した。今後の作業順序は [今後の計画](roadmap.md)を基準とする。
+以下は完了したM1の実施順序と合格条件。各段階はWindows Editorで完了し、実測は [M1完了検証](m1-completion-validation.md)に記録した。今後の作業順序は [今後の計画](roadmap.md)を基準とする。
 
 | # | 作業 | 完了の条件 |
 | --- | --- | --- |

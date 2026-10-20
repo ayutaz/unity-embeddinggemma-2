@@ -1,5 +1,9 @@
 # CPU参照比較の計測契約
 
+テキストには、[既存Windows Playerの同一query CPU / GPU比較](text-paired-performance.md)が
+あります。現在のSDK入力との対応と元timingを再監査し、media用PyTorch比較と別に記録しています。
+初回caseとwarm queryの違い、実行source、runtimeの数値検査と独立raw vector採取の違いを保持します。
+
 更新: 2026-10-20。[Windows機能検証の工程1〜3](results/windows-first-stages-1-to-3-20261020.json)は完了しました。同条件CPU比較・性能・最低要件は[実行計画](next-release-plan.md)の工程4で、機能検証とは別の未完了項目です。他環境の実機受け入れはWindows公開後に分けます。以下の契約・失敗診断は元sourceの範囲で保持します。
 
 画像・音声のGPU実行中に観測したprocess CPU時間とは別に、同じ固定入力と

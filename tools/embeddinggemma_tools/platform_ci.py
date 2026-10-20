@@ -15,6 +15,7 @@ import struct
 import xml.etree.ElementTree as ET
 
 from .bounded_process import read_unity_execution_counts, write_json_atomic
+from .device_fixture_build import stage_fixtures
 
 VERSION = '6000.3.21f1'
 REVISION = 'c02631ffc030'
@@ -177,7 +178,7 @@ def _build_wiring(target):
             'Environment.GetEnvironmentVariable("EG_CI_SOURCE"));\n} } }\n')
 
 
-def execute(project, target, source, output, environment, report, *, command=private_command):
+def execute(project, target, source, output, environment, report, *, command=private_command, fixtures=None):
     project, output = Path(project).resolve(), Path(output).resolve()
     private = output / 'private'
     private.mkdir(exist_ok=True)
@@ -201,6 +202,15 @@ def execute(project, target, source, output, environment, report, *, command=pri
         actual = subprocess.check_output(['git', '-C', str(project), 'rev-parse', 'HEAD'], stderr=subprocess.PIPE).decode().strip()
         if actual != source:
             raise ValueError('checkout_source_mismatch')
+        if fixtures is not None:
+            phase('fixture_staging')
+            fixture_source, manifest_path, manifest_pin = fixtures
+            if target not in {'android', 'ios'}:
+                raise ValueError('device_fixture_target_required')
+            with Path(manifest_path).open('rb') as stream:
+                manifest = stream.read(256 * 1024 + 1)
+            report['fixture_staging'] = stage_fixtures(fixture_source, project, manifest, manifest_pin)
+            report['fixture_staged'] = True
         phase('installation')
         if not HUB.is_file():
             run(['brew', 'install', '--cask', 'unity-hub'], 'hub-install', 600)
@@ -310,7 +320,15 @@ def main(argv=None):
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--execute', action='store_true')
     parser.add_argument('--probe-metal', action='store_true')
+    parser.add_argument('--fixture-source', type=Path)
+    parser.add_argument('--fixture-manifest', type=Path)
+    parser.add_argument('--fixture-manifest-sha256')
     args = parser.parse_args(argv)
+    fixture_options = (args.fixture_source, args.fixture_manifest, args.fixture_manifest_sha256)
+    if any(value is not None for value in fixture_options) and not all(value is not None for value in fixture_options):
+        parser.error('fixture options must be supplied together')
+    if args.fixture_source is not None and args.platform not in {'android', 'ios'}:
+        parser.error('fixture options require a device build target')
     try:
         args.output.mkdir(parents=True, exist_ok=False)
         (args.output / 'public').mkdir()
@@ -331,7 +349,8 @@ def main(argv=None):
     write_json_atomic(args.output / 'public/result.json', report)
     if ready and args.execute:
         try:
-            execute(args.project, args.platform, args.source, args.output, os.environ, report)
+            kwargs = {'fixtures': fixture_options} if args.fixture_source is not None else {}
+            execute(args.project, args.platform, args.source, args.output, os.environ, report, **kwargs)
         except (OSError, ValueError, RuntimeError, subprocess.SubprocessError):
             report['success'] = False
             report['blockers'].append('execution_supervision_failed')

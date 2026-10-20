@@ -27,6 +27,26 @@ Float16では`precision`を`float16`、descriptorを`8a6a90c5f656a00b024553a0412
 
 ## 実行と証拠
 
+### build前の固定入力配置
+
+`embeddinggemma_tools.platform_ci` に、Android / iOS build用の明示的なfixture配置オプションを追加しました。認証設定済みの対応Macで、`tools/`から既存のnative build入口へ次を指定します。変数には実行者の私的な入力directory・元manifest・固定40桁checkout SHAを設定し、値を公開ログへ出しません。
+
+```sh
+uv run --no-project --python 3.13 python -m embeddinggemma_tools.platform_ci \
+  --project .. --platform android --source "$SOURCE_COMMIT" \
+  --output ../artifacts/device-build-with-fixtures --execute \
+  --fixture-source "$FIXTURE_SOURCE" --fixture-manifest "$FIXTURE_MANIFEST" \
+  --fixture-manifest-sha256 524ddbfceb05fc0d799e0b26a253f4755b82bfa304839e22bc6402d5724b295a
+```
+
+iOSでは `--platform ios` を指定します。3つのfixtureオプションは一緒に指定する必要があります。実checkoutの照合後、Unity導入・activation・buildの前に、manifest全bytesのpin、相対pathの重複・逸脱、全ファイルのサイズ / SHA256を検査します。symlink / Windows junctionを拒否し、既存のStreamingAssets内の利用者ファイルと専用directoryを上書きしません。入力の途中変更やコピー失敗では未完成fileを除き、検証済みの出力を保持してbuildを停止します。
+
+配置先は `Assets/StreamingAssets/EmbeddingGemmaDeviceValidation/fixtures/`、同じ専用directoryの `fixture-manifest.json` は元manifestの同一bytesです。端末のpersistent dataへのmanifest・run設定・モデルbundle配置と、モデル取得は別に必要です。既定のhosted workflowはこの入力を自動取得せず、オプション未指定では `fixture_staged` はfalseのままです。
+
+[TDDと元28ファイルの実配置](results/device-fixture-build-staging-tdd-20261020.json)では初回40件Red、workflow依存pathの1件Redを経て、関連128件Green・skip0です。元28ファイル・34,474,958 bytesを配置し、元入力・配置先・完全な私的2コピーのサイズ / hashを独立照合しました。配置の成功を元loaderの受け入れ、Android jar転送、実build、実機GPU・性能合格には数えません。SDK処理・元数値参照・許容差は変更していません。
+
+### 端末での検証
+
 専用runnerはEditor・Development build・computeなし・target不一致を入力読込前に拒否します。AndroidのVulkan、iOSのMetalを明示的に確認します。この確認は実行の入口条件であり、GPUの実行証拠ではありません。
 
 固定manifestに従い、`file://`またはAndroidの`jar:file://`のStreamingAssetsを新しい`runs/<run_id>/fixtures/`へ転送します。全ファイルのsize / SHA256、途中ファイルのcleanupと元loaderの照合を維持します。通信先を指定する設定やCPU fallbackの設定はありません。

@@ -1,8 +1,16 @@
 # 正式リリースまでの計画
 
+2026-10-20の再整理は[正式リリースまでの実行計画](next-release-plan.md)を参照してください。PR #112の確認結果、工程ごとの完了条件・外部依存・再開条件をまとめています。
+
 確認日: 2026-10-20（JST）。対象はテキスト・画像・音声のGPU推論と横断検索です。[ゴール](goal.md)の必須環境・精度条件を維持します。
 
-## 最新の計画（CIを先行、PR #111統合後）
+## 現在の基準（PR #112統合後）
+
+main `e72b5cb` は採用head `874c1c8` と同treeで、必須CI全15 job・実13数値archive・元数値条件・署名・公開identity・全祖先を確認して統合済みです。[統合記録](results/platform-ci-integration-874c1c8-20261020.json)と[最新の実行計画](next-release-plan.md)を使用してください。次は固定入力配置を含む後続変更のCIと、Unity CIライセンス・必須端末・GPU資源の準備です。nativeのライセンスfailure、実機・性能・provider対応・正式公開の未完了条件は維持します。
+
+## CI先行計画（PR #111統合後の履歴）
+
+以下は#112実装中の計画と検証記録です。未実行・次の作業・外部待ちの記述を、現在の結果へ読み替えません。
 
 基準mainは `de56db8c84984dc84fc2597f60cc1c6fbd3bf456`、PR #111まで統合済みです。採用head `1280948` の[必須CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39347537063)は全15 job成功。実13 archiveを独立照合し、元824,320値・CPU encoder 120 capture / 30,822,400値の許容差超過0を確認しました。SDK実行コードはWindows GPU検証source `f0fc2a7`から不変ですが、package内READMEとCHANGELOGは変更されています。package全bytesの一致や、新mainでのGPU再実行は主張しません。
 

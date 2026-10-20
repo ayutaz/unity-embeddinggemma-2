@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "scope": "Host-side original fixture staging before native device build; no actual build or GPU execution",
+  "base_source": "874c1c89f06162fb74086cb24ba13686b2f6981d",
+  "source_sha256_LF": {
+    "tools/embeddinggemma_tools/device_fixture_build.py": "dd47b4263dd287ea50a4e0890a362aa9d89a6b93639326c8756aaf4130642691",
+    "tools/embeddinggemma_tools/platform_ci.py": "36f6e8818c87a0bf1c0f845cbefde979b6876cfc5586d6806251c474b189e46a",
+    "tools/tests/test_device_fixture_build.py": "c4c8d126803c1f16dfe9d25c5dc70f9f4d5f83cdbbc144f271d7067f3ac91746",
+    ".github/workflows/platform-validation.yml": "ea364ed0685f59b0c31cdb148261c9f39b904d2d8d9bfd7d5e31ce3a60311b18"
+  },
+  "TDD": {
+    "initial_red": {
+      "total": 41,
+      "failed": 40,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 1
+    },
+    "workflow_path_red": {
+      "total": 1,
+      "failed": 1,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 0
+    },
+    "final_green": {
+      "total": 128,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 128
+    }
+  },
+  "original_inputs": {
+    "files": 28,
+    "bytes": 34474958,
+    "manifest_sha256": "524ddbfceb05fc0d799e0b26a253f4755b82bfa304839e22bc6402d5724b295a",
+    "original_source_rehashed": true,
+    "staged_outputs_rehashed": true,
+    "two_complete_private_copies_verified": true,
+    "original_manifest_bytes_preserved": true
+  },
+  "actual_Unity_build_performed": false,
+  "model_execution_performed": false,
+  "actual_Android_jar_transfer_verified": false,
+  "actual_device_GPU_verified": false,
+  "original_numerical_reference_or_tolerance_changed": false,
+  "source_required_CI_accepted": false,
+  "formal_release_ready": false
+}

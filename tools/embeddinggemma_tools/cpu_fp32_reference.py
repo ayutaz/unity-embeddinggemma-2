@@ -48,7 +48,7 @@ class NativeFp32Reference:
     def build(cls,directory):
         if platform.machine().casefold() not in ('amd64','x86_64'):
             raise RuntimeError('This explicit reference helper requires x64 AVX2/FMA')
-        directory=Path(directory);directory.mkdir(parents=True,exist_ok=True)
+        directory=Path(directory).resolve();directory.mkdir(parents=True,exist_ok=True)
         executable,flags,environment,kind=_compiler()
         library=directory/('reference.dll' if os.name=='nt' else 'reference.so')
         manifest=directory/'build.json'

@@ -101,6 +101,19 @@ def test_changed_cached_build_is_rejected_without_overwriting_evidence(native,tm
     assert manifest.read_bytes()==before
 
 
+def test_relative_build_directory_compiles_loads_and_reuses_the_same_library(tmp_path,monkeypatch):
+    """The documented CLI uses a path relative to tools, not compiler cwd."""
+    from pathlib import Path
+    monkeypatch.chdir(tmp_path)
+    first=NativeFp32Reference.build(Path('artifacts')/'native-build')
+    again=NativeFp32Reference.build(Path('artifacts')/'native-build')
+    library=Path(first.library._name)
+    assert library.is_absolute() and library.parent==tmp_path/'artifacts/native-build'
+    assert again.configuration==first.configuration
+    assert not (library.parent/'artifacts').exists()
+    np.testing.assert_array_equal(first.matmul(np.array([[2.,3.]],np.float32),np.array([[4.],[5.]],np.float32)),[[23.]])
+
+
 @pytest.mark.parametrize('shape',[(193,),(2,193),(2,3,193)])
 def test_torch_linear_adapter_preserves_rank_bias_and_original_weights(native,scalar,shape):
     import torch

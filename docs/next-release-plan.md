@@ -37,9 +37,26 @@ CPUのPython参照・比較は検証用です。製品の画像 / PCM前処理�
 
 追加Editor試験の初回は検証コードのNUnit記法がcompile errorとなり、モデル実行前に停止しました。次の実行は検証用16 GiB total commit上限に達した後、D3D12 device errorで終了しました。両方を失敗として保存しています。GPU復帰後の560契約試験を確認し、受け入れた3プロセスではowned Editorのresident上限16 GiBと、GPU driver予約等を含むowned jobのcommit上限32 GiBを分けて監視しました。この監視設定はSDKの最低RAM / VRAM要件ではありません。
 
-元の最終vector・中間値の参照と許容差は変更していません。既存の音声GPU4条件16回の[測定](results/audio-gpu-repeat-four-conditions-20261020.json)は保持します。追加の画像・音声GPU計測は10条件・実40回を完了し、各条件18区間、計180区間でメモリsampleを取得しました。[公開用集計](windows-media-memory-results.md)は元source・raw bytes・40出力の独立照合と保管2コピーを確認済みです。12 query errorと利用不可sampleは欠測のまま記録しています。区間には重なる範囲を含み、sample上の最大値は真のpeakや専有量の保証ではありません。同条件CPU比較・最低要件は未完了です。機能検証のprocess時間を推論速度やGPU専有時間として扱いません。新tag consumer、正式版・正式Release、他hardware / platformの合格も未完了です。
+元の最終vector・中間値の参照と許容差は変更していません。既存の音声GPU4条件16回の[測定](results/audio-gpu-repeat-four-conditions-20261020.json)は保持します。追加の画像・音声GPU計測は10条件・実40回を完了し、各条件18区間、計180区間でメモリsampleを取得しました。[公開用集計](windows-media-memory-results.md)は元source・raw bytes・40出力の独立照合と保管2コピーを確認済みです。12 query errorと利用不可sampleは欠測のまま記録しています。区間には重なる範囲を含み、sample上の最大値は真のpeakや専有量の保証ではありません。条件別のCPU比較と初回サポート構成は下記の後続記録で整理済みです。CI統合と公開前確認は未完了です。機能検証のprocess時間を推論速度やGPU専有時間として扱いません。新tag consumer、正式版・正式Release、他hardware / platformの合格も未完了です。
 
 ## 次の進め方
+
+### 最新のチェックポイント
+
+2026-10-20にGitHubを再確認しました。#114はマージ済み、公開mainは `3e78a27`、open PRは0件です。#114のRequired CIは成功していますが、macOS / iOS / Androidの別workflowは失敗を保持しており、全platformの合格ではありません。追加の実装・計測記録はtask branchにあり、まだ公開mainへ統合していません。
+
+音声CPU8回・画像CPU12回とGPU40回の計測・照合は揃いました。画像CPUは正方形16 lane、横長・縦長nativeという条件別の合格です。共通設定での全画像合格とは扱いません。RAM64 GB / VRAM16 GBクラスは検証済み構成に基づく初回サポート基準で、物理的な最低容量の証明ではありません。
+
+直近の作業はCPU比較のCI統合です。新しいworkflow契約テストは実装前の不合格を記録した段階で、CI統合完了・CI成功としては数えません。次の報告点は、音声native経路と画像の条件別設定について、workflow実装・関連テスト・構文検査の成否を確定した時点とします。成功済みのモデル変換や同条件の重い実行は、変更・失敗・新たな懸念がある場合に限って再実行します。
+
+ここからは次の4段階で進めます。
+
+1. **CI統合を完了する。** 元の数値gateとcapture監査を維持し、音声native経路と画像の明示設定をCIへ組み込みます。旧ONNX経路の未完了・失敗を成功へ読み替えません。
+2. **公開前確認を終えて一つのPRへまとめる。** 性能表・対応構成・導入手順、全祖先・送信payload・公開identity・Git hooksを確認します。新規・変更画像があれば実bytesを目視とOCRで確認します。旧providerコピーの個人情報除去も確認し、必要CI成功後に許可済みのマージを行います。
+3. **固定版を新規consumerへ導入する。** 版・CHANGELOG・license・tagを揃え、公開モデル取得からテキスト・画像・音声・RenderTexture、横断検索、解放・正常終了まで確認します。既存プロジェクトでの成功を新tag導入の成功として代用しません。
+4. **Windows版の正式Releaseを公開する。** 前段の完了後に公開し、tag・配布物・導入手順を読み戻して照合します。macOS / iOS / AndroidはWindows公開後の別工程です。
+
+公開停止条件は、既知の旧providerコピーの個人情報除去が未確認である点です。Support案件の読み取りは個別許可待ちで、新しい送信は行いません。ローカルでのCI実装・公開物準備は進められます。正式公開日はこの外部対応と新tag consumerの完了前には確約しません。
 
 工程4では次の状態まで進みました。実行済みの検証と、まだ実モデルへ適用していない実装を区別します。
 

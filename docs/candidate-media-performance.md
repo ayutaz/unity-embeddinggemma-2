@@ -2,6 +2,12 @@
 
 Current checkpoint (2026-10-20): Windows functional stages 1–3 are accepted within the [source-qualified record](results/windows-first-stages-1-to-3-20261020.json). Performance remains stage 4 of the [current release plan](next-release-plan.md). The [four-condition audio GPU result](results/audio-gpu-repeat-four-conditions-20261020.json) covers 16 calls; its partial memory sampling does not establish a guaranteed peak, matched CPU speedup or minimum hardware. The contract and earlier execution notes below retain their own sources and scopes.
 
+The [persistent Windows allocation observer](windows-gpu-memory-observation.md)
+adds a read-only native PDH query with process-lifetime and clock checks. Its
+small contract and CPU-only collector probe do not fill historical sampling
+gaps or qualify real-model memory, performance or minimum hardware. New model
+observations must retain their own numerical gates, actual intervals and gaps.
+
 The candidate fixture uses the published FP32 / Float16-weight descriptors while
 the existing retained-bundle fixture keeps its original pins. Both execute the
 same four rounds: `first`, `warm`, `repeat-1`, `repeat-2`, with one identical

@@ -66,7 +66,10 @@ class NativeAudioCpuEncoder(torch.nn.Module):
             self._original_weights=weight_digests(program)
             self.parts=torch.nn.ModuleList(_make_wrappers(program,self.operations,case_id))
             if len(self.parts)!=5:raise ValueError('Exactly five original partitions are required')
-            self.program=program
+            # ExportedProgram.module() rejects train/eval calls. Keep this
+            # original solely as the checksum owner; executable partitions
+            # already register all active coefficients as ordinary modules.
+            object.__setattr__(self,'program',program)
             self._shapes=[(1,280,1024)]*4+[(210 if case_id=='padded_noise' else 280,512)]
             self._configuration=dict(executor='native-fp32-reference',source=source,case_id=case_id,profile=profile,
                 coefficient_graph_provenance=copy.deepcopy(provenance),native_reference=copy.deepcopy(native.configuration),

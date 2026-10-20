@@ -9,6 +9,14 @@
   "retained_consumer_red": {"failed": 2, "passed": 14, "reason": "explicit CPU-only consumers incorrectly treated as graph generator inputs"},
   "attention_rank4_red": {"failed": 2, "passed": 33, "reason": "explicit head matmul and scoped selection absent"},
   "related_green": {"passed": 206, "failed": 0, "skipped": 0},
+  "integrated_real_model_loading_failure": {
+    "source": "2111f01a147b3d8ce2942e1d2f05a92ec88d56fd",
+    "case": "silence", "exit_code": 1, "phase": "failed_loading",
+    "actual_inference_completed": false,
+    "original_failure_preserved": true
+  },
+  "exported_checksum_owner_red": {"failed": 1, "passed": 12, "reason": "ExportedProgram.module rejects recursive train/eval calls"},
+  "exported_checksum_owner_related_green": {"passed": 26, "failed": 0, "skipped": 0},
   "coverage": [
     "actual values carried through five parts; original reference inputs discarded",
     "CPU FP32 shape/finite/source guards; explicit release and closed-owner rejection",
@@ -19,7 +27,8 @@
     "explicit native/ONNX option separation; audit override rejection",
     "exact registered coefficient graph and producer binding in saved-capture audit",
     "retained graph generator input guard preserved with narrowly enumerated CPU consumers",
-    "rank4 attention matmul compared bitwise with independent scalar C99 fmaf"
+    "rank4 attention matmul compared bitwise with independent scalar C99 fmaf",
+    "actual tiny torch.export module retained as checksum owner without train/eval recursion"
   ],
   "Unity_runtime_changed": false,
   "golden_weights_or_tolerance_changed": false,

@@ -88,6 +88,18 @@ def test_partial_loading_failure_never_changes_shared_math_functions(prepared,mo
     with pytest.raises(ValueError,match='loading failed'):make()
     assert export.fp32_fma is original
 
+
+def test_actual_exported_program_is_a_checksum_owner_without_train_eval_recursion(prepared,monkeypatch,native,tmp_path):
+    module,_,_,_=prepared
+    exported=torch.export.export(torch.nn.Linear(1,1,bias=False).eval(),(torch.ones(1,1),)).module()
+    def load(*args,case_id):
+        return exported,torch.tensor([999.]),torch.tensor([888.]),dict(case_id=case_id,profile='frames-1119-valid-1119',executed_graph_sha256='b'*64,graph_producer='c'*40)
+    monkeypatch.setattr(module,'load_distribution_input',load)
+    encoder=module.NativeAudioCpuEncoder(tmp_path,tmp_path,source=SOURCE,case_id='silence',native=native)
+    assert encoder.training is False and encoder.verify_coefficients()
+    assert torch.equal(encoder(torch.ones(1,1119,128)),torch.full((280,512),5.))
+    encoder.close()
+
 def test_native_primitive_binding_uses_real_operations_in_all_parts(native,monkeypatch):
     module=importlib.import_module('embeddinggemma_tools.native_audio_cpu_encoder')
     from embeddinggemma_tools.cpu_fp32_reference import TorchFp32Reference

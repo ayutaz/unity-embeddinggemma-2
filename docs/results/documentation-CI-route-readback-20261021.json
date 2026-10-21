@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "success": true,
+  "PR": 119,
+  "run_id": 39555715582,
+  "source": "33ed7ea71b6268063c3bcacb038636ae657ea3d4",
+  "merge_tree_verified": true,
+  "source_bound_scope": {
+    "mode": "docs",
+    "reason": "documentation",
+    "base_sha": "4146264e4a1be77bcc6fdfb736da7afe2d4e856b",
+    "head_sha": "93fc1f6e22b68782bd896896018e4e92f90114a6",
+    "source_sha": "33ed7ea71b6268063c3bcacb038636ae657ea3d4",
+    "change_digest": "e4fef6105e37fbd7795098e14d15000856db504b3595be7a018eef1b69c84e39"
+  },
+  "successful_jobs": 4,
+  "explicitly_unexecuted_jobs": 3,
+  "model_execution": false,
+  "summed_successful_job_seconds": 43.0,
+  "created_to_completed_seconds": 39.0,
+  "each_job_seconds": {
+    "changes": 8.0,
+    "workflow-lint / actionlint": 14.0,
+    "documentation": 14.0,
+    "Required CI": 7.0
+  },
+  "local_TDD": {
+    "classifier_aggregate_workflow_documentation_related_tests_passed": 119
+  },
+  "full_code_route": {
+    "PR": 118,
+    "run_id": 39555563787,
+    "source": "4146264e4a1be77bcc6fdfb736da7afe2d4e856b",
+    "terminal_acceptance_pending": true
+  },
+  "main_integrated": false,
+  "SDK_GPU_qualification_added": false
+}

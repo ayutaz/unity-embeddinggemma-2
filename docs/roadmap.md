@@ -10,20 +10,21 @@
 
 | 作業 | 現在の状態 | 次の完了条件 |
 | --- | --- | --- |
-| P0: CIの振り分け | 実装済み。文書専用の[PR #119](https://github.com/ayutaz/unity-embeddinggemma-2/pull/119)はRequired CIまで39秒で完了。モデル実行は明示的に未実行 | コードを含む[PR #118](https://github.com/ayutaz/unity-embeddinggemma-2/pull/118)の完全なCIを確認し、最終差分を揃える |
-| P1: Windowsの反復利用 | image-square / Float16の実Playerが約73秒で正常終了。実行レポートは成功とGPU使用を報告しているが、独立した数値・資源解放の照合は未完了 | 元参照との照合、sampleの登録→検索→中断→再試行→切替→解放を確認する |
-| P2: Intel CPU参照差分 | 追加調査は未着手。既存のhost限定は継続 | 最初の不一致を1条件に固定し、最大2時間で原因または未解決の境界を記録する |
+| P0: CIの振り分け | 実装済み。文書専用の[PR #119](https://github.com/ayutaz/unity-embeddinggemma-2/pull/119)はRequired CIまで39秒で完了。モデル実行は明示的に未実行 | コードを含む[PR #118](https://github.com/ayutaz/unity-embeddinggemma-2/pull/118)の完全なCIと最終headを確認する |
+| P1: Windowsの反復利用 | image-square / Float16の実Player 15 vectorと、実sampleの登録→検索→中断→再試行→切替→解放を独立照合済み。マイク契約10件と短時間の実device制御も成功 | 音声GPUの追加反復を実行できていないため、P1全体は未完了 |
+| P2: Intel CPU参照差分 | 初回の限定調査を完了。入力・依存・参照・演算設定が同じでもIntel / AMDのencoder出力が分岐する。内部の最初の演算は未特定 | host限定を維持して保留。内部layer captureを比較できる具体的な機会ができた場合に再開する |
 
 まずP0の実行中CIを読み戻します。同じ設定の重い再実行は増やさず、成功・失敗・未実行を確定します。
 計画PR #117の内容はPR #118に含まれています。#119の文書補足も統合し、役割が重なるPRは統合済みと確認してから整理します。3本を個別にmainへmergeする必要はありません。
 最終headのRequired CIとprivacy検査を通し、merge依頼がある場合に統合します。
 
-P1では完了した画像実行の原本を先に監査し、合格済みの条件を理由なく再実行しません。
+P1の[追加検証記録](results/post-release-windows-stability-20261021.json)では、元の画像参照とのcosine・検索順位とscore、実Worker・解放・正常終了を照合しています。GPUメモリは観測値と欠測を記録し、保証されたpeakとは扱いません。sampleの手動GUI操作や、submitted GPU kernel内での中断を証明した結果ではありません。
+合格済みの画像条件を理由なく再実行しません。
 音声は対象条件の既存VRAM観測値と安全余裕を満たす場合に順番に実行します。現在の空き容量ではその条件を満たしていないため、重い音声モデルは起動せず、契約テストなどの独立した作業を進めます。
 CPUへの切替で代用せず、未実行範囲を残します。実マイクの物理切断・復帰と他GPU / 他OSも、実施するまで未検証です。
 
-P2のCPU調査は参照ツールの再現性を対象とし、製品のSentis GPU推論とは別です。
-上限までに原因を特定できなければ、元のgolden・許容差とhost限定を維持して終了します。
+P2の[限定調査記録](results/post-release-Intel-CPU-investigation-20261021.json)は参照ツールの再現性を対象とし、製品のSentis GPU推論とは別です。
+元artifactのdigest / CRCと8回のcaptureを再照合し、小さい入力で演算順序の感度を確認しました。原因となる内部演算は未特定のため、元のgolden・許容差とhost限定を維持して初回調査を終了します。
 利用者に影響する修正が見つかった場合だけ、影響範囲の受け入れと次のpatch版を計画します。
 
 ## 次に進める順序

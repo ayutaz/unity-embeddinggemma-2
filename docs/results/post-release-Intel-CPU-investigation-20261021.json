@@ -1,0 +1,372 @@
+{
+  "success": true,
+  "scope": "bounded preserved portrait CPU-reference investigation, not Intel qualification",
+  "hypothesis": "Host-selected FP32 math order contributes to the encoder discrepancy; first exclude input, round instability, source and dependency drift. A small reduction/RMS proxy can test arithmetic sensitivity but cannot establish the first divergent model operator without internal captures.",
+  "investigation_started_utc": "2026-10-21T06:50:21+00:00",
+  "observed_seconds": 118.322279,
+  "budget_seconds": 7200,
+  "reports": [
+    {
+      "archive_sha256": "7b75e44d8e9f58ce1f897f40bfe94a0cce9de1539b084181d244835c030e2cb6",
+      "run": 39444874489,
+      "report_sha256": "0cbeb276dab884611435fa04d7420b15b5bbe5d451df2831843330ba43b7b737",
+      "source": "41d235c5f752f71e80728d823b152583c7a97260",
+      "reference_sha256": "3dfccd1a487ce04df3f8d640483ca045f7a7a56231bc1096ad0f845c923a29c6",
+      "document_reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "descriptor_sha256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "encoder_generation_sha256": "7c183c5217e13c28205c2a804c04ff93c68642b40a948f1cfb3c55d7f3852a98",
+      "PNG_input_sha256": "fce3474792c6401c4bae6ac0261a386f400bac0cece977ffda86388ee6682489",
+      "fingerprints": {
+        "tools/embeddinggemma_tools/image_cpu_reference.py": "76e1be53c555cb116e275fa093f4996455470d80c8ceddbf39c79a823300d213",
+        "tools/embeddinggemma_tools/cpu_execution_context.py": "ae4856b34a36d15cc65f3946912628580dde5df0012ee2492f57631764bd094e",
+        "tools/embeddinggemma_tools/image_reference_cohort.py": "72ae194f49df49b618cf9a37208d4a4e5fdd3993594f3fc68bccb5ef96e6e95a",
+        "tools/embeddinggemma_tools/reference_cpu_performance.py": "15abb51916dd3e808899dbb71cc5aa74a683dbee32aaf937d3fc51804c7a97ac",
+        "tools/embeddinggemma_tools/model.py": "5c6372d56df5c686889b6fc0cdbd651cb35aa8c227bf6f4d339e1406a5e91708",
+        "tools/embeddinggemma_tools/prepare.py": "e67544c31295ef4f1682be49bf5bf1e4dd94c61b3b28a77eb9379b33afaa05db",
+        "tools/embeddinggemma_tools/export.py": "d1216b11fc6590a92f29d39b371ac58332eacb2bed0f9227a2186d9eb51f32de",
+        "tools/embeddinggemma_tools/vision_cpu_simd_reference.py": "0ae6b34a791228ea2eae5fcbca18abc0b976b1284d1c63bf94087829daebe208",
+        "tools/uv.lock": "b94442fcddd738c9581159bec4038960a47425b10bc3662d58c59e06e353e610",
+        "tools/pyproject.toml": "dc207e60e2a9de763f18f1df0beba58f59afe356187e22cf61730c0305ca9f99"
+      },
+      "context": {
+        "cpu_model": {
+          "model name": "INTEL(R) XEON(R) PLATINUM 8573C",
+          "vendor_id": "GenuineIntel",
+          "cpu family": "6",
+          "model": "207",
+          "stepping": "2"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX512",
+        "torch_runtime_version": "2.14.1+cpu",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2026.1-Product Build 20260612 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": null,
+          "MKL_DYNAMIC": "FALSE",
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "stage_sha256": {
+        "pixels": [
+          "c092255aa8e553fa0e859f9a8f8325dc20a758b51119ecdaedf097d3b86f600e",
+          "c092255aa8e553fa0e859f9a8f8325dc20a758b51119ecdaedf097d3b86f600e",
+          "c092255aa8e553fa0e859f9a8f8325dc20a758b51119ecdaedf097d3b86f600e",
+          "c092255aa8e553fa0e859f9a8f8325dc20a758b51119ecdaedf097d3b86f600e"
+        ],
+        "positions": [
+          "89259c32b2d592b9dfd5915f4bf739e8b06dde1f0e61d4a1a69a7c475175e85f",
+          "89259c32b2d592b9dfd5915f4bf739e8b06dde1f0e61d4a1a69a7c475175e85f",
+          "89259c32b2d592b9dfd5915f4bf739e8b06dde1f0e61d4a1a69a7c475175e85f",
+          "89259c32b2d592b9dfd5915f4bf739e8b06dde1f0e61d4a1a69a7c475175e85f"
+        ],
+        "encoder": [
+          "a199cc76208d681fd1da104f946bebb6d390487731323ec029e0a07f38fa45e8",
+          "a199cc76208d681fd1da104f946bebb6d390487731323ec029e0a07f38fa45e8",
+          "a199cc76208d681fd1da104f946bebb6d390487731323ec029e0a07f38fa45e8",
+          "a199cc76208d681fd1da104f946bebb6d390487731323ec029e0a07f38fa45e8"
+        ]
+      },
+      "rounds": [
+        {
+          "round": "first",
+          "failures": 184,
+          "first_failure_flat": 9781,
+          "maximum_absolute_error": 9.85860824584961e-05,
+          "first_failure_values": {
+            "actual": 0.013920649886131287,
+            "expected": 0.013907283544540405,
+            "absolute_error": 1.3366341590881348e-05,
+            "threshold": 1.1390728354454041e-05
+          },
+          "first_failure_coordinate": [
+            19,
+            53
+          ]
+        },
+        {
+          "round": "warm",
+          "failures": 184,
+          "first_failure_flat": 9781,
+          "maximum_absolute_error": 9.85860824584961e-05,
+          "first_failure_values": {
+            "actual": 0.013920649886131287,
+            "expected": 0.013907283544540405,
+            "absolute_error": 1.3366341590881348e-05,
+            "threshold": 1.1390728354454041e-05
+          },
+          "first_failure_coordinate": [
+            19,
+            53
+          ]
+        },
+        {
+          "round": "repeat-1",
+          "failures": 184,
+          "first_failure_flat": 9781,
+          "maximum_absolute_error": 9.85860824584961e-05,
+          "first_failure_values": {
+            "actual": 0.013920649886131287,
+            "expected": 0.013907283544540405,
+            "absolute_error": 1.3366341590881348e-05,
+            "threshold": 1.1390728354454041e-05
+          },
+          "first_failure_coordinate": [
+            19,
+            53
+          ]
+        },
+        {
+          "round": "repeat-2",
+          "failures": 184,
+          "first_failure_flat": 9781,
+          "maximum_absolute_error": 9.85860824584961e-05,
+          "first_failure_values": {
+            "actual": 0.013920649886131287,
+            "expected": 0.013907283544540405,
+            "absolute_error": 1.3366341590881348e-05,
+            "threshold": 1.1390728354454041e-05
+          },
+          "first_failure_coordinate": [
+            19,
+            53
+          ]
+        }
+      ],
+      "all_rounds_identical_per_stage": true,
+      "final_vector_gate_passed": true,
+      "intermediate_gate_passed": false
+    },
+    {
+      "archive_sha256": "df8f8c71330ebe778db4adf6aee4456f8daa60b83ec88daeaa2b50844d45381d",
+      "run": 39434970884,
+      "report_sha256": "38cd581c3f7d81c6e48cf433ddc142430f07f18309e28c27c89a113dc4b63fbd",
+      "source": "0104401bbbcdd69e931716bdde407f7aac97d792",
+      "reference_sha256": "3dfccd1a487ce04df3f8d640483ca045f7a7a56231bc1096ad0f845c923a29c6",
+      "document_reference_sha256": "90692ad38c6d7d844dc6b6e79c7d5cfa719ea59866946dbf94a40bca10ac9eac",
+      "descriptor_sha256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "encoder_generation_sha256": "7c183c5217e13c28205c2a804c04ff93c68642b40a948f1cfb3c55d7f3852a98",
+      "PNG_input_sha256": "fce3474792c6401c4bae6ac0261a386f400bac0cece977ffda86388ee6682489",
+      "fingerprints": {
+        "tools/embeddinggemma_tools/image_cpu_reference.py": "76e1be53c555cb116e275fa093f4996455470d80c8ceddbf39c79a823300d213",
+        "tools/embeddinggemma_tools/cpu_execution_context.py": "ae4856b34a36d15cc65f3946912628580dde5df0012ee2492f57631764bd094e",
+        "tools/embeddinggemma_tools/image_reference_cohort.py": "72ae194f49df49b618cf9a37208d4a4e5fdd3993594f3fc68bccb5ef96e6e95a",
+        "tools/embeddinggemma_tools/reference_cpu_performance.py": "15abb51916dd3e808899dbb71cc5aa74a683dbee32aaf937d3fc51804c7a97ac",
+        "tools/embeddinggemma_tools/model.py": "5c6372d56df5c686889b6fc0cdbd651cb35aa8c227bf6f4d339e1406a5e91708",
+        "tools/embeddinggemma_tools/prepare.py": "e67544c31295ef4f1682be49bf5bf1e4dd94c61b3b28a77eb9379b33afaa05db",
+        "tools/embeddinggemma_tools/export.py": "d1216b11fc6590a92f29d39b371ac58332eacb2bed0f9227a2186d9eb51f32de",
+        "tools/embeddinggemma_tools/vision_cpu_simd_reference.py": "0ae6b34a791228ea2eae5fcbca18abc0b976b1284d1c63bf94087829daebe208",
+        "tools/uv.lock": "b94442fcddd738c9581159bec4038960a47425b10bc3662d58c59e06e353e610",
+        "tools/pyproject.toml": "dc207e60e2a9de763f18f1df0beba58f59afe356187e22cf61730c0305ca9f99"
+      },
+      "context": {
+        "cpu_model": {
+          "model name": "AMD EPYC 9V74 80-Core Processor",
+          "vendor_id": "AuthenticAMD",
+          "cpu family": "25",
+          "model": "17",
+          "stepping": "1"
+        },
+        "cpu_model_available": true,
+        "CPU_capability": "AVX512",
+        "torch_runtime_version": "2.14.1+cpu",
+        "float32_matmul_precision": "highest",
+        "torch_num_threads": 4,
+        "torch_num_interop_threads": 2,
+        "mkl_available": true,
+        "mkldnn_available": true,
+        "mkldnn_enabled": true,
+        "math_libraries": [
+          "Intel(R) oneAPI Math Kernel Library Version 2026.1-Product Build 20260612 for Intel(R) 64 architecture applications",
+          "Intel(R) MKL-DNN v3.12.0 (Git Hash 80afa71049cd69a3df32adcccb623b12cd7baa22)"
+        ],
+        "math_environment": {
+          "OMP_NUM_THREADS": "4",
+          "MKL_NUM_THREADS": "4",
+          "MKL_CBWR": null,
+          "MKL_DYNAMIC": "FALSE",
+          "MKL_ENABLE_INSTRUCTIONS": null,
+          "ATEN_CPU_CAPABILITY": null,
+          "DNNL_MAX_CPU_ISA": null
+        },
+        "flush_denormal_state": null
+      },
+      "runtime_versions": {
+        "torch": "2.14.1",
+        "transformers": "5.19.0",
+        "numpy": "2.5.3",
+        "pillow": "12.3.0"
+      },
+      "stage_sha256": {
+        "pixels": [
+          "c092255aa8e553fa0e859f9a8f8325dc20a758b51119ecdaedf097d3b86f600e",
+          "c092255aa8e553fa0e859f9a8f8325dc20a758b51119ecdaedf097d3b86f600e",
+          "c092255aa8e553fa0e859f9a8f8325dc20a758b51119ecdaedf097d3b86f600e",
+          "c092255aa8e553fa0e859f9a8f8325dc20a758b51119ecdaedf097d3b86f600e"
+        ],
+        "positions": [
+          "89259c32b2d592b9dfd5915f4bf739e8b06dde1f0e61d4a1a69a7c475175e85f",
+          "89259c32b2d592b9dfd5915f4bf739e8b06dde1f0e61d4a1a69a7c475175e85f",
+          "89259c32b2d592b9dfd5915f4bf739e8b06dde1f0e61d4a1a69a7c475175e85f",
+          "89259c32b2d592b9dfd5915f4bf739e8b06dde1f0e61d4a1a69a7c475175e85f"
+        ],
+        "encoder": [
+          "749fd6768296f1115a82da386a65e46f5f27039e782c57c1eedd1b4c2c52741c",
+          "749fd6768296f1115a82da386a65e46f5f27039e782c57c1eedd1b4c2c52741c",
+          "749fd6768296f1115a82da386a65e46f5f27039e782c57c1eedd1b4c2c52741c",
+          "749fd6768296f1115a82da386a65e46f5f27039e782c57c1eedd1b4c2c52741c"
+        ]
+      },
+      "rounds": [
+        {
+          "round": "first",
+          "failures": 0,
+          "first_failure_flat": null,
+          "maximum_absolute_error": 2.086162567138672e-05,
+          "first_failure_values": null,
+          "first_failure_coordinate": null
+        },
+        {
+          "round": "warm",
+          "failures": 0,
+          "first_failure_flat": null,
+          "maximum_absolute_error": 2.086162567138672e-05,
+          "first_failure_values": null,
+          "first_failure_coordinate": null
+        },
+        {
+          "round": "repeat-1",
+          "failures": 0,
+          "first_failure_flat": null,
+          "maximum_absolute_error": 2.086162567138672e-05,
+          "first_failure_values": null,
+          "first_failure_coordinate": null
+        },
+        {
+          "round": "repeat-2",
+          "failures": 0,
+          "first_failure_flat": null,
+          "maximum_absolute_error": 2.086162567138672e-05,
+          "first_failure_values": null,
+          "first_failure_coordinate": null
+        }
+      ],
+      "all_rounds_identical_per_stage": true,
+      "final_vector_gate_passed": true,
+      "intermediate_gate_passed": true
+    }
+  ],
+  "first_observable_divergence": "encoder/projector output; pixels and position input bytes match",
+  "precise_internal_operator_identified": false,
+  "internal_operator_captures_available": false,
+  "dependency_source_fingerprints_equal": true,
+  "declared_math_environment_equal": true,
+  "same_reported_ISA": "AVX512",
+  "host_model_differs": true,
+  "root_cause_proven": false,
+  "original_golden_changed": false,
+  "original_tolerance_changed": false,
+  "Intel_CPU_reference_qualified": false,
+  "SDK_GPU_inference_changed": false,
+  "investigation_completed_utc": "2026-10-21T06:57:06.747509+00:00",
+  "total_bounded_investigation_seconds": 405.747496,
+  "small_input_proxy": {
+    "success": true,
+    "actual_child_executions": 2,
+    "model_loaded": false,
+    "results": [
+      {
+        "scope": "four synthetic pixel rows used as arithmetic proxy, not a captured RMS input",
+        "selected_dispatch": "default",
+        "observed_dispatch": "DEFAULT",
+        "torch_version": "2.14.1+cpu",
+        "input_bytes": 12288,
+        "input_sha256": "5ee4be0cd5fc15979db5ba3460275fcd262099d55f522fc5cd8ab7917fa51132",
+        "shape": [
+          4,
+          768
+        ],
+        "native_mean": [
+          0.0014784178929403424,
+          0.006394015625119209,
+          0.016705036163330078,
+          0.032403647899627686
+        ],
+        "explicit_mean": [
+          0.0014784176601096988,
+          0.006394016090780497,
+          0.01670503430068493,
+          0.032403647899627686
+        ],
+        "maximum_mean_absolute_difference": 1.862645149230957e-09,
+        "rms_differing_elements": 1327,
+        "maximum_rms_absolute_difference": 2.384185791015625e-07,
+        "model_operator_localized": false,
+        "root_cause_proven": false,
+        "CUDA_initialized": false
+      },
+      {
+        "scope": "four synthetic pixel rows used as arithmetic proxy, not a captured RMS input",
+        "selected_dispatch": "avx2",
+        "observed_dispatch": "AVX2",
+        "torch_version": "2.14.1+cpu",
+        "input_bytes": 12288,
+        "input_sha256": "5ee4be0cd5fc15979db5ba3460275fcd262099d55f522fc5cd8ab7917fa51132",
+        "shape": [
+          4,
+          768
+        ],
+        "native_mean": [
+          0.0014784178929403424,
+          0.006394015625119209,
+          0.016705036163330078,
+          0.032403647899627686
+        ],
+        "explicit_mean": [
+          0.0014784176601096988,
+          0.006394016090780497,
+          0.01670503430068493,
+          0.032403647899627686
+        ],
+        "maximum_mean_absolute_difference": 1.862645149230957e-09,
+        "rms_differing_elements": 1327,
+        "maximum_rms_absolute_difference": 2.384185791015625e-07,
+        "model_operator_localized": false,
+        "root_cause_proven": false,
+        "CUDA_initialized": false
+      }
+    ],
+    "native_mean_changes_between_dispatches": false,
+    "explicit_order_changes_between_dispatches": false,
+    "Intel_host_replayed": false,
+    "root_cause_proven": false,
+    "SDK_GPU_change": false
+  },
+  "initial_investigation_completed": true,
+  "disposition": "Retain host-limited CPU reference support. No internal-op localization or universal Intel acceptance. Reopen only for a specific internal capture/replay opportunity.",
+  "test_evidence": {
+    "boundary_auditor_TDD": "missing-module red then 6 tests passed",
+    "original_artifact_digests_and_CRC_verified": true,
+    "all_eight_actual_rounds_recomputed": true
+  },
+  "next_discriminating_evidence": "Same portrait input/coefficients/dependencies on both hosts with layer-by-layer captures, followed by a minimal replay at the first differing layer input; not executed in this bounded investigation"
+}

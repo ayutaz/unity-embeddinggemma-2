@@ -48,6 +48,15 @@ AVX2固定後の別Intel Xeonではlandscapeが6要素、元の中間値gateを�
 CPU比較は記録されたhostと設定の範囲に限定し、Intel hosted CPUでの一致や、全CPU共通の数値再現性を
 資格付けしません。新しいCIでも不一致は失敗のまま残し、同じ条件の再実行で成功を探しません。
 [実験のTDDと失敗記録](results/windows-image-CPU-dispatch-20261021.json)は保持します。
+
+公開後の[限定調査](results/post-release-Intel-CPU-investigation-20261021.json)ではportrait / nativeの保存済みIntel・AMD各4回を再計算しました。
+入力pixel / position、モデル・参照、依存版と実行sourceのfingerprint、宣言された演算設定は一致し、両hostの報告ISAもAVX512です。
+各host内の4回は同じbytesを返しますが、Intelは各184要素が元gateを超過し、AMDは0要素でした。
+最初に保存値が分岐する境界はencoder / projector出力です。これは内部の最初の不一致演算を特定したという意味ではありません。
+4行×768要素の小さい算術proxyでは、nativeと明示的な加算順序の差を観測しましたが、DEFAULT / AVX2の切替でその結果は変わりませんでした。
+実モデルのRMS入力captureでもIntelでの再実行でもないため、これを184要素の原因とは扱いません。
+初回の限定調査はここで終了し、host限定を維持します。内部layerのcapture比較と最初の分岐入力の小さいreplayは未実行です。
+
 SDKの初回対応は[検証済みWindows GPU構成](windows-supported-configuration.md)であり、
 最終sourceのRequired CI、新tagでの実Editor / IL2CPP Player受け入れを別途必要とします。
 全形状をsixteen-laneにした際のlandscape不合格は、

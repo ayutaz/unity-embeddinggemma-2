@@ -47,5 +47,8 @@ tokenize・decode・PCM取得はCPUの入出力境界で、最終vectorはCPU配
 
 ## 記録と次の作業
 
+[公開後の保守確認](results/windows-maintenance-review-20261021.md)では、依存更新PRの失敗原因と差分の再提案、音声GPUの追加反復がVRAM不足で未実行であること、patch版の暫定判断を記録しています。
+正式版で確認済みの音声推論と、この追加反復の未完了を区別します。マイクの物理切断・復帰と実際のOS focus遷移も、未検証です。
+
 [文書一覧](README.md)から、利用手順、性能、CI、固定sourceの検証記録を参照できます。
 過去の成功・失敗JSONを現在のsourceの再実行へ読み替えません。今後の実行順と開始条件は[ロードマップ](roadmap.md)へ集約します。

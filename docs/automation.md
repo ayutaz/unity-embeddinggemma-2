@@ -1,6 +1,6 @@
-# Unity のローカル自動操作
+# Unityのローカル自動操作
 
-更新: 2026-10-20。Windows先行の工程1〜3は[確認記録](results/windows-first-stages-1-to-3-20261020.json)の範囲で完了しました。次の作業は[現在の実行計画](next-release-plan.md)の工程4〜5です。文書更新だけで成功済みの変換・Unity機能試験を再実行しません。
+更新: **2026-10-21**。Windows正式版の[公開tagと実Editor / Playerの受け入れ](status.md)は完了しています。次の作業は[ロードマップ](roadmap.md)へ集約します。文書整理だけで成功済みの変換・Unity実行を繰り返しません。
 
 新しい実行ではsource・モデル・入力・実GPU・所有PID・時間 / メモリ上限・終了を実行前に固定します。観測timeoutを再起動理由にせず、同じhandleの生存を確認します。停止対象はその実行が所有するprocessだけとし、元の失敗・capture・ログを上書きしません。resident RAM、job commit、VRAMの範囲を分け、運用上の開始条件・上限をSDKの最低要件として表示しません。
 
@@ -18,7 +18,7 @@ GPU専用へ変更した対象は別validation packageの `EmbeddingGemma.Valida
 
 `GpuExecutionProfileTests` だけをbatchmodeで指定し、固定Git Runtime / validationのSHA一致、tinyと実square 1件の2 pass・skip0・exit0を確認した。[今回の負荷・失敗結果](gpu-execution-and-silu-validation.md)。下の古いlauncher / suiteの注意は引き続き適用する。
 
-再開時は[全体計画R0〜R5](multimodal-tdd-plan.md)の一つのGPU入力を選び、実GPU / graphics API、actual backend、fallback / flush 0を保存する。GPUモデルでもload / graph変換・shape解析 / Worker準備 / hash / uploadはCPU負荷を伴うため、各段階を計測する。ローカルは外部5分上限を設定・確認し、期限時に対象PIDのidentityを確認して停止、部分結果とexitを別scopeで保存する。既存ignored launcherは長いWaitForExitを使うため、この上限が実装済みとは扱わない。新しいlauncher自動化を追加する場合はTDDでtimeout・子process終了を検証する。
+当時の再開手順では一つのGPU入力を選び、実GPU / graphics API、actual backend、fallback / flush 0を保存する。GPUモデルでもload / graph変換・shape解析 / Worker準備 / hash / uploadはCPU負荷を伴うため、各段階を計測する。ローカルは外部5分上限を設定・確認し、期限時に対象PIDのidentityを確認して停止、部分結果とexitを別scopeで保存する。既存ignored launcherは長いWaitForExitを使うため、この上限が実装済みとは扱わない。新しいlauncher自動化を追加する場合はTDDでtimeout・子process終了を検証する。
 
 観測timeoutだけで新しいEditorを起動しない。同operation / PIDを追跡し、GPU未対応・未実行・中断・数値不合格を区別する。重い全条件の実行はGPU runner / ライセンスを確保したActionsを優先し、CPU runnerの結果を実GPU合格に数えない。
 
@@ -142,11 +142,11 @@ artifact の保持期間は3日。失効した場合は CI で再生成する。
 `--suite m1` は3件すべて、`--suite runtime` は両backendの2件すべて合格した。skip / failed / inconclusiveは0。
 各backendの全15ケースでfp32一致を確認し、C#単体契約24件も合格。詳細は [ランタイム検証記録](m1-runtime-validation.md)。
 続くPR #4では `--suite completion` の1件でfp32 / Float16重み・CPU / GPUCompute全60比較と180定常測定値が合格し、C#単体契約は30件合格した。
-M1完了時はPR #1〜#4をmain `8146107`へ統合し、当時のmain CI（run `37801650704`）は4環境各64件合格。現在のmainはPR #30後の `6f55a85`、[CI run 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)の全8 job成功。CIのPython照合とローカルSentis実測は区別する。
+M1完了時はPR #1〜#4をmain `8146107`へ統合し、当時のmain CI（run `37801650704`）は4環境各64件合格。当時のmainはPR #30後の `6f55a85`、[CI run 38031441901](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38031441901)の全8 job成功。CIのPython照合とローカルSentis実測は区別する。
 保存・量子化・測定とソース対応は [M1完了検証](m1-completion-validation.md)を参照。
 PR #6でUPM移行の導入・compile・契約29件と元プロジェクトの実モデルM1 3件 / API 2件が合格した。全保存・量子化・測定を移行後に再実行した結果ではない。
-検索サンプルは元プロジェクトと後続の固定Git consumerで実モデル4条件・画面 / cacheを確認済み。[当時のGit導入](m2-font-git-consumer-validation.md)。通常表示sample Playerの過去の異常終了は[sample検証と終了監査](m2-player-sample-validation.md)に保持し、その後PR #31の固定sourceで独立2起動の正常終了を確認した。[Player受け入れ](results/m2-current-main-player-acceptance-20261017.json)。他環境・最終candidate・正式公開の残件は[ロードマップ](roadmap.md)を参照。
-クラウドUnity workflowはSecretsが必要なLinux CPUの手動補助検証のみ。M1のWindows CPU/GPUCompute合格はこのローカルハーネスで確認する。
+検索サンプルは元プロジェクトと後続の固定Git consumerで実モデル4条件・画面 / cacheを確認済み。[当時のGit導入](m2-font-git-consumer-validation.md)。通常表示sample Playerの過去の異常終了は[sample検証と終了監査](m2-player-sample-validation.md)に保持し、その後PR #31の固定sourceで独立2起動の正常終了を確認した。[Player受け入れ](results/m2-current-main-player-acceptance-20261017.json)。Windows正式版の後続結果は[検証状況](status.md)、他環境など今後の作業は[ロードマップ](roadmap.md)を参照。
+当時のクラウドUnity workflowはSecretsが必要なLinux CPUの手動補助検証だった。現在のplatform別workflow・開始条件は[CI](ci.md)を参照。M1のWindows CPU/GPUComputeの元結果はローカルハーネスの実測として保持する。
 詳細な履歴は [検証記録](m1-validation.md)を参照。
 
 ## UPM移行後の契約テスト

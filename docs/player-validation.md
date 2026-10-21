@@ -3,7 +3,7 @@
 > 設計・検証の履歴です。本文の状態・実行中・次の作業は記載当時のものです。現在の対応範囲は[検証状況](status.md)、残作業は[ロードマップ](roadmap.md)を参照してください。固定sourceの失敗・未実行も証拠として保持します。
 
 2026-10-10。M2のmacOS Editor / iOS / Android実測とWindows Player回帰の準備を進める。
-受け入れ条件とリリースの依存は [詳細実行計画](m2-release-plan.md) に従う。
+受け入れ条件とリリースの依存は [今後の計画](roadmap.md) に従う。
 
 現在は精度検証専用Windows PlayerのDevelopment / MonoとIL2CPP / Release / High strippingを実行済み。後者はbatch mode / Direct3D12の全4条件・独立2起動・exit 0が合格した。[IL2CPP結果](m2-player-il2cpp-validation.md)。別の[配布sample Player](m2-player-sample-validation.md)は通常表示の日英GUI / Float16 GPU検索・解放が成功したがshutdown失敗。Androidは[実APK・署名 / payload監査](m2-android-validation.md)まで成功、実機 / macOS / iOSは未実行。以下の準備記録や単体契約を不足gateの代替にしない。
 

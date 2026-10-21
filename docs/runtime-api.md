@@ -1,10 +1,10 @@
 # 推論API
 
-> 更新: 2026-10-20。Windows候補の全入力・全role・横断検索は、[実Editorと同一SDKの既存Player結果](results/windows-first-stages-1-to-3-20261020.json)で工程1〜3を受け入れました。性能・最低要件・新tag導入・正式公開は未完了です。[導入の入口](../Packages/com.ayutaz.embeddinggemma/Documentation~/index.md) / [検証状況](status.md) / [現在の実行計画](next-release-plan.md)。
+> 更新: 2026-10-21。Windows版[v0.1.0は正式公開済み](https://github.com/ayutaz/unity-embeddinggemma-2/releases/tag/v0.1.0)です。両形式の公開tag導入・実Editor / Player・全入力とGPU監査は[検証状況](status.md)、対応構成は[こちら](windows-supported-configuration.md)を参照してください。[導入API](../Packages/com.ayutaz.embeddinggemma/Documentation~/index.md) / [今後の計画](roadmap.md)。
 
 ## マルチモーダルAPIとGPU設定
 
-mainへ統合済みの`PartitionedImageFeatureEncoder` / `ImageEmbedder.EmbedAsync`と`PartitionedAudioFeatureEncoder` / `AudioEmbedder.EmbedAsync`は、実Texture・PCMから前処理→encoder→backbone→正規化済み768次元をGPUComputeで実行する固定source検証済み経路です。画像・音声は各6ケースとQuery / Document / Rawの18条件、計算 / 入力CPU fallback・中間readback0。元encoderの画像全3 / 音声全2 profileの厳密数値gateと必須CIも合格しています。[元API検証](results/goal4-current-completion-audit-20261016.json)と[現在のサンプル検証](multimodal-search-sample.md)を区別してください。全端末・正式配布の合格は表しません。
+mainへ統合済みの`PartitionedImageFeatureEncoder` / `ImageEmbedder.EmbedAsync`と`PartitionedAudioFeatureEncoder` / `AudioEmbedder.EmbedAsync`は、実Texture・PCMから前処理→encoder→backbone→正規化済み768次元をGPUComputeで実行する固定source検証済み経路です。画像・音声は各6ケースとQuery / Document / Rawの18条件、計算 / 入力CPU fallback・中間readback0。元encoderの画像全3 / 音声全2 profileの固定sourceの数値gateと、正式版のRequired CIを区別して記録しています。[元API検証](results/goal4-current-completion-audit-20261016.json)と[現在のサンプル検証](multimodal-search-sample.md)を区別してください。全端末・正式配布の合格は表しません。
 
 統合済みの`IAsyncAudioPreprocessor` / `AudioPreprocessor.ProcessAsync`は、GPU fence完了までPCM入力・出力copyを保持し、完了した前処理のGPU cacheを解放します。`AudioEmbedder.EmbedAsync`は対応stageがあればこの経路を待ちます。反復処理には非同期APIを使用し、キャンセル・Dispose後も返されたtaskの完了前に借用stageを破棄しないでください。`GpuMediaSession.CloseAsync`はその完了と所有stageの解放を待ちます。
 
@@ -12,7 +12,7 @@ mainへ統合済みの`PartitionedImageFeatureEncoder` / `ImageEmbedder.EmbedAsy
 
 使用例・prefix / mask・キャンセルと所有権は[音声API](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-embedder.md)と[音声encoder](../Packages/com.ayutaz.embeddinggemma/Documentation~/audio-feature-encoder.md)を参照してください。分割Model・係数・operation接続表は対象profileを監査したものを呼び出し側で準備します。自動ダウンロード・profile選択は行いません。単一Modelの同期encoder APIを、この実モデル受け入れ経路と同一視しません。
 
-`GpuBlockedMatmul`の加算blockは係数・形状と独立参照に照合して指定します。局所patchのblock384成功を他の行列へ一般化せず、採用済み全encoderの計算順を保持します。モデル準備の再利用、長期メモリ / 速度、sample / Player、他端末は後続工程です。
+`GpuBlockedMatmul`の加算blockは係数・形状と独立参照に照合して指定します。局所patchのblock384成功を他の行列へ一般化せず、採用済み全encoderの計算順を保持します。モデル取得とWindows Playerは正式版で受け入れました。長期メモリ、一般的な速度保証、他端末は別途の検証対象です。
 
 ## 既存テキストAPI
 
@@ -76,7 +76,7 @@ using var restoredEmbedder = new TextEmbedder(restored, tokenizerJson, BackendTy
 
 `.sentis`拡張子を要求し、親ディレクトリを作成。一時ファイルを保存・ロード確認後、既存先を置換する。失敗時は一時ファイルを削除する。
 fp16保存はディスク経由でモデルをコピーしてから重み量子化し、入力Modelを変更しない。書き出しは大きいメモリとI/Oを必要とするため、毎推論時に行わない。
-macOS / iOS / Android、UPMリリースは [M2計画](m2-plan.md)の対象。
+macOS / iOS / Android、UPMリリースは [今後の計画](roadmap.md)の対象。
 
 ## 文書を事前埋め込みして検索する
 

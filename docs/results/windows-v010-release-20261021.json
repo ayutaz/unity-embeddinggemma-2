@@ -1,0 +1,263 @@
+{
+  "schema": 1,
+  "recorded_date": "2026-10-21",
+  "scope": "Windows v0.1.0 executed acceptance and formal release readback",
+  "SDK_execution_source": "91e3419571432dfa54e7bbab045ef63a7cef4a81",
+  "tag": "v0.1.0",
+  "package_version": "0.1.0",
+  "published_at_UTC": "2026-10-20T18:04:57Z",
+  "release_url": "https://github.com/ayutaz/unity-embeddinggemma-2/releases/tag/v0.1.0",
+  "formal_release": true,
+  "draft": false,
+  "prerelease": false,
+  "latest_verified_at_publication": true,
+  "tested_configuration": {
+    "OS": "Windows 11 x64",
+    "Unity": "6000.3.21f1",
+    "Sentis": "2.6.1",
+    "graphics": "Direct3D12",
+    "GPU": "RTX 4070 Ti SUPER",
+    "CPU": "Ryzen 9 5900X",
+    "RAM_class_GB": 64,
+    "VRAM_class_GB": 16
+  },
+  "fresh_public_tag_consumer": true,
+  "SDK_source_overlay": false,
+  "Library_copied": false,
+  "actual_Player_processes": 8,
+  "Editor": {
+    "media-fp32": {
+      "base_media_vectors": 36,
+      "warm_media_vectors": 45,
+      "mixed_documents": 18,
+      "mixed_queries": 4,
+      "mixed_rank_and_score_pairs": 72,
+      "minimum_original_reference_cosine": 0.9999997097690786,
+      "maximum_original_score_error": 3.618546470307571e-05
+    },
+    "media-float16": {
+      "base_media_vectors": 36,
+      "warm_media_vectors": 45,
+      "mixed_documents": 18,
+      "mixed_queries": 4,
+      "mixed_rank_and_score_pairs": 72,
+      "minimum_original_reference_cosine": 0.9999899845296644,
+      "maximum_original_score_error": 0.00011192775005852695
+    },
+    "text-rendertexture": [
+      {
+        "precision": "fp32",
+        "text_vectors": 15,
+        "text_roles": [
+          "document",
+          "query",
+          "raw"
+        ],
+        "minimum_original_text_cosine": 0.9999999999996666,
+        "RenderTexture_vectors": 6,
+        "minimum_original_RenderTexture_cosine": 0.9999999999995668
+      },
+      {
+        "precision": "float16",
+        "text_vectors": 15,
+        "text_roles": [
+          "document",
+          "query",
+          "raw"
+        ],
+        "minimum_original_text_cosine": 0.9999999999996896,
+        "RenderTexture_vectors": 6,
+        "minimum_original_RenderTexture_cosine": 0.9999999999996096
+      }
+    ]
+  },
+  "media_Player": {
+    "fp32": {
+      "independent_process_pair_accepted": true,
+      "results": {
+        "cold": {
+          "base_vectors": 36,
+          "warm_vectors": 45,
+          "mixed_documents": 18,
+          "queries": 4,
+          "rank_and_score_pairs": 72,
+          "minimum_original_reference_cosine": 0.9999997097690786,
+          "maximum_original_reference_score_error": 3.618546470307571e-05,
+          "descriptor_reads": 6,
+          "transferred_model_objects": 820
+        },
+        "warm": {
+          "base_vectors": 36,
+          "warm_vectors": 45,
+          "mixed_documents": 18,
+          "queries": 4,
+          "rank_and_score_pairs": 72,
+          "minimum_original_reference_cosine": 0.9999997097690786,
+          "maximum_original_reference_score_error": 3.618546470307571e-05,
+          "descriptor_reads": 6,
+          "transferred_model_objects": 0
+        }
+      },
+      "qualification_sha256": "764502883b2c8f12a4b032b08a1ae1f573a43320e5c7d5c71643dfadff111128"
+    },
+    "float16": {
+      "independent_process_pair_accepted": true,
+      "results": {
+        "cold": {
+          "base_vectors": 36,
+          "warm_vectors": 45,
+          "mixed_documents": 18,
+          "queries": 4,
+          "rank_and_score_pairs": 72,
+          "minimum_original_reference_cosine": 0.9999899845296644,
+          "maximum_original_reference_score_error": 0.00011192775005852695,
+          "descriptor_reads": 6,
+          "transferred_model_objects": 820
+        },
+        "warm": {
+          "base_vectors": 36,
+          "warm_vectors": 45,
+          "mixed_documents": 18,
+          "queries": 4,
+          "rank_and_score_pairs": 72,
+          "minimum_original_reference_cosine": 0.9999899845296644,
+          "maximum_original_reference_score_error": 0.00011192775005852695,
+          "descriptor_reads": 6,
+          "transferred_model_objects": 0
+        }
+      },
+      "qualification_sha256": "423e24d2b81f23a63c18606e3d113f75c65f8033a0bc92c11d23eeb6eaa4d3db"
+    }
+  },
+  "RenderTexture_Player": {
+    "fp32": {
+      "result": {
+        "actual_RenderTexture_calls": 51,
+        "base_vectors": 18,
+        "warm_vectors": 27,
+        "mixed_documents": 18,
+        "queries": 4,
+        "rank_and_score_pairs": 72,
+        "minimum_original_reference_cosine": 0.9999998052055028,
+        "maximum_original_reference_score_error": 3.618546470307571e-05
+      },
+      "audio_inference_in_this_RT_process": false,
+      "companion_actual_audio_independently_accepted": true
+    },
+    "float16": {
+      "result": {
+        "actual_RenderTexture_calls": 51,
+        "base_vectors": 18,
+        "warm_vectors": 27,
+        "mixed_documents": 18,
+        "queries": 4,
+        "rank_and_score_pairs": 72,
+        "minimum_original_reference_cosine": 0.9999984475688108,
+        "maximum_original_reference_score_error": 0.00011192775005852695
+      },
+      "audio_inference_in_this_RT_process": false,
+      "companion_actual_audio_independently_accepted": true
+    }
+  },
+  "text_Player": {
+    "processes": 2,
+    "conditions_per_process": 4,
+    "precisions": [
+      "fp32",
+      "float16"
+    ],
+    "backends": [
+      "CPU",
+      "GPUCompute"
+    ],
+    "CPU_conditions_diagnostic_only": true,
+    "cases_per_condition": 15,
+    "documents": 6,
+    "queries": 4,
+    "token_rows": 25,
+    "raw_vectors_independently_recomputed": false,
+    "saved_query_ranks_and_scores_independently_checked": true,
+    "direct_Worker_assignment_inspection_in_this_text_matrix": false,
+    "matching_text_models_Worker_audited_in_mixed_matrix": true
+  },
+  "Required_CI": {
+    "run": 39449596052,
+    "url": "https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39449596052",
+    "jobs": 15,
+    "archives": 13,
+    "actual_execution_source": "498eb1594acaa90163f7245cf4e47df248cb14ae",
+    "same_full_tree_as_tag": true,
+    "CPU_values_compared": 30822400,
+    "CPU_captures": 120,
+    "tolerance_failures": 0,
+    "GPU_evidence": false
+  },
+  "model_acquisition": {
+    "fp32": {
+      "descriptor_sha256": "40aefa5de06f575d31b7582c24314c1ab035da374116b3ce3036de0e919cd647",
+      "objects": 820,
+      "client_source": "53c58cd7a4158ff647c723d819038a27cf276c9a",
+      "original_cold_acquisition_source": "0104401bbbcdd69e931716bdde407f7aac97d792",
+      "final_client_cold_execution_claimed": false,
+      "legal_files": [
+        {
+          "file": "LICENSE.txt",
+          "bytes": 11358,
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        },
+        {
+          "file": "MODIFICATIONS.txt",
+          "bytes": 509,
+          "sha256": "ccf33e65671c6633cad5ff44fdcd2585be5d25ab0ab50f34127bde8a7fc7fd79"
+        },
+        {
+          "file": "NOTICE.txt",
+          "bytes": 988,
+          "sha256": "e288fe05219a8c3b496c1d1d06ae418d3e82f5790a3b5d5fdce353a7ac00db24"
+        }
+      ]
+    },
+    "float16": {
+      "descriptor_sha256": "8a6a90c5f656a00b024553a0412e5c4d32b4d2c9c7c5b3a0c2c146f557b4e27e",
+      "objects": 820,
+      "client_source": "53c58cd7a4158ff647c723d819038a27cf276c9a",
+      "original_cold_acquisition_source": "0104401bbbcdd69e931716bdde407f7aac97d792",
+      "final_client_cold_execution_claimed": false,
+      "legal_files": [
+        {
+          "file": "LICENSE.txt",
+          "bytes": 11358,
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        },
+        {
+          "file": "MODIFICATIONS.txt",
+          "bytes": 583,
+          "sha256": "c4e8a7e825bcfd2540709f30f54053ff75df145ff53c1046e61467d46b0960e4"
+        },
+        {
+          "file": "NOTICE.txt",
+          "bytes": 988,
+          "sha256": "e288fe05219a8c3b496c1d1d06ae418d3e82f5790a3b5d5fdce353a7ac00db24"
+        }
+      ]
+    }
+  },
+  "unchanged_gates": {
+    "FP32_min_cosine": 0.999,
+    "float16_min_cosine": 0.99,
+    "search_absolute_score_error": 0.001,
+    "original_encoder_elementwise_tolerances_preserved": true
+  },
+  "RT_harness_optional_input_metadata_omission_disclosed": true,
+  "original_28_inputs_and_compiled_pinned_loader_independently_verified": true,
+  "actual_GPU_reports_unchanged": true,
+  "failed_preflight_and_audit_attempts_preserved": true,
+  "guaranteed_peak_or_minimum_hardware": false,
+  "other_platforms_accepted": false,
+  "arbitrary_input_semantic_quality_accepted": false,
+  "old_provider_commit_copies_cleanup_deferred": true,
+  "uploaded_SDK_release_assets": 0,
+  "raw_evidence_publicly_attached": false,
+  "private_acceptance_receipt_sha256": "0deac151f294a7b5649e4edb4434ab0f0dc828824641c16da6bb1c413e402082",
+  "private_release_readback_receipt_sha256": "849458325d426e41ea6dc93fe6229c847713106a051466128ebd8bc35f0015bd"
+}

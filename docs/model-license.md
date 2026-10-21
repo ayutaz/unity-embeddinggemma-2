@@ -19,4 +19,4 @@ FP32 / Float16重みの[実験用モデルpreview](media-model-preparation.md)�
 Player検証のbundleはモデルを含む内部の配置成果物であり、正式Releaseへの添付物ではない。
 モデルを含むPlayer等を後で配布する場合は、Apache-2.0の条文、著作権・帰属表示、変更の表示を配布物に対応させて確認する。コードのLICENSEだけでモデルの帰属表示を済ませない。
 
-この確認は正式公開前の準備の一部です。Windows Playerの固定sourceでの機能検証と、未完了の必須他環境・性能・最終tag導入・正式Releaseを分け、[リリース計画](release-plan.md)の条件で判定します。
+このライセンス照合は2026-10-20時点の記録です。その後のWindows版v0.1.0の公開tag導入・実Editor / Playerと正式公開は[検証状況](status.md)にまとめています。他OS・未検証機器は今後の対象で、Windows版の未達条件には戻しません。[今後の計画](roadmap.md)を参照してください。

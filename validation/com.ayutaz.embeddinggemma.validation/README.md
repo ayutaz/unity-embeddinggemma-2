@@ -1,8 +1,8 @@
 # Opt-in real-weight validation
 
-Updated 2026-10-14. This development-only package is separate from the runtime UPM package and weights-free contract tests. Pin runtime and validation to the same immutable Git SHA, add validation via `?path=/validation/com.ayutaz.embeddinggemma.validation#SHA`, and put both packages in `testables`. The runtime package never depends on this package. No weights or generated model files are included.
+Updated 2026-10-21. Windows SDK v0.1.0 has completed fresh-tag Editor / Player acceptance; see [current status](../../docs/status.md). The numerical diagnostic notes below retain their original 2026-10-14 execution scope. This development-only package is separate from the runtime UPM package and weights-free contract tests. Pin runtime and validation to the same immutable Git SHA, add validation via `?path=/validation/com.ayutaz.embeddinggemma.validation#SHA`, and put both packages in `testables`. The runtime package never depends on this package. No weights or generated model files are included.
 
-## Current entry points and execution scope
+## Fixture entry points and historical execution scope
 
 | Fixture | Scope | Backend policy |
 | --- | --- | --- |
@@ -13,7 +13,7 @@ Updated 2026-10-14. This development-only package is separate from the runtime U
 
 The compensated fixtures reject a CPU backend and unavailable compute shaders, verify output GPU residency, and reject CPU computation fallback / readback flush. Reports declare `execution_backend=GPUCompute` and `cpu_validated=false`. Their GPU-only changes compiled in fixed consumer `b796e504367fb9165a4992ff036a205fb2e7d429`; the profiling fixture passed both tiny / real image tests with no skips and process exit 0. This does not rerun every compensated numeric condition. Other historical fixtures still contain CPU cases; do not run this entire assembly as a GPU-only workload.
 
-The user authorized plan steps 1 and 2. GPU phase measurements passed and the subsequent real Python ONNX SiLU validation executed all six original signals across both profiles, with all six failing the unchanged tolerance. No step 3 numerical fix or full-chain acceptance was performed. The historical interrupted vision run and previous 12 failed CPU/GPU audio conditions remain separate evidence. See the [new measurements](../../docs/gpu-execution-and-silu-validation.md), [status](../../docs/status.md), [plan](../../docs/multimodal-tdd-plan.md), and [ledger](../../docs/steps-1-3-acceptance.md).
+The user authorized plan steps 1 and 2. GPU phase measurements passed and the subsequent real Python ONNX SiLU validation executed all six original signals across both profiles, with all six failing the unchanged tolerance. No step 3 numerical fix or full-chain acceptance was performed. The historical interrupted vision run and previous 12 failed CPU/GPU audio conditions remain separate evidence. See the [new measurements](../../docs/gpu-execution-and-silu-validation.md), [status](../../docs/status.md), [plan](../../docs/roadmap.md), and [ledger](../../docs/steps-1-3-acceptance.md).
 
 ## Artifacts and load cost
 

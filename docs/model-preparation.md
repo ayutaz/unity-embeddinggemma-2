@@ -1,8 +1,8 @@
 # 検索サンプル用モデルの取得・変換・配置・更新
 
-更新: 2026-10-20。[検証状況](status.md) / [ロードマップ](roadmap.md)。テキスト単体の変換手順と、変換済み全6 moduleの公開preview取得を分けて説明します。
+更新: 2026-10-21。[検証状況](status.md) / [ロードマップ](roadmap.md)。テキスト単体の変換手順と、変換済み全6 moduleの公開preview取得を分けて説明します。
 
-## 何を準備できるか（2026-10-20）
+## 何を準備できるか
 
 | 利用する機能 | 必要なもの | 準備経路 |
 | --- | --- | --- |
@@ -13,11 +13,11 @@
 
 ### 画像・音声bundleについて
 
-画像・音声の全6 module bundleは、[公開モデルpreviewと取得手順](media-model-preparation.md)で提供しています。両精度の匿名空cache取得・hash照合・GPU実行の証拠は同手順に記録しています。以下のtext向け準備メニューだけで画像・音声moduleは作れません。Windows機能検証の工程1〜3は完了し、性能・最低要件・新tag導入・正式SDK Releaseは別の未完了条件です。他環境の実機受け入れはWindows公開後に分けます。
+画像・音声の全6 module bundleは、[公開モデルpreviewと取得手順](media-model-preparation.md)で提供しています。両精度の匿名空cache取得・hash照合・GPU実行の証拠は同手順に記録しています。以下のtext向け準備メニューだけで画像・音声moduleは作れません。[Windows v0.1.0の公開tag導入・実Editor / Playerと正式公開](status.md)は完了しています。他環境の実機、未検証機器と物理的最低容量の探索は別の工程です。
 
 既存のqualified graph入力を持つmaintainer向けの生成entry point・環境変数・producer制約は[サンプル検証記録のモデル準備](multimodal-search-sample.md)を参照してください。その手順は既存cacheが前提で、空checkoutからの変換コマンドではありません。準備後はbundleのproducer、全objectのsize・SHA256を照合し、実推論を別途検証します。
 
-previewの取得・hash照合を終えたら、[サンプル手順](../Packages/com.ayutaz.embeddinggemma/Samples~/MultimodalSearch/README.md)へ進めます。固定profileに対応した入力が必要です。previewを取得する経路と、元checkpointから同じモデルを再変換する経路は別です。性能・最低要件・新tag導入・正式公開の残件は[現在の実行計画](next-release-plan.md)を参照してください。
+previewの取得・hash照合を終えたら、[サンプル手順](../Packages/com.ayutaz.embeddinggemma/Samples~/MultimodalSearch/README.md)へ進めます。固定profileに対応した入力が必要です。previewを取得する経路と、元checkpointから同じモデルを再変換する経路は別です。Windows版の実測と対応構成は[検証状況](status.md)、次の作業は[今後の計画](roadmap.md)を参照してください。
 
 ### テキストモデルの準備
 

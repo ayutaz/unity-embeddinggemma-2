@@ -4,7 +4,7 @@
 
 確認日: 2026-10-10。実装開始の基準mainはPR #25後の `b1a8c67c62066bfa5e1830a947563ace3dff9fa5`。その後PR #27の文書更新main `c3281cd`を取り込んだ。Runtime / sample / GUID / manifestは不変で、統合後CI run 38025309104は全8 job成功。
 source `751c30a0b7216b4fe090e989118e570e06b10775`の実APK build・SDK署名検証・完全payload監査は成功した。インストール・実機CPU / GPUは未実行。
-[実APK結果](results/m2-android-apk-build-20261010.json)、[準備時点の履歴](results/m2-android-preparation-20261010.json)、[4段階の計画](m2-release-plan.md)を参照。
+[実APK結果](results/m2-android-apk-build-20261010.json)、[準備時点の履歴](results/m2-android-preparation-20261010.json)、[今後の計画](roadmap.md)を参照。
 
 ## 実装
 

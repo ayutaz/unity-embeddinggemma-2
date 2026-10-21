@@ -1,4 +1,6 @@
-# 工程1〜3の作業基準と受け入れ
+# 工程1〜3の作業基準と受け入れ（過去の検証記録）
+
+> このledgerは当時の数値診断・失敗・未実行の記録です。現在のWindows正式版の状態は[検証状況](status.md)、次の作業は[ロードマップ](roadmap.md)を参照してください。以下の再開順・停止条件を現在の作業計画として使用しません。
 
 > **2026-10-17 完了**：PR #31のmain追従・Windows text Player再検証・画像音声検索sampleの3手順は、PR #31 / #83のマージ、最終CI15 job、実GPU・PlayMode・505件回帰で完了しました。[検証状況](status.md) / [固定証拠](multimodal-search-sample.md)。以下は元計画の診断履歴です。元計画の工程番号と、今回完了した3手順を混同しないでください。
 
@@ -214,4 +216,4 @@ Git `02413f7…` の音声run `38560553234` と画像run `38560640093` は、PNG
 
 [標準ONNX SiLU修正](results/native-silu-division-order-green-20261014.json)はmarkerを `Neg→Exp→Add→Div` へ置換し、FP32除算順序の小さい反例を3 red→3 green、関連37 greenへした。準備回帰は旧Swish検査の失敗を標準4演算の検査へ更新し4 green。実モデルは未実行で、元silence不合格の修正完了とは言えない。
 
-再開順は[全体計画R0〜R5](multimodal-tdd-plan.md)。最新compileと小さいGPU確認、既存SiLU修正のActions全信号照合、一つのGPU失敗経路の最小修正、全profile / 全信号、実全chain、sample / 必須環境 / 配布準備の順に進む。段階別負荷と5分の外部上限を再開時に設定・確認し、未変更の全suite反復や新しい大規模補償候補の同時展開を避ける。工程2・3は未完了。
+再開順は[今後の計画](roadmap.md)。最新compileと小さいGPU確認、既存SiLU修正のActions全信号照合、一つのGPU失敗経路の最小修正、全profile / 全信号、実全chain、sample / 必須環境 / 配布準備の順に進む。段階別負荷と5分の外部上限を再開時に設定・確認し、未変更の全suite反復や新しい大規模補償候補の同時展開を避ける。工程2・3は未完了。

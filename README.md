@@ -1,86 +1,57 @@
 # EmbeddingGemma 2 for Unity
 
-Unity Sentisで、テキスト・画像・音声を共通の768次元ベクトルへ変換するライブラリです。日本語・英語のテキスト検索や、文章で画像・音声を探す検索機能をUnityに組み込めます。
+Unityでテキスト・画像・音声の意味検索を行うためのライブラリです。Unity Sentisで各入力を共通の768次元ベクトルに変換し、日本語・英語で文書や画像、音声を検索できます。
 
-モデル推論にはSentisを使い、追加のネイティブ推論プラグインは不要です。画像・音声はGPUで前処理から推論まで実行します。トークナイズ・ファイルの読み込みとデコード・PCMの取得はCPU側で行い、最終ベクトルはCPU配列として返します。
-
-**Windows向け `0.1.0`。** モデルは別途準備が必要です。公開状況は[GitHub Releases](https://github.com/ayutaz/unity-embeddinggemma-2/releases)、source別の受け入れと公開条件は[実行計画](docs/next-release-plan.md)を参照してください。macOS・iOS・Androidは今後の対応で、未検証です。
-
-[導入・API](Packages/com.ayutaz.embeddinggemma/Documentation~/index.md) · [モデル準備](docs/model-preparation.md) · [現在の対応範囲](docs/status.md) · [ロードマップ](docs/roadmap.md) · [ドキュメント一覧](docs/README.md)
-
-Windows候補の機能検証（工程1〜3）の[2026-10-20時点の確認記録と適用範囲](docs/results/windows-first-stages-1-to-3-20261020.json)では、Editorの実モデルと、同一SDK実装の既存Player結果をsource別に確認しています。[GPU計測](docs/windows-media-memory-results.md)・[画像CPU比較](docs/image-CPU-fixed-conditions.md)・[音声CPU比較](docs/native-audio-CPU-results.md)と[初回対応構成](docs/windows-supported-configuration.md)も参照してください。正式tagでの導入・Editor / Player実行と公開の最終結果は、該当するGitHub Release notesで確認してください。
+**[Windows版 v0.1.0](https://github.com/ayutaz/unity-embeddinggemma-2/releases/tag/v0.1.0) 公開中。** モデルは別途取得が必要です。
 
 ## できること
 
-| 入力 | API・サンプル | 主な用途 |
-| --- | --- | --- |
-| テキスト | `TextEmbedder` / **Text Search** | 文書の意味検索、日本語・英語の検索 |
-| 画像 | `ImageEmbedder.EmbedAsync` / **Image and Audio Search** | Texture・RenderTextureの埋め込み、文章で画像を検索 |
-| 音声 | `AudioEmbedder.EmbedAsync` / **Image and Audio Search** | mono PCMの埋め込み、文章で音声を検索 |
+- **テキスト検索** — 文書を登録し、意味の近い文章を検索。
+- **画像検索** — Texture・RenderTextureからベクトルを生成し、文章で画像を検索。
+- **音声検索** — mono PCM音声からベクトルを生成し、文章で音声を検索。
 
-画像・音声のベクトルは同じ索引へ登録できます。サンプルはcosine類似度による全件比較を使います。
+推論はSentisのGPUComputeを使用します。追加のネイティブ推論プラグインは不要です。
 
+## 対応環境
 
+- **Windows Editor / Player**、Unity **6000.3.21f1**、Sentis **2.6.1**。
+- 実GPU検証環境：Direct3D 12 / NVIDIA RTX 4070 Ti SUPER。
+- FP32 / Float16重みのモデルに対応。
 
-## 動作環境
-
-| 項目 | 現在の基準 |
-| --- | --- |
-| Unity | **6000.3.21f1**（リポジトリの検証プロジェクト） |
-| 推論 | Sentis / `com.unity.ai.inference` **2.6.1** |
-| 実行依存 | Unity提供Newtonsoft JSON **3.2.2** |
-| 実GPU検証 | Windows / Direct3D 12 / RTX 4070 Ti SUPER |
-| モデル準備・開発 | Python **3.13以上**、[uv](https://docs.astral.sh/uv/)、GitHub CLI |
-
-UPMの宣言上の最小版は6000.3.16f1です。これは対応する全Unity版・GPUの検証を意味しません。Python・uloop・URPは、利用側のRuntime依存ではありません。
+macOS・iOS・Androidは未対応です。画像・音声には固定入力サイズ・長さの制約があり、GPU非対応時のCPUへの自動切り替えはありません。モデルは大きく、他のGPUでの最低要件は未確定です。[対応構成と制限](docs/windows-supported-configuration.md)を確認してください。
 
 ## 導入
 
-1. Unityの **Window → Package Manager** を開き、**Add package from git URL** を選びます。
-2. 正式tag `v0.1.0`の公開後、次のURLを入力します。公開前は導入pinとして使わず、GitHub Releasesで正式公開を確認してください。
+1. Unityの **Window → Package Manager → Add package from git URL** を開き、次のURLを入力します。
 
    ```text
    https://github.com/ayutaz/unity-embeddinggemma-2.git?path=/Packages/com.ayutaz.embeddinggemma#v0.1.0
    ```
 
-3. モデルを準備します。**パッケージを追加しただけでは推論できません。** Text Searchは[テキストモデルの取得・変換手順](docs/model-preparation.md)を、Image and Audio Searchは[全6 moduleのモデルpreview取得手順](docs/media-model-preparation.md)を使います。
-4. Package ManagerのSamplesから目的のサンプルをImportします。
+2. モデルを準備します。**パッケージにモデル重みは含まれません。**
+   - テキストのみ：[テキストモデルの準備](docs/model-preparation.md)
+   - 画像・音声も使う：[変換済みモデルbundleの取得](docs/media-model-preparation.md)
+3. Package Managerの **Samples** からサンプルをImportし、各手順に従ってモデルを指定します。
 
-Package Managerでは現在 **EmbeddingGemma** と表示されます。このパッケージにテキスト・画像・音声のAPIと両サンプルを含みます。
+## サンプル
 
-| サンプル | 始め方 |
-| --- | --- |
-| **Text Search** | [手順](Packages/com.ayutaz.embeddinggemma/Samples~/TextSearch/README.md)に従い、モデルとtokenizerを指定して`TextSearch.unity`を再生します。まずこちらから試してください。 |
-| **Image and Audio Search** | [手順](Packages/com.ayutaz.embeddinggemma/Samples~/MultimodalSearch/README.md)に従い、監査済みのモデルbundleを指定して`MultimodalSearch.unity`を再生します。 |
+まずは **Text Search** から試してください。
 
-画像・音声・テキストを含む全6 moduleの変換済みbundleは、FP32 / Float16重みの[実験用モデルpreview](docs/media-model-preparation.md)から取得できます。固定descriptorのSHA256と全objectのhashを照合し、LICENSE・NOTICE・MODIFICATIONSも保持してください。空cacheからの匿名取得・中断復帰・破損修復とWindows GPU実行は[固定sourceで確認済み](docs/results/public-model-consumer-8649c94-20261018.json)です。元checkpointからの再変換、全環境の受け入れ、正式SDK Releaseとは別の経路・条件です。
+| サンプル | 内容 | 開くシーン |
+| --- | --- | --- |
+| [Text Search](Packages/com.ayutaz.embeddinggemma/Samples~/TextSearch/README.md) | 日本語・英語の文書検索 | `TextSearch.unity` |
+| [Image and Audio Search](Packages/com.ayutaz.embeddinggemma/Samples~/MultimodalSearch/README.md) | 画像・音声の登録とテキストによる検索 | `MultimodalSearch.unity` |
 
-既存プロジェクトにAPIを組み込む場合は、[C#の使用例とリソース管理](Packages/com.ayutaz.embeddinggemma/Documentation~/index.md)を参照してください。
+## ドキュメント
 
-## 現在の制約
+- [C# API・使用例](Packages/com.ayutaz.embeddinggemma/Documentation~/index.md)
+- [検証状況](docs/status.md)・[今後の計画](docs/roadmap.md)
+- [ドキュメント一覧](docs/README.md)
 
-- 画像・音声は固定profileを使用します。サンプルの対応寸法・音声長・形式は[入力仕様](Packages/com.ayutaz.embeddinggemma/Samples~/MultimodalSearch/README.md)を参照してください。任意の画像・音声長への対応は保証しません。
-- GPU非対応時にCPUへ自動切り替えはしません。テキストAPIには明示的なCPU選択肢もありますが、画像・音声サンプルはGPU専用です。
-- Unityのメインスレッドから使用します。非同期APIでもすべてのロード・処理が別スレッドになるわけではありません。
-- モデルは大きく、メモリと初回ロードの負荷があります。固定検証のホストメモリ測定は[検証状況](docs/status.md)に記載しています。VRAMの必要量や他端末の最低要件は未確定です。
-- Windowsでは固定sourceで実マイク取得・GPU検索、音声再生 / 停止、画像・音声の混在Playerを検証しています。手動操作全体・権限拒否・他OS・モバイル実機は未完了です。実行sourceと確認範囲は[検証状況](docs/status.md)を参照してください。
+## コントリビューション
 
-確認済みの結果と未検証の範囲は[検証状況](docs/status.md)、残作業の順序と完了条件は[ロードマップ](docs/roadmap.md)へまとめています。
-
-## 開発・コントリビューション
-
-不具合報告・改善提案は[Issues](https://github.com/ayutaz/unity-embeddinggemma-2/issues)、変更提案はPull Requestで受け付けます。不具合にはUnity / Sentis版、OS・GPU・graphics API、再現手順とログを添えてください。
-
-Pythonの開発環境とテストは次の手順です。これは実モデル・Unity GPU検証とは別の単体テストです。
-
-```sh
-cd tools
-uv sync --locked
-uv run --locked pytest -q
-```
-
-振る舞いの変更はTDDで進め、重い変換・回帰はGitHub Actionsを優先します。作業ブランチからPRを作成してください。モデルや大きい生成物はコミットしません。詳細は[開発規則](AGENTS.md)・[CI](docs/ci.md)・[自動操作](docs/automation.md)を参照してください。
+不具合報告・改善提案は[Issues](https://github.com/ayutaz/unity-embeddinggemma-2/issues)、変更提案はPull Requestで受け付けます。不具合には環境と再現手順を添えてください。開発時は[開発規則](AGENTS.md)と[CIの手順](docs/ci.md)を参照してください。
 
 ## ライセンス
 
-コードは[Apache License 2.0](LICENSE)です。モデル重みは同梱しません。モデルの取得元・固定revision・利用条件は[モデルのライセンス確認](docs/model-license.md)を参照してください。
+コードは[Apache License 2.0](LICENSE)です。モデルの利用条件は[モデルのライセンス](docs/model-license.md)を参照してください。

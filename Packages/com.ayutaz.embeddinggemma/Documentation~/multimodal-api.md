@@ -6,7 +6,7 @@
 
 画像・音声の最終APIはmainへ統合済みです。各前処理の出力はencoder入力で、最終768次元embeddingとは異なります。
 
-`MultimodalBackboneProfile`と`MultimodalBackbone`は、encoder / projectorが生成した512幅のsoft-token Tensorを共通本体へ渡すAPIです。画像Texture・音声PCMからの前処理やprompt生成を含みません。Windowsの固定sourceで実画像・PCMから最終embeddingまでのGPU検証が合格しています。zero-feature profileの個別受け入れ、画像・音声Player / 他OSは別の検証対象です。
+`MultimodalBackboneProfile`と`MultimodalBackbone`は、encoder / projectorが生成した512幅のsoft-token Tensorを共通本体へ渡すAPIです。画像Texture・音声PCMからの前処理やprompt生成を含みません。Windowsの固定sourceで実画像・PCMから最終embeddingまでのGPU検証が合格しています。Windows版v0.1.0では画像・音声のWindows Playerも固定profileで受け入れ済みです。zero-feature profileの個別受け入れと他OSは別の検証対象です。
 
 profileの長さ・placeholder ID・feature数・vocabulary / pad IDは、監査済みモデルと公式processorの参照から設定します。対応する保存graphは4入力の名前・型・static shapeが一致する必要があります。
 
@@ -44,7 +44,7 @@ using var prepared = preprocessor.Process(texture);
 
 batch 1、8bit RGB / RGBAのTexture2D・作成済みsingle-sample 2D RenderTextureに対応します。各辺1〜8192px、sRGB / linearの保存値をRGB入力として扱い、alphaを無視します。浮動小数・HDR・圧縮formatは明示拒否します。公式bicubic antialiasのresize・丸め、16px patch・最大2520 patchesへのzero paddingをGPUで実行し、中間pixelをCPUへdownloadしません。
 
-入力Textureはcallerが所有します。結果は出力・作業Tensor / 補間bufferを所有し、processorの再利用・Dispose後も独立して生存します。次段GPU処理が完了するまで結果を保持し、その後Disposeしてください。Unity main threadのみ。Windows候補ではTexture / RenderTextureの全roleを両重み形式で実Editor検証し、同一SDK実装の既存Player結果を照合しています。性能・最低要件・新tag導入・正式公開と他環境の受け入れは[検証状況](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)に分けて記録しています。
+入力Textureはcallerが所有します。結果は出力・作業Tensor / 補間bufferを所有し、processorの再利用・Dispose後も独立して生存します。次段GPU処理が完了するまで結果を保持し、その後Disposeしてください。Unity main threadのみ。公開版v0.1.0ではTexture / RenderTextureの固定条件を両重み形式の実Editor / Windows Playerで確認しています。EditorとPlayerでは確認したshapeの範囲が異なります。具体的な範囲・性能・対応機器と他環境の未検証項目は[検証状況](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)を参照してください。
 
 ## PCM入力境界
 

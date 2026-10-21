@@ -4,13 +4,13 @@
 
 ## 2026-10-14の追加状況
 
-2026-10-15の最新GPU証拠は[元通常5ケース](results/m4-scalar-moment-fma-full-profile-gpu-20261015.json)と[元padded_noise / adapter](results/m4-padded-audio-and-gpu-encoder-adapter-20261015.json)。固定sourceで元6ケース / 2 profileの許容差超過0、実GPUCompute・計算/入力CPU fallback0・中間flush0、fail0 / skip0。元golden / 学習済み係数 / 許容差を保持した。最新headでの全件再実行、CPU合格、実PCM→768 API全条件・sample / Player合格へは拡張しない。詳しくは[M4現在計画](m4-plan.md)。以下は旧候補の履歴。
+2026-10-15の最新GPU証拠は[元通常5ケース](results/m4-scalar-moment-fma-full-profile-gpu-20261015.json)と[元padded_noise / adapter](results/m4-padded-audio-and-gpu-encoder-adapter-20261015.json)。固定sourceで元6ケース / 2 profileの許容差超過0、実GPUCompute・計算/入力CPU fallback0・中間flush0、fail0 / skip0。元golden / 学習済み係数 / 許容差を保持した。最新headでの全件再実行、CPU合格、実PCM→768 API全条件・sample / Player合格へは拡張しない。詳しくは[M4現在計画](m4-audio-embedder-validation.md)。以下は旧候補の履歴。
 
 最新のnorm1 / dynamic16候補も元12数値条件すべて不合格。[追加receipt](results/m4-norm1-dynamic16-full-encoder-failed-20261014.json)。標準ONNX SiLU順序修正の実モデルは未検証。
 
 ## 当時の実測・実装記録
 
-更新日: 2026-10-13。[M4計画](m4-plan.md)のA1 / A4を進める。**この出力は共通本体へ渡す512次元soft tokenであり、最終768次元embeddingではない**。Sentis実CPU / GPU、共通本体・検索 / 再生 / マイク、各実機は未検証。正式リリースは作らない。
+更新日: 2026-10-13。当時のA1 / A4（音声encoder）の実装を進める。**この出力は共通本体へ渡す512次元soft tokenであり、最終768次元embeddingではない**。Sentis実CPU / GPU、共通本体・検索 / 再生 / マイク、各実機は未検証。正式リリースは作らない。
 
 ## 実装とTDD
 

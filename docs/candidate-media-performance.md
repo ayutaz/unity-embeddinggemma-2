@@ -1,6 +1,8 @@
 # Repeated-input performance for the reviewed distribution
 
-Current checkpoint (2026-10-20): Windows functional stages 1–3 are accepted within the [source-qualified record](results/windows-first-stages-1-to-3-20261020.json). Performance remains stage 4 of the [current release plan](next-release-plan.md). The [four-condition audio GPU result](results/audio-gpu-repeat-four-conditions-20261020.json) covers 16 calls; its partial memory sampling does not establish a guaranteed peak, matched CPU speedup or minimum hardware. The contract and earlier execution notes below retain their own sources and scopes.
+Windows v0.1.0 is published. See [current status](status.md) and the [measured Windows performance and memory scope](windows-media-memory-results.md). The checkpoints below describe their recorded sources; they are not the current release task list.
+
+Historical checkpoint (2026-10-20): Windows functional stages 1–3 are accepted within the [source-qualified record](results/windows-first-stages-1-to-3-20261020.json). Performance was the next release stage at that checkpoint. The [four-condition audio GPU result](results/audio-gpu-repeat-four-conditions-20261020.json) covers 16 calls; its partial memory sampling does not establish a guaranteed peak, matched CPU speedup or minimum hardware. The contract and earlier execution notes below retain their own sources and scopes.
 
 The [persistent Windows allocation observer](windows-gpu-memory-observation.md)
 adds a read-only native PDH query with process-lifetime and clock checks. Its

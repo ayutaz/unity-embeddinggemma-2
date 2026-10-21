@@ -1,52 +1,42 @@
 # プロジェクトのゴール
 
-更新: 2026-10-20。ユーザーの方針により、最初の正式リリースはWindows Editor / Playerを対象とします。macOS / iOS / Androidは今後の対応とし、未検証の結果を合格に読み替えません。実際の対応範囲は[検証状況](status.md)、作業順と残件は[実行計画](next-release-plan.md)を参照してください。
+更新: **2026-10-21**。最初のWindows正式版 **[v0.1.0は公開済み](https://github.com/ayutaz/unity-embeddinggemma-2/releases/tag/v0.1.0)** です。
+実際の受け入れ範囲は[検証状況](status.md)、今後の作業は[ロードマップ](roadmap.md)を参照してください。
 
 ## 目指すもの
 
-**Unity Sentisで、テキスト・画像・音声の埋め込みをGPU上で作り、モダリティをまたいだ検索を利用できるようにする。**
+Unity Sentisだけでテキスト・画像・音声をGPU上で共通の正規化768次元vectorへ変換し、モダリティをまたぐ検索を提供します。
+追加のllama.cpp・ONNX Runtime・LiteRT等のネイティブ推論プラグインはRuntimeへ導入しません。
+Texture / RenderTexture・PCMの前処理、encoder、共通backboneをGPUでつなぎ、中間tensorのCPU readback・計算fallbackを禁止します。
 
-1. **Sentisで推論する**：追加のllama.cpp・ONNX Runtime・LiteRT等のネイティブ推論プラグインを使わない。Runtimeの直接依存を明示する。
-2. **3種類の入力を同じ空間へ変換する**：画像・音声encoderの特徴量を共通backboneへ渡し、正規化された768次元vectorを返す。text→text / image / audioの検索と混在索引を提供する。
-3. **GPU上で前処理と推論をつなぐ**：Texture / RenderTextureの画像変換、PCMからの音声特徴量生成、encoder・backboneをGPUで実行する。中間tensorのCPU readback・計算fallbackを禁止する。
+tokenize、ファイルdecode、PCM取得 / uploadはCPU側の入力境界、最終768次元配列の取得は出力境界です。
+GPU非対応時のCPUへの自動切替はしません。テキストAPIの明示的CPU条件・Python参照のCPU実行を、製品のGPU受け入れと分けます。
 
-テキストtokenize、ファイルdecode・音声取得 / uploadはCPU側の入力境界、最終768次元配列のCPU取得は出力境界として認め、転送を記録します。GPU非対応をCPUで代替して合格にはしません。
-
-## 達成基準
+## 維持する条件
 
 | 項目 | 基準 |
 | --- | --- |
-| FP32最終vector | 有限768次元・単位長、固定Python参照とのcosine >= 0.999 |
-| 採用Float16重み形式 | 同じ条件でcosine >= 0.99。全演算FP16化や高速化を自動的に保証しない |
-| encoder・中間値 | 固定参照と元の要素別許容差で照合。後から期待値・許容差を失敗へ合わせない |
-| 横断検索 | 固定queryと文書・画像・音声の全順位・score、混在索引・同点処理を照合 |
-| GPU | actual backendとfallback・readbackを実GPUで監査。skip・tiny graph・import成功・Python CIだけでは合格にしない |
-| 導入・運用 | 空consumerの固定Git導入、モデル準備、sample操作、切替・キャンセル・解放・回復を再現 |
-| 初回正式リリースの必須環境 | Windows Editor / Player。CPU比較と実GPU受け入れを分離。macOS Editor、iOS / Android Player実機は今後別途受け入れ |
-| 性能 | 同一source・モデル・仕事量で初回 / warm・各stage・メモリ・正常終了を測定。最低要件は実測から決める |
+| 最終vector | 有限768次元・単位長。固定元参照に対しFP32 cosine >= 0.999、Float16重み >= 0.99 |
+| encoder・中間値 | 固定model revision・元参照・元の要素別許容差を維持。失敗へ合わせた期待値変更をしない |
+| 入力と検索 | document / query / raw、対応する全固定profile、混在索引の全順位・scoreと同点処理を確認 |
+| 実GPU | actual backend・計算fallback・中間readbackを監査。import、tiny graph、skip、Python CIを実モデルGPUの合格にしない |
+| 導入と寿命 | 空consumerの固定tag導入、モデルのsize / hash・法的表示、キャンセル・回復・切替・解放・正常終了を確認 |
+| 性能と機器 | source・モデル・仕事量・機器を固定し、測定範囲と欠測を明示。観測peakや検証構成を物理的最低容量へ読み替えない |
+| 配布とprivacy | SDKコードとモデルを分離し、モデル重み・大きい生成物をGit / LFSへ入れない。送信履歴・実payload・identity・画像を監査 |
 
-参照は固定revisionのtransformers / sentence-transformers実装に合わせます。prompt、512→768 projection、pooling、L2正規化、次元・mask・feature配置を揃えます。固定入力の一致と任意入力の意味検索品質は別の評価です。
+## 到達点と次の段階
 
-## 成果物と到達点
+Windows Editor / Playerでは、UPM・検索sample、text・image・audioの両形式、固定tag導入と正式公開まで受け入れました。
+対応構成・数値・検証の限界は[正式版の確認記録](results/windows-v010-release-20261021.json)と[対応構成](windows-supported-configuration.md)へまとめています。
+今後はWindows保守、必要な参照比較・性能確認、環境が揃った他platformの受け入れを進めます。
+macOS / iOS / Androidは未対応で、端末・署名・ライセンス不足をWindows公開の待ち条件に戻しません。
 
-| マイルストーン | 現在の到達点 | 続く条件 |
-| --- | --- | --- |
-| M1 テキスト本体 | Windows Editorで推論・保存・量子化・固定入力を受け入れ済み | 環境・profile変更時の再照合 |
-| M2 UPM・検索・検証基盤 | UPM、text sample、固定Git consumer、Windows候補のEditor / Player機能検証はsource別に受け入れ済み | 系統的性能測定・最低要件・新tagの新規導入 |
-| M3 画像 | GPU前処理・元encoder・全role最終API、Texture / RenderTexture・横断検索はWindows候補で受け入れ済み | 性能・最低要件・新tagの導入・正式公開 |
-| M4 音声 | 元encoder・実PCMの全role最終API、async前処理、cache・混在検索・回復をWindows候補で確認。実収録は元source付きで適用 | 性能・最低要件・新tagの導入・正式公開 |
-| 正式公開 | 未実施 | 全必須条件→最終candidate / tag導入→Release |
-
-UPMコード、モデル変換用Python、検索サンプル、環境別の速度・メモリ結果を提供します。モデル重み・生成model・大きい検証artifactはGit / LFSに含めず、取得・変換手順を提供します。リポジトリのpublic公開と正式リリースを区別します。
-
-Windowsの正式公開後にmacOS / iOS / Androidのbuild・実モデルGPU・実機受け入れを進めます。他環境のライセンス・署名・端末不足はWindows先行公開の条件に含めず、対応環境としても表示しません。
-
-2026-10-20の[工程1〜3の確認記録](results/windows-first-stages-1-to-3-20261020.json)は、実Editorと、SDK実行コード一致を確認した既存Playerの結果を区別します。元参照・許容差は維持しています。機能検証の受け入れを、性能・最低要件・新tag導入・正式公開の合格へ読み替えません。
+固定入力の一致と、任意入力の意味検索品質は別の評価です。Float16重みの採用は全演算FP16化や一般的な高速化を保証しません。
 
 ## 対象外
 
-- 動画の埋め込み、モデル学習・fine-tuning、本格的なベクトルDB。
-- ネイティブ推論プラグインを使った代替実装。
-- Web / WebGPUの正式公開必須条件への追加（余力があれば別途検討）。
+- 動画の埋め込み、学習・fine-tuning、本格的なベクトルDB。
+- ネイティブ推論プラグインによる代替実装。
+- Web / WebGPUを現在の正式対応範囲へ追加すること。
 
-開発は[AGENTS.md](../AGENTS.md)に従い、TDD・uv・PR運用を維持します。文書や小さいテストの成功を実モデル・実機の成功として扱いません。
+開発は[AGENTS.md](../AGENTS.md)に従います。過去の固定sourceの結果はそのまま保持し、未実行の機器・sourceへ成功を拡張しません。

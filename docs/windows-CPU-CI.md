@@ -7,7 +7,7 @@ PR #115の実Windows CIで音声2・画像3条件が成功しました。全5 ar
 実行sourceは`0104401`、PR headは`7a33083`で、全tree一致を確認しています。
 [実CIの照合記録](results/windows-CPU-CI-real-readback-20261020.json)、
 [初期TDD記録](results/windows-CPU-CI-TDD-20261020.json)と
-[実行計画](next-release-plan.md)を参照してください。
+[今後の計画](roadmap.md)を参照してください。
 
 ## 音声
 

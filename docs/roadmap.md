@@ -1,165 +1,42 @@
 # ロードマップ
 
-更新: **2026-10-20**。最初の正式リリースはWindows Editor / Playerを対象にします。**#113統合・Windows候補の固定とbuild確認・全入力と横断検索のGPU受け入れ（工程1〜3）は完了**しました。[確認記録](results/windows-first-stages-1-to-3-20261020.json)と[実行計画](next-release-plan.md)を現在の基準として使用してください。次は工程4の性能・最低要件・privacy、その後に工程5の新tag導入・正式公開です。macOS / iOS / AndroidはWindows公開後の対応で、未検証です。
+更新: **2026-10-21**。Windows版 **[v0.1.0は正式公開済み](https://github.com/ayutaz/unity-embeddinggemma-2/releases/tag/v0.1.0)** です。
+新tagの空consumer導入、両重み形式の実Editor / Windows IL2CPP Player、GPU監査、公開後の読み戻しまで完了しました。
+[現状](status.md)と[正式版の確認記録](results/windows-v010-release-20261021.json)を基準にし、公開前の重複計画は廃止します。
 
-## 以前の計画とsource別の記録
+## ここからの優先順
 
-以下の旧sourceの結果や全環境必須の計画は履歴です。現在のWindows最終候補の合格・公開条件へ読み替えません。
-
-更新: **2026-10-18**。履歴整理後のmain `4b5bf72`（PR #85、Runtime改善#88とprivacy guardを含む）を基準とする現在の作業計画です。本文の過去の実行SHAは原本の識別子で、履歴整理後の導入pinとして使わず、sourceとmodel hashを個別に照合します。確認済みの事実は[検証状況](status.md)、変更しない目標は[プロジェクトのゴール](goal.md)を参照してください。
-
-テキスト・画像・音声のGPU API、Windows text Player、画像・音声検索サンプルとcacheは統合済みです。現在はprivacy対応と固定参照の復旧が先です。その後、他の利用者が準備・操作を再現できる状態を作り、そのcandidateで性能と対象環境を検証します。正式リリースは全必須条件の後に行います。
-
-## リリースまでの実行計画
-
-正式リリースの対象は、Sentisによるtext・image・audioのGPU推論と横断検索です。必須環境はWindows Editor / Player、macOS Editor、iOS / Android Player実機です。[ゴール](goal.md)にあるこの範囲を維持し、各工程の未実行・失敗を残件として管理します。現行版は `0.1.0-pre.1`、正式Releaseは未作成です。
-
-| 工程 | 実施内容 | 次へ進む完了条件 |
+| 順序 | 作業 | 開始条件・完了条件 |
 | --- | --- | --- |
-| 1. 基盤復旧・PR整理 | #89・#91をmain `df66a6d`へ統合済み。#86・#87・#90は内容を#91へ取り込んでclose | head 8649c94の全15 CI job・native-dxg、新規consumerと両精度の固定参照PlayModeが合格。正式公開の残件は以下で維持 |
-| 2. 新規利用者の導入再現 | 空checkout / 空cacheから、公開手順でtext・画像3・音声2の全6 moduleを用意。固定Git版を新規consumerへ導入 | 開発者のローカルモデルやLibraryを渡さずに準備・推論できる。切断、破損、期限切れ、revision不一致から復帰し、source / model hashが一致する |
-| 3. 実操作・性能・安定性 | 画像プレビュー、音声再生・途中停止、実マイクの明示開始/停止、日英検索、キャンセル・復帰、切替・解放を最終candidateで確認。遅延と資源残留を計測して必要な修正を行う | 正常系に加え権限拒否、deviceなし、欠落、対応外入力、中断・復帰を確認。初回/warm、load・各stage・release、CPU時間・GPU時間・RAM/VRAMを範囲を明示して記録し、必須の欠測・帰属不明を解消する |
-| 4. WindowsマルチモーダルPlayer | IL2CPP / Release / High strippingでbuildし、text・image・audio、全必要role、横断検索と操作を実GPUで実行 | 元参照のvector・順位・scoreと一致し、fallback/readback監査、独立cold/warm起動、キャンセル・回復・解放、メモリ測定と正常終了がそろう。契約テストだけでは完了にしない |
-| 5. 必須他環境の受け入れ | macOS Editor、iOS / Android実機で3モダリティ・検索・操作・メモリを確認。OS固有の配置、cache、権限、suspend/復帰を修正 | 各端末・OS・graphics API・source / model / 精度を固定した実GPU結果がある。CPU比較を分け、未実行・skip・CPU fallbackをGPU合格に数えない |
-| 6. リリース候補と配布監査 | candidateのsource・モデル・依存を固定。packageの表示名・説明・keywordsを3入力対応の実態に整え、README、API/sample手順、CHANGELOG、利用条件、最低要件、既知の制限を更新。全体回帰と公開内容のprivacy監査 | 空consumerの固定版導入が再現でき、全必須環境の証拠がcandidateに対応する。旧PR/cacheの個人情報対応も結果を再監査。モデルとコードを分離し、画像は元bytesの目視/OCR・hash確認を終える |
-| 7. 正式Releaseと公開後確認 | レビュー可能なRelease本文・版・tag・配布物一覧を準備し、公開依頼に基づきGitHub Releaseを作成。公開された固定tagから導入する | package version、CHANGELOG、tag、Releaseが一致し、公開物の読み戻しと新規consumerでの導入・sampleのsmoke確認が成功する |
-
-**並行して先に行うこと**：Mac・iPhone/iPad・Android端末、Unityのbuild module、Xcode/署名、実GPU・マイクと実操作の検証手段を確認し、担当と実行条件を確定します。端末準備をWindows完了後まで先送りしません。旧PR refs・cacheの削除と元モデル回収に関するSupport対応も追跡します。 現在のWindows環境ではADBは利用可能ですが、接続端末は0台です。repositoryの登録済みself-hosted runnerも0台で、Mac・iOSの利用環境は未確定です。端末の接続・署名・実GPU検証手段の確保を工程5の開始条件として明示します。
-
-**維持する精度と実行条件**：有限・単位長の768次元vector、FP32 cosine >= 0.999、採用Float16形式 >= 0.99、元のencoder要素別許容差、必要なQuery / Document / Raw、固定検索の全順位とscoreを確認します。モデル再検証ではnative full/cutのbit一致と全6信号も維持します。GPU前処理からencoder・backboneをつなぎ、中間CPU計算・readbackで成功扱いにはしません。tokenize・decode・音声取得等の入力境界と最終vector取得は別に記録します。
-
-**時間と実行管理**：固定リリース日は、音声モデル方針と必須端末・署名環境の見通しが立ち、基盤復旧の実測時間を確認した時点で設定します。現時点で日数を確約しません。重い取得・変換・回帰・buildはGitHub Actionsを優先し、実GPU・実機・UIの確認は確保した環境で行います。ローカルUnityを重複起動せず、試行ごとに時間・メモリ上限を定め、同じ巨大モデルの探索・生成を根拠なく繰り返しません。
-
-**実行範囲と条件**：利用者から工程7までの実行依頼を受けています。公開表示名は `yousan` の維持で確定しています。音声モデルは元の数値参照・許容差を保って再検証を進めます。別世代の採用には識別可能な世代名と全受け入れ条件の合格を必要とし、必須条件の省略や原本と異なるモデルの原本扱いは行いません。正式Releaseは工程1〜6の完了後に実施します。
-
-各工程の詳細と既存checkpointは以下に保持します。工程ごとにsource・モデル・精度・環境、合格・失敗・未実行、残件を記録し、最終candidateでの証拠をそろえてから次の完了判定を行います。
-
-[再生成候補の通常経路の比較](results/audio-regeneration-numerical-baseline-summary-20261018.json)では、nativeで2,884要素、未分割ONNXで5,230要素が元の許容差を超え、ONNXの6信号すべてが不合格でした。候補は未採用です。元の参照値を維持し、[別世代候補の5分割数値検証](audio-candidate-qualification.md)を追加しました。関連105テストとworkflow lintは合格しましたが、この小規模確認を実モデル・実GPUの合格には数えません。
-
-[全6信号の数値CI](results/audio-candidate-six-case-numerical-audit-20261018.json)は成功しました。両profile・824,320値で元の許容差超過0、全capture/carryとnative full/cutのbit一致を確認し、[実アップロード全体の独立再監査](results/audio-candidate-six-case-readback-20261018.json)もCI集計と一致しました。新規モデル世代の採用・GPU・consumer・Playerの合格は未実施です。新世代を採用する前のGPU・consumer・Player検証を未統合のcandidateで先行し、その証拠をそろえてから取得経路・最新Required CIを復旧し、PRを順に統合します。元のグラフのbyte同一性やfresh nativeの元参照bit一致を復旧したという扱いにはしません。
-
-## 直近の作業順
-
-### 候補モデルの保存（2026-10-18）
-
-[配布用コピーの保存CI](results/audio-candidate-distribution-ci-readback-20261018.json)は成功しました。optional debug stack traceの除去前後で両profile・全6信号のnative出力がbit一致し、metadata以外のarchive memberも検証しています。保存artifactは90日、元の候補graph・raw入力・JSON計10ファイルはhashを維持した私的な2コピーを確認済みです。[公開ZIP全体の読み戻し](results/audio-candidate-distribution-full-readback-20261018.json)も完了し、ZIP全体・両モデルのSHA256、全CRCと2コピーが一致しました。[元JSON2件とraw入力6件の別保存](results/original-audio-input-preservation-readback-20261018.json)と[新pinからの実取得](results/original-audio-preserved-acquisition-0d13a3d-20261018.json)も成功しています。次は保持できている旧native ONNXの[演算・重みの基準](results/original-native-onnx-computation-identity-20261018.json)と候補の実bytesを比較し、GPU用変換との対応を確認します。必須CI、新世代の採用、最終候補のGPU・consumer・Playerの合格は未実施です。
-
-### 元の数値参照の復旧と次の数値比較（2026-10-18）
-
-#89の公開head `317bae3` の[CIは終了](results/privacy-guard-ci-317bae3-20261018.json)し、Python全4環境・package・workflow lint・model referenceが成功しました。元音声モデル取得の6信号と集計は失敗し、Required CI全体は不合格です。#89・#86・#87は未マージです。
-
-[元の数値参照だけを保存したCI](results/original-audio-golden-ci-readback-20261018.json)は成功しました。実際にアップロードされたZIPのSHA256・CRCと元JSON2件のSHA256を読み戻し、私的な2コピーも照合しました。元モデル2件とGPUの復旧・合格ではありません。
-
-診断workflowの消失した参照取得先を復旧済みの数値原本へ接続し直しました。元JSONのhashと元の許容差を維持し、新たな収集で保存するnative・ONNX出力を元の数値と比較します。前回のbyte復旧runは比較用出力を保持していなかったため、1回の限定実行で必要な証拠を取得します。Required CIの原本モデル条件は変更しません。新たな出力のsource・実行環境・model hashは原本と分け、比較失敗・未実行を合格扱いにしません。
-
-
-### 0. CI・個人情報対応・モデルの再受け入れ
-
-表示名とJUnit出力の修正は公開済みで、`317bae3` のPython全4環境は合格しました。元数値参照のCI保存も完了しています。残る順序は、元の数値参照を使うモデル比較、モデル取得経路の復旧、各PRの最新Required CI、#89 → #86 → #87の統合です。
-
-元モデル2件のbyte復旧は、私的・公開成果物の探索と元のPython tree・依存lockでの再生成とも不成功でした。原本回収はSupportへ照会中です。別世代を検証する場合も元の数値参照・許容差、native full/cutのbit一致、全6信号・全carryのONNX検証と実GPU・consumer・Playerの条件を維持し、合格前に必須条件を置き換えません。
-
-旧PR refs・cache・残るActionsメタデータの個人情報対応は、モデルの数値比較とは別にSupportの結果と照合します。固定参照・モデルは完全なbytesとhashを私的に退避し、元の検証画像を加工・再生成して証拠に置き換えません。大量削除は再開しません。
-
-以降の最終受け入れでは、新規consumerの3入力・検索・操作・速度とメモリ、Windows Release Player、必須他環境を確認します。旧sourceの合格・skip・CPU fallback・契約テストだけで最終実GPU合格にはしません。[過去の統合監査](results/runtime-ready-integration-2a29c68-20261018.json)は当時のcheckpointとして保持します。
-
-Windowsの画像・音声Player検証基盤は私的な統合候補に保持しています。[契約テストと元入力の読み込み65件](results/media-player-contracts-20261018.json)は合格しましたが、最終candidateでの実モデルGPU・Release Player実行は未実施です。[選択したPython 133件とworkflow lint](results/private-final-integration-20261018.json)は当時の固定sourceの確認です。今回の候補モデル用の[105件の契約テスト](results/audio-candidate-contracts-20261018.json)も、実モデルの数値合格や最新headのRequired CIを代替しません。
-
-### 1. 新規利用者のモデル準備
-
-最新componentをまとめた[ツール関連132件のpreview](results/combined-tools-preview-86afcbc-20261018.json)は成功した。これは以前の69/72件とは別の固定sourceで、公開配布元のempty-cache取得・実モデル/GPUの追加合格ではない。[自動化pluginなし新規consumerの実操作](results/fresh-git-native-ui-b519-no-uloop-partial-timeout-20261018.json)は画像登録・参照一致までで900秒上限に達したため、最終の一連操作は未完了のまま維持する。停止済みの同じ試行を成功に読み替えず、公開取得を伴う最終candidateの確認へ対応付ける。
-
-固定参照・現行bundle形式を使い、空checkoutからtext / image / audioの参照・qualified graph取得、変換、bundle生成を再現可能にします。期限切れartifact、欠落・破損・revision違いからの回復も文書化します。
-
-**完了条件**：既存cacheを所有しない第三者が全6 moduleを準備できること。producer / graph / model SHA、全ファイルhash、成功と失敗を記録します。モデルはGit / LFSへ入れません。
-
-モデル取得の追加checkpointとして、PR #86で実FP32 bundle全6 module・820 object・8,583,084,520 bytesの[ローカルHTTPS転送と修復](https://github.com/ayutaz/unity-embeddinggemma-2/blob/e02663d50f539b3fb49674442747a46c85f35450/docs/results/real-local-https-media-recovery-f09317e-20261018.json)を確認した。切断後の818件受信・2件再利用、warmの820件再利用、同サイズ重み破損1件だけの修復、404時の旧descriptor保持と再試行を含む。元と出力の計1,640ファイルを独立に再hashした。sourceは既存ローカルbundleで、公開配布元のempty-cache取得と最終consumerのGPU・操作受け入れは未完了のまま維持する。
-
-取得処理の後続では、[PR #86の排他・強制終了後回収](https://github.com/ayutaz/unity-embeddinggemma-2/blob/ce7e13689f42950937671e0e8436deca61b7d363/docs/results/real-media-crash-recovery-85a2d71-20261018.json)を確認した。実9MiB重みの受信中に所有CLIを終了し、競合拒否、残った一時ファイル回収、1件受信・819件再利用とwarm全820件再利用を確認している。関連51件はWindowsで成功。これを含むローカル統合previewの関連72件とsource対応は[後続checkpoint](results/priority-1-to-3-followup-0658004-20261018.json)に分ける。さらに[別sourceの実Ctrl+C追試](https://github.com/ayutaz/unity-embeddinggemma-2/blob/678eb504ea0a7817ea34ae67b4cc8bb485fdf06a/docs/results/real-media-ctrl-c-2b6f45d-20261018.json)は、2 Red→関連53 Green、実9MiB重みの受信中のexit130・後始末・再試行・warm・820件のhash照合まで確認した。実行結果はWindowsであり、通信停止中の即時キャンセル時間・他OS・公開固定元からの取得は別に確認する。
-
-### 2. 利用者操作とサンプルUX
-
-更新済み#85の固定Git `1d8d868`による[新規consumerの一連操作](results/fresh-native-ui-1d8d868-full-local-bundle-20261018.json)は、既存ローカルFloat16モデルで確認済み。Library・モデルコピー・SDK overlayなしで画像・音声の実GPU登録、日英2検索と元参照、プレビュー、エラー復帰、cacheキャンセル・再試行・切替、再生と明示途中停止、解放・PlayMode停止・Editor通常終了code0を確認した。最初の再生停止は終端付近で未達、別の再生/Stopのみ残り2.688秒・8.557482秒で元gate合格という両記録を残す。以前のfresh timeoutは保持し、公開手順で取得したモデル・最終統合sourceとの対応付け、実マイク・権限/device・中断復帰を次に確認する。
-
-1の手順で用意したモデルと固定Git版を空consumerへ導入し、手動で登録→検索→キャンセル→再登録→切替→解放を確認します。既存bundleでの操作確認は先行できます。結果画像プレビュー・音声再生、マイクの明示開始 / 停止は機能ごとに別PRで実装します。
-
-2026-10-18の固定Git `e28a5fd` 新規consumerでは、既存ローカルFloat16 bundleによる画像・音声の実画面GPU登録、日英検索の参照順位・score、画像プレビュー、音声再生位置の進行、エラー復帰・キャンセル再試行・切替・解放・正常終了code0を確認しました。[操作監査](results/fresh-git-native-ui-e28a5fd-20261018.json)。別のwarm起動では11.2秒音声を7.232秒の位置で停止し、解放と正常終了code0も確認しました。[途中停止監査](results/native-audio-early-stop-e28a5fd-20261018.json)。実マイクと公開入力からの空cache取得は別の未完了項目として維持します。非録音時のpauseで録音破棄のstatusが出る問題、Editor終了時のJobTempAlloc警告は別に扱います。
-
-**完了条件**：日英入力・対応外入力・モデル欠落・権限拒否・deviceなし・中断・復帰を確認すること。固定PCMの数値検証と実マイクの動作検証を分け、無断の保存・送信・収集はしません。
-
-最新sampleを含む固定Git `680af07` の[途中停止のwarm追試](results/native-audio-early-stop-680af07-followup-20261018.json)も、11.2秒の音声を9.130625秒の位置で観測した後に実Stop操作で停止し、解放・正常終了code0を確認した。音声vectorと日本語検索scoreは元参照・許容差内、315 package・86 sampleファイルは終了後に照合済みである。先行試行の自然終了に近い停止・監査gate失敗は保持し、今回の成功を公開取得・実マイクやfresh全操作の合格へ広げない。
-
-### 3. 性能・安定性の測定と改善
-
-candidate・入力・model hashを固定し、最初に測定します。遅い区間・資源残留の原因を絞って修正し、Float16 / GPU単独と連続実行も区別します。測定設計は2の完了を待たず進められます。
-
-**完了条件**：load・初回・warm・前処理・encoder・backbone・解放、CPU / GPU時間、ホストメモリ / VRAMを別記すること。Editor import・検索DB・allocation・domain reloadも分離し、前後で精度・順位・正常終了を維持します。
-
-2026-10-18時点のSDK `d7b2233` では、[GPU出力の不要なCPU storageを省く変更](gpu-write-only-output-allocation.md)をTDD・GPU演算等120件で検証しました。同条件の計測付き画像反復で旧出力とのbyte一致と改善を観測し、全6 module×FP32 / Float16重みの単独参照32ケース、両形式の混在検索の全順位・再試行・解放・正常終了も確認しています。保存重みのFloat16化を全演算FP16化や形式間の高速化にはしません。
-
-同SDKの[画像3・音声2 profile×両形式・40反復](media-gpu-submission-observations.md)で元参照・解放・exit0、encoder 17,176区間と前処理/backbone 80区間、CPU/wall・9プロセスのGPU memoryを確認しました。[text両形式の固定query各4反復](text-current-sdk-observations.md)はmain-thread marker内のmanaged bytesを校正済みの停止CPU履歴で記録しています。GPU Recorderと履歴の値の差、短いstageのGPU memory欠測は保持し、CPU wallとの加減からkernel時間を作りません。
-
-Editorでは[検索割り当て・空/再利用Library](editor-search-allocation-observations.md)、[両sampleと直接index再構築](editor-index-rebuild-observations.md)、[EditMode GC校正・実再構築中のframe全体allocationとnative memory](editor-frame-allocation-observations.md)を分けて確認しました。最後の条件は7 pass / skip0 / exit0で、40文書とfixture・両sceneの保持を2回確認しています。背景index専有bytesは未測定であり、frame全体の値や重なるstartup/import/reload時間を加算しません。
-
-[ロード・解放の範囲監査](load-release-measurement-scope.md)と[Windows engine別のOS観測](windows-gpu-engine-observations.md)では、既存12実行のCPU/wallと、別の実text2実行のcounter時刻・範囲・欠測を照合しました。[frame GC controlと代表実音声](async-frame-allocation-observations.md)も、入力準備・load・検証I/O・release・Editorを含む累積量として保持します。load/release全体のGPU時間、個別非同期stage・背景indexの専有allocationを、この観測から確定はしません。
-
-次は、これらの測定範囲・失敗・欠測を最終candidateへ対応付け、最新Required CIと要件別の監査を閉じます。性能全体は未合格です。過去の12GiB guard中断・16GiB EditMode900秒timeout・Profiler不整合・テスト未実行も[検証状況](status.md)と各記録に保持します。公開取得・実マイク・最終candidateの実操作を含む1〜3全体の条件を維持し、異なる実行条件から速度改善率や最低RAM / VRAMを推定しません。
-
-粗いOS counterの後続として[native PDH追試](results/native-pdh-text-stage-observation-f604baf-20261018.json)を追加した。同じFP32 text4 vectorの元参照・解放・exit0を維持し、8,783点、取得間隔中央値4.6489msとclockを検査した。load内の正数はprocess活動量として保持し、queryの3Dで経過時間を超える差分と、releaseのpair不足はnullとした。26件の新しいRed→関連43 Greenはツールの検証であり、性能全体・SDK専有load/release時間の合格ではない。同方式の単純な再実行で未取得を埋めず、帰属と更新の制約を次の方式の選択へ反映する。
-
-### 4. WindowsマルチモーダルPlayer
-
-[全roleの検証基盤](results/media-player-all-role-contracts-20261018.json)は、Query / Document / Rawの各元参照を固定し、画像18・音声18条件を扱います。79件の契約・元入力読み込みが合格、Editor exit0でした。その後、`89b1ab9` の新規Git consumerで実IL2CPP / Release / High stripping buildに成功しました。[実Playerの全10条件](results/media-player-retained-bundles-gpu-89b1ab9-20261018.json)では、保持しているFP32 / Float16重みbundleで画像3・音声2の全role、通常72件・warm90件、GPU Worker監査、キャンセル回復・解放・正常終了を確認しました。元参照からの独立再計算、40件の破損control拒否と62ファイルのsource hashも確認済みです。新世代モデルの採用、text・横断検索、sample実操作、独立warm起動、process / VRAM計測、必須CIを含む工程全体は未完了です。
-
-1〜3で安定したcandidateを使い、画像・音声sampleの配置・cache・切替・失敗回復をPlayerへ接続します。
-
-先行作業として[画像・音声の固定入力Player検証基盤](windows-media-player-validation.md)を私的なbranchで準備しています。元の参照・入力hash、5 profile、全最終vector、GPU Worker割当、キャンセル後の復帰と解放を記録します。契約テスト・元入力の読み込みと、実際のRelease build・GPU実行は別に判定し、この基盤だけで全体合格にはしません。
-
-**完了条件**：IL2CPP / Release / High stripping、実モデルと全モダリティの固定順位・score、実GPU、独立cold / warmの終了code0を記録すること。旧text Playerの証拠を流用しません。
-
-### 5. 必須他環境の受け入れ
-
-macOS Editor、iOS / Android実機を環境ごとのPRで進めます。環境確保は今から並行し、最終受け入れは安定candidateで行います。
-
-**完了条件**：次表の端末・backend・モデル・source・精度・操作・メモリ・終了を記録すること。未実行やCPU fallbackをGPU合格にしません。
-
-### 6. 最終candidateの導入・配布監査
-
-1〜5の必須条件が合格したら、版更新、CHANGELOG、利用手順・ライセンスを整備し、空consumerで再現します。
-
-**完了条件**：全結果とcandidate source / model hashの対応、固定Git導入、packageとモデル配布の分離、文書コマンド・sample再現、required CI成功を確認すること。
-
-### 7. 正式公開
-
-6が完了し、公開の明示依頼を受けてから、承認されたcandidateをtag固定で導入確認し、GitHub Releaseを作成します。
-
-**完了条件**：tag / version / Releaseの一致と読み戻し。画像・音声を含む必須検証を省いてtext-onlyの正式版を先行公開しません。
-
-各行を巨大な1本のPRにはしません。準備、画像表示、音声再生、収録、測定、原因別修正、環境別受け入れをレビュー可能な単位に分割します。所要時間は実機・runnerと測定で決め、未実測の性能目標を達成済みにしません。
-
-## 正式公開まで維持する条件
-
-| 対象 | 必須の証拠 | 現時点で不足するもの |
-| --- | --- | --- |
-| Windows Editor / Player | 固定Git導入、3モダリティの実モデル・固定順位、sample実操作、CPU / 実GPUを別判定、PlayerのIL2CPP / stripping・独立2起動・正常終了 | 最終candidate全体、画像・音声Player、反復測定・一部UX |
-| macOS Editor | 実Mac、CPU / Metal GPUの3モダリティ、sample操作・解放・測定 | 環境確保と実測 |
-| iOS Player | Mac / Xcode / build module / 署名・実機、IL2CPP / stripping、CPU / Metal GPU、配置・cache・権限・suspend / 復帰 | 環境確保と実測 |
-| Android Player | 対象UnityのSDK / NDK / JDK、実ABI・graphics API・実機、CPU / GPU、jar配置・cache・権限・終了 | 最新toolchain・実機受け入れ。過去APKのbuild監査だけでは不足 |
-
-FP32最終vectorは有限768次元・単位長・参照cosine >= 0.999、採用するFloat16重み形式は >= 0.99、固定横断検索は全順位一致を要求します。encoder中間値・scoreには元の固定許容差を使い、失敗に合わせて緩めません。各profile・role・混在索引とmodule切替を対応する参照で確認します。
-
-CPUでの明示比較はGPU受け入れと分けます。利用者向け画像・音声推論の主経路はGPUであり、非対応演算・OOMをCPUへ切り替えて成功扱いにしません。CPUの数値文脈差、失敗・skip・未実行はそれぞれ記録します。
-
-Web / WebGPU・動画・学習・本格的なベクトルDBは必須公開範囲に追加しません。モバイルのメモリ不足が判明した場合も記録と計画を更新し、未達を黙って除外しません。
-
-## 開発・実行のルール
-
-- 振る舞いの変更は、独立した期待値で意図したRed→最小実装→Green→整理。文書変更に架空のRed / Greenは付けません。
-- Pythonは`tools/`とuv、重い取得・変換・回帰・buildはActionsを優先。実GPU・UI・端末の代替できない確認だけをローカルで行います。
-- 監査済みmodel・Libraryを再利用し、変更のない巨大graphを再生成しません。Unityは重複起動せず、timeoutでは同じPID・operation・保存結果を確認します。
-- 各PRにsource・model / fixture hash、Red / Green、実モデル・実backend、失敗 / skip / 未実行、CIと残件を記録します。main直pushは禁止、マージは依頼された範囲で行います。
-- 実GPUの実行条件と数値結果、Python CIの成功、UI操作、公開操作を別々に判定します。最新headで未実行の条件を過去の成功で埋めません。
-
-実装時のC1〜C7・I1〜I6・A1〜A7の詳細は[全体TDD設計](multimodal-tdd-plan.md)・[画像設計](m3-plan.md)・[音声設計](m4-plan.md)に保持します。そこにある過去checkpointの「次の作業」より、本ページの現在の順序を優先してください。
-
-性能・実操作の未達条件は[優先1〜3の残タスク監査](priority-1-to-3-acceptance.md)も参照してください。最終candidateでの確認は[正式リリース計画](release-plan.md)に従います。
+| 1 | Windows版の保守と導入文書の維持 | 不具合報告時はsource・model descriptor・入力profile・GPU / driver・再現手順を固定する。最小再現をTDDで修正し、影響する数値・cancel / recovery・解放を元基準で確認してPR化する |
+| 2 | CPU参照ツールのhost差の切り分け | Intel hostの画像中間値不一致を[既存記録](windows-CPU-CI.md)から小さい固定入力へ絞る。仮説と時間 / メモリ上限を先に決め、元中間値・最終vector・load / releaseが揃った条件だけを追加受け入れする。失敗へ許容差や期待値を合わせない |
+| 3 | 性能・対応機器の拡張 | 同一source・同一入力・同一仕事量での必要な比較を先に設計する。既存の機器と無料枠で実行できる場合だけ進める。stage / wall / CPU / GPU時間とRAM / VRAMの観測範囲を分け、新しい数値一致と正常終了を確認して対応表へ反映する |
+| 4 | macOS / Android / iOSの受け入れ | 下記の環境条件を満たしたplatformだけを開始する。Windows公開は完了しており、他platformの準備待ちで再度保留しない |
+
+文書・一覧整理だけを理由に、成功済みの巨大モデル取得・変換・GPU全条件を繰り返しません。
+対応機器や真の最低メモリを調べる具体的な必要がない間は、[現在の検証構成](windows-supported-configuration.md)を維持します。
+公開モデルの元checkpointからの再変換は、preview取得とは別の工程です。採用モデルを更新する必要が生じた場合に限り、
+producer・全object hash・元参照を固定し、全6 moduleと両形式を新しいsourceで受け入れます。
+
+## 他platformの開始条件と移行判定
+
+| 段階 | 必要な環境と判定 |
+| --- | --- |
+| CIの入口 | 利用可能なUnity CIライセンス、対象Editor / build module、十分な容量と上限時間。未設定のまま同じpreflightを再実行しない |
+| build / compile | macOS Editor、Android ARM64 IL2CPP / Release / High APK、iOS MetalのXcode exportと署名なしcompileを別々に記録する。buildだけで実GPU合格にしない |
+| 実モデルGPU | MacのMetal能力・容量、Android / iOSの実機と接続host、必要な署名・権限を確保する。既存の小さいcompute probeやエミュレータを代用にしない |
+| 対応表へ追加 | text / image / audio、全role、混在検索、元精度gate、fallback / readback、cancel / recovery・suspend / 復帰・解放・正常終了の実結果を固定sourceへ結び付ける |
+
+現時点で追加の実機は提供されていません。端末購入、有料runner・外注・実機サービスの利用、ユーザーへの新規作業依頼をこの計画の前提にしません。
+使える既存環境が揃うまでは他platformを保留し、Windowsの保守を優先します。[CI](ci.md)と[端末検証](device-validation.md)に既存経路・失敗の範囲があります。
+
+## 各変更と次のリリースの共通条件
+
+1. task branchを作り、挙動変更はTDDとuvで実装する。必要な範囲のテストとworkflow lintを実行し、PRのRequired CIを確認する。
+2. SDK実行コード・モデル・依存・入力・許容差への影響を明示する。文書だけの変更で、旧実測sourceを新sourceの実行へ書き換えない。
+3. 実行は所有process・時間・resident / commitの上限を固定する。観測timeoutで別実行を重複起動せず、元logと失敗を保持する。
+4. 公開前にproject-privacy、versioned Git hooks、全送信祖先、公開identity、実payloadを確認する。新規・変更画像は実bytesを目視・OCRする。`main`へ直接pushせず、mergeは依頼された場合に行う。
+5. 次版は必要な変更がまとまった時点で版・CHANGELOG・固定tagを準備する。影響範囲の実GPUと空consumer、Release公開後の読み戻しを完了してから公開完了とする。現時点で次の版番号・公開日は確約しない。
+
+旧provider側コピーの除去は別件として延期しています。除去完了とは扱わず、新規公開物のprivacy gateも緩めません。
+履歴・固定sourceの検証記録は[文書一覧](README.md)、プロジェクト全体の不変の条件は[ゴール](goal.md)を参照してください。

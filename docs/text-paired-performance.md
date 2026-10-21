@@ -31,4 +31,4 @@ score等の独立照合とruntime内vector検査を分けています。破損re
 
 元のWindows機能検証・Player sourceを保持し、新candidateでの再実行、画像・音声CPUの
 受け入れ、SDK専有allocation、最低hardware、性能全体や正式公開の合格には広げません。
-残件は[Windows先行計画](next-release-plan.md)で追跡します。
+残件は[今後の計画](roadmap.md)で追跡します。

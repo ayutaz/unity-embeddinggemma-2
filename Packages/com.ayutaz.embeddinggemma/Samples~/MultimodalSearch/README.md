@@ -29,6 +29,6 @@ Package Manager の EmbeddingGemma の Samples から **Image and Audio Search**
 
 **キャンセル**は読み込み中、またはencoderのGPU処理境界で反映されます。失敗・キャンセル後は同じ画面から再実行できます。GPUComputeに非対応の環境やCPUへの計算fallbackが必要なモデルは拒否します。
 
-このサンプルの操作対象はWindows Editorです。Windows先行の機能検証は実Editorと、同一SDK実装の既存Player結果を分けて受け入れています。他OS・モバイル・WebGLの動作確認は別途必要です。準備処理の正常終了と、実GPUでの数値検証は別の結果として扱い、[対応範囲とsource別記録](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)を参照してください。
+このサンプルの操作対象はWindows Editorです。SDKのWindows版v0.1.0は公開tagからの新規導入と、実Editor / Windows IL2CPP Playerの固定条件で受け入れ済みです。Playerの数値検証は専用ハーネスによるもので、この画面の全手動操作を検証したという意味ではありません。他OS・モバイル・WebGLは未検証です。[対応範囲とsource別記録](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/status.md)を参照してください。
 
 **モデルの準備**：全6 moduleのFP32 / Float16重みは[公開モデルpreviewと取得手順](https://github.com/ayutaz/unity-embeddinggemma-2/blob/main/docs/media-model-preparation.md)から明示取得できます。モデル・係数・tokenizerはUPMやGitには含みません。descriptorと全objectのhashを検査し、LICENSE / NOTICE / MODIFICATIONSを保持してください。元checkpointから同じモデルを再生成する経路、新tagの空consumer導入、正式SDK公開は別の条件です。

@@ -79,4 +79,4 @@ Processのworking set / private bytesはMono APIが0を返し、全サンプル�
 - Processカウンタが0なら未取得。graphicsCounterAvailable / processCountersAvailableで判定する。
 - Float16は[Sentisの重み量子化](https://docs.unity3d.com/Packages/com.unity.ai.inference@2.6/manual/quantize-a-model.html)であり、すべての演算がfp16になる保証はない。速度やGPUメモリの改善も実測から判断する。
 
-この測定は1台・1セッションのWindows Editor結果。他プラットフォーム・Player・モバイル・UPM公開は [M2計画](m2-plan.md)で検証する。
+この測定は1台・1セッションのWindows Editor結果。他プラットフォーム・Player・モバイル・UPM公開は [今後の計画](roadmap.md)で検証する。

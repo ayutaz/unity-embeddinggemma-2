@@ -1,222 +1,51 @@
 # 現在の対応範囲と検証状況
 
-2026-10-20にユーザーの方針で**Windows Editor / Player先行の正式リリース**へ変更しました。[実行計画](next-release-plan.md)を現在の順序・公開条件として使用してください。macOS / iOS / Androidは今後の対応で、未実行・失敗の記録を保持します。以下の旧記録にある「全必須環境」「必須実機」は当時の条件で、Windows公開の待ち条件にはしません。検証結果そのものは変更しません。
+更新: **2026-10-21**。Windows版 **[v0.1.0を正式公開済み](https://github.com/ayutaz/unity-embeddinggemma-2/releases/tag/v0.1.0)** です。
+公開tagのsourceは `91e3419571432dfa54e7bbab045ef63a7cef4a81`、package versionは `0.1.0` です。
+以下はその版の実行結果です。文書整理後のsourceでモデルを再実行したという意味ではありません。
 
-## Windows候補の工程1〜3（2026-10-20）
-
-後続のtask branchでは`0.1.0`候補の版・CHANGELOGを準備し、[画像 / 音声GPU40回](windows-media-memory-results.md)、[画像CPU12回](image-CPU-fixed-conditions.md)、[音声CPU8回](native-audio-CPU-results.md)と[初回対応構成](windows-supported-configuration.md)を整理しました。[Windows CPU CI](windows-CPU-CI.md)はPR #115の初回head `7a33083`で音声2・画像3 jobが成功し、全20回の実captureを元数値gateで独立に再照合しました。新規取得のHTTP 500に対応する[再要求修正](results/model-acquisition-server-retry-tdd-20261020.json)は関連68テスト合格で、変更後の必要CIを別途確認します。公開mainは#114統合済み`3e78a27`、追加branchは未統合で、正式tag・Releaseはありません。2026-10-20のユーザー指示で旧providerコピー除去は後回しとし、今回の待ち条件から外しました。新規送信のprivacy検査は維持します。[最終確認項目](windows-release-checklist.md)を満たしてから正式公開します。以下の数値・source別結果は元の適用範囲を保ちます。
-
-**main `1a036fb`、PR #113まで統合済み。工程1〜3のWindows機能検証は完了**しました。候補 `e5b6bd9` は実行記録の `9967516` と全treeが一致します。[確認記録](results/windows-first-stages-1-to-3-20261020.json)にsource・モデル・数値gate・失敗履歴・適用範囲をまとめています。
-
-実Windows Editor / D3D12で、両重み形式の全画像・音声role、反復・キャンセル回復・解放、混在索引と順位 / scoreを照合しました。別の実Editorプロセスでテキスト全roleの30ベクトルとRenderTextureの12ベクトルを照合し、受け入れた計3プロセスは正常終了しています。computation CPU fallback・中間readbackは0です。Playerは同一SDK実装の既存IL2CPP / Release / High結果を独立再照合して適用し、新candidate SHAでの再実行とは数えません。
-
-package / sample契約は現Editorで560件合格・失敗 / skip0。native UIと実マイクの既存結果には元sourceを保持しています。追加Editor試験のcompile errorと16 GiB total commit上限到達後のD3D12 failureを保存し、受け入れ実行ではresident / job commitの監視を分けています。これらの上限は最低hardware要件ではありません。**性能・最低要件・旧providerコピー除去・新tag consumer・正式Releaseは未完了**です。
-
-## source別の過去の記録
-
-以前のcheckpoint（#112統合時）: **main `e72b5cb`、PR #112まで統合済み**。採用head `874c1c8` の必須CI全15 job成功と実13数値archiveを独立照合し、元824,320値・CPU encoder 120 capture / 30,822,400値の許容差超過0を確認しました。実mainの同tree・署名・公開identity・全祖先も確認済みです。[統合記録](results/platform-ci-integration-874c1c8-20261020.json)は、native workflowの全3ライセンスfailureと、Metal 16整数probeだけの成功を区別します。Unity build・実モデルMetal・実機GPUの成功ではありません。
-
-後続の[固定入力配置](device-mixed-runtime.md#build前の固定入力配置)は関連128件合格・skip0、元28ファイルの実配置と全hashを確認済みですが、本変更の全必須CIは未受け入れです。SDK実行コード・元数値参照・許容差は維持しています。対応CIライセンス、原モデル / 端末配置、必須実機・性能・最低要件、旧providerコピー除去、正式SDK tag / Release・新tag consumerは未完了です。
-
-## PR #111〜#112実装中のcheckpoint（履歴）
-
-以下の「未受け入れ」「本branch」「次の実行」は各記録source時点の状態です。現在の統合結果は上記を使います。
-
-最新checkpoint（2026-10-20）: **main `de56db8`、PR #111まで統合済み**。採用head `1280948` の[必須CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39347537063)は全15 job成功。実13数値archive、元824,320値、CPU encoder 120 capture / 30,822,400値を独立照合し、元許容差超過0です。SDK実行コードは既存Windows GPU検証source `f0fc2a7`から不変ですが、package README / CHANGELOGは変更されており、package全bytesの一致や新mainのGPU再実行は主張しません。
-
-PR #112の初回head `6c1ee2f`で[platform CIの入口](ci.md)を追加し、[実preflightの全3 job](results/platform-ci-preflight-6c1ee2f-20261020.json)はライセンス未登録でfailureでした。実3 archiveのdigest / CRC・完全な私的2コピーとJSONを独立照合し、Editor導入・build・モデル推論未開始を確認しました。後続sourceの実行成功ではありません。本branchには追加でMetalの16整数compute probeと、iOS export後の署名なしXcode compile・実arm64 app照合を接続しました。[追加TDD](results/platform-native-contracts-tdd-20261020.json)は新規20件Red、保護・終了監督の計4件Red→platform関連68件・関連回帰計105件Greenです。当該TDD時点では追加native処理の実runner結果は未確認でした。後続sourceの実結果は次段落に記録します。原モデル / fixture取得、署名・端末操作、実モデルGPU・全実機、性能・最低要件、旧providerコピー削除、正式SDK tag / Release・新tag consumerは未完了です。
-
-後続head `08d7e33`の[実Metal probe](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39356590582)はSwift compileと16整数のcompute成功・不一致0です。実3 archiveを独立照合し、Unity preflightは全3 jobでライセンス未登録のfailureを保持します。実モデルGPU・Unity build・iOS native compileは未実行です。Required CIのLinux2環境で新規CLIテストが各2件失敗したため、[子プロセスのsource選択](results/platform-cli-source-selection-20261020.json)を修正しました。親の `PYTHONPATH` なし・CIのprivacy plugin有効で関連105件合格ですが、修正sourceの全Required CIは未受け入れです。
-
-## PR #110時点のcheckpoint（履歴）
-
-以下のpackage一致や待機条件は#110時点の状態です。現在の適用範囲と実行順は上記を使います。
-
-最新checkpoint（2026-10-20）: **main `1109698`、PR #110まで統合済み**。[必須CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39336685624)は全15 job成功、実13 archiveと元参照824,320値・CPU encoder 120 capture / 30,822,400値の独立照合で元許容差超過0です。[Windows音声CPU比較](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39336685770)も2条件×4回・全32 captureを独立照合して合格しました。採用headは`810d49a`、実行sourceは同treeのtest-merge `82506a6`です。実mainの同tree・署名・公開identity・全祖先を確認しました。重複main CIはcancelledとして記録し、成功には数えません。
-
-Unity SDKのGPU推論要件は維持し、package全bytesは既存Windows GPU検証source `f0fc2a7`と一致します。今回のCPU比較は新mainのGPU再実行や同一hardwareのCPU/GPU性能合格ではありません。画像CPUの未解決条件、性能・最低要件、macOS / iOS / Android実機、provider側の古いコピー削除、正式SDK Release・新tag consumerは未完了です。現在はGPU容量・必須端末・Android導入時のUAC対応・provider対応待ちで、再開順と完了条件は[リリース計画](release-plan.md)にまとめています。
-
-## PR #109時点のcheckpoint（履歴）
-
-以下は#109時点の記録です。Windows音声CPU比較の「未合格」や「次の実行」は当時の状態で、現在の結果は上記#110を使います。過去の失敗や適用範囲は保持します。
-
-確認checkpoint（2026-10-20）: **main `811c0d2`、PR #109まで統合済み**。[#109の統合記録](results/audio-cpu-pipeline-integration-4367677-20261020.json)ではhead `4367677`の必須CI全15 job・実13数値archiveを照合し、元824,320値とCPU encoderの120 capture・30,822,400値の許容差超過0、実mainとの同tree・公開identity・署名・全祖先を確認しました。重複main CIはcompleted / cancelledで、成功には数えません。SDK packageは下記Windows検証source `f0fc2a7`から全bytesが不変ですが、新mainでGPUを再実行した証拠には置き換えません。
-
-[音声の完全なCPU測定入口](audio-cpu-encoder.md)の初回source `9bd7a26`は、無音合格・padded_noiseのencoder各回33値の超過により全体不合格でした。旧32 captureと失敗を保持し、公式CPU前処理へ修正したsource `4367677`の[再検証](results/audio-cpu-official-preprocessing-4367677-actual-20261020.json)では、Linuxの2条件・各4回・全32 captureを独立照合して元数値条件へ合格しました。比較用CPU経路のWindows実モデル検証を別workflowで準備し、メモリ・CPU型番の取得と失敗ログ保護を含む[関連144テスト](results/audio-cpu-windows-workflow-tdd-20261020.json)を確認しました。Windowsの実モデル合格は未確認です。画像CPU比較の成功・失敗と残件は[リリース計画](release-plan.md)を参照してください。Unity SDKのGPU推論要件は維持します。同一hardwareのCPU/GPU性能・最低要件、必須Mac / iOS / Android実機、provider側の古いコピー削除、正式SDK公開と新tag consumerは未完了です。公開済み4件はいずれもモデル / 数値参照のpreviewで、SDK版は`0.1.0-pre.1`です。
-
-Windows機能検証の保存checkpoint（2026-10-19）: **main `f9b22ce`、PR #102のsource**。[#102の統合とWindows検証](results/device-runtime-integration-f0fc2a7-20261019.json)ではhead `f0fc2a7`の全15 CI job、7成果物のdigest / CRC・私的2コピー、元参照824,320値の超過0と集計一致を確認しました。実mainの同tree・公開identity・provider署名・全履歴も照合済みです。同じsourceのWindows D3D12 / Release IL2CPP / HighでFP32・Float16の独立cold / warm全4起動が成功し、144 base・180 warm media vector、288順位/score、88破損control拒否、計算CPU fallback・中間flush 0、解放・exit0を独立確認しました。最大観測native working setは11,161,444,352 bytesで、専有VRAM・最小hardware・性能全体の証明ではありません。SDK package・Runtimeは不変です。必須Mac / iOS / Android実機、性能、旧PR / cacheのprovider対応、正式SDK Releaseは未完了です。
-
-[iOS build profile](device-validation.md)は#100で統合済みです。[初回の19件Red→19件Green](results/ios-build-profile-tdd-20261019.json)後、Xcodeの構成もReleaseへ固定・復元しました。[追加の8件Red / 15件pass→最終23件Green](results/ios-xcode-scheme-tdd-20261019.json)と、Windows / Android設定を含む関連44件が失敗・skipなしで成功しています。Windows Editorによる設定・復元・上書き拒否・署名情報の非掲載の確認であり、実iOS export・署名・実機GPUは未実行です。旧media単体入口はWindows専用です。後続の[Android / iOS混在入口](device-mixed-runtime.md)を追加し、関連190件のEditor契約検査を確認しました。実APK / Xcode export・端末配置・GPU・全必須実機の受け入れは残ります。
-
-[歴史的raw取得のローカル化](raw-candidate-archive.md)は、全ZIPの固定SHA256と準備済み元goldenを必須にし、古いhosted raw取得へfallbackしません。[関連170件Green・実archive確認](results/raw-candidate-archive-retirement-tdd-20261019.json)では、完全2コピー・全CRCと6 case / 2 raw graph / 2 ONNX profileを照合しました。通常の公開数値回帰と元入力だけの保存は維持し、後続の全Required CI・main統合・旧artifact削除は上記#101の実受け入れで完了しました。モデル推論や新たなGPU受け入れには数えません。
-
-[固定入力のlocal staging](results/device-fixture-materialization-tdd-20261019.json)は29件Red→29件Green、元28ファイル・34,474,958 bytesの実file URI転送と全hashの独立再計算、変更していないloaderによる全role 36ケース・text 6文書 / 4 queryの確認が成功しました。転送段階は元fixtureやGPUの合格を付与せず、既存の独立した元hash・数値gateを維持します。Windows Editorの1統合テスト・skip0であり、Android jar・実機・モデル推論は未実行です。後続の[端末入口](device-mixed-runtime.md)でrunnerへ接続しましたが、実機の取得・GPU・全受け入れは未実行です。
-
-[モデルpreview](results/model-preview-publication-567befb-20261018.json)は両精度825 assetずつ公開し、全実payloadとremote digestを照合済みです。[匿名の空cache取得・中断復帰](results/public-model-consumer-8649c94-20261018.json)は両精度で成功し、warmで820再利用・転送0、1 object破損修復と全hash、公開取得モデルの5 media profile・4 query GPU実行と独立監査まで確認しました。
-
-[許可された8.4秒の実マイク](results/native-microphone-gpu-8649c94-20261018.json)はWindows Editorで取得・自動停止・GPU登録・テキスト検索・解放・破棄まで成功しました。音声270 Workerとtext 1 Workerの計算CPU fallback・中間flushは0。録音の保存・外部送信はなく、音声・embeddingも公開しません。source `8649c94`の追加ローカルharnessによる結果で、任意音声の意味精度・手動録音UI・全環境の合格ではありません。
-
-実画面操作で検出した絶対パス表示は[8件Redから関連50件Green](results/sample-display-privacy-tdd-20261018.json)へ修正し、#93で統合しました。[修正source `7754ce4`の実画面再確認](results/native-ui-7754ce4-20261019.json)では画像・合成音声のGPU登録、日英4検索・8順位/score、preview、エラー復帰、loading cancel・retry、再生、reset・解放・正常終了が成功しました。元の漏えい記録は非公開で保持しています。observer由来のtimeSamples警告も保持し、無警告や再生中断時間の合格は主張しません。
-
-同じSDK bytesの[追加の途中停止確認](results/native-playback-stop-7754ce4-20261019.json)では、11.2秒の固定合成音声を実UIから再生し、残り3.349375秒の観測から0.251744秒後に明示停止を確認しました。clipの切り離し後も登録・preview・sessionを保持し、その後のresetで全解放、PlayMode停止・Editor exit0まで成功しました。文書vectorの元参照cosineは0.9999999905661618、音声270・text 1 WorkerのCPU fallback・中間flushは0です。元の警告・証拠は置き換えず、追加録音はありません。全手動項目・性能全体の合格には広げません。
-
-[公開取得モデルの最終混在Player](results/final-mixed-player-3a02fc0-20261019.json)は、Windows D3D12 / IL2CPP / Release / High strippingでFP32・Float16重みの独立cold / warm全4起動が合格しました。各起動でmedia全3roleの36 base・45 warmと18文書×4検索を元参照から独立照合し、合計288順位/score・88破損control拒否、GPU Worker監査、解放・exit0を確認しました。coldは各820 object転送、warmは0で、descriptor読み込み6件とは分けています。SDK Runtime・元参照・許容差は維持しています。
-
-別の[既存テキスト全ケース](results/final-text-player-3a02fc0-20261019.json)も、同じsourceのRelease Player 2 processでFP32 / Float16重み×CPU / GPUの計8条件が合格しました。各条件で15 case・6文書・4 query、各processで25行のtoken照合を実行しています。GPU条件とCPU条件は別に数え、保存された192順位/scoreと34破損report controlを独立確認しました。この旧text protocolはraw vectorを保存しないため、vectorはruntime内の照合であり、混在Playerの独立vector再計算とは区別します。
-
-[契約112件](results/final-mixed-player-contracts-20261019.json)と[cache接続7件Red→関連119件Green](results/final-mixed-player-cache-integration-20261019.json)、初期の失敗記録は保持しています。実行に使った修正版sourceは`3a02fc0`で、compiled Runtime/link hash67件とpackage 600・sample 86・公式framework 1,168ファイルを確認しました。修正版のbuild warning485件も保持し、無警告とは扱いません。
-
-[#97の先行受け入れ](results/native-distribution-integration-344f07a-20261019.json)は、全15 CI job・実アップロード7 ZIP・元参照824,320値の許容差超過0を確認し、main `4d66d92`へ統合済みです。#95・#96も統合先を記録してcloseしました。公開著者・provider署名・実main treeと履歴を確認しています。
-
-[画像GPUの24反復](candidate-media-performance.md)に続き、[元特徴量を使うCPUの20回診断](reference-cpu-diagnostics.md)を追加しました。最終vectorは全件一致しましたが、元の中間encoder値は画像3・音声2条件すべてで許容差超過・exit1です。元Document特徴量6件はhash・CRC・完全な私的2コピーを確認して回収し、元vision JSONは未回収です。CPU比較全体は未合格。手動UI残項目、音声のGPU反復性能、CPU差の原因、SDK専有GPU時間・allocation、最低要件、macOS / iOS / Android実機、旧provider成果物のprivacy対応、正式SDK tag / Releaseは未完了です。[リリース計画](release-plan.md)で追跡し、Windows機能検証を全環境・性能全体・正式公開の合格には広げません。
-
-数値回帰の[データpreview](results/native-regression-preview-publication-20261019.json)は全16 assetの実サイズ・hash、本文とtagを照合済みです。[明示的な恒久取得経路](native-regression-distribution.md)による全6信号・824,320値の実回帰も上記CIで合格しました。元の数値基準・採用根拠7記録を維持し、実行したclean graphのhashと保存元graphのhashを分けています。旧経路の依存棚卸しとprovider成果物の整理は別に残ります。
-
-[provider側の最新確認](results/provider-cleanup-status-20261019.json)では、既知の書換前commitがAPIで取得でき、commit metadataに非公開メールが残っていました。既存Support案件はOpenで、返信・削除完了は未確認です。元の値・payload・Support本文は公開せず、現行の書換済み履歴・実公開payloadの監査と分けて追跡します。正式公開のprivacy条件は未達です。
-
-## 統合前checkpointと固定sourceの検証記録
-
-更新: **2026-10-18**。公開履歴整理後のmainは `4b5bf72`。開発版 `0.1.0-pre.1`、公開tag・正式Releaseはありません。現在は個人情報対策の回帰修正、固定音声参照データの復旧、GitHub側の残存個人情報の除去を優先します。
-
-元の数値参照JSONと監査JSONは[CI保存・独立readback](results/original-audio-golden-ci-readback-20261018.json)が完了しました。最新head `317bae3` の[CI終端](results/privacy-guard-ci-317bae3-20261018.json)ではPython全4環境等が成功し、元音声モデルの欠落で全体が失敗しました。次は復旧した数値原本を使う限定診断です。
-
-[再生成候補の通常経路の比較](results/audio-regeneration-numerical-baseline-summary-20261018.json)では、nativeで2,884要素、未分割ONNXで5,230要素が元の許容差を超え、ONNXの6信号すべてが不合格でした。候補は未採用です。元の参照値を維持し、[別世代候補の5分割数値検証](audio-candidate-qualification.md)を追加しました。関連105テストとworkflow lintは合格しましたが、この小規模確認を実モデル・実GPUの合格には数えません。
-
-[候補の全6信号数値検証](results/audio-candidate-six-case-numerical-audit-20261018.json)が成功し、824,320値で元許容差超過0でした。[全出力・carryの独立再監査](results/audio-candidate-six-case-readback-20261018.json)も一致しました。次は採用前のGPUモデル・consumer・Playerの対応確認です。通常Required CIの原本archive条件は維持しており、元モデルの復旧・新世代採用・GPU合格とは別に記録します。
-
-## 統合前checkpoint当時の停止条件
-
-| 項目 | 確認済みの状態 | 次の完了条件 |
-| --- | --- | --- |
-| hook | CP932入力の問題を修正し、実行中のhookにも反映。利用者の指示に従い、account `ayutaz` の公開表示名 `yousan` を完全一致で認めるprofile guardを検証。関連51件合格、live profile検査も合格 | 表示名は維持する。個人用path・メール・認証情報、source commit identity、旧providerコピーは引き続き別に検査する |
-| CI | 過去に確認した公開head `317bae3` の[CIは終了](results/privacy-guard-ci-317bae3-20261018.json)。package・workflow lint・model referenceとPython全4環境が成功。元音声モデル取得6信号・集計は失敗し、全体は不合格。元数値参照だけを保存する別の手動CIは成功 | 原本モデル取得か、別世代の完全な再受け入れが必要。数値参照CIだけをRequired CI全体の成功に数えない |
-| 固定音声参照 | 元の参照JSON（25,186,055 bytes）と監査JSONを[手動CIで元SHA256のまま保存](results/original-audio-golden-ci-readback-20261018.json)。実アップロードZIPの配信元SHA256・CRC、2ファイルの元SHA256と私的2コピーを確認。元モデルの探索・再生成は不一致で、グラフ2件は未復旧 | 原本モデルの回収はSupportへ照会中。別世代を検証する場合も元の数値基準を維持する。数値参照の復旧とモデル・GPUの受け入れを区別する |
-| GitHub側の個人情報 | writable branchの履歴修正済み。旧PR/cache除去と成果物復旧をSupportへ依頼済み。受付情報は私的記録に保管 | 対応結果を照合し、旧PR refs・キャッシュ・残るActionsメタデータを再監査 |
-| PR整理 | #89（privacy）、#86（取得）、#87（性能）はDraft。全体Required CIの成功・全機能完了は主張できない | #89、#86、#87を各受け入れ条件と最新headのCIに基づき順に判定 |
-
-追加の大量削除は停止しています。固定artifact IDの棚卸しで残存を確認した参照成果物2件は、私的バックアップの配信元SHA256とZIP整合性を確認しました。消失したモデル2件の復旧は別に未完了です。メタデータ保存だけを成果物の退避とみなしません。復旧不能の場合は新しい参照世代の計画と差分を別に示し、原本と同一の実績には置き換えません。
-
-## これまでの機能・GPU検証記録
-
-以下は各固定sourceの従来の実測です。履歴整理後の最新headで全条件を再実行した証拠や、元成果物を現在も取得できる保証にはなりません。従来の負荷軽減監査のRuntime Git treeは `7d6e4314552b221d06db881405e7ccff3f449a77` でした。
-
-[ランタイム修正の統合監査](results/runtime-ready-integration-2a29c68-20261018.json)では、単独の統合候補 `2a29c68` でpackageとmainの既存2サンプルのEditMode回帰517件（GPU演算等120件を含む）がpass、fail0 / skip0 / exit0でした。Runtimeとpackage依存は、全6 module×FP32 / Float16重みの実GPU参照32 vectorを確認した固定source `d7b2233` と一致します。これはsource一致に基づく既存の実モデル証拠と、新しい小規模GPU・既存sample回帰を組み合わせた監査であり、今回の32 vector再実行や最新UXの操作合格ではありません。
-
-9演算のwrite-only出力で不要なCPU storageの確保・ゼロ初期化・転送を省き、画像segmentとtextの大きな定数を8MiB単位でGPUへ転送し、softmaxの行ごとのdispatchを制限します。元の係数・参照・許容差・GPU経路と演算順序は維持します。公開モデルのempty-cache取得、実マイク、最終candidateの全操作、SDK専有load/release GPU時間・allocation、他環境・正式Releaseは未完了です。これらをランタイム修正の先行統合で完了扱いにはしません。
-
-追加の固定source観測：候補SDKの[GPU出力確保の変更](gpu-write-only-output-allocation.md)では、CPU storageの不要なゼロ初期化・転送を省きました。GPU演算等の回帰120件、全6 module×FP32 / Float16重みの単独実GPU参照32ケース、両形式の混在検索の全順位・再試行・解放・正常終了を新SDKで確認しました。同じ計測付き画像呼び出しのwarm反復はFP32が19.3–29.4秒から4.8–5.5秒、Float16重みが30.2–34.0秒から4.6–5.1秒でした。少数の固定入力観測を通常API全体や形式間の高速化へ拡張しません。性能全体・公開モデル取得・実マイク・最終candidate操作の受け入れは残っています。
-
-[導入](../README.md) / [ドキュメント一覧](README.md) / [今後の計画](roadmap.md)
-
-Runtime負荷軽減の[PR #88](https://github.com/ayutaz/unity-embeddinggemma-2/pull/88)はRequired CI成功後、2026-10-18 00:57:10 UTCにmain `d9ae07b`へsquash統合された。main既存サンプルを保った[単独候補の回帰517 pass / skip0 / exit0](results/runtime-ready-integration-2a29c68-20261018.json)と、統合commitのtreeがCI候補 `57d2cdb`に一致することを確認した。同候補と本branchのRuntime treeは `7d6e4314552b221d06db881405e7ccff3f449a77` で一致する。#85 / #87には実mainの祖先を取り込み、重複Runtime差分を整理した。公開取得・実マイク・最終操作と性能全体の受け入れは別に残す。
-
-## 統合済みの機能
-
-後続の[統合ツールpreview132件](results/combined-tools-preview-86afcbc-20261018.json)は、最新取得CLIとnative PDH・packageを同時に確認した。一方、同じpackage treeの[自動化pluginなし新規consumer](results/fresh-git-native-ui-b519-no-uloop-partial-timeout-20261018.json)は画像GPU登録・参照一致までの部分実行で、900秒上限・exit1のため操作全体は不合格。時間にはimport・操作・待機も含まれ、推論latencyやplugin有無の性能差を示さない。公開取得・実マイク・最終candidate全操作・性能欠測は残す。
-
-別の[更新済み#85 `1d8d868`の新規consumer](results/fresh-native-ui-1d8d868-full-local-bundle-20261018.json)では、既存ローカルFloat16 bundleを使い、実マウス・キーボードによる画像・音声GPU登録、日英2検索の元参照vector・全順位・score、プレビュー、エラー復帰、cacheキャンセル・再試行・切替、再生と明示途中停止、解放、PlayMode停止・Editor正常終了code0まで確認した。Library・モデル・SDK overlayのコピーなしで、初回import・操作・ツール・待機を含むwallは803.890085秒。最初の再生/Stopは終端付近で旧gate未達、別の再生は残り2.688秒・8.557482秒で旧gate合格という両記録を保持する。315 package・86 sample・observer・root user4ファイルも終了後に照合済み。timeSamples警告は残っており、無警告・通常API速度・公開取得・実マイクの合格にはしない。
-
-| 項目 | 現状 | 主な根拠 |
-| --- | --- | --- |
-| テキスト推論・検索 | UPM、保存・Float16重み、Text Searchを実装。固定Git consumerとWindows Playerの実モデル検索を確認 | [PR #31](https://github.com/ayutaz/unity-embeddinggemma-2/pull/31)、[Player監査](results/m2-current-main-player-acceptance-20261017.json) |
-| 画像・音声API | 実Texture / PCMからGPU前処理→encoder→共通backbone→正規化768次元。Query / Document / Rawを固定入力で検証 | [PR #79](https://github.com/ayutaz/unity-embeddinggemma-2/pull/79)、[元API完了監査](results/goal4-current-completion-audit-20261016.json) |
-| 画像・音声検索サンプル | Package ManagerからImport可能。実ファイル登録、混在検索、module切替、キャンセル・復帰・解放 | [PR #83](https://github.com/ayutaz/unity-embeddinggemma-2/pull/83)、[サンプル検証](multimodal-search-sample.md) |
-| モデルbundle・cache | FP32 / Float16の公開previewから6 moduleを準備。サイズ・SHA256照合、選択moduleのcache・破損修復・排他lease | [空cacheからの匿名取得・復帰](results/public-model-consumer-8649c94-20261018.json)を確認。正式SDK tagの新規consumer導入は未実行 |
-
-PR #31と#83はマージ済みです。#83の検証head `613ada824bd13a297660d8c4de4c2c14b4e317e8` は[CI 38939320058](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/38939320058)の15 jobすべて成功。統合後mainと同じtreeです。これはコード統合の確認であり、正式リリースの完了ではありません。
+[導入](../README.md#導入) / [対応構成](windows-supported-configuration.md) / [今後の計画](roadmap.md)
 
 ## 確認済みの範囲
 
-実測はそれぞれの固定sourceに対応します。異なるsource・Unity版の結果を、最新headの全条件再実行として合算しません。
+| 項目 | 実行結果 |
+| --- | --- |
+| 固定tagの導入 | Libraryをコピーしない空consumerで公開Git tagを解決し、実PackageCache・依存・sample bytesを固定sourceと照合 |
+| テキスト | FP32 / Float16、document / query / rawの元15ケース。EditorとWindows Playerで確認 |
+| 画像・音声 | 両形式の画像3形状・音声2profile、全role。前処理→encoder→backbone→正規化768次元を実GPUで確認 |
+| RenderTexture | Editorはsquareの全role、Playerは全3形状・全roleを両形式で確認。Playerは各形式51実呼び出し |
+| 横断検索 | テキスト6・画像6・音声6の混在索引、4 query、全72順位 / scoreを元参照と照合 |
+| Windows Player | Win64 / IL2CPP / Release / High stripping。mediaの独立cold / warm各2形式、RenderTexture各形式、text 2起動の計8実processが正常終了 |
+| GPUと寿命 | actual Worker backend、計算CPU fallback・中間readbackなし、キャンセル後の再実行、解放・正常終了を監査 |
+| モデル | 公開preview由来の全6 module、各形式820 objectのsize / SHA256、LICENSE・NOTICE・MODIFICATIONSを確認 |
+| 公開 | 正式版・latest・tagのSHA・package版・ライセンス・実Release本文を公開後に読み戻して一致確認 |
 
-| 検証 | 結果・範囲 | 固定記録 |
-| --- | --- | --- |
-| 元画像encoder | 6画像・3 profile、778,240値が参照とbit一致 | [画像結果](results/m3-adjacent-reciprocal-all-image-gpu-passed-20261015.json) |
-| 元音声encoder | 6信号・2 profile、824,320値で元許容差超過0 | [音声結果](results/m4-staged-original-encoder-and-final-text-gpu-regression-20261016.json) |
-| 元APIの最終vector | 画像・音声それぞれ全6入力×3 role、各18条件合格。画像RenderTexture・復帰も確認 | [画像API](results/m3-final-image-api-all-cases-all-roles-gpu-20261016.json)、[音声API](results/m4-real-pcm-all-roles-staged-gpu-20261016.json)、[RenderTexture](results/m3-rendertexture-recovery-and-text-gpu-regression-20261016.json) |
-| 保存bundleから実画像・PCM | 5 profile・12条件、最終Document vectorの最小cosine 0.9999998052055729。5プロセスすべて正常終了 | [全profile](results/multimodal-prepared-media-all-profiles-gpu-20261017.json) |
-| 混在サンプル | 実音声・画像、固定4 query、GPUキャンセル→再実行→切替→解放・終了。修正後warmのホストピーク約9.49 GiB | [混在実行](results/multimodal-search-mixed-sample-cache-retirement-20261017.json) |
-| 実PlayMode画面 | 固定Git `1d8d868`新規consumerで画像・音声GPU登録、日英検索の元参照、画像表示、再生・明示途中停止、エラー復帰・解放・exit0を実マウス・キーボードで確認。既存ローカルFloat16モデルの範囲 | [新規consumer監査](results/fresh-native-ui-1d8d868-full-local-bundle-20261018.json) |
-| Unity全体回帰 | package + Text Search + Image and Audio Search、505 pass / fail0 / skip0、正常終了 | [全体回帰](results/multimodal-sample-canonical-regression-20261017.json) |
-| Windows text Player | IL2CPP / Release / High stripping、独立cold / warm、4 query×6順位・score、FP32 GPU、正常終了。CPU計算fallback0 | [Player監査](results/m2-current-main-player-acceptance-20261017.json) |
+固定元参照のFP32 cosine >= 0.999、Float16重み >= 0.99、有限・単位長、検索scoreの絶対誤差 <= 0.001を維持しています。
+元encoderの要素別許容差も変更していません。根拠と数値は[正式版の確認記録](results/windows-v010-release-20261021.json)、
+検証前の工程1〜3は[当時の記録](results/windows-first-stages-1-to-3-20261020.json)を参照してください。
 
-元APIは主にUnity6000.3.16f1、最新サンプル・consumer・Playerは6000.3.21f1です。いずれもSentis2.6.1 / Windows / RTX4070 Ti SUPER / D3D12の固定実測です。Playerの合格範囲はtext検索で、画像・音声Playerの合格を含みません。
+## 対応構成と制約
 
-## GPUとメモリ
+Windows 11 x64、Unity 6000.3.21f1、Sentis 2.6.1、D3D12、RTX 4070 Ti SUPER、
+Ryzen 9 5900X、RAM64 GB / VRAM16 GBクラスが検証済み構成です。
+より小さいメモリ構成が動かないと証明した物理的最低容量ではありません。他GPU・他Unity版の成功を含めません。
+macOS / iOS / Androidは未対応です。既存の小さいMetal probe・APK build・単体テストを実モデルGPUの合格にしません。
 
-画像・音声の受け入れ経路はGPUComputeで実行します。中間tensorのCPU readback・計算fallbackを許可せず、入力の取得・upload、CPU tokenizer、最終768次元のCPU取得を境界として扱います。
+画像・音声は[固定入力profile](../Packages/com.ayutaz.embeddinggemma/Samples~/MultimodalSearch/README.md)を使います。
+tokenize・decode・PCM取得はCPUの入出力境界で、最終vectorはCPU配列へ返します。
+テキストAPIの明示的CPU条件は診断と分け、GPU非対応時に自動fallbackしません。
+全演算FP16化、任意入力の検索品質、普遍的な高速化倍率、長期運用、他機器の成功は今回の結果から保証しません。
 
-音声キャンセル後の再実行でホストメモリが16,757,751,808 bytesに達した失敗を保持しています。GPU fence完了を待つ前処理とcache解放へ修正後、同じ混在warm手順は10,190,360,576 bytesで正常終了しました。修正前cold合格と最終vectorはbit一致しています。
+## 結果の読み方と保持している失敗
 
-全profile検証の最大ホストピークは12,090,900,480 bytes（約11.26 GiB）。これらは実測であり、VRAM必要量・全端末の最低メモリ・長期安定性・速度の保証ではありません。Float16重み保存も高速化の保証にはしません。
+- PlayerのRenderTextureは非公開の追加検証harnessでSDKへ実入力を渡しました。harnessの付随入力metadata保存不足と初回監査失敗を保持し、全28入力原本・固定参照・ビルドした入力検証コードを別監査で照合しました。実行原本・数値基準は変更していません。音声は同版の通常cold Playerの実出力を再利用し、RT process内の音声再推論とは数えません。
+- text専用Playerの全15ケースは実Runtime内で数値判定し、保存queryの順位 / scoreを独立照合しました。保存していない全raw vectorの独立再計算や、そのmatrixでの直接Worker割当監査は主張しません。同じtextモデルのWorkerは混在検索で別途監査しています。
+- 新規公開モデルのcold取得sourceと、最終clientのwarm再検査sourceを分けています。HTTP 500による中断・再開も保持し、新tagで一度にcold network取得した成功とは表示しません。
+- Required CIは全15 job成功、実13 archiveを独立照合しました。別workflowの[Windows CPU参照](windows-CPU-CI.md)はsource・hostを限定します。Intel hostでの画像不一致は未解決で、許容差を緩めていません。これはSDKのCPU fallbackではありません。
+- 他platformのCIライセンスfailure・実機未実行、過去の数値不一致・timeout・欠測は各sourceの記録として残します。[性能とメモリ](windows-media-memory-results.md)は観測範囲に限定し、欠測を0へ置換しません。
+- 旧provider側PR / cacheコピーの除去は延期事項です。現在の送信履歴・実payload・公開identity・画像bytesのprivacy検査とGit hooksは維持します。
 
-既定Assets indexの[明示的な再構築](editor-index-rebuild-observations.md)では、SDK `d7b2233` / validation `9b6f28e` の両sample 86ファイルを導入した既存consumerで、readyでも0文書だったcacheを40文書へ構築し、固定fixture・両sceneの直接検索を2回確認した。6 pass / skip0 / exit0。最初の再構築9.146613秒、同Editorの反復0.0232275秒で、平均性能・推論時間・cold importの値にはしない。失敗した前のprobe、managed Process memoryのraw 0を利用不能とした記録、背景専有allocationの欠測も保持する。
+## 記録と次の作業
 
-## 未完了・未検証
-
-ロード・解放は[同じSDKの12実行と固定sourceを照合](load-release-measurement-scope.md)しました。ロード中に大きな定数・独自operationのGPU転送があるためCPUだけの仕事とは扱わず、未取得のGPU時間はnullを維持します。4回の推論完了後のcloseは、処理中キャンセルやdriverのVRAM返却完了の時間を示しません。この範囲監査でGPU時間の取得を完了扱いにはしません。
-
-同文書の小規模な転送・解放対照実験では、SetDataの3区間はGPU値・データ一致を確認しましたが、DisposeのGPU値は711描画frameでも欠測で、全体は0 pass / 1 fail / skip0 / exit2でした。先行の記録保存失敗と独立記録欠落のRedも保持し、実装後の試行名 `green` や演算controlの成功を、解放計時・実モデルの受け入れ成功とは扱いません。
-
-[Windowsのraw Timer100Nsによる別観測](windows-gpu-engine-observations.md)も追加しました。収集protocolを含む21件が成功し、実textを2プロセス・計8 vectorの参照一致と正常終了へ対応付けています。修正後のload内3観測点・14 engineで観測点間の差分0を確認しましたが、load全体の境界は覆えておらず、約10msのreleaseには観測点がありません。SDK専有のGPU時間とは扱わず、欠測は維持します。
-
-[Editor再構築のframe全体GC](editor-frame-allocation-observations.md)は、EditModeの既知8MiB校正と実indexの2反復を7 pass / skip0 / exit0まで確認しました。40文書と両sample sceneを保持し、累積24,371,666 / 274,417 bytesとnative processメモリを記録しています。index専有bytesやGPU/実モデルの合格ではなく、Profiler不整合・compile未実行等の先行失敗も保持します。
-
-### 進行中PRの確認済み範囲
-
-- [#85](https://github.com/ayutaz/unity-embeddinggemma-2/pull/85): 画像プレビュー・音声再生・明示的なマイク操作の実装。固定Git consumerで画像・音声登録、日英検索、エラー復帰・キャンセル再試行・切替・解放と正常終了を実際のマウス・キーボードで確認しました。実マイクは未実行です。
-
-途中停止の追加操作では、既存consumerのwarm起動から固定11.2秒の合成音声をGPU登録して再生し、7.232秒の位置から停止状態へ移行しました。登録内容の解放とEditor正常終了code0も確認しました。[途中停止監査](results/native-audio-early-stop-e28a5fd-20261018.json)。新しい空consumerの再検証や聴感品質の評価には数えません。
-
-非録音時のpauseによるstatus上書きは、PR #85の追加差分 `99cc826` で修正しました。録音中のキャンセルとpause時の再生停止は維持し、意図したstatus不一致1件のRedから関連9件Green・skip0・exit0を確認しました。これはモデルを使わないlocal-file consumerの回帰であり、新sourceの実GPU・固定Git操作再検証とは別です。
-
-固定Git `e28a5fd` を新規consumerへ解決し、SDK311ファイルとsample86ファイルを照合した実画面操作では、Float16重みの画像1件・合成音声1件をGPU登録し、日英2 queryの順位とscoreを独立Python基準へ照合しました。プレビューを目視し、AudioSourceの再生位置の進行、登録・プレビュー・モデルの解放、PlayMode終了とEditor正常終了code0を確認しました。[固定操作監査](results/fresh-git-native-ui-e28a5fd-20261018.json)。既存のローカル準備済みbundleを使用しており、公開入力からの空cache取得や実マイクの証拠ではありません。再生停止操作は自然終了付近だったため早期停止の証明を残しません。また、非録音時のpauseによる誤解を招くstatus上書きとEditor終了時のJobTempAlloc警告を保持し、正常終了だけで警告の解消とは扱いません。
-- [#86](https://github.com/ayutaz/unity-embeddinggemma-2/pull/86): 固定bundleの取得・監査・再試行・修復。公開取得元から全6 moduleを空cacheへ取得する実行証拠は未完了です。
-- [#87](https://github.com/ayutaz/unity-embeddinggemma-2/pull/87): Float16重みの全6 module・固定16ケースは、単独Editorの実GPUで参照比較・正常終了を確認しました。[固定結果](results/all-six-module-float16-e28a5fd-acceptance-20261018.json)。同一プロセスの連続実行、検索順位、性能、実UIの合格を含みません。
-
-SDK `e28a5fd`のFP32連続試験は、12GiB guardでの中断を保持しています。16GiBの明示割り当てによる別試験も、画像3件と音声1件の登録後、2種類目の音声処理中に既存900秒のfixture上限を超えました。後続テキストfixtureは合格しましたが、全体は1 pass / 1 fail / skip0 / exit2です。[失敗記録](results/combined-fp32-e28a5fd-16gib-timeout-20261018.json)。上限変更や過去sourceの成功をもって、安定性の改善とは扱いません。
-
-同じSDK・16GiB割り当てのPlayMode試験では、FP32とFloat16重みの両方で、画像・音声5件の登録、日英4 queryの全順位・score、GPU-stageでのキャンセルと再試行、Worker・kernel・tensor・cache leaseの解放、続く直接テキスト4件を確認しました。各2 pass / fail0 / skip0 / exit0で、ホスト生涯ピーク最大はFP32が14,559,334,400、Float16が11,157,610,496 bytesです。[対応する入力・順位・sourceの照合](results/fp32-float16-e28a5fd-playmode-correspondence-20261018.json)。これはlocal-file consumerを自動操作した結果で、固定Gitの手動操作や速度改善、最低RAMの証拠ではありません。[4画面の目視確認](results/fp32-e28a5fd-rendered-results-visual-inspection-20261018.json)でも、実際の音声再生とマイク確認は未実行です。
-
-同一テキストの初期観測では、両形式で各4回の実GPU実行・参照一致・解放・exit0を確認しました。[初期観測と限界](results/text-fp32-float16-e28a5fd-measurements-20261018.json)。RecorderとProfiler履歴のGPU値の差、および割り当てAPIの全0を保持します。短い各呼び出し内のGPUメモリ観測も欠測であり、性能全体の合格ではありません。後述する校正結果を、この古い実行の割り当て量へ遡って代入しません。
-
-初回command-buffer区間の実測は、4回目のGPU履歴走査で観測上限200,000 nodeに達し、NUnit 0 pass / 1 fail / skip0 / exit2でした。[失敗監査](results/text-command-buffer-failure-review-20261018.json)。その後、停止した履歴を読む方式では4回の参照一致・解放・exit0まで完走しました。GPU時間の解釈は別途校正中です。
-
-管理メモリの割り当ては、既知の64KiB / 128KiB配列を検出できなかった `GC.GetAllocatedBytesForCurrentThread` を利用不能とし、停止したCPU履歴の `columnGcMemory` で別途校正しました。noop / 64KiB / 128KiBは0 / 65,568 / 131,104 bytes、差分は65,536 bytesで、1 pass / fail0 / skip0 / exit0です。[校正と失敗の区別](results/managed-allocation-scoped-byte-calibration-20261018.json)。FP32の実GPU SDK APIを同一入力で4回測定し、初回547,694 bytes、warm27,224 bytes、続く2回各26,036 bytesを記録しました。4 vectorの独立参照一致・解放・exit0も確認しています。[FP32 APIの割り当て監査](results/text-performance-fp32-e28a5fd-calibrated-cpu-allocation-allocation-audit-20261018.json)。この値は正確なCPU marker内のメインスレッド管理メモリであり、他スレッド・native / GPUメモリ・非同期stage全体の値ではありません。
-
-Float16重みの同じSDK APIでも、初回610,830 bytes、warm26,100 bytes、続く2回各26,036 bytesを観測し、4 vectorの独立参照一致・解放・exit0を確認しました。[Float16 APIの割り当て監査](results/text-performance-float16-weights-e28a5fd-calibrated-cpu-allocation-allocation-audit-20261018.json)。これは個々の固定呼び出しの観測であり、初回条件の違いから精度形式による速度・割り当て改善を推定しません。その後、画像3・音声2 profile×両形式の全40回で、stage別CPU/wall・参照一致・解放・exit0を確認しました。[反復測定とSearchの観測](media-repeat-measurements.md)。stage別GPU時間の校正、非同期割り当て、必要なEditor index再構築・cold import / allocationの受け入れは残っています。
-
-FP32のGPU区間の対照実験では、送信前の250ms CPU待機を加えた1回のdispatchでもRecorderは14.225 / 23.614msで、2回のdispatchでは41.850msでした。4回とも参照一致・解放・exit0を確認しました。[対照実験の固定記録](results/controlled-text-gpu-scope-fp32-20261018.json)。送信前のCPU待機とGPU仕事量への応答を区別できた観測ですが、事前転送済みWorkerの4観測に限ります。SDK API全体の遅延、純粋なkernel稼働時間、平均性能や他stageの校正へ拡張せず、異なる値を示すProfiler履歴の解釈も未確定のままです。
-
-SDK `e28a5fd` と計測 `7ecec1f` をGitから固定書き出しした別consumerでも、実行後に534 sourceファイルを再照合しました。[FP32対照実験](results/controlled-text-gpu-scope-fp32-frozen-calibration-framework-repaired-20261018.json) / [Float16対照実験](results/controlled-text-gpu-scope-float16-weights-frozen-calibration-framework-repaired-20261018.json)は各4 vector・解放・1 pass / skip0 / exit0です。両形式で送信前250msの待機よりRecorderの区間が短い観測を得ましたが、Float16の初回単発値は2 dispatchの値より大きく、「2回がすべての単発より長い」という対照条件は不成立のまま保持します。少数の初回・warmを混ぜて平均性能や速度改善を主張しません。
-
-この固定consumerの最初の起動はTest Frameworkの型解決エラーでsafe modeに入り、テスト未実行でした。正常終了code0だけを合格にせず、公式1.6.0の1168ファイルをbyte照合してembedded packageにした後、両形式が実行できました。検証用projectだけAcceleratorを無効化し、既存のuser設定は保持しています。[環境復旧と重なりのあるimport / reload観測](results/frozen-measurement-environment-recovery-20261018.json)。この復旧時点の実行ではsearch DBの所要時間は未測定でした。別のモデルなしconsumerでは既定indexの初期化・準備待ちとpackage検索4回・exit0を確認しましたが、ファイルパス検索も含むためindex単独・再構築・allocationの受け入れではありません。
-
-固定FP32の旧計測では、Profiler履歴のms→ns変換から負のlong値も検出しました。元のfloat値は未保存で原因未確定です。非数・非正値・long範囲外・丸め後0を履歴の有効時間にしないguardを2件Red→関連10件Greenで追加しました。[変換のTDD](results/gpu-history-value-bounds-tdd-20261018.json)。これはモデルなしのguard検証であり、GPU履歴の解釈やstage別性能の合格には数えません。旧snapshotの不正な履歴値は未利用可能の観測として保持します。
-
-固定sourceの追加試行では、両形式で250msの送信前CPU待機をGPU Recorder区間に含まず、2 dispatchが単発値より長い対照結果を得ました。[追加の制御実験](results/frozen-source-gpu-dispatch-scope-calibration-20261018.json)。上記の別試行で対照条件が不成立だった事実は保持します。待機なし・各1 dispatchの初回 / warm / 2反復も、両形式で4 vectorの参照一致・解放・1 pass / fail0 / skip0 / exit0を確認し、実行後の534 sourceファイルを再照合しました。[通常dispatchの観測](results/frozen-source-text-gpu-dispatch-observations-20261018.json)。入力転送・tokenizerは測定外で、CPU完了時間にはcommand構築・GPU fenceのframe待ち・最終readbackを含みます。SDK API全体の遅延、純粋なkernel稼働時間、平均速度や形式間の高速化は主張しません。Profiler履歴の別値は未確定のままです。
-
-### 新SDKのGPU区間とEditor割り当て
-
-SDK `d7b2233` / 計測 `10962fa` の[全5 profile・両形式の40反復](media-gpu-submission-observations.md)では、元参照・解放・正常終了と、encoder 17,176区間、前処理/backbone 80区間すべてを確認しました。CPU/wall・ロード/解放・ホストメモリを別記し、9プロセスで実際のcounter採取時刻によるGPU memoryも照合しました。FP32 squareのcounter traceと短い区間の欠測は保持します。計測付きAPI・共有cacheを残した固定入力の観測で、通常APIの平均速度・形式間の高速化・最低VRAMではありません。
-
-別のモデルなしconsumerでは、[Editor検索の校正済み割り当てと空/再利用Library](editor-search-allocation-observations.md)を確認しました。noop / 64KiB / 128KiBは両実行で0 / 65,568 / 131,104 bytes、既知SDKファイルの検索4回、各10 pass / fail0 / skip0 / exit0、終了後558 sourceファイル一致です。main-thread marker内のmanaged bytesであり、背景index・native/GPUメモリ・非同期完了の割り当てではありません。検証専用consumerの空Library起動は実import 2658件、再利用起動は0件で、起動/import/reloadの時間は重なるため加算しません。
-
-### 同SDKのtextとフレーム単位GCのcontrol
-
-同SDKの[text両形式の固定query各4反復](text-current-sdk-observations.md)も、独立参照・停止CPU履歴のmanaged bytes・解放・各1 pass / skip0 / exit0まで確認しました。GPU Recorderと履歴の値の差は残っており、cross-method interpretationを合格にせず、純粋なkernel時間とは扱いません。
-
-モデルなしの[frame GC control](async-frame-allocation-observations.md)は、既知の0 / 4MiB / 8MiBを実際のcounter更新に分けて取得し、10 pass / skip0 / exit0でした。描画frameだけを待った旧controlの9 pass / 1 fail / exit2を保持し、元の上限を変えていません。フレーム全体の値は無関係のEditor処理・observerも含み、実モデルの非同期allocationやSDKだけのbytesの合格ではありません。
-
-続く[FP32音声の代表実行](results/async-real-audio-frame-allocation-9bed619-20261018.json)では、元のGPU検証4 vector・解放の後に割り当て記録の欠落で失敗するRedを確認し、接続後は1 pass / skip0 / exit0でした。counter sample 2052個の合計は6,984,175,075 bytesです。入力準備・ロード・検証用I/O・解放・含まれるframeのEditor処理を含む累積割り当てで、SDKの個々のstageのexclusive bytesやホストピークではありません。元のasync呼び出し本体・参照・GPU要件は維持しました。
-
-### 残る受け入れ
-
-- 空のcheckoutから画像・音声bundleを準備する公開手順と配布経路。
-- 公開手順で取得したモデルと最終統合candidateを新しいconsumerへ導入する最終受け入れ。既存ローカルFloat16モデルと固定Git `1d8d868`の画像・音声・日英検索・解放・正常終了の一連操作は上記で確認済み。
-- 結果画像プレビュー・音声再生・明示的なマイク操作のPR統合と実操作の受け入れ。
-- load/release GPU区間の扱い、代表的な非同期割り当て区間と個別stageの測定範囲・欠測の最終監査、明示的index再構築時の専有allocation・背景処理。
-- 画像・音声検索のWindows Player、macOS Editor、iOS / Android実機での精度・操作・cache・正常終了。Androidの過去のAPK build成功は実機GPU合格ではありません。
-- 全モダリティの採用Float16形式・明示CPU経路の環境別受け入れ、最終candidate / tag固定導入、正式Release。
-
-過去のCPU対ONNX診断失敗、旧同期音声のメモリ上限停止、未実行・skipは成功に置き換えません。[サンプル検証](multimodal-search-sample.md)と[過去の設計・検証資料](README.md)に保持しています。次の順序・依存・公開条件は[ロードマップ](roadmap.md)を参照してください。
+[文書一覧](README.md)から、利用手順、性能、CI、固定sourceの検証記録を参照できます。
+過去の成功・失敗JSONを現在のsourceの再実行へ読み替えません。今後の実行順と開始条件は[ロードマップ](roadmap.md)へ集約します。

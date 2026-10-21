@@ -1,9 +1,10 @@
 # Pinned native audio regression distribution
 
 This acquisition route preserves the selected generation's original numerical
-gate without depending on an Actions artifact retention period. The candidate
-workflow uses it explicitly; a fresh complete six-case execution remains pending
-at this implementation checkpoint.
+gate without depending on an Actions artifact retention period. The required
+workflow uses it explicitly. The six-case execution and independent audit passed
+in the [Windows v0.1.0 release acceptance](results/windows-v010-release-20261021.json).
+Earlier implementation checkpoints below retain their original source and scope.
 
 The [data preview](https://github.com/ayutaz/unity-embeddinggemma-2/releases/tag/native-regression-preview-e9de158)
 contains two metadata-clean PT2 graphs, four original/candidate reference and

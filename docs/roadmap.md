@@ -47,7 +47,8 @@ P2の[限定調査記録](results/post-release-Intel-CPU-investigation-20261021.
 ## 依存更新PRの確認
 
 [certifi #120](https://github.com/ayutaz/unity-embeddinggemma-2/pull/120)と[Pillow #121](https://github.com/ayutaz/unity-embeddinggemma-2/pull/121)は別々に判断します。
-この更新時点では両PRのRequired CIの結果を取得できず、mergeStateStatusはBLOCKEDでした。原因を確認する前に成功や不要と判断しません。
+両PRのPython・model-referenceは成功しましたが、package privacyとRequired CIは失敗しています。原因と個別差分の照合は[保守の中間確認](results/windows-maintenance-review-20261021.md)に記録しました。
+privacy規則を変更せず、依存差分だけを公開identityで[PR #123](https://github.com/ayutaz/unity-embeddinggemma-2/pull/123)へまとめました。新sourceの完全なCIはこのcheckpointでは実行中です。
 Pillowはmajor更新のため、画像の読み込み・生成・既存fixtureとの互換性を特に確認します。
 既存runのsourceと結果を読み戻し、具体的な失敗を修正する場合はTDDで対応します。同じ重いCIの再実行を増やさず、新しいcommitや修正が必要な場合だけ、そのheadの回帰を追加します。
 
@@ -109,5 +110,6 @@ P0は完了済みです。P1の各実GPU実行は30分以内とし、開始・�
 過去の実行結果は元sourceに結び付け、新sourceの再実行へ書き換えません。
 
 利用者に影響する修正がまとまった段階で次のpatch版を判断します。版・CHANGELOG・影響範囲の実GPU・新規consumer・固定tag・公開後の読み戻しを揃えます。
+現時点の[暫定判断](results/windows-maintenance-review-20261021.md)は、SDK Runtimeとpackage版に変更がなく、toolsの依存更新と文書だけで新しいSDK Releaseは不要です。音声GPUの追加検証は引き続き必要です。
 CIや文書だけの改善でSDKの新しい版を必須にせず、次の版番号・公開日はまだ固定しません。
 旧provider側PR / cacheコピーの除去はご指定どおり保留し、新規公開物のprivacy検査は継続します。

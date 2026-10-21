@@ -6,9 +6,19 @@
 
 ## 現行の必須CI
 
-`.github/workflows/ci.yml`はPR・mainへのpush・手動起動で実行します。Python3.13 / 3.14 × Windows / Ubuntuの単体テスト、workflow lint、package監査、実モデル参照・exportと固定音声6条件のONNX比較を実行し、`Required CI`で集計します。
+`.github/workflows/ci.yml`はPR・mainへのpush・手動起動で実行します。まず実Git差分とeventのbase / head / sourceを照合し、次の経路を選びます。
 
-通常CIは文書だけの変更でも実モデルのCPU参照生成・比較を含みます。これはUnity RuntimeをCPUで推論する設定ではありません。Unity実GPU・UI・Player・実機の受け入れは別に実施します。GPUテストのskipをGPU成功にせず、CI成功だけで正式公開条件を満たしたとしません。
+| 変更 | 必須の検査 |
+| --- | --- |
+| `README.md`と`docs/`内のMarkdownだけ（`docs/privacy.md`を除く） | 差分・リンク・元の送信祖先すべて・公開profile・実PR本文のprivacy検査、workflow lint |
+| Runtime、Editor / sample、tests、参照 / モデル、依存、workflow、privacy規則、その他のpath | 従来のPython3.13 / 3.14 × Windows / Ubuntu、workflow lint、package監査、実モデル参照・exportと固定音声6条件のONNX比較 |
+| 手動起動、比較元がない場合、mode変更、renameでcodeを隠す場合、判定できない差分 | 完全な既存回帰。分類job自体が失敗した場合はRequired CIも失敗 |
+
+集約checkの名前は`Required CI`です。別のjobでGit差分を再計算し、分類結果・対象source・差分digestの一致を確認します。必要なcheckの欠落・failure・cancel・予期しないskipは失敗です。文書経路ではモデルjobは明示的に未実行と記録し、成功したモデル / GPU検証とは数えません。
+
+この振り分けは実装と小さい契約テスト・workflow lintを確認した段階です。実PRの文書経路・完全回帰の受け入れは別途記録します。文書経路の実行時間10分以内は、runner待ちを除く未測定の目標です。
+
+完全回帰のCPU参照生成・比較はUnity RuntimeのCPU推論設定ではありません。Unity実GPU・UI・Player・実機の受け入れは別に実施します。CI成功だけで正式公開条件を満たしたとしません。branch protectionと、各artifactの公開前guardは変更していません。
 
 ## 固定参照の取得と保持
 

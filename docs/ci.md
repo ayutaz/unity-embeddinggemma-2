@@ -20,6 +20,10 @@
 
 完全回帰のCPU参照生成・比較はUnity RuntimeのCPU推論設定ではありません。Unity実GPU・UI・Player・実機の受け入れは別に実施します。CI成功だけで正式公開条件を満たしたとしません。branch protectionと、各artifactの公開前guardは変更していません。
 
+### 文書経路の結果を読む
+
+`documentation`の`model_execution=false`は、リンク・送信履歴・公開payloadを検査し、モデルを実行していないことを表します。`Required CI`の成功を、新しい実モデルやGPUの検証成功へ読み替えないでください。コード変更などの完全回帰では、元の各jobの実結果を別に確認します。
+
 ## 固定参照の取得と保持
 
 現行のモデル回帰は[明示的な配布入力とaudit](native-regression-distribution.md)を使用します。

@@ -22,6 +22,10 @@
 
 完全回帰のCPU参照生成・比較はUnity RuntimeのCPU推論設定ではありません。Unity実GPU・UI・Player・実機の受け入れは別に実施します。CI成功だけで正式公開条件を満たしたとしません。branch protectionと、各artifactの公開前guardは変更していません。
 
+Pythonのunit jobはWindowsの両versionを30分、Ubuntuを20分で制限します。
+実装PRの[初回最終head CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39559163998)では、Windows / Python 3.13のunit tests自体は成功しましたが、後続の必須artifact privacy検査中に20分のjob上限で取消になりました。
+このjobは未受け入れです。Windows 3.14で既存の30分上限を3.13にも適用し、tests・privacy検査・uploadまで完了を確認します。元の数値gate、検査内容、モデルjobの上限は変更しません。
+
 ### 文書経路の結果を読む
 
 `documentation`の`model_execution=false`は、リンク・送信履歴・公開payloadを検査し、モデルを実行していないことを表します。`Required CI`の成功を、新しい実モデルやGPUの検証成功へ読み替えないでください。コード変更などの完全回帰では、元の各jobの実結果を別に確認します。

@@ -10,17 +10,18 @@
 
 | 作業 | 現在の状態 | 次の完了条件 |
 | --- | --- | --- |
-| P0: CIの振り分け | 実装済み。文書専用の[PR #119](https://github.com/ayutaz/unity-embeddinggemma-2/pull/119)はRequired CIまで39秒で完了。モデル実行は明示的に未実行 | コードを含む[PR #118](https://github.com/ayutaz/unity-embeddinggemma-2/pull/118)の完全なCIと最終headを確認する |
+| P0: CIの振り分け | 文書専用経路はRequired CIまで39秒で成功。完全なCIではWindows / Python 3.13のtests後のprivacy検査が20分上限で取消になり、Windows両環境を30分へ修正 | コードを含む[PR #118](https://github.com/ayutaz/unity-embeddinggemma-2/pull/118)の修正後headで完全なCIを確認する |
 | P1: Windowsの反復利用 | image-square / Float16の実Player 15 vectorと、実sampleの登録→検索→中断→再試行→切替→解放を独立照合済み。マイク契約10件と短時間の実device制御も成功 | 音声GPUの追加反復を実行できていないため、P1全体は未完了 |
 | P2: Intel CPU参照差分 | 初回の限定調査を完了。入力・依存・参照・演算設定が同じでもIntel / AMDのencoder出力が分岐する。内部の最初の演算は未特定 | host限定を維持して保留。内部layer captureを比較できる具体的な機会ができた場合に再開する |
 
 まずP0の実行中CIを読み戻します。同じ設定の重い再実行は増やさず、成功・失敗・未実行を確定します。
-計画PR #117の内容はPR #118に含まれています。#119の文書補足も統合し、役割が重なるPRは統合済みと確認してから整理します。3本を個別にmainへmergeする必要はありません。
+計画PR #117の内容と#119の文書補足はPR #118に含まれています。公開headの内容を確認し、#117と#119は個別にmergeせず閉じ、#118の1本に整理しました。
 最終headのRequired CIとprivacy検査を通し、merge依頼がある場合に統合します。
 
 P1の[追加検証記録](results/post-release-windows-stability-20261021.json)では、元の画像参照とのcosine・検索順位とscore、実Worker・解放・正常終了を照合しています。GPUメモリは観測値と欠測を記録し、保証されたpeakとは扱いません。sampleの手動GUI操作や、submitted GPU kernel内での中断を証明した結果ではありません。
 合格済みの画像条件を理由なく再実行しません。
 音声は対象条件の既存VRAM観測値と安全余裕を満たす場合に順番に実行します。現在の空き容量ではその条件を満たしていないため、重い音声モデルは起動せず、契約テストなどの独立した作業を進めます。
+音声sampleの[入力検査](results/audio-frontend-check-20261021.md)は実Editorで合格しました。元のデコーダーと波形・マスクが一致することの確認であり、音声GPU推論の追加合格ではありません。
 CPUへの切替で代用せず、未実行範囲を残します。実マイクの物理切断・復帰と他GPU / 他OSも、実施するまで未検証です。
 
 P2の[限定調査記録](results/post-release-Intel-CPU-investigation-20261021.json)は参照ツールの再現性を対象とし、製品のSentis GPU推論とは別です。

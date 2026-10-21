@@ -1,42 +1,98 @@
 # ロードマップ
 
 更新: **2026-10-21**。Windows版 **[v0.1.0は正式公開済み](https://github.com/ayutaz/unity-embeddinggemma-2/releases/tag/v0.1.0)** です。
-新tagの空consumer導入、両重み形式の実Editor / Windows IL2CPP Player、GPU監査、公開後の読み戻しまで完了しました。
-[現状](status.md)と[正式版の確認記録](results/windows-v010-release-20261021.json)を基準にし、公開前の重複計画は廃止します。
+公開tagからの新規導入、FP32 / Float16の実Editor・Windows IL2CPP Player、GPU監査と公開後の読み戻しは完了しています。
+[検証状況](status.md)と[正式版の記録](results/windows-v010-release-20261021.json)を基準に、今後はWindows版の保守と利用時の安定性を優先します。
 
-## ここからの優先順
+## 現在地と直近の順序
 
-| 順序 | 作業 | 開始条件・完了条件 |
+2026-10-21時点の追加作業は、次の状態です。正式版の受け入れ結果と、公開後の追加検証を区別します。
+
+| 作業 | 現在の状態 | 次の完了条件 |
 | --- | --- | --- |
-| 1 | Windows版の保守と導入文書の維持 | 不具合報告時はsource・model descriptor・入力profile・GPU / driver・再現手順を固定する。最小再現をTDDで修正し、影響する数値・cancel / recovery・解放を元基準で確認してPR化する |
-| 2 | CPU参照ツールのhost差の切り分け | Intel hostの画像中間値不一致を[既存記録](windows-CPU-CI.md)から小さい固定入力へ絞る。仮説と時間 / メモリ上限を先に決め、元中間値・最終vector・load / releaseが揃った条件だけを追加受け入れする。失敗へ許容差や期待値を合わせない |
-| 3 | 性能・対応機器の拡張 | 同一source・同一入力・同一仕事量での必要な比較を先に設計する。既存の機器と無料枠で実行できる場合だけ進める。stage / wall / CPU / GPU時間とRAM / VRAMの観測範囲を分け、新しい数値一致と正常終了を確認して対応表へ反映する |
-| 4 | macOS / Android / iOSの受け入れ | 下記の環境条件を満たしたplatformだけを開始する。Windows公開は完了しており、他platformの準備待ちで再度保留しない |
+| P0: CIの振り分け | 文書専用経路はRequired CIまで39秒で成功。完全なCIではWindows / Python 3.13のtests後のprivacy検査が20分上限で取消になり、Windows両環境を30分へ修正 | コードを含む[PR #118](https://github.com/ayutaz/unity-embeddinggemma-2/pull/118)の修正後headで完全なCIを確認する |
+| P1: Windowsの反復利用 | image-square / Float16の実Player 15 vectorと、実sampleの登録→検索→中断→再試行→切替→解放を独立照合済み。マイク契約10件と短時間の実device制御も成功 | 音声GPUの追加反復を実行できていないため、P1全体は未完了 |
+| P2: Intel CPU参照差分 | 初回の限定調査を完了。入力・依存・参照・演算設定が同じでもIntel / AMDのencoder出力が分岐する。内部の最初の演算は未特定 | host限定を維持して保留。内部layer captureを比較できる具体的な機会ができた場合に再開する |
 
-文書・一覧整理だけを理由に、成功済みの巨大モデル取得・変換・GPU全条件を繰り返しません。
-対応機器や真の最低メモリを調べる具体的な必要がない間は、[現在の検証構成](windows-supported-configuration.md)を維持します。
-公開モデルの元checkpointからの再変換は、preview取得とは別の工程です。採用モデルを更新する必要が生じた場合に限り、
-producer・全object hash・元参照を固定し、全6 moduleと両形式を新しいsourceで受け入れます。
+まずP0の実行中CIを読み戻します。同じ設定の重い再実行は増やさず、成功・失敗・未実行を確定します。
+計画PR #117の内容と#119の文書補足はPR #118に含まれています。公開headの内容を確認し、#117と#119は個別にmergeせず閉じ、#118の1本に整理しました。
+最終headのRequired CIとprivacy検査を通し、merge依頼がある場合に統合します。
 
-## 他platformの開始条件と移行判定
+P1の[追加検証記録](results/post-release-windows-stability-20261021.json)では、元の画像参照とのcosine・検索順位とscore、実Worker・解放・正常終了を照合しています。GPUメモリは観測値と欠測を記録し、保証されたpeakとは扱いません。sampleの手動GUI操作や、submitted GPU kernel内での中断を証明した結果ではありません。
+合格済みの画像条件を理由なく再実行しません。
+音声は対象条件の既存VRAM観測値と安全余裕を満たす場合に順番に実行します。現在の空き容量ではその条件を満たしていないため、重い音声モデルは起動せず、契約テストなどの独立した作業を進めます。
+音声sampleの[入力検査](results/audio-frontend-check-20261021.md)は実Editorで合格しました。元のデコーダーと波形・マスクが一致することの確認であり、音声GPU推論の追加合格ではありません。
+CPUへの切替で代用せず、未実行範囲を残します。実マイクの物理切断・復帰と他GPU / 他OSも、実施するまで未検証です。
 
-| 段階 | 必要な環境と判定 |
-| --- | --- |
-| CIの入口 | 利用可能なUnity CIライセンス、対象Editor / build module、十分な容量と上限時間。未設定のまま同じpreflightを再実行しない |
-| build / compile | macOS Editor、Android ARM64 IL2CPP / Release / High APK、iOS MetalのXcode exportと署名なしcompileを別々に記録する。buildだけで実GPU合格にしない |
-| 実モデルGPU | MacのMetal能力・容量、Android / iOSの実機と接続host、必要な署名・権限を確保する。既存の小さいcompute probeやエミュレータを代用にしない |
-| 対応表へ追加 | text / image / audio、全role、混在検索、元精度gate、fallback / readback、cancel / recovery・suspend / 復帰・解放・正常終了の実結果を固定sourceへ結び付ける |
+P2の[限定調査記録](results/post-release-Intel-CPU-investigation-20261021.json)は参照ツールの再現性を対象とし、製品のSentis GPU推論とは別です。
+元artifactのdigest / CRCと8回のcaptureを再照合し、小さい入力で演算順序の感度を確認しました。原因となる内部演算は未特定のため、元のgolden・許容差とhost限定を維持して初回調査を終了します。
+利用者に影響する修正が見つかった場合だけ、影響範囲の受け入れと次のpatch版を計画します。
 
-現時点で追加の実機は提供されていません。端末購入、有料runner・外注・実機サービスの利用、ユーザーへの新規作業依頼をこの計画の前提にしません。
-使える既存環境が揃うまでは他platformを保留し、Windowsの保守を優先します。[CI](ci.md)と[端末検証](device-validation.md)に既存経路・失敗の範囲があります。
+## 次に進める順序
 
-## 各変更と次のリリースの共通条件
+| 優先 | 作業 | 完了条件 |
+| --- | --- | --- |
+| P0 | 変更内容に応じたCIの実行範囲を設計・実装 | 文書だけの変更は軽い検査、コード・モデル関連の変更は必要な回帰へ振り分ける。分類・集約判定をTDDで検証し、実PRで両経路を確認する。Required CIとprivacy検査を維持する |
+| P1 | Windowsの反復利用・中断・復帰を確認 | 固定条件で登録→検索→キャンセル→再試行→解放を反復し、元数値基準・実GPU・正常終了を確認する。実マイクの物理切断は実行できた場合だけ確認済みとする |
+| P2 | Intel環境のCPU参照差分を限定調査 | 最初の不一致演算とhost / 命令・依存条件を小さい入力で絞る。初回調査は2時間まで。原因未確定ならhost限定を維持して保留する |
+| 条件付き | 性能改善・他GPU・最低メモリの検証 | 具体的な問題や利用可能な既存機器がある場合に着手。同条件の数値一致・正常終了と、測定範囲を明示した結果を揃えて対応表へ反映する |
+| 保留 | macOS / Android / iOS対応 | CIライセンス・build環境・実モデルGPUを確認できる機器が揃ったplatformだけ着手する |
 
-1. task branchを作り、挙動変更はTDDとuvで実装する。必要な範囲のテストとworkflow lintを実行し、PRのRequired CIを確認する。
-2. SDK実行コード・モデル・依存・入力・許容差への影響を明示する。文書だけの変更で、旧実測sourceを新sourceの実行へ書き換えない。
-3. 実行は所有process・時間・resident / commitの上限を固定する。観測timeoutで別実行を重複起動せず、元logと失敗を保持する。
-4. 公開前にproject-privacy、versioned Git hooks、全送信祖先、公開identity、実payloadを確認する。新規・変更画像は実bytesを目視・OCRする。`main`へ直接pushせず、mergeは依頼された場合に行う。
-5. 次版は必要な変更がまとまった時点で版・CHANGELOG・固定tagを準備する。影響範囲の実GPUと空consumer、Release公開後の読み戻しを完了してから公開完了とする。現時点で次の版番号・公開日は確約しない。
+不具合報告で再現する問題が出た場合は、source・モデルdescriptor・入力profile・GPU / driverと再現手順を固定し、その修正を優先します。
+計画作成時点で、新しい不具合の修正やCI軽量化が完了したという意味ではありません。
 
-旧provider側コピーの除去は別件として延期しています。除去完了とは扱わず、新規公開物のprivacy gateも緩めません。
-履歴・固定sourceの検証記録は[文書一覧](README.md)、プロジェクト全体の不変の条件は[ゴール](goal.md)を参照してください。
+## P0: CIの待ち時間を減らす
+
+直近の[PR #116の必須CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39517101855)は、作成から完了まで待機込みで約77分でした。
+mainでは文書だけの変更でも実モデル回帰を実行します。以下の振り分けはPR #118に実装済みで、完全な回帰の確認と統合が残っています。
+
+1. 差分を分類する小さい処理を作る。まず、文書だけ・Runtime・Editor / sample・参照 / モデル・依存・CI / privacy規則・複数領域・未知のpathのテストをRedにする。
+2. 文書だけの経路は、差分・リンク・公開identity・全送信祖先・実payloadのprivacy検査を必須にする。変更された画像は既存の目視 / OCRとhash照合を維持する。
+3. Runtime、Editor / sample、数値テスト、モデル生成・参照、依存固定、workflow、privacy規則の変更と、判定不能な差分は完全な既存回帰へ送る。文書以外を変更して軽い経路へ入れない。
+4. 集約checkの名前は`Required CI`を維持する。必須の検査の欠落・failure・cancel・予期しないskip・分類の不整合は失敗にする。明示的に対象外と判定したモデル検証は「未実行」と記録し、GPU成功に数えない。
+5. 文書だけの変更と、コード変更を含むPRの実runで振り分けを確認する。後者は既存の元参照・元許容差の完全な回帰を通す。branch protection、artifact guard、画像・モデルの公開条件を維持する。
+
+文書だけの経路は、runner待ちを除く実行時間10分以内を目標にします。PR #119の1回の実測では作成から完了まで39秒でした。他の差分や混雑時の所要時間を保証する値ではありません。
+PRとmainで同じ内容を重複検証する扱いも、source・全treeの照合と必要checkを保つ条件で検討します。現行runを一律に停止する運用にはしません。
+
+## P1: Windowsの安定性を範囲を決めて確認する
+
+小さい契約テスト・エラー経路はCIへ置き、実GPU確認は既存のWindows構成で必要な条件から順に実行します。
+初回の連続実行は**1 profile・1重み形式・30分以内**に限定し、複数のUnity / Playerを同時に起動しません。
+既存のメモリguardと処理の所有関係を維持し、数値不一致・解放失敗・上限超過で停止して原本を保持します。
+
+- 画像・音声の登録とテキスト検索、キャンセル直後の再試行、モデル切替・解放・終了を確認する。
+- 反復回数、入力・参照hash、元数値gate、実Worker、RAM / VRAMの観測値と欠測を記録する。観測最大値を保証されたpeakへ読み替えない。
+- マイク停止・位置後退・フォーカス喪失・録音破棄・再録音の制御をまず契約テストで確認する。既存deviceで可能な実経路を別に確認し、物理切断・復帰ができない間は未検証のまま残す。
+- 問題が再現した場合だけTDDで修正し、影響するprofile・重み形式と実GPU結果を追加する。合格済みの巨大モデル全条件を理由なく繰り返さない。
+
+この段階の終了条件は、対象条件の数値・回復・解放・正常終了が揃い、未実行範囲も記録できることです。
+他GPU・他OSや、任意入力の検索品質まで確認したとは扱いません。
+
+## P2と、環境が必要な作業
+
+[Windows CPU CIの既存記録](windows-CPU-CI.md)から、Intel hostで最初に不一致となる中間値を1条件に絞ります。
+失敗後に設定を自動変更せず、仮説を先に記録して小さい対照を作ります。新しい根拠が得られた仮説だけを既存のCIで確認します。
+同じ設定の再実行で成功を探さず、golden・許容差を変更しません。製品のSentis GPU推論と参照ツールのCPU実行を区別します。
+
+他GPU・低容量構成は、利用できる既存機器と具体的な検証目的がある場合だけ開始します。
+それまでは[現在の対応構成](windows-supported-configuration.md)を維持します。元checkpointからの全モデル再変換は、採用モデル更新が必要になった場合だけ別工程として行います。
+
+macOS / Android / iOSは、利用可能なUnity CIライセンス・対象Editor / build module・容量と時間上限を入口条件にします。
+build / compile、実モデルGPU、端末の権限・suspend / 復帰・解放・正常終了を順に記録し、実GPUの元数値基準まで通った場合だけ対応表へ追加します。
+実機の代わりにエミュレータや小さいcompute probeを成功へ数えません。環境不足の同じpreflightを繰り返しません。
+端末購入、有料runner・外注・実機サービス、ユーザーへの新しい作業依頼は前提にしません。
+
+## 進め方と次のリリース
+
+当初の作業見積もりはP0が半日〜1日、P1が半日〜1日でした。P0は実装と文書経路の確認が進んでおり、残りは完全なCIの確認と統合です。
+P1の各実GPU実行は30分以内、P2の初回調査は最大2時間とします。CI待ちと音声実行のVRAM確保を含む完了日はまだ確約しません。
+現在の結果と残りの作業をこの文書に集約し、同じ内容の別計画書を増やしません。
+
+挙動変更はTDD、Pythonはuv、重い参照生成はCIを使います。`main`へ直接pushせず、各PRのmergeは依頼された場合に行います。
+公開前には[project-privacy](../.agents/skills/project-privacy/SKILL.md)、versioned Git hooks、全送信祖先・公開identity・実payloadと、画像の実bytesを確認します。
+過去の実行結果は元sourceに結び付け、新sourceの再実行へ書き換えません。
+
+利用者に影響する修正がまとまった段階で次のpatch版を判断します。版・CHANGELOG・影響範囲の実GPU・新規consumer・固定tag・公開後の読み戻しを揃えます。
+CIや文書だけの改善でSDKの新しい版を必須にせず、次の版番号・公開日はまだ固定しません。
+旧provider側PR / cacheコピーの除去はご指定どおり保留し、新規公開物のprivacy検査は継続します。

@@ -3,7 +3,7 @@ import json
 
 import yaml
 
-from embeddinggemma_tools.ci import REQUIRED_JOBS
+from embeddinggemma_tools.ci import REQUIRED_JOBS, SCOPED_JOBS
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -123,14 +123,15 @@ def test_required_gate_covers_all_reusable_workflows_even_after_failure():
     workflow = load("ci.yml")
     gate = workflow["jobs"]["required"]
     assert gate["name"] == "Required CI"
-    assert set(gate["needs"]) == set(REQUIRED_JOBS)
+    assert set(gate["needs"]) == set(SCOPED_JOBS)
     assert gate["if"] == "${{ always() }}"
     assert gate["steps"][-1]["env"]["NEEDS_JSON"] == "${{ toJSON(needs) }}"
     assert "embeddinggemma_tools.ci" in gate["steps"][-1]["run"]
     assert not gate.get("continue-on-error")
     for name in REQUIRED_JOBS:
         job = workflow["jobs"][name]
-        assert not job.get("if")
+        assert (not job.get('if') if name == 'workflow-lint'
+                else job['if'] == "${{ needs.changes.outputs.mode == 'full' }}")
         assert not job.get("continue-on-error")
         assert job["uses"].startswith("./.github/workflows/")
         child = load(job["uses"].rsplit("/", 1)[-1])

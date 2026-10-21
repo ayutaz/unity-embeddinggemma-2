@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "success": true,
+  "PR": 119,
+  "run_id": 39555715582,
+  "source": "33ed7ea71b6268063c3bcacb038636ae657ea3d4",
+  "merge_tree_verified": true,
+  "source_bound_scope": {
+    "mode": "docs",
+    "reason": "documentation",
+    "base_sha": "4146264e4a1be77bcc6fdfb736da7afe2d4e856b",
+    "head_sha": "93fc1f6e22b68782bd896896018e4e92f90114a6",
+    "source_sha": "33ed7ea71b6268063c3bcacb038636ae657ea3d4",
+    "change_digest": "e4fef6105e37fbd7795098e14d15000856db504b3595be7a018eef1b69c84e39"
+  },
+  "successful_jobs": 4,
+  "explicitly_unexecuted_jobs": 3,
+  "model_execution": false,
+  "summed_successful_job_seconds": 43.0,
+  "created_to_completed_seconds": 39.0,
+  "each_job_seconds": {
+    "changes": 8.0,
+    "workflow-lint / actionlint": 14.0,
+    "documentation": 14.0,
+    "Required CI": 7.0
+  },
+  "local_TDD": {
+    "classifier_aggregate_workflow_documentation_related_tests_passed": 119
+  },
+  "full_code_route": {
+    "PR": 118,
+    "run_id": 39555563787,
+    "source": "4146264e4a1be77bcc6fdfb736da7afe2d4e856b",
+    "terminal_acceptance_pending": false,
+    "superseded_without_acceptance": true
+  },
+  "main_integrated": false,
+  "SDK_GPU_qualification_added": false,
+  "windows_unit_budget_followup": {
+    "run_id": 39559163998,
+    "source": "643274033e561063439a3e41333ea8cfc5c13707",
+    "job_id": 119086907447,
+    "job_conclusion": "cancelled",
+    "job_timeout_minutes": 20,
+    "offline_unit_tests_step": "success",
+    "mandatory_artifact_privacy_step": "cancelled",
+    "artifact_upload_step": "skipped",
+    "accepted": false,
+    "annotation": "The job has exceeded the maximum execution time of 20m0s",
+    "change": "Windows Python 3.13 and 3.14 whole-job bounds are 30 minutes; Ubuntu remains 20",
+    "TDD_red": "1 failed, 3 passed; Windows Python 3.13 had only 20 minutes",
+    "related_green": "25 passed",
+    "original_numerical_gates_unchanged": true,
+    "privacy_guard_unchanged": true,
+    "model_job_time_limits_unchanged": true,
+    "final_source_CI_acceptance_pending": true
+  }
+}

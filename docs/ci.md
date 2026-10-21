@@ -6,9 +6,29 @@
 
 ## 現行の必須CI
 
-`.github/workflows/ci.yml`はPR・mainへのpush・手動起動で実行します。Python3.13 / 3.14 × Windows / Ubuntuの単体テスト、workflow lint、package監査、実モデル参照・exportと固定音声6条件のONNX比較を実行し、`Required CI`で集計します。
+`.github/workflows/ci.yml`はPR・mainへのpush・手動起動で実行します。まず実Git差分とeventのbase / head / sourceを照合し、次の経路を選びます。
 
-通常CIは文書だけの変更でも実モデルのCPU参照生成・比較を含みます。これはUnity RuntimeをCPUで推論する設定ではありません。Unity実GPU・UI・Player・実機の受け入れは別に実施します。GPUテストのskipをGPU成功にせず、CI成功だけで正式公開条件を満たしたとしません。
+| 変更 | 必須の検査 |
+| --- | --- |
+| `README.md`と`docs/`内のMarkdownだけ（`docs/privacy.md`を除く） | 差分・リンク・元の送信祖先すべて・公開profile・実PR本文のprivacy検査、workflow lint |
+| Runtime、Editor / sample、tests、参照 / モデル、依存、workflow、privacy規則、その他のpath | 従来のPython3.13 / 3.14 × Windows / Ubuntu、workflow lint、package監査、実モデル参照・exportと固定音声6条件のONNX比較 |
+| 手動起動、比較元がない場合、mode変更、renameでcodeを隠す場合、判定できない差分 | 完全な既存回帰。分類job自体が失敗した場合はRequired CIも失敗 |
+
+集約checkの名前は`Required CI`です。別のjobでGit差分を再計算し、分類結果・対象source・差分digestの一致を確認します。必要なcheckの欠落・failure・cancel・予期しないskipは失敗です。文書経路ではモデルjobは明示的に未実行と記録し、成功したモデル / GPU検証とは数えません。
+
+この振り分けはPR #118で実装しています。[文書専用の実run](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39555715582)では、Required CIまで39秒で完了しました。
+[sourceと実jobの照合記録](results/documentation-CI-route-readback-20261021.json)では、モデル3 jobの明示的な未実行と`model_execution=false`を確認しています。
+文書経路はrunner待ちを除く10分以内を目標にしますが、1回の実測で将来の時間を保証するものではありません。コード変更を含む完全回帰と最終headの受け入れは、別途完了を確認します。
+
+完全回帰のCPU参照生成・比較はUnity RuntimeのCPU推論設定ではありません。Unity実GPU・UI・Player・実機の受け入れは別に実施します。CI成功だけで正式公開条件を満たしたとしません。branch protectionと、各artifactの公開前guardは変更していません。
+
+Pythonのunit jobはWindowsの両versionを30分、Ubuntuを20分で制限します。
+実装PRの[初回最終head CI](https://github.com/ayutaz/unity-embeddinggemma-2/actions/runs/39559163998)では、Windows / Python 3.13のunit tests自体は成功しましたが、後続の必須artifact privacy検査中に20分のjob上限で取消になりました。
+このjobは未受け入れです。Windows 3.14で既存の30分上限を3.13にも適用し、tests・privacy検査・uploadまで完了を確認します。元の数値gate、検査内容、モデルjobの上限は変更しません。
+
+### 文書経路の結果を読む
+
+`documentation`の`model_execution=false`は、リンク・送信履歴・公開payloadを検査し、モデルを実行していないことを表します。`Required CI`の成功を、新しい実モデルやGPUの検証成功へ読み替えないでください。コード変更などの完全回帰では、元の各jobの実結果を別に確認します。
 
 ## 固定参照の取得と保持
 
@@ -35,10 +55,11 @@ CI・UPM監査・検索基盤・サンプル・準備 / cache・Editor font寿�
 文書のみのPR #7も全8 job成功後に未マージで閉じた。[現在の状態](status.md)を参照。
 GitHub側のmain保護は設定済み。M1のWindows実測は [完了検証](m1-completion-validation.md)、UPM移行の結果は [パッケージ検証](m2-package-validation.md)を参照。
 
-## 全PRの必須CI
+## 必須CIの導入時の記録
 
-`.github/workflows/ci.yml` を入口とし、paths filterを付けず、全PR・main push・手動実行を対象にする。
-文書のみのPRも同じ検証を実行する。以下のreusable workflowは単独のPR / pushトリガーを持たず、重複実行を避ける。
+以下はPR #6 / #7当時の導入記録です。変更分類を加えた現行の経路・skipの判定は上記を参照してください。
+`.github/workflows/ci.yml`を入口とし、全PR・main push・手動実行を対象にしました。
+導入時は文書のみのPRも同じ完全な検証を実行しました。以下のreusable workflowは単独のPR / pushトリガーを持たず、重複実行を避けます。
 
 | workflow / job | 実行内容 | 判定 |
 | --- | --- | --- |
